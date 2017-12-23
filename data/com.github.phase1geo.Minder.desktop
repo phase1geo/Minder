@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Minder
+GenericName=Mind-mapping Application
+Comment=Mind-mapping application
+Categories=Utility;
+Exec=com.github.phase1geo.Minder
+Icon=application-default-icon
+Terminal=false
+Type=Application
+X-GNOME-Gettext-Domain=Minder
+Keywords=Mind;Mapping;
