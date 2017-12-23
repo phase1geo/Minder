@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2017 Your Name <phase1geo@email.com> -->
+<component type="desktop">
+  <id>com.github.phase1geo.Minder.desktop</id>
+  <metadata_license>GPL 3.0</metadata_license>
+  <name>Minder</name>
+  <summary>Mind-Mapping Application for Elementary OS</summary>
+  <description>
+    <p>A quick summary of your app's main selling points and features. Just a couple sentences per paragraph is best.</p>
+  </description>
+  <custom>
+    <value key="x-appcenter-color-primary">#603461</value>
+    <value key="x-appcenter-color-primary-text">rgb(255, 255, 255)</value>
+    <value key="x-appcenter-suggested-price">5</value>
+  </custom>
+</component>
