@@ -4,7 +4,7 @@ int main( string[] args ) {
 
   /* Create the main window */
   var win = new Gtk.Window();
-  win.title = "Minder";
+  win.title = _( "Minder" );
   win.set_border_width( 12 );
   win.set_position( Gtk.WindowPosition.CENTER );
   win.set_default_size( 600, 400 );
