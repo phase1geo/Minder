@@ -2,7 +2,7 @@
 Name=Minder
 GenericName=Mind-mapping Application
 Comment=Mind-mapping application
-Categories=Utility;
+Categories=Office;Development;
 Exec=com.github.phase1geo.Minder
 Icon=application-default-icon
 Terminal=false
@@ -10,3 +10,7 @@ Type=Application
 X-GNOME-Gettext-Domain=Minder
 X-GNOME-UsesNotifications=true
 Keywords=Mind;Mapping;
+
+[Desktop Action NewDocument]
+Name=New Document
+Exec=com.github.phase1geo.Minder -n
