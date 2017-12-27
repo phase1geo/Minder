@@ -41,7 +41,7 @@ ensure_vala_version("0.16" MINIMUM)
 # files we want to compile
 include(ValaPrecompile)
 vala_precompile(VALA_C ${EXEC_NAME}
-    src/hello-again.vala
+    src/minder.vala
 
 # tell what libraries to use when compiling
 PACKAGES
@@ -59,3 +59,8 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.phase1geo.Minder.desk
 
 # install our .appdata.xml file so AppCenter will see it
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.phase1geo.Minder.appdata.xml DESTINATION ${DATADIR}/metainfo/)
+
+# Translation files
+set (GETTEXT_PACKAGE "${CMAKE_PROJECT_NAME}")
+add_definitions (-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
+add_subdirectory (po)

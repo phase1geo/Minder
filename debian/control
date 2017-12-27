@@ -1,0 +1,14 @@
+Source: minder
+Section: x11
+Priority: extra
+Maintainer: Trevor Williams <phase1geo@gmail.com>
+Build-Depends: cmake (>= 2.8),
+               debhelper (>= 9),
+               libgtk-3-dev,
+               valac (>= 0.16)
+Standards-Version: 3.9.3
+
+Package: minder
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: Mind-mapping application
