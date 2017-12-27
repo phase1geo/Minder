@@ -8,4 +8,5 @@ Icon=application-default-icon
 Terminal=false
 Type=Application
 X-GNOME-Gettext-Domain=Minder
+X-GNOME-UsesNotifications=true
 Keywords=Mind;Mapping;
