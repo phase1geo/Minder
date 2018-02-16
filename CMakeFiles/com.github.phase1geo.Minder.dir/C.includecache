@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/trevorw/projects/Minder/src/minder.c
+glib.h
+-
+glib-object.h
+-
+gtk/gtk.h
+-
+gio/gio.h
+-
+glib/gi18n-lib.h
+-
+stdlib.h
+-
+string.h
+-
+

@@ -1,0 +1,3 @@
+# Hashes of file build rules.
+fe388c4322b4cec5dd630363e97e80d1 com.github.phase1geo.Minder_valac.stamp
+b072b5f6711f96572c661648555a3016 src/minder.c

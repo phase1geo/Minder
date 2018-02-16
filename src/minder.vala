@@ -22,12 +22,12 @@ public class Minder : Gtk.Application {
     app_window.destroy.connect( Gtk.main_quit );
 
     /* Create the canvas */
-    GtkWidget* canvas = gtk_drawing_area_new();
-    gtk_widget_set_size_request( canvas, 500, 500 );
+    // GtkWidget* canvas = gtk_drawing_area_new();
+    // gtk_widget_set_size_request( canvas, 500, 500 );
     // g_signal_connect( canvas, "draw", G_CALLBACK( draw_callback ), NULL );
 
     var box = new Gtk.Box( Orientation.HORIZONTAL, 2 );
-    box.pack_start( canvas );
+    // box.pack_start( canvas );
 
     /*
     show_button.clicked.connect (() => {
