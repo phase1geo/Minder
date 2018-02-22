@@ -16,33 +16,24 @@ public class Minder : Gtk.Application {
     var app_window = new ApplicationWindow( this );
     app_window.title = _( "Minder" );
     app_window.set_position( Gtk.WindowPosition.CENTER );
-    app_window.set_default_size( 600, 400 );
+    app_window.set_default_size( 800, 600 );
     app_window.set_titlebar( header );
     app_window.set_border_width( 2 );
     app_window.destroy.connect( Gtk.main_quit );
 
     /* Create the canvas */
-    // GtkWidget* canvas = gtk_drawing_area_new();
-    // gtk_widget_set_size_request( canvas, 500, 500 );
-    // g_signal_connect( canvas, "draw", G_CALLBACK( draw_callback ), NULL );
+    DrawArea da = new DrawArea();
 
     var box = new Gtk.Box( Orientation.HORIZONTAL, 2 );
-    // box.pack_start( canvas );
+    box.pack_start( da, true, true, 0 );
 
-    /*
-    show_button.clicked.connect (() => {
-      var notification = new Notification( _( "Hello World" ) );
-      var icon = new GLib.ThemedIcon( "dialog-warning" );
-      notification.set_icon( icon );
-      notification.set_body( _( "This is my first notification!" ) );
-      this.send_notification( "notify.app", notification );
-    });
-    */
-
+    /* Display the UI */
     app_window.add( box );
     app_window.show_all();
-
     app_window.show();
+
+    /* Allow the loop to run */
+    Gtk.main();
 
   }
 

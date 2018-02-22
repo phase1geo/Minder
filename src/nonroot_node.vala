@@ -5,16 +5,16 @@ public class Nonroot_Node : Node {
 
   }
 
-  public void detach() {
+  public override void detach() {
 
   }
 
-  public void attach() {
+  public override void attach( Node n ) {
 
   }
 
-  public void draw( Gtk.Context ctx ) {
-    draw_font( ctx );
+  public override void draw( Cairo.Context ctx ) {
+    draw_name( ctx );
   }
 
 }

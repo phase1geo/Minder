@@ -1,1 +1,5 @@
 build/
+CMakeFiles/
+src/*.o
+src/*.c
+*.stamp
