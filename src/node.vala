@@ -47,7 +47,7 @@ public class Node : Object {
   public virtual void draw_name( Cairo.Context ctx ) {
     ctx.set_font_size( 12 );
     ctx.move_to( (posx + 10), (posy + 20) );
-    ctx.set_source_rgba( 0, 0, 0, 1 );
+    ctx.set_source_rgba( 1, 1, 1, 1 );
     ctx.show_text( name );
   }
 

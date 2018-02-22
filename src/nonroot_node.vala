@@ -1,7 +1,7 @@
-public class Nonroot_Node : Node {
+public class NonrootNode : Node {
 
   /* Default constructor */
-  public Nonroot_Node() {
+  public NonrootNode() {
 
   }
 
