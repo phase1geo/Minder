@@ -1,1 +1,0 @@
-/usr/bin/cc     CMakeFiles/com.github.phase1geo.Minder.dir/src/minder.c.o CMakeFiles/com.github.phase1geo.Minder.dir/src/node.c.o  -o com.github.phase1geo.Minder -rdynamic -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lunity -ldee-1.0 -lgthread-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -ldbusmenu-glib 
