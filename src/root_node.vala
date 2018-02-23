@@ -1,3 +1,5 @@
+using Cairo;
+
 public class RootNode : Node {
 
   /* Default constructor */
@@ -9,7 +11,7 @@ public class RootNode : Node {
   }
 
   /* Draws the rectangle around the root node */
-  public void draw_rectangle( Cairo.Context ctx ) {
+  public void draw_rectangle( Context ctx ) {
     double r = 10.0;
     double h = _height;
     double w = _width;
@@ -28,7 +30,7 @@ public class RootNode : Node {
   }
 
   /* Draws this node to the given canvas */
-  public override void draw( Cairo.Context ctx ) {
+  public override void draw( Context ctx ) {
     draw_rectangle( ctx );
     draw_name( ctx );
   }

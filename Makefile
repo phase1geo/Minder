@@ -206,6 +206,33 @@ pot/fast:
 	$(MAKE) -f po/CMakeFiles/pot.dir/build.make po/CMakeFiles/pot.dir/build
 .PHONY : pot/fast
 
+src/color_palette.o: src/color_palette.c.o
+
+.PHONY : src/color_palette.o
+
+# target to build an object file
+src/color_palette.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/color_palette.c.o
+.PHONY : src/color_palette.c.o
+
+src/color_palette.i: src/color_palette.c.i
+
+.PHONY : src/color_palette.i
+
+# target to preprocess a source file
+src/color_palette.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/color_palette.c.i
+.PHONY : src/color_palette.c.i
+
+src/color_palette.s: src/color_palette.c.s
+
+.PHONY : src/color_palette.s
+
+# target to generate assembly for a file
+src/color_palette.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/color_palette.c.s
+.PHONY : src/color_palette.c.s
+
 src/draw_area.o: src/draw_area.c.o
 
 .PHONY : src/draw_area.o
@@ -357,6 +384,9 @@ help:
 	@echo "... po"
 	@echo "... i18n"
 	@echo "... pot"
+	@echo "... src/color_palette.o"
+	@echo "... src/color_palette.i"
+	@echo "... src/color_palette.s"
 	@echo "... src/draw_area.o"
 	@echo "... src/draw_area.i"
 	@echo "... src/draw_area.s"

@@ -1,4 +1,11 @@
 using Gtk;
+using Cairo;
+
+public enum NodeMode {
+  NONE = 0,
+  SELECTED,
+  EDITABLE
+}
 
 public class Node : Object {
 
@@ -10,10 +17,11 @@ public class Node : Object {
   protected int    _height = 50;  /* TBD - This should be derived */
 
   /* Properties */
-  public string name { get; set; default = ""; }
-  public double posx { get; set; default = 0.0; }
-  public double posy { get; set; default = 0.0; }
-  public string note { get; set; default = ""; }
+  public string   name { get; set; default = ""; }
+  public double   posx { get; set; default = 0.0; }
+  public double   posy { get; set; default = 0.0; }
+  public string   note { get; set; default = ""; }
+  public NodeMode mode { get; set; default = NodeMode.NONE; }
 
   /* Default constructor */
   public Node() {}
@@ -21,6 +29,11 @@ public class Node : Object {
   /* Constructor initializing string */
   public Node.with_name( string n ) {
     this.name = n;
+  }
+
+  /* Returns true if the node does not have a parent */
+  public bool is_root() {
+    return( _parent == null );
   }
 
   /* Returns true if the given cursor coordinates lies within this node */
@@ -44,14 +57,27 @@ public class Node : Object {
   }
 
   /* Draws the node font to the screen */
-  public virtual void draw_name( Cairo.Context ctx ) {
+  public virtual void draw_name( Context ctx ) {
+
+    if( mode == NodeMode.SELECTED ) {
+      ctx.set_source_rgba( 0.5, 0.5, 1, 1 );
+      ctx.rectangle( posx, posy, 100, 30 );
+      ctx.fill();
+    }
+
+    /* Output the text */
     ctx.set_font_size( 12 );
     ctx.move_to( (posx + 10), (posy + 20) );
     ctx.set_source_rgba( 1, 1, 1, 1 );
     ctx.show_text( name );
+
+    if( mode == NodeMode.EDITABLE ) {
+      ctx.show_text( "|" );
+    }
+
   }
 
   /* Draws the node on the screen */
-  public virtual void draw( Cairo.Context ctx ) {}
+  public virtual void draw( Context ctx ) {}
 
 }
