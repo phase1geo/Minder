@@ -7,6 +7,13 @@ public enum NodeMode {
   EDITABLE
 }
 
+public struct NodeBounds {
+  double x;
+  double y;
+  double width;
+  double height;
+}
+
 public class Node : Object {
 
   /* Member variables */
@@ -15,6 +22,7 @@ public class Node : Object {
   private   int    _child_index = -1;
   protected int    _width = 100;  /* TBD - This should be derived */
   protected int    _height = 50;  /* TBD - This should be derived */
+  private   int    _cursor = 0;   /* Location of the cursor when editing */
 
   /* Properties */
   public string   name { get; set; default = ""; }
@@ -59,20 +67,29 @@ public class Node : Object {
   /* Draws the node font to the screen */
   public virtual void draw_name( Context ctx ) {
 
+    TextExtents name_extents;
+    double      hmargin = 3;
+    double      vmargin = 5;
+
+    ctx.set_font_size( 14 );
+    ctx.text_extents( name, out name_extents );
+
     if( mode == NodeMode.SELECTED ) {
       ctx.set_source_rgba( 0.5, 0.5, 1, 1 );
-      ctx.rectangle( posx, posy, 100, 30 );
+      ctx.rectangle( (posx + (10 - hmargin)), (posy + ((20 - vmargin) - name_extents.height)), (name_extents.width + (hmargin * 2)), (name_extents.height + (vmargin * 2)) );
       ctx.fill();
     }
 
     /* Output the text */
-    ctx.set_font_size( 12 );
     ctx.move_to( (posx + 10), (posy + 20) );
     ctx.set_source_rgba( 1, 1, 1, 1 );
     ctx.show_text( name );
 
     if( mode == NodeMode.EDITABLE ) {
-      ctx.show_text( "|" );
+      TextExtents extents;
+      ctx.text_extents( name.substring( 0, _cursor ), out extents );
+      ctx.rectangle( (posx + extents.width), posy, 2, extents.height );
+      ctx.fill();
     }
 
   }

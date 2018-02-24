@@ -27,6 +27,9 @@ public class RootNode : Node {
     ctx.line_to(posx,posy+r);                                  // Line to H
     ctx.curve_to(posx,posy,posx,posy,posx+r,posy);             // Curve to A
     ctx.stroke();
+    ctx.set_source_rgba( 0.5, 0.5, 1, 1 );
+    ctx.move_to(posx+r+1,posy+r+1);
+    ctx.fill();
   }
 
   /* Draws this node to the given canvas */
