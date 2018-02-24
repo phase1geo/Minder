@@ -74,7 +74,7 @@ public class DrawArea : Gtk.DrawingArea {
       _press_x = event.x;
       _press_y = event.y;
       set_current_node( event.x, event.y );
-      if( _current_node.mode != NodeMode.EDITABLE ) {
+      if( (_current_node == null) || (_current_node.mode != NodeMode.EDITABLE) || (_current_node.mode != NodeMode.EDITED) ) {
         _pressed = true;
       }
     }
@@ -105,7 +105,10 @@ public class DrawArea : Gtk.DrawingArea {
       }
       switch( m ) {
         case NodeMode.NONE     :  _current_node.mode = NodeMode.SELECTED;  break;
-        case NodeMode.SELECTED :  _current_node.mode = NodeMode.EDITABLE;  break;
+        case NodeMode.SELECTED :
+          _current_node.move_cursor_to_end();
+          _current_node.mode = NodeMode.EDITABLE;
+          break;
       }
       queue_draw();
     }
@@ -115,24 +118,45 @@ public class DrawArea : Gtk.DrawingArea {
   /* Handle a key event */
   private bool on_keypress( EventKey event ) {
     if( _current_node != null ) {
+      bool mode_edit = (_current_node.mode == NodeMode.EDITABLE) || (_current_node.mode == NodeMode.EDITED);
+      bool mode_sel  = (_current_node.mode == NodeMode.SELECTED);
       switch( event.keyval ) {
         case 65288 :  // Backspace
-          _current_node.name = _current_node.name.substring( 0, (_current_node.name.length - 1) );
-          queue_draw();
-          break;
-        case 65293 :  // Return key
-          if( _current_node.mode == NodeMode.EDITABLE ) {
-            stdout.printf( "Editable!\n" );
-            _current_node.mode = NodeMode.SELECTED;
-          } else if( !_current_node.is_root() ) {
-            _current_node.mode = NodeMode.NONE;
-            stdout.printf( "Adding sibling!" );
-            // _current_node = _current_node.add_sibling();
+          if( mode_edit ) {
+            _current_node.edit_backspace();
           }
           queue_draw();
           break;
+        case 65535 :  // Delete key
+          if( mode_edit ) {
+            _current_node.edit_delete();
+            queue_draw();
+          } else if( mode_sel ) {
+            //_current_node.delete();
+            queue_draw();
+          }
+          break;
+        case 65307 :  // Escape key
+          if( mode_edit ) {
+            _current_node.mode = NodeMode.SELECTED;
+            queue_draw();
+          }
+          break;
+        case 65293 :  // Return key
+          if( mode_edit ) {
+            _current_node.mode = NodeMode.SELECTED;
+            queue_draw();
+          } else if( !_current_node.is_root() ) {
+            _current_node.mode = NodeMode.NONE;
+            // _current_node = _current_node.add_sibling();
+            queue_draw();
+          }
+          break;
         case 65289 :  // Tab key
-          if( _current_node.mode == NodeMode.SELECTED ) {
+          if( mode_edit ) {
+            _current_node.mode = NodeMode.SELECTED;
+            queue_draw();
+          } else if( mode_sel ) {
             NonrootNode node;
             if( _current_node.is_root() ) {
               node = new NonrootNode( _palette.next() );
@@ -145,11 +169,42 @@ public class DrawArea : Gtk.DrawingArea {
             queue_draw();
           }
           break;
+        case 65363 :  // Right key
+          if( mode_edit ) {
+            _current_node.move_cursor( 1 );
+          } else if( mode_sel ) {
+            Node first_child = _current_node.first_child();
+            if( first_child != null ) {
+              _current_node = first_child;
+            }
+          }
+          queue_draw();
+          break;
+        case 65361 :  // Left key
+          if( mode_edit ) {
+            _current_node.move_cursor( -1 );
+          }
+          queue_draw();
+          break;
+        case 65360 :  // Home key
+          if( mode_edit ) {
+            _current_node.move_cursor_to_start();
+          }
+          queue_draw();
+          break;
+        case 65367 :  // End key
+          if( mode_edit ) {
+            _current_node.move_cursor_to_end();
+          }
+          queue_draw();
+          break;
         default :
-          stdout.printf( "In on_keypress, keyval: %s\n", event.keyval.to_string() );
-          if( _current_node.mode == NodeMode.EDITABLE ) {
+          if( !event.str.get_char( 0 ).isprint() ) {
+            stdout.printf( "In on_keypress, keyval: %s\n", event.keyval.to_string() );
+          }
+          if( mode_edit ) {
             if( event.str.get_char( 0 ).isprint() ) {
-              _current_node.name += event.str;
+              _current_node.edit_insert( event.str );
               queue_draw();
             }
           }

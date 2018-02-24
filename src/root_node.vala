@@ -12,9 +12,20 @@ public class RootNode : Node {
 
   /* Draws the rectangle around the root node */
   public void draw_rectangle( Context ctx ) {
-    double r = 10.0;
-    double h = _height;
-    double w = _width;
+
+    /* Get the boundaries of the text */
+    TextExtents extents;
+    name_extents( ctx, out extents );
+
+    double padx = 15;
+    double pady = 15;
+    double posx = this.posx - padx;
+    double posy = (this.posy - extents.height) - pady;
+    double r    = 10.0;
+    double h    = extents.height + (pady * 2);
+    double w    = extents.width  + (padx * 2);
+
+    /* Draw the rounded box around the text */
     ctx.set_source_rgba( 1, 1, 1, 1 );
     ctx.set_line_width( 1 );
     ctx.move_to(posx+r,posy);                                  // Move to A
@@ -30,6 +41,7 @@ public class RootNode : Node {
     ctx.set_source_rgba( 0.5, 0.5, 1, 1 );
     ctx.move_to(posx+r+1,posy+r+1);
     ctx.fill();
+
   }
 
   /* Draws this node to the given canvas */
