@@ -1,6 +1,5 @@
 using Gtk;
 using Cairo;
-using Gee;
 
 public enum NodeMode {
   NONE = 0,
@@ -19,11 +18,11 @@ public struct NodeBounds {
 public class Node : Object {
 
   /* Member variables */
-  private   Node            _parent = null;
-  private   ArrayList<Node> _children;
-  protected double          _width = 0;
-  protected double          _height = 0;
-  private   int             _cursor = 0;   /* Location of the cursor when editing */
+  private   Node   _parent = null;
+  private   Node[] _children = {};
+  protected double _width = 0;
+  protected double _height = 0;
+  private   int    _cursor = 0;   /* Location of the cursor when editing */
 
   /* Properties */
   public string   name { get; set; default = ""; }
@@ -33,14 +32,11 @@ public class Node : Object {
   public NodeMode mode { get; set; default = NodeMode.NONE; }
 
   /* Default constructor */
-  public Node() {
-    _children = new ArrayList<Node>();
-  }
+  public Node() {}
 
   /* Constructor initializing string */
   public Node.with_name( string n ) {
     name = n;
-    _children = new ArrayList<Node>();
   }
 
   /* Returns true if the node does not have a parent */
@@ -51,6 +47,43 @@ public class Node : Object {
   /* Returns true if the given cursor coordinates lies within this node */
   public virtual bool is_within( double x, double y ) {
     return( (x >= posx) && (x < (posx + _width)) && (y >= (posy - _height)) && (y < posy) );
+  }
+
+  /* Finds the node which contains the given pixel coordinates */
+  public virtual Node? contains( double x, double y ) {
+    if( is_within( x, y ) ) {
+      return( this );
+    } else {
+      foreach (Node n in _children) {
+        Node tmp = n.contains( x, y );
+        if( tmp != null ) {
+          return( tmp );
+        }
+      }
+      return( null );
+    }
+  }
+
+  /* Returns true if this node contains the given node */
+  public virtual bool contains_node( Node node ) {
+    if( node == this ) {
+      return( true );
+    } else {
+      foreach (Node n in _children) {
+        if( n.contains_node( node ) ) {
+          return( true );
+        }
+      }
+      return( false );
+    }
+  }
+
+  /* Clears all of the modes for this node tree */
+  public void clear_modes() {
+    mode = NodeMode.NONE;
+    foreach (Node n in _children) {
+      n.clear_modes();
+    }
   }
 
   /* Move the cursor in the given direction */
@@ -116,7 +149,13 @@ public class Node : Object {
   /* Detaches this node from its parent node */
   public virtual void detach() {
     if( _parent != null ) {
-      _parent._children.remove( this );
+      Node[] tmp = {};
+      foreach (Node n in _parent._children) {
+        if( n != this ) {
+          tmp += n;
+        }
+      }
+      _parent._children = tmp;
       _parent = null;
     }
   }
@@ -124,22 +163,21 @@ public class Node : Object {
   /* Removes this node from the node tree along with all descendents */
   public virtual void delete() {
     detach();
-    _children.clear();
+    _children = {};
   }
 
   /* Attaches this node as a child of the given node */
-  public virtual void attach( Node n ) {
-    _parent = n;
-    n._children.add( this );
+  public virtual void attach( Node parent ) {
+    _parent = parent;
+    parent._children += this;
   }
 
   /* Returns a reference to the first child of this node */
   public virtual Node? first_child() {
-    if( _children.size == 0 ) {
-      return( null );
-    } else {
-      return( _children.@get( 0 ) );
+    if( _children.length > 0 ) {
+      return( _children[0] );
     }
+    return( null );
   }
 
   /* Calculates the boundaries of the given string */
@@ -206,5 +244,13 @@ public class Node : Object {
 
   /* Draws the node on the screen */
   public virtual void draw( Context ctx ) {}
+
+  /* Draw this node and all child nodes */
+  public void draw_all( Context ctx ) {
+    draw( ctx );
+    foreach (Node n in _children) {
+      n.draw_all( ctx );
+    }
+  }
 
 }

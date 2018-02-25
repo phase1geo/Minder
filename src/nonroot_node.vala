@@ -10,14 +10,6 @@ public class NonrootNode : Node {
     this.color = color;
   }
 
-  public override void detach() {
-
-  }
-
-  public override void attach( Node n ) {
-
-  }
-
   public void draw_line( Context ctx ) {
 
     /* Get the name boundaries */

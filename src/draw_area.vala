@@ -42,10 +42,17 @@ public class DrawArea : Gtk.DrawingArea {
     NonrootNode nr1 = new NonrootNode( _palette.next() );
     nr1.name = "Child A";
     nr1.posx = 500;
-    nr1.posy = 200;
+    nr1.posy = 175;
+
+    NonrootNode nr2 = new NonrootNode( _palette.next() );
+    nr2.name = "Child B";
+    nr2.posx = 500;
+    nr2.posy = 225;
+
+    nr1.attach( n );
+    nr2.attach( n );
 
     _nodes += n;
-    _nodes += nr1;
 
   }
 
@@ -53,17 +60,28 @@ public class DrawArea : Gtk.DrawingArea {
   private void set_current_node( double x, double y ) {
     _current_node = null;
     foreach (Node n in _nodes) {
-      if( n.is_within( x, y ) ) {
-        _current_node = n;
+      _current_node = n.contains( x, y );
+      if( _current_node != null ) {
         return;
       }
     }
   }
 
+  /* Returns the attachable node if one is found */
+  private Node? attachable_node( double x, double y ) {
+    foreach (Node n in _nodes) {
+      Node tmp = n.contains( x, y );
+      if( (tmp != null) && (tmp != _current_node) && !tmp.contains_node( n ) ) {
+        return( tmp );
+      }
+    }
+    return( null );
+  }
+
   /* Draw the available nodes */
   private bool on_draw( Context ctx ) {
     foreach (Node n in _nodes) {
-      n.draw( ctx );
+      n.draw_all( ctx );
     }
     return( false );
   }
@@ -101,10 +119,17 @@ public class DrawArea : Gtk.DrawingArea {
     if( _current_node != null ) {
       NodeMode m = _current_node.mode;
       foreach (Node n in _nodes) {
-        n.mode = NodeMode.NONE;
+        n.clear_modes();
       }
       switch( m ) {
-        case NodeMode.NONE     :  _current_node.mode = NodeMode.SELECTED;  break;
+        case NodeMode.NONE     :
+          _current_node.mode = NodeMode.SELECTED;
+          Node attach_node = attachable_node( event.x, event.y );
+          if( attach_node != null ) {
+            _current_node.detach();
+            _current_node.attach( attach_node );
+          }
+          break;
         case NodeMode.SELECTED :
           _current_node.move_cursor_to_end();
           _current_node.mode = NodeMode.EDITABLE;
@@ -124,15 +149,18 @@ public class DrawArea : Gtk.DrawingArea {
         case 65288 :  // Backspace
           if( mode_edit ) {
             _current_node.edit_backspace();
+            queue_draw();
+          } else if( mode_sel ) {
+            _current_node.delete();
+            queue_draw();
           }
-          queue_draw();
           break;
         case 65535 :  // Delete key
           if( mode_edit ) {
             _current_node.edit_delete();
             queue_draw();
           } else if( mode_sel ) {
-            //_current_node.delete();
+            _current_node.delete();
             queue_draw();
           }
           break;
@@ -161,9 +189,10 @@ public class DrawArea : Gtk.DrawingArea {
             if( _current_node.is_root() ) {
               node = new NonrootNode( _palette.next() );
             } else {
-              node = new NonrootNode( ((NonrootNode)_current_node).color );
+              NonrootNode tmp = (NonrootNode)_current_node;
+              node = new NonrootNode( tmp.color );
             }
-            _current_node.attach( node );
+            node.attach( _current_node );
             _current_node = node;
             _current_node.mode = NodeMode.EDITABLE;
             queue_draw();
