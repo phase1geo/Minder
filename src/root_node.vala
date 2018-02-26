@@ -10,20 +10,23 @@ public class RootNode : Node {
     base.with_name( name );
   }
 
+  protected override void link_point( out double x, out double y ) {
+
+    x = (posx - 15) + _width + 40;
+    y = (posy - _height - 15) + ((_height / 2) + 10);
+
+  }
+
   /* Draws the rectangle around the root node */
   public void draw_rectangle( Context ctx ) {
-
-    /* Get the boundaries of the text */
-    TextExtents extents;
-    name_extents( ctx, out extents );
 
     double padx = 15;
     double pady = 15;
     double posx = this.posx - padx;
-    double posy = (this.posy - extents.height) - pady;
+    double posy = (this.posy - _height) - pady;
     double r    = 10.0;
-    double h    = extents.height + (pady * 2);
-    double w    = extents.width  + (padx * 2);
+    double h    = _height + (pady * 2);
+    double w    = _width  + (padx * 2);
 
     /* Draw the rounded box around the text */
     ctx.set_source_rgba( 1, 1, 1, 1 );
@@ -38,16 +41,13 @@ public class RootNode : Node {
     ctx.line_to(posx,posy+r);                                  // Line to H
     ctx.curve_to(posx,posy,posx,posy,posx+r,posy);             // Curve to A
     ctx.stroke();
-    ctx.set_source_rgba( 0.5, 0.5, 1, 1 );
-    ctx.move_to(posx+r+1,posy+r+1);
-    ctx.fill();
 
   }
 
   /* Draws this node to the given canvas */
   public override void draw( Context ctx ) {
-    draw_rectangle( ctx );
     draw_name( ctx );
+    draw_rectangle( ctx );
   }
 
 }

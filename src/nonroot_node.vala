@@ -10,16 +10,20 @@ public class NonrootNode : Node {
     this.color = color;
   }
 
-  public void draw_line( Context ctx ) {
+  /* Provides the point to link to children nodes */
+  protected override void link_point( out double x, out double y ) {
 
-    /* Get the name boundaries */
-    TextExtents extents;
-    name_extents( ctx, out extents );
+    x = (posx + _width + 15);
+    y = (posy + 10);
+
+  }
+
+  public void draw_line( Context ctx ) {
 
     double padx = 15;
     double posx = this.posx - padx;
     double posy = this.posy + 10;
-    double w    = extents.width + (padx * 2);
+    double w    = _width + (padx * 2);
 
     /* Draw the line under the text name */
     ctx.set_source_rgba( _color.red, _color.green, _color.blue, _color.alpha );
@@ -30,9 +34,27 @@ public class NonrootNode : Node {
 
   }
 
+  /* Draw the link from this node to the parent node */
+  public void draw_link( Context ctx ) {
+
+    double parent_x;
+    double parent_y;
+
+    /* Get the parent's link point */
+    parent.link_point( out parent_x, out parent_y );
+
+    ctx.set_source_rgba( _color.red, _color.green, _color.blue, _color.alpha );
+    ctx.set_line_width( 4 );
+    ctx.move_to( parent_x, parent_y );
+    ctx.line_to( (posx - 15), (posy + 10) );
+    ctx.stroke();
+
+  }
+
   public override void draw( Context ctx ) {
     draw_name( ctx );
     draw_line( ctx );
+    draw_link( ctx );
   }
 
 }

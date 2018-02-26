@@ -57,11 +57,10 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Sets the current node pointer to the node that is within the given coordinates */
-  private void set_current_node( double x, double y ) {
+  private void set_current_node_at_position( double x, double y ) {
     _current_node = null;
     foreach (Node n in _nodes) {
-      _current_node = n.contains( x, y );
-      if( _current_node != null ) {
+      if( select_node( n.contains( x, y ) ) ) {
         return;
       }
     }
@@ -91,10 +90,21 @@ public class DrawArea : Gtk.DrawingArea {
     if( event.button == 1 ) {
       _press_x = event.x;
       _press_y = event.y;
-      set_current_node( event.x, event.y );
-      if( (_current_node == null) || (_current_node.mode != NodeMode.EDITABLE) || (_current_node.mode != NodeMode.EDITED) ) {
-        _pressed = true;
+      set_current_node_at_position( event.x, event.y );
+      if( _current_node != null ) {
+        switch( _current_node.mode ) {
+          case NodeMode.NONE     :
+            _current_node.mode = NodeMode.SELECTED;
+            _pressed = true;
+            break;
+          case NodeMode.SELECTED :
+            _current_node.move_cursor_to_end();
+            _current_node.mode = NodeMode.EDITABLE;
+            _pressed = true;
+            break;
+        }
       }
+      queue_draw();
     }
     return( false );
   }
@@ -117,126 +127,271 @@ public class DrawArea : Gtk.DrawingArea {
   private bool on_release( EventButton event ) {
     _pressed = false;
     if( _current_node != null ) {
-      NodeMode m = _current_node.mode;
-      foreach (Node n in _nodes) {
-        n.clear_modes();
+      if( _current_node.mode == NodeMode.SELECTED ) {
+        Node attach_node = attachable_node( event.x, event.y );
+        if( attach_node != null ) {
+          _current_node.detach();
+          _current_node.attach( attach_node );
+          queue_draw();
+        }
       }
-      switch( m ) {
-        case NodeMode.NONE     :
-          _current_node.mode = NodeMode.SELECTED;
-          Node attach_node = attachable_node( event.x, event.y );
-          if( attach_node != null ) {
-            _current_node.detach();
-            _current_node.attach( attach_node );
-          }
-          break;
-        case NodeMode.SELECTED :
-          _current_node.move_cursor_to_end();
-          _current_node.mode = NodeMode.EDITABLE;
-          break;
-      }
-      queue_draw();
     }
     return( false );
+  }
+
+  /* Returns true if we are in some sort of edit mode */
+  private bool is_mode_edit() {
+    return( (_current_node.mode == NodeMode.EDITABLE) || (_current_node.mode == NodeMode.EDITED) );
+  }
+
+  /* Returns true if we are in the selected mode */
+  private bool is_mode_selected() {
+    return( _current_node.mode == NodeMode.SELECTED );
+  }
+
+  /* If the specified node is not null, selects the node and makes it the current node */
+  private bool select_node( Node? n ) {
+    if( n != null ) {
+      if( _current_node != null ) {
+        _current_node.mode = NodeMode.NONE;
+      }
+      _current_node = n;
+      _current_node.mode = NodeMode.SELECTED;
+      return( true );
+    }
+    return( false );
+  }
+
+  /* Called whenever the backspace character is entered in the drawing area */
+  private void handle_backspace() {
+    if( is_mode_edit() ) {
+      _current_node.edit_backspace();
+      queue_draw();
+    } else if( is_mode_selected() ) {
+      _current_node.delete();
+      queue_draw();
+    }
+  }
+
+  /* Called whenever the delete character is entered in the drawing area */
+  private void handle_delete() {
+    if( is_mode_edit() ) {
+      _current_node.edit_delete();
+      queue_draw();
+    } else if( is_mode_selected() ) {
+      _current_node.delete();
+      queue_draw();
+    }
+  }
+
+  /* Called whenever the escape character is entered in the drawing area */
+  private void handle_escape() {
+    if( is_mode_edit() ) {
+      _current_node.mode = NodeMode.SELECTED;
+      queue_draw();
+    }
+  }
+
+  /* Called whenever the return character is entered in the drawing area */
+  private void handle_return() {
+    if( is_mode_edit() ) {
+      _current_node.mode = NodeMode.SELECTED;
+      queue_draw();
+    } else if( !_current_node.is_root() ) {
+      NonrootNode node;
+      if( _current_node.is_root() ) {
+        node = new NonrootNode( _palette.next() );
+      } else {
+        NonrootNode tmp = (NonrootNode)_current_node;
+        node = new NonrootNode( tmp.color );
+      }
+      _current_node.mode = NodeMode.NONE;
+      node.attach( _current_node.parent );
+      node.posx = _current_node.posx;
+      node.posy = _current_node.posy + 40;
+      if( select_node( node ) ) {
+        node.mode = NodeMode.EDITABLE;
+        queue_draw();
+      }
+    }
+  }
+
+  /* Called whenever the tab character is entered in the drawing area */
+  private void handle_tab() {
+    if( is_mode_edit() ) {
+      _current_node.mode = NodeMode.SELECTED;
+      queue_draw();
+    } else if( is_mode_selected() ) {
+      NonrootNode node;
+      if( _current_node.is_root() ) {
+        node = new NonrootNode( _palette.next() );
+      } else {
+        NonrootNode tmp = (NonrootNode)_current_node;
+        node = new NonrootNode( tmp.color );
+      }
+      _current_node.mode = NodeMode.NONE;
+      node.attach( _current_node );
+      node.posx = _current_node.posx + 100;
+      node.posy = _current_node.posy;
+      if( select_node( node ) ) {
+        node.mode = NodeMode.EDITABLE;
+        queue_draw();
+      }
+    }
+  }
+
+  /* Called whenever the right key is entered in the drawing area */
+  private void handle_right() {
+    if( is_mode_edit() ) {
+      _current_node.move_cursor( 1 );
+      queue_draw();
+    } else if( is_mode_selected() ) {
+      if( select_node( _current_node.first_child() ) ) {
+        queue_draw();
+      }
+    }
+  }
+
+  /* Called whenever the left key is entered in the drawing area */
+  private void handle_left() {
+    if( is_mode_edit() ) {
+      _current_node.move_cursor( -1 );
+      queue_draw();
+    } else if( is_mode_selected() ) {
+      if( select_node( _current_node.parent ) ) {
+        queue_draw();
+      }
+    }
+  }
+
+  /* Called whenever the home key is entered in the drawing area */
+  private void handle_home() {
+    if( is_mode_edit() ) {
+      _current_node.move_cursor_to_start();
+      queue_draw();
+    }
+  }
+
+  /* Called whenever the end key is entered in the drawing area */
+  private void handle_end() {
+    if( is_mode_edit() ) {
+      _current_node.move_cursor_to_end();
+      queue_draw();
+    }
+  }
+
+  /* Called whenever the up key is entered in the drawing area */
+  private void handle_up() {
+    if( is_mode_selected() ) {
+      if( _current_node.is_root() ) {
+        int i = 0;
+        foreach (Node n in _nodes) {
+          if( n == _current_node ) {
+            if( i > 0 ) {
+              if( select_node( _nodes[i-1] ) ) {
+                queue_draw();
+              }
+              return;
+            }
+          }
+          i++;
+        }
+      } else {
+        if( select_node( _current_node.parent.prev_child( _current_node ) ) ) {
+          queue_draw();
+        }
+      }
+    }
+  }
+
+  /* Called whenever the down key is entered in the drawing area */
+  private void handle_down() {
+    if( is_mode_selected() ) {
+      if( _current_node.is_root() ) {
+        int i = 0;
+        foreach (Node n in _nodes) {
+          if( n == _current_node ) {
+            if( (i + 1) > _nodes.length ) {
+              if( select_node( _nodes[i+1] ) ) {
+                queue_draw();
+              }
+              return;
+            }
+          }
+          i++;
+        }
+      } else {
+        if( select_node( _current_node.parent.next_child( _current_node ) ) ) {
+          queue_draw();
+        }
+      }
+    }
+  }
+
+  /* Called whenever the page up key is entered in the drawing area */
+  private void handle_pageup() {
+    if( is_mode_selected() ) {
+      if( _current_node.is_root() ) {
+        if( _nodes.length > 0 ) {
+          if( select_node( _nodes[0] ) ) {
+            queue_draw();
+          }
+        }
+      } else {
+        if( select_node( _current_node.parent.first_child() ) ) {
+          queue_draw();
+        }
+      }
+    }
+  }
+
+  /* Called whenever the page down key is entered in the drawing area */
+  private void handle_pagedn() {
+    if( is_mode_selected() ) {
+      if( _current_node.is_root() ) {
+        if( _nodes.length > 0 ) {
+          if( select_node( _nodes[_nodes.length-1] ) ) {
+            queue_draw();
+          }
+        }
+      } else {
+        if( select_node( _current_node.parent.last_child() ) ) {
+          queue_draw();
+        }
+      }
+    }
+  }
+
+  /* Called whenever a printable character is entered in the drawing area */
+  private void handle_printable( string str ) {
+    if( is_mode_edit() && str.get_char( 0 ).isprint() ) {
+      _current_node.edit_insert( str );
+      queue_draw();
+    }
   }
 
   /* Handle a key event */
   private bool on_keypress( EventKey event ) {
     if( _current_node != null ) {
-      bool mode_edit = (_current_node.mode == NodeMode.EDITABLE) || (_current_node.mode == NodeMode.EDITED);
-      bool mode_sel  = (_current_node.mode == NodeMode.SELECTED);
       switch( event.keyval ) {
-        case 65288 :  // Backspace
-          if( mode_edit ) {
-            _current_node.edit_backspace();
-            queue_draw();
-          } else if( mode_sel ) {
-            _current_node.delete();
-            queue_draw();
-          }
-          break;
-        case 65535 :  // Delete key
-          if( mode_edit ) {
-            _current_node.edit_delete();
-            queue_draw();
-          } else if( mode_sel ) {
-            _current_node.delete();
-            queue_draw();
-          }
-          break;
-        case 65307 :  // Escape key
-          if( mode_edit ) {
-            _current_node.mode = NodeMode.SELECTED;
-            queue_draw();
-          }
-          break;
-        case 65293 :  // Return key
-          if( mode_edit ) {
-            _current_node.mode = NodeMode.SELECTED;
-            queue_draw();
-          } else if( !_current_node.is_root() ) {
-            _current_node.mode = NodeMode.NONE;
-            // _current_node = _current_node.add_sibling();
-            queue_draw();
-          }
-          break;
-        case 65289 :  // Tab key
-          if( mode_edit ) {
-            _current_node.mode = NodeMode.SELECTED;
-            queue_draw();
-          } else if( mode_sel ) {
-            NonrootNode node;
-            if( _current_node.is_root() ) {
-              node = new NonrootNode( _palette.next() );
-            } else {
-              NonrootNode tmp = (NonrootNode)_current_node;
-              node = new NonrootNode( tmp.color );
-            }
-            node.attach( _current_node );
-            _current_node = node;
-            _current_node.mode = NodeMode.EDITABLE;
-            queue_draw();
-          }
-          break;
-        case 65363 :  // Right key
-          if( mode_edit ) {
-            _current_node.move_cursor( 1 );
-          } else if( mode_sel ) {
-            Node first_child = _current_node.first_child();
-            if( first_child != null ) {
-              _current_node = first_child;
-            }
-          }
-          queue_draw();
-          break;
-        case 65361 :  // Left key
-          if( mode_edit ) {
-            _current_node.move_cursor( -1 );
-          }
-          queue_draw();
-          break;
-        case 65360 :  // Home key
-          if( mode_edit ) {
-            _current_node.move_cursor_to_start();
-          }
-          queue_draw();
-          break;
-        case 65367 :  // End key
-          if( mode_edit ) {
-            _current_node.move_cursor_to_end();
-          }
-          queue_draw();
-          break;
+        case 65288 :  handle_backspace();  break;
+        case 65535 :  handle_delete();     break;
+        case 65307 :  handle_escape();     break;
+        case 65293 :  handle_return();     break;
+        case 65289 :  handle_tab();        break;
+        case 65363 :  handle_right();      break;
+        case 65361 :  handle_left();       break;
+        case 65360 :  handle_home();       break;
+        case 65367 :  handle_end();        break;
+        case 65362 :  handle_up();         break;
+        case 65364 :  handle_down();       break;
+        case 65365 :  handle_pageup();     break;
+        case 65366 :  handle_pagedn();     break;
         default :
           if( !event.str.get_char( 0 ).isprint() ) {
             stdout.printf( "In on_keypress, keyval: %s\n", event.keyval.to_string() );
           }
-          if( mode_edit ) {
-            if( event.str.get_char( 0 ).isprint() ) {
-              _current_node.edit_insert( event.str );
-              queue_draw();
-            }
-          }
+          handle_printable( event.str );
           break;
       }
     }

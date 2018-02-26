@@ -18,18 +18,18 @@ public struct NodeBounds {
 public class Node : Object {
 
   /* Member variables */
-  private   Node   _parent = null;
   private   Node[] _children = {};
   protected double _width = 0;
   protected double _height = 0;
   private   int    _cursor = 0;   /* Location of the cursor when editing */
 
   /* Properties */
-  public string   name { get; set; default = ""; }
-  public double   posx { get; set; default = 0.0; }
-  public double   posy { get; set; default = 0.0; }
-  public string   note { get; set; default = ""; }
-  public NodeMode mode { get; set; default = NodeMode.NONE; }
+  public string   name   { get; set; default = ""; }
+  public double   posx   { get; set; default = 50.0; }
+  public double   posy   { get; set; default = 50.0; }
+  public string   note   { get; set; default = ""; }
+  public NodeMode mode   { get; set; default = NodeMode.NONE; }
+  public Node     parent { get; protected set; default = null; }
 
   /* Default constructor */
   public Node() {}
@@ -41,7 +41,7 @@ public class Node : Object {
 
   /* Returns true if the node does not have a parent */
   public bool is_root() {
-    return( _parent == null );
+    return( parent == null );
   }
 
   /* Returns true if the given cursor coordinates lies within this node */
@@ -75,14 +75,6 @@ public class Node : Object {
         }
       }
       return( false );
-    }
-  }
-
-  /* Clears all of the modes for this node tree */
-  public void clear_modes() {
-    mode = NodeMode.NONE;
-    foreach (Node n in _children) {
-      n.clear_modes();
     }
   }
 
@@ -148,15 +140,15 @@ public class Node : Object {
 
   /* Detaches this node from its parent node */
   public virtual void detach() {
-    if( _parent != null ) {
+    if( parent != null ) {
       Node[] tmp = {};
-      foreach (Node n in _parent._children) {
+      foreach (Node n in parent._children) {
         if( n != this ) {
           tmp += n;
         }
       }
-      _parent._children = tmp;
-      _parent = null;
+      parent._children = tmp;
+      parent = null;
     }
   }
 
@@ -168,14 +160,54 @@ public class Node : Object {
 
   /* Attaches this node as a child of the given node */
   public virtual void attach( Node parent ) {
-    _parent = parent;
-    parent._children += this;
+    this.parent = parent;
+    this.parent._children += this;
   }
 
   /* Returns a reference to the first child of this node */
   public virtual Node? first_child() {
     if( _children.length > 0 ) {
       return( _children[0] );
+    }
+    return( null );
+  }
+
+  /* Returns a reference to the last child of this node */
+  public virtual Node? last_child() {
+    if( _children.length > 0 ) {
+      return( _children[_children.length-1] );
+    }
+    return( null );
+  }
+
+  /* Returns a reference to the next child after the specified child of this node */
+  public virtual Node? next_child( Node n ) {
+    int i = 0;
+    foreach (Node c in _children) {
+      if( c == n ) {
+        if( (i + 1) < _children.length ) {
+          return( _children[i+1] );
+        } else {
+          return( null );
+        }
+      }
+      i++;
+    }
+    return( null );
+  }
+
+  /* Returns a reference to the next child after the specified child of this node */
+  public virtual Node? prev_child( Node n ) {
+    int i = 0;
+    foreach (Node c in _children) {
+      if( c == n ) {
+        if( i > 0 ) {
+          return( _children[i-1] );
+        } else {
+          return( null );
+        }
+      }
+      i++;
     }
     return( null );
   }
@@ -200,6 +232,12 @@ public class Node : Object {
   protected void name_extents( Context ctx, out TextExtents extents ) {
     ctx.set_font_size( 14 );
     text_extents( ctx, name, out extents );
+  }
+
+  /* Returns the link point for this node */
+  protected virtual void link_point( out double x, out double y ) {
+    x = posx;
+    y = posy;
   }
 
   /* Draws the node font to the screen */
