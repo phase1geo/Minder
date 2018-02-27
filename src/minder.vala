@@ -24,8 +24,8 @@ public class Minder : Gtk.Application {
     /* Create the canvas */
     DrawArea da = new DrawArea();
 
-    var box = new Gtk.Box( Orientation.HORIZONTAL, 2 );
-    box.pack_start( da, true, true, 0 );
+    var box = new Gtk.ScrolledWindow( null, null );
+    box.add_with_viewport( da );
 
     /* Display the UI */
     app_window.add( box );

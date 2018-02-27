@@ -6,6 +6,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   private double       _press_x;
   private double       _press_y;
+  private double       _origin_x = 0.0;
+  private double       _origin_y = 0.0;
   private bool         _pressed = false;
   private Node         _current_node;
   private Node[]       _nodes;
@@ -103,6 +105,8 @@ public class DrawArea : Gtk.DrawingArea {
             _pressed = true;
             break;
         }
+      } else {
+        _pressed = true;
       }
       queue_draw();
     }
@@ -115,6 +119,15 @@ public class DrawArea : Gtk.DrawingArea {
       if( _current_node != null ) {
         _current_node.posx += (event.x - _press_x);
         _current_node.posy += (event.y - _press_y);
+        queue_draw();
+      } else {
+        double diff_x = (_press_x - event.x);
+        double diff_y = (_press_y - event.y);
+        _origin_x += diff_x;
+        _origin_y += diff_y;
+        foreach (Node n in _nodes) {
+          n.pan( diff_x, diff_y );
+        }
         queue_draw();
       }
       _press_x = event.x;
@@ -199,7 +212,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     } else if( !_current_node.is_root() ) {
       NonrootNode node;
-      if( _current_node.is_root() ) {
+      if( _current_node.parent.is_root() ) {
         node = new NonrootNode( _palette.next() );
       } else {
         NonrootNode tmp = (NonrootNode)_current_node;
@@ -395,7 +408,7 @@ public class DrawArea : Gtk.DrawingArea {
           break;
       }
     }
-    return( false );
+    return( true );
   }
 
 }

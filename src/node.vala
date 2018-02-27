@@ -234,6 +234,15 @@ public class Node : Object {
     text_extents( ctx, name, out extents );
   }
 
+  /* Adjusts the posx and posy values */
+  public virtual void pan( double origin_x, double origin_y ) {
+    posx -= origin_x;
+    posy -= origin_y;
+    foreach (Node n in _children) {
+      n.pan( origin_x, origin_y );
+    }
+  }
+
   /* Returns the link point for this node */
   protected virtual void link_point( out double x, out double y ) {
     x = posx;

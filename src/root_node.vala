@@ -11,10 +11,8 @@ public class RootNode : Node {
   }
 
   protected override void link_point( out double x, out double y ) {
-
     x = (posx - 15) + _width + 40;
     y = (posy - _height - 15) + ((_height / 2) + 10);
-
   }
 
   /* Draws the rectangle around the root node */

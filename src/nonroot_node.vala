@@ -12,12 +12,11 @@ public class NonrootNode : Node {
 
   /* Provides the point to link to children nodes */
   protected override void link_point( out double x, out double y ) {
-
     x = (posx + _width + 15);
     y = (posy + 10);
-
   }
 
+  /* Draws the line under the node name */
   public void draw_line( Context ctx ) {
 
     double padx = 15;
