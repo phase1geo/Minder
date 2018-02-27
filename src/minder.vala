@@ -21,6 +21,31 @@ public class Minder : Gtk.Application {
     app_window.set_border_width( 2 );
     app_window.destroy.connect( Gtk.main_quit );
 
+    /* Create title toolbar */
+    var new_btn = new Button.from_icon_name( "document-new-symbolic", IconSize.SMALL_TOOLBAR );
+    new_btn.set_tooltip_text( "New File" );
+    header.pack_start( new_btn );
+
+    var open_btn = new Button.from_icon_name( "document-open-symbolic", IconSize.SMALL_TOOLBAR );
+    open_btn.set_tooltip_text( "Open File" );
+    header.pack_start( open_btn );
+
+    var save_btn = new Button.from_icon_name( "document-save-as-symbolic", IconSize.SMALL_TOOLBAR );
+    save_btn.set_tooltip_text( "Save File As" );
+    header.pack_start( save_btn );
+
+    var opts_btn = new Button.from_icon_name( "applications-system-symbolic", IconSize.SMALL_TOOLBAR );
+    opts_btn.set_tooltip_text( "Preferences" );
+    header.pack_end( opts_btn );
+
+    var xprt_btn = new Button.from_icon_name( "document-export-symbolic", IconSize.SMALL_TOOLBAR );
+    xprt_btn.set_tooltip_text( "Export" );
+    header.pack_end( xprt_btn );
+
+    var zoom_btn = new Button.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR );
+    zoom_btn.set_tooltip_text( "Zoom" );
+    header.pack_end( zoom_btn );
+
     /* Create the canvas */
     DrawArea da = new DrawArea();
 

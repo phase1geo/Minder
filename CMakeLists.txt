@@ -43,6 +43,7 @@ include(ValaPrecompile)
 vala_precompile(VALA_C ${EXEC_NAME}
     src/minder.vala
     src/color_palette.vala
+    src/document.vala
     src/draw_area.vala
     src/node.vala
     src/nonroot_node.vala

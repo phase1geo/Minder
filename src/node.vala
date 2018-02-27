@@ -78,6 +78,18 @@ public class Node : Object {
     }
   }
 
+  /* Loads the file contents into this instance */
+  public virtual bool load( DataInputStream stream ) {
+    // TBD
+    return( false );
+  }
+
+  /* Saves the node contents to the given data output stream */
+  public virtual bool save( DataOutputStream stream ) {
+    // TBD
+    return( false );
+  }
+
   /* Move the cursor in the given direction */
   public void move_cursor( int dir ) {
     _cursor += dir;

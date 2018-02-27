@@ -233,6 +233,33 @@ src/color_palette.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/color_palette.c.s
 .PHONY : src/color_palette.c.s
 
+src/document.o: src/document.c.o
+
+.PHONY : src/document.o
+
+# target to build an object file
+src/document.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/document.c.o
+.PHONY : src/document.c.o
+
+src/document.i: src/document.c.i
+
+.PHONY : src/document.i
+
+# target to preprocess a source file
+src/document.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/document.c.i
+.PHONY : src/document.c.i
+
+src/document.s: src/document.c.s
+
+.PHONY : src/document.s
+
+# target to generate assembly for a file
+src/document.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/document.c.s
+.PHONY : src/document.c.s
+
 src/draw_area.o: src/draw_area.c.o
 
 .PHONY : src/draw_area.o
@@ -387,6 +414,9 @@ help:
 	@echo "... src/color_palette.o"
 	@echo "... src/color_palette.i"
 	@echo "... src/color_palette.s"
+	@echo "... src/document.o"
+	@echo "... src/document.i"
+	@echo "... src/document.s"
 	@echo "... src/draw_area.o"
 	@echo "... src/draw_area.i"
 	@echo "... src/draw_area.s"

@@ -58,6 +58,31 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Loads the contents of the data input stream */
+  public bool load( DataInputStream stream ) throws GLib.IOError {
+
+    return( true );
+
+  }
+
+  /* Saves the contents of the drawing area to the data output stream */
+  public bool save( DataOutputStream stream ) throws GLib.IOError {
+
+    /* Output the origin information */
+    stream.put_string( "<origin x=\"" );
+    stream.put_string( _origin_x.to_string() );
+    stream.put_string( "\" y=\"" );
+    stream.put_string( _origin_y.to_string() );
+    stream.put_string( "\"></origin>" );
+
+    foreach (Node n in _nodes ) {
+      n.save( stream );
+    }
+
+    return( true );
+
+  }
+
   /* Sets the current node pointer to the node that is within the given coordinates */
   private void set_current_node_at_position( double x, double y ) {
     _current_node = null;
