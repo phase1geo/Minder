@@ -10,6 +10,18 @@ public class NonrootNode : Node {
     this.color = color;
   }
 
+  /* Loads the data from the input stream */
+  public override bool load( DataInputStream stream ) {
+    return( false );
+  }
+
+  /* Saves the current node */
+  public override bool save( DataOutputStream stream, string prefix = "" ) {
+    string attrs = "";
+    attrs += (" color=\"" + color.to_string() + "\"");
+    return( save_node( stream, prefix, attrs, "" ) );
+  }
+
   /* Provides the point to link to children nodes */
   protected override void link_point( out double x, out double y ) {
     x = (posx + _width + 15);
@@ -50,6 +62,7 @@ public class NonrootNode : Node {
 
   }
 
+  /* Draws this node */
   public override void draw( Context ctx ) {
     draw_name( ctx );
     draw_line( ctx );

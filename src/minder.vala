@@ -2,8 +2,13 @@ using Gtk;
 
 public class Minder : Gtk.Application {
 
+  ApplicationWindow _appwin = null;
+  DrawArea          _canvas = null;
+  Document          _doc = null;
+
   public Minder () {
     Object( application_id: "com.github.phase1geo.Minder", flags: ApplicationFlags.FLAGS_NONE );
+    _doc = new Document();
   }
 
   protected override void activate () {
@@ -13,76 +18,99 @@ public class Minder : Gtk.Application {
     header.set_subtitle( _( "Mind-Mapping Application" ) );
     header.set_show_close_button( true );
 
-    var app_window = new ApplicationWindow( this );
-    app_window.title = _( "Minder" );
-    app_window.set_position( Gtk.WindowPosition.CENTER );
-    app_window.set_default_size( 800, 600 );
-    app_window.set_titlebar( header );
-    app_window.set_border_width( 2 );
-    app_window.destroy.connect( Gtk.main_quit );
+    _appwin = new ApplicationWindow( this );
+    _appwin.title = _( "Minder" );
+    _appwin.set_position( Gtk.WindowPosition.CENTER );
+    _appwin.set_default_size( 800, 600 );
+    _appwin.set_titlebar( header );
+    _appwin.set_border_width( 2 );
+    _appwin.destroy.connect( Gtk.main_quit );
 
     /* Create title toolbar */
     var new_btn = new Button.from_icon_name( "document-new-symbolic", IconSize.SMALL_TOOLBAR );
-    new_btn.set_tooltip_text( "New File" );
+    new_btn.set_tooltip_text( _( "New File" ) );
+    new_btn.clicked.connect( do_new_file );
     header.pack_start( new_btn );
 
     var open_btn = new Button.from_icon_name( "document-open-symbolic", IconSize.SMALL_TOOLBAR );
-    open_btn.set_tooltip_text( "Open File" );
+    open_btn.set_tooltip_text( _( "Open File" ) );
+    open_btn.clicked.connect( do_open_file );
     header.pack_start( open_btn );
 
     var save_btn = new Button.from_icon_name( "document-save-as-symbolic", IconSize.SMALL_TOOLBAR );
-    save_btn.set_tooltip_text( "Save File As" );
+    save_btn.set_tooltip_text( _( "Save File As" ) );
+    save_btn.clicked.connect( do_save_file );
     header.pack_start( save_btn );
 
     var opts_btn = new Button.from_icon_name( "applications-system-symbolic", IconSize.SMALL_TOOLBAR );
-    opts_btn.set_tooltip_text( "Preferences" );
+    opts_btn.set_tooltip_text( _( "Preferences" ) );
     header.pack_end( opts_btn );
 
     var xprt_btn = new Button.from_icon_name( "document-export-symbolic", IconSize.SMALL_TOOLBAR );
-    xprt_btn.set_tooltip_text( "Export" );
+    xprt_btn.set_tooltip_text( _( "Export" ) );
     header.pack_end( xprt_btn );
 
     var zoom_btn = new Button.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR );
-    zoom_btn.set_tooltip_text( "Zoom" );
+    zoom_btn.set_tooltip_text( _( "Zoom" ) );
     header.pack_end( zoom_btn );
 
-    /* Create the canvas */
-    DrawArea da = new DrawArea();
-
-    var box = new Gtk.ScrolledWindow( null, null );
-    box.add_with_viewport( da );
+    /* Create and pack the canvas */
+    _canvas = new DrawArea();
+    var box = new Box( Gtk.Orientation.VERTICAL, 2 );
+    box.add( _canvas );
 
     /* Display the UI */
-    app_window.add( box );
-    app_window.show_all();
-    app_window.show();
+    _appwin.add( box );
+    _appwin.show_all();
+    _appwin.show();
 
     /* Allow the loop to run */
     Gtk.main();
 
   }
 
+  /*
+   Allow the user to create a new Minder file.  Checks to see if the current
+   document needs to be saved and saves it (if necessary).
+  */
+  public void do_new_file() {
+    if( _canvas.changed ) {
+      _doc.save( null, _canvas );
+    }
+    _doc = new Document();
+  }
+
+  /* Allow the user to open a Minder file */
+  public void do_open_file() {
+    FileChooserDialog dialog = new FileChooserDialog( _( "Open File" ), _appwin, FileChooserAction.OPEN );
+    FileFilter        filter = new FileFilter();
+    filter.set_filter_name( _( "Minder" ) );
+    filter.add_pattern( "*.minder" );
+    dialog.add_filter( filter );
+    if( dialog.run() == ResponseType.ACCEPT ) {
+      _doc.load( dialog.get_uri(), _canvas );
+    }
+    dialog.close();
+  }
+
+  /* Allow the user to select a filename to save the document as */
+  public void do_save_file() {
+    FileChooserDialog dialog = new FileChooserDialog( _( "Save File" ), _appwin, FileChooserAction.SAVE );
+    FileFilter        filter = new FileFilter();
+    filter.set_filter_name( _( "Minder" ) );
+    filter.add_pattern( "*.minder" );
+    dialog.add_filter( filter );
+    if( dialog.run() == ResponseType.ACCEPT ) {
+      _doc.save( dialog.get_uri(), _canvas );
+    }
+    dialog.close();
+  }
+
+  /* Main routine which gets everything started */
   public static int main( string[] args ) {
-
     var app = new Minder();
-
     return app.run( args );
-
   }
 
 }
 
-/*
-int main( string[] args ) {
-
-  Gtk.init( ref args );
-
-  // Create the main window
-  win.show_all();
-
-  Gtk.main();
-
-  return( 0 );
-
-}
-*/

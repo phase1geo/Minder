@@ -1,20 +1,28 @@
 using Cairo;
 using Gtk;
 
-public class document : Object {
+public class Document : Object {
 
   private string _fname;
 
   /* Default constructor */
-  public document() {}
+  public Document() {
+    _fname = "";
+  }
+
+  /* Returns true if this document has been previously saved */
+  public bool prev_saved() {
+    return( _fname != "" );
+  }
 
   /* Opens the given filename */
-  public bool open( string fname, DrawArea da ) {
+  public bool load( string fname, DrawArea da ) {
     try {
       var file        = File.new_for_path( fname );
       var file_stream = file.read();
       var data_stream = new DataInputStream( file_stream );
       da.load( data_stream );
+      da.changed = false;
       _fname = fname;
     } catch( Error e ) {
       stderr.printf( "Error: %s\n", e.message );
@@ -31,6 +39,8 @@ public class document : Object {
         var file_stream = file.create( FileCreateFlags.NONE );
         var data_stream = new DataOutputStream( file_stream );
         da.save( data_stream );
+        da.changed = false;
+        _fname = fname ?? _fname;
       }
     } catch( Error e ) {
       stderr.printf( "Error: %s\n", e.message );

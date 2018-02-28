@@ -28,6 +28,7 @@ public class Node : Object {
   public double   posx   { get; set; default = 50.0; }
   public double   posy   { get; set; default = 50.0; }
   public string   note   { get; set; default = ""; }
+  public double   task   { get; set; default = -1.0; }
   public NodeMode mode   { get; set; default = NodeMode.NONE; }
   public Node     parent { get; protected set; default = null; }
 
@@ -42,6 +43,19 @@ public class Node : Object {
   /* Returns true if the node does not have a parent */
   public bool is_root() {
     return( parent == null );
+  }
+
+  /*
+   Returns true if this node is a "main branch" which is a node attached
+   directly to the parent.
+  */
+  public bool main_branch() {
+    return( (parent != null) && (parent.parent == null) );
+  }
+
+  /* Returns true if the node is a leaf node */
+  public bool is_leaf() {
+    return( (parent != null) && (_children.length == 0) );
   }
 
   /* Returns true if the given cursor coordinates lies within this node */
@@ -80,14 +94,65 @@ public class Node : Object {
 
   /* Loads the file contents into this instance */
   public virtual bool load( DataInputStream stream ) {
-    // TBD
     return( false );
   }
 
+  /* Saves the current node */
+  public virtual bool save( DataOutputStream stream, string prefix = "" ) {
+    return( save_node( stream, prefix, "", "" ) );
+  }
+
   /* Saves the node contents to the given data output stream */
-  public virtual bool save( DataOutputStream stream ) {
-    // TBD
-    return( false );
+  public bool save_node( DataOutputStream stream, string prefix = "", string attr = "", string nodes = "" ) {
+
+    try {
+      stream.put_string( prefix );
+      stream.put_string( "  <node posx=\"" );
+      stream.put_string( posx.to_string() );
+      stream.put_string( "\" posy=\"" );
+      stream.put_string( posy.to_string() );
+      stream.put_string( "\" width=\"" );
+      stream.put_string( _width.to_string() );
+      stream.put_string( "\" height=\"" );
+      stream.put_string( _height.to_string() );
+      if( task >= 0 ) {
+        stream.put_string( "\" task=\"" );
+        stream.put_string( task.to_string() );
+        stream.put_string( "\"" );
+      }
+      stream.put_string( attr );
+      stream.put_string( ">\n" );
+
+      stream.put_string( prefix );
+      stream.put_string( "    <nodename>\n" );
+      stream.put_string( name );
+      stream.put_string( prefix );
+      stream.put_string( "    </nodename>\n" );
+
+      stream.put_string( prefix );
+      stream.put_string( "    <nodenote>\n" );
+      stream.put_string( note );
+      stream.put_string( prefix );
+      stream.put_string( "    </nodenote>\n" );
+
+      stream.put_string( nodes );
+
+      stream.put_string( prefix );
+      stream.put_string( "    <nodes>\n" );
+      foreach (Node n in _children) {
+        n.save( stream, (prefix + "    ") );
+      }
+      stream.put_string( prefix );
+      stream.put_string( "    </nodes>\n" );
+
+      stream.put_string( prefix );
+      stream.put_string( "  </node>\n" );
+    } catch( Error e ) {
+      return( false );
+    }
+
+    return( true );
+
   }
 
   /* Move the cursor in the given direction */

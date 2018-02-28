@@ -13,6 +13,8 @@ public class DrawArea : Gtk.DrawingArea {
   private Node[]       _nodes;
   private ColorPalette _palette;
 
+  public bool changed { set; get; default = false; }
+
   /* Default constructor */
   public DrawArea() {
 
@@ -73,11 +75,14 @@ public class DrawArea : Gtk.DrawingArea {
     stream.put_string( _origin_x.to_string() );
     stream.put_string( "\" y=\"" );
     stream.put_string( _origin_y.to_string() );
-    stream.put_string( "\"></origin>" );
+    stream.put_string( "\"></origin>\n" );
+    stream.put_string( "<nodes>\n" );
 
     foreach (Node n in _nodes ) {
       n.save( stream );
     }
+
+    stream.put_string( "</nodes>\n" );
 
     return( true );
 
@@ -157,6 +162,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       _press_x = event.x;
       _press_y = event.y;
+      changed = true;
     }
     return( false );
   }
@@ -171,6 +177,7 @@ public class DrawArea : Gtk.DrawingArea {
           _current_node.detach();
           _current_node.attach( attach_node );
           queue_draw();
+          changed = true;
         }
       }
     }
@@ -205,9 +212,11 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_mode_edit() ) {
       _current_node.edit_backspace();
       queue_draw();
+      changed = true;
     } else if( is_mode_selected() ) {
       _current_node.delete();
       queue_draw();
+      changed = true;
     }
   }
 
@@ -216,9 +225,11 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_mode_edit() ) {
       _current_node.edit_delete();
       queue_draw();
+      changed = true;
     } else if( is_mode_selected() ) {
       _current_node.delete();
       queue_draw();
+      changed = true;
     }
   }
 
@@ -251,6 +262,7 @@ public class DrawArea : Gtk.DrawingArea {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
       }
+      changed = true;
     }
   }
 
@@ -275,6 +287,7 @@ public class DrawArea : Gtk.DrawingArea {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
       }
+      changed = true;
     }
   }
 
@@ -405,6 +418,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_mode_edit() && str.get_char( 0 ).isprint() ) {
       _current_node.edit_insert( str );
       queue_draw();
+      changed = true;
     }
   }
 
