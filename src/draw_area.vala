@@ -39,16 +39,17 @@ public class DrawArea : Gtk.DrawingArea {
     this.can_focus = true;
 
     /* TEMPORARY */
+    /*
     RootNode n = new RootNode.with_name( "Main Idea" );
     n.posx = 350;
     n.posy = 200;
 
-    NonrootNode nr1 = new NonrootNode( _palette.next() );
+    NonrootNode nr1 = new NonrootNode.with_color( _palette.next() );
     nr1.name = "Child A";
     nr1.posx = 500;
     nr1.posy = 175;
 
-    NonrootNode nr2 = new NonrootNode( _palette.next() );
+    NonrootNode nr2 = new NonrootNode.with_color( _palette.next() );
     nr2.name = "Child B";
     nr2.posx = 500;
     nr2.posy = 225;
@@ -57,32 +58,60 @@ public class DrawArea : Gtk.DrawingArea {
     nr2.attach( n );
 
     _nodes += n;
+    */
+
+  }
+
+  private void load_origin( Xml.Node* n ) {
+
+    string? x = n->get_prop( "x" );
+    if( x != null ) {
+      _origin_x = double.parse( x );
+    }
+
+    string? y = n->get_prop( "y" );
+    if( y != null ) {
+      _origin_y = double.parse( y );
+    }
 
   }
 
   /* Loads the contents of the data input stream */
-  public bool load( DataInputStream stream ) throws GLib.IOError {
-
-    return( true );
-
+  public void load( Xml.Node* n ) {
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        switch( it->name ) {
+          case "origin" :
+            load_origin( it );
+            break;
+          case "nodes" :
+            for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
+              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
+                RootNode node = new RootNode();
+                node.load( it2 );
+                _nodes += node;
+              }
+            }
+            break;
+        }
+      }
+    }
+    queue_draw();
   }
 
   /* Saves the contents of the drawing area to the data output stream */
-  public bool save( DataOutputStream stream ) throws GLib.IOError {
+  public bool save( Xml.Node* parent ) {
 
-    /* Output the origin information */
-    stream.put_string( "<origin x=\"" );
-    stream.put_string( _origin_x.to_string() );
-    stream.put_string( "\" y=\"" );
-    stream.put_string( _origin_y.to_string() );
-    stream.put_string( "\"></origin>\n" );
-    stream.put_string( "<nodes>\n" );
+    Xml.Node* origin = new Xml.Node( null, "origin" );
+    origin->new_prop( "x", _origin_x.to_string() );
+    origin->new_prop( "y", _origin_y.to_string() );
+    parent->add_child( origin );
 
+    Xml.Node* nodes = new Xml.Node( null, "nodes" );
     foreach (Node n in _nodes ) {
-      n.save( stream );
+      n.save( nodes );
     }
-
-    stream.put_string( "</nodes>\n" );
+    parent->add_child( nodes );
 
     return( true );
 
@@ -249,10 +278,10 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( !_current_node.is_root() ) {
       NonrootNode node;
       if( _current_node.parent.is_root() ) {
-        node = new NonrootNode( _palette.next() );
+        node = new NonrootNode.with_color( _palette.next() );
       } else {
         NonrootNode tmp = (NonrootNode)_current_node;
-        node = new NonrootNode( tmp.color );
+        node = new NonrootNode.with_color( tmp.color );
       }
       _current_node.mode = NodeMode.NONE;
       node.attach( _current_node.parent );
@@ -274,10 +303,10 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_mode_selected() ) {
       NonrootNode node;
       if( _current_node.is_root() ) {
-        node = new NonrootNode( _palette.next() );
+        node = new NonrootNode.with_color( _palette.next() );
       } else {
         NonrootNode tmp = (NonrootNode)_current_node;
-        node = new NonrootNode( tmp.color );
+        node = new NonrootNode.with_color( tmp.color );
       }
       _current_node.mode = NodeMode.NONE;
       node.attach( _current_node );

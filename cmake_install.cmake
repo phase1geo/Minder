@@ -2,7 +2,7 @@
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/usr")
+  set(CMAKE_INSTALL_PREFIX "/usr/local")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -50,26 +50,26 @@ endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/usr/share/applications/com.github.phase1geo.Minder.desktop")
+   "/usr/local/share/applications/com.github.phase1geo.Minder.desktop")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/applications" TYPE FILE FILES "/home/trevorw/projects/Minder/data/com.github.phase1geo.Minder.desktop")
+file(INSTALL DESTINATION "/usr/local/share/applications" TYPE FILE FILES "/home/trevorw/projects/Minder/data/com.github.phase1geo.Minder.desktop")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/usr/share/metainfo/com.github.phase1geo.Minder.appdata.xml")
+   "/usr/local/share/metainfo/com.github.phase1geo.Minder.appdata.xml")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/metainfo" TYPE FILE FILES "/home/trevorw/projects/Minder/data/com.github.phase1geo.Minder.appdata.xml")
+file(INSTALL DESTINATION "/usr/local/share/metainfo" TYPE FILE FILES "/home/trevorw/projects/Minder/data/com.github.phase1geo.Minder.appdata.xml")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)

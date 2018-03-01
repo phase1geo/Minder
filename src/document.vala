@@ -17,35 +17,27 @@ public class Document : Object {
 
   /* Opens the given filename */
   public bool load( string fname, DrawArea da ) {
-    try {
-      var file        = File.new_for_path( fname );
-      var file_stream = file.read();
-      var data_stream = new DataInputStream( file_stream );
-      da.load( data_stream );
-      da.changed = false;
-      _fname = fname;
-    } catch( Error e ) {
-      stderr.printf( "Error: %s\n", e.message );
+    Xml.Doc* doc = Xml.Parser.parse_file( fname );
+    if( doc == null ) {
       return( false );
     }
+    da.load( doc->get_root_element() );
+    delete doc;
+    da.changed = false;
+    _fname = fname;
     return( true );
   }
 
   /* Saves the given node information to the specified file */
   public bool save( string? fname, DrawArea da ) {
-    try {
-      var file = File.new_for_path( fname ?? _fname );
-      {
-        var file_stream = file.create( FileCreateFlags.NONE );
-        var data_stream = new DataOutputStream( file_stream );
-        da.save( data_stream );
-        da.changed = false;
-        _fname = fname ?? _fname;
-      }
-    } catch( Error e ) {
-      stderr.printf( "Error: %s\n", e.message );
-      return( false );
-    }
+    Xml.Doc*  doc  = new Xml.Doc( "1.0" );
+    Xml.Node* root = new Xml.Node( null, "minder" );
+    doc->set_root_element( root );
+    da.save( root );
+    doc->save_format_file( fname, 1 );
+    delete doc;
+    da.changed = false;
+    _fname = fname ?? _fname;
     return( true );
   }
 

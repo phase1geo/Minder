@@ -2,16 +2,16 @@ using Gtk;
 
 public class Minder : Gtk.Application {
 
-  ApplicationWindow _appwin = null;
-  DrawArea          _canvas = null;
-  Document          _doc = null;
+  ApplicationWindow? _appwin = null;
+  DrawArea?          _canvas = null;
+  Document?          _doc = null;
+  Button?            _opts_btn = null;
 
   public Minder () {
     Object( application_id: "com.github.phase1geo.Minder", flags: ApplicationFlags.FLAGS_NONE );
-    _doc = new Document();
   }
 
-  protected override void activate () {
+  protected override void activate() {
 
     var header = new HeaderBar();
     header.set_title( _( "Minder" ) );
@@ -42,9 +42,10 @@ public class Minder : Gtk.Application {
     save_btn.clicked.connect( do_save_file );
     header.pack_start( save_btn );
 
-    var opts_btn = new Button.from_icon_name( "applications-system-symbolic", IconSize.SMALL_TOOLBAR );
-    opts_btn.set_tooltip_text( _( "Preferences" ) );
-    header.pack_end( opts_btn );
+    _opts_btn = new Button.from_icon_name( "applications-system-symbolic", IconSize.SMALL_TOOLBAR );
+    _opts_btn.set_tooltip_text( _( "Preferences" ) );
+    _opts_btn.clicked.connect( do_preferences );
+    header.pack_end( _opts_btn );
 
     var xprt_btn = new Button.from_icon_name( "document-export-symbolic", IconSize.SMALL_TOOLBAR );
     xprt_btn.set_tooltip_text( _( "Export" ) );
@@ -56,15 +57,15 @@ public class Minder : Gtk.Application {
 
     /* Create and pack the canvas */
     _canvas = new DrawArea();
-    var box = new Box( Gtk.Orientation.VERTICAL, 2 );
-    box.add( _canvas );
+
+    /* Create the document */
+    _doc = new Document();
 
     /* Display the UI */
-    _appwin.add( box );
+    _appwin.add( _canvas );
     _appwin.show_all();
     _appwin.show();
 
-    /* Allow the loop to run */
     Gtk.main();
 
   }
@@ -82,34 +83,46 @@ public class Minder : Gtk.Application {
 
   /* Allow the user to open a Minder file */
   public void do_open_file() {
-    FileChooserDialog dialog = new FileChooserDialog( _( "Open File" ), _appwin, FileChooserAction.OPEN );
+    FileChooserDialog dialog = new FileChooserDialog( _( "Open File" ), _appwin, FileChooserAction.OPEN,
+      _( "Cancel" ), ResponseType.CANCEL, _( "Open" ), ResponseType.ACCEPT );
     FileFilter        filter = new FileFilter();
     filter.set_filter_name( _( "Minder" ) );
     filter.add_pattern( "*.minder" );
     dialog.add_filter( filter );
     if( dialog.run() == ResponseType.ACCEPT ) {
-      _doc.load( dialog.get_uri(), _canvas );
+      _doc.load( dialog.get_filename(), _canvas );
     }
     dialog.close();
   }
 
   /* Allow the user to select a filename to save the document as */
   public void do_save_file() {
-    FileChooserDialog dialog = new FileChooserDialog( _( "Save File" ), _appwin, FileChooserAction.SAVE );
+    FileChooserDialog dialog = new FileChooserDialog( _( "Save File" ), _appwin, FileChooserAction.SAVE,
+      _( "Cancel" ), ResponseType.CANCEL, _( "Save" ), ResponseType.ACCEPT );
     FileFilter        filter = new FileFilter();
     filter.set_filter_name( _( "Minder" ) );
     filter.add_pattern( "*.minder" );
     dialog.add_filter( filter );
     if( dialog.run() == ResponseType.ACCEPT ) {
-      _doc.save( dialog.get_uri(), _canvas );
+      string fname = dialog.get_filename();
+      if( fname.substring( -7, -1 ) != ".minder" ) {
+        fname += ".minder";
+      }
+      _doc.save( fname, _canvas );
     }
     dialog.close();
+  }
+
+  /* Displays the preference popup */
+  public void do_preferences() {
+    Popover p = new Popover( _opts_btn );
+    // p.popup();
   }
 
   /* Main routine which gets everything started */
   public static int main( string[] args ) {
     var app = new Minder();
-    return app.run( args );
+    return( app.run( args ) );
   }
 
 }

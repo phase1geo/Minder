@@ -92,66 +92,95 @@ public class Node : Object {
     }
   }
 
+  private void load_name( Xml.Node* n ) {
+    if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
+      name = n->children->get_content();
+    }
+  }
+
+  private void load_note( Xml.Node* n ) {
+    if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
+      note = n->children->get_content();
+    }
+  }
+
   /* Loads the file contents into this instance */
-  public virtual bool load( DataInputStream stream ) {
-    return( false );
+  public virtual void load( Xml.Node* n ) {
+
+    string? x = n->get_prop( "posx" );
+    if( x != null ) {
+      posx = double.parse( x );
+    }
+
+    string? y = n->get_prop( "posy" );
+    if( y != null ) {
+      posy = double.parse( y );
+    }
+
+    string? w = n->get_prop( "width" );
+    if( w != null ) {
+      _width = double.parse( w );
+    }
+
+    string? h = n->get_prop( "height" );
+    if( h != null ) {
+      _height = double.parse( h );
+    }
+
+    string? t = n->get_prop( "task" );
+    if( t != null ) {
+      task = double.parse( t );
+    }
+
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        switch( it->name ) {
+          case "nodename" :  load_name( it );  break;
+          case "nodenote" :  load_note( it );  break;
+          case "nodes"    :
+            for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
+              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
+                NonrootNode child = new NonrootNode();
+                child.load( it2 );
+                child.attach( this );
+              }
+            }
+            break;
+        }
+      }
+    }
+
   }
 
   /* Saves the current node */
-  public virtual bool save( DataOutputStream stream, string prefix = "" ) {
-    return( save_node( stream, prefix, "", "" ) );
+  public virtual void save( Xml.Node* parent ) {
+    parent->add_child( save_node() );
   }
 
   /* Saves the node contents to the given data output stream */
-  public bool save_node( DataOutputStream stream, string prefix = "", string attr = "", string nodes = "" ) {
+  protected Xml.Node* save_node() {
 
-    try {
-      stream.put_string( prefix );
-      stream.put_string( "  <node posx=\"" );
-      stream.put_string( posx.to_string() );
-      stream.put_string( "\" posy=\"" );
-      stream.put_string( posy.to_string() );
-      stream.put_string( "\" width=\"" );
-      stream.put_string( _width.to_string() );
-      stream.put_string( "\" height=\"" );
-      stream.put_string( _height.to_string() );
-      if( task >= 0 ) {
-        stream.put_string( "\" task=\"" );
-        stream.put_string( task.to_string() );
-        stream.put_string( "\"" );
-      }
-      stream.put_string( attr );
-      stream.put_string( ">\n" );
-
-      stream.put_string( prefix );
-      stream.put_string( "    <nodename>\n" );
-      stream.put_string( name );
-      stream.put_string( prefix );
-      stream.put_string( "    </nodename>\n" );
-
-      stream.put_string( prefix );
-      stream.put_string( "    <nodenote>\n" );
-      stream.put_string( note );
-      stream.put_string( prefix );
-      stream.put_string( "    </nodenote>\n" );
-
-      stream.put_string( nodes );
-
-      stream.put_string( prefix );
-      stream.put_string( "    <nodes>\n" );
-      foreach (Node n in _children) {
-        n.save( stream, (prefix + "    ") );
-      }
-      stream.put_string( prefix );
-      stream.put_string( "    </nodes>\n" );
-
-      stream.put_string( prefix );
-      stream.put_string( "  </node>\n" );
-    } catch( Error e ) {
-      return( false );
+    Xml.Node* node = new Xml.Node( null, "node" );
+    node->new_prop( "posx", posx.to_string() );
+    node->new_prop( "posy", posy.to_string() );
+    node->new_prop( "width", _width.to_string() );
+    node->new_prop( "height", _height.to_string() );
+    if( task >= 0 ) {
+      node->new_prop( "task", task.to_string() );
     }
 
-    return( true );
+    node->new_text_child( null, "nodename", name );
+    node->new_text_child( null, "nodenote", note );
+
+    if( _children.length > 0 ) {
+      Xml.Node* nodes = new Xml.Node( null, "nodes" );
+      foreach (Node n in _children) {
+        n.save( nodes );
+      }
+      node->add_child( nodes );
+    }
+
+    return( node );
 
   }
 
