@@ -3,16 +3,11 @@ using Cairo;
 
 public class NonrootNode : Node {
 
-  public RGBA color { set; get; }
+  public int color_index { protected set; get; default = 0; }
 
   /* Default constructor */
-  public NonrootNode() {
-    color = {0.5, 0.5, 0.5, 1.0};
-  }
-
-  /* Constructor */
-  public NonrootNode.with_color( RGBA color ) {
-    this.color = color;
+  public NonrootNode( int color_index ) {
+    this.color_index = color_index;
   }
 
   /* Loads the data from the input stream */
@@ -24,7 +19,7 @@ public class NonrootNode : Node {
     /* Load the color value */
     string? c = n->get_prop( "color" );
     if( c != null ) {
-      color.parse( c );
+      color_index = int.parse( c );
     }
 
   }
@@ -32,7 +27,7 @@ public class NonrootNode : Node {
   /* Saves the current node */
   public override void save( Xml.Node* parent ) {
     Xml.Node* node = save_node();
-    node->new_prop( "color", color.to_string() );
+    node->new_prop( "color", color_index.to_string() );
     parent->add_child( node );
   }
 
@@ -43,15 +38,16 @@ public class NonrootNode : Node {
   }
 
   /* Draws the line under the node name */
-  public void draw_line( Context ctx ) {
+  public void draw_line( Context ctx, Theme theme, Layout layout ) {
 
-    double padx = 15;
-    double posx = this.posx - padx;
-    double posy = this.posy + 10;
-    double w    = _width + (padx * 2);
+    double padx  = 15;
+    double posx  = this.posx - padx;
+    double posy  = this.posy + 10;
+    double w     = _width + (padx * 2);
+    RGBA   color = theme.link_color( color_index );
 
     /* Draw the line under the text name */
-    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+    set_context_color( ctx, color );
     ctx.set_line_width( 4 );
     ctx.move_to( posx, posy );
     ctx.line_to( (posx + w), posy );
@@ -60,15 +56,16 @@ public class NonrootNode : Node {
   }
 
   /* Draw the link from this node to the parent node */
-  public void draw_link( Context ctx ) {
+  public void draw_link( Context ctx, Theme theme, Layout layout ) {
 
     double parent_x;
     double parent_y;
+    RGBA   color = theme.link_color( color_index );
 
     /* Get the parent's link point */
     parent.link_point( out parent_x, out parent_y );
 
-    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+    set_context_color( ctx, color );
     ctx.set_line_width( 4 );
     ctx.move_to( parent_x, parent_y );
     ctx.line_to( (posx - 15), (posy + 10) );
@@ -77,10 +74,10 @@ public class NonrootNode : Node {
   }
 
   /* Draws this node */
-  public override void draw( Context ctx ) {
-    draw_name( ctx );
-    draw_line( ctx );
-    draw_link( ctx );
+  public override void draw( Context ctx, Theme theme, Layout layout ) {
+    draw_name( ctx, theme, layout );
+    draw_line( ctx, theme, layout );
+    draw_link( ctx, theme, layout );
   }
 
 }

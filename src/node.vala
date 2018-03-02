@@ -1,4 +1,5 @@
 using Gtk;
+using Gdk;
 using Cairo;
 
 public enum NodeMode {
@@ -92,12 +93,14 @@ public class Node : Object {
     }
   }
 
+  /* Loads the name value from the given XML node */
   private void load_name( Xml.Node* n ) {
     if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
       name = n->children->get_content();
     }
   }
 
+  /* Loads the note value from the given XML node */
   private void load_note( Xml.Node* n ) {
     if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
       note = n->children->get_content();
@@ -182,6 +185,14 @@ public class Node : Object {
 
     return( node );
 
+  }
+
+  /* Returns the bounding box for this node */
+  public virtual void bbox( out double x, out double y, out double w, out double h ) {
+    x = posx;
+    y = posy;
+    w = _width;
+    h = _height;
   }
 
   /* Move the cursor in the given direction */
@@ -349,6 +360,11 @@ public class Node : Object {
     }
   }
 
+  /* Sets the context source color to the given color value */
+  protected void set_context_color( Context ctx, RGBA color ) {
+    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+  }
+
   /* Returns the link point for this node */
   protected virtual void link_point( out double x, out double y ) {
     x = posx;
@@ -356,7 +372,7 @@ public class Node : Object {
   }
 
   /* Draws the node font to the screen */
-  public virtual void draw_name( Context ctx ) {
+  public virtual void draw_name( Context ctx, Theme theme, Layout layout ) {
 
     TextExtents name_extents;
     double      hmargin = 3;
@@ -371,9 +387,9 @@ public class Node : Object {
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( (mode == NodeMode.SELECTED) || (mode == NodeMode.EDITABLE) ) {
       if( mode == NodeMode.SELECTED ) {
-        ctx.set_source_rgba( 0.5, 0.5, 1, 1 );
+        set_context_color( ctx, theme.nodesel_background );
       } else {
-        ctx.set_source_rgba( 0, 0, 1, 1 );
+        set_context_color( ctx, theme.textsel_background );
       }
       ctx.rectangle( (posx - hmargin), ((posy - vmargin) - name_extents.height), (name_extents.width + (hmargin * 2)), (name_extents.height + (vmargin * 2)) );
       ctx.fill();
@@ -381,14 +397,18 @@ public class Node : Object {
 
     /* Output the text */
     ctx.move_to( posx, posy );
-    ctx.set_source_rgba( 1, 1, 1, 1 );
+    switch( mode ) {
+      case NodeMode.SELECTED :  set_context_color( ctx, theme.nodesel_foreground );  break;
+      case NodeMode.EDITABLE :  set_context_color( ctx, theme.textsel_foreground );  break;
+      default                :  set_context_color( ctx, theme.foreground );          break;
+    }
     ctx.show_text( name );
 
     /* Draw the insertion cursor if we are in the 'editable' state */
     if( (mode == NodeMode.EDITABLE) || (mode == NodeMode.EDITED) ) {
       TextExtents extents;
       text_extents( ctx, name.substring( 0, _cursor ), out extents );
-      ctx.set_source_rgba( 0, 1, 0, 1 );
+      set_context_color( ctx, theme.text_cursor );
       ctx.rectangle( (posx + 1 + extents.width), ((posy - vmargin) - name_extents.height), 1, (name_extents.height + (vmargin * 2)) );
       ctx.fill();
     }
@@ -396,13 +416,13 @@ public class Node : Object {
   }
 
   /* Draws the node on the screen */
-  public virtual void draw( Context ctx ) {}
+  public virtual void draw( Context ctx, Theme theme, Layout layout ) {}
 
   /* Draw this node and all child nodes */
-  public void draw_all( Context ctx ) {
-    draw( ctx );
+  public void draw_all( Context ctx, Theme theme, Layout layout ) {
+    draw( ctx, theme, layout );
     foreach (Node n in _children) {
-      n.draw_all( ctx );
+      n.draw_all( ctx, theme, layout );
     }
   }
 

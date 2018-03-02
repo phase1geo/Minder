@@ -42,12 +42,14 @@ ensure_vala_version("0.16" MINIMUM)
 include(ValaPrecompile)
 vala_precompile(VALA_C ${EXEC_NAME}
     src/minder.vala
-    src/color_palette.vala
     src/document.vala
     src/draw_area.vala
+    src/layout.vala
     src/node.vala
     src/nonroot_node.vala
     src/root_node.vala
+    src/theme.vala
+    src/theme_default.vala
 PACKAGES
     gtk+-3.0
     gee-0.8

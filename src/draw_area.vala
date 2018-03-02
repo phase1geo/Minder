@@ -4,22 +4,20 @@ using Cairo;
 
 public class DrawArea : Gtk.DrawingArea {
 
-  private double       _press_x;
-  private double       _press_y;
-  private double       _origin_x = 0.0;
-  private double       _origin_y = 0.0;
-  private bool         _pressed = false;
-  private Node         _current_node;
-  private Node[]       _nodes;
-  private ColorPalette _palette;
+  private double _press_x;
+  private double _press_y;
+  private double _origin_x = 0.0;
+  private double _origin_y = 0.0;
+  private bool   _pressed = false;
+  private Node   _current_node;
+  private Node[] _nodes;
+  private Theme  _theme;
+  private Layout _layout;
 
   public bool changed { set; get; default = false; }
 
   /* Default constructor */
   public DrawArea() {
-
-    /* Create the color palette */
-    _palette = new ColorPalette();
 
     /* Add event listeners */
     this.draw.connect( on_draw );
@@ -38,30 +36,9 @@ public class DrawArea : Gtk.DrawingArea {
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
 
-    /* TEMPORARY */
-    /*
-    RootNode n = new RootNode.with_name( "Main Idea" );
-    n.posx = 350;
-    n.posy = 200;
-
-    NonrootNode nr1 = new NonrootNode.with_color( _palette.next() );
-    nr1.name = "Child A";
-    nr1.posx = 500;
-    nr1.posy = 175;
-
-    NonrootNode nr2 = new NonrootNode.with_color( _palette.next() );
-    nr2.name = "Child B";
-    nr2.posx = 500;
-    nr2.posy = 225;
-
-    nr1.attach( n );
-    nr2.attach( n );
-
-    _nodes += n;
-    */
-
   }
 
+  /* Loads the drawing area origin from the XML node */
   private void load_origin( Xml.Node* n ) {
 
     string? x = n->get_prop( "x" );
@@ -76,15 +53,35 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Loads the given theme from the list of available options */
+  private void load_theme( Xml.Node* n ) {
+    string? name = n->get_prop( "name" );
+    if( name != null ) {
+      switch( name ) {
+        default :  _theme = new ThemeDefault();  break;
+      }
+    }
+  }
+
+  /* Loads the given layout from the list of available options */
+  private void load_layout( Xml.Node* n ) {
+    string? name = n->get_prop( "name" );
+    if( name != null ) {
+      switch( name ) {
+        default :  _layout = new Layout();  break;
+      }
+    }
+  }
+
   /* Loads the contents of the data input stream */
   public void load( Xml.Node* n ) {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "origin" :
-            load_origin( it );
-            break;
-          case "nodes" :
+          case "theme"  :  load_theme( it );   break;
+          case "layout" :  load_layout( it );  break;
+          case "origin" :  load_origin( it );  break;
+          case "nodes"  :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 RootNode node = new RootNode();
@@ -102,6 +99,14 @@ public class DrawArea : Gtk.DrawingArea {
   /* Saves the contents of the drawing area to the data output stream */
   public bool save( Xml.Node* parent ) {
 
+    Xml.Node* theme = new Xml.Node( null, "theme" );
+    theme->new_prop( "name", _theme.name );
+    parent->add_child( theme );
+
+    Xml.Node* layout = new Xml.Node( null, "layout" );
+    theme->new_prop( "name", _layout.name );
+    parent->add_child( layout );
+
     Xml.Node* origin = new Xml.Node( null, "origin" );
     origin->new_prop( "x", _origin_x.to_string() );
     origin->new_prop( "y", _origin_y.to_string() );
@@ -114,6 +119,20 @@ public class DrawArea : Gtk.DrawingArea {
     parent->add_child( nodes );
 
     return( true );
+
+  }
+
+  /* Initialize the empty drawing area with a node */
+  public void initialize() {
+
+    /* Create the main idea node */
+    RootNode n = new RootNode.with_name( "Main Idea" );
+    n.posx = 350;
+    n.posy = 200;
+
+    _nodes += n;
+
+    queue_draw();
 
   }
 
@@ -141,7 +160,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Draw the available nodes */
   private bool on_draw( Context ctx ) {
     foreach (Node n in _nodes) {
-      n.draw_all( ctx );
+      n.draw_all( ctx, _theme, _layout );
     }
     return( false );
   }
@@ -278,10 +297,9 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( !_current_node.is_root() ) {
       NonrootNode node;
       if( _current_node.parent.is_root() ) {
-        node = new NonrootNode.with_color( _palette.next() );
+        node = new NonrootNode( _theme.next_color_index() );
       } else {
-        NonrootNode tmp = (NonrootNode)_current_node;
-        node = new NonrootNode.with_color( tmp.color );
+        node = new NonrootNode( _current_node.color_index );
       }
       _current_node.mode = NodeMode.NONE;
       node.attach( _current_node.parent );
@@ -303,10 +321,9 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_mode_selected() ) {
       NonrootNode node;
       if( _current_node.is_root() ) {
-        node = new NonrootNode.with_color( _palette.next() );
+        node = new NonrootNode( _theme.next_color_index() );
       } else {
-        NonrootNode tmp = (NonrootNode)_current_node;
-        node = new NonrootNode.with_color( tmp.color );
+        node = new NonrootNode( _current_node.color_index );
       }
       _current_node.mode = NodeMode.NONE;
       node.attach( _current_node );

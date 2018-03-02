@@ -206,33 +206,6 @@ pot/fast:
 	$(MAKE) -f po/CMakeFiles/pot.dir/build.make po/CMakeFiles/pot.dir/build
 .PHONY : pot/fast
 
-src/color_palette.o: src/color_palette.c.o
-
-.PHONY : src/color_palette.o
-
-# target to build an object file
-src/color_palette.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/color_palette.c.o
-.PHONY : src/color_palette.c.o
-
-src/color_palette.i: src/color_palette.c.i
-
-.PHONY : src/color_palette.i
-
-# target to preprocess a source file
-src/color_palette.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/color_palette.c.i
-.PHONY : src/color_palette.c.i
-
-src/color_palette.s: src/color_palette.c.s
-
-.PHONY : src/color_palette.s
-
-# target to generate assembly for a file
-src/color_palette.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/color_palette.c.s
-.PHONY : src/color_palette.c.s
-
 src/document.o: src/document.c.o
 
 .PHONY : src/document.o
@@ -286,6 +259,33 @@ src/draw_area.s: src/draw_area.c.s
 src/draw_area.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/draw_area.c.s
 .PHONY : src/draw_area.c.s
+
+src/layout.o: src/layout.c.o
+
+.PHONY : src/layout.o
+
+# target to build an object file
+src/layout.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layout.c.o
+.PHONY : src/layout.c.o
+
+src/layout.i: src/layout.c.i
+
+.PHONY : src/layout.i
+
+# target to preprocess a source file
+src/layout.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layout.c.i
+.PHONY : src/layout.c.i
+
+src/layout.s: src/layout.c.s
+
+.PHONY : src/layout.s
+
+# target to generate assembly for a file
+src/layout.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layout.c.s
+.PHONY : src/layout.c.s
 
 src/minder.o: src/minder.c.o
 
@@ -395,6 +395,60 @@ src/root_node.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/root_node.c.s
 .PHONY : src/root_node.c.s
 
+src/theme.o: src/theme.c.o
+
+.PHONY : src/theme.o
+
+# target to build an object file
+src/theme.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme.c.o
+.PHONY : src/theme.c.o
+
+src/theme.i: src/theme.c.i
+
+.PHONY : src/theme.i
+
+# target to preprocess a source file
+src/theme.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme.c.i
+.PHONY : src/theme.c.i
+
+src/theme.s: src/theme.c.s
+
+.PHONY : src/theme.s
+
+# target to generate assembly for a file
+src/theme.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme.c.s
+.PHONY : src/theme.c.s
+
+src/theme_default.o: src/theme_default.c.o
+
+.PHONY : src/theme_default.o
+
+# target to build an object file
+src/theme_default.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme_default.c.o
+.PHONY : src/theme_default.c.o
+
+src/theme_default.i: src/theme_default.c.i
+
+.PHONY : src/theme_default.i
+
+# target to preprocess a source file
+src/theme_default.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme_default.c.i
+.PHONY : src/theme_default.c.i
+
+src/theme_default.s: src/theme_default.c.s
+
+.PHONY : src/theme_default.s
+
+# target to generate assembly for a file
+src/theme_default.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme_default.c.s
+.PHONY : src/theme_default.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -411,15 +465,15 @@ help:
 	@echo "... po"
 	@echo "... i18n"
 	@echo "... pot"
-	@echo "... src/color_palette.o"
-	@echo "... src/color_palette.i"
-	@echo "... src/color_palette.s"
 	@echo "... src/document.o"
 	@echo "... src/document.i"
 	@echo "... src/document.s"
 	@echo "... src/draw_area.o"
 	@echo "... src/draw_area.i"
 	@echo "... src/draw_area.s"
+	@echo "... src/layout.o"
+	@echo "... src/layout.i"
+	@echo "... src/layout.s"
 	@echo "... src/minder.o"
 	@echo "... src/minder.i"
 	@echo "... src/minder.s"
@@ -432,6 +486,12 @@ help:
 	@echo "... src/root_node.o"
 	@echo "... src/root_node.i"
 	@echo "... src/root_node.s"
+	@echo "... src/theme.o"
+	@echo "... src/theme.i"
+	@echo "... src/theme.s"
+	@echo "... src/theme_default.o"
+	@echo "... src/theme_default.i"
+	@echo "... src/theme_default.s"
 .PHONY : help
 
 

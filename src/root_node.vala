@@ -17,7 +17,7 @@ public class RootNode : Node {
   }
 
   /* Draws the rectangle around the root node */
-  public void draw_rectangle( Context ctx ) {
+  public void draw_rectangle( Context ctx, Theme theme, Layout layout ) {
 
     double padx = 15;
     double pady = 15;
@@ -28,7 +28,7 @@ public class RootNode : Node {
     double w    = _width  + (padx * 2);
 
     /* Draw the rounded box around the text */
-    ctx.set_source_rgba( 1, 1, 1, 1 );
+    set_context_color( ctx, theme.foreground );
     ctx.set_line_width( 1 );
     ctx.move_to(posx+r,posy);                                  // Move to A
     ctx.line_to(posx+w-r,posy);                                // Straight line to B
@@ -44,9 +44,9 @@ public class RootNode : Node {
   }
 
   /* Draws this node to the given canvas */
-  public override void draw( Context ctx ) {
-    draw_name( ctx );
-    draw_rectangle( ctx );
+  public override void draw( Context ctx, Theme theme, Layout layout ) {
+    draw_name( ctx, theme, layout );
+    draw_rectangle( ctx, theme, layout );
   }
 
 }

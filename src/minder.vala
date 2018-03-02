@@ -78,7 +78,10 @@ public class Minder : Gtk.Application {
     if( _canvas.changed ) {
       _doc.save( null, _canvas );
     }
-    _doc = new Document();
+    _doc    = new Document();
+    _canvas = new DrawArea();
+    _canvas.initialize();
+    _appwin.add( _canvas );
   }
 
   /* Allow the user to open a Minder file */
