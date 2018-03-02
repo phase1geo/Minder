@@ -28,7 +28,7 @@ public class RootNode : Node {
     double w    = _width  + (padx * 2);
 
     /* Draw the rounded box around the text */
-    set_context_color( ctx, theme.foreground );
+    set_context_color( ctx, theme.root_background );
     ctx.set_line_width( 1 );
     ctx.move_to(posx+r,posy);                                  // Move to A
     ctx.line_to(posx+w-r,posy);                                // Straight line to B
@@ -39,7 +39,7 @@ public class RootNode : Node {
     ctx.curve_to(posx,posy+h,posx,posy+h,posx,posy+h-r);       // Curve to G
     ctx.line_to(posx,posy+r);                                  // Line to H
     ctx.curve_to(posx,posy,posx,posy,posx+r,posy);             // Curve to A
-    ctx.stroke();
+    ctx.fill();
 
   }
 
