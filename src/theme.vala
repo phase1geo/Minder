@@ -31,4 +31,10 @@ public class Theme : Object {
     return( link_colors[index % link_colors.length] );
   }
 
+  protected RGBA get_color( string value ) {
+    RGBA c = {1.0, 1.0, 1.0, 1.0};
+    c.parse( value );
+    return( c );
+  }
+
 }

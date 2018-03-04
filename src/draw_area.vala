@@ -137,8 +137,6 @@ public class DrawArea : Gtk.DrawingArea {
 
     queue_draw();
 
-    stdout.printf( "HERE!\n" );
-
   }
 
   /* Sets the current node pointer to the node that is within the given coordinates */
@@ -164,11 +162,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Draw the available nodes */
   private bool on_draw( Context ctx ) {
-    stdout.printf( "In on_drawk, nodes: %d\n", _nodes.length );
     foreach (Node n in _nodes) {
-      stdout.printf( "  HERE\n" );
       n.draw_all( ctx, _theme, _layout );
-      stdout.printf( "  AFTER\n" );
     }
     return( false );
   }

@@ -8,29 +8,26 @@ public class ThemeDefault : Theme {
     name = "Default";
 
     /* Generate the non-link colors */
-    background.parse( "Gray" );
-    foreground.parse( "White" );
-    root_background.parse( "White" );
-    root_foreground.parse( "Black" );
-    nodesel_background.parse( "Light Blue" );
-    nodesel_foreground.parse( "Black" );
-    textsel_background.parse( "Blue" );
-    textsel_foreground.parse( "White" );
-    text_cursor.parse( "Green" );
+    background         = get_color( "Gray" );
+    foreground         = get_color( "White" );
+    root_background    = get_color( "White" );
+    root_foreground    = get_color( "Black" );
+    nodesel_background = get_color( "Light Blue" );
+    nodesel_foreground = get_color( "Black" );
+    textsel_background = get_color( "Blue" );
+    textsel_foreground = get_color( "White" );
+    text_cursor        = get_color( "Green" );
 
     /* Generate the link colors */
     link_colors = new RGBA[8];
-    link_colors[0].parse( "Red" );
-    link_colors[1].parse( "Orange" );
-    link_colors[2].parse( "Yellow" );
-    link_colors[3].parse( "Green" );
-    link_colors[4].parse( "Blue" );
-    link_colors[5].parse( "Purple" );
-    link_colors[6].parse( "Brown" );
-    link_colors[7].parse( "Black" );
-
-    stdout.printf( "HERE root_background, red: %g, green: %g, blue: %g, alpha: %g\n",
-      root_background.red, root_background.green, root_background.blue, root_background.alpha );
+    link_colors[0] = get_color( "Red" );
+    link_colors[1] = get_color( "Orange" );
+    link_colors[2] = get_color( "Yellow" );
+    link_colors[3] = get_color( "Green" );
+    link_colors[4] = get_color( "Blue" );
+    link_colors[5] = get_color( "Purple" );
+    link_colors[6] = get_color( "Brown" );
+    link_colors[7] = get_color( "Black" );
 
   }
 

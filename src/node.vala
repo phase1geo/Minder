@@ -409,7 +409,7 @@ public class Node : Object {
     switch( mode ) {
       case NodeMode.SELECTED :  set_context_color( ctx, theme.nodesel_foreground );  break;
       case NodeMode.EDITABLE :  set_context_color( ctx, theme.textsel_foreground );  break;
-      default                :  set_context_color( ctx, theme.foreground );          break;
+      default                :  set_context_color( ctx, (parent == null) ? theme.root_foreground : theme.foreground );  break;
     }
     ctx.show_text( name );
 
@@ -429,9 +429,7 @@ public class Node : Object {
 
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Layout layout ) {
-    stdout.printf( "In draw_all\n" );
     draw( ctx, theme, layout );
-    stdout.printf( "Calling draw\n" );
     foreach (Node n in _children) {
       n.draw_all( ctx, theme, layout );
     }
