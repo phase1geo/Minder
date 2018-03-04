@@ -19,19 +19,19 @@ public struct NodeBounds {
 public class Node : Object {
 
   /* Member variables */
-  private   Node[] _children = {};
   protected double _width = 0;
   protected double _height = 0;
   private   int    _cursor = 0;   /* Location of the cursor when editing */
+  private   Node[] _children;
 
   /* Properties */
-  public string   name   { get; set; default = ""; }
-  public double   posx   { get; set; default = 50.0; }
-  public double   posy   { get; set; default = 50.0; }
-  public string   note   { get; set; default = ""; }
-  public double   task   { get; set; default = -1.0; }
-  public NodeMode mode   { get; set; default = NodeMode.NONE; }
-  public Node     parent { get; protected set; default = null; }
+  public string   name     { get; set; default = ""; }
+  public double   posx     { get; set; default = 50.0; }
+  public double   posy     { get; set; default = 50.0; }
+  public string   note     { get; set; default = ""; }
+  public double   task     { get; set; default = -1.0; }
+  public NodeMode mode     { get; set; default = NodeMode.NONE; }
+  public Node     parent   { get; protected set; default = null; }
 
   /* Default constructor */
   public Node() {}
@@ -91,6 +91,11 @@ public class Node : Object {
       }
       return( false );
     }
+  }
+
+  /* Returns the children nodes of this node */
+  public Node[] children() {
+    return( _children );
   }
 
   /* Loads the name value from the given XML node */
@@ -365,6 +370,10 @@ public class Node : Object {
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
   }
 
+  public static void output_context_color( RGBA color ) {
+    stdout.printf( "red: %g, green: %g, blue: %g, alpha: %g\n", color.red, color.green, color.blue, color.alpha );
+  }
+
   /* Returns the link point for this node */
   protected virtual void link_point( out double x, out double y ) {
     x = posx;
@@ -420,7 +429,9 @@ public class Node : Object {
 
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Layout layout ) {
+    stdout.printf( "In draw_all\n" );
     draw( ctx, theme, layout );
+    stdout.printf( "Calling draw\n" );
     foreach (Node n in _children) {
       n.draw_all( ctx, theme, layout );
     }

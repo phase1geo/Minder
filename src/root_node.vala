@@ -27,6 +27,9 @@ public class RootNode : Node {
     double h    = _height + (pady * 2);
     double w    = _width  + (padx * 2);
 
+    stdout.printf( "root background, ");
+    output_context_color( theme.root_background );
+
     /* Draw the rounded box around the text */
     set_context_color( ctx, theme.root_background );
     ctx.set_line_width( 1 );

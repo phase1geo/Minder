@@ -19,6 +19,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Default constructor */
   public DrawArea() {
 
+    _theme  = new ThemeDefault();
+    _layout = new Layout();
+
     /* Add event listeners */
     this.draw.connect( on_draw );
     this.button_press_event.connect( on_press );
@@ -134,6 +137,8 @@ public class DrawArea : Gtk.DrawingArea {
 
     queue_draw();
 
+    stdout.printf( "HERE!\n" );
+
   }
 
   /* Sets the current node pointer to the node that is within the given coordinates */
@@ -159,8 +164,11 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Draw the available nodes */
   private bool on_draw( Context ctx ) {
+    stdout.printf( "In on_drawk, nodes: %d\n", _nodes.length );
     foreach (Node n in _nodes) {
+      stdout.printf( "  HERE\n" );
       n.draw_all( ctx, _theme, _layout );
+      stdout.printf( "  AFTER\n" );
     }
     return( false );
   }
@@ -295,11 +303,11 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.mode = NodeMode.SELECTED;
       queue_draw();
     } else if( !_current_node.is_root() ) {
-      NonrootNode node;
+      NonrootNode node = new NonrootNode();
       if( _current_node.parent.is_root() ) {
-        node = new NonrootNode( _theme.next_color_index() );
+        node.color_index = _theme.next_color_index();
       } else {
-        node = new NonrootNode( _current_node.color_index );
+        node.color_index = ((NonrootNode)_current_node).color_index;
       }
       _current_node.mode = NodeMode.NONE;
       node.attach( _current_node.parent );
@@ -319,11 +327,11 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.mode = NodeMode.SELECTED;
       queue_draw();
     } else if( is_mode_selected() ) {
-      NonrootNode node;
+      NonrootNode node = new NonrootNode();
       if( _current_node.is_root() ) {
-        node = new NonrootNode( _theme.next_color_index() );
+        node.color_index = _theme.next_color_index();
       } else {
-        node = new NonrootNode( _current_node.color_index );
+        node.color_index = ((NonrootNode)_current_node).color_index;
       }
       _current_node.mode = NodeMode.NONE;
       node.attach( _current_node );

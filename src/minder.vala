@@ -61,6 +61,9 @@ public class Minder : Gtk.Application {
     /* Create the document */
     _doc = new Document();
 
+    /* Initialize the canvas */
+    _canvas.initialize();
+
     /* Display the UI */
     _appwin.add( _canvas );
     _appwin.show_all();

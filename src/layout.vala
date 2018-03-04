@@ -18,7 +18,7 @@ public class Layout : Object {
   public virtual void place_siblings( Node parent ) {
     double px, py, pw, ph;
     parent.bbox( out px, out py, out pw, out ph );
-    foreach (Node child in parent.children) {
+    foreach (Node child in parent.children()) {
       place_child_of( parent, child );
       // TBD
     }

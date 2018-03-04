@@ -3,12 +3,10 @@ using Cairo;
 
 public class NonrootNode : Node {
 
-  public int color_index { protected set; get; default = 0; }
+  public int color_index { set; get; default = 0; }
 
   /* Default constructor */
-  public NonrootNode( int color_index ) {
-    this.color_index = color_index;
-  }
+  public NonrootNode() {}
 
   /* Loads the data from the input stream */
   public override void load( Xml.Node* n ) {
