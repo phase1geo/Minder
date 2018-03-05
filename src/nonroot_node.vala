@@ -31,7 +31,11 @@ public class NonrootNode : Node {
 
   /* Provides the point to link to children nodes */
   protected override void link_point( out double x, out double y ) {
-    x = (posx + _width + 15);
+    if( parent.posx > posx ) {
+      x = (posx - 15);
+    } else {
+      x = (posx + _width + 15);
+    }
     y = (posy + 10);
   }
 
@@ -66,7 +70,11 @@ public class NonrootNode : Node {
     set_context_color( ctx, color );
     ctx.set_line_width( 4 );
     ctx.move_to( parent_x, parent_y );
-    ctx.line_to( (posx - 15), (posy + 10) );
+    if( parent.posx > posx ) {
+      ctx.line_to( (posx + _width + 15), (posy + 10) );
+    } else {
+      ctx.line_to( (posx - 15), (posy + 10) );
+    }
     ctx.stroke();
 
   }

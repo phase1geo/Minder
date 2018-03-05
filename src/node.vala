@@ -370,8 +370,9 @@ public class Node : Object {
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
   }
 
-  public static void output_context_color( RGBA color ) {
-    stdout.printf( "red: %g, green: %g, blue: %g, alpha: %g\n", color.red, color.green, color.blue, color.alpha );
+  /* Returns true if this model is placed on the right side of the node */
+  public bool on_right() {
+    return( (parent != null) && (parent.posx > posx) );
   }
 
   /* Returns the link point for this node */
@@ -429,10 +430,10 @@ public class Node : Object {
 
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Layout layout ) {
-    draw( ctx, theme, layout );
     foreach (Node n in _children) {
       n.draw_all( ctx, theme, layout );
     }
+    draw( ctx, theme, layout );
   }
 
 }

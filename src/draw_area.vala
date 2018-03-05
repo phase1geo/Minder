@@ -489,9 +489,9 @@ public class DrawArea : Gtk.DrawingArea {
         case 65365 :  handle_pageup();     break;
         case 65366 :  handle_pagedn();     break;
         default :
-          if( !event.str.get_char( 0 ).isprint() ) {
-            stdout.printf( "In on_keypress, keyval: %s\n", event.keyval.to_string() );
-          }
+          //if( !event.str.get_char( 0 ).isprint() ) {
+          //  stdout.printf( "In on_keypress, keyval: %s\n", event.keyval.to_string() );
+          //}
           handle_printable( event.str );
           break;
       }
