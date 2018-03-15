@@ -32,6 +32,7 @@ public class Node : Object {
   public double   task     { get; set; default = -1.0; }
   public NodeMode mode     { get; set; default = NodeMode.NONE; }
   public Node     parent   { get; protected set; default = null; }
+  public int      side     { get; set; default = 0; }
 
   /* Default constructor */
   public Node() {}

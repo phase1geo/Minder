@@ -198,8 +198,11 @@ public class DrawArea : Gtk.DrawingArea {
   private bool on_motion( EventMotion event ) {
     if( _pressed ) {
       if( _current_node != null ) {
-        _current_node.posx += (event.x - _press_x);
-        _current_node.posy += (event.y - _press_y);
+        double diffx = (event.x - _press_x);
+        double diffy = (event.y - _press_y);
+        _current_node.posx += diffx;
+        _current_node.posy += diffy;
+        _layout.adjust_tree( _current_node, diffx, diffy );
         queue_draw();
       } else {
         double diff_x = (_press_x - event.x);
@@ -305,9 +308,8 @@ public class DrawArea : Gtk.DrawingArea {
         node.color_index = ((NonrootNode)_current_node).color_index;
       }
       _current_node.mode = NodeMode.NONE;
+      _layout.add_child_of( _current_node.parent, node );
       node.attach( _current_node.parent );
-      node.posx = _current_node.posx;
-      node.posy = _current_node.posy + 40;
       if( select_node( node ) ) {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
@@ -329,9 +331,8 @@ public class DrawArea : Gtk.DrawingArea {
         node.color_index = ((NonrootNode)_current_node).color_index;
       }
       _current_node.mode = NodeMode.NONE;
+      _layout.add_child_of( _current_node, node );
       node.attach( _current_node );
-      node.posx = _current_node.posx + 100;
-      node.posy = _current_node.posy;
       if( select_node( node ) ) {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
