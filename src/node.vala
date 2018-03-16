@@ -32,7 +32,7 @@ public class Node : Object {
   public double   task     { get; set; default = -1.0; }
   public NodeMode mode     { get; set; default = NodeMode.NONE; }
   public Node     parent   { get; protected set; default = null; }
-  public int      side     { get; set; default = 0; }
+  public int      side     { get; set; default = 1; }
 
   /* Default constructor */
   public Node() {}
@@ -378,8 +378,13 @@ public class Node : Object {
 
   /* Returns the link point for this node */
   protected virtual void link_point( out double x, out double y ) {
-    x = posx;
-    y = posy;
+    if( side == 0 ) {
+      x = posx;
+      y = posy;
+    } else {
+      x = posx + _width;
+      y = posy;
+    }
   }
 
   /* Draws the node font to the screen */

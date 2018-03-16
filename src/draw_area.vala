@@ -160,6 +160,15 @@ public class DrawArea : Gtk.DrawingArea {
     return( null );
   }
 
+  /* Adjusts the x and y origins, panning all elements by the given amount */
+  private void move_origin( double diff_x, double diff_y ) {
+    _origin_x += diff_x;
+    _origin_y += diff_y;
+    foreach (Node n in _nodes) {
+      n.pan( diff_x, diff_y );
+    }
+  }
+
   /* Draw the available nodes */
   private bool on_draw( Context ctx ) {
     foreach (Node n in _nodes) {
@@ -202,16 +211,13 @@ public class DrawArea : Gtk.DrawingArea {
         double diffy = (event.y - _press_y);
         _current_node.posx += diffx;
         _current_node.posy += diffy;
+        _layout.set_side( _current_node );
         _layout.adjust_tree( _current_node, diffx, diffy );
         queue_draw();
       } else {
         double diff_x = (_press_x - event.x);
         double diff_y = (_press_y - event.y);
-        _origin_x += diff_x;
-        _origin_y += diff_y;
-        foreach (Node n in _nodes) {
-          n.pan( diff_x, diff_y );
-        }
+        move_origin( diff_x, diff_y );
         queue_draw();
       }
       _press_x = event.x;
@@ -463,10 +469,28 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  private void adjust_origin() {
+    double x, y, w, h;
+    double diff_x = 0;
+    double diff_y = 0;
+    _current_node.bbox( out x, out y, out w, out h );
+    if( _current_node.side == 0 ) {
+      if( x < 10 ) {
+        diff_x = -100;
+      }
+    } else {
+      if( (800 /* TBD */ - (x + w)) < 10 ) {
+        diff_x = 100;
+      }
+    }
+    move_origin( diff_x, diff_y );
+  }
+
   /* Called whenever a printable character is entered in the drawing area */
   private void handle_printable( string str ) {
     if( is_mode_edit() && str.get_char( 0 ).isprint() ) {
       _current_node.edit_insert( str );
+      adjust_origin();
       queue_draw();
       changed = true;
     }
