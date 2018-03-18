@@ -22,6 +22,13 @@ public class DrawArea : Gtk.DrawingArea {
     _theme  = new ThemeDefault();
     _layout = new Layout();
 
+    /* Set the CSS provider from the theme */
+    StyleContext.add_provider_for_screen(
+      Screen.get_default(),
+      _theme.get_css_provider(),
+      STYLE_PROVIDER_PRIORITY_APPLICATION
+    );
+
     /* Add event listeners */
     this.draw.connect( on_draw );
     this.button_press_event.connect( on_press );

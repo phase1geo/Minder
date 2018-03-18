@@ -8,7 +8,7 @@ public class ThemeDefault : Theme {
     name = "Default";
 
     /* Generate the non-link colors */
-    background         = get_color( "Gray" );
+    background         = get_color( "Grey" );
     foreground         = get_color( "White" );
     root_background    = get_color( "White" );
     root_foreground    = get_color( "Black" );

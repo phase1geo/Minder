@@ -1,8 +1,10 @@
+using Gtk;
 using Gdk;
 
 public class Theme : Object {
 
-  private int _index;
+  private int    _index;
+  private string _css;
 
   public    string name               { protected set; get; }
   public    RGBA   background         { protected set; get; }
@@ -31,10 +33,22 @@ public class Theme : Object {
     return( link_colors[index % link_colors.length] );
   }
 
+  /* Returns the RGBA color for the given color value */
   protected RGBA get_color( string value ) {
     RGBA c = {1.0, 1.0, 1.0, 1.0};
     c.parse( value );
     return( c );
+  }
+
+  /* Returns the CSS provider for this theme */
+  public CssProvider get_css_provider() {
+    CssProvider provider = new CssProvider();
+    try {
+      provider.load_from_data( "GtkDrawingArea { background:" + background.to_string() + "; }" );
+    } catch( GLib.Error e ) {
+      stdout.printf( "Unable to load background color: %s", e.message );
+    }
+    return( provider );
   }
 
 }
