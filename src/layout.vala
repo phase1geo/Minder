@@ -3,7 +3,9 @@ public class Layout : Object {
   protected double _pc_gap = 100;  /* Parent/child gap */
   protected double _sb_gap = 5;    /* Sibling gap */
 
-  public string name { private set; get; }
+  public string name { protected set; get; }
+  public int    padx { protected set; get; default = 10; }
+  public int    pady { protected set; get; default = 10; }
 
   /* Default constructor */
   public Layout() {

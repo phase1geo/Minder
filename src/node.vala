@@ -19,8 +19,10 @@ public struct NodeBounds {
 public class Node : Object {
 
   /* Member variables */
-  protected double _width = 0;
+  protected double _width  = 0;
   protected double _height = 0;
+  protected double _padx   = 0;
+  protected double _pady   = 0;
   private   int    _cursor = 0;   /* Location of the cursor when editing */
   private   Node[] _children;
 
@@ -62,7 +64,7 @@ public class Node : Object {
 
   /* Returns true if the given cursor coordinates lies within this node */
   public virtual bool is_within( double x, double y ) {
-    return( (x >= posx) && (x < (posx + _width)) && (y >= (posy - _height)) && (y < posy) );
+    return( (posx < x) && (x < (posx + _width)) && (posy < y) && (y < (posy - _height)) );
   }
 
   /* Finds the node which contains the given pixel coordinates */
@@ -197,8 +199,8 @@ public class Node : Object {
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
     x = posx;
     y = posy;
-    w = _width;
-    h = _height;
+    w = _width  + (_padx * 2);
+    h = _height + (_pady * 2);
   }
 
   /* Move the cursor in the given direction */
@@ -351,12 +353,6 @@ public class Node : Object {
     }
   }
 
-  /* Returns the extents of the given node name */
-  protected void name_extents( Context ctx, out TextExtents extents ) {
-    ctx.set_font_size( 14 );
-    text_extents( ctx, name, out extents );
-  }
-
   /* Adjusts the posx and posy values */
   public virtual void pan( double origin_x, double origin_y ) {
     posx -= origin_x;
@@ -387,18 +383,63 @@ public class Node : Object {
     }
   }
 
+  /*
+   Returns a newline formatted version of the name which will fit
+   within a given width.
+  */
+  private string get_formatted_name( Context ctx ) {
+
+    TextExtents extents;
+    string[]    words = name.split( " " );
+    string[]    fname = {};
+    int         index = 0;
+    int         start = 0;
+
+    fname += "";
+
+    stdout.printf( "name: %s, words: %d\n", name, words.length );
+
+    for( int i=0; i<words.length; i++ ) {
+      string line = string.joinv( " ", words[start:i+1] );
+      text_extents( ctx, line, out extents );
+      if( extents.width > 200 ) {
+        fname += "";
+        index++;
+        start = i;
+      }
+      fname[index] = line;
+      stdout.printf( "  index: %d, line: %s, fname[]=%s\n", index, line, fname[index] );
+    }
+
+    stdout.printf( "fname length: %d, fname: %s\n", fname.length, string.joinv( "\n", fname ) );
+
+    return( string.joinv( "\n", fname ) );
+
+  }
+
   /* Draws the node font to the screen */
-  public virtual void draw_name( Context ctx, Theme theme, Layout layout ) {
+  public virtual void draw_name( Cairo.Context ctx, Theme theme, Layout layout ) {
 
-    TextExtents name_extents;
-    double      hmargin = 3;
-    double      vmargin = 5;
+    var text             = Pango.cairo_create_layout( ctx );
+    var font_description = new Pango.FontDescription();
+    int width, height;
+    int hmargin          = 3;
+    int vmargin          = 3;
 
-    ctx.set_font_size( 14 );
-    text_extents( ctx, name, out name_extents );
+    /* Setup the font description */
+    font_description.set_size( 14 * Pango.SCALE );
 
-    _width  = name_extents.width;
-    _height = name_extents.height;
+    /* Adjust the options for the text to be rendered */
+    text.set_font_description( font_description );
+    text.set_width( 200 * Pango.SCALE );
+    text.set_text( name, -1 );
+    text.set_wrap( Pango.WrapMode.WORD );
+    text.get_size( out width, out height );
+
+    _width  = (width / Pango.SCALE);
+    _height = (height / Pango.SCALE);
+    _padx   = layout.padx;
+    _pady   = layout.pady;
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( (mode == NodeMode.SELECTED) || (mode == NodeMode.EDITABLE) ) {
@@ -407,25 +448,25 @@ public class Node : Object {
       } else {
         set_context_color( ctx, theme.textsel_background );
       }
-      ctx.rectangle( (posx - hmargin), ((posy - vmargin) - name_extents.height), (name_extents.width + (hmargin * 2)), (name_extents.height + (vmargin * 2)) );
+      ctx.rectangle( ((posx + _padx) - hmargin), ((posy + _pady) - vmargin), (_width + (hmargin * 2)), (_height + (vmargin * 2)) );
       ctx.fill();
     }
 
     /* Output the text */
-    ctx.move_to( posx, posy );
+    ctx.move_to( (posx + _padx), (posy + _pady) );
     switch( mode ) {
       case NodeMode.SELECTED :  set_context_color( ctx, theme.nodesel_foreground );  break;
       case NodeMode.EDITABLE :  set_context_color( ctx, theme.textsel_foreground );  break;
       default                :  set_context_color( ctx, (parent == null) ? theme.root_foreground : theme.foreground );  break;
     }
-    ctx.show_text( name );
+    Pango.cairo_show_layout( ctx, text );
 
     /* Draw the insertion cursor if we are in the 'editable' state */
     if( (mode == NodeMode.EDITABLE) || (mode == NodeMode.EDITED) ) {
       TextExtents extents;
       text_extents( ctx, name.substring( 0, _cursor ), out extents );
       set_context_color( ctx, theme.text_cursor );
-      ctx.rectangle( (posx + 1 + extents.width), ((posy - vmargin) - name_extents.height), 1, (name_extents.height + (vmargin * 2)) );
+      ctx.rectangle( (posx + 1 + extents.width), ((posy - vmargin) - height), 1, (height + (vmargin * 2)) );
       ctx.fill();
     }
 

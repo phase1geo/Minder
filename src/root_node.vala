@@ -19,13 +19,9 @@ public class RootNode : Node {
   /* Draws the rectangle around the root node */
   public void draw_rectangle( Context ctx, Theme theme, Layout layout ) {
 
-    double padx = 15;
-    double pady = 15;
-    double posx = this.posx - padx;
-    double posy = (this.posy - _height) - pady;
-    double r    = 10.0;
-    double h    = _height + (pady * 2);
-    double w    = _width  + (padx * 2);
+    double r = 10.0;
+    double h = _height + (layout.pady * 2);
+    double w = _width  + (layout.padx * 2);
 
     /* Draw the rounded box around the text */
     set_context_color( ctx, theme.root_background );
