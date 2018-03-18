@@ -479,7 +479,7 @@ public class DrawArea : Gtk.DrawingArea {
         diff_x = -100;
       }
     } else {
-      if( (800 /* TBD */ - (x + w)) < 10 ) {
+      if( (get_allocated_width() - (x + w)) < 10 ) {
         diff_x = 100;
       }
     }
