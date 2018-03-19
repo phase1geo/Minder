@@ -70,7 +70,7 @@ public class NonrootNode : Node {
     ctx.set_line_width( 4 );
     ctx.move_to( parent_x, parent_y );
     if( side == 0 ) {
-      ctx.line_to( (posx - _width - (_padx * 2)), (posy + _height + (_pady * 2)) );
+      ctx.line_to( (posx + _width + (_padx * 2)), (posy + _height + (_pady * 2)) );
     } else {
       ctx.line_to( posx, (posy + _height + (_pady * 2)) );
     }

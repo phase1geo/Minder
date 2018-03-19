@@ -205,6 +205,9 @@ public class Node : Object {
       int width, height;
       _layout.set_text( name, -1 );
       _layout.get_size( out width, out height );
+      if( side == 0 ) {
+        posx = (posx + _width) - (width / Pango.SCALE);
+      }
       _width    = (width  / Pango.SCALE);
       _height   = (height / Pango.SCALE);
       _prevname = name;
