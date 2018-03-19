@@ -64,7 +64,9 @@ public class Node : Object {
 
   /* Returns true if the given cursor coordinates lies within this node */
   public virtual bool is_within( double x, double y ) {
-    return( (posx < x) && (x < (posx + _width)) && (posy < y) && (y < (posy - _height)) );
+    double cx, cy, cw, ch;
+    bbox( out cx, out cy, out cw, out ch );
+    return( (cx < x) && (x < (cx + cw)) && (cy < y) && (y < (cy + ch)) );
   }
 
   /* Finds the node which contains the given pixel coordinates */
@@ -383,40 +385,6 @@ public class Node : Object {
     }
   }
 
-  /*
-   Returns a newline formatted version of the name which will fit
-   within a given width.
-  */
-  private string get_formatted_name( Context ctx ) {
-
-    TextExtents extents;
-    string[]    words = name.split( " " );
-    string[]    fname = {};
-    int         index = 0;
-    int         start = 0;
-
-    fname += "";
-
-    stdout.printf( "name: %s, words: %d\n", name, words.length );
-
-    for( int i=0; i<words.length; i++ ) {
-      string line = string.joinv( " ", words[start:i+1] );
-      text_extents( ctx, line, out extents );
-      if( extents.width > 200 ) {
-        fname += "";
-        index++;
-        start = i;
-      }
-      fname[index] = line;
-      stdout.printf( "  index: %d, line: %s, fname[]=%s\n", index, line, fname[index] );
-    }
-
-    stdout.printf( "fname length: %d, fname: %s\n", fname.length, string.joinv( "\n", fname ) );
-
-    return( string.joinv( "\n", fname ) );
-
-  }
-
   /* Draws the node font to the screen */
   public virtual void draw_name( Cairo.Context ctx, Theme theme, Layout layout ) {
 
@@ -463,10 +431,12 @@ public class Node : Object {
 
     /* Draw the insertion cursor if we are in the 'editable' state */
     if( (mode == NodeMode.EDITABLE) || (mode == NodeMode.EDITED) ) {
-      TextExtents extents;
-      text_extents( ctx, name.substring( 0, _cursor ), out extents );
+      var rect = text.index_to_pos( _cursor );
       set_context_color( ctx, theme.text_cursor );
-      ctx.rectangle( (posx + 1 + extents.width), ((posy - vmargin) - height), 1, (height + (vmargin * 2)) );
+      double ix, iy;
+      ix = (posx + _padx) + (rect.x / Pango.SCALE) - 1;
+      iy = (posy + _pady) + (rect.y / Pango.SCALE);
+      ctx.rectangle( ix, iy, 1, (rect.height / Pango.SCALE) );
       ctx.fill();
     }
 

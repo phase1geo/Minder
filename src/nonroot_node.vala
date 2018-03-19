@@ -32,20 +32,19 @@ public class NonrootNode : Node {
   /* Provides the point to link to children nodes */
   protected override void link_point( out double x, out double y ) {
     if( side == 0 ) {
-      x = (posx - 15);
+      x = posx;
     } else {
-      x = (posx + _width + 15);
+      x = posx + _width + (_padx * 2);
     }
-    y = (posy + 10);
+    y = posy + _height + (_pady * 2);
   }
 
   /* Draws the line under the node name */
   public void draw_line( Context ctx, Theme theme, Layout layout ) {
 
-    double padx  = 15;
-    double posx  = this.posx - padx;
-    double posy  = this.posy + 10;
-    double w     = _width + (padx * 2);
+    double posx  = this.posx;
+    double posy  = this.posy + _height + (_pady * 2);
+    double w     = _width + (_padx * 2);
     RGBA   color = theme.link_color( color_index );
 
     /* Draw the line under the text name */
@@ -71,9 +70,9 @@ public class NonrootNode : Node {
     ctx.set_line_width( 4 );
     ctx.move_to( parent_x, parent_y );
     if( side == 0 ) {
-      ctx.line_to( (posx + _width + 15), (posy + 10) );
+      ctx.line_to( (posx - _width - (_padx * 2)), (posy + _height + (_pady * 2)) );
     } else {
-      ctx.line_to( (posx - 15), (posy + 10) );
+      ctx.line_to( posx, (posy + _height + (_pady * 2)) );
     }
     ctx.stroke();
 

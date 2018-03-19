@@ -19,20 +19,22 @@ public class Layout : Object {
     double cx, cy, cw, ch;
     parent.bbox( out px, out py, out pw, out ph );
     child.bbox( out cx, out cy, out cw, out ch );
-    ch = 25;
+    ch = 21;
     if( parent.children().length == 0 ) {
       x = px;
       y = py;
       h = 0;
     } else {
       bbox( parent, 1, out x, out y, out w, out h );
+      stdout.printf( "parent, x: %g, y: %g, w: %g, h: %g\n", x, y, w, h );
     }
     if( child.side == 0 ) {
       child.posx = (x - _pc_gap) - cw;
-      child.posy = (y + h) + ((ch + _sb_gap) / 2);
+      child.posy = y + ((ch + _sb_gap) / 2);
     } else {
+      stdout.printf( "y: %g, ch: %g, sb_gap: %g\n", y, ch, _sb_gap );
       child.posx = (x + pw) + _pc_gap;
-      child.posy = (y + h)  + ((ch + _sb_gap) / 2);
+      child.posy = y + ((ch + _sb_gap) / 2);
     }
     adjust_tree( parent, 0, (0 - ((ch + _sb_gap) / 2)) );
   }

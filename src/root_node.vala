@@ -12,8 +12,8 @@ public class RootNode : Node {
 
   /* Calculates the point on the parent node to start a link */
   protected override void link_point( out double x, out double y ) {
-    x = (posx - 15) + (_width / 2) + 40;
-    y = (posy - _height - 15) + ((_height / 2) + 10);
+    x = posx + (_width / 2);
+    y = posy + (_height / 2);
   }
 
   /* Draws the rectangle around the root node */
