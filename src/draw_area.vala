@@ -327,6 +327,7 @@ public class DrawArea : Gtk.DrawingArea {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
       }
+      adjust_origin();
       changed = true;
     }
   }
@@ -350,6 +351,7 @@ public class DrawArea : Gtk.DrawingArea {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
       }
+      adjust_origin();
       changed = true;
     }
   }
@@ -481,14 +483,15 @@ public class DrawArea : Gtk.DrawingArea {
     double diff_x = 0;
     double diff_y = 0;
     _current_node.bbox( out x, out y, out w, out h );
-    if( _current_node.side == 0 ) {
-      if( x < 10 ) {
-        diff_x = -100;
-      }
-    } else {
-      if( (get_allocated_width() - (x + w)) < 10 ) {
-        diff_x = 100;
-      }
+    if( x < 10 ) {
+      diff_x = -100;
+    } else if( (get_allocated_width() - (x + w)) < 10 ) {
+      diff_x = 100;
+    }
+    if( y < 10 ) {
+      diff_y = -100;
+    } else if( (get_allocated_height() - (y + h)) < 10 ) {
+      diff_y = 100;
     }
     move_origin( diff_x, diff_y );
   }

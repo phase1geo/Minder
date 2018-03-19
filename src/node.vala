@@ -19,12 +19,14 @@ public struct NodeBounds {
 public class Node : Object {
 
   /* Member variables */
-  protected double _width  = 0;
-  protected double _height = 0;
-  protected double _padx   = 0;
-  protected double _pady   = 0;
-  private   int    _cursor = 0;   /* Location of the cursor when editing */
-  private   Node[] _children;
+  protected double       _width    = 0;
+  protected double       _height   = 0;
+  protected double       _padx     = 0;
+  protected double       _pady     = 0;
+  private   int          _cursor   = 0;   /* Location of the cursor when editing */
+  private   Node[]       _children;
+  private   string       _prevname = "";
+  private   Pango.Layout _layout   = null;
 
   /* Properties */
   public string   name     { get; set; default = ""; }
@@ -197,8 +199,21 @@ public class Node : Object {
 
   }
 
+  /* Updates the width and height based on the current name */
+  private void update_size() {
+    if( name != _prevname ) {
+      int width, height;
+      _layout.set_text( name, -1 );
+      _layout.get_size( out width, out height );
+      _width    = (width  / Pango.SCALE);
+      _height   = (height / Pango.SCALE);
+      _prevname = name;
+    }
+  }
+
   /* Returns the bounding box for this node */
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
+    update_size();
     x = posx;
     y = posy;
     w = _width  + (_padx * 2);
@@ -273,8 +288,7 @@ public class Node : Object {
         if( n != this ) {
           tmp += n;
         }
-      }
-      parent._children = tmp;
+      } parent._children = tmp;
       parent = null;
     }
   }
@@ -339,22 +353,6 @@ public class Node : Object {
     return( null );
   }
 
-  /* Calculates the boundaries of the given string */
-  private void text_extents( Context ctx, string s, out TextExtents extents ) {
-    if( s == "" ) {
-      ctx.text_extents( "I", out extents );
-      extents.width = 0;
-    } else {
-      string txt     = s;
-      string chomped = s.chomp();
-      int    diff    = txt.length - chomped.length;
-      if( diff > 0 ) {
-        txt = chomped + "i".ndup( diff );
-      }
-      ctx.text_extents( txt, out extents );
-    }
-  }
-
   /* Adjusts the posx and posy values */
   public virtual void pan( double origin_x, double origin_y ) {
     posx -= origin_x;
@@ -388,26 +386,14 @@ public class Node : Object {
   /* Draws the node font to the screen */
   public virtual void draw_name( Cairo.Context ctx, Theme theme, Layout layout ) {
 
-    var text             = Pango.cairo_create_layout( ctx );
-    var font_description = new Pango.FontDescription();
-    int width, height;
-    int hmargin          = 3;
-    int vmargin          = 3;
+    int hmargin = 3;
+    int vmargin = 3;
 
-    /* Setup the font description */
-    font_description.set_size( 14 * Pango.SCALE );
+    /* Make sure the the size is up-to-date */
+    update_size();
 
-    /* Adjust the options for the text to be rendered */
-    text.set_font_description( font_description );
-    text.set_width( 200 * Pango.SCALE );
-    text.set_text( name, -1 );
-    text.set_wrap( Pango.WrapMode.WORD );
-    text.get_size( out width, out height );
-
-    _width  = (width / Pango.SCALE);
-    _height = (height / Pango.SCALE);
-    _padx   = layout.padx;
-    _pady   = layout.pady;
+    _padx = layout.padx;
+    _pady = layout.pady;
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( (mode == NodeMode.SELECTED) || (mode == NodeMode.EDITABLE) ) {
@@ -427,11 +413,11 @@ public class Node : Object {
       case NodeMode.EDITABLE :  set_context_color( ctx, theme.textsel_foreground );  break;
       default                :  set_context_color( ctx, (parent == null) ? theme.root_foreground : theme.foreground );  break;
     }
-    Pango.cairo_show_layout( ctx, text );
+    Pango.cairo_show_layout( ctx, _layout );
 
     /* Draw the insertion cursor if we are in the 'editable' state */
     if( (mode == NodeMode.EDITABLE) || (mode == NodeMode.EDITED) ) {
-      var rect = text.index_to_pos( _cursor );
+      var rect = _layout.index_to_pos( _cursor );
       set_context_color( ctx, theme.text_cursor );
       double ix, iy;
       ix = (posx + _padx) + (rect.x / Pango.SCALE) - 1;
@@ -447,6 +433,12 @@ public class Node : Object {
 
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Layout layout ) {
+    if( _layout == null ) {
+      _layout = Pango.cairo_create_layout( ctx );
+      _layout.set_font_description( layout.get_font_description() );
+      _layout.set_width( 200 * Pango.SCALE );
+      _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
+    }
     foreach (Node n in _children) {
       n.draw_all( ctx, theme, layout );
     }

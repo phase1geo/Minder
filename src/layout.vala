@@ -1,7 +1,8 @@
 public class Layout : Object {
 
-  protected double _pc_gap = 100;  /* Parent/child gap */
-  protected double _sb_gap = 5;    /* Sibling gap */
+  protected double                _pc_gap = 100;  /* Parent/child gap */
+  protected double                _sb_gap = 5;    /* Sibling gap */
+  protected Pango.FontDescription _font_description = null;
 
   public string name { protected set; get; }
   public int    padx { protected set; get; default = 10; }
@@ -10,6 +11,8 @@ public class Layout : Object {
   /* Default constructor */
   public Layout() {
     name = "Default";
+    _font_description = new Pango.FontDescription();
+    _font_description.set_size( 14 * Pango.SCALE );
   }
 
   /* Adjusts the specified child to be a set distance from the parent */
@@ -19,22 +22,19 @@ public class Layout : Object {
     double cx, cy, cw, ch;
     parent.bbox( out px, out py, out pw, out ph );
     child.bbox( out cx, out cy, out cw, out ch );
-    ch = 21;
     if( parent.children().length == 0 ) {
       x = px;
       y = py;
       h = 0;
     } else {
       bbox( parent, 1, out x, out y, out w, out h );
-      stdout.printf( "parent, x: %g, y: %g, w: %g, h: %g\n", x, y, w, h );
     }
     if( child.side == 0 ) {
       child.posx = (x - _pc_gap) - cw;
-      child.posy = y + ((ch + _sb_gap) / 2);
+      child.posy = y + h + (_sb_gap / 2);
     } else {
-      stdout.printf( "y: %g, ch: %g, sb_gap: %g\n", y, ch, _sb_gap );
       child.posx = (x + pw) + _pc_gap;
-      child.posy = y + ((ch + _sb_gap) / 2);
+      child.posy = y + h + (_sb_gap / 2);
     }
     adjust_tree( parent, 0, (0 - ((ch + _sb_gap) / 2)) );
   }
@@ -100,6 +100,10 @@ public class Layout : Object {
         propagate_side( current, side );
       }
     }
+  }
+
+  public Pango.FontDescription get_font_description() {
+    return( _font_description );
   }
 
 }
