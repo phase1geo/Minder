@@ -12,7 +12,7 @@ public class Layout : Object {
   public Layout() {
     name = "Default";
     _font_description = new Pango.FontDescription();
-    _font_description.set_size( 14 * Pango.SCALE );
+    _font_description.set_size( 12 * Pango.SCALE );
   }
 
   /* Adjusts the specified child to be a set distance from the parent */
@@ -36,6 +36,7 @@ public class Layout : Object {
       child.posx = (x + pw) + _pc_gap;
       child.posy = y + h + (_sb_gap / 2);
     }
+    stdout.printf( "Adjusting tree by %g, ch: %g, sb_gap: %g\n", (0 - ((ch + _sb_gap) / 2)), ch, _sb_gap );
     adjust_tree( parent, 0, (0 - ((ch + _sb_gap) / 2)) );
   }
 

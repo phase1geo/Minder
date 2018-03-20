@@ -146,14 +146,33 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
-  /* Sets the current node pointer to the node that is within the given coordinates */
-  private void set_current_node_at_position( double x, double y ) {
-    _current_node = null;
+  /* Sets the current node pointer to the node that is within the given coordinates.
+   Returns true if */
+  private bool set_current_node_at_position( double x, double y ) {
     foreach (Node n in _nodes) {
-      if( select_node( n.contains( x, y ) ) ) {
-        return;
+      Node match = n.contains( x, y );
+      if( match != null ) {
+        if( match == _current_node ) {
+          if( match.mode == NodeMode.SELECTED ) {
+            match.mode = NodeMode.EDITABLE;
+            match.move_cursor_to_end();
+            return( true );
+          }
+        } else {
+          if( _current_node != null ) {
+            _current_node.mode = NodeMode.NONE;
+          }
+          _current_node = match;
+          if( match.mode == NodeMode.NONE ) {
+            match.mode = NodeMode.SELECTED;
+            return( true );
+          }
+        }
+        return( false );
       }
     }
+    _current_node = null;
+    return( true );
   }
 
   /* Returns the attachable node if one is found */
@@ -189,26 +208,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( event.button == 1 ) {
       _press_x = event.x;
       _press_y = event.y;
-      set_current_node_at_position( event.x, event.y );
-      stdout.printf( "After set_current_node_at_position\n" );
-      if( _current_node != null ) {
-        stdout.printf( "  current_node is NOT null, mode: %s :)\n", _current_node.mode.to_string() );
-        switch( _current_node.mode ) {
-          case NodeMode.NONE     :
-            stdout.printf( "A SELECTED\n" );
-            _current_node.mode = NodeMode.SELECTED;
-            _pressed = true;
-            break;
-          case NodeMode.SELECTED :
-            stdout.printf( "A EDITABLE\n" );
-            _current_node.move_cursor_to_end();
-            _current_node.mode = NodeMode.EDITABLE;
-            _pressed = true;
-            break;
-        }
-      } else {
-        _pressed = true;
-      }
+      _pressed = set_current_node_at_position( event.x, event.y );
       queue_draw();
     }
     return( false );
@@ -268,13 +268,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* If the specified node is not null, selects the node and makes it the current node */
   private bool select_node( Node? n ) {
     if( n != null ) {
-      if( n.mode == NodeMode.NONE ) {
+      if( n != _current_node ) {
         if( _current_node != null ) {
-          stdout.printf( "B NONE\n" );
           _current_node.mode = NodeMode.NONE;
         }
         _current_node = n;
-        stdout.printf( "B SELECTED\n" );
         _current_node.mode = NodeMode.SELECTED;
       }
       return( true );
@@ -311,7 +309,6 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the escape character is entered in the drawing area */
   private void handle_escape() {
     if( is_mode_edit() ) {
-      stdout.printf( "C SELECTED\n" );
       _current_node.mode = NodeMode.SELECTED;
       queue_draw();
     }
@@ -320,7 +317,6 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the return character is entered in the drawing area */
   private void handle_return() {
     if( is_mode_edit() ) {
-      stdout.printf( "D SELECTED\n" );
       _current_node.mode = NodeMode.SELECTED;
       queue_draw();
     } else if( !_current_node.is_root() ) {
@@ -331,12 +327,10 @@ public class DrawArea : Gtk.DrawingArea {
         node.color_index = ((NonrootNode)_current_node).color_index;
         node.side        = _current_node.side;
       }
-      stdout.printf( "D NONE\n" );
       _current_node.mode = NodeMode.NONE;
       _layout.add_child_of( _current_node.parent, node );
       node.attach( _current_node.parent );
       if( select_node( node ) ) {
-        stdout.printf( "D EDITABLE\n" );
         node.mode = NodeMode.EDITABLE;
         queue_draw();
       }
@@ -348,7 +342,6 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the tab character is entered in the drawing area */
   private void handle_tab() {
     if( is_mode_edit() ) {
-      stdout.printf( "E SELECTED\n" );
       _current_node.mode = NodeMode.SELECTED;
       queue_draw();
     } else if( is_mode_selected() ) {
@@ -359,12 +352,10 @@ public class DrawArea : Gtk.DrawingArea {
         node.color_index = ((NonrootNode)_current_node).color_index;
         node.side        = _current_node.side;
       }
-      stdout.printf( "E NONE\n" );
       _current_node.mode = NodeMode.NONE;
       _layout.add_child_of( _current_node, node );
       node.attach( _current_node );
       if( select_node( node ) ) {
-        stdout.printf( "E EDITABLE\n" );
         node.mode = NodeMode.EDITABLE;
         queue_draw();
       }
