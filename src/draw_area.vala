@@ -486,6 +486,10 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* 
+   Checks to see if the current node boundaries are close to running off the canvas
+   and adjusts the view to keep everything visible
+  */
   private void adjust_origin() {
     double x, y, w, h;
     double diff_x = 0;
