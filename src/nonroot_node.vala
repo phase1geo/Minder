@@ -50,6 +50,7 @@ public class NonrootNode : Node {
     /* Draw the line under the text name */
     set_context_color( ctx, color );
     ctx.set_line_width( 4 );
+    ctx.set_line_join( LineJoin.ROUND );
     ctx.move_to( posx, posy );
     ctx.line_to( (posx + w), posy );
     ctx.stroke();
@@ -68,6 +69,7 @@ public class NonrootNode : Node {
 
     set_context_color( ctx, color );
     ctx.set_line_width( 4 );
+    ctx.set_line_join( LineJoin.ROUND );
     ctx.move_to( parent_x, parent_y );
     if( side == 0 ) {
       ctx.line_to( (posx + _width + (_padx * 2)), (posy + _height + (_pady * 2)) );
