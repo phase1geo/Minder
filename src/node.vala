@@ -1,4 +1,5 @@
 using Gtk;
+using GLib;
 using Gdk;
 using Cairo;
 
@@ -24,8 +25,8 @@ public class Node : Object {
   protected double       _padx     = 0;
   protected double       _pady     = 0;
   private   int          _cursor   = 0;   /* Location of the cursor when editing */
-  private   Node[]       _children;
-  private   string       _prevname = "";
+  protected Array<Node>  _children;
+  private   string       _prevname = "~";
   private   Pango.Layout _layout   = null;
 
   /* Properties */
@@ -39,11 +40,14 @@ public class Node : Object {
   public int      side     { get; set; default = 1; }
 
   /* Default constructor */
-  public Node() {}
+  public Node() {
+    _children = new Array<Node>();
+  }
 
   /* Constructor initializing string */
   public Node.with_name( string n ) {
     name = n;
+    _children = new Array<Node>();
   }
 
   /* Returns true if the node does not have a parent */
@@ -76,8 +80,8 @@ public class Node : Object {
     if( is_within( x, y ) ) {
       return( this );
     } else {
-      foreach (Node n in _children) {
-        Node tmp = n.contains( x, y );
+      for( int i=0; i<_children.length; i++ ) {
+        Node tmp = _children.index( i ).contains( x, y );
         if( tmp != null ) {
           return( tmp );
         }
@@ -91,8 +95,8 @@ public class Node : Object {
     if( node == this ) {
       return( true );
     } else {
-      foreach (Node n in _children) {
-        if( n.contains_node( node ) ) {
+      for( int i=0; i<_children.length; i++ ) {
+        if( _children.index( i ).contains_node( node ) ) {
           return( true );
         }
       }
@@ -101,7 +105,7 @@ public class Node : Object {
   }
 
   /* Returns the children nodes of this node */
-  public Node[] children() {
+  public Array<Node> children() {
     return( _children );
   }
 
@@ -157,7 +161,7 @@ public class Node : Object {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 NonrootNode child = new NonrootNode();
                 child.load( it2 );
-                child.attach( this );
+                child.attach( this, -1 );
               }
             }
             break;
@@ -175,11 +179,14 @@ public class Node : Object {
   /* Saves the node contents to the given data output stream */
   protected Xml.Node* save_node() {
 
+    double width  = _width  - (_padx * 2);
+    double height = _height - (_pady * 2);
+
     Xml.Node* node = new Xml.Node( null, "node" );
     node->new_prop( "posx", posx.to_string() );
     node->new_prop( "posy", posy.to_string() );
-    node->new_prop( "width", _width.to_string() );
-    node->new_prop( "height", _height.to_string() );
+    node->new_prop( "width", width.to_string() );
+    node->new_prop( "height", height.to_string() );
     if( task >= 0 ) {
       node->new_prop( "task", task.to_string() );
     }
@@ -189,8 +196,8 @@ public class Node : Object {
 
     if( _children.length > 0 ) {
       Xml.Node* nodes = new Xml.Node( null, "nodes" );
-      foreach (Node n in _children) {
-        n.save( nodes );
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).save( nodes );
       }
       node->add_child( nodes );
     }
@@ -201,7 +208,7 @@ public class Node : Object {
 
   /* Updates the width and height based on the current name */
   private void update_size() {
-    if( name != _prevname ) {
+    if( (name != _prevname) && (_layout != null) ) {
       int width, height;
       _layout.set_text( name, -1 );
       _layout.get_size( out width, out height );
@@ -221,6 +228,22 @@ public class Node : Object {
     y = posy;
     w = _width  + (_padx * 2);
     h = _height + (_pady * 2);
+  }
+
+  /* Moves this node into the proper position within the parent node */
+  public void move_to_position( Node child, double x, double y ) {
+    child.detach();
+    for( int i=0; i<_children.length; i++ ) {
+      /*
+       TBD - This comparison needs to be run through layout as we may be
+       comparing either X or Y
+      */
+      if( y < _children.index( i ).posy ) {
+        child.attach( this, i );
+        return;
+      }
+    }
+    child.attach( this, -1 );
   }
 
   /* Move the cursor in the given direction */
@@ -286,12 +309,11 @@ public class Node : Object {
   /* Detaches this node from its parent node */
   public virtual void detach() {
     if( parent != null ) {
-      Node[] tmp = {};
-      foreach (Node n in parent._children) {
-        if( n != this ) {
-          tmp += n;
+      for( int i=0; i<parent.children().length; i++ ) {
+        if( parent.children().index( i ) == this ) {
+          parent.children().remove_index( i );
         }
-      } parent._children = tmp;
+      }
       parent = null;
     }
   }
@@ -299,19 +321,23 @@ public class Node : Object {
   /* Removes this node from the node tree along with all descendents */
   public virtual void delete() {
     detach();
-    _children = {};
+    _children.remove_range( 0, _children.length );
   }
 
   /* Attaches this node as a child of the given node */
-  public virtual void attach( Node parent ) {
+  public virtual void attach( Node parent, int index ) {
     this.parent = parent;
-    this.parent._children += this;
+    if( index == -1 ) {
+      this.parent.children().append_val( this );
+    } else {
+      this.parent.children().insert_val( index, this );
+    }
   }
 
   /* Returns a reference to the first child of this node */
   public virtual Node? first_child() {
     if( _children.length > 0 ) {
-      return( _children[0] );
+      return( _children.index( 0 ) );
     }
     return( null );
   }
@@ -319,39 +345,35 @@ public class Node : Object {
   /* Returns a reference to the last child of this node */
   public virtual Node? last_child() {
     if( _children.length > 0 ) {
-      return( _children[_children.length-1] );
+      return( _children.index( _children.length - 1 ) );
     }
     return( null );
   }
 
   /* Returns a reference to the next child after the specified child of this node */
   public virtual Node? next_child( Node n ) {
-    int i = 0;
-    foreach (Node c in _children) {
-      if( c == n ) {
+    for( int i=0; i<_children.length; i++ ) {
+      if( _children.index( i ) == n ) {
         if( (i + 1) < _children.length ) {
-          return( _children[i+1] );
+          return( _children.index( i + 1 ) );
         } else {
           return( null );
         }
       }
-      i++;
     }
     return( null );
   }
 
   /* Returns a reference to the next child after the specified child of this node */
   public virtual Node? prev_child( Node n ) {
-    int i = 0;
-    foreach (Node c in _children) {
-      if( c == n ) {
+    for( int i=0; i<_children.length; i++ ) {
+      if( _children.index( i ) == n ) {
         if( i > 0 ) {
-          return( _children[i-1] );
+          return( _children.index( i - 1 ) );
         } else {
           return( null );
         }
       }
-      i++;
     }
     return( null );
   }
@@ -360,19 +382,14 @@ public class Node : Object {
   public virtual void pan( double origin_x, double origin_y ) {
     posx -= origin_x;
     posy -= origin_y;
-    foreach (Node n in _children) {
-      n.pan( origin_x, origin_y );
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).pan( origin_x, origin_y );
     }
   }
 
   /* Sets the context source color to the given color value */
   protected void set_context_color( Context ctx, RGBA color ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
-  }
-
-  /* Returns true if this model is placed on the right side of the node */
-  public bool on_right() {
-    return( (parent != null) && (parent.posx > posx) );
   }
 
   /* Returns the link point for this node */
@@ -442,8 +459,8 @@ public class Node : Object {
       _layout.set_width( 200 * Pango.SCALE );
       _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     }
-    foreach (Node n in _children) {
-      n.draw_all( ctx, theme, layout );
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).draw_all( ctx, theme, layout );
     }
     draw( ctx, theme, layout );
   }

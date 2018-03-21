@@ -1,18 +1,20 @@
 using Gtk;
+using GLib;
 using Gdk;
 using Cairo;
 
 public class DrawArea : Gtk.DrawingArea {
 
-  private double _press_x;
-  private double _press_y;
-  private double _origin_x = 0.0;
-  private double _origin_y = 0.0;
-  private bool   _pressed = false;
-  private Node   _current_node;
-  private Node[] _nodes;
-  private Theme  _theme;
-  private Layout _layout;
+  private double      _press_x;
+  private double      _press_y;
+  private double      _origin_x = 0.0;
+  private double      _origin_y = 0.0;
+  private bool        _pressed = false;
+  private bool        _motion = false;
+  private Node        _current_node;
+  private Array<Node> _nodes;
+  private Theme       _theme;
+  private Layout      _layout;
 
   public bool changed { set; get; default = false; }
 
@@ -21,6 +23,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     _theme  = new ThemeDefault();
     _layout = new Layout();
+    _nodes  = new Array<Node>();
 
     /* Set the CSS provider from the theme */
     StyleContext.add_provider_for_screen(
@@ -45,6 +48,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
+
+    /* Make sure that we draw before we do anything else */
+    queue_draw();
 
   }
 
@@ -96,7 +102,7 @@ public class DrawArea : Gtk.DrawingArea {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 RootNode node = new RootNode();
                 node.load( it2 );
-                _nodes += node;
+                _nodes.append_val( node );
               }
             }
             break;
@@ -123,8 +129,8 @@ public class DrawArea : Gtk.DrawingArea {
     parent->add_child( origin );
 
     Xml.Node* nodes = new Xml.Node( null, "nodes" );
-    foreach (Node n in _nodes ) {
-      n.save( nodes );
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).save( nodes );
     }
     parent->add_child( nodes );
 
@@ -140,7 +146,7 @@ public class DrawArea : Gtk.DrawingArea {
     n.posx = 350;
     n.posy = 200;
 
-    _nodes += n;
+    _nodes.append_val( n );
 
     queue_draw();
 
@@ -149,15 +155,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* Sets the current node pointer to the node that is within the given coordinates.
    Returns true if */
   private bool set_current_node_at_position( double x, double y ) {
-    foreach (Node n in _nodes) {
-      Node match = n.contains( x, y );
+    for( int i=0; i<_nodes.length; i++ ) {
+      Node match = _nodes.index( i ).contains( x, y );
       if( match != null ) {
         if( match == _current_node ) {
-          if( match.mode == NodeMode.SELECTED ) {
-            match.mode = NodeMode.EDITABLE;
-            match.move_cursor_to_end();
-            return( true );
-          }
+          return( true );
         } else {
           if( _current_node != null ) {
             _current_node.mode = NodeMode.NONE;
@@ -171,15 +173,18 @@ public class DrawArea : Gtk.DrawingArea {
         return( false );
       }
     }
+    if( _current_node != null ) {
+      _current_node.mode = NodeMode.NONE;
+    }
     _current_node = null;
     return( true );
   }
 
   /* Returns the attachable node if one is found */
   private Node? attachable_node( double x, double y ) {
-    foreach (Node n in _nodes) {
-      Node tmp = n.contains( x, y );
-      if( (tmp != null) && (tmp != _current_node) && !tmp.contains_node( n ) ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      Node tmp = _nodes.index( i ).contains( x, y );
+      if( (tmp != null) && (tmp != _current_node) && !tmp.contains_node( _nodes.index( i ) ) ) {
         return( tmp );
       }
     }
@@ -190,15 +195,23 @@ public class DrawArea : Gtk.DrawingArea {
   private void move_origin( double diff_x, double diff_y ) {
     _origin_x += diff_x;
     _origin_y += diff_y;
-    foreach (Node n in _nodes) {
-      n.pan( diff_x, diff_y );
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).pan( diff_x, diff_y );
     }
   }
 
   /* Draw the available nodes */
   private bool on_draw( Context ctx ) {
-    foreach (Node n in _nodes) {
-      n.draw_all( ctx, _theme, _layout );
+    if( _layout.default_text_height == 0 ) {
+      var text = Pango.cairo_create_layout( ctx );
+      int width, height;
+      text.set_font_description( _layout.get_font_description() );
+      text.set_text( "O", -1 );
+      text.get_size( out width, out height );
+      _layout.default_text_height = height / Pango.SCALE;
+    }
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).draw_all( ctx, _theme, _layout );
     }
     return( false );
   }
@@ -209,6 +222,7 @@ public class DrawArea : Gtk.DrawingArea {
       _press_x = event.x;
       _press_y = event.y;
       _pressed = set_current_node_at_position( event.x, event.y );
+      _motion  = false;
       queue_draw();
     }
     return( false );
@@ -223,7 +237,7 @@ public class DrawArea : Gtk.DrawingArea {
         _current_node.posx += diffx;
         _current_node.posy += diffy;
         _layout.set_side( _current_node );
-        _layout.adjust_tree( _current_node, diffx, diffy );
+        _layout.adjust_tree( _current_node, null, _current_node.side, diffx, diffy );
         queue_draw();
       } else {
         double diff_x = (_press_x - event.x);
@@ -233,6 +247,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       _press_x = event.x;
       _press_y = event.y;
+      _motion  = true;
       changed = true;
     }
     return( false );
@@ -246,9 +261,15 @@ public class DrawArea : Gtk.DrawingArea {
         Node attach_node = attachable_node( event.x, event.y );
         if( attach_node != null ) {
           _current_node.detach();
-          _current_node.attach( attach_node );
+          _layout.add_child_of( attach_node, _current_node );
+          _current_node.attach( attach_node, -1 );
           queue_draw();
           changed = true;
+        } else if( !_motion ) {
+          _current_node.mode = NodeMode.EDITABLE;
+          _current_node.move_cursor_to_end();
+        } else if( _current_node.parent != null ) {
+          _current_node.parent.move_to_position( _current_node, event.x, event.y );
         }
       }
     }
@@ -329,7 +350,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       _current_node.mode = NodeMode.NONE;
       _layout.add_child_of( _current_node.parent, node );
-      node.attach( _current_node.parent );
+      node.attach( _current_node.parent, -1 );
       if( select_node( node ) ) {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
@@ -354,7 +375,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       _current_node.mode = NodeMode.NONE;
       _layout.add_child_of( _current_node, node );
-      node.attach( _current_node );
+      node.attach( _current_node, -1 );
       if( select_node( node ) ) {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
@@ -408,17 +429,15 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_up() {
     if( is_mode_selected() ) {
       if( _current_node.is_root() ) {
-        int i = 0;
-        foreach (Node n in _nodes) {
-          if( n == _current_node ) {
+        for( int i=0; i<_nodes.length; i++ ) {
+          if( _nodes.index( i ) == _current_node ) {
             if( i > 0 ) {
-              if( select_node( _nodes[i-1] ) ) {
+              if( select_node( _nodes.index( i - 1 ) ) ) {
                 queue_draw();
               }
               return;
             }
           }
-          i++;
         }
       } else {
         if( select_node( _current_node.parent.prev_child( _current_node ) ) ) {
@@ -432,17 +451,15 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_down() {
     if( is_mode_selected() ) {
       if( _current_node.is_root() ) {
-        int i = 0;
-        foreach (Node n in _nodes) {
-          if( n == _current_node ) {
+        for( int i=0; i<_nodes.length; i++ ) {
+          if( _nodes.index( i ) == _current_node ) {
             if( (i + 1) > _nodes.length ) {
-              if( select_node( _nodes[i+1] ) ) {
+              if( select_node( _nodes.index( i + 1 ) ) ) {
                 queue_draw();
               }
               return;
             }
           }
-          i++;
         }
       } else {
         if( select_node( _current_node.parent.next_child( _current_node ) ) ) {
@@ -457,7 +474,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_mode_selected() ) {
       if( _current_node.is_root() ) {
         if( _nodes.length > 0 ) {
-          if( select_node( _nodes[0] ) ) {
+          if( select_node( _nodes.index( 0 ) ) ) {
             queue_draw();
           }
         }
@@ -474,7 +491,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_mode_selected() ) {
       if( _current_node.is_root() ) {
         if( _nodes.length > 0 ) {
-          if( select_node( _nodes[_nodes.length-1] ) ) {
+          if( select_node( _nodes.index( _nodes.length - 1 ) ) ) {
             queue_draw();
           }
         }
@@ -486,7 +503,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* 
+  /*
    Checks to see if the current node boundaries are close to running off the canvas
    and adjusts the view to keep everything visible
   */

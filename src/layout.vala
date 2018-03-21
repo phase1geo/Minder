@@ -1,18 +1,20 @@
 public class Layout : Object {
 
   protected double                _pc_gap = 100;  /* Parent/child gap */
-  protected double                _sb_gap = 5;    /* Sibling gap */
+  protected double                _sb_gap = 8;    /* Sibling gap */
   protected Pango.FontDescription _font_description = null;
 
   public string name { protected set; get; }
   public int    padx { protected set; get; default = 10; }
-  public int    pady { protected set; get; default = 10; }
+  public int    pady { protected set; get; default = 5; }
+  public int    default_text_height { set; get; default = 0; }
 
   /* Default constructor */
   public Layout() {
     name = "Default";
     _font_description = new Pango.FontDescription();
-    _font_description.set_size( 12 * Pango.SCALE );
+    _font_description.set_family( "Sans" );
+    _font_description.set_size( 11 * Pango.SCALE );
   }
 
   /* Adjusts the specified child to be a set distance from the parent */
@@ -20,48 +22,64 @@ public class Layout : Object {
     double x, y, w, h;
     double px, py, pw, ph;
     double cx, cy, cw, ch;
+    double adjust;
     parent.bbox( out px, out py, out pw, out ph );
     child.bbox( out cx, out cy, out cw, out ch );
+    if( ch == 0 ) {
+      ch = default_text_height + (pady * 2);
+    }
+    adjust = 0 - ((ch + _sb_gap) / 2);
     if( parent.children().length == 0 ) {
       x = px;
       y = py;
       h = 0;
     } else {
-      bbox( parent, 1, out x, out y, out w, out h );
+      bbox( parent, 1, child.side, out x, out y, out w, out h );
     }
     if( child.side == 0 ) {
       child.posx = (x - _pc_gap) - cw;
-      child.posy = y + h + (_sb_gap / 2);
+      child.posy = y + h + (_sb_gap / 2) + adjust;
     } else {
       child.posx = (x + pw) + _pc_gap;
-      child.posy = y + h + (_sb_gap / 2);
+      child.posy = y + h + (_sb_gap / 2) + adjust;
     }
-    stdout.printf( "Adjusting tree by %g, ch: %g, sb_gap: %g\n", (0 - ((ch + _sb_gap) / 2)), ch, _sb_gap );
-    adjust_tree( parent, 0, (0 - ((ch + _sb_gap) / 2)) );
+    do {
+      adjust_tree( parent, child, child.side, 0, adjust );
+      child  = parent;
+      parent = parent.parent;
+    } while( parent != null );
   }
 
   /* Get the bbox for the given parent to the given depth */
-  public virtual void bbox( Node parent, int depth, out double x, out double y, out double w, out double h ) {
-    int num_children = parent.children().length;
-    if( (depth == 0) || (num_children == 0) ) {
-      parent.bbox( out x, out y, out w, out h );
-    } else {
-      double x0, y0, w0, h0, xl, yl, wl, hl;
-      bbox( parent.children()[0],              (depth - 1), out x0, out y0, out w0, out h0 );
-      bbox( parent.children()[num_children-1], (depth - 1), out xl, out yl, out wl, out hl );
-      x = (parent.posx < x0) ? parent.posx : ((x0 < xl) ? x0 : xl);
-      y = (parent.posy < y0) ? parent.posy : ((y0 < yl) ? y0 : yl);
-      w = (x0 + w0) - x;
-      h = (yl + hl) - y;
+  public virtual void bbox( Node parent, int depth, int side, out double x, out double y, out double w, out double h ) {
+    uint num_children = parent.children().length;
+    parent.bbox( out x, out y, out w, out h );
+    if( (depth != 0) && (num_children != 0) ) {
+      double cx, cy, cw, ch;
+      double mw, mh;
+      for( int i=0; i<parent.children().length; i++ ) {
+        if( parent.children().index( i ).side == side ) {
+          bbox( parent.children().index( i ), (depth - 1), side, out cx, out cy, out cw, out ch );
+          x  = (x < cx) ? x : cx;
+          y  = (y < cy) ? y : cy;
+          mw = (cx + cw) - x;
+          mh = (cy + ch) - y;
+          w  = (w < mw) ? mw : w;
+          h  = (h < mh) ? mh : h;
+        }
+      }
     }
   }
 
   /* Adjusts the given tree by the given amount */
-  public virtual void adjust_tree( Node parent, double xamount, double yamount ) {
-    foreach (Node child in parent.children()) {
-      child.posx += xamount;
-      child.posy += yamount;
-      adjust_tree( child, xamount, yamount );
+  public virtual void adjust_tree( Node parent, Node? child, int side, double xamount, double yamount ) {
+    for( int i=0; i<parent.children().length; i++ ) {
+      Node n = parent.children().index( i );
+      if( (child != n) && (n.side == side) ) {
+        n.posx += xamount;
+        n.posy += yamount;
+        adjust_tree( n, child, side, xamount, yamount );
+      }
     }
   }
 
@@ -69,7 +87,8 @@ public class Layout : Object {
   protected virtual void propagate_side( Node parent, int side ) {
     double px, py, pw, ph;
     parent.bbox( out px, out py, out pw, out ph );
-    foreach (Node n in parent.children()) {
+    for( int i=0; i<parent.children().length; i++ ) {
+      Node n = parent.children().index( i );
       if( n.side != side ) {
         n.side = side;
         if( side == 0 ) {

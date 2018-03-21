@@ -3,8 +3,7 @@ using Gdk;
 
 public class Theme : Object {
 
-  private int    _index;
-  private string _css;
+  private int _index;
 
   public    string name               { protected set; get; }
   public    RGBA   background         { protected set; get; }

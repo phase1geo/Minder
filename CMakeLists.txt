@@ -23,7 +23,7 @@ set (VERSION_INFO "")
 find_package(PkgConfig)
 
 # now let's actually check for the required dependencies
-pkg_check_modules(DEPS REQUIRED gtk+-3.0 gee-0.8 libxml-2.0 unity)
+pkg_check_modules(DEPS REQUIRED gtk+-3.0 gee-0.8 glib-2.0 libxml-2.0 unity)
 
 add_definitions(${DEPS_CFLAGS})
 link_libraries(${DEPS_LIBRARIES})
@@ -53,6 +53,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
 PACKAGES
     gtk+-3.0
     gee-0.8
+    glib-2.0
     libxml-2.0
     unity
 )

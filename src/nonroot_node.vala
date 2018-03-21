@@ -8,6 +8,26 @@ public class NonrootNode : Node {
   /* Default constructor */
   public NonrootNode() {}
 
+  /* Forces all children nodes to use the same color index as the parent node. */
+  private void propagate_color() {
+    color_index = (parent as NonrootNode).color_index;
+    for( int i=0; i<_children.length; i++ ) {
+      NonrootNode n = (_children.index( i ) as NonrootNode);
+      n.propagate_color();
+    }
+  }
+
+  /*
+   Performs a child attachment to a parent node, assumes the color
+   index of the parent
+  */
+  public override void attach( Node parent, int index ) {
+    base.attach( parent, index );
+    if( !parent.is_root() ) {
+      propagate_color();
+    }
+  }
+
   /* Loads the data from the input stream */
   public override void load( Xml.Node* n ) {
 
@@ -50,7 +70,7 @@ public class NonrootNode : Node {
     /* Draw the line under the text name */
     set_context_color( ctx, color );
     ctx.set_line_width( 4 );
-    ctx.set_line_join( LineJoin.ROUND );
+    ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( posx, posy );
     ctx.line_to( (posx + w), posy );
     ctx.stroke();
@@ -69,7 +89,7 @@ public class NonrootNode : Node {
 
     set_context_color( ctx, color );
     ctx.set_line_width( 4 );
-    ctx.set_line_join( LineJoin.ROUND );
+    ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( parent_x, parent_y );
     if( side == 0 ) {
       ctx.line_to( (posx + _width + (_padx * 2)), (posy + _height + (_pady * 2)) );
