@@ -10,6 +10,11 @@ public class RootNode : Node {
     base.with_name( name );
   }
 
+  /* Returns -1 to indicate that this node is not a child of a parent node */
+  public override int index() {
+    return( -1 );
+  }
+
   /* Calculates the point on the parent node to start a link */
   protected override void link_point( out double x, out double y ) {
     x = posx + (_width / 2);

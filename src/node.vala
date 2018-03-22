@@ -109,6 +109,16 @@ public class Node : Object {
     return( _children );
   }
 
+  /* Returns the child index of this node within its parent */
+  public virtual int index() {
+    for( int i=0; i<parent.children().length; i++ ) {
+      if( parent.children().index( i ) == this ) {
+        return i;
+      }
+    }
+    return( -1 );
+  }
+
   /* Loads the name value from the given XML node */
   private void load_name( Xml.Node* n ) {
     if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
@@ -206,8 +216,14 @@ public class Node : Object {
 
   }
 
-  /* Updates the width and height based on the current name */
-  private void update_size() {
+  /*
+   Updates the width and height based on the current name.  Returns true
+   if the width or height has changed since the last time these values were
+   updated.
+  */
+  public void update_size( out double width_diff, out double height_diff ) {
+    width_diff  = 0;
+    height_diff = 0;
     if( (name != _prevname) && (_layout != null) ) {
       int width, height;
       _layout.set_text( name, -1 );
@@ -215,15 +231,18 @@ public class Node : Object {
       if( side == 0 ) {
         posx = (posx + _width) - (width / Pango.SCALE);
       }
-      _width    = (width  / Pango.SCALE);
-      _height   = (height / Pango.SCALE);
-      _prevname = name;
+      width_diff  = (width  / Pango.SCALE) - _width;
+      height_diff = (height / Pango.SCALE) - _height;
+      _width      = (width  / Pango.SCALE);
+      _height     = (height / Pango.SCALE);
+      _prevname   = name;
     }
   }
 
   /* Returns the bounding box for this node */
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
-    update_size();
+    double width_diff, height_diff;
+    update_size( out width_diff, out height_diff );
     x = posx;
     y = posy;
     w = _width  + (_padx * 2);
@@ -270,7 +289,7 @@ public class Node : Object {
   }
 
   /* Handles a backspace key event */
-  public void edit_backspace() {
+  public void edit_backspace( Layout layout ) {
     if( _cursor > 0 ) {
       if( mode == NodeMode.EDITABLE ) {
         name    = "";
@@ -281,10 +300,11 @@ public class Node : Object {
       }
     }
     mode = NodeMode.EDITED;
+    layout.handle_update_by_edit( this );
   }
 
   /* Handles a delete key event */
-  public void edit_delete() {
+  public void edit_delete( Layout layout ) {
     if( _cursor < name.length ) {
       name = name.splice( _cursor, (_cursor + 1) );
     } else if( mode == NodeMode.EDITABLE ) {
@@ -292,10 +312,11 @@ public class Node : Object {
       _cursor = 0;
     }
     mode = NodeMode.EDITED;
+    layout.handle_update_by_edit( this );
   }
 
   /* Inserts the given string at the current cursor position and adjusts cursor */
-  public void edit_insert( string s ) {
+  public void edit_insert( string s, Layout layout ) {
     if( mode == NodeMode.EDITABLE ) {
       name    = s;
       _cursor = 1;
@@ -304,16 +325,13 @@ public class Node : Object {
       _cursor += s.length;
     }
     mode = NodeMode.EDITED;
+    layout.handle_update_by_edit( this );
   }
 
   /* Detaches this node from its parent node */
   public virtual void detach() {
     if( parent != null ) {
-      for( int i=0; i<parent.children().length; i++ ) {
-        if( parent.children().index( i ) == this ) {
-          parent.children().remove_index( i );
-        }
-      }
+      parent.children().remove_index( index() );
       parent = null;
     }
   }
@@ -352,28 +370,18 @@ public class Node : Object {
 
   /* Returns a reference to the next child after the specified child of this node */
   public virtual Node? next_child( Node n ) {
-    for( int i=0; i<_children.length; i++ ) {
-      if( _children.index( i ) == n ) {
-        if( (i + 1) < _children.length ) {
-          return( _children.index( i + 1 ) );
-        } else {
-          return( null );
-        }
-      }
+    int idx = n.index();
+    if( (idx != -1) && ((idx + 1) < _children.length) ) {
+      return( _children.index( idx + 1 ) );
     }
     return( null );
   }
 
   /* Returns a reference to the next child after the specified child of this node */
   public virtual Node? prev_child( Node n ) {
-    for( int i=0; i<_children.length; i++ ) {
-      if( _children.index( i ) == n ) {
-        if( i > 0 ) {
-          return( _children.index( i - 1 ) );
-        } else {
-          return( null );
-        }
-      }
+    int idx = n.index();
+    if( (idx != -1) && (idx > 0) ) {
+      return( _children.index( idx - 1 ) );
     }
     return( null );
   }
@@ -406,11 +414,12 @@ public class Node : Object {
   /* Draws the node font to the screen */
   public virtual void draw_name( Cairo.Context ctx, Theme theme, Layout layout ) {
 
-    int hmargin = 3;
-    int vmargin = 3;
+    int    hmargin = 3;
+    int    vmargin = 3;
+    double width_diff, height_diff;
 
     /* Make sure the the size is up-to-date */
-    update_size();
+    update_size( out width_diff, out height_diff );
 
     _padx = layout.padx;
     _pady = layout.pady;

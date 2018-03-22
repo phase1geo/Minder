@@ -28,7 +28,7 @@ public class Layout : Object {
     if( ch == 0 ) {
       ch = default_text_height + (pady * 2);
     }
-    adjust = 0 - ((ch + _sb_gap) / 2);
+    adjust = (ch + _sb_gap) / 2;
     if( parent.children().length == 0 ) {
       x = px;
       y = py;
@@ -38,13 +38,13 @@ public class Layout : Object {
     }
     if( child.side == 0 ) {
       child.posx = (x - _pc_gap) - cw;
-      child.posy = y + h + (_sb_gap / 2) + adjust;
+      child.posy = y + h + (_sb_gap / 2) - adjust;
     } else {
       child.posx = (x + pw) + _pc_gap;
-      child.posy = y + h + (_sb_gap / 2) + adjust;
+      child.posy = y + h + (_sb_gap / 2) - adjust;
     }
     do {
-      adjust_tree( parent, child, child.side, 0, adjust );
+      adjust_tree( parent, child, child.side, true, 0, adjust );
       child  = parent;
       parent = parent.parent;
     } while( parent != null );
@@ -72,13 +72,21 @@ public class Layout : Object {
   }
 
   /* Adjusts the given tree by the given amount */
-  public virtual void adjust_tree( Node parent, Node? child, int side, double xamount, double yamount ) {
+  public virtual void adjust_tree( Node parent, Node? child, int side, bool both, double xamount, double yamount ) {
     for( int i=0; i<parent.children().length; i++ ) {
       Node n = parent.children().index( i );
       if( (child != n) && (n.side == side) ) {
-        n.posx += xamount;
-        n.posy += yamount;
-        adjust_tree( n, child, side, xamount, yamount );
+        if( child.posx < n.posx ) {
+          n.posx += xamount;
+        } else if( both ) {
+          n.posx -= xamount;
+        }
+        if( child.posy < n.posy ) {
+          n.posy += yamount;
+        } else if( both ) {
+          n.posy -= yamount;
+        }
+        adjust_tree( n, child, side, both, xamount, yamount );
       }
     }
   }
@@ -119,6 +127,18 @@ public class Layout : Object {
         current.side = side;
         propagate_side( current, side );
       }
+    }
+  }
+
+  /* Updates the layout when necessary when a node is edited */
+  public virtual void handle_update_by_edit( Node n ) {
+    double width_diff, height_diff;
+    n.update_size( out width_diff, out height_diff );
+    if( (n.parent != null) && (height_diff > 0) ) {
+      do {
+        adjust_tree( n.parent, n, n.side, false, 0, height_diff );
+        n = n.parent;
+      } while( n.parent != null );
     }
   }
 

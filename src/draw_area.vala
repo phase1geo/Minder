@@ -237,7 +237,7 @@ public class DrawArea : Gtk.DrawingArea {
         _current_node.posx += diffx;
         _current_node.posy += diffy;
         _layout.set_side( _current_node );
-        _layout.adjust_tree( _current_node, null, _current_node.side, diffx, diffy );
+        _layout.adjust_tree( _current_node, null, _current_node.side, true, diffx, diffy );
         queue_draw();
       } else {
         double diff_x = (_press_x - event.x);
@@ -304,7 +304,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the backspace character is entered in the drawing area */
   private void handle_backspace() {
     if( is_mode_edit() ) {
-      _current_node.edit_backspace();
+      _current_node.edit_backspace( _layout );
       queue_draw();
       changed = true;
     } else if( is_mode_selected() ) {
@@ -317,7 +317,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the delete character is entered in the drawing area */
   private void handle_delete() {
     if( is_mode_edit() ) {
-      _current_node.edit_delete();
+      _current_node.edit_delete( _layout );
       queue_draw();
       changed = true;
     } else if( is_mode_selected() ) {
@@ -528,7 +528,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever a printable character is entered in the drawing area */
   private void handle_printable( string str ) {
     if( is_mode_edit() && str.get_char( 0 ).isprint() ) {
-      _current_node.edit_insert( str );
+      _current_node.edit_insert( str, _layout );
       adjust_origin();
       queue_draw();
       changed = true;
