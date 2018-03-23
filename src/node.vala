@@ -250,7 +250,9 @@ public class Node : Object {
   }
 
   /* Moves this node into the proper position within the parent node */
-  public void move_to_position( Node child, double x, double y ) {
+  public void move_to_position( Node child, double x, double y, Layout layout ) {
+    int from_index = child.index();
+    int from_side  = child.side;
     child.detach();
     for( int i=0; i<_children.length; i++ ) {
       /*
@@ -259,6 +261,7 @@ public class Node : Object {
       */
       if( y < _children.index( i ).posy ) {
         child.attach( this, i );
+        layout.reposition( this, from_index, from_side );
         return;
       }
     }
@@ -337,9 +340,14 @@ public class Node : Object {
   }
 
   /* Removes this node from the node tree along with all descendents */
-  public virtual void delete() {
+  public virtual void delete( Layout _layout ) {
+    double x, y, w, h;
+    int    idx = index();
+    Node   p   = parent;
     detach();
+    _layout.bbox( this, -1, side, out x, out y, out w, out h );
     _children.remove_range( 0, _children.length );
+    _layout.handle_update_by_delete( p, idx, side, w, h );
   }
 
   /* Attaches this node as a child of the given node */

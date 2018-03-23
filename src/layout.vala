@@ -31,23 +31,20 @@ public class Layout : Object {
     adjust = (ch + _sb_gap) / 2;
     if( parent.children().length == 0 ) {
       x = px;
-      y = py;
       h = 0;
+      child.posy = py + ((ph / 2) - (ch / 2));
+      stdout.printf( "py: %g, y: %g, ph: %g, ch: %g\n", py, child.posy, ph, ch );
     } else {
       bbox( parent, 1, child.side, out x, out y, out w, out h );
+      child.posy = y + h + _sb_gap - adjust;
+      stdout.printf( "child.posy: %g, h: %g, adjust: %g\n", child.posy, h, adjust );
     }
     if( child.side == 0 ) {
       child.posx = (x - _pc_gap) - cw;
-      child.posy = y + h + (_sb_gap / 2) - adjust;
     } else {
       child.posx = (x + pw) + _pc_gap;
-      child.posy = y + h + (_sb_gap / 2) - adjust;
     }
-    do {
-      adjust_tree( parent, child, child.side, true, 0, adjust );
-      child  = parent;
-      parent = parent.parent;
-    } while( parent != null );
+    adjust_tree_all( parent, child, true, 0, adjust );
   }
 
   /* Get the bbox for the given parent to the given depth */
@@ -89,6 +86,14 @@ public class Layout : Object {
         adjust_tree( n, child, side, both, xamount, yamount );
       }
     }
+  }
+
+  public virtual void adjust_tree_all( Node parent, Node child, bool both, double xamount, double yamount ) {
+    do {
+      adjust_tree( parent, child, child.side, both, xamount, yamount );
+      child  = parent;
+      parent = parent.parent;
+    } while( parent != null );
   }
 
   /* Recursively sets the side property of this node and all children nodes */
@@ -139,6 +144,36 @@ public class Layout : Object {
         adjust_tree( n.parent, n, n.side, false, 0, height_diff );
         n = n.parent;
       } while( n.parent != null );
+    }
+  }
+
+  public virtual void handle_update_by_insert( Node parent, Node child, int pos ) {
+    /* TBD */
+  }
+
+  public virtual void handle_update_by_delete( Node parent, int index, int side, double xamount, double yamount ) {
+    double adjust = yamount / 2;
+    stdout.printf( "In handle_update_by_delete, adjust: %g\n", adjust );
+    for( int i=0; i<parent.children().length; i++ ) {
+      if( parent.children().index( i ).side == side ) {
+        if( i == index ) { adjust = (0 - adjust); }
+        parent.children().index( i ).posy += adjust;
+        adjust_tree_all( parent, parent.children().index( i ), true, 0, adjust );
+      }
+    }
+  }
+
+  public virtual void reposition( Node n, int from_index, int from_side ) {
+    double x, y, w, h;
+    Node parent   = n.parent;
+    int  to_index = n.index();
+    int  to_side  = n.side;
+    bbox( n, -1, from_side, out x, out y, out w, out h );
+    if( from_side != to_side ) {
+      handle_update_by_delete( parent, from_index, from_side, 0, (h / 2) );
+      handle_update_by_insert( parent, n, to_index );
+    } else {
+      /* TBD */
     }
   }
 

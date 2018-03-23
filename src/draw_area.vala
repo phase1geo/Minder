@@ -269,7 +269,7 @@ public class DrawArea : Gtk.DrawingArea {
           _current_node.mode = NodeMode.EDITABLE;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
-          _current_node.parent.move_to_position( _current_node, event.x, event.y );
+          _current_node.parent.move_to_position( _current_node, event.x, event.y, _layout );
         }
       }
     }
@@ -308,7 +308,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
       changed = true;
     } else if( is_mode_selected() ) {
-      _current_node.delete();
+      _current_node.delete( _layout );
       queue_draw();
       changed = true;
     }
@@ -321,7 +321,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
       changed = true;
     } else if( is_mode_selected() ) {
-      _current_node.delete();
+      _current_node.delete( _layout );
       queue_draw();
       changed = true;
     }
