@@ -24,6 +24,9 @@ public class Node : Object {
   protected double       _height   = 0;
   protected double       _padx     = 0;
   protected double       _pady     = 0;
+  protected double       _ipadx    = 0;
+  protected double       _ipady    = 0;
+  protected double       _task_radius = 5;
   private   int          _cursor   = 0;   /* Location of the cursor when editing */
   protected Array<Node>  _children;
   private   string       _prevname = "~";
@@ -34,7 +37,7 @@ public class Node : Object {
   public double   posx     { get; set; default = 50.0; }
   public double   posy     { get; set; default = 50.0; }
   public string   note     { get; set; default = ""; }
-  public double   task     { get; set; default = -1.0; }
+  public double   task     { get; set; default = /* -1.0 */ 25; }
   public NodeMode mode     { get; set; default = NodeMode.NONE; }
   public Node     parent   { get; protected set; default = null; }
   public int      side     { get; set; default = 1; }
@@ -256,8 +259,13 @@ public class Node : Object {
     update_size( out width_diff, out height_diff );
     x = posx;
     y = posy;
-    w = _width  + (_padx * 2);
+    w = _width  + (_padx * 2) + ((task >= 0) ? (_ipadx + (_task_radius * 2)) : 0);
     h = _height + (_pady * 2);
+  }
+
+  /* Returns the amount of internal width to draw the task checkbutton */
+  protected double task_width() {
+    return( (task >= 0) ? ((_task_radius * 2) + _ipadx) : 0 );
   }
 
   /* Moves this node into the proper position within the parent node */
@@ -425,6 +433,14 @@ public class Node : Object {
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
   }
 
+  /*
+   Sets the context source color to the given color value overriding the
+   alpha value with the given value.
+  */
+  protected void set_context_color_with_alpha( Context ctx, RGBA color, double alpha ) {
+    ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
+  }
+
   /* Returns the link point for this node */
   protected virtual void link_point( out double x, out double y ) {
     if( side == 0 ) {
@@ -446,8 +462,12 @@ public class Node : Object {
     /* Make sure the the size is up-to-date */
     update_size( out width_diff, out height_diff );
 
-    _padx = layout.padx;
-    _pady = layout.pady;
+    _padx  = layout.padx;
+    _pady  = layout.pady;
+    _ipadx = layout.ipadx;
+    _ipady = layout.ipady;
+
+    double twidth = task_width();
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( (mode == NodeMode.SELECTED) || (mode == NodeMode.EDITABLE) ) {
@@ -456,12 +476,12 @@ public class Node : Object {
       } else {
         set_context_color( ctx, theme.textsel_background );
       }
-      ctx.rectangle( ((posx + _padx) - hmargin), ((posy + _pady) - vmargin), (_width + (hmargin * 2)), (_height + (vmargin * 2)) );
+      ctx.rectangle( ((posx + _padx + twidth) - hmargin), ((posy + _pady) - vmargin), (_width + (hmargin * 2)), (_height + (vmargin * 2)) );
       ctx.fill();
     }
 
     /* Output the text */
-    ctx.move_to( (posx + _padx), (posy + _pady) );
+    ctx.move_to( (posx + _padx + twidth), (posy + _pady) );
     switch( mode ) {
       case NodeMode.SELECTED :  set_context_color( ctx, theme.nodesel_foreground );  break;
       case NodeMode.EDITABLE :  set_context_color( ctx, theme.textsel_foreground );  break;
@@ -474,10 +494,63 @@ public class Node : Object {
       var rect = _layout.index_to_pos( _cursor );
       set_context_color( ctx, theme.text_cursor );
       double ix, iy;
-      ix = (posx + _padx) + (rect.x / Pango.SCALE) - 1;
+      ix = (posx + _padx + twidth) + (rect.x / Pango.SCALE) - 1;
       iy = (posy + _pady) + (rect.y / Pango.SCALE);
       ctx.rectangle( ix, iy, 1, (rect.height / Pango.SCALE) );
       ctx.fill();
+    }
+
+  }
+
+  protected virtual void draw_leaf_task( Context ctx, RGBA color ) {
+
+    if( task >= 0 ) {
+
+      double x = posx + _padx + _task_radius;
+      double y = posy + _pady + (_height / 2);
+
+      set_context_color( ctx, color );
+      ctx.set_line_width( 1 );
+      ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
+
+      if( task == 0 ) {
+        ctx.stroke();
+      } else {
+        ctx.fill();
+      }
+
+    }
+
+  }
+
+  /* Draws the task checkbutton */
+  protected virtual void draw_acc_task( Context ctx, RGBA color ) {
+
+    if( task >= 0 ) {
+
+      double x     = posx + _padx + _task_radius;
+      double y     = posy + _pady + (_height / 2);
+      double angle = (((task / 100) * 360) + 270) * (Math.PI / 180.0);
+
+      /* Draw circle outline */
+      if( (_children.length == 0) && (task < 100) ) {
+        set_context_color_with_alpha( ctx, color, 0.3 );
+        ctx.set_line_width( 1 );
+        ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
+        ctx.stroke();
+      }
+
+      /* Draw completeness pie */
+      if( task > 0 ) {
+        set_context_color( ctx, color );
+        ctx.set_line_width( 1 );
+        ctx.arc( x, y, _task_radius, (1.5 * Math.PI), angle );
+        ctx.line_to( x, y );
+        ctx.arc( x, y, _task_radius, (1.5 * Math.PI), (1.5 * Math.PI) );
+        ctx.line_to( x, y );
+        ctx.fill();
+      }
+
     }
 
   }

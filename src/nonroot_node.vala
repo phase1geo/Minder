@@ -64,7 +64,7 @@ public class NonrootNode : Node {
 
     double posx  = this.posx;
     double posy  = this.posy + _height + (_pady * 2);
-    double w     = _width + (_padx * 2);
+    double w     = _width + (_padx * 2) + task_width();
     RGBA   color = theme.link_color( color_index );
 
     /* Draw the line under the text name */
@@ -92,7 +92,7 @@ public class NonrootNode : Node {
     ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( parent_x, parent_y );
     if( side == 0 ) {
-      ctx.line_to( (posx + _width + (_padx * 2)), (posy + _height + (_pady * 2)) );
+      ctx.line_to( (posx + _width + task_width() + (_padx * 2)), (posy + _height + (_pady * 2)) );
     } else {
       ctx.line_to( posx, (posy + _height + (_pady * 2)) );
     }
@@ -100,9 +100,19 @@ public class NonrootNode : Node {
 
   }
 
+  /* Draws the task checkbutton */
+  public void draw_task( Context ctx, Theme theme, Layout layout ) {
+    if( _children.length == 0 ) {
+      draw_leaf_task( ctx, theme.link_color( color_index ) );
+    } else {
+      draw_acc_task( ctx, theme.link_color( color_index ) );
+    }
+  }
+
   /* Draws this node */
   public override void draw( Context ctx, Theme theme, Layout layout ) {
     draw_name( ctx, theme, layout );
+    draw_task( ctx, theme, layout );
     draw_line( ctx, theme, layout );
     draw_link( ctx, theme, layout );
   }

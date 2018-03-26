@@ -4,9 +4,11 @@ public class Layout : Object {
   protected double                _sb_gap = 8;    /* Sibling gap */
   protected Pango.FontDescription _font_description = null;
 
-  public string name { protected set; get; }
-  public int    padx { protected set; get; default = 10; }
-  public int    pady { protected set; get; default = 5; }
+  public string name  { protected set; get; }
+  public int    padx  { protected set; get; default = 10; }
+  public int    pady  { protected set; get; default = 5; }
+  public int    ipadx { protected set; get; default = 6; }
+  public int    ipady { protected set; get; default = 3; }
   public int    default_text_height { set; get; default = 0; }
 
   /* Default constructor */
