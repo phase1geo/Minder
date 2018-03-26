@@ -17,36 +17,6 @@ public class Layout : Object {
     _font_description.set_size( 11 * Pango.SCALE );
   }
 
-  /* Adjusts the specified child to be a set distance from the parent */
-  public virtual void add_child_of( Node parent, Node child ) {
-    double x, y, w, h;
-    double px, py, pw, ph;
-    double cx, cy, cw, ch;
-    double adjust;
-    parent.bbox( out px, out py, out pw, out ph );
-    child.bbox( out cx, out cy, out cw, out ch );
-    if( ch == 0 ) {
-      ch = default_text_height + (pady * 2);
-    }
-    adjust = (ch + _sb_gap) / 2;
-    if( parent.children().length == 0 ) {
-      x = px;
-      h = 0;
-      child.posy = py + ((ph / 2) - (ch / 2));
-      stdout.printf( "py: %g, y: %g, ph: %g, ch: %g\n", py, child.posy, ph, ch );
-    } else {
-      bbox( parent, 1, child.side, out x, out y, out w, out h );
-      child.posy = y + h + _sb_gap - adjust;
-      stdout.printf( "child.posy: %g, h: %g, adjust: %g\n", child.posy, h, adjust );
-    }
-    if( child.side == 0 ) {
-      child.posx = (x - _pc_gap) - cw;
-    } else {
-      child.posx = (x + pw) + _pc_gap;
-    }
-    adjust_tree_all( parent, child, true, 0, adjust );
-  }
-
   /* Get the bbox for the given parent to the given depth */
   public virtual void bbox( Node parent, int depth, int side, out double x, out double y, out double w, out double h ) {
     uint num_children = parent.children().length;
@@ -69,30 +39,26 @@ public class Layout : Object {
   }
 
   /* Adjusts the given tree by the given amount */
-  public virtual void adjust_tree( Node parent, Node? child, int side, bool both, double xamount, double yamount ) {
+  public virtual void adjust_tree( Node parent, int child_index, int side, bool both, double xamount, double yamount ) {
     for( int i=0; i<parent.children().length; i++ ) {
-      Node n = parent.children().index( i );
-      if( (child != n) && (n.side == side) ) {
-        if( child.posx < n.posx ) {
-          n.posx += xamount;
-        } else if( both ) {
-          n.posx -= xamount;
-        }
-        if( child.posy < n.posy ) {
-          n.posy += yamount;
-        } else if( both ) {
-          n.posy -= yamount;
-        }
-        adjust_tree( n, child, side, both, xamount, yamount );
+      if( i != child_index ) {
+        Node n = parent.children().index( i );
+        n.posx += xamount;
+        n.posy += yamount;
+        adjust_tree( n, -1, side, both, xamount, yamount );
+      } else {
+        xamount = 0 - xamount;
+        yamount = 0 - yamount;
       }
     }
   }
 
-  public virtual void adjust_tree_all( Node parent, Node child, bool both, double xamount, double yamount ) {
+  /* Adjust the entire tree */
+  public virtual void adjust_tree_all( Node parent, int child_index, bool both, double xamount, double yamount ) {
     do {
-      adjust_tree( parent, child, child.side, both, xamount, yamount );
-      child  = parent;
-      parent = parent.parent;
+      adjust_tree( parent, child_index, parent.children().index( child_index ).side, both, xamount, yamount );
+      child_index = parent.index();
+      parent      = parent.parent;
     } while( parent != null );
   }
 
@@ -140,25 +106,54 @@ public class Layout : Object {
     double width_diff, height_diff;
     n.update_size( out width_diff, out height_diff );
     if( (n.parent != null) && (height_diff > 0) ) {
-      do {
-        adjust_tree( n.parent, n, n.side, false, 0, height_diff );
-        n = n.parent;
-      } while( n.parent != null );
+      adjust_tree_all( n.parent, n.index(), false, 0, height_diff );
+    }
+  }
+
+  /* Adjusts the gap between the parent and child noes */
+  private void set_pc_gap( Node n ) {
+    double px, py, pw, ph;
+    n.parent.bbox( out px, out py, out pw, out ph );
+    if( n.side == 0 ) {
+      double cx, cy, cw, ch;
+      n.bbox( out cx, out cy, out cw, out ch );
+      n.posx = px - (cw + _pc_gap);
+    } else {
+      n.posx = px + (pw + _pc_gap);
     }
   }
 
   public virtual void handle_update_by_insert( Node parent, Node child, int pos ) {
-    /* TBD */
+    double cx, cy, cw, ch;
+    double adjust;
+    child.bbox( out cx, out cy, out cw, out ch );
+    if( ch == 0 ) { ch = default_text_height + (pady * 2); }
+    adjust = (ch + _sb_gap) / 2;
+    set_pc_gap( child );
+    if( parent.side_count( child.side ) == 1 ) {
+      double px, py, pw, ph;
+      parent.bbox( out px, out py, out pw, out ph );
+      child.posy = py + ((ph / 2) - (ch / 2));
+      return;
+    } else if( ((pos + 1) == parent.children().length) || (parent.children().index( pos + 1 ).side != child.side) ) {
+      double sx, sy, sw, sh;
+      bbox( parent.children().index( pos - 1 ), -1, child.side, out sx, out sy, out sw, out sh );
+      child.posy = sy + sh + _sb_gap - adjust;
+    } else {
+      double sx, sy, sw, sh;
+      bbox( parent.children().index( pos + 1 ), -1, child.side, out sx, out sy, out sw, out sh );
+      child.posy = sy - adjust;
+    }
+    adjust_tree_all( parent, pos, true, 0, (0 - adjust) );
   }
 
   public virtual void handle_update_by_delete( Node parent, int index, int side, double xamount, double yamount ) {
-    double adjust = yamount / 2;
-    stdout.printf( "In handle_update_by_delete, adjust: %g\n", adjust );
+    double adjust = (yamount + _sb_gap) / 2;
     for( int i=0; i<parent.children().length; i++ ) {
       if( parent.children().index( i ).side == side ) {
         if( i == index ) { adjust = (0 - adjust); }
         parent.children().index( i ).posy += adjust;
-        adjust_tree_all( parent, parent.children().index( i ), true, 0, adjust );
+        adjust_tree_all( parent, i, true, 0, adjust );
       }
     }
   }

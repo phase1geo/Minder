@@ -21,8 +21,8 @@ public class NonrootNode : Node {
    Performs a child attachment to a parent node, assumes the color
    index of the parent
   */
-  public override void attach( Node parent, int index ) {
-    base.attach( parent, index );
+  public override void attach( Node parent, int index, Layout? layout ) {
+    base.attach( parent, index, layout );
     if( !parent.is_root() ) {
       propagate_color();
     }

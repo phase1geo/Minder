@@ -237,7 +237,7 @@ public class DrawArea : Gtk.DrawingArea {
         _current_node.posx += diffx;
         _current_node.posy += diffy;
         _layout.set_side( _current_node );
-        _layout.adjust_tree( _current_node, null, _current_node.side, true, diffx, diffy );
+        _layout.adjust_tree( _current_node, -1, _current_node.side, true, diffx, diffy );
         queue_draw();
       } else {
         double diff_x = (_press_x - event.x);
@@ -260,9 +260,8 @@ public class DrawArea : Gtk.DrawingArea {
       if( _current_node.mode == NodeMode.SELECTED ) {
         Node attach_node = attachable_node( event.x, event.y );
         if( attach_node != null ) {
-          _current_node.detach();
-          _layout.add_child_of( attach_node, _current_node );
-          _current_node.attach( attach_node, -1 );
+          _current_node.detach( _layout );
+          _current_node.attach( attach_node, -1, _layout );
           queue_draw();
           changed = true;
         } else if( !_motion ) {
@@ -270,6 +269,7 @@ public class DrawArea : Gtk.DrawingArea {
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
           _current_node.parent.move_to_position( _current_node, event.x, event.y, _layout );
+          queue_draw();
         }
       }
     }
@@ -349,8 +349,7 @@ public class DrawArea : Gtk.DrawingArea {
         node.side        = _current_node.side;
       }
       _current_node.mode = NodeMode.NONE;
-      _layout.add_child_of( _current_node.parent, node );
-      node.attach( _current_node.parent, -1 );
+      node.attach( _current_node.parent, (_current_node.index() + 1), _layout );
       if( select_node( node ) ) {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
@@ -374,8 +373,7 @@ public class DrawArea : Gtk.DrawingArea {
         node.side        = _current_node.side;
       }
       _current_node.mode = NodeMode.NONE;
-      _layout.add_child_of( _current_node, node );
-      node.attach( _current_node, -1 );
+      node.attach( _current_node, -1, _layout );
       if( select_node( node ) ) {
         node.mode = NodeMode.EDITABLE;
         queue_draw();

@@ -119,6 +119,17 @@ public class Node : Object {
     return( -1 );
   }
 
+  /* Returns the number of child nodes that match the given side value */
+  public virtual int side_count( int side ) {
+    int count = 0;
+    for( int i=0; i<children().length; i++ ) {
+      if( _children.index( i ).side == side ) {
+        count++;
+      }
+    }
+    return( count );
+  }
+
   /* Loads the name value from the given XML node */
   private void load_name( Xml.Node* n ) {
     if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
@@ -171,7 +182,7 @@ public class Node : Object {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 NonrootNode child = new NonrootNode();
                 child.load( it2 );
-                child.attach( this, -1 );
+                child.attach( this, -1, null );
               }
             }
             break;
@@ -251,21 +262,21 @@ public class Node : Object {
 
   /* Moves this node into the proper position within the parent node */
   public void move_to_position( Node child, double x, double y, Layout layout ) {
-    int from_index = child.index();
-    int from_side  = child.side;
-    child.detach();
+    int side = child.side;
+    child.detach( layout );
     for( int i=0; i<_children.length; i++ ) {
-      /*
-       TBD - This comparison needs to be run through layout as we may be
-       comparing either X or Y
-      */
-      if( y < _children.index( i ).posy ) {
-        child.attach( this, i );
-        layout.reposition( this, from_index, from_side );
-        return;
+      if( side == _children.index( i ).side ) {
+        /*
+         TBD - This comparison needs to be run through layout as we may be
+         comparing either X or Y
+        */
+        if( y < _children.index( i ).posy ) {
+          child.attach( this, i, layout );
+          return;
+        }
       }
     }
-    child.attach( this, -1 );
+    child.attach( this, -1, layout );
   }
 
   /* Move the cursor in the given direction */
@@ -332,31 +343,37 @@ public class Node : Object {
   }
 
   /* Detaches this node from its parent node */
-  public virtual void detach() {
+  public virtual void detach( Layout? layout ) {
     if( parent != null ) {
+      double x, y, w, h;
+      int    idx = index();
+      Node   p   = parent;
+      layout.bbox( this, -1, side, out x, out y, out w, out h );
       parent.children().remove_index( index() );
+      if( layout != null ) {
+        layout.handle_update_by_delete( p, idx, side, w, h );
+      }
       parent = null;
     }
   }
 
   /* Removes this node from the node tree along with all descendents */
-  public virtual void delete( Layout _layout ) {
-    double x, y, w, h;
-    int    idx = index();
-    Node   p   = parent;
-    detach();
-    _layout.bbox( this, -1, side, out x, out y, out w, out h );
+  public virtual void delete( Layout layout ) {
     _children.remove_range( 0, _children.length );
-    _layout.handle_update_by_delete( p, idx, side, w, h );
+    detach( layout );
   }
 
   /* Attaches this node as a child of the given node */
-  public virtual void attach( Node parent, int index ) {
+  public virtual void attach( Node parent, int index, Layout? layout ) {
     this.parent = parent;
     if( index == -1 ) {
-      this.parent.children().append_val( this );
+      index = (int)this.parent.children().length;
+      parent.children().append_val( this );
     } else {
-      this.parent.children().insert_val( index, this );
+      parent.children().insert_val( index, this );
+    }
+    if( layout != null ) {
+      layout.handle_update_by_insert( parent, this, index );
     }
   }
 
