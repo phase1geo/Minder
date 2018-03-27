@@ -64,7 +64,7 @@ public class NonrootNode : Node {
 
     double posx  = this.posx;
     double posy  = this.posy + _height + (_pady * 2);
-    double w     = _width + (_padx * 2) + task_width();
+    double w     = _width + (_padx * 2) + task_width() + note_width();
     RGBA   color = theme.link_color( color_index );
 
     /* Draw the line under the text name */
@@ -109,10 +109,15 @@ public class NonrootNode : Node {
     }
   }
 
+  public void draw_note( Context ctx, Theme theme, Layout layout ) {
+    draw_common_note( ctx, theme.foreground );
+  }
+
   /* Draws this node */
   public override void draw( Context ctx, Theme theme, Layout layout ) {
     draw_name( ctx, theme, layout );
     draw_task( ctx, theme, layout );
+    draw_note( ctx, theme, layout );
     draw_line( ctx, theme, layout );
     draw_link( ctx, theme, layout );
   }

@@ -152,6 +152,11 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Returns the current node */
+  public Node? get_current_node() {
+    return( _current_node );
+  }
+
   /*
    Sets the current node pointer to the node that is within the given coordinates.
    Returns true if we sucessfully set current_node to a valid node and made it

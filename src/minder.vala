@@ -2,10 +2,12 @@ using Gtk;
 
 public class Minder : Gtk.Application {
 
-  ApplicationWindow? _appwin = null;
-  DrawArea?          _canvas = null;
-  Document?          _doc = null;
-  Button?            _opts_btn = null;
+  ApplicationWindow? _appwin    = null;
+  Box?               _hbox      = null;
+  DrawArea?          _canvas    = null;
+  Revealer?          _inspector = null;
+  Document?          _doc       = null;
+  Button?            _opts_btn  = null;
 
   public Minder () {
     Object( application_id: "com.github.phase1geo.Minder", flags: ApplicationFlags.FLAGS_NONE );
@@ -53,10 +55,35 @@ public class Minder : Gtk.Application {
 
     var zoom_btn = new Button.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR );
     zoom_btn.set_tooltip_text( _( "Zoom" ) );
+    zoom_btn.clicked.connect( do_inspector );
     header.pack_end( zoom_btn );
+
+    /* Create hbox to pack the canvas and inspector panel */
+    _hbox = new Box( Orientation.HORIZONTAL, 0 );
 
     /* Create and pack the canvas */
     _canvas = new DrawArea();
+
+    /* Create the inspector sidebar */
+    _inspector = new Revealer();
+    _inspector.set_transition_type( RevealerTransitionType.SLIDE_LEFT );
+    _inspector.set_transition_duration( 500 );
+
+    Box ibox = new Box( Orientation.VERTICAL, 0 );
+
+    StackSwitcher sb    = new StackSwitcher();
+    Stack         stack = new Stack();
+    stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
+    stack.set_transition_duration( 500 );
+    stack.add_titled( new NodeInspector( _canvas ),   "node", "Node" );
+    stack.add_titled( new ThemeInspector( _canvas ),  "theme", "Theme" );
+    stack.add_titled( new LayoutInspector( _canvas ), "layout", "Layout" );
+
+    sb.set_stack( stack );
+
+    ibox.pack_start( sb,    false, false, 0 );
+    ibox.pack_start( stack, false, false, 0 );
+    _inspector.child = ibox;
 
     /* Create the document */
     _doc = new Document();
@@ -65,9 +92,12 @@ public class Minder : Gtk.Application {
     _canvas.initialize();
 
     /* Display the UI */
-    _appwin.add( _canvas );
+    _hbox.pack_start( _canvas,    true,  true, 0 );
+    _hbox.pack_start( _inspector, false, true, 0 );
+
+    _appwin.add( _hbox );
     _appwin.show_all();
-    _appwin.show();
+    // _appwin.show();
 
     Gtk.main();
 
@@ -123,6 +153,15 @@ public class Minder : Gtk.Application {
   public void do_preferences() {
     Popover p = new Popover( _opts_btn );
     // p.popup();
+  }
+
+  /* Shows or hides the inspector sidebar */
+  public void do_inspector() {
+    if( _inspector.child_revealed ) {
+      _inspector.reveal_child = false;
+    } else {
+      _inspector.reveal_child = true;
+    }
   }
 
   /* Main routine which gets everything started */

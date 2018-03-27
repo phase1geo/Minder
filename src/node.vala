@@ -27,11 +27,12 @@ public class Node : Object {
   protected double       _ipadx       = 0;
   protected double       _ipady       = 0;
   protected double       _task_radius = 5;
+  protected double       _alpha       = 0.3;
   private   int          _cursor      = 0;   /* Location of the cursor when editing */
   protected Array<Node>  _children;
   private   string       _prevname    = "~";
   private   Pango.Layout _layout      = null;
-  private   int          _task_count  = 1;
+  private   int          _task_count  = 0;
   private   int          _task_done   = 0;
 
   /* Properties */
@@ -87,7 +88,7 @@ public class Node : Object {
     if( _task_count > 0 ) {
       double tx, ty, tw, th;
       tx = posx + _padx;
-      ty = posy + _pady;
+      ty = posy + _pady + ((_height / 2) - _task_radius);
       tw = _task_radius * 2;
       th = _task_radius * 2;
       return( (tx < x) && (x < (tx + tw)) && (ty < y) && (y < (ty + th)) );
@@ -287,6 +288,11 @@ public class Node : Object {
     return( (_task_count > 0) ? ((_task_radius * 2) + _ipadx) : 0 );
   }
 
+  /* Returns the width of the note indicator */
+  protected double note_width() {
+    return( (note.length > 0) ? (10 + _ipadx) : 0 );
+  }
+
   /* Moves this node into the proper position within the parent node */
   public void move_to_position( Node child, double x, double y, Layout layout ) {
     int side = child.side;
@@ -445,6 +451,47 @@ public class Node : Object {
     return( null );
   }
 
+  /* Propagates a change in the task_done for this node to all parent nodes */
+  private void propagate_task_info( int count_adjust, int done_adjust ) {
+    Node p = parent;
+    while( p != null ) {
+      p._task_count += count_adjust;
+      p._task_done  += done_adjust;
+      p = p.parent;
+    }
+  }
+
+  /* Sets the task enable to the given value */
+  public void enable_task( bool task ) {
+    if( task ) {
+      _task_count = 1;
+      propagate_task_info( 1, 0 );
+    } else {
+      _task_count = 0;
+      propagate_task_info( -1, ((_task_done > 0) ? -1 : 0) );
+    }
+    _task_done = 0;
+  }
+
+  /*
+   Sets the task done indicator to the given value (0 or 1) and propagates the
+   change to all parent nodes.
+  */
+  public void set_task_done( int done ) {
+    if( _task_done != done ) {
+      _task_done = done;
+      propagate_task_info( 0, (done > 0) ? 1 : -1 );
+    }
+  }
+
+  /*
+   Toggles the current value of task done and propagates the change to all
+   parent nodes.
+  */
+  public void toggle_task_done() {
+    set_task_done( (_task_done > 0) ? 0 : 1 );
+  }
+
   /* Adjusts the posx and posy values */
   public virtual void pan( double origin_x, double origin_y ) {
     posx -= origin_x;
@@ -562,7 +609,7 @@ public class Node : Object {
 
       /* Draw circle outline */
       if( complete < 1 ) {
-        set_context_color_with_alpha( ctx, color, 0.3 );
+        set_context_color_with_alpha( ctx, color, _alpha );
         ctx.new_path();
         ctx.set_line_width( 1 );
         ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
@@ -585,6 +632,33 @@ public class Node : Object {
 
   }
 
+  protected virtual void draw_common_note( Context ctx, RGBA color ) {
+
+    if( note.length > 0 ) {
+
+      double x = posx + _padx + task_width() + _width + _ipadx;
+      double y = posy + _pady + (_height / 2) - 5;
+
+      set_context_color_with_alpha( ctx, color, _alpha );
+      ctx.new_path();
+      ctx.set_line_width( 1 );
+      ctx.move_to( x, y );
+      ctx.line_to( (x + 8), y );
+      ctx.stroke();
+      ctx.move_to( x, (y + 3) );
+      ctx.line_to( (x + 10), (y + 3) );
+      ctx.stroke();
+      ctx.move_to( x, (y + 6) );
+      ctx.line_to( (x + 10), (y + 6) );
+      ctx.stroke();
+      ctx.move_to( x, (y + 9) );
+      ctx.line_to( (x + 10), (y + 9) );
+      ctx.stroke();
+
+    }
+
+  }
+
   /* Draws the node on the screen */
   public virtual void draw( Context ctx, Theme theme, Layout layout ) {}
 
@@ -599,36 +673,8 @@ public class Node : Object {
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).draw_all( ctx, theme, layout );
     }
+    // ctx.scale( 0.5, 0.5 );
     draw( ctx, theme, layout );
-  }
-
-  /* Propagates a change in the task_done for this node to all parent nodes */
-  private void propagate_task_info( int count_adjust, int done_adjust ) {
-    Node p = parent;
-    while( p != null ) {
-      p._task_count += count_adjust;
-      p._task_done  += done_adjust;
-      p = p.parent;
-    }
-  }
-
-  /*
-   Sets the task done indicator to the given value (0 or 1) and propagates the
-   change to all parent nodes.
-  */
-  public void set_task_done( int done ) {
-    if( _task_done != done ) {
-      _task_done = done;
-      propagate_task_info( 0, (done > 0) ? 1 : -1 );
-    }
-  }
-
-  /*
-   Toggles the current value of task done and propagates the change to all
-   parent nodes.
-  */
-  public void toggle_task_done() {
-    set_task_done( (_task_done > 0) ? 0 : 1 );
   }
 
 }

@@ -45,11 +45,14 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/document.vala
     src/draw_area.vala
     src/layout.vala
+    src/layout_inspector.vala
     src/node.vala
+    src/node_inspector.vala
     src/nonroot_node.vala
     src/root_node.vala
     src/theme.vala
     src/theme_default.vala
+    src/theme_inspector.vala
 PACKAGES
     gtk+-3.0
     gee-0.8

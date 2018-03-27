@@ -287,6 +287,33 @@ src/layout.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layout.c.s
 .PHONY : src/layout.c.s
 
+src/layout_inspector.o: src/layout_inspector.c.o
+
+.PHONY : src/layout_inspector.o
+
+# target to build an object file
+src/layout_inspector.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layout_inspector.c.o
+.PHONY : src/layout_inspector.c.o
+
+src/layout_inspector.i: src/layout_inspector.c.i
+
+.PHONY : src/layout_inspector.i
+
+# target to preprocess a source file
+src/layout_inspector.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layout_inspector.c.i
+.PHONY : src/layout_inspector.c.i
+
+src/layout_inspector.s: src/layout_inspector.c.s
+
+.PHONY : src/layout_inspector.s
+
+# target to generate assembly for a file
+src/layout_inspector.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layout_inspector.c.s
+.PHONY : src/layout_inspector.c.s
+
 src/minder.o: src/minder.c.o
 
 .PHONY : src/minder.o
@@ -340,6 +367,33 @@ src/node.s: src/node.c.s
 src/node.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/node.c.s
 .PHONY : src/node.c.s
+
+src/node_inspector.o: src/node_inspector.c.o
+
+.PHONY : src/node_inspector.o
+
+# target to build an object file
+src/node_inspector.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/node_inspector.c.o
+.PHONY : src/node_inspector.c.o
+
+src/node_inspector.i: src/node_inspector.c.i
+
+.PHONY : src/node_inspector.i
+
+# target to preprocess a source file
+src/node_inspector.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/node_inspector.c.i
+.PHONY : src/node_inspector.c.i
+
+src/node_inspector.s: src/node_inspector.c.s
+
+.PHONY : src/node_inspector.s
+
+# target to generate assembly for a file
+src/node_inspector.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/node_inspector.c.s
+.PHONY : src/node_inspector.c.s
 
 src/nonroot_node.o: src/nonroot_node.c.o
 
@@ -449,6 +503,33 @@ src/theme_default.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme_default.c.s
 .PHONY : src/theme_default.c.s
 
+src/theme_inspector.o: src/theme_inspector.c.o
+
+.PHONY : src/theme_inspector.o
+
+# target to build an object file
+src/theme_inspector.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme_inspector.c.o
+.PHONY : src/theme_inspector.c.o
+
+src/theme_inspector.i: src/theme_inspector.c.i
+
+.PHONY : src/theme_inspector.i
+
+# target to preprocess a source file
+src/theme_inspector.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme_inspector.c.i
+.PHONY : src/theme_inspector.c.i
+
+src/theme_inspector.s: src/theme_inspector.c.s
+
+.PHONY : src/theme_inspector.s
+
+# target to generate assembly for a file
+src/theme_inspector.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme_inspector.c.s
+.PHONY : src/theme_inspector.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -474,12 +555,18 @@ help:
 	@echo "... src/layout.o"
 	@echo "... src/layout.i"
 	@echo "... src/layout.s"
+	@echo "... src/layout_inspector.o"
+	@echo "... src/layout_inspector.i"
+	@echo "... src/layout_inspector.s"
 	@echo "... src/minder.o"
 	@echo "... src/minder.i"
 	@echo "... src/minder.s"
 	@echo "... src/node.o"
 	@echo "... src/node.i"
 	@echo "... src/node.s"
+	@echo "... src/node_inspector.o"
+	@echo "... src/node_inspector.i"
+	@echo "... src/node_inspector.s"
 	@echo "... src/nonroot_node.o"
 	@echo "... src/nonroot_node.i"
 	@echo "... src/nonroot_node.s"
@@ -492,6 +579,9 @@ help:
 	@echo "... src/theme_default.o"
 	@echo "... src/theme_default.i"
 	@echo "... src/theme_default.s"
+	@echo "... src/theme_inspector.o"
+	@echo "... src/theme_inspector.i"
+	@echo "... src/theme_inspector.s"
 .PHONY : help
 
 

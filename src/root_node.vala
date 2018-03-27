@@ -26,7 +26,7 @@ public class RootNode : Node {
 
     double r = 10.0;
     double h = _height + (layout.pady * 2);
-    double w = _width  + (layout.padx * 2) + task_width();
+    double w = _width  + (layout.padx * 2) + task_width() + note_width();
 
     /* Draw the rounded box around the text */
     set_context_color( ctx, theme.root_background );
@@ -48,11 +48,16 @@ public class RootNode : Node {
     draw_acc_task( ctx, theme.root_foreground );
   }
 
+  public void draw_note( Context ctx, Theme theme, Layout layout ) {
+    draw_common_note( ctx, theme.root_foreground );
+  }
+
   /* Draws this node to the given canvas */
   public override void draw( Context ctx, Theme theme, Layout layout ) {
     draw_rectangle( ctx, theme, layout );
     draw_name( ctx, theme, layout );
     draw_task( ctx, theme, layout );
+    draw_note( ctx, theme, layout );
   }
 
 }
