@@ -20,27 +20,28 @@ public struct NodeBounds {
 public class Node : Object {
 
   /* Member variables */
-  protected double       _width    = 0;
-  protected double       _height   = 0;
-  protected double       _padx     = 0;
-  protected double       _pady     = 0;
-  protected double       _ipadx    = 0;
-  protected double       _ipady    = 0;
+  protected double       _width       = 0;
+  protected double       _height      = 0;
+  protected double       _padx        = 0;
+  protected double       _pady        = 0;
+  protected double       _ipadx       = 0;
+  protected double       _ipady       = 0;
   protected double       _task_radius = 5;
-  private   int          _cursor   = 0;   /* Location of the cursor when editing */
+  private   int          _cursor      = 0;   /* Location of the cursor when editing */
   protected Array<Node>  _children;
-  private   string       _prevname = "~";
-  private   Pango.Layout _layout   = null;
+  private   string       _prevname    = "~";
+  private   Pango.Layout _layout      = null;
+  private   int          _task_count  = 1;
+  private   int          _task_done   = 0;
 
   /* Properties */
-  public string   name     { get; set; default = ""; }
-  public double   posx     { get; set; default = 50.0; }
-  public double   posy     { get; set; default = 50.0; }
-  public string   note     { get; set; default = ""; }
-  public double   task     { get; set; default = /* -1.0 */ 25; }
-  public NodeMode mode     { get; set; default = NodeMode.NONE; }
-  public Node     parent   { get; protected set; default = null; }
-  public int      side     { get; set; default = 1; }
+  public string   name   { get; set; default = ""; }
+  public double   posx   { get; set; default = 50.0; }
+  public double   posy   { get; set; default = 50.0; }
+  public string   note   { get; set; default = ""; }
+  public NodeMode mode   { get; set; default = NodeMode.NONE; }
+  public Node     parent { get; protected set; default = null; }
+  public int      side   { get; set; default = 1; }
 
   /* Default constructor */
   public Node() {
@@ -76,6 +77,23 @@ public class Node : Object {
     double cx, cy, cw, ch;
     bbox( out cx, out cy, out cw, out ch );
     return( (cx < x) && (x < (cx + cw)) && (cy < y) && (y < (cy + ch)) );
+  }
+
+  /*
+   Returns true if the given cursor coordinates lies within the task checkbutton
+   area
+  */
+  public virtual bool is_within_task( double x, double y ) {
+    if( _task_count > 0 ) {
+      double tx, ty, tw, th;
+      tx = posx + _padx;
+      ty = posy + _pady;
+      tw = _task_radius * 2;
+      th = _task_radius * 2;
+      return( (tx < x) && (x < (tx + tw)) && (ty < y) && (y < (ty + th)) );
+    } else {
+      return( false );
+    }
   }
 
   /* Finds the node which contains the given pixel coordinates */
@@ -170,9 +188,10 @@ public class Node : Object {
       _height = double.parse( h );
     }
 
-    string? t = n->get_prop( "task" );
-    if( t != null ) {
-      task = double.parse( t );
+    string? tc = n->get_prop( "task" );
+    if( tc != null ) {
+      _task_count = 1;
+      _task_done  = int.parse( tc );
     }
 
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
@@ -211,8 +230,8 @@ public class Node : Object {
     node->new_prop( "posy", posy.to_string() );
     node->new_prop( "width", width.to_string() );
     node->new_prop( "height", height.to_string() );
-    if( task >= 0 ) {
-      node->new_prop( "task", task.to_string() );
+    if( (_task_count > 0) && is_leaf() ) {
+      node->new_prop( "task", _task_done.to_string() );
     }
 
     node->new_text_child( null, "nodename", name );
@@ -259,13 +278,13 @@ public class Node : Object {
     update_size( out width_diff, out height_diff );
     x = posx;
     y = posy;
-    w = _width  + (_padx * 2) + ((task >= 0) ? (_ipadx + (_task_radius * 2)) : 0);
+    w = _width  + (_padx * 2) + ((_task_count > 0) ? (_ipadx + (_task_radius * 2)) : 0);
     h = _height + (_pady * 2);
   }
 
   /* Returns the amount of internal width to draw the task checkbutton */
   protected double task_width() {
-    return( (task >= 0) ? ((_task_radius * 2) + _ipadx) : 0 );
+    return( (_task_count > 0) ? ((_task_radius * 2) + _ipadx) : 0 );
   }
 
   /* Moves this node into the proper position within the parent node */
@@ -357,6 +376,7 @@ public class Node : Object {
       int    idx = index();
       Node   p   = parent;
       layout.bbox( this, -1, side, out x, out y, out w, out h );
+      propagate_task_info( (0 - _task_count), (0 - _task_done) );
       parent.children().remove_index( index() );
       if( layout != null ) {
         layout.handle_update_by_delete( p, idx, side, w, h );
@@ -374,12 +394,18 @@ public class Node : Object {
   /* Attaches this node as a child of the given node */
   public virtual void attach( Node parent, int index, Layout? layout ) {
     this.parent = parent;
+    if( (parent._children.length == 0) && (parent._task_count == 1) ) {
+      parent.propagate_task_info( (0 - parent._task_count), (0 - parent._task_done) );
+      parent._task_count = 0;
+      parent._task_done  = 0;
+    }
     if( index == -1 ) {
       index = (int)this.parent.children().length;
       parent.children().append_val( this );
     } else {
       parent.children().insert_val( index, this );
     }
+    propagate_task_info( _task_count, _task_done );
     if( layout != null ) {
       layout.handle_update_by_insert( parent, this, index );
     }
@@ -504,16 +530,17 @@ public class Node : Object {
 
   protected virtual void draw_leaf_task( Context ctx, RGBA color ) {
 
-    if( task >= 0 ) {
+    if( _task_count > 0 ) {
 
       double x = posx + _padx + _task_radius;
       double y = posy + _pady + (_height / 2);
 
       set_context_color( ctx, color );
+      ctx.new_path();
       ctx.set_line_width( 1 );
       ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
 
-      if( task == 0 ) {
+      if( _task_done == 0 ) {
         ctx.stroke();
       } else {
         ctx.fill();
@@ -526,23 +553,26 @@ public class Node : Object {
   /* Draws the task checkbutton */
   protected virtual void draw_acc_task( Context ctx, RGBA color ) {
 
-    if( task >= 0 ) {
+    if( _task_count > 0 ) {
 
-      double x     = posx + _padx + _task_radius;
-      double y     = posy + _pady + (_height / 2);
-      double angle = (((task / 100) * 360) + 270) * (Math.PI / 180.0);
+      double x        = posx + _padx + _task_radius;
+      double y        = posy + _pady + (_height / 2);
+      double complete = _task_done / (_task_count * 1.0);
+      double angle    = ((complete * 360) + 270) * (Math.PI / 180.0);
 
       /* Draw circle outline */
-      if( (_children.length == 0) && (task < 100) ) {
+      if( complete < 1 ) {
         set_context_color_with_alpha( ctx, color, 0.3 );
+        ctx.new_path();
         ctx.set_line_width( 1 );
         ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
         ctx.stroke();
       }
 
       /* Draw completeness pie */
-      if( task > 0 ) {
+      if( _task_done > 0 ) {
         set_context_color( ctx, color );
+        ctx.new_path();
         ctx.set_line_width( 1 );
         ctx.arc( x, y, _task_radius, (1.5 * Math.PI), angle );
         ctx.line_to( x, y );
@@ -570,6 +600,35 @@ public class Node : Object {
       _children.index( i ).draw_all( ctx, theme, layout );
     }
     draw( ctx, theme, layout );
+  }
+
+  /* Propagates a change in the task_done for this node to all parent nodes */
+  private void propagate_task_info( int count_adjust, int done_adjust ) {
+    Node p = parent;
+    while( p != null ) {
+      p._task_count += count_adjust;
+      p._task_done  += done_adjust;
+      p = p.parent;
+    }
+  }
+
+  /*
+   Sets the task done indicator to the given value (0 or 1) and propagates the
+   change to all parent nodes.
+  */
+  public void set_task_done( int done ) {
+    if( _task_done != done ) {
+      _task_done = done;
+      propagate_task_info( 0, (done > 0) ? 1 : -1 );
+    }
+  }
+
+  /*
+   Toggles the current value of task done and propagates the change to all
+   parent nodes.
+  */
+  public void toggle_task_done() {
+    set_task_done( (_task_done > 0) ? 0 : 1 );
   }
 
 }

@@ -125,6 +125,7 @@ public class Layout : Object {
     }
   }
 
+  /* Called when we are inserting a node within a parent */
   public virtual void handle_update_by_insert( Node parent, Node child, int pos ) {
     double cx, cy, cw, ch;
     double adjust;
@@ -149,6 +150,7 @@ public class Layout : Object {
     adjust_tree_all( parent, pos, true, 0, (0 - adjust) );
   }
 
+  /* Called to layout the leftover children of a parent node when a node is deleted */
   public virtual void handle_update_by_delete( Node parent, int index, int side, double xamount, double yamount ) {
     double adjust = (yamount + _sb_gap) / 2;
     for( int i=0; i<parent.children().length; i++ ) {

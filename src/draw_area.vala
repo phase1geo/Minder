@@ -152,12 +152,19 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
-  /* Sets the current node pointer to the node that is within the given coordinates.
-   Returns true if */
+  /*
+   Sets the current node pointer to the node that is within the given coordinates.
+   Returns true if we sucessfully set current_node to a valid node and made it
+   selected.
+  */
   private bool set_current_node_at_position( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
       Node match = _nodes.index( i ).contains( x, y );
       if( match != null ) {
+        if( match.is_within_task( x, y ) && match.is_leaf() ) {
+          match.toggle_task_done();
+          return( false );
+        }
         if( match == _current_node ) {
           return( true );
         } else {
