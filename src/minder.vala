@@ -2,11 +2,17 @@ using Gtk;
 
 public class Minder : Gtk.Application {
 
-  ApplicationWindow? _appwin    = null;
-  DrawArea?          _canvas    = null;
-  Document?          _doc       = null;
-  Popover?           _inspector = null;
-  MenuButton?        _opts_btn  = null;
+  private ApplicationWindow? _appwin    = null;
+  private DrawArea?          _canvas    = null;
+  private Document?          _doc       = null;
+  private Popover?           _inspector = null;
+  private Popover?           _zoom      = null;
+  private MenuButton?        _opts_btn  = null;
+
+  private const GLib.ActionEntry[] action_entries = {
+    { "action_zoom_fit",      action_zoom_fit },
+    { "action_zoom_selected", action_zoom_selected }
+  };
 
   public Minder () {
     Object( application_id: "com.github.phase1geo.Minder", flags: ApplicationFlags.FLAGS_NONE );
@@ -26,6 +32,10 @@ public class Minder : Gtk.Application {
     _appwin.set_titlebar( header );
     _appwin.set_border_width( 2 );
     _appwin.destroy.connect( Gtk.main_quit );
+
+    var actions = new SimpleActionGroup ();
+    actions.add_action_entries( action_entries, _appwin );
+    Widget.insert_action_group( "win", actions );
 
     /* Create title toolbar */
     var new_btn = new Button.from_icon_name( "document-new-symbolic", IconSize.SMALL_TOOLBAR );
@@ -52,7 +62,8 @@ public class Minder : Gtk.Application {
     xprt_btn.set_tooltip_text( _( "Export" ) );
     header.pack_end( xprt_btn );
 
-    var zoom_btn = new Button.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR );
+    var zoom_btn = new MenuButton();
+    zoom_btn.set_image( new Image.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR ) );
     zoom_btn.set_tooltip_text( _( "Zoom" ) );
     header.pack_end( zoom_btn );
 
@@ -80,6 +91,27 @@ public class Minder : Gtk.Application {
 
     _inspector = new Popover( null );
     _inspector.add( ibox );
+
+    Box zbox = new Box( Orientation.VERTICAL, 0 );
+
+    var zoom_scale = new Scale.with_range( Orientation.HORIZONTAL, 25, 800, 25 );
+
+    var zoom_fit = new ModelButton();
+    zoom_fit.text = _( "Zoom to Fit" );
+    zoom_fit.action_name = "win.action_zoom_fit";
+
+    var zoom_sel = new ModelButton();
+    zoom_sel.text = _( "Zoom to Fit Selected" );
+    zoom_sel.action_name = "win.action_zoom_selected";
+
+    zbox.margin = 5;
+    zbox.pack_start( zoom_scale, false, true );
+    zbox.pack_start( zoom_fit,   false, true );
+    zbox.pack_start( zoom_sel,   false, true );
+
+    _zoom = new Popover( null );
+    _zoom.add( zbox );
+    zoom_btn.popover = _zoom;
 
     /* Create the document */
     _doc = new Document();
@@ -147,6 +179,14 @@ public class Minder : Gtk.Application {
     } else {
       _opts_btn.popover = null;
     }
+  }
+
+  private void action_zoom_fit() {
+    stdout.printf( "Called action_zoom_fit\n" );
+  }
+
+  private void action_zoom_selected() {
+    stdout.printf( "Called action_zoom_selected\n" );
   }
 
   /* Main routine which gets everything started */
