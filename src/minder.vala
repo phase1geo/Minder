@@ -3,11 +3,10 @@ using Gtk;
 public class Minder : Gtk.Application {
 
   ApplicationWindow? _appwin    = null;
-  Box?               _hbox      = null;
   DrawArea?          _canvas    = null;
-  Revealer?          _inspector = null;
   Document?          _doc       = null;
-  Button?            _opts_btn  = null;
+  Popover?           _inspector = null;
+  MenuButton?        _opts_btn  = null;
 
   public Minder () {
     Object( application_id: "com.github.phase1geo.Minder", flags: ApplicationFlags.FLAGS_NONE );
@@ -23,7 +22,7 @@ public class Minder : Gtk.Application {
     _appwin = new ApplicationWindow( this );
     _appwin.title = _( "Minder" );
     _appwin.set_position( Gtk.WindowPosition.CENTER );
-    _appwin.set_default_size( 800, 600 );
+    _appwin.set_default_size( 1000, 800 );
     _appwin.set_titlebar( header );
     _appwin.set_border_width( 2 );
     _appwin.destroy.connect( Gtk.main_quit );
@@ -44,9 +43,9 @@ public class Minder : Gtk.Application {
     save_btn.clicked.connect( do_save_file );
     header.pack_start( save_btn );
 
-    _opts_btn = new Button.from_icon_name( "applications-system-symbolic", IconSize.SMALL_TOOLBAR );
-    _opts_btn.set_tooltip_text( _( "Preferences" ) );
-    _opts_btn.clicked.connect( do_preferences );
+    _opts_btn = new MenuButton();
+    _opts_btn.set_image( new Image.from_icon_name( "document-properties-symbolic", IconSize.SMALL_TOOLBAR ) );
+    _opts_btn.set_tooltip_text( _( "Settings" ) );
     header.pack_end( _opts_btn );
 
     var xprt_btn = new Button.from_icon_name( "document-export-symbolic", IconSize.SMALL_TOOLBAR );
@@ -55,20 +54,13 @@ public class Minder : Gtk.Application {
 
     var zoom_btn = new Button.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR );
     zoom_btn.set_tooltip_text( _( "Zoom" ) );
-    zoom_btn.clicked.connect( do_inspector );
     header.pack_end( zoom_btn );
-
-    /* Create hbox to pack the canvas and inspector panel */
-    _hbox = new Box( Orientation.HORIZONTAL, 0 );
 
     /* Create and pack the canvas */
     _canvas = new DrawArea();
+    _canvas.node_changed.connect( on_node_changed );
 
     /* Create the inspector sidebar */
-    _inspector = new Revealer();
-    _inspector.set_transition_type( RevealerTransitionType.SLIDE_LEFT );
-    _inspector.set_transition_duration( 500 );
-
     Box ibox = new Box( Orientation.VERTICAL, 0 );
 
     StackSwitcher sb    = new StackSwitcher();
@@ -81,9 +73,13 @@ public class Minder : Gtk.Application {
 
     sb.set_stack( stack );
 
-    ibox.pack_start( sb,    false, false, 0 );
+    ibox.margin = 5;
+    ibox.pack_start( sb,    false, true,  0 );
     ibox.pack_start( stack, false, false, 0 );
-    _inspector.child = ibox;
+    ibox.show_all();
+
+    _inspector = new Popover( null );
+    _inspector.add( ibox );
 
     /* Create the document */
     _doc = new Document();
@@ -92,12 +88,8 @@ public class Minder : Gtk.Application {
     _canvas.initialize();
 
     /* Display the UI */
-    _hbox.pack_start( _canvas,    true,  true, 0 );
-    _hbox.pack_start( _inspector, false, true, 0 );
-
-    _appwin.add( _hbox );
+    _appwin.add( _canvas );
     _appwin.show_all();
-    // _appwin.show();
 
     Gtk.main();
 
@@ -149,18 +141,11 @@ public class Minder : Gtk.Application {
     dialog.close();
   }
 
-  /* Displays the preference popup */
-  public void do_preferences() {
-    Popover p = new Popover( _opts_btn );
-    // p.popup();
-  }
-
-  /* Shows or hides the inspector sidebar */
-  public void do_inspector() {
-    if( _inspector.child_revealed ) {
-      _inspector.reveal_child = false;
+  private void on_node_changed() {
+    if( _canvas.get_current_node() != null ) {
+      _opts_btn.popover = _inspector;
     } else {
-      _inspector.reveal_child = true;
+      _opts_btn.popover = null;
     }
   }
 

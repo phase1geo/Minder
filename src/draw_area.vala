@@ -18,6 +18,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   public bool changed { set; get; default = false; }
 
+  public signal void node_changed();
+
   /* Default constructor */
   public DrawArea() {
 
@@ -179,6 +181,7 @@ public class DrawArea : Gtk.DrawingArea {
           _current_node = match;
           if( match.mode == NodeMode.NONE ) {
             match.mode = NodeMode.SELECTED;
+            node_changed();
             return( true );
           }
         }
@@ -189,6 +192,7 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.mode = NodeMode.NONE;
     }
     _current_node = null;
+    node_changed();
     return( true );
   }
 
