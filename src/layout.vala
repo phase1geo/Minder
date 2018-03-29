@@ -1,6 +1,6 @@
 public class Layout : Object {
 
-  protected double                _pc_gap = 100;  /* Parent/child gap */
+  protected double                _pc_gap = 50;  /* Parent/child gap */
   protected double                _sb_gap = 8;    /* Sibling gap */
   protected Pango.FontDescription _font_description = null;
 
@@ -27,7 +27,7 @@ public class Layout : Object {
       double cx, cy, cw, ch;
       double mw, mh;
       for( int i=0; i<parent.children().length; i++ ) {
-        if( parent.children().index( i ).side == side ) {
+        if( (side == -1) || (parent.children().index( i ).side == side) ) {
           bbox( parent.children().index( i ), (depth - 1), side, out cx, out cy, out cw, out ch );
           x  = (x < cx) ? x : cx;
           y  = (y < cy) ? y : cy;

@@ -46,6 +46,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/draw_area.vala
     src/layout.vala
     src/layout_inspector.vala
+    src/main_window.vala
     src/node.vala
     src/node_inspector.vala
     src/nonroot_node.vala

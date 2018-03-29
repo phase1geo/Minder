@@ -34,6 +34,7 @@ public class Node : Object {
   private   Pango.Layout _layout      = null;
   private   int          _task_count  = 0;
   private   int          _task_done   = 0;
+  private   Pango.FontDescription _font_description = null;
 
   /* Properties */
   public string   name   { get; set; default = ""; }
@@ -45,14 +46,16 @@ public class Node : Object {
   public int      side   { get; set; default = 1; }
 
   /* Default constructor */
-  public Node() {
+  public Node( Layout? layout ) {
     _children = new Array<Node>();
+    set_layout( layout );
   }
 
   /* Constructor initializing string */
-  public Node.with_name( string n ) {
-    name = n;
+  public Node.with_name( string n, Layout? layout ) {
+    name      = n;
     _children = new Array<Node>();
+    set_layout( layout );
   }
 
   /* Returns true if the node does not have a parent */
@@ -167,7 +170,7 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( Xml.Node* n ) {
+  public virtual void load( Xml.Node* n, Layout? layout ) {
 
     string? x = n->get_prop( "posx" );
     if( x != null ) {
@@ -203,8 +206,8 @@ public class Node : Object {
           case "nodes"    :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                NonrootNode child = new NonrootNode();
-                child.load( it2 );
+                NonrootNode child = new NonrootNode( layout );
+                child.load( it2, layout );
                 child.attach( this, -1, null );
               }
             }
@@ -536,7 +539,7 @@ public class Node : Object {
   }
 
   /* Draws the node font to the screen */
-  public virtual void draw_name( Cairo.Context ctx, Theme theme, Layout layout ) {
+  public virtual void draw_name( Cairo.Context ctx, Theme theme ) {
 
     int    hmargin = 3;
     int    vmargin = 3;
@@ -544,11 +547,6 @@ public class Node : Object {
 
     /* Make sure the the size is up-to-date */
     update_size( out width_diff, out height_diff );
-
-    _padx  = layout.padx;
-    _pady  = layout.pady;
-    _ipadx = layout.ipadx;
-    _ipady = layout.ipady;
 
     double twidth = task_width();
 
@@ -652,8 +650,8 @@ public class Node : Object {
       set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();
       ctx.set_line_width( 1 );
-      ctx.move_to( x, y );
-      ctx.line_to( (x + 8), y );
+      ctx.move_to( (x + 2), y );
+      ctx.line_to( (x + 10), y );
       ctx.stroke();
       ctx.move_to( x, (y + 3) );
       ctx.line_to( (x + 10), (y + 3) );
@@ -670,21 +668,33 @@ public class Node : Object {
   }
 
   /* Draws the node on the screen */
-  public virtual void draw( Context ctx, Theme theme, Layout layout ) {}
+  public virtual void draw( Context ctx, Theme theme ) {}
 
   /* Draw this node and all child nodes */
-  public void draw_all( Context ctx, Theme theme, Layout layout ) {
+  public void draw_all( Context ctx, Theme theme ) {
     if( _layout == null ) {
       _layout = Pango.cairo_create_layout( ctx );
-      _layout.set_font_description( layout.get_font_description() );
+      _layout.set_font_description( _font_description );
       _layout.set_width( 200 * Pango.SCALE );
       _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     }
     for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).draw_all( ctx, theme, layout );
+      _children.index( i ).draw_all( ctx, theme );
     }
-    // ctx.scale( 0.5, 0.5 );
-    draw( ctx, theme, layout );
+    draw( ctx, theme );
+  }
+
+  /* Called whenever the user changes the layout */
+  public void set_layout( Layout? layout ) {
+    if( layout == null ) return;
+    _padx             = layout.padx;
+    _pady             = layout.pady;
+    _ipadx            = layout.ipadx;
+    _ipady            = layout.ipady;
+    _font_description = layout.get_font_description();
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).set_layout( layout );
+    }
   }
 
 }

@@ -15,6 +15,7 @@ public class DrawArea : Gtk.DrawingArea {
   private Array<Node> _nodes;
   private Theme       _theme;
   private Layout      _layout;
+  private double      _scale_factor = 1.0;
 
   public bool changed { set; get; default = false; }
 
@@ -102,8 +103,8 @@ public class DrawArea : Gtk.DrawingArea {
           case "nodes"  :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                RootNode node = new RootNode();
-                node.load( it2 );
+                RootNode node = new RootNode( _layout );
+                node.load( it2, _layout );
                 _nodes.append_val( node );
               }
             }
@@ -144,7 +145,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void initialize() {
 
     /* Create the main idea node */
-    RootNode n = new RootNode.with_name( "Main Idea" );
+    RootNode n = new RootNode.with_name( "Main Idea", _layout );
     n.posx = 350;
     n.posy = 200;
 
@@ -196,6 +197,54 @@ public class DrawArea : Gtk.DrawingArea {
     return( true );
   }
 
+  /* Returns a properly scaled version of the given value */
+  private double scale_value( double val ) {
+    return( val / _scale_factor );
+  }
+
+  /* Sets the scaling factor for the drawing area and forces a redraw */
+  public void set_scaling_factor( double scale_factor ) {
+    _scale_factor = scale_factor;
+    queue_draw();
+  }
+
+  /* Returns the scaling factor based on the given width and height */
+  private double get_scaling_factor( double width, double height ) {
+    double w = get_allocated_width() / width;
+    double h = get_allocated_height() / height;
+    return( (w < h) ? w : h );
+  }
+
+  /*
+   Returns the scaling factor required to display the currently selected node.
+   If no node is currently selected, returns a value of 0.
+  */
+  public double get_scaling_factor_selected() {
+    double x, y, w, h;
+    if( _current_node == null ) return( 0 );
+    _layout.bbox( _current_node, -1, -1, out x, out y, out w, out h );
+    move_origin( (scale_value( x ) - _origin_x), (scale_value( y ) - _origin_y) );
+    return( get_scaling_factor( w, h ) );
+  }
+
+  /* Returns the scaling factor required to display all nodes */
+  public double get_scaling_factor_to_fit() {
+    double x1 = 0;
+    double y1 = 0;
+    double x2 = 0;
+    double y2 = 0;
+    for( int i=0; i<_nodes.length; i++ ) {
+      double x, y, w, h;
+      _layout.bbox( _nodes.index( i ), -1, -1, out x, out y, out w, out h );
+      x1 = (x1 < x) ? x1 : x;
+      y1 = (y1 < y) ? y1 : y;
+      x2 = (x2 < (x + w)) ? (x + w) : x2;
+      y2 = (y2 < (y + h)) ? (y + h) : y2;
+    }
+    move_origin( (scale_value( x1 ) - _origin_x), (scale_value( y1 ) - _origin_y) );
+    return( get_scaling_factor( (x2 - x1), (y2 - y1) ) );
+  }
+
   /* Returns the attachable node if one is found */
   private Node? attachable_node( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
@@ -208,7 +257,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Adjusts the x and y origins, panning all elements by the given amount */
-  private void move_origin( double diff_x, double diff_y ) {
+  public void move_origin( double diff_x, double diff_y ) {
     _origin_x += diff_x;
     _origin_y += diff_y;
     for( int i=0; i<_nodes.length; i++ ) {
@@ -226,8 +275,9 @@ public class DrawArea : Gtk.DrawingArea {
       text.get_size( out width, out height );
       _layout.default_text_height = height / Pango.SCALE;
     }
+    ctx.scale( _scale_factor, _scale_factor );
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).draw_all( ctx, _theme, _layout );
+      _nodes.index( i ).draw_all( ctx, _theme );
     }
     return( false );
   }
@@ -235,9 +285,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Handle button press event */
   private bool on_press( EventButton event ) {
     if( event.button == 1 ) {
-      _press_x = event.x;
-      _press_y = event.y;
-      _pressed = set_current_node_at_position( event.x, event.y );
+      _press_x = scale_value( event.x );
+      _press_y = scale_value( event.y );
+      _pressed = set_current_node_at_position( _press_x, _press_y );
       _motion  = false;
       queue_draw();
     }
@@ -248,21 +298,21 @@ public class DrawArea : Gtk.DrawingArea {
   private bool on_motion( EventMotion event ) {
     if( _pressed ) {
       if( _current_node != null ) {
-        double diffx = (event.x - _press_x);
-        double diffy = (event.y - _press_y);
+        double diffx = scale_value( event.x ) - _press_x;
+        double diffy = scale_value( event.y ) - _press_y;
         _current_node.posx += diffx;
         _current_node.posy += diffy;
         _layout.set_side( _current_node );
         _layout.adjust_tree( _current_node, -1, _current_node.side, true, diffx, diffy );
         queue_draw();
       } else {
-        double diff_x = (_press_x - event.x);
-        double diff_y = (_press_y - event.y);
+        double diff_x = _press_x - scale_value( event.x );
+        double diff_y = _press_y - scale_value( event.y );
         move_origin( diff_x, diff_y );
         queue_draw();
       }
-      _press_x = event.x;
-      _press_y = event.y;
+      _press_x = scale_value( event.x );
+      _press_y = scale_value( event.y );
       _motion  = true;
       changed = true;
     }
@@ -274,7 +324,7 @@ public class DrawArea : Gtk.DrawingArea {
     _pressed = false;
     if( _current_node != null ) {
       if( _current_node.mode == NodeMode.SELECTED ) {
-        Node attach_node = attachable_node( event.x, event.y );
+        Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
         if( attach_node != null ) {
           _current_node.detach( _layout );
           _current_node.attach( attach_node, -1, _layout );
@@ -284,7 +334,7 @@ public class DrawArea : Gtk.DrawingArea {
           _current_node.mode = NodeMode.EDITABLE;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
-          _current_node.parent.move_to_position( _current_node, event.x, event.y, _layout );
+          _current_node.parent.move_to_position( _current_node, scale_value( event.x ), scale_value( event.y ), _layout );
           queue_draw();
         }
       }
@@ -357,7 +407,7 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.mode = NodeMode.SELECTED;
       queue_draw();
     } else if( !_current_node.is_root() ) {
-      NonrootNode node = new NonrootNode();
+      NonrootNode node = new NonrootNode( _layout );
       if( _current_node.parent.is_root() ) {
         node.color_index = _theme.next_color_index();
       } else {
@@ -381,7 +431,7 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.mode = NodeMode.SELECTED;
       queue_draw();
     } else if( is_mode_selected() ) {
-      NonrootNode node = new NonrootNode();
+      NonrootNode node = new NonrootNode( _layout );
       if( _current_node.is_root() ) {
         node.color_index = _theme.next_color_index();
       } else {
@@ -526,15 +576,19 @@ public class DrawArea : Gtk.DrawingArea {
     double diff_x = 0;
     double diff_y = 0;
     _current_node.bbox( out x, out y, out w, out h );
-    if( x < 10 ) {
-      diff_x = -100;
-    } else if( (get_allocated_width() - (x + w)) < 10 ) {
-      diff_x = 100;
+    double scaled_x = scale_value( x );
+    double scaled_y = scale_value( y );
+    double scaled_w = scale_value( w );
+    double scaled_h = scale_value( h );
+    if( scaled_x < scale_value( 10 ) ) {
+      diff_x = scale_value( -100 );
+    } else if( (get_allocated_width() - (scaled_x + scaled_w)) < scale_value( 10 ) ) {
+      diff_x = scale_value( 100 );
     }
-    if( y < 10 ) {
-      diff_y = -100;
-    } else if( (get_allocated_height() - (y + h)) < 10 ) {
-      diff_y = 100;
+    if( scaled_y < scale_value( 10 ) ) {
+      diff_y = scale_value( -100 );
+    } else if( (get_allocated_height() - (scaled_y + scaled_h)) < scale_value( 10 ) ) {
+      diff_y = scale_value( 100 );
     }
     move_origin( diff_x, diff_y );
   }

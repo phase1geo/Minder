@@ -3,11 +3,13 @@ using Cairo;
 public class RootNode : Node {
 
   /* Default constructor */
-  public RootNode() {}
+  public RootNode( Layout? layout ) {
+    base( layout );
+  }
 
   /* Constructor which initializes name */
-  public RootNode.with_name( string name ) {
-    base.with_name( name );
+  public RootNode.with_name( string name, Layout? layout ) {
+    base.with_name( name, layout );
   }
 
   /* Returns -1 to indicate that this node is not a child of a parent node */
@@ -22,11 +24,11 @@ public class RootNode : Node {
   }
 
   /* Draws the rectangle around the root node */
-  public void draw_rectangle( Context ctx, Theme theme, Layout layout ) {
+  public void draw_rectangle( Context ctx, Theme theme ) {
 
     double r = 10.0;
-    double h = _height + (layout.pady * 2);
-    double w = _width  + (layout.padx * 2) + task_width() + note_width();
+    double h = _height + (_pady * 2);
+    double w = _width  + (_padx * 2) + task_width() + note_width();
 
     /* Draw the rounded box around the text */
     set_context_color( ctx, theme.root_background );
@@ -44,20 +46,20 @@ public class RootNode : Node {
 
   }
 
-  public void draw_task( Context ctx, Theme theme, Layout layout ) {
+  public void draw_task( Context ctx, Theme theme ) {
     draw_acc_task( ctx, theme.root_foreground );
   }
 
-  public void draw_note( Context ctx, Theme theme, Layout layout ) {
+  public void draw_note( Context ctx, Theme theme ) {
     draw_common_note( ctx, theme.root_foreground );
   }
 
   /* Draws this node to the given canvas */
-  public override void draw( Context ctx, Theme theme, Layout layout ) {
-    draw_rectangle( ctx, theme, layout );
-    draw_name( ctx, theme, layout );
-    draw_task( ctx, theme, layout );
-    draw_note( ctx, theme, layout );
+  public override void draw( Context ctx, Theme theme ) {
+    draw_rectangle( ctx, theme );
+    draw_name( ctx, theme );
+    draw_task( ctx, theme );
+    draw_note( ctx, theme );
   }
 
 }

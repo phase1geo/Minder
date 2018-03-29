@@ -6,7 +6,9 @@ public class NonrootNode : Node {
   public int color_index { set; get; default = 0; }
 
   /* Default constructor */
-  public NonrootNode() {}
+  public NonrootNode( Layout? layout ) {
+    base( layout );
+  }
 
   /* Forces all children nodes to use the same color index as the parent node. */
   private void propagate_color() {
@@ -29,10 +31,10 @@ public class NonrootNode : Node {
   }
 
   /* Loads the data from the input stream */
-  public override void load( Xml.Node* n ) {
+  public override void load( Xml.Node* n, Layout? layout ) {
 
     /* Allow the base class to parse the node */
-    base.load( n );
+    base.load( n, layout );
 
     /* Load the color value */
     string? c = n->get_prop( "color" );
@@ -60,7 +62,7 @@ public class NonrootNode : Node {
   }
 
   /* Draws the line under the node name */
-  public void draw_line( Context ctx, Theme theme, Layout layout ) {
+  public void draw_line( Context ctx, Theme theme ) {
 
     double posx  = this.posx;
     double posy  = this.posy + _height + (_pady * 2);
@@ -78,7 +80,7 @@ public class NonrootNode : Node {
   }
 
   /* Draw the link from this node to the parent node */
-  public void draw_link( Context ctx, Theme theme, Layout layout ) {
+  public void draw_link( Context ctx, Theme theme ) {
 
     double parent_x;
     double parent_y;
@@ -101,7 +103,7 @@ public class NonrootNode : Node {
   }
 
   /* Draws the task checkbutton */
-  public void draw_task( Context ctx, Theme theme, Layout layout ) {
+  public void draw_task( Context ctx, Theme theme ) {
     if( _children.length == 0 ) {
       draw_leaf_task( ctx, theme.link_color( color_index ) );
     } else {
@@ -109,17 +111,18 @@ public class NonrootNode : Node {
     }
   }
 
-  public void draw_note( Context ctx, Theme theme, Layout layout ) {
+  /* Draws the note icon, if necessary */
+  public void draw_note( Context ctx, Theme theme ) {
     draw_common_note( ctx, theme.foreground );
   }
 
   /* Draws this node */
-  public override void draw( Context ctx, Theme theme, Layout layout ) {
-    draw_name( ctx, theme, layout );
-    draw_task( ctx, theme, layout );
-    draw_note( ctx, theme, layout );
-    draw_line( ctx, theme, layout );
-    draw_link( ctx, theme, layout );
+  public override void draw( Context ctx, Theme theme ) {
+    draw_name( ctx, theme );
+    draw_task( ctx, theme );
+    draw_note( ctx, theme );
+    draw_line( ctx, theme );
+    draw_link( ctx, theme );
   }
 
 }
