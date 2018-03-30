@@ -640,6 +640,7 @@ public class Node : Object {
 
   }
 
+  /* Draws the icon indicating that a note is associated with this node */
   protected virtual void draw_common_note( Context ctx, RGBA color ) {
 
     if( note.length > 0 ) {
@@ -667,6 +668,25 @@ public class Node : Object {
 
   }
 
+  /*
+   Draws the folded indicator to the left/right of the node, depending on the
+   side indicator.
+  */
+  protected virtual void draw_fold( Context ctx, Theme theme ) {
+  
+    if( folded ) {
+    
+      switch( _fold_side ) {
+      double x = posx + _padx + task_width() + _width + note_width() 
+      set_context_color( ctx, theme.link_color );
+      ctx.new_path();
+      ctx.set_line_width( 1 );
+      ctx.move_to( );
+      
+    }
+    
+  }
+  
   /* Draws the node on the screen */
   public virtual void draw( Context ctx, Theme theme ) {}
 
