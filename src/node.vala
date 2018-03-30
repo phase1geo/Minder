@@ -661,6 +661,7 @@ public class Node : Object {
 
   }
 
+  /* Draws the icon indicating that a note is associated with this node */
   protected virtual void draw_common_note( Context ctx, RGBA color ) {
 
     if( note.length > 0 ) {
