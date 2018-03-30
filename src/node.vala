@@ -44,6 +44,7 @@ public class Node : Object {
   public NodeMode mode   { get; set; default = NodeMode.NONE; }
   public Node     parent { get; protected set; default = null; }
   public int      side   { get; set; default = 1; }
+  public bool     folded { get; set; default = false; }
 
   /* Default constructor */
   public Node( Layout? layout ) {
@@ -100,9 +101,20 @@ public class Node : Object {
     }
   }
 
+  /* Returns true if the given cursor coordinates lies within the fold indicator area */
+  public virtual bool is_within_fold( double x, double y ) {
+    if( folded && (_children.length > 0) ) {
+      double fx, fy, fw, fh;
+      fold_bbox( out fx, out fy, out fw, out fh );
+      return( (fx < x) && (x < (fx + fw)) && (fy < y) && (y < (fy + fh)) );
+    } else {
+      return( false );
+    }
+  }
+
   /* Finds the node which contains the given pixel coordinates */
   public virtual Node? contains( double x, double y ) {
-    if( is_within( x, y ) ) {
+    if( is_within( x, y ) || is_within_fold( x, y ) ) {
       return( this );
     } else {
       for( int i=0; i<_children.length; i++ ) {
@@ -284,6 +296,15 @@ public class Node : Object {
     y = posy;
     w = _width  + (_padx * 2) + ((_task_count > 0) ? (_ipadx + (_task_radius * 2)) : 0);
     h = _height + (_pady * 2);
+  }
+
+  /* Returns the bounding box for the fold indicator for this node */
+  private void fold_bbox( out double x, out double y, out double w, out double h ) {
+    bbox( out x, out y, out w, out h );
+    x = x + w + _padx;
+    y = y + (h / 2) - 5;
+    w = 15;
+    h = 10;
   }
 
   /* Returns the amount of internal width to draw the task checkbutton */
@@ -667,6 +688,35 @@ public class Node : Object {
 
   }
 
+  /* Draw the fold indicator */
+  public virtual void draw_common_fold( Context ctx, RGBA bg_color, RGBA fg_color ) {
+
+    if( folded && (_children.length > 0) ) {
+
+      double fx, fy, fw, fh;
+
+      fold_bbox( out fx, out fy, out fw, out fh );
+
+      /* Draw the fold rectangle */
+      set_context_color( ctx, bg_color );
+      ctx.new_path();
+      ctx.set_line_width( 1 );
+      ctx.rectangle( fx, fy, fw, fh );
+      ctx.fill();
+
+      /* Draw circles */
+      set_context_color( ctx, fg_color );
+      ctx.new_path();
+      ctx.arc( (fx + 5), (fy + 5), 1, 0, (2 * Math.PI) );
+      ctx.fill();
+      ctx.new_path();
+      ctx.arc( (fx + 10), (fy + 5), 1, 0, (2 * Math.PI) );
+      ctx.fill();
+
+    }
+
+  }
+
   /* Draws the node on the screen */
   public virtual void draw( Context ctx, Theme theme ) {}
 
@@ -678,8 +728,10 @@ public class Node : Object {
       _layout.set_width( 200 * Pango.SCALE );
       _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     }
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).draw_all( ctx, theme );
+    if( !folded ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).draw_all( ctx, theme );
+      }
     }
     draw( ctx, theme );
   }

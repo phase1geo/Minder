@@ -116,6 +116,11 @@ public class NonrootNode : Node {
     draw_common_note( ctx, theme.foreground );
   }
 
+  /* Draws the fold indicator, if necessary */
+  public void draw_fold( Context ctx, Theme theme ) {
+    draw_common_fold( ctx, theme.link_color( color_index ), theme.foreground );
+  }
+
   /* Draws this node */
   public override void draw( Context ctx, Theme theme ) {
     draw_name( ctx, theme );
@@ -123,6 +128,7 @@ public class NonrootNode : Node {
     draw_note( ctx, theme );
     draw_line( ctx, theme );
     draw_link( ctx, theme );
+    draw_fold( ctx, theme );
   }
 
 }

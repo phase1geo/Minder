@@ -4,6 +4,7 @@ public class NodeInspector : Grid {
 
   private Entry?    _name = null;
   private Switch?   _task = null;
+  private Switch?   _fold = null;
   private TextView? _note = null;
   private DrawArea? _da   = null;
 
@@ -15,7 +16,8 @@ public class NodeInspector : Grid {
 
     create_name( 0 );
     create_task( 1 );
-    create_note( 2 );
+    create_fold( 2 );
+    create_note( 3 );
 
     _da.node_changed.connect( node_changed );
 
@@ -53,6 +55,21 @@ public class NodeInspector : Grid {
 
     attach( lbl,   0, row, 1, 1 );
     attach( _task, 1, row, 1, 1 );
+
+  }
+
+  /* Creates the fold UI elements */
+  private void create_fold( int row ) {
+
+    Label lbl = new Label( _( "Fold" ) );
+
+    lbl.xalign = (float)0;
+
+    _fold = new Switch();
+    _fold.state_set.connect( fold_changed );
+
+    attach( lbl,   0, row, 1, 1 );
+    attach( _fold, 1, row, 1, 1 );
 
   }
 
@@ -104,6 +121,16 @@ public class NodeInspector : Grid {
     return( false );
   }
 
+  /* Called whenever the fold switch is changed within the inspector */
+  private bool fold_changed( bool state ) {
+    Node current = _da.get_current_node();
+    if( current != null ) {
+      current.folded = state;
+      _da.queue_draw();
+    }
+    return( false );
+  }
+
   /*
    Called whenever the text widget is changed.  Updates the current node
    and redraws the canvas when needed.
@@ -126,10 +153,18 @@ public class NodeInspector : Grid {
     if( current != null ) {
       _name.set_text( current.name );
       _task.set_active( current.task_enabled() );
+      if( current.children().length > 0 ) {
+        _fold.set_active( current.folded );
+        _fold.set_sensitive( true );
+      } else {
+        _fold.set_active( false );
+        _fold.set_sensitive( false );
+      }
       _note.buffer.text = current.note;
     } else {
       _name.set_text( "" );
       _task.set_active( false );
+      _fold.set_active( false );
       _note.buffer.text = "";
     }
 

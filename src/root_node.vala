@@ -46,12 +46,19 @@ public class RootNode : Node {
 
   }
 
+  /* Draws the task indicator, if necessary */
   public void draw_task( Context ctx, Theme theme ) {
     draw_acc_task( ctx, theme.root_foreground );
   }
 
+  /* Draws the note indicator, if necessary */
   public void draw_note( Context ctx, Theme theme ) {
     draw_common_note( ctx, theme.root_foreground );
+  }
+
+  /* Draws the fold indicator, if necessary */
+  public void draw_fold( Context ctx, Theme theme ) {
+    draw_common_fold( ctx, theme.root_background, theme.root_foreground );
   }
 
   /* Draws this node to the given canvas */
@@ -60,6 +67,7 @@ public class RootNode : Node {
     draw_name( ctx, theme );
     draw_task( ctx, theme );
     draw_note( ctx, theme );
+    draw_fold( ctx, theme );
   }
 
 }

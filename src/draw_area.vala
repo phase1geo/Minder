@@ -172,6 +172,9 @@ public class DrawArea : Gtk.DrawingArea {
         if( match.is_within_task( x, y ) && match.is_leaf() ) {
           match.toggle_task_done();
           return( false );
+        } else if( match.is_within_fold( x, y ) ) {
+          match.folded = false;
+          return( false );
         }
         if( match == _current_node ) {
           return( true );
