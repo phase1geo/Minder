@@ -1,3 +1,24 @@
+/*
+* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Trevor Williams <phase1geo@gmail.com>
+*/
+
 using Gtk;
 
 public class MainWindow : ApplicationWindow {
@@ -9,6 +30,8 @@ public class MainWindow : ApplicationWindow {
   private MenuButton?  _opts_btn   = null;
   private Scale?       _zoom_scale = null;
   private ModelButton? _zoom_sel   = null;
+  private Button?      _undo_btn   = null;
+  private Button?      _redo_btn   = null;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_zoom_fit",      action_zoom_fit },
@@ -50,6 +73,18 @@ public class MainWindow : ApplicationWindow {
     save_btn.set_tooltip_text( _( "Save File As" ) );
     save_btn.clicked.connect( do_save_file );
     header.pack_start( save_btn );
+
+    _undo_btn = new Button.from_icon_name( "edit-undo-symbolic", IconSize.SMALL_TOOLBAR );
+    _undo_btn.set_tooltip_text( _( "Undo" ) );
+    _undo_btn.set_sensitive( false );
+    _undo_btn.clicked.connect( do_undo );
+    header.pack_start( _undo_btn );
+
+    _redo_btn = new Button.from_icon_name( "edit-redo-symbolic", IconSize.SMALL_TOOLBAR );
+    _redo_btn.set_tooltip_text( _( "Redo" ) );
+    _redo_btn.set_sensitive( false );
+    _redo_btn.clicked.connect( do_redo );
+    header.pack_start( _redo_btn );
 
     _opts_btn = new MenuButton();
     _opts_btn.set_image( new Image.from_icon_name( "document-properties-symbolic", IconSize.SMALL_TOOLBAR ) );
@@ -134,6 +169,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Initialize the canvas */
     _canvas.initialize();
+    _canvas.undo_buffer.buffer_changed.connect( do_buffer_changed );
 
     /* Display the UI */
     add( _canvas );
@@ -167,6 +203,25 @@ public class MainWindow : ApplicationWindow {
       _doc.load( dialog.get_filename(), _canvas );
     }
     dialog.close();
+  }
+
+  /* Perform an undo action */
+  public void do_undo() {
+    _canvas.undo_buffer.undo();
+  }
+
+  /* Perform a redo action */
+  public void do_redo() {
+    _canvas.undo_buffer.redo();
+  }
+
+  /*
+   Called whenever the undo buffer changes state.  Updates the state of
+   the undo and redo buffer buttons.
+  */
+  public void do_buffer_changed() {
+    _undo_btn.set_sensitive( _canvas.undo_buffer.undoable() );
+    _redo_btn.set_sensitive( _canvas.undo_buffer.redoable() );
   }
 
   /* Allow the user to select a filename to save the document as */

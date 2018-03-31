@@ -54,6 +54,9 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/theme.vala
     src/theme_default.vala
     src/theme_inspector.vala
+    src/undo_buffer.vala
+    src/undo_item.vala
+    src/undo_node_insert.vala
 PACKAGES
     gtk+-3.0
     gee-0.8

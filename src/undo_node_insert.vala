@@ -21,18 +21,34 @@
 
 using Gtk;
 
-public class ThemeInspector : Grid {
+public class UndoNodeInsert : UndoItem {
 
-  private DrawArea? _da = null;
+  private DrawArea _da;
+  private Node?    _parent;
+  private Node     _n;
+  private int      _index;
+  private Layout?  _layout;
 
-  public ThemeInspector( DrawArea da ) {
+  /* Default constructor */
+  public UndoNodeInsert( DrawArea da, Node n, Layout l ) {
+    base( "Insert Node" );
+    _da     = da;
+    _n      = n;
+    _index  = n.index();
+    _parent = n.parent;
+    _layout = l;
+  }
 
-    _da = da;
+  /* Performs an undo operation for this data */
+  public override void undo() {
+    _n.detach( _layout );
+    _da.queue_draw();
+  }
 
-    Label lbl = new Label( "THEMES" );
-
-    attach( lbl, 0, 0, 1, 1 );
-
+  /* Performs a redo operation */
+  public override void redo() {
+    _n.attach( _parent, _index, _layout );
+    _da.queue_draw();
   }
 
 }

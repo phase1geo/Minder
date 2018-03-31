@@ -1,3 +1,24 @@
+/*
+* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Trevor Williams <phase1geo@gmail.com>
+*/
+
 using Gtk;
 using GLib;
 using Gdk;
@@ -17,7 +38,8 @@ public class DrawArea : Gtk.DrawingArea {
   private Layout      _layout;
   private double      _scale_factor = 1.0;
 
-  public bool changed { set; get; default = false; }
+  public bool       changed     { set; get; default = false; }
+  public UndoBuffer undo_buffer { set; get; default = new UndoBuffer(); }
 
   public signal void node_changed();
 
@@ -294,6 +316,7 @@ public class DrawArea : Gtk.DrawingArea {
       _motion  = false;
       queue_draw();
     }
+    FOOBAR
     return( false );
   }
 
@@ -419,6 +442,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       _current_node.mode = NodeMode.NONE;
       node.attach( _current_node.parent, (_current_node.index() + 1), _layout );
+      undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
       if( select_node( node ) ) {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
@@ -443,6 +467,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       _current_node.mode = NodeMode.NONE;
       node.attach( _current_node, -1, _layout );
+      undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
       if( select_node( node ) ) {
         node.mode = NodeMode.EDITABLE;
         queue_draw();

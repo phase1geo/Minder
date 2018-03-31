@@ -557,6 +557,87 @@ src/theme_inspector.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme_inspector.c.s
 .PHONY : src/theme_inspector.c.s
 
+src/undo_buffer.o: src/undo_buffer.c.o
+
+.PHONY : src/undo_buffer.o
+
+# target to build an object file
+src/undo_buffer.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_buffer.c.o
+.PHONY : src/undo_buffer.c.o
+
+src/undo_buffer.i: src/undo_buffer.c.i
+
+.PHONY : src/undo_buffer.i
+
+# target to preprocess a source file
+src/undo_buffer.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_buffer.c.i
+.PHONY : src/undo_buffer.c.i
+
+src/undo_buffer.s: src/undo_buffer.c.s
+
+.PHONY : src/undo_buffer.s
+
+# target to generate assembly for a file
+src/undo_buffer.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_buffer.c.s
+.PHONY : src/undo_buffer.c.s
+
+src/undo_item.o: src/undo_item.c.o
+
+.PHONY : src/undo_item.o
+
+# target to build an object file
+src/undo_item.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_item.c.o
+.PHONY : src/undo_item.c.o
+
+src/undo_item.i: src/undo_item.c.i
+
+.PHONY : src/undo_item.i
+
+# target to preprocess a source file
+src/undo_item.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_item.c.i
+.PHONY : src/undo_item.c.i
+
+src/undo_item.s: src/undo_item.c.s
+
+.PHONY : src/undo_item.s
+
+# target to generate assembly for a file
+src/undo_item.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_item.c.s
+.PHONY : src/undo_item.c.s
+
+src/undo_node_insert.o: src/undo_node_insert.c.o
+
+.PHONY : src/undo_node_insert.o
+
+# target to build an object file
+src/undo_node_insert.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_insert.c.o
+.PHONY : src/undo_node_insert.c.o
+
+src/undo_node_insert.i: src/undo_node_insert.c.i
+
+.PHONY : src/undo_node_insert.i
+
+# target to preprocess a source file
+src/undo_node_insert.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_insert.c.i
+.PHONY : src/undo_node_insert.c.i
+
+src/undo_node_insert.s: src/undo_node_insert.c.s
+
+.PHONY : src/undo_node_insert.s
+
+# target to generate assembly for a file
+src/undo_node_insert.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_insert.c.s
+.PHONY : src/undo_node_insert.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -612,6 +693,15 @@ help:
 	@echo "... src/theme_inspector.o"
 	@echo "... src/theme_inspector.i"
 	@echo "... src/theme_inspector.s"
+	@echo "... src/undo_buffer.o"
+	@echo "... src/undo_buffer.i"
+	@echo "... src/undo_buffer.s"
+	@echo "... src/undo_item.o"
+	@echo "... src/undo_item.i"
+	@echo "... src/undo_item.s"
+	@echo "... src/undo_node_insert.o"
+	@echo "... src/undo_node_insert.i"
+	@echo "... src/undo_node_insert.s"
 .PHONY : help
 
 
