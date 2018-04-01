@@ -21,33 +21,31 @@
 
 using Gtk;
 
-public class UndoNodeInsert : UndoItem {
+public class UndoNodeFold : UndoItem {
 
-  private DrawArea _da;
-  private Node?    _parent;
-  private Node     _n;
-  private int      _index;
-  private Layout?  _layout;
-
+  DrawArea _da;
+  Node     _node;
+  bool     _old_fold;
+  bool     _new_fold;
+  
   /* Default constructor */
-  public UndoNodeInsert( DrawArea da, Node n, Layout l ) {
-    base( _( "Insert Node" ) );
-    _da     = da;
-    _n      = n;
-    _index  = n.index();
-    _parent = n.parent;
-    _layout = l;
+  public UndoNodeFold( DrawArea da, Node n, bool new_fold ) {
+    base( _( "Node Change Fold" ) );
+    _da       = da;
+    _node     = n;
+    _old_fold = n.folded;
+    _new_fold = new_fold;
   }
-
-  /* Performs an undo operation for this data */
+  
+  /* Undoes a node fold operation */
   public override void undo() {
-    _n.detach( _layout );
+    _node.folded = _old_fold;
     _da.queue_draw();
   }
-
-  /* Performs a redo operation */
+  
+  /* Redoes a node fold operation */
   public override void redo() {
-    _n.attach( _parent, _index, _layout );
+    _node.folded = _new_fold;
     _da.queue_draw();
   }
 

@@ -21,34 +21,44 @@
 
 using Gtk;
 
-public class UndoNodeInsert : UndoItem {
+public class UndoNodeTask : UndoItem {
+  
+  DrawArea _da;
+  Node     _node;
+  bool     _old_enable;
+  bool     _old_done;
+  bool     _new_enable;
+  bool     _new_done;
 
-  private DrawArea _da;
-  private Node?    _parent;
-  private Node     _n;
-  private int      _index;
-  private Layout?  _layout;
-
-  /* Default constructor */
-  public UndoNodeInsert( DrawArea da, Node n, Layout l ) {
-    base( _( "Insert Node" ) );
-    _da     = da;
-    _n      = n;
-    _index  = n.index();
-    _parent = n.parent;
-    _layout = l;
+  /* Constructor for a node name change */
+  public UndoNodeTask( DrawArea da, Node n, bool new_enable, bool new_done ) {
+    base( _( "Node Task Change" ) );
+    _da         = da;
+    _node       = n;
+    _old_enable = n.task_enabled();
+    _old_done   = n.task_done();
+    _new_name   = new_enable;
+    _new_done   = new_done;
   }
 
-  /* Performs an undo operation for this data */
+  /* Undoes a node name change */
   public override void undo() {
-    _n.detach( _layout );
+    if( _old_enable != _new_enable ) {
+      _node.enable_task( _old_enable );
+    } else {
+      _node.set_task_done( _old_done );
+    }
     _da.queue_draw();
   }
-
-  /* Performs a redo operation */
+  
+  /* Redoes a node name change */
   public override void redo() {
-    _n.attach( _parent, _index, _layout );
+    if( _old_enable != _new_enable ) {
+      _node.enable_task( _new_enable );
+    } else {
+      _node.set_task_done( _new_done );
+    }
     _da.queue_draw();
   }
-
+  
 }

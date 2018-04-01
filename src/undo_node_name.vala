@@ -21,34 +21,32 @@
 
 using Gtk;
 
-public class UndoNodeInsert : UndoItem {
+public class UndoNodeName : UndoItem {
+  
+  DrawArea  _da;
+  Node      _node;
+  string    _old_name;
+  string    _new_name;
 
-  private DrawArea _da;
-  private Node?    _parent;
-  private Node     _n;
-  private int      _index;
-  private Layout?  _layout;
-
-  /* Default constructor */
-  public UndoNodeInsert( DrawArea da, Node n, Layout l ) {
-    base( _( "Insert Node" ) );
-    _da     = da;
-    _n      = n;
-    _index  = n.index();
-    _parent = n.parent;
-    _layout = l;
+  /* Constructor for a node name change */
+  public UndoNodeName( DrawArea da, Node n, string new_name ) {
+    base( _( "Node Name Change" ) );
+    _da       = da;
+    _node     = n;
+    _old_name = n.name;
+    _new_name = new_name;
   }
 
-  /* Performs an undo operation for this data */
+  /* Undoes a node name change */
   public override void undo() {
-    _n.detach( _layout );
+    _node.name = _old_name;
     _da.queue_draw();
   }
-
-  /* Performs a redo operation */
+  
+  /* Redoes a node name change */
   public override void redo() {
-    _n.attach( _parent, _index, _layout );
+    _node.name = _new_name;
     _da.queue_draw();
   }
-
+  
 }
