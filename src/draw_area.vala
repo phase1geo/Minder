@@ -37,6 +37,7 @@ public class DrawArea : Gtk.DrawingArea {
   private Theme       _theme;
   private Layout      _layout;
   private double      _scale_factor = 1.0;
+  private string      _orig_name;
 
   public bool       changed     { set; get; default = false; }
   public UndoBuffer undo_buffer { set; get; default = new UndoBuffer(); }
@@ -192,9 +193,11 @@ public class DrawArea : Gtk.DrawingArea {
       Node match = _nodes.index( i ).contains( x, y );
       if( match != null ) {
         if( match.is_within_task( x, y ) && match.is_leaf() ) {
+          undo_buffer.add_item( new UndoNodeTask( this, match, true, !match.task_done() ) );
           match.toggle_task_done();
           return( false );
         } else if( match.is_within_fold( x, y ) ) {
+          undo_buffer.add_item( new UndoNodeFold( this, match, false ) );
           match.folded = false;
           return( false );
         }
@@ -316,7 +319,6 @@ public class DrawArea : Gtk.DrawingArea {
       _motion  = false;
       queue_draw();
     }
-    FOOBAR
     return( false );
   }
 
@@ -358,6 +360,7 @@ public class DrawArea : Gtk.DrawingArea {
           changed = true;
         } else if( !_motion ) {
           _current_node.mode = NodeMode.EDITABLE;
+          _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
           _current_node.parent.move_to_position( _current_node, scale_value( event.x ), scale_value( event.y ), _layout );
@@ -400,6 +403,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
       changed = true;
     } else if( is_mode_selected() ) {
+      undo_buffer.add_item( new UndoNodeDelete( this, _current_node, _layout ) );
       _current_node.delete( _layout );
       queue_draw();
       changed = true;
@@ -413,6 +417,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
       changed = true;
     } else if( is_mode_selected() ) {
+      undo_buffer.add_item( new UndoNodeDelete( this, _current_node, _layout ) );
       _current_node.delete( _layout );
       queue_draw();
       changed = true;
@@ -430,6 +435,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the return character is entered in the drawing area */
   private void handle_return() {
     if( is_mode_edit() ) {
+      undo_buffer.add_item( new UndoNodeName( this, _current_node, _orig_name ) );
       _current_node.mode = NodeMode.SELECTED;
       queue_draw();
     } else if( !_current_node.is_root() ) {
@@ -455,6 +461,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the tab character is entered in the drawing area */
   private void handle_tab() {
     if( is_mode_edit() ) {
+      undo_buffer.add_item( new UndoNodeName( this, _current_node, _orig_name ) );
       _current_node.mode = NodeMode.SELECTED;
       queue_draw();
     } else if( is_mode_selected() ) {

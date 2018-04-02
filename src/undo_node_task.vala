@@ -22,7 +22,7 @@
 using Gtk;
 
 public class UndoNodeTask : UndoItem {
-  
+
   DrawArea _da;
   Node     _node;
   bool     _old_enable;
@@ -37,7 +37,7 @@ public class UndoNodeTask : UndoItem {
     _node       = n;
     _old_enable = n.task_enabled();
     _old_done   = n.task_done();
-    _new_name   = new_enable;
+    _new_enable = new_enable;
     _new_done   = new_done;
   }
 
@@ -46,19 +46,19 @@ public class UndoNodeTask : UndoItem {
     if( _old_enable != _new_enable ) {
       _node.enable_task( _old_enable );
     } else {
-      _node.set_task_done( _old_done );
+      _node.set_task_done( _old_done ? 1 : 0 );
     }
     _da.queue_draw();
   }
-  
+
   /* Redoes a node name change */
   public override void redo() {
     if( _old_enable != _new_enable ) {
       _node.enable_task( _new_enable );
     } else {
-      _node.set_task_done( _new_done );
+      _node.set_task_done( _new_done ? 1 : 0 );
     }
     _da.queue_draw();
   }
-  
+
 }

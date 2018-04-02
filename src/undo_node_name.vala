@@ -22,7 +22,7 @@
 using Gtk;
 
 public class UndoNodeName : UndoItem {
-  
+
   DrawArea  _da;
   Node      _node;
   string    _old_name;
@@ -42,11 +42,11 @@ public class UndoNodeName : UndoItem {
     _node.name = _old_name;
     _da.queue_draw();
   }
-  
+
   /* Redoes a node name change */
   public override void redo() {
     _node.name = _new_name;
     _da.queue_draw();
   }
-  
+
 }

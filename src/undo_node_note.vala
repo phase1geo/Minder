@@ -21,33 +21,31 @@
 
 using Gtk;
 
-public class UndoNodeDelete : UndoItem {
+public class UndoNodeNote : UndoItem {
 
-  DrawArea _da;
-  Node     _node;
-  Node?    _parent;
-  int      _index;
-  Layout   _layout;
+  DrawArea  _da;
+  Node      _node;
+  string    _old_note;
+  string    _new_note;
 
-  /* Default constructor */
-  public UndoNodeDelete( DrawArea da, Node n, Layout layout ) {
-    base( _( "Delete Node" ) );
-    _da     = da;
-    _node   = n;
-    _parent = n.parent;
-    _index  = n.index();
-    _layout = layout;
+  /* Constructor for a node name change */
+  public UndoNodeNote( DrawArea da, Node n, string new_note ) {
+    base( _( "Node Note Change" ) );
+    _da       = da;
+    _node     = n;
+    _old_note = n.note;
+    _new_note = new_note;
   }
 
-  /* Undoes a node deletion */
+  /* Undoes a node name change */
   public override void undo() {
-    _node.attach( _parent, _index, _layout );
+    _node.note = _old_note;
     _da.queue_draw();
   }
 
-  /* Redoes a node deletion */
+  /* Redoes a node name change */
   public override void redo() {
-    _node.detach( _layout );
+    _node.note = _new_note;
     _da.queue_draw();
   }
 

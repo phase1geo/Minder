@@ -128,6 +128,7 @@ public class NodeInspector : Grid {
       if( current.name != _name.text ) {
         _da.queue_draw();
       }
+      _da.undo_buffer.add_item( new UndoNodeName( _da, current, _name.text ) );
       current.name = _name.text;
     }
   }
@@ -136,6 +137,7 @@ public class NodeInspector : Grid {
   private bool task_changed( bool state ) {
     Node current = _da.get_current_node();
     if( current != null ) {
+      _da.undo_buffer.add_item( new UndoNodeTask( _da, current, state, false ) );
       current.enable_task( state );
       _da.queue_draw();
     }
@@ -146,6 +148,7 @@ public class NodeInspector : Grid {
   private bool fold_changed( bool state ) {
     Node current = _da.get_current_node();
     if( current != null ) {
+      _da.undo_buffer.add_item( new UndoNodeFold( _da, current, state ) );
       current.folded = state;
       _da.queue_draw();
     }
