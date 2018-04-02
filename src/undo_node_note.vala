@@ -29,12 +29,12 @@ public class UndoNodeNote : UndoItem {
   string    _new_note;
 
   /* Constructor for a node name change */
-  public UndoNodeNote( DrawArea da, Node n, string new_note ) {
+  public UndoNodeNote( DrawArea da, Node n, string old_note ) {
     base( _( "Node Note Change" ) );
     _da       = da;
     _node     = n;
-    _old_note = n.note;
-    _new_note = new_note;
+    _old_note = old_note;
+    _new_note = n.note;
   }
 
   /* Undoes a node name change */
