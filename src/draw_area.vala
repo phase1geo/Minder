@@ -168,7 +168,8 @@ public class DrawArea : Gtk.DrawingArea {
   public void initialize() {
 
     /* Create the main idea node */
-    RootNode n = new RootNode.with_name( "Main Idea", _layout );
+    var n = new RootNode.with_name( "Main Idea", _layout );
+    _orig_name = "";
     n.posx = 350;
     n.posy = 200;
 
@@ -440,6 +441,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     } else if( !_current_node.is_root() ) {
       NonrootNode node = new NonrootNode( _layout );
+      _orig_name = "";
       if( _current_node.parent.is_root() ) {
         node.color_index = _theme.next_color_index();
       } else {
@@ -449,6 +451,16 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.mode = NodeMode.NONE;
       node.attach( _current_node.parent, (_current_node.index() + 1), _layout );
       undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
+      if( select_node( node ) ) {
+        node.mode = NodeMode.EDITABLE;
+        queue_draw();
+      }
+      adjust_origin();
+      changed = true;
+    } else {
+      var node = new RootNode.with_name( _( "Another Idea" ), _layout );
+      _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+      _nodes.append_val( node );
       if( select_node( node ) ) {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
@@ -466,6 +478,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     } else if( is_mode_selected() ) {
       NonrootNode node = new NonrootNode( _layout );
+      _orig_name = "";
       if( _current_node.is_root() ) {
         node.color_index = _theme.next_color_index();
       } else {

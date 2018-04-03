@@ -21,8 +21,9 @@
 
 public class Layout : Object {
 
-  protected double                _pc_gap = 50;  /* Parent/child gap */
+  protected double                _pc_gap = 50;   /* Parent/child gap */
   protected double                _sb_gap = 8;    /* Sibling gap */
+  protected double                _rt_gap = 100;  /* Root node gaps */
   protected Pango.FontDescription _font_description = null;
 
   public string name  { protected set; get; }
@@ -176,10 +177,14 @@ public class Layout : Object {
     double adjust = (yamount + _sb_gap) / 2;
     for( int i=0; i<parent.children().length; i++ ) {
       if( parent.children().index( i ).side == side ) {
-        if( i == index ) { adjust = (0 - adjust); }
-        parent.children().index( i ).posy += adjust;
-        adjust_tree_all( parent, i, true, 0, adjust );
+        double current_adjust = (i >= index) ? (0 - adjust) : adjust;
+        parent.children().index( i ).posy += current_adjust;
+        adjust_tree( parent.children().index( i ), -1, side, true, 0, current_adjust );
       }
+    }
+    while( parent.parent != null ) {
+      adjust_tree_all( parent.parent, parent.index(), true, 0, adjust );
+      parent = parent.parent;
     }
   }
 
@@ -195,6 +200,14 @@ public class Layout : Object {
     } else {
       /* TBD */
     }
+  }
+
+  /* Positions the given root node based on the position of the last node */
+  public virtual void position_root( Node last, Node n ) {
+    double x, y, w, h;
+    bbox( last, -1, -1, out x, out y, out w, out h );
+    n.posx = last.posx;
+    n.posy = y + h + _rt_gap;
   }
 
   public Pango.FontDescription get_font_description() {

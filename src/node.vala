@@ -316,7 +316,7 @@ public class Node : Object {
     x = posx;
     y = posy;
     w = _width  + (_padx * 2) + ((_task_count > 0) ? (_ipadx + (_task_radius * 2)) : 0);
-    h = _height + (_pady * 2);
+    h = (_height == 0) ? 0 : (_height + (_pady * 2));
   }
 
   /* Returns the bounding box for the fold indicator for this node */
@@ -625,6 +625,7 @@ public class Node : Object {
 
   }
 
+  /* Draws the task checkbutton for leaf nodes */
   protected virtual void draw_leaf_task( Context ctx, RGBA color ) {
 
     if( _task_count > 0 ) {
@@ -647,7 +648,7 @@ public class Node : Object {
 
   }
 
-  /* Draws the task checkbutton */
+  /* Draws the task checkbutton for non-leaf nodes */
   protected virtual void draw_acc_task( Context ctx, RGBA color ) {
 
     if( _task_count > 0 ) {

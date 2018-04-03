@@ -20,14 +20,16 @@
 */
 
 using Gtk;
+using Gdk;
 
 public class NodeInspector : Grid {
 
-  private Entry?    _name = null;
-  private Switch?   _task = null;
-  private Switch?   _fold = null;
-  private TextView? _note = null;
-  private DrawArea? _da   = null;
+  private Entry?    _name      = null;
+  private Switch?   _task      = null;
+  private Switch?   _fold      = null;
+  private TextView? _note      = null;
+  private DrawArea? _da        = null;
+  private string    _orig_note = "";
 
   public NodeInspector( DrawArea da ) {
 
@@ -106,6 +108,8 @@ public class NodeInspector : Grid {
     _note.set_wrap_mode( Gtk.WrapMode.WORD );
     _note.buffer.text = "";
     _note.buffer.changed.connect( note_changed );
+    _note.focus_in_event.connect( note_focus_in );
+    _note.focus_out_event.connect( note_focus_out );
 
     ScrolledWindow sw = new ScrolledWindow( null, null );
     sw.min_content_width  = 300;
@@ -128,8 +132,9 @@ public class NodeInspector : Grid {
       if( current.name != _name.text ) {
         _da.queue_draw();
       }
-      _da.undo_buffer.add_item( new UndoNodeName( _da, current, _name.text ) );
+      string orig_name = current.name;
       current.name = _name.text;
+      _da.undo_buffer.add_item( new UndoNodeName( _da, current, orig_name ) );
     }
   }
 
@@ -167,6 +172,20 @@ public class NodeInspector : Grid {
       }
       current.note = _note.buffer.text;
     }
+  }
+
+  /* Saves the original version of the node's note */
+  private bool note_focus_in( EventFocus e ) {
+    _orig_note = _note.buffer.text;
+    return( false );
+  }
+
+  private bool note_focus_out( EventFocus e ) {
+    Node current = _da.get_current_node();
+    if( current != null ) {
+      _da.undo_buffer.add_item( new UndoNodeNote( _da, current, _orig_note ) );
+    }
+    return( false );
   }
 
   /* Called whenever the user changes the current node in the canvas */
