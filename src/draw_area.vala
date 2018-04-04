@@ -225,6 +225,7 @@ public class DrawArea : Gtk.DrawingArea {
         } else if( match.is_within_fold( x, y ) ) {
           undo_buffer.add_item( new UndoNodeFold( this, match, false ) );
           match.folded = false;
+          // _layout.handle_update_by_unfold( match );
           return( false );
         }
         _orig_side = match.side;

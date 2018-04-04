@@ -45,7 +45,7 @@ public class Layout : Object {
   public virtual void bbox( Node parent, int depth, int side_mask, out double x, out double y, out double w, out double h ) {
     uint num_children = parent.children().length;
     parent.bbox( out x, out y, out w, out h );
-    if( (depth != 0) && (num_children != 0) ) {
+    if( (depth != 0) && (num_children != 0) && !parent.folded ) {
       double cx, cy, cw, ch;
       double mw, mh;
       for( int i=0; i<parent.children().length; i++ ) {
