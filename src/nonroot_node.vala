@@ -74,12 +74,24 @@ public class NonrootNode : Node {
 
   /* Provides the point to link to children nodes */
   protected override void link_point( out double x, out double y ) {
-    if( side == 0 ) {
-      x = posx;
-    } else {
-      x = posx + _width + (_padx * 2);
+    switch( side ) {
+      case NodeSide.LEFT :
+        x = posx;
+        y = posy + _height + (_pady * 2);
+        break;
+      case NodeSide.RIGHT :
+        x = posx + _width  + (_padx * 2);
+        y = posy + _height + (_pady * 2);
+        break;
+      case NodeSide.TOP :
+        x = posx + (_width / 2) + _padx;
+        y = posy;
+        break;
+      default :
+        x = posx + (_width / 2) + _padx;
+        y = posy + _height + (_pady * 2);
+        break;
     }
-    y = posy + _height + (_pady * 2);
   }
 
   /* Draws the line under the node name */
@@ -114,10 +126,19 @@ public class NonrootNode : Node {
     ctx.set_line_width( 4 );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( parent_x, parent_y );
-    if( side == 0 ) {
-      ctx.line_to( (posx + _width + task_width() + (_padx * 2)), (posy + _height + (_pady * 2)) );
-    } else {
-      ctx.line_to( posx, (posy + _height + (_pady * 2)) );
+    switch( side ) {
+      case NodeSide.LEFT :
+        ctx.line_to( (posx + _width + task_width() + (_padx * 2)), (posy + _height + (_pady * 2)) );
+        break;
+      case NodeSide.RIGHT :
+        ctx.line_to( posx, (posy + _height + (_pady * 2)) );
+        break;
+      case NodeSide.TOP :
+        ctx.line_to( (posx + (_width / 2) + (task_width() / 2) + _padx), posy );
+        break;
+      case NodeSide.BOTTOM :
+        ctx.line_to( (posx + (_width / 2) + (task_width() / 2) + _padx), (posy + _height + (_pady * 2)) );
+        break;
     }
     ctx.stroke();
 

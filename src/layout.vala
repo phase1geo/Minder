@@ -42,15 +42,15 @@ public class Layout : Object {
   }
 
   /* Get the bbox for the given parent to the given depth */
-  public virtual void bbox( Node parent, int depth, int side, out double x, out double y, out double w, out double h ) {
+  public virtual void bbox( Node parent, int depth, int side_mask, out double x, out double y, out double w, out double h ) {
     uint num_children = parent.children().length;
     parent.bbox( out x, out y, out w, out h );
     if( (depth != 0) && (num_children != 0) ) {
       double cx, cy, cw, ch;
       double mw, mh;
       for( int i=0; i<parent.children().length; i++ ) {
-        if( (side == -1) || (parent.children().index( i ).side == side) ) {
-          bbox( parent.children().index( i ), (depth - 1), side, out cx, out cy, out cw, out ch );
+        if( (parent.children().index( i ).side & side_mask) != 0 ) {
+          bbox( parent.children().index( i ), (depth - 1), side_mask, out cx, out cy, out cw, out ch );
           x  = (x < cx) ? x : cx;
           y  = (y < cy) ? y : cy;
           mw = (cx + cw) - x;
@@ -63,13 +63,15 @@ public class Layout : Object {
   }
 
   /* Adjusts the given tree by the given amount */
-  public virtual void adjust_tree( Node parent, int child_index, int side, bool both, double xamount, double yamount ) {
+  public virtual void adjust_tree( Node parent, int child_index, NodeSide side, bool both, double xamount, double yamount ) {
     for( int i=0; i<parent.children().length; i++ ) {
       if( i != child_index ) {
-        Node n = parent.children().index( i );
-        n.posx += xamount;
-        n.posy += yamount;
-        adjust_tree( n, -1, side, both, xamount, yamount );
+        if( parent.children().index( i ).side == side ) {
+          Node n = parent.children().index( i );
+          n.posx += xamount;
+          n.posy += yamount;
+          adjust_tree( n, -1, side, both, xamount, yamount );
+        }
       } else {
         xamount = 0 - xamount;
         yamount = 0 - yamount;
@@ -78,23 +80,23 @@ public class Layout : Object {
   }
 
   /* Adjust the entire tree */
-  public virtual void adjust_tree_all( Node parent, int child_index, bool both, double xamount, double yamount ) {
+  public virtual void adjust_tree_all( Node parent, int child_index, NodeSide side, bool both, double xamount, double yamount ) {
     do {
-      adjust_tree( parent, child_index, parent.children().index( child_index ).side, both, xamount, yamount );
+      adjust_tree( parent, child_index, side, both, xamount, yamount );
       child_index = parent.index();
       parent      = parent.parent;
     } while( parent != null );
   }
 
   /* Recursively sets the side property of this node and all children nodes */
-  protected virtual void propagate_side( Node parent, int side ) {
+  protected virtual void propagate_side( Node parent, NodeSide side ) {
     double px, py, pw, ph;
     parent.bbox( out px, out py, out pw, out ph );
     for( int i=0; i<parent.children().length; i++ ) {
       Node n = parent.children().index( i );
       if( n.side != side ) {
         n.side = side;
-        if( side == 0 ) {
+        if( side == NodeSide.LEFT ) {
           double cx, cy, cw, ch;
           n.bbox( out cx, out cy, out cw, out ch );
           n.posx = px - _pc_gap - cw;
@@ -117,7 +119,7 @@ public class Layout : Object {
       }
       parent.bbox(  out px, out py, out pw, out ph );
       current.bbox( out cx, out cy, out cw, out ch );
-      int side = ((cx + (cw / 2)) > (px + (pw / 2))) ? 1 : 0;
+      NodeSide side = ((cx + (cw / 2)) > (px + (pw / 2))) ? NodeSide.RIGHT : NodeSide.LEFT;
       if( current.side != side ) {
         current.side = side;
         propagate_side( current, side );
@@ -130,7 +132,7 @@ public class Layout : Object {
     double width_diff, height_diff;
     n.update_size( out width_diff, out height_diff );
     if( (n.parent != null) && (height_diff > 0) ) {
-      adjust_tree_all( n.parent, n.index(), false, 0, height_diff );
+      adjust_tree_all( n.parent, n.index(), n.side, false, 0, height_diff );
     }
   }
 
@@ -138,7 +140,7 @@ public class Layout : Object {
   private void set_pc_gap( Node n ) {
     double px, py, pw, ph;
     n.parent.bbox( out px, out py, out pw, out ph );
-    if( n.side == 0 ) {
+    if( n.side == NodeSide.LEFT ) {
       double cx, cy, cw, ch;
       n.bbox( out cx, out cy, out cw, out ch );
       n.posx = px - (cw + _pc_gap);
@@ -169,11 +171,11 @@ public class Layout : Object {
       bbox( parent.children().index( pos + 1 ), -1, child.side, out sx, out sy, out sw, out sh );
       child.posy = sy - adjust;
     }
-    adjust_tree_all( parent, pos, true, 0, (0 - adjust) );
+    adjust_tree_all( parent, pos, child.side, true, 0, (0 - adjust) );
   }
 
   /* Called to layout the leftover children of a parent node when a node is deleted */
-  public virtual void handle_update_by_delete( Node parent, int index, int side, double xamount, double yamount ) {
+  public virtual void handle_update_by_delete( Node parent, int index, NodeSide side, double xamount, double yamount ) {
     double adjust = (yamount + _sb_gap) / 2;
     for( int i=0; i<parent.children().length; i++ ) {
       if( parent.children().index( i ).side == side ) {
@@ -183,22 +185,8 @@ public class Layout : Object {
       }
     }
     while( parent.parent != null ) {
-      adjust_tree_all( parent.parent, parent.index(), true, 0, adjust );
+      adjust_tree_all( parent.parent, parent.index(), side, true, 0, adjust );
       parent = parent.parent;
-    }
-  }
-
-  public virtual void reposition( Node n, int from_index, int from_side ) {
-    double x, y, w, h;
-    Node parent   = n.parent;
-    int  to_index = n.index();
-    int  to_side  = n.side;
-    bbox( n, -1, from_side, out x, out y, out w, out h );
-    if( from_side != to_side ) {
-      handle_update_by_delete( parent, from_index, from_side, 0, (h / 2) );
-      handle_update_by_insert( parent, n, to_index );
-    } else {
-      /* TBD */
     }
   }
 

@@ -24,11 +24,39 @@ using GLib;
 using Gdk;
 using Cairo;
 
+/* Enumeration describing the different modes a node can be in */
 public enum NodeMode {
-  NONE = 0,
-  SELECTED,
-  EDITABLE,
-  EDITED
+  NONE = 0,  // Specifies that this node is not the current node
+  SELECTED,  // Specifies that this node is the current node and is not being edited
+  EDITABLE,  // Specifies that this node's text should be selected for editing
+  EDITED     // Specifies that this node's text has been and currently is actively being edited
+}
+
+public enum NodeSide {
+  LEFT   = 1,  // Specifies that this node is to the left of the root node
+  TOP    = 2,  // Specifies that this node is above the root node
+  RIGHT  = 4,  // Specifies that this node is to the right of the root node
+  BOTTOM = 8;  // Specifies that this node is below the root node
+
+  public string to_string() {
+    switch( this ) {
+      case LEFT   :  return( "left" );
+      case TOP    :  return( "top" );
+      case RIGHT  :  return( "right" );
+      case BOTTOM :  return( "bottom" );
+      default     :  assert_not_reached();
+    }
+  }
+
+  public static NodeSide parse( string val ) {
+    switch( val ) {
+      case "left"   :  return( LEFT );
+      case "top"    :  return( TOP );
+      case "right"  :  return( RIGHT );
+      case "bottom" :  return( BOTTOM );
+      default       :  assert_not_reached();
+    }
+  }
 }
 
 public struct NodeBounds {
@@ -52,10 +80,10 @@ public class Node : Object {
   private   int          _cursor      = 0;   /* Location of the cursor when editing */
   protected Array<Node>  _children;
   private   string       _prevname    = "~";
-  private   Pango.Layout _layout      = null;
   private   int          _task_count  = 0;
   private   int          _task_done   = 0;
-  private   Pango.FontDescription _font_description = null;
+  private   Pango.Layout?          _layout           = null;
+  private   Pango.FontDescription? _font_description = null;
 
   /* Properties */
   public string   name   { get; set; default = ""; }
@@ -63,8 +91,8 @@ public class Node : Object {
   public double   posy   { get; set; default = 50.0; }
   public string   note   { get; set; default = ""; }
   public NodeMode mode   { get; set; default = NodeMode.NONE; }
-  public Node     parent { get; protected set; default = null; }
-  public int      side   { get; set; default = 1; }
+  public Node?    parent { get; protected set; default = null; }
+  public NodeSide side   { get; set; default = NodeSide.RIGHT; }
   public bool     folded { get; set; default = false; }
 
   /* Default constructor */
@@ -178,7 +206,7 @@ public class Node : Object {
   }
 
   /* Returns the number of child nodes that match the given side value */
-  public virtual int side_count( int side ) {
+  public virtual int side_count( NodeSide side ) {
     int count = 0;
     for( int i=0; i<children().length; i++ ) {
       if( _children.index( i ).side == side ) {
@@ -231,6 +259,16 @@ public class Node : Object {
       _task_done  = int.parse( tc );
     }
 
+    string? s = n->get_prop( "side" );
+    if( s != null ) {
+      side = NodeSide.parse( s );
+    }
+
+    string? f = n->get_prop( "fold" );
+    if( f != null ) {
+      folded = bool.parse( f );
+    }
+
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
@@ -270,6 +308,8 @@ public class Node : Object {
     if( (_task_count > 0) && is_leaf() ) {
       node->new_prop( "task", _task_done.to_string() );
     }
+    node->new_prop( "side", side.to_string() );
+    node->new_prop( "fold", folded.to_string() );
 
     node->new_text_child( null, "nodename", name );
     node->new_text_child( null, "nodenote", note );
@@ -298,7 +338,7 @@ public class Node : Object {
       int width, height;
       _layout.set_text( name, -1 );
       _layout.get_size( out width, out height );
-      if( side == 0 ) {
+      if( side == NodeSide.LEFT ) {
         posx = (posx + _width) - (width / Pango.SCALE);
       }
       width_diff  = (width  / Pango.SCALE) - _width;
@@ -321,11 +361,28 @@ public class Node : Object {
 
   /* Returns the bounding box for the fold indicator for this node */
   private void fold_bbox( out double x, out double y, out double w, out double h ) {
-    bbox( out x, out y, out w, out h );
-    x = x + w + _padx;
-    y = y + (h / 2) - 5;
-    w = 15;
+    double bw, bh;
+    bbox( out x, out y, out bw, out bh );
+    w = 16;
     h = 10;
+    switch( side ) {
+      case NodeSide.RIGHT :
+        x += bw + _padx;
+        y += (bh / 2) - 5;
+        break;
+      case NodeSide.LEFT :
+        x -= _padx + w;
+        y += (bh / 2) - 5;
+        break;
+      case NodeSide.TOP :
+        x += (bw / 2) - 8;
+        y -= _padx + bh;
+        break;
+      case NodeSide.BOTTOM :
+        x += (bw / 2) - 8;
+        y += bh + _padx;
+        break;
+    }
   }
 
   /* Returns the amount of internal width to draw the task checkbutton */
@@ -339,19 +396,29 @@ public class Node : Object {
   }
 
   /* Moves this node into the proper position within the parent node */
-  public void move_to_position( Node child, double x, double y, Layout layout ) {
-    int side = child.side;
-    child.detach( layout );
+  public void move_to_position( Node child, NodeSide side, double x, double y, Layout layout ) {
+    child.detach( side, layout );
     for( int i=0; i<_children.length; i++ ) {
-      if( side == _children.index( i ).side ) {
-        /*
-         TBD - This comparison needs to be run through layout as we may be
-         comparing either X or Y
-        */
-        if( y < _children.index( i ).posy ) {
-          child.attach( this, i, layout );
-          return;
+      if( _children.index( i ).side == side ) {
+        switch( side ) {
+          case NodeSide.LEFT  :
+          case NodeSide.RIGHT :
+            if( y < _children.index( i ).posy ) {
+              child.attach( this, i, layout );
+              return;
+            }
+            break;
+          case NodeSide.TOP :
+          case NodeSide.BOTTOM :
+            if( x < _children.index( i ).posx ) {
+              child.attach( this, i, layout );
+              return;
+            }
+            break;
         }
+      } else if( _children.index( i ).side > side ) {
+        child.attach( this, i, layout );
+        return;
       }
     }
     child.attach( this, -1, layout );
@@ -421,7 +488,7 @@ public class Node : Object {
   }
 
   /* Detaches this node from its parent node */
-  public virtual void detach( Layout? layout ) {
+  public virtual void detach( NodeSide side, Layout? layout ) {
     if( parent != null ) {
       double x, y, w, h;
       int    idx = index();
@@ -439,7 +506,7 @@ public class Node : Object {
   /* Removes this node from the node tree along with all descendents */
   public virtual void delete( Layout layout ) {
     _children.remove_range( 0, _children.length );
-    detach( layout );
+    detach( side, layout );
   }
 
   /* Attaches this node as a child of the given node */
@@ -571,12 +638,23 @@ public class Node : Object {
 
   /* Returns the link point for this node */
   protected virtual void link_point( out double x, out double y ) {
-    if( side == 0 ) {
-      x = posx;
-      y = posy;
-    } else {
-      x = posx + _width;
-      y = posy;
+    switch( side ) {
+      case NodeSide.LEFT :
+        x = posx;
+        y = posy;
+        break;
+      case NodeSide.TOP :
+        x = posx + (_width / 2);
+        y = posy;
+        break;
+      case NodeSide.RIGHT :
+        x = posx + _width;
+        y = posy;
+        break;
+      default :
+        x = posx + (_width / 2);
+        y = posy + _height;
+        break;
     }
   }
 

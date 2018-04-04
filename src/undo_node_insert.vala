@@ -41,7 +41,7 @@ public class UndoNodeInsert : UndoItem {
 
   /* Performs an undo operation for this data */
   public override void undo() {
-    _n.detach( _layout );
+    _n.detach( _n.side, _layout );
     _da.queue_draw();
   }
 

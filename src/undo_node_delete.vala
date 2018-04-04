@@ -47,7 +47,7 @@ public class UndoNodeDelete : UndoItem {
 
   /* Redoes a node deletion */
   public override void redo() {
-    _node.detach( _layout );
+    _node.detach( _node.side, _layout );
     _da.queue_draw();
   }
 

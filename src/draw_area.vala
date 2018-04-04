@@ -38,6 +38,7 @@ public class DrawArea : Gtk.DrawingArea {
   private Layout      _layout;
   private double      _scale_factor = 1.0;
   private string      _orig_name;
+  private NodeSide    _orig_side;
 
   public bool       changed     { set; get; default = false; }
   public UndoBuffer undo_buffer { set; get; default = new UndoBuffer(); }
@@ -81,7 +82,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Loads the drawing area origin from the XML node */
-  private void load_origin( Xml.Node* n ) {
+  private void load_drawarea( Xml.Node* n ) {
 
     string? x = n->get_prop( "x" );
     if( x != null ) {
@@ -91,6 +92,11 @@ public class DrawArea : Gtk.DrawingArea {
     string? y = n->get_prop( "y" );
     if( y != null ) {
       _origin_y = double.parse( y );
+    }
+
+    string? sf = n->get_prop( "scale" );
+    if( sf != null ) {
+      _scale_factor = double.parse( sf );
     }
 
   }
@@ -120,10 +126,10 @@ public class DrawArea : Gtk.DrawingArea {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "theme"  :  load_theme( it );   break;
-          case "layout" :  load_layout( it );  break;
-          case "origin" :  load_origin( it );  break;
-          case "nodes"  :
+          case "theme"    :  load_theme( it );   break;
+          case "layout"   :  load_layout( it );  break;
+          case "drawarea" :  load_drawarea( it );  break;
+          case "nodes"    :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 RootNode node = new RootNode( _layout );
@@ -146,12 +152,13 @@ public class DrawArea : Gtk.DrawingArea {
     parent->add_child( theme );
 
     Xml.Node* layout = new Xml.Node( null, "layout" );
-    theme->new_prop( "name", _layout.name );
+    layout->new_prop( "name", _layout.name );
     parent->add_child( layout );
 
-    Xml.Node* origin = new Xml.Node( null, "origin" );
+    Xml.Node* origin = new Xml.Node( null, "drawarea" );
     origin->new_prop( "x", _origin_x.to_string() );
     origin->new_prop( "y", _origin_y.to_string() );
+    origin->new_prop( "scale", _scale_factor.to_string() );
     parent->add_child( origin );
 
     Xml.Node* nodes = new Xml.Node( null, "nodes" );
@@ -202,6 +209,7 @@ public class DrawArea : Gtk.DrawingArea {
           match.folded = false;
           return( false );
         }
+        _orig_side = match.side;
         if( match == _current_node ) {
           return( true );
         } else {
@@ -318,6 +326,7 @@ public class DrawArea : Gtk.DrawingArea {
       _press_y = scale_value( event.y );
       _pressed = set_current_node_at_position( _press_x, _press_y );
       _motion  = false;
+      grab_focus();
       queue_draw();
     }
     return( false );
@@ -355,7 +364,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( _current_node.mode == NodeMode.SELECTED ) {
         Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
         if( attach_node != null ) {
-          _current_node.detach( _layout );
+          _current_node.detach( _orig_side, _layout );
           _current_node.attach( attach_node, -1, _layout );
           queue_draw();
           changed = true;
@@ -364,7 +373,7 @@ public class DrawArea : Gtk.DrawingArea {
           _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
-          _current_node.parent.move_to_position( _current_node, scale_value( event.x ), scale_value( event.y ), _layout );
+          _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
           queue_draw();
         }
       }
@@ -446,9 +455,9 @@ public class DrawArea : Gtk.DrawingArea {
         node.color_index = _theme.next_color_index();
       } else {
         node.color_index = ((NonrootNode)_current_node).color_index;
-        node.side        = _current_node.side;
       }
       _current_node.mode = NodeMode.NONE;
+      node.side          = _current_node.side;
       node.attach( _current_node.parent, (_current_node.index() + 1), _layout );
       undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
       if( select_node( node ) ) {
