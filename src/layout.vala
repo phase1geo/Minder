@@ -63,14 +63,14 @@ public class Layout : Object {
   }
 
   /* Adjusts the given tree by the given amount */
-  public virtual void adjust_tree( Node parent, int child_index, NodeSide side, bool both, double xamount, double yamount ) {
+  public virtual void adjust_tree( Node parent, int child_index, int side_mask, bool both, double xamount, double yamount ) {
     for( int i=0; i<parent.children().length; i++ ) {
       if( i != child_index ) {
-        if( parent.children().index( i ).side == side ) {
+        if( (parent.children().index( i ).side & side_mask) != 0 ) {
           Node n = parent.children().index( i );
           n.posx += xamount;
           n.posy += yamount;
-          adjust_tree( n, -1, side, both, xamount, yamount );
+          adjust_tree( n, -1, side_mask, both, xamount, yamount );
         }
       } else {
         xamount = 0 - xamount;

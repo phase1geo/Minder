@@ -71,13 +71,12 @@ public class DrawArea : Gtk.DrawingArea {
       EventMask.BUTTON_PRESS_MASK |
       EventMask.BUTTON_RELEASE_MASK |
       EventMask.BUTTON1_MOTION_MASK |
-      EventMask.KEY_PRESS_MASK );
+      EventMask.KEY_PRESS_MASK |
+      EventMask.STRUCTURE_MASK
+    );
 
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
-
-    /* Make sure that we draw before we do anything else */
-    queue_draw();
 
   }
 
@@ -123,6 +122,11 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Loads the contents of the data input stream */
   public void load( Xml.Node* n ) {
+
+    /* Clear the existing nodes */
+    _nodes.remove_range( 0, _nodes.length );
+
+    /* Load the contents of the file */
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
@@ -174,14 +178,28 @@ public class DrawArea : Gtk.DrawingArea {
   /* Initialize the empty drawing area with a node */
   public void initialize() {
 
+    /* Clear the list of existing nodes */
+    _nodes.remove_range( 0, _nodes.length );
+
+    /* Clear the undo buffer */
+    undo_buffer.clear();
+
+    /* Clear the changed indicator */
+    changed = false;
+
     /* Create the main idea node */
     var n = new RootNode.with_name( "Main Idea", _layout );
-    _orig_name = "";
-    n.posx = 350;
-    n.posy = 200;
+
+    /* Set the node information */
+    n.posx = (get_allocated_width()  / 2) - 30;
+    n.posy = (get_allocated_height() / 2) - 10;
+    n.mode = NodeMode.SELECTED;
 
     _nodes.append_val( n );
+    _orig_name    = "";
+    _current_node = n;
 
+    /* Redraw the canvas */
     queue_draw();
 
   }
@@ -341,7 +359,11 @@ public class DrawArea : Gtk.DrawingArea {
         _current_node.posx += diffx;
         _current_node.posy += diffy;
         _layout.set_side( _current_node );
-        _layout.adjust_tree( _current_node, -1, _current_node.side, true, diffx, diffy );
+        if( _current_node.parent == null ) {
+          _layout.adjust_tree( _current_node, -1, NodeSide.any(), true, diffx, diffy );
+        } else {
+          _layout.adjust_tree( _current_node, -1, _current_node.side, true, diffx, diffy );
+        }
         queue_draw();
       } else {
         double diff_x = _press_x - scale_value( event.x );

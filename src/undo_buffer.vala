@@ -34,6 +34,13 @@ public class UndoBuffer : Object {
     _redo_buffer = new Array<UndoItem>();
   }
 
+  /* Clear the undo/redo buffers */
+  public void clear() {
+    _undo_buffer.remove_range( 0, _undo_buffer.length );
+    _redo_buffer.remove_range( 0, _redo_buffer.length );
+    buffer_changed();
+  }
+
   /* Returns true if we can perform an undo action */
   public bool undoable() {
     return( _undo_buffer.length > 0 );

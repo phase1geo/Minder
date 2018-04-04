@@ -168,7 +168,7 @@ public class MainWindow : ApplicationWindow {
     _doc = new Document();
 
     /* Initialize the canvas */
-    _canvas.initialize();
+    _canvas.map_event.connect( on_canvas_mapped );
     _canvas.undo_buffer.buffer_changed.connect( do_buffer_changed );
 
     /* Display the UI */
@@ -185,14 +185,16 @@ public class MainWindow : ApplicationWindow {
     if( _canvas.changed ) {
       _doc.save( null, _canvas );
     }
-    _doc    = new Document();
-    _canvas = new DrawArea();
+    _doc = new Document();
     _canvas.initialize();
     add( _canvas );
   }
 
   /* Allow the user to open a Minder file */
   public void do_open_file() {
+    if( _canvas.changed ) {
+      _doc.save( null, _canvas );
+    }
     FileChooserDialog dialog = new FileChooserDialog( _( "Open File" ), this, FileChooserAction.OPEN,
       _( "Cancel" ), ResponseType.CANCEL, _( "Open" ), ResponseType.ACCEPT );
     FileFilter        filter = new FileFilter();
@@ -213,6 +215,12 @@ public class MainWindow : ApplicationWindow {
   /* Perform a redo action */
   public void do_redo() {
     _canvas.undo_buffer.redo();
+  }
+
+  /* Called when the canvas is displayed */
+  private bool on_canvas_mapped( Gdk.EventAny e ) {
+    _canvas.initialize();
+    return( false );
   }
 
   /*

@@ -38,6 +38,7 @@ public enum NodeSide {
   RIGHT  = 4,  // Specifies that this node is to the right of the root node
   BOTTOM = 8;  // Specifies that this node is below the root node
 
+  /* Displays the string value of this NodeSide */
   public string to_string() {
     switch( this ) {
       case LEFT   :  return( "left" );
@@ -48,6 +49,7 @@ public enum NodeSide {
     }
   }
 
+  /* Translates a string from to_string() to a NodeSide value */
   public static NodeSide parse( string val ) {
     switch( val ) {
       case "left"   :  return( LEFT );
@@ -56,6 +58,11 @@ public enum NodeSide {
       case "bottom" :  return( BOTTOM );
       default       :  assert_not_reached();
     }
+  }
+
+  /* Generates the value of the ANY mask value */
+  public static int any() {
+    return( LEFT + RIGHT + TOP + BOTTOM );
   }
 }
 
