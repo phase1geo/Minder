@@ -24,12 +24,13 @@ using Gdk;
 
 public class NodeInspector : Grid {
 
-  private Entry?    _name      = null;
-  private Switch?   _task      = null;
-  private Switch?   _fold      = null;
-  private TextView? _note      = null;
-  private DrawArea? _da        = null;
-  private string    _orig_note = "";
+  private Entry?    _name       = null;
+  private Switch?   _task       = null;
+  private Switch?   _fold       = null;
+  private TextView? _note       = null;
+  private DrawArea? _da         = null;
+  private Button?   _detach_btn = null;
+  private string    _orig_note  = "";
 
   public NodeInspector( DrawArea da ) {
 
@@ -41,6 +42,7 @@ public class NodeInspector : Grid {
     create_task( 1 );
     create_fold( 2 );
     create_note( 3 );
+    create_buttons( 4 );
 
     _da.node_changed.connect( node_changed );
 
@@ -123,6 +125,32 @@ public class NodeInspector : Grid {
 
   }
 
+  /* Creates the node editing button grid and adds it to the popover */
+  private void create_buttons( int row ) {
+
+    var grid = new Grid();
+    grid.column_homogeneous = true;
+    grid.column_spacing     = 10;
+
+    /* Create the detach button */
+    _detach_btn = new Button.from_icon_name( "FOOBAR", IconSize.SMALL_TOOLBAR );
+    _detach_btn.set_tooltip_text( _( "Detach Node" ) );
+    _detach_btn.clicked.connect( node_detach );
+
+    /* Create the node deletion button */
+    var del_btn = new Button.from_icon_name( "edit-delete-symbolic", IconSize.SMALL_TOOLBAR );
+    del_btn.set_tooltip_text( _( "Delete Node" ) );
+    del_btn.clicked.connect( node_delete );
+
+    /* Add the buttons to the button grid */
+    grid.attach( _detach_btn, 0, 0, 1, 1 );
+    grid.attach( del_btn,     1, 0, 1, 1 );
+
+    /* Add the button grid to the popover */
+    attach( grid, 0, row, 2, 1 );
+
+  }
+
   /*
    Called whenever the node name is changed within the inspector.
   */
@@ -181,11 +209,24 @@ public class NodeInspector : Grid {
   }
 
   private bool note_focus_out( EventFocus e ) {
-    Node current = _da.get_current_node();
+    Node? current = _da.get_current_node();
     if( current != null ) {
       _da.undo_buffer.add_item( new UndoNodeNote( _da, current, _orig_note ) );
     }
     return( false );
+  }
+
+  /* Detaches the current node and makes it a parent node */
+  private void node_detach() {
+    _da.detach();
+    _detach_btn.set_sensitive( false );
+  }
+
+  private void node_delete() {
+    Node? current = _da.get_current_node();
+    if( current != null ) {
+      current.delete( _da.get_layout() );
+    }
   }
 
   /* Called whenever the user changes the current node in the canvas */
@@ -203,6 +244,7 @@ public class NodeInspector : Grid {
         _fold.set_active( false );
         _fold.set_sensitive( false );
       }
+      _detach_btn.set_sensitive( current.parent != null );
       _note.buffer.text = current.note;
     } else {
       _name.set_text( "" );

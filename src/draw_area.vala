@@ -145,7 +145,10 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
     }
+
     queue_draw();
+    queue_draw();
+
   }
 
   /* Saves the contents of the drawing area to the data output stream */
@@ -201,12 +204,18 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Redraw the canvas */
     queue_draw();
+    queue_draw();
 
   }
 
   /* Returns the current node */
   public Node? get_current_node() {
     return( _current_node );
+  }
+
+  /* Returns the current layout */
+  public Layout get_layout() {
+    return( _layout );
   }
 
   /*
@@ -496,10 +505,47 @@ public class DrawArea : Gtk.DrawingArea {
       if( select_node( node ) ) {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
+        queue_draw();
       }
       adjust_origin();
       changed = true;
     }
+  }
+
+  /* Adds the given node to the list of root nodes */
+  public void add_root( Node n, int index ) {
+    if( index == -1 ) {
+      _nodes.append_val( n );
+    } else {
+      _nodes.insert_val( index, n );
+    }
+  }
+
+  /* Removes the node at the given root index from the list of root nodes */
+  public void remove_root( int index ) {
+    _nodes.remove_index( index );
+  }
+
+  /* Returns true if the drawing area has a node that is available for detaching */
+  public bool detachable() {
+    return( (_current_node != null) && (_current_node.parent != null) );
+  }
+
+  /* Detaches the given node from its parent and adds it as a root node */
+  public void detach() {
+    if( !detachable() ) return;
+    Node     parent = _current_node.parent;
+    int      index  = _current_node.index();
+    NodeSide side   = _current_node.side;
+    _current_node.detach( side, _layout );
+    if( index == -1 ) {
+      _nodes.append_val( _current_node );
+    } else {
+      _nodes.insert_val( index, _current_node );
+    }
+    undo_buffer.add_item( new UndoNodeDetach( this, _current_node, (int)_nodes.length, parent, side, index, _layout ) );
+    queue_draw();
+    changed = true;
   }
 
   /* Called whenever the tab character is entered in the drawing area */

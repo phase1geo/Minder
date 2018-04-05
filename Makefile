@@ -611,6 +611,33 @@ src/undo_item.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_item.c.s
 .PHONY : src/undo_item.c.s
 
+src/undo_node_attach.o: src/undo_node_attach.c.o
+
+.PHONY : src/undo_node_attach.o
+
+# target to build an object file
+src/undo_node_attach.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_attach.c.o
+.PHONY : src/undo_node_attach.c.o
+
+src/undo_node_attach.i: src/undo_node_attach.c.i
+
+.PHONY : src/undo_node_attach.i
+
+# target to preprocess a source file
+src/undo_node_attach.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_attach.c.i
+.PHONY : src/undo_node_attach.c.i
+
+src/undo_node_attach.s: src/undo_node_attach.c.s
+
+.PHONY : src/undo_node_attach.s
+
+# target to generate assembly for a file
+src/undo_node_attach.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_attach.c.s
+.PHONY : src/undo_node_attach.c.s
+
 src/undo_node_delete.o: src/undo_node_delete.c.o
 
 .PHONY : src/undo_node_delete.o
@@ -637,6 +664,33 @@ src/undo_node_delete.s: src/undo_node_delete.c.s
 src/undo_node_delete.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_delete.c.s
 .PHONY : src/undo_node_delete.c.s
+
+src/undo_node_detach.o: src/undo_node_detach.c.o
+
+.PHONY : src/undo_node_detach.o
+
+# target to build an object file
+src/undo_node_detach.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_detach.c.o
+.PHONY : src/undo_node_detach.c.o
+
+src/undo_node_detach.i: src/undo_node_detach.c.i
+
+.PHONY : src/undo_node_detach.i
+
+# target to preprocess a source file
+src/undo_node_detach.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_detach.c.i
+.PHONY : src/undo_node_detach.c.i
+
+src/undo_node_detach.s: src/undo_node_detach.c.s
+
+.PHONY : src/undo_node_detach.s
+
+# target to generate assembly for a file
+src/undo_node_detach.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_detach.c.s
+.PHONY : src/undo_node_detach.c.s
 
 src/undo_node_fold.o: src/undo_node_fold.c.o
 
@@ -691,6 +745,33 @@ src/undo_node_insert.s: src/undo_node_insert.c.s
 src/undo_node_insert.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_insert.c.s
 .PHONY : src/undo_node_insert.c.s
+
+src/undo_node_move.o: src/undo_node_move.c.o
+
+.PHONY : src/undo_node_move.o
+
+# target to build an object file
+src/undo_node_move.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_move.c.o
+.PHONY : src/undo_node_move.c.o
+
+src/undo_node_move.i: src/undo_node_move.c.i
+
+.PHONY : src/undo_node_move.i
+
+# target to preprocess a source file
+src/undo_node_move.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_move.c.i
+.PHONY : src/undo_node_move.c.i
+
+src/undo_node_move.s: src/undo_node_move.c.s
+
+.PHONY : src/undo_node_move.s
+
+# target to generate assembly for a file
+src/undo_node_move.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_node_move.c.s
+.PHONY : src/undo_node_move.c.s
 
 src/undo_node_name.o: src/undo_node_name.c.o
 
@@ -834,15 +915,24 @@ help:
 	@echo "... src/undo_item.o"
 	@echo "... src/undo_item.i"
 	@echo "... src/undo_item.s"
+	@echo "... src/undo_node_attach.o"
+	@echo "... src/undo_node_attach.i"
+	@echo "... src/undo_node_attach.s"
 	@echo "... src/undo_node_delete.o"
 	@echo "... src/undo_node_delete.i"
 	@echo "... src/undo_node_delete.s"
+	@echo "... src/undo_node_detach.o"
+	@echo "... src/undo_node_detach.i"
+	@echo "... src/undo_node_detach.s"
 	@echo "... src/undo_node_fold.o"
 	@echo "... src/undo_node_fold.i"
 	@echo "... src/undo_node_fold.s"
 	@echo "... src/undo_node_insert.o"
 	@echo "... src/undo_node_insert.i"
 	@echo "... src/undo_node_insert.s"
+	@echo "... src/undo_node_move.o"
+	@echo "... src/undo_node_move.i"
+	@echo "... src/undo_node_move.s"
 	@echo "... src/undo_node_name.o"
 	@echo "... src/undo_node_name.i"
 	@echo "... src/undo_node_name.s"

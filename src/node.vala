@@ -512,8 +512,10 @@ public class Node : Object {
 
   /* Removes this node from the node tree along with all descendents */
   public virtual void delete( Layout layout ) {
-    _children.remove_range( 0, _children.length );
+    Node p = parent;
+    int  i = index();
     detach( side, layout );
+    p.children().remove_index( i );
   }
 
   /* Attaches this node as a child of the given node */
