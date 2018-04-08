@@ -29,7 +29,7 @@ public class MainWindow : ApplicationWindow {
   private Popover?      _zoom         = null;
   private Popover?      _search       = null;
   private SearchEntry?  _search_entry = null;
-  private ListBox       _search_list  = null;
+  private TreeView      _search_list  = null;
   private Gtk.ListStore _search_items = null;
   private Popover?      _export       = null;
   private MenuButton?   _opts_btn     = null;
@@ -185,9 +185,8 @@ public class MainWindow : ApplicationWindow {
 
     _search_items = new Gtk.ListStore( 2, typeof(string), typeof(Node) );
 
-    _search_list = new ListBox();
-    _search_list.selection_mode = SelectionMode.SINGLE;
-    _search_list.bind_model( _search_items, add_search_item );
+    _search_list = new TreeView.with_model( _search_items );
+    _search_list.insert_column_with_attributes( -1, null, new CellRendererText(), "markup", 0 );
 
     sbox.pack_start( _search_entry, false, true );
     sbox.pack_start( _search_list,  true,  true );
@@ -343,7 +342,9 @@ public class MainWindow : ApplicationWindow {
   /* Display matched items to the search within the search popover */
   private void on_search_change() {
     _search_items.clear();
-    _canvas.get_match_items( _search_entry.get_text(), ref _search_items );
+    if( _search_entry.get_text() != "" ) {
+      _canvas.get_match_items( _search_entry.get_text().casefold(), ref _search_items );
+    }
   }
 
   /* Adds a label for the given search item */

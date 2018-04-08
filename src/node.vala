@@ -623,15 +623,27 @@ public class Node : Object {
     set_task_done( (_task_done > 0) ? 0 : 1 );
   }
 
+  private string get_match_name( string str, int index ) {
+    if( str.substring( index, -1 ).length < 50 ) {
+      return( str );
+    } else {
+      return( str.substring( index, 50 ) );
+    }
+  }
+
   /*
    Populates the given ListStore with all nodes that have names that match
    the given string pattern.
   */
   public void get_match_items( string pattern, ref Gtk.ListStore matches ) {
-    if( name.index_of( pattern ) != -1 ) {
+    int index = name.casefold().index_of( pattern );
+    if( index != -1 ) {
       TreeIter it;
+      string str = name.substring( 0, index ) + "<u>" +
+                   name.substring( index, pattern.length ) + "</u>" +
+                   name.substring( (index + pattern.length), -1 );
       matches.append( out it );
-      matches.set( it, 0, name, 1, this );
+      matches.set( it, 0, str, 1, this );
     }
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).get_match_items( pattern, ref matches );
