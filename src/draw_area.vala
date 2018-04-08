@@ -219,6 +219,16 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /*
+   Populates the list of matches with any nodes that match the given string
+   pattern.
+  */
+  public void get_match_items( string pattern, ref Gtk.ListStore matches ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).get_match_items( pattern, ref matches );
+    }
+  }
+
+  /*
    Sets the current node pointer to the node that is within the given coordinates.
    Returns true if we sucessfully set current_node to a valid node and made it
    selected.
@@ -269,8 +279,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Sets the scaling factor for the drawing area and forces a redraw */
   public void set_scaling_factor( double scale_factor ) {
-    _scale_factor = scale_factor;
-    queue_draw();
+    if( _scale_factor != scale_factor ) {
+      _scale_factor = scale_factor;
+      queue_draw();
+    }
   }
 
   /* Returns the scaling factor based on the given width and height */

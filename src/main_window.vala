@@ -23,15 +23,20 @@ using Gtk;
 
 public class MainWindow : ApplicationWindow {
 
-  private DrawArea?    _canvas     = null;
-  private Document?    _doc        = null;
-  private Popover?     _inspector  = null;
-  private Popover?     _zoom       = null;
-  private MenuButton?  _opts_btn   = null;
-  private Scale?       _zoom_scale = null;
-  private ModelButton? _zoom_sel   = null;
-  private Button?      _undo_btn   = null;
-  private Button?      _redo_btn   = null;
+  private DrawArea?     _canvas       = null;
+  private Document?     _doc          = null;
+  private Popover?      _inspector    = null;
+  private Popover?      _zoom         = null;
+  private Popover?      _search       = null;
+  private SearchEntry?  _search_entry = null;
+  private ListBox       _search_list  = null;
+  private Gtk.ListStore _search_items = null;
+  private Popover?      _export       = null;
+  private MenuButton?   _opts_btn     = null;
+  private Scale?        _zoom_scale   = null;
+  private ModelButton?  _zoom_sel     = null;
+  private Button?       _undo_btn     = null;
+  private Button?       _redo_btn     = null;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_zoom_fit",      action_zoom_fit },
@@ -93,7 +98,13 @@ public class MainWindow : ApplicationWindow {
 
     var xprt_btn = new Button.from_icon_name( "document-export-symbolic", IconSize.SMALL_TOOLBAR );
     xprt_btn.set_tooltip_text( _( "Export" ) );
+    xprt_btn.clicked.connect( do_export );
     header.pack_end( xprt_btn );
+
+    var search_btn = new MenuButton();
+    search_btn.set_image( new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
+    search_btn.set_tooltip_text( _( "Search" ) );
+    header.pack_end( search_btn );
 
     var zoom_btn = new MenuButton();
     zoom_btn.set_image( new Image.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR ) );
@@ -125,18 +136,20 @@ public class MainWindow : ApplicationWindow {
     _inspector = new Popover( null );
     _inspector.add( ibox );
 
+    /* Create zoom menu popover */
     Box zbox = new Box( Orientation.VERTICAL, 5 );
 
     var zoom_scale_lbl = new Label( _( "Zoom to Percent" ) );
 
-    _zoom_scale = new Scale.with_range( Orientation.HORIZONTAL, 25, 400, 25 );
-    double[] marks = {25, 50, 100, 200, 400};
+    _zoom_scale = new Scale.with_range( Orientation.HORIZONTAL, 10, 400, 25 );
+    double[] marks = {10, 25, 50, 75, 100, 150, 200, 300, 400};
     foreach (double mark in marks) {
-      _zoom_scale.add_mark( mark, PositionType.BOTTOM, "|" );
+      _zoom_scale.add_mark( mark, PositionType.BOTTOM, "'" );
     }
     _zoom_scale.has_origin = false;
     _zoom_scale.set_value( 100 );
     _zoom_scale.value_changed.connect( set_zoom_scale );
+    _zoom_scale.format_value.connect( set_zoom_value );
 
     var zoom_fit = new ModelButton();
     zoom_fit.text = _( "Zoom to Fit" );
@@ -163,6 +176,26 @@ public class MainWindow : ApplicationWindow {
     _zoom = new Popover( null );
     _zoom.add( zbox );
     zoom_btn.popover = _zoom;
+
+    /* Create search popover */
+    var sbox = new Box( Orientation.VERTICAL, 5 );
+
+    _search_entry = new SearchEntry();
+    _search_entry.search_changed.connect( on_search_change );
+
+    _search_items = new Gtk.ListStore( 2, typeof(string), typeof(Node) );
+
+    _search_list = new ListBox();
+    _search_list.selection_mode = SelectionMode.SINGLE;
+    _search_list.bind_model( _search_items, add_search_item );
+
+    sbox.pack_start( _search_entry, false, true );
+    sbox.pack_start( _search_list,  true,  true );
+    sbox.show_all();
+
+    _search = new Popover( null );
+    _search.add( sbox );
+    search_btn.popover = _search;
 
     /* Create the document */
     _doc = new Document();
@@ -260,10 +293,30 @@ public class MainWindow : ApplicationWindow {
     }
   }
 
+  /* Converts the given value from the scale to the zoom value to use */
+  private double zoom_to_value( double value ) {
+    if( value < 17.50 )     { return( 10 ); }
+    else if( value < 37.5 ) { return( 25 ); }
+    else if( value < 62.5 ) { return( 50 ); }
+    else if( value < 87.5 ) { return( 75 ); }
+    else if( value < 125 )  { return( 100 ); }
+    else if( value < 175 )  { return( 150 ); }
+    else if( value < 250 )  { return( 200 ); }
+    else if( value < 350 )  { return( 300 ); }
+    return( 400 );
+  }
+
   /* Sets the scale factor for the level of zoom to perform */
   private void set_zoom_scale() {
-    double scale_factor = 100 / _zoom_scale.get_value();
+    double value = zoom_to_value( _zoom_scale.get_value() );
+    double scale_factor = 100 / value;
+    _zoom_scale.set_value( value );
     _canvas.set_scaling_factor( scale_factor );
+  }
+
+  /* Returns the value to display in the zoom control */
+  private string set_zoom_value( double val ) {
+    return( zoom_to_value( val ).to_string() );
   }
 
   /* Zooms to make all nodes visible within the viewer */
@@ -285,6 +338,21 @@ public class MainWindow : ApplicationWindow {
   /* Sets the zoom to 100% */
   private void action_zoom_actual() {
     _zoom_scale.set_value( 100 );
+  }
+
+  /* Display matched items to the search within the search popover */
+  private void on_search_change() {
+    _search_items.clear();
+    _canvas.get_match_items( _search_entry.get_text(), ref _search_items );
+  }
+
+  /* Adds a label for the given search item */
+  private Widget add_search_item( string str ) {
+    return( new Label( str ) );
+  }
+
+  private void do_export() {
+    // FOOBAR
   }
 
 }

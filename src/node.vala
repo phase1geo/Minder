@@ -623,6 +623,21 @@ public class Node : Object {
     set_task_done( (_task_done > 0) ? 0 : 1 );
   }
 
+  /*
+   Populates the given ListStore with all nodes that have names that match
+   the given string pattern.
+  */
+  public void get_match_items( string pattern, ref Gtk.ListStore matches ) {
+    if( name.index_of( pattern ) != -1 ) {
+      TreeIter it;
+      matches.append( out it );
+      matches.set( it, 0, name, 1, this );
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).get_match_items( pattern, ref matches );
+    }
+  }
+
   /* Adjusts the posx and posy values */
   public virtual void pan( double origin_x, double origin_y ) {
     posx -= origin_x;
