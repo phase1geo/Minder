@@ -23,25 +23,29 @@ using Gtk;
 
 public class MainWindow : ApplicationWindow {
 
-  private DrawArea?     _canvas       = null;
-  private Document?     _doc          = null;
-  private Popover?      _inspector    = null;
-  private Popover?      _zoom         = null;
-  private Popover?      _search       = null;
-  private SearchEntry?  _search_entry = null;
-  private TreeView      _search_list  = null;
-  private Gtk.ListStore _search_items = null;
-  private Popover?      _export       = null;
-  private MenuButton?   _opts_btn     = null;
-  private Scale?        _zoom_scale   = null;
-  private ModelButton?  _zoom_sel     = null;
-  private Button?       _undo_btn     = null;
-  private Button?       _redo_btn     = null;
+  private DrawArea?      _canvas        = null;
+  private Document?      _doc           = null;
+  private Popover?       _inspector     = null;
+  private Popover?       _zoom          = null;
+  private Popover?       _search        = null;
+  private SearchEntry?   _search_entry  = null;
+  private TreeView       _search_list   = null;
+  private Gtk.ListStore  _search_items  = null;
+  private ScrolledWindow _search_scroll = null;
+  private Popover?       _export        = null;
+  private MenuButton?    _opts_btn      = null;
+  private Scale?         _zoom_scale    = null;
+  private ModelButton?   _zoom_sel      = null;
+  private Button?        _undo_btn      = null;
+  private Button?        _redo_btn      = null;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_zoom_fit",      action_zoom_fit },
     { "action_zoom_selected", action_zoom_selected },
-    { "action_zoom_actual",   action_zoom_actual }
+    { "action_zoom_actual",   action_zoom_actual },
+    { "action_export_opml",   action_export_opml },
+    { "action_export_pdf",    action_export_pdf },
+    { "action_export_print",  action_export_print }
   };
 
   /* Create the main window UI */
@@ -96,10 +100,10 @@ public class MainWindow : ApplicationWindow {
     _opts_btn.set_tooltip_text( _( "Settings" ) );
     header.pack_end( _opts_btn );
 
-    var xprt_btn = new Button.from_icon_name( "document-export-symbolic", IconSize.SMALL_TOOLBAR );
-    xprt_btn.set_tooltip_text( _( "Export" ) );
-    xprt_btn.clicked.connect( do_export );
-    header.pack_end( xprt_btn );
+    var export_btn = new MenuButton();
+    export_btn.set_image( new Image.from_icon_name( "document-export-symbolic", IconSize.SMALL_TOOLBAR ) );
+    export_btn.set_tooltip_text( _( "Export" ) );
+    header.pack_end( export_btn );
 
     var search_btn = new MenuButton();
     search_btn.set_image( new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
@@ -180,21 +184,56 @@ public class MainWindow : ApplicationWindow {
     /* Create search popover */
     var sbox = new Box( Orientation.VERTICAL, 5 );
 
+    /* Create the search entry field */
     _search_entry = new SearchEntry();
     _search_entry.search_changed.connect( on_search_change );
 
     _search_items = new Gtk.ListStore( 2, typeof(string), typeof(Node) );
 
+    /* Create the treeview */
     _search_list = new TreeView.with_model( _search_items );
     _search_list.insert_column_with_attributes( -1, null, new CellRendererText(), "markup", 0 );
+    _search_list.headers_visible = false;
+    _search_list.activate_on_single_click = true;
+    _search_list.row_activated.connect( on_search_clicked );
 
-    sbox.pack_start( _search_entry, false, true );
-    sbox.pack_start( _search_list,  true,  true );
+    /* Create the scrolled window for the treeview */
+    _search_scroll = new ScrolledWindow( null, null );
+    _search_scroll.height_request = 200;
+    _search_scroll.hscrollbar_policy = PolicyType.EXTERNAL;
+    _search_scroll.add( _search_list );
+
+    sbox.pack_start( _search_entry,  false, true );
+    sbox.pack_start( _search_scroll, true,  true );
     sbox.show_all();
 
     _search = new Popover( null );
     _search.add( sbox );
     search_btn.popover = _search;
+
+    /* Create export menu */
+    var ebox = new Box( Orientation.VERTICAL, 5 );
+
+    var export_opml = new ModelButton();
+    export_opml.text = _( "Export To OPML" );
+    export_opml.action_name = "win.action_export_opml";
+
+    var export_pdf = new ModelButton();
+    export_pdf.text = _( "Export to PDF" );
+    export_pdf.action_name = "win.action_export_pdf";
+
+    var export_print = new ModelButton();
+    export_print.text = _( "Print" );
+    export_print.action_name = "win.action_export_print";
+
+    ebox.pack_start( export_opml,  false, true );
+    ebox.pack_start( export_pdf,   false, true );
+    ebox.pack_start( export_print, false, true );
+    ebox.show_all();
+
+    _export = new Popover( null );
+    _export.add( ebox );
+    export_btn.popover = _export;
 
     /* Create the document */
     _doc = new Document();
@@ -347,13 +386,35 @@ public class MainWindow : ApplicationWindow {
     }
   }
 
-  /* Adds a label for the given search item */
-  private Widget add_search_item( string str ) {
-    return( new Label( str ) );
+  /*
+   Called when the user selects an item in the search list.  The current node
+   will be set to the node associated with the selection.
+  */
+  private void on_search_clicked( TreePath path, TreeViewColumn col ) {
+    TreeIter it;
+    Node?    node = null;
+    _search_items.get_iter( out it, path );
+    _search_items.get( it, 1, &node, -1 );
+    if( node != null ) {
+      _canvas.set_current_node( node );
+    }
+    _search.closed();
+    _canvas.grab_focus();
   }
 
-  private void do_export() {
-    // FOOBAR
+  /* Exports the model in OPML format */
+  private void action_export_opml() {
+    // TBD
+  }
+
+  /* Exports the model in PDF format */
+  private void action_export_pdf() {
+    // TBD
+  }
+
+  /* Exports the model to the printer */
+  private void action_export_print() {
+    // TBD
   }
 
 }

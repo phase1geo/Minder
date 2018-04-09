@@ -623,14 +623,6 @@ public class Node : Object {
     set_task_done( (_task_done > 0) ? 0 : 1 );
   }
 
-  private string get_match_name( string str, int index ) {
-    if( str.substring( index, -1 ).length < 50 ) {
-      return( str );
-    } else {
-      return( str.substring( index, 50 ) );
-    }
-  }
-
   /*
    Populates the given ListStore with all nodes that have names that match
    the given string pattern.

@@ -228,6 +228,22 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Sets the current node to the given node */
+  public void set_current_node( Node? n ) {
+    if( n == null ) {
+      _current_node = n;
+    } else if( _current_node == n ) {
+      _current_node.mode = NodeMode.SELECTED;
+    } else {
+      if( _current_node != null ) {
+        _current_node.mode = NodeMode.NONE;
+      }
+      _current_node = n;
+      _current_node.mode = NodeMode.SELECTED;
+      node_changed();
+    }
+  }
+
   /*
    Sets the current node pointer to the node that is within the given coordinates.
    Returns true if we sucessfully set current_node to a valid node and made it
