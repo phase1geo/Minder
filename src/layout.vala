@@ -63,29 +63,27 @@ public class Layout : Object {
   }
 
   /* Adjusts the given tree by the given amount */
-  public virtual void adjust_tree( Node parent, int child_index, int side_mask, bool both, double xamount, double yamount ) {
+  public virtual void adjust_tree( Node parent, int child_index, int side_mask, double amount ) {
     for( int i=0; i<parent.children().length; i++ ) {
       if( i != child_index ) {
         if( (parent.children().index( i ).side & side_mask) != 0 ) {
-          Node n = parent.children().index( i );
-          n.posx += xamount;
-          n.posy += yamount;
-          adjust_tree( n, -1, side_mask, both, xamount, yamount );
+          parent.children().index( i ).posy += amount;
         }
       } else {
-        xamount = 0 - xamount;
-        yamount = 0 - yamount;
+        amount = 0 - amount;
       }
     }
   }
 
   /* Adjust the entire tree */
-  public virtual void adjust_tree_all( Node parent, int child_index, NodeSide side, bool both, double xamount, double yamount ) {
-    do {
-      adjust_tree( parent, child_index, side, both, xamount, yamount );
-      child_index = parent.index();
-      parent      = parent.parent;
-    } while( parent != null );
+  public virtual void adjust_tree_all( Node n, double amount ) {
+    Node     parent = n.parent;
+    int      index  = n.index();
+    while( parent != null ) {
+      adjust_tree( parent, index, n.side, amount );
+      index  = parent.index();
+      parent = parent.parent;
+    }
   }
 
   /* Recursively sets the side property of this node and all children nodes */
@@ -131,8 +129,14 @@ public class Layout : Object {
   public virtual void handle_update_by_edit( Node n ) {
     double width_diff, height_diff;
     n.update_size( out width_diff, out height_diff );
-    if( (n.parent != null) && (height_diff > 0) ) {
-      adjust_tree_all( n.parent, n.index(), n.side, false, 0, height_diff );
+    if( (n.parent != null) && (height_diff != 0) ) {
+      n.set_posy_only( 0 - (height_diff / 2) );
+      adjust_tree_all( n, (0 - (height_diff / 2)) );
+    }
+    if( width_diff != 0 ) {
+      for( int i=0; i<n.children().length; i++ ) {
+        n.children().index( i ).posx += width_diff;
+      }
     }
   }
 
@@ -151,27 +155,43 @@ public class Layout : Object {
 
   /* Called when we are inserting a node within a parent */
   public virtual void handle_update_by_insert( Node parent, Node child, int pos ) {
+
     double cx, cy, cw, ch;
     double adjust;
-    child.bbox( out cx, out cy, out cw, out ch );
+
+    bbox( child, -1, child.side, out cx, out cy, out cw, out ch );
     if( ch == 0 ) { ch = default_text_height + (pady * 2); }
     adjust = (ch + _sb_gap) / 2;
     set_pc_gap( child );
+
+    /*
+     If we are the only child on our side, place ourselves on the same plane as the
+     parent node
+    */
     if( parent.side_count( child.side ) == 1 ) {
       double px, py, pw, ph;
       parent.bbox( out px, out py, out pw, out ph );
       child.posy = py + ((ph / 2) - (ch / 2));
       return;
+
+    /*
+     If we are at the end of the list of children with the matching side as ours,
+     place ourselves just below the next to last sibling.
+    */
     } else if( ((pos + 1) == parent.children().length) || (parent.children().index( pos + 1 ).side != child.side) ) {
       double sx, sy, sw, sh;
       bbox( parent.children().index( pos - 1 ), -1, child.side, out sx, out sy, out sw, out sh );
       child.posy = sy + sh + _sb_gap - adjust;
+
+    /* Otherwise, place ourselves just above the next sibling */
     } else {
       double sx, sy, sw, sh;
       bbox( parent.children().index( pos + 1 ), -1, child.side, out sx, out sy, out sw, out sh );
       child.posy = sy - adjust;
     }
-    adjust_tree_all( parent, pos, child.side, true, 0, (0 - adjust) );
+
+    adjust_tree_all( child, (0 - adjust) );
+
   }
 
   /* Called to layout the leftover children of a parent node when a node is deleted */
@@ -181,12 +201,10 @@ public class Layout : Object {
       if( parent.children().index( i ).side == side ) {
         double current_adjust = (i >= index) ? (0 - adjust) : adjust;
         parent.children().index( i ).posy += current_adjust;
-        adjust_tree( parent.children().index( i ), -1, side, true, 0, current_adjust );
       }
     }
-    while( parent.parent != null ) {
-      adjust_tree_all( parent.parent, parent.index(), side, true, 0, adjust );
-      parent = parent.parent;
+    if( parent.parent != null ) {
+      adjust_tree_all( parent, adjust );
     }
   }
 
@@ -198,6 +216,7 @@ public class Layout : Object {
     n.posy = y + h + _rt_gap;
   }
 
+  /* Returns the font description associated with the layout */
   public Pango.FontDescription get_font_description() {
     return( _font_description );
   }

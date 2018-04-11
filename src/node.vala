@@ -91,11 +91,39 @@ public class Node : Object {
   private   int          _task_done   = 0;
   private   Pango.Layout?          _layout           = null;
   private   Pango.FontDescription? _font_description = null;
+  private   double                 _posx = 0;
+  private   double                 _posy = 0;
 
   /* Properties */
-  public string   name   { get; set; default = ""; }
-  public double   posx   { get; set; default = 50.0; }
-  public double   posy   { get; set; default = 50.0; }
+  public string name { get; set; default = ""; }
+  public double posx {
+    get {
+      return( _posx );
+    }
+    set {
+      double diffx = (value - _posx);
+      if( diffx != 0 ) {
+        for( int i=0; i<_children.length; i++ ) {
+          _children.index( i ).posx += diffx;
+        }
+        _posx = value;
+      }
+    }
+  }
+  public double posy {
+    get {
+      return( _posy );
+    }
+    set {
+      double diffy = (value - _posy);
+      if( diffy != 0 ) {
+        for( int i=0; i<_children.length; i++ ) {
+          _children.index( i ).posy += diffy;
+        }
+        _posy = value;
+      }
+    }
+  }
   public string   note   { get; set; default = ""; }
   public NodeMode mode   { get; set; default = NodeMode.NONE; }
   public Node?    parent { get; protected set; default = null; }
@@ -113,6 +141,43 @@ public class Node : Object {
     name      = n;
     _children = new Array<Node>();
     set_layout( layout );
+  }
+
+  /* Copies an existing node to this node */
+  public Node.copy( Node n ) {
+    _width            = n._width;
+    _height           = n._height;
+    _padx             = n._padx;
+    _pady             = n._pady;
+    _ipadx            = n._ipadx;
+    _ipady            = n._ipady;
+    _task_radius      = n._task_radius;
+    _alpha            = n._alpha;
+    _cursor           = n._cursor;
+    _children         = n._children;
+    _prevname         = n._prevname;
+    _task_count       = n._task_count;
+    _task_done        = n._task_done;
+    _layout           = n._layout;
+    _font_description = n._font_description;
+    _posx             = n._posx;
+    _posy             = n._posy;
+    name              = n.name;
+    note              = n.note;
+    mode              = n.mode;
+    parent            = n.parent;
+    side              = n.side;
+    folded            = n.folded;
+  }
+
+  /* Sets the posx value only, leaving the children positions alone */
+  public void set_posx_only( double adjust ) {
+    _posx += adjust;
+  }
+
+  /* Sets the posy value only, leaving the children positions alone */
+  public void set_posy_only( double adjust ) {
+    _posy += adjust;
   }
 
   /* Returns true if the node does not have a parent */
@@ -646,9 +711,6 @@ public class Node : Object {
   public virtual void pan( double origin_x, double origin_y ) {
     posx -= origin_x;
     posy -= origin_y;
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).pan( origin_x, origin_y );
-    }
   }
 
   /* Sets the context source color to the given color value */

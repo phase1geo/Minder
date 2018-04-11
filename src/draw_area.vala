@@ -30,8 +30,8 @@ public class DrawArea : Gtk.DrawingArea {
   private double      _press_y;
   private double      _origin_x = 0.0;
   private double      _origin_y = 0.0;
-  private bool        _pressed = false;
-  private bool        _motion = false;
+  private bool        _pressed  = false;
+  private bool        _motion   = false;
   private Node        _current_node;
   private Array<Node> _nodes;
   private Theme       _theme;
@@ -397,11 +397,6 @@ public class DrawArea : Gtk.DrawingArea {
         _current_node.posx += diffx;
         _current_node.posy += diffy;
         _layout.set_side( _current_node );
-        if( _current_node.parent == null ) {
-          _layout.adjust_tree( _current_node, -1, NodeSide.any(), true, diffx, diffy );
-        } else {
-          _layout.adjust_tree( _current_node, -1, _current_node.side, true, diffx, diffy );
-        }
         queue_draw();
       } else {
         double diff_x = _press_x - scale_value( event.x );
@@ -425,6 +420,9 @@ public class DrawArea : Gtk.DrawingArea {
         Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
         if( attach_node != null ) {
           _current_node.detach( _orig_side, _layout );
+          if( _current_node.is_root() ) {
+            _current_node = new NonrootNode.from_RootNode( (RootNode)_current_node );
+          }
           _current_node.attach( attach_node, -1, _layout );
           queue_draw();
           changed = true;
@@ -566,6 +564,7 @@ public class DrawArea : Gtk.DrawingArea {
     int      index  = _current_node.index();
     NodeSide side   = _current_node.side;
     _current_node.detach( side, _layout );
+    _current_node = new RootNode.from_NonrootNode( (NonrootNode)_current_node );
     if( index == -1 ) {
       _nodes.append_val( _current_node );
     } else {

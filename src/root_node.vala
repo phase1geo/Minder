@@ -33,6 +33,10 @@ public class RootNode : Node {
     base.with_name( name, layout );
   }
 
+  public RootNode.from_NonrootNode( NonrootNode n ) {
+    base.copy( n );
+  }
+
   /* Returns -1 to indicate that this node is not a child of a parent node */
   public override int index() {
     return( -1 );

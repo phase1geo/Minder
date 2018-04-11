@@ -31,6 +31,11 @@ public class NonrootNode : Node {
     base( layout );
   }
 
+  /* Creates a copy of an existing root node to this new non-root node */
+  public NonrootNode.from_RootNode( RootNode n ) {
+    base.copy( n );
+  }
+
   /* Forces all children nodes to use the same color index as the parent node. */
   private void propagate_color() {
     color_index = (parent as NonrootNode).color_index;
