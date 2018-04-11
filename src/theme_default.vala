@@ -30,25 +30,25 @@ public class ThemeDefault : Theme {
 
     /* Generate the non-link colors */
     background         = get_color( "Grey" );
-    foreground         = get_color( "White" );
-    root_background    = get_color( "White" );
+    foreground         = get_color( "#d4d4d4" );
+    root_background    = get_color( "#d4d4d4" );
     root_foreground    = get_color( "Black" );
-    nodesel_background = get_color( "Light Blue" );
+    nodesel_background = get_color( "#64baff" );
     nodesel_foreground = get_color( "Black" );
-    textsel_background = get_color( "Blue" );
+    textsel_background = get_color( "#0d52bf" );
     textsel_foreground = get_color( "White" );
-    text_cursor        = get_color( "Green" );
+    text_cursor        = get_color( "#3a9104" );
 
     /* Generate the link colors */
     link_colors = new RGBA[8];
-    link_colors[0] = get_color( "Red" );
-    link_colors[1] = get_color( "Orange" );
-    link_colors[2] = get_color( "Yellow" );
-    link_colors[3] = get_color( "Green" );
-    link_colors[4] = get_color( "Blue" );
-    link_colors[5] = get_color( "Purple" );
-    link_colors[6] = get_color( "Brown" );
-    link_colors[7] = get_color( "Black" );
+    link_colors[0] = get_color( "#c6262e" );
+    link_colors[1] = get_color( "#f37329" );
+    link_colors[2] = get_color( "#f9c440" );
+    link_colors[3] = get_color( "#68b723" );
+    link_colors[4] = get_color( "#3689e6" );
+    link_colors[5] = get_color( "#7a36b1" );
+    link_colors[6] = get_color( "#715344" );
+    link_colors[7] = get_color( "#333333" );
 
   }
 

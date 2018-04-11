@@ -168,6 +168,9 @@ public class Node : Object {
     parent            = n.parent;
     side              = n.side;
     folded            = n.folded;
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).parent = this;
+    }
   }
 
   /* Sets the posx value only, leaving the children positions alone */
