@@ -178,6 +178,27 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Imports the OPML data, creating a mind map */
+  public void import_opml( Xml.Node* n, Array<int>? expand_state) {
+    
+    int node_id = 1;
+    
+    /* Clear the existing nodes */
+    _nodes.remove_range( 0, _nodes.length );
+
+    /* Load the contents of the file */
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        if( it->name == "outline") {
+          var root = new RootNode( _layout );
+          root.import_opml( it, node_id, ref expand_state, _layout );
+          _nodes.append_val( root );
+        }
+      }
+    }
+    
+  }
+  
   /* Exports all of the nodes in OPML format */
   public void export_opml( Xml.Node* parent, out string expand_state ) {
     Array<int> estate  = new Array<int>();
@@ -764,11 +785,48 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Called whenever a printable character is entered in the drawing area */
   private void handle_printable( string str ) {
-    if( is_mode_edit() && str.get_char( 0 ).isprint() ) {
-      _current_node.edit_insert( str, _layout );
-      adjust_origin();
-      queue_draw();
-      changed = true;
+    if( str.get_char( 0 ).isprint() ) {
+      if( is_mode_edit() ) {
+        _current_node.edit_insert( str, _layout );
+        adjust_origin();
+        queue_draw();
+        changed = true;
+      } else if( is_mode_selected() ) {
+        switch( str.get_char( 0 ) ) {
+          case "e" :  // Place the current node in edit mode
+            _current_node.mode = NodeMode.EDITABLE;
+            break;
+          case "n" :  // Move the selection to the next sibling
+            // TBD
+            break;
+          case "p" :  // Move the selection to the previous sibling
+            // TBD
+            break;
+          case "a" :  // Move to the parent node
+            // TBD
+            break;
+          case "f" :  // Fold the current node
+            // TBD
+            break;
+          case "t" :  // Toggle the task done indicator
+            // TBD
+            break;
+          case "m" :  // Select the root node
+            // TBD
+            break;
+          case "c" :  // Select the first child node
+            // TBD
+            break;
+          case "i" :  // Display the node properties panel
+            // TBD
+            return;
+          default :
+            // This is a key that doesn't have any associated functionality
+            // so just return immediately so that we don't force a redraw
+            return;
+        }
+        queue_draw();
+      }
     }
   }
 

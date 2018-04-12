@@ -400,6 +400,53 @@ public class Node : Object {
     return( node );
 
   }
+  
+  /* Main method for importing an OPML <outline> into a node */
+  public void import_opml( Xml.Node* parent, int node_id, ref Array<int> expand_state, Layout layout ) {
+    
+    /* Get the node name */
+    string? n = parent->get_prop( "text" );
+    if( n != null ) {
+      name = n;
+    }
+    
+    /* Get the task information */
+    string? t = parent->get_prop( "checked" );
+    if( t != null ) {
+      _task_count = 1;
+      _task_done  = t.to_bool() ? 1 : 0;
+    }
+    
+    /* Get the note information */
+    string? o = parent->get_prop( "node" );
+    if( o != null ) {
+      note = o;
+    }
+    
+    /* Figure out if this node is folded */
+    if( expand_state != null ) {
+      folded = true;
+      for( int i=0; i<expand_state.length; i++ ) {
+        if( expand_state.index( i ) == node_id ) {
+          folded = false;
+          expand_state.remove_index( i );
+          break;
+        }
+      }
+    }
+    
+    node_id++;
+    
+    /* Parse the child nodes */
+    for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
+      if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "outline") ) {
+        var child = new NonrootNode( layout );
+        child.import_opml( it2, node_id, ref expand_state, layout );
+        child.attach( this, -1, null );
+      }
+    }
+    
+  }
 
   /* Main method to export a node tree as OPML */
   public void export_opml( Xml.Node* parent, ref int node_id, ref Array<int> expand_state ) {

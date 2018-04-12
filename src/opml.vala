@@ -62,12 +62,53 @@ public class OPML : Object {
    the stored information.
   */
   public static bool import( string fname ) {
+    
+    /* Read in the contents of the OPML file */
     var doc = Xml.Parser.parse_file( fname );
     if( doc == null ) {
       return( false );
     }
-    // TBD
+    
+    /* Load the contents of the file */
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        Array<int>? expand_state = null;
+        switch( it->name ) {
+          case "head" :
+            import_header( it, out expand_state );
+            break;
+          case "body" :
+            da.import_opml( it, expand_state );
+            break;
+        }
+      }
+    }
+ 
+    /* Delete the OPML document */
+    delete doc;
+    
     return( true );
+    
+  }
+ 
+  /* Parses the OPML head block for information that we will use */ 
+  private static void import_header( Xml.Node* n, out Array<int>? expand_state ) {
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        switch( it->name ) {
+          case "expansionState" :
+            if( (it->children != null) && (it->children->type == Xml.ElementType.TEXT_NODE) ) {
+              expand_state = new Array<int>();
+              string[] values = n->children->get_content().split( "," );
+              foreach (string val in values) {
+                expand_state.append_val( val.to_int() );
+              }
+            }
+            break;
+          }
+        }
+      }
+    }
   }
 
 }
