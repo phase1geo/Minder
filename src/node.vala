@@ -401,6 +401,32 @@ public class Node : Object {
 
   }
 
+  /* Main method to export a node tree as OPML */
+  public void export_opml( Xml.Node* parent, ref int node_id, ref Array<int> expand_state ) {
+    parent->add_child( export_opml_node( ref node_id, ref expand_state ) );
+  }
+
+  /* Traverses the node tree exporting XML nodes in OPML format */
+  private Xml.Node* export_opml_node( ref int node_id, ref Array<int> expand_state ) {
+    Xml.Node* node = new Xml.Node( null, "outline" );
+    node->new_prop( "text", name );
+    if( _task_count > 0 ) {
+      bool checked = _task_done > 0;
+      node->new_prop( "checked", checked.to_string() );
+    }
+    if( note != "" ) {
+      node->new_prop( "note", note );
+    }
+    if( (_children.length > 1) && !folded ) {
+      expand_state.append_val( node_id );
+    }
+    node_id++;
+    for( int i=0; i<_children.length; i++ ) {
+      node->add_child( _children.index( i ).export_opml_node( ref node_id, ref expand_state ) );
+    }
+    return( node );
+  }
+
   /*
    Updates the width and height based on the current name.  Returns true
    if the width or height has changed since the last time these values were

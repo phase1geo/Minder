@@ -449,6 +449,33 @@ src/nonroot_node.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/nonroot_node.c.s
 .PHONY : src/nonroot_node.c.s
 
+src/opml.o: src/opml.c.o
+
+.PHONY : src/opml.o
+
+# target to build an object file
+src/opml.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/opml.c.o
+.PHONY : src/opml.c.o
+
+src/opml.i: src/opml.c.i
+
+.PHONY : src/opml.i
+
+# target to preprocess a source file
+src/opml.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/opml.c.i
+.PHONY : src/opml.c.i
+
+src/opml.s: src/opml.c.s
+
+.PHONY : src/opml.s
+
+# target to generate assembly for a file
+src/opml.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/opml.c.s
+.PHONY : src/opml.c.s
+
 src/root_node.o: src/root_node.c.o
 
 .PHONY : src/root_node.o
@@ -897,6 +924,9 @@ help:
 	@echo "... src/nonroot_node.o"
 	@echo "... src/nonroot_node.i"
 	@echo "... src/nonroot_node.s"
+	@echo "... src/opml.o"
+	@echo "... src/opml.i"
+	@echo "... src/opml.s"
 	@echo "... src/root_node.o"
 	@echo "... src/root_node.i"
 	@echo "... src/root_node.s"

@@ -258,7 +258,6 @@ public class MainWindow : ApplicationWindow {
     }
     _doc = new Document();
     _canvas.initialize();
-    add( _canvas );
   }
 
   /* Allow the user to open a Minder file */
@@ -404,7 +403,20 @@ public class MainWindow : ApplicationWindow {
 
   /* Exports the model in OPML format */
   private void action_export_opml() {
-    // TBD
+    FileChooserDialog dialog = new FileChooserDialog( _( "Export OPML File" ), this, FileChooserAction.SAVE,
+      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
+    FileFilter        filter = new FileFilter();
+    filter.set_filter_name( _( "OPML" ) );
+    filter.add_pattern( "*.opml" );
+    dialog.add_filter( filter );
+    if( dialog.run() == ResponseType.ACCEPT ) {
+      string fname = dialog.get_filename();
+      if( fname.substring( -5, -1 ) != ".opml" ) {
+        fname += ".opml";
+      }
+      OPML.export( fname, _canvas );
+    }
+    dialog.close();
   }
 
   /* Exports the model in PDF format */

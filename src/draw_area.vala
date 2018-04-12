@@ -178,6 +178,22 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Exports all of the nodes in OPML format */
+  public void export_opml( Xml.Node* parent, out string expand_state ) {
+    Array<int> estate  = new Array<int>();
+    int        node_id = 1;
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).export_opml( parent, ref node_id, ref estate );
+    }
+    expand_state = "";
+    for( int i=0; i<estate.length; i++ ) {
+      if( i > 0 ) {
+        expand_state += ",";
+      }
+      expand_state += estate.index( i ).to_string();
+    }
+  }
+
   /* Initialize the empty drawing area with a node */
   public void initialize() {
 

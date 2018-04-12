@@ -50,6 +50,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/node.vala
     src/node_inspector.vala
     src/nonroot_node.vala
+    src/opml.vala
     src/root_node.vala
     src/theme.vala
     src/theme_default.vala
