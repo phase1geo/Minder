@@ -33,7 +33,6 @@ public class MainWindow : ApplicationWindow {
   private Gtk.ListStore  _search_items  = null;
   private ScrolledWindow _search_scroll = null;
   private Popover?       _export        = null;
-  private MenuButton?    _opts_btn      = null;
   private Scale?         _zoom_scale    = null;
   private ModelButton?   _zoom_sel      = null;
   private Button?        _undo_btn      = null;
@@ -51,11 +50,13 @@ public class MainWindow : ApplicationWindow {
   /* Create the main window UI */
   public MainWindow( Gtk.Application app ) {
 
+    /* Create the header bar */
     var header = new HeaderBar();
     header.set_title( _( "Minder" ) );
     header.set_subtitle( _( "Mind-Mapping Application" ) );
     header.set_show_close_button( true );
 
+    /* Set the main window data */
     title = _( "Minder" );
     set_position( Gtk.WindowPosition.CENTER );
     set_default_size( 1000, 800 );
@@ -63,9 +64,17 @@ public class MainWindow : ApplicationWindow {
     set_border_width( 2 );
     destroy.connect( Gtk.main_quit );
 
+    /* Set the stage for menu actions */
     var actions = new SimpleActionGroup ();
     actions.add_action_entries( action_entries, this );
     insert_action_group( "win", actions );
+
+    /* Create and pack the canvas */
+    _canvas = new DrawArea();
+    _canvas.node_changed.connect( on_node_changed );
+    _canvas.show_node_properties.connect( show_node_properties );
+    _canvas.map_event.connect( on_canvas_mapped );
+    _canvas.undo_buffer.buffer_changed.connect( do_buffer_changed );
 
     /* Create title toolbar */
     var new_btn = new Button.from_icon_name( "document-new-symbolic", IconSize.SMALL_TOOLBAR );
@@ -95,57 +104,34 @@ public class MainWindow : ApplicationWindow {
     _redo_btn.clicked.connect( do_redo );
     header.pack_start( _redo_btn );
 
-    _opts_btn = new MenuButton();
-    _opts_btn.set_image( new Image.from_icon_name( "document-properties-symbolic", IconSize.SMALL_TOOLBAR ) );
-    _opts_btn.set_tooltip_text( _( "Settings" ) );
-    header.pack_end( _opts_btn );
+    /* Add the buttons on the right side in the reverse order */
+    add_property_button( header );
+    add_export_button( header );
+    add_search_button( header );
+    add_zoom_button( header );
 
-    var export_btn = new MenuButton();
-    export_btn.set_image( new Image.from_icon_name( "document-export-symbolic", IconSize.SMALL_TOOLBAR ) );
-    export_btn.set_tooltip_text( _( "Export" ) );
-    header.pack_end( export_btn );
+    /* Create the document */
+    _doc = new Document( _canvas );
 
-    var search_btn = new MenuButton();
-    search_btn.set_image( new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
-    search_btn.set_tooltip_text( _( "Search" ) );
-    header.pack_end( search_btn );
+    /* Display the UI */
+    add( _canvas );
+    show_all();
 
-    var zoom_btn = new MenuButton();
-    zoom_btn.set_image( new Image.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR ) );
-    zoom_btn.set_tooltip_text( _( "Zoom" ) );
-    header.pack_end( zoom_btn );
+  }
 
-    /* Create and pack the canvas */
-    _canvas = new DrawArea();
-    _canvas.node_changed.connect( on_node_changed );
-    _canvas.show_node_properties.connect( show_node_properties );
+  /* Adds the zoom functionality */
+  private void add_zoom_button( HeaderBar header ) {
 
-    /* Create the inspector sidebar */
-    Box ibox = new Box( Orientation.VERTICAL, 0 );
-
-    StackSwitcher sb    = new StackSwitcher();
-    Stack         stack = new Stack();
-    stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
-    stack.set_transition_duration( 500 );
-    stack.add_titled( new NodeInspector( _canvas ),   "node", "Node" );
-    stack.add_titled( new ThemeInspector( _canvas ),  "theme", "Theme" );
-    stack.add_titled( new LayoutInspector( _canvas ), "layout", "Layout" );
-
-    sb.set_stack( stack );
-
-    ibox.margin = 5;
-    ibox.pack_start( sb,    false, true,  0 );
-    ibox.pack_start( stack, false, false, 0 );
-    ibox.show_all();
-
-    _inspector = new Popover( null );
-    _inspector.add( ibox );
+    /* Create the menu button */
+    var menu_btn = new MenuButton();
+    menu_btn.set_image( new Image.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR ) );
+    menu_btn.set_tooltip_text( _( "Zoom" ) );
+    header.pack_end( menu_btn );
 
     /* Create zoom menu popover */
-    Box zbox = new Box( Orientation.VERTICAL, 5 );
+    Box box = new Box( Orientation.VERTICAL, 5 );
 
-    var zoom_scale_lbl = new Label( _( "Zoom to Percent" ) );
-
+    var scale_lbl = new Label( _( "Zoom to Percent" ) );
     _zoom_scale = new Scale.with_range( Orientation.HORIZONTAL, 10, 400, 25 );
     double[] marks = {10, 25, 50, 75, 100, 150, 200, 300, 400};
     foreach (double mark in marks) {
@@ -156,37 +142,49 @@ public class MainWindow : ApplicationWindow {
     _zoom_scale.value_changed.connect( set_zoom_scale );
     _zoom_scale.format_value.connect( set_zoom_value );
 
-    var zoom_fit = new ModelButton();
-    zoom_fit.text = _( "Zoom to Fit" );
-    zoom_fit.action_name = "win.action_zoom_fit";
+    var fit = new ModelButton();
+    fit.text = _( "Zoom to Fit" );
+    fit.action_name = "win.action_zoom_fit";
 
     _zoom_sel = new ModelButton();
     _zoom_sel.text = _( "Zoom to Fit Selected Node" );
     _zoom_sel.action_name = "win.action_zoom_selected";
     _zoom_sel.set_sensitive( false );
 
-    var zoom_actual = new ModelButton();
-    zoom_actual.text = _( "Zoom to Actual Size" );
-    zoom_actual.action_name = "win.action_zoom_actual";
+    var actual = new ModelButton();
+    actual.text = _( "Zoom to Actual Size" );
+    actual.action_name = "win.action_zoom_actual";
 
-    zbox.margin = 5;
-    zbox.pack_start( zoom_scale_lbl, false, true );
-    zbox.pack_start( _zoom_scale,    false, true );
-    zbox.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
-    zbox.pack_start( zoom_fit,       false, true );
-    zbox.pack_start( _zoom_sel,      false, true );
-    zbox.pack_start( zoom_actual,    false, true );
-    zbox.show_all();
+    box.margin = 5;
+    box.pack_start( scale_lbl,   false, true );
+    box.pack_start( _zoom_scale, false, true );
+    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
+    box.pack_start( fit,         false, true );
+    box.pack_start( _zoom_sel,   false, true );
+    box.pack_start( actual,      false, true );
+    box.show_all();
 
     _zoom = new Popover( null );
-    _zoom.add( zbox );
-    zoom_btn.popover = _zoom;
+    _zoom.add( box );
+    menu_btn.popover = _zoom;
+
+  }
+
+  /* Adds the search functionality */
+  private void add_search_button( HeaderBar header ) {
+
+    /* Create the menu button */
+    var menu_btn = new MenuButton();
+    menu_btn.set_image( new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
+    menu_btn.set_tooltip_text( _( "Search" ) );
+    header.pack_end( menu_btn );
 
     /* Create search popover */
-    var sbox = new Box( Orientation.VERTICAL, 5 );
+    var box = new Box( Orientation.VERTICAL, 5 );
 
     /* Create the search entry field */
     _search_entry = new SearchEntry();
+    _search_entry.placeholder_text = _( "Search Nodes" );
     _search_entry.search_changed.connect( on_search_change );
 
     _search_items = new Gtk.ListStore( 2, typeof(string), typeof(Node) );
@@ -204,48 +202,85 @@ public class MainWindow : ApplicationWindow {
     _search_scroll.hscrollbar_policy = PolicyType.EXTERNAL;
     _search_scroll.add( _search_list );
 
-    sbox.pack_start( _search_entry,  false, true );
-    sbox.pack_start( _search_scroll, true,  true );
-    sbox.show_all();
+    box.pack_start( _search_entry,  false, true );
+    box.pack_start( _search_scroll, true,  true );
+    box.show_all();
 
+    /* Create the popover and associate it with the menu button */
     _search = new Popover( null );
-    _search.add( sbox );
-    search_btn.popover = _search;
+    _search.add( box );
+    menu_btn.popover = _search;
+
+  }
+
+  /* Adds the export functionality */
+  private void add_export_button( HeaderBar header ) {
+
+    /* Create the menu button */
+    var menu_btn = new MenuButton();
+    menu_btn.set_image( new Image.from_icon_name( "document-export-symbolic", IconSize.SMALL_TOOLBAR ) );
+    menu_btn.set_tooltip_text( _( "Export" ) );
+    header.pack_end( menu_btn );
 
     /* Create export menu */
-    var ebox = new Box( Orientation.VERTICAL, 5 );
+    var box = new Box( Orientation.VERTICAL, 5 );
 
-    var export_opml = new ModelButton();
-    export_opml.text = _( "Export To OPML" );
-    export_opml.action_name = "win.action_export_opml";
+    var opml = new ModelButton();
+    opml.text = _( "Export To OPML" );
+    opml.action_name = "win.action_export_opml";
 
-    var export_pdf = new ModelButton();
-    export_pdf.text = _( "Export to PDF" );
-    export_pdf.action_name = "win.action_export_pdf";
+    var pdf = new ModelButton();
+    pdf.text = _( "Export to PDF" );
+    pdf.action_name = "win.action_export_pdf";
+    pdf.set_sensitive( false );
 
-    var export_print = new ModelButton();
-    export_print.text = _( "Print" );
-    export_print.action_name = "win.action_export_print";
+    var print = new ModelButton();
+    print.text = _( "Print" );
+    print.action_name = "win.action_export_print";
+    print.set_sensitive( false );
 
-    ebox.pack_start( export_opml,  false, true );
-    ebox.pack_start( export_pdf,   false, true );
-    ebox.pack_start( export_print, false, true );
-    ebox.show_all();
+    box.pack_start( opml,  false, true );
+    box.pack_start( pdf,   false, true );
+    box.pack_start( print, false, true );
+    box.show_all();
 
+    /* Create the popover and associate it with clicking on the menu button */
     _export = new Popover( null );
-    _export.add( ebox );
-    export_btn.popover = _export;
+    _export.add( box );
+    menu_btn.popover = _export;
 
-    /* Create the document */
-    _doc = new Document();
+  }
 
-    /* Initialize the canvas */
-    _canvas.map_event.connect( on_canvas_mapped );
-    _canvas.undo_buffer.buffer_changed.connect( do_buffer_changed );
+  /* Adds the property functionality */
+  private void add_property_button( HeaderBar header ) {
 
-    /* Display the UI */
-    add( _canvas );
-    show_all();
+    /* Add the menubutton */
+    var menu_btn = new MenuButton();
+    menu_btn.set_image( new Image.from_icon_name( "document-properties-symbolic", IconSize.SMALL_TOOLBAR ) );
+    menu_btn.set_tooltip_text( _( "Properties" ) );
+    header.pack_end( menu_btn );
+
+    /* Create the inspector sidebar */
+    var box   = new Box( Orientation.VERTICAL, 0 );
+    var sb    = new StackSwitcher();
+    var stack = new Stack();
+
+    stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
+    stack.set_transition_duration( 500 );
+    stack.add_titled( new NodeInspector( _canvas ),   "node", "Node" );
+    stack.add_titled( new ThemeInspector( _canvas ),  "theme", "Theme" );
+    stack.add_titled( new LayoutInspector( _canvas ), "layout", "Layout" );
+
+    sb.set_stack( stack );
+
+    box.margin = 5;
+    box.pack_start( sb,    false, true,  0 );
+    box.pack_start( stack, false, false, 0 );
+    box.show_all();
+
+    _inspector = new Popover( null );
+    _inspector.add( box );
+    menu_btn.popover = _inspector;
 
   }
 
@@ -254,26 +289,40 @@ public class MainWindow : ApplicationWindow {
    document needs to be saved and saves it (if necessary).
   */
   public void do_new_file() {
-    if( _canvas.changed ) {
-      _doc.save( null, _canvas );
+    if( _doc.save_needed ) {
+      _doc.save();
     }
-    _doc = new Document();
+    _doc = new Document( _canvas );
     _canvas.initialize();
   }
 
   /* Allow the user to open a Minder file */
   public void do_open_file() {
-    if( _canvas.changed ) {
-      _doc.save( null, _canvas );
+    if( _doc.save_needed ) {
+      _doc.save();
     }
     FileChooserDialog dialog = new FileChooserDialog( _( "Open File" ), this, FileChooserAction.OPEN,
       _( "Cancel" ), ResponseType.CANCEL, _( "Open" ), ResponseType.ACCEPT );
-    FileFilter        filter = new FileFilter();
-    filter.set_filter_name( _( "Minder" ) );
+
+    /* Create file filters */
+    var filter = new FileFilter();
+    filter.set_filter_name( "Minder" );
     filter.add_pattern( "*.minder" );
     dialog.add_filter( filter );
+
+    filter = new FileFilter();
+    filter.set_filter_name( "OPML" );
+    filter.add_pattern( "*.opml" );
+    dialog.add_filter( filter );
+
     if( dialog.run() == ResponseType.ACCEPT ) {
-      _doc.load( dialog.get_filename(), _canvas );
+      string fname  = dialog.get_filename();
+      if( fname.has_suffix( ".minder" ) ) {
+        _doc.filename = fname;
+        _doc.load();
+      } else if( fname.has_suffix( ".opml" ) ) {
+        OPML.import( fname, _canvas );
+      }
     }
     dialog.close();
   }
@@ -316,7 +365,8 @@ public class MainWindow : ApplicationWindow {
       if( fname.substring( -7, -1 ) != ".minder" ) {
         fname += ".minder";
       }
-      _doc.save( fname, _canvas );
+      _doc.filename = fname;
+      _doc.save();
     }
     dialog.close();
   }
@@ -324,14 +374,12 @@ public class MainWindow : ApplicationWindow {
   /* Called whenever the node selection changes in the canvas */
   private void on_node_changed() {
     if( _canvas.get_current_node() != null ) {
-      _opts_btn.popover = _inspector;
       _zoom_sel.set_sensitive( true );
     } else {
-      _opts_btn.popover = null;
       _zoom_sel.set_sensitive( false );
     }
   }
-  
+
   /* Displays the node properties panel for the current node */
   private void show_node_properties() {
     _inspector.show();

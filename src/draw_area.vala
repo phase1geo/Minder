@@ -40,9 +40,9 @@ public class DrawArea : Gtk.DrawingArea {
   private string      _orig_name;
   private NodeSide    _orig_side;
 
-  public bool       changed     { set; get; default = false; }
   public UndoBuffer undo_buffer { set; get; default = new UndoBuffer(); }
 
+  public signal void changed();
   public signal void node_changed();
   public signal void show_node_properties();
 
@@ -180,10 +180,10 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Imports the OPML data, creating a mind map */
-  public void import_opml( Xml.Node* n, Array<int>? expand_state) {
-    
+  public void import_opml( Xml.Node* n, ref Array<int>? expand_state) {
+
     int node_id = 1;
-    
+
     /* Clear the existing nodes */
     _nodes.remove_range( 0, _nodes.length );
 
@@ -197,9 +197,9 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
     }
-    
+
   }
-  
+
   /* Exports all of the nodes in OPML format */
   public void export_opml( Xml.Node* parent, out string expand_state ) {
     Array<int> estate  = new Array<int>();
@@ -225,20 +225,18 @@ public class DrawArea : Gtk.DrawingArea {
     /* Clear the undo buffer */
     undo_buffer.clear();
 
-    /* Clear the changed indicator */
-    changed = false;
-
     /* Create the main idea node */
     var n = new RootNode.with_name( "Main Idea", _layout );
 
     /* Set the node information */
     n.posx = (get_allocated_width()  / 2) - 30;
     n.posy = (get_allocated_height() / 2) - 10;
-    n.mode = NodeMode.SELECTED;
 
     _nodes.append_val( n );
     _orig_name    = "";
-    _current_node = n;
+
+    /* Make this initial node the current node */
+    set_current_node( n );
 
     /* Redraw the canvas */
     queue_draw();
@@ -270,6 +268,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void set_current_node( Node? n ) {
     if( n == null ) {
       _current_node = n;
+      node_changed();
     } else if( _current_node == n ) {
       _current_node.mode = NodeMode.SELECTED;
     } else {
@@ -281,13 +280,13 @@ public class DrawArea : Gtk.DrawingArea {
       node_changed();
     }
   }
-  
+
   /* Toggles the value of the specified node, if possible */
   public void toggle_task( Node n ) {
     undo_buffer.add_item( new UndoNodeTask( this, n, true, !n.task_done() ) );
     n.toggle_task_done();
   }
-  
+
   /* Toggles the fold for the given node */
   public void toggle_fold( Node n ) {
     bool fold = !n.folded;
@@ -455,7 +454,7 @@ public class DrawArea : Gtk.DrawingArea {
       _press_x = scale_value( event.x );
       _press_y = scale_value( event.y );
       _motion  = true;
-      changed = true;
+      changed();
     }
     return( false );
   }
@@ -473,7 +472,7 @@ public class DrawArea : Gtk.DrawingArea {
           }
           _current_node.attach( attach_node, -1, _layout );
           queue_draw();
-          changed = true;
+          changed();
         } else if( !_motion ) {
           _current_node.mode = NodeMode.EDITABLE;
           _orig_name = _current_node.name;
@@ -506,10 +505,28 @@ public class DrawArea : Gtk.DrawingArea {
         }
         _current_node = n;
         _current_node.mode = NodeMode.SELECTED;
+        node_changed();
       }
       return( true );
     }
     return( false );
+  }
+
+  /* Deletes the given node */
+  private void delete_node( Node n ) {
+    undo_buffer.add_item( new UndoNodeDelete( this, _current_node, _layout ) );
+    if( _current_node.is_root() ) {
+      for( int i=0; i<_nodes.length; i++ ) {
+        if( _nodes.index( i ) == _current_node ) {
+          _nodes.remove_index( i );
+          break;
+        }
+      }
+    } else {
+      n.delete( _layout );
+    }
+    queue_draw();
+    changed();
   }
 
   /* Called whenever the backspace character is entered in the drawing area */
@@ -517,12 +534,10 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_mode_edit() ) {
       _current_node.edit_backspace( _layout );
       queue_draw();
-      changed = true;
+      changed();
     } else if( is_mode_selected() ) {
-      undo_buffer.add_item( new UndoNodeDelete( this, _current_node, _layout ) );
-      _current_node.delete( _layout );
-      queue_draw();
-      changed = true;
+      delete_node( _current_node );
+      _current_node = null;
     }
   }
 
@@ -531,12 +546,10 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_mode_edit() ) {
       _current_node.edit_delete( _layout );
       queue_draw();
-      changed = true;
+      changed();
     } else if( is_mode_selected() ) {
-      undo_buffer.add_item( new UndoNodeDelete( this, _current_node, _layout ) );
-      _current_node.delete( _layout );
-      queue_draw();
-      changed = true;
+      delete_node( _current_node );
+      _current_node = null;
     }
   }
 
@@ -571,7 +584,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
       }
       adjust_origin();
-      changed = true;
+      changed();
     } else {
       var node = new RootNode.with_name( _( "Another Idea" ), _layout );
       _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
@@ -579,15 +592,15 @@ public class DrawArea : Gtk.DrawingArea {
       if( select_node( node ) ) {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
-        queue_draw();
       }
       adjust_origin();
-      changed = true;
+      changed();
     }
   }
 
   /* Adds the given node to the list of root nodes */
   public void add_root( Node n, int index ) {
+    n.mode = NodeMode.NONE;
     if( index == -1 ) {
       _nodes.append_val( n );
     } else {
@@ -620,7 +633,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
     undo_buffer.add_item( new UndoNodeDetach( this, _current_node, (int)_nodes.length, parent, side, index, _layout ) );
     queue_draw();
-    changed = true;
+    changed();
   }
 
   /* Called whenever the tab character is entered in the drawing area */
@@ -646,7 +659,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
       }
       adjust_origin();
-      changed = true;
+      changed();
     }
   }
 
@@ -718,7 +731,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( _current_node.is_root() ) {
         for( int i=0; i<_nodes.length; i++ ) {
           if( _nodes.index( i ) == _current_node ) {
-            if( (i + 1) > _nodes.length ) {
+            if( (i + 1) < _nodes.length ) {
               if( select_node( _nodes.index( i + 1 ) ) ) {
                 queue_draw();
               }
@@ -801,9 +814,9 @@ public class DrawArea : Gtk.DrawingArea {
         _current_node.edit_insert( str, _layout );
         adjust_origin();
         queue_draw();
-        changed = true;
+        changed();
       } else if( is_mode_selected() ) {
-        switch( str.get_char( 0 ) ) {
+        switch( str ) {
           case "e" :  // Place the current node in edit mode
             _current_node.mode = NodeMode.EDITABLE;
             break;
@@ -835,6 +848,16 @@ public class DrawArea : Gtk.DrawingArea {
           case "i" :  // Display the node properties panel
             show_node_properties();
             return;
+          case "u" :  // Perform undo
+            if( undo_buffer.undoable() ) {
+              undo_buffer.undo();
+            }
+            break;
+          case "r" :  // Perform redo
+            if( undo_buffer.redoable() ) {
+              undo_buffer.redo();
+            }
+            break;
           default :
             // This is a key that doesn't have any associated functionality
             // so just return immediately so that we don't force a redraw
@@ -867,6 +890,29 @@ public class DrawArea : Gtk.DrawingArea {
           //  stdout.printf( "In on_keypress, keyval: %s\n", event.keyval.to_string() );
           //}
           handle_printable( event.str );
+          break;
+      }
+
+    /* If there is no current node, allow some of the keyboard shortcuts */
+    } else {
+      switch( event.str ) {
+        case "m" :
+          if( (_nodes.length > 0) && select_node( _nodes.index( 0 ) ) ) {
+            queue_draw();
+          }
+          break;
+        case "u" :  // Perform undo
+          if( undo_buffer.undoable() ) {
+            undo_buffer.undo();
+          }
+          break;
+        case "r" :  // Perform redo
+          if( undo_buffer.redoable() ) {
+            undo_buffer.redo();
+          }
+          break;
+        default :
+          // No need to do anything here
           break;
       }
     }

@@ -37,7 +37,7 @@ public class ThemeDefault : Theme {
     nodesel_foreground = get_color( "Black" );
     textsel_background = get_color( "#0d52bf" );
     textsel_foreground = get_color( "White" );
-    text_cursor        = get_color( "#3a9104" );
+    text_cursor        = get_color( "Black" );
 
     /* Generate the link colors */
     link_colors = new RGBA[8];

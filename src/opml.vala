@@ -61,38 +61,38 @@ public class OPML : Object {
    Reads the contents of an OPML file and creates a new document based on
    the stored information.
   */
-  public static bool import( string fname ) {
-    
+  public static bool import( string fname, DrawArea da ) {
+
     /* Read in the contents of the OPML file */
     var doc = Xml.Parser.parse_file( fname );
     if( doc == null ) {
       return( false );
     }
-    
+
     /* Load the contents of the file */
-    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+    for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         Array<int>? expand_state = null;
         switch( it->name ) {
           case "head" :
-            import_header( it, out expand_state );
+            import_header( it, ref expand_state );
             break;
           case "body" :
-            da.import_opml( it, expand_state );
+            da.import_opml( it, ref expand_state );
             break;
         }
       }
     }
- 
+
     /* Delete the OPML document */
     delete doc;
-    
+
     return( true );
-    
+
   }
- 
-  /* Parses the OPML head block for information that we will use */ 
-  private static void import_header( Xml.Node* n, out Array<int>? expand_state ) {
+
+  /* Parses the OPML head block for information that we will use */
+  private static void import_header( Xml.Node* n, ref Array<int>? expand_state ) {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
@@ -101,11 +101,10 @@ public class OPML : Object {
               expand_state = new Array<int>();
               string[] values = n->children->get_content().split( "," );
               foreach (string val in values) {
-                expand_state.append_val( val.to_int() );
+                expand_state.append_val( int.parse( val ) );
               }
             }
             break;
-          }
         }
       }
     }

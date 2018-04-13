@@ -24,42 +24,76 @@ using Gtk;
 
 public class Document : Object {
 
-  private string _fname;
+  private DrawArea _da;
+
+  /* Properties */
+  public string filename    { set; get; default = ""; }
+  public bool   save_needed { private set; get; default = false; }
 
   /* Default constructor */
-  public Document() {
-    _fname = "";
+  public Document( DrawArea da ) {
+    _da = da;
+    _da.changed.connect( canvas_changed );
+  }
+
+  /* Called whenever the canvas changes such that a save will be needed */
+  private void canvas_changed() {
+    save_needed = true;
   }
 
   /* Returns true if this document has been previously saved */
-  public bool prev_saved() {
-    return( _fname != "" );
+  public bool saved() {
+    return( filename != "" );
   }
 
   /* Opens the given filename */
-  public bool load( string fname, DrawArea da ) {
-    Xml.Doc* doc = Xml.Parser.parse_file( fname );
+  public bool load() {
+    if( filename == "" ) {
+      return( false );
+    }
+    Xml.Doc* doc = Xml.Parser.parse_file( filename );
     if( doc == null ) {
       return( false );
     }
-    da.load( doc->get_root_element() );
+    _da.load( doc->get_root_element() );
     delete doc;
-    da.changed = false;
-    _fname = fname;
     return( true );
   }
 
+  /* Called on application launch to see if we can load an auto-saved application */
+  public void auto_load() {
+    string fname = (filename == "") ? ".minder.bak" : "." + filename + ".bak";
+    // FOOBAR
+  }
+
   /* Saves the given node information to the specified file */
-  public bool save( string? fname, DrawArea da ) {
+  private bool save_with_filename( string fname ) {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
     doc->set_root_element( root );
-    da.save( root );
+    _da.save( root );
     doc->save_format_file( fname, 1 );
     delete doc;
-    da.changed = false;
-    _fname = fname ?? _fname;
     return( true );
+  }
+
+  /* Saves the state of the document */
+  public bool save() {
+    if( filename == "" ) {
+      return( false );
+    }
+    return( save_with_filename( filename ) );
+  }
+
+  /* Auto-saves the document using either a temporary name or a backup file */
+  public void auto_save() {
+    if( save_needed ) {
+      if( filename == "" ) {
+        save_with_filename( ".minder.bak" );
+      } else {
+        save_with_filename( "." + filename + ".bak" );
+      }
+    }
   }
 
   /* Draws the page to the printer */

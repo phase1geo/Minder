@@ -205,7 +205,7 @@ public class Node : Object {
   public bool is_task() {
     return( (_task_count > 0) && is_leaf() );
   }
-  
+
   /* Returns true if the given cursor coordinates lies within this node */
   public virtual bool is_within( double x, double y ) {
     double cx, cy, cw, ch;
@@ -405,29 +405,29 @@ public class Node : Object {
     return( node );
 
   }
-  
+
   /* Main method for importing an OPML <outline> into a node */
-  public void import_opml( Xml.Node* parent, int node_id, ref Array<int> expand_state, Layout layout ) {
-    
+  public void import_opml( Xml.Node* parent, int node_id, ref Array<int>? expand_state, Layout layout ) {
+
     /* Get the node name */
     string? n = parent->get_prop( "text" );
     if( n != null ) {
       name = n;
     }
-    
+
     /* Get the task information */
     string? t = parent->get_prop( "checked" );
     if( t != null ) {
       _task_count = 1;
-      _task_done  = t.to_bool() ? 1 : 0;
+      _task_done  = bool.parse( t ) ? 1 : 0;
     }
-    
+
     /* Get the note information */
     string? o = parent->get_prop( "node" );
     if( o != null ) {
       note = o;
     }
-    
+
     /* Figure out if this node is folded */
     if( expand_state != null ) {
       folded = true;
@@ -439,18 +439,18 @@ public class Node : Object {
         }
       }
     }
-    
+
     node_id++;
-    
+
     /* Parse the child nodes */
-    for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
+    for( Xml.Node* it2 = parent->children; it2 != null; it2 = it2->next ) {
       if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "outline") ) {
         var child = new NonrootNode( layout );
         child.import_opml( it2, node_id, ref expand_state, layout );
-        child.attach( this, -1, null );
+        child.attach( this, -1, layout );
       }
     }
-    
+
   }
 
   /* Main method to export a node tree as OPML */

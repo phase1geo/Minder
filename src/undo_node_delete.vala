@@ -41,13 +41,21 @@ public class UndoNodeDelete : UndoItem {
 
   /* Undoes a node deletion */
   public override void undo() {
-    _node.attach( _parent, _index, _layout );
+    if( _parent == null ) {
+      _da.add_root( _node, _index );
+    } else {
+      _node.attach( _parent, _index, _layout );
+    }
     _da.queue_draw();
   }
 
   /* Redoes a node deletion */
   public override void redo() {
-    _node.detach( _node.side, _layout );
+    if( _parent == null ) {
+      _da.remove_root( _index );
+    } else {
+      _node.detach( _node.side, _layout );
+    }
     _da.queue_draw();
   }
 
