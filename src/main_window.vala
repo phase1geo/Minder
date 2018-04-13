@@ -118,6 +118,7 @@ public class MainWindow : ApplicationWindow {
     /* Create and pack the canvas */
     _canvas = new DrawArea();
     _canvas.node_changed.connect( on_node_changed );
+    _canvas.show_node_properties.connect( show_node_properties );
 
     /* Create the inspector sidebar */
     Box ibox = new Box( Orientation.VERTICAL, 0 );
@@ -320,6 +321,7 @@ public class MainWindow : ApplicationWindow {
     dialog.close();
   }
 
+  /* Called whenever the node selection changes in the canvas */
   private void on_node_changed() {
     if( _canvas.get_current_node() != null ) {
       _opts_btn.popover = _inspector;
@@ -328,6 +330,11 @@ public class MainWindow : ApplicationWindow {
       _opts_btn.popover = null;
       _zoom_sel.set_sensitive( false );
     }
+  }
+  
+  /* Displays the node properties panel for the current node */
+  private void show_node_properties() {
+    _inspector.show();
   }
 
   /* Converts the given value from the scale to the zoom value to use */

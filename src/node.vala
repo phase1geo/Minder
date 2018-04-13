@@ -201,6 +201,11 @@ public class Node : Object {
     return( (parent != null) && (_children.length == 0) );
   }
 
+  /* Returns true if this node is a task */
+  public bool is_task() {
+    return( (_task_count > 0) && is_leaf() );
+  }
+  
   /* Returns true if the given cursor coordinates lies within this node */
   public virtual bool is_within( double x, double y ) {
     double cx, cy, cw, ch;

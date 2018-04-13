@@ -44,6 +44,7 @@ public class DrawArea : Gtk.DrawingArea {
   public UndoBuffer undo_buffer { set; get; default = new UndoBuffer(); }
 
   public signal void node_changed();
+  public signal void show_node_properties();
 
   /* Default constructor */
   public DrawArea() {
@@ -280,6 +281,19 @@ public class DrawArea : Gtk.DrawingArea {
       node_changed();
     }
   }
+  
+  /* Toggles the value of the specified node, if possible */
+  public void toggle_task( Node n ) {
+    undo_buffer.add_item( new UndoNodeTask( this, n, true, !n.task_done() ) );
+    n.toggle_task_done();
+  }
+  
+  /* Toggles the fold for the given node */
+  public void toggle_fold( Node n ) {
+    bool fold = !n.folded;
+    undo_buffer.add_item( new UndoNodeFold( this, n, fold ) );
+    n.folded = fold;
+  }
 
   /*
    Sets the current node pointer to the node that is within the given coordinates.
@@ -291,13 +305,10 @@ public class DrawArea : Gtk.DrawingArea {
       Node match = _nodes.index( i ).contains( x, y );
       if( match != null ) {
         if( match.is_within_task( x, y ) && match.is_leaf() ) {
-          undo_buffer.add_item( new UndoNodeTask( this, match, true, !match.task_done() ) );
-          match.toggle_task_done();
+          toggle_task( match );
           return( false );
         } else if( match.is_within_fold( x, y ) ) {
-          undo_buffer.add_item( new UndoNodeFold( this, match, false ) );
-          match.folded = false;
-          // _layout.handle_update_by_unfold( match );
+          toggle_fold( match );
           return( false );
         }
         _orig_side = match.side;
@@ -797,28 +808,32 @@ public class DrawArea : Gtk.DrawingArea {
             _current_node.mode = NodeMode.EDITABLE;
             break;
           case "n" :  // Move the selection to the next sibling
-            // TBD
+            handle_down();
             break;
           case "p" :  // Move the selection to the previous sibling
-            // TBD
+            handle_up();
             break;
           case "a" :  // Move to the parent node
-            // TBD
+            handle_left();
             break;
-          case "f" :  // Fold the current node
-            // TBD
+          case "f" :  // Fold/unfold the current node
+            toggle_fold( _current_node );
             break;
           case "t" :  // Toggle the task done indicator
-            // TBD
+            if( _current_node.is_task() ) {
+              toggle_task( _current_node );
+            }
             break;
           case "m" :  // Select the root node
-            // TBD
+            if( (_nodes.length == 0) || !select_node( _nodes.index( 0 ) ) ) {
+              return;
+            }
             break;
           case "c" :  // Select the first child node
-            // TBD
+            handle_right();
             break;
           case "i" :  // Display the node properties panel
-            // TBD
+            show_node_properties();
             return;
           default :
             // This is a key that doesn't have any associated functionality
