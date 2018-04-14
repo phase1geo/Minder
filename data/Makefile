@@ -56,6 +56,17 @@ CMAKE_BINARY_DIR = /home/trevorw/projects/Minder
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: install/local
+
+.PHONY : install/local/fast
+
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -100,27 +111,16 @@ list_install_components/fast: list_install_components
 
 .PHONY : list_install_components/fast
 
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
-
-# Special rule for the target install/local
-install/local/fast: install/local
-
-.PHONY : install/local/fast
-
 # The main all target
 all: cmake_check_build_system
-	cd /home/trevorw/projects/Minder && $(CMAKE_COMMAND) -E cmake_progress_start /home/trevorw/projects/Minder/CMakeFiles /home/trevorw/projects/Minder/po/CMakeFiles/progress.marks
-	cd /home/trevorw/projects/Minder && $(MAKE) -f CMakeFiles/Makefile2 po/all
+	cd /home/trevorw/projects/Minder && $(CMAKE_COMMAND) -E cmake_progress_start /home/trevorw/projects/Minder/CMakeFiles /home/trevorw/projects/Minder/data/CMakeFiles/progress.marks
+	cd /home/trevorw/projects/Minder && $(MAKE) -f CMakeFiles/Makefile2 data/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/trevorw/projects/Minder/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/trevorw/projects/Minder && $(MAKE) -f CMakeFiles/Makefile2 po/clean
+	cd /home/trevorw/projects/Minder && $(MAKE) -f CMakeFiles/Makefile2 data/clean
 .PHONY : clean
 
 # The main clean target
@@ -130,12 +130,12 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/trevorw/projects/Minder && $(MAKE) -f CMakeFiles/Makefile2 po/preinstall
+	cd /home/trevorw/projects/Minder && $(MAKE) -f CMakeFiles/Makefile2 data/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/trevorw/projects/Minder && $(MAKE) -f CMakeFiles/Makefile2 po/preinstall
+	cd /home/trevorw/projects/Minder && $(MAKE) -f CMakeFiles/Makefile2 data/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
@@ -143,65 +143,17 @@ depend:
 	cd /home/trevorw/projects/Minder && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-# Convenience name for target.
-po/CMakeFiles/po.dir/rule:
-	cd /home/trevorw/projects/Minder && $(MAKE) -f CMakeFiles/Makefile2 po/CMakeFiles/po.dir/rule
-.PHONY : po/CMakeFiles/po.dir/rule
-
-# Convenience name for target.
-po: po/CMakeFiles/po.dir/rule
-
-.PHONY : po
-
-# fast build rule for target.
-po/fast:
-	cd /home/trevorw/projects/Minder && $(MAKE) -f po/CMakeFiles/po.dir/build.make po/CMakeFiles/po.dir/build
-.PHONY : po/fast
-
-# Convenience name for target.
-po/CMakeFiles/i18n.dir/rule:
-	cd /home/trevorw/projects/Minder && $(MAKE) -f CMakeFiles/Makefile2 po/CMakeFiles/i18n.dir/rule
-.PHONY : po/CMakeFiles/i18n.dir/rule
-
-# Convenience name for target.
-i18n: po/CMakeFiles/i18n.dir/rule
-
-.PHONY : i18n
-
-# fast build rule for target.
-i18n/fast:
-	cd /home/trevorw/projects/Minder && $(MAKE) -f po/CMakeFiles/i18n.dir/build.make po/CMakeFiles/i18n.dir/build
-.PHONY : i18n/fast
-
-# Convenience name for target.
-po/CMakeFiles/pot.dir/rule:
-	cd /home/trevorw/projects/Minder && $(MAKE) -f CMakeFiles/Makefile2 po/CMakeFiles/pot.dir/rule
-.PHONY : po/CMakeFiles/pot.dir/rule
-
-# Convenience name for target.
-pot: po/CMakeFiles/pot.dir/rule
-
-.PHONY : pot
-
-# fast build rule for target.
-pot/fast:
-	cd /home/trevorw/projects/Minder && $(MAKE) -f po/CMakeFiles/pot.dir/build.make po/CMakeFiles/pot.dir/build
-.PHONY : pot/fast
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... install/local"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... po"
 	@echo "... install"
 	@echo "... list_install_components"
-	@echo "... i18n"
-	@echo "... pot"
-	@echo "... install/local"
 .PHONY : help
 
 

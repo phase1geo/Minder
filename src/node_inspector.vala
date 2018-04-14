@@ -21,16 +21,17 @@
 
 using Gtk;
 using Gdk;
+using Granite.Widgets;
 
 public class NodeInspector : Grid {
 
-  private Entry?    _name       = null;
-  private Switch?   _task       = null;
-  private Switch?   _fold       = null;
-  private TextView? _note       = null;
-  private DrawArea? _da         = null;
-  private Button?   _detach_btn = null;
-  private string    _orig_note  = "";
+  private Entry?      _name       = null;
+  private ModeButton? _task       = null;
+  private Switch?     _fold       = null;
+  private TextView?   _note       = null;
+  private DrawArea?   _da         = null;
+  private Button?     _detach_btn = null;
+  private string      _orig_note  = "";
 
   public NodeInspector( DrawArea da ) {
 
@@ -75,8 +76,11 @@ public class NodeInspector : Grid {
 
     lbl.xalign = (float)0;
 
-    _task = new Switch();
-    _task.state_set.connect( task_changed );
+    _task = new ModeButton();
+    _task.append_text( "None" );
+    _task.append_text( "ND" );
+    _task.append_text( "Done" );
+    _task.mode_changed.connect( task_changed );
 
     attach( lbl,   0, row, 1, 1 );
     attach( _task, 1, row, 1, 1 );
@@ -133,7 +137,7 @@ public class NodeInspector : Grid {
     grid.column_spacing     = 10;
 
     /* Create the detach button */
-    _detach_btn = new Button.from_icon_name( "FOOBAR", IconSize.SMALL_TOOLBAR );
+    _detach_btn = new Button.from_icon_name( "minder-detach", IconSize.SMALL_TOOLBAR );
     _detach_btn.set_tooltip_text( _( "Detach Node" ) );
     _detach_btn.clicked.connect( node_detach );
 
@@ -167,7 +171,8 @@ public class NodeInspector : Grid {
   }
 
   /* Called whenever the task enable switch is changed within the inspector */
-  private bool task_changed( bool state ) {
+  private void task_changed( Widget w ) {
+    /*
     Node current = _da.get_current_node();
     if( current != null ) {
       _da.undo_buffer.add_item( new UndoNodeTask( _da, current, state, false ) );
@@ -175,6 +180,7 @@ public class NodeInspector : Grid {
       _da.queue_draw();
     }
     return( false );
+    */
   }
 
   /* Called whenever the fold switch is changed within the inspector */
@@ -236,7 +242,11 @@ public class NodeInspector : Grid {
 
     if( current != null ) {
       _name.set_text( current.name );
-      _task.set_active( current.task_enabled() );
+      if( current.task_enabled() ) {
+        _task.selected = current.task_done() ? 3 : 2;
+      } else {
+        _task.selected = 0;
+      }
       if( current.children().length > 0 ) {
         _fold.set_active( current.folded );
         _fold.set_sensitive( true );
@@ -248,7 +258,7 @@ public class NodeInspector : Grid {
       _note.buffer.text = current.note;
     } else {
       _name.set_text( "" );
-      _task.set_active( false );
+      _task.selected = 0;
       _fold.set_active( false );
       _note.buffer.text = "";
     }

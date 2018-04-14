@@ -23,7 +23,7 @@ set (VERSION_INFO "")
 find_package(PkgConfig)
 
 # now let's actually check for the required dependencies
-pkg_check_modules(DEPS REQUIRED gtk+-3.0 gee-0.8 glib-2.0 libxml-2.0 unity)
+pkg_check_modules(DEPS REQUIRED gtk+-3.0 gee-0.8 glib-2.0 granite libxml-2.0 unity)
 
 add_definitions(${DEPS_CFLAGS})
 link_libraries(${DEPS_LIBRARIES})
@@ -70,6 +70,7 @@ PACKAGES
     gtk+-3.0
     gee-0.8
     glib-2.0
+    granite
     libxml-2.0
     unity
 )
@@ -90,3 +91,4 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.phase1geo.Minder.appd
 set (GETTEXT_PACKAGE "${CMAKE_PROJECT_NAME}")
 add_definitions (-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
 add_subdirectory (po)
+add_subdirectory (data)

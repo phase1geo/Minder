@@ -25,7 +25,7 @@ public class MainWindow : ApplicationWindow {
 
   private DrawArea?      _canvas        = null;
   private Document?      _doc           = null;
-  private Popover?       _inspector     = null;
+  private Revealer?      _inspector     = null;
   private Popover?       _zoom          = null;
   private Popover?       _search        = null;
   private SearchEntry?   _search_entry  = null;
@@ -113,8 +113,13 @@ public class MainWindow : ApplicationWindow {
     /* Create the document */
     _doc = new Document( _canvas );
 
+    /* Create the horizontal box that will contain the canvas and the properties sidebar */
+    var hbox = new Box( Orientation.HORIZONTAL, 0 );
+    hbox.pack_start( _canvas,    true,  true, 0 );
+    hbox.pack_start( _inspector, false, true, 0 );
+
     /* Display the UI */
-    add( _canvas );
+    add( hbox );
     show_all();
 
   }
@@ -255,9 +260,9 @@ public class MainWindow : ApplicationWindow {
   private void add_property_button( HeaderBar header ) {
 
     /* Add the menubutton */
-    var menu_btn = new MenuButton();
-    menu_btn.set_image( new Image.from_icon_name( "document-properties-symbolic", IconSize.SMALL_TOOLBAR ) );
+    var menu_btn = new Button.from_icon_name( "document-properties-symbolic", IconSize.SMALL_TOOLBAR );
     menu_btn.set_tooltip_text( _( "Properties" ) );
+    menu_btn.clicked.connect( inspector_clicked );
     header.pack_end( menu_btn );
 
     /* Create the inspector sidebar */
@@ -278,10 +283,20 @@ public class MainWindow : ApplicationWindow {
     box.pack_start( stack, false, false, 0 );
     box.show_all();
 
-    _inspector = new Popover( null );
-    _inspector.add( box );
-    menu_btn.popover = _inspector;
+    _inspector = new Revealer();
+    _inspector.set_transition_type( RevealerTransitionType.SLIDE_LEFT );
+    _inspector.set_transition_duration( 500 );
+    _inspector.child = box;
 
+  }
+
+  /* Show or hides the inspector sidebar */
+  private void inspector_clicked() {
+    if( _inspector.child_revealed ) {
+      _inspector.reveal_child = false;
+    } else {
+      _inspector.reveal_child = true;
+    }
   }
 
   /*
@@ -382,7 +397,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Displays the node properties panel for the current node */
   private void show_node_properties() {
-    _inspector.show();
+    _inspector.reveal_child = true;
   }
 
   /* Converts the given value from the scale to the zoom value to use */
