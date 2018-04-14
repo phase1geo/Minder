@@ -77,10 +77,12 @@ public class NodeInspector : Grid {
     lbl.xalign = (float)0;
 
     _task = new ModeButton();
-    _task.append_text( "None" );
-    _task.append_text( "ND" );
-    _task.append_text( "Done" );
+    _task.has_tooltip = true;
+    _task.append_icon( "minder-task-none", IconSize.BUTTON );
+    _task.append_icon( "minder-task-todo", IconSize.BUTTON );
+    _task.append_icon( "minder-task-done", IconSize.BUTTON );
     _task.mode_changed.connect( task_changed );
+    _task.query_tooltip.connect( task_tooltip );
 
     attach( lbl,   0, row, 1, 1 );
     attach( _task, 1, row, 1, 1 );
@@ -172,15 +174,35 @@ public class NodeInspector : Grid {
 
   /* Called whenever the task enable switch is changed within the inspector */
   private void task_changed( Widget w ) {
-    /*
     Node current = _da.get_current_node();
     if( current != null ) {
-      _da.undo_buffer.add_item( new UndoNodeTask( _da, current, state, false ) );
-      current.enable_task( state );
+      bool enable = false;
+      bool done   = false;
+      switch( _task.selected ) {
+        case 0 :  enable = false;  done = false;  break;
+        case 1 :  enable = true;   done = false;  break;
+        case 2 :  enable = true;   done = true;   break;
+      }
+      _da.undo_buffer.add_item( new UndoNodeTask( _da, current, enable, done ) );
+      current.enable_task( enable );
+      current.set_task_done( done ? 1 : 0 );
       _da.queue_draw();
     }
-    return( false );
-    */
+  }
+
+  /* Handles displaying a tooltip for the task modebuttons */
+  private bool task_tooltip( int x, int y, bool keyboard, Tooltip tooltip ) {
+    if( keyboard ) {
+      return( false );
+    }
+    int button_width = _task.get_allocated_width() / 3;
+    switch( x / button_width ) {
+      case 0  :  tooltip.set_text( _( "Not a task" ) );       break;
+      case 1  :  tooltip.set_text( _( "Unfinished task" ) );  break;
+      case 2  :  tooltip.set_text( _( "Finished task" ) );    break;
+      default :  return( false );
+    }
+    return( true );
   }
 
   /* Called whenever the fold switch is changed within the inspector */

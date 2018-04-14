@@ -115,7 +115,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the horizontal box that will contain the canvas and the properties sidebar */
     var hbox = new Box( Orientation.HORIZONTAL, 0 );
-    hbox.pack_start( _canvas,    true,  true, 0 );
+    hbox.pack_start( _canvas,    true, true, 0 );
     hbox.pack_start( _inspector, false, true, 0 );
 
     /* Display the UI */

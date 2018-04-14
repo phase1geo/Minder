@@ -12,8 +12,3 @@
 /home/trevorw/projects/Minder/po/CMakeFiles/i18n.dir
 /home/trevorw/projects/Minder/po/CMakeFiles/pot.dir
 /home/trevorw/projects/Minder/po/CMakeFiles/install/local.dir
-/home/trevorw/projects/Minder/data/CMakeFiles/install/local.dir
-/home/trevorw/projects/Minder/data/CMakeFiles/rebuild_cache.dir
-/home/trevorw/projects/Minder/data/CMakeFiles/edit_cache.dir
-/home/trevorw/projects/Minder/data/CMakeFiles/install.dir
-/home/trevorw/projects/Minder/data/CMakeFiles/list_install_components.dir

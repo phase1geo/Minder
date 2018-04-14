@@ -87,8 +87,13 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.phase1geo.Minder.desk
 # install our .appdata.xml file so AppCenter will see it
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.phase1geo.Minder.appdata.xml DESTINATION ${DATADIR}/metainfo/)
 
+# install custom icons
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-none.svg DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-todo.svg DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-done.svg DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-detach.svg    DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+
 # Translation files
 set (GETTEXT_PACKAGE "${CMAKE_PROJECT_NAME}")
 add_definitions (-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
 add_subdirectory (po)
-add_subdirectory (data)

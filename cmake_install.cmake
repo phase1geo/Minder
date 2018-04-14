@@ -60,10 +60,57 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
 file(INSTALL DESTINATION "/usr/local/share/metainfo" TYPE FILE FILES "/home/trevorw/projects/Minder/data/com.github.phase1geo.Minder.appdata.xml")
 endif()
 
+if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/usr/local/share/icons/elementary/apps/16/minder-task-none.svg")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/usr/local/share/icons/elementary/apps/16" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/16/minder-task-none.svg")
+endif()
+
+if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/usr/local/share/icons/elementary/apps/16/minder-task-todo.svg")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/usr/local/share/icons/elementary/apps/16" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/16/minder-task-todo.svg")
+endif()
+
+if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/usr/local/share/icons/elementary/apps/16/minder-task-done.svg")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/usr/local/share/icons/elementary/apps/16" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/16/minder-task-done.svg")
+endif()
+
+if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/usr/local/share/icons/elementary/apps/16/minder-detach.svg")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/usr/local/share/icons/elementary/apps/16" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/16/minder-detach.svg")
+endif()
+
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/trevorw/projects/Minder/po/cmake_install.cmake")
-  include("/home/trevorw/projects/Minder/data/cmake_install.cmake")
 
 endif()
 
