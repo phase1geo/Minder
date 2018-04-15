@@ -93,8 +93,6 @@ public class Node : Object {
   private   Pango.FontDescription? _font_description = null;
   private   double                 _posx = 0;
   private   double                 _posy = 0;
-  private   int                    _selstart = 0;
-  private   int                    _selend   = 0;
 
   /* Properties */
   public string name { get; set; default = ""; }
@@ -126,11 +124,13 @@ public class Node : Object {
       }
     }
   }
-  public string   note   { get; set; default = ""; }
-  public NodeMode mode   { get; set; default = NodeMode.NONE; }
-  public Node?    parent { get; protected set; default = null; }
-  public NodeSide side   { get; set; default = NodeSide.RIGHT; }
-  public bool     folded { get; set; default = false; }
+  public string   note     { get; set; default = ""; }
+  public NodeMode mode     { get; set; default = NodeMode.NONE; }
+  public Node?    parent   { get; protected set; default = null; }
+  public NodeSide side     { get; set; default = NodeSide.RIGHT; }
+  public bool     folded   { get; set; default = false; }
+  public int      selstart { get; set; default = 0; }
+  public int      selend   { get; set; default = 0; }
 
   /* Default constructor */
   public Node( Layout? layout ) {
@@ -842,26 +842,43 @@ public class Node : Object {
     }
   }
 
+  /* Draws the selection box under the selected text */
   protected virtual void draw_selection( Cairo.Context ctx, Theme theme ) {
 
     unowned SList<Pango.LayoutLine> lines = _layout.get_lines_readonly();
     int start_line, start_x;
     int end_line, end_x;
+    Pango.Rectangle irect, lrect;
 
     /* Figure out the starting and ending lines */
-    _layout.index_to_line_x( _selstart, false, out start_line, out start_x );
-    _layout.index_to_line_x( _selend,   false, out end_line,   out end_x );
+    _layout.index_to_line_x( selstart, false, out start_line, out start_x );
+    _layout.index_to_line_x( selend,   false, out end_line,   out end_x );
 
     /* If the start and end lines are the same, create a selection box */
     if( start_line == end_line ) {
-      // FOOBAR
+
+      lines.nth( start_line ).data.get_pixel_extents( out irect, out lrect );
+      set_context_color( ctx, theme.textsel_background );
+      ctx.rectangle( start_x, lrect.y, (end_x - start_x), lrect.height );
 
     /* Otherwise, select the first line, the last line and then all lines as a block */
     } else {
-      // FOOBAR
+
+      /* Draw the selection rectangle for the first line */
+      lines.nth( start_line ).data.get_pixel_extents( out irect, out lrect );
+      set_context_color( ctx, theme.textsel_background );
+      ctx.rectangle( start_x, lrect.y, (lrect.width - start_x), lrect.height );
+
+      /* Draw the selection rectangle for the last line */
+      lines.nth( end_line ).data.get_pixel_extents( out irect, out lrect );
+      set_context_color( ctx, theme.textsel_background );
+      ctx.rectangle( lrect.x, lrect.y, end_x, lrect.height );
+
+      /* Draw selection rectangles for all of the lines inbetween */
       for( int i=(start_line + 1); i<end_line; i++ ) {
-        Pango.LayoutLine line = lines.nth( i ).data;
-//      set_context_color( ctx, theme.textsel_background );
+        lines.nth( i ).data.get_pixel_extents( out irect, out lrect );
+        set_context_color( ctx, theme.textsel_background );
+        ctx.rectangle( lrect.x, lrect.y, lrect.width, lrect.height );
       }
     }
 

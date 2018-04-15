@@ -444,9 +444,13 @@ public class DrawArea : Gtk.DrawingArea {
       if( _current_node != null ) {
         double diffx = scale_value( event.x ) - _press_x;
         double diffy = scale_value( event.y ) - _press_y;
-        _current_node.posx += diffx;
-        _current_node.posy += diffy;
-        _layout.set_side( _current_node );
+        if( _current_node.mode == NodeMode.CURRENT ) {
+          _current_node.posx += diffx;
+          _current_node.posy += diffy;
+          _layout.set_side( _current_node );
+        } else {
+          _current_node.set_cursor_at( event.x, event.y );
+        }
         queue_draw();
       } else {
         double diff_x = _press_x - scale_value( event.x );
