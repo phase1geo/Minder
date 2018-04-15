@@ -27,8 +27,8 @@ using Cairo;
 /* Enumeration describing the different modes a node can be in */
 public enum NodeMode {
   NONE = 0,  // Specifies that this node is not the current node
-  SELECTED,  // Specifies that this node is the current node and is not being edited
-  EDITABLE,  // Specifies that this node's text should be selected for editing
+  CURRENT,   // Specifies that this node is the current node and is not being edited
+  SELECTED,  // Specifies that this node has selected text
   EDITED     // Specifies that this node's text has been and currently is actively being edited
 }
 
@@ -93,6 +93,8 @@ public class Node : Object {
   private   Pango.FontDescription? _font_description = null;
   private   double                 _posx = 0;
   private   double                 _posy = 0;
+  private   int                    _selstart = 0;
+  private   int                    _selend   = 0;
 
   /* Properties */
   public string name { get; set; default = ""; }
@@ -577,6 +579,17 @@ public class Node : Object {
     child.attach( this, -1, layout );
   }
 
+  /* Sets the cursor from the given mouse coordinates */
+  public void set_cursor_at( double x, double y ) {
+    int cursor, trailing;
+    int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
+    int adjusted_y = (int)(y - (posy + _pady)) * Pango.SCALE;
+    if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
+      _cursor = cursor + trailing;
+      mode = NodeMode.EDITED;
+    }
+  }
+
   /* Move the cursor in the given direction */
   public void move_cursor( int dir ) {
     _cursor += dir;
@@ -603,7 +616,7 @@ public class Node : Object {
   /* Handles a backspace key event */
   public void edit_backspace( Layout layout ) {
     if( _cursor > 0 ) {
-      if( mode == NodeMode.EDITABLE ) {
+      if( mode == NodeMode.SELECTED ) {
         name    = "";
         _cursor = 0;
       } else {
@@ -619,7 +632,7 @@ public class Node : Object {
   public void edit_delete( Layout layout ) {
     if( _cursor < name.length ) {
       name = name.splice( _cursor, (_cursor + 1) );
-    } else if( mode == NodeMode.EDITABLE ) {
+    } else if( mode == NodeMode.SELECTED ) {
       name    = "";
       _cursor = 0;
     }
@@ -629,7 +642,7 @@ public class Node : Object {
 
   /* Inserts the given string at the current cursor position and adjusts cursor */
   public void edit_insert( string s, Layout layout ) {
-    if( mode == NodeMode.EDITABLE ) {
+    if( mode == NodeMode.SELECTED ) {
       name    = s;
       _cursor = 1;
     } else {
@@ -829,6 +842,31 @@ public class Node : Object {
     }
   }
 
+  protected virtual void draw_selection( Cairo.Context ctx, Theme theme ) {
+
+    unowned SList<Pango.LayoutLine> lines = _layout.get_lines_readonly();
+    int start_line, start_x;
+    int end_line, end_x;
+
+    /* Figure out the starting and ending lines */
+    _layout.index_to_line_x( _selstart, false, out start_line, out start_x );
+    _layout.index_to_line_x( _selend,   false, out end_line,   out end_x );
+
+    /* If the start and end lines are the same, create a selection box */
+    if( start_line == end_line ) {
+      // FOOBAR
+
+    /* Otherwise, select the first line, the last line and then all lines as a block */
+    } else {
+      // FOOBAR
+      for( int i=(start_line + 1); i<end_line; i++ ) {
+        Pango.LayoutLine line = lines.nth( i ).data;
+//      set_context_color( ctx, theme.textsel_background );
+      }
+    }
+
+  }
+
   /* Draws the node font to the screen */
   public virtual void draw_name( Cairo.Context ctx, Theme theme ) {
 
@@ -839,30 +877,32 @@ public class Node : Object {
     /* Make sure the the size is up-to-date */
     update_size( out width_diff, out height_diff );
 
+    /* Get the widget of the task icon */
     double twidth = task_width();
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
-    if( (mode == NodeMode.SELECTED) || (mode == NodeMode.EDITABLE) ) {
-      if( mode == NodeMode.SELECTED ) {
-        set_context_color( ctx, theme.nodesel_background );
-      } else {
-        set_context_color( ctx, theme.textsel_background );
-      }
+    if( mode == NodeMode.CURRENT ) {
+      set_context_color( ctx, theme.nodesel_background );
       ctx.rectangle( ((posx + _padx + twidth) - hmargin), ((posy + _pady) - vmargin), (_width + (hmargin * 2)), (_height + (vmargin * 2)) );
       ctx.fill();
+    }
+
+    /* Draw the selection */
+    if( mode == NodeMode.SELECTED ) {
+      draw_selection( ctx, theme );
     }
 
     /* Output the text */
     ctx.move_to( (posx + _padx + twidth), (posy + _pady) );
     switch( mode ) {
-      case NodeMode.SELECTED :  set_context_color( ctx, theme.nodesel_foreground );  break;
-      case NodeMode.EDITABLE :  set_context_color( ctx, theme.textsel_foreground );  break;
+      case NodeMode.CURRENT  :  set_context_color( ctx, theme.nodesel_foreground );  break;
+      case NodeMode.SELECTED :  set_context_color( ctx, theme.textsel_foreground );  break;
       default                :  set_context_color( ctx, (parent == null) ? theme.root_foreground : theme.foreground );  break;
     }
     Pango.cairo_show_layout( ctx, _layout );
 
     /* Draw the insertion cursor if we are in the 'editable' state */
-    if( (mode == NodeMode.EDITABLE) || (mode == NodeMode.EDITED) ) {
+    if( (mode == NodeMode.SELECTED) || (mode == NodeMode.EDITED) ) {
       var rect = _layout.index_to_pos( _cursor );
       set_context_color( ctx, theme.text_cursor );
       double ix, iy;
