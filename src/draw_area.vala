@@ -557,6 +557,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_escape() {
     if( is_mode_edit() ) {
       _current_node.mode = NodeMode.SELECTED;
+      node_changed();
       queue_draw();
     }
   }
@@ -566,6 +567,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_mode_edit() ) {
       undo_buffer.add_item( new UndoNodeName( this, _current_node, _orig_name ) );
       _current_node.mode = NodeMode.SELECTED;
+      node_changed();
       queue_draw();
     } else if( !_current_node.is_root() ) {
       NonrootNode node = new NonrootNode( _layout );
@@ -641,6 +643,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_mode_edit() ) {
       undo_buffer.add_item( new UndoNodeName( this, _current_node, _orig_name ) );
       _current_node.mode = NodeMode.SELECTED;
+      node_changed();
       queue_draw();
     } else if( is_mode_selected() ) {
       NonrootNode node = new NonrootNode( _layout );

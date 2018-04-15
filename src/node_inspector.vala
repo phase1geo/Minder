@@ -23,7 +23,7 @@ using Gtk;
 using Gdk;
 using Granite.Widgets;
 
-public class NodeInspector : Grid {
+public class NodeInspector : Box {
 
   private Entry?      _name       = null;
   private ModeButton? _task       = null;
@@ -35,15 +35,15 @@ public class NodeInspector : Grid {
 
   public NodeInspector( DrawArea da ) {
 
+    Object( orientation: Orientation.VERTICAL, spacing: 10 );
+
     _da = da;
 
-    row_spacing = 10;
-
-    create_name( 0 );
-    create_task( 1 );
-    create_fold( 2 );
-    create_note( 3 );
-    create_buttons( 4 );
+    create_name();
+    create_task();
+    create_fold();
+    create_note();
+    create_buttons();
 
     _da.node_changed.connect( node_changed );
 
@@ -52,7 +52,7 @@ public class NodeInspector : Grid {
   }
 
   /* Creates the name entry */
-  private void create_name( int row ) {
+  private void create_name() {
 
     Box   box = new Box( Orientation.VERTICAL, 2 );
     Label lbl = new Label( _( "Name" ) );
@@ -65,14 +65,15 @@ public class NodeInspector : Grid {
     box.pack_start( lbl,   true, false );
     box.pack_start( _name, true, false );
 
-    attach( box, 0, row, 2, 1 );
+    pack_start( box, false, true );
 
   }
 
   /* Creates the task UI elements */
-  private void create_task( int row ) {
+  private void create_task() {
 
-    Label lbl = new Label( _( "Task" ) );
+    var grid = new Grid();
+    var lbl  = new Label( _( "Task" ) );
 
     lbl.xalign = (float)0;
 
@@ -84,28 +85,35 @@ public class NodeInspector : Grid {
     _task.mode_changed.connect( task_changed );
     _task.query_tooltip.connect( task_tooltip );
 
-    attach( lbl,   0, row, 1, 1 );
-    attach( _task, 1, row, 1, 1 );
+    grid.column_homogeneous = true;
+    grid.attach( lbl,   0, 0, 1, 1 );
+    grid.attach( _task, 1, 0, 1, 1 );
+
+    pack_start( grid, false, true );
 
   }
 
   /* Creates the fold UI elements */
-  private void create_fold( int row ) {
+  private void create_fold() {
 
-    Label lbl = new Label( _( "Fold" ) );
+    var grid = new Grid();
+    var lbl  = new Label( _( "Fold" ) );
 
     lbl.xalign = (float)0;
 
     _fold = new Switch();
     _fold.state_set.connect( fold_changed );
 
-    attach( lbl,   0, row, 1, 1 );
-    attach( _fold, 1, row, 1, 1 );
+    grid.column_homogeneous = true;
+    grid.attach( lbl,   0, 0, 1, 1 );
+    grid.attach( _fold, 1, 0, 1, 1 );
+
+    pack_start( grid, false, true );
 
   }
 
   /* Creates the note widget */
-  private void create_note( int row ) {
+  private void create_note() {
 
     Box   box = new Box( Orientation.VERTICAL, 0 );
     Label lbl = new Label( _( "Note" ) );
@@ -127,12 +135,12 @@ public class NodeInspector : Grid {
     box.pack_start( lbl, true, false );
     box.pack_start( sw,  true, true );
 
-    attach( box, 0, row, 2, 1 );
+    pack_start( box, true, true );
 
   }
 
   /* Creates the node editing button grid and adds it to the popover */
-  private void create_buttons( int row ) {
+  private void create_buttons() {
 
     var grid = new Grid();
     grid.column_homogeneous = true;
@@ -153,7 +161,7 @@ public class NodeInspector : Grid {
     grid.attach( del_btn,     1, 0, 1, 1 );
 
     /* Add the button grid to the popover */
-    attach( grid, 0, row, 2, 1 );
+    pack_start( grid, false, true );
 
   }
 
