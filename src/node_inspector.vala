@@ -78,9 +78,9 @@ public class NodeInspector : Grid {
 
     _task = new ModeButton();
     _task.has_tooltip = true;
-    _task.append_icon( "minder-task-none", IconSize.BUTTON );
-    _task.append_icon( "minder-task-todo", IconSize.BUTTON );
-    _task.append_icon( "minder-task-done", IconSize.BUTTON );
+    _task.append_icon( "minder-task-none-symbolic", IconSize.BUTTON );
+    _task.append_icon( "minder-task-todo-symbolic", IconSize.BUTTON );
+    _task.append_icon( "minder-task-done-symbolic", IconSize.BUTTON );
     _task.mode_changed.connect( task_changed );
     _task.query_tooltip.connect( task_tooltip );
 
@@ -139,7 +139,7 @@ public class NodeInspector : Grid {
     grid.column_spacing     = 10;
 
     /* Create the detach button */
-    _detach_btn = new Button.from_icon_name( "minder-detach", IconSize.SMALL_TOOLBAR );
+    _detach_btn = new Button.from_icon_name( "minder-detach-symbolic", IconSize.SMALL_TOOLBAR );
     _detach_btn.set_tooltip_text( _( "Detach Node" ) );
     _detach_btn.clicked.connect( node_detach );
 

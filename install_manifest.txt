@@ -1,10 +1,10 @@
 /usr/local/bin/com.github.phase1geo.Minder
 /usr/local/share/applications/com.github.phase1geo.Minder.desktop
 /usr/local/share/metainfo/com.github.phase1geo.Minder.appdata.xml
-/usr/local/share/icons/elementary/apps/16/minder-task-none.svg
-/usr/local/share/icons/elementary/apps/16/minder-task-todo.svg
-/usr/local/share/icons/elementary/apps/16/minder-task-done.svg
-/usr/local/share/icons/elementary/apps/16/minder-detach.svg
+/usr/local/share/icons/elementary/apps/16/minder-task-none-symbolic.svg
+/usr/local/share/icons/elementary/apps/16/minder-task-todo-symbolic.svg
+/usr/local/share/icons/elementary/apps/16/minder-task-done-symbolic.svg
+/usr/local/share/icons/elementary/apps/16/minder-detach-symbolic.svg
 /usr/local/share/locale/st/LC_MESSAGES/com.github.phase1geo.Minder.mo
 /usr/local/share/locale/kk/LC_MESSAGES/com.github.phase1geo.Minder.mo
 /usr/local/share/locale/he/LC_MESSAGES/com.github.phase1geo.Minder.mo

@@ -88,10 +88,10 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.phase1geo.Minder.desk
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.phase1geo.Minder.appdata.xml DESTINATION ${DATADIR}/metainfo/)
 
 # install custom icons
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-none.svg DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-todo.svg DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-done.svg DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-detach.svg    DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-none-symbolic.svg DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-todo-symbolic.svg DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-done-symbolic.svg DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-detach-symbolic.svg    DESTINATION ${DATADIR}/icons/elementary/apps/16/)
 
 # Translation files
 set (GETTEXT_PACKAGE "${CMAKE_PROJECT_NAME}")

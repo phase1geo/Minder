@@ -15,7 +15,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    viewBox="0 0 16 16"
-   sodipodi:docname="minder-none.svg">
+   sodipodi:docname="minder-task-done-symbolic.svg">
   <defs
      id="defs4489" />
   <sodipodi:namedview
@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="22.197802"
-     inkscape:cx="0.97227717"
+     inkscape:cx="8"
      inkscape:cy="8"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -53,17 +53,9 @@
      id="layer1"
      inkscape:label="Layer 1"
      inkscape:groupmode="layer">
-    <ellipse
-       fill="none" stroke="param(outline) #000" stroke-width="param(outline-width) 1" stroke-opacity="1"
-       id="path4495"
-       cx="8.0188122"
-       cy="8.0037127"
-       rx="7.5485125"
-       ry="7.520699" />
     <path
-       fill="none" stroke="param(outline) #000" stroke-width="param(outline-width) 1" stroke-linecap="butt" stroke-linejoin="miter" stroke-opacity="1"
-       d="m 3.0633664,2.1698019 9.8658416,11.5326731 0,0"
-       id="path5075"
-       inkscape:connector-curvature="0" />
+       style="fill:#666666"
+       d="M 14.50594,8.0119848 A 6.5096536,6.5464315 0 0 1 7.9962869,14.558416 6.5096536,6.5464315 0 0 1 1.4866333,8.0119848 6.5096536,6.5464315 0 0 1 7.9962869,1.4655533 6.5096536,6.5464315 0 0 1 14.50594,8.0119848 Z"
+       id="path4495" />
   </g>
 </svg>
