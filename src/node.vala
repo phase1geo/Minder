@@ -28,8 +28,7 @@ using Cairo;
 public enum NodeMode {
   NONE = 0,  // Specifies that this node is not the current node
   CURRENT,   // Specifies that this node is the current node and is not being edited
-  SELECTED,  // Specifies that this node has selected text
-  EDITED     // Specifies that this node's text has been and currently is actively being edited
+  EDITABLE   // Specifies that this node's text has been and currently is actively being edited
 }
 
 public enum NodeSide {
@@ -580,14 +579,14 @@ public class Node : Object {
   }
 
   /* Sets the cursor from the given mouse coordinates */
-  public void set_cursor_at( double x, double y ) {
+  public int set_cursor_at( double x, double y ) {
     int cursor, trailing;
     int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
     int adjusted_y = (int)(y - (posy + _pady)) * Pango.SCALE;
     if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       _cursor = cursor + trailing;
-      mode = NodeMode.EDITED;
     }
+    return( _cursor );
   }
 
   /* Move the cursor in the given direction */
@@ -598,58 +597,58 @@ public class Node : Object {
     } else if( _cursor > name.length ) {
       _cursor = name.length;
     }
-    mode = NodeMode.EDITED;
+    selend = selstart;
   }
 
   /* Moves the cursor to the beginning of the name */
   public void move_cursor_to_start() {
     _cursor = 0;
-    mode = NodeMode.EDITED;
   }
 
   /* Moves the cursor to the end of the name */
   public void move_cursor_to_end() {
     _cursor = name.length;
-    mode = NodeMode.EDITED;
   }
 
   /* Handles a backspace key event */
   public void edit_backspace( Layout layout ) {
     if( _cursor > 0 ) {
-      if( mode == NodeMode.SELECTED ) {
-        name    = "";
-        _cursor = 0;
+      if( selstart != selend ) {
+        name    = name.splice( selstart, selend );
+        _cursor = selstart;
+        selend  = selstart;
       } else {
         name = name.splice( (_cursor - 1), _cursor );
         _cursor--;
       }
     }
-    mode = NodeMode.EDITED;
     layout.handle_update_by_edit( this );
   }
 
   /* Handles a delete key event */
   public void edit_delete( Layout layout ) {
     if( _cursor < name.length ) {
-      name = name.splice( _cursor, (_cursor + 1) );
-    } else if( mode == NodeMode.SELECTED ) {
-      name    = "";
-      _cursor = 0;
+      if( selstart != selend ) {
+        name    = name.splice( selstart, selend );
+        _cursor = selstart;
+        selend  = selstart;
+      } else {
+        name = name.splice( _cursor, (_cursor + 1) );
+      }
     }
-    mode = NodeMode.EDITED;
     layout.handle_update_by_edit( this );
   }
 
   /* Inserts the given string at the current cursor position and adjusts cursor */
   public void edit_insert( string s, Layout layout ) {
-    if( mode == NodeMode.SELECTED ) {
-      name    = s;
-      _cursor = 1;
+    if( selstart != selend ) {
+      name    = name.splice( selstart, selend, s );
+      _cursor = selstart + s.length;
+      selend  = selstart;
     } else {
       name = name.splice( _cursor, _cursor, s );
       _cursor += s.length;
     }
-    mode = NodeMode.EDITED;
     layout.handle_update_by_edit( this );
   }
 
@@ -846,20 +845,35 @@ public class Node : Object {
   protected virtual void draw_selection( Cairo.Context ctx, Theme theme ) {
 
     unowned SList<Pango.LayoutLine> lines = _layout.get_lines_readonly();
-    int start_line, start_x;
-    int end_line, end_x;
+    int             start_line, start_x;
+    int             end_line,   end_x;
     Pango.Rectangle irect, lrect;
+    double          tx = posx + _padx + task_width();
+    double          ty = posy + _pady;
 
     /* Figure out the starting and ending lines */
     _layout.index_to_line_x( selstart, false, out start_line, out start_x );
     _layout.index_to_line_x( selend,   false, out end_line,   out end_x );
+
+    start_x = start_x / Pango.SCALE;
+    end_x   = end_x   / Pango.SCALE;
+
+    /* Add attributes to set the text selection appropriately */
+    var attrs = new Pango.AttrList();
+    var color = theme.textsel_foreground;
+    var attr  = Pango.attr_foreground_new( (uint16)color.red, (uint16)color.green, (uint16)color.blue );
+    attr.start_index = selstart;
+    attr.end_index   = selend;
+    attrs.insert( (owned)attr );
+    _layout.set_attributes( attrs );
 
     /* If the start and end lines are the same, create a selection box */
     if( start_line == end_line ) {
 
       lines.nth( start_line ).data.get_pixel_extents( out irect, out lrect );
       set_context_color( ctx, theme.textsel_background );
-      ctx.rectangle( start_x, lrect.y, (end_x - start_x), lrect.height );
+      ctx.rectangle( (tx + start_x), (ty + (lrect.height * start_line)), (end_x - start_x), lrect.height );
+      ctx.fill();
 
     /* Otherwise, select the first line, the last line and then all lines as a block */
     } else {
@@ -867,18 +881,21 @@ public class Node : Object {
       /* Draw the selection rectangle for the first line */
       lines.nth( start_line ).data.get_pixel_extents( out irect, out lrect );
       set_context_color( ctx, theme.textsel_background );
-      ctx.rectangle( start_x, lrect.y, (lrect.width - start_x), lrect.height );
+      ctx.rectangle( (tx + start_x), (ty + (lrect.height * start_line)), (lrect.width - start_x), lrect.height );
+      ctx.fill();
 
       /* Draw the selection rectangle for the last line */
       lines.nth( end_line ).data.get_pixel_extents( out irect, out lrect );
       set_context_color( ctx, theme.textsel_background );
-      ctx.rectangle( lrect.x, lrect.y, end_x, lrect.height );
+      ctx.rectangle( (tx + lrect.x), (ty + (lrect.height * end_line)), end_x, lrect.height );
+      ctx.fill();
 
       /* Draw selection rectangles for all of the lines inbetween */
       for( int i=(start_line + 1); i<end_line; i++ ) {
         lines.nth( i ).data.get_pixel_extents( out irect, out lrect );
         set_context_color( ctx, theme.textsel_background );
-        ctx.rectangle( lrect.x, lrect.y, lrect.width, lrect.height );
+        ctx.rectangle( (tx + lrect.x), (ty + (lrect.height * i)), lrect.width, lrect.height );
+        ctx.fill();
       }
     }
 
@@ -905,7 +922,7 @@ public class Node : Object {
     }
 
     /* Draw the selection */
-    if( mode == NodeMode.SELECTED ) {
+    if( selstart != selend ) {
       draw_selection( ctx, theme );
     }
 
@@ -913,13 +930,12 @@ public class Node : Object {
     ctx.move_to( (posx + _padx + twidth), (posy + _pady) );
     switch( mode ) {
       case NodeMode.CURRENT  :  set_context_color( ctx, theme.nodesel_foreground );  break;
-      case NodeMode.SELECTED :  set_context_color( ctx, theme.textsel_foreground );  break;
       default                :  set_context_color( ctx, (parent == null) ? theme.root_foreground : theme.foreground );  break;
     }
     Pango.cairo_show_layout( ctx, _layout );
 
     /* Draw the insertion cursor if we are in the 'editable' state */
-    if( (mode == NodeMode.SELECTED) || (mode == NodeMode.EDITED) ) {
+    if( mode == NodeMode.EDITABLE ) {
       var rect = _layout.index_to_pos( _cursor );
       set_context_color( ctx, theme.text_cursor );
       double ix, iy;

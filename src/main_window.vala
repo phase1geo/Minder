@@ -59,7 +59,7 @@ public class MainWindow : ApplicationWindow {
     /* Set the main window data */
     title = _( "Minder" );
     set_position( Gtk.WindowPosition.CENTER );
-    set_default_size( 1000, 800 );
+    set_default_size( 1000, 600 );
     set_titlebar( header );
     set_border_width( 2 );
     destroy.connect( Gtk.main_quit );
