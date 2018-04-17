@@ -2,5 +2,6 @@ build/
 CMakeFiles/
 src/*.o
 src/*.c
+src/themes/*.c
 *.stamp
 com.github.phase1geo.Minder
