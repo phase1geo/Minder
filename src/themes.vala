@@ -28,22 +28,31 @@ public class Themes : Object {
 
   /* Default constructor */
   public Themes() {
+
+    /* Allocate memory for the themes array */
     _themes = new Array<Theme>();
-    var theme = new ThemeDefault();
-    _themes.append_val( theme );
+
+    /* Create the themes */
+    var default_theme = new ThemeDefault();
+    var dark_theme    = new ThemeDark();
+
+    /* Add the themes to the list */
+    _themes.append_val( default_theme );
+    _themes.append_val( dark_theme );
+
   }
 
   /* Returns a list of theme names */
-  public void names( out Array<string> names ) {
+  public void names( ref Array<string> names ) {
     for( int i=0; i<_themes.length; i++ ) {
       names.append_val( _themes.index( i ).name );
     }
   }
 
   /* Returns a list of icons associated with each of the loaded themes */
-  public void icons( out Array<Image> icons ) {
+  public void icons( ref Array<Image> icons ) {
     for( int i=0; i<_themes.length; i++ ) {
-      icons.append_val( _themes.index( i ).icon );
+      icons.append_val( new Image.from_surface( _themes.index( i ).make_icon() ) );
     }
   }
 

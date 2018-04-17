@@ -53,9 +53,10 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/opml.vala
     src/root_node.vala
     src/theme.vala
-    src/theme_default.vala
     src/theme_inspector.vala
     src/themes.vala
+    src/themes/theme_default.vala
+    src/themes/theme_dark.vala
     src/undo_buffer.vala
     src/undo_item.vala
     src/undo_node_attach.vala

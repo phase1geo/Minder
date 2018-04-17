@@ -23,41 +23,52 @@ using Gtk;
 
 public class ThemeInspector : Box {
 
-  private DrawArea? _da     = null;
-  private Themes?   _themes = null;
+  private DrawArea? _da = null;
 
   public ThemeInspector( DrawArea da ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
 
-    _da     = da;
-    _themes = new Themes();
+    _da = da;
 
-    var lbl       = new Label( _( "Themes" ) );
-    var list      = new ListStore( 1, typeof(string), typeof(Image) );
+    /* Create the UI */
+    var lbl = new Label( _( "Themes" ) );
+    var sw  = new ScrolledWindow( null, null );
+    var vp  = new Viewport( null, null );
+    var box = new Box( Orientation.VERTICAL, 20 );
+    vp.set_size_request( 200, 600 );
+    vp.add( box );
+    sw.add( vp );
 
-    /* Create the tree view */
-    var list_view = new TreeView.with_model( list );
-    list.insert_column_with_attributes( -1, null, new CellRendererPixbuf(), "markup", 0 );
-    list.headers_visible = false;
-    list.activate_on_single_click = true;
-    list.row_activated.connect( on_theme_clicked );
+    /* Get the theme information to display */
+    var names = new Array<string>();
+    var icons = new Array<Gtk.Image>();
 
-    pack_start( lbl,       false, true );
-    pack_start( list_view, true,  true );
+    _da.themes.names( ref names );
+    _da.themes.icons( ref icons );
 
-  }
-
-  /* Called whenever a theme is selected in the treeview */
-  private void on_theme_clicked( TreePath path, TreeViewColumn col ) {
-    TreeIter it;
-    Node?    node = null;
-    _search_items.get_iter( out it, path );
-    _search_items.get( it, 1, &node, -1 );
-    if( node != null ) {
-      _canvas.set_current_node( node );
+    /* Add the themes */
+    for( int i=0; i<names.length; i++ ) {
+      var ebox  = new EventBox();
+      var item  = new Box( Orientation.VERTICAL, 5 );
+      var label = new Label( names.index( i ) );
+      item.pack_start( icons.index( i ), false, false, 5 );
+      item.pack_start( label,            false, true );
+      ebox.button_press_event.connect((w, e) => {
+        Gdk.RGBA c = {1.0, 1.0, 1.0, 1.0};
+        c.parse( "Blue" );
+        w.override_background_color( StateFlags.NORMAL, c );
+        _da.set_theme( label.label );
+        return( false );
+      });
+      ebox.add( item );
+      box.pack_start( ebox, false, true );
     }
-    stdout.printf( "Theme clicked!\n" );
+
+    /* Pack the panel */
+    pack_start( lbl, false, true );
+    pack_start( sw,  true,  true );
+
   }
 
 }

@@ -41,6 +41,7 @@ public class DrawArea : Gtk.DrawingArea {
   private NodeSide    _orig_side;
 
   public UndoBuffer undo_buffer { set; get; default = new UndoBuffer(); }
+  public Themes     themes      { set; get; default = new Themes(); }
 
   public signal void changed();
   public signal void node_changed();
@@ -49,16 +50,12 @@ public class DrawArea : Gtk.DrawingArea {
   /* Default constructor */
   public DrawArea() {
 
-    _theme  = new ThemeDefault();
+    _theme  = themes.get_theme( "Default" );
     _layout = new Layout();
     _nodes  = new Array<Node>();
 
-    /* Set the CSS provider from the theme */
-    StyleContext.add_provider_for_screen(
-      Screen.get_default(),
-      _theme.get_css_provider(),
-      STYLE_PROVIDER_PRIORITY_APPLICATION
-    );
+    /* Set the theme to the default theme */
+    set_theme( "Default" );
 
     /* Add event listeners */
     this.draw.connect( on_draw );
@@ -79,6 +76,17 @@ public class DrawArea : Gtk.DrawingArea {
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
 
+  }
+
+  /* Sets the theme to the given value */
+  public void set_theme( string theme_name ) {
+    _theme = themes.get_theme( theme_name );
+    StyleContext.add_provider_for_screen(
+      Screen.get_default(),
+      _theme.get_css_provider(),
+      STYLE_PROVIDER_PRIORITY_APPLICATION
+    );
+    queue_draw();
   }
 
   /* Loads the drawing area origin from the XML node */
@@ -105,9 +113,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void load_theme( Xml.Node* n ) {
     string? name = n->get_prop( "name" );
     if( name != null ) {
-      switch( name ) {
-        default :  _theme = new ThemeDefault();  break;
-      }
+      _theme = _themes.get_theme( name );
     }
   }
 

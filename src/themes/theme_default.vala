@@ -20,6 +20,7 @@
 */
 
 using Gdk;
+using Gtk;
 
 public class ThemeDefault : Theme {
 

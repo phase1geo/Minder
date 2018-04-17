@@ -524,33 +524,6 @@ src/theme.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme.c.s
 .PHONY : src/theme.c.s
 
-src/theme_default.o: src/theme_default.c.o
-
-.PHONY : src/theme_default.o
-
-# target to build an object file
-src/theme_default.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme_default.c.o
-.PHONY : src/theme_default.c.o
-
-src/theme_default.i: src/theme_default.c.i
-
-.PHONY : src/theme_default.i
-
-# target to preprocess a source file
-src/theme_default.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme_default.c.i
-.PHONY : src/theme_default.c.i
-
-src/theme_default.s: src/theme_default.c.s
-
-.PHONY : src/theme_default.s
-
-# target to generate assembly for a file
-src/theme_default.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme_default.c.s
-.PHONY : src/theme_default.c.s
-
 src/theme_inspector.o: src/theme_inspector.c.o
 
 .PHONY : src/theme_inspector.o
@@ -604,6 +577,60 @@ src/themes.s: src/themes.c.s
 src/themes.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes.c.s
 .PHONY : src/themes.c.s
+
+src/themes/theme_dark.o: src/themes/theme_dark.c.o
+
+.PHONY : src/themes/theme_dark.o
+
+# target to build an object file
+src/themes/theme_dark.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes/theme_dark.c.o
+.PHONY : src/themes/theme_dark.c.o
+
+src/themes/theme_dark.i: src/themes/theme_dark.c.i
+
+.PHONY : src/themes/theme_dark.i
+
+# target to preprocess a source file
+src/themes/theme_dark.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes/theme_dark.c.i
+.PHONY : src/themes/theme_dark.c.i
+
+src/themes/theme_dark.s: src/themes/theme_dark.c.s
+
+.PHONY : src/themes/theme_dark.s
+
+# target to generate assembly for a file
+src/themes/theme_dark.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes/theme_dark.c.s
+.PHONY : src/themes/theme_dark.c.s
+
+src/themes/theme_default.o: src/themes/theme_default.c.o
+
+.PHONY : src/themes/theme_default.o
+
+# target to build an object file
+src/themes/theme_default.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes/theme_default.c.o
+.PHONY : src/themes/theme_default.c.o
+
+src/themes/theme_default.i: src/themes/theme_default.c.i
+
+.PHONY : src/themes/theme_default.i
+
+# target to preprocess a source file
+src/themes/theme_default.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes/theme_default.c.i
+.PHONY : src/themes/theme_default.c.i
+
+src/themes/theme_default.s: src/themes/theme_default.c.s
+
+.PHONY : src/themes/theme_default.s
+
+# target to generate assembly for a file
+src/themes/theme_default.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes/theme_default.c.s
+.PHONY : src/themes/theme_default.c.s
 
 src/undo_buffer.o: src/undo_buffer.c.o
 
@@ -953,15 +980,18 @@ help:
 	@echo "... src/theme.o"
 	@echo "... src/theme.i"
 	@echo "... src/theme.s"
-	@echo "... src/theme_default.o"
-	@echo "... src/theme_default.i"
-	@echo "... src/theme_default.s"
 	@echo "... src/theme_inspector.o"
 	@echo "... src/theme_inspector.i"
 	@echo "... src/theme_inspector.s"
 	@echo "... src/themes.o"
 	@echo "... src/themes.i"
 	@echo "... src/themes.s"
+	@echo "... src/themes/theme_dark.o"
+	@echo "... src/themes/theme_dark.i"
+	@echo "... src/themes/theme_dark.s"
+	@echo "... src/themes/theme_default.o"
+	@echo "... src/themes/theme_default.i"
+	@echo "... src/themes/theme_default.s"
 	@echo "... src/undo_buffer.o"
 	@echo "... src/undo_buffer.i"
 	@echo "... src/undo_buffer.s"

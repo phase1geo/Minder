@@ -72,4 +72,156 @@ public class Theme : Object {
     return( provider );
   }
 
+  /* Sets the context color based on the theme RGBA color */
+  private void set_context_color( Cairo.Context ctx, RGBA color ) {
+    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+  }
+
+  /* Creates the icon representation based on the theme's colors */
+  public Cairo.Surface make_icon() {
+
+    int width, height;
+    Cairo.ImageSurface surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 200, 100 );
+    Cairo.Context      ctx     = new Cairo.Context( surface );
+
+    /* Draw the background */
+    set_context_color( ctx, background );
+    ctx.rectangle( 0, 0, 200, 100 );
+    ctx.fill();
+
+    /* Draw subnode lines */
+    set_context_color( ctx, link_colors[0] );
+    ctx.set_line_cap( Cairo.LineCap.ROUND );
+    ctx.set_line_width( 4 );
+    ctx.move_to( 100, 50 );
+    ctx.line_to( 50, 25 );
+    ctx.stroke();
+    set_context_color( ctx, link_colors[0] );
+    ctx.set_line_cap( Cairo.LineCap.ROUND );
+    ctx.set_line_width( 4 );
+    ctx.move_to( 50, 25 );
+    ctx.line_to( 10, 25 );
+    ctx.stroke();
+
+    set_context_color( ctx, link_colors[1] );
+    ctx.set_line_cap( Cairo.LineCap.ROUND );
+    ctx.set_line_width( 4 );
+    ctx.move_to( 100, 50 );
+    ctx.line_to( 10, 50 );
+    ctx.stroke();
+
+    set_context_color( ctx, link_colors[2] );
+    ctx.set_line_cap( Cairo.LineCap.ROUND );
+    ctx.set_line_width( 4 );
+    ctx.move_to( 100, 50 );
+    ctx.line_to( 50, 75 );
+    ctx.stroke();
+    set_context_color( ctx, link_colors[2] );
+    ctx.set_line_cap( Cairo.LineCap.ROUND );
+    ctx.set_line_width( 4 );
+    ctx.move_to( 50, 75 );
+    ctx.line_to( 10, 75 );
+    ctx.stroke();
+
+    set_context_color( ctx, link_colors[3] );
+    ctx.set_line_cap( Cairo.LineCap.ROUND );
+    ctx.set_line_width( 4 );
+    ctx.move_to( 100, 50 );
+    ctx.line_to( 150, 25 );
+    ctx.stroke();
+    set_context_color( ctx, link_colors[3] );
+    ctx.set_line_cap( Cairo.LineCap.ROUND );
+    ctx.set_line_width( 4 );
+    ctx.move_to( 150, 25 );
+    ctx.line_to( 190, 25 );
+    ctx.stroke();
+
+    set_context_color( ctx, link_colors[4] );
+    ctx.set_line_cap( Cairo.LineCap.ROUND );
+    ctx.set_line_width( 4 );
+    ctx.move_to( 100, 50 );
+    ctx.line_to( 190, 50 );
+    ctx.stroke();
+
+    set_context_color( ctx, link_colors[5] );
+    ctx.set_line_cap( Cairo.LineCap.ROUND );
+    ctx.set_line_width( 4 );
+    ctx.move_to( 100, 50 );
+    ctx.line_to( 150, 75 );
+    ctx.stroke();
+    set_context_color( ctx, link_colors[5] );
+    ctx.set_line_cap( Cairo.LineCap.ROUND );
+    ctx.set_line_width( 4 );
+    ctx.move_to( 150, 75 );
+    ctx.line_to( 190, 75 );
+    ctx.stroke();
+
+    /* Draw root node */
+    double r = 4;
+    double x = 65;
+    double y = 40;
+    double w = 70;
+    double h = 20;
+    set_context_color( ctx, root_background );
+    ctx.set_line_width( 1 );
+    ctx.move_to(x+r,y);
+    ctx.line_to(x+w-r,y);
+    ctx.curve_to(x+w,y,x+w,y,x+w,y+r);
+    ctx.line_to(x+w,y+h-r);
+    ctx.curve_to(x+w,y+h,x+w,y+h,x+w-r,y+h);
+    ctx.line_to(x+r,y+h);
+    ctx.curve_to(x,y+h,x,y+h,x,y+h-r);
+    ctx.line_to(x,y+r);
+    ctx.curve_to(x,y,x,y,x+r,y);
+    ctx.fill();
+
+    /* Create text */
+    var root_text = Pango.cairo_create_layout( ctx );
+    root_text.set_width( 70 * Pango.SCALE );
+    root_text.set_wrap( Pango.WrapMode.WORD_CHAR );
+    root_text.set_text( name, -1 );
+
+    var node_text = Pango.cairo_create_layout( ctx );
+    node_text.set_width( 40 * Pango.SCALE );
+    node_text.set_wrap( Pango.WrapMode.WORD_CHAR );
+    node_text.set_text( "Node", -1 );
+
+    /* Add the text */
+    root_text.get_size( out width, out height );
+    set_context_color( ctx, root_foreground );
+    ctx.move_to( (100 - ((width / Pango.SCALE) / 2)), (50 - ((height / Pango.SCALE) / 2)) );
+    Pango.cairo_show_layout( ctx, root_text );
+
+    node_text.get_size( out width, out height );
+    width  /= Pango.SCALE;
+    height /= Pango.SCALE;
+
+    set_context_color( ctx, foreground );
+    ctx.move_to( (30 - (width / 2)), (25 - (height + 2)) );
+    Pango.cairo_show_layout( ctx, node_text );
+
+    set_context_color( ctx, foreground );
+    ctx.move_to( (30 - (width / 2)), (50 - (height + 2)) );
+    Pango.cairo_show_layout( ctx, node_text );
+
+    set_context_color( ctx, foreground );
+    ctx.move_to( (30 - (width / 2)), (75 - (height + 2)) );
+    Pango.cairo_show_layout( ctx, node_text );
+
+    set_context_color( ctx, foreground );
+    ctx.move_to( (170 - (width / 2)), (25 - (height + 2)) );
+    Pango.cairo_show_layout( ctx, node_text );
+
+    set_context_color( ctx, foreground );
+    ctx.move_to( (170 - (width / 2)), (50 - (height + 2)) );
+    Pango.cairo_show_layout( ctx, node_text );
+
+    set_context_color( ctx, foreground );
+    ctx.move_to( (170 - (width / 2)), (75 - (height + 2)) );
+    Pango.cairo_show_layout( ctx, node_text );
+
+    return( surface );
+
+  }
+
 }
