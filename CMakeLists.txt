@@ -55,6 +55,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/theme.vala
     src/theme_default.vala
     src/theme_inspector.vala
+    src/themes.vala
     src/undo_buffer.vala
     src/undo_item.vala
     src/undo_node_attach.vala
@@ -92,8 +93,18 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-none-symbol
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-todo-symbolic.svg         DESTINATION ${DATADIR}/icons/elementary/apps/16/)
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-done-symbolic.svg         DESTINATION ${DATADIR}/icons/elementary/apps/16/)
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-detach-symbolic.svg            DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/elementary/48/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/elementary/scalable/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/24x24/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/32x32/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/48x48/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/64x64/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/128x128/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/16x16@2/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/24x24@2/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/32x32@2/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/48x48@2/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/64x64@2/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/128x128@2/apps/)
 
 # Translation files
 set (GETTEXT_PACKAGE "${CMAKE_PROJECT_NAME}")

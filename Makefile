@@ -578,6 +578,33 @@ src/theme_inspector.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/theme_inspector.c.s
 .PHONY : src/theme_inspector.c.s
 
+src/themes.o: src/themes.c.o
+
+.PHONY : src/themes.o
+
+# target to build an object file
+src/themes.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes.c.o
+.PHONY : src/themes.c.o
+
+src/themes.i: src/themes.c.i
+
+.PHONY : src/themes.i
+
+# target to preprocess a source file
+src/themes.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes.c.i
+.PHONY : src/themes.c.i
+
+src/themes.s: src/themes.c.s
+
+.PHONY : src/themes.s
+
+# target to generate assembly for a file
+src/themes.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes.c.s
+.PHONY : src/themes.c.s
+
 src/undo_buffer.o: src/undo_buffer.c.o
 
 .PHONY : src/undo_buffer.o
@@ -932,6 +959,9 @@ help:
 	@echo "... src/theme_inspector.o"
 	@echo "... src/theme_inspector.i"
 	@echo "... src/theme_inspector.s"
+	@echo "... src/themes.o"
+	@echo "... src/themes.i"
+	@echo "... src/themes.s"
 	@echo "... src/undo_buffer.o"
 	@echo "... src/undo_buffer.i"
 	@echo "... src/undo_buffer.s"

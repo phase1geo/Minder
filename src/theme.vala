@@ -27,7 +27,7 @@ public class Theme : Object {
   private int _index;
 
   public    string name               { protected set; get; }
-  public.   Image. icon.              { protected set; get; }
+  public    Image  icon               { protected set; get; }
   public    RGBA   background         { protected set; get; }
   public    RGBA   foreground         { protected set; get; }
   public    RGBA   root_background    { protected set; get; }

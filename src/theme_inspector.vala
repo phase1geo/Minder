@@ -21,18 +21,43 @@
 
 using Gtk;
 
-public class ThemeInspector : Grid {
+public class ThemeInspector : Box {
 
-  private DrawArea? _da = null;
+  private DrawArea? _da     = null;
+  private Themes?   _themes = null;
 
   public ThemeInspector( DrawArea da ) {
 
-    _da = da;
+    Object( orientation:Orientation.VERTICAL, spacing:10 );
 
-    Label lbl = new Label( "THEMES" );
+    _da     = da;
+    _themes = new Themes();
 
-    attach( lbl, 0, 0, 1, 1 );
+    var lbl       = new Label( _( "Themes" ) );
+    var list      = new ListStore( 1, typeof(string), typeof(Image) );
 
+    /* Create the tree view */
+    var list_view = new TreeView.with_model( list );
+    list.insert_column_with_attributes( -1, null, new CellRendererPixbuf(), "markup", 0 );
+    list.headers_visible = false;
+    list.activate_on_single_click = true;
+    list.row_activated.connect( on_theme_clicked );
+
+    pack_start( lbl,       false, true );
+    pack_start( list_view, true,  true );
+
+  }
+
+  /* Called whenever a theme is selected in the treeview */
+  private void on_theme_clicked( TreePath path, TreeViewColumn col ) {
+    TreeIter it;
+    Node?    node = null;
+    _search_items.get_iter( out it, path );
+    _search_items.get( it, 1, &node, -1 );
+    if( node != null ) {
+      _canvas.set_current_node( node );
+    }
+    stdout.printf( "Theme clicked!\n" );
   }
 
 }

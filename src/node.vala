@@ -859,6 +859,7 @@ public class Node : Object {
     end_x   = end_x   / Pango.SCALE;
 
     /* Add attributes to set the text selection appropriately */
+/*
     var attrs = new Pango.AttrList();
     var color = theme.textsel_foreground;
     var attr  = Pango.attr_foreground_new( (uint16)color.red, (uint16)color.green, (uint16)color.blue );
@@ -866,6 +867,7 @@ public class Node : Object {
     attr.end_index   = selend;
     attrs.insert( (owned)attr );
     _layout.set_attributes( attrs );
+*/
 
     /* If the start and end lines are the same, create a selection box */
     if( start_line == end_line ) {

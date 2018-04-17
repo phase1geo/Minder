@@ -29,8 +29,8 @@ public class ThemeDefault : Theme {
     name = "Default";
 
     /* Generate the non-link colors */
-    background         = get_color( "Grey" );
-    foreground         = get_color( "#d4d4d4" );
+    background         = get_color( "#ffffff" );
+    foreground         = get_color( "Black" );
     root_background    = get_color( "#d4d4d4" );
     root_foreground    = get_color( "Black" );
     nodesel_background = get_color( "#64baff" );
