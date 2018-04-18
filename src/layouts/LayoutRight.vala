@@ -25,6 +25,15 @@ public class LayoutRight : Layout {
   public LayoutRight() {
     name = _( "To right" );
     icon = "minder-layout-right-symbolic";
+    balanceable = false;
   }
+
+  /* The side should always be set to the right */
+  public override void set_side( Node current ) {
+    current.side = NodeSide.RIGHT;
+  }
+
+  /* We don't support node balancing */
+  public override void balance( Node n ) {}
 
 }

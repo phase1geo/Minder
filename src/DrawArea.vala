@@ -487,7 +487,6 @@ public class DrawArea : Gtk.DrawingArea {
           } else {
             _current_node.selstart = cursor;
           }
-          stdout.printf( "cursor: %d, selstart: %d, selend: %d\n", cursor, _current_node.selstart, _current_node.selend );
         }
         queue_draw();
       } else {

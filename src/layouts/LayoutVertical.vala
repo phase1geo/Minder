@@ -25,6 +25,7 @@ public class LayoutVertical : Layout {
   public LayoutVertical() {
     name = _( "Vertical" );
     icon = "minder-layout-vertical-symbolic";
+    balanceable = true;
   }
 
 }

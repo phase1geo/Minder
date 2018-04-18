@@ -26,9 +26,10 @@ using Cairo;
 
 /* Enumeration describing the different modes a node can be in */
 public enum NodeMode {
-  NONE = 0,  // Specifies that this node is not the current node
-  CURRENT,   // Specifies that this node is the current node and is not being edited
-  EDITABLE   // Specifies that this node's text has been and currently is actively being edited
+  NONE = 0,   // Specifies that this node is not the current node
+  CURRENT,    // Specifies that this node is the current node and is not being edited
+  EDITABLE,   // Specifies that this node's text has been and currently is actively being edited
+  ATTACHABLE  // Specifies that this node is the currently attachable node (affects display)
 }
 
 public enum NodeSide {
@@ -481,16 +482,35 @@ public class Node : Object {
   }
 
   /*
+   Helper function for converting an RGBA color value to a stringified color
+   that can be used by a markup parser.
+  */
+  private string color_from_rgba( RGBA rgba ) {
+    return( "#%02x%02x%02x".printf( ((int)(rgba.red * 256) - 1), ((int)(rgba.green * 256) - 1), ((int)(rgba.blue * 256) - 1) ) );
+  }
+
+  /* Generates the marked up name that will be displayed in the node */
+  private string name_markup( Theme? theme ) {
+    if( (selstart != selend) && (theme != null) ) {
+      string fg      = color_from_rgba( theme.textsel_foreground );
+      string bg      = color_from_rgba( theme.textsel_background );
+      string seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + name.slice( selstart, selend ) + "</span>";
+      return( name.splice( selstart, selend, seltext ) );
+    }
+    return( name );
+  }
+
+  /*
    Updates the width and height based on the current name.  Returns true
    if the width or height has changed since the last time these values were
    updated.
   */
-  public void update_size( out double width_diff, out double height_diff ) {
+  public void update_size( Theme? theme, out double width_diff, out double height_diff ) {
     width_diff  = 0;
     height_diff = 0;
-    if( (name != _prevname) && (_layout != null) ) {
+    if( ((name != _prevname) || (selstart != selend)) && (_layout != null) ) {
       int width, height;
-      _layout.set_text( name, -1 );
+      _layout.set_markup( name_markup( theme ), -1 );
       _layout.get_size( out width, out height );
       if( side == NodeSide.LEFT ) {
         posx = (posx + _width) - (width / Pango.SCALE);
@@ -506,7 +526,7 @@ public class Node : Object {
   /* Returns the bounding box for this node */
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
     double width_diff, height_diff;
-    update_size( out width_diff, out height_diff );
+    update_size( null, out width_diff, out height_diff );
     x = posx;
     y = posy;
     w = _width  + (_padx * 2) + ((_task_count > 0) ? (_ipadx + (_task_radius * 2)) : 0);
@@ -911,7 +931,7 @@ public class Node : Object {
     double width_diff, height_diff;
 
     /* Make sure the the size is up-to-date */
-    update_size( out width_diff, out height_diff );
+    update_size( theme, out width_diff, out height_diff );
 
     /* Get the widget of the task icon */
     double twidth = task_width();
@@ -921,11 +941,6 @@ public class Node : Object {
       set_context_color( ctx, theme.nodesel_background );
       ctx.rectangle( ((posx + _padx + twidth) - hmargin), ((posy + _pady) - vmargin), (_width + (hmargin * 2)), (_height + (vmargin * 2)) );
       ctx.fill();
-    }
-
-    /* Draw the selection */
-    if( selstart != selend ) {
-      draw_selection( ctx, theme );
     }
 
     /* Output the text */

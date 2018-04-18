@@ -25,6 +25,10 @@ public class LayoutUp : Layout {
   public LayoutUp() {
     name = _( "Upwards" );
     icon = "minder-layout-up-symbolic";
+    balanceable = false;
   }
+
+  /* We don't support node balancing */
+  public override void balance( Node n ) {}
 
 }

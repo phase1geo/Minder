@@ -26,6 +26,7 @@ public class MapInspector : Box {
   private DrawArea?                   _da        = null;
   private Granite.Widgets.ModeButton? _layouts   = null;
   private Box?                        _theme_box = null;
+  private Button?                     _balance   = null;
 
   public MapInspector( DrawArea da ) {
 
@@ -75,7 +76,9 @@ public class MapInspector : Box {
     var names = new Array<string>();
     _da.layouts.get_names( ref names );
     if( _layouts.selected < names.length ) {
-      _da.set_layout( names.index( _layouts.selected ) );
+      string name = names.index( _layouts.selected );
+      _da.set_layout( name );
+      _balance.set_sensitive( _da.layouts.get_layout( name ).balanceable );
     }
   }
 
@@ -144,12 +147,12 @@ public class MapInspector : Box {
     grid.column_homogeneous = true;
     grid.column_spacing     = 10;
 
-    var balance = new Button.with_label( _( "Balance Nodes" ) );
-    balance.clicked.connect(() => {
+    _balance = new Button.with_label( _( "Balance Nodes" ) );
+    _balance.clicked.connect(() => {
       _da.balance_nodes();
     });
 
-    grid.attach( balance, 0, 0 );
+    grid.attach( _balance, 0, 0 );
 
     pack_start( grid, false, true );
 
@@ -199,6 +202,9 @@ public class MapInspector : Box {
     else if( layout == _( "To right" )   ) { _layouts.selected = 4; }
     else if( layout == _( "Upwards" )    ) { _layouts.selected = 5; }
     else if( layout == _( "Downwards" )  ) { _layouts.selected = 6; }
+
+    /* Set the sensitivity of the Balance Nodes button */
+    _balance.set_sensitive( _da.layouts.get_layout( layout ).balanceable );
 
   }
 

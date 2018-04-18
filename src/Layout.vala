@@ -26,12 +26,13 @@ public class Layout : Object {
   protected double                _rt_gap = 100;  /* Root node gaps */
   protected Pango.FontDescription _font_description = null;
 
-  public string name  { protected set; get; default = ""; }
-  public string icon  { protected set; get; default = ""; }
-  public int    padx  { protected set; get; default = 10; }
-  public int    pady  { protected set; get; default = 5; }
-  public int    ipadx { protected set; get; default = 6; }
-  public int    ipady { protected set; get; default = 3; }
+  public string name        { protected set; get; default = ""; }
+  public string icon        { protected set; get; default = ""; }
+  public bool   balanceable { protected set; get; default = false; }
+  public int    padx        { protected set; get; default = 10; }
+  public int    pady        { protected set; get; default = 5; }
+  public int    ipadx       { protected set; get; default = 6; }
+  public int    ipady       { protected set; get; default = 3; }
   public int    default_text_height { set; get; default = 0; }
 
   /* Default constructor */
@@ -128,7 +129,7 @@ public class Layout : Object {
   /* Updates the layout when necessary when a node is edited */
   public virtual void handle_update_by_edit( Node n ) {
     double width_diff, height_diff;
-    n.update_size( out width_diff, out height_diff );
+    n.update_size( null, out width_diff, out height_diff );
     if( (n.parent != null) && (height_diff != 0) ) {
       n.set_posy_only( 0 - (height_diff / 2) );
       adjust_tree_all( n, (0 - (height_diff / 2)) );
@@ -214,6 +215,10 @@ public class Layout : Object {
     bbox( last, -1, -1, out x, out y, out w, out h );
     n.posx = last.posx;
     n.posy = y + h + _rt_gap;
+  }
+
+  public virtual void balance( Node n ) {
+    /* TBD */
   }
 
   /* Returns the font description associated with the layout */

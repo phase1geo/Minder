@@ -25,6 +25,7 @@ public class LayoutHorizontal : Layout {
   public LayoutHorizontal() {
     name = _( "Horizontal" );
     icon = "minder-layout-horizontal-symbolic";
+    balanceable = true;
   }
 
 }

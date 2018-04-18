@@ -25,6 +25,15 @@ public class LayoutDown : Layout {
   public LayoutDown() {
     name = _( "Downwards" );
     icon = "minder-layout-down-symbolic";
+    balanceable = false;
   }
+
+  /* The side should always be set to bottom */
+  public override void set_side( Node current ) {
+    current.side = NodeSide.BOTTOM;
+  }
+
+  /* We don't support node balancing */
+  public override void balance( Node n ) {}
 
 }

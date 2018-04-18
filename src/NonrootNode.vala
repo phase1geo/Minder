@@ -139,10 +139,10 @@ public class NonrootNode : Node {
         ctx.line_to( posx, (posy + _height + (_pady * 2)) );
         break;
       case NodeSide.TOP :
-        ctx.line_to( (posx + (_width / 2) + (task_width() / 2) + _padx), posy );
+        ctx.line_to( (posx + (_width / 2) + (task_width() / 2) + _padx), (posy + _height + (_pady * 2)) );
         break;
       case NodeSide.BOTTOM :
-        ctx.line_to( (posx + (_width / 2) + (task_width() / 2) + _padx), (posy + _height + (_pady * 2)) );
+        ctx.line_to( (posx + (_width / 2) + (task_width() / 2) + _padx), posy );
         break;
     }
     ctx.stroke();

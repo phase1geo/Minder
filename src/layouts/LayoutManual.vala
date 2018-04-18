@@ -25,6 +25,10 @@ public class LayoutManual : Layout {
   public LayoutManual() {
     name = _( "Manual" );
     icon = "minder-layout-manual-symbolic";
+    balanceable = false;
   }
+
+  /* We don't support node balancing */
+  public override void balance( Node n ) {}
 
 }

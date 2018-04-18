@@ -25,6 +25,15 @@ public class LayoutLeft : Layout {
   public LayoutLeft() {
     name = _( "To left" );
     icon = "minder-layout-left-symbolic";
+    balanceable = false;
   }
+
+  /* The side should always be set to the left */
+  public override void set_side( Node current ) {
+    current.side = NodeSide.LEFT;
+  }
+
+  /* We don't support node balancing */
+  public override void balance( Node n ) {}
 
 }
