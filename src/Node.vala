@@ -86,13 +86,16 @@ public class Node : Object {
   protected double       _alpha       = 0.3;
   private   int          _cursor      = 0;   /* Location of the cursor when editing */
   protected Array<Node>  _children;
-  private   string       _prevname    = "~";
+  private   NodeMode     _mode        = NodeMode.NONE;
   private   int          _task_count  = 0;
   private   int          _task_done   = 0;
   private   Pango.Layout?          _layout           = null;
   private   Pango.FontDescription? _font_description = null;
   private   double                 _posx = 0;
   private   double                 _posy = 0;
+  private   int                    _selstart  = 0;
+  private   int                    _selend    = 0;
+  private   int                    _selanchor = 0;
 
   /* Properties */
   public string name { get; set; default = ""; }
@@ -125,12 +128,22 @@ public class Node : Object {
     }
   }
   public string   note     { get; set; default = ""; }
-  public NodeMode mode     { get; set; default = NodeMode.NONE; }
+  public NodeMode mode     {
+    get {
+      return( _mode );
+    }
+    set {
+      _mode      = value;
+      _selstart  = 0;
+      _selend    = (_mode == NodeMode.EDITABLE) ? name.length : 0;
+      _selanchor = 0;
+      _cursor    = _selend;
+    }
+    default = NodeMode.NONE;
+  }
   public Node?    parent   { get; protected set; default = null; }
   public NodeSide side     { get; set; default = NodeSide.RIGHT; }
   public bool     folded   { get; set; default = false; }
-  public int      selstart { get; set; default = 0; }
-  public int      selend   { get; set; default = 0; }
 
   /* Default constructor */
   public Node( Layout? layout ) {
@@ -157,7 +170,6 @@ public class Node : Object {
     _alpha            = n._alpha;
     _cursor           = n._cursor;
     _children         = n._children;
-    _prevname         = n._prevname;
     _task_count       = n._task_count;
     _task_done        = n._task_done;
     _layout           = n._layout;
@@ -491,11 +503,11 @@ public class Node : Object {
 
   /* Generates the marked up name that will be displayed in the node */
   private string name_markup( Theme? theme ) {
-    if( (selstart != selend) && (theme != null) ) {
+    if( (_selstart != _selend) && (theme != null) ) {
       string fg      = color_from_rgba( theme.textsel_foreground );
       string bg      = color_from_rgba( theme.textsel_background );
-      string seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + name.slice( selstart, selend ) + "</span>";
-      return( name.splice( selstart, selend, seltext ) );
+      string seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + name.slice( _selstart, _selend ) + "</span>";
+      return( name.splice( _selstart, _selend, seltext ) );
     }
     return( name );
   }
@@ -508,7 +520,7 @@ public class Node : Object {
   public void update_size( Theme? theme, out double width_diff, out double height_diff ) {
     width_diff  = 0;
     height_diff = 0;
-    if( ((name != _prevname) || (selstart != selend)) && (_layout != null) ) {
+    if( _layout != null ) {
       int width, height;
       _layout.set_markup( name_markup( theme ), -1 );
       _layout.get_size( out width, out height );
@@ -519,7 +531,6 @@ public class Node : Object {
       height_diff = (height / Pango.SCALE) - _height;
       _width      = (width  / Pango.SCALE);
       _height     = (height / Pango.SCALE);
-      _prevname   = name;
     }
   }
 
@@ -599,14 +610,61 @@ public class Node : Object {
   }
 
   /* Sets the cursor from the given mouse coordinates */
-  public int set_cursor_at( double x, double y ) {
+  public void set_cursor_at_char( double x, double y, bool motion ) {
     int cursor, trailing;
     int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
     int adjusted_y = (int)(y - (posy + _pady)) * Pango.SCALE;
     if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
-      _cursor = cursor + trailing;
+      cursor += trailing;
+      if( motion ) {
+        if( cursor > _selanchor ) {
+          _selend = cursor;
+        } else if( cursor < _selanchor ) {
+          _selstart = cursor;
+        } else {
+          _selstart = cursor;
+          _selend   = cursor;
+        }
+      } else {
+        _selstart  = cursor;
+        _selend    = cursor;
+        _selanchor = cursor;
+      }
+      _cursor = _selend;
     }
-    return( _cursor );
+  }
+
+  /* Selects the word at the current x/y position in the text */
+  public void set_cursor_at_word( double x, double y, bool motion ) {
+    int cursor, trailing;
+    int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
+    int adjusted_y = (int)(y - (posy + _pady)) * Pango.SCALE;
+    if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
+      cursor += trailing;
+      int word_start = name.substring( 0, cursor ).last_index_of( " " );
+      int word_end   = name.index_of( " ", cursor );
+      if( word_start == -1 ) {
+        _selstart = 0;
+      } else if( !motion || (word_start < _selanchor) ) {
+        _selstart = word_start + 1;
+      }
+      if( word_end == -1 ) {
+        _selend = name.length;
+      } else if( !motion || (word_end > _selanchor) ) {
+        _selend = word_end;
+      }
+      _cursor = _selend;
+    }
+  }
+
+  /* Selects all of the text and places the cursor at the end of the name string */
+  public void set_cursor_all( bool motion ) {
+    if( !motion ) {
+      _selstart  = 0;
+      _selend    = name.length;
+      _selanchor = name.length;
+      _cursor    = name.length;
+    }
   }
 
   /* Move the cursor in the given direction */
@@ -617,26 +675,28 @@ public class Node : Object {
     } else if( _cursor > name.length ) {
       _cursor = name.length;
     }
-    selend = selstart;
+    _selend = _selstart;
   }
 
   /* Moves the cursor to the beginning of the name */
   public void move_cursor_to_start() {
     _cursor = 0;
+    _selend = _selstart;
   }
 
   /* Moves the cursor to the end of the name */
   public void move_cursor_to_end() {
     _cursor = name.length;
+    _selend = _selstart;
   }
 
   /* Handles a backspace key event */
   public void edit_backspace( Layout layout ) {
     if( _cursor > 0 ) {
-      if( selstart != selend ) {
-        name    = name.splice( selstart, selend );
-        _cursor = selstart;
-        selend  = selstart;
+      if( _selstart != _selend ) {
+        name    = name.splice( _selstart, _selend );
+        _cursor = _selstart;
+        _selend = _selstart;
       } else {
         name = name.splice( (_cursor - 1), _cursor );
         _cursor--;
@@ -648,10 +708,10 @@ public class Node : Object {
   /* Handles a delete key event */
   public void edit_delete( Layout layout ) {
     if( _cursor < name.length ) {
-      if( selstart != selend ) {
-        name    = name.splice( selstart, selend );
-        _cursor = selstart;
-        selend  = selstart;
+      if( _selstart != _selend ) {
+        name    = name.splice( _selstart, _selend );
+        _cursor = _selstart;
+        _selend = _selstart;
       } else {
         name = name.splice( _cursor, (_cursor + 1) );
       }
@@ -661,10 +721,10 @@ public class Node : Object {
 
   /* Inserts the given string at the current cursor position and adjusts cursor */
   public void edit_insert( string s, Layout layout ) {
-    if( selstart != selend ) {
-      name    = name.splice( selstart, selend, s );
-      _cursor = selstart + s.length;
-      selend  = selstart;
+    if( _selstart != _selend ) {
+      name    = name.splice( _selstart, _selend, s );
+      _cursor = _selstart + s.length;
+      _selend = _selstart;
     } else {
       name = name.splice( _cursor, _cursor, s );
       _cursor += s.length;
@@ -859,68 +919,6 @@ public class Node : Object {
         y = posy + _height;
         break;
     }
-  }
-
-  /* Draws the selection box under the selected text */
-  protected virtual void draw_selection( Cairo.Context ctx, Theme theme ) {
-
-    unowned SList<Pango.LayoutLine> lines = _layout.get_lines_readonly();
-    int             start_line, start_x;
-    int             end_line,   end_x;
-    Pango.Rectangle irect, lrect;
-    double          tx = posx + _padx + task_width();
-    double          ty = posy + _pady;
-
-    /* Figure out the starting and ending lines */
-    _layout.index_to_line_x( selstart, false, out start_line, out start_x );
-    _layout.index_to_line_x( selend,   false, out end_line,   out end_x );
-
-    start_x = start_x / Pango.SCALE;
-    end_x   = end_x   / Pango.SCALE;
-
-    /* Add attributes to set the text selection appropriately */
-/*
-    var attrs = new Pango.AttrList();
-    var color = theme.textsel_foreground;
-    var attr  = Pango.attr_foreground_new( (uint16)color.red, (uint16)color.green, (uint16)color.blue );
-    attr.start_index = selstart;
-    attr.end_index   = selend;
-    attrs.insert( (owned)attr );
-    _layout.set_attributes( attrs );
-*/
-
-    /* If the start and end lines are the same, create a selection box */
-    if( start_line == end_line ) {
-
-      lines.nth( start_line ).data.get_pixel_extents( out irect, out lrect );
-      set_context_color( ctx, theme.textsel_background );
-      ctx.rectangle( (tx + start_x), (ty + (lrect.height * start_line)), (end_x - start_x), lrect.height );
-      ctx.fill();
-
-    /* Otherwise, select the first line, the last line and then all lines as a block */
-    } else {
-
-      /* Draw the selection rectangle for the first line */
-      lines.nth( start_line ).data.get_pixel_extents( out irect, out lrect );
-      set_context_color( ctx, theme.textsel_background );
-      ctx.rectangle( (tx + start_x), (ty + (lrect.height * start_line)), (lrect.width - start_x), lrect.height );
-      ctx.fill();
-
-      /* Draw the selection rectangle for the last line */
-      lines.nth( end_line ).data.get_pixel_extents( out irect, out lrect );
-      set_context_color( ctx, theme.textsel_background );
-      ctx.rectangle( (tx + lrect.x), (ty + (lrect.height * end_line)), end_x, lrect.height );
-      ctx.fill();
-
-      /* Draw selection rectangles for all of the lines inbetween */
-      for( int i=(start_line + 1); i<end_line; i++ ) {
-        lines.nth( i ).data.get_pixel_extents( out irect, out lrect );
-        set_context_color( ctx, theme.textsel_background );
-        ctx.rectangle( (tx + lrect.x), (ty + (lrect.height * i)), lrect.width, lrect.height );
-        ctx.fill();
-      }
-    }
-
   }
 
   /* Draws the node font to the screen */

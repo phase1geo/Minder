@@ -28,10 +28,11 @@ public class DrawArea : Gtk.DrawingArea {
 
   private double      _press_x;
   private double      _press_y;
-  private double      _origin_x = 0.0;
-  private double      _origin_y = 0.0;
-  private bool        _pressed  = false;
-  private bool        _motion   = false;
+  private double      _origin_x   = 0.0;
+  private double      _origin_y   = 0.0;
+  private bool        _pressed    = false;
+  private EventType   _press_type = EventType.NOTHING;
+  private bool        _motion     = false;
   private Node        _current_node;
   private Array<Node> _nodes;
   private Theme       _theme;
@@ -330,7 +331,7 @@ public class DrawArea : Gtk.DrawingArea {
    Returns true if we sucessfully set current_node to a valid node and made it
    selected.
   */
-  private bool set_current_node_at_position( double x, double y ) {
+  private bool set_current_node_at_position( double x, double y, EventButton e ) {
     for( int i=0; i<_nodes.length; i++ ) {
       Node match = _nodes.index( i ).contains( x, y );
       if( match != null ) {
@@ -344,8 +345,11 @@ public class DrawArea : Gtk.DrawingArea {
         _orig_side = match.side;
         if( match == _current_node ) {
           if( is_mode_edit() ) {
-            match.selstart = match.set_cursor_at( x, y );
-            match.selend   = match.selstart;
+            switch( e.type ) {
+              case EventType.BUTTON_PRESS :         match.set_cursor_at_char( x, y, false );  break;
+              case EventType.DOUBLE_BUTTON_PRESS :  match.set_cursor_at_word( x, y, false );  break;
+              case EventType.TRIPLE_BUTTON_PRESS :  match.set_cursor_all( false );            break;
+            }
           }
           return( true );
         } else {
@@ -460,10 +464,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* Handle button press event */
   private bool on_press( EventButton event ) {
     if( event.button == 1 ) {
-      _press_x = scale_value( event.x );
-      _press_y = scale_value( event.y );
-      _pressed = set_current_node_at_position( _press_x, _press_y );
-      _motion  = false;
+      _press_x    = scale_value( event.x );
+      _press_y    = scale_value( event.y );
+      _pressed    = set_current_node_at_position( _press_x, _press_y, event );
+      _press_type = event.type;
+      _motion     = false;
       grab_focus();
       queue_draw();
     }
@@ -481,11 +486,9 @@ public class DrawArea : Gtk.DrawingArea {
           _current_node.posy += diffy;
           _layout.set_side( _current_node );
         } else {
-          int cursor = _current_node.set_cursor_at( event.x, event.y );
-          if( _current_node.selstart <= cursor ) {
-            _current_node.selend = cursor;
-          } else {
-            _current_node.selstart = cursor;
+          switch( _press_type ) {
+            case EventType.BUTTON_PRESS        :  _current_node.set_cursor_at_char( event.x, event.y, true );  break;
+            case EventType.DOUBLE_BUTTON_PRESS :  _current_node.set_cursor_at_word( event.x, event.y, true );  break;
           }
         }
         queue_draw();
@@ -518,8 +521,7 @@ public class DrawArea : Gtk.DrawingArea {
           queue_draw();
           changed();
         } else if( !_motion ) {
-          _current_node.selstart = 0;
-          _current_node.selend   = _current_node.name.length;
+          _current_node.set_cursor_all( false );
           _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
