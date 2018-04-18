@@ -23,7 +23,7 @@ using Gtk;
 using Gdk;
 using Granite.Widgets;
 
-public class NodeInspector : Box {
+public class NodeInspector : Stack {
 
   private Entry?      _name       = null;
   private ModeButton? _task       = null;
@@ -35,15 +35,28 @@ public class NodeInspector : Box {
 
   public NodeInspector( DrawArea da ) {
 
-    Object( orientation: Orientation.VERTICAL, spacing: 10 );
-
     _da = da;
 
-    create_name();
-    create_task();
-    create_fold();
-    create_note();
-    create_buttons();
+    /* Set the transition duration information */
+    transition_duration = 500;
+    transition_type     = StackTransitionType.OVER_DOWN_UP;
+
+    var empty_box = new Box( Orientation.VERTICAL, 10 );
+    var empty_lbl = new Label( _( "<big>Select a node to view/edit information</big>" ) );
+    var node_box  = new Box( Orientation.VERTICAL, 10 );
+
+    empty_lbl.use_markup = true;
+    empty_box.pack_start( empty_lbl, true, true );
+
+    add_named( node_box,  "node" );
+    add_named( empty_box, "empty" );
+
+    /* Create the node widgets */
+    create_name( node_box );
+    create_task( node_box );
+    create_fold( node_box );
+    create_note( node_box );
+    create_buttons( node_box );
 
     _da.node_changed.connect( node_changed );
 
@@ -52,7 +65,7 @@ public class NodeInspector : Box {
   }
 
   /* Creates the name entry */
-  private void create_name() {
+  private void create_name( Box bbox ) {
 
     Box   box = new Box( Orientation.VERTICAL, 2 );
     Label lbl = new Label( _( "Name" ) );
@@ -65,12 +78,12 @@ public class NodeInspector : Box {
     box.pack_start( lbl,   true, false );
     box.pack_start( _name, true, false );
 
-    pack_start( box, false, true );
+    bbox.pack_start( box, false, true );
 
   }
 
   /* Creates the task UI elements */
-  private void create_task() {
+  private void create_task( Box bbox ) {
 
     var grid = new Grid();
     var lbl  = new Label( _( "Task" ) );
@@ -89,12 +102,12 @@ public class NodeInspector : Box {
     grid.attach( lbl,   0, 0, 1, 1 );
     grid.attach( _task, 1, 0, 1, 1 );
 
-    pack_start( grid, false, true );
+    bbox.pack_start( grid, false, true );
 
   }
 
   /* Creates the fold UI elements */
-  private void create_fold() {
+  private void create_fold( Box bbox ) {
 
     var grid = new Grid();
     var lbl  = new Label( _( "Fold" ) );
@@ -108,12 +121,12 @@ public class NodeInspector : Box {
     grid.attach( lbl,   0, 0, 1, 1 );
     grid.attach( _fold, 1, 0, 1, 1 );
 
-    pack_start( grid, false, true );
+    bbox.pack_start( grid, false, true );
 
   }
 
   /* Creates the note widget */
-  private void create_note() {
+  private void create_note( Box bbox ) {
 
     Box   box = new Box( Orientation.VERTICAL, 0 );
     Label lbl = new Label( _( "Note" ) );
@@ -135,12 +148,12 @@ public class NodeInspector : Box {
     box.pack_start( lbl, true, false );
     box.pack_start( sw,  true, true );
 
-    pack_start( box, true, true );
+    bbox.pack_start( box, true, true );
 
   }
 
   /* Creates the node editing button grid and adds it to the popover */
-  private void create_buttons() {
+  private void create_buttons( Box bbox ) {
 
     var grid = new Grid();
     grid.column_homogeneous = true;
@@ -161,7 +174,7 @@ public class NodeInspector : Box {
     grid.attach( del_btn,     1, 0, 1, 1 );
 
     /* Add the button grid to the popover */
-    pack_start( grid, false, true );
+    bbox.pack_start( grid, false, true );
 
   }
 
@@ -286,11 +299,13 @@ public class NodeInspector : Box {
       }
       _detach_btn.set_sensitive( current.parent != null );
       _note.buffer.text = current.note;
+      set_visible_child_name( "node" );
     } else {
       _name.set_text( "" );
       _task.selected = 0;
       _fold.set_active( false );
       _note.buffer.text = "";
+      set_visible_child_name( "empty" );
     }
 
   }

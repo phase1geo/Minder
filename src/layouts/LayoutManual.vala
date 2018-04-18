@@ -24,6 +24,7 @@ public class LayoutManual : Layout {
   /* Default constructor */
   public LayoutManual() {
     name = _( "Manual" );
+    icon = "minder-layout-manual-symbolic";
   }
 
 }

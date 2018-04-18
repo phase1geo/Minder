@@ -24,6 +24,7 @@ public class LayoutVertical : Layout {
   /* Default constructor */
   public LayoutVertical() {
     name = _( "Vertical" );
+    icon = "minder-layout-vertical-symbolic";
   }
 
 }

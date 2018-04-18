@@ -335,6 +335,33 @@ src/LayoutInspector.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/LayoutInspector.c.s
 .PHONY : src/LayoutInspector.c.s
 
+src/Layouts.o: src/Layouts.c.o
+
+.PHONY : src/Layouts.o
+
+# target to build an object file
+src/Layouts.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Layouts.c.o
+.PHONY : src/Layouts.c.o
+
+src/Layouts.i: src/Layouts.c.i
+
+.PHONY : src/Layouts.i
+
+# target to preprocess a source file
+src/Layouts.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Layouts.c.i
+.PHONY : src/Layouts.c.i
+
+src/Layouts.s: src/Layouts.c.s
+
+.PHONY : src/Layouts.s
+
+# target to generate assembly for a file
+src/Layouts.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Layouts.c.s
+.PHONY : src/Layouts.c.s
+
 src/MainWindow.o: src/MainWindow.c.o
 
 .PHONY : src/MainWindow.o
@@ -1148,6 +1175,9 @@ help:
 	@echo "... src/LayoutInspector.o"
 	@echo "... src/LayoutInspector.i"
 	@echo "... src/LayoutInspector.s"
+	@echo "... src/Layouts.o"
+	@echo "... src/Layouts.i"
+	@echo "... src/Layouts.s"
 	@echo "... src/MainWindow.o"
 	@echo "... src/MainWindow.i"
 	@echo "... src/MainWindow.s"

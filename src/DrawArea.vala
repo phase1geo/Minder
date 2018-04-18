@@ -42,20 +42,22 @@ public class DrawArea : Gtk.DrawingArea {
 
   public UndoBuffer undo_buffer { set; get; default = new UndoBuffer(); }
   public Themes     themes      { set; get; default = new Themes(); }
+  public Layouts    layouts     { set; get; default = new Layouts(); }
 
   public signal void changed();
   public signal void node_changed();
   public signal void show_node_properties();
+  public signal void loaded();
 
   /* Default constructor */
   public DrawArea() {
 
-    _theme  = themes.get_theme( "Default" );
-    _nodes  = new Array<Node>();
+    /* Create the array of root nodes in the map */
+    _nodes = new Array<Node>();
 
     /* Set the theme to the default theme */
     set_theme( "Default" );
-    set_layout( new LayoutHorizontal() );
+    set_layout( _( "Horizontal" ) );
 
     /* Add event listeners */
     this.draw.connect( on_draw );
@@ -78,9 +80,14 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Returns the name of the currently selected theme */
+  public string get_theme_name() {
+    return( _theme.name );
+  }
+
   /* Sets the theme to the given value */
-  public void set_theme( string theme_name ) {
-    _theme = themes.get_theme( theme_name );
+  public void set_theme( string name ) {
+    _theme = themes.get_theme( name );
     StyleContext.add_provider_for_screen(
       Screen.get_default(),
       _theme.get_css_provider(),
@@ -89,10 +96,15 @@ public class DrawArea : Gtk.DrawingArea {
     queue_draw();
   }
 
+  /* Returns the name of the currently selected theme */
+  public string get_layout_name() {
+    return( _layout.name );
+  }
+
   /* Sets the layout to the given value */
-  public void set_layout( Layout? layout ) {
-    _layout = layout;
-    /* TBD */
+  public void set_layout( string name ) {
+    _layout = layouts.get_layout( name );
+    /* TBD - We need to adjust all of the nodes using the given layout */
     queue_draw();
   }
 
@@ -120,7 +132,12 @@ public class DrawArea : Gtk.DrawingArea {
   private void load_theme( Xml.Node* n ) {
     string? name = n->get_prop( "name" );
     if( name != null ) {
-      _theme = _themes.get_theme( name );
+      _theme = themes.get_theme( name );
+      StyleContext.add_provider_for_screen(
+        Screen.get_default(),
+        _theme.get_css_provider(),
+        STYLE_PROVIDER_PRIORITY_APPLICATION
+      );
     }
   }
 
@@ -128,9 +145,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void load_layout( Xml.Node* n ) {
     string? name = n->get_prop( "name" );
     if( name != null ) {
-      switch( name ) {
-        default :  _layout = new Layout();  break;
-      }
+      _layout = layouts.get_layout( name );
     }
   }
 
@@ -162,6 +177,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     queue_draw();
     queue_draw();
+
+    /* Indicate to anyone listening that we have loaded a new file */
+    loaded();
 
   }
 
@@ -664,6 +682,13 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer.add_item( new UndoNodeDetach( this, _current_node, (int)_nodes.length, parent, side, index, _layout ) );
     queue_draw();
     changed();
+  }
+
+  /* Balances the existing nodes based on the current layout */
+  public void balance_nodes() {
+
+    /* TBD - We will balance the current nodes based on the current layout */
+
   }
 
   /* Called whenever the tab character is entered in the drawing area */

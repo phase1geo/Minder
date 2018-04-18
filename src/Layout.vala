@@ -26,7 +26,8 @@ public class Layout : Object {
   protected double                _rt_gap = 100;  /* Root node gaps */
   protected Pango.FontDescription _font_description = null;
 
-  public string name  { protected set; get; }
+  public string name  { protected set; get; default = ""; }
+  public string icon  { protected set; get; default = ""; }
   public int    padx  { protected set; get; default = 10; }
   public int    pady  { protected set; get; default = 5; }
   public int    ipadx { protected set; get; default = 6; }
@@ -35,7 +36,6 @@ public class Layout : Object {
 
   /* Default constructor */
   public Layout() {
-    name = "Default";
     _font_description = new Pango.FontDescription();
     _font_description.set_family( "Sans" );
     _font_description.set_size( 11 * Pango.SCALE );

@@ -24,6 +24,7 @@ public class LayoutHorizontal : Layout {
   /* Default constructor */
   public LayoutHorizontal() {
     name = _( "Horizontal" );
+    icon = "minder-layout-horizontal-symbolic";
   }
 
 }

@@ -24,6 +24,7 @@ public class LayoutDown : Layout {
   /* Default constructor */
   public LayoutDown() {
     name = _( "Downwards" );
+    icon = "minder-layout-down-symbolic";
   }
 
 }

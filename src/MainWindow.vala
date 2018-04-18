@@ -266,20 +266,21 @@ public class MainWindow : ApplicationWindow {
     header.pack_end( menu_btn );
 
     /* Create the inspector sidebar */
-    var box   = new Box( Orientation.VERTICAL, 0 );
+    var box   = new Box( Orientation.VERTICAL, 20 );
     var sb    = new StackSwitcher();
     var stack = new Stack();
 
     stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
     stack.set_transition_duration( 500 );
-    stack.add_titled( new NodeInspector( _canvas ),  "node", "Node" );
-    stack.add_titled( new MapInspector( _canvas ), "map",  "Map" );
+    stack.add_titled( new NodeInspector( _canvas ), "node", "Node" );
+    stack.add_titled( new MapInspector( _canvas ),  "map",  "Map" );
 
+    sb.homogeneous = true;
     sb.set_stack( stack );
 
     box.margin = 5;
-    box.pack_start( sb,    false, true,  0 );
-    box.pack_start( stack, false, false, 0 );
+    box.pack_start( sb,    false, true, 0 );
+    box.pack_start( stack, true,  true, 0 );
     box.show_all();
 
     _inspector = new Revealer();

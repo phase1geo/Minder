@@ -23,8 +23,9 @@ using Gtk;
 
 public class MapInspector : Box {
 
-  private DrawArea?                   _da      = null;
-  private Granite.Widgets.ModeButton? _layouts = null;
+  private DrawArea?                   _da        = null;
+  private Granite.Widgets.ModeButton? _layouts   = null;
+  private Box?                        _theme_box = null;
 
   public MapInspector( DrawArea da ) {
 
@@ -32,13 +33,79 @@ public class MapInspector : Box {
 
     _da = da;
 
+    /* Create the interface */
+    add_layout_ui();
+    add_theme_ui();
+    add_button_ui();
+
+    /* Make sure that we have some defaults set */
+    update_theme_layout();
+
+    /* Whenever a new document is loaded, update the theme and layout within this UI */
+    _da.loaded.connect( update_theme_layout );
+
+  }
+
+  /* Adds the layout UI (TBD - Let's do this programmatically with the DrawArea's layouts list) */
+  private void add_layout_ui() {
+
+    var icons = new Array<string>();
+    _da.layouts.get_icons( ref icons );
+
+    /* Create the modebutton to select the current layout */
+    var lbl = new Label( _( "Node Layouts" ) );
+    lbl.xalign = (float)0;
+
+    /* Create the layouts mode button */
+    _layouts = new Granite.Widgets.ModeButton();
+    _layouts.has_tooltip = true;
+    for( int i=0; i<icons.length; i++ ) {
+      _layouts.append_icon( icons.index( i ), IconSize.SMALL_TOOLBAR );
+    }
+    _layouts.mode_changed.connect( layout_changed );
+    _layouts.query_tooltip.connect( layout_show_tooltip );
+
+    pack_start( lbl,      false, true );
+    pack_start( _layouts, false, true );
+
+  }
+
+  /* Called whenever the user changes the current layout */
+  private void layout_changed() {
+    var names = new Array<string>();
+    _da.layouts.get_names( ref names );
+    if( _layouts.selected < names.length ) {
+      _da.set_layout( names.index( _layouts.selected ) );
+    }
+  }
+
+  /* Called whenever the tooltip needs to be displayed for the layout selector */
+  private bool layout_show_tooltip( int x, int y, bool keyboard, Tooltip tooltip ) {
+    if( keyboard ) {
+      return( false );
+    }
+    var names = new Array<string>();
+    _da.layouts.get_names( ref names );
+    int button_width = (int)(_layouts.get_allocated_width() / names.length);
+    if( (x / button_width) < names.length ) {
+      tooltip.set_text( names.index( x / button_width ) );
+      return( true );
+    }
+    return( false );
+  }
+
+  /* Adds the themes UI */
+  private void add_theme_ui() {
+
     /* Create the UI */
     var lbl = new Label( _( "Themes" ) );
+    lbl.xalign = (float)0;
+
     var sw  = new ScrolledWindow( null, null );
     var vp  = new Viewport( null, null );
-    var box = new Box( Orientation.VERTICAL, 20 );
+    _theme_box = new Box( Orientation.VERTICAL, 20 );
     vp.set_size_request( 200, 600 );
-    vp.add( box );
+    vp.add( _theme_box );
     sw.add( vp );
 
     /* Get the theme information to display */
@@ -56,71 +123,83 @@ public class MapInspector : Box {
       item.pack_start( icons.index( i ), false, false, 5 );
       item.pack_start( label,            false, true );
       ebox.button_press_event.connect((w, e) => {
-        Gdk.RGBA c = {1.0, 1.0, 1.0, 1.0};
-        c.parse( "Blue" );
-        w.override_background_color( StateFlags.NORMAL, c );
+        select_theme( label.label );
         _da.set_theme( label.label );
         return( false );
       });
       ebox.add( item );
-      box.pack_start( ebox, false, true );
+      _theme_box.pack_start( ebox, false, true );
     }
-
-    /* Create the modebutton to select the current layout */
-    var llbl = new Label( _( "Node Layouts" ) );
-    _layouts = new Granite.Widgets.ModeButton();
-    _layouts.has_tooltip = true;
-    _layouts.append_icon( "minder-layout-manual-symbolic",     IconSize.SMALL_TOOLBAR );
-    _layouts.append_icon( "minder-layout-vertical-symbolic",   IconSize.SMALL_TOOLBAR );
-    _layouts.append_icon( "minder-layout-horizontal-symbolic", IconSize.SMALL_TOOLBAR );
-    _layouts.append_icon( "minder-layout-left-symbolic",       IconSize.SMALL_TOOLBAR );
-    _layouts.append_icon( "minder-layout-right-symbolic",      IconSize.SMALL_TOOLBAR );
-    _layouts.append_icon( "minder-layout-up-symbolic",         IconSize.SMALL_TOOLBAR );
-    _layouts.append_icon( "minder-layout-down-symbolic",       IconSize.SMALL_TOOLBAR );
-    _layouts.mode_changed.connect( layout_changed );
-    _layouts.query_tooltip.connect( layout_show_tooltip );
 
     /* Pack the panel */
-    pack_start( llbl,     false, true );
-    pack_start( _layouts, false, true );
-    pack_start( lbl,      false, true );
-    pack_start( sw,       true,  true );
+    pack_start( lbl, false, true );
+    pack_start( sw,  true,  true );
 
   }
 
-  /* Called whenever the user changes the current layout */
-  private void layout_changed() {
+  /* Adds the bottom button frame */
+  private void add_button_ui() {
 
-    switch( _layouts.selected ) {
-      case 0  :  _da.set_layout( new LayoutManual() );      break;
-      case 1  :  _da.set_layout( new LayoutVertical() );    break;
-      case 2  :  _da.set_layout( new LayoutHorizontal() );  break;
-      case 3  :  _da.set_layout( new LayoutLeft() );        break;
-      case 4  :  _da.set_layout( new LayoutRight() );       break;
-      case 5  :  _da.set_layout( new LayoutUp() );          break;
-      case 6  :  _da.set_layout( new LayoutDown() );        break;
-      default :  _da.set_layout( new LayoutHorizontal() );  break;
-    }
+    var grid = new Grid();
+    grid.column_homogeneous = true;
+    grid.column_spacing     = 10;
+
+    var balance = new Button.with_label( _( "Balance Nodes" ) );
+    balance.clicked.connect(() => {
+      _da.balance_nodes();
+    });
+
+    grid.attach( balance, 0, 0 );
+
+    pack_start( grid, false, true );
 
   }
 
-  /* Called whenever the tooltip needs to be displayed for the layout selector */
-  private bool layout_show_tooltip( int x, int y, bool keyboard, Tooltip tooltip ) {
-    if( keyboard ) {
-      return( false );
+  /* Makes sure that only the given theme is selected in the UI */
+  private void select_theme( string name ) {
+
+    /* Deselect all themes */
+    _theme_box.get_children().foreach((entry) => {
+      entry.override_background_color( StateFlags.NORMAL, null );
+    });
+
+    /* Create the selection color */
+    Gdk.RGBA c = {1.0, 1.0, 1.0, 1.0};
+    c.parse( "Blue" );
+
+    /* Select the specified theme */
+    int index;
+    var names = new Array<string>();
+    _da.themes.names( ref names );
+    for( index=0; index<names.length; index++ ) {
+      if( names.index( index ) == name ) {
+        break;
+      }
     }
-    int button_width = _layouts.get_allocated_width() / 7;
-    switch( x / button_width ) {
-      case 0  :  tooltip.set_text( _( "Manual" ) );      break;
-      case 1  :  tooltip.set_text( _( "Vertical" ) );    break;
-      case 2  :  tooltip.set_text( _( "Horizontal" ) );  break;
-      case 3  :  tooltip.set_text( _( "To left" ) );     break;
-      case 4  :  tooltip.set_text( _( "To right" ) );    break;
-      case 5  :  tooltip.set_text( _( "Upwards" ) );     break;
-      case 6  :  tooltip.set_text( _( "Downwards" ) );   break;
-      default :  return( false );
-    }
-    return( true );
+    _theme_box.get_children().foreach((entry) => {
+      if( index == 0 ) {
+        entry.override_background_color( StateFlags.NORMAL, c );
+      }
+      index--;
+    });
+
+  }
+
+  private void update_theme_layout() {
+
+    /* Make sure the current theme is selected */
+    select_theme( _da.get_theme_name() );
+
+    /* Update the current layout in the UI */
+    var layout = _da.get_layout_name();
+    if( layout == _( "Manual" ) ) { _layouts.selected = 0; }
+    else if( layout == _( "Vertical" )   ) { _layouts.selected = 1; }
+    else if( layout == _( "Horizontal" ) ) { _layouts.selected = 2; }
+    else if( layout == _( "To left" )    ) { _layouts.selected = 3; }
+    else if( layout == _( "To right" )   ) { _layouts.selected = 4; }
+    else if( layout == _( "Upwards" )    ) { _layouts.selected = 5; }
+    else if( layout == _( "Downwards" )  ) { _layouts.selected = 6; }
+
   }
 
 }

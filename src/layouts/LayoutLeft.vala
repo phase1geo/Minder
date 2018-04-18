@@ -24,6 +24,7 @@ public class LayoutLeft : Layout {
   /* Default constructor */
   public LayoutLeft() {
     name = _( "To left" );
+    icon = "minder-layout-left-symbolic";
   }
 
 }

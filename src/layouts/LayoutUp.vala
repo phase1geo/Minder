@@ -24,6 +24,7 @@ public class LayoutUp : Layout {
   /* Default constructor */
   public LayoutUp() {
     name = _( "Upwards" );
+    icon = "minder-layout-up-symbolic";
   }
 
 }
