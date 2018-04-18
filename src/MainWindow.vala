@@ -272,9 +272,8 @@ public class MainWindow : ApplicationWindow {
 
     stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
     stack.set_transition_duration( 500 );
-    stack.add_titled( new NodeInspector( _canvas ),   "node", "Node" );
-    stack.add_titled( new ThemeInspector( _canvas ),  "theme", "Theme" );
-    stack.add_titled( new LayoutInspector( _canvas ), "layout", "Layout" );
+    stack.add_titled( new NodeInspector( _canvas ),  "node", "Node" );
+    stack.add_titled( new MapInspector( _canvas ), "map",  "Map" );
 
     sb.set_stack( stack );
 

@@ -41,33 +41,40 @@ ensure_vala_version("0.16" MINIMUM)
 # files we want to compile
 include(ValaPrecompile)
 vala_precompile(VALA_C ${EXEC_NAME}
-    src/minder.vala
-    src/document.vala
-    src/draw_area.vala
-    src/layout.vala
-    src/layout_inspector.vala
-    src/main_window.vala
-    src/node.vala
-    src/node_inspector.vala
-    src/nonroot_node.vala
-    src/opml.vala
-    src/root_node.vala
-    src/theme.vala
-    src/theme_inspector.vala
-    src/themes.vala
-    src/themes/theme_default.vala
-    src/themes/theme_dark.vala
-    src/undo_buffer.vala
-    src/undo_item.vala
-    src/undo_node_attach.vala
-    src/undo_node_delete.vala
-    src/undo_node_detach.vala
-    src/undo_node_fold.vala
-    src/undo_node_insert.vala
-    src/undo_node_move.vala
-    src/undo_node_name.vala
-    src/undo_node_note.vala
-    src/undo_node_task.vala
+    src/Application.vala
+    src/Document.vala
+    src/DrawArea.vala
+    src/Layout.vala
+    src/LayoutInspector.vala
+    src/layouts/LayoutDown.vala
+    src/layouts/LayoutHorizontal.vala
+    src/layouts/LayoutLeft.vala
+    src/layouts/LayoutManual.vala
+    src/layouts/LayoutRight.vala
+    src/layouts/LayoutUp.vala
+    src/layouts/LayoutVertical.vala
+    src/MainWindow.vala
+    src/MapInspector.vala
+    src/Node.vala
+    src/NodeInspector.vala
+    src/NonrootNode.vala
+    src/OPML.vala
+    src/RootNode.vala
+    src/Theme.vala
+    src/Themes.vala
+    src/themes/ThemeDefault.vala
+    src/themes/ThemeDark.vala
+    src/UndoBuffer.vala
+    src/UndoItem.vala
+    src/undo_actions/UndoNodeAttach.vala
+    src/undo_actions/UndoNodeDelete.vala
+    src/undo_actions/UndoNodeDetach.vala
+    src/undo_actions/UndoNodeFold.vala
+    src/undo_actions/UndoNodeInsert.vala
+    src/undo_actions/UndoNodeMove.vala
+    src/undo_actions/UndoNodeName.vala
+    src/undo_actions/UndoNodeNote.vala
+    src/undo_actions/UndoNodeTask.vala
 PACKAGES
     gtk+-3.0
     gee-0.8
@@ -94,6 +101,13 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-none-symbol
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-todo-symbolic.svg         DESTINATION ${DATADIR}/icons/elementary/apps/16/)
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-done-symbolic.svg         DESTINATION ${DATADIR}/icons/elementary/apps/16/)
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-detach-symbolic.svg            DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-manual-symbolic.svg     DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-vertical-symbolic.svg   DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-horizontal-symbolic.svg DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-left-symbolic.svg       DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-right-symbolic.svg      DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-up-symbolic.svg         DESTINATION ${DATADIR}/icons/elementary/apps/16/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-down-symbolic.svg       DESTINATION ${DATADIR}/icons/elementary/apps/16/)
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/24x24/apps/)
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/32x32/apps/)

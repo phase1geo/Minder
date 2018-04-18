@@ -5,6 +5,13 @@
 /usr/local/share/icons/elementary/apps/16/minder-task-todo-symbolic.svg
 /usr/local/share/icons/elementary/apps/16/minder-task-done-symbolic.svg
 /usr/local/share/icons/elementary/apps/16/minder-detach-symbolic.svg
+/usr/local/share/icons/elementary/apps/16/minder-layout-manual-symbolic.svg
+/usr/local/share/icons/elementary/apps/16/minder-layout-vertical-symbolic.svg
+/usr/local/share/icons/elementary/apps/16/minder-layout-horizontal-symbolic.svg
+/usr/local/share/icons/elementary/apps/16/minder-layout-left-symbolic.svg
+/usr/local/share/icons/elementary/apps/16/minder-layout-right-symbolic.svg
+/usr/local/share/icons/elementary/apps/16/minder-layout-up-symbolic.svg
+/usr/local/share/icons/elementary/apps/16/minder-layout-down-symbolic.svg
 /usr/local/share/icons/hicolor/16x16/apps/com.github.phase1geo.Minder.svg
 /usr/local/share/icons/hicolor/24x24/apps/com.github.phase1geo.Minder.svg
 /usr/local/share/icons/hicolor/32x32/apps/com.github.phase1geo.Minder.svg

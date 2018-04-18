@@ -3,5 +3,7 @@ CMakeFiles/
 src/*.o
 src/*.c
 src/themes/*.c
+src/layouts/*.c
+src/undo_actions/*.c
 *.stamp
 com.github.phase1geo.Minder

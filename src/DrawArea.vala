@@ -51,11 +51,11 @@ public class DrawArea : Gtk.DrawingArea {
   public DrawArea() {
 
     _theme  = themes.get_theme( "Default" );
-    _layout = new Layout();
     _nodes  = new Array<Node>();
 
     /* Set the theme to the default theme */
     set_theme( "Default" );
+    set_layout( new LayoutHorizontal() );
 
     /* Add event listeners */
     this.draw.connect( on_draw );
@@ -86,6 +86,13 @@ public class DrawArea : Gtk.DrawingArea {
       _theme.get_css_provider(),
       STYLE_PROVIDER_PRIORITY_APPLICATION
     );
+    queue_draw();
+  }
+
+  /* Sets the layout to the given value */
+  public void set_layout( Layout? layout ) {
+    _layout = layout;
+    /* TBD */
     queue_draw();
   }
 

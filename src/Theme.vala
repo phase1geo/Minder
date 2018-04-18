@@ -84,6 +84,10 @@ public class Theme : Object {
     Cairo.ImageSurface surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 200, 100 );
     Cairo.Context      ctx     = new Cairo.Context( surface );
 
+    var font_desc = new Pango.FontDescription();
+    font_desc.set_family( "Sans" );
+    font_desc.set_size( 10 * Pango.SCALE );
+
     /* Draw the background */
     set_context_color( ctx, background );
     ctx.rectangle( 0, 0, 200, 100 );
@@ -177,11 +181,13 @@ public class Theme : Object {
 
     /* Create text */
     var root_text = Pango.cairo_create_layout( ctx );
+    root_text.set_font_description( font_desc );
     root_text.set_width( 70 * Pango.SCALE );
     root_text.set_wrap( Pango.WrapMode.WORD_CHAR );
     root_text.set_text( name, -1 );
 
     var node_text = Pango.cairo_create_layout( ctx );
+    node_text.set_font_description( font_desc );
     node_text.set_width( 40 * Pango.SCALE );
     node_text.set_wrap( Pango.WrapMode.WORD_CHAR );
     node_text.set_text( "Node", -1 );
