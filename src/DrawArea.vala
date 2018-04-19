@@ -395,9 +395,9 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns the scaling factor based on the given width and height */
   private double get_scaling_factor( double width, double height ) {
-    double w = get_allocated_width() / width;
-    double h = get_allocated_height() / height;
-    return( (w < h) ? w : h );
+    double w = width  / get_allocated_width();
+    double h = height / get_allocated_height();
+    return( (w > h) ? w : h );
   }
 
   /*

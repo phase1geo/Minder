@@ -152,11 +152,11 @@ public class MainWindow : ApplicationWindow {
     _zoom_scale.format_value.connect( set_zoom_value );
 
     _zoom_in = new ModelButton();
-    _zoom_in.text = _( "Zoom in" );
+    _zoom_in.text = _( "Zoom In" );
     _zoom_in.action_name = "win.action_zoom_in";
 
     _zoom_out = new ModelButton();
-    _zoom_out.text = _( "Zoom out" );
+    _zoom_out.text = _( "Zoom Out" );
     _zoom_out.action_name = "win.action_zoom_out";
 
     var fit = new ModelButton();
