@@ -430,6 +430,24 @@ public class DrawArea : Gtk.DrawingArea {
     return( get_scaling_factor( (x2 - x1), (y2 - y1) ) );
   }
 
+  /* Centers the given node within the canvas by adjusting the origin */
+  public void center_node( Node n ) {
+
+    double x, y, w, h;
+    n.bbox( out x, out y, out w, out h );
+
+    stdout.printf( "x: %g, y: %g, w: %g, h: %g, origin_x: %g, origin_y: %g, midx: %g, midy: %g\n", x, y, w, h, _origin_x, _origin_y,
+                   (get_allocated_width() / 2), (get_allocated_height() / 2) );
+
+    double ccx = scale_value( get_allocated_width()  / 2 );
+    double ccy = scale_value( get_allocated_height() / 2 );
+    double ncx = scale_value( x + (w / 2) );
+    double ncy = scale_value( y + (h / 2) );
+
+    move_origin( ((ncx - ccx) - _origin_x), ((ncy - ccy) - _origin_y) );
+
+  }
+
   /* Returns the attachable node if one is found */
   private Node? attachable_node( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
@@ -928,6 +946,9 @@ public class DrawArea : Gtk.DrawingArea {
           case "c" :  // Select the first child node
             handle_right();
             break;
+          case "C" :  // Center the selected node
+            center_node( _current_node );
+            break;
           case "i" :  // Display the node properties panel
             show_node_properties();
             return;
@@ -940,6 +961,12 @@ public class DrawArea : Gtk.DrawingArea {
             if( undo_buffer.redoable() ) {
               undo_buffer.redo();
             }
+            break;
+          case "z" :  // Zoom out
+            /* TBD */
+            break;
+          case "Z" :  // Zoom in
+            /* TBD */
             break;
           default :
             // This is a key that doesn't have any associated functionality
@@ -993,6 +1020,12 @@ public class DrawArea : Gtk.DrawingArea {
           if( undo_buffer.redoable() ) {
             undo_buffer.redo();
           }
+          break;
+        case "z" :  // Zoom out
+          /* TBD */
+          break;
+        case "Z" :  // Zoom in
+          /* TBD */
           break;
         default :
           // No need to do anything here
