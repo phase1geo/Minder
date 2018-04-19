@@ -383,6 +383,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* Sets the scaling factor for the drawing area and forces a redraw */
   public void set_scaling_factor( double scale_factor ) {
     if( _scale_factor != scale_factor ) {
+      int    width  = get_allocated_width()  / 2;
+      int    height = get_allocated_height() / 2;
+      double diff_x = (width  / _scale_factor) - (width  / scale_factor);
+      double diff_y = (height / _scale_factor) - (height / scale_factor);
+      move_origin( diff_x, diff_y );
       _scale_factor = scale_factor;
       queue_draw();
     }
@@ -497,8 +502,8 @@ public class DrawArea : Gtk.DrawingArea {
           _layout.set_side( _current_node );
         } else {
           switch( _press_type ) {
-            case EventType.BUTTON_PRESS        :  _current_node.set_cursor_at_char( event.x, event.y, true );  break;
-            case EventType.DOUBLE_BUTTON_PRESS :  _current_node.set_cursor_at_word( event.x, event.y, true );  break;
+            case EventType.BUTTON_PRESS        :  _current_node.set_cursor_at_char( scale_value( event.x ), scale_value( event.y ), true );  break;
+            case EventType.DOUBLE_BUTTON_PRESS :  _current_node.set_cursor_at_word( scale_value( event.x ), scale_value( event.y ), true );  break;
           }
         }
         queue_draw();

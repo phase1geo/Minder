@@ -34,11 +34,15 @@ public class MainWindow : ApplicationWindow {
   private ScrolledWindow _search_scroll = null;
   private Popover?       _export        = null;
   private Scale?         _zoom_scale    = null;
+  private ModelButton?   _zoom_in       = null;
+  private ModelButton?   _zoom_out      = null;
   private ModelButton?   _zoom_sel      = null;
   private Button?        _undo_btn      = null;
   private Button?        _redo_btn      = null;
 
   private const GLib.ActionEntry[] action_entries = {
+    { "action_zoom_in",       action_zoom_in },
+    { "action_zoom_out",      action_zoom_out },
     { "action_zoom_fit",      action_zoom_fit },
     { "action_zoom_selected", action_zoom_selected },
     { "action_zoom_actual",   action_zoom_actual },
@@ -138,7 +142,7 @@ public class MainWindow : ApplicationWindow {
 
     var scale_lbl = new Label( _( "Zoom to Percent" ) );
     _zoom_scale = new Scale.with_range( Orientation.HORIZONTAL, 10, 400, 25 );
-    double[] marks = {10, 25, 50, 75, 100, 150, 200, 300, 400};
+    double[] marks = {10, 25, 50, 75, 100, 150, 200, 250, 300, 350, 400};
     foreach (double mark in marks) {
       _zoom_scale.add_mark( mark, PositionType.BOTTOM, "'" );
     }
@@ -146,6 +150,14 @@ public class MainWindow : ApplicationWindow {
     _zoom_scale.set_value( 100 );
     _zoom_scale.value_changed.connect( set_zoom_scale );
     _zoom_scale.format_value.connect( set_zoom_value );
+
+    _zoom_in = new ModelButton();
+    _zoom_in.text = _( "Zoom in" );
+    _zoom_in.action_name = "win.action_zoom_in";
+
+    _zoom_out = new ModelButton();
+    _zoom_out.text = _( "Zoom out" );
+    _zoom_out.action_name = "win.action_zoom_out";
 
     var fit = new ModelButton();
     fit.text = _( "Zoom to Fit" );
@@ -163,6 +175,9 @@ public class MainWindow : ApplicationWindow {
     box.margin = 5;
     box.pack_start( scale_lbl,   false, true );
     box.pack_start( _zoom_scale, false, true );
+    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
+    box.pack_start( _zoom_in,    false, true );
+    box.pack_start( _zoom_out,   false, true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
     box.pack_start( fit,         false, true );
     box.pack_start( _zoom_sel,   false, true );
@@ -408,22 +423,50 @@ public class MainWindow : ApplicationWindow {
     else if( value < 87.5 ) { return( 75 ); }
     else if( value < 125 )  { return( 100 ); }
     else if( value < 175 )  { return( 150 ); }
-    else if( value < 250 )  { return( 200 ); }
-    else if( value < 350 )  { return( 300 ); }
+    else if( value < 225 )  { return( 200 ); }
+    else if( value < 275 )  { return( 250 ); }
+    else if( value < 325 )  { return( 300 ); }
+    else if( value < 375 )  { return( 350 ); }
     return( 400 );
   }
 
   /* Sets the scale factor for the level of zoom to perform */
   private void set_zoom_scale() {
     double value = zoom_to_value( _zoom_scale.get_value() );
-    double scale_factor = 100 / value;
+    double scale_factor = value / 100;
     _zoom_scale.set_value( value );
     _canvas.set_scaling_factor( scale_factor );
+    _zoom_in.set_sensitive( value < 400 );
+    _zoom_out.set_sensitive( value > 10 );
   }
 
   /* Returns the value to display in the zoom control */
   private string set_zoom_value( double val ) {
     return( zoom_to_value( val ).to_string() );
+  }
+
+  /* Zooms into the image (makes things larger) */
+  private void action_zoom_in() {
+    double   value = zoom_to_value( _zoom_scale.get_value() );
+    double[] marks = {10, 25, 50, 75, 100, 150, 200, 250, 300, 350, 400};
+    foreach (double mark in marks) {
+      if( value < mark ) {
+        _zoom_scale.set_value( mark );
+        return;
+      }
+    }
+  }
+
+  /* Zooms out of the image (makes things smaller) */
+  private void action_zoom_out() {
+    double   value = zoom_to_value( _zoom_scale.get_value() );
+    double[] marks = {400, 350, 300, 250, 200, 150, 100, 75, 50, 25, 10};
+    foreach (double mark in marks) {
+      if( value > mark ) {
+        _zoom_scale.set_value( mark );
+        return;
+      }
+    }
   }
 
   /* Zooms to make all nodes visible within the viewer */

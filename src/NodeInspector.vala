@@ -290,6 +290,7 @@ public class NodeInspector : Stack {
       } else {
         _task.selected = 0;
       }
+      _task.set_sensitive( current.is_leaf() );
       if( current.children().length > 0 ) {
         _fold.set_active( current.folded );
         _fold.set_sensitive( true );
@@ -301,10 +302,6 @@ public class NodeInspector : Stack {
       _note.buffer.text = current.note;
       set_visible_child_name( "node" );
     } else {
-      _name.set_text( "" );
-      _task.selected = 0;
-      _fold.set_active( false );
-      _note.buffer.text = "";
       set_visible_child_name( "empty" );
     }
 
