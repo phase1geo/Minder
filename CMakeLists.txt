@@ -46,7 +46,6 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/DrawArea.vala
     src/Layout.vala
     src/Layouts.vala
-    src/LayoutInspector.vala
     src/layouts/LayoutDown.vala
     src/layouts/LayoutHorizontal.vala
     src/layouts/LayoutLeft.vala
