@@ -39,6 +39,7 @@ public class ThemeDark : Theme {
     textsel_background = get_color( "#0d52bf" );
     textsel_foreground = get_color( "White" );
     text_cursor        = get_color( "White" );
+    attachable_color   = get_color( "#9bdb4d" );
 
     /* Generate the link colors */
     link_colors = new RGBA[8];

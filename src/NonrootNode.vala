@@ -176,6 +176,7 @@ public class NonrootNode : Node {
     draw_line( ctx, theme );
     draw_link( ctx, theme );
     draw_fold( ctx, theme );
+    draw_attachable( ctx, theme, theme.background );
   }
 
 }

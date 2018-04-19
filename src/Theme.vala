@@ -37,6 +37,7 @@ public class Theme : Object {
   public    RGBA   textsel_background { protected set; get; }
   public    RGBA   textsel_foreground { protected set; get; }
   public    RGBA   text_cursor        { protected set; get; }
+  public    RGBA   attachable_color   { protected set; get; }
   protected RGBA[] link_colors        { set; get; }
 
   /* Default constructor */

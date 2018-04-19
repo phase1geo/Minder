@@ -40,6 +40,7 @@ public class DrawArea : Gtk.DrawingArea {
   private double      _scale_factor = 1.0;
   private string      _orig_name;
   private NodeSide    _orig_side;
+  private Node?       _attach_node  = null;
 
   public UndoBuffer undo_buffer { set; get; default = new UndoBuffer(); }
   public Themes     themes      { set; get; default = new Themes(); }
@@ -428,7 +429,8 @@ public class DrawArea : Gtk.DrawingArea {
   private Node? attachable_node( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
       Node tmp = _nodes.index( i ).contains( x, y );
-      if( (tmp != null) && (tmp != _current_node) && !tmp.contains_node( _nodes.index( i ) ) ) {
+      /* If the node under the cursor is not the current node nor its parent, it can be attached to. */
+      if( (tmp != null) && (tmp != _current_node) && (tmp != _current_node.parent) && !_current_node.contains_node( tmp ) ) {
         return( tmp );
       }
     }
@@ -482,6 +484,14 @@ public class DrawArea : Gtk.DrawingArea {
         double diffx = scale_value( event.x ) - _press_x;
         double diffy = scale_value( event.y ) - _press_y;
         if( _current_node.mode == NodeMode.CURRENT ) {
+          Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
+          if( attach_node != null ) {
+            attach_node.mode = NodeMode.ATTACHABLE;
+            _attach_node     = attach_node;
+          } else if( _attach_node != null ) {
+            _attach_node.mode = NodeMode.NONE;
+            _attach_node      = null;
+          }
           _current_node.posx += diffx;
           _current_node.posy += diffy;
           _layout.set_side( _current_node );
@@ -511,15 +521,24 @@ public class DrawArea : Gtk.DrawingArea {
     _pressed = false;
     if( _current_node != null ) {
       if( _current_node.mode == NodeMode.CURRENT ) {
-        Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
-        if( attach_node != null ) {
-          _current_node.detach( _orig_side, _layout );
+        if( _attach_node != null ) {
           if( _current_node.is_root() ) {
+            for( int i=0; i<_nodes.length; i++ ) {
+              if( _nodes.index( i ) == _current_node ) {
+                _nodes.remove_index( i );
+                break;
+              }
+            }
             _current_node = new NonrootNode.from_RootNode( (RootNode)_current_node );
+          } else {
+            _current_node.detach( _orig_side, _layout );
           }
-          _current_node.attach( attach_node, -1, _layout );
+          _current_node.attach( _attach_node, -1, _layout );
+          _attach_node.mode = NodeMode.NONE;
+          _attach_node      = null;
           queue_draw();
           changed();
+          node_changed();
         } else if( !_motion ) {
           _current_node.set_cursor_all( false );
           _orig_name = _current_node.name;
@@ -572,7 +591,9 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       n.delete( _layout );
     }
+    _current_node = null;
     queue_draw();
+    node_changed();
     changed();
   }
 
@@ -667,7 +688,7 @@ public class DrawArea : Gtk.DrawingArea {
     return( (_current_node != null) && (_current_node.parent != null) );
   }
 
-  /* Detaches the given node from its parent and adds it as a root node */
+  /* Detaches the current node from its parent and adds it as a root node */
   public void detach() {
     if( !detachable() ) return;
     Node     parent = _current_node.parent;

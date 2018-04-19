@@ -93,6 +93,7 @@ public class RootNode : Node {
     draw_task( ctx, theme );
     draw_note( ctx, theme );
     draw_fold( ctx, theme );
+    draw_attachable( ctx, theme, theme.root_background );
   }
 
 }

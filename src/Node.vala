@@ -1077,6 +1077,31 @@ public class Node : Object {
 
   }
 
+  /* Draws the attachable highlight border to indicate when a node is attachable */
+  protected virtual void draw_attachable( Context ctx, Theme theme, RGBA? frost_background ) {
+
+    if( mode == NodeMode.ATTACHABLE ) {
+
+      double x, y, w, h;
+      bbox( out x, out y, out w, out h );
+
+      /* Draw box that is translucent */
+      if( frost_background != null ) {
+        set_context_color_with_alpha( ctx, frost_background, 0.8 );
+        ctx.rectangle( x, y, w, h );
+        ctx.fill();
+      }
+
+      /* Draw highlight border */
+      set_context_color( ctx, theme.attachable_color );
+      ctx.set_line_width( 4 );
+      ctx.rectangle( x, y, w, h );
+      ctx.stroke();
+
+    }
+
+  }
+
   /* Draws the node on the screen */
   public virtual void draw( Context ctx, Theme theme ) {}
 
