@@ -76,6 +76,7 @@ public class MainWindow : ApplicationWindow {
     /* Create and pack the canvas */
     _canvas = new DrawArea();
     _canvas.node_changed.connect( on_node_changed );
+    _canvas.scale_changed.connect( on_scale_changed );
     _canvas.show_node_properties.connect( show_node_properties );
     _canvas.map_event.connect( on_canvas_mapped );
     _canvas.undo_buffer.buffer_changed.connect( do_buffer_changed );
@@ -140,9 +141,9 @@ public class MainWindow : ApplicationWindow {
     /* Create zoom menu popover */
     Box box = new Box( Orientation.VERTICAL, 5 );
 
+    var marks     = _da.get_scale_marks();
     var scale_lbl = new Label( _( "Zoom to Percent" ) );
-    _zoom_scale = new Scale.with_range( Orientation.HORIZONTAL, 10, 400, 25 );
-    double[] marks = {10, 25, 50, 75, 100, 150, 200, 250, 300, 350, 400};
+    _zoom_scale   = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 );
     foreach (double mark in marks) {
       _zoom_scale.add_mark( mark, PositionType.BOTTOM, "'" );
     }
@@ -409,6 +410,16 @@ public class MainWindow : ApplicationWindow {
       _zoom_sel.set_sensitive( false );
     }
   }
+  
+  /* 
+   Called if the canvas changes the scale factor value. Adjusts the
+   UI to match.
+  */
+  private void on_scale_changed( double value ) {
+    var marks = _da.get_scale_smarks();
+    _zoom_out.set_sensitive( value > marks[0] );
+    _zoom_in.set_sensitive( value < marks[marks.length-1] );
+  }
 
   /* Displays the node properties panel for the current node */
   private void show_node_properties() {
@@ -417,17 +428,16 @@ public class MainWindow : ApplicationWindow {
 
   /* Converts the given value from the scale to the zoom value to use */
   private double zoom_to_value( double value ) {
-    if( value < 17.50 )     { return( 10 ); }
-    else if( value < 37.5 ) { return( 25 ); }
-    else if( value < 62.5 ) { return( 50 ); }
-    else if( value < 87.5 ) { return( 75 ); }
-    else if( value < 125 )  { return( 100 ); }
-    else if( value < 175 )  { return( 150 ); }
-    else if( value < 225 )  { return( 200 ); }
-    else if( value < 275 )  { return( 250 ); }
-    else if( value < 325 )  { return( 300 ); }
-    else if( value < 375 )  { return( 350 ); }
-    return( 400 );
+    double last = -1;
+    foreach (double mark in _da.get_scale_marks()) {
+      if( last != -1 ) {
+        if( value < ((mark + last) / 2) ) {
+          return( last );
+        }
+      }
+      last = mark;
+    }
+    return( last );
   }
 
   /* Sets the scale factor for the level of zoom to perform */

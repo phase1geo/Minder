@@ -374,6 +374,12 @@ public class DrawArea : Gtk.DrawingArea {
     node_changed();
     return( true );
   }
+  
+  /* Returns the supported scale points */
+  public double[] get_scale_marks() {
+    double[] marks = {10, 25, 50, 75, 100, 150, 200, 250, 300, 350, 400};
+    return( marks );
+  }
 
   /* Returns a properly scaled version of the given value */
   private double scale_value( double val ) {
