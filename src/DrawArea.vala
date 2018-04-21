@@ -466,25 +466,46 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Centers the given node within the canvas by adjusting the origin */
-  public void center_node( Node n ) {
+  public void center( Node n ) {
 
-    /*
-      double diff_x = (width  / _scale_factor) - (width  / scale_factor);
-      double diff_y = (height / _scale_factor) - (height / scale_factor);
-      move_origin( diff_x, diff_y );
-    */
     double x, y, w, h;
     n.bbox( out x, out y, out w, out h );
 
-    stdout.printf( "x: %g, y: %g, w: %g, h: %g, origin_x: %g, origin_y: %g, midx: %g, midy: %g\n", x, y, w, h, _origin_x, _origin_y,
-                   (get_allocated_width() / 2), (get_allocated_height() / 2) );
-
     double ccx = scale_value( get_allocated_width()  / 2 );
     double ccy = scale_value( get_allocated_height() / 2 );
-    double ncx = scale_value( x + (w / 2) );
-    double ncy = scale_value( y + (h / 2) );
+    double ncx = x + (w / 2);
+    double ncy = y + (h / 2);
 
     move_origin( (ncx - ccx), (ncy - ccy) );
+
+  }
+
+  /* Brings the given node into view in its entirety including the given amount of padding */
+  public void see( Node n, double pad = 20.0 ) {
+
+    double x, y, w, h;
+    n.bbox( out x, out y, out w, out h );
+
+    double diff_x = 0;
+    double diff_y = 0;
+    double sw     = scale_value( get_allocated_width() );
+    double sh     = scale_value( get_allocated_height() );
+
+    if( (x - pad) < 0 ) {
+      diff_x = (x - pad);
+    } else if( (x + w) > sw ) {
+      diff_x = (x + w + pad) - sw;
+    }
+
+    if( (y - pad) < 0 ) {
+      diff_y = (y - pad);
+    } else if( (y + h) > sh ) {
+      diff_y = (y + h + pad) - sh;
+    }
+
+    if( (diff_x != 0) || (diff_y != 0) ) {
+      move_origin( diff_x, diff_y );
+    }
 
   }
 
@@ -992,7 +1013,7 @@ public class DrawArea : Gtk.DrawingArea {
             handle_right();
             break;
           case "C" :  // Center the selected node
-            center_node( _current_node );
+            center( _current_node );
             break;
           case "i" :  // Display the node properties panel
             show_node_properties();
@@ -1006,6 +1027,9 @@ public class DrawArea : Gtk.DrawingArea {
             if( undo_buffer.redoable() ) {
               undo_buffer.redo();
             }
+            break;
+          case "s" :  // See the node
+            see( _current_node );
             break;
           case "z" :  // Zoom out
             zoom_out();
