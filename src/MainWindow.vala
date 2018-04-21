@@ -141,7 +141,7 @@ public class MainWindow : ApplicationWindow {
     /* Create zoom menu popover */
     Box box = new Box( Orientation.VERTICAL, 5 );
 
-    var marks     = _da.get_scale_marks();
+    var marks     = _canvas.get_scale_marks();
     var scale_lbl = new Label( _( "Zoom to Percent" ) );
     _zoom_scale   = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 );
     foreach (double mark in marks) {
@@ -149,7 +149,7 @@ public class MainWindow : ApplicationWindow {
     }
     _zoom_scale.has_origin = false;
     _zoom_scale.set_value( 100 );
-    _zoom_scale.value_changed.connect( set_zoom_scale );
+    _zoom_scale.value_changed.connect( adjust_zoom );
     _zoom_scale.format_value.connect( set_zoom_value );
 
     _zoom_in = new ModelButton();
@@ -410,15 +410,13 @@ public class MainWindow : ApplicationWindow {
       _zoom_sel.set_sensitive( false );
     }
   }
-  
-  /* 
+
+  /*
    Called if the canvas changes the scale factor value. Adjusts the
    UI to match.
   */
-  private void on_scale_changed( double value ) {
-    var marks = _da.get_scale_smarks();
-    _zoom_out.set_sensitive( value > marks[0] );
-    _zoom_in.set_sensitive( value < marks[marks.length-1] );
+  private void on_scale_changed( double scale_factor ) {
+    _zoom_scale.set_value( scale_factor * 100 );
   }
 
   /* Displays the node properties panel for the current node */
@@ -429,7 +427,7 @@ public class MainWindow : ApplicationWindow {
   /* Converts the given value from the scale to the zoom value to use */
   private double zoom_to_value( double value ) {
     double last = -1;
-    foreach (double mark in _da.get_scale_marks()) {
+    foreach (double mark in _canvas.get_scale_marks()) {
       if( last != -1 ) {
         if( value < ((mark + last) / 2) ) {
           return( last );
@@ -441,13 +439,14 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Sets the scale factor for the level of zoom to perform */
-  private void set_zoom_scale() {
+  private void adjust_zoom() {
     double value = zoom_to_value( _zoom_scale.get_value() );
     double scale_factor = value / 100;
+    var marks = _canvas.get_scale_marks();
     _zoom_scale.set_value( value );
     _canvas.set_scaling_factor( scale_factor );
-    _zoom_in.set_sensitive( value < 400 );
-    _zoom_out.set_sensitive( value > 10 );
+    _zoom_in.set_sensitive( value < marks[marks.length-1] );
+    _zoom_out.set_sensitive( value > marks[0] );
   }
 
   /* Returns the value to display in the zoom control */
@@ -457,42 +456,22 @@ public class MainWindow : ApplicationWindow {
 
   /* Zooms into the image (makes things larger) */
   private void action_zoom_in() {
-    double   value = zoom_to_value( _zoom_scale.get_value() );
-    double[] marks = {10, 25, 50, 75, 100, 150, 200, 250, 300, 350, 400};
-    foreach (double mark in marks) {
-      if( value < mark ) {
-        _zoom_scale.set_value( mark );
-        return;
-      }
-    }
+    _canvas.zoom_in();
   }
 
   /* Zooms out of the image (makes things smaller) */
   private void action_zoom_out() {
-    double   value = zoom_to_value( _zoom_scale.get_value() );
-    double[] marks = {400, 350, 300, 250, 200, 150, 100, 75, 50, 25, 10};
-    foreach (double mark in marks) {
-      if( value > mark ) {
-        _zoom_scale.set_value( mark );
-        return;
-      }
-    }
+    _canvas.zoom_out();
   }
 
   /* Zooms to make all nodes visible within the viewer */
   private void action_zoom_fit() {
-    double scale_factor = _canvas.get_scaling_factor_to_fit();
-    if( scale_factor > 0 ) {
-      _zoom_scale.set_value( 100 / scale_factor );
-    }
+    _canvas.zoom_to_fit();
   }
 
   /* Zooms to make the currently selected node and its tree put into view */
   private void action_zoom_selected() {
-    double scale_factor = _canvas.get_scaling_factor_selected();
-    if( scale_factor > 0 ) {
-      _zoom_scale.set_value( 100 / scale_factor );
-    }
+    _canvas.zoom_to_selected();
   }
 
   /* Sets the zoom to 100% */

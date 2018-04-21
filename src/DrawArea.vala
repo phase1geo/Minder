@@ -48,6 +48,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   public signal void changed();
   public signal void node_changed();
+  public signal void scale_changed( double scale );
   public signal void show_node_properties();
   public signal void loaded();
 
@@ -126,6 +127,7 @@ public class DrawArea : Gtk.DrawingArea {
     string? sf = n->get_prop( "scale" );
     if( sf != null ) {
       _scale_factor = double.parse( sf );
+      scale_changed( _scale_factor );
     }
 
   }
@@ -374,7 +376,7 @@ public class DrawArea : Gtk.DrawingArea {
     node_changed();
     return( true );
   }
-  
+
   /* Returns the supported scale points */
   public double[] get_scale_marks() {
     double[] marks = {10, 25, 50, 75, 100, 150, 200, 250, 300, 350, 400};
@@ -395,6 +397,7 @@ public class DrawArea : Gtk.DrawingArea {
       double diff_y = (height / _scale_factor) - (height / scale_factor);
       move_origin( diff_x, diff_y );
       _scale_factor = scale_factor;
+      scale_changed( _scale_factor );
       queue_draw();
     }
   }
@@ -406,20 +409,46 @@ public class DrawArea : Gtk.DrawingArea {
     return( (w > h) ? w : h );
   }
 
+  /* Zooms into the image by one scale mark */
+  public void zoom_in() {
+    var value = _scale_factor * 100;
+    var marks = get_scale_marks();
+    foreach (double mark in marks) {
+      if( value < mark ) {
+        set_scaling_factor( mark / 100 );
+        return;
+      }
+    }
+  }
+
+  /* Zooms out of the image by one scale mark */
+  public void zoom_out() {
+    double value = _scale_factor * 100;
+    var    marks = get_scale_marks();
+    double last  = marks[0];
+    foreach (double mark in marks) {
+      if( value <= mark ) {
+        set_scaling_factor( last / 100 );
+        return;
+      }
+      last = mark;
+    }
+  }
+
   /*
    Returns the scaling factor required to display the currently selected node.
    If no node is currently selected, returns a value of 0.
   */
-  public double get_scaling_factor_selected() {
+  public void zoom_to_selected() {
     double x, y, w, h;
-    if( _current_node == null ) return( 0 );
+    if( _current_node == null ) return;
     _layout.bbox( _current_node, -1, -1, out x, out y, out w, out h );
     move_origin( (scale_value( x ) - _origin_x), (scale_value( y ) - _origin_y) );
-    return( get_scaling_factor( w, h ) );
+    set_scaling_factor( get_scaling_factor( w, h ) );
   }
 
   /* Returns the scaling factor required to display all nodes */
-  public double get_scaling_factor_to_fit() {
+  public void zoom_to_fit() {
     double x1 = 0;
     double y1 = 0;
     double x2 = 0;
@@ -433,7 +462,7 @@ public class DrawArea : Gtk.DrawingArea {
       y2 = (y2 < (y + h)) ? (y + h) : y2;
     }
     move_origin( (scale_value( x1 ) - _origin_x), (scale_value( y1 ) - _origin_y) );
-    return( get_scaling_factor( (x2 - x1), (y2 - y1) ) );
+    set_scaling_factor( get_scaling_factor( (x2 - x1), (y2 - y1) ) );
   }
 
   /* Centers the given node within the canvas by adjusting the origin */
@@ -969,10 +998,10 @@ public class DrawArea : Gtk.DrawingArea {
             }
             break;
           case "z" :  // Zoom out
-            /* TBD */
+            zoom_out();
             break;
           case "Z" :  // Zoom in
-            /* TBD */
+            zoom_in();
             break;
           default :
             // This is a key that doesn't have any associated functionality
@@ -1028,10 +1057,10 @@ public class DrawArea : Gtk.DrawingArea {
           }
           break;
         case "z" :  // Zoom out
-          /* TBD */
+          zoom_out();
           break;
         case "Z" :  // Zoom in
-          /* TBD */
+          zoom_in();
           break;
         default :
           // No need to do anything here
