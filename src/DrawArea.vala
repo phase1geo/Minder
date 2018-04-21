@@ -468,6 +468,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* Centers the given node within the canvas by adjusting the origin */
   public void center_node( Node n ) {
 
+    /*
+      double diff_x = (width  / _scale_factor) - (width  / scale_factor);
+      double diff_y = (height / _scale_factor) - (height / scale_factor);
+      move_origin( diff_x, diff_y );
+    */
     double x, y, w, h;
     n.bbox( out x, out y, out w, out h );
 
@@ -479,7 +484,7 @@ public class DrawArea : Gtk.DrawingArea {
     double ncx = scale_value( x + (w / 2) );
     double ncy = scale_value( y + (h / 2) );
 
-    move_origin( ((ncx - ccx) - _origin_x), ((ncy - ccy) - _origin_y) );
+    move_origin( (ncx - ccx), (ncy - ccy) );
 
   }
 
@@ -495,7 +500,12 @@ public class DrawArea : Gtk.DrawingArea {
     return( null );
   }
 
-  /* Adjusts the x and y origins, panning all elements by the given amount */
+  /*
+   Adjusts the x and y origins, panning all elements by the given amount.
+   Important Note:  When the canvas is panned to the left (causing all
+   nodes to be moved to the left, the origin_x value becomes a positive
+   number.
+  */
   public void move_origin( double diff_x, double diff_y ) {
     _origin_x += diff_x;
     _origin_y += diff_y;
