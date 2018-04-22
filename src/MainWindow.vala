@@ -76,7 +76,7 @@ public class MainWindow : ApplicationWindow {
     /* Create and pack the canvas */
     _canvas = new DrawArea();
     _canvas.node_changed.connect( on_node_changed );
-    _canvas.scale_changed.connect( on_scale_changed );
+    _canvas.scale_changed.connect( change_scale );
     _canvas.show_node_properties.connect( show_node_properties );
     _canvas.map_event.connect( on_canvas_mapped );
     _canvas.undo_buffer.buffer_changed.connect( do_buffer_changed );
@@ -149,7 +149,7 @@ public class MainWindow : ApplicationWindow {
     }
     _zoom_scale.has_origin = false;
     _zoom_scale.set_value( 100 );
-    _zoom_scale.value_changed.connect( adjust_zoom );
+    _zoom_scale.change_value.connect( adjust_zoom );
     _zoom_scale.format_value.connect( set_zoom_value );
 
     _zoom_in = new ModelButton();
@@ -347,15 +347,22 @@ public class MainWindow : ApplicationWindow {
     dialog.add_filter( filter );
 
     if( dialog.run() == ResponseType.ACCEPT ) {
-      string fname  = dialog.get_filename();
-      if( fname.has_suffix( ".minder" ) ) {
-        _doc.filename = fname;
-        _doc.load();
-      } else if( fname.has_suffix( ".opml" ) ) {
-        OPML.import( fname, _canvas );
-      }
+      open_file( dialog.get_filename() );
     }
     dialog.close();
+  }
+
+  /* Opens the file and display it in the canvas */
+  public bool open_file( string fname ) {
+    if( fname.has_suffix( ".minder" ) ) {
+      _doc.filename = fname;
+      _doc.load();
+      return( true );
+    } else if( fname.has_suffix( ".opml" ) ) {
+      OPML.import( fname, _canvas );
+      return( true );
+    }
+    return( false );
   }
 
   /* Perform an undo action */
@@ -368,9 +375,8 @@ public class MainWindow : ApplicationWindow {
     _canvas.undo_buffer.redo();
   }
 
-  /* Called when the canvas is displayed */
   private bool on_canvas_mapped( Gdk.EventAny e ) {
-    _canvas.initialize();
+    _canvas.queue_draw();
     return( false );
   }
 
@@ -415,8 +421,12 @@ public class MainWindow : ApplicationWindow {
    Called if the canvas changes the scale factor value. Adjusts the
    UI to match.
   */
-  private void on_scale_changed( double scale_factor ) {
-    _zoom_scale.set_value( scale_factor * 100 );
+  private void change_scale( double scale_factor ) {
+    var marks       = _canvas.get_scale_marks();
+    var scale_value = scale_factor * 100;
+    _zoom_scale.set_value( scale_value );
+    _zoom_in.set_sensitive( scale_value < marks[marks.length-1] );
+    _zoom_out.set_sensitive( scale_value > marks[0] );
   }
 
   /* Displays the node properties panel for the current node */
@@ -439,14 +449,11 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Sets the scale factor for the level of zoom to perform */
-  private void adjust_zoom() {
-    double value = zoom_to_value( _zoom_scale.get_value() );
-    double scale_factor = value / 100;
-    var marks = _canvas.get_scale_marks();
-    _zoom_scale.set_value( value );
+  private bool adjust_zoom( ScrollType scroll, double new_value ) {
+    var value        = zoom_to_value( new_value );
+    var scale_factor = value / 100;
     _canvas.set_scaling_factor( scale_factor );
-    _zoom_in.set_sensitive( value < marks[marks.length-1] );
-    _zoom_out.set_sensitive( value > marks[0] );
+    return( false );
   }
 
   /* Returns the value to display in the zoom control */
@@ -457,26 +464,31 @@ public class MainWindow : ApplicationWindow {
   /* Zooms into the image (makes things larger) */
   private void action_zoom_in() {
     _canvas.zoom_in();
+    _canvas.grab_focus();
   }
 
   /* Zooms out of the image (makes things smaller) */
   private void action_zoom_out() {
     _canvas.zoom_out();
+    _canvas.grab_focus();
   }
 
   /* Zooms to make all nodes visible within the viewer */
   private void action_zoom_fit() {
     _canvas.zoom_to_fit();
+    _canvas.grab_focus();
   }
 
   /* Zooms to make the currently selected node and its tree put into view */
   private void action_zoom_selected() {
     _canvas.zoom_to_selected();
+    _canvas.grab_focus();
   }
 
   /* Sets the zoom to 100% */
   private void action_zoom_actual() {
-    _zoom_scale.set_value( 100 );
+    _canvas.set_scaling_factor( 1.0 );
+    _canvas.grab_focus();
   }
 
   /* Display matched items to the search within the search popover */

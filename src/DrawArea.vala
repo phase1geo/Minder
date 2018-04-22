@@ -254,6 +254,8 @@ public class DrawArea : Gtk.DrawingArea {
   /* Initialize the empty drawing area with a node */
   public void initialize() {
 
+    stdout.printf( "In DrawArea.initialize\n" );
+
     /* Clear the list of existing nodes */
     _nodes.remove_range( 0, _nodes.length );
 
@@ -388,7 +390,10 @@ public class DrawArea : Gtk.DrawingArea {
     return( val / _scale_factor );
   }
 
-  /* Sets the scaling factor for the drawing area and forces a redraw */
+  /*
+   Sets the scaling factor for the drawing area, causing the center pixel
+   to remain in the center and forces a redraw.
+  */
   public void set_scaling_factor( double scale_factor ) {
     if( _scale_factor != scale_factor ) {
       int    width  = get_allocated_width()  / 2;
@@ -404,9 +409,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns the scaling factor based on the given width and height */
   private double get_scaling_factor( double width, double height ) {
-    double w = width  / get_allocated_width();
-    double h = height / get_allocated_height();
-    return( (w > h) ? w : h );
+    double w  = get_allocated_width() / width;
+    double h  = get_allocated_height() / height;
+    double sf = (w < h) ? w : h;
+    return( (sf > 4) ? 4 : sf );
   }
 
   /* Zooms into the image by one scale mark */
@@ -435,6 +441,15 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Center the box in the canvas */
+  private void center( double x, double y, double w, double h ) {
+    double ccx = scale_value( get_allocated_width()  / 2 );
+    double ccy = scale_value( get_allocated_height() / 2 );
+    double ncx = x + (w / 2);
+    double ncy = y + (h / 2);
+    move_origin( (ncx - ccx), (ncy - ccy) );
+  }
+
   /*
    Returns the scaling factor required to display the currently selected node.
    If no node is currently selected, returns a value of 0.
@@ -443,12 +458,14 @@ public class DrawArea : Gtk.DrawingArea {
     double x, y, w, h;
     if( _current_node == null ) return;
     _layout.bbox( _current_node, -1, -1, out x, out y, out w, out h );
-    move_origin( (scale_value( x ) - _origin_x), (scale_value( y ) - _origin_y) );
+    center( x, y, w, h );
     set_scaling_factor( get_scaling_factor( w, h ) );
   }
 
   /* Returns the scaling factor required to display all nodes */
   public void zoom_to_fit() {
+
+    /* Calculate the overall size of the map */
     double x1 = 0;
     double y1 = 0;
     double x2 = 0;
@@ -461,27 +478,21 @@ public class DrawArea : Gtk.DrawingArea {
       x2 = (x2 < (x + w)) ? (x + w) : x2;
       y2 = (y2 < (y + h)) ? (y + h) : y2;
     }
-    move_origin( (scale_value( x1 ) - _origin_x), (scale_value( y1 ) - _origin_y) );
+
+    /* Center the map and scale it to fit */
+    center( x1, y1, (x2 - x1), (y2 - y1) );
     set_scaling_factor( get_scaling_factor( (x2 - x1), (y2 - y1) ) );
   }
 
   /* Centers the given node within the canvas by adjusting the origin */
-  public void center( Node n ) {
-
+  public void center_node( Node n ) {
     double x, y, w, h;
     n.bbox( out x, out y, out w, out h );
-
-    double ccx = scale_value( get_allocated_width()  / 2 );
-    double ccy = scale_value( get_allocated_height() / 2 );
-    double ncx = x + (w / 2);
-    double ncy = y + (h / 2);
-
-    move_origin( (ncx - ccx), (ncy - ccy) );
-
+    center( x, y, w, h );
   }
 
   /* Brings the given node into view in its entirety including the given amount of padding */
-  public void see( Node n, double pad = 20.0 ) {
+  public void see( Node n, double pad = 100.0 ) {
 
     double x, y, w, h;
     n.bbox( out x, out y, out w, out h );
@@ -742,7 +753,7 @@ public class DrawArea : Gtk.DrawingArea {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
       }
-      adjust_origin();
+      see( _current_node );
       changed();
     } else {
       var node = new RootNode.with_name( _( "Another Idea" ), _layout );
@@ -752,7 +763,7 @@ public class DrawArea : Gtk.DrawingArea {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
       }
-      adjust_origin();
+      see( _current_node );
       changed();
     }
   }
@@ -825,7 +836,7 @@ public class DrawArea : Gtk.DrawingArea {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
       }
-      adjust_origin();
+      see( _current_node );
       changed();
     }
   }
@@ -948,38 +959,12 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /*
-   Checks to see if the current node boundaries are close to running off the canvas
-   and adjusts the view to keep everything visible
-  */
-  private void adjust_origin() {
-    double x, y, w, h;
-    double diff_x = 0;
-    double diff_y = 0;
-    _current_node.bbox( out x, out y, out w, out h );
-    double scaled_x = scale_value( x );
-    double scaled_y = scale_value( y );
-    double scaled_w = scale_value( w );
-    double scaled_h = scale_value( h );
-    if( scaled_x < scale_value( 10 ) ) {
-      diff_x = scale_value( -100 );
-    } else if( (get_allocated_width() - (scaled_x + scaled_w)) < scale_value( 10 ) ) {
-      diff_x = scale_value( 100 );
-    }
-    if( scaled_y < scale_value( 10 ) ) {
-      diff_y = scale_value( -100 );
-    } else if( (get_allocated_height() - (scaled_y + scaled_h)) < scale_value( 10 ) ) {
-      diff_y = scale_value( 100 );
-    }
-    move_origin( diff_x, diff_y );
-  }
-
   /* Called whenever a printable character is entered in the drawing area */
   private void handle_printable( string str ) {
     if( str.get_char( 0 ).isprint() ) {
       if( is_mode_edit() ) {
         _current_node.edit_insert( str, _layout );
-        adjust_origin();
+        see( _current_node );
         queue_draw();
         changed();
       } else if( is_mode_selected() ) {
@@ -1013,7 +998,7 @@ public class DrawArea : Gtk.DrawingArea {
             handle_right();
             break;
           case "C" :  // Center the selected node
-            center( _current_node );
+            center_node( _current_node );
             break;
           case "i" :  // Display the node properties panel
             show_node_properties();

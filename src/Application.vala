@@ -20,8 +20,13 @@
 */
 
 using Gtk;
+using GLib;
 
 public class Minder : Gtk.Application {
+
+  private static bool    version   = false;
+  private static string? open_file = null;
+  private static bool    new_file  = false;
 
   public Minder () {
     Object( application_id: "com.github.phase1geo.Minder", flags: ApplicationFlags.FLAGS_NONE );
@@ -32,14 +37,58 @@ public class Minder : Gtk.Application {
     /* Create the main window */
     var appwin = new MainWindow( this );
 
+    /* Handle the command-line options */
+    if( open_file != null ) {
+      if( !appwin.open_file( open_file ) ) {
+        stdout.printf( "ERROR:  Unable to open file '%s'\n", open_file );
+        Process.exit( 1 );
+      }
+    } else if( new_file ) {
+      appwin.do_new_file();
+    } else {
+      /* TBD - Load the last file */
+    }
+
     /* Run the main loop */
     Gtk.main();
+
+  }
+
+  /* Parse the command-line arguments */
+  void parse_arguments( ref unowned string[] args ) {
+
+    var context = new OptionContext( "- Minder Options" );
+    var options = new OptionEntry[4];
+
+    /* Create the command-line options */
+    options[0] = {"version", 0, 0, OptionArg.NONE, ref version, "Display version number", null};
+    options[1] = {"open", 'o', 0, OptionArg.FILENAME, ref open_file, "Open filename", "FILENAME"};
+    options[2] = {"new", 'n', 0, OptionArg.NONE, ref new_file, "Starts Minder with a new file", null};
+    options[3] = {null};
+
+    /* Parse the arguments */
+    try {
+      context.set_help_enabled( true );
+      context.add_main_entries( options, null );
+      context.parse( ref args );
+    } catch( OptionError e ) {
+      stdout.printf( "ERROR: %s\n", e.message );
+      stdout.printf( "Run '%s --help' to see valid options\n", args[0] );
+      Process.exit( 1 );
+    }
+
+    /* If the version was specified, output it and then exit */
+    if( version ) {
+      stdout.printf( "1.0\n" );
+      Process.exit( 0 );
+    }
 
   }
 
   /* Main routine which gets everything started */
   public static int main( string[] args ) {
     var app = new Minder();
+    app.parse_arguments( ref args );
     return( app.run( args ) );
   }
 
