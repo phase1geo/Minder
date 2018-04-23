@@ -497,6 +497,33 @@ src/OPML.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/OPML.c.s
 .PHONY : src/OPML.c.s
 
+src/Partitioner.o: src/Partitioner.c.o
+
+.PHONY : src/Partitioner.o
+
+# target to build an object file
+src/Partitioner.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Partitioner.c.o
+.PHONY : src/Partitioner.c.o
+
+src/Partitioner.i: src/Partitioner.c.i
+
+.PHONY : src/Partitioner.i
+
+# target to preprocess a source file
+src/Partitioner.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Partitioner.c.i
+.PHONY : src/Partitioner.c.i
+
+src/Partitioner.s: src/Partitioner.c.s
+
+.PHONY : src/Partitioner.s
+
+# target to generate assembly for a file
+src/Partitioner.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Partitioner.c.s
+.PHONY : src/Partitioner.c.s
+
 src/RootNode.o: src/RootNode.c.o
 
 .PHONY : src/RootNode.o
@@ -1166,6 +1193,9 @@ help:
 	@echo "... src/OPML.o"
 	@echo "... src/OPML.i"
 	@echo "... src/OPML.s"
+	@echo "... src/Partitioner.o"
+	@echo "... src/Partitioner.i"
+	@echo "... src/Partitioner.s"
 	@echo "... src/RootNode.o"
 	@echo "... src/RootNode.i"
 	@echo "... src/RootNode.s"

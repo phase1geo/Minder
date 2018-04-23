@@ -808,9 +808,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Balances the existing nodes based on the current layout */
   public void balance_nodes() {
-
-    /* TBD - We will balance the current nodes based on the current layout */
-
+    for( int i=0; i<_nodes.length; i++ ) {
+      var partitioner = new Partitioner();
+      partitioner.partition_node( _nodes.index( i ), _layout );
+    }
   }
 
   /* Called whenever the tab character is entered in the drawing area */
