@@ -441,12 +441,15 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Center the box in the canvas */
-  private void center( double x, double y, double w, double h ) {
-    double ccx = scale_value( get_allocated_width()  / 2 );
-    double ccy = scale_value( get_allocated_height() / 2 );
-    double ncx = x + (w / 2);
-    double ncy = y + (h / 2);
+  /*
+   Positions the given box in the canvas based on the provided
+   x and y positions (values between 0 and 1).
+  */
+  private void position_box( double x, double y, double w, double h, double xpos, double ypos ) {
+    double ccx = scale_value( get_allocated_width()  * xpos );
+    double ccy = scale_value( get_allocated_height() * ypos );
+    double ncx = x + (w * xpos);
+    double ncy = y + (h * ypos);
     move_origin( (ncx - ccx), (ncy - ccy) );
   }
 
@@ -458,7 +461,7 @@ public class DrawArea : Gtk.DrawingArea {
     double x, y, w, h;
     if( _current_node == null ) return;
     _layout.bbox( _current_node, -1, -1, out x, out y, out w, out h );
-    center( x, y, w, h );
+    position_box( x, y, w, h, 0.5, 0.5 );
     set_scaling_factor( get_scaling_factor( w, h ) );
   }
 
@@ -480,7 +483,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     /* Center the map and scale it to fit */
-    center( x1, y1, (x2 - x1), (y2 - y1) );
+    position_box( x1, y1, (x2 - x1), (y2 - y1), 0.5, 0.5 );
     set_scaling_factor( get_scaling_factor( (x2 - x1), (y2 - y1) ) );
   }
 
@@ -488,7 +491,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void center_node( Node n ) {
     double x, y, w, h;
     n.bbox( out x, out y, out w, out h );
-    center( x, y, w, h );
+    position_box( x, y, w, h, 0.5, 0.5 );
   }
 
   /* Brings the given node into view in its entirety including the given amount of padding */
@@ -814,6 +817,26 @@ public class DrawArea : Gtk.DrawingArea {
     }
     queue_draw();
     changed();
+  }
+  
+  /*
+   This method should be called whenever the user change the current
+   layout used.  Causes the nodes to be repositioned based on the new
+   layout.
+  */
+  public void relayout() {
+    for( int i=0; i<_nodes.length; i++ ) {
+      var list = new SList<Node>();
+      var root = _nodes.index( i );
+      for( int j=0; j<root.children().length; j++ ) {
+        var child = root.children().index( j );
+        list.append( child );
+        child.detach( child.side, _layout );
+      }
+      list.@foreach((item) => {
+        item.attach( root, -1, _layout );
+      });
+    }
   }
 
   /* Called whenever the tab character is entered in the drawing area */
