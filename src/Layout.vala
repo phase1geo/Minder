@@ -88,7 +88,7 @@ public class Layout : Object {
   }
 
   /* Recursively sets the side property of this node and all children nodes */
-  protected virtual void propagate_side( Node parent, NodeSide side ) {
+  public virtual void propagate_side( Node parent, NodeSide side ) {
     double px, py, pw, ph;
     parent.bbox( out px, out py, out pw, out ph );
     for( int i=0; i<parent.children().length; i++ ) {
@@ -157,9 +157,12 @@ public class Layout : Object {
   /* Called when we are inserting a node within a parent */
   public virtual void handle_update_by_insert( Node parent, Node child, int pos ) {
 
+    double ox, oy, ow, oh;
     double cx, cy, cw, ch;
     double adjust;
 
+    child.bbox( out ox, out oy, out ow, out oh );
+    if( oh == 0 ) { oh = default_text_height + (pady * 2); }
     bbox( child, -1, child.side, out cx, out cy, out cw, out ch );
     if( ch == 0 ) { ch = default_text_height + (pady * 2); }
     adjust = (ch + _sb_gap) / 2;
@@ -172,7 +175,7 @@ public class Layout : Object {
     if( parent.side_count( child.side ) == 1 ) {
       double px, py, pw, ph;
       parent.bbox( out px, out py, out pw, out ph );
-      child.posy = py + ((ph / 2) - (ch / 2));
+      child.posy = py + ((ph / 2) - (oh / 2));
       return;
 
     /*
@@ -182,13 +185,13 @@ public class Layout : Object {
     } else if( ((pos + 1) == parent.children().length) || (parent.children().index( pos + 1 ).side != child.side) ) {
       double sx, sy, sw, sh;
       bbox( parent.children().index( pos - 1 ), -1, child.side, out sx, out sy, out sw, out sh );
-      child.posy = sy + sh + _sb_gap - adjust;
+      child.posy = (sy + sh + _sb_gap + (oy - cy)) - adjust;
 
     /* Otherwise, place ourselves just above the next sibling */
     } else {
       double sx, sy, sw, sh;
       bbox( parent.children().index( pos + 1 ), -1, child.side, out sx, out sy, out sw, out sh );
-      child.posy = sy - adjust;
+      child.posy = sy + (oy - cy) - adjust;
     }
 
     adjust_tree_all( child, (0 - adjust) );

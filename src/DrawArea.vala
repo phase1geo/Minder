@@ -812,6 +812,8 @@ public class DrawArea : Gtk.DrawingArea {
       var partitioner = new Partitioner();
       partitioner.partition_node( _nodes.index( i ), _layout );
     }
+    queue_draw();
+    changed();
   }
 
   /* Called whenever the tab character is entered in the drawing area */

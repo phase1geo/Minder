@@ -38,21 +38,24 @@ public class PartNode : Object {
       _size = w;
     }
     _node = n;
-    stdout.printf( "Adding PartNode, name: %s, size: %g\n", n.name, _size );
   }
 
   /* Returns the size required by this node */
   public double size() { return( _size ); }
 
+  /* Returns the stored node */
   public Node? node() { return( _node ); }
 
   /* Updates the node based on the given information */
   public void update_node( Node root, int index, int side, Layout layout ) {
-    _node.detach( _node.side, layout );
+    NodeSide orig_side = _node.side;
     if( (_node.side == NodeSide.LEFT) || (_node.side == NodeSide.RIGHT) ) {
       _node.side = (side == 0) ? NodeSide.LEFT : NodeSide.RIGHT;
     } else {
       _node.side = (side == 0) ? NodeSide.TOP  : NodeSide.BOTTOM;
+    }
+    if( orig_side != _node.side ) {
+      layout.propagate_side( _node, _node.side );
     }
     _node.attach( root, index, layout );
   }
@@ -71,23 +74,17 @@ public class Partitioner : Object {
   /* Partitions the given root node */
   public void partition_node( Node root, Layout layout ) {
     if( root.children().length > 2 ) {
-      var data = new Array<PartNode>();
+      var data = new SList<PartNode>();
       for( int i=0; i<root.children().length; i++ ) {
-        var pn = new PartNode( root.children().index( i ), layout );
-        data.append_val( pn );
-      }
-      stdout.printf( "Full list\n" );
-      for( int i=0; i<data.length; i++ ) {
-        stdout.printf( "  n.name: %s, size: %g\n", data.index( i ).node().name, data.index( i ).size() );
+        var node = root.children().index( i );
+        var pn   = new PartNode( node, layout );
+        data.append( pn );
       }
       CompareFunc<PartNode> pn_cmp = (a, b) => {
         return( (a.size() < b.size()) ? 1 : ((a.size() == b.size()) ? 0 : -1) );
       };
-      stdout.printf( "HERE A\n" );
       data.sort( pn_cmp );
-      stdout.printf( "HERE B\n" );
       partition( root, data, layout );
-      stdout.printf( "HERE C\n" );
     }
   }
 
@@ -97,18 +94,29 @@ public class Partitioner : Object {
    to implement and I'm not sure that it really matters that we are completely
    optimal anyways.
   */
-  protected virtual void partition( Node root, Array<PartNode> data, Layout layout ) {
-    double sum0 = 0;
-    double sum1 = 0;
-    for( int i=0; i<data.length; i++ ) {
+  protected virtual void partition( Node root, SList<PartNode> data, Layout layout ) {
+
+    double sum0  = 0;
+    double sum1  = 0;
+    int    size0 = 0;
+
+    /* Detach all of the nodes */
+    data.@foreach((item) => {
+      item.node().detach( item.node().side, layout );
+    });
+
+    /* Attach the nodes according to the side */
+    data.@foreach((item) => {
       if( sum0 < sum1 ) {
-        sum0 += data.index( i ).size();
-        data.index( i ).update_node( root, i, 0, layout );
+        sum0 += item.size();
+        item.update_node( root, size0, 0, layout );
+        size0++;
       } else {
-        sum1 += data.index( i ).size();
-        data.index( i ).update_node( root, i, 1, layout );
+        sum1 += item.size();
+        item.update_node( root, -1, 1, layout );
       }
-    }
+    });
+
   }
 
 }
