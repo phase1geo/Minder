@@ -64,6 +64,16 @@ public enum NodeSide {
   public static int any() {
     return( LEFT + RIGHT + TOP + BOTTOM );
   }
+
+  /* Generates the value of the VERTICAL mask value */
+  public static int vertical() {
+    return( TOP + BOTTOM );
+  }
+
+  /* Generates the value of the HORIZONTAL mask value */
+  public static int horizontal() {
+    return( LEFT + RIGHT );
+  }
 }
 
 public struct NodeBounds {
@@ -1129,6 +1139,7 @@ public class Node : Object {
     _ipadx            = layout.ipadx;
     _ipady            = layout.ipady;
     _font_description = layout.get_font_description();
+    layout.set_side( this );
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).set_layout( layout );
     }

@@ -28,4 +28,15 @@ public class LayoutVertical : Layout {
     balanceable = true;
   }
 
+  /* Maps the given side to the appropriate side for this layout */
+  public override NodeSide side_mapping( NodeSide side ) {
+    switch( side ) {
+      case NodeSide.LEFT   :  return( NodeSide.TOP );
+      case NodeSide.RIGHT  :  return( NodeSide.BOTTOM );
+      case NodeSide.TOP    :  return( NodeSide.TOP );
+      case NodeSide.BOTTOM :  return( NodeSide.BOTTOM );
+    }
+    return( NodeSide.BOTTOM );
+  }
+
 }

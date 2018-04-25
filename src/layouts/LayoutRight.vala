@@ -28,12 +28,14 @@ public class LayoutRight : Layout {
     balanceable = false;
   }
 
+  /* Maps the given side to the appropriate side for this layout */
+  public override NodeSide side_mapping( NodeSide side ) {
+    return( NodeSide.RIGHT );
+  }
+
   /* The side should always be set to the right */
   public override void set_side( Node current ) {
     current.side = NodeSide.RIGHT;
   }
-
-  /* We don't support node balancing */
-  public override void balance( Node n ) {}
 
 }

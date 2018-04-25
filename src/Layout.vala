@@ -42,6 +42,35 @@ public class Layout : Object {
     _font_description.set_size( 11 * Pango.SCALE );
   }
 
+  /*
+   Virtual function used to map a node's side to its new side when this
+   layout is applied.
+  */
+  public virtual NodeSide side_mapping( NodeSide side ) {
+    switch( side ) {
+      case NodeSide.LEFT   :  return( NodeSide.LEFT );
+      case NodeSide.RIGHT  :  return( NodeSide.RIGHT );
+      case NodeSide.TOP    :  return( NodeSide.LEFT );
+      case NodeSide.BOTTOM :  return( NodeSide.RIGHT );
+    }
+    return( NodeSide.RIGHT );
+  }
+
+  /* Initializes the given node based on this layout */
+  public void initialize( Node root ) {
+    var list = new SList<Node>();
+    for( int i=0; i<root.children().length; i++ ) {
+      Node n = root.children().index( i );
+      n.side = side_mapping( n.side );
+      propagate_side( n, n.side );
+      list.append( n );
+      n.detach( n.side, this );
+    }
+    list.@foreach((item) => {
+      item.attach( root, -1, this );
+    });
+  }
+
   /* Get the bbox for the given parent to the given depth */
   public virtual void bbox( Node parent, int depth, int side_mask, out double x, out double y, out double w, out double h ) {
     uint num_children = parent.children().length;
@@ -67,8 +96,13 @@ public class Layout : Object {
   public virtual void adjust_tree( Node parent, int child_index, int side_mask, double amount ) {
     for( int i=0; i<parent.children().length; i++ ) {
       if( i != child_index ) {
-        if( (parent.children().index( i ).side & side_mask) != 0 ) {
-          parent.children().index( i ).posy += amount;
+        Node n = parent.children().index( i );
+        if( (n.side & side_mask) != 0 ) {
+          if( (n.side & NodeSide.horizontal()) != 0 ) {
+            n.posy += amount;
+          } else {
+            n.posx += amount;
+          }
         }
       } else {
         amount = 0 - amount;
@@ -95,12 +129,23 @@ public class Layout : Object {
       Node n = parent.children().index( i );
       if( n.side != side ) {
         n.side = side;
-        if( side == NodeSide.LEFT ) {
-          double cx, cy, cw, ch;
-          n.bbox( out cx, out cy, out cw, out ch );
-          n.posx = px - _pc_gap - cw;
-        } else {
-          n.posx = px + pw + _pc_gap;
+        switch( side ) {
+          case NodeSide.LEFT :
+            double cx, cy, cw, ch;
+            n.bbox( out cx, out cy, out cw, out ch );
+            n.posx = px - _pc_gap - cw;
+            break;
+          case NodeSide.RIGHT :
+            n.posx = px + pw + _pc_gap;
+            break;
+          case NodeSide.TOP :
+            double cx, cy, cw, ch;
+            n.bbox( out cx, out cy, out cw, out ch );
+            n.posy = py - _pc_gap - ch;
+            break;
+          case NodeSide.BOTTOM :
+            n.posy = py + ph + _pc_gap;
+            break;
         }
         propagate_side( n, side );
       }
@@ -118,7 +163,12 @@ public class Layout : Object {
       }
       parent.bbox(  out px, out py, out pw, out ph );
       current.bbox( out cx, out cy, out cw, out ch );
-      NodeSide side = ((cx + (cw / 2)) > (px + (pw / 2))) ? NodeSide.RIGHT : NodeSide.LEFT;
+      NodeSide side;
+      if( (current.side & NodeSide.horizontal()) != 0 ) {
+        side = ((cx + (cw / 2)) > (px + (pw / 2))) ? NodeSide.RIGHT : NodeSide.LEFT;
+      } else {
+        side = ((cy + (ch / 2)) > (py + (ph / 2))) ? NodeSide.BOTTOM : NodeSide.TOP;
+      }
       if( current.side != side ) {
         current.side = side;
         propagate_side( current, side );
@@ -130,13 +180,25 @@ public class Layout : Object {
   public virtual void handle_update_by_edit( Node n ) {
     double width_diff, height_diff;
     n.update_size( null, out width_diff, out height_diff );
-    if( (n.parent != null) && (height_diff != 0) ) {
-      n.set_posy_only( 0 - (height_diff / 2) );
-      adjust_tree_all( n, (0 - (height_diff / 2)) );
-    }
-    if( width_diff != 0 ) {
-      for( int i=0; i<n.children().length; i++ ) {
-        n.children().index( i ).posx += width_diff;
+    if( (n.side & NodeSide.horizontal()) != 0 ) {
+      if( (n.parent != null) && (height_diff != 0) ) {
+        n.set_posy_only( 0 - (height_diff / 2) );
+        adjust_tree_all( n, (0 - (height_diff / 2)) );
+      }
+      if( width_diff != 0 ) {
+        for( int i=0; i<n.children().length; i++ ) {
+          n.children().index( i ).posx += width_diff;
+        }
+      }
+    } else {
+      if( (n.parent != null) && (width_diff != 0) ) {
+        n.set_posx_only( 0 - (width_diff / 2) );
+        adjust_tree_all( n, (0 - (width_diff / 2)) );
+      }
+      if( height_diff != 0 ) {
+        for( int i=0; i<n.children().length; i++ ) {
+          n.children().index( i ).posy += height_diff;
+        }
       }
     }
   }
@@ -145,12 +207,23 @@ public class Layout : Object {
   private void set_pc_gap( Node n ) {
     double px, py, pw, ph;
     n.parent.bbox( out px, out py, out pw, out ph );
-    if( n.side == NodeSide.LEFT ) {
-      double cx, cy, cw, ch;
-      n.bbox( out cx, out cy, out cw, out ch );
-      n.posx = px - (cw + _pc_gap);
-    } else {
-      n.posx = px + (pw + _pc_gap);
+    switch( n.side ) {
+      case NodeSide.LEFT :
+        double cx, cy, cw, ch;
+        n.bbox( out cx, out cy, out cw, out ch );
+        n.posx = px - (cw + _pc_gap);
+        break;
+      case NodeSide.RIGHT :
+        n.posx = px + (pw + _pc_gap);
+        break;
+      case NodeSide.TOP :
+        double cx, cy, cw, ch;
+        n.bbox( out cx, out cy, out cw, out ch );
+        n.posy = py - (ch + _pc_gap);
+        break;
+      case NodeSide.BOTTOM :
+        n.posy = py + (ph + _pc_gap);
+        break;
     }
   }
 
@@ -165,7 +238,11 @@ public class Layout : Object {
     if( oh == 0 ) { oh = default_text_height + (pady * 2); }
     bbox( child, -1, child.side, out cx, out cy, out cw, out ch );
     if( ch == 0 ) { ch = default_text_height + (pady * 2); }
-    adjust = (ch + _sb_gap) / 2;
+    if( (child.side & NodeSide.horizontal()) != 0 ) {
+      adjust = (ch + _sb_gap) / 2;
+    } else {
+      adjust = (cw + _sb_gap) / 2;
+    }
     set_pc_gap( child );
 
     /*
@@ -175,7 +252,11 @@ public class Layout : Object {
     if( parent.side_count( child.side ) == 1 ) {
       double px, py, pw, ph;
       parent.bbox( out px, out py, out pw, out ph );
-      child.posy = py + ((ph / 2) - (oh / 2));
+      if( (child.side & NodeSide.horizontal()) != 0 ) {
+        child.posy = py + ((ph / 2) - (oh / 2));
+      } else {
+        child.posx = px + ((pw / 2) - (ow / 2));
+      }
       return;
 
     /*
@@ -185,13 +266,21 @@ public class Layout : Object {
     } else if( ((pos + 1) == parent.children().length) || (parent.children().index( pos + 1 ).side != child.side) ) {
       double sx, sy, sw, sh;
       bbox( parent.children().index( pos - 1 ), -1, child.side, out sx, out sy, out sw, out sh );
-      child.posy = (sy + sh + _sb_gap + (oy - cy)) - adjust;
+      if( (child.side & NodeSide.horizontal()) != 0 ) {
+        child.posy = (sy + sh + _sb_gap + (oy - cy)) - adjust;
+      } else {
+        child.posx = (sx + sw + _sb_gap + (ox - cx)) - adjust;
+      }
 
     /* Otherwise, place ourselves just above the next sibling */
     } else {
       double sx, sy, sw, sh;
       bbox( parent.children().index( pos + 1 ), -1, child.side, out sx, out sy, out sw, out sh );
-      child.posy = sy + (oy - cy) - adjust;
+      if( (child.side & NodeSide.horizontal()) != 0 ) {
+        child.posy = sy + (oy - cy) - adjust;
+      } else {
+        child.posx = sx + (ox - cx) - adjust;
+      }
     }
 
     adjust_tree_all( child, (0 - adjust) );
@@ -202,9 +291,14 @@ public class Layout : Object {
   public virtual void handle_update_by_delete( Node parent, int index, NodeSide side, double xamount, double yamount ) {
     double adjust = (yamount + _sb_gap) / 2;
     for( int i=0; i<parent.children().length; i++ ) {
-      if( parent.children().index( i ).side == side ) {
+      Node n = parent.children().index( i );
+      if( n.side == side ) {
         double current_adjust = (i >= index) ? (0 - adjust) : adjust;
-        parent.children().index( i ).posy += current_adjust;
+        if( (n.side & NodeSide.horizontal()) != 0 ) {
+          n.posy += current_adjust;
+        } else {
+          n.posx += current_adjust;
+        }
       }
     }
     if( parent.parent != null ) {
@@ -218,10 +312,6 @@ public class Layout : Object {
     bbox( last, -1, -1, out x, out y, out w, out h );
     n.posx = last.posx;
     n.posy = y + h + _rt_gap;
-  }
-
-  public virtual void balance( Node n ) {
-    /* TBD */
   }
 
   /* Returns the font description associated with the layout */

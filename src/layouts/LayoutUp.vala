@@ -28,7 +28,14 @@ public class LayoutUp : Layout {
     balanceable = false;
   }
 
-  /* We don't support node balancing */
-  public override void balance( Node n ) {}
+  /* Maps the given side to the appropriate side for this layout */
+  public override NodeSide side_mapping( NodeSide side ) {
+    return( NodeSide.TOP );
+  }
+
+  /* Provides the default position for a newly created node */
+  public override void set_side( Node current ) {
+    current.side = NodeSide.TOP;
+  }
 
 }

@@ -107,7 +107,10 @@ public class DrawArea : Gtk.DrawingArea {
   /* Sets the layout to the given value */
   public void set_layout( string name ) {
     _layout = layouts.get_layout( name );
-    /* TBD - We need to adjust all of the nodes using the given layout */
+    for( int i=0; i<_nodes.length; i++ ) {
+      _layout.initialize( _nodes.index( i ) );
+    }
+    // FOOBAR
     queue_draw();
   }
 
@@ -817,26 +820,6 @@ public class DrawArea : Gtk.DrawingArea {
     }
     queue_draw();
     changed();
-  }
-  
-  /*
-   This method should be called whenever the user change the current
-   layout used.  Causes the nodes to be repositioned based on the new
-   layout.
-  */
-  public void relayout() {
-    for( int i=0; i<_nodes.length; i++ ) {
-      var list = new SList<Node>();
-      var root = _nodes.index( i );
-      for( int j=0; j<root.children().length; j++ ) {
-        var child = root.children().index( j );
-        list.append( child );
-        child.detach( child.side, _layout );
-      }
-      list.@foreach((item) => {
-        item.attach( root, -1, _layout );
-      });
-    }
   }
 
   /* Called whenever the tab character is entered in the drawing area */

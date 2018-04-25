@@ -28,7 +28,9 @@ public class LayoutManual : Layout {
     balanceable = false;
   }
 
-  /* We don't support node balancing */
-  public override void balance( Node n ) {}
+  /* Maps the given side to the appropriate side for this layout */
+  public override NodeSide side_mapping( NodeSide side ) {
+    return( side );
+  }
 
 }
