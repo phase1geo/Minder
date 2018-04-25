@@ -325,6 +325,7 @@ public class MainWindow : ApplicationWindow {
     }
     _doc = new Document( _canvas );
     _canvas.initialize();
+    _canvas.grab_focus();
   }
 
   /* Allow the user to open a Minder file */
@@ -350,6 +351,7 @@ public class MainWindow : ApplicationWindow {
       open_file( dialog.get_filename() );
     }
     dialog.close();
+    _canvas.grab_focus();
   }
 
   /* Opens the file and display it in the canvas */
@@ -368,11 +370,13 @@ public class MainWindow : ApplicationWindow {
   /* Perform an undo action */
   public void do_undo() {
     _canvas.undo_buffer.undo();
+    _canvas.grab_focus();
   }
 
   /* Perform a redo action */
   public void do_redo() {
     _canvas.undo_buffer.redo();
+    _canvas.grab_focus();
   }
 
   private bool on_canvas_mapped( Gdk.EventAny e ) {
@@ -406,6 +410,7 @@ public class MainWindow : ApplicationWindow {
       _doc.save();
     }
     dialog.close();
+    _canvas.grab_focus();
   }
 
   /* Called whenever the node selection changes in the canvas */
