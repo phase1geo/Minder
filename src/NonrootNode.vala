@@ -101,6 +101,9 @@ public class NonrootNode : Node {
 
   /* Draws the line under the node name */
   public void draw_line( Context ctx, Theme theme ) {
+  
+    /* If we are vertically oriented, don't draw the line */
+    if( (side & NodeSide.VERTICAL) != 0 ) return;
 
     double posx  = this.posx;
     double posy  = this.posy + _height + (_pady * 2);

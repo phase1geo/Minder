@@ -191,6 +191,9 @@ public class Layout : Object {
         }
       }
     } else {
+      if( (n.side == NodeSide.TOP) && (n.parent != null) && (height_diff != 0) ) {
+        n.posy -= height_diff;
+      }
       if( (n.parent != null) && (width_diff != 0) ) {
         n.set_posx_only( 0 - (width_diff / 2) );
         adjust_tree_all( n, (0 - (width_diff / 2)) );
