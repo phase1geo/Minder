@@ -776,7 +776,6 @@ public class Node : Object {
   public virtual void attach( Node parent, int index, Layout? layout ) {
     this.parent = parent;
     if( (parent._children.length == 0) && (parent._task_count == 1) ) {
-      stdout.printf( "HERE!\n" );
       parent.propagate_task_info( (0 - parent._task_count), (0 - parent._task_done) );
       parent._task_count = 0;
       parent._task_done  = 0;
@@ -789,7 +788,6 @@ public class Node : Object {
     } else {
       parent.children().insert_val( index, this );
     }
-    stdout.printf( "Calling propagate_task_info, count: %d, done: %d\n", _task_count, _task_done );
     propagate_task_info( _task_count, _task_done );
     if( layout != null ) {
       layout.handle_update_by_insert( parent, this, index );
