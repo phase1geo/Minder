@@ -57,17 +57,19 @@ public class Layout : Object {
   }
 
   /* Initializes the given node based on this layout */
-  public void initialize( Node root ) {
+  public void initialize( Node parent ) {
     var list = new SList<Node>();
-    for( int i=0; i<root.children().length; i++ ) {
-      Node n = root.children().index( i );
+    for( int i=0; i<parent.children().length; i++ ) {
+      Node n = parent.children().index( i );
+      initialize( n );
       n.side = side_mapping( n.side );
-      propagate_side( n, n.side );
       list.append( n );
-      n.detach( n.side, this );
     }
     list.@foreach((item) => {
-      item.attach( root, -1, this );
+      item.detach( item.side, this );
+    });
+    list.@foreach((item) => {
+      item.attach( parent, -1, this );
     });
   }
 
@@ -90,6 +92,7 @@ public class Layout : Object {
         }
       }
     }
+    parent.tree_width = w;  // We'll save the overall child width into the node for comparison purposes
   }
 
   /* Adjusts the given tree by the given amount */
@@ -191,16 +194,23 @@ public class Layout : Object {
         }
       }
     } else {
-      if( (n.side == NodeSide.TOP) && (n.parent != null) && (height_diff != 0) ) {
-        n.posy -= height_diff;
-      }
       if( (n.parent != null) && (width_diff != 0) ) {
+        double tree_width = n.tree_width;
+        double nx, ny, nw, nh;
         n.set_posx_only( 0 - (width_diff / 2) );
-        adjust_tree_all( n, (0 - (width_diff / 2)) );
+        bbox( n, 1, -1, out nx, out ny, out nw, out nh );
+        width_diff = n.tree_width - tree_width;
+        if( width_diff != 0 ) {
+          adjust_tree_all( n, (0 - (width_diff / 2)) );
+        }
       }
       if( height_diff != 0 ) {
-        for( int i=0; i<n.children().length; i++ ) {
-          n.children().index( i ).posy += height_diff;
+        if( n.side == NodeSide.TOP ) {
+          n.posy -= height_diff;
+        } else {
+          for( int i=0; i<n.children().length; i++ ) {
+            n.children().index( i ).posy += height_diff;
+          }
         }
       }
     }

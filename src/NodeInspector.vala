@@ -64,6 +64,11 @@ public class NodeInspector : Stack {
 
   }
 
+  /* Returns the width of this window */
+  public int get_width() {
+    return( 300 );
+  }
+
   /* Creates the name entry */
   private void create_name( Box bbox ) {
 
@@ -145,8 +150,8 @@ public class NodeInspector : Stack {
     sw.min_content_height = 300;
     sw.add( _note );
 
-    box.pack_start( lbl, true, false );
-    box.pack_start( sw,  true, true );
+    box.pack_start( lbl, false, false );
+    box.pack_start( sw,  true,  true );
 
     bbox.pack_start( box, true, true );
 

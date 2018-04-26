@@ -33,7 +33,7 @@ public class UndoNodeDetach : UndoItem {
 
   /* Default constructor */
   public UndoNodeDetach( DrawArea da, Node n, int root_index, Node old_parent, NodeSide old_side, int old_index, Layout l ) {
-    base( _( "Detach Node" ) );
+    base( _( "detach node" ) );
     _da         = da;
     _n          = n;
     _root_index = root_index;

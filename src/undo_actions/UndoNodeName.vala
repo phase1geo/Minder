@@ -30,7 +30,7 @@ public class UndoNodeName : UndoItem {
 
   /* Constructor for a node name change */
   public UndoNodeName( DrawArea da, Node n, string old_name ) {
-    base( _( "Node Name Change" ) );
+    base( _( "node name change" ) );
     _da       = da;
     _node     = n;
     _old_name = old_name;

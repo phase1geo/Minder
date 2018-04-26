@@ -27,22 +27,22 @@ public class UndoNodeFold : UndoItem {
   Node     _node;
   bool     _old_fold;
   bool     _new_fold;
-  
+
   /* Default constructor */
   public UndoNodeFold( DrawArea da, Node n, bool new_fold ) {
-    base( _( "Node Change Fold" ) );
+    base( _( "node change fold" ) );
     _da       = da;
     _node     = n;
     _old_fold = n.folded;
     _new_fold = new_fold;
   }
-  
+
   /* Undoes a node fold operation */
   public override void undo() {
     _node.folded = _old_fold;
     _da.queue_draw();
   }
-  
+
   /* Redoes a node fold operation */
   public override void redo() {
     _node.folded = _new_fold;

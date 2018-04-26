@@ -86,26 +86,26 @@ public struct NodeBounds {
 public class Node : Object {
 
   /* Member variables */
-  protected double       _width       = 0;
-  protected double       _height      = 0;
-  protected double       _padx        = 0;
-  protected double       _pady        = 0;
-  protected double       _ipadx       = 0;
-  protected double       _ipady       = 0;
-  protected double       _task_radius = 5;
-  protected double       _alpha       = 0.3;
-  private   int          _cursor      = 0;   /* Location of the cursor when editing */
-  protected Array<Node>  _children;
-  private   NodeMode     _mode        = NodeMode.NONE;
-  private   int          _task_count  = 0;
-  private   int          _task_done   = 0;
+  protected double                 _width            = 0;
+  protected double                 _height           = 0;
+  protected double                 _padx             = 0;
+  protected double                 _pady             = 0;
+  protected double                 _ipadx            = 0;
+  protected double                 _ipady            = 0;
+  protected double                 _task_radius      = 5;
+  protected double                 _alpha            = 0.3;
+  private   int                    _cursor           = 0;   /* Location of the cursor when editing */
+  protected Array<Node>            _children;
+  private   NodeMode               _mode             = NodeMode.NONE;
+  private   int                    _task_count       = 0;
+  private   int                    _task_done        = 0;
   private   Pango.Layout?          _layout           = null;
   private   Pango.FontDescription? _font_description = null;
-  private   double                 _posx = 0;
-  private   double                 _posy = 0;
-  private   int                    _selstart  = 0;
-  private   int                    _selend    = 0;
-  private   int                    _selanchor = 0;
+  private   double                 _posx             = 0;
+  private   double                 _posy             = 0;
+  private   int                    _selstart         = 0;
+  private   int                    _selend           = 0;
+  private   int                    _selanchor        = 0;
 
   /* Properties */
   public string name { get; set; default = ""; }
@@ -137,8 +137,8 @@ public class Node : Object {
       }
     }
   }
-  public string   note     { get; set; default = ""; }
-  public NodeMode mode     {
+  public string   note { get; set; default = ""; }
+  public NodeMode mode {
     get {
       return( _mode );
     }
@@ -151,9 +151,10 @@ public class Node : Object {
     }
     default = NodeMode.NONE;
   }
-  public Node?    parent   { get; protected set; default = null; }
-  public NodeSide side     { get; set; default = NodeSide.RIGHT; }
-  public bool     folded   { get; set; default = false; }
+  public Node?    parent     { get; protected set; default = null; }
+  public NodeSide side       { get; set; default = NodeSide.RIGHT; }
+  public bool     folded     { get; set; default = false; }
+  public double   tree_width { get; set; default = 0; }
 
   /* Default constructor */
   public Node( Layout? layout ) {
@@ -205,6 +206,11 @@ public class Node : Object {
   /* Sets the posy value only, leaving the children positions alone */
   public void set_posy_only( double adjust ) {
     _posy += adjust;
+  }
+
+  /* Returns the current width value */
+  public double get_width() {
+    return( _width );
   }
 
   /* Returns true if the node does not have a parent */
@@ -770,9 +776,12 @@ public class Node : Object {
   public virtual void attach( Node parent, int index, Layout? layout ) {
     this.parent = parent;
     if( (parent._children.length == 0) && (parent._task_count == 1) ) {
+      stdout.printf( "HERE!\n" );
       parent.propagate_task_info( (0 - parent._task_count), (0 - parent._task_done) );
       parent._task_count = 0;
       parent._task_done  = 0;
+      _task_count = 1;
+      _task_done  = 0;
     }
     if( index == -1 ) {
       index = (int)this.parent.children().length;
@@ -780,6 +789,7 @@ public class Node : Object {
     } else {
       parent.children().insert_val( index, this );
     }
+    stdout.printf( "Calling propagate_task_info, count: %d, done: %d\n", _task_count, _task_done );
     propagate_task_info( _task_count, _task_done );
     if( layout != null ) {
       layout.handle_update_by_insert( parent, this, index );

@@ -73,6 +73,18 @@ public class UndoBuffer : Object {
     }
   }
 
+  /* Returns the undo tooltip */
+  public string undo_tooltip() {
+    if( _undo_buffer.length == 0 ) return( "" );
+    return( _( "Undo " ) + _undo_buffer.index( _undo_buffer.length - 1 ).name );
+  }
+
+  /* Returns the undo tooltip */
+  public string redo_tooltip() {
+    if( _redo_buffer.length == 0 ) return( "" );
+    return( _( "Redo " ) + _redo_buffer.index( _redo_buffer.length - 1 ).name );
+  }
+
   /* Adds a new undo item to the undo buffer.  Clears the redo buffer. */
   public void add_item( UndoItem item ) {
     _undo_buffer.append_val( item );

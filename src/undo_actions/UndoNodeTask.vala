@@ -32,7 +32,7 @@ public class UndoNodeTask : UndoItem {
 
   /* Constructor for a node name change */
   public UndoNodeTask( DrawArea da, Node n, bool new_enable, bool new_done ) {
-    base( _( "Node Task Change" ) );
+    base( _( "node task change" ) );
     _da         = da;
     _node       = n;
     _old_enable = n.task_enabled();

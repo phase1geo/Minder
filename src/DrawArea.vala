@@ -106,12 +106,21 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Sets the layout to the given value */
   public void set_layout( string name ) {
-    _layout = layouts.get_layout( name );
-    for( int i=0; i<_nodes.length; i++ ) {
-      _layout.initialize( _nodes.index( i ) );
+    if( _layout == null ) {
+      _layout = layouts.get_layout( name );
+    } else {
+      bool old_balanceable = _layout.balanceable;
+      _layout = layouts.get_layout( name );
+      for( int i=0; i<_nodes.length; i++ ) {
+        _layout.initialize( _nodes.index( i ) );
+      }
+      if( !old_balanceable && _layout.balanceable ) {
+        balance_nodes();
+      } else {
+        queue_draw();
+        changed();
+      }
     }
-    // FOOBAR
-    queue_draw();
   }
 
   /* Loads the drawing area origin from the XML node */
@@ -257,13 +266,20 @@ public class DrawArea : Gtk.DrawingArea {
   /* Initialize the empty drawing area with a node */
   public void initialize() {
 
-    stdout.printf( "In DrawArea.initialize\n" );
-
     /* Clear the list of existing nodes */
     _nodes.remove_range( 0, _nodes.length );
 
     /* Clear the undo buffer */
     undo_buffer.clear();
+
+    /* Initialize variables */
+    _origin_x     = 0.0;
+    _origin_y     = 0.0;
+    _pressed      = false;
+    _press_type   = EventType.NOTHING;
+    _motion       = false;
+    _scale_factor = 1.0;
+    _attach_node  = null;
 
     /* Create the main idea node */
     var n = new RootNode.with_name( "Main Idea", _layout );

@@ -31,7 +31,7 @@ public class UndoNodeDelete : UndoItem {
 
   /* Default constructor */
   public UndoNodeDelete( DrawArea da, Node n, Layout layout ) {
-    base( _( "Delete Node" ) );
+    base( _( "delete node" ) );
     _da     = da;
     _node   = n;
     _parent = n.parent;

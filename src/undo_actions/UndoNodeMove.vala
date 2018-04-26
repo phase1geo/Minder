@@ -33,7 +33,7 @@ public class UndoNodeMove : UndoItem {
 
   /* Default constructor */
   public UndoNodeMove( DrawArea da, Node n, NodeSide old_side, int old_index, Layout l ) {
-    base( _( "Move Node" ) );
+    base( _( "move node" ) );
     _da        = da;
     _n         = n;
     _old_side  = old_side;

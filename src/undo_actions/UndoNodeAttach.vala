@@ -35,7 +35,7 @@ public class UndoNodeAttach : UndoItem {
 
   /* Default constructor */
   public UndoNodeAttach( DrawArea da, Node n, Node old_parent, NodeSide old_side, int old_index, Layout l ) {
-    base( _( "Attach Node" ) );
+    base( _( "attach node" ) );
     _da         = da;
     _n          = n;
     _old_parent = old_parent;

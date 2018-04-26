@@ -31,7 +31,7 @@ public class UndoNodeInsert : UndoItem {
 
   /* Default constructor */
   public UndoNodeInsert( DrawArea da, Node n, Layout l ) {
-    base( _( "Insert Node" ) );
+    base( _( "insert node" ) );
     _da     = da;
     _n      = n;
     _index  = n.index();

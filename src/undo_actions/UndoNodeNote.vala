@@ -30,7 +30,7 @@ public class UndoNodeNote : UndoItem {
 
   /* Constructor for a node name change */
   public UndoNodeNote( DrawArea da, Node n, string old_note ) {
-    base( _( "Node Note Change" ) );
+    base( _( "node note change" ) );
     _da       = da;
     _node     = n;
     _old_note = old_note;

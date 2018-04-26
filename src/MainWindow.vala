@@ -309,9 +309,9 @@ public class MainWindow : ApplicationWindow {
   /* Show or hides the inspector sidebar */
   private void inspector_clicked() {
     if( _inspector.child_revealed ) {
-      _inspector.reveal_child = false;
+      hide_node_properties();
     } else {
-      _inspector.reveal_child = true;
+      show_node_properties();
     }
   }
 
@@ -390,7 +390,9 @@ public class MainWindow : ApplicationWindow {
   */
   public void do_buffer_changed() {
     _undo_btn.set_sensitive( _canvas.undo_buffer.undoable() );
+    _undo_btn.set_tooltip_text( _canvas.undo_buffer.undo_tooltip() );
     _redo_btn.set_sensitive( _canvas.undo_buffer.redoable() );
+    _redo_btn.set_tooltip_text( _canvas.undo_buffer.redo_tooltip() );
   }
 
   /* Allow the user to select a filename to save the document as */
@@ -437,6 +439,13 @@ public class MainWindow : ApplicationWindow {
   /* Displays the node properties panel for the current node */
   private void show_node_properties() {
     _inspector.reveal_child = true;
+    _canvas.move_origin( 300, 0 );
+  }
+
+  /* Hides the node properties panel */
+  private void hide_node_properties() {
+    _inspector.reveal_child = false;
+    _canvas.move_origin( -300, 0 );
   }
 
   /* Converts the given value from the scale to the zoom value to use */
