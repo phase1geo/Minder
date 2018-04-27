@@ -31,7 +31,7 @@ public class PartNode : Object {
   /* Creates a single partitioner node */
   public PartNode( Node n, Layout l ) {
     double x, y, w, h;
-    l.bbox( n, -1, -1, out x, out y, out w, out h );
+    l.bbox( n, -1, out x, out y, out w, out h );
     if( (n.side == NodeSide.LEFT) || (n.side == NodeSide.RIGHT) ) {
       _size = h;
     } else {

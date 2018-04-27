@@ -479,7 +479,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void zoom_to_selected() {
     double x, y, w, h;
     if( _current_node == null ) return;
-    _layout.bbox( _current_node, -1, -1, out x, out y, out w, out h );
+    _layout.bbox( _current_node, -1, out x, out y, out w, out h );
     position_box( x, y, w, h, 0.5, 0.5 );
     set_scaling_factor( get_scaling_factor( w, h ) );
   }
@@ -494,7 +494,7 @@ public class DrawArea : Gtk.DrawingArea {
     double y2 = 0;
     for( int i=0; i<_nodes.length; i++ ) {
       double x, y, w, h;
-      _layout.bbox( _nodes.index( i ), -1, -1, out x, out y, out w, out h );
+      _layout.bbox( _nodes.index( i ), -1, out x, out y, out w, out h );
       x1 = (x1 < x) ? x1 : x;
       y1 = (y1 < y) ? y1 : y;
       x2 = (x2 < (x + w)) ? (x + w) : x2;

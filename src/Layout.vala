@@ -74,15 +74,18 @@ public class Layout : Object {
   }
 
   /* Get the bbox for the given parent to the given depth */
-  public virtual void bbox( Node parent, int depth, int side_mask, out double x, out double y, out double w, out double h ) {
+  public virtual void bbox( Node parent, int side_mask, out double x, out double y, out double w, out double h ) {
+
     uint num_children = parent.children().length;
+
     parent.bbox( out x, out y, out w, out h );
-    if( (depth != 0) && (num_children != 0) && !parent.folded ) {
+
+    if( (num_children != 0) && !parent.folded ) {
       double cx, cy, cw, ch;
       double mw, mh;
       for( int i=0; i<parent.children().length; i++ ) {
         if( (parent.children().index( i ).side & side_mask) != 0 ) {
-          bbox( parent.children().index( i ), (depth - 1), side_mask, out cx, out cy, out cw, out ch );
+          bbox( parent.children().index( i ), side_mask, out cx, out cy, out cw, out ch );
           x  = (x < cx) ? x : cx;
           y  = (y < cy) ? y : cy;
           mw = (cx + cw) - x;
@@ -92,7 +95,7 @@ public class Layout : Object {
         }
       }
     }
-    parent.tree_width = w;  // We'll save the overall child width into the node for comparison purposes
+
   }
 
   /* Adjusts the given tree by the given amount */
@@ -195,11 +198,11 @@ public class Layout : Object {
       }
     } else {
       if( (n.parent != null) && (width_diff != 0) ) {
-        double tree_width = n.tree_width;
+        double tree_size = n.tree_size;
         double nx, ny, nw, nh;
         n.set_posx_only( 0 - (width_diff / 2) );
-        bbox( n, 1, -1, out nx, out ny, out nw, out nh );
-        width_diff = n.tree_width - tree_width;
+        bbox( n, -1, out nx, out ny, out nw, out nh );
+        width_diff = n.tree_size - tree_size;
         if( width_diff != 0 ) {
           adjust_tree_all( n, (0 - (width_diff / 2)) );
         }
@@ -216,7 +219,7 @@ public class Layout : Object {
     }
   }
 
-  /* Adjusts the gap between the parent and child noes */
+  /* Adjusts the gap between the parent and child nodes */
   private void set_pc_gap( Node n ) {
     double px, py, pw, ph;
     n.parent.bbox( out px, out py, out pw, out ph );
@@ -249,7 +252,7 @@ public class Layout : Object {
 
     child.bbox( out ox, out oy, out ow, out oh );
     if( oh == 0 ) { oh = default_text_height + (pady * 2); }
-    bbox( child, -1, child.side, out cx, out cy, out cw, out ch );
+    bbox( child, child.side, out cx, out cy, out cw, out ch );
     if( ch == 0 ) { ch = default_text_height + (pady * 2); }
     if( (child.side & NodeSide.horizontal()) != 0 ) {
       adjust = (ch + _sb_gap) / 2;
@@ -278,7 +281,7 @@ public class Layout : Object {
     */
     } else if( ((pos + 1) == parent.children().length) || (parent.children().index( pos + 1 ).side != child.side) ) {
       double sx, sy, sw, sh;
-      bbox( parent.children().index( pos - 1 ), -1, child.side, out sx, out sy, out sw, out sh );
+      bbox( parent.children().index( pos - 1 ), child.side, out sx, out sy, out sw, out sh );
       if( (child.side & NodeSide.horizontal()) != 0 ) {
         child.posy = (sy + sh + _sb_gap + (oy - cy)) - adjust;
       } else {
@@ -288,7 +291,7 @@ public class Layout : Object {
     /* Otherwise, place ourselves just above the next sibling */
     } else {
       double sx, sy, sw, sh;
-      bbox( parent.children().index( pos + 1 ), -1, child.side, out sx, out sy, out sw, out sh );
+      bbox( parent.children().index( pos + 1 ), child.side, out sx, out sy, out sw, out sh );
       if( (child.side & NodeSide.horizontal()) != 0 ) {
         child.posy = sy + (oy - cy) - adjust;
       } else {
@@ -322,7 +325,7 @@ public class Layout : Object {
   /* Positions the given root node based on the position of the last node */
   public virtual void position_root( Node last, Node n ) {
     double x, y, w, h;
-    bbox( last, -1, -1, out x, out y, out w, out h );
+    bbox( last, -1, out x, out y, out w, out h );
     n.posx = last.posx;
     n.posy = y + h + _rt_gap;
   }

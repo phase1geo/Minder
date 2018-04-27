@@ -154,7 +154,7 @@ public class Node : Object {
   public Node?    parent     { get; protected set; default = null; }
   public NodeSide side       { get; set; default = NodeSide.RIGHT; }
   public bool     folded     { get; set; default = false; }
-  public double   tree_width { get; set; default = 0; }
+  public double   tree_size  { get; set; default = 0; }
 
   /* Default constructor */
   public Node( Layout? layout ) {
@@ -754,7 +754,7 @@ public class Node : Object {
       double x, y, w, h;
       int    idx = index();
       Node   p   = parent;
-      layout.bbox( this, -1, side, out x, out y, out w, out h );
+      layout.bbox( this, side, out x, out y, out w, out h );
       propagate_task_info( (0 - _task_count), (0 - _task_done) );
       parent.children().remove_index( index() );
       if( layout != null ) {
