@@ -1,5 +1,5 @@
 # project name
-project (com.github.phase1geo.Minder)
+project (com.github.phase1geo.minder)
 
 # the oldest stable cmake version we support
 cmake_minimum_required (VERSION 2.6)
@@ -12,9 +12,9 @@ list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/src)
 set (DATADIR "${CMAKE_INSTALL_PREFIX}/share")
 
 # what to call that directory where we install data too
-set (PKGDATADIR "${DATADIR}/com.github.phase1geo.Minder")
+set (PKGDATADIR "${DATADIR}/com.github.phase1geo.minder")
 
-set (EXEC_NAME "com.github.phase1geo.Minder")
+set (EXEC_NAME "com.github.phase1geo.minder")
 set (RELEASE_NAME "")
 set (VERSION "0.1")
 set (VERSION_INFO "")
@@ -23,7 +23,7 @@ set (VERSION_INFO "")
 find_package(PkgConfig)
 
 # now let's actually check for the required dependencies
-pkg_check_modules(DEPS REQUIRED gtk+-3.0 gee-0.8 glib-2.0 granite libxml-2.0 unity)
+pkg_check_modules(DEPS REQUIRED gtk+-3.0 gee-0.8 glib-2.0 granite libxml-2.0 unity plank)
 
 add_definitions(${DEPS_CFLAGS})
 link_libraries(${DEPS_LIBRARIES})
@@ -85,6 +85,7 @@ PACKAGES
     granite
     libxml-2.0
     unity
+    plank
 )
 
 # tell cmake what to call the executable we just made
@@ -94,35 +95,35 @@ add_executable(${EXEC_NAME} ${VALA_C})
 install (TARGETS ${EXEC_NAME} RUNTIME DESTINATION bin)
 
 # install our .desktop file so the Applications menu will see it
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.phase1geo.Minder.desktop DESTINATION ${DATADIR}/applications/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.phase1geo.minder.desktop DESTINATION ${DATADIR}/applications/)
 
 # install our .appdata.xml file so AppCenter will see it
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.phase1geo.Minder.appdata.xml DESTINATION ${DATADIR}/metainfo/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.phase1geo.minder.appdata.xml DESTINATION ${DATADIR}/metainfo/)
 
 # install custom icons
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-none-symbolic.svg         DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-todo-symbolic.svg         DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-done-symbolic.svg         DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-detach-symbolic.svg            DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-manual-symbolic.svg     DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-vertical-symbolic.svg   DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-horizontal-symbolic.svg DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-left-symbolic.svg       DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-right-symbolic.svg      DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-up-symbolic.svg         DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-down-symbolic.svg       DESTINATION ${DATADIR}/icons/elementary/apps/16/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/24x24/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/32x32/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/48x48/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/64x64/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/128x128/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/16x16@2/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/24x24@2/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/32x32@2/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/48x48@2/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/64x64@2/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.Minder.svg DESTINATION ${DATADIR}/icons/hicolor/128x128@2/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-none-symbolic.svg         DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-todo-symbolic.svg         DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-task-done-symbolic.svg         DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-detach-symbolic.svg            DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-manual-symbolic.svg     DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-vertical-symbolic.svg   DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-horizontal-symbolic.svg DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-left-symbolic.svg       DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-right-symbolic.svg      DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-up-symbolic.svg         DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/16/minder-layout-down-symbolic.svg       DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.minder.svg DESTINATION ${DATADIR}/icons/hicolor/16x16/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.minder.svg DESTINATION ${DATADIR}/icons/hicolor/24x24/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.minder.svg DESTINATION ${DATADIR}/icons/hicolor/32x32/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.minder.svg DESTINATION ${DATADIR}/icons/hicolor/48x48/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.minder.svg DESTINATION ${DATADIR}/icons/hicolor/64x64/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.minder.svg DESTINATION ${DATADIR}/icons/hicolor/128x128/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.minder.svg DESTINATION ${DATADIR}/icons/hicolor/16x16@2/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.minder.svg DESTINATION ${DATADIR}/icons/hicolor/24x24@2/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.minder.svg DESTINATION ${DATADIR}/icons/hicolor/32x32@2/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.minder.svg DESTINATION ${DATADIR}/icons/hicolor/48x48@2/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.minder.svg DESTINATION ${DATADIR}/icons/hicolor/64x64@2/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/icons/scalable/com.github.phase1geo.minder.svg DESTINATION ${DATADIR}/icons/hicolor/128x128@2/apps/)
 
 # Translation files
 set (GETTEXT_PACKAGE "${CMAKE_PROJECT_NAME}")

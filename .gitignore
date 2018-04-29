@@ -6,4 +6,4 @@ src/themes/*.c
 src/layouts/*.c
 src/undo_actions/*.c
 *.stamp
-com.github.phase1geo.Minder
+com.github.phase1geo.minder

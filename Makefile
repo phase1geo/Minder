@@ -78,6 +78,17 @@ list_install_components/fast: list_install_components
 
 .PHONY : list_install_components/fast
 
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -89,6 +100,17 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: install/strip
+
+.PHONY : install/strip/fast
+
 # Special rule for the target install/local
 install/local: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
@@ -99,17 +121,6 @@ install/local: preinstall
 install/local/fast: install/local
 
 .PHONY : install/local/fast
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -144,22 +155,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named com.github.phase1geo.Minder
+# Target rules for targets named com.github.phase1geo.minder
 
 # Build rule for target.
-com.github.phase1geo.Minder: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 com.github.phase1geo.Minder
-.PHONY : com.github.phase1geo.Minder
+com.github.phase1geo.minder: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 com.github.phase1geo.minder
+.PHONY : com.github.phase1geo.minder
 
 # fast build rule for target.
-com.github.phase1geo.Minder/fast:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/build
-.PHONY : com.github.phase1geo.Minder/fast
-
-# Manual pre-install relink rule for target.
-com.github.phase1geo.Minder/preinstall:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/preinstall
-.PHONY : com.github.phase1geo.Minder/preinstall
+com.github.phase1geo.minder/fast:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/build
+.PHONY : com.github.phase1geo.minder/fast
 
 #=============================================================================
 # Target rules for targets named po
@@ -206,7 +212,7 @@ src/Application.o: src/Application.c.o
 
 # target to build an object file
 src/Application.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Application.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Application.c.o
 .PHONY : src/Application.c.o
 
 src/Application.i: src/Application.c.i
@@ -215,7 +221,7 @@ src/Application.i: src/Application.c.i
 
 # target to preprocess a source file
 src/Application.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Application.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Application.c.i
 .PHONY : src/Application.c.i
 
 src/Application.s: src/Application.c.s
@@ -224,7 +230,7 @@ src/Application.s: src/Application.c.s
 
 # target to generate assembly for a file
 src/Application.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Application.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Application.c.s
 .PHONY : src/Application.c.s
 
 src/Document.o: src/Document.c.o
@@ -233,7 +239,7 @@ src/Document.o: src/Document.c.o
 
 # target to build an object file
 src/Document.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Document.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Document.c.o
 .PHONY : src/Document.c.o
 
 src/Document.i: src/Document.c.i
@@ -242,7 +248,7 @@ src/Document.i: src/Document.c.i
 
 # target to preprocess a source file
 src/Document.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Document.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Document.c.i
 .PHONY : src/Document.c.i
 
 src/Document.s: src/Document.c.s
@@ -251,7 +257,7 @@ src/Document.s: src/Document.c.s
 
 # target to generate assembly for a file
 src/Document.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Document.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Document.c.s
 .PHONY : src/Document.c.s
 
 src/DrawArea.o: src/DrawArea.c.o
@@ -260,7 +266,7 @@ src/DrawArea.o: src/DrawArea.c.o
 
 # target to build an object file
 src/DrawArea.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/DrawArea.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/DrawArea.c.o
 .PHONY : src/DrawArea.c.o
 
 src/DrawArea.i: src/DrawArea.c.i
@@ -269,7 +275,7 @@ src/DrawArea.i: src/DrawArea.c.i
 
 # target to preprocess a source file
 src/DrawArea.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/DrawArea.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/DrawArea.c.i
 .PHONY : src/DrawArea.c.i
 
 src/DrawArea.s: src/DrawArea.c.s
@@ -278,7 +284,7 @@ src/DrawArea.s: src/DrawArea.c.s
 
 # target to generate assembly for a file
 src/DrawArea.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/DrawArea.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/DrawArea.c.s
 .PHONY : src/DrawArea.c.s
 
 src/Layout.o: src/Layout.c.o
@@ -287,7 +293,7 @@ src/Layout.o: src/Layout.c.o
 
 # target to build an object file
 src/Layout.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Layout.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Layout.c.o
 .PHONY : src/Layout.c.o
 
 src/Layout.i: src/Layout.c.i
@@ -296,7 +302,7 @@ src/Layout.i: src/Layout.c.i
 
 # target to preprocess a source file
 src/Layout.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Layout.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Layout.c.i
 .PHONY : src/Layout.c.i
 
 src/Layout.s: src/Layout.c.s
@@ -305,7 +311,7 @@ src/Layout.s: src/Layout.c.s
 
 # target to generate assembly for a file
 src/Layout.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Layout.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Layout.c.s
 .PHONY : src/Layout.c.s
 
 src/Layouts.o: src/Layouts.c.o
@@ -314,7 +320,7 @@ src/Layouts.o: src/Layouts.c.o
 
 # target to build an object file
 src/Layouts.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Layouts.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Layouts.c.o
 .PHONY : src/Layouts.c.o
 
 src/Layouts.i: src/Layouts.c.i
@@ -323,7 +329,7 @@ src/Layouts.i: src/Layouts.c.i
 
 # target to preprocess a source file
 src/Layouts.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Layouts.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Layouts.c.i
 .PHONY : src/Layouts.c.i
 
 src/Layouts.s: src/Layouts.c.s
@@ -332,7 +338,7 @@ src/Layouts.s: src/Layouts.c.s
 
 # target to generate assembly for a file
 src/Layouts.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Layouts.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Layouts.c.s
 .PHONY : src/Layouts.c.s
 
 src/MainWindow.o: src/MainWindow.c.o
@@ -341,7 +347,7 @@ src/MainWindow.o: src/MainWindow.c.o
 
 # target to build an object file
 src/MainWindow.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/MainWindow.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/MainWindow.c.o
 .PHONY : src/MainWindow.c.o
 
 src/MainWindow.i: src/MainWindow.c.i
@@ -350,7 +356,7 @@ src/MainWindow.i: src/MainWindow.c.i
 
 # target to preprocess a source file
 src/MainWindow.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/MainWindow.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/MainWindow.c.i
 .PHONY : src/MainWindow.c.i
 
 src/MainWindow.s: src/MainWindow.c.s
@@ -359,7 +365,7 @@ src/MainWindow.s: src/MainWindow.c.s
 
 # target to generate assembly for a file
 src/MainWindow.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/MainWindow.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/MainWindow.c.s
 .PHONY : src/MainWindow.c.s
 
 src/MapInspector.o: src/MapInspector.c.o
@@ -368,7 +374,7 @@ src/MapInspector.o: src/MapInspector.c.o
 
 # target to build an object file
 src/MapInspector.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/MapInspector.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/MapInspector.c.o
 .PHONY : src/MapInspector.c.o
 
 src/MapInspector.i: src/MapInspector.c.i
@@ -377,7 +383,7 @@ src/MapInspector.i: src/MapInspector.c.i
 
 # target to preprocess a source file
 src/MapInspector.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/MapInspector.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/MapInspector.c.i
 .PHONY : src/MapInspector.c.i
 
 src/MapInspector.s: src/MapInspector.c.s
@@ -386,7 +392,7 @@ src/MapInspector.s: src/MapInspector.c.s
 
 # target to generate assembly for a file
 src/MapInspector.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/MapInspector.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/MapInspector.c.s
 .PHONY : src/MapInspector.c.s
 
 src/Node.o: src/Node.c.o
@@ -395,7 +401,7 @@ src/Node.o: src/Node.c.o
 
 # target to build an object file
 src/Node.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Node.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Node.c.o
 .PHONY : src/Node.c.o
 
 src/Node.i: src/Node.c.i
@@ -404,7 +410,7 @@ src/Node.i: src/Node.c.i
 
 # target to preprocess a source file
 src/Node.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Node.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Node.c.i
 .PHONY : src/Node.c.i
 
 src/Node.s: src/Node.c.s
@@ -413,7 +419,7 @@ src/Node.s: src/Node.c.s
 
 # target to generate assembly for a file
 src/Node.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Node.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Node.c.s
 .PHONY : src/Node.c.s
 
 src/NodeInspector.o: src/NodeInspector.c.o
@@ -422,7 +428,7 @@ src/NodeInspector.o: src/NodeInspector.c.o
 
 # target to build an object file
 src/NodeInspector.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/NodeInspector.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/NodeInspector.c.o
 .PHONY : src/NodeInspector.c.o
 
 src/NodeInspector.i: src/NodeInspector.c.i
@@ -431,7 +437,7 @@ src/NodeInspector.i: src/NodeInspector.c.i
 
 # target to preprocess a source file
 src/NodeInspector.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/NodeInspector.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/NodeInspector.c.i
 .PHONY : src/NodeInspector.c.i
 
 src/NodeInspector.s: src/NodeInspector.c.s
@@ -440,7 +446,7 @@ src/NodeInspector.s: src/NodeInspector.c.s
 
 # target to generate assembly for a file
 src/NodeInspector.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/NodeInspector.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/NodeInspector.c.s
 .PHONY : src/NodeInspector.c.s
 
 src/NonrootNode.o: src/NonrootNode.c.o
@@ -449,7 +455,7 @@ src/NonrootNode.o: src/NonrootNode.c.o
 
 # target to build an object file
 src/NonrootNode.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/NonrootNode.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/NonrootNode.c.o
 .PHONY : src/NonrootNode.c.o
 
 src/NonrootNode.i: src/NonrootNode.c.i
@@ -458,7 +464,7 @@ src/NonrootNode.i: src/NonrootNode.c.i
 
 # target to preprocess a source file
 src/NonrootNode.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/NonrootNode.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/NonrootNode.c.i
 .PHONY : src/NonrootNode.c.i
 
 src/NonrootNode.s: src/NonrootNode.c.s
@@ -467,7 +473,7 @@ src/NonrootNode.s: src/NonrootNode.c.s
 
 # target to generate assembly for a file
 src/NonrootNode.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/NonrootNode.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/NonrootNode.c.s
 .PHONY : src/NonrootNode.c.s
 
 src/OPML.o: src/OPML.c.o
@@ -476,7 +482,7 @@ src/OPML.o: src/OPML.c.o
 
 # target to build an object file
 src/OPML.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/OPML.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/OPML.c.o
 .PHONY : src/OPML.c.o
 
 src/OPML.i: src/OPML.c.i
@@ -485,7 +491,7 @@ src/OPML.i: src/OPML.c.i
 
 # target to preprocess a source file
 src/OPML.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/OPML.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/OPML.c.i
 .PHONY : src/OPML.c.i
 
 src/OPML.s: src/OPML.c.s
@@ -494,7 +500,7 @@ src/OPML.s: src/OPML.c.s
 
 # target to generate assembly for a file
 src/OPML.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/OPML.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/OPML.c.s
 .PHONY : src/OPML.c.s
 
 src/PDF.o: src/PDF.c.o
@@ -503,7 +509,7 @@ src/PDF.o: src/PDF.c.o
 
 # target to build an object file
 src/PDF.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/PDF.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/PDF.c.o
 .PHONY : src/PDF.c.o
 
 src/PDF.i: src/PDF.c.i
@@ -512,7 +518,7 @@ src/PDF.i: src/PDF.c.i
 
 # target to preprocess a source file
 src/PDF.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/PDF.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/PDF.c.i
 .PHONY : src/PDF.c.i
 
 src/PDF.s: src/PDF.c.s
@@ -521,7 +527,7 @@ src/PDF.s: src/PDF.c.s
 
 # target to generate assembly for a file
 src/PDF.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/PDF.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/PDF.c.s
 .PHONY : src/PDF.c.s
 
 src/Partitioner.o: src/Partitioner.c.o
@@ -530,7 +536,7 @@ src/Partitioner.o: src/Partitioner.c.o
 
 # target to build an object file
 src/Partitioner.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Partitioner.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Partitioner.c.o
 .PHONY : src/Partitioner.c.o
 
 src/Partitioner.i: src/Partitioner.c.i
@@ -539,7 +545,7 @@ src/Partitioner.i: src/Partitioner.c.i
 
 # target to preprocess a source file
 src/Partitioner.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Partitioner.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Partitioner.c.i
 .PHONY : src/Partitioner.c.i
 
 src/Partitioner.s: src/Partitioner.c.s
@@ -548,7 +554,7 @@ src/Partitioner.s: src/Partitioner.c.s
 
 # target to generate assembly for a file
 src/Partitioner.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Partitioner.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Partitioner.c.s
 .PHONY : src/Partitioner.c.s
 
 src/Print.o: src/Print.c.o
@@ -557,7 +563,7 @@ src/Print.o: src/Print.c.o
 
 # target to build an object file
 src/Print.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Print.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Print.c.o
 .PHONY : src/Print.c.o
 
 src/Print.i: src/Print.c.i
@@ -566,7 +572,7 @@ src/Print.i: src/Print.c.i
 
 # target to preprocess a source file
 src/Print.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Print.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Print.c.i
 .PHONY : src/Print.c.i
 
 src/Print.s: src/Print.c.s
@@ -575,7 +581,7 @@ src/Print.s: src/Print.c.s
 
 # target to generate assembly for a file
 src/Print.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Print.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Print.c.s
 .PHONY : src/Print.c.s
 
 src/RootNode.o: src/RootNode.c.o
@@ -584,7 +590,7 @@ src/RootNode.o: src/RootNode.c.o
 
 # target to build an object file
 src/RootNode.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/RootNode.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/RootNode.c.o
 .PHONY : src/RootNode.c.o
 
 src/RootNode.i: src/RootNode.c.i
@@ -593,7 +599,7 @@ src/RootNode.i: src/RootNode.c.i
 
 # target to preprocess a source file
 src/RootNode.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/RootNode.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/RootNode.c.i
 .PHONY : src/RootNode.c.i
 
 src/RootNode.s: src/RootNode.c.s
@@ -602,7 +608,7 @@ src/RootNode.s: src/RootNode.c.s
 
 # target to generate assembly for a file
 src/RootNode.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/RootNode.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/RootNode.c.s
 .PHONY : src/RootNode.c.s
 
 src/Theme.o: src/Theme.c.o
@@ -611,7 +617,7 @@ src/Theme.o: src/Theme.c.o
 
 # target to build an object file
 src/Theme.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Theme.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Theme.c.o
 .PHONY : src/Theme.c.o
 
 src/Theme.i: src/Theme.c.i
@@ -620,7 +626,7 @@ src/Theme.i: src/Theme.c.i
 
 # target to preprocess a source file
 src/Theme.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Theme.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Theme.c.i
 .PHONY : src/Theme.c.i
 
 src/Theme.s: src/Theme.c.s
@@ -629,7 +635,7 @@ src/Theme.s: src/Theme.c.s
 
 # target to generate assembly for a file
 src/Theme.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Theme.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Theme.c.s
 .PHONY : src/Theme.c.s
 
 src/Themes.o: src/Themes.c.o
@@ -638,7 +644,7 @@ src/Themes.o: src/Themes.c.o
 
 # target to build an object file
 src/Themes.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Themes.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Themes.c.o
 .PHONY : src/Themes.c.o
 
 src/Themes.i: src/Themes.c.i
@@ -647,7 +653,7 @@ src/Themes.i: src/Themes.c.i
 
 # target to preprocess a source file
 src/Themes.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Themes.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Themes.c.i
 .PHONY : src/Themes.c.i
 
 src/Themes.s: src/Themes.c.s
@@ -656,7 +662,7 @@ src/Themes.s: src/Themes.c.s
 
 # target to generate assembly for a file
 src/Themes.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Themes.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Themes.c.s
 .PHONY : src/Themes.c.s
 
 src/UndoBuffer.o: src/UndoBuffer.c.o
@@ -665,7 +671,7 @@ src/UndoBuffer.o: src/UndoBuffer.c.o
 
 # target to build an object file
 src/UndoBuffer.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/UndoBuffer.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/UndoBuffer.c.o
 .PHONY : src/UndoBuffer.c.o
 
 src/UndoBuffer.i: src/UndoBuffer.c.i
@@ -674,7 +680,7 @@ src/UndoBuffer.i: src/UndoBuffer.c.i
 
 # target to preprocess a source file
 src/UndoBuffer.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/UndoBuffer.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/UndoBuffer.c.i
 .PHONY : src/UndoBuffer.c.i
 
 src/UndoBuffer.s: src/UndoBuffer.c.s
@@ -683,7 +689,7 @@ src/UndoBuffer.s: src/UndoBuffer.c.s
 
 # target to generate assembly for a file
 src/UndoBuffer.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/UndoBuffer.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/UndoBuffer.c.s
 .PHONY : src/UndoBuffer.c.s
 
 src/UndoItem.o: src/UndoItem.c.o
@@ -692,7 +698,7 @@ src/UndoItem.o: src/UndoItem.c.o
 
 # target to build an object file
 src/UndoItem.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/UndoItem.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/UndoItem.c.o
 .PHONY : src/UndoItem.c.o
 
 src/UndoItem.i: src/UndoItem.c.i
@@ -701,7 +707,7 @@ src/UndoItem.i: src/UndoItem.c.i
 
 # target to preprocess a source file
 src/UndoItem.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/UndoItem.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/UndoItem.c.i
 .PHONY : src/UndoItem.c.i
 
 src/UndoItem.s: src/UndoItem.c.s
@@ -710,7 +716,7 @@ src/UndoItem.s: src/UndoItem.c.s
 
 # target to generate assembly for a file
 src/UndoItem.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/UndoItem.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/UndoItem.c.s
 .PHONY : src/UndoItem.c.s
 
 src/layouts/LayoutDown.o: src/layouts/LayoutDown.c.o
@@ -719,7 +725,7 @@ src/layouts/LayoutDown.o: src/layouts/LayoutDown.c.o
 
 # target to build an object file
 src/layouts/LayoutDown.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutDown.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutDown.c.o
 .PHONY : src/layouts/LayoutDown.c.o
 
 src/layouts/LayoutDown.i: src/layouts/LayoutDown.c.i
@@ -728,7 +734,7 @@ src/layouts/LayoutDown.i: src/layouts/LayoutDown.c.i
 
 # target to preprocess a source file
 src/layouts/LayoutDown.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutDown.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutDown.c.i
 .PHONY : src/layouts/LayoutDown.c.i
 
 src/layouts/LayoutDown.s: src/layouts/LayoutDown.c.s
@@ -737,7 +743,7 @@ src/layouts/LayoutDown.s: src/layouts/LayoutDown.c.s
 
 # target to generate assembly for a file
 src/layouts/LayoutDown.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutDown.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutDown.c.s
 .PHONY : src/layouts/LayoutDown.c.s
 
 src/layouts/LayoutHorizontal.o: src/layouts/LayoutHorizontal.c.o
@@ -746,7 +752,7 @@ src/layouts/LayoutHorizontal.o: src/layouts/LayoutHorizontal.c.o
 
 # target to build an object file
 src/layouts/LayoutHorizontal.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutHorizontal.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutHorizontal.c.o
 .PHONY : src/layouts/LayoutHorizontal.c.o
 
 src/layouts/LayoutHorizontal.i: src/layouts/LayoutHorizontal.c.i
@@ -755,7 +761,7 @@ src/layouts/LayoutHorizontal.i: src/layouts/LayoutHorizontal.c.i
 
 # target to preprocess a source file
 src/layouts/LayoutHorizontal.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutHorizontal.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutHorizontal.c.i
 .PHONY : src/layouts/LayoutHorizontal.c.i
 
 src/layouts/LayoutHorizontal.s: src/layouts/LayoutHorizontal.c.s
@@ -764,7 +770,7 @@ src/layouts/LayoutHorizontal.s: src/layouts/LayoutHorizontal.c.s
 
 # target to generate assembly for a file
 src/layouts/LayoutHorizontal.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutHorizontal.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutHorizontal.c.s
 .PHONY : src/layouts/LayoutHorizontal.c.s
 
 src/layouts/LayoutLeft.o: src/layouts/LayoutLeft.c.o
@@ -773,7 +779,7 @@ src/layouts/LayoutLeft.o: src/layouts/LayoutLeft.c.o
 
 # target to build an object file
 src/layouts/LayoutLeft.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutLeft.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutLeft.c.o
 .PHONY : src/layouts/LayoutLeft.c.o
 
 src/layouts/LayoutLeft.i: src/layouts/LayoutLeft.c.i
@@ -782,7 +788,7 @@ src/layouts/LayoutLeft.i: src/layouts/LayoutLeft.c.i
 
 # target to preprocess a source file
 src/layouts/LayoutLeft.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutLeft.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutLeft.c.i
 .PHONY : src/layouts/LayoutLeft.c.i
 
 src/layouts/LayoutLeft.s: src/layouts/LayoutLeft.c.s
@@ -791,7 +797,7 @@ src/layouts/LayoutLeft.s: src/layouts/LayoutLeft.c.s
 
 # target to generate assembly for a file
 src/layouts/LayoutLeft.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutLeft.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutLeft.c.s
 .PHONY : src/layouts/LayoutLeft.c.s
 
 src/layouts/LayoutManual.o: src/layouts/LayoutManual.c.o
@@ -800,7 +806,7 @@ src/layouts/LayoutManual.o: src/layouts/LayoutManual.c.o
 
 # target to build an object file
 src/layouts/LayoutManual.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutManual.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutManual.c.o
 .PHONY : src/layouts/LayoutManual.c.o
 
 src/layouts/LayoutManual.i: src/layouts/LayoutManual.c.i
@@ -809,7 +815,7 @@ src/layouts/LayoutManual.i: src/layouts/LayoutManual.c.i
 
 # target to preprocess a source file
 src/layouts/LayoutManual.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutManual.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutManual.c.i
 .PHONY : src/layouts/LayoutManual.c.i
 
 src/layouts/LayoutManual.s: src/layouts/LayoutManual.c.s
@@ -818,7 +824,7 @@ src/layouts/LayoutManual.s: src/layouts/LayoutManual.c.s
 
 # target to generate assembly for a file
 src/layouts/LayoutManual.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutManual.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutManual.c.s
 .PHONY : src/layouts/LayoutManual.c.s
 
 src/layouts/LayoutRight.o: src/layouts/LayoutRight.c.o
@@ -827,7 +833,7 @@ src/layouts/LayoutRight.o: src/layouts/LayoutRight.c.o
 
 # target to build an object file
 src/layouts/LayoutRight.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutRight.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutRight.c.o
 .PHONY : src/layouts/LayoutRight.c.o
 
 src/layouts/LayoutRight.i: src/layouts/LayoutRight.c.i
@@ -836,7 +842,7 @@ src/layouts/LayoutRight.i: src/layouts/LayoutRight.c.i
 
 # target to preprocess a source file
 src/layouts/LayoutRight.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutRight.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutRight.c.i
 .PHONY : src/layouts/LayoutRight.c.i
 
 src/layouts/LayoutRight.s: src/layouts/LayoutRight.c.s
@@ -845,7 +851,7 @@ src/layouts/LayoutRight.s: src/layouts/LayoutRight.c.s
 
 # target to generate assembly for a file
 src/layouts/LayoutRight.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutRight.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutRight.c.s
 .PHONY : src/layouts/LayoutRight.c.s
 
 src/layouts/LayoutUp.o: src/layouts/LayoutUp.c.o
@@ -854,7 +860,7 @@ src/layouts/LayoutUp.o: src/layouts/LayoutUp.c.o
 
 # target to build an object file
 src/layouts/LayoutUp.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutUp.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutUp.c.o
 .PHONY : src/layouts/LayoutUp.c.o
 
 src/layouts/LayoutUp.i: src/layouts/LayoutUp.c.i
@@ -863,7 +869,7 @@ src/layouts/LayoutUp.i: src/layouts/LayoutUp.c.i
 
 # target to preprocess a source file
 src/layouts/LayoutUp.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutUp.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutUp.c.i
 .PHONY : src/layouts/LayoutUp.c.i
 
 src/layouts/LayoutUp.s: src/layouts/LayoutUp.c.s
@@ -872,7 +878,7 @@ src/layouts/LayoutUp.s: src/layouts/LayoutUp.c.s
 
 # target to generate assembly for a file
 src/layouts/LayoutUp.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutUp.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutUp.c.s
 .PHONY : src/layouts/LayoutUp.c.s
 
 src/layouts/LayoutVertical.o: src/layouts/LayoutVertical.c.o
@@ -881,7 +887,7 @@ src/layouts/LayoutVertical.o: src/layouts/LayoutVertical.c.o
 
 # target to build an object file
 src/layouts/LayoutVertical.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutVertical.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutVertical.c.o
 .PHONY : src/layouts/LayoutVertical.c.o
 
 src/layouts/LayoutVertical.i: src/layouts/LayoutVertical.c.i
@@ -890,7 +896,7 @@ src/layouts/LayoutVertical.i: src/layouts/LayoutVertical.c.i
 
 # target to preprocess a source file
 src/layouts/LayoutVertical.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutVertical.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutVertical.c.i
 .PHONY : src/layouts/LayoutVertical.c.i
 
 src/layouts/LayoutVertical.s: src/layouts/LayoutVertical.c.s
@@ -899,7 +905,7 @@ src/layouts/LayoutVertical.s: src/layouts/LayoutVertical.c.s
 
 # target to generate assembly for a file
 src/layouts/LayoutVertical.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/layouts/LayoutVertical.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/layouts/LayoutVertical.c.s
 .PHONY : src/layouts/LayoutVertical.c.s
 
 src/themes/ThemeDark.o: src/themes/ThemeDark.c.o
@@ -908,7 +914,7 @@ src/themes/ThemeDark.o: src/themes/ThemeDark.c.o
 
 # target to build an object file
 src/themes/ThemeDark.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes/ThemeDark.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/themes/ThemeDark.c.o
 .PHONY : src/themes/ThemeDark.c.o
 
 src/themes/ThemeDark.i: src/themes/ThemeDark.c.i
@@ -917,7 +923,7 @@ src/themes/ThemeDark.i: src/themes/ThemeDark.c.i
 
 # target to preprocess a source file
 src/themes/ThemeDark.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes/ThemeDark.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/themes/ThemeDark.c.i
 .PHONY : src/themes/ThemeDark.c.i
 
 src/themes/ThemeDark.s: src/themes/ThemeDark.c.s
@@ -926,7 +932,7 @@ src/themes/ThemeDark.s: src/themes/ThemeDark.c.s
 
 # target to generate assembly for a file
 src/themes/ThemeDark.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes/ThemeDark.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/themes/ThemeDark.c.s
 .PHONY : src/themes/ThemeDark.c.s
 
 src/themes/ThemeDefault.o: src/themes/ThemeDefault.c.o
@@ -935,7 +941,7 @@ src/themes/ThemeDefault.o: src/themes/ThemeDefault.c.o
 
 # target to build an object file
 src/themes/ThemeDefault.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes/ThemeDefault.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/themes/ThemeDefault.c.o
 .PHONY : src/themes/ThemeDefault.c.o
 
 src/themes/ThemeDefault.i: src/themes/ThemeDefault.c.i
@@ -944,7 +950,7 @@ src/themes/ThemeDefault.i: src/themes/ThemeDefault.c.i
 
 # target to preprocess a source file
 src/themes/ThemeDefault.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes/ThemeDefault.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/themes/ThemeDefault.c.i
 .PHONY : src/themes/ThemeDefault.c.i
 
 src/themes/ThemeDefault.s: src/themes/ThemeDefault.c.s
@@ -953,7 +959,7 @@ src/themes/ThemeDefault.s: src/themes/ThemeDefault.c.s
 
 # target to generate assembly for a file
 src/themes/ThemeDefault.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/themes/ThemeDefault.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/themes/ThemeDefault.c.s
 .PHONY : src/themes/ThemeDefault.c.s
 
 src/undo_actions/UndoNodeAttach.o: src/undo_actions/UndoNodeAttach.c.o
@@ -962,7 +968,7 @@ src/undo_actions/UndoNodeAttach.o: src/undo_actions/UndoNodeAttach.c.o
 
 # target to build an object file
 src/undo_actions/UndoNodeAttach.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeAttach.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeAttach.c.o
 .PHONY : src/undo_actions/UndoNodeAttach.c.o
 
 src/undo_actions/UndoNodeAttach.i: src/undo_actions/UndoNodeAttach.c.i
@@ -971,7 +977,7 @@ src/undo_actions/UndoNodeAttach.i: src/undo_actions/UndoNodeAttach.c.i
 
 # target to preprocess a source file
 src/undo_actions/UndoNodeAttach.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeAttach.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeAttach.c.i
 .PHONY : src/undo_actions/UndoNodeAttach.c.i
 
 src/undo_actions/UndoNodeAttach.s: src/undo_actions/UndoNodeAttach.c.s
@@ -980,7 +986,7 @@ src/undo_actions/UndoNodeAttach.s: src/undo_actions/UndoNodeAttach.c.s
 
 # target to generate assembly for a file
 src/undo_actions/UndoNodeAttach.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeAttach.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeAttach.c.s
 .PHONY : src/undo_actions/UndoNodeAttach.c.s
 
 src/undo_actions/UndoNodeDelete.o: src/undo_actions/UndoNodeDelete.c.o
@@ -989,7 +995,7 @@ src/undo_actions/UndoNodeDelete.o: src/undo_actions/UndoNodeDelete.c.o
 
 # target to build an object file
 src/undo_actions/UndoNodeDelete.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeDelete.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeDelete.c.o
 .PHONY : src/undo_actions/UndoNodeDelete.c.o
 
 src/undo_actions/UndoNodeDelete.i: src/undo_actions/UndoNodeDelete.c.i
@@ -998,7 +1004,7 @@ src/undo_actions/UndoNodeDelete.i: src/undo_actions/UndoNodeDelete.c.i
 
 # target to preprocess a source file
 src/undo_actions/UndoNodeDelete.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeDelete.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeDelete.c.i
 .PHONY : src/undo_actions/UndoNodeDelete.c.i
 
 src/undo_actions/UndoNodeDelete.s: src/undo_actions/UndoNodeDelete.c.s
@@ -1007,7 +1013,7 @@ src/undo_actions/UndoNodeDelete.s: src/undo_actions/UndoNodeDelete.c.s
 
 # target to generate assembly for a file
 src/undo_actions/UndoNodeDelete.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeDelete.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeDelete.c.s
 .PHONY : src/undo_actions/UndoNodeDelete.c.s
 
 src/undo_actions/UndoNodeDetach.o: src/undo_actions/UndoNodeDetach.c.o
@@ -1016,7 +1022,7 @@ src/undo_actions/UndoNodeDetach.o: src/undo_actions/UndoNodeDetach.c.o
 
 # target to build an object file
 src/undo_actions/UndoNodeDetach.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeDetach.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeDetach.c.o
 .PHONY : src/undo_actions/UndoNodeDetach.c.o
 
 src/undo_actions/UndoNodeDetach.i: src/undo_actions/UndoNodeDetach.c.i
@@ -1025,7 +1031,7 @@ src/undo_actions/UndoNodeDetach.i: src/undo_actions/UndoNodeDetach.c.i
 
 # target to preprocess a source file
 src/undo_actions/UndoNodeDetach.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeDetach.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeDetach.c.i
 .PHONY : src/undo_actions/UndoNodeDetach.c.i
 
 src/undo_actions/UndoNodeDetach.s: src/undo_actions/UndoNodeDetach.c.s
@@ -1034,7 +1040,7 @@ src/undo_actions/UndoNodeDetach.s: src/undo_actions/UndoNodeDetach.c.s
 
 # target to generate assembly for a file
 src/undo_actions/UndoNodeDetach.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeDetach.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeDetach.c.s
 .PHONY : src/undo_actions/UndoNodeDetach.c.s
 
 src/undo_actions/UndoNodeFold.o: src/undo_actions/UndoNodeFold.c.o
@@ -1043,7 +1049,7 @@ src/undo_actions/UndoNodeFold.o: src/undo_actions/UndoNodeFold.c.o
 
 # target to build an object file
 src/undo_actions/UndoNodeFold.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeFold.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeFold.c.o
 .PHONY : src/undo_actions/UndoNodeFold.c.o
 
 src/undo_actions/UndoNodeFold.i: src/undo_actions/UndoNodeFold.c.i
@@ -1052,7 +1058,7 @@ src/undo_actions/UndoNodeFold.i: src/undo_actions/UndoNodeFold.c.i
 
 # target to preprocess a source file
 src/undo_actions/UndoNodeFold.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeFold.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeFold.c.i
 .PHONY : src/undo_actions/UndoNodeFold.c.i
 
 src/undo_actions/UndoNodeFold.s: src/undo_actions/UndoNodeFold.c.s
@@ -1061,7 +1067,7 @@ src/undo_actions/UndoNodeFold.s: src/undo_actions/UndoNodeFold.c.s
 
 # target to generate assembly for a file
 src/undo_actions/UndoNodeFold.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeFold.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeFold.c.s
 .PHONY : src/undo_actions/UndoNodeFold.c.s
 
 src/undo_actions/UndoNodeInsert.o: src/undo_actions/UndoNodeInsert.c.o
@@ -1070,7 +1076,7 @@ src/undo_actions/UndoNodeInsert.o: src/undo_actions/UndoNodeInsert.c.o
 
 # target to build an object file
 src/undo_actions/UndoNodeInsert.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeInsert.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeInsert.c.o
 .PHONY : src/undo_actions/UndoNodeInsert.c.o
 
 src/undo_actions/UndoNodeInsert.i: src/undo_actions/UndoNodeInsert.c.i
@@ -1079,7 +1085,7 @@ src/undo_actions/UndoNodeInsert.i: src/undo_actions/UndoNodeInsert.c.i
 
 # target to preprocess a source file
 src/undo_actions/UndoNodeInsert.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeInsert.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeInsert.c.i
 .PHONY : src/undo_actions/UndoNodeInsert.c.i
 
 src/undo_actions/UndoNodeInsert.s: src/undo_actions/UndoNodeInsert.c.s
@@ -1088,7 +1094,7 @@ src/undo_actions/UndoNodeInsert.s: src/undo_actions/UndoNodeInsert.c.s
 
 # target to generate assembly for a file
 src/undo_actions/UndoNodeInsert.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeInsert.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeInsert.c.s
 .PHONY : src/undo_actions/UndoNodeInsert.c.s
 
 src/undo_actions/UndoNodeMove.o: src/undo_actions/UndoNodeMove.c.o
@@ -1097,7 +1103,7 @@ src/undo_actions/UndoNodeMove.o: src/undo_actions/UndoNodeMove.c.o
 
 # target to build an object file
 src/undo_actions/UndoNodeMove.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeMove.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeMove.c.o
 .PHONY : src/undo_actions/UndoNodeMove.c.o
 
 src/undo_actions/UndoNodeMove.i: src/undo_actions/UndoNodeMove.c.i
@@ -1106,7 +1112,7 @@ src/undo_actions/UndoNodeMove.i: src/undo_actions/UndoNodeMove.c.i
 
 # target to preprocess a source file
 src/undo_actions/UndoNodeMove.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeMove.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeMove.c.i
 .PHONY : src/undo_actions/UndoNodeMove.c.i
 
 src/undo_actions/UndoNodeMove.s: src/undo_actions/UndoNodeMove.c.s
@@ -1115,7 +1121,7 @@ src/undo_actions/UndoNodeMove.s: src/undo_actions/UndoNodeMove.c.s
 
 # target to generate assembly for a file
 src/undo_actions/UndoNodeMove.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeMove.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeMove.c.s
 .PHONY : src/undo_actions/UndoNodeMove.c.s
 
 src/undo_actions/UndoNodeName.o: src/undo_actions/UndoNodeName.c.o
@@ -1124,7 +1130,7 @@ src/undo_actions/UndoNodeName.o: src/undo_actions/UndoNodeName.c.o
 
 # target to build an object file
 src/undo_actions/UndoNodeName.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeName.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeName.c.o
 .PHONY : src/undo_actions/UndoNodeName.c.o
 
 src/undo_actions/UndoNodeName.i: src/undo_actions/UndoNodeName.c.i
@@ -1133,7 +1139,7 @@ src/undo_actions/UndoNodeName.i: src/undo_actions/UndoNodeName.c.i
 
 # target to preprocess a source file
 src/undo_actions/UndoNodeName.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeName.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeName.c.i
 .PHONY : src/undo_actions/UndoNodeName.c.i
 
 src/undo_actions/UndoNodeName.s: src/undo_actions/UndoNodeName.c.s
@@ -1142,7 +1148,7 @@ src/undo_actions/UndoNodeName.s: src/undo_actions/UndoNodeName.c.s
 
 # target to generate assembly for a file
 src/undo_actions/UndoNodeName.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeName.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeName.c.s
 .PHONY : src/undo_actions/UndoNodeName.c.s
 
 src/undo_actions/UndoNodeNote.o: src/undo_actions/UndoNodeNote.c.o
@@ -1151,7 +1157,7 @@ src/undo_actions/UndoNodeNote.o: src/undo_actions/UndoNodeNote.c.o
 
 # target to build an object file
 src/undo_actions/UndoNodeNote.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeNote.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeNote.c.o
 .PHONY : src/undo_actions/UndoNodeNote.c.o
 
 src/undo_actions/UndoNodeNote.i: src/undo_actions/UndoNodeNote.c.i
@@ -1160,7 +1166,7 @@ src/undo_actions/UndoNodeNote.i: src/undo_actions/UndoNodeNote.c.i
 
 # target to preprocess a source file
 src/undo_actions/UndoNodeNote.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeNote.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeNote.c.i
 .PHONY : src/undo_actions/UndoNodeNote.c.i
 
 src/undo_actions/UndoNodeNote.s: src/undo_actions/UndoNodeNote.c.s
@@ -1169,7 +1175,7 @@ src/undo_actions/UndoNodeNote.s: src/undo_actions/UndoNodeNote.c.s
 
 # target to generate assembly for a file
 src/undo_actions/UndoNodeNote.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeNote.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeNote.c.s
 .PHONY : src/undo_actions/UndoNodeNote.c.s
 
 src/undo_actions/UndoNodeTask.o: src/undo_actions/UndoNodeTask.c.o
@@ -1178,7 +1184,7 @@ src/undo_actions/UndoNodeTask.o: src/undo_actions/UndoNodeTask.c.o
 
 # target to build an object file
 src/undo_actions/UndoNodeTask.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeTask.c.o
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeTask.c.o
 .PHONY : src/undo_actions/UndoNodeTask.c.o
 
 src/undo_actions/UndoNodeTask.i: src/undo_actions/UndoNodeTask.c.i
@@ -1187,7 +1193,7 @@ src/undo_actions/UndoNodeTask.i: src/undo_actions/UndoNodeTask.c.i
 
 # target to preprocess a source file
 src/undo_actions/UndoNodeTask.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeTask.c.i
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeTask.c.i
 .PHONY : src/undo_actions/UndoNodeTask.c.i
 
 src/undo_actions/UndoNodeTask.s: src/undo_actions/UndoNodeTask.c.s
@@ -1196,7 +1202,7 @@ src/undo_actions/UndoNodeTask.s: src/undo_actions/UndoNodeTask.c.s
 
 # target to generate assembly for a file
 src/undo_actions/UndoNodeTask.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/undo_actions/UndoNodeTask.c.s
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeTask.c.s
 .PHONY : src/undo_actions/UndoNodeTask.c.s
 
 # Help Target
@@ -1207,10 +1213,11 @@ help:
 	@echo "... depend"
 	@echo "... install"
 	@echo "... list_install_components"
-	@echo "... com.github.phase1geo.Minder"
-	@echo "... edit_cache"
-	@echo "... install/local"
 	@echo "... rebuild_cache"
+	@echo "... com.github.phase1geo.minder"
+	@echo "... edit_cache"
+	@echo "... install/strip"
+	@echo "... install/local"
 	@echo "... po"
 	@echo "... i18n"
 	@echo "... pot"

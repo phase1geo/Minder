@@ -29,7 +29,7 @@ public class Minder : Granite.Application {
   private static bool    new_file  = false;
 
   public Minder () {
-    Object( application_id: "com.github.phase1geo.Minder", flags: ApplicationFlags.FLAGS_NONE );
+    Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.FLAGS_NONE );
   }
 
   protected override void activate() {

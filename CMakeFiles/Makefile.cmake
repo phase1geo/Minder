@@ -52,7 +52,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/com.github.phase1geo.Minder.dir/DependInfo.cmake"
+  "CMakeFiles/com.github.phase1geo.minder.dir/DependInfo.cmake"
   "po/CMakeFiles/po.dir/DependInfo.cmake"
   "po/CMakeFiles/i18n.dir/DependInfo.cmake"
   "po/CMakeFiles/pot.dir/DependInfo.cmake"

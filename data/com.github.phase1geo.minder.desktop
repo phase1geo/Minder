@@ -3,14 +3,15 @@ Name=Minder
 GenericName=Mind-mapping Application
 Comment=Mind-mapping application
 Categories=Office;Development;
-Exec=com.github.phase1geo.Minder
-Icon=com.github.phase1geo.Minder.svg
+Exec=com.github.phase1geo.minder
+Icon=com.github.phase1geo.minder
 Terminal=false
 Type=Application
 X-GNOME-Gettext-Domain=Minder
 X-GNOME-UsesNotifications=true
 Keywords=Mind;Mapping;
+Actions=NewDocument;
 
 [Desktop Action NewDocument]
 Name=New Document
-Exec=com.github.phase1geo.Minder -n
+Exec=com.github.phase1geo.minder -n
