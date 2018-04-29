@@ -22,7 +22,7 @@
 using Gtk;
 using GLib;
 
-public class Minder : Gtk.Application {
+public class Minder : Granite.Application {
 
   private static bool    version   = false;
   private static string? open_file = null;
