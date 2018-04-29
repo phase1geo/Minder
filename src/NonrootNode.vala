@@ -38,7 +38,9 @@ public class NonrootNode : Node {
 
   /* Forces all children nodes to use the same color index as the parent node. */
   private void propagate_color() {
-    color_index = (parent as NonrootNode).color_index;
+    if( !parent.is_root() ) {
+      color_index = (parent as NonrootNode).color_index;
+    }
     for( int i=0; i<_children.length; i++ ) {
       NonrootNode n = (_children.index( i ) as NonrootNode);
       n.propagate_color();
@@ -51,9 +53,7 @@ public class NonrootNode : Node {
   */
   public override void attach( Node parent, int index, Layout? layout ) {
     base.attach( parent, index, layout );
-    if( !parent.is_root() ) {
-      propagate_color();
-    }
+    propagate_color();
   }
 
   /* Loads the data from the input stream */

@@ -682,6 +682,9 @@ public class DrawArea : Gtk.DrawingArea {
           } else {
             _current_node.detach( _orig_side, _layout );
           }
+          if( _attach_node.is_root() ) {
+            ((NonrootNode)_current_node).color_index = _theme.next_color_index();
+          }
           _current_node.attach( _attach_node, -1, _layout );
           _attach_node.mode = NodeMode.NONE;
           _attach_node      = null;
