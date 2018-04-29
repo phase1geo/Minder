@@ -549,12 +549,26 @@ public class MainWindow : ApplicationWindow {
 
   /* Exports the model in PDF format */
   private void action_export_pdf() {
-    // TBD
+    FileChooserDialog dialog = new FileChooserDialog( _( "Export PDF File" ), this, FileChooserAction.SAVE,
+      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
+    FileFilter        filter = new FileFilter();
+    filter.set_filter_name( _( "PDF" ) );
+    filter.add_pattern( "*.pdf" );
+    dialog.add_filter( filter );
+    if( dialog.run() == ResponseType.ACCEPT ) {
+      string fname = dialog.get_filename();
+      if( fname.substring( -4, -1 ) != ".pdf" ) {
+        fname += ".pdf";
+      }
+      PDF.export( fname, _canvas );
+    }
+    dialog.close();
   }
 
   /* Exports the model to the printer */
   private void action_export_print() {
-    // TBD
+    var print = new Print();
+    print.print( _canvas, this );
   }
 
 }

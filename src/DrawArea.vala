@@ -484,26 +484,42 @@ public class DrawArea : Gtk.DrawingArea {
     set_scaling_factor( get_scaling_factor( w, h ) );
   }
 
-  /* Returns the scaling factor required to display all nodes */
-  public void zoom_to_fit() {
+  public void document_rectangle( out double x, out double y, out double width, out double height ) {
 
-    /* Calculate the overall size of the map */
     double x1 = 0;
     double y1 = 0;
     double x2 = 0;
     double y2 = 0;
+
+    /* Calculate the overall size of the map */
     for( int i=0; i<_nodes.length; i++ ) {
-      double x, y, w, h;
-      _layout.bbox( _nodes.index( i ), -1, out x, out y, out w, out h );
-      x1 = (x1 < x) ? x1 : x;
-      y1 = (y1 < y) ? y1 : y;
-      x2 = (x2 < (x + w)) ? (x + w) : x2;
-      y2 = (y2 < (y + h)) ? (y + h) : y2;
+      double nx, ny, nw, nh;
+      _layout.bbox( _nodes.index( i ), -1, out nx, out ny, out nw, out nh );
+      x1 = (x1 < nx) ? x1 : nx;
+      y1 = (y1 < ny) ? y1 : ny;
+      x2 = (x2 < (nx + nw)) ? (nx + nw) : x2;
+      y2 = (y2 < (ny + nh)) ? (ny + nh) : y2;
     }
 
+    /* Set the outputs */
+    x      = x1;
+    y      = y1;
+    width  = (x2 - x1);
+    height = (y2 - y1);
+
+  }
+
+  /* Returns the scaling factor required to display all nodes */
+  public void zoom_to_fit() {
+
+    /* Get the document rectangle */
+    double x, y, w, h;
+    document_rectangle( out x, out y, out w, out h );
+
     /* Center the map and scale it to fit */
-    position_box( x1, y1, (x2 - x1), (y2 - y1), 0.5, 0.5 );
-    set_scaling_factor( get_scaling_factor( (x2 - x1), (y2 - y1) ) );
+    position_box( x, y, w, h, 0.5, 0.5 );
+    set_scaling_factor( get_scaling_factor( w, h ) );
+
   }
 
   /* Centers the given node within the canvas by adjusting the origin */
@@ -554,6 +570,12 @@ public class DrawArea : Gtk.DrawingArea {
     return( null );
   }
 
+  /* Returns the origin */
+  public void get_origin( out double x, out double y ) {
+    x = _origin_x;
+    y = _origin_y;
+  }
+
   /*
    Adjusts the x and y origins, panning all elements by the given amount.
    Important Note:  When the canvas is panned to the left (causing all
@@ -568,8 +590,15 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Draws all of the root node trees */
+  public void draw_all( Context ctx ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).draw_all( ctx, _theme );
+    }
+  }
+
   /* Draw the available nodes */
-  private bool on_draw( Context ctx ) {
+  public bool on_draw( Context ctx ) {
     if( _layout.default_text_height == 0 ) {
       var text = Pango.cairo_create_layout( ctx );
       int width, height;
@@ -579,9 +608,7 @@ public class DrawArea : Gtk.DrawingArea {
       _layout.default_text_height = height / Pango.SCALE;
     }
     ctx.scale( _scale_factor, _scale_factor );
-    for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).draw_all( ctx, _theme );
-    }
+    draw_all( ctx );
     return( false );
   }
 

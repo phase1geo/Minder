@@ -497,6 +497,33 @@ src/OPML.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/OPML.c.s
 .PHONY : src/OPML.c.s
 
+src/PDF.o: src/PDF.c.o
+
+.PHONY : src/PDF.o
+
+# target to build an object file
+src/PDF.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/PDF.c.o
+.PHONY : src/PDF.c.o
+
+src/PDF.i: src/PDF.c.i
+
+.PHONY : src/PDF.i
+
+# target to preprocess a source file
+src/PDF.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/PDF.c.i
+.PHONY : src/PDF.c.i
+
+src/PDF.s: src/PDF.c.s
+
+.PHONY : src/PDF.s
+
+# target to generate assembly for a file
+src/PDF.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/PDF.c.s
+.PHONY : src/PDF.c.s
+
 src/Partitioner.o: src/Partitioner.c.o
 
 .PHONY : src/Partitioner.o
@@ -523,6 +550,33 @@ src/Partitioner.s: src/Partitioner.c.s
 src/Partitioner.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Partitioner.c.s
 .PHONY : src/Partitioner.c.s
+
+src/Print.o: src/Print.c.o
+
+.PHONY : src/Print.o
+
+# target to build an object file
+src/Print.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Print.c.o
+.PHONY : src/Print.c.o
+
+src/Print.i: src/Print.c.i
+
+.PHONY : src/Print.i
+
+# target to preprocess a source file
+src/Print.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Print.c.i
+.PHONY : src/Print.c.i
+
+src/Print.s: src/Print.c.s
+
+.PHONY : src/Print.s
+
+# target to generate assembly for a file
+src/Print.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.Minder.dir/build.make CMakeFiles/com.github.phase1geo.Minder.dir/src/Print.c.s
+.PHONY : src/Print.c.s
 
 src/RootNode.o: src/RootNode.c.o
 
@@ -1193,9 +1247,15 @@ help:
 	@echo "... src/OPML.o"
 	@echo "... src/OPML.i"
 	@echo "... src/OPML.s"
+	@echo "... src/PDF.o"
+	@echo "... src/PDF.i"
+	@echo "... src/PDF.s"
 	@echo "... src/Partitioner.o"
 	@echo "... src/Partitioner.i"
 	@echo "... src/Partitioner.s"
+	@echo "... src/Print.o"
+	@echo "... src/Print.i"
+	@echo "... src/Print.s"
 	@echo "... src/RootNode.o"
 	@echo "... src/RootNode.i"
 	@echo "... src/RootNode.s"

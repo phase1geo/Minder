@@ -60,6 +60,8 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/NonrootNode.vala
     src/OPML.vala
     src/Partitioner.vala
+    src/PDF.vala
+    src/Print.vala
     src/RootNode.vala
     src/Theme.vala
     src/Themes.vala
