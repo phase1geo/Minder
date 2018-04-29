@@ -71,7 +71,7 @@ CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 //Enable/Disable output of compile commands during generation.
 CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=OFF
 
-//No help, variable specified on the command line.
+//Install path prefix, prepended onto install directories.
 CMAKE_INSTALL_PREFIX:PATH=/usr
 
 //Path to a program.
