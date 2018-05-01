@@ -155,6 +155,7 @@ public class Node : Object {
   public NodeSide side       { get; set; default = NodeSide.RIGHT; }
   public bool     folded     { get; set; default = false; }
   public double   tree_size  { get; set; default = 0; }
+  public double   node_size  { get; set; default = 0; }
 
   /* Default constructor */
   public Node( Layout? layout ) {
@@ -379,6 +380,16 @@ public class Node : Object {
       folded = bool.parse( f );
     }
 
+    string? ts = n->get_prop( "treesize" );
+    if( ts != null ) {
+      tree_size = double.parse( ts );
+    }
+
+    string? ns = n->get_prop( "nodesize" );
+    if( ns != null ) {
+      node_size = double.parse( ns );
+    }
+
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
@@ -397,6 +408,16 @@ public class Node : Object {
       }
     }
 
+    if( ts == null ) {
+      double bx, by, bw, bh;
+      layout.bbox( this, side, out bx, out by, out bw, out bh );
+      tree_size = ((side & NodeSide.horizontal()) != 0) ? bh : bw;
+    }
+
+    if( ns == null ) {
+      node_size = ((side & NodeSide.horizontal()) != 0) ? _height : _width;
+    }
+
   }
 
   /* Saves the current node */
@@ -407,19 +428,18 @@ public class Node : Object {
   /* Saves the node contents to the given data output stream */
   protected Xml.Node* save_node() {
 
-    double width  = _width  - (_padx * 2);
-    double height = _height - (_pady * 2);
-
     Xml.Node* node = new Xml.Node( null, "node" );
     node->new_prop( "posx", posx.to_string() );
     node->new_prop( "posy", posy.to_string() );
-    node->new_prop( "width", width.to_string() );
-    node->new_prop( "height", height.to_string() );
+    node->new_prop( "width", _width.to_string() );
+    node->new_prop( "height", _height.to_string() );
     if( (_task_count > 0) && is_leaf() ) {
       node->new_prop( "task", _task_done.to_string() );
     }
     node->new_prop( "side", side.to_string() );
     node->new_prop( "fold", folded.to_string() );
+    node->new_prop( "treesize", tree_size.to_string() );
+    node->new_prop( "nodesize", node_size.to_string() );
 
     node->new_text_child( null, "nodename", name );
     node->new_text_child( null, "nodenote", note );
@@ -537,16 +557,15 @@ public class Node : Object {
     width_diff  = 0;
     height_diff = 0;
     if( _layout != null ) {
-      int width, height;
+      int text_width, text_height;
+      double orig_width  = _width;
+      double orig_height = _height;
       _layout.set_markup( name_markup( theme ), -1 );
-      _layout.get_size( out width, out height );
-      if( side == NodeSide.LEFT ) {
-        posx = (posx + _width) - (width / Pango.SCALE);
-      }
-      width_diff  = (width  / Pango.SCALE) - _width;
-      height_diff = (height / Pango.SCALE) - _height;
-      _width      = (width  / Pango.SCALE);
-      _height     = (height / Pango.SCALE);
+      _layout.get_size( out text_width, out text_height );
+      _width      = (text_width  / Pango.SCALE) + (_padx * 2) + task_width() + note_width();
+      _height     = (text_height / Pango.SCALE) + (_pady * 2);
+      width_diff  = _width  - orig_width;
+      height_diff = _height - orig_height;
     }
   }
 
@@ -556,8 +575,8 @@ public class Node : Object {
     update_size( null, out width_diff, out height_diff );
     x = posx;
     y = posy;
-    w = _width  + (_padx * 2) + ((_task_count > 0) ? (_ipadx + (_task_radius * 2)) : 0);
-    h = (_height == 0) ? 0 : (_height + (_pady * 2));
+    w = _width;
+    h = _height;
   }
 
   /* Returns the bounding box for the fold indicator for this node */
@@ -955,7 +974,7 @@ public class Node : Object {
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( mode == NodeMode.CURRENT ) {
       set_context_color( ctx, theme.nodesel_background );
-      ctx.rectangle( ((posx + _padx + twidth) - hmargin), ((posy + _pady) - vmargin), (_width + (hmargin * 2)), (_height + (vmargin * 2)) );
+      ctx.rectangle( ((posx + _padx) - hmargin), ((posy + _pady) - vmargin), ((_width - (_padx * 2)) + (hmargin * 2)), ((_height - (_pady * 2)) + (vmargin * 2)) );
       ctx.fill();
     }
 
@@ -986,7 +1005,7 @@ public class Node : Object {
     if( _task_count > 0 ) {
 
       double x = posx + _padx + _task_radius;
-      double y = posy + _pady + (_height / 2);
+      double y = posy + (_height / 2);
 
       set_context_color( ctx, color );
       ctx.new_path();
@@ -1009,7 +1028,7 @@ public class Node : Object {
     if( _task_count > 0 ) {
 
       double x        = posx + _padx + _task_radius;
-      double y        = posy + _pady + (_height / 2);
+      double y        = posy + (_height / 2);
       double complete = _task_done / (_task_count * 1.0);
       double angle    = ((complete * 360) + 270) * (Math.PI / 180.0);
 
@@ -1043,8 +1062,8 @@ public class Node : Object {
 
     if( note.length > 0 ) {
 
-      double x = posx + _padx + task_width() + _width + _ipadx;
-      double y = posy + _pady + (_height / 2) - 5;
+      double x = posx + (_width - (note_width() + _padx)) + _ipadx;
+      double y = posy + (_height / 2) - 5;
 
       set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();

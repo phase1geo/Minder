@@ -44,16 +44,16 @@ public class RootNode : Node {
 
   /* Calculates the point on the parent node to start a link */
   protected override void link_point( out double x, out double y ) {
-    x = posx + _padx + (_width / 2);
-    y = posy + _pady + (_height / 2);
+    x = posx + (_width / 2);
+    y = posy + (_height / 2);
   }
 
   /* Draws the rectangle around the root node */
   public void draw_rectangle( Context ctx, Theme theme ) {
 
     double r = 10.0;
-    double h = _height + (_pady * 2);
-    double w = _width  + (_padx * 2) + task_width() + note_width();
+    double h = _height;
+    double w = _width;
 
     /* Draw the rounded box around the text */
     set_context_color( ctx, theme.root_background );

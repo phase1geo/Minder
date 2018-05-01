@@ -187,15 +187,7 @@ public class NodeInspector : Stack {
    Called whenever the node name is changed within the inspector.
   */
   private void name_changed() {
-    Node current = _da.get_current_node();
-    if( current != null ) {
-      if( current.name != _name.text ) {
-        _da.queue_draw();
-      }
-      string orig_name = current.name;
-      current.name = _name.text;
-      _da.undo_buffer.add_item( new UndoNodeName( _da, current, orig_name ) );
-    }
+    _da.change_current_name( _name.text );
   }
 
   /* Called whenever the task enable switch is changed within the inspector */
@@ -209,10 +201,7 @@ public class NodeInspector : Stack {
         case 1 :  enable = true;   done = false;  break;
         case 2 :  enable = true;   done = true;   break;
       }
-      _da.undo_buffer.add_item( new UndoNodeTask( _da, current, enable, done ) );
-      current.enable_task( enable );
-      current.set_task_done( done ? 1 : 0 );
-      _da.queue_draw();
+      _da.change_current_task( enable, done );
     }
   }
 
@@ -233,12 +222,7 @@ public class NodeInspector : Stack {
 
   /* Called whenever the fold switch is changed within the inspector */
   private bool fold_changed( bool state ) {
-    Node current = _da.get_current_node();
-    if( current != null ) {
-      _da.undo_buffer.add_item( new UndoNodeFold( _da, current, state ) );
-      current.folded = state;
-      _da.queue_draw();
-    }
+    _da.change_current_fold( state );
     return( false );
   }
 
@@ -247,24 +231,19 @@ public class NodeInspector : Stack {
    and redraws the canvas when needed.
   */
   private void note_changed() {
-    Node current = _da.get_current_node();
-    if( current != null ) {
-      if( (_note.buffer.text.length == 0) != (current.note.length == 0) ) {
-        _da.queue_draw();
-      }
-      current.note = _note.buffer.text;
-    }
+    _da.change_current_note( _note.buffer.text );
   }
 
-  /* Saves the original version of the node's note */
+  /* Saves the original version of the node's note so that we can */
   private bool note_focus_in( EventFocus e ) {
     _orig_note = _note.buffer.text;
     return( false );
   }
 
+  /* When the note buffer loses focus, save the note change to the undo buffer */
   private bool note_focus_out( EventFocus e ) {
     Node? current = _da.get_current_node();
-    if( current != null ) {
+    if( (current != null) && (current.note != _orig_note) ) {
       _da.undo_buffer.add_item( new UndoNodeNote( _da, current, _orig_note ) );
     }
     return( false );

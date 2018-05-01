@@ -98,6 +98,59 @@ public class Layout : Object {
 
   }
 
+  /* Calculate the adjustment difference of the given node's tree */
+  private double get_adjust( Node parent, bool child_changed ) {
+
+    /* Get the original tree size */
+    double orig_tree_size = parent.tree_size;
+    double orig_node_size = parent.node_size;
+
+    /* Calculate the new tree size, set it and get the size of the node itself */
+    double tx, ty, tw, th;
+    double px, py, pw, ph;
+    bbox( parent, -1, out tx, out ty, out tw, out th );
+    parent.bbox( out px, out py, out pw, out ph );
+    if( (parent.side & NodeSide.horizontal()) != 0 ) {
+      parent.tree_size = th;
+      parent.node_size = ph;
+    } else {
+      parent.tree_size = tw;
+      parent.node_size = pw;
+    }
+
+    /* Calculate the growth difference */
+    if( child_changed ) {
+      if( parent.tree_size > parent.node_size ) {
+        if( orig_tree_size >= parent.node_size ) {
+          return( parent.tree_size - orig_tree_size );
+        } else {
+          return( parent.tree_size - parent.node_size );
+        }
+      } else {
+        if( orig_tree_size > parent.node_size ) {
+          return( parent.node_size - orig_tree_size );
+        } else {
+          return( 0 );
+        }
+      }
+    } else {
+      if( parent.tree_size < parent.node_size ) {
+        if( orig_node_size < parent.tree_size ) {
+          return( parent.node_size - parent.tree_size );
+        } else {
+          return( parent.node_size - orig_node_size );
+        }
+      } else {
+        if( orig_node_size > parent.tree_size ) {
+          return( parent.tree_size - orig_node_size );
+        } else {
+          return( 0 );
+        }
+      }
+    }
+
+  }
+
   /* Adjusts the given tree by the given amount */
   public virtual void adjust_tree( Node parent, int child_index, int side_mask, double amount ) {
     for( int i=0; i<parent.children().length; i++ ) {
@@ -120,8 +173,9 @@ public class Layout : Object {
   public virtual void adjust_tree_all( Node n, double amount ) {
     Node     parent = n.parent;
     int      index  = n.index();
-    while( parent != null ) {
+    while( (parent != null) && (amount != 0) ) {
       adjust_tree( parent, index, n.side, amount );
+      amount = 0 - (get_adjust( parent, true ) / 2);
       index  = parent.index();
       parent = parent.parent;
     }
@@ -189,23 +243,21 @@ public class Layout : Object {
     if( (n.side & NodeSide.horizontal()) != 0 ) {
       if( (n.parent != null) && (height_diff != 0) ) {
         n.set_posy_only( 0 - (height_diff / 2) );
-        adjust_tree_all( n, (0 - (height_diff / 2)) );
+        adjust_tree_all( n, get_adjust( n, false ) );  // , (0 - (height_diff / 2)) );
       }
       if( width_diff != 0 ) {
-        for( int i=0; i<n.children().length; i++ ) {
-          n.children().index( i ).posx += width_diff;
+        if( n.side == NodeSide.LEFT ) {
+          n.posx -= width_diff;
+        } else {
+          for( int i=0; i<n.children().length; i++ ) {
+            n.children().index( i ).posx += width_diff;
+          }
         }
       }
     } else {
       if( (n.parent != null) && (width_diff != 0) ) {
-        double tree_size = n.tree_size;
-        double nx, ny, nw, nh;
         n.set_posx_only( 0 - (width_diff / 2) );
-        bbox( n, -1, out nx, out ny, out nw, out nh );
-        width_diff = n.tree_size - tree_size;
-        if( width_diff != 0 ) {
-          adjust_tree_all( n, (0 - (width_diff / 2)) );
-        }
+        adjust_tree_all( n, get_adjust( n, false ) ); // , (0 - (width_diff / 2)) );
       }
       if( height_diff != 0 ) {
         if( n.side == NodeSide.TOP ) {
@@ -217,6 +269,11 @@ public class Layout : Object {
         }
       }
     }
+  }
+
+  /* Called when a node's fold indicator changes */
+  public virtual void handle_update_by_fold( Node n ) {
+    adjust_tree_all( n, (0 - (get_adjust( n, true ) / 2)) );
   }
 
   /* Adjusts the gap between the parent and child nodes */
@@ -299,7 +356,7 @@ public class Layout : Object {
       }
     }
 
-    adjust_tree_all( child, (0 - adjust) );
+    adjust_tree_all( child, get_adjust( child, false ) );  //, (0 - adjust) );
 
   }
 
@@ -318,7 +375,7 @@ public class Layout : Object {
       }
     }
     if( parent.parent != null ) {
-      adjust_tree_all( parent, adjust );
+      adjust_tree_all( parent, get_adjust( parent, false ) ); // , adjust );
     }
   }
 

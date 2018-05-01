@@ -82,19 +82,19 @@ public class NonrootNode : Node {
     switch( side ) {
       case NodeSide.LEFT :
         x = posx;
-        y = posy + _height + (_pady * 2);
+        y = posy + _height;
         break;
       case NodeSide.RIGHT :
-        x = posx + _width  + (_padx * 2);
-        y = posy + _height + (_pady * 2);
+        x = posx + _width;
+        y = posy + _height;
         break;
       case NodeSide.TOP :
-        x = posx + (_width / 2) + _padx;
+        x = posx + (_width / 2);
         y = posy;
         break;
       default :
-        x = posx + (_width / 2) + _padx;
-        y = posy + _height + (_pady * 2);
+        x = posx + (_width / 2);
+        y = posy + _height;
         break;
     }
   }
@@ -106,8 +106,8 @@ public class NonrootNode : Node {
     if( (side & NodeSide.vertical()) != 0 ) return;
 
     double posx  = this.posx;
-    double posy  = this.posy + _height + (_pady * 2);
-    double w     = _width + (_padx * 2) + task_width() + note_width();
+    double posy  = this.posy + _height;
+    double w     = _width;
     RGBA   color = theme.link_color( color_index );
 
     /* Draw the line under the text name */
@@ -136,16 +136,16 @@ public class NonrootNode : Node {
     ctx.move_to( parent_x, parent_y );
     switch( side ) {
       case NodeSide.LEFT :
-        ctx.line_to( (posx + _width + task_width() + (_padx * 2)), (posy + _height + (_pady * 2)) );
+        ctx.line_to( (posx + _width), (posy + _height) );
         break;
       case NodeSide.RIGHT :
-        ctx.line_to( posx, (posy + _height + (_pady * 2)) );
+        ctx.line_to( posx, (posy + _height) );
         break;
       case NodeSide.TOP :
-        ctx.line_to( (posx + (_width / 2) + (task_width() / 2) + _padx), (posy + _height + (_pady * 2)) );
+        ctx.line_to( (posx + (_width / 2)), (posy + _height) );
         break;
       case NodeSide.BOTTOM :
-        ctx.line_to( (posx + (_width / 2) + (task_width() / 2) + _padx), posy );
+        ctx.line_to( (posx + (_width / 2)), posy );
         break;
     }
     ctx.stroke();

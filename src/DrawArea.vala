@@ -348,6 +348,64 @@ public class DrawArea : Gtk.DrawingArea {
     bool fold = !n.folded;
     undo_buffer.add_item( new UndoNodeFold( this, n, fold ) );
     n.folded = fold;
+    _layout.handle_update_by_fold( n );
+    queue_draw();
+  }
+
+  /*
+   Changes the current node's name to the given name.  Updates the layout,
+   adds the undo item, and redraws the canvas.
+  */
+  public void change_current_name( string name ) {
+    if( (_current_node != null) && (_current_node.name != name) ) {
+      string orig_name = _current_node.name;
+      _current_node.name = name;
+      _layout.handle_update_by_edit( _current_node );
+      undo_buffer.add_item( new UndoNodeName( this, _current_node, orig_name ) );
+      queue_draw();
+    }
+  }
+
+  /*
+   Changes the current node's task to the given values.  Updates the layout,
+   adds the undo item, and redraws the canvas.
+  */
+  public void change_current_task( bool enable, bool done ) {
+    if( _current_node != null ) {
+      undo_buffer.add_item( new UndoNodeTask( this, _current_node, enable, done ) );
+      _current_node.enable_task( enable );
+      _current_node.set_task_done( done ? 1 : 0 );
+      _layout.handle_update_by_edit( _current_node );
+      queue_draw();
+    }
+  }
+
+  /*
+   Changes the current node's folded state to the given value.  Updates the
+   layout, adds the undo item and redraws the canvas.
+  */
+  public void change_current_fold( bool folded ) {
+    if( _current_node != null ) {
+      undo_buffer.add_item( new UndoNodeFold( this, _current_node, folded ) );
+      _current_node.folded = folded;
+      _layout.handle_update_by_fold( _current_node );
+      queue_draw();
+    }
+  }
+
+  /*
+   Changes the current node's folded state to the given value.  Updates the
+   layout, adds the undo item and redraws the canvas.
+  */
+  public void change_current_note( string note ) {
+    if( _current_node != null ) {
+      string orig_note = _current_node.note;
+      _current_node.note = note;
+      if( (note.length == 0) != (orig_note.length == 0) ) {
+        _layout.handle_update_by_edit( _current_node );
+        queue_draw();
+      }
+    }
   }
 
   /*
@@ -361,9 +419,11 @@ public class DrawArea : Gtk.DrawingArea {
       if( match != null ) {
         if( match.is_within_task( x, y ) && match.is_leaf() ) {
           toggle_task( match );
+          node_changed();
           return( false );
         } else if( match.is_within_fold( x, y ) ) {
           toggle_fold( match );
+          node_changed();
           return( false );
         }
         _orig_side = match.side;
