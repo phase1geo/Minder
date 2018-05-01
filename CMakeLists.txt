@@ -41,6 +41,7 @@ ensure_vala_version("0.16" MINIMUM)
 # files we want to compile
 include(ValaPrecompile)
 vala_precompile(VALA_C ${EXEC_NAME}
+    src/Animator.vala
     src/Application.vala
     src/Document.vala
     src/DrawArea.vala
