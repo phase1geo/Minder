@@ -129,7 +129,7 @@ public class MainWindow : ApplicationWindow {
     add_zoom_button( header );
 
     /* Create the document */
-    _doc = new Document( _canvas );
+    _doc = new Document( _canvas, _settings );
 
     /* Create the horizontal box that will contain the canvas and the properties sidebar */
     var hbox = new Box( Orientation.HORIZONTAL, 0 );

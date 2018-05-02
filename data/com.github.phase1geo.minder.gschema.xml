@@ -21,35 +21,10 @@
       <summary>Most recent height of minder window</summary>
       <description>Most recent height of minder window</description>
     </key>
-    <key name="scale-factor" type="d">
-      <default>1.0</default>
-      <summary>Most recent scaling factor used in canvas</summary>
-      <description>Most recent scaling factor used in canvas</description>
-    </key>
-    <key name="origin-x" type="d">
-      <default>0.0</default>
-      <summary>Most recent canvas x origin used in canvas</summary>
-      <description>Most recent canvas x origin used in canvas</description>
-    </key>
-    <key name="origin-y" type="d">
-      <default>0.0</default>
-      <summary>Most recent canvas y origin used in canvas</summary>
-      <description>Most recent canvas y origin used in canvas</description>
-    </key>
-    <key name="nodes" type="s">
+    <key name="last-file" type="s">
       <default>""</default>
-      <summary>XML listing of the currently stored nodes</summary>
-      <description>XML listing of the currently stored nodes</description>
-    </key>
-    <key name="layout" type="s">
-      <default>"Horizontal"</default>
-      <summary>Most recent layout in use</summary>
-      <description>Most recent layout in use</description>
-    </key>
-    <key name="theme" type="s">
-      <default>"Default"</default>
-      <summary>Most recent theme in use</summary>
-      <description>Most recent theme in use</description>
+      <summary>Name of the last edited file</summary>
+      <description>Name of the last edited file (or the empty string if an unnamed file was last edited.</description>
     </key>
     <key name="node-properties-shown" type="b">
       <default>false</default>

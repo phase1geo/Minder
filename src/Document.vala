@@ -24,15 +24,17 @@ using Gtk;
 
 public class Document : Object {
 
-  private DrawArea _da;
+  private DrawArea      _da;
+  private GLib.Settings _settings;
 
   /* Properties */
   public string filename    { set; get; default = ""; }
   public bool   save_needed { private set; get; default = false; }
 
   /* Default constructor */
-  public Document( DrawArea da ) {
-    _da = da;
+  public Document( DrawArea da, GLib.Settings settings ) {
+    _da       = da;
+    _settings = settings;
     _da.changed.connect( canvas_changed );
   }
 
@@ -60,12 +62,6 @@ public class Document : Object {
     return( true );
   }
 
-  /* Called on application launch to see if we can load an auto-saved application */
-  public void auto_load() {
-    string fname = (filename == "") ? ".minder.bak" : "." + filename + ".bak";
-    // FOOBAR
-  }
-
   /* Saves the given node information to the specified file */
   private bool save_with_filename( string fname ) {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
@@ -74,6 +70,7 @@ public class Document : Object {
     _da.save( root );
     doc->save_format_file( fname, 1 );
     delete doc;
+    _settings.set_string( "last-file", fname );
     return( true );
   }
 
@@ -89,9 +86,10 @@ public class Document : Object {
   public void auto_save() {
     if( save_needed ) {
       if( filename == "" ) {
-        save_with_filename( ".minder.bak" );
+        var dir = FOOBAR;
+        save_with_filename( dir + "unnamed.minder" );
       } else {
-        save_with_filename( "." + filename + ".bak" );
+        save_with_filename( filename );
       }
     }
   }

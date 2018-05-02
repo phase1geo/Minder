@@ -34,21 +34,30 @@ public class Minder : Granite.Application {
 
   protected override void activate() {
 
-    var settings = new GLib.Settings( "com.github.phase1geo.minder" );
+    var settings  = new GLib.Settings( "com.github.phase1geo.minder" );
+    var last_file = settings.get_string( "last-file" );
 
     /* Create the main window */
     var appwin = new MainWindow( this, settings );
 
-    /* Handle the command-line options */
+    /*
+     If the user specified to open a specific filename from
+     the command-line, attempt to open it.  Display an error
+     message and exit immediately if there is an error opening
+     the file.
+    */
     if( open_file != null ) {
       if( !appwin.open_file( open_file ) ) {
         stdout.printf( "ERROR:  Unable to open file '%s'\n", open_file );
         Process.exit( 1 );
       }
-    } else if( new_file ) {
+      
+    /*
+     If the user specified that a new file should be created or the
+     saved last-file string is empty, create a new map.
+    */
+    } else if( new_file || (last_file == "") || !appwin.open_file( last_file ) ) {
       appwin.do_new_file();
-    } else {
-      /* TBD - Load the last file */
     }
 
     /* Handle any changes to the position of the window */
