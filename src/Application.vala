@@ -34,8 +34,10 @@ public class Minder : Granite.Application {
 
   protected override void activate() {
 
+    var settings = new GLib.Settings( "com.github.phase1geo.minder" );
+
     /* Create the main window */
-    var appwin = new MainWindow( this );
+    var appwin = new MainWindow( this, settings );
 
     /* Handle the command-line options */
     if( open_file != null ) {
@@ -48,6 +50,19 @@ public class Minder : Granite.Application {
     } else {
       /* TBD - Load the last file */
     }
+
+    /* Handle any changes to the position of the window */
+    appwin.configure_event.connect(() => {
+      int root_x, root_y;
+      int size_w, size_h;
+      appwin.get_position( out root_x, out root_y );
+      appwin.get_size( out size_w, out size_h );
+      settings.set_int( "window-x", root_x );
+      settings.set_int( "window-y", root_y );
+      settings.set_int( "window-w", size_w );
+      settings.set_int( "window-h", size_h );
+      return( false );
+    });
 
     /* Run the main loop */
     Gtk.main();

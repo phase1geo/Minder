@@ -515,7 +515,7 @@ public class DrawArea : Gtk.DrawingArea {
     var marks = get_scale_marks();
     foreach (double mark in marks) {
       if( value < mark ) {
-        var animation = new Animator.scale( this );
+        var animation = new Animator.scale( this, "zoom in" );
         set_scaling_factor( mark / 100 );
         animation.animate();
         return;
@@ -530,7 +530,7 @@ public class DrawArea : Gtk.DrawingArea {
     double last  = marks[0];
     foreach (double mark in marks) {
       if( value <= mark ) {
-        var animation = new Animator.scale( this );
+        var animation = new Animator.scale( this, "zoom out" );
         set_scaling_factor( last / 100 );
         animation.animate();
         return;
@@ -558,7 +558,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void zoom_to_selected() {
     double x, y, w, h;
     if( _current_node == null ) return;
-    var animation = new Animator.scale( this );
+    var animation = new Animator.scale( this, "zoom to selected" );
     _layout.bbox( _current_node, -1, out x, out y, out w, out h );
     position_box( x, y, w, h, 0.5, 0.5 );
     set_scaling_factor( get_scaling_factor( w, h ) );
@@ -593,7 +593,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns the scaling factor required to display all nodes */
   public void zoom_to_fit() {
 
-    var animation = new Animator.scale( this );
+    var animation = new Animator.scale( this, "zoom to fit" );
 
     /* Get the document rectangle */
     double x, y, w, h;
@@ -639,7 +639,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     if( (diff_x != 0) || (diff_y != 0) ) {
-      var animation = new Animator.scale( this );
+      var animation = new Animator.scale( this, "see" );
       move_origin( diff_x, diff_y );
       animation.animate();
     }
@@ -789,7 +789,7 @@ public class DrawArea : Gtk.DrawingArea {
           _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
-          var animation = new Animator.node( this, _current_node );
+          var animation = new Animator.node( this, _current_node, "move to position" );
           _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
           animation.animate();
         }
@@ -955,7 +955,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Balances the existing nodes based on the current layout */
   public void balance_nodes() {
-    var animation = new Animator( this );
+    var animation = new Animator( this, "balance nodes" );
     for( int i=0; i<_nodes.length; i++ ) {
       var partitioner = new Partitioner();
       partitioner.partition_node( _nodes.index( i ), _layout );

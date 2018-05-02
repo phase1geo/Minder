@@ -23,9 +23,11 @@ using Gtk;
 
 public class MainWindow : ApplicationWindow {
 
+  private GLib.Settings  _settings;
   private DrawArea?      _canvas        = null;
   private Document?      _doc           = null;
   private Revealer?      _inspector     = null;
+  private Stack?         _stack         = null;
   private Popover?       _zoom          = null;
   private Popover?       _search        = null;
   private SearchEntry?   _search_entry  = null;
@@ -52,7 +54,14 @@ public class MainWindow : ApplicationWindow {
   };
 
   /* Create the main window UI */
-  public MainWindow( Gtk.Application app ) {
+  public MainWindow( Gtk.Application app, GLib.Settings settings ) {
+
+    _settings = settings;
+
+    var window_x = settings.get_int( "window-x" );
+    var window_y = settings.get_int( "window-y" );
+    var window_w = settings.get_int( "window-w" );
+    var window_h = settings.get_int( "window-h" );
 
     /* Create the header bar */
     var header = new HeaderBar();
@@ -62,8 +71,12 @@ public class MainWindow : ApplicationWindow {
 
     /* Set the main window data */
     title = _( "Minder" );
-    set_position( Gtk.WindowPosition.CENTER );
-    set_default_size( 1000, 600 );
+    if( (window_x == -1) && (window_y == -1) ) {
+      set_position( Gtk.WindowPosition.CENTER );
+    } else {
+      move( window_x, window_y );
+    }
+    set_default_size( window_w, window_h );
     set_titlebar( header );
     set_border_width( 2 );
     destroy.connect( Gtk.main_quit );
@@ -284,25 +297,44 @@ public class MainWindow : ApplicationWindow {
     /* Create the inspector sidebar */
     var box   = new Box( Orientation.VERTICAL, 20 );
     var sb    = new StackSwitcher();
-    var stack = new Stack();
 
-    stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
-    stack.set_transition_duration( 500 );
-    stack.add_titled( new NodeInspector( _canvas ), "node", "Node" );
-    stack.add_titled( new MapInspector( _canvas ),  "map",  "Map" );
+    /* If the stack switcher is clicked, save off which tab is in view */
+    sb.add_events( Gdk.EventMask.BUTTON_PRESS_MASK );
+    sb.button_press_event.connect(() => {
+      stdout.printf( "visible child: %s\n", _stack.visible_child_name );
+      _settings.set_boolean( "node-properties-shown", (_stack.visible_child_name == "node") );
+      _settings.set_boolean( "map-properties-shown",  (_stack.visible_child_name == "map") );
+      return( false );
+    });
+
+    _stack = new Stack();
+
+    _stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
+    _stack.set_transition_duration( 500 );
+    _stack.add_titled( new NodeInspector( _canvas ), "node", "Node" );
+    _stack.add_titled( new MapInspector( _canvas ),  "map",  "Map" );
 
     sb.homogeneous = true;
-    sb.set_stack( stack );
+    sb.set_stack( _stack );
 
     box.margin = 5;
-    box.pack_start( sb,    false, true, 0 );
-    box.pack_start( stack, true,  true, 0 );
+    box.pack_start( sb,     false, true, 0 );
+    box.pack_start( _stack, true,  true, 0 );
     box.show_all();
 
     _inspector = new Revealer();
     _inspector.set_transition_type( RevealerTransitionType.SLIDE_LEFT );
     _inspector.set_transition_duration( 500 );
     _inspector.child = box;
+
+    /* If the settings says to display the properties, do it now */
+    if( _settings.get_boolean( "node-properties-shown" ) ) {
+      _stack.visible_child_name = "node";
+      show_node_properties();
+    } else if( _settings.get_boolean( "map-properties-shown" ) ) {
+      _stack.visible_child_name = "map";
+      show_node_properties();
+    }
 
   }
 
@@ -440,12 +472,15 @@ public class MainWindow : ApplicationWindow {
   private void show_node_properties() {
     _inspector.reveal_child = true;
     _canvas.move_origin( 300, 0 );
+    _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
   }
 
   /* Hides the node properties panel */
   private void hide_node_properties() {
     _inspector.reveal_child = false;
     _canvas.move_origin( -300, 0 );
+    _settings.set_boolean( "node-properties_shown", false );
+    _settings.set_boolean( "map-properties_shown",  false );
   }
 
   /* Converts the given value from the scale to the zoom value to use */

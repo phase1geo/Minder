@@ -34,19 +34,29 @@ public class Animator : Object {
   private double?             _eox     = null;  // Ending x-origin
   private double?             _eoy     = null;  // Ending y-origin
   private int                 _index   = 1;     // Animation index
-  private const int           _timeout = 20;    // Number of milliseconds between frames
+  private string              _name    = "";
+  private int                 _id;
+  // private const int           _timeout = 20;    // Number of milliseconds between frames (30 fps)
+  private const int           _timeout = 1000;    // Number of milliseconds between frames (30 fps)
   private const double        _frames  = 10;    // Number of frames to animate (note: set to 1 to disable animation)
+  private static int          _next_id = 0;
+
+  public static bool         _in_progress = false;
 
   /* Default constructor */
-  public Animator( DrawArea da ) {
+  public Animator( DrawArea da, string name = "unnamed" ) {
     _da   = da;
+    _name = name;
+    _id   = _next_id++;
     _da.stop_animation();
     _spos = new AnimationPositions( _da );
   }
 
   /* Constructor for a specified node tree */
-  public Animator.node( DrawArea da, Node n ) {
+  public Animator.node( DrawArea da, Node n, string name = "unnamed" ) {
     _da    = da;
+    _name  = name;
+    _id    = _next_id++;
     _da.stop_animation();
     _node  = n;
     _spos  = new AnimationPositions.for_node( _node );
@@ -54,8 +64,10 @@ public class Animator : Object {
   }
 
   /* Constructor for a scale change */
-  public Animator.scale( DrawArea da ) {
+  public Animator.scale( DrawArea da, string name = "unnamed" ) {
     _da     = da;
+    _name   = name;
+    _id     = _next_id++;
     _da.stop_animation();
     _sscale = da.get_scale_factor();
     _da.get_origin( out _sox, out _soy );
@@ -66,14 +78,14 @@ public class Animator : Object {
     _da.stop_animation.connect( stop_animating );
     if( _node != null ) {
       _epos = new AnimationPositions.for_node( _node );
-      animate_positions();
+      Timeout.add( _timeout, animate_positions );
     } else if( _sscale != null ) {
       _escale = _da.get_scale_factor();
       _da.get_origin( out _eox, out _eoy );
-      animate_scaling();
+      Timeout.add( _timeout, animate_scaling );
     } else {
       _epos = new AnimationPositions( _da );
-      animate_positions();
+      Timeout.add( _timeout, animate_positions );
     }
   }
 
@@ -81,17 +93,18 @@ public class Animator : Object {
   private bool animate_positions() {
     double divisor = _index / _frames;
     _index++;
-    for( int i=0; i<_spos.length; i++ ) {
+    for( int i=0; i<_spos.length(); i++ ) {
       double x = _spos.x( i ) + ((_epos.x( i ) - _spos.x( i )) * divisor);
       double y = _spos.y( i ) + ((_epos.y( i ) - _spos.y( i )) * divisor);
       _spos.node( i ).set_posx_only( x );
       _spos.node( i ).set_posy_only( y );
     }
     _da.queue_draw();
-    if( _index <= _frames ) {
-      Timeout.add( _timeout, this.animate_positions );
+    if( _index > _frames ) {
+      _da.stop_animation.disconnect( stop_animating );
+      return( false );
     }
-    return( false );
+    return( true );
   }
 
   /* Animates the given scaling and origin changes */
@@ -101,19 +114,25 @@ public class Animator : Object {
     double scale_factor = _sscale + ((_escale - _sscale) * divisor);
     double origin_x     = _sox    + ((_eox    - _sox)    * divisor);
     double origin_y     = _soy    + ((_eoy    - _soy)    * divisor);
+    stdout.printf( "index: %d, divisor: %g, scale: %g, ox: %g, oy: %g\n", _index, divisor, scale_factor, origin_x, origin_y );
     _da.set_scale_factor( scale_factor );
     _da.set_origin( origin_x, origin_y );
     _da.queue_draw();
-    if( _index <= _frames ) {
-      Timeout.add( _timeout, this.animate_scaling );
+    if( _index > _frames ) {
+      _da.stop_animation.disconnect( stop_animating );
+      return( false );
     }
-    return( false );
+    return( true );
   }
 
   /* Stops any active animations */
   private void stop_animating() {
-    stdout.printf( "Stopping animation, index: %d\n", _index );
     _index = (int)_frames;
+    if( _sscale != null ) {
+      animate_scaling();
+    } else {
+      animate_positions();
+    }
   }
 
 }
@@ -127,13 +146,6 @@ public class AnimationPositions : Object {
   private Array<double?> _x;
   private Array<double?> _y;
   private Array<Node?>   _node;
-
-  public uint length {
-    private set {}
-    get {
-      return( _node.length );
-    }
-  }
 
   /* Default constructor */
   public AnimationPositions( DrawArea da ) {
@@ -164,6 +176,11 @@ public class AnimationPositions : Object {
     for( int i=0; i<n.children().length; i++ ) {
       gather_positions( n.children().index( i ) );
     }
+  }
+
+  /* Returns the number of nodes in this structure */
+  public uint length() {
+    return( _node.length );
   }
 
   /* Returns the X position at the given index */

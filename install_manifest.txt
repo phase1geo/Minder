@@ -1,3 +1,4 @@
+/usr/share/glib-2.0/schemas/com.github.phase1geo.minder.gschema.xml
 /usr/bin/com.github.phase1geo.minder
 /usr/share/applications/com.github.phase1geo.minder.desktop
 /usr/share/metainfo/com.github.phase1geo.minder.appdata.xml

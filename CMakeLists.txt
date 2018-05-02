@@ -19,6 +19,10 @@ set (RELEASE_NAME "")
 set (VERSION "0.1")
 set (VERSION_INFO "")
 
+# GSettings
+include(GSettings)
+add_schema( "data/com.github.phase1geo.minder.gschema.xml" )
+
 # we're about to use pkgconfig to make sure dependencies are installed so let's find pkgconfig first
 find_package(PkgConfig)
 
