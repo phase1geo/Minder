@@ -206,6 +206,33 @@ pot/fast:
 	$(MAKE) -f po/CMakeFiles/pot.dir/build.make po/CMakeFiles/pot.dir/build
 .PHONY : pot/fast
 
+src/Animator.o: src/Animator.c.o
+
+.PHONY : src/Animator.o
+
+# target to build an object file
+src/Animator.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Animator.c.o
+.PHONY : src/Animator.c.o
+
+src/Animator.i: src/Animator.c.i
+
+.PHONY : src/Animator.i
+
+# target to preprocess a source file
+src/Animator.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Animator.c.i
+.PHONY : src/Animator.c.i
+
+src/Animator.s: src/Animator.c.s
+
+.PHONY : src/Animator.s
+
+# target to generate assembly for a file
+src/Animator.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Animator.c.s
+.PHONY : src/Animator.c.s
+
 src/Application.o: src/Application.c.o
 
 .PHONY : src/Application.o
@@ -1221,6 +1248,9 @@ help:
 	@echo "... po"
 	@echo "... i18n"
 	@echo "... pot"
+	@echo "... src/Animator.o"
+	@echo "... src/Animator.i"
+	@echo "... src/Animator.s"
 	@echo "... src/Application.o"
 	@echo "... src/Application.i"
 	@echo "... src/Application.s"

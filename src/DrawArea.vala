@@ -51,6 +51,7 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void scale_changed( double scale );
   public signal void show_node_properties();
   public signal void loaded();
+  public signal void stop_animation();
 
   /* Default constructor */
   public DrawArea() {
@@ -121,6 +122,11 @@ public class DrawArea : Gtk.DrawingArea {
         changed();
       }
     }
+  }
+
+  /* Returns the list of nodes */
+  public Array<Node> get_nodes() {
+    return( _nodes );
   }
 
   /* Loads the drawing area origin from the XML node */
@@ -482,7 +488,6 @@ public class DrawArea : Gtk.DrawingArea {
       move_origin( diff_x, diff_y );
       _scale_factor = scale_factor;
       scale_changed( _scale_factor );
-      queue_draw();
     }
   }
 
@@ -494,13 +499,25 @@ public class DrawArea : Gtk.DrawingArea {
     return( (sf > 4) ? 4 : sf );
   }
 
+  /* Returns the current scaling factor */
+  public double get_scale_factor() {
+    return( _scale_factor );
+  }
+
+  /* Sets the current scaling factor to the given value */
+  public void set_scale_factor( double value ) {
+    _scale_factor = value;
+  }
+
   /* Zooms into the image by one scale mark */
   public void zoom_in() {
     var value = _scale_factor * 100;
     var marks = get_scale_marks();
     foreach (double mark in marks) {
       if( value < mark ) {
+        var animation = new Animator.scale( this );
         set_scaling_factor( mark / 100 );
+        animation.animate();
         return;
       }
     }
@@ -513,7 +530,9 @@ public class DrawArea : Gtk.DrawingArea {
     double last  = marks[0];
     foreach (double mark in marks) {
       if( value <= mark ) {
+        var animation = new Animator.scale( this );
         set_scaling_factor( last / 100 );
+        animation.animate();
         return;
       }
       last = mark;
@@ -539,9 +558,11 @@ public class DrawArea : Gtk.DrawingArea {
   public void zoom_to_selected() {
     double x, y, w, h;
     if( _current_node == null ) return;
+    var animation = new Animator.scale( this );
     _layout.bbox( _current_node, -1, out x, out y, out w, out h );
     position_box( x, y, w, h, 0.5, 0.5 );
     set_scaling_factor( get_scaling_factor( w, h ) );
+    animation.animate();
   }
 
   public void document_rectangle( out double x, out double y, out double width, out double height ) {
@@ -572,6 +593,8 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns the scaling factor required to display all nodes */
   public void zoom_to_fit() {
 
+    var animation = new Animator.scale( this );
+
     /* Get the document rectangle */
     double x, y, w, h;
     document_rectangle( out x, out y, out w, out h );
@@ -579,6 +602,9 @@ public class DrawArea : Gtk.DrawingArea {
     /* Center the map and scale it to fit */
     position_box( x, y, w, h, 0.5, 0.5 );
     set_scaling_factor( get_scaling_factor( w, h ) );
+
+    /* Animate the scaling */
+    animation.animate();
 
   }
 
@@ -613,7 +639,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     if( (diff_x != 0) || (diff_y != 0) ) {
+      var animation = new Animator.scale( this );
       move_origin( diff_x, diff_y );
+      animation.animate();
     }
 
   }
@@ -634,6 +662,11 @@ public class DrawArea : Gtk.DrawingArea {
   public void get_origin( out double x, out double y ) {
     x = _origin_x;
     y = _origin_y;
+  }
+
+  /* Sets the origin to the given x and y coordinates */
+  public void set_origin( double x, double y ) {
+    move_origin( (x - _origin_x), (y - _origin_y) );
   }
 
   /*
@@ -756,8 +789,9 @@ public class DrawArea : Gtk.DrawingArea {
           _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
+          var animation = new Animator.node( this, _current_node );
           _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
-          queue_draw();
+          animation.animate();
         }
       }
     }
@@ -783,6 +817,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
         _current_node = n;
         _current_node.mode = NodeMode.CURRENT;
+        see( _current_node );
         node_changed();
       }
       return( true );
@@ -920,11 +955,12 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Balances the existing nodes based on the current layout */
   public void balance_nodes() {
+    var animation = new Animator( this );
     for( int i=0; i<_nodes.length; i++ ) {
       var partitioner = new Partitioner();
       partitioner.partition_node( _nodes.index( i ), _layout );
     }
-    queue_draw();
+    animation.animate();
     changed();
   }
 

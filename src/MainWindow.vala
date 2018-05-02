@@ -467,6 +467,7 @@ public class MainWindow : ApplicationWindow {
     var value        = zoom_to_value( new_value );
     var scale_factor = value / 100;
     _canvas.set_scaling_factor( scale_factor );
+    _canvas.queue_draw();
     return( false );
   }
 
@@ -501,7 +502,9 @@ public class MainWindow : ApplicationWindow {
 
   /* Sets the zoom to 100% */
   private void action_zoom_actual() {
+    var animation = new Animator.scale( _canvas );
     _canvas.set_scaling_factor( 1.0 );
+    animation.animate();
     _canvas.grab_focus();
   }
 
