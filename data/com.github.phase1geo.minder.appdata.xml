@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2017 Your Name <phase1geo@email.com> -->
 <component type="desktop">
-  <id>com.github.phase1geo.Minder.desktop</id>
+  <id>com.github.phase1geo.minder.desktop</id>
   <metadata_license>GPL 3.0</metadata_license>
   <name>Minder</name>
   <summary>Mind-Mapping Application for Elementary OS</summary>
