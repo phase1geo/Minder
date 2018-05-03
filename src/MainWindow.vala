@@ -24,6 +24,7 @@ using Gtk;
 public class MainWindow : ApplicationWindow {
 
   private GLib.Settings  _settings;
+  private HeaderBar?     _header        = null;
   private DrawArea?      _canvas        = null;
   private Document?      _doc           = null;
   private Revealer?      _inspector     = null;
@@ -64,10 +65,9 @@ public class MainWindow : ApplicationWindow {
     var window_h = settings.get_int( "window-h" );
 
     /* Create the header bar */
-    var header = new HeaderBar();
-    header.set_title( _( "Minder" ) );
-    header.set_subtitle( _( "Mind-Mapping Application" ) );
-    header.set_show_close_button( true );
+    _header = new HeaderBar();
+    _header.set_show_close_button( true );
+    update_title();
 
     /* Set the main window data */
     title = _( "Minder" );
@@ -77,7 +77,7 @@ public class MainWindow : ApplicationWindow {
       move( window_x, window_y );
     }
     set_default_size( window_w, window_h );
-    set_titlebar( header );
+    set_titlebar( _header );
     set_border_width( 2 );
     destroy.connect( Gtk.main_quit );
 
@@ -98,38 +98,35 @@ public class MainWindow : ApplicationWindow {
     var new_btn = new Button.from_icon_name( "document-new-symbolic", IconSize.SMALL_TOOLBAR );
     new_btn.set_tooltip_text( _( "New File" ) );
     new_btn.clicked.connect( do_new_file );
-    header.pack_start( new_btn );
+    _header.pack_start( new_btn );
 
     var open_btn = new Button.from_icon_name( "document-open-symbolic", IconSize.SMALL_TOOLBAR );
     open_btn.set_tooltip_text( _( "Open File" ) );
     open_btn.clicked.connect( do_open_file );
-    header.pack_start( open_btn );
+    _header.pack_start( open_btn );
 
     var save_btn = new Button.from_icon_name( "document-save-as-symbolic", IconSize.SMALL_TOOLBAR );
     save_btn.set_tooltip_text( _( "Save File As" ) );
     save_btn.clicked.connect( do_save_file );
-    header.pack_start( save_btn );
+    _header.pack_start( save_btn );
 
     _undo_btn = new Button.from_icon_name( "edit-undo-symbolic", IconSize.SMALL_TOOLBAR );
     _undo_btn.set_tooltip_text( _( "Undo" ) );
     _undo_btn.set_sensitive( false );
     _undo_btn.clicked.connect( do_undo );
-    header.pack_start( _undo_btn );
+    _header.pack_start( _undo_btn );
 
     _redo_btn = new Button.from_icon_name( "edit-redo-symbolic", IconSize.SMALL_TOOLBAR );
     _redo_btn.set_tooltip_text( _( "Redo" ) );
     _redo_btn.set_sensitive( false );
     _redo_btn.clicked.connect( do_redo );
-    header.pack_start( _redo_btn );
+    _header.pack_start( _redo_btn );
 
     /* Add the buttons on the right side in the reverse order */
-    add_property_button( header );
-    add_export_button( header );
-    add_search_button( header );
-    add_zoom_button( header );
-
-    /* Create the document */
-    _doc = new Document( _canvas, _settings );
+    add_property_button();
+    add_export_button();
+    add_search_button();
+    add_zoom_button();
 
     /* Create the horizontal box that will contain the canvas and the properties sidebar */
     var hbox = new Box( Orientation.HORIZONTAL, 0 );
@@ -142,14 +139,24 @@ public class MainWindow : ApplicationWindow {
 
   }
 
+  /* Updates the title */
+  private void update_title() {
+    string suffix = " \u2014 Minder";
+    if( (_doc == null) || !_doc.is_saved() ) {
+      _header.set_title( _( "Unnamed Document" ) + suffix );
+    } else {
+      _header.set_title( GLib.Path.get_basename( _doc.filename ) + suffix );
+    }
+  }
+
   /* Adds the zoom functionality */
-  private void add_zoom_button( HeaderBar header ) {
+  private void add_zoom_button() {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
     menu_btn.set_image( new Image.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR ) );
     menu_btn.set_tooltip_text( _( "Zoom" ) );
-    header.pack_end( menu_btn );
+    _header.pack_end( menu_btn );
 
     /* Create zoom menu popover */
     Box box = new Box( Orientation.VERTICAL, 5 );
@@ -205,13 +212,13 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the search functionality */
-  private void add_search_button( HeaderBar header ) {
+  private void add_search_button() {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
     menu_btn.set_image( new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
     menu_btn.set_tooltip_text( _( "Search" ) );
-    header.pack_end( menu_btn );
+    _header.pack_end( menu_btn );
 
     /* Create search popover */
     var box = new Box( Orientation.VERTICAL, 5 );
@@ -248,13 +255,13 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the export functionality */
-  private void add_export_button( HeaderBar header ) {
+  private void add_export_button() {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
     menu_btn.set_image( new Image.from_icon_name( "document-export-symbolic", IconSize.SMALL_TOOLBAR ) );
     menu_btn.set_tooltip_text( _( "Export" ) );
-    header.pack_end( menu_btn );
+    _header.pack_end( menu_btn );
 
     /* Create export menu */
     var box = new Box( Orientation.VERTICAL, 5 );
@@ -286,33 +293,31 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the property functionality */
-  private void add_property_button( HeaderBar header ) {
+  private void add_property_button() {
 
     /* Add the menubutton */
     var menu_btn = new Button.from_icon_name( "document-properties-symbolic", IconSize.SMALL_TOOLBAR );
     menu_btn.set_tooltip_text( _( "Properties" ) );
     menu_btn.clicked.connect( inspector_clicked );
-    header.pack_end( menu_btn );
+    _header.pack_end( menu_btn );
 
     /* Create the inspector sidebar */
     var box   = new Box( Orientation.VERTICAL, 20 );
     var sb    = new StackSwitcher();
 
-    /* If the stack switcher is clicked, save off which tab is in view */
-    sb.add_events( Gdk.EventMask.BUTTON_PRESS_MASK );
-    sb.button_press_event.connect(() => {
-      stdout.printf( "visible child: %s\n", _stack.visible_child_name );
-      _settings.set_boolean( "node-properties-shown", (_stack.visible_child_name == "node") );
-      _settings.set_boolean( "map-properties-shown",  (_stack.visible_child_name == "map") );
-      return( false );
-    });
-
     _stack = new Stack();
-
     _stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
     _stack.set_transition_duration( 500 );
     _stack.add_titled( new NodeInspector( _canvas ), "node", "Node" );
     _stack.add_titled( new MapInspector( _canvas ),  "map",  "Map" );
+
+    /* If the stack switcher is clicked, save off which tab is in view */
+    _stack.notify.connect((ps) => {
+      if( ps.name == "visible-child" ) {
+        _settings.set_boolean( "node-properties-shown", (_stack.visible_child_name == "node") );
+        _settings.set_boolean( "map-properties-shown",  (_stack.visible_child_name == "map") );
+      }
+    });
 
     sb.homogeneous = true;
     sb.set_stack( _stack );
@@ -352,19 +357,31 @@ public class MainWindow : ApplicationWindow {
    document needs to be saved and saves it (if necessary).
   */
   public void do_new_file() {
-    if( _doc.save_needed ) {
-      _doc.save();
+
+    /* Save any changes to the current document */
+    if( _doc != null ) {
+      _doc.auto_save();
     }
-    _doc = new Document( _canvas );
-    _canvas.initialize();
+
+    /* Create a new document */
+    _doc = new Document( _canvas, _settings );
+    _canvas.initialize_for_new();
     _canvas.grab_focus();
+
+    /* Set the title to indicate that we have an unnamed document */
+    update_title();
+
   }
 
   /* Allow the user to open a Minder file */
   public void do_open_file() {
-    if( _doc.save_needed ) {
-      _doc.save();
+
+    /* Automatically save the current file if one exists */
+    if( _doc != null ) {
+      _doc.auto_save();
     }
+
+    /* Get the file to open from the user */
     FileChooserDialog dialog = new FileChooserDialog( _( "Open File" ), this, FileChooserAction.OPEN,
       _( "Cancel" ), ResponseType.CANCEL, _( "Open" ), ResponseType.ACCEPT );
 
@@ -382,17 +399,25 @@ public class MainWindow : ApplicationWindow {
     if( dialog.run() == ResponseType.ACCEPT ) {
       open_file( dialog.get_filename() );
     }
+
     dialog.close();
     _canvas.grab_focus();
+
   }
 
   /* Opens the file and display it in the canvas */
   public bool open_file( string fname ) {
     if( fname.has_suffix( ".minder" ) ) {
+      _doc = new Document( _canvas, _settings );
+      _canvas.initialize_for_open();
       _doc.filename = fname;
+      update_title();
       _doc.load();
       return( true );
     } else if( fname.has_suffix( ".opml" ) ) {
+      _doc = new Document( _canvas, _settings );
+      _canvas.initialize_for_open();
+      update_title();
       OPML.import( fname, _canvas );
       return( true );
     }
@@ -442,6 +467,7 @@ public class MainWindow : ApplicationWindow {
       }
       _doc.filename = fname;
       _doc.save();
+      update_title();
     }
     dialog.close();
     _canvas.grab_focus();
@@ -479,8 +505,8 @@ public class MainWindow : ApplicationWindow {
   private void hide_node_properties() {
     _inspector.reveal_child = false;
     _canvas.move_origin( -300, 0 );
-    _settings.set_boolean( "node-properties_shown", false );
-    _settings.set_boolean( "map-properties_shown",  false );
+    _settings.set_boolean( "node-properties-shown", false );
+    _settings.set_boolean( "map-properties-shown",  false );
   }
 
   /* Converts the given value from the scale to the zoom value to use */

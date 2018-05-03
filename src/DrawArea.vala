@@ -69,6 +69,7 @@ public class DrawArea : Gtk.DrawingArea {
     this.motion_notify_event.connect( on_motion );
     this.button_release_event.connect( on_release );
     this.key_press_event.connect( on_keypress );
+    this.scroll_event.connect( on_scroll );
 
     /* Make sure the above events are listened for */
     this.add_events(
@@ -76,6 +77,7 @@ public class DrawArea : Gtk.DrawingArea {
       EventMask.BUTTON_RELEASE_MASK |
       EventMask.BUTTON1_MOTION_MASK |
       EventMask.KEY_PRESS_MASK |
+      EventMask.SMOOTH_SCROLL_MASK |
       EventMask.STRUCTURE_MASK
     );
 
@@ -269,8 +271,31 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Initializes the canvas to prepare it for a document that will be loaded */
+  public void initialize_for_open() {
+
+    /* Clear the list of existing nodes */
+    _nodes.remove_range( 0, _nodes.length );
+
+    /* Clear the undo buffer */
+    undo_buffer.clear();
+
+    /* Initialize variables */
+    _origin_x     = 0.0;
+    _origin_y     = 0.0;
+    _pressed      = false;
+    _press_type   = EventType.NOTHING;
+    _motion       = false;
+    _scale_factor = 1.0;
+    _attach_node  = null;
+    _orig_name    = "";
+
+    queue_draw();
+
+  }
+
   /* Initialize the empty drawing area with a node */
-  public void initialize() {
+  public void initialize_for_new() {
 
     /* Clear the list of existing nodes */
     _nodes.remove_range( 0, _nodes.length );
@@ -612,7 +637,9 @@ public class DrawArea : Gtk.DrawingArea {
   public void center_node( Node n ) {
     double x, y, w, h;
     n.bbox( out x, out y, out w, out h );
+    var animation = new Animator.scale( this );
     position_box( x, y, w, h, 0.5, 0.5 );
+    animation.animate();
   }
 
   /* Brings the given node into view in its entirety including the given amount of padding */
@@ -1238,6 +1265,23 @@ public class DrawArea : Gtk.DrawingArea {
       }
     }
     return( true );
+  }
+
+  /*
+   Called whenever the user scrolls on the canvas.  We will adjust the
+   origin to give the canvas the appearance of scrolling.
+  */
+  private bool on_scroll( EventScroll e ) {
+
+    double delta_x, delta_y;
+    e.get_scroll_deltas( out delta_x, out delta_y );
+
+    /* Adjust the origin and redraw */
+    move_origin( (delta_x * 120), (delta_y * 120) );
+    queue_draw();
+
+    return( false );
+
   }
 
 }

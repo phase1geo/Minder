@@ -33,11 +33,10 @@ public class Animator : Object {
   private double?             _soy     = null;  // Starting y-origin
   private double?             _eox     = null;  // Ending x-origin
   private double?             _eoy     = null;  // Ending y-origin
-  private int                 _index   = 1;     // Animation index
+  private int                 _index   = 0;     // Animation index
   private string              _name    = "";
   private int                 _id;
-  // private const int           _timeout = 20;    // Number of milliseconds between frames (30 fps)
-  private const int           _timeout = 1000;    // Number of milliseconds between frames (30 fps)
+  private const int           _timeout = 20;    // Number of milliseconds between frames (30 fps)
   private const double        _frames  = 10;    // Number of frames to animate (note: set to 1 to disable animation)
   private static int          _next_id = 0;
 
@@ -79,18 +78,21 @@ public class Animator : Object {
     if( _node != null ) {
       _epos = new AnimationPositions.for_node( _node );
       Timeout.add( _timeout, animate_positions );
+      adjust_positions();
     } else if( _sscale != null ) {
       _escale = _da.get_scale_factor();
       _da.get_origin( out _eox, out _eoy );
       Timeout.add( _timeout, animate_scaling );
+      adjust_scaling();
     } else {
       _epos = new AnimationPositions( _da );
       Timeout.add( _timeout, animate_positions );
+      adjust_positions();
     }
   }
 
-  /* Perform the animation */
-  private bool animate_positions() {
+  /* Adjusts all of the node positions for the given frame */
+  private void adjust_positions() {
     double divisor = _index / _frames;
     _index++;
     for( int i=0; i<_spos.length(); i++ ) {
@@ -99,6 +101,22 @@ public class Animator : Object {
       _spos.node( i ).set_posx_only( x );
       _spos.node( i ).set_posy_only( y );
     }
+  }
+
+  /* Adjusts all of the origin/scaling for the given frame */
+  private void adjust_scaling() {
+    double divisor = _index / _frames;
+    _index++;
+    double scale_factor = _sscale + ((_escale - _sscale) * divisor);
+    double origin_x     = _sox    + ((_eox    - _sox)    * divisor);
+    double origin_y     = _soy    + ((_eoy    - _soy)    * divisor);
+    _da.set_scale_factor( scale_factor );
+    _da.set_origin( origin_x, origin_y );
+  }
+
+  /* Perform the animation */
+  private bool animate_positions() {
+    adjust_positions();
     _da.queue_draw();
     if( _index > _frames ) {
       _da.stop_animation.disconnect( stop_animating );
@@ -109,14 +127,7 @@ public class Animator : Object {
 
   /* Animates the given scaling and origin changes */
   private bool animate_scaling() {
-    double divisor = _index / _frames;
-    _index++;
-    double scale_factor = _sscale + ((_escale - _sscale) * divisor);
-    double origin_x     = _sox    + ((_eox    - _sox)    * divisor);
-    double origin_y     = _soy    + ((_eoy    - _soy)    * divisor);
-    stdout.printf( "index: %d, divisor: %g, scale: %g, ox: %g, oy: %g\n", _index, divisor, scale_factor, origin_x, origin_y );
-    _da.set_scale_factor( scale_factor );
-    _da.set_origin( origin_x, origin_y );
+    adjust_scaling();
     _da.queue_draw();
     if( _index > _frames ) {
       _da.stop_animation.disconnect( stop_animating );

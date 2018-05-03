@@ -21,38 +21,65 @@
 
 using Cairo;
 using Gtk;
+using GLib;
 
 public class Document : Object {
 
   private DrawArea      _da;
   private GLib.Settings _settings;
+  private string        _filename;
+  private bool          _from_user;  // Set to true if _filename was set by the user
 
   /* Properties */
-  public string filename    { set; get; default = ""; }
-  public bool   save_needed { private set; get; default = false; }
+  public string filename {
+    set {
+      if( _filename != value ) {
+        if( !_from_user ) {
+          FileUtils.unlink( _filename );
+        }
+        _filename  = value;
+        _from_user = true;
+        _settings.set_string( "last-file", value );
+      }
+    }
+    get {
+      return( _filename );
+    }
+  }
+  public bool save_needed { private set; get; default = false; }
 
   /* Default constructor */
   public Document( DrawArea da, GLib.Settings settings ) {
+
     _da       = da;
     _settings = settings;
+
+    /* Create the temporary file */
+    var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
+    if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
+      _filename  = GLib.Path.build_filename( dir, "unnamed.minder" );
+      _from_user = false;
+      _settings.set_string( "last-file", _filename );
+    }
+
+    /* Listen for any changes from the canvas */
     _da.changed.connect( canvas_changed );
+
   }
 
   /* Called whenever the canvas changes such that a save will be needed */
   private void canvas_changed() {
     save_needed = true;
+    auto_save();
   }
 
-  /* Returns true if this document has been previously saved */
-  public bool saved() {
-    return( filename != "" );
+  /* Returns true if the stored filename came from the user */
+  public bool is_saved() {
+    return( _from_user );
   }
 
   /* Opens the given filename */
   public bool load() {
-    if( filename == "" ) {
-      return( false );
-    }
     Xml.Doc* doc = Xml.Parser.parse_file( filename );
     if( doc == null ) {
       return( false );
@@ -63,48 +90,21 @@ public class Document : Object {
   }
 
   /* Saves the given node information to the specified file */
-  private bool save_with_filename( string fname ) {
+  public bool save() {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
     doc->set_root_element( root );
     _da.save( root );
-    doc->save_format_file( fname, 1 );
+    doc->save_format_file( filename, 1 );
     delete doc;
-    _settings.set_string( "last-file", fname );
     return( true );
   }
 
-  /* Saves the state of the document */
-  public bool save() {
-    if( filename == "" ) {
-      return( false );
-    }
-    return( save_with_filename( filename ) );
-  }
-
-  /* Auto-saves the document using either a temporary name or a backup file */
+  /* Auto-saves the document */
   public void auto_save() {
     if( save_needed ) {
-      if( filename == "" ) {
-        var dir = FOOBAR;
-        save_with_filename( dir + "unnamed.minder" );
-      } else {
-        save_with_filename( filename );
-      }
+      save();
     }
-  }
-
-  /* Draws the page to the printer */
-  public void draw_page( PrintOperation op, PrintContext context, int nr ) {
-
-    Context ctx = context.get_cairo_context();
-    double  w   = context.get_width();
-    double  h   = context.get_height();
-
-    ctx.set_source_rgb( 0.5, 0.5, 1 );
-    ctx.rectangle( (w * 0.1), (h * 0.1), (w * 0.8), (h * 0.8) );
-    ctx.stroke();
-
   }
 
 }

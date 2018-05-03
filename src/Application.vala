@@ -41,6 +41,16 @@ public class Minder : Granite.Application {
     var appwin = new MainWindow( this, settings );
 
     /*
+    stdout.printf( "user_cache_dir: %s\n", GLib.Environment.get_user_cache_dir() );
+    stdout.printf( "user_config_dir: %s\n", GLib.Environment.get_user_config_dir() );
+    stdout.printf( "user_data_dir: %s\n", GLib.Environment.get_user_data_dir() );
+    stdout.printf( "user_runtime_dir: %s\n", GLib.Environment.get_user_runtime_dir() );
+    stdout.printf( "user_special_dir: %s\n", GLib.Environment.get_user_special_dir( UserDirectory.PUBLIC_SHARE ) );
+    stdout.printf( "current_dir: %s\n", GLib.Environment.get_current_dir() );
+    stdout.printf( "home_dir: %s\n", GLib.Environment.get_home_dir() );
+    */
+
+    /*
      If the user specified to open a specific filename from
      the command-line, attempt to open it.  Display an error
      message and exit immediately if there is an error opening
@@ -51,7 +61,7 @@ public class Minder : Granite.Application {
         stdout.printf( "ERROR:  Unable to open file '%s'\n", open_file );
         Process.exit( 1 );
       }
-      
+
     /*
      If the user specified that a new file should be created or the
      saved last-file string is empty, create a new map.
