@@ -107,11 +107,13 @@ public class Animator : Object {
   private void adjust_scaling() {
     double divisor = _index / _frames;
     _index++;
-    double scale_factor = _sscale + ((_escale - _sscale) * divisor);
-    double origin_x     = _sox    + ((_eox    - _sox)    * divisor);
-    double origin_y     = _soy    + ((_eoy    - _soy)    * divisor);
-    _da.set_scale_factor( scale_factor );
-    _da.set_origin( origin_x, origin_y );
+    double diff_x = (_eox - _sox) * divisor;
+    double diff_y = (_eoy - _soy) * divisor;
+    double sf0    = (_index == 1) ? _sscale : _da.get_scale_factor();
+    double w      = _da.get_allocated_width();
+    double sf1    = (0 - (sf0 * w)) / ((diff_x * sf0) - w);
+    _da.set_scale_factor( sf1 );
+    _da.set_origin( (_sox + diff_x), (_soy + diffy) );
   }
 
   /* Perform the animation */
