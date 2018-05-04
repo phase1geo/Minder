@@ -637,7 +637,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void center_node( Node n ) {
     double x, y, w, h;
     n.bbox( out x, out y, out w, out h );
-    var animation = new Animator.scale( this );
+    var animation = new Animator.pan( this );
     position_box( x, y, w, h, 0.5, 0.5 );
     animation.animate();
   }
@@ -666,7 +666,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     if( (diff_x != 0) || (diff_y != 0) ) {
-      var animation = new Animator.scale( this, "see" );
+      var animation = new Animator.pan( this, "see" );
       move_origin( diff_x, diff_y );
       animation.animate();
     }

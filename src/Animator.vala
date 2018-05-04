@@ -69,6 +69,14 @@ public class Animator : Object {
     _id     = _next_id++;
     _da.stop_animation();
     _sscale = da.get_scale_factor();
+  }
+
+  /* Constructor for a pan change */
+  public Animator.pan( DrawArea da, string name = "unnamed" ) {
+    _da     = da;
+    _name   = name;
+    _id     = _next_id++;
+    _da.stop_animation();
     _da.get_origin( out _sox, out _soy );
   }
 
@@ -81,9 +89,12 @@ public class Animator : Object {
       adjust_positions();
     } else if( _sscale != null ) {
       _escale = _da.get_scale_factor();
-      _da.get_origin( out _eox, out _eoy );
       Timeout.add( _timeout, animate_scaling );
       adjust_scaling();
+    } else if( _sox != null ) {
+      _da.get_origin( out _eox, out _eoy );
+      Timeout.add( _timeout, animate_panning );
+      adjust_panning();
     } else {
       _epos = new AnimationPositions( _da );
       Timeout.add( _timeout, animate_positions );
@@ -103,17 +114,21 @@ public class Animator : Object {
     }
   }
 
-  /* Adjusts all of the origin/scaling for the given frame */
+  /* Adjusts scaling factor for the given frame */
   private void adjust_scaling() {
     double divisor = _index / _frames;
     _index++;
-    double diff_x = (_eox - _sox) * divisor;
-    double diff_y = (_eoy - _soy) * divisor;
-    double sf0    = (_index == 1) ? _sscale : _da.get_scale_factor();
-    double w      = _da.get_allocated_width();
-    double sf1    = (0 - (sf0 * w)) / ((diff_x * sf0) - w);
-    _da.set_scale_factor( sf1 );
-    _da.set_origin( (_sox + diff_x), (_soy + diffy) );
+    double sf = _sscale + ((_escale - _sscale) * divisor);
+    _da.set_scaling_factor( sf );
+  }
+
+  /* Adjusts the origin for the given frame */
+  private void adjust_panning() {
+    double divisor = _index / _frames;
+    _index++;
+    double origin_x = _sox + ((_eox - _sox) * divisor);
+    double origin_y = _soy + ((_eoy - _soy) * divisor);
+    _da.set_origin( origin_x, origin_y );
   }
 
   /* Perform the animation */
@@ -127,9 +142,20 @@ public class Animator : Object {
     return( true );
   }
 
-  /* Animates the given scaling and origin changes */
+  /* Animates the given scaling change */
   private bool animate_scaling() {
     adjust_scaling();
+    _da.queue_draw();
+    if( _index > _frames ) {
+      _da.stop_animation.disconnect( stop_animating );
+      return( false );
+    }
+    return( true );
+  }
+
+  /* Animates the given panning change */
+  private bool animate_panning() {
+    adjust_panning();
     _da.queue_draw();
     if( _index > _frames ) {
       _da.stop_animation.disconnect( stop_animating );
