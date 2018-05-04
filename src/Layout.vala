@@ -356,7 +356,7 @@ public class Layout : Object {
       }
     }
 
-    adjust_tree_all( child, get_adjust( child, false ) );  //, (0 - adjust) );
+    adjust_tree_all( child, (0 - adjust) );
 
   }
 
@@ -375,7 +375,7 @@ public class Layout : Object {
       }
     }
     if( parent.parent != null ) {
-      adjust_tree_all( parent, get_adjust( parent, false ) ); // , adjust );
+      adjust_tree_all( parent, adjust );
     }
   }
 

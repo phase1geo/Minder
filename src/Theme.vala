@@ -40,6 +40,15 @@ public class Theme : Object {
   public    RGBA   attachable_color   { protected set; get; }
   protected RGBA[] link_colors        { set; get; }
 
+  public int index {
+    set {
+      _index = value;
+    }
+    get {
+      return( _index );
+    }
+  }
+
   /* Default constructor */
   public Theme() {
     _index = 0;

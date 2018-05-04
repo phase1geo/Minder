@@ -154,6 +154,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Loads the given theme from the list of available options */
   private void load_theme( Xml.Node* n ) {
+
+    /* Get the theme */
     string? name = n->get_prop( "name" );
     if( name != null ) {
       _theme = themes.get_theme( name );
@@ -163,6 +165,13 @@ public class DrawArea : Gtk.DrawingArea {
         STYLE_PROVIDER_PRIORITY_APPLICATION
       );
     }
+
+    /* Set the current theme index */
+    string? index = n->get_prop( "index" );
+    if( index != null ) {
+      _theme.index = int.parse( index );
+    }
+
   }
 
   /* Loads the given layout from the list of available options */
@@ -212,6 +221,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     Xml.Node* theme = new Xml.Node( null, "theme" );
     theme->new_prop( "name", _theme.name );
+    theme->new_prop( "index", _theme.index.to_string() );
     parent->add_child( theme );
 
     Xml.Node* layout = new Xml.Node( null, "layout" );
@@ -816,9 +826,9 @@ public class DrawArea : Gtk.DrawingArea {
           _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
-          var animation = new Animator.node( this, _current_node, "move to position" );
+          // var animation = new Animator.node( this, _current_node, "move to position" );
           _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
-          animation.animate();
+          // animation.animate();
         }
       }
     }

@@ -17,9 +17,12 @@
 //Path to a program.
 CMAKE_AR:FILEPATH=/usr/bin/ar
 
+//No help, variable specified on the command line.
+CMAKE_BUILD_DEBUG:UNINITIALIZED=1
+
 //Choose the type of build, options are: None(CMAKE_CXX_FLAGS or
 // CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel.
-CMAKE_BUILD_TYPE:STRING=
+CMAKE_BUILD_TYPE:STRING=Debug
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
