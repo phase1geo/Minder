@@ -1038,7 +1038,14 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.move_cursor( 1 );
       queue_draw();
     } else if( is_mode_selected() ) {
-      if( select_node( _current_node.first_child() ) ) {
+      Node? next;
+      switch( _current_node.side ) {
+        case NodeSide.TOP    :
+        case NodeSide.BOTTOM :  next = _current_node.parent.next_child( _current_node );  break;
+        case NodeSide.LEFT   :  next = _current_node.parent;  break;
+        default              :  next = _current_node.first_child();  break;
+      }
+      if( select_node( next ) ) {
         queue_draw();
       }
     }
@@ -1050,7 +1057,14 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.move_cursor( -1 );
       queue_draw();
     } else if( is_mode_selected() ) {
-      if( select_node( _current_node.parent ) ) {
+      Node? next;
+      switch( _current_node.side ) {
+        case NodeSide.TOP :
+        case NodeSide.BOTTOM :  next = _current_node.parent.prev_child( _current_node );  break;
+        case NodeSide.LEFT   :  next = _current_node.first_child();  break;
+        default              :  next = _current_node.parent;  break;
+      }
+      if( select_node( next ) ) {
         queue_draw();
       }
     }
@@ -1087,7 +1101,13 @@ public class DrawArea : Gtk.DrawingArea {
           }
         }
       } else {
-        if( select_node( _current_node.parent.prev_child( _current_node ) ) ) {
+        Node? next;
+        switch( _current_node.side ) {
+          case NodeSide.TOP    :  next = _current_node.first_child();          break;
+          case NodeSide.BOTTOM :  next = _current_node.parent;                 break;
+          default :  next = _current_node.parent.prev_child( _current_node );  break;
+        }
+        if( select_node( next ) ) {
           queue_draw();
         }
       }
@@ -1109,7 +1129,13 @@ public class DrawArea : Gtk.DrawingArea {
           }
         }
       } else {
-        if( select_node( _current_node.parent.next_child( _current_node ) ) ) {
+        Node? next;
+        switch( _current_node.side ) {
+          case NodeSide.TOP    :  next = _current_node.parent;  break;
+          case NodeSide.BOTTOM :  next = _current_node.first_child();  break;
+          default :  next = _current_node.parent.next_child( _current_node );  break;
+        }
+        if( select_node( next ) ) {
           queue_draw();
         }
       }
@@ -1164,13 +1190,19 @@ public class DrawArea : Gtk.DrawingArea {
             _current_node.mode = NodeMode.EDITABLE;
             break;
           case "n" :  // Move the selection to the next sibling
-            handle_down();
+            if( select_node( _current_node.parent.next_child( _current_node ) ) ) {
+              queue_draw();
+            }
             break;
           case "p" :  // Move the selection to the previous sibling
-            handle_up();
+            if( select_node( _current_node.parent.prev_child( _current_node ) ) ) {
+              queue_draw();
+            }
             break;
           case "a" :  // Move to the parent node
-            handle_left();
+            if( select_node( _current_node.parent ) ) {
+              queue_draw();
+            }
             break;
           case "f" :  // Fold/unfold the current node
             toggle_fold( _current_node );
@@ -1186,7 +1218,9 @@ public class DrawArea : Gtk.DrawingArea {
             }
             break;
           case "c" :  // Select the first child node
-            handle_right();
+            if( select_node( _current_node.first_child() ) ) {
+              queue_draw();
+            }
             break;
           case "C" :  // Center the selected node
             center_node( _current_node );
