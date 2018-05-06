@@ -497,14 +497,18 @@ public class MainWindow : ApplicationWindow {
   /* Displays the node properties panel for the current node */
   private void show_node_properties() {
     _inspector.reveal_child = true;
+    var animation = new Animator.pan( _canvas );
     _canvas.move_origin( 300, 0 );
+    animation.animate();
     _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
   }
 
   /* Hides the node properties panel */
   private void hide_node_properties() {
     _inspector.reveal_child = false;
+    var animation = new Animator.pan( _canvas );
     _canvas.move_origin( -300, 0 );
+    animation.animate();
     _settings.set_boolean( "node-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",  false );
   }

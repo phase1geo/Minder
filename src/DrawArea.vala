@@ -45,6 +45,7 @@ public class DrawArea : Gtk.DrawingArea {
   public UndoBuffer undo_buffer { set; get; default = new UndoBuffer(); }
   public Themes     themes      { set; get; default = new Themes(); }
   public Layouts    layouts     { set; get; default = new Layouts(); }
+  public bool       animate     { set; get; default = true; }
 
   public signal void changed();
   public signal void node_changed();
@@ -113,7 +114,7 @@ public class DrawArea : Gtk.DrawingArea {
       _layout = layouts.get_layout( name );
     } else {
       var old_balanceable = _layout.balanceable;
-      var animation       = new Animator( this, _layout );
+      var animation       = new Animator( this );
       _layout = layouts.get_layout( name );
       for( int i=0; i<_nodes.length; i++ ) {
         _layout.initialize( _nodes.index( i ) );
@@ -828,7 +829,7 @@ public class DrawArea : Gtk.DrawingArea {
           _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
-          var animation = new Animator.node( this, _layout, _current_node, "move to position" );
+          var animation = new Animator.node( this, _current_node, "move to position" );
           _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
           animation.animate();
         }
@@ -994,7 +995,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Balances the existing nodes based on the current layout */
   public void balance_nodes() {
-    var animation = new Animator( this, _layout, "balance nodes" );
+    var animation = new Animator( this, "balance nodes" );
     for( int i=0; i<_nodes.length; i++ ) {
       var partitioner = new Partitioner();
       partitioner.partition_node( _nodes.index( i ), _layout );

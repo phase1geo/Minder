@@ -24,7 +24,6 @@ using GLib;
 public class Animator : Object {
 
   private DrawArea            _da;              // Reference to canvas
-  private Layout              _layout;          // Reference to the current layout
   private Node?               _node    = null;  // Reference to node to move (if null, we are moving everything on the canvas
   private AnimationPositions? _spos    = null;  // Node starting positions
   private AnimationPositions? _epos    = null;  // Node ending positions
@@ -41,12 +40,9 @@ public class Animator : Object {
   private const double        _frames  = 10;    // Number of frames to animate (note: set to 1 to disable animation)
   private static int          _next_id = 0;
 
-  public static bool         _in_progress = false;
-
   /* Default constructor */
-  public Animator( DrawArea da, Layout layout, string name = "unnamed" ) {
+  public Animator( DrawArea da, string name = "unnamed" ) {
     _da     = da;
-    _layout = layout;
     _name   = name;
     _id     = _next_id++;
     _da.stop_animation();
@@ -54,9 +50,8 @@ public class Animator : Object {
   }
 
   /* Constructor for a specified node tree */
-  public Animator.node( DrawArea da, Layout layout, Node n, string name = "unnamed" ) {
+  public Animator.node( DrawArea da, Node n, string name = "unnamed" ) {
     _da     = da;
-    _layout = layout;
     _name   = name;
     _id     = _next_id++;
     _da.stop_animation();
@@ -85,6 +80,7 @@ public class Animator : Object {
 
   /* User method which performs the animation */
   public void animate() {
+    if( !_da.animate ) return;
     _da.stop_animation.connect( stop_animating );
     if( _node != null ) {
       _epos = new AnimationPositions.for_node( _node );
@@ -114,7 +110,7 @@ public class Animator : Object {
       double y = _spos.y( i ) + ((_epos.y( i ) - _spos.y( i )) * divisor);
       _spos.node( i ).set_posx_only( x );
       _spos.node( i ).set_posy_only( y );
-      _spos.node( i ).side = _layout.get_side( _spos.node( i ) );
+      _spos.node( i ).side = _da.get_layout().get_side( _spos.node( i ) );
     }
   }
 

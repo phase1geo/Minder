@@ -35,6 +35,7 @@ public class MapInspector : Box {
     _da = da;
 
     /* Create the interface */
+    add_animation_ui();
     add_layout_ui();
     add_theme_ui();
     add_button_ui();
@@ -47,7 +48,33 @@ public class MapInspector : Box {
 
   }
 
-  /* Adds the layout UI (TBD - Let's do this programmatically with the DrawArea's layouts list) */
+  /* Add the animation enable UI */
+  private void add_animation_ui() {
+
+    var grid = new Grid();
+    var lbl  = new Label( _( "Enable animations" ) );
+
+    lbl.xalign = (float)0;
+
+    var enable = new Switch();
+    enable.set_active( _da.animate );
+    enable.state_set.connect( animation_changed );
+
+    grid.column_homogeneous = true;
+    grid.attach( lbl,    0, 0, 1, 1 );
+    grid.attach( enable, 1, 0, 1, 1 );
+
+    pack_start( grid, false, true );
+
+  }
+
+  /* Called whenever the fold switch is changed within the inspector */
+  private bool animation_changed( bool state ) {
+    _da.animate = state;
+    return( false );
+  }
+
+  /* Adds the layout UI */
   private void add_layout_ui() {
 
     var icons = new Array<string>();
