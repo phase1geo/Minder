@@ -212,23 +212,23 @@ public class Layout : Object {
     }
   }
 
+  /* Returns the side of the given node relative to its parent */
+  public virtual NodeSide get_side( Node n ) {
+    double rx, ry, rw, rh;
+    double nx, ny, nw, nh;
+    n.get_root().bbox( out rx, out ry, out rw, out rh );
+    n.bbox( out nx, out ny, out nw, out nh );
+    if( (n.side & NodeSide.horizontal()) != 0 ) {
+      return( ((nx + (nw / 2)) > (rx + (rw / 2))) ? NodeSide.RIGHT : NodeSide.LEFT );
+    } else {
+      return( ((ny + (nh / 2)) > (ry + (rh / 2))) ? NodeSide.BOTTOM : NodeSide.TOP );
+    }
+  }
+
   /* Sets the side values of the given node */
   public virtual void set_side( Node current ) {
-    Node parent = current.parent;
-    if( parent != null ) {
-      double px, py, pw, ph;
-      double cx, cy, cw, ch;
-      while( parent.parent != null ) {
-        parent = parent.parent;
-      }
-      parent.bbox(  out px, out py, out pw, out ph );
-      current.bbox( out cx, out cy, out cw, out ch );
-      NodeSide side;
-      if( (current.side & NodeSide.horizontal()) != 0 ) {
-        side = ((cx + (cw / 2)) > (px + (pw / 2))) ? NodeSide.RIGHT : NodeSide.LEFT;
-      } else {
-        side = ((cy + (ch / 2)) > (py + (ph / 2))) ? NodeSide.BOTTOM : NodeSide.TOP;
-      }
+    if( !current.is_root() ) {
+      NodeSide side = get_side( current );
       if( current.side != side ) {
         current.side = side;
         propagate_side( current, side );
@@ -242,7 +242,7 @@ public class Layout : Object {
     n.update_size( null, out width_diff, out height_diff );
     if( (n.side & NodeSide.horizontal()) != 0 ) {
       if( (n.parent != null) && (height_diff != 0) ) {
-        n.set_posy_only( 0 - (height_diff / 2) );
+        n.adjust_posy_only( 0 - (height_diff / 2) );
         adjust_tree_all( n, get_adjust( n, false ) );  // , (0 - (height_diff / 2)) );
       }
       if( width_diff != 0 ) {
@@ -256,7 +256,7 @@ public class Layout : Object {
       }
     } else {
       if( (n.parent != null) && (width_diff != 0) ) {
-        n.set_posx_only( 0 - (width_diff / 2) );
+        n.adjust_posx_only( 0 - (width_diff / 2) );
         adjust_tree_all( n, get_adjust( n, false ) ); // , (0 - (width_diff / 2)) );
       }
       if( height_diff != 0 ) {

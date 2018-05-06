@@ -200,13 +200,23 @@ public class Node : Object {
   }
 
   /* Sets the posx value only, leaving the children positions alone */
-  public void set_posx_only( double adjust ) {
-    _posx += adjust;
+  public void set_posx_only( double value ) {
+    _posx = value;
   }
 
   /* Sets the posy value only, leaving the children positions alone */
-  public void set_posy_only( double adjust ) {
-    _posy += adjust;
+  public void set_posy_only( double value ) {
+    _posy = value;
+  }
+
+  /* Sets the posx value only, leaving the children positions alone */
+  public void adjust_posx_only( double value ) {
+    _posx += value;
+  }
+
+  /* Sets the posy value only, leaving the children positions alone */
+  public void adjust_posy_only( double value ) {
+    _posy += value;
   }
 
   /* Returns the current width value */
@@ -304,6 +314,17 @@ public class Node : Object {
   /* Returns the children nodes of this node */
   public Array<Node> children() {
     return( _children );
+  }
+
+  /* Returns the root node for this node */
+  public Node get_root() {
+    Node n = this;
+    Node p = parent;
+    while( p != null ) {
+      n = p;
+      p = p.parent;
+    }
+    return( n );
   }
 
   /* Returns the child index of this node within its parent */

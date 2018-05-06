@@ -24,6 +24,7 @@ using GLib;
 public class Animator : Object {
 
   private DrawArea            _da;              // Reference to canvas
+  private Layout              _layout;          // Reference to the current layout
   private Node?               _node    = null;  // Reference to node to move (if null, we are moving everything on the canvas
   private AnimationPositions? _spos    = null;  // Node starting positions
   private AnimationPositions? _epos    = null;  // Node ending positions
@@ -43,23 +44,25 @@ public class Animator : Object {
   public static bool         _in_progress = false;
 
   /* Default constructor */
-  public Animator( DrawArea da, string name = "unnamed" ) {
-    _da   = da;
-    _name = name;
-    _id   = _next_id++;
+  public Animator( DrawArea da, Layout layout, string name = "unnamed" ) {
+    _da     = da;
+    _layout = layout;
+    _name   = name;
+    _id     = _next_id++;
     _da.stop_animation();
-    _spos = new AnimationPositions( _da );
+    _spos   = new AnimationPositions( _da );
   }
 
   /* Constructor for a specified node tree */
-  public Animator.node( DrawArea da, Node n, string name = "unnamed" ) {
-    _da    = da;
-    _name  = name;
-    _id    = _next_id++;
+  public Animator.node( DrawArea da, Layout layout, Node n, string name = "unnamed" ) {
+    _da     = da;
+    _layout = layout;
+    _name   = name;
+    _id     = _next_id++;
     _da.stop_animation();
-    _node  = n;
-    _spos  = new AnimationPositions.for_node( _node );
-    _index = 0;
+    _node   = n;
+    _spos   = new AnimationPositions.for_node( _node );
+    _index  = 0;
   }
 
   /* Constructor for a scale change */
@@ -111,6 +114,7 @@ public class Animator : Object {
       double y = _spos.y( i ) + ((_epos.y( i ) - _spos.y( i )) * divisor);
       _spos.node( i ).set_posx_only( x );
       _spos.node( i ).set_posy_only( y );
+      _spos.node( i ).side = _layout.get_side( _spos.node( i ) );
     }
   }
 

@@ -112,17 +112,19 @@ public class DrawArea : Gtk.DrawingArea {
     if( _layout == null ) {
       _layout = layouts.get_layout( name );
     } else {
-      bool old_balanceable = _layout.balanceable;
+      var old_balanceable = _layout.balanceable;
+      var animation       = new Animator( this, _layout );
       _layout = layouts.get_layout( name );
       for( int i=0; i<_nodes.length; i++ ) {
         _layout.initialize( _nodes.index( i ) );
       }
+      animation.animate();
       if( !old_balanceable && _layout.balanceable ) {
         balance_nodes();
       } else {
         queue_draw();
-        changed();
       }
+      changed();
     }
   }
 
@@ -826,9 +828,9 @@ public class DrawArea : Gtk.DrawingArea {
           _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
-          // var animation = new Animator.node( this, _current_node, "move to position" );
+          var animation = new Animator.node( this, _layout, _current_node, "move to position" );
           _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
-          // animation.animate();
+          animation.animate();
         }
       }
     }
@@ -992,7 +994,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Balances the existing nodes based on the current layout */
   public void balance_nodes() {
-    var animation = new Animator( this, "balance nodes" );
+    var animation = new Animator( this, _layout, "balance nodes" );
     for( int i=0; i<_nodes.length; i++ ) {
       var partitioner = new Partitioner();
       partitioner.partition_node( _nodes.index( i ), _layout );
