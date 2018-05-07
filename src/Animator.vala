@@ -59,9 +59,11 @@ public class Animator : Object {
   /* User method which performs the animation */
   public void animate() {
     if( !enable ) return;
+    if( _actions.length == 1 ) {
+      Timeout.add( _timeout, animate_action );
+    }
     _actions.peek_head().capture( _da );
     _actions.peek_head().adjust( _da );
-    Timeout.add( _timeout, animate_action );
   }
 
   /* Perform the animation */
