@@ -31,8 +31,8 @@ public class AnimatorAction : Object {
   protected int        _id;
   protected static int _next_id = 0;
 
-  protected int index  { set; get; default = 0; }
-  protected int frames { private set; get; default = 10; }
+  protected int    index  { set; get; default = 0; }
+  protected double frames { private set; get; default = 10; }
 
   /* Default constructor */
   public AnimatorAction( string name ) {

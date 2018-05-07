@@ -62,8 +62,8 @@ public class Animator : Object {
     if( _actions.length == 1 ) {
       Timeout.add( _timeout, animate_action );
     }
-    _actions.peek_head().capture( _da );
-    _actions.peek_head().adjust( _da );
+    _actions.peek_tail().capture( _da );
+    _actions.peek_tail().adjust( _da );
   }
 
   /* Perform the animation */
