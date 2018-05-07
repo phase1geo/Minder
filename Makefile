@@ -746,6 +746,141 @@ src/UndoItem.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/UndoItem.c.s
 .PHONY : src/UndoItem.c.s
 
+src/animator/AnimatorAction.o: src/animator/AnimatorAction.c.o
+
+.PHONY : src/animator/AnimatorAction.o
+
+# target to build an object file
+src/animator/AnimatorAction.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorAction.c.o
+.PHONY : src/animator/AnimatorAction.c.o
+
+src/animator/AnimatorAction.i: src/animator/AnimatorAction.c.i
+
+.PHONY : src/animator/AnimatorAction.i
+
+# target to preprocess a source file
+src/animator/AnimatorAction.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorAction.c.i
+.PHONY : src/animator/AnimatorAction.c.i
+
+src/animator/AnimatorAction.s: src/animator/AnimatorAction.c.s
+
+.PHONY : src/animator/AnimatorAction.s
+
+# target to generate assembly for a file
+src/animator/AnimatorAction.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorAction.c.s
+.PHONY : src/animator/AnimatorAction.c.s
+
+src/animator/AnimatorNodes.o: src/animator/AnimatorNodes.c.o
+
+.PHONY : src/animator/AnimatorNodes.o
+
+# target to build an object file
+src/animator/AnimatorNodes.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorNodes.c.o
+.PHONY : src/animator/AnimatorNodes.c.o
+
+src/animator/AnimatorNodes.i: src/animator/AnimatorNodes.c.i
+
+.PHONY : src/animator/AnimatorNodes.i
+
+# target to preprocess a source file
+src/animator/AnimatorNodes.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorNodes.c.i
+.PHONY : src/animator/AnimatorNodes.c.i
+
+src/animator/AnimatorNodes.s: src/animator/AnimatorNodes.c.s
+
+.PHONY : src/animator/AnimatorNodes.s
+
+# target to generate assembly for a file
+src/animator/AnimatorNodes.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorNodes.c.s
+.PHONY : src/animator/AnimatorNodes.c.s
+
+src/animator/AnimatorPan.o: src/animator/AnimatorPan.c.o
+
+.PHONY : src/animator/AnimatorPan.o
+
+# target to build an object file
+src/animator/AnimatorPan.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorPan.c.o
+.PHONY : src/animator/AnimatorPan.c.o
+
+src/animator/AnimatorPan.i: src/animator/AnimatorPan.c.i
+
+.PHONY : src/animator/AnimatorPan.i
+
+# target to preprocess a source file
+src/animator/AnimatorPan.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorPan.c.i
+.PHONY : src/animator/AnimatorPan.c.i
+
+src/animator/AnimatorPan.s: src/animator/AnimatorPan.c.s
+
+.PHONY : src/animator/AnimatorPan.s
+
+# target to generate assembly for a file
+src/animator/AnimatorPan.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorPan.c.s
+.PHONY : src/animator/AnimatorPan.c.s
+
+src/animator/AnimatorPositions.o: src/animator/AnimatorPositions.c.o
+
+.PHONY : src/animator/AnimatorPositions.o
+
+# target to build an object file
+src/animator/AnimatorPositions.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorPositions.c.o
+.PHONY : src/animator/AnimatorPositions.c.o
+
+src/animator/AnimatorPositions.i: src/animator/AnimatorPositions.c.i
+
+.PHONY : src/animator/AnimatorPositions.i
+
+# target to preprocess a source file
+src/animator/AnimatorPositions.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorPositions.c.i
+.PHONY : src/animator/AnimatorPositions.c.i
+
+src/animator/AnimatorPositions.s: src/animator/AnimatorPositions.c.s
+
+.PHONY : src/animator/AnimatorPositions.s
+
+# target to generate assembly for a file
+src/animator/AnimatorPositions.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorPositions.c.s
+.PHONY : src/animator/AnimatorPositions.c.s
+
+src/animator/AnimatorScale.o: src/animator/AnimatorScale.c.o
+
+.PHONY : src/animator/AnimatorScale.o
+
+# target to build an object file
+src/animator/AnimatorScale.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorScale.c.o
+.PHONY : src/animator/AnimatorScale.c.o
+
+src/animator/AnimatorScale.i: src/animator/AnimatorScale.c.i
+
+.PHONY : src/animator/AnimatorScale.i
+
+# target to preprocess a source file
+src/animator/AnimatorScale.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorScale.c.i
+.PHONY : src/animator/AnimatorScale.c.i
+
+src/animator/AnimatorScale.s: src/animator/AnimatorScale.c.s
+
+.PHONY : src/animator/AnimatorScale.s
+
+# target to generate assembly for a file
+src/animator/AnimatorScale.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/animator/AnimatorScale.c.s
+.PHONY : src/animator/AnimatorScale.c.s
+
 src/layouts/LayoutDown.o: src/layouts/LayoutDown.c.o
 
 .PHONY : src/layouts/LayoutDown.o
@@ -1308,6 +1443,21 @@ help:
 	@echo "... src/UndoItem.o"
 	@echo "... src/UndoItem.i"
 	@echo "... src/UndoItem.s"
+	@echo "... src/animator/AnimatorAction.o"
+	@echo "... src/animator/AnimatorAction.i"
+	@echo "... src/animator/AnimatorAction.s"
+	@echo "... src/animator/AnimatorNodes.o"
+	@echo "... src/animator/AnimatorNodes.i"
+	@echo "... src/animator/AnimatorNodes.s"
+	@echo "... src/animator/AnimatorPan.o"
+	@echo "... src/animator/AnimatorPan.i"
+	@echo "... src/animator/AnimatorPan.s"
+	@echo "... src/animator/AnimatorPositions.o"
+	@echo "... src/animator/AnimatorPositions.i"
+	@echo "... src/animator/AnimatorPositions.s"
+	@echo "... src/animator/AnimatorScale.o"
+	@echo "... src/animator/AnimatorScale.i"
+	@echo "... src/animator/AnimatorScale.s"
 	@echo "... src/layouts/LayoutDown.o"
 	@echo "... src/layouts/LayoutDown.i"
 	@echo "... src/layouts/LayoutDown.s"

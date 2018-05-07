@@ -46,6 +46,11 @@ ensure_vala_version("0.16" MINIMUM)
 include(ValaPrecompile)
 vala_precompile(VALA_C ${EXEC_NAME}
     src/Animator.vala
+    src/animator/AnimatorAction.vala
+    src/animator/AnimatorNodes.vala
+    src/animator/AnimatorPan.vala
+    src/animator/AnimatorPositions.vala
+    src/animator/AnimatorScale.vala
     src/Application.vala
     src/Document.vala
     src/DrawArea.vala

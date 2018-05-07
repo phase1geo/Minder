@@ -2,6 +2,7 @@ build/
 CMakeFiles/
 src/*.o
 src/*.c
+src/animator/*.c
 src/themes/*.c
 src/layouts/*.c
 src/undo_actions/*.c

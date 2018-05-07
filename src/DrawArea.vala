@@ -45,20 +45,22 @@ public class DrawArea : Gtk.DrawingArea {
   public UndoBuffer undo_buffer { set; get; default = new UndoBuffer(); }
   public Themes     themes      { set; get; default = new Themes(); }
   public Layouts    layouts     { set; get; default = new Layouts(); }
-  public bool       animate     { set; get; default = true; }
+  public Animator   animator    { set; get; }
 
   public signal void changed();
   public signal void node_changed();
   public signal void scale_changed( double scale );
   public signal void show_node_properties();
   public signal void loaded();
-  public signal void stop_animation();
 
   /* Default constructor */
   public DrawArea() {
 
     /* Create the array of root nodes in the map */
     _nodes = new Array<Node>();
+
+    /* Allocate memory for the animator */
+    animator = new Animator( this );
 
     /* Set the theme to the default theme */
     set_theme( "Default" );
@@ -114,12 +116,12 @@ public class DrawArea : Gtk.DrawingArea {
       _layout = layouts.get_layout( name );
     } else {
       var old_balanceable = _layout.balanceable;
-      var animation       = new Animator( this );
+      animator.add_nodes( "set layout" );
       _layout = layouts.get_layout( name );
       for( int i=0; i<_nodes.length; i++ ) {
         _layout.initialize( _nodes.index( i ) );
       }
-      animation.animate();
+      animator.animate();
       if( !old_balanceable && _layout.balanceable ) {
         balance_nodes();
       } else {
@@ -553,9 +555,9 @@ public class DrawArea : Gtk.DrawingArea {
     var marks = get_scale_marks();
     foreach (double mark in marks) {
       if( value < mark ) {
-        var animation = new Animator.scale( this, "zoom in" );
+        animator.add_scale( "zoom in" );
         set_scaling_factor( mark / 100 );
-        animation.animate();
+        animator.animate();
         return;
       }
     }
@@ -568,9 +570,9 @@ public class DrawArea : Gtk.DrawingArea {
     double last  = marks[0];
     foreach (double mark in marks) {
       if( value <= mark ) {
-        var animation = new Animator.scale( this, "zoom out" );
+        animator.add_scale( "zoom out" );
         set_scaling_factor( last / 100 );
-        animation.animate();
+        animator.animate();
         return;
       }
       last = mark;
@@ -596,11 +598,11 @@ public class DrawArea : Gtk.DrawingArea {
   public void zoom_to_selected() {
     double x, y, w, h;
     if( _current_node == null ) return;
-    var animation = new Animator.scale( this, "zoom to selected" );
+    animator.add_scale( "zoom to selected" );
     _layout.bbox( _current_node, -1, out x, out y, out w, out h );
     position_box( x, y, w, h, 0.5, 0.5 );
     set_scaling_factor( get_scaling_factor( w, h ) );
-    animation.animate();
+    animator.animate();
   }
 
   public void document_rectangle( out double x, out double y, out double width, out double height ) {
@@ -631,7 +633,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns the scaling factor required to display all nodes */
   public void zoom_to_fit() {
 
-    var animation = new Animator.scale( this, "zoom to fit" );
+    animator.add_scale( "zoom to fit" );
 
     /* Get the document rectangle */
     double x, y, w, h;
@@ -642,7 +644,7 @@ public class DrawArea : Gtk.DrawingArea {
     set_scaling_factor( get_scaling_factor( w, h ) );
 
     /* Animate the scaling */
-    animation.animate();
+    animator.animate();
 
   }
 
@@ -650,9 +652,9 @@ public class DrawArea : Gtk.DrawingArea {
   public void center_node( Node n ) {
     double x, y, w, h;
     n.bbox( out x, out y, out w, out h );
-    var animation = new Animator.pan( this );
+    animator.add_pan( "center node" );
     position_box( x, y, w, h, 0.5, 0.5 );
-    animation.animate();
+    animator.animate();
   }
 
   /* Brings the given node into view in its entirety including the given amount of padding */
@@ -679,9 +681,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     if( (diff_x != 0) || (diff_y != 0) ) {
-      var animation = new Animator.pan( this, "see" );
+      animator.add_pan( "see" );
       move_origin( diff_x, diff_y );
-      animation.animate();
+      animator.animate();
     }
 
   }
@@ -829,9 +831,9 @@ public class DrawArea : Gtk.DrawingArea {
           _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
-          var animation = new Animator.node( this, _current_node, "move to position" );
+          animator.add_node( _current_node, "move to position" );
           _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
-          animation.animate();
+          animator.animate();
         }
       }
     }
@@ -995,12 +997,12 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Balances the existing nodes based on the current layout */
   public void balance_nodes() {
-    var animation = new Animator( this, "balance nodes" );
+    animator.add_nodes( "balance nodes" );
     for( int i=0; i<_nodes.length; i++ ) {
       var partitioner = new Partitioner();
       partitioner.partition_node( _nodes.index( i ), _layout );
     }
-    animation.animate();
+    animator.animate();
     changed();
   }
 
@@ -1043,7 +1045,7 @@ public class DrawArea : Gtk.DrawingArea {
         case NodeSide.TOP    :
         case NodeSide.BOTTOM :  next = _current_node.parent.next_child( _current_node );  break;
         case NodeSide.LEFT   :  next = _current_node.parent;  break;
-        default              :  next = _current_node.first_child();  break;
+        default              :  next = _current_node.first_child( NodeSide.RIGHT );  break;
       }
       if( select_node( next ) ) {
         queue_draw();
@@ -1061,7 +1063,7 @@ public class DrawArea : Gtk.DrawingArea {
       switch( _current_node.side ) {
         case NodeSide.TOP :
         case NodeSide.BOTTOM :  next = _current_node.parent.prev_child( _current_node );  break;
-        case NodeSide.LEFT   :  next = _current_node.first_child();  break;
+        case NodeSide.LEFT   :  next = _current_node.first_child( NodeSide.LEFT );  break;
         default              :  next = _current_node.parent;  break;
       }
       if( select_node( next ) ) {
@@ -1103,8 +1105,8 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         Node? next;
         switch( _current_node.side ) {
-          case NodeSide.TOP    :  next = _current_node.first_child();          break;
-          case NodeSide.BOTTOM :  next = _current_node.parent;                 break;
+          case NodeSide.TOP    :  next = _current_node.first_child( NodeSide.TOP );  break;
+          case NodeSide.BOTTOM :  next = _current_node.parent;  break;
           default :  next = _current_node.parent.prev_child( _current_node );  break;
         }
         if( select_node( next ) ) {
@@ -1132,7 +1134,7 @@ public class DrawArea : Gtk.DrawingArea {
         Node? next;
         switch( _current_node.side ) {
           case NodeSide.TOP    :  next = _current_node.parent;  break;
-          case NodeSide.BOTTOM :  next = _current_node.first_child();  break;
+          case NodeSide.BOTTOM :  next = _current_node.first_child( NodeSide.BOTTOM );  break;
           default :  next = _current_node.parent.next_child( _current_node );  break;
         }
         if( select_node( next ) ) {

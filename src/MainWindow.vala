@@ -497,18 +497,18 @@ public class MainWindow : ApplicationWindow {
   /* Displays the node properties panel for the current node */
   private void show_node_properties() {
     _inspector.reveal_child = true;
-    var animation = new Animator.pan( _canvas );
+    _canvas.animator.add_pan( "show_node_properties" );
     _canvas.move_origin( 300, 0 );
-    animation.animate();
+    _canvas.animator.animate();
     _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
   }
 
   /* Hides the node properties panel */
   private void hide_node_properties() {
     _inspector.reveal_child = false;
-    var animation = new Animator.pan( _canvas );
+    _canvas.animator.add_pan( "hide node properties" );
     _canvas.move_origin( -300, 0 );
-    animation.animate();
+    _canvas.animator.animate();
     _settings.set_boolean( "node-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",  false );
   }
@@ -567,9 +567,9 @@ public class MainWindow : ApplicationWindow {
 
   /* Sets the zoom to 100% */
   private void action_zoom_actual() {
-    var animation = new Animator.scale( _canvas );
+    _canvas.animator.add_scale( "action_zoom_actual" );
     _canvas.set_scaling_factor( 1.0 );
-    animation.animate();
+    _canvas.animator.animate();
     _canvas.grab_focus();
   }
 

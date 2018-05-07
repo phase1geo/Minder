@@ -835,17 +835,21 @@ public class Node : Object {
   }
 
   /* Returns a reference to the first child of this node */
-  public virtual Node? first_child() {
-    if( _children.length > 0 ) {
-      return( _children.index( 0 ) );
+  public virtual Node? first_child( NodeSide? side = null ) {
+    for( int i=0; i<(int)_children.length; i++ ) {
+      if( (side == null) || (_children.index( i ).side == side) ) {
+        return( _children.index( i ) );
+      }
     }
     return( null );
   }
 
   /* Returns a reference to the last child of this node */
-  public virtual Node? last_child() {
-    if( _children.length > 0 ) {
-      return( _children.index( _children.length - 1 ) );
+  public virtual Node? last_child( NodeSide? side = null ) {
+    for( int i=((int)_children.length - 1); i>=0; i-- ) {
+      if( (side == null) || (_children.index( i ).side == side) ) {
+        return( _children.index( i ) );
+      }
     }
     return( null );
   }

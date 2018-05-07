@@ -57,7 +57,7 @@ public class MapInspector : Box {
     lbl.xalign = (float)0;
 
     var enable = new Switch();
-    enable.set_active( _da.animate );
+    enable.set_active( _da.animator.enable );
     enable.state_set.connect( animation_changed );
 
     grid.column_homogeneous = true;
@@ -70,7 +70,7 @@ public class MapInspector : Box {
 
   /* Called whenever the fold switch is changed within the inspector */
   private bool animation_changed( bool state ) {
-    _da.animate = state;
+    _da.animator.enable = state;
     return( false );
   }
 
