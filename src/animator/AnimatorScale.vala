@@ -29,12 +29,12 @@ public class AnimatorScale : AnimatorAction {
   /* Constructor for a scale change */
   public AnimatorScale( DrawArea da, string name ) {
     base( name );
-    _sscale = da.get_scale_factor();
+    _sscale = da.sfactor;
   }
 
   /* User method which performs the animation */
   public override void capture( DrawArea da ) {
-    _escale = da.get_scale_factor();
+    _escale = da.sfactor;
   }
 
   /* Adjusts scaling factor for the given frame */

@@ -28,8 +28,12 @@ public class DrawArea : Gtk.DrawingArea {
 
   private double      _press_x;
   private double      _press_y;
-  private double      _origin_x   = 0.0;
-  private double      _origin_y   = 0.0;
+  private double      _origin_x;
+  private double      _origin_y;
+  private double      _scale_factor;
+  private double      _store_origin_x;
+  private double      _store_origin_y;
+  private double      _store_scale_factor;
   private bool        _pressed    = false;
   private EventType   _press_type = EventType.NOTHING;
   private bool        _motion     = false;
@@ -37,7 +41,6 @@ public class DrawArea : Gtk.DrawingArea {
   private Array<Node> _nodes;
   private Theme       _theme;
   private Layout      _layout;
-  private double      _scale_factor = 1.0;
   private string      _orig_name;
   private NodeSide    _orig_side;
   private Node?       _attach_node  = null;
@@ -46,6 +49,31 @@ public class DrawArea : Gtk.DrawingArea {
   public Themes     themes      { set; get; default = new Themes(); }
   public Layouts    layouts     { set; get; default = new Layouts(); }
   public Animator   animator    { set; get; }
+
+  public double origin_x {
+    set {
+      _store_origin_x = _origin_x = value;
+    }
+    get {
+      return( _origin_x );
+    }
+  }
+  public double origin_y {
+    set {
+      _store_origin_y = _origin_y = value;
+    }
+    get {
+      return( _origin_y );
+    }
+  }
+  public double sfactor {
+    set {
+      _store_scale_factor = _scale_factor = value;
+    }
+    get {
+      return( _scale_factor );
+    }
+  }
 
   public signal void changed();
   public signal void node_changed();
@@ -141,18 +169,18 @@ public class DrawArea : Gtk.DrawingArea {
 
     string? x = n->get_prop( "x" );
     if( x != null ) {
-      _origin_x = double.parse( x );
+      origin_x = double.parse( x );
     }
 
     string? y = n->get_prop( "y" );
     if( y != null ) {
-      _origin_y = double.parse( y );
+      origin_y = double.parse( y );
     }
 
     string? sf = n->get_prop( "scale" );
     if( sf != null ) {
-      _scale_factor = double.parse( sf );
-      scale_changed( _scale_factor );
+      sfactor = double.parse( sf );
+      scale_changed( sfactor );
     }
 
   }
@@ -234,9 +262,9 @@ public class DrawArea : Gtk.DrawingArea {
     parent->add_child( layout );
 
     Xml.Node* origin = new Xml.Node( null, "drawarea" );
-    origin->new_prop( "x", _origin_x.to_string() );
-    origin->new_prop( "y", _origin_y.to_string() );
-    origin->new_prop( "scale", _scale_factor.to_string() );
+    origin->new_prop( "x", _store_origin_x.to_string() );
+    origin->new_prop( "y", _store_origin_y.to_string() );
+    origin->new_prop( "scale", _store_scale_factor.to_string() );
     parent->add_child( origin );
 
     Xml.Node* nodes = new Xml.Node( null, "nodes" );
@@ -296,14 +324,14 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer.clear();
 
     /* Initialize variables */
-    _origin_x     = 0.0;
-    _origin_y     = 0.0;
-    _pressed      = false;
-    _press_type   = EventType.NOTHING;
-    _motion       = false;
-    _scale_factor = 1.0;
-    _attach_node  = null;
-    _orig_name    = "";
+    origin_x     = 0.0;
+    origin_y     = 0.0;
+    sfactor      = 1.0;
+    _pressed     = false;
+    _press_type  = EventType.NOTHING;
+    _motion      = false;
+    _attach_node = null;
+    _orig_name   = "";
 
     queue_draw();
 
@@ -319,13 +347,13 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer.clear();
 
     /* Initialize variables */
-    _origin_x     = 0.0;
-    _origin_y     = 0.0;
-    _pressed      = false;
-    _press_type   = EventType.NOTHING;
-    _motion       = false;
-    _scale_factor = 1.0;
-    _attach_node  = null;
+    origin_x     = 0.0;
+    origin_y     = 0.0;
+    sfactor      = 1.0;
+    _pressed     = false;
+    _press_type  = EventType.NOTHING;
+    _motion      = false;
+    _attach_node = null;
 
     /* Create the main idea node */
     var n = new RootNode.with_name( "Main Idea", _layout );
@@ -512,22 +540,22 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns a properly scaled version of the given value */
   private double scale_value( double val ) {
-    return( val / _scale_factor );
+    return( val / sfactor );
   }
 
   /*
    Sets the scaling factor for the drawing area, causing the center pixel
    to remain in the center and forces a redraw.
   */
-  public void set_scaling_factor( double scale_factor ) {
-    if( _scale_factor != scale_factor ) {
+  public void set_scaling_factor( double sf ) {
+    if( sfactor != sf ) {
       int    width  = get_allocated_width()  / 2;
       int    height = get_allocated_height() / 2;
-      double diff_x = (width  / _scale_factor) - (width  / scale_factor);
-      double diff_y = (height / _scale_factor) - (height / scale_factor);
+      double diff_x = (width  / sfactor) - (width  / sf);
+      double diff_y = (height / sfactor) - (height / sf);
       move_origin( diff_x, diff_y );
-      _scale_factor = scale_factor;
-      scale_changed( _scale_factor );
+      sfactor = sf;
+      scale_changed( sfactor );
     }
   }
 
@@ -539,19 +567,9 @@ public class DrawArea : Gtk.DrawingArea {
     return( (sf > 4) ? 4 : sf );
   }
 
-  /* Returns the current scaling factor */
-  public double get_scale_factor() {
-    return( _scale_factor );
-  }
-
-  /* Sets the current scaling factor to the given value */
-  public void set_scale_factor( double value ) {
-    _scale_factor = value;
-  }
-
   /* Zooms into the image by one scale mark */
   public void zoom_in() {
-    var value = _scale_factor * 100;
+    var value = sfactor * 100;
     var marks = get_scale_marks();
     foreach (double mark in marks) {
       if( value < mark ) {
@@ -565,7 +583,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Zooms out of the image by one scale mark */
   public void zoom_out() {
-    double value = _scale_factor * 100;
+    double value = sfactor * 100;
     var    marks = get_scale_marks();
     double last  = marks[0];
     foreach (double mark in marks) {
@@ -702,13 +720,13 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns the origin */
   public void get_origin( out double x, out double y ) {
-    x = _origin_x;
-    y = _origin_y;
+    x = origin_x;
+    y = origin_y;
   }
 
   /* Sets the origin to the given x and y coordinates */
   public void set_origin( double x, double y ) {
-    move_origin( (x - _origin_x), (y - _origin_y) );
+    move_origin( (x - origin_x), (y - origin_y) );
   }
 
   /*
@@ -718,8 +736,8 @@ public class DrawArea : Gtk.DrawingArea {
    number.
   */
   public void move_origin( double diff_x, double diff_y ) {
-    _origin_x += diff_x;
-    _origin_y += diff_y;
+    origin_x += diff_x;
+    origin_y += diff_y;
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).pan( diff_x, diff_y );
     }
@@ -742,7 +760,7 @@ public class DrawArea : Gtk.DrawingArea {
       text.get_size( out width, out height );
       _layout.default_text_height = height / Pango.SCALE;
     }
-    ctx.scale( _scale_factor, _scale_factor );
+    ctx.scale( sfactor, sfactor );
     draw_all( ctx );
     return( false );
   }
