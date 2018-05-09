@@ -164,6 +164,14 @@ public class NodeInspector : Stack {
     grid.column_homogeneous = true;
     grid.column_spacing     = 10;
 
+    var copy_btn = new Button.from_icon_name( "edit-copy-symbolic", IconSize.SMALL_TOOLBAR );
+    copy_btn.set_tooltip_text( _( "Copy Node To Clipboard" ) );
+    copy_btn.clicked.connect( node_copy );
+
+    var cut_btn = new Button.from_icon_name( "edit-cut-symbolic", IconSize.SMALL_TOOLBAR );
+    cut_btn.set_tooltip_text( _( "Cut Node To Clipboard" ) );
+    cut_btn.clicked.connect( node_cut );
+
     /* Create the detach button */
     _detach_btn = new Button.from_icon_name( "minder-detach-symbolic", IconSize.SMALL_TOOLBAR );
     _detach_btn.set_tooltip_text( _( "Detach Node" ) );
@@ -175,8 +183,10 @@ public class NodeInspector : Stack {
     del_btn.clicked.connect( node_delete );
 
     /* Add the buttons to the button grid */
-    grid.attach( _detach_btn, 0, 0, 1, 1 );
-    grid.attach( del_btn,     1, 0, 1, 1 );
+    grid.attach( copy_btn,    0, 0, 1, 1 );
+    grid.attach( cut_btn,     1, 0, 1, 1 );
+    grid.attach( _detach_btn, 2, 0, 1, 1 );
+    grid.attach( del_btn,     3, 0, 1, 1 );
 
     /* Add the button grid to the popover */
     bbox.pack_start( grid, false, true );
@@ -249,17 +259,25 @@ public class NodeInspector : Stack {
     return( false );
   }
 
+  /* Copies the current node to the clipboard */
+  private void node_copy() {
+    _da.copy_node_to_clipboard();
+  }
+
+  /* Cuts the current node to the clipboard */
+  private void node_cut() {
+    _da.cut_node_to_clipboard();
+  }
+
   /* Detaches the current node and makes it a parent node */
   private void node_detach() {
     _da.detach();
     _detach_btn.set_sensitive( false );
   }
 
+  /* Deletes the current node */
   private void node_delete() {
-    Node? current = _da.get_current_node();
-    if( current != null ) {
-      current.delete( _da.get_layout() );
-    }
+    _da.delete_node();
   }
 
   /* Called whenever the user changes the current node in the canvas */

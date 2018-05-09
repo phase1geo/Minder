@@ -26,24 +26,26 @@ using Cairo;
 
 public class DrawArea : Gtk.DrawingArea {
 
-  private double      _press_x;
-  private double      _press_y;
-  private double      _origin_x;
-  private double      _origin_y;
-  private double      _scale_factor;
-  private double      _store_origin_x;
-  private double      _store_origin_y;
-  private double      _store_scale_factor;
-  private bool        _pressed    = false;
-  private EventType   _press_type = EventType.NOTHING;
-  private bool        _motion     = false;
-  private Node        _current_node;
-  private Array<Node> _nodes;
-  private Theme       _theme;
-  private Layout      _layout;
-  private string      _orig_name;
-  private NodeSide    _orig_side;
-  private Node?       _attach_node  = null;
+  private double       _press_x;
+  private double       _press_y;
+  private double       _origin_x;
+  private double       _origin_y;
+  private double       _scale_factor;
+  private double       _store_origin_x;
+  private double       _store_origin_y;
+  private double       _store_scale_factor;
+  private bool         _pressed    = false;
+  private EventType    _press_type = EventType.NOTHING;
+  private bool         _motion     = false;
+  private Node         _current_node;
+  private Array<Node>  _nodes;
+  private Theme        _theme;
+  private Layout       _layout;
+  private string       _orig_name;
+  private NodeSide     _orig_side;
+  private Node?        _attach_node  = null;
+  private Node?        _node_clipboard = null;
+  private DrawAreaMenu _popup_menu;
 
   public UndoBuffer undo_buffer { set; get; default = new UndoBuffer(); }
   public Themes     themes      { set; get; default = new Themes(); }
@@ -89,6 +91,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Allocate memory for the animator */
     animator = new Animator( this );
+
+    /* Create the popup menu */
+    _popup_menu = new DrawAreaMenu( this );
 
     /* Set the theme to the default theme */
     set_theme( "Default" );
@@ -231,7 +236,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "nodes"    :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                RootNode node = new RootNode( _layout );
+                var node = new Node( _layout );
                 node.load( it2, _layout );
                 _nodes.append_val( node );
               }
@@ -289,7 +294,7 @@ public class DrawArea : Gtk.DrawingArea {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "outline") {
-          var root = new RootNode( _layout );
+          var root = new Node( _layout );
           root.import_opml( it, node_id, ref expand_state, _layout );
           _nodes.append_val( root );
         }
@@ -324,14 +329,15 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer.clear();
 
     /* Initialize variables */
-    origin_x     = 0.0;
-    origin_y     = 0.0;
-    sfactor      = 1.0;
-    _pressed     = false;
-    _press_type  = EventType.NOTHING;
-    _motion      = false;
-    _attach_node = null;
-    _orig_name   = "";
+    origin_x        = 0.0;
+    origin_y        = 0.0;
+    sfactor         = 1.0;
+    _pressed        = false;
+    _press_type     = EventType.NOTHING;
+    _motion         = false;
+    _attach_node    = null;
+    _orig_name      = "";
+    _node_clipboard = null;
 
     queue_draw();
 
@@ -347,16 +353,17 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer.clear();
 
     /* Initialize variables */
-    origin_x     = 0.0;
-    origin_y     = 0.0;
-    sfactor      = 1.0;
-    _pressed     = false;
-    _press_type  = EventType.NOTHING;
-    _motion      = false;
-    _attach_node = null;
+    origin_x        = 0.0;
+    origin_y        = 0.0;
+    sfactor         = 1.0;
+    _pressed        = false;
+    _press_type     = EventType.NOTHING;
+    _motion         = false;
+    _attach_node    = null;
+    _node_clipboard = null;
 
     /* Create the main idea node */
-    var n = new RootNode.with_name( "Main Idea", _layout );
+    var n = new Node.with_name( "Main Idea", _layout );
 
     /* Set the node information */
     n.posx = (get_allocated_width()  / 2) - 30;
@@ -767,14 +774,21 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Handle button press event */
   private bool on_press( EventButton event ) {
-    if( event.button == 1 ) {
-      _press_x    = scale_value( event.x );
-      _press_y    = scale_value( event.y );
-      _pressed    = set_current_node_at_position( _press_x, _press_y, event );
-      _press_type = event.type;
-      _motion     = false;
-      grab_focus();
-      queue_draw();
+    switch( event.button ) {
+      case Gdk.BUTTON_PRIMARY :
+        _press_x    = scale_value( event.x );
+        _press_y    = scale_value( event.y );
+        _pressed    = set_current_node_at_position( _press_x, _press_y, event );
+        _press_type = event.type;
+        _motion     = false;
+        grab_focus();
+        queue_draw();
+        break;
+      case Gdk.BUTTON_SECONDARY :
+        _popup_menu.popup( null, null, null, event.button, event.time );
+        // TBD - This should be available for Juno
+        // _popup_menu.popup_at_pointer();
+        break;
     }
     return( false );
   }
@@ -831,12 +845,11 @@ public class DrawArea : Gtk.DrawingArea {
                 break;
               }
             }
-            _current_node = new NonrootNode.from_RootNode( (RootNode)_current_node );
           } else {
             _current_node.detach( _orig_side, _layout );
           }
           if( _attach_node.is_root() ) {
-            ((NonrootNode)_current_node).color_index = _theme.next_color_index();
+            _current_node.color_index = _theme.next_color_index();
           }
           _current_node.attach( _attach_node, -1, _layout );
           _attach_node.mode = NodeMode.NONE;
@@ -885,8 +898,14 @@ public class DrawArea : Gtk.DrawingArea {
     return( false );
   }
 
+  /* Returns true if we can perform a node deletion operation */
+  public bool node_deleteable() {
+    return( _current_node != null );
+  }
+
   /* Deletes the given node */
-  private void delete_node( Node n ) {
+  public void delete_node() {
+    if( _current_node == null ) return;
     undo_buffer.add_item( new UndoNodeDelete( this, _current_node, _layout ) );
     if( _current_node.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
@@ -896,7 +915,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
     } else {
-      n.delete( _layout );
+      _current_node.delete( _layout );
     }
     _current_node = null;
     queue_draw();
@@ -911,7 +930,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
       changed();
     } else if( is_mode_selected() ) {
-      delete_node( _current_node );
+      delete_node();
       _current_node = null;
     }
   }
@@ -923,7 +942,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
       changed();
     } else if( is_mode_selected() ) {
-      delete_node( _current_node );
+      delete_node();
       _current_node = null;
     }
   }
@@ -945,12 +964,12 @@ public class DrawArea : Gtk.DrawingArea {
       node_changed();
       queue_draw();
     } else if( !_current_node.is_root() ) {
-      NonrootNode node = new NonrootNode( _layout );
+      var node = new Node( _layout );
       _orig_name = "";
       if( _current_node.parent.is_root() ) {
         node.color_index = _theme.next_color_index();
       } else {
-        node.color_index = ((NonrootNode)_current_node).color_index;
+        node.color_index = _current_node.color_index;
       }
       _current_node.mode = NodeMode.NONE;
       node.side          = _current_node.side;
@@ -963,7 +982,7 @@ public class DrawArea : Gtk.DrawingArea {
       see( _current_node );
       changed();
     } else {
-      var node = new RootNode.with_name( _( "Another Idea" ), _layout );
+      var node = new Node.with_name( _( "Another Idea" ), _layout );
       _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
       _nodes.append_val( node );
       if( select_node( node ) ) {
@@ -1002,12 +1021,7 @@ public class DrawArea : Gtk.DrawingArea {
     int      index  = _current_node.index();
     NodeSide side   = _current_node.side;
     _current_node.detach( side, _layout );
-    _current_node = new RootNode.from_NonrootNode( (NonrootNode)_current_node );
-    if( index == -1 ) {
-      _nodes.append_val( _current_node );
-    } else {
-      _nodes.insert_val( index, _current_node );
-    }
+    add_root( _current_node, index );
     undo_buffer.add_item( new UndoNodeDetach( this, _current_node, (int)_nodes.length, parent, side, index, _layout ) );
     queue_draw();
     changed();
@@ -1032,12 +1046,12 @@ public class DrawArea : Gtk.DrawingArea {
       node_changed();
       queue_draw();
     } else if( is_mode_selected() ) {
-      NonrootNode node = new NonrootNode( _layout );
+      var node = new Node( _layout );
       _orig_name = "";
       if( _current_node.is_root() ) {
         node.color_index = _theme.next_color_index();
       } else {
-        node.color_index = ((NonrootNode)_current_node).color_index;
+        node.color_index = _current_node.color_index;
         node.side        = _current_node.side;
       }
       _current_node.mode = NodeMode.NONE;
@@ -1332,6 +1346,70 @@ public class DrawArea : Gtk.DrawingArea {
       }
     }
     return( true );
+  }
+
+  /* Returns true if we can perform a node copy operation */
+  public bool node_copyable() {
+    return( _current_node != null );
+  }
+
+  /* Returns true if we can perform a node cut operation */
+  public bool node_cuttable() {
+    return( _current_node != null );
+  }
+
+  /* Returns true if we can perform a node paste operation */
+  public bool node_pasteable() {
+    return( _node_clipboard != null );
+  }
+
+  /* Copies the current node to the node clipboard */
+  public void copy_node_to_clipboard() {
+    if( _current_node == null ) return;
+    _node_clipboard = new Node.copy_tree( _current_node );
+  }
+
+  /* Cuts the current node from the tree and stores it in the clipboard */
+  public void cut_node_to_clipboard() {
+    if( _current_node == null ) return;
+    copy_node_to_clipboard();
+    if( _current_node.is_root() ) {
+      for( int i=0; i<_nodes.length; i++ ) {
+        if( _nodes.index( i ) == _current_node ) {
+          _nodes.remove_index( i );
+          break;
+        }
+      }
+    } else {
+      _current_node.delete( _layout );
+    }
+    queue_draw();
+    node_changed();
+    changed();
+  }
+
+  /*
+   Pastes the clipboard content as either a root node or to the currently
+   selected node.
+  */
+  public void paste_node_from_clipboard() {
+    if( _node_clipboard == null ) return;
+    Node node = new Node.copy_tree( _node_clipboard );
+    if( _current_node == null ) {
+      _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+      add_root( node, -1 );
+    } else {
+      _current_node.mode = NodeMode.NONE;
+      node.attach( _current_node, -1, _layout );
+    }
+    queue_draw();
+    node_changed();
+    changed();
+  }
+
+  /* Clears the node clipboard */
+  public void clear_node_clipboard() {
+    _node_clipboard = null;
   }
 
   /*

@@ -314,6 +314,33 @@ src/DrawArea.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/DrawArea.c.s
 .PHONY : src/DrawArea.c.s
 
+src/DrawAreaMenu.o: src/DrawAreaMenu.c.o
+
+.PHONY : src/DrawAreaMenu.o
+
+# target to build an object file
+src/DrawAreaMenu.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/DrawAreaMenu.c.o
+.PHONY : src/DrawAreaMenu.c.o
+
+src/DrawAreaMenu.i: src/DrawAreaMenu.c.i
+
+.PHONY : src/DrawAreaMenu.i
+
+# target to preprocess a source file
+src/DrawAreaMenu.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/DrawAreaMenu.c.i
+.PHONY : src/DrawAreaMenu.c.i
+
+src/DrawAreaMenu.s: src/DrawAreaMenu.c.s
+
+.PHONY : src/DrawAreaMenu.s
+
+# target to generate assembly for a file
+src/DrawAreaMenu.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/DrawAreaMenu.c.s
+.PHONY : src/DrawAreaMenu.c.s
+
 src/Layout.o: src/Layout.c.o
 
 .PHONY : src/Layout.o
@@ -476,33 +503,6 @@ src/NodeInspector.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/NodeInspector.c.s
 .PHONY : src/NodeInspector.c.s
 
-src/NonrootNode.o: src/NonrootNode.c.o
-
-.PHONY : src/NonrootNode.o
-
-# target to build an object file
-src/NonrootNode.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/NonrootNode.c.o
-.PHONY : src/NonrootNode.c.o
-
-src/NonrootNode.i: src/NonrootNode.c.i
-
-.PHONY : src/NonrootNode.i
-
-# target to preprocess a source file
-src/NonrootNode.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/NonrootNode.c.i
-.PHONY : src/NonrootNode.c.i
-
-src/NonrootNode.s: src/NonrootNode.c.s
-
-.PHONY : src/NonrootNode.s
-
-# target to generate assembly for a file
-src/NonrootNode.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/NonrootNode.c.s
-.PHONY : src/NonrootNode.c.s
-
 src/OPML.o: src/OPML.c.o
 
 .PHONY : src/OPML.o
@@ -610,33 +610,6 @@ src/Print.s: src/Print.c.s
 src/Print.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/Print.c.s
 .PHONY : src/Print.c.s
-
-src/RootNode.o: src/RootNode.c.o
-
-.PHONY : src/RootNode.o
-
-# target to build an object file
-src/RootNode.c.o:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/RootNode.c.o
-.PHONY : src/RootNode.c.o
-
-src/RootNode.i: src/RootNode.c.i
-
-.PHONY : src/RootNode.i
-
-# target to preprocess a source file
-src/RootNode.c.i:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/RootNode.c.i
-.PHONY : src/RootNode.c.i
-
-src/RootNode.s: src/RootNode.c.s
-
-.PHONY : src/RootNode.s
-
-# target to generate assembly for a file
-src/RootNode.c.s:
-	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/RootNode.c.s
-.PHONY : src/RootNode.c.s
 
 src/Theme.o: src/Theme.c.o
 
@@ -1395,6 +1368,9 @@ help:
 	@echo "... src/DrawArea.o"
 	@echo "... src/DrawArea.i"
 	@echo "... src/DrawArea.s"
+	@echo "... src/DrawAreaMenu.o"
+	@echo "... src/DrawAreaMenu.i"
+	@echo "... src/DrawAreaMenu.s"
 	@echo "... src/Layout.o"
 	@echo "... src/Layout.i"
 	@echo "... src/Layout.s"
@@ -1413,9 +1389,6 @@ help:
 	@echo "... src/NodeInspector.o"
 	@echo "... src/NodeInspector.i"
 	@echo "... src/NodeInspector.s"
-	@echo "... src/NonrootNode.o"
-	@echo "... src/NonrootNode.i"
-	@echo "... src/NonrootNode.s"
 	@echo "... src/OPML.o"
 	@echo "... src/OPML.i"
 	@echo "... src/OPML.s"
@@ -1428,9 +1401,6 @@ help:
 	@echo "... src/Print.o"
 	@echo "... src/Print.i"
 	@echo "... src/Print.s"
-	@echo "... src/RootNode.o"
-	@echo "... src/RootNode.i"
-	@echo "... src/RootNode.s"
 	@echo "... src/Theme.o"
 	@echo "... src/Theme.i"
 	@echo "... src/Theme.s"

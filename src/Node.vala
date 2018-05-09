@@ -151,11 +151,12 @@ public class Node : Object {
     }
     default = NodeMode.NONE;
   }
-  public Node?    parent     { get; protected set; default = null; }
-  public NodeSide side       { get; set; default = NodeSide.RIGHT; }
-  public bool     folded     { get; set; default = false; }
-  public double   tree_size  { get; set; default = 0; }
-  public double   node_size  { get; set; default = 0; }
+  public Node?    parent      { get; protected set; default = null; }
+  public NodeSide side        { get; set; default = NodeSide.RIGHT; }
+  public bool     folded      { get; set; default = false; }
+  public double   tree_size   { get; set; default = 0; }
+  public double   node_size   { get; set; default = 0; }
+  public int      color_index { set; get; default = 0; }
 
   /* Default constructor */
   public Node( Layout? layout ) {
@@ -172,6 +173,26 @@ public class Node : Object {
 
   /* Copies an existing node to this node */
   public Node.copy( Node n ) {
+    copy_variables( n );
+    _children = n._children;
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).parent = this;
+    }
+  }
+
+  /* Copies an existing node tree to this node */
+  public Node.copy_tree( Node n ) {
+    copy_variables( n );
+    _children = new Array<Node>();
+    for( int i=0; i<n._children.length; i++ ) {
+      Node child = new Node.copy_tree( n._children.index( i ) );
+      child.parent = this;
+      _children.append_val( child );
+    }
+  }
+
+  /* Copies just the variables of the node, minus the children nodes */
+  public void copy_variables( Node n ) {
     _width            = n._width;
     _height           = n._height;
     _padx             = n._padx;
@@ -181,7 +202,6 @@ public class Node : Object {
     _task_radius      = n._task_radius;
     _alpha            = n._alpha;
     _cursor           = n._cursor;
-    _children         = n._children;
     _task_count       = n._task_count;
     _task_done        = n._task_done;
     _layout           = n._layout;
@@ -194,9 +214,7 @@ public class Node : Object {
     parent            = n.parent;
     side              = n.side;
     folded            = n.folded;
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).parent = this;
-    }
+    color_index       = n.color_index;
   }
 
   /* Sets the posx value only, leaving the children positions alone */
@@ -329,9 +347,11 @@ public class Node : Object {
 
   /* Returns the child index of this node within its parent */
   public virtual int index() {
-    for( int i=0; i<parent.children().length; i++ ) {
-      if( parent.children().index( i ) == this ) {
-        return i;
+    if( !is_root() ) {
+      for( int i=0; i<parent.children().length; i++ ) {
+        if( parent.children().index( i ) == this ) {
+          return i;
+        }
       }
     }
     return( -1 );
@@ -411,6 +431,11 @@ public class Node : Object {
       node_size = double.parse( ns );
     }
 
+    string? c = n->get_prop( "color" );
+    if( c != null ) {
+      color_index = int.parse( c );
+    }
+
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
@@ -419,7 +444,7 @@ public class Node : Object {
           case "nodes"    :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                NonrootNode child = new NonrootNode( layout );
+                var child = new Node( layout );
                 child.load( it2, layout );
                 child.attach( this, -1, null );
               }
@@ -461,6 +486,9 @@ public class Node : Object {
     node->new_prop( "fold", folded.to_string() );
     node->new_prop( "treesize", tree_size.to_string() );
     node->new_prop( "nodesize", node_size.to_string() );
+    if( !is_root() ) {
+      node->new_prop( "color", color_index.to_string() );
+    }
 
     node->new_text_child( null, "nodename", name );
     node->new_text_child( null, "nodenote", note );
@@ -516,7 +544,7 @@ public class Node : Object {
     /* Parse the child nodes */
     for( Xml.Node* it2 = parent->children; it2 != null; it2 = it2->next ) {
       if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "outline") ) {
-        var child = new NonrootNode( layout );
+        var child = new Node( layout );
         child.import_opml( it2, node_id, ref expand_state, layout );
         child.attach( this, -1, layout );
       }
@@ -812,6 +840,16 @@ public class Node : Object {
     p.children().remove_index( i );
   }
 
+  /* Forces all children nodes to use the same color index as the parent node. */
+  private void propagate_color() {
+    if( !main_branch() ) {
+      color_index = parent.color_index;
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).propagate_color();
+    }
+  }
+
   /* Attaches this node as a child of the given node */
   public virtual void attach( Node parent, int index, Layout? layout ) {
     this.parent = parent;
@@ -831,6 +869,9 @@ public class Node : Object {
     propagate_task_info( _task_count, _task_done );
     if( layout != null ) {
       layout.handle_update_by_insert( parent, this, index );
+    }
+    if( !is_root() ) {
+      propagate_color();
     }
   }
 
@@ -963,28 +1004,56 @@ public class Node : Object {
 
   /* Returns the link point for this node */
   protected virtual void link_point( out double x, out double y ) {
-    switch( side ) {
-      case NodeSide.LEFT :
-        x = posx;
-        y = posy;
-        break;
-      case NodeSide.TOP :
-        x = posx + (_width / 2);
-        y = posy;
-        break;
-      case NodeSide.RIGHT :
-        x = posx + _width;
-        y = posy;
-        break;
-      default :
-        x = posx + (_width / 2);
-        y = posy + _height;
-        break;
+    if( is_root() ) {
+      x = posx + (_width / 2);
+      y = posy + (_height / 2);
+    } else {
+      switch( side ) {
+        case NodeSide.LEFT :
+          x = posx;
+          y = posy + _height;
+          break;
+        case NodeSide.TOP :
+          x = posx + (_width / 2);
+          y = posy + _height;
+          break;
+        case NodeSide.RIGHT :
+          x = posx + _width;
+          y = posy + _height;
+          break;
+        default :
+          x = posx + (_width / 2);
+          y = posy;
+          break;
+      }
     }
   }
 
+  /* Draws the rectangle around the root node */
+  protected void draw_root_rectangle( Context ctx, Theme theme ) {
+
+    double r = 10.0;
+    double h = _height;
+    double w = _width;
+
+    /* Draw the rounded box around the text */
+    set_context_color( ctx, theme.root_background );
+    ctx.set_line_width( 1 );
+    ctx.move_to(posx+r,posy);                                  // Move to A
+    ctx.line_to(posx+w-r,posy);                                // Straight line to B
+    ctx.curve_to(posx+w,posy,posx+w,posy,posx+w,posy+r);       // Curve to C, Control points are both at Q
+    ctx.line_to(posx+w,posy+h-r);                              // Move to D
+    ctx.curve_to(posx+w,posy+h,posx+w,posy+h,posx+w-r,posy+h); // Curve to E
+    ctx.line_to(posx+r,posy+h);                                // Line to F
+    ctx.curve_to(posx,posy+h,posx,posy+h,posx,posy+h-r);       // Curve to G
+    ctx.line_to(posx,posy+r);                                  // Line to H
+    ctx.curve_to(posx,posy,posx,posy,posx+r,posy);             // Curve to A
+    ctx.fill();
+
+  }
+
   /* Draws the node font to the screen */
-  public virtual void draw_name( Cairo.Context ctx, Theme theme ) {
+  protected virtual void draw_name( Cairo.Context ctx, Theme theme ) {
 
     int    hmargin = 3;
     int    vmargin = 3;
@@ -1111,7 +1180,7 @@ public class Node : Object {
   }
 
   /* Draw the fold indicator */
-  public virtual void draw_common_fold( Context ctx, RGBA bg_color, RGBA fg_color ) {
+  protected virtual void draw_common_fold( Context ctx, RGBA bg_color, RGBA fg_color ) {
 
     if( folded && (_children.length > 0) ) {
 
@@ -1164,8 +1233,91 @@ public class Node : Object {
 
   }
 
+  /* Draws the line under the node name */
+  protected virtual void draw_line( Context ctx, Theme theme ) {
+
+    /* If we are vertically oriented, don't draw the line */
+    if( (side & NodeSide.vertical()) != 0 ) return;
+
+    double posx  = this.posx;
+    double posy  = this.posy + _height;
+    double w     = _width;
+    RGBA   color = theme.link_color( color_index );
+
+    /* Draw the line under the text name */
+    set_context_color( ctx, color );
+    ctx.set_line_width( 4 );
+    ctx.set_line_cap( LineCap.ROUND );
+    ctx.move_to( posx, posy );
+    ctx.line_to( (posx + w), posy );
+    ctx.stroke();
+
+  }
+
+  /* Draw the link from this node to the parent node */
+  protected virtual void draw_link( Context ctx, Theme theme ) {
+
+    double parent_x;
+    double parent_y;
+    RGBA   color = theme.link_color( color_index );
+
+    /* Get the parent's link point */
+    parent.link_point( out parent_x, out parent_y );
+
+    set_context_color( ctx, color );
+    ctx.set_line_width( 4 );
+    ctx.set_line_cap( LineCap.ROUND );
+    ctx.move_to( parent_x, parent_y );
+    switch( side ) {
+      case NodeSide.LEFT :
+        ctx.line_to( (posx + _width), (posy + _height) );
+        break;
+      case NodeSide.RIGHT :
+        ctx.line_to( posx, (posy + _height) );
+        break;
+      case NodeSide.TOP :
+        ctx.line_to( (posx + (_width / 2)), (posy + _height) );
+        break;
+      case NodeSide.BOTTOM :
+        ctx.line_to( (posx + (_width / 2)), posy );
+        break;
+    }
+    ctx.stroke();
+
+  }
+
   /* Draws the node on the screen */
-  public virtual void draw( Context ctx, Theme theme ) {}
+  public virtual void draw( Context ctx, Theme theme ) {
+
+    /* If this is a root node, draw specifically for a root node */
+    if( is_root() ) {
+      draw_root_rectangle( ctx, theme );
+      draw_name( ctx, theme );
+      if( is_leaf() ) {
+        draw_leaf_task( ctx, theme.root_foreground );
+      } else {
+        draw_acc_task( ctx, theme.root_foreground );
+      }
+      draw_common_note( ctx, theme.root_foreground );
+      draw_common_fold( ctx, theme.root_background, theme.root_foreground );
+      draw_attachable( ctx, theme, theme.root_background );
+
+    /* Otherwise, draw the node as a non-root node */
+    } else {
+      draw_name( ctx, theme );
+      if( is_leaf() ) {
+        draw_leaf_task( ctx, theme.link_color( color_index ) );
+      } else {
+        draw_acc_task( ctx, theme.link_color( color_index ) );
+      }
+      draw_common_note( ctx, theme.foreground );
+      draw_line( ctx, theme );
+      draw_link( ctx, theme );
+      draw_common_fold( ctx, theme.link_color( color_index ), theme.foreground );
+      draw_attachable( ctx, theme, theme.background );
+    }
+
+  }
 
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme ) {
