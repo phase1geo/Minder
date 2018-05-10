@@ -46,6 +46,7 @@ public class DrawArea : Gtk.DrawingArea {
   private Node?        _attach_node  = null;
   private Node?        _node_clipboard = null;
   private DrawAreaMenu _popup_menu;
+  private uint?        _auto_save_id = null;
 
   public UndoBuffer undo_buffer { set; get; default = new UndoBuffer(); }
   public Themes     themes      { set; get; default = new Themes(); }
@@ -80,7 +81,7 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void changed();
   public signal void node_changed();
   public signal void scale_changed( double scale );
-  public signal void show_node_properties();
+  public signal void show_properties( string? tab );
   public signal void loaded();
 
   /* Default constructor */
@@ -422,6 +423,8 @@ public class DrawArea : Gtk.DrawingArea {
   public void toggle_task( Node n ) {
     undo_buffer.add_item( new UndoNodeTask( this, n, true, !n.task_done() ) );
     n.toggle_task_done();
+    queue_draw();
+    changed();
   }
 
   /* Toggles the fold for the given node */
@@ -431,6 +434,7 @@ public class DrawArea : Gtk.DrawingArea {
     n.folded = fold;
     _layout.handle_update_by_fold( n );
     queue_draw();
+    changed();
   }
 
   /*
@@ -444,6 +448,7 @@ public class DrawArea : Gtk.DrawingArea {
       _layout.handle_update_by_edit( _current_node );
       undo_buffer.add_item( new UndoNodeName( this, _current_node, orig_name ) );
       queue_draw();
+      changed();
     }
   }
 
@@ -458,6 +463,7 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.set_task_done( done ? 1 : 0 );
       _layout.handle_update_by_edit( _current_node );
       queue_draw();
+      changed();
     }
   }
 
@@ -471,6 +477,7 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.folded = folded;
       _layout.handle_update_by_fold( _current_node );
       queue_draw();
+      changed();
     }
   }
 
@@ -486,6 +493,7 @@ public class DrawArea : Gtk.DrawingArea {
         _layout.handle_update_by_edit( _current_node );
         queue_draw();
       }
+      auto_save();
     }
   }
 
@@ -683,14 +691,16 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Brings the given node into view in its entirety including the given amount of padding */
-  public void see( Node n, double pad = 100.0 ) {
+  public void see( double width_adjust = 0, double pad = 100.0 ) {
+
+    if( _current_node == null ) return;
 
     double x, y, w, h;
-    n.bbox( out x, out y, out w, out h );
+    _current_node.bbox( out x, out y, out w, out h );
 
     double diff_x = 0;
     double diff_y = 0;
-    double sw     = scale_value( get_allocated_width() );
+    double sw     = scale_value( get_allocated_width() + width_adjust );
     double sh     = scale_value( get_allocated_height() );
 
     if( (x - pad) < 0 ) {
@@ -709,6 +719,7 @@ public class DrawArea : Gtk.DrawingArea {
       animator.add_pan( "see" );
       move_origin( diff_x, diff_y );
       animator.animate();
+      changed();
     }
 
   }
@@ -827,7 +838,7 @@ public class DrawArea : Gtk.DrawingArea {
       _press_x = scale_value( event.x );
       _press_y = scale_value( event.y );
       _motion  = true;
-      changed();
+      auto_save();
     }
     return( false );
   }
@@ -890,7 +901,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
         _current_node = n;
         _current_node.mode = NodeMode.CURRENT;
-        see( _current_node );
+        see();
         node_changed();
       }
       return( true );
@@ -979,7 +990,7 @@ public class DrawArea : Gtk.DrawingArea {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
       }
-      see( _current_node );
+      see();
       changed();
     } else {
       var node = new Node.with_name( _( "Another Idea" ), _layout );
@@ -989,7 +1000,7 @@ public class DrawArea : Gtk.DrawingArea {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
       }
-      see( _current_node );
+      see();
       changed();
     }
   }
@@ -1061,7 +1072,7 @@ public class DrawArea : Gtk.DrawingArea {
         node.mode = NodeMode.EDITABLE;
         queue_draw();
       }
-      see( _current_node );
+      see();
       changed();
     }
   }
@@ -1215,7 +1226,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( str.get_char( 0 ).isprint() ) {
       if( is_mode_edit() ) {
         _current_node.edit_insert( str, _layout );
-        see( _current_node );
+        see();
         queue_draw();
         changed();
       } else if( is_mode_selected() ) {
@@ -1260,7 +1271,7 @@ public class DrawArea : Gtk.DrawingArea {
             center_node( _current_node );
             break;
           case "i" :  // Display the node properties panel
-            show_node_properties();
+            show_properties( "node" );
             return;
           case "u" :  // Perform undo
             if( undo_buffer.undoable() ) {
@@ -1273,7 +1284,7 @@ public class DrawArea : Gtk.DrawingArea {
             }
             break;
           case "s" :  // See the node
-            see( _current_node );
+            see();
             break;
           case "z" :  // Zoom out
             zoom_out();
@@ -1425,8 +1436,26 @@ public class DrawArea : Gtk.DrawingArea {
     move_origin( (delta_x * 120), (delta_y * 120) );
     queue_draw();
 
+    /* When the end of the scroll occurs, save the scroll position to the file */
+    auto_save();
+
     return( false );
 
+  }
+
+  /* Perform an automatic save for times when changes may be happening rapidly */
+  private void auto_save() {
+    if( _auto_save_id != null ) {
+      Source.remove( _auto_save_id );
+    }
+    _auto_save_id = Timeout.add( 200, do_auto_save );
+  }
+
+  /* Allows the document to be auto-saved after a scroll event */
+  private bool do_auto_save() {
+    _auto_save_id = null;
+    changed();
+    return( false );
   }
 
 }

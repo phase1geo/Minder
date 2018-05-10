@@ -925,12 +925,12 @@ public class Node : Object {
 
   /* Returns true if this node's task indicator is currently enabled */
   public bool task_enabled() {
-    return( is_leaf() && (_task_count == 1) );
+    return( _task_count > 0 );
   }
 
   /* Returns true if this node's task indicator indicates that it is currently done */
   public bool task_done() {
-    return( is_leaf() && (_task_done == 1) );
+    return( _task_count == _task_done );
   }
 
   /* Sets the task enable to the given value */

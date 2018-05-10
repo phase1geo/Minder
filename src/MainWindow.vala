@@ -90,7 +90,7 @@ public class MainWindow : ApplicationWindow {
     _canvas = new DrawArea();
     _canvas.node_changed.connect( on_node_changed );
     _canvas.scale_changed.connect( change_scale );
-    _canvas.show_node_properties.connect( show_node_properties );
+    _canvas.show_properties.connect( show_properties );
     _canvas.map_event.connect( on_canvas_mapped );
     _canvas.undo_buffer.buffer_changed.connect( do_buffer_changed );
 
@@ -334,11 +334,9 @@ public class MainWindow : ApplicationWindow {
 
     /* If the settings says to display the properties, do it now */
     if( _settings.get_boolean( "node-properties-shown" ) ) {
-      _stack.visible_child_name = "node";
-      show_node_properties();
+      show_properties( "node" );
     } else if( _settings.get_boolean( "map-properties-shown" ) ) {
-      _stack.visible_child_name = "map";
-      show_node_properties();
+      show_properties( "map" );
     }
 
   }
@@ -346,9 +344,9 @@ public class MainWindow : ApplicationWindow {
   /* Show or hides the inspector sidebar */
   private void inspector_clicked() {
     if( _inspector.child_revealed ) {
-      hide_node_properties();
+      hide_properties();
     } else {
-      show_node_properties();
+      show_properties( null );
     }
   }
 
@@ -495,20 +493,22 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Displays the node properties panel for the current node */
-  private void show_node_properties() {
-    _inspector.reveal_child = true;
-    _canvas.animator.add_pan( "show_node_properties" );
-    _canvas.move_origin( 300, 0 );
-    _canvas.animator.animate();
+  private void show_properties( string? tab ) {
+    if( _inspector.reveal_child && ((tab == null) || (_stack.visible_child_name == tab)) ) return;
+    if( tab != null ) {
+      _stack.visible_child_name = tab;
+    }
+    if( !_inspector.reveal_child ) {
+      _inspector.reveal_child = true;
+      _canvas.see( -300 );
+    }
     _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
   }
 
   /* Hides the node properties panel */
-  private void hide_node_properties() {
+  private void hide_properties() {
+    if( !_inspector.reveal_child ) return;
     _inspector.reveal_child = false;
-    _canvas.animator.add_pan( "hide node properties" );
-    _canvas.move_origin( -300, 0 );
-    _canvas.animator.animate();
     _settings.set_boolean( "node-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",  false );
   }
