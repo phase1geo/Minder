@@ -224,6 +224,10 @@ public class DrawArea : Gtk.DrawingArea {
   /* Loads the contents of the data input stream */
   public void load( Xml.Node* n ) {
 
+    /* Disable animations while we are loading */
+    var animate = animator.enable;
+    animator.enable = false;
+
     /* Clear the existing nodes */
     _nodes.remove_range( 0, _nodes.length );
 
@@ -252,6 +256,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Indicate to anyone listening that we have loaded a new file */
     loaded();
+
+    /* Reset the animator enable */
+    animator.enable = animate;
 
   }
 
