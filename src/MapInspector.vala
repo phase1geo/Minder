@@ -23,16 +23,18 @@ using Gtk;
 
 public class MapInspector : Box {
 
-  private DrawArea?                   _da        = null;
+  private DrawArea                    _da;
+  private GLib.Settings               _settings;
   private Granite.Widgets.ModeButton? _layouts   = null;
   private Box?                        _theme_box = null;
   private Button?                     _balance   = null;
 
-  public MapInspector( DrawArea da ) {
+  public MapInspector( DrawArea da, GLib.Settings settings ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
 
-    _da = da;
+    _da       = da;
+    _settings = settings;
 
     /* Create the interface */
     add_animation_ui();
@@ -51,13 +53,14 @@ public class MapInspector : Box {
   /* Add the animation enable UI */
   private void add_animation_ui() {
 
-    var grid = new Grid();
-    var lbl  = new Label( _( "Enable animations" ) );
+    var grid    = new Grid();
+    var lbl     = new Label( _( "Enable animations" ) );
+    var animate = _settings.get_boolean( "enable-animations" );
 
     lbl.xalign = (float)0;
 
     var enable = new Switch();
-    enable.set_active( _da.animator.enable );
+    enable.set_active( animate );
     enable.state_set.connect( animation_changed );
 
     grid.column_homogeneous = true;
@@ -66,11 +69,15 @@ public class MapInspector : Box {
 
     pack_start( grid, false, true );
 
+    /* Initialize the animator */
+    _da.animator.enable = animate;
+
   }
 
   /* Called whenever the fold switch is changed within the inspector */
   private bool animation_changed( bool state ) {
     _da.animator.enable = state;
+    _settings.set_boolean( "enable-animations", state );
     return( false );
   }
 

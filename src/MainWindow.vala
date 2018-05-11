@@ -93,6 +93,7 @@ public class MainWindow : ApplicationWindow {
     _canvas.show_properties.connect( show_properties );
     _canvas.map_event.connect( on_canvas_mapped );
     _canvas.undo_buffer.buffer_changed.connect( do_buffer_changed );
+    _canvas.animator.enable = _settings.get_boolean( "enable-animations" );
 
     /* Create title toolbar */
     var new_btn = new Button.from_icon_name( "document-new-symbolic", IconSize.SMALL_TOOLBAR );
@@ -309,7 +310,7 @@ public class MainWindow : ApplicationWindow {
     _stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
     _stack.set_transition_duration( 500 );
     _stack.add_titled( new NodeInspector( _canvas ), "node", "Node" );
-    _stack.add_titled( new MapInspector( _canvas ),  "map",  "Map" );
+    _stack.add_titled( new MapInspector( _canvas, _settings ),  "map",  "Map" );
 
     /* If the stack switcher is clicked, save off which tab is in view */
     _stack.notify.connect((ps) => {

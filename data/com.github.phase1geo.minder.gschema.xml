@@ -24,7 +24,7 @@
     <key name="last-file" type="s">
       <default>""</default>
       <summary>Name of the last edited file</summary>
-      <description>Name of the last edited file (or the empty string if an unnamed file was last edited.</description>
+      <description>Name of the last edited file (or the empty string if an unnamed file was last edited).</description>
     </key>
     <key name="node-properties-shown" type="b">
       <default>false</default>
@@ -35,6 +35,11 @@
       <default>false</default>
       <summary>Most recent state of the map properties sidebar</summary>
       <description>Most recent state of the map properties sidebar</description>
+    </key>
+    <key name="enable-animations" type="b">
+      <default>true</default>
+      <summary>Enables/Disables canvas animations</summary>
+      <description>Controls the initial state of the canvas animator</description>
     </key>
   </schema>
 </schemalist>
