@@ -51,6 +51,7 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_actual",   action_zoom_actual },
     { "action_export_opml",   action_export_opml },
     { "action_export_pdf",    action_export_pdf },
+    { "action_export_png",    action_export_png },
     { "action_export_print",  action_export_print }
   };
 
@@ -275,6 +276,11 @@ public class MainWindow : ApplicationWindow {
     pdf.text = _( "Export to PDF" );
     pdf.action_name = "win.action_export_pdf";
     pdf.set_sensitive( false );
+    
+    var png = new ModelButton();
+    png.text = _( "Export to PNG" );
+    png.action_name = "win.action_export_png";
+    png.set_sensitive( false );
 
     var print = new ModelButton();
     print.text = _( "Print" );
@@ -283,6 +289,7 @@ public class MainWindow : ApplicationWindow {
 
     box.pack_start( opml,  false, true );
     box.pack_start( pdf,   false, true );
+    box.pack_start( png,   false, true );
     box.pack_start( print, false, true );
     box.show_all();
 
@@ -611,7 +618,7 @@ public class MainWindow : ApplicationWindow {
       if( fname.substring( -5, -1 ) != ".opml" ) {
         fname += ".opml";
       }
-      OPML.export( fname, _canvas );
+      ExportOPML.export( fname, _canvas );
     }
     dialog.close();
   }
@@ -629,14 +636,31 @@ public class MainWindow : ApplicationWindow {
       if( fname.substring( -4, -1 ) != ".pdf" ) {
         fname += ".pdf";
       }
-      PDF.export( fname, _canvas );
+      ExportPDF.export( fname, _canvas );
+    }
+    dialog.close();
+  }
+  
+  /* Exports the model in PNG format */
+  private void action_export_png() {
+    FileChooserDialog dialog = new FileChooserDialog( _( "Export PNG File" ), this, FileChooserAction.SAVE, _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
+    FileFilter.       filter = new FileFilter();
+    filter.set_filter_name( _( "PNG" ) );
+    filter.add_pattern( "*.png" );
+    dialog.add_filter( filter );
+    if( dialog.run() == ResponseType.ACCEPT ) {
+      string fname = dialog.get_filename();
+      if( fname.substring( -4, -1 ) != ".png" ) {
+        fname += ".pdf";
+      }
+      ExportPNG.export( fname, _canvas );
     }
     dialog.close();
   }
 
   /* Exports the model to the printer */
   private void action_export_print() {
-    var print = new Print();
+    var print = new ExportPrint();
     print.print( _canvas, this );
   }
 

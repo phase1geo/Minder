@@ -21,7 +21,7 @@
 
 using Gtk;
 
-public class Print : Object {
+public class ExportPrint : Object {
 
   private DrawArea _da;
 

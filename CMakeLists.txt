@@ -55,6 +55,10 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/Document.vala
     src/DrawArea.vala
     src/DrawAreaMenu.vala
+    src/exports/ExportOPML.vala
+    src/exports/ExportPDF.vala
+    src/exports/ExportPNG.vala
+    src/exports/ExportPrint.vala
     src/Layout.vala
     src/Layouts.vala
     src/layouts/LayoutDown.vala
@@ -68,10 +72,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/MapInspector.vala
     src/Node.vala
     src/NodeInspector.vala
-    src/OPML.vala
     src/Partitioner.vala
-    src/PDF.vala
-    src/Print.vala
     src/Theme.vala
     src/Themes.vala
     src/themes/ThemeDefault.vala

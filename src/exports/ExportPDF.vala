@@ -21,7 +21,7 @@
 
 using Cairo;
 
-public class PDF : Object {
+public class ExportPDF : Object {
 
   /* Default constructor */
   public static void export( string fname, DrawArea da ) {
