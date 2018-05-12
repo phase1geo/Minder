@@ -31,7 +31,7 @@ public class ExportPNG : Object {
     da.document_rectangle( out x, out y, out w, out h );
 
     /* Create the drawing surface */
-    var surface = new ImageSurface( Format.ARGB32, w, h );
+    var surface = new ImageSurface( Format.ARGB32, (int)w, (int)h );
     var context = new Context( surface );
 
     /* Translate the image */

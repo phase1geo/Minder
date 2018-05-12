@@ -424,7 +424,7 @@ public class MainWindow : ApplicationWindow {
       _doc = new Document( _canvas, _settings );
       _canvas.initialize_for_open();
       update_title();
-      OPML.import( fname, _canvas );
+      ExportOPML.import( fname, _canvas );
       return( true );
     }
     return( false );
@@ -643,15 +643,16 @@ public class MainWindow : ApplicationWindow {
   
   /* Exports the model in PNG format */
   private void action_export_png() {
-    FileChooserDialog dialog = new FileChooserDialog( _( "Export PNG File" ), this, FileChooserAction.SAVE, _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
-    FileFilter.       filter = new FileFilter();
+    FileChooserDialog dialog = new FileChooserDialog( _( "Export PNG File" ), this, FileChooserAction.SAVE,
+      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
+    FileFilter        filter = new FileFilter();
     filter.set_filter_name( _( "PNG" ) );
     filter.add_pattern( "*.png" );
     dialog.add_filter( filter );
     if( dialog.run() == ResponseType.ACCEPT ) {
       string fname = dialog.get_filename();
       if( fname.substring( -4, -1 ) != ".png" ) {
-        fname += ".pdf";
+        fname += ".png";
       }
       ExportPNG.export( fname, _canvas );
     }

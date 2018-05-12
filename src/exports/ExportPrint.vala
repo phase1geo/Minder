@@ -26,7 +26,7 @@ public class ExportPrint : Object {
   private DrawArea _da;
 
   /* Default constructor */
-  public Print() {}
+  public ExportPrint() {}
 
   /* Perform print operation */
   public void print( DrawArea da, MainWindow main ) {
