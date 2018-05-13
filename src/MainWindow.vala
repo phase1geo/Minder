@@ -481,11 +481,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Called whenever the node selection changes in the canvas */
   private void on_node_changed() {
-    if( _canvas.get_current_node() != null ) {
-      _zoom_sel.set_sensitive( true );
-    } else {
-      _zoom_sel.set_sensitive( false );
-    }
+    _zoom_sel.set_sensitive( _canvas.get_current_node() != null );
   }
 
   /*
