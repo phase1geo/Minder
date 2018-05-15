@@ -97,6 +97,7 @@ public class Document : Object {
     _da.save( root );
     doc->save_format_file( filename, 1 );
     delete doc;
+    save_needed = false;
     return( true );
   }
 

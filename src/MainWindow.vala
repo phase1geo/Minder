@@ -42,8 +42,17 @@ public class MainWindow : ApplicationWindow {
   private ModelButton?   _zoom_sel      = null;
   private Button?        _undo_btn      = null;
   private Button?        _redo_btn      = null;
+  private Button?        _search_btn    = null;
 
   private const GLib.ActionEntry[] action_entries = {
+    { "action_new",           action_new },
+    { "action_open",          action_open },
+    { "action_save",          action_save },
+    { "action_save_as",       action_save_as },
+    { "action_undo",          action_undo },
+    { "action_redo",          action_redo },
+    { "action_search",        action_search },
+    { "action_quit",          action_quit },
     { "action_zoom_in",       action_zoom_in },
     { "action_zoom_out",      action_zoom_out },
     { "action_zoom_fit",      action_zoom_fit },
@@ -86,6 +95,9 @@ public class MainWindow : ApplicationWindow {
     var actions = new SimpleActionGroup ();
     actions.add_action_entries( action_entries, this );
     insert_action_group( "win", actions );
+    
+    /* Add keyboard shortcuts */
+    add_keyboard_shortcuts( app );
 
     /* Create and pack the canvas */
     _canvas = new DrawArea();
@@ -149,6 +161,23 @@ public class MainWindow : ApplicationWindow {
     } else {
       _header.set_title( GLib.Path.get_basename( _doc.filename ) + suffix );
     }
+  }
+  
+  /* Adds keyboard shortcuts for the menu actions */
+  private void add_keyboard_shortcuts( Gtk.Application app ) {
+  
+    app.set_accels_for_action( "win.action_new", "<Control>n" );
+    app.set_accels_for_action( "win.action_open", "<Control>o" );
+    app.set_accels_for_action( "win.action_save", "<Control>s" );
+    app.set_accels_for_action( "win.action_save_as", "<Control><Shift>s" );
+    app.set_accels_for_action( "win.action_undo", "<Control>z" );
+    app.set_accels_for_action( "win.action_redo", "<Control><Shift>z" );
+    app.set_accels_for_action( "win.action_search", "<Control>f" );
+    app.set_accels_for_action( "win.action_quit", "<Control>q" );
+    app.set_accels_for_action( "win.action_zoom_actual", "<Control>0" );
+    app.set_accels_for_action( "win.action_zoom_in", "<Control>plus" );
+    app.set_accels_for_action( "win.action_zoom_out", "<Control>minus" );
+    
   }
 
   /* Adds the zoom functionality */
@@ -217,10 +246,10 @@ public class MainWindow : ApplicationWindow {
   private void add_search_button() {
 
     /* Create the menu button */
-    var menu_btn = new MenuButton();
-    menu_btn.set_image( new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
-    menu_btn.set_tooltip_text( _( "Search" ) );
-    _header.pack_end( menu_btn );
+    _search_btn = new MenuButton();
+    _search_btn.set_image( new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
+    _search_btn.set_tooltip_text( _( "Search" ) );
+    _header.pack_end( _search_btn );
 
     /* Create search popover */
     var box = new Box( Orientation.VERTICAL, 5 );
@@ -252,7 +281,7 @@ public class MainWindow : ApplicationWindow {
     /* Create the popover and associate it with the menu button */
     _search = new Popover( null );
     _search.add( box );
-    menu_btn.popover = _search;
+    _search_btn.popover = _search;
 
   }
 
@@ -543,6 +572,46 @@ public class MainWindow : ApplicationWindow {
   /* Returns the value to display in the zoom control */
   private string set_zoom_value( double val ) {
     return( zoom_to_value( val ).to_string() );
+  }
+  
+  /* Called when the user uses the Control-n keyboard shortcut */
+  private void action_new() {
+    do_new_file();
+  }
+  
+  /* Called when the user uses the Control-o keyboard shortcut */
+  private void action_open() {
+    do_open_file();
+  }
+  
+  /* Called when the user uses the Control-s keyboard shortcut */
+  private void action_save() {
+    _doc.save();
+  }
+  
+  /* Called when the user uses the Control-S keyboard shortcut */
+  private void action_save_as() {
+    do_save_file();
+  }
+  
+  /* Called when the user uses the Control-z keyboard shortcut */
+  private void action_undo() {
+    do_undo();
+  }
+  
+  /* Called when the user uses the Control-Z keyboard shortcut */
+  private void action_redo() {
+    do_redo();
+  }
+  
+  /* Called when the user uses the Control-f keyboard shortcut */
+  private void action_search() {
+    _search_btn.clicked();
+  }
+  
+  /* Called when the user uses the Control-q keyboard shortcut */
+  private void action_quit() {
+    destroy();
   }
 
   /* Zooms into the image (makes things larger) */
