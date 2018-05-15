@@ -666,13 +666,15 @@ public class Node : Object {
 
   /* Moves this node into the proper position within the parent node */
   public void move_to_position( Node child, NodeSide side, double x, double y, Layout layout ) {
+    stdout.printf( "In move_to_position, side: %s\n", side.to_string() );
     child.detach( side, layout );
     for( int i=0; i<_children.length; i++ ) {
-      if( _children.index( i ).side == side ) {
-        switch( side ) {
+      if( _children.index( i ).side == child.side ) {
+        switch( child.side ) {
           case NodeSide.LEFT  :
           case NodeSide.RIGHT :
             if( y < _children.index( i ).posy ) {
+              stdout.printf( "Attaching to %s at %d\n", side.to_string(), i );
               child.attach( this, i, layout );
               return;
             }
@@ -680,16 +682,15 @@ public class Node : Object {
           case NodeSide.TOP :
           case NodeSide.BOTTOM :
             if( x < _children.index( i ).posx ) {
+              stdout.printf( "Attaching to %s at %d\n", side.to_string(), i );
               child.attach( this, i, layout );
               return;
             }
             break;
         }
-      } else if( _children.index( i ).side > side ) {
-        child.attach( this, i, layout );
-        return;
       }
     }
+    stdout.printf( "Attaching at end of side %s\n", child.side.to_string() );
     child.attach( this, -1, layout );
   }
 
@@ -862,8 +863,10 @@ public class Node : Object {
     }
     if( index == -1 ) {
       index = (int)this.parent.children().length;
+      stdout.printf( "A index: %d\n", index );
       parent.children().append_val( this );
     } else {
+      stdout.printf( "B index: %d\n", index );
       parent.children().insert_val( index, this );
     }
     propagate_task_info( _task_count, _task_done );
