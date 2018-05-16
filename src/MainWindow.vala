@@ -31,6 +31,7 @@ public class MainWindow : ApplicationWindow {
   private Stack?         _stack         = null;
   private Popover?       _zoom          = null;
   private Popover?       _search        = null;
+  private MenuButton?    _search_btn    = null;
   private SearchEntry?   _search_entry  = null;
   private TreeView       _search_list   = null;
   private Gtk.ListStore  _search_items  = null;
@@ -42,7 +43,6 @@ public class MainWindow : ApplicationWindow {
   private ModelButton?   _zoom_sel      = null;
   private Button?        _undo_btn      = null;
   private Button?        _redo_btn      = null;
-  private Button?        _search_btn    = null;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_new",           action_new },
@@ -66,6 +66,8 @@ public class MainWindow : ApplicationWindow {
 
   /* Create the main window UI */
   public MainWindow( Gtk.Application app, GLib.Settings settings ) {
+
+    Object( application: app );
 
     _settings = settings;
 
@@ -95,7 +97,7 @@ public class MainWindow : ApplicationWindow {
     var actions = new SimpleActionGroup ();
     actions.add_action_entries( action_entries, this );
     insert_action_group( "win", actions );
-    
+
     /* Add keyboard shortcuts */
     add_keyboard_shortcuts( app );
 
@@ -147,6 +149,9 @@ public class MainWindow : ApplicationWindow {
     hbox.pack_start( _canvas,    true,  true, 0 );
     hbox.pack_start( _inspector, false, true, 0 );
 
+    /* Add a shortcut help window */
+    // set_help_overlay( new Shortcuts() );
+
     /* Display the UI */
     add( hbox );
     show_all();
@@ -162,22 +167,22 @@ public class MainWindow : ApplicationWindow {
       _header.set_title( GLib.Path.get_basename( _doc.filename ) + suffix );
     }
   }
-  
+
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
-  
-    app.set_accels_for_action( "win.action_new", "<Control>n" );
-    app.set_accels_for_action( "win.action_open", "<Control>o" );
-    app.set_accels_for_action( "win.action_save", "<Control>s" );
-    app.set_accels_for_action( "win.action_save_as", "<Control><Shift>s" );
-    app.set_accels_for_action( "win.action_undo", "<Control>z" );
-    app.set_accels_for_action( "win.action_redo", "<Control><Shift>z" );
-    app.set_accels_for_action( "win.action_search", "<Control>f" );
-    app.set_accels_for_action( "win.action_quit", "<Control>q" );
-    app.set_accels_for_action( "win.action_zoom_actual", "<Control>0" );
-    app.set_accels_for_action( "win.action_zoom_in", "<Control>plus" );
-    app.set_accels_for_action( "win.action_zoom_out", "<Control>minus" );
-    
+
+    app.set_accels_for_action( "win.action_new",         { "<Control>n" } );
+    app.set_accels_for_action( "win.action_open",        { "<Control>o" } );
+    app.set_accels_for_action( "win.action_save",        { "<Control>s" } );
+    app.set_accels_for_action( "win.action_save_as",     { "<Control><Shift>s" } );
+    app.set_accels_for_action( "win.action_undo",        { "<Control>z" } );
+    app.set_accels_for_action( "win.action_redo",        { "<Control><Shift>z" } );
+    app.set_accels_for_action( "win.action_search",      { "<Control>f" } );
+    app.set_accels_for_action( "win.action_quit",        { "<Control>q" } );
+    app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
+    app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
+    app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
+
   }
 
   /* Adds the zoom functionality */
@@ -305,7 +310,7 @@ public class MainWindow : ApplicationWindow {
     pdf.text = _( "Export to PDF" );
     pdf.action_name = "win.action_export_pdf";
     pdf.set_sensitive( false );
-    
+
     var png = new ModelButton();
     png.text = _( "Export to PNG" );
     png.action_name = "win.action_export_png";
@@ -573,42 +578,42 @@ public class MainWindow : ApplicationWindow {
   private string set_zoom_value( double val ) {
     return( zoom_to_value( val ).to_string() );
   }
-  
+
   /* Called when the user uses the Control-n keyboard shortcut */
   private void action_new() {
     do_new_file();
   }
-  
+
   /* Called when the user uses the Control-o keyboard shortcut */
   private void action_open() {
     do_open_file();
   }
-  
+
   /* Called when the user uses the Control-s keyboard shortcut */
   private void action_save() {
     _doc.save();
   }
-  
+
   /* Called when the user uses the Control-S keyboard shortcut */
   private void action_save_as() {
     do_save_file();
   }
-  
+
   /* Called when the user uses the Control-z keyboard shortcut */
   private void action_undo() {
     do_undo();
   }
-  
+
   /* Called when the user uses the Control-Z keyboard shortcut */
   private void action_redo() {
     do_redo();
   }
-  
+
   /* Called when the user uses the Control-f keyboard shortcut */
   private void action_search() {
     _search_btn.clicked();
   }
-  
+
   /* Called when the user uses the Control-q keyboard shortcut */
   private void action_quit() {
     destroy();
@@ -705,7 +710,7 @@ public class MainWindow : ApplicationWindow {
     }
     dialog.close();
   }
-  
+
   /* Exports the model in PNG format */
   private void action_export_png() {
     FileChooserDialog dialog = new FileChooserDialog( _( "Export PNG File" ), this, FileChooserAction.SAVE,
