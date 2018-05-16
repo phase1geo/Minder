@@ -318,13 +318,6 @@ public class Layout : Object {
     }
     set_pc_gap( child );
 
-    stdout.printf( "handle_update_by_insert:\n" );
-    for( int i=0; i<parent.children().length; i++ ) {
-      stdout.printf( "  i: %d, side: %s, name: %s\n", i, parent.children().index( i ).side.to_string(), parent.children().index( i ).name );
-    }
-
-    stdout.printf( "pos: %d, children: %u, child.side: %s, pos+1 side: %s\n", pos, parent.children().length, child.side.to_string(), parent.children().index( pos + 1 ).side.to_string() );
-
     /*
      If we are the only child on our side, place ourselves on the same plane as the
      parent node

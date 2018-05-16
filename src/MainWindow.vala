@@ -149,7 +149,7 @@ public class MainWindow : ApplicationWindow {
     hbox.pack_start( _canvas,    true,  true, 0 );
     hbox.pack_start( _inspector, false, true, 0 );
 
-    /* Add a shortcut help window */
+    /* TBD - This may work with Juno - Add a shortcut help window */
     // set_help_overlay( new Shortcuts() );
 
     /* Display the UI */
