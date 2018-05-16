@@ -86,26 +86,25 @@ public struct NodeBounds {
 public class Node : Object {
 
   /* Member variables */
-  protected double                 _width            = 0;
-  protected double                 _height           = 0;
-  protected double                 _padx             = 0;
-  protected double                 _pady             = 0;
-  protected double                 _ipadx            = 0;
-  protected double                 _ipady            = 0;
-  protected double                 _task_radius      = 5;
-  protected double                 _alpha            = 0.3;
-  private   int                    _cursor           = 0;   /* Location of the cursor when editing */
-  protected Array<Node>            _children;
-  private   NodeMode               _mode             = NodeMode.NONE;
-  private   int                    _task_count       = 0;
-  private   int                    _task_done        = 0;
-  private   Pango.Layout?          _layout           = null;
-  private   Pango.FontDescription? _font_description = null;
-  private   double                 _posx             = 0;
-  private   double                 _posy             = 0;
-  private   int                    _selstart         = 0;
-  private   int                    _selend           = 0;
-  private   int                    _selanchor        = 0;
+  protected double       _width       = 0;
+  protected double       _height      = 0;
+  protected double       _padx        = 0;
+  protected double       _pady        = 0;
+  protected double       _ipadx       = 0;
+  protected double       _ipady       = 0;
+  protected double       _task_radius = 5;
+  protected double       _alpha       = 0.3;
+  private   int          _cursor      = 0;   /* Location of the cursor when editing */
+  protected Array<Node>  _children;
+  private   NodeMode     _mode        = NodeMode.NONE;
+  private   int          _task_count  = 0;
+  private   int          _task_done   = 0;
+  private   Pango.Layout _layout      = null;
+  private   double       _posx        = 0;
+  private   double       _posy        = 0;
+  private   int          _selstart    = 0;
+  private   int          _selend      = 0;
+  private   int          _selanchor   = 0;
 
   /* Properties */
   public string name { get; set; default = ""; }
@@ -159,15 +158,21 @@ public class Node : Object {
   public int      color_index { set; get; default = 0; }
 
   /* Default constructor */
-  public Node( Layout? layout ) {
+  public Node( DrawArea da, Layout? layout ) {
     _children = new Array<Node>();
+    _layout   = da.create_pango_layout( null );
+    _layout.set_width( 200 * Pango.SCALE );
+    _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     set_layout( layout );
   }
 
   /* Constructor initializing string */
-  public Node.with_name( string n, Layout? layout ) {
+  public Node.with_name( DrawArea da, string n, Layout? layout ) {
     name      = n;
     _children = new Array<Node>();
+    _layout   = da.create_pango_layout( n );
+    _layout.set_width( 200 * Pango.SCALE );
+    _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     set_layout( layout );
   }
 
@@ -205,7 +210,6 @@ public class Node : Object {
     _task_count       = n._task_count;
     _task_done        = n._task_done;
     _layout           = n._layout;
-    _font_description = n._font_description;
     _posx             = n._posx;
     _posy             = n._posy;
     name              = n.name;
@@ -383,7 +387,7 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( Xml.Node* n, Layout? layout ) {
+  public virtual void load( DrawArea da, Xml.Node* n, Layout? layout ) {
 
     string? x = n->get_prop( "posx" );
     if( x != null ) {
@@ -444,8 +448,8 @@ public class Node : Object {
           case "nodes"    :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var child = new Node( layout );
-                child.load( it2, layout );
+                var child = new Node( da, layout );
+                child.load( da, it2, layout );
                 child.attach( this, -1, null );
               }
             }
@@ -506,7 +510,7 @@ public class Node : Object {
   }
 
   /* Main method for importing an OPML <outline> into a node */
-  public void import_opml( Xml.Node* parent, int node_id, ref Array<int>? expand_state, Layout layout ) {
+  public void import_opml( DrawArea da, Xml.Node* parent, int node_id, ref Array<int>? expand_state, Layout layout ) {
 
     /* Get the node name */
     string? n = parent->get_prop( "text" );
@@ -544,8 +548,8 @@ public class Node : Object {
     /* Parse the child nodes */
     for( Xml.Node* it2 = parent->children; it2 != null; it2 = it2->next ) {
       if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "outline") ) {
-        var child = new Node( layout );
-        child.import_opml( it2, node_id, ref expand_state, layout );
+        var child = new Node( da, layout );
+        child.import_opml( da, it2, node_id, ref expand_state, layout );
         child.attach( this, -1, layout );
       }
     }
@@ -1321,12 +1325,6 @@ public class Node : Object {
 
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme ) {
-    if( _layout == null ) {
-      _layout = Pango.cairo_create_layout( ctx );
-      _layout.set_font_description( _font_description );
-      _layout.set_width( 200 * Pango.SCALE );
-      _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
-    }
     if( !folded ) {
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).draw_all( ctx, theme );
@@ -1338,15 +1336,15 @@ public class Node : Object {
   /* Called whenever the user changes the layout */
   public void set_layout( Layout? layout ) {
     if( layout == null ) return;
-    _padx             = layout.padx;
-    _pady             = layout.pady;
-    _ipadx            = layout.ipadx;
-    _ipady            = layout.ipady;
-    _font_description = layout.get_font_description();
+    _padx  = layout.padx;
+    _pady  = layout.pady;
+    _ipadx = layout.ipadx;
+    _ipady = layout.ipady;
     layout.set_side( this );
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).set_layout( layout );
     }
+    _layout.set_font_description( layout.get_font_description() );
   }
 
 }

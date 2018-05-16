@@ -99,7 +99,7 @@ public class Layout : Object {
   }
 
   /* Calculate the adjustment difference of the given node's tree */
-  private double get_adjust( Node parent, bool child_changed ) {
+  public double get_adjust( Node parent, bool child_changed ) {
 
     /* Get the original tree size */
     double orig_tree_size = parent.tree_size;
@@ -116,6 +116,11 @@ public class Layout : Object {
     } else {
       parent.tree_size = tw;
       parent.node_size = pw;
+    }
+
+    /* If the original tree_size was not set, return 0 */
+    if( orig_tree_size == 0 ) {
+      return( 0 );
     }
 
     /* Calculate the growth difference */
@@ -141,11 +146,7 @@ public class Layout : Object {
           return( parent.node_size - orig_node_size );
         }
       } else {
-        if( orig_node_size > parent.tree_size ) {
-          return( parent.tree_size - orig_node_size );
-        } else {
-          return( 0 );
-        }
+        return( parent.tree_size - orig_node_size );
       }
     }
 
@@ -171,9 +172,9 @@ public class Layout : Object {
 
   /* Adjust the entire tree */
   public virtual void adjust_tree_all( Node n, double amount ) {
-    Node     parent = n.parent;
-    int      index  = n.index();
-    while( (parent != null) && (amount != 0) ) {
+    Node parent = n.parent;
+    int  index  = n.index();
+    while( parent != null ) {
       adjust_tree( parent, index, n.side, amount );
       amount = 0 - (get_adjust( parent, true ) / 2);
       index  = parent.index();
@@ -240,10 +241,11 @@ public class Layout : Object {
   public virtual void handle_update_by_edit( Node n ) {
     double width_diff, height_diff;
     n.update_size( null, out width_diff, out height_diff );
+    double adjust = 0 - (get_adjust( n, false ) / 2);
     if( (n.side & NodeSide.horizontal()) != 0 ) {
       if( (n.parent != null) && (height_diff != 0) ) {
         n.adjust_posy_only( 0 - (height_diff / 2) );
-        adjust_tree_all( n, get_adjust( n, false ) );  // , (0 - (height_diff / 2)) );
+        adjust_tree_all( n, adjust );  // , (0 - (height_diff / 2)) );
       }
       if( width_diff != 0 ) {
         if( n.side == NodeSide.LEFT ) {
@@ -257,7 +259,7 @@ public class Layout : Object {
     } else {
       if( (n.parent != null) && (width_diff != 0) ) {
         n.adjust_posx_only( 0 - (width_diff / 2) );
-        adjust_tree_all( n, get_adjust( n, false ) ); // , (0 - (width_diff / 2)) );
+        adjust_tree_all( n, adjust ); // , (0 - (width_diff / 2)) );
       }
       if( height_diff != 0 ) {
         if( n.side == NodeSide.TOP ) {

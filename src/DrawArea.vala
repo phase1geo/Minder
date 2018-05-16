@@ -241,8 +241,8 @@ public class DrawArea : Gtk.DrawingArea {
           case "nodes"    :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var node = new Node( _layout );
-                node.load( it2, _layout );
+                var node = new Node( this, _layout );
+                node.load( this, it2, _layout );
                 _nodes.append_val( node );
               }
             }
@@ -251,7 +251,6 @@ public class DrawArea : Gtk.DrawingArea {
       }
     }
 
-    queue_draw();
     queue_draw();
 
     /* Indicate to anyone listening that we have loaded a new file */
@@ -302,8 +301,8 @@ public class DrawArea : Gtk.DrawingArea {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "outline") {
-          var root = new Node( _layout );
-          root.import_opml( it, node_id, ref expand_state, _layout );
+          var root = new Node( this, _layout );
+          root.import_opml( this, it, node_id, ref expand_state, _layout );
           _nodes.append_val( root );
         }
       }
@@ -371,7 +370,7 @@ public class DrawArea : Gtk.DrawingArea {
     _node_clipboard = null;
 
     /* Create the main idea node */
-    var n = new Node.with_name( "Main Idea", _layout );
+    var n = new Node.with_name( this, "Main Idea", _layout );
 
     /* Set the node information */
     n.posx = (get_allocated_width()  / 2) - 30;
@@ -384,7 +383,6 @@ public class DrawArea : Gtk.DrawingArea {
     set_current_node( n );
 
     /* Redraw the canvas */
-    queue_draw();
     queue_draw();
 
   }
@@ -982,7 +980,7 @@ public class DrawArea : Gtk.DrawingArea {
       node_changed();
       queue_draw();
     } else if( !_current_node.is_root() ) {
-      var node = new Node( _layout );
+      var node = new Node( this, _layout );
       _orig_name = "";
       if( _current_node.parent.is_root() ) {
         node.color_index = _theme.next_color_index();
@@ -1000,7 +998,7 @@ public class DrawArea : Gtk.DrawingArea {
       see();
       changed();
     } else {
-      var node = new Node.with_name( _( "Another Idea" ), _layout );
+      var node = new Node.with_name( this, _( "Another Idea" ), _layout );
       _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
       _nodes.append_val( node );
       if( select_node( node ) ) {
@@ -1064,7 +1062,7 @@ public class DrawArea : Gtk.DrawingArea {
       node_changed();
       queue_draw();
     } else if( is_mode_selected() ) {
-      var node = new Node( _layout );
+      var node = new Node( this, _layout );
       _orig_name = "";
       if( _current_node.is_root() ) {
         node.color_index = _theme.next_color_index();
