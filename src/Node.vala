@@ -820,6 +820,17 @@ public class Node : Object {
     layout.handle_update_by_edit( this );
   }
 
+  /*
+   Returns the currently selected text or, if no text is currently selected,
+   returns null.
+  */
+  public string? get_selected_text() {
+    if( _selstart != _selend ) {
+      return( name.slice( _selstart, _selend ) );
+    }
+    return( null );
+  }
+
   /* Detaches this node from its parent node */
   public virtual void detach( NodeSide side, Layout? layout ) {
     if( parent != null ) {

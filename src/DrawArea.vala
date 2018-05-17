@@ -1308,57 +1308,53 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Handle a key event */
-  private bool on_keypress( EventKey event ) {
+  private bool on_keypress( EventKey e ) {
+
+    /* Figure out which modifiers were used */
+    var nomod   = (e.state & ModifierType.MODIFIER_MASK) == 0;
+    var control = (e.state & ModifierType.MODIFIER_MASK) == ModifierType.CONTROL_MASK;
+    var shift   = (e.state & ModifierType.MODIFIER_MASK) == ModifierType.SHIFT_MASK;
+
+    /* If there is a current node selected, operate on it */
     if( _current_node != null ) {
-      switch( event.keyval ) {
-        case 65288 :  handle_backspace();  break;
-        case 65535 :  handle_delete();     break;
-        case 65307 :  handle_escape();     break;
-        case 65293 :  handle_return();     break;
-        case 65289 :  handle_tab();        break;
-        case 65363 :  handle_right();      break;
-        case 65361 :  handle_left();       break;
-        case 65360 :  handle_home();       break;
-        case 65367 :  handle_end();        break;
-        case 65362 :  handle_up();         break;
-        case 65364 :  handle_down();       break;
-        case 65365 :  handle_pageup();     break;
-        case 65366 :  handle_pagedn();     break;
-        default :
-          //if( !event.str.get_char( 0 ).isprint() ) {
-          //  stdout.printf( "In on_keypress, keyval: %s\n", event.keyval.to_string() );
-          //}
-          handle_printable( event.str );
-          break;
+      if( control ) {
+        switch( e.keyval ) {
+          case 99  :  do_copy();   break;
+          case 120 :  do_cut();    break;
+          case 118 :  do_paste();  break;
+        }
+      } else if( nomod || shift ) {
+        switch( e.keyval ) {
+          case 65288 :  handle_backspace();  break;
+          case 65535 :  handle_delete();     break;
+          case 65307 :  handle_escape();     break;
+          case 65293 :  handle_return();     break;
+          case 65289 :  handle_tab();        break;
+          case 65363 :  handle_right();      break;
+          case 65361 :  handle_left();       break;
+          case 65360 :  handle_home();       break;
+          case 65367 :  handle_end();        break;
+          case 65362 :  handle_up();         break;
+          case 65364 :  handle_down();       break;
+          case 65365 :  handle_pageup();     break;
+          case 65366 :  handle_pagedn();     break;
+          default :
+            //if( !e.str.get_char( 0 ).isprint() ) {
+            //  stdout.printf( "In on_keypress, keyval: %s\n", e.keyval.to_string() );
+            //}
+            handle_printable( e.str );
+            break;
+        }
       }
 
     /* If there is no current node, allow some of the keyboard shortcuts */
-    } else {
-      switch( event.str ) {
-        case "m" :
-          if( (_nodes.length > 0) && select_node( _nodes.index( 0 ) ) ) {
-            queue_draw();
-          }
-          break;
-        case "u" :  // Perform undo
-          if( undo_buffer.undoable() ) {
-            undo_buffer.undo();
-          }
-          break;
-        case "r" :  // Perform redo
-          if( undo_buffer.redoable() ) {
-            undo_buffer.redo();
-          }
-          break;
-        case "z" :  // Zoom out
-          zoom_out();
-          break;
-        case "Z" :  // Zoom in
-          zoom_in();
-          break;
-        default :
-          // No need to do anything here
-          break;
+    } else if( nomod || shift ) {
+      switch( e.str ) {
+        case "m" :  if( (_nodes.length > 0) && select_node( _nodes.index( 0 ) ) ) queue_draw();  break;
+        case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
+        case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
+        case "z" :  zoom_out();  break;
+        case "Z" :  zoom_in();   break;
       }
     }
     return( true );
@@ -1385,6 +1381,25 @@ public class DrawArea : Gtk.DrawingArea {
     _node_clipboard = new Node.copy_tree( _current_node );
   }
 
+  /* Copies the currently selected text to the clipboard */
+  private void copy_selected_text() {
+    if( _current_node == null ) return;
+    string? value = _current_node.get_selected_text();
+    if( value != null ) {
+      var clipboard = Clipboard.get_default( get_display() );
+      clipboard.set_text( value, -1 );
+    }
+  }
+
+  /* Copies either the current node or the currently selected text to the clipboard */
+  public void do_copy() {
+    if( _current_node == null ) return;
+    switch( _current_node.mode ) {
+      case NodeMode.CURRENT  :  copy_node_to_clipboard();  break;
+      case NodeMode.EDITABLE :  copy_selected_text();      break;
+    }
+  }
+
   /* Cuts the current node from the tree and stores it in the clipboard */
   public void cut_node_to_clipboard() {
     if( _current_node == null ) return;
@@ -1404,6 +1419,21 @@ public class DrawArea : Gtk.DrawingArea {
     changed();
   }
 
+  /* Cuts the current selected text to the clipboard */
+  private void cut_selected_text() {
+    copy_selected_text();
+    _current_node.edit_delete( _layout );
+  }
+
+  /* Either cuts the current node or cuts the currently selected text */
+  public void do_cut() {
+    if( _current_node == null ) return;
+    switch( _current_node.mode ) {
+      case NodeMode.CURRENT  :  cut_node_to_clipboard();  break;
+      case NodeMode.EDITABLE :  cut_selected_text();      break;
+    }
+  }
+
   /*
    Pastes the clipboard content as either a root node or to the currently
    selected node.
@@ -1421,6 +1451,26 @@ public class DrawArea : Gtk.DrawingArea {
     queue_draw();
     node_changed();
     changed();
+  }
+
+  /* Pastes the text that is in the clipboard to the node text */
+  private void paste_text() {
+    var clipboard = Clipboard.get_default( get_display() );
+    string? value = clipboard.wait_for_text();
+    if( value != null ) {
+      _current_node.edit_insert( value, _layout );
+      queue_draw();
+      changed();
+    }
+  }
+
+  /* Pastes the contents of the clipboard into the current node */
+  public void do_paste() {
+    if( _current_node == null ) return;
+    switch( _current_node.mode ) {
+      case NodeMode.CURRENT  :  paste_node_from_clipboard();  break;
+      case NodeMode.EDITABLE :  paste_text();                 break;
+    }
   }
 
   /* Clears the node clipboard */

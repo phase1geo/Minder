@@ -40,13 +40,13 @@ public class DrawAreaMenu : Gtk.Menu {
     _da = da;
 
     _copy = new Gtk.MenuItem.with_label( _( "Copy" ) );
-    _copy.activate.connect( copy_node );
+    _copy.activate.connect( copy );
 
     _cut = new Gtk.MenuItem.with_label( _( "Cut" ) );
-    _cut.activate.connect( cut_node );
+    _cut.activate.connect( cut );
 
     _paste = new Gtk.MenuItem.with_label( _( "Paste" ) );
-    _paste.activate.connect( paste_node );
+    _paste.activate.connect( paste );
 
     _delete = new Gtk.MenuItem.with_label( _( "Delete" ) );
     _delete.activate.connect( delete_node );
@@ -141,13 +141,13 @@ public class DrawAreaMenu : Gtk.Menu {
   }
 
   /* Copies the current node to the clipboard */
-  private void copy_node() {
-    _da.copy_node_to_clipboard();
+  private void copy() {
+    _da.do_copy();
   }
 
   /* Cuts the current node to the clipboard */
-  private void cut_node() {
-    _da.cut_node_to_clipboard();
+  private void cut() {
+    _da.do_cut();
   }
 
   /*
@@ -155,8 +155,8 @@ public class DrawAreaMenu : Gtk.Menu {
    node is currently selected) or attaches it to the currently selected
    node.
   */
-  private void paste_node() {
-    _da.paste_node_from_clipboard();
+  private void paste() {
+    _da.do_paste();
   }
 
   /* Deletes the current node */
