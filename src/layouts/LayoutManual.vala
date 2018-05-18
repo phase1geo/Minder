@@ -49,6 +49,6 @@ public class LayoutManual : Layout {
   public override void handle_update_by_insert( Node parent, Node child, int pos ) {}
 
   /* Called to layout the leftover children of a parent node when a node is deleted */
-  public override void handle_update_by_delete( Node parent, int index, NodeSide side, double xamount, double yamount ) {}
+  public override void handle_update_by_delete( Node parent, int index, NodeSide side ) {}
 
 }

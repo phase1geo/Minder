@@ -98,65 +98,22 @@ public class Layout : Object {
 
   }
 
-  /* Calculate the adjustment difference of the given node's tree */
-  public double get_adjust( Node parent, bool child_changed ) {
+  /*
+   Calculate the adjustment difference of the given node's tree.
+   If the returned value is positive, it indicates a growth occurred.
+  */
+  public double get_adjust( Node parent ) {
 
     /* Get the original tree size */
     double orig_tree_size = parent.tree_size;
-    double orig_node_size = parent.node_size;
 
     /* Calculate the new tree size, set it and get the size of the node itself */
-    double tx, ty, tw, th;
-    double px, py, pw, ph;
-    bbox( parent, -1, out tx, out ty, out tw, out th );
-    parent.bbox( out px, out py, out pw, out ph );
-    if( (parent.side & NodeSide.horizontal()) != 0 ) {
-      parent.tree_size = th;
-      parent.node_size = ph;
-    } else {
-      parent.tree_size = tw;
-      parent.node_size = pw;
-    }
+    double x, y, w, h;
+    bbox( parent, -1, out x, out y, out w, out h );
+    parent.tree_size = ((parent.side & NodeSide.horizontal()) != 0) ? h : w;
 
-    stdout.printf( "In get_adjust, name: %s, otree: %g, onode: %g, tree: %g, node: %g, child_changed: %s\n",
-      parent.name.slice(0,5), orig_tree_size, orig_node_size, parent.tree_size, parent.node_size, child_changed.to_string() );
-
-    /* If the original tree_size was not set, return 0 */
-    if( orig_tree_size == 0 ) {
-      return( 0 );
-    }
-
-    /* Calculate the growth difference */
-    if( child_changed ) {
-      if( parent.tree_size > parent.node_size ) {
-        if( orig_tree_size >= parent.node_size ) {
-          return( parent.tree_size - orig_tree_size );
-        } else {
-          return( parent.tree_size - parent.node_size );
-        }
-      } else {
-        if( orig_tree_size > parent.node_size ) {
-          return( parent.node_size - orig_tree_size );
-        } else {
-          return( 0 );
-        }
-      }
-    } else {
-      /* TBD */
-      if( parent.node_size < parent.tree_size ) {
-        if( orig_node_size > parent.tree_size ) {  // Parent shrank
-          return( parent.tree_size - orig_node_size );
-        } else {  // No change
-          return( 0 );
-        }
-      } else {
-        if( orig_node_size > parent.tree_size ) {  //
-          return( parent.tree_size );
-        } else {
-          return( TBD );
-        }
-      }
-    }
+    /* Return the growth difference */
+    return( (orig_tree_size == 0) ? 0 : (parent.tree_size - orig_tree_size) );
 
   }
 
@@ -184,7 +141,7 @@ public class Layout : Object {
     int  index  = n.index();
     while( parent != null ) {
       adjust_tree( parent, index, n.side, amount );
-      amount = 0 - (get_adjust( parent, true ) / 2);
+      amount = 0 - (get_adjust( parent ) / 2);
       index  = parent.index();
       parent = parent.parent;
     }
@@ -249,7 +206,7 @@ public class Layout : Object {
   public virtual void handle_update_by_edit( Node n ) {
     double width_diff, height_diff;
     n.update_size( null, out width_diff, out height_diff );
-    double adjust = 0 - (get_adjust( n, false ) / 2);
+    double adjust = 0 - (get_adjust( n ) / 2);
     if( (n.side & NodeSide.horizontal()) != 0 ) {
       if( (n.parent != null) && (height_diff != 0) ) {
         n.adjust_posy_only( 0 - (height_diff / 2) );
@@ -283,7 +240,7 @@ public class Layout : Object {
 
   /* Called when a node's fold indicator changes */
   public virtual void handle_update_by_fold( Node n ) {
-    adjust_tree_all( n, (0 - (get_adjust( n, true ) / 2)) );
+    adjust_tree_all( n, (0 - (get_adjust( n ) / 2)) );
   }
 
   /* Adjusts the gap between the parent and child nodes */
@@ -315,17 +272,12 @@ public class Layout : Object {
 
     double ox, oy, ow, oh;
     double cx, cy, cw, ch;
-    double adjust;
+    double adjust = (get_adjust( parent ) + _sb_gap) / 2;
 
     child.bbox( out ox, out oy, out ow, out oh );
-    if( oh == 0 ) { oh = default_text_height + (pady * 2); }
+    // if( oh == 0 ) { oh = default_text_height + (pady * 2); }
     bbox( child, child.side, out cx, out cy, out cw, out ch );
-    if( ch == 0 ) { ch = default_text_height + (pady * 2); }
-    if( (child.side & NodeSide.horizontal()) != 0 ) {
-      adjust = (ch + _sb_gap) / 2;
-    } else {
-      adjust = (cw + _sb_gap) / 2;
-    }
+    // if( ch == 0 ) { ch = default_text_height + (pady * 2); }
     set_pc_gap( child );
 
     /*
@@ -371,8 +323,8 @@ public class Layout : Object {
   }
 
   /* Called to layout the leftover children of a parent node when a node is deleted */
-  public virtual void handle_update_by_delete( Node parent, int index, NodeSide side, double xamount, double yamount ) {
-    double adjust = (yamount + _sb_gap) / 2;
+  public virtual void handle_update_by_delete( Node parent, int index, NodeSide side ) {
+    double adjust = (get_adjust( parent ) + _sb_gap) / 2;
     for( int i=0; i<parent.children().length; i++ ) {
       Node n = parent.children().index( i );
       if( n.side == side ) {

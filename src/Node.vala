@@ -834,14 +834,10 @@ public class Node : Object {
   /* Detaches this node from its parent node */
   public virtual void detach( NodeSide side, Layout? layout ) {
     if( parent != null ) {
-      double x, y, w, h;
-      int    idx = index();
-      Node   p   = parent;
-      layout.bbox( this, side, out x, out y, out w, out h );
       propagate_task_info( (0 - _task_count), (0 - _task_done) );
       parent.children().remove_index( index() );
       if( layout != null ) {
-        layout.handle_update_by_delete( p, idx, side, w, h );
+        layout.handle_update_by_delete( parent, index(), side );
       }
       parent = null;
     }
