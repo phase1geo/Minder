@@ -42,8 +42,12 @@ public class DrawAreaMenu : Gtk.Menu {
 
     _da = da;
 
+    // var accel_group = new AccelGroup();
+    // _da.add_accel_group( accel_group );
+
     _copy = new Gtk.MenuItem.with_label( _( "Copy" ) );
     _copy.activate.connect( copy );
+    // _copy.add_accelerator( "activate", accel_group, ord( "c" ), gdk.CONTROL_MASK, ACCEL_VISIBLE );
     add_accel_label( _copy, "<Control>c" );
 
     _cut = new Gtk.MenuItem.with_label( _( "Cut" ) );
@@ -108,13 +112,9 @@ public class DrawAreaMenu : Gtk.Menu {
 
   private void add_accel_label( Widget widget, string accelerator ) {
 
-    stdout.printf( "In add_accel, accelerator: %s\n", accelerator );
-
     /* Convert the menu item to an accelerator label */
     AccelLabel? label = widget as AccelLabel;
     if( label == null ) return;
-
-    stdout.printf( "HERE\n" );
 
     /* Parse the accelerator */
     uint             key  = 0;

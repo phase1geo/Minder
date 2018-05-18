@@ -118,6 +118,9 @@ public class Layout : Object {
       parent.node_size = pw;
     }
 
+    stdout.printf( "In get_adjust, name: %s, otree: %g, onode: %g, tree: %g, node: %g, child_changed: %s\n",
+      parent.name.slice(0,5), orig_tree_size, orig_node_size, parent.tree_size, parent.node_size, child_changed.to_string() );
+
     /* If the original tree_size was not set, return 0 */
     if( orig_tree_size == 0 ) {
       return( 0 );
@@ -139,14 +142,19 @@ public class Layout : Object {
         }
       }
     } else {
-      if( parent.tree_size < parent.node_size ) {
-        if( orig_node_size < parent.tree_size ) {
-          return( parent.node_size - parent.tree_size );
-        } else {
-          return( parent.node_size - orig_node_size );
+      /* TBD */
+      if( parent.node_size < parent.tree_size ) {
+        if( orig_node_size > parent.tree_size ) {  // Parent shrank
+          return( parent.tree_size - orig_node_size );
+        } else {  // No change
+          return( 0 );
         }
       } else {
-        return( parent.tree_size - orig_node_size );
+        if( orig_node_size > parent.tree_size ) {  //
+          return( parent.tree_size );
+        } else {
+          return( TBD );
+        }
       }
     }
 
