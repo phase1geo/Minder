@@ -154,7 +154,6 @@ public class Node : Object {
   public NodeSide side        { get; set; default = NodeSide.RIGHT; }
   public bool     folded      { get; set; default = false; }
   public double   tree_size   { get; set; default = 0; }
-  public double   node_size   { get; set; default = 0; }
   public int      color_index { set; get; default = 0; }
 
   /* Default constructor */
@@ -430,11 +429,6 @@ public class Node : Object {
       tree_size = double.parse( ts );
     }
 
-    string? ns = n->get_prop( "nodesize" );
-    if( ns != null ) {
-      node_size = double.parse( ns );
-    }
-
     string? c = n->get_prop( "color" );
     if( c != null ) {
       color_index = int.parse( c );
@@ -464,10 +458,6 @@ public class Node : Object {
       tree_size = ((side & NodeSide.horizontal()) != 0) ? bh : bw;
     }
 
-    if( ns == null ) {
-      node_size = ((side & NodeSide.horizontal()) != 0) ? _height : _width;
-    }
-
   }
 
   /* Saves the current node */
@@ -489,7 +479,6 @@ public class Node : Object {
     node->new_prop( "side", side.to_string() );
     node->new_prop( "fold", folded.to_string() );
     node->new_prop( "treesize", tree_size.to_string() );
-    node->new_prop( "nodesize", node_size.to_string() );
     if( !is_root() ) {
       node->new_prop( "color", color_index.to_string() );
     }
