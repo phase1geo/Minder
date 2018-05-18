@@ -33,6 +33,9 @@ public class DrawAreaMenu : Gtk.Menu {
   Gtk.MenuItem _note;
   Gtk.MenuItem _fold;
   Gtk.MenuItem _detach;
+  Gtk.MenuItem _root;
+  Gtk.MenuItem _child;
+  Gtk.MenuItem _sibling;
 
   /* Default constructor */
   public DrawAreaMenu( DrawArea da ) {
@@ -41,12 +44,15 @@ public class DrawAreaMenu : Gtk.Menu {
 
     _copy = new Gtk.MenuItem.with_label( _( "Copy" ) );
     _copy.activate.connect( copy );
+    add_accel_label( _copy, "<Control>c" );
 
     _cut = new Gtk.MenuItem.with_label( _( "Cut" ) );
     _cut.activate.connect( cut );
+    add_accel_label( _cut, "<Control>x" );
 
     _paste = new Gtk.MenuItem.with_label( _( "Paste" ) );
     _paste.activate.connect( paste );
+    add_accel_label( _paste, "<Control>v" );
 
     _delete = new Gtk.MenuItem.with_label( _( "Delete" ) );
     _delete.activate.connect( delete_node );
@@ -66,6 +72,15 @@ public class DrawAreaMenu : Gtk.Menu {
     _detach = new Gtk.MenuItem.with_label( _( "Detach" ) );
     _detach.activate.connect( detach_node );
 
+    _root = new Gtk.MenuItem.with_label( _( "Add Root Node" ) );
+    _root.activate.connect( add_root_node );
+
+    _child = new Gtk.MenuItem.with_label( _( "Add Child Node" ) );
+    _child.activate.connect( add_child_node );
+
+    _sibling = new Gtk.MenuItem.with_label( _( "Add Sibling Node" ) );
+    _sibling.activate.connect( add_sibling_node );
+
     /* Add the menu items to the menu */
     add( _copy );
     add( _cut );
@@ -77,6 +92,10 @@ public class DrawAreaMenu : Gtk.Menu {
     add( _note );
     add( _fold );
     add( new SeparatorMenuItem() );
+    add( _root );
+    add( _child );
+    add( _sibling );
+    add( new SeparatorMenuItem() );
     add( _detach );
 
     /* Make the menu visible */
@@ -84,6 +103,27 @@ public class DrawAreaMenu : Gtk.Menu {
 
     /* Make sure that we handle menu state when we are popped up */
     show.connect( on_popup );
+
+  }
+
+  private void add_accel_label( Widget widget, string accelerator ) {
+
+    stdout.printf( "In add_accel, accelerator: %s\n", accelerator );
+
+    /* Convert the menu item to an accelerator label */
+    AccelLabel? label = widget as AccelLabel;
+    if( label == null ) return;
+
+    stdout.printf( "HERE\n" );
+
+    /* Parse the accelerator */
+    uint             key  = 0;
+    Gdk.ModifierType mods = 0;
+    accelerator_parse( accelerator, out key, out mods );
+
+    /* Add the accelerator to the label */
+    label.set_accel( key, mods );
+    label.refetch();
 
   }
 
@@ -131,6 +171,8 @@ public class DrawAreaMenu : Gtk.Menu {
     _task.set_sensitive( node_selected() );
     _note.set_sensitive( node_selected() );
     _fold.set_sensitive( node_foldable() );
+    _child.set_sensitive( node_selected() );
+    _sibling.set_sensitive( node_selected() );
     _detach.set_sensitive( _da.detachable() );
 
     /* Set the menu item labels */
@@ -193,6 +235,21 @@ public class DrawAreaMenu : Gtk.Menu {
   private void fold_node() {
     _da.change_current_fold( !node_is_folded() );
     _da.node_changed();
+  }
+
+  /* Creates a new root node */
+  private void add_root_node() {
+    _da.add_root_node();
+  }
+
+  /* Creates a new child node from the current node */
+  private void add_child_node() {
+    _da.add_child_node();
+  }
+
+  /* Creates a sibling node of the current node */
+  private void add_sibling_node() {
+    _da.add_sibling_node();
   }
 
   /* Detaches the currently selected node and make it a root node */

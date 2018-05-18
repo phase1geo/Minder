@@ -972,6 +972,40 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Adds a new root node to the canvas */
+  public void add_root_node() {
+    var node = new Node.with_name( this, _( "Another Idea" ), _layout );
+    _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+    _nodes.append_val( node );
+    if( select_node( node ) ) {
+      node.mode = NodeMode.EDITABLE;
+      queue_draw();
+    }
+    see();
+    changed();
+  }
+
+  /* Adds a new sibling node to the current node */
+  public void add_sibling_node() {
+    var node = new Node( this, _layout );
+    _orig_name = "";
+    if( _current_node.parent.is_root() ) {
+      node.color_index = _theme.next_color_index();
+    } else {
+      node.color_index = _current_node.color_index;
+    }
+    _current_node.mode = NodeMode.NONE;
+    node.side          = _current_node.side;
+    node.attach( _current_node.parent, (_current_node.index() + 1), _layout );
+    undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
+    if( select_node( node ) ) {
+      node.mode = NodeMode.EDITABLE;
+      queue_draw();
+    }
+    see();
+    changed();
+  }
+
   /* Called whenever the return character is entered in the drawing area */
   private void handle_return() {
     if( is_mode_edit() ) {
@@ -980,33 +1014,9 @@ public class DrawArea : Gtk.DrawingArea {
       node_changed();
       queue_draw();
     } else if( !_current_node.is_root() ) {
-      var node = new Node( this, _layout );
-      _orig_name = "";
-      if( _current_node.parent.is_root() ) {
-        node.color_index = _theme.next_color_index();
-      } else {
-        node.color_index = _current_node.color_index;
-      }
-      _current_node.mode = NodeMode.NONE;
-      node.side          = _current_node.side;
-      node.attach( _current_node.parent, (_current_node.index() + 1), _layout );
-      undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
-      if( select_node( node ) ) {
-        node.mode = NodeMode.EDITABLE;
-        queue_draw();
-      }
-      see();
-      changed();
+      add_sibling_node();
     } else {
-      var node = new Node.with_name( this, _( "Another Idea" ), _layout );
-      _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
-      _nodes.append_val( node );
-      if( select_node( node ) ) {
-        node.mode = NodeMode.EDITABLE;
-        queue_draw();
-      }
-      see();
-      changed();
+      add_root_node();
     }
   }
 
@@ -1054,6 +1064,27 @@ public class DrawArea : Gtk.DrawingArea {
     changed();
   }
 
+  /* Adds a child node to the current node */
+  public void add_child_node() {
+    var node = new Node( this, _layout );
+    _orig_name = "";
+    if( _current_node.is_root() ) {
+      node.color_index = _theme.next_color_index();
+    } else {
+      node.color_index = _current_node.color_index;
+      node.side        = _current_node.side;
+    }
+    _current_node.mode = NodeMode.NONE;
+    node.attach( _current_node, -1, _layout );
+    undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
+    if( select_node( node ) ) {
+      node.mode = NodeMode.EDITABLE;
+      queue_draw();
+    }
+    see();
+    changed();
+  }
+
   /* Called whenever the tab character is entered in the drawing area */
   private void handle_tab() {
     if( is_mode_edit() ) {
@@ -1062,23 +1093,7 @@ public class DrawArea : Gtk.DrawingArea {
       node_changed();
       queue_draw();
     } else if( is_mode_selected() ) {
-      var node = new Node( this, _layout );
-      _orig_name = "";
-      if( _current_node.is_root() ) {
-        node.color_index = _theme.next_color_index();
-      } else {
-        node.color_index = _current_node.color_index;
-        node.side        = _current_node.side;
-      }
-      _current_node.mode = NodeMode.NONE;
-      node.attach( _current_node, -1, _layout );
-      undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
-      if( select_node( node ) ) {
-        node.mode = NodeMode.EDITABLE;
-        queue_draw();
-      }
-      see();
-      changed();
+      add_child_node();
     }
   }
 
