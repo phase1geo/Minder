@@ -878,6 +878,7 @@ public class DrawArea : Gtk.DrawingArea {
           _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
+          stdout.printf( "Calling move to position\n" );
           animator.add_node( _current_node, "move to position" );
           _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
           animator.animate();

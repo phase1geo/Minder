@@ -1030,7 +1030,7 @@ public class Node : Object {
           break;
         case NodeSide.TOP :
           x = posx + (_width / 2);
-          y = posy + _height;
+          y = posy;
           break;
         case NodeSide.RIGHT :
           x = posx + _width;
@@ -1038,7 +1038,7 @@ public class Node : Object {
           break;
         default :
           x = posx + (_width / 2);
-          y = posy;
+          y = posy + _height;
           break;
       }
     }

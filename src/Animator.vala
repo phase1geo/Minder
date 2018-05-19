@@ -58,7 +58,10 @@ public class Animator : Object {
 
   /* User method which performs the animation */
   public void animate() {
-    if( !enable ) return;
+    if( !enable ) {
+      _da.queue_draw();
+      return;
+    }
     if( _actions.length == 1 ) {
       Timeout.add( _timeout, animate_action );
     }
