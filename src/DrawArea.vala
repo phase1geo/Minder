@@ -933,6 +933,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       _current_node.delete( _layout );
     }
+    _current_node.mode = NodeMode.NONE;
     _current_node = null;
     queue_draw();
     node_changed();
@@ -1104,11 +1105,15 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     } else if( is_mode_selected() ) {
       Node? next;
-      switch( _current_node.side ) {
-        case NodeSide.TOP    :
-        case NodeSide.BOTTOM :  next = _current_node.parent.next_child( _current_node );  break;
-        case NodeSide.LEFT   :  next = _current_node.parent;  break;
-        default              :  next = _current_node.first_child( NodeSide.RIGHT );  break;
+      if( _current_node.is_root() ) {
+        next = _current_node.first_child( NodeSide.RIGHT );
+      } else {
+        switch( _current_node.side ) {
+          case NodeSide.TOP    :
+          case NodeSide.BOTTOM :  next = _current_node.parent.next_child( _current_node );  break;
+          case NodeSide.LEFT   :  next = _current_node.parent;  break;
+          default              :  next = _current_node.first_child( NodeSide.RIGHT );  break;
+        }
       }
       if( select_node( next ) ) {
         queue_draw();
@@ -1123,11 +1128,15 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     } else if( is_mode_selected() ) {
       Node? next;
-      switch( _current_node.side ) {
-        case NodeSide.TOP :
-        case NodeSide.BOTTOM :  next = _current_node.parent.prev_child( _current_node );  break;
-        case NodeSide.LEFT   :  next = _current_node.first_child( NodeSide.LEFT );  break;
-        default              :  next = _current_node.parent;  break;
+      if( _current_node.is_root() ) {
+        next = _current_node.first_child( NodeSide.LEFT );
+      } else {
+        switch( _current_node.side ) {
+          case NodeSide.TOP :
+          case NodeSide.BOTTOM :  next = _current_node.parent.prev_child( _current_node );  break;
+          case NodeSide.LEFT   :  next = _current_node.first_child( NodeSide.LEFT );  break;
+          default              :  next = _current_node.parent;  break;
+        }
       }
       if( select_node( next ) ) {
         queue_draw();
@@ -1153,7 +1162,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Called whenever the up key is entered in the drawing area */
   private void handle_up() {
-    if( is_mode_selected() ) {
+    if( is_mode_edit() ) {
+      _current_node.move_cursor_vertically( -1 );
+      queue_draw();
+    } else if( is_mode_selected() ) {
       if( _current_node.is_root() ) {
         for( int i=0; i<_nodes.length; i++ ) {
           if( _nodes.index( i ) == _current_node ) {
@@ -1170,7 +1182,7 @@ public class DrawArea : Gtk.DrawingArea {
         switch( _current_node.side ) {
           case NodeSide.TOP    :  next = _current_node.first_child( NodeSide.TOP );  break;
           case NodeSide.BOTTOM :  next = _current_node.parent;  break;
-          default :  next = _current_node.parent.prev_child( _current_node );  break;
+          default              :  next = _current_node.parent.prev_child( _current_node );  break;
         }
         if( select_node( next ) ) {
           queue_draw();
@@ -1181,7 +1193,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Called whenever the down key is entered in the drawing area */
   private void handle_down() {
-    if( is_mode_selected() ) {
+    if( is_mode_edit() ) {
+      _current_node.move_cursor_vertically( 1 );
+      queue_draw();
+    } else if( is_mode_selected() ) {
       if( _current_node.is_root() ) {
         for( int i=0; i<_nodes.length; i++ ) {
           if( _nodes.index( i ) == _current_node ) {
@@ -1198,7 +1213,7 @@ public class DrawArea : Gtk.DrawingArea {
         switch( _current_node.side ) {
           case NodeSide.TOP    :  next = _current_node.parent;  break;
           case NodeSide.BOTTOM :  next = _current_node.first_child( NodeSide.BOTTOM );  break;
-          default :  next = _current_node.parent.next_child( _current_node );  break;
+          default              :  next = _current_node.parent.next_child( _current_node );  break;
         }
         if( select_node( next ) ) {
           queue_draw();
@@ -1429,6 +1444,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       _current_node.delete( _layout );
     }
+    _current_node.mode = NodeMode.NONE;
     _current_node = null;
     queue_draw();
     node_changed();

@@ -755,6 +755,23 @@ public class Node : Object {
     _selend = _selstart;
   }
 
+  /* Moves the cursor up/down the text by a line */
+  public void move_cursor_vertically( int dir ) {
+    int line, x;
+    int index, trailing;
+    _layout.index_to_line_x( _cursor, false, out line, out x );
+    line += dir;
+    if( line < 0 ) {
+      line = 0;
+    } else if( line >= _layout.get_line_count() ) {
+      line = _layout.get_line_count() - 1;
+    }
+    var line_layout = _layout.get_line( line );
+    line_layout.x_to_index( x, out index, out trailing );
+    _cursor = index + trailing;
+    _selend = _selstart;
+  }
+
   /* Moves the cursor to the beginning of the name */
   public void move_cursor_to_start() {
     _cursor = 0;

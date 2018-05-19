@@ -98,23 +98,26 @@ public class Layout : Object {
 
   }
 
+  /* Updates the tree size */
+  private void update_tree_size( Node n ) {
+
+    /* Get the node's tree dimensions */
+    double x, y, w, h;
+    bbox( n, -1, out x, out y, out w, out h );
+
+    /* Set the tree size in the node */
+    n.tree_size = ((n.side & NodeSide.horizontal()) != 0) ? h : w;
+
+  }
+
   /*
    Calculate the adjustment difference of the given node's tree.
    If the returned value is positive, it indicates a growth occurred.
   */
   public double get_adjust( Node parent ) {
-
-    /* Get the original tree size */
     double orig_tree_size = parent.tree_size;
-
-    /* Calculate the new tree size, set it and get the size of the node itself */
-    double x, y, w, h;
-    bbox( parent, -1, out x, out y, out w, out h );
-    parent.tree_size = ((parent.side & NodeSide.horizontal()) != 0) ? h : w;
-
-    /* Return the growth difference */
+    update_tree_size( parent );
     return( (orig_tree_size == 0) ? 0 : (parent.tree_size - orig_tree_size) );
-
   }
 
   /* Adjusts the given tree by the given amount */
@@ -272,14 +275,16 @@ public class Layout : Object {
 
     double ox, oy, ow, oh;
     double cx, cy, cw, ch;
-    double adjust = (get_adjust( parent ) + _sb_gap) / 2;
+    double adjust;
+
+    update_tree_size( child );
 
     child.bbox( out ox, out oy, out ow, out oh );
     // if( oh == 0 ) { oh = default_text_height + (pady * 2); }
     bbox( child, child.side, out cx, out cy, out cw, out ch );
     // if( ch == 0 ) { ch = default_text_height + (pady * 2); }
     set_pc_gap( child );
-    adjust = ((((child.side & NodeSide.horizontal()) != 0) ? ch : cw) + _sb_gap) / 2;
+    adjust = (child.tree_size + _sb_gap) / 2;
 
     /*
      If we are the only child on our side, place ourselves on the same plane as the
@@ -341,11 +346,9 @@ public class Layout : Object {
       }
     }
 
-    get_adjust( parent );
-
     /* Adjust the rest of the tree */
     if( parent.parent != null ) {
-//      adjust_tree_all( parent, adjust );
+      adjust_tree_all( parent, (0 - (get_adjust( parent ) / 2)) );
     }
 
   }
