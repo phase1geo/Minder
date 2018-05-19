@@ -823,10 +823,11 @@ public class Node : Object {
   /* Detaches this node from its parent node */
   public virtual void detach( NodeSide side, Layout? layout ) {
     if( parent != null ) {
+      int idx = index();
       propagate_task_info( (0 - _task_count), (0 - _task_done) );
-      parent.children().remove_index( index() );
+      parent.children().remove_index( idx );
       if( layout != null ) {
-        layout.handle_update_by_delete( parent, index(), side );
+        layout.handle_update_by_delete( parent, idx, side, tree_size );
       }
       parent = null;
     }
@@ -834,10 +835,7 @@ public class Node : Object {
 
   /* Removes this node from the node tree along with all descendents */
   public virtual void delete( Layout layout ) {
-    Node p = parent;
-    int  i = index();
     detach( side, layout );
-    p.children().remove_index( i );
   }
 
   /* Forces all children nodes to use the same color index as the parent node. */

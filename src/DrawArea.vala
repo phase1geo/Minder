@@ -1429,6 +1429,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       _current_node.delete( _layout );
     }
+    _current_node = null;
     queue_draw();
     node_changed();
     changed();

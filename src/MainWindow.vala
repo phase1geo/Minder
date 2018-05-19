@@ -112,28 +112,28 @@ public class MainWindow : ApplicationWindow {
 
     /* Create title toolbar */
     var new_btn = new Button.from_icon_name( "document-new-symbolic", IconSize.SMALL_TOOLBAR );
-    new_btn.set_tooltip_text( _( "New File (Control-n)" ) );
+    new_btn.set_tooltip_markup( _( "New File   <i>(Control-N)</i>" ) );
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
 
     var open_btn = new Button.from_icon_name( "document-open-symbolic", IconSize.SMALL_TOOLBAR );
-    open_btn.set_tooltip_text( _( "Open File (Control-o)" ) );
+    open_btn.set_tooltip_markup( _( "Open File   <i>(Control-O)</i>" ) );
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
     var save_btn = new Button.from_icon_name( "document-save-as-symbolic", IconSize.SMALL_TOOLBAR );
-    save_btn.set_tooltip_text( _( "Save File As (Control-Shift-s)" ) );
+    save_btn.set_tooltip_markup( _( "Save File As   <i>(Control-Shift-S)</i>" ) );
     save_btn.clicked.connect( do_save_file );
     _header.pack_start( save_btn );
 
     _undo_btn = new Button.from_icon_name( "edit-undo-symbolic", IconSize.SMALL_TOOLBAR );
-    _undo_btn.set_tooltip_text( _( "Undo (Control-z)" ) );
+    _undo_btn.set_tooltip_markup( _( "Undo   <i>(Control-Z)</i>" ) );
     _undo_btn.set_sensitive( false );
     _undo_btn.clicked.connect( do_undo );
     _header.pack_start( _undo_btn );
 
     _redo_btn = new Button.from_icon_name( "edit-redo-symbolic", IconSize.SMALL_TOOLBAR );
-    _redo_btn.set_tooltip_text( _( "Redo (Control-Shift-z)" ) );
+    _redo_btn.set_tooltip_markup( _( "Redo   <i>(Control-Shift-Z)</i>" ) );
     _redo_btn.set_sensitive( false );
     _redo_btn.clicked.connect( do_redo );
     _header.pack_start( _redo_btn );
@@ -254,7 +254,7 @@ public class MainWindow : ApplicationWindow {
     /* Create the menu button */
     _search_btn = new MenuButton();
     _search_btn.set_image( new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
-    _search_btn.set_tooltip_text( _( "Search (Control-f)" ) );
+    _search_btn.set_tooltip_markup( _( "Search   <i>(Control-F)</i>" ) );
     _header.pack_end( _search_btn );
 
     /* Create search popover */

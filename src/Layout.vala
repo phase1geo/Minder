@@ -279,6 +279,7 @@ public class Layout : Object {
     bbox( child, child.side, out cx, out cy, out cw, out ch );
     // if( ch == 0 ) { ch = default_text_height + (pady * 2); }
     set_pc_gap( child );
+    adjust = ((((child.side & NodeSide.horizontal()) != 0) ? ch : cw) + _sb_gap) / 2;
 
     /*
      If we are the only child on our side, place ourselves on the same plane as the
@@ -323,8 +324,11 @@ public class Layout : Object {
   }
 
   /* Called to layout the leftover children of a parent node when a node is deleted */
-  public virtual void handle_update_by_delete( Node parent, int index, NodeSide side ) {
-    double adjust = (get_adjust( parent ) + _sb_gap) / 2;
+  public virtual void handle_update_by_delete( Node parent, int index, NodeSide side, double size ) {
+
+    double adjust = (size + _sb_gap) / 2;
+
+    /* Adjust the parent's descendants */
     for( int i=0; i<parent.children().length; i++ ) {
       Node n = parent.children().index( i );
       if( n.side == side ) {
@@ -336,9 +340,14 @@ public class Layout : Object {
         }
       }
     }
+
+    get_adjust( parent );
+
+    /* Adjust the rest of the tree */
     if( parent.parent != null ) {
-      adjust_tree_all( parent, adjust );
+//      adjust_tree_all( parent, adjust );
     }
+
   }
 
   /* Positions the given root node based on the position of the last node */
