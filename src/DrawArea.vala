@@ -43,15 +43,15 @@ public class DrawArea : Gtk.DrawingArea {
   private Layout       _layout;
   private string       _orig_name;
   private NodeSide     _orig_side;
-  private Node?        _attach_node  = null;
-  private Node?        _node_clipboard = null;
+  private Node?        _attach_node    = null;
   private DrawAreaMenu _popup_menu;
-  private uint?        _auto_save_id = null;
+  private uint?        _auto_save_id   = null;
 
-  public UndoBuffer undo_buffer { set; get; default = new UndoBuffer(); }
-  public Themes     themes      { set; get; default = new Themes(); }
-  public Layouts    layouts     { set; get; default = new Layouts(); }
-  public Animator   animator    { set; get; }
+  public UndoBuffer undo_buffer    { set; get; default = new UndoBuffer(); }
+  public Themes     themes         { set; get; default = new Themes(); }
+  public Layouts    layouts        { set; get; default = new Layouts(); }
+  public Animator   animator       { set; get; }
+  public Node?      node_clipboard { set; get; default = null; }
 
   public double origin_x {
     set {
@@ -336,15 +336,15 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer.clear();
 
     /* Initialize variables */
-    origin_x        = 0.0;
-    origin_y        = 0.0;
-    sfactor         = 1.0;
-    _pressed        = false;
-    _press_type     = EventType.NOTHING;
-    _motion         = false;
-    _attach_node    = null;
-    _orig_name      = "";
-    _node_clipboard = null;
+    origin_x       = 0.0;
+    origin_y       = 0.0;
+    sfactor        = 1.0;
+    node_clipboard = null;
+    _pressed       = false;
+    _press_type    = EventType.NOTHING;
+    _motion        = false;
+    _attach_node   = null;
+    _orig_name     = "";
 
     queue_draw();
 
@@ -360,14 +360,14 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer.clear();
 
     /* Initialize variables */
-    origin_x        = 0.0;
-    origin_y        = 0.0;
-    sfactor         = 1.0;
-    _pressed        = false;
-    _press_type     = EventType.NOTHING;
-    _motion         = false;
-    _attach_node    = null;
-    _node_clipboard = null;
+    origin_x       = 0.0;
+    origin_y       = 0.0;
+    sfactor        = 1.0;
+    node_clipboard = null;
+    _pressed       = false;
+    _press_type    = EventType.NOTHING;
+    _motion        = false;
+    _attach_node   = null;
 
     /* Create the main idea node */
     var n = new Node.with_name( this, "Main Idea", _layout );
@@ -1407,13 +1407,13 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns true if we can perform a node paste operation */
   public bool node_pasteable() {
-    return( _node_clipboard != null );
+    return( node_clipboard != null );
   }
 
   /* Copies the current node to the node clipboard */
   public void copy_node_to_clipboard() {
     if( _current_node == null ) return;
-    _node_clipboard = new Node.copy_tree( _current_node );
+    node_clipboard = new Node.copy_tree( _current_node );
   }
 
   /* Copies the currently selected text to the clipboard */
@@ -1438,6 +1438,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Cuts the current node from the tree and stores it in the clipboard */
   public void cut_node_to_clipboard() {
     if( _current_node == null ) return;
+    undo_buffer.add_item( new UndoNodeCut( this, _current_node, _layout ) );
     copy_node_to_clipboard();
     if( _current_node.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
@@ -1476,8 +1477,8 @@ public class DrawArea : Gtk.DrawingArea {
    selected node.
   */
   public void paste_node_from_clipboard() {
-    if( _node_clipboard == null ) return;
-    Node node = new Node.copy_tree( _node_clipboard );
+    if( node_clipboard == null ) return;
+    Node node = new Node.copy_tree( node_clipboard );
     if( _current_node == null ) {
       _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
       add_root( node, -1 );
@@ -1485,6 +1486,7 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.mode = NodeMode.NONE;
       node.attach( _current_node, -1, _layout );
     }
+    undo_buffer.add_item( new UndoNodePaste( this, Node n, _layout ) );
     queue_draw();
     node_changed();
     changed();
@@ -1512,7 +1514,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Clears the node clipboard */
   public void clear_node_clipboard() {
-    _node_clipboard = null;
+    node_clipboard = null;
   }
 
   /*
