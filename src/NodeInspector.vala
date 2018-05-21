@@ -25,13 +25,13 @@ using Granite.Widgets;
 
 public class NodeInspector : Stack {
 
-  private Entry?      _name       = null;
-  private ModeButton? _task       = null;
-  private Switch?     _fold       = null;
-  private TextView?   _note       = null;
-  private DrawArea?   _da         = null;
-  private Button?     _detach_btn = null;
-  private string      _orig_note  = "";
+  private Entry    _name;
+  private Switch   _task;
+  private Switch   _fold;
+  private TextView _note;
+  private DrawArea _da;
+  private Button   _detach_btn;
+  private string   _orig_note  = "";
 
   public NodeInspector( DrawArea da ) {
 
@@ -95,13 +95,8 @@ public class NodeInspector : Stack {
 
     lbl.xalign = (float)0;
 
-    _task = new ModeButton();
-    _task.has_tooltip = true;
-    _task.append_icon( "minder-task-none-symbolic", IconSize.BUTTON );
-    _task.append_icon( "minder-task-todo-symbolic", IconSize.BUTTON );
-    _task.append_icon( "minder-task-done-symbolic", IconSize.BUTTON );
-    _task.mode_changed.connect( task_changed );
-    _task.query_tooltip.connect( task_tooltip );
+    _task = new Switch();
+    _task.state_set.connect( task_changed );
 
     grid.column_homogeneous = true;
     grid.attach( lbl,   0, 0, 1, 1 );
@@ -201,33 +196,9 @@ public class NodeInspector : Stack {
   }
 
   /* Called whenever the task enable switch is changed within the inspector */
-  private void task_changed( Widget w ) {
-    Node current = _da.get_current_node();
-    if( current != null ) {
-      bool enable = false;
-      bool done   = false;
-      switch( _task.selected ) {
-        case 0 :  enable = false;  done = false;  break;
-        case 1 :  enable = true;   done = false;  break;
-        case 2 :  enable = true;   done = true;   break;
-      }
-      _da.change_current_task( enable, done );
-    }
-  }
-
-  /* Handles displaying a tooltip for the task modebuttons */
-  private bool task_tooltip( int x, int y, bool keyboard, Tooltip tooltip ) {
-    if( keyboard ) {
-      return( false );
-    }
-    int button_width = _task.get_allocated_width() / 3;
-    switch( x / button_width ) {
-      case 0  :  tooltip.set_text( _( "Not a task" ) );       break;
-      case 1  :  tooltip.set_text( _( "Unfinished task" ) );  break;
-      case 2  :  tooltip.set_text( _( "Finished task" ) );    break;
-      default :  return( false );
-    }
-    return( true );
+  private bool task_changed( bool state ) {
+    _da.change_current_task( state, false );
+    return( false );
   }
 
   /* Called whenever the fold switch is changed within the inspector */
@@ -287,12 +258,7 @@ public class NodeInspector : Stack {
 
     if( current != null ) {
       _name.set_text( current.name );
-      if( current.task_enabled() ) {
-        _task.selected = current.task_done() ? 3 : 2;
-      } else {
-        _task.selected = 0;
-      }
-      _task.set_sensitive( current.is_leaf() );
+      _task.set_active( current.task_enabled() );
       if( current.children().length > 0 ) {
         _fold.set_active( current.folded );
         _fold.set_sensitive( true );

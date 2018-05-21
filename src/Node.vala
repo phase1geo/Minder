@@ -928,14 +928,28 @@ public class Node : Object {
     return( null );
   }
 
+  /* Propagates task information toward the leaf nodes */
+  private void propagate_task_info_down() {
+    if( is_leaf() ) {
+      propagate_task_info_up( )
+    }
+    for( int i=0; i<children().length; i++ ) {
+      children().index( i ).propagate_task_info_down();
+    }
+  }
+
   /* Propagates a change in the task_done for this node to all parent nodes */
-  private void propagate_task_info( int count_adjust, int done_adjust ) {
+  private void propagate_task_info_up( int count_adjust, int done_adjust ) {
     Node p = parent;
     while( p != null ) {
       p._task_count += count_adjust;
       p._task_done  += done_adjust;
       p = p.parent;
     }
+  }
+
+  private void propagate_task_info( int count_adjust, int done_adjust ) {
+    propagate_task_info_down();
   }
 
   /* Returns true if this node's task indicator is currently enabled */
