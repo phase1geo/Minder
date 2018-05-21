@@ -769,7 +769,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* Draws all of the root node trees */
   public void draw_all( Context ctx ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).draw_all( ctx, _theme );
+      _nodes.index( i ).draw_all( ctx, _theme, _current_node );
+    }
+    /* Draw the current node on top of all others */
+    if( _current_node != null ) {
+      _current_node.draw_all( ctx, _theme, null );
     }
   }
 

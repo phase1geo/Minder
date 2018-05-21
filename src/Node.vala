@@ -929,13 +929,28 @@ public class Node : Object {
   }
 
   /* Propagates task information toward the leaf nodes */
-  private void propagate_task_info_down() {
+  private void propagate_task_info_down( bool enable, bool? done ) {
     if( is_leaf() ) {
-      propagate_task_info_up( )
-    }
-    for( int i=0; i<children().length; i++ ) {
-      children().index( i ).propagate_task_info_down();
-    }
+      if( enable ) {
+        if( done == null ) {
+          _task_done = ((_task_count == 0) || (_task_done == 0)) ? 0 : 1;
+        } else {
+          _task_done = done ? 1 : 0;
+        }
+        _task_count = 1;
+      } else {
+        _task_done  = 0;
+        _task_count = 0;
+      } 
+    } else {
+      _task_count = 0;
+      _task_done  = 0;
+      for( int i=0; i<children().length; i++ ) {
+        children().index( i ).propagate_task_info_down( enable, done );
+        _task_count += children().index( i )._task_count;
+        _task_done  += children().index( i )._task_done;
+      }
+    } 
   }
 
   /* Propagates a change in the task_done for this node to all parent nodes */
@@ -948,8 +963,12 @@ public class Node : Object {
     }
   }
 
-  private void propagate_task_info( int count_adjust, int done_adjust ) {
-    propagate_task_info_down();
+  /* Propagates the given task enable information down and up the tree */
+  private void propagate_task_info( bool enable, bool? done ) {
+    double task_count = _task_count;
+    double task_done  = _task_done;
+    propagate_task_info_down( enable, done );
+    propagate_task_info_up( (_task_count - task_count), (_task_done - task_done) );
   }
 
   /* Returns true if this node's task indicator is currently enabled */
@@ -964,25 +983,15 @@ public class Node : Object {
 
   /* Sets the task enable to the given value */
   public void enable_task( bool task ) {
-    if( task ) {
-      _task_count = 1;
-      propagate_task_info( 1, 0 );
-    } else {
-      _task_count = 0;
-      propagate_task_info( -1, ((_task_done > 0) ? -1 : 0) );
-    }
-    _task_done = 0;
+    propagate_task_info( task, null );
   }
 
   /*
    Sets the task done indicator to the given value (0 or 1) and propagates the
    change to all parent nodes.
   */
-  public void set_task_done( int done ) {
-    if( _task_done != done ) {
-      _task_done = done;
-      propagate_task_info( 0, (done > 0) ? 1 : -1 );
-    }
+  public void set_task_done( bool done ) {
+    propagate_task_info( task, done );
   }
 
   /*
@@ -990,7 +999,7 @@ public class Node : Object {
    parent nodes.
   */
   public void toggle_task_done() {
-    set_task_done( (_task_done > 0) ? 0 : 1 );
+    set_task_done( _task_done == 0 );
   }
 
   /*
@@ -1349,13 +1358,15 @@ public class Node : Object {
   }
 
   /* Draw this node and all child nodes */
-  public void draw_all( Context ctx, Theme theme ) {
-    if( !folded ) {
-      for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).draw_all( ctx, theme );
+  public void draw_all( Context ctx, Theme theme, Node? current ) {
+    if( this != current ) {
+      if( !folded ) {
+        for( int i=0; i<_children.length; i++ ) {
+          _children.index( i ).draw_all( ctx, theme, current );
+        }
       }
+      draw( ctx, theme );
     }
-    draw( ctx, theme );
   }
 
   /* Called whenever the user changes the layout */
