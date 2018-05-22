@@ -97,7 +97,7 @@ public class MapInspector : Box {
     for( int i=0; i<icons.length; i++ ) {
       _layouts.append_icon( icons.index( i ), IconSize.SMALL_TOOLBAR );
     }
-    _layouts.mode_changed.connect( layout_changed );
+    _layouts.button_release_event.connect( layout_changed );
     _layouts.query_tooltip.connect( layout_show_tooltip );
 
     pack_start( lbl,      false, true );
@@ -106,7 +106,7 @@ public class MapInspector : Box {
   }
 
   /* Called whenever the user changes the current layout */
-  private void layout_changed() {
+  private bool layout_changed( Gdk.EventButton e ) {
     var names = new Array<string>();
     _da.layouts.get_names( ref names );
     if( _layouts.selected < names.length ) {
@@ -114,6 +114,7 @@ public class MapInspector : Box {
       _da.set_layout( name );
       _balance.set_sensitive( _da.layouts.get_layout( name ).balanceable );
     }
+    return( false );
   }
 
   /* Called whenever the tooltip needs to be displayed for the layout selector */
