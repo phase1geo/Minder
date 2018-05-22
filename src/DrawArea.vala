@@ -465,7 +465,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( _current_node != null ) {
       undo_buffer.add_item( new UndoNodeTask( this, _current_node, enable, done ) );
       _current_node.enable_task( enable );
-      _current_node.set_task_done( done ? 1 : 0 );
+      _current_node.set_task_done( done );
       _layout.handle_update_by_edit( _current_node );
       queue_draw();
       changed();
@@ -769,11 +769,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* Draws all of the root node trees */
   public void draw_all( Context ctx ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).draw_all( ctx, _theme, _current_node );
+      _nodes.index( i ).draw_all( ctx, _theme, _current_node, false );
     }
     /* Draw the current node on top of all others */
     if( _current_node != null ) {
-      _current_node.draw_all( ctx, _theme, null );
+      _current_node.draw_all( ctx, _theme, null, true );
     }
   }
 
@@ -882,7 +882,6 @@ public class DrawArea : Gtk.DrawingArea {
           _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
-          stdout.printf( "Calling move to position\n" );
           animator.add_node( _current_node, "move to position" );
           _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
           animator.animate();
@@ -1486,7 +1485,7 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.mode = NodeMode.NONE;
       node.attach( _current_node, -1, _layout );
     }
-    undo_buffer.add_item( new UndoNodePaste( this, Node n, _layout ) );
+    undo_buffer.add_item( new UndoNodePaste( this, node, _layout ) );
     queue_draw();
     node_changed();
     changed();

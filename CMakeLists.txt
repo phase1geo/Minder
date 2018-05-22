@@ -80,6 +80,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/UndoBuffer.vala
     src/UndoItem.vala
     src/undo_actions/UndoNodeAttach.vala
+    src/undo_actions/UndoNodeCut.vala
     src/undo_actions/UndoNodeDelete.vala
     src/undo_actions/UndoNodeDetach.vala
     src/undo_actions/UndoNodeFold.vala
@@ -87,6 +88,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/undo_actions/UndoNodeMove.vala
     src/undo_actions/UndoNodeName.vala
     src/undo_actions/UndoNodeNote.vala
+    src/undo_actions/UndoNodePaste.vala
     src/undo_actions/UndoNodeTask.vala
 PACKAGES
     gtk+-3.0

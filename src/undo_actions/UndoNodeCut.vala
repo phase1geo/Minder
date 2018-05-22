@@ -33,7 +33,7 @@ public class UndoNodeCut : UndoItem {
   /* Default constructor */
   public UndoNodeCut( DrawArea da, Node n, Layout layout ) {
     base( _( "cut node" ) );
-    _da        
+    _da
     = da;
     _node      = n;
     _parent    = n.parent;
@@ -50,7 +50,7 @@ public class UndoNodeCut : UndoItem {
       _node.attach( _parent, _index, _layout );
     }
     _da.queue_draw();
-    _da.node_clipboard = clipboard;
+    _da.node_clipboard = _clipboard;
   }
 
   /* Redoes a node deletion */

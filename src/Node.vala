@@ -841,7 +841,7 @@ public class Node : Object {
   public virtual void detach( NodeSide side, Layout? layout ) {
     if( parent != null ) {
       int idx = index();
-      propagate_task_info( (0 - _task_count), (0 - _task_done) );
+      propagate_task_info_up( (0 - _task_count), (0 - _task_done) );
       parent.children().remove_index( idx );
       if( layout != null ) {
         layout.handle_update_by_delete( parent, idx, side, tree_size );
@@ -869,7 +869,7 @@ public class Node : Object {
   public virtual void attach( Node parent, int index, Layout? layout ) {
     this.parent = parent;
     if( (parent._children.length == 0) && (parent._task_count == 1) ) {
-      parent.propagate_task_info( (0 - parent._task_count), (0 - parent._task_done) );
+      parent.propagate_task_info_up( (0 - parent._task_count), (0 - parent._task_done) );
       parent._task_count = 0;
       parent._task_done  = 0;
       _task_count = 1;
@@ -881,7 +881,7 @@ public class Node : Object {
     } else {
       parent.children().insert_val( index, this );
     }
-    propagate_task_info( _task_count, _task_done );
+    propagate_task_info_up( _task_count, _task_done );
     if( layout != null ) {
       layout.handle_update_by_insert( parent, this, index );
     }
@@ -929,19 +929,20 @@ public class Node : Object {
   }
 
   /* Propagates task information toward the leaf nodes */
-  private void propagate_task_info_down( bool enable, bool? done ) {
+  private void propagate_task_info_down( bool? enable, bool? done ) {
     if( is_leaf() ) {
-      if( enable ) {
+      if( enable != null ) {
+        _task_count = enable ? 1 : 0;
+      }
+      if( _task_count == 1 ) {
         if( done == null ) {
           _task_done = ((_task_count == 0) || (_task_done == 0)) ? 0 : 1;
         } else {
           _task_done = done ? 1 : 0;
         }
-        _task_count = 1;
       } else {
         _task_done  = 0;
-        _task_count = 0;
-      } 
+      }
     } else {
       _task_count = 0;
       _task_done  = 0;
@@ -950,7 +951,7 @@ public class Node : Object {
         _task_count += children().index( i )._task_count;
         _task_done  += children().index( i )._task_done;
       }
-    } 
+    }
   }
 
   /* Propagates a change in the task_done for this node to all parent nodes */
@@ -964,9 +965,9 @@ public class Node : Object {
   }
 
   /* Propagates the given task enable information down and up the tree */
-  private void propagate_task_info( bool enable, bool? done ) {
-    double task_count = _task_count;
-    double task_done  = _task_done;
+  private void propagate_task_info( bool? enable, bool? done ) {
+    int task_count = _task_count;
+    int task_done  = _task_done;
     propagate_task_info_down( enable, done );
     propagate_task_info_up( (_task_count - task_count), (_task_done - task_done) );
   }
@@ -991,7 +992,7 @@ public class Node : Object {
    change to all parent nodes.
   */
   public void set_task_done( bool done ) {
-    propagate_task_info( task, done );
+    propagate_task_info( null, done );
   }
 
   /*
@@ -1350,7 +1351,7 @@ public class Node : Object {
       }
       draw_common_note( ctx, theme.foreground );
       draw_line( ctx, theme );
-      draw_link( ctx, theme );
+      // draw_link( ctx, theme );
       draw_common_fold( ctx, theme.link_color( color_index ), theme.foreground );
       draw_attachable( ctx, theme, theme.background );
     }
@@ -1358,14 +1359,17 @@ public class Node : Object {
   }
 
   /* Draw this node and all child nodes */
-  public void draw_all( Context ctx, Theme theme, Node? current ) {
+  public void draw_all( Context ctx, Theme theme, Node? current, bool draw_current ) {
     if( this != current ) {
       if( !folded ) {
         for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).draw_all( ctx, theme, current );
+          _children.index( i ).draw_all( ctx, theme, current, false );
         }
       }
       draw( ctx, theme );
+    }
+    if( !is_root() && !draw_current ) {
+      draw_link( ctx, theme );
     }
   }
 

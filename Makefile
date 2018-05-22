@@ -1151,6 +1151,33 @@ src/undo_actions/UndoNodeAttach.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeAttach.c.s
 .PHONY : src/undo_actions/UndoNodeAttach.c.s
 
+src/undo_actions/UndoNodeCut.o: src/undo_actions/UndoNodeCut.c.o
+
+.PHONY : src/undo_actions/UndoNodeCut.o
+
+# target to build an object file
+src/undo_actions/UndoNodeCut.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeCut.c.o
+.PHONY : src/undo_actions/UndoNodeCut.c.o
+
+src/undo_actions/UndoNodeCut.i: src/undo_actions/UndoNodeCut.c.i
+
+.PHONY : src/undo_actions/UndoNodeCut.i
+
+# target to preprocess a source file
+src/undo_actions/UndoNodeCut.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeCut.c.i
+.PHONY : src/undo_actions/UndoNodeCut.c.i
+
+src/undo_actions/UndoNodeCut.s: src/undo_actions/UndoNodeCut.c.s
+
+.PHONY : src/undo_actions/UndoNodeCut.s
+
+# target to generate assembly for a file
+src/undo_actions/UndoNodeCut.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeCut.c.s
+.PHONY : src/undo_actions/UndoNodeCut.c.s
+
 src/undo_actions/UndoNodeDelete.o: src/undo_actions/UndoNodeDelete.c.o
 
 .PHONY : src/undo_actions/UndoNodeDelete.o
@@ -1340,6 +1367,33 @@ src/undo_actions/UndoNodeNote.c.s:
 	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodeNote.c.s
 .PHONY : src/undo_actions/UndoNodeNote.c.s
 
+src/undo_actions/UndoNodePaste.o: src/undo_actions/UndoNodePaste.c.o
+
+.PHONY : src/undo_actions/UndoNodePaste.o
+
+# target to build an object file
+src/undo_actions/UndoNodePaste.c.o:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodePaste.c.o
+.PHONY : src/undo_actions/UndoNodePaste.c.o
+
+src/undo_actions/UndoNodePaste.i: src/undo_actions/UndoNodePaste.c.i
+
+.PHONY : src/undo_actions/UndoNodePaste.i
+
+# target to preprocess a source file
+src/undo_actions/UndoNodePaste.c.i:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodePaste.c.i
+.PHONY : src/undo_actions/UndoNodePaste.c.i
+
+src/undo_actions/UndoNodePaste.s: src/undo_actions/UndoNodePaste.c.s
+
+.PHONY : src/undo_actions/UndoNodePaste.s
+
+# target to generate assembly for a file
+src/undo_actions/UndoNodePaste.c.s:
+	$(MAKE) -f CMakeFiles/com.github.phase1geo.minder.dir/build.make CMakeFiles/com.github.phase1geo.minder.dir/src/undo_actions/UndoNodePaste.c.s
+.PHONY : src/undo_actions/UndoNodePaste.c.s
+
 src/undo_actions/UndoNodeTask.o: src/undo_actions/UndoNodeTask.c.o
 
 .PHONY : src/undo_actions/UndoNodeTask.o
@@ -1488,6 +1542,9 @@ help:
 	@echo "... src/undo_actions/UndoNodeAttach.o"
 	@echo "... src/undo_actions/UndoNodeAttach.i"
 	@echo "... src/undo_actions/UndoNodeAttach.s"
+	@echo "... src/undo_actions/UndoNodeCut.o"
+	@echo "... src/undo_actions/UndoNodeCut.i"
+	@echo "... src/undo_actions/UndoNodeCut.s"
 	@echo "... src/undo_actions/UndoNodeDelete.o"
 	@echo "... src/undo_actions/UndoNodeDelete.i"
 	@echo "... src/undo_actions/UndoNodeDelete.s"
@@ -1509,6 +1566,9 @@ help:
 	@echo "... src/undo_actions/UndoNodeNote.o"
 	@echo "... src/undo_actions/UndoNodeNote.i"
 	@echo "... src/undo_actions/UndoNodeNote.s"
+	@echo "... src/undo_actions/UndoNodePaste.o"
+	@echo "... src/undo_actions/UndoNodePaste.i"
+	@echo "... src/undo_actions/UndoNodePaste.s"
 	@echo "... src/undo_actions/UndoNodeTask.o"
 	@echo "... src/undo_actions/UndoNodeTask.i"
 	@echo "... src/undo_actions/UndoNodeTask.s"

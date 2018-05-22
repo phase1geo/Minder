@@ -46,7 +46,7 @@ public class UndoNodeTask : UndoItem {
     if( _old_enable != _new_enable ) {
       _node.enable_task( _old_enable );
     } else {
-      _node.set_task_done( _old_done ? 1 : 0 );
+      _node.set_task_done( _old_done );
     }
     _da.queue_draw();
   }
@@ -56,7 +56,7 @@ public class UndoNodeTask : UndoItem {
     if( _old_enable != _new_enable ) {
       _node.enable_task( _new_enable );
     } else {
-      _node.set_task_done( _new_done ? 1 : 0 );
+      _node.set_task_done( _new_done );
     }
     _da.queue_draw();
   }
