@@ -47,6 +47,8 @@ public class UndoNodeDelete : UndoItem {
       _node.attach( _parent, _index, _layout );
     }
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
   /* Redoes a node deletion */
@@ -57,6 +59,8 @@ public class UndoNodeDelete : UndoItem {
       _node.detach( _node.side, _layout );
     }
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
 }

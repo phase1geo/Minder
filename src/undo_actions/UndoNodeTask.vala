@@ -49,6 +49,8 @@ public class UndoNodeTask : UndoItem {
       _node.set_task_done( _old_done );
     }
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
   /* Redoes a node name change */
@@ -59,6 +61,8 @@ public class UndoNodeTask : UndoItem {
       _node.set_task_done( _new_done );
     }
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
 }

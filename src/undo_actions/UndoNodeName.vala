@@ -41,12 +41,16 @@ public class UndoNodeName : UndoItem {
   public override void undo() {
     _node.name = _old_name;
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
   /* Redoes a node name change */
   public override void redo() {
     _node.name = _new_name;
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
 }

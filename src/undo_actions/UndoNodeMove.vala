@@ -49,6 +49,7 @@ public class UndoNodeMove : UndoItem {
     _n.detach( _new_side, _layout );
     _n.attach( parent, _old_index, _layout );
     _da.queue_draw();
+    _da.changed();
   }
 
   /* Performs a redo operation */
@@ -57,6 +58,7 @@ public class UndoNodeMove : UndoItem {
     _n.detach( _old_side, _layout );
     _n.attach( parent, _new_index, _layout );
     _da.queue_draw();
+    _da.changed();
   }
 
 }

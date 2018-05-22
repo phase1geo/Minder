@@ -48,6 +48,8 @@ public class UndoNodeDetach : UndoItem {
     _da.remove_root( _root_index );
     _n.attach( _old_parent, _old_index, _layout );
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
   /* Performs a redo operation */
@@ -55,6 +57,8 @@ public class UndoNodeDetach : UndoItem {
     _n.detach( _old_side, _layout );
     _da.add_root( _n, _root_index );
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
 }

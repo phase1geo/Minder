@@ -1,6 +1,5 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
-*
+* Copyright (c) 2018 (https://github.com/phase1geo/Minder) *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
 * License as published by the Free Software Foundation; either
@@ -50,6 +49,7 @@ public class UndoNodeCut : UndoItem {
       _node.attach( _parent, _index, _layout );
     }
     _da.queue_draw();
+    _da.changed();
     _da.node_clipboard = _clipboard;
   }
 
@@ -62,6 +62,7 @@ public class UndoNodeCut : UndoItem {
       _node.detach( _node.side, _layout );
     }
     _da.queue_draw();
+    _da.changed();
   }
 
 }

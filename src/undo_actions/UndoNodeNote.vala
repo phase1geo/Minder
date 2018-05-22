@@ -41,12 +41,16 @@ public class UndoNodeNote : UndoItem {
   public override void undo() {
     _node.note = _old_note;
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
   /* Redoes a node name change */
   public override void redo() {
     _node.note = _new_note;
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
 }

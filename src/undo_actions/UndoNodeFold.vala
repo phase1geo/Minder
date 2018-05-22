@@ -41,12 +41,16 @@ public class UndoNodeFold : UndoItem {
   public override void undo() {
     _node.folded = _old_fold;
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
   /* Redoes a node fold operation */
   public override void redo() {
     _node.folded = _new_fold;
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
 }

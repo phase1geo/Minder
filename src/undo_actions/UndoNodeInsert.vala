@@ -43,12 +43,16 @@ public class UndoNodeInsert : UndoItem {
   public override void undo() {
     _n.detach( _n.side, _layout );
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
   /* Performs a redo operation */
   public override void redo() {
     _n.attach( _parent, _index, _layout );
     _da.queue_draw();
+    _da.node_changed();
+    _da.changed();
   }
 
 }

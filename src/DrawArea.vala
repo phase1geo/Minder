@@ -821,12 +821,14 @@ public class DrawArea : Gtk.DrawingArea {
         double diffy = scale_value( event.y ) - _press_y;
         if( _current_node.mode == NodeMode.CURRENT ) {
           Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
+          if( _attach_node != null ) {
+            _attach_node.mode = NodeMode.NONE;
+          }
           if( attach_node != null ) {
             attach_node.mode = NodeMode.ATTACHABLE;
-            _attach_node     = attach_node;
+            _attach_node = attach_node;
           } else if( _attach_node != null ) {
-            _attach_node.mode = NodeMode.NONE;
-            _attach_node      = null;
+            _attach_node = null;
           }
           _current_node.posx += diffx;
           _current_node.posy += diffy;
@@ -882,8 +884,10 @@ public class DrawArea : Gtk.DrawingArea {
           _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
         } else if( _current_node.parent != null ) {
+          int orig_index = _current_node.index();
           animator.add_node( _current_node, "move to position" );
           _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
+          undo_buffer.add_item( new UndoNodeMove( this, _current_node, _orig_side, orig_index, _layout ) );
           animator.animate();
         }
       }
