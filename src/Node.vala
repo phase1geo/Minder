@@ -1300,8 +1300,8 @@ public class Node : Object {
     /* If we are vertically oriented, don't draw the line */
     if( (side & NodeSide.vertical()) != 0 ) return;
 
-    double posx  = draw_posx;
-    double posy  = draw_posy + _height;
+    double x     = draw_posx;
+    double y     = draw_posy + _height;
     double w     = _width;
     RGBA   color = theme.link_color( color_index );
 
@@ -1309,8 +1309,8 @@ public class Node : Object {
     set_context_color( ctx, color );
     ctx.set_line_width( 4 );
     ctx.set_line_cap( LineCap.ROUND );
-    ctx.move_to( draw_posx, draw_posy );
-    ctx.line_to( (draw_posx + w), draw_posy );
+    ctx.move_to( x, y );
+    ctx.line_to( (x + w), y );
     ctx.stroke();
 
   }
