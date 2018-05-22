@@ -46,8 +46,8 @@ public class AnimatorNodes : AnimatorAction {
     for( int i=0; i<_spos.length(); i++ ) {
       double x = _spos.x( i ) + ((_epos.x( i ) - _spos.x( i )) * divisor);
       double y = _spos.y( i ) + ((_epos.y( i ) - _spos.y( i )) * divisor);
-      _spos.node( i ).set_posx_only( x );
-      _spos.node( i ).set_posy_only( y );
+      _spos.node( i ).draw_posx = x;
+      _spos.node( i ).draw_posy = y;
       _spos.node( i ).side = da.get_layout().get_side( _spos.node( i ) );
     }
   }
