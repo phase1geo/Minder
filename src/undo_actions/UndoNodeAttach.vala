@@ -25,7 +25,7 @@ public class UndoNodeAttach : UndoItem {
 
   private DrawArea _da;
   private Node     _n;
-  private Node     _old_parent;
+  private Node?    _old_parent;
   private NodeSide _old_side;
   private int      _old_index;
   private Node     _new_parent;
@@ -34,7 +34,7 @@ public class UndoNodeAttach : UndoItem {
   private Layout?  _layout;
 
   /* Default constructor */
-  public UndoNodeAttach( DrawArea da, Node n, Node old_parent, NodeSide old_side, int old_index, Layout l ) {
+  public UndoNodeAttach( DrawArea da, Node n, Node? old_parent, NodeSide old_side, int old_index, Layout l ) {
     base( _( "attach node" ) );
     _da         = da;
     _n          = n;
@@ -50,7 +50,11 @@ public class UndoNodeAttach : UndoItem {
   /* Performs an undo operation for this data */
   public override void undo() {
     _n.detach( _new_side, _layout );
-    _n.attach( _old_parent, _old_index, _layout );
+    if( _old_parent == null ) {
+      _da.add_root( _n, _old_index );
+    } else {
+      _n.attach( _old_parent, _old_index, _layout );
+    }
     _da.queue_draw();
     _da.node_changed();
     _da.changed();
@@ -58,7 +62,11 @@ public class UndoNodeAttach : UndoItem {
 
   /* Performs a redo operation */
   public override void redo() {
-    _n.detach( _old_side, _layout );
+    if( _old_parent == null ) {
+      _da.remove_root( _old_index );
+    } else {
+      _n.detach( _old_side, _layout );
+    }
     _n.attach( _new_parent, _new_index, _layout );
     _da.queue_draw();
     _da.node_changed();

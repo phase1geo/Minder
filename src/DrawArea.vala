@@ -860,14 +860,19 @@ public class DrawArea : Gtk.DrawingArea {
     if( _current_node != null ) {
       if( _current_node.mode == NodeMode.CURRENT ) {
         if( _attach_node != null ) {
+          Node? orig_parent = null;
+          int   orig_index  = -1;
           if( _current_node.is_root() ) {
             for( int i=0; i<_nodes.length; i++ ) {
               if( _nodes.index( i ) == _current_node ) {
                 _nodes.remove_index( i );
+                orig_index = i;
                 break;
               }
             }
           } else {
+            orig_parent = _current_node.parent;
+            orig_index  = _current_node.index();
             _current_node.detach( _orig_side, _layout );
           }
           if( _attach_node.is_root() ) {
@@ -876,6 +881,7 @@ public class DrawArea : Gtk.DrawingArea {
           _current_node.attach( _attach_node, -1, _layout );
           _attach_node.mode = NodeMode.NONE;
           _attach_node      = null;
+          undo_buffer.add_item( new UndoNodeAttach( this, _current_node, orig_parent, _orig_side, orig_index, _layout ) );
           queue_draw();
           changed();
           node_changed();
