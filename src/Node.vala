@@ -635,8 +635,8 @@ public class Node : Object {
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
     double width_diff, height_diff;
     update_size( null, out width_diff, out height_diff );
-    x = posx;
-    y = posy;
+    x = draw_posx;
+    y = draw_posy;
     w = _width;
     h = _height;
   }

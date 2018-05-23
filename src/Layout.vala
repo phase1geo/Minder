@@ -181,7 +181,7 @@ public class Layout : Object {
     }
   }
 
-  /* Returns the side of the given node relative to its parent */
+  /* Returns the side of the given node relative to its root */
   public virtual NodeSide get_side( Node n ) {
     double rx, ry, rw, rh;
     double nx, ny, nw, nh;
