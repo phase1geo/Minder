@@ -288,6 +288,11 @@ public class Node : Object {
     return( (_task_count > 0) && is_leaf() );
   }
 
+  /* Returns the task completion percentage value */
+  public double task_completion_percentage() {
+    return( (_task_done / (_task_count * 1.0)) * 100 );
+  }
+
   /* Returns true if the given cursor coordinates lies within this node */
   public virtual bool is_within( double x, double y ) {
     double cx, cy, cw, ch;
@@ -297,7 +302,7 @@ public class Node : Object {
 
   /*
    Returns true if the given cursor coordinates lies within the task checkbutton
-   area
+   area.
   */
   public virtual bool is_within_task( double x, double y ) {
     if( _task_count > 0 ) {
@@ -307,6 +312,22 @@ public class Node : Object {
       tw = _task_radius * 2;
       th = _task_radius * 2;
       return( (tx < x) && (x < (tx + tw)) && (ty < y) && (y < (ty + th)) );
+    } else {
+      return( false );
+    }
+  }
+
+  /*
+   Returns true if the given cursor coordinates lies within the note icon area.
+  */
+  public virtual bool is_within_note( double x, double y ) {
+    if( note.length > 0 ) {
+      double nx, ny, nw, nh;
+      nx = draw_posx + (_width - (note_width() + _padx)) + _ipadx;
+      ny = draw_posy + (_height / 2) - 5;
+      nw = 11;
+      nh = 11;
+      return( (nx < x) && (x < (nx + nw)) && (ny < y) && (y < (ny + nh)) );
     } else {
       return( false );
     }

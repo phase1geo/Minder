@@ -37,7 +37,7 @@ public class DrawArea : Gtk.DrawingArea {
   private bool         _pressed    = false;
   private EventType    _press_type = EventType.NOTHING;
   private bool         _motion     = false;
-  private Node         _current_node;
+  private Node?        _current_node;
   private Array<Node>  _nodes;
   private Theme        _theme;
   private Layout       _layout;
@@ -113,6 +113,7 @@ public class DrawArea : Gtk.DrawingArea {
       EventMask.BUTTON_PRESS_MASK |
       EventMask.BUTTON_RELEASE_MASK |
       EventMask.BUTTON1_MOTION_MASK |
+      EventMask.POINTER_MOTION_MASK |
       EventMask.KEY_PRESS_MASK |
       EventMask.SMOOTH_SCROLL_MASK |
       EventMask.STRUCTURE_MASK
@@ -511,7 +512,7 @@ public class DrawArea : Gtk.DrawingArea {
     for( int i=0; i<_nodes.length; i++ ) {
       Node match = _nodes.index( i ).contains( x, y );
       if( match != null ) {
-        if( match.is_within_task( x, y ) && match.is_leaf() ) {
+        if( match.is_within_task( x, y ) ) {
           toggle_task( match );
           node_changed();
           return( false );
@@ -850,6 +851,23 @@ public class DrawArea : Gtk.DrawingArea {
       _press_y = scale_value( event.y );
       _motion  = true;
       auto_save();
+    } else {
+      for( int i=0; i<_nodes.length; i++ ) {
+        Node match = _nodes.index( i ).contains( event.x, event.y );
+        if( match != null ) {
+          if( get_tooltip_text() == null ) {
+            if( match.is_within_task( event.x, event.y ) ) {
+              set_tooltip_text( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
+            } else if( match.is_within_note( event.x, event.y ) ) {
+              set_tooltip_text( match.note );
+            }
+          }
+          return( false );
+        }
+      }
+      if( get_tooltip_text() != null ) {
+        set_tooltip_text( null );
+      }
     }
     return( false );
   }
