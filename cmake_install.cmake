@@ -233,7 +233,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/icons/hicolor/16x16/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/scalable/com.github.phase1geo.minder.svg")
+file(INSTALL DESTINATION "/usr/share/icons/hicolor/16x16/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/16/com.github.phase1geo.minder.svg")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -245,7 +245,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/icons/hicolor/24x24/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/scalable/com.github.phase1geo.minder.svg")
+file(INSTALL DESTINATION "/usr/share/icons/hicolor/24x24/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/24/com.github.phase1geo.minder.svg")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -257,7 +257,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/icons/hicolor/32x32/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/scalable/com.github.phase1geo.minder.svg")
+file(INSTALL DESTINATION "/usr/share/icons/hicolor/32x32/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/32/com.github.phase1geo.minder.svg")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -269,7 +269,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/icons/hicolor/48x48/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/scalable/com.github.phase1geo.minder.svg")
+file(INSTALL DESTINATION "/usr/share/icons/hicolor/48x48/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/48/com.github.phase1geo.minder.svg")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -281,7 +281,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/icons/hicolor/64x64/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/scalable/com.github.phase1geo.minder.svg")
+file(INSTALL DESTINATION "/usr/share/icons/hicolor/64x64/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/64/com.github.phase1geo.minder.svg")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -293,7 +293,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/icons/hicolor/128x128/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/scalable/com.github.phase1geo.minder.svg")
+file(INSTALL DESTINATION "/usr/share/icons/hicolor/128x128/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/128/com.github.phase1geo.minder.svg")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -305,7 +305,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/icons/hicolor/16x16@2/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/scalable/com.github.phase1geo.minder.svg")
+file(INSTALL DESTINATION "/usr/share/icons/hicolor/16x16@2/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/16/com.github.phase1geo.minder.svg")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -317,7 +317,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/icons/hicolor/24x24@2/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/scalable/com.github.phase1geo.minder.svg")
+file(INSTALL DESTINATION "/usr/share/icons/hicolor/24x24@2/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/24/com.github.phase1geo.minder.svg")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -329,7 +329,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/icons/hicolor/32x32@2/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/scalable/com.github.phase1geo.minder.svg")
+file(INSTALL DESTINATION "/usr/share/icons/hicolor/32x32@2/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/32/com.github.phase1geo.minder.svg")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -341,7 +341,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/icons/hicolor/48x48@2/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/scalable/com.github.phase1geo.minder.svg")
+file(INSTALL DESTINATION "/usr/share/icons/hicolor/48x48@2/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/48/com.github.phase1geo.minder.svg")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -353,7 +353,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/icons/hicolor/64x64@2/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/scalable/com.github.phase1geo.minder.svg")
+file(INSTALL DESTINATION "/usr/share/icons/hicolor/64x64@2/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/64/com.github.phase1geo.minder.svg")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -365,7 +365,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/share/icons/hicolor/128x128@2/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/scalable/com.github.phase1geo.minder.svg")
+file(INSTALL DESTINATION "/usr/share/icons/hicolor/128x128@2/apps" TYPE FILE FILES "/home/trevorw/projects/Minder/data/icons/128/com.github.phase1geo.minder.svg")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
