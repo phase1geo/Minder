@@ -26,9 +26,6 @@ matrix:
     - env: DIST=loki
     - env: DIST=juno
 
-before_install:
-  - docker pull ubuntu:18.04
-
 install:
   - npm install @elementaryos/houston
 
