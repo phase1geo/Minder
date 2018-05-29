@@ -1,0 +1,35 @@
+language: node_js
+
+node_js:
+  - lts/*
+
+sudo: required
+
+services:
+  - docker
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libstdc++-5-dev
+
+cache:
+  directories:
+    - /tmp/liftoff
+
+matrix:
+  include:
+    -env: DIST=loki
+    -env: DIST=juno
+
+install:
+  - npm install @elementaryos/houston
+
+script:
+  - houston ci
+    --name-appstream com.github.phase1geo.minder.desktop
+    --name-domain com.github.phase1geo.minder
+    --name-human Minder
+    --distribution $DIST
