@@ -26,9 +26,6 @@ matrix:
     - env: DIST=loki
     - env: DIST=juno
 
-env:
-  - DEPENDENCY_PACKAGES="libgtk-3-dev libgee-0.8-dev valac"
-
 install:
   - npm install @elementaryos/houston
 
