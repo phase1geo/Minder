@@ -1,3 +1,5 @@
+Makefile
+CMakeCache.txt
 build/
 CMakeFiles/
 src/*.o
