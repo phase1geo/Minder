@@ -18,6 +18,7 @@ addons:
       - libstdc++-5-dev
       - libgee-0.8-dev
       - libxml2-dev
+      - elementary-sdk
 
 cache:
   directories:
