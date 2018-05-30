@@ -102,8 +102,6 @@ public class Node : Object {
   private   Pango.Layout _layout      = null;
   private   double       _posx        = 0;
   private   double       _posy        = 0;
-  private   double       _draw_posx   = 0;
-  private   double       _draw_posy   = 0;
   private   int          _selstart    = 0;
   private   int          _selend      = 0;
   private   int          _selanchor   = 0;
@@ -121,7 +119,6 @@ public class Node : Object {
           _children.index( i ).posx += diffx;
         }
         _posx = value;
-        _draw_posx = value;
       }
     }
   }
@@ -136,24 +133,7 @@ public class Node : Object {
           _children.index( i ).posy += diffy;
         }
         _posy = value;
-        _draw_posy = value;
       }
-    }
-  }
-  public double draw_posx {
-    get {
-      return( _draw_posx );
-    }
-    set {
-      _draw_posx = value;
-    }
-  }
-  public double draw_posy {
-    get {
-      return( _draw_posy );
-    }
-    set {
-      _draw_posy = value;
     }
   }
   public string   note { get; set; default = ""; }
@@ -323,8 +303,8 @@ public class Node : Object {
   public virtual bool is_within_note( double x, double y ) {
     if( note.length > 0 ) {
       double nx, ny, nw, nh;
-      nx = draw_posx + (_width - (note_width() + _padx)) + _ipadx;
-      ny = draw_posy + (_height / 2) - 5;
+      nx = posx + (_width - (note_width() + _padx)) + _ipadx;
+      ny = posy + (_height / 2) - 5;
       nw = 11;
       nh = 11;
       return( (nx < x) && (x < (nx + nw)) && (ny < y) && (y < (ny + nh)) );
@@ -656,8 +636,8 @@ public class Node : Object {
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
     double width_diff, height_diff;
     update_size( null, out width_diff, out height_diff );
-    x = draw_posx;
-    y = draw_posy;
+    x = posx;
+    y = posy;
     w = _width;
     h = _height;
   }
@@ -1085,25 +1065,25 @@ public class Node : Object {
   /* Returns the link point for this node */
   protected virtual void link_point( out double x, out double y ) {
     if( is_root() ) {
-      x = draw_posx + (_width / 2);
-      y = draw_posy + (_height / 2);
+      x = posx + (_width / 2);
+      y = posy + (_height / 2);
     } else {
       switch( side ) {
         case NodeSide.LEFT :
-          x = draw_posx;
-          y = draw_posy + _height;
+          x = posx;
+          y = posy + _height;
           break;
         case NodeSide.TOP :
-          x = draw_posx + (_width / 2);
-          y = draw_posy;
+          x = posx + (_width / 2);
+          y = posy;
           break;
         case NodeSide.RIGHT :
-          x = draw_posx + _width;
-          y = draw_posy + _height;
+          x = posx + _width;
+          y = posy + _height;
           break;
         default :
-          x = draw_posx + (_width / 2);
-          y = draw_posy + _height;
+          x = posx + (_width / 2);
+          y = posy + _height;
           break;
       }
     }
@@ -1113,8 +1093,8 @@ public class Node : Object {
   protected void draw_root_rectangle( Context ctx, Theme theme ) {
 
     double r = 10.0;
-    double x = draw_posx;
-    double y = draw_posy;
+    double x = posx;
+    double y = posy;
     double h = _height;
     double w = _width;
 
@@ -1150,12 +1130,12 @@ public class Node : Object {
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( mode == NodeMode.CURRENT ) {
       set_context_color( ctx, theme.nodesel_background );
-      ctx.rectangle( ((draw_posx + _padx) - hmargin), ((draw_posy + _pady) - vmargin), ((_width - (_padx * 2)) + (hmargin * 2)), ((_height - (_pady * 2)) + (vmargin * 2)) );
+      ctx.rectangle( ((posx + _padx) - hmargin), ((posy + _pady) - vmargin), ((_width - (_padx * 2)) + (hmargin * 2)), ((_height - (_pady * 2)) + (vmargin * 2)) );
       ctx.fill();
     }
 
     /* Output the text */
-    ctx.move_to( (draw_posx + _padx + twidth), (draw_posy + _pady) );
+    ctx.move_to( (posx + _padx + twidth), (posy + _pady) );
     switch( mode ) {
       case NodeMode.CURRENT  :  set_context_color( ctx, theme.nodesel_foreground );  break;
       default                :  set_context_color( ctx, (parent == null) ? theme.root_foreground : theme.foreground );  break;
@@ -1167,8 +1147,8 @@ public class Node : Object {
       var rect = _layout.index_to_pos( _cursor );
       set_context_color( ctx, theme.text_cursor );
       double ix, iy;
-      ix = (draw_posx + _padx + twidth) + (rect.x / Pango.SCALE) - 1;
-      iy = (draw_posy + _pady) + (rect.y / Pango.SCALE);
+      ix = (posx + _padx + twidth) + (rect.x / Pango.SCALE) - 1;
+      iy = (posy + _pady) + (rect.y / Pango.SCALE);
       ctx.rectangle( ix, iy, 1, (rect.height / Pango.SCALE) );
       ctx.fill();
     }
@@ -1180,8 +1160,8 @@ public class Node : Object {
 
     if( _task_count > 0 ) {
 
-      double x = draw_posx + _padx + _task_radius;
-      double y = draw_posy + (_height / 2);
+      double x = posx + _padx + _task_radius;
+      double y = posy + (_height / 2);
 
       set_context_color( ctx, color );
       ctx.new_path();
@@ -1203,8 +1183,8 @@ public class Node : Object {
 
     if( _task_count > 0 ) {
 
-      double x        = draw_posx + _padx + _task_radius;
-      double y        = draw_posy + (_height / 2);
+      double x        = posx + _padx + _task_radius;
+      double y        = posy + (_height / 2);
       double complete = _task_done / (_task_count * 1.0);
       double angle    = ((complete * 360) + 270) * (Math.PI / 180.0);
 
@@ -1238,8 +1218,8 @@ public class Node : Object {
 
     if( note.length > 0 ) {
 
-      double x = draw_posx + (_width - (note_width() + _padx)) + _ipadx;
-      double y = draw_posy + (_height / 2) - 5;
+      double x = posx + (_width - (note_width() + _padx)) + _ipadx;
+      double y = posy + (_height / 2) - 5;
 
       set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();
@@ -1321,8 +1301,8 @@ public class Node : Object {
     /* If we are vertically oriented, don't draw the line */
     if( (side & NodeSide.vertical()) != 0 ) return;
 
-    double x     = draw_posx;
-    double y     = draw_posy + _height;
+    double x     = posx;
+    double y     = posy + _height;
     double w     = _width;
     RGBA   color = theme.link_color( color_index );
 
@@ -1352,16 +1332,16 @@ public class Node : Object {
     ctx.move_to( parent_x, parent_y );
     switch( side ) {
       case NodeSide.LEFT :
-        ctx.line_to( (draw_posx + _width), (draw_posy + _height) );
+        ctx.line_to( (posx + _width), (posy + _height) );
         break;
       case NodeSide.RIGHT :
-        ctx.line_to( draw_posx, (draw_posy + _height) );
+        ctx.line_to( posx, (posy + _height) );
         break;
       case NodeSide.TOP :
-        ctx.line_to( (draw_posx + (_width / 2)), (draw_posy + _height) );
+        ctx.line_to( (posx + (_width / 2)), (posy + _height) );
         break;
       case NodeSide.BOTTOM :
-        ctx.line_to( (draw_posx + (_width / 2)), draw_posy );
+        ctx.line_to( (posx + (_width / 2)), posy );
         break;
     }
     ctx.stroke();

@@ -1,5 +1,4 @@
-/*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+/* * Copyright (c) 2018 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -27,6 +26,7 @@ public class Animator : Object {
   private Queue<AnimatorAction> _actions;       // Queue of animation actions to perform
   private const int             _timeout = 20;  // Number of milliseconds between frames (30 fps)
   private const double          _frames  = 10;  // Number of frames to animate (note: set to 1 to disable animation)
+  private bool                  _running = false;
 
   public bool enable { set; get; default = true; }
 
@@ -34,35 +34,46 @@ public class Animator : Object {
   public Animator( DrawArea da ) {
     _da      = da;
     _actions = new Queue<AnimatorAction>();
+    _running = false;
   }
 
   /* Animates all of the nodes on the canvas */
   public void add_nodes( string name ) {
-    _actions.push_tail( new AnimatorNodes( _da, null, name ) );
+    if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.NODES) ) {
+      _actions.push_tail( new AnimatorNodes( _da, null, name ) );
+    }
   }
 
   /* Animates the specified node on the canvas */
   public void add_node( Node n, string name ) {
-    _actions.push_tail( new AnimatorNodes( _da, n, name ) );
+    if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.NODE) ) {
+      _actions.push_tail( new AnimatorNodes( _da, n, name ) );
+    }
   }
 
   /* Animates a change to the canvas scale */
   public void add_scale( string name ) {
-    _actions.push_tail( new AnimatorScale( _da, name ) );
+    if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.SCALE) ) {
+      _actions.push_tail( new AnimatorScale( _da, name ) );
+    }
   }
 
   /* Animates a change to the canvas scale */
   public void add_pan( string name ) {
-    _actions.push_tail( new AnimatorPan( _da, name ) );
+    if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.PAN) ) {
+      _actions.push_tail( new AnimatorPan( _da, name ) );
+    }
   }
 
   /* User method which performs the animation */
   public void animate() {
     if( !enable ) {
+      _da.changed();
       _da.queue_draw();
       return;
     }
-    if( _actions.length == 1 ) {
+    if( !_running ) {
+      _running = true;
       Timeout.add( _timeout, animate_action );
     }
     _actions.peek_tail().capture( _da );
@@ -74,9 +85,10 @@ public class Animator : Object {
     _actions.peek_head().adjust( _da );
     if( _actions.peek_head().done() ) {
       _actions.pop_head();
+      _da.changed();
     }
     _da.queue_draw();
-    return( _actions.length > 0 );
+    return( _running = (_actions.length > 0) );
   }
 
 }

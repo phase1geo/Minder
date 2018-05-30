@@ -21,6 +21,14 @@
 
 using GLib;
 
+public enum AnimationType {
+  UNKNOWN = 0,
+  NODES,
+  NODE,
+  PAN,
+  SCALE
+}
+
 /*
  Base class that allows multiple animation objects to be stored in the
  animator class.
@@ -48,6 +56,11 @@ public class AnimatorAction : Object {
   /* Returns true if this animation action is complete */
   public bool done() {
     return( index > frames );
+  }
+
+  /* Returns the animation type */
+  public virtual AnimationType type() {
+    return( AnimationType.UNKNOWN );
   }
 
   /* Captures the end state */

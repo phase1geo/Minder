@@ -34,6 +34,11 @@ public class AnimatorNodes : AnimatorAction {
     _spos = new AnimatorPositions( da, n );
   }
 
+  /* Returns the NODES types */
+  public override AnimationType type() {
+    return( (_node == null) ? AnimationType.NODES : AnimationType.NODE );
+  }
+
   /* Captures the end state */
   public override void capture( DrawArea da ) {
     _epos = new AnimatorPositions( da, _node );
@@ -46,8 +51,8 @@ public class AnimatorNodes : AnimatorAction {
     for( int i=0; i<_spos.length(); i++ ) {
       double x = _spos.x( i ) + ((_epos.x( i ) - _spos.x( i )) * divisor);
       double y = _spos.y( i ) + ((_epos.y( i ) - _spos.y( i )) * divisor);
-      _spos.node( i ).draw_posx = x;
-      _spos.node( i ).draw_posy = y;
+      _spos.node( i ).posx = x;
+      _spos.node( i ).posy = y;
       _spos.node( i ).side = da.get_layout().get_side( _spos.node( i ) );
     }
   }

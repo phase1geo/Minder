@@ -34,6 +34,11 @@ public class AnimatorPan : AnimatorAction {
     da.get_origin( out _sox, out _soy );
   }
 
+  /* Returns the NODES types */
+  public override AnimationType type() {
+    return( AnimationType.PAN );
+  }
+
   /* User method which performs the animation */
   public override void capture( DrawArea da ) {
     da.get_origin( out _eox, out _eoy );

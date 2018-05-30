@@ -32,6 +32,11 @@ public class AnimatorScale : AnimatorAction {
     _sscale = da.sfactor;
   }
 
+  /* Returns the NODES types */
+  public override AnimationType type() {
+    return( AnimationType.SCALE );
+  }
+
   /* User method which performs the animation */
   public override void capture( DrawArea da ) {
     _escale = da.sfactor;

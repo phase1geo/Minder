@@ -159,10 +159,7 @@ public class DrawArea : Gtk.DrawingArea {
       animator.animate();
       if( !old_balanceable && _layout.balanceable ) {
         balance_nodes();
-      } else {
-        queue_draw();
       }
-      changed();
     }
   }
 
@@ -725,7 +722,6 @@ public class DrawArea : Gtk.DrawingArea {
       animator.add_pan( "see" );
       move_origin( diff_x, diff_y );
       animator.animate();
-      changed();
     }
 
   }
@@ -1094,7 +1090,6 @@ public class DrawArea : Gtk.DrawingArea {
       partitioner.partition_node( _nodes.index( i ), _layout );
     }
     animator.animate();
-    changed();
   }
 
   /* Adds a child node to the current node */
