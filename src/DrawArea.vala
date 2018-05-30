@@ -156,9 +156,10 @@ public class DrawArea : Gtk.DrawingArea {
       for( int i=0; i<_nodes.length; i++ ) {
         _layout.initialize( _nodes.index( i ) );
       }
-      animator.animate();
       if( !old_balanceable && _layout.balanceable ) {
         balance_nodes();
+      } else {
+        animator.animate();
       }
     }
   }
