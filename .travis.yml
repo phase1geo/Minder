@@ -18,7 +18,6 @@ addons:
       - libstdc++-5-dev
       - libgee-0.8-dev
       - libxml2-dev
-      - libplank-dev
 
 cache:
   directories:
