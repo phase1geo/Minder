@@ -1410,4 +1410,12 @@ public class Node : Object {
     _layout.set_font_description( layout.get_font_description() );
   }
 
+  /* Outputs the node's information to standard output */
+  public void display( string prefix = "" ) {
+    stdout.printf( "%sNode, name: %s, posx: %g, posy: %g, side: %s\n", prefix, name, posx, posy, side.to_string() );
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).display( prefix + "  " );
+    }
+  }
+
 }
