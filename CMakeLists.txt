@@ -80,6 +80,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/UndoBuffer.vala
     src/UndoItem.vala
     src/undo_actions/UndoNodeAttach.vala
+    src/undo_actions/UndoNodeBalance.vala
     src/undo_actions/UndoNodeCut.vala
     src/undo_actions/UndoNodeDelete.vala
     src/undo_actions/UndoNodeDetach.vala

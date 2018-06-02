@@ -47,6 +47,8 @@ public class UndoNodeMove : UndoItem {
   public override void undo() {
     Node parent = _n.parent;
     _n.detach( _new_side, _layout );
+    _n.side = _old_side;
+    _layout.propagate_side( _n, _old_side );
     _n.attach( parent, _old_index, _layout );
     _da.queue_draw();
     _da.changed();
@@ -56,6 +58,8 @@ public class UndoNodeMove : UndoItem {
   public override void redo() {
     Node parent = _n.parent;
     _n.detach( _old_side, _layout );
+    _n.side = _new_side;
+    _layout.propagate_side( _n, _new_side );
     _n.attach( parent, _new_index, _layout );
     _da.queue_draw();
     _da.changed();

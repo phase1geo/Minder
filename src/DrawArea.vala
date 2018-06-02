@@ -1085,6 +1085,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Balances the existing nodes based on the current layout */
   public void balance_nodes() {
+    undo_buffer.add_item( new UndoNodeBalance( this, _layout ) );
     animator.add_nodes( "balance nodes" );
     for( int i=0; i<_nodes.length; i++ ) {
       var partitioner = new Partitioner();
