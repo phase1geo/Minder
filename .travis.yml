@@ -38,3 +38,4 @@ script:
     --name-domain com.github.phase1geo.minder
     --name-human Minder
     --distribution $DIST
+r
