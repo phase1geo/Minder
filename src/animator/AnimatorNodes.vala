@@ -24,14 +24,13 @@ using GLib;
 public class AnimatorNodes : AnimatorAction {
 
   private Node?              _node = null;
-  private AnimatorPositions? _spos = null;
-  private AnimatorPositions? _epos = null;
+  private AnimatorPositions? _pos  = null;
 
   /* Default constructor */
   public AnimatorNodes( DrawArea da, Node? n = null, string name = "unnamed" ) {
     base( name );
     _node = n;
-    _spos = new AnimatorPositions( da, n );
+    _pos  = new AnimatorPositions( da, n );
   }
 
   /* Returns the NODES types */
@@ -41,19 +40,19 @@ public class AnimatorNodes : AnimatorAction {
 
   /* Captures the end state */
   public override void capture( DrawArea da ) {
-    _epos = new AnimatorPositions( da, _node );
+    _pos.gather_new_positions();
   }
 
   /* Adjusts all of the node positions for the given frame */
   public override void adjust( DrawArea da ) {
     double divisor = index / frames;
     index++;
-    for( int i=0; i<_spos.length(); i++ ) {
-      double x = _spos.x( i ) + ((_epos.x( i ) - _spos.x( i )) * divisor);
-      double y = _spos.y( i ) + ((_epos.y( i ) - _spos.y( i )) * divisor);
-      _spos.node( i ).posx = x;
-      _spos.node( i ).posy = y;
-      _spos.node( i ).side = da.get_layout().get_side( _spos.node( i ) );
+    for( int i=0; i<_pos.length(); i++ ) {
+      double x = _pos.old_x( i ) + ((_pos.new_x( i ) - _pos.old_x( i )) * divisor);
+      double y = _pos.old_y( i ) + ((_pos.new_y( i ) - _pos.old_y( i )) * divisor);
+      _pos.node( i ).posx = x;
+      _pos.node( i ).posy = y;
+      _pos.node( i ).side = da.get_layout().get_side( _pos.node( i ) );
     }
   }
 
