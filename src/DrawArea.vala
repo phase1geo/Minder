@@ -157,7 +157,7 @@ public class DrawArea : Gtk.DrawingArea {
         _layout.initialize( _nodes.index( i ) );
       }
       if( !old_balanceable && _layout.balanceable ) {
-        balance_nodes();
+        balance_nodes( false );
       } else {
         animator.animate();
       }
@@ -877,6 +877,7 @@ public class DrawArea : Gtk.DrawingArea {
         if( _attach_node != null ) {
           Node? orig_parent = null;
           int   orig_index  = -1;
+          int   orig_link   = -1;
           if( _current_node.is_root() ) {
             for( int i=0; i<_nodes.length; i++ ) {
               if( _nodes.index( i ) == _current_node ) {
@@ -888,6 +889,7 @@ public class DrawArea : Gtk.DrawingArea {
           } else {
             orig_parent = _current_node.parent;
             orig_index  = _current_node.index();
+            orig_link   = _current_node.color_index;
             _current_node.detach( _orig_side, _layout );
           }
           if( _attach_node.is_root() ) {
@@ -896,7 +898,7 @@ public class DrawArea : Gtk.DrawingArea {
           _current_node.attach( _attach_node, -1, _layout );
           _attach_node.mode = NodeMode.NONE;
           _attach_node      = null;
-          undo_buffer.add_item( new UndoNodeAttach( this, _current_node, orig_parent, _orig_side, orig_index, _layout ) );
+          undo_buffer.add_item( new UndoNodeAttach( this, _current_node, orig_parent, _orig_side, orig_index, orig_link, _layout ) );
           queue_draw();
           changed();
           node_changed();
@@ -1084,8 +1086,10 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Balances the existing nodes based on the current layout */
-  public void balance_nodes() {
-    undo_buffer.add_item( new UndoNodeBalance( this, _layout ) );
+  public void balance_nodes( bool undoable = true ) {
+    if( undoable ) {
+      undo_buffer.add_item( new UndoNodeBalance( this, _layout ) );
+    }
     animator.add_nodes( "balance nodes" );
     for( int i=0; i<_nodes.length; i++ ) {
       var partitioner = new Partitioner();

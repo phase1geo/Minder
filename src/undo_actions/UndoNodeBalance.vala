@@ -70,11 +70,11 @@ public class UndoNodeBalance : UndoItem {
 
   /* Perform the swap */
   private void change( Array<BalanceNodes> nodes ) {
+    _da.animator.add_nodes( "undo balance nodes" );
     for( int i=0; i<_da.get_nodes().length; i++ ) {
       nodes.index( i ).change( _da, _layout, _da.get_nodes().index( i ) );
     }
-    _da.queue_draw();
-    _da.changed();
+    _da.animator.animate();
   }
 
   /* Performs an undo operation for this data */

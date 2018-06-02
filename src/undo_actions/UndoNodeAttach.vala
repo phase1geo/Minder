@@ -28,19 +28,21 @@ public class UndoNodeAttach : UndoItem {
   private Node?    _old_parent;
   private NodeSide _old_side;
   private int      _old_index;
+  private int      _old_link;
   private Node     _new_parent;
   private NodeSide _new_side;
   private int      _new_index;
   private Layout?  _layout;
 
   /* Default constructor */
-  public UndoNodeAttach( DrawArea da, Node n, Node? old_parent, NodeSide old_side, int old_index, Layout l ) {
+  public UndoNodeAttach( DrawArea da, Node n, Node? old_parent, NodeSide old_side, int old_index, int old_link, Layout l ) {
     base( _( "attach node" ) );
     _da         = da;
     _n          = n;
     _old_parent = old_parent;
     _old_side   = old_side;
     _old_index  = old_index;
+    _old_link   = old_link;
     _new_parent = n.parent;
     _new_side   = n.side;
     _new_index  = n.index();
@@ -49,28 +51,33 @@ public class UndoNodeAttach : UndoItem {
 
   /* Performs an undo operation for this data */
   public override void undo() {
+    _da.animator.add_nodes( "undo attach" );
     _n.detach( _new_side, _layout );
     if( _old_parent == null ) {
       _da.add_root( _n, _old_index );
     } else {
+      _n.color_index = _old_link;
+      _n.side        = _old_side;
+      _layout.propagate_side( _n, _old_side );
       _n.attach( _old_parent, _old_index, _layout );
     }
-    _da.queue_draw();
+    _da.animator.animate();
     _da.node_changed();
-    _da.changed();
   }
 
   /* Performs a redo operation */
   public override void redo() {
+    _da.animator.add_nodes( "redo attach" );
     if( _old_parent == null ) {
       _da.remove_root( _old_index );
     } else {
       _n.detach( _old_side, _layout );
     }
+    _n.side = _new_side;
+    _layout.propagate_side( _n, _new_side );
     _n.attach( _new_parent, _new_index, _layout );
-    _da.queue_draw();
+    _da.animator.animate();
     _da.node_changed();
-    _da.changed();
   }
 
 }
