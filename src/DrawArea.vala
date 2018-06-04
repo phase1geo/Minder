@@ -1021,12 +1021,8 @@ public class DrawArea : Gtk.DrawingArea {
   public void add_sibling_node() {
     var node = new Node( this, _layout );
     _orig_name = "";
-    if( _current_node.parent.is_root() ) {
-      node.color_index = _theme.next_color_index();
-    } else {
-      node.color_index = _current_node.color_index;
-    }
     _current_node.mode = NodeMode.NONE;
+    node.color_index   = _current_node.parent.is_root() ? _theme.next_color_index() : _current_node.color_index;
     node.side          = _current_node.side;
     node.attach( _current_node.parent, (_current_node.index() + 1), _layout );
     undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );

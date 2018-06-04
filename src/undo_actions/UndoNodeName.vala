@@ -40,6 +40,7 @@ public class UndoNodeName : UndoItem {
   /* Undoes a node name change */
   public override void undo() {
     _node.name = _old_name;
+    _da.get_layout().handle_update_by_edit( _node );
     _da.queue_draw();
     _da.node_changed();
     _da.changed();
@@ -48,6 +49,7 @@ public class UndoNodeName : UndoItem {
   /* Redoes a node name change */
   public override void redo() {
     _node.name = _new_name;
+    _da.get_layout().handle_update_by_edit( _node );
     _da.queue_draw();
     _da.node_changed();
     _da.changed();
