@@ -48,42 +48,49 @@ public class DrawAreaMenu : Gtk.Menu {
     _copy = new Gtk.MenuItem.with_label( _( "Copy" ) );
     _copy.activate.connect( copy );
     // _copy.add_accelerator( "activate", accel_group, ord( "c" ), gdk.CONTROL_MASK, ACCEL_VISIBLE );
-    add_accel_label( _copy, "<Control>c" );
+    add_accel_label( _copy.get_child(), "<Control>c" );
 
     _cut = new Gtk.MenuItem.with_label( _( "Cut" ) );
     _cut.activate.connect( cut );
-    add_accel_label( _cut, "<Control>x" );
+    add_accel_label( _cut.get_child(), "<Control>x" );
 
     _paste = new Gtk.MenuItem.with_label( _( "Paste" ) );
     _paste.activate.connect( paste );
-    add_accel_label( _paste, "<Control>v" );
+    add_accel_label( _paste.get_child(), "<Control>v" );
 
     _delete = new Gtk.MenuItem.with_label( _( "Delete" ) );
     _delete.activate.connect( delete_node );
+    add_accel_label( _delete.get_child(), "<Delete>" ) );
 
     _edit = new Gtk.MenuItem.with_label( _( "Edit..." ) );
     _edit.activate.connect( edit_node );
+    add_accel_label( _edit.get_child(), "e" ) );
 
     _task = new Gtk.MenuItem.with_label( _( "Add Task" ) );
     _task.activate.connect( change_task );
+    add_accel_label( _task.get_child(), "t" ) );
 
     _note = new Gtk.MenuItem.with_label( _( "Add Note" ) );
     _note.activate.connect( change_note );
 
     _fold = new Gtk.MenuItem.with_label( _( "Fold Children" ) );
     _fold.activate.connect( fold_node );
+    add_accel_label( _fold.get_child(), "f" );
 
     _detach = new Gtk.MenuItem.with_label( _( "Detach" ) );
     _detach.activate.connect( detach_node );
+    add_accel_label( _detach.get_child(), "d" );
 
     _root = new Gtk.MenuItem.with_label( _( "Add Root Node" ) );
     _root.activate.connect( add_root_node );
 
     _child = new Gtk.MenuItem.with_label( _( "Add Child Node" ) );
     _child.activate.connect( add_child_node );
+    add_accel_label( _child.get_child(), "<Tab>" );
 
     _sibling = new Gtk.MenuItem.with_label( _( "Add Sibling Node" ) );
     _sibling.activate.connect( add_sibling_node );
+    add_accel_label( _sibling.get_child(), "<Return>" );
 
     /* Add the menu items to the menu */
     add( _copy );
@@ -110,7 +117,7 @@ public class DrawAreaMenu : Gtk.Menu {
 
   }
 
-  private void add_accel_label( Widget widget, string accelerator ) {
+  private void add_accel_label( Gtk.Widget widget, string accelerator ) {
 
     /* Convert the menu item to an accelerator label */
     AccelLabel? label = widget as AccelLabel;
