@@ -57,7 +57,7 @@ public class Layout : Object {
   }
 
   /* Initializes the given node based on this layout */
-  public void initialize( Node parent ) {
+  public virtual void initialize( Node parent ) {
     var list = new SList<Node>();
     for( int i=0; i<parent.children().length; i++ ) {
       Node n = parent.children().index( i );
@@ -280,9 +280,7 @@ public class Layout : Object {
     update_tree_size( child );
 
     child.bbox( out ox, out oy, out ow, out oh );
-    // if( oh == 0 ) { oh = default_text_height + (pady * 2); }
     bbox( child, child.side, out cx, out cy, out cw, out ch );
-    // if( ch == 0 ) { ch = default_text_height + (pady * 2); }
     set_pc_gap( child );
     adjust = (child.tree_size + _sb_gap) / 2;
 
