@@ -1178,7 +1178,7 @@ public class DrawArea : Gtk.DrawingArea {
     int      index  = _current_node.index();
     NodeSide side   = _current_node.side;
     _current_node.detach( side, _layout );
-    add_root( _current_node, index );
+    add_root( _current_node, -1 );
     undo_buffer.add_item( new UndoNodeDetach( this, _current_node, (int)_nodes.length, parent, side, index, _layout ) );
     queue_draw();
     changed();

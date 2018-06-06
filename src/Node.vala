@@ -154,7 +154,8 @@ public class Node : Object {
   public NodeSide side        { get; set; default = NodeSide.RIGHT; }
   public bool     folded      { get; set; default = false; }
   public double   tree_size   { get; set; default = 0; }
-  public int      color_index { set; get; default = 0; }
+  public int      color_index { get; set; default = 0; }
+  public bool     attached    { get; set; default = false; }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -681,6 +682,7 @@ public class Node : Object {
   /* Moves this node into the proper position within the parent node */
   public void move_to_position( Node child, NodeSide side, double x, double y, Layout layout ) {
     child.detach( side, layout );
+    child.attached = true;
     for( int i=0; i<_children.length; i++ ) {
       if( _children.index( i ).side == child.side ) {
         switch( child.side ) {
@@ -867,7 +869,8 @@ public class Node : Object {
       if( layout != null ) {
         layout.handle_update_by_delete( parent, idx, side, tree_size );
       }
-      parent = null;
+      parent   = null;
+      attached = false;
     }
   }
 
@@ -909,6 +912,7 @@ public class Node : Object {
     if( !is_root() ) {
       propagate_color();
     }
+    attached = true;
   }
 
   /* Returns a reference to the first child of this node */

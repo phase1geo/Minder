@@ -80,7 +80,6 @@ public class DrawAreaMenu : Gtk.Menu {
 
     _detach = new Gtk.MenuItem.with_label( _( "Detach" ) );
     _detach.activate.connect( detach_node );
-    add_accel_label( _detach, "D" );
 
     _root = new Gtk.MenuItem.with_label( _( "Add Root Node" ) );
     _root.activate.connect( add_root_node );

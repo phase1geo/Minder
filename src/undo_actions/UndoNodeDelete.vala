@@ -44,6 +44,7 @@ public class UndoNodeDelete : UndoItem {
     if( _parent == null ) {
       _da.add_root( _node, _index );
     } else {
+      _node.attached = true;
       _node.attach( _parent, _index, _layout );
     }
     _da.queue_draw();

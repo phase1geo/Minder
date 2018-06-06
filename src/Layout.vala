@@ -270,6 +270,11 @@ public class Layout : Object {
     }
   }
 
+  /* Returns the adjustment value */
+  protected virtual double get_insert_adjust( Node child ) {
+    return( (child.tree_size + _sb_gap) / 2 );
+  }
+
   /* Called when we are inserting a node within a parent */
   public virtual void handle_update_by_insert( Node parent, Node child, int pos ) {
 
@@ -282,7 +287,7 @@ public class Layout : Object {
     child.bbox( out ox, out oy, out ow, out oh );
     bbox( child, child.side, out cx, out cy, out cw, out ch );
     set_pc_gap( child );
-    adjust = (child.tree_size + _sb_gap) / 2;
+    adjust = get_insert_adjust( child );
 
     /*
      If we are the only child on our side, place ourselves on the same plane as the

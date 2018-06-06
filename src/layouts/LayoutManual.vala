@@ -36,12 +36,6 @@ public class LayoutManual : Layout {
     return( side );
   }
 
-  /* Adjusts the given tree by the given amount */
-  public override void adjust_tree( Node parent, int child_index, int side_mask, double amount ) {}
-
-  /* Adjust the entire tree */
-  public override void adjust_tree_all( Node n, double amount ) {}
-
   /* Updates the layout when necessary when a node is edited */
   public override void handle_update_by_edit( Node n ) {}
 
@@ -49,7 +43,11 @@ public class LayoutManual : Layout {
   public override void handle_update_by_fold( Node n ) {}
 
   /* Called when we are inserting a node within a parent */
-  // public override void handle_update_by_insert( Node parent, Node child, int pos ) {}
+  public override void handle_update_by_insert( Node parent, Node child, int pos ) {
+    if( !child.attached ) {
+      base.handle_update_by_insert( parent, child, pos );
+    }
+  }
 
   /* Called to layout the leftover children of a parent node when a node is deleted */
   public override void handle_update_by_delete( Node parent, int index, NodeSide side, double size ) {}
