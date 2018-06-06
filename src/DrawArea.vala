@@ -744,7 +744,6 @@ public class DrawArea : Gtk.DrawingArea {
   private Node? attachable_node( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
       Node tmp = _nodes.index( i ).contains( x, y, _current_node );
-      /* If the node under the cursor is not the current node nor its parent, it can be attached to. */
       if( (tmp != null) && (tmp != _current_node.parent) && !_current_node.contains_node( tmp ) ) {
         return( tmp );
       }
