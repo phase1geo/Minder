@@ -513,7 +513,7 @@ public class DrawArea : Gtk.DrawingArea {
   */
   private bool set_current_node_at_position( double x, double y, EventButton e ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      Node match = _nodes.index( i ).contains( x, y );
+      Node match = _nodes.index( i ).contains( x, y, null );
       if( match != null ) {
         if( match.is_within_task( x, y ) ) {
           toggle_task( match );
@@ -743,9 +743,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns the attachable node if one is found */
   private Node? attachable_node( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      Node tmp = _nodes.index( i ).contains( x, y );
+      Node tmp = _nodes.index( i ).contains( x, y, _current_node );
       /* If the node under the cursor is not the current node nor its parent, it can be attached to. */
-      if( (tmp != null) && (tmp != _current_node) && (tmp != _current_node.parent) && !_current_node.contains_node( tmp ) ) {
+      if( (tmp != null) && (tmp != _current_node.parent) && !_current_node.contains_node( tmp ) ) {
         return( tmp );
       }
     }
@@ -863,7 +863,7 @@ public class DrawArea : Gtk.DrawingArea {
       auto_save();
     } else {
       for( int i=0; i<_nodes.length; i++ ) {
-        Node match = _nodes.index( i ).contains( event.x, event.y );
+        Node match = _nodes.index( i ).contains( event.x, event.y, null );
         if( match != null ) {
           if( get_tooltip_text() == null ) {
             if( match.is_within_task( event.x, event.y ) ) {

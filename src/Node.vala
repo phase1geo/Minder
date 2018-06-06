@@ -326,12 +326,12 @@ public class Node : Object {
   }
 
   /* Finds the node which contains the given pixel coordinates */
-  public virtual Node? contains( double x, double y ) {
-    if( is_within( x, y ) || is_within_fold( x, y ) ) {
+  public virtual Node? contains( double x, double y, Node? n ) {
+    if( (this != n) && (is_within( x, y ) || is_within_fold( x, y )) ) {
       return( this );
     } else {
       for( int i=0; i<_children.length; i++ ) {
-        Node tmp = _children.index( i ).contains( x, y );
+        Node tmp = _children.index( i ).contains( x, y, n );
         if( tmp != null ) {
           return( tmp );
         }
