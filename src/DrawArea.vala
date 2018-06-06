@@ -700,6 +700,13 @@ public class DrawArea : Gtk.DrawingArea {
     animator.animate();
   }
 
+  /* Centers the currently selected node */
+  public void center_current_node() {
+    if( _current_node != null ) {
+      center_node( _current_node );
+    }
+  }
+
   /* Brings the given node into view in its entirety including the given amount of padding */
   public void see( double width_adjust = 0, double pad = 100.0 ) {
 
@@ -950,6 +957,91 @@ public class DrawArea : Gtk.DrawingArea {
       return( true );
     }
     return( false );
+  }
+
+  /* Returns true if there is a root that is available for selection */
+  public bool root_selectable() {
+    return( (_current_node == null) ? (_nodes.length > 0) : (_current_node.get_root() != _current_node) );
+  }
+
+  /*
+   If there is no current node, selects the first root node; otherwise, selects
+   the current node's root node.
+  */
+  public void select_root_node() {
+    if( _current_node == null ) {
+      if( _nodes.length > 0 ) {
+        if( select_node( _nodes.index( 0 ) ) ) {
+          queue_draw();
+        }
+      }
+    } else {
+      if( select_node( _current_node.get_root() ) ) {
+        queue_draw();
+      }
+    }
+  }
+
+  /* Returns true if there is a next sibling available for selection */
+  public bool sibling_selectable() {
+    return( (_current_node != null) && (_current_node.is_root() ? (_nodes.length > 1) : (_current_node.parent.children().length > 1)) );
+  }
+
+  /* Selects the next (dir = 1) or previous (dir = -1) sibling */
+  public void select_sibling_node( int dir ) {
+    if( _current_node != null ) {
+      Array<Node> nodes;
+      int         index = 0;
+      if( _current_node.is_root() ) {
+        nodes = _nodes;
+        for( int i=0; i<_nodes.length; i++ ) {
+          if( _nodes.index( i ) == _current_node ) {
+            index = i;
+            break;
+          }
+        }
+      } else {
+        nodes = _current_node.parent.children();
+        index = _current_node.index();
+      }
+      if( (index + dir) < 0 ) {
+        if( select_node( nodes.index( nodes.length - 1 ) ) ) {
+          queue_draw();
+        }
+      } else {
+        if( select_node( nodes.index( (index + dir) % nodes.length ) ) ) {
+          queue_draw();
+        }
+      }
+    }
+  }
+
+  /* Returns true if there is a child node of the current node */
+  public bool child_selectable() {
+    return( (_current_node != null) && !_current_node.is_leaf() );
+  }
+
+  /* Selects the first child node of the current node */
+  public void select_first_child_node() {
+    if( (_current_node != null) && !_current_node.is_leaf() ) {
+      if( select_node( _current_node.children().index( 0 ) ) ) {
+        queue_draw();
+      }
+    }
+  }
+
+  /* Returns true if there is a parent node of the current node */
+  public bool parent_selectable() {
+    return( (_current_node != null) && !_current_node.is_root() );
+  }
+
+  /* Selects the parent node of the current node */
+  public void select_parent_node() {
+    if( (_current_node != null) && !_current_node.is_root() ) {
+      if( select_node( _current_node.parent ) ) {
+        queue_draw();
+      }
+    }
   }
 
   /* Returns true if we can perform a node deletion operation */
@@ -1308,48 +1400,20 @@ public class DrawArea : Gtk.DrawingArea {
         changed();
       } else if( is_mode_selected() ) {
         switch( str ) {
-          case "e" :  // Place the current node in edit mode
-            _current_node.mode = NodeMode.EDITABLE;
-            break;
-          case "n" :  // Move the selection to the next sibling
-            if( select_node( _current_node.parent.next_child( _current_node ) ) ) {
-              queue_draw();
-            }
-            break;
-          case "p" :  // Move the selection to the previous sibling
-            if( select_node( _current_node.parent.prev_child( _current_node ) ) ) {
-              queue_draw();
-            }
-            break;
-          case "a" :  // Move to the parent node
-            if( select_node( _current_node.parent ) ) {
-              queue_draw();
-            }
-            break;
-          case "f" :  // Fold/unfold the current node
-            toggle_fold( _current_node );
-            break;
+          case "e" :  _current_node.mode = NodeMode.EDITABLE;  break;
+          case "n" :  select_sibling_node( 1 );  break;
+          case "p" :  select_sibling_node( -1 );  break;
+          case "a" :  select_parent_node();  break;
+          case "f" :  toggle_fold( _current_node );  break;
           case "t" :  // Toggle the task done indicator
             if( _current_node.is_task() ) {
               toggle_task( _current_node );
             }
             break;
-          case "m" :  // Select the root node
-            if( (_nodes.length == 0) || !select_node( _nodes.index( 0 ) ) ) {
-              return;
-            }
-            break;
-          case "c" :  // Select the first child node
-            if( select_node( _current_node.first_child() ) ) {
-              queue_draw();
-            }
-            break;
-          case "C" :  // Center the selected node
-            center_node( _current_node );
-            break;
-          case "i" :  // Display the node properties panel
-            show_properties( "node" );
-            return;
+          case "m" :  select_root_node();  break;
+          case "c" :  select_first_child_node();  break;
+          case "C" :  center_current_node();  break;
+          case "i" :  show_properties( "node" );  break;
           case "u" :  // Perform undo
             if( undo_buffer.undoable() ) {
               undo_buffer.undo();
@@ -1360,21 +1424,14 @@ public class DrawArea : Gtk.DrawingArea {
               undo_buffer.redo();
             }
             break;
-          case "s" :  // See the node
-            see();
-            break;
-          case "z" :  // Zoom out
-            zoom_out();
-            break;
-          case "Z" :  // Zoom in
-            zoom_in();
-            break;
+          case "s" :  see();  break;
+          case "z" :  zoom_out();  break;
+          case "Z" :  zoom_in();  break;
           default :
             // This is a key that doesn't have any associated functionality
             // so just return immediately so that we don't force a redraw
             return;
         }
-        queue_draw();
       }
     }
   }
@@ -1422,7 +1479,7 @@ public class DrawArea : Gtk.DrawingArea {
     /* If there is no current node, allow some of the keyboard shortcuts */
     } else if( nomod || shift ) {
       switch( e.str ) {
-        case "m" :  if( (_nodes.length > 0) && select_node( _nodes.index( 0 ) ) ) queue_draw();  break;
+        case "m" :  select_root_node();  break;
         case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
         case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
         case "z" :  zoom_out();  break;

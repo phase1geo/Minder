@@ -36,61 +36,90 @@ public class DrawAreaMenu : Gtk.Menu {
   Gtk.MenuItem _root;
   Gtk.MenuItem _child;
   Gtk.MenuItem _sibling;
+  Gtk.MenuItem _selroot;
+  Gtk.MenuItem _selnext;
+  Gtk.MenuItem _selprev;
+  Gtk.MenuItem _selchild;
+  Gtk.MenuItem _selparent;
+  Gtk.MenuItem _center;
 
   /* Default constructor */
   public DrawAreaMenu( DrawArea da ) {
 
     _da = da;
 
-    // var accel_group = new AccelGroup();
-    // _da.add_accel_group( accel_group );
-
     _copy = new Gtk.MenuItem.with_label( _( "Copy" ) );
     _copy.activate.connect( copy );
-    // _copy.add_accelerator( "activate", accel_group, ord( "c" ), gdk.CONTROL_MASK, ACCEL_VISIBLE );
-    add_accel_label( _copy.get_child(), "<Control>c" );
+    add_accel_label( _copy, "<Control>c" );
 
     _cut = new Gtk.MenuItem.with_label( _( "Cut" ) );
     _cut.activate.connect( cut );
-    add_accel_label( _cut.get_child(), "<Control>x" );
+    add_accel_label( _cut, "<Control>x" );
 
     _paste = new Gtk.MenuItem.with_label( _( "Paste" ) );
     _paste.activate.connect( paste );
-    add_accel_label( _paste.get_child(), "<Control>v" );
+    add_accel_label( _paste, "<Control>v" );
 
     _delete = new Gtk.MenuItem.with_label( _( "Delete" ) );
     _delete.activate.connect( delete_node );
-    add_accel_label( _delete.get_child(), "<Delete>" ) );
+    add_accel_label( _delete, "Delete" );
 
     _edit = new Gtk.MenuItem.with_label( _( "Edit..." ) );
     _edit.activate.connect( edit_node );
-    add_accel_label( _edit.get_child(), "e" ) );
+    add_accel_label( _edit, "E" );
 
     _task = new Gtk.MenuItem.with_label( _( "Add Task" ) );
     _task.activate.connect( change_task );
-    add_accel_label( _task.get_child(), "t" ) );
 
     _note = new Gtk.MenuItem.with_label( _( "Add Note" ) );
     _note.activate.connect( change_note );
 
     _fold = new Gtk.MenuItem.with_label( _( "Fold Children" ) );
     _fold.activate.connect( fold_node );
-    add_accel_label( _fold.get_child(), "f" );
+    add_accel_label( _fold, "F" );
 
     _detach = new Gtk.MenuItem.with_label( _( "Detach" ) );
     _detach.activate.connect( detach_node );
-    add_accel_label( _detach.get_child(), "d" );
+    add_accel_label( _detach, "D" );
 
     _root = new Gtk.MenuItem.with_label( _( "Add Root Node" ) );
     _root.activate.connect( add_root_node );
 
     _child = new Gtk.MenuItem.with_label( _( "Add Child Node" ) );
     _child.activate.connect( add_child_node );
-    add_accel_label( _child.get_child(), "<Tab>" );
+    add_accel_label( _child, "Tab" );
 
     _sibling = new Gtk.MenuItem.with_label( _( "Add Sibling Node" ) );
     _sibling.activate.connect( add_sibling_node );
-    add_accel_label( _sibling.get_child(), "<Return>" );
+    add_accel_label( _sibling, "Return" );
+
+    var selnode = new Gtk.MenuItem.with_label( _( "Select Node" ) );
+    var selmenu = new Gtk.Menu();
+    selnode.set_submenu( selmenu );
+
+    _selroot = new Gtk.MenuItem.with_label( _( "Root" ) );
+    _selroot.activate.connect( select_root_node );
+    add_accel_label( _selroot, "M" );
+
+    _selnext = new Gtk.MenuItem.with_label( _( "Next Sibling" ) );
+    _selnext.activate.connect( select_next_sibling_node );
+    add_accel_label( _selnext, "N" );
+
+    _selprev = new Gtk.MenuItem.with_label( _( "Previous Sibling" ) );
+    _selprev.activate.connect( select_previous_sibling_node );
+    add_accel_label( _selprev, "P" );
+
+    _selchild = new Gtk.MenuItem.with_label( _( "First Child" ) );
+    _selchild.activate.connect( select_first_child_node );
+    add_accel_label( _selchild, "C" );
+
+    _selparent = new Gtk.MenuItem.with_label( _( "Parent" ) );
+    _selparent.activate.connect( select_parent_node );
+    add_accel_label( _selparent, "A" );
+
+    _center = new Gtk.MenuItem.with_label( _( "Center Current Node" ) );
+    _center.activate.connect( center_current_node );
+    add_accel_label( _center, "<Shift>C" );
 
     /* Add the menu items to the menu */
     add( _copy );
@@ -107,7 +136,17 @@ public class DrawAreaMenu : Gtk.Menu {
     add( _child );
     add( _sibling );
     add( new SeparatorMenuItem() );
+    add( selnode );
+    add( _center );
+    add( new SeparatorMenuItem() );
     add( _detach );
+
+    /* Add the items to the selection menu */
+    selmenu.add( _selroot );
+    selmenu.add( _selnext );
+    selmenu.add( _selprev );
+    selmenu.add( _selchild );
+    selmenu.add( _selparent );
 
     /* Make the menu visible */
     show_all();
@@ -117,10 +156,10 @@ public class DrawAreaMenu : Gtk.Menu {
 
   }
 
-  private void add_accel_label( Gtk.Widget widget, string accelerator ) {
+  private void add_accel_label( Gtk.MenuItem item, string accelerator ) {
 
     /* Convert the menu item to an accelerator label */
-    AccelLabel? label = widget as AccelLabel;
+    AccelLabel? label = item.get_child() as AccelLabel;
     if( label == null ) return;
 
     /* Parse the accelerator */
@@ -181,6 +220,12 @@ public class DrawAreaMenu : Gtk.Menu {
     _child.set_sensitive( node_selected() );
     _sibling.set_sensitive( node_selected() );
     _detach.set_sensitive( _da.detachable() );
+    _selroot.set_sensitive( _da.root_selectable() );
+    _selnext.set_sensitive( _da.sibling_selectable() );
+    _selprev.set_sensitive( _da.sibling_selectable() );
+    _selchild.set_sensitive( _da.child_selectable() );
+    _selparent.set_sensitive( _da.parent_selectable() );
+    _center.set_sensitive( node_selected() );
 
     /* Set the menu item labels */
     _task.label = node_is_task()   ? _( "Remove Task" )     : _( "Add Task" );
@@ -262,6 +307,36 @@ public class DrawAreaMenu : Gtk.Menu {
   /* Detaches the currently selected node and make it a root node */
   private void detach_node() {
     _da.detach();
+  }
+
+  /* Selects the current root node */
+  private void select_root_node() {
+    _da.select_root_node();
+  }
+
+  /* Selects the next sibling node of the current node */
+  private void select_next_sibling_node() {
+    _da.select_sibling_node( 1 );
+  }
+
+  /* Selects the previous sibling node of the current node */
+  private void select_previous_sibling_node() {
+    _da.select_sibling_node( -1 );
+  }
+
+  /* Selects the first child node of the current node */
+  private void select_first_child_node() {
+    _da.select_first_child_node();
+  }
+
+  /* Selects the parent node of the current node */
+  private void select_parent_node() {
+    _da.select_parent_node();
+  }
+
+  /* Centers the current node */
+  private void center_current_node() {
+    _da.center_current_node();
   }
 
 }
