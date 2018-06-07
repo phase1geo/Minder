@@ -42,16 +42,18 @@ public class UndoNodeInsert : UndoItem {
   /* Performs an undo operation for this data */
   public override void undo() {
     _n.detach( _n.side, _layout );
+    if( _da.get_current_node() == _n ) {
+      _da.set_current_node( null );
+    }
     _da.queue_draw();
-    _da.node_changed();
     _da.changed();
   }
 
   /* Performs a redo operation */
   public override void redo() {
     _n.attach( _parent, _index, _layout );
+    _da.set_current_node( _n );
     _da.queue_draw();
-    _da.node_changed();
     _da.changed();
   }
 
