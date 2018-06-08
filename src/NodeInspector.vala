@@ -31,7 +31,8 @@ public class NodeInspector : Stack {
   private TextView _note;
   private DrawArea _da;
   private Button   _detach_btn;
-  private string   _orig_note  = "";
+  private string   _orig_note = "";
+  private Node?    _node = null;
 
   public NodeInspector( DrawArea da ) {
 
@@ -96,7 +97,7 @@ public class NodeInspector : Stack {
     lbl.xalign = (float)0;
 
     _task = new Switch();
-    _task.state_set.connect( task_changed );
+    _task.button_release_event.connect( task_changed );
 
     grid.column_homogeneous = true;
     grid.attach( lbl,   0, 0, 1, 1 );
@@ -115,7 +116,7 @@ public class NodeInspector : Stack {
     lbl.xalign = (float)0;
 
     _fold = new Switch();
-    _fold.state_set.connect( fold_changed );
+    _fold.button_release_event.connect( fold_changed );
 
     grid.column_homogeneous = true;
     grid.attach( lbl,   0, 0, 1, 1 );
@@ -196,14 +197,20 @@ public class NodeInspector : Stack {
   }
 
   /* Called whenever the task enable switch is changed within the inspector */
-  private bool task_changed( bool state ) {
-    _da.change_current_task( state, false );
+  private bool task_changed( Gdk.EventButton e ) {
+    Node? current = _da.get_current_node();
+    if( current != null ) {
+      _da.change_current_task( !current.task_enabled(), false );
+    }
     return( false );
   }
 
   /* Called whenever the fold switch is changed within the inspector */
-  private bool fold_changed( bool state ) {
-    _da.change_current_fold( state );
+  private bool fold_changed( Gdk.EventButton e ) {
+    Node? current = _da.get_current_node();
+    if( current != null ) {
+      _da.change_current_fold( !current.folded );
+    }
     return( false );
   }
 
@@ -217,15 +224,15 @@ public class NodeInspector : Stack {
 
   /* Saves the original version of the node's note so that we can */
   private bool note_focus_in( EventFocus e ) {
+    _node      = _da.get_current_node();
     _orig_note = _note.buffer.text;
     return( false );
   }
 
   /* When the note buffer loses focus, save the note change to the undo buffer */
   private bool note_focus_out( EventFocus e ) {
-    Node? current = _da.get_current_node();
-    if( (current != null) && (current.note != _orig_note) ) {
-      _da.undo_buffer.add_item( new UndoNodeNote( _da, current, _orig_note ) );
+    if( (_node != null) && (_node.note != _orig_note) ) {
+      _da.undo_buffer.add_item( new UndoNodeNote( _da, _node, _orig_note ) );
     }
     return( false );
   }

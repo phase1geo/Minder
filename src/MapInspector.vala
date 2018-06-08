@@ -61,7 +61,7 @@ public class MapInspector : Box {
 
     var enable = new Switch();
     enable.set_active( animate );
-    enable.state_set.connect( animation_changed );
+    enable.button_release_event.connect( animation_changed );
 
     grid.column_homogeneous = true;
     grid.attach( lbl,    0, 0, 1, 1 );
@@ -75,9 +75,9 @@ public class MapInspector : Box {
   }
 
   /* Called whenever the fold switch is changed within the inspector */
-  private bool animation_changed( bool state ) {
-    _da.animator.enable = state;
-    _settings.set_boolean( "enable-animations", state );
+  private bool animation_changed( Gdk.EventButton e ) {
+    _da.animator.enable = !_da.animator.enable;
+    _settings.set_boolean( "enable-animations", _da.animator.enable );
     return( false );
   }
 

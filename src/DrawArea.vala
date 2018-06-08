@@ -428,7 +428,6 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Toggles the value of the specified node, if possible */
   public void toggle_task( Node n ) {
-    stdout.printf( "In toggle_task\n" );
     undo_buffer.add_item( new UndoNodeTask( this, n, true, !n.task_done() ) );
     n.toggle_task_done();
     queue_draw();
@@ -468,7 +467,6 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void change_current_task( bool enable, bool done ) {
     if( _current_node != null ) {
-      stdout.printf( "In change_current_task\n" );
       undo_buffer.add_item( new UndoNodeTask( this, _current_node, enable, done ) );
       _current_node.enable_task( enable );
       _current_node.set_task_done( done );

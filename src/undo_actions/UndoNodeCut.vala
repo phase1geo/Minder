@@ -48,6 +48,7 @@ public class UndoNodeCut : UndoItem {
     } else {
       _node.attach( _parent, _index, _layout );
     }
+    _da.set_current_node( _node );
     _da.queue_draw();
     _da.changed();
     _da.node_clipboard = _clipboard;
@@ -61,6 +62,7 @@ public class UndoNodeCut : UndoItem {
     } else {
       _node.detach( _node.side, _layout );
     }
+    _da.set_current_node( null );
     _da.queue_draw();
     _da.changed();
   }

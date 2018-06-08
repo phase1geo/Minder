@@ -40,6 +40,7 @@ public class UndoNodeFold : UndoItem {
   /* Undoes a node fold operation */
   public override void undo() {
     _node.folded = _old_fold;
+    _da.get_layout().handle_update_by_fold( _node );
     _da.queue_draw();
     _da.node_changed();
     _da.changed();
@@ -48,6 +49,7 @@ public class UndoNodeFold : UndoItem {
   /* Redoes a node fold operation */
   public override void redo() {
     _node.folded = _new_fold;
+    _da.get_layout().handle_update_by_fold( _node );
     _da.queue_draw();
     _da.node_changed();
     _da.changed();
