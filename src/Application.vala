@@ -27,6 +27,7 @@ public class Minder : Granite.Application {
   private static bool    version   = false;
   private static string? open_file = null;
   private static bool    new_file  = false;
+  private static bool    testing   = false;
 
   public Minder () {
     Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.FLAGS_NONE );
@@ -92,13 +93,14 @@ public class Minder : Granite.Application {
   void parse_arguments( ref unowned string[] args ) {
 
     var context = new OptionContext( "- Minder Options" );
-    var options = new OptionEntry[4];
+    var options = new OptionEntry[5];
 
     /* Create the command-line options */
     options[0] = {"version", 0, 0, OptionArg.NONE, ref version, "Display version number", null};
     options[1] = {"open", 'o', 0, OptionArg.FILENAME, ref open_file, "Open filename", "FILENAME"};
     options[2] = {"new", 'n', 0, OptionArg.NONE, ref new_file, "Starts Minder with a new file", null};
-    options[3] = {null};
+    options[3] = {"run-tests", 0, 0, OptionArg.NONE, ref testing, "Run testing", null};
+    options[4] = {null};
 
     /* Parse the arguments */
     try {
@@ -121,9 +123,23 @@ public class Minder : Granite.Application {
 
   /* Main routine which gets everything started */
   public static int main( string[] args ) {
+
     var app = new Minder();
     app.parse_arguments( ref args );
-    return( app.run( args ) );
+
+    if (testing) {
+      Gtk.init( ref args );
+      var testing = new App.Tests.Testing( args );
+      Idle.add( () => {
+        testing.run();
+        Gtk.main_quit();
+        return( false );
+      });
+      Gtk.main();
+      return( 0 );
+    } else {
+      return( app.run( args ) );
+    }
   }
 
 }
