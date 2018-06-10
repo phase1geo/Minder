@@ -47,6 +47,7 @@ public class UndoNodeDelete : UndoItem {
       _node.attached = true;
       _node.attach( _parent, _index, _layout );
     }
+    _da.set_current_node( _node );
     _da.queue_draw();
     _da.node_changed();
     _da.changed();
@@ -59,6 +60,7 @@ public class UndoNodeDelete : UndoItem {
     } else {
       _node.detach( _node.side, _layout );
     }
+    _da.set_current_node( null );
     _da.queue_draw();
     _da.node_changed();
     _da.changed();

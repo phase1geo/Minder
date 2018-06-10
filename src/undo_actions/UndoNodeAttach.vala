@@ -61,8 +61,10 @@ public class UndoNodeAttach : UndoItem {
       _layout.propagate_side( _n, _old_side );
       _n.attach( _old_parent, _old_index, _layout );
     }
+    _da.set_current_node( _n );
     _da.animator.animate();
     _da.node_changed();
+    _da.changed();
   }
 
   /* Performs a redo operation */
@@ -76,8 +78,10 @@ public class UndoNodeAttach : UndoItem {
     _n.side = _new_side;
     _layout.propagate_side( _n, _new_side );
     _n.attach( _new_parent, _new_index, _layout );
+    _da.set_current_node( _n );
     _da.animator.animate();
     _da.node_changed();
+    _da.changed();
   }
 
 }
