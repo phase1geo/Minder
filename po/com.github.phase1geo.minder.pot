@@ -1,0 +1,386 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.phase1geo.minder package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.phase1geo.minder\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-10 00:47-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/DrawAreaMenu.vala:51
+msgid "Copy"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:55
+msgid "Cut"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:59
+msgid "Paste"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:63
+msgid "Delete"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:67
+msgid "Edit..."
+msgstr ""
+
+#: src/DrawAreaMenu.vala:71 src/DrawAreaMenu.vala:230
+msgid "Add Task"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:74 src/DrawAreaMenu.vala:231
+msgid "Add Note"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:77 src/DrawAreaMenu.vala:232
+msgid "Fold Children"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:81
+msgid "Detach"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:84
+msgid "Add Root Node"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:87
+msgid "Add Child Node"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:91
+msgid "Add Sibling Node"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:95
+msgid "Select Node"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:99
+msgid "Root"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:103
+msgid "Next Sibling"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:107
+msgid "Previous Sibling"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:111
+msgid "First Child"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:115
+msgid "Parent"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:119
+msgid "Center Current Node"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:230
+msgid "Remove Task"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:231
+msgid "Remove Note"
+msgstr ""
+
+#: src/DrawAreaMenu.vala:232
+msgid "Unfold Children"
+msgstr ""
+
+#: src/DrawArea.vala:102 src/layouts/LayoutHorizontal.vala:26
+#: src/MapInspector.vala:235
+msgid "Horizontal"
+msgstr ""
+
+#: src/DrawArea.vala:869
+#, c-format
+msgid "%0.3g%% complete"
+msgstr ""
+
+#: src/DrawArea.vala:1107
+msgid "Another Idea"
+msgstr ""
+
+#: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:237
+msgid "To right"
+msgstr ""
+
+#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:234
+msgid "Vertical"
+msgstr ""
+
+#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:238
+msgid "Upwards"
+msgstr ""
+
+#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:239
+msgid "Downwards"
+msgstr ""
+
+#: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:236
+msgid "To left"
+msgstr ""
+
+#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:233
+msgid "Manual"
+msgstr ""
+
+#: src/MainWindow.vala:85 src/MainWindow.vala:501
+msgid "Minder"
+msgstr ""
+
+#: src/MainWindow.vala:115
+msgid "New File   <i>(Control-N)</i>"
+msgstr ""
+
+#: src/MainWindow.vala:120
+msgid "Open File   <i>(Control-O)</i>"
+msgstr ""
+
+#: src/MainWindow.vala:125
+msgid "Save File As   <i>(Control-Shift-S)</i>"
+msgstr ""
+
+#: src/MainWindow.vala:130
+msgid "Undo   <i>(Control-Z)</i>"
+msgstr ""
+
+#: src/MainWindow.vala:136
+msgid "Redo   <i>(Control-Shift-Z)</i>"
+msgstr ""
+
+#: src/MainWindow.vala:165
+msgid "Unnamed Document"
+msgstr ""
+
+#: src/MainWindow.vala:195
+msgid "Zoom"
+msgstr ""
+
+#: src/MainWindow.vala:202
+msgid "Zoom to Percent"
+msgstr ""
+
+#: src/MainWindow.vala:213
+msgid "Zoom In"
+msgstr ""
+
+#: src/MainWindow.vala:217
+msgid "Zoom Out"
+msgstr ""
+
+#: src/MainWindow.vala:221
+msgid "Zoom to Fit"
+msgstr ""
+
+#: src/MainWindow.vala:225
+msgid "Zoom to Fit Selected Node"
+msgstr ""
+
+#: src/MainWindow.vala:230
+msgid "Zoom to Actual Size"
+msgstr ""
+
+#: src/MainWindow.vala:257
+msgid "Search   <i>(Control-F)</i>"
+msgstr ""
+
+#: src/MainWindow.vala:265
+msgid "Search Nodes"
+msgstr ""
+
+#: src/MainWindow.vala:300 src/MainWindow.vala:682 src/MainWindow.vala:700
+#: src/MainWindow.vala:718
+msgid "Export"
+msgstr ""
+
+#: src/MainWindow.vala:307
+msgid "Export To OPML"
+msgstr ""
+
+#: src/MainWindow.vala:311
+msgid "Export to PDF"
+msgstr ""
+
+#: src/MainWindow.vala:316
+msgid "Export to PNG"
+msgstr ""
+
+#: src/MainWindow.vala:321
+msgid "Print"
+msgstr ""
+
+#: src/MainWindow.vala:343
+msgid "Properties"
+msgstr ""
+
+#: src/MainWindow.vala:426
+msgid "Open File"
+msgstr ""
+
+#: src/MainWindow.vala:427 src/MainWindow.vala:499 src/MainWindow.vala:682
+#: src/MainWindow.vala:700 src/MainWindow.vala:718
+msgid "Cancel"
+msgstr ""
+
+#: src/MainWindow.vala:427
+msgid "Open"
+msgstr ""
+
+#: src/MainWindow.vala:498
+msgid "Save File"
+msgstr ""
+
+#: src/MainWindow.vala:499
+msgid "Save"
+msgstr ""
+
+#: src/MainWindow.vala:681
+msgid "Export OPML File"
+msgstr ""
+
+#: src/MainWindow.vala:684
+msgid "OPML"
+msgstr ""
+
+#: src/MainWindow.vala:699
+msgid "Export PDF File"
+msgstr ""
+
+#: src/MainWindow.vala:702
+msgid "PDF"
+msgstr ""
+
+#: src/MainWindow.vala:717
+msgid "Export PNG File"
+msgstr ""
+
+#: src/MainWindow.vala:720
+msgid "PNG"
+msgstr ""
+
+#: src/MapInspector.vala:57
+msgid "Enable animations"
+msgstr ""
+
+#: src/MapInspector.vala:91
+msgid "Node Layouts"
+msgstr ""
+
+#: src/MapInspector.vala:139
+msgid "Themes"
+msgstr ""
+
+#: src/MapInspector.vala:185
+msgid "Balance Nodes"
+msgstr ""
+
+#: src/NodeInspector.vala:46
+msgid "<big>Select a node to view/edit information</big>"
+msgstr ""
+
+#: src/NodeInspector.vala:77
+msgid "Name"
+msgstr ""
+
+#: src/NodeInspector.vala:95
+msgid "Task"
+msgstr ""
+
+#: src/NodeInspector.vala:114
+msgid "Fold"
+msgstr ""
+
+#: src/NodeInspector.vala:133
+msgid "Note"
+msgstr ""
+
+#: src/NodeInspector.vala:164
+msgid "Copy Node To Clipboard"
+msgstr ""
+
+#: src/NodeInspector.vala:168
+msgid "Cut Node To Clipboard"
+msgstr ""
+
+#: src/NodeInspector.vala:173
+msgid "Detach Node"
+msgstr ""
+
+#: src/NodeInspector.vala:178
+msgid "Delete Node"
+msgstr ""
+
+#: src/undo_actions/UndoNodeCut.vala:34
+msgid "cut node"
+msgstr ""
+
+#: src/undo_actions/UndoNodeName.vala:33
+msgid "node name change"
+msgstr ""
+
+#: src/undo_actions/UndoNodeDelete.vala:34
+msgid "delete node"
+msgstr ""
+
+#: src/undo_actions/UndoNodeInsert.vala:34
+msgid "insert node"
+msgstr ""
+
+#: src/undo_actions/UndoNodeTask.vala:35
+msgid "node task change"
+msgstr ""
+
+#: src/undo_actions/UndoNodeBalance.vala:62
+msgid "balance nodes"
+msgstr ""
+
+#: src/undo_actions/UndoNodeNote.vala:33
+msgid "node note change"
+msgstr ""
+
+#: src/undo_actions/UndoNodeFold.vala:33
+msgid "node change fold"
+msgstr ""
+
+#: src/undo_actions/UndoNodeMove.vala:36
+msgid "move node"
+msgstr ""
+
+#: src/undo_actions/UndoNodeDetach.vala:36
+msgid "detach node"
+msgstr ""
+
+#: src/undo_actions/UndoNodeAttach.vala:39
+msgid "attach node"
+msgstr ""
+
+#: src/undo_actions/UndoNodePaste.vala:34
+msgid "paste node"
+msgstr ""
+
+#: src/UndoBuffer.vala:79
+msgid "Undo "
+msgstr ""
+
+#: src/UndoBuffer.vala:85
+msgid "Redo "
+msgstr ""
