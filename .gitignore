@@ -1,7 +1,4 @@
-Makefile
-CMakeCache.txt
 build/
-CMakeFiles/
 src/*.o
 src/*.c
 src/animator/*.c
