@@ -1,9 +1,9 @@
 Format: http://dep.debian.net/deps/dep5
-Upstream-Name: minder
+Upstream-Name: Minder
 Source: https://github.com/phase1geo/minder
 
 Files: *
-Copyright: 2017 Trevor Williams <phase1geo@gmail.com>
+Copyright: 2018 Trevor Williams <phase1geo@gmail.com>
 License: GPL-3.0+
 
 License: GPL-3.0+
