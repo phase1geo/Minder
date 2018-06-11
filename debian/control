@@ -1,14 +1,17 @@
-Source: minder
+Source: com.github.phase1geo.minder
 Section: x11
 Priority: extra
-Maintainer: Trevor Williams <phase1geo@gmail.com>
-Build-Depends: cmake (>= 2.8),
-               debhelper (>= 9),
+Maintainer: Trevor Williams <phase1geo@icloud.com>
+Build-Depends: meson,
+               valac,
+               debhelper,
+               libcairo2-dev,
+               libgranite-dev,
                libgtk-3-dev,
-               valac (>= 0.16)
-Standards-Version: 3.9.3
+               libxml2-dev
 
-Package: minder
+Standards-Version: 3.9.3
+Package: com.github.phase1geo.foobar
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: Mind-mapping application
