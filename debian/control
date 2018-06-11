@@ -11,7 +11,7 @@ Build-Depends: meson,
                libxml2-dev
 
 Standards-Version: 3.9.3
-Package: com.github.phase1geo.foobar
+Package: com.github.phase1geo.minder
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: Mind-mapping application
