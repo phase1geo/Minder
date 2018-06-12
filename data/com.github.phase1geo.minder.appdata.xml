@@ -37,7 +37,6 @@
   <developer_name>Trevor Williams</developer_name>
   <url type="homepage">https://github.com/phase1geo/minder/</url>
   <url type="bugtracker">https://github.com/phase1geo/minder/issues/</url>
-  <icon type="stock" />
   
   <custom>
     <value key="x-appcenter-color-primary">#603461</value>
@@ -76,12 +75,9 @@
   </content_rating>
 
   <releases>
-    <release version="1.0" date="TBD">
+    <release version="1.0" date="6/16/2018">
       <description>
-        <p>Text</p>
-        <ul>
-          <li>List of changes</li>
-        </ul>
+        <p>Initial release</p>
       </description>
     </release>
   </releases>
