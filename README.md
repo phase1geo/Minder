@@ -1,6 +1,6 @@
 # Minder
 
-![Screenshot](data/screenshot-light.png "Mind-mapping application for Elementary OS")
+![Screenshot](data/screenshots/screenshot-light.png "Mind-mapping application for Elementary OS")
 
 
 ## Installation
