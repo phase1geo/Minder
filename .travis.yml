@@ -34,7 +34,5 @@ install:
 
 script:
   - houston ci
-    --name-appstream com.github.phase1geo.minder.desktop
     --name-domain com.github.phase1geo.minder
-    --name-human Minder
     --distribution $DIST
