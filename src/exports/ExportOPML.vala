@@ -101,7 +101,8 @@ public class ExportOPML : Object {
               expand_state = new Array<int>();
               string[] values = n->children->get_content().split( "," );
               foreach (string val in values) {
-                expand_state.append_val( int.parse( val ) );
+                int intval = int.parse( val );
+                expand_state.append_val( intval );
               }
             }
             break;
