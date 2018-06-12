@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2017 Your Name <phase1geo@email.com> -->
-<component type="desktop">
+<!-- Copyright 2018 Trevor Williams <phase1geo@icloud.com> -->
+<component type="desktop-application">
   <id>com.github.phase1geo.minder.desktop</id>
-  <metadata_license>CC0</metadata_license>
+  <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</metadata_license>
   <name>Minder</name>
   <summary>Create, develop, visualize, organize and manage your ideas</summary>
@@ -20,28 +20,16 @@
   <provides>
     <binary>com.github.phase1geo.minder</binary>
   </provides>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Main Application</caption>
+      <image>https://blah</image>
+    </screenshot>
+  </screenshots>
   <developer_name>Trevor Williams</developer_name>
   <url type="homepage">https://github.com/phase1geo/minder/</url>
   <url type="bugtracker">https://github.com/phase1geo/minder/issues/</url>
   <icon type="stock" />
-  
-  <releases>
-    <release version="1.0" date="TBD">
-      <description>
-        <p>Text</p>
-        <ul>
-          <li>List of changes</li>
-        </ul>
-      </description>
-    </release>
-  </releases>
-  
-  <screenshots>
-    <screenshot type="default">
-      <caption>TBD</caption>
-      <image>URL</image>
-    </screenshot>
-  </screenshots>
   
   <custom>
     <value key="x-appcenter-color-primary">#603461</value>
@@ -78,4 +66,16 @@
     <content_attribute id="money-purchasing">none</content_attribute>
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
+
+  <releases>
+    <release version="1.0" date="TBD">
+      <description>
+        <p>Text</p>
+        <ul>
+          <li>List of changes</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+  
 </component>
