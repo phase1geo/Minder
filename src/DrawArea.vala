@@ -302,7 +302,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "outline") {
           var root = new Node( this, _layout );
-          root.import_opml( this, it, node_id, ref expand_state, _layout );
+          root.import_opml( this, it, node_id, ref expand_state, _theme, _layout );
           _nodes.append_val( root );
         }
       }
@@ -346,7 +346,8 @@ public class DrawArea : Gtk.DrawingArea {
     _attach_node   = null;
     _orig_name     = "";
     _current_new   = false;
-    _current_node  = null;
+
+    set_current_node( null );
 
     queue_draw();
 
@@ -1580,7 +1581,17 @@ public class DrawArea : Gtk.DrawingArea {
       _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
       add_root( node, -1 );
     } else {
-      _current_node.mode = NodeMode.NONE;
+      if( _current_node.is_root() ) {
+        uint num_children = _current_node.children().length;
+        node.color_index = _theme.next_color_index();
+        if( num_children > 0 ) {
+          node.side = _current_node.children().index( num_children - 1 ).side;
+          _layout.propagate_side( node, node.side );
+        }
+      } else {
+        node.side = _current_node.side;
+        _layout.propagate_side( node, node.side );
+      }
       node.attach( _current_node, -1, _layout );
     }
     undo_buffer.add_item( new UndoNodePaste( this, node, _layout ) );

@@ -179,6 +179,7 @@ public class Node : Object {
   /* Copies an existing node to this node */
   public Node.copy( Node n ) {
     copy_variables( n );
+    mode = NodeMode.NONE;
     _children = n._children;
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).parent = this;
@@ -188,6 +189,7 @@ public class Node : Object {
   /* Copies an existing node tree to this node */
   public Node.copy_tree( Node n ) {
     copy_variables( n );
+    mode = NodeMode.NONE;
     _children = new Array<Node>();
     for( int i=0; i<n._children.length; i++ ) {
       Node child = new Node.copy_tree( n._children.index( i ) );
@@ -521,7 +523,7 @@ public class Node : Object {
   }
 
   /* Main method for importing an OPML <outline> into a node */
-  public void import_opml( DrawArea da, Xml.Node* parent, int node_id, ref Array<int>? expand_state, Layout layout ) {
+  public void import_opml( DrawArea da, Xml.Node* parent, int node_id, ref Array<int>? expand_state, Theme theme, Layout layout ) {
 
     /* Get the node name */
     string? n = parent->get_prop( "text" );
@@ -554,14 +556,19 @@ public class Node : Object {
       }
     }
 
+    /* Calculate the color index if we are a main branch */
+    if( main_branch() ) {
+      color_index = theme.next_color_index();
+    }
+
     node_id++;
 
     /* Parse the child nodes */
     for( Xml.Node* it2 = parent->children; it2 != null; it2 = it2->next ) {
       if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "outline") ) {
         var child = new Node( da, layout );
-        child.import_opml( da, it2, node_id, ref expand_state, layout );
         child.attach( this, -1, layout );
+        child.import_opml( da, it2, node_id, ref expand_state, theme, layout );
       }
     }
 
