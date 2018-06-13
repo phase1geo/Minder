@@ -1378,7 +1378,6 @@ public class Node : Object {
       }
       draw_common_note( ctx, theme.foreground );
       draw_line( ctx, theme );
-      // draw_link( ctx, theme );
       draw_common_fold( ctx, theme.link_color( color_index ), theme.foreground );
       draw_attachable( ctx, theme, theme.background );
     }

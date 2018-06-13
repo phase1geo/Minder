@@ -346,6 +346,7 @@ public class DrawArea : Gtk.DrawingArea {
     _attach_node   = null;
     _orig_name     = "";
     _current_new   = false;
+    _current_node  = null;
 
     queue_draw();
 
@@ -378,11 +379,14 @@ public class DrawArea : Gtk.DrawingArea {
     n.posx = (get_allocated_width()  / 2) - 30;
     n.posy = (get_allocated_height() / 2) - 10;
 
+    _layout.handle_update_by_edit( n );
+
     _nodes.append_val( n );
     _orig_name    = "";
 
     /* Make this initial node the current node */
     set_current_node( n );
+    n.mode = NodeMode.EDITABLE;
 
     /* Redraw the canvas */
     queue_draw();
