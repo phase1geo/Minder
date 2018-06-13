@@ -141,24 +141,15 @@ public class NodeInspector : Stack {
     lbl.xalign = (float)0;
 
     _link_color = new ColorButton();
-    _link_color.color_set.connect( link_color_changed );
+    _link_color.color_set.connect(() => {
+      _da.change_current_link_color( _link_color.rgba );
+    });
 
     grid.column_homogeneous = true;
     grid.attach( lbl,         0, 0, 1, 1 );
     grid.attach( _link_color, 1, 0, 1, 1 );
 
     bbox.pack_start( grid, false, true );
-
-  }
-
-  /* Displays the link colors in a color chooser widget */
-  private void link_color_changed() {
-
-    int index = _da.get_theme().get_color_index( _link_color.rgba );
-
-    if( index != -1 ) {
-      _da.change_current_link_color( index );
-    }
 
   }
 

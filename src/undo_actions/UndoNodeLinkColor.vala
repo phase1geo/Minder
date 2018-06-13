@@ -25,22 +25,21 @@ public class UndoNodeLinkColor : UndoItem {
 
   DrawArea  _da;
   Node      _node;
-  int       _old_color_index;
-  int       _new_color_index;
+  RGBA      _old_color;
+  RGBA      _new_color;
 
   /* Constructor for a node name change */
-  public UndoNodeLinkColor( DrawArea da, Node n, int old_color_index ) {
+  public UndoNodeLinkColor( DrawArea da, Node n, RGBA old_color ) {
     base( _( "link color change" ) );
-    _da              = da;
-    _node            = n;
-    _old_color_index = old_color_index;
-    _new_color_index = n.color_index;
+    _da        = da;
+    _node      = n;
+    _old_color = old_color;
+    _new_color = n.link_color;
   }
 
   /* Undoes a node name change */
   public override void undo() {
-    _node.color_index = _old_color_index;
-    _node.propagate_color();
+    _node.link_color = _old_color;
     _da.queue_draw();
     _da.node_changed();
     _da.changed();
@@ -48,8 +47,7 @@ public class UndoNodeLinkColor : UndoItem {
 
   /* Redoes a node name change */
   public override void redo() {
-    _node.color_index = _new_color_index;
-    _node.propagate_color();
+    _node.link_color = _new_color;
     _da.queue_draw();
     _da.node_changed();
     _da.changed();

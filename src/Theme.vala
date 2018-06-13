@@ -55,8 +55,8 @@ public class Theme : Object {
   }
 
   /* Returns the next available link color index */
-  public int next_color_index() {
-    return( _index++ );
+  public RGBA next_color() {
+    return( link_colors[_index++ % link_colors.length] );
   }
 
   /* Returns the number of link colors */

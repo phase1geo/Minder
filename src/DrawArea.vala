@@ -138,14 +138,23 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Sets the theme to the given value */
   public void set_theme( string name ) {
+    Theme orig_theme = _theme;
     _theme = themes.get_theme( name );
     StyleContext.add_provider_for_screen(
       Screen.get_default(),
       _theme.get_css_provider(),
       STYLE_PROVIDER_PRIORITY_APPLICATION
     );
+    map_theme_colors( orig_theme );
     theme_changed();
     queue_draw();
+  }
+  
+  /* Updates all nodes with the new theme colors */
+  private void map_theme_colors( Theme old_theme ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).map_theme_colors( old_theme, _theme );
+    }
   }
 
   /* Returns the name of the currently selected theme */
@@ -523,15 +532,12 @@ public class DrawArea : Gtk.DrawingArea {
    Changes the current node's link color and propagates that color to all
    descendants.
   */
-  public void change_current_link_color( int color_index ) {
-    stdout.printf( "In change_current_link_color, color_index: %d\n", color_index );
+  public void change_current_link_color( RGBA color ) {
     if( _current_node != null ) {
-      int orig_index = _current_node.color_index;
-      stdout.printf( "  orig_index: %d\n", orig_index );
-      if( orig_index != color_index ) {
-        _current_node.color_index = color_index;
-        _current_node.propagate_color();
-        undo_buffer.add_item( new UndoNodeLinkColor( this, _current_node, orig_index ) );
+      RGBA orig_color = _current_node.link_color;
+      if( orig_color != color ) {
+        _current_node.link_color = color;
+        undo_buffer.add_item( new UndoNodeLinkColor( this, _current_node, orig_color ) );
         queue_draw();
         changed();
       }
@@ -921,7 +927,7 @@ public class DrawArea : Gtk.DrawingArea {
         if( _attach_node != null ) {
           Node? orig_parent = null;
           int   orig_index  = -1;
-          int   orig_link   = -1;
+          RGBA? orig_link   = null;
           if( _current_node.is_root() ) {
             for( int i=0; i<_nodes.length; i++ ) {
               if( _nodes.index( i ) == _current_node ) {
@@ -933,13 +939,10 @@ public class DrawArea : Gtk.DrawingArea {
           } else {
             orig_parent = _current_node.parent;
             orig_index  = _current_node.index();
-            orig_link   = _current_node.color_index;
+            orig_link   = _current_node.link_color;
             _current_node.detach( _orig_side, _layout );
           }
-          if( _attach_node.is_root() ) {
-            _current_node.color_index = _theme.next_color_index();
-          }
-          _current_node.attach( _attach_node, -1, _layout );
+          _current_node.attach( _attach_node, -1, _theme, _layout );
           _attach_node.mode = NodeMode.NONE;
           _attach_node      = null;
           undo_buffer.add_item( new UndoNodeAttach( this, _current_node, orig_parent, _orig_side, orig_index, orig_link, _layout ) );
@@ -1153,9 +1156,8 @@ public class DrawArea : Gtk.DrawingArea {
     var node = new Node( this, _layout );
     _orig_name = "";
     _current_node.mode = NodeMode.NONE;
-    node.color_index   = _current_node.parent.is_root() ? _theme.next_color_index() : _current_node.color_index;
     node.side          = _current_node.side;
-    node.attach( _current_node.parent, (_current_node.index() + 1), _layout );
+    node.attach( _current_node.parent, (_current_node.index() + 1), _theme, _layout );
     undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
     if( select_node( node ) ) {
       node.mode = NodeMode.EDITABLE;
@@ -1232,14 +1234,11 @@ public class DrawArea : Gtk.DrawingArea {
   public void add_child_node() {
     var node = new Node( this, _layout );
     _orig_name = "";
-    if( _current_node.is_root() ) {
-      node.color_index = _theme.next_color_index();
-    } else {
-      node.color_index = _current_node.color_index;
-      node.side        = _current_node.side;
+    if( !_current_node.is_root() ) {
+      node.side = _current_node.side;
     }
     _current_node.mode = NodeMode.NONE;
-    node.attach( _current_node, -1, _layout );
+    node.attach( _current_node, -1, _theme, _layout );
     undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
     if( select_node( node ) ) {
       node.mode = NodeMode.EDITABLE;
@@ -1576,7 +1575,7 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.delete( _layout );
     }
     _current_node.mode = NodeMode.NONE;
-    _current_node = null;
+    _current_node      = null;
     queue_draw();
     node_changed();
     changed();
@@ -1610,7 +1609,6 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       if( _current_node.is_root() ) {
         uint num_children = _current_node.children().length;
-        node.color_index = _theme.next_color_index();
         if( num_children > 0 ) {
           node.side = _current_node.children().index( num_children - 1 ).side;
           _layout.propagate_side( node, node.side );
@@ -1619,7 +1617,7 @@ public class DrawArea : Gtk.DrawingArea {
         node.side = _current_node.side;
         _layout.propagate_side( node, node.side );
       }
-      node.attach( _current_node, -1, _layout );
+      node.attach( _current_node, -1, _theme, _layout );
     }
     undo_buffer.add_item( new UndoNodePaste( this, node, _layout ) );
     queue_draw();

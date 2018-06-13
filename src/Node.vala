@@ -105,6 +105,7 @@ public class Node : Object {
   private   int          _selstart    = 0;
   private   int          _selend      = 0;
   private   int          _selanchor   = 0;
+  private   RGBA?        _link_color  = null;
 
   /* Properties */
   public string name { get; set; default = ""; }
@@ -150,12 +151,24 @@ public class Node : Object {
     }
     default = NodeMode.NONE;
   }
-  public Node?    parent      { get; protected set; default = null; }
-  public NodeSide side        { get; set; default = NodeSide.RIGHT; }
-  public bool     folded      { get; set; default = false; }
-  public double   tree_size   { get; set; default = 0; }
-  public int      color_index { get; set; default = 0; }
-  public bool     attached    { get; set; default = false; }
+  public Node?    parent     { get; protected set; default = null; }
+  public NodeSide side       { get; set; default = NodeSide.RIGHT; }
+  public bool     folded     { get; set; default = false; }
+  public double   tree_size  { get; set; default = 0; }
+  public RGBA?    link_color {
+    get {
+      return( _link_color );
+    }
+    set {
+      if( !is_root() ) {
+        _link_color = value;
+        for( int i=0; i<_children.length; i++ ) {
+          _children.index( i ).link_color = value;
+        }
+      }
+    }
+  }
+  public bool     attached   { get; set; default = false; }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -214,13 +227,13 @@ public class Node : Object {
     _layout           = n._layout;
     _posx             = n._posx;
     _posy             = n._posy;
+    _link_color       = n._link_color;
     name              = n.name;
     note              = n.note;
     mode              = n.mode;
     parent            = n.parent;
     side              = n.side;
     folded            = n.folded;
-    color_index       = n.color_index;
   }
 
   /* Sets the posx value only, leaving the children positions alone */
@@ -410,7 +423,7 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, Layout? layout ) {
+  public virtual void load( DrawArea da, Xml.Node* n, Layout? layout, Theme theme ) {
 
     string? x = n->get_prop( "posx" );
     if( x != null ) {
@@ -455,7 +468,7 @@ public class Node : Object {
 
     string? c = n->get_prop( "color" );
     if( c != null ) {
-      color_index = int.parse( c );
+      _link_color = RGBA.parse( c );
     }
 
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
@@ -468,7 +481,7 @@ public class Node : Object {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var child = new Node( da, layout );
                 child.load( da, it2, layout );
-                child.attach( this, -1, null );
+                child.attach( this, -1, null, null );
               }
             }
             break;
@@ -504,7 +517,7 @@ public class Node : Object {
     node->new_prop( "fold", folded.to_string() );
     node->new_prop( "treesize", tree_size.to_string() );
     if( !is_root() ) {
-      node->new_prop( "color", color_index.to_string() );
+      node->new_prop( "color", _link_color.to_string() );
     }
 
     node->new_text_child( null, "nodename", name );
@@ -556,18 +569,13 @@ public class Node : Object {
       }
     }
 
-    /* Calculate the color index if we are a main branch */
-    if( main_branch() ) {
-      color_index = theme.next_color_index();
-    }
-
     node_id++;
 
     /* Parse the child nodes */
     for( Xml.Node* it2 = parent->children; it2 != null; it2 = it2->next ) {
       if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "outline") ) {
         var child = new Node( da, layout );
-        child.attach( this, -1, layout );
+        child.attach( this, -1, layout, theme );
         child.import_opml( da, it2, node_id, ref expand_state, theme, layout );
       }
     }
@@ -687,7 +695,7 @@ public class Node : Object {
   }
 
   /* Moves this node into the proper position within the parent node */
-  public void move_to_position( Node child, NodeSide side, double x, double y, Layout layout ) {
+  public void move_to_position( Node child, NodeSide side, double x, double y, Theme theme, Layout layout ) {
     child.detach( side, layout );
     child.attached = true;
     for( int i=0; i<_children.length; i++ ) {
@@ -696,24 +704,24 @@ public class Node : Object {
           case NodeSide.LEFT  :
           case NodeSide.RIGHT :
             if( y < _children.index( i ).posy ) {
-              child.attach( this, i, layout );
+              child.attach( this, i, theme, layout );
               return;
             }
             break;
           case NodeSide.TOP :
           case NodeSide.BOTTOM :
             if( x < _children.index( i ).posx ) {
-              child.attach( this, i, layout );
+              child.attach( this, i, theme, layout );
               return;
             }
             break;
         }
       } else if( _children.index( i ).side > child.side ) {
-        child.attach( this, i, layout );
+        child.attach( this, i, theme, layout );
         return;
       }
     }
-    child.attach( this, -1, layout );
+    child.attach( this, -1, theme, layout );
   }
 
   /* Sets the cursor from the given mouse coordinates */
@@ -876,8 +884,9 @@ public class Node : Object {
       if( layout != null ) {
         layout.handle_update_by_delete( parent, idx, side, tree_size );
       }
-      parent   = null;
-      attached = false;
+      _link_color = null;
+      parent      = null;
+      attached    = false;
     }
   }
 
@@ -886,18 +895,8 @@ public class Node : Object {
     detach( side, layout );
   }
 
-  /* Forces all children nodes to use the same color index as the parent node. */
-  public void propagate_color() {
-    if( !main_branch() ) {
-      color_index = parent.color_index;
-    }
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).propagate_color();
-    }
-  }
-
   /* Attaches this node as a child of the given node */
-  public virtual void attach( Node parent, int index, Layout? layout ) {
+  public virtual void attach( Node parent, int index, Theme? theme, Layout? layout ) {
     this.parent = parent;
     if( (parent._children.length == 0) && (parent._task_count == 1) ) {
       parent.propagate_task_info_up( (0 - parent._task_count), (0 - parent._task_done) );
@@ -916,8 +915,8 @@ public class Node : Object {
     if( layout != null ) {
       layout.handle_update_by_insert( parent, this, index );
     }
-    if( !is_root() ) {
-      propagate_color();
+    if( !is_root() && (theme != null) ) {
+      link_color = main_branch() ? theme.next_color() : parent.link_color;
     }
     attached = true;
   }
@@ -1058,6 +1057,24 @@ public class Node : Object {
   public virtual void pan( double origin_x, double origin_y ) {
     posx -= origin_x;
     posy -= origin_y;
+  }
+  
+  /*
+   Called when the theme is changed by the user.  Looks up this
+   node's link color in the old theme to see if it is a themed color.
+   If it is, map it to the new theme's color palette.  If the current
+   color is not a theme link color, keep the current color as it
+   was custom set by the user.  Performs this mapping recursively for
+   all descendants.
+  */
+  public void map_theme_colors( Theme old_theme, Theme new_theme ) {
+    int old_index = old_theme.get_color_index( _link_color );
+    if( old_index != -1 ) {
+      _link_color = new_theme.link_color( old_index );
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).map_theme_colors( old_theme, new_theme );
+    }
   }
 
   /* Sets the context source color to the given color value */
@@ -1312,13 +1329,12 @@ public class Node : Object {
     /* If we are vertically oriented, don't draw the line */
     if( (side & NodeSide.vertical()) != 0 ) return;
 
-    double x     = posx;
-    double y     = posy + _height;
-    double w     = _width;
-    RGBA   color = theme.link_color( color_index );
+    double x = posx;
+    double y = posy + _height;
+    double w = _width;
 
     /* Draw the line under the text name */
-    set_context_color( ctx, color );
+    set_context_color( ctx, _link_color );
     ctx.set_line_width( 4 );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( x, y );
@@ -1332,12 +1348,11 @@ public class Node : Object {
 
     double parent_x;
     double parent_y;
-    RGBA   color = theme.link_color( color_index );
 
     /* Get the parent's link point */
     parent.link_point( out parent_x, out parent_y );
 
-    set_context_color( ctx, color );
+    set_context_color( ctx, _link_color );
     ctx.set_line_width( 4 );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( parent_x, parent_y );
@@ -1379,13 +1394,13 @@ public class Node : Object {
     } else {
       draw_name( ctx, theme );
       if( is_leaf() ) {
-        draw_leaf_task( ctx, theme.link_color( color_index ) );
+        draw_leaf_task( ctx, _link_color );
       } else {
-        draw_acc_task( ctx, theme.link_color( color_index ) );
+        draw_acc_task( ctx, _link_color );
       }
       draw_common_note( ctx, theme.foreground );
       draw_line( ctx, theme );
-      draw_common_fold( ctx, theme.link_color( color_index ), theme.foreground );
+      draw_common_fold( ctx, _link_color, theme.foreground );
       draw_attachable( ctx, theme, theme.background );
     }
 
