@@ -887,7 +887,7 @@ public class Node : Object {
   }
 
   /* Forces all children nodes to use the same color index as the parent node. */
-  private void propagate_color() {
+  public void propagate_color() {
     if( !main_branch() ) {
       color_index = parent.color_index;
     }

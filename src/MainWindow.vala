@@ -24,25 +24,26 @@ using Gtk;
 public class MainWindow : ApplicationWindow {
 
   private GLib.Settings  _settings;
-  private HeaderBar?     _header        = null;
-  private DrawArea?      _canvas        = null;
-  private Document?      _doc           = null;
-  private Revealer?      _inspector     = null;
-  private Stack?         _stack         = null;
-  private Popover?       _zoom          = null;
-  private Popover?       _search        = null;
-  private MenuButton?    _search_btn    = null;
-  private SearchEntry?   _search_entry  = null;
-  private TreeView       _search_list   = null;
-  private Gtk.ListStore  _search_items  = null;
-  private ScrolledWindow _search_scroll = null;
-  private Popover?       _export        = null;
-  private Scale?         _zoom_scale    = null;
-  private ModelButton?   _zoom_in       = null;
-  private ModelButton?   _zoom_out      = null;
-  private ModelButton?   _zoom_sel      = null;
-  private Button?        _undo_btn      = null;
-  private Button?        _redo_btn      = null;
+  private HeaderBar?     _header         = null;
+  private DrawArea?      _canvas         = null;
+  private Document?      _doc            = null;
+  private Revealer?      _inspector      = null;
+  private NodeInspector  _node_inspector = null;
+  private Stack?         _stack          = null;
+  private Popover?       _zoom           = null;
+  private Popover?       _search         = null;
+  private MenuButton?    _search_btn     = null;
+  private SearchEntry?   _search_entry   = null;
+  private TreeView       _search_list    = null;
+  private Gtk.ListStore  _search_items   = null;
+  private ScrolledWindow _search_scroll  = null;
+  private Popover?       _export         = null;
+  private Scale?         _zoom_scale     = null;
+  private ModelButton?   _zoom_in        = null;
+  private ModelButton?   _zoom_out       = null;
+  private ModelButton?   _zoom_sel       = null;
+  private Button?        _undo_btn       = null;
+  private Button?        _redo_btn       = null;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_new",           action_new },
@@ -345,13 +346,15 @@ public class MainWindow : ApplicationWindow {
     _header.pack_end( menu_btn );
 
     /* Create the inspector sidebar */
-    var box   = new Box( Orientation.VERTICAL, 20 );
-    var sb    = new StackSwitcher();
+    var box = new Box( Orientation.VERTICAL, 20 );
+    var sb  = new StackSwitcher();
+
+    _node_inspector = new NodeInspector( _canvas );
 
     _stack = new Stack();
     _stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
     _stack.set_transition_duration( 500 );
-    _stack.add_titled( new NodeInspector( _canvas ), "node", "Node" );
+    _stack.add_titled( _node_inspector, "node", "Node" );
     _stack.add_titled( new MapInspector( _canvas, _settings ),  "map",  "Map" );
 
     /* If the stack switcher is clicked, save off which tab is in view */
@@ -377,9 +380,9 @@ public class MainWindow : ApplicationWindow {
 
     /* If the settings says to display the properties, do it now */
     if( _settings.get_boolean( "node-properties-shown" ) ) {
-      show_properties( "node" );
+      show_properties( "node", false );
     } else if( _settings.get_boolean( "map-properties-shown" ) ) {
-      show_properties( "map" );
+      show_properties( "map", false );
     }
 
   }
@@ -389,7 +392,7 @@ public class MainWindow : ApplicationWindow {
     if( _inspector.child_revealed ) {
       hide_properties();
     } else {
-      show_properties( null );
+      show_properties( null, false );
     }
   }
 
@@ -532,7 +535,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Displays the node properties panel for the current node */
-  private void show_properties( string? tab ) {
+  private void show_properties( string? tab, bool grab_note ) {
     if( _inspector.reveal_child && ((tab == null) || (_stack.visible_child_name == tab)) ) return;
     if( tab != null ) {
       _stack.visible_child_name = tab;
@@ -542,6 +545,13 @@ public class MainWindow : ApplicationWindow {
       _canvas.see( -300 );
     }
     _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
+    if( _stack.visible_child_name == "node" ) {
+      if( grab_note ) {
+        _node_inspector.grab_note();
+      } else {
+        _node_inspector.grab_name();
+      }
+    }
   }
 
   /* Hides the node properties panel */

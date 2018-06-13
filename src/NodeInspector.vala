@@ -25,14 +25,15 @@ using Granite.Widgets;
 
 public class NodeInspector : Stack {
 
-  private Entry    _name;
-  private Switch   _task;
-  private Switch   _fold;
-  private TextView _note;
-  private DrawArea _da;
-  private Button   _detach_btn;
-  private string   _orig_note = "";
-  private Node?    _node = null;
+  private Entry       _name;
+  private Switch      _task;
+  private Switch      _fold;
+  private ColorButton _link_color;
+  private TextView    _note;
+  private DrawArea    _da;
+  private Button      _detach_btn;
+  private string      _orig_note = "";
+  private Node?       _node = null;
 
   public NodeInspector( DrawArea da ) {
 
@@ -56,10 +57,12 @@ public class NodeInspector : Stack {
     create_name( node_box );
     create_task( node_box );
     create_fold( node_box );
+    create_link( node_box );
     create_note( node_box );
     create_buttons( node_box );
 
     _da.node_changed.connect( node_changed );
+    _da.theme_changed.connect( theme_changed );
 
     show_all();
 
@@ -123,6 +126,39 @@ public class NodeInspector : Stack {
     grid.attach( _fold, 1, 0, 1, 1 );
 
     bbox.pack_start( grid, false, true );
+
+  }
+
+  /*
+   Allows the user to select a different color for the current link
+   and tree.
+  */
+  private void create_link( Box bbox ) {
+
+    var grid = new Grid();
+    var lbl  = new Label( _( "Link Color" ) );
+
+    lbl.xalign = (float)0;
+
+    _link_color = new ColorButton();
+    _link_color.color_set.connect( link_color_changed );
+
+    grid.column_homogeneous = true;
+    grid.attach( lbl,         0, 0, 1, 1 );
+    grid.attach( _link_color, 1, 0, 1, 1 );
+
+    bbox.pack_start( grid, false, true );
+
+  }
+
+  /* Displays the link colors in a color chooser widget */
+  private void link_color_changed() {
+
+    int index = _da.get_theme().get_color_index( _link_color.rgba );
+
+    if( index != -1 ) {
+      _da.change_current_link_color( index );
+    }
 
   }
 
@@ -258,6 +294,26 @@ public class NodeInspector : Stack {
     _da.delete_node();
   }
 
+  /* Grabs the input focus on the name entry */
+  public void grab_name() {
+    _name.grab_focus();
+  }
+
+  /* Grabs the focus on the note widget */
+  public void grab_note() {
+    _note.grab_focus();
+  }
+
+  /* Called whenever the theme is changed */
+  private void theme_changed() {
+    int    num_colors = _da.get_theme().num_link_colors();
+    RGBA[] colors     = new RGBA[num_colors];
+    for( int i=0; i<num_colors; i++ ) {
+      colors[i] = _da.get_theme().link_color( i );
+    }
+    _link_color.add_palette( Orientation.HORIZONTAL, 4, colors );
+  }
+
   /* Called whenever the user changes the current node in the canvas */
   private void node_changed() {
 
@@ -266,12 +322,20 @@ public class NodeInspector : Stack {
     if( current != null ) {
       _name.set_text( current.name );
       _task.set_active( current.task_enabled() );
-      if( current.children().length > 0 ) {
-        _fold.set_active( current.folded );
-        _fold.set_sensitive( true );
-      } else {
+      if( current.is_leaf() ) {
         _fold.set_active( false );
         _fold.set_sensitive( false );
+      } else {
+        _fold.set_active( current.folded );
+        _fold.set_sensitive( true );
+      }
+      if( current.is_root() ) {
+        _link_color.set_sensitive( false );
+        _link_color.alpha = 0;
+      } else {
+        _link_color.set_sensitive( true );
+        _link_color.rgba  = _da.get_theme().link_color( current.color_index );
+        _link_color.alpha = 65535;
       }
       _detach_btn.set_sensitive( current.parent != null );
       _note.buffer.text = current.note;

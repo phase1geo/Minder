@@ -59,9 +59,29 @@ public class Theme : Object {
     return( _index++ );
   }
 
+  /* Returns the number of link colors */
+  public int num_link_colors() {
+    return( link_colors.length );
+  }
+
   /* Returns the color associated with the given index */
   public RGBA link_color( int index ) {
     return( link_colors[index % link_colors.length] );
+  }
+
+  /*
+   Searches the stored link colors for one that matches the given color.
+   If a match is found, returns the index of the stored color.  If no match
+   was found, returns -1.
+  */
+  public int get_color_index( RGBA color ) {
+    string color_str = color.to_string();
+    for( int i=0; i<link_colors.length; i++ ) {
+      if( link_colors[i].to_string() == color_str ) {
+        return( i );
+      }
+    }
+    return( -1 );
   }
 
   /* Returns the RGBA color for the given color value */

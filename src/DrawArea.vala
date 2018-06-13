@@ -81,8 +81,9 @@ public class DrawArea : Gtk.DrawingArea {
 
   public signal void changed();
   public signal void node_changed();
+  public signal void theme_changed();
   public signal void scale_changed( double scale );
-  public signal void show_properties( string? tab );
+  public signal void show_properties( string? tab, bool grab_note );
   public signal void loaded();
 
   /* Default constructor */
@@ -130,6 +131,11 @@ public class DrawArea : Gtk.DrawingArea {
     return( _theme.name );
   }
 
+  /* Returns the current theme */
+  public Theme get_theme() {
+    return( _theme );
+  }
+
   /* Sets the theme to the given value */
   public void set_theme( string name ) {
     _theme = themes.get_theme( name );
@@ -138,6 +144,7 @@ public class DrawArea : Gtk.DrawingArea {
       _theme.get_css_provider(),
       STYLE_PROVIDER_PRIORITY_APPLICATION
     );
+    theme_changed();
     queue_draw();
   }
 
@@ -203,6 +210,7 @@ public class DrawArea : Gtk.DrawingArea {
         _theme.get_css_provider(),
         STYLE_PROVIDER_PRIORITY_APPLICATION
       );
+      theme_changed();
     }
 
     /* Set the current theme index */
@@ -508,6 +516,25 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
       }
       auto_save();
+    }
+  }
+
+  /*
+   Changes the current node's link color and propagates that color to all
+   descendants.
+  */
+  public void change_current_link_color( int color_index ) {
+    stdout.printf( "In change_current_link_color, color_index: %d\n", color_index );
+    if( _current_node != null ) {
+      int orig_index = _current_node.color_index;
+      stdout.printf( "  orig_index: %d\n", orig_index );
+      if( orig_index != color_index ) {
+        _current_node.color_index = color_index;
+        _current_node.propagate_color();
+        undo_buffer.add_item( new UndoNodeLinkColor( this, _current_node, orig_index ) );
+        queue_draw();
+        changed();
+      }
     }
   }
 
@@ -1417,7 +1444,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "m" :  select_root_node();  break;
           case "c" :  select_first_child_node();  break;
           case "C" :  center_current_node();  break;
-          case "i" :  show_properties( "node" );  break;
+          case "i" :  show_properties( "node", false );  break;
           case "u" :  // Perform undo
             if( undo_buffer.undoable() ) {
               undo_buffer.undo();

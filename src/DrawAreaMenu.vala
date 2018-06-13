@@ -259,7 +259,7 @@ public class DrawAreaMenu : Gtk.Menu {
 
   /* Displays the sidebar to edit the node properties */
   private void edit_node() {
-    _da.show_properties( "node" );
+    _da.show_properties( "node", false );
   }
 
   /* Changes the task status of the currently selected node */
@@ -277,7 +277,7 @@ public class DrawAreaMenu : Gtk.Menu {
     if( node_has_note() ) {
       _da.change_current_note( "" );
     } else {
-      _da.show_properties( "node" );
+      _da.show_properties( "node", true );
     }
     _da.node_changed();
   }
