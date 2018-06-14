@@ -549,6 +549,7 @@ public class Node : Object {
     if( t != null ) {
       _task_count = 1;
       _task_done  = bool.parse( t ) ? 1 : 0;
+      propagate_task_info_up( _task_count, _task_done );
     }
 
     /* Get the note information */
@@ -591,7 +592,7 @@ public class Node : Object {
   private Xml.Node* export_opml_node( ref int node_id, ref Array<int> expand_state ) {
     Xml.Node* node = new Xml.Node( null, "outline" );
     node->new_prop( "text", name );
-    if( _task_count > 0 ) {
+    if( is_leaf() && (_task_count > 0) ) {
       bool checked = _task_done > 0;
       node->new_prop( "checked", checked.to_string() );
     }
@@ -695,7 +696,7 @@ public class Node : Object {
   }
 
   /* Moves this node into the proper position within the parent node */
-  public void move_to_position( Node child, NodeSide side, double x, double y, Theme theme, Layout layout ) {
+  public void move_to_position( Node child, NodeSide side, double x, double y, Layout layout ) {
     child.detach( side, layout );
     child.attached = true;
     for( int i=0; i<_children.length; i++ ) {
@@ -704,24 +705,24 @@ public class Node : Object {
           case NodeSide.LEFT  :
           case NodeSide.RIGHT :
             if( y < _children.index( i ).posy ) {
-              child.attach( this, i, theme, layout );
+              child.attach( this, i, null, layout );
               return;
             }
             break;
           case NodeSide.TOP :
           case NodeSide.BOTTOM :
             if( x < _children.index( i ).posx ) {
-              child.attach( this, i, theme, layout );
+              child.attach( this, i, null, layout );
               return;
             }
             break;
         }
       } else if( _children.index( i ).side > child.side ) {
-        child.attach( this, i, theme, layout );
+        child.attach( this, i, null, layout );
         return;
       }
     }
-    child.attach( this, -1, theme, layout );
+    child.attach( this, -1, null, layout );
   }
 
   /* Sets the cursor from the given mouse coordinates */

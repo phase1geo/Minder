@@ -297,12 +297,21 @@ public class NodeInspector : Stack {
 
   /* Called whenever the theme is changed */
   private void theme_changed() {
+  
     int    num_colors = _da.get_theme().num_link_colors();
     RGBA[] colors     = new RGBA[num_colors];
+    
+    /* Gather the theme colors into an RGBA array */
     for( int i=0; i<num_colors; i++ ) {
       colors[i] = _da.get_theme().link_color( i );
     }
-    _link_color.add_palette( Orientation.HORIZONTAL, 4, colors );
+    
+    /* Clear the palette */
+    _link_color.add_palette( Orientation.HORIZONTAL, 10, null );
+    
+    /* Set the palette with the new theme colors */
+    _link_color.add_palette( Orientation.HORIZONTAL, 10, colors );
+    
   }
 
   /* Called whenever the user changes the current node in the canvas */

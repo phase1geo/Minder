@@ -958,7 +958,7 @@ public class DrawArea : Gtk.DrawingArea {
         } else if( _current_node.parent != null ) {
           int orig_index = _current_node.index();
           animator.add_node( _current_node, "move to position" );
-          _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _theme, _layout );
+          _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
           undo_buffer.add_item( new UndoNodeMove( this, _current_node, _orig_side, orig_index, _layout ) );
           animator.animate();
         }
