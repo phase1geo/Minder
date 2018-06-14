@@ -57,7 +57,7 @@ public class PartNode : Object {
     if( orig_side != _node.side ) {
       layout.propagate_side( _node, _node.side );
     }
-    _node.attach( root, index, layout );
+    _node.attach( root, index, null, layout );
   }
 
 }

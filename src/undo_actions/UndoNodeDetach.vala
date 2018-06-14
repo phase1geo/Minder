@@ -47,7 +47,7 @@ public class UndoNodeDetach : UndoItem {
   public override void undo() {
     _da.animator.add_nodes( "undo detach" );
     _da.remove_root( _root_index );
-    _n.attach( _old_parent, _old_index, _layout );
+    _n.attach( _old_parent, _old_index, null, _layout );
     _da.set_current_node( _n );
     _da.animator.animate();
     _da.queue_draw();

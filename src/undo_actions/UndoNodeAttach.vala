@@ -20,6 +20,7 @@
 */
 
 using Gtk;
+using Gdk;
 
 public class UndoNodeAttach : UndoItem {
 
@@ -28,14 +29,14 @@ public class UndoNodeAttach : UndoItem {
   private Node?    _old_parent;
   private NodeSide _old_side;
   private int      _old_index;
-  private int      _old_link;
+  private RGBA     _old_link;
   private Node     _new_parent;
   private NodeSide _new_side;
   private int      _new_index;
   private Layout?  _layout;
 
   /* Default constructor */
-  public UndoNodeAttach( DrawArea da, Node n, Node? old_parent, NodeSide old_side, int old_index, int old_link, Layout l ) {
+  public UndoNodeAttach( DrawArea da, Node n, Node? old_parent, NodeSide old_side, int old_index, RGBA old_link, Layout l ) {
     base( _( "attach node" ) );
     _da         = da;
     _n          = n;
@@ -56,10 +57,10 @@ public class UndoNodeAttach : UndoItem {
     if( _old_parent == null ) {
       _da.add_root( _n, _old_index );
     } else {
-      _n.color_index = _old_link;
+      _n.link_color  = _old_link;
       _n.side        = _old_side;
       _layout.propagate_side( _n, _old_side );
-      _n.attach( _old_parent, _old_index, _layout );
+      _n.attach( _old_parent, _old_index, _da.get_theme(), _layout );
     }
     _da.set_current_node( _n );
     _da.animator.animate();
@@ -77,7 +78,7 @@ public class UndoNodeAttach : UndoItem {
     }
     _n.side = _new_side;
     _layout.propagate_side( _n, _new_side );
-    _n.attach( _new_parent, _new_index, _layout );
+    _n.attach( _new_parent, _new_index, _da.get_theme(), _layout );
     _da.set_current_node( _n );
     _da.animator.animate();
     _da.node_changed();

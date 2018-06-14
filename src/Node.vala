@@ -105,7 +105,7 @@ public class Node : Object {
   private   int          _selstart    = 0;
   private   int          _selend      = 0;
   private   int          _selanchor   = 0;
-  private   RGBA?        _link_color  = null;
+  private   RGBA         _link_color;
 
   /* Properties */
   public string name { get; set; default = ""; }
@@ -155,7 +155,7 @@ public class Node : Object {
   public NodeSide side       { get; set; default = NodeSide.RIGHT; }
   public bool     folded     { get; set; default = false; }
   public double   tree_size  { get; set; default = 0; }
-  public RGBA?    link_color {
+  public RGBA     link_color {
     get {
       return( _link_color );
     }
@@ -423,7 +423,7 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, Layout? layout, Theme theme ) {
+  public virtual void load( DrawArea da, Xml.Node* n, Layout? layout ) {
 
     string? x = n->get_prop( "posx" );
     if( x != null ) {
@@ -468,7 +468,7 @@ public class Node : Object {
 
     string? c = n->get_prop( "color" );
     if( c != null ) {
-      _link_color = RGBA.parse( c );
+      _link_color.parse( c );
     }
 
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
@@ -517,7 +517,7 @@ public class Node : Object {
     node->new_prop( "fold", folded.to_string() );
     node->new_prop( "treesize", tree_size.to_string() );
     if( !is_root() ) {
-      node->new_prop( "color", _link_color.to_string() );
+      node->new_prop( "color", color_from_rgba( _link_color ) );
     }
 
     node->new_text_child( null, "nodename", name );
@@ -575,7 +575,7 @@ public class Node : Object {
     for( Xml.Node* it2 = parent->children; it2 != null; it2 = it2->next ) {
       if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "outline") ) {
         var child = new Node( da, layout );
-        child.attach( this, -1, layout, theme );
+        child.attach( this, -1, theme, layout );
         child.import_opml( da, it2, node_id, ref expand_state, theme, layout );
       }
     }
@@ -884,7 +884,6 @@ public class Node : Object {
       if( layout != null ) {
         layout.handle_update_by_delete( parent, idx, side, tree_size );
       }
-      _link_color = null;
       parent      = null;
       attached    = false;
     }

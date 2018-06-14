@@ -46,7 +46,7 @@ public class UndoNodeBalance : UndoItem {
         Node n = _nodes.index( i );
         n.side = _sides.index( i );
         l.propagate_side( n, n.side );
-        n.attach( parent, i, l );
+        n.attach( parent, i, null, l );
       }
     }
 

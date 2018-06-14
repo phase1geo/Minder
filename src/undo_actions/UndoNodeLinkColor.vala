@@ -20,6 +20,7 @@
 */
 
 using Gtk;
+using Gdk;
 
 public class UndoNodeLinkColor : UndoItem {
 

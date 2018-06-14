@@ -325,7 +325,7 @@ public class NodeInspector : Stack {
         _link_color.alpha = 0;
       } else {
         _link_color.set_sensitive( true );
-        _link_color.rgba  = _da.get_theme().link_color( current.color_index );
+        _link_color.rgba  = current.link_color;
         _link_color.alpha = 65535;
       }
       _detach_btn.set_sensitive( current.parent != null );

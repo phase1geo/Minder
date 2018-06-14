@@ -49,7 +49,7 @@ public class UndoNodePaste : UndoItem {
 
   /* Performs a redo operation */
   public override void redo() {
-    _n.attach( _parent, _index, _layout );
+    _n.attach( _parent, _index, null, _layout );
     _da.set_current_node( _n );
     _da.queue_draw();
     _da.changed();
