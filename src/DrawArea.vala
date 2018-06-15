@@ -151,7 +151,7 @@ public class DrawArea : Gtk.DrawingArea {
     theme_changed();
     queue_draw();
   }
-  
+
   /* Updates all nodes with the new theme colors */
   private void map_theme_colors( Theme old_theme ) {
     for( int i=0; i<_nodes.length; i++ ) {
@@ -1224,10 +1224,17 @@ public class DrawArea : Gtk.DrawingArea {
     if( undoable ) {
       undo_buffer.add_item( new UndoNodeBalance( this, _layout ) );
     }
-    animator.add_nodes( "balance nodes" );
-    for( int i=0; i<_nodes.length; i++ ) {
+    if( (_current_node == null) || !undoable ) {
+      animator.add_nodes( "balance nodes" );
+      for( int i=0; i<_nodes.length; i++ ) {
+        var partitioner = new Partitioner();
+        partitioner.partition_node( _nodes.index( i ), _layout );
+      }
+    } else {
+      Node current_root = _current_node.get_root();
+      animator.add_node( current_root, "balance tree" );
       var partitioner = new Partitioner();
-      partitioner.partition_node( _nodes.index( i ), _layout );
+      partitioner.partition_node( current_root, _layout );
     }
     animator.animate();
   }

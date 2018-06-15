@@ -404,7 +404,11 @@ public class MainWindow : ApplicationWindow {
 
     /* Save any changes to the current document */
     if( _doc != null ) {
-      _doc.auto_save();
+      if( _doc.is_saved() ) {
+        _doc.auto_save();
+      } else {
+        do_save_file();
+      }
     }
 
     /* Create a new document */
@@ -422,7 +426,11 @@ public class MainWindow : ApplicationWindow {
 
     /* Automatically save the current file if one exists */
     if( _doc != null ) {
-      _doc.auto_save();
+      if( _doc.is_saved() ) {
+        _doc.auto_save();
+      } else {
+        do_save_file();
+      }
     }
 
     /* Get the file to open from the user */
@@ -681,6 +689,7 @@ public class MainWindow : ApplicationWindow {
     _search_items.get( it, 1, &node, -1 );
     if( node != null ) {
       _canvas.set_current_node( node );
+      _canvas.see();
     }
     _search.closed();
     _canvas.grab_focus();

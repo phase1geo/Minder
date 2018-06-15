@@ -29,14 +29,14 @@ public class UndoNodeAttach : UndoItem {
   private Node?    _old_parent;
   private NodeSide _old_side;
   private int      _old_index;
-  private RGBA     _old_link;
+  private RGBA?    _old_link;
   private Node     _new_parent;
   private NodeSide _new_side;
   private int      _new_index;
   private Layout?  _layout;
 
   /* Default constructor */
-  public UndoNodeAttach( DrawArea da, Node n, Node? old_parent, NodeSide old_side, int old_index, RGBA old_link, Layout l ) {
+  public UndoNodeAttach( DrawArea da, Node n, Node? old_parent, NodeSide old_side, int old_index, RGBA? old_link, Layout l ) {
     base( _( "attach node" ) );
     _da         = da;
     _n          = n;
