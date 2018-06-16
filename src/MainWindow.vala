@@ -150,9 +150,6 @@ public class MainWindow : ApplicationWindow {
     hbox.pack_start( _canvas,    true,  true, 0 );
     hbox.pack_start( _inspector, false, true, 0 );
 
-    /* TBD - This may work with Juno - Add a shortcut help window */
-    // set_help_overlay( new Shortcuts() );
-
     /* Display the UI */
     add( hbox );
     show_all();
@@ -396,6 +393,40 @@ public class MainWindow : ApplicationWindow {
     }
   }
 
+  /* Displays the save warning dialog window */
+  public void show_save_warning( string type ) {
+
+    var dialog = new Granite.MessageDialog.with_image_from_icon_name(
+      _( "Save current unnamed document?"),
+      _( "Changes will be permanently lost if not saved."),
+      "dialog-warning",
+      ButtonsType.NONE
+    );
+
+    dialog.add_button( _( "Don't Save" ), 1 );
+    dialog.add_button( _( "Cancel" ),     2 );
+    dialog.add_button( _( "Save" ),       3 );
+    dialog.set_transient_for( this );
+    dialog.set_default_response( 3 );
+    dialog.set_title( "" );
+
+    dialog.response.connect((id) => {
+      dialog.destroy();
+      if( id == 3 ) {
+        do_save_file();
+      }
+      if( (id == 1) || (id == 3) ) {
+        switch( type ) {
+          case "new"  :  create_new_file();       break;
+          case "open" :  select_and_open_file();  break;
+        }
+      }
+    });
+
+    dialog.show_all();
+
+  }
+
   /*
    Allow the user to create a new Minder file.  Checks to see if the current
    document needs to be saved and saves it (if necessary).
@@ -407,9 +438,19 @@ public class MainWindow : ApplicationWindow {
       if( _doc.is_saved() ) {
         _doc.auto_save();
       } else {
-        do_save_file();
+        show_save_warning( "new" );
+        return;
       }
     }
+
+    create_new_file();
+
+  }
+
+  /*
+   Creates a new file
+  */
+  private void create_new_file() {
 
     /* Create a new document */
     _doc = new Document( _canvas, _settings );
@@ -429,9 +470,19 @@ public class MainWindow : ApplicationWindow {
       if( _doc.is_saved() ) {
         _doc.auto_save();
       } else {
-        do_save_file();
+        show_save_warning( "open" );
+        return;
       }
     }
+
+    select_and_open_file();
+
+  }
+
+  /*
+   Allows the user to select a file to open and opens it in the same window.
+  */
+  private void select_and_open_file() {
 
     /* Get the file to open from the user */
     FileChooserDialog dialog = new FileChooserDialog( _( "Open File" ), this, FileChooserAction.OPEN,
