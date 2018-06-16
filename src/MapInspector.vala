@@ -53,7 +53,7 @@ public class MapInspector : Box {
   /* Add the animation enable UI */
   private void add_animation_ui() {
 
-    var grid    = new Grid();
+    var box     = new Box( Orientation.HORIZONTAL, 0 );
     var lbl     = new Label( _( "Enable animations" ) );
     var animate = _settings.get_boolean( "enable-animations" );
 
@@ -63,11 +63,10 @@ public class MapInspector : Box {
     enable.set_active( animate );
     enable.button_release_event.connect( animation_changed );
 
-    grid.column_homogeneous = true;
-    grid.attach( lbl,    0, 0, 1, 1 );
-    grid.attach( enable, 1, 0, 1, 1 );
+    box.pack_start( lbl,    false, true, 0 );
+    box.pack_end(   enable, false, true, 0 );
 
-    pack_start( grid, false, true );
+    pack_start( box, false, true );
 
     /* Initialize the animator */
     _da.animator.enable = animate;

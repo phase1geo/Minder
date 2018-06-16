@@ -28,6 +28,7 @@ public class NodeInspector : Stack {
   private Entry       _name;
   private Switch      _task;
   private Switch      _fold;
+  private Box         _link_box;
   private ColorButton _link_color;
   private TextView    _note;
   private DrawArea    _da;
@@ -94,7 +95,7 @@ public class NodeInspector : Stack {
   /* Creates the task UI elements */
   private void create_task( Box bbox ) {
 
-    var grid = new Grid();
+    var box  = new Box( Orientation.HORIZONTAL, 0 );
     var lbl  = new Label( _( "Task" ) );
 
     lbl.xalign = (float)0;
@@ -102,30 +103,28 @@ public class NodeInspector : Stack {
     _task = new Switch();
     _task.button_release_event.connect( task_changed );
 
-    grid.column_homogeneous = true;
-    grid.attach( lbl,   0, 0, 1, 1 );
-    grid.attach( _task, 1, 0, 1, 1 );
+    box.pack_start( lbl,   false, true, 0 );
+    box.pack_end(   _task, false, true, 0 );
 
-    bbox.pack_start( grid, false, true );
+    bbox.pack_start( box, false, true );
 
   }
 
   /* Creates the fold UI elements */
   private void create_fold( Box bbox ) {
 
-    var grid = new Grid();
-    var lbl  = new Label( _( "Fold" ) );
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Fold" ) );
 
     lbl.xalign = (float)0;
 
     _fold = new Switch();
     _fold.button_release_event.connect( fold_changed );
 
-    grid.column_homogeneous = true;
-    grid.attach( lbl,   0, 0, 1, 1 );
-    grid.attach( _fold, 1, 0, 1, 1 );
+    box.pack_start( lbl,   false, true, 0 );
+    box.pack_end(   _fold, false, true, 0 );
 
-    bbox.pack_start( grid, false, true );
+    bbox.pack_start( box, false, true );
 
   }
 
@@ -135,21 +134,21 @@ public class NodeInspector : Stack {
   */
   private void create_link( Box bbox ) {
 
-    var grid = new Grid();
-    var lbl  = new Label( _( "Link Color" ) );
+    _link_box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl   = new Label( _( "Link Color" ) );
 
-    lbl.xalign = (float)0;
+    _link_box.homogeneous = true;
+    lbl.xalign            = (float)0;
 
     _link_color = new ColorButton();
     _link_color.color_set.connect(() => {
       _da.change_current_link_color( _link_color.rgba );
     });
 
-    grid.column_homogeneous = true;
-    grid.attach( lbl,         0, 0, 1, 1 );
-    grid.attach( _link_color, 1, 0, 1, 1 );
+    _link_box.pack_start( lbl,         false, true, 0 );
+    _link_box.pack_end(   _link_color, true,  true, 0 );
 
-    bbox.pack_start( grid, false, true );
+    bbox.pack_start( _link_box, false, true );
 
   }
 
@@ -297,21 +296,21 @@ public class NodeInspector : Stack {
 
   /* Called whenever the theme is changed */
   private void theme_changed() {
-  
+
     int    num_colors = _da.get_theme().num_link_colors();
     RGBA[] colors     = new RGBA[num_colors];
-    
+
     /* Gather the theme colors into an RGBA array */
     for( int i=0; i<num_colors; i++ ) {
       colors[i] = _da.get_theme().link_color( i );
     }
-    
+
     /* Clear the palette */
     _link_color.add_palette( Orientation.HORIZONTAL, 10, null );
-    
+
     /* Set the palette with the new theme colors */
     _link_color.add_palette( Orientation.HORIZONTAL, 10, colors );
-    
+
   }
 
   /* Called whenever the user changes the current node in the canvas */
@@ -330,10 +329,9 @@ public class NodeInspector : Stack {
         _fold.set_sensitive( true );
       }
       if( current.is_root() ) {
-        _link_color.set_sensitive( false );
-        _link_color.alpha = 0;
+        _link_box.visible = false;
       } else {
-        _link_color.set_sensitive( true );
+        _link_box.visible = true;
         _link_color.rgba  = current.link_color;
         _link_color.alpha = 65535;
       }
