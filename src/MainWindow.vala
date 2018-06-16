@@ -403,19 +403,26 @@ public class MainWindow : ApplicationWindow {
       ButtonsType.NONE
     );
 
-    dialog.add_button( _( "Don't Save" ), 1 );
-    dialog.add_button( _( "Cancel" ),     2 );
-    dialog.add_button( _( "Save" ),       3 );
+    var dont = new Button.with_label( _( "Discard Changes" ) );
+    dialog.add_action_widget( dont, ResponseType.CLOSE );
+
+    var cancel = new Button.with_label( _( "Cancel" ) );
+    dialog.add_action_widget( cancel, ResponseType.CANCEL );
+
+    var save = new Button.with_label( _( "Save" ) );
+    save.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+    dialog.add_action_widget( save, ResponseType.ACCEPT );
+
     dialog.set_transient_for( this );
-    dialog.set_default_response( 3 );
+    dialog.set_default_response( ResponseType.ACCEPT );
     dialog.set_title( "" );
 
     dialog.response.connect((id) => {
       dialog.destroy();
-      if( id == 3 ) {
+      if( id == ResponseType.ACCEPT ) {
         do_save_file();
       }
-      if( (id == 1) || (id == 3) ) {
+      if( (id == ResponseType.CLOSE) || (id == ResponseType.ACCEPT) ) {
         switch( type ) {
           case "new"  :  create_new_file();       break;
           case "open" :  select_and_open_file();  break;
