@@ -124,7 +124,7 @@ public class MainWindow : ApplicationWindow {
 
     var save_btn = new Button.from_icon_name( "document-save-as-symbolic", IconSize.SMALL_TOOLBAR );
     save_btn.set_tooltip_markup( _( "Save File As   <i>(Control-Shift-S)</i>" ) );
-    save_btn.clicked.connect( do_save_file );
+    save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
     _undo_btn = new Button.from_icon_name( "edit-undo-symbolic", IconSize.SMALL_TOOLBAR );
@@ -420,7 +420,9 @@ public class MainWindow : ApplicationWindow {
     dialog.response.connect((id) => {
       dialog.destroy();
       if( id == ResponseType.ACCEPT ) {
-        do_save_file();
+        if( !save_file() ) {
+          id = ResponseType.CANCEL;
+        }
       }
       if( (id == ResponseType.CLOSE) || (id == ResponseType.ACCEPT) ) {
         switch( type ) {
@@ -563,10 +565,11 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Allow the user to select a filename to save the document as */
-  public void do_save_file() {
+  public bool save_file() {
     FileChooserDialog dialog = new FileChooserDialog( _( "Save File" ), this, FileChooserAction.SAVE,
       _( "Cancel" ), ResponseType.CANCEL, _( "Save" ), ResponseType.ACCEPT );
     FileFilter        filter = new FileFilter();
+    bool              retval = false;
     filter.set_filter_name( _( "Minder" ) );
     filter.add_pattern( "*.minder" );
     dialog.add_filter( filter );
@@ -578,9 +581,16 @@ public class MainWindow : ApplicationWindow {
       _doc.filename = fname;
       _doc.save();
       update_title();
+      retval = true;
     }
     dialog.close();
     _canvas.grab_focus();
+    return( retval );
+  }
+
+  /* Called when the save as button is clicked */
+  public void do_save_as_file() {
+    save_file();
   }
 
   /* Called whenever the node selection changes in the canvas */
@@ -673,7 +683,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Called when the user uses the Control-S keyboard shortcut */
   private void action_save_as() {
-    do_save_file();
+    do_save_as_file();
   }
 
   /* Called when the user uses the Control-z keyboard shortcut */

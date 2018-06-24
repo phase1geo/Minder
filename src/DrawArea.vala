@@ -1237,6 +1237,7 @@ public class DrawArea : Gtk.DrawingArea {
       partitioner.partition_node( current_root, _layout );
     }
     animator.animate();
+    grab_focus();
   }
 
   /* Adds a child node to the current node */
