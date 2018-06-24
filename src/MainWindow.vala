@@ -397,8 +397,8 @@ public class MainWindow : ApplicationWindow {
   public void show_save_warning( string type ) {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
-      _( "Save current unnamed document?"),
-      _( "Changes will be permanently lost if not saved."),
+      _( "Save current unnamed document?" ),
+      _( "Changes will be permanently lost if not saved." ),
       "dialog-warning",
       ButtonsType.NONE
     );
