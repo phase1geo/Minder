@@ -678,7 +678,11 @@ public class MainWindow : ApplicationWindow {
 
   /* Called when the user uses the Control-s keyboard shortcut */
   private void action_save() {
-    _doc.save();
+    if( _doc.is_saved() ) {
+      _doc.save();
+    } else {
+      save_file();
+    }
   }
 
   /* Called when the user uses the Control-S keyboard shortcut */

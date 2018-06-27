@@ -30,8 +30,12 @@
       <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-dark.png</image>
     </screenshot>
     <screenshot>
+      <caption>Node Property Sidebar</caption>
+      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-node-properties.png</image>
+    </screenshot>
+    <screenshot>
       <caption>Map Property Sidebar</caption>
-      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-properties.png</image>
+      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-map-properties.png</image>
     </screenshot>
   </screenshots>
   <developer_name>Trevor Williams</developer_name>
@@ -75,7 +79,12 @@
   </content_rating>
 
   <releases>
-    <release version="1.0" date="6/16/2018">
+    <release version="1.0.1" date="6/26/2018">
+      <description>
+        <p>Initial release</p>
+      </description>
+    </release>
+    <release version="1.0.0" date="6/16/2018">
       <description>
         <p>Initial release</p>
       </description>
