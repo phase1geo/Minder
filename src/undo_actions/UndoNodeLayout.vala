@@ -19,15 +19,15 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class UndoNodeBalance : UndoItem {
+public class UndoNodeLayout : UndoItem {
 
-  private class BalanceNodes {
+  private class LayoutNodes {
 
     private Array<Node>     _nodes;
     private Array<NodeSide> _sides;
 
     /* Stores the given node into this class */
-    public BalanceNodes( Node n ) {
+    public LayoutNodes( Node n ) {
       _nodes = new Array<Node>();
       _sides = new Array<NodeSide>();
       for( int i=0; i<n.children().length; i++ ) {
@@ -52,45 +52,49 @@ public class UndoNodeBalance : UndoItem {
 
   }
 
-  private DrawArea             _da;
-  private Array<BalanceNodes>  _old;
-  private Array<BalanceNodes>? _new = null;
-  private Layout?              _layout;
+  private DrawArea            _da;
+  private Array<LayoutNodes>  _old;
+  private Array<LayoutNodes>? _new = null;
+  private Layout              _old_layout;
+  private Layout              _new_layout;
 
   /* Default constructor */
-  public UndoNodeBalance( DrawArea da, Layout l ) {
-    base( _( "balance nodes" ) );
-    _da     = da;
-    _layout = l;
-    _old    = new Array<BalanceNodes>();
+  public UndoNodeLayout( DrawArea da, Layout old_layout, Layout new_layout ) {
+    base( _( "change layout" ) );
+    _da         = da;
+    _old_layout = old_layout;
+    _new_layout = new_layout;
+    _old        = new Array<LayoutNodes>();
     for( int i=0; i<da.get_nodes().length; i++ ) {
-      _old.append_val( new BalanceNodes( da.get_nodes().index( i ) ) );
+      _old.append_val( new LayoutNodes( da.get_nodes().index( i ) ) );
     }
   }
 
   /* Perform the swap */
-  private void change( Array<BalanceNodes> nodes ) {
-    _da.animator.add_nodes( "undo balance nodes" );
+  private void change( Array<LayoutNodes> nodes, Layout layout ) {
+    _da.animator.add_nodes( "undo layout change" );
     for( int i=0; i<_da.get_nodes().length; i++ ) {
-      nodes.index( i ).change( _da, _layout, _da.get_nodes().index( i ) );
+      nodes.index( i ).change( _da, layout, _da.get_nodes().index( i ) );
     }
     _da.animator.animate();
+    _da.set_layout( layout.name );
+    _da.loaded();
   }
 
   /* Performs an undo operation for this data */
   public override void undo() {
     if( _new == null ) {
-      _new = new Array<BalanceNodes>();
+      _new = new Array<LayoutNodes>();
       for( int i=0; i<_da.get_nodes().length; i++ ) {
-        _new.append_val( new BalanceNodes( _da.get_nodes().index( i ) ) );
+        _new.append_val( new LayoutNodes( _da.get_nodes().index( i ) ) );
       }
     }
-    change( _old );
+    change( _old, _old_layout );
   }
 
   /* Performs a redo operation */
   public override void redo() {
-    change( _new );
+    change( _new, _new_layout );
   }
 
 }

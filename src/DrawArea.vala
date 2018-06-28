@@ -166,12 +166,14 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Sets the layout to the given value */
   public void set_layout( string name ) {
+    var new_layout = layouts.get_layout( name );
     if( _layout == null ) {
-      _layout = layouts.get_layout( name );
+      _layout = new_layout;
     } else {
+      undo_buffer.add_item( new UndoNodeLayout( this, _layout, new_layout ) );
       var old_balanceable = _layout.balanceable;
       animator.add_nodes( "set layout" );
-      _layout = layouts.get_layout( name );
+      _layout = new_layout;
       for( int i=0; i<_nodes.length; i++ ) {
         _layout.initialize( _nodes.index( i ) );
       }

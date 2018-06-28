@@ -192,6 +192,23 @@ public class MapInspector : Box {
 
   }
 
+  /* Sets the map inspector UI to match the given layout name */
+  private void select_layout( string name ) {
+
+    /* Set the layout button to the matching value */
+    if( name == _( "Manual" ) ) { _layouts.selected = 0; }
+    else if( name == _( "Vertical" )   ) { _layouts.selected = 1; }
+    else if( name == _( "Horizontal" ) ) { _layouts.selected = 2; }
+    else if( name == _( "To left" )    ) { _layouts.selected = 3; }
+    else if( name == _( "To right" )   ) { _layouts.selected = 4; }
+    else if( name == _( "Upwards" )    ) { _layouts.selected = 5; }
+    else if( name == _( "Downwards" )  ) { _layouts.selected = 6; }
+
+    /* Set the sensitivity of the Balance Nodes button */
+    _balance.set_sensitive( _da.layouts.get_layout( name ).balanceable );
+
+  }
+
   /* Makes sure that only the given theme is selected in the UI */
   private void select_theme( string name ) {
 
@@ -228,18 +245,8 @@ public class MapInspector : Box {
     select_theme( _da.get_theme_name() );
 
     /* Update the current layout in the UI */
-    var layout = _da.get_layout_name();
-    if( layout == _( "Manual" ) ) { _layouts.selected = 0; }
-    else if( layout == _( "Vertical" )   ) { _layouts.selected = 1; }
-    else if( layout == _( "Horizontal" ) ) { _layouts.selected = 2; }
-    else if( layout == _( "To left" )    ) { _layouts.selected = 3; }
-    else if( layout == _( "To right" )   ) { _layouts.selected = 4; }
-    else if( layout == _( "Upwards" )    ) { _layouts.selected = 5; }
-    else if( layout == _( "Downwards" )  ) { _layouts.selected = 6; }
-
-    /* Set the sensitivity of the Balance Nodes button */
-    _balance.set_sensitive( _da.layouts.get_layout( layout ).balanceable );
-
+    select_layout( _da.get_layout_name() );
+    
   }
 
 }
