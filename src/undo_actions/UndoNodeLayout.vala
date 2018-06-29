@@ -21,80 +21,28 @@
 
 public class UndoNodeLayout : UndoItem {
 
-  private class LayoutNodes {
-
-    private Array<Node>     _nodes;
-    private Array<NodeSide> _sides;
-
-    /* Stores the given node into this class */
-    public LayoutNodes( Node n ) {
-      _nodes = new Array<Node>();
-      _sides = new Array<NodeSide>();
-      for( int i=0; i<n.children().length; i++ ) {
-        _nodes.append_val( n.children().index( i ) );
-        _sides.append_val( n.children().index( i ).side );
-      }
-    }
-
-    /* Performs an undo operation for the stored nodes */
-    public void change( DrawArea da, Layout l, Node parent ) {
-      for( int i=0; i<_nodes.length; i++ ) {
-        Node n = _nodes.index( i );
-        n.detach( n.side, l );
-      }
-      for( int i=0; i<_nodes.length; i++ ) {
-        Node n = _nodes.index( i );
-        n.side = _sides.index( i );
-        l.propagate_side( n, n.side );
-        n.attach( parent, i, null, l );
-      }
-    }
-
-  }
-
-  private DrawArea            _da;
-  private Array<LayoutNodes>  _old;
-  private Array<LayoutNodes>? _new = null;
-  private Layout              _old_layout;
-  private Layout              _new_layout;
+  private DrawArea _da;
+  private string   _old_layout;
+  private string   _new_layout;
 
   /* Default constructor */
   public UndoNodeLayout( DrawArea da, Layout old_layout, Layout new_layout ) {
     base( _( "change layout" ) );
     _da         = da;
-    _old_layout = old_layout;
-    _new_layout = new_layout;
-    _old        = new Array<LayoutNodes>();
-    for( int i=0; i<da.get_nodes().length; i++ ) {
-      _old.append_val( new LayoutNodes( da.get_nodes().index( i ) ) );
-    }
-  }
-
-  /* Perform the swap */
-  private void change( Array<LayoutNodes> nodes, Layout layout ) {
-    _da.animator.add_nodes( "undo layout change" );
-    for( int i=0; i<_da.get_nodes().length; i++ ) {
-      nodes.index( i ).change( _da, layout, _da.get_nodes().index( i ) );
-    }
-    _da.animator.animate();
-    _da.set_layout( layout.name );
-    _da.loaded();
+    _old_layout = old_layout.name;
+    _new_layout = new_layout.name;
   }
 
   /* Performs an undo operation for this data */
   public override void undo() {
-    if( _new == null ) {
-      _new = new Array<LayoutNodes>();
-      for( int i=0; i<_da.get_nodes().length; i++ ) {
-        _new.append_val( new LayoutNodes( _da.get_nodes().index( i ) ) );
-      }
-    }
-    change( _old, _old_layout );
+    _da.set_layout( _old_layout, false );
+    _da.loaded();
   }
 
   /* Performs a redo operation */
   public override void redo() {
-    change( _new, _new_layout );
+    _da.set_layout( _new_layout, false );
+    _da.loaded();
   }
 
 }

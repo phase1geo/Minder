@@ -109,31 +109,32 @@ public class MainWindow : ApplicationWindow {
     _canvas.show_properties.connect( show_properties );
     _canvas.map_event.connect( on_canvas_mapped );
     _canvas.undo_buffer.buffer_changed.connect( do_buffer_changed );
+    _canvas.theme_changed.connect( on_theme_changed );
     _canvas.animator.enable = _settings.get_boolean( "enable-animations" );
 
     /* Create title toolbar */
-    var new_btn = new Button.from_icon_name( "document-new-symbolic", IconSize.SMALL_TOOLBAR );
+    var new_btn = new Button.from_icon_name( "document-new", IconSize.LARGE_TOOLBAR );
     new_btn.set_tooltip_markup( _( "New File   <i>(Control-N)</i>" ) );
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
 
-    var open_btn = new Button.from_icon_name( "document-open-symbolic", IconSize.SMALL_TOOLBAR );
+    var open_btn = new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR );
     open_btn.set_tooltip_markup( _( "Open File   <i>(Control-O)</i>" ) );
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
-    var save_btn = new Button.from_icon_name( "document-save-as-symbolic", IconSize.SMALL_TOOLBAR );
+    var save_btn = new Button.from_icon_name( "document-save-as", IconSize.LARGE_TOOLBAR );
     save_btn.set_tooltip_markup( _( "Save File As   <i>(Control-Shift-S)</i>" ) );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
-    _undo_btn = new Button.from_icon_name( "edit-undo-symbolic", IconSize.SMALL_TOOLBAR );
+    _undo_btn = new Button.from_icon_name( "edit-undo", IconSize.LARGE_TOOLBAR );
     _undo_btn.set_tooltip_markup( _( "Undo   <i>(Control-Z)</i>" ) );
     _undo_btn.set_sensitive( false );
     _undo_btn.clicked.connect( do_undo );
     _header.pack_start( _undo_btn );
 
-    _redo_btn = new Button.from_icon_name( "edit-redo-symbolic", IconSize.SMALL_TOOLBAR );
+    _redo_btn = new Button.from_icon_name( "edit-redo", IconSize.LARGE_TOOLBAR );
     _redo_btn.set_tooltip_markup( _( "Redo   <i>(Control-Shift-Z)</i>" ) );
     _redo_btn.set_sensitive( false );
     _redo_btn.clicked.connect( do_redo );
@@ -189,7 +190,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
-    menu_btn.set_image( new Image.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR ) );
+    menu_btn.set_image( new Image.from_icon_name( "zoom-fit-best", IconSize.LARGE_TOOLBAR ) );
     menu_btn.set_tooltip_text( _( "Zoom" ) );
     _header.pack_end( menu_btn );
 
@@ -251,7 +252,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     _search_btn = new MenuButton();
-    _search_btn.set_image( new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
+    _search_btn.set_image( new Image.from_icon_name( "edit-find", IconSize.LARGE_TOOLBAR ) );
     _search_btn.set_tooltip_markup( _( "Search   <i>(Control-F)</i>" ) );
     _header.pack_end( _search_btn );
 
@@ -294,7 +295,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
-    menu_btn.set_image( new Image.from_icon_name( "document-export-symbolic", IconSize.SMALL_TOOLBAR ) );
+    menu_btn.set_image( new Image.from_icon_name( "document-export", IconSize.LARGE_TOOLBAR ) );
     menu_btn.set_tooltip_text( _( "Export" ) );
     _header.pack_end( menu_btn );
 
@@ -337,7 +338,7 @@ public class MainWindow : ApplicationWindow {
   private void add_property_button() {
 
     /* Add the menubutton */
-    var menu_btn = new Button.from_icon_name( "document-properties-symbolic", IconSize.SMALL_TOOLBAR );
+    var menu_btn = new Button.from_icon_name( "document-properties", IconSize.LARGE_TOOLBAR );
     menu_btn.set_tooltip_text( _( "Properties" ) );
     menu_btn.clicked.connect( inspector_clicked );
     _header.pack_end( menu_btn );
@@ -551,6 +552,14 @@ public class MainWindow : ApplicationWindow {
   private bool on_canvas_mapped( Gdk.EventAny e ) {
     _canvas.queue_draw();
     return( false );
+  }
+
+  /* Called whenever the theme is changed */
+  private void on_theme_changed() {
+    Gtk.Settings? settings = Gtk.Settings.get_default();
+    if( settings != null ) {
+      settings.gtk_application_prefer_dark_theme = _canvas.get_theme().prefer_dark;
+    }
   }
 
   /*

@@ -85,7 +85,10 @@ public struct NodeBounds {
 
 public class Node : Object {
 
+  private static int _next_id = 0;
+
   /* Member variables */
+  protected int          _id;
   protected double       _width       = 0;
   protected double       _height      = 0;
   protected double       _padx        = 0;
@@ -172,6 +175,7 @@ public class Node : Object {
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
+    _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = da.create_pango_layout( null );
     _layout.set_width( 200 * Pango.SCALE );
@@ -182,6 +186,7 @@ public class Node : Object {
   /* Constructor initializing string */
   public Node.with_name( DrawArea da, string n, Layout? layout ) {
     name      = n;
+    _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = da.create_pango_layout( n );
     _layout.set_width( 200 * Pango.SCALE );
@@ -191,6 +196,7 @@ public class Node : Object {
 
   /* Copies an existing node to this node */
   public Node.copy( Node n ) {
+    _id       = _next_id++;
     copy_variables( n );
     mode = NodeMode.NONE;
     _children = n._children;
@@ -201,6 +207,7 @@ public class Node : Object {
 
   /* Copies an existing node tree to this node */
   public Node.copy_tree( Node n ) {
+    _id = _next_id++;
     copy_variables( n );
     mode = NodeMode.NONE;
     _children = new Array<Node>();
@@ -234,6 +241,11 @@ public class Node : Object {
     parent            = n.parent;
     side              = n.side;
     folded            = n.folded;
+  }
+
+  /* Returns the associated ID of this node */
+  public int id() {
+    return( _id );
   }
 
   /* Sets the posx value only, leaving the children positions alone */
@@ -425,6 +437,14 @@ public class Node : Object {
   /* Loads the file contents into this instance */
   public virtual void load( DrawArea da, Xml.Node* n, Layout? layout ) {
 
+    string? i = n->get_prop( "id" );
+    if( i != null ) {
+      _id = int.parse( i );
+      if( _next_id <= _id ) {
+        _next_id = _id + 1;
+      }
+    }
+
     string? x = n->get_prop( "posx" );
     if( x != null ) {
       posx = double.parse( x );
@@ -506,6 +526,7 @@ public class Node : Object {
   protected Xml.Node* save_node() {
 
     Xml.Node* node = new Xml.Node( null, "node" );
+    node->new_prop( "id", _id.to_string() );
     node->new_prop( "posx", posx.to_string() );
     node->new_prop( "posy", posy.to_string() );
     node->new_prop( "width", _width.to_string() );

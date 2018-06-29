@@ -80,10 +80,14 @@ public class Partitioner : Object {
         var pn   = new PartNode( node, layout );
         data.append( pn );
       }
-      CompareFunc<PartNode> pn_cmp = (a, b) => {
+      CompareFunc<PartNode> pn_cmp1 = (a, b) => {
+        return( (a.node().id() < b.node().id()) ? 1 : -1 );
+      };
+      CompareFunc<PartNode> pn_cmp2 = (a, b) => {
         return( (a.size() < b.size()) ? 1 : ((a.size() == b.size()) ? 0 : -1) );
       };
-      data.sort( pn_cmp );
+      data.sort( pn_cmp1 );
+      data.sort( pn_cmp2 );
       partition( root, data, layout );
     }
   }
