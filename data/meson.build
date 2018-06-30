@@ -15,6 +15,7 @@ custom_icons = [
   'minder-layout-left-symbolic',
   'minder-layout-down-symbolic',
   'minder-layout-manual-symbolic',
+  'minder-layout-up-symbolic',
   'minder-layout-vertical-symbolic',
   'minder-task-todo-symbolic'
 ]
