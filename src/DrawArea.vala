@@ -358,6 +358,9 @@ public class DrawArea : Gtk.DrawingArea {
     /* Clear the undo buffer */
     undo_buffer.clear();
 
+    /* Reset the node ID generator */
+    Node.reset();
+
     /* Initialize variables */
     origin_x       = 0.0;
     origin_y       = 0.0;
@@ -384,6 +387,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Clear the undo buffer */
     undo_buffer.clear();
+
+    /* Reset the node ID generator */
+    Node.reset();
 
     /* Initialize variables */
     origin_x       = 0.0;

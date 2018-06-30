@@ -218,6 +218,11 @@ public class Node : Object {
     }
   }
 
+  /* Resets the ID generator.  This should be called whenever a new document is started. */
+  public static void reset() {
+    _next_id = 0;
+  }
+
   /* Copies just the variables of the node, minus the children nodes */
   public void copy_variables( Node n ) {
     _width            = n._width;
