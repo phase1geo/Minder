@@ -79,12 +79,7 @@
   </content_rating>
 
   <releases>
-    <release version="1.0.1" date="6/26/2018">
-      <description>
-        <p>Initial release</p>
-      </description>
-    </release>
-    <release version="1.0.0" date="6/16/2018">
+    <release version="1.0.2" date="6/29/2018">
       <description>
         <p>Initial release</p>
       </description>
