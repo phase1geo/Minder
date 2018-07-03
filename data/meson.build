@@ -17,7 +17,9 @@ custom_icons = [
   'minder-layout-manual-symbolic',
   'minder-layout-up-symbolic',
   'minder-layout-vertical-symbolic',
-  'minder-task-todo-symbolic'
+  'minder-note-symbolic',
+  'minder-task-todo-symbolic',
+  'minder-title-symbolic'
 ]
 
 foreach i : custom_icons

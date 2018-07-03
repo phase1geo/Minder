@@ -1061,19 +1061,31 @@ public class Node : Object {
   }
 
   /*
+   Checks the given string to see if it is a match to the given pattern.  If
+   it is, the matching portion of the string appended to the list of matches.
+  */
+  private void match_string( string pattern, string value, string type, ref Gtk.ListStore matches ) {
+    int index = value.casefold().index_of( pattern );
+    if( index != -1 ) {
+      TreeIter it;
+      int    start_index = (index > 20) ? (index - 20) : 0;
+      string prefix      = (index > 20) ? "..."        : "";
+      string str         = prefix +
+                           value.substring( start_index, (index - start_index) ) + "<u>" +
+                           value.substring( index, pattern.length ) + "</u>" +
+                           value.substring( (index + pattern.length), -1 );
+      matches.append( out it );
+      matches.set( it, 0, type, 1, str, 2, this, -1 );
+    }
+  }
+
+  /*
    Populates the given ListStore with all nodes that have names that match
    the given string pattern.
   */
   public void get_match_items( string pattern, ref Gtk.ListStore matches ) {
-    int index = name.casefold().index_of( pattern );
-    if( index != -1 ) {
-      TreeIter it;
-      string str = name.substring( 0, index ) + "<u>" +
-                   name.substring( index, pattern.length ) + "</u>" +
-                   name.substring( (index + pattern.length), -1 );
-      matches.append( out it );
-      matches.set( it, 0, str, 1, this );
-    }
+    match_string( pattern, name, "minder-title-symbolic", ref matches );
+    match_string( pattern, note, "minder-note-symbolic",  ref matches );
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).get_match_items( pattern, ref matches );
     }
@@ -1084,7 +1096,7 @@ public class Node : Object {
     posx -= origin_x;
     posy -= origin_y;
   }
-  
+
   /*
    Called when the theme is changed by the user.  Looks up this
    node's link color in the old theme to see if it is a themed color.

@@ -1,5 +1,9 @@
 # Minder
 
+<p align="center">
+  <a href="https://appcenter.elementary.io/com.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
+</p>
+
 ![Screenshot](data/screenshots/screenshot-light.png "Mind-mapping application for Elementary OS")
 
 
@@ -51,3 +55,6 @@ When the application is first launched, a main idea node will be displayed in th
 
 The property sidebar can be shown or hidden by clicking on the gear icon in the upper right corner of the window. This sidebar contains two tabs, one for editing or taking action on the currently selected node. The other tab allows you to modify the layout or theme that is used for the entire mind map.
 
+<p align="center">
+  <a href="https://appcenter.elementary.io/com.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
+</p>

@@ -264,11 +264,12 @@ public class MainWindow : ApplicationWindow {
     _search_entry.placeholder_text = _( "Search Nodes" );
     _search_entry.search_changed.connect( on_search_change );
 
-    _search_items = new Gtk.ListStore( 2, typeof(string), typeof(Node) );
+    _search_items = new Gtk.ListStore( 3, typeof(string), typeof(string), typeof(Node) );
 
     /* Create the treeview */
     _search_list = new TreeView.with_model( _search_items );
-    _search_list.insert_column_with_attributes( -1, null, new CellRendererText(), "markup", 0 );
+    _search_list.insert_column_with_attributes( -1, null, new CellRendererPixbuf(), "icon-name", 0, null );
+    _search_list.insert_column_with_attributes( -1, null, new CellRendererText(),   "markup",    1, null );
     _search_list.headers_visible = false;
     _search_list.activate_on_single_click = true;
     _search_list.row_activated.connect( on_search_clicked );
@@ -767,7 +768,7 @@ public class MainWindow : ApplicationWindow {
     TreeIter it;
     Node?    node = null;
     _search_items.get_iter( out it, path );
-    _search_items.get( it, 1, &node, -1 );
+    _search_items.get( it, 2, &node, -1 );
     if( node != null ) {
       _canvas.set_current_node( node );
       _canvas.see();
