@@ -254,6 +254,7 @@ public class MainWindow : ApplicationWindow {
     _search_btn = new MenuButton();
     _search_btn.set_image( new Image.from_icon_name( "edit-find", IconSize.LARGE_TOOLBAR ) );
     _search_btn.set_tooltip_markup( _( "Search   <i>(Control-F)</i>" ) );
+    _search_btn.clicked.connect( on_search_change );
     _header.pack_end( _search_btn );
 
     /* Create search popover */
@@ -262,6 +263,7 @@ public class MainWindow : ApplicationWindow {
     /* Create the search entry field */
     _search_entry = new SearchEntry();
     _search_entry.placeholder_text = _( "Search Nodes" );
+    _search_entry.width_chars = 30;
     _search_entry.search_changed.connect( on_search_change );
 
     _search_items = new Gtk.ListStore( 3, typeof(string), typeof(string), typeof(Node) );
@@ -272,6 +274,7 @@ public class MainWindow : ApplicationWindow {
     _search_list.insert_column_with_attributes( -1, null, new CellRendererText(),   "markup",    1, null );
     _search_list.headers_visible = false;
     _search_list.activate_on_single_click = true;
+    _search_list.enable_search = false;
     _search_list.row_activated.connect( on_search_clicked );
 
     /* Create the scrolled window for the treeview */
