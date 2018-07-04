@@ -1083,11 +1083,13 @@ public class Node : Object {
    Populates the given ListStore with all nodes that have names that match
    the given string pattern.
   */
-  public void get_match_items( string pattern, ref Gtk.ListStore matches ) {
-    match_string( pattern, name, "minder-title-symbolic", ref matches );
-    match_string( pattern, note, "minder-note-symbolic",  ref matches );
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).get_match_items( pattern, ref matches );
+  public void get_match_items( string pattern, bool search_folded, ref Gtk.ListStore matches ) {
+    match_string( pattern, name, "<b><i>Name:</i></b>", ref matches );
+    match_string( pattern, note, "<b><i>Note:</i></b>", ref matches );
+    if( !folded || search_folded ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).get_match_items( pattern, search_folded, ref matches );
+      }
     }
   }
 

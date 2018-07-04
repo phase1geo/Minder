@@ -37,6 +37,7 @@ public class MainWindow : ApplicationWindow {
   private TreeView       _search_list    = null;
   private Gtk.ListStore  _search_items   = null;
   private ScrolledWindow _search_scroll  = null;
+  private Switch?        _folded_switch  = null;
   private Popover?       _export         = null;
   private Scale?         _zoom_scale     = null;
   private ModelButton?   _zoom_in        = null;
@@ -269,9 +270,11 @@ public class MainWindow : ApplicationWindow {
     _search_items = new Gtk.ListStore( 3, typeof(string), typeof(string), typeof(Node) );
 
     /* Create the treeview */
-    _search_list = new TreeView.with_model( _search_items );
-    _search_list.insert_column_with_attributes( -1, null, new CellRendererPixbuf(), "icon-name", 0, null );
-    _search_list.insert_column_with_attributes( -1, null, new CellRendererText(),   "markup",    1, null );
+    _search_list  = new TreeView.with_model( _search_items );
+    var type_cell = new CellRendererText();
+    type_cell.xalign = 1;
+    _search_list.insert_column_with_attributes( -1, null, type_cell,              "markup", 0, null );
+    _search_list.insert_column_with_attributes( -1, null, new CellRendererText(), "markup", 1, null );
     _search_list.headers_visible = false;
     _search_list.activate_on_single_click = true;
     _search_list.enable_search = false;
@@ -283,7 +286,11 @@ public class MainWindow : ApplicationWindow {
     _search_scroll.hscrollbar_policy = PolicyType.EXTERNAL;
     _search_scroll.add( _search_list );
 
+    var search_opts = new Expander( _( "Search Options" ) );
+    search_opts.add( create_search_options_box() );
+
     box.pack_start( _search_entry,  false, true );
+    box.pack_start( search_opts,    false, true );
     box.pack_start( _search_scroll, true,  true );
     box.show_all();
 
@@ -292,6 +299,33 @@ public class MainWindow : ApplicationWindow {
     _search.add( box );
     _search_btn.popover = _search;
 
+  }
+
+  private Box create_search_options_box() {
+
+    var box = new Box( Orientation.VERTICAL, 5 );
+
+    /* Create the folded widget */
+    var folded_box   = new Box( Orientation.HORIZONTAL, 5 );
+    var folded_label = new Label( _( "Search Folded Nodes" ) );
+    folded_label.xalign = (float)0;
+    _folded_switch   = new Switch();
+    _folded_switch.active = true;
+    _folded_switch.state_set.connect( search_folded_changed );
+    folded_box.pack_start( folded_label,   false, true, 5 );
+    folded_box.pack_end(   _folded_switch, false, true, 5 );
+
+    box.pack_start( folded_box, false, true, 5 );
+    box.show_all();
+
+    return( box );
+
+  }
+
+  /* Called when the user changes the search folded nodes switch */
+  private bool search_folded_changed( bool state ) {
+    on_search_change();
+    return( false );
   }
 
   /* Adds the export functionality */
@@ -759,7 +793,11 @@ public class MainWindow : ApplicationWindow {
   private void on_search_change() {
     _search_items.clear();
     if( _search_entry.get_text() != "" ) {
-      _canvas.get_match_items( _search_entry.get_text().casefold(), ref _search_items );
+      _canvas.get_match_items(
+        _search_entry.get_text().casefold(),
+        _folded_switch.active,
+        ref _search_items
+      );
     }
   }
 
