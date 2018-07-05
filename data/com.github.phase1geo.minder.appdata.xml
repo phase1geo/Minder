@@ -23,31 +23,31 @@
   <screenshots>
     <screenshot type="default">
       <caption>Main Application - Light Theme</caption>
-      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-light.png</image>
+      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-light.png?raw=true</image>
     </screenshot>
     <screenshot>
       <caption>Main Application - Dark Theme</caption>
-      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-dark.png</image>
+      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-dark.png?raw=true</image>
     </screenshot>
     <screenshot>
       <caption>Node Property Sidebar</caption>
-      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-node-properties.png</image>
+      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-node-properties.png?raw=true</image>
     </screenshot>
     <screenshot>
       <caption>Map Property Sidebar</caption>
-      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-map-properties.png</image>
+      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-map-properties.png?raw=true</image>
     </screenshot>
   </screenshots>
   <developer_name>Trevor Williams</developer_name>
   <url type="homepage">https://github.com/phase1geo/minder/</url>
   <url type="bugtracker">https://github.com/phase1geo/minder/issues/</url>
-  
+
   <custom>
     <value key="x-appcenter-color-primary">#603461</value>
     <value key="x-appcenter-color-primary-text">rgb(255, 255, 255)</value>
     <value key="x-appcenter-suggested-price">5</value>
   </custom>
-  
+
   <content_rating type="oars-1.1">
     <content_attribute id="violence-cartoon">none</content_attribute>
     <content_attribute id="violence-fantasy">none</content_attribute>
@@ -85,5 +85,5 @@
       </description>
     </release>
   </releases>
-  
+
 </component>
