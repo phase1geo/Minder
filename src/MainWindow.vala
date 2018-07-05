@@ -45,6 +45,9 @@ public class MainWindow : ApplicationWindow {
   private ModelButton?   _zoom_sel       = null;
   private Button?        _undo_btn       = null;
   private Button?        _redo_btn       = null;
+  private Button?        _prop_btn       = null;
+  private Image?         _prop_show      = null;
+  private Image?         _prop_hide      = null;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_new",           action_new },
@@ -376,10 +379,13 @@ public class MainWindow : ApplicationWindow {
   private void add_property_button() {
 
     /* Add the menubutton */
-    var menu_btn = new Button.from_icon_name( "document-properties", IconSize.LARGE_TOOLBAR );
-    menu_btn.set_tooltip_text( _( "Properties" ) );
-    menu_btn.clicked.connect( inspector_clicked );
-    _header.pack_end( menu_btn );
+    _prop_show = new Image.from_icon_name( "pane-show-symbolic", IconSize.LARGE_TOOLBAR );
+    _prop_hide = new Image.from_icon_name( "pane-hide-symbolic", IconSize.LARGE_TOOLBAR );
+    _prop_btn  = new Button();
+    _prop_btn.image = _prop_show;
+    _prop_btn.set_tooltip_text( _( "Properties" ) );
+    _prop_btn.clicked.connect( inspector_clicked );
+    _header.pack_end( _prop_btn );
 
     /* Create the inspector sidebar */
     var box = new Box( Orientation.VERTICAL, 20 );
@@ -660,6 +666,7 @@ public class MainWindow : ApplicationWindow {
   /* Displays the node properties panel for the current node */
   private void show_properties( string? tab, bool grab_note ) {
     if( _inspector.reveal_child && ((tab == null) || (_stack.visible_child_name == tab)) ) return;
+    _prop_btn.image = _prop_hide;
     if( tab != null ) {
       _stack.visible_child_name = tab;
     }
@@ -680,6 +687,7 @@ public class MainWindow : ApplicationWindow {
   /* Hides the node properties panel */
   private void hide_properties() {
     if( !_inspector.reveal_child ) return;
+    _prop_btn.image = _prop_show;
     _inspector.reveal_child = false;
     _settings.set_boolean( "node-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",  false );
