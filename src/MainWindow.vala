@@ -37,7 +37,9 @@ public class MainWindow : ApplicationWindow {
   private TreeView       _search_list    = null;
   private Gtk.ListStore  _search_items   = null;
   private ScrolledWindow _search_scroll  = null;
-  private Switch?        _folded_switch  = null;
+  private ComboBox?      _meta_opts      = null;
+  private ComboBox?      _folded_opts    = null;
+  private ComboBox?      _task_opts      = null;
   private Popover?       _export         = null;
   private Scale?         _zoom_scale     = null;
   private ModelButton?   _zoom_in        = null;
@@ -68,6 +70,8 @@ public class MainWindow : ApplicationWindow {
     { "action_export_png",    action_export_png },
     { "action_export_print",  action_export_print }
   };
+
+  private delegate void ChangedFunc();
 
   /* Create the main window UI */
   public MainWindow( Gtk.Application app, GLib.Settings settings ) {
@@ -267,7 +271,7 @@ public class MainWindow : ApplicationWindow {
     /* Create the search entry field */
     _search_entry = new SearchEntry();
     _search_entry.placeholder_text = _( "Search Nodes" );
-    _search_entry.width_chars = 30;
+    _search_entry.width_chars = 40;
     _search_entry.search_changed.connect( on_search_change );
 
     _search_items = new Gtk.ListStore( 3, typeof(string), typeof(string), typeof(Node) );
@@ -289,12 +293,14 @@ public class MainWindow : ApplicationWindow {
     _search_scroll.hscrollbar_policy = PolicyType.EXTERNAL;
     _search_scroll.add( _search_list );
 
-    var search_opts = new Expander( _( "Search Options" ) );
+    var search_opts = new Expander( _( "Search Criteria" ) );
     search_opts.add( create_search_options_box() );
 
+    box.margin = 5;
     box.pack_start( _search_entry,  false, true );
-    box.pack_start( search_opts,    false, true );
     box.pack_start( _search_scroll, true,  true );
+    box.pack_start( new Separator( Orientation.HORIZONTAL ) );
+    box.pack_start( search_opts,    false, true, 5 );
     box.show_all();
 
     /* Create the popover and associate it with the menu button */
@@ -304,31 +310,80 @@ public class MainWindow : ApplicationWindow {
 
   }
 
+  /* Create the search criteria box */
   private Box create_search_options_box() {
 
     var box = new Box( Orientation.VERTICAL, 5 );
 
+    /* Create the metadata widget */
+    var meta_box   = new Box( Orientation.HORIZONTAL, 5 );
+    var meta_label = new Label( _( "Search Metadata" ) );
+
+    meta_label.xalign = (float)0;
+    _meta_opts        = create_combobox( { _( "Titles only" ), _( "Notes only"), _( "All" )} );
+    _meta_opts.active = _settings.get_int( "search-opt-meta" );
+    _meta_opts.changed.connect( on_search_opt_change );
+
+    meta_box.homogeneous = true;
+    meta_box.pack_start( meta_label, false, true, 5 );
+    meta_box.pack_end(   _meta_opts, true,  true, 5 );
+
     /* Create the folded widget */
     var folded_box   = new Box( Orientation.HORIZONTAL, 5 );
     var folded_label = new Label( _( "Search Folded Nodes" ) );
-    folded_label.xalign = (float)0;
-    _folded_switch   = new Switch();
-    _folded_switch.active = true;
-    _folded_switch.state_set.connect( search_folded_changed );
-    folded_box.pack_start( folded_label,   false, true, 5 );
-    folded_box.pack_end(   _folded_switch, false, true, 5 );
 
-    box.pack_start( folded_box, false, true, 5 );
+    folded_label.xalign = (float)0;
+    _folded_opts        = create_combobox( { _( "Unfolded only" ), _( "Folded only" ), _( "All" )} );
+    _folded_opts.active = _settings.get_int( "search-opt-folded" );
+    _folded_opts.changed.connect( on_search_opt_change );
+
+    folded_box.homogeneous = true;
+    folded_box.pack_start( folded_label, false, true, 5 );
+    folded_box.pack_end(   _folded_opts, false, true, 5 );
+
+    /* Create the task widget */
+    var task_box = new Box( Orientation.HORIZONTAL, 5 );
+    var task_label = new Label( _( "Search Tasks" ) );
+
+    task_label.xalign = (float)0;
+    _task_opts        = create_combobox( { _( "Non-tasks only" ), _( "Tasks only" ), _( "All" )} );
+    _task_opts.active = _settings.get_int( "search-opt-task" );
+    _task_opts.changed.connect( on_search_opt_change );
+
+    task_box.homogeneous = true;
+    task_box.pack_start( task_label, false, true, 5 );
+    task_box.pack_end(   _task_opts, false, true, 5 );
+
+    box.margin_top = 10;
+    box.pack_start( meta_box,   false, true, 0 );
+    box.pack_start( folded_box, false, true, 0 );
+    box.pack_start( task_box,   false, true, 0 );
     box.show_all();
 
     return( box );
 
   }
 
-  /* Called when the user changes the search folded nodes switch */
-  private bool search_folded_changed( bool state ) {
-    on_search_change();
-    return( false );
+  /* Creates a combobox with the given values */
+  private ComboBox create_combobox( string[] values ) {
+
+    var      store = new Gtk.ListStore( 1, typeof( string ) );
+    TreeIter iter;
+
+    foreach( string value in values) {
+      store.append( out iter );
+      store.set( iter, 0, value );
+    }
+
+    var cbox = new ComboBox.with_model( store );
+    var cell = new CellRendererText();
+
+    cbox.pack_start( cell, true );
+    cbox.add_attribute( cell, "text", 0 );
+    cbox.active = 0;
+
+    return( cbox );
+
   }
 
   /* Adds the export functionality */
@@ -362,9 +417,11 @@ public class MainWindow : ApplicationWindow {
     print.action_name = "win.action_export_print";
     print.set_sensitive( false );
 
+    box.margin = 5;
     box.pack_start( opml,  false, true );
     box.pack_start( pdf,   false, true );
     box.pack_start( png,   false, true );
+    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
     box.pack_start( print, false, true );
     box.show_all();
 
@@ -797,13 +854,22 @@ public class MainWindow : ApplicationWindow {
     _canvas.grab_focus();
   }
 
+  /* Called whenever one of the search options have changed */
+  private void on_search_opt_change() {
+    _settings.set_int( "search-opt-meta",   _meta_opts.active );
+    _settings.set_int( "search-opt-folded", _folded_opts.active );
+    _settings.set_int( "search-opt-task",   _task_opts.active );
+    on_search_change();
+  }
+
   /* Display matched items to the search within the search popover */
   private void on_search_change() {
+    int[] search_opts = { _meta_opts.active, _folded_opts.active, _task_opts.active };
     _search_items.clear();
     if( _search_entry.get_text() != "" ) {
       _canvas.get_match_items(
         _search_entry.get_text().casefold(),
-        _folded_switch.active,
+        search_opts,
         ref _search_items
       );
     }

@@ -55,7 +55,7 @@ public class NodeInspector : Stack {
     add_named( empty_box, "empty" );
 
     /* Create the node widgets */
-    create_name( node_box );
+    create_title( node_box );
     create_task( node_box );
     create_fold( node_box );
     create_link( node_box );
@@ -75,10 +75,10 @@ public class NodeInspector : Stack {
   }
 
   /* Creates the name entry */
-  private void create_name( Box bbox ) {
+  private void create_title( Box bbox ) {
 
     Box   box = new Box( Orientation.VERTICAL, 2 );
-    Label lbl = new Label( _( "Name" ) );
+    Label lbl = new Label( _( "Title" ) );
 
     _name = new Entry();
     _name.activate.connect( name_changed );
