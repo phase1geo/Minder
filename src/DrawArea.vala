@@ -454,8 +454,9 @@ public class DrawArea : Gtk.DrawingArea {
       if( _current_node != null ) {
         _current_node.mode = NodeMode.NONE;
       }
-      _current_node = n;
+      _current_node      = n;
       _current_node.mode = NodeMode.CURRENT;
+      _current_node.reveal( _layout );
       node_changed();
     }
   }
@@ -1064,12 +1065,12 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns true if there is a child node of the current node */
   public bool child_selectable() {
-    return( (_current_node != null) && !_current_node.is_leaf() );
+    return( (_current_node != null) && !_current_node.is_leaf() && !_current_node.folded );
   }
 
   /* Selects the first child node of the current node */
   public void select_first_child_node() {
-    if( (_current_node != null) && !_current_node.is_leaf() ) {
+    if( (_current_node != null) && !_current_node.is_leaf() && !_current_node.folded ) {
       if( select_node( _current_node.children().index( 0 ) ) ) {
         queue_draw();
       }
@@ -1257,7 +1258,9 @@ public class DrawArea : Gtk.DrawingArea {
     if( !_current_node.is_root() ) {
       node.side = _current_node.side;
     }
-    _current_node.mode = NodeMode.NONE;
+    _current_node.mode   = NodeMode.NONE;
+    _current_node.folded = false;
+    _layout.handle_update_by_fold( _current_node );
     node.attach( _current_node, -1, _theme, _layout );
     undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
     if( select_node( node ) ) {

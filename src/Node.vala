@@ -102,6 +102,7 @@ public class Node : Object {
   private   NodeMode     _mode        = NodeMode.NONE;
   private   int          _task_count  = 0;
   private   int          _task_done   = 0;
+  private   bool         _folded      = false;
   private   Pango.Layout _layout      = null;
   private   double       _posx        = 0;
   private   double       _posy        = 0;
@@ -156,7 +157,17 @@ public class Node : Object {
   }
   public Node?    parent     { get; protected set; default = null; }
   public NodeSide side       { get; set; default = NodeSide.RIGHT; }
-  public bool     folded     { get; set; default = false; }
+  public bool     folded {
+    get {
+      return( _folded );
+    }
+    set {
+      _folded = value;
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).folded = value;
+      }
+    }
+  }
   public double   tree_size  { get; set; default = 0; }
   public RGBA     link_color {
     get {
@@ -198,7 +209,7 @@ public class Node : Object {
   public Node.copy( Node n ) {
     _id       = _next_id++;
     copy_variables( n );
-    mode = NodeMode.NONE;
+    mode      = NodeMode.NONE;
     _children = n._children;
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).parent = this;
@@ -207,9 +218,9 @@ public class Node : Object {
 
   /* Copies an existing node tree to this node */
   public Node.copy_tree( Node n ) {
-    _id = _next_id++;
+    _id       = _next_id++;
     copy_variables( n );
-    mode = NodeMode.NONE;
+    mode      = NodeMode.NONE;
     _children = new Array<Node>();
     for( int i=0; i<n._children.length; i++ ) {
       Node child = new Node.copy_tree( n._children.index( i ) );
@@ -225,27 +236,27 @@ public class Node : Object {
 
   /* Copies just the variables of the node, minus the children nodes */
   public void copy_variables( Node n ) {
-    _width            = n._width;
-    _height           = n._height;
-    _padx             = n._padx;
-    _pady             = n._pady;
-    _ipadx            = n._ipadx;
-    _ipady            = n._ipady;
-    _task_radius      = n._task_radius;
-    _alpha            = n._alpha;
-    _cursor           = n._cursor;
-    _task_count       = n._task_count;
-    _task_done        = n._task_done;
-    _layout           = n._layout;
-    _posx             = n._posx;
-    _posy             = n._posy;
-    _link_color       = n._link_color;
-    name              = n.name;
-    note              = n.note;
-    mode              = n.mode;
-    parent            = n.parent;
-    side              = n.side;
-    folded            = n.folded;
+    _width       = n._width;
+    _height      = n._height;
+    _padx        = n._padx;
+    _pady        = n._pady;
+    _ipadx       = n._ipadx;
+    _ipady       = n._ipady;
+    _task_radius = n._task_radius;
+    _alpha       = n._alpha;
+    _cursor      = n._cursor;
+    _task_count  = n._task_count;
+    _task_done   = n._task_done;
+    _layout      = n._layout;
+    _posx        = n._posx;
+    _posy        = n._posy;
+    _link_color  = n._link_color;
+    name         = n.name;
+    note         = n.note;
+    mode         = n.mode;
+    parent       = n.parent;
+    side         = n.side;
+    folded       = n.folded;
   }
 
   /* Returns the associated ID of this node */
@@ -949,9 +960,11 @@ public class Node : Object {
 
   /* Returns a reference to the first child of this node */
   public virtual Node? first_child( NodeSide? side = null ) {
-    for( int i=0; i<(int)_children.length; i++ ) {
-      if( (side == null) || (_children.index( i ).side == side) ) {
-        return( _children.index( i ) );
+    if( !folded ) {
+      for( int i=0; i<(int)_children.length; i++ ) {
+        if( (side == null) || (_children.index( i ).side == side) ) {
+          return( _children.index( i ) );
+        }
       }
     }
     return( null );
@@ -959,9 +972,11 @@ public class Node : Object {
 
   /* Returns a reference to the last child of this node */
   public virtual Node? last_child( NodeSide? side = null ) {
-    for( int i=((int)_children.length - 1); i>=0; i-- ) {
-      if( (side == null) || (_children.index( i ).side == side) ) {
-        return( _children.index( i ) );
+    if( !folded ) {
+      for( int i=((int)_children.length - 1); i>=0; i-- ) {
+        if( (side == null) || (_children.index( i ).side == side) ) {
+          return( _children.index( i ) );
+        }
       }
     }
     return( null );
@@ -1058,6 +1073,19 @@ public class Node : Object {
   */
   public void toggle_task_done() {
     set_task_done( _task_done == 0 );
+  }
+
+  /* Set all ancestor nodes fold indicators to false */
+  public void reveal( Layout layout ) {
+    var tmp = parent;
+    while( tmp != null ) {
+      if( !tmp._folded ) {
+        return;
+      }
+      tmp._folded = false;
+      layout.handle_update_by_fold( tmp );
+      tmp = tmp.parent;
+    }
   }
 
   /*
