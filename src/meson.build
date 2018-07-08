@@ -34,6 +34,7 @@ sources += files(
     'undo_actions/UndoNodeName.vala',
     'undo_actions/UndoNodeNote.vala',
     'undo_actions/UndoNodePaste.vala',
+    'undo_actions/UndoNodeReveal.vala',
     'undo_actions/UndoNodeTask.vala',
 
     'Animator.vala',

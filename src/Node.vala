@@ -1075,17 +1075,21 @@ public class Node : Object {
     set_task_done( _task_done == 0 );
   }
 
-  /* Set all ancestor nodes fold indicators to false */
-  public void reveal( Layout layout ) {
+  /*
+   Set all ancestor nodes fold indicators to false.  Returns the last node
+   that is last node that is folded.
+  */
+  public Node reveal( Layout layout ) {
     var tmp = parent;
     while( tmp != null ) {
       if( !tmp._folded ) {
-        return;
+        return( tmp );
       }
       tmp._folded = false;
       layout.handle_update_by_fold( tmp );
-      tmp = tmp.parent;
+      tmp  = tmp.parent;
     }
+    return( tmp );
   }
 
   /*

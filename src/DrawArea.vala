@@ -454,9 +454,12 @@ public class DrawArea : Gtk.DrawingArea {
       if( _current_node != null ) {
         _current_node.mode = NodeMode.NONE;
       }
+      if( (n.parent != null) && n.parent.folded ) {
+        var last = n.reveal( _layout );
+        undo_buffer.add_item( new UndoNodeReveal( this, n, last ) );
+      }
       _current_node      = n;
       _current_node.mode = NodeMode.CURRENT;
-      _current_node.reveal( _layout );
       node_changed();
     }
   }
@@ -583,6 +586,8 @@ public class DrawArea : Gtk.DrawingArea {
               case EventType.DOUBLE_BUTTON_PRESS :  match.set_cursor_at_word( x, y, false );  break;
               case EventType.TRIPLE_BUTTON_PRESS :  match.set_cursor_all( false );            break;
             }
+          } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
+            _current_node.mode = NodeMode.EDITABLE;
           }
           return( true );
         } else {
@@ -833,7 +838,7 @@ public class DrawArea : Gtk.DrawingArea {
       _nodes.index( i ).draw_all( ctx, _theme, _current_node, false );
     }
     /* Draw the current node on top of all others */
-    if( _current_node != null ) {
+    if( (_current_node != null) && ((_current_node.parent == null) || !_current_node.parent.folded) ) {
       _current_node.draw_all( ctx, _theme, null, true );
     }
   }
@@ -867,8 +872,6 @@ public class DrawArea : Gtk.DrawingArea {
         break;
       case Gdk.BUTTON_SECONDARY :
         _popup_menu.popup( null, null, null, event.button, event.time );
-        // TBD - This should be available for Juno
-        // _popup_menu.popup_at_pointer();
         break;
     }
     return( false );
@@ -1259,10 +1262,10 @@ public class DrawArea : Gtk.DrawingArea {
       node.side = _current_node.side;
     }
     _current_node.mode   = NodeMode.NONE;
-    _current_node.folded = false;
-    _layout.handle_update_by_fold( _current_node );
     node.attach( _current_node, -1, _theme, _layout );
     undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
+    _current_node.folded = false;
+    _layout.handle_update_by_fold( _current_node );
     if( select_node( node ) ) {
       node.mode = NodeMode.EDITABLE;
       queue_draw();
@@ -1453,7 +1456,10 @@ public class DrawArea : Gtk.DrawingArea {
         changed();
       } else if( is_mode_selected() ) {
         switch( str ) {
-          case "e" :  _current_node.mode = NodeMode.EDITABLE;  break;
+          case "e" :
+            _current_node.mode = NodeMode.EDITABLE;
+            queue_draw();
+            break;
           case "n" :  select_sibling_node( 1 );  break;
           case "p" :  select_sibling_node( -1 );  break;
           case "a" :  select_parent_node();  break;
