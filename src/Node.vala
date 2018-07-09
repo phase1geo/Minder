@@ -494,7 +494,7 @@ public class Node : Object {
 
     string? f = n->get_prop( "fold" );
     if( f != null ) {
-      folded = bool.parse( f );
+      _folded = bool.parse( f );
     }
 
     string? ts = n->get_prop( "treesize" );
@@ -551,7 +551,7 @@ public class Node : Object {
       node->new_prop( "task", _task_done.to_string() );
     }
     node->new_prop( "side", side.to_string() );
-    node->new_prop( "fold", folded.to_string() );
+    node->new_prop( "fold", _folded.to_string() );
     node->new_prop( "treesize", tree_size.to_string() );
     if( !is_root() ) {
       node->new_prop( "color", color_from_rgba( _link_color ) );
@@ -597,10 +597,10 @@ public class Node : Object {
 
     /* Figure out if this node is folded */
     if( expand_state != null ) {
-      folded = true;
+      _folded = true;
       for( int i=0; i<expand_state.length; i++ ) {
         if( expand_state.index( i ) == node_id ) {
-          folded = false;
+          _folded = false;
           expand_state.remove_index( i );
           break;
         }
