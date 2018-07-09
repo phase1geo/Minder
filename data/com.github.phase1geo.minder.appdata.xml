@@ -79,6 +79,21 @@
   </content_rating>
 
   <releases>
+    <release version="1.0.3" date="7/9/2018">
+      <description>
+        <p>Search improvements and bug fixes</p>
+        <ul>
+          <li>Added ability to search within notes.</li>
+          <li>Added ability to optionally control search criteria within search popover.</li>
+          <li>Fixed screenshots.</li>
+          <li>Changed properties header bar icon to a sidebar hide/show icon for clarity.</li>
+          <li>Several minor UI improvements.</li>
+          <li>Removing deprecated GTK calls.</li>
+          <li>Added ability to double-click on a node to make it editable.</li>
+          <li>Bug fixes.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.2" date="6/29/2018">
       <description>
         <p>Initial release</p>
