@@ -41,20 +41,35 @@
       <summary>Enables/Disables canvas animations</summary>
       <description>Controls the initial state of the canvas animator</description>
     </key>
-    <key name="search-opt-meta" type="i">
-      <default>2</default>
-      <summary>Type of node metadata strings to search</summary>
-      <description>0=Node titles only, 1=Node notes only, 2=All</description>
+    <key name="search-opt-titles" type="b">
+      <default>true</default>
+      <summary>Search option for node titles</summary>
+      <description>Specifies whether node titles should be searched or not</description>
     </key>
-    <key name="search-opt-folded" type="i">
-      <default>2</default>
-      <summary>Specifies the folded state of nodes to search</summary>
-      <description>0=Unfolded nodes only, 1=Folded nodes only, 2=All</description>
+    <key name="search-opt-notes" type="b">
+      <default>true</default>
+      <summary>Search option for node notes</summary>
+      <description>Specifies whether node notes should be searched or not</description>
     </key>
-    <key name="search-opt-task" type="i">
-      <default>2</default>
-      <summary>Specifies the task state of nodes to search</summary>
-      <description>0=Non-task nodes only, 1=Task nodes only, 2=All</description>
+    <key name="search-opt-folded" type="b">
+      <default>true</default>
+      <summary>Search option for folded nodes</summary>
+      <description>Specifies whether folded nodes should be searched or not</description>
+    </key>
+    <key name="search-opt-unfolded" type="b">
+      <default>true</default>
+      <summary>Search option for unfolded nodes</summary>
+      <description>Specifies whether unfolded nodes should be searched or not</description>
+    </key>
+    <key name="search-opt-tasks" type="b">
+      <default>true</default>
+      <summary>Search option for task nodes</summary>
+      <description>Specifies whether task nodes should be searched or not</description>
+    </key>
+    <key name="search-opt-nontasks" type="b">
+      <default>true</default>
+      <summary>Search option for non-task nodes</summary>
+      <description>Specifies whether non-task nodes should be searched or not</description>
     </key>
   </schema>
 </schemalist>

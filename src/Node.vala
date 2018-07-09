@@ -1115,20 +1115,20 @@ public class Node : Object {
    Populates the given ListStore with all nodes that have names that match
    the given string pattern.
   */
-  public void get_match_items( string pattern, int[] search_opts, ref Gtk.ListStore matches ) {
-    if( (((_task_count == 0) || !is_leaf()) && (search_opts[2] != 1)) ||
-        ((_task_count != 0) && is_leaf() && (search_opts[2] != 0)) ) {
-      if( search_opts[0] != 1 ) {
+  public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+    if( ((((_task_count == 0) || !is_leaf()) && search_opts[5]) ||
+         ((_task_count != 0) && is_leaf()   && search_opts[4])) &&
+        (((parent != null) && parent.folded && search_opts[2]) ||
+         (((parent == null) || !parent.folded) && search_opts[3])) ) {
+      if( search_opts[0] ) {
         match_string( pattern, name, "<b><i>Title:</i></b>", ref matches );
       }
-      if( search_opts[0] != 0 ) {
+      if( search_opts[1] ) {
         match_string( pattern, note, "<b><i>Note:</i></b>", ref matches );
       }
     }
-    if( (folded && (search_opts[1] != 0)) || (!folded && (search_opts[1] != 1)) ) {
-      for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).get_match_items( pattern, search_opts, ref matches );
-      }
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).get_match_items( pattern, search_opts, ref matches );
     }
   }
 
