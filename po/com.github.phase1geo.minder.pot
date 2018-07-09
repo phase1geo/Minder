@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-29 20:48-0500\n"
+"POT-Creation-Date: 2018-07-09 00:46-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,12 +110,12 @@ msgstr ""
 msgid "Horizontal"
 msgstr ""
 
-#: src/DrawArea.vala:919
+#: src/DrawArea.vala:929
 #, c-format
 msgid "%0.3g%% complete"
 msgstr ""
 
-#: src/DrawArea.vala:1154
+#: src/DrawArea.vala:1164
 msgid "Another Idea"
 msgstr ""
 
@@ -143,149 +143,177 @@ msgstr ""
 msgid "Manual"
 msgstr ""
 
-#: src/MainWindow.vala:86 src/MainWindow.vala:582
+#: src/MainWindow.vala:97 src/MainWindow.vala:682
 msgid "Minder"
 msgstr ""
 
-#: src/MainWindow.vala:117
+#: src/MainWindow.vala:128
 msgid "New File   <i>(Control-N)</i>"
 msgstr ""
 
-#: src/MainWindow.vala:122
+#: src/MainWindow.vala:133
 msgid "Open File   <i>(Control-O)</i>"
 msgstr ""
 
-#: src/MainWindow.vala:127
+#: src/MainWindow.vala:138
 msgid "Save File As   <i>(Control-Shift-S)</i>"
 msgstr ""
 
-#: src/MainWindow.vala:132
+#: src/MainWindow.vala:143
 msgid "Undo   <i>(Control-Z)</i>"
 msgstr ""
 
-#: src/MainWindow.vala:138
+#: src/MainWindow.vala:149
 msgid "Redo   <i>(Control-Shift-Z)</i>"
 msgstr ""
 
-#: src/MainWindow.vala:164
+#: src/MainWindow.vala:175
 msgid "Unnamed Document"
 msgstr ""
 
-#: src/MainWindow.vala:194
+#: src/MainWindow.vala:205
 msgid "Zoom"
 msgstr ""
 
-#: src/MainWindow.vala:201
+#: src/MainWindow.vala:212
 msgid "Zoom to Percent"
 msgstr ""
 
-#: src/MainWindow.vala:212
+#: src/MainWindow.vala:223
 msgid "Zoom In"
 msgstr ""
 
-#: src/MainWindow.vala:216
+#: src/MainWindow.vala:227
 msgid "Zoom Out"
 msgstr ""
 
-#: src/MainWindow.vala:220
+#: src/MainWindow.vala:231
 msgid "Zoom to Fit"
 msgstr ""
 
-#: src/MainWindow.vala:224
+#: src/MainWindow.vala:235
 msgid "Zoom to Fit Selected Node"
 msgstr ""
 
-#: src/MainWindow.vala:229
+#: src/MainWindow.vala:240
 msgid "Zoom to Actual Size"
 msgstr ""
 
-#: src/MainWindow.vala:256
+#: src/MainWindow.vala:267
 msgid "Search   <i>(Control-F)</i>"
 msgstr ""
 
-#: src/MainWindow.vala:264
+#: src/MainWindow.vala:276
 msgid "Search Nodes"
 msgstr ""
 
-#: src/MainWindow.vala:299 src/MainWindow.vala:782 src/MainWindow.vala:800
-#: src/MainWindow.vala:818
+#: src/MainWindow.vala:299
+msgid "Search Criteria"
+msgstr ""
+
+#: src/MainWindow.vala:321
+msgid "Titles"
+msgstr ""
+
+#: src/MainWindow.vala:322
+msgid "Notes"
+msgstr ""
+
+#: src/MainWindow.vala:323
+msgid "Folded"
+msgstr ""
+
+#: src/MainWindow.vala:324
+msgid "Unfolded"
+msgstr ""
+
+#: src/MainWindow.vala:325
+msgid "Tasks"
+msgstr ""
+
+#: src/MainWindow.vala:326
+msgid "Non-tasks"
+msgstr ""
+
+#: src/MainWindow.vala:394 src/MainWindow.vala:896 src/MainWindow.vala:914
+#: src/MainWindow.vala:932
 msgid "Export"
 msgstr ""
 
-#: src/MainWindow.vala:306
+#: src/MainWindow.vala:401
 msgid "Export To OPML"
 msgstr ""
 
-#: src/MainWindow.vala:310
+#: src/MainWindow.vala:405
 msgid "Export to PDF"
 msgstr ""
 
-#: src/MainWindow.vala:315
+#: src/MainWindow.vala:410
 msgid "Export to PNG"
 msgstr ""
 
-#: src/MainWindow.vala:320
+#: src/MainWindow.vala:415
 msgid "Print"
 msgstr ""
 
-#: src/MainWindow.vala:342
+#: src/MainWindow.vala:442
 msgid "Properties"
 msgstr ""
 
-#: src/MainWindow.vala:401
+#: src/MainWindow.vala:501
 msgid "Save current unnamed document?"
 msgstr ""
 
-#: src/MainWindow.vala:402
+#: src/MainWindow.vala:502
 msgid "Changes will be permanently lost if not saved."
 msgstr ""
 
-#: src/MainWindow.vala:407
+#: src/MainWindow.vala:507
 msgid "Discard Changes"
 msgstr ""
 
-#: src/MainWindow.vala:410 src/MainWindow.vala:499 src/MainWindow.vala:579
-#: src/MainWindow.vala:782 src/MainWindow.vala:800 src/MainWindow.vala:818
+#: src/MainWindow.vala:510 src/MainWindow.vala:599 src/MainWindow.vala:679
+#: src/MainWindow.vala:896 src/MainWindow.vala:914 src/MainWindow.vala:932
 msgid "Cancel"
 msgstr ""
 
-#: src/MainWindow.vala:413 src/MainWindow.vala:579
+#: src/MainWindow.vala:513 src/MainWindow.vala:679
 msgid "Save"
 msgstr ""
 
-#: src/MainWindow.vala:498
+#: src/MainWindow.vala:598
 msgid "Open File"
 msgstr ""
 
-#: src/MainWindow.vala:499
+#: src/MainWindow.vala:599
 msgid "Open"
 msgstr ""
 
-#: src/MainWindow.vala:578
+#: src/MainWindow.vala:678
 msgid "Save File"
 msgstr ""
 
-#: src/MainWindow.vala:781
+#: src/MainWindow.vala:895
 msgid "Export OPML File"
 msgstr ""
 
-#: src/MainWindow.vala:784
+#: src/MainWindow.vala:898
 msgid "OPML"
 msgstr ""
 
-#: src/MainWindow.vala:799
+#: src/MainWindow.vala:913
 msgid "Export PDF File"
 msgstr ""
 
-#: src/MainWindow.vala:802
+#: src/MainWindow.vala:916
 msgid "PDF"
 msgstr ""
 
-#: src/MainWindow.vala:817
+#: src/MainWindow.vala:931
 msgid "Export PNG File"
 msgstr ""
 
-#: src/MainWindow.vala:820
+#: src/MainWindow.vala:934
 msgid "PNG"
 msgstr ""
 
@@ -310,7 +338,7 @@ msgid "<big>Select a node to view/edit information</big>"
 msgstr ""
 
 #: src/NodeInspector.vala:81
-msgid "Name"
+msgid "Title"
 msgstr ""
 
 #: src/NodeInspector.vala:99
@@ -357,7 +385,7 @@ msgstr ""
 msgid "delete node"
 msgstr ""
 
-#: src/undo_actions/UndoNodeInsert.vala:34
+#: src/undo_actions/UndoNodeInsert.vala:35
 msgid "insert node"
 msgstr ""
 
