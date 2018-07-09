@@ -96,8 +96,9 @@ public class Theme : Object {
   public CssProvider get_css_provider() {
     CssProvider provider = new CssProvider();
     try {
-      provider.load_from_resource( "com/github/phase1geo/minder/Application.css" );
-      provider.load_from_data( "GtkDrawingArea { background:" + background.to_string() + "; }" );
+      var css_data = ".theme-selected { background: #087DFF; } " +
+                     ".canvas { background: " + background.to_string() + "; }";
+      provider.load_from_data( css_data );
     } catch( GLib.Error e ) {
       stdout.printf( "Unable to load background color: %s", e.message );
     }

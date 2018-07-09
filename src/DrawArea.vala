@@ -124,6 +124,12 @@ public class DrawArea : Gtk.DrawingArea {
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
 
+    /*
+     Make sure that we add a CSS class name to ourselves so we can color
+     our background with the theme.
+    */
+    get_style_context().add_class( "canvas" );
+
   }
 
   /* Returns the name of the currently selected theme */

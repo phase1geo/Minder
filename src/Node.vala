@@ -247,6 +247,7 @@ public class Node : Object {
     _cursor      = n._cursor;
     _task_count  = n._task_count;
     _task_done   = n._task_done;
+    _folded      = n._folded;
     _layout      = n._layout;
     _posx        = n._posx;
     _posy        = n._posy;
@@ -256,7 +257,6 @@ public class Node : Object {
     mode         = n.mode;
     parent       = n.parent;
     side         = n.side;
-    folded       = n.folded;
   }
 
   /* Returns the associated ID of this node */
