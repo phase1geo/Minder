@@ -214,7 +214,8 @@ public class MapInspector : Box {
 
     /* Deselect all themes */
     _theme_box.get_children().foreach((entry) => {
-      entry.override_background_color( StateFlags.NORMAL, null );
+      entry.get_style_context().remove_class( "theme-selected" );
+      // entry.override_background_color( StateFlags.NORMAL, null );
     });
 
     /* Create the selection color */
@@ -232,7 +233,8 @@ public class MapInspector : Box {
     }
     _theme_box.get_children().foreach((entry) => {
       if( index == 0 ) {
-        entry.override_background_color( StateFlags.NORMAL, c );
+        entry.get_style_context().add_class( "theme-selected" );
+        // entry.override_background_color( StateFlags.NORMAL, c );
       }
       index--;
     });
@@ -246,7 +248,7 @@ public class MapInspector : Box {
 
     /* Update the current layout in the UI */
     select_layout( _da.get_layout_name() );
-    
+
   }
 
 }

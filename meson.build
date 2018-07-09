@@ -13,9 +13,8 @@ gnome = import('gnome')
 i18n = import('i18n')
 
 gresource = gnome.compile_resources(
-    'as-resources', 'data/com.github.phase1geo.minder.gresource.xml',
+    'minder-resources', 'data/' + meson.project_name() + '.gresource.xml',
     source_dir: 'data',
-    c_name: 'as'
 )
 
 conf = configuration_data()
