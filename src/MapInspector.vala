@@ -215,12 +215,7 @@ public class MapInspector : Box {
     /* Deselect all themes */
     _theme_box.get_children().foreach((entry) => {
       entry.get_style_context().remove_class( "theme-selected" );
-      // entry.override_background_color( StateFlags.NORMAL, null );
     });
-
-    /* Create the selection color */
-    Gdk.RGBA c = {1.0, 1.0, 1.0, 1.0};
-    c.parse( "Blue" );
 
     /* Select the specified theme */
     int index;
@@ -234,7 +229,6 @@ public class MapInspector : Box {
     _theme_box.get_children().foreach((entry) => {
       if( index == 0 ) {
         entry.get_style_context().add_class( "theme-selected" );
-        // entry.override_background_color( StateFlags.NORMAL, c );
       }
       index--;
     });
