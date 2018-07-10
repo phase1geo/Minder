@@ -33,13 +33,21 @@ subdir('po')
 subdir('src')
 subdir('tests')
 
+gtk_dep = dependency('gtk+-3.0')
+
+if gtk_dep.version().version_compare('>=3.22.0')
+  add_project_arguments(['-DGTK322'], language, 'vala')
+endif
+
+message( gtk_dep.version() )
+
 dependencies = [
     dependency('gobject-2.0'),
     dependency('glib-2.0'),
     dependency('cairo'),
     dependency('gee-0.8'),
     dependency('granite'),
-    dependency('gtk+-3.0'),
+    gtk_dep,
     dependency('libxml-2.0')
 ]
 
