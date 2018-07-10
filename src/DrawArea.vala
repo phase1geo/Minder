@@ -883,11 +883,11 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         break;
       case Gdk.BUTTON_SECONDARY :
-        if( Gtk.get_minor_version() >= 22 ) {
-          _popup_menu.popup_at_pointer( event );
-        } else {
-          _popup_menu.popup( null, null, null, event.button, event.time );
-        }
+// #if GTK_CHECK_VERSION(3,22,0)
+//        _popup_menu.popup_at_pointer( event );
+//#else
+        _popup_menu.popup( null, null, null, event.button, event.time );
+//#endif
         break;
     }
     return( false );

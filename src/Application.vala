@@ -115,7 +115,7 @@ public class Minder : Granite.Application {
 
     /* If the version was specified, output it and then exit */
     if( version ) {
-      stdout.printf( "1.0\n" );
+      stdout.printf( "1.0.3\n" );
       Process.exit( 0 );
     }
 
@@ -127,10 +127,10 @@ public class Minder : Granite.Application {
     var app = new Minder();
     app.parse_arguments( ref args );
 
-    if (testing) {
+    if( testing ) {
       Gtk.init( ref args );
       var testing = new App.Tests.Testing( args );
-      Idle.add( () => {
+      Idle.add(() => {
         testing.run();
         Gtk.main_quit();
         return( false );
@@ -140,6 +140,7 @@ public class Minder : Granite.Application {
     } else {
       return( app.run( args ) );
     }
+
   }
 
 }
