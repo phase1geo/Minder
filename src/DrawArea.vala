@@ -838,6 +838,11 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Draw the background from the stylesheet */
+  private void draw_background( Context ctx ) {
+    get_style_context().render_background( ctx, 0, 0, get_allocated_width(), get_allocated_height() );
+  }
+
   /* Draws all of the root node trees */
   public void draw_all( Context ctx ) {
     for( int i=0; i<_nodes.length; i++ ) {
@@ -860,6 +865,7 @@ public class DrawArea : Gtk.DrawingArea {
       _layout.default_text_height = height / Pango.SCALE;
     }
     ctx.scale( sfactor, sfactor );
+    draw_background( ctx );
     draw_all( ctx );
     return( false );
   }
@@ -877,7 +883,11 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         break;
       case Gdk.BUTTON_SECONDARY :
-        _popup_menu.popup( null, null, null, event.button, event.time );
+        if( Gtk.get_minor_version() >= 22 ) {
+          _popup_menu.popup_at_pointer( event );
+        } else {
+          _popup_menu.popup( null, null, null, event.button, event.time );
+        }
         break;
     }
     return( false );
