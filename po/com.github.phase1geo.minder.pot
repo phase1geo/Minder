@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-09 00:46-0500\n"
+"POT-Creation-Date: 2018-07-10 00:10-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,12 +110,12 @@ msgstr ""
 msgid "Horizontal"
 msgstr ""
 
-#: src/DrawArea.vala:929
+#: src/DrawArea.vala:939
 #, c-format
 msgid "%0.3g%% complete"
 msgstr ""
 
-#: src/DrawArea.vala:1164
+#: src/DrawArea.vala:1174
 msgid "Another Idea"
 msgstr ""
 
