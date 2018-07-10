@@ -36,10 +36,8 @@ subdir('tests')
 gtk_dep = dependency('gtk+-3.0')
 
 if gtk_dep.version().version_compare('>=3.22.0')
-  add_project_arguments(['-DGTK322'], language, 'vala')
+  add_project_arguments(['--define=GTK322'], language: 'vala')
 endif
-
-message( gtk_dep.version() )
 
 dependencies = [
     dependency('gobject-2.0'),
