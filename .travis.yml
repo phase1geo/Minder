@@ -36,3 +36,7 @@ script:
   - houston ci
     --name-domain com.github.phase1geo.minder
     --distribution $DIST
+
+branches:
+  only:
+  - master
