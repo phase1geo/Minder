@@ -1,8 +1,0 @@
-build/
-src/*.o
-src/*.c
-src/animator/*.c
-src/exports/*.c
-src/themes/*.c
-src/layouts/*.c
-src/undo_actions/*.c
