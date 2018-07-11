@@ -10,5 +10,5 @@ if not os.environ.get('DESTDIR'):
     print('Compiling gsettings schemas...')
     subprocess.call(['glib-compile-schemas', schemadir], shell=False)
 
-    print('Updating icon cache...')
-    subprocess.call(['gtk-update-icon-cache', hicolordir], shell=False)
+    # print('Updating icon cache...')
+    # subprocess.call(['gtk-update-icon-cache', hicolordir], shell=False)
