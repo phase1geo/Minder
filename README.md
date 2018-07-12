@@ -31,7 +31,7 @@ When the application is first launched, a main idea node will be displayed in th
 
 | Key/Mouse Action | Description |
 |------------------|-------------|
-| e | Edits the displayed node text (otherwise called the node "name") of the currently selected node. Editable text will be immediately highlighted, so just start typing the new name to change it. To end the text editing, hit either the **Return** key or the **Tab** key. |
+| e or double-click | Edits the displayed node text (otherwise called the node "name") of the currently selected node. Editable text will be immediately highlighted, so just start typing the new name to change it. To end the text editing, hit either the **Return** key or the **Tab** key. |
 | f | Folds the currently selected node, hiding the selected node's tree. |
 | z | Zooms out. |
 | Z | Zooms in. |
