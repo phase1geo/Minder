@@ -23,19 +23,19 @@
   <screenshots>
     <screenshot type="default">
       <caption>Main Application - Light Theme</caption>
-      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-light.png?raw=true</image>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-light.png</image>
     </screenshot>
     <screenshot>
       <caption>Main Application - Dark Theme</caption>
-      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-dark.png?raw=true</image>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-dark.png</image>
     </screenshot>
     <screenshot>
       <caption>Node Property Sidebar</caption>
-      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-node-properties.png?raw=true</image>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-node-properties.png</image>
     </screenshot>
     <screenshot>
       <caption>Map Property Sidebar</caption>
-      <image>https://github.com/phase1geo/Minder/tree/master/data/screenshots/screenshot-map-properties.png?raw=true</image>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-map-properties.png</image>
     </screenshot>
   </screenshots>
   <developer_name>Trevor Williams</developer_name>
@@ -79,6 +79,11 @@
   </content_rating>
 
   <releases>
+    <release version="1.0.5" date="7/12/2018">
+      <description>
+        <p>Initial startup bug fix.</p>
+      </description>
+    </release>
     <release version="1.0.4" date="7/11/2018">
       <description>
         <p>Search improvements and bug fixes</p>
