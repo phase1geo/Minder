@@ -620,6 +620,9 @@ public class MainWindow : ApplicationWindow {
 
   /* Opens the file and display it in the canvas */
   public bool open_file( string fname ) {
+    if( !FileUtils.test( fname, FileTest.IS_REGULAR ) ) {
+      return( false );
+    }
     if( fname.has_suffix( ".minder" ) ) {
       _doc = new Document( _canvas, _settings );
       _canvas.initialize_for_open();
