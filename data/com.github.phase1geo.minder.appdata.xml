@@ -79,7 +79,7 @@
   </content_rating>
 
   <releases>
-    <release version="1.0.5" date="7/12/2018">
+    <release version="1.0.7" date="7/13/2018">
       <description>
         <p>Initial startup bug fix.</p>
       </description>
