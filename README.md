@@ -4,7 +4,7 @@
   <a href="https://appcenter.elementary.io/com.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
 </p>
 
-![Screenshot](data/screenshots/screenshot-light.png "Mind-mapping application for Elementary OS")
+![Main Window - Light Theme](https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-light.png "Mind-mapping application for Elementary OS")
 
 
 ## Installation
