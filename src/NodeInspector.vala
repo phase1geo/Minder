@@ -82,6 +82,7 @@ public class NodeInspector : Stack {
 
     _name = new Entry();
     _name.activate.connect( name_changed );
+    _name.focus_out_event.connect( name_focus_out );
 
     lbl.xalign = (float)0;
 
@@ -220,6 +221,15 @@ public class NodeInspector : Stack {
   */
   private void name_changed() {
     _da.change_current_name( _name.text );
+  }
+
+  /*
+   Called whenever the node title loses input focus. Updates the
+   node title in the canvas.
+  */
+  private bool name_focus_out( EventFocus e ) {
+    _da.change_current_name( _name.text );
+    return( false );
   }
 
   /* Called whenever the task enable switch is changed within the inspector */
