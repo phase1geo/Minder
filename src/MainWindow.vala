@@ -71,6 +71,7 @@ public class MainWindow : ApplicationWindow {
     { "action_export_opml",   action_export_opml },
     { "action_export_pdf",    action_export_pdf },
     { "action_export_png",    action_export_png },
+    { "action_export_svg",    action_export_svg },
     { "action_export_print",  action_export_print }
   };
 
@@ -411,6 +412,11 @@ public class MainWindow : ApplicationWindow {
     png.action_name = "win.action_export_png";
     png.set_sensitive( false );
 
+    var svg = new ModelButton();
+    svg.text = _( "Export to SVG" );
+    svg.action_name = "win.action_export_svg";
+    svg.set_sensitive( false );
+
     var print = new ModelButton();
     print.text = _( "Print" );
     print.action_name = "win.action_export_print";
@@ -420,6 +426,7 @@ public class MainWindow : ApplicationWindow {
     box.pack_start( opml,  false, true );
     box.pack_start( pdf,   false, true );
     box.pack_start( png,   false, true );
+    box.pack_start( svg,   false, true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
     box.pack_start( print, false, true );
     box.show_all();
@@ -943,6 +950,24 @@ public class MainWindow : ApplicationWindow {
         fname += ".png";
       }
       ExportPNG.export( fname, _canvas );
+    }
+    dialog.close();
+  }
+
+  /* Exports the model in SVG format */
+  private void action_export_svg() {
+    FileChooserDialog dialog = new FileChooserDialog( _( "Export SVG File" ), this, FileChooserAction.SAVE,
+      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
+    FileFilter        filter = new FileFilter();
+    filter.set_filter_name( _( "SVG" ) );
+    filter.add_pattern( "*.svg" );
+    dialog.add_filter( filter );
+    if( dialog.run() == ResponseType.ACCEPT ) {
+      string fname = dialog.get_filename();
+      if( fname.substring( -4, -1 ) != ".svg" ) {
+        fname += ".svg";
+      }
+      ExportSVG.export( fname, _canvas );
     }
     dialog.close();
   }

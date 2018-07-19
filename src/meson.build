@@ -9,6 +9,7 @@ sources += files(
     'exports/ExportPDF.vala',
     'exports/ExportPNG.vala',
     'exports/ExportPrint.vala',
+    'exports/ExportSVG.vala',
 
     'layouts/LayoutDown.vala',
     'layouts/LayoutHorizontal.vala',
