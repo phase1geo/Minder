@@ -5,13 +5,13 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Minder</name>
-  <summary>Create, develop, visualize, organize and manage your ideas</summary>
+  <summary>Create, develop and visualize your ideas</summary>
   <description>
     <p>Use the power of mind-mapping to make your ideas come to life.</p>
     <ul>
       <li>Quickly create visual mind-maps using the keyboard and automatic layout.</li>
       <li>Gorgeous themes.</li>
-      <li>Export to PDF and OPML.</li>
+      <li>Export to PDF, PNG, SVG and OPML.</li>
       <li>Printer support.</li>
       <li>Add notes and tasks to your nodes.</li>
       <li>Colorized node branches.</li>
