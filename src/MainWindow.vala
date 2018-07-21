@@ -68,11 +68,8 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_fit",      action_zoom_fit },
     { "action_zoom_selected", action_zoom_selected },
     { "action_zoom_actual",   action_zoom_actual },
-    { "action_export_opml",   action_export_opml },
-    { "action_export_pdf",    action_export_pdf },
-    { "action_export_png",    action_export_png },
-    { "action_export_svg",    action_export_svg },
-    { "action_export_print",  action_export_print }
+    { "action_export",        action_export },
+    { "action_print",         action_print }
   };
 
   private delegate void ChangedFunc();
@@ -193,7 +190,7 @@ public class MainWindow : ApplicationWindow {
     app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
     app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
     app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
-    app.set_accels_for_action( "win.action_export_print", { "<Control>p" } );
+    app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
 
   }
 
@@ -398,37 +395,19 @@ public class MainWindow : ApplicationWindow {
     /* Create export menu */
     var box = new Box( Orientation.VERTICAL, 5 );
 
-    var opml = new ModelButton();
-    opml.text = _( "Export To OPML" );
-    opml.action_name = "win.action_export_opml";
-
-    var pdf = new ModelButton();
-    pdf.text = _( "Export to PDF" );
-    pdf.action_name = "win.action_export_pdf";
-    pdf.set_sensitive( false );
-
-    var png = new ModelButton();
-    png.text = _( "Export to PNG" );
-    png.action_name = "win.action_export_png";
-    png.set_sensitive( false );
-
-    var svg = new ModelButton();
-    svg.text = _( "Export to SVG" );
-    svg.action_name = "win.action_export_svg";
-    svg.set_sensitive( false );
+    var export = new ModelButton();
+    export.text = _( "Export..." );
+    export.action_name = "win.action_export";
 
     var print = new ModelButton();
     print.text = _( "Print" );
-    print.action_name = "win.action_export_print";
+    print.action_name = "win.action_print";
     print.set_sensitive( false );
 
     box.margin = 5;
-    box.pack_start( opml,  false, true );
-    box.pack_start( pdf,   false, true );
-    box.pack_start( png,   false, true );
-    box.pack_start( svg,   false, true );
+    box.pack_start( export, false, true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
-    box.pack_start( print, false, true );
+    box.pack_start( print,  false, true );
     box.show_all();
 
     /* Create the popover and associate it with clicking on the menu button */
@@ -900,80 +879,80 @@ public class MainWindow : ApplicationWindow {
     _canvas.grab_focus();
   }
 
-  /* Exports the model in OPML format */
-  private void action_export_opml() {
-    FileChooserDialog dialog = new FileChooserDialog( _( "Export OPML File" ), this, FileChooserAction.SAVE,
+  /* Exports the model to various formats */
+  private void action_export() {
+
+    FileChooserDialog dialog = new FileChooserDialog( _( "Export As" ), this, FileChooserAction.SAVE,
       _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
-    FileFilter        filter = new FileFilter();
-    filter.set_filter_name( _( "OPML" ) );
-    filter.add_pattern( "*.opml" );
-    dialog.add_filter( filter );
+
+    /* JPEG */
+    FileFilter jpeg_filter = new FileFilter();
+    jpeg_filter.set_filter_name( _( "JPEG" ) );
+    jpeg_filter.add_pattern( "*.jpeg" );
+    jpeg_filter.add_pattern( "*.jpg" );
+    dialog.add_filter( jpeg_filter );
+
+    /* OPML */
+    FileFilter opml_filter = new FileFilter();
+    opml_filter.set_filter_name( _( "OPML" ) );
+    opml_filter.add_pattern( "*.opml" );
+    dialog.add_filter( opml_filter );
+
+    /* PDF */
+    FileFilter pdf_filter = new FileFilter();
+    pdf_filter.set_filter_name( _( "PDF" ) );
+    pdf_filter.add_pattern( "*.pdf" );
+    dialog.add_filter( pdf_filter );
+
+    /* PNG */
+    FileFilter png_filter = new FileFilter();
+    png_filter.set_filter_name( _( "PNG" ) );
+    png_filter.add_pattern( "*.png" );
+    dialog.add_filter( png_filter );
+
+    /* SVG */
+    FileFilter svg_filter = new FileFilter();
+    svg_filter.set_filter_name( _( "SVG" ) );
+    svg_filter.add_pattern( "*.svg" );
+    dialog.add_filter( svg_filter );
+
     if( dialog.run() == ResponseType.ACCEPT ) {
-      string fname = dialog.get_filename();
-      if( fname.substring( -5, -1 ) != ".opml" ) {
-        fname += ".opml";
+
+      var fname  = dialog.get_filename();
+      var filter = dialog.get_filter();
+
+      if( jpeg_filter == filter ) {
+        // ExportJPEG.export( repair_filename( fname, {".jpeg", ".jpg"} ), _canvas );
+      } else if( opml_filter == filter ) {
+        ExportOPML.export( repair_filename( fname, {".opml"} ), _canvas );
+      } else if( pdf_filter == filter ) {
+        ExportPDF.export( repair_filename( fname, {".pdf"} ), _canvas );
+      } else if( png_filter == filter ) {
+        ExportPNG.export( repair_filename( fname, {".png"} ), _canvas );
+      } else if( svg_filter == filter ) {
+        ExportSVG.export( repair_filename( fname, {".svg"} ), _canvas );
       }
-      ExportOPML.export( fname, _canvas );
     }
     dialog.close();
+
   }
 
-  /* Exports the model in PDF format */
-  private void action_export_pdf() {
-    FileChooserDialog dialog = new FileChooserDialog( _( "Export PDF File" ), this, FileChooserAction.SAVE,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
-    FileFilter        filter = new FileFilter();
-    filter.set_filter_name( _( "PDF" ) );
-    filter.add_pattern( "*.pdf" );
-    dialog.add_filter( filter );
-    if( dialog.run() == ResponseType.ACCEPT ) {
-      string fname = dialog.get_filename();
-      if( fname.substring( -4, -1 ) != ".pdf" ) {
-        fname += ".pdf";
+  /*
+   Checks the given filename to see if it contains any of the given suffixes.
+   If a valid suffix is found, return the filename without modification; otherwise,
+   returns the filename with the extension added.
+  */
+  private string repair_filename( string fname, string[] extensions ) {
+    foreach (string ext in extensions) {
+      if( fname.has_suffix( ext ) ) {
+        return( fname );
       }
-      ExportPDF.export( fname, _canvas );
     }
-    dialog.close();
-  }
-
-  /* Exports the model in PNG format */
-  private void action_export_png() {
-    FileChooserDialog dialog = new FileChooserDialog( _( "Export PNG File" ), this, FileChooserAction.SAVE,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
-    FileFilter        filter = new FileFilter();
-    filter.set_filter_name( _( "PNG" ) );
-    filter.add_pattern( "*.png" );
-    dialog.add_filter( filter );
-    if( dialog.run() == ResponseType.ACCEPT ) {
-      string fname = dialog.get_filename();
-      if( fname.substring( -4, -1 ) != ".png" ) {
-        fname += ".png";
-      }
-      ExportPNG.export( fname, _canvas );
-    }
-    dialog.close();
-  }
-
-  /* Exports the model in SVG format */
-  private void action_export_svg() {
-    FileChooserDialog dialog = new FileChooserDialog( _( "Export SVG File" ), this, FileChooserAction.SAVE,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
-    FileFilter        filter = new FileFilter();
-    filter.set_filter_name( _( "SVG" ) );
-    filter.add_pattern( "*.svg" );
-    dialog.add_filter( filter );
-    if( dialog.run() == ResponseType.ACCEPT ) {
-      string fname = dialog.get_filename();
-      if( fname.substring( -4, -1 ) != ".svg" ) {
-        fname += ".svg";
-      }
-      ExportSVG.export( fname, _canvas );
-    }
-    dialog.close();
+    return( fname + extensions[0] );
   }
 
   /* Exports the model to the printer */
-  private void action_export_print() {
+  private void action_print() {
     var print = new ExportPrint();
     print.print( _canvas, this );
   }
