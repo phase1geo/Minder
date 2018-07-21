@@ -874,12 +874,12 @@ public class DrawArea : Gtk.DrawingArea {
   private bool on_press( EventButton event ) {
     switch( event.button ) {
       case Gdk.BUTTON_PRIMARY :
+        grab_focus();
         _press_x    = scale_value( event.x );
         _press_y    = scale_value( event.y );
         _pressed    = set_current_node_at_position( _press_x, _press_y, event );
         _press_type = event.type;
         _motion     = false;
-        grab_focus();
         queue_draw();
         break;
       case Gdk.BUTTON_SECONDARY :
