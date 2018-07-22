@@ -79,6 +79,17 @@
   </content_rating>
 
   <releases>
+    <release version="1.0.8" date="7/23/2018">
+      <description>
+        <p>Support for more export types and bug fixes.
+        <ul>
+          <li>Added support for exporting to SVG, JPEG, BMP, Markdown, PlainText and CSV formats.</li>
+          <li>Cleaning up Export menu to include a single "Export..." option.</li>
+          <li>Fixing issue where modified node title in node inspector was lost when input focus was changed.</li>
+          <li>Added Czech translation (thanks to Jan Marek!).</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.7" date="7/13/2018">
       <description>
         <p>Initial startup bug fix.</p>
