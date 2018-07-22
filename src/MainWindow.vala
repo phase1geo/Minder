@@ -898,6 +898,13 @@ public class MainWindow : ApplicationWindow {
     jpeg_filter.add_pattern( "*.jpg" );
     dialog.add_filter( jpeg_filter );
 
+    /* Markdown */
+    FileFilter md_filter = new FileFilter();
+    md_filter.set_filter_name( _( "Markdown" ) );
+    md_filter.add_pattern( "*.md" );
+    md_filter.add_pattern( "*.markdown" );
+    dialog.add_filter( md_filter );
+
     /* OPML */
     FileFilter opml_filter = new FileFilter();
     opml_filter.set_filter_name( _( "OPML" ) );
@@ -931,6 +938,8 @@ public class MainWindow : ApplicationWindow {
         ExportImage.export( repair_filename( fname, {".bmp"} ), "bmp", _canvas );
       } else if( jpeg_filter == filter ) {
         ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", _canvas );
+      } else if( md_filter == filter ) {
+        ExportMarkdown.export( repair_filename( fname, {".md", ".markdown"} ), _canvas );
       } else if( opml_filter == filter ) {
         ExportOPML.export( repair_filename( fname, {".opml"} ), _canvas );
       } else if( pdf_filter == filter ) {

@@ -312,6 +312,11 @@ public class Node : Object {
     return( (_task_count > 0) && is_leaf() );
   }
 
+  /* Returns true if this task node is complete */
+  public bool is_task_done() {
+    return( _task_count == _task_done );
+  }
+
   /* Returns the task completion percentage value */
   public double task_completion_percentage() {
     return( (_task_done / (_task_count * 1.0)) * 100 );
