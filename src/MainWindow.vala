@@ -923,6 +923,12 @@ public class MainWindow : ApplicationWindow {
     png_filter.add_pattern( "*.png" );
     dialog.add_filter( png_filter );
 
+    /* PlainText */
+    FileFilter txt_filter = new FileFilter();
+    txt_filter.set_filter_name( _( "PlainText" ) );
+    txt_filter.add_pattern( "*.txt" );
+    dialog.add_filter( txt_filter );
+
     /* SVG */
     FileFilter svg_filter = new FileFilter();
     svg_filter.set_filter_name( _( "SVG" ) );
@@ -946,6 +952,8 @@ public class MainWindow : ApplicationWindow {
         ExportPDF.export( repair_filename( fname, {".pdf"} ), _canvas );
       } else if( png_filter == filter ) {
         ExportPNG.export( repair_filename( fname, {".png"} ), _canvas );
+      } else if( txt_filter == filter ) {
+        ExportText.export( repair_filename( fname, {".txt"} ), _canvas );
       } else if( svg_filter == filter ) {
         ExportSVG.export( repair_filename( fname, {".svg"} ), _canvas );
       }
