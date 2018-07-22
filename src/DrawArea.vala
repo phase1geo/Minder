@@ -712,8 +712,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   public void document_rectangle( out double x, out double y, out double width, out double height ) {
 
-    double x1 = 0;
-    double y1 = 0;
+    double x1 = 10000000;
+    double y1 = 10000000;
     double x2 = 0;
     double y2 = 0;
 
@@ -839,7 +839,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Draw the background from the stylesheet */
-  private void draw_background( Context ctx ) {
+  public void draw_background( Context ctx ) {
     get_style_context().render_background( ctx, 0, 0, get_allocated_width(), get_allocated_height() );
   }
 

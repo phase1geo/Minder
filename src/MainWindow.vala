@@ -885,6 +885,12 @@ public class MainWindow : ApplicationWindow {
     FileChooserDialog dialog = new FileChooserDialog( _( "Export As" ), this, FileChooserAction.SAVE,
       _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
 
+    /* BMP */
+    FileFilter bmp_filter = new FileFilter();
+    bmp_filter.set_filter_name( _( "BMP" ) );
+    bmp_filter.add_pattern( "*.bmp" );
+    dialog.add_filter( bmp_filter );
+
     /* JPEG */
     FileFilter jpeg_filter = new FileFilter();
     jpeg_filter.set_filter_name( _( "JPEG" ) );
@@ -921,8 +927,10 @@ public class MainWindow : ApplicationWindow {
       var fname  = dialog.get_filename();
       var filter = dialog.get_filter();
 
-      if( jpeg_filter == filter ) {
-        // ExportJPEG.export( repair_filename( fname, {".jpeg", ".jpg"} ), _canvas );
+      if( bmp_filter == filter ) {
+        ExportImage.export( repair_filename( fname, {".bmp"} ), "bmp", _canvas );
+      } else if( jpeg_filter == filter ) {
+        ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", _canvas );
       } else if( opml_filter == filter ) {
         ExportOPML.export( repair_filename( fname, {".opml"} ), _canvas );
       } else if( pdf_filter == filter ) {
@@ -933,6 +941,7 @@ public class MainWindow : ApplicationWindow {
         ExportSVG.export( repair_filename( fname, {".svg"} ), _canvas );
       }
     }
+
     dialog.close();
 
   }

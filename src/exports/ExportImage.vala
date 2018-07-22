@@ -21,29 +21,36 @@
 
 using Cairo;
 using Gdk;
+using Gtk;
 
-public class ExportJPEG : Object {
+public class ExportImage : Object {
 
   /* Default constructor */
-  public static void export( string fname, DrawArea da ) {
+  public static void export( string fname, string type, DrawArea da ) {
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
     da.document_rectangle( out x, out y, out w, out h );
 
     /* Create the drawing surface */
-    var surface = new ImageSurface( Format.ARGB32, (int)w, (int)h );
+    var surface = new ImageSurface( Format.RGB24, ((int)w + 20), ((int)h + 20) );
     var context = new Context( surface );
-    // var pixbuf  = new Pixbuf();
 
     /* Translate the image */
-    context.translate( (0 - x), (0 - y) );
+    context.translate( (10 - x), (10 - y) );
 
     /* Recreate the image */
+    da.draw_background( context );
     da.draw_all( context );
 
     /* Write the pixbuf to the file */
-    // pixbuf.save( fname, "jpeg" );
+    var pixbuf = pixbuf_get_from_surface( surface, 0, 0, ((int)w + 20), ((int)h + 20) );
+
+    try {
+      pixbuf.save( fname, type );
+    } catch( Error e ) {
+      stdout.printf( "Error writing %s: %s\n", type, e.message );
+    }
 
   }
 

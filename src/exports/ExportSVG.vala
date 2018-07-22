@@ -31,13 +31,13 @@ public class ExportSVG : Object {
     da.document_rectangle( out x, out y, out w, out h );
 
     /* Create the drawing surface */
-    var surface = new SvgSurface( fname, (int)w, (int)h );
+    var surface = new SvgSurface( fname, ((int)w + 20), ((int)h + 20) );
     var context = new Context( surface );
 
     surface.restrict_to_version( SvgVersion.VERSION_1_1 );
 
     /* Translate the image */
-    context.translate( (0 - x), (0 - y) );
+    context.translate( (10 - x), (10 - y) );
 
     /* Recreate the image */
     da.draw_all( context );
