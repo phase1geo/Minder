@@ -891,6 +891,12 @@ public class MainWindow : ApplicationWindow {
     bmp_filter.add_pattern( "*.bmp" );
     dialog.add_filter( bmp_filter );
 
+    /* CSV */
+    FileFilter csv_filter = new FileFilter();
+    csv_filter.set_filter_name( _( "CSV" ) );
+    csv_filter.add_pattern( "*.csv" );
+    dialog.add_filter( csv_filter );
+
     /* JPEG */
     FileFilter jpeg_filter = new FileFilter();
     jpeg_filter.set_filter_name( _( "JPEG" ) );
@@ -942,6 +948,8 @@ public class MainWindow : ApplicationWindow {
 
       if( bmp_filter == filter ) {
         ExportImage.export( repair_filename( fname, {".bmp"} ), "bmp", _canvas );
+      } else if( csv_filter == filter ) {
+        ExportCSV.export( repair_filename( fname, {".csv"} ), _canvas );
       } else if( jpeg_filter == filter ) {
         ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", _canvas );
       } else if( md_filter == filter ) {

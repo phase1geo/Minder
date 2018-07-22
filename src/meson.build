@@ -5,6 +5,7 @@ sources += files(
     'animator/AnimatorPositions.vala',
     'animator/AnimatorScale.vala',
 
+    'exports/ExportCSV.vala',
     'exports/ExportImage.vala',
     'exports/ExportMarkdown.vala',
     'exports/ExportOPML.vala',
