@@ -10,4 +10,4 @@ if not os.environ.get('DESTDIR'):
 
     print('Updating icon cache...')
     hicolordir = os.path.join(os.environ['MESON_INSTALL_PREFIX'], 'share', 'icons', 'hicolor')
-    subprocess.call(['update-icon-caches', hicolordir], shell=False)
+    subprocess.call(['gtk-update-icon-cache', hicolordir], shell=False)
