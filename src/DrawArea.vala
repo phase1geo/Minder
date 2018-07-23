@@ -1270,6 +1270,28 @@ public class DrawArea : Gtk.DrawingArea {
     grab_focus();
   }
 
+  /* Folds all completed tasks found in any tree */
+  public void fold_completed_tasks() {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).fold_completed_tasks();
+    }
+    queue_draw();
+    changed();
+  }
+
+  /* Unfolds all nodes in the document */
+  public void unfold_all_nodes() {
+    if( _current_node != null ) {
+      _current_node.get_root().folded = false;
+    } else {
+      for( int i=0; i<_nodes.length; i++ ) {
+        _nodes.index( i ).folded = false;
+      }
+    }
+    queue_draw();
+    changed();
+  }
+
   /* Adds a child node to the current node */
   public void add_child_node() {
     var node = new Node( this, _layout );

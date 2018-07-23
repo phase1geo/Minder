@@ -185,7 +185,7 @@ public class NodeInspector : Stack {
 
     var grid = new Grid();
     grid.column_homogeneous = true;
-    grid.column_spacing     = 10;
+    grid.column_spacing     = 5;
 
     var copy_btn = new Button.from_icon_name( "edit-copy-symbolic", IconSize.SMALL_TOOLBAR );
     copy_btn.set_tooltip_text( _( "Copy Node To Clipboard" ) );

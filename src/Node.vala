@@ -727,6 +727,11 @@ public class Node : Object {
     }
   }
 
+  /* Recursively spans node tree folding any nodes which contain fully completed tasks */
+  public void fold_completed_tasks() {
+    // TBD
+  }
+
   /* Returns the amount of internal width to draw the task checkbutton */
   protected double task_width() {
     return( (_task_count > 0) ? ((_task_radius * 2) + _ipadx) : 0 );
