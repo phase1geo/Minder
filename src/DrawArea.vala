@@ -1272,24 +1272,42 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Folds all completed tasks found in any tree */
   public void fold_completed_tasks() {
-    for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).fold_completed_tasks();
+    var changes = new Array<Node>();
+    if( _current_node == null ) {
+      for( int i=0; i<_nodes.length; i++ ) {
+        _nodes.index( i ).fold_completed_tasks( ref changes );
+      }
+    } else {
+      _current_node.get_root().fold_completed_tasks( ref changes );
     }
-    queue_draw();
-    changed();
+    if( changes.length > 0 ) {
+      for( int i=0; i<changes.length; i++ ) {
+        _layout.handle_update_by_fold( changes.index( i ) );
+      }
+      undo_buffer.add_item( new UndoNodeFoldChanges( this, _( "fold completed tasks" ), changes, true ) );
+      queue_draw();
+      changed();
+    }
   }
 
   /* Unfolds all nodes in the document */
   public void unfold_all_nodes() {
+    var changes = new Array<Node>();
     if( _current_node != null ) {
-      _current_node.get_root().folded = false;
+      _current_node.get_root().set_fold( false, ref changes );
     } else {
       for( int i=0; i<_nodes.length; i++ ) {
-        _nodes.index( i ).folded = false;
+        _nodes.index( i ).set_fold( false, ref changes );
       }
     }
-    queue_draw();
-    changed();
+    if( changes.length > 0 ) {
+      for( int i=0; i<changes.length; i++ ) {
+        _layout.handle_update_by_fold( changes.index( i ) );
+      }
+      undo_buffer.add_item( new UndoNodeFoldChanges( this, _( "unfold all tasks" ), changes, false ) );
+      queue_draw();
+      changed();
+    }
   }
 
   /* Adds a child node to the current node */

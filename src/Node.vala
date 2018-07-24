@@ -727,9 +727,36 @@ public class Node : Object {
     }
   }
 
+  /*
+   Sets the fold for this node to the given value.  Appends this node to
+   the changed list if the folded value changed.
+  */
+  public void set_fold( bool value, ref Array<Node> changed ) {
+    if( _folded != value ) {
+      changed.append_val( this );
+      folded = value;
+    } else if( !_folded ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).set_fold( value, ref changed );
+      }
+    }
+  }
+
   /* Recursively spans node tree folding any nodes which contain fully completed tasks */
-  public void fold_completed_tasks() {
-    // TBD
+  public void fold_completed_tasks( ref Array<Node> changed ) {
+    if( !_folded && (_task_count > 0) ) {
+      if( _task_count == _task_done ) {
+        for( int i=0; i<_children.length; i++ ) {
+          if( _children.index( i ).is_leaf() ) {
+            set_fold( true, ref changed );
+            return;
+          }
+        }
+      }
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).fold_completed_tasks( ref changed );
+      }
+    }
   }
 
   /* Returns the amount of internal width to draw the task checkbutton */
