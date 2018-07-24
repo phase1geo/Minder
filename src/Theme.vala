@@ -24,7 +24,8 @@ using Gdk;
 
 public class Theme : Object {
 
-  private int _index;
+  private int          _index;
+  private Array<RGBA?> _link_colors;
 
   public    string name               { protected set; get; }
   public    Image  icon               { protected set; get; }
@@ -38,7 +39,6 @@ public class Theme : Object {
   public    RGBA   textsel_foreground { protected set; get; }
   public    RGBA   text_cursor        { protected set; get; }
   public    RGBA   attachable_color   { protected set; get; }
-  protected RGBA[] link_colors        { set; get; }
   public    bool   prefer_dark        { protected set; get; }
 
   public int index {
@@ -52,22 +52,28 @@ public class Theme : Object {
 
   /* Default constructor */
   public Theme() {
-    _index = 0;
+    _index       = 0;
+    _link_colors = new Array<RGBA?>();
+  }
+
+  /* Adds the given color to the list of link colors */
+  protected void add_link_color( RGBA color ) {
+    _link_colors.append_val( color );
   }
 
   /* Returns the next available link color index */
   public RGBA next_color() {
-    return( link_colors[_index++ % link_colors.length] );
+    return( _link_colors.index( _index++ % _link_colors.length ) );
   }
 
   /* Returns the number of link colors */
   public int num_link_colors() {
-    return( link_colors.length );
+    return( (int)_link_colors.length );
   }
 
   /* Returns the color associated with the given index */
   public RGBA link_color( int index ) {
-    return( link_colors[index % link_colors.length] );
+    return( _link_colors.index( index % _link_colors.length ) );
   }
 
   /*
@@ -77,8 +83,8 @@ public class Theme : Object {
   */
   public int get_color_index( RGBA color ) {
     string color_str = color.to_string();
-    for( int i=0; i<link_colors.length; i++ ) {
-      if( link_colors[i].to_string() == color_str ) {
+    for( int i=0; i<_link_colors.length; i++ ) {
+      if( _link_colors.index( i ).to_string() == color_str ) {
         return( i );
       }
     }
@@ -127,66 +133,66 @@ public class Theme : Object {
     ctx.fill();
 
     /* Draw subnode lines */
-    set_context_color( ctx, link_colors[0] );
+    set_context_color( ctx, _link_colors.index( 0 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 100, 50 );
     ctx.line_to( 50, 25 );
     ctx.stroke();
-    set_context_color( ctx, link_colors[0] );
+    set_context_color( ctx, _link_colors.index( 0 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 50, 25 );
     ctx.line_to( 10, 25 );
     ctx.stroke();
 
-    set_context_color( ctx, link_colors[1] );
+    set_context_color( ctx, _link_colors.index( 1 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 100, 50 );
     ctx.line_to( 10, 50 );
     ctx.stroke();
 
-    set_context_color( ctx, link_colors[2] );
+    set_context_color( ctx, _link_colors.index( 2 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 100, 50 );
     ctx.line_to( 50, 75 );
     ctx.stroke();
-    set_context_color( ctx, link_colors[2] );
+    set_context_color( ctx, _link_colors.index( 2 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 50, 75 );
     ctx.line_to( 10, 75 );
     ctx.stroke();
 
-    set_context_color( ctx, link_colors[3] );
+    set_context_color( ctx, _link_colors.index( 3 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 100, 50 );
     ctx.line_to( 150, 25 );
     ctx.stroke();
-    set_context_color( ctx, link_colors[3] );
+    set_context_color( ctx, _link_colors.index( 3 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 150, 25 );
     ctx.line_to( 190, 25 );
     ctx.stroke();
 
-    set_context_color( ctx, link_colors[4] );
+    set_context_color( ctx, _link_colors.index( 4 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 100, 50 );
     ctx.line_to( 190, 50 );
     ctx.stroke();
 
-    set_context_color( ctx, link_colors[5] );
+    set_context_color( ctx, _link_colors.index( 5 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 100, 50 );
     ctx.line_to( 150, 75 );
     ctx.stroke();
-    set_context_color( ctx, link_colors[5] );
+    set_context_color( ctx, _link_colors.index( 5 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 150, 75 );
