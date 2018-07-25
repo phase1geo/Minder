@@ -1270,6 +1270,20 @@ public class DrawArea : Gtk.DrawingArea {
     grab_focus();
   }
 
+  /* Returns true if there is at least one node that can be folded due to completed tasks */
+  public bool completed_tasks_foldable() {
+    if( _current_node != null ) {
+      return( _current_node.get_root().completed_tasks_foldable() );
+    } else {
+      for( int i=0; i<_nodes.length; i++ ) {
+        if( _nodes.index( i ).completed_tasks_foldable() ) {
+          return( true );
+        }
+      }
+    }
+    return( false );
+  }
+
   /* Folds all completed tasks found in any tree */
   public void fold_completed_tasks() {
     var changes = new Array<Node>();
@@ -1287,7 +1301,22 @@ public class DrawArea : Gtk.DrawingArea {
       undo_buffer.add_item( new UndoNodeFoldChanges( this, _( "fold completed tasks" ), changes, true ) );
       queue_draw();
       changed();
+      node_changed();
     }
+  }
+
+  /* Returns true if there is at least one node that is unfoldable */
+  public bool unfoldable() {
+    if( _current_node != null ) {
+      return( _current_node.get_root().unfoldable() );
+    } else {
+      for( int i=0; i<_nodes.length; i++ ) {
+        if( _nodes.index( i ).unfoldable() ) {
+          return( true );
+        }
+      }
+    }
+    return( false );
   }
 
   /* Unfolds all nodes in the document */
@@ -1307,6 +1336,7 @@ public class DrawArea : Gtk.DrawingArea {
       undo_buffer.add_item( new UndoNodeFoldChanges( this, _( "unfold all tasks" ), changes, false ) );
       queue_draw();
       changed();
+      node_changed();
     }
   }
 

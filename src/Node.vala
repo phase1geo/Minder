@@ -742,6 +742,39 @@ public class Node : Object {
     }
   }
 
+  /* Returns true if there is at least one node that is foldable due to its tasks being completed. */
+  public bool completed_tasks_foldable() {
+    if( !_folded && (_task_count > 0) ) {
+      if( _task_count == _task_done ) {
+        for( int i=0; i<_children.length; i++ ) {
+          if( _children.index( i ).is_leaf() ) {
+            return( true );
+          }
+        }
+      }
+      for( int i=0; i<_children.length; i++ ) {
+        if( _children.index( i ).completed_tasks_foldable() ) {
+          return( true );
+        }
+      }
+    }
+    return( false );
+  }
+
+  /* Returns true if any node is found to be unfoldable */
+  public bool unfoldable() {
+    if( _folded ) {
+      return( true );
+    } else {
+      for( int i=0; i<_children.length; i++ ) {
+        if( _children.index( i ).unfoldable() ) {
+          return( true );
+        }
+      }
+    }
+    return( false );
+  }
+
   /* Recursively spans node tree folding any nodes which contain fully completed tasks */
   public void fold_completed_tasks( ref Array<Node> changed ) {
     if( !_folded && (_task_count > 0) ) {

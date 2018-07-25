@@ -25,9 +25,11 @@ public class MapInspector : Box {
 
   private DrawArea                    _da;
   private GLib.Settings               _settings;
-  private Granite.Widgets.ModeButton? _layouts   = null;
-  private Box?                        _theme_box = null;
-  private Button?                     _balance   = null;
+  private Granite.Widgets.ModeButton? _layouts        = null;
+  private Box?                        _theme_box      = null;
+  private Button?                     _balance        = null;
+  private Button?                     _fold_completed = null;
+  private Button?                     _unfold_all     = null;
 
   public MapInspector( DrawArea da, GLib.Settings settings ) {
 
@@ -47,6 +49,7 @@ public class MapInspector : Box {
 
     /* Whenever a new document is loaded, update the theme and layout within this UI */
     _da.loaded.connect( update_theme_layout );
+    _da.node_changed.connect( node_changed );
 
   }
 
@@ -187,19 +190,19 @@ public class MapInspector : Box {
       _da.balance_nodes();
     });
 
-    var fold_completed = new Button.with_label( _( "Fold Completed Tasks" ) );
-    fold_completed.clicked.connect(() => {
+    _fold_completed = new Button.with_label( _( "Fold Completed Tasks" ) );
+    _fold_completed.clicked.connect(() => {
       _da.fold_completed_tasks();
     });
 
-    var unfold_all = new Button.with_label( _( "Unfold All Nodes" ) );
-    unfold_all.clicked.connect(() => {
+    _unfold_all = new Button.with_label( _( "Unfold All Nodes" ) );
+    _unfold_all.clicked.connect(() => {
       _da.unfold_all_nodes();
     });
 
-    grid.attach( _balance,       0, 0 );
-    grid.attach( fold_completed, 0, 1 );
-    grid.attach( unfold_all,     0, 2 );
+    grid.attach( _balance,        0, 0 );
+    grid.attach( _fold_completed, 0, 1 );
+    grid.attach( _unfold_all,     0, 2 );
 
     pack_start( grid, false, true );
 
@@ -255,6 +258,20 @@ public class MapInspector : Box {
 
     /* Update the current layout in the UI */
     select_layout( _da.get_layout_name() );
+
+    /* Initialize the button states */
+    node_changed();
+
+  }
+
+  /* Called whenever the current node is changed */
+  private void node_changed() {
+
+    var foldable   = _da.completed_tasks_foldable();
+    var unfoldable = _da.unfoldable();
+
+    _fold_completed.set_sensitive( foldable );
+    _unfold_all.set_sensitive( unfoldable );
 
   }
 
