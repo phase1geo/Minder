@@ -8,6 +8,8 @@ foreach i : icon_sizes
 endforeach
 
 custom_icons = [
+  'minder-balance-symbolic',
+  'minder-fold-completed-symbolic',
   'minder-layout-horizontal-symbolic',
   'minder-layout-right-symbolic',
   'minder-task-done-symbolic',
@@ -19,7 +21,8 @@ custom_icons = [
   'minder-layout-vertical-symbolic',
   'minder-note-symbolic',
   'minder-task-todo-symbolic',
-  'minder-title-symbolic'
+  'minder-title-symbolic',
+  'minder-unfold-symbolic'
 ]
 
 foreach i : custom_icons

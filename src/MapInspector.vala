@@ -185,24 +185,27 @@ public class MapInspector : Box {
     grid.column_spacing     = 5;
     grid.row_spacing        = 5;
 
-    _balance = new Button.with_label( _( "Balance Nodes" ) );
+    _balance = new Button.from_icon_name( "minder-balance-symbolic", IconSize.SMALL_TOOLBAR );
+    _balance.set_tooltip_text( _( "Balance Nodes" ) );
     _balance.clicked.connect(() => {
       _da.balance_nodes();
     });
 
-    _fold_completed = new Button.with_label( _( "Fold Completed Tasks" ) );
+    _fold_completed = new Button.from_icon_name( "minder-fold-completed-symbolic", IconSize.SMALL_TOOLBAR );
+    _fold_completed.set_tooltip_text( _( "Fold Completed Tasks" ) );
     _fold_completed.clicked.connect(() => {
       _da.fold_completed_tasks();
     });
 
-    _unfold_all = new Button.with_label( _( "Unfold All Nodes" ) );
+    _unfold_all = new Button.from_icon_name( "minder-unfold-symbolic", IconSize.SMALL_TOOLBAR );
+    _unfold_all.set_tooltip_text( _( "Unfold All Nodes" ) );
     _unfold_all.clicked.connect(() => {
       _da.unfold_all_nodes();
     });
 
     grid.attach( _balance,        0, 0 );
-    grid.attach( _fold_completed, 0, 1 );
-    grid.attach( _unfold_all,     0, 2 );
+    grid.attach( _fold_completed, 1, 0 );
+    grid.attach( _unfold_all,     2, 0 );
 
     pack_start( grid, false, true );
 
