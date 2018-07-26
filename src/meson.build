@@ -23,8 +23,10 @@ sources += files(
     'layouts/LayoutUp.vala',
     'layouts/LayoutVertical.vala',
 
-    'themes/ThemeDefault.vala',
     'themes/ThemeDark.vala',
+    'themes/ThemeDefault.vala',
+    'themes/ThemeSolarizedDark.vala',
+    'themes/ThemeSolarizedLight.vala',
 
     'undo_actions/UndoNodeAttach.vala',
     'undo_actions/UndoNodeBalance.vala',

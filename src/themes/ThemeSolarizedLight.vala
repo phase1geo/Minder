@@ -22,35 +22,35 @@
 using Gdk;
 using Gtk;
 
-public class ThemeDark : Theme {
+public class ThemeSolarizedLight : Theme {
 
   /* Create the theme colors */
-  public ThemeDark() {
+  public ThemeSolarizedLight() {
 
-    name = _( "Dark" );
+    name = _( "Solarized Light" ); 
 
     /* Generate the non-link colors */
-    background         = get_color( "#000000" );
-    foreground         = get_color( "White" );
-    root_background    = get_color( "#d4d4d4" );
-    root_foreground    = get_color( "Black" );
-    nodesel_background = get_color( "#64baff" );
-    nodesel_foreground = get_color( "Black" );
-    textsel_background = get_color( "#0d52bf" );
-    textsel_foreground = get_color( "White" );
-    text_cursor        = get_color( "White" );
+    background         = get_color( "#FDF6E3" );  // Done
+    foreground         = get_color( "#586E75" );  // Done
+    root_background    = get_color( "#839496" );
+    root_foreground    = get_color( "#FDF6E3" );
+    nodesel_background = get_color( "#586E75" );  // Done
+    nodesel_foreground = get_color( "#000000" );  // Done
+    textsel_background = get_color( "#93A1A1" );  // Done
+    textsel_foreground = get_color( "#002B36" );  // Done
+    text_cursor        = get_color( "#586E75" );
     attachable_color   = get_color( "#9bdb4d" );
-    prefer_dark        = true;
+    prefer_dark        = false;
 
     /* Generate the link colors */
-    add_link_color( get_color( "#c6262e" ) );
-    add_link_color( get_color( "#f37329" ) );
-    add_link_color( get_color( "#f9c440" ) );
-    add_link_color( get_color( "#68b723" ) );
-    add_link_color( get_color( "#3689e6" ) );
-    add_link_color( get_color( "#7a36b1" ) );
-    add_link_color( get_color( "#715344" ) );
-    add_link_color( get_color( "#bbbbbb" ) );
+    add_link_color( get_color( "#DC322F" ) );
+    add_link_color( get_color( "#CB4B16" ) );
+    add_link_color( get_color( "#B58900" ) );
+    add_link_color( get_color( "#859900" ) );
+    add_link_color( get_color( "#268BD2" ) );
+    add_link_color( get_color( "#6C71C4" ) );
+    add_link_color( get_color( "#D33682" ) );
+    add_link_color( get_color( "#2AA198" ) );
 
   }
 

@@ -33,12 +33,16 @@ public class Themes : Object {
     _themes = new Array<Theme>();
 
     /* Create the themes */
-    var default_theme = new ThemeDefault();
-    var dark_theme    = new ThemeDark();
+    var default_theme         = new ThemeDefault();
+    var dark_theme            = new ThemeDark();
+    var solarized_light_theme = new ThemeSolarizedLight();
+    var solarized_dark_theme  = new ThemeSolarizedDark();
 
     /* Add the themes to the list */
     _themes.append_val( default_theme );
     _themes.append_val( dark_theme );
+    _themes.append_val( solarized_light_theme );
+    _themes.append_val( solarized_dark_theme );
 
   }
 

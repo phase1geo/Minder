@@ -119,9 +119,9 @@ public class Theme : Object {
   /* Creates the icon representation based on the theme's colors */
   public Cairo.Surface make_icon() {
 
-    int width, height;
     Cairo.ImageSurface surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 200, 100 );
     Cairo.Context      ctx     = new Cairo.Context( surface );
+    int                width, height;
 
     var font_desc = new Pango.FontDescription();
     font_desc.set_family( "Sans" );
@@ -199,12 +199,22 @@ public class Theme : Object {
     ctx.line_to( 190, 75 );
     ctx.stroke();
 
+    /* Create root node text */
+    var root_text = Pango.cairo_create_layout( ctx );
+    root_text.set_font_description( font_desc );
+    root_text.set_width( 70 * Pango.SCALE );
+    root_text.set_wrap( Pango.WrapMode.WORD_CHAR );
+    root_text.set_text( name, -1 );
+    root_text.get_pixel_size( out width, out height );
+
+    height += 4;
+
     /* Draw root node */
     double r = 4;
     double x = 65;
-    double y = 40;
+    double y = (100 - height) / 2;
     double w = 70;
-    double h = 20;
+    double h = height;
     set_context_color( ctx, root_background );
     ctx.set_line_width( 1 );
     ctx.move_to(x+r,y);
@@ -218,13 +228,7 @@ public class Theme : Object {
     ctx.curve_to(x,y,x,y,x+r,y);
     ctx.fill();
 
-    /* Create text */
-    var root_text = Pango.cairo_create_layout( ctx );
-    root_text.set_font_description( font_desc );
-    root_text.set_width( 70 * Pango.SCALE );
-    root_text.set_wrap( Pango.WrapMode.WORD_CHAR );
-    root_text.set_text( name, -1 );
-
+    /* Create non-root node text */
     var node_text = Pango.cairo_create_layout( ctx );
     node_text.set_font_description( font_desc );
     node_text.set_width( 40 * Pango.SCALE );
@@ -232,9 +236,8 @@ public class Theme : Object {
     node_text.set_text( "Node", -1 );
 
     /* Add the text */
-    root_text.get_size( out width, out height );
     set_context_color( ctx, root_foreground );
-    ctx.move_to( (100 - ((width / Pango.SCALE) / 2)), (50 - ((height / Pango.SCALE) / 2)) );
+    ctx.move_to( (100 - (width / 2)), (50 - (height / 2)) );
     Pango.cairo_show_layout( ctx, root_text );
 
     node_text.get_size( out width, out height );
