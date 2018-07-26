@@ -747,7 +747,7 @@ public class Node : Object {
     if( !_folded && (_task_count > 0) ) {
       if( _task_count == _task_done ) {
         for( int i=0; i<_children.length; i++ ) {
-          if( _children.index( i ).is_leaf() ) {
+          if( _children.index( i ).is_leaf() && (_children.index( i )._task_done == 1) ) {
             return( true );
           }
         }
@@ -780,7 +780,7 @@ public class Node : Object {
     if( !_folded && (_task_count > 0) ) {
       if( _task_count == _task_done ) {
         for( int i=0; i<_children.length; i++ ) {
-          if( _children.index( i ).is_leaf() ) {
+          if( _children.index( i ).is_leaf() && (_children.index( i )._task_done == 1) ) {
             set_fold( true, ref changed );
             return;
           }
