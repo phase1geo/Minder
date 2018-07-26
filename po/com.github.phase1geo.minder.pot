@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-25 21:13-0500\n"
+"POT-Creation-Date: 2018-07-26 01:20-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,15 +115,15 @@ msgstr ""
 msgid "%0.3g%% complete"
 msgstr ""
 
-#: src/DrawArea.vala:1174
+#: src/DrawArea.vala:1185
 msgid "Another Idea"
 msgstr ""
 
-#: src/DrawArea.vala:1301
+#: src/DrawArea.vala:1312
 msgid "fold completed tasks"
 msgstr ""
 
-#: src/DrawArea.vala:1336
+#: src/DrawArea.vala:1347
 msgid "unfold all tasks"
 msgstr ""
 
