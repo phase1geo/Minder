@@ -957,30 +957,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( _current_node != null ) {
       if( _current_node.mode == NodeMode.CURRENT ) {
         if( _attach_node != null ) {
-          Node? orig_parent = null;
-          int   orig_index  = -1;
-          RGBA? orig_link   = null;
-          if( _current_node.is_root() ) {
-            for( int i=0; i<_nodes.length; i++ ) {
-              if( _nodes.index( i ) == _current_node ) {
-                _nodes.remove_index( i );
-                orig_index = i;
-                break;
-              }
-            }
-          } else {
-            orig_parent = _current_node.parent;
-            orig_index  = _current_node.index();
-            orig_link   = _current_node.link_color;
-            _current_node.detach( _orig_side, _layout );
-          }
-          _current_node.attach( _attach_node, -1, _theme, _layout );
-          _attach_node.mode = NodeMode.NONE;
-          _attach_node      = null;
-          undo_buffer.add_item( new UndoNodeAttach( this, _current_node, orig_parent, _orig_side, orig_index, orig_link, _layout ) );
-          queue_draw();
-          changed();
-          node_changed();
+          attach_current_node();
         } else if( !_motion ) {
           _current_node.set_cursor_all( false );
           _orig_name = _current_node.name;
@@ -997,6 +974,40 @@ public class DrawArea : Gtk.DrawingArea {
     return( false );
   }
 
+  /* Attaches the current node to the given node */
+  private void attach_current_node() {
+
+    Node? orig_parent = null;
+    int   orig_index  = -1;
+    RGBA? orig_link   = null;
+
+    if( _current_node.is_root() ) {
+      for( int i=0; i<_nodes.length; i++ ) {
+        if( _nodes.index( i ) == _current_node ) {
+          _nodes.remove_index( i );
+          orig_index = i;
+          break;
+        }
+      }
+    } else {
+      orig_parent = _current_node.parent;
+      orig_index  = _current_node.index();
+      orig_link   = _current_node.link_color;
+      _current_node.detach( _orig_side, _layout );
+    }
+
+    _current_node.attach( _attach_node, -1, _theme, _layout );
+    _attach_node.mode = NodeMode.NONE;
+    _attach_node      = null;
+
+    undo_buffer.add_item( new UndoNodeAttach( this, _current_node, orig_parent, _orig_side, orig_index, orig_link, _layout ) );
+
+    queue_draw();
+    changed();
+    node_changed();
+
+  }
+  
   /* Returns true if we are in some sort of edit mode */
   private bool is_mode_edit() {
     return( _current_node.mode == NodeMode.EDITABLE );

@@ -1004,6 +1004,7 @@ public class Node : Object {
 
   /* Attaches this node as a child of the given node */
   public virtual void attach( Node parent, int index, Theme? theme, Layout? layout ) {
+    bool isroot = is_root();
     this.parent = parent;
     if( (parent._children.length == 0) && (parent._task_count == 1) ) {
       parent.propagate_task_info_up( (0 - parent._task_count), (0 - parent._task_done) );
@@ -1015,6 +1016,11 @@ public class Node : Object {
     if( index == -1 ) {
       index = (int)this.parent.children().length;
       parent.children().append_val( this );
+      if( isroot && (layout != null) ) {
+        side = parent.children().index( index ).side;
+        layout.propagate_side( this, side );
+        layout.initialize( this );
+      }
     } else {
       parent.children().insert_val( index, this );
     }
