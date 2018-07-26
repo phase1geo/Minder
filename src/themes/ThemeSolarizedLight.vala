@@ -30,14 +30,14 @@ public class ThemeSolarizedLight : Theme {
     name = _( "Solarized Light" ); 
 
     /* Generate the non-link colors */
-    background         = get_color( "#FDF6E3" );  // Done
-    foreground         = get_color( "#586E75" );  // Done
+    background         = get_color( "#FDF6E3" );
+    foreground         = get_color( "#586E75" );
     root_background    = get_color( "#839496" );
     root_foreground    = get_color( "#FDF6E3" );
-    nodesel_background = get_color( "#586E75" );  // Done
-    nodesel_foreground = get_color( "#000000" );  // Done
-    textsel_background = get_color( "#93A1A1" );  // Done
-    textsel_foreground = get_color( "#002B36" );  // Done
+    nodesel_background = get_color( "#586E75" );
+    nodesel_foreground = get_color( "#ffffff" );
+    textsel_background = get_color( "#93A1A1" );
+    textsel_foreground = get_color( "#002B36" );
     text_cursor        = get_color( "#586E75" );
     attachable_color   = get_color( "#9bdb4d" );
     prefer_dark        = false;
