@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-25 08:47-0500\n"
+"POT-Creation-Date: 2018-07-25 21:13-0500\n"
 "PO-Revision-Date: 2018-07-21 21:13+0200\n"
 "Last-Translator: Jan Marek <janmarek28@gmail.com>\n"
 "Language-Team: čeština <>\n"
@@ -108,7 +108,7 @@ msgid "Unfold Children"
 msgstr "Rozbalit potomky"
 
 #: src/DrawArea.vala:103 src/layouts/LayoutHorizontal.vala:26
-#: src/MapInspector.vala:217
+#: src/MapInspector.vala:220
 msgid "Horizontal"
 msgstr "Horizontální"
 
@@ -129,27 +129,27 @@ msgstr ""
 msgid "unfold all tasks"
 msgstr ""
 
-#: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:219
+#: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:222
 msgid "To right"
 msgstr "Do prava"
 
-#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:216
+#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:219
 msgid "Vertical"
 msgstr "Vertikální"
 
-#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:220
+#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:223
 msgid "Upwards"
 msgstr "Vzhůru"
 
-#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:221
+#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:224
 msgid "Downwards"
 msgstr "Dolů"
 
-#: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:218
+#: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:221
 msgid "To left"
 msgstr "Do leva"
 
-#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:215
+#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:218
 msgid "Manual"
 msgstr "Ruční"
 
@@ -348,15 +348,15 @@ msgstr "Rozvržení uzlů"
 msgid "Themes"
 msgstr "Témata"
 
-#: src/MapInspector.vala:188
+#: src/MapInspector.vala:189
 msgid "Balance Nodes"
 msgstr "Vyvážit uzly"
 
-#: src/MapInspector.vala:193
+#: src/MapInspector.vala:195
 msgid "Fold Completed Tasks"
 msgstr ""
 
-#: src/MapInspector.vala:198
+#: src/MapInspector.vala:201
 #, fuzzy
 msgid "Unfold All Nodes"
 msgstr "Rozbalit potomky"
