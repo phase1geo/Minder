@@ -1596,9 +1596,9 @@ public class DrawArea : Gtk.DrawingArea {
   private bool on_keypress( EventKey e ) {
 
     /* Figure out which modifiers were used */
-    var nomod   = (e.state & ModifierType.MODIFIER_MASK) == 0;
-    var control = (e.state & ModifierType.MODIFIER_MASK) == ModifierType.CONTROL_MASK;
-    var shift   = (e.state & ModifierType.MODIFIER_MASK) == ModifierType.SHIFT_MASK;
+    var control = (bool) e.state & ModifierType.CONTROL_MASK;
+    var shift   = (bool) e.state & ModifierType.SHIFT_MASK;
+    var nomod   = !(control || shift);
 
     /* If there is a current node selected, operate on it */
     if( _current_node != null ) {
