@@ -409,7 +409,7 @@ public class DrawArea : Gtk.DrawingArea {
     _current_new   = false;
 
     /* Create the main idea node */
-    var n = new Node.with_name( this, "Main Idea", _layout );
+    var n = new Node.with_name( this, _("Main Idea"), _layout );
 
     /* Set the node information */
     n.posx = (get_allocated_width()  / 2) - 30;
@@ -1007,7 +1007,7 @@ public class DrawArea : Gtk.DrawingArea {
     node_changed();
 
   }
-  
+
   /* Returns true if we are in some sort of edit mode */
   private bool is_mode_edit() {
     return( _current_node.mode == NodeMode.EDITABLE );

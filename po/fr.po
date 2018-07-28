@@ -2,160 +2,160 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# Jan Marek <janmarek28@gmail.com>, 2018.
+# yannicka <yannick.armand@protonmail.com>, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-28 18:50+0200\n"
-"PO-Revision-Date: 2018-07-21 21:13+0200\n"
-"Last-Translator: Jan Marek <janmarek28@gmail.com>\n"
-"Language-Team: čeština <>\n"
+"PO-Revision-Date: 2018-07-28 18:54+0200\n"
+"Last-Translator: yannicka <yannick.armand@protonmail.com>\n"
+"Language-Team: français <>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 2.91.7\n"
 
 #: src/DrawAreaMenu.vala:51
 msgid "Copy"
-msgstr "Kopírovat"
+msgstr "Copier"
 
 #: src/DrawAreaMenu.vala:55
 msgid "Cut"
-msgstr "Vyjmout"
+msgstr "Couper"
 
 #: src/DrawAreaMenu.vala:59
 msgid "Paste"
-msgstr "Vložit"
+msgstr "Coller"
 
 #: src/DrawAreaMenu.vala:63
 msgid "Delete"
-msgstr "Smazat"
+msgstr "Supprimer"
 
 #: src/DrawAreaMenu.vala:67
 msgid "Edit..."
-msgstr "Upravit…"
+msgstr "Modifier…"
 
 #: src/DrawAreaMenu.vala:71 src/DrawAreaMenu.vala:230
 msgid "Add Task"
-msgstr "Přidat úkol"
+msgstr "Transformer en tâche"
 
 #: src/DrawAreaMenu.vala:74 src/DrawAreaMenu.vala:231
 msgid "Add Note"
-msgstr "Přidat poznámku"
+msgstr "Ajouter une note"
 
 #: src/DrawAreaMenu.vala:77 src/DrawAreaMenu.vala:232
 msgid "Fold Children"
-msgstr "Sbalit potomky"
+msgstr "Plier les enfants"
 
 #: src/DrawAreaMenu.vala:81
 msgid "Detach"
-msgstr "Odpojit"
+msgstr "Détacher"
 
 #: src/DrawAreaMenu.vala:84
 msgid "Add Root Node"
-msgstr "Přidat kořenový uzel"
+msgstr "Ajouter un nœud racine"
 
 #: src/DrawAreaMenu.vala:87
 msgid "Add Child Node"
-msgstr "Přidat uzel potomka"
+msgstr "Ajouter un nœud enfant"
 
 #: src/DrawAreaMenu.vala:91
 msgid "Add Sibling Node"
-msgstr "Přidat uzel sourozence"
+msgstr "Ajouter un nœud frère"
 
 #: src/DrawAreaMenu.vala:95
 msgid "Select Node"
-msgstr "Vybrat uzel"
+msgstr "Sélectionner le nœud"
 
 #: src/DrawAreaMenu.vala:99
 msgid "Root"
-msgstr "Kořen"
+msgstr "Racine"
 
 #: src/DrawAreaMenu.vala:103
 msgid "Next Sibling"
-msgstr "Další sourozenec"
+msgstr "Nœud suivant"
 
 #: src/DrawAreaMenu.vala:107
 msgid "Previous Sibling"
-msgstr "Předchozí sourozenec"
+msgstr "Nœud précédent"
 
 #: src/DrawAreaMenu.vala:111
 msgid "First Child"
-msgstr "První potomek"
+msgstr "Premier enfant"
 
 #: src/DrawAreaMenu.vala:115
 msgid "Parent"
-msgstr "Rodič"
+msgstr "Parent"
 
 #: src/DrawAreaMenu.vala:119
 msgid "Center Current Node"
-msgstr "Vystředit aktuální uzel"
+msgstr "Centrer sur le nœud"
 
 #: src/DrawAreaMenu.vala:230
 msgid "Remove Task"
-msgstr "Odstranit úkol"
+msgstr "Supprimer la tâche"
 
 #: src/DrawAreaMenu.vala:231
 msgid "Remove Note"
-msgstr "Odstranit poznámku"
+msgstr "Supprimer la note"
 
 #: src/DrawAreaMenu.vala:232
 msgid "Unfold Children"
-msgstr "Rozbalit potomky"
+msgstr "Déplier les enfants"
 
 #: src/DrawArea.vala:103 src/layouts/LayoutHorizontal.vala:26
 #: src/MapInspector.vala:220
 msgid "Horizontal"
-msgstr "Horizontální"
+msgstr "Horizontal"
 
 #: src/DrawArea.vala:412
 msgid "Main Idea"
-msgstr ""
+msgstr "Idée principale"
 
 #: src/DrawArea.vala:939
 #, c-format
 msgid "%0.3g%% complete"
-msgstr "%0.3g%% hotovo"
+msgstr "%0.3g%% complété"
 
 #: src/DrawArea.vala:1185
 msgid "Another Idea"
-msgstr "Další nápad"
+msgstr "Autre idée"
 
 #: src/DrawArea.vala:1312
 msgid "fold completed tasks"
-msgstr ""
+msgstr "plier les tâches terminées"
 
 #: src/DrawArea.vala:1347
 msgid "unfold all tasks"
-msgstr ""
+msgstr "déplier toutes les tâches"
 
 #: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:222
 msgid "To right"
-msgstr "Do prava"
+msgstr "Vers la droite"
 
 #: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:219
 msgid "Vertical"
-msgstr "Vertikální"
+msgstr "Vertical"
 
 #: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:223
 msgid "Upwards"
-msgstr "Vzhůru"
+msgstr "Vers le haut"
 
 #: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:224
 msgid "Downwards"
-msgstr "Dolů"
+msgstr "Vers le bas"
 
 #: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:221
 msgid "To left"
-msgstr "Do leva"
+msgstr "Vers la gauche"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:218
 msgid "Manual"
-msgstr "Ruční"
+msgstr "Manuel"
 
 #: src/MainWindow.vala:95 src/MainWindow.vala:671
 msgid "Minder"
@@ -163,170 +163,170 @@ msgstr "Minder"
 
 #: src/MainWindow.vala:126
 msgid "New File   <i>(Control-N)</i>"
-msgstr "Nový soubor   <i>(Ctrl-N)</i>"
+msgstr "Nouveau fichier   <i>(Ctrl+N)</i>"
 
 #: src/MainWindow.vala:131
 msgid "Open File   <i>(Control-O)</i>"
-msgstr "Otevřít soubor   <i>(Ctrl-O)</i>"
+msgstr "Ouvrir un fichier   <i>(Ctrl+O)</i>"
 
 #: src/MainWindow.vala:136
 msgid "Save File As   <i>(Control-Shift-S)</i>"
-msgstr "Uložit soubor jako   <i>(Ctrl-Shift-S)</i>"
+msgstr "Enregistrer sous   <i>(Ctrl+Shift+S)</i>"
 
 #: src/MainWindow.vala:141
 msgid "Undo   <i>(Control-Z)</i>"
-msgstr "Zpět   <i>(Ctrl-Z)</i>"
+msgstr "Annuler   <i>(Ctrl+Z)</i>"
 
 #: src/MainWindow.vala:147
 msgid "Redo   <i>(Control-Shift-Z)</i>"
-msgstr "Znovu   <i>(Ctrl-Shift-Z)</i>"
+msgstr "Refaire   <i>(Ctrl+Shift+Z)</i>"
 
 #: src/MainWindow.vala:173
 msgid "Unnamed Document"
-msgstr "Nepojmenovaný dokument"
+msgstr "Document sans titre"
 
 #: src/MainWindow.vala:203
 msgid "Zoom"
-msgstr "Přiblížení"
+msgstr "Zoom"
 
 #: src/MainWindow.vala:210
 msgid "Zoom to Percent"
-msgstr "Procentuální přiblížení"
+msgstr "Pourcentage de zoom"
 
 #: src/MainWindow.vala:221
 msgid "Zoom In"
-msgstr "Přiblížit"
+msgstr "Zoomer"
 
 #: src/MainWindow.vala:225
 msgid "Zoom Out"
-msgstr "Oddálit"
+msgstr "Dézoomer"
 
 #: src/MainWindow.vala:229
 msgid "Zoom to Fit"
-msgstr "Vměstnat do okna"
+msgstr "Voir l'ensemble du document"
 
 #: src/MainWindow.vala:233
 msgid "Zoom to Fit Selected Node"
-msgstr "Vměstnat do okna vybraný uzel"
+msgstr "Zoomer sur le nœud sélectionné"
 
 #: src/MainWindow.vala:238
 msgid "Zoom to Actual Size"
-msgstr "Přiblížení dle skutečných rozměrů"
+msgstr "Zoom par défaut (100 %)"
 
 #: src/MainWindow.vala:265
 msgid "Search   <i>(Control-F)</i>"
-msgstr "Hledat   <i>(Ctrl-F)</i>"
+msgstr "Rechercher   <i>(Ctrl+F)</i>"
 
 #: src/MainWindow.vala:274
 msgid "Search Nodes"
-msgstr "Hledat uzly"
+msgstr "Recherches "
 
 #: src/MainWindow.vala:297
 msgid "Search Criteria"
-msgstr "Kritéria hledání"
+msgstr "Critères de recherche"
 
 #: src/MainWindow.vala:319
 msgid "Titles"
-msgstr "Názvy"
+msgstr "Titres"
 
 #: src/MainWindow.vala:320
 msgid "Notes"
-msgstr "Poznámky"
+msgstr "Notes"
 
 #: src/MainWindow.vala:321
 msgid "Folded"
-msgstr "Sbalené"
+msgstr "Plié"
 
 #: src/MainWindow.vala:322
 msgid "Unfolded"
-msgstr "Rozbalené"
+msgstr "Déplié"
 
 #: src/MainWindow.vala:323
 msgid "Tasks"
-msgstr "Úkoly"
+msgstr "Tâches"
 
 #: src/MainWindow.vala:324
 msgid "Non-tasks"
-msgstr "Nejsou úkoly"
+msgstr "Non-tâches"
 
 #: src/MainWindow.vala:392 src/MainWindow.vala:886
 msgid "Export"
-msgstr "Export"
+msgstr "Exporter"
 
 #: src/MainWindow.vala:399
-#, fuzzy
 msgid "Export..."
-msgstr "Export"
+msgstr "Exporter…"
 
 #: src/MainWindow.vala:403
 msgid "Print"
-msgstr "Vytisknout"
+msgstr "Imprimer"
 
 #: src/MainWindow.vala:428
 msgid "Properties"
-msgstr "Parametry"
+msgstr "Propriétés"
 
 #: src/MainWindow.vala:441
 msgid "Node"
-msgstr ""
+msgstr "Nœud"
 
 #: src/MainWindow.vala:442
 msgid "Map"
-msgstr ""
+msgstr "Carte"
 
 #: src/MainWindow.vala:487
 msgid "Save current unnamed document?"
-msgstr "Uložit aktuální nepojmenovaný dokument?"
+msgstr "Enregistrer le document actuellement sans titre ?"
 
 #: src/MainWindow.vala:488
 msgid "Changes will be permanently lost if not saved."
-msgstr "Pokud soubor neuložíte, provedené změny se navždy ztratí."
+msgstr ""
+"Les modifications seront définitivement perdues si elles ne sont pas "
+"enregistrées."
 
 #: src/MainWindow.vala:493
 msgid "Discard Changes"
-msgstr "Zahodit změny"
+msgstr "Ignorer les modifications"
 
 #: src/MainWindow.vala:496 src/MainWindow.vala:585 src/MainWindow.vala:668
 #: src/MainWindow.vala:886
 msgid "Cancel"
-msgstr "Zrušit"
+msgstr "Annuler"
 
 #: src/MainWindow.vala:499 src/MainWindow.vala:668
 msgid "Save"
-msgstr "Uložit"
+msgstr "Enregistrer"
 
 #: src/MainWindow.vala:584
 msgid "Open File"
-msgstr "Otevřít soubor"
+msgstr "Ouvrir le fichier"
 
 #: src/MainWindow.vala:585
 msgid "Open"
-msgstr "Otevřít"
+msgstr "Ouvrir"
 
 #: src/MainWindow.vala:667
 msgid "Save File"
-msgstr "Uložit soubor"
+msgstr "Enregistrer le fichier"
 
 #: src/MainWindow.vala:885
-#, fuzzy
 msgid "Export As"
-msgstr "Export"
+msgstr "Exporter sous"
 
 #: src/MainWindow.vala:890
 msgid "BMP"
-msgstr ""
+msgstr "BMP"
 
 #: src/MainWindow.vala:896
 msgid "CSV"
-msgstr ""
+msgstr "CSV"
 
 #: src/MainWindow.vala:902
 msgid "JPEG"
-msgstr ""
+msgstr "JPEG"
 
 #: src/MainWindow.vala:909
 msgid "Markdown"
-msgstr ""
+msgstr "Markdown"
 
 #: src/MainWindow.vala:916
 msgid "OPML"
@@ -342,147 +342,128 @@ msgstr "PNG"
 
 #: src/MainWindow.vala:934
 msgid "PlainText"
-msgstr ""
+msgstr "Texte"
 
 #: src/MainWindow.vala:940
 msgid "SVG"
-msgstr ""
+msgstr "SVG"
 
 #: src/MapInspector.vala:60
 msgid "Enable animations"
-msgstr "Povolit animace"
+msgstr "Activer les animations"
 
 #: src/MapInspector.vala:93
 msgid "Node Layouts"
-msgstr "Rozvržení uzlů"
+msgstr "Disposition des nœuds"
 
 #: src/MapInspector.vala:141
 msgid "Themes"
-msgstr "Témata"
+msgstr "Thèmes"
 
 #: src/MapInspector.vala:189
 msgid "Balance Nodes"
-msgstr "Vyvážit uzly"
+msgstr "Équilibrer les nœuds"
 
 #: src/MapInspector.vala:195
 msgid "Fold Completed Tasks"
-msgstr ""
+msgstr "Plier les tâches terminées"
 
 #: src/MapInspector.vala:201
-#, fuzzy
 msgid "Unfold All Nodes"
-msgstr "Rozbalit potomky"
+msgstr "Déplier toutes les tâches"
 
 #: src/NodeInspector.vala:48
 msgid "<big>Select a node to view/edit information</big>"
-msgstr "<big>Vyberte uzel pro zobrazení/úpravy informací</big>"
+msgstr "<big>Sélectionner un nœud pour voir/modifier ses informations</big>"
 
 #: src/NodeInspector.vala:81
 msgid "Title"
-msgstr "Název"
+msgstr "Titre"
 
 #: src/NodeInspector.vala:100
 msgid "Task"
-msgstr "Úkol"
+msgstr "Tâche"
 
 #: src/NodeInspector.vala:118
 msgid "Fold"
-msgstr "Sbalit"
+msgstr "Plier"
 
 #: src/NodeInspector.vala:139
 msgid "Link Color"
-msgstr "Barva odkazu"
+msgstr "Couleur du lien"
 
 #: src/NodeInspector.vala:160
 msgid "Note"
-msgstr "Poznámka"
+msgstr "Note"
 
 #: src/NodeInspector.vala:191
 msgid "Copy Node To Clipboard"
-msgstr "Kopírovat uzel do schránky"
+msgstr "Copier le nœud sur le presse-papier"
 
 #: src/NodeInspector.vala:195
 msgid "Cut Node To Clipboard"
-msgstr "Vyjmout uzel do schránky"
+msgstr "Couper le nœud sur le presse-papier"
 
 #: src/NodeInspector.vala:200
 msgid "Detach Node"
-msgstr "Odpojit uzel"
+msgstr "Détacher le nœud"
 
 #: src/NodeInspector.vala:205
 msgid "Delete Node"
-msgstr "Smazat uzel"
+msgstr "Supprimer le nœud"
 
 #: src/undo_actions/UndoNodeCut.vala:34
 msgid "cut node"
-msgstr "vyjmout uzel"
+msgstr "couper le nœud"
 
 #: src/undo_actions/UndoNodeName.vala:33
 msgid "node name change"
-msgstr "přejmenovat uzel"
+msgstr "changement du nom du nœud"
 
 #: src/undo_actions/UndoNodeDelete.vala:34
 msgid "delete node"
-msgstr "smazat uzel"
+msgstr "supprimer le nœud"
 
 #: src/undo_actions/UndoNodeInsert.vala:35
 msgid "insert node"
-msgstr "vložit uzel"
+msgstr "insérer un nœud"
 
 #: src/undo_actions/UndoNodeTask.vala:35
 msgid "node task change"
-msgstr "změna úkolu uzlu"
+msgstr "changement du la tâche du nœud"
 
 #: src/undo_actions/UndoNodeBalance.vala:62
 msgid "balance nodes"
-msgstr "vyvážit uzly"
+msgstr "balance des nœuds"
 
 #: src/undo_actions/UndoNodeNote.vala:33
 msgid "node note change"
-msgstr "změna poznámky uzlu"
+msgstr "changement du la note du nœud"
 
 #: src/undo_actions/UndoNodeFold.vala:33
 msgid "node change fold"
-msgstr "změna sbalení uzlu"
+msgstr "changement du pli du nœud"
 
 #: src/undo_actions/UndoNodeMove.vala:36
 msgid "move node"
-msgstr "přesunout uzel"
+msgstr "déplacer le nœud"
 
 #: src/undo_actions/UndoNodeDetach.vala:36
 msgid "detach node"
-msgstr "odpojit uzel"
+msgstr "détacher le nœud"
 
 #: src/undo_actions/UndoNodeAttach.vala:40
 msgid "attach node"
-msgstr "připojit uzel"
+msgstr "attacher le nœud"
 
 #: src/undo_actions/UndoNodePaste.vala:34
 msgid "paste node"
-msgstr "vložit uzel"
+msgstr "coller le nœud"
 
 #: src/UndoBuffer.vala:79
 msgid "Undo "
-msgstr "Zpět"
+msgstr "Annuler "
 
 #: src/UndoBuffer.vala:85
 msgid "Redo "
-msgstr "Znovu"
-
-#~ msgid "Export To OPML"
-#~ msgstr "Exportovat do OPML"
-
-#~ msgid "Export to PDF"
-#~ msgstr "Exportovat do PDF"
-
-#~ msgid "Export to PNG"
-#~ msgstr "Exportovat do PNG"
-
-#~ msgid "Export OPML File"
-#~ msgstr "Exportovat OPML soubor"
-
-#~ msgid "Export PDF File"
-#~ msgstr "Exportovat PDF soubor"
-
-#~ msgid "Export PNG File"
-#~ msgstr "Exportovat PNG soubor"
+msgstr "Refaire "
