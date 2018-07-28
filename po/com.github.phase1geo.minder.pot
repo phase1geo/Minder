@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-26 01:20-0500\n"
+"POT-Creation-Date: 2018-07-28 18:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,6 +108,10 @@ msgstr ""
 #: src/DrawArea.vala:103 src/layouts/LayoutHorizontal.vala:26
 #: src/MapInspector.vala:220
 msgid "Horizontal"
+msgstr ""
+
+#: src/DrawArea.vala:412
+msgid "Main Idea"
 msgstr ""
 
 #: src/DrawArea.vala:939
@@ -257,6 +261,14 @@ msgstr ""
 
 #: src/MainWindow.vala:428
 msgid "Properties"
+msgstr ""
+
+#: src/MainWindow.vala:441
+msgid "Node"
+msgstr ""
+
+#: src/MainWindow.vala:442
+msgid "Map"
 msgstr ""
 
 #: src/MainWindow.vala:487
