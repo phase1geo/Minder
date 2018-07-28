@@ -41,13 +41,11 @@
   <developer_name>Trevor Williams</developer_name>
   <url type="homepage">https://github.com/phase1geo/minder/</url>
   <url type="bugtracker">https://github.com/phase1geo/minder/issues/</url>
-
   <custom>
     <value key="x-appcenter-color-primary">#603461</value>
     <value key="x-appcenter-color-primary-text">rgb(255, 255, 255)</value>
     <value key="x-appcenter-suggested-price">5</value>
   </custom>
-
   <content_rating type="oars-1.1">
     <content_attribute id="violence-cartoon">none</content_attribute>
     <content_attribute id="violence-fantasy">none</content_attribute>
@@ -77,11 +75,10 @@
     <content_attribute id="money-purchasing">none</content_attribute>
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
-
   <releases>
-    <release version="1.0.8" date="7/23/2018">
+    <release version="1.0.8" date="2018-07-23">
       <description>
-        <p>Support for more export types and bug fixes.
+        <p>Support for more export types and bug fixes.</p>
         <ul>
           <li>Added support for exporting to SVG, JPEG, BMP, Markdown, PlainText and CSV formats.</li>
           <li>Added support for folding all completed tasks in map inspector.</li>
@@ -95,12 +92,12 @@
         </ul>
       </description>
     </release>
-    <release version="1.0.7" date="7/13/2018">
+    <release version="1.0.7" date="2018-07-13">
       <description>
         <p>Initial startup bug fix.</p>
       </description>
     </release>
-    <release version="1.0.4" date="7/11/2018">
+    <release version="1.0.4" date="2018-07-11">
       <description>
         <p>Search improvements and bug fixes</p>
         <ul>
@@ -115,11 +112,10 @@
         </ul>
       </description>
     </release>
-    <release version="1.0.2" date="6/29/2018">
+    <release version="1.0.2" date="2018-06-29">
       <description>
         <p>Initial release</p>
       </description>
     </release>
   </releases>
-
 </component>
