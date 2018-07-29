@@ -30,6 +30,8 @@ public class UndoNodeAttach : UndoItem {
   private NodeSide _old_side;
   private int      _old_index;
   private RGBA?    _old_link;
+  private double   _old_posx;
+  private double   _old_posy;
   private Node     _new_parent;
   private NodeSide _new_side;
   private int      _new_index;
@@ -50,12 +52,29 @@ public class UndoNodeAttach : UndoItem {
     _layout     = l;
   }
 
+  /* Constructor for root nodes */
+  public UndoNodeAttach.for_root( DrawArea da, Node n, int old_index, double old_posx, double old_posy, Layout l ) {
+    base( _( "attach node" ) );
+    _da         = da;
+    _n          = n;
+    _old_parent = null;
+    _old_index  = old_index;
+    _old_posx   = old_posx;
+    _old_posy   = old_posy;
+    _new_parent = n.parent;
+    _new_side   = n.side;
+    _new_index  = n.index();
+    _layout     = l;
+  }
+
   /* Performs an undo operation for this data */
   public override void undo() {
     _da.animator.add_nodes( "undo attach" );
     _n.detach( _new_side, _layout );
     if( _old_parent == null ) {
       _da.add_root( _n, _old_index );
+      _n.posx = _old_posx;
+      _n.posy = _old_posy;
     } else {
       _n.link_color  = _old_link;
       _n.side        = _old_side;
