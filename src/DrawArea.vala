@@ -26,29 +26,28 @@ using Cairo;
 
 public class DrawArea : Gtk.DrawingArea {
 
-  private double       _press_x;
-  private double       _press_y;
-  private double       _origin_x;
-  private double       _origin_y;
-  private double       _scale_factor;
-  private double       _store_origin_x;
-  private double       _store_origin_y;
-  private double       _store_scale_factor;
-  private bool         _pressed    = false;
-  private EventType    _press_type = EventType.NOTHING;
-  private bool         _motion     = false;
-  private Node?        _current_node;
-  private bool         _current_new = false;
-  private Array<Node>  _nodes;
-  private Theme        _theme;
-  private Layout       _layout;
-  private string       _orig_name;
-  private NodeSide     _orig_side;
-  private double       _orig_posx;
-  private double       _orig_posy;
-  private Node?        _attach_node    = null;
-  private DrawAreaMenu _popup_menu;
-  private uint?        _auto_save_id   = null;
+  private double           _press_x;
+  private double           _press_y;
+  private double           _origin_x;
+  private double           _origin_y;
+  private double           _scale_factor;
+  private double           _store_origin_x;
+  private double           _store_origin_y;
+  private double           _store_scale_factor;
+  private bool             _pressed    = false;
+  private EventType        _press_type = EventType.NOTHING;
+  private bool             _motion     = false;
+  private Node?            _current_node;
+  private bool             _current_new = false;
+  private Array<Node>      _nodes;
+  private Theme            _theme;
+  private Layout           _layout;
+  private string           _orig_name;
+  private NodeSide         _orig_side;
+  private Array<NodeInfo?> _orig_info;
+  private Node?            _attach_node    = null;
+  private DrawAreaMenu     _popup_menu;
+  private uint?            _auto_save_id   = null;
 
   public UndoBuffer undo_buffer    { set; get; default = new UndoBuffer(); }
   public Themes     themes         { set; get; default = new Themes(); }
@@ -99,6 +98,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Create the popup menu */
     _popup_menu = new DrawAreaMenu( this );
+
+    /* Create the node information array */
+    _orig_info = new Array<NodeInfo?>();
 
     /* Set the theme to the default theme */
     set_theme( "Default" );
@@ -587,8 +589,8 @@ public class DrawArea : Gtk.DrawingArea {
           return( false );
         }
         _orig_side = match.side;
-        _orig_posx = match.posx;
-        _orig_posy = match.posy;
+        _orig_info.remove_range( 0, _orig_info.length );
+        match.get_node_info( ref _orig_info );
         if( match == _current_node ) {
           if( is_mode_edit() ) {
             switch( e.type ) {
@@ -981,10 +983,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Attaches the current node to the attach node */
   private void attach_current_node() {
 
-    Node?  orig_parent = null;
-    int    orig_index  = -1;
-    RGBA?  orig_link   = null;
-    bool   isroot      = _current_node.is_root();
+    Node? orig_parent = null;
+    int   orig_index  = -1;
+    bool  isroot      = _current_node.is_root();
 
     /* Remove the current node from its current location */
     if( isroot ) {
@@ -998,7 +999,6 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       orig_parent = _current_node.parent;
       orig_index  = _current_node.index();
-      orig_link   = _current_node.link_color;
       _current_node.detach( _orig_side, _layout );
     }
 
@@ -1009,9 +1009,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Add the attachment information to the undo buffer */
     if( isroot ) {
-      undo_buffer.add_item( new UndoNodeAttach.for_root( this, _current_node, orig_index, _orig_posx, _orig_posy, _layout ) );
+      undo_buffer.add_item( new UndoNodeAttach.for_root( this, _current_node, orig_index, _orig_info, _layout ) );
     } else {
-      undo_buffer.add_item( new UndoNodeAttach( this, _current_node, orig_parent, _orig_side, orig_index, orig_link, _layout ) );
+      undo_buffer.add_item( new UndoNodeAttach( this, _current_node, orig_parent, _orig_side, orig_index, _orig_info, _layout ) );
     }
 
     queue_draw();

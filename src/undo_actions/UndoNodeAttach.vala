@@ -24,28 +24,26 @@ using Gdk;
 
 public class UndoNodeAttach : UndoItem {
 
-  private DrawArea _da;
-  private Node     _n;
-  private Node?    _old_parent;
-  private NodeSide _old_side;
-  private int      _old_index;
-  private RGBA?    _old_link;
-  private double   _old_posx;
-  private double   _old_posy;
-  private Node     _new_parent;
-  private NodeSide _new_side;
-  private int      _new_index;
-  private Layout?  _layout;
+  private DrawArea         _da;
+  private Node             _n;
+  private Node?            _old_parent;
+  private NodeSide         _old_side;
+  private int              _old_index;
+  private Array<NodeInfo?> _old_info;
+  private Node             _new_parent;
+  private NodeSide         _new_side;
+  private int              _new_index;
+  private Layout?          _layout;
 
   /* Default constructor */
-  public UndoNodeAttach( DrawArea da, Node n, Node? old_parent, NodeSide old_side, int old_index, RGBA? old_link, Layout l ) {
+  public UndoNodeAttach( DrawArea da, Node n, Node? old_parent, NodeSide old_side, int old_index, Array<NodeInfo?> old_info, Layout l ) {
     base( _( "attach node" ) );
     _da         = da;
     _n          = n;
     _old_parent = old_parent;
     _old_side   = old_side;
     _old_index  = old_index;
-    _old_link   = old_link;
+    _old_info   = old_info;
     _new_parent = n.parent;
     _new_side   = n.side;
     _new_index  = n.index();
@@ -53,14 +51,13 @@ public class UndoNodeAttach : UndoItem {
   }
 
   /* Constructor for root nodes */
-  public UndoNodeAttach.for_root( DrawArea da, Node n, int old_index, double old_posx, double old_posy, Layout l ) {
+  public UndoNodeAttach.for_root( DrawArea da, Node n, int old_index, Array<NodeInfo?> old_info, Layout l ) {
     base( _( "attach node" ) );
     _da         = da;
     _n          = n;
     _old_parent = null;
     _old_index  = old_index;
-    _old_posx   = old_posx;
-    _old_posy   = old_posy;
+    _old_info   = old_info;
     _new_parent = n.parent;
     _new_side   = n.side;
     _new_index  = n.index();
@@ -69,15 +66,15 @@ public class UndoNodeAttach : UndoItem {
 
   /* Performs an undo operation for this data */
   public override void undo() {
+    int index = 0;
     _da.animator.add_nodes( "undo attach" );
     _n.detach( _new_side, _layout );
     if( _old_parent == null ) {
       _da.add_root( _n, _old_index );
-      _n.posx = _old_posx;
-      _n.posy = _old_posy;
+      _n.set_node_info( _old_info, ref index );
     } else {
-      _n.link_color  = _old_link;
-      _n.side        = _old_side;
+      _n.set_node_info( _old_info, ref index );
+      _n.side = _old_side;
       _layout.propagate_side( _n, _old_side );
       _n.attach( _old_parent, _old_index, _da.get_theme(), _layout );
     }

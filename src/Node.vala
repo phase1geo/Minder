@@ -83,6 +83,19 @@ public struct NodeBounds {
   double height;
 }
 
+public struct NodeInfo {
+  double   posx;
+  double   posy;
+  NodeSide side;
+  RGBA     color;
+  public NodeInfo( double x, double y, NodeSide s, RGBA c ) {
+    posx  = x;
+    posy  = y;
+    side  = s;
+    color = c;
+  }
+}
+
 public class Node : Object {
 
   private static int _next_id = 0;
@@ -1243,6 +1256,37 @@ public class Node : Object {
   */
   protected void set_context_color_with_alpha( Context ctx, RGBA color, double alpha ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
+  }
+
+  /*
+   Gathers the information from all stored nodes for positional and link color information.
+   This information is used by the undo/redo functions.
+  */
+  public void get_node_info( ref Array<NodeInfo?> info ) {
+
+    info.append_val( NodeInfo( _posx, _posy, side, _link_color ) );
+
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).get_node_info( ref info );
+    }
+
+  }
+
+  /*
+   Restores the give information in the node info array to the node and subnodes.
+  */
+  public void set_node_info( Array<NodeInfo?> info, ref int index ) {
+
+    _posx       = info.index( index ).posx;
+    _posy       = info.index( index ).posy;
+    side        = info.index( index ).side;
+    _link_color = info.index( index ).color;
+
+    for( int i=0; i<_children.length; i++ ) {
+      index++;
+      _children.index( i ).set_node_info( info, ref index );
+    }
+
   }
 
   /* Returns the link point for this node */
