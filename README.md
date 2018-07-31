@@ -35,6 +35,11 @@ From the command-line within the top Minder directory, run `./app run` to build 
 
 To install, run `sudo ./app install` and then run the application from your application launcher.
 
+## Arch Linux
+
+Arch Linux users can find Minder under the name [minder-git](https://aur.archlinux.org/packages/minder-git/) in the **AUR**:
+
+`$ aurman -S minder-git`
 
 ## Quick Guide to Creating a Mind-Map
 
