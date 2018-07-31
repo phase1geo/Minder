@@ -6,7 +6,18 @@
 
 ![Main Window - Light Theme](https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-light.png "Mind-mapping application for Elementary OS")
 
+## Overview
 
+Use the power of mind-mapping to make your ideas come to life.
+
+- Quickly create visual mind-maps using the keyboard and automatic layout.
+- Gorgeous themes.
+- Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown and PlainText formats.
+- Printer support.
+- Add notes and tasks to your nodes.
+- Colorized node branches.
+
+    
 ## Installation
 
 You will need the following dependencies to build Minder:
