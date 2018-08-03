@@ -669,7 +669,7 @@ public class Node : Object {
    that can be used by a markup parser.
   */
   private string color_from_rgba( RGBA rgba ) {
-    return( "#%02x%02x%02x".printf( ((int)(rgba.red * 256) - 1), ((int)(rgba.green * 256) - 1), ((int)(rgba.blue * 256) - 1) ) );
+    return( "#%02x%02x%02x".printf( (int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255) ) );
   }
 
   /* Generates the marked up name that will be displayed in the node */
