@@ -1241,7 +1241,6 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds the given node to the list of root nodes */
   public void add_root( Node n, int index ) {
-    n.mode = NodeMode.NONE;
     if( index == -1 ) {
       _nodes.append_val( n );
     } else {

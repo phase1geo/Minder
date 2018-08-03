@@ -1017,8 +1017,32 @@ public class Node : Object {
 
   /* Attaches this node as a child of the given node */
   public virtual void attach( Node parent, int index, Theme? theme, Layout? layout ) {
-    bool isroot = is_root();
+    if( is_root() ) {
+      attach_root( parent, theme, layout );
+    } else {
+      attach_nonroot( parent, index, theme, layout );
+    }
+  }
+
+  /* Attaches this node to the end of the given parent when this node is a root node */
+  public virtual void attach_root( Node parent, Theme? theme, Layout? layout ) {
     this.parent = parent;
+    if( layout != null ) {
+      if( children().length > 0 ) {
+        side = children().index( children().length - 1 ).side;
+        layout.propagate_side( this, side );
+      }
+      layout.initialize( this );
+    }
+    attach_common( -1, theme, layout );
+  }
+
+  public virtual void attach_nonroot( Node parent, int index, Theme? theme, Layout? layout ) {
+    this.parent = parent;
+    attach_common( index, theme, layout );
+  }
+
+  protected virtual void attach_common( int index, Theme? theme, Layout? layout ) {
     if( (parent._children.length == 0) && (parent._task_count == 1) ) {
       parent.propagate_task_info_up( (0 - parent._task_count), (0 - parent._task_done) );
       parent._task_count = 0;
@@ -1029,11 +1053,6 @@ public class Node : Object {
     if( index == -1 ) {
       index = (int)this.parent.children().length;
       parent.children().append_val( this );
-      if( isroot && (layout != null) ) {
-        side = parent.children().index( index ).side;
-        layout.propagate_side( this, side );
-        layout.initialize( this );
-      }
     } else {
       parent.children().insert_val( index, this );
     }
@@ -1041,7 +1060,7 @@ public class Node : Object {
     if( layout != null ) {
       layout.handle_update_by_insert( parent, this, index );
     }
-    if( !is_root() && (theme != null) ) {
+    if( theme != null ) {
       link_color = main_branch() ? theme.next_color() : parent.link_color;
     }
     attached = true;

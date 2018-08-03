@@ -69,7 +69,7 @@ public class Layout : Object {
       item.detach( item.side, this );
     });
     list.@foreach((item) => {
-      item.attach( parent, -1, null, this );
+      item.attach_nonroot( parent, -1, null, this );
     });
   }
 
