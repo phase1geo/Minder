@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-28 18:50+0200\n"
+"POT-Creation-Date: 2018-08-04 01:45-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -105,29 +105,29 @@ msgstr ""
 msgid "Unfold Children"
 msgstr ""
 
-#: src/DrawArea.vala:103 src/layouts/LayoutHorizontal.vala:26
+#: src/DrawArea.vala:110 src/layouts/LayoutHorizontal.vala:26
 #: src/MapInspector.vala:220
 msgid "Horizontal"
 msgstr ""
 
-#: src/DrawArea.vala:412
+#: src/DrawArea.vala:419
 msgid "Main Idea"
 msgstr ""
 
-#: src/DrawArea.vala:939
+#: src/DrawArea.vala:948
 #, c-format
 msgid "%0.3g%% complete"
 msgstr ""
 
-#: src/DrawArea.vala:1185
+#: src/DrawArea.vala:1200
 msgid "Another Idea"
 msgstr ""
 
-#: src/DrawArea.vala:1312
+#: src/DrawArea.vala:1326
 msgid "fold completed tasks"
 msgstr ""
 
-#: src/DrawArea.vala:1347
+#: src/DrawArea.vala:1361
 msgid "unfold all tasks"
 msgstr ""
 
@@ -376,90 +376,91 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: src/NodeInspector.vala:100
+#: src/NodeInspector.vala:101
 msgid "Task"
 msgstr ""
 
-#: src/NodeInspector.vala:118
+#: src/NodeInspector.vala:119
 msgid "Fold"
 msgstr ""
 
-#: src/NodeInspector.vala:139
+#: src/NodeInspector.vala:140
 msgid "Link Color"
 msgstr ""
 
-#: src/NodeInspector.vala:160
+#: src/NodeInspector.vala:161
 msgid "Note"
 msgstr ""
 
-#: src/NodeInspector.vala:191
+#: src/NodeInspector.vala:192
 msgid "Copy Node To Clipboard"
 msgstr ""
 
-#: src/NodeInspector.vala:195
+#: src/NodeInspector.vala:196
 msgid "Cut Node To Clipboard"
 msgstr ""
 
-#: src/NodeInspector.vala:200
+#: src/NodeInspector.vala:201
 msgid "Detach Node"
 msgstr ""
 
-#: src/NodeInspector.vala:205
+#: src/NodeInspector.vala:206
 msgid "Delete Node"
 msgstr ""
 
-#: src/undo_actions/UndoNodeCut.vala:34
+#: src/undo_actions/UndoNodeCut.vala:32
 msgid "cut node"
 msgstr ""
 
-#: src/undo_actions/UndoNodeName.vala:33
+#: src/undo_actions/UndoNodeName.vala:32
 msgid "node name change"
 msgstr ""
 
-#: src/undo_actions/UndoNodeDelete.vala:34
+#: src/undo_actions/UndoNodeDelete.vala:32
 msgid "delete node"
 msgstr ""
 
-#: src/undo_actions/UndoNodeInsert.vala:35
+#: src/undo_actions/UndoNodeInsert.vala:33
 msgid "insert node"
 msgstr ""
 
-#: src/undo_actions/UndoNodeTask.vala:35
+#: src/undo_actions/UndoNodeTask.vala:34
 msgid "node task change"
 msgstr ""
 
-#: src/undo_actions/UndoNodeBalance.vala:62
+#: src/undo_actions/UndoNodeBalance.vala:60
 msgid "balance nodes"
 msgstr ""
 
-#: src/undo_actions/UndoNodeNote.vala:33
+#: src/undo_actions/UndoNodeNote.vala:32
 msgid "node note change"
 msgstr ""
 
-#: src/undo_actions/UndoNodeFold.vala:33
+#: src/undo_actions/UndoNodeFold.vala:32
 msgid "node change fold"
 msgstr ""
 
-#: src/undo_actions/UndoNodeMove.vala:36
+#: src/undo_actions/UndoNodeMove.vala:34
 msgid "move node"
 msgstr ""
 
-#: src/undo_actions/UndoNodeDetach.vala:36
+#: src/undo_actions/UndoNodeDetach.vala:34
 msgid "detach node"
 msgstr ""
 
-#: src/undo_actions/UndoNodeAttach.vala:40
+#: src/undo_actions/UndoNodeAttach.vala:39
+#: src/undo_actions/UndoNodeAttach.vala:54
 msgid "attach node"
 msgstr ""
 
-#: src/undo_actions/UndoNodePaste.vala:34
+#: src/undo_actions/UndoNodePaste.vala:32
 msgid "paste node"
 msgstr ""
 
-#: src/UndoBuffer.vala:79
+#: src/UndoBuffer.vala:81
 msgid "Undo "
 msgstr ""
 
-#: src/UndoBuffer.vala:85
+#: src/UndoBuffer.vala:87
 msgid "Redo "
 msgstr ""
