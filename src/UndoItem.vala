@@ -31,9 +31,9 @@ public class UndoItem : GLib.Object {
   }
 
   /* Causes the stored item to be put into the before state */
-  public virtual void undo() {}
+  public virtual void undo( DrawArea da ) {}
 
   /* Causes the stored item to be put into the after state */
-  public virtual void redo() {}
+  public virtual void redo( DrawArea da ) {}
 
 }

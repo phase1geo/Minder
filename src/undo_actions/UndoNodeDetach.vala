@@ -23,47 +23,43 @@ using Gtk;
 
 public class UndoNodeDetach : UndoItem {
 
-  private DrawArea _da;
   private Node     _n;
   private Node     _old_parent;
   private NodeSide _old_side;
   private int      _old_index;
   private int      _root_index;
-  private Layout?  _layout;
 
   /* Default constructor */
-  public UndoNodeDetach( DrawArea da, Node n, int root_index, Node old_parent, NodeSide old_side, int old_index, Layout l ) {
+  public UndoNodeDetach( Node n, int root_index, Node old_parent, NodeSide old_side, int old_index ) {
     base( _( "detach node" ) );
-    _da         = da;
     _n          = n;
     _root_index = root_index;
     _old_parent = old_parent;
     _old_side   = old_side;
     _old_index  = old_index;
-    _layout     = l;
   }
 
   /* Performs an undo operation for this data */
-  public override void undo() {
-    _da.animator.add_nodes( "undo detach" );
-    _da.remove_root( _root_index );
-    _n.attach( _old_parent, _old_index, null, _layout );
-    _da.set_current_node( _n );
-    _da.animator.animate();
-    _da.queue_draw();
-    _da.node_changed();
-    _da.changed();
+  public override void undo( DrawArea da ) {
+    da.animator.add_nodes( "undo detach" );
+    da.remove_root( _root_index );
+    _n.attach( _old_parent, _old_index, null, da.get_layout() );
+    da.set_current_node( _n );
+    da.animator.animate();
+    da.queue_draw();
+    da.node_changed();
+    da.changed();
   }
 
   /* Performs a redo operation */
-  public override void redo() {
-    _da.animator.add_nodes( "redo detach" );
-    _n.detach( _old_side, _layout );
-    _da.add_root( _n, _root_index );
-    _da.set_current_node( _n );
-    _da.animator.animate();
-    _da.node_changed();
-    _da.changed();
+  public override void redo( DrawArea da ) {
+    da.animator.add_nodes( "redo detach" );
+    _n.detach( _old_side, da.get_layout() );
+    da.add_root( _n, _root_index );
+    da.set_current_node( _n );
+    da.animator.animate();
+    da.node_changed();
+    da.changed();
   }
 
 }

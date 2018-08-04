@@ -23,34 +23,32 @@ using Gtk;
 
 public class UndoNodeNote : UndoItem {
 
-  DrawArea  _da;
-  Node      _node;
-  string    _old_note;
-  string    _new_note;
+  Node   _node;
+  string _old_note;
+  string _new_note;
 
   /* Constructor for a node name change */
-  public UndoNodeNote( DrawArea da, Node n, string old_note ) {
+  public UndoNodeNote( Node n, string old_note ) {
     base( _( "node note change" ) );
-    _da       = da;
     _node     = n;
     _old_note = old_note;
     _new_note = n.note;
   }
 
   /* Undoes a node name change */
-  public override void undo() {
+  public override void undo( DrawArea da ) {
     _node.note = _old_note;
-    _da.queue_draw();
-    _da.node_changed();
-    _da.changed();
+    da.queue_draw();
+    da.node_changed();
+    da.changed();
   }
 
   /* Redoes a node name change */
-  public override void redo() {
+  public override void redo( DrawArea da ) {
     _node.note = _new_note;
-    _da.queue_draw();
-    _da.node_changed();
-    _da.changed();
+    da.queue_draw();
+    da.node_changed();
+    da.changed();
   }
 
 }

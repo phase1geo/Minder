@@ -22,49 +22,44 @@ using Gtk;
 
 public class UndoNodeCut : UndoItem {
 
-  DrawArea _da;
-  Node     _node;
-  Node?    _parent;
-  Node?    _clipboard;
-  int      _index;
-  Layout   _layout;
+  Node  _node;
+  Node? _parent;
+  Node? _clipboard;
+  int   _index;
 
   /* Default constructor */
-  public UndoNodeCut( DrawArea da, Node n, Layout layout ) {
+  public UndoNodeCut( DrawArea da, Node n ) {
     base( _( "cut node" ) );
-    _da
-    = da;
     _node      = n;
     _parent    = n.parent;
     _index     = n.index();
-    _layout    = layout;
-    _clipboard = _da.node_clipboard;
+    _clipboard = da.node_clipboard;
   }
 
   /* Undoes a node deletion */
-  public override void undo() {
+  public override void undo( DrawArea da ) {
     if( _parent == null ) {
-      _da.add_root( _node, _index );
+      da.add_root( _node, _index );
     } else {
-      _node.attach( _parent, _index, null, _layout );
+      _node.attach( _parent, _index, null, da.get_layout() );
     }
-    _da.set_current_node( _node );
-    _da.queue_draw();
-    _da.changed();
-    _da.node_clipboard = _clipboard;
+    da.set_current_node( _node );
+    da.queue_draw();
+    da.changed();
+    da.node_clipboard = _clipboard;
   }
 
   /* Redoes a node deletion */
-  public override void redo() {
-    _da.node_clipboard = _node;
+  public override void redo( DrawArea da ) {
+    da.node_clipboard = _node;
     if( _parent == null ) {
-      _da.remove_root( _index );
+      da.remove_root( _index );
     } else {
-      _node.detach( _node.side, _layout );
+      _node.detach( _node.side, da.get_layout() );
     }
-    _da.set_current_node( null );
-    _da.queue_draw();
-    _da.changed();
+    da.set_current_node( null );
+    da.queue_draw();
+    da.changed();
   }
 
 }

@@ -23,36 +23,34 @@ using Gtk;
 
 public class UndoNodeName : UndoItem {
 
-  DrawArea  _da;
-  Node      _node;
-  string    _old_name;
-  string    _new_name;
+  Node   _node;
+  string _old_name;
+  string _new_name;
 
   /* Constructor for a node name change */
-  public UndoNodeName( DrawArea da, Node n, string old_name ) {
+  public UndoNodeName( Node n, string old_name ) {
     base( _( "node name change" ) );
-    _da       = da;
     _node     = n;
     _old_name = old_name;
     _new_name = n.name;
   }
 
   /* Undoes a node name change */
-  public override void undo() {
+  public override void undo( DrawArea da ) {
     _node.name = _old_name;
-    _da.get_layout().handle_update_by_edit( _node );
-    _da.queue_draw();
-    _da.node_changed();
-    _da.changed();
+    da.get_layout().handle_update_by_edit( _node );
+    da.queue_draw();
+    da.node_changed();
+    da.changed();
   }
 
   /* Redoes a node name change */
-  public override void redo() {
+  public override void redo( DrawArea da ) {
     _node.name = _new_name;
-    _da.get_layout().handle_update_by_edit( _node );
-    _da.queue_draw();
-    _da.node_changed();
-    _da.changed();
+    da.get_layout().handle_update_by_edit( _node );
+    da.queue_draw();
+    da.node_changed();
+    da.changed();
   }
 
 }

@@ -23,44 +23,40 @@ using Gtk;
 
 public class UndoNodeInsert : UndoItem {
 
-  private DrawArea _da;
-  private Node?    _parent;
-  private Node     _n;
-  private int      _index;
-  private bool     _parent_folded;
-  private Layout?  _layout;
+  private Node? _parent;
+  private Node  _n;
+  private int   _index;
+  private bool  _parent_folded;
 
   /* Default constructor */
-  public UndoNodeInsert( DrawArea da, Node n, Layout l ) {
+  public UndoNodeInsert( Node n ) {
     base( _( "insert node" ) );
-    _da            = da;
     _n             = n;
     _index         = n.index();
     _parent        = n.parent;
     _parent_folded = _parent.folded;
-    _layout        = l;
   }
 
   /* Performs an undo operation for this data */
-  public override void undo() {
+  public override void undo( DrawArea da ) {
     if( _parent_folded ) {
       _parent.folded = true;
     }
-    _n.detach( _n.side, _layout );
-    if( _da.get_current_node() == _n ) {
-      _da.set_current_node( null );
+    _n.detach( _n.side, da.get_layout() );
+    if( da.get_current_node() == _n ) {
+      da.set_current_node( null );
     }
-    _da.queue_draw();
-    _da.changed();
+    da.queue_draw();
+    da.changed();
   }
 
   /* Performs a redo operation */
-  public override void redo() {
+  public override void redo( DrawArea da ) {
     _parent.folded = _parent_folded;
-    _n.attach( _parent, _index, null, _layout );
-    _da.set_current_node( _n );
-    _da.queue_draw();
-    _da.changed();
+    _n.attach( _parent, _index, null, da.get_layout() );
+    da.set_current_node( _n );
+    da.queue_draw();
+    da.changed();
   }
 
 }

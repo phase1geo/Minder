@@ -49,7 +49,7 @@ public class DrawArea : Gtk.DrawingArea {
   private DrawAreaMenu     _popup_menu;
   private uint?            _auto_save_id   = null;
 
-  public UndoBuffer undo_buffer    { set; get; default = new UndoBuffer(); }
+  public UndoBuffer undo_buffer    { set; get; }
   public Themes     themes         { set; get; default = new Themes(); }
   public Layouts    layouts        { set; get; default = new Layouts(); }
   public Animator   animator       { set; get; }
@@ -95,6 +95,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Allocate memory for the animator */
     animator = new Animator( this );
+
+    /* Allocate memory for the undo buffer */
+    undo_buffer = new UndoBuffer( this );
 
     /* Create the popup menu */
     _popup_menu = new DrawAreaMenu( this );
@@ -181,7 +184,7 @@ public class DrawArea : Gtk.DrawingArea {
       _layout = new_layout;
     } else {
       if( undoable ) {
-        undo_buffer.add_item( new UndoNodeLayout( this, _layout, new_layout ) );
+        undo_buffer.add_item( new UndoNodeLayout( _layout, new_layout ) );
       }
       var old_balanceable = _layout.balanceable;
       animator.add_nodes( "set layout" );
@@ -476,7 +479,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Toggles the value of the specified node, if possible */
   public void toggle_task( Node n ) {
-    undo_buffer.add_item( new UndoNodeTask( this, n, true, !n.task_done() ) );
+    undo_buffer.add_item( new UndoNodeTask( n, true, !n.task_done() ) );
     n.toggle_task_done();
     queue_draw();
     changed();
@@ -485,7 +488,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Toggles the fold for the given node */
   public void toggle_fold( Node n ) {
     bool fold = !n.folded;
-    undo_buffer.add_item( new UndoNodeFold( this, n, fold ) );
+    undo_buffer.add_item( new UndoNodeFold( n, fold ) );
     n.folded = fold;
     _layout.handle_update_by_fold( n );
     queue_draw();
@@ -502,7 +505,7 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.name = name;
       _layout.handle_update_by_edit( _current_node );
       if( !_current_new ) {
-        undo_buffer.add_item( new UndoNodeName( this, _current_node, orig_name ) );
+        undo_buffer.add_item( new UndoNodeName( _current_node, orig_name ) );
       }
       queue_draw();
       changed();
@@ -515,7 +518,7 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void change_current_task( bool enable, bool done ) {
     if( _current_node != null ) {
-      undo_buffer.add_item( new UndoNodeTask( this, _current_node, enable, done ) );
+      undo_buffer.add_item( new UndoNodeTask( _current_node, enable, done ) );
       _current_node.enable_task( enable );
       _current_node.set_task_done( done );
       _layout.handle_update_by_edit( _current_node );
@@ -530,7 +533,7 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void change_current_fold( bool folded ) {
     if( _current_node != null ) {
-      undo_buffer.add_item( new UndoNodeFold( this, _current_node, folded ) );
+      undo_buffer.add_item( new UndoNodeFold( _current_node, folded ) );
       _current_node.folded = folded;
       _layout.handle_update_by_fold( _current_node );
       queue_draw();
@@ -563,7 +566,7 @@ public class DrawArea : Gtk.DrawingArea {
       RGBA orig_color = _current_node.link_color;
       if( orig_color != color ) {
         _current_node.link_color = color;
-        undo_buffer.add_item( new UndoNodeLinkColor( this, _current_node, orig_color ) );
+        undo_buffer.add_item( new UndoNodeLinkColor( _current_node, orig_color ) );
         queue_draw();
         changed();
       }
@@ -972,7 +975,7 @@ public class DrawArea : Gtk.DrawingArea {
           int orig_index = _current_node.index();
           animator.add_node( _current_node, "move to position" );
           _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
-          undo_buffer.add_item( new UndoNodeMove( this, _current_node, _orig_side, orig_index, _layout ) );
+          undo_buffer.add_item( new UndoNodeMove( _current_node, _orig_side, orig_index ) );
           animator.animate();
         }
       }
@@ -1009,9 +1012,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Add the attachment information to the undo buffer */
     if( isroot ) {
-      undo_buffer.add_item( new UndoNodeAttach.for_root( this, _current_node, orig_index, _orig_info, _layout ) );
+      undo_buffer.add_item( new UndoNodeAttach.for_root( _current_node, orig_index, _orig_info ) );
     } else {
-      undo_buffer.add_item( new UndoNodeAttach( this, _current_node, orig_parent, _orig_side, orig_index, _orig_info, _layout ) );
+      undo_buffer.add_item( new UndoNodeAttach( _current_node, orig_parent, _orig_side, orig_index, _orig_info ) );
     }
 
     queue_draw();
@@ -1141,7 +1144,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Deletes the given node */
   public void delete_node() {
     if( _current_node == null ) return;
-    undo_buffer.add_item( new UndoNodeDelete( this, _current_node, _layout ) );
+    undo_buffer.add_item( new UndoNodeDelete( _current_node ) );
     if( _current_node.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
         if( _nodes.index( i ) == _current_node ) {
@@ -1213,7 +1216,7 @@ public class DrawArea : Gtk.DrawingArea {
     _current_node.mode = NodeMode.NONE;
     node.side          = _current_node.side;
     node.attach( _current_node.parent, (_current_node.index() + 1), _theme, _layout );
-    undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
+    undo_buffer.add_item( new UndoNodeInsert( node ) );
     if( select_node( node ) ) {
       node.mode = NodeMode.EDITABLE;
       _current_new = true;
@@ -1227,7 +1230,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_return() {
     if( is_mode_edit() ) {
       if( !_current_new ) {
-        undo_buffer.add_item( new UndoNodeName( this, _current_node, _orig_name ) );
+        undo_buffer.add_item( new UndoNodeName( _current_node, _orig_name ) );
       }
       _current_node.mode = NodeMode.CURRENT;
       node_changed();
@@ -1266,7 +1269,7 @@ public class DrawArea : Gtk.DrawingArea {
     NodeSide side   = _current_node.side;
     _current_node.detach( side, _layout );
     add_root( _current_node, -1 );
-    undo_buffer.add_item( new UndoNodeDetach( this, _current_node, (int)_nodes.length, parent, side, index, _layout ) );
+    undo_buffer.add_item( new UndoNodeDetach( _current_node, (int)_nodes.length, parent, side, index ) );
     queue_draw();
     changed();
   }
@@ -1274,7 +1277,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Balances the existing nodes based on the current layout */
   public void balance_nodes( bool undoable = true ) {
     if( undoable ) {
-      undo_buffer.add_item( new UndoNodeBalance( this, _layout ) );
+      undo_buffer.add_item( new UndoNodeBalance( this ) );
     }
     if( (_current_node == null) || !undoable ) {
       animator.add_nodes( "balance nodes" );
@@ -1320,7 +1323,7 @@ public class DrawArea : Gtk.DrawingArea {
       for( int i=0; i<changes.length; i++ ) {
         _layout.handle_update_by_fold( changes.index( i ) );
       }
-      undo_buffer.add_item( new UndoNodeFoldChanges( this, _( "fold completed tasks" ), changes, true ) );
+      undo_buffer.add_item( new UndoNodeFoldChanges( _( "fold completed tasks" ), changes, true ) );
       queue_draw();
       changed();
       node_changed();
@@ -1355,7 +1358,7 @@ public class DrawArea : Gtk.DrawingArea {
       for( int i=0; i<changes.length; i++ ) {
         _layout.handle_update_by_fold( changes.index( i ) );
       }
-      undo_buffer.add_item( new UndoNodeFoldChanges( this, _( "unfold all tasks" ), changes, false ) );
+      undo_buffer.add_item( new UndoNodeFoldChanges( _( "unfold all tasks" ), changes, false ) );
       queue_draw();
       changed();
       node_changed();
@@ -1371,7 +1374,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
     _current_node.mode   = NodeMode.NONE;
     node.attach( _current_node, -1, _theme, _layout );
-    undo_buffer.add_item( new UndoNodeInsert( this, node, _layout ) );
+    undo_buffer.add_item( new UndoNodeInsert( node ) );
     _current_node.folded = false;
     _layout.handle_update_by_fold( _current_node );
     if( select_node( node ) ) {
@@ -1386,7 +1389,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_tab() {
     if( is_mode_edit() ) {
       if( !_current_new ) {
-        undo_buffer.add_item( new UndoNodeName( this, _current_node, _orig_name ) );
+        undo_buffer.add_item( new UndoNodeName( _current_node, _orig_name ) );
       }
       _current_node.mode = NodeMode.CURRENT;
       node_changed();
@@ -1699,7 +1702,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Cuts the current node from the tree and stores it in the clipboard */
   public void cut_node_to_clipboard() {
     if( _current_node == null ) return;
-    undo_buffer.add_item( new UndoNodeCut( this, _current_node, _layout ) );
+    undo_buffer.add_item( new UndoNodeCut( this, _current_node ) );
     copy_node_to_clipboard();
     if( _current_node.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
@@ -1756,7 +1759,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       node.attach( _current_node, -1, _theme, _layout );
     }
-    undo_buffer.add_item( new UndoNodePaste( this, node, _layout ) );
+    undo_buffer.add_item( new UndoNodePaste( node ) );
     queue_draw();
     node_changed();
     changed();

@@ -52,45 +52,41 @@ public class UndoNodeBalance : UndoItem {
 
   }
 
-  private DrawArea             _da;
   private Array<BalanceNodes>  _old;
   private Array<BalanceNodes>? _new = null;
-  private Layout?              _layout;
 
   /* Default constructor */
-  public UndoNodeBalance( DrawArea da, Layout l ) {
+  public UndoNodeBalance( DrawArea da ) {
     base( _( "balance nodes" ) );
-    _da     = da;
-    _layout = l;
-    _old    = new Array<BalanceNodes>();
+    _old = new Array<BalanceNodes>();
     for( int i=0; i<da.get_nodes().length; i++ ) {
       _old.append_val( new BalanceNodes( da.get_nodes().index( i ) ) );
     }
   }
 
   /* Perform the swap */
-  private void change( Array<BalanceNodes> nodes ) {
-    _da.animator.add_nodes( "undo balance nodes" );
-    for( int i=0; i<_da.get_nodes().length; i++ ) {
-      nodes.index( i ).change( _da, _layout, _da.get_nodes().index( i ) );
+  private void change( DrawArea da, Array<BalanceNodes> nodes ) {
+    da.animator.add_nodes( "undo balance nodes" );
+    for( int i=0; i<da.get_nodes().length; i++ ) {
+      nodes.index( i ).change( da, da.get_layout(), da.get_nodes().index( i ) );
     }
-    _da.animator.animate();
+    da.animator.animate();
   }
 
   /* Performs an undo operation for this data */
-  public override void undo() {
+  public override void undo( DrawArea da ) {
     if( _new == null ) {
       _new = new Array<BalanceNodes>();
-      for( int i=0; i<_da.get_nodes().length; i++ ) {
-        _new.append_val( new BalanceNodes( _da.get_nodes().index( i ) ) );
+      for( int i=0; i<da.get_nodes().length; i++ ) {
+        _new.append_val( new BalanceNodes( da.get_nodes().index( i ) ) );
       }
     }
-    change( _old );
+    change( da, _old );
   }
 
   /* Performs a redo operation */
-  public override void redo() {
-    change( _new );
+  public override void redo( DrawArea da ) {
+    change( da, _new );
   }
 
 }

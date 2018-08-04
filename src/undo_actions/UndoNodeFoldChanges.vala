@@ -23,36 +23,34 @@ using Gtk;
 
 public class UndoNodeFoldChanges : UndoItem {
 
-  private DrawArea    _da;
   private Array<Node> _changes;
   private bool        _folded;
 
   /* Default constructor */
-  public UndoNodeFoldChanges( DrawArea da, string msg, Array<Node> changes, bool folded ) {
+  public UndoNodeFoldChanges( string msg, Array<Node> changes, bool folded ) {
     base( msg );
-    _da      = da;
     _changes = changes;
     _folded  = folded;
   }
 
   /* Change the fold states of the changed list of nodes to the given value */
-  private void change_folds( bool value ) {
+  private void change_folds( DrawArea da, bool value ) {
     for( int i=0; i<_changes.length; i++ ) {
       _changes.index( i ).folded = value;
-      _da.get_layout().handle_update_by_fold( _changes.index( i ) );
+      da.get_layout().handle_update_by_fold( _changes.index( i ) );
     }
-    _da.queue_draw();
-    _da.changed();
+    da.queue_draw();
+    da.changed();
   }
 
   /* Undoes a node fold operation */
-  public override void undo() {
-    change_folds( !_folded );
+  public override void undo( DrawArea da ) {
+    change_folds( da, !_folded );
   }
 
   /* Redoes a node fold operation */
-  public override void redo() {
-    change_folds( _folded );
+  public override void redo( DrawArea da ) {
+    change_folds( da, _folded );
   }
 
 }

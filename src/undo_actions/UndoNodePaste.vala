@@ -23,36 +23,32 @@ using Gtk;
 
 public class UndoNodePaste : UndoItem {
 
-  private DrawArea _da;
-  private Node?    _parent;
-  private Node     _n;
-  private int      _index;
-  private Layout?  _layout;
+  private Node? _parent;
+  private Node  _n;
+  private int   _index;
 
   /* Default constructor */
-  public UndoNodePaste( DrawArea da, Node n, Layout l ) {
+  public UndoNodePaste( Node n ) {
     base( _( "paste node" ) );
-    _da     = da;
     _n      = n;
     _index  = n.index();
     _parent = n.parent;
-    _layout = l;
   }
 
   /* Performs an undo operation for this data */
-  public override void undo() {
-    _n.detach( _n.side, _layout );
-    _da.set_current_node( null );
-    _da.queue_draw();
-    _da.changed();
+  public override void undo( DrawArea da ) {
+    _n.detach( _n.side, da.get_layout() );
+    da.set_current_node( null );
+    da.queue_draw();
+    da.changed();
   }
 
   /* Performs a redo operation */
-  public override void redo() {
-    _n.attach( _parent, _index, null, _layout );
-    _da.set_current_node( _n );
-    _da.queue_draw();
-    _da.changed();
+  public override void redo( DrawArea da ) {
+    _n.attach( _parent, _index, null, da.get_layout() );
+    da.set_current_node( _n );
+    da.queue_draw();
+    da.changed();
   }
 
 }

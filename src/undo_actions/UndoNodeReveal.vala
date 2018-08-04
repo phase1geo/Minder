@@ -23,24 +23,22 @@ using Gtk;
 
 public class UndoNodeReveal : UndoItem {
 
-  DrawArea _da;
-  Node     _current;
-  Node     _node;
-  Node     _last;
+  Node _current;
+  Node _node;
+  Node _last;
 
   /* Default constructor */
   public UndoNodeReveal( DrawArea da, Node n, Node last ) {
     base( _( "node reveal" ) );
-    _da      = da;
-    _current = _da.get_current_node();
+    _current = da.get_current_node();
     _node    = n;
     _last    = last;
   }
 
   /* Performs the reveal/unreveal operation */
-  private void set_folds( bool value ) {
+  private void set_folds( DrawArea da, bool value ) {
     var tmp    = _node.parent;
-    var layout = _da.get_layout();
+    var layout = da.get_layout();
     while( tmp != _last ) {
       tmp.folded = value;
       layout.handle_update_by_fold( tmp );
@@ -49,19 +47,19 @@ public class UndoNodeReveal : UndoItem {
   }
 
   /* Undoes a node reveal operation */
-  public override void undo() {
-    set_folds( true );
-    _da.set_current_node( _current );
-    _da.queue_draw();
-    _da.changed();
+  public override void undo( DrawArea da ) {
+    set_folds( da, true );
+    da.set_current_node( _current );
+    da.queue_draw();
+    da.changed();
   }
 
   /* Redoes a node reveal operation */
-  public override void redo() {
-    set_folds( false );
-    _da.set_current_node( _node );
-    _da.queue_draw();
-    _da.changed();
+  public override void redo( DrawArea da ) {
+    set_folds( da, false );
+    da.set_current_node( _node );
+    da.queue_draw();
+    da.changed();
   }
 
 }

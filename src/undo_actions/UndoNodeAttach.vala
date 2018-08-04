@@ -24,7 +24,6 @@ using Gdk;
 
 public class UndoNodeAttach : UndoItem {
 
-  private DrawArea         _da;
   private Node             _n;
   private Node?            _old_parent;
   private NodeSide         _old_side;
@@ -34,12 +33,10 @@ public class UndoNodeAttach : UndoItem {
   private NodeSide         _new_side;
   private int              _new_index;
   private Array<NodeInfo?> _new_info;
-  private Layout?          _layout;
 
   /* Default constructor */
-  public UndoNodeAttach( DrawArea da, Node n, Node? old_parent, NodeSide old_side, int old_index, Array<NodeInfo?> old_info, Layout l ) {
+  public UndoNodeAttach( Node n, Node? old_parent, NodeSide old_side, int old_index, Array<NodeInfo?> old_info ) {
     base( _( "attach node" ) );
-    _da         = da;
     _n          = n;
     _old_parent = old_parent;
     _old_side   = old_side;
@@ -50,13 +47,11 @@ public class UndoNodeAttach : UndoItem {
     _new_index  = n.index();
     _new_info   = new Array<NodeInfo?>();
     _n.get_node_info( ref _new_info );
-    _layout     = l;
   }
 
   /* Constructor for root nodes */
-  public UndoNodeAttach.for_root( DrawArea da, Node n, int old_index, Array<NodeInfo?> old_info, Layout l ) {
+  public UndoNodeAttach.for_root( Node n, int old_index, Array<NodeInfo?> old_info ) {
     base( _( "attach node" ) );
-    _da         = da;
     _n          = n;
     _old_parent = null;
     _old_index  = old_index;
@@ -66,51 +61,50 @@ public class UndoNodeAttach : UndoItem {
     _new_index  = n.index();
     _new_info   = new Array<NodeInfo?>();
     _n.get_node_info( ref _new_info );
-    _layout     = l;
   }
 
   /* Performs an undo operation for this data */
-  public override void undo() {
+  public override void undo( DrawArea da ) {
     int index = 0;
-    _da.animator.add_nodes( "undo attach" );
-    _n.detach( _new_side, _layout );
+    da.animator.add_nodes( "undo attach" );
+    _n.detach( _new_side, da.get_layout() );
     if( _old_parent == null ) {
-      _da.add_root( _n, _old_index );
+      da.add_root( _n, _old_index );
       _n.set_node_info( _old_info, ref index );
     } else {
       _n.set_node_info( _old_info, ref index );
       _n.side = _old_side;
-      _layout.propagate_side( _n, _old_side );
-      _n.attach_nonroot( _old_parent, _old_index, _da.get_theme(), _layout );
+      da.get_layout().propagate_side( _n, _old_side );
+      _n.attach_nonroot( _old_parent, _old_index, da.get_theme(), da.get_layout() );
     }
-    _da.set_current_node( _n );
-    _da.animator.animate();
-    _da.node_changed();
-    _da.changed();
+    da.set_current_node( _n );
+    da.animator.animate();
+    da.node_changed();
+    da.changed();
   }
 
   /* Performs a redo operation */
-  public override void redo() {
+  public override void redo( DrawArea da ) {
     int index = 0;
-    _da.animator.add_nodes( "redo attach" );
+    da.animator.add_nodes( "redo attach" );
     if( _old_parent == null ) {
-      _da.remove_root( _old_index );
+      da.remove_root( _old_index );
     } else {
-      _n.detach( _old_side, _layout );
+      _n.detach( _old_side, da.get_layout() );
     }
     _n.side = _new_side;
-    _layout.propagate_side( _n, _new_side );
+    da.get_layout().propagate_side( _n, _new_side );
     if( _old_parent == null ) {
-      _n.attach_root( _new_parent, _da.get_theme(), _layout );
+      _n.attach_root( _new_parent, da.get_theme(), da.get_layout() );
       _n.set_node_info( _new_info, ref index );
     } else {
       _n.set_node_info( _new_info, ref index );
-      _n.attach_nonroot( _new_parent, _new_index, _da.get_theme(), _layout );
+      _n.attach_nonroot( _new_parent, _new_index, da.get_theme(), da.get_layout() );
     }
-    _da.set_current_node( _n );
-    _da.animator.animate();
-    _da.node_changed();
-    _da.changed();
+    da.set_current_node( _n );
+    da.animator.animate();
+    da.node_changed();
+    da.changed();
   }
 
 }

@@ -24,34 +24,32 @@ using Gdk;
 
 public class UndoNodeLinkColor : UndoItem {
 
-  DrawArea  _da;
-  Node      _node;
-  RGBA      _old_color;
-  RGBA      _new_color;
+  Node _node;
+  RGBA _old_color;
+  RGBA _new_color;
 
   /* Constructor for a node name change */
-  public UndoNodeLinkColor( DrawArea da, Node n, RGBA old_color ) {
+  public UndoNodeLinkColor( Node n, RGBA old_color ) {
     base( _( "link color change" ) );
-    _da        = da;
     _node      = n;
     _old_color = old_color;
     _new_color = n.link_color;
   }
 
   /* Undoes a node name change */
-  public override void undo() {
+  public override void undo( DrawArea da ) {
     _node.link_color = _old_color;
-    _da.queue_draw();
-    _da.node_changed();
-    _da.changed();
+    da.queue_draw();
+    da.node_changed();
+    da.changed();
   }
 
   /* Redoes a node name change */
-  public override void redo() {
+  public override void redo( DrawArea da ) {
     _node.link_color = _new_color;
-    _da.queue_draw();
-    _da.node_changed();
-    _da.changed();
+    da.queue_draw();
+    da.node_changed();
+    da.changed();
   }
 
 }

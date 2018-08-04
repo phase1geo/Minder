@@ -23,45 +23,41 @@ using Gtk;
 
 public class UndoNodeMove : UndoItem {
 
-  private DrawArea _da;
   private Node     _n;
   private NodeSide _old_side;
   private int      _old_index;
   private NodeSide _new_side;
   private int      _new_index;
-  private Layout?  _layout;
 
   /* Default constructor */
-  public UndoNodeMove( DrawArea da, Node n, NodeSide old_side, int old_index, Layout l ) {
+  public UndoNodeMove( Node n, NodeSide old_side, int old_index ) {
     base( _( "move node" ) );
-    _da        = da;
     _n         = n;
     _old_side  = old_side;
     _old_index = old_index;
     _new_side  = n.side;
     _new_index = n.index();
-    _layout    = l;
   }
 
   /* Perform the node move change */
-  public void change( NodeSide old_side, NodeSide new_side, int new_index ) {
+  public void change( DrawArea da, NodeSide old_side, NodeSide new_side, int new_index ) {
     Node parent = _n.parent;
-    _da.animator.add_nodes( "undo move" );
-    _n.detach( old_side, _layout );
+    da.animator.add_nodes( "undo move" );
+    _n.detach( old_side, da.get_layout() );
     _n.side = new_side;
-    _layout.propagate_side( _n, new_side );
-    _n.attach( parent, new_index, null, _layout );
-    _da.animator.animate();
+    da.get_layout().propagate_side( _n, new_side );
+    _n.attach( parent, new_index, null, da.get_layout() );
+    da.animator.animate();
   }
 
   /* Performs an undo operation for this data */
-  public override void undo() {
-    change( _new_side, _old_side, _old_index );
+  public override void undo( DrawArea da ) {
+    change( da, _new_side, _old_side, _old_index );
   }
 
   /* Performs a redo operation */
-  public override void redo() {
-    change( _old_side, _new_side, _new_index );
+  public override void redo( DrawArea da ) {
+    change( da, _old_side, _new_side, _new_index );
   }
 
 }

@@ -269,7 +269,7 @@ public class NodeInspector : Stack {
   /* When the note buffer loses focus, save the note change to the undo buffer */
   private bool note_focus_out( EventFocus e ) {
     if( (_node != null) && (_node.note != _orig_note) ) {
-      _da.undo_buffer.add_item( new UndoNodeNote( _da, _node, _orig_note ) );
+      _da.undo_buffer.add_item( new UndoNodeNote( _node, _orig_note ) );
     }
     return( false );
   }

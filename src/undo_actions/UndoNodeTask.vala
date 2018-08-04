@@ -23,17 +23,15 @@ using Gtk;
 
 public class UndoNodeTask : UndoItem {
 
-  DrawArea _da;
-  Node     _node;
-  bool     _old_enable;
-  bool     _old_done;
-  bool     _new_enable;
-  bool     _new_done;
+  Node _node;
+  bool _old_enable;
+  bool _old_done;
+  bool _new_enable;
+  bool _new_done;
 
   /* Constructor for a node name change */
-  public UndoNodeTask( DrawArea da, Node n, bool new_enable, bool new_done ) {
+  public UndoNodeTask( Node n, bool new_enable, bool new_done ) {
     base( _( "node task change" ) );
-    _da         = da;
     _node       = n;
     _old_enable = n.task_enabled();
     _old_done   = n.task_done();
@@ -42,27 +40,27 @@ public class UndoNodeTask : UndoItem {
   }
 
   /* Undoes a node name change */
-  public override void undo() {
+  public override void undo( DrawArea da ) {
     if( _old_enable != _new_enable ) {
       _node.enable_task( _old_enable );
     } else {
       _node.set_task_done( _old_done );
     }
-    _da.queue_draw();
-    _da.node_changed();
-    _da.changed();
+    da.queue_draw();
+    da.node_changed();
+    da.changed();
   }
 
   /* Redoes a node name change */
-  public override void redo() {
+  public override void redo( DrawArea da ) {
     if( _old_enable != _new_enable ) {
       _node.enable_task( _new_enable );
     } else {
       _node.set_task_done( _new_done );
     }
-    _da.queue_draw();
-    _da.node_changed();
-    _da.changed();
+    da.queue_draw();
+    da.node_changed();
+    da.changed();
   }
 
 }

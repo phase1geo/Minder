@@ -23,47 +23,43 @@ using Gtk;
 
 public class UndoNodeDelete : UndoItem {
 
-  DrawArea _da;
-  Node     _node;
-  Node?    _parent;
-  int      _index;
-  Layout   _layout;
+  Node  _node;
+  Node? _parent;
+  int   _index;
 
   /* Default constructor */
-  public UndoNodeDelete( DrawArea da, Node n, Layout layout ) {
+  public UndoNodeDelete( Node n ) {
     base( _( "delete node" ) );
-    _da     = da;
     _node   = n;
     _parent = n.parent;
     _index  = n.index();
-    _layout = layout;
   }
 
   /* Undoes a node deletion */
-  public override void undo() {
+  public override void undo( DrawArea da ) {
     if( _parent == null ) {
-      _da.add_root( _node, _index );
+      da.add_root( _node, _index );
     } else {
       _node.attached = true;
-      _node.attach( _parent, _index, null, _layout );
+      _node.attach( _parent, _index, null, da.get_layout() );
     }
-    _da.set_current_node( _node );
-    _da.queue_draw();
-    _da.node_changed();
-    _da.changed();
+    da.set_current_node( _node );
+    da.queue_draw();
+    da.node_changed();
+    da.changed();
   }
 
   /* Redoes a node deletion */
-  public override void redo() {
+  public override void redo( DrawArea da ) {
     if( _parent == null ) {
-      _da.remove_root( _index );
+      da.remove_root( _index );
     } else {
-      _node.detach( _node.side, _layout );
+      _node.detach( _node.side, da.get_layout() );
     }
-    _da.set_current_node( null );
-    _da.queue_draw();
-    _da.node_changed();
-    _da.changed();
+    da.set_current_node( null );
+    da.queue_draw();
+    da.node_changed();
+    da.changed();
   }
 
 }
