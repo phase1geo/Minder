@@ -33,6 +33,7 @@ public class UndoNodeAttach : UndoItem {
   private Node             _new_parent;
   private NodeSide         _new_side;
   private int              _new_index;
+  private Array<NodeInfo?> _new_info;
   private Layout?          _layout;
 
   /* Default constructor */
@@ -47,6 +48,8 @@ public class UndoNodeAttach : UndoItem {
     _new_parent = n.parent;
     _new_side   = n.side;
     _new_index  = n.index();
+    _new_info   = new Array<NodeInfo?>();
+    _n.get_node_info( ref _new_info );
     _layout     = l;
   }
 
@@ -61,6 +64,8 @@ public class UndoNodeAttach : UndoItem {
     _new_parent = n.parent;
     _new_side   = n.side;
     _new_index  = n.index();
+    _new_info   = new Array<NodeInfo?>();
+    _n.get_node_info( ref _new_info );
     _layout     = l;
   }
 
@@ -76,7 +81,7 @@ public class UndoNodeAttach : UndoItem {
       _n.set_node_info( _old_info, ref index );
       _n.side = _old_side;
       _layout.propagate_side( _n, _old_side );
-      _n.attach( _old_parent, _old_index, _da.get_theme(), _layout );
+      _n.attach_nonroot( _old_parent, _old_index, _da.get_theme(), _layout );
     }
     _da.set_current_node( _n );
     _da.animator.animate();
@@ -86,6 +91,7 @@ public class UndoNodeAttach : UndoItem {
 
   /* Performs a redo operation */
   public override void redo() {
+    int index = 0;
     _da.animator.add_nodes( "redo attach" );
     if( _old_parent == null ) {
       _da.remove_root( _old_index );
@@ -94,7 +100,13 @@ public class UndoNodeAttach : UndoItem {
     }
     _n.side = _new_side;
     _layout.propagate_side( _n, _new_side );
-    _n.attach( _new_parent, _new_index, _da.get_theme(), _layout );
+    if( _old_parent == null ) {
+      _n.attach_root( _new_parent, _da.get_theme(), _layout );
+      _n.set_node_info( _new_info, ref index );
+    } else {
+      _n.set_node_info( _new_info, ref index );
+      _n.attach_nonroot( _new_parent, _new_index, _da.get_theme(), _layout );
+    }
     _da.set_current_node( _n );
     _da.animator.animate();
     _da.node_changed();
