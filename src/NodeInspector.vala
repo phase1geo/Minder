@@ -81,6 +81,7 @@ public class NodeInspector : Stack {
     Label lbl = new Label( _( "Title" ) );
 
     _name = new Entry();
+    // _name.input_hints = InputHints.EMOJI;
     _name.activate.connect( name_changed );
     _name.focus_out_event.connect( name_focus_out );
 
