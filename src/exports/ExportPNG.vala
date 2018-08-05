@@ -24,20 +24,23 @@ using Cairo;
 public class ExportPNG : Object {
 
   /* Default constructor */
-  public static void export( string fname, DrawArea da ) {
+  public static void export( string fname, DrawArea da, bool transparent ) {
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
     da.document_rectangle( out x, out y, out w, out h );
 
     /* Create the drawing surface */
-    var surface = new ImageSurface( Format.ARGB32, ((int)w + 20), ((int)h + 20) );
+    var surface = new ImageSurface( (transparent ? Format.ARGB32 : Format.RGB24), ((int)w + 20), ((int)h + 20) );
     var context = new Context( surface );
 
     /* Translate the image */
     context.translate( (10 - x), (10 - y) );
 
     /* Recreate the image */
+    if( !transparent ) {
+      da.get_style_context().render_background( context, (10 - x), (10 - y), ((int)w + 20), ((int)h + 20) );
+    }
     da.draw_all( context );
 
     /* Write the image to the PNG file */

@@ -923,11 +923,17 @@ public class MainWindow : ApplicationWindow {
     pdf_filter.add_pattern( "*.pdf" );
     dialog.add_filter( pdf_filter );
 
-    /* PNG */
-    FileFilter png_filter = new FileFilter();
-    png_filter.set_filter_name( _( "PNG" ) );
-    png_filter.add_pattern( "*.png" );
-    dialog.add_filter( png_filter );
+    /* PNG (transparent) */
+    FileFilter pngt_filter = new FileFilter();
+    pngt_filter.set_filter_name( _( "PNG (Transparent)" ) );
+    pngt_filter.add_pattern( "*.png" );
+    dialog.add_filter( pngt_filter );
+
+    /* PNG (opaque) */
+    FileFilter pngo_filter = new FileFilter();
+    pngo_filter.set_filter_name( _( "PNG (Opaque)" ) );
+    pngo_filter.add_pattern( "*.png" );
+    dialog.add_filter( pngo_filter );
 
     /* PlainText */
     FileFilter txt_filter = new FileFilter();
@@ -958,8 +964,10 @@ public class MainWindow : ApplicationWindow {
         ExportOPML.export( repair_filename( fname, {".opml"} ), _canvas );
       } else if( pdf_filter == filter ) {
         ExportPDF.export( repair_filename( fname, {".pdf"} ), _canvas );
-      } else if( png_filter == filter ) {
-        ExportPNG.export( repair_filename( fname, {".png"} ), _canvas );
+      } else if( pngt_filter == filter ) {
+        ExportPNG.export( repair_filename( fname, {".png"} ), _canvas, true );
+      } else if( pngo_filter == filter ) {
+        ExportPNG.export( repair_filename( fname, {".png"} ), _canvas, false );
       } else if( txt_filter == filter ) {
         ExportText.export( repair_filename( fname, {".txt"} ), _canvas );
       } else if( svg_filter == filter ) {
