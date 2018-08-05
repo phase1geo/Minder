@@ -40,7 +40,7 @@ public class ExportImage : Object {
     context.translate( (10 - x), (10 - y) );
 
     /* Recreate the image */
-    da.draw_background( context );
+    da.get_style_context().render_background( context, (10 - x), (10 - y), ((int)w + 20), ((int)h + 20) );
     da.draw_all( context );
 
     /* Write the pixbuf to the file */

@@ -196,6 +196,8 @@ public class Node : Object {
     }
   }
   public bool     attached   { get; set; default = false; }
+  public int      line_width { get; set; default = 4; }
+  public int      radius     { get; set; default = 10; }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -708,10 +710,24 @@ public class Node : Object {
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
     double width_diff, height_diff;
     update_size( null, out width_diff, out height_diff );
-    x = posx;
-    y = posy;
-    w = _width;
-    h = _height;
+    if( is_root() ) {
+      x = posx;
+      y = posy;
+      w = _width;
+      h = _height;
+    } else {
+      if( (side & NodeSide.vertical()) != 0 ) {
+        x = posx;
+        y = posy;
+        w = _width;
+        h = _height;
+      } else {
+        x = posx - (line_width / 2);
+        y = posy;
+        w = _width  + line_width;
+        h = _height + (line_width / 2);
+      }
+    }
   }
 
   /* Returns the bounding box for the fold indicator for this node */
@@ -1338,7 +1354,7 @@ public class Node : Object {
   /* Draws the rectangle around the root node */
   protected void draw_root_rectangle( Context ctx, Theme theme ) {
 
-    double r = 10.0;
+    double r = (double)radius;
     double x = posx;
     double y = posy;
     double h = _height;
@@ -1553,7 +1569,7 @@ public class Node : Object {
 
     /* Draw the line under the text name */
     set_context_color( ctx, _link_color );
-    ctx.set_line_width( 4 );
+    ctx.set_line_width( line_width );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( x, y );
     ctx.line_to( (x + w), y );
@@ -1571,7 +1587,7 @@ public class Node : Object {
     parent.link_point( out parent_x, out parent_y );
 
     set_context_color( ctx, _link_color );
-    ctx.set_line_width( 4 );
+    ctx.set_line_width( line_width );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( parent_x, parent_y );
     switch( side ) {

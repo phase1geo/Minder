@@ -80,21 +80,24 @@ public class Layout : Object {
 
     parent.bbox( out x, out y, out w, out h );
 
+    double x2 = x + w;
+    double y2 = y + h;
+
     if( (num_children != 0) && !parent.folded ) {
       double cx, cy, cw, ch;
-      double mw, mh;
       for( int i=0; i<parent.children().length; i++ ) {
         if( (parent.children().index( i ).side & side_mask) != 0 ) {
           bbox( parent.children().index( i ), side_mask, out cx, out cy, out cw, out ch );
           x  = (x < cx) ? x : cx;
           y  = (y < cy) ? y : cy;
-          mw = (cx + cw) - x;
-          mh = (cy + ch) - y;
-          w  = (w < mw) ? mw : w;
-          h  = (h < mh) ? mh : h;
+          x2 = (x2 < (cx + cw)) ? (cx + cw) : x2;
+          y2 = (y2 < (cy + ch)) ? (cy + ch) : y2;
         }
       }
     }
+
+    w = (x2 - x);
+    h = (y2 - y);
 
   }
 

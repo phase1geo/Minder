@@ -721,10 +721,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   public void document_rectangle( out double x, out double y, out double width, out double height ) {
 
-    double x1 = 10000000;
-    double y1 = 10000000;
-    double x2 = 0;
-    double y2 = 0;
+    double x1 =  10000000;
+    double y1 =  10000000;
+    double x2 = -10000000;
+    double y2 = -10000000;
 
     /* Calculate the overall size of the map */
     for( int i=0; i<_nodes.length; i++ ) {
