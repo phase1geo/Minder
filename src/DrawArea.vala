@@ -857,7 +857,6 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Draw the background from the stylesheet */
   public void draw_background( Context ctx ) {
-    stdout.printf( "Scaling factor: %g\n", _scale_factor );
     get_style_context().render_background( ctx, 0, 0, (get_allocated_width() / _scale_factor), (get_allocated_height() / _scale_factor) );
   }
 

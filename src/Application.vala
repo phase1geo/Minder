@@ -39,7 +39,7 @@ public class Minder : Granite.Application {
     var last_file = settings.get_string( "last-file" );
 
     /* Add the application-specific icons */
-    weak var default_theme = IconTheme.get_default();
+    weak IconTheme default_theme = IconTheme.get_default();
     default_theme.add_resource_path( "/com/github/phase1geo/minder" );
 
     /* Create the main window */
