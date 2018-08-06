@@ -663,8 +663,11 @@ public class DrawArea : Gtk.DrawingArea {
     return( (sf > 4) ? 4 : sf );
   }
 
-  /* Zooms into the image by one scale mark */
-  public void zoom_in() {
+  /*
+   Zooms into the image by one scale mark.  Returns true if the zoom was successful;
+   otherwise, returns false.
+  */
+  public bool zoom_in() {
     var value = sfactor * 100;
     var marks = get_scale_marks();
     foreach (double mark in marks) {
@@ -672,13 +675,17 @@ public class DrawArea : Gtk.DrawingArea {
         animator.add_scale( "zoom in" );
         set_scaling_factor( mark / 100 );
         animator.animate();
-        return;
+        return( true );
       }
     }
+    return( false );
   }
 
-  /* Zooms out of the image by one scale mark */
-  public void zoom_out() {
+  /*
+   Zooms out of the image by one scale mark.  Returns true if the zoom was successful;
+   otherwise, returns false.
+  */
+  public bool zoom_out() {
     double value = sfactor * 100;
     var    marks = get_scale_marks();
     double last  = marks[0];
@@ -687,10 +694,11 @@ public class DrawArea : Gtk.DrawingArea {
         animator.add_scale( "zoom out" );
         set_scaling_factor( last / 100 );
         animator.animate();
-        return;
+        return( true );
       }
       last = mark;
     }
+    return( false );
   }
 
   /*
@@ -849,7 +857,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Draw the background from the stylesheet */
   public void draw_background( Context ctx ) {
-    get_style_context().render_background( ctx, 0, 0, get_allocated_width(), get_allocated_height() );
+    stdout.printf( "Scaling factor: %g\n", _scale_factor );
+    get_style_context().render_background( ctx, 0, 0, (get_allocated_width() / _scale_factor), (get_allocated_height() / _scale_factor) );
   }
 
   /* Draws all of the root node trees */
@@ -1798,6 +1807,23 @@ public class DrawArea : Gtk.DrawingArea {
 
     double delta_x, delta_y;
     e.get_scroll_deltas( out delta_x, out delta_y );
+
+    bool shift   = (bool) e.state & ModifierType.SHIFT_MASK;
+    bool control = (bool) e.state & ModifierType.CONTROL_MASK;
+
+    /* Swap the deltas if the SHIFT key is held down */
+    if( shift && !control ) {
+      double tmp = delta_x;
+      delta_x = delta_y;
+      delta_y = tmp;
+    } else if( control ) {
+      if( e.delta_y < 0 ) {
+        zoom_in();
+      } else {
+        zoom_out();
+      }
+      return( false );
+    }
 
     /* Adjust the origin and redraw */
     move_origin( (delta_x * 120), (delta_y * 120) );
