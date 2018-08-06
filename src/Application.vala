@@ -38,6 +38,10 @@ public class Minder : Granite.Application {
     var settings  = new GLib.Settings( "com.github.phase1geo.minder" );
     var last_file = settings.get_string( "last-file" );
 
+    /* Add the application-specific icons */
+    weak var default_theme = IconTheme.get_default();
+    default_theme.add_resource_path( "/com/github/phase1geo/minder" );
+
     /* Create the main window */
     var appwin = new MainWindow( this, settings );
 

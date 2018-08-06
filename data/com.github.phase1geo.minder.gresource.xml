@@ -2,5 +2,18 @@
 <gresources>
   <gresource prefix="/com/github/phase1geo/minder">
     <file alias="Application.css" compressed="true">Application.css</file>
+    <file alias="minder-balance-symbolic.svg">icons/16/minder-balance-symbolic.svg</file>
+    <file alias="minder-detach-symbolic.svg">icons/16/minder-detach-symbolic.svg</file>
+    <file alias="minder-fold-completed.svg">icons/16/minder-fold-completed-symbolic.svg</file>
+    <file alias="minder-layout-down-symbolic.svg">icons/16/minder-layout-down-symbolic.svg</file>
+    <file alias="minder-layout-horizontal-symbolic.svg">icons/16/minder-layout-horizontal-symbolic.svg</file>
+    <file alias="minder-layout-left-symbolic.svg">icons/16/minder-layout-left-symbolic.svg</file>
+    <file alias="minder-layout-manual-symbolic.svg">icons/16/minder-layout-manual-symbolic.svg</file>
+    <file alias="minder-layout-right-symoblic.svg">icons/16/minder-layout-right-symbolic.svg</file>
+    <file alias="minder-layout-up-symbolic.svg">icons/16/minder-layout-up-symbolics.svg</file>
+    <file alias="minder-layout-vertical-symbolic.svg">icons/16/minder-layout-vertical-symbolic.svg</file>
+    <file alias="minder-note-symbolic.svg">icons/16/minder-note-symbolic.svg</file>
+    <file alias="minder-title-symbolic.svg">icons/16/minder-title-symbolic.svg</file>
+    <file alias="minder-unfold-symbolic.svg">icons/16/minder-unfold-symbolic.svg</file>
   </gresource>
 </gresources>
