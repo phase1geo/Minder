@@ -7,31 +7,6 @@ foreach i : icon_sizes
     )
 endforeach
 
-custom_icons = [
-  'minder-balance-symbolic',
-  'minder-fold-completed-symbolic',
-  'minder-layout-horizontal-symbolic',
-  'minder-layout-right-symbolic',
-  'minder-task-done-symbolic',
-  'minder-detach-symbolic',
-  'minder-layout-left-symbolic',
-  'minder-layout-down-symbolic',
-  'minder-layout-manual-symbolic',
-  'minder-layout-up-symbolic',
-  'minder-layout-vertical-symbolic',
-  'minder-note-symbolic',
-  'minder-task-todo-symbolic',
-  'minder-title-symbolic',
-  'minder-unfold-symbolic'
-]
-
-foreach i : custom_icons
-    install_data(
-        join_paths('icons', '16', i + '.svg'),
-        install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', '16x16', 'apps')
-    )
-endforeach
-
 install_data(
     meson.project_name() + '.desktop',
     install_dir: join_paths(get_option('datadir'), 'applications')
