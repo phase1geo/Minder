@@ -83,6 +83,7 @@
           <li>Added support for shift-mousewheel to scroll horizontally.</li>
           <li>Added support for control-mousewheel to zoom in/out.</li>
           <li>Fixed issue with drawing background when zoom factor was small.</li> 
+	  <li>Custom icons are now stored as a gresource rather than in the file system.</li>
           <li>Other minor bug fixes.</li>
         </ul>
       </description>
