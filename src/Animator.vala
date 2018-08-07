@@ -37,6 +37,11 @@ public class Animator : Object {
     _running = false;
   }
 
+  /* Returns true if there is currently an animation in progress */
+  public bool is_running() {
+    return( _running );
+  }
+
   /* Animates all of the nodes on the canvas */
   public void add_nodes( string name ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.NODES) ) {

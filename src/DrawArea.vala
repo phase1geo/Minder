@@ -670,6 +670,9 @@ public class DrawArea : Gtk.DrawingArea {
   public bool zoom_in() {
     var value = sfactor * 100;
     var marks = get_scale_marks();
+    if( value < marks[0] ) {
+      value = marks[0];
+    }
     foreach (double mark in marks) {
       if( value < mark ) {
         animator.add_scale( "zoom in" );
@@ -689,6 +692,9 @@ public class DrawArea : Gtk.DrawingArea {
     double value = sfactor * 100;
     var    marks = get_scale_marks();
     double last  = marks[0];
+    if( value > marks[marks.length-1] ) {
+      value = marks[marks.length-1];
+    }
     foreach (double mark in marks) {
       if( value <= mark ) {
         animator.add_scale( "zoom out" );
@@ -1818,7 +1824,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( control ) {
       if( e.delta_y < 0 ) {
         zoom_in();
-      } else {
+      } else if( e.delta_y > 0 ) {
         zoom_out();
       }
       return( false );
