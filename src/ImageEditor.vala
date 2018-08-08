@@ -51,17 +51,18 @@ class ImageEditor : Gtk.Dialog {
     create_ui();
     try {
       var pix = new Pixbuf.from_file( fname );
-      _image = new ImageSurface.for_data( pix.get_pixels(), Format.RGB24, pix.width, pix.height, pix.rowstride );
+      _image = (ImageSurface)cairo_surface_create_from_pixbuf( pix, 0, null );
     } catch( Error e ) {
+      stdout.printf( "ERROR loading from file: %s\n", e.message );
       // TBD - There was an error loading the file
     }
   }
 
   /* Constructor */
   public ImageEditor.from_image( Image img ) {
+    stdout.printf( "In ImageEditor.from_image\n" );
     create_ui();
-    var pix = img.get_pixbuf();
-    _image = new ImageSurface.for_data( pix.get_pixels(), Format.RGB24, pix.width, pix.height, pix.rowstride );
+    _image = (ImageSurface)cairo_surface_create_from_pixbuf( img.get_pixbuf(), 0, null );
   }
 
   /* Creates the user interface */
@@ -70,21 +71,16 @@ class ImageEditor : Gtk.Dialog {
     this.modal               = true;
     this.destroy_with_parent = true;
 
-    var vbox = new Box( Orientation.VERTICAL, 5 );
-
     _da      = create_drawing_area();
     var zoom = create_zoom_slider();
 
-    /* Add the action buttons */
-    add_button( _( "Apply" ),  ResponseType.APPLY );
-    add_button( _( "Cancel" ), ResponseType.CANCEL );
-
     /* Pack the widgets into the window */
-    vbox.pack_start( _da,  true,  true, 5 );
-    vbox.pack_start( zoom, false, true, 5 );
+    get_content_area().pack_start( _da,  true,  true, 5 );
+    get_content_area().pack_start( zoom, false, true, 5 );
 
-    /* Add the items to the window */
-    add( vbox );
+    /* Add the action buttons */
+    add_button( _( "Cancel" ), ResponseType.CANCEL );
+    add_button( _( "Apply" ),  ResponseType.APPLY );
 
     show_all();
 

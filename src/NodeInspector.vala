@@ -191,21 +191,24 @@ public class NodeInspector : Stack {
 
     lbl.xalign = (float)0;
 
+    var ebox = new EventBox();
     _image = new Image.from_pixbuf( new Pixbuf( Colorspace.RGB, false, 8, 200, 200 ) );
 
-    _image.add_events( EventMask.BUTTON_PRESS_MASK );
+    ebox.add_events( EventMask.BUTTON_PRESS_MASK );
+    ebox.add( _image );
 
-    _image.button_press_event.connect((e) => {
+    ebox.button_press_event.connect((e) => {
       stdout.printf( "HERE!!!\n" );
       var editor = new ImageEditor.from_image( _image );
+      editor.set_transient_for( (Gtk.Window)_da.get_toplevel() );
       if( editor.run() == ResponseType.APPLY ) {
         _image.set_from_pixbuf( editor.get_pixbuf() );
       }
       return( false );
     });
 
-    box.pack_start( lbl,    false, false );
-    box.pack_start( _image, true,  true );
+    box.pack_start( lbl,  false, false );
+    box.pack_start( ebox, true,  true );
 
     bbox.pack_start( box, false, true );
 
