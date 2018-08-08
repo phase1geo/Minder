@@ -50,6 +50,7 @@ sources += files(
     'Document.vala',
     'DrawArea.vala',
     'DrawAreaMenu.vala',
+    'ImageEditor.vala',
     'Layout.vala',
     'Layouts.vala',
     'MainWindow.vala',

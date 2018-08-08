@@ -35,6 +35,7 @@ public class NodeInspector : Stack {
   private Button      _detach_btn;
   private string      _orig_note = "";
   private Node?       _node = null;
+  // private Image       _image;
 
   public NodeInspector( DrawArea da ) {
 
@@ -60,6 +61,7 @@ public class NodeInspector : Stack {
     create_fold( node_box );
     create_link( node_box );
     create_note( node_box );
+    // create_image( node_box );
     create_buttons( node_box );
 
     _da.node_changed.connect( node_changed );
@@ -180,6 +182,36 @@ public class NodeInspector : Stack {
     bbox.pack_start( box, true, true );
 
   }
+
+  /* Creates the image widget */
+#if DEVELOPMENT
+  private void create_image( Box bbox ) {
+
+    var box = new Box( Orientation.VERTICAL, 0 );
+    var lbl = new Label( _( "Image" ) );
+
+    lbl.xalign = (float)0;
+
+    _image = new Image.from_pixbuf( new Pixbuf( Colorspace.RGB, false, 8, 200, 200 ) );
+
+    _image.add_events( EventMask.BUTTON_PRESS_MASK );
+
+    _image.button_press_event.connect((e) => {
+      stdout.printf( "HERE!!!\n" );
+      var editor = new ImageEditor.from_image( _image );
+      if( editor.run() == ResponseType.APPLY ) {
+        _image.set_from_pixbuf( editor.get_pixbuf() );
+      }
+      return( false );
+    });
+
+    box.pack_start( lbl,    false, false );
+    box.pack_start( _image, true,  true );
+
+    bbox.pack_start( box, false, true );
+
+  }
+#endif
 
   /* Creates the node editing button grid and adds it to the popover */
   private void create_buttons( Box bbox ) {
