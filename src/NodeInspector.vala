@@ -35,7 +35,7 @@ public class NodeInspector : Stack {
   private Button      _detach_btn;
   private string      _orig_note = "";
   private Node?       _node = null;
-  // private Image       _image;
+  private Image       _image;
 
   public NodeInspector( DrawArea da ) {
 
@@ -61,7 +61,7 @@ public class NodeInspector : Stack {
     create_fold( node_box );
     create_link( node_box );
     create_note( node_box );
-    // create_image( node_box );
+    create_image( node_box );
     create_buttons( node_box );
 
     _da.node_changed.connect( node_changed );
@@ -184,7 +184,6 @@ public class NodeInspector : Stack {
   }
 
   /* Creates the image widget */
-#if DEVELOPMENT
   private void create_image( Box bbox ) {
 
     var box = new Box( Orientation.VERTICAL, 0 );
@@ -211,7 +210,6 @@ public class NodeInspector : Stack {
     bbox.pack_start( box, false, true );
 
   }
-#endif
 
   /* Creates the node editing button grid and adds it to the popover */
   private void create_buttons( Box bbox ) {

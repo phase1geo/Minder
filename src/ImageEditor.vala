@@ -37,7 +37,7 @@ class ImageEditor : Gtk.Dialog {
   private int           _crop_target = -1;
   private double        _last_x;
   private double        _last_y;
-//  private Pixbuf?       _pixbuf;
+  private Pixbuf?       _pixbuf;
 
   public signal void done( bool changed );
 
@@ -195,11 +195,9 @@ class ImageEditor : Gtk.Dialog {
   }
 
   /* Returns the pixbuf associated with this window */
-#if DEVELOPMENT
   public Pixbuf? get_pixbuf() {
     return( _pixbuf );
   }
-#endif
 
 }
 
