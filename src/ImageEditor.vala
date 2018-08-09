@@ -42,34 +42,35 @@ class ImageEditor : Gtk.Dialog {
   public signal void done( bool changed );
 
   /* Default constructor */
-  public ImageEditor() {
-    create_ui();
+  public ImageEditor( Gtk.Window parent ) {
+    create_ui( parent );
   }
 
   /* Constructor */
-  public ImageEditor.from_file( string fname ) {
-    create_ui();
+  public ImageEditor.from_file( string fname, Gtk.Window parent ) {
+    create_ui( parent );
     try {
       var pix = new Pixbuf.from_file( fname );
       _image = (ImageSurface)cairo_surface_create_from_pixbuf( pix, 0, null );
+      _da.queue_draw();
     } catch( Error e ) {
       stdout.printf( "ERROR loading from file: %s\n", e.message );
-      // TBD - There was an error loading the file
     }
   }
 
   /* Constructor */
-  public ImageEditor.from_image( Image img ) {
-    stdout.printf( "In ImageEditor.from_image\n" );
-    create_ui();
+  public ImageEditor.from_image( Image img, Gtk.Window parent ) {
+    create_ui( parent );
     _image = (ImageSurface)cairo_surface_create_from_pixbuf( img.get_pixbuf(), 0, null );
+    _da.queue_draw();
   }
 
   /* Creates the user interface */
-  public void create_ui() {
+  public void create_ui( Gtk.Window parent ) {
 
-    this.modal               = true;
-    this.destroy_with_parent = true;
+    modal               = true;
+    destroy_with_parent = true;
+    set_transient_for( parent );
 
     _da      = create_drawing_area();
     var zoom = create_zoom_slider();
@@ -110,7 +111,8 @@ class ImageEditor : Gtk.Dialog {
     /* Add event listeners */
     da.draw.connect((ctx) => {
       ctx.scale( _scale, _scale );
-      ctx.translate( _tx, _ty );
+      ctx.translate( (_tx / _scale), (_ty / _scale) );
+      draw_background( ctx );
       draw_image( ctx );
       draw_crop( ctx );
       return( false );
@@ -140,12 +142,12 @@ class ImageEditor : Gtk.Dialog {
         _tx += (e.x - _last_x);
         _ty += (e.y - _last_y);
       } else {
-        if( (_crop_target & 0x2) == 0 ) {
+        if( (_crop_target & 0x1) == 0 ) {
           _cx1 += (e.x - _last_x);
         } else {
           _cx2 += (e.x - _last_x);
         }
-        if( (_crop_target & 0x1) == 0 ) {
+        if( (_crop_target & 0x2) == 0 ) {
           _cy1 += (e.y - _last_y);
         } else {
           _cy2 += (e.y - _last_y);
@@ -161,15 +163,52 @@ class ImageEditor : Gtk.Dialog {
 
   }
 
+  /* Colors the background of the canvas */
+  private void draw_background( Context ctx ) {
+    var tx     = 0 - (_tx / _scale);
+    var ty     = 0 - (_ty / _scale);
+    var width  = _da.get_allocated_width()  / _scale;
+    var height = _da.get_allocated_height() / _scale;
+    _da.get_style_context().render_background( ctx, tx, ty, width, height );
+  }
+
   /* Add the image */
   private void draw_image( Context ctx ) {
     ctx.set_source_surface( _image, 0, 0 );
+    ctx.paint();
   }
 
   /* Draw the crop mask */
   private void draw_crop( Context ctx ) {
 
-    // TBD
+    var width  = _da.get_allocated_width()  / _scale;
+    var height = _da.get_allocated_height() / _scale;
+    var tx     = 0 - _tx;
+    var ty     = 0 - _ty;
+    var cx1    = _cx1 + tx;
+    var cy1    = _cy1 + ty;
+    var cx2    = _cx2 + tx;
+    var cy2    = _cy2 + ty;
+
+    ctx.set_source_rgba( 0, 0, 0, 0.8 );
+    ctx.rectangle( tx, ty, cx1, height );
+    ctx.fill();
+    ctx.rectangle( cx2, ty, (width - cx2), height );
+    ctx.fill();
+    ctx.rectangle( cx1, ty, (cx2 - cx1), cy1 );
+    ctx.fill();
+    ctx.rectangle( cx1, cy2, (cx2 - cx1), (height - cy2) );
+    ctx.fill();
+
+    ctx.set_source_rgb( 1, 1, 1 );
+    ctx.rectangle( (cx1 - 5), (cy1 - 5), 10, 10 );
+    ctx.fill();
+    ctx.rectangle( (cx2 - 5), (cy1 - 5), 10, 10 );
+    ctx.fill();
+    ctx.rectangle( (cx1 - 5), (cy2 - 5), 10, 10 );
+    ctx.fill();
+    ctx.rectangle( (cx2 - 5), (cy2 - 5), 10, 10 );
+    ctx.fill();
 
   }
 

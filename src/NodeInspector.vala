@@ -35,7 +35,8 @@ public class NodeInspector : Stack {
   private Button      _detach_btn;
   private string      _orig_note = "";
   private Node?       _node = null;
-  private Image       _image;
+  private EventBox    _image_box;
+  private Button      _image_btn;
 
   public NodeInspector( DrawArea da ) {
 
@@ -191,26 +192,87 @@ public class NodeInspector : Stack {
 
     lbl.xalign = (float)0;
 
-    var ebox = new EventBox();
-    _image = new Image.from_pixbuf( new Pixbuf( Colorspace.RGB, false, 8, 200, 200 ) );
+    _image_btn = new Button.with_label( _( "Add Image..." ) );
+    _image_btn.visible = true;
+    _image_btn.clicked.connect( image_button_clicked );
 
-    ebox.add_events( EventMask.BUTTON_PRESS_MASK );
-    ebox.add( _image );
+    _image_box = new EventBox();
+    _image_box.visible = false;
+    _image_box.add_events( EventMask.BUTTON_PRESS_MASK );
+    _image_box.button_press_event.connect( image_box_clicked );
+    _image_box.add( new Image.from_pixbuf( null ) );
 
-    ebox.button_press_event.connect((e) => {
-      stdout.printf( "HERE!!!\n" );
-      var editor = new ImageEditor.from_image( _image );
-      editor.set_transient_for( (Gtk.Window)_da.get_toplevel() );
-      if( editor.run() == ResponseType.APPLY ) {
-        _image.set_from_pixbuf( editor.get_pixbuf() );
-      }
-      return( false );
-    });
-
-    box.pack_start( lbl,  false, false );
-    box.pack_start( ebox, true,  true );
+    box.pack_start( lbl,        false, false );
+    box.pack_start( _image_btn, false, false );
+    box.pack_start( _image_box, true,  true );
 
     bbox.pack_start( box, false, true );
+
+  }
+
+  /* Called when the user clicks on the image button */
+  private void image_button_clicked() {
+
+    var     parent = (Gtk.Window)_da.get_toplevel();
+    string? fname  = null;
+
+    FileChooserDialog dialog = new FileChooserDialog( _( "Select Image" ), parent, FileChooserAction.OPEN,
+      _( "Cancel" ), ResponseType.CANCEL, _( "Select" ), ResponseType.ACCEPT );
+
+    /* BMP */
+    FileFilter filter = new FileFilter();
+    filter.set_filter_name( _( "Images" ) );
+    filter.add_pattern( "*.bmp" );
+    filter.add_pattern( "*.png" );
+    filter.add_pattern( "*.jpg" );
+    filter.add_pattern( "*.jpeg" );
+    dialog.add_filter( filter );
+
+    if( dialog.run() == ResponseType.ACCEPT ) {
+      fname = dialog.get_filename();
+    }
+ 
+    /* Close the dialog */
+    dialog.destroy();
+
+    if( fname != null ) {
+      ImageEditor editor = new ImageEditor.from_file( fname, parent );
+      if( editor.run() == ResponseType.APPLY ) {
+        var image = (Image)_image_box.get_child();
+        image.set_from_pixbuf( editor.get_pixbuf() );
+        set_image_visible( true );
+      }
+      editor.close();
+      set_image_visible( true );
+    } else {
+      set_image_visible( false );
+    }
+
+  }
+
+  /* Called when the user clicks on the image box */
+  private bool image_box_clicked( EventButton e ) {
+
+    var parent = (Gtk.Window)_da.get_toplevel();
+    var image  = (Image)_image_box.get_child();
+    var editor = new ImageEditor.from_image( image, parent );
+
+    if( editor.run() == ResponseType.APPLY ) {
+      image.set_from_pixbuf( editor.get_pixbuf() );
+    }
+
+    /* Close the image editor */
+    editor.close();
+
+    return( false );
+
+  }
+
+  /* Sets the visibility of the image widget to the given value */
+  private void set_image_visible( bool show ) {
+
+    _image_btn.visible = !show;
+    _image_box.visible = show;
 
   }
 
