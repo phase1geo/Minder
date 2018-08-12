@@ -56,6 +56,7 @@ sources += files(
     'MainWindow.vala',
     'MapInspector.vala',
     'Node.vala',
+    'NodeImage.vala',
     'NodeInspector.vala',
     'Partitioner.vala',
     'Theme.vala',

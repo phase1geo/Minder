@@ -195,9 +195,10 @@ public class Node : Object {
       }
     }
   }
-  public bool     attached   { get; set; default = false; }
-  public int      line_width { get; set; default = 4; }
-  public int      radius     { get; set; default = 10; }
+  public bool       attached   { get; set; default = false; }
+  public int        line_width { get; set; default = 4; }
+  public int        radius     { get; set; default = 10; }
+  public NodeImage? image      { get; set; default = null; }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -686,9 +687,7 @@ public class Node : Object {
   }
 
   /*
-   Updates the width and height based on the current name.  Returns true
-   if the width or height has changed since the last time these values were
-   updated.
+   Updates the width and height based on the current name.
   */
   public void update_size( Theme? theme, out double width_diff, out double height_diff ) {
     width_diff  = 0;
@@ -697,10 +696,15 @@ public class Node : Object {
       int text_width, text_height;
       double orig_width  = _width;
       double orig_height = _height;
+      int img_width      = (image != null) ? (image.width()  + (_padx * 2)) : 0;
+      int img_height     = (image != null) ? (image.height() + _pady)       : 0;
       _layout.set_markup( name_markup( theme ), -1 );
       _layout.get_size( out text_width, out text_height );
-      _width      = (text_width  / Pango.SCALE) + (_padx * 2) + task_width() + note_width();
-      _height     = (text_height / Pango.SCALE) + (_pady * 2);
+      _width     = (text_width  / Pango.SCALE) + (_padx * 2) + task_width() + note_width();
+      if( img_width > _width ) {
+        _width = img_width;
+      }
+      _height     = (text_height / Pango.SCALE) + (_pady * 2) + img_height;
       width_diff  = _width  - orig_width;
       height_diff = _height - orig_height;
     }
@@ -1376,11 +1380,20 @@ public class Node : Object {
 
   }
 
+  /* Draws the node image above the note */
+  protected virtual void draw_image( Cairo.Context ctx, Theme theme ) {
+    if( image != null ) {
+      image.draw( ctx, (posx + _padx), (posy + _pady) );
+    }
+
+  }
+
   /* Draws the node font to the screen */
   protected virtual void draw_name( Cairo.Context ctx, Theme theme ) {
 
-    int    hmargin = 3;
-    int    vmargin = 3;
+    int    hmargin    = 3;
+    int    vmargin    = 3;
+    int    img_height = (image != null) ? (image.height + _pady) : 0;
     double width_diff, height_diff;
 
     /* Make sure the the size is up-to-date */
@@ -1392,7 +1405,7 @@ public class Node : Object {
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( mode == NodeMode.CURRENT ) {
       set_context_color( ctx, theme.nodesel_background );
-      ctx.rectangle( ((posx + _padx) - hmargin), ((posy + _pady) - vmargin), ((_width - (_padx * 2)) + (hmargin * 2)), ((_height - (_pady * 2)) + (vmargin * 2)) );
+      ctx.rectangle( ((posx + _padx) - hmargin), (((posy + _pady) - vmargin) + img_height), ((_width - (_padx * 2)) + (hmargin * 2)), ((_height - (_pady * 2)) + (vmargin * 2)) );
       ctx.fill();
     }
 
@@ -1614,6 +1627,7 @@ public class Node : Object {
     /* If this is a root node, draw specifically for a root node */
     if( is_root() ) {
       draw_root_rectangle( ctx, theme );
+      draw_image( ctx, theme );
       draw_name( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, theme.root_foreground );
@@ -1626,6 +1640,7 @@ public class Node : Object {
 
     /* Otherwise, draw the node as a non-root node */
     } else {
+      draw_image( ctx, theme );
       draw_name( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, _link_color );

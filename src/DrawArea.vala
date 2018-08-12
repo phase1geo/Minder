@@ -558,6 +558,39 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /*
+   Adds an image to the current node by allowing the user to select an image file
+   from the file system and, optionally, editing the image prior to assigning it
+   to a node.  Updates the layout, adds the undo item and redraws the canvas.
+   item and redraws the canvas.
+  */
+  public void add_current_image() {
+    if( _current_node != null ) {
+      if( _current_node.image == null ) {
+        ImageEditor editor = FOOBAR;
+        _current_node.image = null;
+        _layout.handle_update_by_edit( _current_node );
+        queue_draw();
+        auto_save();
+      }
+    }
+  }
+
+  /*
+   Deletes the image from the current node.  Updates the layout, adds the undo
+   item and redraws the canvas.
+  */
+  public void remove_current_image() {
+    if( _current_node != null ) {
+      if( _current_node.image != null ) {
+        _current_node.image = null;
+        _layout.handle_update_by_edit( _current_node );
+        queue_draw();
+        auto_save();
+      }
+    }
+  }
+
+  /*
    Changes the current node's link color and propagates that color to all
    descendants.
   */
