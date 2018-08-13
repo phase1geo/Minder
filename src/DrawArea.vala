@@ -638,7 +638,11 @@ public class DrawArea : Gtk.DrawingArea {
               case EventType.TRIPLE_BUTTON_PRESS :  match.set_cursor_all( false );            break;
             }
           } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
-            _current_node.mode = NodeMode.EDITABLE;
+            if( _current_node.is_within_image( x, y ) ) {
+              stdout.printf( "Edit image!\n" );
+            } else {
+              _current_node.mode = NodeMode.EDITABLE;
+            }
           }
           return( true );
         } else {

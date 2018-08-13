@@ -33,8 +33,9 @@ public class NodeImage {
   public NodeImage.from_file( string fname ) {
     _fname = fname;
     try {
-      _buf = new Pixbuf.from_file_at_size( fname, 400, 200 );
-      stdout.printf( "HERE! size: %d\n", _buf.get_pixels().length );
+      _buf = new Pixbuf.from_file_at_size( fname, 200, 400 );
+      var pixels = _buf.pixel_bytes.length;
+      stdout.printf( "HERE! size: %d, bytes: %d\n", pixels, (int)_buf.get_byte_length() );
     } catch( Error e ) {
       // TBD
     }
@@ -110,7 +111,8 @@ public class NodeImage {
 
   /* Saves the given node image in the given XML node */
   public virtual void save( Xml.Node* parent ) {
-    Xml.Node* n = parent->new_text_child( null, "nodeimage", Base64.encode( _buf.get_pixels() ) );
+    /*
+    Xml.Node* n = parent->new_text_child( null, "nodeimage", Base64.encode( _buf.pixel_bytes.get_data() ) );
     n->new_prop( "fname",      _fname );
     n->new_prop( "colorspace", _buf.colorspace.to_string() );
     n->new_prop( "alpha",      _buf.has_alpha.to_string() );
@@ -118,6 +120,7 @@ public class NodeImage {
     n->new_prop( "width",      _buf.width.to_string() );
     n->new_prop( "height",     _buf.height.to_string() );
     n->new_prop( "rowstride",  _buf.rowstride.to_string() );
+    */
   }
 
   /* Allows the user to choose an image file */

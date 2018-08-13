@@ -378,12 +378,26 @@ public class Node : Object {
     }
   }
 
-  /* Returns true if the given cursor coordinates lies within the fold indicator area */
+  /* Returns true if the given cursor coordinates lie within the fold indicator area */
   public virtual bool is_within_fold( double x, double y ) {
     if( folded && (_children.length > 0) ) {
       double fx, fy, fw, fh;
       fold_bbox( out fx, out fy, out fw, out fh );
       return( (fx < x) && (x < (fx + fw)) && (fy < y) && (y < (fy + fh)) );
+    } else {
+      return( false );
+    }
+  }
+
+  /* Returns true if the given cursor coordinates lie within the image area */
+  public virtual bool is_within_image( double x, double y ) {
+    if( image != null ) {
+      double ix, iy, iw, ih;
+      ix = posx + _padx;
+      iy = posy + _pady;
+      iw = image.width();
+      ih = image.height();
+      return( (ix <= x) && (x <= (ix + iw)) && (iy <= y) && (y <= (iy + ih)) );
     } else {
       return( false );
     }
@@ -877,8 +891,9 @@ public class Node : Object {
   /* Sets the cursor from the given mouse coordinates */
   public void set_cursor_at_char( double x, double y, bool motion ) {
     int cursor, trailing;
+    int img_height = (image != null) ? (int)(image.height() + _pady) : 0;
     int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
-    int adjusted_y = (int)(y - (posy + _pady)) * Pango.SCALE;
+    int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
     if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor += trailing;
       if( motion ) {
@@ -902,8 +917,9 @@ public class Node : Object {
   /* Selects the word at the current x/y position in the text */
   public void set_cursor_at_word( double x, double y, bool motion ) {
     int cursor, trailing;
+    int img_height = (image != null) ? (int)(image.height() + _pady) : 0;
     int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
-    int adjusted_y = (int)(y - (posy + _pady)) * Pango.SCALE;
+    int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
     if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor += trailing;
       int word_start = name.substring( 0, cursor ).last_index_of( " " );
@@ -1414,12 +1430,12 @@ public class Node : Object {
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( mode == NodeMode.CURRENT ) {
       set_context_color( ctx, theme.nodesel_background );
-      ctx.rectangle( ((posx + _padx) - hmargin), (((posy + _pady) - vmargin) + img_height), ((_width - (_padx * 2)) + (hmargin * 2)), ((_height - (_pady * 2)) + (vmargin * 2)) );
+      ctx.rectangle( ((posx + _padx) - hmargin), ((posy + _pady) - vmargin), ((_width - (_padx * 2)) + (hmargin * 2)), ((_height - (_pady * 2)) + (vmargin * 2)) );
       ctx.fill();
     }
 
     /* Output the text */
-    ctx.move_to( (posx + _padx + twidth), (posy + _pady) );
+    ctx.move_to( (posx + _padx + twidth), (posy + _pady + img_height) );
     switch( mode ) {
       case NodeMode.CURRENT  :  set_context_color( ctx, theme.nodesel_foreground );  break;
       default                :  set_context_color( ctx, (parent == null) ? theme.root_foreground : theme.foreground );  break;
@@ -1432,7 +1448,7 @@ public class Node : Object {
       set_context_color( ctx, theme.text_cursor );
       double ix, iy;
       ix = (posx + _padx + twidth) + (rect.x / Pango.SCALE) - 1;
-      iy = (posy + _pady) + (rect.y / Pango.SCALE);
+      iy = (posy + _pady + img_height) + (rect.y / Pango.SCALE);
       ctx.rectangle( ix, iy, 1, (rect.height / Pango.SCALE) );
       ctx.fill();
     }
@@ -1636,8 +1652,8 @@ public class Node : Object {
     /* If this is a root node, draw specifically for a root node */
     if( is_root() ) {
       draw_root_rectangle( ctx, theme );
-      draw_image( ctx, theme );
       draw_name( ctx, theme );
+      draw_image( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, theme.root_foreground );
       } else {
@@ -1649,8 +1665,8 @@ public class Node : Object {
 
     /* Otherwise, draw the node as a non-root node */
     } else {
-      draw_image( ctx, theme );
       draw_name( ctx, theme );
+      draw_image( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, _link_color );
       } else {
