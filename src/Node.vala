@@ -471,6 +471,10 @@ public class Node : Object {
     }
   }
 
+  private void load_image( Xml.Node* n ) {
+    image = new NodeImage.from_xml( n );
+  }
+
   /* Loads the file contents into this instance */
   public virtual void load( DrawArea da, Xml.Node* n, Layout? layout ) {
 
@@ -531,9 +535,10 @@ public class Node : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "nodename" :  load_name( it );  break;
-          case "nodenote" :  load_note( it );  break;
-          case "nodes"    :
+          case "nodename"  :  load_name( it );  break;
+          case "nodenote"  :  load_note( it );  break;
+          case "nodeimage" :  load_image( it );  break;
+          case "nodes"     :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var child = new Node( da, layout );
@@ -576,6 +581,10 @@ public class Node : Object {
     node->new_prop( "treesize", tree_size.to_string() );
     if( !is_root() ) {
       node->new_prop( "color", color_from_rgba( _link_color ) );
+    }
+
+    if( image != null ) {
+      image.save( node );
     }
 
     node->new_text_child( null, "nodename", name );
@@ -696,8 +705,8 @@ public class Node : Object {
       int text_width, text_height;
       double orig_width  = _width;
       double orig_height = _height;
-      int img_width      = (image != null) ? (image.width()  + (_padx * 2)) : 0;
-      int img_height     = (image != null) ? (image.height() + _pady)       : 0;
+      double img_width   = (image != null) ? (image.width()  + (_padx * 2)) : 0;
+      double img_height  = (image != null) ? (image.height() + _pady)       : 0;
       _layout.set_markup( name_markup( theme ), -1 );
       _layout.get_size( out text_width, out text_height );
       _width     = (text_width  / Pango.SCALE) + (_padx * 2) + task_width() + note_width();
@@ -1393,7 +1402,7 @@ public class Node : Object {
 
     int    hmargin    = 3;
     int    vmargin    = 3;
-    int    img_height = (image != null) ? (image.height + _pady) : 0;
+    double img_height = (image != null) ? (image.height() + _pady) : 0;
     double width_diff, height_diff;
 
     /* Make sure the the size is up-to-date */

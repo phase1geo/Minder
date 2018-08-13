@@ -566,11 +566,14 @@ public class DrawArea : Gtk.DrawingArea {
   public void add_current_image() {
     if( _current_node != null ) {
       if( _current_node.image == null ) {
-        ImageEditor editor = FOOBAR;
-        _current_node.image = null;
-        _layout.handle_update_by_edit( _current_node );
-        queue_draw();
-        auto_save();
+        var     parent = (Gtk.Window)get_toplevel();
+        string? fname  = NodeImage.choose_image_file( parent );
+        if( fname != null ) {
+          _current_node.image = new NodeImage.from_file( fname );
+          _layout.handle_update_by_edit( _current_node );
+          queue_draw();
+          auto_save();
+        }
       }
     }
   }
@@ -579,7 +582,7 @@ public class DrawArea : Gtk.DrawingArea {
    Deletes the image from the current node.  Updates the layout, adds the undo
    item and redraws the canvas.
   */
-  public void remove_current_image() {
+  public void delete_current_image() {
     if( _current_node != null ) {
       if( _current_node.image != null ) {
         _current_node.image = null;

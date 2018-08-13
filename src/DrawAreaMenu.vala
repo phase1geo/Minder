@@ -31,6 +31,7 @@ public class DrawAreaMenu : Gtk.Menu {
   Gtk.MenuItem _edit;
   Gtk.MenuItem _task;
   Gtk.MenuItem _note;
+  Gtk.MenuItem _image;
   Gtk.MenuItem _fold;
   Gtk.MenuItem _detach;
   Gtk.MenuItem _root;

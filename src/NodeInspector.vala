@@ -214,26 +214,7 @@ public class NodeInspector : Stack {
   private void image_button_clicked() {
 
     var     parent = (Gtk.Window)_da.get_toplevel();
-    string? fname  = null;
-
-    FileChooserDialog dialog = new FileChooserDialog( _( "Select Image" ), parent, FileChooserAction.OPEN,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Select" ), ResponseType.ACCEPT );
-
-    /* BMP */
-    FileFilter filter = new FileFilter();
-    filter.set_filter_name( _( "Images" ) );
-    filter.add_pattern( "*.bmp" );
-    filter.add_pattern( "*.png" );
-    filter.add_pattern( "*.jpg" );
-    filter.add_pattern( "*.jpeg" );
-    dialog.add_filter( filter );
-
-    if( dialog.run() == ResponseType.ACCEPT ) {
-      fname = dialog.get_filename();
-    }
- 
-    /* Close the dialog */
-    dialog.destroy();
+    string? fname  = NodeImage.choose_image_file( parent );
 
     if( fname != null ) {
       ImageEditor editor = new ImageEditor.from_file( fname, parent );
