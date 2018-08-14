@@ -34,8 +34,6 @@ public class NodeImage {
     _fname = fname;
     try {
       _buf = new Pixbuf.from_file_at_size( fname, 200, 400 );
-      var pixels = _buf.pixel_bytes.length;
-      stdout.printf( "HERE! size: %d, bytes: %d\n", pixels, (int)_buf.get_byte_length() );
     } catch( Error e ) {
       // TBD
     }
@@ -114,6 +112,11 @@ public class NodeImage {
   public void draw( Context ctx, double x, double y ) {
     cairo_set_source_pixbuf( ctx, _buf, x, y );
     ctx.paint();
+  }
+
+  /* Sets the given image widget to the stored pixbuf */
+  public void set_image( Image img ) {
+    img.set_from_pixbuf( _buf );
   }
 
   /* Saves the given node image in the given XML node */

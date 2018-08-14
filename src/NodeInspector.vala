@@ -213,21 +213,7 @@ public class NodeInspector : Stack {
   /* Called when the user clicks on the image button */
   private void image_button_clicked() {
 
-    var     parent = (Gtk.Window)_da.get_toplevel();
-    string? fname  = NodeImage.choose_image_file( parent );
-
-    if( fname != null ) {
-      ImageEditor editor = new ImageEditor.from_file( fname, parent );
-      if( editor.run() == ResponseType.APPLY ) {
-        var image = (Image)_image_box.get_child();
-        image.set_from_pixbuf( editor.get_pixbuf() );
-        set_image_visible( true );
-      }
-      editor.close();
-      set_image_visible( true );
-    } else {
-      set_image_visible( false );
-    }
+    _da.add_current_image();
 
   }
 
@@ -404,6 +390,7 @@ public class NodeInspector : Stack {
   private void node_changed() {
 
     Node? current = _da.get_current_node();
+    Image image   = (Image)_image_box.get_child();
 
     if( current != null ) {
       _name.set_text( current.name );
@@ -424,6 +411,12 @@ public class NodeInspector : Stack {
       }
       _detach_btn.set_sensitive( current.parent != null );
       _note.buffer.text = current.note;
+      if( current.image != null ) {
+        current.image.set_image( image );
+        set_image_visible( true );
+      } else {
+        set_image_visible( false );
+      }
       set_visible_child_name( "node" );
     } else {
       set_visible_child_name( "empty" );

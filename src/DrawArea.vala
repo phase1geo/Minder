@@ -572,6 +572,7 @@ public class DrawArea : Gtk.DrawingArea {
           _current_node.image = new NodeImage.from_file( fname );
           _layout.handle_update_by_edit( _current_node );
           queue_draw();
+          node_changed();
           auto_save();
         }
       }
@@ -588,6 +589,7 @@ public class DrawArea : Gtk.DrawingArea {
         _current_node.image = null;
         _layout.handle_update_by_edit( _current_node );
         queue_draw();
+        node_changed();
         auto_save();
       }
     }
