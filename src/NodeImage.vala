@@ -54,6 +54,11 @@ public class NodeImage {
     string? f = n->get_prop( "fname" );
     if( f != null ) {
       _fname = f;
+      try {
+        _buf = new Pixbuf.from_file_at_size( _fname, 200, 400 );
+      } catch( Error e ) {
+        // TBD
+      }
     }
 
     string? cs = n->get_prop( "colorspace" );
@@ -86,10 +91,12 @@ public class NodeImage {
       stride = int.parse( r );
     }
 
+/*
     if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
       var pixels = Base64.decode( n->children->get_content() );
       _buf = new Pixbuf.from_data( pixels, cspace, alpha, bps, width, height, stride );
     }
+*/
 
   }
 
@@ -111,8 +118,8 @@ public class NodeImage {
 
   /* Saves the given node image in the given XML node */
   public virtual void save( Xml.Node* parent ) {
-    /*
-    Xml.Node* n = parent->new_text_child( null, "nodeimage", Base64.encode( _buf.pixel_bytes.get_data() ) );
+    Xml.Node* n = new Xml.Node( null, "nodeimage" );
+    // Xml.Node* n = parent->new_text_child( null, "nodeimage", Base64.encode( _buf.pixel_bytes.get_data() ) );
     n->new_prop( "fname",      _fname );
     n->new_prop( "colorspace", _buf.colorspace.to_string() );
     n->new_prop( "alpha",      _buf.has_alpha.to_string() );
@@ -120,7 +127,7 @@ public class NodeImage {
     n->new_prop( "width",      _buf.width.to_string() );
     n->new_prop( "height",     _buf.height.to_string() );
     n->new_prop( "rowstride",  _buf.rowstride.to_string() );
-    */
+    parent->add_child( n );
   }
 
   /* Allows the user to choose an image file */
