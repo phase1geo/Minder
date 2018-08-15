@@ -220,9 +220,10 @@ public class NodeInspector : Stack {
   /* Called when the user clicks on the image box */
   private bool image_box_clicked( EventButton e ) {
 
-    var parent = (Gtk.Window)_da.get_toplevel();
-    var image  = (Image)_image_box.get_child();
-    var editor = new ImageEditor.from_image( image, parent );
+    var current = _da.get_current_node();
+    var parent  = (Gtk.Window)_da.get_toplevel();
+    var image   = (Image)_image_box.get_child();
+    var editor  = new ImageEditor( current.image, parent );
 
     if( editor.run() == ResponseType.APPLY ) {
       image.set_from_pixbuf( editor.get_pixbuf() );

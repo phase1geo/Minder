@@ -42,27 +42,18 @@ class ImageEditor : Gtk.Dialog {
   public signal void done( bool changed );
 
   /* Default constructor */
-  public ImageEditor( Gtk.Window parent ) {
-    create_ui( parent );
-  }
+  public ImageEditor( NodeImage img, Gtk.Window parent ) {
 
-  /* Constructor */
-  public ImageEditor.from_file( string fname, Gtk.Window parent ) {
-    create_ui( parent );
-    try {
-      var pix = new Pixbuf.from_file( fname );
-      _image = (ImageSurface)cairo_surface_create_from_pixbuf( pix, 0, null );
-      _da.queue_draw();
-    } catch( Error e ) {
-      stdout.printf( "ERROR loading from file: %s\n", e.message );
-    }
-  }
+    /* Set the defaults */
+    _scale = img.scale;
 
-  /* Constructor */
-  public ImageEditor.from_image( Image img, Gtk.Window parent ) {
+    /* Create the user interface of the editor window */
     create_ui( parent );
+
+    /* Load the image and draw it */
     _image = (ImageSurface)cairo_surface_create_from_pixbuf( img.get_pixbuf(), 0, null );
     _da.queue_draw();
+
   }
 
   /* Creates the user interface */

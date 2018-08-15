@@ -26,75 +26,60 @@ using Cairo;
 
 public class NodeImage {
 
-  private string _fname;
   private Pixbuf _buf;
+
+  public string fname { get; set; default = ""; }
+  public bool   valid { get; private set; default = false; }
+  public double scale { get; set; default = 1; }
 
   /* Default constructor */
   public NodeImage.from_file( string fname ) {
-    _fname = fname;
-    try {
-      _buf = new Pixbuf.from_file_at_size( fname, 200, 400 );
-    } catch( Error e ) {
-      // TBD
-    }
+    valid = load_from_file( fname );
   }
 
   /* Constructor from XML file */
   public NodeImage.from_xml( Xml.Node* n ) {
 
-    Colorspace cspace = Colorspace.RGB;
-    bool       alpha  = false;
-    int        bps    = 0;
-    int        width  = 0;
-    int        height = 0;
-    int        stride = 0;
-
     string? f = n->get_prop( "fname" );
     if( f != null ) {
-      _fname = f;
-      try {
-        _buf = new Pixbuf.from_file_at_size( _fname, 200, 400 );
-      } catch( Error e ) {
-        // TBD
-      }
+      valid = load_from_file( f );
     }
 
-    string? cs = n->get_prop( "colorspace" );
-    if( cs != null ) {
-      cspace = (Colorspace)int.parse( cs );
+    string? s = n->get_prop( "scale" );
+    if( s != null ) {
+      scale = double.parse( s );
     }
 
-    string? a = n->get_prop( "alpha" );
-    if( a != null ) {
-      alpha = bool.parse( a );
+  }
+
+  /* Loads the current file into this structure */
+  private bool load_from_file( string fn ) {
+
+    int act_width, act_height;
+    int req_width  = 200;
+    int req_height = 400;
+
+    /* Save the filename */
+    fname = fn;
+
+    /* Get the file information */
+    Pixbuf.get_file_info( fname, out act_width, out act_height );
+
+    if( act_width < 200 ) {
+      req_width = act_width;
     }
 
-    string? b = n->get_prop( "bps" );
-    if( b != null ) {
-      bps = int.parse( b );
+    /* Get the file into the current pixbuf */
+    try {
+      _buf = new Pixbuf.from_file_at_size( fname, req_width, req_height );
+    } catch( Error e ) {
+      return( false );
     }
 
-    string? w = n->get_prop( "width" );
-    if( w != null ) {
-      width = int.parse( w );
-    }
+    /* Calculate the scaling factor */
+    scale = _buf.width / (double)act_width;
 
-    string? h = n->get_prop( "height" );
-    if( h != null ) {
-      height = int.parse( h );
-    }
-
-    string? r = n->get_prop( "rowstride" );
-    if( r != null ) {
-      stride = int.parse( r );
-    }
-
-/*
-    if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
-      var pixels = Base64.decode( n->children->get_content() );
-      _buf = new Pixbuf.from_data( pixels, cspace, alpha, bps, width, height, stride );
-    }
-*/
+    return( true );
 
   }
 
@@ -108,11 +93,17 @@ public class NodeImage {
     return( _buf.height );
   }
 
+  /* Returns a pixbuf */
+  public Pixbuf? get_pixbuf() {
+    return( _buf );
+  }
+
   /* Draws the image to the given context */
   public void draw( Context ctx, double x, double y ) {
     cairo_set_source_pixbuf( ctx, _buf, x, y );
     ctx.paint();
   }
+
 
   /* Sets the given image widget to the stored pixbuf */
   public void set_image( Image img ) {
@@ -122,26 +113,20 @@ public class NodeImage {
   /* Saves the given node image in the given XML node */
   public virtual void save( Xml.Node* parent ) {
     Xml.Node* n = new Xml.Node( null, "nodeimage" );
-    // Xml.Node* n = parent->new_text_child( null, "nodeimage", Base64.encode( _buf.pixel_bytes.get_data() ) );
-    n->new_prop( "fname",      _fname );
-    n->new_prop( "colorspace", _buf.colorspace.to_string() );
-    n->new_prop( "alpha",      _buf.has_alpha.to_string() );
-    n->new_prop( "bps",        _buf.bits_per_sample.to_string() );
-    n->new_prop( "width",      _buf.width.to_string() );
-    n->new_prop( "height",     _buf.height.to_string() );
-    n->new_prop( "rowstride",  _buf.rowstride.to_string() );
+    n->new_prop( "fname", fname );
+    n->new_prop( "scale", scale.to_string() );
     parent->add_child( n );
   }
 
   /* Allows the user to choose an image file */
   public static string? choose_image_file( Gtk.Window parent ) {
 
-    string? fname = null;
+    string? fn = null;
 
     FileChooserDialog dialog = new FileChooserDialog( _( "Select Image" ), parent, FileChooserAction.OPEN,
       _( "Cancel" ), ResponseType.CANCEL, _( "Select" ), ResponseType.ACCEPT );
 
-    /* BMP */
+    /* Allow pixbuf image types */
     FileFilter filter = new FileFilter();
     filter.set_filter_name( _( "Images" ) );
     filter.add_pattern( "*.bmp" );
@@ -151,13 +136,13 @@ public class NodeImage {
     dialog.add_filter( filter );
 
     if( dialog.run() == ResponseType.ACCEPT ) {
-      fname = dialog.get_filename();
+      fn = dialog.get_filename();
     }
 
     /* Close the dialog */
     dialog.destroy();
 
-    return( fname );
+    return( fn );
 
   }
 
