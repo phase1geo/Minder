@@ -1389,8 +1389,8 @@ public class Node : Object {
     double h = _height;
     double w = _width;
 
-    /* Draw the rounded box around the text */
     set_context_color_with_alpha( ctx, theme.root_background, (motion ? 0.2 : 1) );
+
     ctx.set_line_width( 1 );
     ctx.move_to(x+r,y);                      // Move to A
     ctx.line_to(x+w-r,y);                    // Straight line to B
@@ -1408,7 +1408,7 @@ public class Node : Object {
   /* Draws the node image above the note */
   protected virtual void draw_image( Cairo.Context ctx, Theme theme, bool motion ) {
     if( image != null ) {
-      image.draw( ctx, (posx + _padx), (posy + _pady), (motion ? 50 : 255) );
+      image.draw( ctx, (posx + _padx), (posy + _pady), (motion ? 0.2 : 1) );
     }
 
   }

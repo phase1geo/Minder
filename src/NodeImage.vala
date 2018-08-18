@@ -125,18 +125,10 @@ public class NodeImage {
   }
 
   /* Draws the image to the given context */
-  public void draw( Context ctx, double x, double y, int opacity=255 ) {
+  public void draw( Context ctx, double x, double y, double opacity ) {
 
-    var buf = _buf;
-
-    if( opacity < 255 ) {
-      buf = new Pixbuf( _buf.colorspace, true, _buf.bits_per_sample, _buf.width, _buf.height );
-      buf.fill( (uint32)0xffffff32 );
-      _buf.composite( buf, 0, 0, _buf.width, _buf.height, 0, 0, 1, 1, InterpType.BILINEAR, opacity );
-    }
-
-    cairo_set_source_pixbuf( ctx, buf, x, y );
-    ctx.paint();
+    cairo_set_source_pixbuf( ctx, _buf, x, y );
+    ctx.paint_with_alpha( opacity );
 
   }
 
