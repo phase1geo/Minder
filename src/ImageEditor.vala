@@ -26,7 +26,6 @@ using Cairo;
 class ImageEditor : Gtk.Dialog {
 
   private DrawingArea   _da;
-  private double        _scale       = 1;
   private double        _tx          = 0;
   private double        _ty          = 0;
   private double        _cx1         = 0;
@@ -35,9 +34,10 @@ class ImageEditor : Gtk.Dialog {
   private double        _cy2         = 200;
   private ImageSurface? _image       = null;
   private int           _crop_target = -1;
+  private NodeImage     _node_image;
   private double        _last_x;
   private double        _last_y;
-  private Pixbuf?       _pixbuf;
+  private double        _scale;
 
   public signal void done( bool changed );
 
@@ -45,7 +45,8 @@ class ImageEditor : Gtk.Dialog {
   public ImageEditor( NodeImage img, Gtk.Window parent ) {
 
     /* Set the defaults */
-    _scale = img.scale;
+    _node_image = img;
+    _scale      = img.scale;
 
     /* Create the user interface of the editor window */
     create_ui( parent );
@@ -108,6 +109,7 @@ class ImageEditor : Gtk.Dialog {
       draw_crop( ctx );
       return( false );
     });
+
     da.button_press_event.connect((e) => {
       var p = 5;
       _crop_target = -1;
@@ -128,6 +130,7 @@ class ImageEditor : Gtk.Dialog {
       }
       return( false );
     });
+
     da.motion_notify_event.connect((e) => {
       if( _crop_target == -1 ) {
         _tx += (e.x - _last_x);
@@ -156,17 +159,22 @@ class ImageEditor : Gtk.Dialog {
 
   /* Colors the background of the canvas */
   private void draw_background( Context ctx ) {
+
     var tx     = 0 - (_tx / _scale);
     var ty     = 0 - (_ty / _scale);
     var width  = _da.get_allocated_width()  / _scale;
     var height = _da.get_allocated_height() / _scale;
+
     _da.get_style_context().render_background( ctx, tx, ty, width, height );
+
   }
 
   /* Add the image */
   private void draw_image( Context ctx ) {
+
     ctx.set_source_surface( _image, 0, 0 );
     ctx.paint();
+
   }
 
   /* Draw the crop mask */
@@ -208,7 +216,7 @@ class ImageEditor : Gtk.Dialog {
 
     var slider = new Scale.with_range( Orientation.HORIZONTAL, 10, 200, 10 );
 
-    slider.set_value( 100 );
+    slider.set_value( _node_image.scale );
     slider.has_origin = true;
     slider.change_value.connect((scroll, value) => {
       _scale = value / 100;
@@ -221,8 +229,15 @@ class ImageEditor : Gtk.Dialog {
   }
 
   /* Returns the pixbuf associated with this window */
-  public Pixbuf? get_pixbuf() {
-    return( _pixbuf );
+  public void set_node_image() {
+
+    _node_image.scale  = _scale;
+    _node_image.posx   = _cx1;
+    _node_image.posy   = _cy1;
+
+    /* Copy the buffer to the node image */
+    _buf.scale( _node_image.get_pixbuf(), _cx1, _cy1, (_cx2 - _cx1), (_cy2 - _cy1), _tx, _ty, _scale, _scale, InterpType.BILINEAR );
+
   }
 
 }

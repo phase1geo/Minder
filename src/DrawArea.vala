@@ -596,6 +596,25 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /*
+   Causes the current node's image to be edited.
+  */
+  public void edit_current_image() {
+    if( _current_node != null ) {
+      if( _current_node.image != null ) {
+        var parent = (Gtk.Window)get_toplevel();
+        var editor = new ImageEditor( _current_node.image, parent );
+        if( editor.run() == ResponseType.APPLY ) {
+          editor.set_node_image();
+          queue_draw();
+          node_changed();
+          auto_save();
+        }
+        editor.close();
+      }
+    }
+  }
+
+  /*
    Changes the current node's link color and propagates that color to all
    descendants.
   */
@@ -641,7 +660,7 @@ public class DrawArea : Gtk.DrawingArea {
             }
           } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
             if( _current_node.is_within_image( x, y ) ) {
-              stdout.printf( "Edit image!\n" );
+              edit_current_image();
             } else {
               _current_node.mode = NodeMode.EDITABLE;
             }

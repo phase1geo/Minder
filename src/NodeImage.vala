@@ -31,14 +31,20 @@ public class NodeImage {
   public string fname { get; set; default = ""; }
   public bool   valid { get; private set; default = false; }
   public double scale { get; set; default = 1; }
+  public double posx  { get; set; }
+  public double posy  { get; set; }
 
   /* Default constructor */
   public NodeImage.from_file( string fname ) {
+
     valid = load_from_file( fname );
+
   }
 
   /* Constructor from XML file */
   public NodeImage.from_xml( Xml.Node* n ) {
+
+    double width, height;
 
     string? f = n->get_prop( "fname" );
     if( f != null ) {
@@ -50,6 +56,26 @@ public class NodeImage {
       scale = double.parse( s );
     }
 
+    string? x = n->get_prop( "posx" );
+    if( x != null ) {
+      posx = double.parse( x );
+    }
+
+    string? y = n->get_prop( "posy" );
+    if( y != null ) {
+      posy = double.parse( y );
+    }
+
+    string? w = n->get_prop( "width" );
+    if( w != null ) {
+      width = double.parse( w );
+    }
+
+    string? h = n->get_prop( "height" );
+    if( h != null ) {
+      height = double.parse( h );
+    }
+
   }
 
   /* Loads the current file into this structure */
@@ -58,9 +84,6 @@ public class NodeImage {
     int act_width, act_height;
     int req_width  = 200;
     int req_height = 400;
-
-    /* Save the filename */
-    fname = fn;
 
     /* Get the file information */
     Pixbuf.get_file_info( fname, out act_width, out act_height );
@@ -77,7 +100,10 @@ public class NodeImage {
     }
 
     /* Calculate the scaling factor */
+    fname = fn;
     scale = _buf.width / (double)act_width;
+    posx  = 0;
+    posy  = 0;
 
     return( true );
 
@@ -100,22 +126,34 @@ public class NodeImage {
 
   /* Draws the image to the given context */
   public void draw( Context ctx, double x, double y ) {
+
     cairo_set_source_pixbuf( ctx, _buf, x, y );
     ctx.paint();
+
   }
 
 
   /* Sets the given image widget to the stored pixbuf */
   public void set_image( Image img ) {
+
     img.set_from_pixbuf( _buf );
+
   }
 
   /* Saves the given node image in the given XML node */
   public virtual void save( Xml.Node* parent ) {
+
     Xml.Node* n = new Xml.Node( null, "nodeimage" );
-    n->new_prop( "fname", fname );
-    n->new_prop( "scale", scale.to_string() );
+
+    n->new_prop( "fname",  fname );
+    n->new_prop( "scale",  scale.to_string() );
+    n->new_prop( "posx",   posx.to_string() );
+    n->new_prop( "posy",   posy.to_string() );
+    n->new_prop( "width",  _buf.width.to_string() );
+    n->new_prop( "height", _buf.height.to_string() );
+
     parent->add_child( n );
+
   }
 
   /* Allows the user to choose an image file */
