@@ -35,6 +35,7 @@ sources += files(
     'undo_actions/UndoNodeDetach.vala',
     'undo_actions/UndoNodeFold.vala',
     'undo_actions/UndoNodeFoldChanges.vala',
+    'undo_actions/UndoNodeImage.vala',
     'undo_actions/UndoNodeInsert.vala',
     'undo_actions/UndoNodeLayout.vala',
     'undo_actions/UndoNodeLinkColor.vala',

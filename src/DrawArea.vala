@@ -570,6 +570,7 @@ public class DrawArea : Gtk.DrawingArea {
         string? fname  = NodeImage.choose_image_file( parent );
         if( fname != null ) {
           _current_node.image = new NodeImage.from_file( fname );
+          undo_buffer.add_item( new UndoNodeImage( _current_node, null ) );
           _layout.handle_update_by_edit( _current_node );
           queue_draw();
           node_changed();
@@ -585,8 +586,10 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void delete_current_image() {
     if( _current_node != null ) {
-      if( _current_node.image != null ) {
+      NodeImage? orig_image = _current_node.image;
+      if( orig_image != null ) {
         _current_node.image = null;
+        undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
         _layout.handle_update_by_edit( _current_node );
         queue_draw();
         node_changed();
@@ -600,11 +603,13 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void edit_current_image() {
     if( _current_node != null ) {
-      if( _current_node.image != null ) {
+      NodeImage? orig_image = _current_node.image;
+      if( orig_image != null ) {
         var parent = (Gtk.Window)get_toplevel();
-        var editor = new ImageEditor( _current_node.image, parent );
+        var editor = new ImageEditor( orig_image, parent );
         if( editor.run() == ResponseType.APPLY ) {
           editor.set_node_image();
+          undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
           queue_draw();
           node_changed();
           auto_save();
