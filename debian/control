@@ -8,7 +8,8 @@ Build-Depends: meson,
                libcairo2-dev,
                libgranite-dev,
                libgtk-3-dev,
-               libxml2-dev
+               libxml2-dev,
+               libarchive-dev
 
 Standards-Version: 3.9.3
 Package: com.github.phase1geo.minder
