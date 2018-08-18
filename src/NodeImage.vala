@@ -86,7 +86,7 @@ public class NodeImage {
     int req_height = 400;
 
     /* Get the file information */
-    Pixbuf.get_file_info( fname, out act_width, out act_height );
+    Pixbuf.get_file_info( fn, out act_width, out act_height );
 
     if( act_width < 200 ) {
       req_width = act_width;
@@ -94,7 +94,7 @@ public class NodeImage {
 
     /* Get the file into the current pixbuf */
     try {
-      _buf = new Pixbuf.from_file_at_size( fname, req_width, req_height );
+      _buf = new Pixbuf.from_file_at_size( fn, req_width, req_height );
     } catch( Error e ) {
       return( false );
     }
@@ -125,9 +125,17 @@ public class NodeImage {
   }
 
   /* Draws the image to the given context */
-  public void draw( Context ctx, double x, double y ) {
+  public void draw( Context ctx, double x, double y, int opacity=255 ) {
 
-    cairo_set_source_pixbuf( ctx, _buf, x, y );
+    var buf = _buf;
+
+    if( opacity < 255 ) {
+      buf = new Pixbuf( _buf.colorspace, true, _buf.bits_per_sample, _buf.width, _buf.height );
+      buf.fill( (uint32)0xffffff32 );
+      _buf.composite( buf, 0, 0, _buf.width, _buf.height, 0, 0, 1, 1, InterpType.BILINEAR, opacity );
+    }
+
+    cairo_set_source_pixbuf( ctx, buf, x, y );
     ctx.paint();
 
   }

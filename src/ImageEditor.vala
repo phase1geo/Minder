@@ -236,7 +236,12 @@ class ImageEditor : Gtk.Dialog {
     _node_image.posy   = _cy1;
 
     /* Copy the buffer to the node image */
-    _buf.scale( _node_image.get_pixbuf(), _cx1, _cy1, (_cx2 - _cx1), (_cy2 - _cy1), _tx, _ty, _scale, _scale, InterpType.BILINEAR );
+    try {
+      var buf = new Pixbuf.from_file( _node_image.fname );
+      buf.scale( _node_image.get_pixbuf(), (int)_cx1, (int)_cy1, (int)(_cx2 - _cx1), (int)(_cy2 - _cy1), _tx, _ty, _scale, _scale, InterpType.BILINEAR );
+    } catch( Error e ) {
+      // TBD
+    }
 
   }
 

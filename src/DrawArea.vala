@@ -930,11 +930,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* Draws all of the root node trees */
   public void draw_all( Context ctx ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).draw_all( ctx, _theme, _current_node, false );
+      _nodes.index( i ).draw_all( ctx, _theme, _current_node, false, false );
     }
     /* Draw the current node on top of all others */
     if( (_current_node != null) && ((_current_node.parent == null) || !_current_node.parent.folded) ) {
-      _current_node.draw_all( ctx, _theme, null, true );
+      _current_node.draw_all( ctx, _theme, null, true, (_pressed && _motion) );
     }
   }
 
@@ -1040,18 +1040,28 @@ public class DrawArea : Gtk.DrawingArea {
     _pressed = false;
     if( _current_node != null ) {
       if( _current_node.mode == NodeMode.CURRENT ) {
+
+        /* If we are hovering over an attach node, perform the attachment */
         if( _attach_node != null ) {
           attach_current_node();
+
+        /* If we are not in motion, set the cursor */
         } else if( !_motion ) {
           _current_node.set_cursor_all( false );
           _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
+
+        /* If we are not a root node, move the node into the appropriate position */
         } else if( _current_node.parent != null ) {
           int orig_index = _current_node.index();
           animator.add_node( _current_node, "move to position" );
           _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
           undo_buffer.add_item( new UndoNodeMove( _current_node, _orig_side, orig_index ) );
           animator.animate();
+
+        /* Otherwise, redraw everything after the move */
+        } else {
+          queue_draw();
         }
       }
     }

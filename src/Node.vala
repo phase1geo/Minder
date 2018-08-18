@@ -1381,7 +1381,7 @@ public class Node : Object {
   }
 
   /* Draws the rectangle around the root node */
-  protected void draw_root_rectangle( Context ctx, Theme theme ) {
+  protected void draw_root_rectangle( Context ctx, Theme theme, bool motion ) {
 
     double r = (double)radius;
     double x = posx;
@@ -1390,7 +1390,7 @@ public class Node : Object {
     double w = _width;
 
     /* Draw the rounded box around the text */
-    set_context_color( ctx, theme.root_background );
+    set_context_color_with_alpha( ctx, theme.root_background, (motion ? 0.2 : 1) );
     ctx.set_line_width( 1 );
     ctx.move_to(x+r,y);                      // Move to A
     ctx.line_to(x+w-r,y);                    // Straight line to B
@@ -1406,15 +1406,15 @@ public class Node : Object {
   }
 
   /* Draws the node image above the note */
-  protected virtual void draw_image( Cairo.Context ctx, Theme theme ) {
+  protected virtual void draw_image( Cairo.Context ctx, Theme theme, bool motion ) {
     if( image != null ) {
-      image.draw( ctx, (posx + _padx), (posy + _pady) );
+      image.draw( ctx, (posx + _padx), (posy + _pady), (motion ? 50 : 255) );
     }
 
   }
 
   /* Draws the node font to the screen */
-  protected virtual void draw_name( Cairo.Context ctx, Theme theme ) {
+  protected virtual void draw_name( Cairo.Context ctx, Theme theme, bool motion ) {
 
     int    hmargin    = 3;
     int    vmargin    = 3;
@@ -1429,7 +1429,7 @@ public class Node : Object {
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( mode == NodeMode.CURRENT ) {
-      set_context_color( ctx, theme.nodesel_background );
+      set_context_color_with_alpha( ctx, theme.nodesel_background, (motion ? 0.2 : 1) );
       ctx.rectangle( ((posx + _padx) - hmargin), ((posy + _pady) - vmargin), ((_width - (_padx * 2)) + (hmargin * 2)), ((_height - (_pady * 2)) + (vmargin * 2)) );
       ctx.fill();
     }
@@ -1578,13 +1578,6 @@ public class Node : Object {
       double x, y, w, h;
       bbox( out x, out y, out w, out h );
 
-      /* Draw box that is translucent */
-      if( frost_background != null ) {
-        set_context_color_with_alpha( ctx, frost_background, 0.8 );
-        ctx.rectangle( x, y, w, h );
-        ctx.fill();
-      }
-
       /* Draw highlight border */
       set_context_color( ctx, theme.attachable_color );
       ctx.set_line_width( 4 );
@@ -1647,13 +1640,13 @@ public class Node : Object {
   }
 
   /* Draws the node on the screen */
-  public virtual void draw( Context ctx, Theme theme ) {
+  public virtual void draw( Context ctx, Theme theme, bool motion ) {
 
     /* If this is a root node, draw specifically for a root node */
     if( is_root() ) {
-      draw_root_rectangle( ctx, theme );
-      draw_name( ctx, theme );
-      draw_image( ctx, theme );
+      draw_root_rectangle( ctx, theme, motion );
+      draw_name( ctx, theme, motion );
+      draw_image( ctx, theme, motion );
       if( is_leaf() ) {
         draw_leaf_task( ctx, theme.root_foreground );
       } else {
@@ -1665,8 +1658,8 @@ public class Node : Object {
 
     /* Otherwise, draw the node as a non-root node */
     } else {
-      draw_name( ctx, theme );
-      draw_image( ctx, theme );
+      draw_name( ctx, theme, motion );
+      draw_image( ctx, theme, motion );
       if( is_leaf() ) {
         draw_leaf_task( ctx, _link_color );
       } else {
@@ -1681,14 +1674,14 @@ public class Node : Object {
   }
 
   /* Draw this node and all child nodes */
-  public void draw_all( Context ctx, Theme theme, Node? current, bool draw_current ) {
+  public void draw_all( Context ctx, Theme theme, Node? current, bool draw_current, bool motion ) {
     if( this != current ) {
       if( !folded ) {
         for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).draw_all( ctx, theme, current, false );
+          _children.index( i ).draw_all( ctx, theme, current, false, motion );
         }
       }
-      draw( ctx, theme );
+      draw( ctx, theme, motion );
     }
     if( !is_root() && !draw_current ) {
       draw_link( ctx, theme );
