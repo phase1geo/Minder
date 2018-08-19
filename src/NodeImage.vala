@@ -78,6 +78,16 @@ public class NodeImage {
 
   }
 
+  /* Creates a new NodeImage from the given NodeImage */
+  public NodeImage.from_node_image( NodeImage ni ) {
+    _buf  = ni.get_pixbuf().copy();
+    fname = ni.fname;
+    valid = ni.valid;
+    scale = ni.scale;
+    posx  = ni.posx;
+    posy  = ni.posy;
+  }
+
   /* Loads the current file into this structure */
   private bool load_from_file( string fn ) {
 

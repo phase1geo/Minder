@@ -52,8 +52,13 @@ class ImageEditor : Gtk.Dialog {
     create_ui( parent );
 
     /* Load the image and draw it */
-    _image = (ImageSurface)cairo_surface_create_from_pixbuf( img.get_pixbuf(), 0, null );
-    _da.queue_draw();
+    try {
+      var pixbuf = new Pixbuf.from_file( img.fname );
+      _image = (ImageSurface)cairo_surface_create_from_pixbuf( pixbuf, 0, null );
+      _da.queue_draw();
+    } catch( Error e ) {
+      // TBD
+    }
 
   }
 
@@ -216,7 +221,7 @@ class ImageEditor : Gtk.Dialog {
 
     var slider = new Scale.with_range( Orientation.HORIZONTAL, 10, 200, 10 );
 
-    slider.set_value( _node_image.scale );
+    slider.set_value( _node_image.scale * 100 );
     slider.has_origin = true;
     slider.change_value.connect((scroll, value) => {
       _scale = value / 100;

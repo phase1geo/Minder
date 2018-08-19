@@ -603,8 +603,8 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void edit_current_image() {
     if( _current_node != null ) {
-      NodeImage? orig_image = _current_node.image;
-      if( orig_image != null ) {
+      if( _current_node.image != null ) {
+        NodeImage orig_image = new NodeImage.from_node_image( _current_node.image );
         var parent = (Gtk.Window)get_toplevel();
         var editor = new ImageEditor( orig_image, parent );
         if( editor.run() == ResponseType.APPLY ) {
