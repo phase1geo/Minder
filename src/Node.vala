@@ -403,6 +403,19 @@ public class Node : Object {
     }
   }
 
+  /* Returns true if the given cursor coordinates lie within the resizer area */
+  public virtual bool is_within_resizer( double x, double y ) {
+    if( mode == NodeMode.CURRENT ) {
+      double rx, ry, rw, rh;
+      rx = posx + _width;
+      ry = posy;
+      rw = 8;
+      rh = 8;
+      return( (rx < x) && (x <= (rx + rw)) && (ry < y) && (y <= (ry + rh)) );
+    }
+    return( false );
+  }
+
   /* Finds the node which contains the given pixel coordinates */
   public virtual Node? contains( double x, double y, Node? n ) {
     if( (this != n) && (is_within( x, y ) || is_within_fold( x, y )) ) {
@@ -731,6 +744,11 @@ public class Node : Object {
       width_diff  = _width  - orig_width;
       height_diff = _height - orig_height;
     }
+  }
+
+  /* Resizes the node width by the given amount */
+  public virtual void resize( double diff ) {
+    _width += diff;
   }
 
   /* Returns the bounding box for this node */
@@ -1639,6 +1657,25 @@ public class Node : Object {
 
   }
 
+  /* Draw the node resizer area */
+  protected virtual void draw_resizer( Context ctx, Theme theme ) {
+
+    /* Only draw the resizer if we are selected */
+    if( mode != NodeMode.CURRENT ) {
+      return;
+    }
+
+    double x, y;
+
+    x = (posx + _width);
+    y = posy;
+
+    set_context_color( ctx, theme.foreground );
+    ctx.rectangle( x, y, 8, 8 );
+    ctx.fill();
+
+  }
+
   /* Draws the node on the screen */
   public virtual void draw( Context ctx, Theme theme, bool motion ) {
 
@@ -1655,6 +1692,7 @@ public class Node : Object {
       draw_common_note( ctx, theme.root_foreground );
       draw_common_fold( ctx, theme.root_background, theme.root_foreground );
       draw_attachable( ctx, theme, theme.root_background );
+      draw_resizer( ctx, theme );
 
     /* Otherwise, draw the node as a non-root node */
     } else {
@@ -1669,6 +1707,7 @@ public class Node : Object {
       draw_line( ctx, theme );
       draw_common_fold( ctx, _link_color, theme.foreground );
       draw_attachable( ctx, theme, theme.background );
+      draw_resizer( ctx, theme );
     }
 
   }

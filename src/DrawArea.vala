@@ -36,6 +36,7 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _store_scale_factor;
   private bool             _pressed    = false;
   private EventType        _press_type = EventType.NOTHING;
+  private bool             _resize     = false;
   private bool             _motion     = false;
   private Node?            _current_node;
   private bool             _current_new = false;
@@ -652,6 +653,9 @@ public class DrawArea : Gtk.DrawingArea {
           toggle_fold( match );
           node_changed();
           return( false );
+        } else if( match.is_within_resizer( x, y ) ) {
+          _resize = true;
+          return( false );
         }
         _orig_side = match.side;
         _orig_info.remove_range( 0, _orig_info.length );
@@ -989,19 +993,23 @@ public class DrawArea : Gtk.DrawingArea {
         double diffx = scale_value( event.x ) - _press_x;
         double diffy = scale_value( event.y ) - _press_y;
         if( _current_node.mode == NodeMode.CURRENT ) {
-          Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
-          if( _attach_node != null ) {
-            _attach_node.mode = NodeMode.NONE;
+          if( _resize ) {
+            _current_node.resize( diffx );
+          } else {
+            Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
+            if( _attach_node != null ) {
+              _attach_node.mode = NodeMode.NONE;
+            }
+            if( attach_node != null ) {
+              attach_node.mode = NodeMode.ATTACHABLE;
+              _attach_node = attach_node;
+            } else if( _attach_node != null ) {
+              _attach_node = null;
+            }
+            _current_node.posx += diffx;
+            _current_node.posy += diffy;
+            _layout.set_side( _current_node );
           }
-          if( attach_node != null ) {
-            attach_node.mode = NodeMode.ATTACHABLE;
-            _attach_node = attach_node;
-          } else if( _attach_node != null ) {
-            _attach_node = null;
-          }
-          _current_node.posx += diffx;
-          _current_node.posy += diffy;
-          _layout.set_side( _current_node );
         } else {
           switch( _press_type ) {
             case EventType.BUTTON_PRESS        :  _current_node.set_cursor_at_char( scale_value( event.x ), scale_value( event.y ), true );  break;
