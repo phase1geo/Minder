@@ -123,6 +123,8 @@ public class Node : Object {
   private   int          _selend      = 0;
   private   int          _selanchor   = 0;
   private   RGBA         _link_color;
+  private   double       _min_width   = 50;
+  private   double       _max_width   = 200;
 
   /* Properties */
   public string name { get; set; default = ""; }
@@ -205,7 +207,7 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = da.create_pango_layout( null );
-    _layout.set_width( 200 * Pango.SCALE );
+    _layout.set_width( (int)_max_width * Pango.SCALE );
     _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     set_layout( layout );
   }
@@ -216,7 +218,7 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = da.create_pango_layout( n );
-    _layout.set_width( 200 * Pango.SCALE );
+    _layout.set_width( (int)_max_width * Pango.SCALE );
     _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     set_layout( layout );
   }
@@ -407,7 +409,7 @@ public class Node : Object {
   public virtual bool is_within_resizer( double x, double y ) {
     if( mode == NodeMode.CURRENT ) {
       double rx, ry, rw, rh;
-      rx = posx + _width;
+      rx = posx + _width - 8;
       ry = posy;
       rw = 8;
       rh = 8;
@@ -523,6 +525,12 @@ public class Node : Object {
       posy = double.parse( y );
     }
 
+    string? mw = n->get_prop( "maxwidth" );
+    if( mw != null ) {
+      _max_width = double.parse( mw );
+      _layout.set_width( (int)_max_width * Pango.SCALE );
+    }
+
     string? w = n->get_prop( "width" );
     if( w != null ) {
       _width = double.parse( w );
@@ -598,6 +606,7 @@ public class Node : Object {
     node->new_prop( "id", _id.to_string() );
     node->new_prop( "posx", posx.to_string() );
     node->new_prop( "posy", posy.to_string() );
+    node->new_prop( "maxwidth", _max_width.to_string() );
     node->new_prop( "width", _width.to_string() );
     node->new_prop( "height", _height.to_string() );
     if( (_task_count > 0) && is_leaf() ) {
@@ -747,8 +756,17 @@ public class Node : Object {
   }
 
   /* Resizes the node width by the given amount */
-  public virtual void resize( double diff ) {
-    _width += diff;
+  public virtual void resize( double diff, Layout layout ) {
+    if( image == null ) {
+      if( (diff < 0) ? ((_max_width + diff) <= _min_width) : !_layout.is_wrapped() ) return;
+      _max_width += diff;
+    } else {
+      if( (_max_width + diff) < _min_width ) return;
+      _max_width += diff;
+      image.set_width( (int)_max_width );
+    }
+    _layout.set_width( (int)_max_width * Pango.SCALE );
+    layout.handle_update_by_edit( this );
   }
 
   /* Returns the bounding box for this node */
@@ -1667,12 +1685,13 @@ public class Node : Object {
 
     double x, y;
 
-    x = (posx + _width);
+    x = (posx + _width) - 8;
     y = posy;
 
     set_context_color( ctx, theme.foreground );
+    ctx.set_line_width( 1 );
     ctx.rectangle( x, y, 8, 8 );
-    ctx.fill();
+    ctx.stroke();
 
   }
 

@@ -35,20 +35,22 @@ public class NodeImage {
   public double posy  { get; set; }
 
   /* Default constructor */
-  public NodeImage.from_file( string fname ) {
+  public NodeImage.from_file( string fn ) {
 
-    valid = load_from_file( fname );
+    fname = fn;
+    valid = load( 200 );
 
   }
 
   /* Constructor from XML file */
   public NodeImage.from_xml( Xml.Node* n ) {
 
-    double width, height;
+    double width  = 0;
+    double height = 0;
 
     string? f = n->get_prop( "fname" );
     if( f != null ) {
-      valid = load_from_file( f );
+      fname = f;
     }
 
     string? s = n->get_prop( "scale" );
@@ -76,6 +78,11 @@ public class NodeImage {
       height = double.parse( h );
     }
 
+    /* Allocate the image */
+    if( (fname != "") && (width > 0) ) {
+      valid = load( (int)width );
+    }
+
   }
 
   /* Creates a new NodeImage from the given NodeImage */
@@ -89,28 +96,28 @@ public class NodeImage {
   }
 
   /* Loads the current file into this structure */
-  private bool load_from_file( string fn ) {
+  private bool load( int req_width ) {
 
     int act_width, act_height;
-    int req_width  = 200;
     int req_height = 400;
 
     /* Get the file information */
-    Pixbuf.get_file_info( fn, out act_width, out act_height );
+    Pixbuf.get_file_info( fname, out act_width, out act_height );
 
+    /*
     if( act_width < 200 ) {
       req_width = act_width;
     }
+    */
 
     /* Get the file into the current pixbuf */
     try {
-      _buf = new Pixbuf.from_file_at_size( fn, req_width, req_height );
+      _buf = new Pixbuf.from_file_at_size( fname, req_width, req_height );
     } catch( Error e ) {
       return( false );
     }
 
     /* Calculate the scaling factor */
-    fname = fn;
     scale = _buf.width / (double)act_width;
     posx  = 0;
     posy  = 0;
@@ -147,6 +154,13 @@ public class NodeImage {
   public void set_image( Image img ) {
 
     img.set_from_pixbuf( _buf );
+
+  }
+
+  /* Sets the width of the image to the given value */
+  public void set_width( int width ) {
+
+    load( width );
 
   }
 

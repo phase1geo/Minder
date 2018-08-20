@@ -655,7 +655,7 @@ public class DrawArea : Gtk.DrawingArea {
           return( false );
         } else if( match.is_within_resizer( x, y ) ) {
           _resize = true;
-          return( false );
+          return( true );
         }
         _orig_side = match.side;
         _orig_info.remove_range( 0, _orig_info.length );
@@ -943,7 +943,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
     /* Draw the current node on top of all others */
     if( (_current_node != null) && ((_current_node.parent == null) || !_current_node.parent.folded) ) {
-      _current_node.draw_all( ctx, _theme, null, true, (_pressed && _motion) );
+      _current_node.draw_all( ctx, _theme, null, true, (_pressed && _motion && !_resize) );
     }
   }
 
@@ -994,7 +994,7 @@ public class DrawArea : Gtk.DrawingArea {
         double diffy = scale_value( event.y ) - _press_y;
         if( _current_node.mode == NodeMode.CURRENT ) {
           if( _resize ) {
-            _current_node.resize( diffx );
+            _current_node.resize( diffx, _layout );
           } else {
             Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
             if( _attach_node != null ) {
@@ -1051,6 +1051,10 @@ public class DrawArea : Gtk.DrawingArea {
   /* Handle button release event */
   private bool on_release( EventButton event ) {
     _pressed = false;
+    if( _resize ) {
+      _resize  = false;
+      return( false );
+    }
     if( _current_node != null ) {
       if( _current_node.mode == NodeMode.CURRENT ) {
 
