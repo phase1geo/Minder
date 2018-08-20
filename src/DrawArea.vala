@@ -206,6 +206,20 @@ public class DrawArea : Gtk.DrawingArea {
     return( _nodes );
   }
 
+  /* Sets the cursor of the drawing area */
+  private void set_cursor( CursorType? type = null ) {
+
+    var     win    = get_window();
+    Cursor? cursor = win.get_cursor();
+
+    if( type == null ) {
+      win.set_cursor( null );
+    } else if( (cursor == null) || (cursor.cursor_type != type) ) {
+      win.set_cursor( new Cursor.for_display( get_display(), type ) );
+    }
+
+  }
+
   /* Loads the drawing area origin from the XML node */
   private void load_drawarea( Xml.Node* n ) {
 
@@ -1033,9 +1047,14 @@ public class DrawArea : Gtk.DrawingArea {
         if( match != null ) {
           if( get_tooltip_text() == null ) {
             if( match.is_within_task( event.x, event.y ) ) {
+              set_cursor( CursorType.HAND1 );
               set_tooltip_text( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
             } else if( match.is_within_note( event.x, event.y ) ) {
               set_tooltip_text( match.note );
+            } else if( match.is_within_resizer( event.x, event.y ) ) {
+              set_cursor( CursorType.SB_H_DOUBLE_ARROW );
+            } else {
+              set_cursor( null );
             }
           }
           return( false );
@@ -1044,6 +1063,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( get_tooltip_text() != null ) {
         set_tooltip_text( null );
       }
+      set_cursor( null );
     }
     return( false );
   }
@@ -1051,6 +1071,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Handle button release event */
   private bool on_release( EventButton event ) {
     _pressed = false;
+    if( _motion ) {
+      set_cursor( null );
+    }
     if( _resize ) {
       _resize  = false;
       return( false );
