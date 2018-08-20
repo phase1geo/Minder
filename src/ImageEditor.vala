@@ -26,8 +26,6 @@ using Cairo;
 class ImageEditor : Gtk.Dialog {
 
   private DrawingArea   _da;
-  private double        _tx          = 0;
-  private double        _ty          = 0;
   private double        _cx1         = 0;
   private double        _cy1         = 0;
   private double        _cx2         = 200;
@@ -53,8 +51,12 @@ class ImageEditor : Gtk.Dialog {
 
     /* Load the image and draw it */
     try {
-      var pixbuf = new Pixbuf.from_file( img.fname );
-      _image = (ImageSurface)cairo_surface_create_from_pixbuf( pixbuf, 0, null );
+      var pixbuf = new Pixbuf.from_file_at_size( img.fname, 600, 600 );
+      _image             = (ImageSurface)cairo_surface_create_from_pixbuf( pixbuf, 0, null );
+      _da.width_request  = pixbuf.width;
+      _da.height_request = pixbuf.height;
+      _cx2               = pixbuf.width;
+      _cy2               = pixbuf.height;
       _da.queue_draw();
     } catch( Error e ) {
       // TBD
@@ -69,12 +71,10 @@ class ImageEditor : Gtk.Dialog {
     destroy_with_parent = true;
     set_transient_for( parent );
 
-    _da      = create_drawing_area();
-    var zoom = create_zoom_slider();
+    _da = create_drawing_area();
 
     /* Pack the widgets into the window */
-    get_content_area().pack_start( _da,  true,  true, 5 );
-    get_content_area().pack_start( zoom, false, true, 5 );
+    get_content_area().pack_start( _da, true, true, 5 );
 
     /* Add the action buttons */
     add_button( _( "Cancel" ), ResponseType.CANCEL );
@@ -89,8 +89,8 @@ class ImageEditor : Gtk.Dialog {
 
     var da = new DrawingArea();
 
-    da.width_request  = 200;
-    da.height_request = 200;
+    da.width_request  = 600;
+    da.height_request = 600;
 
     /* Make sure the above events are listened for */
     da.add_events(
@@ -107,70 +107,64 @@ class ImageEditor : Gtk.Dialog {
 
     /* Add event listeners */
     da.draw.connect((ctx) => {
-      ctx.scale( _scale, _scale );
-      ctx.translate( (_tx / _scale), (_ty / _scale) );
-      draw_background( ctx );
       draw_image( ctx );
       draw_crop( ctx );
       return( false );
     });
 
     da.button_press_event.connect((e) => {
-      var p = 5;
+      var p = 8;
+      var h = ((_cy2 - _cy1) + p) / 2;
+      var v = ((_cx2 - _cx1) + p) / 2;
       _crop_target = -1;
       _last_x      = e.x;
       _last_y      = e.y;
-      if( ((_cx1 - p) <= e.x) && (e.x <= (_cx1 + p)) ) {
-        if( ((_cy1 - p) <= e.y) && (e.y <= (_cy1 + p)) ) {
+      if( (_cx1 <= e.x) && (e.x <= (_cx1 + p)) ) {
+        if( (_cy1 <= e.y) && (e.y <= (_cy1 + p)) ) {
           _crop_target = 0;
+        } else if( (h <= e.x) && (e.x <= (h + p)) ) {
+          _crop_target = 1;
         } else if( ((_cy2 - p) <= e.y) && (e.y <= (_cy2 + p)) ) {
           _crop_target = 2;
         }
+      } else if( (h <= e.x) && (e.x <= (h + p)) ) {
+        if( (_cy1 <= e.y) && (e.y <= (_cy1 + p)) ) {
+          _crop_target = 3;
+        } else if( (_cy2 <= e.y) && (e.y <= (_cy2 + p)) ) {
+          _crop_target = 4;
+        }
       } else if( ((_cx2 - p) <= e.x) && (e.x <= (_cx2 + p)) ) {
         if( ((_cy1 - p) <= e.y) && (e.y <= (_cy1 + 5)) ) {
-          _crop_target = 1;
+          _crop_target = 5;
+        } else if( (v <= e.y) && (e.y <= (v + p)) ) {
+          _crop_target = 6;
         } else if( ((_cy2 - p) <= e.y) && (e.y <= (_cy2 + p)) ) {
-          _crop_target = 3;
+          _crop_target = 7;
         }
       }
+      stdout.printf( "crop_target: %d\n", _crop_target );
       return( false );
     });
 
     da.motion_notify_event.connect((e) => {
-      if( _crop_target == -1 ) {
-        _tx += (e.x - _last_x);
-        _ty += (e.y - _last_y);
-      } else {
-        if( (_crop_target & 0x1) == 0 ) {
-          _cx1 += (e.x - _last_x);
-        } else {
-          _cx2 += (e.x - _last_x);
-        }
-        if( (_crop_target & 0x2) == 0 ) {
-          _cy1 += (e.y - _last_y);
-        } else {
-          _cy2 += (e.y - _last_y);
-        }
+      double diffx = (e.x - _last_x);
+      double diffy = (e.y - _last_y);
+      switch( _crop_target ) {
+        case 0 :  _cx1 += diffx;  _cy1 += diffy;  break;
+        case 1 :  _cy1 += diffy;  break;
+        case 2 :  _cx2 += diffx;  _cy1 += diffy;  break;
+        case 3 :  _cx1 += diffx;  break;
+        case 4 :  _cx2 += diffx;  break;
+        case 5 :  _cx1 += diffx;  _cy2 += diffy;  break;
+        case 6 :  _cy2 += diffy;  break;
+        case 7 :  _cx2 += diffx;  _cy2 += diffy;  break;
       }
       _last_x = e.x;
       _last_y = e.y;
-      da.queue_draw();
       return( false );
     });
 
     return( da );
-
-  }
-
-  /* Colors the background of the canvas */
-  private void draw_background( Context ctx ) {
-
-    var tx     = 0 - (_tx / _scale);
-    var ty     = 0 - (_ty / _scale);
-    var width  = _da.get_allocated_width()  / _scale;
-    var height = _da.get_allocated_height() / _scale;
-
-    _da.get_style_context().render_background( ctx, tx, ty, width, height );
 
   }
 
@@ -185,51 +179,48 @@ class ImageEditor : Gtk.Dialog {
   /* Draw the crop mask */
   private void draw_crop( Context ctx ) {
 
-    var width  = _da.get_allocated_width()  / _scale;
-    var height = _da.get_allocated_height() / _scale;
-    var tx     = 0 - _tx;
-    var ty     = 0 - _ty;
-    var cx1    = _cx1 + tx;
-    var cy1    = _cy1 + ty;
-    var cx2    = _cx2 + tx;
-    var cy2    = _cy2 + ty;
+    var width  = _da.get_allocated_width();
+    var height = _da.get_allocated_height();
+    var cx1    = _cx1;
+    var cy1    = _cy1;
+    var cx2    = _cx2;
+    var cy2    = _cy2;
+    var cw     = 8;
+
+    ctx.set_line_width( 1 );
 
     ctx.set_source_rgba( 0, 0, 0, 0.8 );
-    ctx.rectangle( tx, ty, cx1, height );
+    ctx.rectangle( 0, 0, cx1, height );
     ctx.fill();
-    ctx.rectangle( cx2, ty, (width - cx2), height );
+    ctx.rectangle( cx2, 0, (width - cx2), height );
     ctx.fill();
-    ctx.rectangle( cx1, ty, (cx2 - cx1), cy1 );
+    ctx.rectangle( cx1, 0, (cx2 - cx1), cy1 );
     ctx.fill();
     ctx.rectangle( cx1, cy2, (cx2 - cx1), (height - cy2) );
     ctx.fill();
 
-    ctx.set_source_rgb( 1, 1, 1 );
-    ctx.rectangle( (cx1 - 5), (cy1 - 5), 10, 10 );
-    ctx.fill();
-    ctx.rectangle( (cx2 - 5), (cy1 - 5), 10, 10 );
-    ctx.fill();
-    ctx.rectangle( (cx1 - 5), (cy2 - 5), 10, 10 );
-    ctx.fill();
-    ctx.rectangle( (cx2 - 5), (cy2 - 5), 10, 10 );
-    ctx.fill();
+    /* Draw the crop points */
+    draw_crop_point( ctx, cx1, cy1, cw );
+    draw_crop_point( ctx, (((cx2 - cx1) + cw) / 2), cy1, cw );
+    draw_crop_point( ctx, (cx2 - cw), cy1, cw );
+    draw_crop_point( ctx, cx1, (((cy2 - cy1) + cw) / 2), cw );
+    draw_crop_point( ctx, (cx2 - cw), (((cy2 - cy1) + cw) / 2), cw );
+    draw_crop_point( ctx, cx1, (cy2 - cw), cw );
+    draw_crop_point( ctx, (((cx2 - cx1) + cw) / 2), (cy2 - cw), cw );
+    draw_crop_point( ctx, (cx2 - cw), (cy2 - cw), cw );
 
   }
 
-  /* Create the zoom slider */
-  public Scale create_zoom_slider() {
+  /* Draws a single crop point at the given point with the given width/height */
+  private void draw_crop_point( Context ctx, double x, double y, double w ) {
 
-    var slider = new Scale.with_range( Orientation.HORIZONTAL, 10, 200, 10 );
+    ctx.set_source_rgb( 1, 1, 1 );
+    ctx.rectangle( x, y, w, w );
+    ctx.fill();
 
-    slider.set_value( _node_image.scale * 100 );
-    slider.has_origin = true;
-    slider.change_value.connect((scroll, value) => {
-      _scale = value / 100;
-      _da.queue_draw();
-      return( false );
-    });
-
-    return( slider );
+    ctx.set_source_rgb( 0, 0, 0 );
+    ctx.rectangle( x, y, w, w );
+    ctx.stroke();
 
   }
 
@@ -243,7 +234,7 @@ class ImageEditor : Gtk.Dialog {
     /* Copy the buffer to the node image */
     try {
       var buf = new Pixbuf.from_file( _node_image.fname );
-      buf.scale( _node_image.get_pixbuf(), (int)_cx1, (int)_cy1, (int)(_cx2 - _cx1), (int)(_cy2 - _cy1), _tx, _ty, _scale, _scale, InterpType.BILINEAR );
+      buf.scale( _node_image.get_pixbuf(), (int)_cx1, (int)_cy1, (int)(_cx2 - _cx1), (int)(_cy2 - _cy1), 0, 0, _scale, _scale, InterpType.BILINEAR );
     } catch( Error e ) {
       // TBD
     }

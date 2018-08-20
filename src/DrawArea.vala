@@ -684,6 +684,7 @@ public class DrawArea : Gtk.DrawingArea {
           } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
             if( _current_node.is_within_image( x, y ) ) {
               edit_current_image();
+              return( false );
             } else {
               _current_node.mode = NodeMode.EDITABLE;
             }
