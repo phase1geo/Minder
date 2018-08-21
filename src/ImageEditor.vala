@@ -25,22 +25,34 @@ using Cairo;
 
 class ImageEditor : Gtk.Dialog {
 
-  private DrawingArea   _da;
-  private double        _cx1         = 0;
-  private double        _cy1         = 0;
-  private double        _cx2         = 200;
-  private double        _cy2         = 200;
-  private ImageSurface? _image       = null;
-  private int           _crop_target = -1;
-  private NodeImage     _node_image;
-  private double        _last_x;
-  private double        _last_y;
-  private double        _scale;
+  private const double MIN_WIDTH  = 50;
+  private const int    CROP_WIDTH = 8;
+
+  private DrawingArea     _da;
+  private double          _cx1         = 0;
+  private double          _cy1         = 0;
+  private double          _cx2         = 200;
+  private double          _cy2         = 200;
+  private ImageSurface?   _image       = null;
+  private int             _crop_target = -1;
+  private NodeImage       _node_image;
+  private double          _last_x;
+  private double          _last_y;
+  private double          _scale;
+  private Gdk.Rectangle[] _crop_points;
 
   public signal void done( bool changed );
 
   /* Default constructor */
   public ImageEditor( NodeImage img, Gtk.Window parent ) {
+
+    /* Allocate crop points */
+    _crop_points = new Gdk.Rectangle[8];
+
+    /* Initialize the crop points */
+    for( int i=0; i<_crop_points.length; i++ ) {
+      _crop_points[i] = {0, 0, CROP_WIDTH, CROP_WIDTH};
+    }
 
     /* Set the defaults */
     _node_image = img;
@@ -57,11 +69,80 @@ class ImageEditor : Gtk.Dialog {
       _da.height_request = pixbuf.height;
       _cx2               = pixbuf.width;
       _cy2               = pixbuf.height;
+      set_crop_points();
       _da.queue_draw();
     } catch( Error e ) {
       // TBD
     }
 
+  }
+
+  /* Set the crop point positions to the values on the current crop region */
+  private void set_crop_points() {
+    var x0 = (int)_cx1;
+    var x1 = (int)(_cx1 + ((_cx2 - _cx1) / 2) - (CROP_WIDTH / 2));
+    var x2 = (int)(_cx2 - CROP_WIDTH);
+    var y0 = (int)_cy1;
+    var y1 = (int)(_cy1 + ((_cy2 - _cy1) / 2) - (CROP_WIDTH / 2));
+    var y2 = (int)(_cy2 - CROP_WIDTH);
+    _crop_points[0].x = x0;
+    _crop_points[0].y = y0;
+    _crop_points[1].x = x1;
+    _crop_points[1].y = y0;
+    _crop_points[2].x = x2;
+    _crop_points[2].y = y0;
+    _crop_points[3].x = x0;
+    _crop_points[3].y = y1;
+    _crop_points[4].x = x2;
+    _crop_points[4].y = y1;
+    _crop_points[5].x = x0;
+    _crop_points[5].y = y2;
+    _crop_points[6].x = x1;
+    _crop_points[6].y = y2;
+    _crop_points[7].x = x2;
+    _crop_points[7].y = y2;
+  }
+
+  /* Set the crop target based on the position of the cursor */
+  private void set_crop_target( double x, double y ) {
+    Gdk.Rectangle cursor = {(int)x, (int)y, 1, 1};
+    Gdk.Rectangle tmp;
+    int           i      = 0;
+    foreach (Gdk.Rectangle crop_point in _crop_points) {
+      if( crop_point.intersect( cursor, out tmp ) ) {
+        _crop_target = i;
+        return;
+      }
+      i++;
+    }
+    _crop_target = -1;
+  }
+
+  /* Adjusts the crop points by the given cursor difference */
+  private void adjust_crop_points( double diffx, double diffy ) {
+    if( _crop_target != -1 ) {
+      var cx1 = _cx1;
+      var cy1 = _cy1;
+      var cx2 = _cx2;
+      var cy2 = _cy2;
+      switch( _crop_target ) {
+        case 0 :  cx1 += diffx;  cy1 += diffy;  break;
+        case 1 :  cy1 += diffy;                 break;
+        case 2 :  cx2 += diffx;  cy1 += diffy;  break;
+        case 3 :  cx1 += diffx;                 break;
+        case 4 :  cx2 += diffx;                 break;
+        case 5 :  cx1 += diffx;  cy2 += diffy;  break;
+        case 6 :  cy2 += diffy;                 break;
+        case 7 :  cx2 += diffx;  cy2 += diffy;  break;
+      }
+      if( (cx2 - cx1) >= MIN_WIDTH ) {
+        _cx1 = cx1;  _cx2 = cx2;
+      }
+      if( (cy2 - cy1) >= MIN_WIDTH ) {
+        _cy1 = cy1;  _cy2 = cy2;
+      }
+      set_crop_points();
+    }
   }
 
   /* Creates the user interface */
@@ -113,54 +194,17 @@ class ImageEditor : Gtk.Dialog {
     });
 
     da.button_press_event.connect((e) => {
-      var p = 8;
-      var h = ((_cy2 - _cy1) + p) / 2;
-      var v = ((_cx2 - _cx1) + p) / 2;
-      _crop_target = -1;
-      _last_x      = e.x;
-      _last_y      = e.y;
-      if( (_cx1 <= e.x) && (e.x <= (_cx1 + p)) ) {
-        if( (_cy1 <= e.y) && (e.y <= (_cy1 + p)) ) {
-          _crop_target = 0;
-        } else if( (h <= e.x) && (e.x <= (h + p)) ) {
-          _crop_target = 1;
-        } else if( ((_cy2 - p) <= e.y) && (e.y <= (_cy2 + p)) ) {
-          _crop_target = 2;
-        }
-      } else if( (h <= e.x) && (e.x <= (h + p)) ) {
-        if( (_cy1 <= e.y) && (e.y <= (_cy1 + p)) ) {
-          _crop_target = 3;
-        } else if( (_cy2 <= e.y) && (e.y <= (_cy2 + p)) ) {
-          _crop_target = 4;
-        }
-      } else if( ((_cx2 - p) <= e.x) && (e.x <= (_cx2 + p)) ) {
-        if( ((_cy1 - p) <= e.y) && (e.y <= (_cy1 + 5)) ) {
-          _crop_target = 5;
-        } else if( (v <= e.y) && (e.y <= (v + p)) ) {
-          _crop_target = 6;
-        } else if( ((_cy2 - p) <= e.y) && (e.y <= (_cy2 + p)) ) {
-          _crop_target = 7;
-        }
-      }
-      stdout.printf( "crop_target: %d\n", _crop_target );
+      set_crop_target( e.x, e.y );
+      _last_x = e.x;
+      _last_y = e.y;
       return( false );
     });
 
     da.motion_notify_event.connect((e) => {
-      double diffx = (e.x - _last_x);
-      double diffy = (e.y - _last_y);
-      switch( _crop_target ) {
-        case 0 :  _cx1 += diffx;  _cy1 += diffy;  break;
-        case 1 :  _cy1 += diffy;  break;
-        case 2 :  _cx2 += diffx;  _cy1 += diffy;  break;
-        case 3 :  _cx1 += diffx;  break;
-        case 4 :  _cx2 += diffx;  break;
-        case 5 :  _cx1 += diffx;  _cy2 += diffy;  break;
-        case 6 :  _cy2 += diffy;  break;
-        case 7 :  _cx2 += diffx;  _cy2 += diffy;  break;
-      }
+      adjust_crop_points( (e.x - _last_x), (e.y - _last_y) );
       _last_x = e.x;
       _last_y = e.y;
+      queue_draw();
       return( false );
     });
 
@@ -181,45 +225,35 @@ class ImageEditor : Gtk.Dialog {
 
     var width  = _da.get_allocated_width();
     var height = _da.get_allocated_height();
-    var cx1    = _cx1;
-    var cy1    = _cy1;
-    var cx2    = _cx2;
-    var cy2    = _cy2;
-    var cw     = 8;
 
     ctx.set_line_width( 1 );
 
     ctx.set_source_rgba( 0, 0, 0, 0.8 );
-    ctx.rectangle( 0, 0, cx1, height );
+    ctx.rectangle( 0, 0, _cx1, height );
     ctx.fill();
-    ctx.rectangle( cx2, 0, (width - cx2), height );
+    ctx.rectangle( _cx2, 0, (width - _cx2), height );
     ctx.fill();
-    ctx.rectangle( cx1, 0, (cx2 - cx1), cy1 );
+    ctx.rectangle( _cx1, 0, (_cx2 - _cx1), _cy1 );
     ctx.fill();
-    ctx.rectangle( cx1, cy2, (cx2 - cx1), (height - cy2) );
+    ctx.rectangle( _cx1, _cy2, (_cx2 - _cx1), (height - _cy2) );
     ctx.fill();
 
     /* Draw the crop points */
-    draw_crop_point( ctx, cx1, cy1, cw );
-    draw_crop_point( ctx, (((cx2 - cx1) + cw) / 2), cy1, cw );
-    draw_crop_point( ctx, (cx2 - cw), cy1, cw );
-    draw_crop_point( ctx, cx1, (((cy2 - cy1) + cw) / 2), cw );
-    draw_crop_point( ctx, (cx2 - cw), (((cy2 - cy1) + cw) / 2), cw );
-    draw_crop_point( ctx, cx1, (cy2 - cw), cw );
-    draw_crop_point( ctx, (((cx2 - cx1) + cw) / 2), (cy2 - cw), cw );
-    draw_crop_point( ctx, (cx2 - cw), (cy2 - cw), cw );
+    foreach (Gdk.Rectangle crop_point in _crop_points) {
+      draw_crop_point( ctx, crop_point );
+    }
 
   }
 
   /* Draws a single crop point at the given point with the given width/height */
-  private void draw_crop_point( Context ctx, double x, double y, double w ) {
+  private void draw_crop_point( Context ctx, Gdk.Rectangle crop ) {
 
     ctx.set_source_rgb( 1, 1, 1 );
-    ctx.rectangle( x, y, w, w );
+    ctx.rectangle( crop.x, crop.y, crop.width, crop.width );
     ctx.fill();
 
     ctx.set_source_rgb( 0, 0, 0 );
-    ctx.rectangle( x, y, w, w );
+    ctx.rectangle( crop.x, crop.y, crop.width, crop.width );
     ctx.stroke();
 
   }
