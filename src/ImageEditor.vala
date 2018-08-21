@@ -120,11 +120,11 @@ class ImageEditor : Gtk.Dialog {
 
   /* Adjusts the crop points by the given cursor difference */
   private void adjust_crop_points( double diffx, double diffy ) {
+    var cx1 = _cx1;
+    var cy1 = _cy1;
+    var cx2 = _cx2;
+    var cy2 = _cy2;
     if( _crop_target != -1 ) {
-      var cx1 = _cx1;
-      var cy1 = _cy1;
-      var cx2 = _cx2;
-      var cy2 = _cy2;
       switch( _crop_target ) {
         case 0 :  cx1 += diffx;  cy1 += diffy;  break;
         case 1 :  cy1 += diffy;                 break;
@@ -142,6 +142,17 @@ class ImageEditor : Gtk.Dialog {
         _cy1 = cy1;  _cy2 = cy2;
       }
       set_crop_points();
+    } else {
+      cx1 += diffx;
+      cy1 += diffy;
+      cx2 += diffx;
+      cy2 += diffy;
+      if( (cx1 >= 0) && (cy1 >= 0) && (cx2 < _buf.width) && (cy2 < _buf.height) ) {
+        _cx1 = cx1;
+        _cy1 = cy1;
+        _cx2 = cx2;
+        _cy2 = cy2;
+      }
     }
   }
 
