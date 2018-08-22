@@ -28,11 +28,12 @@ public class NodeImage {
 
   private Pixbuf _buf;
 
-  public string fname { get; set; default = ""; }
-  public bool   valid { get; private set; default = false; }
-  public double scale { get; set; default = 1; }
-  public double posx  { get; set; }
-  public double posy  { get; set; }
+  public string fname  { get; set; default = ""; }
+  public bool   valid  { get; private set; default = false; }
+  public double scale  { get; set; default = 1; }
+  public double posx   { get; set; }
+  public double posy   { get; set; }
+  public int    rotate { get; set; default = 0; }
 
   /* Default constructor */
   public NodeImage.from_file( string fn ) {
@@ -56,6 +57,11 @@ public class NodeImage {
     string? s = n->get_prop( "scale" );
     if( s != null ) {
       scale = double.parse( s );
+    }
+
+    string? r = n->get_prop( "rotate" );
+    if( r != null ) {
+      rotate = int.parse( r );
     }
 
     string? x = n->get_prop( "posx" );
@@ -87,12 +93,13 @@ public class NodeImage {
 
   /* Creates a new NodeImage from the given NodeImage */
   public NodeImage.from_node_image( NodeImage ni ) {
-    _buf  = ni.get_pixbuf().copy();
-    fname = ni.fname;
-    valid = ni.valid;
-    scale = ni.scale;
-    posx  = ni.posx;
-    posy  = ni.posy;
+    _buf   = ni.get_pixbuf().copy();
+    fname  = ni.fname;
+    valid  = ni.valid;
+    scale  = ni.scale;
+    posx   = ni.posx;
+    posy   = ni.posy;
+    rotate = ni.rotate;
   }
 
   /* Loads the current file into this structure */
@@ -154,6 +161,13 @@ public class NodeImage {
   public void set_image( Image img ) {
 
     img.set_from_pixbuf( _buf );
+
+  }
+
+  /* Sets the buffer from the given surface */
+  public void set_from_surface( Surface surface, int x, int y, int width, int height ) {
+
+    _buf = pixbuf_get_from_surface( surface, x, y, width, height );
 
   }
 

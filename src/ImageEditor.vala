@@ -41,7 +41,10 @@ class ImageEditor : Gtk.Dialog {
   private double          _scale;
   private Gdk.Rectangle[] _crop_points;
   private CursorType[]    _crop_cursors;
-  private int             _rotation    = 0;
+  private int             _rotation;
+  private Label           _status_cursor;
+  private Label           _status_crop;
+  private Label           _status_rotate;
 
   public signal void done( bool changed );
 
@@ -85,6 +88,8 @@ class ImageEditor : Gtk.Dialog {
       _crop_points[8].width  = pixbuf.width;
       _crop_points[8].height = pixbuf.height;
       set_crop_points();
+      set_cursor_location( 0, 0 );
+      set_rotation( 0 );
       _da.queue_draw();
     } catch( Error e ) {
       // TBD
@@ -124,6 +129,8 @@ class ImageEditor : Gtk.Dialog {
     _crop_points[8].width  = (int)(_cx2 - _cx1);
     _crop_points[8].height = (int)(_cy2 - _cy1);
 
+    _status_crop.label = _( "Crop Area: %d,%d %3dx%3d" ).printf( _crop_points[8].x, _crop_points[8].y, _crop_points[8].width, _crop_points[8].height );
+
   }
 
   /* Set the crop target based on the position of the cursor */
@@ -160,10 +167,10 @@ class ImageEditor : Gtk.Dialog {
         case 8 :  cx1 += diffx;  cy1 += diffy;
                   cx2 += diffx;  cy2 += diffy;  break;
       }
-      if( (cx1 >= 0) && (cx2 <= _da.get_allocated_width()) && ((cx2 - cx1) >= MIN_WIDTH) ) {
+      if( (cx1 >= 0) && (cx2 <= _image.get_width()) && ((cx2 - cx1) >= MIN_WIDTH) ) {
         _cx1 = cx1;  _cx2 = cx2;
       }
-      if( (cy1 >= 0) && (cy2 <= _da.get_allocated_height()) && ((cy2 - cy1) >= MIN_WIDTH) ) {
+      if( (cy1 >= 0) && (cy2 <= _da.height_request) && ((cy2 - cy1) >= MIN_WIDTH) ) {
         _cy1 = cy1;  _cy2 = cy2;
       }
       set_crop_points();
@@ -178,10 +185,12 @@ class ImageEditor : Gtk.Dialog {
     set_transient_for( parent );
 
     _da = create_drawing_area();
+    var status  = create_status_area();
     var toolbar = create_toolbar();
 
     /* Pack the widgets into the window */
-    get_content_area().pack_start( _da, true, true, 10 );
+    get_content_area().pack_start( _da,     true,  true, 10 );
+    get_content_area().pack_start( status,  false, false, 0 );
     get_content_area().pack_start( toolbar, false, true, 10 );
 
     /* Add the action buttons */
@@ -247,6 +256,7 @@ class ImageEditor : Gtk.Dialog {
       }
       _last_x = e.x;
       _last_y = e.y;
+      set_cursor_location( (int)e.x, (int)e.y );
       return( false );
     });
 
@@ -257,6 +267,38 @@ class ImageEditor : Gtk.Dialog {
     });
 
     return( da );
+
+  }
+
+  /* Creates the status area */
+  private Box create_status_area() {
+
+    var box = new Box( Orientation.HORIZONTAL, 10 );
+
+    _status_cursor = new Label( null );
+    _status_crop   = new Label( null );
+    _status_rotate = new Label( null );
+
+    box.pack_start( _status_cursor, false, false, 5 );
+    box.pack_start( _status_crop,   false, false, 5 );
+    box.pack_start( _status_rotate, false, false, 5 );
+
+    return( box );
+
+  }
+
+  /* Updates the cursor location status with the given values */
+  private void set_cursor_location( int x, int y ) {
+
+    _status_cursor.label = _( "Cursor: %3d,%3d" ).printf( x, y );
+
+  }
+
+  /* Sets the rotation value and updates the status */
+  private void set_rotation( int value ) {
+
+    _rotation = value;
+    _status_rotate.label = _( "Rotation: %3d\u00b0" ).printf( _rotation );
 
   }
 
@@ -276,7 +318,7 @@ class ImageEditor : Gtk.Dialog {
     });
 
     angle.value_changed.connect(() => {
-      _rotation = (int)angle.get_value();
+      set_rotation( (int)angle.get_value() );
       _da.queue_draw();
     });
 
@@ -305,8 +347,8 @@ class ImageEditor : Gtk.Dialog {
   /* Add the image */
   private void draw_image( Context ctx ) {
 
-    var w = _da.get_allocated_width();
-    var h = _da.get_allocated_height();
+    var w = _image.get_width();
+    var h = _image.get_height();
 
     ctx.translate( (w * 0.5), (h * 0.5) );
     ctx.rotate( _rotation * Math.PI / 180 );
@@ -323,8 +365,8 @@ class ImageEditor : Gtk.Dialog {
   /* Draw the crop mask */
   private void draw_crop( Context ctx ) {
 
-    var width  = _da.get_allocated_width();
-    var height = _da.get_allocated_height();
+    var width  = _image.get_width();
+    var height = _image.get_height();
 
     ctx.set_line_width( 0 );
     ctx.set_source_rgba( 0, 0, 0, 0.8 );
@@ -362,17 +404,14 @@ class ImageEditor : Gtk.Dialog {
   /* Returns the pixbuf associated with this window */
   public void set_node_image() {
 
-    _node_image.scale  = _scale;
+    _node_image.rotate = _rotation;
     _node_image.posx   = _cx1;
     _node_image.posy   = _cy1;
+    _node_image.width  = _cx2 - _cx1;
+    _node_image.height = _cy2 - _cy1;
 
     /* Copy the buffer to the node image */
-    try {
-      var buf = new Pixbuf.from_file( _node_image.fname );
-      buf.scale( _node_image.get_pixbuf(), (int)_cx1, (int)_cy1, (int)(_cx2 - _cx1), (int)(_cy2 - _cy1), 0, 0, _scale, _scale, InterpType.BILINEAR );
-    } catch( Error e ) {
-      // TBD
-    }
+    _node_image.get_pixbuf() = pixbuf_get_from_surface( _image, (int)_cx1, (int)_cy1, (int)(_cx2 - _cx1), (int)(_cy2 - _cy1) );
 
   }
 
