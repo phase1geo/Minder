@@ -41,6 +41,7 @@ class ImageEditor : Gtk.Dialog {
   private double          _scale;
   private Gdk.Rectangle[] _crop_points;
   private CursorType[]    _crop_cursors;
+  private int             _rotation    = 0;
 
   public signal void done( bool changed );
 
@@ -177,9 +178,11 @@ class ImageEditor : Gtk.Dialog {
     set_transient_for( parent );
 
     _da = create_drawing_area();
+    var toolbar = create_toolbar();
 
     /* Pack the widgets into the window */
     get_content_area().pack_start( _da, true, true, 10 );
+    get_content_area().pack_start( toolbar, false, true, 10 );
 
     /* Add the action buttons */
     add_button( _( "Cancel" ), ResponseType.CANCEL );
@@ -257,6 +260,34 @@ class ImageEditor : Gtk.Dialog {
 
   }
 
+  private Box create_toolbar() {
+
+    var box       = new Box( Orientation.HORIZONTAL, 10 );
+    var clockwise = new Button.from_icon_name( "object-rotate-right-symbolic", IconSize.BUTTON );
+    var counter   = new Button.from_icon_name( "object-rotate-left-symbolic",  IconSize.BUTTON );
+    var angle     = new Scale.with_range( Orientation.HORIZONTAL, 0, 360, 1 );
+
+    clockwise.clicked.connect(() => {
+      angle.set_value( angle.get_value() + 1 );
+    });
+
+    counter.clicked.connect(() => {
+      angle.set_value( angle.get_value() - 1 );
+    });
+
+    angle.value_changed.connect(() => {
+      _rotation = (int)angle.get_value();
+      _da.queue_draw();
+    });
+
+    box.pack_start( counter,   false, false, 5 );
+    box.pack_start( angle,     true,  true,  0 );
+    box.pack_start( clockwise, false, false, 5 );
+
+    return( box );
+
+  }
+
   /* Sets the cursor of the drawing area */
   private void set_cursor( CursorType? type = null ) {
 
@@ -274,8 +305,18 @@ class ImageEditor : Gtk.Dialog {
   /* Add the image */
   private void draw_image( Context ctx ) {
 
+    var w = _da.get_allocated_width();
+    var h = _da.get_allocated_height();
+
+    ctx.translate( (w * 0.5), (h * 0.5) );
+    ctx.rotate( _rotation * Math.PI / 180 );
+    ctx.translate( (w * -0.5), (h * -0.5) );
     ctx.set_source_surface( _image, 0, 0 );
     ctx.paint();
+
+    ctx.translate( (w * 0.5), (h * 0.5) );
+    ctx.rotate( (0 - _rotation) * Math.PI / 180 );
+    ctx.translate( (w * -0.5), (h * -0.5) );
 
   }
 
@@ -286,7 +327,6 @@ class ImageEditor : Gtk.Dialog {
     var height = _da.get_allocated_height();
 
     ctx.set_line_width( 0 );
-
     ctx.set_source_rgba( 0, 0, 0, 0.8 );
     ctx.rectangle( 0, 0, _cx1, height );
     ctx.fill();
