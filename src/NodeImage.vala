@@ -30,9 +30,10 @@ public class NodeImage {
 
   public string fname  { get; set; default = ""; }
   public bool   valid  { get; private set; default = false; }
-  public double scale  { get; set; default = 1; }
-  public double posx   { get; set; }
-  public double posy   { get; set; }
+  public double posx   { get; set; default = 0; }
+  public double posy   { get; set; default = 0; }
+  public int    width  { get; set; default = 0; }
+  public int    height { get; set; default = 0; }
   public int    rotate { get; set; default = 0; }
 
   /* Default constructor */
@@ -52,11 +53,6 @@ public class NodeImage {
     string? f = n->get_prop( "fname" );
     if( f != null ) {
       fname = f;
-    }
-
-    string? s = n->get_prop( "scale" );
-    if( s != null ) {
-      scale = double.parse( s );
     }
 
     string? r = n->get_prop( "rotate" );
@@ -96,10 +92,23 @@ public class NodeImage {
     _buf   = ni.get_pixbuf().copy();
     fname  = ni.fname;
     valid  = ni.valid;
-    scale  = ni.scale;
     posx   = ni.posx;
     posy   = ni.posy;
     rotate = ni.rotate;
+  }
+
+  /* Add the image */
+  private void draw_image( Context ctx, ImageSurface image ) {
+
+    var w = image.get_width();
+    var h = image.get_height();
+
+    ctx.translate( (w * 0.5), (h * 0.5) );
+    ctx.rotate( rotate * Math.PI / 180 );
+    ctx.translate( (w * -0.5), (h * -0.5) );
+    ctx.set_source_surface( image, 0, 0 );
+    ctx.paint();
+
   }
 
   /* Loads the current file into this structure */
@@ -119,28 +128,22 @@ public class NodeImage {
 
     /* Get the file into the current pixbuf */
     try {
-      _buf = new Pixbuf.from_file_at_size( fname, req_width, req_height );
+      var buf     = new Pixbuf.from_file_at_size( fname, req_width, req_height );
+      var image   = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 0, null );
+      var surface = new ImageSurface( image.get_format(), image.get_width(), image.get_height() );
+      var context = new Context( surface );
+      draw_image( context, image );
+      _buf = pixbuf_get_from_surface( surface, (int)posx, (int)posy, width, height );
     } catch( Error e ) {
       return( false );
     }
 
     /* Calculate the scaling factor */
-    scale = _buf.width / (double)act_width;
-    posx  = 0;
-    posy  = 0;
+    posx = 0;
+    posy = 0;
 
     return( true );
 
-  }
-
-  /* Returns the width of the stored image */
-  public double width() {
-    return( _buf.width );
-  }
-
-  /* Returns the height of the stored image */
-  public double height() {
-    return( _buf.height );
   }
 
   /* Returns a pixbuf */
@@ -167,12 +170,15 @@ public class NodeImage {
   /* Sets the buffer from the given surface */
   public void set_from_surface( Surface surface, int x, int y, int width, int height ) {
 
+    posx = x;
+    posy = y;
+
     _buf = pixbuf_get_from_surface( surface, x, y, width, height );
 
   }
 
   /* Sets the width of the image to the given value */
-  public void set_width( int width ) {
+  public void set_image_width( int width ) {
 
     load( width );
 
@@ -184,7 +190,7 @@ public class NodeImage {
     Xml.Node* n = new Xml.Node( null, "nodeimage" );
 
     n->new_prop( "fname",  fname );
-    n->new_prop( "scale",  scale.to_string() );
+    n->new_prop( "rotate", rotate.to_string() );
     n->new_prop( "posx",   posx.to_string() );
     n->new_prop( "posy",   posy.to_string() );
     n->new_prop( "width",  _buf.width.to_string() );

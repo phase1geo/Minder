@@ -38,7 +38,6 @@ class ImageEditor : Gtk.Dialog {
   private NodeImage       _node_image;
   private double          _last_x;
   private double          _last_y;
-  private double          _scale;
   private Gdk.Rectangle[] _crop_points;
   private CursorType[]    _crop_cursors;
   private int             _rotation;
@@ -72,7 +71,12 @@ class ImageEditor : Gtk.Dialog {
 
     /* Set the defaults */
     _node_image = img;
-    _scale      = img.scale;
+    _cx1        = img.posx;
+    _cy1        = img.posy;
+    _cx2        = img.posx + img.width;
+    _cy2        = img.posy + img.height;
+
+    stdout.printf( "cx1: %g, cy1: %g, cx2: %g, cy2: %g\n", _cx1, _cy1, _cx2, _cy2 );
 
     /* Create the user interface of the editor window */
     create_ui( parent );
@@ -89,7 +93,7 @@ class ImageEditor : Gtk.Dialog {
       _crop_points[8].height = pixbuf.height;
       set_crop_points();
       set_cursor_location( 0, 0 );
-      set_rotation( 0 );
+      set_rotation( img.rotate );
       _da.queue_draw();
     } catch( Error e ) {
       // TBD
@@ -404,14 +408,16 @@ class ImageEditor : Gtk.Dialog {
   /* Returns the pixbuf associated with this window */
   public void set_node_image() {
 
-    _node_image.rotate = _rotation;
-    _node_image.posx   = _cx1;
-    _node_image.posy   = _cy1;
-    _node_image.width  = _cx2 - _cx1;
-    _node_image.height = _cy2 - _cy1;
+    /* Create a surface and context to draw */
+    var surface = new ImageSurface( _image.get_format(), _image.get_width(), _image.get_height() );
+    var context = new Context( surface );
 
-    /* Copy the buffer to the node image */
-    _node_image.get_pixbuf() = pixbuf_get_from_surface( _image, (int)_cx1, (int)_cy1, (int)(_cx2 - _cx1), (int)(_cy2 - _cy1) );
+    /* Draw the image onto the context */
+    draw_image( context );
+
+    /* Set the node image */
+    _node_image.rotate = _rotation;
+    _node_image.set_from_surface( surface, (int)_cx1, (int)_cy1, (int)(_cx2 - _cx1), (int)(_cy2 - _cy1) );
 
   }
 

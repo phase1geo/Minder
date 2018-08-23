@@ -397,8 +397,8 @@ public class Node : Object {
       double ix, iy, iw, ih;
       ix = posx + _padx;
       iy = posy + _pady;
-      iw = image.width();
-      ih = image.height();
+      iw = image.width;
+      ih = image.height;
       return( (ix <= x) && (x <= (ix + iw)) && (iy <= y) && (y <= (iy + ih)) );
     } else {
       return( false );
@@ -741,8 +741,8 @@ public class Node : Object {
       int text_width, text_height;
       double orig_width  = _width;
       double orig_height = _height;
-      double img_width   = (image != null) ? (image.width()  + (_padx * 2)) : 0;
-      double img_height  = (image != null) ? (image.height() + _pady)       : 0;
+      double img_width   = (image != null) ? (image.width  + (_padx * 2)) : 0;
+      double img_height  = (image != null) ? (image.height + _pady)       : 0;
       _layout.set_markup( name_markup( theme ), -1 );
       _layout.get_size( out text_width, out text_height );
       _width     = (text_width  / Pango.SCALE) + (_padx * 2) + task_width() + note_width();
@@ -763,7 +763,7 @@ public class Node : Object {
     } else {
       if( (_max_width + diff) < _min_width ) return;
       _max_width += diff;
-      image.set_width( (int)_max_width );
+      image.set_image_width( (int)_max_width );
     }
     _layout.set_width( (int)_max_width * Pango.SCALE );
     layout.handle_update_by_edit( this );
@@ -927,7 +927,7 @@ public class Node : Object {
   /* Sets the cursor from the given mouse coordinates */
   public void set_cursor_at_char( double x, double y, bool motion ) {
     int cursor, trailing;
-    int img_height = (image != null) ? (int)(image.height() + _pady) : 0;
+    int img_height = (image != null) ? (int)(image.height + _pady) : 0;
     int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
     int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
     if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
@@ -953,7 +953,7 @@ public class Node : Object {
   /* Selects the word at the current x/y position in the text */
   public void set_cursor_at_word( double x, double y, bool motion ) {
     int cursor, trailing;
-    int img_height = (image != null) ? (int)(image.height() + _pady) : 0;
+    int img_height = (image != null) ? (int)(image.height + _pady) : 0;
     int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
     int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
     if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
@@ -1454,7 +1454,7 @@ public class Node : Object {
 
     int    hmargin    = 3;
     int    vmargin    = 3;
-    double img_height = (image != null) ? (image.height() + _pady) : 0;
+    double img_height = (image != null) ? (image.height + _pady) : 0;
     double width_diff, height_diff;
 
     /* Make sure the the size is up-to-date */
