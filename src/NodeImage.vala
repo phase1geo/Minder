@@ -47,9 +47,6 @@ public class NodeImage {
   /* Constructor from XML file */
   public NodeImage.from_xml( Xml.Node* n ) {
 
-    double width  = 0;
-    double height = 0;
-
     string? f = n->get_prop( "fname" );
     if( f != null ) {
       fname = f;
@@ -72,12 +69,12 @@ public class NodeImage {
 
     string? w = n->get_prop( "width" );
     if( w != null ) {
-      width = double.parse( w );
+      width = int.parse( w );
     }
 
     string? h = n->get_prop( "height" );
     if( h != null ) {
-      height = double.parse( h );
+      height = int.parse( h );
     }
 
     /* Allocate the image */
@@ -94,6 +91,8 @@ public class NodeImage {
     valid  = ni.valid;
     posx   = ni.posx;
     posy   = ni.posy;
+    width  = ni.width;
+    height = ni.height;
     rotate = ni.rotate;
   }
 
@@ -133,14 +132,16 @@ public class NodeImage {
       var surface = new ImageSurface( image.get_format(), image.get_width(), image.get_height() );
       var context = new Context( surface );
       draw_image( context, image );
-      _buf = pixbuf_get_from_surface( surface, (int)posx, (int)posy, width, height );
+      _buf = pixbuf_get_from_surface( surface, (int)posx, (int)posy, image.get_width(), image.get_height() );
     } catch( Error e ) {
       return( false );
     }
 
     /* Calculate the scaling factor */
-    posx = 0;
-    posy = 0;
+    posx   = 0;
+    posy   = 0;
+    width  = _buf.width;
+    height = _buf.height;
 
     return( true );
 
