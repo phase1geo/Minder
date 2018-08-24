@@ -164,7 +164,22 @@ public class NodeImage {
   /* Sets the given image widget to the stored pixbuf */
   public void set_image( Image img ) {
 
-    img.set_from_pixbuf( _buf );
+    Pixbuf? buf;
+    var scale_width  = 200.0 / _buf.width;
+    var scale_height = 200.0 / _buf.height;
+    var width        = 200;
+    var height       = 200;
+
+    /* Calculate the width and height of the required image */
+    if( scale_width < scale_height ) {
+      height = (int)(scale_width * _buf.height);
+    } else {
+      width  = (int)(scale_height * _buf.width);
+    }
+
+    /* Create the pixbuf thumbnail and set it in the given image widget */
+    buf = _buf.scale_simple( width, height, InterpType.BILINEAR );
+    img.set_from_pixbuf( buf );
 
   }
 
