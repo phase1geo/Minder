@@ -23,11 +23,12 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-class ImageEditor : Popover {
+class ImageEditor {
 
   private const double MIN_WIDTH  = 50;
   private const int    CROP_WIDTH = 8;
 
+  private Popover         _popover;
   private DrawingArea     _da;
   private double          _cx1         = 0;
   private double          _cy1         = 0;
@@ -49,8 +50,6 @@ class ImageEditor : Popover {
 
   /* Default constructor */
   public ImageEditor( DrawArea da ) {
-
-    relative_to = da; // (Gtk.Widget)da;
 
     /* Allocate crop points */
     _crop_points  = new Gdk.Rectangle[9];
@@ -76,7 +75,10 @@ class ImageEditor : Popover {
 
   }
 
-  public void edit_image( NodeImage img ) {
+  public void edit_image( NodeImage img, double x, double y ) {
+
+    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
+    _popover.pointing_to = rect;
 
     /* Set the defaults */
     _node_image = img;
@@ -104,7 +106,7 @@ class ImageEditor : Popover {
     }
 
     /* Display ourselves */
-    popup();
+    _popover.popup();
 
   }
 
@@ -191,7 +193,8 @@ class ImageEditor : Popover {
   /* Creates the user interface */
   public void create_ui( Gtk.Window parent ) {
 
-    modal = true;
+    _popover = new Popover( parent );
+    _popover.modal = true;
 
     var box = new Box( Orientation.VERTICAL, 5 );
 
@@ -206,10 +209,10 @@ class ImageEditor : Popover {
     box.pack_start( toolbar, false, true, 10 );
     box.pack_start( buttons, false, true, 10 );
 
-    /* Add the box to the popover */
-    add( box );
+    box.show_all();
 
-    show_all();
+    /* Add the box to the popover */
+    _popover.add( box );
 
   }
 
@@ -246,7 +249,7 @@ class ImageEditor : Popover {
       set_crop_target( e.x, e.y );
       if( _crop_target == 8 ) {
         var win = _da.get_window();
-        win.set_cursor( new Cursor.from_name( get_display(), "grabbing" ) );
+        win.set_cursor( new Cursor.from_name( _popover.get_display(), "grabbing" ) );
       }
       _last_x = e.x;
       _last_y = e.y;
@@ -264,7 +267,7 @@ class ImageEditor : Popover {
         _crop_target = -1;
       } else {
         adjust_crop_points( (e.x - _last_x), (e.y - _last_y) );
-        queue_draw();
+        da.queue_draw();
       }
       _last_x = e.x;
       _last_y = e.y;
@@ -286,6 +289,8 @@ class ImageEditor : Popover {
   private Box create_status_area() {
 
     var box = new Box( Orientation.HORIZONTAL, 10 );
+
+    box.homogeneous = true;
 
     _status_cursor = new Label( null );
     _status_crop   = new Label( null );
@@ -353,17 +358,15 @@ class ImageEditor : Popover {
     var apply  = new Button.with_label( _( "Apply" ) );
     var change = new Button.with_label( _( "Change Image" ) );
 
-    box.homogeneous = true;
-
     cancel.clicked.connect(() => {
-      popdown();
+      _popover.popdown();
     });
 
     apply.clicked.connect(() => {
       NodeImage orig_image = new NodeImage.from_node_image( _node_image );
       set_node_image();
       changed( orig_image );
-      popdown();
+      _popover.popdown();
     });
 
     change.clicked.connect(() => {
@@ -390,7 +393,7 @@ class ImageEditor : Popover {
     if( type == null ) {
       win.set_cursor( null );
     } else if( (cursor == null) || (cursor.cursor_type != type) ) {
-      win.set_cursor( new Cursor.for_display( get_display(), type ) );
+      win.set_cursor( new Cursor.for_display( _popover.get_display(), type ) );
     }
 
   }
