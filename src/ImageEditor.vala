@@ -76,8 +76,6 @@ class ImageEditor : Gtk.Dialog {
     _cx2        = img.posx + img.width;
     _cy2        = img.posy + img.height;
 
-    stdout.printf( "cx1: %g, cy1: %g, cx2: %g, cy2: %g\n", _cx1, _cy1, _cx2, _cy2 );
-
     /* Create the user interface of the editor window */
     create_ui( parent );
 

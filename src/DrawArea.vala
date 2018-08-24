@@ -623,13 +623,11 @@ public class DrawArea : Gtk.DrawingArea {
         var parent = (Gtk.Window)get_toplevel();
         var editor = new ImageEditor( _current_node.image, parent );
         if( editor.run() == ResponseType.APPLY ) {
-          stdout.printf( "Setting node image!\n" );
           editor.set_node_image();
           undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
           queue_draw();
           node_changed();
           auto_save();
-          stdout.printf( "Done!\n" );
         }
         editor.close();
       }
