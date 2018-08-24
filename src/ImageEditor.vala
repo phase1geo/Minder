@@ -23,7 +23,7 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-class ImageEditor : Gtk.Dialog {
+class ImageEditor : Popover {
 
   private const double MIN_WIDTH  = 50;
   private const int    CROP_WIDTH = 8;
@@ -45,10 +45,12 @@ class ImageEditor : Gtk.Dialog {
   private Label           _status_crop;
   private Label           _status_rotate;
 
-  public signal void done( bool changed );
+  public signal void changed( NodeImage? orig_image );
 
   /* Default constructor */
-  public ImageEditor( NodeImage img, Gtk.Window parent ) {
+  public ImageEditor( DrawArea da ) {
+
+    relative_to = da; // (Gtk.Widget)da;
 
     /* Allocate crop points */
     _crop_points  = new Gdk.Rectangle[9];
@@ -69,15 +71,19 @@ class ImageEditor : Gtk.Dialog {
     _crop_cursors[6] = CursorType.SB_V_DOUBLE_ARROW;
     _crop_cursors[7] = CursorType.TOP_LEFT_CORNER;
 
+    /* Create the user interface of the editor window */
+    create_ui( (Gtk.Window)da.get_toplevel() );
+
+  }
+
+  public void edit_image( NodeImage img ) {
+
     /* Set the defaults */
     _node_image = img;
     _cx1        = img.posx;
     _cy1        = img.posy;
     _cx2        = img.posx + img.width;
     _cy2        = img.posy + img.height;
-
-    /* Create the user interface of the editor window */
-    create_ui( parent );
 
     /* Load the image and draw it */
     try {
@@ -96,6 +102,9 @@ class ImageEditor : Gtk.Dialog {
     } catch( Error e ) {
       // TBD
     }
+
+    /* Display ourselves */
+    popup();
 
   }
 
@@ -182,22 +191,23 @@ class ImageEditor : Gtk.Dialog {
   /* Creates the user interface */
   public void create_ui( Gtk.Window parent ) {
 
-    modal               = true;
-    destroy_with_parent = true;
-    set_transient_for( parent );
+    modal = true;
+
+    var box = new Box( Orientation.VERTICAL, 5 );
 
     _da = create_drawing_area();
     var status  = create_status_area();
     var toolbar = create_toolbar();
+    var buttons = create_buttons( parent );
 
     /* Pack the widgets into the window */
-    get_content_area().pack_start( _da,     true,  true, 10 );
-    get_content_area().pack_start( status,  false, false, 0 );
-    get_content_area().pack_start( toolbar, false, true, 10 );
+    box.pack_start( _da,     true,  true, 10 );
+    box.pack_start( status,  false, false, 0 );
+    box.pack_start( toolbar, false, true, 10 );
+    box.pack_start( buttons, false, true, 10 );
 
-    /* Add the action buttons */
-    add_button( _( "Cancel" ), ResponseType.CANCEL );
-    add_button( _( "Apply" ),  ResponseType.APPLY );
+    /* Add the box to the popover */
+    add( box );
 
     show_all();
 
@@ -304,12 +314,15 @@ class ImageEditor : Gtk.Dialog {
 
   }
 
+  /* Creates the rotation toolbar */
   private Box create_toolbar() {
 
     var box       = new Box( Orientation.HORIZONTAL, 10 );
     var clockwise = new Button.from_icon_name( "object-rotate-right-symbolic", IconSize.BUTTON );
     var counter   = new Button.from_icon_name( "object-rotate-left-symbolic",  IconSize.BUTTON );
-    var angle     = new Scale.with_range( Orientation.HORIZONTAL, 0, 360, 1 );
+    var angle     = new Scale.with_range( Orientation.HORIZONTAL, -180, 180, 1 );
+
+    angle.set_value( 0 );
 
     clockwise.clicked.connect(() => {
       angle.set_value( angle.get_value() + 1 );
@@ -327,6 +340,42 @@ class ImageEditor : Gtk.Dialog {
     box.pack_start( counter,   false, false, 5 );
     box.pack_start( angle,     true,  true,  0 );
     box.pack_start( clockwise, false, false, 5 );
+
+    return( box );
+
+  }
+
+  /* Creates the button bar at the bottom of the window */
+  private Box create_buttons( Gtk.Window parent ) {
+
+    var box    = new Box( Orientation.HORIZONTAL, 10 );
+    var cancel = new Button.with_label( _( "Cancel" ) );
+    var apply  = new Button.with_label( _( "Apply" ) );
+    var change = new Button.with_label( _( "Change Image" ) );
+
+    box.homogeneous = true;
+
+    cancel.clicked.connect(() => {
+      popdown();
+    });
+
+    apply.clicked.connect(() => {
+      NodeImage orig_image = new NodeImage.from_node_image( _node_image );
+      set_node_image();
+      changed( orig_image );
+      popdown();
+    });
+
+    change.clicked.connect(() => {
+      string? fn = NodeImage.choose_image_file( parent );
+      if( fn != null ) {
+        // FOOBAR
+      }
+    });
+
+    box.pack_start( change, false, false, 10 );
+    box.pack_end(   cancel, false, false, 10 );
+    box.pack_end(   apply,  false, false, 10 );
 
     return( box );
 
@@ -404,7 +453,7 @@ class ImageEditor : Gtk.Dialog {
   }
 
   /* Returns the pixbuf associated with this window */
-  public void set_node_image() {
+  private void set_node_image() {
 
     /* Create a surface and context to draw */
     var surface = new ImageSurface( _image.get_format(), _image.get_width(), _image.get_height() );

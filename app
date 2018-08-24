@@ -74,6 +74,10 @@ case $1 in
     initialize
     ./com.github.phase1geo.minder "${@:2}"
     ;;
+"debug")
+    initialize
+    gdb ./com.github.phase1geo.minder "${@:2}"
+    ;;
 "test")
     test
     ;;

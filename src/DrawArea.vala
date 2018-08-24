@@ -46,15 +46,16 @@ public class DrawArea : Gtk.DrawingArea {
   private string           _orig_name;
   private NodeSide         _orig_side;
   private Array<NodeInfo?> _orig_info;
-  private Node?            _attach_node    = null;
+  private Node?            _attach_node  = null;
   private DrawAreaMenu     _popup_menu;
-  private uint?            _auto_save_id   = null;
+  private uint?            _auto_save_id = null;
+  private ImageEditor      _editor;
 
-  public UndoBuffer undo_buffer    { set; get; }
-  public Themes     themes         { set; get; default = new Themes(); }
-  public Layouts    layouts        { set; get; default = new Layouts(); }
-  public Animator   animator       { set; get; }
-  public Node?      node_clipboard { set; get; default = null; }
+  public UndoBuffer  undo_buffer    { set; get; }
+  public Themes      themes         { set; get; default = new Themes(); }
+  public Layouts     layouts        { set; get; default = new Layouts(); }
+  public Animator    animator       { set; get; }
+  public Node?       node_clipboard { set; get; default = null; }
 
   public double origin_x {
     set {
@@ -99,6 +100,10 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Allocate memory for the undo buffer */
     undo_buffer = new UndoBuffer( this );
+
+    /* Allocate the image editor popover */
+    _editor = new ImageEditor( this );
+    _editor.changed.connect( current_image_edited );
 
     /* Create the popup menu */
     _popup_menu = new DrawAreaMenu( this );
@@ -619,19 +624,17 @@ public class DrawArea : Gtk.DrawingArea {
   public void edit_current_image() {
     if( _current_node != null ) {
       if( _current_node.image != null ) {
-        NodeImage orig_image = new NodeImage.from_node_image( _current_node.image );
-        var parent = (Gtk.Window)get_toplevel();
-        var editor = new ImageEditor( _current_node.image, parent );
-        if( editor.run() == ResponseType.APPLY ) {
-          editor.set_node_image();
-          undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
-          queue_draw();
-          node_changed();
-          auto_save();
-        }
-        editor.close();
+        _editor.edit_image( _current_node.image );
       }
     }
+  }
+
+  /* Called whenever the current node's image is changed */
+  private void current_image_edited( NodeImage? orig_image ) {
+    undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
+    queue_draw();
+    node_changed();
+    auto_save();
   }
 
   /*
