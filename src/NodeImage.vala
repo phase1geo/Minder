@@ -27,6 +27,8 @@ using Cairo;
 public class NodeImage {
 
   private Pixbuf _buf;
+  private double _act_width;
+  private double _act_height;
 
   public string fname  { get; set; default = ""; }
   public bool   valid  { get; private set; default = false; }
@@ -113,11 +115,10 @@ public class NodeImage {
   /* Loads the current file into this structure */
   private bool load( int req_width ) {
 
-    int act_width, act_height;
     int req_height = 400;
 
     /* Get the file information */
-    Pixbuf.get_file_info( fname, out act_width, out act_height );
+    Pixbuf.get_file_info( fname, out _act_width, out _act_height );
 
     /*
     if( act_width < 200 ) {
@@ -152,6 +153,16 @@ public class NodeImage {
     return( _buf );
   }
 
+  /* Returns the actual width of the original file image */
+  public double act_width() {
+    return( _act_width );
+  }
+
+  /* Returns the actual width of the original file image */
+  public double act_height() {
+    return( _act_height );
+  }
+
   /* Draws the image to the given context */
   public void draw( Context ctx, double x, double y, double opacity ) {
 
@@ -184,12 +195,18 @@ public class NodeImage {
   }
 
   /* Sets the buffer from the given surface */
-  public void set_from_surface( Surface surface, int x, int y, int width, int height ) {
+  public void set_from_surface( Surface surface, int x, int y, int width, int height, int max_width ) {
+
+    var scale_width  = max_width / width;
 
     posx = x;
     posy = y;
 
-    _buf = pixbuf_get_from_surface( surface, x, y, width, height );
+    /* Get a copy of the image area to capture */
+    var buf = pixbuf_get_from_surface( surface, x, y, width, height );
+
+    /* Scale the image to fit within the node's max_width value */
+    _buf = buf.scale_simple( max_width, (height * scale_width), InterpType.BILINEAR );
 
   }
 

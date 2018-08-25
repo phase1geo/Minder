@@ -335,6 +335,11 @@ public class Node : Object {
     return( _task_count == _task_done );
   }
 
+  /* Returns the maximum width allowed for this node */
+  public int max_width() {
+    return( (int)_max_width );
+  }
+
   /* Returns the task completion percentage value */
   public double task_completion_percentage() {
     return( (_task_done / (_task_count * 1.0)) * 100 );

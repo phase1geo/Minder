@@ -37,6 +37,7 @@ class ImageEditor {
   private ImageSurface?   _image       = null;
   private int             _crop_target = -1;
   private NodeImage       _node_image;
+  private int             _max_width;
   private double          _last_x;
   private double          _last_y;
   private Gdk.Rectangle[] _crop_points;
@@ -75,38 +76,59 @@ class ImageEditor {
 
   }
 
-  public void edit_image( NodeImage img, double x, double y ) {
+  public void edit_image( NodeImage img, double x, double y, int max_width ) {
 
     Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
     _popover.pointing_to = rect;
 
+    var scale_width = max_width / img.width;
+
     /* Set the defaults */
     _node_image = img;
-    _cx1        = img.posx;
-    _cy1        = img.posy;
-    _cx2        = img.posx + img.width;
-    _cy2        = img.posy + img.height;
+    _max_width  = max_width;
 
     /* Load the image and draw it */
-    try {
-      var pixbuf = new Pixbuf.from_file_at_size( img.fname, 600, 600 );
-      _image             = (ImageSurface)cairo_surface_create_from_pixbuf( pixbuf, 0, null );
-      _da.width_request  = pixbuf.width;
-      _da.height_request = pixbuf.height;
-      _cx2               = pixbuf.width;
-      _cy2               = pixbuf.height;
-      _crop_points[8].width  = pixbuf.width;
-      _crop_points[8].height = pixbuf.height;
+    if( initialize( img.fname ) ) {
+      _cx1 = img.posx;
+      _cy1 = img.posy;
+      _cx2 = img.posx + img.width;
+      _cy2 = img.posy + img.height;
+      _crop_points[8].width  = img.width;
+      _crop_points[8].height = img.height;
       set_crop_points();
-      set_cursor_location( 0, 0 );
       set_rotation( img.rotate );
       _da.queue_draw();
-    } catch( Error e ) {
-      // TBD
     }
 
     /* Display ourselves */
     _popover.popup();
+
+  }
+
+  /* Initializes the image editor with the give image filename */
+  private bool initialize( string fname ) {
+
+    _cx1 = 0;
+    _cy1 = 0;
+
+    /* Load the image and draw it */
+    try {
+      var pixbuf = new Pixbuf.from_file_at_size( fname, 600, 600 );
+      _image                 = (ImageSurface)cairo_surface_create_from_pixbuf( pixbuf, 0, null );
+      _da.width_request      = pixbuf.width;
+      _da.height_request     = pixbuf.height;
+      _cx2                   = pixbuf.width;
+      _cy2                   = pixbuf.height;
+      _crop_points[8].width  = pixbuf.width;
+      _crop_points[8].height = pixbuf.height;
+      set_crop_points();
+      set_cursor_location( 0, 0 );
+      set_rotation( 0 );
+    } catch( Error e ) {
+      return( false );
+    }
+
+    return( true );
 
   }
 
@@ -322,7 +344,7 @@ class ImageEditor {
   /* Creates the rotation toolbar */
   private Box create_toolbar() {
 
-    var box       = new Box( Orientation.HORIZONTAL, 10 );
+    var box       = new Box( Orientation.HORIZONTAL, 5 );
     var clockwise = new Button.from_icon_name( "object-rotate-right-symbolic", IconSize.BUTTON );
     var counter   = new Button.from_icon_name( "object-rotate-left-symbolic",  IconSize.BUTTON );
     var angle     = new Scale.with_range( Orientation.HORIZONTAL, -180, 180, 1 );
@@ -353,7 +375,7 @@ class ImageEditor {
   /* Creates the button bar at the bottom of the window */
   private Box create_buttons( Gtk.Window parent ) {
 
-    var box    = new Box( Orientation.HORIZONTAL, 10 );
+    var box    = new Box( Orientation.HORIZONTAL, 5 );
     var cancel = new Button.with_label( _( "Cancel" ) );
     var apply  = new Button.with_label( _( "Apply" ) );
     var change = new Button.with_label( _( "Change Image" ) );
@@ -363,22 +385,20 @@ class ImageEditor {
     });
 
     apply.clicked.connect(() => {
-      NodeImage orig_image = new NodeImage.from_node_image( _node_image );
       set_node_image();
-      changed( orig_image );
       _popover.popdown();
     });
 
     change.clicked.connect(() => {
       string? fn = NodeImage.choose_image_file( parent );
-      if( fn != null ) {
-        // FOOBAR
+      if( (fn != null) && initialize( fn ) ) {
+        _da.queue_draw();
       }
     });
 
-    box.pack_start( change, false, false, 10 );
-    box.pack_end(   cancel, false, false, 10 );
-    box.pack_end(   apply,  false, false, 10 );
+    box.pack_start( change, false, false, 5 );
+    box.pack_end(   apply,  false, false, 5 );
+    box.pack_end(   cancel, false, false, 5 );
 
     return( box );
 
@@ -458,6 +478,9 @@ class ImageEditor {
   /* Returns the pixbuf associated with this window */
   private void set_node_image() {
 
+    /* Create a copy of the current image before changing it */
+    NodeImage orig_image = new NodeImage.from_node_image( _node_image );
+
     /* Create a surface and context to draw */
     var surface = new ImageSurface( _image.get_format(), _image.get_width(), _image.get_height() );
     var context = new Context( surface );
@@ -467,7 +490,11 @@ class ImageEditor {
 
     /* Set the node image */
     _node_image.rotate = _rotation;
-    _node_image.set_from_surface( surface, (int)_cx1, (int)_cy1, (int)(_cx2 - _cx1), (int)(_cy2 - _cy1) );
+    _node_image.set_from_surface( surface, (int)_cx1, (int)_cy1, (int)(_cx2 - _cx1), (int)(_cy2 - _cy1), _max_width );
+
+
+    /* Indicate that the image changed */
+    changed( orig_image );
 
   }
 
