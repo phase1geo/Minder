@@ -1245,10 +1245,10 @@ public class Node : Object {
         (((parent != null) && parent.folded && search_opts[2]) ||
          (((parent == null) || !parent.folded) && search_opts[3])) ) {
       if( search_opts[0] ) {
-        match_string( pattern, name, "<b><i>Title:</i></b>", ref matches );
+        match_string( pattern, name, _("<b><i>Title:</i></b>"), ref matches );
       }
       if( search_opts[1] ) {
-        match_string( pattern, note, "<b><i>Note:</i></b>", ref matches );
+        match_string( pattern, note, _("<b><i>Note:</i></b>"), ref matches );
       }
     }
     for( int i=0; i<_children.length; i++ ) {
