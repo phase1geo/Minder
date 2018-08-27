@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-06 18:16-0500\n"
+"POT-Creation-Date: 2018-08-27 14:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Helder Bertoldo <helder.bertoldo@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,20 +115,20 @@ msgstr "Horizontal"
 msgid "Main Idea"
 msgstr ""
 
-#: src/DrawArea.vala:956
+#: src/DrawArea.vala:962
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "0.3g%% completados"
 
-#: src/DrawArea.vala:1208
+#: src/DrawArea.vala:1214
 msgid "Another Idea"
 msgstr "Outra Ideia"
 
-#: src/DrawArea.vala:1334
+#: src/DrawArea.vala:1340
 msgid "fold completed tasks"
 msgstr ""
 
-#: src/DrawArea.vala:1369
+#: src/DrawArea.vala:1375
 msgid "unfold all tasks"
 msgstr ""
 
@@ -376,43 +376,55 @@ msgstr ""
 msgid "Unfold All Nodes"
 msgstr "Desdobrar Filhos"
 
-#: src/NodeInspector.vala:48
+#: src/Node.vala:1248
+msgid "<b><i>Title:</i></b>"
+msgstr ""
+
+#: src/Node.vala:1251
+msgid "<b><i>Note:</i></b>"
+msgstr ""
+
+#: src/NodeInspector.vala:49
 msgid "<big>Select a node to view/edit information</big>"
 msgstr "<big>Selecionar um nó para visualizar/editar informação</big>"
 
-#: src/NodeInspector.vala:81
+#: src/NodeInspector.vala:83
 msgid "Title"
 msgstr "Título"
 
-#: src/NodeInspector.vala:101
+#: src/NodeInspector.vala:103
 msgid "Task"
 msgstr "Tarefa"
 
-#: src/NodeInspector.vala:119
+#: src/NodeInspector.vala:121
 msgid "Fold"
 msgstr ""
 
-#: src/NodeInspector.vala:140
+#: src/NodeInspector.vala:142
 msgid "Link Color"
 msgstr "Cor do Link"
 
-#: src/NodeInspector.vala:161
+#: src/NodeInspector.vala:163
 msgid "Note"
 msgstr "Nota"
 
-#: src/NodeInspector.vala:192
+#: src/NodeInspector.vala:191
+msgid "Image"
+msgstr ""
+
+#: src/NodeInspector.vala:224
 msgid "Copy Node To Clipboard"
 msgstr "Copiar Nó Para a Área de Transferência"
 
-#: src/NodeInspector.vala:196
+#: src/NodeInspector.vala:228
 msgid "Cut Node To Clipboard"
 msgstr "Recortar Nó Para a Área de Transferência"
 
-#: src/NodeInspector.vala:201
+#: src/NodeInspector.vala:233
 msgid "Detach Node"
 msgstr "Desanexar Nó"
 
-#: src/NodeInspector.vala:206
+#: src/NodeInspector.vala:238
 msgid "Delete Node"
 msgstr "Deletar Nó"
 
