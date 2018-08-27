@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-06 18:16-0500\n"
+"POT-Creation-Date: 2018-08-27 14:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -373,6 +373,13 @@ msgid "Unfold All Nodes"
 msgstr ""
 
 #: src/NodeInspector.vala:48
+#: src/Node.vala:1248
+msgid "<b><i>Title:</i></b>"
+msgstr ""
+
+#: src/Node.vala:1251
+msgid "<b><i>Note:</i></b>"
+msgstr ""
 msgid "<big>Select a node to view/edit information</big>"
 msgstr ""
 

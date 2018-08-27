@@ -10,6 +10,7 @@ src/layouts/LayoutManual.vala
 src/MainWindow.vala
 src/MapInspector.vala
 src/MapInspector.vala
+src/Node.vala
 src/NodeInspector.vala
 src/undo_actions/UndoNodeCut.vala
 src/undo_actions/UndoNodeName.vala
