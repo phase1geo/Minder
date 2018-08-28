@@ -1211,7 +1211,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a new root node to the canvas */
   public void add_root_node() {
-    // Check if user didn't deleted first node
+    /* Check if user didn't delete first node */
     if (_nodes.length == 0) {
         initialize_for_new();
         return;
