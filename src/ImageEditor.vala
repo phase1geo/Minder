@@ -81,7 +81,8 @@ class ImageEditor {
     Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
     _popover.pointing_to = rect;
 
-    var scale_width = max_width / img.width;
+    var scale_width = (max_width * 1.0) / img.width;
+    stdout.printf( "max_width: %d, img.width: %d, scale_width: %g\n", max_width, img.width, scale_width );
 
     /* Set the defaults */
     _node_image = img;
