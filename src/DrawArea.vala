@@ -1211,13 +1211,13 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a new root node to the canvas */
   public void add_root_node() {
-    /* Check if user didn't delete first node */
-    if (_nodes.length == 0) {
-        initialize_for_new();
-        return;
-    }
     var node = new Node.with_name( this, _( "Another Idea" ), _layout );
-    _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+    if (_nodes.length == 0) {
+      node.posx = (get_allocated_width()  / 2) - 30;
+      node.posy = (get_allocated_height() / 2) - 10;
+    } else {
+      _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+    }
     _nodes.append_val( node );
     if( select_node( node ) ) {
       node.mode = NodeMode.EDITABLE;
