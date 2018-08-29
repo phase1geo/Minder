@@ -376,7 +376,7 @@ msgstr "Rozwiń wszystkie węzły"
 
 #: src/NodeInspector.vala:49
 msgid "<big>Select a node to view/edit information</big>"
-msgstr "<big>Wybierz węzeł aby zobaczyć/edytować informacje<big>"
+msgstr "<big>Wybierz węzeł aby zobaczyć/edytować informacje</big>"
 
 #: src/NodeInspector.vala:83
 msgid "Title"
