@@ -27,6 +27,9 @@ class ImageEditor {
 
   private const double MIN_WIDTH  = 50;
   private const int    CROP_WIDTH = 8;
+  private const Gtk.TargetEntry[] DRAG_TARGETS = {
+    {"text/uri-list", 0, 0}
+  };
 
   private Popover         _popover;
   private DrawingArea     _da;
@@ -81,15 +84,14 @@ class ImageEditor {
     Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
     _popover.pointing_to = rect;
 
-    var scale_width = (max_width * 1.0) / img.width;
-    stdout.printf( "max_width: %d, img.width: %d, scale_width: %g\n", max_width, img.width, scale_width );
-
     /* Set the defaults */
     _node_image = img;
     _max_width  = max_width;
 
     /* Load the image and draw it */
     if( initialize( img.fname ) ) {
+      var scale_width = (max_width * 1.0) / img.width;
+      stdout.printf( "max_width: %d, img.width: %d, scale_width: %g\n", max_width, img.width, scale_width );
       _cx1 = img.posx;
       _cy1 = img.posy;
       _cx2 = img.posx + img.width;
@@ -109,6 +111,9 @@ class ImageEditor {
   /* Initializes the image editor with the give image filename */
   private bool initialize( string fname ) {
 
+    var cx1 = _cx1;
+    var cy1 = _cy1;
+
     _cx1 = 0;
     _cy1 = 0;
 
@@ -126,6 +131,8 @@ class ImageEditor {
       set_cursor_location( 0, 0 );
       set_rotation( 0 );
     } catch( Error e ) {
+      _cx1 = cx1;
+      _cy1 = cy1;
       return( false );
     }
 
@@ -302,6 +309,18 @@ class ImageEditor {
       _crop_target = -1;
       set_cursor( null );
       return( false );
+    });
+
+    /* Set ourselves up to be a drag target */
+    Gtk.drag_dest_set( da, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
+
+    da.drag_data_received.connect((ctx, x, y, data, info, t) => {
+      if( data.get_uris().length == 1 ) {
+        var file = File.new_for_uri( data.get_uris()[0] );
+        if( initialize( file.get_path() ) ) {
+          Gtk.drag_finish( ctx, true, false, t );
+        }
+      }
     });
 
     return( da );
@@ -492,7 +511,6 @@ class ImageEditor {
     /* Set the node image */
     _node_image.rotate = _rotation;
     _node_image.set_from_surface( surface, (int)_cx1, (int)_cy1, (int)(_cx2 - _cx1), (int)(_cy2 - _cy1), _max_width );
-
 
     /* Indicate that the image changed */
     changed( orig_image );
