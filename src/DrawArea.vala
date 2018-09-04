@@ -141,9 +141,12 @@ public class DrawArea : Gtk.DrawingArea {
     /* Set ourselves up to be a drag target */
     Gtk.drag_dest_set( this, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
 
-    drag_motion.connect( handle_drag_motion );
-    drag_leave.connect( handle_drag_leave );
-    drag_data_received.connect( handle_drag_data_received );
+    this.drag_motion.connect( handle_drag_motion );
+    this.drag_drop.connect((ctx, x, y, t) => {
+      stdout.printf( "Dropped\n" );
+      return( false );
+    });
+    this.drag_data_received.connect( handle_drag_data_received );
 
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
@@ -1028,6 +1031,11 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Handle mouse motion */
   private bool on_motion( EventMotion event ) {
+    if( _attach_node != null ) {
+      _attach_node.mode = NodeMode.NONE;
+      _attach_node      = null;
+      queue_draw();
+    }
     if( _pressed ) {
       if( _current_node != null ) {
         double diffx = scale_value( event.x ) - _press_x;
@@ -1037,14 +1045,9 @@ public class DrawArea : Gtk.DrawingArea {
             _current_node.resize( diffx, _layout );
           } else {
             Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
-            if( _attach_node != null ) {
-              _attach_node.mode = NodeMode.NONE;
-            }
             if( attach_node != null ) {
               attach_node.mode = NodeMode.ATTACHABLE;
               _attach_node = attach_node;
-            } else if( _attach_node != null ) {
-              _attach_node = null;
             }
             _current_node.posx += diffx;
             _current_node.posy += diffy;
@@ -2013,23 +2016,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
-  /* Called when a drag leaves the canvas */
-  private void handle_drag_leave( Gdk.DragContext ctx, uint t ) {
-
-    stdout.printf( "Leaving\n" );
-
-    if( _attach_node != null ) {
-      _attach_node.mode = NodeMode.NONE;
-      _attach_node      = null;
-      queue_draw();
-    }
-
-  }
-
   /* Called when something is dropped on the DrawArea */
   private void handle_drag_data_received( Gdk.DragContext ctx, int x, int y, Gtk.SelectionData data, uint info, uint t ) {
-
-    stdout.printf( "Receiving\n" );
 
     if( (_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE) ) {
 
