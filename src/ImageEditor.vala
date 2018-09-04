@@ -49,6 +49,7 @@ class ImageEditor {
   private Label           _status_cursor;
   private Label           _status_crop;
   private Label           _status_rotate;
+  private bool            _drag_in = false;
 
   public signal void changed( NodeImage? orig_image );
 
