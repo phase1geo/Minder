@@ -26,6 +26,10 @@ using Cairo;
 
 public class DrawArea : Gtk.DrawingArea {
 
+  private const Gtk.TargetEntry[] DRAG_TARGETS = {
+    {"text/uri-list", 0, 0}
+  };
+
   private double           _press_x;
   private double           _press_y;
   private double           _origin_x;
@@ -133,6 +137,13 @@ public class DrawArea : Gtk.DrawingArea {
       EventMask.SMOOTH_SCROLL_MASK |
       EventMask.STRUCTURE_MASK
     );
+
+    /* Set ourselves up to be a drag target */
+    Gtk.drag_dest_set( this, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
+
+    drag_motion.connect( handle_drag_motion );
+    drag_leave.connect( handle_drag_leave );
+    drag_data_received.connect( handle_drag_data_received );
 
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
@@ -918,6 +929,17 @@ public class DrawArea : Gtk.DrawingArea {
     for( int i=0; i<_nodes.length; i++ ) {
       Node tmp = _nodes.index( i ).contains( x, y, _current_node );
       if( (tmp != null) && (tmp != _current_node.parent) && !_current_node.contains_node( tmp ) ) {
+        return( tmp );
+      }
+    }
+    return( null );
+  }
+
+  /* Returns the droppable node if one is found */
+  private Node? droppable_node( double x, double y ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      Node tmp = _nodes.index( i ).contains( x, y, null );
+      if( tmp != null ) {
         return( tmp );
       }
     }
@@ -1969,6 +1991,90 @@ public class DrawArea : Gtk.DrawingArea {
     _auto_save_id = null;
     changed();
     return( false );
+  }
+
+  /* Called whenever we drag something over the canvas */
+  private bool handle_drag_motion( Gdk.DragContext ctx, int x, int y, uint t ) {
+
+    Node attach_node = droppable_node( scale_value( x ), scale_value( y ) );
+    if( _attach_node != null ) {
+      _attach_node.mode = NodeMode.NONE;
+    }
+    if( attach_node != null ) {
+      attach_node.mode = NodeMode.DROPPABLE;
+      _attach_node = attach_node;
+      queue_draw();
+    } else if( _attach_node != null ) {
+      _attach_node = null;
+      queue_draw();
+    }
+
+    return( true );
+
+  }
+
+  /* Called when a drag leaves the canvas */
+  private void handle_drag_leave( Gdk.DragContext ctx, uint t ) {
+
+    stdout.printf( "Leaving\n" );
+
+    if( _attach_node != null ) {
+      _attach_node.mode = NodeMode.NONE;
+      _attach_node      = null;
+      queue_draw();
+    }
+
+  }
+
+  /* Called when something is dropped on the DrawArea */
+  private void handle_drag_data_received( Gdk.DragContext ctx, int x, int y, Gtk.SelectionData data, uint info, uint t ) {
+
+    stdout.printf( "Receiving\n" );
+
+    if( (_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE) ) {
+
+      foreach (var uri in data.get_uris()) {
+        var file  = File.new_for_uri( uri );
+        var image = new NodeImage.from_file( file.get_path() );
+        if( image.valid ) {
+          var node = new Node.with_name( this, _( "Another Idea" ), _layout );
+          node.image = image;
+          _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+          _nodes.append_val( node );
+          if( select_node( node ) ) {
+            node.mode = NodeMode.EDITABLE;
+            _current_new = true;
+            queue_draw();
+          }
+        }
+      }
+
+      Gtk.drag_finish( ctx, true, false, t );
+
+      see();
+      queue_draw();
+      node_changed();
+      auto_save();
+
+    } else if( (_attach_node.mode == NodeMode.DROPPABLE) && (data.get_uris().length == 1) ) {
+
+      var file  = File.new_for_uri( data.get_uris()[0] );
+      var image = new NodeImage.from_file( file.get_path() );
+      if( image.valid ) {
+        var orig_image = _current_node.image;
+        _attach_node.image = image;
+        undo_buffer.add_item( new UndoNodeImage( _attach_node, orig_image ) );
+        _layout.handle_update_by_edit( _attach_node );
+        _attach_node.mode = NodeMode.NONE;
+        _attach_node      = null;
+        Gtk.drag_finish( ctx, true, false, t );
+        queue_draw();
+        node_changed();
+        auto_save();
+      }
+
+    }
+
   }
 
 }

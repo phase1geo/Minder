@@ -29,7 +29,8 @@ public enum NodeMode {
   NONE = 0,   // Specifies that this node is not the current node
   CURRENT,    // Specifies that this node is the current node and is not being edited
   EDITABLE,   // Specifies that this node's text has been and currently is actively being edited
-  ATTACHABLE  // Specifies that this node is the currently attachable node (affects display)
+  ATTACHABLE, // Specifies that this node is the currently attachable node (affects display)
+  DROPPABLE   // Specifies that this node can receive a dropped item
 }
 
 public enum NodeSide {
@@ -1614,7 +1615,7 @@ public class Node : Object {
   /* Draws the attachable highlight border to indicate when a node is attachable */
   protected virtual void draw_attachable( Context ctx, Theme theme, RGBA? frost_background ) {
 
-    if( mode == NodeMode.ATTACHABLE ) {
+    if( (mode == NodeMode.ATTACHABLE) || (mode == NodeMode.DROPPABLE) ) {
 
       double x, y, w, h;
       bbox( out x, out y, out w, out h );
