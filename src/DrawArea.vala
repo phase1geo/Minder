@@ -142,10 +142,6 @@ public class DrawArea : Gtk.DrawingArea {
     Gtk.drag_dest_set( this, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
 
     this.drag_motion.connect( handle_drag_motion );
-    this.drag_drop.connect((ctx, x, y, t) => {
-      stdout.printf( "Dropped\n" );
-      return( false );
-    });
     this.drag_data_received.connect( handle_drag_data_received );
 
     /* Make sure the drawing area can receive keyboard focus */
@@ -2049,7 +2045,7 @@ public class DrawArea : Gtk.DrawingArea {
       var file  = File.new_for_uri( data.get_uris()[0] );
       var image = new NodeImage.from_file( file.get_path() );
       if( image.valid ) {
-        var orig_image = _current_node.image;
+        var orig_image = _attach_node.image;
         _attach_node.image = image;
         undo_buffer.add_item( new UndoNodeImage( _attach_node, orig_image ) );
         _layout.handle_update_by_edit( _attach_node );
@@ -2063,6 +2059,22 @@ public class DrawArea : Gtk.DrawingArea {
 
     }
 
+  }
+
+  /* Sets the image of the current node to the given filename */
+  public bool update_current_image( string fname ) {
+    var image = new NodeImage.from_file( fname );
+    if( image.valid ) {
+      var orig_image = _current_node.image;
+      _current_node.image = image;
+      undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
+      _layout.handle_update_by_edit( _current_node );
+      queue_draw();
+      node_changed();
+      auto_save();
+      return( true );
+    }
+    return( false );
   }
 
 }

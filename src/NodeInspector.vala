@@ -25,6 +25,10 @@ using Granite.Widgets;
 
 public class NodeInspector : Stack {
 
+  private const Gtk.TargetEntry[] DRAG_TARGETS = {
+    {"text/uri-list", 0, 0}
+  };
+
   private Entry       _name;
   private Switch      _task;
   private Switch      _fold;
@@ -207,6 +211,18 @@ public class NodeInspector : Stack {
     box.pack_start( _image_box, true,  true );
 
     bbox.pack_start( box, false, true );
+
+    /* Set ourselves up to be a drag target */
+    Gtk.drag_dest_set( _image_box, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
+
+    _image_box.drag_data_received.connect((ctx, x, y, data, info, t) => {
+      if( data.get_uris().length == 1 ) {
+        var file = File.new_for_uri( data.get_uris()[0] );
+        if( _da.update_current_image( file.get_path() ) ) {
+          Gtk.drag_finish( ctx, true, false, t );
+        }
+      }
+    });
 
   }
 
