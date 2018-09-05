@@ -2018,17 +2018,19 @@ public class DrawArea : Gtk.DrawingArea {
     if( (_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE) ) {
 
       foreach (var uri in data.get_uris()) {
-        var file  = File.new_for_uri( uri );
-        var image = new NodeImage.from_file( file.get_path() );
-        if( image.valid ) {
-          var node = new Node.with_name( this, _( "Another Idea" ), _layout );
-          node.image = image;
-          _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
-          _nodes.append_val( node );
-          if( select_node( node ) ) {
-            node.mode = NodeMode.EDITABLE;
-            _current_new = true;
-            queue_draw();
+        string? fname = NodeImage.get_fname_from_uri( uri );
+        if( fname != null ) {
+          var image = new NodeImage.from_file( fname );
+          if( image.valid ) {
+            var node = new Node.with_name( this, _( "Another Idea" ), _layout );
+            node.image = image;
+            _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+            _nodes.append_val( node );
+            if( select_node( node ) ) {
+              node.mode = NodeMode.EDITABLE;
+              _current_new = true;
+              queue_draw();
+            }
           }
         }
       }
@@ -2042,19 +2044,21 @@ public class DrawArea : Gtk.DrawingArea {
 
     } else if( (_attach_node.mode == NodeMode.DROPPABLE) && (data.get_uris().length == 1) ) {
 
-      var file  = File.new_for_uri( data.get_uris()[0] );
-      var image = new NodeImage.from_file( file.get_path() );
-      if( image.valid ) {
-        var orig_image = _attach_node.image;
-        _attach_node.image = image;
-        undo_buffer.add_item( new UndoNodeImage( _attach_node, orig_image ) );
-        _layout.handle_update_by_edit( _attach_node );
-        _attach_node.mode = NodeMode.NONE;
-        _attach_node      = null;
-        Gtk.drag_finish( ctx, true, false, t );
-        queue_draw();
-        node_changed();
-        auto_save();
+      string? fname = NodeImage.get_fname_from_uri( data.get_uris()[0] );
+      if( fname != null ) {
+        var image = new NodeImage.from_file( fname );
+        if( image.valid ) {
+          var orig_image = _attach_node.image;
+          _attach_node.image = image;
+          undo_buffer.add_item( new UndoNodeImage( _attach_node, orig_image ) );
+          _layout.handle_update_by_edit( _attach_node );
+          _attach_node.mode = NodeMode.NONE;
+          _attach_node      = null;
+          Gtk.drag_finish( ctx, true, false, t );
+          queue_draw();
+          node_changed();
+          auto_save();
+        }
       }
 
     }

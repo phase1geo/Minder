@@ -71,5 +71,10 @@
       <summary>Search option for non-task nodes</summary>
       <description>Specifies whether non-task nodes should be searched or not</description>
     </key>
+    <key name="image-id" type="i">
+      <default>1</default>
+      <summary>Unique ID added to image names</summary>
+      <description>Specifies the current unique image ID value</description>
+    </key>
   </schema>
 </schemalist>

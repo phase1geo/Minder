@@ -24,10 +24,11 @@ using GLib;
 
 public class Minder : Granite.Application {
 
-  private static bool    version   = false;
-  private static string? open_file = null;
-  private static bool    new_file  = false;
-  private static bool    testing   = false;
+  private static bool          version   = false;
+  private static string?       open_file = null;
+  private static bool          new_file  = false;
+  private static bool          testing   = false;
+  private static GLib.Settings settings;
 
   public Minder () {
     Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.FLAGS_NONE );
@@ -35,7 +36,9 @@ public class Minder : Granite.Application {
 
   protected override void activate() {
 
-    var settings  = new GLib.Settings( "com.github.phase1geo.minder" );
+    /* Initialize the settings */
+    settings = new GLib.Settings( "com.github.phase1geo.minder" );
+
     var last_file = settings.get_string( "last-file" );
 
     /* Add the application-specific icons */
@@ -93,8 +96,15 @@ public class Minder : Granite.Application {
 
   }
 
+  /* Returns the next unique image ID */
+  public static int get_image_id() {
+    var image_id = settings.get_int( "image-id" );
+    settings.set_int( "image-id", (image_id + 1) );
+    return( image_id );
+  }
+
   /* Parse the command-line arguments */
-  void parse_arguments( ref unowned string[] args ) {
+  private void parse_arguments( ref unowned string[] args ) {
 
     var context = new OptionContext( "- Minder Options" );
     var options = new OptionEntry[5];

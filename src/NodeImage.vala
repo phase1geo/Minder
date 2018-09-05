@@ -261,4 +261,32 @@ public class NodeImage {
 
   }
 
+  /* Returns the path for the file associated with the given URI */
+  public static string? get_fname_from_uri( string uri ) {
+    var rfile = File.new_for_uri( uri );
+    if( uri.has_prefix( "file://" ) ) {
+      return( rfile.get_path() );
+    } else {
+      var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "images" );
+      if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
+        var parts = uri.split( "." );
+        var ext   = parts[parts.length - 1];
+        if( (ext == "bmp") || (ext == "png") || (ext == "jpg") || (ext == "jpeg") ) {
+          ext = "." + ext;
+        } else {
+          ext = "";
+        }
+        var id    = Minder.get_image_id();
+        var lfile = File.new_for_path( GLib.Path.build_filename( dir, "img%06d%s".printf( id, ext ) ) );
+        try {
+          rfile.copy( lfile, FileCopyFlags.OVERWRITE );
+          return( lfile.get_path() );
+        } catch( Error e ) {
+          return( null );
+        }
+      }
+      return( null );
+    }
+  }
+
 }

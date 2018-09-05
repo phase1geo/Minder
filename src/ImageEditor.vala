@@ -316,8 +316,8 @@ class ImageEditor {
 
     da.drag_data_received.connect((ctx, x, y, data, info, t) => {
       if( data.get_uris().length == 1 ) {
-        var file = File.new_for_uri( data.get_uris()[0] );
-        if( initialize( file.get_path() ) ) {
+        string? fname = NodeImage.get_fname_from_uri( data.get_uris()[0] );
+        if( (fname != null) && initialize( fname ) ) {
           Gtk.drag_finish( ctx, true, false, t );
         }
       }
