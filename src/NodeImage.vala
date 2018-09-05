@@ -261,13 +261,23 @@ public class NodeImage {
 
   }
 
+  /* Returns the web pathname used to store downloaded images */
+  private static string get_web_path() {
+    return( GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "images" ) );
+  }
+
+  /* Returns true if the given image filename is one that came from the web */
+  public bool is_from_web() {
+    return( fname.has_prefix( get_web_path() ) );
+  }
+
   /* Returns the path for the file associated with the given URI */
   public static string? get_fname_from_uri( string uri ) {
     var rfile = File.new_for_uri( uri );
     if( uri.has_prefix( "file://" ) ) {
       return( rfile.get_path() );
     } else {
-      var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "images" );
+      var dir = get_web_path();
       if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
         var parts = uri.split( "." );
         var ext   = parts[parts.length - 1];
