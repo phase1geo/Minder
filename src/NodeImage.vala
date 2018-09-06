@@ -178,35 +178,39 @@ public class NodeImage {
     Pixbuf? buf;
     var scale_width  = 200.0 / _buf.width;
     var scale_height = 200.0 / _buf.height;
-    var width        = 200;
-    var height       = 200;
+    var w            = 200;
+    var h            = 200;
 
     /* Calculate the width and height of the required image */
     if( scale_width < scale_height ) {
-      height = (int)(scale_width * _buf.height);
+      h = (int)(scale_width * _buf.height);
     } else {
-      width  = (int)(scale_height * _buf.width);
+      w = (int)(scale_height * _buf.width);
     }
 
     /* Create the pixbuf thumbnail and set it in the given image widget */
-    buf = _buf.scale_simple( width, height, InterpType.BILINEAR );
+    buf = _buf.scale_simple( w, h, InterpType.BILINEAR );
     img.set_from_pixbuf( buf );
 
   }
 
   /* Sets the buffer from the given surface */
-  public void set_from_surface( Surface surface, int x, int y, int width, int height, int max_width ) {
+  public void set_from_surface( Surface surface, int x, int y, int w, int h, int max_width ) {
 
-    var scale_width  = max_width / width;
+    var scale = (max_width * 1.0) / w;
+
+    stdout.printf( "In set_from_surface, w: %d, max_width; %d, scale: %g\n", w, max_width, scale );
 
     posx = x;
     posy = y;
 
     /* Get a copy of the image area to capture */
-    var buf = pixbuf_get_from_surface( surface, x, y, width, height );
+    var buf = pixbuf_get_from_surface( surface, x, y, w, h );
 
     /* Scale the image to fit within the node's max_width value */
-    _buf = buf.scale_simple( max_width, (height * scale_width), InterpType.BILINEAR );
+    _buf   = buf.scale_simple( max_width, (int)(h * scale), InterpType.BILINEAR );
+    width  = _buf.width;
+    height = _buf.height;
 
   }
 

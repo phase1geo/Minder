@@ -90,14 +90,16 @@ class ImageEditor {
 
     /* Load the image and draw it */
     if( initialize( img.fname ) ) {
-      var scale_width = (max_width * 1.0) / img.width;
-      stdout.printf( "max_width: %d, img.width: %d, scale_width: %g\n", max_width, img.width, scale_width );
+      var scale      = (max_width * 1.0) / img.width;
+      var img_width  = img.width  / scale;
+      var img_height = img.height / scale;
+      stdout.printf( "max_width: %d, img_width: %g, img_height: %g, img.width: %d, img.height: %d, scale: %g\n", max_width, img_width, img_height, img.width, img.height, scale );
       _cx1 = img.posx;
       _cy1 = img.posy;
-      _cx2 = img.posx + img.width;
-      _cy2 = img.posy + img.height;
-      _crop_points[8].width  = img.width;
-      _crop_points[8].height = img.height;
+      _cx2 = img.posx + img_width;
+      _cy2 = img.posy + img_height;
+      _crop_points[8].width  = (int)img_width;
+      _crop_points[8].height = (int)img_height;
       set_crop_points();
       set_rotation( img.rotate );
       _da.queue_draw();
@@ -497,6 +499,8 @@ class ImageEditor {
 
   /* Returns the pixbuf associated with this window */
   private void set_node_image() {
+
+    stdout.printf( "cx1: %g, cy1: %g, cx2: %g, cy2: %g\n", _cx1, _cy1, _cx2, _cy2 );
 
     /* Create a copy of the current image before changing it */
     NodeImage orig_image = new NodeImage.from_node_image( _node_image );
