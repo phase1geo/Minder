@@ -1204,8 +1204,10 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_escape() {
     if( is_mode_edit() ) {
       _current_node.mode = NodeMode.CURRENT;
-      node_changed();
+      _current_node.name = _orig_name;
+      _layout.handle_update_by_edit( _current_node );
       queue_draw();
+      changed();
     }
   }
 
@@ -1743,7 +1745,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Cuts the current selected text to the clipboard */
   private void cut_selected_text() {
     copy_selected_text();
-    _current_node.edit_insert("", _layout );
+    _current_node.edit_insert( "", _layout );
     queue_draw();
     changed();
   }
