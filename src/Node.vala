@@ -346,6 +346,13 @@ public class Node : Object {
     return( (_task_done / (_task_count * 1.0)) * 100 );
   }
 
+  /* Returns true if the resizer should be in the upper left */
+  private bool resizer_on_left() {
+
+    return( !is_root() && (side == NodeSide.LEFT) );
+
+  }
+
   /* Returns true if the given cursor coordinates lies within this node */
   public virtual bool is_within( double x, double y ) {
     double cx, cy, cw, ch;
@@ -415,7 +422,7 @@ public class Node : Object {
   public virtual bool is_within_resizer( double x, double y ) {
     if( mode == NodeMode.CURRENT ) {
       double rx, ry, rw, rh;
-      rx = posx + _width - 8;
+      rx = resizer_on_left() ? posx : (posx + _width - 8);
       ry = posy;
       rw = 8;
       rh = 8;
@@ -763,6 +770,7 @@ public class Node : Object {
 
   /* Resizes the node width by the given amount */
   public virtual void resize( double diff, Layout layout ) {
+    diff = resizer_on_left() ? (0 - diff) : diff;
     if( image == null ) {
       if( (diff < 0) ? ((_max_width + diff) <= _min_width) : !_layout.is_wrapped() ) return;
       _max_width += diff;
@@ -1689,10 +1697,8 @@ public class Node : Object {
       return;
     }
 
-    double x, y;
-
-    x = (posx + _width) - 8;
-    y = posy;
+    double x = resizer_on_left() ? posx : (posx + _width - 8);
+    double y = posy;
 
     set_context_color( ctx, theme.foreground );
     ctx.set_line_width( 1 );
