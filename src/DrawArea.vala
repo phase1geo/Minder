@@ -1743,7 +1743,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Cuts the current selected text to the clipboard */
   private void cut_selected_text() {
     copy_selected_text();
-    _current_node.edit_delete( _layout );
+    _current_node.edit_insert("", _layout );
+    queue_draw();
+    changed();
   }
 
   /* Either cuts the current node or cuts the currently selected text */
