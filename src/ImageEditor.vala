@@ -90,10 +90,10 @@ class ImageEditor {
 
     /* Load the image and draw it */
     if( initialize( img.fname ) ) {
-      var scale      = (max_width * 1.0) / img.width;
-      var img_width  = img.width  / scale;
-      var img_height = img.height / scale;
-      stdout.printf( "max_width: %d, img_width: %g, img_height: %g, img.width: %d, img.height: %d, scale: %g\n", max_width, img_width, img_height, img.width, img.height, scale );
+      var scale      = (_da.width_request * 1.0) / img.width;
+      stdout.printf( "scale: %g\n", scale );
+      var img_width  = img.width  * scale;
+      var img_height = img.height * scale;
       _cx1 = img.posx;
       _cy1 = img.posy;
       _cx2 = img.posx + img_width;

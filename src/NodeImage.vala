@@ -40,10 +40,8 @@ public class NodeImage {
 
   /* Default constructor */
   public NodeImage.from_file( string fn ) {
-
     fname = fn;
     valid = load( 200 );
-
   }
 
   /* Constructor from XML file */
