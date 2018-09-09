@@ -118,12 +118,6 @@ public class NodeImage {
     /* Get the file information */
     Pixbuf.get_file_info( fname, out _act_width, out _act_height );
 
-    /*
-    if( act_width < 200 ) {
-      req_width = act_width;
-    }
-    */
-
     /* Get the file into the current pixbuf */
     try {
       var buf     = new Pixbuf.from_file_at_size( fname, req_width, req_height );
