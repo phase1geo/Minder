@@ -90,8 +90,7 @@ class ImageEditor {
 
     /* Load the image and draw it */
     if( initialize( img.fname ) ) {
-      var scale      = (_da.width_request * 1.0) / img.width;
-      stdout.printf( "scale: %g\n", scale );
+      var scale      = ((_da.width_request * 1.0) / img.act_width()) * img.get_scale();
       var img_width  = img.width  * scale;
       var img_height = img.height * scale;
       _cx1 = img.posx;
@@ -499,8 +498,6 @@ class ImageEditor {
 
   /* Returns the pixbuf associated with this window */
   private void set_node_image() {
-
-    stdout.printf( "cx1: %g, cy1: %g, cx2: %g, cy2: %g\n", _cx1, _cy1, _cx2, _cy2 );
 
     /* Create a copy of the current image before changing it */
     NodeImage orig_image = new NodeImage.from_node_image( _node_image );

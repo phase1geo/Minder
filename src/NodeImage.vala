@@ -29,6 +29,7 @@ public class NodeImage {
   private Pixbuf _buf;
   private double _act_width;
   private double _act_height;
+  private double _scale = 1;
 
   public string fname  { get; set; default = ""; }
   public bool   valid  { get; private set; default = false; }
@@ -41,6 +42,7 @@ public class NodeImage {
   /* Default constructor */
   public NodeImage.from_file( string fn ) {
     fname = fn;
+    load_file_info();
     valid = load( 200 );
   }
 
@@ -77,9 +79,15 @@ public class NodeImage {
       height = int.parse( h );
     }
 
+    string? s = n->get_prop( "scale" );
+    if( s != null ) {
+      _scale = double.parse( s );
+    }
+
     /* Allocate the image */
-    if( (fname != "") && (width > 0) ) {
-      valid = load( (int)width );
+    if( (fname != "") && (width > 0) && (_scale > 0) ) {
+      load_file_info();
+      valid = load( (int)(_act_width * _scale) );
     }
 
   }
@@ -94,6 +102,7 @@ public class NodeImage {
     width  = ni.width;
     height = ni.height;
     rotate = ni.rotate;
+    _scale = ni.get_scale();
   }
 
   /* Add the image */
@@ -110,13 +119,15 @@ public class NodeImage {
 
   }
 
+  /* Load the width/height information of the original file */
+  private void load_file_info() {
+    Pixbuf.get_file_info( fname, out _act_width, out _act_height );
+  }
+
   /* Loads the current file into this structure */
   private bool load( int req_width ) {
 
     int req_height = 400;
-
-    /* Get the file information */
-    Pixbuf.get_file_info( fname, out _act_width, out _act_height );
 
     /* Get the file into the current pixbuf */
     try {
@@ -135,6 +146,7 @@ public class NodeImage {
     posy   = 0;
     width  = _buf.width;
     height = _buf.height;
+    _scale = _act_width / req_width;
 
     return( true );
 
@@ -143,6 +155,11 @@ public class NodeImage {
   /* Returns a pixbuf */
   public Pixbuf? get_pixbuf() {
     return( _buf );
+  }
+
+  /* Returns the scaling factor used for getting the original image to the one needed for the pixbuf */
+  public double get_scale() {
+    return( _scale );
   }
 
   /* Returns the actual width of the original file image */
@@ -157,10 +174,8 @@ public class NodeImage {
 
   /* Draws the image to the given context */
   public void draw( Context ctx, double x, double y, double opacity ) {
-
     cairo_set_source_pixbuf( ctx, _buf, x, y );
     ctx.paint_with_alpha( opacity );
-
   }
 
 
@@ -190,8 +205,6 @@ public class NodeImage {
   public void set_from_surface( Surface surface, int x, int y, int w, int h, int max_width ) {
 
     var scale = (max_width * 1.0) / w;
-
-    stdout.printf( "In set_from_surface, w: %d, max_width; %d, scale: %g\n", w, max_width, scale );
 
     posx = x;
     posy = y;
@@ -224,6 +237,7 @@ public class NodeImage {
     n->new_prop( "posy",   posy.to_string() );
     n->new_prop( "width",  _buf.width.to_string() );
     n->new_prop( "height", _buf.height.to_string() );
+    n->new_prop( "scale",  _scale.to_string() );
 
     parent->add_child( n );
 
