@@ -43,6 +43,7 @@ class ImageEditor {
   private Label           _status_cursor;
   private Label           _status_crop;
   private Label           _status_rotate;
+  private Scale           _angle;
 
   public signal void changed( NodeImage? orig_image );
 
@@ -88,7 +89,7 @@ class ImageEditor {
     _crop_points[8].width  = img.crop_w;
     _crop_points[8].height = img.crop_h;
     set_crop_points();
-    set_rotation( img.rotate );
+    _angle.set_value( img.rotate );
     _da.queue_draw();
 
     /* Display ourselves */
@@ -107,7 +108,7 @@ class ImageEditor {
       _crop_points[8].height = _node_image.height;
       set_crop_points();
       set_cursor_location( 0, 0 );
-      set_rotation( 0 );
+      _angle.set_value( 0 );
     }
 
     return( _node_image.valid );
@@ -294,6 +295,7 @@ class ImageEditor {
       if( data.get_uris().length == 1 ) {
         string? fname = NodeImage.get_fname_from_uri( data.get_uris()[0] );
         if( (fname != null) && initialize( fname ) ) {
+          da.queue_draw();
           Gtk.drag_finish( ctx, true, false, t );
         }
       }
@@ -324,17 +326,7 @@ class ImageEditor {
 
   /* Updates the cursor location status with the given values */
   private void set_cursor_location( int x, int y ) {
-
     _status_cursor.label = _( "Cursor: %3d,%3d" ).printf( x, y );
-
-  }
-
-  /* Sets the rotation value and updates the status */
-  private void set_rotation( int value ) {
-
-    _node_image.rotate = value;
-    _status_rotate.label = _( "Rotation: %3d\u00b0" ).printf( value );
-
   }
 
   /* Creates the rotation toolbar */
@@ -343,25 +335,27 @@ class ImageEditor {
     var box       = new Box( Orientation.HORIZONTAL, 5 );
     var clockwise = new Button.from_icon_name( "object-rotate-right-symbolic", IconSize.BUTTON );
     var counter   = new Button.from_icon_name( "object-rotate-left-symbolic",  IconSize.BUTTON );
-    var angle     = new Scale.with_range( Orientation.HORIZONTAL, -180, 180, 1 );
+    _angle        = new Scale.with_range( Orientation.HORIZONTAL, -180, 180, 1 );
 
-    angle.set_value( 0 );
+    _angle.set_value( 0 );
 
     clockwise.clicked.connect(() => {
-      angle.set_value( angle.get_value() + 1 );
+      _angle.set_value( _angle.get_value() + 1 );
     });
 
     counter.clicked.connect(() => {
-      angle.set_value( angle.get_value() - 1 );
+      _angle.set_value( _angle.get_value() - 1 );
     });
 
-    angle.value_changed.connect(() => {
-      set_rotation( (int)angle.get_value() );
+    _angle.value_changed.connect(() => {
+      var value = (int)_angle.get_value();
+      _node_image.rotate = value;
+      _status_rotate.label = _( "Rotation: %3d\u00b0" ).printf( value );
       _da.queue_draw();
     });
 
     box.pack_start( counter,   false, false, 5 );
-    box.pack_start( angle,     true,  true,  0 );
+    box.pack_start( _angle,    true,  true,  0 );
     box.pack_start( clockwise, false, false, 5 );
 
     return( box );

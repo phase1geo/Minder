@@ -154,8 +154,8 @@ public class NodeImage {
       /* Initialize the variables */
       crop_x = 0;
       crop_y = 0;
-      crop_w = _surface.get_width();
-      crop_h = _surface.get_height();
+      crop_w = image.get_width();
+      crop_h = image.get_height();
       rotate = 0;
 
     } catch( Error e ) {
@@ -216,20 +216,6 @@ public class NodeImage {
     /* Create the pixbuf thumbnail and set it in the given image widget */
     buf = _buf.scale_simple( w, h, InterpType.BILINEAR );
     img.set_from_pixbuf( buf );
-
-  }
-
-  /* Sets the buffer from the given surface */
-  public void set_edit_info( int x, int y, int w, int h, int r ) {
-
-    crop_x = x;
-    crop_y = y;
-    crop_w = w;
-    crop_h = h;
-    rotate = r;
-
-    /* Set the width information */
-    set_width( _buf.width );
 
   }
 
