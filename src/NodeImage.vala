@@ -26,24 +26,35 @@ using Cairo;
 
 public class NodeImage {
 
-  private Pixbuf _buf;
-  private double _act_width;
-  private double _act_height;
-  private double _scale = 1;
+  public const int EDIT_WIDTH  = 600;
+  public const int EDIT_HEIGHT = 600;
+
+  private ImageSurface _surface;
+  private Pixbuf       _buf;
 
   public string fname  { get; set; default = ""; }
   public bool   valid  { get; private set; default = false; }
-  public double posx   { get; set; default = 0; }
-  public double posy   { get; set; default = 0; }
-  public int    width  { get; set; default = 0; }
-  public int    height { get; set; default = 0; }
+  public int    crop_x { get; set; default = 0; }
+  public int    crop_y { get; set; default = 0; }
+  public int    crop_w { get; set; default = 0; }
+  public int    crop_h { get; set; default = 0; }
+  public int    width  {
+    get {
+      return( _buf.width );
+    }
+  }
+  public int    height {
+    get {
+      return( _buf.height );
+    }
+  }
   public int    rotate { get; set; default = 0; }
 
   /* Default constructor */
   public NodeImage.from_file( string fn ) {
-    fname = fn;
-    load_file_info();
-    valid = load( 200 );
+    if( load( fn ) ) {
+      set_width( 200 );
+    }
   }
 
   /* Constructor from XML file */
@@ -59,53 +70,58 @@ public class NodeImage {
       rotate = int.parse( r );
     }
 
-    string? x = n->get_prop( "posx" );
+    string? x = n->get_prop( "x" );
     if( x != null ) {
-      posx = double.parse( x );
+      crop_x = int.parse( x );
     }
 
-    string? y = n->get_prop( "posy" );
+    string? y = n->get_prop( "y" );
     if( y != null ) {
-      posy = double.parse( y );
+      crop_y = int.parse( y );
     }
 
-    string? w = n->get_prop( "width" );
+    string? w = n->get_prop( "w" );
     if( w != null ) {
-      width = int.parse( w );
+      crop_w = int.parse( w );
     }
 
-    string? h = n->get_prop( "height" );
+    string? h = n->get_prop( "h" );
     if( h != null ) {
-      height = int.parse( h );
-    }
-
-    string? s = n->get_prop( "scale" );
-    if( s != null ) {
-      _scale = double.parse( s );
+      crop_h = int.parse( h );
     }
 
     /* Allocate the image */
-    if( (fname != "") && (width > 0) && (_scale > 0) ) {
-      load_file_info();
-      valid = load( (int)(_act_width * _scale) );
+    if( fname != "" ) {
+      if( load( fname ) ) {
+        set_width( 200 );
+      }
     }
 
   }
 
   /* Creates a new NodeImage from the given NodeImage */
   public NodeImage.from_node_image( NodeImage ni ) {
-    _buf   = ni.get_pixbuf().copy();
-    fname  = ni.fname;
-    valid  = ni.valid;
-    posx   = ni.posx;
-    posy   = ni.posy;
-    width  = ni.width;
-    height = ni.height;
-    rotate = ni.rotate;
-    _scale = ni.get_scale();
+    copy_from( ni );
   }
 
-  /* Add the image */
+  /* Copy the node image from the given parameter */
+  public void copy_from( NodeImage ni ) {
+    var s = ni.get_surface();
+    _surface = new ImageSurface.for_data( s.get_data(), s.get_format(), s.get_width(), s.get_height(), s.get_stride() );
+    fname    = ni.fname;
+    valid    = ni.valid;
+    crop_x   = ni.crop_x;
+    crop_y   = ni.crop_y;
+    crop_w   = ni.crop_w;
+    crop_h   = ni.crop_h;
+    rotate   = ni.rotate;
+    set_width( ni.get_pixbuf().width );
+  }
+
+  /*
+   Add the image to the given context.  We need this method because we are
+   supporting image rotation.
+  */
   private void draw_image( Context ctx, ImageSurface image ) {
 
     var w = image.get_width();
@@ -119,57 +135,59 @@ public class NodeImage {
 
   }
 
-  /* Load the width/height information of the original file */
-  private void load_file_info() {
-    Pixbuf.get_file_info( fname, out _act_width, out _act_height );
-  }
-
   /* Loads the current file into this structure */
-  private bool load( int req_width ) {
+  public bool load( string fn ) {
 
-    int req_height = 400;
+    fname = fn;
+    valid = true;
 
-    /* Get the file into the current pixbuf */
+    /* Get the file into the stored pixbuf */
     try {
-      var buf     = new Pixbuf.from_file_at_size( fname, req_width, req_height );
+
+      /* Initialize the buffer */
+      var buf     = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
       var image   = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 0, null );
-      var surface = new ImageSurface( image.get_format(), image.get_width(), image.get_height() );
-      var context = new Context( surface );
+      _surface    = new ImageSurface( image.get_format(), image.get_width(), image.get_height() );
+      var context = new Context( _surface );
       draw_image( context, image );
-      _buf = pixbuf_get_from_surface( surface, (int)posx, (int)posy, image.get_width(), image.get_height() );
+
+      /* Initialize the variables */
+      crop_x = 0;
+      crop_y = 0;
+      crop_w = _surface.get_width();
+      crop_h = _surface.get_height();
+      rotate = 0;
+
     } catch( Error e ) {
-      return( false );
+      valid = false;
     }
 
-    /* Calculate the scaling factor */
-    posx   = 0;
-    posy   = 0;
-    width  = _buf.width;
-    height = _buf.height;
-    _scale = _act_width / req_width;
+    return( valid );
 
-    return( true );
+  }
 
+  /*
+   Sets the width of the buffer based to the given value. We will always generate
+   the buffer from the stored surface so that we don't lose resolution when scaling
+   up.
+  */
+  public void set_width( int width ) {
+
+    var scale = (width * 1.0) / crop_w;
+    var buf   = pixbuf_get_from_surface( _surface, crop_x, crop_y, crop_w, crop_h );
+
+    _buf = buf.scale_simple( width, (int)(crop_h * scale), InterpType.BILINEAR );
+
+  }
+
+  /* Returns the original pixbuf */
+  public ImageSurface? get_surface() {
+    return( _surface );
   }
 
   /* Returns a pixbuf */
   public Pixbuf? get_pixbuf() {
     return( _buf );
-  }
-
-  /* Returns the scaling factor used for getting the original image to the one needed for the pixbuf */
-  public double get_scale() {
-    return( _scale );
-  }
-
-  /* Returns the actual width of the original file image */
-  public double act_width() {
-    return( _act_width );
-  }
-
-  /* Returns the actual width of the original file image */
-  public double act_height() {
-    return( _act_height );
   }
 
   /* Draws the image to the given context */
@@ -202,27 +220,16 @@ public class NodeImage {
   }
 
   /* Sets the buffer from the given surface */
-  public void set_from_surface( Surface surface, int x, int y, int w, int h, int max_width ) {
+  public void set_edit_info( int x, int y, int w, int h, int r ) {
 
-    var scale = (max_width * 1.0) / w;
+    crop_x = x;
+    crop_y = y;
+    crop_w = w;
+    crop_h = h;
+    rotate = r;
 
-    posx = x;
-    posy = y;
-
-    /* Get a copy of the image area to capture */
-    var buf = pixbuf_get_from_surface( surface, x, y, w, h );
-
-    /* Scale the image to fit within the node's max_width value */
-    _buf   = buf.scale_simple( max_width, (int)(h * scale), InterpType.BILINEAR );
-    width  = _buf.width;
-    height = _buf.height;
-
-  }
-
-  /* Sets the width of the image to the given value */
-  public void set_image_width( int width ) {
-
-    load( width );
+    /* Set the width information */
+    set_width( _buf.width );
 
   }
 
@@ -233,11 +240,10 @@ public class NodeImage {
 
     n->new_prop( "fname",  fname );
     n->new_prop( "rotate", rotate.to_string() );
-    n->new_prop( "posx",   posx.to_string() );
-    n->new_prop( "posy",   posy.to_string() );
-    n->new_prop( "width",  _buf.width.to_string() );
-    n->new_prop( "height", _buf.height.to_string() );
-    n->new_prop( "scale",  _scale.to_string() );
+    n->new_prop( "x",      crop_x.to_string() );
+    n->new_prop( "y",      crop_y.to_string() );
+    n->new_prop( "w",      crop_w.to_string() );
+    n->new_prop( "h",      crop_h.to_string() );
 
     parent->add_child( n );
 

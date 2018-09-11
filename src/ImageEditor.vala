@@ -33,19 +33,13 @@ class ImageEditor {
 
   private Popover         _popover;
   private DrawingArea     _da;
-  private double          _cx1         = 0;
-  private double          _cy1         = 0;
-  private double          _cx2         = 200;
-  private double          _cy2         = 200;
-  private ImageSurface?   _image       = null;
-  private int             _crop_target = -1;
+  private NodeImage       _orig_image;
   private NodeImage       _node_image;
-  private int             _max_width;
+  private int             _crop_target = -1;
   private double          _last_x;
   private double          _last_y;
   private Gdk.Rectangle[] _crop_points;
   private CursorType[]    _crop_cursors;
-  private int             _rotation;
   private Label           _status_cursor;
   private Label           _status_crop;
   private Label           _status_rotate;
@@ -79,30 +73,23 @@ class ImageEditor {
 
   }
 
-  public void edit_image( NodeImage img, double x, double y, int max_width ) {
+  public void edit_image( NodeImage img, double x, double y ) {
 
     Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
     _popover.pointing_to = rect;
 
     /* Set the defaults */
-    _node_image = img;
-    _max_width  = max_width;
+    _orig_image = img;
+    _node_image = new NodeImage.from_node_image( img );
 
     /* Load the image and draw it */
-    if( initialize( img.fname ) ) {
-      var scale      = ((_da.width_request * 1.0) / img.act_width()) * img.get_scale();
-      var img_width  = img.width  * scale;
-      var img_height = img.height * scale;
-      _cx1 = img.posx;
-      _cy1 = img.posy;
-      _cx2 = img.posx + img_width;
-      _cy2 = img.posy + img_height;
-      _crop_points[8].width  = (int)img_width;
-      _crop_points[8].height = (int)img_height;
-      set_crop_points();
-      set_rotation( img.rotate );
-      _da.queue_draw();
-    }
+    _da.width_request      = img.get_surface().get_width();
+    _da.height_request     = img.get_surface().get_height();
+    _crop_points[8].width  = img.crop_w;
+    _crop_points[8].height = img.crop_h;
+    set_crop_points();
+    set_rotation( img.rotate );
+    _da.queue_draw();
 
     /* Display ourselves */
     _popover.popup();
@@ -112,44 +99,30 @@ class ImageEditor {
   /* Initializes the image editor with the give image filename */
   private bool initialize( string fname ) {
 
-    var cx1 = _cx1;
-    var cy1 = _cy1;
-
-    _cx1 = 0;
-    _cy1 = 0;
-
     /* Load the image and draw it */
-    try {
-      var pixbuf = new Pixbuf.from_file_at_size( fname, 600, 600 );
-      _image                 = (ImageSurface)cairo_surface_create_from_pixbuf( pixbuf, 0, null );
-      _da.width_request      = pixbuf.width;
-      _da.height_request     = pixbuf.height;
-      _cx2                   = pixbuf.width;
-      _cy2                   = pixbuf.height;
-      _crop_points[8].width  = pixbuf.width;
-      _crop_points[8].height = pixbuf.height;
+    if( _node_image.load( fname ) ) {
+      _da.width_request      = _node_image.width;
+      _da.height_request     = _node_image.height;
+      _crop_points[8].width  = _node_image.width;
+      _crop_points[8].height = _node_image.height;
       set_crop_points();
       set_cursor_location( 0, 0 );
       set_rotation( 0 );
-    } catch( Error e ) {
-      _cx1 = cx1;
-      _cy1 = cy1;
-      return( false );
     }
 
-    return( true );
+    return( _node_image.valid );
 
   }
 
   /* Set the crop point positions to the values on the current crop region */
   private void set_crop_points() {
 
-    var x0 = (int)_cx1;
-    var x1 = (int)(_cx1 + ((_cx2 - _cx1) / 2) - (CROP_WIDTH / 2));
-    var x2 = (int)(_cx2 - CROP_WIDTH);
-    var y0 = (int)_cy1;
-    var y1 = (int)(_cy1 + ((_cy2 - _cy1) / 2) - (CROP_WIDTH / 2));
-    var y2 = (int)(_cy2 - CROP_WIDTH);
+    var x0 = _node_image.crop_x;
+    var x1 = (_node_image.crop_x + (_node_image.crop_w / 2) - (CROP_WIDTH / 2));
+    var x2 = ((_node_image.crop_x + _node_image.crop_w) - CROP_WIDTH);
+    var y0 = _node_image.crop_y;
+    var y1 = (_node_image.crop_y + (_node_image.crop_h / 2) - (CROP_WIDTH / 2));
+    var y2 = ((_node_image.crop_y + _node_image.crop_h) - CROP_WIDTH);
 
     _crop_points[0].x = x0;
     _crop_points[0].y = y0;
@@ -170,8 +143,8 @@ class ImageEditor {
 
     _crop_points[8].x      = x0;
     _crop_points[8].y      = y0;
-    _crop_points[8].width  = (int)(_cx2 - _cx1);
-    _crop_points[8].height = (int)(_cy2 - _cy1);
+    _crop_points[8].width  = _node_image.crop_w;
+    _crop_points[8].height = _node_image.crop_h;
 
     _status_crop.label = _( "Crop Area: %d,%d %3dx%3d" ).printf( _crop_points[8].x, _crop_points[8].y, _crop_points[8].width, _crop_points[8].height );
 
@@ -193,12 +166,12 @@ class ImageEditor {
   }
 
   /* Adjusts the crop points by the given cursor difference */
-  private void adjust_crop_points( double diffx, double diffy ) {
+  private void adjust_crop_points( int diffx, int diffy ) {
     if( _crop_target != -1 ) {
-      var cx1 = _cx1;
-      var cy1 = _cy1;
-      var cx2 = _cx2;
-      var cy2 = _cy2;
+      var cx1 = _node_image.crop_x;
+      var cy1 = _node_image.crop_y;
+      var cx2 = cx1 + _node_image.crop_w;
+      var cy2 = cy1 + _node_image.crop_h;
       switch( _crop_target ) {
         case 0 :  cx1 += diffx;  cy1 += diffy;  break;
         case 1 :  cy1 += diffy;                 break;
@@ -211,11 +184,13 @@ class ImageEditor {
         case 8 :  cx1 += diffx;  cy1 += diffy;
                   cx2 += diffx;  cy2 += diffy;  break;
       }
-      if( (cx1 >= 0) && (cx2 <= _image.get_width()) && ((cx2 - cx1) >= MIN_WIDTH) ) {
-        _cx1 = cx1;  _cx2 = cx2;
+      if( (cx1 >= 0) && (cx2 <= _da.width_request) && ((cx2 - cx1) >= MIN_WIDTH) ) {
+        _node_image.crop_x = cx1;
+        _node_image.crop_w = (cx2 - cx1);
       }
       if( (cy1 >= 0) && (cy2 <= _da.height_request) && ((cy2 - cy1) >= MIN_WIDTH) ) {
-        _cy1 = cy1;  _cy2 = cy2;
+        _node_image.crop_y = cy1;
+        _node_image.crop_h = (cy2 - cy1);
       }
       set_crop_points();
     }
@@ -252,8 +227,8 @@ class ImageEditor {
 
     var da = new DrawingArea();
 
-    da.width_request  = 600;
-    da.height_request = 600;
+    da.width_request  = NodeImage.EDIT_WIDTH;
+    da.height_request = NodeImage.EDIT_HEIGHT;
 
     /* Make sure the above events are listened for */
     da.add_events(
@@ -297,7 +272,7 @@ class ImageEditor {
         }
         _crop_target = -1;
       } else {
-        adjust_crop_points( (e.x - _last_x), (e.y - _last_y) );
+        adjust_crop_points( (int)(e.x - _last_x), (int)(e.y - _last_y) );
         da.queue_draw();
       }
       _last_x = e.x;
@@ -357,8 +332,8 @@ class ImageEditor {
   /* Sets the rotation value and updates the status */
   private void set_rotation( int value ) {
 
-    _rotation = value;
-    _status_rotate.label = _( "Rotation: %3d\u00b0" ).printf( _rotation );
+    _node_image.rotate = value;
+    _status_rotate.label = _( "Rotation: %3d\u00b0" ).printf( value );
 
   }
 
@@ -442,17 +417,17 @@ class ImageEditor {
   /* Add the image */
   private void draw_image( Context ctx ) {
 
-    var w = _image.get_width();
-    var h = _image.get_height();
+    var w = _da.width_request;
+    var h = _da.height_request;
 
     ctx.translate( (w * 0.5), (h * 0.5) );
-    ctx.rotate( _rotation * Math.PI / 180 );
+    ctx.rotate( _node_image.rotate * Math.PI / 180 );
     ctx.translate( (w * -0.5), (h * -0.5) );
-    ctx.set_source_surface( _image, 0, 0 );
+    ctx.set_source_surface( _node_image.get_surface(), 0, 0 );
     ctx.paint();
 
     ctx.translate( (w * 0.5), (h * 0.5) );
-    ctx.rotate( (0 - _rotation) * Math.PI / 180 );
+    ctx.rotate( (0 - _node_image.rotate) * Math.PI / 180 );
     ctx.translate( (w * -0.5), (h * -0.5) );
 
   }
@@ -460,18 +435,22 @@ class ImageEditor {
   /* Draw the crop mask */
   private void draw_crop( Context ctx ) {
 
-    var width  = _image.get_width();
-    var height = _image.get_height();
+    var width  = _da.width_request;
+    var height = _da.height_request;
+    var cx1    = _node_image.crop_x;
+    var cy1    = _node_image.crop_y;
+    var cx2    = _node_image.crop_x + _node_image.crop_w;
+    var cy2    = _node_image.crop_y + _node_image.crop_h;
 
     ctx.set_line_width( 0 );
     ctx.set_source_rgba( 0, 0, 0, 0.8 );
-    ctx.rectangle( 0, 0, _cx1, height );
+    ctx.rectangle( 0, 0, cx1, height );
     ctx.fill();
-    ctx.rectangle( _cx2, 0, (width - _cx2), height );
+    ctx.rectangle( cx2, 0, (width - cx2), height );
     ctx.fill();
-    ctx.rectangle( _cx1, 0, (_cx2 - _cx1), (_cy1 + 1) );
+    ctx.rectangle( cx1, 0, (cx2 - cx1), (cy1 + 1) );
     ctx.fill();
-    ctx.rectangle( _cx1, _cy2, (_cx2 - _cx1), (height - _cy2) );
+    ctx.rectangle( cx1, cy2, (cx2 - cx1), (height - cy2) );
     ctx.fill();
 
     ctx.set_line_width( 1 );
@@ -500,18 +479,10 @@ class ImageEditor {
   private void set_node_image() {
 
     /* Create a copy of the current image before changing it */
-    NodeImage orig_image = new NodeImage.from_node_image( _node_image );
-
-    /* Create a surface and context to draw */
-    var surface = new ImageSurface( _image.get_format(), _image.get_width(), _image.get_height() );
-    var context = new Context( surface );
-
-    /* Draw the image onto the context */
-    draw_image( context );
+    var orig_image = new NodeImage.from_node_image( _orig_image );
 
     /* Set the node image */
-    _node_image.rotate = _rotation;
-    _node_image.set_from_surface( surface, (int)_cx1, (int)_cy1, (int)(_cx2 - _cx1), (int)(_cy2 - _cy1), _max_width );
+    _orig_image.copy_from( _node_image );
 
     /* Indicate that the image changed */
     changed( orig_image );

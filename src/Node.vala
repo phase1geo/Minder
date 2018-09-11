@@ -775,7 +775,7 @@ public class Node : Object {
     } else {
       if( (_max_width + diff) < _min_width ) return;
       _max_width += diff;
-      image.set_image_width( (int)_max_width );
+      image.set_width( (int)_max_width );
     }
     _layout.set_width( (int)_max_width * Pango.SCALE );
     layout.handle_update_by_edit( this );
