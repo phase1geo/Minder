@@ -48,11 +48,10 @@ public class NodeImage {
       return( _buf.height );
     }
   }
-  public int    rotate { get; set; default = 0; }
 
   /* Default constructor */
   public NodeImage.from_file( string fn ) {
-    if( load( fn ) ) {
+    if( load( fn, true ) ) {
       set_width( 200 );
     }
   }
@@ -63,11 +62,6 @@ public class NodeImage {
     string? f = n->get_prop( "fname" );
     if( f != null ) {
       fname = f;
-    }
-
-    string? r = n->get_prop( "rotate" );
-    if( r != null ) {
-      rotate = int.parse( r );
     }
 
     string? x = n->get_prop( "x" );
@@ -92,7 +86,7 @@ public class NodeImage {
 
     /* Allocate the image */
     if( fname != "" ) {
-      if( load( fname ) ) {
+      if( load( fname, false ) ) {
         set_width( 200 );
       }
     }
@@ -106,37 +100,27 @@ public class NodeImage {
 
   /* Copy the node image from the given parameter */
   public void copy_from( NodeImage ni ) {
+
     var s = ni.get_surface();
+
+    /* Initialize the values */
+    fname  = ni.fname;
+    valid  = ni.valid;
+    crop_x = ni.crop_x;
+    crop_y = ni.crop_y;
+    crop_w = ni.crop_w;
+    crop_h = ni.crop_h;
+
+    /* Copy the surface */
     _surface = new ImageSurface.for_data( s.get_data(), s.get_format(), s.get_width(), s.get_height(), s.get_stride() );
-    fname    = ni.fname;
-    valid    = ni.valid;
-    crop_x   = ni.crop_x;
-    crop_y   = ni.crop_y;
-    crop_w   = ni.crop_w;
-    crop_h   = ni.crop_h;
-    rotate   = ni.rotate;
+
+    /* Update the pixbuf using the width */
     set_width( ni.get_pixbuf().width );
-  }
-
-  /*
-   Add the image to the given context.  We need this method because we are
-   supporting image rotation.
-  */
-  private void draw_image( Context ctx, ImageSurface image ) {
-
-    var w = image.get_width();
-    var h = image.get_height();
-
-    ctx.translate( (w * 0.5), (h * 0.5) );
-    ctx.rotate( rotate * Math.PI / 180 );
-    ctx.translate( (w * -0.5), (h * -0.5) );
-    ctx.set_source_surface( image, 0, 0 );
-    ctx.paint();
 
   }
 
   /* Loads the current file into this structure */
-  public bool load( string fn ) {
+  public bool load( string fn, bool init ) {
 
     fname = fn;
     valid = true;
@@ -144,19 +128,20 @@ public class NodeImage {
     /* Get the file into the stored pixbuf */
     try {
 
-      /* Initialize the buffer */
-      var buf     = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
-      var image   = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 0, null );
-      _surface    = new ImageSurface( image.get_format(), image.get_width(), image.get_height() );
-      var context = new Context( _surface );
-      draw_image( context, image );
+      /* Read in the file into the given buffer */
+      var buf = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
+      _surface = new ImageSurface( Cairo.Format.ARGB32, buf.width, buf.height );
+      var ctx = new Context( _surface );
+      cairo_set_source_pixbuf( ctx, buf, 0, 0 );
+      ctx.paint();
 
       /* Initialize the variables */
-      crop_x = 0;
-      crop_y = 0;
-      crop_w = image.get_width();
-      crop_h = image.get_height();
-      rotate = 0;
+      if( init ) {
+        crop_x = 0;
+        crop_y = 0;
+        crop_w = _surface.get_width();
+        crop_h = _surface.get_height();
+      }
 
     } catch( Error e ) {
       valid = false;
@@ -200,7 +185,6 @@ public class NodeImage {
   /* Sets the given image widget to the stored pixbuf */
   public void set_image( Image img ) {
 
-    Pixbuf? buf;
     var scale_width  = 200.0 / _buf.width;
     var scale_height = 200.0 / _buf.height;
     var w            = 200;
@@ -214,7 +198,7 @@ public class NodeImage {
     }
 
     /* Create the pixbuf thumbnail and set it in the given image widget */
-    buf = _buf.scale_simple( w, h, InterpType.BILINEAR );
+    var buf = _buf.scale_simple( w, h, InterpType.BILINEAR );
     img.set_from_pixbuf( buf );
 
   }
@@ -224,12 +208,11 @@ public class NodeImage {
 
     Xml.Node* n = new Xml.Node( null, "nodeimage" );
 
-    n->new_prop( "fname",  fname );
-    n->new_prop( "rotate", rotate.to_string() );
-    n->new_prop( "x",      crop_x.to_string() );
-    n->new_prop( "y",      crop_y.to_string() );
-    n->new_prop( "w",      crop_w.to_string() );
-    n->new_prop( "h",      crop_h.to_string() );
+    n->new_prop( "fname", fname );
+    n->new_prop( "x",     crop_x.to_string() );
+    n->new_prop( "y",     crop_y.to_string() );
+    n->new_prop( "w",     crop_w.to_string() );
+    n->new_prop( "h",     crop_h.to_string() );
 
     parent->add_child( n );
 

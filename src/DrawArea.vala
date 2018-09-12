@@ -634,7 +634,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void edit_current_image() {
     if( _current_node != null ) {
       if( _current_node.image != null ) {
-        _editor.edit_image( _current_node.image, _current_node.posx, _current_node.posy );
+        _editor.edit_image( _current_node, _current_node.posx, _current_node.posy );
       }
     }
   }
