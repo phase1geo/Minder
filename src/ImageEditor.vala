@@ -111,12 +111,13 @@ class ImageEditor {
 
     /* Load the image and draw it */
     if( _image.valid ) {
-      _da.width_request      = _image.width;
-      _da.height_request     = _image.height;
-      _crop_points[8].width  = _image.width;
-      _crop_points[8].height = _image.height;
+      _da.width_request      = _image.get_surface().get_width();
+      _da.height_request     = _image.get_surface().get_height();
+      _crop_points[8].width  = _image.crop_w;
+      _crop_points[8].height = _image.crop_h;
       set_crop_points();
       set_cursor_location( 0, 0 );
+      _da.queue_draw();
     }
 
     return( _image.valid );
@@ -299,7 +300,6 @@ class ImageEditor {
       if( data.get_uris().length == 1 ) {
         string? fname = NodeImage.get_fname_from_uri( data.get_uris()[0] );
         if( (fname != null) && initialize( fname ) ) {
-          da.queue_draw();
           Gtk.drag_finish( ctx, true, false, t );
         }
       }
@@ -350,8 +350,8 @@ class ImageEditor {
 
     change.clicked.connect(() => {
       string? fn = NodeImage.choose_image_file( parent );
-      if( (fn != null) && initialize( fn ) ) {
-        _da.queue_draw();
+      if( fn != null ) {
+        initialize( fn );
       }
     });
 

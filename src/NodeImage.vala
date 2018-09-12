@@ -130,10 +130,7 @@ public class NodeImage {
 
       /* Read in the file into the given buffer */
       var buf = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
-      _surface = new ImageSurface( Cairo.Format.ARGB32, buf.width, buf.height );
-      var ctx = new Context( _surface );
-      cairo_set_source_pixbuf( ctx, buf, 0, 0 );
-      ctx.paint();
+      _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
 
       /* Initialize the variables */
       if( init ) {

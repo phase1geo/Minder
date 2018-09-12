@@ -642,6 +642,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the current node's image is changed */
   private void current_image_edited( NodeImage? orig_image ) {
     undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
+    _layout.handle_update_by_edit( _current_node );
     queue_draw();
     node_changed();
     auto_save();
