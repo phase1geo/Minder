@@ -365,8 +365,9 @@ public class Node : Object {
   public virtual bool is_within_task( double x, double y ) {
     if( _task_count > 0 ) {
       double tx, ty, tw, th;
+      double img_height = (image == null) ? 0 : image.height;
       tx = posx + _padx;
-      ty = posy + _pady + ((_height / 2) - _task_radius);
+      ty = posy + _pady + img_height + (((_height - (img_height + _pady)) / 2) - _task_radius);
       tw = _task_radius * 2;
       th = _task_radius * 2;
       return( (tx < x) && (x < (tx + tw)) && (ty < y) && (y < (ty + th)) );
@@ -381,8 +382,9 @@ public class Node : Object {
   public virtual bool is_within_note( double x, double y ) {
     if( note.length > 0 ) {
       double nx, ny, nw, nh;
+      double img_height = (image == null) ? 0 : image.height;
       nx = posx + (_width - (note_width() + _padx)) + _ipadx;
-      ny = posy + (_height / 2) - 5;
+      ny = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2) - 5;
       nw = 11;
       nh = 11;
       return( (nx < x) && (x < (nx + nw)) && (ny < y) && (y < (ny + nh)) );
@@ -1508,8 +1510,9 @@ public class Node : Object {
 
     if( _task_count > 0 ) {
 
-      double x = posx + _padx + _task_radius;
-      double y = posy + (_height / 2);
+      double img_height = (image == null) ? 0 : image.height;
+      double x          = posx + _padx + _task_radius;
+      double y          = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2);
 
       set_context_color( ctx, color );
       ctx.new_path();
@@ -1531,10 +1534,11 @@ public class Node : Object {
 
     if( _task_count > 0 ) {
 
-      double x        = posx + _padx + _task_radius;
-      double y        = posy + (_height / 2);
-      double complete = _task_done / (_task_count * 1.0);
-      double angle    = ((complete * 360) + 270) * (Math.PI / 180.0);
+      double img_height = (image == null) ? 0 : image.height;
+      double x          = posx + _padx + _task_radius;
+      double y          = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2);
+      double complete   = _task_done / (_task_count * 1.0);
+      double angle      = ((complete * 360) + 270) * (Math.PI / 180.0);
 
       /* Draw circle outline */
       if( complete < 1 ) {
@@ -1566,8 +1570,9 @@ public class Node : Object {
 
     if( note.length > 0 ) {
 
-      double x = posx + (_width - (note_width() + _padx)) + _ipadx;
-      double y = posy + (_height / 2) - 5;
+      double img_height = (image == null) ? 0 : image.height;
+      double x          = posx + (_width - (note_width() + _padx)) + _ipadx;
+      double y          = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2) - 5;
 
       set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();
