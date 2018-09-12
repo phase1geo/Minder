@@ -599,7 +599,7 @@ public class DrawArea : Gtk.DrawingArea {
         var     parent = (Gtk.Window)get_toplevel();
         string? fname  = NodeImage.choose_image_file( parent );
         if( fname != null ) {
-          _current_node.image = new NodeImage.from_file( fname );
+          _current_node.image = new NodeImage.from_file( fname, _current_node.max_width() );
           undo_buffer.add_item( new UndoNodeImage( _current_node, null ) );
           _layout.handle_update_by_edit( _current_node );
           queue_draw();
@@ -2020,7 +2020,7 @@ public class DrawArea : Gtk.DrawingArea {
       foreach (var uri in data.get_uris()) {
         string? fname = NodeImage.get_fname_from_uri( uri );
         if( fname != null ) {
-          var image = new NodeImage.from_file( fname );
+          var image = new NodeImage.from_file( fname, 200 );
           if( image.valid ) {
             var node = new Node.with_name( this, _( "Another Idea" ), _layout );
             node.image = image;
@@ -2046,7 +2046,7 @@ public class DrawArea : Gtk.DrawingArea {
 
       string? fname = NodeImage.get_fname_from_uri( data.get_uris()[0] );
       if( fname != null ) {
-        var image = new NodeImage.from_file( fname );
+        var image = new NodeImage.from_file( fname, _attach_node.max_width() );
         if( image.valid ) {
           var orig_image = _attach_node.image;
           _attach_node.image = image;
@@ -2067,7 +2067,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Sets the image of the current node to the given filename */
   public bool update_current_image( string fname ) {
-    var image = new NodeImage.from_file( fname );
+    var image = new NodeImage.from_file( fname, _current_node.max_width() );
     if( image.valid ) {
       var orig_image = _current_node.image;
       _current_node.image = image;

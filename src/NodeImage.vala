@@ -50,9 +50,9 @@ public class NodeImage {
   }
 
   /* Default constructor */
-  public NodeImage.from_file( string fn ) {
+  public NodeImage.from_file( string fn, int width ) {
     if( load( fn, true ) ) {
-      set_width( 200 );
+      set_width( width );
     }
   }
 
