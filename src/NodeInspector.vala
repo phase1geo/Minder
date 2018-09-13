@@ -202,41 +202,57 @@ public class NodeInspector : Stack {
     _image_btn.visible = true;
     _image_btn.clicked.connect( image_button_clicked );
 
-    var btn_box = new Box( Orientation.VERTICAL, 0 );
-    btn_box.halign = Align.END;
-    btn_box.valign = Align.START;
-
     _image = new Image.from_pixbuf( null );
 
-    var btn_del = new Button.from_icon_name( "edit-delete-symbolic" );
-    btn_del.relief = ReliefStyle.NONE;
-    btn_del.clicked.connect(() => {
-      _da.delete_current_image();
-    });
     var btn_edit = new Button.from_icon_name( "document-edit-symbolic" );
-    btn_edit.relief = ReliefStyle.NONE;
+    btn_edit.set_tooltip_text( _( "Edit Image" ) );
+    btn_edit.halign       = Align.START;
+    btn_edit.valign       = Align.START;
+    btn_edit.border_width = 5;
     btn_edit.clicked.connect(() => {
+      stdout.printf( "Editing!\n" );
       _da.edit_current_image();
     });
 
-    btn_box.pack_start( btn_del,  false, false, 5 );
-    btn_box.pack_start( btn_edit, false, false, 5 );
+    var reveal_edit = new Revealer();
+    reveal_edit.transition_duration = 500;
+    reveal_edit.transition_type     = RevealerTransitionType.CROSSFADE;
+    reveal_edit.add( btn_edit );
+
+    var btn_del = new Button.from_icon_name( "edit-delete-symbolic" );
+    btn_del.set_tooltip_text( _( "Remove Image" ) );
+    btn_del.halign       = Align.END;
+    btn_del.valign       = Align.START;
+    btn_del.border_width = 5;
+    btn_del.clicked.connect(() => {
+      _da.delete_current_image();
+    });
+
+    var reveal_del = new Revealer();
+    reveal_del.transition_duration = 500;
+    reveal_del.transition_type     = RevealerTransitionType.CROSSFADE;
+    reveal_del.add( btn_del );
 
     var img_overlay = new Overlay();
-    img_overlay.add_overlay( btn_box );
+    img_overlay.add_overlay( reveal_edit );
+    img_overlay.add_overlay( reveal_del );
     img_overlay.add( _image );
 
-    btn_box.visible = false;
+    stdout.printf( "pass, edit: %s, del: %s\n",
+                   img_overlay.get_overlay_pass_through( reveal_edit ).to_string(),
+                   img_overlay.get_overlay_pass_through( reveal_del ).to_string() );
 
     _image_area = new EventBox();
     _image_area.visible = false;
     _image_area.add_events( EventMask.ENTER_NOTIFY_MASK | EventMask.LEAVE_NOTIFY_MASK );
     _image_area.enter_notify_event.connect((e) => {
-      btn_box.visible = true;
+      reveal_edit.reveal_child = true;
+      reveal_del.reveal_child  = true;
       return( false );
     });
     _image_area.leave_notify_event.connect((e) => {
-      btn_box.visible = false;
+      reveal_edit.reveal_child = false;
+      reveal_del.reveal_child  = false;
       return( false );
     });
     _image_area.add( img_overlay );
