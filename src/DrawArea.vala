@@ -50,6 +50,7 @@ public class DrawArea : Gtk.DrawingArea {
   private string           _orig_name;
   private NodeSide         _orig_side;
   private Array<NodeInfo?> _orig_info;
+  private int              _orig_width;
   private Node?            _attach_node  = null;
   private DrawAreaMenu     _popup_menu;
   private uint?            _auto_save_id = null;
@@ -682,7 +683,8 @@ public class DrawArea : Gtk.DrawingArea {
           node_changed();
           return( false );
         } else if( match.is_within_resizer( x, y ) ) {
-          _resize = true;
+          _resize     = true;
+          _orig_width = match.max_width();
           return( true );
         }
         _orig_side = match.side;
@@ -1101,7 +1103,8 @@ public class DrawArea : Gtk.DrawingArea {
       set_cursor( null );
     }
     if( _resize ) {
-      _resize  = false;
+      _resize = false;
+      undo_buffer.add_item( new UndoNodeResize( _current_node, _orig_width ) );
       return( false );
     }
     if( _current_node != null ) {

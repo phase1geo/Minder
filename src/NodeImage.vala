@@ -73,7 +73,7 @@ public class NodeImage {
   }
 
   /* Constructor from XML file */
-  public NodeImage.from_xml( Xml.Node* n ) {
+  public NodeImage.from_xml( Xml.Node* n, int width ) {
 
     string? f = n->get_prop( "fname" );
     if( f != null ) {
@@ -108,7 +108,7 @@ public class NodeImage {
     /* Allocate the image */
     if( fname != "" ) {
       if( load( fname, false ) ) {
-        set_width( 200 );
+        set_width( width );
       }
     }
 

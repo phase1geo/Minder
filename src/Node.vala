@@ -514,7 +514,7 @@ public class Node : Object {
   }
 
   private void load_image( Xml.Node* n ) {
-    image = new NodeImage.from_xml( n );
+    image = new NodeImage.from_xml( n, (int)_max_width );
   }
 
   /* Loads the file contents into this instance */
