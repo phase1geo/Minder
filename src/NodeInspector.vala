@@ -41,6 +41,7 @@ public class NodeInspector : Stack {
   private Node?       _node = null;
   private EventBox    _image_box;
   private Button      _image_btn;
+  private Label       _image_loc;
 
   public NodeInspector( DrawArea da ) {
 
@@ -206,9 +207,17 @@ public class NodeInspector : Stack {
     _image_box.button_press_event.connect( image_box_clicked );
     _image_box.add( new Image.from_pixbuf( null ) );
 
+    _image_loc = new Label( "" );
+    _image_loc.visible    = false;
+    _image_loc.use_markup = true;
+    _image_loc.wrap       = true;
+    _image_loc.max_width_chars = 40;
+    _image_loc.activate_link.connect( image_link_clicked );
+
     box.pack_start( lbl,        false, false );
     box.pack_start( _image_btn, false, false );
     box.pack_start( _image_box, true,  true );
+    box.pack_start( _image_loc, false, true );
 
     bbox.pack_start( box, false, true );
 
@@ -217,8 +226,7 @@ public class NodeInspector : Stack {
 
     _image_box.drag_data_received.connect((ctx, x, y, data, info, t) => {
       if( data.get_uris().length == 1 ) {
-        string? fname = NodeImage.get_fname_from_uri( data.get_uris()[0] );
-        if( (fname != null) && _da.update_current_image( fname ) ) {
+        if( _da.update_current_image( data.get_uris()[0] ) ) {
           Gtk.drag_finish( ctx, true, false, t );
         }
       }
@@ -248,6 +256,29 @@ public class NodeInspector : Stack {
 
     _image_btn.visible = !show;
     _image_box.visible = show;
+    _image_loc.visible = show;
+
+  }
+
+  /* Called if the user clicks on the image URI */
+  private bool image_link_clicked( string uri ) {
+
+    File file = File.new_for_uri( uri );
+
+    /* If the URI is a file on the local filesystem, view it with the Files app */
+    if( file.get_uri_scheme() == "file" ) {
+      var files = AppInfo.get_default_for_type( "inode/directory", true );
+      var list  = new List<File>();
+      list.append( file );
+      try {
+        files.launch( list, null );
+      } catch( Error e ) {
+        return( false );
+      }
+      return( true );
+    }
+
+    return( false );
 
   }
 
@@ -420,7 +451,10 @@ public class NodeInspector : Stack {
       _detach_btn.set_sensitive( current.parent != null );
       _note.buffer.text = current.note;
       if( current.image != null ) {
+        var url = current.image.uri.replace( "&", "&amp;" );
+        var str = "<a href=\"" + url + "\">" + url + "</a>";
         current.image.set_image( image );
+        _image_loc.label = str;
         set_image_visible( true );
       } else {
         set_image_visible( false );

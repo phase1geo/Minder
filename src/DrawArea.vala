@@ -599,7 +599,7 @@ public class DrawArea : Gtk.DrawingArea {
         var     parent = (Gtk.Window)get_toplevel();
         string? fname  = NodeImage.choose_image_file( parent );
         if( fname != null ) {
-          _current_node.image = new NodeImage.from_file( fname, _current_node.max_width() );
+          _current_node.image = new NodeImage.from_file( fname, null, _current_node.max_width() );
           undo_buffer.add_item( new UndoNodeImage( _current_node, null ) );
           _layout.handle_update_by_edit( _current_node );
           queue_draw();
@@ -2019,19 +2019,16 @@ public class DrawArea : Gtk.DrawingArea {
     if( (_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE) ) {
 
       foreach (var uri in data.get_uris()) {
-        string? fname = NodeImage.get_fname_from_uri( uri );
-        if( fname != null ) {
-          var image = new NodeImage.from_file( fname, 200 );
-          if( image.valid ) {
-            var node = new Node.with_name( this, _( "Another Idea" ), _layout );
-            node.image = image;
-            _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
-            _nodes.append_val( node );
-            if( select_node( node ) ) {
-              node.mode = NodeMode.EDITABLE;
-              _current_new = true;
-              queue_draw();
-            }
+        var image = new NodeImage.from_uri( uri, 200 );
+        if( image.valid ) {
+          var node = new Node.with_name( this, _( "Another Idea" ), _layout );
+          node.image = image;
+          _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+          _nodes.append_val( node );
+          if( select_node( node ) ) {
+            node.mode = NodeMode.EDITABLE;
+            _current_new = true;
+            queue_draw();
           }
         }
       }
@@ -2045,21 +2042,18 @@ public class DrawArea : Gtk.DrawingArea {
 
     } else if( (_attach_node.mode == NodeMode.DROPPABLE) && (data.get_uris().length == 1) ) {
 
-      string? fname = NodeImage.get_fname_from_uri( data.get_uris()[0] );
-      if( fname != null ) {
-        var image = new NodeImage.from_file( fname, _attach_node.max_width() );
-        if( image.valid ) {
-          var orig_image = _attach_node.image;
-          _attach_node.image = image;
-          undo_buffer.add_item( new UndoNodeImage( _attach_node, orig_image ) );
-          _layout.handle_update_by_edit( _attach_node );
-          _attach_node.mode = NodeMode.NONE;
-          _attach_node      = null;
-          Gtk.drag_finish( ctx, true, false, t );
-          queue_draw();
-          node_changed();
-          auto_save();
-        }
+      var image = new NodeImage.from_uri( data.get_uris()[0], _attach_node.max_width() );
+      if( image.valid ) {
+        var orig_image = _attach_node.image;
+        _attach_node.image = image;
+        undo_buffer.add_item( new UndoNodeImage( _attach_node, orig_image ) );
+        _layout.handle_update_by_edit( _attach_node );
+        _attach_node.mode = NodeMode.NONE;
+        _attach_node      = null;
+        Gtk.drag_finish( ctx, true, false, t );
+        queue_draw();
+        node_changed();
+        auto_save();
       }
 
     }
@@ -2067,8 +2061,8 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Sets the image of the current node to the given filename */
-  public bool update_current_image( string fname ) {
-    var image = new NodeImage.from_file( fname, _current_node.max_width() );
+  public bool update_current_image( string uri ) {
+    var image = new NodeImage.from_uri( uri, _current_node.max_width() );
     if( image.valid ) {
       var orig_image = _current_node.image;
       _current_node.image = image;

@@ -1566,13 +1566,14 @@ public class Node : Object {
   }
 
   /* Draws the icon indicating that a note is associated with this node */
-  protected virtual void draw_common_note( Context ctx, RGBA color ) {
+  protected virtual void draw_common_note( Context ctx, RGBA reg_color, RGBA sel_color ) {
 
     if( note.length > 0 ) {
 
       double img_height = (image == null) ? 0 : image.height;
       double x          = posx + (_width - (note_width() + _padx)) + _ipadx;
       double y          = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2) - 5;
+      RGBA   color      = (mode == NodeMode.CURRENT) ? sel_color : reg_color;
 
       set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();
@@ -1723,7 +1724,7 @@ public class Node : Object {
       } else {
         draw_acc_task( ctx, theme.root_foreground );
       }
-      draw_common_note( ctx, theme.root_foreground );
+      draw_common_note( ctx, theme.root_foreground, theme.nodesel_foreground );
       draw_common_fold( ctx, theme.root_background, theme.root_foreground );
       draw_attachable( ctx, theme, theme.root_background );
       draw_resizer( ctx, theme );
@@ -1737,7 +1738,7 @@ public class Node : Object {
       } else {
         draw_acc_task( ctx, _link_color );
       }
-      draw_common_note( ctx, theme.foreground );
+      draw_common_note( ctx, theme.foreground, theme.nodesel_foreground );
       draw_line( ctx, theme );
       draw_common_fold( ctx, _link_color, theme.foreground );
       draw_attachable( ctx, theme, theme.background );

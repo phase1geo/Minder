@@ -33,6 +33,7 @@ public class NodeImage {
   private Pixbuf       _buf;
 
   public string fname  { get; set; default = ""; }
+  public string uri    { get; private set; default = ""; }
   public bool   valid  { get; private set; default = false; }
   public int    crop_x { get; set; default = 0; }
   public int    crop_y { get; set; default = 0; }
@@ -50,8 +51,23 @@ public class NodeImage {
   }
 
   /* Default constructor */
-  public NodeImage.from_file( string fn, int width ) {
+  public NodeImage.from_file( string fn, string? uri, int width ) {
     if( load( fn, true ) ) {
+      if( uri != null ) {
+        this.uri = uri;
+      } else {
+        var file = GLib.File.new_for_path( fn );
+        this.uri = file.get_uri_scheme();
+      }
+      set_width( width );
+    }
+  }
+
+  /* Default constructor */
+  public NodeImage.from_uri( string uri, int width ) {
+    string? fn = get_fname_from_uri( uri );
+    if( (fn != null) && load( fn, true ) ) {
+      this.uri = uri;
       set_width( width );
     }
   }
@@ -62,6 +78,11 @@ public class NodeImage {
     string? f = n->get_prop( "fname" );
     if( f != null ) {
       fname = f;
+    }
+
+    string? u = n->get_prop( "uri" );
+    if( u != null ) {
+      uri = u;
     }
 
     string? x = n->get_prop( "x" );
@@ -93,34 +114,8 @@ public class NodeImage {
 
   }
 
-  /* Creates a new NodeImage from the given NodeImage */
-  public NodeImage.from_node_image( NodeImage ni ) {
-    copy_from( ni );
-  }
-
-  /* Copy the node image from the given parameter */
-  public void copy_from( NodeImage ni ) {
-
-    var s = ni.get_surface();
-
-    /* Initialize the values */
-    fname  = ni.fname;
-    valid  = ni.valid;
-    crop_x = ni.crop_x;
-    crop_y = ni.crop_y;
-    crop_w = ni.crop_w;
-    crop_h = ni.crop_h;
-
-    /* Copy the surface */
-    _surface = new ImageSurface.for_data( s.get_data(), s.get_format(), s.get_width(), s.get_height(), s.get_stride() );
-
-    /* Update the pixbuf using the width */
-    set_width( ni.get_pixbuf().width );
-
-  }
-
   /* Loads the current file into this structure */
-  public bool load( string fn, bool init ) {
+  private bool load( string fn, bool init ) {
 
     fname = fn;
     valid = true;
@@ -206,6 +201,7 @@ public class NodeImage {
     Xml.Node* n = new Xml.Node( null, "nodeimage" );
 
     n->new_prop( "fname", fname );
+    n->new_prop( "uri",   uri );
     n->new_prop( "x",     crop_x.to_string() );
     n->new_prop( "y",     crop_y.to_string() );
     n->new_prop( "w",     crop_w.to_string() );
@@ -254,9 +250,9 @@ public class NodeImage {
   }
 
   /* Returns the path for the file associated with the given URI */
-  public static string? get_fname_from_uri( string uri ) {
+  private string? get_fname_from_uri( string uri ) {
     var rfile = File.new_for_uri( uri );
-    if( uri.has_prefix( "file://" ) ) {
+    if( rfile.get_uri_scheme() == "file" ) {
       return( rfile.get_path() );
     } else {
       var dir = get_web_path();

@@ -79,7 +79,7 @@ class ImageEditor {
 
     /* Set the defaults */
     _node  = node;
-    _image = new NodeImage.from_file( node.image.fname, _node.max_width() );
+    _image = new NodeImage.from_file( node.image.fname, node.image.uri, _node.max_width() );
 
     if( _image.valid ) {
 
@@ -104,10 +104,14 @@ class ImageEditor {
   }
 
   /* Initializes the image editor with the give image filename */
-  private bool initialize( string fname ) {
+  private bool initialize( string fname, bool fname_is_uri ) {
 
     /* Create a new image from the given filename */
-    _image = new NodeImage.from_file( fname, _node.max_width() );
+    if( fname_is_uri ) {
+      _image = new NodeImage.from_uri( fname, _node.max_width() );
+    } else {
+      _image = new NodeImage.from_file( fname, null, _node.max_width() );
+    }
 
     /* Load the image and draw it */
     if( _image.valid ) {
@@ -298,8 +302,7 @@ class ImageEditor {
 
     da.drag_data_received.connect((ctx, x, y, data, info, t) => {
       if( data.get_uris().length == 1 ) {
-        string? fname = NodeImage.get_fname_from_uri( data.get_uris()[0] );
-        if( (fname != null) && initialize( fname ) ) {
+        if( initialize( data.get_uris()[0], true ) ) {
           Gtk.drag_finish( ctx, true, false, t );
         }
       }
@@ -351,7 +354,7 @@ class ImageEditor {
     change.clicked.connect(() => {
       string? fn = NodeImage.choose_image_file( parent );
       if( fn != null ) {
-        initialize( fn );
+        initialize( fn, true );
       }
     });
 
@@ -389,7 +392,13 @@ class ImageEditor {
     ctx.rectangle( 0, 0, _da.width_request, _da.height_request );
     ctx.fill();
 
+    /* Cut out the area for the image */
+    ctx.set_operator( Operator.CLEAR );
+    ctx.rectangle( _image.crop_x, _image.crop_y, _image.crop_w, _image.crop_h );
+    ctx.fill();
+
     /* Finally, draw the portion of the image this not cropped */
+    ctx.set_operator( Operator.OVER );
     ctx.set_source_surface( _image.get_surface(), 0, 0 );
     ctx.rectangle( _image.crop_x, _image.crop_y, _image.crop_w, _image.crop_h );
     ctx.fill();
