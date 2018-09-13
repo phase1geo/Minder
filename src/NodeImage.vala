@@ -57,7 +57,7 @@ public class NodeImage {
         this.uri = uri;
       } else {
         var file = GLib.File.new_for_path( fn );
-        this.uri = file.get_uri_scheme();
+        this.uri = file.get_uri();
       }
       set_width( width );
     }
@@ -177,10 +177,10 @@ public class NodeImage {
   /* Sets the given image widget to the stored pixbuf */
   public void set_image( Image img ) {
 
-    var scale_width  = 200.0 / _buf.width;
-    var scale_height = 200.0 / _buf.height;
-    var w            = 200;
-    var h            = 200;
+    var scale_width  = 300.0 / _buf.width;
+    var scale_height = 300.0 / _buf.height;
+    var w            = 300;
+    var h            = 300;
 
     /* Calculate the width and height of the required image */
     if( scale_width < scale_height ) {

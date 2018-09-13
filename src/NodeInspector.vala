@@ -39,6 +39,7 @@ public class NodeInspector : Stack {
   private Button      _detach_btn;
   private string      _orig_note = "";
   private Node?       _node = null;
+  private EventBox    _image_area;
   private EventBox    _image_box;
   private Button      _image_btn;
   private Label       _image_loc;
@@ -201,11 +202,48 @@ public class NodeInspector : Stack {
     _image_btn.visible = true;
     _image_btn.clicked.connect( image_button_clicked );
 
+    var btn_box = new Box( Orientation.VERTICAL, 0 );
+    btn_box.halign = Align.END;
+    btn_box.valign = Align.START;
+
     _image_box = new EventBox();
     _image_box.visible = false;
     _image_box.add_events( EventMask.BUTTON_PRESS_MASK );
     _image_box.button_press_event.connect( image_box_clicked );
     _image_box.add( new Image.from_pixbuf( null ) );
+
+    var btn_del = new Button.from_icon_name( "edit-delete-symbolic" );
+    btn_del.relief = ReliefStyle.NONE;
+    btn_del.clicked.connect(() => {
+      _da.delete_current_image();
+    });
+    var btn_edit = new Button.from_icon_name( "document-edit-symbolic" );
+    btn_edit.relief = ReliefStyle.NONE;
+    btn_edit.clicked.connect(() => {
+      _da.edit_current_image();
+    });
+
+    btn_box.pack_start( btn_del,  false, false, 5 );
+    btn_box.pack_start( btn_edit, false, false, 5 );
+
+    var img_overlay = new Overlay();
+    img_overlay.add_overlay( btn_box );
+    img_overlay.add( _image_box );
+
+    btn_box.visible = false;
+
+    _image_area = new EventBox();
+    _image_area.visible = false;
+    _image_area.add_events( EventMask.ENTER_NOTIFY_MASK | EventMask.LEAVE_NOTIFY_MASK );
+    _image_area.enter_notify_event.connect((e) => {
+      btn_box.visible = true;
+      return( false );
+    });
+    _image_area.leave_notify_event.connect((e) => {
+      btn_box.visible = false;
+      return( false );
+    });
+    _image_area.add( img_overlay );
 
     _image_loc = new Label( "" );
     _image_loc.visible    = false;
@@ -214,10 +252,10 @@ public class NodeInspector : Stack {
     _image_loc.max_width_chars = 40;
     _image_loc.activate_link.connect( image_link_clicked );
 
-    box.pack_start( lbl,        false, false );
-    box.pack_start( _image_btn, false, false );
-    box.pack_start( _image_box, true,  true );
-    box.pack_start( _image_loc, false, true );
+    box.pack_start( lbl,         false, false );
+    box.pack_start( _image_btn,  false, false );
+    box.pack_start( _image_area, true,  true );
+    box.pack_start( _image_loc,  false, true );
 
     bbox.pack_start( box, false, true );
 
@@ -254,9 +292,9 @@ public class NodeInspector : Stack {
   /* Sets the visibility of the image widget to the given value */
   private void set_image_visible( bool show ) {
 
-    _image_btn.visible = !show;
-    _image_box.visible = show;
-    _image_loc.visible = show;
+    _image_btn.visible  = !show;
+    _image_area.visible = show;
+    _image_loc.visible  = show;
 
   }
 
