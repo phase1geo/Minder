@@ -341,6 +341,7 @@ class ImageEditor {
     var cancel = new Button.with_label( _( "Cancel" ) );
     var apply  = new Button.with_label( _( "Apply" ) );
     var change = new Button.with_label( _( "Change Image" ) );
+    var remove = new Button.with_label( _( "Remove Image" ) );
 
     cancel.clicked.connect(() => {
       _popover.popdown();
@@ -358,7 +359,13 @@ class ImageEditor {
       }
     });
 
+    remove.clicked.connect(() => {
+      remove_image();
+      _popover.popdown();
+    });
+
     box.pack_start( change, false, false, 5 );
+    box.pack_start( remove, false, false, 5 );
     box.pack_end(   apply,  false, false, 5 );
     box.pack_end(   cancel, false, false, 5 );
 
@@ -424,7 +431,21 @@ class ImageEditor {
 
   }
 
-  /* Returns the pixbuf associated with this window */
+  /* Removes the current image for the node */
+  private void remove_image() {
+
+    /* Create a copy of the current image before changing it */
+    var orig_image = _node.image;
+
+    /* Clear the node image */
+    _node.image = null;
+
+    /* Indicate that the image changed */
+    changed( orig_image );
+
+  }
+
+  /* Sets the node image to the edited image */
   private void set_image() {
 
     /* Create a copy of the current image before changing it */
