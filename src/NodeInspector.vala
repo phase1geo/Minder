@@ -40,7 +40,7 @@ public class NodeInspector : Stack {
   private string      _orig_note = "";
   private Node?       _node = null;
   private EventBox    _image_area;
-  private EventBox    _image_box;
+  private Image       _image;
   private Button      _image_btn;
   private Label       _image_loc;
 
@@ -206,11 +206,7 @@ public class NodeInspector : Stack {
     btn_box.halign = Align.END;
     btn_box.valign = Align.START;
 
-    _image_box = new EventBox();
-    _image_box.visible = false;
-    _image_box.add_events( EventMask.BUTTON_PRESS_MASK );
-    _image_box.button_press_event.connect( image_box_clicked );
-    _image_box.add( new Image.from_pixbuf( null ) );
+    _image = new Image.from_pixbuf( null );
 
     var btn_del = new Button.from_icon_name( "edit-delete-symbolic" );
     btn_del.relief = ReliefStyle.NONE;
@@ -228,7 +224,7 @@ public class NodeInspector : Stack {
 
     var img_overlay = new Overlay();
     img_overlay.add_overlay( btn_box );
-    img_overlay.add( _image_box );
+    img_overlay.add( _image );
 
     btn_box.visible = false;
 
@@ -260,9 +256,9 @@ public class NodeInspector : Stack {
     bbox.pack_start( box, false, true );
 
     /* Set ourselves up to be a drag target */
-    Gtk.drag_dest_set( _image_box, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
+    Gtk.drag_dest_set( _image, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
 
-    _image_box.drag_data_received.connect((ctx, x, y, data, info, t) => {
+    _image.drag_data_received.connect((ctx, x, y, data, info, t) => {
       if( data.get_uris().length == 1 ) {
         if( _da.update_current_image( data.get_uris()[0] ) ) {
           Gtk.drag_finish( ctx, true, false, t );
@@ -276,16 +272,6 @@ public class NodeInspector : Stack {
   private void image_button_clicked() {
 
     _da.add_current_image();
-
-  }
-
-  /* Called when the user clicks on the image box */
-  private bool image_box_clicked( EventButton e ) {
-
-    /* Edits the current image */
-    _da.edit_current_image();
-
-    return( false );
 
   }
 
@@ -467,7 +453,6 @@ public class NodeInspector : Stack {
   private void node_changed() {
 
     Node? current = _da.get_current_node();
-    Image image   = (Image)_image_box.get_child();
 
     if( current != null ) {
       _name.set_text( current.name );
@@ -491,7 +476,7 @@ public class NodeInspector : Stack {
       if( current.image != null ) {
         var url = current.image.uri.replace( "&", "&amp;" );
         var str = "<a href=\"" + url + "\">" + url + "</a>";
-        current.image.set_image( image );
+        current.image.set_image( _image );
         _image_loc.label = str;
         set_image_visible( true );
       } else {
