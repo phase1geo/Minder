@@ -72,6 +72,25 @@ class ImageEditor {
 
   }
 
+  /* Handles the display of the image editor popover */
+  private void show_popover( bool show ) {
+
+#if GTK322
+    if( show ) {
+      _popover.popup();
+    } else {
+      _popover.popdown();
+    }
+#else
+    if( show ) {
+      _popover.show();
+    } else {
+      _popover.hide();
+    }
+#endif
+
+  }
+
   public void edit_image( Node node, double x, double y ) {
 
     Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
@@ -97,7 +116,7 @@ class ImageEditor {
       _da.queue_draw();
 
       /* Display ourselves */
-      _popover.popup();
+      show_popover( true );
 
     }
 
@@ -344,12 +363,12 @@ class ImageEditor {
     var remove = new Button.with_label( _( "Remove Image" ) );
 
     cancel.clicked.connect(() => {
-      _popover.popdown();
+      show_popover( false );
     });
 
     apply.clicked.connect(() => {
       set_image();
-      _popover.popdown();
+      show_popover( false );
     });
 
     change.clicked.connect(() => {
@@ -361,7 +380,7 @@ class ImageEditor {
 
     remove.clicked.connect(() => {
       remove_image();
-      _popover.popdown();
+      show_popover( false );
     });
 
     box.pack_start( change, false, false, 5 );
