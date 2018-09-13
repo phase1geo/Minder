@@ -210,7 +210,6 @@ public class NodeInspector : Stack {
     btn_edit.valign       = Align.START;
     btn_edit.border_width = 5;
     btn_edit.clicked.connect(() => {
-      stdout.printf( "Editing!\n" );
       _da.edit_current_image();
     });
 
@@ -234,13 +233,9 @@ public class NodeInspector : Stack {
     reveal_del.add( btn_del );
 
     var img_overlay = new Overlay();
-    img_overlay.add_overlay( reveal_edit );
     img_overlay.add_overlay( reveal_del );
+    img_overlay.add_overlay( reveal_edit );
     img_overlay.add( _image );
-
-    stdout.printf( "pass, edit: %s, del: %s\n",
-                   img_overlay.get_overlay_pass_through( reveal_edit ).to_string(),
-                   img_overlay.get_overlay_pass_through( reveal_del ).to_string() );
 
     _image_area = new EventBox();
     _image_area.visible = false;
