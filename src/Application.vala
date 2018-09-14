@@ -29,6 +29,7 @@ public class Minder : Granite.Application {
   private static bool          new_file  = false;
   private static bool          testing   = false;
   private static GLib.Settings settings;
+  private static ImageManager  image_manager;
 
   public Minder () {
     Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.FLAGS_NONE );
@@ -38,6 +39,9 @@ public class Minder : Granite.Application {
 
     /* Initialize the settings */
     settings = new GLib.Settings( "com.github.phase1geo.minder" );
+
+    /* Initialize the image manager */
+    image_manager = new ImageManager();
 
     var last_file = settings.get_string( "last-file" );
 
@@ -101,6 +105,11 @@ public class Minder : Granite.Application {
     var image_id = settings.get_int( "image-id" );
     settings.set_int( "image-id", (image_id + 1) );
     return( image_id );
+  }
+
+  /* Returns access to the image manager for the application */
+  public static ImageManager get_image_manager() {
+    return( image_manager );
   }
 
   /* Parse the command-line arguments */

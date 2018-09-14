@@ -21,26 +21,25 @@
 
 using GLib;
 
-class ImageManager {
+public class ImageManager {
 
   /* Private class used by the image manager to store image information */
   private class ImageItem {
 
     public string fname { set; get; default = ""; }
     public string uri   { set; get; default = ""; }
-    public bool   valid { set; get; default = ""; }
+    public bool   valid { set; get; default = false; }
 
     /* Default constructor */
     public ImageItem( string fname, string uri ) {
       this.fname = fname;
       this.uri   = uri;
-      this valid = true;
+      this.valid = true;
     }
 
     /* Returns true if the file exists */
     public bool exists() {
-      var file = File.new_from_path( fname );
-      return( file.exists() );
+      return( FileUtils.test( fname, FileTest.EXISTS ) );
     }
 
     /* If the current item is no longer valid, remove it from the file system */
@@ -53,17 +52,24 @@ class ImageManager {
   }
 
   private Array<ImageItem> _images;
-  private bool             _available;
+  private bool             _available = true;
 
   /* Default constructor */
   public ImageManager() {
-    var dir = get_storage_path();
-    if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
+
+    /* Create the images directory if it does not exist */
+    if( DirUtils.create_with_parents( get_storage_path(), 0775 ) == 0 ) {
+      _available = true;
+    }
+
+    /* Allocate the images array */
+    _images = new Array<ImageItem>();
+
   }
 
-  /* Loads the stored images in the minder library */
-  private void load() {
-    // TBD
+  /* Destructor */
+  ~ImageManager() {
+    cleanup();
   }
 
   /*
@@ -80,49 +86,78 @@ class ImageManager {
     return( -1 );
   }
 
-  /* Adds the given image information to the stored list */
-  public void get_image( string uri ) {
+  /*
+   Adds the given image information to the stored list.  Returns true if the image
+   was successfully retrieved; otherwise, returns false.
+  */
+  public bool add_image( string uri ) {
     var match = find_match( uri );
     if( match == -1 ) {
-      var item = new ImageItem( fname, uri );
-      if( item.exists() ) {
-        _images.append_val( item );
+      var fname = uri_to_fname( uri );
+      if( !copy_uri_to_fname( uri, fname ) ) {
+        return( false );
       }
+      _images.append_val( new ImageItem( fname, uri ) );
+    } else if( !_images.index( match ).exists() ) {
+      if( !copy_uri_to_fname( uri, _images.index( match ).fname ) ) {
+        return( false );
+      }
+    }
+    return( true );
+  }
+
+  /* Returns the full pathname of the stored file for the given URI */
+  public string? get_path( string uri ) {
+    var match = find_match( uri );
+    if( match != -1 ) {
+      return( GLib.Path.build_filename( get_storage_path(), _images.index( match ).fname ) );
+    }
+    return( null );
+  }
+
+  /*
+   Sets the validity of the given URI to the the specified value.  When an image
+   is no longer needed, this method should be called with a value of false.  When
+   an image is needed again, this method should be called with a value of true.
+  */
+  public void set_valid( string uri, bool value ) {
+    var match = find_match( uri );
+    if( match != -1 ) {
+      _images.index( match ).valid = value;
     }
   }
 
   /* Returns the web pathname used to store downloaded images */
-  private static string get_web_path() {
+  private static string get_storage_path() {
     return( GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "images" ) );
   }
 
-  /* Returns the path for the file associated with the given URI */
-  private string? get_fname_from_uri( string uri ) {
-    var rfile = File.new_for_uri( uri );
-    if( rfile.get_uri_scheme() == "file" ) {
-      return( rfile.get_path() );
+  /* Returns the filename associated with the given URI */
+  private string uri_to_fname( string uri ) {
+    var parts = uri.split( "." );
+    var ext   = parts[parts.length - 1].split( "?" )[0];
+    if( (ext == "bmp") || (ext == "png") || (ext == "jpg") || (ext == "jpeg") ) {
+      ext = "." + ext;
     } else {
-        var parts = uri.split( "." );
-        var ext   = parts[parts.length - 1];
-        if( (ext == "bmp") || (ext == "png") || (ext == "jpg") || (ext == "jpeg") ) {
-          ext = "." + ext;
-        } else {
-          ext = "";
-        }
-        var id    = Minder.get_image_id();
-        var lfile = File.new_for_path( GLib.Path.build_filename( dir, "img%06d%s".printf( id, ext ) ) );
-        try {
-          rfile.copy( lfile, FileCopyFlags.OVERWRITE );
-          return( lfile.get_path() );
-        } catch( Error e ) {
-          return( null );
-        }
-      }
-      return( null );
+      ext = "";
     }
+    return( "img%06d%s".printf( Minder.get_image_id(), ext ) );
   }
+
+  /* Copies the given URI to the given filename in the storage directory */
+  private bool copy_uri_to_fname( string uri, string fname ) {
+    var rfile = File.new_for_uri( uri );
+    var lfile = File.new_for_path( GLib.Path.build_filename( get_storage_path(), fname ) );
+    try {
+      rfile.copy( lfile, FileCopyFlags.OVERWRITE );
+    } catch( Error e ) {
+      return( false );
+    }
+    return( true );
+  }
+
   /* Cleans up the contents of the stored images */
-  public void cleanup() {
+  private void cleanup() {
     for( int i=0; i<_images.length; i++ ) {
       _images.index( i ).cleanup();
     }

@@ -206,48 +206,41 @@ public class NodeInspector : Stack {
 
     var btn_edit = new Button.from_icon_name( "document-edit-symbolic" );
     btn_edit.set_tooltip_text( _( "Edit Image" ) );
-    btn_edit.halign       = Align.START;
-    btn_edit.valign       = Align.START;
-    btn_edit.border_width = 5;
     btn_edit.clicked.connect(() => {
       _da.edit_current_image();
     });
 
-    var reveal_edit = new Revealer();
-    reveal_edit.transition_duration = 500;
-    reveal_edit.transition_type     = RevealerTransitionType.CROSSFADE;
-    reveal_edit.add( btn_edit );
-
     var btn_del = new Button.from_icon_name( "edit-delete-symbolic" );
     btn_del.set_tooltip_text( _( "Remove Image" ) );
-    btn_del.halign       = Align.END;
-    btn_del.valign       = Align.START;
-    btn_del.border_width = 5;
     btn_del.clicked.connect(() => {
       _da.delete_current_image();
     });
 
-    var reveal_del = new Revealer();
-    reveal_del.transition_duration = 500;
-    reveal_del.transition_type     = RevealerTransitionType.CROSSFADE;
-    reveal_del.add( btn_del );
+    var btn_box = new Box( Orientation.HORIZONTAL, 20 );
+    btn_box.halign       = Align.END;
+    btn_box.valign       = Align.START;
+    btn_box.border_width = 5;
+    btn_box.pack_start( btn_edit, false, false );
+    btn_box.pack_start( btn_del,  false, false );
+
+    var reveal_box = new Revealer();
+    reveal_box.transition_duration = 500;
+    reveal_box.transition_type     = RevealerTransitionType.CROSSFADE;
+    reveal_box.add( btn_box );
 
     var img_overlay = new Overlay();
-    img_overlay.add_overlay( reveal_del );
-    img_overlay.add_overlay( reveal_edit );
+    img_overlay.add_overlay( reveal_box );
     img_overlay.add( _image );
 
     _image_area = new EventBox();
     _image_area.visible = false;
     _image_area.add_events( EventMask.ENTER_NOTIFY_MASK | EventMask.LEAVE_NOTIFY_MASK );
     _image_area.enter_notify_event.connect((e) => {
-      reveal_edit.reveal_child = true;
-      reveal_del.reveal_child  = true;
+      reveal_box.reveal_child = true;
       return( false );
     });
     _image_area.leave_notify_event.connect((e) => {
-      reveal_edit.reveal_child = false;
-      reveal_del.reveal_child  = false;
+      reveal_box.reveal_child = false;
       return( false );
     });
     _image_area.add( img_overlay );

@@ -71,10 +71,6 @@ public class Document : Object {
 
   }
 
-  public static ImageManager get_image_manager() {
-    return( _image_manager );
-  }
-
   /* Called whenever the canvas changes such that a save will be needed */
   private void canvas_changed() {
     save_needed = true;
