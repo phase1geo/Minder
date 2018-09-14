@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-13 22:29-0500\n"
+"POT-Creation-Date: 2018-09-13 22:44-0500\n"
 "PO-Revision-Date: 2018-07-21 21:13+0200\n"
 "Last-Translator: Jan Marek <janmarek28@gmail.com>\n"
 "Language-Team: čeština <>\n"
@@ -107,7 +107,8 @@ msgstr "Odstranit úkol"
 msgid "Remove Note"
 msgstr "Odstranit poznámku"
 
-#: src/DrawAreaMenu.vala:243 src/NodeInspector.vala:214
+#: src/DrawAreaMenu.vala:243 src/ImageEditor.vala:363
+#: src/NodeInspector.vala:214
 #, fuzzy
 msgid "Remove Image"
 msgstr "Odstranit úkol"
@@ -142,29 +143,52 @@ msgstr ""
 msgid "unfold all tasks"
 msgstr ""
 
+#: src/ImageEditor.vala:182
+#, c-format
+msgid "Crop Area: %d,%d %3dx%3d"
+msgstr ""
+
+#: src/ImageEditor.vala:353
+#, c-format
+msgid "Cursor: %3d,%3d"
+msgstr ""
+
+#: src/ImageEditor.vala:360 src/MainWindow.vala:496 src/MainWindow.vala:585
+#: src/MainWindow.vala:668 src/MainWindow.vala:886 src/NodeImage.vala:220
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: src/ImageEditor.vala:361
+msgid "Apply"
+msgstr ""
+
+#: src/ImageEditor.vala:362
+msgid "Change Image"
+msgstr ""
+
+#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:218
+msgid "Manual"
+msgstr "Ruční"
+
 #: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:222
 msgid "To right"
 msgstr "Do prava"
-
-#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:219
-msgid "Vertical"
-msgstr "Vertikální"
-
-#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:223
-msgid "Upwards"
-msgstr "Vzhůru"
-
-#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:224
-msgid "Downwards"
-msgstr "Dolů"
 
 #: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:221
 msgid "To left"
 msgstr "Do leva"
 
-#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:218
-msgid "Manual"
-msgstr "Ruční"
+#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:224
+msgid "Downwards"
+msgstr "Dolů"
+
+#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:223
+msgid "Upwards"
+msgstr "Vzhůru"
+
+#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:219
+msgid "Vertical"
+msgstr "Vertikální"
 
 #: src/MainWindow.vala:95 src/MainWindow.vala:671
 msgid "Minder"
@@ -295,11 +319,6 @@ msgstr "Pokud soubor neuložíte, provedené změny se navždy ztratí."
 msgid "Discard Changes"
 msgstr "Zahodit změny"
 
-#: src/MainWindow.vala:496 src/MainWindow.vala:585 src/MainWindow.vala:668
-#: src/MainWindow.vala:886
-msgid "Cancel"
-msgstr "Zrušit"
-
 #: src/MainWindow.vala:499 src/MainWindow.vala:668
 msgid "Save"
 msgstr "Uložit"
@@ -386,6 +405,20 @@ msgstr ""
 msgid "Unfold All Nodes"
 msgstr "Rozbalit potomky"
 
+#: src/NodeImage.vala:219
+#, fuzzy
+msgid "Select Image"
+msgstr "Vybrat uzel"
+
+#: src/NodeImage.vala:220
+#, fuzzy
+msgid "Select"
+msgstr "Vybrat uzel"
+
+#: src/NodeImage.vala:224
+msgid "Images"
+msgstr ""
+
 #: src/NodeInspector.vala:56
 msgid "<big>Select a node to view/edit information</big>"
 msgstr "<big>Vyberte uzel pro zobrazení/úpravy informací</big>"
@@ -438,17 +471,49 @@ msgstr "Odpojit uzel"
 msgid "Delete Node"
 msgstr "Smazat uzel"
 
-#: src/undo_actions/UndoNodeCut.vala:32
-msgid "cut node"
-msgstr "vyjmout uzel"
+#: src/themes/ThemeSolarizedLight.vala:30
+msgid "Solarized Light"
+msgstr ""
 
-#: src/undo_actions/UndoNodeName.vala:32
-msgid "node name change"
-msgstr "přejmenovat uzel"
+#: src/themes/ThemeDefault.vala:30
+msgid "Default"
+msgstr ""
+
+#: src/themes/ThemeDark.vala:30
+msgid "Dark"
+msgstr ""
+
+#: src/themes/ThemeSolarizedDark.vala:30
+msgid "Solarized Dark"
+msgstr ""
+
+#: src/undo_actions/UndoNodePaste.vala:32
+msgid "paste node"
+msgstr "vložit uzel"
+
+#: src/undo_actions/UndoNodeMove.vala:34
+msgid "move node"
+msgstr "přesunout uzel"
+
+#: src/undo_actions/UndoNodeNote.vala:32
+msgid "node note change"
+msgstr "změna poznámky uzlu"
+
+#: src/undo_actions/UndoNodeReveal.vala:32
+msgid "node reveal"
+msgstr ""
 
 #: src/undo_actions/UndoNodeDelete.vala:32
 msgid "delete node"
 msgstr "smazat uzel"
+
+#: src/undo_actions/UndoNodeCut.vala:32
+msgid "cut node"
+msgstr "vyjmout uzel"
+
+#: src/undo_actions/UndoNodeResize.vala:32
+msgid "node resize"
+msgstr ""
 
 #: src/undo_actions/UndoNodeInsert.vala:33
 msgid "insert node"
@@ -458,34 +523,40 @@ msgstr "vložit uzel"
 msgid "node task change"
 msgstr "změna úkolu uzlu"
 
-#: src/undo_actions/UndoNodeBalance.vala:60
-msgid "balance nodes"
-msgstr "vyvážit uzly"
-
-#: src/undo_actions/UndoNodeNote.vala:32
-msgid "node note change"
-msgstr "změna poznámky uzlu"
-
-#: src/undo_actions/UndoNodeFold.vala:32
-msgid "node change fold"
-msgstr "změna sbalení uzlu"
-
-#: src/undo_actions/UndoNodeMove.vala:34
-msgid "move node"
-msgstr "přesunout uzel"
-
-#: src/undo_actions/UndoNodeDetach.vala:34
-msgid "detach node"
-msgstr "odpojit uzel"
-
 #: src/undo_actions/UndoNodeAttach.vala:39
 #: src/undo_actions/UndoNodeAttach.vala:54
 msgid "attach node"
 msgstr "připojit uzel"
 
-#: src/undo_actions/UndoNodePaste.vala:32
-msgid "paste node"
-msgstr "vložit uzel"
+#: src/undo_actions/UndoNodeLinkColor.vala:33
+#, fuzzy
+msgid "link color change"
+msgstr "změna poznámky uzlu"
+
+#: src/undo_actions/UndoNodeLayout.vala:29
+msgid "change layout"
+msgstr ""
+
+#: src/undo_actions/UndoNodeFold.vala:32
+msgid "node change fold"
+msgstr "změna sbalení uzlu"
+
+#: src/undo_actions/UndoNodeBalance.vala:60
+msgid "balance nodes"
+msgstr "vyvážit uzly"
+
+#: src/undo_actions/UndoNodeImage.vala:32
+#, fuzzy
+msgid "node image change"
+msgstr "přejmenovat uzel"
+
+#: src/undo_actions/UndoNodeDetach.vala:34
+msgid "detach node"
+msgstr "odpojit uzel"
+
+#: src/undo_actions/UndoNodeName.vala:32
+msgid "node name change"
+msgstr "přejmenovat uzel"
 
 #: src/UndoBuffer.vala:81
 msgid "Undo "

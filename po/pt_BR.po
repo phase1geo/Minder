@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-13 22:29-0500\n"
+"POT-Creation-Date: 2018-09-13 22:44-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Helder Bertoldo <helder.bertoldo@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -106,7 +106,8 @@ msgstr "Remover Tarefa"
 msgid "Remove Note"
 msgstr "Remover Nota"
 
-#: src/DrawAreaMenu.vala:243 src/NodeInspector.vala:214
+#: src/DrawAreaMenu.vala:243 src/ImageEditor.vala:363
+#: src/NodeInspector.vala:214
 #, fuzzy
 msgid "Remove Image"
 msgstr "Remover Tarefa"
@@ -141,29 +142,52 @@ msgstr ""
 msgid "unfold all tasks"
 msgstr ""
 
+#: src/ImageEditor.vala:182
+#, c-format
+msgid "Crop Area: %d,%d %3dx%3d"
+msgstr ""
+
+#: src/ImageEditor.vala:353
+#, c-format
+msgid "Cursor: %3d,%3d"
+msgstr ""
+
+#: src/ImageEditor.vala:360 src/MainWindow.vala:496 src/MainWindow.vala:585
+#: src/MainWindow.vala:668 src/MainWindow.vala:886 src/NodeImage.vala:220
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/ImageEditor.vala:361
+msgid "Apply"
+msgstr ""
+
+#: src/ImageEditor.vala:362
+msgid "Change Image"
+msgstr ""
+
+#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:218
+msgid "Manual"
+msgstr "Manual"
+
 #: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:222
 msgid "To right"
 msgstr "Para a direita"
-
-#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:219
-msgid "Vertical"
-msgstr "Vertical"
-
-#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:223
-msgid "Upwards"
-msgstr "Para cima"
-
-#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:224
-msgid "Downwards"
-msgstr "Para baixo"
 
 #: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:221
 msgid "To left"
 msgstr "Para a esquerda"
 
-#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:218
-msgid "Manual"
-msgstr "Manual"
+#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:224
+msgid "Downwards"
+msgstr "Para baixo"
+
+#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:223
+msgid "Upwards"
+msgstr "Para cima"
+
+#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:219
+msgid "Vertical"
+msgstr "Vertical"
 
 #: src/MainWindow.vala:95 src/MainWindow.vala:671
 msgid "Minder"
@@ -294,11 +318,6 @@ msgstr ""
 msgid "Discard Changes"
 msgstr "Descartar Mudanças"
 
-#: src/MainWindow.vala:496 src/MainWindow.vala:585 src/MainWindow.vala:668
-#: src/MainWindow.vala:886
-msgid "Cancel"
-msgstr "Cancelar"
-
 #: src/MainWindow.vala:499 src/MainWindow.vala:668
 msgid "Save"
 msgstr "Salvar"
@@ -385,6 +404,20 @@ msgstr ""
 msgid "Unfold All Nodes"
 msgstr "Desdobrar Filhos"
 
+#: src/NodeImage.vala:219
+#, fuzzy
+msgid "Select Image"
+msgstr "Selecionar Nó"
+
+#: src/NodeImage.vala:220
+#, fuzzy
+msgid "Select"
+msgstr "Selecionar Nó"
+
+#: src/NodeImage.vala:224
+msgid "Images"
+msgstr ""
+
 #: src/NodeInspector.vala:56
 msgid "<big>Select a node to view/edit information</big>"
 msgstr "<big>Selecionar um nó para visualizar/editar informação</big>"
@@ -437,17 +470,49 @@ msgstr "Desanexar Nó"
 msgid "Delete Node"
 msgstr "Deletar Nó"
 
-#: src/undo_actions/UndoNodeCut.vala:32
-msgid "cut node"
-msgstr "recortar nó"
+#: src/themes/ThemeSolarizedLight.vala:30
+msgid "Solarized Light"
+msgstr ""
 
-#: src/undo_actions/UndoNodeName.vala:32
-msgid "node name change"
-msgstr "mudar nome do nó"
+#: src/themes/ThemeDefault.vala:30
+msgid "Default"
+msgstr ""
+
+#: src/themes/ThemeDark.vala:30
+msgid "Dark"
+msgstr ""
+
+#: src/themes/ThemeSolarizedDark.vala:30
+msgid "Solarized Dark"
+msgstr ""
+
+#: src/undo_actions/UndoNodePaste.vala:32
+msgid "paste node"
+msgstr "colar nó"
+
+#: src/undo_actions/UndoNodeMove.vala:34
+msgid "move node"
+msgstr "mover nó"
+
+#: src/undo_actions/UndoNodeNote.vala:32
+msgid "node note change"
+msgstr ""
+
+#: src/undo_actions/UndoNodeReveal.vala:32
+msgid "node reveal"
+msgstr ""
 
 #: src/undo_actions/UndoNodeDelete.vala:32
 msgid "delete node"
 msgstr "apagar nó"
+
+#: src/undo_actions/UndoNodeCut.vala:32
+msgid "cut node"
+msgstr "recortar nó"
+
+#: src/undo_actions/UndoNodeResize.vala:32
+msgid "node resize"
+msgstr ""
 
 #: src/undo_actions/UndoNodeInsert.vala:33
 msgid "insert node"
@@ -457,34 +522,39 @@ msgstr "inserir nó"
 msgid "node task change"
 msgstr "mudar tarefa do nó"
 
-#: src/undo_actions/UndoNodeBalance.vala:60
-msgid "balance nodes"
-msgstr "balancear nós"
+#: src/undo_actions/UndoNodeAttach.vala:39
+#: src/undo_actions/UndoNodeAttach.vala:54
+msgid "attach node"
+msgstr "anexar nó"
 
-#: src/undo_actions/UndoNodeNote.vala:32
-msgid "node note change"
+#: src/undo_actions/UndoNodeLinkColor.vala:33
+msgid "link color change"
+msgstr ""
+
+#: src/undo_actions/UndoNodeLayout.vala:29
+msgid "change layout"
 msgstr ""
 
 #: src/undo_actions/UndoNodeFold.vala:32
 msgid "node change fold"
 msgstr ""
 
-#: src/undo_actions/UndoNodeMove.vala:34
-msgid "move node"
-msgstr "mover nó"
+#: src/undo_actions/UndoNodeBalance.vala:60
+msgid "balance nodes"
+msgstr "balancear nós"
+
+#: src/undo_actions/UndoNodeImage.vala:32
+#, fuzzy
+msgid "node image change"
+msgstr "mudar nome do nó"
 
 #: src/undo_actions/UndoNodeDetach.vala:34
 msgid "detach node"
 msgstr "desanexar nó"
 
-#: src/undo_actions/UndoNodeAttach.vala:39
-#: src/undo_actions/UndoNodeAttach.vala:54
-msgid "attach node"
-msgstr "anexar nó"
-
-#: src/undo_actions/UndoNodePaste.vala:32
-msgid "paste node"
-msgstr "colar nó"
+#: src/undo_actions/UndoNodeName.vala:32
+msgid "node name change"
+msgstr "mudar nome do nó"
 
 #: src/UndoBuffer.vala:81
 msgid "Undo "
