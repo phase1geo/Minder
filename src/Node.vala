@@ -126,6 +126,7 @@ public class Node : Object {
   private   RGBA         _link_color;
   private   double       _min_width   = 50;
   private   double       _max_width   = 200;
+  private   NodeImage    _image       = null;
 
   /* Properties */
   public string name { get; set; default = ""; }
@@ -201,7 +202,6 @@ public class Node : Object {
   public bool       attached   { get; set; default = false; }
   public int        line_width { get; set; default = 4; }
   public int        radius     { get; set; default = 10; }
-  public NodeImage? image      { get; set; default = null; }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -308,6 +308,22 @@ public class Node : Object {
     return( _width );
   }
 
+  /* Gets the NodeImage instance associated with this class instance */
+  public NodeImage get_image() {
+    return( _image );
+  }
+
+  /* Sets the node image to the given value, updating the image manager accordingly. */
+  public void set_image( ImageManager im, NodeImage? ni ) {
+    if( _image != null ) {
+      im.set_valid_for_uri( _image.uri, false );
+    }
+    if( ni != null ) {
+      im.set_valid_for_uri( ni.uri, true );
+    }
+    _image = ni;
+  }
+
   /* Returns true if the node does not have a parent */
   public bool is_root() {
     return( parent == null );
@@ -365,7 +381,7 @@ public class Node : Object {
   public virtual bool is_within_task( double x, double y ) {
     if( _task_count > 0 ) {
       double tx, ty, tw, th;
-      double img_height = (image == null) ? 0 : image.height;
+      double img_height = (_image == null) ? 0 : _image.height;
       tx = posx + _padx;
       ty = posy + _pady + img_height + (((_height - (img_height + _pady)) / 2) - _task_radius);
       tw = _task_radius * 2;
@@ -382,7 +398,7 @@ public class Node : Object {
   public virtual bool is_within_note( double x, double y ) {
     if( note.length > 0 ) {
       double nx, ny, nw, nh;
-      double img_height = (image == null) ? 0 : image.height;
+      double img_height = (_image == null) ? 0 : _image.height;
       nx = posx + (_width - (note_width() + _padx)) + _ipadx;
       ny = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2) - 5;
       nw = 11;
@@ -406,12 +422,12 @@ public class Node : Object {
 
   /* Returns true if the given cursor coordinates lie within the image area */
   public virtual bool is_within_image( double x, double y ) {
-    if( image != null ) {
+    if( _image != null ) {
       double ix, iy, iw, ih;
       ix = posx + _padx;
       iy = posy + _pady;
-      iw = image.width;
-      ih = image.height;
+      iw = _image.width;
+      ih = _image.height;
       return( (ix <= x) && (x <= (ix + iw)) && (iy <= y) && (y <= (iy + ih)) );
     } else {
       return( false );
@@ -513,8 +529,9 @@ public class Node : Object {
     }
   }
 
-  private void load_image( Xml.Node* n ) {
-    image = new NodeImage.from_xml( n, (int)_max_width );
+  /* Loads the image information from the given XML node */
+  private void load_image( ImageManager im, Xml.Node* n ) {
+    _image = new NodeImage.from_xml( im, n, (int)_max_width );
   }
 
   /* Loads the file contents into this instance */
@@ -585,7 +602,7 @@ public class Node : Object {
         switch( it->name ) {
           case "nodename"  :  load_name( it );  break;
           case "nodenote"  :  load_note( it );  break;
-          case "nodeimage" :  load_image( it );  break;
+          case "nodeimage" :  load_image( da.image_manager, it );  break;
           case "nodes"     :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
@@ -632,8 +649,8 @@ public class Node : Object {
       node->new_prop( "color", color_from_rgba( _link_color ) );
     }
 
-    if( image != null ) {
-      image.save( node );
+    if( _image != null ) {
+      _image.save( node );
     }
 
     node->new_text_child( null, "nodename", name );
@@ -754,8 +771,8 @@ public class Node : Object {
       int text_width, text_height;
       double orig_width  = _width;
       double orig_height = _height;
-      double img_width   = (image != null) ? (image.width  + (_padx * 2)) : 0;
-      double img_height  = (image != null) ? (image.height + _pady)       : 0;
+      double img_width   = (_image != null) ? (_image.width  + (_padx * 2)) : 0;
+      double img_height  = (_image != null) ? (_image.height + _pady)       : 0;
       _layout.set_markup( name_markup( theme ), -1 );
       _layout.get_size( out text_width, out text_height );
       _width     = (text_width  / Pango.SCALE) + (_padx * 2) + task_width() + note_width();
@@ -771,13 +788,13 @@ public class Node : Object {
   /* Resizes the node width by the given amount */
   public virtual void resize( double diff, Layout layout ) {
     diff = resizer_on_left() ? (0 - diff) : diff;
-    if( image == null ) {
+    if( _image == null ) {
       if( (diff < 0) ? ((_max_width + diff) <= _min_width) : !_layout.is_wrapped() ) return;
       _max_width += diff;
     } else {
       if( (_max_width + diff) < _min_width ) return;
       _max_width += diff;
-      image.set_width( (int)_max_width );
+      _image.set_width( (int)_max_width );
     }
     _layout.set_width( (int)_max_width * Pango.SCALE );
     layout.handle_update_by_edit( this );
@@ -941,7 +958,7 @@ public class Node : Object {
   /* Sets the cursor from the given mouse coordinates */
   public void set_cursor_at_char( double x, double y, bool motion ) {
     int cursor, trailing;
-    int img_height = (image != null) ? (int)(image.height + _pady) : 0;
+    int img_height = (_image != null) ? (int)(_image.height + _pady) : 0;
     int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
     int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
     if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
@@ -967,7 +984,7 @@ public class Node : Object {
   /* Selects the word at the current x/y position in the text */
   public void set_cursor_at_word( double x, double y, bool motion ) {
     int cursor, trailing;
-    int img_height = (image != null) ? (int)(image.height + _pady) : 0;
+    int img_height = (_image != null) ? (int)(_image.height + _pady) : 0;
     int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
     int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
     if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
@@ -1457,8 +1474,8 @@ public class Node : Object {
 
   /* Draws the node image above the note */
   protected virtual void draw_image( Cairo.Context ctx, Theme theme, bool motion ) {
-    if( image != null ) {
-      image.draw( ctx, (posx + _padx), (posy + _pady), (motion ? 0.2 : 1) );
+    if( _image != null ) {
+      _image.draw( ctx, (posx + _padx), (posy + _pady), (motion ? 0.2 : 1) );
     }
 
   }
@@ -1468,7 +1485,7 @@ public class Node : Object {
 
     int    hmargin    = 3;
     int    vmargin    = 3;
-    double img_height = (image != null) ? (image.height + _pady) : 0;
+    double img_height = (_image != null) ? (_image.height + _pady) : 0;
     double width_diff, height_diff;
 
     /* Make sure the the size is up-to-date */
@@ -1510,7 +1527,7 @@ public class Node : Object {
 
     if( _task_count > 0 ) {
 
-      double img_height = (image == null) ? 0 : image.height;
+      double img_height = (_image == null) ? 0 : _image.height;
       double x          = posx + _padx + _task_radius;
       double y          = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2);
 
@@ -1534,7 +1551,7 @@ public class Node : Object {
 
     if( _task_count > 0 ) {
 
-      double img_height = (image == null) ? 0 : image.height;
+      double img_height = (_image == null) ? 0 : _image.height;
       double x          = posx + _padx + _task_radius;
       double y          = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2);
       double complete   = _task_done / (_task_count * 1.0);
@@ -1570,7 +1587,7 @@ public class Node : Object {
 
     if( note.length > 0 ) {
 
-      double img_height = (image == null) ? 0 : image.height;
+      double img_height = (_image == null) ? 0 : _image.height;
       double x          = posx + (_width - (note_width() + _padx)) + _ipadx;
       double y          = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2) - 5;
       RGBA   color      = (mode == NodeMode.CURRENT) ? sel_color : reg_color;

@@ -197,7 +197,7 @@ public class DrawAreaMenu : Gtk.Menu {
   /* Returns true if an image is associated with the currently selected node */
   private bool node_has_image() {
     Node? current = _da.get_current_node();
-    return( (current != null) && (current.image != null) );
+    return( (current != null) && (current.get_image() != null) );
   }
 
   /* Returns true if there is a currently selected node that is foldable */

@@ -68,7 +68,7 @@ class ImageEditor {
     _crop_cursors[7] = CursorType.TOP_LEFT_CORNER;
 
     /* Create the user interface of the editor window */
-    create_ui( (Gtk.Window)da.get_toplevel() );
+    create_ui( (Gtk.Window)da.get_toplevel(), da.image_manager );
 
   }
 
@@ -98,18 +98,18 @@ class ImageEditor {
 
     /* Set the defaults */
     _node  = node;
-    _image = new NodeImage( node.image.fname, node.image.uri, _node.max_width() );
+    _image = new NodeImage( node.get_image().fname, node.get_image().uri, _node.max_width() );
 
     if( _image.valid ) {
 
-      _image.crop_x = node.image.crop_x;
-      _image.crop_y = node.image.crop_y;
-      _image.crop_w = node.image.crop_w;
-      _image.crop_h = node.image.crop_h;
+      _image.crop_x = node.get_image().crop_x;
+      _image.crop_y = node.get_image().crop_y;
+      _image.crop_w = node.get_image().crop_w;
+      _image.crop_h = node.get_image().crop_h;
 
       /* Load the image and draw it */
-      _da.width_request      = node.image.get_surface().get_width();
-      _da.height_request     = node.image.get_surface().get_height();
+      _da.width_request      = node.get_image().get_surface().get_width();
+      _da.height_request     = node.get_image().get_surface().get_height();
       _crop_points[8].width  = _image.crop_w;
       _crop_points[8].height = _image.crop_h;
       set_crop_points();
@@ -123,14 +123,10 @@ class ImageEditor {
   }
 
   /* Initializes the image editor with the give image filename */
-  private bool initialize( string fname, bool fname_is_uri ) {
+  private bool initialize( NodeImage ni ) {
 
     /* Create a new image from the given filename */
-    if( fname_is_uri ) {
-      _image = new NodeImage.from_uri( fname, _node.max_width() );
-    } else {
-      _image = new NodeImage.from_file( fname, null, _node.max_width() );
-    }
+    _image = ni;
 
     /* Load the image and draw it */
     if( _image.valid ) {
@@ -229,16 +225,16 @@ class ImageEditor {
   }
 
   /* Creates the user interface */
-  public void create_ui( Gtk.Window parent ) {
+  public void create_ui( Gtk.Window parent, ImageManager im ) {
 
     _popover = new Popover( parent );
     _popover.modal = true;
 
     var box = new Box( Orientation.VERTICAL, 5 );
 
-    _da = create_drawing_area();
+    _da = create_drawing_area( im );
     var status  = create_status_area();
-    var buttons = create_buttons( parent );
+    var buttons = create_buttons( parent, im );
 
     /* Pack the widgets into the window */
     box.pack_start( _da,     true,  true, 10 );
@@ -253,7 +249,7 @@ class ImageEditor {
   }
 
   /* Create the image editing area */
-  public DrawingArea create_drawing_area() {
+  public DrawingArea create_drawing_area( ImageManager im ) {
 
     var da = new DrawingArea();
 
@@ -321,7 +317,8 @@ class ImageEditor {
 
     da.drag_data_received.connect((ctx, x, y, data, info, t) => {
       if( data.get_uris().length == 1 ) {
-        if( initialize( data.get_uris()[0], true ) ) {
+        NodeImage? ni = new NodeImage.from_uri( im, data.get_uris()[0], _node.max_width() );
+        if( (ni != null) && initialize( ni ) ) {
           Gtk.drag_finish( ctx, true, false, t );
         }
       }
@@ -354,7 +351,7 @@ class ImageEditor {
   }
 
   /* Creates the button bar at the bottom of the window */
-  private Box create_buttons( Gtk.Window parent ) {
+  private Box create_buttons( Gtk.Window parent, ImageManager im ) {
 
     var box    = new Box( Orientation.HORIZONTAL, 5 );
     var cancel = new Button.with_label( _( "Cancel" ) );
@@ -367,20 +364,18 @@ class ImageEditor {
     });
 
     apply.clicked.connect(() => {
-      set_image();
-      show_popover( false );
+      set_image( im );
     });
 
     change.clicked.connect(() => {
-      string? fn = NodeImage.choose_image_file( parent );
-      if( fn != null ) {
-        initialize( fn, true );
+      NodeImage? ni = im.choose_node_image( parent, _node.max_width() );
+      if( ni != null ) {
+        initialize( ni );
       }
     });
 
     remove.clicked.connect(() => {
-      remove_image();
-      show_popover( false );
+      remove_image( im );
     });
 
     box.pack_start( change, false, false, 5 );
@@ -451,33 +446,39 @@ class ImageEditor {
   }
 
   /* Removes the current image for the node */
-  private void remove_image() {
+  private void remove_image( ImageManager im ) {
 
     /* Create a copy of the current image before changing it */
-    var orig_image = _node.image;
+    var orig_image = _node.get_image();
 
     /* Clear the node image */
-    _node.image = null;
+    _node.set_image( im, null );
 
     /* Indicate that the image changed */
     changed( orig_image );
 
+    /* Hide the popover */
+    show_popover( false );
+
   }
 
   /* Sets the node image to the edited image */
-  private void set_image() {
+  private void set_image( ImageManager im ) {
 
     /* Create a copy of the current image before changing it */
-    var orig_image = _node.image;
+    var orig_image = _node.get_image();
 
     /* Set the image width to match the node's max width */
     _image.set_width( _node.max_width() );
 
     /* Set the node image */
-    _node.image = _image;
+    _node.set_image( im, _image );
 
     /* Indicate that the image changed */
     changed( orig_image );
+
+    /* Close the popover */
+    show_popover( false );
 
   }
 

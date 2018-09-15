@@ -57,8 +57,17 @@ public class NodeImage {
     }
   }
 
+  public NodeImage.from_uri( ImageManager im, string uri, int width ) {
+    string? fn = im.add_image( uri );
+    if( (fn != null) && load( fn, uri, true ) ) {
+      set_width( width );
+    } else {
+      im.set_valid_for_uri( uri, false );
+    }
+  }
+
   /* Constructor from XML file */
-  public NodeImage.from_xml( Xml.Node* n, int width ) {
+  public NodeImage.from_xml( ImageManager im, Xml.Node* n, int width ) {
 
     string? f = n->get_prop( "fname" );
     if( f != null ) {
@@ -97,6 +106,9 @@ public class NodeImage {
       }
     }
 
+    /* Add ourselves to the image manager */
+    im.add_node_image( this );
+
   }
 
   /* Loads the current file into this structure */
@@ -122,10 +134,10 @@ public class NodeImage {
       }
 
     } catch( Error e ) {
-      valid = false;
+      this.valid = false;
     }
 
-    return( valid );
+    return( this.valid );
 
   }
 

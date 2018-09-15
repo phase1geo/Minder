@@ -48,6 +48,27 @@ public class ImageManager {
       this.valid = true;
     }
 
+    /* Loads the item information from given XML node */
+    public ImageItem.from_xml( Xml.Node* n ) {
+      string? f = n->get_prop( "fname" );
+      if( f != null ) {
+        fname = f;
+      }
+      string? u = n->get_prop( "uri" );
+      if( u != null ) {
+        uri = u;
+      }
+      valid = true;
+    }
+
+    /* Saves the given image item to the specified XML node */
+    public void save( Xml.Node* parent ) {
+      Xml.Node* n = new Xml.Node( null, "imageitem" );
+      n->new_prop( "fname", fname );
+      n->new_prop( "uri",   uri );
+      parent->add_child( n );
+    }
+
     /* Returns true if the file exists */
     public bool exists() {
       return( FileUtils.test( ImageManager.get_path( fname ), FileTest.EXISTS ) );
@@ -84,6 +105,31 @@ public class ImageManager {
     cleanup();
   }
 
+  /* Returns the next unique image ID */
+  private int get_image_id() {
+    var image_id = Minder.settings.get_int( "image-id" );
+    Minder.settings.set_int( "image-id", (image_id + 1) );
+    return( image_id );
+  }
+
+  /* Loads the image manager information from the specified XML node */
+  public void load( Xml.Node* n ) {
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        if( it->name == "image" ) {
+          _images.append_val( new ImageItem.from_xml( it ) );
+        }
+      }
+    }
+  }
+
+  /* Saves the image manager information to the file */
+  public void save( Xml.Node* n ) {
+    for( int i=0; i<_images.length; i++ ) {
+      _images.index( i ).save( n );
+    }
+  }
+
   /*
    Searches the list of stored image items, returning the array index
    of the item that matches.  If no match is found, a value of -1 is
@@ -110,6 +156,7 @@ public class ImageManager {
         return( null );
       }
       match = (int)_images.length;
+      stdout.printf( "1 add, fname: %s, uri: %s\n", fname, uri );
       _images.append_val( new ImageItem( fname, uri ) );
     } else if( !_images.index( match ).exists() ) {
       if( !copy_uri_to_fname( uri, _images.index( match ).fname ) ) {
@@ -117,6 +164,18 @@ public class ImageManager {
       }
     }
     return( get_path( _images.index( match ).fname ) );
+  }
+
+  /* Add the node image to the list.  Called when a node is read from XML. */
+  public void add_node_image( NodeImage ni ) {
+    var match = find_match( ni.uri );
+    if( match == -1 ) {
+      var item = new ImageItem( ni.fname, ni.uri );
+      if( item.exists() ) {
+        stdout.printf( "2 add, fname: %s, uri: %s\n", ni.fname, ni.uri );
+        _images.append_val( new ImageItem( ni.fname, ni.uri ) );
+      }
+    }
   }
 
   /* Returns the full pathname of the stored file for the given URI */
@@ -149,7 +208,7 @@ public class ImageManager {
     } else {
       ext = "";
     }
-    return( "img%06d%s".printf( Minder.get_image_id(), ext ) );
+    return( "img%06d%s".printf( get_image_id(), ext ) );
   }
 
   /* Copies the given URI to the given filename in the storage directory */

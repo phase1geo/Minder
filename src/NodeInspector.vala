@@ -477,10 +477,10 @@ public class NodeInspector : Stack {
       }
       _detach_btn.set_sensitive( current.parent != null );
       _note.buffer.text = current.note;
-      if( current.image != null ) {
-        var url = current.image.uri.replace( "&", "&amp;" );
+      if( current.get_image() != null ) {
+        var url = current.get_image().uri.replace( "&", "&amp;" );
         var str = "<a href=\"" + url + "\">" + url + "</a>";
-        current.image.set_image( _image );
+        current.get_image().set_image( _image );
         _image_loc.label = str;
         set_image_visible( true );
       } else {

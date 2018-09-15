@@ -32,12 +32,12 @@ public class UndoNodeImage : UndoItem {
     base( _( "node image change" ) );
     _node      = n;
     _old_image = old_image;
-    _new_image = n.image;
+    _new_image = n.get_image();
   }
 
   /* Changes the node image, adjusts the layout and updates the UI */
   private void change( DrawArea da, NodeImage? img ) {
-    _node.image = img;
+    _node.set_image( da.image_manager, img );
     da.get_layout().handle_update_by_edit( _node );
     da.queue_draw();
     da.node_changed();

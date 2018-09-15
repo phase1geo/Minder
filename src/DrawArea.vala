@@ -56,11 +56,12 @@ public class DrawArea : Gtk.DrawingArea {
   private uint?            _auto_save_id = null;
   private ImageEditor      _editor;
 
-  public UndoBuffer  undo_buffer    { set; get; }
-  public Themes      themes         { set; get; default = new Themes(); }
-  public Layouts     layouts        { set; get; default = new Layouts(); }
-  public Animator    animator       { set; get; }
-  public Node?       node_clipboard { set; get; default = null; }
+  public UndoBuffer   undo_buffer    { set; get; }
+  public Themes       themes         { set; get; default = new Themes(); }
+  public Layouts      layouts        { set; get; default = new Layouts(); }
+  public Animator     animator       { set; get; }
+  public Node?        node_clipboard { set; get; default = null; }
+  public ImageManager image_manager  { set; get; default = new ImageManager(); }
 
   public double origin_x {
     set {
@@ -305,6 +306,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "theme"    :  load_theme( it );   break;
           case "layout"   :  load_layout( it );  break;
           case "drawarea" :  load_drawarea( it );  break;
+          case "images"   :  image_manager.load( it );  break;
           case "nodes"    :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
@@ -345,6 +347,10 @@ public class DrawArea : Gtk.DrawingArea {
     origin->new_prop( "y", _store_origin_y.to_string() );
     origin->new_prop( "scale", _store_scale_factor.to_string() );
     parent->add_child( origin );
+
+    Xml.Node* images = new Xml.Node( null, "images" );
+    image_manager.save( images );
+    parent->add_child( images );
 
     Xml.Node* nodes = new Xml.Node( null, "nodes" );
     for( int i=0; i<_nodes.length; i++ ) {
@@ -596,11 +602,11 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void add_current_image() {
     if( _current_node != null ) {
-      if( _current_node.image == null ) {
+      if( _current_node.get_image() == null ) {
         var parent    = (Gtk.Window)get_toplevel();
         var max_width = _current_node.max_width();
-        _current_node.image = Minder.get_image_manager().choose_node_image( parent, max_width );
-        if( _current_node.image != null ) {
+        _current_node.set_image( image_manager, image_manager.choose_node_image( parent, max_width ) );
+        if( _current_node.get_image() != null ) {
           undo_buffer.add_item( new UndoNodeImage( _current_node, null ) );
           _layout.handle_update_by_edit( _current_node );
           queue_draw();
@@ -617,9 +623,9 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void delete_current_image() {
     if( _current_node != null ) {
-      NodeImage? orig_image = _current_node.image;
+      NodeImage? orig_image = _current_node.get_image();
       if( orig_image != null ) {
-        _current_node.image = null;
+        _current_node.set_image( image_manager, null );
         undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
         _layout.handle_update_by_edit( _current_node );
         queue_draw();
@@ -634,7 +640,7 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void edit_current_image() {
     if( _current_node != null ) {
-      if( _current_node.image != null ) {
+      if( _current_node.get_image() != null ) {
         _editor.edit_image( _current_node, _current_node.posx, _current_node.posy );
       }
     }
@@ -2022,10 +2028,10 @@ public class DrawArea : Gtk.DrawingArea {
     if( (_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE) ) {
 
       foreach (var uri in data.get_uris()) {
-        var image = new NodeImage.from_uri( uri, 200 );
+        var image = new NodeImage.from_uri( image_manager, uri, 200 );
         if( image.valid ) {
           var node = new Node.with_name( this, _( "Another Idea" ), _layout );
-          node.image = image;
+          node.set_image( image_manager, image );
           _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
           _nodes.append_val( node );
           if( select_node( node ) ) {
@@ -2045,10 +2051,11 @@ public class DrawArea : Gtk.DrawingArea {
 
     } else if( (_attach_node.mode == NodeMode.DROPPABLE) && (data.get_uris().length == 1) ) {
 
-      var image = new NodeImage.from_uri( data.get_uris()[0], _attach_node.max_width() );
+      var image = new NodeImage.from_uri( image_manager, data.get_uris()[0], _attach_node.max_width() );
+      stdout.printf( "After nodeimage creation, valid: %s\n", image.valid.to_string() );
       if( image.valid ) {
-        var orig_image = _attach_node.image;
-        _attach_node.image = image;
+        var orig_image = _attach_node.get_image();
+        _attach_node.set_image( image_manager, image );
         undo_buffer.add_item( new UndoNodeImage( _attach_node, orig_image ) );
         _layout.handle_update_by_edit( _attach_node );
         _attach_node.mode = NodeMode.NONE;
@@ -2065,10 +2072,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Sets the image of the current node to the given filename */
   public bool update_current_image( string uri ) {
-    var image = new NodeImage.from_uri( uri, _current_node.max_width() );
+    var image = new NodeImage.from_uri( image_manager, uri, _current_node.max_width() );
     if( image.valid ) {
-      var orig_image = _current_node.image;
-      _current_node.image = image;
+      var orig_image = _current_node.get_image();
+      _current_node.set_image( image_manager, image );
       undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
       _layout.handle_update_by_edit( _current_node );
       queue_draw();
