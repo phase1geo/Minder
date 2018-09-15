@@ -51,23 +51,8 @@ public class NodeImage {
   }
 
   /* Default constructor */
-  public NodeImage.from_file( string fn, string? uri, int width ) {
-    if( load( fn, true ) ) {
-      if( uri != null ) {
-        this.uri = uri;
-      } else {
-        var file = GLib.File.new_for_path( fn );
-        this.uri = file.get_uri();
-      }
-      set_width( width );
-    }
-  }
-
-  /* Default constructor */
-  public NodeImage.from_uri( string uri, int width ) {
-    string? fn = get_fname_from_uri( uri );
-    if( (fn != null) && load( fn, true ) ) {
-      this.uri = uri;
+  public NodeImage( string fname, string uri, int width ) {
+    if( load( fname, uri, true ) ) {
       set_width( width );
     }
   }
@@ -107,7 +92,7 @@ public class NodeImage {
 
     /* Allocate the image */
     if( fname != "" ) {
-      if( load( fname, false ) ) {
+      if( load( fname, uri, false ) ) {
         set_width( width );
       }
     }
@@ -115,10 +100,11 @@ public class NodeImage {
   }
 
   /* Loads the current file into this structure */
-  private bool load( string fn, bool init ) {
+  private bool load( string fname, string uri, bool init ) {
 
-    fname = fn;
-    valid = true;
+    this.fname = fname;
+    this.uri   = uri;
+    this.valid = true;
 
     /* Get the file into the stored pixbuf */
     try {
@@ -209,72 +195,6 @@ public class NodeImage {
 
     parent->add_child( n );
 
-  }
-
-  /* Allows the user to choose an image file */
-  public static string? choose_image_file( Gtk.Window parent ) {
-
-    string? fn = null;
-
-    FileChooserDialog dialog = new FileChooserDialog( _( "Select Image" ), parent, FileChooserAction.OPEN,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Select" ), ResponseType.ACCEPT );
-
-    /* Allow pixbuf image types */
-    FileFilter filter = new FileFilter();
-    filter.set_filter_name( _( "Images" ) );
-    filter.add_pattern( "*.bmp" );
-    filter.add_pattern( "*.png" );
-    filter.add_pattern( "*.jpg" );
-    filter.add_pattern( "*.jpeg" );
-    dialog.add_filter( filter );
-
-    if( dialog.run() == ResponseType.ACCEPT ) {
-      fn = dialog.get_filename();
-    }
-
-    /* Close the dialog */
-    dialog.destroy();
-
-    return( fn );
-
-  }
-
-  /* Returns the web pathname used to store downloaded images */
-  private static string get_web_path() {
-    return( GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "images" ) );
-  }
-
-  /* Returns true if the given image filename is one that came from the web */
-  public bool is_from_web() {
-    return( fname.has_prefix( get_web_path() ) );
-  }
-
-  /* Returns the path for the file associated with the given URI */
-  private string? get_fname_from_uri( string uri ) {
-    var rfile = File.new_for_uri( uri );
-    if( rfile.get_uri_scheme() == "file" ) {
-      return( rfile.get_path() );
-    } else {
-      var dir = get_web_path();
-      if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
-        var parts = uri.split( "." );
-        var ext   = parts[parts.length - 1];
-        if( (ext == "bmp") || (ext == "png") || (ext == "jpg") || (ext == "jpeg") ) {
-          ext = "." + ext;
-        } else {
-          ext = "";
-        }
-        var id    = Minder.get_image_id();
-        var lfile = File.new_for_path( GLib.Path.build_filename( dir, "img%06d%s".printf( id, ext ) ) );
-        try {
-          rfile.copy( lfile, FileCopyFlags.OVERWRITE );
-          return( lfile.get_path() );
-        } catch( Error e ) {
-          return( null );
-        }
-      }
-      return( null );
-    }
   }
 
 }

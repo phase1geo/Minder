@@ -597,10 +597,10 @@ public class DrawArea : Gtk.DrawingArea {
   public void add_current_image() {
     if( _current_node != null ) {
       if( _current_node.image == null ) {
-        var     parent = (Gtk.Window)get_toplevel();
-        string? fname  = NodeImage.choose_image_file( parent );
-        if( fname != null ) {
-          _current_node.image = new NodeImage.from_file( fname, null, _current_node.max_width() );
+        var parent    = (Gtk.Window)get_toplevel();
+        var max_width = _current_node.max_width();
+        _current_node.image = Minder.get_image_manager().choose_node_image( parent, max_width );
+        if( _current_node.image != null ) {
           undo_buffer.add_item( new UndoNodeImage( _current_node, null ) );
           _layout.handle_update_by_edit( _current_node );
           queue_draw();

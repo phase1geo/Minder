@@ -20,8 +20,19 @@
 */
 
 using GLib;
+using Gtk;
 
 public class ImageManager {
+
+  /* Returns the web pathname used to store downloaded images */
+  private static string get_storage_path() {
+    return( GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "images" ) );
+  }
+
+  /* Returns the full pathname to the given fname */
+  private static string get_path( string fname ) {
+    return( GLib.Path.build_filename( get_storage_path(), fname ) );
+  }
 
   /* Private class used by the image manager to store image information */
   private class ImageItem {
@@ -39,13 +50,14 @@ public class ImageManager {
 
     /* Returns true if the file exists */
     public bool exists() {
-      return( FileUtils.test( fname, FileTest.EXISTS ) );
+      return( FileUtils.test( ImageManager.get_path( fname ), FileTest.EXISTS ) );
     }
 
     /* If the current item is no longer valid, remove it from the file system */
     public void cleanup() {
       if( !valid && exists() ) {
-        FileUtils.unlink( fname );
+        // FileUtils.unlink( ImageManager.get_path( fname ) );
+        stdout.printf( "Removing fname: %s\n", ImageManager.get_path( fname ) );
       }
     }
 
@@ -87,30 +99,31 @@ public class ImageManager {
   }
 
   /*
-   Adds the given image information to the stored list.  Returns true if the image
-   was successfully retrieved; otherwise, returns false.
+   Adds the given image information to the stored list.  Returns the path to the
+   filename to use if the image was successfully retrieved; otherwise, returns null.
   */
-  public bool add_image( string uri ) {
+  public string? add_image( string uri ) {
     var match = find_match( uri );
     if( match == -1 ) {
       var fname = uri_to_fname( uri );
       if( !copy_uri_to_fname( uri, fname ) ) {
-        return( false );
+        return( null );
       }
+      match = (int)_images.length;
       _images.append_val( new ImageItem( fname, uri ) );
     } else if( !_images.index( match ).exists() ) {
       if( !copy_uri_to_fname( uri, _images.index( match ).fname ) ) {
-        return( false );
+        return( null );
       }
     }
-    return( true );
+    return( get_path( _images.index( match ).fname ) );
   }
 
   /* Returns the full pathname of the stored file for the given URI */
-  public string? get_path( string uri ) {
+  public string? get_path_for_uri( string uri ) {
     var match = find_match( uri );
     if( match != -1 ) {
-      return( GLib.Path.build_filename( get_storage_path(), _images.index( match ).fname ) );
+      return( get_path( _images.index( match ).fname ) );
     }
     return( null );
   }
@@ -120,16 +133,11 @@ public class ImageManager {
    is no longer needed, this method should be called with a value of false.  When
    an image is needed again, this method should be called with a value of true.
   */
-  public void set_valid( string uri, bool value ) {
+  public void set_valid_for_uri( string uri, bool value ) {
     var match = find_match( uri );
     if( match != -1 ) {
       _images.index( match ).valid = value;
     }
-  }
-
-  /* Returns the web pathname used to store downloaded images */
-  private static string get_storage_path() {
-    return( GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "images" ) );
   }
 
   /* Returns the filename associated with the given URI */
@@ -147,8 +155,9 @@ public class ImageManager {
   /* Copies the given URI to the given filename in the storage directory */
   private bool copy_uri_to_fname( string uri, string fname ) {
     var rfile = File.new_for_uri( uri );
-    var lfile = File.new_for_path( GLib.Path.build_filename( get_storage_path(), fname ) );
+    var lfile = File.new_for_path( get_path( fname ) );
     try {
+      stdout.printf( "Copying file %s to %s\n", rfile.get_path(), lfile.get_path() );
       rfile.copy( lfile, FileCopyFlags.OVERWRITE );
     } catch( Error e ) {
       return( false );
@@ -161,6 +170,42 @@ public class ImageManager {
     for( int i=0; i<_images.length; i++ ) {
       _images.index( i ).cleanup();
     }
+  }
+
+  /*
+   Allows the user to choose an image file.  If the user selects an existing file, 
+   a NodeImage will be created and returned to the calling function.
+  */
+  public NodeImage? choose_node_image( Gtk.Window parent, int width ) {
+
+    NodeImage? ni = null;
+
+    FileChooserDialog dialog = new FileChooserDialog(
+      _( "Select Image" ), parent, FileChooserAction.OPEN,
+      _( "Cancel" ), ResponseType.CANCEL,
+      _( "Select" ), ResponseType.ACCEPT
+    );
+
+    /* Allow pixbuf image types */
+    FileFilter filter = new FileFilter();
+    filter.set_filter_name( _( "Images" ) );
+    filter.add_pattern( "*.bmp" );
+    filter.add_pattern( "*.png" );
+    filter.add_pattern( "*.jpg" );
+    filter.add_pattern( "*.jpeg" );
+    dialog.add_filter( filter );
+
+    if( dialog.run() == ResponseType.ACCEPT ) {
+      var uri   = dialog.get_uri();
+      var fname = add_image( dialog.get_uri() );
+      ni        = new NodeImage( fname, uri, width );
+    }
+
+    /* Close the dialog */
+    dialog.destroy();
+
+    return( ni );
+
   }
 
 }

@@ -98,7 +98,7 @@ class ImageEditor {
 
     /* Set the defaults */
     _node  = node;
-    _image = new NodeImage.from_file( node.image.fname, node.image.uri, _node.max_width() );
+    _image = new NodeImage( node.image.fname, node.image.uri, _node.max_width() );
 
     if( _image.valid ) {
 
