@@ -26,6 +26,10 @@ using Cairo;
 
 public class DrawArea : Gtk.DrawingArea {
 
+  private const Gtk.TargetEntry[] DRAG_TARGETS = {
+    {"text/uri-list", 0, 0}
+  };
+
   private double           _press_x;
   private double           _press_y;
   private double           _origin_x;
@@ -36,6 +40,7 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _store_scale_factor;
   private bool             _pressed    = false;
   private EventType        _press_type = EventType.NOTHING;
+  private bool             _resize     = false;
   private bool             _motion     = false;
   private Node?            _current_node;
   private bool             _current_new = false;
@@ -45,15 +50,18 @@ public class DrawArea : Gtk.DrawingArea {
   private string           _orig_name;
   private NodeSide         _orig_side;
   private Array<NodeInfo?> _orig_info;
-  private Node?            _attach_node    = null;
+  private int              _orig_width;
+  private Node?            _attach_node  = null;
   private DrawAreaMenu     _popup_menu;
-  private uint?            _auto_save_id   = null;
+  private uint?            _auto_save_id = null;
+  private ImageEditor      _editor;
 
-  public UndoBuffer undo_buffer    { set; get; }
-  public Themes     themes         { set; get; default = new Themes(); }
-  public Layouts    layouts        { set; get; default = new Layouts(); }
-  public Animator   animator       { set; get; }
-  public Node?      node_clipboard { set; get; default = null; }
+  public UndoBuffer   undo_buffer    { set; get; }
+  public Themes       themes         { set; get; default = new Themes(); }
+  public Layouts      layouts        { set; get; default = new Layouts(); }
+  public Animator     animator       { set; get; }
+  public Node?        node_clipboard { set; get; default = null; }
+  public ImageManager image_manager  { set; get; default = new ImageManager(); }
 
   public double origin_x {
     set {
@@ -99,6 +107,10 @@ public class DrawArea : Gtk.DrawingArea {
     /* Allocate memory for the undo buffer */
     undo_buffer = new UndoBuffer( this );
 
+    /* Allocate the image editor popover */
+    _editor = new ImageEditor( this );
+    _editor.changed.connect( current_image_edited );
+
     /* Create the popup menu */
     _popup_menu = new DrawAreaMenu( this );
 
@@ -127,6 +139,15 @@ public class DrawArea : Gtk.DrawingArea {
       EventMask.SMOOTH_SCROLL_MASK |
       EventMask.STRUCTURE_MASK
     );
+
+    /* Set ourselves up to be a drag target */
+    Gtk.drag_dest_set( this, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
+
+    this.drag_motion.connect( handle_drag_motion );
+    this.drag_data_received.connect( handle_drag_data_received );
+    this.destroy.connect(() => {
+      image_manager.cleanup();
+    });
 
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
@@ -205,6 +226,20 @@ public class DrawArea : Gtk.DrawingArea {
     return( _nodes );
   }
 
+  /* Sets the cursor of the drawing area */
+  private void set_cursor( CursorType? type = null ) {
+
+    var     win    = get_window();
+    Cursor? cursor = win.get_cursor();
+
+    if( type == null ) {
+      win.set_cursor( null );
+    } else if( (cursor == null) || (cursor.cursor_type != type) ) {
+      win.set_cursor( new Cursor.for_display( get_display(), type ) );
+    }
+
+  }
+
   /* Loads the drawing area origin from the XML node */
   private void load_drawarea( Xml.Node* n ) {
 
@@ -274,6 +309,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "theme"    :  load_theme( it );   break;
           case "layout"   :  load_layout( it );  break;
           case "drawarea" :  load_drawarea( it );  break;
+          case "images"   :  image_manager.load( it );  break;
           case "nodes"    :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
@@ -314,6 +350,10 @@ public class DrawArea : Gtk.DrawingArea {
     origin->new_prop( "y", _store_origin_y.to_string() );
     origin->new_prop( "scale", _store_scale_factor.to_string() );
     parent->add_child( origin );
+
+    Xml.Node* images = new Xml.Node( null, "images" );
+    image_manager.save( images );
+    parent->add_child( images );
 
     Xml.Node* nodes = new Xml.Node( null, "nodes" );
     for( int i=0; i<_nodes.length; i++ ) {
@@ -558,6 +598,68 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /*
+   Adds an image to the current node by allowing the user to select an image file
+   from the file system and, optionally, editing the image prior to assigning it
+   to a node.  Updates the layout, adds the undo item and redraws the canvas.
+   item and redraws the canvas.
+  */
+  public void add_current_image() {
+    if( _current_node != null ) {
+      if( _current_node.get_image() == null ) {
+        var parent    = (Gtk.Window)get_toplevel();
+        var max_width = _current_node.max_width();
+        var id        = image_manager.choose_image( parent );
+        _current_node.set_image( image_manager, new NodeImage( image_manager, id, max_width ) );
+        if( _current_node.get_image() != null ) {
+          undo_buffer.add_item( new UndoNodeImage( _current_node, null ) );
+          _layout.handle_update_by_edit( _current_node );
+          queue_draw();
+          node_changed();
+          auto_save();
+        }
+      }
+    }
+  }
+
+  /*
+   Deletes the image from the current node.  Updates the layout, adds the undo
+   item and redraws the canvas.
+  */
+  public void delete_current_image() {
+    if( _current_node != null ) {
+      NodeImage? orig_image = _current_node.get_image();
+      if( orig_image != null ) {
+        _current_node.set_image( image_manager, null );
+        undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
+        _layout.handle_update_by_edit( _current_node );
+        queue_draw();
+        node_changed();
+        auto_save();
+      }
+    }
+  }
+
+  /*
+   Causes the current node's image to be edited.
+  */
+  public void edit_current_image() {
+    if( _current_node != null ) {
+      if( _current_node.get_image() != null ) {
+        _editor.edit_image( image_manager, _current_node, _current_node.posx, _current_node.posy );
+      }
+    }
+  }
+
+  /* Called whenever the current node's image is changed */
+  private void current_image_edited( NodeImage? orig_image ) {
+    undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
+    _layout.handle_update_by_edit( _current_node );
+    queue_draw();
+    node_changed();
+    auto_save();
+  }
+
+  /*
    Changes the current node's link color and propagates that color to all
    descendants.
   */
@@ -590,6 +692,10 @@ public class DrawArea : Gtk.DrawingArea {
           toggle_fold( match );
           node_changed();
           return( false );
+        } else if( match.is_within_resizer( x, y ) ) {
+          _resize     = true;
+          _orig_width = match.max_width();
+          return( true );
         }
         _orig_side = match.side;
         _orig_info.remove_range( 0, _orig_info.length );
@@ -602,7 +708,12 @@ public class DrawArea : Gtk.DrawingArea {
               case EventType.TRIPLE_BUTTON_PRESS :  match.set_cursor_all( false );            break;
             }
           } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
-            _current_node.mode = NodeMode.EDITABLE;
+            if( _current_node.is_within_image( x, y ) ) {
+              edit_current_image();
+              return( false );
+            } else {
+              _current_node.mode = NodeMode.EDITABLE;
+            }
           }
           return( true );
         } else {
@@ -836,6 +947,17 @@ public class DrawArea : Gtk.DrawingArea {
     return( null );
   }
 
+  /* Returns the droppable node if one is found */
+  private Node? droppable_node( double x, double y ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      Node tmp = _nodes.index( i ).contains( x, y, null );
+      if( tmp != null ) {
+        return( tmp );
+      }
+    }
+    return( null );
+  }
+
   /* Returns the origin */
   public void get_origin( out double x, out double y ) {
     x = origin_x;
@@ -869,11 +991,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* Draws all of the root node trees */
   public void draw_all( Context ctx ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).draw_all( ctx, _theme, _current_node, false );
+      _nodes.index( i ).draw_all( ctx, _theme, _current_node, false, false );
     }
     /* Draw the current node on top of all others */
     if( (_current_node != null) && ((_current_node.parent == null) || !_current_node.parent.folded) ) {
-      _current_node.draw_all( ctx, _theme, null, true );
+      _current_node.draw_all( ctx, _theme, null, true, (_pressed && _motion && !_resize) );
     }
   }
 
@@ -918,24 +1040,28 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Handle mouse motion */
   private bool on_motion( EventMotion event ) {
+    if( _attach_node != null ) {
+      _attach_node.mode = NodeMode.NONE;
+      _attach_node      = null;
+      queue_draw();
+    }
     if( _pressed ) {
       if( _current_node != null ) {
         double diffx = scale_value( event.x ) - _press_x;
         double diffy = scale_value( event.y ) - _press_y;
         if( _current_node.mode == NodeMode.CURRENT ) {
-          Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
-          if( _attach_node != null ) {
-            _attach_node.mode = NodeMode.NONE;
+          if( _resize ) {
+            _current_node.resize( diffx, _layout );
+          } else {
+            Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
+            if( attach_node != null ) {
+              attach_node.mode = NodeMode.ATTACHABLE;
+              _attach_node = attach_node;
+            }
+            _current_node.posx += diffx;
+            _current_node.posy += diffy;
+            _layout.set_side( _current_node );
           }
-          if( attach_node != null ) {
-            attach_node.mode = NodeMode.ATTACHABLE;
-            _attach_node = attach_node;
-          } else if( _attach_node != null ) {
-            _attach_node = null;
-          }
-          _current_node.posx += diffx;
-          _current_node.posy += diffy;
-          _layout.set_side( _current_node );
         } else {
           switch( _press_type ) {
             case EventType.BUTTON_PRESS        :  _current_node.set_cursor_at_char( scale_value( event.x ), scale_value( event.y ), true );  break;
@@ -959,9 +1085,14 @@ public class DrawArea : Gtk.DrawingArea {
         if( match != null ) {
           if( get_tooltip_text() == null ) {
             if( match.is_within_task( event.x, event.y ) ) {
+              set_cursor( CursorType.HAND1 );
               set_tooltip_text( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
             } else if( match.is_within_note( event.x, event.y ) ) {
               set_tooltip_text( match.note );
+            } else if( match.is_within_resizer( event.x, event.y ) ) {
+              set_cursor( CursorType.SB_H_DOUBLE_ARROW );
+            } else {
+              set_cursor( null );
             }
           }
           return( false );
@@ -970,6 +1101,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( get_tooltip_text() != null ) {
         set_tooltip_text( null );
       }
+      set_cursor( null );
     }
     return( false );
   }
@@ -977,20 +1109,38 @@ public class DrawArea : Gtk.DrawingArea {
   /* Handle button release event */
   private bool on_release( EventButton event ) {
     _pressed = false;
+    if( _motion ) {
+      set_cursor( null );
+    }
+    if( _resize ) {
+      _resize = false;
+      undo_buffer.add_item( new UndoNodeResize( _current_node, _orig_width ) );
+      return( false );
+    }
     if( _current_node != null ) {
       if( _current_node.mode == NodeMode.CURRENT ) {
+
+        /* If we are hovering over an attach node, perform the attachment */
         if( _attach_node != null ) {
           attach_current_node();
+
+        /* If we are not in motion, set the cursor */
         } else if( !_motion ) {
           _current_node.set_cursor_all( false );
           _orig_name = _current_node.name;
           _current_node.move_cursor_to_end();
+
+        /* If we are not a root node, move the node into the appropriate position */
         } else if( _current_node.parent != null ) {
           int orig_index = _current_node.index();
           animator.add_node( _current_node, "move to position" );
           _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
           undo_buffer.add_item( new UndoNodeMove( _current_node, _orig_side, orig_index ) );
           animator.animate();
+
+        /* Otherwise, redraw everything after the move */
+        } else {
+          queue_draw();
         }
       }
     }
@@ -1862,6 +2012,89 @@ public class DrawArea : Gtk.DrawingArea {
   private bool do_auto_save() {
     _auto_save_id = null;
     changed();
+    return( false );
+  }
+
+  /* Called whenever we drag something over the canvas */
+  private bool handle_drag_motion( Gdk.DragContext ctx, int x, int y, uint t ) {
+
+    Node attach_node = droppable_node( scale_value( x ), scale_value( y ) );
+    if( _attach_node != null ) {
+      _attach_node.mode = NodeMode.NONE;
+    }
+    if( attach_node != null ) {
+      attach_node.mode = NodeMode.DROPPABLE;
+      _attach_node = attach_node;
+      queue_draw();
+    } else if( _attach_node != null ) {
+      _attach_node = null;
+      queue_draw();
+    }
+
+    return( true );
+
+  }
+
+  /* Called when something is dropped on the DrawArea */
+  private void handle_drag_data_received( Gdk.DragContext ctx, int x, int y, Gtk.SelectionData data, uint info, uint t ) {
+
+    if( (_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE) ) {
+
+      foreach (var uri in data.get_uris()) {
+        var image = new NodeImage.from_uri( image_manager, uri, 200 );
+        if( image.valid ) {
+          var node = new Node.with_name( this, _( "Another Idea" ), _layout );
+          node.set_image( image_manager, image );
+          _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+          _nodes.append_val( node );
+          if( select_node( node ) ) {
+            node.mode = NodeMode.EDITABLE;
+            _current_new = true;
+            queue_draw();
+          }
+        }
+      }
+
+      Gtk.drag_finish( ctx, true, false, t );
+
+      see();
+      queue_draw();
+      node_changed();
+      auto_save();
+
+    } else if( (_attach_node.mode == NodeMode.DROPPABLE) && (data.get_uris().length == 1) ) {
+
+      var image = new NodeImage.from_uri( image_manager, data.get_uris()[0], _attach_node.max_width() );
+      if( image.valid ) {
+        var orig_image = _attach_node.get_image();
+        _attach_node.set_image( image_manager, image );
+        undo_buffer.add_item( new UndoNodeImage( _attach_node, orig_image ) );
+        _layout.handle_update_by_edit( _attach_node );
+        _attach_node.mode = NodeMode.NONE;
+        _attach_node      = null;
+        Gtk.drag_finish( ctx, true, false, t );
+        queue_draw();
+        node_changed();
+        auto_save();
+      }
+
+    }
+
+  }
+
+  /* Sets the image of the current node to the given filename */
+  public bool update_current_image( string uri ) {
+    var image = new NodeImage.from_uri( image_manager, uri, _current_node.max_width() );
+    if( image.valid ) {
+      var orig_image = _current_node.get_image();
+      _current_node.set_image( image_manager, image );
+      undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
+      _layout.handle_update_by_edit( _current_node );
+      queue_draw();
+      node_changed();
+      auto_save();
+      return( true );
+    }
     return( false );
   }
 

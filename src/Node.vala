@@ -29,7 +29,8 @@ public enum NodeMode {
   NONE = 0,   // Specifies that this node is not the current node
   CURRENT,    // Specifies that this node is the current node and is not being edited
   EDITABLE,   // Specifies that this node's text has been and currently is actively being edited
-  ATTACHABLE  // Specifies that this node is the currently attachable node (affects display)
+  ATTACHABLE, // Specifies that this node is the currently attachable node (affects display)
+  DROPPABLE   // Specifies that this node can receive a dropped item
 }
 
 public enum NodeSide {
@@ -123,6 +124,9 @@ public class Node : Object {
   private   int          _selend      = 0;
   private   int          _selanchor   = 0;
   private   RGBA         _link_color;
+  private   double       _min_width   = 50;
+  private   double       _max_width   = 200;
+  private   NodeImage    _image       = null;
 
   /* Properties */
   public string name { get; set; default = ""; }
@@ -195,16 +199,16 @@ public class Node : Object {
       }
     }
   }
-  public bool     attached   { get; set; default = false; }
-  public int      line_width { get; set; default = 4; }
-  public int      radius     { get; set; default = 10; }
+  public bool       attached   { get; set; default = false; }
+  public int        line_width { get; set; default = 4; }
+  public int        radius     { get; set; default = 10; }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = da.create_pango_layout( null );
-    _layout.set_width( 200 * Pango.SCALE );
+    _layout.set_width( (int)_max_width * Pango.SCALE );
     _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     set_layout( layout );
   }
@@ -215,7 +219,7 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = da.create_pango_layout( n );
-    _layout.set_width( 200 * Pango.SCALE );
+    _layout.set_width( (int)_max_width * Pango.SCALE );
     _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     set_layout( layout );
   }
@@ -304,6 +308,22 @@ public class Node : Object {
     return( _width );
   }
 
+  /* Gets the NodeImage instance associated with this class instance */
+  public NodeImage get_image() {
+    return( _image );
+  }
+
+  /* Sets the node image to the given value, updating the image manager accordingly. */
+  public void set_image( ImageManager im, NodeImage? ni ) {
+    if( _image != null ) {
+      im.set_valid( _image.id, false );
+    }
+    if( ni != null ) {
+      im.set_valid( ni.id, true );
+    }
+    _image = ni;
+  }
+
   /* Returns true if the node does not have a parent */
   public bool is_root() {
     return( parent == null );
@@ -332,9 +352,19 @@ public class Node : Object {
     return( _task_count == _task_done );
   }
 
+  /* Returns the maximum width allowed for this node */
+  public int max_width() {
+    return( (int)_max_width );
+  }
+
   /* Returns the task completion percentage value */
   public double task_completion_percentage() {
     return( (_task_done / (_task_count * 1.0)) * 100 );
+  }
+
+  /* Returns true if the resizer should be in the upper left */
+  private bool resizer_on_left() {
+    return( !is_root() && (side == NodeSide.LEFT) );
   }
 
   /* Returns true if the given cursor coordinates lies within this node */
@@ -351,8 +381,9 @@ public class Node : Object {
   public virtual bool is_within_task( double x, double y ) {
     if( _task_count > 0 ) {
       double tx, ty, tw, th;
+      double img_height = (_image == null) ? 0 : _image.height;
       tx = posx + _padx;
-      ty = posy + _pady + ((_height / 2) - _task_radius);
+      ty = posy + _pady + img_height + (((_height - (img_height + _pady)) / 2) - _task_radius);
       tw = _task_radius * 2;
       th = _task_radius * 2;
       return( (tx < x) && (x < (tx + tw)) && (ty < y) && (y < (ty + th)) );
@@ -367,8 +398,9 @@ public class Node : Object {
   public virtual bool is_within_note( double x, double y ) {
     if( note.length > 0 ) {
       double nx, ny, nw, nh;
+      double img_height = (_image == null) ? 0 : _image.height;
       nx = posx + (_width - (note_width() + _padx)) + _ipadx;
-      ny = posy + (_height / 2) - 5;
+      ny = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2) - 5;
       nw = 11;
       nh = 11;
       return( (nx < x) && (x < (nx + nw)) && (ny < y) && (y < (ny + nh)) );
@@ -377,7 +409,7 @@ public class Node : Object {
     }
   }
 
-  /* Returns true if the given cursor coordinates lies within the fold indicator area */
+  /* Returns true if the given cursor coordinates lie within the fold indicator area */
   public virtual bool is_within_fold( double x, double y ) {
     if( folded && (_children.length > 0) ) {
       double fx, fy, fw, fh;
@@ -386,6 +418,33 @@ public class Node : Object {
     } else {
       return( false );
     }
+  }
+
+  /* Returns true if the given cursor coordinates lie within the image area */
+  public virtual bool is_within_image( double x, double y ) {
+    if( _image != null ) {
+      double ix, iy, iw, ih;
+      ix = posx + _padx;
+      iy = posy + _pady;
+      iw = _image.width;
+      ih = _image.height;
+      return( (ix <= x) && (x <= (ix + iw)) && (iy <= y) && (y <= (iy + ih)) );
+    } else {
+      return( false );
+    }
+  }
+
+  /* Returns true if the given cursor coordinates lie within the resizer area */
+  public virtual bool is_within_resizer( double x, double y ) {
+    if( mode == NodeMode.CURRENT ) {
+      double rx, ry, rw, rh;
+      rx = resizer_on_left() ? posx : (posx + _width - 8);
+      ry = posy;
+      rw = 8;
+      rh = 8;
+      return( (rx < x) && (x <= (rx + rw)) && (ry < y) && (y <= (ry + rh)) );
+    }
+    return( false );
   }
 
   /* Finds the node which contains the given pixel coordinates */
@@ -470,6 +529,11 @@ public class Node : Object {
     }
   }
 
+  /* Loads the image information from the given XML node */
+  private void load_image( ImageManager im, Xml.Node* n ) {
+    _image = new NodeImage.from_xml( im, n, (int)_max_width );
+  }
+
   /* Loads the file contents into this instance */
   public virtual void load( DrawArea da, Xml.Node* n, Layout? layout ) {
 
@@ -489,6 +553,12 @@ public class Node : Object {
     string? y = n->get_prop( "posy" );
     if( y != null ) {
       posy = double.parse( y );
+    }
+
+    string? mw = n->get_prop( "maxwidth" );
+    if( mw != null ) {
+      _max_width = double.parse( mw );
+      _layout.set_width( (int)_max_width * Pango.SCALE );
     }
 
     string? w = n->get_prop( "width" );
@@ -530,9 +600,10 @@ public class Node : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "nodename" :  load_name( it );  break;
-          case "nodenote" :  load_note( it );  break;
-          case "nodes"    :
+          case "nodename"  :  load_name( it );  break;
+          case "nodenote"  :  load_note( it );  break;
+          case "nodeimage" :  load_image( da.image_manager, it );  break;
+          case "nodes"     :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var child = new Node( da, layout );
@@ -565,6 +636,7 @@ public class Node : Object {
     node->new_prop( "id", _id.to_string() );
     node->new_prop( "posx", posx.to_string() );
     node->new_prop( "posy", posy.to_string() );
+    node->new_prop( "maxwidth", _max_width.to_string() );
     node->new_prop( "width", _width.to_string() );
     node->new_prop( "height", _height.to_string() );
     if( (_task_count > 0) && is_leaf() ) {
@@ -575,6 +647,10 @@ public class Node : Object {
     node->new_prop( "treesize", tree_size.to_string() );
     if( !is_root() ) {
       node->new_prop( "color", color_from_rgba( _link_color ) );
+    }
+
+    if( _image != null ) {
+      _image.save( node );
     }
 
     node->new_text_child( null, "nodename", name );
@@ -686,9 +762,7 @@ public class Node : Object {
   }
 
   /*
-   Updates the width and height based on the current name.  Returns true
-   if the width or height has changed since the last time these values were
-   updated.
+   Updates the width and height based on the current name.
   */
   public void update_size( Theme? theme, out double width_diff, out double height_diff ) {
     width_diff  = 0;
@@ -697,13 +771,33 @@ public class Node : Object {
       int text_width, text_height;
       double orig_width  = _width;
       double orig_height = _height;
+      double img_width   = (_image != null) ? (_image.width  + (_padx * 2)) : 0;
+      double img_height  = (_image != null) ? (_image.height + _pady)       : 0;
       _layout.set_markup( name_markup( theme ), -1 );
       _layout.get_size( out text_width, out text_height );
-      _width      = (text_width  / Pango.SCALE) + (_padx * 2) + task_width() + note_width();
-      _height     = (text_height / Pango.SCALE) + (_pady * 2);
+      _width     = (text_width  / Pango.SCALE) + (_padx * 2) + task_width() + note_width();
+      if( img_width > _width ) {
+        _width = img_width;
+      }
+      _height     = (text_height / Pango.SCALE) + (_pady * 2) + img_height;
       width_diff  = _width  - orig_width;
       height_diff = _height - orig_height;
     }
+  }
+
+  /* Resizes the node width by the given amount */
+  public virtual void resize( double diff, Layout layout ) {
+    diff = resizer_on_left() ? (0 - diff) : diff;
+    if( _image == null ) {
+      if( (diff < 0) ? ((_max_width + diff) <= _min_width) : !_layout.is_wrapped() ) return;
+      _max_width += diff;
+    } else {
+      if( (_max_width + diff) < _min_width ) return;
+      _max_width += diff;
+      _image.set_width( (int)_max_width );
+    }
+    _layout.set_width( (int)_max_width * Pango.SCALE );
+    layout.handle_update_by_edit( this );
   }
 
   /* Returns the bounding box for this node */
@@ -864,8 +958,9 @@ public class Node : Object {
   /* Sets the cursor from the given mouse coordinates */
   public void set_cursor_at_char( double x, double y, bool motion ) {
     int cursor, trailing;
+    int img_height = (_image != null) ? (int)(_image.height + _pady) : 0;
     int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
-    int adjusted_y = (int)(y - (posy + _pady)) * Pango.SCALE;
+    int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
     if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor += trailing;
       if( motion ) {
@@ -889,8 +984,9 @@ public class Node : Object {
   /* Selects the word at the current x/y position in the text */
   public void set_cursor_at_word( double x, double y, bool motion ) {
     int cursor, trailing;
+    int img_height = (_image != null) ? (int)(_image.height + _pady) : 0;
     int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
-    int adjusted_y = (int)(y - (posy + _pady)) * Pango.SCALE;
+    int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
     if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor += trailing;
       int word_start = name.substring( 0, cursor ).last_index_of( " " );
@@ -1352,7 +1448,7 @@ public class Node : Object {
   }
 
   /* Draws the rectangle around the root node */
-  protected void draw_root_rectangle( Context ctx, Theme theme ) {
+  protected void draw_root_rectangle( Context ctx, Theme theme, bool motion ) {
 
     double r = (double)radius;
     double x = posx;
@@ -1360,8 +1456,8 @@ public class Node : Object {
     double h = _height;
     double w = _width;
 
-    /* Draw the rounded box around the text */
-    set_context_color( ctx, theme.root_background );
+    set_context_color_with_alpha( ctx, theme.root_background, (motion ? 0.2 : 1) );
+
     ctx.set_line_width( 1 );
     ctx.move_to(x+r,y);                      // Move to A
     ctx.line_to(x+w-r,y);                    // Straight line to B
@@ -1376,11 +1472,20 @@ public class Node : Object {
 
   }
 
-  /* Draws the node font to the screen */
-  protected virtual void draw_name( Cairo.Context ctx, Theme theme ) {
+  /* Draws the node image above the note */
+  protected virtual void draw_image( Cairo.Context ctx, Theme theme, bool motion ) {
+    if( _image != null ) {
+      _image.draw( ctx, (posx + _padx), (posy + _pady), (motion ? 0.2 : 1) );
+    }
 
-    int    hmargin = 3;
-    int    vmargin = 3;
+  }
+
+  /* Draws the node font to the screen */
+  protected virtual void draw_name( Cairo.Context ctx, Theme theme, bool motion ) {
+
+    int    hmargin    = 3;
+    int    vmargin    = 3;
+    double img_height = (_image != null) ? (_image.height + _pady) : 0;
     double width_diff, height_diff;
 
     /* Make sure the the size is up-to-date */
@@ -1391,13 +1496,13 @@ public class Node : Object {
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( mode == NodeMode.CURRENT ) {
-      set_context_color( ctx, theme.nodesel_background );
+      set_context_color_with_alpha( ctx, theme.nodesel_background, (motion ? 0.2 : 1) );
       ctx.rectangle( ((posx + _padx) - hmargin), ((posy + _pady) - vmargin), ((_width - (_padx * 2)) + (hmargin * 2)), ((_height - (_pady * 2)) + (vmargin * 2)) );
       ctx.fill();
     }
 
     /* Output the text */
-    ctx.move_to( (posx + _padx + twidth), (posy + _pady) );
+    ctx.move_to( (posx + _padx + twidth), (posy + _pady + img_height) );
     switch( mode ) {
       case NodeMode.CURRENT  :  set_context_color( ctx, theme.nodesel_foreground );  break;
       default                :  set_context_color( ctx, (parent == null) ? theme.root_foreground : theme.foreground );  break;
@@ -1410,7 +1515,7 @@ public class Node : Object {
       set_context_color( ctx, theme.text_cursor );
       double ix, iy;
       ix = (posx + _padx + twidth) + (rect.x / Pango.SCALE) - 1;
-      iy = (posy + _pady) + (rect.y / Pango.SCALE);
+      iy = (posy + _pady + img_height) + (rect.y / Pango.SCALE);
       ctx.rectangle( ix, iy, 1, (rect.height / Pango.SCALE) );
       ctx.fill();
     }
@@ -1422,8 +1527,9 @@ public class Node : Object {
 
     if( _task_count > 0 ) {
 
-      double x = posx + _padx + _task_radius;
-      double y = posy + (_height / 2);
+      double img_height = (_image == null) ? 0 : _image.height;
+      double x          = posx + _padx + _task_radius;
+      double y          = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2);
 
       set_context_color( ctx, color );
       ctx.new_path();
@@ -1445,10 +1551,11 @@ public class Node : Object {
 
     if( _task_count > 0 ) {
 
-      double x        = posx + _padx + _task_radius;
-      double y        = posy + (_height / 2);
-      double complete = _task_done / (_task_count * 1.0);
-      double angle    = ((complete * 360) + 270) * (Math.PI / 180.0);
+      double img_height = (_image == null) ? 0 : _image.height;
+      double x          = posx + _padx + _task_radius;
+      double y          = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2);
+      double complete   = _task_done / (_task_count * 1.0);
+      double angle      = ((complete * 360) + 270) * (Math.PI / 180.0);
 
       /* Draw circle outline */
       if( complete < 1 ) {
@@ -1476,12 +1583,14 @@ public class Node : Object {
   }
 
   /* Draws the icon indicating that a note is associated with this node */
-  protected virtual void draw_common_note( Context ctx, RGBA color ) {
+  protected virtual void draw_common_note( Context ctx, RGBA reg_color, RGBA sel_color ) {
 
     if( note.length > 0 ) {
 
-      double x = posx + (_width - (note_width() + _padx)) + _ipadx;
-      double y = posy + (_height / 2) - 5;
+      double img_height = (_image == null) ? 0 : _image.height;
+      double x          = posx + (_width - (note_width() + _padx)) + _ipadx;
+      double y          = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2) - 5;
+      RGBA   color      = (mode == NodeMode.CURRENT) ? sel_color : reg_color;
 
       set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();
@@ -1535,17 +1644,10 @@ public class Node : Object {
   /* Draws the attachable highlight border to indicate when a node is attachable */
   protected virtual void draw_attachable( Context ctx, Theme theme, RGBA? frost_background ) {
 
-    if( mode == NodeMode.ATTACHABLE ) {
+    if( (mode == NodeMode.ATTACHABLE) || (mode == NodeMode.DROPPABLE) ) {
 
       double x, y, w, h;
       bbox( out x, out y, out w, out h );
-
-      /* Draw box that is translucent */
-      if( frost_background != null ) {
-        set_context_color_with_alpha( ctx, frost_background, 0.8 );
-        ctx.rectangle( x, y, w, h );
-        ctx.fill();
-      }
 
       /* Draw highlight border */
       set_context_color( ctx, theme.attachable_color );
@@ -1608,47 +1710,69 @@ public class Node : Object {
 
   }
 
+  /* Draw the node resizer area */
+  protected virtual void draw_resizer( Context ctx, Theme theme ) {
+
+    /* Only draw the resizer if we are selected */
+    if( mode != NodeMode.CURRENT ) {
+      return;
+    }
+
+    double x = resizer_on_left() ? posx : (posx + _width - 8);
+    double y = posy;
+
+    set_context_color( ctx, theme.foreground );
+    ctx.set_line_width( 1 );
+    ctx.rectangle( x, y, 8, 8 );
+    ctx.stroke();
+
+  }
+
   /* Draws the node on the screen */
-  public virtual void draw( Context ctx, Theme theme ) {
+  public virtual void draw( Context ctx, Theme theme, bool motion ) {
 
     /* If this is a root node, draw specifically for a root node */
     if( is_root() ) {
-      draw_root_rectangle( ctx, theme );
-      draw_name( ctx, theme );
+      draw_root_rectangle( ctx, theme, motion );
+      draw_name( ctx, theme, motion );
+      draw_image( ctx, theme, motion );
       if( is_leaf() ) {
         draw_leaf_task( ctx, theme.root_foreground );
       } else {
         draw_acc_task( ctx, theme.root_foreground );
       }
-      draw_common_note( ctx, theme.root_foreground );
+      draw_common_note( ctx, theme.root_foreground, theme.nodesel_foreground );
       draw_common_fold( ctx, theme.root_background, theme.root_foreground );
       draw_attachable( ctx, theme, theme.root_background );
+      draw_resizer( ctx, theme );
 
     /* Otherwise, draw the node as a non-root node */
     } else {
-      draw_name( ctx, theme );
+      draw_name( ctx, theme, motion );
+      draw_image( ctx, theme, motion );
       if( is_leaf() ) {
         draw_leaf_task( ctx, _link_color );
       } else {
         draw_acc_task( ctx, _link_color );
       }
-      draw_common_note( ctx, theme.foreground );
+      draw_common_note( ctx, theme.foreground, theme.nodesel_foreground );
       draw_line( ctx, theme );
       draw_common_fold( ctx, _link_color, theme.foreground );
       draw_attachable( ctx, theme, theme.background );
+      draw_resizer( ctx, theme );
     }
 
   }
 
   /* Draw this node and all child nodes */
-  public void draw_all( Context ctx, Theme theme, Node? current, bool draw_current ) {
+  public void draw_all( Context ctx, Theme theme, Node? current, bool draw_current, bool motion ) {
     if( this != current ) {
       if( !folded ) {
         for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).draw_all( ctx, theme, current, false );
+          _children.index( i ).draw_all( ctx, theme, current, false, motion );
         }
       }
-      draw( ctx, theme );
+      draw( ctx, theme, motion );
     }
     if( !is_root() && !draw_current ) {
       draw_link( ctx, theme );

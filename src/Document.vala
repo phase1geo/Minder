@@ -29,6 +29,7 @@ public class Document : Object {
   private GLib.Settings _settings;
   private string        _filename;
   private bool          _from_user;  // Set to true if _filename was set by the user
+  private ImageManager  _image_manager;
 
   /* Properties */
   public string filename {
@@ -61,6 +62,9 @@ public class Document : Object {
       _from_user = false;
       _settings.set_string( "last-file", _filename );
     }
+
+    /* Create the image manager */
+    _image_manager = new ImageManager();
 
     /* Listen for any changes from the canvas */
     _da.changed.connect( canvas_changed );

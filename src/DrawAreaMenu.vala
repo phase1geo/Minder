@@ -31,6 +31,7 @@ public class DrawAreaMenu : Gtk.Menu {
   Gtk.MenuItem _edit;
   Gtk.MenuItem _task;
   Gtk.MenuItem _note;
+  Gtk.MenuItem _image;
   Gtk.MenuItem _fold;
   Gtk.MenuItem _detach;
   Gtk.MenuItem _root;
@@ -73,6 +74,9 @@ public class DrawAreaMenu : Gtk.Menu {
 
     _note = new Gtk.MenuItem.with_label( _( "Add Note" ) );
     _note.activate.connect( change_note );
+
+    _image = new Gtk.MenuItem.with_label( _( "Add Image" ) );
+    _image.activate.connect( change_image );
 
     _fold = new Gtk.MenuItem.with_label( _( "Fold Children" ) );
     _fold.activate.connect( fold_node );
@@ -129,6 +133,7 @@ public class DrawAreaMenu : Gtk.Menu {
     add( _edit );
     add( _task );
     add( _note );
+    add( _image );
     add( _fold );
     add( new SeparatorMenuItem() );
     add( _root );
@@ -189,6 +194,12 @@ public class DrawAreaMenu : Gtk.Menu {
     return( (current != null) && (current.note != "") );
   }
 
+  /* Returns true if an image is associated with the currently selected node */
+  private bool node_has_image() {
+    Node? current = _da.get_current_node();
+    return( (current != null) && (current.get_image() != null) );
+  }
+
   /* Returns true if there is a currently selected node that is foldable */
   private bool node_foldable() {
     Node? current = _da.get_current_node();
@@ -227,9 +238,10 @@ public class DrawAreaMenu : Gtk.Menu {
     _center.set_sensitive( node_selected() );
 
     /* Set the menu item labels */
-    _task.label = node_is_task()   ? _( "Remove Task" )     : _( "Add Task" );
-    _note.label = node_has_note()  ? _( "Remove Note" )     : _( "Add Note" );
-    _fold.label = node_is_folded() ? _( "Unfold Children" ) : _( "Fold Children" );
+    _task.label  = node_is_task()   ? _( "Remove Task" )     : _( "Add Task" );
+    _note.label  = node_has_note()  ? _( "Remove Note" )     : _( "Add Note" );
+    _image.label = node_has_image() ? _( "Remove Image" )    : _( "Add Image" );
+    _fold.label  = node_is_folded() ? _( "Unfold Children" ) : _( "Fold Children" );
 
   }
 
@@ -278,6 +290,16 @@ public class DrawAreaMenu : Gtk.Menu {
       _da.change_current_note( "" );
     } else {
       _da.show_properties( "node", true );
+    }
+    _da.node_changed();
+  }
+
+  /* Changes the image of the currently selected node */
+  private void change_image() {
+    if( node_has_image() ) {
+      _da.delete_current_image();
+    } else {
+      _da.add_current_image();
     }
     _da.node_changed();
   }

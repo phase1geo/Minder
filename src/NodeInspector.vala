@@ -25,6 +25,10 @@ using Granite.Widgets;
 
 public class NodeInspector : Stack {
 
+  private const Gtk.TargetEntry[] DRAG_TARGETS = {
+    {"text/uri-list", 0, 0}
+  };
+
   private Entry       _name;
   private Switch      _task;
   private Switch      _fold;
@@ -35,7 +39,10 @@ public class NodeInspector : Stack {
   private Button      _detach_btn;
   private string      _orig_note = "";
   private Node?       _node = null;
-  // private Image       _image;
+  private EventBox    _image_area;
+  private Image       _image;
+  private Button      _image_btn;
+  private Label       _image_loc;
 
   public NodeInspector( DrawArea da ) {
 
@@ -61,7 +68,7 @@ public class NodeInspector : Stack {
     create_fold( node_box );
     create_link( node_box );
     create_note( node_box );
-    // create_image( node_box );
+    create_image( node_box );
     create_buttons( node_box );
 
     _da.node_changed.connect( node_changed );
@@ -184,7 +191,6 @@ public class NodeInspector : Stack {
   }
 
   /* Creates the image widget */
-#if DEVELOPMENT
   private void create_image( Box bbox ) {
 
     var box = new Box( Orientation.VERTICAL, 0 );
@@ -192,26 +198,117 @@ public class NodeInspector : Stack {
 
     lbl.xalign = (float)0;
 
-    _image = new Image.from_pixbuf( new Pixbuf( Colorspace.RGB, false, 8, 200, 200 ) );
+    _image_btn = new Button.with_label( _( "Add Image..." ) );
+    _image_btn.visible = true;
+    _image_btn.clicked.connect( image_button_clicked );
 
-    _image.add_events( EventMask.BUTTON_PRESS_MASK );
+    _image = new Image.from_pixbuf( null );
 
-    _image.button_press_event.connect((e) => {
-      stdout.printf( "HERE!!!\n" );
-      var editor = new ImageEditor.from_image( _image );
-      if( editor.run() == ResponseType.APPLY ) {
-        _image.set_from_pixbuf( editor.get_pixbuf() );
-      }
-      return( false );
+    var btn_edit = new Button.from_icon_name( "document-edit-symbolic" );
+    btn_edit.set_tooltip_text( _( "Edit Image" ) );
+    btn_edit.clicked.connect(() => {
+      _da.edit_current_image();
     });
 
-    box.pack_start( lbl,    false, false );
-    box.pack_start( _image, true,  true );
+    var btn_del = new Button.from_icon_name( "edit-delete-symbolic" );
+    btn_del.set_tooltip_text( _( "Remove Image" ) );
+    btn_del.clicked.connect(() => {
+      _da.delete_current_image();
+    });
+
+    var btn_box = new Box( Orientation.HORIZONTAL, 20 );
+    btn_box.halign       = Align.END;
+    btn_box.valign       = Align.START;
+    btn_box.border_width = 5;
+    btn_box.pack_start( btn_edit, false, false );
+    btn_box.pack_start( btn_del,  false, false );
+
+    var reveal_box = new Revealer();
+    reveal_box.transition_duration = 500;
+    reveal_box.transition_type     = RevealerTransitionType.CROSSFADE;
+    reveal_box.add( btn_box );
+
+    var img_overlay = new Overlay();
+    img_overlay.add_overlay( reveal_box );
+    img_overlay.add( _image );
+
+    _image_area = new EventBox();
+    _image_area.visible = false;
+    _image_area.add_events( EventMask.ENTER_NOTIFY_MASK | EventMask.LEAVE_NOTIFY_MASK );
+    _image_area.enter_notify_event.connect((e) => {
+      reveal_box.reveal_child = true;
+      return( false );
+    });
+    _image_area.leave_notify_event.connect((e) => {
+      reveal_box.reveal_child = false;
+      return( false );
+    });
+    _image_area.add( img_overlay );
+
+    _image_loc = new Label( "" );
+    _image_loc.visible    = false;
+    _image_loc.use_markup = true;
+    _image_loc.wrap       = true;
+    _image_loc.max_width_chars = 40;
+    _image_loc.activate_link.connect( image_link_clicked );
+
+    box.pack_start( lbl,         false, false );
+    box.pack_start( _image_btn,  false, false );
+    box.pack_start( _image_area, true,  true );
+    box.pack_start( _image_loc,  false, true );
 
     bbox.pack_start( box, false, true );
 
+    /* Set ourselves up to be a drag target */
+    Gtk.drag_dest_set( _image, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
+
+    _image.drag_data_received.connect((ctx, x, y, data, info, t) => {
+      if( data.get_uris().length == 1 ) {
+        if( _da.update_current_image( data.get_uris()[0] ) ) {
+          Gtk.drag_finish( ctx, true, false, t );
+        }
+      }
+    });
+
   }
-#endif
+
+  /* Called when the user clicks on the image button */
+  private void image_button_clicked() {
+
+    _da.add_current_image();
+
+  }
+
+  /* Sets the visibility of the image widget to the given value */
+  private void set_image_visible( bool show ) {
+
+    _image_btn.visible  = !show;
+    _image_area.visible = show;
+    _image_loc.visible  = show;
+
+  }
+
+  /* Called if the user clicks on the image URI */
+  private bool image_link_clicked( string uri ) {
+
+    File file = File.new_for_uri( uri );
+
+    /* If the URI is a file on the local filesystem, view it with the Files app */
+    if( file.get_uri_scheme() == "file" ) {
+      var files = AppInfo.get_default_for_type( "inode/directory", true );
+      var list  = new List<File>();
+      list.append( file );
+      try {
+        files.launch( list, null );
+      } catch( Error e ) {
+        return( false );
+      }
+      return( true );
+    }
+
+    return( false );
+
+  }
 
   /* Creates the node editing button grid and adds it to the popover */
   private void create_buttons( Box bbox ) {
@@ -380,6 +477,15 @@ public class NodeInspector : Stack {
       }
       _detach_btn.set_sensitive( current.parent != null );
       _note.buffer.text = current.note;
+      if( current.get_image() != null ) {
+        var url = _da.image_manager.get_uri( current.get_image().id ).replace( "&", "&amp;" );
+        var str = "<a href=\"" + url + "\">" + url + "</a>";
+        current.get_image().set_image( _image );
+        _image_loc.label = str;
+        set_image_visible( true );
+      } else {
+        set_image_visible( false );
+      }
       set_visible_child_name( "node" );
     } else {
       set_visible_child_name( "empty" );

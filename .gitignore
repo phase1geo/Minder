@@ -1,8 +1,14 @@
 build/
 src/*.o
 src/*.c
+src/*.swp
 src/animator/*.c
+src/animator/*.swp
 src/exports/*.c
+src/exports/*.swp
 src/themes/*.c
+src/themes/*.swp
 src/layouts/*.c
+src/layouts/*.swp
 src/undo_actions/*.c
+src/undo_actions/*.swp
