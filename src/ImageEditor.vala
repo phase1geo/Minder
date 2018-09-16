@@ -91,14 +91,15 @@ class ImageEditor {
 
   }
 
-  public void edit_image( Node node, double x, double y ) {
+  /* Opens an image editor popup containing the image of the specified node */
+  public void edit_image( ImageManager im, Node node, double x, double y ) {
 
     Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
     _popover.pointing_to = rect;
 
     /* Set the defaults */
     _node  = node;
-    _image = new NodeImage( node.get_image().fname, node.get_image().uri, _node.max_width() );
+    _image = new NodeImage( im, node.get_image().id, _node.max_width() );
 
     if( _image.valid ) {
 
@@ -368,9 +369,12 @@ class ImageEditor {
     });
 
     change.clicked.connect(() => {
-      NodeImage? ni = im.choose_node_image( parent, _node.max_width() );
-      if( ni != null ) {
-        initialize( ni );
+      var id = im.choose_image( parent );
+      if( id != -1 ) {
+        var ni = new NodeImage( im, id, _node.max_width() );
+        if( ni != null ) {
+          initialize( ni );
+        }
       }
     });
 

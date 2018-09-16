@@ -478,7 +478,7 @@ public class NodeInspector : Stack {
       _detach_btn.set_sensitive( current.parent != null );
       _note.buffer.text = current.note;
       if( current.get_image() != null ) {
-        var url = current.get_image().uri.replace( "&", "&amp;" );
+        var url = _da.image_manager.get_uri( current.get_image().id ).replace( "&", "&amp;" );
         var str = "<a href=\"" + url + "\">" + url + "</a>";
         current.get_image().set_image( _image );
         _image_loc.label = str;

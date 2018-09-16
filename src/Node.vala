@@ -316,10 +316,10 @@ public class Node : Object {
   /* Sets the node image to the given value, updating the image manager accordingly. */
   public void set_image( ImageManager im, NodeImage? ni ) {
     if( _image != null ) {
-      im.set_valid_for_uri( _image.uri, false );
+      im.set_valid( _image.id, false );
     }
     if( ni != null ) {
-      im.set_valid_for_uri( ni.uri, true );
+      im.set_valid( ni.id, true );
     }
     _image = ni;
   }

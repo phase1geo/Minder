@@ -32,51 +32,47 @@ public class NodeImage {
   private ImageSurface _surface;
   private Pixbuf       _buf;
 
-  public string fname  { get; set; default = ""; }
-  public string uri    { get; private set; default = ""; }
-  public bool   valid  { get; private set; default = false; }
-  public int    crop_x { get; set; default = 0; }
-  public int    crop_y { get; set; default = 0; }
-  public int    crop_w { get; set; default = 0; }
-  public int    crop_h { get; set; default = 0; }
-  public int    width  {
+  public int  id     { get; set; default = -1; }
+  public bool valid  { get; private set; default = false; }
+  public int  crop_x { get; set; default = 0; }
+  public int  crop_y { get; set; default = 0; }
+  public int  crop_w { get; set; default = 0; }
+  public int  crop_h { get; set; default = 0; }
+  public int  width  {
     get {
       return( _buf.width );
     }
   }
-  public int    height {
+  public int  height {
     get {
       return( _buf.height );
     }
   }
 
   /* Default constructor */
-  public NodeImage( string fname, string uri, int width ) {
-    if( load( fname, uri, true ) ) {
+  public NodeImage( ImageManager im, int id, int width ) {
+    if( load( im, id, true ) ) {
       set_width( width );
     }
   }
 
   public NodeImage.from_uri( ImageManager im, string uri, int width ) {
-    string? fn = im.add_image( uri );
-    if( (fn != null) && load( fn, uri, true ) ) {
-      set_width( width );
-    } else {
-      im.set_valid_for_uri( uri, false );
+    int id = im.add_image( uri );
+    if( id != 1 ) {
+      if( load( im, id, true ) ) {
+        set_width( width );
+      } else {
+        im.set_valid( id, false );
+      }
     }
   }
 
   /* Constructor from XML file */
   public NodeImage.from_xml( ImageManager im, Xml.Node* n, int width ) {
 
-    string? f = n->get_prop( "fname" );
-    if( f != null ) {
-      fname = f;
-    }
-
-    string? u = n->get_prop( "uri" );
-    if( u != null ) {
-      uri = u;
+    string? i = n->get_prop( "id" );
+    if( i != null ) {
+      id = int.parse( i );
     }
 
     string? x = n->get_prop( "x" );
@@ -100,29 +96,32 @@ public class NodeImage {
     }
 
     /* Allocate the image */
-    if( fname != "" ) {
-      if( load( fname, uri, false ) ) {
+    if( id != -1 ) {
+      if( load( im, id, false ) ) {
         set_width( width );
       }
     }
 
-    /* Add ourselves to the image manager */
-    im.add_node_image( this );
-
   }
 
   /* Loads the current file into this structure */
-  private bool load( string fname, string uri, bool init ) {
+  private bool load( ImageManager im, int id, bool init ) {
 
-    this.fname = fname;
-    this.uri   = uri;
+    this.id    = id;
     this.valid = true;
 
     /* Get the file into the stored pixbuf */
     try {
 
+      /* Get the name of the file to read from the ImageManager */
+      var fname = im.get_file( id );
+      if( fname == null ) {
+        this.valid = false;
+        return( false );
+      }
+
       /* Read in the file into the given buffer */
-      var buf = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
+      var buf   = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
       _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
 
       /* Initialize the variables */
@@ -198,12 +197,11 @@ public class NodeImage {
 
     Xml.Node* n = new Xml.Node( null, "nodeimage" );
 
-    n->new_prop( "fname", fname );
-    n->new_prop( "uri",   uri );
-    n->new_prop( "x",     crop_x.to_string() );
-    n->new_prop( "y",     crop_y.to_string() );
-    n->new_prop( "w",     crop_w.to_string() );
-    n->new_prop( "h",     crop_h.to_string() );
+    n->new_prop( "id", id.to_string() );
+    n->new_prop( "x",  crop_x.to_string() );
+    n->new_prop( "y",  crop_y.to_string() );
+    n->new_prop( "w",  crop_w.to_string() );
+    n->new_prop( "h",  crop_h.to_string() );
 
     parent->add_child( n );
 

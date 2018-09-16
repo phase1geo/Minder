@@ -605,7 +605,8 @@ public class DrawArea : Gtk.DrawingArea {
       if( _current_node.get_image() == null ) {
         var parent    = (Gtk.Window)get_toplevel();
         var max_width = _current_node.max_width();
-        _current_node.set_image( image_manager, image_manager.choose_node_image( parent, max_width ) );
+        var id        = image_manager.choose_image( parent );
+        _current_node.set_image( image_manager, new NodeImage( image_manager, id, max_width ) );
         if( _current_node.get_image() != null ) {
           undo_buffer.add_item( new UndoNodeImage( _current_node, null ) );
           _layout.handle_update_by_edit( _current_node );
@@ -641,7 +642,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void edit_current_image() {
     if( _current_node != null ) {
       if( _current_node.get_image() != null ) {
-        _editor.edit_image( _current_node, _current_node.posx, _current_node.posy );
+        _editor.edit_image( image_manager, _current_node, _current_node.posx, _current_node.posy );
       }
     }
   }
@@ -2052,7 +2053,6 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( (_attach_node.mode == NodeMode.DROPPABLE) && (data.get_uris().length == 1) ) {
 
       var image = new NodeImage.from_uri( image_manager, data.get_uris()[0], _attach_node.max_width() );
-      stdout.printf( "After nodeimage creation, valid: %s\n", image.valid.to_string() );
       if( image.valid ) {
         var orig_image = _attach_node.get_image();
         _attach_node.set_image( image_manager, image );
