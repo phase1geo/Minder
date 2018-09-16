@@ -145,6 +145,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     this.drag_motion.connect( handle_drag_motion );
     this.drag_data_received.connect( handle_drag_data_received );
+    this.destroy.connect(() => {
+      image_manager.cleanup();
+    });
 
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;

@@ -130,11 +130,6 @@ public class ImageManager {
 
   }
 
-  /* Destructor */
-  ~ImageManager() {
-    cleanup();
-  }
-
   /* Loads the image manager information from the specified XML node */
   public void load( Xml.Node* n ) {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
@@ -230,7 +225,7 @@ public class ImageManager {
   }
 
   /* Cleans up the contents of the stored images */
-  private void cleanup() {
+  public void cleanup() {
     for( int i=0; i<_images.length; i++ ) {
       _images.index( i ).cleanup();
     }
