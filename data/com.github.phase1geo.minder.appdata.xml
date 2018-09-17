@@ -84,8 +84,9 @@
           <li>Added basic image editing support.</li>
           <li>Added support for dragging and dropping local and web images.</li>
           <li>Added support for resizing node width.</li>
-          <li>Changing cursors when over a task button.</li>
-          <li>Changing location of task and note elements in a node.</li>
+          <li>Changed cursors when over a task button.</li>
+          <li>Changed location of task and note elements in a node.</li>
+          <li>Added support for keeping the map from scrolling off screen.</li>
           <li>Added support for shift-mousewheel to scroll horizontally.</li>
           <li>Added support for control-mousewheel to zoom in/out.</li>
           <li>Fixed issue with drawing background when zoom factor was small.</li> 
