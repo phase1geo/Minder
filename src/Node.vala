@@ -530,8 +530,12 @@ public class Node : Object {
   }
 
   /* Loads the image information from the given XML node */
-  private void load_image( ImageManager im, Xml.Node* n ) {
+  private void load_image( ImageManager im, Xml.Node* n, Layout? layout ) {
     _image = new NodeImage.from_xml( im, n, (int)_max_width );
+    if( !_image.valid ) {
+      _image = null;
+      layout.handle_update_by_edit( this );
+    }
   }
 
   /* Loads the file contents into this instance */
@@ -602,7 +606,7 @@ public class Node : Object {
         switch( it->name ) {
           case "nodename"  :  load_name( it );  break;
           case "nodenote"  :  load_note( it );  break;
-          case "nodeimage" :  load_image( da.image_manager, it );  break;
+          case "nodeimage" :  load_image( da.image_manager, it, layout );  break;
           case "nodes"     :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {

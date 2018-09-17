@@ -145,9 +145,20 @@ public class DrawArea : Gtk.DrawingArea {
 
     this.drag_motion.connect( handle_drag_motion );
     this.drag_data_received.connect( handle_drag_data_received );
+
+    /*
+     Make sure that the images are cleaned up when the user exits the application or we received
+     a terminate signal.
+    */
     this.destroy.connect(() => {
       image_manager.cleanup();
     });
+
+    /*
+    TBD - This code does not compile
+    Posix.sighandler_t? t = this.handle_sigterm;
+    Posix.@signal( Posix.Signal.TERM, t );
+    */
 
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
@@ -158,6 +169,11 @@ public class DrawArea : Gtk.DrawingArea {
     */
     get_style_context().add_class( "canvas" );
 
+  }
+
+  /* Called to handle a sigterm signal to the application */
+  public void handle_sigterm( int s ) {
+    image_manager.cleanup();
   }
 
   /* Returns the name of the currently selected theme */
