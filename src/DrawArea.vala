@@ -985,6 +985,23 @@ public class DrawArea : Gtk.DrawingArea {
     move_origin( (x - origin_x), (y - origin_y) );
   }
 
+  /* Checks to see if the boundary of the map never goes out of view */
+  private bool out_of_bounds( double diff_x, double diff_y ) {
+
+    double x, y, w, h;
+    double aw = scale_value( get_allocated_width() );
+    double ah = scale_value( get_allocated_height() );
+    double s  = 40;
+
+    document_rectangle( out x, out y, out w, out h );
+
+    x -= diff_x;
+    y -= diff_y;
+
+    return( ((x + w) < s) || ((y + h) < s) || ((aw - x) < s) || ((ah - y) < s) );
+
+  }
+
   /*
    Adjusts the x and y origins, panning all elements by the given amount.
    Important Note:  When the canvas is panned to the left (causing all
@@ -992,6 +1009,9 @@ public class DrawArea : Gtk.DrawingArea {
    number.
   */
   public void move_origin( double diff_x, double diff_y ) {
+    if( out_of_bounds( diff_x, diff_y ) ) {
+      return;
+    }
     origin_x += diff_x;
     origin_y += diff_y;
     for( int i=0; i<_nodes.length; i++ ) {
