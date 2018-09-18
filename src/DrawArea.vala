@@ -1884,7 +1884,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Copies the current node to the node clipboard */
   public void copy_node_to_clipboard() {
     if( _current_node == null ) return;
-    node_clipboard = new Node.copy_tree( _current_node );
+    node_clipboard = new Node.copy_tree( _current_node, image_manager );
   }
 
   /* Copies the currently selected text to the clipboard */
@@ -1951,7 +1951,7 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void paste_node_from_clipboard() {
     if( node_clipboard == null ) return;
-    Node node = new Node.copy_tree( node_clipboard );
+    Node node = new Node.copy_tree( node_clipboard, image_manager );
     if( _current_node == null ) {
       _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
       add_root( node, -1 );

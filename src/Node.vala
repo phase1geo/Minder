@@ -225,9 +225,9 @@ public class Node : Object {
   }
 
   /* Copies an existing node to this node */
-  public Node.copy( Node n ) {
+  public Node.copy( Node n, ImageManager im ) {
     _id       = _next_id++;
-    copy_variables( n );
+    copy_variables( n, im );
     mode      = NodeMode.NONE;
     _children = n._children;
     for( int i=0; i<_children.length; i++ ) {
@@ -236,13 +236,13 @@ public class Node : Object {
   }
 
   /* Copies an existing node tree to this node */
-  public Node.copy_tree( Node n ) {
+  public Node.copy_tree( Node n, ImageManager im ) {
     _id       = _next_id++;
-    copy_variables( n );
+    copy_variables( n, im );
     mode      = NodeMode.NONE;
     _children = new Array<Node>();
     for( int i=0; i<n._children.length; i++ ) {
-      Node child = new Node.copy_tree( n._children.index( i ) );
+      Node child = new Node.copy_tree( n._children.index( i ), im );
       child.parent = this;
       _children.append_val( child );
     }
@@ -254,7 +254,7 @@ public class Node : Object {
   }
 
   /* Copies just the variables of the node, minus the children nodes */
-  public void copy_variables( Node n ) {
+  public void copy_variables( Node n, ImageManager im ) {
     _width       = n._width;
     _height      = n._height;
     _padx        = n._padx;
@@ -271,6 +271,8 @@ public class Node : Object {
     _posx        = n._posx;
     _posy        = n._posy;
     _link_color  = n._link_color;
+    _max_width   = n._max_width;
+    _image       = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, (int)n._max_width );
     name         = n.name;
     note         = n.note;
     mode         = n.mode;

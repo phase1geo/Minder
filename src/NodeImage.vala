@@ -56,13 +56,33 @@ public class NodeImage {
     }
   }
 
+  /* Constructor from a URI */
   public NodeImage.from_uri( ImageManager im, string uri, int width ) {
     int id = im.add_image( uri );
-    if( id != 1 ) {
+    if( id != -1 ) {
       if( load( im, id, true ) ) {
         set_width( width );
       } else {
         im.set_valid( id, false );
+      }
+    }
+  }
+
+  /* Constructor from another node image */
+  public NodeImage.from_node_image( ImageManager im, NodeImage ni, int width ) {
+    string uri = im.get_uri( ni.id );
+    if( uri != "" ) {
+      int id = im.add_image( uri );
+      if( id != -1 ) {
+        crop_x = ni.crop_x;
+        crop_y = ni.crop_y;
+        crop_w = ni.crop_w;
+        crop_h = ni.crop_h;
+        if( load( im, id, false ) ) {
+          set_width( width );
+        } else {
+          im.set_valid( id, false );
+        }
       }
     }
   }
