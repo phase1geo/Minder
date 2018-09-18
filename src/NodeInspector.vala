@@ -202,7 +202,7 @@ public class NodeInspector : Stack {
     _image_btn.visible = true;
     _image_btn.clicked.connect( image_button_clicked );
 
-    _image = new Image.from_pixbuf( null );
+    _image = new Image();
 
     var btn_edit = new Button.from_icon_name( "document-edit-symbolic" );
     btn_edit.set_tooltip_text( _( "Edit Image" ) );
