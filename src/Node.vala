@@ -170,7 +170,6 @@ public class Node : Object {
       _selanchor = 0;
       _cursor    = _selend;
     }
-    default = NodeMode.NONE;
   }
   public Node?    parent     { get; protected set; default = null; }
   public NodeSide side       { get; set; default = NodeSide.RIGHT; }
