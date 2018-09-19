@@ -233,14 +233,16 @@ class ImageEditor {
 
     var box = new Box( Orientation.VERTICAL, 5 );
 
+    box.border_width = 5;
+
     _da = create_drawing_area( im );
     var status  = create_status_area();
     var buttons = create_buttons( parent, im );
 
     /* Pack the widgets into the window */
-    box.pack_start( _da,     true,  true, 10 );
-    box.pack_start( status,  false, false, 0 );
-    box.pack_start( buttons, false, true, 10 );
+    box.pack_start( _da,     true,  true );
+    box.pack_start( status,  false, false );
+    box.pack_start( buttons, false, true );
 
     box.show_all();
 
@@ -339,8 +341,8 @@ class ImageEditor {
     _status_cursor = new Label( null );
     _status_crop   = new Label( null );
 
-    box.pack_start( _status_cursor, false, false, 5 );
-    box.pack_start( _status_crop,   false, false, 5 );
+    box.pack_start( _status_cursor, false, false );
+    box.pack_start( _status_crop,   false, false );
 
     return( box );
 
@@ -382,10 +384,10 @@ class ImageEditor {
       remove_image( im );
     });
 
-    box.pack_start( change, false, false, 5 );
-    box.pack_start( remove, false, false, 5 );
-    box.pack_end(   apply,  false, false, 5 );
-    box.pack_end(   cancel, false, false, 5 );
+    box.pack_start( change, false, false );
+    box.pack_start( remove, false, false );
+    box.pack_end(   apply,  false, false );
+    box.pack_end(   cancel, false, false );
 
     return( box );
 

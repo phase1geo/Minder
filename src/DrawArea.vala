@@ -622,16 +622,18 @@ public class DrawArea : Gtk.DrawingArea {
   public void add_current_image() {
     if( _current_node != null ) {
       if( _current_node.get_image() == null ) {
-        var parent    = (Gtk.Window)get_toplevel();
-        var max_width = _current_node.max_width();
-        var id        = image_manager.choose_image( parent );
-        _current_node.set_image( image_manager, new NodeImage( image_manager, id, max_width ) );
-        if( _current_node.get_image() != null ) {
-          undo_buffer.add_item( new UndoNodeImage( _current_node, null ) );
-          _layout.handle_update_by_edit( _current_node );
-          queue_draw();
-          node_changed();
-          auto_save();
+        var parent = (Gtk.Window)get_toplevel();
+        var id     = image_manager.choose_image( parent );
+        if( id != -1 ) {
+          var max_width = _current_node.max_width();
+          _current_node.set_image( image_manager, new NodeImage( image_manager, id, max_width ) );
+          if( _current_node.get_image() != null ) {
+            undo_buffer.add_item( new UndoNodeImage( _current_node, null ) );
+            _layout.handle_update_by_edit( _current_node );
+            queue_draw();
+            node_changed();
+            auto_save();
+          }
         }
       }
     }
