@@ -30,6 +30,7 @@ You will need the following dependencies to build Minder:
 * libgtk-3-dev
 * libxml2-dev
 * libgee-0.8-dev
+* libarchive-dev
 
 From the command-line within the top Minder directory, run `./app run` to build and run the application.
 
@@ -78,3 +79,7 @@ The property sidebar can be shown or hidden by clicking on the gear icon in the 
 <p align="center">
   <a href="https://appcenter.elementary.io/com.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
 </p>
+
+## Documentation
+
+Minder documentation can be found [here](https://github.com/phase1geo/Minder/wiki/Table-of-Contents).
