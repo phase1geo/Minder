@@ -516,6 +516,24 @@ public class Node : Object {
     return( count );
   }
 
+  /*
+   Returns a reference to the node with the given ID.  If the ID was
+   not found in this node's tree, returns null.
+  */
+  public virtual Node? get_node( int id ) {
+    if( _id == id ) {
+      return( this );
+    } else {
+      for( int i=0; i<children().length; i++ ) {
+        Node? node = children().index( i ).get_node( id );
+        if( node != null ) {
+          return( node );
+        }
+      }
+    }
+    return( null );
+  }
+
   /* Loads the name value from the given XML node */
   private void load_name( Xml.Node* n ) {
     if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {

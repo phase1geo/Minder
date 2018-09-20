@@ -42,9 +42,11 @@ public class DrawArea : Gtk.DrawingArea {
   private EventType        _press_type = EventType.NOTHING;
   private bool             _resize     = false;
   private bool             _motion     = false;
-  private Node?            _current_node;
+  private Node?            _current_node = null;
   private bool             _current_new = false;
+  private Connection?      _current_connection = null;
   private Array<Node>      _nodes;
+  private Connections      _connections;
   private Theme            _theme;
   private Layout           _layout;
   private string           _orig_name;
@@ -100,6 +102,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Create the array of root nodes in the map */
     _nodes = new Array<Node>();
+
+    /* Create the connections */
+    _connections = new Connections();
 
     /* Allocate memory for the animator */
     animator = new Animator( this );
@@ -242,6 +247,17 @@ public class DrawArea : Gtk.DrawingArea {
     return( _nodes );
   }
 
+  /* Searches for and returns the node with the specified ID */
+  public Node? get_node( int id ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      Node? node = _nodes.index( i ).get_node( id );
+      if( node != null ) {
+        return( node );
+      }
+    }
+    return( null );
+  }
+
   /* Sets the cursor of the drawing area */
   private void set_cursor( CursorType? type = null ) {
 
@@ -322,11 +338,12 @@ public class DrawArea : Gtk.DrawingArea {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "theme"    :  load_theme( it );   break;
-          case "layout"   :  load_layout( it );  break;
-          case "drawarea" :  load_drawarea( it );  break;
-          case "images"   :  image_manager.load( it );  break;
-          case "nodes"    :
+          case "theme"       :  load_theme( it );   break;
+          case "layout"      :  load_layout( it );  break;
+          case "drawarea"    :  load_drawarea( it );  break;
+          case "images"      :  image_manager.load( it );  break;
+          case "connections" :  _connections.load( this, it );  break;
+          case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var node = new Node( this, _layout );
@@ -376,6 +393,8 @@ public class DrawArea : Gtk.DrawingArea {
       _nodes.index( i ).save( nodes );
     }
     parent->add_child( nodes );
+
+    _connections.save( parent );
 
     return( true );
 
@@ -431,16 +450,17 @@ public class DrawArea : Gtk.DrawingArea {
     Node.reset();
 
     /* Initialize variables */
-    origin_x       = 0.0;
-    origin_y       = 0.0;
-    sfactor        = 1.0;
-    node_clipboard = null;
-    _pressed       = false;
-    _press_type    = EventType.NOTHING;
-    _motion        = false;
-    _attach_node   = null;
-    _orig_name     = "";
-    _current_new   = false;
+    origin_x            = 0.0;
+    origin_y            = 0.0;
+    sfactor             = 1.0;
+    node_clipboard      = null;
+    _pressed            = false;
+    _press_type         = EventType.NOTHING;
+    _motion             = false;
+    _attach_node        = null;
+    _orig_name          = "";
+    _current_new        = false;
+    _current_connection = null;
 
     set_current_node( null );
 
@@ -461,15 +481,16 @@ public class DrawArea : Gtk.DrawingArea {
     Node.reset();
 
     /* Initialize variables */
-    origin_x       = 0.0;
-    origin_y       = 0.0;
-    sfactor        = 1.0;
-    node_clipboard = null;
-    _pressed       = false;
-    _press_type    = EventType.NOTHING;
-    _motion        = false;
-    _attach_node   = null;
-    _current_new   = false;
+    origin_x            = 0.0;
+    origin_y            = 0.0;
+    sfactor             = 1.0;
+    node_clipboard      = null;
+    _pressed            = false;
+    _press_type         = EventType.NOTHING;
+    _motion             = false;
+    _attach_node        = null;
+    _current_new        = false;
+    _current_connection = null;
 
     /* Create the main idea node */
     var n = new Node.with_name( this, _("Main Idea"), _layout );
@@ -1028,12 +1049,17 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Draws all of the root node trees */
   public void draw_all( Context ctx ) {
+    _connections.draw_all( ctx, _theme );
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).draw_all( ctx, _theme, _current_node, false, false );
     }
     /* Draw the current node on top of all others */
     if( (_current_node != null) && ((_current_node.parent == null) || !_current_node.parent.folded) ) {
       _current_node.draw_all( ctx, _theme, null, true, (_pressed && _motion && !_resize) );
+    }
+    /* Draw the current connection on top of everything else */
+    if( _current_connection != null ) {
+      _current_connection.draw( ctx, _theme );
     }
   }
 
@@ -1122,7 +1148,10 @@ public class DrawArea : Gtk.DrawingArea {
         Node match = _nodes.index( i ).contains( event.x, event.y, null );
         if( match != null ) {
           if( get_tooltip_text() == null ) {
-            if( match.is_within_task( event.x, event.y ) ) {
+            if( _current_connection != null ) {
+              _attach_node      = match;
+              _attach_node.mode = NodeMode.ATTACHABLE;
+            } else if( match.is_within_task( event.x, event.y ) ) {
               set_cursor( CursorType.HAND1 );
               set_tooltip_text( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
             } else if( match.is_within_note( event.x, event.y ) ) {
@@ -1136,7 +1165,9 @@ public class DrawArea : Gtk.DrawingArea {
           return( false );
         }
       }
-      if( get_tooltip_text() != null ) {
+      if( _current_connection != null )  {
+        update_connection( event.x, event.y );
+      } else if( get_tooltip_text() != null ) {
         set_tooltip_text( null );
       }
       set_cursor( null );
@@ -1155,7 +1186,15 @@ public class DrawArea : Gtk.DrawingArea {
       undo_buffer.add_item( new UndoNodeResize( _current_node, _orig_width ) );
       return( false );
     }
-    if( _current_node != null ) {
+    if( _current_connection != null ) {
+      if( _attach_node != null ) {
+        end_connection( _attach_node );
+        _attach_node.mode = NodeMode.NONE;
+        _attach_node = null;
+      } else {
+        _current_connection = null;
+      }
+    } else if( _current_node != null ) {
       if( _current_node.mode == NodeMode.CURRENT ) {
 
         /* If we are hovering over an attach node, perform the attachment */
@@ -2134,6 +2173,31 @@ public class DrawArea : Gtk.DrawingArea {
       return( true );
     }
     return( false );
+  }
+
+  /* Starts a connection from the current node */
+  public void start_connection() {
+    if( _current_node != null ) {
+      _current_connection = new Connection( _current_node );
+    }
+  }
+
+  /* Called when a connection is being drawn by moving the mouse */
+  public void update_connection( double x, double y ) {
+    if( _current_connection != null ) {
+      _current_connection.draw_to( x, y );
+    }
+  }
+
+  /* Ends a connection at the given node */
+  public void end_connection( Node n ) {
+    if( _current_connection != null ) {
+      _current_connection.connect_to( n );
+      _connections.add_connection( _current_connection );
+      _current_connection = null;
+      changed();
+      queue_draw();
+    }
   }
 
 }

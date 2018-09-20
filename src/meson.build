@@ -49,6 +49,8 @@ sources += files(
 
     'Animator.vala',
     'Application.vala',
+    'Connection.vala',
+    'Connections.vala',
     'Document.vala',
     'DrawArea.vala',
     'DrawAreaMenu.vala',

@@ -32,6 +32,7 @@ public class DrawAreaMenu : Gtk.Menu {
   Gtk.MenuItem _task;
   Gtk.MenuItem _note;
   Gtk.MenuItem _image;
+  Gtk.MenuItem _conn;
   Gtk.MenuItem _fold;
   Gtk.MenuItem _detach;
   Gtk.MenuItem _root;
@@ -77,6 +78,9 @@ public class DrawAreaMenu : Gtk.Menu {
 
     _image = new Gtk.MenuItem.with_label( _( "Add Image" ) );
     _image.activate.connect( change_image );
+
+    _conn = new Gtk.MenuItem.with_label( _( "Add Connection" ) );
+    _conn.activate.connect( add_connection );
 
     _fold = new Gtk.MenuItem.with_label( _( "Fold Children" ) );
     _fold.activate.connect( fold_node );
@@ -134,6 +138,7 @@ public class DrawAreaMenu : Gtk.Menu {
     add( _task );
     add( _note );
     add( _image );
+    add( _conn );
     add( _fold );
     add( new SeparatorMenuItem() );
     add( _root );
@@ -226,6 +231,7 @@ public class DrawAreaMenu : Gtk.Menu {
     _edit.set_sensitive( node_selected() );
     _task.set_sensitive( node_selected() );
     _note.set_sensitive( node_selected() );
+    _conn.set_sensitive( node_selected() );
     _fold.set_sensitive( node_foldable() );
     _child.set_sensitive( node_selected() );
     _sibling.set_sensitive( node_selected() );
@@ -302,6 +308,11 @@ public class DrawAreaMenu : Gtk.Menu {
       _da.add_current_image();
     }
     _da.node_changed();
+  }
+
+  /* Changes the connection of the currently selected node */
+  private void add_connection() {
+    _da.start_connection();
   }
 
   /* Fold the currently selected node */
