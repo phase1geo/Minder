@@ -23,6 +23,10 @@ sources += files(
     'layouts/LayoutUp.vala',
     'layouts/LayoutVertical.vala',
 
+    'links/LinkStraight.vala',
+    'links/LinkSquared.vala',
+    'links/LinkCurved.vala',
+
     'themes/ThemeDark.vala',
     'themes/ThemeDefault.vala',
     'themes/ThemeSolarizedDark.vala',
@@ -58,6 +62,8 @@ sources += files(
     'ImageManager.vala',
     'Layout.vala',
     'Layouts.vala',
+    'Link.vala',
+    'Links.vala',
     'MainWindow.vala',
     'MapInspector.vala',
     'Node.vala',

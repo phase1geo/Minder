@@ -201,6 +201,7 @@ public class Node : Object {
   public bool       attached   { get; set; default = false; }
   public int        line_width { get; set; default = 4; }
   public int        radius     { get; set; default = 10; }
+  public Link       link       { get; set; default = null; }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -1714,22 +1715,20 @@ public class Node : Object {
     set_context_color( ctx, _link_color );
     ctx.set_line_width( line_width );
     ctx.set_line_cap( LineCap.ROUND );
-    ctx.move_to( parent_x, parent_y );
     switch( side ) {
       case NodeSide.LEFT :
-        ctx.line_to( (posx + _width), (posy + _height) );
+        link.draw( parent_x, parent_y, (posx + _width), (posy + _height), true );
         break;
       case NodeSide.RIGHT :
-        ctx.line_to( posx, (posy + _height) );
+        link.draw( parent_x, parent_y, posx, (posy + _height), true );
         break;
       case NodeSide.TOP :
-        ctx.line_to( (posx + (_width / 2)), (posy + _height) );
+        link.draw( parent_x, parent_y, (posx + (_width / 2)), (posy + _height), false );
         break;
       case NodeSide.BOTTOM :
-        ctx.line_to( (posx + (_width / 2)), posy );
+        link.draw( parent_x, parent_y, (posx + (_width / 2)), posy, false );
         break;
     }
-    ctx.stroke();
 
   }
 
@@ -1771,6 +1770,7 @@ public class Node : Object {
 
     /* Otherwise, draw the node as a non-root node */
     } else {
+      draw_line( ctx, theme );
       draw_name( ctx, theme, motion );
       draw_image( ctx, theme, motion );
       if( is_leaf() ) {
@@ -1779,7 +1779,6 @@ public class Node : Object {
         draw_acc_task( ctx, _link_color );
       }
       draw_common_note( ctx, theme.foreground, theme.nodesel_foreground );
-      draw_line( ctx, theme );
       draw_common_fold( ctx, _link_color, theme.foreground );
       draw_attachable( ctx, theme, theme.background );
       draw_resizer( ctx, theme );
