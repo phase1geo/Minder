@@ -1144,6 +1144,9 @@ public class DrawArea : Gtk.DrawingArea {
       _motion  = true;
       auto_save();
     } else {
+      if( _current_connection != null )  {
+        update_connection( event.x, event.y );
+      }
       for( int i=0; i<_nodes.length; i++ ) {
         Node match = _nodes.index( i ).contains( event.x, event.y, null );
         if( match != null ) {
@@ -1165,9 +1168,7 @@ public class DrawArea : Gtk.DrawingArea {
           return( false );
         }
       }
-      if( _current_connection != null )  {
-        update_connection( event.x, event.y );
-      } else if( get_tooltip_text() != null ) {
+      if( get_tooltip_text() != null ) {
         set_tooltip_text( null );
       }
       set_cursor( null );
@@ -2186,6 +2187,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void update_connection( double x, double y ) {
     if( _current_connection != null ) {
       _current_connection.draw_to( x, y );
+      queue_draw();
     }
   }
 

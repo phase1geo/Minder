@@ -36,7 +36,7 @@ public class Connections {
   /* Saves the connection information to the given XML file */
   public void save( Xml.Node* parent ) {
     if( _connections.length > 0 ) {
-      Xml.Node n = new Xml.Node( null, "connections" );
+      Xml.Node* n = new Xml.Node( null, "connections" );
       for( int i=0; i<_connections.length; i++ ) {
         _connections.index( i ).save( n );
       }
