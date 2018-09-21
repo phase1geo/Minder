@@ -21,6 +21,16 @@ public class Connections {
     }
   }
 
+  /* Returns true if the given point is within the drag handle */
+  public Connection? within_drag_handle( double x, double y ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ).within_drag_handle( x, y ) ) {
+        return( _connections.index( i ) );
+      }
+    }
+    return( null );
+  }
+
   /* Loads the listed connections from the given XML data */
   public void load( DrawArea da, Xml.Node* node ) {
     for( Xml.Node* it = node->children; it != null; it = it->next ) {

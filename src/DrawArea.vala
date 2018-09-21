@@ -768,6 +768,15 @@ public class DrawArea : Gtk.DrawingArea {
           }
         }
         return( false );
+      } else {
+        if( _current_connection != null ) {
+          _current_connection.mode = ConnMode.NONE;
+          _current_connection      = null;
+        }
+        _current_connection = _connections.within_drag_handle( x, y );
+        if( _current_connection != null ) {
+          _current_connection.mode = ConnMode.SELECTED;
+        }
       }
     }
     if( _current_node != null ) {
