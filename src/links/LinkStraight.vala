@@ -19,15 +19,18 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class LinkStraight : Link {
+public class LinkStraight : Object, Link {
+
+  /* Default constructor */
+  public LinkStraight() {}
 
   /* Returns the name of the link type */
   public string name() {
-    return( "Straight" );
+    return( _( "Straight" ) );
   }
 
   /* Draw method for the link */
-  public void draw( Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal ) {
+  public void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal ) {
     ctx.move_to( from_x, from_y );
     ctx.line_to( to_x,   to_y );
     ctx.stroke();

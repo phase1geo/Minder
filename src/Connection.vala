@@ -108,14 +108,15 @@ public class Connection {
       get_connect_point( _to_node, out end_x, out end_y );
     }
 
-    RGBA color = theme.connection_color;
+    var color    = theme.connection_color;
+    var x_adjust = (end_x - start_x) * 0.5;
     
     ctx.save();
     ctx.set_line_width( 2 );
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
     ctx.set_dash( {15, 5}, 0 );
     ctx.move_to( start_x, start_y );
-    ctx.line_to( end_x, end_y );
+    ctx.curve_to( (end_x - x_adjust), start_y, (start_x + x_adjust), end_y, end_x, end_y );
     ctx.stroke();
     ctx.restore();
 

@@ -21,7 +21,7 @@
 
 public class Layout : Object {
 
-  protected double                _pc_gap = 50;   /* Parent/child gap */
+  protected double                _pc_gap = 100;  /* Parent/child gap */
   protected double                _sb_gap = 8;    /* Sibling gap */
   protected double                _rt_gap = 100;  /* Root node gaps */
   protected Pango.FontDescription _font_description = null;

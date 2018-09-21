@@ -27,20 +27,29 @@ public class Links {
 
   /* Default constructor */
   public Links() {
-    _links.append_val( new LinkStraight() );
-    _links.append_val( new LinkSquared() );
-    _links.append_val( new LinkCurved() );
+
+    /* Create the links */
+    var straight = new LinkStraight();
+    var squared  = new LinkSquared();
+    var curved   = new LinkCurved();
+
+    /* Add the links to the list */
+    _links.append_val( straight );
+    _links.append_val( squared );
+    _links.append_val( curved );
+
   }
 
-  public set_all_to_link( Array<Node> nodes, Link link ) {
+  /* Sets all nodes in the mind-map to the given link style */
+  public void set_all_to_link( Array<Node> nodes, Link link ) {
     for( int i=0; i<nodes.length; i++ ) {
       set_node_to_link( nodes.index( i ), link );
-      set_all_to_link( ndoes.index( i ).children(), link );
+      set_all_to_link( nodes.index( i ).children(), link );
     }
   }
 
-  /* Sets all nodes in the document to the given link style */
-  public set_levels_to_link( Array<Node> nodes, int levels, Link link, int level=0 ) {
+  /* Sets all nodes at the specified levels to the given link style */
+  public void set_levels_to_link( Array<Node> nodes, int levels, Link link, int level=0 ) {
     for( int i=0; i<nodes.length; i++ ) {
       if( (levels & (1 << level)) != 0 ) {
         set_node_to_link( nodes.index( i ), link );
@@ -49,8 +58,8 @@ public class Links {
     }
   }
 
-  /* Sets the give node's link style to the given style */
-  public set_node_to_link( Node node, Link link ) {
+  /* Sets the given node's link style to the given style */
+  public void set_node_to_link( Node node, Link link ) {
     node.link = link;
   }
 

@@ -19,13 +19,13 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public interface Link {
+public interface Link : Object {
 
   /* Returns the name of the link type */
   public abstract string name();
 
   /* Draw method for the link */
-  public abstract void draw( Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal );
+  public abstract void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal );
 
 }
 

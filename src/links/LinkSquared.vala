@@ -19,23 +19,26 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class LinkSquared : Link {
+public class LinkSquared : Object, Link {
+
+  /* Default constructor */
+  public LinkSquared() {}
 
   /* Returns the name of the link type */
   public string name() {
-    return( "Squared" );
+    return( _( "Squared" ) );
   }
 
   /* Draw method for the link */
-  public void draw( Context ctx, double from_x, double from_y, double to_x, double to_y, bool vertical ) {
+  public void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal ) {
     ctx.move_to( from_x, from_y );
     if( horizontal ) {
-      var mid_x = ((from_x < to_x) ? (to_x - from_x) : (to_x - from_x)) / 2;
+      var mid_x = (from_x + to_x) / 2;
       ctx.line_to( mid_x, from_y );
       ctx.line_to( mid_x, to_y );
       ctx.line_to( to_x,  to_y );
     } else {
-      var mid_y = ((from_y < to_y) ? (to_y - from_y) : (to_y - from_y)) / 2;
+      var mid_y = (from_y + to_y) / 2;
       ctx.line_to( from_x, mid_y );
       ctx.line_to( to_x,   mid_y );
       ctx.line_to( to_x,   to_y );

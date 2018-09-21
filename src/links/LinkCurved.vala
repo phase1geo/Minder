@@ -19,22 +19,25 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class LinkCurved : Link {
+public class LinkCurved : Object, Link {
+
+  /* Default constructor */
+  public LinkCurved() {}
 
   /* Returns the name of the link type */
-  public string name();
+  public string name() {
+    return( _( "Curved" ) );
+  }
 
   /* Draw method for the link */
-  public void draw( Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal ) {
+  public void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal ) {
     ctx.move_to( from_x, from_y );
     if( horizontal ) {
-      var mid_x = ((from_x < to_x) ? (to_x - from_x) : (to_x - from_x)) / 2;
-      ctx.curve_to( mid_x, from_y );
-      ctx.curve_to( mid_x, to_y );
+      var x_adjust = (to_x - from_x) * 0.5;
+      ctx.curve_to( (to_x - x_adjust), from_y, (from_x + x_adjust), to_y, to_x, to_y );
     } else {
-      var mid_y = ((from_y < to_y) ? (to_y - from_y) : (to_y - from_y)) / 2;
-      ctx.line_to( from_x, mid_y );
-      ctx.line_to( to_x,   to_y );
+      var y_adjust = (to_y - from_y) * 0.5;
+      ctx.curve_to( from_x, (to_y - y_adjust), to_x, (from_y + y_adjust), to_x, to_y );
     }
     ctx.stroke();
   }

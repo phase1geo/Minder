@@ -201,7 +201,8 @@ public class Node : Object {
   public bool       attached   { get; set; default = false; }
   public int        line_width { get; set; default = 4; }
   public int        radius     { get; set; default = 10; }
-  public Link       link       { get; set; default = null; }
+  // public Link       link       { get; set; default = null; }
+  public Link       link       { get; set; default = new LinkCurved(); }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -1684,7 +1685,7 @@ public class Node : Object {
   }
 
   /* Draws the line under the node name */
-  protected virtual void draw_line( Context ctx, Theme theme ) {
+  protected virtual void draw_line( Context ctx, Theme theme, bool motion ) {
 
     /* If we are vertically oriented, don't draw the line */
     if( (side & NodeSide.vertical()) != 0 ) return;
@@ -1692,6 +1693,15 @@ public class Node : Object {
     double x = posx;
     double y = posy + _height;
     double w = _width;
+    double hmargin = 3;
+    double vmargin = 3;
+
+    /* Draw the background color behind text */
+    if( !motion ) {
+      set_context_color( ctx, theme.background );
+      ctx.rectangle( ((posx + _padx) - hmargin), ((posy + _pady) - vmargin), ((_width - (_padx * 2)) + (hmargin * 2)), ((_height - (_pady * 2)) + (vmargin * 2)) );
+      ctx.fill();
+    }
 
     /* Draw the line under the text name */
     set_context_color( ctx, _link_color );
@@ -1717,16 +1727,16 @@ public class Node : Object {
     ctx.set_line_cap( LineCap.ROUND );
     switch( side ) {
       case NodeSide.LEFT :
-        link.draw( parent_x, parent_y, (posx + _width), (posy + _height), true );
+        link.draw( ctx, parent_x, parent_y, (posx + _width), (posy + _height), true );
         break;
       case NodeSide.RIGHT :
-        link.draw( parent_x, parent_y, posx, (posy + _height), true );
+        link.draw( ctx, parent_x, parent_y, posx, (posy + _height), true );
         break;
       case NodeSide.TOP :
-        link.draw( parent_x, parent_y, (posx + (_width / 2)), (posy + _height), false );
+        link.draw( ctx, parent_x, parent_y, (posx + (_width / 2)), (posy + _height), false );
         break;
       case NodeSide.BOTTOM :
-        link.draw( parent_x, parent_y, (posx + (_width / 2)), posy, false );
+        link.draw( ctx, parent_x, parent_y, (posx + (_width / 2)), posy, false );
         break;
     }
 
@@ -1770,7 +1780,7 @@ public class Node : Object {
 
     /* Otherwise, draw the node as a non-root node */
     } else {
-      draw_line( ctx, theme );
+      draw_line( ctx, theme, motion );
       draw_name( ctx, theme, motion );
       draw_image( ctx, theme, motion );
       if( is_leaf() ) {
