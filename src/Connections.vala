@@ -31,6 +31,13 @@ public class Connections {
     return( null );
   }
 
+  /* Adjusts the connections based on the amount of panning that occurred */
+  public void pan( double diff_x, double diff_y ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      _connections.index( i ).pan( diff_x, diff_y );
+    }
+  }
+
   /* Loads the listed connections from the given XML data */
   public void load( DrawArea da, Xml.Node* node ) {
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
@@ -55,9 +62,11 @@ public class Connections {
   }
 
   /* Draws all of the connections onto the given context */
-  public void draw_all( Cairo.Context ctx, Theme theme ) {
+  public void draw_all( Cairo.Context ctx, Theme theme, Connection? current ) {
     for( int i=0; i<_connections.length; i++ ) {
-      _connections.index( i ).draw( ctx, theme );
+      if( _connections.index( i ) != current ) {
+        _connections.index( i ).draw( ctx, theme );
+      }
     }
   }
 

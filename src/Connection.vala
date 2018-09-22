@@ -31,12 +31,12 @@ public enum ConnMode {
 
 public class Connection {
 
-  private Node?    _from_node = null;
-  private Node?    _to_node   = null;
-  private double   _posx;
-  private double   _posy;
-  private double   _dragx;
-  private double   _dragy;
+  private Node?  _from_node = null;
+  private Node?  _to_node   = null;
+  private double _posx;
+  private double _posy;
+  private double _dragx;
+  private double _dragy;
 
   public string   title { get; set; default = ""; }
   public ConnMode mode  { get; set; default = ConnMode.NONE; }
@@ -66,7 +66,7 @@ public class Connection {
   public void connect_to( Node to_node ) {
     double fx, fy, tx, ty;
     get_connect_point( _from_node, out fx, out fy );
-    get_connect_point( _to_node,   out tx, out ty );
+    get_connect_point( to_node,    out tx, out ty );
     _to_node = to_node;
     _dragx   = (fx + tx) / 2;
     _dragy   = (fy + ty) / 2;
@@ -95,6 +95,18 @@ public class Connection {
   /* Returns true if the given point lies within the from connection handle */
   public bool within_to_handle( double x, double y ) {
     return( within_handle( _to_node, x, y ) );
+  }
+
+  /* Updates the location of the drag handle */
+  public void move_drag_handle( double x, double y ) {
+    _dragx = x;
+    _dragy = y;
+  }
+
+  /* Updates the location of dragx/dragy based on the amount of canvas pan */
+  public void pan( double diff_x, double diff_y ) {
+    _dragx -= diff_x;
+    _dragy -= diff_y;
   }
 
   /* Returns true if the given point lies within the from connection handle */
@@ -165,19 +177,29 @@ public class Connection {
       get_connect_point( _to_node, out end_x, out end_y );
     }
 
+    /* The value of t is always 0.5 */
     var color = theme.connection_color;
-    
+    var ax    = _dragx - (((start_x + end_x) * 0.5) - _dragx);
+    var ay    = _dragy - (((start_y + end_y) * 0.5) - _dragy);
+
     /* Draw the curve */
     ctx.set_line_width( 2 );
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
 
+    /* Draw the curve as a quadratic curve (saves some additional calculations) */
     ctx.save();
     ctx.set_dash( {15, 5}, 0 );
     ctx.move_to( start_x, start_y );
-    ctx.curve_to( start_x, start_y, ((start_x + end_x) / 2), ((start_y + end_y) / 2), end_x, end_y );
+    ctx.curve_to(
+      (((2.0 / 3.0) * ax) + ((1.0 / 3.0) * start_x)),
+      (((2.0 / 3.0) * ay) + ((1.0 / 3.0) * start_y)),
+      (((2.0 / 3.0) * ax) + ((1.0 / 3.0) * end_x)),
+      (((2.0 / 3.0) * ay) + ((1.0 / 3.0) * end_y)),
+      end_x, end_y
+    );
     ctx.stroke();
 
-    /* Draw the circle at the midpoint */
+    /* Draw the drag circle */
     ctx.arc( _dragx, _dragy, 8, 0, (2 * Math.PI) );
     ctx.fill();
 

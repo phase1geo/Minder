@@ -1049,6 +1049,7 @@ public class DrawArea : Gtk.DrawingArea {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).pan( diff_x, diff_y );
     }
+    _connections.pan( diff_x, diff_y );
   }
 
   /* Draw the background from the stylesheet */
@@ -1058,7 +1059,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Draws all of the root node trees */
   public void draw_all( Context ctx ) {
-    _connections.draw_all( ctx, _theme );
+    _connections.draw_all( ctx, _theme, _current_connection );
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).draw_all( ctx, _theme, _current_node, false, false );
     }
@@ -1119,7 +1120,10 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     }
     if( _pressed ) {
-      if( _current_node != null ) {
+      if( (_current_connection != null) && (_current_connection.mode == ConnMode.SELECTED) ) {
+        _current_connection.move_drag_handle( event.x, event.y );
+        queue_draw();
+      } else if( _current_node != null ) {
         double diffx = scale_value( event.x ) - _press_x;
         double diffy = scale_value( event.y ) - _press_y;
         if( _current_node.mode == NodeMode.CURRENT ) {
@@ -1434,6 +1438,11 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_mode_selected() ) {
       delete_node();
       _current_node = null;
+    } else if( (_current_connection != null) && (_current_connection.mode == ConnMode.SELECTED) ) {
+      _connections.remove_connection( _current_connection );
+      _current_connection = null;
+      queue_draw();
+      changed();
     }
   }
 
