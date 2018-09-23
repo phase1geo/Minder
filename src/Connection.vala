@@ -84,7 +84,7 @@ public class Connection {
 
   /* Returns true if the given point is within the drag handle */
   public bool within_drag_handle( double x, double y ) {
-    return( ((_dragx - 4) <= x) && (x <= (_dragx + 4)) && ((_dragy - 4) <= y) && (y <= (_dragy + 4)) );
+    return( ((_dragx - 3) <= x) && (x <= (_dragx + 3)) && ((_dragy - 3) <= y) && (y <= (_dragy + 3)) );
   }
 
   /* Returns true if the given point lies within the from connection handle */
@@ -188,7 +188,7 @@ public class Connection {
 
     /* Draw the curve as a quadratic curve (saves some additional calculations) */
     ctx.save();
-    ctx.set_dash( {15, 5}, 0 );
+    ctx.set_dash( {5, 5}, 0 );
     ctx.move_to( start_x, start_y );
     ctx.curve_to(
       (((2.0 / 3.0) * ax) + ((1.0 / 3.0) * start_x)),
@@ -199,8 +199,13 @@ public class Connection {
     );
     ctx.stroke();
 
+    /* Draw the arrow */
+    if( mode != ConnMode.SELECTED ) {
+      draw_arrow( ctx, color, start_x, start_y, end_x, end_y );
+    }
+
     /* Draw the drag circle */
-    ctx.arc( _dragx, _dragy, 8, 0, (2 * Math.PI) );
+    ctx.arc( _dragx, _dragy, 6, 0, (2 * Math.PI) );
     ctx.fill();
 
     /* If we are selected draw the endpoints */
@@ -211,6 +216,38 @@ public class Connection {
       ctx.fill();
     }
 
+    ctx.restore();
+
+  }
+
+  /* Draws arrow point to the "to" node */
+  protected virtual void draw_arrow( Cairo.Context ctx, RGBA color, double fx, double fy, double tx, double ty ) {
+
+    /* Figure out where a point on the curve is close to the "to" point */
+    var t = 0.9;
+    var x = (1 - t) * (1 - t) * fx + 2 * (1 - t) * t * _dragx + t * t * tx;
+    var y = (1 - t) * (1 - t) * fy + 2 * (1 - t) * t * _dragy + t * t * ty;
+
+    /* Calculate the angle of the line */
+    var a     = Math.fabs( tx - x );
+    var o     = Math.fabs( ty - y );
+    var angle = Math.round( GLib.Math.atanf( (float)(o / a) ) * 180 / Math.PI * 10000) / 10000;
+    stdout.printf( "angle: %g\n", angle );
+
+    return;
+
+    /* Draw arrow in the upwards direction */
+    ctx.save();
+    ctx.set_line_width( 1 );
+    ctx.move_to( tx, ty );
+    ctx.line_to( (tx + 3), (ty + 4) );
+    ctx.line_to( (tx - 5), (ty + 4) );
+    ctx.close_path();
+
+    /* Rotate it around the point to the correct angle */
+    ctx.translate( tx, ty );
+    ctx.rotate( (angle * Math.PI) / 100 );
+    ctx.fill();
     ctx.restore();
 
   }

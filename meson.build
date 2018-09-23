@@ -23,7 +23,8 @@ configure_file(output: 'config.h', configuration: conf)
 config_h_dir = include_directories('.')
 
 c_args = [
-  '-include', 'config.h'
+  '-include', 'config.h',
+  '-X', '-lm'
 ]
 
 sources = files()
