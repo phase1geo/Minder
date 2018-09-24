@@ -166,7 +166,7 @@ public class Node : Object {
     set {
       _mode      = value;
       _selstart  = 0;
-      _selend    = (_mode == NodeMode.EDITABLE) ? name.length : 0;
+      _selend    = (_mode == NodeMode.EDITABLE) ? name.char_count() : 0;
       _selanchor = 0;
       _cursor    = _selend;
     }
@@ -758,10 +758,12 @@ public class Node : Object {
   /* Generates the marked up name that will be displayed in the node */
   private string name_markup( Theme? theme ) {
     if( (_selstart != _selend) && (theme != null) ) {
-      string fg      = color_from_rgba( theme.textsel_foreground );
-      string bg      = color_from_rgba( theme.textsel_background );
-      string seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + name.slice( _selstart, _selend ) + "</span>";
-      return( name.splice( _selstart, _selend, seltext ) );
+      var fg      = color_from_rgba( theme.textsel_foreground );
+      var bg      = color_from_rgba( theme.textsel_background );
+      var spos    = name.index_of_nth_char( _selstart );
+      var epos    = name.index_of_nth_char( _selend );
+      var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + name.slice( spos, epos ) + "</span>";
+      return( name.splice( spos, epos, seltext ) );
     }
     return( name );
   }
@@ -967,20 +969,20 @@ public class Node : Object {
     int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
     int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
     if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
-      cursor += trailing;
+      var cindex = name.char_count( cursor + trailing );
       if( motion ) {
-        if( cursor > _selanchor ) {
-          _selend = cursor;
-        } else if( cursor < _selanchor ) {
-          _selstart = cursor;
+        if( cindex > _selanchor ) {
+          _selend = cindex;
+        } else if( cindex < _selanchor ) {
+          _selstart = cindex;
         } else {
-          _selstart = cursor;
-          _selend   = cursor;
+          _selstart = cindex;
+          _selend   = cindex;
         }
       } else {
-        _selstart  = cursor;
-        _selend    = cursor;
-        _selanchor = cursor;
+        _selstart  = cindex;
+        _selend    = cindex;
+        _selanchor = cindex;
       }
       _cursor = _selend;
     }
@@ -994,17 +996,23 @@ public class Node : Object {
     int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
     if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor += trailing;
-      int word_start = name.substring( 0, cursor ).last_index_of( " " );
-      int word_end   = name.index_of( " ", cursor );
+      var word_start = name.substring( 0, cursor ).last_index_of( " " );
+      var word_end   = name.index_of( " ", cursor );
       if( word_start == -1 ) {
         _selstart = 0;
-      } else if( !motion || (word_start < _selanchor) ) {
-        _selstart = word_start + 1;
+      } else {
+        var windex = name.char_count( word_start );
+        if( !motion || (windex < _selanchor) ) {
+          _selstart = windex + 1;
+        }
       }
       if( word_end == -1 ) {
-        _selend = name.length;
-      } else if( !motion || (word_end > _selanchor) ) {
-        _selend = word_end;
+        _selend = name.char_count();
+      } else {
+        var windex = name.char_count( word_end );
+        if( !motion || (windex > _selanchor) ) {
+          _selend = windex;
+        }
       }
       _cursor = _selend;
     }
@@ -1014,19 +1022,20 @@ public class Node : Object {
   public void set_cursor_all( bool motion ) {
     if( !motion ) {
       _selstart  = 0;
-      _selend    = name.length;
-      _selanchor = name.length;
-      _cursor    = name.length;
+      _selend    = name.char_count();
+      _selanchor = _selend;
+      _cursor    = _selend;
     }
   }
 
   /* Move the cursor in the given direction */
   public void move_cursor( int dir ) {
+    var last = name.char_count();
     _cursor += dir;
     if( _cursor < 0 ) {
       _cursor = 0;
-    } else if( _cursor > name.length ) {
-      _cursor = name.length;
+    } else if( _cursor > last ) {
+      _cursor = last;
     }
     _selend = _selstart;
   }
@@ -1035,7 +1044,8 @@ public class Node : Object {
   public void move_cursor_vertically( int dir ) {
     int line, x;
     int index, trailing;
-    _layout.index_to_line_x( _cursor, false, out line, out x );
+    var cpos = name.index_of_nth_char( _cursor );
+    _layout.index_to_line_x( cpos, false, out line, out x );
     line += dir;
     if( line < 0 ) {
       line = 0;
@@ -1044,7 +1054,7 @@ public class Node : Object {
     }
     var line_layout = _layout.get_line( line );
     line_layout.x_to_index( x, out index, out trailing );
-    _cursor = index + trailing;
+    _cursor = name.char_count( index + trailing );
     _selend = _selstart;
   }
 
@@ -1056,7 +1066,7 @@ public class Node : Object {
 
   /* Moves the cursor to the end of the name */
   public void move_cursor_to_end() {
-    _cursor = name.length;
+    _cursor = name.char_count();
     _selend = _selstart;
   }
 
@@ -1064,11 +1074,15 @@ public class Node : Object {
   public void edit_backspace( Layout layout ) {
     if( _cursor > 0 ) {
       if( _selstart != _selend ) {
-        name    = name.splice( _selstart, _selend );
-        _cursor = _selstart;
-        _selend = _selstart;
+        var spos = name.index_of_nth_char( _selstart );
+        var epos = name.index_of_nth_char( _selend );
+        name     = name.splice( spos, epos );
+        _cursor  = _selstart;
+        _selend  = _selstart;
       } else {
-        name = name.splice( (_cursor - 1), _cursor );
+        var spos = name.index_of_nth_char( _cursor - 1 );
+        var epos = name.index_of_nth_char( _cursor );
+        name     = name.splice( spos, epos );
         _cursor--;
       }
     }
@@ -1079,11 +1093,15 @@ public class Node : Object {
   public void edit_delete( Layout layout ) {
     if( _cursor < name.length ) {
       if( _selstart != _selend ) {
-        name    = name.splice( _selstart, _selend );
+        var spos = name.index_of_nth_char( _selstart );
+        var epos = name.index_of_nth_char( _selend );
+        name    = name.splice( spos, epos );
         _cursor = _selstart;
         _selend = _selstart;
       } else {
-        name = name.splice( _cursor, (_cursor + 1) );
+        var spos = name.index_of_nth_char( _cursor );
+        var epos = name.index_of_nth_char( _cursor + 1 );
+        name = name.splice( spos, epos );
       }
     }
     layout.handle_update_by_edit( this );
@@ -1091,13 +1109,17 @@ public class Node : Object {
 
   /* Inserts the given string at the current cursor position and adjusts cursor */
   public void edit_insert( string s, Layout layout ) {
+    var slen = s.char_count();
     if( _selstart != _selend ) {
-      name    = name.splice( _selstart, _selend, s );
-      _cursor = _selstart + s.length;
+      var spos = name.index_of_nth_char( _selstart );
+      var epos = name.index_of_nth_char( _selend );
+      name    = name.splice( spos, epos, s );
+      _cursor = _selstart + slen;
       _selend = _selstart;
     } else {
-      name = name.splice( _cursor, _cursor, s );
-      _cursor += s.length;
+      var cpos = name.index_of_nth_char( _cursor );
+      name = name.splice( cpos, cpos, s );
+      _cursor += slen;
     }
     layout.handle_update_by_edit( this );
   }
@@ -1108,7 +1130,9 @@ public class Node : Object {
   */
   public string? get_selected_text() {
     if( _selstart != _selend ) {
-      return( name.slice( _selstart, _selend ) );
+      var spos = name.index_of_nth_char( _selstart );
+      var epos = name.index_of_nth_char( _selend );
+      return( name.slice( spos, epos ) );
     }
     return( null );
   }
@@ -1516,7 +1540,8 @@ public class Node : Object {
 
     /* Draw the insertion cursor if we are in the 'editable' state */
     if( mode == NodeMode.EDITABLE ) {
-      var rect = _layout.index_to_pos( _cursor );
+      var cpos = name.index_of_nth_char( _cursor );
+      var rect = _layout.index_to_pos( cpos );
       set_context_color( ctx, theme.text_cursor );
       double ix, iy;
       ix = (posx + _padx + twidth) + (rect.x / Pango.SCALE) - 1;
