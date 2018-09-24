@@ -198,11 +198,10 @@ public class Node : Object {
       }
     }
   }
-  public bool       attached   { get; set; default = false; }
-  public int        line_width { get; set; default = 4; }
-  public int        radius     { get; set; default = 10; }
-  // public Link       link       { get; set; default = null; }
-  public Link       link       { get; set; default = new LinkCurved(); }
+  public bool     attached   { get; set; default = false; }
+  public int      line_width { get; set; default = 4; }
+  public int      radius     { get; set; default = 10; }
+  public Style    style      { get; set; default = new Style(); }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -1472,6 +1471,16 @@ public class Node : Object {
     }
   }
 
+  /* Draws the border around the node */
+  protected void draw_border( Context ctx, Theme theme, bool motion ) {
+
+    var horizontal = (side & NodeSide.horizontal()) != 0;
+
+    ctx.set_line_width( node_border_width );
+    style.draw_background( ctx, posx, posy, _width, _height, horizontal, motion );
+
+  }
+
   /* Draws the rectangle around the root node */
   protected void draw_root_rectangle( Context ctx, Theme theme, bool motion ) {
 
@@ -1723,20 +1732,19 @@ public class Node : Object {
     parent.link_point( out parent_x, out parent_y );
 
     set_context_color( ctx, _link_color );
-    ctx.set_line_width( line_width );
     ctx.set_line_cap( LineCap.ROUND );
     switch( side ) {
       case NodeSide.LEFT :
-        link.draw( ctx, parent_x, parent_y, (posx + _width), (posy + _height), true );
+        style.draw_link( ctx, parent_x, parent_y, (posx + _width), (posy + _height), true );
         break;
       case NodeSide.RIGHT :
-        link.draw( ctx, parent_x, parent_y, posx, (posy + _height), true );
+        style.draw_link( ctx, parent_x, parent_y, posx, (posy + _height), true );
         break;
       case NodeSide.TOP :
-        link.draw( ctx, parent_x, parent_y, (posx + (_width / 2)), (posy + _height), false );
+        style.draw_link( ctx, parent_x, parent_y, (posx + (_width / 2)), (posy + _height), false );
         break;
       case NodeSide.BOTTOM :
-        link.draw( ctx, parent_x, parent_y, (posx + (_width / 2)), posy, false );
+        style.draw_link( ctx, parent_x, parent_y, (posx + (_width / 2)), posy, false );
         break;
     }
 

@@ -19,25 +19,35 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class LinkStraight : Object, Link {
+public class LinkTypeSquared : Object, LinkType {
 
   /* Default constructor */
-  public LinkStraight() {}
+  public LinkTypeSquared() {}
 
   /* Returns the name of the link type */
   public string name() {
-    return( _( "Straight" ) );
+    return( _( "Squared" ) );
   }
 
   /* Returns the name of the icon */
   public string icon_name() {
-    return( "minder-link-straight-symbolic" );
+    return( "minder-link-squared-symbolic" );
   }
 
   /* Draw method for the link */
   public void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal ) {
     ctx.move_to( from_x, from_y );
-    ctx.line_to( to_x,   to_y );
+    if( horizontal ) {
+      var mid_x = (from_x + to_x) / 2;
+      ctx.line_to( mid_x, from_y );
+      ctx.line_to( mid_x, to_y );
+      ctx.line_to( to_x,  to_y );
+    } else {
+      var mid_y = (from_y + to_y) / 2;
+      ctx.line_to( from_x, mid_y );
+      ctx.line_to( to_x,   mid_y );
+      ctx.line_to( to_x,   to_y );
+    }
     ctx.stroke();
   }
 
