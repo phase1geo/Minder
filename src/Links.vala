@@ -34,6 +34,7 @@ public class Links {
     var curved   = new LinkCurved();
 
     /* Add the links to the list */
+    _links = new Array<Link>();
     _links.append_val( straight );
     _links.append_val( squared );
     _links.append_val( curved );
@@ -61,6 +62,11 @@ public class Links {
   /* Sets the given node's link style to the given style */
   public void set_node_to_link( Node node, Link link ) {
     node.link = link;
+  }
+
+  /* Returns the list of available link types */
+  public Array<Link> get_links() {
+    return( _links );
   }
 
 }

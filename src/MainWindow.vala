@@ -440,12 +440,14 @@ public class MainWindow : ApplicationWindow {
     _stack.set_transition_duration( 500 );
     _stack.add_titled( _node_inspector, "node", _("Node") );
     _stack.add_titled( new MapInspector( _canvas, _settings ),  "map",  _("Map") );
+    _stack.add_titled( new StyleInspector( _canvas, _settings ), "style", _("Style") );
 
     /* If the stack switcher is clicked, save off which tab is in view */
     _stack.notify.connect((ps) => {
       if( ps.name == "visible-child" ) {
         _settings.set_boolean( "node-properties-shown", (_stack.visible_child_name == "node") );
         _settings.set_boolean( "map-properties-shown",  (_stack.visible_child_name == "map") );
+        _settings.set_boolean( "style-properties-shown", (_stack.visible_child_name == "style" ) );
       }
     });
 
@@ -467,6 +469,8 @@ public class MainWindow : ApplicationWindow {
       show_properties( "node", false );
     } else if( _settings.get_boolean( "map-properties-shown" ) ) {
       show_properties( "map", false );
+    } else if( _settings.get_boolean( "style-properties-shown" ) ) {
+      show_properties( "style", false );
     }
 
   }
@@ -734,8 +738,9 @@ public class MainWindow : ApplicationWindow {
     if( !_inspector.reveal_child ) return;
     _prop_btn.image = _prop_show;
     _inspector.reveal_child = false;
-    _settings.set_boolean( "node-properties-shown", false );
-    _settings.set_boolean( "map-properties-shown",  false );
+    _settings.set_boolean( "node-properties-shown",  false );
+    _settings.set_boolean( "map-properties-shown",   false );
+    _settings.set_boolean( "style-properites-shown", false );
   }
 
   /* Converts the given value from the scale to the zoom value to use */

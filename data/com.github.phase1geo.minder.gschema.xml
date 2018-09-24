@@ -36,6 +36,11 @@
       <summary>Most recent state of the map properties sidebar</summary>
       <description>Most recent state of the map properties sidebar</description>
     </key>
+    <key name="style-properties-shown" type="b">
+      <default>false</default>
+      <summary>Most recent state of the style properties sidebar</summary>
+      <description>Most recent state of the style properities sidebar</description>
+    </key>
     <key name="enable-animations" type="b">
       <default>true</default>
       <summary>Enables/Disables canvas animations</summary>

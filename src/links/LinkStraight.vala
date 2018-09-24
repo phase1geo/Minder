@@ -29,6 +29,11 @@ public class LinkStraight : Object, Link {
     return( _( "Straight" ) );
   }
 
+  /* Returns the name of the icon */
+  public string icon_name() {
+    return( "minder-link-straight-symbolic" );
+  }
+
   /* Draw method for the link */
   public void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal ) {
     ctx.move_to( from_x, from_y );

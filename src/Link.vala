@@ -24,6 +24,9 @@ public interface Link : Object {
   /* Returns the name of the link type */
   public abstract string name();
 
+  /* Returns the name of the link icon */
+  public abstract string icon_name();
+
   /* Draw method for the link */
   public abstract void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal );
 

@@ -70,6 +70,7 @@ sources += files(
     'NodeImage.vala',
     'NodeInspector.vala',
     'Partitioner.vala',
+    'StyleInspector.vala',
     'Theme.vala',
     'Themes.vala',
     'UndoBuffer.vala',
