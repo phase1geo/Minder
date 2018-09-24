@@ -769,13 +769,19 @@ public class DrawArea : Gtk.DrawingArea {
         }
         return( false );
       } else {
-        if( _current_connection != null ) {
-          _current_connection.mode = ConnMode.NONE;
-          _current_connection      = null;
-        }
+        var last_connection = _current_connection;
         _current_connection = _connections.within_drag_handle( x, y );
         if( _current_connection != null ) {
-          _current_connection.mode = ConnMode.SELECTED;
+          if( _current_connection == last_connection ) {
+            _current_connection.mode = ConnMode.ADJUSTING;
+          } else {
+            _current_connection.mode = ConnMode.SELECTED;
+            if( last_connection != null ) {
+              last_connection.mode = ConnMode.NONE;
+            }
+          }
+        } else if( last_connection != null ) {
+          last_connection.mode = ConnMode.NONE;
         }
       }
     }
@@ -1059,7 +1065,6 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Draws all of the root node trees */
   public void draw_all( Context ctx ) {
-    _connections.draw_all( ctx, _theme, _current_connection );
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).draw_all( ctx, _theme, _current_node, false, false );
     }
@@ -1068,9 +1073,7 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.draw_all( ctx, _theme, null, true, (_pressed && _motion && !_resize) );
     }
     /* Draw the current connection on top of everything else */
-    if( _current_connection != null ) {
-      _current_connection.draw( ctx, _theme );
-    }
+    _connections.draw_all( ctx, _theme, null );
   }
 
   /* Draw the available nodes */
@@ -1120,7 +1123,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     }
     if( _pressed ) {
-      if( (_current_connection != null) && (_current_connection.mode == ConnMode.SELECTED) ) {
+      if( (_current_connection != null) && (_current_connection.mode != ConnMode.NONE) ) {
         _current_connection.move_drag_handle( event.x, event.y );
         queue_draw();
       } else if( _current_node != null ) {
@@ -1205,8 +1208,8 @@ public class DrawArea : Gtk.DrawingArea {
         end_connection( _attach_node );
         _attach_node.mode = NodeMode.NONE;
         _attach_node = null;
-      } else {
-        _current_connection = null;
+      } else if( _current_connection.mode == ConnMode.ADJUSTING ) {
+        _current_connection.mode = ConnMode.SELECTED;
       }
     } else if( _current_node != null ) {
       if( _current_node.mode == NodeMode.CURRENT ) {

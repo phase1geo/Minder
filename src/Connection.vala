@@ -26,7 +26,8 @@ using Gdk;
 /* Connection mode value for the Connection.mode property */
 public enum ConnMode {
   NONE = 0,  // Normally drawn mode
-  SELECTED   // Indicates that the connection is currently selected
+  SELECTED,  // Indicates that the connection is currently selected
+  ADJUSTING  // Indicates that we are moving the drag handle to change the line shape
 }
 
 public class Connection {
@@ -58,28 +59,44 @@ public class Connection {
   private void get_connect_point( Node node, out double cx, out double cy ) {
     double x, y, w, h;
     node.bbox( out x, out y, out w, out h );
-    cx = x + w;
-    cy = y + (h / 2);
+    /* TEMPORARY - This needs to be more robust */
+    if( node == _from_node ) {
+      cx = x + (w / 2);
+      cy = y;
+    } else {
+      cx = x + (w / 2);
+      cy = y + h;
+    }
   }
 
   /* Completes the connection */
-  public void connect_to( Node to_node ) {
+  public void connect_to( Node node ) {
     double fx, fy, tx, ty;
-    get_connect_point( _from_node, out fx, out fy );
-    get_connect_point( to_node,    out tx, out ty );
-    _to_node = to_node;
-    _dragx   = (fx + tx) / 2;
-    _dragy   = (fy + ty) / 2;
+    if( _from_node == null ) {
+      get_connect_point( _to_node, out tx, out ty );
+      get_connect_point( node,     out fx, out fy );
+      _from_node = node;
+    } else {
+      get_connect_point( _from_node, out fx, out fy );
+      get_connect_point( node,       out tx, out ty );
+      _to_node = node;
+    }
+    _dragx = (fx + tx) / 2;
+    _dragy = (fy + ty) / 2;
   }
 
   /* Draws the connections to the given point */
   public void draw_to( double x, double y ) {
-    double fx, fy;
-    get_connect_point( _from_node, out fx, out fy );
-    _posx  = x;
-    _posy  = y;
-    _dragx = (fx + x) / 2;
-    _dragy = (fy + y) / 2;
+    double nx, ny;
+    _posx = x;
+    _posy = y;
+    if( _from_node == null ) {
+      get_connect_point( _to_node, out nx, out ny );
+    } else {
+      get_connect_point( _from_node, out nx, out ny );
+    }
+    _dragx = (nx + x) / 2;
+    _dragy = (ny + y) / 2;
   }
 
   /* Returns true if the given point is within the drag handle */
@@ -99,6 +116,7 @@ public class Connection {
 
   /* Updates the location of the drag handle */
   public void move_drag_handle( double x, double y ) {
+    mode   = ConnMode.ADJUSTING;
     _dragx = x;
     _dragy = y;
   }
@@ -201,7 +219,7 @@ public class Connection {
 
     /* Draw the arrow */
     if( mode != ConnMode.SELECTED ) {
-      draw_arrow( ctx, color, start_x, start_y, end_x, end_y );
+      draw_arrow( ctx, color, end_x, end_y, ax, ay );
     }
 
     /* Draw the drag circle */
@@ -220,35 +238,33 @@ public class Connection {
 
   }
 
-  /* Draws arrow point to the "to" node */
-  protected virtual void draw_arrow( Cairo.Context ctx, RGBA color, double fx, double fy, double tx, double ty ) {
+  /*
+   Draws arrow point to the "to" node.  The tailx/y values should be the
+   bezier control point closest to the "to" node.
+  */
+  protected virtual void draw_arrow( Cairo.Context ctx, RGBA color, double tipx, double tipy, double tailx, double taily ) {
 
-    /* Figure out where a point on the curve is close to the "to" point */
-    var t = 0.9;
-    var x = (1 - t) * (1 - t) * fx + 2 * (1 - t) * t * _dragx + t * t * tx;
-    var y = (1 - t) * (1 - t) * fy + 2 * (1 - t) * t * _dragy + t * t * ty;
+    var arrowLength = 10; // can be adjusted
+    var dx = tipx - tailx;
+    var dy = tipy - taily;
 
-    /* Calculate the angle of the line */
-    var a     = Math.fabs( tx - x );
-    var o     = Math.fabs( ty - y );
-    var angle = Math.round( GLib.Math.atanf( (float)(o / a) ) * 180 / Math.PI * 10000) / 10000;
-    stdout.printf( "angle: %g\n", angle );
+    var theta = Math.atan2( dy, dx );
 
-    return;
+    var rad = 35 * (Math.PI / 180);  // 35 angle, can be adjusted
+    var x1  = tipx - arrowLength * Math.cos( theta + rad );
+    var y1  = tipy - arrowLength * Math.sin( theta + rad );
 
-    /* Draw arrow in the upwards direction */
-    ctx.save();
+    var phi2 = -35 * (Math.PI / 180);  // -35 angle, can be adjusted
+    var x2   = tipx - arrowLength * Math.cos( theta + phi2 );
+    var y2   = tipy - arrowLength * Math.sin( theta + phi2 );
+
+    /* Draw the arrow */
     ctx.set_line_width( 1 );
-    ctx.move_to( tx, ty );
-    ctx.line_to( (tx + 3), (ty + 4) );
-    ctx.line_to( (tx - 5), (ty + 4) );
+    ctx.move_to( tipx, tipy );
+    ctx.line_to( x1, y1 );
+    ctx.line_to( x2, y2 );
     ctx.close_path();
-
-    /* Rotate it around the point to the correct angle */
-    ctx.translate( tx, ty );
-    ctx.rotate( (angle * Math.PI) / 100 );
     ctx.fill();
-    ctx.restore();
 
   }
 

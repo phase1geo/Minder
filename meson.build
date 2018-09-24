@@ -24,7 +24,6 @@ config_h_dir = include_directories('.')
 
 c_args = [
   '-include', 'config.h',
-  '-X', '-lm'
 ]
 
 sources = files()
@@ -40,6 +39,10 @@ if gtk_dep.version().version_compare('>=3.22.0')
   add_project_arguments(['--define=GTK322'], language: 'vala')
 endif
 
+# Add the math library
+cc = meson.get_compiler('c')
+math_dep = cc.find_library('m', required: false)
+
 dependencies = [
     dependency('gobject-2.0'),
     dependency('glib-2.0'),
@@ -48,7 +51,8 @@ dependencies = [
     dependency('granite'),
     dependency('gtk+-3.0'),
     dependency('libxml-2.0'),
-    dependency('libarchive')
+    dependency('libarchive'),
+    math_dep
 ]
 
 e = executable('com.github.phase1geo.minder',

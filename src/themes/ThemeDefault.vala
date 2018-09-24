@@ -40,7 +40,7 @@ public class ThemeDefault : Theme {
     textsel_foreground = get_color( "White" );
     text_cursor        = get_color( "Black" );
     attachable_color   = get_color( "#9bdb4d" );
-    connection_color   = get_color( "#d4d4d4" );
+    connection_color   = get_color( "#777777" );
     prefer_dark        = false;
 
     /* Generate the link colors */
