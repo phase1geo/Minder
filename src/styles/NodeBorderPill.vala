@@ -19,19 +19,30 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public interface LinkType : Object {
+public class NodeBorderPill : Object, NodeBorder {
 
-  /* Returns the name of the link type */
-  public abstract string name();
+  /* Default constructor */
+  public NodeBorderPill() {}
 
-  /* Returns the display name of the link type (should be a translatable string) */
-  public abstract string display_name();
+  /* Returns the searchable name of the node border */
+  public string name() {
+    return( "pilled" );
+  }
 
-  /* Returns the name of the link icon */
-  public abstract string icon_name();
+  /* Returns the name of the node border to display (should be translatable) */
+  public string display_name() {
+    return( _( "Pill" ) );
+  }
 
-  /* Draw method for the link */
-  public abstract void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal );
+  /* Returns the name of the icon */
+  public string icon_name() {
+    return( "minder-node-border-pill-symbolic" );
+  }
+
+  /* Draw method for the node border */
+  public void draw( Cairo.Context ctx, double x, double y, double w, double h, bool horizontal, bool motion ) {
+    // TBD
+  }
 
 }
 

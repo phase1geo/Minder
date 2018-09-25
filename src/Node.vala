@@ -1476,33 +1476,8 @@ public class Node : Object {
 
     var horizontal = (side & NodeSide.horizontal()) != 0;
 
-    ctx.set_line_width( node_border_width );
-    style.draw_background( ctx, posx, posy, _width, _height, horizontal, motion );
-
-  }
-
-  /* Draws the rectangle around the root node */
-  protected void draw_root_rectangle( Context ctx, Theme theme, bool motion ) {
-
-    double r = (double)radius;
-    double x = posx;
-    double y = posy;
-    double h = _height;
-    double w = _width;
-
-    set_context_color_with_alpha( ctx, theme.root_background, (motion ? 0.2 : 1) );
-
-    ctx.set_line_width( 1 );
-    ctx.move_to(x+r,y);                      // Move to A
-    ctx.line_to(x+w-r,y);                    // Straight line to B
-    ctx.curve_to(x+w,y,x+w,y,x+w,y+r);       // Curve to C, Control points are both at Q
-    ctx.line_to(x+w,y+h-r);                  // Move to D
-    ctx.curve_to(x+w,y+h,x+w,y+h,x+w-r,y+h); // Curve to E
-    ctx.line_to(x+r,y+h);                    // Line to F
-    ctx.curve_to(x,y+h,x,y+h,x,y+h-r);       // Curve to G
-    ctx.line_to(x,y+r);                      // Line to H
-    ctx.curve_to(x,y,x,y,x+r,y);             // Curve to A
-    ctx.fill();
+    ctx.set_line_width( style.node_borderwidth );
+    style.draw_border( ctx, posx, posy, _width, _height, horizontal, motion );
 
   }
 
@@ -1773,7 +1748,8 @@ public class Node : Object {
 
     /* If this is a root node, draw specifically for a root node */
     if( is_root() ) {
-      draw_root_rectangle( ctx, theme, motion );
+
+      draw_border( ctx, theme, motion );
       draw_name( ctx, theme, motion );
       draw_image( ctx, theme, motion );
       if( is_leaf() ) {
@@ -1788,7 +1764,7 @@ public class Node : Object {
 
     /* Otherwise, draw the node as a non-root node */
     } else {
-      draw_line( ctx, theme, motion );
+      draw_border( ctx, theme, motion );
       draw_name( ctx, theme, motion );
       draw_image( ctx, theme, motion );
       if( is_leaf() ) {

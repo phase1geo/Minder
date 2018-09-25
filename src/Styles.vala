@@ -23,8 +23,9 @@ using Gtk;
 
 public class Styles {
 
-  private Array<LinkType>   _link_types;
-  private Array<NodeBorder> _node_borders;
+  private static Array<LinkType>   _link_types;
+  private static Array<NodeBorder> _node_borders;
+  private        Array<Style>      _styles;
 
   /* Default constructor */
   public Styles() {
@@ -52,34 +53,93 @@ public class Styles {
     _node_borders.append_val( nb_rounded );
     _node_borders.append_val( nb_pilled );
 
+    /* Allocate styles for each level */
+    _styles = new Array<Style>();
+    for( int i=0; i<=10; i++ ) {
+      var style = new Style();
+      style.link_type  = lt_straight;
+      style.link_width = 4;
+      if( i == 0 ) {
+        style.node_border = nb_rounded;
+      } else {
+        style.node_border = nb_underlined;
+      }
+      style.node_width       = 200;
+      style.node_borderwidth = 4;
+      _styles.append_val( style );
+    }
+
   }
 
   /* Sets all nodes in the mind-map to the given link style */
-  public void set_all_to_link( Array<Node> nodes, Style link ) {
+  public void set_all_to_style( Array<Node> nodes, Style style ) {
+    _styles.index( 10 ).copy( style );
+    set_all_to_style_helper( nodes, style );
+  }
+
+  /* Updates the nodes */
+  private void set_all_to_style_helper( Array<Node> nodes, Style style ) {
     for( int i=0; i<nodes.length; i++ ) {
       set_node_to_style( nodes.index( i ), style );
-      set_all_to_style( nodes.index( i ).children(), style );
+      set_all_to_style_helper( nodes.index( i ).children(), style );
     }
   }
 
   /* Sets all nodes at the specified levels to the given link style */
-  public void set_levels_to_style( Array<Node> nodes, int levels, Style style, int level=0 ) {
+  public void set_levels_to_style( Array<Node> nodes, int levels, Style style ) {
+    for( int i=0; i<10; i++ ) {
+      if( (levels & (1 << i)) != 0 ) {
+        _styles.index( i ).copy( style );
+      }
+    }
+    set_levels_to_style_helper( nodes, levels, style, 0 );
+  }
+
+  /* Helper function for the set_levels_to_style */
+  private void set_levels_to_style_helper( Array<Node> nodes, int levels, Style style, int level ) {
     for( int i=0; i<nodes.length; i++ ) {
       if( (levels & (1 << level)) != 0 ) {
         set_node_to_style( nodes.index( i ), style );
       }
-      set_levels_to_style( nodes.index( i ).children(), levels, style, (level + 1) );
+      set_levels_to_style_helper( nodes.index( i ).children(), levels, style, (level + 1) );
     }
   }
 
   /* Sets the given node's link style to the given style */
   public void set_node_to_style( Node node, Style style ) {
-    node.style = style;
+    node.style.copy( style );
+  }
+
+  /* Returns the link type with the given name */
+  public LinkType? get_link_type( string name ) {
+    for( int i=0; i<_link_types.length; i++ ) {
+      var link_type = _link_types.index( i );
+      if( link_type.name() == name ) {
+        return( link_type );
+      }
+    }
+    return( null );
   }
 
   /* Returns the list of available link types */
-  public Array<LinkTypes> get_link_types() {
+  public Array<LinkType> get_link_types() {
     return( _link_types );
+  }
+
+  /* Returns the node border with the given name */
+  public NodeBorder? get_node_border( string name ) {
+    for( int i=0; i<_node_borders.length; i++ ) {
+      var node_border = _node_borders.index( i );
+      if( node_border.name() == name ) {
+        return( node_border );
+      }
+    }
+    return( null );
+  }
+
+  /* Return the list of available node borders */
+  public Array<NodeBorder> get_node_borders() {
+    return( _node_borders );
   }
 
 }

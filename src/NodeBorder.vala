@@ -21,14 +21,17 @@
 
 public interface NodeBorder : Object {
 
-  /* Returns the name of the link type */
+  /* Returns the search name of the node border */
   public abstract string name();
 
-  /* Returns the name of the link icon */
+  /* Returns the name of the node border */
+  public abstract string display_name();
+
+  /* Returns the name of the node border icon */
   public abstract string icon_name();
 
-  /* Draw method for the link */
-  public abstract void draw( Cairo.Context ctx, double x, double y, double w, double h );
+  /* Draw method for the node border */
+  public abstract void draw( Cairo.Context ctx, double x, double y, double w, double h, bool horizontal, bool motion );
 
 }
 

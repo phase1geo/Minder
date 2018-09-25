@@ -24,8 +24,13 @@ public class LinkTypeSquared : Object, LinkType {
   /* Default constructor */
   public LinkTypeSquared() {}
 
-  /* Returns the name of the link type */
+  /* Returns the search name */
   public string name() {
+    return( "squared" );
+  }
+
+  /* Returns the name of the link type */
+  public string display_name() {
     return( _( "Squared" ) );
   }
 

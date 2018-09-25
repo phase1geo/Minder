@@ -24,8 +24,13 @@ public class LinkTypeStraight : Object, LinkType {
   /* Default constructor */
   public LinkTypeStraight() {}
 
-  /* Returns the name of the link type */
+  /* Returns the search name */
   public string name() {
+    return( "straight" );
+  }
+
+  /* Returns the name of the link type */
+  public string display_name() {
     return( _( "Straight" ) );
   }
 

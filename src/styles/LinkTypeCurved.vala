@@ -24,8 +24,13 @@ public class LinkTypeCurved : Object, LinkType {
   /* Default constructor */
   public LinkTypeCurved() {}
 
-  /* Returns the name of the link type */
+  /* Returns the search name */
   public string name() {
+    return( "curved" );
+  }
+
+  /* Returns the name of the link type */
+  public string display_name() {
     return( _( "Curved" ) );
   }
 

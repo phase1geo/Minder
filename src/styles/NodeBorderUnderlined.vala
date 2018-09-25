@@ -24,8 +24,13 @@ public class NodeBorderUnderlined : Object, NodeBorder {
   /* Default constructor */
   public NodeBorderUnderlined() {}
 
-  /* Returns the name of the link type */
+  /* Search name of this instance */
   public string name() {
+    return( "underlined" );
+  }
+
+  /* Returns the name of the link type */
+  public string display_name() {
     return( _( "Underlined" ) );
   }
 

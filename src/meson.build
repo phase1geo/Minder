@@ -26,7 +26,7 @@ sources += files(
     'styles/LinkTypeStraight.vala',
     'styles/LinkTypeSquared.vala',
     'styles/LinkTypeCurved.vala',
-    'styles/NodeBorderUnderline.vala',
+    'styles/NodeBorderUnderlined.vala',
     'styles/NodeBorderSquared.vala',
     'styles/NodeBorderRounded.vala',
     'styles/NodeBorderPill.vala',

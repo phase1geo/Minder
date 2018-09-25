@@ -24,8 +24,13 @@ public class NodeBorderSquared : Object, NodeBorder {
   /* Default constructor */
   public NodeBorderSquared() {}
 
-  /* Returns the name of the link type */
+  /* Returns the searchable name of the node border */
   public string name() {
+    return( "squared" );
+  }
+
+  /* Returns the name of the node border to display (should be translatable) */
+  public string display_name() {
     return( _( "Squared Off" ) );
   }
 
@@ -35,7 +40,7 @@ public class NodeBorderSquared : Object, NodeBorder {
   }
 
   /* Draw method for the node border */
-  public void draw( Cairo.Context ctx, double x, double y, double w, double h ) {
+  public void draw( Cairo.Context ctx, double x, double y, double w, double h, bool horizontal, bool motion ) {
     ctx.rectangle( x, y, w, h );
     ctx.stroke();
   }
