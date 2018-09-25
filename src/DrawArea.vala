@@ -92,6 +92,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   public signal void changed();
   public signal void node_changed();
+  public signal void connection_changed();
   public signal void theme_changed();
   public signal void scale_changed( double scale );
   public signal void show_properties( string? tab, bool grab_note );
@@ -516,6 +517,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns the current node */
   public Node? get_current_node() {
     return( _current_node );
+  }
+
+  /* Returns the current connection */
+  public Connection? get_current_connection() {
+    return( _current_connection );
   }
 
   /* Returns the current layout */

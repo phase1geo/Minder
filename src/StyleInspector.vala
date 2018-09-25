@@ -36,7 +36,7 @@ public enum StyleAffects {
   ALL
 }
 
-public class StyleInspector : Box {
+public class StyleInspector : Stack {
 
   private DrawArea                   _da;
   private GLib.Settings              _settings;
@@ -48,8 +48,6 @@ public class StyleInspector : Box {
   public static Styles styles = new Styles();
 
   public StyleInspector( DrawArea da, GLib.Settings settings ) {
-
-    Object( orientation:Orientation.VERTICAL, spacing:10 );
 
     _da            = da;
     _settings      = settings;
@@ -63,44 +61,85 @@ public class StyleInspector : Box {
     _current_style.node_width       = settings.get_int( "style-node-width" );
     _current_style.node_borderwidth = settings.get_int( "style-node-borderwidth" );
 
-    /* Create the UI */
-    add_link_ui();
-    add_node_ui();
-    add_button_bar();
+    /* Set the transition duration information */
+    transition_duration = 500;
+    transition_type     = StackTransitionType.OVER_DOWN_UP;
+
+    var empty_box = new Box( Orientation.VERTICAL, 10 );
+    var empty_lbl = new Label( _( "<big>Select a node or connection to view/edit its style</big>" ) );
+    var node_box  = new Box( Orientation.VERTICAL, 10 );
+    var conn_box  = new Box( Orientation.VERTICAL, 10 );
+
+    empty_lbl.use_markup = true;
+    empty_box.pack_start( empty_lbl, true, true );
+
+    add_named( node_box,  "node" );
+    add_named( conn_box,  "connection" );
+    add_named( empty_box, "empty" );
+
+    /* Create the UI for nodes */
+    var link     = create_link_ui();
+    var node     = create_node_ui();
+    var node_bar = create_node_button_bar();
+
+    node_box.pack_start( link,     false, true );
+    node_box.pack_start( node,     false, true );
+    node_box.pack_end(   node_bar, false, true );
+
+    /* Create the UI for connections */
+    var conn     = create_connection_ui();
+    var conn_bar = create_connection_button_bar();
+
+    conn_box.pack_start( conn,     false, true );
+    conn_box.pack_end(   conn_bar, false, true );
+
+    /* Listen for changes to the current node and connection */
+    _da.node_changed.connect( handle_node_changed );
+    _da.connection_changed.connect( handle_connection_changed );
 
   }
 
   /* Adds the options to manipulate line options */
-  private void add_link_ui() {
+  private Box create_link_ui() {
 
     var box = new Box( Orientation.VERTICAL, 0 );
+
     var lbl = new Label( _( "<b>Link Options</b>" ) );
     lbl.use_markup = true;
-
     lbl.xalign = (float)0;
 
-    var ltbox  = new Box( Orientation.HORIZONTAL, 0 );
-    ltbox.border_width = 10;
+    var link_type = create_link_type_ui();
 
-    var link_types_lbl = new Label( _( "Line Type" ) );
+    box.pack_start( lbl,       false, true );
+    box.pack_start( link_type, false, true );
+
+    return( box );
+
+  }
+
+  /* Create the link type UI */
+  private Box create_link_type_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.border_width = 10;
+
+    var lbl = new Label( _( "Line Type" ) );
 
     /* Create the line types mode button */
     _link_types = new Granite.Widgets.ModeButton();
     _link_types.has_tooltip = true;
+    _link_types.button_release_event.connect( link_type_changed );
+    _link_types.query_tooltip.connect( link_type_show_tooltip );
+
     var link_types = styles.get_link_types();
     for( int i=0; i<link_types.length; i++ ) {
       _link_types.append_icon( link_types.index( i ).icon_name(), IconSize.SMALL_TOOLBAR );
     }
-    _link_types.button_release_event.connect( link_type_changed );
-    _link_types.query_tooltip.connect( link_type_show_tooltip );
 
-    ltbox.pack_start( link_types_lbl, false, false );
-    ltbox.pack_end(   _link_types,    false, false );
+    box.pack_start( lbl,         false, false );
+    box.pack_end(   _link_types, false, false );
 
-    box.pack_start( lbl,   false, true, 0 );
-    box.pack_start( ltbox, false, true, 0 );
-
-    pack_start( box, false, true );
+    return( box );
 
   }
 
@@ -127,37 +166,47 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  /* Adds the options to manipulate line options */
-  private void add_node_ui() {
+  /* Creates the options to manipulate node options */
+  private Box create_node_ui() {
 
-    var box = new Box( Orientation.VERTICAL, 0 );
+    var box = new Box( Orientation.VERTICAL, 5 );
+
     var lbl = new Label( _( "<b>Node Options</b>" ) );
     lbl.use_markup = true;
+    lbl.xalign     = (float)0;
 
-    lbl.xalign = (float)0;
+    var node_border = create_node_border_ui();
 
-    var nbbox  = new Box( Orientation.HORIZONTAL, 0 );
-    nbbox.border_width = 10;
+    box.pack_start( lbl,         false, true );
+    box.pack_start( node_border, false, true );
 
-    var node_border_lbl = new Label( _( "Node Border" ) );
+    return( box );
+
+  }
+
+  /* Creates the node border panel */
+  private Box create_node_border_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Node Border" ) );
+
+    box.border_width = 10;
 
     /* Create the line types mode button */
     _node_borders = new Granite.Widgets.ModeButton();
     _node_borders.has_tooltip = true;
+    _node_borders.button_release_event.connect( node_border_changed );
+    _node_borders.query_tooltip.connect( node_border_show_tooltip );
+
     var node_borders = styles.get_node_borders();
     for( int i=0; i<node_borders.length; i++ ) {
       _node_borders.append_icon( node_borders.index( i ).icon_name(), IconSize.SMALL_TOOLBAR );
     }
-    _node_borders.button_release_event.connect( node_border_changed );
-    _node_borders.query_tooltip.connect( node_border_show_tooltip );
 
-    nbbox.pack_start( node_border_lbl, false, false );
-    nbbox.pack_end(   _node_borders,   false, false );
+    box.pack_start( lbl,           false, false );
+    box.pack_end(   _node_borders, false, false );
 
-    box.pack_start( lbl,   false, true, 0 );
-    box.pack_start( nbbox, false, true, 0 );
-
-    pack_start( box, false, true );
+    return( box );
 
   }
 
@@ -185,7 +234,7 @@ public class StyleInspector : Box {
   }
 
   /* Creates the button bar at the bottom of the Styles inspector */
-  private void add_button_bar() {
+  private Box create_node_button_bar() {
 
     var box      = new Box( Orientation.HORIZONTAL, 5 );
     var lbl      = new Label( _( "Apply Style To:" ) );
@@ -262,7 +311,7 @@ public class StyleInspector : Box {
     box.pack_start( mb,    false, false );
     box.pack_end(   apply, false, false );
 
-    pack_end( box, false, true );
+    return( box );
 
   }
 
@@ -270,6 +319,24 @@ public class StyleInspector : Box {
   private void set_affects( StyleAffects affects ) {
     _affects = affects;
     _settings.set_int( "style-affects", affects );
+  }
+
+  /* Creates the connection style UI */
+  private Box create_connection_ui() {
+
+    var box = new Box( Orientation.VERTICAL, 5 );
+
+    return( box );
+
+  }
+
+  /* Creates the connection button bar */
+  private Box create_connection_button_bar() {
+
+    var box = new Box( Orientation.HORIZONTAL, 5 );
+
+    return( box );
+
   }
 
   /* Apply the changes */
@@ -283,6 +350,26 @@ public class StyleInspector : Box {
     }
     _da.changed();
     _da.queue_draw();
+  }
+
+  /* Called whenever the current node changes */
+  private void handle_node_changed() {
+    Node? node = _da.get_current_node();
+    if( node != null ) {
+      // Show the node styles pane
+    } else {
+      // Hide the styles pane?
+    }
+  }
+
+  /* Called whenever the current connection changes */
+  private void handle_connection_changed() {
+    Connection? conn = _da.get_current_connection();
+    if( conn != null ) {
+      // Show the connection styles pane
+    } else {
+      // Hide the styles pane?
+    }
   }
 
 }

@@ -326,6 +326,17 @@ public class Node : Object {
     _image = ni;
   }
 
+  /* Get the level of this node */
+  public int get_level() {
+    Node p     = parent;
+    int  level = 0;
+    while( p != null ) {
+      level++;
+      p = p.parent;
+    }
+    return( level );
+  }
+
   /* Returns true if the node does not have a parent */
   public bool is_root() {
     return( parent == null );
