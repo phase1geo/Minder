@@ -63,7 +63,7 @@ public class Style {
   }
 
   /* Stores this style in XML format */
-  public void store( Xml.Node* parent ) {
+  public void save( Xml.Node* parent ) {
     Xml.Node* n = new Xml.Node( null, "style" );
     n->set_prop( "link_type",        link_type.name() );
     n->set_prop( "link_width",       link_width.to_string() );

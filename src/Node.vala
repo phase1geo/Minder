@@ -627,6 +627,7 @@ public class Node : Object {
           case "nodename"  :  load_name( it );  break;
           case "nodenote"  :  load_note( it );  break;
           case "nodeimage" :  load_image( da.image_manager, it, layout );  break;
+          case "style"     :  style.load( it );  break;
           case "nodes"     :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
@@ -676,6 +677,8 @@ public class Node : Object {
     if( _image != null ) {
       _image.save( node );
     }
+
+    style.save( node );
 
     node->new_text_child( null, "nodename", name );
     node->new_text_child( null, "nodenote", note );
