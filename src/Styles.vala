@@ -42,13 +42,17 @@ public class Styles {
     _link_types.append_val( lt_curved );
 
     /* Create the node borders */
+    var nb_none       = new NodeBorderNone();
     var nb_underlined = new NodeBorderUnderlined();
+    var nb_bracketed  = new NodeBorderBracket();
     var nb_squared    = new NodeBorderSquared();
     var nb_rounded    = new NodeBorderRounded();
     var nb_pilled     = new NodeBorderPill();
 
     _node_borders = new Array<NodeBorder>();
+    _node_borders.append_val( nb_none );
     _node_borders.append_val( nb_underlined );
+    _node_borders.append_val( nb_bracketed );
     _node_borders.append_val( nb_squared );
     _node_borders.append_val( nb_rounded );
     _node_borders.append_val( nb_pilled );
@@ -140,6 +144,11 @@ public class Styles {
   /* Return the list of available node borders */
   public Array<NodeBorder> get_node_borders() {
     return( _node_borders );
+  }
+
+  /* Returns the style for the given level */
+  public Style get_style_for_level( uint level ) {
+    return( _styles.index( (level > 9) ? 9 : level ) );
   }
 
 }

@@ -148,6 +148,7 @@ public class StyleInspector : Stack {
     var link_types = styles.get_link_types();
     if( _link_types.selected < link_types.length ) {
       _current_style.link_type = link_types.index( _link_types.selected );
+      apply_changes();
     }
     return( false );
   }
@@ -215,6 +216,7 @@ public class StyleInspector : Stack {
     var node_borders = styles.get_node_borders();
     if( _node_borders.selected < node_borders.length ) {
       _current_style.node_border = node_borders.index( _node_borders.selected );
+      apply_changes();
     }
     return( false );
   }
@@ -305,7 +307,7 @@ public class StyleInspector : Stack {
       case StyleAffects.CURRENT :  menu_lbl.label = curr.label;  break;
     }
 
-    apply.activate.connect( apply_changes );
+    apply.activate.connect( apply_changes_to );
 
     box.pack_start( lbl,   false, false );
     box.pack_start( mb,    false, false );
@@ -340,16 +342,21 @@ public class StyleInspector : Stack {
   }
 
   /* Apply the changes */
-  private void apply_changes() {
-    if( _affects == StyleAffects.CURRENT ) {
+  private void apply_changes( StyleAffects affects = StyleAffects.CURRENT ) {
+    if( affects == StyleAffects.CURRENT ) {
       styles.set_node_to_style( _da.get_current_node(), _current_style );
-    } else if( _affects == StyleAffects.ALL ) {
+    } else if( affects == StyleAffects.ALL ) {
       styles.set_all_to_style( _da.get_nodes(), _current_style );
     } else {
       styles.set_levels_to_style( _da.get_nodes(), (1 << _affects), _current_style );
     }
     _da.changed();
     _da.queue_draw();
+  }
+
+  /* Applies the changes to the given affect type */
+  private void apply_changes_to() {
+    apply_changes( _affects );
   }
 
   /* Called whenever the current node changes */

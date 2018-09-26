@@ -79,10 +79,15 @@ public class Style {
     link_type.draw( ctx, fx, fy, tx, ty, horizontal );
   }
 
-  /* Draws the border around a node with the given dimensions and stored styling */
-  public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, bool horizontal, bool motion ) {
+  /* Draws the shape behind a node with the given dimensions and stored styling */
+  public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
     ctx.set_line_width( node_borderwidth );
-    node_border.draw( ctx, x, y, w, h, horizontal, motion );
+    node_border.draw_border( ctx, x, y, w, h, s );
+  }
+
+  /* Draws the node fill */
+  public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
+    node_border.draw_fill( ctx, x, y, w, h, s );
   }
 
 }

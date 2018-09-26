@@ -19,34 +19,30 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class NodeBorderUnderlined : Object, NodeBorder {
+public class NodeBorderNone : Object, NodeBorder {
 
   /* Default constructor */
-  public NodeBorderUnderlined() {}
+  public NodeBorderNone() {}
 
-  /* Search name of this instance */
+  /* Returns the searchable name of the node border */
   public string name() {
-    return( "underlined" );
+    return( "none" );
   }
 
-  /* Returns the name of the link type */
+  /* Returns the name of the node border to display (should be translatable) */
   public string display_name() {
-    return( _( "Underlined" ) );
+    return( _( "None" ) );
   }
 
   /* Returns the name of the icon */
   public string icon_name() {
-    return( "minder-node-border-underlined-symbolic" );
+    return( "minder-node-border-none-symbolic" );
   }
 
-  /* Draw method for the link */
-  public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
-    ctx.move_to( x, (y + h) );
-    ctx.line_to( (x + w), (y + h) );
-    ctx.stroke();
-  }
+  /* Draw method for the node border */
+  public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {}
 
-  /* Draw method for the fill */
+  /* Draw method for the node fill */
   public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
     ctx.rectangle( x, y, w, h );
     ctx.fill();

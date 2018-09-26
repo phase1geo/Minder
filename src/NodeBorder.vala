@@ -31,7 +31,10 @@ public interface NodeBorder : Object {
   public abstract string icon_name();
 
   /* Draw method for the node border */
-  public abstract void draw( Cairo.Context ctx, double x, double y, double w, double h, bool horizontal, bool motion );
+  public abstract void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s );
+
+  /* Draw method for the node fill */
+  public abstract void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s );
 
 }
 

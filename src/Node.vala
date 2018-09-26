@@ -211,6 +211,7 @@ public class Node : Object {
     _layout.set_width( (int)_max_width * Pango.SCALE );
     _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     set_layout( layout );
+    style.copy( StyleInspector.styles.get_style_for_level( 1 ) );
   }
 
   /* Constructor initializing string */
@@ -222,6 +223,7 @@ public class Node : Object {
     _layout.set_width( (int)_max_width * Pango.SCALE );
     _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     set_layout( layout );
+    style.copy( StyleInspector.styles.get_style_for_level( 0 ) );
   }
 
   /* Copies an existing node to this node */
@@ -278,6 +280,7 @@ public class Node : Object {
     mode         = n.mode;
     parent       = n.parent;
     side         = n.side;
+    style.copy( n.style );
   }
 
   /* Returns the associated ID of this node */
@@ -327,9 +330,9 @@ public class Node : Object {
   }
 
   /* Get the level of this node */
-  public int get_level() {
+  public uint get_level() {
     Node p     = parent;
-    int  level = 0;
+    uint level = 0;
     while( p != null ) {
       level++;
       p = p.parent;
@@ -1464,10 +1467,11 @@ public class Node : Object {
       x = posx + (_width / 2);
       y = posy + (_height / 2);
     } else {
+      double height = (style.node_border.name() == "underlined") ? _height : (_height / 2);
       switch( side ) {
         case NodeSide.LEFT :
           x = posx;
-          y = posy + _height;
+          y = posy + height;
           break;
         case NodeSide.TOP :
           x = posx + (_width / 2);
@@ -1475,7 +1479,7 @@ public class Node : Object {
           break;
         case NodeSide.RIGHT :
           x = posx + _width;
-          y = posy + _height;
+          y = posy + height;
           break;
         default :
           x = posx + (_width / 2);
@@ -1486,12 +1490,28 @@ public class Node : Object {
   }
 
   /* Draws the border around the node */
-  protected void draw_border( Context ctx, Theme theme, bool motion ) {
+  protected void draw_shape( Context ctx, Theme theme, RGBA border_color, bool motion ) {
 
-    var horizontal = (side & NodeSide.horizontal()) != 0;
+    /* Set the fill color */
+    if( mode == NodeMode.CURRENT ) {
+      set_context_color_with_alpha( ctx, theme.nodesel_background, (motion ? 0.2 : 1) );
+    } else if( is_root() ) {
+      set_context_color_with_alpha( ctx, border_color, (motion ? 0.2 : 1) );
+    } else {
+      set_context_color_with_alpha( ctx, theme.background, (motion ? 0.2 : 1) );
+    }
 
+    /* Draw the fill */
+    style.draw_fill( ctx, posx, posy, _width, _height, side );
+
+    /* Draw the border */
+    set_context_color_with_alpha( ctx, border_color, (motion ? 0.2 : 1) );
     ctx.set_line_width( style.node_borderwidth );
-    style.draw_border( ctx, posx, posy, _width, _height, horizontal, motion );
+
+    /* If we are in a vertical orientation and the border type is underlined, draw nothing */
+    if( ((side & NodeSide.horizontal()) != 0) || (style.node_border.name() != "underlined") ) {
+      style.draw_border( ctx, posx, posy, _width, _height, side );
+    }
 
   }
 
@@ -1716,18 +1736,20 @@ public class Node : Object {
 
     double parent_x;
     double parent_y;
+    double height = (style.node_border.name() == "underlined") ? _height : (_height / 2);
 
     /* Get the parent's link point */
     parent.link_point( out parent_x, out parent_y );
 
     set_context_color( ctx, _link_color );
     ctx.set_line_cap( LineCap.ROUND );
+
     switch( side ) {
       case NodeSide.LEFT :
-        style.draw_link( ctx, parent_x, parent_y, (posx + _width), (posy + _height), true );
+        style.draw_link( ctx, parent_x, parent_y, (posx + _width), (posy + height), true );
         break;
       case NodeSide.RIGHT :
-        style.draw_link( ctx, parent_x, parent_y, posx, (posy + _height), true );
+        style.draw_link( ctx, parent_x, parent_y, posx, (posy + height), true );
         break;
       case NodeSide.TOP :
         style.draw_link( ctx, parent_x, parent_y, (posx + (_width / 2)), (posy + _height), false );
@@ -1750,9 +1772,12 @@ public class Node : Object {
     double x = resizer_on_left() ? posx : (posx + _width - 8);
     double y = posy;
 
-    set_context_color( ctx, theme.foreground );
+    set_context_color( ctx, theme.background );
     ctx.set_line_width( 1 );
     ctx.rectangle( x, y, 8, 8 );
+    ctx.fill_preserve();
+
+    set_context_color( ctx, theme.foreground );
     ctx.stroke();
 
   }
@@ -1763,7 +1788,7 @@ public class Node : Object {
     /* If this is a root node, draw specifically for a root node */
     if( is_root() ) {
 
-      draw_border( ctx, theme, motion );
+      draw_shape( ctx, theme, theme.root_background, motion );
       draw_name( ctx, theme, motion );
       draw_image( ctx, theme, motion );
       if( is_leaf() ) {
@@ -1778,7 +1803,7 @@ public class Node : Object {
 
     /* Otherwise, draw the node as a non-root node */
     } else {
-      draw_border( ctx, theme, motion );
+      draw_shape( ctx, theme, _link_color, motion );
       draw_name( ctx, theme, motion );
       draw_image( ctx, theme, motion );
       if( is_leaf() ) {

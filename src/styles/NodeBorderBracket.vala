@@ -19,34 +19,59 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class NodeBorderUnderlined : Object, NodeBorder {
+public class NodeBorderBracket : Object, NodeBorder {
 
   /* Default constructor */
-  public NodeBorderUnderlined() {}
+  public NodeBorderBracket() {}
 
-  /* Search name of this instance */
+  /* Returns the searchable name of the node border */
   public string name() {
-    return( "underlined" );
+    return( "bracket" );
   }
 
-  /* Returns the name of the link type */
+  /* Returns the name of the node border to display (should be translatable) */
   public string display_name() {
-    return( _( "Underlined" ) );
+    return( _( "Square Bracket" ) );
   }
 
   /* Returns the name of the icon */
   public string icon_name() {
-    return( "minder-node-border-underlined-symbolic" );
+    return( "minder-node-border-bracket-symbolic" );
   }
 
-  /* Draw method for the link */
+  /* Draw method for the node border */
   public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
-    ctx.move_to( x, (y + h) );
-    ctx.line_to( (x + w), (y + h) );
+    var d = 10;
+    switch( s ) {
+      case NodeSide.LEFT :
+        ctx.move_to( (x + w - d), y );
+        ctx.line_to( (x + w), y );
+        ctx.line_to( (x + w), (y + h) );
+        ctx.line_to( (x + w - d), (y + h) );
+        break;
+      case NodeSide.TOP :
+        ctx.move_to( x, (y + h - d) );
+        ctx.line_to( x, (y + h) );
+        ctx.line_to( (x + w), (y + h) );
+        ctx.line_to( (x + w), (y + h - d) );
+        break;
+      case NodeSide.RIGHT :
+        ctx.move_to( (x + d), y );
+        ctx.line_to( x, y );
+        ctx.line_to( x, (y + h) );
+        ctx.line_to( (x + d), (y + h) );
+        break;
+      case NodeSide.BOTTOM :
+        ctx.move_to( x, (y + d) );
+        ctx.line_to( x, y );
+        ctx.line_to( (x + w), y );
+        ctx.line_to( (x + w), (y + d) );
+        break;
+    }
     ctx.stroke();
   }
 
-  /* Draw method for the fill */
+  /* Draw method for the node fill */
   public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
     ctx.rectangle( x, y, w, h );
     ctx.fill();

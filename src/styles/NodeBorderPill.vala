@@ -31,7 +31,7 @@ public class NodeBorderPill : Object, NodeBorder {
 
   /* Returns the name of the node border to display (should be translatable) */
   public string display_name() {
-    return( _( "Pill" ) );
+    return( _( "Pill-shaped" ) );
   }
 
   /* Returns the name of the icon */
@@ -39,9 +39,25 @@ public class NodeBorderPill : Object, NodeBorder {
     return( "minder-node-border-pill-symbolic" );
   }
 
+  private void draw_common( Cairo.Context ctx, double x, double y, double w, double h ) {
+    var d = 5;
+    ctx.move_to( (x + d), y );
+    ctx.line_to( (x + w - d), y );
+    ctx.curve_to( (x + w - d), y, (x + w + d), (y + (h / 2)), (x + w - d), (y + h) );
+    ctx.line_to( (x + d), (y + h) );
+    ctx.curve_to( (x + d), (y + h), (x - d), (y + (h / 2)), (x + d), y );
+  }
+
   /* Draw method for the node border */
-  public void draw( Cairo.Context ctx, double x, double y, double w, double h, bool horizontal, bool motion ) {
-    // TBD
+  public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
+    draw_common( ctx, x, y, w, h );
+    ctx.stroke();
+  }
+
+  /* Draw method for the node fill */
+  public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
+    draw_common( ctx, x, y, w, h );
+    ctx.fill();
   }
 
 }
