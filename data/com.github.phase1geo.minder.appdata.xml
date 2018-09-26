@@ -81,6 +81,7 @@
         <ul>
           <li>Fixed bugs related to editing unicode characters in map area.</li>
         </ul>
+      </description>
     </release>
     <release version="1.1" date="2018-09-18">
       <description>
