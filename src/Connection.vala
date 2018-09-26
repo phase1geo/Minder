@@ -32,12 +32,16 @@ public enum ConnMode {
 
 public class Connection {
 
-  private Node?  _from_node = null;
-  private Node?  _to_node   = null;
-  private double _posx;
-  private double _posy;
-  private double _dragx;
-  private double _dragy;
+  private Node?   _from_node = null;
+  private Node?   _to_node   = null;
+  private double  _posx;
+  private double  _posy;
+  private double  _dragx;
+  private double  _dragy;
+  private double? _last_fx = null;
+  private double? _last_fy = null;
+  private double? _last_tx = null;
+  private double? _last_ty = null;
 
   public string   title { get; set; default = ""; }
   public ConnMode mode  { get; set; default = ConnMode.NONE; }
@@ -185,6 +189,8 @@ public class Connection {
 
     double start_x, start_y;
     double end_x,   end_y;
+    double dragx = _dragx;
+    double dragy = _dragy;
 
     get_connect_point( _from_node, out start_x, out start_y );
 
@@ -195,10 +201,18 @@ public class Connection {
       get_connect_point( _to_node, out end_x, out end_y );
     }
 
+    /* Calculate the difference between the from and end values */
+    if( _last_fx != null ) {
+      dragx += ((start_x - _last_fx) + (end_x - _last_tx));
+      dragy += ((start_y - _last_fy) + (end_y - _last_ty));
+      stdout.printf( "dragx: %g, dragy: %g, sx: %g, sy: %g, ex: %g, ey: %g, fx: %g, fy: %g, tx: %g, ty: %g\n",
+                     dragx, dragy, start_x, start_y, end_x, end_y, _last_fx, _last_fy, _last_tx, _last_ty );
+    }
+
     /* The value of t is always 0.5 */
     var color = theme.connection_color;
-    var ax    = _dragx - (((start_x + end_x) * 0.5) - _dragx);
-    var ay    = _dragy - (((start_y + end_y) * 0.5) - _dragy);
+    var ax    = dragx - (((start_x + end_x) * 0.5) - dragx);
+    var ay    = dragy - (((start_y + end_y) * 0.5) - dragy);
 
     /* Draw the curve */
     ctx.set_line_width( 2 );
@@ -223,7 +237,7 @@ public class Connection {
     }
 
     /* Draw the drag circle */
-    ctx.arc( _dragx, _dragy, 6, 0, (2 * Math.PI) );
+    ctx.arc( dragx, dragy, 6, 0, (2 * Math.PI) );
     ctx.fill();
 
     /* If we are selected draw the endpoints */
@@ -235,6 +249,12 @@ public class Connection {
     }
 
     ctx.restore();
+
+    /* Save the last used values */
+    _last_fx = start_x;
+    _last_fy = start_y;
+    _last_tx = end_x;
+    _last_ty = end_y;
 
   }
 

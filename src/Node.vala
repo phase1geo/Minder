@@ -1509,9 +1509,7 @@ public class Node : Object {
     ctx.set_line_width( style.node_borderwidth );
 
     /* If we are in a vertical orientation and the border type is underlined, draw nothing */
-    if( ((side & NodeSide.horizontal()) != 0) || (style.node_border.name() != "underlined") ) {
-      style.draw_border( ctx, posx, posy, _width, _height, side );
-    }
+    style.draw_border( ctx, posx, posy, _width, _height, side );
 
   }
 
