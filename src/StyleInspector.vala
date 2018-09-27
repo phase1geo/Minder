@@ -42,6 +42,7 @@ public class StyleInspector : Stack {
   private GLib.Settings              _settings;
   private Granite.Widgets.ModeButton _link_types;
   private Granite.Widgets.ModeButton _node_borders;
+  private FontButton                 _font_chooser;
   private Style                      _current_style;
   private StyleAffects               _affects;
 
@@ -123,7 +124,7 @@ public class StyleInspector : Stack {
     var box = new Box( Orientation.HORIZONTAL, 0 );
     box.border_width = 10;
 
-    var lbl = new Label( _( "Line Type" ) );
+    var lbl = new Label( _( "Line Style" ) );
 
     /* Create the line types mode button */
     _link_types = new Granite.Widgets.ModeButton();
@@ -177,9 +178,11 @@ public class StyleInspector : Stack {
     lbl.xalign     = (float)0;
 
     var node_border = create_node_border_ui();
+    var node_font   = create_node_font_ui();
 
     box.pack_start( lbl,         false, true );
     box.pack_start( node_border, false, true );
+    box.pack_start( node_font,   false, true );
 
     return( box );
 
@@ -189,7 +192,7 @@ public class StyleInspector : Stack {
   private Box create_node_border_ui() {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Node Border" ) );
+    var lbl = new Label( _( "Border Style" ) );
 
     box.border_width = 10;
 
@@ -233,6 +236,28 @@ public class StyleInspector : Stack {
       return( true );
     }
     return( false );
+  }
+
+  /* Creates the node font selector */
+  private Box create_node_font_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Font" ) );
+
+    box.border_width = 10;
+
+    _font_chooser = new FontButton();
+    _font_chooser.font_set.connect(() => {
+      _current_style.node_font.set_family( _font_chooser.get_font_family().get_name() );
+      _current_style.node_font.set_size( _font_chooser.get_font_size() );
+      apply_changes();
+    });
+
+    box.pack_start( lbl,         false, false );
+    box.pack_end( _font_chooser, false, true );
+
+    return( box );
+
   }
 
   /* Creates the button bar at the bottom of the Styles inspector */

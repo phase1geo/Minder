@@ -103,30 +103,32 @@ public class Node : Object {
 
   /* Member variables */
   protected int          _id;
-  protected double       _width       = 0;
-  protected double       _height      = 0;
-  protected double       _padx        = 0;
-  protected double       _pady        = 0;
-  protected double       _ipadx       = 0;
-  protected double       _ipady       = 0;
-  protected double       _task_radius = 5;
-  protected double       _alpha       = 0.3;
-  private   int          _cursor      = 0;   /* Location of the cursor when editing */
+  protected double       _width        = 0;
+  protected double       _height       = 0;
+  protected double       _padx         = 10;
+  protected double       _pady         = 5;
+  protected double       _ipadx        = 6;
+  protected double       _ipady        = 3;
+  protected double       _task_radius  = 5;
+  protected double       _alpha        = 0.3;
+  private   int          _cursor       = 0;   /* Location of the cursor when editing */
   protected Array<Node>  _children;
-  private   NodeMode     _mode        = NodeMode.NONE;
-  private   int          _task_count  = 0;
-  private   int          _task_done   = 0;
-  private   bool         _folded      = false;
-  private   Pango.Layout _layout      = null;
-  private   double       _posx        = 0;
-  private   double       _posy        = 0;
-  private   int          _selstart    = 0;
-  private   int          _selend      = 0;
-  private   int          _selanchor   = 0;
+  private   NodeMode     _mode         = NodeMode.NONE;
+  private   int          _task_count   = 0;
+  private   int          _task_done    = 0;
+  private   bool         _folded       = false;
+  private   Pango.Layout _pango_layout = null;
+  private   double       _posx         = 0;
+  private   double       _posy         = 0;
+  private   int          _selstart     = 0;
+  private   int          _selend       = 0;
+  private   int          _selanchor    = 0;
   private   RGBA         _link_color;
-  private   double       _min_width   = 50;
-  private   double       _max_width   = 200;
-  private   NodeImage    _image       = null;
+  private   double       _min_width    = 50;
+  private   NodeImage?   _image        = null;
+  private   Layout?      _layout       = null;
+  private   Style        _style        = new Style();
+  private   double       _max_width    = 200;
 
   /* Properties */
   public string name { get; set; default = ""; }
@@ -199,31 +201,49 @@ public class Node : Object {
     }
   }
   public bool     attached   { get; set; default = false; }
-  public int      line_width { get; set; default = 4; }
-  public int      radius     { get; set; default = 10; }
-  public Style    style      { get; set; default = new Style(); }
+  public Style    style {
+    get {
+      return( _style );
+    }
+    set {
+      _style.copy( value );
+      _pango_layout.set_font_description( _style.node_font );
+      _pango_layout.set_width( _style.node_width * Pango.SCALE );
+      _layout.handle_update_by_edit( this );
+    }
+  }
+  public Layout   layout {
+    get {
+      return( _layout );
+    }
+    set {
+      _layout = value;
+      _layout.set_side( this );
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).layout = value;
+      }
+    }
+  }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
     _id       = _next_id++;
     _children = new Array<Node>();
-    _layout   = da.create_pango_layout( null );
-    _layout.set_width( (int)_max_width * Pango.SCALE );
-    _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
-    set_layout( layout );
-    style.copy( StyleInspector.styles.get_style_for_level( 1 ) );
+    _pango_layout = da.create_pango_layout( null );
+    _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
+    this.layout = layout;
+    style = StyleInspector.styles.get_style_for_level( 1 );
   }
 
   /* Constructor initializing string */
   public Node.with_name( DrawArea da, string n, Layout? layout ) {
-    name      = n;
-    _id       = _next_id++;
-    _children = new Array<Node>();
-    _layout   = da.create_pango_layout( n );
-    _layout.set_width( (int)_max_width * Pango.SCALE );
-    _layout.set_wrap( Pango.WrapMode.WORD_CHAR );
-    set_layout( layout );
-    style.copy( StyleInspector.styles.get_style_for_level( 0 ) );
+    name          = n;
+    _id           = _next_id++;
+    _children     = new Array<Node>();
+    _pango_layout = da.create_pango_layout( n );
+    _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
+    this.layout = layout;
+    style = StyleInspector.styles.get_style_for_level( 0 );
   }
 
   /* Copies an existing node to this node */
@@ -257,30 +277,27 @@ public class Node : Object {
 
   /* Copies just the variables of the node, minus the children nodes */
   public void copy_variables( Node n, ImageManager im ) {
-    _width       = n._width;
-    _height      = n._height;
-    _padx        = n._padx;
-    _pady        = n._pady;
-    _ipadx       = n._ipadx;
-    _ipady       = n._ipady;
-    _task_radius = n._task_radius;
-    _alpha       = n._alpha;
-    _cursor      = n._cursor;
-    _task_count  = n._task_count;
-    _task_done   = n._task_done;
-    _folded      = n._folded;
-    _layout      = n._layout;
-    _posx        = n._posx;
-    _posy        = n._posy;
-    _link_color  = n._link_color;
-    _max_width   = n._max_width;
-    _image       = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, (int)n._max_width );
-    name         = n.name;
-    note         = n.note;
-    mode         = n.mode;
-    parent       = n.parent;
-    side         = n.side;
-    style.copy( n.style );
+    _width        = n._width;
+    _height       = n._height;
+    _task_radius  = n._task_radius;
+    _alpha        = n._alpha;
+    _cursor       = n._cursor;
+    _task_count   = n._task_count;
+    _task_done    = n._task_done;
+    _folded       = n._folded;
+    _pango_layout = n._pango_layout;
+    _posx         = n._posx;
+    _posy         = n._posy;
+    _link_color   = n._link_color;
+    _max_width    = n._max_width;
+    _image        = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, (int)n._max_width );
+    name          = n.name;
+    note          = n.note;
+    mode          = n.mode;
+    parent        = n.parent;
+    side          = n.side;
+    layout        = n.layout;
+    style         = n.style;
   }
 
   /* Returns the associated ID of this node */
@@ -564,16 +581,22 @@ public class Node : Object {
   }
 
   /* Loads the image information from the given XML node */
-  private void load_image( ImageManager im, Xml.Node* n, Layout? layout ) {
+  private void load_image( ImageManager im, Xml.Node* n ) {
     _image = new NodeImage.from_xml( im, n, (int)_max_width );
     if( !_image.valid ) {
       _image = null;
-      layout.handle_update_by_edit( this );
+      _layout.handle_update_by_edit( this );
     }
   }
 
+  /* Loads the style information from the given XML node */
+  private void load_style( Xml.Node* n ) {
+    _style.load( n );
+    _pango_layout.set_font_description( _style.node_font );
+  }
+
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, Layout? layout ) {
+  public virtual void load( DrawArea da, Xml.Node* n ) {
 
     string? i = n->get_prop( "id" );
     if( i != null ) {
@@ -596,7 +619,7 @@ public class Node : Object {
     string? mw = n->get_prop( "maxwidth" );
     if( mw != null ) {
       _max_width = double.parse( mw );
-      _layout.set_width( (int)_max_width * Pango.SCALE );
+      _pango_layout.set_width( (int)_max_width * Pango.SCALE );
     }
 
     string? w = n->get_prop( "width" );
@@ -635,19 +658,24 @@ public class Node : Object {
       _link_color.parse( c );
     }
 
+    string? l = n->get_prop( "layout" );
+    if( l != null ) {
+      _layout = da.layouts.get_layout( l );
+    }
+
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           case "nodename"  :  load_name( it );  break;
           case "nodenote"  :  load_note( it );  break;
-          case "nodeimage" :  load_image( da.image_manager, it, layout );  break;
-          case "style"     :  style.load( it );  break;
+          case "nodeimage" :  load_image( da.image_manager, it );  break;
+          case "style"     :  load_style( it );  break;
           case "nodes"     :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var child = new Node( da, layout );
-                child.load( da, it2, layout );
-                child.attach( this, -1, null, null );
+                var child = new Node( da, _layout );
+                child.load( da, it2 );
+                child.attach( this, -1, null );
               }
             }
             break;
@@ -710,7 +738,7 @@ public class Node : Object {
   }
 
   /* Main method for importing an OPML <outline> into a node */
-  public void import_opml( DrawArea da, Xml.Node* parent, int node_id, ref Array<int>? expand_state, Theme theme, Layout layout ) {
+  public void import_opml( DrawArea da, Xml.Node* parent, int node_id, ref Array<int>? expand_state, Theme theme ) {
 
     /* Get the node name */
     string? n = parent->get_prop( "text" );
@@ -750,8 +778,8 @@ public class Node : Object {
     for( Xml.Node* it2 = parent->children; it2 != null; it2 = it2->next ) {
       if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "outline") ) {
         var child = new Node( da, layout );
-        child.attach( this, -1, theme, layout );
-        child.import_opml( da, it2, node_id, ref expand_state, theme, layout );
+        child.attach( this, -1, theme );
+        child.import_opml( da, it2, node_id, ref expand_state, theme );
       }
     }
 
@@ -808,14 +836,14 @@ public class Node : Object {
   public void update_size( Theme? theme, out double width_diff, out double height_diff ) {
     width_diff  = 0;
     height_diff = 0;
-    if( _layout != null ) {
+    if( _pango_layout != null ) {
       int text_width, text_height;
       double orig_width  = _width;
       double orig_height = _height;
       double img_width   = (_image != null) ? (_image.width  + (_padx * 2)) : 0;
       double img_height  = (_image != null) ? (_image.height + _pady)       : 0;
-      _layout.set_markup( name_markup( theme ), -1 );
-      _layout.get_size( out text_width, out text_height );
+      _pango_layout.set_markup( name_markup( theme ), -1 );
+      _pango_layout.get_size( out text_width, out text_height );
       _width     = (text_width  / Pango.SCALE) + (_padx * 2) + task_width() + note_width();
       if( img_width > _width ) {
         _width = img_width;
@@ -827,17 +855,17 @@ public class Node : Object {
   }
 
   /* Resizes the node width by the given amount */
-  public virtual void resize( double diff, Layout layout ) {
+  public virtual void resize( double diff ) {
     diff = resizer_on_left() ? (0 - diff) : diff;
     if( _image == null ) {
-      if( (diff < 0) ? ((_max_width + diff) <= _min_width) : !_layout.is_wrapped() ) return;
+      if( (diff < 0) ? ((_max_width + diff) <= _min_width) : !_pango_layout.is_wrapped() ) return;
       _max_width += diff;
     } else {
       if( (_max_width + diff) < _min_width ) return;
       _max_width += diff;
       _image.set_width( (int)_max_width );
     }
-    _layout.set_width( (int)_max_width * Pango.SCALE );
+    _pango_layout.set_width( (int)_max_width * Pango.SCALE );
     layout.handle_update_by_edit( this );
   }
 
@@ -857,10 +885,10 @@ public class Node : Object {
         w = _width;
         h = _height;
       } else {
-        x = posx - (line_width / 2);
+        x = posx - (style.node_borderwidth / 2);
         y = posy;
-        w = _width  + line_width;
-        h = _height + (line_width / 2);
+        w = _width  + style.node_borderwidth;
+        h = _height + (style.node_borderwidth / 2);
       }
     }
   }
@@ -967,8 +995,8 @@ public class Node : Object {
   }
 
   /* Moves this node into the proper position within the parent node */
-  public void move_to_position( Node child, NodeSide side, double x, double y, Layout layout ) {
-    child.detach( side, layout );
+  public void move_to_position( Node child, NodeSide side, double x, double y ) {
+    child.detach( side );
     child.attached = true;
     for( int i=0; i<_children.length; i++ ) {
       if( _children.index( i ).side == child.side ) {
@@ -976,24 +1004,24 @@ public class Node : Object {
           case NodeSide.LEFT  :
           case NodeSide.RIGHT :
             if( y < _children.index( i ).posy ) {
-              child.attach( this, i, null, layout );
+              child.attach( this, i, null );
               return;
             }
             break;
           case NodeSide.TOP :
           case NodeSide.BOTTOM :
             if( x < _children.index( i ).posx ) {
-              child.attach( this, i, null, layout );
+              child.attach( this, i, null );
               return;
             }
             break;
         }
       } else if( _children.index( i ).side > child.side ) {
-        child.attach( this, i, null, layout );
+        child.attach( this, i, null );
         return;
       }
     }
-    child.attach( this, -1, null, layout );
+    child.attach( this, -1, null );
   }
 
   /* Sets the cursor from the given mouse coordinates */
@@ -1002,7 +1030,7 @@ public class Node : Object {
     int img_height = (_image != null) ? (int)(_image.height + _pady) : 0;
     int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
     int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
-    if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
+    if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor += trailing;
       if( motion ) {
         if( cursor > _selanchor ) {
@@ -1028,7 +1056,7 @@ public class Node : Object {
     int img_height = (_image != null) ? (int)(_image.height + _pady) : 0;
     int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
     int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
-    if( _layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
+    if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor += trailing;
       int word_start = name.substring( 0, cursor ).last_index_of( " " );
       int word_end   = name.index_of( " ", cursor );
@@ -1071,14 +1099,14 @@ public class Node : Object {
   public void move_cursor_vertically( int dir ) {
     int line, x;
     int index, trailing;
-    _layout.index_to_line_x( _cursor, false, out line, out x );
+    _pango_layout.index_to_line_x( _cursor, false, out line, out x );
     line += dir;
     if( line < 0 ) {
       line = 0;
-    } else if( line >= _layout.get_line_count() ) {
-      line = _layout.get_line_count() - 1;
+    } else if( line >= _pango_layout.get_line_count() ) {
+      line = _pango_layout.get_line_count() - 1;
     }
-    var line_layout = _layout.get_line( line );
+    var line_layout = _pango_layout.get_line( line );
     line_layout.x_to_index( x, out index, out trailing );
     _cursor = index + trailing;
     _selend = _selstart;
@@ -1097,7 +1125,7 @@ public class Node : Object {
   }
 
   /* Handles a backspace key event */
-  public void edit_backspace( Layout layout ) {
+  public void edit_backspace() {
     if( _cursor > 0 ) {
       if( _selstart != _selend ) {
         name    = name.splice( _selstart, _selend );
@@ -1112,7 +1140,7 @@ public class Node : Object {
   }
 
   /* Handles a delete key event */
-  public void edit_delete( Layout layout ) {
+  public void edit_delete() {
     if( _cursor < name.length ) {
       if( _selstart != _selend ) {
         name    = name.splice( _selstart, _selend );
@@ -1126,7 +1154,7 @@ public class Node : Object {
   }
 
   /* Inserts the given string at the current cursor position and adjusts cursor */
-  public void edit_insert( string s, Layout layout ) {
+  public void edit_insert( string s ) {
     if( _selstart != _selend ) {
       name    = name.splice( _selstart, _selend, s );
       _cursor = _selstart + s.length;
@@ -1150,7 +1178,7 @@ public class Node : Object {
   }
 
   /* Detaches this node from its parent node */
-  public virtual void detach( NodeSide side, Layout? layout ) {
+  public virtual void detach( NodeSide side ) {
     if( parent != null ) {
       int idx = index();
       propagate_task_info_up( (0 - _task_count), (0 - _task_done) );
@@ -1158,28 +1186,29 @@ public class Node : Object {
       if( layout != null ) {
         layout.handle_update_by_delete( parent, idx, side, tree_size );
       }
-      parent      = null;
-      attached    = false;
+      parent   = null;
+      attached = false;
     }
   }
 
   /* Removes this node from the node tree along with all descendents */
-  public virtual void delete( Layout layout ) {
-    detach( side, layout );
+  public virtual void delete() {
+    detach( side );
   }
 
   /* Attaches this node as a child of the given node */
-  public virtual void attach( Node parent, int index, Theme? theme, Layout? layout ) {
+  public virtual void attach( Node parent, int index, Theme? theme ) {
     if( is_root() ) {
-      attach_root( parent, theme, layout );
+      attach_root( parent, theme );
     } else {
-      attach_nonroot( parent, index, theme, layout );
+      attach_nonroot( parent, index, theme );
     }
   }
 
   /* Attaches this node to the end of the given parent when this node is a root node */
-  public virtual void attach_root( Node parent, Theme? theme, Layout? layout ) {
+  public virtual void attach_root( Node parent, Theme? theme ) {
     this.parent = parent;
+    layout = parent.layout;
     if( layout != null ) {
       if( children().length > 0 ) {
         side = children().index( children().length - 1 ).side;
@@ -1187,15 +1216,16 @@ public class Node : Object {
       }
       layout.initialize( this );
     }
-    attach_common( -1, theme, layout );
+    attach_common( -1, theme );
   }
 
-  public virtual void attach_nonroot( Node parent, int index, Theme? theme, Layout? layout ) {
+  public virtual void attach_nonroot( Node parent, int index, Theme? theme ) {
     this.parent = parent;
-    attach_common( index, theme, layout );
+    layout = parent.layout;
+    attach_common( index, theme );
   }
 
-  protected virtual void attach_common( int index, Theme? theme, Layout? layout ) {
+  protected virtual void attach_common( int index, Theme? theme ) {
     if( (parent._children.length == 0) && (parent._task_count == 1) ) {
       parent.propagate_task_info_up( (0 - parent._task_count), (0 - parent._task_done) );
       parent._task_count = 0;
@@ -1340,7 +1370,7 @@ public class Node : Object {
    Set all ancestor nodes fold indicators to false.  Returns the last node
    that is last node that is folded.
   */
-  public Node reveal( Layout layout ) {
+  public Node reveal() {
     var tmp = parent;
     while( tmp != null ) {
       if( !tmp._folded ) {
@@ -1548,11 +1578,11 @@ public class Node : Object {
       case NodeMode.CURRENT  :  set_context_color( ctx, theme.nodesel_foreground );  break;
       default                :  set_context_color( ctx, (parent == null) ? theme.root_foreground : theme.foreground );  break;
     }
-    Pango.cairo_show_layout( ctx, _layout );
+    Pango.cairo_show_layout( ctx, _pango_layout );
 
     /* Draw the insertion cursor if we are in the 'editable' state */
     if( mode == NodeMode.EDITABLE ) {
-      var rect = _layout.index_to_pos( _cursor );
+      var rect = _pango_layout.index_to_pos( _cursor );
       set_context_color( ctx, theme.text_cursor );
       double ix, iy;
       ix = (posx + _padx + twidth) + (rect.x / Pango.SCALE) - 1;
@@ -1721,7 +1751,7 @@ public class Node : Object {
 
     /* Draw the line under the text name */
     set_context_color( ctx, _link_color );
-    ctx.set_line_width( line_width );
+    ctx.set_line_width( style.node_borderwidth );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( x, y );
     ctx.line_to( (x + w), y );
@@ -1830,20 +1860,6 @@ public class Node : Object {
     if( !is_root() && !draw_current ) {
       draw_link( ctx, theme );
     }
-  }
-
-  /* Called whenever the user changes the layout */
-  public void set_layout( Layout? layout ) {
-    if( layout == null ) return;
-    _padx  = layout.padx;
-    _pady  = layout.pady;
-    _ipadx = layout.ipadx;
-    _ipady = layout.ipady;
-    layout.set_side( this );
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).set_layout( layout );
-    }
-    _layout.set_font_description( layout.get_font_description() );
   }
 
   /* Outputs the node's information to standard output */

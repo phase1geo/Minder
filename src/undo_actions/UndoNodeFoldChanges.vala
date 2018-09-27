@@ -37,7 +37,7 @@ public class UndoNodeFoldChanges : UndoItem {
   private void change_folds( DrawArea da, bool value ) {
     for( int i=0; i<_changes.length; i++ ) {
       _changes.index( i ).folded = value;
-      da.get_layout().handle_update_by_fold( _changes.index( i ) );
+      _changes.index( i ).layout.handle_update_by_fold( _changes.index( i ) );
     }
     da.queue_draw();
     da.changed();

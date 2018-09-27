@@ -52,7 +52,7 @@ public class AnimatorNodes : AnimatorAction {
       double y = _pos.old_y( i ) + ((_pos.new_y( i ) - _pos.old_y( i )) * divisor);
       _pos.node( i ).posx = x;
       _pos.node( i ).posy = y;
-      _pos.node( i ).side = da.get_layout().get_side( _pos.node( i ) );
+      _pos.node( i ).side = _pos.node( i ).layout.get_side( _pos.node( i ) );
     }
   }
 

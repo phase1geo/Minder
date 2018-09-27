@@ -37,7 +37,7 @@ public class UndoNodePaste : UndoItem {
 
   /* Performs an undo operation for this data */
   public override void undo( DrawArea da ) {
-    _n.detach( _n.side, da.get_layout() );
+    _n.detach( _n.side );
     da.set_current_node( null );
     da.queue_draw();
     da.changed();
@@ -45,7 +45,7 @@ public class UndoNodePaste : UndoItem {
 
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
-    _n.attach( _parent, _index, null, da.get_layout() );
+    _n.attach( _parent, _index, null );
     da.set_current_node( _n );
     da.queue_draw();
     da.changed();

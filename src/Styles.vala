@@ -111,7 +111,7 @@ public class Styles {
 
   /* Sets the given node's link style to the given style */
   public void set_node_to_style( Node node, Style style ) {
-    node.style.copy( style );
+    node.style = style;
   }
 
   /* Returns the link type with the given name */

@@ -42,7 +42,7 @@ public class UndoNodeInsert : UndoItem {
     if( _parent_folded ) {
       _parent.folded = true;
     }
-    _n.detach( _n.side, da.get_layout() );
+    _n.detach( _n.side );
     if( da.get_current_node() == _n ) {
       da.set_current_node( null );
     }
@@ -53,7 +53,7 @@ public class UndoNodeInsert : UndoItem {
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
     _parent.folded = _parent_folded;
-    _n.attach( _parent, _index, null, da.get_layout() );
+    _n.attach( _parent, _index, null );
     da.set_current_node( _n );
     da.queue_draw();
     da.changed();

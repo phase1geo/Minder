@@ -19,15 +19,22 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
+using Pango;
+
 public class Style {
 
-  public LinkType   link_type        { get; set; }
-  public int        link_width       { get; set; }
-  public NodeBorder node_border      { get; set; }
-  public int        node_width       { get; set; }
-  public int        node_borderwidth { get; set; }
+  public LinkType        link_type        { get; set; }
+  public int             link_width       { get; set; }
+  public NodeBorder      node_border      { get; set; }
+  public int             node_width       { get; set; }
+  public int             node_borderwidth { get; set; }
+  public FontDescription node_font        { get; set; }
 
-  public Style() {}
+  public Style() {
+    node_font = new FontDescription();
+    node_font.set_family( "Sans" );
+    node_font.set_size( 11 * Pango.SCALE );
+  }
 
   /* Copies the given style to this style */
   public void copy( Style s ) {
@@ -36,6 +43,7 @@ public class Style {
     node_border      = s.node_border;
     node_width       = s.node_width;
     node_borderwidth = s.node_borderwidth;
+    node_font        = s.node_font.copy();
   }
 
   /* Loads the style information in the given XML node */
@@ -60,6 +68,10 @@ public class Style {
     if( nbw != null ) {
       node_borderwidth = int.parse( nbw );
     }
+    string? nf = node->get_prop( "node_font" );
+    if( nf != null ) {
+      node_font = FontDescription.from_string( nf );
+    }
   }
 
   /* Stores this style in XML format */
@@ -70,6 +82,7 @@ public class Style {
     n->set_prop( "node_border",      node_border.name() );
     n->set_prop( "node_width",       node_width.to_string() );
     n->set_prop( "node_borderwidth", node_borderwidth.to_string() );
+    n->set_prop( "node_font",        node_font.to_string() );
     parent->add_child( n );
   }
 

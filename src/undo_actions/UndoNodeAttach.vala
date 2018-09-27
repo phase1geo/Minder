@@ -67,15 +67,15 @@ public class UndoNodeAttach : UndoItem {
   public override void undo( DrawArea da ) {
     int index = 0;
     da.animator.add_nodes( "undo attach" );
-    _n.detach( _new_side, da.get_layout() );
+    _n.detach( _new_side );
     if( _old_parent == null ) {
       da.add_root( _n, _old_index );
       _n.set_node_info( _old_info, ref index );
     } else {
       _n.set_node_info( _old_info, ref index );
       _n.side = _old_side;
-      da.get_layout().propagate_side( _n, _old_side );
-      _n.attach_nonroot( _old_parent, _old_index, da.get_theme(), da.get_layout() );
+      _n.layout.propagate_side( _n, _old_side );
+      _n.attach_nonroot( _old_parent, _old_index, da.get_theme() );
     }
     da.set_current_node( _n );
     da.animator.animate();
@@ -90,16 +90,16 @@ public class UndoNodeAttach : UndoItem {
     if( _old_parent == null ) {
       da.remove_root( _old_index );
     } else {
-      _n.detach( _old_side, da.get_layout() );
+      _n.detach( _old_side );
     }
     _n.side = _new_side;
-    da.get_layout().propagate_side( _n, _new_side );
+    _n.layout.propagate_side( _n, _new_side );
     if( _old_parent == null ) {
-      _n.attach_root( _new_parent, da.get_theme(), da.get_layout() );
+      _n.attach_root( _new_parent, da.get_theme() );
       _n.set_node_info( _new_info, ref index );
     } else {
       _n.set_node_info( _new_info, ref index );
-      _n.attach_nonroot( _new_parent, _new_index, da.get_theme(), da.get_layout() );
+      _n.attach_nonroot( _new_parent, _new_index, da.get_theme() );
     }
     da.set_current_node( _n );
     da.animator.animate();

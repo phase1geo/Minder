@@ -43,10 +43,10 @@ public class UndoNodeMove : UndoItem {
   public void change( DrawArea da, NodeSide old_side, NodeSide new_side, int new_index ) {
     Node parent = _n.parent;
     da.animator.add_nodes( "undo move" );
-    _n.detach( old_side, da.get_layout() );
+    _n.detach( old_side );
     _n.side = new_side;
-    da.get_layout().propagate_side( _n, new_side );
-    _n.attach( parent, new_index, null, da.get_layout() );
+    _n.layout.propagate_side( _n, new_side );
+    _n.attach( parent, new_index, null );
     da.animator.animate();
   }
 

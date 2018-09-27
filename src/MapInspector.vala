@@ -112,9 +112,11 @@ public class MapInspector : Box {
     var names = new Array<string>();
     _da.layouts.get_names( ref names );
     if( _layouts.selected < names.length ) {
-      string name = names.index( _layouts.selected );
-      _da.set_layout( name );
-      _balance.set_sensitive( _da.layouts.get_layout( name ).balanceable );
+      var   name   = names.index( _layouts.selected );
+      var   layout = _da.layouts.get_layout( name );
+      Node? node   = _da.get_current_node();
+      _da.set_layout( name, ((node == null) ? null : node.get_root()) );
+      _balance.set_sensitive( layout.balanceable );
     }
     return( false );
   }
@@ -259,9 +261,6 @@ public class MapInspector : Box {
     /* Make sure the current theme is selected */
     select_theme( _da.get_theme_name() );
 
-    /* Update the current layout in the UI */
-    select_layout( _da.get_layout_name() );
-
     /* Initialize the button states */
     node_changed();
 
@@ -270,9 +269,20 @@ public class MapInspector : Box {
   /* Called whenever the current node is changed */
   private void node_changed() {
 
-    var foldable   = _da.completed_tasks_foldable();
-    var unfoldable = _da.unfoldable();
+    Node? current    = _da.get_current_node();
+    var   foldable   = _da.completed_tasks_foldable();
+    var   unfoldable = _da.unfoldable();
 
+    /* Select the layout that corresponds with the current tree */
+    if( current != null ) {
+      select_layout( current.layout.name );
+    } else if( _da.get_nodes().length > 0 ) {
+      select_layout( _da.get_nodes().index( 0 ).layout.name );
+    } else {
+      select_layout( _da.layouts.get_default().name );
+    }
+
+    /* Update the sensitivity of the buttons */
     _fold_completed.set_sensitive( foldable );
     _unfold_all.set_sensitive( unfoldable );
 

@@ -205,8 +205,6 @@ public class Connection {
     if( _last_fx != null ) {
       dragx += ((start_x - _last_fx) + (end_x - _last_tx));
       dragy += ((start_y - _last_fy) + (end_y - _last_ty));
-      stdout.printf( "dragx: %g, dragy: %g, sx: %g, sy: %g, ex: %g, ey: %g, fx: %g, fy: %g, tx: %g, ty: %g\n",
-                     dragx, dragy, start_x, start_y, end_x, end_y, _last_fx, _last_fy, _last_tx, _last_ty );
     }
 
     /* The value of t is always 0.5 */
