@@ -68,6 +68,7 @@ sources += files(
     'ImageManager.vala',
     'Layout.vala',
     'Layouts.vala',
+    'LinkDash.vala',
     'LinkType.vala',
     'MainWindow.vala',
     'MapInspector.vala',

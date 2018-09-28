@@ -24,6 +24,7 @@ using Gtk;
 public class Styles {
 
   private static Array<LinkType>   _link_types;
+  private static Array<LinkDash>   _link_dashes;
   private static Array<NodeBorder> _node_borders;
   private        Array<Style>      _styles;
 
@@ -40,6 +41,19 @@ public class Styles {
     _link_types.append_val( lt_straight );
     _link_types.append_val( lt_squared );
     _link_types.append_val( lt_curved );
+
+    /* Create the link dashes */
+    var ld_solid  = new LinkDash( "solid",     _( "Solid" ),      {} );
+    var ld_dotted = new LinkDash( "dotted",    _( "Dotted" ),     {5, 2} );
+    var ld_sdash  = new LinkDash( "shortdash", _( "Short Dash" ), {5, 5} );
+    var ld_ldash  = new LinkDash( "longdash",  _( "Long Dash" ),  {20, 5} );
+
+    /* Add the link dashes to the list */
+    _link_dashes = new Array<LinkDash>();
+    _link_dashes.append_val( ld_solid );
+    _link_dashes.append_val( ld_dotted );
+    _link_dashes.append_val( ld_sdash );
+    _link_dashes.append_val( ld_ldash );
 
     /* Create the node borders */
     var nb_none       = new NodeBorderNone();
@@ -63,6 +77,8 @@ public class Styles {
       var style = new Style();
       style.link_type  = lt_straight;
       style.link_width = 4;
+      style.link_arrow = false;
+      style.link_dash  = ld_solid;
       if( i == 0 ) {
         style.node_border = nb_rounded;
       } else {
@@ -128,6 +144,22 @@ public class Styles {
   /* Returns the list of available link types */
   public Array<LinkType> get_link_types() {
     return( _link_types );
+  }
+
+  /* Returns the link dash with the given name */
+  public LinkDash? get_link_dash( string name ) {
+    for( int i=0; i<_link_dashes.length; i++ ) {
+      var link_dash = _link_dashes.index( i );
+      if( link_dash.name == name ) {
+        return( link_dash );
+      }
+    }
+    return( null );
+  }
+
+  /* Returns the list of available link dashes */
+  public Array<LinkDash> get_link_dashes() {
+    return( _link_dashes );
   }
 
   /* Returns the node border with the given name */

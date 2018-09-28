@@ -26,6 +26,7 @@ public class Style {
   public LinkType        link_type        { get; set; }
   public int             link_width       { get; set; }
   public bool            link_arrow       { get; set; }
+  public LinkDash        link_dash        { get; set; }
   public NodeBorder      node_border      { get; set; }
   public int             node_width       { get; set; }
   public int             node_borderwidth { get; set; }
@@ -42,6 +43,7 @@ public class Style {
     link_type        = s.link_type;
     link_width       = s.link_width;
     link_arrow       = s.link_arrow;
+    link_dash        = s.link_dash;
     node_border      = s.node_border;
     node_width       = s.node_width;
     node_borderwidth = s.node_borderwidth;
@@ -62,6 +64,10 @@ public class Style {
     string? la = node->get_prop( "link_arrow" );
     if( la != null ) {
       link_arrow = bool.parse( la );
+    }
+    string? ld = node->get_prop( "link_dash" );
+    if( ld != null ) {
+      link_dash = StyleInspector.styles.get_link_dash( ld );
     }
 
     string? nb = node->get_prop( "node_border" );
@@ -85,21 +91,28 @@ public class Style {
 
   /* Stores this style in XML format */
   public void save( Xml.Node* parent ) {
+
     Xml.Node* n = new Xml.Node( null, "style" );
+
     n->set_prop( "link_type",        link_type.name() );
     n->set_prop( "link_width",       link_width.to_string() );
     n->set_prop( "link_arrow",       link_arrow.to_string() );
+    n->set_prop( "link_dash",        link_dash.name );
+
     n->set_prop( "node_border",      node_border.name() );
     n->set_prop( "node_width",       node_width.to_string() );
     n->set_prop( "node_borderwidth", node_borderwidth.to_string() );
     n->set_prop( "node_font",        node_font.to_string() );
+
     parent->add_child( n );
+
   }
 
   /* Draws the link with the given information, applying the stored styling */
   public void draw_link( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal,
                          out double tailx, out double taily, out double tipx, out double tipy ) {
     ctx.set_line_width( link_width );
+    link_dash.set_context( ctx );
     link_type.draw( ctx, from_x, from_y, to_x, to_y, horizontal, out tailx, out taily, out tipx, out tipy );
   }
 
