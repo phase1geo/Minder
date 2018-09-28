@@ -40,15 +40,24 @@ public class LinkTypeSquared : Object, LinkType {
   }
 
   /* Draw method for the link */
-  public void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal ) {
+  public void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal,
+                    out double fx, out double fy, out double tx, out double ty ) {
     ctx.move_to( from_x, from_y );
     if( horizontal ) {
       var mid_x = (from_x + to_x) / 2;
+      fx = mid_x;
+      fy = from_y;
+      tx = mid_x;
+      ty = to_y;
       ctx.line_to( mid_x, from_y );
       ctx.line_to( mid_x, to_y );
       ctx.line_to( to_x,  to_y );
     } else {
       var mid_y = (from_y + to_y) / 2;
+      fx = from_x;
+      fy = mid_y;
+      tx = to_x;
+      ty = mid_y;
       ctx.line_to( from_x, mid_y );
       ctx.line_to( to_x,   mid_y );
       ctx.line_to( to_x,   to_y );

@@ -25,6 +25,7 @@ public class Style {
 
   public LinkType        link_type        { get; set; }
   public int             link_width       { get; set; }
+  public bool            link_arrow       { get; set; }
   public NodeBorder      node_border      { get; set; }
   public int             node_width       { get; set; }
   public int             node_borderwidth { get; set; }
@@ -40,6 +41,7 @@ public class Style {
   public void copy( Style s ) {
     link_type        = s.link_type;
     link_width       = s.link_width;
+    link_arrow       = s.link_arrow;
     node_border      = s.node_border;
     node_width       = s.node_width;
     node_borderwidth = s.node_borderwidth;
@@ -48,6 +50,7 @@ public class Style {
 
   /* Loads the style information in the given XML node */
   public void load( Xml.Node* node ) {
+
     string? lt = node->get_prop( "link_type" );
     if( lt != null ) {
       link_type = StyleInspector.styles.get_link_type( lt );
@@ -56,6 +59,11 @@ public class Style {
     if( lw != null ) {
       link_width = int.parse( lw );
     }
+    string? la = node->get_prop( "link_arrow" );
+    if( la != null ) {
+      link_arrow = bool.parse( la );
+    }
+
     string? nb = node->get_prop( "node_border" );
     if( nb != null ) {
       node_border = StyleInspector.styles.get_node_border( nb );
@@ -72,6 +80,7 @@ public class Style {
     if( nf != null ) {
       node_font = FontDescription.from_string( nf );
     }
+
   }
 
   /* Stores this style in XML format */
@@ -79,6 +88,7 @@ public class Style {
     Xml.Node* n = new Xml.Node( null, "style" );
     n->set_prop( "link_type",        link_type.name() );
     n->set_prop( "link_width",       link_width.to_string() );
+    n->set_prop( "link_arrow",       link_arrow.to_string() );
     n->set_prop( "node_border",      node_border.name() );
     n->set_prop( "node_width",       node_width.to_string() );
     n->set_prop( "node_borderwidth", node_borderwidth.to_string() );
@@ -87,9 +97,10 @@ public class Style {
   }
 
   /* Draws the link with the given information, applying the stored styling */
-  public void draw_link( Cairo.Context ctx, double fx, double fy, double tx, double ty, bool horizontal ) {
+  public void draw_link( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal,
+                         out double fx, out double fy, out double tx, out double ty ) {
     ctx.set_line_width( link_width );
-    link_type.draw( ctx, fx, fy, tx, ty, horizontal );
+    link_type.draw( ctx, from_x, from_y, to_x, to_y, horizontal, out fx, out fy, out tx, out ty );
   }
 
   /* Draws the shape behind a node with the given dimensions and stored styling */

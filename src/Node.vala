@@ -1765,6 +1765,7 @@ public class Node : Object {
     double parent_x;
     double parent_y;
     double height = (style.node_border.name() == "underlined") ? _height : (_height / 2);
+    double fx = 0, fy = 0, tx = 0, ty = 0;
 
     /* Get the parent's link point */
     parent.link_point( out parent_x, out parent_y );
@@ -1774,18 +1775,67 @@ public class Node : Object {
 
     switch( side ) {
       case NodeSide.LEFT :
-        style.draw_link( ctx, parent_x, parent_y, (posx + _width), (posy + height), true );
+        style.draw_link( ctx, parent_x, parent_y, (posx + _width), (posy + height), true, out fx, out fy, out tx, out ty );
         break;
       case NodeSide.RIGHT :
-        style.draw_link( ctx, parent_x, parent_y, posx, (posy + height), true );
+        style.draw_link( ctx, parent_x, parent_y, posx, (posy + height), true, out fx, out fy, out tx, out ty );
         break;
       case NodeSide.TOP :
-        style.draw_link( ctx, parent_x, parent_y, (posx + (_width / 2)), (posy + _height), false );
+        style.draw_link( ctx, parent_x, parent_y, (posx + (_width / 2)), (posy + _height), false, out fx, out fy, out tx, out ty );
         break;
       case NodeSide.BOTTOM :
-        style.draw_link( ctx, parent_x, parent_y, (posx + (_width / 2)), posy, false );
+        style.draw_link( ctx, parent_x, parent_y, (posx + (_width / 2)), posy, false, out fx, out fy, out tx, out ty );
         break;
     }
+
+    /* Draw the arrow */
+    if( style.link_arrow ) {
+      draw_link_arrow( ctx, theme, fx, fy, tx, ty );
+    }
+
+  }
+
+  /*
+   Draws arrow point to the "to" node.  The tailx/y values should be the
+   bezier control point closest to the "to" node.
+  */
+  protected virtual void draw_link_arrow( Context ctx, Theme theme, double fx, double fy, double tx, double ty ) {
+
+    var adjust_x = (fx < tx) ? 0.505 : 0.495;
+    var adjust_y = (fy < ty) ? 0.505 : 0.495;
+
+    /* Draw the "shadow" arrow */
+    draw_arrow( ctx, theme.background, ((fx + tx) * adjust_x), ((fy + ty) * adjust_y), fx, fy );
+
+    /* Draw the arrow */
+    draw_arrow( ctx, _link_color, ((fx + tx) * 0.5), ((fy + ty) * 0.5), fx, fy );
+
+  }
+
+  protected virtual void draw_arrow( Context ctx, RGBA color, double tipx, double tipy, double tailx, double taily ) {
+
+    var arrowLength = 10; // can be adjusted
+    var dx = tipx - tailx;
+    var dy = tipy - taily;
+
+    var theta = Math.atan2( dy, dx );
+
+    var rad = 35 * (Math.PI / 180);  // 35 angle, can be adjusted
+    var x1  = tipx - arrowLength * Math.cos( theta + rad );
+    var y1  = tipy - arrowLength * Math.sin( theta + rad );
+
+    var phi2 = -35 * (Math.PI / 180);  // -35 angle, can be adjusted
+    var x2   = tipx - arrowLength * Math.cos( theta + phi2 );
+    var y2   = tipy - arrowLength * Math.sin( theta + phi2 );
+
+    /* Draw the arrow */
+    set_context_color( ctx, color );
+    ctx.set_line_width( 1 );
+    ctx.move_to( tipx, tipy );
+    ctx.line_to( x1, y1 );
+    ctx.line_to( x2, y2 );
+    ctx.close_path();
+    ctx.fill();
 
   }
 

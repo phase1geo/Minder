@@ -42,6 +42,7 @@ public class StyleInspector : Stack {
   private GLib.Settings              _settings;
   private Granite.Widgets.ModeButton _link_types;
   private Scale                      _link_width;
+  private Switch                     _link_arrow;
   private Granite.Widgets.ModeButton _node_borders;
   private Scale                      _node_borderwidth;
   private FontButton                 _font_chooser;
@@ -116,9 +117,11 @@ public class StyleInspector : Stack {
 
     var link_type  = create_link_type_ui();
     var link_width = create_link_width_ui();
+    var link_arrow = create_link_arrow_ui();
 
     cbox.pack_start( link_type,  false, true );
     cbox.pack_start( link_width, false, true );
+    cbox.pack_start( link_arrow, false, true );
 
     box.pack_start( lbl,  false, true );
     box.pack_start( cbox, false, true );
@@ -211,6 +214,31 @@ public class StyleInspector : Stack {
   private bool link_width_changed( ScrollType scroll, double value ) {
     _current_style.link_width = (int)value;
     apply_changes();
+    return( false );
+  }
+
+  /* Creates the link arrow UI element */
+  private Box create_link_arrow_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 5 );
+    var lbl = new Label( _( "Link Arrows" ) );
+    
+    _link_arrow = new Switch();
+    _link_arrow.set_active( false );  /* TBD */
+    _link_arrow.button_release_event.connect( link_arrow_changed );
+
+    box.pack_start( lbl,       false, false );
+    box.pack_end( _link_arrow, false, false );
+
+    return( box );
+
+  }
+
+  /* Called when the user clicks on the link arrow switch */
+  private bool link_arrow_changed( Gdk.EventButton e ) {
+    _current_style.link_arrow = !_current_style.link_arrow;
+    apply_changes();
+    // _settings.set_boolean( "enable-animations", _da.animator.enable );
     return( false );
   }
 
@@ -486,6 +514,7 @@ public class StyleInspector : Stack {
         }
       }
       _link_width.set_value( (double)_current_style.link_width );
+      _link_arrow.set_active( _current_style.link_arrow );
       var node_borders = styles.get_node_borders();
       for( int i=0; i<node_borders.length; i++ ) {
         if( node_borders.index( i ).name() == _current_style.node_border.name() ) {

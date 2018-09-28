@@ -31,7 +31,8 @@ public interface LinkType : Object {
   public abstract string icon_name();
 
   /* Draw method for the link */
-  public abstract void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal );
+  public abstract void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal,
+                             out double fx, out double fy, out double tx, out double ty );
 
 }
 
