@@ -41,11 +41,11 @@ public class LinkTypeStraight : Object, LinkType {
 
   /* Draw method for the link */
   public void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal,
-                    out double fx, out double fy, out double tx, out double ty ) {
-    fx = from_x;
-    fy = from_y;
-    tx = to_x;
-    ty = to_y;
+                    out double tailx, out double taily, out double tipx, out double tipy ) {
+    tailx = from_x;
+    taily = from_y;
+    tipx  = (from_x + to_x) / 2;
+    tipy  = (from_y + to_y) / 2;
     ctx.move_to( from_x, from_y );
     ctx.line_to( to_x,   to_y );
     ctx.stroke();

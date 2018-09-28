@@ -98,9 +98,9 @@ public class Style {
 
   /* Draws the link with the given information, applying the stored styling */
   public void draw_link( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal,
-                         out double fx, out double fy, out double tx, out double ty ) {
+                         out double tailx, out double taily, out double tipx, out double tipy ) {
     ctx.set_line_width( link_width );
-    link_type.draw( ctx, from_x, from_y, to_x, to_y, horizontal, out fx, out fy, out tx, out ty );
+    link_type.draw( ctx, from_x, from_y, to_x, to_y, horizontal, out tailx, out taily, out tipx, out tipy );
   }
 
   /* Draws the shape behind a node with the given dimensions and stored styling */

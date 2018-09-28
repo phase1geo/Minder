@@ -83,10 +83,12 @@ public class StyleInspector : Stack {
 
     /* Create the UI for nodes */
     var link     = create_link_ui();
+    var sep1     = new Separator( Orientation.HORIZONTAL );
     var node     = create_node_ui();
     var node_bar = create_node_button_bar();
 
     node_box.pack_start( link,     false, true );
+    node_box.pack_start( sep1,     false, true );
     node_box.pack_start( node,     false, true );
     node_box.pack_end(   node_bar, false, true );
 
@@ -212,6 +214,7 @@ public class StyleInspector : Stack {
 
   /* Called whenever the user changes the link width value */
   private bool link_width_changed( ScrollType scroll, double value ) {
+    if( value > 8 ) value = 8;
     _current_style.link_width = (int)value;
     apply_changes();
     return( false );
@@ -221,7 +224,7 @@ public class StyleInspector : Stack {
   private Box create_link_arrow_ui() {
 
     var box = new Box( Orientation.HORIZONTAL, 5 );
-    var lbl = new Label( _( "Link Arrows" ) );
+    var lbl = new Label( _( "Link Arrow" ) );
     
     _link_arrow = new Switch();
     _link_arrow.set_active( false );  /* TBD */
