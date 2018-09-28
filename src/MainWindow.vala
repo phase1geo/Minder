@@ -210,7 +210,8 @@ public class MainWindow : ApplicationWindow {
     var scale_lbl = new Label( _( "Zoom to Percent" ) );
     _zoom_scale   = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 );
     foreach (double mark in marks) {
-      _zoom_scale.add_mark( mark, PositionType.BOTTOM, "'" );
+      // _zoom_scale.add_mark( mark, PositionType.BOTTOM, "'" );
+      _zoom_scale.add_mark( mark, PositionType.BOTTOM, null );
     }
     _zoom_scale.has_origin = false;
     _zoom_scale.set_value( 100 );

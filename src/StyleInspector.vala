@@ -41,7 +41,9 @@ public class StyleInspector : Stack {
   private DrawArea                   _da;
   private GLib.Settings              _settings;
   private Granite.Widgets.ModeButton _link_types;
+  private Scale                      _link_width;
   private Granite.Widgets.ModeButton _node_borders;
+  private Scale                      _node_borderwidth;
   private FontButton                 _font_chooser;
   private Style                      _current_style;
   private StyleAffects               _affects;
@@ -68,8 +70,8 @@ public class StyleInspector : Stack {
 
     var empty_box = new Box( Orientation.VERTICAL, 10 );
     var empty_lbl = new Label( _( "<big>Select a node or connection to view/edit its style</big>" ) );
-    var node_box  = new Box( Orientation.VERTICAL, 10 );
-    var conn_box  = new Box( Orientation.VERTICAL, 10 );
+    var node_box  = new Box( Orientation.VERTICAL, 20 );
+    var conn_box  = new Box( Orientation.VERTICAL, 5 );
 
     empty_lbl.use_markup = true;
     empty_box.pack_start( empty_lbl, true, true );
@@ -109,10 +111,17 @@ public class StyleInspector : Stack {
     lbl.use_markup = true;
     lbl.xalign = (float)0;
 
-    var link_type = create_link_type_ui();
+    var cbox = new Box( Orientation.VERTICAL, 10 );
+    cbox.border_width = 10;
 
-    box.pack_start( lbl,       false, true );
-    box.pack_start( link_type, false, true );
+    var link_type  = create_link_type_ui();
+    var link_width = create_link_width_ui();
+
+    cbox.pack_start( link_type,  false, true );
+    cbox.pack_start( link_width, false, true );
+
+    box.pack_start( lbl,  false, true );
+    box.pack_start( cbox, false, true );
 
     return( box );
 
@@ -122,9 +131,10 @@ public class StyleInspector : Stack {
   private Box create_link_type_ui() {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.border_width = 10;
+    box.homogeneous = true;
 
     var lbl = new Label( _( "Line Style" ) );
+    lbl.xalign = (float)0;
 
     /* Create the line types mode button */
     _link_types = new Granite.Widgets.ModeButton();
@@ -137,8 +147,8 @@ public class StyleInspector : Stack {
       _link_types.append_icon( link_types.index( i ).icon_name(), IconSize.SMALL_TOOLBAR );
     }
 
-    box.pack_start( lbl,         false, false );
-    box.pack_end(   _link_types, false, false );
+    box.pack_start( lbl,         false, true );
+    box.pack_end(   _link_types, false, true );
 
     return( box );
 
@@ -168,6 +178,42 @@ public class StyleInspector : Stack {
     return( false );
   }
 
+  /* Create widget for handling the width of a link */
+  private Box create_link_width_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Line Width" ) );
+    lbl.xalign = (float)0;
+
+    _link_width = new Scale.with_range( Orientation.HORIZONTAL, 2, 8, 1 );
+    _link_width.draw_value = false;
+
+    for( int i=2; i<=8; i++ ) {
+      if( (i % 2) == 0 ) {
+        _link_width.add_mark( i, PositionType.BOTTOM, "%d".printf( i ) );
+      } else {
+        _link_width.add_mark( i, PositionType.BOTTOM, null );
+      }
+    }
+
+    _link_width.change_value.connect( link_width_changed );
+
+    box.pack_start( lbl,         false, true );
+    box.pack_end(   _link_width, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the user changes the link width value */
+  private bool link_width_changed( ScrollType scroll, double value ) {
+    _current_style.link_width = (int)value;
+    apply_changes();
+    return( false );
+  }
+
   /* Creates the options to manipulate node options */
   private Box create_node_ui() {
 
@@ -177,12 +223,19 @@ public class StyleInspector : Stack {
     lbl.use_markup = true;
     lbl.xalign     = (float)0;
 
-    var node_border = create_node_border_ui();
-    var node_font   = create_node_font_ui();
+    var cbox = new Box( Orientation.VERTICAL, 10 );
+    cbox.border_width = 10;
 
-    box.pack_start( lbl,         false, true );
-    box.pack_start( node_border, false, true );
-    box.pack_start( node_font,   false, true );
+    var node_border      = create_node_border_ui();
+    var node_borderwidth = create_node_borderwidth_ui();
+    var node_font        = create_node_font_ui();
+
+    cbox.pack_start( node_border,      false, true );
+    cbox.pack_start( node_borderwidth, false, true );
+    cbox.pack_start( node_font,        false, true );
+
+    box.pack_start( lbl,  false, true );
+    box.pack_start( cbox, false, true );
 
     return( box );
 
@@ -193,8 +246,6 @@ public class StyleInspector : Stack {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
     var lbl = new Label( _( "Border Style" ) );
-
-    box.border_width = 10;
 
     /* Create the line types mode button */
     _node_borders = new Granite.Widgets.ModeButton();
@@ -238,13 +289,50 @@ public class StyleInspector : Stack {
     return( false );
   }
 
+  /* Create widget for handling the width of a link */
+  private Box create_node_borderwidth_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Border Width" ) );
+    lbl.xalign = (float)0;
+
+    _node_borderwidth = new Scale.with_range( Orientation.HORIZONTAL, 2, 8, 1 );
+    _node_borderwidth.draw_value = false;
+
+    for( int i=2; i<=8; i++ ) {
+      if( (i % 2) == 0 ) {
+        _node_borderwidth.add_mark( i, PositionType.BOTTOM, "%d".printf( i ) );
+      } else {
+        _node_borderwidth.add_mark( i, PositionType.BOTTOM, null );
+      }
+    }
+
+    _node_borderwidth.change_value.connect( node_borderwidth_changed );
+
+    box.pack_start( lbl,               false, true );
+    box.pack_end(   _node_borderwidth, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the user changes the link width value */
+  private bool node_borderwidth_changed( ScrollType scroll, double value ) {
+    _current_style.node_borderwidth = (int)value;
+    apply_changes();
+    return( false );
+  }
+
   /* Creates the node font selector */
   private Box create_node_font_ui() {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Font" ) );
+    box.homogeneous = true;
 
-    box.border_width = 10;
+    var lbl = new Label( _( "Font" ) );
+    lbl.xalign = (float)0;
 
     _font_chooser = new FontButton();
     _font_chooser.font_set.connect(() => {
@@ -253,7 +341,7 @@ public class StyleInspector : Stack {
       apply_changes();
     });
 
-    box.pack_start( lbl,         false, false );
+    box.pack_start( lbl,         false, true );
     box.pack_end( _font_chooser, false, true );
 
     return( box );
@@ -389,6 +477,24 @@ public class StyleInspector : Stack {
     Node? node = _da.get_current_node();
     if( node != null ) {
       // Show the node styles pane
+      _current_style.copy( node.style );
+      var link_types = styles.get_link_types();
+      for( int i=0; i<link_types.length; i++ ) {
+        if( link_types.index( i ).name() == _current_style.link_type.name() ) {
+          _link_types.selected = i;
+          break;
+        }
+      }
+      _link_width.set_value( (double)_current_style.link_width );
+      var node_borders = styles.get_node_borders();
+      for( int i=0; i<node_borders.length; i++ ) {
+        if( node_borders.index( i ).name() == _current_style.node_border.name() ) {
+          _node_borders.selected = i;
+          break;
+        }
+      }
+      _node_borderwidth.set_value( (double)_current_style.node_borderwidth );
+      _font_chooser.set_font( _current_style.node_font.to_string() );
     } else {
       // Hide the styles pane?
     }
