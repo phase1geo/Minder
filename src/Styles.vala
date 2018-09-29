@@ -129,7 +129,7 @@ public class Styles {
       if( (levels & (1 << level)) != 0 ) {
         set_node_to_style( nodes.index( i ), style );
       }
-      set_levels_to_style_helper( nodes.index( i ).children(), levels, style, (level + 1) );
+      set_levels_to_style_helper( nodes.index( i ).children(), levels, style, ((level == 9) ? 9 : (level + 1)) );
     }
   }
 
