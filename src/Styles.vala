@@ -44,9 +44,9 @@ public class Styles {
 
     /* Create the link dashes */
     var ld_solid  = new LinkDash( "solid",     _( "Solid" ),      {} );
-    var ld_dotted = new LinkDash( "dotted",    _( "Dotted" ),     {5, 2} );
-    var ld_sdash  = new LinkDash( "shortdash", _( "Short Dash" ), {5, 5} );
-    var ld_ldash  = new LinkDash( "longdash",  _( "Long Dash" ),  {20, 5} );
+    var ld_dotted = new LinkDash( "dotted",    _( "Dotted" ),     {2, 6} );
+    var ld_sdash  = new LinkDash( "shortdash", _( "Short Dash" ), {6, 6} );
+    var ld_ldash  = new LinkDash( "longdash",  _( "Long Dash" ),  {20, 6} );
 
     /* Add the link dashes to the list */
     _link_dashes = new Array<LinkDash>();

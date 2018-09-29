@@ -36,19 +36,35 @@ public class LinkDash : Object {
  
   /* Makes an icon for the given dash */
   public Cairo.Surface make_icon() {
-    Cairo.ImageSurface surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 50, 20 );
+
+    Cairo.ImageSurface surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 100, 20 );
     Cairo.Context      ctx     = new Cairo.Context( surface );
+
+    ctx.set_source_rgba( 0.5, 0.5, 0.5, 1 );
     ctx.set_dash( pattern, 0 );
-    ctx.set_line_width( 5 );
+    ctx.set_line_width( 4 );
+    ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( 10, 10 );
-    ctx.line_to( 40, 10 );
+    ctx.line_to( 90, 10 );
     ctx.stroke();
+
     return( surface );
+
   }
 
   /* Sets the given context for the dash information */
-  public void set_context( Cairo.Context ctx ) {
-    ctx.set_dash( pattern, 0 );
+  public void set_context( Cairo.Context ctx, int line_width ) {
+    double[] adjusted_pattern = {};
+    int      i = 0;
+    foreach( double val in pattern ) {
+      if( i == 0 ) {
+        adjusted_pattern += val;
+      } else {
+        adjusted_pattern += (line_width + val);
+      }
+      i++;
+    }
+    ctx.set_dash( adjusted_pattern, 0 );
   }
 
 }

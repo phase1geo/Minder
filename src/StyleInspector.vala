@@ -43,6 +43,7 @@ public class StyleInspector : Stack {
   private Granite.Widgets.ModeButton _link_types;
   private Scale                      _link_width;
   private Switch                     _link_arrow;
+  private Image                      _link_dash;
   private Granite.Widgets.ModeButton _node_borders;
   private Scale                      _node_borderwidth;
   private FontButton                 _font_chooser;
@@ -118,10 +119,12 @@ public class StyleInspector : Stack {
     cbox.border_width = 10;
 
     var link_type  = create_link_type_ui();
+    var link_dash  = create_link_dash_ui();
     var link_width = create_link_width_ui();
     var link_arrow = create_link_arrow_ui();
 
     cbox.pack_start( link_type,  false, true );
+    cbox.pack_start( link_dash,  false, true );
     cbox.pack_start( link_width, false, true );
     cbox.pack_start( link_arrow, false, true );
 
@@ -181,6 +184,46 @@ public class StyleInspector : Stack {
       return( true );
     }
     return( false );
+  }
+
+  /* Create the link dash widget */
+  private Box create_link_dash_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Line Dash" ) );
+    lbl.xalign = (float)0;
+
+    var menu   = new Gtk.Menu();
+    var dashes = styles.get_link_dashes();
+
+    _link_dash = new Image.from_surface( dashes.index( 0 ).make_icon() );
+
+    for( int i=0; i<dashes.length; i++ ) {
+      var dash = dashes.index( i );
+      var img  = new Image.from_surface( dash.make_icon() );
+      var mi   = new Gtk.MenuItem();
+      mi.activate.connect(() => {
+        _current_style.link_dash = dash;
+        _link_dash.surface       = img.surface;
+        apply_changes();
+      });
+      mi.add( img );
+      menu.add( mi );
+    }
+
+    menu.show_all();
+
+    var mb = new MenuButton();
+    mb.add( _link_dash );
+    mb.popup = menu;
+
+    box.pack_start( lbl, false, true );
+    box.pack_end(   mb,  false, true );
+
+    return( box );
+
   }
 
   /* Create widget for handling the width of a link */
@@ -513,6 +556,13 @@ public class StyleInspector : Stack {
       for( int i=0; i<link_types.length; i++ ) {
         if( link_types.index( i ).name() == _current_style.link_type.name() ) {
           _link_types.selected = i;
+          break;
+        }
+      }
+      var link_dashes = styles.get_link_dashes();
+      for( int i=0; i<link_dashes.length; i++ ) {
+        if( link_dashes.index( i ).name == _current_style.link_dash.name ) {
+          _link_dash.surface = link_dashes.index( i ).make_icon();
           break;
         }
       }
