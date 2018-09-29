@@ -86,23 +86,31 @@ public class Styles {
       }
       style.node_width       = 200;
       style.node_borderwidth = 4;
+      style.connection_dash  = ld_dotted;
+      style.connection_width = 2;
       _styles.append_val( style );
     }
 
   }
 
   /* Sets all nodes in the mind-map to the given link style */
-  public void set_all_to_style( Array<Node> nodes, Style style ) {
+  public void set_all_nodes_to_style( Array<Node> nodes, Style style ) {
     _styles.index( 10 ).copy( style );
-    set_all_to_style_helper( nodes, style );
+    set_all_nodes_to_style_helper( nodes, style );
   }
 
   /* Updates the nodes */
-  private void set_all_to_style_helper( Array<Node> nodes, Style style ) {
+  private void set_all_nodes_to_style_helper( Array<Node> nodes, Style style ) {
     for( int i=0; i<nodes.length; i++ ) {
       set_node_to_style( nodes.index( i ), style );
-      set_all_to_style_helper( nodes.index( i ).children(), style );
+      set_all_nodes_to_style_helper( nodes.index( i ).children(), style );
     }
+  }
+
+  /* Sets all of the connections to the given style */
+  public void set_all_connections_to_style( Connections conns, Style style ) {
+    _styles.index( 10 ).copy( style );
+    conns.set_all_connections_to_style( style );
   }
 
   /* Sets all nodes at the specified levels to the given link style */
@@ -125,9 +133,14 @@ public class Styles {
     }
   }
 
-  /* Sets the given node's link style to the given style */
+  /* Sets the given node's style to the given style */
   public void set_node_to_style( Node node, Style style ) {
     node.style = style;
+  }
+
+  /* Sets the given connection's style to the given style */
+  public void set_connection_to_style( Connection conn, Style style ) {
+    conn.style = style;
   }
 
   /* Returns the link type with the given name */
@@ -181,6 +194,11 @@ public class Styles {
   /* Returns the style for the given level */
   public Style get_style_for_level( uint level ) {
     return( _styles.index( (level > 9) ? 9 : level ) );
+  }
+
+  /* Returns the global style */
+  public Style get_global_style() {
+    return( _styles.index( 10 ) );
   }
 
 }

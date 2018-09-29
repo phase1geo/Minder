@@ -31,6 +31,8 @@ public class Style {
   public int             node_width       { get; set; }
   public int             node_borderwidth { get; set; }
   public FontDescription node_font        { get; set; }
+  public LinkDash        connection_dash  { get; set; }
+  public int             connection_width { get; set; }
 
   public Style() {
     node_font = new FontDescription();
@@ -48,10 +50,12 @@ public class Style {
     node_width       = s.node_width;
     node_borderwidth = s.node_borderwidth;
     node_font        = s.node_font.copy();
+    connection_dash  = s.connection_dash;
+    connection_width = s.connection_width;
   }
 
   /* Loads the style information in the given XML node */
-  public void load( Xml.Node* node ) {
+  public void load_node( Xml.Node* node ) {
 
     string? lt = node->get_prop( "link_type" );
     if( lt != null ) {
@@ -89,8 +93,22 @@ public class Style {
 
   }
 
+  /* Loads the style information in the given XML node */
+  public void load_connection( Xml.Node* node ) {
+
+    string? d = node->get_prop( "dash" );
+    if( d != null ) {
+      connection_dash = StyleInspector.styles.get_link_dash( d );
+    }
+    string? w = node->get_prop( "width" );
+    if( w != null ) {
+      connection_width = int.parse( w );
+    }
+
+  }
+
   /* Stores this style in XML format */
-  public void save( Xml.Node* parent ) {
+  public void save_node( Xml.Node* parent ) {
 
     Xml.Node* n = new Xml.Node( null, "style" );
 
@@ -103,6 +121,18 @@ public class Style {
     n->set_prop( "node_width",       node_width.to_string() );
     n->set_prop( "node_borderwidth", node_borderwidth.to_string() );
     n->set_prop( "node_font",        node_font.to_string() );
+
+    parent->add_child( n );
+
+  }
+
+  /* Stores this style in XML format */
+  public void save_connection( Xml.Node* parent ) {
+
+    Xml.Node* n = new Xml.Node( null, "style" );
+
+    n->set_prop( "dash",  connection_dash.name );
+    n->set_prop( "width", connection_width.to_string() );
 
     parent->add_child( n );
 
@@ -129,6 +159,12 @@ public class Style {
   /* Draws the node fill */
   public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
     node_border.draw_fill( ctx, x, y, w, h, s );
+  }
+
+  /* Sets up the given context to draw the stylized connection */
+  public void draw_connection( Cairo.Context ctx ) {
+    ctx.set_line_width( connection_width );
+    connection_dash.set_context( ctx, connection_width );
   }
 
 }

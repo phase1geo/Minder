@@ -47,6 +47,8 @@ public class StyleInspector : Stack {
   private Granite.Widgets.ModeButton _node_borders;
   private Scale                      _node_borderwidth;
   private FontButton                 _font_chooser;
+  private Image                      _conn_dash;
+  private Scale                      _conn_width;
   private Style                      _current_style;
   private StyleAffects               _affects;
 
@@ -513,10 +515,103 @@ public class StyleInspector : Stack {
   /* Creates the connection style UI */
   private Box create_connection_ui() {
 
-    var box = new Box( Orientation.VERTICAL, 5 );
+    var box = new Box( Orientation.VERTICAL, 0 );
+
+    var lbl = new Label( _( "<b>Connection Options</b>" ) );
+    lbl.use_markup = true;
+    lbl.xalign = (float)0;
+
+    var cbox = new Box( Orientation.VERTICAL, 10 );
+    cbox.border_width = 10;
+
+    var conn_dash  = create_connection_dash_ui();
+    var conn_width = create_connection_width_ui();
+
+    cbox.pack_start( conn_dash,  false, true );
+    cbox.pack_start( conn_width, false, true );
+
+    box.pack_start( lbl,  false, true );
+    box.pack_start( cbox, false, true );
 
     return( box );
 
+  }
+
+  /* Create the connection dash widget */
+  private Box create_connection_dash_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Line Dash" ) );
+    lbl.xalign = (float)0;
+
+    var menu   = new Gtk.Menu();
+    var dashes = styles.get_link_dashes();
+
+    _conn_dash = new Image.from_surface( dashes.index( 0 ).make_icon() );
+
+    for( int i=0; i<dashes.length; i++ ) {
+      var dash = dashes.index( i );
+      var img  = new Image.from_surface( dash.make_icon() );
+      var mi   = new Gtk.MenuItem();
+      mi.activate.connect(() => {
+        _current_style.connection_dash = dash;
+        _conn_dash.surface             = img.surface;
+        apply_changes();
+      });
+      mi.add( img );
+      menu.add( mi );
+    }
+
+    menu.show_all();
+
+    var mb = new MenuButton();
+    mb.add( _conn_dash );
+    mb.popup = menu;
+
+    box.pack_start( lbl, false, true );
+    box.pack_end(   mb,  false, true );
+
+    return( box );
+
+  }
+
+  /* Create widget for handling the width of a connection */
+  private Box create_connection_width_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Line Width" ) );
+    lbl.xalign = (float)0;
+
+    _conn_width = new Scale.with_range( Orientation.HORIZONTAL, 2, 8, 1 );
+    _conn_width.draw_value = false;
+
+    for( int i=2; i<=8; i++ ) {
+      if( (i % 2) == 0 ) {
+        _conn_width.add_mark( i, PositionType.BOTTOM, "%d".printf( i ) );
+      } else {
+        _conn_width.add_mark( i, PositionType.BOTTOM, null );
+      }
+    }
+
+    _conn_width.change_value.connect( connection_width_changed );
+
+    box.pack_start( lbl,         false, true );
+    box.pack_end(   _conn_width, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the user changes the link width value */
+  private bool connection_width_changed( ScrollType scroll, double value ) {
+    if( value > 8 ) value = 8;
+    _current_style.connection_width = (int)value;
+    apply_changes();
+    return( false );
   }
 
   /* Creates the connection button bar */
@@ -530,12 +625,20 @@ public class StyleInspector : Stack {
 
   /* Apply the changes */
   private void apply_changes( StyleAffects affects = StyleAffects.CURRENT ) {
-    if( affects == StyleAffects.CURRENT ) {
-      styles.set_node_to_style( _da.get_current_node(), _current_style );
-    } else if( affects == StyleAffects.ALL ) {
-      styles.set_all_to_style( _da.get_nodes(), _current_style );
+    if( _da.get_current_node() != null ) {
+      if( affects == StyleAffects.CURRENT ) {
+        styles.set_node_to_style( _da.get_current_node(), _current_style );
+      } else if( affects == StyleAffects.ALL ) {
+        styles.set_all_nodes_to_style( _da.get_nodes(), _current_style );
+      } else {
+        styles.set_levels_to_style( _da.get_nodes(), (1 << _affects), _current_style );
+      }
     } else {
-      styles.set_levels_to_style( _da.get_nodes(), (1 << _affects), _current_style );
+      if( affects == StyleAffects.CURRENT ) {
+        styles.set_connection_to_style( _da.get_current_connection(), _current_style );
+      } else {
+        styles.set_all_connections_to_style( _da.get_connections(), _current_style );
+      }
     }
     _da.changed();
     _da.queue_draw();
@@ -577,8 +680,9 @@ public class StyleInspector : Stack {
       }
       _node_borderwidth.set_value( (double)_current_style.node_borderwidth );
       _font_chooser.set_font( _current_style.node_font.to_string() );
+      set_visible_child_name( "node" );
     } else {
-      // Hide the styles pane?
+      set_visible_child_name( "empty" );
     }
   }
 
@@ -587,8 +691,18 @@ public class StyleInspector : Stack {
     Connection? conn = _da.get_current_connection();
     if( conn != null ) {
       // Show the connection styles pane
+      _current_style.copy( conn.style );
+      var link_dashes = styles.get_link_dashes();
+      for( int i=0; i<link_dashes.length; i++ ) {
+        if( link_dashes.index( i ).name == _current_style.connection_dash.name ) {
+          _conn_dash.surface = link_dashes.index( i ).make_icon();
+          break;
+        }
+      }
+      _conn_width.set_value( (double)_current_style.connection_width );
+      set_visible_child_name( "connection" );
     } else {
-      // Hide the styles pane?
+      set_visible_child_name( "empty" );
     }
   }
 

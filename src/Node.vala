@@ -591,7 +591,7 @@ public class Node : Object {
 
   /* Loads the style information from the given XML node */
   private void load_style( Xml.Node* n ) {
-    _style.load( n );
+    _style.load_node( n );
     _pango_layout.set_font_description( _style.node_font );
   }
 
@@ -720,7 +720,7 @@ public class Node : Object {
       _image.save( node );
     }
 
-    style.save( node );
+    style.save_node( node );
 
     node->new_text_child( null, "nodename", name );
     node->new_text_child( null, "nodenote", note );

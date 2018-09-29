@@ -243,6 +243,11 @@ public class DrawArea : Gtk.DrawingArea {
     return( _nodes );
   }
 
+  /* Returns the connections list */
+  public Connections get_connections() {
+    return( _connections );
+  }
+
   /* Searches for and returns the node with the specified ID */
   public Node? get_node( int id ) {
     for( int i=0; i<_nodes.length; i++ ) {
@@ -762,9 +767,13 @@ public class DrawArea : Gtk.DrawingArea {
             if( last_connection != null ) {
               last_connection.mode = ConnMode.NONE;
             }
+            connection_changed();
+            return( true );
           }
         } else if( last_connection != null ) {
           last_connection.mode = ConnMode.NONE;
+          connection_changed();
+          return( true );
         }
       }
     }

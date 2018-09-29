@@ -61,6 +61,13 @@ public class Connections {
     }
   }
 
+  /* Set all of the stored connections to the given style */
+  public void set_all_connections_to_style( Style style ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      _connections.index( i ).style = style;
+    }
+  }
+
   /* Draws all of the connections onto the given context */
   public void draw_all( Cairo.Context ctx, Theme theme, Connection? current ) {
     for( int i=0; i<_connections.length; i++ ) {

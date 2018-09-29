@@ -45,6 +45,7 @@ public class Connection {
 
   public string   title { get; set; default = ""; }
   public ConnMode mode  { get; set; default = ConnMode.NONE; }
+  public Style    style { get; set; default = new Style(); }
 
   /* Default constructor */
   public Connection( Node from_node ) {
@@ -52,10 +53,12 @@ public class Connection {
     get_connect_point( from_node, out _posx, out _posy );
     _dragx = _posx;
     _dragy = _posy;
+    style  = StyleInspector.styles.get_global_style();
   }
 
   /* Constructor from XML data */
   public Connection.from_xml( DrawArea da, Xml.Node* n ) {
+    style = StyleInspector.styles.get_global_style();
     load( da, n );
   }
 
@@ -169,6 +172,15 @@ public class Connection {
       title = ti;
     }
 
+    /* Load the connection style */
+    for( Xml.Node* it = node->children; it != null; it = it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        if( it->name == "style" ) {
+          style.load_connection( it );
+        }
+      }
+    }
+
   }
 
   /* Saves the connection information to the given XML node */
@@ -180,6 +192,10 @@ public class Connection {
     n->set_prop( "drag_x",  _dragx.to_string() );
     n->set_prop( "drag_y",  _dragy.to_string() );
     n->set_prop( "title",   title );
+
+    /* Save the style connection */
+    style.save_connection( n );
+
     parent->add_child( n );
 
   }
@@ -213,12 +229,11 @@ public class Connection {
     var ay    = dragy - (((start_y + end_y) * 0.5) - dragy);
 
     /* Draw the curve */
-    ctx.set_line_width( 2 );
+    ctx.save();
+    style.draw_connection( ctx );
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
 
     /* Draw the curve as a quadratic curve (saves some additional calculations) */
-    ctx.save();
-    ctx.set_dash( {5, 5}, 0 );
     ctx.move_to( start_x, start_y );
     ctx.curve_to(
       (((2.0 / 3.0) * ax) + ((1.0 / 3.0) * start_x)),
