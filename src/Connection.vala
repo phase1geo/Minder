@@ -42,10 +42,18 @@ public class Connection {
   private double? _last_fy = null;
   private double? _last_tx = null;
   private double? _last_ty = null;
+  private Style   _style   = new Style();
 
   public string   title { get; set; default = ""; }
   public ConnMode mode  { get; set; default = ConnMode.NONE; }
-  public Style    style { get; set; default = new Style(); }
+  public Style    style { 
+    get {
+      return( _style );
+    }
+    set {
+      _style.copy( value );
+    }
+  }
 
   /* Default constructor */
   public Connection( Node from_node ) {
