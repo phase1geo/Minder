@@ -25,9 +25,10 @@ using Gdk;
 
 /* Connection mode value for the Connection.mode property */
 public enum ConnMode {
-  NONE = 0,  // Normally drawn mode
-  SELECTED,  // Indicates that the connection is currently selected
-  ADJUSTING  // Indicates that we are moving the drag handle to change the line shape
+  NONE = 0,    // Normally drawn mode
+  CONNECTING,  // Indicates that the connection is being made between two nodes
+  SELECTED,    // Indicates that the connection is currently selected
+  ADJUSTING    // Indicates that we are moving the drag handle to change the line shape
 }
 
 public class Connection {
@@ -44,7 +45,7 @@ public class Connection {
   private double? _last_ty = null;
 
   public string   title { get; set; default = ""; }
-  public ConnMode mode  { get; set; default = ConnMode.NONE; }
+  public ConnMode mode  { get; set; default = ConnMode.CONNECTING; }
   public Style    style { get; set; default = new Style(); }
 
   /* Default constructor */
@@ -200,6 +201,25 @@ public class Connection {
 
   }
 
+  /*
+   Checks to see if this connection is attached to the given node.  If it is,
+   save the location of the node as it will be moved to a new position.
+  */
+  public void check_for_connection_to_node( Node node ) {
+    _last_fx = _last_fy = _last_tx = _last_ty = null;
+    if( _from_node == node ) {
+      get_connect_point( _from_node, out _last_fx, out _last_fy );
+      if( _to_node != null ) {
+        get_connect_point( _to_node, out _last_tx, out _last_ty );
+      }
+    } else if( _to_node == node ) {
+      get_connect_point( _to_node, out _last_tx, out _last_ty );
+      if( _from_node != null ) {
+        get_connect_point( _from_node, out _last_fx, out _last_fy );
+      }
+    }
+  }
+
   /* Draws the connection to the given context */
   public virtual void draw( Cairo.Context ctx, Theme theme ) {
 
@@ -218,7 +238,7 @@ public class Connection {
     }
 
     /* Calculate the difference between the from and end values */
-    if( _last_fx != null ) {
+    if( (_last_fx != null) && (_last_tx != null) ) {
       dragx += ((start_x - _last_fx) + (end_x - _last_tx));
       dragy += ((start_y - _last_fy) + (end_y - _last_ty));
     }
@@ -262,12 +282,6 @@ public class Connection {
     }
 
     ctx.restore();
-
-    /* Save the last used values */
-    _last_fx = start_x;
-    _last_fy = start_y;
-    _last_tx = end_x;
-    _last_ty = end_y;
 
   }
 
