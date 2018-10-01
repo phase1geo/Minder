@@ -1209,19 +1209,16 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Handle button release event */
   private bool on_release( EventButton event ) {
-    stdout.printf( "In on_release\n" );
     _pressed = false;
     if( _motion ) {
       set_cursor( null );
     }
     if( _resize ) {
-      stdout.printf( "Released!\n" );
       _resize = false;
       undo_buffer.add_item( new UndoNodeResize( _current_node, _orig_width ) );
       return( false );
     }
     if( _current_connection != null ) {
-      stdout.printf( "HERE!, mode: %s\n", _current_connection.mode.to_string() );
       if( _attach_node != null ) {
         end_connection( _attach_node );
         _attach_node.mode = NodeMode.NONE;
@@ -1256,7 +1253,6 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
     }
-    stdout.printf( "DONE\n" );
     return( false );
   }
 
