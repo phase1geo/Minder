@@ -1092,7 +1092,7 @@ public class DrawArea : Gtk.DrawingArea {
       _current_node.draw_all( ctx, _theme, null, true, (_pressed && _motion && !_resize) );
     }
     /* Draw the current connection on top of everything else */
-    _connections.draw_all( ctx, _theme, null );
+    _connections.draw_all( ctx, _theme );
   }
 
   /* Draw the available nodes */
@@ -1174,7 +1174,9 @@ public class DrawArea : Gtk.DrawingArea {
       auto_save();
     } else {
       if( _current_connection != null )  {
+        stdout.printf( "Drawing connection...\n" );
         if( _current_connection.mode == ConnMode.CONNECTING ) {
+          stdout.printf( "  DOING IT!\n" );
           update_connection( event.x, event.y );
         }
       }
@@ -1226,6 +1228,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else if( _current_connection.mode == ConnMode.ADJUSTING ) {
         _current_connection.mode = ConnMode.SELECTED;
       }
+      queue_draw();
     } else if( _current_node != null ) {
       if( _current_node.mode == NodeMode.CURRENT ) {
 
@@ -2215,7 +2218,8 @@ public class DrawArea : Gtk.DrawingArea {
   /* Starts a connection from the current node */
   public void start_connection() {
     if( _current_node != null ) {
-      _current_connection = new Connection( _current_node );
+      _current_connection      = new Connection( _current_node );
+      _current_connection.mode = ConnMode.ADJUSTING;
     }
   }
 

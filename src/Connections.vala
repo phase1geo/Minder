@@ -76,11 +76,9 @@ public class Connections {
   }
 
   /* Draws all of the connections onto the given context */
-  public void draw_all( Cairo.Context ctx, Theme theme, Connection? current ) {
+  public void draw_all( Cairo.Context ctx, Theme theme ) {
     for( int i=0; i<_connections.length; i++ ) {
-      if( _connections.index( i ) != current ) {
-        _connections.index( i ).draw( ctx, theme );
-      }
+      _connections.index( i ).draw( ctx, theme );
     }
   }
 

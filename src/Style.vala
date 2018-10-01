@@ -163,6 +163,7 @@ public class Style {
 
   /* Sets up the given context to draw the stylized connection */
   public void draw_connection( Cairo.Context ctx ) {
+    stdout.printf( "In draw_connection, width: %d\n", connection_width );
     ctx.set_line_width( connection_width );
     connection_dash.set_context( ctx, connection_width );
   }

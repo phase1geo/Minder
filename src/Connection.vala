@@ -46,7 +46,7 @@ public class Connection {
   private Style   _style   = new Style();
 
   public string   title { get; set; default = ""; }
-  public ConnMode mode  { get; set; default = ConnMode.CONNECTING; }
+  public ConnMode mode  { get; set; default = ConnMode.NONE; }
   public Style    style { 
     get {
       return( _style );
@@ -260,6 +260,7 @@ public class Connection {
     ctx.save();
     style.draw_connection( ctx );
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+    stdout.printf( "Setting rgba: %s\n", color.to_string() );
 
     /* Draw the curve as a quadratic curve (saves some additional calculations) */
     ctx.move_to( start_x, start_y );

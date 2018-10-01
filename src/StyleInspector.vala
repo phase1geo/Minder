@@ -286,7 +286,6 @@ public class StyleInspector : Stack {
   private bool link_arrow_changed( Gdk.EventButton e ) {
     _current_style.link_arrow = !_current_style.link_arrow;
     apply_changes();
-    // _settings.set_boolean( "enable-animations", _da.animator.enable );
     return( false );
   }
 
