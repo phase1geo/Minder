@@ -78,6 +78,7 @@
   <releases>
     <release version="1.1.1" date="2018-09-27">
       <description>
+        <p>Bug fix release</p>
         <ul>
           <li>Fixed bugs related to editing unicode characters in map area.</li>
           <li>Reduced height of node textbox in sidebar to help alleviate window sizing problems.</li>
