@@ -180,7 +180,7 @@ public class NodeInspector : Stack {
 
     ScrolledWindow sw = new ScrolledWindow( null, null );
     sw.min_content_width  = 300;
-    sw.min_content_height = 300;
+    sw.min_content_height = 100;
     sw.add( _note );
 
     box.pack_start( lbl, false, false );
