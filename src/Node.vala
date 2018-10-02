@@ -934,31 +934,38 @@ public class Node : Object {
 
   /* Moves this node into the proper position within the parent node */
   public void move_to_position( Node child, NodeSide side, double x, double y, Layout layout ) {
-    child.detach( side, layout );
-    child.attached = true;
+    int idx = child.index();
     for( int i=0; i<_children.length; i++ ) {
       if( _children.index( i ).side == child.side ) {
         switch( child.side ) {
           case NodeSide.LEFT  :
           case NodeSide.RIGHT :
             if( y < _children.index( i ).posy ) {
-              child.attach( this, i, null, layout );
+              child.detach( side, layout );
+              child.attached = true;
+              child.attach( this, (i - ((idx < i) ? 1 : 0)), null, layout );
               return;
             }
             break;
           case NodeSide.TOP :
           case NodeSide.BOTTOM :
             if( x < _children.index( i ).posx ) {
-              child.attach( this, i, null, layout );
+              child.detach( side, layout );
+              child.attached = true;
+              child.attach( this, (i - ((idx < i) ? 1 : 0)), null, layout );
               return;
             }
             break;
         }
       } else if( _children.index( i ).side > child.side ) {
-        child.attach( this, i, null, layout );
+        child.detach( side, layout );
+        child.attached = true;
+        child.attach( this, (i - ((idx < i) ? 1 : 0)), null, layout );
         return;
       }
     }
+    child.detach( side, layout );
+    child.attached = true;
     child.attach( this, -1, null, layout );
   }
 
@@ -1158,7 +1165,7 @@ public class Node : Object {
 
   /* Attaches this node as a child of the given node */
   public virtual void attach( Node parent, int index, Theme? theme, Layout? layout ) {
-    if( is_root() ) {
+    if( index == -1 ) {
       attach_root( parent, theme, layout );
     } else {
       attach_nonroot( parent, index, theme, layout );
@@ -1169,8 +1176,8 @@ public class Node : Object {
   public virtual void attach_root( Node parent, Theme? theme, Layout? layout ) {
     this.parent = parent;
     if( layout != null ) {
-      if( children().length > 0 ) {
-        side = children().index( children().length - 1 ).side;
+      if( parent.children().length > 0 ) {
+        side = parent.children().index( parent.children().length - 1 ).side;
         layout.propagate_side( this, side );
       }
       layout.initialize( this );
