@@ -80,6 +80,7 @@
       <description>
         <ul>
           <li>Fixed bugs related to editing unicode characters in map area.</li>
+          <li>Reduced height of node textbox in sidebar to help alleviate window sizing problems.</li>
         </ul>
       </description>
     </release>
