@@ -76,6 +76,17 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.1.1" date="2018-09-27">
+      <description>
+        <p>Bug fix release</p>
+        <ul>
+          <li>Fixed bugs related to editing unicode characters in map area.</li>
+          <li>Reduced height of node textbox in sidebar to help alleviate window sizing problems.</li>
+          <li>Fixed issue with moving a node to a different position within a parent node.</li>
+          <li>Fixed issue connecting a root node to another node.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.1" date="2018-09-18">
       <description>
         <p>Images now supported!</p>
