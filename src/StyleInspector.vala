@@ -36,7 +36,7 @@ public enum StyleAffects {
   ALL
 }
 
-public class StyleInspector : Stack {
+public class StyleInspector : Box {
 
   private DrawArea                   _da;
   private GLib.Settings              _settings;
@@ -56,6 +56,8 @@ public class StyleInspector : Stack {
 
   public StyleInspector( DrawArea da, GLib.Settings settings ) {
 
+    Object( orientation:Orientation.VERTICAL, spacing:20 );
+
     _da            = da;
     _settings      = settings;
     _current_style = new Style();
@@ -64,43 +66,32 @@ public class StyleInspector : Stack {
     _affects                        = (StyleAffects)settings.get_int( "style-affects" );
     _current_style.link_type        = styles.get_link_type( settings.get_string( "style-link-type" ) );
     _current_style.link_width       = settings.get_int( "style-link-width" );
+    _current_style.link_arrow       = settings.get_boolean( "style-link-arrow" );
+    _current_style.link_dash        = styles.get_link_dash( settings.get_string( "style-link-dash" ) );
     _current_style.node_border      = styles.get_node_border( settings.get_string( "style-node-border" ) );
     _current_style.node_width       = settings.get_int( "style-node-width" );
     _current_style.node_borderwidth = settings.get_int( "style-node-borderwidth" );
-
-    /* Set the transition duration information */
-    transition_duration = 500;
-    transition_type     = StackTransitionType.OVER_DOWN_UP;
-
-    var empty_box = new Box( Orientation.VERTICAL, 10 );
-    var empty_lbl = new Label( _( "<big>Select a node or connection to view/edit its style</big>" ) );
-    var node_box  = new Box( Orientation.VERTICAL, 20 );
-    var conn_box  = new Box( Orientation.VERTICAL, 5 );
-
-    empty_lbl.use_markup = true;
-    empty_box.pack_start( empty_lbl, true, true );
-
-    add_named( node_box,  "node" );
-    add_named( conn_box,  "connection" );
-    add_named( empty_box, "empty" );
+    _current_style.node_font.set_family( settings.get_string( "style-node-font-family" ) );
+    _current_style.node_font.set_size( settings.get_int( "style-node-font-size" ) * Pango.SCALE );
+    _current_style.connection_dash  = styles.get_link_dash( settings.get_string( "style-connection-dash" ) );
+    _current_style.connection_width = settings.get_int( "style-connection-width" );
+    _current_style.connection_arrow = settings.get_string( "style-connection-arrow" );
 
     /* Create the UI for nodes */
-    var link     = create_link_ui();
-    var sep1     = new Separator( Orientation.HORIZONTAL );
-    var node     = create_node_ui();
-    var node_bar = create_node_button_bar();
+    var link = create_link_ui();
+    var sep1 = new Separator( Orientation.HORIZONTAL );
+    var node = create_node_ui();
+    var sep2 = new Separator( Orientation.HORIZONTAL );
+    var conn = create_connection_ui();
+    var bbar = create_node_button_bar();
 
-    node_box.pack_start( link,     false, true );
-    node_box.pack_start( sep1,     false, true );
-    node_box.pack_start( node,     false, true );
-    node_box.pack_end(   node_bar, false, true );
-
-    /* Create the UI for connections */
-    var conn     = create_connection_ui();
-    var conn_bar = create_connection_button_bar();
-
-    conn_box.pack_start( conn,     false, true );
-    conn_box.pack_end(   conn_bar, false, true );
+    /* Pack the elements into this widget */
+    pack_start( link, false, true );
+    pack_start( sep1, false, true );
+    pack_start( node, false, true );
+    pack_start( sep2, false, true );
+    pack_start( conn, false, true );
+    pack_end(   bbar, false, true );
 
     /* Listen for changes to the current node and connection */
     _da.node_changed.connect( handle_node_changed );
@@ -169,6 +160,7 @@ public class StyleInspector : Stack {
     var link_types = styles.get_link_types();
     if( _link_types.selected < link_types.length ) {
       _current_style.link_type = link_types.index( _link_types.selected );
+      _settings.set_string( "style-link-type", _current_style.link_type.name() );
       apply_changes();
     }
     return( false );
@@ -209,6 +201,7 @@ public class StyleInspector : Stack {
       mi.activate.connect(() => {
         _current_style.link_dash = dash;
         _link_dash.surface       = img.surface;
+        _settings.set_string( "style-link-dash", dash.name );
         apply_changes();
       });
       mi.add( img );
@@ -261,6 +254,7 @@ public class StyleInspector : Stack {
   private bool link_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
     _current_style.link_width = (int)value;
+    _settings.set_int( "style-link-width", (int)value );
     apply_changes();
     return( false );
   }
@@ -285,6 +279,7 @@ public class StyleInspector : Stack {
   /* Called when the user clicks on the link arrow switch */
   private bool link_arrow_changed( Gdk.EventButton e ) {
     _current_style.link_arrow = !_current_style.link_arrow;
+    _settings.set_boolean( "style-link-arrow", _current_style.link_arrow );
     apply_changes();
     return( false );
   }
@@ -345,6 +340,7 @@ public class StyleInspector : Stack {
     var node_borders = styles.get_node_borders();
     if( _node_borders.selected < node_borders.length ) {
       _current_style.node_border = node_borders.index( _node_borders.selected );
+      _settings.set_string( "style-node-border", _current_style.node_border.name() );
       apply_changes();
     }
     return( false );
@@ -396,6 +392,7 @@ public class StyleInspector : Stack {
   /* Called whenever the user changes the link width value */
   private bool node_borderwidth_changed( ScrollType scroll, double value ) {
     _current_style.node_borderwidth = (int)value;
+    _settings.set_int( "style-node-borderwidth", (int)value );
     apply_changes();
     return( false );
   }
@@ -411,8 +408,12 @@ public class StyleInspector : Stack {
 
     _font_chooser = new FontButton();
     _font_chooser.font_set.connect(() => {
-      _current_style.node_font.set_family( _font_chooser.get_font_family().get_name() );
-      _current_style.node_font.set_size( _font_chooser.get_font_size() );
+      var family = _font_chooser.get_font_family().get_name();
+      var size   = _font_chooser.get_font_size();
+      _current_style.node_font.set_family( family );
+      _current_style.node_font.set_size( size * Pango.SCALE );
+      _settings.set_string( "style-node-font-family", family );
+      _settings.set_int( "style-node-font-size", size );
       apply_changes();
     });
 
@@ -557,6 +558,7 @@ public class StyleInspector : Stack {
       mi.activate.connect(() => {
         _current_style.connection_dash = dash;
         _conn_dash.surface             = img.surface;
+        _settings.set_string( "style-connection-dash", dash.name );
         apply_changes();
       });
       mi.add( img );
@@ -609,35 +611,22 @@ public class StyleInspector : Stack {
   private bool connection_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
     _current_style.connection_width = (int)value;
+    _settings.set_int( "style-connection-width", (int)value );
     apply_changes();
     return( false );
   }
 
-  /* Creates the connection button bar */
-  private Box create_connection_button_bar() {
-
-    var box = new Box( Orientation.HORIZONTAL, 5 );
-
-    return( box );
-
-  }
-
   /* Apply the changes */
   private void apply_changes( StyleAffects affects = StyleAffects.CURRENT ) {
-    if( _da.get_current_node() != null ) {
-      if( affects == StyleAffects.CURRENT ) {
-        styles.set_node_to_style( _da.get_current_node(), _current_style );
-      } else if( affects == StyleAffects.ALL ) {
-        styles.set_all_nodes_to_style( _da.get_nodes(), _current_style );
-      } else {
-        styles.set_levels_to_style( _da.get_nodes(), (1 << _affects), _current_style );
-      }
+    Node?       node = _da.get_current_node();
+    Connection? conn = _da.get_current_connection();
+    if( node != null ) {
+      styles.set_node_to_style( node, _current_style );
+    } else if( conn != null ) {
+      styles.set_connection_to_style( conn, _current_style );
     } else {
-      if( affects == StyleAffects.CURRENT ) {
-        styles.set_connection_to_style( _da.get_current_connection(), _current_style );
-      } else {
-        styles.set_all_connections_to_style( _da.get_connections(), _current_style );
-      }
+      styles.set_all_nodes_to_style( _da.get_nodes(), _current_style );
+      styles.set_all_connections_to_style( _da.get_connections(), _current_style );
     }
     _da.changed();
     _da.queue_draw();
@@ -679,9 +668,9 @@ public class StyleInspector : Stack {
       }
       _node_borderwidth.set_value( (double)_current_style.node_borderwidth );
       _font_chooser.set_font( _current_style.node_font.to_string() );
-      set_visible_child_name( "node" );
+      /* TBD */
     } else {
-      set_visible_child_name( "empty" );
+      /* TBD */
     }
   }
 
@@ -699,9 +688,9 @@ public class StyleInspector : Stack {
         }
       }
       _conn_width.set_value( (double)_current_style.connection_width );
-      set_visible_child_name( "connection" );
+      /* TBD */
     } else {
-      set_visible_child_name( "empty" );
+      /* TBD */
     }
   }
 

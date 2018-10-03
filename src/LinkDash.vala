@@ -29,9 +29,11 @@ public class LinkDash : Object {
 
   /* Default constructor */
   public LinkDash( string name, string display_name, double[] pattern ) {
+
     this.name         = name;
     this.display_name = display_name;
     this.pattern      = pattern;
+
   }
  
   /* Makes an icon for the given dash */
@@ -54,8 +56,10 @@ public class LinkDash : Object {
 
   /* Sets the given context for the dash information */
   public void set_context( Cairo.Context ctx, int line_width ) {
+
     double[] adjusted_pattern = {};
-    int      i = 0;
+    int      i                = 0;
+
     foreach( double val in pattern ) {
       if( i == 0 ) {
         adjusted_pattern += val;
@@ -64,7 +68,9 @@ public class LinkDash : Object {
       }
       i++;
     }
+
     ctx.set_dash( adjusted_pattern, 0 );
+
   }
 
 }

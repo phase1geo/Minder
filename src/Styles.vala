@@ -63,6 +63,7 @@ public class Styles {
     var nb_rounded    = new NodeBorderRounded();
     var nb_pilled     = new NodeBorderPill();
 
+    /* Add the node borders to the list */
     _node_borders = new Array<NodeBorder>();
     _node_borders.append_val( nb_none );
     _node_borders.append_val( nb_underlined );

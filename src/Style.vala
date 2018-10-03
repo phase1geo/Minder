@@ -33,15 +33,19 @@ public class Style {
   public FontDescription node_font        { get; set; }
   public LinkDash        connection_dash  { get; set; }
   public int             connection_width { get; set; }
+  public string          connection_arrow { get; set; }
 
   public Style() {
+
     node_font = new FontDescription();
     node_font.set_family( "Sans" );
     node_font.set_size( 11 * Pango.SCALE );
+
   }
 
   /* Copies the given style to this style */
   public void copy( Style s ) {
+
     link_type        = s.link_type;
     link_width       = s.link_width;
     link_arrow       = s.link_arrow;
@@ -52,6 +56,8 @@ public class Style {
     node_font        = s.node_font.copy();
     connection_dash  = s.connection_dash;
     connection_width = s.connection_width;
+    connection_arrow = s.connection_arrow;
+
   }
 
   /* Loads the style information in the given XML node */
@@ -104,6 +110,10 @@ public class Style {
     if( w != null ) {
       connection_width = int.parse( w );
     }
+    string? a = node->get_prop( "arrow" );
+    if( a != null ) {
+      connection_arrow = a;
+    }
 
   }
 
@@ -133,6 +143,7 @@ public class Style {
 
     n->set_prop( "dash",  connection_dash.name );
     n->set_prop( "width", connection_width.to_string() );
+    n->set_prop( "arrow", connection_arrow );
 
     parent->add_child( n );
 
@@ -141,31 +152,38 @@ public class Style {
   /* Draws the link with the given information, applying the stored styling */
   public void draw_link( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal,
                          out double tailx, out double taily, out double tipx, out double tipy ) {
+
     ctx.save();
     ctx.set_line_width( link_width );
     link_dash.set_context( ctx, link_width );
     link_type.draw( ctx, from_x, from_y, to_x, to_y, horizontal, out tailx, out taily, out tipx, out tipy );
     ctx.restore();
+
   }
 
   /* Draws the shape behind a node with the given dimensions and stored styling */
   public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
+
     ctx.save();
     ctx.set_line_width( node_borderwidth );
     node_border.draw_border( ctx, x, y, w, h, s );
     ctx.restore();
+
   }
 
   /* Draws the node fill */
   public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
+
     node_border.draw_fill( ctx, x, y, w, h, s );
+
   }
 
   /* Sets up the given context to draw the stylized connection */
   public void draw_connection( Cairo.Context ctx ) {
-    stdout.printf( "In draw_connection, width: %d\n", connection_width );
+
     ctx.set_line_width( connection_width );
     connection_dash.set_context( ctx, connection_width );
+
   }
 
 }

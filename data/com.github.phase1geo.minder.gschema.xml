@@ -96,10 +96,15 @@
       <summary>Last used link width in Style properties</summary>
       <description>Last used link width in Style properties</description>
     </key>
-    <key name="style-link-show-direction" type="b">
+    <key name="style-link-arrow" type="b">
       <default>false</default>
-      <summary>Last used link direction indication in Style properties</summary>
-      <description>Last used link direction indication in Style properties</description>
+      <summary>Last used link arrow indicator in Style properties</summary>
+      <description>Last used link arrow indicator in Style properties</description>
+    </key>
+    <key name="style-link-dash" type="s">
+      <default>"solid"</default>
+      <summary>Last used link dash indicator in Style properties</summary>
+      <description>Last used link dash indicator in Style properties</description>
     </key>
     <key name="style-node-border" type="s">
       <default>"underlined"</default>
@@ -116,17 +121,27 @@
       <summary>Last used node borderwidth in Style properties</summary>
       <description>Last used node borderwidth in Style properties</description>
     </key>
+    <key name="style-node-font-family" type="s">
+      <default>"sans"</default>
+      <summary>Last used node font family in Style properties</summary>
+      <description>Last used node font family in Style properties</description>
+    </key>
+    <key name="style-node-font-size" type="i">
+      <default>11</default>
+      <summary>Last used node font size in Style properties</summary>
+      <description>Last used node font size in Style properties</description>
+    </key>
+    <key name="style-connection-dash" type="s">
+      <default>"dotted"</default>
+      <summary>Last used connection type in Style properties</summary>
+      <description>Last used connection type in Style properties</description>
+    </key>
     <key name="style-connection-width" type="i">
       <default>2</default>
       <summary>Last used connection width in Style properties</summary>
       <description>Last used connection width in Style properties</description>
     </key>
-    <key name="style-connection-type" type="s">
-      <default>"dotted"</default>
-      <summary>Last used connection type in Style properties</summary>
-      <description>Last used connection type in Style properties</description>
-    </key>
-    <key name="style-connection-arrow-direction" type="s">
+    <key name="style-connection-arrow" type="s">
       <default>"to"</default>
       <summary>Last used connection arrow direction in Style properties</summary>
       <description>Last used connection arrow direction in Style properties</description>
