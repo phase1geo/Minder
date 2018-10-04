@@ -668,10 +668,8 @@ public class StyleInspector : Box {
       }
       _node_borderwidth.set_value( (double)_current_style.node_borderwidth );
       _font_chooser.set_font( _current_style.node_font.to_string() );
-      /* TBD */
-    } else {
-      /* TBD */
     }
+    handle_ui_changed();
   }
 
   /* Called whenever the current connection changes */
@@ -688,10 +686,21 @@ public class StyleInspector : Box {
         }
       }
       _conn_width.set_value( (double)_current_style.connection_width );
-      /* TBD */
-    } else {
-      /* TBD */
     }
+    handle_ui_changed();
+  }
+
+  private void handle_ui_changed() {
+    bool node_enable = _da.get_current_connection() == null;
+    bool conn_enable = _da.get_current_node() == null;
+    _link_types.set_sensitive( node_enable );
+    _link_dash.set_sensitive( node_enable );
+    _link_arrow.set_sensitive( node_enable );
+    _node_borders.set_sensitive( node_enable );
+    _node_borderwidth.set_sensitive( node_enable );
+    _font_chooser.set_sensitive( node_enable );
+    _conn_dash.set_sensitive( conn_enable );
+    _conn_width.set_sensitive( conn_enable );
   }
 
 }
