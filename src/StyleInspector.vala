@@ -72,7 +72,7 @@ public class StyleInspector : Box {
     _current_style.node_width       = settings.get_int( "style-node-width" );
     _current_style.node_borderwidth = settings.get_int( "style-node-borderwidth" );
     _current_style.node_font.set_family( settings.get_string( "style-node-font-family" ) );
-    _current_style.node_font.set_size( settings.get_int( "style-node-font-size" ) * Pango.SCALE );
+    _current_style.node_font.set_size( settings.get_int( "style-node-font-size" ) );
     _current_style.connection_dash  = styles.get_link_dash( settings.get_string( "style-connection-dash" ) );
     _current_style.connection_width = settings.get_int( "style-connection-width" );
     _current_style.connection_arrow = settings.get_string( "style-connection-arrow" );
@@ -407,11 +407,12 @@ public class StyleInspector : Box {
     lbl.xalign = (float)0;
 
     _font_chooser = new FontButton();
+    _font_chooser.use_font = true;
     _font_chooser.font_set.connect(() => {
       var family = _font_chooser.get_font_family().get_name();
       var size   = _font_chooser.get_font_size();
       _current_style.node_font.set_family( family );
-      _current_style.node_font.set_size( size * Pango.SCALE );
+      _current_style.node_font.set_size( size );
       _settings.set_string( "style-node-font-family", family );
       _settings.set_int( "style-node-font-size", size );
       apply_changes();
@@ -641,7 +642,6 @@ public class StyleInspector : Box {
   private void handle_node_changed() {
     Node? node = _da.get_current_node();
     if( node != null ) {
-      // Show the node styles pane
       _current_style.copy( node.style );
       var link_types = styles.get_link_types();
       for( int i=0; i<link_types.length; i++ ) {
@@ -676,7 +676,6 @@ public class StyleInspector : Box {
   private void handle_connection_changed() {
     Connection? conn = _da.get_current_connection();
     if( conn != null ) {
-      // Show the connection styles pane
       _current_style.copy( conn.style );
       var link_dashes = styles.get_link_dashes();
       for( int i=0; i<link_dashes.length; i++ ) {
@@ -690,11 +689,13 @@ public class StyleInspector : Box {
     handle_ui_changed();
   }
 
+  /* Called whenever the current node or connection changes */
   private void handle_ui_changed() {
     bool node_enable = _da.get_current_connection() == null;
     bool conn_enable = _da.get_current_node() == null;
     _link_types.set_sensitive( node_enable );
     _link_dash.set_sensitive( node_enable );
+    _link_width.set_sensitive( node_enable );
     _link_arrow.set_sensitive( node_enable );
     _node_borders.set_sensitive( node_enable );
     _node_borderwidth.set_sensitive( node_enable );
