@@ -65,10 +65,28 @@ public class Connection {
     style  = StyleInspector.styles.get_global_style();
   }
 
+  /* Constructs a connection based on another connection */
+  public Connection.from_connection( Connection conn ) {
+    copy( conn );
+  }
+
   /* Constructor from XML data */
   public Connection.from_xml( DrawArea da, Xml.Node* n ) {
     style = StyleInspector.styles.get_global_style();
     load( da, n );
+  }
+
+  /* Copies the given connection to this instance */
+  public void copy( Connection conn ) {
+    _from_node = conn._from_node;
+    _to_node   = conn._to_node;
+    _dragx     = conn._dragx;
+    _dragy     = conn._dragy;
+    _last_fx   = conn._last_fx;
+    _last_fy   = conn._last_fy;
+    _last_tx   = conn._last_tx;
+    _last_ty   = conn._last_ty;
+    style      = conn.style;
   }
 
   /* Returns the point to add the connection to based on the node */
