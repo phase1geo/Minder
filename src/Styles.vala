@@ -103,7 +103,7 @@ public class Styles {
   /* Updates the nodes */
   private void set_all_nodes_to_style_helper( Array<Node> nodes, Style style ) {
     for( int i=0; i<nodes.length; i++ ) {
-      set_node_to_style( nodes.index( i ), style );
+      nodes.index( i ).style = style;
       set_all_nodes_to_style_helper( nodes.index( i ).children(), style );
     }
   }
@@ -112,6 +112,15 @@ public class Styles {
   public void set_all_connections_to_style( Connections conns, Style style ) {
     _styles.index( 10 ).copy( style );
     conns.set_all_connections_to_style( style );
+  }
+
+  /* Sets the given tree/subtree to the given style */
+  public void set_tree_to_style( Node parent, Style style ) {
+    parent.style = style;
+    var children = parent.children();
+    for( int i=0; i<children.length; i++ ) {
+      set_tree_to_style( children.index( i ), style );
+    }
   }
 
   /* Sets all nodes at the specified levels to the given link style */
@@ -128,20 +137,10 @@ public class Styles {
   private void set_levels_to_style_helper( Array<Node> nodes, int levels, Style style, int level ) {
     for( int i=0; i<nodes.length; i++ ) {
       if( (levels & (1 << level)) != 0 ) {
-        set_node_to_style( nodes.index( i ), style );
+        nodes.index( i ).style = style;
       }
       set_levels_to_style_helper( nodes.index( i ).children(), levels, style, ((level == 9) ? 9 : (level + 1)) );
     }
-  }
-
-  /* Sets the given node's style to the given style */
-  public void set_node_to_style( Node node, Style style ) {
-    node.style = style;
-  }
-
-  /* Sets the given connection's style to the given style */
-  public void set_connection_to_style( Connection conn, Style style ) {
-    conn.style = style;
   }
 
   /* Returns the link type with the given name */

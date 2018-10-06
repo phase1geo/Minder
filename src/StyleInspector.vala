@@ -22,18 +22,54 @@
 using Gtk;
 
 public enum StyleAffects {
-  CURRENT = 0,
-  LEVEL0,
-  LEVEL1,
-  LEVEL2,
-  LEVEL3,
-  LEVEL4,
-  LEVEL5,
-  LEVEL6,
-  LEVEL7,
-  LEVEL8,
-  LEVEL9,
-  ALL
+  ALL = 0,         // Applies changes to all nodes and connections
+  SEP0,            // Indicates a separator (not a value)
+  CURRENT,         // Applies changes to the current node/connection
+  CURRTREE,        // Applies changes to the current tree
+  CURRSUBTREE,     // Applies changes to the current nodes and all descendants
+  SEP1,            // Indicates a separator (not a value)
+  LEVEL0,          // Applies changes to all root nodes
+  LEVEL1,          // Applies changes to all level-1 nodes
+  LEVEL2,          // Applies changes to all level-2 nodes
+  LEVEL3,          // Applies changes to all level-2 nodes
+  LEVEL4,          // Applies changes to all level-2 nodes
+  LEVEL5,          // Applies changes to all level-2 nodes
+  LEVEL6,          // Applies changes to all level-2 nodes
+  LEVEL7,          // Applies changes to all level-2 nodes
+  LEVEL8,          // Applies changes to all level-2 nodes
+  LEVEL9;          // Applies changes to all level-2 nodes
+
+  /* Displays the label to display for this enumerated value */
+  public string label() {
+    switch( this ) {
+      case ALL         :  return( _( "All" ) );
+      case CURRENT     :  return( _( "Current" ) );
+      case CURRTREE    :  return( _( "Current Tree" ) );
+      case CURRSUBTREE :  return( _( "Current Node + Descendants" ) );
+      case LEVEL0      :  return( _( "Root Nodes" ) );
+      case LEVEL1      :  return( _( "Level 1 Nodes" ) );
+      case LEVEL2      :  return( _( "Level 2 Nodes" ) );
+      case LEVEL3      :  return( _( "Level 3 Nodes" ) );
+      case LEVEL4      :  return( _( "Level 4 Nodes" ) );
+      case LEVEL5      :  return( _( "Level 5 Nodes" ) );
+      case LEVEL6      :  return( _( "Level 6 Nodes" ) );
+      case LEVEL7      :  return( _( "Level 7 Nodes" ) );
+      case LEVEL8      :  return( _( "Level 8 Nodes" ) );
+      case LEVEL9      :  return( _( "Level 9 Nodes" ) );
+    }
+    return( "Unknown" );
+  }
+
+  /* Returns true if this is a separator */
+  public bool is_separator() {
+    return( (this == SEP0) || (this == SEP1) );
+  }
+
+  /* Returns the level associated with this value */
+  public uint level() {
+    return( (uint)this - (uint)LEVEL0 );
+  }
+
 }
 
 public class StyleInspector : Box {
@@ -51,6 +87,10 @@ public class StyleInspector : Box {
   private Scale                      _conn_width;
   private Style                      _current_style;
   private StyleAffects               _affects;
+  private Array<Gtk.MenuItem>        _affect_items;
+  private Box                        _link_group;
+  private Box                        _node_group;
+  private Box                        _conn_group;
 
   public static Styles styles = new Styles();
 
@@ -78,24 +118,79 @@ public class StyleInspector : Box {
     _current_style.connection_arrow = settings.get_string( "style-connection-arrow" );
 
     /* Create the UI for nodes */
-    var link = create_link_ui();
-    var sep1 = new Separator( Orientation.HORIZONTAL );
-    var node = create_node_ui();
-    var sep2 = new Separator( Orientation.HORIZONTAL );
-    var conn = create_connection_ui();
-    var bbar = create_node_button_bar();
+    var affect = create_affect_ui();
+    var box    = new Box( Orientation.VERTICAL, 0 );
+    var sw     = new ScrolledWindow( null, null );
+    var vp     = new Viewport( null, null );
+    vp.set_size_request( 200, 600 );
+    vp.add( box );
+    sw.add( vp );
+
+    _link_group = create_link_ui();
+    _node_group = create_node_ui();
+    _conn_group = create_connection_ui();
+
+    /* Pack the scrollwindow */
+    box.pack_start( _link_group, false, true );
+    box.pack_start( _node_group, false, true );
+    box.pack_start( _conn_group, false, true );
 
     /* Pack the elements into this widget */
-    pack_start( link, false, true );
-    pack_start( sep1, false, true );
-    pack_start( node, false, true );
-    pack_start( sep2, false, true );
-    pack_start( conn, false, true );
-    pack_end(   bbar, false, true );
+    pack_start( affect, false, true );
+    pack_start( sw,     true,  true, 10 );
 
     /* Listen for changes to the current node and connection */
     _da.node_changed.connect( handle_node_changed );
     _da.connection_changed.connect( handle_connection_changed );
+
+    /* Update the UI */
+    handle_ui_changed();
+
+  }
+
+  /* Creates the menubutton that changes the affect */
+  private Box create_affect_ui() {
+
+    var box      = new Box( Orientation.HORIZONTAL, 10 );
+    var lbl      = new Label( _( "<b>Changes affect:</b>" ) );
+    var mb       = new MenuButton();
+    var menu_lbl = new Label( "" );
+    var menu     = new Gtk.Menu();
+
+    lbl.use_markup = true;
+
+    mb.add( menu_lbl );
+    mb.popup = menu;
+
+    /* Allocate memory for menu items */
+    _affect_items = new Array<Gtk.MenuItem>();
+
+    /* Add all of the enumerations */
+    EnumClass eclass = (EnumClass)typeof( StyleAffects ).class_ref();
+    for( int i=0; i<eclass.n_values; i++ ) {
+      var affect = (StyleAffects)eclass.get_value( i ).value;
+      if( affect.is_separator() ) {
+        var mi = new Gtk.SeparatorMenuItem();
+        menu.add( mi );
+        _affect_items.append_val( mi );
+      } else {
+        var label = affect.label();
+        var mi    = new Gtk.MenuItem.with_label( label );
+        menu.add( mi );
+        mi.activate.connect(() => { set_affects( affect ); menu_lbl.label = label; });
+        _affect_items.append_val( mi );
+      }
+    }
+    menu.show_all();
+
+    /* Make sure that the menubutton label is set accordingly */
+    menu_lbl.label = _affects.label();
+
+    /* Pack the menubutton box */
+    box.pack_start( lbl, false, false );
+    box.pack_start( mb,  true,  true );
+
+    return( box );
 
   }
 
@@ -103,6 +198,7 @@ public class StyleInspector : Box {
   private Box create_link_ui() {
 
     var box = new Box( Orientation.VERTICAL, 0 );
+    var sep = new Separator( Orientation.HORIZONTAL );
 
     var lbl = new Label( _( "<b>Link Options</b>" ) );
     lbl.use_markup = true;
@@ -123,6 +219,7 @@ public class StyleInspector : Box {
 
     box.pack_start( lbl,  false, true );
     box.pack_start( cbox, false, true );
+    box.pack_start( sep,  false, true, 10 );
 
     return( box );
 
@@ -288,6 +385,7 @@ public class StyleInspector : Box {
   private Box create_node_ui() {
 
     var box = new Box( Orientation.VERTICAL, 5 );
+    var sep = new Separator( Orientation.HORIZONTAL );
 
     var lbl = new Label( _( "<b>Node Options</b>" ) );
     lbl.use_markup = true;
@@ -306,6 +404,7 @@ public class StyleInspector : Box {
 
     box.pack_start( lbl,  false, true );
     box.pack_start( cbox, false, true );
+    box.pack_start( sep,  false, true, 10 );
 
     return( box );
 
@@ -401,8 +500,6 @@ public class StyleInspector : Box {
   private Box create_node_font_ui() {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
-
     var lbl = new Label( _( "Font" ) );
     lbl.xalign = (float)0;
 
@@ -425,98 +522,11 @@ public class StyleInspector : Box {
 
   }
 
-  /* Creates the button bar at the bottom of the Styles inspector */
-  private Box create_node_button_bar() {
-
-    var box      = new Box( Orientation.HORIZONTAL, 5 );
-    var lbl      = new Label( _( "Apply Style To:" ) );
-    var mb       = new MenuButton();
-    var apply    = new Button.with_label( _( "Apply Style" ) );
-    var menu     = new Gtk.Menu();
-    var menu_lbl = new Label( "" );
-
-    box.border_width = 5;
-    mb.add( menu_lbl );
-    mb.popup = menu;
-
-    var all  = new Gtk.MenuItem.with_label( _( "All Nodes" ) );
-    var root = new Gtk.MenuItem.with_label( _( "Root Nodes" ) );
-    var lvl1 = new Gtk.MenuItem.with_label( _( "Level 1 Nodes" ) );
-    var lvl2 = new Gtk.MenuItem.with_label( _( "Level 2 Nodes" ) );
-    var lvl3 = new Gtk.MenuItem.with_label( _( "Level 3 Nodes" ) );
-    var lvl4 = new Gtk.MenuItem.with_label( _( "Level 4 Nodes" ) );
-    var lvl5 = new Gtk.MenuItem.with_label( _( "Level 5 Nodes" ) );
-    var lvl6 = new Gtk.MenuItem.with_label( _( "Level 6 Nodes" ) );
-    var lvl7 = new Gtk.MenuItem.with_label( _( "Level 7 Nodes" ) );
-    var lvl8 = new Gtk.MenuItem.with_label( _( "Level 8 Nodes" ) );
-    var lvl9 = new Gtk.MenuItem.with_label( _( "Level 9 Nodes" ) );
-    var curr = new Gtk.MenuItem.with_label( _( "Current Node" ) );
-
-    menu.add( all );
-    menu.add( new Gtk.SeparatorMenuItem() );
-    menu.add( root );
-    menu.add( lvl1 );
-    menu.add( lvl2 );
-    menu.add( lvl3 );
-    menu.add( lvl4 );
-    menu.add( lvl5 );
-    menu.add( lvl6 );
-    menu.add( lvl7 );
-    menu.add( lvl8 );
-    menu.add( lvl9 );
-    menu.add( new Gtk.SeparatorMenuItem() );
-    menu.add( curr );
-    menu.show_all();
-
-    all.activate.connect(()  => { set_affects( StyleAffects.ALL );     menu_lbl.label = all.label; });
-    root.activate.connect(() => { set_affects( StyleAffects.LEVEL0 );  menu_lbl.label = root.label; });
-    lvl1.activate.connect(() => { set_affects( StyleAffects.LEVEL1 );  menu_lbl.label = lvl1.label; });
-    lvl2.activate.connect(() => { set_affects( StyleAffects.LEVEL2 );  menu_lbl.label = lvl2.label; });
-    lvl3.activate.connect(() => { set_affects( StyleAffects.LEVEL3 );  menu_lbl.label = lvl3.label; });
-    lvl4.activate.connect(() => { set_affects( StyleAffects.LEVEL4 );  menu_lbl.label = lvl4.label; });
-    lvl5.activate.connect(() => { set_affects( StyleAffects.LEVEL5 );  menu_lbl.label = lvl5.label; });
-    lvl6.activate.connect(() => { set_affects( StyleAffects.LEVEL6 );  menu_lbl.label = lvl6.label; });
-    lvl7.activate.connect(() => { set_affects( StyleAffects.LEVEL7 );  menu_lbl.label = lvl7.label; });
-    lvl8.activate.connect(() => { set_affects( StyleAffects.LEVEL8 );  menu_lbl.label = lvl8.label; });
-    lvl9.activate.connect(() => { set_affects( StyleAffects.LEVEL9 );  menu_lbl.label = lvl9.label; });
-    curr.activate.connect(() => { set_affects( StyleAffects.CURRENT ); menu_lbl.label = curr.label; });
-
-    /* Initialize the menubutton label */
-    switch( _affects ) {
-      case StyleAffects.ALL     :  menu_lbl.label = all.label;   break;
-      case StyleAffects.LEVEL0  :  menu_lbl.label = root.label;  break;
-      case StyleAffects.LEVEL1  :  menu_lbl.label = lvl1.label;  break;
-      case StyleAffects.LEVEL2  :  menu_lbl.label = lvl2.label;  break;
-      case StyleAffects.LEVEL3  :  menu_lbl.label = lvl3.label;  break;
-      case StyleAffects.LEVEL4  :  menu_lbl.label = lvl4.label;  break;
-      case StyleAffects.LEVEL5  :  menu_lbl.label = lvl5.label;  break;
-      case StyleAffects.LEVEL6  :  menu_lbl.label = lvl6.label;  break;
-      case StyleAffects.LEVEL7  :  menu_lbl.label = lvl7.label;  break;
-      case StyleAffects.LEVEL8  :  menu_lbl.label = lvl8.label;  break;
-      case StyleAffects.LEVEL9  :  menu_lbl.label = lvl9.label;  break;
-      case StyleAffects.CURRENT :  menu_lbl.label = curr.label;  break;
-    }
-
-    apply.activate.connect( apply_changes_to );
-
-    box.pack_start( lbl,   false, false );
-    box.pack_start( mb,    false, false );
-    box.pack_end(   apply, false, false );
-
-    return( box );
-
-  }
-
-  /* Sets the affects value and save the change to the settings */
-  private void set_affects( StyleAffects affects ) {
-    _affects = affects;
-    _settings.set_int( "style-affects", affects );
-  }
-
   /* Creates the connection style UI */
   private Box create_connection_ui() {
 
     var box = new Box( Orientation.VERTICAL, 0 );
+    var sep = new Separator( Orientation.HORIZONTAL );
 
     var lbl = new Label( _( "<b>Connection Options</b>" ) );
     lbl.use_markup = true;
@@ -533,6 +543,7 @@ public class StyleInspector : Box {
 
     box.pack_start( lbl,  false, true );
     box.pack_start( cbox, false, true );
+    box.pack_start( sep,  false, true, 10 );
 
     return( box );
 
@@ -617,25 +628,99 @@ public class StyleInspector : Box {
     return( false );
   }
 
+  /* Sets the affects value and save the change to the settings */
+  private void set_affects( StyleAffects affects ) {
+    _affects = affects;
+    _settings.set_int( "style-affects", affects );
+    switch( _affects ) {
+      case StyleAffects.ALL     :
+        _current_style.copy( styles.get_global_style() );
+        _link_group.visible = true;
+        _node_group.visible = true;
+        _conn_group.visible = true;
+        break;
+      case StyleAffects.LEVEL0  :
+      case StyleAffects.LEVEL1  :
+      case StyleAffects.LEVEL2  :
+      case StyleAffects.LEVEL3  :
+      case StyleAffects.LEVEL4  :
+      case StyleAffects.LEVEL5  :
+      case StyleAffects.LEVEL6  :
+      case StyleAffects.LEVEL7  :
+      case StyleAffects.LEVEL8  :
+      case StyleAffects.LEVEL9  :
+        _current_style.copy( styles.get_style_for_level( _affects.level() ) );
+        _link_group.visible = (_affects != StyleAffects.LEVEL0);
+        _node_group.visible = true;
+        _conn_group.visible = false;
+        break;
+      case StyleAffects.CURRENT :
+        var node = _da.get_current_node();
+        var conn = _da.get_current_connection();
+        if( node != null ) {
+          _current_style.copy( node.style );
+          _link_group.visible = true;
+          _node_group.visible = true;
+          _conn_group.visible = false;
+        } else if( conn != null ) {
+          _current_style.copy( conn.style );
+          _link_group.visible = false;
+          _node_group.visible = false;
+          _conn_group.visible = true;
+        }
+        break;
+      case StyleAffects.CURRTREE :
+        _current_style.copy( _da.get_current_node().get_root().style );
+        _link_group.visible = true;
+        _node_group.visible = true;
+        _conn_group.visible = false;
+        break;
+      case StyleAffects.CURRSUBTREE :
+        _current_style.copy( _da.get_current_node().style );
+        _link_group.visible = true;
+        _node_group.visible = true;
+        _conn_group.visible = false;
+        break;
+    }
+  }
+
   /* Apply the changes */
-  private void apply_changes( StyleAffects affects = StyleAffects.CURRENT ) {
+  private void apply_changes() {
     Node?       node = _da.get_current_node();
     Connection? conn = _da.get_current_connection();
-    if( node != null ) {
-      styles.set_node_to_style( node, _current_style );
-    } else if( conn != null ) {
-      styles.set_connection_to_style( conn, _current_style );
-    } else {
-      styles.set_all_nodes_to_style( _da.get_nodes(), _current_style );
-      styles.set_all_connections_to_style( _da.get_connections(), _current_style );
+    switch( _affects ) {
+      case StyleAffects.ALL     :
+        styles.set_all_nodes_to_style( _da.get_nodes(), _current_style );
+        styles.set_all_connections_to_style( _da.get_connections(), _current_style );
+        break;
+      case StyleAffects.LEVEL0  :
+      case StyleAffects.LEVEL1  :
+      case StyleAffects.LEVEL2  :
+      case StyleAffects.LEVEL3  :
+      case StyleAffects.LEVEL4  :
+      case StyleAffects.LEVEL5  :
+      case StyleAffects.LEVEL6  :
+      case StyleAffects.LEVEL7  :
+      case StyleAffects.LEVEL8  :
+      case StyleAffects.LEVEL9  :
+        styles.set_levels_to_style( _da.get_nodes(), (1 << (int)_affects.level()), _current_style );
+        break;
+      case StyleAffects.CURRENT :
+        if( node != null ) {
+          node.style = _current_style;
+        } else if( conn != null ) {
+          conn.style = _current_style;
+        }
+        break;
+      case StyleAffects.CURRTREE :
+        styles.set_tree_to_style( node.get_root(), _current_style );
+        break;
+      case StyleAffects.CURRSUBTREE :
+        styles.set_tree_to_style( node, _current_style );
+        break;
     }
     _da.changed();
     _da.queue_draw();
-  }
-
-  /* Applies the changes to the given affect type */
-  private void apply_changes_to() {
-    apply_changes( _affects );
   }
 
   /* Called whenever the current node changes */
@@ -691,17 +776,32 @@ public class StyleInspector : Box {
 
   /* Called whenever the current node or connection changes */
   private void handle_ui_changed() {
-    bool node_enable = _da.get_current_connection() == null;
-    bool conn_enable = _da.get_current_node() == null;
-    _link_types.set_sensitive( node_enable );
-    _link_dash.set_sensitive( node_enable );
-    _link_width.set_sensitive( node_enable );
-    _link_arrow.set_sensitive( node_enable );
-    _node_borders.set_sensitive( node_enable );
-    _node_borderwidth.set_sensitive( node_enable );
-    _font_chooser.set_sensitive( node_enable );
-    _conn_dash.set_sensitive( conn_enable );
-    _conn_width.set_sensitive( conn_enable );
+    var curr_is_node = _da.get_current_node() != null;
+    var curr_is_conn = _da.get_current_connection() != null;
+    for( int i=0; i<_affect_items.length; i++ ) {
+      var entry = _affect_items.index( i );
+      switch( i ) {
+        case StyleAffects.CURRENT     :  entry.visible = curr_is_node || curr_is_conn;  break;
+        case StyleAffects.CURRTREE    :
+        case StyleAffects.CURRSUBTREE :  entry.visible = curr_is_node;  break;
+        case StyleAffects.SEP1        :  entry.visible = curr_is_node || curr_is_conn;  break;
+        case StyleAffects.LEVEL0      :
+        case StyleAffects.LEVEL1      :
+        case StyleAffects.LEVEL2      :
+        case StyleAffects.LEVEL3      :
+        case StyleAffects.LEVEL4      :
+        case StyleAffects.LEVEL5      :
+        case StyleAffects.LEVEL6      :
+        case StyleAffects.LEVEL7      :
+        case StyleAffects.LEVEL8      :
+        case StyleAffects.LEVEL9      :  entry.visible = !curr_is_conn;  break;
+      }
+    }
+    if( curr_is_node || curr_is_conn ) {
+      set_affects( StyleAffects.CURRENT );
+    } else {
+      set_affects( StyleAffects.ALL );
+    }
   }
 
 }
