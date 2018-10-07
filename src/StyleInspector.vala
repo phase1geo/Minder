@@ -88,6 +88,8 @@ public class StyleInspector : Box {
   private Style                      _current_style;
   private StyleAffects               _affects;
   private Array<Gtk.MenuItem>        _affect_items;
+  private Label                      _affects_label;
+  private Box                        _branch_group;
   private Box                        _link_group;
   private Box                        _node_group;
   private Box                        _conn_group;
@@ -100,7 +102,7 @@ public class StyleInspector : Box {
 
     _da            = da;
     _settings      = settings;
-    _current_style = new Style();
+    _current_style = new Style.templated();
 
     /* Load the current style with values from settings */
     _affects                        = (StyleAffects)settings.get_int( "style-affects" );
@@ -126,14 +128,16 @@ public class StyleInspector : Box {
     vp.add( box );
     sw.add( vp );
 
-    _link_group = create_link_ui();
-    _node_group = create_node_ui();
-    _conn_group = create_connection_ui();
+    _branch_group = create_branch_ui();
+    _link_group   = create_link_ui();
+    _node_group   = create_node_ui();
+    _conn_group   = create_connection_ui();
 
     /* Pack the scrollwindow */
-    box.pack_start( _link_group, false, true );
-    box.pack_start( _node_group, false, true );
-    box.pack_start( _conn_group, false, true );
+    box.pack_start( _branch_group, false, true );
+    box.pack_start( _link_group,   false, true );
+    box.pack_start( _node_group,   false, true );
+    box.pack_start( _conn_group,   false, true );
 
     /* Pack the elements into this widget */
     pack_start( affect, false, true );
@@ -151,15 +155,16 @@ public class StyleInspector : Box {
   /* Creates the menubutton that changes the affect */
   private Box create_affect_ui() {
 
-    var box      = new Box( Orientation.HORIZONTAL, 10 );
-    var lbl      = new Label( _( "<b>Changes affect:</b>" ) );
-    var mb       = new MenuButton();
-    var menu_lbl = new Label( "" );
-    var menu     = new Gtk.Menu();
+    var box  = new Box( Orientation.HORIZONTAL, 10 );
+    var lbl  = new Label( _( "<b>Changes affect:</b>" ) );
+    var mb   = new MenuButton();
+    var menu = new Gtk.Menu();
+
+    _affects_label = new Label( "" );
 
     lbl.use_markup = true;
 
-    mb.add( menu_lbl );
+    mb.add( _affects_label );
     mb.popup = menu;
 
     /* Allocate memory for menu items */
@@ -174,17 +179,16 @@ public class StyleInspector : Box {
         menu.add( mi );
         _affect_items.append_val( mi );
       } else {
-        var label = affect.label();
-        var mi    = new Gtk.MenuItem.with_label( label );
+        var mi = new Gtk.MenuItem.with_label( affect.label() );
         menu.add( mi );
-        mi.activate.connect(() => { set_affects( affect ); menu_lbl.label = label; });
+        mi.activate.connect(() => { set_affects( affect ); });
         _affect_items.append_val( mi );
       }
     }
     menu.show_all();
 
     /* Make sure that the menubutton label is set accordingly */
-    menu_lbl.label = _affects.label();
+    set_affects( _affects );
 
     /* Pack the menubutton box */
     box.pack_start( lbl, false, false );
@@ -192,6 +196,83 @@ public class StyleInspector : Box {
 
     return( box );
 
+  }
+
+  /* Adds the options to manipulate line options */
+  private Box create_branch_ui() {
+
+    var box = new Box( Orientation.VERTICAL, 0 );
+    var sep = new Separator( Orientation.HORIZONTAL );
+
+    var lbl = new Label( _( "<b>Branch Options</b>" ) );
+    lbl.use_markup = true;
+    lbl.xalign = (float)0;
+
+    var cbox = new Box( Orientation.VERTICAL, 10 );
+    cbox.border_width = 10;
+
+    var branch_type = create_branch_type_ui();
+
+    cbox.pack_start( branch_type, false, true );
+
+    box.pack_start( lbl,  false, true );
+    box.pack_start( cbox, false, true );
+    box.pack_start( sep,  false, true, 10 );
+
+    return( box );
+
+  }
+
+  /* Create the branch type UI */
+  private Box create_branch_type_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Branch Style" ) );
+    lbl.xalign = (float)0;
+
+    /* Create the line types mode button */
+    _link_types = new Granite.Widgets.ModeButton();
+    _link_types.has_tooltip = true;
+    _link_types.button_release_event.connect( branch_type_changed );
+    _link_types.query_tooltip.connect( branch_type_show_tooltip );
+
+    var link_types = styles.get_link_types();
+    for( int i=0; i<link_types.length; i++ ) {
+      _link_types.append_icon( link_types.index( i ).icon_name(), IconSize.SMALL_TOOLBAR );
+    }
+
+    box.pack_start( lbl,         false, true );
+    box.pack_end(   _link_types, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the user changes the current layout */
+  private bool branch_type_changed( Gdk.EventButton e ) {
+    var link_types = styles.get_link_types();
+    if( _link_types.selected < link_types.length ) {
+      _current_style.link_type = link_types.index( _link_types.selected );
+      _settings.set_string( "style-link-type", _current_style.link_type.name() );
+      apply_changes();
+    }
+    return( false );
+  }
+
+  /* Called whenever the tooltip needs to be displayed for the layout selector */
+  private bool branch_type_show_tooltip( int x, int y, bool keyboard, Tooltip tooltip ) {
+    if( keyboard ) {
+      return( false );
+    }
+    var link_types = styles.get_link_types();
+    int button_width = (int)(_link_types.get_allocated_width() / link_types.length);
+    if( (x / button_width) < link_types.length ) {
+      tooltip.set_text( link_types.index( x / button_width ).display_name() );
+      return( true );
+    }
+    return( false );
   }
 
   /* Adds the options to manipulate line options */
@@ -207,12 +288,10 @@ public class StyleInspector : Box {
     var cbox = new Box( Orientation.VERTICAL, 10 );
     cbox.border_width = 10;
 
-    var link_type  = create_link_type_ui();
     var link_dash  = create_link_dash_ui();
     var link_width = create_link_width_ui();
     var link_arrow = create_link_arrow_ui();
 
-    cbox.pack_start( link_type,  false, true );
     cbox.pack_start( link_dash,  false, true );
     cbox.pack_start( link_width, false, true );
     cbox.pack_start( link_arrow, false, true );
@@ -223,58 +302,6 @@ public class StyleInspector : Box {
 
     return( box );
 
-  }
-
-  /* Create the link type UI */
-  private Box create_link_type_ui() {
-
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    box.homogeneous = true;
-
-    var lbl = new Label( _( "Line Style" ) );
-    lbl.xalign = (float)0;
-
-    /* Create the line types mode button */
-    _link_types = new Granite.Widgets.ModeButton();
-    _link_types.has_tooltip = true;
-    _link_types.button_release_event.connect( link_type_changed );
-    _link_types.query_tooltip.connect( link_type_show_tooltip );
-
-    var link_types = styles.get_link_types();
-    for( int i=0; i<link_types.length; i++ ) {
-      _link_types.append_icon( link_types.index( i ).icon_name(), IconSize.SMALL_TOOLBAR );
-    }
-
-    box.pack_start( lbl,         false, true );
-    box.pack_end(   _link_types, false, true );
-
-    return( box );
-
-  }
-
-  /* Called whenever the user changes the current layout */
-  private bool link_type_changed( Gdk.EventButton e ) {
-    var link_types = styles.get_link_types();
-    if( _link_types.selected < link_types.length ) {
-      _current_style.link_type = link_types.index( _link_types.selected );
-      _settings.set_string( "style-link-type", _current_style.link_type.name() );
-      apply_changes();
-    }
-    return( false );
-  }
-
-  /* Called whenever the tooltip needs to be displayed for the layout selector */
-  private bool link_type_show_tooltip( int x, int y, bool keyboard, Tooltip tooltip ) {
-    if( keyboard ) {
-      return( false );
-    }
-    var link_types = styles.get_link_types();
-    int button_width = (int)(_link_types.get_allocated_width() / link_types.length);
-    if( (x / button_width) < link_types.length ) {
-      tooltip.set_text( link_types.index( x / button_width ).display_name() );
-      return( true );
-    }
-    return( false );
   }
 
   /* Create the link dash widget */
@@ -508,8 +535,7 @@ public class StyleInspector : Box {
     _font_chooser.font_set.connect(() => {
       var family = _font_chooser.get_font_family().get_name();
       var size   = _font_chooser.get_font_size();
-      _current_style.node_font.set_family( family );
-      _current_style.node_font.set_size( size );
+      _current_style.set_template_font( family, size );
       _settings.set_string( "style-node-font-family", family );
       _settings.set_int( "style-node-font-size", size );
       apply_changes();
@@ -631,13 +657,15 @@ public class StyleInspector : Box {
   /* Sets the affects value and save the change to the settings */
   private void set_affects( StyleAffects affects ) {
     _affects = affects;
+    _affects_label.label = affects.label();
     _settings.set_int( "style-affects", affects );
     switch( _affects ) {
       case StyleAffects.ALL     :
         _current_style.copy( styles.get_global_style() );
-        _link_group.visible = true;
-        _node_group.visible = true;
-        _conn_group.visible = true;
+        _branch_group.visible = true;
+        _link_group.visible   = true;
+        _node_group.visible   = true;
+        _conn_group.visible   = true;
         break;
       case StyleAffects.LEVEL0  :
       case StyleAffects.LEVEL1  :
@@ -650,36 +678,41 @@ public class StyleInspector : Box {
       case StyleAffects.LEVEL8  :
       case StyleAffects.LEVEL9  :
         _current_style.copy( styles.get_style_for_level( _affects.level() ) );
-        _link_group.visible = (_affects != StyleAffects.LEVEL0);
-        _node_group.visible = true;
-        _conn_group.visible = false;
+        _branch_group.visible = true;
+        _link_group.visible   = (_affects != StyleAffects.LEVEL0);
+        _node_group.visible   = true;
+        _conn_group.visible   = false;
         break;
       case StyleAffects.CURRENT :
         var node = _da.get_current_node();
         var conn = _da.get_current_connection();
         if( node != null ) {
           _current_style.copy( node.style );
-          _link_group.visible = true;
-          _node_group.visible = true;
-          _conn_group.visible = false;
+          _branch_group.visible = true;
+          _link_group.visible   = true;
+          _node_group.visible   = true;
+          _conn_group.visible   = false;
         } else if( conn != null ) {
           _current_style.copy( conn.style );
-          _link_group.visible = false;
-          _node_group.visible = false;
-          _conn_group.visible = true;
+          _branch_group.visible = false;
+          _link_group.visible   = false;
+          _node_group.visible   = false;
+          _conn_group.visible   = true;
         }
         break;
       case StyleAffects.CURRTREE :
         _current_style.copy( _da.get_current_node().get_root().style );
-        _link_group.visible = true;
-        _node_group.visible = true;
-        _conn_group.visible = false;
+        _branch_group.visible = true;
+        _link_group.visible   = true;
+        _node_group.visible   = true;
+        _conn_group.visible   = false;
         break;
       case StyleAffects.CURRSUBTREE :
         _current_style.copy( _da.get_current_node().style );
-        _link_group.visible = true;
-        _node_group.visible = true;
-        _conn_group.visible = false;
+        _branch_group.visible = true;
+        _link_group.visible   = true;
+        _node_group.visible   = true;
+        _conn_group.visible   = false;
         break;
     }
   }
@@ -719,6 +752,7 @@ public class StyleInspector : Box {
         styles.set_tree_to_style( node, _current_style );
         break;
     }
+    _current_style.clear_template();
     _da.changed();
     _da.queue_draw();
   }

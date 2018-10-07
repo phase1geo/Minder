@@ -23,19 +23,24 @@ using Pango;
 
 public class Style {
 
-  public LinkType        link_type        { get; set; }
-  public int             link_width       { get; set; }
-  public bool            link_arrow       { get; set; }
-  public LinkDash        link_dash        { get; set; }
-  public NodeBorder      node_border      { get; set; }
-  public int             node_width       { get; set; }
-  public int             node_borderwidth { get; set; }
-  public FontDescription node_font        { get; set; }
-  public LinkDash        connection_dash  { get; set; }
-  public int             connection_width { get; set; }
-  public string          connection_arrow { get; set; }
+  private bool _template;
 
+  public LinkType?        link_type        { get; set; default = null; }
+  public int?             link_width       { get; set; default = null; }
+  public bool?            link_arrow       { get; set; default = null; }
+  public LinkDash?        link_dash        { get; set; default = null; }
+  public NodeBorder?      node_border      { get; set; default = null; }
+  public int?             node_width       { get; set; default = null; }
+  public int?             node_borderwidth { get; set; default = null; }
+  public FontDescription? node_font        { get; set; default = null; }
+  public LinkDash?        connection_dash  { get; set; default = null; }
+  public int?             connection_width { get; set; default = null; }
+  public string?          connection_arrow { get; set; default = null; }
+
+  /* Default constructor */
   public Style() {
+
+    _template = false;
 
     node_font = new FontDescription();
     node_font.set_family( "Sans" );
@@ -43,20 +48,53 @@ public class Style {
 
   }
 
+  /* Constructor used for style templating */
+  public Style.templated() {
+    _template = true;
+  }
+
+  /* Creates a font for a templated style */
+  public void set_template_font( string family, int size ) {
+
+    node_font = new FontDescription();
+    node_font.set_family( family );
+    node_font.set_size( size * Pango.SCALE );
+
+  }
+
+  /* Clears this style template options */
+  public void clear_template() {
+
+    if( _template ) {
+      link_type        = null;
+      link_width       = null;
+      link_arrow       = null;
+      link_dash        = null;
+      node_border      = null;
+      node_width       = null;
+      node_borderwidth = null;
+      node_font        = null;
+      connection_dash  = null;
+      connection_width = null;
+      connection_arrow = null;
+    }
+
+  }
+
   /* Copies the given style to this style */
   public void copy( Style s ) {
 
-    link_type        = s.link_type;
-    link_width       = s.link_width;
-    link_arrow       = s.link_arrow;
-    link_dash        = s.link_dash;
-    node_border      = s.node_border;
-    node_width       = s.node_width;
-    node_borderwidth = s.node_borderwidth;
-    node_font        = s.node_font.copy();
-    connection_dash  = s.connection_dash;
-    connection_width = s.connection_width;
-    connection_arrow = s.connection_arrow;
+    if( (link_type        != null) || !_template ) link_type        = s.link_type;
+    if( (link_width       != null) || !_template ) link_width       = s.link_width;
+    if( (link_arrow       != null) || !_template ) link_arrow       = s.link_arrow;
+    if( (link_dash        != null) || !_template ) link_dash        = s.link_dash;
+    if( (node_border      != null) || !_template ) node_border      = s.node_border;
+    if( (node_width       != null) || !_template ) node_width       = s.node_width;
+    if( (node_borderwidth != null) || !_template ) node_borderwidth = s.node_borderwidth;
+    if( (node_font        != null) || !_template ) node_font        = s.node_font.copy();
+    if( (connection_dash  != null) || !_template ) connection_dash  = s.connection_dash;
+    if( (connection_width != null) || !_template ) connection_width = s.connection_width;
+    if( (connection_arrow != null) || !_template ) connection_arrow = s.connection_arrow;
 
   }
 
@@ -150,13 +188,13 @@ public class Style {
   }
 
   /* Draws the link with the given information, applying the stored styling */
-  public void draw_link( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal,
+  public void draw_link( Cairo.Context ctx, Style parent_style, double from_x, double from_y, double to_x, double to_y, bool horizontal,
                          out double tailx, out double taily, out double tipx, out double tipy ) {
 
     ctx.save();
     ctx.set_line_width( link_width );
     link_dash.set_context( ctx, link_width );
-    link_type.draw( ctx, from_x, from_y, to_x, to_y, horizontal, out tailx, out taily, out tipx, out tipy );
+    parent_style.link_type.draw( ctx, from_x, from_y, to_x, to_y, horizontal, out tailx, out taily, out tipx, out tipy );
     ctx.restore();
 
   }

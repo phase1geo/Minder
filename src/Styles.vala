@@ -96,7 +96,9 @@ public class Styles {
 
   /* Sets all nodes in the mind-map to the given link style */
   public void set_all_nodes_to_style( Array<Node> nodes, Style style ) {
-    _styles.index( 10 ).copy( style );
+    for( int i=0; i<=10; i++ ) {
+      _styles.index( i ).copy( style );
+    }
     set_all_nodes_to_style_helper( nodes, style );
   }
 

@@ -1807,19 +1807,19 @@ public class Node : Object {
 
     switch( side ) {
       case NodeSide.LEFT :
-        style.draw_link( ctx, parent_x, parent_y, (posx + _width), (posy + height), true,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + _width), (posy + height), true,
                          out tailx, out taily, out tipx, out tipy );
         break;
       case NodeSide.RIGHT :
-        style.draw_link( ctx, parent_x, parent_y, posx, (posy + height), true,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, posx, (posy + height), true,
                          out tailx, out taily, out tipx, out tipy );
         break;
       case NodeSide.TOP :
-        style.draw_link( ctx, parent_x, parent_y, (posx + (_width / 2)), (posy + _height), false,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + _height), false,
                          out tailx, out taily, out tipx, out tipy );
         break;
       case NodeSide.BOTTOM :
-        style.draw_link( ctx, parent_x, parent_y, (posx + (_width / 2)), posy, false,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), posy, false,
                          out tailx, out taily, out tipx, out tipy );
         break;
     }
