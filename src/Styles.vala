@@ -94,6 +94,33 @@ public class Styles {
 
   }
 
+  /* Loads the contents of the style templates */
+  public void load( Xml.Node* n ) {
+
+    int level = 0;
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        if( it->name == "style" ) {
+          _styles.index( level ).load( it );
+          level++;
+        }
+      }
+    }
+
+  }
+
+  /* Saves the style template information */
+  public void save( Xml.Node* parent ) {
+
+    Xml.Node* node = new Xml.Node( null, "styles" );
+    for( int i=0; i<_styles.length; i++ ) {
+      _styles.index( i ).save( node );
+    }
+
+    parent->add_child( node );
+
+  }
+
   /* Sets all nodes in the mind-map to the given link style */
   public void set_all_nodes_to_style( Array<Node> nodes, Style style ) {
     for( int i=0; i<=10; i++ ) {

@@ -332,6 +332,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           case "theme"       :  load_theme( it );   break;
+          case "styles"      :  StyleInspector.styles.load( it );  break;
           case "drawarea"    :  load_drawarea( it );  break;
           case "images"      :  image_manager.load( it );  break;
           case "connections" :  _connections.load( this, it );  break;
@@ -365,6 +366,8 @@ public class DrawArea : Gtk.DrawingArea {
     theme->new_prop( "name", _theme.name );
     theme->new_prop( "index", _theme.index.to_string() );
     parent->add_child( theme );
+
+    StyleInspector.styles.save( parent );
 
     Xml.Node* origin = new Xml.Node( null, "drawarea" );
     origin->new_prop( "x", _store_origin_x.to_string() );
