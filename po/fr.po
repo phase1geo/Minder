@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-16 18:10-0500\n"
-"PO-Revision-Date: 2018-07-28 18:54+0200\n"
+"POT-Creation-Date: 2018-10-07 20:02+0200\n"
+"PO-Revision-Date: 2018-10-07 20:08+0200\n"
 "Last-Translator: yannicka <yannick.armand@protonmail.com>\n"
 "Language-Team: français <>\n"
 "Language: \n"
@@ -49,7 +49,7 @@ msgstr "Ajouter une note"
 
 #: src/DrawAreaMenu.vala:78 src/DrawAreaMenu.vala:243
 msgid "Add Image"
-msgstr ""
+msgstr "Ajouter une image"
 
 #: src/DrawAreaMenu.vala:81 src/DrawAreaMenu.vala:244
 msgid "Fold Children"
@@ -107,11 +107,10 @@ msgstr "Supprimer la tâche"
 msgid "Remove Note"
 msgstr "Supprimer la note"
 
-#: src/DrawAreaMenu.vala:243 src/ImageEditor.vala:361
+#: src/DrawAreaMenu.vala:243 src/ImageEditor.vala:363
 #: src/NodeInspector.vala:214
-#, fuzzy
 msgid "Remove Image"
-msgstr "Supprimer la tâche"
+msgstr "Supprimer l'image"
 
 #: src/DrawAreaMenu.vala:244
 msgid "Unfold Children"
@@ -122,49 +121,49 @@ msgstr "Déplier les enfants"
 msgid "Horizontal"
 msgstr "Horizontal"
 
-#: src/DrawArea.vala:459
+#: src/DrawArea.vala:475
 msgid "Main Idea"
 msgstr "Idée principale"
 
-#: src/DrawArea.vala:1089
+#: src/DrawArea.vala:1127
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% complété"
 
-#: src/DrawArea.vala:1366 src/DrawArea.vala:2046
+#: src/DrawArea.vala:1404 src/DrawArea.vala:2084
 msgid "Another Idea"
 msgstr "Autre idée"
 
-#: src/DrawArea.vala:1497
+#: src/DrawArea.vala:1535
 msgid "fold completed tasks"
 msgstr "plier les tâches terminées"
 
-#: src/DrawArea.vala:1532
+#: src/DrawArea.vala:1570
 msgid "unfold all tasks"
 msgstr "déplier toutes les tâches"
 
 #: src/ImageEditor.vala:179
 #, c-format
 msgid "Crop Area: %d,%d %3dx%3d"
-msgstr ""
+msgstr "Zone de découpe : %d,%d %3dx%3d"
 
-#: src/ImageEditor.vala:351
+#: src/ImageEditor.vala:353
 #, c-format
 msgid "Cursor: %3d,%3d"
-msgstr ""
+msgstr "Curseur : %3d,%3d"
 
-#: src/ImageEditor.vala:358 src/MainWindow.vala:496 src/MainWindow.vala:585
+#: src/ImageEditor.vala:360 src/MainWindow.vala:496 src/MainWindow.vala:585
 #: src/MainWindow.vala:668 src/MainWindow.vala:886
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/ImageEditor.vala:359
+#: src/ImageEditor.vala:361
 msgid "Apply"
-msgstr ""
+msgstr "Appliquer"
 
-#: src/ImageEditor.vala:360
+#: src/ImageEditor.vala:362
 msgid "Change Image"
-msgstr ""
+msgstr "Changer l'image"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:218
 msgid "Manual"
@@ -366,11 +365,11 @@ msgstr "PDF"
 
 #: src/MainWindow.vala:928
 msgid "PNG (Transparent)"
-msgstr ""
+msgstr "PNG (transparent)"
 
 #: src/MainWindow.vala:934
 msgid "PNG (Opaque)"
-msgstr ""
+msgstr "PNG (opaque)"
 
 #: src/MainWindow.vala:940
 msgid "PlainText"
@@ -404,13 +403,13 @@ msgstr "Plier les tâches terminées"
 msgid "Unfold All Nodes"
 msgstr "Déplier toutes les tâches"
 
-#: src/Node.vala:1344
+#: src/Node.vala:1380
 msgid "<b><i>Title:</i></b>"
-msgstr ""
+msgstr "<b><i>Titre :</i></b>"
 
-#: src/Node.vala:1347
+#: src/Node.vala:1383
 msgid "<b><i>Note:</i></b>"
-msgstr ""
+msgstr "<b><i>Note :</i></b>"
 
 #: src/NodeInspector.vala:56
 msgid "<big>Select a node to view/edit information</big>"
@@ -438,15 +437,15 @@ msgstr "Note"
 
 #: src/NodeInspector.vala:197
 msgid "Image"
-msgstr ""
+msgstr "Image"
 
 #: src/NodeInspector.vala:201
 msgid "Add Image..."
-msgstr ""
+msgstr "Ajouter une image..."
 
 #: src/NodeInspector.vala:208
 msgid "Edit Image"
-msgstr ""
+msgstr "Modifier l'image"
 
 #: src/NodeInspector.vala:321
 msgid "Copy Node To Clipboard"
@@ -466,19 +465,19 @@ msgstr "Supprimer le nœud"
 
 #: src/themes/ThemeSolarizedLight.vala:30
 msgid "Solarized Light"
-msgstr ""
+msgstr "Solarized Light"
 
 #: src/themes/ThemeDefault.vala:30
 msgid "Default"
-msgstr ""
+msgstr "Default"
 
 #: src/themes/ThemeDark.vala:30
 msgid "Dark"
-msgstr ""
+msgstr "Dark"
 
 #: src/themes/ThemeSolarizedDark.vala:30
 msgid "Solarized Dark"
-msgstr ""
+msgstr "Solarized Dark"
 
 #: src/undo_actions/UndoNodePaste.vala:32
 msgid "paste node"
@@ -494,7 +493,7 @@ msgstr "changement du la note du nœud"
 
 #: src/undo_actions/UndoNodeReveal.vala:32
 msgid "node reveal"
-msgstr ""
+msgstr "révélation de noeud"
 
 #: src/undo_actions/UndoNodeDelete.vala:32
 msgid "delete node"
@@ -506,7 +505,7 @@ msgstr "couper le nœud"
 
 #: src/undo_actions/UndoNodeResize.vala:32
 msgid "node resize"
-msgstr ""
+msgstr "redimensionnement du nœud"
 
 #: src/undo_actions/UndoNodeInsert.vala:33
 msgid "insert node"
@@ -522,13 +521,12 @@ msgid "attach node"
 msgstr "attacher le nœud"
 
 #: src/undo_actions/UndoNodeLinkColor.vala:33
-#, fuzzy
 msgid "link color change"
-msgstr "changement du la note du nœud"
+msgstr "changement de la couleur du lien"
 
 #: src/undo_actions/UndoNodeLayout.vala:29
 msgid "change layout"
-msgstr ""
+msgstr "changement de disposition"
 
 #: src/undo_actions/UndoNodeFold.vala:32
 msgid "node change fold"
@@ -539,9 +537,8 @@ msgid "balance nodes"
 msgstr "balance des nœuds"
 
 #: src/undo_actions/UndoNodeImage.vala:32
-#, fuzzy
 msgid "node image change"
-msgstr "changement du nom du nœud"
+msgstr "changement de la taille de l'image"
 
 #: src/undo_actions/UndoNodeDetach.vala:34
 msgid "detach node"

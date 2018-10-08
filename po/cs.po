@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-16 18:10-0500\n"
+"POT-Creation-Date: 2018-10-07 20:02+0200\n"
 "PO-Revision-Date: 2018-07-21 21:13+0200\n"
 "Last-Translator: Jan Marek <janmarek28@gmail.com>\n"
 "Language-Team: čeština <>\n"
@@ -107,7 +107,7 @@ msgstr "Odstranit úkol"
 msgid "Remove Note"
 msgstr "Odstranit poznámku"
 
-#: src/DrawAreaMenu.vala:243 src/ImageEditor.vala:361
+#: src/DrawAreaMenu.vala:243 src/ImageEditor.vala:363
 #: src/NodeInspector.vala:214
 #, fuzzy
 msgid "Remove Image"
@@ -122,24 +122,24 @@ msgstr "Rozbalit potomky"
 msgid "Horizontal"
 msgstr "Horizontální"
 
-#: src/DrawArea.vala:459
+#: src/DrawArea.vala:475
 msgid "Main Idea"
 msgstr ""
 
-#: src/DrawArea.vala:1089
+#: src/DrawArea.vala:1127
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% hotovo"
 
-#: src/DrawArea.vala:1366 src/DrawArea.vala:2046
+#: src/DrawArea.vala:1404 src/DrawArea.vala:2084
 msgid "Another Idea"
 msgstr "Další nápad"
 
-#: src/DrawArea.vala:1497
+#: src/DrawArea.vala:1535
 msgid "fold completed tasks"
 msgstr ""
 
-#: src/DrawArea.vala:1532
+#: src/DrawArea.vala:1570
 msgid "unfold all tasks"
 msgstr ""
 
@@ -148,21 +148,21 @@ msgstr ""
 msgid "Crop Area: %d,%d %3dx%3d"
 msgstr ""
 
-#: src/ImageEditor.vala:351
+#: src/ImageEditor.vala:353
 #, c-format
 msgid "Cursor: %3d,%3d"
 msgstr ""
 
-#: src/ImageEditor.vala:358 src/MainWindow.vala:496 src/MainWindow.vala:585
+#: src/ImageEditor.vala:360 src/MainWindow.vala:496 src/MainWindow.vala:585
 #: src/MainWindow.vala:668 src/MainWindow.vala:886
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: src/ImageEditor.vala:359
+#: src/ImageEditor.vala:361
 msgid "Apply"
 msgstr ""
 
-#: src/ImageEditor.vala:360
+#: src/ImageEditor.vala:362
 msgid "Change Image"
 msgstr ""
 
@@ -405,11 +405,11 @@ msgstr ""
 msgid "Unfold All Nodes"
 msgstr "Rozbalit potomky"
 
-#: src/Node.vala:1344
+#: src/Node.vala:1380
 msgid "<b><i>Title:</i></b>"
 msgstr ""
 
-#: src/Node.vala:1347
+#: src/Node.vala:1383
 msgid "<b><i>Note:</i></b>"
 msgstr ""
 
