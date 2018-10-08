@@ -97,12 +97,15 @@ public class Styles {
   /* Loads the contents of the style templates */
   public void load( Xml.Node* n ) {
 
-    int level = 0;
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "style" ) {
-          _styles.index( level ).load( it );
-          level++;
+          string? l = it->get_prop( "level" );
+          if( l != null ) {
+            int level = int.parse( l );
+            _styles.index( level ).load_node( it );
+            _styles.index( level ).load_connection( it );
+          }
         }
       }
     }
@@ -114,7 +117,11 @@ public class Styles {
 
     Xml.Node* node = new Xml.Node( null, "styles" );
     for( int i=0; i<_styles.length; i++ ) {
-      _styles.index( i ).save( node );
+      Xml.Node* n = new Xml.Node( null, "style" );
+      n->set_prop( "level", i.to_string() );
+      _styles.index( i ).save_node_in_node( n );
+      _styles.index( i ).save_connection_in_node( n );
+      node->add_child( n );
     }
 
     parent->add_child( node );

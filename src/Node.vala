@@ -232,7 +232,6 @@ public class Node : Object {
     _pango_layout = da.create_pango_layout( null );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     this.layout = layout;
-    style = StyleInspector.styles.get_style_for_level( 1 );
   }
 
   /* Constructor initializing string */
@@ -243,7 +242,6 @@ public class Node : Object {
     _pango_layout = da.create_pango_layout( n );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     this.layout = layout;
-    style = StyleInspector.styles.get_style_for_level( 0 );
   }
 
   /* Copies an existing node to this node */

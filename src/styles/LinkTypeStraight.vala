@@ -44,8 +44,8 @@ public class LinkTypeStraight : Object, LinkType {
                     out double tailx, out double taily, out double tipx, out double tipy ) {
     tailx = from_x;
     taily = from_y;
-    tipx  = (from_x + to_x) / 2;
-    tipy  = (from_y + to_y) / 2;
+    tipx  = to_x;
+    tipy  = to_y;
     ctx.move_to( from_x, from_y );
     ctx.line_to( to_x,   to_y );
     ctx.stroke();

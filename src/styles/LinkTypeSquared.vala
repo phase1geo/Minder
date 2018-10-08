@@ -46,18 +46,18 @@ public class LinkTypeSquared : Object, LinkType {
     if( horizontal ) {
       var mid_x = (from_x + to_x) / 2;
       tailx = mid_x;
-      taily = from_y;
-      tipx  = mid_x;
-      tipy  = (from_y + to_y) / 2;
+      taily = to_y;
+      tipx  = to_x;
+      tipy  = to_y;
       ctx.line_to( mid_x, from_y );
       ctx.line_to( mid_x, to_y );
       ctx.line_to( to_x,  to_y );
     } else {
       var mid_y = (from_y + to_y) / 2;
-      tailx = from_x;
+      tailx = to_x;
       taily = mid_y;
-      tipx  = (from_x + to_x) / 2;
-      tipy  = mid_y;
+      tipx  = to_x;
+      tipy  = to_y;
       ctx.line_to( from_x, mid_y );
       ctx.line_to( to_x,   mid_y );
       ctx.line_to( to_x,   to_y );

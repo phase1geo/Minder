@@ -42,19 +42,19 @@ public class LinkTypeCurved : Object, LinkType {
   /* Draw method for the link */
   public void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal,
                     out double tailx, out double taily, out double tipx, out double tipy ) {
-    tipx = (from_x + to_x) / 2;
-    tipy = (from_y + to_y) / 2;
+    tipx = to_x;
+    tipy = to_y;
 
     ctx.move_to( from_x, from_y );
     if( horizontal ) {
       var x_adjust = (to_x - from_x) * 0.5;
-      tailx = from_x + (x_adjust / 2);
-      taily = from_y;
+      tailx = from_x + x_adjust;
+      taily = from_y + ((to_y - from_y) * 0.95);
       ctx.curve_to( (to_x - x_adjust), from_y, (from_x + x_adjust), to_y, to_x, to_y );
     } else {
       var y_adjust = (to_y - from_y) * 0.5;
-      tailx = from_x;
-      taily = to_y - (y_adjust / 2);
+      tailx = from_x + ((to_x - from_x) * 0.95);
+      taily = from_y + y_adjust;
       ctx.curve_to( from_x, (to_y - y_adjust), to_x, (from_y + y_adjust), to_x, to_y );
     }
     ctx.stroke();

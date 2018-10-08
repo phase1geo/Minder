@@ -84,53 +84,53 @@ public class Style {
   /* Copies the given style to this style */
   public void copy( Style s ) {
 
-    if( (link_type        != null) || !_template ) link_type        = s.link_type;
-    if( (link_width       != null) || !_template ) link_width       = s.link_width;
-    if( (link_arrow       != null) || !_template ) link_arrow       = s.link_arrow;
-    if( (link_dash        != null) || !_template ) link_dash        = s.link_dash;
-    if( (node_border      != null) || !_template ) node_border      = s.node_border;
-    if( (node_width       != null) || !_template ) node_width       = s.node_width;
-    if( (node_borderwidth != null) || !_template ) node_borderwidth = s.node_borderwidth;
-    if( (node_font        != null) || !_template ) node_font        = s.node_font.copy();
-    if( (connection_dash  != null) || !_template ) connection_dash  = s.connection_dash;
-    if( (connection_width != null) || !_template ) connection_width = s.connection_width;
-    if( (connection_arrow != null) || !_template ) connection_arrow = s.connection_arrow;
+    if( (s.link_type        != null) || !s._template ) link_type        = s.link_type;
+    if( (s.link_width       != null) || !s._template ) link_width       = s.link_width;
+    if( (s.link_arrow       != null) || !s._template ) link_arrow       = s.link_arrow;
+    if( (s.link_dash        != null) || !s._template ) link_dash        = s.link_dash;
+    if( (s.node_border      != null) || !s._template ) node_border      = s.node_border;
+    if( (s.node_width       != null) || !s._template ) node_width       = s.node_width;
+    if( (s.node_borderwidth != null) || !s._template ) node_borderwidth = s.node_borderwidth;
+    if( (s.node_font        != null) || !s._template ) node_font        = s.node_font.copy();
+    if( (s.connection_dash  != null) || !s._template ) connection_dash  = s.connection_dash;
+    if( (s.connection_width != null) || !s._template ) connection_width = s.connection_width;
+    if( (s.connection_arrow != null) || !s._template ) connection_arrow = s.connection_arrow;
 
   }
 
   /* Loads the style information in the given XML node */
   public void load_node( Xml.Node* node ) {
 
-    string? lt = node->get_prop( "link_type" );
+    string? lt = node->get_prop( "linktype" );
     if( lt != null ) {
       link_type = StyleInspector.styles.get_link_type( lt );
     }
-    string? lw = node->get_prop( "link_width" );
+    string? lw = node->get_prop( "linkwidth" );
     if( lw != null ) {
       link_width = int.parse( lw );
     }
-    string? la = node->get_prop( "link_arrow" );
+    string? la = node->get_prop( "linkarrow" );
     if( la != null ) {
       link_arrow = bool.parse( la );
     }
-    string? ld = node->get_prop( "link_dash" );
+    string? ld = node->get_prop( "linkdash" );
     if( ld != null ) {
       link_dash = StyleInspector.styles.get_link_dash( ld );
     }
 
-    string? nb = node->get_prop( "node_border" );
+    string? nb = node->get_prop( "nodeborder" );
     if( nb != null ) {
       node_border = StyleInspector.styles.get_node_border( nb );
     }
-    string? nw = node->get_prop( "node_width" );
+    string? nw = node->get_prop( "nodewidth" );
     if( nw != null ) {
       node_width = int.parse( nw );
     }
-    string? nbw = node->get_prop( "node_borderwidth" );
+    string? nbw = node->get_prop( "nodeborderwidth" );
     if( nbw != null ) {
       node_borderwidth = int.parse( nbw );
     }
-    string? nf = node->get_prop( "node_font" );
+    string? nf = node->get_prop( "nodefont" );
     if( nf != null ) {
       node_font = FontDescription.from_string( nf );
     }
@@ -140,17 +140,47 @@ public class Style {
   /* Loads the style information in the given XML node */
   public void load_connection( Xml.Node* node ) {
 
-    string? d = node->get_prop( "dash" );
+    string? d = node->get_prop( "connectiondash" );
     if( d != null ) {
       connection_dash = StyleInspector.styles.get_link_dash( d );
     }
-    string? w = node->get_prop( "width" );
+    string? w = node->get_prop( "connectionwidth" );
     if( w != null ) {
       connection_width = int.parse( w );
     }
-    string? a = node->get_prop( "arrow" );
+    string? a = node->get_prop( "connectionarrow" );
     if( a != null ) {
       connection_arrow = a;
+    }
+
+  }
+
+  public void save_node_in_node( Xml.Node* n ) {
+
+    if( link_type != null ) {
+      n->set_prop( "linktype", link_type.name() );
+    }
+    if( link_width != null ) {
+      n->set_prop( "linkwidth", link_width.to_string() );
+    }
+    if( link_arrow != null ) {
+      n->set_prop( "linkarrow", link_arrow.to_string() );
+    }
+    if( link_dash != null ) {
+      n->set_prop( "linkdash", link_dash.name );
+    }
+
+    if( node_border != null ) {
+      n->set_prop( "nodeborder", node_border.name() );
+    }
+    if( node_width != null ) {
+      n->set_prop( "nodewidth", node_width.to_string() );
+    }
+    if( node_borderwidth != null ) {
+      n->set_prop( "nodeborderwidth", node_borderwidth.to_string() );
+    }
+    if( node_font != null ) {
+      n->set_prop( "nodefont", node_font.to_string() );
     }
 
   }
@@ -159,18 +189,22 @@ public class Style {
   public void save_node( Xml.Node* parent ) {
 
     Xml.Node* n = new Xml.Node( null, "style" );
-
-    n->set_prop( "link_type",        link_type.name() );
-    n->set_prop( "link_width",       link_width.to_string() );
-    n->set_prop( "link_arrow",       link_arrow.to_string() );
-    n->set_prop( "link_dash",        link_dash.name );
-
-    n->set_prop( "node_border",      node_border.name() );
-    n->set_prop( "node_width",       node_width.to_string() );
-    n->set_prop( "node_borderwidth", node_borderwidth.to_string() );
-    n->set_prop( "node_font",        node_font.to_string() );
-
+    save_node_in_node( n );
     parent->add_child( n );
+
+  }
+
+  public void save_connection_in_node( Xml.Node* n ) {
+
+    if( connection_dash != null ) {
+      n->set_prop( "connectiondash",  connection_dash.name );
+    }
+    if( connection_width != null ) {
+      n->set_prop( "connectionwidth", connection_width.to_string() );
+    }
+    if( connection_arrow != null ) {
+      n->set_prop( "connectionarrow", connection_arrow );
+    }
 
   }
 
@@ -178,17 +212,14 @@ public class Style {
   public void save_connection( Xml.Node* parent ) {
 
     Xml.Node* n = new Xml.Node( null, "style" );
-
-    n->set_prop( "dash",  connection_dash.name );
-    n->set_prop( "width", connection_width.to_string() );
-    n->set_prop( "arrow", connection_arrow );
-
+    save_connection_in_node( n );
     parent->add_child( n );
 
   }
 
   /* Draws the link with the given information, applying the stored styling */
-  public void draw_link( Cairo.Context ctx, Style parent_style, double from_x, double from_y, double to_x, double to_y, bool horizontal,
+  public void draw_link( Cairo.Context ctx, Style parent_style, double from_x, double from_y,
+                         double to_x, double to_y, bool horizontal,
                          out double tailx, out double taily, out double tipx, out double tipy ) {
 
     ctx.save();

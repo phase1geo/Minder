@@ -1492,6 +1492,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Adds a new root node to the canvas */
   public void add_root_node() {
     var node = new Node.with_name( this, _( "Another Idea" ), _nodes.index( 0 ).layout );
+    node.style = StyleInspector.styles.get_global_style();
     if (_nodes.length == 0) {
       node.posx = (get_allocated_width()  / 2) - 30;
       node.posy = (get_allocated_height() / 2) - 10;
@@ -1514,6 +1515,8 @@ public class DrawArea : Gtk.DrawingArea {
     _orig_name = "";
     _current_node.mode = NodeMode.NONE;
     node.side          = _current_node.side;
+    node.style         = _current_node.style; 
+    node.style         = StyleInspector.styles.get_style_for_level( _current_node.get_level() );
     node.attach( _current_node.parent, (_current_node.index() + 1), _theme );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     if( select_node( node ) ) {
@@ -1671,6 +1674,12 @@ public class DrawArea : Gtk.DrawingArea {
     if( !_current_node.is_root() ) {
       node.side = _current_node.side;
     }
+    if( _current_node.children().length > 0 ) {
+      node.style = _current_node.last_child().style;
+    } else {
+      node.style = _current_node.style;
+    }
+    node.style = StyleInspector.styles.get_style_for_level( _current_node.get_level() + 1 );
     _current_node.mode   = NodeMode.NONE;
     node.attach( _current_node, -1, _theme );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
