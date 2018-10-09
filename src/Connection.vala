@@ -33,6 +33,7 @@ public enum ConnMode {
 
 public class Connection {
 
+  private int     RADIUS     = 6;
   private Node?   _from_node = null;
   private Node?   _to_node   = null;
   private double  _posx;
@@ -135,7 +136,8 @@ public class Connection {
 
   /* Returns true if the given point is within the drag handle */
   public bool within_drag_handle( double x, double y ) {
-    return( ((_dragx - 3) <= x) && (x <= (_dragx + 3)) && ((_dragy - 3) <= y) && (y <= (_dragy + 3)) );
+    return( ((_dragx - RADIUS) <= x) && (x <= (_dragx + RADIUS)) &&
+            ((_dragy - RADIUS) <= y) && (y <= (_dragy + RADIUS)) );
   }
 
   /* Returns true if the given point lies within the from connection handle */
@@ -166,7 +168,7 @@ public class Connection {
     if( mode == ConnMode.SELECTED ) {
       double fx, fy;
       get_connect_point( node, out fx, out fy );
-      return( ((fx - 3) <= x) && (x <= (fx + 3)) && ((fy - 3) <= y) && (y <= (fy + 3)) );
+      return( ((fx - RADIUS) <= x) && (x <= (fx + RADIUS)) && ((fy - RADIUS) <= y) && (y <= (fy + RADIUS)) );
     }
     return( false );
   }
@@ -306,7 +308,7 @@ public class Connection {
     /* Draw the drag circle */
     ctx.set_line_width( 1 );
     ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
-    ctx.arc( dragx, dragy, 6, 0, (2 * Math.PI) );
+    ctx.arc( dragx, dragy, RADIUS, 0, (2 * Math.PI) );
     ctx.fill_preserve();
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
     ctx.stroke();
@@ -315,13 +317,13 @@ public class Connection {
     if( mode == ConnMode.SELECTED ) {
 
       ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
-      ctx.arc( start_x, start_y, 6, 0, (2 * Math.PI) );
+      ctx.arc( start_x, start_y, RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
       ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
       ctx.stroke();
 
       ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
-      ctx.arc( end_x, end_y, 6, 0, (2 * Math.PI) );
+      ctx.arc( end_x, end_y, RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
       ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
       ctx.stroke();
