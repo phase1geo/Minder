@@ -249,11 +249,11 @@ public class Connection {
   /* Draws the connection to the given context */
   public virtual void draw( Cairo.Context ctx, Theme theme ) {
 
-    RGBA   bg    = theme.background;
     double start_x, start_y;
     double end_x,   end_y;
     double dragx = _dragx;
     double dragy = _dragy;
+    RGBA   bg    = (mode == ConnMode.NONE) ? theme.background : theme.nodesel_background;
 
     get_connect_point( _from_node, out start_x, out start_y );
 
@@ -340,7 +340,7 @@ public class Connection {
 
     double extlen[7] = {12, 12, 13, 14, 15, 16, 16};
 
-    var arrowLength = extlen[line_width - 2];
+    var arrowLength = extlen[line_width];
 
     var dx = tipx - tailx;
     var dy = tipy - taily;
