@@ -83,6 +83,7 @@ public class StyleInspector : Box {
   private Scale                      _node_borderwidth;
   private FontButton                 _font_chooser;
   private Image                      _conn_dash;
+  private Image                      _conn_arrow;
   private Scale                      _conn_width;
   private Style                      _current_style;
   private StyleAffects               _affects;
@@ -537,9 +538,11 @@ public class StyleInspector : Box {
     cbox.border_width = 10;
 
     var conn_dash  = create_connection_dash_ui();
+    var conn_arrow = create_connection_arrow_ui();
     var conn_width = create_connection_width_ui();
 
     cbox.pack_start( conn_dash,  false, true );
+    cbox.pack_start( conn_arrow, false, true );
     cbox.pack_start( conn_width, false, true );
 
     box.pack_start( lbl,  false, true );
@@ -581,6 +584,45 @@ public class StyleInspector : Box {
 
     var mb = new MenuButton();
     mb.add( _conn_dash );
+    mb.popup = menu;
+
+    box.pack_start( lbl, false, true );
+    box.pack_end(   mb,  false, true );
+
+    return( box );
+
+  }
+
+  /* Creates the connection arrow position UI */
+  private Box create_connection_arrow_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Arrows" ) );
+    lbl.xalign = (float)0;
+
+    var menu         = new Gtk.Menu();
+    string arrows[4] = {"none", "fromto", "tofrom", "both"};
+
+    _conn_arrow = new Image.from_surface( Connection.make_arrow_icon( "fromto" ) );
+
+    foreach (string arrow in arrows) {
+      var img = new Image.from_surface( Connection.make_arrow_icon( arrow ) );
+      var mi  = new Gtk.MenuItem();
+      mi.activate.connect(() => {
+        _current_style.connection_arrow = arrow;
+        _conn_arrow.surface             = img.surface;
+        apply_changes();
+      });
+      mi.add( img );
+      menu.add( mi );
+    }
+
+    menu.show_all();
+
+    var mb = new MenuButton();
+    mb.add( _conn_arrow );
     mb.popup = menu;
 
     box.pack_start( lbl, false, true );
@@ -779,6 +821,7 @@ public class StyleInspector : Box {
     _link_arrow.set_active( style.link_arrow );
     _node_borderwidth.set_value( (double)style.node_borderwidth );
     _font_chooser.set_font( style.node_font.to_string() );
+    _conn_arrow.surface = Connection.make_arrow_icon( style.connection_arrow );
     _conn_width.set_value( (double)style.connection_width );
   }
 

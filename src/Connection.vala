@@ -249,6 +249,7 @@ public class Connection {
   /* Draws the connection to the given context */
   public virtual void draw( Cairo.Context ctx, Theme theme ) {
 
+    RGBA   bg    = theme.background;
     double start_x, start_y;
     double end_x,   end_y;
     double dragx = _dragx;
@@ -290,21 +291,41 @@ public class Connection {
     );
     ctx.stroke();
 
+    ctx.set_dash( {}, 0 );
+
     /* Draw the arrow */
     if( mode != ConnMode.SELECTED ) {
-      draw_arrow( ctx, color, end_x, end_y, ax, ay );
+      if( (style.connection_arrow == "fromto") || (style.connection_arrow == "both") ) {
+        draw_arrow( ctx, style.connection_width, end_x, end_y, ax, ay );
+      }
+      if( (style.connection_arrow == "tofrom") || (style.connection_arrow == "both") ) {
+        draw_arrow( ctx, style.connection_width, start_x, start_y, ax, ay );
+      }
     }
 
     /* Draw the drag circle */
+    ctx.set_line_width( 1 );
+    ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
     ctx.arc( dragx, dragy, 6, 0, (2 * Math.PI) );
-    ctx.fill();
+    ctx.fill_preserve();
+    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+    ctx.stroke();
 
     /* If we are selected draw the endpoints */
     if( mode == ConnMode.SELECTED ) {
+
+      ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
       ctx.arc( start_x, start_y, 6, 0, (2 * Math.PI) );
-      ctx.fill();
+      ctx.fill_preserve();
+      ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+      ctx.stroke();
+
+      ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
       ctx.arc( end_x, end_y, 6, 0, (2 * Math.PI) );
-      ctx.fill();
+      ctx.fill_preserve();
+      ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+      ctx.stroke();
+
     }
 
     ctx.restore();
@@ -315,9 +336,12 @@ public class Connection {
    Draws arrow point to the "to" node.  The tailx/y values should be the
    bezier control point closest to the "to" node.
   */
-  protected virtual void draw_arrow( Cairo.Context ctx, RGBA color, double tipx, double tipy, double tailx, double taily ) {
+  private static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy, double tailx, double taily ) {
 
-    var arrowLength = 10; // can be adjusted
+    double extlen[7] = {12, 12, 13, 14, 15, 16, 16};
+
+    var arrowLength = extlen[line_width - 2];
+
     var dx = tipx - tailx;
     var dy = tipy - taily;
 
@@ -338,6 +362,30 @@ public class Connection {
     ctx.line_to( x2, y2 );
     ctx.close_path();
     ctx.fill();
+
+  }
+
+  /* Makes an icon for the given dash */
+  public static Cairo.Surface make_arrow_icon( string type ) {
+
+    Cairo.ImageSurface surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 100, 20 );
+    Cairo.Context      ctx     = new Cairo.Context( surface );
+
+    ctx.set_source_rgba( 0.5, 0.5, 0.5, 1 );
+    ctx.set_line_width( 4 );
+    ctx.set_line_cap( LineCap.ROUND );
+    ctx.move_to( 10, 10 );
+    ctx.line_to( 90, 10 );
+    ctx.stroke();
+
+    if( (type == "fromto") || (type == "both") ) {
+      draw_arrow( ctx, 4, 90, 10, 10, 10 );
+    }
+    if( (type == "tofrom") || (type == "both") ) {
+      draw_arrow( ctx, 4, 10, 10, 90, 10 );
+    }
+
+    return( surface );
 
   }
 

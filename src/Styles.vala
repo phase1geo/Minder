@@ -89,6 +89,7 @@ public class Styles {
       style.node_borderwidth = 4;
       style.connection_dash  = ld_dotted;
       style.connection_width = 2;
+      style.connection_arrow = "fromto";
       _styles.append_val( style );
     }
 
