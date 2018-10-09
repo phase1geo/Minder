@@ -76,6 +76,11 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.1.2" date="2018-10-09">
+      <description>
+        Updating French translation.
+      </description>
+    </release>
     <release version="1.1.1" date="2018-09-27">
       <description>
         <p>Bug fix release</p>
