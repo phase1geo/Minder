@@ -724,6 +724,7 @@ public class StyleInspector : Box {
         styles.set_tree_to_style( node, _current_style );
         break;
     }
+    _da.undo_buffer.add_item( new UndoStyleChange( _current_style ) );
     _current_style.clear_template();
     _da.changed();
     _da.queue_draw();

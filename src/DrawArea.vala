@@ -340,7 +340,7 @@ public class DrawArea : Gtk.DrawingArea {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var node = new Node.with_name( this, "temp", layouts.get_default() );
-                node.load( this, it2 );
+                node.load( this, it2, true );
                 _nodes.append_val( node );
               }
             }

@@ -594,7 +594,7 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n ) {
+  public virtual void load( DrawArea da, Xml.Node* n, bool isroot ) {
 
     string? i = n->get_prop( "id" );
     if( i != null ) {
@@ -661,6 +661,9 @@ public class Node : Object {
       _layout = da.layouts.get_layout( l );
     }
 
+    /* Make sure the style has a default value */
+    style.copy( StyleInspector.styles.get_style_for_level( isroot ? 0 : 1 ) );
+
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
@@ -672,7 +675,7 @@ public class Node : Object {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var child = new Node( da, _layout );
-                child.load( da, it2 );
+                child.load( da, it2, false );
                 child.attach( this, -1, null );
               }
             }
