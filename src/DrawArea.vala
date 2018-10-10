@@ -731,6 +731,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Called whenever the user clicks on a valid connection */
   private bool set_current_connection_from_position( Connection conn, EventButton e ) {
+
     if( conn == _current_connection ) {
       _current_connection.mode = ConnMode.ADJUSTING;
       return( true );
@@ -742,7 +743,9 @@ public class DrawArea : Gtk.DrawingArea {
       _current_connection = conn;
       connection_changed();
     }
+
     return( false );
+
   }
 
   /* Called whenever the user clicks on node */
@@ -804,6 +807,17 @@ public class DrawArea : Gtk.DrawingArea {
    selected.
   */
   private bool set_current_at_position( double x, double y, EventButton e ) {
+
+    if( (_current_connection != null) && (_current_connection.mode == ConnMode.SELECTED) ) {
+      if( _current_connection.within_from_handle( e.x, e.y ) ) {
+        _current_connection.disconnect( true );
+        return( true );
+      } else if( _current_connection.within_to_handle( e.x, e.y ) ) {
+        _current_connection.disconnect( false );
+        return( true );
+      }
+    }
+
     if( (_attach_node == null) || (_current_connection == null) || (_current_connection.mode != ConnMode.CONNECTING) ) {
       var match_conn = _connections.within_drag_handle( x, y );
       if( match_conn != null ) {
@@ -820,7 +834,9 @@ public class DrawArea : Gtk.DrawingArea {
         clear_current_node();
       }
     }
+
     return( true );
+
   }
 
   /* Returns the supported scale points */

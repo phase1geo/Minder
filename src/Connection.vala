@@ -120,6 +120,18 @@ public class Connection {
     _dragy = (fy + ty) / 2;
   }
 
+  /* Called when disconnecting a connection from a node */
+  public void disconnect( bool from ) {
+    if( from ) {
+      _from_node = null;
+      get_connect_point( _from_node, out _posx, out _posy );
+    } else {
+      _to_node = null;
+      get_connect_point( _to_node, out _posx, out _posy );
+    }
+    mode = ConnMode.CONNECTING;
+  }
+
   /* Draws the connections to the given point */
   public void draw_to( double x, double y ) {
     double nx, ny;
