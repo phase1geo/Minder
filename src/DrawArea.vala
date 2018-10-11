@@ -308,8 +308,7 @@ public class DrawArea : Gtk.DrawingArea {
       );
       theme_changed();
     }
-
-    /* Set the current theme index */
+/* Set the current theme index */
     string? index = n->get_prop( "index" );
     if( index != null ) {
       _theme.index = int.parse( index );

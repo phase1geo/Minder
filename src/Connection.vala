@@ -123,11 +123,11 @@ public class Connection {
   /* Called when disconnecting a connection from a node */
   public void disconnect( bool from ) {
     if( from ) {
-      _from_node = null;
       get_connect_point( _from_node, out _posx, out _posy );
+      _from_node = null;
     } else {
-      _to_node = null;
       get_connect_point( _to_node, out _posx, out _posy );
+      _to_node = null;
     }
     mode = ConnMode.CONNECTING;
   }
