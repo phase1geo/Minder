@@ -1329,12 +1329,12 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns true if we are in some sort of edit mode */
   private bool is_mode_edit() {
-    return( _current_node.mode == NodeMode.EDITABLE );
+    return( (_current_node != null) && (_current_node.mode == NodeMode.EDITABLE) );
   }
 
   /* Returns true if we are in the selected mode */
   private bool is_mode_selected() {
-    return( _current_node.mode == NodeMode.CURRENT );
+    return( (_current_node != null) && (_current_node.mode == NodeMode.CURRENT) );
   }
 
   /* If the specified node is not null, selects the node and makes it the current node */
@@ -1474,7 +1474,8 @@ public class DrawArea : Gtk.DrawingArea {
       changed();
     } else if( is_mode_selected() ) {
       delete_node();
-      _current_node = null;
+    } else if( is_connection_selected() ) {
+      delete_connection();
     }
   }
 
@@ -1486,14 +1487,8 @@ public class DrawArea : Gtk.DrawingArea {
       changed();
     } else if( is_mode_selected() ) {
       delete_node();
-      _current_node = null;
-    } else if( (_current_connection != null) && (_current_connection.mode == ConnMode.SELECTED) ) {
-      var orig_connection = new Connection.from_connection( _current_connection );
-      _connections.remove_connection( _current_connection );
-      _current_connection = null;
-      undo_buffer.add_item( new UndoConnectionChange( _( "delete connection" ), orig_connection, null ) );
-      queue_draw();
-      changed();
+    } else if( is_connection_selected() ) {
+      delete_connection();
     }
   }
 
@@ -1941,8 +1936,8 @@ public class DrawArea : Gtk.DrawingArea {
     var shift   = (bool) e.state & ModifierType.SHIFT_MASK;
     var nomod   = !(control || shift);
 
-    /* If there is a current node selected, operate on it */
-    if( _current_node != null ) {
+    /* If there is a current node or connection selected, operate on it */
+    if( (_current_node != null) || (_current_connection != null) ) {
       if( control ) {
         switch( e.keyval ) {
           case 99  :  do_copy();   break;
@@ -2256,30 +2251,43 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Starts a connection from the current node */
   public void start_connection() {
-    if( _current_node != null ) {
-      _current_connection      = new Connection( _current_node );
-      _current_connection.mode = ConnMode.CONNECTING;
-    }
+    if( _current_node == null ) return;
+    _current_connection      = new Connection( _current_node );
+    _current_connection.mode = ConnMode.CONNECTING;
   }
 
   /* Called when a connection is being drawn by moving the mouse */
   public void update_connection( double x, double y ) {
-    if( _current_connection != null ) {
-      _current_connection.draw_to( x, y );
-      queue_draw();
-    }
+    if( _current_connection == null ) return;
+    _current_connection.draw_to( x, y );
+    queue_draw();
   }
 
   /* Ends a connection at the given node */
   public void end_connection( Node n ) {
-    if( _current_connection != null ) {
-      _current_connection.connect_to( n );
-      _connections.add_connection( _current_connection );
-      undo_buffer.add_item( new UndoConnectionChange( _( "add connection" ), null, _current_connection ) );
-      _current_connection = null;
-      changed();
-      queue_draw();
-    }
+    if( _current_connection == null ) return;
+    _current_connection.connect_to( n );
+    _connections.add_connection( _current_connection );
+    undo_buffer.add_item( new UndoConnectionChange( _( "add connection" ), null, _current_connection ) );
+    _current_connection = null;
+    changed();
+    queue_draw();
+  }
+
+  /* Deletes the current connection */
+  public void delete_connection() {
+    if( _current_connection == null ) return;
+    var orig_connection = new Connection.from_connection( _current_connection );
+    _connections.remove_connection( _current_connection );
+    _current_connection = null;
+    undo_buffer.add_item( new UndoConnectionChange( _( "delete connection" ), orig_connection, null ) );
+    changed();
+    queue_draw();
+  }
+
+  /* Returns true if the current connection is in the selected state */
+  public bool is_connection_selected() {
+    return( (_current_connection != null) && (_current_connection.mode == ConnMode.SELECTED) );
   }
 
 }

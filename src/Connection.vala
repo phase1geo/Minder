@@ -352,9 +352,9 @@ public class Connection {
   */
   private static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy, double tailx, double taily ) {
 
-    double extlen[7] = {12, 12, 13, 14, 15, 16, 16};
+    double extlen[7] = {14, 14, 15, 16, 17, 18, 18};
 
-    var arrowLength = extlen[line_width];
+    var arrowLength = extlen[line_width-2];
 
     var dx = tipx - tailx;
     var dy = tipy - taily;
@@ -388,8 +388,8 @@ public class Connection {
     ctx.set_source_rgba( 0.5, 0.5, 0.5, 1 );
     ctx.set_line_width( 4 );
     ctx.set_line_cap( LineCap.ROUND );
-    ctx.move_to( 10, 10 );
-    ctx.line_to( 90, 10 );
+    ctx.move_to( 15, 10 );
+    ctx.line_to( 85, 10 );
     ctx.stroke();
 
     if( (type == "fromto") || (type == "both") ) {

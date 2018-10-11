@@ -34,12 +34,14 @@ public class Connections {
   }
 
   /* Removes the given connection */
-  public void remove_connection( Connection conn ) {
+  public bool remove_connection( Connection conn ) {
     for( uint i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ) == conn ) {
         _connections.remove_index( i ); 
+        return( true );
       }
     }
+    return( false );
   }
 
   /* Returns true if the given point is within the drag handle */
