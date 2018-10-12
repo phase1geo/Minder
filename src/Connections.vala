@@ -61,6 +61,13 @@ public class Connections {
     }
   }
 
+  /* Called whenever a node changes positions */
+  public void node_moved( Node node ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      _connections.index( i ).node_moved( node );
+    }
+  }
+
   /* Loads the listed connections from the given XML data */
   public void load( DrawArea da, Xml.Node* node ) {
     for( Xml.Node* it = node->children; it != null; it = it->next ) {

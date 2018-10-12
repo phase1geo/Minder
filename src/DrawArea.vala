@@ -1183,6 +1183,7 @@ public class DrawArea : Gtk.DrawingArea {
             _current_node.posx += diffx;
             _current_node.posy += diffy;
             _current_node.layout.set_side( _current_node );
+            _connections.node_moved( _current_node );
           }
         } else {
           switch( _press_type ) {

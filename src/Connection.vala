@@ -143,6 +143,23 @@ public class Connection {
     set_connect_point( from );
   }
 
+  /*
+   Checks to see if this connection is connected to the given node.  If it is,
+   updates the stored curve.
+  */
+  public void node_moved( Node node ) {
+    double x, y, w, h;
+    if( _from_node == node ) {
+      _from_node.bbox( out x, out y, out w, out h );
+      _curve.set_point( 0, (x + (w / 2)), (y + (h / 2)) );
+      set_connect_point( true );
+    } else if( _to_node == node ) {
+      _to_node.bbox( out x, out y, out w, out h );
+      _curve.set_point( 2, (x + (w / 2)), (y + (h / 2)) );
+      set_connect_point( false );
+    }
+  }
+
   /* Returns the point to add the connection to based on the node */
   private void set_connect_point( bool from ) {
 
