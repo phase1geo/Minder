@@ -1217,7 +1217,7 @@ public class DrawArea : Gtk.DrawingArea {
         Node match = _nodes.index( i ).contains( event.x, event.y, null );
         if( match != null ) {
           if( get_tooltip_text() == null ) {
-            if( _current_connection != null ) {
+            if( (_current_connection != null) && (_current_connection.mode == ConnMode.CONNECTING) ) {
               _attach_node      = match;
               _attach_node.mode = NodeMode.ATTACHABLE;
             } else if( match.is_within_task( event.x, event.y ) ) {
@@ -1255,7 +1255,11 @@ public class DrawArea : Gtk.DrawingArea {
     }
     if( _current_connection != null ) {
       if( _attach_node != null ) {
-        end_connection( _attach_node );
+        if( _current_connection.mode == ConnMode.ADJUSTING ) {
+          end_connection( _attach_node );
+        } else {
+          // FOOBAR
+        }
         _attach_node.mode = NodeMode.NONE;
         _attach_node = null;
       } else if( _current_connection.mode == ConnMode.ADJUSTING ) {
