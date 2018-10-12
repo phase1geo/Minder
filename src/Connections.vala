@@ -44,7 +44,20 @@ public class Connections {
     return( false );
   }
 
-  /* Returns true if the given point is within the drag handle */
+  /*
+   Returns the associated connection if the given point is in proximity to the
+   connection's curve.
+  */
+  public Connection? on_curve( double x, double y ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ).on_curve( x, y ) ) {
+        return( _connections.index( i ) );
+      }
+    }
+    return( null );
+  }
+
+  /* Returns the associated connection if the given point is within the drag handle */
   public Connection? within_drag_handle( double x, double y ) {
     for( int i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ).within_drag_handle( x, y ) ) {
@@ -61,10 +74,31 @@ public class Connections {
     }
   }
 
-  /* Called whenever a node changes positions */
-  public void node_moved( Node node ) {
+  /*
+   Helper function to node_moved() which recursively updates all
+   nodes within the given node subtree.
+  */
+  public void node_moved( Node node, Node subroot, double diff_x, double diff_y ) {
+    for( int i=0; i<node.children().length; i++ ) {
+      node_moved( node.children().index( i ), subroot, diff_x, diff_y );
+    }
     for( int i=0; i<_connections.length; i++ ) {
-      _connections.index( i ).node_moved( node );
+      _connections.index( i ).node_moved( node, subroot, diff_x, diff_y );
+    }
+  }
+
+  /*
+   Called whenever a node is deleted in the mind map.  All attached connections
+   also need to be removed.
+  */
+  public void node_deleted( Node node ) {
+    for( int i=0; i<node.children().length; i++ ) {
+      node_deleted( node.children().index( i ) );
+    }
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ).attached_to_node( node ) ) {
+        _connections.remove_index( i );
+      }
     }
   }
 

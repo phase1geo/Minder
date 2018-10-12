@@ -818,7 +818,12 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     if( (_attach_node == null) || (_current_connection == null) || (_current_connection.mode != ConnMode.CONNECTING) ) {
-      var match_conn = _connections.within_drag_handle( x, y );
+      Connection? match_conn;
+      if( _current_connection == null ) {
+        match_conn = _connections.on_curve( x, y );
+      } else {
+        match_conn = _connections.within_drag_handle( x, y );
+      }
       if( match_conn != null ) {
         clear_current_node();
         return( set_current_connection_from_position( match_conn, e ) );
@@ -1183,7 +1188,7 @@ public class DrawArea : Gtk.DrawingArea {
             _current_node.posx += diffx;
             _current_node.posy += diffy;
             _current_node.layout.set_side( _current_node );
-            _connections.node_moved( _current_node );
+            _connections.node_moved( _current_node, _current_node, diffx, diffy );
           }
         } else {
           switch( _press_type ) {
@@ -1459,6 +1464,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       _current_node.delete();
     }
+    _connections.node_deleted( _current_node );
     _current_node.mode = NodeMode.NONE;
     _current_node = null;
     queue_draw();

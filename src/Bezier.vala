@@ -150,15 +150,15 @@ public class Bezier {
     double c = _apoints.index( 2 ).y;
     double d = a - 2 * b + c;
 
-    if( (d <= -0.0000001) || (0.0000001 <= d) ) {
+    if( d != 0 ) {
       var m1 = -sqrt( b * b - a * c );
       var m2 = -a + b;
       var v1 = -(m1 + m2) / d;
       var v2 = -(-m1 + m2) / d;
       if( is_t_within_range( v1 ) ) roots.append_val( v1 );
       if( is_t_within_range( v2 ) ) roots.append_val( v2 );
-    } else if( (b != c) && (0.0000001 <= d) && (d <= 0.0000001) ) {
-      var v = (2 * b - c) / 2 * (b - c);
+    } else if( b != c ) {
+      var v = ((2 * b) - c) / (2 * (b - c));
       if( is_t_within_range( v ) ) roots.append_val( v );
     }
 
@@ -177,6 +177,39 @@ public class Bezier {
                   c * (axis_is_x ? _points.index( 2 ).y : _points.index( 2 ).x);
 
     return( axis );
+
+  }
+
+  /* Returns true if the given point is within close proximity to this curve */
+  public bool within_range( double x, double y ) {
+
+    Array<double?> roots     = new Array<double?>();
+    double         tolerance = 10;
+
+    /* Let's start by looking at the X axis */
+    get_roots( x, true, ref roots );
+
+    if( roots.length > 0 ) {
+      for( int i=0; i<roots.length; i++ ) {
+        double curve_y = get_axis( roots.index( i ), true );
+        if( ((curve_y - tolerance) <= y) && (y <= (curve_y + tolerance)) ) {
+          return( true );
+        }
+      }
+    }
+
+    /* Let's take a look at the Y axis */
+    roots.remove_range( 0, roots.length );
+    get_roots( y, false, ref roots );
+
+    for( int i=0; i<roots.length; i++ ) {
+      double curve_x = get_axis( roots.index( i ), false );
+      if( ((curve_x - tolerance) <= x) && (x <= (curve_x + tolerance)) ) {
+        return( true );
+      }
+    }
+
+    return( false );
 
   }
 

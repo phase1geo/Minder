@@ -147,17 +147,28 @@ public class Connection {
    Checks to see if this connection is connected to the given node.  If it is,
    updates the stored curve.
   */
-  public void node_moved( Node node ) {
+  public void node_moved( Node node, Node subroot, double diff_x, double diff_y ) {
     double x, y, w, h;
     if( _from_node == node ) {
-      _from_node.bbox( out x, out y, out w, out h );
-      _curve.set_point( 0, (x + (w / 2)), (y + (h / 2)) );
-      set_connect_point( true );
+      if( _to_node.is_descendant_of( subroot ) ) {
+        pan( -diff_x, -diff_y );
+      } else {
+        _from_node.bbox( out x, out y, out w, out h );
+        _curve.set_point( 0, (x + (w / 2)), (y + (h / 2)) );
+        set_connect_point( true );
+      }
     } else if( _to_node == node ) {
-      _to_node.bbox( out x, out y, out w, out h );
-      _curve.set_point( 2, (x + (w / 2)), (y + (h / 2)) );
-      set_connect_point( false );
+      if( !_from_node.is_descendant_of( subroot ) ) {
+        _to_node.bbox( out x, out y, out w, out h );
+        _curve.set_point( 2, (x + (w / 2)), (y + (h / 2)) );
+        set_connect_point( false );
+      }
     }
+  }
+
+  /* Returns true if we are attached to the given node */
+  public bool attached_to_node( Node node ) {
+    return( (_from_node == node) || (_to_node == node) );
   }
 
   /* Returns the point to add the connection to based on the node */
@@ -175,6 +186,16 @@ public class Connection {
 
     _curve.set_connect_point( from, (y - extra), (y + h + extra), (x - extra), (x + w + extra) );
 
+  }
+
+  /* Returns true if the given point is within proximity to the stored curve */
+  public bool on_curve( double x, double y ) {
+    double fx, fy, tx, ty;
+    _curve.get_from_point( out fx, out fy );
+    _curve.get_to_point( out tx, out ty );
+    var curve = new Bezier.with_endpoints( fx, fy, tx, ty );
+    curve.update_control_from_drag_handle( _dragx, _dragy );
+    return( curve.within_range( x, y ) );
   }
 
   /* Returns true if the given point is within the drag handle */
@@ -196,9 +217,9 @@ public class Connection {
   /* Updates the location of the drag handle */
   public void move_drag_handle( double x, double y ) {
     mode = ConnMode.ADJUSTING;
-    _curve.update_control_from_drag_handle( x, y );
     _dragx = x;
     _dragy = y;
+    _curve.update_control_from_drag_handle( x, y );
     set_connect_point( true );
     set_connect_point( false );
   }
@@ -311,6 +332,11 @@ public class Connection {
   /* Draws the connection to the given context */
   public virtual void draw( Cairo.Context ctx, Theme theme ) {
 
+    /* If either the from or to node is folded, don't bother to draw ourselves */
+    if( ((_from_node != null) && _from_node.folded) || ((_to_node   != null) && _to_node.folded) ) {
+      return;
+    }
+
     double start_x, start_y;
     double end_x,   end_y;
     double dragx = _dragx;
@@ -368,12 +394,14 @@ public class Connection {
     }
 
     /* Draw the drag circle */
-    ctx.set_line_width( 1 );
-    ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
-    ctx.arc( dragx, dragy, RADIUS, 0, (2 * Math.PI) );
-    ctx.fill_preserve();
-    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
-    ctx.stroke();
+    if( mode != ConnMode.NONE ) {
+      ctx.set_line_width( 1 );
+      ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
+      ctx.arc( dragx, dragy, RADIUS, 0, (2 * Math.PI) );
+      ctx.fill_preserve();
+      ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+      ctx.stroke();
+    }
 
     /* If we are selected draw the endpoints */
     if( mode == ConnMode.SELECTED ) {
@@ -400,7 +428,8 @@ public class Connection {
    Draws arrow point to the "to" node.  The tailx/y values should be the
    bezier control point closest to the "to" node.
   */
-  private static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy, double tailx, double taily ) {
+  private static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy,
+                                  double tailx, double taily ) {
 
     double extlen[7] = {14, 14, 15, 16, 17, 18, 18};
 

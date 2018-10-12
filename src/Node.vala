@@ -383,6 +383,15 @@ public class Node : Object {
     return( _task_count == _task_done );
   }
 
+  /* Returns true if this node is a descendant of the given node */
+  public bool is_descendant_of( Node node ) {
+    Node p = parent;
+    while( (p != null) && (p != node) ) {
+      p = p.parent;
+    }
+    return( p == node );
+  }
+
   /* Returns the maximum width allowed for this node */
   public int max_width() {
     return( (int)_max_width );
