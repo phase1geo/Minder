@@ -101,27 +101,30 @@ public class Connection {
   /* Completes the connection */
   public void connect_to( Node node ) {
     double fx, fy, tx, ty;
+    double x, y, w, h;
+    bool   from;
+    node.bbox( out x, out y, out w, out h );
     if( _from_node == null ) {
-      get_connect_point( _to_node, out tx, out ty );
-      get_connect_point( node,     out fx, out fy );
-      _from_node = node;
+      _from_node = node;  from = true;
     } else {
-      get_connect_point( _from_node, out fx, out fy );
-      get_connect_point( node,       out tx, out ty );
-      _to_node = node;
+      _to_node = node;  from = false;
     }
+    _curve.set_point( (from ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
+    _curve.get_point( 0, out fx, out fy );
+    _curve.get_point( 2, out tx, out ty );
     _dragx = (fx + tx) / 2;
     _dragy = (fy + ty) / 2;
     _curve.update_control_from_drag_handle( _dragx, _dragy );
+    set_connect_point( from );
   }
 
   /* Called when disconnecting a connection from a node */
   public void disconnect( bool from ) {
     if( from ) {
-      get_connect_point( _from_node, out _posx, out _posy );
+      _curve.get_from_point( out _posx, out _posy );
       _from_node = null;
     } else {
-      get_connect_point( _to_node, out _posx, out _posy );
+      _curve.get_to_point( out _posx, out _posy );
       _to_node = null;
     }
     mode = ConnMode.CONNECTING;
@@ -130,48 +133,30 @@ public class Connection {
   /* Draws the connections to the given point */
   public void draw_to( double x, double y ) {
     double nx, ny;
+    bool   from = (_from_node != null);
     _posx = x;
     _posy = y;
-    _curve.get_point( ((_from_node != null) ? 0 : 2), out nx, out ny );
+    _curve.get_point( (from ? 0 : 2), out nx, out ny );
     _dragx = (nx + x) / 2;
     _dragy = (ny + y) / 2;
     _curve.update_control_from_drag_handle( _dragx, _dragy );
+    set_connect_point( from );
   }
 
   /* Returns the point to add the connection to based on the node */
-  private void get_connect_point( Node node, out double tx, out double ty ) {
+  private void set_connect_point( bool from ) {
 
     double x, y, w, h;
-    bool   from = (node == _from_node);
-    node.bbox( out x, out y, out w, out h );
+    double bw    = from ? _from_node.style.node_borderwidth : _to_node.style.node_borderwidth;
+    double extra = bw + (style.connection_width / 2);
 
-    stdout.printf( "Node name: %s, x0: %g, y0: %g, x1: %g, y1: %g\n", node.name, x, y, (x + w), (y + h) );
-
-    /* Check the top of the node */
-    double isect = _curve.get_intersecting_point( y, false, from );
-    stdout.printf( "  top isect: %g\n", isect );
-    if( (x <= isect) && (isect <= (x + w)) ) {
-      tx = isect;  ty = y;  stdout.printf( "  A tx: %g, ty: %g\n", tx, ty );  return;
+    if( from ) {
+      _from_node.bbox( out x, out y, out w, out h );
+    } else {
+      _to_node.bbox( out x, out y, out w, out h );
     }
 
-    /* Check the bottom of the node */
-    isect = _curve.get_intersecting_point( (y + h), false, from );
-    stdout.printf( "  bottom isect: %g\n", isect );
-    if( (x <= isect) && (isect <= (x + w)) ) {
-      tx = isect;  ty = y + h;  stdout.printf( "  B tx: %g, ty: %g\n", tx, ty );  return;
-    }
-
-    /* Check the left side of the node */
-    isect = _curve.get_intersecting_point( x, true, from );
-    stdout.printf( "  left isect: %g\n", isect );
-    if( (y <= isect) && (isect <= (y + h)) ) {
-      tx = x;  ty = isect;  stdout.printf( "  C tx: %g, ty: %g\n", tx, ty );  return;
-    }
-
-    /* Check the right side of the node */
-    isect = _curve.get_intersecting_point( (x + w), true, from );
-    stdout.printf( "  right isect: %g\n", isect );
-    tx = (x + w);  ty = isect;  stdout.printf( "  D tx: %g, ty: %g\n", tx, ty );
+    _curve.set_connect_point( from, (y - extra), (y + h + extra), (x - extra), (x + w + extra) );
 
   }
 
@@ -183,25 +168,22 @@ public class Connection {
 
   /* Returns true if the given point lies within the from connection handle */
   public bool within_from_handle( double x, double y ) {
-    return( within_handle( _from_node, x, y ) );
+    return( within_handle( true, x, y ) );
   }
 
   /* Returns true if the given point lies within the from connection handle */
   public bool within_to_handle( double x, double y ) {
-    return( within_handle( _to_node, x, y ) );
-  }
-
-  /* Sets the drag handle location and updates the curve control point */
-  private void set_drag_handle( double x, double y ) {
-    _curve.update_control_from_drag_handle( x, y );
-    _dragx = x;
-    _dragy = y;
+    return( within_handle( false, x, y ) );
   }
 
   /* Updates the location of the drag handle */
   public void move_drag_handle( double x, double y ) {
     mode = ConnMode.ADJUSTING;
-    set_drag_handle( x, y );
+    _curve.update_control_from_drag_handle( x, y );
+    _dragx = x;
+    _dragy = y;
+    set_connect_point( true );
+    set_connect_point( false );
   }
 
   /* Updates the location of dragx/dragy based on the amount of canvas pan */
@@ -212,11 +194,15 @@ public class Connection {
   }
 
   /* Returns true if the given point lies within the from connection handle */
-  private bool within_handle( Node node, double x, double y ) {
+  private bool within_handle( bool from, double x, double y ) {
     if( mode == ConnMode.SELECTED ) {
-      double fx, fy;
-      get_connect_point( node, out fx, out fy );
-      return( ((fx - RADIUS) <= x) && (x <= (fx + RADIUS)) && ((fy - RADIUS) <= y) && (y <= (fy + RADIUS)) );
+      double px, py;
+      if( from ) {
+        _curve.get_from_point( out px, out py );
+      } else {
+        _curve.get_to_point( out px, out py );
+      }
+      return( ((px - RADIUS) <= x) && (x <= (px + RADIUS)) && ((py - RADIUS) <= y) && (y <= (py + RADIUS)) );
     }
     return( false );
   }
@@ -254,9 +240,10 @@ public class Connection {
     double tx, ty, tw, th;
     _from_node.bbox( out fx, out fy, out fw, out fh );
     _to_node.bbox(   out tx, out ty, out tw, out th );
-    stdout.printf( "Creating bezier curve\n" );
     _curve = new Bezier.with_endpoints( (fx + (fw / 2)), (fy + (fh / 2)), (tx + (tw / 2)), (ty + (th / 2)) );
     _curve.update_control_from_drag_handle( _dragx, _dragy );
+    set_connect_point( true );
+    set_connect_point( false );
 
     /* Load the connection style */
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
@@ -291,18 +278,17 @@ public class Connection {
    save the location of the node as it will be moved to a new position.
   */
   public void check_for_connection_to_node( Node node ) {
+
     _last_fx = _last_fy = _last_tx = _last_ty = null;
+
     if( _from_node == node ) {
-      get_connect_point( _from_node, out _last_fx, out _last_fy );
-      if( _to_node != null ) {
-        get_connect_point( _to_node, out _last_tx, out _last_ty );
-      }
+      _curve.get_from_point( out _last_fx, out _last_fy );
+      if( _to_node != null ) _curve.get_to_point( out _last_tx, out _last_ty );
     } else if( _to_node == node ) {
-      get_connect_point( _to_node, out _last_tx, out _last_ty );
-      if( _from_node != null ) {
-        get_connect_point( _from_node, out _last_fx, out _last_fy );
-      }
+      _curve.get_to_point( out _last_tx, out _last_ty );
+      if( _from_node != null ) _curve.get_from_point( out _last_fx, out _last_fy );
     }
+
   }
 
   /* Draws the connection to the given context */
@@ -318,21 +304,23 @@ public class Connection {
       start_x = _posx;
       start_y = _posy;
     } else {
-      get_connect_point( _from_node, out start_x, out start_y );
+      _curve.get_from_point( out start_x, out start_y );
     }
 
     if( _to_node == null ) {
       end_x = _posx;
       end_y = _posy;
     } else {
-      get_connect_point( _to_node, out end_x, out end_y );
+      _curve.get_to_point( out end_x, out end_y );
     }
 
     /* The value of t is always 0.5 */
     RGBA   color = theme.connection_color;
     double cx, cy;
 
-    _curve.get_point( 1, out cx, out cy );
+    /* Calclate the control points based on the calculated start/end points */
+    cx = dragx - (((start_x + end_x) * 0.5) - dragx);
+    cy = dragy - (((start_y + end_y) * 0.5) - dragy);
 
     /* Draw the curve */
     ctx.save();

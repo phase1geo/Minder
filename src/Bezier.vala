@@ -71,6 +71,8 @@ public class Bezier {
       _points.index( i ).set_coordinate( b._points.index( i ).x, b._points.index( i ).y );
       _apoints.index( i ).set_coordinate( b._apoints.index( i ).x, b._apoints.index( i ).y );
     }
+    _from.set_coordinate( b._from.x, b._from.y );
+    _to.set_coordinate( b._to.x, b._to.y );
   }
 
   /* Returns the point at the given index */
@@ -79,15 +81,25 @@ public class Bezier {
     y = _points.index( pindex ).y;
   }
 
+  public void get_from_point( out double x, out double y ) {
+    x = _from.x;
+    y = _from.y;
+  }
+
+  public void get_to_point( out double x, out double y ) {
+    x = _to.x;
+    y = _to.y;
+  }
+
   /* Update the given point */
-  public void update_point( int pindex, double x, double y ) {
+  public void set_point( int pindex, double x, double y ) {
     _points.index( pindex ).set_coordinate( x, y );
   }
 
   public void update_control_from_drag_handle( double x, double y ) {
     var cx = x - (((_points.index( 0 ).x + _points.index( 2 ).x) * 0.5) - x);
     var cy = y - (((_points.index( 0 ).y + _points.index( 2 ).y) * 0.5) - y);
-    update_point( 1, cx, cy );
+    set_point( 1, cx, cy );
   }
 
   /* Called when the user pans the canvas.  Updates the stored points */
@@ -95,6 +107,8 @@ public class Bezier {
     for( int i=0; i<3; i++ ) {
       _points.index( i ).pan( diff_x, diff_y );
     }
+    _from.pan( diff_x, diff_y );
+    _to.pan( diff_x, diff_y );
   }
 
   /* Returns true if the given t value is within its valid range */
@@ -199,6 +213,36 @@ public class Bezier {
 
   }
 
-  
+  /* Given the bounds of a box, calculate the connection point to the box and store it locally */
+  public void set_connect_point( bool from, double top, double bottom, double left, double right ) {
+
+    double isect;
+
+    /* Check the top of the node */
+    isect = get_intersecting_point( top, false, from );
+    if( (left <= isect) && (isect <= right) ) {
+      if( from ) { _from.set_coordinate( isect, top ); } else { _to.set_coordinate( isect, top ); }
+      return;
+    }
+
+    /* Check the bottom of the node */
+    isect = get_intersecting_point( bottom, false, from );
+    if( (left <= isect) && (isect <= right) ) {
+      if( from ) { _from.set_coordinate( isect, bottom ); } else { _to.set_coordinate( isect, bottom ); }
+      return;
+    }
+
+    /* Check the left side of the node */
+    isect = get_intersecting_point( left, true, from );
+    if( (top <= isect) && (isect <= bottom) ) {
+      if( from ) { _from.set_coordinate( left, isect ); } else { _to.set_coordinate( left, isect ); }
+      return;
+    }
+
+    /* Check the right side of the node */
+    isect = get_intersecting_point( right, true, from );
+    if( from ) { _from.set_coordinate( right, isect ); } else { _to.set_coordinate( right, isect ); }
+
+  }
 
 }
