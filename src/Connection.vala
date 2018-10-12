@@ -22,6 +22,7 @@
 using Cairo;
 using Pango;
 using Gdk;
+using GLib.Math;
 
 /* Connection mode value for the Connection.mode property */
 public enum ConnMode {
@@ -45,6 +46,7 @@ public class Connection {
   private double? _last_tx = null;
   private double? _last_ty = null;
   private Style   _style   = new Style();
+  private Bezier  _curve;
 
   public string   title { get; set; default = ""; }
   public ConnMode mode  { get; set; default = ConnMode.NONE; }
@@ -59,15 +61,20 @@ public class Connection {
 
   /* Default constructor */
   public Connection( Node from_node ) {
+    double x, y, w, h;
+    from_node.bbox( out x, out y, out w, out h );
+    _posx      = x + (w / 2);
+    _posy      = y + (h / 2);
     _from_node = from_node;
-    get_connect_point( from_node, out _posx, out _posy );
-    _dragx = _posx;
-    _dragy = _posy;
-    style  = StyleInspector.styles.get_global_style();
+    _dragx     = _posx;
+    _dragy     = _posy;
+    _curve     = new Bezier.with_endpoints( _posx, _posy, _posx, _posy );
+    style      = StyleInspector.styles.get_global_style();
   }
 
   /* Constructs a connection based on another connection */
   public Connection.from_connection( Connection conn ) {
+    _curve = new Bezier();
     copy( conn );
   }
 
@@ -87,21 +94,8 @@ public class Connection {
     _last_fy   = conn._last_fy;
     _last_tx   = conn._last_tx;
     _last_ty   = conn._last_ty;
+    _curve.copy( conn._curve );
     style      = conn.style;
-  }
-
-  /* Returns the point to add the connection to based on the node */
-  private void get_connect_point( Node node, out double cx, out double cy ) {
-    double x, y, w, h;
-    node.bbox( out x, out y, out w, out h );
-    /* TEMPORARY - This needs to be more robust */
-    if( node == _from_node ) {
-      cx = x + (w / 2);
-      cy = y;
-    } else {
-      cx = x + (w / 2);
-      cy = y + h;
-    }
   }
 
   /* Completes the connection */
@@ -118,6 +112,7 @@ public class Connection {
     }
     _dragx = (fx + tx) / 2;
     _dragy = (fy + ty) / 2;
+    _curve.update_control_from_drag_handle( _dragx, _dragy );
   }
 
   /* Called when disconnecting a connection from a node */
@@ -137,13 +132,47 @@ public class Connection {
     double nx, ny;
     _posx = x;
     _posy = y;
-    if( _from_node == null ) {
-      get_connect_point( _to_node, out nx, out ny );
-    } else {
-      get_connect_point( _from_node, out nx, out ny );
-    }
+    _curve.get_point( ((_from_node != null) ? 0 : 2), out nx, out ny );
     _dragx = (nx + x) / 2;
     _dragy = (ny + y) / 2;
+    _curve.update_control_from_drag_handle( _dragx, _dragy );
+  }
+
+  /* Returns the point to add the connection to based on the node */
+  private void get_connect_point( Node node, out double tx, out double ty ) {
+
+    double x, y, w, h;
+    bool   from = (node == _from_node);
+    node.bbox( out x, out y, out w, out h );
+
+    stdout.printf( "Node name: %s, x0: %g, y0: %g, x1: %g, y1: %g\n", node.name, x, y, (x + w), (y + h) );
+
+    /* Check the top of the node */
+    double isect = _curve.get_intersecting_point( y, false, from );
+    stdout.printf( "  top isect: %g\n", isect );
+    if( (x <= isect) && (isect <= (x + w)) ) {
+      tx = isect;  ty = y;  stdout.printf( "  A tx: %g, ty: %g\n", tx, ty );  return;
+    }
+
+    /* Check the bottom of the node */
+    isect = _curve.get_intersecting_point( (y + h), false, from );
+    stdout.printf( "  bottom isect: %g\n", isect );
+    if( (x <= isect) && (isect <= (x + w)) ) {
+      tx = isect;  ty = y + h;  stdout.printf( "  B tx: %g, ty: %g\n", tx, ty );  return;
+    }
+
+    /* Check the left side of the node */
+    isect = _curve.get_intersecting_point( x, true, from );
+    stdout.printf( "  left isect: %g\n", isect );
+    if( (y <= isect) && (isect <= (y + h)) ) {
+      tx = x;  ty = isect;  stdout.printf( "  C tx: %g, ty: %g\n", tx, ty );  return;
+    }
+
+    /* Check the right side of the node */
+    isect = _curve.get_intersecting_point( (x + w), true, from );
+    stdout.printf( "  right isect: %g\n", isect );
+    tx = (x + w);  ty = isect;  stdout.printf( "  D tx: %g, ty: %g\n", tx, ty );
+
   }
 
   /* Returns true if the given point is within the drag handle */
@@ -162,15 +191,22 @@ public class Connection {
     return( within_handle( _to_node, x, y ) );
   }
 
-  /* Updates the location of the drag handle */
-  public void move_drag_handle( double x, double y ) {
-    mode   = ConnMode.ADJUSTING;
+  /* Sets the drag handle location and updates the curve control point */
+  private void set_drag_handle( double x, double y ) {
+    _curve.update_control_from_drag_handle( x, y );
     _dragx = x;
     _dragy = y;
   }
 
+  /* Updates the location of the drag handle */
+  public void move_drag_handle( double x, double y ) {
+    mode = ConnMode.ADJUSTING;
+    set_drag_handle( x, y );
+  }
+
   /* Updates the location of dragx/dragy based on the amount of canvas pan */
   public void pan( double diff_x, double diff_y ) {
+    _curve.pan( diff_x, diff_y );
     _dragx -= diff_x;
     _dragy -= diff_y;
   }
@@ -212,6 +248,15 @@ public class Connection {
     if( ti != null ) {
       title = ti;
     }
+
+    /* Update the stored curve */
+    double fx, fy, fw, fh;
+    double tx, ty, tw, th;
+    _from_node.bbox( out fx, out fy, out fw, out fh );
+    _to_node.bbox(   out tx, out ty, out tw, out th );
+    stdout.printf( "Creating bezier curve\n" );
+    _curve = new Bezier.with_endpoints( (fx + (fw / 2)), (fy + (fh / 2)), (tx + (tw / 2)), (ty + (th / 2)) );
+    _curve.update_control_from_drag_handle( _dragx, _dragy );
 
     /* Load the connection style */
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
@@ -269,7 +314,12 @@ public class Connection {
     double dragy = _dragy;
     RGBA   bg    = (mode == ConnMode.NONE) ? theme.background : theme.nodesel_background;
 
-    get_connect_point( _from_node, out start_x, out start_y );
+    if( _from_node == null ) {
+      start_x = _posx;
+      start_y = _posy;
+    } else {
+      get_connect_point( _from_node, out start_x, out start_y );
+    }
 
     if( _to_node == null ) {
       end_x = _posx;
@@ -278,16 +328,11 @@ public class Connection {
       get_connect_point( _to_node, out end_x, out end_y );
     }
 
-    /* Calculate the difference between the from and end values */
-    if( (_last_fx != null) && (_last_tx != null) ) {
-      dragx += ((start_x - _last_fx) + (end_x - _last_tx));
-      dragy += ((start_y - _last_fy) + (end_y - _last_ty));
-    }
-
     /* The value of t is always 0.5 */
-    var color = theme.connection_color;
-    var ax    = dragx - (((start_x + end_x) * 0.5) - dragx);
-    var ay    = dragy - (((start_y + end_y) * 0.5) - dragy);
+    RGBA   color = theme.connection_color;
+    double cx, cy;
+
+    _curve.get_point( 1, out cx, out cy );
 
     /* Draw the curve */
     ctx.save();
@@ -297,10 +342,10 @@ public class Connection {
     /* Draw the curve as a quadratic curve (saves some additional calculations) */
     ctx.move_to( start_x, start_y );
     ctx.curve_to(
-      (((2.0 / 3.0) * ax) + ((1.0 / 3.0) * start_x)),
-      (((2.0 / 3.0) * ay) + ((1.0 / 3.0) * start_y)),
-      (((2.0 / 3.0) * ax) + ((1.0 / 3.0) * end_x)),
-      (((2.0 / 3.0) * ay) + ((1.0 / 3.0) * end_y)),
+      (((2.0 / 3.0) * cx) + ((1.0 / 3.0) * start_x)),
+      (((2.0 / 3.0) * cy) + ((1.0 / 3.0) * start_y)),
+      (((2.0 / 3.0) * cx) + ((1.0 / 3.0) * end_x)),
+      (((2.0 / 3.0) * cy) + ((1.0 / 3.0) * end_y)),
       end_x, end_y
     );
     ctx.stroke();
@@ -310,10 +355,10 @@ public class Connection {
     /* Draw the arrow */
     if( mode != ConnMode.SELECTED ) {
       if( (style.connection_arrow == "fromto") || (style.connection_arrow == "both") ) {
-        draw_arrow( ctx, style.connection_width, end_x, end_y, ax, ay );
+        draw_arrow( ctx, style.connection_width, end_x, end_y, cx, cy );
       }
       if( (style.connection_arrow == "tofrom") || (style.connection_arrow == "both") ) {
-        draw_arrow( ctx, style.connection_width, start_x, start_y, ax, ay );
+        draw_arrow( ctx, style.connection_width, start_x, start_y, cx, cy );
       }
     }
 

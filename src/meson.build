@@ -60,6 +60,7 @@ sources += files(
 
     'Animator.vala',
     'Application.vala',
+    'Bezier.vala',
     'Connection.vala',
     'Connections.vala',
     'Document.vala',
