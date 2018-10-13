@@ -30,6 +30,12 @@ public class Connections {
 
   /* Adds the given connection */
   public void add_connection( Connection conn ) {
+    /* Don't add the connection if it has already been added */
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ) == conn ) {
+        return;
+      }
+    }
     _connections.append_val( conn );
   }
 

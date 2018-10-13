@@ -1255,11 +1255,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
     if( _current_connection != null ) {
       if( _attach_node != null ) {
-        if( _current_connection.mode == ConnMode.ADJUSTING ) {
-          end_connection( _attach_node );
-        } else {
-          // FOOBAR
-        }
+        end_connection( _attach_node );
         _attach_node.mode = NodeMode.NONE;
         _attach_node = null;
       } else if( _current_connection.mode == ConnMode.ADJUSTING ) {
