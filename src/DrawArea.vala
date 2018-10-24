@@ -56,6 +56,7 @@ public class DrawArea : Gtk.DrawingArea {
   private DrawAreaMenu     _popup_menu;
   private uint?            _auto_save_id = null;
   private ImageEditor      _editor;
+  private IMContextSimple  _im_context;
 
   public UndoBuffer   undo_buffer    { set; get; }
   public Themes       themes         { set; get; default = new Themes(); }
@@ -172,6 +173,10 @@ public class DrawArea : Gtk.DrawingArea {
      our background with the theme.
     */
     get_style_context().add_class( "canvas" );
+
+    /* Make sure that we us the ImContextSimple input method */
+    _im_context = new IMContextSimple();
+    _im_context.commit.connect( handle_printable );
 
   }
 
@@ -1501,6 +1506,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the escape character is entered in the drawing area */
   private void handle_escape() {
     if( is_mode_edit() ) {
+      _im_context.reset();
       _current_node.mode = NodeMode.CURRENT;
       _current_node.name = _orig_name;
       _current_node.layout.handle_update_by_edit( _current_node );
@@ -1951,6 +1957,9 @@ public class DrawArea : Gtk.DrawingArea {
           case 118 :  do_paste();  break;
         }
       } else if( nomod || shift ) {
+        if( _im_context.filter_keypress( e ) ) {
+          return( true );
+        }
         switch( e.keyval ) {
           case 65288 :  handle_backspace();  break;
           case 65535 :  handle_delete();     break;
