@@ -17,9 +17,11 @@ addons:
     packages:
       - libstdc++-5-dev
 
-cache:
-  directories:
-    - /tmp/liftoff
+install:
+  - npm i -g @elementaryos/houston
+
+script:
+  - houston ci
 
 matrix:
   include:
@@ -28,14 +30,6 @@ matrix:
     
 before_install:
   - docker pull ubuntu:18.04
-
-install:
-  - npm install @elementaryos/houston
-
-script:
-  - houston ci
-    --name-domain com.github.phase1geo.minder
-    --distribution $DIST
 
 branches:
   only:
