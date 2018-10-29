@@ -1743,6 +1743,10 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /*
+   Called whenever the Control-Tab key combo is entered.  Causes a tabe character
+   to be inserted into the title.
+  */
   private void handle_control_tab() {
     if( is_mode_edit() ) {
       _current_node.edit_insert( "\t" );
@@ -1775,6 +1779,17 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /*
+   Called whenever the Control-right key combo is entered.  Moves the cursor
+   one word to the right.
+  */
+  private void handle_control_right() {
+    if( is_mode_edit() ) {
+      _current_node.move_cursor_by_word( 1 );
+      queue_draw();
+    }
+  }
+
   /* Called whenever the left key is entered in the drawing area */
   private void handle_left() {
     if( is_mode_edit() ) {
@@ -1795,6 +1810,17 @@ public class DrawArea : Gtk.DrawingArea {
       if( select_node( next ) ) {
         queue_draw();
       }
+    }
+  }
+
+  /*
+   Called whenever the Control-left key combo is entered.  Moves the cursor one
+   word to the left.
+  */
+  private void handle_control_left() {
+    if( is_mode_edit() ) {
+      _current_node.move_cursor_by_word( -1 );
+      queue_draw();
     }
   }
 
@@ -1976,6 +2002,8 @@ public class DrawArea : Gtk.DrawingArea {
           case 118   :  do_paste();  break;
           case 65293 :  handle_control_return();  break;
           case 65289 :  handle_control_tab();     break;
+          case 65363 :  handle_control_right();   break;
+          case 65361 :  handle_control_left();    break;
         }
       } else if( nomod || shift ) {
         if( _im_context.filter_keypress( e ) ) {

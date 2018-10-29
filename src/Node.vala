@@ -1151,6 +1151,32 @@ public class Node : Object {
     _selend = _selstart;
   }
 
+  /* Moves the cursor to the next or previous word beginning */
+  public void move_cursor_by_word( int dir ) {
+    bool alnum_found = false;
+    if( dir == 1 ) {
+      for( int i=_cursor; i<name.char_count(); i++ ) {
+        if( name.get_char( i ).isalnum() ) {
+          alnum_found = true;
+        } else if( alnum_found ) {
+          _cursor = i;
+          return;
+        }
+      }
+      _cursor = name.char_count();
+    } else {
+      for( int i=(_cursor - 1); i>=0; i-- ) {
+        if( name.get_char( i ).isalnum() ) {
+          alnum_found = true;
+        } else if( alnum_found ) {
+          _cursor = (i + 1);
+          return;
+        }
+      }
+      _cursor = 0;
+    }
+  }
+
   /* Handles a backspace key event */
   public void edit_backspace() {
     if( _cursor > 0 ) {
