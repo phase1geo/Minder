@@ -1541,7 +1541,7 @@ public class DrawArea : Gtk.DrawingArea {
     _orig_name = "";
     _current_node.mode = NodeMode.NONE;
     node.side          = _current_node.side;
-    node.style         = _current_node.style; 
+    node.style         = _current_node.style;
     node.style         = StyleInspector.styles.get_style_for_level( _current_node.get_level() );
     node.attach( _current_node.parent, (_current_node.index() + 1), _theme );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
@@ -1567,6 +1567,16 @@ public class DrawArea : Gtk.DrawingArea {
       add_sibling_node();
     } else {
       add_root_node();
+    }
+  }
+
+  /* Called whenever the user hits a Control-Return key.  Causes a newline to be inserted */
+  private void handle_control_return() {
+    if( is_mode_edit() ) {
+      _current_node.edit_insert( "\n" );
+      see();
+      node_changed();
+      queue_draw();
     }
   }
 
@@ -1730,6 +1740,15 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     } else if( is_mode_selected() ) {
       add_child_node();
+    }
+  }
+
+  private void handle_control_tab() {
+    if( is_mode_edit() ) {
+      _current_node.edit_insert( "\t" );
+      see();
+      node_changed();
+      queue_draw();
     }
   }
 
@@ -1952,9 +1971,11 @@ public class DrawArea : Gtk.DrawingArea {
     if( (_current_node != null) || (_current_connection != null) ) {
       if( control ) {
         switch( e.keyval ) {
-          case 99  :  do_copy();   break;
-          case 120 :  do_cut();    break;
-          case 118 :  do_paste();  break;
+          case 99    :  do_copy();   break;
+          case 120   :  do_cut();    break;
+          case 118   :  do_paste();  break;
+          case 65293 :  handle_control_return();  break;
+          case 65289 :  handle_control_tab();     break;
         }
       } else if( nomod || shift ) {
         if( _im_context.filter_keypress( e ) ) {
