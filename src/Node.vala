@@ -1079,14 +1079,7 @@ public class Node : Object {
       cursor += trailing;
       var word_start = name.substring( 0, cursor ).last_index_of( " " );
       var word_end   = name.index_of( " ", cursor );
-      if( word_start == -1 ) {
-        _selstart = 0;
-      } else {
-        var windex = name.char_count( word_start );
-        if( !motion || (windex < _selanchor) ) {
-          _selstart = windex + 1;
-        }
-      }
+      if( word_start == -1 ) { _selstart = 0; } else { var windex = name.char_count( word_start ); if( !motion || (windex < _selanchor) ) { _selstart = windex + 1; } }
       if( word_end == -1 ) {
         _selend = name.char_count();
       } else {
@@ -1097,6 +1090,11 @@ public class Node : Object {
       }
       _cursor = _selend;
     }
+  }
+
+  /* Deselects all of the text */
+  public void set_cursor_none() {
+    _selstart = _selend;
   }
 
   /* Selects all of the text and places the cursor at the end of the name string */
@@ -1151,29 +1149,80 @@ public class Node : Object {
     _selend = _selstart;
   }
 
-  /* Moves the cursor to the next or previous word beginning */
-  public void move_cursor_by_word( int dir ) {
+  /* Causes the selection to continue from the start of the text */
+  public void selection_to_start() {
+    if( _selstart == _selend ) {
+      _selstart = 0;
+      _selend   = _cursor;
+      _cursor   = 0;
+    } else {
+      _selstart = 0;
+      _cursor   = 0;
+    }
+  }
+
+  /* Causes the selection to continue to the end of the text */
+  public void selection_to_end() {
+    if( _selstart == _selend ) {
+      _selstart = _cursor;
+      _selend   = name.char_count();
+      _cursor   = name.char_count();
+    } else {
+      _selend = name.char_count();
+      _cursor = name.char_count();
+    }
+  }
+
+  /* Finds the next/previous word boundary */
+  private int find_word( int start, int dir ) {
     bool alnum_found = false;
     if( dir == 1 ) {
-      for( int i=_cursor; i<name.char_count(); i++ ) {
-        if( name.get_char( i ).isalnum() ) {
+      for( int i=start; i<name.char_count(); i++ ) {
+        int index = name.index_of_nth_char( i );
+        if( name.get_char( index ).isalnum() ) {
           alnum_found = true;
         } else if( alnum_found ) {
-          _cursor = i;
-          return;
+          return( i );
         }
       }
-      _cursor = name.char_count();
+      return( name.char_count() );
     } else {
-      for( int i=(_cursor - 1); i>=0; i-- ) {
-        if( name.get_char( i ).isalnum() ) {
+      for( int i=(start - 1); i>=0; i-- ) {
+        int index = name.index_of_nth_char( i );
+        if( name.get_char( index ).isalnum() ) {
           alnum_found = true;
         } else if( alnum_found ) {
-          _cursor = (i + 1);
-          return;
+          return( i + 1 );
         }
       }
-      _cursor = 0;
+      return( 0 );
+    }
+  }
+
+  /* Moves the cursor to the next or previous word beginning */
+  public void move_cursor_by_word( int dir ) {
+    _cursor = find_word( _cursor, dir );
+    _selend = _selstart;
+  }
+
+  /* Change the selection by a word in the given direction */
+  public void selection_by_word( int dir ) {
+    if( _cursor == _selstart ) {
+      _cursor = find_word( _cursor, dir );
+      if( _cursor <= _selend ) {
+        _selstart = _cursor;
+      } else {
+        _selstart = _selend;
+        _selend   = _cursor;
+      }
+    } else {
+      _cursor = find_word( _cursor, dir );
+      if( _cursor >= _selstart ) {
+        _selend = _cursor;
+      } else {
+        _selend   = _selstart;
+        _selstart = _cursor;
+      }
     }
   }
 

@@ -1783,9 +1783,13 @@ public class DrawArea : Gtk.DrawingArea {
    Called whenever the Control-right key combo is entered.  Moves the cursor
    one word to the right.
   */
-  private void handle_control_right() {
+  private void handle_control_right( bool shift ) {
     if( is_mode_edit() ) {
-      _current_node.move_cursor_by_word( 1 );
+      if( shift ) {
+        _current_node.selection_by_word( 1 );
+      } else {
+        _current_node.move_cursor_by_word( 1 );
+      }
       queue_draw();
     }
   }
@@ -1817,9 +1821,29 @@ public class DrawArea : Gtk.DrawingArea {
    Called whenever the Control-left key combo is entered.  Moves the cursor one
    word to the left.
   */
-  private void handle_control_left() {
+  private void handle_control_left( bool shift ) {
     if( is_mode_edit() ) {
-      _current_node.move_cursor_by_word( -1 );
+      if( shift ) {
+        _current_node.selection_by_word( -1 );
+      } else {
+        _current_node.move_cursor_by_word( -1 );
+      }
+      queue_draw();
+    }
+  }
+
+  /* Selects all of the text in the current node */
+  private void handle_control_slash() {
+    if( is_mode_edit() ) {
+      _current_node.set_cursor_all( false );
+      queue_draw();
+    }
+  }
+
+  /* Deselects all of the text in the current node */
+  private void handle_control_backslash() {
+    if( is_mode_edit() ) {
+      _current_node.set_cursor_none();
       queue_draw();
     }
   }
@@ -1871,6 +1895,21 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /*
+   Causes the text to select everything from the beginnning of the string to the cursor
+   position.
+  */
+  private void handle_control_up( bool shift ) {
+    if( is_mode_edit() ) {
+      if( shift ) {
+        _current_node.selection_to_start();
+      } else {
+        _current_node.move_cursor_to_start();
+      }
+      queue_draw();
+    }
+  }
+
   /* Called whenever the down key is entered in the drawing area */
   private void handle_down() {
     if( is_mode_edit() ) {
@@ -1899,6 +1938,20 @@ public class DrawArea : Gtk.DrawingArea {
           queue_draw();
         }
       }
+    }
+  }
+
+  /*
+   Causes the text to be selected from the current cursor position to the end of the string.
+  */
+  private void handle_control_down( bool shift ) {
+    if( is_mode_edit() ) {
+      if( shift ) {
+        _current_node.selection_to_end();
+      } else {
+        _current_node.move_cursor_to_end();
+      }
+      queue_draw();
     }
   }
 
@@ -2000,10 +2053,14 @@ public class DrawArea : Gtk.DrawingArea {
           case 99    :  do_copy();   break;
           case 120   :  do_cut();    break;
           case 118   :  do_paste();  break;
-          case 65293 :  handle_control_return();  break;
-          case 65289 :  handle_control_tab();     break;
-          case 65363 :  handle_control_right();   break;
-          case 65361 :  handle_control_left();    break;
+          case 65293 :  handle_control_return();        break;
+          case 65289 :  handle_control_tab();           break;
+          case 65363 :  handle_control_right( shift );  break;
+          case 65359 :  handle_control_left( shift );   break;
+          case 65362 :  handle_control_up( shift );     break;
+          case 65364 :  handle_control_down( shift );   break;
+          case 47    :  handle_control_slash();         break;
+          case 92    :  handle_control_backslash();     break;
         }
       } else if( nomod || shift ) {
         if( _im_context.filter_keypress( e ) ) {
