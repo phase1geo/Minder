@@ -491,8 +491,9 @@ public class DrawArea : Gtk.DrawingArea {
     var n = new Node.with_name( this, _("Main Idea"), layouts.get_default() );
 
     /* Set the node information */
-    n.posx = (get_allocated_width()  / 2) - 30;
-    n.posy = (get_allocated_height() / 2) - 10;
+    n.posx  = (get_allocated_width()  / 2) - 30;
+    n.posy  = (get_allocated_height() / 2) - 10;
+    n.style = StyleInspector.styles.get_global_style();
 
     n.layout.handle_update_by_edit( n );
 

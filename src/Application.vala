@@ -31,7 +31,7 @@ public class Minder : Granite.Application {
   public  static GLib.Settings settings;
 
   public Minder () {
-    Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.FLAGS_NONE );
+    Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.HANDLES_OPEN );
   }
 
   protected override void activate() {
@@ -125,6 +125,17 @@ public class Minder : Granite.Application {
       stdout.printf( "1.1.0\n" );
       Process.exit( 0 );
     }
+
+    /* If we see files on the command-line */
+    if( args.length >= 2 ) {
+      open_file = args[1];
+    }
+
+  }
+
+  protected override void open( File[] files, string hint ) {
+
+    activate();
 
   }
 
