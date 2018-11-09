@@ -124,7 +124,7 @@ public class StyleInspector : Box {
     box.pack_start( _branch_group, false, true );
     box.pack_start( _link_group,   false, true );
     box.pack_start( _node_group,   false, true );
-    box.pack_start( _conn_group,   false, true );
+    // box.pack_start( _conn_group,   false, true );
 
     /* Pack the elements into this widget */
     pack_start( affect, false, true );
