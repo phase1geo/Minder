@@ -69,7 +69,8 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_selected", action_zoom_selected },
     { "action_zoom_actual",   action_zoom_actual },
     { "action_export",        action_export },
-    { "action_print",         action_print }
+    { "action_print",         action_print },
+    { "action_sidebar",       action_sidebar }
   };
 
   private delegate void ChangedFunc();
@@ -191,6 +192,7 @@ public class MainWindow : ApplicationWindow {
     app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
     app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
     app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
+    app.set_accels_for_action( "win.action_sidebar",     { "<Control>bar"} );
 
   }
 
@@ -741,7 +743,7 @@ public class MainWindow : ApplicationWindow {
     _inspector.reveal_child = false;
     _settings.set_boolean( "node-properties-shown",  false );
     _settings.set_boolean( "map-properties-shown",   false );
-    _settings.set_boolean( "style-properites-shown", false );
+    _settings.set_boolean( "style-properties-shown", false );
   }
 
   /* Converts the given value from the scale to the zoom value to use */
@@ -1003,6 +1005,11 @@ public class MainWindow : ApplicationWindow {
   private void action_print() {
     var print = new ExportPrint();
     print.print( _canvas, this );
+  }
+
+  /* Displays or hides the sidebar */
+  private void action_sidebar() {
+    inspector_clicked();
   }
 
 }

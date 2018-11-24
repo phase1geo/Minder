@@ -1093,7 +1093,7 @@ public class Node : Object {
 
   /* Deselects all of the text */
   public void set_cursor_none() {
-    _selstart = _selend;
+    _selstart = _selend = _cursor;
   }
 
   /* Selects all of the text and places the cursor at the end of the name string */
@@ -1115,7 +1115,7 @@ public class Node : Object {
     } else if( _cursor > last ) {
       _cursor = last;
     }
-    _selend = _selstart;
+    _selend = _selstart = _cursor;
   }
 
   /* Moves the cursor up/down the text by a line */
@@ -1133,19 +1133,19 @@ public class Node : Object {
     var line_layout = _pango_layout.get_line( line );
     line_layout.x_to_index( x, out index, out trailing );
     _cursor = name.char_count( index + trailing );
-    _selend = _selstart;
+    _selend = _selstart = _cursor;
   }
 
   /* Moves the cursor to the beginning of the name */
   public void move_cursor_to_start() {
     _cursor = 0;
-    _selend = _selstart;
+    _selend = _selstart = _cursor;
   }
 
   /* Moves the cursor to the end of the name */
   public void move_cursor_to_end() {
     _cursor = name.char_count();
-    _selend = _selstart;
+    _selend = _selstart = _cursor;
   }
 
   /* Causes the selection to continue from the start of the text */

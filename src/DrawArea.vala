@@ -1819,8 +1819,8 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /*
-   Called whenever the Control-left key combo is entered.  Moves the cursor one
-   word to the left.
+   If Control is used, jumps the cursor to the end of the previous word.  If Control-Shift
+   is used, adds the previous word to the selection.
   */
   private void handle_control_left( bool shift ) {
     if( is_mode_edit() ) {
@@ -1897,8 +1897,8 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /*
-   Causes the text to select everything from the beginnning of the string to the cursor
-   position.
+   If the Control key is used, jumps the cursor to the beginning of the text.  If Control-Shift
+   is used, selects everything from the beginnning of the string to the cursor position.
   */
   private void handle_control_up( bool shift ) {
     if( is_mode_edit() ) {
@@ -1943,7 +1943,8 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /*
-   Causes the text to be selected from the current cursor position to the end of the string.
+   If the Control key is used, jumps the cursor to the end of the text.  If Control-Shift is
+   used, selects all text from the current cursor position to the end of the string.
   */
   private void handle_control_down( bool shift ) {
     if( is_mode_edit() ) {
@@ -2057,7 +2058,7 @@ public class DrawArea : Gtk.DrawingArea {
           case 65293 :  handle_control_return();        break;
           case 65289 :  handle_control_tab();           break;
           case 65363 :  handle_control_right( shift );  break;
-          case 65359 :  handle_control_left( shift );   break;
+          case 65361 :  handle_control_left( shift );   break;
           case 65362 :  handle_control_up( shift );     break;
           case 65364 :  handle_control_down( shift );   break;
           case 47    :  handle_control_slash();         break;
