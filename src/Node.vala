@@ -112,6 +112,7 @@ public class Node : Object {
   protected double       _task_radius  = 5;
   protected double       _alpha        = 0.3;
   private   int          _cursor       = 0;   /* Location of the cursor when editing */
+  private   int          _column       = 0;   /* Character column to use when moving vertically */
   protected Array<Node>  _children;
   private   NodeMode     _mode         = NodeMode.NONE;
   private   int          _task_count   = 0;
@@ -1042,6 +1043,13 @@ public class Node : Object {
     child.attach( this, -1, null );
   }
 
+  /* Updates the column value */
+  private void update_column() {
+    int line;
+    var cpos = name.index_of_nth_char( _cursor );
+    _pango_layout.index_to_line_x( cpos, false, out line, out _column );
+  }
+
   /* Sets the cursor from the given mouse coordinates */
   public void set_cursor_at_char( double x, double y, bool motion ) {
     int cursor, trailing;
@@ -1065,6 +1073,7 @@ public class Node : Object {
         _selanchor = cindex;
       }
       _cursor = _selend;
+      update_column();
     }
   }
 
@@ -1088,12 +1097,38 @@ public class Node : Object {
         }
       }
       _cursor = _selend;
+      update_column();
+    }
+  }
+
+  /* Called after the cursor has been moved, clears the selection */
+  private void clear_selection() {
+    _selstart = _selend = _cursor;
+  }
+
+  /*
+   Called after the cursor has been moved, adjusts the selection
+   to include the cursor.
+  */
+  private void adjust_selection( int last_cursor ) {
+    if( last_cursor == _selstart ) {
+      if( _cursor <= _selend ) {
+        _selstart = _cursor;
+      } else {
+        _selend = _cursor;
+      }
+    } else {
+      if( _cursor >= _selstart ) {
+        _selend = _cursor;
+      } else {
+        _selstart = _cursor;
+      }
     }
   }
 
   /* Deselects all of the text */
   public void set_cursor_none() {
-    _selstart = _selend = _cursor;
+    clear_selection();
   }
 
   /* Selects all of the text and places the cursor at the end of the name string */
@@ -1106,8 +1141,8 @@ public class Node : Object {
     }
   }
 
-  /* Move the cursor in the given direction */
-  public void move_cursor( int dir ) {
+  /* Adjusts the cursor by the given amount of characters */
+  private void cursor_by_char( int dir ) {
     var last = name.char_count();
     _cursor += dir;
     if( _cursor < 0 ) {
@@ -1115,37 +1150,66 @@ public class Node : Object {
     } else if( _cursor > last ) {
       _cursor = last;
     }
-    _selend = _selstart = _cursor;
+    update_column();
+  }
+
+  /* Move the cursor in the given direction */
+  public void move_cursor( int dir ) {
+    cursor_by_char( dir );
+    clear_selection();
+  }
+
+  /* Adjusts the selection by the given cursor */
+  public void selection_by_char( int dir ) {
+    var last_cursor = _cursor;
+    cursor_by_char( dir );
+    adjust_selection( last_cursor );
   }
 
   /* Moves the cursor up/down the text by a line */
-  public void move_cursor_vertically( int dir ) {
+  private void cursor_by_line( int dir ) {
     int line, x;
-    int index, trailing;
     var cpos = name.index_of_nth_char( _cursor );
     _pango_layout.index_to_line_x( cpos, false, out line, out x );
     line += dir;
     if( line < 0 ) {
-      line = 0;
+      _cursor = 0;
     } else if( line >= _pango_layout.get_line_count() ) {
-      line = _pango_layout.get_line_count() - 1;
+      _cursor = name.char_count();
+    } else {
+      int index, trailing;
+      var line_layout = _pango_layout.get_line( line );
+      line_layout.x_to_index( _column, out index, out trailing );
+      _cursor = name.char_count( index + trailing );
     }
-    var line_layout = _pango_layout.get_line( line );
-    line_layout.x_to_index( x, out index, out trailing );
-    _cursor = name.char_count( index + trailing );
-    _selend = _selstart = _cursor;
+  }
+
+  /*
+   Moves the cursor in the given vertical direction, clearing the
+   selection.
+  */
+  public void move_cursor_vertically( int dir ) {
+    cursor_by_line( dir );
+    clear_selection();
+  }
+
+  /* Adjusts the selection in the vertical direction */
+  public void selection_vertically( int dir ) {
+    var last_cursor = _cursor;
+    cursor_by_line( dir );
+    adjust_selection( last_cursor );
   }
 
   /* Moves the cursor to the beginning of the name */
   public void move_cursor_to_start() {
     _cursor = 0;
-    _selend = _selstart = _cursor;
+    clear_selection();
   }
 
   /* Moves the cursor to the end of the name */
   public void move_cursor_to_end() {
     _cursor = name.char_count();
-    _selend = _selstart = _cursor;
+    clear_selection();
   }
 
   /* Causes the selection to continue from the start of the text */

@@ -46,7 +46,7 @@ public class AnimatorNodes : AnimatorAction {
   /* Adjusts all of the node positions for the given frame */
   public override void adjust( DrawArea da ) {
     double divisor = index / frames;
-    double frame   = 1 / frames;
+    // double frame   = 1 / frames;
     index++;
     for( int i=0; i<_pos.length(); i++ ) {
       double dx = _pos.new_x( i ) - _pos.old_x( i );

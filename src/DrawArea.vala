@@ -1758,9 +1758,13 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Called whenever the right key is entered in the drawing area */
-  private void handle_right() {
+  private void handle_right( bool shift ) {
     if( is_mode_edit() ) {
-      _current_node.move_cursor( 1 );
+      if( shift ) {
+        _current_node.selection_by_char( 1 );
+      } else {
+        _current_node.move_cursor( 1 );
+      }
       queue_draw();
     } else if( is_mode_selected() ) {
       Node? next;
@@ -1796,9 +1800,13 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Called whenever the left key is entered in the drawing area */
-  private void handle_left() {
+  private void handle_left( bool shift ) {
     if( is_mode_edit() ) {
-      _current_node.move_cursor( -1 );
+      if( shift ) {
+        _current_node.selection_by_char( -1 );
+      } else {
+        _current_node.move_cursor( -1 );
+      }
       queue_draw();
     } else if( is_mode_selected() ) {
       Node? next;
@@ -1866,9 +1874,13 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Called whenever the up key is entered in the drawing area */
-  private void handle_up() {
+  private void handle_up( bool shift ) {
     if( is_mode_edit() ) {
-      _current_node.move_cursor_vertically( -1 );
+      if( shift ) {
+        _current_node.selection_vertically( -1 );
+      } else {
+        _current_node.move_cursor_vertically( -1 );
+      }
       queue_draw();
     } else if( is_mode_selected() ) {
       if( _current_node.is_root() ) {
@@ -1912,9 +1924,13 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Called whenever the down key is entered in the drawing area */
-  private void handle_down() {
+  private void handle_down( bool shift ) {
     if( is_mode_edit() ) {
-      _current_node.move_cursor_vertically( 1 );
+      if( shift ) {
+        _current_node.selection_vertically( 1 );
+      } else {
+        _current_node.move_cursor_vertically( 1 );
+      }
       queue_draw();
     } else if( is_mode_selected() ) {
       if( _current_node.is_root() ) {
@@ -2069,19 +2085,19 @@ public class DrawArea : Gtk.DrawingArea {
           return( true );
         }
         switch( e.keyval ) {
-          case 65288 :  handle_backspace();  break;
-          case 65535 :  handle_delete();     break;
-          case 65307 :  handle_escape();     break;
-          case 65293 :  handle_return();     break;
-          case 65289 :  handle_tab();        break;
-          case 65363 :  handle_right();      break;
-          case 65361 :  handle_left();       break;
-          case 65360 :  handle_home();       break;
-          case 65367 :  handle_end();        break;
-          case 65362 :  handle_up();         break;
-          case 65364 :  handle_down();       break;
-          case 65365 :  handle_pageup();     break;
-          case 65366 :  handle_pagedn();     break;
+          case 65288 :  handle_backspace();    break;
+          case 65535 :  handle_delete();       break;
+          case 65307 :  handle_escape();       break;
+          case 65293 :  handle_return();       break;
+          case 65289 :  handle_tab();          break;
+          case 65363 :  handle_right( shift ); break;
+          case 65361 :  handle_left( shift );  break;
+          case 65360 :  handle_home();         break;
+          case 65367 :  handle_end();          break;
+          case 65362 :  handle_up( shift );    break;
+          case 65364 :  handle_down( shift );  break;
+          case 65365 :  handle_pageup();       break;
+          case 65366 :  handle_pagedn();       break;
           default :
             //if( !e.str.get_char( 0 ).isprint() ) {
             //  stdout.printf( "In on_keypress, keyval: %s\n", e.keyval.to_string() );
