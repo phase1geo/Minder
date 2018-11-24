@@ -218,7 +218,6 @@ public class Node : Object {
     }
     set {
       _layout = value;
-      _layout.set_side( this );
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).layout = value;
       }

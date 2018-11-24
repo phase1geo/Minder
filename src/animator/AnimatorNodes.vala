@@ -56,9 +56,7 @@ public class AnimatorNodes : AnimatorAction {
       _pos.node( i ).posx = x;
       _pos.node( i ).posy = y;
       _pos.node( i ).side = _pos.node( i ).layout.get_side( _pos.node( i ) );
-      if( _node != null ) {
-        da.get_connections().node_moved( _pos.node( i ), _node, (dx * frame), (dy * frame) );
-      }
+      // da.get_connections().node_moved( _pos.node( i ), _node, (dx * frame), (dy * frame) );
     }
   }
 
