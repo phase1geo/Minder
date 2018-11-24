@@ -776,9 +776,10 @@ public class DrawArea : Gtk.DrawingArea {
     node.get_node_info( ref _orig_info );
     if( node == _current_node ) {
       if( is_mode_edit() ) {
+        bool shift = (bool) e.state & ModifierType.SHIFT_MASK;
         switch( e.type ) {
-          case EventType.BUTTON_PRESS :         node.set_cursor_at_char( e.x, e.y, false );  break;
-          case EventType.DOUBLE_BUTTON_PRESS :  node.set_cursor_at_word( e.x, e.y, false );  break;
+          case EventType.BUTTON_PRESS :         node.set_cursor_at_char( e.x, e.y, shift );  break;
+          case EventType.DOUBLE_BUTTON_PRESS :  node.set_cursor_at_word( e.x, e.y, shift );  break;
           case EventType.TRIPLE_BUTTON_PRESS :  node.set_cursor_all( false );            break;
         }
       } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
