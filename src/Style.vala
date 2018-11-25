@@ -32,6 +32,9 @@ public class Style {
   public NodeBorder?      node_border      { get; set; default = null; }
   public int?             node_width       { get; set; default = null; }
   public int?             node_borderwidth { get; set; default = null; }
+  public bool?            node_fill        { get; set; default = null; }
+  public int?             node_margin      { get; set; default = null; }
+  public int?             node_padding     { get; set; default = null; }
   public FontDescription? node_font        { get; set; default = null; }
   public LinkDash?        connection_dash  { get; set; default = null; }
   public int?             connection_width { get; set; default = null; }
@@ -73,6 +76,9 @@ public class Style {
       node_border      = null;
       node_width       = null;
       node_borderwidth = null;
+      node_fill        = null;
+      node_margin      = null;
+      node_padding     = null;
       node_font        = null;
       connection_dash  = null;
       connection_width = null;
@@ -91,6 +97,9 @@ public class Style {
     if( (s.node_border      != null) || !s._template ) node_border      = s.node_border;
     if( (s.node_width       != null) || !s._template ) node_width       = s.node_width;
     if( (s.node_borderwidth != null) || !s._template ) node_borderwidth = s.node_borderwidth;
+    if( (s.node_fill        != null) || !s._template ) node_fill        = s.node_fill;
+    if( (s.node_margin      != null) || !s._template ) node_margin      = s.node_margin;
+    if( (s.node_padding     != null) || !s._template ) node_padding     = s.node_padding;
     if( (s.node_font        != null) || !s._template ) node_font        = s.node_font.copy();
     if( (s.connection_dash  != null) || !s._template ) connection_dash  = s.connection_dash;
     if( (s.connection_width != null) || !s._template ) connection_width = s.connection_width;
@@ -129,6 +138,18 @@ public class Style {
     string? nbw = node->get_prop( "nodeborderwidth" );
     if( nbw != null ) {
       node_borderwidth = int.parse( nbw );
+    }
+    string? nlf = node->get_prop( "nodefill" );
+    if( nlf != null ) {
+      node_fill = bool.parse( nlf );
+    }
+    string? nm = node->get_prop( "nodemargin" );
+    if( nm != null ) {
+      node_margin = int.parse( nm );
+    }
+    string? np = node->get_prop( "nodepadding" );
+    if( np != null ) {
+      node_padding = int.parse( np );
     }
     string? nf = node->get_prop( "nodefont" );
     if( nf != null ) {
@@ -178,6 +199,15 @@ public class Style {
     }
     if( node_borderwidth != null ) {
       n->set_prop( "nodeborderwidth", node_borderwidth.to_string() );
+    }
+    if( node_fill != null ) {
+      n->set_prop( "nodefill", node_fill.to_string() );
+    }
+    if( node_margin != null ) {
+      n->set_prop( "nodemargin", node_margin.to_string() );
+    }
+    if( node_padding != null ) {
+      n->set_prop( "nodepadding", node_padding.to_string() );
     }
     if( node_font != null ) {
       n->set_prop( "nodefont", node_font.to_string() );

@@ -81,6 +81,9 @@ public class StyleInspector : Box {
   private Image                      _link_dash;
   private Granite.Widgets.ModeButton _node_borders;
   private Scale                      _node_borderwidth;
+  private Switch                     _node_fill;
+  private Scale                      _node_margin;
+  private Scale                      _node_padding;
   private FontButton                 _font_chooser;
   private Image                      _conn_dash;
   private Image                      _conn_arrow;
@@ -369,7 +372,7 @@ public class StyleInspector : Box {
 
     var box = new Box( Orientation.HORIZONTAL, 5 );
     var lbl = new Label( _( "Link Arrow" ) );
-    
+
     _link_arrow = new Switch();
     _link_arrow.set_active( false );  /* TBD */
     _link_arrow.button_release_event.connect( link_arrow_changed );
@@ -403,10 +406,16 @@ public class StyleInspector : Box {
 
     var node_border      = create_node_border_ui();
     var node_borderwidth = create_node_borderwidth_ui();
+    var node_fill        = create_node_fill_ui();
+    var node_margin      = create_node_margin_ui();
+    var node_padding     = create_node_padding_ui();
     var node_font        = create_node_font_ui();
 
     cbox.pack_start( node_border,      false, true );
     cbox.pack_start( node_borderwidth, false, true );
+    cbox.pack_start( node_fill,        false, true );
+    cbox.pack_start( node_margin,      false, true );
+    cbox.pack_start( node_padding,     false, true );
     cbox.pack_start( node_font,        false, true );
 
     box.pack_start( lbl,  false, true );
@@ -497,6 +506,90 @@ public class StyleInspector : Box {
   /* Called whenever the user changes the link width value */
   private bool node_borderwidth_changed( ScrollType scroll, double value ) {
     _current_style.node_borderwidth = (int)value;
+    apply_changes();
+    return( false );
+  }
+
+  /* Create the node fill UI */
+  private Box create_node_fill_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Fill With Link Color") );
+    lbl.xalign = (float)0;
+
+    _node_fill = new Switch();
+    _node_fill.button_release_event.connect( node_fill_changed );
+
+    box.pack_start( lbl,        false, true );
+    box.pack_end(   _node_fill, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the node fill status changes */
+  private bool node_fill_changed( Gdk.EventButton e ) {
+    _current_style.node_fill = !_node_fill.active;
+    apply_changes();
+    return( false );
+  }
+
+  /* Allows the user to change the node margin */
+  private Box create_node_margin_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Margin" ) );
+    lbl.xalign = (float)0;
+
+    _node_margin = new Scale.with_range( Orientation.HORIZONTAL, 5, 30, 1 );
+    _node_margin.draw_value = true;
+    _node_margin.change_value.connect( node_margin_changed );
+
+    box.pack_start( lbl,          false, true );
+    box.pack_end(   _node_margin, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the node margin value is changed */
+  private bool node_margin_changed( ScrollType scroll, double value ) {
+    if( (int)value > 30 ) {
+      return( false );
+    }
+    _current_style.node_margin = (int)value;
+    apply_changes();
+    return( false );
+  }
+
+  /* Allows the user to change the node padding */
+  private Box create_node_padding_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Padding" ) );
+    lbl.xalign = (float)0;
+
+    _node_padding = new Scale.with_range( Orientation.HORIZONTAL, 2, 20, 2 );
+    _node_padding.draw_value = true;
+    _node_padding.change_value.connect( node_padding_changed );
+
+    box.pack_start( lbl,           false, true );
+    box.pack_end(   _node_padding, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the node margin value is changed */
+  private bool node_padding_changed( ScrollType scroll, double value ) {
+    if( (int) value > 25 ) {
+      return( false );
+    }
+    _current_style.node_padding = (int)value;
     apply_changes();
     return( false );
   }
@@ -820,6 +913,9 @@ public class StyleInspector : Box {
     _link_width.set_value( (double)style.link_width );
     _link_arrow.set_active( style.link_arrow );
     _node_borderwidth.set_value( (double)style.node_borderwidth );
+    _node_fill.active = !(bool)style.node_fill;
+    _node_margin.set_value( (double)style.node_margin );
+    _node_padding.set_value( (double)style.node_padding );
     _font_chooser.set_font( style.node_font.to_string() );
     _conn_arrow.surface = Connection.make_arrow_icon( style.connection_arrow );
     _conn_width.set_value( (double)style.connection_width );

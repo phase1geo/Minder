@@ -22,7 +22,6 @@
 public class Layout : Object {
 
   protected double _pc_gap = 100;  /* Parent/child gap */
-  protected double _sb_gap = 8;    /* Sibling gap */
   protected double _rt_gap = 100;  /* Root node gaps */
 
   public string name        { protected set; get; default = ""; }
@@ -265,7 +264,7 @@ public class Layout : Object {
 
   /* Returns the adjustment value */
   protected virtual double get_insert_adjust( Node child ) {
-    return( (child.tree_size + _sb_gap) / 2 );
+    return( child.tree_size / 2 );
   }
 
   /* Called when we are inserting a node within a parent */
@@ -304,9 +303,9 @@ public class Layout : Object {
       double sx, sy, sw, sh;
       bbox( parent.children().index( pos - 1 ), child.side, out sx, out sy, out sw, out sh );
       if( (child.side & NodeSide.horizontal()) != 0 ) {
-        child.posy = (sy + sh + _sb_gap + (oy - cy)) - adjust;
+        child.posy = (sy + sh + (oy - cy)) - adjust;
       } else {
-        child.posx = (sx + sw + _sb_gap + (ox - cx)) - adjust;
+        child.posx = (sx + sw + (ox - cx)) - adjust;
       }
 
     /* Otherwise, place ourselves just above the next sibling */
@@ -327,7 +326,7 @@ public class Layout : Object {
   /* Called to layout the leftover children of a parent node when a node is deleted */
   public virtual void handle_update_by_delete( Node parent, int index, NodeSide side, double size ) {
 
-    double adjust = (size + _sb_gap) / 2;
+    double adjust = size / 2;
 
     /* Adjust the parent's descendants */
     for( int i=0; i<parent.children().length; i++ ) {

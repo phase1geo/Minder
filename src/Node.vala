@@ -105,8 +105,6 @@ public class Node : Object {
   protected int          _id;
   protected double       _width        = 0;
   protected double       _height       = 0;
-  protected double       _padx         = 10;
-  protected double       _pady         = 5;
   protected double       _ipadx        = 6;
   protected double       _ipady        = 3;
   protected double       _task_radius  = 5;
@@ -411,6 +409,10 @@ public class Node : Object {
   public virtual bool is_within( double x, double y ) {
     double cx, cy, cw, ch;
     bbox( out cx, out cy, out cw, out ch );
+    cx += (double)style.node_margin;
+    cy += (double)style.node_margin;
+    cw -= (double)style.node_margin * 2;
+    ch -= (double)style.node_margin * 2;
     return( (cx < x) && (x < (cx + cw)) && (cy < y) && (y < (cy + ch)) );
   }
 
@@ -422,8 +424,8 @@ public class Node : Object {
     if( _task_count > 0 ) {
       double tx, ty, tw, th;
       double img_height = (_image == null) ? 0 : _image.height;
-      tx = posx + _padx;
-      ty = posy + _pady + img_height + (((_height - (img_height + _pady)) / 2) - _task_radius);
+      tx = posx + style.node_padding;
+      ty = posy + style.node_padding + img_height + (((_height - (img_height + style.node_padding)) / 2) - _task_radius);
       tw = _task_radius * 2;
       th = _task_radius * 2;
       return( (tx < x) && (x < (tx + tw)) && (ty < y) && (y < (ty + th)) );
@@ -439,8 +441,8 @@ public class Node : Object {
     if( note.length > 0 ) {
       double nx, ny, nw, nh;
       double img_height = (_image == null) ? 0 : _image.height;
-      nx = posx + (_width - (note_width() + _padx)) + _ipadx;
-      ny = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2) - 5;
+      nx = posx + (_width - (note_width() + style.node_padding)) + _ipadx;
+      ny = posy + style.node_padding + img_height + ((_height - (img_height + style.node_padding)) / 2) - 5;
       nw = 11;
       nh = 11;
       return( (nx < x) && (x < (nx + nw)) && (ny < y) && (y < (ny + nh)) );
@@ -464,8 +466,8 @@ public class Node : Object {
   public virtual bool is_within_image( double x, double y ) {
     if( _image != null ) {
       double ix, iy, iw, ih;
-      ix = posx + _padx;
-      iy = posy + _pady;
+      ix = posx + style.node_padding;
+      iy = posy + style.node_padding;
       iw = _image.width;
       ih = _image.height;
       return( (ix <= x) && (x <= (ix + iw)) && (iy <= y) && (y <= (iy + ih)) );
@@ -852,15 +854,15 @@ public class Node : Object {
       int text_width, text_height;
       double orig_width  = _width;
       double orig_height = _height;
-      double img_width   = (_image != null) ? (_image.width  + (_padx * 2)) : 0;
-      double img_height  = (_image != null) ? (_image.height + _pady)       : 0;
+      double img_width   = (_image != null) ? (_image.width  + (style.node_padding * 2)) : 0;
+      double img_height  = (_image != null) ? (_image.height + style.node_padding)       : 0;
       _pango_layout.set_markup( name_markup( theme ), -1 );
       _pango_layout.get_size( out text_width, out text_height );
-      _width     = (text_width  / Pango.SCALE) + (_padx * 2) + task_width() + note_width();
+      _width     = (text_width  / Pango.SCALE) + (style.node_padding * 2) + task_width() + note_width();
       if( img_width > _width ) {
         _width = img_width;
       }
-      _height     = (text_height / Pango.SCALE) + (_pady * 2) + img_height;
+      _height     = (text_height / Pango.SCALE) + (style.node_padding * 2) + img_height;
       width_diff  = _width  - orig_width;
       height_diff = _height - orig_height;
     }
@@ -884,25 +886,23 @@ public class Node : Object {
   /* Returns the bounding box for this node */
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
     double width_diff, height_diff;
+    double margin = (double)style.node_margin;
     update_size( null, out width_diff, out height_diff );
-    if( is_root() ) {
+    if( is_root() || ((side & NodeSide.vertical()) != 0) ) {
       x = posx;
       y = posy;
       w = _width;
       h = _height;
     } else {
-      if( (side & NodeSide.vertical()) != 0 ) {
-        x = posx;
-        y = posy;
-        w = _width;
-        h = _height;
-      } else {
-        x = posx - (style.node_borderwidth / 2);
-        y = posy;
-        w = _width  + style.node_borderwidth;
-        h = _height + (style.node_borderwidth / 2);
-      }
+      x = posx - (style.node_borderwidth / 2);
+      y = posy;
+      w = _width  + style.node_borderwidth;
+      h = _height + (style.node_borderwidth / 2);
     }
+    x -= margin;
+    y -= margin;
+    w += (margin * 2);
+    h += (margin * 2);
   }
 
   /* Returns the bounding box for the fold indicator for this node */
@@ -913,20 +913,20 @@ public class Node : Object {
     h = 10;
     switch( side ) {
       case NodeSide.RIGHT :
-        x += bw + _padx;
+        x += bw + style.node_padding;
         y += (bh / 2) - 5;
         break;
       case NodeSide.LEFT :
-        x -= _padx + w;
+        x -= style.node_padding + w;
         y += (bh / 2) - 5;
         break;
       case NodeSide.TOP :
         x += (bw / 2) - 8;
-        y -= _padx + bh;
+        y -= style.node_padding + bh;
         break;
       case NodeSide.BOTTOM :
         x += (bw / 2) - 8;
-        y += bh + _padx;
+        y += bh + style.node_padding;
         break;
     }
   }
@@ -1053,9 +1053,9 @@ public class Node : Object {
   /* Sets the cursor from the given mouse coordinates */
   public void set_cursor_at_char( double x, double y, bool motion ) {
     int cursor, trailing;
-    int img_height = (_image != null) ? (int)(_image.height + _pady) : 0;
-    int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
-    int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
+    int img_height = (_image != null) ? (int)(_image.height + style.node_padding) : 0;
+    int adjusted_x = (int)(x - (posx + style.node_padding + task_width())) * Pango.SCALE;
+    int adjusted_y = (int)(y - (posy + style.node_padding + img_height)) * Pango.SCALE;
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       var cindex = name.char_count( cursor + trailing );
       if( motion ) {
@@ -1080,9 +1080,9 @@ public class Node : Object {
   /* Selects the word at the current x/y position in the text */
   public void set_cursor_at_word( double x, double y, bool motion ) {
     int cursor, trailing;
-    int img_height = (_image != null) ? (int)(_image.height + _pady) : 0;
-    int adjusted_x = (int)(x - (posx + _padx + task_width())) * Pango.SCALE;
-    int adjusted_y = (int)(y - (posy + _pady + img_height)) * Pango.SCALE;
+    int img_height = (_image != null) ? (int)(_image.height + style.node_padding) : 0;
+    int adjusted_x = (int)(x - (posx + style.node_padding + task_width())) * Pango.SCALE;
+    int adjusted_y = (int)(y - (posy + style.node_padding + img_height)) * Pango.SCALE;
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor += trailing;
       var word_start = name.substring( 0, cursor ).last_index_of( " " );
@@ -1704,7 +1704,7 @@ public class Node : Object {
     /* Set the fill color */
     if( mode == NodeMode.CURRENT ) {
       set_context_color_with_alpha( ctx, theme.nodesel_background, (motion ? 0.2 : 1) );
-    } else if( is_root() ) {
+    } else if( is_root() || style.node_fill ) {
       set_context_color_with_alpha( ctx, border_color, (motion ? 0.2 : 1) );
     } else {
       set_context_color_with_alpha( ctx, theme.background, (motion ? 0.2 : 1) );
@@ -1725,7 +1725,7 @@ public class Node : Object {
   /* Draws the node image above the note */
   protected virtual void draw_image( Cairo.Context ctx, Theme theme, bool motion ) {
     if( _image != null ) {
-      _image.draw( ctx, (posx + _padx), (posy + _pady), (motion ? 0.2 : 1) );
+      _image.draw( ctx, (posx + style.node_padding), (posy + style.node_padding), (motion ? 0.2 : 1) );
     }
 
   }
@@ -1735,7 +1735,7 @@ public class Node : Object {
 
     int    hmargin    = 3;
     int    vmargin    = 3;
-    double img_height = (_image != null) ? (_image.height + _pady) : 0;
+    double img_height = (_image != null) ? (_image.height + style.node_padding) : 0;
     double width_diff, height_diff;
 
     /* Make sure the the size is up-to-date */
@@ -1747,15 +1747,17 @@ public class Node : Object {
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( mode == NodeMode.CURRENT ) {
       set_context_color_with_alpha( ctx, theme.nodesel_background, (motion ? 0.2 : 1) );
-      ctx.rectangle( ((posx + _padx) - hmargin), ((posy + _pady) - vmargin), ((_width - (_padx * 2)) + (hmargin * 2)), ((_height - (_pady * 2)) + (vmargin * 2)) );
+      ctx.rectangle( ((posx + style.node_padding) - hmargin), ((posy + style.node_padding) - vmargin), ((_width - (style.node_padding * 2)) + (hmargin * 2)), ((_height - (style.node_padding * 2)) + (vmargin * 2)) );
       ctx.fill();
     }
 
     /* Output the text */
-    ctx.move_to( (posx + _padx + twidth), (posy + _pady + img_height) );
+    ctx.move_to( (posx + style.node_padding + twidth), (posy + style.node_padding + img_height) );
     switch( mode ) {
       case NodeMode.CURRENT  :  set_context_color( ctx, theme.nodesel_foreground );  break;
-      default                :  set_context_color( ctx, (parent == null) ? theme.root_foreground : theme.foreground );  break;
+      default                :  set_context_color( ctx, (parent == null) ? theme.root_foreground :
+                                                        style.node_fill  ? theme.background :
+                                                                           theme.foreground );  break;
     }
     Pango.cairo_show_layout( ctx, _pango_layout );
 
@@ -1765,8 +1767,8 @@ public class Node : Object {
       var rect = _pango_layout.index_to_pos( cpos );
       set_context_color( ctx, theme.text_cursor );
       double ix, iy;
-      ix = (posx + _padx + twidth) + (rect.x / Pango.SCALE) - 1;
-      iy = (posy + _pady + img_height) + (rect.y / Pango.SCALE);
+      ix = (posx + style.node_padding + twidth) + (rect.x / Pango.SCALE) - 1;
+      iy = (posy + style.node_padding + img_height) + (rect.y / Pango.SCALE);
       ctx.rectangle( ix, iy, 1, (rect.height / Pango.SCALE) );
       ctx.fill();
     }
@@ -1779,8 +1781,8 @@ public class Node : Object {
     if( _task_count > 0 ) {
 
       double img_height = (_image == null) ? 0 : _image.height;
-      double x          = posx + _padx + _task_radius;
-      double y          = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2);
+      double x          = posx + style.node_padding + _task_radius;
+      double y          = posy + style.node_padding + img_height + ((_height - (img_height + style.node_padding)) / 2);
 
       set_context_color( ctx, color );
       ctx.new_path();
@@ -1803,8 +1805,8 @@ public class Node : Object {
     if( _task_count > 0 ) {
 
       double img_height = (_image == null) ? 0 : _image.height;
-      double x          = posx + _padx + _task_radius;
-      double y          = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2);
+      double x          = posx + style.node_padding + _task_radius;
+      double y          = posy + style.node_padding + img_height + ((_height - (img_height + style.node_padding)) / 2);
       double complete   = _task_done / (_task_count * 1.0);
       double angle      = ((complete * 360) + 270) * (Math.PI / 180.0);
 
@@ -1839,8 +1841,8 @@ public class Node : Object {
     if( note.length > 0 ) {
 
       double img_height = (_image == null) ? 0 : _image.height;
-      double x          = posx + (_width - (note_width() + _padx)) + _ipadx;
-      double y          = posy + _pady + img_height + ((_height - (img_height + _pady)) / 2) - 5;
+      double x          = posx + (_width - (note_width() + style.node_padding)) + _ipadx;
+      double y          = posy + style.node_padding + img_height + ((_height - (img_height + style.node_padding)) / 2) - 5;
       RGBA   color      = (mode == NodeMode.CURRENT) ? sel_color : reg_color;
 
       set_context_color_with_alpha( ctx, color, _alpha );
@@ -1925,7 +1927,7 @@ public class Node : Object {
     /* Draw the background color behind text */
     if( !motion ) {
       set_context_color( ctx, theme.background );
-      ctx.rectangle( ((posx + _padx) - hmargin), ((posy + _pady) - vmargin), ((_width - (_padx * 2)) + (hmargin * 2)), ((_height - (_pady * 2)) + (vmargin * 2)) );
+      ctx.rectangle( ((posx + style.node_padding) - hmargin), ((posy + style.node_padding) - vmargin), ((_width - (style.node_padding * 2)) + (hmargin * 2)), ((_height - (style.node_padding * 2)) + (vmargin * 2)) );
       ctx.fill();
     }
 
