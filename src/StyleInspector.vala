@@ -529,7 +529,7 @@ public class StyleInspector : Box {
 
   /* Called whenever the node fill status changes */
   private bool node_fill_changed( Gdk.EventButton e ) {
-    _current_style.node_fill = !_node_fill.active;
+    _current_style.node_fill = !_node_fill.get_active();
     apply_changes();
     return( false );
   }
@@ -913,7 +913,8 @@ public class StyleInspector : Box {
     _link_width.set_value( (double)style.link_width );
     _link_arrow.set_active( style.link_arrow );
     _node_borderwidth.set_value( (double)style.node_borderwidth );
-    _node_fill.active = !(bool)style.node_fill;
+    _node_fill.set_active( (bool)style.node_fill );
+    _node_fill.set_sensitive( style.node_border.is_fillable() );
     _node_margin.set_value( (double)style.node_margin );
     _node_padding.set_value( (double)style.node_padding );
     _font_chooser.set_font( style.node_font.to_string() );

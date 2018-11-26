@@ -39,6 +39,11 @@ public class NodeBorderPill : Object, NodeBorder {
     return( "minder-node-border-pill-symbolic" );
   }
 
+  /* Indicate that this node is fillable */
+  public bool is_fillable() {
+    return( true );
+  }
+
   private void draw_common( Cairo.Context ctx, double x, double y, double w, double h ) {
     var d = 5;
     ctx.move_to( (x + d), y );

@@ -1704,7 +1704,7 @@ public class Node : Object {
     /* Set the fill color */
     if( mode == NodeMode.CURRENT ) {
       set_context_color_with_alpha( ctx, theme.nodesel_background, (motion ? 0.2 : 1) );
-    } else if( is_root() || style.node_fill ) {
+    } else if( is_root() || style.is_fillable() ) {
       set_context_color_with_alpha( ctx, border_color, (motion ? 0.2 : 1) );
     } else {
       set_context_color_with_alpha( ctx, theme.background, (motion ? 0.2 : 1) );
@@ -1755,9 +1755,9 @@ public class Node : Object {
     ctx.move_to( (posx + style.node_padding + twidth), (posy + style.node_padding + img_height) );
     switch( mode ) {
       case NodeMode.CURRENT  :  set_context_color( ctx, theme.nodesel_foreground );  break;
-      default                :  set_context_color( ctx, (parent == null) ? theme.root_foreground :
-                                                        style.node_fill  ? theme.background :
-                                                                           theme.foreground );  break;
+      default                :  set_context_color( ctx, (parent == null)    ? theme.root_foreground :
+                                                        style.is_fillable() ? theme.background :
+                                                                              theme.foreground );  break;
     }
     Pango.cairo_show_layout( ctx, _pango_layout );
 
@@ -1765,7 +1765,7 @@ public class Node : Object {
     if( mode == NodeMode.EDITABLE ) {
       var cpos = name.index_of_nth_char( _cursor );
       var rect = _pango_layout.index_to_pos( cpos );
-      set_context_color( ctx, theme.text_cursor );
+      set_context_color( ctx, (style.is_fillable() ? theme.background : theme.text_cursor) );
       double ix, iy;
       ix = (posx + style.node_padding + twidth) + (rect.x / Pango.SCALE) - 1;
       iy = (posy + style.node_padding + img_height) + (rect.y / Pango.SCALE);
@@ -1836,14 +1836,16 @@ public class Node : Object {
   }
 
   /* Draws the icon indicating that a note is associated with this node */
-  protected virtual void draw_common_note( Context ctx, RGBA reg_color, RGBA sel_color ) {
+  protected virtual void draw_common_note( Context ctx, RGBA reg_color, RGBA sel_color, RGBA bg_color ) {
 
     if( note.length > 0 ) {
 
       double img_height = (_image == null) ? 0 : _image.height;
       double x          = posx + (_width - (note_width() + style.node_padding)) + _ipadx;
       double y          = posy + style.node_padding + img_height + ((_height - (img_height + style.node_padding)) / 2) - 5;
-      RGBA   color      = (mode == NodeMode.CURRENT) ? sel_color : reg_color;
+      RGBA   color      = (mode == NodeMode.CURRENT) ? sel_color :
+                          style.is_fillable()        ? bg_color  :
+                                                       reg_color;
 
       set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();
@@ -2050,7 +2052,7 @@ public class Node : Object {
       } else {
         draw_acc_task( ctx, theme.root_foreground );
       }
-      draw_common_note( ctx, theme.root_foreground, theme.nodesel_foreground );
+      draw_common_note( ctx, theme.root_foreground, theme.nodesel_foreground, theme.root_foreground );
       draw_common_fold( ctx, theme.root_background, theme.root_foreground );
       draw_attachable( ctx, theme, theme.root_background );
       draw_resizer( ctx, theme );
@@ -2061,11 +2063,11 @@ public class Node : Object {
       draw_name( ctx, theme, motion );
       draw_image( ctx, theme, motion );
       if( is_leaf() ) {
-        draw_leaf_task( ctx, _link_color );
+        draw_leaf_task( ctx, (style.is_fillable() ? theme.background : _link_color) );
       } else {
-        draw_acc_task( ctx, _link_color );
+        draw_acc_task( ctx, (style.is_fillable() ? theme.background : _link_color) );
       }
-      draw_common_note( ctx, theme.foreground, theme.nodesel_foreground );
+      draw_common_note( ctx, theme.foreground, theme.nodesel_foreground, theme.background );
       draw_common_fold( ctx, _link_color, theme.foreground );
       draw_attachable( ctx, theme, theme.background );
       draw_resizer( ctx, theme );

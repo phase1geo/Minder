@@ -39,6 +39,11 @@ public class NodeBorderUnderlined : Object, NodeBorder {
     return( "minder-node-border-underlined-symbolic" );
   }
 
+  /* Indicate that this border is not fillable */
+  public bool is_fillable() {
+    return( false );
+  }
+
   /* Draw method for the link */
   public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
     ctx.move_to( x, (y + h) );

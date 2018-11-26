@@ -56,6 +56,11 @@ public class Style {
     _template = true;
   }
 
+  /* Returns true if the node assigned with this style can be filled with a color */
+  public bool is_fillable() {
+    return( node_fill && node_border.is_fillable() );
+  }
+
   /* Creates a font for a templated style */
   public void set_template_font( string family, int size ) {
 

@@ -39,6 +39,11 @@ public class NodeBorderNone : Object, NodeBorder {
     return( "minder-node-border-none-symbolic" );
   }
 
+  /* Indicate that this node is not fillable */
+  public bool is_fillable() {
+    return( false );
+  }
+
   /* Draw method for the node border */
   public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {}
 

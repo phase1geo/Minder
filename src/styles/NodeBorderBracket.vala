@@ -39,6 +39,11 @@ public class NodeBorderBracket : Object, NodeBorder {
     return( "minder-node-border-bracket-symbolic" );
   }
 
+  /* Indicate that this border type is not fillable */
+  public bool is_fillable() {
+    return( false );
+  }
+
   /* Draw method for the node border */
   public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
     var d = 10;

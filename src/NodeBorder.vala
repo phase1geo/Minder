@@ -30,6 +30,9 @@ public interface NodeBorder : Object {
   /* Returns the name of the node border icon */
   public abstract string icon_name();
 
+  /* Returns true if this node border is fillable */
+  public abstract bool is_fillable();
+
   /* Draw method for the node border */
   public abstract void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s );
 

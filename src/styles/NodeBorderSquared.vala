@@ -39,6 +39,11 @@ public class NodeBorderSquared : Object, NodeBorder {
     return( "minder-node-border-squared-symbolic" );
   }
 
+  /* Indicate that this node is fillable */
+  public bool is_fillable() {
+    return( true );
+  }
+
   /* Draw method for the node border */
   public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
     ctx.rectangle( x, y, w, h );
