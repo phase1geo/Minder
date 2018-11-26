@@ -727,6 +727,7 @@ public class Node : Object {
     if( !is_root() ) {
       node->new_prop( "color", color_from_rgba( _link_color ) );
     }
+    node->new_prop( "layout", _layout.name );
 
     if( _image != null ) {
       _image.save( node );
