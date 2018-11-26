@@ -543,7 +543,7 @@ public class StyleInspector : Box {
     var lbl = new Label( _( "Margin" ) );
     lbl.xalign = (float)0;
 
-    _node_margin = new Scale.with_range( Orientation.HORIZONTAL, 5, 30, 1 );
+    _node_margin = new Scale.with_range( Orientation.HORIZONTAL, 5, 20, 1 );
     _node_margin.draw_value = true;
     _node_margin.change_value.connect( node_margin_changed );
 
@@ -556,7 +556,7 @@ public class StyleInspector : Box {
 
   /* Called whenever the node margin value is changed */
   private bool node_margin_changed( ScrollType scroll, double value ) {
-    if( (int)value > 30 ) {
+    if( (int)value > 20 ) {
       return( false );
     }
     _current_style.node_margin = (int)value;
@@ -573,7 +573,7 @@ public class StyleInspector : Box {
     var lbl = new Label( _( "Padding" ) );
     lbl.xalign = (float)0;
 
-    _node_padding = new Scale.with_range( Orientation.HORIZONTAL, 2, 20, 2 );
+    _node_padding = new Scale.with_range( Orientation.HORIZONTAL, 5, 20, 2 );
     _node_padding.draw_value = true;
     _node_padding.change_value.connect( node_padding_changed );
 
@@ -586,7 +586,7 @@ public class StyleInspector : Box {
 
   /* Called whenever the node margin value is changed */
   private bool node_padding_changed( ScrollType scroll, double value ) {
-    if( (int) value > 25 ) {
+    if( (int) value > 20 ) {
       return( false );
     }
     _current_style.node_padding = (int)value;

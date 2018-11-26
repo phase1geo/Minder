@@ -858,11 +858,11 @@ public class Node : Object {
       double img_height  = (_image != null) ? (_image.height + style.node_padding)       : 0;
       _pango_layout.set_markup( name_markup( theme ), -1 );
       _pango_layout.get_size( out text_width, out text_height );
-      _width     = (text_width  / Pango.SCALE) + (style.node_padding * 2) + task_width() + note_width();
+      _width     = (text_width  / Pango.SCALE) + (style.node_padding * 2) + task_width() + note_width() + (style.node_margin * 2);
       if( img_width > _width ) {
         _width = img_width;
       }
-      _height     = (text_height / Pango.SCALE) + (style.node_padding * 2) + img_height;
+      _height     = (text_height / Pango.SCALE) + (style.node_padding * 2) + img_height + (style.node_margin * 2);
       width_diff  = _width  - orig_width;
       height_diff = _height - orig_height;
     }
@@ -899,10 +899,6 @@ public class Node : Object {
       w = _width  + style.node_borderwidth;
       h = _height + (style.node_borderwidth / 2);
     }
-    x -= margin;
-    y -= margin;
-    w += (margin * 2);
-    h += (margin * 2);
   }
 
   /* Returns the bounding box for the fold indicator for this node */
@@ -1679,20 +1675,20 @@ public class Node : Object {
       double height = (style.node_border.name() == "underlined") ? _height : (_height / 2);
       switch( side ) {
         case NodeSide.LEFT :
-          x = posx;
+          x = posx + style.node_margin;
           y = posy + height;
           break;
         case NodeSide.TOP :
           x = posx + (_width / 2);
-          y = posy;
+          y = posy + style.node_margin;
           break;
         case NodeSide.RIGHT :
-          x = posx + _width;
+          x = posx + _width - style.node_margin;
           y = posy + height;
           break;
         default :
           x = posx + (_width / 2);
-          y = posy + _height;
+          y = posy + _height - style.node_margin;
           break;
       }
     }
@@ -1700,6 +1696,11 @@ public class Node : Object {
 
   /* Draws the border around the node */
   protected void draw_shape( Context ctx, Theme theme, RGBA border_color, bool motion ) {
+
+    double x = posx + style.node_margin;
+    double y = posy + style.node_margin;
+    double w = _width  - (style.node_margin * 2);
+    double h = _height - (style.node_margin * 2);
 
     /* Set the fill color */
     if( mode == NodeMode.CURRENT ) {
@@ -1711,21 +1712,21 @@ public class Node : Object {
     }
 
     /* Draw the fill */
-    style.draw_fill( ctx, posx, posy, _width, _height, side );
+    style.draw_fill( ctx, x, y, w, h, side );
 
     /* Draw the border */
     set_context_color_with_alpha( ctx, border_color, (motion ? 0.2 : 1) );
     ctx.set_line_width( style.node_borderwidth );
 
     /* If we are in a vertical orientation and the border type is underlined, draw nothing */
-    style.draw_border( ctx, posx, posy, _width, _height, side );
+    style.draw_border( ctx, x, y, w, h, side );
 
   }
 
   /* Draws the node image above the note */
   protected virtual void draw_image( Cairo.Context ctx, Theme theme, bool motion ) {
     if( _image != null ) {
-      _image.draw( ctx, (posx + style.node_padding), (posy + style.node_padding), (motion ? 0.2 : 1) );
+      _image.draw( ctx, (posx + style.node_padding + style.node_margin), (posy + style.node_padding + style.node_margin), (motion ? 0.2 : 1) );
     }
 
   }
@@ -1747,12 +1748,12 @@ public class Node : Object {
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( mode == NodeMode.CURRENT ) {
       set_context_color_with_alpha( ctx, theme.nodesel_background, (motion ? 0.2 : 1) );
-      ctx.rectangle( ((posx + style.node_padding) - hmargin), ((posy + style.node_padding) - vmargin), ((_width - (style.node_padding * 2)) + (hmargin * 2)), ((_height - (style.node_padding * 2)) + (vmargin * 2)) );
+      ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin), ((posy + style.node_padding + style.node_margin) - vmargin), ((_width - (style.node_padding * 2) - (style.node_margin * 2)) + (hmargin * 2)), ((_height - (style.node_padding * 2) - (style.node_margin * 2)) + (vmargin * 2)) );
       ctx.fill();
     }
 
     /* Output the text */
-    ctx.move_to( (posx + style.node_padding + twidth), (posy + style.node_padding + img_height) );
+    ctx.move_to( (posx + style.node_padding + style.node_margin + twidth), (posy + style.node_padding + style.node_margin + img_height) );
     switch( mode ) {
       case NodeMode.CURRENT  :  set_context_color( ctx, theme.nodesel_foreground );  break;
       default                :  set_context_color( ctx, (parent == null)    ? theme.root_foreground :
@@ -1767,8 +1768,8 @@ public class Node : Object {
       var rect = _pango_layout.index_to_pos( cpos );
       set_context_color( ctx, (style.is_fillable() ? theme.background : theme.text_cursor) );
       double ix, iy;
-      ix = (posx + style.node_padding + twidth) + (rect.x / Pango.SCALE) - 1;
-      iy = (posy + style.node_padding + img_height) + (rect.y / Pango.SCALE);
+      ix = (posx + style.node_padding + style.node_margin + twidth) + (rect.x / Pango.SCALE) - 1;
+      iy = (posy + style.node_padding + style.node_margin + img_height) + (rect.y / Pango.SCALE);
       ctx.rectangle( ix, iy, 1, (rect.height / Pango.SCALE) );
       ctx.fill();
     }
@@ -1781,8 +1782,8 @@ public class Node : Object {
     if( _task_count > 0 ) {
 
       double img_height = (_image == null) ? 0 : _image.height;
-      double x          = posx + style.node_padding + _task_radius;
-      double y          = posy + style.node_padding + img_height + ((_height - (img_height + style.node_padding)) / 2);
+      double x          = posx + style.node_padding + style.node_margin + _task_radius;
+      double y          = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2);
 
       set_context_color( ctx, color );
       ctx.new_path();
@@ -1805,8 +1806,8 @@ public class Node : Object {
     if( _task_count > 0 ) {
 
       double img_height = (_image == null) ? 0 : _image.height;
-      double x          = posx + style.node_padding + _task_radius;
-      double y          = posy + style.node_padding + img_height + ((_height - (img_height + style.node_padding)) / 2);
+      double x          = posx + style.node_padding + style.node_margin + _task_radius;
+      double y          = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2);
       double complete   = _task_done / (_task_count * 1.0);
       double angle      = ((complete * 360) + 270) * (Math.PI / 180.0);
 
@@ -1841,8 +1842,8 @@ public class Node : Object {
     if( note.length > 0 ) {
 
       double img_height = (_image == null) ? 0 : _image.height;
-      double x          = posx + (_width - (note_width() + style.node_padding)) + _ipadx;
-      double y          = posy + style.node_padding + img_height + ((_height - (img_height + style.node_padding)) / 2) - 5;
+      double x          = posx + (_width - (note_width() + style.node_padding + style.node_margin)) + _ipadx;
+      double y          = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2) - 5;
       RGBA   color      = (mode == NodeMode.CURRENT) ? sel_color :
                           style.is_fillable()        ? bg_color  :
                                                        reg_color;
@@ -1929,7 +1930,7 @@ public class Node : Object {
     /* Draw the background color behind text */
     if( !motion ) {
       set_context_color( ctx, theme.background );
-      ctx.rectangle( ((posx + style.node_padding) - hmargin), ((posy + style.node_padding) - vmargin), ((_width - (style.node_padding * 2)) + (hmargin * 2)), ((_height - (style.node_padding * 2)) + (vmargin * 2)) );
+      ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin), ((posy + style.node_padding) - vmargin), ((_width - (style.node_padding * 2)) + (hmargin * 2)), ((_height - (style.node_padding * 2)) + (vmargin * 2)) );
       ctx.fill();
     }
 
@@ -1959,19 +1960,19 @@ public class Node : Object {
 
     switch( side ) {
       case NodeSide.LEFT :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + _width), (posy + height), true,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + _width - style.node_margin), (posy + height), true,
                          out tailx, out taily, out tipx, out tipy );
         break;
       case NodeSide.RIGHT :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, posx, (posy + height), true,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + style.node_margin), (posy + height), true,
                          out tailx, out taily, out tipx, out tipy );
         break;
       case NodeSide.TOP :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + _height), false,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + _height - style.node_margin), false,
                          out tailx, out taily, out tipx, out tipy );
         break;
       case NodeSide.BOTTOM :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), posy, false,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + style.node_margin), false,
                          out tailx, out taily, out tipx, out tipy );
         break;
     }
