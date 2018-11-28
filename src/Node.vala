@@ -208,7 +208,9 @@ public class Node : Object {
       _style.copy( value );
       _pango_layout.set_font_description( _style.node_font );
       _pango_layout.set_width( _style.node_width * Pango.SCALE );
-      _layout.handle_update_by_edit( this );
+      if( _layout != null ) {
+        _layout.handle_update_by_edit( this );
+      }
     }
   }
   public Layout   layout {
@@ -225,11 +227,11 @@ public class Node : Object {
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
-    _id       = _next_id++;
-    _children = new Array<Node>();
+    _id           = _next_id++;
+    _children     = new Array<Node>();
+    _layout       = layout;
     _pango_layout = da.create_pango_layout( null );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
-    this.layout = layout;
   }
 
   /* Constructor initializing string */
@@ -237,9 +239,9 @@ public class Node : Object {
     name          = n;
     _id           = _next_id++;
     _children     = new Array<Node>();
+    _layout       = layout;
     _pango_layout = da.create_pango_layout( n );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
-    this.layout = layout;
   }
 
   /* Copies an existing node to this node */
@@ -281,6 +283,7 @@ public class Node : Object {
     _task_count   = n._task_count;
     _task_done    = n._task_done;
     _folded       = n._folded;
+    _layout       = n._layout;
     _pango_layout = n._pango_layout;
     _posx         = n._posx;
     _posy         = n._posy;
@@ -292,7 +295,6 @@ public class Node : Object {
     mode          = n.mode;
     parent        = n.parent;
     side          = n.side;
-    layout        = n.layout;
     style         = n.style;
   }
 
@@ -480,8 +482,9 @@ public class Node : Object {
   public virtual bool is_within_resizer( double x, double y ) {
     if( mode == NodeMode.CURRENT ) {
       double rx, ry, rw, rh;
-      rx = resizer_on_left() ? posx : (posx + _width - 8);
-      ry = posy;
+      int    margin = style.node_margin;
+      rx = resizer_on_left() ? (posx + margin) : (posx + _width - margin - 8);
+      ry = posy + margin;
       rw = 8;
       rh = 8;
       return( (rx < x) && (x <= (rx + rw)) && (ry < y) && (y <= (ry + rh)) );
@@ -667,11 +670,6 @@ public class Node : Object {
       _link_color.parse( c );
     }
 
-    string? l = n->get_prop( "layout" );
-    if( l != null ) {
-      _layout = da.layouts.get_layout( l );
-    }
-
     /* Make sure the style has a default value */
     style.copy( StyleInspector.styles.get_style_for_level( isroot ? 0 : 1 ) );
 
@@ -693,6 +691,12 @@ public class Node : Object {
             break;
         }
       }
+    }
+
+    /* Apply the stored layout */
+    string? l = n->get_prop( "layout" );
+    if( l != null ) {
+      _layout = da.layouts.get_layout( l );
     }
 
     if( ts == null ) {
@@ -887,7 +891,6 @@ public class Node : Object {
   /* Returns the bounding box for this node */
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
     double width_diff, height_diff;
-    double margin = (double)style.node_margin;
     update_size( null, out width_diff, out height_diff );
     if( is_root() || ((side & NodeSide.vertical()) != 0) ) {
       x = posx;
@@ -2027,8 +2030,9 @@ public class Node : Object {
       return;
     }
 
-    double x = resizer_on_left() ? posx : (posx + _width - 8);
-    double y = posy;
+    int    margin = style.node_margin;
+    double x      = resizer_on_left() ? (posx + margin) : (posx + _width - margin - 8);
+    double y      = posy + margin;
 
     set_context_color( ctx, theme.background );
     ctx.set_line_width( 1 );

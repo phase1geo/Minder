@@ -228,12 +228,14 @@ public class DrawArea : Gtk.DrawingArea {
     var old_balanceable = old_layout.balanceable;
     animator.add_nodes( "set layout" );
     if( root_node == null ) {
+      stdout.printf( "In set_layout, all\n" );
       for( int i=0; i<_nodes.length; i++ ) {
-        _nodes.index( i ).layout = new_layout;
+        // _nodes.index( i ).layout = new_layout;
         new_layout.initialize( _nodes.index( i ) );
       }
     } else {
-      root_node.layout = new_layout;
+      stdout.printf( "In set_layout, node, name: %s\n", new_layout.name );
+      // root_node.layout = new_layout;
       new_layout.initialize( root_node );
     }
     if( !old_balanceable && new_layout.balanceable ) {
@@ -321,8 +323,23 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /*
+   We don't store the layout, but if it is found, we need to initialize the
+   layout information for all nodes to this value.
+  */
+  private void load_layout( Xml.Node* n, ref Layout? layout ) {
+
+    string? name = n->get_prop( "name" );
+    if( name != null ) {
+      layout = layouts.get_layout( name );
+    }
+
+  }
+
   /* Loads the contents of the data input stream */
   public void load( Xml.Node* n ) {
+
+    Layout? use_layout = null;
 
     /* Disable animations while we are loading */
     var animate = animator.enable;
@@ -336,6 +353,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           case "theme"       :  load_theme( it );   break;
+          case "layout"      :  load_layout( it, ref use_layout );  break;
           case "styles"      :  StyleInspector.styles.load( it );  break;
           case "drawarea"    :  load_drawarea( it );  break;
           case "images"      :  image_manager.load( it );  break;
@@ -343,8 +361,11 @@ public class DrawArea : Gtk.DrawingArea {
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var node = new Node.with_name( this, "temp", layouts.get_default() );
+                var node = new Node.with_name( this, "temp", null );
                 node.load( this, it2, true );
+                if( use_layout != null ) {
+                  node.layout = use_layout;
+                }
                 _nodes.append_val( node );
               }
             }

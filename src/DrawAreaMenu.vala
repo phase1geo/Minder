@@ -79,10 +79,8 @@ public class DrawAreaMenu : Gtk.Menu {
     _image = new Gtk.MenuItem.with_label( _( "Add Image" ) );
     _image.activate.connect( change_image );
 
-    /*
     _conn = new Gtk.MenuItem.with_label( _( "Add Connection" ) );
     _conn.activate.connect( add_connection );
-    */
 
     _fold = new Gtk.MenuItem.with_label( _( "Fold Children" ) );
     _fold.activate.connect( fold_node );
@@ -140,7 +138,7 @@ public class DrawAreaMenu : Gtk.Menu {
     add( _task );
     add( _note );
     add( _image );
-    add( _conn );
+    // add( _conn );
     add( _fold );
     add( new SeparatorMenuItem() );
     add( _root );
