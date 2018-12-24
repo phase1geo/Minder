@@ -72,6 +72,8 @@ public class MainWindow : ApplicationWindow {
     { "action_print",         action_print }
   };
 
+  private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
+
   private delegate void ChangedFunc();
 
   /* Create the main window UI */
@@ -122,28 +124,38 @@ public class MainWindow : ApplicationWindow {
     _canvas.animator.enable = _settings.get_boolean( "enable-animations" );
 
     /* Create title toolbar */
-    var new_btn = new Button.from_icon_name( "document-new", IconSize.LARGE_TOOLBAR );
+    var new_btn = on_elementary
+      ? new Button.from_icon_name( "document-new", IconSize.LARGE_TOOLBAR )
+      : new Button.from_icon_name( "document-new-symbolic" );
     new_btn.set_tooltip_markup( _( "New File   <i>(Control-N)</i>" ) );
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
 
-    var open_btn = new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR );
+    var open_btn = on_elementary
+      ? new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR )
+      : new Button.from_icon_name( "document-open-symbolic" );
     open_btn.set_tooltip_markup( _( "Open File   <i>(Control-O)</i>" ) );
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
-    var save_btn = new Button.from_icon_name( "document-save-as", IconSize.LARGE_TOOLBAR );
+    var save_btn = on_elementary
+      ? new Button.from_icon_name( "document-save-as", IconSize.LARGE_TOOLBAR )
+      : new Button.from_icon_name( "document-save-as-symbolic" );
     save_btn.set_tooltip_markup( _( "Save File As   <i>(Control-Shift-S)</i>" ) );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
-    _undo_btn = new Button.from_icon_name( "edit-undo", IconSize.LARGE_TOOLBAR );
+    _undo_btn = on_elementary
+      ? new Button.from_icon_name( "edit-undo", IconSize.LARGE_TOOLBAR )
+      : new Button.from_icon_name( "edit-undo-symbolic" );
     _undo_btn.set_tooltip_markup( _( "Undo   <i>(Control-Z)</i>" ) );
     _undo_btn.set_sensitive( false );
     _undo_btn.clicked.connect( do_undo );
     _header.pack_start( _undo_btn );
 
-    _redo_btn = new Button.from_icon_name( "edit-redo", IconSize.LARGE_TOOLBAR );
+    _redo_btn = on_elementary
+      ? new Button.from_icon_name( "edit-redo", IconSize.LARGE_TOOLBAR )
+      : new Button.from_icon_name( "edit-redo-symbolic" );
     _redo_btn.set_tooltip_markup( _( "Redo   <i>(Control-Shift-Z)</i>" ) );
     _redo_btn.set_sensitive( false );
     _redo_btn.clicked.connect( do_redo );
@@ -199,7 +211,9 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
-    menu_btn.set_image( new Image.from_icon_name( "zoom-fit-best", IconSize.LARGE_TOOLBAR ) );
+    menu_btn.set_image( on_elementary
+      ? new Image.from_icon_name( "zoom-fit-best", IconSize.LARGE_TOOLBAR )
+      : new Image.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR ) );
     menu_btn.set_tooltip_text( _( "Zoom" ) );
     _header.pack_end( menu_btn );
 
@@ -261,7 +275,9 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     _search_btn = new MenuButton();
-    _search_btn.set_image( new Image.from_icon_name( "edit-find", IconSize.LARGE_TOOLBAR ) );
+    _search_btn.set_image( on_elementary
+      ? new Image.from_icon_name( "edit-find", IconSize.LARGE_TOOLBAR )
+      : new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
     _search_btn.set_tooltip_markup( _( "Search   <i>(Control-F)</i>" ) );
     _search_btn.clicked.connect( on_search_change );
     _header.pack_end( _search_btn );
@@ -388,7 +404,9 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
-    menu_btn.set_image( new Image.from_icon_name( "document-export", IconSize.LARGE_TOOLBAR ) );
+    menu_btn.set_image( on_elementary
+      ? new Image.from_icon_name( "document-export", IconSize.LARGE_TOOLBAR )
+      : new Image.from_icon_name( "document-send-symbolic", IconSize.SMALL_TOOLBAR ) );
     menu_btn.set_tooltip_text( _( "Export" ) );
     _header.pack_end( menu_btn );
 
@@ -421,8 +439,12 @@ public class MainWindow : ApplicationWindow {
   private void add_property_button() {
 
     /* Add the menubutton */
-    _prop_show = new Image.from_icon_name( "pane-show-symbolic", IconSize.LARGE_TOOLBAR );
-    _prop_hide = new Image.from_icon_name( "pane-hide-symbolic", IconSize.LARGE_TOOLBAR );
+    _prop_show = on_elementary
+      ? new Image.from_icon_name( "pane-show-symbolic", IconSize.LARGE_TOOLBAR )
+      : new Image.from_icon_name( "go-previous-symbolic", IconSize.SMALL_TOOLBAR );
+    _prop_hide = on_elementary
+      ? new Image.from_icon_name( "pane-hide-symbolic", IconSize.LARGE_TOOLBAR )
+      : new Image.from_icon_name( "go-next-symbolic", IconSize.SMALL_TOOLBAR );
     _prop_btn  = new Button();
     _prop_btn.image = _prop_show;
     _prop_btn.set_tooltip_text( _( "Properties" ) );
