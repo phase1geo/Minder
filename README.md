@@ -22,6 +22,9 @@ Use the power of mind-mapping to make your ideas come to life.
 
 You will need the following dependencies to build Minder:
 
+* ninja-build
+* python3-pip
+* python3-setuptools
 * meson
 * valac
 * debhelper
