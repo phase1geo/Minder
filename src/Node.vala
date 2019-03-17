@@ -213,7 +213,7 @@ public class Node : Object {
       }
     }
   }
-  public Layout   layout {
+  public Layout?  layout {
     get {
       return( _layout );
     }
@@ -1676,7 +1676,7 @@ public class Node : Object {
       x = posx + (_width / 2);
       y = posy + (_height / 2);
     } else {
-      double height = (style.node_border.name() == "underlined") ? _height : (_height / 2);
+      double height = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
       switch( side ) {
         case NodeSide.LEFT :
           x = posx + style.node_margin;
@@ -1953,7 +1953,7 @@ public class Node : Object {
 
     double parent_x;
     double parent_y;
-    double height = (style.node_border.name() == "underlined") ? _height : (_height / 2);
+    double height = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
     double tailx = 0, taily = 0, tipx = 0, tipy = 0;
 
     /* Get the parent's link point */

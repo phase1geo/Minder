@@ -228,13 +228,11 @@ public class DrawArea : Gtk.DrawingArea {
     var old_balanceable = old_layout.balanceable;
     animator.add_nodes( "set layout" );
     if( root_node == null ) {
-      stdout.printf( "In set_layout, all\n" );
       for( int i=0; i<_nodes.length; i++ ) {
         // _nodes.index( i ).layout = new_layout;
         new_layout.initialize( _nodes.index( i ) );
       }
     } else {
-      stdout.printf( "In set_layout, node, name: %s\n", new_layout.name );
       // root_node.layout = new_layout;
       new_layout.initialize( root_node );
     }
@@ -1411,9 +1409,27 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Returns true if there is a next sibling available for selection */
+  /* Returns true if there is a sibling available for selection */
   public bool sibling_selectable() {
     return( (_current_node != null) && (_current_node.is_root() ? (_nodes.length > 1) : (_current_node.parent.children().length > 1)) );
+  }
+
+  /* Returns the sibling node in the given direction of the current node */
+  public Node? sibling_node( int dir ) {
+    if( _current_node != null ) {
+      if( _current_node.is_root() ) {
+        for( int i=0; i<_nodes.length; i++ ) {
+          if( _nodes.index( i ) == _current_node ) {
+            return( (((i + dir) < 0) || ((i + dir) >= _nodes.length)) ? null : _nodes.index( i + dir ) );
+          }
+        }
+      } else if( dir == 1 ) {
+        return( _current_node.parent.next_child( _current_node ) );
+      } else {
+        return( _current_node.parent.prev_child( _current_node ) );
+      }
+    }
+    return( null );
   }
 
   /* Selects the next (dir = 1) or previous (dir = -1) sibling */
@@ -1507,7 +1523,18 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
       changed();
     } else if( is_mode_selected() ) {
-      delete_node();
+      Node? next;
+      if( ((next = sibling_node( 1 )) == null) && ((next = sibling_node( -1 )) == null) && _current_node.is_root() ) {
+        delete_node();
+      } else {
+        if( next == null ) {
+          next = _current_node.parent;
+        }
+        delete_node();
+        if( select_node( next ) ) {
+          queue_draw();
+        }
+      }
     } else if( is_connection_selected() ) {
       delete_connection();
     }
@@ -1520,6 +1547,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
       changed();
     } else if( is_mode_selected() ) {
+      // FOOBAR
       delete_node();
     } else if( is_connection_selected() ) {
       delete_connection();

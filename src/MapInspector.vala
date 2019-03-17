@@ -269,16 +269,23 @@ public class MapInspector : Box {
   /* Called whenever the current node is changed */
   private void node_changed() {
 
-    Node? current    = _da.get_current_node();
-    var   foldable   = _da.completed_tasks_foldable();
-    var   unfoldable = _da.unfoldable();
+    Node? current         = _da.get_current_node();
+    var   foldable        = _da.completed_tasks_foldable();
+    var   unfoldable      = _da.unfoldable();
+    bool  layout_selected = false;
 
     /* Select the layout that corresponds with the current tree */
     if( current != null ) {
-      select_layout( current.layout.name );
+      if( layout_selected = (current.layout != null) ) {
+        select_layout( current.layout.name );
+      }
     } else if( _da.get_nodes().length > 0 ) {
-      select_layout( _da.get_nodes().index( 0 ).layout.name );
-    } else {
+      if( layout_selected = (_da.get_nodes().index( 0 ).layout != null) ) {
+        select_layout( _da.get_nodes().index( 0 ).layout.name );
+      }
+    }
+
+    if( !layout_selected ) {
       select_layout( _da.layouts.get_default().name );
     }
 
