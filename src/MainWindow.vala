@@ -919,6 +919,12 @@ public class MainWindow : ApplicationWindow {
     md_filter.add_pattern( "*.markdown" );
     dialog.add_filter( md_filter );
 
+    /* Mermaid */
+    FileFilter mmd_filter = new FileFilter();
+    mmd_filter.set_filter_name( _( "Mermaid" ) );
+    mmd_filter.add_pattern( "*.mmd" );
+    dialog.add_filter( mmd_filter );
+
     /* OPML */
     FileFilter opml_filter = new FileFilter();
     opml_filter.set_filter_name( _( "OPML" ) );
@@ -968,6 +974,8 @@ public class MainWindow : ApplicationWindow {
         ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", _canvas );
       } else if( md_filter == filter ) {
         ExportMarkdown.export( repair_filename( fname, {".md", ".markdown"} ), _canvas );
+      } else if( mmd_filter == filter ) {
+        ExportMermaid.export( repair_filename( fname, {".mmd"} ), _canvas );
       } else if( opml_filter == filter ) {
         ExportOPML.export( repair_filename( fname, {".opml"} ), _canvas );
       } else if( pdf_filter == filter ) {

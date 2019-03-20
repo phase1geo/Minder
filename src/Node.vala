@@ -329,7 +329,7 @@ public class Node : Object {
   }
 
   /* Gets the NodeImage instance associated with this class instance */
-  public NodeImage get_image() {
+  public NodeImage? get_image() {
     return( _image );
   }
 
@@ -696,7 +696,7 @@ public class Node : Object {
     /* Apply the stored layout */
     string? l = n->get_prop( "layout" );
     if( l != null ) {
-      _layout = da.layouts.get_layout( l );
+      layout = da.layouts.get_layout( l );
     }
 
     if( ts == null ) {

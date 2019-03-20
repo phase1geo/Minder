@@ -229,11 +229,11 @@ public class DrawArea : Gtk.DrawingArea {
     animator.add_nodes( "set layout" );
     if( root_node == null ) {
       for( int i=0; i<_nodes.length; i++ ) {
-        // _nodes.index( i ).layout = new_layout;
+        _nodes.index( i ).layout = new_layout;
         new_layout.initialize( _nodes.index( i ) );
       }
     } else {
-      // root_node.layout = new_layout;
+      root_node.layout = new_layout;
       new_layout.initialize( root_node );
     }
     if( !old_balanceable && new_layout.balanceable ) {
