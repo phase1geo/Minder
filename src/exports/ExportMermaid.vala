@@ -57,11 +57,18 @@ public class ExportMermaid : Object {
 
     try {
 
-      var nodes = da.get_nodes();
+      var nodes   = da.get_nodes();
+      int link_id = 0;
+
+      if( nodes.length == 0 ) {
+        return;
+      }
+
+      string title = "graph " + map_layout_to_direction( nodes.index( 0 ) ) + "\n";
+      os.write( title.data );
+
       for( int i=0; i<nodes.length; i++ ) {
-        string title = "\ngraph " + map_layout_to_direction( nodes.index( i ) ) + "\n";
-        os.write( title.data );
-        export_node( os, nodes.index( i ) );
+        export_node( os, nodes.index( i ), ref link_id );
       }
 
     } catch( Error e ) {
@@ -70,9 +77,14 @@ public class ExportMermaid : Object {
 
   }
 
+  private static string make_id( Node n ) {
+
+    return( "id" + n.id().to_string() );
+
+  }
+
   private static string make_title( Node n ) {
 
-    string id_str  = "id" + n.id().to_string();
     bool   rounded = n.style.node_border.name() == "rounded";
     string left    = rounded ? "(" : "[";
     string right   = rounded ? ")" : "]";
@@ -82,26 +94,64 @@ public class ExportMermaid : Object {
       name = "Image";
     }
 
-    return( id_str + left + "\"" + n.name + "\"" + right );
+    return( make_id( n ) + left + "\"" + n.name + "\"" + right );
 
   }
 
   private static string make_link( Node n ) {
 
     bool arrow = n.style.link_arrow;
-    bool thin  = n.style.link_width < 5;
     bool solid = n.style.link_dash.name == "solid";
 
     if( arrow ) {
-      return( thin ? (solid ? "-->" : "-.->") : (solid ? "==>" : "-:->") );
+      return( solid ? "-->" : "-.->" );
     } else {
-      return( thin ? (solid ? "---" : "-.-")  : (solid ? "===" : "-:-") );
+      return( solid ? "---" : "-.-" );
     }
 
   }
 
+  private static string make_link_color( Node n ) {
+
+    var rgba = n.link_color;
+
+    return( "#%02x%02x%02x".printf( (int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255) ) );
+
+  }
+
+  private static string make_node_style( Node n ) {
+
+    string color = make_link_color( n );
+    string fill  = n.style.node_fill ? ("fill:" + color + ",") : "";
+    string width = n.style.node_borderwidth.to_string();
+
+    return( "style " + make_id( n ) + " " + fill + "stroke:" + color + ",stroke-width:" + width + "px" );
+
+  }
+
+  private static string make_link_style( Node n, ref int link_id ) {
+
+    string color       = make_link_color( n );
+    string width       = n.style.link_width.to_string();
+    int    lid         = link_id++;
+    var    pattern     = n.style.link_dash.pattern;
+    string pattern_str = "";
+    
+    if( pattern.length > 0 ) {
+      pattern_str = ",stroke-dasharray:";
+      for( int i=0; i<pattern.length; i++ ) {
+        pattern_str += "%s%d".printf( ((i == 0) ? "" : ","), (int)pattern[i] );
+      }
+    }
+
+    // public double[] pattern;
+
+    return( "linkStyle " + lid.to_string() + " stroke:" + color + ",stroke-width:" + width + "px" + pattern_str );
+
+  }
+
   /* Draws the given node and its children to the output stream */
-  private static void export_node( FileOutputStream os, Node node ) {
+  private static void export_node( FileOutputStream os, Node node, ref int link_id ) {
     
     try {
 
@@ -115,9 +165,11 @@ public class ExportMermaid : Object {
         for( int i=0; i<children.length; i++ ) {
           var link   = make_link( children.index( i ) );
           var ctitle = make_title( children.index( i ) );
-          var line   = "  " + title + " " + link + " " + ctitle + ";\n";
+          var nstyle = make_node_style( children.index( i ) );
+          var lstyle = make_link_style( children.index( i ), ref link_id );
+          var line   = "  " + title + " " + link + " " + ctitle + ";  " + nstyle + ";  " + lstyle + ";\n";
           os.write( line.data );
-          export_node( os, children.index( i ) );
+          export_node( os, children.index( i ), ref link_id );
         }
       }
 
