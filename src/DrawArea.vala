@@ -99,7 +99,7 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void loaded();
 
   /* Default constructor */
-  public DrawArea() {
+  public DrawArea( AccelGroup accel_group ) {
 
     /* Create the array of root nodes in the map */
     _nodes = new Array<Node>();
@@ -118,7 +118,7 @@ public class DrawArea : Gtk.DrawingArea {
     _editor.changed.connect( current_image_edited );
 
     /* Create the popup menu */
-    _popup_menu = new DrawAreaMenu( this );
+    _popup_menu = new DrawAreaMenu( this, accel_group );
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();

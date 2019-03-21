@@ -46,29 +46,29 @@ public class DrawAreaMenu : Gtk.Menu {
   Gtk.MenuItem _center;
 
   /* Default constructor */
-  public DrawAreaMenu( DrawArea da ) {
+  public DrawAreaMenu( DrawArea da, AccelGroup accel_group ) {
 
     _da = da;
 
     _copy = new Gtk.MenuItem.with_label( _( "Copy" ) );
+    _copy.add_accelerator( "activate", accel_group, 'c', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _copy.activate.connect( copy );
-    add_accel_label( _copy, "<Control>c" );
 
     _cut = new Gtk.MenuItem.with_label( _( "Cut" ) );
+    _cut.add_accelerator( "activate", accel_group, 'x', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _cut.activate.connect( cut );
-    add_accel_label( _cut, "<Control>x" );
 
     _paste = new Gtk.MenuItem.with_label( _( "Paste" ) );
+    _paste.add_accelerator( "activate", accel_group, 'v', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _paste.activate.connect( paste );
-    add_accel_label( _paste, "<Control>v" );
 
     _delete = new Gtk.MenuItem.with_label( _( "Delete" ) );
+    _delete.add_accelerator( "activate", accel_group, 65535, 0, AccelFlags.VISIBLE );
     _delete.activate.connect( delete_node );
-    add_accel_label( _delete, "Delete" );
 
     _edit = new Gtk.MenuItem.with_label( _( "Edit..." ) );
+    _edit.add_accelerator( "activate", accel_group, 'e', 0, AccelFlags.VISIBLE );
     _edit.activate.connect( edit_node );
-    add_accel_label( _edit, "E" );
 
     _task = new Gtk.MenuItem.with_label( _( "Add Task" ) );
     _task.activate.connect( change_task );
@@ -83,8 +83,8 @@ public class DrawAreaMenu : Gtk.Menu {
     _conn.activate.connect( add_connection );
 
     _fold = new Gtk.MenuItem.with_label( _( "Fold Children" ) );
+    _fold.add_accelerator( "activate", accel_group, 'f', 0, AccelFlags.VISIBLE );
     _fold.activate.connect( fold_node );
-    add_accel_label( _fold, "F" );
 
     _detach = new Gtk.MenuItem.with_label( _( "Detach" ) );
     _detach.activate.connect( detach_node );
@@ -93,40 +93,40 @@ public class DrawAreaMenu : Gtk.Menu {
     _root.activate.connect( add_root_node );
 
     _child = new Gtk.MenuItem.with_label( _( "Add Child Node" ) );
+    _child.add_accelerator( "activate", accel_group, 65289, 0, AccelFlags.VISIBLE );
     _child.activate.connect( add_child_node );
-    add_accel_label( _child, "Tab" );
 
     _sibling = new Gtk.MenuItem.with_label( _( "Add Sibling Node" ) );
+    _sibling.add_accelerator( "activate", accel_group, 65293, 0, AccelFlags.VISIBLE );
     _sibling.activate.connect( add_sibling_node );
-    add_accel_label( _sibling, "Return" );
 
     var selnode = new Gtk.MenuItem.with_label( _( "Select Node" ) );
     var selmenu = new Gtk.Menu();
     selnode.set_submenu( selmenu );
 
     _selroot = new Gtk.MenuItem.with_label( _( "Root" ) );
+    _selroot.add_accelerator( "activate", accel_group, 'm', 0, AccelFlags.VISIBLE );
     _selroot.activate.connect( select_root_node );
-    add_accel_label( _selroot, "M" );
 
     _selnext = new Gtk.MenuItem.with_label( _( "Next Sibling" ) );
+    _selnext.add_accelerator( "activate", accel_group, 'n', 0, AccelFlags.VISIBLE );
     _selnext.activate.connect( select_next_sibling_node );
-    add_accel_label( _selnext, "N" );
 
     _selprev = new Gtk.MenuItem.with_label( _( "Previous Sibling" ) );
+    _selprev.add_accelerator( "activate", accel_group, 'p', 0, AccelFlags.VISIBLE );
     _selprev.activate.connect( select_previous_sibling_node );
-    add_accel_label( _selprev, "P" );
 
     _selchild = new Gtk.MenuItem.with_label( _( "First Child" ) );
+    _selchild.add_accelerator( "activate", accel_group, 'c', 0, AccelFlags.VISIBLE );
     _selchild.activate.connect( select_first_child_node );
-    add_accel_label( _selchild, "C" );
 
     _selparent = new Gtk.MenuItem.with_label( _( "Parent" ) );
+    _selparent.add_accelerator( "activate", accel_group, 'a', 0, AccelFlags.VISIBLE );
     _selparent.activate.connect( select_parent_node );
-    add_accel_label( _selparent, "A" );
 
     _center = new Gtk.MenuItem.with_label( _( "Center Current Node" ) );
+    _center.add_accelerator( "activate", accel_group, 'C', 0, AccelFlags.VISIBLE );
     _center.activate.connect( center_current_node );
-    add_accel_label( _center, "<Shift>C" );
 
     /* Add the menu items to the menu */
     add( _copy );
@@ -162,23 +162,6 @@ public class DrawAreaMenu : Gtk.Menu {
 
     /* Make sure that we handle menu state when we are popped up */
     show.connect( on_popup );
-
-  }
-
-  private void add_accel_label( Gtk.MenuItem item, string accelerator ) {
-
-    /* Convert the menu item to an accelerator label */
-    AccelLabel? label = item.get_child() as AccelLabel;
-    if( label == null ) return;
-
-    /* Parse the accelerator */
-    uint             key  = 0;
-    Gdk.ModifierType mods = 0;
-    accelerator_parse( accelerator, out key, out mods );
-
-    /* Add the accelerator to the label */
-    label.set_accel( key, mods );
-    label.refetch();
 
   }
 

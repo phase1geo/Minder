@@ -258,9 +258,9 @@ public class Node : Object {
   /* Copies an existing node tree to this node */
   public Node.copy_tree( Node n, ImageManager im ) {
     _id       = _next_id++;
+    _children = new Array<Node>();
     copy_variables( n, im );
     mode      = NodeMode.NONE;
-    _children = new Array<Node>();
     for( int i=0; i<n._children.length; i++ ) {
       Node child = new Node.copy_tree( n._children.index( i ), im );
       child.parent = this;

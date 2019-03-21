@@ -109,11 +109,14 @@ public class MainWindow : ApplicationWindow {
     actions.add_action_entries( action_entries, this );
     insert_action_group( "win", actions );
 
+    AccelGroup accel_group = new Gtk.AccelGroup();
+    this.add_accel_group( accel_group );
+
     /* Add keyboard shortcuts */
     add_keyboard_shortcuts( app );
 
     /* Create and pack the canvas */
-    _canvas = new DrawArea();
+    _canvas = new DrawArea( accel_group );
     _canvas.node_changed.connect( on_node_changed );
     _canvas.scale_changed.connect( change_scale );
     _canvas.show_properties.connect( show_properties );
@@ -125,35 +128,40 @@ public class MainWindow : ApplicationWindow {
     /* Create title toolbar */
     var new_btn = new Button.from_icon_name( "document-new", IconSize.LARGE_TOOLBAR );
     new_btn.set_tooltip_markup( _( "New File   <i>(Control-N)</i>" ) );
+    new_btn.add_accelerator( "clicked", accel_group, 'n', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
 
     var open_btn = new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR );
     open_btn.set_tooltip_markup( _( "Open File   <i>(Control-O)</i>" ) );
+    open_btn.add_accelerator( "clicked", accel_group, 'o', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
     var save_btn = new Button.from_icon_name( "document-save-as", IconSize.LARGE_TOOLBAR );
     save_btn.set_tooltip_markup( _( "Save File As   <i>(Control-Shift-S)</i>" ) );
+    open_btn.add_accelerator( "clicked", accel_group, 'S', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
     _undo_btn = new Button.from_icon_name( "edit-undo", IconSize.LARGE_TOOLBAR );
     _undo_btn.set_tooltip_markup( _( "Undo   <i>(Control-Z)</i>" ) );
     _undo_btn.set_sensitive( false );
+    _undo_btn.add_accelerator( "clicked", accel_group, 'z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _undo_btn.clicked.connect( do_undo );
     _header.pack_start( _undo_btn );
 
     _redo_btn = new Button.from_icon_name( "edit-redo", IconSize.LARGE_TOOLBAR );
     _redo_btn.set_tooltip_markup( _( "Redo   <i>(Control-Shift-Z)</i>" ) );
     _redo_btn.set_sensitive( false );
+    _redo_btn.add_accelerator( "clicked", accel_group, 'Z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _redo_btn.clicked.connect( do_redo );
     _header.pack_start( _redo_btn );
 
     /* Add the buttons on the right side in the reverse order */
-    add_property_button();
+    add_property_button( accel_group );
     add_export_button();
-    add_search_button();
+    add_search_button( accel_group );
     add_zoom_button();
 
     /* Create the horizontal box that will contain the canvas and the properties sidebar */
@@ -180,19 +188,19 @@ public class MainWindow : ApplicationWindow {
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
 
-    app.set_accels_for_action( "win.action_new",         { "<Control>n" } );
-    app.set_accels_for_action( "win.action_open",        { "<Control>o" } );
+    // app.set_accels_for_action( "win.action_new",         { "<Control>n" } );
+    // app.set_accels_for_action( "win.action_open",        { "<Control>o" } );
     app.set_accels_for_action( "win.action_save",        { "<Control>s" } );
-    app.set_accels_for_action( "win.action_save_as",     { "<Control><Shift>s" } );
-    app.set_accels_for_action( "win.action_undo",        { "<Control>z" } );
-    app.set_accels_for_action( "win.action_redo",        { "<Control><Shift>z" } );
-    app.set_accels_for_action( "win.action_search",      { "<Control>f" } );
+    // app.set_accels_for_action( "win.action_save_as",     { "<Control><Shift>s" } );
+    // app.set_accels_for_action( "win.action_undo",        { "<Control>z" } );
+    // app.set_accels_for_action( "win.action_redo",        { "<Control><Shift>z" } );
+    // app.set_accels_for_action( "win.action_search",      { "<Control>f" } );
     app.set_accels_for_action( "win.action_quit",        { "<Control>q" } );
     app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
     app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
     app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
     app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
-    app.set_accels_for_action( "win.action_sidebar",     { "<Control>bar"} );
+    // app.set_accels_for_action( "win.action_sidebar",     { "<Control>bar"} );
 
   }
 
@@ -260,12 +268,13 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the search functionality */
-  private void add_search_button() {
+  private void add_search_button( AccelGroup accel_group ) {
 
     /* Create the menu button */
     _search_btn = new MenuButton();
     _search_btn.set_image( new Image.from_icon_name( "edit-find", IconSize.LARGE_TOOLBAR ) );
     _search_btn.set_tooltip_markup( _( "Search   <i>(Control-F)</i>" ) );
+    _search_btn.add_accelerator( "clicked", accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _search_btn.clicked.connect( on_search_change );
     _header.pack_end( _search_btn );
 
@@ -421,7 +430,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the property functionality */
-  private void add_property_button() {
+  private void add_property_button( AccelGroup accel_group ) {
 
     /* Add the menubutton */
     _prop_show = new Image.from_icon_name( "pane-show-symbolic", IconSize.LARGE_TOOLBAR );
@@ -429,6 +438,7 @@ public class MainWindow : ApplicationWindow {
     _prop_btn  = new Button();
     _prop_btn.image = _prop_show;
     _prop_btn.set_tooltip_text( _( "Properties" ) );
+    _prop_btn.add_accelerator( "clicked", accel_group, '|', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _prop_btn.clicked.connect( inspector_clicked );
     _header.pack_end( _prop_btn );
 
