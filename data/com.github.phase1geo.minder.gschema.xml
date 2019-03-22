@@ -36,6 +36,11 @@
       <summary>Most recent state of the map properties sidebar</summary>
       <description>Most recent state of the map properties sidebar</description>
     </key>
+    <key name="style-properties-shown" type="b">
+      <default>false</default>
+      <summary>Most recent state of the style properties sidebar</summary>
+      <description>Most recent state of the style properities sidebar</description>
+    </key>
     <key name="enable-animations" type="b">
       <default>true</default>
       <summary>Enables/Disables canvas animations</summary>
@@ -75,6 +80,71 @@
       <default>1</default>
       <summary>Unique ID added to image names</summary>
       <description>Specifies the current unique image ID value</description>
+    </key>
+    <key name="style-affects" type="i">
+      <default>10</default>
+      <summary>Last used affects value in Style properties</summary>
+      <description>Last used affects value in Style properties</description>
+    </key>
+    <key name="style-link-type" type="s">
+      <default>"straight"</default>
+      <summary>Last used link type style in Style properties</summary>
+      <description>Last used link type style in Style properties</description>
+    </key>
+    <key name="style-link-width" type="i">
+      <default>4</default>
+      <summary>Last used link width in Style properties</summary>
+      <description>Last used link width in Style properties</description>
+    </key>
+    <key name="style-link-arrow" type="b">
+      <default>false</default>
+      <summary>Last used link arrow indicator in Style properties</summary>
+      <description>Last used link arrow indicator in Style properties</description>
+    </key>
+    <key name="style-link-dash" type="s">
+      <default>"solid"</default>
+      <summary>Last used link dash indicator in Style properties</summary>
+      <description>Last used link dash indicator in Style properties</description>
+    </key>
+    <key name="style-node-border" type="s">
+      <default>"underlined"</default>
+      <summary>Last used node border type in Style properties</summary>
+      <description>Last used node border type in Style properties</description>
+    </key>
+    <key name="style-node-width" type="i">
+      <default>200</default>
+      <summary>Last used maximum node width in Style properties</summary>
+      <description>Last used maximum node width in Style properties</description>
+    </key>
+    <key name="style-node-borderwidth" type="i">
+      <default>4</default>
+      <summary>Last used node borderwidth in Style properties</summary>
+      <description>Last used node borderwidth in Style properties</description>
+    </key>
+    <key name="style-node-font-family" type="s">
+      <default>"sans"</default>
+      <summary>Last used node font family in Style properties</summary>
+      <description>Last used node font family in Style properties</description>
+    </key>
+    <key name="style-node-font-size" type="i">
+      <default>11</default>
+      <summary>Last used node font size in Style properties</summary>
+      <description>Last used node font size in Style properties</description>
+    </key>
+    <key name="style-connection-dash" type="s">
+      <default>"dotted"</default>
+      <summary>Last used connection type in Style properties</summary>
+      <description>Last used connection type in Style properties</description>
+    </key>
+    <key name="style-connection-width" type="i">
+      <default>2</default>
+      <summary>Last used connection width in Style properties</summary>
+      <description>Last used connection width in Style properties</description>
+    </key>
+    <key name="style-connection-arrow" type="s">
+      <default>"to"</default>
+      <summary>Last used connection arrow direction in Style properties</summary>
+      <description>Last used connection arrow direction in Style properties</description>
     </key>
   </schema>
 </schemalist>

@@ -29,7 +29,7 @@ public class NodeInspector : Stack {
     {"text/uri-list", 0, 0}
   };
 
-  private Entry       _name;
+  private TextView    _name;
   private Switch      _task;
   private Switch      _fold;
   private Box         _link_box;
@@ -86,15 +86,17 @@ public class NodeInspector : Stack {
   /* Creates the name entry */
   private void create_title( Box bbox ) {
 
-    Box   box = new Box( Orientation.VERTICAL, 2 );
-    Label lbl = new Label( _( "Title" ) );
+    Box   box = new Box( Orientation.VERTICAL, 10 );
+    Label lbl = new Label( _( "<b>Title</b>" ) );
 
-    _name = new Entry();
-    // _name.input_hints = InputHints.EMOJI;
-    _name.activate.connect( name_changed );
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
+
+    _name = new TextView();
+    _name.set_wrap_mode( Gtk.WrapMode.WORD );
+    _name.buffer.text = "";
+    _name.buffer.changed.connect( name_changed );
     _name.focus_out_event.connect( name_focus_out );
-
-    lbl.xalign = (float)0;
 
     box.pack_start( lbl,   true, false );
     box.pack_start( _name, true, false );
@@ -107,9 +109,10 @@ public class NodeInspector : Stack {
   private void create_task( Box bbox ) {
 
     var box  = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl  = new Label( _( "Task" ) );
+    var lbl  = new Label( _( "<b>Task</b>" ) );
 
-    lbl.xalign = (float)0;
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
 
     _task = new Switch();
     _task.button_release_event.connect( task_changed );
@@ -125,9 +128,10 @@ public class NodeInspector : Stack {
   private void create_fold( Box bbox ) {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Fold" ) );
+    var lbl = new Label( _( "<b>Fold</b>" ) );
 
-    lbl.xalign = (float)0;
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
 
     _fold = new Switch();
     _fold.button_release_event.connect( fold_changed );
@@ -146,10 +150,11 @@ public class NodeInspector : Stack {
   private void create_link( Box bbox ) {
 
     _link_box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl   = new Label( _( "Link Color" ) );
+    var lbl   = new Label( _( "<b>Link Color</b>" ) );
 
     _link_box.homogeneous = true;
     lbl.xalign            = (float)0;
+    lbl.use_markup        = true;
 
     _link_color = new ColorButton();
     _link_color.color_set.connect(() => {
@@ -166,10 +171,11 @@ public class NodeInspector : Stack {
   /* Creates the note widget */
   private void create_note( Box bbox ) {
 
-    Box   box = new Box( Orientation.VERTICAL, 0 );
-    Label lbl = new Label( _( "Note" ) );
+    Box   box = new Box( Orientation.VERTICAL, 10 );
+    Label lbl = new Label( _( "<b>Note</b>" ) );
 
-    lbl.xalign = (float)0;
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
 
     _note = new TextView();
     _note.set_wrap_mode( Gtk.WrapMode.WORD );
@@ -194,9 +200,10 @@ public class NodeInspector : Stack {
   private void create_image( Box bbox ) {
 
     var box = new Box( Orientation.VERTICAL, 0 );
-    var lbl = new Label( _( "Image" ) );
+    var lbl = new Label( _( "<b>Image</b>" ) );
 
-    lbl.xalign = (float)0;
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
 
     _image_btn = new Button.with_label( _( "Add Image..." ) );
     _image_btn.visible = true;
@@ -350,7 +357,7 @@ public class NodeInspector : Stack {
    Called whenever the node name is changed within the inspector.
   */
   private void name_changed() {
-    _da.change_current_name( _name.text );
+    _da.change_current_name( _name.buffer.text );
   }
 
   /*
@@ -358,7 +365,7 @@ public class NodeInspector : Stack {
    node title in the canvas.
   */
   private bool name_focus_out( EventFocus e ) {
-    _da.change_current_name( _name.text );
+    _da.change_current_name( _name.buffer.text );
     return( false );
   }
 
@@ -459,7 +466,7 @@ public class NodeInspector : Stack {
     Node? current = _da.get_current_node();
 
     if( current != null ) {
-      _name.set_text( current.name );
+      _name.buffer.text = current.name;
       _task.set_active( current.task_enabled() );
       if( current.is_leaf() ) {
         _fold.set_active( false );

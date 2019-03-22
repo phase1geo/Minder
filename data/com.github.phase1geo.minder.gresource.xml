@@ -13,5 +13,14 @@
     <file alias="minder-layout-up-symbolic.svg">icons/16/minder-layout-up-symbolic.svg</file>
     <file alias="minder-layout-vertical-symbolic.svg">icons/16/minder-layout-vertical-symbolic.svg</file>
     <file alias="minder-unfold-symbolic.svg">icons/16/minder-unfold-symbolic.svg</file>
+    <file alias="minder-link-curved-symbolic.svg">icons/16/minder-link-curved-symbolic.svg</file>
+    <file alias="minder-link-straight-symbolic.svg">icons/16/minder-link-straight-symbolic.svg</file>
+    <file alias="minder-link-squared-symbolic.svg">icons/16/minder-link-squared-symbolic.svg</file>
+    <file alias="minder-node-border-none-symbolic.svg">icons/16/minder-node-border-none-symbolic.svg</file>
+    <file alias="minder-node-border-underlined-symbolic.svg">icons/16/minder-node-border-underlined-symbolic.svg</file>
+    <file alias="minder-node-border-bracket-symbolic.svg">icons/16/minder-node-border-bracket-symbolic.svg</file>
+    <file alias="minder-node-border-squared-symbolic.svg">icons/16/minder-node-border-squared-symbolic.svg</file>
+    <file alias="minder-node-border-rounded-symbolic.svg">icons/16/minder-node-border-rounded-symbolic.svg</file>
+    <file alias="minder-node-border-pill-symbolic.svg">icons/16/minder-node-border-pill-symbolic.svg</file>
   </gresource>
 </gresources>

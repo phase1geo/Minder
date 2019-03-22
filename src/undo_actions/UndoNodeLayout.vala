@@ -23,23 +23,25 @@ public class UndoNodeLayout : UndoItem {
 
   private string _old_layout;
   private string _new_layout;
+  private Node?  _root;
 
   /* Default constructor */
-  public UndoNodeLayout( Layout old_layout, Layout new_layout ) {
+  public UndoNodeLayout( Layout old_layout, Layout new_layout, Node? root_node ) {
     base( _( "change layout" ) );
     _old_layout = old_layout.name;
     _new_layout = new_layout.name;
+    _root       = root_node;
   }
 
   /* Performs an undo operation for this data */
   public override void undo( DrawArea da ) {
-    da.set_layout( _old_layout, false );
+    da.set_layout( _old_layout, _root, false );
     da.loaded();
   }
 
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
-    da.set_layout( _new_layout, false );
+    da.set_layout( _new_layout, _root, false );
     da.loaded();
   }
 

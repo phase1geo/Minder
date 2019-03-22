@@ -42,11 +42,12 @@ public class DrawArea : Gtk.DrawingArea {
   private EventType        _press_type = EventType.NOTHING;
   private bool             _resize     = false;
   private bool             _motion     = false;
-  private Node?            _current_node;
+  private Node?            _current_node = null;
   private bool             _current_new = false;
+  private Connection?      _current_connection = null;
   private Array<Node>      _nodes;
+  private Connections      _connections;
   private Theme            _theme;
-  private Layout           _layout;
   private string           _orig_name;
   private NodeSide         _orig_side;
   private Array<NodeInfo?> _orig_info;
@@ -91,16 +92,20 @@ public class DrawArea : Gtk.DrawingArea {
 
   public signal void changed();
   public signal void node_changed();
+  public signal void connection_changed();
   public signal void theme_changed();
   public signal void scale_changed( double scale );
   public signal void show_properties( string? tab, bool grab_note );
   public signal void loaded();
 
   /* Default constructor */
-  public DrawArea() {
+  public DrawArea( AccelGroup accel_group ) {
 
     /* Create the array of root nodes in the map */
     _nodes = new Array<Node>();
+
+    /* Create the connections */
+    _connections = new Connections();
 
     /* Allocate memory for the animator */
     animator = new Animator( this );
@@ -113,14 +118,13 @@ public class DrawArea : Gtk.DrawingArea {
     _editor.changed.connect( current_image_edited );
 
     /* Create the popup menu */
-    _popup_menu = new DrawAreaMenu( this );
+    _popup_menu = new DrawAreaMenu( this, accel_group );
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
 
     /* Set the theme to the default theme */
     set_theme( "Default" );
-    set_layout( _( "Horizontal" ) );
 
     /* Add event listeners */
     this.draw.connect( on_draw );
@@ -170,7 +174,7 @@ public class DrawArea : Gtk.DrawingArea {
     */
     get_style_context().add_class( "canvas" );
 
-    /* Handle special character input */
+    /* Make sure that we us the ImContextSimple input method */
     _im_context = new IMContextSimple();
     _im_context.commit.connect( handle_printable );
 
@@ -214,37 +218,50 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Returns the name of the currently selected theme */
-  public string get_layout_name() {
-    return( _layout.name );
-  }
-
   /* Sets the layout to the given value */
-  public void set_layout( string name, bool undoable = true ) {
+  public void set_layout( string name, Node? root_node, bool undoable = true ) {
+    var old_layout = (root_node == null) ? _nodes.index( 0 ).layout : root_node.layout;
     var new_layout = layouts.get_layout( name );
-    if( _layout == null ) {
-      _layout = new_layout;
-    } else {
-      if( undoable ) {
-        undo_buffer.add_item( new UndoNodeLayout( _layout, new_layout ) );
-      }
-      var old_balanceable = _layout.balanceable;
-      animator.add_nodes( "set layout" );
-      _layout = new_layout;
+    if( undoable ) {
+      undo_buffer.add_item( new UndoNodeLayout( old_layout, new_layout, root_node ) );
+    }
+    var old_balanceable = old_layout.balanceable;
+    animator.add_nodes( "set layout" );
+    if( root_node == null ) {
       for( int i=0; i<_nodes.length; i++ ) {
-        _layout.initialize( _nodes.index( i ) );
+        _nodes.index( i ).layout = new_layout;
+        new_layout.initialize( _nodes.index( i ) );
       }
-      if( !old_balanceable && _layout.balanceable ) {
-        balance_nodes( false );
-      } else {
-        animator.animate();
-      }
+    } else {
+      root_node.layout = new_layout;
+      new_layout.initialize( root_node );
+    }
+    if( !old_balanceable && new_layout.balanceable ) {
+      balance_nodes( false );
+    } else {
+      animator.animate();
     }
   }
 
   /* Returns the list of nodes */
   public Array<Node> get_nodes() {
     return( _nodes );
+  }
+
+  /* Returns the connections list */
+  public Connections get_connections() {
+    return( _connections );
+  }
+
+  /* Searches for and returns the node with the specified ID */
+  public Node? get_node( int id ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      Node? node = _nodes.index( i ).get_node( id );
+      if( node != null ) {
+        return( node );
+      }
+    }
+    return( null );
   }
 
   /* Sets the cursor of the drawing area */
@@ -296,8 +313,7 @@ public class DrawArea : Gtk.DrawingArea {
       );
       theme_changed();
     }
-
-    /* Set the current theme index */
+/* Set the current theme index */
     string? index = n->get_prop( "index" );
     if( index != null ) {
       _theme.index = int.parse( index );
@@ -305,16 +321,23 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
-  /* Loads the given layout from the list of available options */
-  private void load_layout( Xml.Node* n ) {
+  /*
+   We don't store the layout, but if it is found, we need to initialize the
+   layout information for all nodes to this value.
+  */
+  private void load_layout( Xml.Node* n, ref Layout? layout ) {
+
     string? name = n->get_prop( "name" );
     if( name != null ) {
-      _layout = layouts.get_layout( name );
+      layout = layouts.get_layout( name );
     }
+
   }
 
   /* Loads the contents of the data input stream */
   public void load( Xml.Node* n ) {
+
+    Layout? use_layout = null;
 
     /* Disable animations while we are loading */
     var animate = animator.enable;
@@ -327,15 +350,20 @@ public class DrawArea : Gtk.DrawingArea {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "theme"    :  load_theme( it );   break;
-          case "layout"   :  load_layout( it );  break;
-          case "drawarea" :  load_drawarea( it );  break;
-          case "images"   :  image_manager.load( it );  break;
-          case "nodes"    :
+          case "theme"       :  load_theme( it );   break;
+          case "layout"      :  load_layout( it, ref use_layout );  break;
+          case "styles"      :  StyleInspector.styles.load( it );  break;
+          case "drawarea"    :  load_drawarea( it );  break;
+          case "images"      :  image_manager.load( it );  break;
+          case "connections" :  _connections.load( this, it );  break;
+          case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var node = new Node( this, _layout );
-                node.load( this, it2, _layout );
+                var node = new Node.with_name( this, "temp", null );
+                node.load( this, it2, true );
+                if( use_layout != null ) {
+                  node.layout = use_layout;
+                }
                 _nodes.append_val( node );
               }
             }
@@ -362,9 +390,7 @@ public class DrawArea : Gtk.DrawingArea {
     theme->new_prop( "index", _theme.index.to_string() );
     parent->add_child( theme );
 
-    Xml.Node* layout = new Xml.Node( null, "layout" );
-    layout->new_prop( "name", _layout.name );
-    parent->add_child( layout );
+    StyleInspector.styles.save( parent );
 
     Xml.Node* origin = new Xml.Node( null, "drawarea" );
     origin->new_prop( "x", _store_origin_x.to_string() );
@@ -382,6 +408,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
     parent->add_child( nodes );
 
+    _connections.save( parent );
+
     return( true );
 
   }
@@ -398,8 +426,8 @@ public class DrawArea : Gtk.DrawingArea {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "outline") {
-          var root = new Node( this, _layout );
-          root.import_opml( this, it, node_id, ref expand_state, _theme, _layout );
+          var root = new Node( this, layouts.get_default() );
+          root.import_opml( this, it, node_id, ref expand_state, _theme );
           _nodes.append_val( root );
         }
       }
@@ -436,16 +464,17 @@ public class DrawArea : Gtk.DrawingArea {
     Node.reset();
 
     /* Initialize variables */
-    origin_x       = 0.0;
-    origin_y       = 0.0;
-    sfactor        = 1.0;
-    node_clipboard = null;
-    _pressed       = false;
-    _press_type    = EventType.NOTHING;
-    _motion        = false;
-    _attach_node   = null;
-    _orig_name     = "";
-    _current_new   = false;
+    origin_x            = 0.0;
+    origin_y            = 0.0;
+    sfactor             = 1.0;
+    node_clipboard      = null;
+    _pressed            = false;
+    _press_type         = EventType.NOTHING;
+    _motion             = false;
+    _attach_node        = null;
+    _orig_name          = "";
+    _current_new        = false;
+    _current_connection = null;
 
     set_current_node( null );
 
@@ -466,24 +495,26 @@ public class DrawArea : Gtk.DrawingArea {
     Node.reset();
 
     /* Initialize variables */
-    origin_x       = 0.0;
-    origin_y       = 0.0;
-    sfactor        = 1.0;
-    node_clipboard = null;
-    _pressed       = false;
-    _press_type    = EventType.NOTHING;
-    _motion        = false;
-    _attach_node   = null;
-    _current_new   = false;
+    origin_x            = 0.0;
+    origin_y            = 0.0;
+    sfactor             = 1.0;
+    node_clipboard      = null;
+    _pressed            = false;
+    _press_type         = EventType.NOTHING;
+    _motion             = false;
+    _attach_node        = null;
+    _current_new        = false;
+    _current_connection = null;
 
     /* Create the main idea node */
-    var n = new Node.with_name( this, _("Main Idea"), _layout );
+    var n = new Node.with_name( this, _("Main Idea"), layouts.get_default() );
 
     /* Set the node information */
-    n.posx = (get_allocated_width()  / 2) - 30;
-    n.posy = (get_allocated_height() / 2) - 10;
+    n.posx  = (get_allocated_width()  / 2) - 30;
+    n.posy  = (get_allocated_height() / 2) - 10;
+    n.style = StyleInspector.styles.get_global_style();
 
-    _layout.handle_update_by_edit( n );
+    n.layout.handle_update_by_edit( n );
 
     _nodes.append_val( n );
     _orig_name    = "";
@@ -502,9 +533,9 @@ public class DrawArea : Gtk.DrawingArea {
     return( _current_node );
   }
 
-  /* Returns the current layout */
-  public Layout get_layout() {
-    return( _layout );
+  /* Returns the current connection */
+  public Connection? get_current_connection() {
+    return( _current_connection );
   }
 
   /*
@@ -529,13 +560,19 @@ public class DrawArea : Gtk.DrawingArea {
         _current_node.mode = NodeMode.NONE;
       }
       if( (n.parent != null) && n.parent.folded ) {
-        var last = n.reveal( _layout );
+        var last = n.reveal();
         undo_buffer.add_item( new UndoNodeReveal( this, n, last ) );
       }
       _current_node      = n;
       _current_node.mode = NodeMode.CURRENT;
       node_changed();
     }
+  }
+
+  /* Sets the current connection to the given node */
+  public void set_current_connection( Connection? c ) {
+    _current_connection = c;
+    connection_changed();
   }
 
   /* Toggles the value of the specified node, if possible */
@@ -551,7 +588,7 @@ public class DrawArea : Gtk.DrawingArea {
     bool fold = !n.folded;
     undo_buffer.add_item( new UndoNodeFold( n, fold ) );
     n.folded = fold;
-    _layout.handle_update_by_fold( n );
+    n.layout.handle_update_by_fold( n );
     queue_draw();
     changed();
   }
@@ -564,7 +601,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( (_current_node != null) && (_current_node.name != name) ) {
       string orig_name = _current_node.name;
       _current_node.name = name;
-      _layout.handle_update_by_edit( _current_node );
+      _current_node.layout.handle_update_by_edit( _current_node );
       if( !_current_new ) {
         undo_buffer.add_item( new UndoNodeName( _current_node, orig_name ) );
       }
@@ -582,7 +619,7 @@ public class DrawArea : Gtk.DrawingArea {
       undo_buffer.add_item( new UndoNodeTask( _current_node, enable, done ) );
       _current_node.enable_task( enable );
       _current_node.set_task_done( done );
-      _layout.handle_update_by_edit( _current_node );
+      _current_node.layout.handle_update_by_edit( _current_node );
       queue_draw();
       changed();
     }
@@ -596,7 +633,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( _current_node != null ) {
       undo_buffer.add_item( new UndoNodeFold( _current_node, folded ) );
       _current_node.folded = folded;
-      _layout.handle_update_by_fold( _current_node );
+      _current_node.layout.handle_update_by_fold( _current_node );
       queue_draw();
       changed();
     }
@@ -611,7 +648,7 @@ public class DrawArea : Gtk.DrawingArea {
       string orig_note = _current_node.note;
       _current_node.note = note;
       if( (note.length == 0) != (orig_note.length == 0) ) {
-        _layout.handle_update_by_edit( _current_node );
+        _current_node.layout.handle_update_by_edit( _current_node );
         queue_draw();
       }
       auto_save();
@@ -634,7 +671,7 @@ public class DrawArea : Gtk.DrawingArea {
           _current_node.set_image( image_manager, new NodeImage( image_manager, id, max_width ) );
           if( _current_node.get_image() != null ) {
             undo_buffer.add_item( new UndoNodeImage( _current_node, null ) );
-            _layout.handle_update_by_edit( _current_node );
+            _current_node.layout.handle_update_by_edit( _current_node );
             queue_draw();
             node_changed();
             auto_save();
@@ -654,7 +691,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( orig_image != null ) {
         _current_node.set_image( image_manager, null );
         undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
-        _layout.handle_update_by_edit( _current_node );
+        _current_node.layout.handle_update_by_edit( _current_node );
         queue_draw();
         node_changed();
         auto_save();
@@ -676,7 +713,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the current node's image is changed */
   private void current_image_edited( NodeImage? orig_image ) {
     undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
-    _layout.handle_update_by_edit( _current_node );
+    _current_node.layout.handle_update_by_edit( _current_node );
     queue_draw();
     node_changed();
     auto_save();
@@ -698,68 +735,138 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Clears the current connection (if it is set) and updates the UI accordingly */
+  private void clear_current_connection() {
+    if( _current_connection != null ) {
+      _current_connection.mode = ConnMode.NONE;
+      _current_connection      = null;
+      connection_changed();
+    }
+  }
+
+  /* Clears the current node (if it is set) and updates the UI accordingly */
+  private void clear_current_node() {
+    if( _current_node != null ) {
+      _current_node.mode = NodeMode.NONE;
+      _current_node      = null;
+      node_changed();
+    }
+  }
+
+  /* Called whenever the user clicks on a valid connection */
+  private bool set_current_connection_from_position( Connection conn, EventButton e ) {
+
+    if( conn == _current_connection ) {
+      _current_connection.mode = ConnMode.ADJUSTING;
+      return( true );
+    } else {
+      conn.mode = ConnMode.SELECTED;
+      if( _current_connection != null ) {
+        _current_connection.mode = ConnMode.NONE;
+      }
+      _current_connection = conn;
+      connection_changed();
+    }
+
+    return( false );
+
+  }
+
+  /* Called whenever the user clicks on node */
+  private bool set_current_node_from_position( Node node, EventButton e ) {
+
+    /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
+    if( node.is_within_task( e.x, e.y ) ) {
+      toggle_task( node );
+      node_changed();
+      return( false );
+    } else if( node.is_within_fold( e.x, e.y ) ) {
+      toggle_fold( node );
+      node_changed();
+      return( false );
+    } else if( node.is_within_resizer( e.x, e.y ) ) {
+      _resize     = true;
+      _orig_width = node.max_width();
+      return( true );
+    }
+
+    _orig_side = node.side;
+    _orig_info.remove_range( 0, _orig_info.length );
+    node.get_node_info( ref _orig_info );
+    if( node == _current_node ) {
+      if( is_mode_edit() ) {
+        bool shift = (bool) e.state & ModifierType.SHIFT_MASK;
+        switch( e.type ) {
+          case EventType.BUTTON_PRESS :         node.set_cursor_at_char( e.x, e.y, shift );  break;
+          case EventType.DOUBLE_BUTTON_PRESS :  node.set_cursor_at_word( e.x, e.y, shift );  break;
+          case EventType.TRIPLE_BUTTON_PRESS :  node.set_cursor_all( false );            break;
+        }
+      } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
+        if( _current_node.is_within_image( e.x, e.y ) ) {
+          edit_current_image();
+          return( false );
+        } else {
+          _current_node.mode = NodeMode.EDITABLE;
+        }
+      }
+      return( true );
+    } else {
+      _current_new = false;
+      if( _current_node != null ) {
+        _current_node.mode = NodeMode.NONE;
+      }
+      _current_node = node;
+      _connections.check_for_connection_to_node( _current_node );
+      if( node.mode == NodeMode.NONE ) {
+        node.mode = NodeMode.CURRENT;
+        node_changed();
+        return( true );
+      }
+    }
+    return( false );
+  }
+
   /*
    Sets the current node pointer to the node that is within the given coordinates.
    Returns true if we sucessfully set current_node to a valid node and made it
    selected.
   */
-  private bool set_current_node_at_position( double x, double y, EventButton e ) {
-    for( int i=0; i<_nodes.length; i++ ) {
-      Node match = _nodes.index( i ).contains( x, y, null );
-      if( match != null ) {
-        if( match.is_within_task( x, y ) ) {
-          toggle_task( match );
-          node_changed();
-          return( false );
-        } else if( match.is_within_fold( x, y ) ) {
-          toggle_fold( match );
-          node_changed();
-          return( false );
-        } else if( match.is_within_resizer( x, y ) ) {
-          _resize     = true;
-          _orig_width = match.max_width();
-          return( true );
-        }
-        _orig_side = match.side;
-        _orig_info.remove_range( 0, _orig_info.length );
-        match.get_node_info( ref _orig_info );
-        if( match == _current_node ) {
-          if( is_mode_edit() ) {
-            switch( e.type ) {
-              case EventType.BUTTON_PRESS :         match.set_cursor_at_char( x, y, false );  break;
-              case EventType.DOUBLE_BUTTON_PRESS :  match.set_cursor_at_word( x, y, false );  break;
-              case EventType.TRIPLE_BUTTON_PRESS :  match.set_cursor_all( false );            break;
-            }
-          } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
-            if( _current_node.is_within_image( x, y ) ) {
-              edit_current_image();
-              return( false );
-            } else {
-              _current_node.mode = NodeMode.EDITABLE;
-            }
-          }
-          return( true );
-        } else {
-          _current_new = false;
-          if( _current_node != null ) {
-            _current_node.mode = NodeMode.NONE;
-          }
-          _current_node = match;
-          if( match.mode == NodeMode.NONE ) {
-            match.mode = NodeMode.CURRENT;
-            node_changed();
-            return( true );
-          }
-        }
-        return( false );
+  private bool set_current_at_position( double x, double y, EventButton e ) {
+
+    if( (_current_connection != null) && (_current_connection.mode == ConnMode.SELECTED) ) {
+      if( _current_connection.within_from_handle( e.x, e.y ) ) {
+        _current_connection.disconnect( true );
+        return( true );
+      } else if( _current_connection.within_to_handle( e.x, e.y ) ) {
+        _current_connection.disconnect( false );
+        return( true );
       }
     }
-    if( _current_node != null ) {
-      _current_node.mode = NodeMode.NONE;
+
+    if( (_attach_node == null) || (_current_connection == null) || (_current_connection.mode != ConnMode.CONNECTING) ) {
+      Connection? match_conn;
+      if( _current_connection == null ) {
+        match_conn = _connections.on_curve( x, y );
+      } else {
+        match_conn = _connections.within_drag_handle( x, y );
+      }
+      if( match_conn != null ) {
+        clear_current_node();
+        return( set_current_connection_from_position( match_conn, e ) );
+      } else {
+        clear_current_connection();
+        for( int i=0; i<_nodes.length; i++ ) {
+          var match_node = _nodes.index( i ).contains( x, y, null );
+          if( match_node != null ) {
+            return( set_current_node_from_position( match_node, e ) );
+          }
+        }
+        clear_current_node();
+      }
     }
-    _current_node = null;
-    node_changed();
+
     return( true );
+
   }
 
   /* Returns the supported scale points */
@@ -861,7 +968,7 @@ public class DrawArea : Gtk.DrawingArea {
     double x, y, w, h;
     if( _current_node == null ) return;
     animator.add_scale( "zoom to selected" );
-    _layout.bbox( _current_node, -1, out x, out y, out w, out h );
+    _current_node.layout.bbox( _current_node, -1, out x, out y, out w, out h );
     position_box( x, y, w, h, 0.5, 0.5 );
     set_scaling_factor( get_scaling_factor( w, h ) );
     animator.animate();
@@ -877,7 +984,7 @@ public class DrawArea : Gtk.DrawingArea {
     /* Calculate the overall size of the map */
     for( int i=0; i<_nodes.length; i++ ) {
       double nx, ny, nw, nh;
-      _layout.bbox( _nodes.index( i ), -1, out nx, out ny, out nw, out nh );
+      _nodes.index( i ).layout.bbox( _nodes.index( i ), -1, out nx, out ny, out nw, out nh );
       x1 = (x1 < nx) ? x1 : nx;
       y1 = (y1 < ny) ? y1 : ny;
       x2 = (x2 < (nx + nw)) ? (nx + nw) : x2;
@@ -1024,6 +1131,7 @@ public class DrawArea : Gtk.DrawingArea {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).pan( diff_x, diff_y );
     }
+    _connections.pan( diff_x, diff_y );
   }
 
   /* Draw the background from the stylesheet */
@@ -1040,18 +1148,15 @@ public class DrawArea : Gtk.DrawingArea {
     if( (_current_node != null) && ((_current_node.parent == null) || !_current_node.parent.folded) ) {
       _current_node.draw_all( ctx, _theme, null, true, (_pressed && _motion && !_resize) );
     }
+    /* Draw the current connection on top of everything else */
+    _connections.draw_all( ctx, _theme );
+    if( _current_connection != null ) {
+      _current_connection.draw( ctx, _theme );
+    }
   }
 
   /* Draw the available nodes */
   public bool on_draw( Context ctx ) {
-    if( _layout.default_text_height == 0 ) {
-      var text = Pango.cairo_create_layout( ctx );
-      int width, height;
-      text.set_font_description( _layout.get_font_description() );
-      text.set_text( "O", -1 );
-      text.get_size( out width, out height );
-      _layout.default_text_height = height / Pango.SCALE;
-    }
     ctx.scale( sfactor, sfactor );
     draw_background( ctx );
     draw_all( ctx );
@@ -1065,7 +1170,7 @@ public class DrawArea : Gtk.DrawingArea {
         grab_focus();
         _press_x    = scale_value( event.x );
         _press_y    = scale_value( event.y );
-        _pressed    = set_current_node_at_position( _press_x, _press_y, event );
+        _pressed    = set_current_at_position( _press_x, _press_y, event );
         _press_type = event.type;
         _motion     = false;
         queue_draw();
@@ -1089,12 +1194,17 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     }
     if( _pressed ) {
-      if( _current_node != null ) {
+      if( _current_connection != null ) {
+        if( _current_connection.mode == ConnMode.ADJUSTING ) {
+          _current_connection.move_drag_handle( event.x, event.y );
+          queue_draw();
+        }
+      } else if( _current_node != null ) {
         double diffx = scale_value( event.x ) - _press_x;
         double diffy = scale_value( event.y ) - _press_y;
         if( _current_node.mode == NodeMode.CURRENT ) {
           if( _resize ) {
-            _current_node.resize( diffx, _layout );
+            _current_node.resize( diffx );
           } else {
             Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
             if( attach_node != null ) {
@@ -1103,7 +1213,8 @@ public class DrawArea : Gtk.DrawingArea {
             }
             _current_node.posx += diffx;
             _current_node.posy += diffy;
-            _layout.set_side( _current_node );
+            _current_node.layout.set_side( _current_node );
+            _connections.node_moved( _current_node, _current_node, diffx, diffy );
           }
         } else {
           switch( _press_type ) {
@@ -1123,11 +1234,19 @@ public class DrawArea : Gtk.DrawingArea {
       _motion  = true;
       auto_save();
     } else {
+      if( _current_connection != null )  {
+        if( _current_connection.mode == ConnMode.CONNECTING ) {
+          update_connection( event.x, event.y );
+        }
+      }
       for( int i=0; i<_nodes.length; i++ ) {
         Node match = _nodes.index( i ).contains( event.x, event.y, null );
         if( match != null ) {
           if( get_tooltip_text() == null ) {
-            if( match.is_within_task( event.x, event.y ) ) {
+            if( (_current_connection != null) && (_current_connection.mode == ConnMode.CONNECTING) ) {
+              _attach_node      = match;
+              _attach_node.mode = NodeMode.ATTACHABLE;
+            } else if( match.is_within_task( event.x, event.y ) ) {
               set_cursor( CursorType.HAND1 );
               set_tooltip_text( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
             } else if( match.is_within_note( event.x, event.y ) ) {
@@ -1160,7 +1279,16 @@ public class DrawArea : Gtk.DrawingArea {
       undo_buffer.add_item( new UndoNodeResize( _current_node, _orig_width ) );
       return( false );
     }
-    if( _current_node != null ) {
+    if( _current_connection != null ) {
+      if( _attach_node != null ) {
+        end_connection( _attach_node );
+        _attach_node.mode = NodeMode.NONE;
+        _attach_node = null;
+      } else if( _current_connection.mode == ConnMode.ADJUSTING ) {
+        _current_connection.mode = ConnMode.SELECTED;
+      }
+      queue_draw();
+    } else if( _current_node != null ) {
       if( _current_node.mode == NodeMode.CURRENT ) {
 
         /* If we are hovering over an attach node, perform the attachment */
@@ -1177,7 +1305,7 @@ public class DrawArea : Gtk.DrawingArea {
         } else if( _current_node.parent != null ) {
           int orig_index = _current_node.index();
           animator.add_node( _current_node, "move to position" );
-          _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ), _layout );
+          _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) );
           undo_buffer.add_item( new UndoNodeMove( _current_node, _orig_side, orig_index ) );
           animator.animate();
 
@@ -1209,11 +1337,11 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       orig_parent = _current_node.parent;
       orig_index  = _current_node.index();
-      _current_node.detach( _orig_side, _layout );
+      _current_node.detach( _orig_side );
     }
 
     /* Attach the node */
-    _current_node.attach( _attach_node, -1, _theme, _layout );
+    _current_node.attach( _attach_node, -1, _theme );
     _attach_node.mode = NodeMode.NONE;
     _attach_node      = null;
 
@@ -1231,13 +1359,13 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Returns true if we are in some sort of edit mode */
-  private bool is_mode_edit() {
-    return( _current_node.mode == NodeMode.EDITABLE );
+  public bool is_mode_edit() {
+    return( (_current_node != null) && (_current_node.mode == NodeMode.EDITABLE) );
   }
 
   /* Returns true if we are in the selected mode */
   private bool is_mode_selected() {
-    return( _current_node.mode == NodeMode.CURRENT );
+    return( (_current_node != null) && (_current_node.mode == NodeMode.CURRENT) );
   }
 
   /* If the specified node is not null, selects the node and makes it the current node */
@@ -1281,9 +1409,27 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Returns true if there is a next sibling available for selection */
+  /* Returns true if there is a sibling available for selection */
   public bool sibling_selectable() {
     return( (_current_node != null) && (_current_node.is_root() ? (_nodes.length > 1) : (_current_node.parent.children().length > 1)) );
+  }
+
+  /* Returns the sibling node in the given direction of the current node */
+  public Node? sibling_node( int dir ) {
+    if( _current_node != null ) {
+      if( _current_node.is_root() ) {
+        for( int i=0; i<_nodes.length; i++ ) {
+          if( _nodes.index( i ) == _current_node ) {
+            return( (((i + dir) < 0) || ((i + dir) >= _nodes.length)) ? null : _nodes.index( i + dir ) );
+          }
+        }
+      } else if( dir == 1 ) {
+        return( _current_node.parent.next_child( _current_node ) );
+      } else {
+        return( _current_node.parent.prev_child( _current_node ) );
+      }
+    }
+    return( null );
   }
 
   /* Selects the next (dir = 1) or previous (dir = -1) sibling */
@@ -1360,8 +1506,9 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
     } else {
-      _current_node.delete( _layout );
+      _current_node.delete();
     }
+    _connections.node_deleted( _current_node );
     _current_node.mode = NodeMode.NONE;
     _current_node = null;
     queue_draw();
@@ -1372,24 +1519,38 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the backspace character is entered in the drawing area */
   private void handle_backspace() {
     if( is_mode_edit() ) {
-      _current_node.edit_backspace( _layout );
+      _current_node.edit_backspace();
       queue_draw();
       changed();
     } else if( is_mode_selected() ) {
-      delete_node();
-      _current_node = null;
+      Node? next;
+      if( ((next = sibling_node( 1 )) == null) && ((next = sibling_node( -1 )) == null) && _current_node.is_root() ) {
+        delete_node();
+      } else {
+        if( next == null ) {
+          next = _current_node.parent;
+        }
+        delete_node();
+        if( select_node( next ) ) {
+          queue_draw();
+        }
+      }
+    } else if( is_connection_selected() ) {
+      delete_connection();
     }
   }
 
   /* Called whenever the delete character is entered in the drawing area */
   private void handle_delete() {
     if( is_mode_edit() ) {
-      _current_node.edit_delete( _layout );
+      _current_node.edit_delete();
       queue_draw();
       changed();
     } else if( is_mode_selected() ) {
+      // FOOBAR
       delete_node();
-      _current_node = null;
+    } else if( is_connection_selected() ) {
+      delete_connection();
     }
   }
 
@@ -1399,7 +1560,7 @@ public class DrawArea : Gtk.DrawingArea {
       _im_context.reset();
       _current_node.mode = NodeMode.CURRENT;
       _current_node.name = _orig_name;
-      _layout.handle_update_by_edit( _current_node );
+      _current_node.layout.handle_update_by_edit( _current_node );
       queue_draw();
       changed();
     }
@@ -1407,12 +1568,13 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a new root node to the canvas */
   public void add_root_node() {
-    var node = new Node.with_name( this, _( "Another Idea" ), _layout );
+    var node = new Node.with_name( this, _( "Another Idea" ), _nodes.index( 0 ).layout );
+    node.style = StyleInspector.styles.get_global_style();
     if (_nodes.length == 0) {
       node.posx = (get_allocated_width()  / 2) - 30;
       node.posy = (get_allocated_height() / 2) - 10;
     } else {
-      _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+      _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
     }
     _nodes.append_val( node );
     if( select_node( node ) ) {
@@ -1426,11 +1588,13 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a new sibling node to the current node */
   public void add_sibling_node() {
-    var node = new Node( this, _layout );
+    var node = new Node( this, layouts.get_default() );
     _orig_name = "";
     _current_node.mode = NodeMode.NONE;
     node.side          = _current_node.side;
-    node.attach( _current_node.parent, (_current_node.index() + 1), _theme, _layout );
+    node.style         = _current_node.style;
+    node.style         = StyleInspector.styles.get_style_for_level( _current_node.get_level() );
+    node.attach( _current_node.parent, (_current_node.index() + 1), _theme );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     if( select_node( node ) ) {
       node.mode = NodeMode.EDITABLE;
@@ -1454,6 +1618,16 @@ public class DrawArea : Gtk.DrawingArea {
       add_sibling_node();
     } else {
       add_root_node();
+    }
+  }
+
+  /* Called whenever the user hits a Control-Return key.  Causes a newline to be inserted */
+  private void handle_control_return() {
+    if( is_mode_edit() ) {
+      _current_node.edit_insert( "\n" );
+      see();
+      node_changed();
+      queue_draw();
     }
   }
 
@@ -1482,7 +1656,7 @@ public class DrawArea : Gtk.DrawingArea {
     Node     parent = _current_node.parent;
     int      index  = _current_node.index();
     NodeSide side   = _current_node.side;
-    _current_node.detach( side, _layout );
+    _current_node.detach( side );
     add_root( _current_node, -1 );
     undo_buffer.add_item( new UndoNodeDetach( _current_node, (int)_nodes.length, parent, side, index ) );
     queue_draw();
@@ -1491,20 +1665,20 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Balances the existing nodes based on the current layout */
   public void balance_nodes( bool undoable = true ) {
+    Node? root_node = (_current_node == null) ? null : _current_node.get_root();
     if( undoable ) {
-      undo_buffer.add_item( new UndoNodeBalance( this ) );
+      undo_buffer.add_item( new UndoNodeBalance( this, root_node ) );
     }
     if( (_current_node == null) || !undoable ) {
       animator.add_nodes( "balance nodes" );
       for( int i=0; i<_nodes.length; i++ ) {
         var partitioner = new Partitioner();
-        partitioner.partition_node( _nodes.index( i ), _layout );
+        partitioner.partition_node( _nodes.index( i ) );
       }
     } else {
-      Node current_root = _current_node.get_root();
-      animator.add_node( current_root, "balance tree" );
+      animator.add_node( root_node, "balance tree" );
       var partitioner = new Partitioner();
-      partitioner.partition_node( current_root, _layout );
+      partitioner.partition_node( root_node );
     }
     animator.animate();
     grab_focus();
@@ -1536,7 +1710,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
     if( changes.length > 0 ) {
       for( int i=0; i<changes.length; i++ ) {
-        _layout.handle_update_by_fold( changes.index( i ) );
+        changes.index( i ).layout.handle_update_by_fold( changes.index( i ) );
       }
       undo_buffer.add_item( new UndoNodeFoldChanges( _( "fold completed tasks" ), changes, true ) );
       queue_draw();
@@ -1571,7 +1745,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
     if( changes.length > 0 ) {
       for( int i=0; i<changes.length; i++ ) {
-        _layout.handle_update_by_fold( changes.index( i ) );
+        changes.index( i ).layout.handle_update_by_fold( changes.index( i ) );
       }
       undo_buffer.add_item( new UndoNodeFoldChanges( _( "unfold all tasks" ), changes, false ) );
       queue_draw();
@@ -1582,16 +1756,22 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a child node to the current node */
   public void add_child_node() {
-    var node = new Node( this, _layout );
+    var node = new Node( this, layouts.get_default() );
     _orig_name = "";
     if( !_current_node.is_root() ) {
       node.side = _current_node.side;
     }
+    if( _current_node.children().length > 0 ) {
+      node.style = _current_node.last_child().style;
+    } else {
+      node.style = _current_node.style;
+    }
+    node.style = StyleInspector.styles.get_style_for_level( _current_node.get_level() + 1 );
     _current_node.mode   = NodeMode.NONE;
-    node.attach( _current_node, -1, _theme, _layout );
+    node.attach( _current_node, -1, _theme );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     _current_node.folded = false;
-    _layout.handle_update_by_fold( _current_node );
+    _current_node.layout.handle_update_by_fold( _current_node );
     if( select_node( node ) ) {
       node.mode = NodeMode.EDITABLE;
       queue_draw();
@@ -1614,10 +1794,27 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Called whenever the right key is entered in the drawing area */
-  private void handle_right() {
+  /*
+   Called whenever the Control-Tab key combo is entered.  Causes a tabe character
+   to be inserted into the title.
+  */
+  private void handle_control_tab() {
     if( is_mode_edit() ) {
-      _current_node.move_cursor( 1 );
+      _current_node.edit_insert( "\t" );
+      see();
+      node_changed();
+      queue_draw();
+    }
+  }
+
+  /* Called whenever the right key is entered in the drawing area */
+  private void handle_right( bool shift ) {
+    if( is_mode_edit() ) {
+      if( shift ) {
+        _current_node.selection_by_char( 1 );
+      } else {
+        _current_node.move_cursor( 1 );
+      }
       queue_draw();
     } else if( is_mode_selected() ) {
       Node? next;
@@ -1637,10 +1834,29 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Called whenever the left key is entered in the drawing area */
-  private void handle_left() {
+  /*
+   Called whenever the Control-right key combo is entered.  Moves the cursor
+   one word to the right.
+  */
+  private void handle_control_right( bool shift ) {
     if( is_mode_edit() ) {
-      _current_node.move_cursor( -1 );
+      if( shift ) {
+        _current_node.selection_by_word( 1 );
+      } else {
+        _current_node.move_cursor_by_word( 1 );
+      }
+      queue_draw();
+    }
+  }
+
+  /* Called whenever the left key is entered in the drawing area */
+  private void handle_left( bool shift ) {
+    if( is_mode_edit() ) {
+      if( shift ) {
+        _current_node.selection_by_char( -1 );
+      } else {
+        _current_node.move_cursor( -1 );
+      }
       queue_draw();
     } else if( is_mode_selected() ) {
       Node? next;
@@ -1657,6 +1873,37 @@ public class DrawArea : Gtk.DrawingArea {
       if( select_node( next ) ) {
         queue_draw();
       }
+    }
+  }
+
+  /*
+   If Control is used, jumps the cursor to the end of the previous word.  If Control-Shift
+   is used, adds the previous word to the selection.
+  */
+  private void handle_control_left( bool shift ) {
+    if( is_mode_edit() ) {
+      if( shift ) {
+        _current_node.selection_by_word( -1 );
+      } else {
+        _current_node.move_cursor_by_word( -1 );
+      }
+      queue_draw();
+    }
+  }
+
+  /* Selects all of the text in the current node */
+  private void handle_control_slash() {
+    if( is_mode_edit() ) {
+      _current_node.set_cursor_all( false );
+      queue_draw();
+    }
+  }
+
+  /* Deselects all of the text in the current node */
+  private void handle_control_backslash() {
+    if( is_mode_edit() ) {
+      _current_node.set_cursor_none();
+      queue_draw();
     }
   }
 
@@ -1677,9 +1924,13 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Called whenever the up key is entered in the drawing area */
-  private void handle_up() {
+  private void handle_up( bool shift ) {
     if( is_mode_edit() ) {
-      _current_node.move_cursor_vertically( -1 );
+      if( shift ) {
+        _current_node.selection_vertically( -1 );
+      } else {
+        _current_node.move_cursor_vertically( -1 );
+      }
       queue_draw();
     } else if( is_mode_selected() ) {
       if( _current_node.is_root() ) {
@@ -1707,10 +1958,29 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Called whenever the down key is entered in the drawing area */
-  private void handle_down() {
+  /*
+   If the Control key is used, jumps the cursor to the beginning of the text.  If Control-Shift
+   is used, selects everything from the beginnning of the string to the cursor position.
+  */
+  private void handle_control_up( bool shift ) {
     if( is_mode_edit() ) {
-      _current_node.move_cursor_vertically( 1 );
+      if( shift ) {
+        _current_node.selection_to_start();
+      } else {
+        _current_node.move_cursor_to_start();
+      }
+      queue_draw();
+    }
+  }
+
+  /* Called whenever the down key is entered in the drawing area */
+  private void handle_down( bool shift ) {
+    if( is_mode_edit() ) {
+      if( shift ) {
+        _current_node.selection_vertically( 1 );
+      } else {
+        _current_node.move_cursor_vertically( 1 );
+      }
       queue_draw();
     } else if( is_mode_selected() ) {
       if( _current_node.is_root() ) {
@@ -1735,6 +2005,21 @@ public class DrawArea : Gtk.DrawingArea {
           queue_draw();
         }
       }
+    }
+  }
+
+  /*
+   If the Control key is used, jumps the cursor to the end of the text.  If Control-Shift is
+   used, selects all text from the current cursor position to the end of the string.
+  */
+  private void handle_control_down( bool shift ) {
+    if( is_mode_edit() ) {
+      if( shift ) {
+        _current_node.selection_to_end();
+      } else {
+        _current_node.move_cursor_to_end();
+      }
+      queue_draw();
     }
   }
 
@@ -1776,7 +2061,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_printable( string str ) {
     if( str.get_char( 0 ).isprint() ) {
       if( is_mode_edit() ) {
-        _current_node.edit_insert( str, _layout );
+        _current_node.edit_insert( str );
         see();
         queue_draw();
         changed();
@@ -1829,32 +2114,40 @@ public class DrawArea : Gtk.DrawingArea {
     var shift   = (bool) e.state & ModifierType.SHIFT_MASK;
     var nomod   = !(control || shift);
 
-    /* If there is a current node selected, operate on it */
-    if( _current_node != null ) {
+    /* If there is a current node or connection selected, operate on it */
+    if( (_current_node != null) || (_current_connection != null) ) {
       if( control ) {
         switch( e.keyval ) {
-          case 99  :  do_copy();   break;
-          case 120 :  do_cut();    break;
-          case 118 :  do_paste();  break;
+          case 99    :  do_copy();   break;
+          case 120   :  do_cut();    break;
+          case 118   :  do_paste();  break;
+          case 65293 :  handle_control_return();        break;
+          case 65289 :  handle_control_tab();           break;
+          case 65363 :  handle_control_right( shift );  break;
+          case 65361 :  handle_control_left( shift );   break;
+          case 65362 :  handle_control_up( shift );     break;
+          case 65364 :  handle_control_down( shift );   break;
+          case 47    :  handle_control_slash();         break;
+          case 92    :  handle_control_backslash();     break;
         }
       } else if( nomod || shift ) {
         if( _im_context.filter_keypress( e ) ) {
           return( true );
         }
         switch( e.keyval ) {
-          case 65288 :  handle_backspace();  break;
-          case 65535 :  handle_delete();     break;
-          case 65307 :  handle_escape();     break;
-          case 65293 :  handle_return();     break;
-          case 65289 :  handle_tab();        break;
-          case 65363 :  handle_right();      break;
-          case 65361 :  handle_left();       break;
-          case 65360 :  handle_home();       break;
-          case 65367 :  handle_end();        break;
-          case 65362 :  handle_up();         break;
-          case 65364 :  handle_down();       break;
-          case 65365 :  handle_pageup();     break;
-          case 65366 :  handle_pagedn();     break;
+          case 65288 :  handle_backspace();    break;
+          case 65535 :  handle_delete();       break;
+          case 65307 :  handle_escape();       break;
+          case 65293 :  handle_return();       break;
+          case 65289 :  handle_tab();          break;
+          case 65363 :  handle_right( shift ); break;
+          case 65361 :  handle_left( shift );  break;
+          case 65360 :  handle_home();         break;
+          case 65367 :  handle_end();          break;
+          case 65362 :  handle_up( shift );    break;
+          case 65364 :  handle_down( shift );  break;
+          case 65365 :  handle_pageup();       break;
+          case 65366 :  handle_pagedn();       break;
           default :
             //if( !e.str.get_char( 0 ).isprint() ) {
             //  stdout.printf( "In on_keypress, keyval: %s\n", e.keyval.to_string() );
@@ -1930,7 +2223,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
     } else {
-      _current_node.delete( _layout );
+      _current_node.delete();
     }
     _current_node.mode = NodeMode.NONE;
     _current_node      = null;
@@ -1942,7 +2235,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Cuts the current selected text to the clipboard */
   private void cut_selected_text() {
     copy_selected_text();
-    _current_node.edit_insert( "", _layout );
+    _current_node.edit_insert( "" );
     queue_draw();
     changed();
   }
@@ -1964,20 +2257,20 @@ public class DrawArea : Gtk.DrawingArea {
     if( node_clipboard == null ) return;
     Node node = new Node.copy_tree( node_clipboard, image_manager );
     if( _current_node == null ) {
-      _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+      _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
       add_root( node, -1 );
     } else {
       if( _current_node.is_root() ) {
         uint num_children = _current_node.children().length;
         if( num_children > 0 ) {
           node.side = _current_node.children().index( num_children - 1 ).side;
-          _layout.propagate_side( node, node.side );
+          node.layout.propagate_side( node, node.side );
         }
       } else {
         node.side = _current_node.side;
-        _layout.propagate_side( node, node.side );
+        node.layout.propagate_side( node, node.side );
       }
-      node.attach( _current_node, -1, _theme, _layout );
+      node.attach( _current_node, -1, _theme );
     }
     undo_buffer.add_item( new UndoNodePaste( node ) );
     queue_draw();
@@ -1990,7 +2283,7 @@ public class DrawArea : Gtk.DrawingArea {
     var clipboard = Clipboard.get_default( get_display() );
     string? value = clipboard.wait_for_text();
     if( value != null ) {
-      _current_node.edit_insert( value, _layout );
+      _current_node.edit_insert( value );
       queue_draw();
       changed();
     }
@@ -2090,9 +2383,9 @@ public class DrawArea : Gtk.DrawingArea {
       foreach (var uri in data.get_uris()) {
         var image = new NodeImage.from_uri( image_manager, uri, 200 );
         if( image.valid ) {
-          var node = new Node.with_name( this, _( "Another Idea" ), _layout );
+          var node = new Node.with_name( this, _( "Another Idea" ), layouts.get_default() );
           node.set_image( image_manager, image );
-          _layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+          _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
           _nodes.append_val( node );
           if( select_node( node ) ) {
             node.mode = NodeMode.EDITABLE;
@@ -2116,7 +2409,7 @@ public class DrawArea : Gtk.DrawingArea {
         var orig_image = _attach_node.get_image();
         _attach_node.set_image( image_manager, image );
         undo_buffer.add_item( new UndoNodeImage( _attach_node, orig_image ) );
-        _layout.handle_update_by_edit( _attach_node );
+        _attach_node.layout.handle_update_by_edit( _attach_node );
         _attach_node.mode = NodeMode.NONE;
         _attach_node      = null;
         Gtk.drag_finish( ctx, true, false, t );
@@ -2136,13 +2429,54 @@ public class DrawArea : Gtk.DrawingArea {
       var orig_image = _current_node.get_image();
       _current_node.set_image( image_manager, image );
       undo_buffer.add_item( new UndoNodeImage( _current_node, orig_image ) );
-      _layout.handle_update_by_edit( _current_node );
+      _current_node.layout.handle_update_by_edit( _current_node );
       queue_draw();
       node_changed();
       auto_save();
       return( true );
     }
     return( false );
+  }
+
+  /* Starts a connection from the current node */
+  public void start_connection() {
+    if( _current_node == null ) return;
+    _current_connection      = new Connection( _current_node );
+    _current_connection.mode = ConnMode.CONNECTING;
+  }
+
+  /* Called when a connection is being drawn by moving the mouse */
+  public void update_connection( double x, double y ) {
+    if( _current_connection == null ) return;
+    _current_connection.draw_to( x, y );
+    queue_draw();
+  }
+
+  /* Ends a connection at the given node */
+  public void end_connection( Node n ) {
+    if( _current_connection == null ) return;
+    _current_connection.connect_to( n );
+    _connections.add_connection( _current_connection );
+    undo_buffer.add_item( new UndoConnectionChange( _( "add connection" ), null, _current_connection ) );
+    _current_connection = null;
+    changed();
+    queue_draw();
+  }
+
+  /* Deletes the current connection */
+  public void delete_connection() {
+    if( _current_connection == null ) return;
+    var orig_connection = new Connection.from_connection( _current_connection );
+    _connections.remove_connection( _current_connection );
+    _current_connection = null;
+    undo_buffer.add_item( new UndoConnectionChange( _( "delete connection" ), orig_connection, null ) );
+    changed();
+    queue_draw();
+  }
+
+  /* Returns true if the current connection is in the selected state */
+  public bool is_connection_selected() {
+    return( (_current_connection != null) && (_current_connection.mode == ConnMode.SELECTED) );
   }
 
 }

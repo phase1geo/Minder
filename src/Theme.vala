@@ -39,6 +39,7 @@ public class Theme : Object {
   public    RGBA   textsel_foreground { protected set; get; }
   public    RGBA   text_cursor        { protected set; get; }
   public    RGBA   attachable_color   { protected set; get; }
+  public    RGBA   connection_color   { protected set; get; }
   public    bool   prefer_dark        { protected set; get; }
 
   public int index {

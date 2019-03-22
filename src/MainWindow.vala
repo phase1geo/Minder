@@ -69,7 +69,8 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_selected", action_zoom_selected },
     { "action_zoom_actual",   action_zoom_actual },
     { "action_export",        action_export },
-    { "action_print",         action_print }
+    { "action_print",         action_print },
+    { "action_sidebar",       action_sidebar }
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -106,15 +107,20 @@ public class MainWindow : ApplicationWindow {
     destroy.connect( Gtk.main_quit );
 
     /* Set the stage for menu actions */
+    /*
     var actions = new SimpleActionGroup ();
     actions.add_action_entries( action_entries, this );
     insert_action_group( "win", actions );
+    */
+
+    AccelGroup accel_group = new Gtk.AccelGroup();
+    this.add_accel_group( accel_group );
 
     /* Add keyboard shortcuts */
     add_keyboard_shortcuts( app );
 
     /* Create and pack the canvas */
-    _canvas = new DrawArea();
+    _canvas = new DrawArea( accel_group );
     _canvas.node_changed.connect( on_node_changed );
     _canvas.scale_changed.connect( change_scale );
     _canvas.show_properties.connect( show_properties );
@@ -128,6 +134,7 @@ public class MainWindow : ApplicationWindow {
       ? new Button.from_icon_name( "document-new", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-new-symbolic" );
     new_btn.set_tooltip_markup( _( "New File   <i>(Control-N)</i>" ) );
+    new_btn.add_accelerator( "clicked", accel_group, 'n', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
 
@@ -135,6 +142,7 @@ public class MainWindow : ApplicationWindow {
       ? new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-open-symbolic" );
     open_btn.set_tooltip_markup( _( "Open File   <i>(Control-O)</i>" ) );
+    open_btn.add_accelerator( "clicked", accel_group, 'o', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
@@ -142,6 +150,7 @@ public class MainWindow : ApplicationWindow {
       ? new Button.from_icon_name( "document-save-as", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-save-as-symbolic" );
     save_btn.set_tooltip_markup( _( "Save File As   <i>(Control-Shift-S)</i>" ) );
+    open_btn.add_accelerator( "clicked", accel_group, 'S', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
@@ -150,6 +159,7 @@ public class MainWindow : ApplicationWindow {
       : new Button.from_icon_name( "edit-undo-symbolic" );
     _undo_btn.set_tooltip_markup( _( "Undo   <i>(Control-Z)</i>" ) );
     _undo_btn.set_sensitive( false );
+    _undo_btn.add_accelerator( "clicked", accel_group, 'z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _undo_btn.clicked.connect( do_undo );
     _header.pack_start( _undo_btn );
 
@@ -158,14 +168,15 @@ public class MainWindow : ApplicationWindow {
       : new Button.from_icon_name( "edit-redo-symbolic" );
     _redo_btn.set_tooltip_markup( _( "Redo   <i>(Control-Shift-Z)</i>" ) );
     _redo_btn.set_sensitive( false );
+    _redo_btn.add_accelerator( "clicked", accel_group, 'Z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _redo_btn.clicked.connect( do_redo );
     _header.pack_start( _redo_btn );
 
     /* Add the buttons on the right side in the reverse order */
-    add_property_button();
-    add_export_button();
-    add_search_button();
-    add_zoom_button();
+    add_property_button( accel_group );
+    add_export_button( accel_group );
+    add_search_button( accel_group );
+    add_zoom_button( accel_group );
 
     /* Create the horizontal box that will contain the canvas and the properties sidebar */
     var hbox = new Box( Orientation.HORIZONTAL, 0 );
@@ -191,23 +202,24 @@ public class MainWindow : ApplicationWindow {
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
 
-    app.set_accels_for_action( "win.action_new",         { "<Control>n" } );
-    app.set_accels_for_action( "win.action_open",        { "<Control>o" } );
+    // app.set_accels_for_action( "win.action_new",         { "<Control>n" } );
+    // app.set_accels_for_action( "win.action_open",        { "<Control>o" } );
     app.set_accels_for_action( "win.action_save",        { "<Control>s" } );
-    app.set_accels_for_action( "win.action_save_as",     { "<Control><Shift>s" } );
-    app.set_accels_for_action( "win.action_undo",        { "<Control>z" } );
-    app.set_accels_for_action( "win.action_redo",        { "<Control><Shift>z" } );
-    app.set_accels_for_action( "win.action_search",      { "<Control>f" } );
+    // app.set_accels_for_action( "win.action_save_as",     { "<Control><Shift>s" } );
+    // app.set_accels_for_action( "win.action_undo",        { "<Control>z" } );
+    // app.set_accels_for_action( "win.action_redo",        { "<Control><Shift>z" } );
+    // app.set_accels_for_action( "win.action_search",      { "<Control>f" } );
     app.set_accels_for_action( "win.action_quit",        { "<Control>q" } );
-    app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
-    app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
-    app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
-    app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
+    // app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
+    // app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
+    // app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
+    // app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
+    // app.set_accels_for_action( "win.action_sidebar",     { "<Control>bar"} );
 
   }
 
   /* Adds the zoom functionality */
-  private void add_zoom_button() {
+  private void add_zoom_button( AccelGroup accel_group ) {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
@@ -224,7 +236,8 @@ public class MainWindow : ApplicationWindow {
     var scale_lbl = new Label( _( "Zoom to Percent" ) );
     _zoom_scale   = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 );
     foreach (double mark in marks) {
-      _zoom_scale.add_mark( mark, PositionType.BOTTOM, "'" );
+      // _zoom_scale.add_mark( mark, PositionType.BOTTOM, "'" );
+      _zoom_scale.add_mark( mark, PositionType.BOTTOM, null );
     }
     _zoom_scale.has_origin = false;
     _zoom_scale.set_value( 100 );
@@ -233,24 +246,27 @@ public class MainWindow : ApplicationWindow {
 
     _zoom_in = new ModelButton();
     _zoom_in.text = _( "Zoom In" );
-    _zoom_in.action_name = "win.action_zoom_in";
+    _zoom_in.add_accelerator( "clicked", accel_group, '+', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _zoom_in.clicked.connect( action_zoom_in );
 
     _zoom_out = new ModelButton();
     _zoom_out.text = _( "Zoom Out" );
-    _zoom_out.action_name = "win.action_zoom_out";
+    _zoom_out.add_accelerator( "clicked", accel_group, '-', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _zoom_out.clicked.connect( action_zoom_out );
 
     var fit = new ModelButton();
     fit.text = _( "Zoom to Fit" );
-    fit.action_name = "win.action_zoom_fit";
+    fit.clicked.connect( action_zoom_fit );
 
     _zoom_sel = new ModelButton();
     _zoom_sel.text = _( "Zoom to Fit Selected Node" );
-    _zoom_sel.action_name = "win.action_zoom_selected";
     _zoom_sel.set_sensitive( false );
+    _zoom_sel.clicked.connect( action_zoom_selected );
 
     var actual = new ModelButton();
     actual.text = _( "Zoom to Actual Size" );
-    actual.action_name = "win.action_zoom_actual";
+    actual.add_accelerator( "clicked", accel_group, '0', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    actual.clicked.connect( action_zoom_actual );
 
     box.margin = 5;
     box.pack_start( scale_lbl,   false, true );
@@ -271,7 +287,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the search functionality */
-  private void add_search_button() {
+  private void add_search_button( AccelGroup accel_group ) {
 
     /* Create the menu button */
     _search_btn = new MenuButton();
@@ -279,6 +295,7 @@ public class MainWindow : ApplicationWindow {
       ? new Image.from_icon_name( "edit-find", IconSize.LARGE_TOOLBAR )
       : new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
     _search_btn.set_tooltip_markup( _( "Search   <i>(Control-F)</i>" ) );
+    _search_btn.add_accelerator( "clicked", accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _search_btn.clicked.connect( on_search_change );
     _header.pack_end( _search_btn );
 
@@ -400,7 +417,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the export functionality */
-  private void add_export_button() {
+  private void add_export_button( AccelGroup accel_group ) {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
@@ -419,8 +436,9 @@ public class MainWindow : ApplicationWindow {
 
     var print = new ModelButton();
     print.text = _( "Print" );
-    print.action_name = "win.action_print";
     print.set_sensitive( false );
+    print.add_accelerator( "activate", accel_group, 'p', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    print.activate.connect( action_print );
 
     box.margin = 5;
     box.pack_start( export, false, true );
@@ -436,7 +454,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the property functionality */
-  private void add_property_button() {
+  private void add_property_button( AccelGroup accel_group ) {
 
     /* Add the menubutton */
     _prop_show = on_elementary
@@ -448,6 +466,7 @@ public class MainWindow : ApplicationWindow {
     _prop_btn  = new Button();
     _prop_btn.image = _prop_show;
     _prop_btn.set_tooltip_text( _( "Properties" ) );
+    _prop_btn.add_accelerator( "clicked", accel_group, '|', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _prop_btn.clicked.connect( inspector_clicked );
     _header.pack_end( _prop_btn );
 
@@ -461,6 +480,7 @@ public class MainWindow : ApplicationWindow {
     _stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
     _stack.set_transition_duration( 500 );
     _stack.add_titled( _node_inspector, "node", _("Node") );
+    _stack.add_titled( new StyleInspector( _canvas ), "style", _("Style") );
     _stack.add_titled( new MapInspector( _canvas, _settings ),  "map",  _("Map") );
 
     /* If the stack switcher is clicked, save off which tab is in view */
@@ -468,6 +488,7 @@ public class MainWindow : ApplicationWindow {
       if( ps.name == "visible-child" ) {
         _settings.set_boolean( "node-properties-shown", (_stack.visible_child_name == "node") );
         _settings.set_boolean( "map-properties-shown",  (_stack.visible_child_name == "map") );
+        _settings.set_boolean( "style-properties-shown", (_stack.visible_child_name == "style" ) );
       }
     });
 
@@ -489,6 +510,8 @@ public class MainWindow : ApplicationWindow {
       show_properties( "node", false );
     } else if( _settings.get_boolean( "map-properties-shown" ) ) {
       show_properties( "map", false );
+    } else if( _settings.get_boolean( "style-properties-shown" ) ) {
+      show_properties( "style", false );
     }
 
   }
@@ -756,8 +779,9 @@ public class MainWindow : ApplicationWindow {
     if( !_inspector.reveal_child ) return;
     _prop_btn.image = _prop_show;
     _inspector.reveal_child = false;
-    _settings.set_boolean( "node-properties-shown", false );
-    _settings.set_boolean( "map-properties-shown",  false );
+    _settings.set_boolean( "node-properties-shown",  false );
+    _settings.set_boolean( "map-properties-shown",   false );
+    _settings.set_boolean( "style-properties-shown", false );
   }
 
   /* Converts the given value from the scale to the zoom value to use */
@@ -933,6 +957,12 @@ public class MainWindow : ApplicationWindow {
     md_filter.add_pattern( "*.markdown" );
     dialog.add_filter( md_filter );
 
+    /* Mermaid */
+    FileFilter mmd_filter = new FileFilter();
+    mmd_filter.set_filter_name( _( "Mermaid" ) );
+    mmd_filter.add_pattern( "*.mmd" );
+    dialog.add_filter( mmd_filter );
+
     /* OPML */
     FileFilter opml_filter = new FileFilter();
     opml_filter.set_filter_name( _( "OPML" ) );
@@ -982,6 +1012,8 @@ public class MainWindow : ApplicationWindow {
         ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", _canvas );
       } else if( md_filter == filter ) {
         ExportMarkdown.export( repair_filename( fname, {".md", ".markdown"} ), _canvas );
+      } else if( mmd_filter == filter ) {
+        ExportMermaid.export( repair_filename( fname, {".mmd"} ), _canvas );
       } else if( opml_filter == filter ) {
         ExportOPML.export( repair_filename( fname, {".opml"} ), _canvas );
       } else if( pdf_filter == filter ) {
@@ -1019,6 +1051,11 @@ public class MainWindow : ApplicationWindow {
   private void action_print() {
     var print = new ExportPrint();
     print.print( _canvas, this );
+  }
+
+  /* Displays or hides the sidebar */
+  private void action_sidebar() {
+    inspector_clicked();
   }
 
 }
