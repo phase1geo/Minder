@@ -105,9 +105,11 @@ public class MainWindow : ApplicationWindow {
     destroy.connect( Gtk.main_quit );
 
     /* Set the stage for menu actions */
+    /*
     var actions = new SimpleActionGroup ();
     actions.add_action_entries( action_entries, this );
     insert_action_group( "win", actions );
+    */
 
     AccelGroup accel_group = new Gtk.AccelGroup();
     this.add_accel_group( accel_group );
@@ -160,9 +162,9 @@ public class MainWindow : ApplicationWindow {
 
     /* Add the buttons on the right side in the reverse order */
     add_property_button( accel_group );
-    add_export_button();
+    add_export_button( accel_group );
     add_search_button( accel_group );
-    add_zoom_button();
+    add_zoom_button( accel_group );
 
     /* Create the horizontal box that will contain the canvas and the properties sidebar */
     var hbox = new Box( Orientation.HORIZONTAL, 0 );
@@ -196,16 +198,16 @@ public class MainWindow : ApplicationWindow {
     // app.set_accels_for_action( "win.action_redo",        { "<Control><Shift>z" } );
     // app.set_accels_for_action( "win.action_search",      { "<Control>f" } );
     app.set_accels_for_action( "win.action_quit",        { "<Control>q" } );
-    app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
-    app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
-    app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
-    app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
+    // app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
+    // app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
+    // app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
+    // app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
     // app.set_accels_for_action( "win.action_sidebar",     { "<Control>bar"} );
 
   }
 
   /* Adds the zoom functionality */
-  private void add_zoom_button() {
+  private void add_zoom_button( AccelGroup accel_group ) {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
@@ -230,24 +232,27 @@ public class MainWindow : ApplicationWindow {
 
     _zoom_in = new ModelButton();
     _zoom_in.text = _( "Zoom In" );
-    _zoom_in.action_name = "win.action_zoom_in";
+    _zoom_in.add_accelerator( "clicked", accel_group, '+', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _zoom_in.clicked.connect( action_zoom_in );
 
     _zoom_out = new ModelButton();
     _zoom_out.text = _( "Zoom Out" );
-    _zoom_out.action_name = "win.action_zoom_out";
+    _zoom_out.add_accelerator( "clicked", accel_group, '-', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _zoom_out.clicked.connect( action_zoom_out );
 
     var fit = new ModelButton();
     fit.text = _( "Zoom to Fit" );
-    fit.action_name = "win.action_zoom_fit";
+    fit.clicked.connect( action_zoom_fit );
 
     _zoom_sel = new ModelButton();
     _zoom_sel.text = _( "Zoom to Fit Selected Node" );
-    _zoom_sel.action_name = "win.action_zoom_selected";
     _zoom_sel.set_sensitive( false );
+    _zoom_sel.clicked.connect( action_zoom_selected );
 
     var actual = new ModelButton();
     actual.text = _( "Zoom to Actual Size" );
-    actual.action_name = "win.action_zoom_actual";
+    actual.add_accelerator( "clicked", accel_group, '0', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    actual.clicked.connect( action_zoom_actual );
 
     box.margin = 5;
     box.pack_start( scale_lbl,   false, true );
@@ -396,7 +401,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the export functionality */
-  private void add_export_button() {
+  private void add_export_button( AccelGroup accel_group ) {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
@@ -413,8 +418,9 @@ public class MainWindow : ApplicationWindow {
 
     var print = new ModelButton();
     print.text = _( "Print" );
-    print.action_name = "win.action_print";
     print.set_sensitive( false );
+    print.add_accelerator( "activate", accel_group, 'p', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    print.activate.connect( action_print );
 
     box.margin = 5;
     box.pack_start( export, false, true );

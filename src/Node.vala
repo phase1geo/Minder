@@ -1718,12 +1718,16 @@ public class Node : Object {
     /* Draw the fill */
     style.draw_fill( ctx, x, y, w, h, side );
 
-    /* Draw the border */
-    set_context_color_with_alpha( ctx, border_color, (motion ? 0.2 : 1) );
-    ctx.set_line_width( style.node_borderwidth );
+    if( !is_root() || style.is_fillable() ) {
 
-    /* If we are in a vertical orientation and the border type is underlined, draw nothing */
-    style.draw_border( ctx, x, y, w, h, side );
+      /* Draw the border */
+      set_context_color_with_alpha( ctx, border_color, (motion ? 0.2 : 1) );
+      ctx.set_line_width( style.node_borderwidth );
+
+      /* If we are in a vertical orientation and the border type is underlined, draw nothing */
+      style.draw_border( ctx, x, y, w, h, side );
+
+    }
 
   }
 

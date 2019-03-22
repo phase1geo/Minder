@@ -1359,7 +1359,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Returns true if we are in some sort of edit mode */
-  private bool is_mode_edit() {
+  public bool is_mode_edit() {
     return( (_current_node != null) && (_current_node.mode == NodeMode.EDITABLE) );
   }
 

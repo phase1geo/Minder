@@ -255,12 +255,16 @@ public class DrawAreaMenu : Gtk.Menu {
 
   /* Deletes the current node */
   private void delete_node() {
-    _da.delete_node();
+    if( !_da.is_mode_edit() ) {
+      _da.delete_node();
+    }
   }
 
   /* Displays the sidebar to edit the node properties */
   private void edit_node() {
-    _da.show_properties( "node", false );
+    if( !_da.is_mode_edit() ) {
+      _da.show_properties( "node", false );
+    }
   }
 
   /* Changes the task status of the currently selected node */
@@ -300,8 +304,10 @@ public class DrawAreaMenu : Gtk.Menu {
 
   /* Fold the currently selected node */
   private void fold_node() {
-    _da.change_current_fold( !node_is_folded() );
-    _da.node_changed();
+    if( !_da.is_mode_edit() ) {
+      _da.change_current_fold( !node_is_folded() );
+      _da.node_changed();
+    }
   }
 
   /* Creates a new root node */
@@ -311,12 +317,12 @@ public class DrawAreaMenu : Gtk.Menu {
 
   /* Creates a new child node from the current node */
   private void add_child_node() {
-    _da.add_child_node();
+    _da.handle_tab();
   }
 
   /* Creates a sibling node of the current node */
   private void add_sibling_node() {
-    _da.add_sibling_node();
+    _da.handle_return();
   }
 
   /* Detaches the currently selected node and make it a root node */
@@ -326,32 +332,44 @@ public class DrawAreaMenu : Gtk.Menu {
 
   /* Selects the current root node */
   private void select_root_node() {
-    _da.select_root_node();
+    if( !_da.is_mode_edit() ) {
+      _da.select_root_node();
+    }
   }
 
   /* Selects the next sibling node of the current node */
   private void select_next_sibling_node() {
-    _da.select_sibling_node( 1 );
+    if( !_da.is_mode_edit() ) {
+      _da.select_sibling_node( 1 );
+    }
   }
 
   /* Selects the previous sibling node of the current node */
   private void select_previous_sibling_node() {
-    _da.select_sibling_node( -1 );
+    if( !_da.is_mode_edit() ) {
+      _da.select_sibling_node( -1 );
+    }
   }
 
   /* Selects the first child node of the current node */
   private void select_first_child_node() {
-    _da.select_first_child_node();
+    if( !_da.is_mode_edit() ) {
+      _da.select_first_child_node();
+    }
   }
 
   /* Selects the parent node of the current node */
   private void select_parent_node() {
-    _da.select_parent_node();
+    if( !_da.is_mode_edit() ) {
+      _da.select_parent_node();
+    }
   }
 
   /* Centers the current node */
   private void center_current_node() {
-    _da.center_current_node();
+    if( !_da.is_mode_edit() ) {
+      _da.center_current_node();
+    }
   }
 
 }
