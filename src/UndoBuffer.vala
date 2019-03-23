@@ -62,6 +62,7 @@ public class UndoBuffer : Object {
       _redo_buffer.append_val( item );
       buffer_changed();
     }
+    output( "AFTER UNDO" );
   }
 
   /* Performs the next redo action in the buffer */
@@ -73,6 +74,7 @@ public class UndoBuffer : Object {
       _undo_buffer.append_val( item );
       buffer_changed();
     }
+    output( "AFTER REDO" );
   }
 
   /* Returns the undo tooltip */
@@ -92,6 +94,19 @@ public class UndoBuffer : Object {
     _undo_buffer.append_val( item );
     _redo_buffer.remove_range( 0, _redo_buffer.length );
     buffer_changed();
+    output( "ITEM ADDED" );
+  }
+
+  /* Outputs the state of the undo and redo buffers to standard output */
+  public void output( string msg = "BUFFER STATE" ) {
+    stdout.printf( "%s\n  Undo Buffer\n-----------\n", msg );
+    for( int i=0; i<_undo_buffer.length; i++ ) {
+      stdout.printf( "    %s\n", _undo_buffer.index( i ).name );
+    }
+    stdout.printf( "  Redo Buffer\n-----------\n" );
+    for( int i=0; i<_redo_buffer.length; i++ ) {
+      stdout.printf( "    %s\n", _redo_buffer.index( i ).name );
+    }
   }
 
 }

@@ -357,6 +357,7 @@ public class NodeInspector : Stack {
    Called whenever the node name is changed within the inspector.
   */
   private void name_changed() {
+    stdout.printf( "In name_changed: %s\n", _name.buffer.text );
     _da.change_current_name( _name.buffer.text );
   }
 
@@ -365,6 +366,7 @@ public class NodeInspector : Stack {
    node title in the canvas.
   */
   private bool name_focus_out( EventFocus e ) {
+    stdout.printf( "In name_focus_out: %s\n", _name.buffer.text );
     _da.change_current_name( _name.buffer.text );
     return( false );
   }
@@ -466,7 +468,9 @@ public class NodeInspector : Stack {
     Node? current = _da.get_current_node();
 
     if( current != null ) {
+      stdout.printf( "In node_changed, current.name: %s\n", current.name );
       _name.buffer.text = current.name;
+      stdout.printf( "Buffer changed\n" );
       _task.set_active( current.task_enabled() );
       if( current.is_leaf() ) {
         _fold.set_active( false );

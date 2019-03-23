@@ -598,6 +598,7 @@ public class DrawArea : Gtk.DrawingArea {
    adds the undo item, and redraws the canvas.
   */
   public void change_current_name( string name ) {
+    stdout.printf( "In change_current_name, name: (%s), current_name: (%s)\n", name, _current_node.name );
     if( (_current_node != null) && (_current_node.name != name) ) {
       string orig_name = _current_node.name;
       _current_node.name = name;
@@ -1368,6 +1369,36 @@ public class DrawArea : Gtk.DrawingArea {
     return( (_current_node != null) && (_current_node.mode == NodeMode.CURRENT) );
   }
 
+  /* Returns the next node to select after the current node is removed */
+  private Node? next_node_to_select() {
+    if( _current_node != null ) {
+      if( _current_node.is_root() ) {
+        if( _nodes.length > 1 ) {
+          for( int i=0; i<_nodes.length; i++ ) {
+            if( _nodes.index( i ) == _current_node ) {
+              if( i == 0 ) {
+                return( _nodes.index( 1 ) );
+              } else if( (i + 1) == _nodes.length ) {
+                return( _nodes.index( i - 1 ) );
+              }
+              break;
+            }
+          }
+        }
+      } else {
+        Node? next = _current_node.parent.next_child( _current_node );
+        if( next == null ) {
+          next = _current_node.parent.prev_child( _current_node );
+          if( next == null ) {
+            next = _current_node.parent;
+          }
+        }
+        return( next );
+      }
+    }
+    return( null );
+  }
+
   /* If the specified node is not null, selects the node and makes it the current node */
   private bool select_node( Node? n ) {
     if( n != null ) {
@@ -1376,6 +1407,7 @@ public class DrawArea : Gtk.DrawingArea {
           _current_node.mode = NodeMode.NONE;
         }
         _current_node = n;
+        stdout.printf( "In select_node, name: (%s)\n", _current_node.name );
         _current_new  = false;
         _current_node.mode = NodeMode.CURRENT;
         see();
@@ -1497,6 +1529,10 @@ public class DrawArea : Gtk.DrawingArea {
   /* Deletes the given node */
   public void delete_node() {
     if( _current_node == null ) return;
+    Node? next_node = next_node_to_select();
+    if( next_node != null ) {
+      stdout.printf( "Next node will be: (%s)\n", next_node.name );
+    }
     undo_buffer.add_item( new UndoNodeDelete( _current_node ) );
     if( _current_node.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
@@ -1511,8 +1547,9 @@ public class DrawArea : Gtk.DrawingArea {
     _connections.node_deleted( _current_node );
     _current_node.mode = NodeMode.NONE;
     _current_node = null;
-    queue_draw();
     node_changed();
+    select_node( next_node );
+    queue_draw();
     changed();
   }
 
@@ -2213,6 +2250,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Cuts the current node from the tree and stores it in the clipboard */
   public void cut_node_to_clipboard() {
     if( _current_node == null ) return;
+    Node? next_node = next_node_to_select();
     undo_buffer.add_item( new UndoNodeCut( this, _current_node ) );
     copy_node_to_clipboard();
     if( _current_node.is_root() ) {
@@ -2227,8 +2265,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
     _current_node.mode = NodeMode.NONE;
     _current_node      = null;
-    queue_draw();
     node_changed();
+    select_node( next_node );
+    queue_draw();
     changed();
   }
 
