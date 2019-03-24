@@ -2,8 +2,6 @@
 Name=Minder
 GenericName=Mind-mapper
 Comment=Create, develop and visualize your ideas
-Comment[cs]=Tvořte, rozvíjejte a vizualizujte své nápady
-Comment[pl]=Tworz, rozwijaj i wizualizuj swoje pomysły
 Categories=Utility;Office;Development;
 Exec=com.github.phase1geo.minder %f
 Icon=com.github.phase1geo.minder
@@ -17,6 +15,4 @@ Actions=NewDocument;
 
 [Desktop Action NewDocument]
 Name=New Document
-Name[cs]=Nový dokument
-Name[pl]=Nowy dokument
 Exec=com.github.phase1geo.minder -n

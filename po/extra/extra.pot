@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-24 15:37+0100\n"
+"POT-Creation-Date: 2019-03-24 16:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -268,14 +268,14 @@ msgstr ""
 msgid "Mind-mapper"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.desktop.in:10
+#: data/com.github.phase1geo.minder.desktop.in:8
 msgid "com.github.phase1geo.minder"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.desktop.in:16
+#: data/com.github.phase1geo.minder.desktop.in:14
 msgid "Mind;Mapping;"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.desktop.in:20
+#: data/com.github.phase1geo.minder.desktop.in:18
 msgid "New Document"
 msgstr ""
