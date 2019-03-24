@@ -1571,7 +1571,7 @@ public class Node : Object {
     if( index != -1 ) {
       TreeIter it;
       int    start_index = (index > 20) ? (index - 20) : 0;
-      string prefix      = (index > 20) ? "..."        : "";
+      string prefix      = (index > 20) ? "…"        : "";
       string str         = prefix +
                            value.substring( start_index, (index - start_index) ) + "<u>" +
                            value.substring( index, pattern.length ) + "</u>" +

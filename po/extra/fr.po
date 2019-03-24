@@ -1,0 +1,322 @@
+# French translations for extra package.
+# Copyright (C) 2019 THE extra'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the extra package.
+# Automatically generated, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: extra\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-03-24 16:38+0100\n"
+"PO-Revision-Date: 2019-03-24 15:37+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:7
+#: data/com.github.phase1geo.minder.desktop.in:3
+msgid "Minder"
+msgstr "Minder"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:8
+#: data/com.github.phase1geo.minder.desktop.in:5
+msgid "Create, develop and visualize your ideas"
+msgstr "Créez, développez et visualisez vos idées"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:10
+msgid "Use the power of mind-mapping to make your ideas come to life."
+msgstr "Utilisez le pouvoir des cartes mentales pour donner vie à vos idées."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:12
+msgid ""
+"Quickly create visual mind-maps using the keyboard and automatic layout."
+msgstr ""
+"Créez rapidement des cartes mentales visuelles en utilisant le clavier et la "
+"mise en forme automatique."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:13
+msgid "Gorgeous themes."
+msgstr "Magnifiques thèmes."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:14
+msgid ""
+"Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown and PlainText "
+"formats."
+msgstr ""
+"Exportez aux formats PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Mardown et Texte "
+"brut."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:15
+msgid "Printer support."
+msgstr "Support des imprimantes."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:16
+msgid "Add notes, tasks and images to your nodes."
+msgstr "Ajoutez des notes, des tâches et des images à vos nœuds."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:17
+msgid "Colorized node branches."
+msgstr "Branches colorées."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:25
+msgid "Main Application - Light Theme"
+msgstr "Application principale - Thème clair"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:29
+msgid "Main Application - Dark Theme"
+msgstr "Application principale - Thème sombre"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:33
+msgid "Node Property Sidebar"
+msgstr "Barre latérale des propriétés des nœuds"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:37
+msgid "Map Property Sidebar"
+msgstr "Barre latérale des propriétés de la carte"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:41
+msgid "Trevor Williams"
+msgstr "Trevor Williams"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:82
+msgid "Adding Spanish translation (thanks to Adolfo Jayme-Barrientos)."
+msgstr "Ajout des traductions en espagnol (grâce à Adolfo Jayme-Barrientos)."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:83
+msgid "Adding support for special character insertion via the Compose key."
+msgstr ""
+"Ajout du support pour l'insertion de caractères spéciaux avec la touche "
+"Compose."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:89
+msgid "Updating French translation."
+msgstr "Mises à jour des traductions en français."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:94
+msgid "Bug fix release"
+msgstr "Version corrective"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:96
+msgid "Fixed bugs related to editing unicode characters in map area."
+msgstr ""
+"Correction de bugs liés à l'édition de caractères unicode dans la zone de la "
+"carte."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:97
+msgid ""
+"Reduced height of node textbox in sidebar to help alleviate window sizing "
+"problems."
+msgstr ""
+"Réduction de la hauteur de la zone de texte du nœud dans la barre latérale "
+"pour aider à diminuer les problèmes de dimensionnement de la fenêtre."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:98
+msgid ""
+"Fixed issue with moving a node to a different position within a parent node."
+msgstr ""
+"Correction d'un problème avec le déplacement d'un nœud vers une position "
+"différente au sein d'un nœud parent."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:99
+msgid "Fixed issue connecting a root node to another node."
+msgstr ""
+"Correction d'un problème de connexion d'un nœud racine à un autre nœud."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:105
+msgid "Images now supported!"
+msgstr "Les images sont désormais prises en charge !"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:107
+msgid "Added support for images within nodes."
+msgstr "Ajout de la prise en charge des images à l'intérieur des nœuds."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:108
+msgid "Added basic image editing support."
+msgstr "Ajout de la prise en charge mimimale de la modification d'image."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:109
+msgid "Added support for dragging and dropping local and web images."
+msgstr ""
+"Ajout de la prise en charge du glisser-déposer d'images locales ou web."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:110
+msgid "Added support for resizing node width."
+msgstr ""
+"Ajout de la prise en charge du redimensionnement de la largeur des nœuds."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:111
+msgid "Changed cursors when over a task button."
+msgstr "Modification du curseur au survol d'un bouton de tâche."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:112
+msgid "Changed location of task and note elements in a node."
+msgstr ""
+"Modification de l'emplacement des éléments de tâche et de note dans un nœud."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:113
+msgid "Added support for keeping the map from scrolling off screen."
+msgstr ""
+"Ajout de la prise en charge du maintien du défilement de la carte de l'écran."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:114
+msgid "Added support for shift-mousewheel to scroll horizontally."
+msgstr ""
+"Ajout de la prise en charge de la molette de la souris avec shift pour le "
+"défilement horizontal."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:115
+msgid "Added support for control-mousewheel to zoom in/out."
+msgstr ""
+"Ajout de la prise en charge de la molette de la souris pour effectuer un "
+"zoom avant/arrière."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:116
+msgid "Fixed issue with drawing background when zoom factor was small."
+msgstr ""
+"Correction d'un problème avec l'arrière-plan du graphique lorsque le facteur "
+"de zoom était faible."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:117
+msgid ""
+"Custom icons are now stored as a gresource rather than in the file system."
+msgstr ""
+"Les icônes personnalisées sont maintenant stockées en tant que ressource "
+"gresource plutôt que dans le système de fichiers."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:118
+msgid "Other minor bug fixes."
+msgstr "Autres corrections de bugs mineures."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:124
+msgid "Support for more export types and bug fixes."
+msgstr "Prise en charge de plus de types d'exportation et corrections de bugs."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:126
+msgid ""
+"Added support for exporting to SVG, JPEG, BMP, Markdown, PlainText and CSV "
+"formats."
+msgstr ""
+"Ajout de la prise en charge pour l'exportation vers les formats SVG, JPEG, "
+"BMP, Mardown, Texte brut et CSV."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:127
+msgid "Added support for folding all completed tasks in map inspector."
+msgstr ""
+"Ajout de la prise en charge pour plier toutes les tâches complétées dans "
+"l'inspecteur de carte."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:128
+msgid "Added support for unfolding all folded nodes in map inspector."
+msgstr ""
+"Ajout de la prise en charge pour déplier tous les nœuds pliés dans "
+"l'inspecteur de carte."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:129
+msgid "Added Solarized Dark and Solarized Light themes."
+msgstr "AJout des thèmes Solarized Dark et Solarized Light."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:130
+msgid "Changing button display in map inspector."
+msgstr "Modification de l'affichage du bouton dans l'inspecteur de carte."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:131
+msgid "Cleaning up Export menu to include a single \"Export…\" option."
+msgstr ""
+"Nettoyage du menu Exporter pour inclure une seule option « Exporter… »."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:132
+msgid ""
+"Fixing issue where modified node title in node inspector was lost when input "
+"focus was changed."
+msgstr ""
+"Correction d'un problème où le titre de nœud modifié dans l'inspecteur de "
+"nœud était perdu lorsque le point focalisé en entrée était modifié."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:133
+msgid "Fixing issue where an entire tree is attached to another tree."
+msgstr ""
+"Correction d'un problème où un arbre entier est attaché à un autre arbre."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:134
+msgid "Added Czech translation (thanks to Jan Marek!)."
+msgstr "Ajout des traductions en tchèque (grâce à Jan Marek !)."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:135
+msgid "Added French translation (thanks to Yannick A.!)."
+msgstr "Ajout des traductions en français (grâce à Yannick A. !)."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:136
+msgid "Added Brazilian Portuguese translation (thanks to btd1337!)"
+msgstr "Ajout des traductions en portugais brésilien (grâce à btd1337 !)"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:142
+msgid "Initial startup bug fix."
+msgstr "Correction de bug au premier démarrage."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:147
+msgid "Search improvements and bug fixes"
+msgstr "Amélioration de la recherche et corrections de bugs"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:149
+msgid "Added ability to search within notes."
+msgstr "Ajout de la possibilité de chercher parmi les notes."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:150
+msgid ""
+"Added ability to optionally control search criteria within search popover."
+msgstr ""
+"Ajout de la possibilité pour optionnellement contrôler les critères de "
+"recherche dans le volet de recherche."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:151
+msgid "Fixed screenshots."
+msgstr "Correction des captures d'écran."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:152
+msgid ""
+"Changed properties header bar icon to a sidebar hide/show icon for clarity."
+msgstr ""
+"L'icône de la barre supérieure des propriétés a été changée en icône de "
+"masquage/affichage dans la barre latérale pour plus de clarté."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:153
+msgid "Several minor UI improvements."
+msgstr "Améliorations mineures diverses de l'interface."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:154
+msgid "Removing deprecated GTK calls."
+msgstr "Suprresion des éléments GTK dépréciés."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:155
+msgid "Added ability to double-click on a node to make it editable."
+msgstr ""
+"Ajout de la possibilité de double-cliquer sur un nœud pour le rendre "
+"éditable."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:156
+msgid "Bug fixes."
+msgstr "Corrections de bugs."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:162
+msgid "Initial release"
+msgstr "Version initiale"
+
+#: data/com.github.phase1geo.minder.desktop.in:4
+msgid "Mind-mapper"
+msgstr "Créateur de cartes mentales"
+
+#: data/com.github.phase1geo.minder.desktop.in:8
+msgid "com.github.phase1geo.minder"
+msgstr "com.github.phase1geo.minder"
+
+#: data/com.github.phase1geo.minder.desktop.in:14
+msgid "Mind;Mapping;"
+msgstr "Mentale;Carte;"
+
+#: data/com.github.phase1geo.minder.desktop.in:18
+msgid "New Document"
+msgstr "Nouveau document"

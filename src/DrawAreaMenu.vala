@@ -66,7 +66,7 @@ public class DrawAreaMenu : Gtk.Menu {
     _delete.activate.connect( delete_node );
     add_accel_label( _delete, 65535, 0 );
 
-    _edit = new Gtk.MenuItem.with_label( _( "Edit..." ) );
+    _edit = new Gtk.MenuItem.with_label( _( "Edit…" ) );
     _edit.activate.connect( edit_node );
     add_accel_label( _edit, 'e', 0 );
 
