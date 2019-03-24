@@ -51,7 +51,7 @@ msgstr "Ajouter une image"
 
 #: src/DrawAreaMenu.vala:82
 msgid "Add Connection"
-msgstr ""
+msgstr "Ajouter une connexion"
 
 #: src/DrawAreaMenu.vala:85 src/DrawAreaMenu.vala:246
 msgid "Fold Children"
@@ -141,12 +141,12 @@ msgstr "déplier toutes les tâches"
 
 #: src/DrawArea.vala:2499
 msgid "add connection"
-msgstr ""
+msgstr "ajouter une connection"
 
 #: src/DrawArea.vala:2511
 #, fuzzy
 msgid "delete connection"
-msgstr "supprimer le nœud"
+msgstr "supprimer la connection"
 
 #: src/ImageEditor.vala:179
 #, c-format
@@ -169,7 +169,7 @@ msgstr "Appliquer"
 
 #: src/ImageEditor.vala:362
 msgid "Change Image"
-msgstr "Changer l'image"
+msgstr "Modifier l'image"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:220
 msgid "Manual"
@@ -261,7 +261,7 @@ msgstr "Rechercher   <i>(Ctrl+F)</i>"
 
 #: src/MainWindow.vala:307
 msgid "Search Nodes"
-msgstr "Recherches "
+msgstr "Rechercher des noeuds"
 
 #: src/MainWindow.vala:330
 msgid "Search Criteria"
@@ -313,7 +313,7 @@ msgstr "Nœud"
 
 #: src/MainWindow.vala:483
 msgid "Style"
-msgstr ""
+msgstr "Style"
 
 #: src/MainWindow.vala:484
 msgid "Map"
@@ -321,7 +321,7 @@ msgstr "Carte"
 
 #: src/MainWindow.vala:532
 msgid "Save current unnamed document?"
-msgstr "Enregistrer le document actuellement sans titre ?"
+msgstr "Enregistrer le document sans titre actuel ?"
 
 #: src/MainWindow.vala:533
 msgid "Changes will be permanently lost if not saved."
@@ -371,7 +371,7 @@ msgstr "Markdown"
 
 #: src/MainWindow.vala:962
 msgid "Mermaid"
-msgstr ""
+msgstr "Mermaid"
 
 #: src/MainWindow.vala:968
 msgid "OPML"
@@ -391,7 +391,7 @@ msgstr "PNG (opaque)"
 
 #: src/MainWindow.vala:992
 msgid "PlainText"
-msgstr "Texte"
+msgstr "Texte brut"
 
 #: src/MainWindow.vala:998
 msgid "SVG"
@@ -434,31 +434,28 @@ msgid "<big>Select a node to view/edit information</big>"
 msgstr "<big>Sélectionner un nœud pour voir/modifier ses informations</big>"
 
 #: src/NodeInspector.vala:90
-#, fuzzy
 msgid "<b>Title</b>"
-msgstr "<b><i>Titre :</i></b>"
+msgstr "<b>Titre</b>"
 
 #: src/NodeInspector.vala:112
 msgid "<b>Task</b>"
-msgstr ""
+msgstr "<b>Tâche</b>"
 
 #: src/NodeInspector.vala:131
 msgid "<b>Fold</b>"
-msgstr ""
+msgstr "<b>Plier</b>"
 
 #: src/NodeInspector.vala:153
-#, fuzzy
 msgid "<b>Link Color</b>"
-msgstr "Couleur du lien"
+msgstr "<b>Couleur du lien</b>"
 
 #: src/NodeInspector.vala:175
-#, fuzzy
 msgid "<b>Note</b>"
-msgstr "<b><i>Note :</i></b>"
+msgstr "<b>Note</b>"
 
 #: src/NodeInspector.vala:203
 msgid "<b>Image</b>"
-msgstr ""
+msgstr "<b>Image</b>"
 
 #: src/NodeInspector.vala:208
 msgid "Add Image…"
@@ -490,11 +487,11 @@ msgstr "Solarized Light"
 
 #: src/themes/ThemeDefault.vala:30
 msgid "Default"
-msgstr "Default"
+msgstr "Défaut"
 
 #: src/themes/ThemeDark.vala:30
 msgid "Dark"
-msgstr "Dark"
+msgstr "Sombre"
 
 #: src/themes/ThemeSolarizedDark.vala:30
 msgid "Solarized Dark"
@@ -576,18 +573,3 @@ msgstr "Annuler "
 #: src/UndoBuffer.vala:89
 msgid "Redo "
 msgstr "Refaire "
-
-#~ msgid "Title"
-#~ msgstr "Titre"
-
-#~ msgid "Task"
-#~ msgstr "Tâche"
-
-#~ msgid "Fold"
-#~ msgstr "Plier"
-
-#~ msgid "Note"
-#~ msgstr "Note"
-
-#~ msgid "Image"
-#~ msgstr "Image"

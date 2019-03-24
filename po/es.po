@@ -144,9 +144,8 @@ msgid "add connection"
 msgstr ""
 
 #: src/DrawArea.vala:2511
-#, fuzzy
 msgid "delete connection"
-msgstr "eliminación de nodo"
+msgstr ""
 
 #: src/ImageEditor.vala:179
 #, c-format
@@ -432,9 +431,8 @@ msgid "<big>Select a node to view/edit information</big>"
 msgstr "<big>Seleccione un nodo para ver o editar su información</big>"
 
 #: src/NodeInspector.vala:90
-#, fuzzy
 msgid "<b>Title</b>"
-msgstr "<b><i>Título:</i></b>"
+msgstr "<b>Título</b>"
 
 #: src/NodeInspector.vala:112
 msgid "<b>Task</b>"
@@ -445,14 +443,12 @@ msgid "<b>Fold</b>"
 msgstr ""
 
 #: src/NodeInspector.vala:153
-#, fuzzy
 msgid "<b>Link Color</b>"
-msgstr "Color del enlace"
+msgstr "<b>Color del enlace</b>"
 
 #: src/NodeInspector.vala:175
-#, fuzzy
 msgid "<b>Note</b>"
-msgstr "<b><i>Nota:</i></b>"
+msgstr "<b>Nota</b>"
 
 #: src/NodeInspector.vala:203
 msgid "<b>Image</b>"
@@ -574,18 +570,3 @@ msgstr "Deshacer "
 #: src/UndoBuffer.vala:89
 msgid "Redo "
 msgstr "Rehacer "
-
-#~ msgid "Title"
-#~ msgstr "Título"
-
-#~ msgid "Task"
-#~ msgstr "Tarea"
-
-#~ msgid "Fold"
-#~ msgstr "Plegar"
-
-#~ msgid "Note"
-#~ msgstr "Nota"
-
-#~ msgid "Image"
-#~ msgstr "Imagen"

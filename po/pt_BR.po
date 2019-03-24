@@ -144,9 +144,8 @@ msgid "add connection"
 msgstr ""
 
 #: src/DrawArea.vala:2511
-#, fuzzy
 msgid "delete connection"
-msgstr "apagar nó"
+msgstr ""
 
 #: src/ImageEditor.vala:179
 #, c-format
@@ -444,9 +443,8 @@ msgid "<b>Fold</b>"
 msgstr ""
 
 #: src/NodeInspector.vala:153
-#, fuzzy
 msgid "<b>Link Color</b>"
-msgstr "Cor do Link"
+msgstr "<b>Cor do Link</b>"
 
 #: src/NodeInspector.vala:175
 msgid "<b>Note</b>"
@@ -572,12 +570,3 @@ msgstr "Desfazer "
 #: src/UndoBuffer.vala:89
 msgid "Redo "
 msgstr "Refazer "
-
-#~ msgid "Title"
-#~ msgstr "Título"
-
-#~ msgid "Task"
-#~ msgstr "Tarefa"
-
-#~ msgid "Note"
-#~ msgstr "Nota"

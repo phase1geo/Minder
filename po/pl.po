@@ -145,9 +145,8 @@ msgid "add connection"
 msgstr ""
 
 #: src/DrawArea.vala:2511
-#, fuzzy
 msgid "delete connection"
-msgstr "usunięcie węzła"
+msgstr ""
 
 #: src/ImageEditor.vala:179
 #, c-format
@@ -445,9 +444,8 @@ msgid "<b>Fold</b>"
 msgstr ""
 
 #: src/NodeInspector.vala:153
-#, fuzzy
 msgid "<b>Link Color</b>"
-msgstr "Kolor połączenia"
+msgstr "<b>Kolor połączenia</b>"
 
 #: src/NodeInspector.vala:175
 msgid "<b>Note</b>"
@@ -573,18 +571,3 @@ msgstr "Cofnij "
 #: src/UndoBuffer.vala:89
 msgid "Redo "
 msgstr "Ponów "
-
-#~ msgid "Title"
-#~ msgstr "Tytuł"
-
-#~ msgid "Task"
-#~ msgstr "Zadanie"
-
-#~ msgid "Fold"
-#~ msgstr "Zwiń"
-
-#~ msgid "Note"
-#~ msgstr "Notatka"
-
-#~ msgid "Image"
-#~ msgstr "Obraz"

@@ -144,9 +144,8 @@ msgid "add connection"
 msgstr ""
 
 #: src/DrawArea.vala:2511
-#, fuzzy
 msgid "delete connection"
-msgstr "smazat uzel"
+msgstr ""
 
 #: src/ImageEditor.vala:179
 #, c-format
@@ -444,9 +443,8 @@ msgid "<b>Fold</b>"
 msgstr ""
 
 #: src/NodeInspector.vala:153
-#, fuzzy
 msgid "<b>Link Color</b>"
-msgstr "Barva odkazu"
+msgstr "<b>Barva odkazu</b>"
 
 #: src/NodeInspector.vala:175
 msgid "<b>Note</b>"
@@ -572,15 +570,3 @@ msgstr "Zpět"
 #: src/UndoBuffer.vala:89
 msgid "Redo "
 msgstr "Znovu"
-
-#~ msgid "Title"
-#~ msgstr "Název"
-
-#~ msgid "Task"
-#~ msgstr "Úkol"
-
-#~ msgid "Fold"
-#~ msgstr "Sbalit"
-
-#~ msgid "Note"
-#~ msgstr "Poznámka"
