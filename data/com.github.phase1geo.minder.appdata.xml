@@ -128,7 +128,7 @@
           <li>Added support for unfolding all folded nodes in map inspector.</li>
           <li>Added Solarized Dark and Solarized Light themes.</li>
           <li>Changing button display in map inspector.</li>
-          <li>Cleaning up Export menu to include a single "Export..." option.</li>
+          <li>Cleaning up Export menu to include a single "Export…" option.</li>
           <li>Fixing issue where modified node title in node inspector was lost when input focus was changed.</li>
           <li>Fixing issue where an entire tree is attached to another tree.</li>
           <li>Added Czech translation (thanks to Jan Marek!).</li>

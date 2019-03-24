@@ -205,7 +205,7 @@ public class NodeInspector : Stack {
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
 
-    _image_btn = new Button.with_label( _( "Add Image..." ) );
+    _image_btn = new Button.with_label( _( "Add Image…" ) );
     _image_btn.visible = true;
     _image_btn.clicked.connect( image_button_clicked );
 

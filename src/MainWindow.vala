@@ -431,7 +431,7 @@ public class MainWindow : ApplicationWindow {
     var box = new Box( Orientation.VERTICAL, 5 );
 
     var export = new ModelButton();
-    export.text = _( "Export..." );
+    export.text = _( "Export…" );
     export.action_name = "win.action_export";
 
     var print = new ModelButton();
