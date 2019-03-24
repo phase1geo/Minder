@@ -1,16 +1,16 @@
 # French translations for com.github.phase1geo.minder package.
 # Copyright (C) 2019 THE com.github.phase1geo.minder'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
-# yannicka <yannick.armand@protonmail.com>, 2019.
+# NathanBnm, 2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-24 15:31+0100\n"
+"POT-Creation-Date: 2019-03-24 16:06+0100\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
-"Last-Translator: yannicka <yannick.armand@protonmail.com>\n"
-"Language-Team: none\n"
+"Last-Translator: NathanBnm\n"
+"Language-Team: Français\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -480,6 +480,162 @@ msgstr "Détacher le nœud"
 #: src/NodeInspector.vala:342
 msgid "Delete Node"
 msgstr "Supprimer le nœud"
+
+#: src/StyleInspector.vala:45
+msgid "All"
+msgstr "Tout"
+
+#: src/StyleInspector.vala:46
+msgid "Current"
+msgstr "Courant"
+
+#: src/StyleInspector.vala:47
+msgid "Current Tree"
+msgstr "Arbre courant"
+
+#: src/StyleInspector.vala:48
+msgid "Current Node + Descendants"
+msgstr "Nœud courant + Descendants"
+
+#: src/StyleInspector.vala:49
+msgid "Root Nodes"
+msgstr "Nœuds racine"
+
+#: src/StyleInspector.vala:50
+msgid "Level 1 Nodes"
+msgstr "Nœuds de niveau 1"
+
+#: src/StyleInspector.vala:51
+msgid "Level 2 Nodes"
+msgstr "Nœuds de niveau 2"
+
+#: src/StyleInspector.vala:52
+msgid "Level 3 Nodes"
+msgstr "Nœuds de niveau 3"
+
+#: src/StyleInspector.vala:53
+msgid "Level 4 Nodes"
+msgstr "Nœuds de niveau 4"
+
+#: src/StyleInspector.vala:54
+msgid "Level 5 Nodes"
+msgstr "Nœuds de niveau 5"
+
+#: src/StyleInspector.vala:55
+msgid "Level 6 Nodes"
+msgstr "Nœuds de niveau 6"
+
+#: src/StyleInspector.vala:56
+msgid "Level 7 Nodes"
+msgstr "Nœuds de niveau 7"
+
+#: src/StyleInspector.vala:57
+msgid "Level 8 Nodes"
+msgstr "Nœuds de niveau 8"
+
+#: src/StyleInspector.vala:58
+msgid "Level 9 Nodes"
+msgstr "Nœuds de niveau 9"
+
+#: src/StyleInspector.vala:149
+msgid "<b>Changes affect:</b>"
+msgstr "<b>Les modifications affectent :</b>"
+
+#: src/StyleInspector.vala:194
+msgid "<b>Branch Options</b>"
+msgstr "<b>Options des branches</b>"
+
+#: src/StyleInspector.vala:219
+msgid "Branch Style"
+msgstr "Style de branche"
+
+#: src/StyleInspector.vala:270
+msgid "<b>Link Options</b>"
+msgstr "<b>Options des liens</b>"
+
+#: src/StyleInspector.vala:299 src/StyleInspector.vala:655
+msgid "Line Dash"
+msgstr "Style de ligne"
+
+#: src/StyleInspector.vala:339 src/StyleInspector.vala:734
+msgid "Line Width"
+msgstr "Épaisseur de ligne"
+
+#: src/StyleInspector.vala:374
+msgid "Link Arrow"
+msgstr "Flèche"
+
+#: src/StyleInspector.vala:400
+msgid "<b>Node Options</b>"
+msgstr "<b>Options des nœuds</b>"
+
+#: src/StyleInspector.vala:433
+msgid "Border Style"
+msgstr "Style de bordure"
+
+#: src/StyleInspector.vala:483
+msgid "Border Width"
+msgstr "Épaisseur de bordure"
+
+#: src/StyleInspector.vala:517
+msgid "Fill With Link Color"
+msgstr "Remplir avec la couleur du lien"
+
+#: src/StyleInspector.vala:543
+msgid "Margin"
+msgstr "Marge extérieure"
+
+#: src/StyleInspector.vala:573
+msgid "Padding"
+msgstr "Marge intérieure"
+
+#: src/StyleInspector.vala:601
+msgid "Font"
+msgstr "Police"
+
+#: src/StyleInspector.vala:626
+msgid "<b>Connection Options</b>"
+msgstr "<b>Options des connections</b>"
+
+#: src/StyleInspector.vala:695
+msgid "Arrows"
+msgstr "Flèches"
+
+#: src/styles/LinkTypeCurved.vala:34
+msgid "Curved"
+msgstr "Courbe"
+
+#: src/styles/LinkTypeSquared.vala:34
+msgid "Squared"
+msgstr "Carré"
+
+#: src/styles/LinkTypeStraight.vala:34
+msgid "Straight"
+msgstr "Droit"
+
+#: src/styles/NodeBorderBracket.vala:34
+msgid "Square Bracket"
+msgstr "Crochet"
+
+#: src/styles/NodeBorderNone.vala:34
+msgid "None"
+msgstr "Aucun"
+
+#: src/styles/NodeBorderPill.vala:34
+msgid "Pill-shaped"
+msgstr "En forme de pilule"
+
+#: src/styles/NodeBorderRounded.vala:34
+msgid "Rounded Rectangle"
+msgstr "Rectangle arrondi"
+
+#: src/styles/NodeBorderSquared.vala:34
+msgid "Squared Off"
+msgstr "Carré"
+
+#: src/styles/NodeBorderUnderlined.vala:34
+msgid "Underlined"
+msgstr "Souligné"
 
 #: src/themes/ThemeSolarizedLight.vala:30
 msgid "Solarized Light"
