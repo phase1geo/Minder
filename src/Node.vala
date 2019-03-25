@@ -426,8 +426,8 @@ public class Node : Object {
     if( _task_count > 0 ) {
       double tx, ty, tw, th;
       double img_height = (_image == null) ? 0 : _image.height;
-      tx = posx + style.node_padding;
-      ty = posy + style.node_padding + img_height + (((_height - (img_height + style.node_padding)) / 2) - _task_radius);
+      tx = posx + style.node_padding + style.node_margin;
+      ty = posy + style.node_padding + style.node_margin + img_height + (((_height - (img_height + style.node_padding)) / 2) - _task_radius);
       tw = _task_radius * 2;
       th = _task_radius * 2;
       return( (tx < x) && (x < (tx + tw)) && (ty < y) && (y < (ty + th)) );
@@ -444,7 +444,7 @@ public class Node : Object {
       double nx, ny, nw, nh;
       double img_height = (_image == null) ? 0 : _image.height;
       nx = posx + (_width - (note_width() + style.node_padding)) + _ipadx;
-      ny = posy + style.node_padding + img_height + ((_height - (img_height + style.node_padding)) / 2) - 5;
+      ny = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + style.node_padding)) / 2) - 5;
       nw = 11;
       nh = 11;
       return( (nx < x) && (x < (nx + nw)) && (ny < y) && (y < (ny + nh)) );
@@ -468,8 +468,8 @@ public class Node : Object {
   public virtual bool is_within_image( double x, double y ) {
     if( _image != null ) {
       double ix, iy, iw, ih;
-      ix = posx + style.node_padding;
-      iy = posy + style.node_padding;
+      ix = posx + style.node_padding + style.node_margin;
+      iy = posy + style.node_padding + style.node_margin;
       iw = _image.width;
       ih = _image.height;
       return( (ix <= x) && (x <= (ix + iw)) && (iy <= y) && (y <= (iy + ih)) );
@@ -859,8 +859,8 @@ public class Node : Object {
       int text_width, text_height;
       double orig_width  = _width;
       double orig_height = _height;
-      double img_width   = (_image != null) ? (_image.width  + (style.node_padding * 2)) : 0;
-      double img_height  = (_image != null) ? (_image.height + style.node_padding)       : 0;
+      double img_width   = (_image != null) ? (_image.width  + (style.node_padding * 2) + (style.node_margin * 2)) : 0;
+      double img_height  = (_image != null) ? (_image.height + style.node_padding + (style.node_margin * 2))       : 0;
       _pango_layout.set_markup( name_markup( theme ), -1 );
       _pango_layout.get_size( out text_width, out text_height );
       _width     = (text_width  / Pango.SCALE) + (style.node_padding * 2) + task_width() + note_width() + (style.node_margin * 2);
