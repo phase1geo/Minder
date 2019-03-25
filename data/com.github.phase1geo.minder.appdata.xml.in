@@ -21,17 +21,13 @@
     <binary>com.github.phase1geo.minder</binary>
   </provides>
   <screenshots>
-    <screenshot type="default">
-      <caption>Main Application - Light Theme</caption>
-      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-light.png</image>
-    </screenshot>
-    <screenshot>
-      <caption>Main Application - Dark Theme</caption>
-      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-dark.png</image>
-    </screenshot>
     <screenshot>
       <caption>Node Property Sidebar</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-node-properties.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Style Property Sidebar</caption>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-style-properties.png</image>
     </screenshot>
     <screenshot>
       <caption>Map Property Sidebar</caption>
