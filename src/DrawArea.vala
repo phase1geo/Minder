@@ -775,16 +775,19 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the user clicks on node */
   private bool set_current_node_from_position( Node node, EventButton e ) {
 
+    double scaled_x = scale_value( e.x );
+    double scaled_y = scale_value( e.y );
+
     /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
-    if( node.is_within_task( e.x, e.y ) ) {
+    if( node.is_within_task( scaled_x, scaled_y ) ) {
       toggle_task( node );
       node_changed();
       return( false );
-    } else if( node.is_within_fold( e.x, e.y ) ) {
+    } else if( node.is_within_fold( scaled_x, scaled_y ) ) {
       toggle_fold( node );
       node_changed();
       return( false );
-    } else if( node.is_within_resizer( e.x, e.y ) ) {
+    } else if( node.is_within_resizer( scaled_x, scaled_y ) ) {
       _resize     = true;
       _orig_width = node.max_width();
       return( true );
@@ -802,7 +805,7 @@ public class DrawArea : Gtk.DrawingArea {
           case EventType.TRIPLE_BUTTON_PRESS :  node.set_cursor_all( false );            break;
         }
       } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
-        if( _current_node.is_within_image( e.x, e.y ) ) {
+        if( _current_node.is_within_image( scaled_x, scaled_y ) ) {
           edit_current_image();
           return( false );
         } else {
@@ -1193,6 +1196,8 @@ public class DrawArea : Gtk.DrawingArea {
       _attach_node      = null;
       queue_draw();
     }
+    double scaled_x = scale_value( event.x );
+    double scaled_y = scale_value( event.y );
     if( _pressed ) {
       if( _current_connection != null ) {
         if( _current_connection.mode == ConnMode.ADJUSTING ) {
@@ -1200,13 +1205,13 @@ public class DrawArea : Gtk.DrawingArea {
           queue_draw();
         }
       } else if( _current_node != null ) {
-        double diffx = scale_value( event.x ) - _press_x;
-        double diffy = scale_value( event.y ) - _press_y;
+        double diffx = scaled_x - _press_x;
+        double diffy = scaled_y - _press_y;
         if( _current_node.mode == NodeMode.CURRENT ) {
           if( _resize ) {
             _current_node.resize( diffx );
           } else {
-            Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
+            Node attach_node = attachable_node( scaled_x, scaled_y );
             if( attach_node != null ) {
               attach_node.mode = NodeMode.ATTACHABLE;
               _attach_node = attach_node;
@@ -1218,19 +1223,19 @@ public class DrawArea : Gtk.DrawingArea {
           }
         } else {
           switch( _press_type ) {
-            case EventType.BUTTON_PRESS        :  _current_node.set_cursor_at_char( scale_value( event.x ), scale_value( event.y ), true );  break;
-            case EventType.DOUBLE_BUTTON_PRESS :  _current_node.set_cursor_at_word( scale_value( event.x ), scale_value( event.y ), true );  break;
+            case EventType.BUTTON_PRESS        :  _current_node.set_cursor_at_char( scaled_x, scaled_y, true );  break;
+            case EventType.DOUBLE_BUTTON_PRESS :  _current_node.set_cursor_at_word( scaled_x, scaled_y, true );  break;
           }
         }
         queue_draw();
       } else {
-        double diff_x = _press_x - scale_value( event.x );
-        double diff_y = _press_y - scale_value( event.y );
+        double diff_x = _press_x - scaled_x;
+        double diff_y = _press_y - scaled_y;
         move_origin( diff_x, diff_y );
         queue_draw();
       }
-      _press_x = scale_value( event.x );
-      _press_y = scale_value( event.y );
+      _press_x = scaled_x;
+      _press_y = scaled_y;
       _motion  = true;
       auto_save();
     } else {
@@ -1240,30 +1245,28 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
       for( int i=0; i<_nodes.length; i++ ) {
-        Node match = _nodes.index( i ).contains( event.x, event.y, null );
+        Node match = _nodes.index( i ).contains( scaled_x, scaled_y, null );
         if( match != null ) {
-          if( get_tooltip_text() == null ) {
-            if( (_current_connection != null) && (_current_connection.mode == ConnMode.CONNECTING) ) {
-              _attach_node      = match;
-              _attach_node.mode = NodeMode.ATTACHABLE;
-            } else if( match.is_within_task( event.x, event.y ) ) {
-              set_cursor( CursorType.HAND1 );
-              set_tooltip_text( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
-            } else if( match.is_within_note( event.x, event.y ) ) {
-              set_tooltip_text( match.note );
-            } else if( match.is_within_resizer( event.x, event.y ) ) {
-              set_cursor( CursorType.SB_H_DOUBLE_ARROW );
-            } else {
-              set_cursor( null );
-            }
+          if( (_current_connection != null) && (_current_connection.mode == ConnMode.CONNECTING) ) {
+            _attach_node      = match;
+            _attach_node.mode = NodeMode.ATTACHABLE;
+          } else if( match.is_within_task( scaled_x, scaled_y ) ) {
+            set_cursor( CursorType.HAND1 );
+            set_tooltip_text( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
+          } else if( match.is_within_note( scaled_x, scaled_y ) ) {
+            set_tooltip_text( match.note );
+          } else if( match.is_within_resizer( scaled_x, scaled_y ) ) {
+            set_cursor( CursorType.SB_H_DOUBLE_ARROW );
+            set_tooltip_text( null );
+          } else {
+            set_cursor( null );
+            set_tooltip_text( null );
           }
           return( false );
         }
       }
-      if( get_tooltip_text() != null ) {
-        set_tooltip_text( null );
-      }
       set_cursor( null );
+      set_tooltip_text( null );
     }
     return( false );
   }

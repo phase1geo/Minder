@@ -407,6 +407,11 @@ public class Node : Object {
     return( !is_root() && (side == NodeSide.LEFT) );
   }
 
+  /* Returns true if the given coordinates are within the specified bounds */
+  private bool is_within_bounds( double x, double y, double bx, double by, double bw, double bh ) {
+    return( (bx < x) && (x < (bx + bw)) && (by < y) && (y < (by + bh)) );
+  }
+
   /* Returns true if the given cursor coordinates lies within this node */
   public virtual bool is_within( double x, double y ) {
     double cx, cy, cw, ch;
@@ -415,7 +420,41 @@ public class Node : Object {
     cy += (double)style.node_margin;
     cw -= (double)style.node_margin * 2;
     ch -= (double)style.node_margin * 2;
-    return( (cx < x) && (x < (cx + cw)) && (cy < y) && (y < (cy + ch)) );
+    return( is_within_bounds( x, y, cx, cy, cw, ch ) );
+  }
+
+  /* Returns the positional information for where the task item is located (if it exists) */
+  protected virtual void task_bbox( out double x, out double y, out double w, out double h ) {
+    double img_height = (_image == null) ? 0 : _image.height;
+    x = posx + style.node_margin + style.node_padding;
+    y = posy + style.node_margin + style.node_padding + img_height + (((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2) - _task_radius);
+    w = _task_radius * 2;
+    h = _task_radius * 2;
+  }
+
+  /* Returns the positional information for where the note item is located (if it exists) */
+  protected virtual void note_bbox( out double x, out double y, out double w, out double h ) {
+    double img_height = (_image == null) ? 0 : _image.height;
+    x = posx + (_width - (note_width() + style.node_padding + style.node_margin)) + _ipadx;
+    y = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2) - 5;
+    w = 11;
+    h = 11;
+  }
+
+  /* Returns the positional information of the stored image (if no image exists, the behavior of this method is undefined) */
+  protected virtual void image_bbox( out double x, out double y, out double w, out double h ) {
+    x = posx + style.node_padding + style.node_margin;
+    y = posy + style.node_padding + style.node_margin;
+    w = (_image == null) ? 0 : _image.width;
+    h = (_image == null) ? 0 : _image.height;
+  }
+
+  /* Returns the positional information for where the resizer box is located (if it exists) */
+  protected virtual void resizer_bbox( out double x, out double y, out double w, out double h ) {
+    x = resizer_on_left() ? (posx + style.node_margin) : (posx + _width - style.node_margin - 8);
+    y = posy + style.node_margin;
+    w = 8;
+    h = 8;
   }
 
   /*
@@ -425,12 +464,8 @@ public class Node : Object {
   public virtual bool is_within_task( double x, double y ) {
     if( _task_count > 0 ) {
       double tx, ty, tw, th;
-      double img_height = (_image == null) ? 0 : _image.height;
-      tx = posx + style.node_padding + style.node_margin;
-      ty = posy + style.node_padding + style.node_margin + img_height + (((_height - (img_height + style.node_padding)) / 2) - _task_radius);
-      tw = _task_radius * 2;
-      th = _task_radius * 2;
-      return( (tx < x) && (x < (tx + tw)) && (ty < y) && (y < (ty + th)) );
+      task_bbox( out tx, out ty, out tw, out th );
+      return( is_within_bounds( x, y, tx, ty, tw, th ) );
     } else {
       return( false );
     }
@@ -442,12 +477,8 @@ public class Node : Object {
   public virtual bool is_within_note( double x, double y ) {
     if( note.length > 0 ) {
       double nx, ny, nw, nh;
-      double img_height = (_image == null) ? 0 : _image.height;
-      nx = posx + (_width - (note_width() + style.node_padding)) + _ipadx;
-      ny = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + style.node_padding)) / 2) - 5;
-      nw = 11;
-      nh = 11;
-      return( (nx < x) && (x < (nx + nw)) && (ny < y) && (y < (ny + nh)) );
+      note_bbox( out nx, out ny, out nw, out nh );
+      return( is_within_bounds( x, y, nx, ny, nw, nh ) );
     } else {
       return( false );
     }
@@ -458,7 +489,7 @@ public class Node : Object {
     if( folded && (_children.length > 0) ) {
       double fx, fy, fw, fh;
       fold_bbox( out fx, out fy, out fw, out fh );
-      return( (fx < x) && (x < (fx + fw)) && (fy < y) && (y < (fy + fh)) );
+      return( is_within_bounds( x, y, fx, fy, fw, fh ) );
     } else {
       return( false );
     }
@@ -468,11 +499,9 @@ public class Node : Object {
   public virtual bool is_within_image( double x, double y ) {
     if( _image != null ) {
       double ix, iy, iw, ih;
-      ix = posx + style.node_padding + style.node_margin;
-      iy = posy + style.node_padding + style.node_margin;
-      iw = _image.width;
-      ih = _image.height;
-      return( (ix <= x) && (x <= (ix + iw)) && (iy <= y) && (y <= (iy + ih)) );
+      image_bbox( out ix, out iy, out iw, out ih );
+      return( is_within_bounds( x, y, ix, iy, iw, ih ) );
+      // return( (ix <= x) && (x <= (ix + iw)) && (iy <= y) && (y <= (iy + ih)) );
     } else {
       return( false );
     }
@@ -482,12 +511,9 @@ public class Node : Object {
   public virtual bool is_within_resizer( double x, double y ) {
     if( mode == NodeMode.CURRENT ) {
       double rx, ry, rw, rh;
-      int    margin = style.node_margin;
-      rx = resizer_on_left() ? (posx + margin) : (posx + _width - margin - 8);
-      ry = posy + margin;
-      rw = 8;
-      rh = 8;
-      return( (rx < x) && (x <= (rx + rw)) && (ry < y) && (y <= (ry + rh)) );
+      resizer_bbox( out rx, out ry, out rw, out rh );
+      return( is_within_bounds( x, y, rx, ry, rw, rh ) );
+      // return( (rx < x) && (x <= (rx + rw)) && (ry < y) && (y <= (ry + rh)) );
     }
     return( false );
   }
@@ -1734,7 +1760,9 @@ public class Node : Object {
   /* Draws the node image above the note */
   protected virtual void draw_image( Cairo.Context ctx, Theme theme, bool motion ) {
     if( _image != null ) {
-      _image.draw( ctx, (posx + style.node_padding + style.node_margin), (posy + style.node_padding + style.node_margin), (motion ? 0.2 : 1) );
+      double x, y, w, h;
+      image_bbox( out x, out y, out w, out h );
+      _image.draw( ctx, x, y, (motion ? 0.2 : 1) );
     }
 
   }
@@ -1789,14 +1817,14 @@ public class Node : Object {
 
     if( _task_count > 0 ) {
 
-      double img_height = (_image == null) ? 0 : _image.height;
-      double x          = posx + style.node_padding + style.node_margin + _task_radius;
-      double y          = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2);
+      double x, y, w, h;
+
+      task_bbox( out x, out y, out w, out h );
 
       set_context_color( ctx, color );
       ctx.new_path();
       ctx.set_line_width( 1 );
-      ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
+      ctx.arc( (x + _task_radius), (y + _task_radius), _task_radius, 0, (2 * Math.PI) );
 
       if( _task_done == 0 ) {
         ctx.stroke();
@@ -1813,11 +1841,14 @@ public class Node : Object {
 
     if( _task_count > 0 ) {
 
-      double img_height = (_image == null) ? 0 : _image.height;
-      double x          = posx + style.node_padding + style.node_margin + _task_radius;
-      double y          = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2);
-      double complete   = _task_done / (_task_count * 1.0);
-      double angle      = ((complete * 360) + 270) * (Math.PI / 180.0);
+      double x, y, w, h;
+      double complete = _task_done / (_task_count * 1.0);
+      double angle    = ((complete * 360) + 270) * (Math.PI / 180.0);
+
+      task_bbox( out x, out y, out w, out h );
+
+      x += _task_radius;
+      y += _task_radius;
 
       /* Draw circle outline */
       if( complete < 1 ) {
@@ -1849,12 +1880,12 @@ public class Node : Object {
 
     if( note.length > 0 ) {
 
-      double img_height = (_image == null) ? 0 : _image.height;
-      double x          = posx + (_width - (note_width() + style.node_padding + style.node_margin)) + _ipadx;
-      double y          = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2) - 5;
-      RGBA   color      = (mode == NodeMode.CURRENT) ? sel_color :
-                          style.is_fillable()        ? bg_color  :
-                                                       reg_color;
+      double x, y, w, h;
+      RGBA   color = (mode == NodeMode.CURRENT) ? sel_color :
+                     style.is_fillable()        ? bg_color  :
+                                                  reg_color;
+
+      note_bbox( out x, out y, out w, out h );
 
       set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();
@@ -2034,13 +2065,13 @@ public class Node : Object {
       return;
     }
 
-    int    margin = style.node_margin;
-    double x      = resizer_on_left() ? (posx + margin) : (posx + _width - margin - 8);
-    double y      = posy + margin;
+    double x, y, w, h;
+
+    resizer_bbox( out x, out y, out w, out h );
 
     set_context_color( ctx, theme.background );
     ctx.set_line_width( 1 );
-    ctx.rectangle( x, y, 8, 8 );
+    ctx.rectangle( x, y, w, h );
     ctx.fill_preserve();
 
     set_context_color( ctx, theme.foreground );
