@@ -598,7 +598,6 @@ public class DrawArea : Gtk.DrawingArea {
    adds the undo item, and redraws the canvas.
   */
   public void change_current_name( string name ) {
-    stdout.printf( "In change_current_name, name: (%s), current_name: (%s)\n", name, _current_node.name );
     if( (_current_node != null) && (_current_node.name != name) ) {
       string orig_name = _current_node.name;
       _current_node.name = name;
@@ -1407,7 +1406,6 @@ public class DrawArea : Gtk.DrawingArea {
           _current_node.mode = NodeMode.NONE;
         }
         _current_node = n;
-        stdout.printf( "In select_node, name: (%s)\n", _current_node.name );
         _current_new  = false;
         _current_node.mode = NodeMode.CURRENT;
         see();
@@ -1530,9 +1528,6 @@ public class DrawArea : Gtk.DrawingArea {
   public void delete_node() {
     if( _current_node == null ) return;
     Node? next_node = next_node_to_select();
-    if( next_node != null ) {
-      stdout.printf( "Next node will be: (%s)\n", next_node.name );
-    }
     undo_buffer.add_item( new UndoNodeDelete( _current_node ) );
     if( _current_node.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {

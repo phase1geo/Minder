@@ -26,6 +26,7 @@ public class UndoBuffer : Object {
   private DrawArea        _da;
   private Array<UndoItem> _undo_buffer;
   private Array<UndoItem> _redo_buffer;
+  private bool            _debug = false;
 
   public signal void buffer_changed();
 
@@ -99,13 +100,15 @@ public class UndoBuffer : Object {
 
   /* Outputs the state of the undo and redo buffers to standard output */
   public void output( string msg = "BUFFER STATE" ) {
-    stdout.printf( "%s\n  Undo Buffer\n-----------\n", msg );
-    for( int i=0; i<_undo_buffer.length; i++ ) {
-      stdout.printf( "    %s\n", _undo_buffer.index( i ).name );
-    }
-    stdout.printf( "  Redo Buffer\n-----------\n" );
-    for( int i=0; i<_redo_buffer.length; i++ ) {
-      stdout.printf( "    %s\n", _redo_buffer.index( i ).name );
+    if( _debug ) {
+      stdout.printf( "%s\n  Undo Buffer\n-----------\n", msg );
+      for( int i=0; i<_undo_buffer.length; i++ ) {
+        stdout.printf( "    %s\n", _undo_buffer.index( i ).name );
+      }
+      stdout.printf( "  Redo Buffer\n-----------\n" );
+      for( int i=0; i<_redo_buffer.length; i++ ) {
+        stdout.printf( "    %s\n", _redo_buffer.index( i ).name );
+      }
     }
   }
 
