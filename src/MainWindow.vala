@@ -55,13 +55,7 @@ public class MainWindow : ApplicationWindow {
   private Image?         _prop_hide      = null;
 
   private const GLib.ActionEntry[] action_entries = {
-    { "action_new",           action_new },
-    { "action_open",          action_open },
     { "action_save",          action_save },
-    { "action_save_as",       action_save_as },
-    { "action_undo",          action_undo },
-    { "action_redo",          action_redo },
-    { "action_search",        action_search },
     { "action_quit",          action_quit },
     { "action_zoom_in",       action_zoom_in },
     { "action_zoom_out",      action_zoom_out },
@@ -69,8 +63,7 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_selected", action_zoom_selected },
     { "action_zoom_actual",   action_zoom_actual },
     { "action_export",        action_export },
-    { "action_print",         action_print },
-    { "action_sidebar",       action_sidebar }
+    { "action_print",         action_print }
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -107,11 +100,9 @@ public class MainWindow : ApplicationWindow {
     destroy.connect( Gtk.main_quit );
 
     /* Set the stage for menu actions */
-    /*
     var actions = new SimpleActionGroup ();
     actions.add_action_entries( action_entries, this );
     insert_action_group( "win", actions );
-    */
 
     AccelGroup accel_group = new Gtk.AccelGroup();
     this.add_accel_group( accel_group );
@@ -202,19 +193,12 @@ public class MainWindow : ApplicationWindow {
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
 
-    // app.set_accels_for_action( "win.action_new",         { "<Control>n" } );
-    // app.set_accels_for_action( "win.action_open",        { "<Control>o" } );
     app.set_accels_for_action( "win.action_save",        { "<Control>s" } );
-    // app.set_accels_for_action( "win.action_save_as",     { "<Control><Shift>s" } );
-    // app.set_accels_for_action( "win.action_undo",        { "<Control>z" } );
-    // app.set_accels_for_action( "win.action_redo",        { "<Control><Shift>z" } );
-    // app.set_accels_for_action( "win.action_search",      { "<Control>f" } );
     app.set_accels_for_action( "win.action_quit",        { "<Control>q" } );
-    // app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
-    // app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
-    // app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
-    // app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
-    // app.set_accels_for_action( "win.action_sidebar",     { "<Control>bar"} );
+    app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
+    app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
+    app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
+    app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
 
   }
 
@@ -246,27 +230,23 @@ public class MainWindow : ApplicationWindow {
 
     _zoom_in = new ModelButton();
     _zoom_in.text = _( "Zoom In" );
-    _zoom_in.add_accelerator( "clicked", accel_group, '+', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
-    _zoom_in.clicked.connect( action_zoom_in );
+    _zoom_in.action_name = "win.action_zoom_in";
 
     _zoom_out = new ModelButton();
     _zoom_out.text = _( "Zoom Out" );
-    _zoom_out.add_accelerator( "clicked", accel_group, '-', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
-    _zoom_out.clicked.connect( action_zoom_out );
+    _zoom_out.action_name = "win.action_zoom_out";
 
     var fit = new ModelButton();
     fit.text = _( "Zoom to Fit" );
-    fit.clicked.connect( action_zoom_fit );
+    fit.action_name = "win.action_zoom_fit";
 
     _zoom_sel = new ModelButton();
     _zoom_sel.text = _( "Zoom to Fit Selected Node" );
-    _zoom_sel.set_sensitive( false );
-    _zoom_sel.clicked.connect( action_zoom_selected );
+    _zoom_sel.action_name = "win.action_zoom_selected";
 
     var actual = new ModelButton();
     actual.text = _( "Zoom to Actual Size" );
-    actual.add_accelerator( "clicked", accel_group, '0', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
-    actual.clicked.connect( action_zoom_actual );
+    actual.action_name = "win.action_zoom_actual";
 
     box.margin = 5;
     box.pack_start( scale_lbl,   false, true );
@@ -436,9 +416,7 @@ public class MainWindow : ApplicationWindow {
 
     var print = new ModelButton();
     print.text = _( "Print" );
-    print.set_sensitive( false );
-    print.add_accelerator( "activate", accel_group, 'p', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
-    print.activate.connect( action_print );
+    print.action_name = "win.action_print";
 
     box.margin = 5;
     box.pack_start( export, false, true );
@@ -812,16 +790,6 @@ public class MainWindow : ApplicationWindow {
     return( zoom_to_value( val ).to_string() );
   }
 
-  /* Called when the user uses the Control-n keyboard shortcut */
-  private void action_new() {
-    do_new_file();
-  }
-
-  /* Called when the user uses the Control-o keyboard shortcut */
-  private void action_open() {
-    do_open_file();
-  }
-
   /* Called when the user uses the Control-s keyboard shortcut */
   private void action_save() {
     if( _doc.is_saved() ) {
@@ -829,26 +797,6 @@ public class MainWindow : ApplicationWindow {
     } else {
       save_file();
     }
-  }
-
-  /* Called when the user uses the Control-S keyboard shortcut */
-  private void action_save_as() {
-    do_save_as_file();
-  }
-
-  /* Called when the user uses the Control-z keyboard shortcut */
-  private void action_undo() {
-    do_undo();
-  }
-
-  /* Called when the user uses the Control-Z keyboard shortcut */
-  private void action_redo() {
-    do_redo();
-  }
-
-  /* Called when the user uses the Control-f keyboard shortcut */
-  private void action_search() {
-    _search_btn.clicked();
   }
 
   /* Called when the user uses the Control-q keyboard shortcut */
@@ -1051,11 +999,6 @@ public class MainWindow : ApplicationWindow {
   private void action_print() {
     var print = new ExportPrint();
     print.print( _canvas, this );
-  }
-
-  /* Displays or hides the sidebar */
-  private void action_sidebar() {
-    inspector_clicked();
   }
 
 }
