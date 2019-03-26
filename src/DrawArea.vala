@@ -977,6 +977,7 @@ public class DrawArea : Gtk.DrawingArea {
     animator.animate();
   }
 
+  /* Figures out the boundaries of the document primarily for the purposes of printing */
   public void document_rectangle( out double x, out double y, out double width, out double height ) {
 
     double x1 =  10000000;
