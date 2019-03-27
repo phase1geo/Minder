@@ -6,7 +6,6 @@ import subprocess
 if not os.environ.get('DESTDIR'):
     print('Compiling gsettings schemas…')
     schemadir  = os.path.join(os.environ['MESON_INSTALL_PREFIX'], 'share', 'glib-2.0', 'schemas')
-    print('schemadir: %s\n', schemadir);
     subprocess.call(['glib-compile-schemas', schemadir], shell=False)
 
     print('Compiling mime types…')
