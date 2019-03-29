@@ -1403,11 +1403,16 @@ public class Node : Object {
 
   /* Attaches this node as a child of the given node */
   public virtual void attach( Node parent, int index, Theme? theme ) {
-    if( index == -1 ) {
-      attach_root( parent, theme );
-    } else {
-      attach_nonroot( parent, index, theme );
+    this.parent = parent;
+    layout = parent.layout;
+    if( layout != null ) {
+      if( parent.children().length > 0 ) {
+        side = parent.children().index( parent.children().length - 1 ).side;
+        layout.propagate_side( this, side );
+      }
+      layout.initialize( this );
     }
+    attach_common( index, theme );
   }
 
   /* Attaches this node to the end of the given parent when this node is a root node */
@@ -2132,10 +2137,12 @@ public class Node : Object {
   }
 
   /* Outputs the node's information to standard output */
-  public void display( string prefix = "" ) {
-    stdout.printf( "%sNode, name: %s, posx: %g, posy: %g, side: %s\n", prefix, name, posx, posy, side.to_string() );
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).display( prefix + "  " );
+  public void display( bool recursive = false, string prefix = "" ) {
+    stdout.printf( "%sNode, name: %s, posx: %g, posy: %g, side: %s, layout: %s\n", prefix, name, posx, posy, side.to_string(), ((layout == null) ? "Unknown" : layout.name) );
+    if( recursive ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).display( recursive, prefix + "  " );
+      }
     }
   }
 

@@ -57,6 +57,7 @@ public class DrawArea : Gtk.DrawingArea {
   private uint?            _auto_save_id = null;
   private ImageEditor      _editor;
   private IMContextSimple  _im_context;
+  private bool             _debug        = true;
 
   public UndoBuffer   undo_buffer    { set; get; }
   public Themes       themes         { set; get; default = new Themes(); }
@@ -2120,6 +2121,11 @@ public class DrawArea : Gtk.DrawingArea {
           case "c" :  select_first_child_node();  break;
           case "C" :  center_current_node();  break;
           case "i" :  show_properties( "node", false );  break;
+          case "I" :
+            if( _debug ) {
+              _current_node.display();
+            }
+            break;
           case "u" :  // Perform undo
             if( undo_buffer.undoable() ) {
               undo_buffer.undo();
