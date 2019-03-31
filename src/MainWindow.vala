@@ -141,7 +141,7 @@ public class MainWindow : ApplicationWindow {
       ? new Button.from_icon_name( "document-save-as", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-save-as-symbolic" );
     save_btn.set_tooltip_markup( _( "Save File As   <i>(Control-Shift-S)</i>" ) );
-    open_btn.add_accelerator( "clicked", accel_group, 'S', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    open_btn.add_accelerator( "clicked", accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
@@ -159,7 +159,7 @@ public class MainWindow : ApplicationWindow {
       : new Button.from_icon_name( "edit-redo-symbolic" );
     _redo_btn.set_tooltip_markup( _( "Redo   <i>(Control-Shift-Z)</i>" ) );
     _redo_btn.set_sensitive( false );
-    _redo_btn.add_accelerator( "clicked", accel_group, 'Z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _redo_btn.add_accelerator( "clicked", accel_group, 'z', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     _redo_btn.clicked.connect( do_redo );
     _header.pack_start( _redo_btn );
 

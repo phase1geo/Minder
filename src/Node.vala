@@ -1033,8 +1033,9 @@ public class Node : Object {
   }
 
   /* Moves this node into the proper position within the parent node */
-  public void move_to_position( Node child, NodeSide side, double x, double y ) {
-    int idx = child.index();
+  public bool move_to_position( Node child, NodeSide side, double x, double y ) {
+    int idx          = child.index();
+    bool same_parent = (this == child.parent);
     for( int i=0; i<_children.length; i++ ) {
       if( _children.index( i ).side == child.side ) {
         switch( child.side ) {
@@ -1044,7 +1045,7 @@ public class Node : Object {
               child.detach( side );
               child.attached = true;
               child.attach( this, (i - ((idx < i) ? 1 : 0)), null );
-              return;
+              return( !same_parent || (idx != child.index()) );
             }
             break;
           case NodeSide.TOP :
@@ -1053,7 +1054,7 @@ public class Node : Object {
               child.detach( side );
               child.attached = true;
               child.attach( this, (i - ((idx < i) ? 1 : 0)), null );
-              return;
+              return( !same_parent || (idx != child.index()) );
             }
             break;
         }
@@ -1061,12 +1062,13 @@ public class Node : Object {
         child.detach( side );
         child.attached = true;
         child.attach( this, (i - ((idx < i) ? 1 : 0)), null );
-        return;
+        return( !same_parent || (idx != child.index()) );
       }
     }
     child.detach( side );
     child.attached = true;
     child.attach( this, -1, null );
+    return( !same_parent || (idx != child.index()) );
   }
 
   /* Updates the column value */

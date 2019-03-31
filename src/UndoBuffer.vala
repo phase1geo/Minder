@@ -26,7 +26,7 @@ public class UndoBuffer : Object {
   private DrawArea        _da;
   private Array<UndoItem> _undo_buffer;
   private Array<UndoItem> _redo_buffer;
-  private bool            _debug = true;
+  private bool            _debug = false;
 
   public signal void buffer_changed();
 
