@@ -95,7 +95,7 @@ public class UndoNodeAttach : UndoItem {
     _n.side = _new_side;
     _n.layout.propagate_side( _n, _new_side );
     if( _old_parent == null ) {
-      _n.attach_root( _new_parent, da.get_theme() );
+      _n.attach( _new_parent, -1, da.get_theme() );
       _n.set_node_info( _new_info, ref index );
     } else {
       _n.set_node_info( _new_info, ref index );

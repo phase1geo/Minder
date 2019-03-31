@@ -1408,27 +1408,18 @@ public class Node : Object {
     this.parent = parent;
     layout = parent.layout;
     if( layout != null ) {
-      if( parent.children().length > 0 ) {
-        side = parent.children().index( parent.children().length - 1 ).side;
-        layout.propagate_side( this, side );
+      if( parent.is_root() ) {
+        if( parent.children().length == 0 ) {
+          side = layout.side_mapping( side );
+        } else {
+          side = parent.children().index( parent.children().length - 1 ).side;
+        }
+      } else {
+        side = parent.side;
       }
-      layout.initialize( this );
+      layout.propagate_side( this, side );
     }
     attach_common( index, theme );
-  }
-
-  /* Attaches this node to the end of the given parent when this node is a root node */
-  public virtual void attach_root( Node parent, Theme? theme ) {
-    this.parent = parent;
-    layout = parent.layout;
-    if( layout != null ) {
-      if( parent.children().length > 0 ) {
-        side = parent.children().index( parent.children().length - 1 ).side;
-        layout.propagate_side( this, side );
-      }
-      layout.initialize( this );
-    }
-    attach_common( -1, theme );
   }
 
   public virtual void attach_nonroot( Node parent, int index, Theme? theme ) {
