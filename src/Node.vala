@@ -1418,6 +1418,7 @@ public class Node : Object {
         side = parent.side;
       }
       layout.propagate_side( this, side );
+      layout.initialize( this );
     }
     attach_common( index, theme );
   }
