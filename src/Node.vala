@@ -1924,10 +1924,10 @@ public class Node : Object {
       /* Draw circles */
       set_context_color( ctx, fg_color );
       ctx.new_path();
-      ctx.arc( (fx + 5), (fy + 5), 1, 0, (2 * Math.PI) );
+      ctx.arc( (fx + 5), (fy + 5), 2, 0, (2 * Math.PI) );
       ctx.fill();
       ctx.new_path();
-      ctx.arc( (fx + 10), (fy + 5), 1, 0, (2 * Math.PI) );
+      ctx.arc( (fx + 10), (fy + 5), 2, 0, (2 * Math.PI) );
       ctx.fill();
 
     }
@@ -2107,7 +2107,7 @@ public class Node : Object {
         draw_acc_task( ctx, (style.is_fillable() ? theme.background : _link_color) );
       }
       draw_common_note( ctx, theme.foreground, theme.nodesel_foreground, theme.background );
-      draw_common_fold( ctx, _link_color, theme.foreground );
+      draw_common_fold( ctx, _link_color, theme.background );
       draw_attachable( ctx, theme, theme.background );
       draw_resizer( ctx, theme );
     }
