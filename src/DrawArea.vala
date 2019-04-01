@@ -1691,12 +1691,13 @@ public class DrawArea : Gtk.DrawingArea {
   /* Detaches the current node from its parent and adds it as a root node */
   public void detach() {
     if( !detachable() ) return;
-    Node     parent = _current_node.parent;
-    int      index  = _current_node.index();
-    NodeSide side   = _current_node.side;
+    Node     parent     = _current_node.parent;
+    int      index      = _current_node.index();
+    int      root_index = (int)_nodes.length;
+    NodeSide side       = _current_node.side;
     _current_node.detach( side );
     add_root( _current_node, -1 );
-    undo_buffer.add_item( new UndoNodeDetach( _current_node, (int)_nodes.length, parent, side, index ) );
+    undo_buffer.add_item( new UndoNodeDetach( _current_node, root_index, parent, side, index ) );
     queue_draw();
     changed();
   }
