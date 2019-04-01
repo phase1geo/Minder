@@ -1082,8 +1082,8 @@ public class Node : Object {
   public void set_cursor_at_char( double x, double y, bool motion ) {
     int cursor, trailing;
     int img_height = (_image != null) ? (int)(_image.height + style.node_padding) : 0;
-    int adjusted_x = (int)(x - (posx + style.node_padding + task_width())) * Pango.SCALE;
-    int adjusted_y = (int)(y - (posy + style.node_padding + img_height)) * Pango.SCALE;
+    int adjusted_x = (int)(x - (posx + style.node_margin + style.node_padding + task_width())) * Pango.SCALE;
+    int adjusted_y = (int)(y - (posy + style.node_margin + style.node_padding + img_height)) * Pango.SCALE;
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       var cindex = name.char_count( cursor + trailing );
       if( motion ) {
@@ -1109,8 +1109,8 @@ public class Node : Object {
   public void set_cursor_at_word( double x, double y, bool motion ) {
     int cursor, trailing;
     int img_height = (_image != null) ? (int)(_image.height + style.node_padding) : 0;
-    int adjusted_x = (int)(x - (posx + style.node_padding + task_width())) * Pango.SCALE;
-    int adjusted_y = (int)(y - (posy + style.node_padding + img_height)) * Pango.SCALE;
+    int adjusted_x = (int)(x - (posx + style.node_margin + style.node_padding + task_width())) * Pango.SCALE;
+    int adjusted_y = (int)(y - (posy + style.node_margin + style.node_padding + img_height)) * Pango.SCALE;
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor += trailing;
       var word_start = name.substring( 0, cursor ).last_index_of( " " );

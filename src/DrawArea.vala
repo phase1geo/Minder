@@ -1151,7 +1151,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
     /* Draw the current node on top of all others */
     if( (_current_node != null) && ((_current_node.parent == null) || !_current_node.parent.folded) ) {
-      _current_node.draw_all( ctx, _theme, null, true, (_pressed && _motion && !_resize) );
+      _current_node.draw_all( ctx, _theme, null, true, (!is_mode_edit() && _pressed && _motion && !_resize) );
     }
     /* Draw the current connection on top of everything else */
     _connections.draw_all( ctx, _theme );
