@@ -115,6 +115,45 @@ public class Style {
 
   }
 
+  /* Copies the from style based on the valid fields from the template style */
+  public void copy_alias( Style template, Style from ) {
+    if( template.link_type        != null ) link_type        = from.link_type;
+    if( template.link_width       != null ) link_width       = from.link_width;
+    if( template.link_arrow       != null ) link_arrow       = from.link_arrow;
+    if( template.link_dash        != null ) link_dash        = from.link_dash;
+    if( template.node_border      != null ) node_border      = from.node_border;
+    if( template.node_width       != null ) node_width       = from.node_width;
+    if( template.node_borderwidth != null ) node_borderwidth = from.node_borderwidth;
+    if( template.node_fill        != null ) node_fill        = from.node_fill;
+    if( template.node_margin      != null ) node_margin      = from.node_margin;
+    if( template.node_padding     != null ) node_padding     = from.node_padding;
+    if( template.node_font        != null ) node_font        = from.node_font.copy();
+    if( template.node_markup      != null ) node_markup      = from.node_markup;
+    if( template.connection_dash  != null ) connection_dash  = from.connection_dash;
+    if( template.connection_width != null ) connection_width = from.connection_width;
+    if( template.connection_arrow != null ) connection_arrow = from.connection_arrow;
+  }
+
+  public string to_string() {
+    string[] arr = {};
+    if( link_type        != null ) arr += "ltype";
+    if( link_width       != null ) arr += "lwidth";
+    if( link_arrow       != null ) arr += "larrow";
+    if( link_dash        != null ) arr += "ldash";
+    if( node_border      != null ) arr += "nborder";
+    if( node_width       != null ) arr += "nwidth";
+    if( node_borderwidth != null ) arr += "nbwidth";
+    if( node_fill        != null ) arr += "nfill";
+    if( node_margin      != null ) arr += "nmargin";
+    if( node_padding     != null ) arr += "npad";
+    if( node_font        != null ) arr += "nfont";
+    if( node_markup      != null ) arr += "nmarkup";
+    if( connection_dash  != null ) arr += "cdash";
+    if( connection_width != null ) arr += "cwidth";
+    if( connection_arrow != null ) arr += "carrow";
+    return( string.joinv( "+", arr ) );
+  }
+
   /* Loads the style information in the given XML node */
   public void load_node( Xml.Node* node ) {
 

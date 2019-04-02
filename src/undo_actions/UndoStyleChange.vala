@@ -33,12 +33,12 @@ public class UndoStyleChange : UndoItem {
   public UndoStyleChange( StyleAffects affects, Style style, Node? node, Connection? conn ) {
     base( _( "style change" ) );
     _affects   = affects;
-    _new_style = new Style();
-    _old_style = new Style();
+    _new_style = new Style.templated();
+    _old_style = new Style.templated();
     _node      = node;
     _conn      = conn;
     switch( affects ) {
-      case StyleAffects.ALL         :  _old_style.copy( StyleInspector.styles.get_global_style() );  break;
+      case StyleAffects.ALL         :  _old_style.copy_alias( style, StyleInspector.styles.get_global_style() );  break;
       case StyleAffects.LEVEL0      :
       case StyleAffects.LEVEL1      :
       case StyleAffects.LEVEL2      :
@@ -48,12 +48,11 @@ public class UndoStyleChange : UndoItem {
       case StyleAffects.LEVEL6      :
       case StyleAffects.LEVEL7      :
       case StyleAffects.LEVEL8      :
-      case StyleAffects.LEVEL9      :  _old_style.copy( StyleInspector.styles.get_style_for_level( affects.level() ) );  break;
-      case StyleAffects.CURRENT     :  _old_style.copy( (_node != null) ? _node.style : _conn.style );  break;
-      case StyleAffects.CURRTREE    :  _old_style.copy( _node.get_root().style );  break;
-      case StyleAffects.CURRSUBTREE :  _old_style.copy( _node.style );  break;
+      case StyleAffects.LEVEL9      :  _old_style.copy_alias( style, StyleInspector.styles.get_style_for_level( affects.level() ) );  break;
+      case StyleAffects.CURRENT     :  _old_style.copy_alias( style, ((_node != null) ? _node.style : _conn.style) );  break;
+      case StyleAffects.CURRTREE    :  _old_style.copy_alias( style, _node.get_root().style );  break;
+      case StyleAffects.CURRSUBTREE :  _old_style.copy_alias( style, _node.style );  break;
     }
-    _new_style.copy( _old_style );
     _new_style.copy( style );
   }
 
