@@ -896,6 +896,65 @@ public class StyleInspector : Box {
     _current_style.clear_template();
   }
 
+  /* Checks the nodes in the given tree at the specified level to see if there are any non-leaf nodes */
+  private bool check_level_for_branches( Node node, int levels, int level ) {
+    if( (levels & (1 << level)) != 0 ) {
+      return( !node.is_leaf() );
+    } else {
+      for( int i=0; i<node.children().length; i++ ) {
+        if( check_level_for_branches( node.children().index( i ), levels, ((level == 9) ? 9 : (level + 1)) ) ) {
+          return( true );
+        }
+      }
+      return( false );
+    }
+  }
+
+  /* We need to disable the link types widget if our affected nodes are leaf nodes only */
+  private void update_link_types_state() {
+    bool sensitive = false;
+    switch( _affects ) {
+      case StyleAffects.ALL     :
+        for( int i=0; i<_da.get_nodes().length; i++ ) {
+          if( !_da.get_nodes().index( i ).is_leaf() ) {
+            sensitive = true;
+            break;
+          }
+        }
+        break;
+      case StyleAffects.LEVEL0  :
+      case StyleAffects.LEVEL1  :
+      case StyleAffects.LEVEL2  :
+      case StyleAffects.LEVEL3  :
+      case StyleAffects.LEVEL4  :
+      case StyleAffects.LEVEL5  :
+      case StyleAffects.LEVEL6  :
+      case StyleAffects.LEVEL7  :
+      case StyleAffects.LEVEL8  :
+      case StyleAffects.LEVEL9  :
+        for( int i=0; i<_da.get_nodes().length; i++ ) {
+          if( check_level_for_branches( _da.get_nodes().index( i ), (1 << (int)_affects.level()), 0 ) ) {
+            sensitive = true;
+            break;
+          }
+        }
+        break;
+      case StyleAffects.CURRENT :
+        var node = _da.get_current_node();
+        if( node != null ) {
+          sensitive = !node.is_leaf();
+        }
+        break;
+      case StyleAffects.CURRTREE :
+        sensitive = !_da.get_current_node().get_root().is_leaf();
+        break;
+      case StyleAffects.CURRSUBTREE :
+        sensitive = !_da.get_current_node().is_leaf();
+        break;
+    }
+    _link_types.set_sensitive( sensitive );
+  }
+
   private void update_link_types_with_style( Style style ) {
     var link_types = styles.get_link_types();
     for( int i=0; i<link_types.length; i++ ) {
@@ -904,6 +963,7 @@ public class StyleInspector : Box {
         break;
       }
     }
+    update_link_types_state();
   }
 
   private void update_link_dashes_with_style( Style style ) {
