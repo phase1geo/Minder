@@ -850,14 +850,12 @@ public class StyleInspector : Box {
     }
   }
 
-  /* Apply the changes */
-  private void apply_changes() {
-    Node?       node = _da.get_current_node();
-    Connection? conn = _da.get_current_connection();
-    switch( _affects ) {
+  /* Apply the given style information based on the affects type */
+  public static void apply_style_change( DrawArea da, StyleAffects affects, Style style, Node? node, Connection? conn ) {
+    switch( affects ) {
       case StyleAffects.ALL     :
-        styles.set_all_nodes_to_style( _da.get_nodes(), _current_style );
-        styles.set_all_connections_to_style( _da.get_connections(), _current_style );
+        styles.set_all_nodes_to_style( da.get_nodes(), style );
+        styles.set_all_connections_to_style( da.get_connections(), style );
         break;
       case StyleAffects.LEVEL0  :
       case StyleAffects.LEVEL1  :
@@ -869,25 +867,33 @@ public class StyleInspector : Box {
       case StyleAffects.LEVEL7  :
       case StyleAffects.LEVEL8  :
       case StyleAffects.LEVEL9  :
-        styles.set_levels_to_style( _da.get_nodes(), (1 << (int)_affects.level()), _current_style );
+        styles.set_levels_to_style( da.get_nodes(), (1 << (int)affects.level()), style );
         break;
       case StyleAffects.CURRENT :
         if( node != null ) {
-          node.style = _current_style;
+          node.style = style;
         } else if( conn != null ) {
-          conn.style = _current_style;
+          conn.style = style;
         }
         break;
       case StyleAffects.CURRTREE :
-        styles.set_tree_to_style( node.get_root(), _current_style );
+        styles.set_tree_to_style( node.get_root(), style );
         break;
       case StyleAffects.CURRSUBTREE :
-        styles.set_tree_to_style( node, _current_style );
+        styles.set_tree_to_style( node, style );
         break;
     }
+    da.changed();
+    da.queue_draw();
+  }
+
+  /* Apply the changes */
+  private void apply_changes() {
+    Node?       node = _da.get_current_node();
+    Connection? conn = _da.get_current_connection();
+    _da.undo_buffer.add_item( new UndoStyleChange( _affects, _current_style, node, conn ) );
+    apply_style_change( _da, _affects, _current_style, node, conn );
     _current_style.clear_template();
-    _da.changed();
-    _da.queue_draw();
   }
 
   private void update_link_types_with_style( Style style ) {

@@ -58,6 +58,7 @@ sources += files(
     'undo_actions/UndoNodeResize.vala',
     'undo_actions/UndoNodeReveal.vala',
     'undo_actions/UndoNodeTask.vala',
+    'undo_actions/UndoStyleChange.vala',
 
     'Animator.vala',
     'Application.vala',
