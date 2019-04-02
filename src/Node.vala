@@ -862,6 +862,11 @@ public class Node : Object {
     return( "#%02x%02x%02x".printf( (int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255) ) );
   }
 
+  /* Removes < and > characters */
+  private string unmarkup( string markup ) {
+    return( markup.replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
+  }
+
   /* Generates the marked up name that will be displayed in the node */
   private string name_markup( Theme? theme ) {
     if( (_selstart != _selend) && (theme != null) ) {
@@ -869,10 +874,12 @@ public class Node : Object {
       var bg      = color_from_rgba( theme.textsel_background );
       var spos    = name.index_of_nth_char( _selstart );
       var epos    = name.index_of_nth_char( _selend );
-      var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + name.slice( spos, epos ) + "</span>";
-      return( name.splice( spos, epos, seltext ) );
+      var begtext = unmarkup( name.slice( 0, spos ) );
+      var endtext = unmarkup( name.slice( epos, name.char_count() ) );
+      var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + unmarkup( name.slice( spos, epos ) ) + "</span>";
+      return( begtext + seltext + endtext );
     }
-    return( name );
+    return( (!(bool)style.node_markup || (_mode == NodeMode.EDITABLE)) ? unmarkup( name ) : name );
   }
 
   /*

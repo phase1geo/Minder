@@ -85,6 +85,7 @@ public class StyleInspector : Box {
   private Scale                      _node_margin;
   private Scale                      _node_padding;
   private FontButton                 _font_chooser;
+  private Switch                     _node_markup;
   private Image                      _conn_dash;
   private Image                      _conn_arrow;
   private Scale                      _conn_width;
@@ -410,6 +411,7 @@ public class StyleInspector : Box {
     var node_margin      = create_node_margin_ui();
     var node_padding     = create_node_padding_ui();
     var node_font        = create_node_font_ui();
+    var node_markup      = create_node_markup_ui();
 
     cbox.pack_start( node_border,      false, true );
     cbox.pack_start( node_borderwidth, false, true );
@@ -417,6 +419,7 @@ public class StyleInspector : Box {
     cbox.pack_start( node_margin,      false, true );
     cbox.pack_start( node_padding,     false, true );
     cbox.pack_start( node_font,        false, true );
+    cbox.pack_start( node_markup,      false, true );
 
     box.pack_start( lbl,  false, true );
     box.pack_start( cbox, false, true );
@@ -615,6 +618,29 @@ public class StyleInspector : Box {
 
     return( box );
 
+  }
+
+  private Box create_node_markup_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Enable Markup" ) );
+    lbl.xalign = (float)0;
+
+    _node_markup = new Switch();
+    _node_markup.button_release_event.connect( node_markup_changed );
+
+    box.pack_start( lbl,        false, true );
+    box.pack_end( _node_markup, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the node fill status changes */
+  private bool node_markup_changed( Gdk.EventButton e ) {
+    _current_style.node_markup = !_node_markup.get_active();
+    apply_changes();
+    return( false );
   }
 
   /* Creates the connection style UI */
@@ -918,6 +944,7 @@ public class StyleInspector : Box {
     _node_margin.set_value( (double)style.node_margin );
     _node_padding.set_value( (double)style.node_padding );
     _font_chooser.set_font( style.node_font.to_string() );
+    _node_markup.set_active( (bool)style.node_markup );
     _conn_arrow.surface = Connection.make_arrow_icon( style.connection_arrow );
     _conn_width.set_value( (double)style.connection_width );
   }

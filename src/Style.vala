@@ -36,6 +36,7 @@ public class Style {
   public int?             node_margin      { get; set; default = null; }
   public int?             node_padding     { get; set; default = null; }
   public FontDescription? node_font        { get; set; default = null; }
+  public bool?            node_markup      { get; set; default = null; }
   public LinkDash?        connection_dash  { get; set; default = null; }
   public int?             connection_width { get; set; default = null; }
   public string?          connection_arrow { get; set; default = null; }
@@ -85,6 +86,7 @@ public class Style {
       node_margin      = null;
       node_padding     = null;
       node_font        = null;
+      node_markup      = null;
       connection_dash  = null;
       connection_width = null;
       connection_arrow = null;
@@ -106,6 +108,7 @@ public class Style {
     if( (s.node_margin      != null) || !s._template ) node_margin      = s.node_margin;
     if( (s.node_padding     != null) || !s._template ) node_padding     = s.node_padding;
     if( (s.node_font        != null) || !s._template ) node_font        = s.node_font.copy();
+    if( (s.node_markup      != null) || !s._template ) node_markup      = s.node_markup;
     if( (s.connection_dash  != null) || !s._template ) connection_dash  = s.connection_dash;
     if( (s.connection_width != null) || !s._template ) connection_width = s.connection_width;
     if( (s.connection_arrow != null) || !s._template ) connection_arrow = s.connection_arrow;
@@ -159,6 +162,10 @@ public class Style {
     string? nf = node->get_prop( "nodefont" );
     if( nf != null ) {
       node_font = FontDescription.from_string( nf );
+    }
+    string? nmu = node->get_prop( "nodemarkup" );
+    if( nmu != null ) {
+      node_markup = bool.parse( nmu );
     }
 
   }
@@ -216,6 +223,9 @@ public class Style {
     }
     if( node_font != null ) {
       n->set_prop( "nodefont", node_font.to_string() );
+    }
+    if( node_markup != null ) {
+      n->set_prop( "nodemarkup", node_markup.to_string() );
     }
 
   }
