@@ -1309,7 +1309,7 @@ public class DrawArea : Gtk.DrawingArea {
         /* If we are not a root node, move the node into the appropriate position */
         } else if( _current_node.parent != null ) {
           int orig_index = _current_node.index();
-          animator.add_node( _current_node, "move to position" );
+          animator.add_nodes( "move to position" );
           if( _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) ) ) {
             undo_buffer.add_item( new UndoNodeMove( _current_node, _orig_side, orig_index ) );
           }

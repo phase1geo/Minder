@@ -58,7 +58,7 @@ public class Layout : Object {
       item.detach( item.side );
     });
     list.@foreach((item) => {
-      item.attach_nonroot( parent, -1, null );
+      item.attach_init( parent, -1 );
     });
   }
 

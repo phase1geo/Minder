@@ -1051,7 +1051,7 @@ public class Node : Object {
             if( y < _children.index( i ).posy ) {
               child.detach( side );
               child.attached = true;
-              child.attach( this, (i - ((idx < i) ? 1 : 0)), null );
+              child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
               return( !same_parent || (idx != child.index()) );
             }
             break;
@@ -1060,7 +1060,7 @@ public class Node : Object {
             if( x < _children.index( i ).posx ) {
               child.detach( side );
               child.attached = true;
-              child.attach( this, (i - ((idx < i) ? 1 : 0)), null );
+              child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
               return( !same_parent || (idx != child.index()) );
             }
             break;
@@ -1068,13 +1068,13 @@ public class Node : Object {
       } else if( _children.index( i ).side > child.side ) {
         child.detach( side );
         child.attached = true;
-        child.attach( this, (i - ((idx < i) ? 1 : 0)), null );
+        child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
         return( !same_parent || (idx != child.index()) );
       }
     }
     child.detach( side );
     child.attached = true;
-    child.attach( this, -1, null );
+    child.attach( this, -1, null, false );
     return( !same_parent || (idx != child.index()) );
   }
 
@@ -1411,29 +1411,31 @@ public class Node : Object {
   }
 
   /* Attaches this node as a child of the given node */
-  public virtual void attach( Node parent, int index, Theme? theme ) {
+  public virtual void attach( Node parent, int index, Theme? theme, bool set_side = true ) {
     this.parent = parent;
     layout = parent.layout;
     if( layout != null ) {
-      if( parent.is_root() ) {
-        if( parent.children().length == 0 ) {
-          side = layout.side_mapping( side );
+      if( set_side ) {
+        if( parent.is_root() ) {
+          if( parent.children().length == 0 ) {
+            side = layout.side_mapping( side );
+          } else {
+            side = parent.children().index( parent.children().length - 1 ).side;
+          }
         } else {
-          side = parent.children().index( parent.children().length - 1 ).side;
+          side = parent.side;
         }
-      } else {
-        side = parent.side;
+        layout.propagate_side( this, side );
       }
-      layout.propagate_side( this, side );
       layout.initialize( this );
     }
     attach_common( index, theme );
   }
 
-  public virtual void attach_nonroot( Node parent, int index, Theme? theme ) {
+  public virtual void attach_init( Node parent, int index ) {
     this.parent = parent;
     layout = parent.layout;
-    attach_common( index, theme );
+    attach_common( index, null );
   }
 
   protected virtual void attach_common( int index, Theme? theme ) {

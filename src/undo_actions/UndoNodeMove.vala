@@ -46,7 +46,7 @@ public class UndoNodeMove : UndoItem {
     _n.detach( old_side );
     _n.side = new_side;
     _n.layout.propagate_side( _n, new_side );
-    _n.attach( parent, new_index, null );
+    _n.attach( parent, new_index, null, false );
     da.animator.animate();
   }
 
