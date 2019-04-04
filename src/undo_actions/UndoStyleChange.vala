@@ -23,22 +23,36 @@ using Gtk;
 
 public class UndoStyleChange : UndoItem {
 
-  StyleAffects _affects;
-  Style        _old_style;
-  Style        _new_style;
-  Node?        _node;
-  Connection?  _conn;
+  private StyleAffects _affects;
+  private Node?        _node;
+  private Connection?  _conn;
+
+  private enum StyleChangeType {
+    LOAD = 0,
+    UNDO,
+    REDO
+  }
 
   /* Constructor for a node name change */
-  public UndoStyleChange( StyleAffects affects, Style style, Node? node, Connection? conn ) {
+  public UndoStyleChange( StyleAffects affects, DrawArea da ) {
     base( _( "style change" ) );
-    _affects   = affects;
-    _new_style = new Style.templated();
-    _old_style = new Style.templated();
-    _node      = node;
-    _conn      = conn;
-    switch( affects ) {
-      case StyleAffects.ALL         :  _old_style.copy_alias( style, StyleInspector.styles.get_global_style() );  break;
+    _affects = affects;
+    _node    = da.get_current_node();
+    _conn    = da.get_current_connection();
+  }
+
+  protected void load_styles( DrawArea da ) {
+    traverse_styles( da, StyleChangeType.LOAD );
+  }
+
+  private void traverse_styles( DrawArea da, StyleChangeType change_type ) {
+    int index = 1;
+    switch( _affects ) {
+      case StyleAffects.ALL         :
+        for( int i=0; i<da.get_nodes().length; i++ ) {
+          set_style_for_tree( da.get_nodes().index( i ), change_type, ref index );
+        }
+        break;
       case StyleAffects.LEVEL0      :
       case StyleAffects.LEVEL1      :
       case StyleAffects.LEVEL2      :
@@ -48,22 +62,76 @@ public class UndoStyleChange : UndoItem {
       case StyleAffects.LEVEL6      :
       case StyleAffects.LEVEL7      :
       case StyleAffects.LEVEL8      :
-      case StyleAffects.LEVEL9      :  _old_style.copy_alias( style, StyleInspector.styles.get_style_for_level( affects.level() ) );  break;
-      case StyleAffects.CURRENT     :  _old_style.copy_alias( style, ((_node != null) ? _node.style : _conn.style) );  break;
-      case StyleAffects.CURRTREE    :  _old_style.copy_alias( style, _node.get_root().style );  break;
-      case StyleAffects.CURRSUBTREE :  _old_style.copy_alias( style, _node.style );  break;
+      case StyleAffects.LEVEL9      :
+        for( int i=0; i<da.get_nodes().length; i++ ) {
+          set_style_for_level( da.get_nodes().index( i ), (int)_affects.level(), change_type, ref index, 0 );
+        }
+        break;
+      case StyleAffects.CURRENT     :
+        if( _node != null ) {
+          set_style( _node.style, change_type, ref index );
+        } else {
+          set_style( _conn.style, change_type, ref index );
+        }
+        break;
+      case StyleAffects.CURRTREE    :
+        set_style_for_tree( _node.get_root(), change_type, ref index );
+        break;
+      case StyleAffects.CURRSUBTREE :
+        set_style_for_tree( _node, change_type, ref index );
+        break;
     }
-    _new_style.copy( style );
+    da.changed();
+    da.queue_draw();
+  }
+
+  private void set_style( Style style, StyleChangeType change_type, ref int index ) {
+    switch( change_type ) {
+      case StyleChangeType.LOAD :
+        load_style_value( style );
+        store_style_value( style, 0 );
+        break;
+      case StyleChangeType.UNDO :
+        store_style_value( style, index++ );
+        break;
+      case StyleChangeType.REDO :
+        store_style_value( style, 0 );
+        break;
+    }
+  }
+
+  private void set_style_for_tree( Node node, StyleChangeType change_type, ref int index ) {
+    set_style( node.style, change_type, ref index );
+    for( int i=0; i<node.children().length; i++ ) {
+      set_style_for_tree( node.children().index( i ), change_type, ref index );
+    }
+  }
+
+  private void set_style_for_level( Node node, int levels, StyleChangeType change_type, ref int index, int level ) {
+    if( (levels & (1 << level)) != 0 ) {
+      set_style( node.style, change_type, ref index );
+    }
+    for( int i=0; i<node.children().length; i++ ) {
+      set_style_for_level( node.children().index( i ), levels, change_type, ref index, ((level == 9) ? 9 : (level + 1)) );
+    }
+  }
+
+  protected virtual void load_style_value( Style style ) {
+    /* This method will be overridden */
+  }
+
+  protected virtual void store_style_value( Style style, int index ) {
+    /* This method will be overridden */
   }
 
   /* Undoes a node name change */
   public override void undo( DrawArea da ) {
-    StyleInspector.apply_style_change( da, _affects, _old_style, _node, _conn );
+    traverse_styles( da, StyleChangeType.UNDO );
   }
 
   /* Redoes a node name change */
   public override void redo( DrawArea da ) {
-    StyleInspector.apply_style_change( da, _affects, _new_style, _node, _conn );
+    traverse_styles( da, StyleChangeType.REDO );
   }
 
 }
