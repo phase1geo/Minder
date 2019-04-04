@@ -243,7 +243,6 @@ public class StyleInspector : Box {
     var link_types = styles.get_link_types();
     if( _link_types.selected < link_types.length ) {
       _da.undo_buffer.add_item( new UndoStyleLinkType( _affects, link_types.index( _link_types.selected ), _da ) );
-      apply_changes();
     }
     return( false );
   }
@@ -312,7 +311,6 @@ public class StyleInspector : Box {
       mi.activate.connect(() => {
         _da.undo_buffer.add_item( new UndoStyleLinkDash( _affects, dash, _da ) );
         _link_dash.surface = img.surface;
-        apply_changes();
       });
       mi.add( img );
       menu.add( mi );
@@ -364,7 +362,6 @@ public class StyleInspector : Box {
   private bool link_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
     _da.undo_buffer.add_item( new UndoStyleLinkWidth( _affects, (int)value, _da ) );
-    apply_changes();
     return( false );
   }
 
@@ -388,7 +385,6 @@ public class StyleInspector : Box {
   /* Called when the user clicks on the link arrow switch */
   private bool link_arrow_changed( Gdk.EventButton e ) {
     _da.undo_buffer.add_item( new UndoStyleLinkArrow( _affects, !_link_arrow.get_active(), _da ) );
-    apply_changes();
     return( false );
   }
 
@@ -589,7 +585,6 @@ public class StyleInspector : Box {
       return( false );
     }
     _da.undo_buffer.add_item( new UndoStyleNodePadding( _affects, (int)value, _da ) );
-    apply_changes();
     return( false );
   }
 
@@ -685,9 +680,8 @@ public class StyleInspector : Box {
       var img  = new Image.from_surface( dash.make_icon() );
       var mi   = new Gtk.MenuItem();
       mi.activate.connect(() => {
-        _current_style.connection_dash = dash;
-        _conn_dash.surface             = img.surface;
-        apply_changes();
+        _da.undo_buffer.add_item( new UndoStyleConnectionDash( _affects, dash, _da ) );
+        _conn_dash.surface = img.surface;
       });
       mi.add( img );
       menu.add( mi );
@@ -724,9 +718,8 @@ public class StyleInspector : Box {
       var img = new Image.from_surface( Connection.make_arrow_icon( arrow ) );
       var mi  = new Gtk.MenuItem();
       mi.activate.connect(() => {
-        _current_style.connection_arrow = arrow;
-        _conn_arrow.surface             = img.surface;
-        apply_changes();
+        _da.undo_buffer.add_item( new UndoStyleConnectionArrow( _affects, arrow, _da ) );
+        _conn_arrow.surface = img.surface;
       });
       mi.add( img );
       menu.add( mi );
@@ -777,8 +770,7 @@ public class StyleInspector : Box {
   /* Called whenever the user changes the link width value */
   private bool connection_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
-    _current_style.connection_width = (int)value;
-    apply_changes();
+    _da.undo_buffer.add_item( new UndoStyleConnectionWidth( _affects, (int)value, _da ) );
     return( false );
   }
 
@@ -842,47 +834,6 @@ public class StyleInspector : Box {
         _conn_group.visible   = false;
         break;
     }
-  }
-
-  /* Apply the given style information based on the affects type */
-  public static void apply_style_change( DrawArea da, StyleAffects affects, Style style, Node? node, Connection? conn ) {
-    switch( affects ) {
-      case StyleAffects.ALL     :
-        styles.set_all_nodes_to_style( da.get_nodes(), style );
-        styles.set_all_connections_to_style( da.get_connections(), style );
-        break;
-      case StyleAffects.LEVEL0  :
-      case StyleAffects.LEVEL1  :
-      case StyleAffects.LEVEL2  :
-      case StyleAffects.LEVEL3  :
-      case StyleAffects.LEVEL4  :
-      case StyleAffects.LEVEL5  :
-      case StyleAffects.LEVEL6  :
-      case StyleAffects.LEVEL7  :
-      case StyleAffects.LEVEL8  :
-      case StyleAffects.LEVEL9  :
-        styles.set_levels_to_style( da.get_nodes(), (1 << (int)affects.level()), style );
-        break;
-      case StyleAffects.CURRENT :
-        if( node != null ) {
-          node.style = style;
-        } else if( conn != null ) {
-          conn.style = style;
-        }
-        break;
-      case StyleAffects.CURRTREE :
-        styles.set_tree_to_style( node.get_root(), style );
-        break;
-      case StyleAffects.CURRSUBTREE :
-        styles.set_tree_to_style( node, style );
-        break;
-    }
-  }
-
-  /* Apply the changes */
-  private void apply_changes() {
-    _da.changed();
-    _da.queue_draw();
   }
 
   /* Checks the nodes in the given tree at the specified level to see if there are any non-leaf nodes */
