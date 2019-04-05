@@ -42,7 +42,7 @@ public class UndoStyleNodePadding : UndoStyleChange {
   }
 
   protected override void replace_with_item( UndoItem item ) {
-    _values.data[0] = ((UndoStyleNodeMargin)item)._values.data[0];
+    _values.data[0] = ((UndoStyleNodePadding)item)._values.data[0];
   }
 
 }
