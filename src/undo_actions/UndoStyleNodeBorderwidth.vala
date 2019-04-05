@@ -41,4 +41,8 @@ public class UndoStyleNodeBorderwidth : UndoStyleChange {
     style.node_borderwidth = _values.index( index );
   }
 
+  protected override void replace_with_item( UndoItem item ) {
+    _values.data[0] = ((UndoStyleNodeBorderwidth)item)._values.data[0];
+  }
+
 }

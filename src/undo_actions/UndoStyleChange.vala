@@ -39,6 +39,14 @@ public class UndoStyleChange : UndoItem {
     _affects = affects;
     _node    = da.get_current_node();
     _conn    = da.get_current_connection();
+    Type type = this.get_type();
+  	stdout.printf( "type: %s\n", type.name() );
+  }
+
+  /* Returns true if the given undo item matches our item */
+  protected override bool matches( UndoItem item ) {
+    UndoStyleChange other = (UndoStyleChange)item;
+    return( (_affects == other._affects) && (_node == other._node) && (_conn == other._conn) );
   }
 
   protected void load_styles( DrawArea da ) {
@@ -52,6 +60,7 @@ public class UndoStyleChange : UndoItem {
         for( int i=0; i<da.get_nodes().length; i++ ) {
           set_style_for_tree( da.get_nodes().index( i ), change_type, ref index );
         }
+        da.node_changed();
         break;
       case StyleAffects.LEVEL0      :
       case StyleAffects.LEVEL1      :
@@ -66,42 +75,59 @@ public class UndoStyleChange : UndoItem {
         for( int i=0; i<da.get_nodes().length; i++ ) {
           set_style_for_level( da.get_nodes().index( i ), (int)_affects.level(), change_type, ref index, 0 );
         }
+        da.node_changed();
         break;
       case StyleAffects.CURRENT     :
         if( _node != null ) {
-          set_style( _node.style, change_type, ref index );
+          set_node_style( _node, change_type, ref index );
+          da.node_changed();
         } else {
-          set_style( _conn.style, change_type, ref index );
+          set_connection_style( _conn, change_type, ref index );
+          da.connection_changed();
         }
         break;
       case StyleAffects.CURRTREE    :
         set_style_for_tree( _node.get_root(), change_type, ref index );
+        da.node_changed();
         break;
       case StyleAffects.CURRSUBTREE :
         set_style_for_tree( _node, change_type, ref index );
+        da.node_changed();
         break;
     }
     da.changed();
     da.queue_draw();
   }
 
-  private void set_style( Style style, StyleChangeType change_type, ref int index ) {
+  private void set_style( Style old_style, Style new_style, StyleChangeType change_type, ref int index ) {
     switch( change_type ) {
       case StyleChangeType.LOAD :
-        load_style_value( style );
-        store_style_value( style, 0 );
+        load_style_value( old_style );
+        store_style_value( new_style, 0 );
         break;
       case StyleChangeType.UNDO :
-        store_style_value( style, index++ );
+        store_style_value( new_style, index++ );
         break;
       case StyleChangeType.REDO :
-        store_style_value( style, 0 );
+        store_style_value( new_style, 0 );
         break;
     }
   }
 
+  private void set_node_style( Node node, StyleChangeType change_type, ref int index ) {
+    Style new_style = new Style.templated();
+    set_style( node.style, new_style, change_type, ref index );
+    node.style = new_style;
+  }
+
+  private void set_connection_style( Connection conn, StyleChangeType change_type, ref int index ) {
+    Style new_style = new Style.templated();
+    set_style( conn.style, new_style, change_type, ref index );
+    conn.style = new_style;
+  }
+
   private void set_style_for_tree( Node node, StyleChangeType change_type, ref int index ) {
-    set_style( node.style, change_type, ref index );
+    set_node_style( node, change_type, ref index );
     for( int i=0; i<node.children().length; i++ ) {
       set_style_for_tree( node.children().index( i ), change_type, ref index );
     }
@@ -109,7 +135,7 @@ public class UndoStyleChange : UndoItem {
 
   private void set_style_for_level( Node node, int levels, StyleChangeType change_type, ref int index, int level ) {
     if( (levels & (1 << level)) != 0 ) {
-      set_style( node.style, change_type, ref index );
+      set_node_style( node, change_type, ref index );
     }
     for( int i=0; i<node.children().length; i++ ) {
       set_style_for_level( node.children().index( i ), levels, change_type, ref index, ((level == 9) ? 9 : (level + 1)) );

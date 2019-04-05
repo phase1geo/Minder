@@ -41,4 +41,8 @@ public class UndoStyleLinkWidth : UndoStyleChange {
     style.link_width = _values.index( index );
   }
 
+  protected override void replace_with_item( UndoItem item ) {
+    _values.data[0] = ((UndoStyleLinkWidth)item)._values.data[0];
+  }
+
 }

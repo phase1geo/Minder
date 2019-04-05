@@ -36,4 +36,13 @@ public class UndoItem : GLib.Object {
   /* Causes the stored item to be put into the after state */
   public virtual void redo( DrawArea da ) {}
 
+  /* Checks to see if the given undo item is "mergeable" with this one */
+  public virtual bool matches( UndoItem item ) {
+    return( false );
+  }
+
+  public virtual void replace_with_item( UndoItem item ) {
+    /* Do nothing by default */
+  }
+
 }

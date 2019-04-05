@@ -361,7 +361,7 @@ public class StyleInspector : Box {
   /* Called whenever the user changes the link width value */
   private bool link_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
-    _da.undo_buffer.add_item( new UndoStyleLinkWidth( _affects, (int)value, _da ) );
+    _da.undo_buffer.replace_item( new UndoStyleLinkWidth( _affects, (int)value, _da ) );
     return( false );
   }
 
@@ -503,7 +503,7 @@ public class StyleInspector : Box {
 
   /* Called whenever the user changes the link width value */
   private bool node_borderwidth_changed( ScrollType scroll, double value ) {
-    _da.undo_buffer.add_item( new UndoStyleNodeBorderwidth( _affects, (int)value, _da ) );
+    _da.undo_buffer.replace_item( new UndoStyleNodeBorderwidth( _affects, (int)value, _da ) );
     return( false );
   }
 
@@ -555,7 +555,7 @@ public class StyleInspector : Box {
     if( (int)value > 20 ) {
       return( false );
     }
-    _da.undo_buffer.add_item( new UndoStyleNodeMargin( _affects, (int)value, _da ) );
+    _da.undo_buffer.replace_item( new UndoStyleNodeMargin( _affects, (int)value, _da ) );
     return( false );
   }
 
@@ -584,7 +584,7 @@ public class StyleInspector : Box {
     if( (int) value > 20 ) {
       return( false );
     }
-    _da.undo_buffer.add_item( new UndoStyleNodePadding( _affects, (int)value, _da ) );
+    _da.undo_buffer.replace_item( new UndoStyleNodePadding( _affects, (int)value, _da ) );
     return( false );
   }
 
@@ -770,7 +770,7 @@ public class StyleInspector : Box {
   /* Called whenever the user changes the link width value */
   private bool connection_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
-    _da.undo_buffer.add_item( new UndoStyleConnectionWidth( _affects, (int)value, _da ) );
+    _da.undo_buffer.replace_item( new UndoStyleConnectionWidth( _affects, (int)value, _da ) );
     return( false );
   }
 

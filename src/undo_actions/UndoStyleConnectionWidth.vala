@@ -41,4 +41,8 @@ public class UndoStyleConnectionWidth : UndoStyleChange {
     style.connection_width = _values.index( index );
   }
 
+  protected override void replace_with_item( UndoItem item ) {
+    _values.data[0] = ((UndoStyleConnectionWidth)item)._values.data[0];
+  }
+
 }

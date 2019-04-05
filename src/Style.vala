@@ -136,21 +136,21 @@ public class Style {
 
   public string to_string() {
     string[] arr = {};
-    if( link_type        != null ) arr += "ltype";
-    if( link_width       != null ) arr += "lwidth";
-    if( link_arrow       != null ) arr += "larrow";
-    if( link_dash        != null ) arr += "ldash";
-    if( node_border      != null ) arr += "nborder";
-    if( node_width       != null ) arr += "nwidth";
-    if( node_borderwidth != null ) arr += "nbwidth";
-    if( node_fill        != null ) arr += "nfill";
-    if( node_margin      != null ) arr += "nmargin";
-    if( node_padding     != null ) arr += "npad";
+    if( link_type        != null ) arr += "ltype[%s]".printf( link_type.name() );
+    if( link_width       != null ) arr += "lwidth[%d]".printf( link_width );
+    if( link_arrow       != null ) arr += "larrow[%s]".printf( link_arrow.to_string() );
+    if( link_dash        != null ) arr += "ldash[%s]".printf( link_dash.name );
+    if( node_border      != null ) arr += "nborder[%s]".printf( node_border.name() );
+    if( node_width       != null ) arr += "nwidth[%d]".printf( node_width );
+    if( node_borderwidth != null ) arr += "nbwidth[%d]".printf( node_borderwidth );
+    if( node_fill        != null ) arr += "nfill[%s]".printf( node_fill.to_string() );
+    if( node_margin      != null ) arr += "nmargin[%d]".printf( node_margin );
+    if( node_padding     != null ) arr += "npad[%d]".printf( node_padding );
     if( node_font        != null ) arr += "nfont";
-    if( node_markup      != null ) arr += "nmarkup";
-    if( connection_dash  != null ) arr += "cdash";
-    if( connection_width != null ) arr += "cwidth";
-    if( connection_arrow != null ) arr += "carrow";
+    if( node_markup      != null ) arr += "nmarkup[%s]".printf( node_markup.to_string() );
+    if( connection_dash  != null ) arr += "cdash[%s]".printf( connection_dash.name );
+    if( connection_width != null ) arr += "cwidth[%d]".printf( connection_width );
+    if( connection_arrow != null ) arr += "carrow[%s]".printf( connection_arrow );
     return( string.joinv( "+", arr ) );
   }
 

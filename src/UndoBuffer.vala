@@ -26,7 +26,7 @@ public class UndoBuffer : Object {
   private DrawArea        _da;
   private Array<UndoItem> _undo_buffer;
   private Array<UndoItem> _redo_buffer;
-  private bool            _debug = false;
+  private bool            _debug = true;
 
   public signal void buffer_changed();
 
@@ -96,6 +96,22 @@ public class UndoBuffer : Object {
     _redo_buffer.remove_range( 0, _redo_buffer.length );
     buffer_changed();
     output( "ITEM ADDED" );
+  }
+
+  /*
+   Attempts to replace the last item in the undo buffer with the given item if both items are the same type;
+   otherwise, the new item will just be added like any other item.
+  */
+  public void replace_item( UndoItem item ) {
+    if( _undo_buffer.length > 0 ) {
+      UndoItem last = _undo_buffer.index( _undo_buffer.length - 1 );
+      if( (last.get_type() == item.get_type()) && last.matches( item ) ) {
+        last.replace_with_item( item );
+        output( "ITEM REPLACED" );
+        return;
+      }
+    }
+    add_item( item );
   }
 
   /* Outputs the state of the undo and redo buffers to standard output */

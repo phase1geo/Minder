@@ -41,4 +41,8 @@ public class UndoStyleNodeMargin : UndoStyleChange {
     style.node_margin = _values.index( index );
   }
 
+  protected override void replace_with_item( UndoItem item ) {
+    _values.data[0] = ((UndoStyleNodeMargin)item)._values.data[0];
+  }
+
 }
