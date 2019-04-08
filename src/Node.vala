@@ -205,11 +205,12 @@ public class Node : Object {
       return( _style );
     }
     set {
-      _style.copy( value );
-      _pango_layout.set_font_description( _style.node_font );
-      _pango_layout.set_width( _style.node_width * Pango.SCALE );
-      if( _layout != null ) {
-        _layout.handle_update_by_edit( this );
+      if( _style.copy( value ) ) {
+        _pango_layout.set_font_description( _style.node_font );
+        _pango_layout.set_width( _style.node_width * Pango.SCALE );
+        if( _layout != null ) {
+          _layout.handle_update_by_edit( this );
+        }
       }
     }
   }

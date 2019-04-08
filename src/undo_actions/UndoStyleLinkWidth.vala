@@ -23,26 +23,34 @@ using Gtk;
 
 public class UndoStyleLinkWidth : UndoStyleChange {
 
-  Array<int> _values;
+  private GenericArray<int> _values;
 
   /* Constructor for a node name change */
   public UndoStyleLinkWidth( StyleAffects affects, int link_width, DrawArea da ) {
     base( affects, da );
-    _values = new Array<int>();
-    _values.append_val( link_width );
+    _values = new GenericArray<int>();
+    _values.add( link_width );
     load_styles( da );
   }
 
   protected override void load_style_value( Style style ) {
-    _values.append_val( style.link_width );
+    _values.add( style.link_width );
   }
 
   protected override void store_style_value( Style style, int index ) {
-    style.link_width = _values.index( index );
+    style.link_width = _values.get( index );
   }
 
   protected override void replace_with_item( UndoItem item ) {
-    _values.data[0] = ((UndoStyleLinkWidth)item)._values.data[0];
+    _values.set( 0, ((UndoStyleLinkWidth)item)._values.get( 0 ) );
+  }
+
+  protected override string to_string() {
+    string[] sa = new string[_values.length];
+    for( int i=0; i<_values.length; i++ ) {
+      sa[i] = _values.get( i ).to_string();
+    }
+    return( base.to_string() + ", lwidth: %s".printf( string.joinv( ",", sa ) ) );
   }
 
 }

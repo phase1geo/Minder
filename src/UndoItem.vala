@@ -24,6 +24,7 @@ using GLib;
 public class UndoItem : GLib.Object {
 
   public string name { set; get; default = ""; }
+  public int    id   { set; get; default = -1; }
 
   /* Default constructor */
   public UndoItem( string name ) {
@@ -43,6 +44,10 @@ public class UndoItem : GLib.Object {
 
   public virtual void replace_with_item( UndoItem item ) {
     /* Do nothing by default */
+  }
+
+  public virtual string to_string() {
+    return( "%s [%d]".printf( name, id ) );
   }
 
 }

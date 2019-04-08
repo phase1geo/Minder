@@ -23,26 +23,26 @@ using Gtk;
 
 public class UndoStyleNodeBorderwidth : UndoStyleChange {
 
-  Array<int> _values;
+  GenericArray<int> _values;
 
   /* Constructor for a node name change */
   public UndoStyleNodeBorderwidth( StyleAffects affects, int node_borderwidth, DrawArea da ) {
     base( affects, da );
-    _values = new Array<int>();
-    _values.append_val( node_borderwidth );
+    _values = new GenericArray<int>();
+    _values.add( node_borderwidth );
     load_styles( da );
   }
 
   protected override void load_style_value( Style style ) {
-    _values.append_val( style.node_borderwidth );
+    _values.add( style.node_borderwidth );
   }
 
   protected override void store_style_value( Style style, int index ) {
-    style.node_borderwidth = _values.index( index );
+    style.node_borderwidth = _values.get( index );
   }
 
   protected override void replace_with_item( UndoItem item ) {
-    _values.data[0] = ((UndoStyleNodeBorderwidth)item)._values.data[0];
+    _values.set( 0, ((UndoStyleNodeBorderwidth)item)._values.get( 0 ) );
   }
 
 }

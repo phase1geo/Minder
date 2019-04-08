@@ -94,44 +94,29 @@ public class Style {
 
   }
 
-  /* Copies the given style to this style */
-  public void copy( Style s ) {
+  /* Copies the given style to this style.  Returns true if the style changed; otherwise, returns false. */
+  public bool copy( Style s ) {
 
-    if( (s.link_type        != null) || !s._template ) link_type        = s.link_type;
-    if( (s.link_width       != null) || !s._template ) link_width       = s.link_width;
-    if( (s.link_arrow       != null) || !s._template ) link_arrow       = s.link_arrow;
-    if( (s.link_dash        != null) || !s._template ) link_dash        = s.link_dash;
-    if( (s.node_border      != null) || !s._template ) node_border      = s.node_border;
-    if( (s.node_width       != null) || !s._template ) node_width       = s.node_width;
-    if( (s.node_borderwidth != null) || !s._template ) node_borderwidth = s.node_borderwidth;
-    if( (s.node_fill        != null) || !s._template ) node_fill        = s.node_fill;
-    if( (s.node_margin      != null) || !s._template ) node_margin      = s.node_margin;
-    if( (s.node_padding     != null) || !s._template ) node_padding     = s.node_padding;
-    if( (s.node_font        != null) || !s._template ) node_font        = s.node_font.copy();
-    if( (s.node_markup      != null) || !s._template ) node_markup      = s.node_markup;
-    if( (s.connection_dash  != null) || !s._template ) connection_dash  = s.connection_dash;
-    if( (s.connection_width != null) || !s._template ) connection_width = s.connection_width;
-    if( (s.connection_arrow != null) || !s._template ) connection_arrow = s.connection_arrow;
+    bool changed = false;
 
-  }
+    if( ((s.link_type        != null) || !s._template) && (link_type        != s.link_type) )        { changed = true;  link_type        = s.link_type; }
+    if( ((s.link_width       != null) || !s._template) && (link_width       != s.link_width) )       { changed = true;  link_width       = s.link_width; }
+    if( ((s.link_arrow       != null) || !s._template) && (link_arrow       != s.link_arrow) )       { changed = true;  link_arrow       = s.link_arrow; }
+    if( ((s.link_dash        != null) || !s._template) && (link_dash        != s.link_dash) )        { changed = true;  link_dash        = s.link_dash; }
+    if( ((s.node_border      != null) || !s._template) && (node_border      != s.node_border) )      { changed = true;  node_border      = s.node_border; }
+    if( ((s.node_width       != null) || !s._template) && (node_width       != s.node_width) )       { changed = true;  node_width       = s.node_width; }
+    if( ((s.node_borderwidth != null) || !s._template) && (node_borderwidth != s.node_borderwidth) ) { changed = true;  node_borderwidth = s.node_borderwidth; }
+    if( ((s.node_fill        != null) || !s._template) && (node_fill        != s.node_fill) )        { changed = true;  node_fill        = s.node_fill; }
+    if( ((s.node_margin      != null) || !s._template) && (node_margin      != s.node_margin) )      { changed = true;  node_margin      = s.node_margin; }
+    if( ((s.node_padding     != null) || !s._template) && (node_padding     != s.node_padding) )     { changed = true;  node_padding     = s.node_padding; }
+    if( ((s.node_font        != null) || !s._template) )                                             { changed = true;  node_font        = s.node_font.copy(); }
+    if( ((s.node_markup      != null) || !s._template) && (node_markup      != s.node_markup) )      { changed = true;  node_markup      = s.node_markup; }
+    if( ((s.connection_dash  != null) || !s._template) && (connection_dash  != s.connection_dash) )  { changed = true;  connection_dash  = s.connection_dash; }
+    if( ((s.connection_width != null) || !s._template) && (connection_width != s.connection_width) ) { changed = true;  connection_width = s.connection_width; }
+    if( ((s.connection_arrow != null) || !s._template) && (connection_arrow != s.connection_arrow) ) { changed = true;  connection_arrow = s.connection_arrow; }
 
-  /* Copies the from style based on the valid fields from the template style */
-  public void copy_alias( Style template, Style from ) {
-    if( template.link_type        != null ) link_type        = from.link_type;
-    if( template.link_width       != null ) link_width       = from.link_width;
-    if( template.link_arrow       != null ) link_arrow       = from.link_arrow;
-    if( template.link_dash        != null ) link_dash        = from.link_dash;
-    if( template.node_border      != null ) node_border      = from.node_border;
-    if( template.node_width       != null ) node_width       = from.node_width;
-    if( template.node_borderwidth != null ) node_borderwidth = from.node_borderwidth;
-    if( template.node_fill        != null ) node_fill        = from.node_fill;
-    if( template.node_margin      != null ) node_margin      = from.node_margin;
-    if( template.node_padding     != null ) node_padding     = from.node_padding;
-    if( template.node_font        != null ) node_font        = from.node_font.copy();
-    if( template.node_markup      != null ) node_markup      = from.node_markup;
-    if( template.connection_dash  != null ) connection_dash  = from.connection_dash;
-    if( template.connection_width != null ) connection_width = from.connection_width;
-    if( template.connection_arrow != null ) connection_arrow = from.connection_arrow;
+    return( changed );
+
   }
 
   public string to_string() {

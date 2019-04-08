@@ -23,26 +23,26 @@ using Gtk;
 
 public class UndoStyleConnectionWidth : UndoStyleChange {
 
-  Array<int> _values;
+  GenericArray<int> _values;
 
   /* Constructor for a node name change */
   public UndoStyleConnectionWidth( StyleAffects affects, int connection_width, DrawArea da ) {
     base( affects, da );
-    _values = new Array<int>();
-    _values.append_val( connection_width );
+    _values = new GenericArray<int>();
+    _values.add( connection_width );
     load_styles( da );
   }
 
   protected override void load_style_value( Style style ) {
-    _values.append_val( style.connection_width );
+    _values.add( style.connection_width );
   }
 
   protected override void store_style_value( Style style, int index ) {
-    style.connection_width = _values.index( index );
+    style.connection_width = _values.get( index );
   }
 
   protected override void replace_with_item( UndoItem item ) {
-    _values.data[0] = ((UndoStyleConnectionWidth)item)._values.data[0];
+    _values.set( 0, ((UndoStyleConnectionWidth)item)._values.get( 0 ) );
   }
 
 }

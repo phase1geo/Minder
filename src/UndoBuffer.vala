@@ -26,7 +26,8 @@ public class UndoBuffer : Object {
   private DrawArea        _da;
   private Array<UndoItem> _undo_buffer;
   private Array<UndoItem> _redo_buffer;
-  private bool            _debug = true;
+  private bool            _debug = false;
+  private static int      _current_id = 0;
 
   public signal void buffer_changed();
 
@@ -92,6 +93,7 @@ public class UndoBuffer : Object {
 
   /* Adds a new undo item to the undo buffer.  Clears the redo buffer. */
   public void add_item( UndoItem item ) {
+    item.id = _current_id++;
     _undo_buffer.append_val( item );
     _redo_buffer.remove_range( 0, _redo_buffer.length );
     buffer_changed();
@@ -103,10 +105,12 @@ public class UndoBuffer : Object {
    otherwise, the new item will just be added like any other item.
   */
   public void replace_item( UndoItem item ) {
+    item.id = _current_id++;
     if( _undo_buffer.length > 0 ) {
       UndoItem last = _undo_buffer.index( _undo_buffer.length - 1 );
       if( (last.get_type() == item.get_type()) && last.matches( item ) ) {
         last.replace_with_item( item );
+        buffer_changed();
         output( "ITEM REPLACED" );
         return;
       }
@@ -119,11 +123,11 @@ public class UndoBuffer : Object {
     if( _debug ) {
       stdout.printf( "%s\n  Undo Buffer\n-----------\n", msg );
       for( int i=0; i<_undo_buffer.length; i++ ) {
-        stdout.printf( "    %s\n", _undo_buffer.index( i ).name );
+        stdout.printf( "    %s\n", _undo_buffer.index( i ).to_string() );
       }
       stdout.printf( "  Redo Buffer\n-----------\n" );
       for( int i=0; i<_redo_buffer.length; i++ ) {
-        stdout.printf( "    %s\n", _redo_buffer.index( i ).name );
+        stdout.printf( "    %s\n", _redo_buffer.index( i ).to_string() );
       }
     }
   }

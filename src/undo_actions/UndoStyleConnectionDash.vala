@@ -23,22 +23,22 @@ using Gtk;
 
 public class UndoStyleConnectionDash : UndoStyleChange {
 
-  Array<LinkDash> _values;
+  GenericArray<LinkDash> _values;
 
   /* Constructor for a node name change */
   public UndoStyleConnectionDash( StyleAffects affects, LinkDash connection_dash, DrawArea da ) {
     base( affects, da );
-    _values = new Array<LinkDash>();
-    _values.append_val( connection_dash );
+    _values = new GenericArray<LinkDash>();
+    _values.add( connection_dash );
     load_styles( da );
   }
 
   protected override void load_style_value( Style style ) {
-    _values.append_val( style.connection_dash );
+    _values.add( style.connection_dash );
   }
 
   protected override void store_style_value( Style style, int index ) {
-    style.connection_dash = _values.index( index );
+    style.connection_dash = _values.get( index );
   }
 
 }

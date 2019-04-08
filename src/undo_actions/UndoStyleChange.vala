@@ -39,8 +39,6 @@ public class UndoStyleChange : UndoItem {
     _affects = affects;
     _node    = da.get_current_node();
     _conn    = da.get_current_connection();
-    Type type = this.get_type();
-  	stdout.printf( "type: %s\n", type.name() );
   }
 
   /* Returns true if the given undo item matches our item */
@@ -158,6 +156,10 @@ public class UndoStyleChange : UndoItem {
   /* Redoes a node name change */
   public override void redo( DrawArea da ) {
     traverse_styles( da, StyleChangeType.REDO );
+  }
+
+  public override string to_string() {
+    return( base.to_string() + ", affects: %s".printf( _affects.to_string() )  );
   }
 
 }

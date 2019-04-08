@@ -23,26 +23,26 @@ using Gtk;
 
 public class UndoStyleNodePadding : UndoStyleChange {
 
-  Array<int> _values;
+  GenericArray<int> _values;
 
   /* Constructor for a node name change */
   public UndoStyleNodePadding( StyleAffects affects, int node_padding, DrawArea da ) {
     base( affects, da );
-    _values = new Array<int>();
-    _values.append_val( node_padding );
+    _values = new GenericArray<int>();
+    _values.add( node_padding );
     load_styles( da );
   }
 
   protected override void load_style_value( Style style ) {
-    _values.append_val( style.node_padding );
+    _values.add( style.node_padding );
   }
 
   protected override void store_style_value( Style style, int index ) {
-    style.node_padding = _values.index( index );
+    style.node_padding = _values.get( index );
   }
 
   protected override void replace_with_item( UndoItem item ) {
-    _values.data[0] = ((UndoStyleNodeMargin)item)._values.data[0];
+    _values.set( 0, ((UndoStyleNodePadding)item)._values.get( 0 ) );
   }
 
 }

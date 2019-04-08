@@ -23,22 +23,22 @@ using Gtk;
 
 public class UndoStyleNodeMarkup : UndoStyleChange {
 
-  Array<bool> _values;
+  GenericArray<bool> _values;
 
   /* Constructor for a node name change */
   public UndoStyleNodeMarkup( StyleAffects affects, bool node_markup, DrawArea da ) {
     base( affects, da );
-    _values = new Array<bool>();
-    _values.append_val( node_markup );
+    _values = new GenericArray<bool>();
+    _values.add( node_markup );
     load_styles( da );
   }
 
   protected override void load_style_value( Style style ) {
-    _values.append_val( style.node_markup );
+    _values.add( style.node_markup );
   }
 
   protected override void store_style_value( Style style, int index ) {
-    style.node_markup = _values.index( index );
+    style.node_markup = _values.get( index );
   }
 
 }

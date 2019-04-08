@@ -23,22 +23,22 @@ using Gtk;
 
 public class UndoStyleConnectionArrow : UndoStyleChange {
 
-  Array<string> _values;
+  GenericArray<string> _values;
 
   /* Constructor for a node name change */
   public UndoStyleConnectionArrow( StyleAffects affects, string connection_arrow, DrawArea da ) {
     base( affects, da );
-    _values = new Array<string>();
-    _values.append_val( connection_arrow );
+    _values = new GenericArray<string>();
+    _values.add( connection_arrow );
     load_styles( da );
   }
 
   protected override void load_style_value( Style style ) {
-    _values.append_val( style.connection_arrow );
+    _values.add( style.connection_arrow );
   }
 
   protected override void store_style_value( Style style, int index ) {
-    style.connection_arrow = _values.index( index );
+    style.connection_arrow = _values.get( index );
   }
 
 }

@@ -24,7 +24,7 @@ using Pango;
 
 public class UndoStyleNodeFont : UndoStyleChange {
 
-  Array<FontDescription> _values;
+  GenericArray<FontDescription> _values;
 
   /* Constructor for a node name change */
   public UndoStyleNodeFont( StyleAffects affects, string family, int size, DrawArea da ) {
@@ -32,17 +32,17 @@ public class UndoStyleNodeFont : UndoStyleChange {
     var node_font = new FontDescription();
     node_font.set_family( family );
     node_font.set_size( size * Pango.SCALE );
-    _values = new Array<FontDescription>();
-    _values.append_val( node_font );
+    _values = new GenericArray<FontDescription>();
+    _values.add( node_font );
     load_styles( da );
   }
 
   protected override void load_style_value( Style style ) {
-    _values.append_val( style.node_font );
+    _values.add( style.node_font );
   }
 
   protected override void store_style_value( Style style, int index ) {
-    style.node_font = _values.index( index );
+    style.node_font = _values.get( index );
   }
 
 }

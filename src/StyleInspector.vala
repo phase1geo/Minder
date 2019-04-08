@@ -20,8 +20,10 @@
 */
 
 using Gtk;
+using Gdk;
 
 public enum StyleAffects {
+
   ALL = 0,         // Applies changes to all nodes and connections
   SEP0,            // Indicates a separator (not a value)
   CURRENT,         // Applies changes to the current node/connection
@@ -89,7 +91,6 @@ public class StyleInspector : Box {
   private Image                      _conn_dash;
   private Image                      _conn_arrow;
   private Scale                      _conn_width;
-  private Style                      _current_style;
   private StyleAffects               _affects;
   private Array<Gtk.MenuItem>        _affect_items;
   private Label                      _affects_label;
@@ -97,6 +98,7 @@ public class StyleInspector : Box {
   private Box                        _link_group;
   private Box                        _node_group;
   private Box                        _conn_group;
+  private bool                       _change_add = true;
 
   public static Styles styles = new Styles();
 
@@ -104,8 +106,7 @@ public class StyleInspector : Box {
 
     Object( orientation:Orientation.VERTICAL, spacing:20 );
 
-    _da            = da;
-    _current_style = new Style.templated();
+    _da = da;
 
     /* Initialize the affects */
     _affects = StyleAffects.ALL;
@@ -350,6 +351,7 @@ public class StyleInspector : Box {
     }
 
     _link_width.change_value.connect( link_width_changed );
+    _link_width.button_release_event.connect( link_width_released );
 
     box.pack_start( lbl,         false, true );
     box.pack_end(   _link_width, false, true );
@@ -361,7 +363,18 @@ public class StyleInspector : Box {
   /* Called whenever the user changes the link width value */
   private bool link_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
-    _da.undo_buffer.replace_item( new UndoStyleLinkWidth( _affects, (int)value, _da ) );
+    var link_width = new UndoStyleLinkWidth( _affects, (int)value, _da );
+    if( _change_add ) {
+      _da.undo_buffer.add_item( link_width );
+      _change_add = false;
+    } else {
+      _da.undo_buffer.replace_item( link_width );
+    }
+    return( false );
+  }
+
+  private bool link_width_released( EventButton e ) {
+    _change_add = true;
     return( false );
   }
 
@@ -493,6 +506,7 @@ public class StyleInspector : Box {
     }
 
     _node_borderwidth.change_value.connect( node_borderwidth_changed );
+    _node_borderwidth.button_release_event.connect( node_borderwidth_released );
 
     box.pack_start( lbl,               false, true );
     box.pack_end(   _node_borderwidth, false, true );
@@ -503,7 +517,18 @@ public class StyleInspector : Box {
 
   /* Called whenever the user changes the link width value */
   private bool node_borderwidth_changed( ScrollType scroll, double value ) {
-    _da.undo_buffer.replace_item( new UndoStyleNodeBorderwidth( _affects, (int)value, _da ) );
+    var borderwidth = new UndoStyleNodeBorderwidth( _affects, (int)value, _da );
+    if( _change_add ) {
+      _da.undo_buffer.add_item( borderwidth );
+      _change_add = false;
+    } else {
+      _da.undo_buffer.replace_item( borderwidth );
+    }
+    return( false );
+  }
+
+  private bool node_borderwidth_released( EventButton e ) {
+    _change_add = true;
     return( false );
   }
 
@@ -542,6 +567,7 @@ public class StyleInspector : Box {
     _node_margin = new Scale.with_range( Orientation.HORIZONTAL, 5, 20, 1 );
     _node_margin.draw_value = true;
     _node_margin.change_value.connect( node_margin_changed );
+    _node_margin.button_release_event.connect( node_margin_released );
 
     box.pack_start( lbl,          false, true );
     box.pack_end(   _node_margin, false, true );
@@ -555,7 +581,18 @@ public class StyleInspector : Box {
     if( (int)value > 20 ) {
       return( false );
     }
-    _da.undo_buffer.replace_item( new UndoStyleNodeMargin( _affects, (int)value, _da ) );
+    var margin = new UndoStyleNodeMargin( _affects, (int)value, _da );
+    if( _change_add ) {
+      _da.undo_buffer.add_item( margin );
+      _change_add = false;
+    } else {
+      _da.undo_buffer.replace_item( margin );
+    }
+    return( false );
+  }
+
+  private bool node_margin_released( EventButton e ) {
+    _change_add = true;
     return( false );
   }
 
@@ -571,6 +608,7 @@ public class StyleInspector : Box {
     _node_padding = new Scale.with_range( Orientation.HORIZONTAL, 5, 20, 2 );
     _node_padding.draw_value = true;
     _node_padding.change_value.connect( node_padding_changed );
+    _node_padding.button_release_event.connect( node_padding_released );
 
     box.pack_start( lbl,           false, true );
     box.pack_end(   _node_padding, false, true );
@@ -584,7 +622,18 @@ public class StyleInspector : Box {
     if( (int) value > 20 ) {
       return( false );
     }
-    _da.undo_buffer.replace_item( new UndoStyleNodePadding( _affects, (int)value, _da ) );
+    var padding = new UndoStyleNodePadding( _affects, (int)value, _da );
+    if( _change_add ) {
+      _da.undo_buffer.add_item( padding );
+      _change_add = false;
+    } else {
+      _da.undo_buffer.replace_item( padding );
+    }
+    return( false );
+  }
+
+  private bool node_padding_released( EventButton e ) {
+    _change_add = true;
     return( false );
   }
 
@@ -759,6 +808,7 @@ public class StyleInspector : Box {
     }
 
     _conn_width.change_value.connect( connection_width_changed );
+    _conn_width.button_release_event.connect( connection_width_released );
 
     box.pack_start( lbl,         false, true );
     box.pack_end(   _conn_width, false, true );
@@ -770,7 +820,18 @@ public class StyleInspector : Box {
   /* Called whenever the user changes the link width value */
   private bool connection_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
-    _da.undo_buffer.replace_item( new UndoStyleConnectionWidth( _affects, (int)value, _da ) );
+    var width = new UndoStyleConnectionWidth( _affects, (int)value, _da );
+    if( _change_add ) {
+      _da.undo_buffer.add_item( width );
+      _change_add = false;
+    } else {
+      _da.undo_buffer.replace_item( width );
+    }
+    return( false );
+  }
+
+  private bool connection_width_released( EventButton e ) {
+    _change_add = true;
     return( false );
   }
 
