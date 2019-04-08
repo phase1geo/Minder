@@ -1004,7 +1004,7 @@ public class StyleInspector : Box {
     update_node_borders_with_style( style );
     update_conn_dashes_with_style( style );
     _link_width.set_value( (double)style.link_width );
-    _link_arrow.set_active( style.link_arrow );
+    _link_arrow.set_active( (bool)style.link_arrow );
     _node_borderwidth.set_value( (double)style.node_borderwidth );
     _node_fill.set_active( (bool)style.node_fill );
     _node_fill.set_sensitive( style.node_border.is_fillable() );

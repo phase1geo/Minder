@@ -58,7 +58,9 @@ public class UndoStyleChange : UndoItem {
         for( int i=0; i<da.get_nodes().length; i++ ) {
           set_style_for_tree( da.get_nodes().index( i ), change_type, ref index );
         }
-        da.node_changed();
+        if( change_type != StyleChangeType.LOAD ) {
+          da.node_changed();
+        }
         break;
       case StyleAffects.LEVEL0      :
       case StyleAffects.LEVEL1      :
@@ -73,24 +75,34 @@ public class UndoStyleChange : UndoItem {
         for( int i=0; i<da.get_nodes().length; i++ ) {
           set_style_for_level( da.get_nodes().index( i ), (int)_affects.level(), change_type, ref index, 0 );
         }
-        da.node_changed();
+        if( change_type != StyleChangeType.LOAD ) {
+          da.node_changed();
+        }
         break;
       case StyleAffects.CURRENT     :
         if( _node != null ) {
           set_node_style( _node, change_type, ref index );
-          da.node_changed();
+          if( change_type != StyleChangeType.LOAD ) {
+            da.node_changed();
+          }
         } else {
           set_connection_style( _conn, change_type, ref index );
-          da.connection_changed();
+          if( change_type != StyleChangeType.LOAD ) {
+            da.connection_changed();
+          }
         }
         break;
       case StyleAffects.CURRTREE    :
         set_style_for_tree( _node.get_root(), change_type, ref index );
-        da.node_changed();
+        if( change_type != StyleChangeType.LOAD ) {
+          da.node_changed();
+        }
         break;
       case StyleAffects.CURRSUBTREE :
         set_style_for_tree( _node, change_type, ref index );
-        da.node_changed();
+        if( change_type != StyleChangeType.LOAD ) {
+          da.node_changed();
+        }
         break;
     }
     da.changed();
