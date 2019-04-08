@@ -249,7 +249,7 @@ public class Layout : Object {
         n.posx = px - (cw + _pc_gap);
         break;
       case NodeSide.RIGHT :
-        n.posx = px + (pw + _pc_gap);
+        n.posx = px + (pw + _pc_gap) - n.parent.task_width();
         break;
       case NodeSide.TOP :
         double cx, cy, cw, ch;

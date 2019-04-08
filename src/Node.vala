@@ -932,10 +932,10 @@ public class Node : Object {
       w = _width;
       h = _height;
     } else {
-      x = posx - (style.node_borderwidth / 2);
+      x = posx; // - (style.node_borderwidth / 2);
       y = posy;
-      w = _width  + style.node_borderwidth;
-      h = _height + (style.node_borderwidth / 2);
+      w = _width; //  + style.node_borderwidth;
+      h = _height; // + (style.node_borderwidth / 2);
     }
   }
 
@@ -1031,12 +1031,12 @@ public class Node : Object {
   }
 
   /* Returns the amount of internal width to draw the task checkbutton */
-  protected double task_width() {
+  public double task_width() {
     return( (_task_count > 0) ? ((_task_radius * 2) + _ipadx) : 0 );
   }
 
   /* Returns the width of the note indicator */
-  protected double note_width() {
+  public double note_width() {
     return( (note.length > 0) ? (10 + _ipadx) : 0 );
   }
 
