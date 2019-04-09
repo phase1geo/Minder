@@ -58,6 +58,7 @@ sources += files(
     'undo_actions/UndoNodeResize.vala',
     'undo_actions/UndoNodeReveal.vala',
     'undo_actions/UndoNodeTask.vala',
+    'undo_actions/UndoStyleAffectChange.vala',
     'undo_actions/UndoStyleChange.vala',
     'undo_actions/UndoStyleConnectionArrow.vala',
     'undo_actions/UndoStyleConnectionDash.vala',
