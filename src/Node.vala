@@ -1999,6 +1999,8 @@ public class Node : Object {
     double parent_y;
     double height = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
     double tailx = 0, taily = 0, tipx = 0, tipy = 0;
+    double tip_adjust = (style.link_width / 2) + 1;
+    double link_adjust = style.link_arrow ? (style.link_width / 2) + ((style.node_borderwidth / 2) + 2) : 0;
 
     /* Get the parent's link point */
     parent.link_point( out parent_x, out parent_y );
@@ -2008,20 +2010,24 @@ public class Node : Object {
 
     switch( side ) {
       case NodeSide.LEFT :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + _width - style.node_margin), (posy + height), true,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + _width - style.node_margin + link_adjust), (posy + height), true,
                          out tailx, out taily, out tipx, out tipy );
+        tipx -= tip_adjust;
         break;
       case NodeSide.RIGHT :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + style.node_margin), (posy + height), true,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + style.node_margin - link_adjust), (posy + height), true,
                          out tailx, out taily, out tipx, out tipy );
+        tipx += tip_adjust;
         break;
       case NodeSide.TOP :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + _height - style.node_margin), false,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + _height - style.node_margin + link_adjust), false,
                          out tailx, out taily, out tipx, out tipy );
+        tipy += tip_adjust;
         break;
       case NodeSide.BOTTOM :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + style.node_margin), false,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + style.node_margin - link_adjust), false,
                          out tailx, out taily, out tipx, out tipy );
+        tipx -= tip_adjust;
         break;
     }
 
