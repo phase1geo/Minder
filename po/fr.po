@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-08 00:47-0500\n"
+"POT-Creation-Date: 2019-04-09 22:33-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: NathanBnm\n"
 "Language-Team: Français\n"
@@ -127,7 +127,7 @@ msgstr "Idée principale"
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% complété"
 
-#: src/DrawArea.vala:1609 src/DrawArea.vala:2432
+#: src/DrawArea.vala:1609 src/DrawArea.vala:2433
 msgid "Another Idea"
 msgstr "Autre idée"
 
@@ -139,11 +139,11 @@ msgstr "plier les tâches terminées"
 msgid "unfold all tasks"
 msgstr "déplier toutes les tâches"
 
-#: src/DrawArea.vala:2506
+#: src/DrawArea.vala:2507
 msgid "add connection"
 msgstr "ajouter une connection"
 
-#: src/DrawArea.vala:2518
+#: src/DrawArea.vala:2519
 #, fuzzy
 msgid "delete connection"
 msgstr "supprimer la connection"
@@ -421,11 +421,11 @@ msgstr "Plier les tâches terminées"
 msgid "Unfold All Nodes"
 msgstr "Déplier toutes les tâches"
 
-#: src/Node.vala:1629
+#: src/Node.vala:1630
 msgid "<b><i>Title:</i></b>"
 msgstr "<b><i>Titre :</i></b>"
 
-#: src/Node.vala:1632
+#: src/Node.vala:1633
 msgid "<b><i>Note:</i></b>"
 msgstr "<b><i>Note :</i></b>"
 

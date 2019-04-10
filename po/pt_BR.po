@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-08 00:47-0500\n"
+"POT-Creation-Date: 2019-04-09 22:33-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Helder Bertoldo <helder.bertoldo@gmail.com>\n"
 "Language-Team: none\n"
@@ -127,7 +127,7 @@ msgstr ""
 msgid "%0.3g%% complete"
 msgstr "0.3g%% completados"
 
-#: src/DrawArea.vala:1609 src/DrawArea.vala:2432
+#: src/DrawArea.vala:1609 src/DrawArea.vala:2433
 msgid "Another Idea"
 msgstr "Outra Ideia"
 
@@ -139,11 +139,11 @@ msgstr ""
 msgid "unfold all tasks"
 msgstr ""
 
-#: src/DrawArea.vala:2506
+#: src/DrawArea.vala:2507
 msgid "add connection"
 msgstr ""
 
-#: src/DrawArea.vala:2518
+#: src/DrawArea.vala:2519
 msgid "delete connection"
 msgstr ""
 
@@ -418,11 +418,11 @@ msgstr ""
 msgid "Unfold All Nodes"
 msgstr ""
 
-#: src/Node.vala:1629
+#: src/Node.vala:1630
 msgid "<b><i>Title:</i></b>"
 msgstr ""
 
-#: src/Node.vala:1632
+#: src/Node.vala:1633
 msgid "<b><i>Note:</i></b>"
 msgstr ""
 
