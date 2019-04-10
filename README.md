@@ -15,6 +15,7 @@ Use the power of mind-mapping to make your ideas come to life.
 - Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown and PlainText formats.
 - Printer support.
 - Add notes, tasks and images to your nodes.
+- Stylize nodes and links to add more meaning and improve readability.
 - Colorized node branches.
 
     

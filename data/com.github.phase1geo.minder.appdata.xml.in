@@ -72,7 +72,15 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
-    <release version="1.2" date="2019-04-10">
+    <release version="1.2.1" date="2019-04-10">
+      <description>
+        <ul>
+          <li>Fixing appdata.xml file omission.</li>
+          <li>Removing automatic style apply when the affects is set to certain values.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.2" date="2019-04-09">
       <description>
         <ul>
           <li>Added Spanish translation.</li>
