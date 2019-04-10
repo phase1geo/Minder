@@ -886,7 +886,7 @@ public class StyleInspector : Box {
         _link_group.visible   = true;
         _node_group.visible   = true;
         _conn_group.visible   = false;
-        _da.undo_buffer.add_item( new UndoStyleAffectChange( _affects, _da.get_current_node().get_root().style, _da ) );
+        // _da.undo_buffer.add_item( new UndoStyleAffectChange( _affects, _da.get_current_node().get_root().style, _da ) );
         break;
       case StyleAffects.CURRSUBTREE :
         update_ui_with_style( _da.get_current_node().style );
@@ -894,7 +894,7 @@ public class StyleInspector : Box {
         _link_group.visible   = true;
         _node_group.visible   = true;
         _conn_group.visible   = false;
-        _da.undo_buffer.add_item( new UndoStyleAffectChange( _affects, _da.get_current_node().style, _da ) );
+        // _da.undo_buffer.add_item( new UndoStyleAffectChange( _affects, _da.get_current_node().style, _da ) );
         break;
     }
   }
