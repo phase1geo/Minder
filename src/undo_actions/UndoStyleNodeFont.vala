@@ -31,7 +31,7 @@ public class UndoStyleNodeFont : UndoStyleChange {
     base( affects, da );
     var node_font = new FontDescription();
     node_font.set_family( family );
-    node_font.set_size( size * Pango.SCALE );
+    node_font.set_size( size );
     _values = new GenericArray<FontDescription>();
     _values.add( node_font );
     load_styles( da );

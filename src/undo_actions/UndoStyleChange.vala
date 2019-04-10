@@ -73,7 +73,7 @@ public class UndoStyleChange : UndoItem {
       case StyleAffects.LEVEL8      :
       case StyleAffects.LEVEL9      :
         for( int i=0; i<da.get_nodes().length; i++ ) {
-          set_style_for_level( da.get_nodes().index( i ), (int)_affects.level(), change_type, ref index, 0 );
+          set_style_for_level( da.get_nodes().index( i ), (1 << (int)_affects.level()), change_type, ref index, 0 );
         }
         if( change_type != StyleChangeType.LOAD ) {
           da.node_changed();
