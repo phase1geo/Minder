@@ -262,6 +262,7 @@ public class Node : Object {
     _children = new Array<Node>();
     copy_variables( n, im );
     mode      = NodeMode.NONE;
+    tree_size = n.tree_size;
     for( int i=0; i<n._children.length; i++ ) {
       Node child = new Node.copy_tree( n._children.index( i ), im );
       child.parent = this;

@@ -2319,6 +2319,7 @@ public class DrawArea : Gtk.DrawingArea {
       node.attach( _current_node, -1, _theme );
     }
     undo_buffer.add_item( new UndoNodePaste( node ) );
+    select_node( node );
     queue_draw();
     node_changed();
     changed();
