@@ -84,7 +84,7 @@ public class Connections {
    Helper function to node_moved() which recursively updates all
    nodes within the given node subtree.
   */
-  public void node_moved( Node node, Node subroot, double diff_x, double diff_y ) {
+  public void node_moved( Node node, Node? subroot, double diff_x, double diff_y ) {
     for( int i=0; i<node.children().length; i++ ) {
       node_moved( node.children().index( i ), subroot, diff_x, diff_y );
     }

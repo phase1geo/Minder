@@ -147,10 +147,10 @@ public class Connection {
    Checks to see if this connection is connected to the given node.  If it is,
    updates the stored curve.
   */
-  public void node_moved( Node node, Node subroot, double diff_x, double diff_y ) {
+  public void node_moved( Node node, Node? subroot, double diff_x, double diff_y ) {
     double x, y, w, h;
     if( _from_node == node ) {
-      if( _to_node.is_descendant_of( subroot ) ) {
+      if( (subroot != null) && _to_node.is_descendant_of( subroot ) ) {
         pan( -diff_x, -diff_y );
       } else {
         _from_node.bbox( out x, out y, out w, out h );
@@ -158,7 +158,7 @@ public class Connection {
         set_connect_point( true );
       }
     } else if( _to_node == node ) {
-      if( !_from_node.is_descendant_of( subroot ) ) {
+      if( (subroot == null) || !_from_node.is_descendant_of( subroot ) ) {
         _to_node.bbox( out x, out y, out w, out h );
         _curve.set_point( 2, (x + (w / 2)), (y + (h / 2)) );
         set_connect_point( false );

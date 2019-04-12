@@ -138,7 +138,7 @@ public class DrawAreaMenu : Gtk.Menu {
     add( _task );
     add( _note );
     add( _image );
-    // add( _conn );
+    add( _conn );
     add( _fold );
     add( new SeparatorMenuItem() );
     add( _root );

@@ -1547,7 +1547,6 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
       changed();
     } else if( is_mode_selected() ) {
-      // FOOBAR
       delete_node();
     } else if( is_connection_selected() ) {
       delete_connection();
