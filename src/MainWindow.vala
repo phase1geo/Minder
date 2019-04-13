@@ -20,6 +20,7 @@
 */
 
 using Gtk;
+using Gdk;
 
 public class MainWindow : ApplicationWindow {
 
@@ -122,6 +123,7 @@ public class MainWindow : ApplicationWindow {
     _canvas.node_changed.connect( on_node_changed );
     _canvas.scale_changed.connect( change_scale );
     _canvas.show_properties.connect( show_properties );
+    _canvas.hide_properties.connect( hide_properties );
     _canvas.map_event.connect( on_canvas_mapped );
     _canvas.undo_buffer.buffer_changed.connect( do_buffer_changed );
     _canvas.theme_changed.connect( on_theme_changed );
@@ -461,6 +463,9 @@ public class MainWindow : ApplicationWindow {
     _stack.add_titled( new StyleInspector( _canvas ), "style", _("Style") );
     _stack.add_titled( new MapInspector( _canvas, _settings ),  "map",  _("Map") );
 
+    _stack.add_events( EventMask.KEY_PRESS_MASK );
+    _stack.key_press_event.connect( stack_keypress );
+
     /* If the stack switcher is clicked, save off which tab is in view */
     _stack.notify.connect((ps) => {
       if( ps.name == "visible-child" ) {
@@ -492,6 +497,14 @@ public class MainWindow : ApplicationWindow {
       show_properties( "style", false );
     }
 
+  }
+
+  private bool stack_keypress( EventKey e ) {
+    if( e.keyval == 65307 ) {  /* Escape key pressed */
+      hide_properties();
+      return( false );
+    }
+    return( true );
   }
 
   /* Show or hides the inspector sidebar */
@@ -757,6 +770,7 @@ public class MainWindow : ApplicationWindow {
     if( !_inspector.reveal_child ) return;
     _prop_btn.image = _prop_show;
     _inspector.reveal_child = false;
+    _canvas.grab_focus();
     _settings.set_boolean( "node-properties-shown",  false );
     _settings.set_boolean( "map-properties-shown",   false );
     _settings.set_boolean( "style-properties-shown", false );

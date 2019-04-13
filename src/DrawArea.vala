@@ -96,6 +96,7 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void theme_changed();
   public signal void scale_changed( double scale );
   public signal void show_properties( string? tab, bool grab_note );
+  public signal void hide_properties();
   public signal void loaded();
 
   /* Default constructor */
@@ -1563,11 +1564,14 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_escape() {
     if( is_mode_edit() ) {
       _im_context.reset();
+      if( !_current_new ) {
+        undo_buffer.add_item( new UndoNodeName( _current_node, _orig_name ) );
+      }
       _current_node.mode = NodeMode.CURRENT;
-      _current_node.name = _orig_name;
-      _current_node.layout.handle_update_by_edit( _current_node );
+      node_changed();
       queue_draw();
-      changed();
+    } else if( is_mode_selected() ) {
+      hide_properties();
     }
   }
 
