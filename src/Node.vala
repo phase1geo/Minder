@@ -224,6 +224,7 @@ public class Node : Object {
       }
     }
   }
+  public Node? last_selected_child { get; set; default = null; }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -1008,7 +1009,8 @@ public class Node : Object {
 
   /* Moves this node into the proper position within the parent node */
   public void move_to_position( Node child, NodeSide side, double x, double y ) {
-    int idx = child.index();
+    int   idx           = child.index();
+    Node? last_selected = last_selected_child;
     for( int i=0; i<_children.length; i++ ) {
       if( _children.index( i ).side == child.side ) {
         switch( child.side ) {
@@ -1018,6 +1020,7 @@ public class Node : Object {
               child.detach( side );
               child.attached = true;
               child.attach( this, (i - ((idx < i) ? 1 : 0)), null );
+              last_selected_child = last_selected;
               return;
             }
             break;
@@ -1027,6 +1030,7 @@ public class Node : Object {
               child.detach( side );
               child.attached = true;
               child.attach( this, (i - ((idx < i) ? 1 : 0)), null );
+              last_selected_child = last_selected;
               return;
             }
             break;
@@ -1035,12 +1039,14 @@ public class Node : Object {
         child.detach( side );
         child.attached = true;
         child.attach( this, (i - ((idx < i) ? 1 : 0)), null );
+        last_selected_child = last_selected;
         return;
       }
     }
     child.detach( side );
     child.attached = true;
     child.attach( this, -1, null );
+    last_selected_child = last_selected;
   }
 
   /* Updates the column value */
@@ -1362,6 +1368,9 @@ public class Node : Object {
       int idx = index();
       propagate_task_info_up( (0 - _task_count), (0 - _task_done) );
       parent.children().remove_index( idx );
+      if( parent.last_selected_child == this ) {
+        parent.last_selected_child = null;
+      }
       if( layout != null ) {
         layout.handle_update_by_delete( parent, idx, side, tree_size );
       }

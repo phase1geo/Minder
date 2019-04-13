@@ -819,6 +819,9 @@ public class DrawArea : Gtk.DrawingArea {
       _connections.check_for_connection_to_node( _current_node );
       if( node.mode == NodeMode.NONE ) {
         node.mode = NodeMode.CURRENT;
+        if( node.parent != null ) {
+          node.parent.last_selected_child = node;
+        }
         node_changed();
         return( true );
       }
@@ -1378,6 +1381,9 @@ public class DrawArea : Gtk.DrawingArea {
         _current_node = n;
         _current_new  = false;
         _current_node.mode = NodeMode.CURRENT;
+        if( _current_node.parent != null ) {
+          _current_node.parent.last_selected_child = n;
+        }
         see();
         node_changed();
       }
@@ -1466,10 +1472,10 @@ public class DrawArea : Gtk.DrawingArea {
     return( (_current_node != null) && !_current_node.is_leaf() && !_current_node.folded );
   }
 
-  /* Selects the first child node of the current node */
-  public void select_first_child_node() {
+  /* Selects the last selected child node of the current node */
+  public void select_child_node() {
     if( (_current_node != null) && !_current_node.is_leaf() && !_current_node.folded ) {
-      if( select_node( _current_node.children().index( 0 ) ) ) {
+      if( select_node( _current_node.last_selected_child ?? _current_node.children().index( 0 ) ) ) {
         queue_draw();
       }
     }
@@ -1824,7 +1830,7 @@ public class DrawArea : Gtk.DrawingArea {
           case NodeSide.TOP    :
           case NodeSide.BOTTOM :  next = _current_node.parent.next_child( _current_node );  break;
           case NodeSide.LEFT   :  next = _current_node.parent;  break;
-          default              :  next = _current_node.first_child( NodeSide.RIGHT );  break;
+          default              :  next = _current_node.last_selected_child ?? _current_node.first_child( NodeSide.RIGHT );  break;
         }
       }
       if( select_node( next ) ) {
@@ -1865,7 +1871,7 @@ public class DrawArea : Gtk.DrawingArea {
         switch( _current_node.side ) {
           case NodeSide.TOP :
           case NodeSide.BOTTOM :  next = _current_node.parent.prev_child( _current_node );  break;
-          case NodeSide.LEFT   :  next = _current_node.first_child( NodeSide.LEFT );  break;
+          case NodeSide.LEFT   :  next = _current_node.last_selected_child ?? _current_node.first_child( NodeSide.LEFT );  break;
           default              :  next = _current_node.parent;  break;
         }
       }
@@ -1946,7 +1952,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         Node? next;
         switch( _current_node.side ) {
-          case NodeSide.TOP    :  next = _current_node.first_child( NodeSide.TOP );  break;
+          case NodeSide.TOP    :  next = _current_node.last_selected_child ?? _current_node.first_child( NodeSide.TOP );  break;
           case NodeSide.BOTTOM :  next = _current_node.parent;  break;
           default              :  next = _current_node.parent.prev_child( _current_node );  break;
         }
@@ -1997,7 +2003,7 @@ public class DrawArea : Gtk.DrawingArea {
         Node? next;
         switch( _current_node.side ) {
           case NodeSide.TOP    :  next = _current_node.parent;  break;
-          case NodeSide.BOTTOM :  next = _current_node.first_child( NodeSide.BOTTOM );  break;
+          case NodeSide.BOTTOM :  next = _current_node.last_selected_child ?? _current_node.first_child( NodeSide.BOTTOM );  break;
           default              :  next = _current_node.parent.next_child( _current_node );  break;
         }
         if( select_node( next ) ) {
@@ -2080,7 +2086,7 @@ public class DrawArea : Gtk.DrawingArea {
             }
             break;
           case "m" :  select_root_node();  break;
-          case "c" :  select_first_child_node();  break;
+          case "c" :  select_child_node();  break;
           case "C" :  center_current_node();  break;
           case "i" :  show_properties( "node", false );  break;
           case "u" :  // Perform undo
@@ -2096,6 +2102,10 @@ public class DrawArea : Gtk.DrawingArea {
           case "s" :  see();  break;
           case "z" :  zoom_out();  break;
           case "Z" :  zoom_in();  break;
+          case "h" :  handle_left( false );  break;
+          case "j" :  handle_down( false );  break;
+          case "k" :  handle_up( false );  break;
+          case "l" :  handle_right( false );  break;
           default :
             // This is a key that doesn't have any associated functionality
             // so just return immediately so that we don't force a redraw

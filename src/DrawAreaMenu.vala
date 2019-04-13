@@ -116,8 +116,8 @@ public class DrawAreaMenu : Gtk.Menu {
     _selprev.activate.connect( select_previous_sibling_node );
     add_accel_label( _selprev, 'p', 0 );
 
-    _selchild = new Gtk.MenuItem.with_label( _( "First Child" ) );
-    _selchild.activate.connect( select_first_child_node );
+    _selchild = new Gtk.MenuItem.with_label( _( "Child" ) );
+    _selchild.activate.connect( select_child_node );
     add_accel_label( _selchild, 'c', 0 );
 
     _selparent = new Gtk.MenuItem.with_label( _( "Parent" ) );
@@ -353,8 +353,8 @@ public class DrawAreaMenu : Gtk.Menu {
   }
 
   /* Selects the first child node of the current node */
-  private void select_first_child_node() {
-    _da.select_first_child_node();
+  private void select_child_node() {
+    _da.select_child_node();
   }
 
   /* Selects the parent node of the current node */
