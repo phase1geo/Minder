@@ -102,29 +102,32 @@ public class Connection {
   public void connect_to( Node node ) {
     double fx, fy, tx, ty;
     double x, y, w, h;
-    bool   from;
     node.bbox( out x, out y, out w, out h );
     if( _from_node == null ) {
-      _from_node = node;  from = true;
+      _from_node = node;
+      _from_node.moved.connect( this.end_moved );
     } else {
-      _to_node = node;  from = false;
+      _to_node = node;
+      _to_node.moved.connect( this.end_moved );
     }
-    _curve.set_point( (from ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
+    _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
     _curve.get_point( 0, out fx, out fy );
     _curve.get_point( 2, out tx, out ty );
     _dragx = (fx + tx) / 2;
     _dragy = (fy + ty) / 2;
     _curve.update_control_from_drag_handle( _dragx, _dragy );
-    set_connect_point( from );
+    set_connect_point( node );
   }
 
   /* Called when disconnecting a connection from a node */
   public void disconnect( bool from ) {
     if( from ) {
       _curve.get_from_point( out _posx, out _posy );
+      _from_node.moved.disconnect( this.end_moved );
       _from_node = null;
     } else {
       _curve.get_to_point( out _posx, out _posy );
+      _to_node.moved.disconnect( this.end_moved );
       _to_node = null;
     }
     mode = ConnMode.CONNECTING;
@@ -140,29 +143,23 @@ public class Connection {
     _dragx = (nx + x) / 2;
     _dragy = (ny + y) / 2;
     _curve.update_control_from_drag_handle( _dragx, _dragy );
-    set_connect_point( from );
+    set_connect_point( from ? _from_node : _to_node );
   }
 
-  /*
-   Checks to see if this connection is connected to the given node.  If it is,
-   updates the stored curve.
-  */
-  public void node_moved( Node node, Node? subroot, double diff_x, double diff_y ) {
-    double x, y, w, h;
-    if( _from_node == node ) {
-      if( (subroot != null) && _to_node.is_descendant_of( subroot ) ) {
-        pan( -diff_x, -diff_y );
-      } else {
-        _from_node.bbox( out x, out y, out w, out h );
-        _curve.set_point( 0, (x + (w / 2)), (y + (h / 2)) );
-        set_connect_point( true );
+  /* Handles any position changes of either the to or from node */
+  private void end_moved( Node node, double diffx, double diffy, bool panned ) {
+    bool from = (node == _from_node);
+    if( panned ) {
+      if( from ) {
+        _curve.pan( diffx, diffy );
+        _dragx += diffx;
+        _dragy += diffy;
       }
-    } else if( _to_node == node ) {
-      if( (subroot == null) || !_from_node.is_descendant_of( subroot ) ) {
-        _to_node.bbox( out x, out y, out w, out h );
-        _curve.set_point( 2, (x + (w / 2)), (y + (h / 2)) );
-        set_connect_point( false );
-      }
+    } else {
+      double x, y, w, h;
+      node.bbox( out x, out y, out w, out h );
+      _curve.set_point( (from ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
+      set_connect_point( node );
     }
   }
 
@@ -172,19 +169,15 @@ public class Connection {
   }
 
   /* Returns the point to add the connection to based on the node */
-  private void set_connect_point( bool from ) {
+  private void set_connect_point( Node node ) {
 
     double x, y, w, h;
-    double bw    = from ? _from_node.style.node_borderwidth : _to_node.style.node_borderwidth;
+    double bw    = node.style.node_borderwidth;
     double extra = bw + (style.connection_width / 2);
 
-    if( from ) {
-      _from_node.bbox( out x, out y, out w, out h );
-    } else {
-      _to_node.bbox( out x, out y, out w, out h );
-    }
+    node.bbox( out x, out y, out w, out h );
 
-    _curve.set_connect_point( from, (y - extra), (y + h + extra), (x - extra), (x + w + extra) );
+    _curve.set_connect_point( (node == _from_node), (y - extra), (y + h + extra), (x - extra), (x + w + extra) );
 
   }
 
@@ -220,15 +213,8 @@ public class Connection {
     _dragx = x;
     _dragy = y;
     _curve.update_control_from_drag_handle( x, y );
-    set_connect_point( true );
-    set_connect_point( false );
-  }
-
-  /* Updates the location of dragx/dragy based on the amount of canvas pan */
-  public void pan( double diff_x, double diff_y ) {
-    _curve.pan( diff_x, diff_y );
-    _dragx -= diff_x;
-    _dragy -= diff_y;
+    set_connect_point( _from_node );
+    set_connect_point( _to_node );
   }
 
   /* Returns true if the given point lies within the from connection handle */
@@ -251,11 +237,13 @@ public class Connection {
     string? f = node->get_prop( "from_id" );
     if( f != null ) {
       _from_node = da.get_node( int.parse( f ) );
+      _from_node.moved.connect( this.end_moved );
     }
 
     string? t = node->get_prop( "to_id" );
     if( t != null ) {
       _to_node = da.get_node( int.parse( t ) );
+      _to_node.moved.connect( this.end_moved );
     }
 
     string? x = node->get_prop( "drag_x" );
@@ -280,8 +268,8 @@ public class Connection {
     _to_node.bbox(   out tx, out ty, out tw, out th );
     _curve = new Bezier.with_endpoints( (fx + (fw / 2)), (fy + (fh / 2)), (tx + (tw / 2)), (ty + (th / 2)) );
     _curve.update_control_from_drag_handle( _dragx, _dragy );
-    set_connect_point( true );
-    set_connect_point( false );
+    set_connect_point( _from_node );
+    set_connect_point( _to_node );
 
     /* Load the connection style */
     for( Xml.Node* it = node->children; it != null; it = it->next ) {

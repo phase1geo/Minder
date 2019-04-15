@@ -1133,9 +1133,8 @@ public class DrawArea : Gtk.DrawingArea {
     origin_x += diff_x;
     origin_y += diff_y;
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).pan( diff_x, diff_y );
+      _nodes.index( i ).pan( -diff_x, -diff_y );
     }
-    _connections.pan( diff_x, diff_y );
   }
 
   /* Draw the background from the stylesheet */
@@ -1218,7 +1217,6 @@ public class DrawArea : Gtk.DrawingArea {
             _current_node.posx += diffx;
             _current_node.posy += diffy;
             _current_node.layout.set_side( _current_node );
-            _connections.node_moved( _current_node, _current_node, diffx, diffy );
           }
         } else {
           switch( _press_type ) {
@@ -2461,7 +2459,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called when a connection is being drawn by moving the mouse */
   public void update_connection( double x, double y ) {
     if( _current_connection == null ) return;
-    _current_connection.draw_to( x, y );
+    _current_connection.draw_to( scale_value( x ), scale_value( y ) );
     queue_draw();
   }
 

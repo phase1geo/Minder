@@ -46,7 +46,6 @@ public class AnimatorNodes : AnimatorAction {
   /* Adjusts all of the node positions for the given frame */
   public override void adjust( DrawArea da ) {
     double divisor = index / frames;
-    double frame   = 1 / frames;
     index++;
     for( int i=0; i<_pos.length(); i++ ) {
       double dx = _pos.new_x( i ) - _pos.old_x( i );
@@ -56,7 +55,6 @@ public class AnimatorNodes : AnimatorAction {
       _pos.node( i ).posx = x;
       _pos.node( i ).posy = y;
       _pos.node( i ).side = _pos.node( i ).layout.get_side( _pos.node( i ) );
-      da.get_connections().node_moved( _pos.node( i ), _node, (dx * frame), (dy * frame) );
     }
   }
 

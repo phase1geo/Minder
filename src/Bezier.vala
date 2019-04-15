@@ -36,8 +36,8 @@ public class Bezier {
       y = b;
     }
     public void pan( double diff_x, double diff_y ) {
-      x -= diff_x;
-      y -= diff_y;
+      x += diff_x;
+      y += diff_y;
     }
   }
 

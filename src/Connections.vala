@@ -43,6 +43,8 @@ public class Connections {
   public bool remove_connection( Connection conn ) {
     for( uint i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ) == conn ) {
+        _connections.index( i ).disconnect( true );
+        _connections.index( i ).disconnect( false );
         _connections.remove_index( i ); 
         return( true );
       }
@@ -71,26 +73,6 @@ public class Connections {
       }
     }
     return( null );
-  }
-
-  /* Adjusts the connections based on the amount of panning that occurred */
-  public void pan( double diff_x, double diff_y ) {
-    for( int i=0; i<_connections.length; i++ ) {
-      _connections.index( i ).pan( diff_x, diff_y );
-    }
-  }
-
-  /*
-   Helper function to node_moved() which recursively updates all
-   nodes within the given node subtree.
-  */
-  public void node_moved( Node node, Node? subroot, double diff_x, double diff_y ) {
-    for( int i=0; i<node.children().length; i++ ) {
-      node_moved( node.children().index( i ), subroot, diff_x, diff_y );
-    }
-    for( int i=0; i<_connections.length; i++ ) {
-      _connections.index( i ).node_moved( node, subroot, diff_x, diff_y );
-    }
   }
 
   /*

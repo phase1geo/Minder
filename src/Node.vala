@@ -129,6 +129,9 @@ public class Node : Object {
   private   Style        _style        = new Style();
   private   double       _max_width    = 200;
 
+  /* Node signals */
+  public signal void moved( double diffx, double diffy, bool panning );
+
   /* Properties */
   public string name { get; set; default = ""; }
   public double posx {
@@ -136,11 +139,8 @@ public class Node : Object {
       return( _posx );
     }
     set {
-      double diffx = (value - _posx);
-      if( diffx != 0 ) {
-        for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).posx += diffx;
-        }
+      if( (value - _posx) != 0 ) {
+        moved( (value - _posx), 0, false );
         _posx = value;
       }
     }
@@ -150,11 +150,8 @@ public class Node : Object {
       return( _posy );
     }
     set {
-      double diffy = (value - _posy);
-      if( diffy != 0 ) {
-        for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).posy += diffy;
-        }
+      if( (value - _posy) != 0 ) {
+        moved( 0, (value - _posy), false );
         _posy = value;
       }
     }
@@ -1362,12 +1359,20 @@ public class Node : Object {
     return( null );
   }
 
+  /* If the parent node is moved, we will move ourselves the same amount */
+  private void parent_moved( Node parent, double diffx, double diffy, bool panned ) {
+    _posx += diffx;
+    _posy += diffy;
+    moved( diffx, diffy, panned );
+  }
+
   /* Detaches this node from its parent node */
   public virtual void detach( NodeSide side ) {
     if( parent != null ) {
       int idx = index();
       propagate_task_info_up( (0 - _task_count), (0 - _task_done) );
       parent.children().remove_index( idx );
+      parent.moved.disconnect( this.parent_moved );
       if( parent.last_selected_child == this ) {
         parent.last_selected_child = null;
       }
@@ -1428,6 +1433,7 @@ public class Node : Object {
       parent.children().insert_val( index, this );
     }
     propagate_task_info_up( _task_count, _task_done );
+    parent.moved.connect( this.parent_moved );
     if( layout != null ) {
       layout.handle_update_by_insert( parent, this, index );
     }
@@ -1612,9 +1618,10 @@ public class Node : Object {
   }
 
   /* Adjusts the posx and posy values */
-  public virtual void pan( double origin_x, double origin_y ) {
-    posx -= origin_x;
-    posy -= origin_y;
+  public virtual void pan( double diffx, double diffy ) {
+    _posx += diffx;
+    _posy += diffy;
+    moved( diffx, diffy, true );
   }
 
   /*
