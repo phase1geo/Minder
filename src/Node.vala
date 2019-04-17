@@ -130,7 +130,7 @@ public class Node : Object {
   private   double       _max_width    = 200;
 
   /* Node signals */
-  public signal void moved( double diffx, double diffy, bool panning );
+  public signal void moved( double diffx, double diffy );
 
   /* Properties */
   public string name { get; set; default = ""; }
@@ -139,9 +139,10 @@ public class Node : Object {
       return( _posx );
     }
     set {
-      if( (value - _posx) != 0 ) {
-        moved( (value - _posx), 0, false );
-        _posx = value;
+      double diff = (value - _posx);
+      _posx = value;
+      if( diff != 0 ) {
+        moved( diff, 0 );
       }
     }
   }
@@ -150,9 +151,10 @@ public class Node : Object {
       return( _posy );
     }
     set {
-      if( (value - _posy) != 0 ) {
-        moved( 0, (value - _posy), false );
-        _posy = value;
+      double diff = (value - _posy);
+      _posy = value;
+      if( diff != 0 ) {
+        moved( 0, diff );
       }
     }
   }
@@ -1360,10 +1362,10 @@ public class Node : Object {
   }
 
   /* If the parent node is moved, we will move ourselves the same amount */
-  private void parent_moved( Node parent, double diffx, double diffy, bool panned ) {
+  private void parent_moved( Node parent, double diffx, double diffy ) {
     _posx += diffx;
     _posy += diffy;
-    moved( diffx, diffy, panned );
+    moved( diffx, diffy );
   }
 
   /* Detaches this node from its parent node */
@@ -1621,7 +1623,7 @@ public class Node : Object {
   public virtual void pan( double diffx, double diffy ) {
     _posx += diffx;
     _posy += diffy;
-    moved( diffx, diffy, true );
+    moved( diffx, diffy );
   }
 
   /*

@@ -120,13 +120,6 @@ public class Connections {
     }
   }
 
-  /* Checks to see if there are any connections attached to the given node */
-  public void check_for_connection_to_node( Node node ) {
-    for( int i=0; i<_connections.length; i++ ) {
-      _connections.index( i ).check_for_connection_to_node( node );
-    }
-  }
-
   /* Draws all of the connections onto the given context */
   public void draw_all( Cairo.Context ctx, Theme theme ) {
     for( int i=0; i<_connections.length; i++ ) {

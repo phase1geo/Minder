@@ -34,19 +34,15 @@ public enum ConnMode {
 
 public class Connection {
 
-  private int     RADIUS     = 6;
-  private Node?   _from_node = null;
-  private Node?   _to_node   = null;
-  private double  _posx;
-  private double  _posy;
-  private double  _dragx;
-  private double  _dragy;
-  private double? _last_fx = null;
-  private double? _last_fy = null;
-  private double? _last_tx = null;
-  private double? _last_ty = null;
-  private Style   _style   = new Style();
-  private Bezier  _curve;
+  private int    RADIUS     = 6;
+  private Node?  _from_node = null;
+  private Node?  _to_node   = null;
+  private double _posx;
+  private double _posy;
+  private double _dragx;
+  private double _dragy;
+  private Style  _style   = new Style();
+  private Bezier _curve;
 
   public string   title { get; set; default = ""; }
   public ConnMode mode  { get; set; default = ConnMode.NONE; }
@@ -90,10 +86,6 @@ public class Connection {
     _to_node   = conn._to_node;
     _dragx     = conn._dragx;
     _dragy     = conn._dragy;
-    _last_fx   = conn._last_fx;
-    _last_fy   = conn._last_fy;
-    _last_tx   = conn._last_tx;
-    _last_ty   = conn._last_ty;
     _curve.copy( conn._curve );
     style      = conn.style;
   }
@@ -136,31 +128,25 @@ public class Connection {
   /* Draws the connections to the given point */
   public void draw_to( double x, double y ) {
     double nx, ny;
-    bool   from = (_from_node != null);
+    Node node = (_from_node != null) ? _from_node : _to_node;
     _posx = x;
     _posy = y;
-    _curve.get_point( (from ? 0 : 2), out nx, out ny );
+    _curve.get_point( ((node == _from_node) ? 0 : 2), out nx, out ny );
     _dragx = (nx + x) / 2;
     _dragy = (ny + y) / 2;
     _curve.update_control_from_drag_handle( _dragx, _dragy );
-    set_connect_point( from ? _from_node : _to_node );
+    set_connect_point( node );
   }
 
   /* Handles any position changes of either the to or from node */
-  private void end_moved( Node node, double diffx, double diffy, bool panned ) {
-    bool from = (node == _from_node);
-    if( panned ) {
-      if( from ) {
-        _curve.pan( diffx, diffy );
-        _dragx += diffx;
-        _dragy += diffy;
-      }
-    } else {
-      double x, y, w, h;
-      node.bbox( out x, out y, out w, out h );
-      _curve.set_point( (from ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
-      set_connect_point( node );
-    }
+  private void end_moved( Node node, double diffx, double diffy ) {
+    double x, y, w, h;
+    node.bbox( out x, out y, out w, out h );
+    _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
+    _dragx += (diffx / 2);
+    _dragy += (diffy / 2);
+    _curve.update_control_from_drag_handle( _dragx, _dragy );
+    set_connect_point( node );
   }
 
   /* Returns true if we are attached to the given node */
@@ -299,29 +285,12 @@ public class Connection {
 
   }
 
-  /*
-   Checks to see if this connection is attached to the given node.  If it is,
-   save the location of the node as it will be moved to a new position.
-  */
-  public void check_for_connection_to_node( Node node ) {
-
-    _last_fx = _last_fy = _last_tx = _last_ty = null;
-
-    if( _from_node == node ) {
-      _curve.get_from_point( out _last_fx, out _last_fy );
-      if( _to_node != null ) _curve.get_to_point( out _last_tx, out _last_ty );
-    } else if( _to_node == node ) {
-      _curve.get_to_point( out _last_tx, out _last_ty );
-      if( _from_node != null ) _curve.get_from_point( out _last_fx, out _last_fy );
-    }
-
-  }
-
   /* Draws the connection to the given context */
   public virtual void draw( Cairo.Context ctx, Theme theme ) {
 
-    /* If either the from or to node is folded, don't bother to draw ourselves */
-    if( ((_from_node != null) && _from_node.folded) || ((_to_node   != null) && _to_node.folded) ) {
+    /* If either the from or to node is hidden, don't bother to draw ourselves */
+    if( ((_from_node != null) && !_from_node.is_root() && _from_node.parent.folded) ||
+        ((_to_node   != null) && !_to_node.is_root()   && _to_node.parent.folded) ) {
       return;
     }
 

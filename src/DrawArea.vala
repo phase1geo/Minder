@@ -817,7 +817,6 @@ public class DrawArea : Gtk.DrawingArea {
         _current_node.mode = NodeMode.NONE;
       }
       _current_node = node;
-      _connections.check_for_connection_to_node( _current_node );
       if( node.mode == NodeMode.NONE ) {
         node.mode = NodeMode.CURRENT;
         if( node.parent != null ) {
@@ -827,7 +826,9 @@ public class DrawArea : Gtk.DrawingArea {
         return( true );
       }
     }
+
     return( false );
+
   }
 
   /*
