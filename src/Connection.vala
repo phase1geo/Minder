@@ -146,7 +146,8 @@ public class Connection {
     _dragx += (diffx / 2);
     _dragy += (diffy / 2);
     _curve.update_control_from_drag_handle( _dragx, _dragy );
-    set_connect_point( node );
+    set_connect_point( _from_node );
+    set_connect_point( _to_node );
   }
 
   /* Returns true if we are attached to the given node */
