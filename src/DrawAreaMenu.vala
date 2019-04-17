@@ -183,6 +183,11 @@ public class DrawAreaMenu : Gtk.Menu {
     return( _da.get_current_node() != null );
   }
 
+  /* Returns true if there is a currently selected connection */
+  private bool connection_selected() {
+    return( _da.get_current_connection() != null );
+  }
+
   /* Returns true if the currently selected node is a task */
   private bool node_is_task() {
     Node? current = _da.get_current_node();
@@ -228,9 +233,11 @@ public class DrawAreaMenu : Gtk.Menu {
     _task.set_sensitive( node_selected() );
     _note.set_sensitive( node_selected() );
     _conn.set_sensitive( node_selected() );
+    _image.set_sensitive( node_selected() );
     _fold.set_sensitive( node_foldable() );
     _child.set_sensitive( node_selected() );
     _sibling.set_sensitive( node_selected() );
+    _root.set_sensitive( !connection_selected() );
     _detach.set_sensitive( _da.detachable() );
     _selroot.set_sensitive( _da.root_selectable() );
     _selnext.set_sensitive( _da.sibling_selectable() );

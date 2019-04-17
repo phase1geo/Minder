@@ -1394,7 +1394,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns true if there is a root that is available for selection */
   public bool root_selectable() {
-    return( (_current_node == null) ? (_nodes.length > 0) : (_current_node.get_root() != _current_node) );
+    return( (_current_connection == null) && ((_current_node == null) ? (_nodes.length > 0) : (_current_node.get_root() != _current_node)) );
   }
 
   /*
@@ -1402,16 +1402,15 @@ public class DrawArea : Gtk.DrawingArea {
    the current node's root node.
   */
   public void select_root_node() {
+    if( _current_connection != null ) return;
     if( _current_node == null ) {
       if( _nodes.length > 0 ) {
         if( select_node( _nodes.index( 0 ) ) ) {
           queue_draw();
         }
       }
-    } else {
-      if( select_node( _current_node.get_root() ) ) {
-        queue_draw();
-      }
+    } else if( select_node( _current_node.get_root() ) ) {
+      queue_draw();
     }
   }
 

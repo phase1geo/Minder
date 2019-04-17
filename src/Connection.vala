@@ -183,10 +183,17 @@ public class Connection {
   private void set_connect_point( Node node ) {
 
     double x, y, w, h;
-    double bw    = node.style.node_borderwidth;
-    double extra = bw + (style.connection_width / 2);
+    double bw     = node.style.node_borderwidth;
+    double extra  = bw + (style.connection_width / 2);
+    double margin = node.style.node_margin;
 
     node.bbox( out x, out y, out w, out h );
+
+    /* Remove the node's margin */
+    x += margin;
+    y += margin;
+    w -= (margin * 2);
+    h -= (margin * 2);
 
     _curve.set_connect_point( (node == _from_node), (y - extra), (y + h + extra), (x - extra), (x + w + extra) );
 
