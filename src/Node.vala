@@ -131,6 +131,7 @@ public class Node : Object {
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
+  public signal void resized( double diffw, double diffh );
 
   /* Properties */
   public string name { get; set; default = ""; }
@@ -870,6 +871,9 @@ public class Node : Object {
       _height     = (text_height / Pango.SCALE) + (style.node_padding * 2) + img_height + (style.node_margin * 2);
       width_diff  = _width  - orig_width;
       height_diff = _height - orig_height;
+      if( (width_diff != 0) || (height_diff != 0) ) {
+        resized( width_diff, height_diff );
+      }
     }
   }
 

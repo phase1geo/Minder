@@ -62,7 +62,7 @@ public class Connection {
     _posx      = x + (w / 2);
     _posy      = y + (h / 2);
     _from_node = from_node;
-    _from_node.moved.connect( this.end_moved );
+    connect_node( _from_node );
     _dragx     = _posx;
     _dragy     = _posy;
     _curve     = new Bezier.with_endpoints( _posx, _posy, _posx, _posy );
@@ -91,6 +91,18 @@ public class Connection {
     style      = conn.style;
   }
 
+  /* Connects to the given node */
+  private void connect_node( Node node ) {
+    node.moved.connect( this.end_moved );
+    node.resized.connect( this.end_resized );
+  }
+
+  /* Disconnects from the given node */
+  private void disconnect_node( Node node ) {
+    node.moved.disconnect( this.end_moved );
+    node.resized.disconnect( this.end_resized );
+  }
+
   /* Completes the connection */
   public void connect_to( Node node ) {
     double fx, fy, tx, ty;
@@ -98,11 +110,10 @@ public class Connection {
     node.bbox( out x, out y, out w, out h );
     if( _from_node == null ) {
       _from_node = node;
-      _from_node.moved.connect( this.end_moved );
     } else {
       _to_node = node;
-      _to_node.moved.connect( this.end_moved );
     }
+    connect_node( node );
     _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
     _curve.get_point( 0, out fx, out fy );
     _curve.get_point( 2, out tx, out ty );
@@ -116,11 +127,11 @@ public class Connection {
   public void disconnect( bool from ) {
     if( from ) {
       _curve.get_from_point( out _posx, out _posy );
-      _from_node.moved.disconnect( this.end_moved );
+      disconnect_node( _from_node );
       _from_node = null;
     } else {
       _curve.get_to_point( out _posx, out _posy );
-      _to_node.moved.disconnect( this.end_moved );
+      disconnect_node( _to_node );
       _to_node = null;
     }
     mode = ConnMode.CONNECTING;
@@ -146,6 +157,18 @@ public class Connection {
     _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
     _dragx += (diffx / 2);
     _dragy += (diffy / 2);
+    _curve.update_control_from_drag_handle( _dragx, _dragy );
+    set_connect_point( _from_node );
+    set_connect_point( _to_node );
+  }
+
+  /* Handles any resizing changes of either the to or from node */
+  private void end_resized( Node node, double diffw, double diffh ) {
+    double x, y, w, h;
+    node.bbox( out x, out y, out w, out h );
+    _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
+    _dragx += (diffw / 2);
+    _dragy += (diffh / 2);
     _curve.update_control_from_drag_handle( _dragx, _dragy );
     set_connect_point( _from_node );
     set_connect_point( _to_node );
@@ -225,13 +248,13 @@ public class Connection {
     string? f = node->get_prop( "from_id" );
     if( f != null ) {
       _from_node = da.get_node( int.parse( f ) );
-      _from_node.moved.connect( this.end_moved );
+      connect_node( _from_node );
     }
 
     string? t = node->get_prop( "to_id" );
     if( t != null ) {
       _to_node = da.get_node( int.parse( t ) );
-      _to_node.moved.connect( this.end_moved );
+      connect_node( _to_node );
     }
 
     string? x = node->get_prop( "drag_x" );
