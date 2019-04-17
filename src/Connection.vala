@@ -62,6 +62,7 @@ public class Connection {
     _posx      = x + (w / 2);
     _posy      = y + (h / 2);
     _from_node = from_node;
+    _from_node.moved.connect( this.end_moved );
     _dragx     = _posx;
     _dragy     = _posy;
     _curve     = new Bezier.with_endpoints( _posx, _posy, _posx, _posy );
