@@ -28,6 +28,11 @@ public class Connections {
     _connections = new Array<Connection>();
   }
 
+  /* Removes all connections */
+  public void clear_all_connections() {
+    _connections.remove_range( 0, _connections.length );
+  }
+
   /* Adds the given connection */
   public void add_connection( Connection conn ) {
     /* Don't add the connection if it has already been added */

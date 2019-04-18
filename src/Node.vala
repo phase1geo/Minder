@@ -806,6 +806,9 @@ public class Node : Object {
       note = o;
     }
 
+    /* Load the style */
+    style.copy( StyleInspector.styles.get_global_style() );
+
     /* Figure out if this node is folded */
     if( expand_state != null ) {
       _folded = true;
@@ -824,8 +827,8 @@ public class Node : Object {
     for( Xml.Node* it2 = parent->children; it2 != null; it2 = it2->next ) {
       if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "outline") ) {
         var child = new Node( da, layout );
-        child.attach( this, -1, theme );
         child.import_opml( da, it2, node_id, ref expand_state, theme );
+        child.attach( this, -1, theme );
       }
     }
 

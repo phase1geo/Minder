@@ -459,6 +459,9 @@ public class DrawArea : Gtk.DrawingArea {
     /* Clear the list of existing nodes */
     _nodes.remove_range( 0, _nodes.length );
 
+    /* Clear the list of connections */
+    _connections.clear_all_connections();
+
     /* Clear the undo buffer */
     undo_buffer.clear();
 
@@ -489,6 +492,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Clear the list of existing nodes */
     _nodes.remove_range( 0, _nodes.length );
+
+    /* Clear the list of connections */
+    _connections.clear_all_connections();
 
     /* Clear the undo buffer */
     undo_buffer.clear();
@@ -1313,9 +1319,8 @@ public class DrawArea : Gtk.DrawingArea {
         } else if( _current_node.parent != null ) {
           int orig_index = _current_node.index();
           animator.add_nodes( "move to position" );
-          if( _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) ) ) {
-            undo_buffer.add_item( new UndoNodeMove( _current_node, _orig_side, orig_index ) );
-          }
+          _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) );
+          undo_buffer.add_item( new UndoNodeMove( _current_node, _orig_side, orig_index ) );
           animator.animate();
 
         /* Otherwise, redraw everything after the move */
