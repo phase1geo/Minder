@@ -57,6 +57,7 @@ public class DrawArea : Gtk.DrawingArea {
   private uint?            _auto_save_id = null;
   private ImageEditor      _editor;
   private IMContextSimple  _im_context;
+  private bool             _debug        = true;
 
   public UndoBuffer   undo_buffer    { set; get; }
   public Themes       themes         { set; get; default = new Themes(); }
@@ -776,16 +777,19 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the user clicks on node */
   private bool set_current_node_from_position( Node node, EventButton e ) {
 
+    double scaled_x = scale_value( e.x );
+    double scaled_y = scale_value( e.y );
+
     /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
-    if( node.is_within_task( e.x, e.y ) ) {
+    if( node.is_within_task( scaled_x, scaled_y ) ) {
       toggle_task( node );
       node_changed();
       return( false );
-    } else if( node.is_within_fold( e.x, e.y ) ) {
+    } else if( node.is_within_fold( scaled_x, scaled_y ) ) {
       toggle_fold( node );
       node_changed();
       return( false );
-    } else if( node.is_within_resizer( e.x, e.y ) ) {
+    } else if( node.is_within_resizer( scaled_x, scaled_y ) ) {
       _resize     = true;
       _orig_width = node.max_width();
       return( true );
@@ -803,7 +807,7 @@ public class DrawArea : Gtk.DrawingArea {
           case EventType.TRIPLE_BUTTON_PRESS :  node.set_cursor_all( false );            break;
         }
       } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
-        if( _current_node.is_within_image( e.x, e.y ) ) {
+        if( _current_node.is_within_image( scaled_x, scaled_y ) ) {
           edit_current_image();
           return( false );
         } else {
@@ -979,6 +983,7 @@ public class DrawArea : Gtk.DrawingArea {
     animator.animate();
   }
 
+  /* Figures out the boundaries of the document primarily for the purposes of printing */
   public void document_rectangle( out double x, out double y, out double width, out double height ) {
 
     double x1 =  10000000;
@@ -1150,7 +1155,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
     /* Draw the current node on top of all others */
     if( (_current_node != null) && ((_current_node.parent == null) || !_current_node.parent.folded) ) {
-      _current_node.draw_all( ctx, _theme, null, true, (_pressed && _motion && !_resize) );
+      _current_node.draw_all( ctx, _theme, null, true, (!is_mode_edit() && _pressed && _motion && !_resize) );
     }
     /* Draw the current connection on top of everything else */
     _connections.draw_all( ctx, _theme );
@@ -1197,6 +1202,8 @@ public class DrawArea : Gtk.DrawingArea {
       _attach_node      = null;
       queue_draw();
     }
+    double scaled_x = scale_value( event.x );
+    double scaled_y = scale_value( event.y );
     if( _pressed ) {
       if( _current_connection != null ) {
         if( _current_connection.mode == ConnMode.ADJUSTING ) {
@@ -1204,13 +1211,13 @@ public class DrawArea : Gtk.DrawingArea {
           queue_draw();
         }
       } else if( _current_node != null ) {
-        double diffx = scale_value( event.x ) - _press_x;
-        double diffy = scale_value( event.y ) - _press_y;
+        double diffx = scaled_x - _press_x;
+        double diffy = scaled_y - _press_y;
         if( _current_node.mode == NodeMode.CURRENT ) {
           if( _resize ) {
             _current_node.resize( diffx );
           } else {
-            Node attach_node = attachable_node( scale_value( event.x ), scale_value( event.y ) );
+            Node attach_node = attachable_node( scaled_x, scaled_y );
             if( attach_node != null ) {
               attach_node.mode = NodeMode.ATTACHABLE;
               _attach_node = attach_node;
@@ -1221,19 +1228,19 @@ public class DrawArea : Gtk.DrawingArea {
           }
         } else {
           switch( _press_type ) {
-            case EventType.BUTTON_PRESS        :  _current_node.set_cursor_at_char( scale_value( event.x ), scale_value( event.y ), true );  break;
-            case EventType.DOUBLE_BUTTON_PRESS :  _current_node.set_cursor_at_word( scale_value( event.x ), scale_value( event.y ), true );  break;
+            case EventType.BUTTON_PRESS        :  _current_node.set_cursor_at_char( scaled_x, scaled_y, true );  break;
+            case EventType.DOUBLE_BUTTON_PRESS :  _current_node.set_cursor_at_word( scaled_x, scaled_y, true );  break;
           }
         }
         queue_draw();
       } else {
-        double diff_x = _press_x - scale_value( event.x );
-        double diff_y = _press_y - scale_value( event.y );
+        double diff_x = _press_x - scaled_x;
+        double diff_y = _press_y - scaled_y;
         move_origin( diff_x, diff_y );
         queue_draw();
       }
-      _press_x = scale_value( event.x );
-      _press_y = scale_value( event.y );
+      _press_x = scaled_x;
+      _press_y = scaled_y;
       _motion  = true;
       auto_save();
     } else {
@@ -1243,30 +1250,28 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
       for( int i=0; i<_nodes.length; i++ ) {
-        Node match = _nodes.index( i ).contains( event.x, event.y, null );
+        Node match = _nodes.index( i ).contains( scaled_x, scaled_y, null );
         if( match != null ) {
-          if( get_tooltip_text() == null ) {
-            if( (_current_connection != null) && (_current_connection.mode == ConnMode.CONNECTING) ) {
-              _attach_node      = match;
-              _attach_node.mode = NodeMode.ATTACHABLE;
-            } else if( match.is_within_task( event.x, event.y ) ) {
-              set_cursor( CursorType.HAND1 );
-              set_tooltip_text( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
-            } else if( match.is_within_note( event.x, event.y ) ) {
-              set_tooltip_text( match.note );
-            } else if( match.is_within_resizer( event.x, event.y ) ) {
-              set_cursor( CursorType.SB_H_DOUBLE_ARROW );
-            } else {
-              set_cursor( null );
-            }
+          if( (_current_connection != null) && (_current_connection.mode == ConnMode.CONNECTING) ) {
+            _attach_node      = match;
+            _attach_node.mode = NodeMode.ATTACHABLE;
+          } else if( match.is_within_task( scaled_x, scaled_y ) ) {
+            set_cursor( CursorType.HAND1 );
+            set_tooltip_text( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
+          } else if( match.is_within_note( scaled_x, scaled_y ) ) {
+            set_tooltip_text( match.note );
+          } else if( match.is_within_resizer( scaled_x, scaled_y ) ) {
+            set_cursor( CursorType.SB_H_DOUBLE_ARROW );
+            set_tooltip_text( null );
+          } else {
+            set_cursor( null );
+            set_tooltip_text( null );
           }
           return( false );
         }
       }
-      if( get_tooltip_text() != null ) {
-        set_tooltip_text( null );
-      }
       set_cursor( null );
+      set_tooltip_text( null );
     }
     return( false );
   }
@@ -1307,9 +1312,10 @@ public class DrawArea : Gtk.DrawingArea {
         /* If we are not a root node, move the node into the appropriate position */
         } else if( _current_node.parent != null ) {
           int orig_index = _current_node.index();
-          animator.add_node( _current_node, "move to position" );
-          _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) );
-          undo_buffer.add_item( new UndoNodeMove( _current_node, _orig_side, orig_index ) );
+          animator.add_nodes( "move to position" );
+          if( _current_node.parent.move_to_position( _current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) ) ) {
+            undo_buffer.add_item( new UndoNodeMove( _current_node, _orig_side, orig_index ) );
+          }
           animator.animate();
 
         /* Otherwise, redraw everything after the move */
@@ -1369,6 +1375,36 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns true if we are in the selected mode */
   private bool is_mode_selected() {
     return( (_current_node != null) && (_current_node.mode == NodeMode.CURRENT) );
+  }
+
+  /* Returns the next node to select after the current node is removed */
+  private Node? next_node_to_select() {
+    if( _current_node != null ) {
+      if( _current_node.is_root() ) {
+        if( _nodes.length > 1 ) {
+          for( int i=0; i<_nodes.length; i++ ) {
+            if( _nodes.index( i ) == _current_node ) {
+              if( i == 0 ) {
+                return( _nodes.index( 1 ) );
+              } else if( (i + 1) == _nodes.length ) {
+                return( _nodes.index( i - 1 ) );
+              }
+              break;
+            }
+          }
+        }
+      } else {
+        Node? next = _current_node.parent.next_child( _current_node );
+        if( next == null ) {
+          next = _current_node.parent.prev_child( _current_node );
+          if( next == null ) {
+            next = _current_node.parent;
+          }
+        }
+        return( next );
+      }
+    }
+    return( null );
   }
 
   /* If the specified node is not null, selects the node and makes it the current node */
@@ -1502,6 +1538,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Deletes the given node */
   public void delete_node() {
     if( _current_node == null ) return;
+    Node? next_node = next_node_to_select();
     undo_buffer.add_item( new UndoNodeDelete( _current_node ) );
     if( _current_node.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
@@ -1516,8 +1553,9 @@ public class DrawArea : Gtk.DrawingArea {
     _connections.node_deleted( _current_node );
     _current_node.mode = NodeMode.NONE;
     _current_node = null;
-    queue_draw();
     node_changed();
+    select_node( next_node );
+    queue_draw();
     changed();
   }
 
@@ -1660,12 +1698,13 @@ public class DrawArea : Gtk.DrawingArea {
   /* Detaches the current node from its parent and adds it as a root node */
   public void detach() {
     if( !detachable() ) return;
-    Node     parent = _current_node.parent;
-    int      index  = _current_node.index();
-    NodeSide side   = _current_node.side;
+    Node     parent     = _current_node.parent;
+    int      index      = _current_node.index();
+    int      root_index = (int)_nodes.length;
+    NodeSide side       = _current_node.side;
     _current_node.detach( side );
     add_root( _current_node, -1 );
-    undo_buffer.add_item( new UndoNodeDetach( _current_node, (int)_nodes.length, parent, side, index ) );
+    undo_buffer.add_item( new UndoNodeDetach( _current_node, root_index, parent, side, index ) );
     queue_draw();
     changed();
   }
@@ -2091,6 +2130,11 @@ public class DrawArea : Gtk.DrawingArea {
           case "c" :  select_child_node();  break;
           case "C" :  center_current_node();  break;
           case "i" :  show_properties( "node", false );  break;
+          case "I" :
+            if( _debug ) {
+              _current_node.display();
+            }
+            break;
           case "u" :  // Perform undo
             if( undo_buffer.undoable() ) {
               undo_buffer.undo();
@@ -2224,6 +2268,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Cuts the current node from the tree and stores it in the clipboard */
   public void cut_node_to_clipboard() {
     if( _current_node == null ) return;
+    Node? next_node = next_node_to_select();
     undo_buffer.add_item( new UndoNodeCut( this, _current_node ) );
     copy_node_to_clipboard();
     if( _current_node.is_root() ) {
@@ -2238,8 +2283,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
     _current_node.mode = NodeMode.NONE;
     _current_node      = null;
-    queue_draw();
     node_changed();
+    select_node( next_node );
+    queue_draw();
     changed();
   }
 
@@ -2284,6 +2330,7 @@ public class DrawArea : Gtk.DrawingArea {
       node.attach( _current_node, -1, _theme );
     }
     undo_buffer.add_item( new UndoNodePaste( node ) );
+    select_node( node );
     queue_draw();
     node_changed();
     changed();

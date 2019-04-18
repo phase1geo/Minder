@@ -43,6 +43,7 @@ public class NodeInspector : Stack {
   private Image       _image;
   private Button      _image_btn;
   private Label       _image_loc;
+  private bool        _ignore_name_change = false;
 
   public NodeInspector( DrawArea da ) {
 
@@ -205,7 +206,7 @@ public class NodeInspector : Stack {
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
 
-    _image_btn = new Button.with_label( _( "Add Image..." ) );
+    _image_btn = new Button.with_label( _( "Add Image…" ) );
     _image_btn.visible = true;
     _image_btn.clicked.connect( image_button_clicked );
 
@@ -357,7 +358,10 @@ public class NodeInspector : Stack {
    Called whenever the node name is changed within the inspector.
   */
   private void name_changed() {
-    _da.change_current_name( _name.buffer.text );
+    if( !_ignore_name_change ) {
+      _da.change_current_name( _name.buffer.text );
+    }
+    _ignore_name_change = false;
   }
 
   /*
@@ -466,6 +470,7 @@ public class NodeInspector : Stack {
     Node? current = _da.get_current_node();
 
     if( current != null ) {
+      _ignore_name_change = true;
       _name.buffer.text = current.name;
       _task.set_active( current.task_enabled() );
       if( current.is_leaf() ) {

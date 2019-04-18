@@ -36,11 +36,9 @@ public class ExportImage : Object {
     var surface = new ImageSurface( Format.RGB24, ((int)w + 20), ((int)h + 20) );
     var context = new Context( surface );
 
-    /* Translate the image */
-    context.translate( (10 - x), (10 - y) );
-
     /* Recreate the image */
-    da.get_style_context().render_background( context, (10 - x), (10 - y), ((int)w + 20), ((int)h + 20) );
+    da.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
+    context.translate( (10 - x), (10 - y) );
     da.draw_all( context );
 
     /* Write the pixbuf to the file */

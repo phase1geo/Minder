@@ -75,7 +75,7 @@ public class UndoNodeAttach : UndoItem {
       _n.set_node_info( _old_info, ref index );
       _n.side = _old_side;
       _n.layout.propagate_side( _n, _old_side );
-      _n.attach_nonroot( _old_parent, _old_index, da.get_theme() );
+      _n.attach_init( _old_parent, _old_index );
     }
     da.set_current_node( _n );
     da.animator.animate();
@@ -95,11 +95,11 @@ public class UndoNodeAttach : UndoItem {
     _n.side = _new_side;
     _n.layout.propagate_side( _n, _new_side );
     if( _old_parent == null ) {
-      _n.attach_root( _new_parent, da.get_theme() );
+      _n.attach( _new_parent, -1, da.get_theme() );
       _n.set_node_info( _new_info, ref index );
     } else {
       _n.set_node_info( _new_info, ref index );
-      _n.attach_nonroot( _new_parent, _new_index, da.get_theme() );
+      _n.attach_init( _new_parent, _new_index );
     }
     da.set_current_node( _n );
     da.animator.animate();

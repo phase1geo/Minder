@@ -205,11 +205,12 @@ public class Node : Object {
       return( _style );
     }
     set {
-      _style.copy( value );
-      _pango_layout.set_font_description( _style.node_font );
-      _pango_layout.set_width( _style.node_width * Pango.SCALE );
-      if( _layout != null ) {
-        _layout.handle_update_by_edit( this );
+      if( _style.copy( value ) ) {
+        _pango_layout.set_font_description( _style.node_font );
+        _pango_layout.set_width( _style.node_width * Pango.SCALE );
+        if( _layout != null ) {
+          _layout.handle_update_by_edit( this );
+        }
       }
     }
   }
@@ -262,6 +263,7 @@ public class Node : Object {
     _children = new Array<Node>();
     copy_variables( n, im );
     mode      = NodeMode.NONE;
+    tree_size = n.tree_size;
     for( int i=0; i<n._children.length; i++ ) {
       Node child = new Node.copy_tree( n._children.index( i ), im );
       child.parent = this;
@@ -408,6 +410,11 @@ public class Node : Object {
     return( !is_root() && (side == NodeSide.LEFT) );
   }
 
+  /* Returns true if the given coordinates are within the specified bounds */
+  private bool is_within_bounds( double x, double y, double bx, double by, double bw, double bh ) {
+    return( (bx < x) && (x < (bx + bw)) && (by < y) && (y < (by + bh)) );
+  }
+
   /* Returns true if the given cursor coordinates lies within this node */
   public virtual bool is_within( double x, double y ) {
     double cx, cy, cw, ch;
@@ -416,7 +423,41 @@ public class Node : Object {
     cy += (double)style.node_margin;
     cw -= (double)style.node_margin * 2;
     ch -= (double)style.node_margin * 2;
-    return( (cx < x) && (x < (cx + cw)) && (cy < y) && (y < (cy + ch)) );
+    return( is_within_bounds( x, y, cx, cy, cw, ch ) );
+  }
+
+  /* Returns the positional information for where the task item is located (if it exists) */
+  protected virtual void task_bbox( out double x, out double y, out double w, out double h ) {
+    double img_height = (_image == null) ? 0 : _image.height;
+    x = posx + style.node_margin + style.node_padding;
+    y = posy + style.node_margin + style.node_padding + img_height + (((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2) - _task_radius);
+    w = _task_radius * 2;
+    h = _task_radius * 2;
+  }
+
+  /* Returns the positional information for where the note item is located (if it exists) */
+  protected virtual void note_bbox( out double x, out double y, out double w, out double h ) {
+    double img_height = (_image == null) ? 0 : _image.height;
+    x = posx + (_width - (note_width() + style.node_padding + style.node_margin)) + _ipadx;
+    y = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2) - 5;
+    w = 11;
+    h = 11;
+  }
+
+  /* Returns the positional information of the stored image (if no image exists, the behavior of this method is undefined) */
+  protected virtual void image_bbox( out double x, out double y, out double w, out double h ) {
+    x = posx + style.node_padding + style.node_margin;
+    y = posy + style.node_padding + style.node_margin;
+    w = (_image == null) ? 0 : _image.width;
+    h = (_image == null) ? 0 : _image.height;
+  }
+
+  /* Returns the positional information for where the resizer box is located (if it exists) */
+  protected virtual void resizer_bbox( out double x, out double y, out double w, out double h ) {
+    x = resizer_on_left() ? (posx + style.node_margin) : (posx + _width - style.node_margin - 8);
+    y = posy + style.node_margin;
+    w = 8;
+    h = 8;
   }
 
   /*
@@ -426,12 +467,8 @@ public class Node : Object {
   public virtual bool is_within_task( double x, double y ) {
     if( _task_count > 0 ) {
       double tx, ty, tw, th;
-      double img_height = (_image == null) ? 0 : _image.height;
-      tx = posx + style.node_padding;
-      ty = posy + style.node_padding + img_height + (((_height - (img_height + style.node_padding)) / 2) - _task_radius);
-      tw = _task_radius * 2;
-      th = _task_radius * 2;
-      return( (tx < x) && (x < (tx + tw)) && (ty < y) && (y < (ty + th)) );
+      task_bbox( out tx, out ty, out tw, out th );
+      return( is_within_bounds( x, y, tx, ty, tw, th ) );
     } else {
       return( false );
     }
@@ -443,12 +480,8 @@ public class Node : Object {
   public virtual bool is_within_note( double x, double y ) {
     if( note.length > 0 ) {
       double nx, ny, nw, nh;
-      double img_height = (_image == null) ? 0 : _image.height;
-      nx = posx + (_width - (note_width() + style.node_padding)) + _ipadx;
-      ny = posy + style.node_padding + img_height + ((_height - (img_height + style.node_padding)) / 2) - 5;
-      nw = 11;
-      nh = 11;
-      return( (nx < x) && (x < (nx + nw)) && (ny < y) && (y < (ny + nh)) );
+      note_bbox( out nx, out ny, out nw, out nh );
+      return( is_within_bounds( x, y, nx, ny, nw, nh ) );
     } else {
       return( false );
     }
@@ -459,7 +492,7 @@ public class Node : Object {
     if( folded && (_children.length > 0) ) {
       double fx, fy, fw, fh;
       fold_bbox( out fx, out fy, out fw, out fh );
-      return( (fx < x) && (x < (fx + fw)) && (fy < y) && (y < (fy + fh)) );
+      return( is_within_bounds( x, y, fx, fy, fw, fh ) );
     } else {
       return( false );
     }
@@ -469,11 +502,9 @@ public class Node : Object {
   public virtual bool is_within_image( double x, double y ) {
     if( _image != null ) {
       double ix, iy, iw, ih;
-      ix = posx + style.node_padding;
-      iy = posy + style.node_padding;
-      iw = _image.width;
-      ih = _image.height;
-      return( (ix <= x) && (x <= (ix + iw)) && (iy <= y) && (y <= (iy + ih)) );
+      image_bbox( out ix, out iy, out iw, out ih );
+      return( is_within_bounds( x, y, ix, iy, iw, ih ) );
+      // return( (ix <= x) && (x <= (ix + iw)) && (iy <= y) && (y <= (iy + ih)) );
     } else {
       return( false );
     }
@@ -483,12 +514,9 @@ public class Node : Object {
   public virtual bool is_within_resizer( double x, double y ) {
     if( mode == NodeMode.CURRENT ) {
       double rx, ry, rw, rh;
-      int    margin = style.node_margin;
-      rx = resizer_on_left() ? (posx + margin) : (posx + _width - margin - 8);
-      ry = posy + margin;
-      rw = 8;
-      rh = 8;
-      return( (rx < x) && (x <= (rx + rw)) && (ry < y) && (y <= (ry + rh)) );
+      resizer_bbox( out rx, out ry, out rw, out rh );
+      return( is_within_bounds( x, y, rx, ry, rw, rh ) );
+      // return( (rx < x) && (x <= (rx + rw)) && (ry < y) && (y <= (ry + rh)) );
     }
     return( false );
   }
@@ -837,6 +865,11 @@ public class Node : Object {
     return( "#%02x%02x%02x".printf( (int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255) ) );
   }
 
+  /* Removes < and > characters */
+  private string unmarkup( string markup ) {
+    return( markup.replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
+  }
+
   /* Generates the marked up name that will be displayed in the node */
   private string name_markup( Theme? theme ) {
     if( (_selstart != _selend) && (theme != null) ) {
@@ -844,10 +877,12 @@ public class Node : Object {
       var bg      = color_from_rgba( theme.textsel_background );
       var spos    = name.index_of_nth_char( _selstart );
       var epos    = name.index_of_nth_char( _selend );
-      var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + name.slice( spos, epos ) + "</span>";
-      return( name.splice( spos, epos, seltext ) );
+      var begtext = unmarkup( name.slice( 0, spos ) );
+      var endtext = unmarkup( name.slice( epos, name.char_count() ) );
+      var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + unmarkup( name.slice( spos, epos ) ) + "</span>";
+      return( begtext + seltext + endtext );
     }
-    return( name );
+    return( (!(bool)style.node_markup || (_mode == NodeMode.EDITABLE)) ? unmarkup( name ) : name );
   }
 
   /*
@@ -860,8 +895,8 @@ public class Node : Object {
       int text_width, text_height;
       double orig_width  = _width;
       double orig_height = _height;
-      double img_width   = (_image != null) ? (_image.width  + (style.node_padding * 2)) : 0;
-      double img_height  = (_image != null) ? (_image.height + style.node_padding)       : 0;
+      double img_width   = (_image != null) ? (_image.width  + (style.node_padding * 2) + (style.node_margin * 2)) : 0;
+      double img_height  = (_image != null) ? (_image.height + style.node_padding + (style.node_margin * 2))       : 0;
       _pango_layout.set_markup( name_markup( theme ), -1 );
       _pango_layout.get_size( out text_width, out text_height );
       _width     = (text_width  / Pango.SCALE) + (style.node_padding * 2) + task_width() + note_width() + (style.node_margin * 2);
@@ -902,10 +937,10 @@ public class Node : Object {
       w = _width;
       h = _height;
     } else {
-      x = posx - (style.node_borderwidth / 2);
+      x = posx; // - (style.node_borderwidth / 2);
       y = posy;
-      w = _width  + style.node_borderwidth;
-      h = _height + (style.node_borderwidth / 2);
+      w = _width; //  + style.node_borderwidth;
+      h = _height; // + (style.node_borderwidth / 2);
     }
   }
 
@@ -1001,12 +1036,12 @@ public class Node : Object {
   }
 
   /* Returns the amount of internal width to draw the task checkbutton */
-  protected double task_width() {
+  public double task_width() {
     return( (_task_count > 0) ? ((_task_radius * 2) + _ipadx) : 0 );
   }
 
   /* Returns the width of the note indicator */
-  protected double note_width() {
+  public double note_width() {
     return( (note.length > 0) ? (10 + _ipadx) : 0 );
   }
 
@@ -1063,8 +1098,8 @@ public class Node : Object {
   public void set_cursor_at_char( double x, double y, bool motion ) {
     int cursor, trailing;
     int img_height = (_image != null) ? (int)(_image.height + style.node_padding) : 0;
-    int adjusted_x = (int)(x - (posx + style.node_padding + task_width())) * Pango.SCALE;
-    int adjusted_y = (int)(y - (posy + style.node_padding + img_height)) * Pango.SCALE;
+    int adjusted_x = (int)(x - (posx + style.node_margin + style.node_padding + task_width())) * Pango.SCALE;
+    int adjusted_y = (int)(y - (posy + style.node_margin + style.node_padding + img_height)) * Pango.SCALE;
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       var cindex = name.char_count( cursor + trailing );
       if( motion ) {
@@ -1090,8 +1125,8 @@ public class Node : Object {
   public void set_cursor_at_word( double x, double y, bool motion ) {
     int cursor, trailing;
     int img_height = (_image != null) ? (int)(_image.height + style.node_padding) : 0;
-    int adjusted_x = (int)(x - (posx + style.node_padding + task_width())) * Pango.SCALE;
-    int adjusted_y = (int)(y - (posy + style.node_padding + img_height)) * Pango.SCALE;
+    int adjusted_x = (int)(x - (posx + style.node_margin + style.node_padding + task_width())) * Pango.SCALE;
+    int adjusted_y = (int)(y - (posy + style.node_margin + style.node_padding + img_height)) * Pango.SCALE;
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor += trailing;
       var word_start = name.substring( 0, cursor ).last_index_of( " " );
@@ -1396,32 +1431,31 @@ public class Node : Object {
   }
 
   /* Attaches this node as a child of the given node */
-  public virtual void attach( Node parent, int index, Theme? theme ) {
-    if( index == -1 ) {
-      attach_root( parent, theme );
-    } else {
-      attach_nonroot( parent, index, theme );
-    }
-  }
-
-  /* Attaches this node to the end of the given parent when this node is a root node */
-  public virtual void attach_root( Node parent, Theme? theme ) {
+  public virtual void attach( Node parent, int index, Theme? theme, bool set_side = true ) {
     this.parent = parent;
     layout = parent.layout;
     if( layout != null ) {
-      if( parent.children().length > 0 ) {
-        side = parent.children().index( parent.children().length - 1 ).side;
+      if( set_side ) {
+        if( parent.is_root() ) {
+          if( parent.children().length == 0 ) {
+            side = layout.side_mapping( side );
+          } else {
+            side = parent.children().index( parent.children().length - 1 ).side;
+          }
+        } else {
+          side = parent.side;
+        }
         layout.propagate_side( this, side );
       }
       layout.initialize( this );
     }
-    attach_common( -1, theme );
+    attach_common( index, theme );
   }
 
-  public virtual void attach_nonroot( Node parent, int index, Theme? theme ) {
+  public virtual void attach_init( Node parent, int index ) {
     this.parent = parent;
     layout = parent.layout;
-    attach_common( index, theme );
+    attach_common( index, null );
   }
 
   protected virtual void attach_common( int index, Theme? theme ) {
@@ -1592,7 +1626,7 @@ public class Node : Object {
     if( index != -1 ) {
       TreeIter it;
       int    start_index = (index > 20) ? (index - 20) : 0;
-      string prefix      = (index > 20) ? "..."        : "";
+      string prefix      = (index > 20) ? "…"        : "";
       string str         = prefix +
                            value.substring( start_index, (index - start_index) ) + "<u>" +
                            value.substring( index, pattern.length ) + "</u>" +
@@ -1756,7 +1790,9 @@ public class Node : Object {
   /* Draws the node image above the note */
   protected virtual void draw_image( Cairo.Context ctx, Theme theme, bool motion ) {
     if( _image != null ) {
-      _image.draw( ctx, (posx + style.node_padding + style.node_margin), (posy + style.node_padding + style.node_margin), (motion ? 0.2 : 1) );
+      double x, y, w, h;
+      image_bbox( out x, out y, out w, out h );
+      _image.draw( ctx, x, y, (motion ? 0.2 : 1) );
     }
 
   }
@@ -1811,14 +1847,14 @@ public class Node : Object {
 
     if( _task_count > 0 ) {
 
-      double img_height = (_image == null) ? 0 : _image.height;
-      double x          = posx + style.node_padding + style.node_margin + _task_radius;
-      double y          = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2);
+      double x, y, w, h;
+
+      task_bbox( out x, out y, out w, out h );
 
       set_context_color( ctx, color );
       ctx.new_path();
       ctx.set_line_width( 1 );
-      ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
+      ctx.arc( (x + _task_radius), (y + _task_radius), _task_radius, 0, (2 * Math.PI) );
 
       if( _task_done == 0 ) {
         ctx.stroke();
@@ -1835,11 +1871,14 @@ public class Node : Object {
 
     if( _task_count > 0 ) {
 
-      double img_height = (_image == null) ? 0 : _image.height;
-      double x          = posx + style.node_padding + style.node_margin + _task_radius;
-      double y          = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2);
-      double complete   = _task_done / (_task_count * 1.0);
-      double angle      = ((complete * 360) + 270) * (Math.PI / 180.0);
+      double x, y, w, h;
+      double complete = _task_done / (_task_count * 1.0);
+      double angle    = ((complete * 360) + 270) * (Math.PI / 180.0);
+
+      task_bbox( out x, out y, out w, out h );
+
+      x += _task_radius;
+      y += _task_radius;
 
       /* Draw circle outline */
       if( complete < 1 ) {
@@ -1871,12 +1910,12 @@ public class Node : Object {
 
     if( note.length > 0 ) {
 
-      double img_height = (_image == null) ? 0 : _image.height;
-      double x          = posx + (_width - (note_width() + style.node_padding + style.node_margin)) + _ipadx;
-      double y          = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2) - 5;
-      RGBA   color      = (mode == NodeMode.CURRENT) ? sel_color :
-                          style.is_fillable()        ? bg_color  :
-                                                       reg_color;
+      double x, y, w, h;
+      RGBA   color = (mode == NodeMode.CURRENT) ? sel_color :
+                     style.is_fillable()        ? bg_color  :
+                                                  reg_color;
+
+      note_bbox( out x, out y, out w, out h );
 
       set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();
@@ -1917,10 +1956,10 @@ public class Node : Object {
       /* Draw circles */
       set_context_color( ctx, fg_color );
       ctx.new_path();
-      ctx.arc( (fx + 5), (fy + 5), 1, 0, (2 * Math.PI) );
+      ctx.arc( (fx + 5), (fy + 5), 2, 0, (2 * Math.PI) );
       ctx.fill();
       ctx.new_path();
-      ctx.arc( (fx + 10), (fy + 5), 1, 0, (2 * Math.PI) );
+      ctx.arc( (fx + 10), (fy + 5), 2, 0, (2 * Math.PI) );
       ctx.fill();
 
     }
@@ -1981,6 +2020,8 @@ public class Node : Object {
     double parent_y;
     double height = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
     double tailx = 0, taily = 0, tipx = 0, tipy = 0;
+    double tip_adjust = (style.link_width / 2) + 1;
+    double link_adjust = style.link_arrow ? (style.link_width / 2) + ((style.node_borderwidth / 2) + 2) : 0;
 
     /* Get the parent's link point */
     parent.link_point( out parent_x, out parent_y );
@@ -1990,20 +2031,24 @@ public class Node : Object {
 
     switch( side ) {
       case NodeSide.LEFT :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + _width - style.node_margin), (posy + height), true,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + _width - style.node_margin + link_adjust), (posy + height), true,
                          out tailx, out taily, out tipx, out tipy );
+        tipx -= tip_adjust;
         break;
       case NodeSide.RIGHT :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + style.node_margin), (posy + height), true,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + style.node_margin - link_adjust), (posy + height), true,
                          out tailx, out taily, out tipx, out tipy );
+        tipx += tip_adjust;
         break;
       case NodeSide.TOP :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + _height - style.node_margin), false,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + _height - style.node_margin + link_adjust), false,
                          out tailx, out taily, out tipx, out tipy );
+        tipy += tip_adjust;
         break;
       case NodeSide.BOTTOM :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + style.node_margin), false,
+        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + style.node_margin - link_adjust), false,
                          out tailx, out taily, out tipx, out tipy );
+        tipx -= tip_adjust;
         break;
     }
 
@@ -2056,13 +2101,13 @@ public class Node : Object {
       return;
     }
 
-    int    margin = style.node_margin;
-    double x      = resizer_on_left() ? (posx + margin) : (posx + _width - margin - 8);
-    double y      = posy + margin;
+    double x, y, w, h;
+
+    resizer_bbox( out x, out y, out w, out h );
 
     set_context_color( ctx, theme.background );
     ctx.set_line_width( 1 );
-    ctx.rectangle( x, y, 8, 8 );
+    ctx.rectangle( x, y, w, h );
     ctx.fill_preserve();
 
     set_context_color( ctx, theme.foreground );
@@ -2100,7 +2145,7 @@ public class Node : Object {
         draw_acc_task( ctx, (style.is_fillable() ? theme.background : _link_color) );
       }
       draw_common_note( ctx, theme.foreground, theme.nodesel_foreground, theme.background );
-      draw_common_fold( ctx, _link_color, theme.foreground );
+      draw_common_fold( ctx, _link_color, theme.background );
       draw_attachable( ctx, theme, theme.background );
       draw_resizer( ctx, theme );
     }
@@ -2123,10 +2168,12 @@ public class Node : Object {
   }
 
   /* Outputs the node's information to standard output */
-  public void display( string prefix = "" ) {
-    stdout.printf( "%sNode, name: %s, posx: %g, posy: %g, side: %s\n", prefix, name, posx, posy, side.to_string() );
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).display( prefix + "  " );
+  public void display( bool recursive = false, string prefix = "" ) {
+    stdout.printf( "%sNode, name: %s, posx: %g, posy: %g, side: %s, layout: %s\n", prefix, name, posx, posy, side.to_string(), ((layout == null) ? "Unknown" : layout.name) );
+    if( recursive ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).display( recursive, prefix + "  " );
+      }
     }
   }
 

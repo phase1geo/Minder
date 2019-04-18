@@ -58,7 +58,7 @@ public class Layout : Object {
       item.detach( item.side );
     });
     list.@foreach((item) => {
-      item.attach_nonroot( parent, -1, null );
+      item.attach_init( parent, -1 );
     });
   }
 
@@ -249,7 +249,7 @@ public class Layout : Object {
         n.posx = px - (cw + _pc_gap);
         break;
       case NodeSide.RIGHT :
-        n.posx = px + (pw + _pc_gap);
+        n.posx = px + (pw + _pc_gap) - n.parent.task_width();
         break;
       case NodeSide.TOP :
         double cx, cy, cw, ch;

@@ -5,40 +5,48 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Minder</name>
+  <name xml:lang="fr">Minder</name>
   <summary>Create, develop and visualize your ideas</summary>
+  <summary xml:lang="fr">Créez, développez et visualisez vos idées</summary>
   <description>
     <p>Use the power of mind-mapping to make your ideas come to life.</p>
+    <p xml:lang="fr">Utilisez le pouvoir des cartes mentales pour donner vie à vos idées.</p>
     <ul>
       <li>Quickly create visual mind-maps using the keyboard and automatic layout.</li>
+      <li xml:lang="fr">Créez rapidement des cartes mentales visuelles en utilisant le clavier et la mise en forme automatique.</li>
       <li>Gorgeous themes.</li>
+      <li xml:lang="fr">Magnifiques thèmes.</li>
       <li>Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown and PlainText formats.</li>
+      <li xml:lang="fr">Exportez aux formats PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Mardown et Texte brut.</li>
       <li>Printer support.</li>
+      <li xml:lang="fr">Support des imprimantes.</li>
       <li>Add notes, tasks and images to your nodes.</li>
+      <li xml:lang="fr">Ajoutez des notes, des tâches et des images à vos nœuds.</li>
       <li>Colorized node branches.</li>
+      <li xml:lang="fr">Branches colorées.</li>
     </ul>
   </description>
   <provides>
     <binary>com.github.phase1geo.minder</binary>
   </provides>
   <screenshots>
-    <screenshot type="default">
-      <caption>Main Application - Light Theme</caption>
-      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-light.png</image>
-    </screenshot>
-    <screenshot>
-      <caption>Main Application - Dark Theme</caption>
-      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-dark.png</image>
-    </screenshot>
     <screenshot>
       <caption>Node Property Sidebar</caption>
+      <caption xml:lang="fr">Barre latérale des propriétés des nœuds</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-node-properties.png</image>
     </screenshot>
     <screenshot>
+      <caption>Style Property Sidebar</caption>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-style-properties.png</image>
+    </screenshot>
+    <screenshot>
       <caption>Map Property Sidebar</caption>
+      <caption xml:lang="fr">Barre latérale des propriétés de la carte</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-map-properties.png</image>
     </screenshot>
   </screenshots>
   <developer_name>Trevor Williams</developer_name>
+  <developer_name xml:lang="fr">Trevor Williams</developer_name>
   <url type="homepage">https://github.com/phase1geo/minder/</url>
   <url type="bugtracker">https://github.com/phase1geo/minder/issues/</url>
   <custom>
@@ -76,77 +84,158 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.2.1" date="2019-04-10">
+      <description>
+        <ul>
+          <li>Fixing appdata.xml file omission.</li>
+          <li>Removing automatic style apply when the affects is set to certain values.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.2" date="2019-04-09">
+      <description>
+        <ul>
+          <li>Added Spanish translation.</li>
+          <li>Added support for Control-Return/Tab to support adding newlines/tabs in a node's title.</li>
+          <li>Improved node title editing support for selection and cursor movement.</li>
+          <li>Added support for automatically opening Minder files from Files.</li>
+          <li>Added ability to modify styles of nodes and links.</li>
+          <li>Changed layouts to be stored on a per tree basis instead of a per document basis.</li>
+          <li>Added support for exporting to the Mermaid format.</li>
+          <li>Added support for disabling/enabling displaying markup in node title.</li>
+          <li>Improved the look of the fold indicators.</li>
+          <li>Lots of bug fixes.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.1.3" date="2018-10-13">
+      <description>
+        <ul>
+          <li>Adding Spanish translation (thanks to Adolfo Jayme-Barrientos).</li>
+          <li xml:lang="fr">Ajout des traductions en espagnol (grâce à Adolfo Jayme-Barrientos).</li>
+          <li>Adding support for special character insertion via the Compose key.</li>
+          <li xml:lang="fr">Ajout du support pour l'insertion de caractères spéciaux avec la touche Compose.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.1.2" date="2018-10-09">
+      <description>
+        <p>Updating French translation.</p>
+        <p xml:lang="fr">Mises à jour des traductions en français.</p>
+      </description>
+    </release>
     <release version="1.1.1" date="2018-09-27">
       <description>
         <p>Bug fix release</p>
+        <p xml:lang="fr">Version corrective</p>
         <ul>
           <li>Fixed bugs related to editing unicode characters in map area.</li>
+          <li xml:lang="fr">Correction de bugs liés à l'édition de caractères unicode dans la zone de la carte.</li>
           <li>Reduced height of node textbox in sidebar to help alleviate window sizing problems.</li>
+          <li xml:lang="fr">Réduction de la hauteur de la zone de texte du nœud dans la barre latérale pour aider à diminuer les problèmes de dimensionnement de la fenêtre.</li>
           <li>Fixed issue with moving a node to a different position within a parent node.</li>
+          <li xml:lang="fr">Correction d'un problème avec le déplacement d'un nœud vers une position différente au sein d'un nœud parent.</li>
           <li>Fixed issue connecting a root node to another node.</li>
+          <li xml:lang="fr">Correction d'un problème de connexion d'un nœud racine à un autre nœud.</li>
         </ul>
       </description>
     </release>
     <release version="1.1" date="2018-09-18">
       <description>
         <p>Images now supported!</p>
+        <p xml:lang="fr">Les images sont désormais prises en charge !</p>
         <ul>
           <li>Added support for images within nodes.</li>
+          <li xml:lang="fr">Ajout de la prise en charge des images à l'intérieur des nœuds.</li>
           <li>Added basic image editing support.</li>
+          <li xml:lang="fr">Ajout de la prise en charge mimimale de la modification d'image.</li>
           <li>Added support for dragging and dropping local and web images.</li>
+          <li xml:lang="fr">Ajout de la prise en charge du glisser-déposer d'images locales ou web.</li>
           <li>Added support for resizing node width.</li>
+          <li xml:lang="fr">Ajout de la prise en charge du redimensionnement de la largeur des nœuds.</li>
           <li>Changed cursors when over a task button.</li>
+          <li xml:lang="fr">Modification du curseur au survol d'un bouton de tâche.</li>
           <li>Changed location of task and note elements in a node.</li>
+          <li xml:lang="fr">Modification de l'emplacement des éléments de tâche et de note dans un nœud.</li>
           <li>Added support for keeping the map from scrolling off screen.</li>
+          <li xml:lang="fr">Ajout de la prise en charge du maintien du défilement de la carte de l'écran.</li>
           <li>Added support for shift-mousewheel to scroll horizontally.</li>
+          <li xml:lang="fr">Ajout de la prise en charge de la molette de la souris avec shift pour le défilement horizontal.</li>
           <li>Added support for control-mousewheel to zoom in/out.</li>
-          <li>Fixed issue with drawing background when zoom factor was small.</li> 
+          <li xml:lang="fr">Ajout de la prise en charge de la molette de la souris pour effectuer un zoom avant/arrière.</li>
+          <li>Fixed issue with drawing background when zoom factor was small.</li>
+          <li xml:lang="fr">Correction d'un problème avec l'arrière-plan du graphique lorsque le facteur de zoom était faible.</li>
           <li>Custom icons are now stored as a gresource rather than in the file system.</li>
+          <li xml:lang="fr">Les icônes personnalisées sont maintenant stockées en tant que ressource gresource plutôt que dans le système de fichiers.</li>
           <li>Other minor bug fixes.</li>
+          <li xml:lang="fr">Autres corrections de bugs mineures.</li>
         </ul>
       </description>
     </release>
     <release version="1.0.8" date="2018-08-06">
       <description>
         <p>Support for more export types and bug fixes.</p>
+        <p xml:lang="fr">Prise en charge de plus de types d'exportation et corrections de bugs.</p>
         <ul>
           <li>Added support for exporting to SVG, JPEG, BMP, Markdown, PlainText and CSV formats.</li>
+          <li xml:lang="fr">Ajout de la prise en charge pour l'exportation vers les formats SVG, JPEG, BMP, Mardown, Texte brut et CSV.</li>
           <li>Added support for folding all completed tasks in map inspector.</li>
+          <li xml:lang="fr">Ajout de la prise en charge pour plier toutes les tâches complétées dans l'inspecteur de carte.</li>
           <li>Added support for unfolding all folded nodes in map inspector.</li>
+          <li xml:lang="fr">Ajout de la prise en charge pour déplier tous les nœuds pliés dans l'inspecteur de carte.</li>
           <li>Added Solarized Dark and Solarized Light themes.</li>
+          <li xml:lang="fr">AJout des thèmes Solarized Dark et Solarized Light.</li>
           <li>Changing button display in map inspector.</li>
-          <li>Cleaning up Export menu to include a single "Export..." option.</li>
+          <li xml:lang="fr">Modification de l'affichage du bouton dans l'inspecteur de carte.</li>
+          <li>Cleaning up Export menu to include a single "Export…" option.</li>
+          <li xml:lang="fr">Nettoyage du menu Exporter pour inclure une seule option « Exporter… ».</li>
           <li>Fixing issue where modified node title in node inspector was lost when input focus was changed.</li>
+          <li xml:lang="fr">Correction d'un problème où le titre de nœud modifié dans l'inspecteur de nœud était perdu lorsque le point focalisé en entrée était modifié.</li>
           <li>Fixing issue where an entire tree is attached to another tree.</li>
+          <li xml:lang="fr">Correction d'un problème où un arbre entier est attaché à un autre arbre.</li>
           <li>Added Czech translation (thanks to Jan Marek!).</li>
+          <li xml:lang="fr">Ajout des traductions en tchèque (grâce à Jan Marek !).</li>
           <li>Added French translation (thanks to Yannick A.!).</li>
+          <li xml:lang="fr">Ajout des traductions en français (grâce à Yannick A. !).</li>
           <li>Added Brazilian Portuguese translation (thanks to btd1337!)</li>
+          <li xml:lang="fr">Ajout des traductions en portugais brésilien (grâce à btd1337 !)</li>
         </ul>
       </description>
     </release>
     <release version="1.0.7" date="2018-07-13">
       <description>
         <p>Initial startup bug fix.</p>
+        <p xml:lang="fr">Correction de bug au premier démarrage.</p>
       </description>
     </release>
     <release version="1.0.4" date="2018-07-11">
       <description>
         <p>Search improvements and bug fixes</p>
+        <p xml:lang="fr">Amélioration de la recherche et corrections de bugs</p>
         <ul>
           <li>Added ability to search within notes.</li>
+          <li xml:lang="fr">Ajout de la possibilité de chercher parmi les notes.</li>
           <li>Added ability to optionally control search criteria within search popover.</li>
+          <li xml:lang="fr">Ajout de la possibilité pour optionnellement contrôler les critères de recherche dans le volet de recherche.</li>
           <li>Fixed screenshots.</li>
+          <li xml:lang="fr">Correction des captures d'écran.</li>
           <li>Changed properties header bar icon to a sidebar hide/show icon for clarity.</li>
+          <li xml:lang="fr">L'icône de la barre supérieure des propriétés a été changée en icône de masquage/affichage dans la barre latérale pour plus de clarté.</li>
           <li>Several minor UI improvements.</li>
+          <li xml:lang="fr">Améliorations mineures diverses de l'interface.</li>
           <li>Removing deprecated GTK calls.</li>
+          <li xml:lang="fr">Suprresion des éléments GTK dépréciés.</li>
           <li>Added ability to double-click on a node to make it editable.</li>
+          <li xml:lang="fr">Ajout de la possibilité de double-cliquer sur un nœud pour le rendre éditable.</li>
           <li>Bug fixes.</li>
+          <li xml:lang="fr">Corrections de bugs.</li>
         </ul>
       </description>
     </release>
     <release version="1.0.2" date="2018-06-29">
       <description>
         <p>Initial release</p>
+        <p xml:lang="fr">Version initiale</p>
       </description>
     </release>
   </releases>

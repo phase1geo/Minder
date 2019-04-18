@@ -41,7 +41,7 @@ public class UndoNodeCut : UndoItem {
     if( _parent == null ) {
       da.add_root( _node, _index );
     } else {
-      _node.attach( _parent, _index, null );
+      _node.attach_init( _parent, _index );
     }
     da.set_current_node( _node );
     da.queue_draw();
