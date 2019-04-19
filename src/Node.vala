@@ -1775,7 +1775,7 @@ public class Node : Object {
     }
 
     /* Draw the fill */
-    style.draw_fill( ctx, x, y, w, h, side );
+    style.draw_node_fill( ctx, x, y, w, h, side );
 
     if( !is_root() || style.is_fillable() ) {
 
@@ -1784,7 +1784,7 @@ public class Node : Object {
       ctx.set_line_width( style.node_borderwidth );
 
       /* If we are in a vertical orientation and the border type is underlined, draw nothing */
-      style.draw_border( ctx, x, y, w, h, side );
+      style.draw_node_border( ctx, x, y, w, h, side );
 
     }
 

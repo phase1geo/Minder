@@ -57,7 +57,8 @@ public class DrawArea : Gtk.DrawingArea {
   private uint?            _auto_save_id = null;
   private ImageEditor      _editor;
   private IMContextSimple  _im_context;
-  private bool             _debug        = true;
+  private bool             _debug           = false;
+  private Connection?      _last_connection = null;
 
   public UndoBuffer   undo_buffer    { set; get; }
   public Themes       themes         { set; get; default = new Themes(); }
@@ -766,6 +767,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     if( conn == _current_connection ) {
       _current_connection.mode = ConnMode.ADJUSTING;
+      _last_connection = new Connection.from_connection( this, _current_connection );
       return( true );
     } else {
       conn.mode = ConnMode.SELECTED;
@@ -848,11 +850,14 @@ public class DrawArea : Gtk.DrawingArea {
   */
   private bool set_current_at_position( double x, double y, EventButton e ) {
 
+    /* If the user clicked on a selected connection endpoint, disconnect that endpoint */
     if( (_current_connection != null) && (_current_connection.mode == ConnMode.SELECTED) ) {
       if( _current_connection.within_from_handle( e.x, e.y ) ) {
+        _last_connection = new Connection.from_connection( this, _current_connection );
         _current_connection.disconnect( true );
         return( true );
       } else if( _current_connection.within_to_handle( e.x, e.y ) ) {
+        _last_connection = new Connection.from_connection( this, _current_connection );
         _current_connection.disconnect( false );
         return( true );
       }
@@ -1203,19 +1208,41 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Handle mouse motion */
   private bool on_motion( EventMotion event ) {
+
+    /* If the node is attached, clear it */
     if( _attach_node != null ) {
       _attach_node.mode = NodeMode.NONE;
       _attach_node      = null;
       queue_draw();
     }
+
     double scaled_x = scale_value( event.x );
     double scaled_y = scale_value( event.y );
+
+    /* If the mouse button is current pressed, handle it */
     if( _pressed ) {
+
+      /* If we are dealing with a connection, update it based on its mode */
       if( _current_connection != null ) {
-        if( _current_connection.mode == ConnMode.ADJUSTING ) {
-          _current_connection.move_drag_handle( event.x, event.y );
-          queue_draw();
+        switch( _current_connection.mode ) {
+          case ConnMode.ADJUSTING :
+            _current_connection.move_drag_handle( event.x, event.y );
+            queue_draw();
+            break;
+          case ConnMode.CONNECTING :
+            update_connection( event.x, event.y );
+            for( int i=0; i<_nodes.length; i++ ) {
+              Node? match = _nodes.index( i ).contains( scaled_x, scaled_y, null );
+              if( match != null ) {
+                _attach_node      = match;
+                _attach_node.mode = NodeMode.ATTACHABLE;
+                break;
+              }
+            }
+            break;
         }
+
+      /* If we are dealing with a node, handle it based on its mode */
       } else if( _current_node != null ) {
         double diffx = scaled_x - _press_x;
         double diffy = scaled_y - _press_y;
@@ -1239,6 +1266,7 @@ public class DrawArea : Gtk.DrawingArea {
           }
         }
         queue_draw();
+
       } else {
         double diff_x = _press_x - scaled_x;
         double diff_y = _press_y - scaled_y;
@@ -1284,25 +1312,46 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Handle button release event */
   private bool on_release( EventButton event ) {
+
     _pressed = false;
+
     if( _motion ) {
       set_cursor( null );
     }
+
+    /* If we were resizing a node, end the resize */
     if( _resize ) {
       _resize = false;
       undo_buffer.add_item( new UndoNodeResize( _current_node, _orig_width ) );
       return( false );
     }
+
+    /* If a connection is selected, deal with the possibilities */
     if( _current_connection != null ) {
+
+      /* If the connection end is released on an attachable node, attach the connection to the node */
       if( _attach_node != null ) {
         end_connection( _attach_node );
+        undo_buffer.add_item( new UndoConnectionChange( _( "connection endpoint change" ), _last_connection, _current_connection ) );
         _attach_node.mode = NodeMode.NONE;
         _attach_node = null;
+        _last_connection = null;
+
+      /* If we were dragging the connection midpoint, change the connection mode to SELECTED */
       } else if( _current_connection.mode == ConnMode.ADJUSTING ) {
+        undo_buffer.add_item( new UndoConnectionChange( _( "connection drag" ), _last_connection, _current_connection ) );
         _current_connection.mode = ConnMode.SELECTED;
+
+      /* If we were dragging a connection end and failed to attach it to a node, return the connection to where it was prior to the drag */
+      } else if( _last_connection != null ) {
+        _current_connection.copy( _last_connection );
+        _last_connection = null;
       }
       queue_draw();
+
+    /* If a node is selected, deal with the possibilities */
     } else if( _current_node != null ) {
+
       if( _current_node.mode == NodeMode.CURRENT ) {
 
         /* If we are hovering over an attach node, perform the attachment */
@@ -1327,9 +1376,13 @@ public class DrawArea : Gtk.DrawingArea {
         } else {
           queue_draw();
         }
+
       }
+
     }
+
     return( false );
+
   }
 
   /* Attaches the current node to the attach node */
@@ -2504,7 +2557,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Starts a connection from the current node */
   public void start_connection() {
     if( _current_node == null ) return;
-    _current_connection      = new Connection( _current_node );
+    _current_connection      = new Connection( this, _current_node );
     _current_connection.mode = ConnMode.CONNECTING;
   }
 
@@ -2521,7 +2574,8 @@ public class DrawArea : Gtk.DrawingArea {
     _current_connection.connect_to( n );
     _connections.add_connection( _current_connection );
     undo_buffer.add_item( new UndoConnectionChange( _( "add connection" ), null, _current_connection ) );
-    _current_connection = null;
+    _current_connection.mode = ConnMode.ADJUSTING;
+    _last_connection = null;
     changed();
     queue_draw();
   }
@@ -2529,7 +2583,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Deletes the current connection */
   public void delete_connection() {
     if( _current_connection == null ) return;
-    var orig_connection = new Connection.from_connection( _current_connection );
+    var orig_connection = new Connection.from_connection( this, _current_connection );
     _connections.remove_connection( _current_connection );
     _current_connection = null;
     undo_buffer.add_item( new UndoConnectionChange( _( "delete connection" ), orig_connection, null ) );

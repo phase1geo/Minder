@@ -29,34 +29,51 @@ public enum ConnMode {
   NONE = 0,    // Normally drawn mode
   CONNECTING,  // Indicates that the connection is being made between two nodes
   SELECTED,    // Indicates that the connection is currently selected
-  ADJUSTING    // Indicates that we are moving the drag handle to change the line shape
+  ADJUSTING,   // Indicates that we are moving the drag handle to change the line shape
+  EDITABLE     // Indicates that the connection title is in edit mode
 }
 
 public class Connection {
 
-  private int    RADIUS     = 6;
-  private Node?  _from_node = null;
-  private Node?  _to_node   = null;
-  private double _posx;
-  private double _posy;
-  private double _dragx;
-  private double _dragy;
-  private Style  _style   = new Style();
-  private Bezier _curve;
+  private int          RADIUS     = 6;
+  private Node?        _from_node = null;
+  private Node?        _to_node   = null;
+  private double       _posx;
+  private double       _posy;
+  private double       _dragx;
+  private double       _dragy;
+  private Style        _style   = new Style();
+  private Bezier       _curve;
+  private Pango.Layout _pango_layout = null;
+  private int          _selstart = 0;
+  private int          _selend   = 0;
+  private string       _title    = "";
 
-  public string   title { get; set; default = ""; }
+  public string title {
+    get {
+      return( _title );
+    }
+    set {
+      _title = value;
+      _pango_layout.set_markup( title_markup( null ), -1 );
+    }
+  }
+  public string   note  { get; set; default = ""; }
   public ConnMode mode  { get; set; default = ConnMode.NONE; }
   public Style    style { 
     get {
       return( _style );
     }
     set {
-      _style.copy( value );
+      if( _style.copy( value ) ) {
+        _pango_layout.set_font_description( _style.node_font );
+        _pango_layout.set_width( _style.node_width * Pango.SCALE );
+      }
     }
   }
 
   /* Default constructor */
-  public Connection( Node from_node ) {
+  public Connection( DrawArea da, Node from_node ) {
     double x, y, w, h;
     from_node.bbox( out x, out y, out w, out h );
     _posx      = x + (w / 2);
@@ -67,28 +84,37 @@ public class Connection {
     _dragy     = _posy;
     _curve     = new Bezier.with_endpoints( _posx, _posy, _posx, _posy );
     style      = StyleInspector.styles.get_global_style();
+    _pango_layout = da.create_pango_layout( null );
+    _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
   }
 
   /* Constructs a connection based on another connection */
-  public Connection.from_connection( Connection conn ) {
+  public Connection.from_connection( DrawArea da, Connection conn ) {
     _curve = new Bezier();
+    _pango_layout = da.create_pango_layout( null );
+    _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     copy( conn );
   }
 
   /* Constructor from XML data */
   public Connection.from_xml( DrawArea da, Xml.Node* n ) {
+    _pango_layout = da.create_pango_layout( null );
+    _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     style = StyleInspector.styles.get_global_style();
     load( da, n );
   }
 
   /* Copies the given connection to this instance */
   public void copy( Connection conn ) {
-    _from_node = conn._from_node;
-    _to_node   = conn._to_node;
-    _dragx     = conn._dragx;
-    _dragy     = conn._dragy;
+    _from_node    = conn._from_node;
+    _to_node      = conn._to_node;
+    _dragx        = conn._dragx;
+    _dragy        = conn._dragy;
     _curve.copy( conn._curve );
-    style      = conn.style;
+    _pango_layout = conn._pango_layout;
+    title         = conn.title;
+    mode          = conn.mode;
+    style         = conn.style;
   }
 
   /* Connects to the given node */
@@ -209,20 +235,47 @@ public class Connection {
     return( curve.within_range( x, y ) );
   }
 
+  /* Returns true if the given x/y point lies within a handle located at hx/hy */
+  private bool within_handle( double hx, double hy, double x, double y ) {
+    return( ((hx - RADIUS) <= x) && (x <= (hx + RADIUS)) && ((hy - RADIUS) <= y) && (y <= (hy + RADIUS)) );
+  }
+
   /* Returns true if the given point is within the drag handle */
   public bool within_drag_handle( double x, double y ) {
-    return( ((_dragx - RADIUS) <= x) && (x <= (_dragx + RADIUS)) &&
-            ((_dragy - RADIUS) <= y) && (y <= (_dragy + RADIUS)) );
+    if( mode == ConnMode.SELECTED ) {
+      if( title == "" ) {
+        return( within_handle( _dragx, _dragy, x, y ) );
+      } else {
+        double tx, ty, tw, th;
+        title_bbox( out tx, out ty, out tw, out th );
+        return( within_handle( _dragx, (_dragy + (th / 2)), x, y ) );
+      }
+    } 
+    return( false );
   }
 
   /* Returns true if the given point lies within the from connection handle */
   public bool within_from_handle( double x, double y ) {
-    return( within_handle( true, x, y ) );
+    return( within_endpoint_handle( true, x, y ) );
   }
 
   /* Returns true if the given point lies within the from connection handle */
   public bool within_to_handle( double x, double y ) {
-    return( within_handle( false, x, y ) );
+    return( within_endpoint_handle( false, x, y ) );
+  }
+
+  /* Returns true if the given point lies within the from connection handle */
+  private bool within_endpoint_handle( bool from, double x, double y ) {
+    if( mode == ConnMode.SELECTED ) {
+      double px, py;
+      if( from ) {
+        _curve.get_from_point( out px, out py );
+      } else {
+        _curve.get_to_point( out px, out py );
+      }
+      return( within_handle( px, py, x, y ) );
+    }
+    return( false );
   }
 
   /* Updates the location of the drag handle */
@@ -233,20 +286,6 @@ public class Connection {
     _curve.update_control_from_drag_handle( x, y );
     set_connect_point( _from_node );
     set_connect_point( _to_node );
-  }
-
-  /* Returns true if the given point lies within the from connection handle */
-  private bool within_handle( bool from, double x, double y ) {
-    if( mode == ConnMode.SELECTED ) {
-      double px, py;
-      if( from ) {
-        _curve.get_from_point( out px, out py );
-      } else {
-        _curve.get_to_point( out px, out py );
-      }
-      return( ((px - RADIUS) <= x) && (x <= (px + RADIUS)) && ((py - RADIUS) <= y) && (y <= (py + RADIUS)) );
-    }
-    return( false );
   }
 
   /* Loads the connection information */
@@ -277,6 +316,11 @@ public class Connection {
     string? ti = node->get_prop( "title" );
     if( ti != null ) {
       title = ti;
+    }
+
+    string? n = node->get_prop( "note" );
+    if( n != null ) {
+      note = n;
     }
 
     /* Update the stored curve */
@@ -382,8 +426,13 @@ public class Connection {
       }
     }
 
+    /* Draw the connection title if it exists */
+    if( title != "" ) {
+
+      draw_title( ctx, theme );
+
     /* Draw the drag circle */
-    if( mode != ConnMode.NONE ) {
+    } else if( mode != ConnMode.NONE ) {
       ctx.set_line_width( 1 );
       ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
       ctx.arc( dragx, dragy, RADIUS, 0, (2 * Math.PI) );
@@ -410,6 +459,78 @@ public class Connection {
     }
 
     ctx.restore();
+
+  }
+
+  private void title_bbox( out double x, out double y, out double w, out double h ) {
+
+    int text_width, text_height;
+
+    _pango_layout.get_size( out text_width, out text_height );
+
+    w = (text_width  / Pango.SCALE) + (style.connection_padding * 2);
+    h = (text_height / Pango.SCALE) + (style.connection_padding * 2);
+    x = _dragx - (w / 2);
+    y = _dragy - (h / 2);
+
+  }
+
+  /*
+   Helper function for converting an RGBA color value to a stringified color
+   that can be used by a markup parser.
+  */
+  private string color_from_rgba( RGBA rgba ) {
+    return( "#%02x%02x%02x".printf( (int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255) ) );
+  }
+
+  /* Removes < and > characters */
+  private string unmarkup( string markup ) {
+    return( markup.replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
+  }
+
+  /* Generates the marked up name that will be displayed in the node */
+  private string title_markup( Theme? theme ) {
+    if( (_selstart != _selend) && (theme != null) ) {
+      var fg      = color_from_rgba( theme.textsel_foreground );
+      var bg      = color_from_rgba( theme.textsel_background );
+      var spos    = title.index_of_nth_char( _selstart );
+      var epos    = title.index_of_nth_char( _selend );
+      var begtext = unmarkup( title.slice( 0, spos ) );
+      var endtext = unmarkup( title.slice( epos, title.char_count() ) );
+      var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + unmarkup( title.slice( spos, epos ) ) + "</span>";
+      return( begtext + seltext + endtext );
+    }
+    return( (!(bool)style.node_markup || (mode == ConnMode.EDITABLE)) ? unmarkup( title ) : title );
+  }
+
+  /*
+   Draws the connection title if it has been enabled.
+  */
+  private void draw_title( Cairo.Context ctx, Theme theme ) {
+
+    RGBA   color = theme.connection_color;
+    RGBA   fg    = theme.foreground;
+    double x, y, w, h;
+
+    title_bbox( out x, out y, out w, out h );
+
+    /* Draw the box */
+    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+    ctx.rectangle( x, y, w, h );
+    ctx.fill();
+
+    /* Draw the text */
+    ctx.move_to( (x + style.connection_padding), (y + style.connection_padding) );
+    ctx.set_source_rgba( fg.red, fg.green, fg.blue, fg.alpha );
+    Pango.cairo_show_layout( ctx, _pango_layout );
+
+    /* Draw the drag handle */
+    ctx.set_line_width( 1 );
+    ctx.set_source_rgba( fg.red, fg.green, fg.blue, fg.alpha );
+    ctx.arc( _dragx, (_dragy + (h / 2)), RADIUS, 0, (2 * Math.PI) );
+    ctx.fill_preserve();
+    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+    ctx.stroke();
 
   }
 

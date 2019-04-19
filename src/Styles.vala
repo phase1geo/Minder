@@ -85,15 +85,16 @@ public class Styles {
       } else {
         style.node_border = nb_underlined;
       }
-      style.node_width       = 200;
-      style.node_borderwidth = 4;
-      style.node_fill        = false;
-      style.node_margin      = 8;
-      style.node_padding     = 6;
-      style.node_markup      = true;
-      style.connection_dash  = ld_dotted;
-      style.connection_width = 2;
-      style.connection_arrow = "fromto";
+      style.node_width         = 200;
+      style.node_borderwidth   = 4;
+      style.node_fill          = false;
+      style.node_margin        = 8;
+      style.node_padding       = 6;
+      style.node_markup        = true;
+      style.connection_dash    = ld_dotted;
+      style.connection_width   = 2;
+      style.connection_arrow   = "fromto";
+      style.connection_padding = 6;
       _styles.append_val( style );
     }
 
