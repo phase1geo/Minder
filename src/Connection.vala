@@ -500,7 +500,8 @@ public class Connection {
       var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + unmarkup( title.slice( spos, epos ) ) + "</span>";
       return( begtext + seltext + endtext );
     }
-    return( (!(bool)style.node_markup || (mode == ConnMode.EDITABLE)) ? unmarkup( title ) : title );
+    // return( (!(bool)style.node_markup || (mode == ConnMode.EDITABLE)) ? unmarkup( title ) : title );
+    return( (mode == ConnMode.EDITABLE) ? unmarkup( title ) : title );
   }
 
   /*
@@ -509,7 +510,7 @@ public class Connection {
   private void draw_title( Cairo.Context ctx, Theme theme ) {
 
     RGBA   color = theme.connection_color;
-    RGBA   fg    = theme.foreground;
+    RGBA   fg    = theme.background;
     double x, y, w, h;
 
     title_bbox( out x, out y, out w, out h );
@@ -525,12 +526,18 @@ public class Connection {
     Pango.cairo_show_layout( ctx, _pango_layout );
 
     /* Draw the drag handle */
-    ctx.set_line_width( 1 );
-    ctx.set_source_rgba( fg.red, fg.green, fg.blue, fg.alpha );
-    ctx.arc( _dragx, (_dragy + (h / 2)), RADIUS, 0, (2 * Math.PI) );
-    ctx.fill_preserve();
-    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
-    ctx.stroke();
+    if( (mode == ConnMode.SELECTED) || (mode == ConnMode.ADJUSTING) ) {
+
+      RGBA bg = theme.nodesel_background;
+
+      ctx.set_line_width( 1 );
+      ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
+      ctx.arc( _dragx, (_dragy + (h / 2)), RADIUS, 0, (2 * Math.PI) );
+      ctx.fill_preserve();
+      ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+      ctx.stroke();
+
+    }
 
   }
 

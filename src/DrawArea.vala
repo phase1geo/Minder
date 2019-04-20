@@ -45,6 +45,7 @@ public class DrawArea : Gtk.DrawingArea {
   private Node?            _current_node = null;
   private bool             _current_new = false;
   private Connection?      _current_connection = null;
+  private Connection?      _last_connection = null;
   private Array<Node>      _nodes;
   private Connections      _connections;
   private Theme            _theme;
@@ -57,8 +58,7 @@ public class DrawArea : Gtk.DrawingArea {
   private uint?            _auto_save_id = null;
   private ImageEditor      _editor;
   private IMContextSimple  _im_context;
-  private bool             _debug           = false;
-  private Connection?      _last_connection = null;
+  private bool             _debug        = false;
 
   public UndoBuffer   undo_buffer    { set; get; }
   public Themes       themes         { set; get; default = new Themes(); }
@@ -481,6 +481,7 @@ public class DrawArea : Gtk.DrawingArea {
     _orig_name          = "";
     _current_new        = false;
     _current_connection = null;
+    _last_connection    = null;
 
     set_current_node( null );
 
@@ -514,6 +515,7 @@ public class DrawArea : Gtk.DrawingArea {
     _attach_node        = null;
     _current_new        = false;
     _current_connection = null;
+    _last_connection    = null;
 
     /* Create the main idea node */
     var n = new Node.with_name( this, _("Main Idea"), layouts.get_default() );
@@ -749,6 +751,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( _current_connection != null ) {
       _current_connection.mode = ConnMode.NONE;
       _current_connection      = null;
+      _last_connection         = null;
       connection_changed();
     }
   }
@@ -2586,6 +2589,7 @@ public class DrawArea : Gtk.DrawingArea {
     var orig_connection = new Connection.from_connection( this, _current_connection );
     _connections.remove_connection( _current_connection );
     _current_connection = null;
+    _last_connection    = null;
     undo_buffer.add_item( new UndoConnectionChange( _( "delete connection" ), orig_connection, null ) );
     changed();
     queue_draw();
