@@ -12,12 +12,12 @@ Use the power of mind-mapping to make your ideas come to life.
 
 - Quickly create visual mind-maps using the keyboard and automatic layout.
 - Gorgeous themes.
-- Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown and PlainText formats.
+- Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText and Mermaid formats.
 - Printer support.
 - Add notes, tasks and images to your nodes.
 - Stylize nodes and links to add more meaning and improve readability.
+- Add node-to-node connections with optional text and notes.
 - Colorized node branches.
-
     
 ## Installation
 

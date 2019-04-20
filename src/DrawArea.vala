@@ -1669,6 +1669,11 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     } else if( is_mode_selected() ) {
       hide_properties();
+    } else if( (_current_connection != null) && (_current_connection.mode == ConnMode.CONNECTING) ) {
+      _connections.remove_connection( _current_connection );
+      _current_connection = null;
+      _last_connection = null;
+      queue_draw();
     }
   }
 
@@ -2562,6 +2567,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( _current_node == null ) return;
     _current_connection      = new Connection( this, _current_node );
     _current_connection.mode = ConnMode.CONNECTING;
+    queue_draw();
   }
 
   /* Called when a connection is being drawn by moving the mouse */
