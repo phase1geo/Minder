@@ -23,40 +23,71 @@ using Gtk;
 using GLib;
 using Gdk;
 using Cairo;
+using Pango;
 
 public class CanvasText : Object {
 
   /* Member variables */
-  private   int          _cursor       = 0;   /* Location of the cursor when editing */
-  private   int          _column       = 0;   /* Character column to use when moving vertically */
-  private   Pango.Layout _pango_layout = null;
-  private   int          _selstart     = 0;
-  private   int          _selend       = 0;
-  private   int          _selanchor    = 0;
-  private   double       _min_width    = 50;
-  private   double       _max_width    = 200;
+  private string       _text         = "";
+  private bool         _markup       = true;
+  private bool         _edit         = false;
+  private int          _cursor       = 0;   /* Location of the cursor when editing */
+  private int          _column       = 0;   /* Character column to use when moving vertically */
+  private Pango.Layout _pango_layout = null;
+  private int          _selstart     = 0;
+  private int          _selend       = 0;
+  private int          _selanchor    = 0;
+  private double       _min_width    = 50;
+  private double       _max_width    = 200;
+  private double       _width        = 0;
+  private double       _height       = 0;
 
   /* Signals */
-  public signal void text_changed();
-  public signal void resized( double diffw, double diffh );
+  public signal void resized();
 
   /* Properties */
-  public string text   { get; set; default = ""; }
-  public double posx   { get; set; default = 0; }
-  public double posy   { get; set; default = 0; }
-  public bool   markup { get; set; default = true; }
-  public bool   edit   { get; set; default = false; }
-  public Style  style  {
+  public string text {
     get {
-      return( _style );
+      return( _text );
     }
     set {
-      if( _style.copy( value ) ) {
-        _pango_layout.set_font_description( _style.node_font );
-        _pango_layout.set_width( _style.node_width * Pango.SCALE );
-        if( _layout != null ) {
-          _layout.handle_update_by_edit( this );
-        }
+      if( _text != value ) {
+        _text = value;
+        update_size( true );
+      }
+    }
+  }
+  public double posx   { get; set; default = 0; }
+  public double posy   { get; set; default = 0; }
+  public double width  {
+    get {
+      return( _width / Pango.SCALE );
+    }
+  }
+  public double height {
+    get {
+      return( _height / Pango.SCALE );
+    }
+  }
+  public bool markup {
+    get {
+      return( _markup );
+    }
+    set {
+      if( _markup != value ) {
+        _markup = value;
+        update_size( true );
+      }
+    }
+  }
+  public bool edit {
+    get {
+      return( _edit );
+    }
+    set {
+      if( _edit != value ) {
+        _edit = value;
+        update_size( true );
       }
     }
   }
@@ -65,22 +96,26 @@ public class CanvasText : Object {
   public CanvasText( DrawArea da ) {
     _pango_layout = da.create_pango_layout( null );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
+    update_size( false );
   }
 
   /* Constructor initializing string */
   public CanvasText.with_text( DrawArea da, string txt ) {
-    text          = txt;
-    _pango_layout = da.create_pango_layout( n );
+    _pango_layout = da.create_pango_layout( txt );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
+    _text         = txt;
+    update_size( false );
   }
 
   /* Copies an existing CanvasText to this CanvasText */
-  public CanvasText.copy( CanvasText ct ) {
+  public void copy( CanvasText ct ) {
     posx       = ct.posx;
     posy       = ct.posy;
-    text       = ct.text;
     _min_width = ct._min_width;
     _max_width = ct._max_width;
+    _text      = ct.text;
+    _pango_layout.set_font_description( ct._pango_layout.get_font_description() );
+    update_size( true );
   }
 
   /* Returns the maximum width allowed for this node */
@@ -88,33 +123,24 @@ public class CanvasText : Object {
     return( (int)_max_width );
   }
 
-  /* Returns true if the given coordinates are within the specified bounds */
-  private bool is_within_bounds( double x, double y, double bx, double by, double bw, double bh ) {
-    return( (bx < x) && (x < (bx + bw)) && (by < y) && (y < (by + bh)) );
+  /* Sets the font description to the given value */
+  public void set_font( FontDescription font ) {
+    _pango_layout.set_font_description( font );
+    update_size( true );
+  }
+
+  /* Returns true if the text is currently wrapped */
+  public bool is_wrapped() {
+    return( _pango_layout.is_wrapped() );
   }
 
   /* Returns true if the given cursor coordinates lies within this node */
   public bool is_within( double x, double y ) {
-    double cx, cy, cw, ch;
-    bbox( out cx, out cy, out cw, out ch );
-    return( is_within_bounds( x, y, cx, cy, cw, ch ) );
-  }
-
-  /* Loads the name value from the given XML node */
-  private void load_text( Xml.Node* n ) {
-    if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
-      text = n->children->get_content();
-    }
-  }
-
-  /* Loads the style information from the given XML node */
-  private void load_style( Xml.Node* n ) {
-    // TBD - _style.load_node( n );
-    // TBD - _pango_layout.set_font_description( _style.node_font );
+    return( (posx < x) && (x < (posx + _width)) && (posy < y) && (y < (posy + _height)) );
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, bool isroot ) {
+  public virtual void load( Xml.Node* n ) {
 
     string? x = n->get_prop( "posx" );
     if( x != null ) {
@@ -132,29 +158,9 @@ public class CanvasText : Object {
       _pango_layout.set_width( (int)_max_width * Pango.SCALE );
     }
 
-    /* Make sure the style has a default value */
-    style.copy( StyleInspector.styles.get_style_for_level( isroot ? 0 : 1 ) );
-
-  }
-
-  /* Saves the current node */
-  public virtual void save( Xml.Node* parent ) {
-    parent->add_child( save_node() );
-  }
-
-  /* Saves the node contents to the given data output stream */
-  protected Xml.Node* save_node() {
-
-    Xml.Node* node = new Xml.Node( null, "text" );
-    node->new_prop( "posx", posx.to_string() );
-    node->new_prop( "posy", posy.to_string() );
-    node->new_prop( "maxwidth", _max_width.to_string() );
-
-    // TBD - style.save_node( node );
-
-    // TBD - node->new_text_child( null, "nodename", name );
-
-    return( node );
+    if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
+      text = n->children->get_content();
+    }
 
   }
 
@@ -183,27 +189,21 @@ public class CanvasText : Object {
       var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + unmarkup( text.slice( spos, epos ) ) + "</span>";
       return( begtext + seltext + endtext );
     }
-    return( (!(markup || edit) ? unmarkup( text ) : text );
+    return( (markup || edit) ? text : unmarkup( text ) );
   }
 
   /*
-   Updates the width and height based on the current name.
+   Updates the width and height based on the current text.
   */
-  public void update_size( Theme? theme, out double width_diff, out double height_diff ) {
-    width_diff  = 0;
-    height_diff = 0;
+  public void update_size( bool call_resized ) {
     if( _pango_layout != null ) {
       int text_width, text_height;
-      double orig_width  = _width;
-      double orig_height = _height;
-      _pango_layout.set_markup( name_markup( theme ), -1 );
+      _pango_layout.set_markup( name_markup( null ), -1 );
       _pango_layout.get_size( out text_width, out text_height );
       _width  = (text_width  / Pango.SCALE);
       _height = (text_height / Pango.SCALE);
-      width_diff  = _width  - orig_width;
-      height_diff = _height - orig_height;
-      if( (width_diff != 0) || (height_diff != 0) ) {
-        resized( width_diff, height_diff );
+      if( call_resized ) {
+        resized();
       }
     }
   }
@@ -213,6 +213,7 @@ public class CanvasText : Object {
     if( (diff < 0) ? ((_max_width + diff) <= _min_width) : !_pango_layout.is_wrapped() ) return;
     _max_width += diff;
     _pango_layout.set_width( (int)_max_width * Pango.SCALE );
+    update_size( true );
   }
 
   /* Updates the column value */
@@ -228,7 +229,7 @@ public class CanvasText : Object {
     int adjusted_x = (int)x * Pango.SCALE;
     int adjusted_y = (int)y * Pango.SCALE;
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
-      var cindex = name.char_count( cursor + trailing );
+      var cindex = text.char_count( cursor + trailing );
       if( motion ) {
         if( cindex > _selanchor ) {
           _selend = cindex;
@@ -251,7 +252,6 @@ public class CanvasText : Object {
   /* Selects the word at the current x/y position in the text */
   public void set_cursor_at_word( double x, double y, bool motion ) {
     int cursor, trailing;
-    int img_height = (_image != null) ? (int)(_image.height + style.node_padding) : 0;
     int adjusted_x = (int)x * Pango.SCALE;
     int adjusted_y = (int)y * Pango.SCALE;
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
@@ -273,7 +273,7 @@ public class CanvasText : Object {
   }
 
   /* Called after the cursor has been moved, clears the selection */
-  private void clear_selection() {
+  public void clear_selection() {
     _selstart = _selend = _cursor;
   }
 
@@ -476,7 +476,6 @@ public class CanvasText : Object {
         _cursor--;
       }
     }
-    text_changed();
   }
 
   /* Handles a delete key event */
@@ -494,7 +493,6 @@ public class CanvasText : Object {
         text = text.splice( spos, epos );
       }
     }
-    text_changed();
   }
 
   /* Inserts the given string at the current cursor position and adjusts cursor */
@@ -511,7 +509,6 @@ public class CanvasText : Object {
       text = text.splice( cpos, cpos, s );
       _cursor += slen;
     }
-    text_changed();
   }
 
   /*
@@ -528,7 +525,7 @@ public class CanvasText : Object {
   }
 
   /* Sets the context source color to the given color value */
-  protected void set_context_color( Context ctx, RGBA color ) {
+  protected void set_context_color( Cairo.Context ctx, RGBA color ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
   }
 
@@ -536,49 +533,29 @@ public class CanvasText : Object {
    Sets the context source color to the given color value overriding the
    alpha value with the given value.
   */
-  protected void set_context_color_with_alpha( Context ctx, RGBA color, double alpha ) {
+  protected void set_context_color_with_alpha( Cairo.Context ctx, RGBA color, double alpha ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
   }
 
   /* Draws the node font to the screen */
-  public void draw( Cairo.Context ctx, Theme theme, bool motion ) {
-
-    int    hmargin    = 3;
-    int    vmargin    = 3;
-    double img_height = (_image != null) ? (_image.height + style.node_padding) : 0;
-    double width_diff, height_diff;
+  public void draw( Cairo.Context ctx, Theme theme, RGBA fg, bool motion ) {
 
     /* Make sure the the size is up-to-date */
-    update_size( theme, out width_diff, out height_diff );
-
-    /* Get the widget of the task icon */
-    double twidth = task_width();
-
-    /* Draw the selection box around the text if the node is in the 'selected' state */
-    if( mode == NodeMode.CURRENT ) {
-      set_context_color_with_alpha( ctx, theme.nodesel_background, (motion ? 0.2 : 1) );
-      ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin), ((posy + style.node_padding + style.node_margin) - vmargin), ((_width - (style.node_padding * 2) - (style.node_margin * 2)) + (hmargin * 2)), ((_height - (style.node_padding * 2) - (style.node_margin * 2)) + (vmargin * 2)) );
-      ctx.fill();
-    }
+    _pango_layout.set_markup( name_markup( theme ), -1 );
 
     /* Output the text */
-    ctx.move_to( (posx + style.node_padding + style.node_margin + twidth), (posy + style.node_padding + style.node_margin + img_height) );
-    switch( mode ) {
-      case NodeMode.CURRENT  :  set_context_color( ctx, theme.nodesel_foreground );  break;
-      default                :  set_context_color( ctx, (parent == null)    ? theme.root_foreground :
-                                                        style.is_fillable() ? theme.background :
-                                                                              theme.foreground );  break;
-    }
+    ctx.move_to( posx, posy );
+    set_context_color( ctx, fg );
     Pango.cairo_show_layout( ctx, _pango_layout );
 
     /* Draw the insertion cursor if we are in the 'editable' state */
-    if( mode == NodeMode.EDITABLE ) {
-      var cpos = name.index_of_nth_char( _cursor );
+    if( edit ) {
+      var cpos = text.index_of_nth_char( _cursor );
       var rect = _pango_layout.index_to_pos( cpos );
-      set_context_color( ctx, (style.is_fillable() ? theme.background : theme.text_cursor) );
+      set_context_color( ctx, theme.text_cursor );
       double ix, iy;
-      ix = (posx + style.node_padding + style.node_margin + twidth) + (rect.x / Pango.SCALE) - 1;
-      iy = (posy + style.node_padding + style.node_margin + img_height) + (rect.y / Pango.SCALE);
+      ix = posx + (rect.x / Pango.SCALE) - 1;
+      iy = posy + (rect.y / Pango.SCALE);
       ctx.rectangle( ix, iy, 1, (rect.height / Pango.SCALE) );
       ctx.fill();
     }

@@ -78,6 +78,7 @@ sources += files(
     'Animator.vala',
     'Application.vala',
     'Bezier.vala',
+    'CanvasText.vala',
     'Connection.vala',
     'Connections.vala',
     'Document.vala',

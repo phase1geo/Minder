@@ -471,7 +471,7 @@ public class NodeInspector : Stack {
 
     if( current != null ) {
       _ignore_name_change = true;
-      _name.buffer.text = current.name;
+      _name.buffer.text = current.name.text;
       _task.set_active( current.task_enabled() );
       if( current.is_leaf() ) {
         _fold.set_active( false );
@@ -489,10 +489,10 @@ public class NodeInspector : Stack {
       }
       _detach_btn.set_sensitive( current.parent != null );
       _note.buffer.text = current.note;
-      if( current.get_image() != null ) {
-        var url = _da.image_manager.get_uri( current.get_image().id ).replace( "&", "&amp;" );
+      if( current.image != null ) {
+        var url = _da.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
         var str = "<a href=\"" + url + "\">" + url + "</a>";
-        current.get_image().set_image( _image );
+        current.image.set_image( _image );
         _image_loc.label = str;
         set_image_visible( true );
       } else {

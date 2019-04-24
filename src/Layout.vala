@@ -198,35 +198,33 @@ public class Layout : Object {
   }
 
   /* Updates the layout when necessary when a node is edited */
-  public virtual void handle_update_by_edit( Node n ) {
-    double width_diff, height_diff;
-    n.update_size( null, out width_diff, out height_diff );
+  public virtual void handle_update_by_edit( Node n, double diffw, double diffh ) {
     double adjust = 0 - (get_adjust( n ) / 2);
     if( (n.side & NodeSide.horizontal()) != 0 ) {
-      if( (n.parent != null) && (height_diff != 0) ) {
-        n.adjust_posy_only( 0 - (height_diff / 2) );
-        adjust_tree_all( n, adjust );  // , (0 - (height_diff / 2)) );
+      if( (n.parent != null) && (diffh != 0) ) {
+        n.adjust_posy_only( 0 - (diffh / 2) );
+        adjust_tree_all( n, adjust );
       }
-      if( width_diff != 0 ) {
+      if( diffw != 0 ) {
         if( n.side == NodeSide.LEFT ) {
-          n.posx -= width_diff;
+          n.posx -= diffw;
         } else {
           for( int i=0; i<n.children().length; i++ ) {
-            n.children().index( i ).posx += width_diff;
+            n.children().index( i ).posx += diffw;
           }
         }
       }
     } else {
-      if( (n.parent != null) && (width_diff != 0) ) {
-        n.adjust_posx_only( 0 - (width_diff / 2) );
-        adjust_tree_all( n, adjust ); // , (0 - (width_diff / 2)) );
+      if( (n.parent != null) && (diffw != 0) ) {
+        n.adjust_posx_only( 0 - (diffw / 2) );
+        adjust_tree_all( n, adjust );
       }
-      if( height_diff != 0 ) {
+      if( diffh != 0 ) {
         if( n.side == NodeSide.TOP ) {
-          n.posy -= height_diff;
+          n.posy -= diffh;
         } else {
           for( int i=0; i<n.children().length; i++ ) {
-            n.children().index( i ).posy += height_diff;
+            n.children().index( i ).posy += diffh;
           }
         }
       }

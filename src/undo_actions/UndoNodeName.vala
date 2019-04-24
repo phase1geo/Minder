@@ -32,13 +32,12 @@ public class UndoNodeName : UndoItem {
     base( _( "node name change" ) );
     _node     = n;
     _old_name = old_name;
-    _new_name = n.name;
+    _new_name = n.name.text;
   }
 
   /* Undoes a node name change */
   public override void undo( DrawArea da ) {
-    _node.name = _old_name;
-    _node.layout.handle_update_by_edit( _node );
+    _node.name.text = _old_name;
     da.queue_draw();
     da.node_changed();
     da.changed();
@@ -46,8 +45,7 @@ public class UndoNodeName : UndoItem {
 
   /* Redoes a node name change */
   public override void redo( DrawArea da ) {
-    _node.name = _new_name;
-    _node.layout.handle_update_by_edit( _node );
+    _node.name.text = _new_name;
     da.queue_draw();
     da.node_changed();
     da.changed();

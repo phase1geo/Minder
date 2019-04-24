@@ -88,13 +88,13 @@ public class ExportMermaid : Object {
     bool   rounded = n.style.node_border.name() == "rounded";
     string left    = rounded ? "(" : "[";
     string right   = rounded ? ")" : "]";
-    string name    = n.name;
+    string name    = n.name.text;
 
-    if( (name == "") && (n.get_image() != null) ) {
+    if( (name == "") && (n.image != null) ) {
       name = "Image";
     }
 
-    return( make_id( n ) + left + "\"" + n.name + "\"" + right );
+    return( make_id( n ) + left + "\"" + n.name.text + "\"" + right );
 
   }
 
