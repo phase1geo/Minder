@@ -40,6 +40,8 @@ sources += files(
     'themes/ThemeSolarizedLight.vala',
 
     'undo_actions/UndoConnectionChange.vala',
+    'undo_actions/UndoConnectionNote.vala',
+    'undo_actions/UndoConnectionTitle.vala',
     'undo_actions/UndoNodeAttach.vala',
     'undo_actions/UndoNodeBalance.vala',
     'undo_actions/UndoNodeCut.vala',
@@ -80,6 +82,7 @@ sources += files(
     'Bezier.vala',
     'CanvasText.vala',
     'Connection.vala',
+    'ConnectionInspector.vala',
     'Connections.vala',
     'Document.vala',
     'DrawArea.vala',

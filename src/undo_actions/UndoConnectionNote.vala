@@ -21,39 +21,33 @@
 
 using Gtk;
 
-public class UndoConnectionChange : UndoItem {
+public class UndoConnectionNote : UndoItem {
 
-  Connection? _old_connection;
-  Connection? _new_connection;
+  Connection _conn;
+  string     _old_note;
+  string     _new_note;
 
-  /* Constructor for adding/removing/changing a connection */
-  public UndoConnectionChange( string name, Connection? old_connection, Connection? new_connection ) {
-    base( name );
-    _old_connection = old_connection;
-    _new_connection = new_connection;
+  /* Constructor for a node name change */
+  public UndoConnectionNote( Connection c, string old_note ) {
+    base( _( "connection note change" ) );
+    _conn     = c;
+    _old_note = old_note;
+    _new_note = c.note;
   }
 
-  /* Undoes a connection change */
+  /* Undoes a node name change */
   public override void undo( DrawArea da ) {
-    if( _old_connection == null ) {
-      da.get_connections().remove_connection( _new_connection );
-    } else {
-      _old_connection.copy( da, _new_connection );
-    }
-    da.set_current_connection( _old_connection );
+    _conn.note = _old_note;
     da.queue_draw();
+    da.connection_changed();
     da.changed();
   }
 
-  /* Redoes a connection change */
+  /* Redoes a node name change */
   public override void redo( DrawArea da ) {
-    if( _new_connection == null ) {
-      da.get_connections().remove_connection( _old_connection );
-    } else {
-      _new_connection.copy( da, _old_connection );
-    }
-    da.set_current_connection( _new_connection );
+    _conn.note = _new_note;
     da.queue_draw();
+    da.connection_changed();
     da.changed();
   }
 

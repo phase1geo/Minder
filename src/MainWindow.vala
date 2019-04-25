@@ -460,6 +460,7 @@ public class MainWindow : ApplicationWindow {
     _stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
     _stack.set_transition_duration( 500 );
     _stack.add_titled( _node_inspector, "node", _("Node") );
+    _stack.add_titled( new ConnectionInspector( _canvas ), "connection", _("Connection") );
     _stack.add_titled( new StyleInspector( _canvas ), "style", _("Style") );
     _stack.add_titled( new MapInspector( _canvas, _settings ),  "map",  _("Map") );
 

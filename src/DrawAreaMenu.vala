@@ -296,7 +296,7 @@ public class DrawAreaMenu : Gtk.Menu {
   /* Changes the note status of the currently selected node */
   private void change_note() {
     if( node_has_note() ) {
-      _da.change_current_note( "" );
+      _da.change_current_node_note( "" );
     } else {
       _da.show_properties( "node", true );
     }

@@ -606,12 +606,27 @@ public class DrawArea : Gtk.DrawingArea {
    Changes the current node's name to the given name.  Updates the layout,
    adds the undo item, and redraws the canvas.
   */
-  public void change_current_name( string name ) {
+  public void change_current_node_name( string name ) {
     if( (_current_node != null) && (_current_node.name.text != name) ) {
       string orig_name = _current_node.name.text;
       _current_node.name.text = name;
       if( !_current_new ) {
         undo_buffer.add_item( new UndoNodeName( _current_node, orig_name ) );
+      }
+      queue_draw();
+      changed();
+    }
+  }
+
+  /*
+   Changes the current connection's title to the given value.
+  */
+  public void change_current_connection_title( string title ) {
+    if( _current_connection != null ) {
+      string? orig_title = (_current_connection.title == null) ? null : _current_connection.title.text;
+      _current_connection.change_title( this, title );
+      if( !_current_new ) {
+        undo_buffer.add_item( new UndoConnectionTitle( _current_connection, orig_title ) );
       }
       queue_draw();
       changed();
@@ -647,12 +662,23 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /*
-   Changes the current node's folded state to the given value.  Updates the
+   Changes the current node's note to the given value.  Updates the
    layout, adds the undo item and redraws the canvas.
   */
-  public void change_current_note( string note ) {
+  public void change_current_node_note( string note ) {
     if( _current_node != null ) {
       _current_node.note = note;
+      queue_draw();
+      auto_save();
+    }
+  }
+
+  /*
+   Changes the current connection's note to the given value. 
+  */
+  public void change_current_connection_note( string note ) {
+    if( _current_connection != null ) {
+      _current_connection.note = note;
       queue_draw();
       auto_save();
     }
@@ -758,8 +784,22 @@ public class DrawArea : Gtk.DrawingArea {
   private bool set_current_connection_from_position( Connection conn, EventButton e ) {
 
     if( conn == _current_connection ) {
-      _current_connection.mode = ConnMode.ADJUSTING;
-      _last_connection = new Connection.from_connection( this, _current_connection );
+      if( conn.mode == ConnMode.EDITABLE ) {
+        stdout.printf( "HERE 1\n" );
+        bool shift = (bool) e.state & ModifierType.SHIFT_MASK;
+        switch( e.type ) {
+          case EventType.BUTTON_PRESS        :  conn.title.set_cursor_at_char( e.x, e.y, shift );  break;
+          case EventType.DOUBLE_BUTTON_PRESS :  conn.title.set_cursor_at_word( e.x, e.y, shift );  break;
+          case EventType.TRIPLE_BUTTON_PRESS :  conn.title.set_cursor_all( false );                break;
+        }
+      } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
+        stdout.printf( "HERE 2\n" );
+        _current_connection.mode = ConnMode.EDITABLE;
+      } else {
+        stdout.printf( "HERE 3\n" );
+        _current_connection.mode = ConnMode.ADJUSTING;
+        _last_connection = new Connection.from_connection( this, _current_connection );
+      }
       return( true );
     } else {
       conn.mode = ConnMode.SELECTED;
@@ -802,9 +842,9 @@ public class DrawArea : Gtk.DrawingArea {
       if( is_mode_edit() ) {
         bool shift = (bool) e.state & ModifierType.SHIFT_MASK;
         switch( e.type ) {
-          case EventType.BUTTON_PRESS :         node.name.set_cursor_at_char( e.x, e.y, shift );  break;
+          case EventType.BUTTON_PRESS        :  node.name.set_cursor_at_char( e.x, e.y, shift );  break;
           case EventType.DOUBLE_BUTTON_PRESS :  node.name.set_cursor_at_word( e.x, e.y, shift );  break;
-          case EventType.TRIPLE_BUTTON_PRESS :  node.name.set_cursor_all( false );            break;
+          case EventType.TRIPLE_BUTTON_PRESS :  node.name.set_cursor_all( false );                break;
         }
       } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
         if( _current_node.is_within_image( scaled_x, scaled_y ) ) {
@@ -858,9 +898,13 @@ public class DrawArea : Gtk.DrawingArea {
     if( (_attach_node == null) || (_current_connection == null) || (_current_connection.mode != ConnMode.CONNECTING) ) {
       Connection? match_conn;
       if( _current_connection == null ) {
-        match_conn = _connections.on_curve( x, y );
+        if( (match_conn = _connections.on_curve( x, y )) == null ) {
+          match_conn = _connections.within_title( x, y );
+        }
       } else {
-        match_conn = _connections.within_drag_handle( x, y );
+        if( (match_conn = _connections.within_drag_handle( x, y )) == null ) {
+          match_conn = _connections.within_title( x, y );
+        }
       }
       if( match_conn != null ) {
         clear_current_node();
@@ -1321,8 +1365,11 @@ public class DrawArea : Gtk.DrawingArea {
     /* If a connection is selected, deal with the possibilities */
     if( _current_connection != null ) {
 
+      stdout.printf( "HERE!!!\n" );
+
       /* If the connection end is released on an attachable node, attach the connection to the node */
       if( _attach_node != null ) {
+        stdout.printf( "  HERE A\n" );
         end_connection( _attach_node );
         undo_buffer.add_item( new UndoConnectionChange( _( "connection endpoint change" ), _last_connection, _current_connection ) );
         _attach_node.mode = NodeMode.NONE;
@@ -1331,14 +1378,17 @@ public class DrawArea : Gtk.DrawingArea {
 
       /* If we were dragging the connection midpoint, change the connection mode to SELECTED */
       } else if( _current_connection.mode == ConnMode.ADJUSTING ) {
+        stdout.printf( "  HERE B\n" );
         undo_buffer.add_item( new UndoConnectionChange( _( "connection drag" ), _last_connection, _current_connection ) );
         _current_connection.mode = ConnMode.SELECTED;
 
       /* If we were dragging a connection end and failed to attach it to a node, return the connection to where it was prior to the drag */
       } else if( _last_connection != null ) {
-        _current_connection.copy( _last_connection );
+        stdout.printf( "  HERE C\n" );
+        _current_connection.copy( this, _last_connection );
         _last_connection = null;
       }
+
       queue_draw();
 
     /* If a node is selected, deal with the possibilities */

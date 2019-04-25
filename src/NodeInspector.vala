@@ -359,7 +359,7 @@ public class NodeInspector : Stack {
   */
   private void name_changed() {
     if( !_ignore_name_change ) {
-      _da.change_current_name( _name.buffer.text );
+      _da.change_current_node_name( _name.buffer.text );
     }
     _ignore_name_change = false;
   }
@@ -369,7 +369,7 @@ public class NodeInspector : Stack {
    node title in the canvas.
   */
   private bool name_focus_out( EventFocus e ) {
-    _da.change_current_name( _name.buffer.text );
+    _da.change_current_node_name( _name.buffer.text );
     return( false );
   }
 
@@ -396,7 +396,7 @@ public class NodeInspector : Stack {
    and redraws the canvas when needed.
   */
   private void note_changed() {
-    _da.change_current_note( _note.buffer.text );
+    _da.change_current_node_note( _note.buffer.text );
   }
 
   /* Saves the original version of the node's note so that we can */

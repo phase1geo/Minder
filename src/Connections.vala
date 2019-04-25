@@ -70,6 +70,19 @@ public class Connections {
     return( null );
   }
 
+  /*
+   Returns the associated connection if the given point is within the connection's
+   title text.
+  */
+  public Connection? within_title( double x, double y ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ).within_title( x, y ) ) {
+        return( _connections.index( i ) );
+      }
+    }
+    return( null );
+  }
+
   /* Returns the associated connection if the given point is within the drag handle */
   public Connection? within_drag_handle( double x, double y ) {
     for( int i=0; i<_connections.length; i++ ) {
