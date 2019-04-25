@@ -61,12 +61,12 @@ public class CanvasText : Object {
   public double posy   { get; set; default = 0; }
   public double width  {
     get {
-      return( _width / Pango.SCALE );
+      return( _width );
     }
   }
   public double height {
     get {
-      return( _height / Pango.SCALE );
+      return( _height );
     }
   }
   public bool markup {
@@ -96,6 +96,7 @@ public class CanvasText : Object {
   public CanvasText( DrawArea da ) {
     _pango_layout = da.create_pango_layout( null );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
+    _pango_layout.set_width( (int)_max_width * Pango.SCALE );
     update_size( false );
   }
 
@@ -103,6 +104,7 @@ public class CanvasText : Object {
   public CanvasText.with_text( DrawArea da, string txt ) {
     _pango_layout = da.create_pango_layout( txt );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
+    _pango_layout.set_width( (int)_max_width * Pango.SCALE );
     _text         = txt;
     update_size( false );
   }
@@ -210,7 +212,6 @@ public class CanvasText : Object {
 
   /* Resizes the node width by the given amount */
   public virtual void resize( double diff ) {
-    if( (diff < 0) ? ((_max_width + diff) <= _min_width) : !_pango_layout.is_wrapped() ) return;
     _max_width += diff;
     _pango_layout.set_width( (int)_max_width * Pango.SCALE );
     update_size( true );
@@ -226,8 +227,8 @@ public class CanvasText : Object {
   /* Sets the cursor from the given mouse coordinates */
   public void set_cursor_at_char( double x, double y, bool motion ) {
     int cursor, trailing;
-    int adjusted_x = (int)x * Pango.SCALE;
-    int adjusted_y = (int)y * Pango.SCALE;
+    int adjusted_x = (int)(x - posx) * Pango.SCALE;
+    int adjusted_y = (int)(y - posy) * Pango.SCALE;
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       var cindex = text.char_count( cursor + trailing );
       if( motion ) {
@@ -252,8 +253,8 @@ public class CanvasText : Object {
   /* Selects the word at the current x/y position in the text */
   public void set_cursor_at_word( double x, double y, bool motion ) {
     int cursor, trailing;
-    int adjusted_x = (int)x * Pango.SCALE;
-    int adjusted_y = (int)y * Pango.SCALE;
+    int adjusted_x = (int)(x - posx) * Pango.SCALE;
+    int adjusted_y = (int)(y - posy) * Pango.SCALE;
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       cursor += trailing;
       var word_start = text.substring( 0, cursor ).last_index_of( " " );

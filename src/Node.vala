@@ -183,7 +183,11 @@ public class Node : Object {
       if( _mode != value ) {
         _mode = value;
         if( _mode == NodeMode.EDITABLE ) {
+          name.edit = true;
           name.set_cursor_all( false );
+        } else {
+          name.edit = false;
+          name.clear_selection();
         }
       }
     }
@@ -338,34 +342,39 @@ public class Node : Object {
   /* Sets the posx value only, leaving the children positions alone */
   public void set_posx_only( double value ) {
     _posx = value;
+    position_name();
   }
 
   /* Sets the posy value only, leaving the children positions alone */
   public void set_posy_only( double value ) {
     _posy = value;
+    position_name();
   }
 
   /* Sets the posx value only, leaving the children positions alone */
   public void adjust_posx_only( double value ) {
     _posx += value;
+    position_name();
   }
 
   /* Sets the posy value only, leaving the children positions alone */
   public void adjust_posy_only( double value ) {
     _posy += value;
+    position_name();
   }
 
   /* Called whenever the node size is changed */
   private void update_size() {
-    double orig_width  = _width;
-    double orig_height = _height;
-    int    margin      = (style.node_margin  == null) ? 0 : style.node_margin;
-    int    padding     = (style.node_padding == null) ? 0 : style.node_padding;
-    if( (_image != null) && (_name.width < _image.width) ) {
-      _width  = (margin * 2) + (padding * 2) + task_width() + ((_name.width < _image.width) ? _image.width : _name.width) + note_width();
+    var orig_width  = _width;
+    var orig_height = _height;
+    var margin      = (style.node_margin  == null) ? 0 : style.node_margin;
+    var padding     = (style.node_padding == null) ? 0 : style.node_padding;
+    var name_width  = task_width() + _name.width + note_width();
+    if( _image != null ) {
+      _width  = (margin * 2) + (padding * 2) + ((name_width < _image.width) ? _image.width : name_width);
       _height = (margin * 2) + (padding * 2) + _image.height + padding + _name.height;
     } else {
-      _width  = (margin * 2) + (padding * 2) + task_width() + _name.width + note_width();
+      _width  = (margin * 2) + (padding * 2) + name_width;
       _height = (margin * 2) + (padding * 2) + _name.height;
     }
     if( (_layout != null) && (((_width - orig_width) != 0) || ((_height - orig_width) != 0)) ) {
@@ -455,45 +464,53 @@ public class Node : Object {
 
   /* Returns true if the given cursor coordinates lies within this node */
   public virtual bool is_within( double x, double y ) {
+    double margin = style.node_margin ?? 0;
     double cx, cy, cw, ch;
     bbox( out cx, out cy, out cw, out ch );
-    cx += (double)style.node_margin;
-    cy += (double)style.node_margin;
-    cw -= (double)style.node_margin * 2;
-    ch -= (double)style.node_margin * 2;
+    cx += margin;
+    cy += margin;
+    cw -= margin * 2;
+    ch -= margin * 2;
     return( is_within_bounds( x, y, cx, cy, cw, ch ) );
   }
 
   /* Returns the positional information for where the task item is located (if it exists) */
   protected virtual void task_bbox( out double x, out double y, out double w, out double h ) {
-    double img_height = (_image == null) ? 0 : _image.height;
-    x = posx + style.node_margin + style.node_padding;
-    y = posy + style.node_margin + style.node_padding + img_height + (((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2) - _task_radius);
+    int    margin     = style.node_margin  ?? 0;
+    int    padding    = style.node_padding ?? 0;
+    double img_height = (_image == null) ? 0 : (_image.height + padding);
+    x = posx + margin + padding;
+    y = posy + margin + padding + img_height + (((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - _task_radius);
     w = _task_radius * 2;
     h = _task_radius * 2;
   }
 
   /* Returns the positional information for where the note item is located (if it exists) */
   protected virtual void note_bbox( out double x, out double y, out double w, out double h ) {
-    double img_height = (_image == null) ? 0 : _image.height;
-    x = posx + (_width - (note_width() + style.node_padding + style.node_margin)) + _ipadx;
-    y = posy + style.node_padding + style.node_margin + img_height + ((_height - (img_height + (style.node_padding * 2) + (style.node_margin * 2))) / 2) - 5;
+    int    margin     = style.node_margin  ?? 0;
+    int    padding    = style.node_padding ?? 0;
+    double img_height = (_image == null) ? 0 : (_image.height + padding);
+    x = posx + (_width - (note_width() + padding + margin)) + _ipadx;
+    y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
     w = 11;
     h = 11;
   }
 
   /* Returns the positional information of the stored image (if no image exists, the behavior of this method is undefined) */
   protected virtual void image_bbox( out double x, out double y, out double w, out double h ) {
-    x = posx + style.node_padding + style.node_margin;
-    y = posy + style.node_padding + style.node_margin;
+    int margin  = style.node_margin  ?? 0;
+    int padding = style.node_padding ?? 0;
+    x = posx + padding + margin;
+    y = posy + padding + margin;
     w = (_image == null) ? 0 : _image.width;
     h = (_image == null) ? 0 : _image.height;
   }
 
   /* Returns the positional information for where the resizer box is located (if it exists) */
   protected virtual void resizer_bbox( out double x, out double y, out double w, out double h ) {
-    x = resizer_on_left() ? (posx + style.node_margin) : (posx + _width - style.node_margin - 8);
-    y = posy + style.node_margin;
+    int margin  = style.node_margin  ?? 0;
+    x = resizer_on_left() ? (posx + margin) : (posx + _width - margin - 8);
+    y = posy + margin;
     w = 8;
     h = 8;
   }
@@ -771,6 +788,10 @@ public class Node : Object {
       layout.bbox( this, side, out bx, out by, out bw, out bh );
       tree_size = ((side & NodeSide.horizontal()) != 0) ? bh : bw;
     }
+
+    /* Make sure that the name is positioned properly */
+    position_name();
+    update_size();
 
   }
 
@@ -1256,7 +1277,8 @@ public class Node : Object {
     propagate_task_info_down( enable, done );
     propagate_task_info_up( (_task_count - task_count), (_task_done - task_done) );
     if( enable != null ) {
-      layout.handle_update_by_edit( this, (enable ? task_width() : (0 - task_width())), 0 );
+      position_name();
+      update_size();
     }
   }
 
@@ -1426,23 +1448,24 @@ public class Node : Object {
       x = posx + (_width / 2);
       y = posy + (_height / 2);
     } else {
-      double height = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
+      int    margin = style.node_margin ?? 0;
+      double height = (style.node_border.name() == "underlined") ? (_height - margin) : (_height / 2);
       switch( side ) {
         case NodeSide.LEFT :
-          x = posx + style.node_margin;
+          x = posx + margin;
           y = posy + height;
           break;
         case NodeSide.TOP :
           x = posx + (_width / 2);
-          y = posy + style.node_margin;
+          y = posy + margin;
           break;
         case NodeSide.RIGHT :
-          x = posx + _width - style.node_margin;
+          x = posx + _width - margin;
           y = posy + height;
           break;
         default :
           x = posx + (_width / 2);
-          y = posy + _height - style.node_margin;
+          y = posy + _height - margin;
           break;
       }
     }
