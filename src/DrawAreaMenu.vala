@@ -232,7 +232,7 @@ public class DrawAreaMenu : Gtk.Menu {
     _edit.set_sensitive( node_selected() );
     _task.set_sensitive( node_selected() );
     _note.set_sensitive( node_selected() );
-    _conn.set_sensitive( node_selected() );
+    _conn.set_sensitive( node_selected() && !_da.get_connections().hide );
     _image.set_sensitive( node_selected() );
     _fold.set_sensitive( node_foldable() );
     _child.set_sensitive( node_selected() );

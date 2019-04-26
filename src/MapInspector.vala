@@ -77,7 +77,7 @@ public class MapInspector : Box {
 
   }
 
-  /* Called whenever the fold switch is changed within the inspector */
+  /* Called whenever the animation switch is changed within the inspector */
   private bool animation_changed( Gdk.EventButton e ) {
     _da.animator.enable = !_da.animator.enable;
     _settings.set_boolean( "enable-animations", _da.animator.enable );
@@ -103,7 +103,7 @@ public class MapInspector : Box {
 
   }
 
-  /* Called whenever the fold switch is changed within the inspector */
+  /* Called whenever the hide connections switch is changed within the inspector */
   private bool hide_connections_changed( Gdk.EventButton e ) {
     _da.get_connections().hide = !_da.get_connections().hide;
     _da.queue_draw();

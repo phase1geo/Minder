@@ -785,7 +785,6 @@ public class DrawArea : Gtk.DrawingArea {
 
     if( conn == _current_connection ) {
       if( conn.mode == ConnMode.EDITABLE ) {
-        stdout.printf( "HERE 1\n" );
         bool shift = (bool) e.state & ModifierType.SHIFT_MASK;
         switch( e.type ) {
           case EventType.BUTTON_PRESS        :  conn.title.set_cursor_at_char( e.x, e.y, shift );  break;
@@ -793,10 +792,8 @@ public class DrawArea : Gtk.DrawingArea {
           case EventType.TRIPLE_BUTTON_PRESS :  conn.title.set_cursor_all( false );                break;
         }
       } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
-        stdout.printf( "HERE 2\n" );
         _current_connection.mode = ConnMode.EDITABLE;
       } else {
-        stdout.printf( "HERE 3\n" );
         _current_connection.mode = ConnMode.ADJUSTING;
         _last_connection = new Connection.from_connection( this, _current_connection );
       }
@@ -1365,11 +1362,8 @@ public class DrawArea : Gtk.DrawingArea {
     /* If a connection is selected, deal with the possibilities */
     if( _current_connection != null ) {
 
-      stdout.printf( "HERE!!!\n" );
-
       /* If the connection end is released on an attachable node, attach the connection to the node */
       if( _attach_node != null ) {
-        stdout.printf( "  HERE A\n" );
         end_connection( _attach_node );
         undo_buffer.add_item( new UndoConnectionChange( _( "connection endpoint change" ), _last_connection, _current_connection ) );
         _attach_node.mode = NodeMode.NONE;
@@ -1378,13 +1372,11 @@ public class DrawArea : Gtk.DrawingArea {
 
       /* If we were dragging the connection midpoint, change the connection mode to SELECTED */
       } else if( _current_connection.mode == ConnMode.ADJUSTING ) {
-        stdout.printf( "  HERE B\n" );
         undo_buffer.add_item( new UndoConnectionChange( _( "connection drag" ), _last_connection, _current_connection ) );
         _current_connection.mode = ConnMode.SELECTED;
 
       /* If we were dragging a connection end and failed to attach it to a node, return the connection to where it was prior to the drag */
       } else if( _last_connection != null ) {
-        stdout.printf( "  HERE C\n" );
         _current_connection.copy( this, _last_connection );
         _last_connection = null;
       }
