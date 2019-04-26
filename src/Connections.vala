@@ -23,6 +23,8 @@ public class Connections {
 
   private Array<Connection> _connections;
 
+  public bool hide { set; get; default = false; }
+
   /* Default constructor */
   public Connections() {
     _connections = new Array<Connection>();
@@ -140,6 +142,7 @@ public class Connections {
 
   /* Draws all of the connections onto the given context */
   public void draw_all( Cairo.Context ctx, Theme theme ) {
+    if( hide ) return;
     for( int i=0; i<_connections.length; i++ ) {
       _connections.index( i ).draw( ctx, theme );
     }

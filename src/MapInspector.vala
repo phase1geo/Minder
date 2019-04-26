@@ -40,6 +40,7 @@ public class MapInspector : Box {
 
     /* Create the interface */
     add_animation_ui();
+    add_connection_ui();
     add_layout_ui();
     add_theme_ui();
     add_button_ui();
@@ -80,6 +81,32 @@ public class MapInspector : Box {
   private bool animation_changed( Gdk.EventButton e ) {
     _da.animator.enable = !_da.animator.enable;
     _settings.set_boolean( "enable-animations", _da.animator.enable );
+    return( false );
+  }
+
+  /* Add the connection show/hide UI */
+  private void add_connection_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Hide connections" ) );
+
+    lbl.xalign = (float)0;
+
+    var hide_connections = new Switch();
+    hide_connections.set_active( _da.get_connections().hide );
+    hide_connections.button_release_event.connect( hide_connections_changed );
+
+    box.pack_start( lbl,              false, true, 0 );
+    box.pack_end(   hide_connections, false, true, 0 );
+
+    pack_start( box, false, true );
+
+  }
+
+  /* Called whenever the fold switch is changed within the inspector */
+  private bool hide_connections_changed( Gdk.EventButton e ) {
+    _da.get_connections().hide = !_da.get_connections().hide;
+    _da.queue_draw();
     return( false );
   }
 
