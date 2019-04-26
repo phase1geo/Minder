@@ -24,36 +24,35 @@ using Gdk;
 
 public class MainWindow : ApplicationWindow {
 
-  private GLib.Settings  _settings;
-  private HeaderBar?     _header         = null;
-  private DrawArea?      _canvas         = null;
-  private Document?      _doc            = null;
-  private Revealer?      _inspector      = null;
-  private NodeInspector  _node_inspector = null;
-  private Stack?         _stack          = null;
-  private Popover?       _zoom           = null;
-  private Popover?       _search         = null;
-  private MenuButton?    _search_btn     = null;
-  private SearchEntry?   _search_entry   = null;
-  private TreeView       _search_list;
-  private Gtk.ListStore  _search_items;
-  private ScrolledWindow _search_scroll;
-  private CheckButton    _search_titles;
-  private CheckButton    _search_notes;
-  private CheckButton    _search_folded;
-  private CheckButton    _search_unfolded;
-  private CheckButton    _search_tasks;
-  private CheckButton    _search_nontasks;
-  private Popover?       _export         = null;
-  private Scale?         _zoom_scale     = null;
-  private ModelButton?   _zoom_in        = null;
-  private ModelButton?   _zoom_out       = null;
-  private ModelButton?   _zoom_sel       = null;
-  private Button?        _undo_btn       = null;
-  private Button?        _redo_btn       = null;
-  private Button?        _prop_btn       = null;
-  private Image?         _prop_show      = null;
-  private Image?         _prop_hide      = null;
+  private GLib.Settings     _settings;
+  private HeaderBar?        _header         = null;
+  private DrawArea?         _canvas         = null;
+  private Document?         _doc            = null;
+  private Revealer?         _inspector      = null;
+  private Stack?            _stack          = null;
+  private Popover?          _zoom           = null;
+  private Popover?          _search         = null;
+  private MenuButton?       _search_btn     = null;
+  private SearchEntry?      _search_entry   = null;
+  private TreeView          _search_list;
+  private Gtk.ListStore     _search_items;
+  private ScrolledWindow    _search_scroll;
+  private CheckButton       _search_titles;
+  private CheckButton       _search_notes;
+  private CheckButton       _search_folded;
+  private CheckButton       _search_unfolded;
+  private CheckButton       _search_tasks;
+  private CheckButton       _search_nontasks;
+  private Popover?          _export         = null;
+  private Scale?            _zoom_scale     = null;
+  private ModelButton?      _zoom_in        = null;
+  private ModelButton?      _zoom_out       = null;
+  private ModelButton?      _zoom_sel       = null;
+  private Button?           _undo_btn       = null;
+  private Button?           _redo_btn       = null;
+  private Button?           _prop_btn       = null;
+  private Image?            _prop_show      = null;
+  private Image?            _prop_hide      = null;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",          action_save },
@@ -454,13 +453,10 @@ public class MainWindow : ApplicationWindow {
     var box = new Box( Orientation.VERTICAL, 20 );
     var sb  = new StackSwitcher();
 
-    _node_inspector = new NodeInspector( _canvas );
-
     _stack = new Stack();
     _stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
     _stack.set_transition_duration( 500 );
-    _stack.add_titled( _node_inspector, "node", _("Node") );
-    _stack.add_titled( new ConnectionInspector( _canvas ), "connection", _("Connection") );
+    _stack.add_titled( new CurrentInspector( _canvas ), "current", _("Current") );
     _stack.add_titled( new StyleInspector( _canvas ), "style", _("Style") );
     _stack.add_titled( new MapInspector( _canvas, _settings ),  "map",  _("Map") );
 
@@ -470,7 +466,7 @@ public class MainWindow : ApplicationWindow {
     /* If the stack switcher is clicked, save off which tab is in view */
     _stack.notify.connect((ps) => {
       if( ps.name == "visible-child" ) {
-        _settings.set_boolean( "node-properties-shown", (_stack.visible_child_name == "node") );
+        _settings.set_boolean( "current-properties-shown", (_stack.visible_child_name == "current") );
         _settings.set_boolean( "map-properties-shown",  (_stack.visible_child_name == "map") );
         _settings.set_boolean( "style-properties-shown", (_stack.visible_child_name == "style" ) );
       }
@@ -490,8 +486,8 @@ public class MainWindow : ApplicationWindow {
     _inspector.child = box;
 
     /* If the settings says to display the properties, do it now */
-    if( _settings.get_boolean( "node-properties-shown" ) ) {
-      show_properties( "node", false );
+    if( _settings.get_boolean( "current-properties-shown" ) ) {
+      show_properties( "current", false );
     } else if( _settings.get_boolean( "map-properties-shown" ) ) {
       show_properties( "map", false );
     } else if( _settings.get_boolean( "style-properties-shown" ) ) {
@@ -757,13 +753,6 @@ public class MainWindow : ApplicationWindow {
       _canvas.see( -300 );
     }
     _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
-    if( _stack.visible_child_name == "node" ) {
-      if( grab_note ) {
-        _node_inspector.grab_note();
-      } else {
-        _node_inspector.grab_name();
-      }
-    }
   }
 
   /* Hides the node properties panel */
@@ -772,7 +761,7 @@ public class MainWindow : ApplicationWindow {
     _prop_btn.image = _prop_show;
     _inspector.reveal_child = false;
     _canvas.grab_focus();
-    _settings.set_boolean( "node-properties-shown",  false );
+    _settings.set_boolean( "current-properties-shown",  false );
     _settings.set_boolean( "map-properties-shown",   false );
     _settings.set_boolean( "style-properties-shown", false );
   }

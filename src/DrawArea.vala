@@ -767,16 +767,18 @@ public class DrawArea : Gtk.DrawingArea {
       _current_connection.mode = ConnMode.NONE;
       _current_connection      = null;
       _last_connection         = null;
-      connection_changed();
+      // connection_changed();
     }
   }
 
   /* Clears the current node (if it is set) and updates the UI accordingly */
-  private void clear_current_node() {
+  private void clear_current_node( bool signal_change ) {
     if( _current_node != null ) {
       _current_node.mode = NodeMode.NONE;
       _current_node      = null;
-      node_changed();
+      if( signal_change ) {
+        node_changed();
+      }
     }
   }
 
@@ -904,7 +906,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
       if( match_conn != null ) {
-        clear_current_node();
+        clear_current_node( false );
         return( set_current_connection_from_position( match_conn, e ) );
       } else {
         clear_current_connection();
@@ -914,7 +916,7 @@ public class DrawArea : Gtk.DrawingArea {
             return( set_current_node_from_position( match_node, e ) );
           }
         }
-        clear_current_node();
+        clear_current_node( true );
       }
     }
 

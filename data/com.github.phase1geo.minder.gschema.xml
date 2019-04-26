@@ -26,10 +26,10 @@
       <summary>Name of the last edited file</summary>
       <description>Name of the last edited file (or the empty string if an unnamed file was last edited).</description>
     </key>
-    <key name="node-properties-shown" type="b">
+    <key name="current-properties-shown" type="b">
       <default>false</default>
-      <summary>Most recent state of the node properties sidebar</summary>
-      <description>Most recent state of the node properties sidebar</description>
+      <summary>Most recent state of the current item properties sidebar</summary>
+      <description>Most recent state of the current item properties sidebar</description>
     </key>
     <key name="map-properties-shown" type="b">
       <default>false</default>
