@@ -110,7 +110,7 @@ public class Node : Object {
   protected double       _ipadx        = 6;
   protected double       _ipady        = 3;
   protected double       _task_radius  = 5;
-  protected double       _alpha        = 0.3;
+  protected double       _alpha        = 1.0;
   protected Array<Node>  _children;
   private   NodeMode     _mode         = NodeMode.NONE;
   private   int          _task_count   = 0;
@@ -256,6 +256,17 @@ public class Node : Object {
   public NodeImage? image {
     get {
       return( _image );
+    }
+  }
+  public double alpha {
+    get {
+      return( _alpha );
+    }
+    set {
+      _alpha = value;
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).alpha = value;
+      }
     }
   }
 
@@ -1396,19 +1407,6 @@ public class Node : Object {
     }
   }
 
-  /* Sets the context source color to the given color value */
-  protected void set_context_color( Context ctx, RGBA color ) {
-    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
-  }
-
-  /*
-   Sets the context source color to the given color value overriding the
-   alpha value with the given value.
-  */
-  protected void set_context_color_with_alpha( Context ctx, RGBA color, double alpha ) {
-    ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
-  }
-
   /*
    Gathers the information from all stored nodes for positional and link color information.
    This information is used by the undo/redo functions.
@@ -1472,7 +1470,7 @@ public class Node : Object {
   }
 
   /* Draws the border around the node */
-  protected void draw_shape( Context ctx, Theme theme, RGBA border_color, bool motion ) {
+  protected void draw_shape( Context ctx, Theme theme, RGBA border_color ) {
 
     double x = posx + style.node_margin;
     double y = posy + style.node_margin;
@@ -1481,11 +1479,11 @@ public class Node : Object {
 
     /* Set the fill color */
     if( mode == NodeMode.CURRENT ) {
-      set_context_color_with_alpha( ctx, theme.nodesel_background, (motion ? 0.2 : 1) );
+      Utils.set_context_color_with_alpha( ctx, theme.nodesel_background, _alpha );
     } else if( is_root() || style.is_fillable() ) {
-      set_context_color_with_alpha( ctx, border_color, (motion ? 0.2 : 1) );
+      Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
     } else {
-      set_context_color_with_alpha( ctx, theme.background, (motion ? 0.2 : 1) );
+      Utils.set_context_color_with_alpha( ctx, theme.background, _alpha );
     }
 
     /* Draw the fill */
@@ -1494,7 +1492,7 @@ public class Node : Object {
     if( !is_root() || style.is_fillable() ) {
 
       /* Draw the border */
-      set_context_color_with_alpha( ctx, border_color, (motion ? 0.2 : 1) );
+      Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
       ctx.set_line_width( style.node_borderwidth );
 
       /* If we are in a vertical orientation and the border type is underlined, draw nothing */
@@ -1505,37 +1503,40 @@ public class Node : Object {
   }
 
   /* Draws the node image above the note */
-  protected virtual void draw_image( Cairo.Context ctx, Theme theme, bool motion ) {
+  protected virtual void draw_image( Cairo.Context ctx, Theme theme ) {
     if( _image != null ) {
       double x, y, w, h;
       image_bbox( out x, out y, out w, out h );
-      _image.draw( ctx, x, y, (motion ? 0.2 : 1) );
+      _image.draw( ctx, x, y, _alpha );
     }
 
   }
 
   /* Draws the node font to the screen */
-  protected virtual void draw_name( Cairo.Context ctx, Theme theme, bool motion ) {
+  protected virtual void draw_name( Cairo.Context ctx, Theme theme ) {
 
     int hmargin = 3;
     int vmargin = 3;
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( mode == NodeMode.CURRENT ) {
-      set_context_color_with_alpha( ctx, theme.nodesel_background, (motion ? 0.2 : 1) );
-      ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin), ((posy + style.node_padding + style.node_margin) - vmargin), ((_width - (style.node_padding * 2) - (style.node_margin * 2)) + (hmargin * 2)), ((_height - (style.node_padding * 2) - (style.node_margin * 2)) + (vmargin * 2)) );
+      Utils.set_context_color_with_alpha( ctx, theme.nodesel_background, _alpha );
+      ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin),
+                     ((posy + style.node_padding + style.node_margin) - vmargin),
+                     ((_width  - (style.node_padding * 2) - (style.node_margin * 2)) + (hmargin * 2)),
+                     ((_height - (style.node_padding * 2) - (style.node_margin * 2)) + (vmargin * 2)) );
       ctx.fill();
     }
 
     /* Draw the text */
     if( mode == NodeMode.CURRENT ) {
-      name.draw( ctx, theme, theme.nodesel_foreground, motion );
+      name.draw( ctx, theme, theme.nodesel_foreground, _alpha );
     } else if( parent == null ) {
-      name.draw( ctx, theme, theme.root_foreground, motion );
+      name.draw( ctx, theme, theme.root_foreground, _alpha );
     } else if( style.is_fillable() ) {
-      name.draw( ctx, theme, theme.background, motion );
+      name.draw( ctx, theme, theme.background, _alpha );
     } else {
-      name.draw( ctx, theme, theme.foreground, motion );
+      name.draw( ctx, theme, theme.foreground, _alpha );
     }
 
   }
@@ -1549,7 +1550,7 @@ public class Node : Object {
 
       task_bbox( out x, out y, out w, out h );
 
-      set_context_color( ctx, color );
+      Utils.set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();
       ctx.set_line_width( 1 );
       ctx.arc( (x + _task_radius), (y + _task_radius), _task_radius, 0, (2 * Math.PI) );
@@ -1580,7 +1581,7 @@ public class Node : Object {
 
       /* Draw circle outline */
       if( complete < 1 ) {
-        set_context_color_with_alpha( ctx, color, _alpha );
+        Utils.set_context_color_with_alpha( ctx, color, _alpha );
         ctx.new_path();
         ctx.set_line_width( 1 );
         ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
@@ -1589,7 +1590,7 @@ public class Node : Object {
 
       /* Draw completeness pie */
       if( _task_done > 0 ) {
-        set_context_color( ctx, color );
+        Utils.set_context_color_with_alpha( ctx, color, _alpha );
         ctx.new_path();
         ctx.set_line_width( 1 );
         ctx.arc( x, y, _task_radius, (1.5 * Math.PI), angle );
@@ -1615,7 +1616,7 @@ public class Node : Object {
 
       note_bbox( out x, out y, out w, out h );
 
-      set_context_color_with_alpha( ctx, color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();
       ctx.set_line_width( 1 );
       ctx.move_to( (x + 2), y );
@@ -1645,14 +1646,14 @@ public class Node : Object {
       fold_bbox( out fx, out fy, out fw, out fh );
 
       /* Draw the fold rectangle */
-      set_context_color( ctx, bg_color );
+      Utils.set_context_color_with_alpha( ctx, bg_color, _alpha );
       ctx.new_path();
       ctx.set_line_width( 1 );
       ctx.rectangle( fx, fy, fw, fh );
       ctx.fill();
 
       /* Draw circles */
-      set_context_color( ctx, fg_color );
+      Utils.set_context_color_with_alpha( ctx, fg_color, _alpha );
       ctx.new_path();
       ctx.arc( (fx + 5), (fy + 5), 2, 0, (2 * Math.PI) );
       ctx.fill();
@@ -1673,41 +1674,12 @@ public class Node : Object {
       bbox( out x, out y, out w, out h );
 
       /* Draw highlight border */
-      set_context_color( ctx, theme.attachable_color );
+      Utils.set_context_color_with_alpha( ctx, theme.attachable_color, _alpha );
       ctx.set_line_width( 4 );
       ctx.rectangle( x, y, w, h );
       ctx.stroke();
 
     }
-
-  }
-
-  /* Draws the line under the node name */
-  protected virtual void draw_line( Context ctx, Theme theme, bool motion ) {
-
-    /* If we are vertically oriented, don't draw the line */
-    if( (side & NodeSide.vertical()) != 0 ) return;
-
-    double x = posx;
-    double y = posy + _height;
-    double w = _width;
-    double hmargin = 3;
-    double vmargin = 3;
-
-    /* Draw the background color behind text */
-    if( !motion ) {
-      set_context_color( ctx, theme.background );
-      ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin), ((posy + style.node_padding) - vmargin), ((_width - (style.node_padding * 2)) + (hmargin * 2)), ((_height - (style.node_padding * 2)) + (vmargin * 2)) );
-      ctx.fill();
-    }
-
-    /* Draw the line under the text name */
-    set_context_color( ctx, _link_color );
-    ctx.set_line_width( style.node_borderwidth );
-    ctx.set_line_cap( LineCap.ROUND );
-    ctx.move_to( x, y );
-    ctx.line_to( (x + w), y );
-    ctx.stroke();
 
   }
 
@@ -1724,7 +1696,7 @@ public class Node : Object {
     /* Get the parent's link point */
     parent.link_point( out parent_x, out parent_y );
 
-    set_context_color( ctx, _link_color );
+    Utils.set_context_color_with_alpha( ctx, _link_color, _alpha );
     ctx.set_line_cap( LineCap.ROUND );
 
     switch( side ) {
@@ -1777,7 +1749,7 @@ public class Node : Object {
     var y2   = tipy - arrowLength * Math.sin( theta + phi2 );
 
     /* Draw the arrow */
-    set_context_color( ctx, _link_color );
+    Utils.set_context_color_with_alpha( ctx, _link_color, _alpha );
     ctx.set_line_width( 1 );
     ctx.move_to( tipx, tipy );
     ctx.line_to( x1, y1 );
@@ -1785,7 +1757,7 @@ public class Node : Object {
     ctx.close_path();
     ctx.fill_preserve();
 
-    set_context_color( ctx, theme.background );
+    Utils.set_context_color_with_alpha( ctx, theme.background, _alpha );
     ctx.set_line_width( 2 );
     ctx.stroke();
 
@@ -1803,12 +1775,12 @@ public class Node : Object {
 
     resizer_bbox( out x, out y, out w, out h );
 
-    set_context_color( ctx, theme.background );
+    Utils.set_context_color( ctx, theme.background );
     ctx.set_line_width( 1 );
     ctx.rectangle( x, y, w, h );
     ctx.fill_preserve();
 
-    set_context_color( ctx, theme.foreground );
+    Utils.set_context_color_with_alpha( ctx, theme.foreground, _alpha );
     ctx.stroke();
 
   }
@@ -1819,9 +1791,9 @@ public class Node : Object {
     /* If this is a root node, draw specifically for a root node */
     if( is_root() ) {
 
-      draw_shape( ctx, theme, theme.root_background, motion );
-      draw_name( ctx, theme, motion );
-      draw_image( ctx, theme, motion );
+      draw_shape( ctx, theme, theme.root_background );
+      draw_name( ctx, theme );
+      draw_image( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, theme.root_foreground );
       } else {
@@ -1834,9 +1806,9 @@ public class Node : Object {
 
     /* Otherwise, draw the node as a non-root node */
     } else {
-      draw_shape( ctx, theme, _link_color, motion );
-      draw_name( ctx, theme, motion );
-      draw_image( ctx, theme, motion );
+      draw_shape( ctx, theme, _link_color );
+      draw_name( ctx, theme );
+      draw_image( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, (style.is_fillable() ? theme.background : _link_color) );
       } else {

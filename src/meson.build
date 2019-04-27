@@ -108,5 +108,6 @@ sources += files(
     'Theme.vala',
     'Themes.vala',
     'UndoBuffer.vala',
-    'UndoItem.vala'
+    'UndoItem.vala',
+    'Utils.vala'
 )

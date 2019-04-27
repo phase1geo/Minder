@@ -84,6 +84,7 @@ public class Connection {
       }
     }
   }
+  public double alpha { get; set; default=1.0; }
 
   /* Default constructor */
   public Connection( DrawArea da, Node from_node ) {
@@ -455,7 +456,7 @@ public class Connection {
     /* Draw the curve */
     ctx.save();
     style.draw_connection( ctx );
-    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+    Utils.set_context_color( ctx, color );
 
     /* Draw the curve as a quadratic curve (saves some additional calculations) */
     ctx.move_to( start_x, start_y );
@@ -542,7 +543,7 @@ public class Connection {
     ctx.fill();
 
     /* Draw the text */
-    _title.draw( ctx, theme, fg, false );
+    _title.draw( ctx, theme, fg, _alpha );
 
     /* Draw the drag handle */
     if( (mode == ConnMode.SELECTED) || (mode == ConnMode.ADJUSTING) ) {

@@ -525,28 +525,15 @@ public class CanvasText : Object {
     return( null );
   }
 
-  /* Sets the context source color to the given color value */
-  protected void set_context_color( Cairo.Context ctx, RGBA color ) {
-    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
-  }
-
-  /*
-   Sets the context source color to the given color value overriding the
-   alpha value with the given value.
-  */
-  protected void set_context_color_with_alpha( Cairo.Context ctx, RGBA color, double alpha ) {
-    ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
-  }
-
   /* Draws the node font to the screen */
-  public void draw( Cairo.Context ctx, Theme theme, RGBA fg, bool motion ) {
+  public void draw( Cairo.Context ctx, Theme theme, RGBA fg, double alpha ) {
 
     /* Make sure the the size is up-to-date */
     _pango_layout.set_markup( name_markup( theme ), -1 );
 
     /* Output the text */
     ctx.move_to( posx, posy );
-    set_context_color( ctx, fg );
+    Utils.set_context_color_with_alpha( ctx, fg, alpha );
     Pango.cairo_show_layout( ctx, _pango_layout );
     ctx.new_path();
 
@@ -554,7 +541,7 @@ public class CanvasText : Object {
     if( edit ) {
       var cpos = text.index_of_nth_char( _cursor );
       var rect = _pango_layout.index_to_pos( cpos );
-      set_context_color( ctx, theme.text_cursor );
+      Utils.set_context_color_with_alpha( ctx, theme.text_cursor, alpha );
       double ix, iy;
       ix = posx + (rect.x / Pango.SCALE) - 1;
       iy = posy + (rect.y / Pango.SCALE);
