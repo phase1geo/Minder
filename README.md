@@ -50,6 +50,10 @@ Minder is packaged in Void Linux, install it with `xbps-install`:
 
 `$ sudo xbps-install Minder`
 
+For Fedora user, install the RPM package with:
+
+`$ sudo dnf copr enable atim/minder -y && sudo dnf install minder -y`
+
 ## Quick Guide to Creating a Mind-Map
 
 When the application is first launched, a main idea node will be displayed in the center of the mind-map canvas. The following actions can be performed on this node:
