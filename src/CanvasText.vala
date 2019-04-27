@@ -548,6 +548,7 @@ public class CanvasText : Object {
     ctx.move_to( posx, posy );
     set_context_color( ctx, fg );
     Pango.cairo_show_layout( ctx, _pango_layout );
+    ctx.new_path();
 
     /* Draw the insertion cursor if we are in the 'editable' state */
     if( edit ) {
