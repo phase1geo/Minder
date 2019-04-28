@@ -1308,6 +1308,9 @@ public class DrawArea : Gtk.DrawingArea {
         move_origin( diff_x, diff_y );
         queue_draw();
       }
+      if( !_motion && (_current_node != null) ) {
+        _current_node.alpha = 0.3;
+      }
       _press_x = scaled_x;
       _press_y = scaled_y;
       _motion  = true;
@@ -1415,6 +1418,14 @@ public class DrawArea : Gtk.DrawingArea {
 
       }
 
+    }
+
+    /* If motion is set, clear it and clear the alpha */
+    if( _motion ) {
+      if( _current_node != null ) {
+        _current_node.alpha = 1.0;
+      }
+      _motion = false;
     }
 
     return( false );

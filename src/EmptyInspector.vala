@@ -27,8 +27,9 @@ public class EmptyInspector : Box {
 
   public EmptyInspector( DrawArea da ) {
 
-    var empty_lbl = new Label( _( "<big>Select a node or connection to view/edit information</big>" ) );
+    var empty_lbl = new Label( _( "<big>Select a node or connection\nto view/edit information</big>" ) );
     empty_lbl.use_markup = true;
+    empty_lbl.justify    = Justification.CENTER;
 
     pack_start( empty_lbl, true, true );
 
