@@ -19,8 +19,9 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-using Cairo;
+using Gtk;
 using Gdk;
+using Cairo;
 
 public class Utils {
 
@@ -35,6 +36,22 @@ public class Utils {
   */
   public static void set_context_color_with_alpha( Context ctx, RGBA color, double alpha ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
+  }
+
+  /*
+   Adds the given accelerator label to the given menu item.
+  */
+  public static void add_accel_label( Gtk.MenuItem item, uint key, Gdk.ModifierType mods ) {
+
+    /* Convert the menu item to an accelerator label */
+    AccelLabel? label = item.get_child() as AccelLabel;
+
+    if( label == null ) return;
+
+    /* Add the accelerator to the label */
+    label.set_accel( key, mods );
+    label.refetch();
+
   }
 
 }

@@ -74,6 +74,16 @@ public class Connection {
       }
     }
   }
+  public Node? from_node {
+    get {
+      return( _from_node );
+    }
+  }
+  public Node? to_node {
+    get {
+      return( _to_node );
+    }
+  }
   public Style style { 
     get {
       return( _style );

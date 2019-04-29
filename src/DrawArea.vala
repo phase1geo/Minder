@@ -54,7 +54,9 @@ public class DrawArea : Gtk.DrawingArea {
   private Array<NodeInfo?> _orig_info;
   private int              _orig_width;
   private Node?            _attach_node  = null;
-  private DrawAreaMenu     _popup_menu;
+  private NodeMenu         _node_menu;
+  private ConnectionMenu   _conn_menu;
+  private EmptyMenu        _empty_menu;
   private uint?            _auto_save_id = null;
   private ImageEditor      _editor;
   private IMContextSimple  _im_context;
@@ -121,7 +123,9 @@ public class DrawArea : Gtk.DrawingArea {
     _editor.changed.connect( current_image_edited );
 
     /* Create the popup menu */
-    _popup_menu = new DrawAreaMenu( this, accel_group );
+    _node_menu  = new NodeMenu( this, accel_group );
+    _conn_menu  = new ConnectionMenu( this, accel_group );
+    _empty_menu = new EmptyMenu( this, accel_group );
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
@@ -1218,6 +1222,29 @@ public class DrawArea : Gtk.DrawingArea {
     return( false );
   }
 
+  /* Displays the contextual menu based on what is currently selected */
+  private void show_contextual_menu( EventButton event ) {
+
+#if GTK322
+    if( _current_node != null ) {
+      _node_menu.popup_at_pointer( event );
+    } else if( _current_connection != null ) {
+      _conn_menu.popup_at_pointer( event );
+    } else {
+      _empty_menu.popup_at_pointer( event );
+    }
+#else
+    if( _current_node != null ) {
+      _node_menu.popup( null, null, null, event.button, event.time );
+    } else if( _current_connection != null ) {
+      _conn_menu.popup( null, null, null, event.button, event.time );
+    } else {
+      _empty_menu.popup( null, null, null, event.button, event.time );
+    }
+#endif
+
+  }
+
   /* Handle button press event */
   private bool on_press( EventButton event ) {
     switch( event.button ) {
@@ -1231,11 +1258,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         break;
       case Gdk.BUTTON_SECONDARY :
-#if GTK322
-        _popup_menu.popup_at_pointer( event );
-#else
-        _popup_menu.popup( null, null, null, event.button, event.time );
-#endif
+        show_contextual_menu( event );
         break;
     }
     return( false );
@@ -1635,9 +1658,14 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Returns true if we can perform a node deletion operation */
-  public bool node_deleteable() {
-    return( _current_node != null );
+  /* Selects the given connection node */
+  public void select_connection_node( bool start ) {
+    if( _current_connection != null ) {
+      if( select_node( start ? _current_connection.from_node : _current_connection.to_node ) ) {
+        clear_current_connection();
+        queue_draw();
+      }
+    }
   }
 
   /* Deletes the given node */
