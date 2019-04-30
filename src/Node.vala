@@ -124,6 +124,7 @@ public class Node : Object {
   private   Layout?      _layout       = null;
   private   Style        _style        = new Style();
   private   double       _max_width    = 200;
+  private   bool         _loaded       = false;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -376,6 +377,7 @@ public class Node : Object {
 
   /* Called whenever the node size is changed */
   private void update_size() {
+    if( !_loaded ) return;
     var orig_width  = _width;
     var orig_height = _height;
     var margin      = (style.node_margin  == null) ? 0 : style.node_margin;
@@ -802,7 +804,8 @@ public class Node : Object {
 
     /* Make sure that the name is positioned properly */
     position_name();
-    update_size();
+
+    _loaded = true;
 
   }
 
@@ -1690,7 +1693,7 @@ public class Node : Object {
     double parent_y;
     double height = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
     double tailx = 0, taily = 0, tipx = 0, tipy = 0;
-    double tip_adjust = (style.link_width / 2) + 1;
+    double tip_adjust  = (style.link_width / 2) + 1;
     double link_adjust = style.link_arrow ? (style.link_width / 2) + ((style.node_borderwidth / 2) + 2) : 0;
 
     /* Get the parent's link point */

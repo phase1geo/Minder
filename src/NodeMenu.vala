@@ -165,11 +165,6 @@ public class NodeMenu : Gtk.Menu {
 
   }
 
-  /* Returns true if there is a currently selected connection */
-  private bool connection_selected() {
-    return( _da.get_current_connection() != null );
-  }
-
   /* Returns true if the currently selected node is a task */
   private bool node_is_task() {
     Node? current = _da.get_current_node();
@@ -209,6 +204,7 @@ public class NodeMenu : Gtk.Menu {
     /* Set the menu sensitivity */
     _paste.set_sensitive( _da.node_pasteable() );
     _conn.set_sensitive( !_da.get_connections().hide );
+    _fold.set_sensitive( node_foldable() );
     _detach.set_sensitive( _da.detachable() );
     _selroot.set_sensitive( _da.root_selectable() );
     _selnext.set_sensitive( _da.sibling_selectable() );
