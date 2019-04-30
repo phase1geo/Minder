@@ -1083,7 +1083,7 @@ public class Node : Object {
             if( y < _children.index( i ).posy ) {
               child.detach( side );
               child.attached = true;
-              child.attach( this, (i - ((idx < i) ? 1 : 0)), null );
+              child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
               last_selected_child = last_selected;
               return;
             }
@@ -1093,7 +1093,7 @@ public class Node : Object {
             if( x < _children.index( i ).posx ) {
               child.detach( side );
               child.attached = true;
-              child.attach( this, (i - ((idx < i) ? 1 : 0)), null );
+              child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
               last_selected_child = last_selected;
               return;
             }
@@ -1102,14 +1102,14 @@ public class Node : Object {
       } else if( _children.index( i ).side > child.side ) {
         child.detach( side );
         child.attached = true;
-        child.attach( this, (i - ((idx < i) ? 1 : 0)), null );
+        child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
         last_selected_child = last_selected;
         return;
       }
     }
     child.detach( side );
     child.attached = true;
-    child.attach( this, -1, null );
+    child.attach( this, -1, null, false );
     last_selected_child = last_selected;
   }
 

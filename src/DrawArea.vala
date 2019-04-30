@@ -1325,6 +1325,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
         queue_draw();
 
+      /* Otherwise, we are panning the canvas */
       } else {
         double diff_x = _press_x - scaled_x;
         double diff_y = _press_y - scaled_y;
