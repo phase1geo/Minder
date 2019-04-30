@@ -1331,7 +1331,7 @@ public class DrawArea : Gtk.DrawingArea {
         move_origin( diff_x, diff_y );
         queue_draw();
       }
-      if( !_motion && (_current_node != null) ) {
+      if( !_motion && !_resize && (_current_node != null) ) {
         _current_node.alpha = 0.3;
       }
       _press_x = scaled_x;
