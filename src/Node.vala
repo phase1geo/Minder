@@ -276,7 +276,7 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
-    _name     = new CanvasText( da );
+    _name     = new CanvasText( da, _max_width );
     _name.resized.connect( update_size );
   }
 
@@ -285,14 +285,14 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
-    _name     = new CanvasText.with_text( da, n );
+    _name     = new CanvasText.with_text( da, _max_width, n );
     _name.resized.connect( update_size );
   }
 
   /* Copies an existing node to this node */
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
     _id       = _next_id++;
-    _name     = new CanvasText( da );
+    _name     = new CanvasText( da, _max_width );
     copy_variables( n, im );
     _name.resized.connect( update_size );
     mode      = NodeMode.NONE;
@@ -305,7 +305,7 @@ public class Node : Object {
   /* Copies an existing node tree to this node */
   public Node.copy_tree( DrawArea da, Node n, ImageManager im ) {
     _id       = _next_id++;
-    _name     = new CanvasText( da );
+    _name     = new CanvasText( da, _max_width );
     _children = new Array<Node>();
     copy_variables( n, im );
     _name.resized.connect( update_size );

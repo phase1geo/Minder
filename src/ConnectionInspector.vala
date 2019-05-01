@@ -192,8 +192,8 @@ public class ConnectionInspector : Box {
 
     if( current != null ) {
       _ignore_title_change = true;
-      _title.buffer.text = (current.title != null) ? current.title.text : null;
-      _note.buffer.text = current.note;
+      _title.buffer.text   = (current.title != null) ? current.title.text : "";
+      _note.buffer.text    = current.note;
     }
 
   }

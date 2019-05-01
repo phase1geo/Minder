@@ -31,14 +31,13 @@ public class UndoConnectionChange : UndoItem {
     base( name );
     _old_connection = old_connection;
     _new_connection = new_connection;
+    stdout.printf( "old_connection null: %s, new_connection null: %s\n", (_old_connection == null).to_string(), (_new_connection == null).to_string() );
   }
 
   /* Undoes a connection change */
   public override void undo( DrawArea da ) {
     if( _old_connection == null ) {
       da.get_connections().remove_connection( _new_connection );
-    } else {
-      _old_connection.copy( da, _new_connection );
     }
     da.set_current_connection( _old_connection );
     da.queue_draw();
@@ -49,8 +48,6 @@ public class UndoConnectionChange : UndoItem {
   public override void redo( DrawArea da ) {
     if( _new_connection == null ) {
       da.get_connections().remove_connection( _old_connection );
-    } else {
-      _new_connection.copy( da, _old_connection );
     }
     da.set_current_connection( _new_connection );
     da.queue_draw();

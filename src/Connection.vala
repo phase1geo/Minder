@@ -43,9 +43,10 @@ public class Connection {
   private double      _posy;
   private double      _dragx;
   private double      _dragy;
-  private Style       _style = new Style();
+  private Style       _style     = new Style();
   private Bezier      _curve;
-  private CanvasText? _title = null;
+  private CanvasText? _title     = null;
+  private double      _max_width = 100;
 
   public CanvasText? title {
     get {
@@ -132,10 +133,14 @@ public class Connection {
     position_title();
     _curve.copy( conn._curve );
     if( conn.title == null ) {
+      if( _title != null ) {
+        _title.resized.disconnect( position_title );
+      }
       _title = null;
     } else {
       if( title == null ) {
-        _title = new CanvasText( da );
+        _title = new CanvasText( da, _max_width );
+        _title.resized.connect( position_title );
       }
       _title.copy( conn.title );
     }
@@ -146,14 +151,17 @@ public class Connection {
   /* Adds a title */
   public void change_title( DrawArea da, string title ) {
     if( title == "" ) {
+      if( _title != null ) {
+        _title.resized.disconnect( position_title );
+      }
       _title = null;
     } else if( _title == null ) {
-      _title = new CanvasText.with_text( da, title );
+      _title = new CanvasText.with_text( da, _max_width, title );
+      _title.resized.connect( position_title );
       _title.set_font( style.node_font );
       position_title();
     } else {
       _title.text = title;
-      position_title();
     }
   }
 
@@ -399,7 +407,8 @@ public class Connection {
 
     string? ti = node->get_prop( "title" );
     if( ti != null ) {
-      _title = new CanvasText.with_text( da, ti );
+      _title = new CanvasText.with_text( da, _max_width, ti );
+      _title.resized.connect( position_title );
       _title.set_font( style.node_font );
       position_title();
     }

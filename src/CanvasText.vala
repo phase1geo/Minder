@@ -37,7 +37,6 @@ public class CanvasText : Object {
   private int          _selstart     = 0;
   private int          _selend       = 0;
   private int          _selanchor    = 0;
-  private double       _min_width    = 50;
   private double       _max_width    = 200;
   private double       _width        = 0;
   private double       _height       = 0;
@@ -93,7 +92,8 @@ public class CanvasText : Object {
   }
 
   /* Default constructor */
-  public CanvasText( DrawArea da ) {
+  public CanvasText( DrawArea da, double max_width ) {
+    _max_width    = max_width;
     _pango_layout = da.create_pango_layout( null );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( (int)_max_width * Pango.SCALE );
@@ -101,7 +101,8 @@ public class CanvasText : Object {
   }
 
   /* Constructor initializing string */
-  public CanvasText.with_text( DrawArea da, string txt ) {
+  public CanvasText.with_text( DrawArea da, double max_width, string txt ) {
+    _max_width    = max_width;
     _pango_layout = da.create_pango_layout( txt );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( (int)_max_width * Pango.SCALE );
@@ -113,10 +114,10 @@ public class CanvasText : Object {
   public void copy( CanvasText ct ) {
     posx       = ct.posx;
     posy       = ct.posy;
-    _min_width = ct._min_width;
     _max_width = ct._max_width;
     _text      = ct.text;
     _pango_layout.set_font_description( ct._pango_layout.get_font_description() );
+    _pango_layout.set_width( (int)_max_width * Pango.SCALE );
     update_size( true );
   }
 

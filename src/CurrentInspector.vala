@@ -59,17 +59,18 @@ public class CurrentInspector : Stack {
   /* Called whenever the user changes the current node in the canvas */
   private void current_changed() {
 
-    if( (_da.get_current_node() != null) && (visible_child_name != "node") ) {
-      transition_type = (visible_child_name == "connection") ? StackTransitionType.NONE : StackTransitionType.SLIDE_UP;
-      stdout.printf( "%s to node, ttype: %s\n", visible_child_name, transition_type.to_string() );
-      set_visible_child_name( "node" );
-    } else if( (_da.get_current_connection() != null) && (visible_child_name != "connection") ) {
-      transition_type = (visible_child_name == "node") ? StackTransitionType.NONE : StackTransitionType.SLIDE_UP;
-      stdout.printf( "%s to connection, ttype: %s\n", visible_child_name, transition_type.to_string() );
-      set_visible_child_name( "connection" );
+    if( _da.get_current_node() != null ) {
+      if( visible_child_name != "node" ) {
+        transition_type = (visible_child_name == "connection") ? StackTransitionType.NONE : StackTransitionType.SLIDE_UP;
+        set_visible_child_name( "node" );
+      }
+    } else if( _da.get_current_connection() != null ) {
+      if( visible_child_name != "connection" ) {
+        transition_type = (visible_child_name == "node") ? StackTransitionType.NONE : StackTransitionType.SLIDE_UP;
+        set_visible_child_name( "connection" );
+      }
     } else {
       transition_type = StackTransitionType.SLIDE_DOWN;
-      stdout.printf( "%s to empty, ttype: %s\n", visible_child_name, transition_type.to_string() );
       set_visible_child_name( "empty" );
     }
 
