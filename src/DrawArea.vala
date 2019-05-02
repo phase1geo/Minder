@@ -43,9 +43,10 @@ public class DrawArea : Gtk.DrawingArea {
   private bool             _resize     = false;
   private bool             _motion     = false;
   private Node?            _current_node = null;
-  private bool             _current_new = false;
+  private Node?            _last_node    = null;
+  private bool             _current_new  = false;
   private Connection?      _current_connection = null;
-  private Connection?      _last_connection = null;
+  private Connection?      _last_connection    = null;
   private Array<Node>      _nodes;
   private Connections      _connections;
   private Theme            _theme;
@@ -2757,6 +2758,9 @@ public class DrawArea : Gtk.DrawingArea {
     if( _current_node == null ) return;
     _current_connection      = new Connection( this, _current_node );
     _current_connection.mode = ConnMode.CONNECTING;
+    _last_node               = _current_node;
+    _current_node.mode       = NodeMode.NONE;
+    _current_node            = null;
     queue_draw();
   }
 
