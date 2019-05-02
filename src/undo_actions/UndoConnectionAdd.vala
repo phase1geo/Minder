@@ -21,34 +21,36 @@
 
 using Gtk;
 
-public class UndoConnectionChange : UndoItem {
+public class UndoConnectionAdd : UndoItem {
 
-  Connection? _old_connection;
-  Connection? _new_connection;
+  Connection _connection;
+  Node       _from_node;
+  Node       _to_node;
 
-  /* Constructor for adding/removing/changing a connection */
-  public UndoConnectionChange( string name, Connection? old_connection, Connection? new_connection ) {
-    base( name );
-    _old_connection = old_connection;
-    _new_connection = new_connection;
+  /* Constructor for adding a connection */
+  public UndoConnectionAdd( Connection connection ) {
+    base( _( "add connection" ) );
+    _connection = connection;
+    _from_node  = connection.from_node;
+    _to_node    = connection.to_node;
   }
 
   /* Undoes a connection change */
   public override void undo( DrawArea da ) {
-    if( _old_connection == null ) {
-      da.get_connections().remove_connection( _new_connection );
-    }
-    da.set_current_connection( _old_connection );
+    da.get_connections().remove_connection( _connection );
+    da.set_current_connection( null );
     da.queue_draw();
     da.changed();
   }
 
   /* Redoes a connection change */
   public override void redo( DrawArea da ) {
-    if( _new_connection == null ) {
-      da.get_connections().remove_connection( _old_connection );
-    }
-    da.set_current_connection( _new_connection );
+    _connection.from_node = _from_node;
+    _connection.to_node   = _to_node;
+    _connection.connect_node( _from_node );
+    _connection.connect_node( _to_node );
+    da.get_connections().add_connection( _connection );
+    da.set_current_connection( _connection );
     da.queue_draw();
     da.changed();
   }

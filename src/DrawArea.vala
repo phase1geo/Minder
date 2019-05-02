@@ -1406,7 +1406,9 @@ public class DrawArea : Gtk.DrawingArea {
       /* If the connection end is released on an attachable node, attach the connection to the node */
       if( _attach_node != null ) {
         end_connection( _attach_node );
-        undo_buffer.add_item( new UndoConnectionChange( _( "connection endpoint change" ), _last_connection, _current_connection ) );
+        if( _last_connection != null ) {
+          undo_buffer.add_item( new UndoConnectionChange( _( "connection endpoint change" ), _last_connection, _current_connection ) );
+        }
         _attach_node.mode = NodeMode.NONE;
         _attach_node = null;
         _last_connection = null;
@@ -2770,7 +2772,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( _current_connection == null ) return;
     _current_connection.connect_to( n );
     _connections.add_connection( _current_connection );
-    undo_buffer.add_item( new UndoConnectionChange( _( "add connection" ), null, _current_connection ) );
+    undo_buffer.add_item( new UndoConnectionAdd( _current_connection ) );
     _current_connection.mode = ConnMode.ADJUSTING;
     _last_connection = null;
     connection_changed();
