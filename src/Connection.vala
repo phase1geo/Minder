@@ -155,8 +155,8 @@ public class Connection {
   }
 
   /* Adds a title */
-  public void change_title( DrawArea da, string title ) {
-    if( title == "" ) {
+  public void change_title( DrawArea da, string title, bool allow_empty = false ) {
+    if( (title == "") && !allow_empty ) {
       if( _title != null ) {
         _title.resized.disconnect( position_title );
       }

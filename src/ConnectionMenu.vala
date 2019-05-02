@@ -99,7 +99,11 @@ public class ConnectionMenu : Gtk.Menu {
 
   /* Displays the sidebar to edit the node properties */
   private void edit_title() {
-    _da.show_properties( "current", false );
+    Connection conn = _da.get_current_connection();
+    if( conn.title == null ) {
+      conn.change_title( _da, "", true );
+    }
+    conn.mode = ConnMode.EDITABLE;
   }
 
   /* Changes the note status of the currently selected node */

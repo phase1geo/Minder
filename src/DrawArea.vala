@@ -53,6 +53,7 @@ public class DrawArea : Gtk.DrawingArea {
   private NodeSide         _orig_side;
   private Array<NodeInfo?> _orig_info;
   private int              _orig_width;
+  private string           _orig_title;
   private Node?            _attach_node  = null;
   private NodeMenu         _node_menu;
   private ConnectionMenu   _conn_menu;
@@ -632,7 +633,7 @@ public class DrawArea : Gtk.DrawingArea {
    Changes the current connection's title to the given value.
   */
   public void change_current_connection_title( string title ) {
-    if( _current_connection != null ) {
+    if( (_current_connection != null) && (_current_connection.title.text != title) ) {
       string? orig_title = (_current_connection.title == null) ? null : _current_connection.title.text;
       _current_connection.change_title( this, title );
       if( !_current_new ) {
@@ -807,6 +808,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
       } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
         _current_connection.mode = ConnMode.EDITABLE;
+        _orig_title = _current_connection.title.text;
       }
       return( true );
     } else {
@@ -1762,6 +1764,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_escape() {
     if( is_connection_editable() ) {
       _im_context.reset();
+      undo_buffer.add_item( new UndoConnectionTitle( _current_connection, _orig_title ) );
       _current_connection.mode = ConnMode.SELECTED;
       connection_changed();
       queue_draw();
@@ -1825,6 +1828,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the return character is entered in the drawing area */
   private void handle_return() {
     if( is_connection_editable() ) {
+      undo_buffer.add_item( new UndoConnectionTitle( _current_connection, _orig_title ) );
       _current_connection.mode = ConnMode.SELECTED;
       connection_changed();
       queue_draw();
