@@ -40,6 +40,7 @@ sources += files(
     'themes/ThemeSolarizedLight.vala',
 
     'undo_actions/UndoConnectionChange.vala',
+    'undo_actions/UndoConnectionDelete.vala',
     'undo_actions/UndoConnectionNote.vala',
     'undo_actions/UndoConnectionTitle.vala',
     'undo_actions/UndoNodeAttach.vala',

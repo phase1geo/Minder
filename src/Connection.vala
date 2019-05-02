@@ -79,10 +79,16 @@ public class Connection {
     get {
       return( _from_node );
     }
+    set {
+      _from_node = value;
+    }
   }
   public Node? to_node {
     get {
       return( _to_node );
+    }
+    set {
+      _to_node = value;
     }
   }
   public Style style { 
@@ -176,13 +182,13 @@ public class Connection {
   }
 
   /* Connects to the given node */
-  private void connect_node( Node node ) {
+  public void connect_node( Node node ) {
     node.moved.connect( this.end_moved );
     node.resized.connect( this.end_resized );
   }
 
   /* Disconnects from the given node */
-  private void disconnect_node( Node node ) {
+  public void disconnect_node( Node node ) {
     node.moved.disconnect( this.end_moved );
     node.resized.disconnect( this.end_resized );
   }

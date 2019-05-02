@@ -584,7 +584,13 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Sets the current connection to the given node */
   public void set_current_connection( Connection? c ) {
+    if( _current_connection != null ) {
+      _current_connection.mode = ConnMode.NONE;
+    }
     _current_connection = c;
+    if( _current_connection != null ) {
+      _current_connection.mode = ConnMode.SELECTED;
+    }
     connection_changed();
   }
 
@@ -2771,11 +2777,10 @@ public class DrawArea : Gtk.DrawingArea {
   /* Deletes the current connection */
   public void delete_connection() {
     if( _current_connection == null ) return;
-    var orig_connection = new Connection.from_connection( this, _current_connection );
+    undo_buffer.add_item( new UndoConnectionDelete( _current_connection ) );
     _connections.remove_connection( _current_connection );
     _current_connection = null;
     _last_connection    = null;
-    undo_buffer.add_item( new UndoConnectionChange( _( "delete connection" ), orig_connection, null ) );
     connection_changed();
     changed();
     queue_draw();
