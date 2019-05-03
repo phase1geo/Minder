@@ -40,7 +40,7 @@ public class ThemeSolarizedLight : Theme {
     textsel_foreground = get_color( "#002B36" );
     text_cursor        = get_color( "#586E75" );
     attachable_color   = get_color( "#9bdb4d" );
-    connection_color   = get_color( "#777777" );
+    connection_color   = get_color( "#606060" );
     prefer_dark        = false;
 
     /* Generate the link colors */

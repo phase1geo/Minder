@@ -262,7 +262,10 @@ public class MapInspector : Box {
 
     /* Deselect all themes */
     _theme_box.get_children().foreach((entry) => {
-      entry.get_style_context().remove_class( "theme-selected" );
+      EventBox e = (EventBox)entry;
+      Box      b = (Box)e.get_children().nth_data( 0 );
+      e.get_style_context().remove_class( "theme-selected" );
+    //  b.get_children().nth_data( 1 ).get_style_context().remove_class( "theme-font-selected" );
     });
 
     /* Select the specified theme */
@@ -276,7 +279,10 @@ public class MapInspector : Box {
     }
     _theme_box.get_children().foreach((entry) => {
       if( index == 0 ) {
-        entry.get_style_context().add_class( "theme-selected" );
+        EventBox e = (EventBox)entry;
+        Box      b = (Box)e.get_children().nth_data( 0 );
+        e.get_style_context().add_class( "theme-selected" );
+     //   b.get_children().nth_data( 1 ).get_style_context().add_class( "theme-font-selected" );
       }
       index--;
     });

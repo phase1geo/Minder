@@ -22,4 +22,9 @@
 
 .theme-selected {
   background: blue;
+  color: white;
+}
+
+.theme-font-selected {
+  color: white;
 }
