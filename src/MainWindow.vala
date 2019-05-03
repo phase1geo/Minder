@@ -614,8 +614,7 @@ public class MainWindow : ApplicationWindow {
   private void select_and_open_file() {
 
     /* Get the file to open from the user */
-    FileChooserDialog dialog = new FileChooserDialog( _( "Open File" ), this, FileChooserAction.OPEN,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Open" ), ResponseType.ACCEPT );
+    FileChooserNative dialog = new FileChooserNative( _( "Open File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
 
     /* Create file filters */
     var filter = new FileFilter();
@@ -632,7 +631,6 @@ public class MainWindow : ApplicationWindow {
       open_file( dialog.get_filename() );
     }
 
-    dialog.close();
     _canvas.grab_focus();
 
   }
@@ -697,8 +695,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Allow the user to select a filename to save the document as */
   public bool save_file() {
-    FileChooserDialog dialog = new FileChooserDialog( _( "Save File" ), this, FileChooserAction.SAVE,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Save" ), ResponseType.ACCEPT );
+    FileChooserNative dialog = new FileChooserNative( _( "Save File" ), this, FileChooserAction.SAVE, _( "Save" ), _( "Cancel" ) );
     FileFilter        filter = new FileFilter();
     bool              retval = false;
     filter.set_filter_name( _( "Minder" ) );
@@ -714,7 +711,6 @@ public class MainWindow : ApplicationWindow {
       update_title();
       retval = true;
     }
-    dialog.close();
     _canvas.grab_focus();
     return( retval );
   }
@@ -880,8 +876,7 @@ public class MainWindow : ApplicationWindow {
   /* Exports the model to various formats */
   private void action_export() {
 
-    FileChooserDialog dialog = new FileChooserDialog( _( "Export As" ), this, FileChooserAction.SAVE,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
+    FileChooserNative dialog = new FileChooserNative( _( "Export As" ), this, FileChooserAction.SAVE, _( "Export" ), _( "Cancel" ) );
 
     /* BMP */
     FileFilter bmp_filter = new FileFilter();
@@ -980,8 +975,6 @@ public class MainWindow : ApplicationWindow {
         ExportSVG.export( repair_filename( fname, {".svg"} ), _canvas );
       }
     }
-
-    dialog.close();
 
   }
 
