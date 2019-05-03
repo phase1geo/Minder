@@ -25,6 +25,14 @@ using Cairo;
 
 public class Utils {
 
+  /*
+   Helper function for converting an RGBA color value to a stringified color
+   that can be used by a markup parser.
+  */
+  public static string color_from_rgba( RGBA rgba ) {
+    return( "#%02x%02x%02x".printf( (int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255) ) );
+  }
+
   /* Sets the context source color to the given color value */
   public static void set_context_color( Context ctx, RGBA color ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );

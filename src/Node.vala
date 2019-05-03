@@ -831,7 +831,7 @@ public class Node : Object {
     node->new_prop( "fold", _folded.to_string() );
     node->new_prop( "treesize", tree_size.to_string() );
     if( !is_root() ) {
-      node->new_prop( "color", color_from_rgba( _link_color ) );
+      node->new_prop( "color", Utils.color_from_rgba( _link_color ) );
     }
     node->new_prop( "layout", _layout.name );
 
@@ -931,14 +931,6 @@ public class Node : Object {
       node->add_child( _children.index( i ).export_opml_node( ref node_id, ref expand_state ) );
     }
     return( node );
-  }
-
-  /*
-   Helper function for converting an RGBA color value to a stringified color
-   that can be used by a markup parser.
-  */
-  private string color_from_rgba( RGBA rgba ) {
-    return( "#%02x%02x%02x".printf( (int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255) ) );
   }
 
   /* Resizes the node width by the given amount */

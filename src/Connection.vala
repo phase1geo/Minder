@@ -590,12 +590,13 @@ public class Connection {
    Draws arrow point to the "to" node.  The tailx/y values should be the
    bezier control point closest to the "to" node.
   */
-  private static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy,
-                                  double tailx, double taily ) {
+  public static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy, double tailx, double taily, double arrowLength = 0 ) {
 
     double extlen[7] = {14, 14, 15, 16, 17, 18, 18};
 
-    var arrowLength = extlen[line_width-2];
+    if( arrowLength == 0 ) {
+      arrowLength = extlen[line_width-2];
+    }
 
     var dx = tipx - tailx;
     var dy = tipy - taily;

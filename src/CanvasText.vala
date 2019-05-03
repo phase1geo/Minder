@@ -167,14 +167,6 @@ public class CanvasText : Object {
 
   }
 
-  /*
-   Helper function for converting an RGBA color value to a stringified color
-   that can be used by a markup parser.
-  */
-  private string color_from_rgba( RGBA rgba ) {
-    return( "#%02x%02x%02x".printf( (int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255) ) );
-  }
-
   /* Removes < and > characters */
   private string unmarkup( string markup ) {
     return( markup.replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
@@ -183,8 +175,8 @@ public class CanvasText : Object {
   /* Generates the marked up name that will be displayed in the node */
   private string name_markup( Theme? theme ) {
     if( (_selstart != _selend) && (theme != null) ) {
-      var fg      = color_from_rgba( theme.textsel_foreground );
-      var bg      = color_from_rgba( theme.textsel_background );
+      var fg      = Utils.color_from_rgba( theme.textsel_foreground );
+      var bg      = Utils.color_from_rgba( theme.textsel_background );
       var spos    = text.index_of_nth_char( _selstart );
       var epos    = text.index_of_nth_char( _selend );
       var begtext = unmarkup( text.slice( 0, spos ) );
