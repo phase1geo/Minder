@@ -26,7 +26,8 @@ public enum AnimationType {
   NODES,
   NODE,
   PAN,
-  SCALE
+  SCALE,
+  PANSCALE
 }
 
 /*
