@@ -186,14 +186,15 @@ public class MapInspector : Box {
 
     /* Add the themes */
     for( int i=0; i<names.length; i++ ) {
+      var name  = names.index( i );
       var ebox  = new EventBox();
       var item  = new Box( Orientation.VERTICAL, 5 );
-      var label = new Label( names.index( i ) );
+      var label = new Label( name );
       item.pack_start( icons.index( i ), false, false, 5 );
       item.pack_start( label,            false, true );
       ebox.button_press_event.connect((w, e) => {
-        select_theme( label.label );
-        _da.set_theme( label.label );
+        select_theme( name );
+        _da.set_theme( name );
         return( false );
       });
       ebox.add( item );
@@ -260,31 +261,31 @@ public class MapInspector : Box {
   /* Makes sure that only the given theme is selected in the UI */
   private void select_theme( string name ) {
 
-    /* Deselect all themes */
-    _theme_box.get_children().foreach((entry) => {
-      EventBox e = (EventBox)entry;
-      Box      b = (Box)e.get_children().nth_data( 0 );
-      e.get_style_context().remove_class( "theme-selected" );
-    //  b.get_children().nth_data( 1 ).get_style_context().remove_class( "theme-font-selected" );
-    });
-
-    /* Select the specified theme */
-    int index;
+    int index = 0;
     var names = new Array<string>();
     _da.themes.names( ref names );
-    for( index=0; index<names.length; index++ ) {
-      if( names.index( index ) == name ) {
-        break;
-      }
-    }
+
+    /* Deselect all themes */
     _theme_box.get_children().foreach((entry) => {
-      if( index == 0 ) {
-        EventBox e = (EventBox)entry;
-        Box      b = (Box)e.get_children().nth_data( 0 );
+      var e = (EventBox)entry;
+      var b = (Box)e.get_children().nth_data( 0 );
+      var l = (Label)b.get_children().nth_data( 1 );
+      e.get_style_context().remove_class( "theme-selected" );
+      l.set_markup( names.index( index ) );
+      index++;
+    });
+
+    /* Select the matching theme */
+    index = 0;
+    _theme_box.get_children().foreach((entry) => {
+      if( names.index( index ) == name ) {
+        var e = (EventBox)entry;
+        var b = (Box)e.get_children().nth_data( 0 );
+        var l = (Label)b.get_children().nth_data( 1 );
         e.get_style_context().add_class( "theme-selected" );
-     //   b.get_children().nth_data( 1 ).get_style_context().add_class( "theme-font-selected" );
+        l.set_markup( "<span color=\"white\">%s</span>".printf( names.index( index ) ) );
       }
-      index--;
+      index++;
     });
 
   }
