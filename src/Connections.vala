@@ -50,8 +50,8 @@ public class Connections {
   public bool remove_connection( Connection conn ) {
     for( uint i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ) == conn ) {
-        _connections.index( i ).disconnect( true );
-        _connections.index( i ).disconnect( false );
+        _connections.index( i ).disconnect_from_node( true );
+        _connections.index( i ).disconnect_from_node( false );
         _connections.remove_index( i ); 
         return( true );
       }
@@ -137,6 +137,13 @@ public class Connections {
   public void set_all_connections_to_style( Style style ) {
     for( int i=0; i<_connections.length; i++ ) {
       _connections.index( i ).style = style;
+    }
+  }
+
+  /* Searches the connections for ones that match the given pattern and search options */
+  public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      _connections.index( i ).get_match_items( pattern, search_opts, ref matches );
     }
   }
 

@@ -558,8 +558,13 @@ public class DrawArea : Gtk.DrawingArea {
    pattern.
   */
   public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
-    for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).get_match_items( pattern, search_opts, ref matches );
+    if( search_opts[0] ) {
+      for( int i=0; i<_nodes.length; i++ ) {
+        _nodes.index( i ).get_match_items( pattern, search_opts, ref matches );
+      }
+    }
+    if( search_opts[1] ) {
+      _connections.get_match_items( pattern, search_opts, ref matches );
     }
   }
 
@@ -897,11 +902,11 @@ public class DrawArea : Gtk.DrawingArea {
     if( (_current_connection != null) && (_current_connection.mode == ConnMode.SELECTED) ) {
       if( _current_connection.within_from_handle( e.x, e.y ) ) {
         _last_connection = new Connection.from_connection( this, _current_connection );
-        _current_connection.disconnect( true );
+        _current_connection.disconnect_from_node( true );
         return( true );
       } else if( _current_connection.within_to_handle( e.x, e.y ) ) {
         _last_connection = new Connection.from_connection( this, _current_connection );
-        _current_connection.disconnect( false );
+        _current_connection.disconnect_from_node( false );
         return( true );
       } else if( _current_connection.within_drag_handle( e.x, e.y ) ) {
         _current_connection.mode = ConnMode.ADJUSTING;
@@ -1108,10 +1113,15 @@ public class DrawArea : Gtk.DrawingArea {
   /* Brings the given node into view in its entirety including the given amount of padding */
   public void see( double width_adjust = 0, double pad = 100.0 ) {
 
-    if( _current_node == null ) return;
-
     double x, y, w, h;
-    _current_node.bbox( out x, out y, out w, out h );
+
+    if( _current_connection != null ) {
+      _current_connection.bbox( out x, out y, out w, out h );
+    } else if( _current_node != null ) {
+      _current_node.bbox( out x, out y, out w, out h );
+    } else {
+      return;
+    }
 
     double diff_x = 0;
     double diff_y = 0;

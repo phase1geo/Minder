@@ -33,7 +33,7 @@ public enum ConnMode {
   EDITABLE     // Indicates that the connection title is in edit mode
 }
 
-public class Connection {
+public class Connection : Object {
 
   private int         RADIUS     = 6;
   private ConnMode    _mode      = ConnMode.NONE;
@@ -154,6 +154,29 @@ public class Connection {
     style         = conn.style;
   }
 
+  /* Returns the canvas box that contains both the from and to nodes */
+  public void bbox( out double x, out double y, out double w, out double h ) {
+    double fx, fy, fw, fh;
+    double tx, ty, tw, th;
+    if( (_from_node != null) && (_to_node != null) ) {
+      _from_node.bbox( out fx, out fy, out fw, out fh );
+      _to_node.bbox( out tx, out ty, out tw, out th );
+      x = (fx < tx) ? fx : tx;
+      y = (fy < ty) ? fy : ty;
+      w = ((fx + fw) > (tx + tw)) ? ((fx + fw) - x) : ((tx + tw) - x);
+      h = ((fy + fh) > (ty + th)) ? ((fy + fh) - y) : ((ty + th) - y);
+    } else if( _from_node != null ) {
+      _from_node.bbox( out x, out y, out w, out h );
+    } else if( _to_node != null ) {
+      _to_node.bbox( out x, out y, out w, out h );
+    } else {
+      x = 0;
+      y = 0;
+      w = 0;
+      h = 0;
+    }
+  }
+
   /* Adds a title */
   public void change_title( DrawArea da, string title, bool allow_empty = false ) {
     if( (title == "") && !allow_empty ) {
@@ -215,7 +238,7 @@ public class Connection {
   }
 
   /* Called when disconnecting a connection from a node */
-  public void disconnect( bool from ) {
+  public void disconnect_from_node( bool from ) {
     if( from ) {
       _curve.get_from_point( out _posx, out _posy );
       disconnect_node( _from_node );
@@ -439,6 +462,19 @@ public class Connection {
 
     parent->add_child( n );
 
+  }
+
+  /*
+   Populates the given ListStore with all nodes that have names that match
+   the given string pattern.
+  */
+  public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+    if( search_opts[2] && (title != null) ) {
+      Utils.match_string( pattern, title.text, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), null, this, ref matches );
+    }
+    if( search_opts[3] ) {
+      Utils.match_string( pattern, note, "<b><i>%s:</i></b>".printf( _( "Connection Note" ) ), null, this, ref matches );
+    }
   }
 
   /* Draws the connection to the given context */

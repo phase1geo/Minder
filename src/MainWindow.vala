@@ -37,6 +37,8 @@ public class MainWindow : ApplicationWindow {
   private TreeView          _search_list;
   private Gtk.ListStore     _search_items;
   private ScrolledWindow    _search_scroll;
+  private CheckButton       _search_nodes;
+  private CheckButton       _search_connections;
   private CheckButton       _search_titles;
   private CheckButton       _search_notes;
   private CheckButton       _search_folded;
@@ -289,11 +291,11 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the search entry field */
     _search_entry = new SearchEntry();
-    _search_entry.placeholder_text = _( "Search Nodes" );
-    _search_entry.width_chars = 40;
+    _search_entry.placeholder_text = _( "Search Nodes and Connections" );
+    _search_entry.width_chars = 60;
     _search_entry.search_changed.connect( on_search_change );
 
-    _search_items = new Gtk.ListStore( 3, typeof(string), typeof(string), typeof(Node) );
+    _search_items = new Gtk.ListStore( 4, typeof(string), typeof(string), typeof(Node), typeof(Connection) );
 
     /* Create the treeview */
     _search_list  = new TreeView.with_model( _search_items );
@@ -334,29 +336,50 @@ public class MainWindow : ApplicationWindow {
 
     var grid = new Grid();
 
-    _search_titles   = new CheckButton.with_label( _( "Titles" ) );
-    _search_notes    = new CheckButton.with_label( _( "Notes" ) );
-    _search_folded   = new CheckButton.with_label( _( "Folded" ) );
-    _search_unfolded = new CheckButton.with_label( _( "Unfolded" ) );
-    _search_tasks    = new CheckButton.with_label( _( "Tasks" ) );
-    _search_nontasks = new CheckButton.with_label( _( "Non-tasks" ) );
+    _search_nodes       = new CheckButton.with_label( _( "Nodes" ) );
+    _search_connections = new CheckButton.with_label( _( "Connections" ) );
+    _search_titles      = new CheckButton.with_label( _( "Titles" ) );
+    _search_notes       = new CheckButton.with_label( _( "Notes" ) );
+    _search_folded      = new CheckButton.with_label( _( "Folded" ) );
+    _search_unfolded    = new CheckButton.with_label( _( "Unfolded" ) );
+    _search_tasks       = new CheckButton.with_label( _( "Tasks" ) );
+    _search_nontasks    = new CheckButton.with_label( _( "Non-tasks" ) );
 
     /* Set the active values from the settings */
-    _search_titles.active   = _settings.get_boolean( "search-opt-titles" );
-    _search_notes.active    = _settings.get_boolean( "search-opt-notes" );
-    _search_folded.active   = _settings.get_boolean( "search-opt-folded" );
-    _search_unfolded.active = _settings.get_boolean( "search-opt-unfolded" );
-    _search_tasks.active    = _settings.get_boolean( "search-opt-tasks" );
-    _search_nontasks.active = _settings.get_boolean( "search-opt-nontasks" );
+    _search_nodes.active       = _settings.get_boolean( "search-opt-nodes" );
+    _search_connections.active = _settings.get_boolean( "search-opt-connections" );
+    _search_titles.active      = _settings.get_boolean( "search-opt-titles" );
+    _search_notes.active       = _settings.get_boolean( "search-opt-notes" );
+    _search_folded.active      = _settings.get_boolean( "search-opt-folded" );
+    _search_unfolded.active    = _settings.get_boolean( "search-opt-unfolded" );
+    _search_tasks.active       = _settings.get_boolean( "search-opt-tasks" );
+    _search_nontasks.active    = _settings.get_boolean( "search-opt-nontasks" );
 
     /* Set the checkbutton sensitivity */
+    _search_nodes.set_sensitive( _search_connections.active );
+    _search_connections.set_sensitive( _search_nodes.active );
     _search_titles.set_sensitive( _search_notes.active );
     _search_notes.set_sensitive( _search_titles.active );
-    _search_folded.set_sensitive( _search_unfolded.active );
-    _search_unfolded.set_sensitive( _search_folded.active );
-    _search_tasks.set_sensitive( _search_nontasks.active );
-    _search_nontasks.set_sensitive( _search_tasks.active );
+    _search_folded.set_sensitive( _search_nodes.active && _search_unfolded.active );
+    _search_unfolded.set_sensitive( _search_nodes.active && _search_folded.active );
+    _search_tasks.set_sensitive( _search_nodes.active && _search_nontasks.active );
+    _search_nontasks.set_sensitive( _search_nodes.active && _search_tasks.active );
 
+    _search_nodes.toggled.connect(() => {
+      bool nodes = _search_nodes.active;
+      _settings.set_boolean( "search-opt-nodes", _search_nodes.active );
+      _search_connections.set_sensitive( nodes );
+      _search_folded.set_sensitive( nodes );
+      _search_unfolded.set_sensitive( nodes );
+      _search_tasks.set_sensitive( nodes );
+      _search_nontasks.set_sensitive( nodes );
+      on_search_change();
+    });
+    _search_connections.toggled.connect(() => {
+      _settings.set_boolean( "search-opt-connections", _search_connections.active );
+      _search_nodes.set_sensitive( _search_connections.active );
+      on_search_change();
+    });
     _search_titles.toggled.connect(() => {
       _settings.set_boolean( "search-opt-titles", _search_titles.active );
       _search_notes.set_sensitive( _search_titles.active );
@@ -390,12 +413,15 @@ public class MainWindow : ApplicationWindow {
 
     grid.margin_top         = 10;
     grid.column_homogeneous = true;
-    grid.attach( _search_titles,   0, 0, 1, 1 );
-    grid.attach( _search_notes,    0, 1, 1, 1 );
-    grid.attach( _search_folded,   1, 0, 1, 1 );
-    grid.attach( _search_unfolded, 1, 1, 1, 1 );
-    grid.attach( _search_tasks,    2, 0, 1, 1 );
-    grid.attach( _search_nontasks, 2, 1, 1, 1 );
+    grid.column_spacing     = 10;
+    grid.attach( _search_nodes,       0, 0, 1, 1 );
+    grid.attach( _search_connections, 0, 1, 1, 1 );
+    grid.attach( _search_titles,      1, 0, 1, 1 );
+    grid.attach( _search_notes,       1, 1, 1, 1 );
+    grid.attach( _search_folded,      2, 0, 1, 1 );
+    grid.attach( _search_unfolded,    2, 1, 1, 1 );
+    grid.attach( _search_tasks,       3, 0, 1, 1 );
+    grid.attach( _search_nontasks,    3, 1, 1, 1 );
 
     return( grid );
 
@@ -843,12 +869,14 @@ public class MainWindow : ApplicationWindow {
   /* Display matched items to the search within the search popover */
   private void on_search_change() {
     bool[] search_opts = {
-      _search_titles.active,    // 0
-      _search_notes.active,     // 1
-      _search_folded.active,    // 2
-      _search_unfolded.active,  // 3
-      _search_tasks.active,     // 4
-      _search_nontasks.active   // 5
+      _search_nodes.active,       // 0
+      _search_connections.active, // 1
+      _search_titles.active,      // 2
+      _search_notes.active,       // 3
+      _search_folded.active,      // 4
+      _search_unfolded.active,    // 5
+      _search_tasks.active,       // 6
+      _search_nontasks.active     // 7
     };
     _search_items.clear();
     if( _search_entry.get_text() != "" ) {
@@ -865,12 +893,18 @@ public class MainWindow : ApplicationWindow {
    will be set to the node associated with the selection.
   */
   private void on_search_clicked( TreePath path, TreeViewColumn col ) {
-    TreeIter it;
-    Node?    node = null;
+    TreeIter    it;
+    Node?       node = null;
+    Connection? conn = null;
     _search_items.get_iter( out it, path );
-    _search_items.get( it, 2, &node, -1 );
+    _search_items.get( it, 2, &node, 3, &conn, -1 );
     if( node != null ) {
+      _canvas.set_current_connection( null );
       _canvas.set_current_node( node );
+      _canvas.see();
+    } else if( conn != null ) {
+      _canvas.set_current_node( null );
+      _canvas.set_current_connection( conn );
       _canvas.see();
     }
     _search.closed();

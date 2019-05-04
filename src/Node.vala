@@ -1337,38 +1337,19 @@ public class Node : Object {
   }
 
   /*
-   Checks the given string to see if it is a match to the given pattern.  If
-   it is, the matching portion of the string appended to the list of matches.
-  */
-  private void match_string( string pattern, string value, string type, ref Gtk.ListStore matches ) {
-    int index = value.casefold().index_of( pattern );
-    if( index != -1 ) {
-      TreeIter it;
-      int    start_index = (index > 20) ? (index - 20) : 0;
-      string prefix      = (index > 20) ? "…"        : "";
-      string str         = prefix +
-                           value.substring( start_index, (index - start_index) ) + "<u>" +
-                           value.substring( index, pattern.length ) + "</u>" +
-                           value.substring( (index + pattern.length), -1 );
-      matches.append( out it );
-      matches.set( it, 0, type, 1, str, 2, this, -1 );
-    }
-  }
-
-  /*
    Populates the given ListStore with all nodes that have names that match
    the given string pattern.
   */
   public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
-    if( ((((_task_count == 0) || !is_leaf()) && search_opts[5]) ||
-         ((_task_count != 0) && is_leaf()   && search_opts[4])) &&
-        (((parent != null) && parent.folded && search_opts[2]) ||
-         (((parent == null) || !parent.folded) && search_opts[3])) ) {
-      if( search_opts[0] ) {
-        match_string( pattern, name.text, _("<b><i>Title:</i></b>"), ref matches );
+    if( ((((_task_count == 0) || !is_leaf()) && search_opts[7]) ||
+         ((_task_count != 0) && is_leaf()   && search_opts[6])) &&
+        (((parent != null) && parent.folded && search_opts[4]) ||
+         (((parent == null) || !parent.folded) && search_opts[5])) ) {
+      if( search_opts[2] ) {
+        Utils.match_string( pattern, name.text, "<b><i>%s:</i></b>".printf( _( "Node Title" ) ), this, null, ref matches );
       }
-      if( search_opts[1] ) {
-        match_string( pattern, note, _("<b><i>Note:</i></b>"), ref matches );
+      if( search_opts[3] ) {
+        Utils.match_string( pattern, note, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), this, null, ref matches );
       }
     }
     for( int i=0; i<_children.length; i++ ) {

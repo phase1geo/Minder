@@ -46,15 +46,25 @@
       <summary>Enables/Disables canvas animations</summary>
       <description>Controls the initial state of the canvas animator</description>
     </key>
+    <key name="search-opt-nodes" type="b">
+      <default>true</default>
+      <summary>Search option for nodes</summary>
+      <description>Specifies whether nodes should be searched or not</description>
+    </key>
+    <key name="search-opt-connections" type="b">
+      <default>true</default>
+      <summary>Search option for connections</summary>
+      <description>Specifies whether connections should be searched or not</description>
+    </key>
     <key name="search-opt-titles" type="b">
       <default>true</default>
-      <summary>Search option for node titles</summary>
-      <description>Specifies whether node titles should be searched or not</description>
+      <summary>Search option for node/connection titles</summary>
+      <description>Specifies whether node/connection titles should be searched or not</description>
     </key>
     <key name="search-opt-notes" type="b">
       <default>true</default>
-      <summary>Search option for node notes</summary>
-      <description>Specifies whether node notes should be searched or not</description>
+      <summary>Search option for node/connection notes</summary>
+      <description>Specifies whether node/connection notes should be searched or not</description>
     </key>
     <key name="search-opt-folded" type="b">
       <default>true</default>

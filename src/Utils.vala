@@ -62,4 +62,23 @@ public class Utils {
 
   }
 
+  /*
+   Checks the given string to see if it is a match to the given pattern.  If
+   it is, the matching portion of the string appended to the list of matches.
+  */
+  public static void match_string( string pattern, string value, string type, Node? node, Connection? conn, ref Gtk.ListStore matches ) {
+    int index = value.casefold().index_of( pattern );
+    if( index != -1 ) {
+      TreeIter it;
+      int    start_index = (index > 20) ? (index - 20) : 0;
+      string prefix      = (index > 20) ? "…"        : "";
+      string str         = prefix +
+                           value.substring( start_index, (index - start_index) ) + "<u>" +
+                           value.substring( index, pattern.length ) + "</u>" +
+                           value.substring( (index + pattern.length), -1 );
+      matches.append( out it );
+      matches.set( it, 0, type, 1, str, 2, node, 3, conn, -1 );
+    }
+  }
+
 }
