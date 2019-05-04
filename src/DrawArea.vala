@@ -2174,6 +2174,32 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Handles the emoji insertion process for the given text item */
+  private void insert_emoji( CanvasText text ) {
+    var overlay = (Overlay)get_parent();
+    var entry = new Entry();
+    int x, ytop, ybot;
+    text.get_cursor_pos( out x, out ytop, out ybot );
+    entry.margin_start = x;
+    entry.margin_top   = ytop + ((ybot - ytop) / 2);
+    entry.changed.connect(() => {
+      text.insert( entry.text );
+      entry.unparent();
+      grab_focus();
+    });
+    overlay.add_overlay( entry );
+    entry.insert_emoji();
+  }
+
+  /* Called whenever the period key is entered with the control key */
+  private void handle_control_period() {
+    if( is_node_editable() ) {
+      insert_emoji( _current_node.name );
+    } else if( is_connection_editable() ) {
+      insert_emoji( _current_connection.title );
+    }
+  }
+
   /* Called whenever the home key is entered in the drawing area */
   private void handle_home() {
     if( is_connection_editable() ) {
@@ -2432,9 +2458,9 @@ public class DrawArea : Gtk.DrawingArea {
     if( (_current_node != null) || (_current_connection != null) ) {
       if( control ) {
         switch( e.keyval ) {
-          case 99    :  do_copy();   break;
-          case 120   :  do_cut();    break;
-          case 118   :  do_paste();  break;
+          case 99    :  do_copy();                      break;
+          case 120   :  do_cut();                       break;
+          case 118   :  do_paste();                     break;
           case 65293 :  handle_control_return();        break;
           case 65289 :  handle_control_tab();           break;
           case 65363 :  handle_control_right( shift );  break;
@@ -2443,6 +2469,7 @@ public class DrawArea : Gtk.DrawingArea {
           case 65364 :  handle_control_down( shift );   break;
           case 47    :  handle_control_slash();         break;
           case 92    :  handle_control_backslash();     break;
+          case 46    :  handle_control_period();        break;
         }
       } else if( nomod || shift ) {
         if( _im_context.filter_keypress( e ) ) {
@@ -2463,9 +2490,9 @@ public class DrawArea : Gtk.DrawingArea {
           case 65365 :  handle_pageup();       break;
           case 65366 :  handle_pagedn();       break;
           default :
-            //if( !e.str.get_char( 0 ).isprint() ) {
-            //  stdout.printf( "In on_keypress, keyval: %s\n", e.keyval.to_string() );
-            //}
+            // if( !e.str.get_char( 0 ).isprint() ) {
+            //   stdout.printf( "In on_keypress, keyval: %s\n", e.keyval.to_string() );
+            // }
             handle_printable( e.str );
             break;
         }

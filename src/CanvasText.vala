@@ -518,6 +518,15 @@ public class CanvasText : Object {
     return( null );
   }
 
+  /* Returns the current cursor position */
+  public void get_cursor_pos( out int x, out int ytop, out int ybot ) {
+    var index = text.index_of_nth_char( _cursor );
+    var rect  = _pango_layout.index_to_pos( index );
+    x    = (int)(posx + (rect.x / Pango.SCALE));
+    ytop = (int)(posy + (rect.y / Pango.SCALE));
+    ybot = ytop + (int)(rect.height / Pango.SCALE);
+  }
+
   /* Draws the node font to the screen */
   public void draw( Cairo.Context ctx, Theme theme, RGBA fg, double alpha ) {
 

@@ -170,10 +170,14 @@ public class MainWindow : ApplicationWindow {
     add_search_button( accel_group );
     add_zoom_button( accel_group );
 
+    /* Create the overlay that will hold the canvas so that we can put an entry box for emoji support */
+    var canvas_overlay = new Overlay();
+    canvas_overlay.add( _canvas );
+
     /* Create the horizontal box that will contain the canvas and the properties sidebar */
     var hbox = new Box( Orientation.HORIZONTAL, 0 );
-    hbox.pack_start( _canvas,    true,  true, 0 );
-    hbox.pack_start( _inspector, false, true, 0 );
+    hbox.pack_start( canvas_overlay, true,  true, 0 );
+    hbox.pack_start( _inspector,     false, true, 0 );
 
     /* Display the UI */
     add( hbox );
