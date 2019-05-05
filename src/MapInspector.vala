@@ -50,7 +50,7 @@ public class MapInspector : Box {
 
     /* Whenever a new document is loaded, update the theme and layout within this UI */
     _da.loaded.connect( update_theme_layout );
-    _da.node_changed.connect( node_changed );
+    _da.current_changed.connect( current_changed );
 
   }
 
@@ -296,12 +296,12 @@ public class MapInspector : Box {
     select_theme( _da.get_theme_name() );
 
     /* Initialize the button states */
-    node_changed();
+    current_changed();
 
   }
 
-  /* Called whenever the current node is changed */
-  private void node_changed() {
+  /* Called whenever the current item is changed */
+  private void current_changed() {
 
     Node? current         = _da.get_current_node();
     var   foldable        = _da.completed_tasks_foldable();

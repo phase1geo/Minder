@@ -48,7 +48,6 @@ public class UndoNodeDetach : UndoItem {
     da.set_current_node( _n );
     da.animator.animate();
     da.queue_draw();
-    da.node_changed();
     da.changed();
   }
 
@@ -59,7 +58,6 @@ public class UndoNodeDetach : UndoItem {
     da.add_root( _n, _root_index );
     da.set_current_node( _n );
     da.animator.animate();
-    da.node_changed();
     da.changed();
   }
 

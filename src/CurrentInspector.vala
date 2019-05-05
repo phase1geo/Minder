@@ -33,7 +33,6 @@ public class CurrentInspector : Stack {
 
     /* Set the transition duration information */
     transition_duration = 500;
-    // transition_type     = StackTransitionType.SLIDE_UP_DOWN;
     transition_type     = StackTransitionType.NONE;
 
     var node_box  = new NodeInspector( da );
@@ -44,8 +43,7 @@ public class CurrentInspector : Stack {
     add_named( conn_box,  "connection" );
     add_named( empty_box, "empty" );
 
-    _da.node_changed.connect( current_changed );
-    _da.connection_changed.connect( current_changed );
+    _da.current_changed.connect( current_changed );
 
     show_all();
 

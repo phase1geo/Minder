@@ -136,8 +136,7 @@ public class StyleInspector : Box {
     pack_start( sw,     true,  true, 10 );
 
     /* Listen for changes to the current node and connection */
-    _da.node_changed.connect( handle_node_changed );
-    _da.connection_changed.connect( handle_connection_changed );
+    _da.current_changed.connect( handle_current_changed );
 
     /* Update the UI */
     handle_ui_changed();
@@ -1019,19 +1018,11 @@ public class StyleInspector : Box {
   }
 
   /* Called whenever the current node changes */
-  private void handle_node_changed() {
-    Node? node = _da.get_current_node();
-    if( node != null ) {
-      update_ui_with_style( node.style );
-    }
-    handle_ui_changed();
-  }
-
-  /* Called whenever the current connection changes */
-  private void handle_connection_changed() {
-    Connection? conn = _da.get_current_connection();
-    if( conn != null ) {
-      update_ui_with_style( conn.style );
+  private void handle_current_changed() {
+    if( _da.get_current_node() != null ) {
+      update_ui_with_style( _da.get_current_node().style );
+    } else if( _da.get_current_connection() != null ) {
+      update_ui_with_style( _da.get_current_connection().style );
     }
     handle_ui_changed();
   }

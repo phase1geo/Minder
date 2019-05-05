@@ -113,7 +113,7 @@ public class ConnectionMenu : Gtk.Menu {
     } else {
       _da.show_properties( "current", true );
     }
-    _da.connection_changed();
+    _da.current_changed();
   }
 
   /* Selects the next sibling node of the current node */

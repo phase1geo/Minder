@@ -38,7 +38,7 @@ public class UndoConnectionTitle : UndoItem {
   private void change( DrawArea da, string? title ) {
     _conn.change_title( da, title );
     da.queue_draw();
-    da.connection_changed();
+    da.current_changed();
     da.changed();
   }
 

@@ -256,7 +256,7 @@ public class NodeMenu : Gtk.Menu {
     } else {
       _da.change_current_task( true, false );
     }
-    _da.node_changed();
+    _da.current_changed();
   }
 
   /* Changes the note status of the currently selected node */
@@ -266,7 +266,7 @@ public class NodeMenu : Gtk.Menu {
     } else {
       _da.show_properties( "node", true );
     }
-    _da.node_changed();
+    _da.current_changed();
   }
 
   /* Changes the image of the currently selected node */
@@ -276,7 +276,7 @@ public class NodeMenu : Gtk.Menu {
     } else {
       _da.add_current_image();
     }
-    _da.node_changed();
+    _da.current_changed();
   }
 
   /* Changes the connection of the currently selected node */
@@ -287,7 +287,7 @@ public class NodeMenu : Gtk.Menu {
   /* Fold the currently selected node */
   private void fold_node() {
     _da.change_current_fold( !node_is_folded() );
-    _da.node_changed();
+    _da.current_changed();
   }
 
   /* Creates a new root node */

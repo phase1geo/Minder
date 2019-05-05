@@ -114,7 +114,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create and pack the canvas */
     _canvas = new DrawArea( accel_group );
-    _canvas.node_changed.connect( on_node_changed );
+    _canvas.current_changed.connect( on_current_changed );
     _canvas.scale_changed.connect( change_scale );
     _canvas.show_properties.connect( show_properties );
     _canvas.hide_properties.connect( hide_properties );
@@ -751,7 +751,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Called whenever the node selection changes in the canvas */
-  private void on_node_changed() {
+  private void on_current_changed() {
     _zoom_sel.set_sensitive( _canvas.get_current_node() != null );
   }
 

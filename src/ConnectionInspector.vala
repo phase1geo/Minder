@@ -47,7 +47,7 @@ public class ConnectionInspector : Box {
     create_note();
     create_buttons();
 
-    _da.connection_changed.connect( connection_changed );
+    _da.current_changed.connect( connection_changed );
 
     show_all();
 

@@ -45,7 +45,6 @@ public class UndoNodeDelete : UndoItem {
     }
     da.set_current_node( _node );
     da.queue_draw();
-    da.node_changed();
     da.changed();
   }
 
@@ -58,7 +57,6 @@ public class UndoNodeDelete : UndoItem {
     }
     da.set_current_node( null );
     da.queue_draw();
-    da.node_changed();
     da.changed();
   }
 

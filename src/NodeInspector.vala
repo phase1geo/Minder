@@ -60,7 +60,7 @@ public class NodeInspector : Box {
     create_image();
     create_buttons();
 
-    _da.node_changed.connect( node_changed );
+    _da.current_changed.connect( node_changed );
     _da.theme_changed.connect( theme_changed );
 
     show_all();

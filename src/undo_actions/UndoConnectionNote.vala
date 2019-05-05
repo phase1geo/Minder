@@ -39,7 +39,7 @@ public class UndoConnectionNote : UndoItem {
   public override void undo( DrawArea da ) {
     _conn.note = _old_note;
     da.queue_draw();
-    da.connection_changed();
+    da.current_changed();
     da.changed();
   }
 
@@ -47,7 +47,7 @@ public class UndoConnectionNote : UndoItem {
   public override void redo( DrawArea da ) {
     _conn.note = _new_note;
     da.queue_draw();
-    da.connection_changed();
+    da.current_changed();
     da.changed();
   }
 

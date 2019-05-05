@@ -79,7 +79,6 @@ public class UndoNodeAttach : UndoItem {
     }
     da.set_current_node( _n );
     da.animator.animate();
-    da.node_changed();
     da.changed();
   }
 
@@ -103,7 +102,6 @@ public class UndoNodeAttach : UndoItem {
     }
     da.set_current_node( _n );
     da.animator.animate();
-    da.node_changed();
     da.changed();
   }
 
