@@ -55,8 +55,8 @@ public class AnimatorPanScale : AnimatorAction {
     double origin_x = _sox + ((_eox - _sox) * divisor);
     double origin_y = _soy + ((_eoy - _soy) * divisor);
     double sf       = _sscale + ((_escale - _sscale) * divisor);
+    da.sfactor = sf;
     da.set_origin( origin_x, origin_y );
-    da.set_scaling_factor( sf );
   }
 
 }

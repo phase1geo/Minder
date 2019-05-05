@@ -62,7 +62,7 @@ public class DrawArea : Gtk.DrawingArea {
   private uint?            _auto_save_id = null;
   private ImageEditor      _editor;
   private IMContextSimple  _im_context;
-  private bool             _debug        = false;
+  private bool             _debug        = true;
 
   public UndoBuffer   undo_buffer    { set; get; }
   public Themes       themes         { set; get; default = new Themes(); }
@@ -1127,7 +1127,7 @@ public class DrawArea : Gtk.DrawingArea {
     double diff_y = 0;
     double sw     = scale_value( get_allocated_width() + width_adjust );
     double sh     = scale_value( get_allocated_height() );
-    double sf     = get_scaling_factor( w, h );
+    double sf     = get_scaling_factor( (w + (pad * 2)), (h + (pad * 2)) );
 
     if( (x - pad) < 0 ) {
       diff_x = (x - pad);
