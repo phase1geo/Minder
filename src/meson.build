@@ -2,6 +2,7 @@ sources += files(
     'animator/AnimatorAction.vala',
     'animator/AnimatorNodes.vala',
     'animator/AnimatorPan.vala',
+    'animator/AnimatorPanScale.vala',
     'animator/AnimatorPositions.vala',
     'animator/AnimatorScale.vala',
 

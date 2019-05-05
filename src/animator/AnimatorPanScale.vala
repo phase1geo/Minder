@@ -31,7 +31,7 @@ public class AnimatorPanScale : AnimatorAction {
   private double? _escale = null;  // Ending scaling factor
 
   /* Constructor for a pan change */
-  public AnimatorPan( DrawArea da, string name ) {
+  public AnimatorPanScale( DrawArea da, string name ) {
     base( name );
     da.get_origin( out _sox, out _soy );
     _sscale = da.sfactor;

@@ -1127,6 +1127,7 @@ public class DrawArea : Gtk.DrawingArea {
     double diff_y = 0;
     double sw     = scale_value( get_allocated_width() + width_adjust );
     double sh     = scale_value( get_allocated_height() );
+    double sf     = get_scaling_factor( w, h );
 
     if( (x - pad) < 0 ) {
       diff_x = (x - pad);
@@ -1134,15 +1135,26 @@ public class DrawArea : Gtk.DrawingArea {
       diff_x = (x + w + pad) - sw;
     }
 
+    stdout.printf( "y: %g, pad: %g, h: %g, sh: %g\n", y, pad, h, sh );
     if( (y - pad) < 0 ) {
+      stdout.printf( "  HERE A\n" );
       diff_y = (y - pad);
     } else if( (y + h) > sh ) {
+      stdout.printf( "  HERE B\n" );
       diff_y = (y + h + pad) - sh;
     }
 
     if( (diff_x != 0) || (diff_y != 0) ) {
-      animator.add_pan( "see" );
-      move_origin( diff_x, diff_y );
+      stdout.printf( "diff_x: %g, diff_y: %g, sf: %g\n", diff_x, diff_y, sf );
+      if( sf >= sfactor ) {
+        animator.add_pan( "see" );
+        move_origin( diff_x, diff_y );
+      } else {
+        animator.add_pan_scale( "see" );
+        sfactor = sf;
+        scale_changed( sfactor );
+        move_origin( diff_x, diff_y );
+      }
       animator.animate();
     }
 
