@@ -261,7 +261,16 @@ public class Bezier {
 
     /* Check the right side of the node */
     isect = get_intersecting_point( right, true, from );
-    if( from ) { _from.set_coordinate( right, isect ); } else { _to.set_coordinate( right, isect ); }
+    if( (top <= isect) && (isect <= bottom) ) {
+      if( from ) { _from.set_coordinate( right, isect ); } else { _to.set_coordinate( right, isect ); }
+      return;
+    }
+
+    if( from ) {
+      _from.set_coordinate( _points.index( 0 ).x, _points.index( 0 ).y );
+    } else {
+      _to.set_coordinate( _points.index( 2 ).x, _points.index( 2 ).y );
+    }
 
   }
 

@@ -2804,6 +2804,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void start_connection() {
     if( _current_node == null ) return;
     _current_connection      = new Connection( this, _current_node );
+    _current_connection.draw_to( _press_x, _press_y );
     _current_connection.mode = ConnMode.CONNECTING;
     _last_node               = _current_node;
     _current_node.mode       = NodeMode.NONE;
