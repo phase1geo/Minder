@@ -1137,17 +1137,13 @@ public class DrawArea : Gtk.DrawingArea {
       diff_x = (x + w + pad) - sw;
     }
 
-    stdout.printf( "y: %g, pad: %g, h: %g, sh: %g\n", y, pad, h, sh );
     if( (y - pad) < 0 ) {
-      stdout.printf( "  HERE A\n" );
       diff_y = (y - pad);
     } else if( (y + h) > sh ) {
-      stdout.printf( "  HERE B\n" );
       diff_y = (y + h + pad) - sh;
     }
 
     if( (diff_x != 0) || (diff_y != 0) ) {
-      stdout.printf( "diff_x: %g, diff_y: %g, sf: %g\n", diff_x, diff_y, sf );
       if( sf >= sfactor ) {
         animator.add_pan( "see" );
         move_origin( diff_x, diff_y );
