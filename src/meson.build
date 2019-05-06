@@ -42,6 +42,7 @@ sources += files(
 
     'undo_actions/UndoConnectionAdd.vala',
     'undo_actions/UndoConnectionChange.vala',
+    'undo_actions/UndoConnectionColor.vala',
     'undo_actions/UndoConnectionDelete.vala',
     'undo_actions/UndoConnectionNote.vala',
     'undo_actions/UndoConnectionTitle.vala',

@@ -102,6 +102,7 @@ public class Connection : Object {
     }
   }
   public double alpha { get; set; default=1.0; }
+  public RGBA   color { get; set; } 
 
   /* Default constructor */
   public Connection( DrawArea da, Node from_node ) {
@@ -152,6 +153,7 @@ public class Connection : Object {
     }
     mode          = conn.mode;
     style         = conn.style;
+    color         = conn.color;
   }
 
   /* Returns the canvas box that contains both the from and to nodes */

@@ -30,6 +30,7 @@ public class ConnectionInspector : Box {
   };
 
   private TextView    _title;
+  private ColorButton _color;
   private TextView    _note;
   private DrawArea    _da;
   private string      _orig_note           = "";
@@ -44,6 +45,7 @@ public class ConnectionInspector : Box {
 
     /* Create the node widgets */
     create_title();
+    create_color();
     create_note();
     create_buttons();
 
@@ -75,6 +77,27 @@ public class ConnectionInspector : Box {
 
     box.pack_start( lbl,   true, false );
     box.pack_start( _title, true, false );
+
+    pack_start( box, false, true );
+
+  }
+
+  private void create_color() {
+
+    Box box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "<b>Color</b>" ) );
+
+    box.homogeneous = true;
+    lbl.xalign      = (float)0;
+    lbl.use_markup  = true;
+
+    _color = new ColorButton();
+    _color.color_set.connect(() => {
+      _da.change_current_connection_color( _color.rgba );
+    });
+
+    box.pack_start( lbl,    false, true, 0 );
+    box.pack_end(   _color, true,  true, 0 );
 
     pack_start( box, false, true );
 

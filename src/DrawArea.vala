@@ -785,6 +785,21 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /*
+   Changes the current connection's color to the specified color.
+  */
+  public void change_current_connection_color( RGBA color ) {
+    if( _current_connection != null ) {
+      RGBA orig_color = _current_connection.color;
+      if( orig_color != color ) {
+        _current_connection.color = color;
+        undo_buffer.add_item( new UndoConnectionColor( _current_connection, orig_color ) );
+        queue_draw();
+        changed();
+      }
+    }
+  }
+
   /* Clears the current connection (if it is set) and updates the UI accordingly */
   private void clear_current_connection( bool signal_change ) {
     if( _current_connection != null ) {
