@@ -102,7 +102,7 @@ public class Connection : Object {
     }
   }
   public double alpha { get; set; default=1.0; }
-  public RGBA   color { get; set; } 
+  public RGBA   color { get; set; }
 
   /* Default constructor */
   public Connection( DrawArea da, Node from_node ) {
@@ -116,6 +116,7 @@ public class Connection : Object {
     _dragy     = _posy;
     position_title();
     _curve     = new Bezier.with_endpoints( _posx, _posy, _posx, _posy );
+    _color     = da.get_theme().connection_color;
     style      = StyleInspector.styles.get_global_style();
   }
 
@@ -417,6 +418,13 @@ public class Connection : Object {
       note = n;
     }
 
+    string? c = node->get_prop( "color" );
+    if( c != null ) {
+      _color.parse( c );
+    } else {
+      _color = da.get_theme().connection_color;
+    }
+
     /* Update the stored curve */
     double fx, fy, fw, fh;
     double tx, ty, tw, th;
@@ -454,6 +462,7 @@ public class Connection : Object {
     n->set_prop( "to_id",        _to_node.id().to_string() );
     n->set_prop( "drag_x",       _dragx.to_string() );
     n->set_prop( "drag_y",       _dragy.to_string() );
+    n->set_prop( "color",        _color.to_string() );
 
     if( title != null ) {
       n->set_prop( "title", title.text );
@@ -509,7 +518,6 @@ public class Connection : Object {
     }
 
     /* The value of t is always 0.5 */
-    RGBA   color = theme.connection_color;
     double cx, cy;
 
     /* Calclate the control points based on the calculated start/end points */
@@ -593,7 +601,6 @@ public class Connection : Object {
   */
   private void draw_title( Cairo.Context ctx, Theme theme ) {
 
-    var    color   = theme.connection_color;
     var    fg      = theme.background;
     var    padding = _style.connection_padding ?? 0;
     double x, y, w, h;
