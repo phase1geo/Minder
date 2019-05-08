@@ -286,6 +286,12 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Sets the cursor of the drawing area to the named cursor */
+  private void set_cursor_from_name( string name ) {
+    var win = get_window();
+    win.set_cursor( new Cursor.from_name( get_display(), name ) );
+  }
+
   /* Loads the drawing area origin from the XML node */
   private void load_drawarea( Xml.Node* n ) {
 
@@ -1390,6 +1396,12 @@ public class DrawArea : Gtk.DrawingArea {
       if( _current_connection != null )  {
         if( _current_connection.mode == ConnMode.CONNECTING ) {
           update_connection( event.x, event.y );
+        }
+        if( _current_connection.within_drag_handle( event.x, event.y ) ||
+            _current_connection.within_from_handle( event.x, event.y ) ||
+            _current_connection.within_to_handle( event.x, event.y ) ) {
+          set_cursor_from_name( "move" );
+          return( false );
         }
       }
       for( int i=0; i<_nodes.length; i++ ) {

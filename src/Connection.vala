@@ -380,10 +380,15 @@ public class Connection : Object {
   /* Updates the location of the drag handle */
   public void move_drag_handle( double x, double y ) {
     mode = ConnMode.ADJUSTING;
+    position_title();
     _dragx = x;
     _dragy = y;
-    position_title();
-    _curve.update_control_from_drag_handle( x, y );
+    if( title != null ) {
+      double tx, ty, tw, th;
+      title_bbox( out tx, out ty, out tw, out th );
+      _dragy -= ((th / 2) + _style.connection_padding);
+    }
+    _curve.update_control_from_drag_handle( _dragx, _dragy );
     set_connect_point( _from_node );
     set_connect_point( _to_node );
   }
