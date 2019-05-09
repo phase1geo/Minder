@@ -961,6 +961,10 @@ public class DrawArea : Gtk.DrawingArea {
         }
         clear_current_node( true );
         clear_current_connection( true );
+        if( _last_node != null ) {
+          _current_node = _last_node;
+          _current_node.mode = NodeMode.CURRENT;
+        }
       }
     }
 
@@ -2854,6 +2858,7 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer.add_item( new UndoConnectionAdd( _current_connection ) );
     _current_connection.mode = ConnMode.ADJUSTING;
     _last_connection = null;
+    _last_node       = null;
     current_changed();
     changed();
     queue_draw();
