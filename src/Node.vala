@@ -124,7 +124,7 @@ public class Node : Object {
   private   Layout?      _layout       = null;
   private   Style        _style        = new Style();
   private   double       _max_width    = 200;
-  private   bool         _loaded       = false;
+  private   bool         _loaded       = true;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -706,6 +706,8 @@ public class Node : Object {
 
   /* Loads the file contents into this instance */
   public virtual void load( DrawArea da, Xml.Node* n, bool isroot ) {
+
+    _loaded = false;
 
     string? i = n->get_prop( "id" );
     if( i != null ) {
