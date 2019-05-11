@@ -21,33 +21,37 @@
 
 using Gtk;
 
-public class UndoNodeName : UndoItem {
+public class UndoConnectionDelete : UndoItem {
 
-  Node   _node;
-  string _old_name;
-  string _new_name;
+  Connection _connection;
+  Node       _from_node;
+  Node       _to_node;
 
-  /* Constructor for a node name change */
-  public UndoNodeName( Node n, string old_name ) {
-    base( _( "node name change" ) );
-    _node     = n;
-    _old_name = old_name;
-    _new_name = n.name.text;
+  /* Constructor for deleting a connection */
+  public UndoConnectionDelete( Connection connection ) {
+    base( _( "delete connection" ) );
+    _connection = connection;
+    _from_node  = connection.from_node;
+    _to_node    = connection.to_node;
   }
 
-  /* Undoes a node name change */
+  /* Undoes a connection change */
   public override void undo( DrawArea da ) {
-    _node.name.text = _old_name;
+    _connection.from_node = _from_node;
+    _connection.to_node   = _to_node;
+    _connection.connect_node( _from_node );
+    _connection.connect_node( _to_node );
+    da.get_connections().add_connection( _connection );
+    da.set_current_connection( _connection );
     da.queue_draw();
-    da.current_changed();
     da.changed();
   }
 
-  /* Redoes a node name change */
+  /* Redoes a connection change */
   public override void redo( DrawArea da ) {
-    _node.name.text = _new_name;
+    da.get_connections().remove_connection( _connection );
+    da.set_current_connection( null );
     da.queue_draw();
-    da.current_changed();
     da.changed();
   }
 

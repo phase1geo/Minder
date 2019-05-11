@@ -99,18 +99,18 @@ class ImageEditor {
 
     /* Set the defaults */
     _node  = node;
-    _image = new NodeImage( im, node.get_image().id, _node.max_width() );
+    _image = new NodeImage( im, node.image.id, _node.max_width() );
 
     if( _image.valid ) {
 
-      _image.crop_x = node.get_image().crop_x;
-      _image.crop_y = node.get_image().crop_y;
-      _image.crop_w = node.get_image().crop_w;
-      _image.crop_h = node.get_image().crop_h;
+      _image.crop_x = node.image.crop_x;
+      _image.crop_y = node.image.crop_y;
+      _image.crop_w = node.image.crop_w;
+      _image.crop_h = node.image.crop_h;
 
       /* Load the image and draw it */
-      _da.width_request      = node.get_image().get_surface().get_width();
-      _da.height_request     = node.get_image().get_surface().get_height();
+      _da.width_request      = node.image.get_surface().get_width();
+      _da.height_request     = node.image.get_surface().get_height();
       _crop_points[8].width  = _image.crop_w;
       _crop_points[8].height = _image.crop_h;
       set_crop_points();
@@ -455,7 +455,7 @@ class ImageEditor {
   private void remove_image( ImageManager im ) {
 
     /* Create a copy of the current image before changing it */
-    var orig_image = _node.get_image();
+    var orig_image = _node.image;
 
     /* Clear the node image */
     _node.set_image( im, null );
@@ -472,7 +472,7 @@ class ImageEditor {
   private void set_image( ImageManager im ) {
 
     /* Create a copy of the current image before changing it */
-    var orig_image = _node.get_image();
+    var orig_image = _node.image;
 
     /* Set the image width to match the node's max width */
     _image.set_width( _node.max_width() );

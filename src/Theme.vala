@@ -269,6 +269,23 @@ public class Theme : Object {
     ctx.move_to( (170 - (width / 2)), (75 - (height + 2)) );
     Pango.cairo_show_layout( ctx, node_text );
 
+    /* Draw connection */
+    set_context_color( ctx, connection_color );
+    double p[6] = {60, 15, 100, 5, 140, 15};
+    ctx.set_line_width( 2 );
+    ctx.set_dash( {3, 5}, 0 );
+    ctx.move_to( p[0], p[1] );
+    ctx.curve_to(
+      (((2.0 / 3.0) * p[2]) + ((1.0 / 3.0) * p[0])),
+      (((2.0 / 3.0) * p[3]) + ((1.0 / 3.0) * p[1])),
+      (((2.0 / 3.0) * p[2]) + ((1.0 / 3.0) * p[4])),
+      (((2.0 / 3.0) * p[3]) + ((1.0 / 3.0) * p[5])),
+      p[4], p[5]
+    );
+    ctx.stroke();
+    Connection.draw_arrow( ctx, 2, p[0], p[1], p[2], p[3], 7 );
+    Connection.draw_arrow( ctx, 2, p[4], p[5], p[2], p[3], 7 );
+
     return( surface );
 
   }

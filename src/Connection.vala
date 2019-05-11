@@ -29,53 +29,101 @@ public enum ConnMode {
   NONE = 0,    // Normally drawn mode
   CONNECTING,  // Indicates that the connection is being made between two nodes
   SELECTED,    // Indicates that the connection is currently selected
-  ADJUSTING    // Indicates that we are moving the drag handle to change the line shape
+  ADJUSTING,   // Indicates that we are moving the drag handle to change the line shape
+  EDITABLE     // Indicates that the connection title is in edit mode
 }
 
-public class Connection {
+public class Connection : Object {
 
-  private int     RADIUS     = 6;
-  private Node?   _from_node = null;
-  private Node?   _to_node   = null;
-  private double  _posx;
-  private double  _posy;
-  private double  _dragx;
-  private double  _dragy;
-  private double? _last_fx = null;
-  private double? _last_fy = null;
-  private double? _last_tx = null;
-  private double? _last_ty = null;
-  private Style   _style   = new Style();
-  private Bezier  _curve;
+  private int         RADIUS     = 6;
+  private ConnMode    _mode      = ConnMode.NONE;
+  private Node?       _from_node = null;
+  private Node?       _to_node   = null;
+  private double      _posx;
+  private double      _posy;
+  private double      _dragx;
+  private double      _dragy;
+  private Style       _style     = new Style();
+  private Bezier      _curve;
+  private CanvasText? _title     = null;
+  private double      _max_width = 100;
 
-  public string   title { get; set; default = ""; }
-  public ConnMode mode  { get; set; default = ConnMode.NONE; }
-  public Style    style { 
+  public CanvasText? title {
+    get {
+      return( _title );
+    }
+  }
+  public string   note  { get; set; default = ""; }
+  public ConnMode mode  {
+    get {
+      return( _mode );
+    }
+    set {
+      if( _mode != value ) {
+        _mode = value;
+        if( _mode == ConnMode.EDITABLE ) {
+          if( _title != null ) {
+            _title.edit = true;
+            _title.set_cursor_all( false );
+          }
+        } else {
+          if( _title != null ) {
+            _title.edit = false;
+            _title.clear_selection();
+          }
+        }
+      }
+    }
+  }
+  public Node? from_node {
+    get {
+      return( _from_node );
+    }
+    set {
+      _from_node = value;
+    }
+  }
+  public Node? to_node {
+    get {
+      return( _to_node );
+    }
+    set {
+      _to_node = value;
+    }
+  }
+  public Style style { 
     get {
       return( _style );
     }
     set {
-      _style.copy( value );
+      if( _style.copy( value ) && (_title != null) ) {
+        _title.set_font( _style.node_font );
+      }
     }
   }
+  public double alpha { get; set; default=1.0; }
+  public RGBA   color { get; set; }
 
   /* Default constructor */
-  public Connection( Node from_node ) {
+  public Connection( DrawArea da, Node from_node ) {
     double x, y, w, h;
     from_node.bbox( out x, out y, out w, out h );
     _posx      = x + (w / 2);
     _posy      = y + (h / 2);
     _from_node = from_node;
+    connect_node( _from_node );
     _dragx     = _posx;
     _dragy     = _posy;
+    position_title();
     _curve     = new Bezier.with_endpoints( _posx, _posy, _posx, _posy );
+    _color     = da.get_theme().connection_color;
     style      = StyleInspector.styles.get_global_style();
   }
 
   /* Constructs a connection based on another connection */
-  public Connection.from_connection( Connection conn ) {
+  public Connection.from_connection( DrawArea da, Connection conn ) {
     _curve = new Bezier();
-    copy( conn );
+    copy( da, conn );
   }
 
   /* Constructor from XML data */
@@ -85,46 +133,122 @@ public class Connection {
   }
 
   /* Copies the given connection to this instance */
-  public void copy( Connection conn ) {
-    _from_node = conn._from_node;
-    _to_node   = conn._to_node;
-    _dragx     = conn._dragx;
-    _dragy     = conn._dragy;
-    _last_fx   = conn._last_fx;
-    _last_fy   = conn._last_fy;
-    _last_tx   = conn._last_tx;
-    _last_ty   = conn._last_ty;
+  public void copy( DrawArea da, Connection conn ) {
+    _from_node    = conn._from_node;
+    _to_node      = conn._to_node;
+    _dragx        = conn._dragx;
+    _dragy        = conn._dragy;
+    position_title();
     _curve.copy( conn._curve );
-    style      = conn.style;
+    if( conn.title == null ) {
+      if( _title != null ) {
+        _title.resized.disconnect( position_title );
+      }
+      _title = null;
+    } else {
+      if( title == null ) {
+        _title = new CanvasText( da, _max_width );
+        _title.resized.connect( position_title );
+      }
+      _title.copy( conn.title );
+    }
+    mode          = conn.mode;
+    style         = conn.style;
+    color         = conn.color;
+  }
+
+  /* Returns the canvas box that contains both the from and to nodes */
+  public void bbox( out double x, out double y, out double w, out double h ) {
+    double fx, fy, fw, fh;
+    double tx, ty, tw, th;
+    if( (_from_node != null) && (_to_node != null) ) {
+      _from_node.bbox( out fx, out fy, out fw, out fh );
+      _to_node.bbox( out tx, out ty, out tw, out th );
+      x = (fx < tx) ? fx : tx;
+      y = (fy < ty) ? fy : ty;
+      w = ((fx + fw) > (tx + tw)) ? ((fx + fw) - x) : ((tx + tw) - x);
+      h = ((fy + fh) > (ty + th)) ? ((fy + fh) - y) : ((ty + th) - y);
+    } else if( _from_node != null ) {
+      _from_node.bbox( out x, out y, out w, out h );
+    } else if( _to_node != null ) {
+      _to_node.bbox( out x, out y, out w, out h );
+    } else {
+      x = 0;
+      y = 0;
+      w = 0;
+      h = 0;
+    }
+  }
+
+  /* Adds a title */
+  public void change_title( DrawArea da, string title, bool allow_empty = false ) {
+    if( (title == "") && !allow_empty ) {
+      if( _title != null ) {
+        _title.resized.disconnect( position_title );
+      }
+      _title = null;
+    } else if( _title == null ) {
+      _title = new CanvasText.with_text( da, _max_width, title );
+      _title.resized.connect( position_title );
+      _title.set_font( style.node_font );
+      position_title();
+    } else {
+      _title.text = title;
+    }
+  }
+
+  /* Positions the given title according to the location of the _dragx and _dragy values */
+  private void position_title() {
+    if( title != null ) {
+      var text_width  = title.width;
+      var text_height = title.height;
+      _title.posx = _dragx - (text_width  / 2);
+      _title.posy = _dragy - (text_height / 2);
+    }
+  }
+
+  /* Connects to the given node */
+  public void connect_node( Node node ) {
+    node.moved.connect( this.end_moved );
+    node.resized.connect( this.end_resized );
+  }
+
+  /* Disconnects from the given node */
+  public void disconnect_node( Node node ) {
+    node.moved.disconnect( this.end_moved );
+    node.resized.disconnect( this.end_resized );
   }
 
   /* Completes the connection */
   public void connect_to( Node node ) {
     double fx, fy, tx, ty;
     double x, y, w, h;
-    bool   from;
     node.bbox( out x, out y, out w, out h );
     if( _from_node == null ) {
-      _from_node = node;  from = true;
+      _from_node = node;
     } else {
-      _to_node = node;  from = false;
+      _to_node = node;
     }
-    _curve.set_point( (from ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
+    connect_node( node );
+    _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
     _curve.get_point( 0, out fx, out fy );
     _curve.get_point( 2, out tx, out ty );
     _dragx = (fx + tx) / 2;
     _dragy = (fy + ty) / 2;
+    position_title();
     _curve.update_control_from_drag_handle( _dragx, _dragy );
-    set_connect_point( from );
+    set_connect_point( node );
   }
 
   /* Called when disconnecting a connection from a node */
-  public void disconnect( bool from ) {
+  public void disconnect_from_node( bool from ) {
     if( from ) {
       _curve.get_from_point( out _posx, out _posy );
+      disconnect_node( _from_node );
       _from_node = null;
     } else {
       _curve.get_to_point( out _posx, out _posy );
+      disconnect_node( _to_node );
       _to_node = null;
     }
     mode = ConnMode.CONNECTING;
@@ -133,37 +257,41 @@ public class Connection {
   /* Draws the connections to the given point */
   public void draw_to( double x, double y ) {
     double nx, ny;
-    bool   from = (_from_node != null);
+    Node node = (_from_node != null) ? _from_node : _to_node;
     _posx = x;
     _posy = y;
-    _curve.get_point( (from ? 0 : 2), out nx, out ny );
+    _curve.get_point( ((node == _from_node) ? 0 : 2), out nx, out ny );
     _dragx = (nx + x) / 2;
     _dragy = (ny + y) / 2;
+    position_title();
     _curve.update_control_from_drag_handle( _dragx, _dragy );
-    set_connect_point( from );
+    set_connect_point( node );
   }
 
-  /*
-   Checks to see if this connection is connected to the given node.  If it is,
-   updates the stored curve.
-  */
-  public void node_moved( Node node, Node subroot, double diff_x, double diff_y ) {
+  /* Handles any position changes of either the to or from node */
+  private void end_moved( Node node, double diffx, double diffy ) {
     double x, y, w, h;
-    if( _from_node == node ) {
-      if( _to_node.is_descendant_of( subroot ) ) {
-        pan( -diff_x, -diff_y );
-      } else {
-        _from_node.bbox( out x, out y, out w, out h );
-        _curve.set_point( 0, (x + (w / 2)), (y + (h / 2)) );
-        set_connect_point( true );
-      }
-    } else if( _to_node == node ) {
-      if( !_from_node.is_descendant_of( subroot ) ) {
-        _to_node.bbox( out x, out y, out w, out h );
-        _curve.set_point( 2, (x + (w / 2)), (y + (h / 2)) );
-        set_connect_point( false );
-      }
-    }
+    node.bbox( out x, out y, out w, out h );
+    _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
+    _dragx += (diffx / 2);
+    _dragy += (diffy / 2);
+    position_title();
+    _curve.update_control_from_drag_handle( _dragx, _dragy );
+    set_connect_point( _from_node );
+    set_connect_point( _to_node );
+  }
+
+  /* Handles any resizing changes of either the to or from node */
+  private void end_resized( Node node, double diffw, double diffh ) {
+    double x, y, w, h;
+    node.bbox( out x, out y, out w, out h );
+    _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
+    _dragx += (diffw / 2);
+    _dragy += (diffh / 2);
+    position_title();
+    _curve.update_control_from_drag_handle( _dragx, _dragy );
+    set_connect_point( _from_node );
+    set_connect_point( _to_node );
   }
 
   /* Returns true if we are attached to the given node */
@@ -172,19 +300,22 @@ public class Connection {
   }
 
   /* Returns the point to add the connection to based on the node */
-  private void set_connect_point( bool from ) {
+  private void set_connect_point( Node node ) {
 
     double x, y, w, h;
-    double bw    = from ? _from_node.style.node_borderwidth : _to_node.style.node_borderwidth;
-    double extra = bw + (style.connection_width / 2);
+    double bw     = node.style.node_borderwidth;
+    double extra  = bw + (style.connection_width / 2);
+    double margin = node.style.node_margin;
 
-    if( from ) {
-      _from_node.bbox( out x, out y, out w, out h );
-    } else {
-      _to_node.bbox( out x, out y, out w, out h );
-    }
+    node.bbox( out x, out y, out w, out h );
 
-    _curve.set_connect_point( from, (y - extra), (y + h + extra), (x - extra), (x + w + extra) );
+    /* Remove the node's margin */
+    x += margin;
+    y += margin;
+    w -= (margin * 2);
+    h -= (margin * 2);
+
+    _curve.set_connect_point( (node == _from_node), (y - extra), (y + h + extra), (x - extra), (x + w + extra) );
 
   }
 
@@ -198,41 +329,37 @@ public class Connection {
     return( curve.within_range( x, y ) );
   }
 
+  /* Returns true if the given x/y point lies within a handle located at hx/hy */
+  private bool within_handle( double hx, double hy, double x, double y ) {
+    return( ((hx - RADIUS) <= x) && (x <= (hx + RADIUS)) && ((hy - RADIUS) <= y) && (y <= (hy + RADIUS)) );
+  }
+
   /* Returns true if the given point is within the drag handle */
   public bool within_drag_handle( double x, double y ) {
-    return( ((_dragx - RADIUS) <= x) && (x <= (_dragx + RADIUS)) &&
-            ((_dragy - RADIUS) <= y) && (y <= (_dragy + RADIUS)) );
+    if( mode == ConnMode.SELECTED ) {
+      if( title == null ) {
+        return( within_handle( _dragx, _dragy, x, y ) );
+      } else {
+        double tx, ty, tw, th;
+        title_bbox( out tx, out ty, out tw, out th );
+        return( within_handle( _dragx, (_dragy + (th / 2) + _style.connection_padding), x, y ) );
+      }
+    } 
+    return( false );
   }
 
   /* Returns true if the given point lies within the from connection handle */
   public bool within_from_handle( double x, double y ) {
-    return( within_handle( true, x, y ) );
+    return( within_endpoint_handle( true, x, y ) );
   }
 
   /* Returns true if the given point lies within the from connection handle */
   public bool within_to_handle( double x, double y ) {
-    return( within_handle( false, x, y ) );
-  }
-
-  /* Updates the location of the drag handle */
-  public void move_drag_handle( double x, double y ) {
-    mode = ConnMode.ADJUSTING;
-    _dragx = x;
-    _dragy = y;
-    _curve.update_control_from_drag_handle( x, y );
-    set_connect_point( true );
-    set_connect_point( false );
-  }
-
-  /* Updates the location of dragx/dragy based on the amount of canvas pan */
-  public void pan( double diff_x, double diff_y ) {
-    _curve.pan( diff_x, diff_y );
-    _dragx -= diff_x;
-    _dragy -= diff_y;
+    return( within_endpoint_handle( false, x, y ) );
   }
 
   /* Returns true if the given point lies within the from connection handle */
-  private bool within_handle( bool from, double x, double y ) {
+  private bool within_endpoint_handle( bool from, double x, double y ) {
     if( mode == ConnMode.SELECTED ) {
       double px, py;
       if( from ) {
@@ -240,9 +367,30 @@ public class Connection {
       } else {
         _curve.get_to_point( out px, out py );
       }
-      return( ((px - RADIUS) <= x) && (x <= (px + RADIUS)) && ((py - RADIUS) <= y) && (y <= (py + RADIUS)) );
+      return( within_handle( px, py, x, y ) );
     }
     return( false );
+  }
+
+  /* Returns true if the given coordinates are within the title text area. */
+  public bool within_title( double x, double y ) {
+    return( (_title != null) && _title.is_within( x, y ) );
+  }
+
+  /* Updates the location of the drag handle */
+  public void move_drag_handle( double x, double y ) {
+    mode = ConnMode.ADJUSTING;
+    position_title();
+    _dragx = x;
+    _dragy = y;
+    if( title != null ) {
+      double tx, ty, tw, th;
+      title_bbox( out tx, out ty, out tw, out th );
+      _dragy -= ((th / 2) + _style.connection_padding);
+    }
+    _curve.update_control_from_drag_handle( _dragx, _dragy );
+    set_connect_point( _from_node );
+    set_connect_point( _to_node );
   }
 
   /* Loads the connection information */
@@ -251,11 +399,13 @@ public class Connection {
     string? f = node->get_prop( "from_id" );
     if( f != null ) {
       _from_node = da.get_node( int.parse( f ) );
+      connect_node( _from_node );
     }
 
     string? t = node->get_prop( "to_id" );
     if( t != null ) {
       _to_node = da.get_node( int.parse( t ) );
+      connect_node( _to_node );
     }
 
     string? x = node->get_prop( "drag_x" );
@@ -268,9 +418,16 @@ public class Connection {
       _dragy = double.parse( y );
     }
 
-    string? ti = node->get_prop( "title" );
-    if( ti != null ) {
-      title = ti;
+    string? n = node->get_prop( "note" );
+    if( n != null ) {
+      note = n;
+    }
+
+    string? c = node->get_prop( "color" );
+    if( c != null ) {
+      _color.parse( c );
+    } else {
+      _color = da.get_theme().connection_color;
     }
 
     /* Update the stored curve */
@@ -280,8 +437,8 @@ public class Connection {
     _to_node.bbox(   out tx, out ty, out tw, out th );
     _curve = new Bezier.with_endpoints( (fx + (fw / 2)), (fy + (fh / 2)), (tx + (tw / 2)), (ty + (th / 2)) );
     _curve.update_control_from_drag_handle( _dragx, _dragy );
-    set_connect_point( true );
-    set_connect_point( false );
+    set_connect_point( _from_node );
+    set_connect_point( _to_node );
 
     /* Load the connection style */
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
@@ -292,17 +449,29 @@ public class Connection {
       }
     }
 
+    string? ti = node->get_prop( "title" );
+    if( ti != null ) {
+      _title = new CanvasText.with_text( da, _max_width, ti );
+      _title.resized.connect( position_title );
+      _title.set_font( style.node_font );
+      position_title();
+    }
+
   }
 
   /* Saves the connection information to the given XML node */
   public void save( Xml.Node* parent ) {
 
     Xml.Node* n = new Xml.Node( null, "connection" );
-    n->set_prop( "from_id", _from_node.id().to_string() );
-    n->set_prop( "to_id",   _to_node.id().to_string() );
-    n->set_prop( "drag_x",  _dragx.to_string() );
-    n->set_prop( "drag_y",  _dragy.to_string() );
-    n->set_prop( "title",   title );
+    n->set_prop( "from_id",      _from_node.id().to_string() );
+    n->set_prop( "to_id",        _to_node.id().to_string() );
+    n->set_prop( "drag_x",       _dragx.to_string() );
+    n->set_prop( "drag_y",       _dragy.to_string() );
+    n->set_prop( "color",        _color.to_string() );
+
+    if( title != null ) {
+      n->set_prop( "title", title.text );
+    }
 
     /* Save the style connection */
     style.save_connection( n );
@@ -312,28 +481,24 @@ public class Connection {
   }
 
   /*
-   Checks to see if this connection is attached to the given node.  If it is,
-   save the location of the node as it will be moved to a new position.
+   Populates the given ListStore with all nodes that have names that match
+   the given string pattern.
   */
-  public void check_for_connection_to_node( Node node ) {
-
-    _last_fx = _last_fy = _last_tx = _last_ty = null;
-
-    if( _from_node == node ) {
-      _curve.get_from_point( out _last_fx, out _last_fy );
-      if( _to_node != null ) _curve.get_to_point( out _last_tx, out _last_ty );
-    } else if( _to_node == node ) {
-      _curve.get_to_point( out _last_tx, out _last_ty );
-      if( _from_node != null ) _curve.get_from_point( out _last_fx, out _last_fy );
+  public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+    if( search_opts[2] && (title != null) ) {
+      Utils.match_string( pattern, title.text, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), null, this, ref matches );
     }
-
+    if( search_opts[3] ) {
+      Utils.match_string( pattern, note, "<b><i>%s:</i></b>".printf( _( "Connection Note" ) ), null, this, ref matches );
+    }
   }
 
   /* Draws the connection to the given context */
   public virtual void draw( Cairo.Context ctx, Theme theme ) {
 
-    /* If either the from or to node is folded, don't bother to draw ourselves */
-    if( ((_from_node != null) && _from_node.folded) || ((_to_node   != null) && _to_node.folded) ) {
+    /* If either the from or to node is hidden, don't bother to draw ourselves */
+    if( ((_from_node != null) && !_from_node.is_root() && _from_node.parent.folded) ||
+        ((_to_node   != null) && !_to_node.is_root()   && _to_node.parent.folded) ) {
       return;
     }
 
@@ -358,7 +523,6 @@ public class Connection {
     }
 
     /* The value of t is always 0.5 */
-    RGBA   color = theme.connection_color;
     double cx, cy;
 
     /* Calclate the control points based on the calculated start/end points */
@@ -368,7 +532,7 @@ public class Connection {
     /* Draw the curve */
     ctx.save();
     style.draw_connection( ctx );
-    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+    Utils.set_context_color( ctx, color );
 
     /* Draw the curve as a quadratic curve (saves some additional calculations) */
     ctx.move_to( start_x, start_y );
@@ -393,8 +557,13 @@ public class Connection {
       }
     }
 
+    /* Draw the connection title if it exists */
+    if( title != null ) {
+
+      draw_title( ctx, theme );
+
     /* Draw the drag circle */
-    if( mode != ConnMode.NONE ) {
+    } else if( mode != ConnMode.NONE ) {
       ctx.set_line_width( 1 );
       ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
       ctx.arc( dragx, dragy, RADIUS, 0, (2 * Math.PI) );
@@ -424,16 +593,60 @@ public class Connection {
 
   }
 
+  /* Returns the bounding box for the stored title (assumes the title is not null */
+  private void title_bbox( out double x, out double y, out double w, out double h ) {
+    x = _title.posx;
+    y = _title.posy;
+    w = _title.width;
+    h = _title.height;
+  }
+
+  /*
+   Draws the connection title if it has been enabled.
+  */
+  private void draw_title( Cairo.Context ctx, Theme theme ) {
+
+    var    fg      = theme.background;
+    var    padding = _style.connection_padding ?? 0;
+    double x, y, w, h;
+
+    title_bbox( out x, out y, out w, out h );
+
+    /* Draw the box */
+    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+    ctx.rectangle( (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)) );
+    ctx.fill();
+
+    /* Draw the text */
+    _title.draw( ctx, theme, fg, _alpha );
+
+    /* Draw the drag handle */
+    if( (mode == ConnMode.SELECTED) || (mode == ConnMode.ADJUSTING) ) {
+
+      RGBA bg = theme.nodesel_background;
+
+      ctx.set_line_width( 1 );
+      ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
+      ctx.arc( _dragx, (_dragy + (h / 2) + padding), RADIUS, 0, (2 * Math.PI) );
+      ctx.fill_preserve();
+      ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+      ctx.stroke();
+
+    }
+
+  }
+
   /*
    Draws arrow point to the "to" node.  The tailx/y values should be the
    bezier control point closest to the "to" node.
   */
-  private static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy,
-                                  double tailx, double taily ) {
+  public static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy, double tailx, double taily, double arrowLength = 0 ) {
 
     double extlen[7] = {14, 14, 15, 16, 17, 18, 18};
 
-    var arrowLength = extlen[line_width-2];
+    if( arrowLength == 0 ) {
+      arrowLength = extlen[line_width-2];
+    }
 
     var dx = tipx - tailx;
     var dy = tipy - taily;

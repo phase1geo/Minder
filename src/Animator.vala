@@ -63,10 +63,17 @@ public class Animator : Object {
     }
   }
 
-  /* Animates a change to the canvas scale */
+  /* Animates a change to the canvas pan */
   public void add_pan( string name ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.PAN) ) {
       _actions.push_tail( new AnimatorPan( _da, name ) );
+    }
+  }
+
+  /* Animates a change to both the canvas scale and pan */
+  public void add_pan_scale( string name ) {
+    if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.PANSCALE) ) {
+      _actions.push_tail( new AnimatorPanScale( _da, name ) );
     }
   }
 

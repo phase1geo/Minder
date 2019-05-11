@@ -35,10 +35,6 @@ public class Bezier {
       x = a;
       y = b;
     }
-    public void pan( double diff_x, double diff_y ) {
-      x -= diff_x;
-      y -= diff_y;
-    }
   }
 
   private Array<Point> _points  = new Array<Point>();
@@ -100,15 +96,6 @@ public class Bezier {
     var cx = x - (((_points.index( 0 ).x + _points.index( 2 ).x) * 0.5) - x);
     var cy = y - (((_points.index( 0 ).y + _points.index( 2 ).y) * 0.5) - y);
     set_point( 1, cx, cy );
-  }
-
-  /* Called when the user pans the canvas.  Updates the stored points */
-  public void pan( double diff_x, double diff_y ) {
-    for( int i=0; i<3; i++ ) {
-      _points.index( i ).pan( diff_x, diff_y );
-    }
-    _from.pan( diff_x, diff_y );
-    _to.pan( diff_x, diff_y );
   }
 
   /* Returns true if the given t value is within its valid range */
@@ -274,7 +261,16 @@ public class Bezier {
 
     /* Check the right side of the node */
     isect = get_intersecting_point( right, true, from );
-    if( from ) { _from.set_coordinate( right, isect ); } else { _to.set_coordinate( right, isect ); }
+    if( (top <= isect) && (isect <= bottom) ) {
+      if( from ) { _from.set_coordinate( right, isect ); } else { _to.set_coordinate( right, isect ); }
+      return;
+    }
+
+    if( from ) {
+      _from.set_coordinate( _points.index( 0 ).x, _points.index( 0 ).y );
+    } else {
+      _to.set_coordinate( _points.index( 2 ).x, _points.index( 2 ).y );
+    }
 
   }
 

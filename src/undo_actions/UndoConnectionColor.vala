@@ -20,24 +20,25 @@
 */
 
 using Gtk;
+using Gdk;
 
-public class UndoNodeName : UndoItem {
+public class UndoConnectionColor : UndoItem {
 
-  Node   _node;
-  string _old_name;
-  string _new_name;
+  Connection _conn;
+  RGBA       _old_color;
+  RGBA       _new_color;
 
   /* Constructor for a node name change */
-  public UndoNodeName( Node n, string old_name ) {
-    base( _( "node name change" ) );
-    _node     = n;
-    _old_name = old_name;
-    _new_name = n.name.text;
+  public UndoConnectionColor( Connection c, RGBA old_color ) {
+    base( _( "connection color change" ) );
+    _conn      = c;
+    _old_color = old_color;
+    _new_color = c.color;
   }
 
   /* Undoes a node name change */
   public override void undo( DrawArea da ) {
-    _node.name.text = _old_name;
+    _conn.color = _old_color;
     da.queue_draw();
     da.current_changed();
     da.changed();
@@ -45,7 +46,7 @@ public class UndoNodeName : UndoItem {
 
   /* Redoes a node name change */
   public override void redo( DrawArea da ) {
-    _node.name.text = _new_name;
+    _conn.color = _new_color;
     da.queue_draw();
     da.current_changed();
     da.changed();

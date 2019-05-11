@@ -20,35 +20,26 @@
 */
 
 using Gtk;
+using Gdk;
+using Granite.Widgets;
 
-public class UndoNodeName : UndoItem {
+public class EmptyInspector : Box {
 
-  Node   _node;
-  string _old_name;
-  string _new_name;
+  public EmptyInspector( DrawArea da ) {
 
-  /* Constructor for a node name change */
-  public UndoNodeName( Node n, string old_name ) {
-    base( _( "node name change" ) );
-    _node     = n;
-    _old_name = old_name;
-    _new_name = n.name.text;
+    var empty_lbl = new Label( _( "<big>Select a node or connection\nto view/edit information</big>" ) );
+    empty_lbl.use_markup = true;
+    empty_lbl.justify    = Justification.CENTER;
+
+    pack_start( empty_lbl, true, true );
+
+    show_all();
+
   }
 
-  /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
-    _node.name.text = _old_name;
-    da.queue_draw();
-    da.current_changed();
-    da.changed();
-  }
-
-  /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
-    _node.name.text = _new_name;
-    da.queue_draw();
-    da.current_changed();
-    da.changed();
+  /* Returns the width of this window */
+  public int get_width() {
+    return( 300 );
   }
 
 }

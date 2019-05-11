@@ -25,21 +25,22 @@ public class Style {
 
   private bool _template;
 
-  public LinkType?        link_type        { get; set; default = null; }
-  public int?             link_width       { get; set; default = null; }
-  public bool?            link_arrow       { get; set; default = null; }
-  public LinkDash?        link_dash        { get; set; default = null; }
-  public NodeBorder?      node_border      { get; set; default = null; }
-  public int?             node_width       { get; set; default = null; }
-  public int?             node_borderwidth { get; set; default = null; }
-  public bool?            node_fill        { get; set; default = null; }
-  public int?             node_margin      { get; set; default = null; }
-  public int?             node_padding     { get; set; default = null; }
-  public FontDescription? node_font        { get; set; default = null; }
-  public bool?            node_markup      { get; set; default = null; }
-  public LinkDash?        connection_dash  { get; set; default = null; }
-  public int?             connection_width { get; set; default = null; }
-  public string?          connection_arrow { get; set; default = null; }
+  public LinkType?        link_type          { get; set; default = null; }
+  public int?             link_width         { get; set; default = null; }
+  public bool?            link_arrow         { get; set; default = null; }
+  public LinkDash?        link_dash          { get; set; default = null; }
+  public NodeBorder?      node_border        { get; set; default = null; }
+  public int?             node_width         { get; set; default = null; }
+  public int?             node_borderwidth   { get; set; default = null; }
+  public bool?            node_fill          { get; set; default = null; }
+  public int?             node_margin        { get; set; default = null; }
+  public int?             node_padding       { get; set; default = null; }
+  public FontDescription? node_font          { get; set; default = null; }
+  public bool?            node_markup        { get; set; default = null; }
+  public LinkDash?        connection_dash    { get; set; default = null; }
+  public int?             connection_width   { get; set; default = null; }
+  public string?          connection_arrow   { get; set; default = null; }
+  public int?             connection_padding { get; set; default = null; }
 
   /* Default constructor */
   public Style() {
@@ -75,21 +76,22 @@ public class Style {
   public void clear_template() {
 
     if( _template ) {
-      link_type        = null;
-      link_width       = null;
-      link_arrow       = null;
-      link_dash        = null;
-      node_border      = null;
-      node_width       = null;
-      node_borderwidth = null;
-      node_fill        = null;
-      node_margin      = null;
-      node_padding     = null;
-      node_font        = null;
-      node_markup      = null;
-      connection_dash  = null;
-      connection_width = null;
-      connection_arrow = null;
+      link_type          = null;
+      link_width         = null;
+      link_arrow         = null;
+      link_dash          = null;
+      node_border        = null;
+      node_width         = null;
+      node_borderwidth   = null;
+      node_fill          = null;
+      node_margin        = null;
+      node_padding       = null;
+      node_font          = null;
+      node_markup        = null;
+      connection_dash    = null;
+      connection_width   = null;
+      connection_arrow   = null;
+      connection_padding = null;
     }
 
   }
@@ -99,21 +101,22 @@ public class Style {
 
     bool changed = false;
 
-    if( ((s.link_type        != null) || !s._template) && (link_type        != s.link_type) )        { changed = true;  link_type        = s.link_type; }
-    if( ((s.link_width       != null) || !s._template) && (link_width       != s.link_width) )       { changed = true;  link_width       = s.link_width; }
-    if( ((s.link_arrow       != null) || !s._template) && (link_arrow       != s.link_arrow) )       { changed = true;  link_arrow       = s.link_arrow; }
-    if( ((s.link_dash        != null) || !s._template) && (link_dash        != s.link_dash) )        { changed = true;  link_dash        = s.link_dash; }
-    if( ((s.node_border      != null) || !s._template) && (node_border      != s.node_border) )      { changed = true;  node_border      = s.node_border; }
-    if( ((s.node_width       != null) || !s._template) && (node_width       != s.node_width) )       { changed = true;  node_width       = s.node_width; }
-    if( ((s.node_borderwidth != null) || !s._template) && (node_borderwidth != s.node_borderwidth) ) { changed = true;  node_borderwidth = s.node_borderwidth; }
-    if( ((s.node_fill        != null) || !s._template) && (node_fill        != s.node_fill) )        { changed = true;  node_fill        = s.node_fill; }
-    if( ((s.node_margin      != null) || !s._template) && (node_margin      != s.node_margin) )      { changed = true;  node_margin      = s.node_margin; }
-    if( ((s.node_padding     != null) || !s._template) && (node_padding     != s.node_padding) )     { changed = true;  node_padding     = s.node_padding; }
-    if( ((s.node_font        != null) || !s._template) )                                             { changed = true;  node_font        = s.node_font.copy(); }
-    if( ((s.node_markup      != null) || !s._template) && (node_markup      != s.node_markup) )      { changed = true;  node_markup      = s.node_markup; }
-    if( ((s.connection_dash  != null) || !s._template) && (connection_dash  != s.connection_dash) )  { changed = true;  connection_dash  = s.connection_dash; }
-    if( ((s.connection_width != null) || !s._template) && (connection_width != s.connection_width) ) { changed = true;  connection_width = s.connection_width; }
-    if( ((s.connection_arrow != null) || !s._template) && (connection_arrow != s.connection_arrow) ) { changed = true;  connection_arrow = s.connection_arrow; }
+    if( ((s.link_type          != null) || !s._template) && (link_type          != s.link_type) )          { changed = true;  link_type          = s.link_type; }
+    if( ((s.link_width         != null) || !s._template) && (link_width         != s.link_width) )         { changed = true;  link_width         = s.link_width; }
+    if( ((s.link_arrow         != null) || !s._template) && (link_arrow         != s.link_arrow) )         { changed = true;  link_arrow         = s.link_arrow; }
+    if( ((s.link_dash          != null) || !s._template) && (link_dash          != s.link_dash) )          { changed = true;  link_dash          = s.link_dash; }
+    if( ((s.node_border        != null) || !s._template) && (node_border        != s.node_border) )        { changed = true;  node_border        = s.node_border; }
+    if( ((s.node_width         != null) || !s._template) && (node_width         != s.node_width) )         { changed = true;  node_width         = s.node_width; }
+    if( ((s.node_borderwidth   != null) || !s._template) && (node_borderwidth   != s.node_borderwidth) )   { changed = true;  node_borderwidth   = s.node_borderwidth; }
+    if( ((s.node_fill          != null) || !s._template) && (node_fill          != s.node_fill) )          { changed = true;  node_fill          = s.node_fill; }
+    if( ((s.node_margin        != null) || !s._template) && (node_margin        != s.node_margin) )        { changed = true;  node_margin        = s.node_margin; }
+    if( ((s.node_padding       != null) || !s._template) && (node_padding       != s.node_padding) )       { changed = true;  node_padding       = s.node_padding; }
+    if( ((s.node_font          != null) || !s._template) )                                                 { changed = true;  node_font          = s.node_font.copy(); }
+    if( ((s.node_markup        != null) || !s._template) && (node_markup        != s.node_markup) )        { changed = true;  node_markup        = s.node_markup; }
+    if( ((s.connection_dash    != null) || !s._template) && (connection_dash    != s.connection_dash) )    { changed = true;  connection_dash    = s.connection_dash; }
+    if( ((s.connection_width   != null) || !s._template) && (connection_width   != s.connection_width) )   { changed = true;  connection_width   = s.connection_width; }
+    if( ((s.connection_arrow   != null) || !s._template) && (connection_arrow   != s.connection_arrow) )   { changed = true;  connection_arrow   = s.connection_arrow; }
+    if( ((s.connection_padding != null) || !s._template) && (connection_padding != s.connection_padding) ) { changed = true;  connection_padding = s.connection_padding; }
 
     return( changed );
 
@@ -121,21 +124,22 @@ public class Style {
 
   public string to_string() {
     string[] arr = {};
-    if( link_type        != null ) arr += "ltype[%s]".printf( link_type.name() );
-    if( link_width       != null ) arr += "lwidth[%d]".printf( link_width );
-    if( link_arrow       != null ) arr += "larrow[%s]".printf( link_arrow.to_string() );
-    if( link_dash        != null ) arr += "ldash[%s]".printf( link_dash.name );
-    if( node_border      != null ) arr += "nborder[%s]".printf( node_border.name() );
-    if( node_width       != null ) arr += "nwidth[%d]".printf( node_width );
-    if( node_borderwidth != null ) arr += "nbwidth[%d]".printf( node_borderwidth );
-    if( node_fill        != null ) arr += "nfill[%s]".printf( node_fill.to_string() );
-    if( node_margin      != null ) arr += "nmargin[%d]".printf( node_margin );
-    if( node_padding     != null ) arr += "npad[%d]".printf( node_padding );
-    if( node_font        != null ) arr += "nfont";
-    if( node_markup      != null ) arr += "nmarkup[%s]".printf( node_markup.to_string() );
-    if( connection_dash  != null ) arr += "cdash[%s]".printf( connection_dash.name );
-    if( connection_width != null ) arr += "cwidth[%d]".printf( connection_width );
-    if( connection_arrow != null ) arr += "carrow[%s]".printf( connection_arrow );
+    if( link_type          != null ) arr += "ltype[%s]".printf( link_type.name() );
+    if( link_width         != null ) arr += "lwidth[%d]".printf( link_width );
+    if( link_arrow         != null ) arr += "larrow[%s]".printf( link_arrow.to_string() );
+    if( link_dash          != null ) arr += "ldash[%s]".printf( link_dash.name );
+    if( node_border        != null ) arr += "nborder[%s]".printf( node_border.name() );
+    if( node_width         != null ) arr += "nwidth[%d]".printf( node_width );
+    if( node_borderwidth   != null ) arr += "nbwidth[%d]".printf( node_borderwidth );
+    if( node_fill          != null ) arr += "nfill[%s]".printf( node_fill.to_string() );
+    if( node_margin        != null ) arr += "nmargin[%d]".printf( node_margin );
+    if( node_padding       != null ) arr += "npad[%d]".printf( node_padding );
+    if( node_font          != null ) arr += "nfont";
+    if( node_markup        != null ) arr += "nmarkup[%s]".printf( node_markup.to_string() );
+    if( connection_dash    != null ) arr += "cdash[%s]".printf( connection_dash.name );
+    if( connection_width   != null ) arr += "cwidth[%d]".printf( connection_width );
+    if( connection_arrow   != null ) arr += "carrow[%s]".printf( connection_arrow );
+    if( connection_padding != null ) arr += "cpad[%d]".printf( connection_padding );
     return( string.joinv( "+", arr ) );
   }
 
@@ -209,6 +213,10 @@ public class Style {
     if( a != null ) {
       connection_arrow = a;
     }
+    string? p = node->get_prop( "connectionpadding" );
+    if( p != null ) {
+      connection_padding = int.parse( p );
+    }
 
   }
 
@@ -274,6 +282,9 @@ public class Style {
     if( connection_arrow != null ) {
       n->set_prop( "connectionarrow", connection_arrow );
     }
+    if( connection_padding != null ) {
+      n->set_prop( "connectionpadding", connection_padding.to_string() );
+    }
 
   }
 
@@ -300,7 +311,7 @@ public class Style {
   }
 
   /* Draws the shape behind a node with the given dimensions and stored styling */
-  public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
+  public void draw_node_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
 
     ctx.save();
     ctx.set_line_width( node_borderwidth );
@@ -310,7 +321,7 @@ public class Style {
   }
 
   /* Draws the node fill */
-  public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
+  public void draw_node_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
 
     node_border.draw_fill( ctx, x, y, w, h, s );
 

@@ -26,10 +26,10 @@
       <summary>Name of the last edited file</summary>
       <description>Name of the last edited file (or the empty string if an unnamed file was last edited).</description>
     </key>
-    <key name="node-properties-shown" type="b">
+    <key name="current-properties-shown" type="b">
       <default>false</default>
-      <summary>Most recent state of the node properties sidebar</summary>
-      <description>Most recent state of the node properties sidebar</description>
+      <summary>Most recent state of the current item properties sidebar</summary>
+      <description>Most recent state of the current item properties sidebar</description>
     </key>
     <key name="map-properties-shown" type="b">
       <default>false</default>
@@ -46,15 +46,25 @@
       <summary>Enables/Disables canvas animations</summary>
       <description>Controls the initial state of the canvas animator</description>
     </key>
+    <key name="search-opt-nodes" type="b">
+      <default>true</default>
+      <summary>Search option for nodes</summary>
+      <description>Specifies whether nodes should be searched or not</description>
+    </key>
+    <key name="search-opt-connections" type="b">
+      <default>true</default>
+      <summary>Search option for connections</summary>
+      <description>Specifies whether connections should be searched or not</description>
+    </key>
     <key name="search-opt-titles" type="b">
       <default>true</default>
-      <summary>Search option for node titles</summary>
-      <description>Specifies whether node titles should be searched or not</description>
+      <summary>Search option for node/connection titles</summary>
+      <description>Specifies whether node/connection titles should be searched or not</description>
     </key>
     <key name="search-opt-notes" type="b">
       <default>true</default>
-      <summary>Search option for node notes</summary>
-      <description>Specifies whether node notes should be searched or not</description>
+      <summary>Search option for node/connection notes</summary>
+      <description>Specifies whether node/connection notes should be searched or not</description>
     </key>
     <key name="search-opt-folded" type="b">
       <default>true</default>

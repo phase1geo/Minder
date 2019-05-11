@@ -21,41 +21,42 @@
 
 using GLib;
 
-public class AnimatorNodes : AnimatorAction {
+public class AnimatorPanScale : AnimatorAction {
 
-  private Node?              _node = null;
-  private AnimatorPositions? _pos  = null;
+  private double? _sox    = null;  // Starting x-origin
+  private double? _soy    = null;  // Starting y-origin
+  private double? _eox    = null;  // Ending x-origin
+  private double? _eoy    = null;  // Ending y-origin
+  private double? _sscale = null;  // Starting scaling factor
+  private double? _escale = null;  // Ending scaling factor
 
-  /* Default constructor */
-  public AnimatorNodes( DrawArea da, Node? n = null, string name = "unnamed" ) {
+  /* Constructor for a pan change */
+  public AnimatorPanScale( DrawArea da, string name ) {
     base( name );
-    _node = n;
-    _pos  = new AnimatorPositions( da, n );
+    da.get_origin( out _sox, out _soy );
+    _sscale = da.sfactor;
   }
 
   /* Returns the NODES types */
   public override AnimationType type() {
-    return( (_node == null) ? AnimationType.NODES : AnimationType.NODE );
+    return( AnimationType.PANSCALE );
   }
 
-  /* Captures the end state */
+  /* User method which performs the animation */
   public override void capture( DrawArea da ) {
-    _pos.gather_new_positions();
+    da.get_origin( out _eox, out _eoy );
+    _escale = da.sfactor;
   }
 
-  /* Adjusts all of the node positions for the given frame */
+  /* Adjusts the origin for the given frame */
   public override void adjust( DrawArea da ) {
     double divisor = index / frames;
     index++;
-    for( int i=0; i<_pos.length(); i++ ) {
-      double dx = _pos.new_x( i ) - _pos.old_x( i );
-      double dy = _pos.new_y( i ) - _pos.old_y( i );
-      double x  = _pos.old_x( i ) + (dx * divisor);
-      double y  = _pos.old_y( i ) + (dy * divisor);
-      _pos.node( i ).posx = x;
-      _pos.node( i ).posy = y;
-      _pos.node( i ).side = _pos.node( i ).layout.get_side( _pos.node( i ) );
-    }
+    double origin_x = _sox + ((_eox - _sox) * divisor);
+    double origin_y = _soy + ((_eoy - _soy) * divisor);
+    double sf       = _sscale + ((_escale - _sscale) * divisor);
+    da.sfactor = sf;
+    da.set_origin( origin_x, origin_y );
   }
 
 }

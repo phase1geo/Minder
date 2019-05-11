@@ -85,15 +85,16 @@ public class Styles {
       } else {
         style.node_border = nb_underlined;
       }
-      style.node_width       = 200;
-      style.node_borderwidth = 4;
-      style.node_fill        = false;
-      style.node_margin      = 8;
-      style.node_padding     = 6;
-      style.node_markup      = true;
-      style.connection_dash  = ld_dotted;
-      style.connection_width = 2;
-      style.connection_arrow = "fromto";
+      style.node_width         = 200;
+      style.node_borderwidth   = 4;
+      style.node_fill          = false;
+      style.node_margin        = 8;
+      style.node_padding       = 6;
+      style.node_markup        = true;
+      style.connection_dash    = ld_dotted;
+      style.connection_width   = 2;
+      style.connection_arrow   = "fromto";
+      style.connection_padding = 6;
       _styles.append_val( style );
     }
 
@@ -134,53 +135,18 @@ public class Styles {
   }
 
   /* Sets all nodes in the mind-map to the given link style */
-  public void set_all_nodes_to_style( Array<Node> nodes, Style style ) {
+  public void set_all_to_style( Style style ) {
     for( int i=0; i<=10; i++ ) {
       _styles.index( i ).copy( style );
-    }
-    set_all_nodes_to_style_helper( nodes, style );
-  }
-
-  /* Updates the nodes */
-  private void set_all_nodes_to_style_helper( Array<Node> nodes, Style style ) {
-    for( int i=0; i<nodes.length; i++ ) {
-      nodes.index( i ).style = style;
-      set_all_nodes_to_style_helper( nodes.index( i ).children(), style );
-    }
-  }
-
-  /* Sets all of the connections to the given style */
-  public void set_all_connections_to_style( Connections conns, Style style ) {
-    _styles.index( 10 ).copy( style );
-    conns.set_all_connections_to_style( style );
-  }
-
-  /* Sets the given tree/subtree to the given style */
-  public void set_tree_to_style( Node parent, Style style ) {
-    parent.style = style;
-    var children = parent.children();
-    for( int i=0; i<children.length; i++ ) {
-      set_tree_to_style( children.index( i ), style );
     }
   }
 
   /* Sets all nodes at the specified levels to the given link style */
-  public void set_levels_to_style( Array<Node> nodes, int levels, Style style ) {
+  public void set_levels_to_style( int levels, Style style ) {
     for( int i=0; i<10; i++ ) {
       if( (levels & (1 << i)) != 0 ) {
         _styles.index( i ).copy( style );
       }
-    }
-    set_levels_to_style_helper( nodes, levels, style, 0 );
-  }
-
-  /* Helper function for the set_levels_to_style */
-  private void set_levels_to_style_helper( Array<Node> nodes, int levels, Style style, int level ) {
-    for( int i=0; i<nodes.length; i++ ) {
-      if( (levels & (1 << level)) != 0 ) {
-        nodes.index( i ).style = style;
-      }
-      set_levels_to_style_helper( nodes.index( i ).children(), levels, style, ((level == 9) ? 9 : (level + 1)) );
     }
   }
 

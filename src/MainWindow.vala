@@ -20,39 +20,41 @@
 */
 
 using Gtk;
+using Gdk;
 
 public class MainWindow : ApplicationWindow {
 
-  private GLib.Settings  _settings;
-  private HeaderBar?     _header         = null;
-  private DrawArea?      _canvas         = null;
-  private Document?      _doc            = null;
-  private Revealer?      _inspector      = null;
-  private NodeInspector  _node_inspector = null;
-  private Stack?         _stack          = null;
-  private Popover?       _zoom           = null;
-  private Popover?       _search         = null;
-  private MenuButton?    _search_btn     = null;
-  private SearchEntry?   _search_entry   = null;
-  private TreeView       _search_list;
-  private Gtk.ListStore  _search_items;
-  private ScrolledWindow _search_scroll;
-  private CheckButton    _search_titles;
-  private CheckButton    _search_notes;
-  private CheckButton    _search_folded;
-  private CheckButton    _search_unfolded;
-  private CheckButton    _search_tasks;
-  private CheckButton    _search_nontasks;
-  private Popover?       _export         = null;
-  private Scale?         _zoom_scale     = null;
-  private ModelButton?   _zoom_in        = null;
-  private ModelButton?   _zoom_out       = null;
-  private ModelButton?   _zoom_sel       = null;
-  private Button?        _undo_btn       = null;
-  private Button?        _redo_btn       = null;
-  private Button?        _prop_btn       = null;
-  private Image?         _prop_show      = null;
-  private Image?         _prop_hide      = null;
+  private GLib.Settings     _settings;
+  private HeaderBar?        _header         = null;
+  private DrawArea?         _canvas         = null;
+  private Document?         _doc            = null;
+  private Revealer?         _inspector      = null;
+  private Stack?            _stack          = null;
+  private Popover?          _zoom           = null;
+  private Popover?          _search         = null;
+  private MenuButton?       _search_btn     = null;
+  private SearchEntry?      _search_entry   = null;
+  private TreeView          _search_list;
+  private Gtk.ListStore     _search_items;
+  private ScrolledWindow    _search_scroll;
+  private CheckButton       _search_nodes;
+  private CheckButton       _search_connections;
+  private CheckButton       _search_titles;
+  private CheckButton       _search_notes;
+  private CheckButton       _search_folded;
+  private CheckButton       _search_unfolded;
+  private CheckButton       _search_tasks;
+  private CheckButton       _search_nontasks;
+  private Popover?          _export         = null;
+  private Scale?            _zoom_scale     = null;
+  private ModelButton?      _zoom_in        = null;
+  private ModelButton?      _zoom_out       = null;
+  private ModelButton?      _zoom_sel       = null;
+  private Button?           _undo_btn       = null;
+  private Button?           _redo_btn       = null;
+  private Button?           _prop_btn       = null;
+  private Image?            _prop_show      = null;
+  private Image?            _prop_hide      = null;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",          action_save },
@@ -112,9 +114,10 @@ public class MainWindow : ApplicationWindow {
 
     /* Create and pack the canvas */
     _canvas = new DrawArea( accel_group );
-    _canvas.node_changed.connect( on_node_changed );
+    _canvas.current_changed.connect( on_current_changed );
     _canvas.scale_changed.connect( change_scale );
     _canvas.show_properties.connect( show_properties );
+    _canvas.hide_properties.connect( hide_properties );
     _canvas.map_event.connect( on_canvas_mapped );
     _canvas.undo_buffer.buffer_changed.connect( do_buffer_changed );
     _canvas.theme_changed.connect( on_theme_changed );
@@ -169,10 +172,14 @@ public class MainWindow : ApplicationWindow {
     add_search_button( accel_group );
     add_zoom_button( accel_group );
 
+    /* Create the overlay that will hold the canvas so that we can put an entry box for emoji support */
+    var canvas_overlay = new Overlay();
+    canvas_overlay.add( _canvas );
+
     /* Create the horizontal box that will contain the canvas and the properties sidebar */
     var hbox = new Box( Orientation.HORIZONTAL, 0 );
-    hbox.pack_start( _canvas,    true,  true, 0 );
-    hbox.pack_start( _inspector, false, true, 0 );
+    hbox.pack_start( canvas_overlay, true,  true, 0 );
+    hbox.pack_start( _inspector,     false, true, 0 );
 
     /* Display the UI */
     add( hbox );
@@ -284,11 +291,11 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the search entry field */
     _search_entry = new SearchEntry();
-    _search_entry.placeholder_text = _( "Search Nodes" );
-    _search_entry.width_chars = 40;
+    _search_entry.placeholder_text = _( "Search Nodes and Connections" );
+    _search_entry.width_chars = 60;
     _search_entry.search_changed.connect( on_search_change );
 
-    _search_items = new Gtk.ListStore( 3, typeof(string), typeof(string), typeof(Node) );
+    _search_items = new Gtk.ListStore( 4, typeof(string), typeof(string), typeof(Node), typeof(Connection) );
 
     /* Create the treeview */
     _search_list  = new TreeView.with_model( _search_items );
@@ -329,29 +336,50 @@ public class MainWindow : ApplicationWindow {
 
     var grid = new Grid();
 
-    _search_titles   = new CheckButton.with_label( _( "Titles" ) );
-    _search_notes    = new CheckButton.with_label( _( "Notes" ) );
-    _search_folded   = new CheckButton.with_label( _( "Folded" ) );
-    _search_unfolded = new CheckButton.with_label( _( "Unfolded" ) );
-    _search_tasks    = new CheckButton.with_label( _( "Tasks" ) );
-    _search_nontasks = new CheckButton.with_label( _( "Non-tasks" ) );
+    _search_nodes       = new CheckButton.with_label( _( "Nodes" ) );
+    _search_connections = new CheckButton.with_label( _( "Connections" ) );
+    _search_titles      = new CheckButton.with_label( _( "Titles" ) );
+    _search_notes       = new CheckButton.with_label( _( "Notes" ) );
+    _search_folded      = new CheckButton.with_label( _( "Folded" ) );
+    _search_unfolded    = new CheckButton.with_label( _( "Unfolded" ) );
+    _search_tasks       = new CheckButton.with_label( _( "Tasks" ) );
+    _search_nontasks    = new CheckButton.with_label( _( "Non-tasks" ) );
 
     /* Set the active values from the settings */
-    _search_titles.active   = _settings.get_boolean( "search-opt-titles" );
-    _search_notes.active    = _settings.get_boolean( "search-opt-notes" );
-    _search_folded.active   = _settings.get_boolean( "search-opt-folded" );
-    _search_unfolded.active = _settings.get_boolean( "search-opt-unfolded" );
-    _search_tasks.active    = _settings.get_boolean( "search-opt-tasks" );
-    _search_nontasks.active = _settings.get_boolean( "search-opt-nontasks" );
+    _search_nodes.active       = _settings.get_boolean( "search-opt-nodes" );
+    _search_connections.active = _settings.get_boolean( "search-opt-connections" );
+    _search_titles.active      = _settings.get_boolean( "search-opt-titles" );
+    _search_notes.active       = _settings.get_boolean( "search-opt-notes" );
+    _search_folded.active      = _settings.get_boolean( "search-opt-folded" );
+    _search_unfolded.active    = _settings.get_boolean( "search-opt-unfolded" );
+    _search_tasks.active       = _settings.get_boolean( "search-opt-tasks" );
+    _search_nontasks.active    = _settings.get_boolean( "search-opt-nontasks" );
 
     /* Set the checkbutton sensitivity */
+    _search_nodes.set_sensitive( _search_connections.active );
+    _search_connections.set_sensitive( _search_nodes.active );
     _search_titles.set_sensitive( _search_notes.active );
     _search_notes.set_sensitive( _search_titles.active );
-    _search_folded.set_sensitive( _search_unfolded.active );
-    _search_unfolded.set_sensitive( _search_folded.active );
-    _search_tasks.set_sensitive( _search_nontasks.active );
-    _search_nontasks.set_sensitive( _search_tasks.active );
+    _search_folded.set_sensitive( _search_nodes.active && _search_unfolded.active );
+    _search_unfolded.set_sensitive( _search_nodes.active && _search_folded.active );
+    _search_tasks.set_sensitive( _search_nodes.active && _search_nontasks.active );
+    _search_nontasks.set_sensitive( _search_nodes.active && _search_tasks.active );
 
+    _search_nodes.toggled.connect(() => {
+      bool nodes = _search_nodes.active;
+      _settings.set_boolean( "search-opt-nodes", _search_nodes.active );
+      _search_connections.set_sensitive( nodes );
+      _search_folded.set_sensitive( nodes );
+      _search_unfolded.set_sensitive( nodes );
+      _search_tasks.set_sensitive( nodes );
+      _search_nontasks.set_sensitive( nodes );
+      on_search_change();
+    });
+    _search_connections.toggled.connect(() => {
+      _settings.set_boolean( "search-opt-connections", _search_connections.active );
+      _search_nodes.set_sensitive( _search_connections.active );
+      on_search_change();
+    });
     _search_titles.toggled.connect(() => {
       _settings.set_boolean( "search-opt-titles", _search_titles.active );
       _search_notes.set_sensitive( _search_titles.active );
@@ -385,12 +413,15 @@ public class MainWindow : ApplicationWindow {
 
     grid.margin_top         = 10;
     grid.column_homogeneous = true;
-    grid.attach( _search_titles,   0, 0, 1, 1 );
-    grid.attach( _search_notes,    0, 1, 1, 1 );
-    grid.attach( _search_folded,   1, 0, 1, 1 );
-    grid.attach( _search_unfolded, 1, 1, 1, 1 );
-    grid.attach( _search_tasks,    2, 0, 1, 1 );
-    grid.attach( _search_nontasks, 2, 1, 1, 1 );
+    grid.column_spacing     = 10;
+    grid.attach( _search_nodes,       0, 0, 1, 1 );
+    grid.attach( _search_connections, 0, 1, 1, 1 );
+    grid.attach( _search_titles,      1, 0, 1, 1 );
+    grid.attach( _search_notes,       1, 1, 1, 1 );
+    grid.attach( _search_folded,      2, 0, 1, 1 );
+    grid.attach( _search_unfolded,    2, 1, 1, 1 );
+    grid.attach( _search_tasks,       3, 0, 1, 1 );
+    grid.attach( _search_nontasks,    3, 1, 1, 1 );
 
     return( grid );
 
@@ -452,19 +483,20 @@ public class MainWindow : ApplicationWindow {
     var box = new Box( Orientation.VERTICAL, 20 );
     var sb  = new StackSwitcher();
 
-    _node_inspector = new NodeInspector( _canvas );
-
     _stack = new Stack();
     _stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
     _stack.set_transition_duration( 500 );
-    _stack.add_titled( _node_inspector, "node", _("Node") );
+    _stack.add_titled( new CurrentInspector( _canvas ), "current", _("Current") );
     _stack.add_titled( new StyleInspector( _canvas ), "style", _("Style") );
     _stack.add_titled( new MapInspector( _canvas, _settings ),  "map",  _("Map") );
+
+    _stack.add_events( EventMask.KEY_PRESS_MASK );
+    _stack.key_press_event.connect( stack_keypress );
 
     /* If the stack switcher is clicked, save off which tab is in view */
     _stack.notify.connect((ps) => {
       if( ps.name == "visible-child" ) {
-        _settings.set_boolean( "node-properties-shown", (_stack.visible_child_name == "node") );
+        _settings.set_boolean( "current-properties-shown", (_stack.visible_child_name == "current") );
         _settings.set_boolean( "map-properties-shown",  (_stack.visible_child_name == "map") );
         _settings.set_boolean( "style-properties-shown", (_stack.visible_child_name == "style" ) );
       }
@@ -484,14 +516,22 @@ public class MainWindow : ApplicationWindow {
     _inspector.child = box;
 
     /* If the settings says to display the properties, do it now */
-    if( _settings.get_boolean( "node-properties-shown" ) ) {
-      show_properties( "node", false );
+    if( _settings.get_boolean( "current-properties-shown" ) ) {
+      show_properties( "current", false );
     } else if( _settings.get_boolean( "map-properties-shown" ) ) {
       show_properties( "map", false );
     } else if( _settings.get_boolean( "style-properties-shown" ) ) {
       show_properties( "style", false );
     }
 
+  }
+
+  private bool stack_keypress( EventKey e ) {
+    if( e.keyval == 65307 ) {  /* Escape key pressed */
+      hide_properties();
+      return( false );
+    }
+    return( true );
   }
 
   /* Show or hides the inspector sidebar */
@@ -604,8 +644,7 @@ public class MainWindow : ApplicationWindow {
   private void select_and_open_file() {
 
     /* Get the file to open from the user */
-    FileChooserDialog dialog = new FileChooserDialog( _( "Open File" ), this, FileChooserAction.OPEN,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Open" ), ResponseType.ACCEPT );
+    FileChooserNative dialog = new FileChooserNative( _( "Open File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
 
     /* Create file filters */
     var filter = new FileFilter();
@@ -622,7 +661,6 @@ public class MainWindow : ApplicationWindow {
       open_file( dialog.get_filename() );
     }
 
-    dialog.close();
     _canvas.grab_focus();
 
   }
@@ -687,8 +725,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Allow the user to select a filename to save the document as */
   public bool save_file() {
-    FileChooserDialog dialog = new FileChooserDialog( _( "Save File" ), this, FileChooserAction.SAVE,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Save" ), ResponseType.ACCEPT );
+    FileChooserNative dialog = new FileChooserNative( _( "Save File" ), this, FileChooserAction.SAVE, _( "Save" ), _( "Cancel" ) );
     FileFilter        filter = new FileFilter();
     bool              retval = false;
     filter.set_filter_name( _( "Minder" ) );
@@ -704,7 +741,6 @@ public class MainWindow : ApplicationWindow {
       update_title();
       retval = true;
     }
-    dialog.close();
     _canvas.grab_focus();
     return( retval );
   }
@@ -715,7 +751,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Called whenever the node selection changes in the canvas */
-  private void on_node_changed() {
+  private void on_current_changed() {
     _zoom_sel.set_sensitive( _canvas.get_current_node() != null );
   }
 
@@ -743,13 +779,6 @@ public class MainWindow : ApplicationWindow {
       _canvas.see( -300 );
     }
     _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
-    if( _stack.visible_child_name == "node" ) {
-      if( grab_note ) {
-        _node_inspector.grab_note();
-      } else {
-        _node_inspector.grab_name();
-      }
-    }
   }
 
   /* Hides the node properties panel */
@@ -757,7 +786,8 @@ public class MainWindow : ApplicationWindow {
     if( !_inspector.reveal_child ) return;
     _prop_btn.image = _prop_show;
     _inspector.reveal_child = false;
-    _settings.set_boolean( "node-properties-shown",  false );
+    _canvas.grab_focus();
+    _settings.set_boolean( "current-properties-shown",  false );
     _settings.set_boolean( "map-properties-shown",   false );
     _settings.set_boolean( "style-properties-shown", false );
   }
@@ -839,12 +869,14 @@ public class MainWindow : ApplicationWindow {
   /* Display matched items to the search within the search popover */
   private void on_search_change() {
     bool[] search_opts = {
-      _search_titles.active,    // 0
-      _search_notes.active,     // 1
-      _search_folded.active,    // 2
-      _search_unfolded.active,  // 3
-      _search_tasks.active,     // 4
-      _search_nontasks.active   // 5
+      _search_nodes.active,       // 0
+      _search_connections.active, // 1
+      _search_titles.active,      // 2
+      _search_notes.active,       // 3
+      _search_folded.active,      // 4
+      _search_unfolded.active,    // 5
+      _search_tasks.active,       // 6
+      _search_nontasks.active     // 7
     };
     _search_items.clear();
     if( _search_entry.get_text() != "" ) {
@@ -861,12 +893,18 @@ public class MainWindow : ApplicationWindow {
    will be set to the node associated with the selection.
   */
   private void on_search_clicked( TreePath path, TreeViewColumn col ) {
-    TreeIter it;
-    Node?    node = null;
+    TreeIter    it;
+    Node?       node = null;
+    Connection? conn = null;
     _search_items.get_iter( out it, path );
-    _search_items.get( it, 2, &node, -1 );
+    _search_items.get( it, 2, &node, 3, &conn, -1 );
     if( node != null ) {
+      _canvas.set_current_connection( null );
       _canvas.set_current_node( node );
+      _canvas.see();
+    } else if( conn != null ) {
+      _canvas.set_current_node( null );
+      _canvas.set_current_connection( conn );
       _canvas.see();
     }
     _search.closed();
@@ -876,8 +914,7 @@ public class MainWindow : ApplicationWindow {
   /* Exports the model to various formats */
   private void action_export() {
 
-    FileChooserDialog dialog = new FileChooserDialog( _( "Export As" ), this, FileChooserAction.SAVE,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
+    FileChooserNative dialog = new FileChooserNative( _( "Export As" ), this, FileChooserAction.SAVE, _( "Export" ), _( "Cancel" ) );
 
     /* BMP */
     FileFilter bmp_filter = new FileFilter();
@@ -976,8 +1013,6 @@ public class MainWindow : ApplicationWindow {
         ExportSVG.export( repair_filename( fname, {".svg"} ), _canvas );
       }
     }
-
-    dialog.close();
 
   }
 

@@ -40,6 +40,7 @@ public class MapInspector : Box {
 
     /* Create the interface */
     add_animation_ui();
+    add_connection_ui();
     add_layout_ui();
     add_theme_ui();
     add_button_ui();
@@ -49,7 +50,7 @@ public class MapInspector : Box {
 
     /* Whenever a new document is loaded, update the theme and layout within this UI */
     _da.loaded.connect( update_theme_layout );
-    _da.node_changed.connect( node_changed );
+    _da.current_changed.connect( current_changed );
 
   }
 
@@ -76,10 +77,36 @@ public class MapInspector : Box {
 
   }
 
-  /* Called whenever the fold switch is changed within the inspector */
+  /* Called whenever the animation switch is changed within the inspector */
   private bool animation_changed( Gdk.EventButton e ) {
     _da.animator.enable = !_da.animator.enable;
     _settings.set_boolean( "enable-animations", _da.animator.enable );
+    return( false );
+  }
+
+  /* Add the connection show/hide UI */
+  private void add_connection_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Hide connections" ) );
+
+    lbl.xalign = (float)0;
+
+    var hide_connections = new Switch();
+    hide_connections.set_active( _da.get_connections().hide );
+    hide_connections.button_release_event.connect( hide_connections_changed );
+
+    box.pack_start( lbl,              false, true, 0 );
+    box.pack_end(   hide_connections, false, true, 0 );
+
+    pack_start( box, false, true );
+
+  }
+
+  /* Called whenever the hide connections switch is changed within the inspector */
+  private bool hide_connections_changed( Gdk.EventButton e ) {
+    _da.get_connections().hide = !_da.get_connections().hide;
+    _da.queue_draw();
     return( false );
   }
 
@@ -159,14 +186,15 @@ public class MapInspector : Box {
 
     /* Add the themes */
     for( int i=0; i<names.length; i++ ) {
+      var name  = names.index( i );
       var ebox  = new EventBox();
       var item  = new Box( Orientation.VERTICAL, 5 );
-      var label = new Label( names.index( i ) );
+      var label = new Label( name );
       item.pack_start( icons.index( i ), false, false, 5 );
       item.pack_start( label,            false, true );
       ebox.button_press_event.connect((w, e) => {
-        select_theme( label.label );
-        _da.set_theme( label.label );
+        select_theme( name );
+        _da.set_theme( name );
         return( false );
       });
       ebox.add( item );
@@ -233,25 +261,31 @@ public class MapInspector : Box {
   /* Makes sure that only the given theme is selected in the UI */
   private void select_theme( string name ) {
 
-    /* Deselect all themes */
-    _theme_box.get_children().foreach((entry) => {
-      entry.get_style_context().remove_class( "theme-selected" );
-    });
-
-    /* Select the specified theme */
-    int index;
+    int index = 0;
     var names = new Array<string>();
     _da.themes.names( ref names );
-    for( index=0; index<names.length; index++ ) {
-      if( names.index( index ) == name ) {
-        break;
-      }
-    }
+
+    /* Deselect all themes */
     _theme_box.get_children().foreach((entry) => {
-      if( index == 0 ) {
-        entry.get_style_context().add_class( "theme-selected" );
+      var e = (EventBox)entry;
+      var b = (Box)e.get_children().nth_data( 0 );
+      var l = (Label)b.get_children().nth_data( 1 );
+      e.get_style_context().remove_class( "theme-selected" );
+      l.set_markup( names.index( index ) );
+      index++;
+    });
+
+    /* Select the matching theme */
+    index = 0;
+    _theme_box.get_children().foreach((entry) => {
+      if( names.index( index ) == name ) {
+        var e = (EventBox)entry;
+        var b = (Box)e.get_children().nth_data( 0 );
+        var l = (Label)b.get_children().nth_data( 1 );
+        e.get_style_context().add_class( "theme-selected" );
+        l.set_markup( "<span color=\"white\">%s</span>".printf( names.index( index ) ) );
       }
-      index--;
+      index++;
     });
 
   }
@@ -262,12 +296,12 @@ public class MapInspector : Box {
     select_theme( _da.get_theme_name() );
 
     /* Initialize the button states */
-    node_changed();
+    current_changed();
 
   }
 
-  /* Called whenever the current node is changed */
-  private void node_changed() {
+  /* Called whenever the current item is changed */
+  private void current_changed() {
 
     Node? current         = _da.get_current_node();
     var   foldable        = _da.completed_tasks_foldable();

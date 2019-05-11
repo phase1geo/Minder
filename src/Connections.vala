@@ -23,9 +23,16 @@ public class Connections {
 
   private Array<Connection> _connections;
 
+  public bool hide { set; get; default = false; }
+
   /* Default constructor */
   public Connections() {
     _connections = new Array<Connection>();
+  }
+
+  /* Removes all connections */
+  public void clear_all_connections() {
+    _connections.remove_range( 0, _connections.length );
   }
 
   /* Adds the given connection */
@@ -43,6 +50,8 @@ public class Connections {
   public bool remove_connection( Connection conn ) {
     for( uint i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ) == conn ) {
+        _connections.index( i ).disconnect_from_node( true );
+        _connections.index( i ).disconnect_from_node( false );
         _connections.remove_index( i ); 
         return( true );
       }
@@ -63,6 +72,19 @@ public class Connections {
     return( null );
   }
 
+  /*
+   Returns the associated connection if the given point is within the connection's
+   title text.
+  */
+  public Connection? within_title( double x, double y ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ).within_title( x, y ) ) {
+        return( _connections.index( i ) );
+      }
+    }
+    return( null );
+  }
+
   /* Returns the associated connection if the given point is within the drag handle */
   public Connection? within_drag_handle( double x, double y ) {
     for( int i=0; i<_connections.length; i++ ) {
@@ -71,26 +93,6 @@ public class Connections {
       }
     }
     return( null );
-  }
-
-  /* Adjusts the connections based on the amount of panning that occurred */
-  public void pan( double diff_x, double diff_y ) {
-    for( int i=0; i<_connections.length; i++ ) {
-      _connections.index( i ).pan( diff_x, diff_y );
-    }
-  }
-
-  /*
-   Helper function to node_moved() which recursively updates all
-   nodes within the given node subtree.
-  */
-  public void node_moved( Node node, Node subroot, double diff_x, double diff_y ) {
-    for( int i=0; i<node.children().length; i++ ) {
-      node_moved( node.children().index( i ), subroot, diff_x, diff_y );
-    }
-    for( int i=0; i<_connections.length; i++ ) {
-      _connections.index( i ).node_moved( node, subroot, diff_x, diff_y );
-    }
   }
 
   /*
@@ -138,15 +140,16 @@ public class Connections {
     }
   }
 
-  /* Checks to see if there are any connections attached to the given node */
-  public void check_for_connection_to_node( Node node ) {
+  /* Searches the connections for ones that match the given pattern and search options */
+  public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     for( int i=0; i<_connections.length; i++ ) {
-      _connections.index( i ).check_for_connection_to_node( node );
+      _connections.index( i ).get_match_items( pattern, search_opts, ref matches );
     }
   }
 
   /* Draws all of the connections onto the given context */
   public void draw_all( Cairo.Context ctx, Theme theme ) {
+    if( hide ) return;
     for( int i=0; i<_connections.length; i++ ) {
       _connections.index( i ).draw( ctx, theme );
     }

@@ -40,7 +40,7 @@ public class ThemeSolarizedDark : Theme {
     textsel_foreground = get_color( "#002B36" );  // Done
     text_cursor        = get_color( "#93A1A1" );  // Done
     attachable_color   = get_color( "#9bdb4d" );
-    connection_color   = get_color( "#777777" );
+    connection_color   = get_color( "#606060" );
     prefer_dark        = true;
 
     /* Generate the link colors */
