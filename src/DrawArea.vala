@@ -1364,6 +1364,7 @@ public class DrawArea : Gtk.DrawingArea {
         if( _current_node.mode == NodeMode.CURRENT ) {
           if( _resize ) {
             _current_node.resize( diffx );
+            auto_save();
           } else {
             Node attach_node = attachable_node( scaled_x, scaled_y );
             if( attach_node != null ) {
@@ -1388,6 +1389,7 @@ public class DrawArea : Gtk.DrawingArea {
         double diff_y = _press_y - scaled_y;
         move_origin( diff_x, diff_y );
         queue_draw();
+        auto_save();
       }
       if( !_motion && !_resize && (_current_node != null) ) {
         _current_node.alpha = 0.3;
@@ -1395,7 +1397,6 @@ public class DrawArea : Gtk.DrawingArea {
       _press_x = scaled_x;
       _press_y = scaled_y;
       _motion  = true;
-      auto_save();
     } else {
       if( _current_connection != null )  {
         if( _current_connection.mode == ConnMode.CONNECTING ) {
@@ -1469,6 +1470,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else if( _current_connection.mode == ConnMode.ADJUSTING ) {
         undo_buffer.add_item( new UndoConnectionChange( _( "connection drag" ), _last_connection, _current_connection ) );
         _current_connection.mode = ConnMode.SELECTED;
+        auto_save();
 
       /* If we were dragging a connection end and failed to attach it to a node, return the connection to where it was prior to the drag */
       } else if( _last_connection != null ) {
@@ -2856,7 +2858,7 @@ public class DrawArea : Gtk.DrawingArea {
     _current_connection.connect_to( n );
     _connections.add_connection( _current_connection );
     undo_buffer.add_item( new UndoConnectionAdd( _current_connection ) );
-    _current_connection.mode = ConnMode.ADJUSTING;
+    _current_connection.mode = ConnMode.SELECTED;
     _last_connection = null;
     _last_node       = null;
     current_changed();
