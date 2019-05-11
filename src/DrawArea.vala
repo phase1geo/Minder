@@ -391,6 +391,9 @@ public class DrawArea : Gtk.DrawingArea {
     /* Indicate to anyone listening that we have loaded a new file */
     loaded();
 
+    /* Make sure that the inspector is updated */
+    current_changed();
+
     /* Reset the animator enable */
     animator.enable = animate;
 
