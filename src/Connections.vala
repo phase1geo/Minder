@@ -133,6 +133,15 @@ public class Connections {
     }
   }
 
+  /* Saves the connection information to the given XML node if the connection is fully within the given node tree */
+  public void save_if_in_node( Xml.Node* parent, Node node ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ).from_node.is_descendant_of( node ) && _connections.index( i ).to_node.is_descendant_of( node ) ) {
+        _connections.index( i ).save( parent );
+      }
+    }
+  }
+
   /* Set all of the stored connections to the given style */
   public void set_all_connections_to_style( Style style ) {
     for( int i=0; i<_connections.length; i++ ) {

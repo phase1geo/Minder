@@ -68,7 +68,7 @@ public class DrawArea : Gtk.DrawingArea {
   public Themes       themes         { set; get; default = new Themes(); }
   public Layouts      layouts        { set; get; default = new Layouts(); }
   public Animator     animator       { set; get; }
-  public Node?        node_clipboard { set; get; default = null; }
+  public Clipboard    node_clipboard { set; get; default = Clipboard.get_for_display( Display.get_default(), Atom.intern( "org.github.phase1geo.minder", false ) ); }
   public ImageManager image_manager  { set; get; default = new ImageManager(); }
 
   public double origin_x {
@@ -487,7 +487,7 @@ public class DrawArea : Gtk.DrawingArea {
     origin_x            = 0.0;
     origin_y            = 0.0;
     sfactor             = 1.0;
-    node_clipboard      = null;
+    node_clipboard.clear();
     _pressed            = false;
     _press_type         = EventType.NOTHING;
     _motion             = false;
@@ -522,7 +522,7 @@ public class DrawArea : Gtk.DrawingArea {
     origin_x            = 0.0;
     origin_y            = 0.0;
     sfactor             = 1.0;
-    node_clipboard      = null;
+    node_clipboard.clear();
     _pressed            = false;
     _press_type         = EventType.NOTHING;
     _motion             = false;
@@ -2579,13 +2579,56 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns true if we can perform a node paste operation */
   public bool node_pasteable() {
-    return( node_clipboard != null );
+    return( node_clipboard.wait_is_text_available() );
+  }
+
+  /* Serializes the current node tree */
+  public string serialize_for_copy( Node node ) {
+    string    str;
+    Xml.Doc*  doc  = new Xml.Doc( "1.0" );
+    Xml.Node* root = new Xml.Node( null, "minder" );
+    doc->set_root_element( root );
+    Xml.Node* nodes = new Xml.Node( null, "nodes" );
+    node.save( nodes );
+    root->add_child( nodes );
+    Xml.Node* conns = new Xml.Node( null, "connections" );
+    _connections.save_if_in_node( conns, node );
+    root->add_child( conns );
+    doc->dump_memory( out str );
+    delete doc;
+    return( str );
+  }
+
+  /* Deserializes the paste string and returns the list of nodes */
+  public void deserialize_for_paste( string str, out Array<Node> nodes ) {
+    nodes = new Array<Node>();
+    Xml.Doc* doc = Xml.Parser.parse_doc( str );
+    if( doc == null ) return;
+    for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        switch( it->name ) {
+          // case "images"      :  image_manager.load( it );  break;
+          case "connections" :  _connections.load( this, it );  break;
+          case "nodes"       :
+            for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
+              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
+                var node = new Node.with_name( this, "temp", null );
+                node.load( this, it2, true );
+                nodes.append_val( node );
+              }
+            }
+            break;
+        }
+      }
+    }
+    delete doc;
   }
 
   /* Copies the current node to the node clipboard */
   public void copy_node_to_clipboard() {
     if( _current_node == null ) return;
-    node_clipboard = new Node.copy_tree( this, _current_node, image_manager );
+    node_clipboard.set_text( serialize_for_copy( _current_node ), -1 );
+    node_clipboard.store();
   }
 
   /* Copies the currently selected text to the clipboard */
@@ -2653,26 +2696,38 @@ public class DrawArea : Gtk.DrawingArea {
    selected node.
   */
   public void paste_node_from_clipboard() {
-    if( node_clipboard == null ) return;
-    Node node = new Node.copy_tree( this, node_clipboard, image_manager );
+    if( !node_clipboard.wait_is_text_available() ) return;
+    Array<Node> nodes;
+    deserialize_for_paste( node_clipboard.wait_for_text(), out nodes );
     if( _current_node == null ) {
-      _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
-      add_root( node, -1 );
+      for( int i=0; i<nodes.length; i++ ) {
+        _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), nodes.index( i ) );
+        add_root( nodes.index( i ), -1 );
+      }
     } else {
       if( _current_node.is_root() ) {
         uint num_children = _current_node.children().length;
         if( num_children > 0 ) {
-          node.side = _current_node.children().index( num_children - 1 ).side;
-          node.layout.propagate_side( node, node.side );
+          for( int i=0; i<nodes.length; i++ ) {
+            nodes.index( i ).side = _current_node.children().index( num_children - 1 ).side;
+            nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
+            nodes.index( i ).attach( _current_node, -1, _theme );
+          }
+        } else {
+          for( int i=0; i<nodes.length; i++ ) {
+            nodes.index( i ).attach( _current_node, -1, _theme );
+          }
         }
       } else {
-        node.side = _current_node.side;
-        node.layout.propagate_side( node, node.side );
+        for( int i=0; i<nodes.length; i++ ) {
+          nodes.index( i ).side = _current_node.side;
+          nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
+          nodes.index( i ).attach( _current_node, -1, _theme );
+        }
       }
-      node.attach( _current_node, -1, _theme );
     }
-    undo_buffer.add_item( new UndoNodePaste( node ) );
-    select_node( node );
+    undo_buffer.add_item( new UndoNodePaste( nodes ) );
+    select_node( nodes.index( 0 ) );
     queue_draw();
     current_changed();
     changed();
@@ -2696,11 +2751,6 @@ public class DrawArea : Gtk.DrawingArea {
       case NodeMode.CURRENT  :  paste_node_from_clipboard();  break;
       case NodeMode.EDITABLE :  paste_text();                 break;
     }
-  }
-
-  /* Clears the node clipboard */
-  public void clear_node_clipboard() {
-    node_clipboard = null;
   }
 
   /*
