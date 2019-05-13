@@ -23,14 +23,16 @@ using Gtk;
 
 public class UndoNodePaste : UndoItem {
 
-  private Array<Node?> _parents;
-  private Array<Node>  _nodes;
-  private Array<int>   _indices;
+  private Array<Node?>      _parents;
+  private Array<Node>       _nodes;
+  private Array<int>        _indices;
+  private Array<Connection> _conns;
 
   /* Default constructor */
-  public UndoNodePaste( Array<Node> nodes ) {
+  public UndoNodePaste( Array<Node> nodes, Array<Connection> conns ) {
     base( _( "paste node" ) );
     _nodes   = nodes;
+    _conns   = conns;
     _indices = new Array<int>();
     _parents = new Array<Node?>();
     for( int i=0; i<nodes.length; i++ ) {
@@ -45,6 +47,9 @@ public class UndoNodePaste : UndoItem {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).detach( _nodes.index( i ).side );
     }
+    for( int i=0; i<_conns.length; i++ ) {
+      da.get_connections().remove_connection( _conns.index( i ) );
+    }
     da.set_current_node( null );
     da.queue_draw();
     da.changed();
@@ -54,6 +59,9 @@ public class UndoNodePaste : UndoItem {
   public override void redo( DrawArea da ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).attach( _parents.index( i ), _indices.index( i ), null );
+    }
+    for( int i=0; i<_conns.length; i++ ) {
+      da.get_connections().add_connection( _conns.index( i ) );
     }
     da.set_current_node( _nodes.index( 0 ) );
     da.queue_draw();

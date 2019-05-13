@@ -371,7 +371,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "styles"      :  StyleInspector.styles.load( it );  break;
           case "drawarea"    :  load_drawarea( it );  break;
           case "images"      :  image_manager.load( it );  break;
-          case "connections" :  _connections.load( this, it, _nodes, id_map );  break;
+          case "connections" :  _connections.load( this, it, null, _nodes, id_map );  break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
@@ -2602,8 +2602,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Deserializes the paste string and returns the list of nodes */
-  public void deserialize_for_paste( string str, out Array<Node> nodes ) {
-    nodes           = new Array<Node>();
+  public void deserialize_for_paste( string str, Array<Node> nodes, Array<Connection> conns ) {
     Xml.Doc* doc    = Xml.Parser.parse_doc( str );
     var      id_map = new HashMap<int,int>();
     if( doc == null ) return;
@@ -2611,7 +2610,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           // case "images"      :  image_manager.load( it );  break;
-          case "connections" :  _connections.load( this, it, nodes, id_map );  break;
+          case "connections" :  _connections.load( this, it, conns, nodes, id_map );  break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
@@ -2700,8 +2699,9 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void paste_node_from_clipboard() {
     if( !node_clipboard.wait_is_text_available() ) return;
-    Array<Node> nodes;
-    deserialize_for_paste( node_clipboard.wait_for_text(), out nodes );
+    var nodes = new Array<Node>();
+    var conns = new Array<Connection>();
+    deserialize_for_paste( node_clipboard.wait_for_text(), nodes, conns );
     if( _current_node == null ) {
       for( int i=0; i<nodes.length; i++ ) {
         _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), nodes.index( i ) );
@@ -2729,7 +2729,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
     }
-    undo_buffer.add_item( new UndoNodePaste( nodes ) );
+    undo_buffer.add_item( new UndoNodePaste( nodes, conns ) );
     select_node( nodes.index( 0 ) );
     queue_draw();
     current_changed();

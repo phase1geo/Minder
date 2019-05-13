@@ -113,11 +113,14 @@ public class Connections {
   }
 
   /* Loads the listed connections from the given XML data */
-  public void load( DrawArea da, Xml.Node* node, Array<Node> nodes, HashMap<int,int> id_map ) {
+  public void load( DrawArea da, Xml.Node* node, Array<Connection>? conns, Array<Node> nodes, HashMap<int,int> id_map ) {
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "connection" ) {
           var conn = new Connection.from_xml( da, it, nodes, id_map );
+          if( conns != null ) {
+            conns.append_val( conn );
+          }
           _connections.append_val( conn );
         }
       }
