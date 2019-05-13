@@ -19,6 +19,8 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
+using Gee;
+
 public class Connections {
 
   private Array<Connection> _connections;
@@ -111,11 +113,11 @@ public class Connections {
   }
 
   /* Loads the listed connections from the given XML data */
-  public void load( DrawArea da, Xml.Node* node ) {
+  public void load( DrawArea da, Xml.Node* node, Array<Node> nodes, HashMap<int,int> id_map ) {
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "connection" ) {
-          var conn = new Connection.from_xml( da, it );
+          var conn = new Connection.from_xml( da, it, nodes, id_map );
           _connections.append_val( conn );
         }
       }

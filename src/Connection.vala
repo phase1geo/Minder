@@ -23,6 +23,7 @@ using Cairo;
 using Pango;
 using Gdk;
 using GLib.Math;
+using Gee;
 
 /* Connection mode value for the Connection.mode property */
 public enum ConnMode {
@@ -127,9 +128,9 @@ public class Connection : Object {
   }
 
   /* Constructor from XML data */
-  public Connection.from_xml( DrawArea da, Xml.Node* n ) {
+  public Connection.from_xml( DrawArea da, Xml.Node* n, Array<Node> nodes, HashMap<int,int> id_map ) {
     style = StyleInspector.styles.get_global_style();
-    load( da, n );
+    load( da, n, nodes, id_map );
   }
 
   /* Copies the given connection to this instance */
@@ -394,17 +395,17 @@ public class Connection : Object {
   }
 
   /* Loads the connection information */
-  private void load( DrawArea da, Xml.Node* node ) {
+  private void load( DrawArea da, Xml.Node* node, Array<Node> nodes, HashMap<int,int> id_map ) {
 
     string? f = node->get_prop( "from_id" );
     if( f != null ) {
-      _from_node = da.get_node( int.parse( f ) );
+      _from_node = da.get_node( nodes, id_map.get( int.parse( f ) ) );
       connect_node( _from_node );
     }
 
     string? t = node->get_prop( "to_id" );
     if( t != null ) {
-      _to_node = da.get_node( int.parse( t ) );
+      _to_node = da.get_node( nodes, id_map.get( int.parse( t ) ) );
       connect_node( _to_node );
     }
 

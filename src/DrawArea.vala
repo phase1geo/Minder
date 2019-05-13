@@ -23,6 +23,7 @@ using Gtk;
 using GLib;
 using Gdk;
 using Cairo;
+using Gee;
 
 public class DrawArea : Gtk.DrawingArea {
 
@@ -262,9 +263,9 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Searches for and returns the node with the specified ID */
-  public Node? get_node( int id ) {
-    for( int i=0; i<_nodes.length; i++ ) {
-      Node? node = _nodes.index( i ).get_node( id );
+  public Node? get_node( Array<Node> nodes, int id ) {
+    for( int i=0; i<nodes.length; i++ ) {
+      Node? node = nodes.index( i ).get_node( id );
       if( node != null ) {
         return( node );
       }
@@ -352,6 +353,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void load( Xml.Node* n ) {
 
     Layout? use_layout = null;
+    var     id_map     = new HashMap<int,int>();
 
     /* Disable animations while we are loading */
     var animate = animator.enable;
@@ -369,12 +371,12 @@ public class DrawArea : Gtk.DrawingArea {
           case "styles"      :  StyleInspector.styles.load( it );  break;
           case "drawarea"    :  load_drawarea( it );  break;
           case "images"      :  image_manager.load( it );  break;
-          case "connections" :  _connections.load( this, it );  break;
+          case "connections" :  _connections.load( this, it, _nodes, id_map );  break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var node = new Node.with_name( this, "temp", null );
-                node.load( this, it2, true );
+                node.load( this, it2, true, id_map );
                 if( use_layout != null ) {
                   node.layout = use_layout;
                 }
@@ -2601,19 +2603,20 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Deserializes the paste string and returns the list of nodes */
   public void deserialize_for_paste( string str, out Array<Node> nodes ) {
-    nodes = new Array<Node>();
-    Xml.Doc* doc = Xml.Parser.parse_doc( str );
+    nodes           = new Array<Node>();
+    Xml.Doc* doc    = Xml.Parser.parse_doc( str );
+    var      id_map = new HashMap<int,int>();
     if( doc == null ) return;
     for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           // case "images"      :  image_manager.load( it );  break;
-          case "connections" :  _connections.load( this, it );  break;
+          case "connections" :  _connections.load( this, it, nodes, id_map );  break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var node = new Node.with_name( this, "temp", null );
-                node.load( this, it2, true );
+                node.load( this, it2, true, id_map );
                 nodes.append_val( node );
               }
             }

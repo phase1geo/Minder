@@ -23,6 +23,7 @@ using Gtk;
 using GLib;
 using Gdk;
 using Cairo;
+using Gee;
 
 /* Enumeration describing the different modes a node can be in */
 public enum NodeMode {
@@ -303,7 +304,7 @@ public class Node : Object {
   }
 
   /* Copies an existing node tree to this node */
-  public Node.copy_tree( DrawArea da, Node n, ImageManager im ) {
+  public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int> id_map ) {
     _id       = _next_id++;
     _name     = new CanvasText( da, _max_width );
     _children = new Array<Node>();
@@ -311,8 +312,9 @@ public class Node : Object {
     _name.resized.connect( update_size );
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
+    id_map.set( n._id, _id );
     for( int i=0; i<n._children.length; i++ ) {
-      Node child = new Node.copy_tree( da, n._children.index( i ), im );
+      Node child = new Node.copy_tree( da, n._children.index( i ), im, id_map );
       child.parent = this;
       _children.append_val( child );
     }
@@ -705,16 +707,14 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, bool isroot ) {
+  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, HashMap<int,int> id_map ) {
 
     _loaded = false;
 
     string? i = n->get_prop( "id" );
     if( i != null ) {
-      _id = int.parse( i );
-      if( _next_id <= _id ) {
-        _next_id = _id + 1;
-      }
+      _id = _next_id++;
+      id_map.set( int.parse( i ), _id );
     }
 
     string? x = n->get_prop( "posx" );
@@ -783,7 +783,7 @@ public class Node : Object {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var child = new Node( da, _layout );
-                child.load( da, it2, false );
+                child.load( da, it2, false, id_map );
                 child.attach( this, -1, null );
               }
             }
