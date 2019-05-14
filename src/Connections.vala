@@ -19,6 +19,8 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
+using Gee;
+
 public class Connections {
 
   private Array<Connection> _connections;
@@ -47,11 +49,13 @@ public class Connections {
   }
 
   /* Removes the given connection */
-  public bool remove_connection( Connection conn ) {
+  public bool remove_connection( Connection conn, bool disconnect ) {
     for( uint i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ) == conn ) {
-        _connections.index( i ).disconnect_from_node( true );
-        _connections.index( i ).disconnect_from_node( false );
+        if( disconnect ) {
+          _connections.index( i ).disconnect_from_node( true );
+          _connections.index( i ).disconnect_from_node( false );
+        }
         _connections.remove_index( i ); 
         return( true );
       }
@@ -111,11 +115,14 @@ public class Connections {
   }
 
   /* Loads the listed connections from the given XML data */
-  public void load( DrawArea da, Xml.Node* node ) {
+  public void load( DrawArea da, Xml.Node* node, Array<Connection>? conns, Array<Node> nodes, HashMap<int,int> id_map ) {
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "connection" ) {
-          var conn = new Connection.from_xml( da, it );
+          var conn = new Connection.from_xml( da, it, nodes, id_map );
+          if( conns != null ) {
+            conns.append_val( conn );
+          }
           _connections.append_val( conn );
         }
       }
@@ -130,6 +137,15 @@ public class Connections {
         _connections.index( i ).save( n );
       }
       parent->add_child( n );
+    }
+  }
+
+  /* Saves the connection information to the given XML node if the connection is fully within the given node tree */
+  public void save_if_in_node( Xml.Node* parent, Node node ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ).from_node.is_descendant_of( node ) && _connections.index( i ).to_node.is_descendant_of( node ) ) {
+        _connections.index( i ).save( parent );
+      }
     }
   }
 

@@ -24,20 +24,19 @@ public class UndoNodeCut : UndoItem {
 
   Node  _node;
   Node? _parent;
-  Node? _clipboard;
   int   _index;
 
   /* Default constructor */
   public UndoNodeCut( DrawArea da, Node n ) {
     base( _( "cut node" ) );
-    _node      = n;
-    _parent    = n.parent;
-    _index     = n.index();
-    _clipboard = da.node_clipboard;
+    _node   = n;
+    _parent = n.parent;
+    _index  = n.index();
   }
 
   /* Undoes a node deletion */
   public override void undo( DrawArea da ) {
+    da.node_clipboard.clear();
     if( _parent == null ) {
       da.add_root( _node, _index );
     } else {
@@ -46,12 +45,12 @@ public class UndoNodeCut : UndoItem {
     da.set_current_node( _node );
     da.queue_draw();
     da.changed();
-    da.node_clipboard = _clipboard;
   }
 
   /* Redoes a node deletion */
   public override void redo( DrawArea da ) {
-    da.node_clipboard = _node;
+    da.node_clipboard.set_text( da.serialize_for_copy( _node ), -1 );
+    da.node_clipboard.store();
     if( _parent == null ) {
       da.remove_root( _index );
     } else {

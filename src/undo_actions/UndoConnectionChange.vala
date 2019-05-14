@@ -36,7 +36,7 @@ public class UndoConnectionChange : UndoItem {
   /* Undoes a connection change */
   public override void undo( DrawArea da ) {
     if( _old_connection == null ) {
-      da.get_connections().remove_connection( _new_connection );
+      da.get_connections().remove_connection( _new_connection, true );
     }
     da.set_current_connection( _old_connection );
     da.queue_draw();
@@ -46,7 +46,7 @@ public class UndoConnectionChange : UndoItem {
   /* Redoes a connection change */
   public override void redo( DrawArea da ) {
     if( _new_connection == null ) {
-      da.get_connections().remove_connection( _old_connection );
+      da.get_connections().remove_connection( _old_connection, true );
     }
     da.set_current_connection( _new_connection );
     da.queue_draw();

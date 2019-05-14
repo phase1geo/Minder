@@ -60,6 +60,10 @@ public class UndoStyleChange : UndoItem {
         }
         if( change_type != StyleChangeType.LOAD ) {
           da.current_changed();
+        } else {
+          Style new_style = new Style.templated();
+          store_style_value( new_style, 0 );
+          StyleInspector.styles.set_all_to_style( new_style );
         }
         break;
       case StyleAffects.LEVEL0      :
@@ -77,6 +81,10 @@ public class UndoStyleChange : UndoItem {
         }
         if( change_type != StyleChangeType.LOAD ) {
           da.current_changed();
+        } else {
+          Style new_style = new Style.templated();
+          store_style_value( new_style, 0 );
+          StyleInspector.styles.set_levels_to_style( (1 << (int)_affects.level()), new_style );
         }
         break;
       case StyleAffects.CURRENT     :
