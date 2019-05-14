@@ -49,11 +49,13 @@ public class Connections {
   }
 
   /* Removes the given connection */
-  public bool remove_connection( Connection conn ) {
+  public bool remove_connection( Connection conn, bool disconnect ) {
     for( uint i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ) == conn ) {
-        _connections.index( i ).disconnect_from_node( true );
-        _connections.index( i ).disconnect_from_node( false );
+        if( disconnect ) {
+          _connections.index( i ).disconnect_from_node( true );
+          _connections.index( i ).disconnect_from_node( false );
+        }
         _connections.remove_index( i ); 
         return( true );
       }

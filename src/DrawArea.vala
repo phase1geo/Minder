@@ -1840,7 +1840,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_node_selected() ) {
       hide_properties();
     } else if( (_current_connection != null) && (_current_connection.mode == ConnMode.CONNECTING) ) {
-      _connections.remove_connection( _current_connection );
+      _connections.remove_connection( _current_connection, true );
       _current_connection = null;
       _last_connection = null;
       queue_draw();
@@ -2602,9 +2602,8 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Deserializes the paste string and returns the list of nodes */
-  public void deserialize_for_paste( string str, Array<Node> nodes, Array<Connection> conns ) {
+  public void deserialize_for_paste( string str, Array<Node> nodes, Array<Connection> conns, HashMap<int,int> id_map ) {
     Xml.Doc* doc    = Xml.Parser.parse_doc( str );
-    var      id_map = new HashMap<int,int>();
     if( doc == null ) return;
     for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
@@ -2699,9 +2698,10 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void paste_node_from_clipboard() {
     if( !node_clipboard.wait_is_text_available() ) return;
-    var nodes = new Array<Node>();
-    var conns = new Array<Connection>();
-    deserialize_for_paste( node_clipboard.wait_for_text(), nodes, conns );
+    var nodes  = new Array<Node>();
+    var conns  = new Array<Connection>();
+    var id_map = new HashMap<int,int>();
+    deserialize_for_paste( node_clipboard.wait_for_text(), nodes, conns, id_map );
     if( _current_node == null ) {
       for( int i=0; i<nodes.length; i++ ) {
         _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), nodes.index( i ) );
@@ -2926,7 +2926,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void delete_connection() {
     if( _current_connection == null ) return;
     undo_buffer.add_item( new UndoConnectionDelete( _current_connection ) );
-    _connections.remove_connection( _current_connection );
+    _connections.remove_connection( _current_connection, true );
     _current_connection = null;
     _last_connection    = null;
     current_changed();

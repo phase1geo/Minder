@@ -20,6 +20,7 @@
 */
 
 using Gtk;
+using Gee;
 
 public class UndoNodePaste : UndoItem {
 
@@ -48,7 +49,7 @@ public class UndoNodePaste : UndoItem {
       _nodes.index( i ).detach( _nodes.index( i ).side );
     }
     for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().remove_connection( _conns.index( i ) );
+      da.get_connections().remove_connection( _conns.index( i ), false );
     }
     da.set_current_node( null );
     da.queue_draw();
