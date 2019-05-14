@@ -1,4 +1,6 @@
-src/DrawAreaMenu.vala
+src/NodeMenu.vala
+src/EmptyMenu.vala
+src/ConnectionMenu.vala
 src/DrawArea.vala
 src/ImageEditor.vala
 
