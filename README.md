@@ -4,20 +4,25 @@
   <a href="https://appcenter.elementary.io/com.github.phase1geo.minder"><img src="https://appcenter.elementary.io/badge.svg" alt="Get it on AppCenter" /></a>
 </p>
 
-![Main Window - Light Theme](https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-light.png "Mind-mapping application for Elementary OS")
+![<center><b>Main Window - Light Theme</b></center>](https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-node-properties.png "Mind-mapping application for Elementary OS")
 
 ## Overview
 
 Use the power of mind-mapping to make your ideas come to life.
 
 - Quickly create visual mind-maps using the keyboard and automatic layout.
-- Gorgeous themes.
+- Choose from many tree layout choices.
+- Add notes, tasks and images to your nodes.
+- Add node-to-node connections with optional text and notes.
+- Stylize nodes, links and connections to add more meaning and improve readability.
+- Quick search of node and connection titles and notes, including filtering options.
+- Zoom in to focus on certain ideas or zoom out to see the bigger picture.
+- Unlimited undo/redo of any change.
+- Automatically saves in the background.
+- Colorized node branches.
+- Gorgeous themes and animations.
 - Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText and Mermaid formats.
 - Printer support.
-- Add notes, tasks and images to your nodes.
-- Stylize nodes and links to add more meaning and improve readability.
-- Add node-to-node connections with optional text and notes.
-- Colorized node branches.
     
 ## Installation
 
@@ -50,7 +55,7 @@ Minder is packaged in Void Linux, install it with `xbps-install`:
 
 `$ sudo xbps-install Minder`
 
-For Fedora user, install the RPM package with:
+For Fedora users, install the RPM package with:
 
 `$ sudo dnf copr enable atim/minder -y && sudo dnf install minder -y`
 
@@ -82,7 +87,7 @@ When the application is first launched, a main idea node will be displayed in th
 
 ## Property Sidebar
 
-The property sidebar can be shown or hidden by clicking on the gear icon in the upper right corner of the window. This sidebar contains two tabs, one for editing or taking action on the currently selected node. The other tab allows you to modify the layout or theme that is used for the entire mind map.
+The property sidebar can be shown or hidden by clicking on the gear icon in the upper right corner of the window. This sidebar contains three tabs. The **Current** tab allows you to edit information for or take action on the currently selected node or connection. The **Style** tab allows you to change the look or meaning of different objects in the map. The **Map** tab allows you to modify the layout or theme that is used for the entire mind map.
 
 ## Documentation
 
