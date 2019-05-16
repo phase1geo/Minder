@@ -246,7 +246,7 @@ public class NodeMenu : Gtk.Menu {
 
   /* Displays the sidebar to edit the node properties */
   private void edit_node() {
-    _da.show_properties( "node", false );
+    _da.show_properties( "current", false );
   }
 
   /* Changes the task status of the currently selected node */
@@ -264,7 +264,7 @@ public class NodeMenu : Gtk.Menu {
     if( node_has_note() ) {
       _da.change_current_node_note( "" );
     } else {
-      _da.show_properties( "node", true );
+      _da.show_properties( "current", true );
     }
     _da.current_changed();
   }
@@ -281,7 +281,7 @@ public class NodeMenu : Gtk.Menu {
 
   /* Changes the connection of the currently selected node */
   private void add_connection() {
-    _da.start_connection();
+    _da.start_connection( false );
   }
 
   /* Fold the currently selected node */
