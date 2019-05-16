@@ -1756,7 +1756,9 @@ public class DrawArea : Gtk.DrawingArea {
   public void delete_node() {
     if( _current_node == null ) return;
     Node? next_node = next_node_to_select();
-    undo_buffer.add_item( new UndoNodeDelete( _current_node ) );
+    var   conns     = new Array<Connection>();
+    _connections.node_deleted( _current_node, conns );
+    undo_buffer.add_item( new UndoNodeDelete( _current_node, conns ) );
     if( _current_node.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
         if( _nodes.index( i ) == _current_node ) {
@@ -1767,7 +1769,6 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       _current_node.delete();
     }
-    _connections.node_deleted( _current_node );
     _current_node.mode = NodeMode.NONE;
     _current_node = null;
     current_changed();
@@ -2655,7 +2656,9 @@ public class DrawArea : Gtk.DrawingArea {
   public void cut_node_to_clipboard() {
     if( _current_node == null ) return;
     Node? next_node = next_node_to_select();
-    undo_buffer.add_item( new UndoNodeCut( this, _current_node ) );
+    var   conns     = new Array<Connection>();
+    _connections.node_deleted( _current_node, conns );
+    undo_buffer.add_item( new UndoNodeCut( _current_node, conns ) );
     copy_node_to_clipboard();
     if( _current_node.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {

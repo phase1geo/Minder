@@ -103,12 +103,13 @@ public class Connections {
    Called whenever a node is deleted in the mind map.  All attached connections
    also need to be removed.
   */
-  public void node_deleted( Node node ) {
+  public void node_deleted( Node node, Array<Connection> conns ) {
     for( int i=0; i<node.children().length; i++ ) {
-      node_deleted( node.children().index( i ) );
+      node_deleted( node.children().index( i ), conns );
     }
     for( int i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ).attached_to_node( node ) ) {
+        conns.append_val( _connections.index( i ) );
         _connections.remove_index( i );
       }
     }

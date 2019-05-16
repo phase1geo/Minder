@@ -23,16 +23,18 @@ using Gtk;
 
 public class UndoNodeDelete : UndoItem {
 
-  Node  _node;
-  Node? _parent;
-  int   _index;
+  Node              _node;
+  Node?             _parent;
+  int               _index;
+  Array<Connection> _conns;
 
   /* Default constructor */
-  public UndoNodeDelete( Node n ) {
+  public UndoNodeDelete( Node n, Array<Connection> conns ) {
     base( _( "delete node" ) );
     _node   = n;
     _parent = n.parent;
     _index  = n.index();
+    _conns  = conns;
   }
 
   /* Undoes a node deletion */
@@ -44,6 +46,9 @@ public class UndoNodeDelete : UndoItem {
       _node.attach_init( _parent, _index );
     }
     da.set_current_node( _node );
+    for( int i=0; i<_conns.length; i++ ) {
+      da.get_connections().add_connection( _conns.index( i ) );
+    }
     da.queue_draw();
     da.changed();
   }
@@ -56,6 +61,9 @@ public class UndoNodeDelete : UndoItem {
       _node.detach( _node.side );
     }
     da.set_current_node( null );
+    for( int i=0; i<_conns.length; i++ ) {
+      da.get_connections().remove_connection( _conns.index( i ), false );
+    }
     da.queue_draw();
     da.changed();
   }
