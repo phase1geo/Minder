@@ -107,7 +107,7 @@ public class Connections {
     for( int i=0; i<node.children().length; i++ ) {
       node_deleted( node.children().index( i ), conns );
     }
-    for( int i=0; i<_connections.length; i++ ) {
+    for( int i=((int)_connections.length - 1); i>=0; i-- ) {
       if( _connections.index( i ).attached_to_node( node ) ) {
         conns.append_val( _connections.index( i ) );
         _connections.remove_index( i );

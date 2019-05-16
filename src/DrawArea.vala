@@ -1761,15 +1761,16 @@ public class DrawArea : Gtk.DrawingArea {
     Node? next_node = next_node_to_select();
     var   conns     = new Array<Connection>();
     _connections.node_deleted( _current_node, conns );
-    undo_buffer.add_item( new UndoNodeDelete( _current_node, conns ) );
     if( _current_node.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
         if( _nodes.index( i ) == _current_node ) {
+          undo_buffer.add_item( new UndoNodeDelete( _current_node, i, conns ) );
           _nodes.remove_index( i );
           break;
         }
       }
     } else {
+      undo_buffer.add_item( new UndoNodeDelete( _current_node, _current_node.index(), conns ) );
       _current_node.delete();
     }
     _current_node.mode = NodeMode.NONE;
@@ -2715,16 +2716,17 @@ public class DrawArea : Gtk.DrawingArea {
     Node? next_node = next_node_to_select();
     var   conns     = new Array<Connection>();
     _connections.node_deleted( _current_node, conns );
-    undo_buffer.add_item( new UndoNodeCut( _current_node, conns ) );
     copy_node_to_clipboard();
     if( _current_node.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
         if( _nodes.index( i ) == _current_node ) {
+          undo_buffer.add_item( new UndoNodeCut( _current_node, i, conns ) );
           _nodes.remove_index( i );
           break;
         }
       }
     } else {
+      undo_buffer.add_item( new UndoNodeCut( _current_node, _current_node.index(), conns ) );
       _current_node.delete();
     }
     _current_node.mode = NodeMode.NONE;

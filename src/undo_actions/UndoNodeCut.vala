@@ -28,11 +28,11 @@ public class UndoNodeCut : UndoItem {
   Array<Connection> _conns;
 
   /* Default constructor */
-  public UndoNodeCut( Node n, Array<Connection> conns ) {
+  public UndoNodeCut( Node n, int index, Array<Connection> conns ) {
     base( _( "cut node" ) );
     _node   = n;
     _parent = n.parent;
-    _index  = n.index();
+    _index  = index;
     _conns  = conns;
   }
 
