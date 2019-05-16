@@ -29,11 +29,11 @@ public class UndoNodeDelete : UndoItem {
   Array<Connection> _conns;
 
   /* Default constructor */
-  public UndoNodeDelete( Node n, Array<Connection> conns ) {
+  public UndoNodeDelete( Node n, int index, Array<Connection> conns ) {
     base( _( "delete node" ) );
     _node   = n;
     _parent = n.parent;
-    _index  = n.index();
+    _index  = index;
     _conns  = conns;
   }
 
