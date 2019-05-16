@@ -2118,7 +2118,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_node_selected() ) {
       Node? next;
       if( _current_node.is_root() ) {
-        next = _current_node.first_child( NodeSide.RIGHT );
+        next = _current_node.last_selected_child ?? _current_node.first_child( NodeSide.RIGHT );
       } else {
         switch( _current_node.side ) {
           case NodeSide.TOP    :
@@ -2174,7 +2174,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_node_selected() ) {
       Node? next;
       if( _current_node.is_root() ) {
-        next = _current_node.first_child( NodeSide.LEFT );
+        next = _current_node.last_selected_child ?? _current_node.first_child( NodeSide.LEFT );
       } else {
         switch( _current_node.side ) {
           case NodeSide.TOP :
@@ -2455,6 +2455,31 @@ public class DrawArea : Gtk.DrawingArea {
         see();
         queue_draw();
         changed();
+      } else if( is_connection_selected() ) {
+        switch( str ) {
+          case "e" :
+            _current_connection.mode = ConnMode.EDITABLE;
+            queue_draw();
+            break;
+          case "n" :  select_connection_node( false );  break;
+          case "p" :  select_connection_node( true );   break;
+          case "i" :  show_properties( "current", false );  break;
+          case "u" :  // Perform undo
+            if( undo_buffer.undoable() ) {
+              undo_buffer.undo();
+            }
+            break;
+          case "r" :  // Perform redo
+            if( undo_buffer.redoable() ) {
+              undo_buffer.redo();
+            }
+            break;
+          case "s" :  see();  break;
+          case "z" :  zoom_out();  break;
+          case "Z" :  zoom_in();  break;
+          default :
+            return;
+        }
       } else if( is_node_selected() ) {
         switch( str ) {
           case "e" :
@@ -2473,7 +2498,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "m" :  select_root_node();  break;
           case "c" :  select_child_node();  break;
           case "C" :  center_current_node();  break;
-          case "i" :  show_properties( "node", false );  break;
+          case "i" :  show_properties( "current", false );  break;
           case "I" :
             if( _debug ) {
               _current_node.display();
