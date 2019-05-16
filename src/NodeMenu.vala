@@ -281,7 +281,7 @@ public class NodeMenu : Gtk.Menu {
 
   /* Changes the connection of the currently selected node */
   private void add_connection() {
-    _da.start_connection();
+    _da.start_connection( false );
   }
 
   /* Fold the currently selected node */
