@@ -81,4 +81,9 @@ public class Utils {
     }
   }
 
+  /* Returns true if the given coordinates are within the specified bounds */
+  public static bool is_within_bounds( double x, double y, double bx, double by, double bw, double bh ) {
+    return( (bx < x) && (x < (bx + bw)) && (by < y) && (y < (by + bh)) );
+  }
+
 }

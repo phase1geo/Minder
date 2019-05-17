@@ -473,11 +473,6 @@ public class Node : Object {
     return( !is_root() && (side == NodeSide.LEFT) );
   }
 
-  /* Returns true if the given coordinates are within the specified bounds */
-  private bool is_within_bounds( double x, double y, double bx, double by, double bw, double bh ) {
-    return( (bx < x) && (x < (bx + bw)) && (by < y) && (y < (by + bh)) );
-  }
-
   /* Returns true if the given cursor coordinates lies within this node */
   public virtual bool is_within( double x, double y ) {
     double margin = style.node_margin ?? 0;
@@ -487,7 +482,7 @@ public class Node : Object {
     cy += margin;
     cw -= margin * 2;
     ch -= margin * 2;
-    return( is_within_bounds( x, y, cx, cy, cw, ch ) );
+    return( Utils.is_within_bounds( x, y, cx, cy, cw, ch ) );
   }
 
   /* Returns the positional information for where the task item is located (if it exists) */
@@ -539,7 +534,7 @@ public class Node : Object {
     if( _task_count > 0 ) {
       double tx, ty, tw, th;
       task_bbox( out tx, out ty, out tw, out th );
-      return( is_within_bounds( x, y, tx, ty, tw, th ) );
+      return( Utils.is_within_bounds( x, y, tx, ty, tw, th ) );
     } else {
       return( false );
     }
@@ -552,7 +547,7 @@ public class Node : Object {
     if( note.length > 0 ) {
       double nx, ny, nw, nh;
       note_bbox( out nx, out ny, out nw, out nh );
-      return( is_within_bounds( x, y, nx, ny, nw, nh ) );
+      return( Utils.is_within_bounds( x, y, nx, ny, nw, nh ) );
     } else {
       return( false );
     }
@@ -563,7 +558,7 @@ public class Node : Object {
     if( folded && (_children.length > 0) ) {
       double fx, fy, fw, fh;
       fold_bbox( out fx, out fy, out fw, out fh );
-      return( is_within_bounds( x, y, fx, fy, fw, fh ) );
+      return( Utils.is_within_bounds( x, y, fx, fy, fw, fh ) );
     } else {
       return( false );
     }
@@ -574,7 +569,7 @@ public class Node : Object {
     if( _image != null ) {
       double ix, iy, iw, ih;
       image_bbox( out ix, out iy, out iw, out ih );
-      return( is_within_bounds( x, y, ix, iy, iw, ih ) );
+      return( Utils.is_within_bounds( x, y, ix, iy, iw, ih ) );
       // return( (ix <= x) && (x <= (ix + iw)) && (iy <= y) && (y <= (iy + ih)) );
     } else {
       return( false );
@@ -586,7 +581,7 @@ public class Node : Object {
     if( mode == NodeMode.CURRENT ) {
       double rx, ry, rw, rh;
       resizer_bbox( out rx, out ry, out rw, out rh );
-      return( is_within_bounds( x, y, rx, ry, rw, rh ) );
+      return( Utils.is_within_bounds( x, y, rx, ry, rw, rh ) );
       // return( (rx < x) && (x <= (rx + rw)) && (ry < y) && (y <= (ry + rh)) );
     }
     return( false );

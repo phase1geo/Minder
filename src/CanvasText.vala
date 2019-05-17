@@ -139,7 +139,7 @@ public class CanvasText : Object {
 
   /* Returns true if the given cursor coordinates lies within this node */
   public bool is_within( double x, double y ) {
-    return( (posx < x) && (x < (posx + _width)) && (posy < y) && (y < (posy + _height)) );
+    return( Utils.is_within_bounds( x, y, posx, posy, _width, _height ) );
   }
 
   /* Loads the file contents into this instance */

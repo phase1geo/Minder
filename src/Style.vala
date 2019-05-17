@@ -41,6 +41,7 @@ public class Style {
   public int?             connection_width   { get; set; default = null; }
   public string?          connection_arrow   { get; set; default = null; }
   public int?             connection_padding { get; set; default = null; }
+  public FontDescription? connection_font    { get; set; default = null; }
 
   /* Default constructor */
   public Style() {
@@ -50,6 +51,10 @@ public class Style {
     node_font = new FontDescription();
     node_font.set_family( "Sans" );
     node_font.set_size( 11 * Pango.SCALE );
+
+    connection_font = new FontDescription();
+    connection_font.set_family( "Sans" );
+    connection_font.set_size( 10 * Pango.SCALE );
 
   }
 
@@ -61,15 +66,6 @@ public class Style {
   /* Returns true if the node assigned with this style can be filled with a color */
   public bool is_fillable() {
     return( node_fill && node_border.is_fillable() );
-  }
-
-  /* Creates a font for a templated style */
-  public void set_template_font( string family, int size ) {
-
-    node_font = new FontDescription();
-    node_font.set_family( family );
-    node_font.set_size( size * Pango.SCALE );
-
   }
 
   /* Clears this style template options */
@@ -92,6 +88,7 @@ public class Style {
       connection_width   = null;
       connection_arrow   = null;
       connection_padding = null;
+      connection_font    = null;
     }
 
   }
@@ -117,6 +114,7 @@ public class Style {
     if( ((s.connection_width   != null) || !s._template) && (connection_width   != s.connection_width) )   { changed = true;  connection_width   = s.connection_width; }
     if( ((s.connection_arrow   != null) || !s._template) && (connection_arrow   != s.connection_arrow) )   { changed = true;  connection_arrow   = s.connection_arrow; }
     if( ((s.connection_padding != null) || !s._template) && (connection_padding != s.connection_padding) ) { changed = true;  connection_padding = s.connection_padding; }
+    if( ((s.connection_font    != null) || !s._template) )                                                 { changed = true;  connection_font    = s.connection_font.copy(); }
 
     return( changed );
 
@@ -140,6 +138,7 @@ public class Style {
     if( connection_width   != null ) arr += "cwidth[%d]".printf( connection_width );
     if( connection_arrow   != null ) arr += "carrow[%s]".printf( connection_arrow );
     if( connection_padding != null ) arr += "cpad[%d]".printf( connection_padding );
+    if( connection_font    != null ) arr += "cfont";
     return( string.joinv( "+", arr ) );
   }
 
@@ -217,6 +216,10 @@ public class Style {
     if( p != null ) {
       connection_padding = int.parse( p );
     }
+    string? f = node->get_prop( "connectionfont" );
+    if( f != null ) {
+      connection_font = FontDescription.from_string( f );
+    }
 
   }
 
@@ -284,6 +287,9 @@ public class Style {
     }
     if( connection_padding != null ) {
       n->set_prop( "connectionpadding", connection_padding.to_string() );
+    }
+    if( connection_font != null ) {
+      n->set_prop( "connectionfont", connection_font.to_string() );
     }
 
   }
