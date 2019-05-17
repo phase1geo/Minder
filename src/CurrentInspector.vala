@@ -74,4 +74,15 @@ public class CurrentInspector : Stack {
 
   }
 
+  /* Gives the node or connection note field keyboard focus */
+  public void grab_note() {
+
+    if( _da.get_current_node() != null ) {
+      (get_child_by_name( "node" ) as NodeInspector).grab_note();
+    } else if( _da.get_current_connection() != null ) {
+      (get_child_by_name( "connection" ) as ConnectionInspector).grab_note();
+    }
+
+  }
+
 }

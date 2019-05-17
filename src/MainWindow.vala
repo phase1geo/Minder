@@ -769,16 +769,20 @@ public class MainWindow : ApplicationWindow {
 
   /* Displays the node properties panel for the current node */
   private void show_properties( string? tab, bool grab_note ) {
-    if( _inspector.reveal_child && ((tab == null) || (_stack.visible_child_name == tab)) ) return;
-    _prop_btn.image = _prop_hide;
-    if( tab != null ) {
-      _stack.visible_child_name = tab;
+    if( !_inspector.reveal_child || ((tab != null) && (_stack.visible_child_name != tab)) ) {
+      _prop_btn.image = _prop_hide;
+      if( tab != null ) {
+        _stack.visible_child_name = tab;
+      }
+      if( !_inspector.reveal_child ) {
+        _inspector.reveal_child = true;
+        _canvas.see( -300 );
+      }
+      _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
     }
-    if( !_inspector.reveal_child ) {
-      _inspector.reveal_child = true;
-      _canvas.see( -300 );
+    if( grab_note && (tab != null) && (tab == "current") ) {
+      (_stack.get_child_by_name( tab ) as CurrentInspector).grab_note();
     }
-    _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
   }
 
   /* Hides the node properties panel */
