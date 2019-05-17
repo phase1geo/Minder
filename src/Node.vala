@@ -244,7 +244,8 @@ public class Node : Object {
       }
     }
   }
-  public Node? last_selected_child { get; set; default = null; }
+  public Node?       last_selected_child      { get; set; default = null; }
+  public Connection? last_selected_connection { get; set; default = null; }
   public double width {
     get {
       return( _width );

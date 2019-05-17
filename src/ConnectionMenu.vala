@@ -29,6 +29,8 @@ public class ConnectionMenu : Gtk.Menu {
   Gtk.MenuItem _note;
   Gtk.MenuItem _selstart;
   Gtk.MenuItem _selend;
+  Gtk.MenuItem _selnext;
+  Gtk.MenuItem _selprev;
 
   /* Default constructor */
   public ConnectionMenu( DrawArea da, AccelGroup accel_group ) {
@@ -46,7 +48,7 @@ public class ConnectionMenu : Gtk.Menu {
     _note = new Gtk.MenuItem.with_label( _( "Add Note" ) );
     _note.activate.connect( change_note );
 
-    var selnode = new Gtk.MenuItem.with_label( _( "Select Node" ) );
+    var selnode = new Gtk.MenuItem.with_label( _( "Select" ) );
     var selmenu = new Gtk.Menu();
     selnode.set_submenu( selmenu );
 
@@ -57,6 +59,14 @@ public class ConnectionMenu : Gtk.Menu {
     _selend = new Gtk.MenuItem.with_label( _( "End Node" ) );
     _selend.activate.connect( select_end_node );
     Utils.add_accel_label( _selend, 'n', 0 );
+
+    _selnext = new Gtk.MenuItem.with_label( _( "Next Connection" ) );
+    _selnext.activate.connect( select_next_connection );
+    Utils.add_accel_label( _selnext, 65363, 0 );
+
+    _selprev = new Gtk.MenuItem.with_label( _( "Previous Connection" ) );
+    _selprev.activate.connect( select_prev_connection );
+    Utils.add_accel_label( _selprev, 65361, 0 );
 
     /* Add the menu items to the menu */
     add( _delete );
@@ -69,6 +79,9 @@ public class ConnectionMenu : Gtk.Menu {
     /* Add the items to the selection menu */
     selmenu.add( _selstart );
     selmenu.add( _selend );
+    selmenu.add( new SeparatorMenuItem() );
+    selmenu.add( _selnext );
+    selmenu.add( _selprev );
 
     /* Make the menu visible */
     show_all();
@@ -124,6 +137,16 @@ public class ConnectionMenu : Gtk.Menu {
   /* Selects the previous sibling node of the current node */
   private void select_end_node() {
     _da.select_connection_node( false );
+  }
+
+  /* Selects the next connection in the mind map */
+  private void select_next_connection() {
+    _da.select_connection( 1 );
+  }
+
+  /* Selects the previous connection in the mind map */
+  private void select_prev_connection() {
+    _da.select_connection( -1 );
   }
 
 }

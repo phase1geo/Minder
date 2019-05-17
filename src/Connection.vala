@@ -218,6 +218,9 @@ public class Connection : Object {
   public void disconnect_node( Node node ) {
     node.moved.disconnect( this.end_moved );
     node.resized.disconnect( this.end_resized );
+    if( node.last_selected_connection == this ) {
+      node.last_selected_connection = null;
+    }
   }
 
   /* Completes the connection */

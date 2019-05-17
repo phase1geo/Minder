@@ -43,6 +43,7 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _selprev;
   Gtk.MenuItem _selchild;
   Gtk.MenuItem _selparent;
+  Gtk.MenuItem _selconn;
   Gtk.MenuItem _center;
 
   /* Default constructor */
@@ -100,29 +101,33 @@ public class NodeMenu : Gtk.Menu {
     _sibling.activate.connect( add_sibling_node );
     Utils.add_accel_label( _sibling, 65293, 0 );
 
-    var selnode = new Gtk.MenuItem.with_label( _( "Select Node" ) );
+    var selnode = new Gtk.MenuItem.with_label( _( "Select" ) );
     var selmenu = new Gtk.Menu();
     selnode.set_submenu( selmenu );
 
-    _selroot = new Gtk.MenuItem.with_label( _( "Root" ) );
+    _selroot = new Gtk.MenuItem.with_label( _( "Root Node" ) );
     _selroot.activate.connect( select_root_node );
     Utils.add_accel_label( _selroot, 'm', 0 );
 
-    _selnext = new Gtk.MenuItem.with_label( _( "Next Sibling" ) );
+    _selnext = new Gtk.MenuItem.with_label( _( "Next Sibling Node" ) );
     _selnext.activate.connect( select_next_sibling_node );
     Utils.add_accel_label( _selnext, 'n', 0 );
 
-    _selprev = new Gtk.MenuItem.with_label( _( "Previous Sibling" ) );
+    _selprev = new Gtk.MenuItem.with_label( _( "Previous Sibling Node" ) );
     _selprev.activate.connect( select_previous_sibling_node );
     Utils.add_accel_label( _selprev, 'p', 0 );
 
-    _selchild = new Gtk.MenuItem.with_label( _( "Child" ) );
+    _selchild = new Gtk.MenuItem.with_label( _( "Child Node" ) );
     _selchild.activate.connect( select_child_node );
     Utils.add_accel_label( _selchild, 'c', 0 );
 
-    _selparent = new Gtk.MenuItem.with_label( _( "Parent" ) );
+    _selparent = new Gtk.MenuItem.with_label( _( "Parent Node" ) );
     _selparent.activate.connect( select_parent_node );
     Utils.add_accel_label( _selparent, 'a', 0 );
+
+    _selconn = new Gtk.MenuItem.with_label( _( "Connection" ) );
+    _selconn.activate.connect( select_connection );
+    Utils.add_accel_label( _selconn, 'x', 0 );
 
     _center = new Gtk.MenuItem.with_label( _( "Center Current Node" ) );
     _center.activate.connect( center_current_node );
@@ -156,6 +161,8 @@ public class NodeMenu : Gtk.Menu {
     selmenu.add( _selprev );
     selmenu.add( _selchild );
     selmenu.add( _selparent );
+    selmenu.add( new SeparatorMenuItem() );
+    selmenu.add( _selconn );
 
     /* Make the menu visible */
     show_all();
@@ -333,6 +340,11 @@ public class NodeMenu : Gtk.Menu {
   /* Selects the parent node of the current node */
   private void select_parent_node() {
     _da.select_parent_node();
+  }
+
+  /* Selects the one of the connections attached to the current node */
+  private void select_connection() {
+    _da.select_attached_connection();
   }
 
   /* Centers the current node */
