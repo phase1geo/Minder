@@ -848,8 +848,9 @@ public class DrawArea : Gtk.DrawingArea {
           case EventType.TRIPLE_BUTTON_PRESS :  conn.title.set_cursor_all( false );                break;
         }
       } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
-        _current_connection.mode = ConnMode.EDITABLE;
         _orig_title = _current_connection.title.text;
+        _current_connection.edit_title_begin( this );
+        _current_connection.mode = ConnMode.EDITABLE;
       }
       return( true );
     } else {
@@ -930,15 +931,15 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* If the user clicked on a selected connection endpoint, disconnect that endpoint */
     if( (_current_connection != null) && (_current_connection.mode == ConnMode.SELECTED) ) {
-      if( _current_connection.within_from_handle( e.x, e.y ) ) {
+      if( _current_connection.within_from_handle( x, y ) ) {
         _last_connection = new Connection.from_connection( this, _current_connection );
         _current_connection.disconnect_from_node( true );
         return( true );
-      } else if( _current_connection.within_to_handle( e.x, e.y ) ) {
+      } else if( _current_connection.within_to_handle( x, y ) ) {
         _last_connection = new Connection.from_connection( this, _current_connection );
         _current_connection.disconnect_from_node( false );
         return( true );
-      } else if( _current_connection.within_drag_handle( e.x, e.y ) ) {
+      } else if( _current_connection.within_drag_handle( x, y ) ) {
         _current_connection.mode = ConnMode.ADJUSTING;
         return( true );
       }
@@ -1348,7 +1349,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( _current_connection != null ) {
         switch( _current_connection.mode ) {
           case ConnMode.ADJUSTING :
-            _current_connection.move_drag_handle( event.x, event.y );
+            _current_connection.move_drag_handle( scaled_x, scaled_y );
             queue_draw();
             break;
           case ConnMode.CONNECTING :
@@ -1409,10 +1410,19 @@ public class DrawArea : Gtk.DrawingArea {
         if( _current_connection.mode == ConnMode.CONNECTING ) {
           update_connection( event.x, event.y );
         }
-        if( _current_connection.within_drag_handle( event.x, event.y ) ||
-            _current_connection.within_from_handle( event.x, event.y ) ||
-            _current_connection.within_to_handle( event.x, event.y ) ) {
+        if( _current_connection.within_drag_handle( scaled_x, scaled_y ) ||
+            _current_connection.within_from_handle( scaled_x, scaled_y ) ||
+            _current_connection.within_to_handle( scaled_x, scaled_y ) ) {
           set_cursor_from_name( "move" );
+          return( false );
+        } else if( _current_connection.within_note( scaled_x, scaled_y ) ) {
+          set_tooltip_text( _current_connection.note );
+          return( false );
+        }
+      } else {
+        Connection? match_conn = _connections.within_note( scaled_x, scaled_y );
+        if( match_conn != null ) {
+          set_tooltip_text( match_conn.note );
           return( false );
         }
       }
@@ -1860,6 +1870,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_escape() {
     if( is_connection_editable() ) {
       _im_context.reset();
+      _current_connection.edit_title_end();
       undo_buffer.add_item( new UndoConnectionTitle( _current_connection, _orig_title ) );
       _current_connection.mode = ConnMode.SELECTED;
       current_changed();
@@ -1930,6 +1941,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the return character is entered in the drawing area */
   private void handle_return() {
     if( is_connection_editable() ) {
+      _current_connection.edit_title_end();
       undo_buffer.add_item( new UndoConnectionTitle( _current_connection, _orig_title ) );
       _current_connection.mode = ConnMode.SELECTED;
       current_changed();
@@ -2524,6 +2536,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else if( is_connection_selected() ) {
         switch( str ) {
           case "e" :
+            _current_connection.edit_title_begin( this );
             _current_connection.mode = ConnMode.EDITABLE;
             queue_draw();
             break;

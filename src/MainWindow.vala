@@ -24,6 +24,9 @@ using Gdk;
 
 public class MainWindow : ApplicationWindow {
 
+  private const string DESKTOP_SCHEMA = "io.elementary.desktop";
+  private const string DARK_KEY       = "prefer-dark";
+
   private GLib.Settings     _settings;
   private HeaderBar?        _header         = null;
   private DrawArea?         _canvas         = null;
@@ -55,6 +58,7 @@ public class MainWindow : ApplicationWindow {
   private Button?           _prop_btn       = null;
   private Image?            _prop_show      = null;
   private Image?            _prop_hide      = null;
+  private bool              _prefer_dark    = false;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",          action_save },
@@ -78,6 +82,9 @@ public class MainWindow : ApplicationWindow {
     Object( application: app );
 
     _settings = settings;
+
+    /* Handle any changes to the dark mode preference setting */
+    handle_prefer_dark_changes();
 
     var window_x = settings.get_int( "window-x" );
     var window_y = settings.get_int( "window-y" );
@@ -185,6 +192,18 @@ public class MainWindow : ApplicationWindow {
     add( hbox );
     show_all();
 
+  }
+
+  /* Handles any changes to the dark mode preference gsettings for the desktop */
+  private void handle_prefer_dark_changes() {
+    var lookup = SettingsSchemaSource.get_default().lookup( DESKTOP_SCHEMA, false );
+    if( lookup != null ) {
+      var desktop_settings = new GLib.Settings( DESKTOP_SCHEMA );
+      desktop_settings.changed.connect(() => {
+        _prefer_dark = desktop_settings.get_boolean( DARK_KEY );
+        on_theme_changed();
+      });
+    }
   }
 
   /* Updates the title */
@@ -708,7 +727,7 @@ public class MainWindow : ApplicationWindow {
   private void on_theme_changed() {
     Gtk.Settings? settings = Gtk.Settings.get_default();
     if( settings != null ) {
-      settings.gtk_application_prefer_dark_theme = _canvas.get_theme().prefer_dark;
+      settings.gtk_application_prefer_dark_theme = _prefer_dark || _canvas.get_theme().prefer_dark;
     }
   }
 

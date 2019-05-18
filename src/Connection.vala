@@ -194,6 +194,22 @@ public class Connection : Object {
     }
   }
 
+  /* Makes sure that the title is ready to be edited */
+  public void edit_title_begin( DrawArea da ) {
+    if( _title != null ) return;
+    _title = new CanvasText.with_text( da, _max_width, "" );
+    _title.resized.connect( position_title );
+    _title.set_font( style.connection_font );
+    position_title();
+  }
+
+  /* Called when the title text is done being edited */
+  public void edit_title_end() {
+    if( (_title == null) || (_title.text != "") ) return;
+    _title.resized.disconnect( position_title );
+    _title = null;
+  }
+
   /* Adds a title */
   public void change_title( DrawArea da, string title, bool allow_empty = false ) {
     if( (title == "") && !allow_empty ) {
@@ -354,7 +370,7 @@ public class Connection : Object {
   /* Returns true if the given point is within the drag handle */
   public bool within_drag_handle( double x, double y ) {
     if( mode == ConnMode.SELECTED ) {
-      if( title == null ) {
+      if( (title == null) && (note.length == 0) ) {
         return( within_handle( _dragx, _dragy, x, y ) );
       } else {
         double tx, ty, tw, th;
@@ -402,6 +418,37 @@ public class Connection : Object {
     return( Utils.is_within_bounds( x, y, nx, ny, nw, nh ) );
   }
 
+  /* Returns the bounding box for the stored title and note icon */
+  private void title_bbox( out double x, out double y, out double w, out double h ) {
+    var padding = style.connection_padding ?? 0;
+    if( _title != null ) {
+      x = _title.posx - padding;
+      y = _title.posy - padding;
+      w = _title.width + (padding * 2) + ((note.length > 0) ? (padding + 11) : 0);
+      h = ((_title.height < 11) ? 11 : _title.height) + (padding * 2);
+    } else {
+      x = _dragx - (padding + 5);
+      y = _dragy - (padding + 5);
+      w = 11 + (padding * 2);
+      h = 11 + (padding * 2);
+    }
+  }
+
+  /* Returns the positional information for where the note item is located (if it exists) */
+  private void note_bbox( out double x, out double y, out double w, out double h ) {
+
+    double tx, ty, tw, th;
+    var    padding = style.connection_padding ?? 0;
+
+    title_bbox( out tx, out ty, out tw, out th );
+
+    x = (tx + tw) - (padding + 11);
+    y = ty + (th / 2) - 5;
+    w = 11;
+    h = 11;
+
+  }
+
   /* Updates the location of the drag handle */
   public void move_drag_handle( double x, double y ) {
     mode = ConnMode.ADJUSTING;
@@ -411,7 +458,7 @@ public class Connection : Object {
     if( title != null ) {
       double tx, ty, tw, th;
       title_bbox( out tx, out ty, out tw, out th );
-      _dragy -= ((th / 2) + _style.connection_padding);
+      _dragy -= (th / 2);
     }
     _curve.update_control_from_drag_handle( _dragx, _dragy );
     set_connect_point( _from_node );
@@ -619,25 +666,6 @@ public class Connection : Object {
 
   }
 
-  /* Returns the bounding box for the stored title (assumes the title is not null */
-  private void title_bbox( out double x, out double y, out double w, out double h ) {
-    x = _title.posx;
-    y = _title.posy;
-    w = _title.width;
-    h = _title.height;
-  }
-
-  /* Returns the positional information for where the note item is located (if it exists) */
-  private void note_bbox( out double x, out double y, out double w, out double h ) {
-    int padding = style.connection_padding ?? 0;
-    var posx    = (_title == null) ? (_dragx - 5) : _title.posx;
-    var posy    = (_title == null) ? (_dragy - 5) : _title.posy;
-    x = posx + _title.width + padding;
-    y = posy;
-    w = 11;
-    h = 11;
-  }
-
   /*
    Draws the connection title if it has been enabled.
   */
@@ -647,21 +675,8 @@ public class Connection : Object {
     var    padding = _style.connection_padding ?? 0;
     double x, y, w, h;
 
-    if( _title != null ) {
-      title_bbox( out x, out y, out w, out h );
-    } else {
-      x = _dragx;
-      y = _dragy - padding;
-      w = 0;
-      h = 0;
-    }
-
-    if( note.length > 0 ) {
-      w += padding + 11;
-      if( h < 11 ) {
-        h = 11;
-      }
-    }
+    /* Get the bbox for the entire title box */
+    title_bbox( out x, out y, out w, out h );
 
     /* Draw the box */
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );

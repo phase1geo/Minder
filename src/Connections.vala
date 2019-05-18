@@ -114,6 +114,19 @@ public class Connections {
     return( null );
   }
 
+  /*
+   Searches the connections for one which is displaying a note at the given
+   coordinates.  If a match is found, return the connection; otherwise, return null.
+  */
+  public Connection? within_note( double x, double y ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ).within_note( x, y ) ) {
+        return( _connections.index( i ) );
+      }
+    }
+    return( null );
+  }
+
   /* Returns the associated connection if the given point is within the drag handle */
   public Connection? within_drag_handle( double x, double y ) {
     for( int i=0; i<_connections.length; i++ ) {
