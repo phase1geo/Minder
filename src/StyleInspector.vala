@@ -86,11 +86,13 @@ public class StyleInspector : Box {
   private Switch                     _node_fill;
   private Scale                      _node_margin;
   private Scale                      _node_padding;
-  private FontButton                 _font_chooser;
+  private FontButton                 _node_font;
   private Switch                     _node_markup;
   private Image                      _conn_dash;
   private Image                      _conn_arrow;
   private Scale                      _conn_width;
+  private Scale                      _conn_padding;
+  private FontButton                 _conn_font;
   private StyleAffects               _affects;
   private Array<Gtk.MenuItem>        _affect_items;
   private Label                      _affects_label;
@@ -643,16 +645,16 @@ public class StyleInspector : Box {
     var lbl = new Label( _( "Font" ) );
     lbl.xalign = (float)0;
 
-    _font_chooser = new FontButton();
-    _font_chooser.use_font = true;
-    _font_chooser.font_set.connect(() => {
-      var family = _font_chooser.get_font_family().get_name();
-      var size   = _font_chooser.get_font_size();
+    _node_font = new FontButton();
+    _node_font.use_font = true;
+    _node_font.font_set.connect(() => {
+      var family = _node_font.get_font_family().get_name();
+      var size   = _node_font.get_font_size();
       _da.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _da ) );
     });
 
-    box.pack_start( lbl,         false, true );
-    box.pack_end( _font_chooser, false, true );
+    box.pack_start( lbl,      false, true );
+    box.pack_end( _node_font, false, true );
 
     return( box );
 
@@ -693,13 +695,17 @@ public class StyleInspector : Box {
     var cbox = new Box( Orientation.VERTICAL, 10 );
     cbox.border_width = 10;
 
-    var conn_dash  = create_connection_dash_ui();
-    var conn_arrow = create_connection_arrow_ui();
-    var conn_width = create_connection_width_ui();
+    var conn_dash    = create_connection_dash_ui();
+    var conn_arrow   = create_connection_arrow_ui();
+    var conn_width   = create_connection_width_ui();
+    var conn_padding = create_connection_padding_ui();
+    var conn_font    = create_connection_font_ui();
 
-    cbox.pack_start( conn_dash,  false, true );
-    cbox.pack_start( conn_arrow, false, true );
-    cbox.pack_start( conn_width, false, true );
+    cbox.pack_start( conn_dash,    false, true );
+    cbox.pack_start( conn_arrow,   false, true );
+    cbox.pack_start( conn_width,   false, true );
+    cbox.pack_start( conn_padding, false, true );
+    cbox.pack_start( conn_font,    false, true );
 
     box.pack_start( lbl,  false, true );
     box.pack_start( cbox, false, true );
@@ -795,7 +801,7 @@ public class StyleInspector : Box {
     var lbl = new Label( _( "Line Width" ) );
     lbl.xalign = (float)0;
 
-    _conn_width = new Scale.with_range( Orientation.HORIZONTAL, 2, 8, 1 );
+    _conn_width = new Scale.with_range( Orientation.HORIZONTAL, 1, 8, 1 );
     _conn_width.draw_value = false;
 
     for( int i=2; i<=8; i++ ) {
@@ -832,6 +838,69 @@ public class StyleInspector : Box {
   private bool connection_width_released( EventButton e ) {
     _change_add = true;
     return( false );
+  }
+
+  /* Allows the user to change the node padding */
+  private Box create_connection_padding_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Padding" ) );
+    lbl.xalign = (float)0;
+
+    _conn_padding = new Scale.with_range( Orientation.HORIZONTAL, 2, 10, 2 );
+    _conn_padding.draw_value = true;
+    _conn_padding.change_value.connect( connection_padding_changed );
+    _conn_padding.button_release_event.connect( connection_padding_released );
+
+    box.pack_start( lbl,           false, true );
+    box.pack_end(   _conn_padding, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the node margin value is changed */
+  private bool connection_padding_changed( ScrollType scroll, double value ) {
+    if( (int) value > 20 ) {
+      return( false );
+    }
+    var padding = new UndoStyleConnectionPadding( _affects, (int)value, _da );
+    if( _change_add ) {
+      _da.undo_buffer.add_item( padding );
+      _change_add = false;
+    } else {
+      _da.undo_buffer.replace_item( padding );
+    }
+    return( false );
+  }
+
+  private bool connection_padding_released( EventButton e ) {
+    _change_add = true;
+    return( false );
+  }
+
+  /* Creates the node font selector */
+  private Box create_connection_font_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Font" ) );
+    lbl.xalign = (float)0;
+
+    _conn_font = new FontButton();
+    _conn_font.use_font = true;
+    _conn_font.font_set.connect(() => {
+      var family = _conn_font.get_font_family().get_name();
+      var size   = _conn_font.get_font_size();
+      _da.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _da ) );
+    });
+
+    box.pack_start( lbl,      false, true );
+    box.pack_end( _conn_font, false, true );
+
+    return( box );
+
   }
 
   /* Sets the affects value and save the change to the settings */
@@ -1011,10 +1080,12 @@ public class StyleInspector : Box {
     _node_fill.set_sensitive( style.node_border.is_fillable() );
     _node_margin.set_value( (double)style.node_margin );
     _node_padding.set_value( (double)style.node_padding );
-    _font_chooser.set_font( style.node_font.to_string() );
+    _node_font.set_font( style.node_font.to_string() );
     _node_markup.set_active( (bool)style.node_markup );
     _conn_arrow.surface = Connection.make_arrow_icon( style.connection_arrow );
     _conn_width.set_value( (double)style.connection_width );
+    _conn_font.set_font( style.connection_font.to_string() );
+    _conn_padding.set_value( (double)style.connection_padding );
   }
 
   /* Called whenever the current node changes */

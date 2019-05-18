@@ -742,10 +742,10 @@ public class Connection : Object {
   */
   public static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy, double tailx, double taily, double arrowLength = 0 ) {
 
-    double extlen[7] = {14, 14, 15, 16, 17, 18, 18};
+    double extlen[8] = {12, 13, 14, 15, 16, 17, 18, 18};
 
     if( arrowLength == 0 ) {
-      arrowLength = extlen[line_width-2];
+      arrowLength = extlen[line_width-1];
     }
 
     var dx = tipx - tailx;
