@@ -199,6 +199,7 @@ public class MainWindow : ApplicationWindow {
     var lookup = SettingsSchemaSource.get_default().lookup( DESKTOP_SCHEMA, false );
     if( lookup != null ) {
       var desktop_settings = new GLib.Settings( DESKTOP_SCHEMA );
+      _prefer_dark = desktop_settings.get_boolean( DARK_KEY );
       desktop_settings.changed.connect(() => {
         _prefer_dark = desktop_settings.get_boolean( DARK_KEY );
         on_theme_changed();
