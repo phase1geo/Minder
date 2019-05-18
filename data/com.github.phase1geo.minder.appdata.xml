@@ -100,6 +100,7 @@
           <li>Improved readability of theme name when the theme is selected.</li>
           <li>Fixed issue where changing a global style was not saved/applied to new nodes.</li>
           <li>Improved copy/paste support of nodes so that copied items can be pasted in other mind maps.</li>
+          <li>Added support for dynamically changing to dark mode in the UI if the prefer-dark desktop gsetting is set.</li>
           <li>Removed support for Loki builds.</li>
         </ul>
       </description>
