@@ -36,9 +36,8 @@
   </provides>
   <screenshots>
     <screenshot>
-      <caption>Node Property Sidebar</caption>
-      <caption xml:lang="fr">Barre latérale des propriétés des nœuds</caption>
-      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-node-properties.png</image>
+      <caption>Node/Connection Property Sidebar</caption>
+      <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-current-properties.png</image>
     </screenshot>
     <screenshot>
       <caption>Style Property Sidebar</caption>
