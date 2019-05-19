@@ -14,17 +14,21 @@
     <ul>
       <li>Quickly create visual mind-maps using the keyboard and automatic layout.</li>
       <li xml:lang="fr">Créez rapidement des cartes mentales visuelles en utilisant le clavier et la mise en forme automatique.</li>
-      <li>Gorgeous themes.</li>
-      <li xml:lang="fr">Magnifiques thèmes.</li>
+      <li>Choose from many tree layout choices</li>
+      <li>Add notes, tasks and images to your nodes.</li>
+      <li xml:lang="fr">Ajoutez des notes, des tâches et des images à vos nœuds.</li>
+      <li>Add node-to-node connections with optional text and notes.</li>
+      <li>Stylize nodes, links and connections to add more meaning and improve readability.</li>
+      <li>Quick search of node and connection titles and notes, including filtering options.</li>
+      <li>Zoom in to focus on certain ideas or zoom out to see the bigger picture.</li>
+      <li>Unlimited undo/redo of any change.</li>
+      <li>Automatically saves in the background.</li>
+      <li>Colorized node branches.</li>
+      <li xml:lang="fr">Branches colorées.</li>
+      <li>Gorgeous themes and animations.</li>
       <li>Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText and Mermaid formats.</li>
       <li>Printer support.</li>
       <li xml:lang="fr">Support des imprimantes.</li>
-      <li>Add notes, tasks and images to your nodes.</li>
-      <li xml:lang="fr">Ajoutez des notes, des tâches et des images à vos nœuds.</li>
-      <li>Stylize nodes and links to add more meaning and improve readability.</li>
-      <li>Add node-to-node connections with optional text and notes.</li>
-      <li>Colorized node branches.</li>
-      <li xml:lang="fr">Branches colorées.</li>
     </ul>
   </description>
   <provides>
@@ -87,6 +91,7 @@
   <releases>
     <release version="1.3" date="2019-05-17">
       <description>
+        <p>Let's stay connected!</p>
         <ul>
           <li>Added support for creating a visual connection between any two nodes.</li>
           <li>Added ability to show/hide all connections in the map.</li>
@@ -101,6 +106,7 @@
           <li>Fixed issue where changing a global style was not saved/applied to new nodes.</li>
           <li>Improved copy/paste support of nodes so that copied items can be pasted in other mind maps.</li>
           <li>Added support for dynamically changing to dark mode in the UI if the prefer-dark desktop gsetting is set.</li>
+          <li>Added ability to show/hide each panel within the style inspector.</li>
           <li>Removed support for Loki builds.</li>
         </ul>
       </description>

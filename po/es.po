@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-18 01:31-0500\n"
+"POT-Creation-Date: 2019-05-18 23:24-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: none\n"
@@ -581,71 +581,71 @@ msgstr ""
 msgid "Level 9 Nodes"
 msgstr ""
 
-#: src/StyleInspector.vala:150
+#: src/StyleInspector.vala:155
 msgid "<b>Changes affect:</b>"
 msgstr ""
 
-#: src/StyleInspector.vala:195
+#: src/StyleInspector.vala:201
 msgid "<b>Branch Options</b>"
 msgstr ""
 
-#: src/StyleInspector.vala:220
+#: src/StyleInspector.vala:230
 msgid "Branch Style"
 msgstr ""
 
-#: src/StyleInspector.vala:270
+#: src/StyleInspector.vala:281
 msgid "<b>Link Options</b>"
 msgstr ""
 
-#: src/StyleInspector.vala:299 src/StyleInspector.vala:718
+#: src/StyleInspector.vala:314 src/StyleInspector.vala:747
 msgid "Line Dash"
 msgstr ""
 
-#: src/StyleInspector.vala:338 src/StyleInspector.vala:795
+#: src/StyleInspector.vala:353 src/StyleInspector.vala:824
 msgid "Line Width"
 msgstr ""
 
-#: src/StyleInspector.vala:384
+#: src/StyleInspector.vala:399
 msgid "Link Arrow"
 msgstr ""
 
-#: src/StyleInspector.vala:409
+#: src/StyleInspector.vala:425
 msgid "<b>Node Options</b>"
 msgstr ""
 
-#: src/StyleInspector.vala:444
+#: src/StyleInspector.vala:464
 msgid "Border Style"
 msgstr ""
 
-#: src/StyleInspector.vala:493
+#: src/StyleInspector.vala:513
 msgid "Border Width"
 msgstr ""
 
-#: src/StyleInspector.vala:538
+#: src/StyleInspector.vala:558
 msgid "Fill With Link Color"
 msgstr ""
 
-#: src/StyleInspector.vala:563
+#: src/StyleInspector.vala:583
 msgid "Margin"
 msgstr ""
 
-#: src/StyleInspector.vala:604
+#: src/StyleInspector.vala:624 src/StyleInspector.vala:872
 msgid "Padding"
 msgstr ""
 
-#: src/StyleInspector.vala:643
+#: src/StyleInspector.vala:663 src/StyleInspector.vala:911
 msgid "Font"
 msgstr ""
 
-#: src/StyleInspector.vala:664
+#: src/StyleInspector.vala:684
 msgid "Enable Markup"
 msgstr ""
 
-#: src/StyleInspector.vala:689
+#: src/StyleInspector.vala:710
 msgid "<b>Connection Options</b>"
 msgstr ""
 
-#: src/StyleInspector.vala:757
+#: src/StyleInspector.vala:786
 msgid "Arrows"
 msgstr ""
 
