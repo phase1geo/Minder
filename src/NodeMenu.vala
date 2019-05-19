@@ -82,6 +82,7 @@ public class NodeMenu : Gtk.Menu {
 
     _conn = new Gtk.MenuItem.with_label( _( "Add Connection" ) );
     _conn.activate.connect( add_connection );
+    Utils.add_accel_label( _conn, 'x', 0 );
 
     _fold = new Gtk.MenuItem.with_label( _( "Fold Children" ) );
     _fold.activate.connect( fold_node );
@@ -127,7 +128,7 @@ public class NodeMenu : Gtk.Menu {
 
     _selconn = new Gtk.MenuItem.with_label( _( "Connection" ) );
     _selconn.activate.connect( select_connection );
-    Utils.add_accel_label( _selconn, 'x', 0 );
+    Utils.add_accel_label( _selconn, 'X', Gdk.ModifierType.SHIFT_MASK );
 
     _center = new Gtk.MenuItem.with_label( _( "Center Current Node" ) );
     _center.activate.connect( center_current_node );

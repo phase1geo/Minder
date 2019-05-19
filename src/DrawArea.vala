@@ -2602,8 +2602,8 @@ public class DrawArea : Gtk.DrawingArea {
           case "j" :  handle_down( false );  break;
           case "k" :  handle_up( false );  break;
           case "l" :  handle_right( false );  break;
-          case ">" :  start_connection( true );  break;
-          case "x" :  select_attached_connection();  break;
+          case "x" :  start_connection( true );  break;
+          case "X" :  select_attached_connection();  break;
           default :
             // This is a key that doesn't have any associated functionality
             // so just return immediately so that we don't force a redraw

@@ -54,11 +54,11 @@ public class ConnectionMenu : Gtk.Menu {
 
     _selstart = new Gtk.MenuItem.with_label( _( "Start Node" ) );
     _selstart.activate.connect( select_start_node );
-    Utils.add_accel_label( _selstart, 'p', 0 );
+    Utils.add_accel_label( _selstart, 'f', 0 );
 
     _selend = new Gtk.MenuItem.with_label( _( "End Node" ) );
     _selend.activate.connect( select_end_node );
-    Utils.add_accel_label( _selend, 'n', 0 );
+    Utils.add_accel_label( _selend, 't', 0 );
 
     _selnext = new Gtk.MenuItem.with_label( _( "Next Connection" ) );
     _selnext.activate.connect( select_next_connection );

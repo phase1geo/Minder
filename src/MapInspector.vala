@@ -58,10 +58,11 @@ public class MapInspector : Box {
   private void add_animation_ui() {
 
     var box     = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl     = new Label( _( "Enable animations" ) );
+    var lbl     = new Label( _( "<b>Enable animations</b>" ) );
     var animate = _settings.get_boolean( "enable-animations" );
 
     lbl.xalign = (float)0;
+    lbl.use_markup = true;
 
     var enable = new Switch();
     enable.set_active( animate );
@@ -87,13 +88,15 @@ public class MapInspector : Box {
   /* Add the connection show/hide UI */
   private void add_connection_ui() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Hide connections" ) );
+    var box       = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl       = new Label( _( "<b>Hide connections</b>" ) );
+    var hide_conn = _settings.get_boolean( "hide-connections" );
 
     lbl.xalign = (float)0;
+    lbl.use_markup = true;
 
     var hide_connections = new Switch();
-    hide_connections.set_active( _da.get_connections().hide );
+    hide_connections.set_active( hide_conn );
     hide_connections.button_release_event.connect( hide_connections_changed );
 
     box.pack_start( lbl,              false, true, 0 );
@@ -101,11 +104,15 @@ public class MapInspector : Box {
 
     pack_start( box, false, true );
 
+    /* Initialize the connections */
+    _da.get_connections().hide = hide_conn;
+
   }
 
   /* Called whenever the hide connections switch is changed within the inspector */
   private bool hide_connections_changed( Gdk.EventButton e ) {
     _da.get_connections().hide = !_da.get_connections().hide;
+    _settings.set_boolean( "hide-connections", _da.get_connections().hide );
     _da.queue_draw();
     return( false );
   }
@@ -117,8 +124,9 @@ public class MapInspector : Box {
     _da.layouts.get_icons( ref icons );
 
     /* Create the modebutton to select the current layout */
-    var lbl = new Label( _( "Node Layouts" ) );
+    var lbl = new Label( _( "<b>Node Layouts</b>" ) );
     lbl.xalign = (float)0;
+    lbl.use_markup = true;
 
     /* Create the layouts mode button */
     _layouts = new Granite.Widgets.ModeButton();
@@ -167,8 +175,9 @@ public class MapInspector : Box {
   private void add_theme_ui() {
 
     /* Create the UI */
-    var lbl = new Label( _( "Themes" ) );
+    var lbl = new Label( _( "<b>Themes</b>" ) );
     lbl.xalign = (float)0;
+    lbl.use_markup = true;
 
     var sw  = new ScrolledWindow( null, null );
     var vp  = new Viewport( null, null );
