@@ -202,7 +202,7 @@ public class StyleInspector : Box {
     exp.use_markup = true;
     exp.expanded   = _settings.get_boolean( "style-branch-options-expanded" );
     exp.activate.connect(() => {
-      _settings.set_boolean( "style-branch-options-all-expanded", !exp.expanded );
+      _settings.set_boolean( "style-branch-options-expanded", !exp.expanded );
     });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
