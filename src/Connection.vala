@@ -47,6 +47,7 @@ public class Connection : Object {
   private Style       _style     = new Style();
   private Bezier      _curve;
   private CanvasText? _title     = null;
+  private string      _note      = "";
   private double      _max_width = 100;
 
   public CanvasText? title {
@@ -54,7 +55,18 @@ public class Connection : Object {
       return( _title );
     }
   }
-  public string   note  { get; set; default = ""; }
+  public string note  {
+    get {
+      return( _note );
+    }
+    set {
+      bool was_empty = (_note.length == 0);
+      _note = value;
+      if( was_empty != (_note.length == 0) ) {
+        position_title();
+      }
+    }
+  }
   public ConnMode mode  {
     get {
       return( _mode );
@@ -98,7 +110,8 @@ public class Connection : Object {
     }
     set {
       if( _style.copy( value ) && (_title != null) ) {
-        _title.set_font( _style.node_font );
+        _title.set_font( _style.connection_font );
+        position_title();
       }
     }
   }
@@ -181,6 +194,22 @@ public class Connection : Object {
     }
   }
 
+  /* Makes sure that the title is ready to be edited */
+  public void edit_title_begin( DrawArea da ) {
+    if( _title != null ) return;
+    _title = new CanvasText.with_text( da, _max_width, "" );
+    _title.resized.connect( position_title );
+    _title.set_font( style.connection_font );
+    position_title();
+  }
+
+  /* Called when the title text is done being edited */
+  public void edit_title_end() {
+    if( (_title == null) || (_title.text != "") ) return;
+    _title.resized.disconnect( position_title );
+    _title = null;
+  }
+
   /* Adds a title */
   public void change_title( DrawArea da, string title, bool allow_empty = false ) {
     if( (title == "") && !allow_empty ) {
@@ -191,7 +220,7 @@ public class Connection : Object {
     } else if( _title == null ) {
       _title = new CanvasText.with_text( da, _max_width, title );
       _title.resized.connect( position_title );
-      _title.set_font( style.node_font );
+      _title.set_font( style.connection_font );
       position_title();
     } else {
       _title.text = title;
@@ -201,10 +230,10 @@ public class Connection : Object {
   /* Positions the given title according to the location of the _dragx and _dragy values */
   private void position_title() {
     if( title != null ) {
-      var text_width  = title.width;
-      var text_height = title.height;
-      _title.posx = _dragx - (text_width  / 2);
-      _title.posy = _dragy - (text_height / 2);
+      var width  = title.width  + ((note.length > 0) ? (style.connection_padding + 11) : 0);
+      var height = (title.height < 11) ? 11 : title.height;
+      _title.posx = _dragx - (width  / 2);
+      _title.posy = _dragy - (height / 2);
     }
   }
 
@@ -218,6 +247,9 @@ public class Connection : Object {
   public void disconnect_node( Node node ) {
     node.moved.disconnect( this.end_moved );
     node.resized.disconnect( this.end_resized );
+    if( node.last_selected_connection == this ) {
+      node.last_selected_connection = null;
+    }
   }
 
   /* Completes the connection */
@@ -338,7 +370,7 @@ public class Connection : Object {
   /* Returns true if the given point is within the drag handle */
   public bool within_drag_handle( double x, double y ) {
     if( mode == ConnMode.SELECTED ) {
-      if( title == null ) {
+      if( (title == null) && (note.length == 0) ) {
         return( within_handle( _dragx, _dragy, x, y ) );
       } else {
         double tx, ty, tw, th;
@@ -378,6 +410,45 @@ public class Connection : Object {
     return( (_title != null) && _title.is_within( x, y ) );
   }
 
+  /* Returns true if the given coordinates lies within the connection note */
+  public bool within_note( double x, double y ) {
+    if( note.length == 0 ) return( false );
+    double nx, ny, nw, nh;
+    note_bbox( out nx, out ny, out nw, out nh );
+    return( Utils.is_within_bounds( x, y, nx, ny, nw, nh ) );
+  }
+
+  /* Returns the bounding box for the stored title and note icon */
+  private void title_bbox( out double x, out double y, out double w, out double h ) {
+    var padding = style.connection_padding ?? 0;
+    if( _title != null ) {
+      x = _title.posx - padding;
+      y = _title.posy - padding;
+      w = _title.width + (padding * 2) + ((note.length > 0) ? (padding + 11) : 0);
+      h = ((_title.height < 11) ? 11 : _title.height) + (padding * 2);
+    } else {
+      x = _dragx - (padding + 5);
+      y = _dragy - (padding + 5);
+      w = 11 + (padding * 2);
+      h = 11 + (padding * 2);
+    }
+  }
+
+  /* Returns the positional information for where the note item is located (if it exists) */
+  private void note_bbox( out double x, out double y, out double w, out double h ) {
+
+    double tx, ty, tw, th;
+    var    padding = style.connection_padding ?? 0;
+
+    title_bbox( out tx, out ty, out tw, out th );
+
+    x = (tx + tw) - (padding + 11);
+    y = ty + (th / 2) - 5;
+    w = 11;
+    h = 11;
+
+  }
+
   /* Updates the location of the drag handle */
   public void move_drag_handle( double x, double y ) {
     mode = ConnMode.ADJUSTING;
@@ -387,7 +458,7 @@ public class Connection : Object {
     if( title != null ) {
       double tx, ty, tw, th;
       title_bbox( out tx, out ty, out tw, out th );
-      _dragy -= ((th / 2) + _style.connection_padding);
+      _dragy -= (th / 2);
     }
     _curve.update_control_from_drag_handle( _dragx, _dragy );
     set_connect_point( _from_node );
@@ -441,21 +512,23 @@ public class Connection : Object {
     set_connect_point( _from_node );
     set_connect_point( _to_node );
 
-    /* Load the connection style */
+    /* Load the connection information */
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
-        if( it->name == "style" ) {
-          style.load_connection( it );
+        switch( it->name ) {
+          case "style" :  style.load_connection( it );  break;
+          case "title" :  
+           if( (it->children != null) && (it->children->type == Xml.ElementType.TEXT_NODE) ) {
+             change_title( da, it->children->get_content() );
+           }
+           break;
+          case "note"  :
+           if( (it->children != null) && (it->children->type == Xml.ElementType.TEXT_NODE) ) {
+             note = it->children->get_content();
+           }
+           break;
         }
       }
-    }
-
-    string? ti = node->get_prop( "title" );
-    if( ti != null ) {
-      _title = new CanvasText.with_text( da, _max_width, ti );
-      _title.resized.connect( position_title );
-      _title.set_font( style.node_font );
-      position_title();
     }
 
   }
@@ -470,12 +543,11 @@ public class Connection : Object {
     n->set_prop( "drag_y",       _dragy.to_string() );
     n->set_prop( "color",        _color.to_string() );
 
-    if( title != null ) {
-      n->set_prop( "title", title.text );
-    }
-
     /* Save the style connection */
     style.save_connection( n );
+
+    n->new_text_child( null, "title", ((title != null) ? title.text : "") );
+    n->new_text_child( null, "note",  note );
 
     parent->add_child( n );
 
@@ -559,7 +631,7 @@ public class Connection : Object {
     }
 
     /* Draw the connection title if it exists */
-    if( title != null ) {
+    if( (title != null) || (note.length > 0) ) {
 
       draw_title( ctx, theme );
 
@@ -594,14 +666,6 @@ public class Connection : Object {
 
   }
 
-  /* Returns the bounding box for the stored title (assumes the title is not null */
-  private void title_bbox( out double x, out double y, out double w, out double h ) {
-    x = _title.posx;
-    y = _title.posy;
-    w = _title.width;
-    h = _title.height;
-  }
-
   /*
    Draws the connection title if it has been enabled.
   */
@@ -611,15 +675,22 @@ public class Connection : Object {
     var    padding = _style.connection_padding ?? 0;
     double x, y, w, h;
 
+    /* Get the bbox for the entire title box */
     title_bbox( out x, out y, out w, out h );
 
     /* Draw the box */
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
-    ctx.rectangle( (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)) );
+    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)), (padding * 2) );
+    // ctx.rectangle( (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)) );
     ctx.fill();
 
     /* Draw the text */
-    _title.draw( ctx, theme, fg, _alpha );
+    if( _title != null ) {
+      _title.draw( ctx, theme, fg, _alpha );
+    }
+
+    /* Draw the note, if necessary */
+    draw_note( ctx, fg );
 
     /* Draw the drag handle */
     if( (mode == ConnMode.SELECTED) || (mode == ConnMode.ADJUSTING) ) {
@@ -637,16 +708,45 @@ public class Connection : Object {
 
   }
 
+  /* Draws the icon indicating that a note is associated with this node */
+  private void draw_note( Cairo.Context ctx, RGBA color ) {
+
+    if( note.length > 0 ) {
+
+      double x, y, w, h;
+
+      note_bbox( out x, out y, out w, out h );
+
+      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      ctx.new_path();
+      ctx.set_line_width( 1 );
+      ctx.move_to( (x + 2), y );
+      ctx.line_to( (x + 10), y );
+      ctx.stroke();
+      ctx.move_to( x, (y + 3) );
+      ctx.line_to( (x + 10), (y + 3) );
+      ctx.stroke();
+      ctx.move_to( x, (y + 6) );
+      ctx.line_to( (x + 10), (y + 6) );
+      ctx.stroke();
+      ctx.move_to( x, (y + 9) );
+      ctx.line_to( (x + 10), (y + 9) );
+      ctx.stroke();
+
+    }
+
+  }
+
   /*
    Draws arrow point to the "to" node.  The tailx/y values should be the
    bezier control point closest to the "to" node.
   */
   public static void draw_arrow( Cairo.Context ctx, int line_width, double tipx, double tipy, double tailx, double taily, double arrowLength = 0 ) {
 
-    double extlen[7] = {14, 14, 15, 16, 17, 18, 18};
+    double extlen[8] = {12, 13, 14, 15, 16, 17, 18, 18};
 
     if( arrowLength == 0 ) {
-      arrowLength = extlen[line_width-2];
+      arrowLength = extlen[line_width-1];
     }
 
     var dx = tipx - tailx;

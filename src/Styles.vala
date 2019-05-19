@@ -94,7 +94,7 @@ public class Styles {
       style.connection_dash    = ld_dotted;
       style.connection_width   = 2;
       style.connection_arrow   = "fromto";
-      style.connection_padding = 6;
+      style.connection_padding = 3;
       _styles.append_val( style );
     }
 

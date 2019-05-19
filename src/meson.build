@@ -68,6 +68,8 @@ sources += files(
     'undo_actions/UndoStyleChange.vala',
     'undo_actions/UndoStyleConnectionArrow.vala',
     'undo_actions/UndoStyleConnectionDash.vala',
+    'undo_actions/UndoStyleConnectionFont.vala',
+    'undo_actions/UndoStyleConnectionPadding.vala',
     'undo_actions/UndoStyleConnectionWidth.vala',
     'undo_actions/UndoStyleLinkArrow.vala',
     'undo_actions/UndoStyleLinkDash.vala',

@@ -63,6 +63,31 @@ public class Connections {
     return( false );
   }
 
+  /* Returns the connection that is before or after the given connection */
+  public Connection? get_connection( Connection conn, int dir ) {
+    if( _connections.length == 1 ) return( null );
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ) == conn ) {
+        int index = ((i + dir) < 0) ? (int)(_connections.length - 1) : (int)((i + dir) % _connections.length);
+        return( _connections.index( index ) );
+      }
+    }
+    return( null );
+  }
+
+  /*
+   Returns the first connection that is attached to the given node; otherwise, returns
+   null if the node does not contain a connection.
+  */
+  public Connection? get_attached_connection( Node node ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ).attached_to_node( node ) ) {
+        return( _connections.index( i ) );
+      }
+    }
+    return( null );
+  }
+
   /*
    Returns the associated connection if the given point is in proximity to the
    connection's curve.
@@ -83,6 +108,19 @@ public class Connections {
   public Connection? within_title( double x, double y ) {
     for( int i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ).within_title( x, y ) ) {
+        return( _connections.index( i ) );
+      }
+    }
+    return( null );
+  }
+
+  /*
+   Searches the connections for one which is displaying a note at the given
+   coordinates.  If a match is found, return the connection; otherwise, return null.
+  */
+  public Connection? within_note( double x, double y ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ).within_note( x, y ) ) {
         return( _connections.index( i ) );
       }
     }

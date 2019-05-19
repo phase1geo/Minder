@@ -24,6 +24,9 @@ using Gdk;
 
 public class MainWindow : ApplicationWindow {
 
+  private const string DESKTOP_SCHEMA = "io.elementary.desktop";
+  private const string DARK_KEY       = "prefer-dark";
+
   private GLib.Settings     _settings;
   private HeaderBar?        _header         = null;
   private DrawArea?         _canvas         = null;
@@ -55,6 +58,7 @@ public class MainWindow : ApplicationWindow {
   private Button?           _prop_btn       = null;
   private Image?            _prop_show      = null;
   private Image?            _prop_hide      = null;
+  private bool              _prefer_dark    = false;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",          action_save },
@@ -78,6 +82,9 @@ public class MainWindow : ApplicationWindow {
     Object( application: app );
 
     _settings = settings;
+
+    /* Handle any changes to the dark mode preference setting */
+    handle_prefer_dark_changes();
 
     var window_x = settings.get_int( "window-x" );
     var window_y = settings.get_int( "window-y" );
@@ -185,6 +192,19 @@ public class MainWindow : ApplicationWindow {
     add( hbox );
     show_all();
 
+  }
+
+  /* Handles any changes to the dark mode preference gsettings for the desktop */
+  private void handle_prefer_dark_changes() {
+    var lookup = SettingsSchemaSource.get_default().lookup( DESKTOP_SCHEMA, false );
+    if( lookup != null ) {
+      var desktop_settings = new GLib.Settings( DESKTOP_SCHEMA );
+      _prefer_dark = desktop_settings.get_boolean( DARK_KEY );
+      desktop_settings.changed.connect(() => {
+        _prefer_dark = desktop_settings.get_boolean( DARK_KEY );
+        on_theme_changed();
+      });
+    }
   }
 
   /* Updates the title */
@@ -487,7 +507,7 @@ public class MainWindow : ApplicationWindow {
     _stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
     _stack.set_transition_duration( 500 );
     _stack.add_titled( new CurrentInspector( _canvas ), "current", _("Current") );
-    _stack.add_titled( new StyleInspector( _canvas ), "style", _("Style") );
+    _stack.add_titled( new StyleInspector( _canvas, _settings ), "style", _("Style") );
     _stack.add_titled( new MapInspector( _canvas, _settings ),  "map",  _("Map") );
 
     _stack.add_events( EventMask.KEY_PRESS_MASK );
@@ -708,7 +728,7 @@ public class MainWindow : ApplicationWindow {
   private void on_theme_changed() {
     Gtk.Settings? settings = Gtk.Settings.get_default();
     if( settings != null ) {
-      settings.gtk_application_prefer_dark_theme = _canvas.get_theme().prefer_dark;
+      settings.gtk_application_prefer_dark_theme = _prefer_dark || _canvas.get_theme().prefer_dark;
     }
   }
 
@@ -769,16 +789,20 @@ public class MainWindow : ApplicationWindow {
 
   /* Displays the node properties panel for the current node */
   private void show_properties( string? tab, bool grab_note ) {
-    if( _inspector.reveal_child && ((tab == null) || (_stack.visible_child_name == tab)) ) return;
-    _prop_btn.image = _prop_hide;
-    if( tab != null ) {
-      _stack.visible_child_name = tab;
+    if( !_inspector.reveal_child || ((tab != null) && (_stack.visible_child_name != tab)) ) {
+      _prop_btn.image = _prop_hide;
+      if( tab != null ) {
+        _stack.visible_child_name = tab;
+      }
+      if( !_inspector.reveal_child ) {
+        _inspector.reveal_child = true;
+        _canvas.see( -300 );
+      }
+      _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
     }
-    if( !_inspector.reveal_child ) {
-      _inspector.reveal_child = true;
-      _canvas.see( -300 );
+    if( grab_note && (tab != null) && (tab == "current") ) {
+      (_stack.get_child_by_name( tab ) as CurrentInspector).grab_note();
     }
-    _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
   }
 
   /* Hides the node properties panel */
