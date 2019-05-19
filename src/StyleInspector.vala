@@ -101,6 +101,7 @@ public class StyleInspector : Box {
   private Box                        _link_group;
   private Box                        _node_group;
   private Box                        _conn_group;
+  private Expander                   _conn_exp;
   private bool                       _change_add = true;
 
   public static Styles styles = new Styles();
@@ -201,7 +202,7 @@ public class StyleInspector : Box {
     exp.use_markup = true;
     exp.expanded   = _settings.get_boolean( "style-branch-options-expanded" );
     exp.activate.connect(() => {
-      _settings.set_boolean( "style-branch-options-expanded", !exp.expanded );
+      _settings.set_boolean( "style-branch-options-all-expanded", !exp.expanded );
     });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
@@ -706,11 +707,11 @@ public class StyleInspector : Box {
     var sep = new Separator( Orientation.HORIZONTAL );
 
     /* Create expander */
-    var exp = new Expander( "  " + _( "<b>Connection Options</b>" ) );
-    exp.use_markup = true;
-    exp.expanded   = _settings.get_boolean( "style-connection-options-expanded" );
-    exp.activate.connect(() => {
-      _settings.set_boolean( "style-connection-options-expanded", !exp.expanded );
+    _conn_exp = new Expander( "  " + _( "<b>Connection Options</b>" ) );
+    _conn_exp.use_markup = true;
+    _conn_exp.expanded   = _settings.get_boolean( "style-connection-options-expanded" );
+    _conn_exp.activate.connect(() => {
+      _settings.set_boolean( "style-connection-options-expanded", !_conn_exp.expanded );
     });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
@@ -728,10 +729,10 @@ public class StyleInspector : Box {
     cbox.pack_start( conn_padding, false, true );
     cbox.pack_start( conn_font,    false, true );
 
-    exp.add( cbox );
+    _conn_exp.add( cbox );
 
-    box.pack_start( exp, false, true );
-    box.pack_start( sep, false, true, 10 );
+    box.pack_start( _conn_exp, false, true );
+    box.pack_start( sep,       false, true, 10 );
 
     return( box );
 
@@ -936,6 +937,7 @@ public class StyleInspector : Box {
         _link_group.visible   = true;
         _node_group.visible   = true;
         _conn_group.visible   = true;
+        _conn_exp.expanded    = _settings.get_boolean( "style-connection-options-expanded" );
         break;
       case StyleAffects.LEVEL0  :
       case StyleAffects.LEVEL1  :
@@ -968,6 +970,7 @@ public class StyleInspector : Box {
           _link_group.visible   = false;
           _node_group.visible   = false;
           _conn_group.visible   = true;
+          _conn_exp.expanded    = true;
         }
         break;
       case StyleAffects.CURRTREE :
@@ -976,7 +979,6 @@ public class StyleInspector : Box {
         _link_group.visible   = true;
         _node_group.visible   = true;
         _conn_group.visible   = false;
-        // _da.undo_buffer.add_item( new UndoStyleAffectChange( _affects, _da.get_current_node().get_root().style, _da ) );
         break;
       case StyleAffects.CURRSUBTREE :
         update_ui_with_style( _da.get_current_node().style );
@@ -984,7 +986,6 @@ public class StyleInspector : Box {
         _link_group.visible   = true;
         _node_group.visible   = true;
         _conn_group.visible   = false;
-        // _da.undo_buffer.add_item( new UndoStyleAffectChange( _affects, _da.get_current_node().style, _da ) );
         break;
     }
   }
