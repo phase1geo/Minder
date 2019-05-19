@@ -77,6 +77,7 @@ public enum StyleAffects {
 public class StyleInspector : Box {
 
   private DrawArea                   _da;
+  private GLib.Settings              _settings;
   private Granite.Widgets.ModeButton _link_types;
   private Scale                      _link_width;
   private Switch                     _link_arrow;
@@ -104,11 +105,12 @@ public class StyleInspector : Box {
 
   public static Styles styles = new Styles();
 
-  public StyleInspector( DrawArea da ) {
+  public StyleInspector( DrawArea da, GLib.Settings settings ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:20 );
 
-    _da = da;
+    _da       = da;
+    _settings = settings;
 
     /* Initialize the affects */
     _affects = StyleAffects.ALL;
@@ -194,9 +196,13 @@ public class StyleInspector : Box {
     var box = new Box( Orientation.VERTICAL, 0 );
     var sep = new Separator( Orientation.HORIZONTAL );
 
-    var lbl = new Label( _( "<b>Branch Options</b>" ) );
-    lbl.use_markup = true;
-    lbl.xalign = (float)0;
+    /* Create expander */
+    var exp = new Expander( "  " + _( "<b>Branch Options</b>" ) );
+    exp.use_markup = true;
+    exp.expanded   = _settings.get_boolean( "style-branch-options-expanded" );
+    exp.activate.connect(() => {
+      _settings.set_boolean( "style-branch-options-expanded", !exp.expanded );
+    });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
     cbox.border_width = 10;
@@ -205,9 +211,10 @@ public class StyleInspector : Box {
 
     cbox.pack_start( branch_type, false, true );
 
-    box.pack_start( lbl,  false, true );
-    box.pack_start( cbox, false, true );
-    box.pack_start( sep,  false, true, 10 );
+    exp.add( cbox );
+
+    box.pack_start( exp, false, true );
+    box.pack_start( sep, false, true, 10 );
 
     return( box );
 
@@ -269,9 +276,13 @@ public class StyleInspector : Box {
     var box = new Box( Orientation.VERTICAL, 0 );
     var sep = new Separator( Orientation.HORIZONTAL );
 
-    var lbl = new Label( _( "<b>Link Options</b>" ) );
-    lbl.use_markup = true;
-    lbl.xalign = (float)0;
+    /* Create expander */
+    var exp = new Expander( "  " + _( "<b>Link Options</b>" ) );
+    exp.use_markup = true;
+    exp.expanded   = _settings.get_boolean( "style-link-options-expanded" );
+    exp.activate.connect(() => {
+      _settings.set_boolean( "style-link-options-expanded", !exp.expanded );
+    });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
     cbox.border_width = 10;
@@ -284,9 +295,10 @@ public class StyleInspector : Box {
     cbox.pack_start( link_width, false, true );
     cbox.pack_start( link_arrow, false, true );
 
-    box.pack_start( lbl,  false, true );
-    box.pack_start( cbox, false, true );
-    box.pack_start( sep,  false, true, 10 );
+    exp.add( cbox );
+
+    box.pack_start( exp, false, true );
+    box.pack_start( sep, false, true, 10 );
 
     return( box );
 
@@ -408,9 +420,13 @@ public class StyleInspector : Box {
     var box = new Box( Orientation.VERTICAL, 5 );
     var sep = new Separator( Orientation.HORIZONTAL );
 
-    var lbl = new Label( _( "<b>Node Options</b>" ) );
-    lbl.use_markup = true;
-    lbl.xalign     = (float)0;
+    /* Create expander */
+    var exp = new Expander( "  " + _( "<b>Node Options</b>" ) );
+    exp.use_markup = true;
+    exp.expanded   = _settings.get_boolean( "style-node-options-expanded" );
+    exp.activate.connect(() => {
+      _settings.set_boolean( "style-node-options-expanded", !exp.expanded );
+    });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
     cbox.border_width = 10;
@@ -431,9 +447,10 @@ public class StyleInspector : Box {
     cbox.pack_start( node_font,        false, true );
     cbox.pack_start( node_markup,      false, true );
 
-    box.pack_start( lbl,  false, true );
-    box.pack_start( cbox, false, true );
-    box.pack_start( sep,  false, true, 10 );
+    exp.add( cbox );
+
+    box.pack_start( exp, false, true );
+    box.pack_start( sep, false, true, 10 );
 
     return( box );
 
@@ -688,9 +705,13 @@ public class StyleInspector : Box {
     var box = new Box( Orientation.VERTICAL, 0 );
     var sep = new Separator( Orientation.HORIZONTAL );
 
-    var lbl = new Label( _( "<b>Connection Options</b>" ) );
-    lbl.use_markup = true;
-    lbl.xalign = (float)0;
+    /* Create expander */
+    var exp = new Expander( "  " + _( "<b>Connection Options</b>" ) );
+    exp.use_markup = true;
+    exp.expanded   = _settings.get_boolean( "style-connection-options-expanded" );
+    exp.activate.connect(() => {
+      _settings.set_boolean( "style-connection-options-expanded", !exp.expanded );
+    });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
     cbox.border_width = 10;
@@ -707,9 +728,10 @@ public class StyleInspector : Box {
     cbox.pack_start( conn_padding, false, true );
     cbox.pack_start( conn_font,    false, true );
 
-    box.pack_start( lbl,  false, true );
-    box.pack_start( cbox, false, true );
-    box.pack_start( sep,  false, true, 10 );
+    exp.add( cbox );
+
+    box.pack_start( exp, false, true );
+    box.pack_start( sep, false, true, 10 );
 
     return( box );
 

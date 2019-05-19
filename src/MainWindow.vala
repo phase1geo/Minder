@@ -507,7 +507,7 @@ public class MainWindow : ApplicationWindow {
     _stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
     _stack.set_transition_duration( 500 );
     _stack.add_titled( new CurrentInspector( _canvas ), "current", _("Current") );
-    _stack.add_titled( new StyleInspector( _canvas ), "style", _("Style") );
+    _stack.add_titled( new StyleInspector( _canvas, _settings ), "style", _("Style") );
     _stack.add_titled( new MapInspector( _canvas, _settings ),  "map",  _("Map") );
 
     _stack.add_events( EventMask.KEY_PRESS_MASK );

@@ -156,5 +156,40 @@
       <summary>Last used connection arrow direction in Style properties</summary>
       <description>Last used connection arrow direction in Style properties</description>
     </key>
+    <key name="style-connection-padding" type="i">
+      <default>4</default>
+      <summary>Last used connection padding in Style properties</summary>
+      <description>Last used connection padding in Style properties</description>
+    </key>
+    <key name="style-connection-font-family" type="s">
+      <default>"sans"</default>
+      <summary>Last used node font family in Style properties</summary>
+      <description>Last used node font family in Style properties</description>
+    </key>
+    <key name="style-connection-font-size" type="i">
+      <default>10</default>
+      <summary>Last used node font size in Style properties</summary>
+      <description>Last used node font size in Style properties</description>
+    </key>
+    <key name="style-branch-options-expanded" type="b">
+      <default>true</default>
+      <summary>Specifies the expanded state of the Branch Options panel in the Style properties</summary>
+      <description>Specifies the expanded state of the Branch Options panel in the Style properties</description>
+    </key>
+    <key name="style-link-options-expanded" type="b">
+      <default>true</default>
+      <summary>Specifies the expanded state of the Link Options panel in the Style properties</summary>
+      <description>Specifies the expanded state of the Link Options panel in the Style properties</description>
+    </key>
+    <key name="style-node-options-expanded" type="b">
+      <default>true</default>
+      <summary>Specifies the expanded state of the Node Options panel in the Style properties</summary>
+      <description>Specifies the expanded state of the Node Options panel in the Style properties</description>
+    </key>
+    <key name="style-connection-options-expanded" type="b">
+      <default>true</default>
+      <summary>Specifies the expanded state of the Connection Options panel in the Style properties</summary>
+      <description>Specifies the expanded state of the Connection Options panel in the Style properties</description>
+    </key>
   </schema>
 </schemalist>
