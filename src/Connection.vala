@@ -680,7 +680,8 @@ public class Connection : Object {
 
     /* Draw the box */
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
-    ctx.rectangle( (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)) );
+    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)), (padding * 2) );
+    // ctx.rectangle( (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)) );
     ctx.fill();
 
     /* Draw the text */
