@@ -23,16 +23,18 @@ using Gtk;
 
 public class UndoNodeDelete : UndoItem {
 
-  Node  _node;
-  Node? _parent;
-  int   _index;
+  Node              _node;
+  Node?             _parent;
+  int               _index;
+  Array<Connection> _conns;
 
   /* Default constructor */
-  public UndoNodeDelete( Node n ) {
+  public UndoNodeDelete( Node n, int index, Array<Connection> conns ) {
     base( _( "delete node" ) );
     _node   = n;
     _parent = n.parent;
-    _index  = n.index();
+    _index  = index;
+    _conns  = conns;
   }
 
   /* Undoes a node deletion */
@@ -41,11 +43,13 @@ public class UndoNodeDelete : UndoItem {
       da.add_root( _node, _index );
     } else {
       _node.attached = true;
-      _node.attach( _parent, _index, null, da.get_layout() );
+      _node.attach_init( _parent, _index );
     }
     da.set_current_node( _node );
+    for( int i=0; i<_conns.length; i++ ) {
+      da.get_connections().add_connection( _conns.index( i ) );
+    }
     da.queue_draw();
-    da.node_changed();
     da.changed();
   }
 
@@ -54,11 +58,13 @@ public class UndoNodeDelete : UndoItem {
     if( _parent == null ) {
       da.remove_root( _index );
     } else {
-      _node.detach( _node.side, da.get_layout() );
+      _node.detach( _node.side );
     }
     da.set_current_node( null );
+    for( int i=0; i<_conns.length; i++ ) {
+      da.get_connections().remove_connection( _conns.index( i ), false );
+    }
     da.queue_draw();
-    da.node_changed();
     da.changed();
   }
 

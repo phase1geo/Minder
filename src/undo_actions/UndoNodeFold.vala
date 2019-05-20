@@ -38,18 +38,18 @@ public class UndoNodeFold : UndoItem {
   /* Undoes a node fold operation */
   public override void undo( DrawArea da ) {
     _node.folded = _old_fold;
-    da.get_layout().handle_update_by_fold( _node );
+    _node.layout.handle_update_by_fold( _node );
     da.queue_draw();
-    da.node_changed();
+    da.current_changed();
     da.changed();
   }
 
   /* Redoes a node fold operation */
   public override void redo( DrawArea da ) {
     _node.folded = _new_fold;
-    da.get_layout().handle_update_by_fold( _node );
+    _node.layout.handle_update_by_fold( _node );
     da.queue_draw();
-    da.node_changed();
+    da.current_changed();
     da.changed();
   }
 

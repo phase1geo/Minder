@@ -48,11 +48,13 @@ public class AnimatorNodes : AnimatorAction {
     double divisor = index / frames;
     index++;
     for( int i=0; i<_pos.length(); i++ ) {
-      double x = _pos.old_x( i ) + ((_pos.new_x( i ) - _pos.old_x( i )) * divisor);
-      double y = _pos.old_y( i ) + ((_pos.new_y( i ) - _pos.old_y( i )) * divisor);
+      double dx = _pos.new_x( i ) - _pos.old_x( i );
+      double dy = _pos.new_y( i ) - _pos.old_y( i );
+      double x  = _pos.old_x( i ) + (dx * divisor);
+      double y  = _pos.old_y( i ) + (dy * divisor);
       _pos.node( i ).posx = x;
       _pos.node( i ).posy = y;
-      _pos.node( i ).side = da.get_layout().get_side( _pos.node( i ) );
+      _pos.node( i ).side = _pos.node( i ).layout.get_side( _pos.node( i ) );
     }
   }
 

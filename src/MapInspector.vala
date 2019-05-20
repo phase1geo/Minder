@@ -40,6 +40,7 @@ public class MapInspector : Box {
 
     /* Create the interface */
     add_animation_ui();
+    add_connection_ui();
     add_layout_ui();
     add_theme_ui();
     add_button_ui();
@@ -49,7 +50,7 @@ public class MapInspector : Box {
 
     /* Whenever a new document is loaded, update the theme and layout within this UI */
     _da.loaded.connect( update_theme_layout );
-    _da.node_changed.connect( node_changed );
+    _da.current_changed.connect( current_changed );
 
   }
 
@@ -57,10 +58,11 @@ public class MapInspector : Box {
   private void add_animation_ui() {
 
     var box     = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl     = new Label( _( "Enable animations" ) );
+    var lbl     = new Label( _( "<b>Enable animations</b>" ) );
     var animate = _settings.get_boolean( "enable-animations" );
 
     lbl.xalign = (float)0;
+    lbl.use_markup = true;
 
     var enable = new Switch();
     enable.set_active( animate );
@@ -76,10 +78,42 @@ public class MapInspector : Box {
 
   }
 
-  /* Called whenever the fold switch is changed within the inspector */
+  /* Called whenever the animation switch is changed within the inspector */
   private bool animation_changed( Gdk.EventButton e ) {
     _da.animator.enable = !_da.animator.enable;
     _settings.set_boolean( "enable-animations", _da.animator.enable );
+    return( false );
+  }
+
+  /* Add the connection show/hide UI */
+  private void add_connection_ui() {
+
+    var box       = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl       = new Label( _( "<b>Hide connections</b>" ) );
+    var hide_conn = _settings.get_boolean( "hide-connections" );
+
+    lbl.xalign = (float)0;
+    lbl.use_markup = true;
+
+    var hide_connections = new Switch();
+    hide_connections.set_active( hide_conn );
+    hide_connections.button_release_event.connect( hide_connections_changed );
+
+    box.pack_start( lbl,              false, true, 0 );
+    box.pack_end(   hide_connections, false, true, 0 );
+
+    pack_start( box, false, true );
+
+    /* Initialize the connections */
+    _da.get_connections().hide = hide_conn;
+
+  }
+
+  /* Called whenever the hide connections switch is changed within the inspector */
+  private bool hide_connections_changed( Gdk.EventButton e ) {
+    _da.get_connections().hide = !_da.get_connections().hide;
+    _settings.set_boolean( "hide-connections", _da.get_connections().hide );
+    _da.queue_draw();
     return( false );
   }
 
@@ -90,8 +124,9 @@ public class MapInspector : Box {
     _da.layouts.get_icons( ref icons );
 
     /* Create the modebutton to select the current layout */
-    var lbl = new Label( _( "Node Layouts" ) );
+    var lbl = new Label( _( "<b>Node Layouts</b>" ) );
     lbl.xalign = (float)0;
+    lbl.use_markup = true;
 
     /* Create the layouts mode button */
     _layouts = new Granite.Widgets.ModeButton();
@@ -112,9 +147,11 @@ public class MapInspector : Box {
     var names = new Array<string>();
     _da.layouts.get_names( ref names );
     if( _layouts.selected < names.length ) {
-      string name = names.index( _layouts.selected );
-      _da.set_layout( name );
-      _balance.set_sensitive( _da.layouts.get_layout( name ).balanceable );
+      var   name   = names.index( _layouts.selected );
+      var   layout = _da.layouts.get_layout( name );
+      Node? node   = _da.get_current_node();
+      _da.set_layout( name, ((node == null) ? null : node.get_root()) );
+      _balance.set_sensitive( layout.balanceable );
     }
     return( false );
   }
@@ -138,8 +175,9 @@ public class MapInspector : Box {
   private void add_theme_ui() {
 
     /* Create the UI */
-    var lbl = new Label( _( "Themes" ) );
+    var lbl = new Label( _( "<b>Themes</b>" ) );
     lbl.xalign = (float)0;
+    lbl.use_markup = true;
 
     var sw  = new ScrolledWindow( null, null );
     var vp  = new Viewport( null, null );
@@ -157,14 +195,15 @@ public class MapInspector : Box {
 
     /* Add the themes */
     for( int i=0; i<names.length; i++ ) {
+      var name  = names.index( i );
       var ebox  = new EventBox();
       var item  = new Box( Orientation.VERTICAL, 5 );
-      var label = new Label( names.index( i ) );
+      var label = new Label( name );
       item.pack_start( icons.index( i ), false, false, 5 );
       item.pack_start( label,            false, true );
       ebox.button_press_event.connect((w, e) => {
-        select_theme( label.label );
-        _da.set_theme( label.label );
+        select_theme( name );
+        _da.set_theme( name );
         return( false );
       });
       ebox.add( item );
@@ -231,25 +270,31 @@ public class MapInspector : Box {
   /* Makes sure that only the given theme is selected in the UI */
   private void select_theme( string name ) {
 
-    /* Deselect all themes */
-    _theme_box.get_children().foreach((entry) => {
-      entry.get_style_context().remove_class( "theme-selected" );
-    });
-
-    /* Select the specified theme */
-    int index;
+    int index = 0;
     var names = new Array<string>();
     _da.themes.names( ref names );
-    for( index=0; index<names.length; index++ ) {
-      if( names.index( index ) == name ) {
-        break;
-      }
-    }
+
+    /* Deselect all themes */
     _theme_box.get_children().foreach((entry) => {
-      if( index == 0 ) {
-        entry.get_style_context().add_class( "theme-selected" );
+      var e = (EventBox)entry;
+      var b = (Box)e.get_children().nth_data( 0 );
+      var l = (Label)b.get_children().nth_data( 1 );
+      e.get_style_context().remove_class( "theme-selected" );
+      l.set_markup( names.index( index ) );
+      index++;
+    });
+
+    /* Select the matching theme */
+    index = 0;
+    _theme_box.get_children().foreach((entry) => {
+      if( names.index( index ) == name ) {
+        var e = (EventBox)entry;
+        var b = (Box)e.get_children().nth_data( 0 );
+        var l = (Label)b.get_children().nth_data( 1 );
+        e.get_style_context().add_class( "theme-selected" );
+        l.set_markup( "<span color=\"white\">%s</span>".printf( names.index( index ) ) );
       }
-      index--;
+      index++;
     });
 
   }
@@ -259,20 +304,35 @@ public class MapInspector : Box {
     /* Make sure the current theme is selected */
     select_theme( _da.get_theme_name() );
 
-    /* Update the current layout in the UI */
-    select_layout( _da.get_layout_name() );
-
     /* Initialize the button states */
-    node_changed();
+    current_changed();
 
   }
 
-  /* Called whenever the current node is changed */
-  private void node_changed() {
+  /* Called whenever the current item is changed */
+  private void current_changed() {
 
-    var foldable   = _da.completed_tasks_foldable();
-    var unfoldable = _da.unfoldable();
+    Node? current         = _da.get_current_node();
+    var   foldable        = _da.completed_tasks_foldable();
+    var   unfoldable      = _da.unfoldable();
+    bool  layout_selected = false;
 
+    /* Select the layout that corresponds with the current tree */
+    if( current != null ) {
+      if( layout_selected = (current.layout != null) ) {
+        select_layout( current.layout.name );
+      }
+    } else if( _da.get_nodes().length > 0 ) {
+      if( layout_selected = (_da.get_nodes().index( 0 ).layout != null) ) {
+        select_layout( _da.get_nodes().index( 0 ).layout.name );
+      }
+    }
+
+    if( !layout_selected ) {
+      select_layout( _da.layouts.get_default().name );
+    }
+
+    /* Update the sensitivity of the buttons */
     _fold_completed.set_sensitive( foldable );
     _unfold_all.set_sensitive( unfoldable );
 

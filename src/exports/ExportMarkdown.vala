@@ -43,7 +43,7 @@ public class ExportMarkdown : Object {
 
       var nodes = da.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
-        string title = "# " + nodes.index( i ).name + "\n\n";
+        string title = "# " + nodes.index( i ).name.text + "\n\n";
         os.write( title.data );
         var children = nodes.index( i ).children();
         for( int j=0; j<children.length; j++ ) {
@@ -72,7 +72,7 @@ public class ExportMarkdown : Object {
         }
       }
 
-      title += node.name + "\n";
+      title += node.name.text + "\n";
 
       os.write( title.data );
 

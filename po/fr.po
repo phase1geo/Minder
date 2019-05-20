@@ -1,492 +1,713 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# French translations for com.github.phase1geo.minder package.
+# Copyright (C) 2019 THE com.github.phase1geo.minder'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# yannicka <yannick.armand@protonmail.com>, 2018.
+# NathanBnm, 2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-13 22:44-0500\n"
-"PO-Revision-Date: 2018-07-28 18:54+0200\n"
-"Last-Translator: yannicka <yannick.armand@protonmail.com>\n"
-"Language-Team: français <>\n"
-"Language: \n"
+"POT-Creation-Date: 2019-05-18 23:48-0500\n"
+"PO-Revision-Date: 2019-03-24 15:24+0100\n"
+"Last-Translator: NathanBnm\n"
+"Language-Team: Français\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/DrawAreaMenu.vala:52
+#: src/NodeMenu.vala:54
 msgid "Copy"
 msgstr "Copier"
 
-#: src/DrawAreaMenu.vala:56
+#: src/NodeMenu.vala:58
 msgid "Cut"
 msgstr "Couper"
 
-#: src/DrawAreaMenu.vala:60
+#: src/NodeMenu.vala:62
 msgid "Paste"
 msgstr "Coller"
 
-#: src/DrawAreaMenu.vala:64
+#: src/NodeMenu.vala:66 src/ConnectionMenu.vala:40
 msgid "Delete"
 msgstr "Supprimer"
 
-#: src/DrawAreaMenu.vala:68
-msgid "Edit..."
+#: src/NodeMenu.vala:70 src/ConnectionMenu.vala:44
+msgid "Edit…"
 msgstr "Modifier…"
 
-#: src/DrawAreaMenu.vala:72 src/DrawAreaMenu.vala:241
+#: src/NodeMenu.vala:74 src/NodeMenu.vala:223
 msgid "Add Task"
 msgstr "Transformer en tâche"
 
-#: src/DrawAreaMenu.vala:75 src/DrawAreaMenu.vala:242
+#: src/NodeMenu.vala:77 src/NodeMenu.vala:224 src/ConnectionMenu.vala:48
+#: src/ConnectionMenu.vala:104
 msgid "Add Note"
 msgstr "Ajouter une note"
 
-#: src/DrawAreaMenu.vala:78 src/DrawAreaMenu.vala:243
+#: src/NodeMenu.vala:80 src/NodeMenu.vala:225
 msgid "Add Image"
-msgstr ""
+msgstr "Ajouter une image"
 
-#: src/DrawAreaMenu.vala:81 src/DrawAreaMenu.vala:244
+#: src/NodeMenu.vala:83
+msgid "Add Connection"
+msgstr "Ajouter une connexion"
+
+#: src/NodeMenu.vala:86 src/NodeMenu.vala:226
 msgid "Fold Children"
 msgstr "Plier les enfants"
 
-#: src/DrawAreaMenu.vala:85
+#: src/NodeMenu.vala:90
 msgid "Detach"
 msgstr "Détacher"
 
-#: src/DrawAreaMenu.vala:88
+#: src/NodeMenu.vala:93 src/EmptyMenu.vala:35
 msgid "Add Root Node"
 msgstr "Ajouter un nœud racine"
 
-#: src/DrawAreaMenu.vala:91
+#: src/NodeMenu.vala:96
 msgid "Add Child Node"
 msgstr "Ajouter un nœud enfant"
 
-#: src/DrawAreaMenu.vala:95
+#: src/NodeMenu.vala:100
 msgid "Add Sibling Node"
 msgstr "Ajouter un nœud frère"
 
-#: src/DrawAreaMenu.vala:99
-msgid "Select Node"
+#: src/NodeMenu.vala:104 src/ConnectionMenu.vala:51
+#, fuzzy
+msgid "Select"
 msgstr "Sélectionner le nœud"
 
-#: src/DrawAreaMenu.vala:103
-msgid "Root"
-msgstr "Racine"
+#: src/NodeMenu.vala:108
+#, fuzzy
+msgid "Root Node"
+msgstr "Nœuds racine"
 
-#: src/DrawAreaMenu.vala:107
-msgid "Next Sibling"
+#: src/NodeMenu.vala:112
+#, fuzzy
+msgid "Next Sibling Node"
 msgstr "Nœud suivant"
 
-#: src/DrawAreaMenu.vala:111
-msgid "Previous Sibling"
+#: src/NodeMenu.vala:116
+#, fuzzy
+msgid "Previous Sibling Node"
 msgstr "Nœud précédent"
 
-#: src/DrawAreaMenu.vala:115
-msgid "First Child"
-msgstr "Premier enfant"
+#: src/NodeMenu.vala:120
+#, fuzzy
+msgid "Child Node"
+msgstr "Ajouter un nœud enfant"
 
-#: src/DrawAreaMenu.vala:119
-msgid "Parent"
-msgstr "Parent"
+#: src/NodeMenu.vala:124
+#, fuzzy
+msgid "Parent Node"
+msgstr "Rechercher des noeuds"
 
-#: src/DrawAreaMenu.vala:123
+#: src/NodeMenu.vala:128
+#, fuzzy
+msgid "Connection"
+msgstr "Ajouter une connexion"
+
+#: src/NodeMenu.vala:132
 msgid "Center Current Node"
 msgstr "Centrer sur le nœud"
 
-#: src/DrawAreaMenu.vala:241
+#: src/NodeMenu.vala:223
 msgid "Remove Task"
 msgstr "Supprimer la tâche"
 
-#: src/DrawAreaMenu.vala:242
+#: src/NodeMenu.vala:224 src/ConnectionMenu.vala:104
 msgid "Remove Note"
 msgstr "Supprimer la note"
 
-#: src/DrawAreaMenu.vala:243 src/ImageEditor.vala:363
-#: src/NodeInspector.vala:214
-#, fuzzy
+#: src/NodeMenu.vala:225 src/ImageEditor.vala:363 src/NodeInspector.vala:210
 msgid "Remove Image"
-msgstr "Supprimer la tâche"
+msgstr "Supprimer l'image"
 
-#: src/DrawAreaMenu.vala:244
+#: src/NodeMenu.vala:226
 msgid "Unfold Children"
 msgstr "Déplier les enfants"
 
-#: src/DrawArea.vala:121 src/layouts/LayoutHorizontal.vala:26
-#: src/MapInspector.vala:220
-msgid "Horizontal"
-msgstr "Horizontal"
+#: src/EmptyMenu.vala:38
+msgid "Select Node"
+msgstr "Sélectionner le nœud"
 
-#: src/DrawArea.vala:450
+#: src/EmptyMenu.vala:42
+msgid "Root"
+msgstr "Racine"
+
+#: src/ConnectionMenu.vala:55
+#, fuzzy
+msgid "Start Node"
+msgstr "Rechercher des noeuds"
+
+#: src/ConnectionMenu.vala:59
+#, fuzzy
+msgid "End Node"
+msgstr "Nœud"
+
+#: src/ConnectionMenu.vala:63
+#, fuzzy
+msgid "Next Connection"
+msgstr "Ajouter une connexion"
+
+#: src/ConnectionMenu.vala:67
+#, fuzzy
+msgid "Previous Connection"
+msgstr "Ajouter une connexion"
+
+#: src/DrawArea.vala:537
 msgid "Main Idea"
 msgstr "Idée principale"
 
-#: src/DrawArea.vala:1079
+#: src/DrawArea.vala:1437
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% complété"
 
-#: src/DrawArea.vala:1354 src/DrawArea.vala:2027
+#: src/DrawArea.vala:1480
+#, fuzzy
+msgid "connection endpoint change"
+msgstr "changement du la note du nœud"
+
+#: src/DrawArea.vala:1486
+#, fuzzy
+msgid "connection drag"
+msgstr "ajouter une connection"
+
+#: src/DrawArea.vala:1904 src/DrawArea.vala:2951
 msgid "Another Idea"
 msgstr "Autre idée"
 
-#: src/DrawArea.vala:1480
+#: src/DrawArea.vala:2063
 msgid "fold completed tasks"
 msgstr "plier les tâches terminées"
 
-#: src/DrawArea.vala:1515
+#: src/DrawArea.vala:2098
 msgid "unfold all tasks"
 msgstr "déplier toutes les tâches"
 
-#: src/ImageEditor.vala:182
+#: src/ImageEditor.vala:179
 #, c-format
 msgid "Crop Area: %d,%d %3dx%3d"
-msgstr ""
+msgstr "Zone de découpe : %d,%d %3dx%3d"
 
 #: src/ImageEditor.vala:353
 #, c-format
 msgid "Cursor: %3d,%3d"
-msgstr ""
+msgstr "Curseur : %3d,%3d"
 
-#: src/ImageEditor.vala:360 src/MainWindow.vala:496 src/MainWindow.vala:585
-#: src/MainWindow.vala:668 src/MainWindow.vala:886 src/NodeImage.vala:220
+#: src/ImageEditor.vala:360 src/MainWindow.vala:579 src/MainWindow.vala:667
+#: src/MainWindow.vala:748 src/MainWindow.vala:941
 msgid "Cancel"
 msgstr "Annuler"
 
 #: src/ImageEditor.vala:361
 msgid "Apply"
-msgstr ""
+msgstr "Appliquer"
 
 #: src/ImageEditor.vala:362
 msgid "Change Image"
-msgstr ""
+msgstr "Modifier l'image"
 
-#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:218
+#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:248
 msgid "Manual"
 msgstr "Manuel"
 
-#: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:222
+#: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:252
 msgid "To right"
 msgstr "Vers la droite"
 
-#: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:221
+#: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:251
 msgid "To left"
 msgstr "Vers la gauche"
 
-#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:224
+#: src/layouts/LayoutHorizontal.vala:26 src/MapInspector.vala:250
+msgid "Horizontal"
+msgstr "Horizontal"
+
+#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:254
 msgid "Downwards"
 msgstr "Vers le bas"
 
-#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:223
+#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:253
 msgid "Upwards"
 msgstr "Vers le haut"
 
-#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:219
+#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:249
 msgid "Vertical"
 msgstr "Vertical"
 
-#: src/MainWindow.vala:95 src/MainWindow.vala:671
+#: src/MainWindow.vala:100 src/MainWindow.vala:751
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:126
+#: src/MainWindow.vala:137
 msgid "New File   <i>(Control-N)</i>"
 msgstr "Nouveau fichier   <i>(Ctrl+N)</i>"
 
-#: src/MainWindow.vala:131
+#: src/MainWindow.vala:145
 msgid "Open File   <i>(Control-O)</i>"
 msgstr "Ouvrir un fichier   <i>(Ctrl+O)</i>"
 
-#: src/MainWindow.vala:136
+#: src/MainWindow.vala:153
 msgid "Save File As   <i>(Control-Shift-S)</i>"
 msgstr "Enregistrer sous   <i>(Ctrl+Shift+S)</i>"
 
-#: src/MainWindow.vala:141
+#: src/MainWindow.vala:161
 msgid "Undo   <i>(Control-Z)</i>"
 msgstr "Annuler   <i>(Ctrl+Z)</i>"
 
-#: src/MainWindow.vala:147
+#: src/MainWindow.vala:170
 msgid "Redo   <i>(Control-Shift-Z)</i>"
 msgstr "Refaire   <i>(Ctrl+Shift+Z)</i>"
 
-#: src/MainWindow.vala:173
+#: src/MainWindow.vala:214
 msgid "Unnamed Document"
 msgstr "Document sans titre"
 
-#: src/MainWindow.vala:203
+#: src/MainWindow.vala:240
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/MainWindow.vala:210
+#: src/MainWindow.vala:247
 msgid "Zoom to Percent"
 msgstr "Pourcentage de zoom"
 
-#: src/MainWindow.vala:221
+#: src/MainWindow.vala:259
 msgid "Zoom In"
 msgstr "Zoomer"
 
-#: src/MainWindow.vala:225
+#: src/MainWindow.vala:263
 msgid "Zoom Out"
 msgstr "Dézoomer"
 
-#: src/MainWindow.vala:229
+#: src/MainWindow.vala:267
 msgid "Zoom to Fit"
 msgstr "Voir l'ensemble du document"
 
-#: src/MainWindow.vala:233
+#: src/MainWindow.vala:271
 msgid "Zoom to Fit Selected Node"
 msgstr "Zoomer sur le nœud sélectionné"
 
-#: src/MainWindow.vala:238
+#: src/MainWindow.vala:275
 msgid "Zoom to Actual Size"
 msgstr "Zoom par défaut (100 %)"
 
-#: src/MainWindow.vala:265
+#: src/MainWindow.vala:304
 msgid "Search   <i>(Control-F)</i>"
 msgstr "Rechercher   <i>(Ctrl+F)</i>"
 
-#: src/MainWindow.vala:274
-msgid "Search Nodes"
-msgstr "Recherches "
+#: src/MainWindow.vala:314
+#, fuzzy
+msgid "Search Nodes and Connections"
+msgstr "Ajouter une connexion"
 
-#: src/MainWindow.vala:297
+#: src/MainWindow.vala:337
 msgid "Search Criteria"
 msgstr "Critères de recherche"
 
-#: src/MainWindow.vala:319
+#: src/MainWindow.vala:359
+#, fuzzy
+msgid "Nodes"
+msgstr "Nœud"
+
+#: src/MainWindow.vala:360
+#, fuzzy
+msgid "Connections"
+msgstr "Ajouter une connexion"
+
+#: src/MainWindow.vala:361
 msgid "Titles"
 msgstr "Titres"
 
-#: src/MainWindow.vala:320
+#: src/MainWindow.vala:362
 msgid "Notes"
 msgstr "Notes"
 
-#: src/MainWindow.vala:321
+#: src/MainWindow.vala:363
 msgid "Folded"
 msgstr "Plié"
 
-#: src/MainWindow.vala:322
+#: src/MainWindow.vala:364
 msgid "Unfolded"
 msgstr "Déplié"
 
-#: src/MainWindow.vala:323
+#: src/MainWindow.vala:365
 msgid "Tasks"
 msgstr "Tâches"
 
-#: src/MainWindow.vala:324
+#: src/MainWindow.vala:366
 msgid "Non-tasks"
 msgstr "Non-tâches"
 
-#: src/MainWindow.vala:392 src/MainWindow.vala:886
+#: src/MainWindow.vala:458 src/MainWindow.vala:941
 msgid "Export"
 msgstr "Exporter"
 
-#: src/MainWindow.vala:399
-msgid "Export..."
+#: src/MainWindow.vala:465
+msgid "Export…"
 msgstr "Exporter…"
 
-#: src/MainWindow.vala:403
+#: src/MainWindow.vala:469
 msgid "Print"
 msgstr "Imprimer"
 
-#: src/MainWindow.vala:428
+#: src/MainWindow.vala:497
 msgid "Properties"
 msgstr "Propriétés"
 
-#: src/MainWindow.vala:441
-msgid "Node"
-msgstr "Nœud"
+#: src/MainWindow.vala:509 src/StyleInspector.vala:48
+msgid "Current"
+msgstr "Courant"
 
-#: src/MainWindow.vala:442
+#: src/MainWindow.vala:510
+msgid "Style"
+msgstr "Style"
+
+#: src/MainWindow.vala:511
 msgid "Map"
 msgstr "Carte"
 
-#: src/MainWindow.vala:487
+#: src/MainWindow.vala:570
 msgid "Save current unnamed document?"
-msgstr "Enregistrer le document actuellement sans titre ?"
+msgstr "Enregistrer le document sans titre actuel ?"
 
-#: src/MainWindow.vala:488
+#: src/MainWindow.vala:571
 msgid "Changes will be permanently lost if not saved."
 msgstr ""
 "Les modifications seront définitivement perdues si elles ne sont pas "
 "enregistrées."
 
-#: src/MainWindow.vala:493
+#: src/MainWindow.vala:576
 msgid "Discard Changes"
 msgstr "Ignorer les modifications"
 
-#: src/MainWindow.vala:499 src/MainWindow.vala:668
+#: src/MainWindow.vala:582 src/MainWindow.vala:748
 msgid "Save"
 msgstr "Enregistrer"
 
-#: src/MainWindow.vala:584
+#: src/MainWindow.vala:667
 msgid "Open File"
 msgstr "Ouvrir le fichier"
 
-#: src/MainWindow.vala:585
+#: src/MainWindow.vala:667
 msgid "Open"
 msgstr "Ouvrir"
 
-#: src/MainWindow.vala:667
+#: src/MainWindow.vala:748
 msgid "Save File"
 msgstr "Enregistrer le fichier"
 
-#: src/MainWindow.vala:885
+#: src/MainWindow.vala:941
 msgid "Export As"
 msgstr "Exporter sous"
 
-#: src/MainWindow.vala:890
+#: src/MainWindow.vala:945
 msgid "BMP"
 msgstr "BMP"
 
-#: src/MainWindow.vala:896
+#: src/MainWindow.vala:951
 msgid "CSV"
 msgstr "CSV"
 
-#: src/MainWindow.vala:902
+#: src/MainWindow.vala:957
 msgid "JPEG"
 msgstr "JPEG"
 
-#: src/MainWindow.vala:909
+#: src/MainWindow.vala:964
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/MainWindow.vala:916
+#: src/MainWindow.vala:971
+msgid "Mermaid"
+msgstr "Mermaid"
+
+#: src/MainWindow.vala:977
 msgid "OPML"
 msgstr "OPML"
 
-#: src/MainWindow.vala:922
+#: src/MainWindow.vala:983
 msgid "PDF"
 msgstr "PDF"
 
-#: src/MainWindow.vala:928
+#: src/MainWindow.vala:989
 msgid "PNG (Transparent)"
-msgstr ""
+msgstr "PNG (transparent)"
 
-#: src/MainWindow.vala:934
+#: src/MainWindow.vala:995
 msgid "PNG (Opaque)"
-msgstr ""
+msgstr "PNG (opaque)"
 
-#: src/MainWindow.vala:940
+#: src/MainWindow.vala:1001
 msgid "PlainText"
-msgstr "Texte"
+msgstr "Texte brut"
 
-#: src/MainWindow.vala:946
+#: src/MainWindow.vala:1007
 msgid "SVG"
 msgstr "SVG"
 
-#: src/MapInspector.vala:60
+#: src/MapInspector.vala:61
 msgid "Enable animations"
 msgstr "Activer les animations"
 
-#: src/MapInspector.vala:93
+#: src/MapInspector.vala:91
+#, fuzzy
+msgid "Hide connections"
+msgstr "ajouter une connection"
+
+#: src/MapInspector.vala:120
 msgid "Node Layouts"
 msgstr "Disposition des nœuds"
 
-#: src/MapInspector.vala:141
+#: src/MapInspector.vala:170
 msgid "Themes"
 msgstr "Thèmes"
 
-#: src/MapInspector.vala:189
+#: src/MapInspector.vala:219
 msgid "Balance Nodes"
 msgstr "Équilibrer les nœuds"
 
-#: src/MapInspector.vala:195
+#: src/MapInspector.vala:225
 msgid "Fold Completed Tasks"
 msgstr "Plier les tâches terminées"
 
-#: src/MapInspector.vala:201
+#: src/MapInspector.vala:231
 msgid "Unfold All Nodes"
 msgstr "Déplier toutes les tâches"
 
-#: src/NodeImage.vala:219
+#: src/Node.vala:1347
 #, fuzzy
-msgid "Select Image"
-msgstr "Sélectionner le nœud"
+msgid "Node Title"
+msgstr "Titres"
 
-#: src/NodeImage.vala:220
+#: src/Node.vala:1350
 #, fuzzy
-msgid "Select"
-msgstr "Sélectionner le nœud"
+msgid "Node Note"
+msgstr "Ajouter une note"
 
-#: src/NodeImage.vala:224
-msgid "Images"
-msgstr ""
+#: src/NodeInspector.vala:79
+msgid "<b>Title</b>"
+msgstr "<b>Titre</b>"
 
-#: src/NodeInspector.vala:56
-msgid "<big>Select a node to view/edit information</big>"
-msgstr "<big>Sélectionner un nœud pour voir/modifier ses informations</big>"
+#: src/NodeInspector.vala:101
+msgid "<b>Task</b>"
+msgstr "<b>Tâche</b>"
 
-#: src/NodeInspector.vala:90
-msgid "Title"
-msgstr "Titre"
+#: src/NodeInspector.vala:120
+msgid "<b>Fold</b>"
+msgstr "<b>Plier</b>"
 
-#: src/NodeInspector.vala:110
-msgid "Task"
-msgstr "Tâche"
+#: src/NodeInspector.vala:142
+msgid "<b>Link Color</b>"
+msgstr "<b>Couleur du lien</b>"
 
-#: src/NodeInspector.vala:128
-msgid "Fold"
-msgstr "Plier"
+#: src/NodeInspector.vala:164
+msgid "<b>Note</b>"
+msgstr "<b>Note</b>"
 
-#: src/NodeInspector.vala:149
-msgid "Link Color"
-msgstr "Couleur du lien"
-
-#: src/NodeInspector.vala:170
-msgid "Note"
-msgstr "Note"
+#: src/NodeInspector.vala:192
+msgid "<b>Image</b>"
+msgstr "<b>Image</b>"
 
 #: src/NodeInspector.vala:197
-msgid "Image"
-msgstr ""
+msgid "Add Image…"
+msgstr "Ajouter une image…"
 
-#: src/NodeInspector.vala:201
-msgid "Add Image..."
-msgstr ""
-
-#: src/NodeInspector.vala:208
+#: src/NodeInspector.vala:204
 msgid "Edit Image"
-msgstr ""
+msgstr "Modifier l'image"
 
-#: src/NodeInspector.vala:321
+#: src/NodeInspector.vala:317
 msgid "Copy Node To Clipboard"
 msgstr "Copier le nœud sur le presse-papier"
 
-#: src/NodeInspector.vala:325
+#: src/NodeInspector.vala:321
 msgid "Cut Node To Clipboard"
 msgstr "Couper le nœud sur le presse-papier"
 
-#: src/NodeInspector.vala:330
+#: src/NodeInspector.vala:326
 msgid "Detach Node"
 msgstr "Détacher le nœud"
 
-#: src/NodeInspector.vala:335
+#: src/NodeInspector.vala:331
 msgid "Delete Node"
 msgstr "Supprimer le nœud"
 
+#: src/StyleInspector.vala:47
+msgid "All"
+msgstr "Tout"
+
+#: src/StyleInspector.vala:49
+msgid "Current Tree"
+msgstr "Arbre courant"
+
+#: src/StyleInspector.vala:50
+msgid "Current Node + Descendants"
+msgstr "Nœud courant + Descendants"
+
+#: src/StyleInspector.vala:51
+msgid "Root Nodes"
+msgstr "Nœuds racine"
+
+#: src/StyleInspector.vala:52
+msgid "Level 1 Nodes"
+msgstr "Nœuds de niveau 1"
+
+#: src/StyleInspector.vala:53
+msgid "Level 2 Nodes"
+msgstr "Nœuds de niveau 2"
+
+#: src/StyleInspector.vala:54
+msgid "Level 3 Nodes"
+msgstr "Nœuds de niveau 3"
+
+#: src/StyleInspector.vala:55
+msgid "Level 4 Nodes"
+msgstr "Nœuds de niveau 4"
+
+#: src/StyleInspector.vala:56
+msgid "Level 5 Nodes"
+msgstr "Nœuds de niveau 5"
+
+#: src/StyleInspector.vala:57
+msgid "Level 6 Nodes"
+msgstr "Nœuds de niveau 6"
+
+#: src/StyleInspector.vala:58
+msgid "Level 7 Nodes"
+msgstr "Nœuds de niveau 7"
+
+#: src/StyleInspector.vala:59
+msgid "Level 8 Nodes"
+msgstr "Nœuds de niveau 8"
+
+#: src/StyleInspector.vala:60
+msgid "Level 9 Nodes"
+msgstr "Nœuds de niveau 9"
+
+#: src/StyleInspector.vala:155
+msgid "<b>Changes affect:</b>"
+msgstr "<b>Les modifications affectent :</b>"
+
+#: src/StyleInspector.vala:201
+msgid "<b>Branch Options</b>"
+msgstr "<b>Options des branches</b>"
+
+#: src/StyleInspector.vala:230
+msgid "Branch Style"
+msgstr "Style de branche"
+
+#: src/StyleInspector.vala:281
+msgid "<b>Link Options</b>"
+msgstr "<b>Options des liens</b>"
+
+#: src/StyleInspector.vala:314 src/StyleInspector.vala:747
+msgid "Line Dash"
+msgstr "Style de ligne"
+
+#: src/StyleInspector.vala:353 src/StyleInspector.vala:824
+msgid "Line Width"
+msgstr "Épaisseur de ligne"
+
+#: src/StyleInspector.vala:399
+msgid "Link Arrow"
+msgstr "Flèche"
+
+#: src/StyleInspector.vala:425
+msgid "<b>Node Options</b>"
+msgstr "<b>Options des nœuds</b>"
+
+#: src/StyleInspector.vala:464
+msgid "Border Style"
+msgstr "Style de bordure"
+
+#: src/StyleInspector.vala:513
+msgid "Border Width"
+msgstr "Épaisseur de bordure"
+
+#: src/StyleInspector.vala:558
+msgid "Fill With Link Color"
+msgstr "Remplir avec la couleur du lien"
+
+#: src/StyleInspector.vala:583
+msgid "Margin"
+msgstr "Marge extérieure"
+
+#: src/StyleInspector.vala:624 src/StyleInspector.vala:872
+msgid "Padding"
+msgstr "Marge intérieure"
+
+#: src/StyleInspector.vala:663 src/StyleInspector.vala:911
+msgid "Font"
+msgstr "Police"
+
+#: src/StyleInspector.vala:684
+msgid "Enable Markup"
+msgstr ""
+
+#: src/StyleInspector.vala:710
+msgid "<b>Connection Options</b>"
+msgstr "<b>Options des connections</b>"
+
+#: src/StyleInspector.vala:786
+msgid "Arrows"
+msgstr "Flèches"
+
+#: src/styles/LinkTypeCurved.vala:34
+msgid "Curved"
+msgstr "Courbe"
+
+#: src/styles/LinkTypeSquared.vala:34
+msgid "Squared"
+msgstr "Carré"
+
+#: src/styles/LinkTypeStraight.vala:34
+msgid "Straight"
+msgstr "Droit"
+
+#: src/styles/NodeBorderBracket.vala:34
+msgid "Square Bracket"
+msgstr "Crochet"
+
+#: src/styles/NodeBorderNone.vala:34
+msgid "None"
+msgstr "Aucun"
+
+#: src/styles/NodeBorderPill.vala:34
+msgid "Pill-shaped"
+msgstr "En forme de pilule"
+
+#: src/styles/NodeBorderRounded.vala:34
+msgid "Rounded Rectangle"
+msgstr "Rectangle arrondi"
+
+#: src/styles/NodeBorderSquared.vala:34
+msgid "Squared Off"
+msgstr "Carré"
+
+#: src/styles/NodeBorderUnderlined.vala:34
+msgid "Underlined"
+msgstr "Souligné"
+
 #: src/themes/ThemeSolarizedLight.vala:30
 msgid "Solarized Light"
-msgstr ""
+msgstr "Solarized Light"
 
 #: src/themes/ThemeDefault.vala:30
 msgid "Default"
-msgstr ""
+msgstr "Défaut"
 
 #: src/themes/ThemeDark.vala:30
 msgid "Dark"
-msgstr ""
+msgstr "Sombre"
 
 #: src/themes/ThemeSolarizedDark.vala:30
 msgid "Solarized Dark"
-msgstr ""
+msgstr "Solarized Dark"
 
-#: src/undo_actions/UndoNodePaste.vala:32
+#: src/undo_actions/UndoNodePaste.vala:34
 msgid "paste node"
 msgstr "coller le nœud"
 
@@ -500,9 +721,9 @@ msgstr "changement du la note du nœud"
 
 #: src/undo_actions/UndoNodeReveal.vala:32
 msgid "node reveal"
-msgstr ""
+msgstr "révélation de noeud"
 
-#: src/undo_actions/UndoNodeDelete.vala:32
+#: src/undo_actions/UndoNodeDelete.vala:33
 msgid "delete node"
 msgstr "supprimer le nœud"
 
@@ -512,7 +733,7 @@ msgstr "couper le nœud"
 
 #: src/undo_actions/UndoNodeResize.vala:32
 msgid "node resize"
-msgstr ""
+msgstr "redimensionnement du nœud"
 
 #: src/undo_actions/UndoNodeInsert.vala:33
 msgid "insert node"
@@ -528,26 +749,24 @@ msgid "attach node"
 msgstr "attacher le nœud"
 
 #: src/undo_actions/UndoNodeLinkColor.vala:33
-#, fuzzy
 msgid "link color change"
-msgstr "changement du la note du nœud"
+msgstr "changement de la couleur du lien"
 
-#: src/undo_actions/UndoNodeLayout.vala:29
+#: src/undo_actions/UndoNodeLayout.vala:30
 msgid "change layout"
-msgstr ""
+msgstr "changement de disposition"
 
 #: src/undo_actions/UndoNodeFold.vala:32
 msgid "node change fold"
 msgstr "changement du pli du nœud"
 
-#: src/undo_actions/UndoNodeBalance.vala:60
+#: src/undo_actions/UndoNodeBalance.vala:61
 msgid "balance nodes"
 msgstr "balance des nœuds"
 
 #: src/undo_actions/UndoNodeImage.vala:32
-#, fuzzy
 msgid "node image change"
-msgstr "changement du nom du nœud"
+msgstr "changement de la taille de l'image"
 
 #: src/undo_actions/UndoNodeDetach.vala:34
 msgid "detach node"
@@ -557,13 +776,30 @@ msgstr "détacher le nœud"
 msgid "node name change"
 msgstr "changement du nom du nœud"
 
-#: src/UndoBuffer.vala:81
+#: src/UndoBuffer.vala:85
 msgid "Undo "
 msgstr "Annuler "
 
-#: src/UndoBuffer.vala:87
+#: src/UndoBuffer.vala:91
 msgid "Redo "
 msgstr "Refaire "
 
-#~ msgid "PNG"
-#~ msgstr "PNG"
+#, fuzzy
+#~ msgid "Child"
+#~ msgstr "Premier enfant"
+
+#~ msgid "Parent"
+#~ msgstr "Parent"
+
+#, fuzzy
+#~ msgid "delete connection"
+#~ msgstr "supprimer la connection"
+
+#~ msgid "<b><i>Title:</i></b>"
+#~ msgstr "<b><i>Titre :</i></b>"
+
+#~ msgid "<b><i>Note:</i></b>"
+#~ msgstr "<b><i>Note :</i></b>"
+
+#~ msgid "<big>Select a node to view/edit information</big>"
+#~ msgstr "<big>Sélectionner un nœud pour voir/modifier ses informations</big>"

@@ -34,13 +34,13 @@ public class ExportPNG : Object {
     var surface = new ImageSurface( (transparent ? Format.ARGB32 : Format.RGB24), ((int)w + 20), ((int)h + 20) );
     var context = new Context( surface );
 
-    /* Translate the image */
-    context.translate( (10 - x), (10 - y) );
-
     /* Recreate the image */
     if( !transparent ) {
-      da.get_style_context().render_background( context, (10 - x), (10 - y), ((int)w + 20), ((int)h + 20) );
+      da.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
     }
+
+    /* Translate the image */
+    context.translate( (10 - x), (10 - y) );
     da.draw_all( context );
 
     /* Write the image to the PNG file */

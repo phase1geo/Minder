@@ -40,7 +40,7 @@ public class UndoNodeLinkColor : UndoItem {
   public override void undo( DrawArea da ) {
     _node.link_color = _old_color;
     da.queue_draw();
-    da.node_changed();
+    da.current_changed();
     da.changed();
   }
 
@@ -48,7 +48,7 @@ public class UndoNodeLinkColor : UndoItem {
   public override void redo( DrawArea da ) {
     _node.link_color = _new_color;
     da.queue_draw();
-    da.node_changed();
+    da.current_changed();
     da.changed();
   }
 

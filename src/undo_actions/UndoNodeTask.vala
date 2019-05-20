@@ -47,7 +47,7 @@ public class UndoNodeTask : UndoItem {
       _node.set_task_done( _old_done );
     }
     da.queue_draw();
-    da.node_changed();
+    da.current_changed();
     da.changed();
   }
 
@@ -59,7 +59,7 @@ public class UndoNodeTask : UndoItem {
       _node.set_task_done( _new_done );
     }
     da.queue_draw();
-    da.node_changed();
+    da.current_changed();
     da.changed();
   }
 

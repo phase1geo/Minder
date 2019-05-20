@@ -22,42 +22,49 @@ using Gtk;
 
 public class UndoNodeCut : UndoItem {
 
-  Node  _node;
-  Node? _parent;
-  Node? _clipboard;
-  int   _index;
+  Node              _node;
+  Node?             _parent;
+  int               _index;
+  Array<Connection> _conns;
 
   /* Default constructor */
-  public UndoNodeCut( DrawArea da, Node n ) {
+  public UndoNodeCut( Node n, int index, Array<Connection> conns ) {
     base( _( "cut node" ) );
-    _node      = n;
-    _parent    = n.parent;
-    _index     = n.index();
-    _clipboard = da.node_clipboard;
+    _node   = n;
+    _parent = n.parent;
+    _index  = index;
+    _conns  = conns;
   }
 
   /* Undoes a node deletion */
   public override void undo( DrawArea da ) {
+    da.node_clipboard.clear();
     if( _parent == null ) {
       da.add_root( _node, _index );
     } else {
-      _node.attach( _parent, _index, null, da.get_layout() );
+      _node.attach_init( _parent, _index );
     }
     da.set_current_node( _node );
+    for( int i=0; i<_conns.length; i++ ) {
+      da.get_connections().add_connection( _conns.index( i ) );
+    }
     da.queue_draw();
     da.changed();
-    da.node_clipboard = _clipboard;
   }
 
   /* Redoes a node deletion */
   public override void redo( DrawArea da ) {
-    da.node_clipboard = _node;
+    da.node_clipboard.set_text( da.serialize_for_copy( _node ), -1 );
+    da.node_clipboard.store();
     if( _parent == null ) {
       da.remove_root( _index );
     } else {
-      _node.detach( _node.side, da.get_layout() );
+      _node.detach( _node.side );
     }
     da.set_current_node( null );
+    for( int i=0; i<_conns.length; i++ ) {
+      da.get_connections().remove_connection( _conns.index( i ), false );
+    }
     da.queue_draw();
     da.changed();
   }

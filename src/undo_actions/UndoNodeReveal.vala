@@ -37,11 +37,10 @@ public class UndoNodeReveal : UndoItem {
 
   /* Performs the reveal/unreveal operation */
   private void set_folds( DrawArea da, bool value ) {
-    var tmp    = _node.parent;
-    var layout = da.get_layout();
+    var tmp = _node.parent;
     while( tmp != _last ) {
       tmp.folded = value;
-      layout.handle_update_by_fold( tmp );
+      tmp.layout.handle_update_by_fold( tmp );
       tmp = tmp.parent;
     }
   }

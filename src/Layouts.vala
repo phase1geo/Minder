@@ -75,4 +75,9 @@ public class Layouts : Object {
     return( _layouts.index( 2 ) );
   }
 
+  /* Returns the default layout (we are going to use 'horizontal') */
+  public Layout get_default() {
+    return( _layouts.index( 2 ) );
+  }
+
 }

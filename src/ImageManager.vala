@@ -240,11 +240,7 @@ public class ImageManager {
 
     int id = -1;
 
-    FileChooserDialog dialog = new FileChooserDialog(
-      _( "Select Image" ), parent, FileChooserAction.OPEN,
-      _( "Cancel" ), ResponseType.CANCEL,
-      _( "Select" ), ResponseType.ACCEPT
-    );
+    FileChooserNative dialog = new FileChooserNative( _( "Select Image" ), parent, FileChooserAction.OPEN, _( "Select" ), _( "Cancel" ) );
 
     /* Allow pixbuf image types */
     FileFilter filter = new FileFilter();

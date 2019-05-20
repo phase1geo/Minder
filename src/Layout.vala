@@ -21,26 +21,15 @@
 
 public class Layout : Object {
 
-  protected double                _pc_gap = 50;   /* Parent/child gap */
-  protected double                _sb_gap = 8;    /* Sibling gap */
-  protected double                _rt_gap = 100;  /* Root node gaps */
-  protected Pango.FontDescription _font_description = null;
+  protected double _pc_gap = 100;  /* Parent/child gap */
+  protected double _rt_gap = 100;  /* Root node gaps */
 
   public string name        { protected set; get; default = ""; }
   public string icon        { protected set; get; default = ""; }
   public bool   balanceable { protected set; get; default = false; }
-  public int    padx        { protected set; get; default = 10; }
-  public int    pady        { protected set; get; default = 5; }
-  public int    ipadx       { protected set; get; default = 6; }
-  public int    ipady       { protected set; get; default = 3; }
-  public int    default_text_height { set; get; default = 0; }
 
   /* Default constructor */
-  public Layout() {
-    _font_description = new Pango.FontDescription();
-    _font_description.set_family( "Sans" );
-    _font_description.set_size( 11 * Pango.SCALE );
-  }
+  public Layout() {}
 
   /*
    Virtual function used to map a node's side to its new side when this
@@ -66,10 +55,10 @@ public class Layout : Object {
       list.append( n );
     }
     list.@foreach((item) => {
-      item.detach( item.side, this );
+      item.detach( item.side );
     });
     list.@foreach((item) => {
-      item.attach_nonroot( parent, -1, null, this );
+      item.attach_init( parent, -1 );
     });
   }
 
@@ -209,35 +198,33 @@ public class Layout : Object {
   }
 
   /* Updates the layout when necessary when a node is edited */
-  public virtual void handle_update_by_edit( Node n ) {
-    double width_diff, height_diff;
-    n.update_size( null, out width_diff, out height_diff );
+  public virtual void handle_update_by_edit( Node n, double diffw, double diffh ) {
     double adjust = 0 - (get_adjust( n ) / 2);
     if( (n.side & NodeSide.horizontal()) != 0 ) {
-      if( (n.parent != null) && (height_diff != 0) ) {
-        n.adjust_posy_only( 0 - (height_diff / 2) );
-        adjust_tree_all( n, adjust );  // , (0 - (height_diff / 2)) );
+      if( (n.parent != null) && (diffh != 0) ) {
+        n.adjust_posy_only( 0 - (diffh / 2) );
+        adjust_tree_all( n, adjust );
       }
-      if( width_diff != 0 ) {
+      if( diffw != 0 ) {
         if( n.side == NodeSide.LEFT ) {
-          n.posx -= width_diff;
+          n.posx -= diffw;
         } else {
           for( int i=0; i<n.children().length; i++ ) {
-            n.children().index( i ).posx += width_diff;
+            n.children().index( i ).posx += diffw;
           }
         }
       }
     } else {
-      if( (n.parent != null) && (width_diff != 0) ) {
-        n.adjust_posx_only( 0 - (width_diff / 2) );
-        adjust_tree_all( n, adjust ); // , (0 - (width_diff / 2)) );
+      if( (n.parent != null) && (diffw != 0) ) {
+        n.adjust_posx_only( 0 - (diffw / 2) );
+        adjust_tree_all( n, adjust );
       }
-      if( height_diff != 0 ) {
+      if( diffh != 0 ) {
         if( n.side == NodeSide.TOP ) {
-          n.posy -= height_diff;
+          n.posy -= diffh;
         } else {
           for( int i=0; i<n.children().length; i++ ) {
-            n.children().index( i ).posy += height_diff;
+            n.children().index( i ).posy += diffh;
           }
         }
       }
@@ -260,7 +247,7 @@ public class Layout : Object {
         n.posx = px - (cw + _pc_gap);
         break;
       case NodeSide.RIGHT :
-        n.posx = px + (pw + _pc_gap);
+        n.posx = px + (pw + _pc_gap) - n.parent.task_width();
         break;
       case NodeSide.TOP :
         double cx, cy, cw, ch;
@@ -275,7 +262,7 @@ public class Layout : Object {
 
   /* Returns the adjustment value */
   protected virtual double get_insert_adjust( Node child ) {
-    return( (child.tree_size + _sb_gap) / 2 );
+    return( child.tree_size / 2 );
   }
 
   /* Called when we are inserting a node within a parent */
@@ -314,9 +301,9 @@ public class Layout : Object {
       double sx, sy, sw, sh;
       bbox( parent.children().index( pos - 1 ), child.side, out sx, out sy, out sw, out sh );
       if( (child.side & NodeSide.horizontal()) != 0 ) {
-        child.posy = (sy + sh + _sb_gap + (oy - cy)) - adjust;
+        child.posy = (sy + sh + (oy - cy)) - adjust;
       } else {
-        child.posx = (sx + sw + _sb_gap + (ox - cx)) - adjust;
+        child.posx = (sx + sw + (ox - cx)) - adjust;
       }
 
     /* Otherwise, place ourselves just above the next sibling */
@@ -337,7 +324,7 @@ public class Layout : Object {
   /* Called to layout the leftover children of a parent node when a node is deleted */
   public virtual void handle_update_by_delete( Node parent, int index, NodeSide side, double size ) {
 
-    double adjust = (size + _sb_gap) / 2;
+    double adjust = size / 2;
 
     /* Adjust the parent's descendants */
     for( int i=0; i<parent.children().length; i++ ) {
@@ -365,11 +352,6 @@ public class Layout : Object {
     bbox( last, -1, out x, out y, out w, out h );
     n.posx = last.posx;
     n.posy = y + h + _rt_gap;
-  }
-
-  /* Returns the font description associated with the layout */
-  public Pango.FontDescription get_font_description() {
-    return( _font_description );
   }
 
 }

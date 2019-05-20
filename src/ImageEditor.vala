@@ -99,18 +99,18 @@ class ImageEditor {
 
     /* Set the defaults */
     _node  = node;
-    _image = new NodeImage( im, node.get_image().id, _node.max_width() );
+    _image = new NodeImage( im, node.image.id, _node.max_width() );
 
     if( _image.valid ) {
 
-      _image.crop_x = node.get_image().crop_x;
-      _image.crop_y = node.get_image().crop_y;
-      _image.crop_w = node.get_image().crop_w;
-      _image.crop_h = node.get_image().crop_h;
+      _image.crop_x = node.image.crop_x;
+      _image.crop_y = node.image.crop_y;
+      _image.crop_w = node.image.crop_w;
+      _image.crop_h = node.image.crop_h;
 
       /* Load the image and draw it */
-      _da.width_request      = node.get_image().get_surface().get_width();
-      _da.height_request     = node.get_image().get_surface().get_height();
+      _da.width_request      = node.image.get_surface().get_width();
+      _da.height_request     = node.image.get_surface().get_height();
       _crop_points[8].width  = _image.crop_w;
       _crop_points[8].height = _image.crop_h;
       set_crop_points();
@@ -233,14 +233,16 @@ class ImageEditor {
 
     var box = new Box( Orientation.VERTICAL, 5 );
 
+    box.border_width = 5;
+
     _da = create_drawing_area( im );
     var status  = create_status_area();
     var buttons = create_buttons( parent, im );
 
     /* Pack the widgets into the window */
-    box.pack_start( _da,     true,  true, 10 );
-    box.pack_start( status,  false, false, 0 );
-    box.pack_start( buttons, false, true, 10 );
+    box.pack_start( _da,     true,  true );
+    box.pack_start( status,  false, false );
+    box.pack_start( buttons, false, true );
 
     box.show_all();
 
@@ -339,8 +341,8 @@ class ImageEditor {
     _status_cursor = new Label( null );
     _status_crop   = new Label( null );
 
-    box.pack_start( _status_cursor, false, false, 5 );
-    box.pack_start( _status_crop,   false, false, 5 );
+    box.pack_start( _status_cursor, false, false );
+    box.pack_start( _status_crop,   false, false );
 
     return( box );
 
@@ -382,10 +384,10 @@ class ImageEditor {
       remove_image( im );
     });
 
-    box.pack_start( change, false, false, 5 );
-    box.pack_start( remove, false, false, 5 );
-    box.pack_end(   apply,  false, false, 5 );
-    box.pack_end(   cancel, false, false, 5 );
+    box.pack_start( change, false, false );
+    box.pack_start( remove, false, false );
+    box.pack_end(   apply,  false, false );
+    box.pack_end(   cancel, false, false );
 
     return( box );
 
@@ -453,7 +455,7 @@ class ImageEditor {
   private void remove_image( ImageManager im ) {
 
     /* Create a copy of the current image before changing it */
-    var orig_image = _node.get_image();
+    var orig_image = _node.image;
 
     /* Clear the node image */
     _node.set_image( im, null );
@@ -470,7 +472,7 @@ class ImageEditor {
   private void set_image( ImageManager im ) {
 
     /* Create a copy of the current image before changing it */
-    var orig_image = _node.get_image();
+    var orig_image = _node.image;
 
     /* Set the image width to match the node's max width */
     _image.set_width( _node.max_width() );

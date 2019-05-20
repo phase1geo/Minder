@@ -23,13 +23,13 @@ using Gtk;
 using Gdk;
 using Granite.Widgets;
 
-public class NodeInspector : Stack {
+public class NodeInspector : Box {
 
   private const Gtk.TargetEntry[] DRAG_TARGETS = {
     {"text/uri-list", 0, 0}
   };
 
-  private Entry       _name;
+  private TextView    _name;
   private Switch      _task;
   private Switch      _fold;
   private Box         _link_box;
@@ -43,35 +43,24 @@ public class NodeInspector : Stack {
   private Image       _image;
   private Button      _image_btn;
   private Label       _image_loc;
+  private bool        _ignore_name_change = false;
 
   public NodeInspector( DrawArea da ) {
 
+    Object( orientation:Orientation.VERTICAL, spacing:10 );
+
     _da = da;
 
-    /* Set the transition duration information */
-    transition_duration = 500;
-    transition_type     = StackTransitionType.OVER_DOWN_UP;
-
-    var empty_box = new Box( Orientation.VERTICAL, 10 );
-    var empty_lbl = new Label( _( "<big>Select a node to view/edit information</big>" ) );
-    var node_box  = new Box( Orientation.VERTICAL, 10 );
-
-    empty_lbl.use_markup = true;
-    empty_box.pack_start( empty_lbl, true, true );
-
-    add_named( node_box,  "node" );
-    add_named( empty_box, "empty" );
-
     /* Create the node widgets */
-    create_title( node_box );
-    create_task( node_box );
-    create_fold( node_box );
-    create_link( node_box );
-    create_note( node_box );
-    create_image( node_box );
-    create_buttons( node_box );
+    create_title();
+    create_task();
+    create_fold();
+    create_link();
+    create_note();
+    create_image();
+    create_buttons();
 
-    _da.node_changed.connect( node_changed );
+    _da.current_changed.connect( node_changed );
     _da.theme_changed.connect( theme_changed );
 
     show_all();
@@ -84,32 +73,35 @@ public class NodeInspector : Stack {
   }
 
   /* Creates the name entry */
-  private void create_title( Box bbox ) {
+  private void create_title() {
 
-    Box   box = new Box( Orientation.VERTICAL, 2 );
-    Label lbl = new Label( _( "Title" ) );
+    Box   box = new Box( Orientation.VERTICAL, 10 );
+    Label lbl = new Label( _( "<b>Title</b>" ) );
 
-    _name = new Entry();
-    // _name.input_hints = InputHints.EMOJI;
-    _name.activate.connect( name_changed );
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
+
+    _name = new TextView();
+    _name.set_wrap_mode( Gtk.WrapMode.WORD );
+    _name.buffer.text = "";
+    _name.buffer.changed.connect( name_changed );
     _name.focus_out_event.connect( name_focus_out );
-
-    lbl.xalign = (float)0;
 
     box.pack_start( lbl,   true, false );
     box.pack_start( _name, true, false );
 
-    bbox.pack_start( box, false, true );
+    pack_start( box, false, true );
 
   }
 
   /* Creates the task UI elements */
-  private void create_task( Box bbox ) {
+  private void create_task() {
 
     var box  = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl  = new Label( _( "Task" ) );
+    var lbl  = new Label( _( "<b>Task</b>" ) );
 
-    lbl.xalign = (float)0;
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
 
     _task = new Switch();
     _task.button_release_event.connect( task_changed );
@@ -117,17 +109,18 @@ public class NodeInspector : Stack {
     box.pack_start( lbl,   false, true, 0 );
     box.pack_end(   _task, false, true, 0 );
 
-    bbox.pack_start( box, false, true );
+    pack_start( box, false, true );
 
   }
 
   /* Creates the fold UI elements */
-  private void create_fold( Box bbox ) {
+  private void create_fold() {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Fold" ) );
+    var lbl = new Label( _( "<b>Fold</b>" ) );
 
-    lbl.xalign = (float)0;
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
 
     _fold = new Switch();
     _fold.button_release_event.connect( fold_changed );
@@ -135,7 +128,7 @@ public class NodeInspector : Stack {
     box.pack_start( lbl,   false, true, 0 );
     box.pack_end(   _fold, false, true, 0 );
 
-    bbox.pack_start( box, false, true );
+    pack_start( box, false, true );
 
   }
 
@@ -143,13 +136,14 @@ public class NodeInspector : Stack {
    Allows the user to select a different color for the current link
    and tree.
   */
-  private void create_link( Box bbox ) {
+  private void create_link() {
 
     _link_box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl   = new Label( _( "Link Color" ) );
+    var lbl   = new Label( _( "<b>Link Color</b>" ) );
 
     _link_box.homogeneous = true;
     lbl.xalign            = (float)0;
+    lbl.use_markup        = true;
 
     _link_color = new ColorButton();
     _link_color.color_set.connect(() => {
@@ -159,17 +153,18 @@ public class NodeInspector : Stack {
     _link_box.pack_start( lbl,         false, true, 0 );
     _link_box.pack_end(   _link_color, true,  true, 0 );
 
-    bbox.pack_start( _link_box, false, true );
+    pack_start( _link_box, false, true );
 
   }
 
   /* Creates the note widget */
-  private void create_note( Box bbox ) {
+  private void create_note() {
 
-    Box   box = new Box( Orientation.VERTICAL, 0 );
-    Label lbl = new Label( _( "Note" ) );
+    Box   box = new Box( Orientation.VERTICAL, 10 );
+    Label lbl = new Label( _( "<b>Note</b>" ) );
 
-    lbl.xalign = (float)0;
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
 
     _note = new TextView();
     _note.set_wrap_mode( Gtk.WrapMode.WORD );
@@ -180,29 +175,30 @@ public class NodeInspector : Stack {
 
     ScrolledWindow sw = new ScrolledWindow( null, null );
     sw.min_content_width  = 300;
-    sw.min_content_height = 300;
+    sw.min_content_height = 100;
     sw.add( _note );
 
     box.pack_start( lbl, false, false );
     box.pack_start( sw,  true,  true );
 
-    bbox.pack_start( box, true, true );
+    pack_start( box, true, true );
 
   }
 
   /* Creates the image widget */
-  private void create_image( Box bbox ) {
+  private void create_image() {
 
     var box = new Box( Orientation.VERTICAL, 0 );
-    var lbl = new Label( _( "Image" ) );
+    var lbl = new Label( _( "<b>Image</b>" ) );
 
-    lbl.xalign = (float)0;
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
 
-    _image_btn = new Button.with_label( _( "Add Image..." ) );
+    _image_btn = new Button.with_label( _( "Add Image…" ) );
     _image_btn.visible = true;
     _image_btn.clicked.connect( image_button_clicked );
 
-    _image = new Image.from_pixbuf( null );
+    _image = new Image();
 
     var btn_edit = new Button.from_icon_name( "document-edit-symbolic" );
     btn_edit.set_tooltip_text( _( "Edit Image" ) );
@@ -257,7 +253,7 @@ public class NodeInspector : Stack {
     box.pack_start( _image_area, true,  true );
     box.pack_start( _image_loc,  false, true );
 
-    bbox.pack_start( box, false, true );
+    pack_start( box, false, true );
 
     /* Set ourselves up to be a drag target */
     Gtk.drag_dest_set( _image, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
@@ -311,7 +307,7 @@ public class NodeInspector : Stack {
   }
 
   /* Creates the node editing button grid and adds it to the popover */
-  private void create_buttons( Box bbox ) {
+  private void create_buttons() {
 
     var grid = new Grid();
     grid.column_homogeneous = true;
@@ -342,7 +338,7 @@ public class NodeInspector : Stack {
     grid.attach( del_btn,     3, 0, 1, 1 );
 
     /* Add the button grid to the popover */
-    bbox.pack_start( grid, false, true );
+    pack_start( grid, false, true );
 
   }
 
@@ -350,7 +346,10 @@ public class NodeInspector : Stack {
    Called whenever the node name is changed within the inspector.
   */
   private void name_changed() {
-    _da.change_current_name( _name.text );
+    if( !_ignore_name_change ) {
+      _da.change_current_node_name( _name.buffer.text );
+    }
+    _ignore_name_change = false;
   }
 
   /*
@@ -358,7 +357,7 @@ public class NodeInspector : Stack {
    node title in the canvas.
   */
   private bool name_focus_out( EventFocus e ) {
-    _da.change_current_name( _name.text );
+    _da.change_current_node_name( _name.buffer.text );
     return( false );
   }
 
@@ -385,7 +384,7 @@ public class NodeInspector : Stack {
    and redraws the canvas when needed.
   */
   private void note_changed() {
-    _da.change_current_note( _note.buffer.text );
+    _da.change_current_node_note( _note.buffer.text );
   }
 
   /* Saves the original version of the node's note so that we can */
@@ -459,7 +458,8 @@ public class NodeInspector : Stack {
     Node? current = _da.get_current_node();
 
     if( current != null ) {
-      _name.set_text( current.name );
+      _ignore_name_change = true;
+      _name.buffer.text = current.name.text;
       _task.set_active( current.task_enabled() );
       if( current.is_leaf() ) {
         _fold.set_active( false );
@@ -477,18 +477,15 @@ public class NodeInspector : Stack {
       }
       _detach_btn.set_sensitive( current.parent != null );
       _note.buffer.text = current.note;
-      if( current.get_image() != null ) {
-        var url = _da.image_manager.get_uri( current.get_image().id ).replace( "&", "&amp;" );
+      if( current.image != null ) {
+        var url = _da.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
         var str = "<a href=\"" + url + "\">" + url + "</a>";
-        current.get_image().set_image( _image );
+        current.image.set_image( _image );
         _image_loc.label = str;
         set_image_visible( true );
       } else {
         set_image_visible( false );
       }
-      set_visible_child_name( "node" );
-    } else {
-      set_visible_child_name( "empty" );
     }
 
   }

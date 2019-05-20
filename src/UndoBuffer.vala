@@ -26,6 +26,8 @@ public class UndoBuffer : Object {
   private DrawArea        _da;
   private Array<UndoItem> _undo_buffer;
   private Array<UndoItem> _redo_buffer;
+  private bool            _debug = false;
+  private static int      _current_id = 0;
 
   public signal void buffer_changed();
 
@@ -62,6 +64,7 @@ public class UndoBuffer : Object {
       _redo_buffer.append_val( item );
       buffer_changed();
     }
+    output( "AFTER UNDO" );
   }
 
   /* Performs the next redo action in the buffer */
@@ -73,6 +76,7 @@ public class UndoBuffer : Object {
       _undo_buffer.append_val( item );
       buffer_changed();
     }
+    output( "AFTER REDO" );
   }
 
   /* Returns the undo tooltip */
@@ -89,9 +93,43 @@ public class UndoBuffer : Object {
 
   /* Adds a new undo item to the undo buffer.  Clears the redo buffer. */
   public void add_item( UndoItem item ) {
+    item.id = _current_id++;
     _undo_buffer.append_val( item );
     _redo_buffer.remove_range( 0, _redo_buffer.length );
     buffer_changed();
+    output( "ITEM ADDED" );
+  }
+
+  /*
+   Attempts to replace the last item in the undo buffer with the given item if both items are the same type;
+   otherwise, the new item will just be added like any other item.
+  */
+  public void replace_item( UndoItem item ) {
+    item.id = _current_id++;
+    if( _undo_buffer.length > 0 ) {
+      UndoItem last = _undo_buffer.index( _undo_buffer.length - 1 );
+      if( (last.get_type() == item.get_type()) && last.matches( item ) ) {
+        last.replace_with_item( item );
+        buffer_changed();
+        output( "ITEM REPLACED" );
+        return;
+      }
+    }
+    add_item( item );
+  }
+
+  /* Outputs the state of the undo and redo buffers to standard output */
+  public void output( string msg = "BUFFER STATE" ) {
+    if( _debug ) {
+      stdout.printf( "%s\n  Undo Buffer\n-----------\n", msg );
+      for( int i=0; i<_undo_buffer.length; i++ ) {
+        stdout.printf( "    %s\n", _undo_buffer.index( i ).to_string() );
+      }
+      stdout.printf( "  Redo Buffer\n-----------\n" );
+      for( int i=0; i<_redo_buffer.length; i++ ) {
+        stdout.printf( "    %s\n", _redo_buffer.index( i ).to_string() );
+      }
+    }
   }
 
 }

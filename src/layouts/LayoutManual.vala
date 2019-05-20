@@ -37,7 +37,7 @@ public class LayoutManual : Layout {
   }
 
   /* Updates the layout when necessary when a node is edited */
-  public override void handle_update_by_edit( Node n ) {}
+  public override void handle_update_by_edit( Node n, double diffw, double diffh ) {}
 
   /* Called when a node's fold indicator changes */
   public override void handle_update_by_fold( Node n ) {}

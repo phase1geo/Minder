@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=Minder
+GenericName=Mind-mapper
+Comment=Create, develop and visualize your ideas
+Categories=Utility;Office;Development;
+Exec=com.github.phase1geo.minder %f
+Icon=com.github.phase1geo.minder
+Terminal=false
+Type=Application
+MimeType=application/com.github.phase1geo.minder;
+X-GNOME-Gettext-Domain=Minder
+X-GNOME-UsesNotifications=true
+Keywords=Mind;Mapping;
+Actions=NewDocument;
+
+[Desktop Action NewDocument]
+Name=New Document
+Exec=com.github.phase1geo.minder -n

@@ -37,38 +37,48 @@ public class UndoNodeBalance : UndoItem {
     }
 
     /* Performs an undo operation for the stored nodes */
-    public void change( DrawArea da, Layout l, Node parent ) {
+    public void change( Node parent ) {
       for( int i=0; i<_nodes.length; i++ ) {
         Node n = _nodes.index( i );
-        n.detach( n.side, l );
+        n.detach( n.side );
       }
       for( int i=0; i<_nodes.length; i++ ) {
         Node n = _nodes.index( i );
         n.side = _sides.index( i );
-        l.propagate_side( n, n.side );
-        n.attach( parent, i, null, l );
+        n.layout.propagate_side( n, n.side );
+        n.attach_init( parent, -1 );
       }
     }
 
   }
 
   private Array<BalanceNodes>  _old;
-  private Array<BalanceNodes>? _new = null;
+  private Array<BalanceNodes>? _new  = null;
+  private Node?                _root = null;
 
   /* Default constructor */
-  public UndoNodeBalance( DrawArea da ) {
+  public UndoNodeBalance( DrawArea da, Node? root_node ) {
     base( _( "balance nodes" ) );
-    _old = new Array<BalanceNodes>();
-    for( int i=0; i<da.get_nodes().length; i++ ) {
-      _old.append_val( new BalanceNodes( da.get_nodes().index( i ) ) );
+    _root = root_node;
+    _old  = new Array<BalanceNodes>();
+    if( root_node == null ) {
+      for( int i=0; i<da.get_nodes().length; i++ ) {
+        _old.append_val( new BalanceNodes( da.get_nodes().index( i ) ) );
+      }
+    } else {
+      _old.append_val( new BalanceNodes( root_node ) );
     }
   }
 
   /* Perform the swap */
   private void change( DrawArea da, Array<BalanceNodes> nodes ) {
     da.animator.add_nodes( "undo balance nodes" );
-    for( int i=0; i<da.get_nodes().length; i++ ) {
-      nodes.index( i ).change( da, da.get_layout(), da.get_nodes().index( i ) );
+    if( _root == null ) {
+      for( int i=0; i<da.get_nodes().length; i++ ) {
+        nodes.index( i ).change( da.get_nodes().index( i ) );
+      }
+    } else {
+      nodes.index( 0 ).change( _root );
     }
     da.animator.animate();
   }
