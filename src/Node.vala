@@ -1670,7 +1670,7 @@ public class Node : Object {
     /* Get the parent's link point */
     parent.link_point( out parent_x, out parent_y );
 
-    Utils.set_context_color_with_alpha( ctx, _link_color, _alpha );
+    Utils.set_context_color_with_alpha( ctx, _link_color, ((_parent.alpha != 1.0) ? _parent.alpha : _alpha) );
     ctx.set_line_cap( LineCap.ROUND );
 
     switch( side ) {

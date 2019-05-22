@@ -55,6 +55,7 @@ public class MainWindow : ApplicationWindow {
   private ModelButton?      _zoom_sel       = null;
   private Button?           _undo_btn       = null;
   private Button?           _redo_btn       = null;
+  private ToggleButton?     _focus_btn      = null;
   private Button?           _prop_btn       = null;
   private Image?            _prop_show      = null;
   private Image?            _prop_hide      = null;
@@ -178,6 +179,7 @@ public class MainWindow : ApplicationWindow {
     add_export_button( accel_group );
     add_search_button( accel_group );
     add_zoom_button( accel_group );
+    add_focus_button( accel_group );
 
     /* Create the overlay that will hold the canvas so that we can put an entry box for emoji support */
     var canvas_overlay = new Overlay();
@@ -482,6 +484,30 @@ public class MainWindow : ApplicationWindow {
 
   }
 
+  /* Adds the focus mode button to the headerbar */
+  private void add_focus_button( AccelGroup accel_group ) {
+
+    _focus_btn = new ToggleButton.with_label( _( "Focus" ) );
+    _focus_btn.valign = Align.CENTER;
+    _focus_btn.toggled.connect(() => {
+      set_focus_btn_state();
+      _canvas.set_focus_mode( _focus_btn.active );
+      _canvas.grab_focus();
+    });
+
+    _header.pack_end( _focus_btn );
+
+  }
+
+  /* Sets the color of the focus button to match the current active state */
+  private void set_focus_btn_state() {
+    if( _focus_btn.active ) {
+      _focus_btn.get_style_context().add_class( "suggested-action" );
+    } else {
+      _focus_btn.get_style_context().remove_class( "suggested-action" );
+    }
+  }
+
   /* Adds the property functionality */
   private void add_property_button( AccelGroup accel_group ) {
 
@@ -773,6 +799,12 @@ public class MainWindow : ApplicationWindow {
   /* Called whenever the node selection changes in the canvas */
   private void on_current_changed() {
     _zoom_sel.set_sensitive( _canvas.get_current_node() != null );
+    if( _canvas.get_current_node() != null ) {
+      _focus_btn.set_sensitive( true );
+    } else {
+      _focus_btn.active = false;
+      _focus_btn.set_sensitive( false );
+    }
   }
 
   /*

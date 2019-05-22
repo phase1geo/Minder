@@ -30,6 +30,7 @@ public class DrawArea : Gtk.DrawingArea {
   private const Gtk.TargetEntry[] DRAG_TARGETS = {
     {"text/uri-list", 0, 0}
   };
+  private const double focus_alpha = 0.1;
 
   private double           _press_x;
   private double           _press_y;
@@ -64,6 +65,7 @@ public class DrawArea : Gtk.DrawingArea {
   private ImageEditor      _editor;
   private IMContextSimple  _im_context;
   private bool             _debug        = true;
+  private bool             _focus_mode   = false;
 
   public UndoBuffer   undo_buffer    { set; get; }
   public Themes       themes         { set; get; default = new Themes(); }
@@ -260,6 +262,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns the connections list */
   public Connections get_connections() {
     return( _connections );
+  }
+
+  /* Returns the current focus mode value */
+  public bool get_focus_mode() {
+    return( _focus_mode );
   }
 
   /* Searches for and returns the node with the specified ID */
@@ -591,14 +598,16 @@ public class DrawArea : Gtk.DrawingArea {
         _current_connection      = null;
       }
       if( _current_node != null ) {
-        _current_node.mode = NodeMode.NONE;
+        _current_node.mode  = NodeMode.NONE;
+        _current_node.alpha = _focus_mode ? focus_alpha : 1.0; 
       }
       if( (n.parent != null) && n.parent.folded ) {
         var last = n.reveal();
         undo_buffer.add_item( new UndoNodeReveal( this, n, last ) );
       }
-      _current_node      = n;
-      _current_node.mode = NodeMode.CURRENT;
+      _current_node       = n;
+      _current_node.mode  = NodeMode.CURRENT;
+      _current_node.alpha = 1.0;
       current_changed();
     }
   }
@@ -828,8 +837,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Clears the current node (if it is set) and updates the UI accordingly */
   private void clear_current_node( bool signal_change ) {
     if( _current_node != null ) {
-      _current_node.mode = NodeMode.NONE;
-      _current_node      = null;
+      _current_node.mode  = NodeMode.NONE;
+      _current_node.alpha = 1.0;
+      _current_node       = null;
       if( signal_change ) {
         current_changed();
       }
@@ -1639,11 +1649,13 @@ public class DrawArea : Gtk.DrawingArea {
     if( n != null ) {
       if( n != _current_node ) {
         if( _current_node != null ) {
-          _current_node.mode = NodeMode.NONE;
+          _current_node.mode  = NodeMode.NONE;
+          _current_node.alpha = _focus_mode ? focus_alpha : 1.0;
         }
-        _current_node = n;
-        _current_new  = false;
-        _current_node.mode = NodeMode.CURRENT;
+        _current_node       = n;
+        _current_new        = false;
+        _current_node.mode  = NodeMode.CURRENT;
+        _current_node.alpha = 1.0;
         if( _current_node.parent != null ) {
           _current_node.parent.last_selected_child = n;
         }
@@ -3070,6 +3082,25 @@ public class DrawArea : Gtk.DrawingArea {
     _last_connection    = null;
     current_changed();
     changed();
+    queue_draw();
+  }
+
+  /*
+   Called when the focus button active state changes.  Causes all nodes and connections
+   to have the alpha state set to almost transparent (when focus mode is enabled) or fully opaque.
+  */
+  public void set_focus_mode( bool focus ) {
+    double alpha = focus ? focus_alpha : 1.0;
+    _focus_mode = focus;
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).alpha = alpha;
+    }
+    _connections.set_alpha( alpha );
+    if( _current_node != null ) {
+      _current_node.alpha = 1.0;
+    } else if( _current_connection != null ) {
+      _current_connection.alpha = 1.0;
+    }
     queue_draw();
   }
 

@@ -202,6 +202,13 @@ public class Connections {
     }
   }
 
+  /* Sets the focus mode to the given value and updates the alpha value of the stored connections */
+  public void set_alpha( double alpha ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      _connections.index( i ).alpha = alpha;
+    }
+  }
+
   /* Draws all of the connections onto the given context */
   public void draw_all( Cairo.Context ctx, Theme theme ) {
     if( hide ) return;
