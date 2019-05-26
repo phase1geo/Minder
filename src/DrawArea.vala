@@ -991,7 +991,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Returns the supported scale points */
-  public double[] get_scale_marks() {
+  public static double[] get_scale_marks() {
     double[] marks = {10, 25, 50, 75, 100, 150, 200, 250, 300, 350, 400};
     return( marks );
   }
@@ -3097,6 +3097,13 @@ public class DrawArea : Gtk.DrawingArea {
     }
     _connections.set_alpha( alpha );
     if( _current_node != null ) {
+      if( focus ) {
+        var parent = _current_node.parent;
+        while( parent != null ) {
+          parent.set_alpha_only( 1.0 );
+          parent = parent.parent;
+        }
+      }
       _current_node.alpha = 1.0;
     } else if( _current_connection != null ) {
       _current_connection.alpha = 1.0;

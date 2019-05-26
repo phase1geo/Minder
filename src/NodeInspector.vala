@@ -35,7 +35,7 @@ public class NodeInspector : Box {
   private Box         _link_box;
   private ColorButton _link_color;
   private TextView    _note;
-  private DrawArea    _da;
+  private DrawArea?   _da = null;
   private Button      _detach_btn;
   private string      _orig_note = "";
   private Node?       _node = null;
@@ -45,11 +45,9 @@ public class NodeInspector : Box {
   private Label       _image_loc;
   private bool        _ignore_name_change = false;
 
-  public NodeInspector( DrawArea da ) {
+  public NodeInspector( MainWindow win ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
-
-    _da = da;
 
     /* Create the node widgets */
     create_title();
@@ -60,11 +58,23 @@ public class NodeInspector : Box {
     create_image();
     create_buttons();
 
-    _da.current_changed.connect( node_changed );
-    _da.theme_changed.connect( theme_changed );
 
     show_all();
 
+    win.canvas_changed.connect( tab_changed );
+
+  }
+
+  private void tab_changed( DrawArea? da ) {
+    if( _da != null ) {
+      _da.current_changed.disconnect( node_changed );
+      _da.theme_changed.disconnect( theme_changed );
+    }
+    if( da != null ) {
+      da.current_changed.connect( node_changed );
+      da.theme_changed.connect( theme_changed );
+    }
+    _da = da;
   }
 
   /* Returns the width of this window */

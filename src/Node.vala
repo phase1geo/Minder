@@ -366,6 +366,11 @@ public class Node : Object {
     position_name();
   }
 
+  /* Sets the alpha value without propagating this to the children */
+  public void set_alpha_only( double value ) {
+    _alpha = value;
+  }
+
   /* Sets the posx value only, leaving the children positions alone */
   public void adjust_posx_only( double value ) {
     _posx += value;

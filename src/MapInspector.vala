@@ -23,7 +23,7 @@ using Gtk;
 
 public class MapInspector : Box {
 
-  private DrawArea                    _da;
+  private DrawArea?                   _da             = null;
   private GLib.Settings               _settings;
   private Granite.Widgets.ModeButton? _layouts        = null;
   private Box?                        _theme_box      = null;
@@ -31,11 +31,10 @@ public class MapInspector : Box {
   private Button?                     _fold_completed = null;
   private Button?                     _unfold_all     = null;
 
-  public MapInspector( DrawArea da, GLib.Settings settings ) {
+  public MapInspector( MainWindow win, GLib.Settings settings ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
 
-    _da       = da;
     _settings = settings;
 
     /* Create the interface */
@@ -45,13 +44,25 @@ public class MapInspector : Box {
     add_theme_ui();
     add_button_ui();
 
-    /* Make sure that we have some defaults set */
+    /* Listen for changes to the current tab */
+    win.canvas_changed.connect( tab_changed );
+
+  }
+
+  /* Listen for any changes to the current tab in the main window */
+  private void tab_changed( DrawArea? da ) {
+    if( _da != null ) {
+      _da.loaded.disconnect( update_theme_layout );
+      _da.current_changed.disconnect( current_changed );
+    }
+    if( da != null ) {
+      da.loaded.connect( update_theme_layout );
+      da.current_changed.connect( current_changed );
+    }
+    _da = da;
+    _da.animator.enable        = _settings.get_boolean( "enable-animations" );
+    _da.get_connections().hide = _settings.get_boolean( "hide-connections" );
     update_theme_layout();
-
-    /* Whenever a new document is loaded, update the theme and layout within this UI */
-    _da.loaded.connect( update_theme_layout );
-    _da.current_changed.connect( current_changed );
-
   }
 
   /* Add the animation enable UI */
@@ -72,9 +83,6 @@ public class MapInspector : Box {
     box.pack_end(   enable, false, true, 0 );
 
     pack_start( box, false, true );
-
-    /* Initialize the animator */
-    _da.animator.enable = animate;
 
   }
 
@@ -104,9 +112,6 @@ public class MapInspector : Box {
 
     pack_start( box, false, true );
 
-    /* Initialize the connections */
-    _da.get_connections().hide = hide_conn;
-
   }
 
   /* Called whenever the hide connections switch is changed within the inspector */
@@ -120,8 +125,9 @@ public class MapInspector : Box {
   /* Adds the layout UI */
   private void add_layout_ui() {
 
-    var icons = new Array<string>();
-    _da.layouts.get_icons( ref icons );
+    var icons   = new Array<string>();
+    var layouts = new Layouts();
+    layouts.get_icons( ref icons );
 
     /* Create the modebutton to select the current layout */
     var lbl = new Label( _( "<b>Node Layouts</b>" ) );
@@ -187,11 +193,12 @@ public class MapInspector : Box {
     sw.add( vp );
 
     /* Get the theme information to display */
-    var names = new Array<string>();
-    var icons = new Array<Gtk.Image>();
+    var names  = new Array<string>();
+    var icons  = new Array<Gtk.Image>();
+    var themes = new Themes();
 
-    _da.themes.names( ref names );
-    _da.themes.icons( ref icons );
+    themes.names( ref names );
+    themes.icons( ref icons );
 
     /* Add the themes */
     for( int i=0; i<names.length; i++ ) {

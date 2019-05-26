@@ -29,7 +29,8 @@ public class MainWindow : ApplicationWindow {
 
   private GLib.Settings     _settings;
   private HeaderBar?        _header         = null;
-  private DrawArea?         _canvas         = null;
+  private Gtk.AccelGroup?   _accel_group    = null;
+  private Granite.Widgets.DynamicNotebook? _nb = null;
   private Document?         _doc            = null;
   private Revealer?         _inspector      = null;
   private Stack?            _stack          = null;
@@ -77,6 +78,8 @@ public class MainWindow : ApplicationWindow {
 
   private delegate void ChangedFunc();
 
+  public signal void canvas_changed( DrawArea? da );
+
   /* Create the main window UI */
   public MainWindow( Gtk.Application app, GLib.Settings settings ) {
 
@@ -114,29 +117,24 @@ public class MainWindow : ApplicationWindow {
     actions.add_action_entries( action_entries, this );
     insert_action_group( "win", actions );
 
-    AccelGroup accel_group = new Gtk.AccelGroup();
-    this.add_accel_group( accel_group );
+    /* Create the accelerator group for the window */
+    _accel_group = new Gtk.AccelGroup();
+    this.add_accel_group( _accel_group );
 
     /* Add keyboard shortcuts */
     add_keyboard_shortcuts( app );
 
-    /* Create and pack the canvas */
-    _canvas = new DrawArea( accel_group );
-    _canvas.current_changed.connect( on_current_changed );
-    _canvas.scale_changed.connect( change_scale );
-    _canvas.show_properties.connect( show_properties );
-    _canvas.hide_properties.connect( hide_properties );
-    _canvas.map_event.connect( on_canvas_mapped );
-    _canvas.undo_buffer.buffer_changed.connect( do_buffer_changed );
-    _canvas.theme_changed.connect( on_theme_changed );
-    _canvas.animator.enable = _settings.get_boolean( "enable-animations" );
+    /* Create the notebook */
+    _nb = new Granite.Widgets.DynamicNotebook();
+    _nb.new_tab_requested.connect( create_new_file );
+    _nb.tab_switched.connect( tab_changed );
 
     /* Create title toolbar */
     var new_btn = on_elementary
       ? new Button.from_icon_name( "document-new", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-new-symbolic" );
     new_btn.set_tooltip_markup( _( "New File   <i>(Control-N)</i>" ) );
-    new_btn.add_accelerator( "clicked", accel_group, 'n', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    new_btn.add_accelerator( "clicked", _accel_group, 'n', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
 
@@ -144,7 +142,7 @@ public class MainWindow : ApplicationWindow {
       ? new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-open-symbolic" );
     open_btn.set_tooltip_markup( _( "Open File   <i>(Control-O)</i>" ) );
-    open_btn.add_accelerator( "clicked", accel_group, 'o', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    open_btn.add_accelerator( "clicked", _accel_group, 'o', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
@@ -152,7 +150,7 @@ public class MainWindow : ApplicationWindow {
       ? new Button.from_icon_name( "document-save-as", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-save-as-symbolic" );
     save_btn.set_tooltip_markup( _( "Save File As   <i>(Control-Shift-S)</i>" ) );
-    open_btn.add_accelerator( "clicked", accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
+    open_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
@@ -161,7 +159,7 @@ public class MainWindow : ApplicationWindow {
       : new Button.from_icon_name( "edit-undo-symbolic" );
     _undo_btn.set_tooltip_markup( _( "Undo   <i>(Control-Z)</i>" ) );
     _undo_btn.set_sensitive( false );
-    _undo_btn.add_accelerator( "clicked", accel_group, 'z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _undo_btn.add_accelerator( "clicked", _accel_group, 'z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _undo_btn.clicked.connect( do_undo );
     _header.pack_start( _undo_btn );
 
@@ -170,30 +168,85 @@ public class MainWindow : ApplicationWindow {
       : new Button.from_icon_name( "edit-redo-symbolic" );
     _redo_btn.set_tooltip_markup( _( "Redo   <i>(Control-Shift-Z)</i>" ) );
     _redo_btn.set_sensitive( false );
-    _redo_btn.add_accelerator( "clicked", accel_group, 'z', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
+    _redo_btn.add_accelerator( "clicked", _accel_group, 'z', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     _redo_btn.clicked.connect( do_redo );
     _header.pack_start( _redo_btn );
 
     /* Add the buttons on the right side in the reverse order */
-    add_property_button( accel_group );
-    add_export_button( accel_group );
-    add_search_button( accel_group );
-    add_zoom_button( accel_group );
-    add_focus_button( accel_group );
+    add_property_button();
+    add_export_button();
+    add_search_button();
+    add_zoom_button();
+    add_focus_button();
 
-    /* Create the overlay that will hold the canvas so that we can put an entry box for emoji support */
-    var canvas_overlay = new Overlay();
-    canvas_overlay.add( _canvas );
-
-    /* Create the horizontal box that will contain the canvas and the properties sidebar */
+    /* Create the horizontal box that will contain the notebook and the properties sidebar */
     var hbox = new Box( Orientation.HORIZONTAL, 0 );
-    hbox.pack_start( canvas_overlay, true,  true, 0 );
-    hbox.pack_start( _inspector,     false, true, 0 );
+    hbox.pack_start( _nb,        true,  true, 0 );
+    hbox.pack_start( _inspector, false, true, 0 );
 
     /* Display the UI */
     add( hbox );
     show_all();
 
+    /* Add an initial page - This is just temporary for now */
+    add_tab( null );
+
+  }
+
+  /* Called whenever the current tab is changed */
+  private void tab_changed( Granite.Widgets.Tab? old_tab, Granite.Widgets.Tab new_tab ) {
+    var bin = (Gtk.Bin)new_tab.page;
+    canvas_changed( (DrawArea)bin.get_child() );
+  }
+
+  /* Adds a new tab to the notebook */
+  public DrawArea add_tab( string? fname ) {
+
+    /* Create and pack the canvas */
+    var da = new DrawArea( _accel_group );
+    da.current_changed.connect( on_current_changed );
+    da.scale_changed.connect( change_scale );
+    da.show_properties.connect( show_properties );
+    da.hide_properties.connect( hide_properties );
+    da.map_event.connect( on_canvas_mapped );
+    da.undo_buffer.buffer_changed.connect( do_buffer_changed );
+    da.theme_changed.connect( on_theme_changed );
+    da.animator.enable = _settings.get_boolean( "enable-animations" );
+
+    /* TBD - Create a new document */
+    _doc = new Document( da, _settings );
+
+    /* Create the overlay that will hold the canvas so that we can put an entry box for emoji support */
+    var overlay = new Overlay();
+    overlay.add( da );
+
+    var title = (fname == null) ? _( "Unnamed" ) : GLib.Path.get_basename( fname );
+    var tab   = new Granite.Widgets.Tab( title, null, overlay );
+    tab.pinnable = false;
+
+    /* Add the page to the notebook */
+    _nb.insert_tab( tab, _nb.n_tabs );
+
+    /* Make the drawing area new */
+    if( fname == null ) {
+      da.initialize_for_new();
+    } else {
+      da.initialize_for_open();
+    }
+    da.grab_focus();
+
+    /* Indicate that the tab has changed */
+    _nb.current = tab;
+    canvas_changed( da );
+
+    return( da );
+
+  }
+
+  /* Returns the current drawing area */
+  public DrawArea? get_current_da() {
+    var bin = (Gtk.Bin)_nb.current.page;
+    return( (DrawArea)bin.get_child() );
   }
 
   /* Handles any changes to the dark mode preference gsettings for the desktop */
@@ -232,7 +285,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the zoom functionality */
-  private void add_zoom_button( AccelGroup accel_group ) {
+  private void add_zoom_button() {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
@@ -245,7 +298,7 @@ public class MainWindow : ApplicationWindow {
     /* Create zoom menu popover */
     Box box = new Box( Orientation.VERTICAL, 5 );
 
-    var marks     = _canvas.get_scale_marks();
+    var marks     = DrawArea.get_scale_marks();
     var scale_lbl = new Label( _( "Zoom to Percent" ) );
     _zoom_scale   = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 );
     foreach (double mark in marks) {
@@ -296,7 +349,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the search functionality */
-  private void add_search_button( AccelGroup accel_group ) {
+  private void add_search_button() {
 
     /* Create the menu button */
     _search_btn = new MenuButton();
@@ -304,7 +357,7 @@ public class MainWindow : ApplicationWindow {
       ? new Image.from_icon_name( "edit-find", IconSize.LARGE_TOOLBAR )
       : new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
     _search_btn.set_tooltip_markup( _( "Search   <i>(Control-F)</i>" ) );
-    _search_btn.add_accelerator( "clicked", accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _search_btn.add_accelerator( "clicked", _accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _search_btn.clicked.connect( on_search_change );
     _header.pack_end( _search_btn );
 
@@ -450,7 +503,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the export functionality */
-  private void add_export_button( AccelGroup accel_group ) {
+  private void add_export_button() {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
@@ -485,14 +538,14 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the focus mode button to the headerbar */
-  private void add_focus_button( AccelGroup accel_group ) {
+  private void add_focus_button() {
 
     _focus_btn = new ToggleButton.with_label( _( "Focus" ) );
     _focus_btn.valign = Align.CENTER;
     _focus_btn.toggled.connect(() => {
       set_focus_btn_state();
-      _canvas.set_focus_mode( _focus_btn.active );
-      _canvas.grab_focus();
+      get_current_da().set_focus_mode( _focus_btn.active );
+      get_current_da().grab_focus();
     });
 
     _header.pack_end( _focus_btn );
@@ -509,7 +562,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the property functionality */
-  private void add_property_button( AccelGroup accel_group ) {
+  private void add_property_button() {
 
     /* Add the menubutton */
     _prop_show = on_elementary
@@ -521,7 +574,7 @@ public class MainWindow : ApplicationWindow {
     _prop_btn  = new Button();
     _prop_btn.image = _prop_show;
     _prop_btn.set_tooltip_text( _( "Properties" ) );
-    _prop_btn.add_accelerator( "clicked", accel_group, '|', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _prop_btn.add_accelerator( "clicked", _accel_group, '|', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _prop_btn.clicked.connect( inspector_clicked );
     _header.pack_end( _prop_btn );
 
@@ -532,9 +585,9 @@ public class MainWindow : ApplicationWindow {
     _stack = new Stack();
     _stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
     _stack.set_transition_duration( 500 );
-    _stack.add_titled( new CurrentInspector( _canvas ), "current", _("Current") );
-    _stack.add_titled( new StyleInspector( _canvas, _settings ), "style", _("Style") );
-    _stack.add_titled( new MapInspector( _canvas, _settings ),  "map",  _("Map") );
+    _stack.add_titled( new CurrentInspector( this ), "current", _("Current") );
+    _stack.add_titled( new StyleInspector( this, _settings ), "style", _("Style") );
+    _stack.add_titled( new MapInspector( this, _settings ),  "map",  _("Map") );
 
     _stack.add_events( EventMask.KEY_PRESS_MASK );
     _stack.key_press_event.connect( stack_keypress );
@@ -657,10 +710,7 @@ public class MainWindow : ApplicationWindow {
   */
   private void create_new_file() {
 
-    /* Create a new document */
-    _doc = new Document( _canvas, _settings );
-    _canvas.initialize_for_new();
-    _canvas.grab_focus();
+    add_tab( _( "Untitled" ) );
 
     /* Set the title to indicate that we have an unnamed document */
     update_title();
@@ -707,7 +757,7 @@ public class MainWindow : ApplicationWindow {
       open_file( dialog.get_filename() );
     }
 
-    _canvas.grab_focus();
+    get_current_da().grab_focus();
 
   }
 
@@ -717,17 +767,16 @@ public class MainWindow : ApplicationWindow {
       return( false );
     }
     if( fname.has_suffix( ".minder" ) ) {
-      _doc = new Document( _canvas, _settings );
-      _canvas.initialize_for_open();
+      add_tab( fname );
       _doc.filename = fname;
       update_title();
       _doc.load();
       return( true );
     } else if( fname.has_suffix( ".opml" ) ) {
-      _doc = new Document( _canvas, _settings );
-      _canvas.initialize_for_open();
+      var da = add_tab( null );
+      da.initialize_for_open();
       update_title();
-      ExportOPML.import( fname, _canvas );
+      ExportOPML.import( fname, da );
       return( true );
     }
     return( false );
@@ -735,18 +784,19 @@ public class MainWindow : ApplicationWindow {
 
   /* Perform an undo action */
   public void do_undo() {
-    _canvas.undo_buffer.undo();
-    _canvas.grab_focus();
+    var da = get_current_da();
+    da.undo_buffer.undo();
+    da.grab_focus();
   }
 
   /* Perform a redo action */
   public void do_redo() {
-    _canvas.undo_buffer.redo();
-    _canvas.grab_focus();
+    get_current_da().undo_buffer.redo();
+    get_current_da().grab_focus();
   }
 
   private bool on_canvas_mapped( Gdk.EventAny e ) {
-    _canvas.queue_draw();
+    get_current_da().queue_draw();
     return( false );
   }
 
@@ -754,7 +804,7 @@ public class MainWindow : ApplicationWindow {
   private void on_theme_changed() {
     Gtk.Settings? settings = Gtk.Settings.get_default();
     if( settings != null ) {
-      settings.gtk_application_prefer_dark_theme = _prefer_dark || _canvas.get_theme().prefer_dark;
+      settings.gtk_application_prefer_dark_theme = _prefer_dark || get_current_da().get_theme().prefer_dark;
     }
   }
 
@@ -763,10 +813,11 @@ public class MainWindow : ApplicationWindow {
    the undo and redo buffer buttons.
   */
   public void do_buffer_changed() {
-    _undo_btn.set_sensitive( _canvas.undo_buffer.undoable() );
-    _undo_btn.set_tooltip_text( _canvas.undo_buffer.undo_tooltip() );
-    _redo_btn.set_sensitive( _canvas.undo_buffer.redoable() );
-    _redo_btn.set_tooltip_text( _canvas.undo_buffer.redo_tooltip() );
+    var da = get_current_da();
+    _undo_btn.set_sensitive( da.undo_buffer.undoable() );
+    _undo_btn.set_tooltip_text( da.undo_buffer.undo_tooltip() );
+    _redo_btn.set_sensitive( da.undo_buffer.redoable() );
+    _redo_btn.set_tooltip_text( da.undo_buffer.redo_tooltip() );
   }
 
   /* Allow the user to select a filename to save the document as */
@@ -787,7 +838,7 @@ public class MainWindow : ApplicationWindow {
       update_title();
       retval = true;
     }
-    _canvas.grab_focus();
+    get_current_da().grab_focus();
     return( retval );
   }
 
@@ -798,8 +849,9 @@ public class MainWindow : ApplicationWindow {
 
   /* Called whenever the node selection changes in the canvas */
   private void on_current_changed() {
-    _zoom_sel.set_sensitive( _canvas.get_current_node() != null );
-    if( _canvas.get_current_node() != null ) {
+    var da = get_current_da();
+    _zoom_sel.set_sensitive( da.get_current_node() != null );
+    if( da.get_current_node() != null ) {
       _focus_btn.set_sensitive( true );
     } else {
       _focus_btn.active = false;
@@ -812,7 +864,7 @@ public class MainWindow : ApplicationWindow {
    UI to match.
   */
   private void change_scale( double scale_factor ) {
-    var marks       = _canvas.get_scale_marks();
+    var marks       = DrawArea.get_scale_marks();
     var scale_value = scale_factor * 100;
     _zoom_scale.set_value( scale_value );
     _zoom_in.set_sensitive( scale_value < marks[marks.length-1] );
@@ -828,7 +880,7 @@ public class MainWindow : ApplicationWindow {
       }
       if( !_inspector.reveal_child ) {
         _inspector.reveal_child = true;
-        _canvas.see( -300 );
+        get_current_da().see( -300 );
       }
       _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
     }
@@ -842,7 +894,7 @@ public class MainWindow : ApplicationWindow {
     if( !_inspector.reveal_child ) return;
     _prop_btn.image = _prop_show;
     _inspector.reveal_child = false;
-    _canvas.grab_focus();
+    get_current_da().grab_focus();
     _settings.set_boolean( "current-properties-shown",  false );
     _settings.set_boolean( "map-properties-shown",   false );
     _settings.set_boolean( "style-properties-shown", false );
@@ -851,7 +903,7 @@ public class MainWindow : ApplicationWindow {
   /* Converts the given value from the scale to the zoom value to use */
   private double zoom_to_value( double value ) {
     double last = -1;
-    foreach (double mark in _canvas.get_scale_marks()) {
+    foreach (double mark in DrawArea.get_scale_marks()) {
       if( last != -1 ) {
         if( value < ((mark + last) / 2) ) {
           return( last );
@@ -866,8 +918,9 @@ public class MainWindow : ApplicationWindow {
   private bool adjust_zoom( ScrollType scroll, double new_value ) {
     var value        = zoom_to_value( new_value );
     var scale_factor = value / 100;
-    _canvas.set_scaling_factor( scale_factor );
-    _canvas.queue_draw();
+    var da           = get_current_da();
+    da.set_scaling_factor( scale_factor );
+    da.queue_draw();
     return( false );
   }
 
@@ -892,34 +945,39 @@ public class MainWindow : ApplicationWindow {
 
   /* Zooms into the image (makes things larger) */
   private void action_zoom_in() {
-    _canvas.zoom_in();
-    _canvas.grab_focus();
+    var da = get_current_da();
+    da.zoom_in();
+    da.grab_focus();
   }
 
   /* Zooms out of the image (makes things smaller) */
   private void action_zoom_out() {
-    _canvas.zoom_out();
-    _canvas.grab_focus();
+    var da = get_current_da();
+    da.zoom_out();
+    da.grab_focus();
   }
 
   /* Zooms to make all nodes visible within the viewer */
   private void action_zoom_fit() {
-    _canvas.zoom_to_fit();
-    _canvas.grab_focus();
+    var da = get_current_da();
+    da.zoom_to_fit();
+    da.grab_focus();
   }
 
   /* Zooms to make the currently selected node and its tree put into view */
   private void action_zoom_selected() {
-    _canvas.zoom_to_selected();
-    _canvas.grab_focus();
+    var da = get_current_da();
+    da.zoom_to_selected();
+    da.grab_focus();
   }
 
   /* Sets the zoom to 100% */
   private void action_zoom_actual() {
-    _canvas.animator.add_scale( "action_zoom_actual" );
-    _canvas.set_scaling_factor( 1.0 );
-    _canvas.animator.animate();
-    _canvas.grab_focus();
+    var da = get_current_da();
+    da.animator.add_scale( "action_zoom_actual" );
+    da.set_scaling_factor( 1.0 );
+    da.animator.animate();
+    da.grab_focus();
   }
 
   /* Display matched items to the search within the search popover */
@@ -936,7 +994,7 @@ public class MainWindow : ApplicationWindow {
     };
     _search_items.clear();
     if( _search_entry.get_text() != "" ) {
-      _canvas.get_match_items(
+      get_current_da().get_match_items(
         _search_entry.get_text().casefold(),
         search_opts,
         ref _search_items
@@ -952,19 +1010,20 @@ public class MainWindow : ApplicationWindow {
     TreeIter    it;
     Node?       node = null;
     Connection? conn = null;
+    var         da   = get_current_da();
     _search_items.get_iter( out it, path );
     _search_items.get( it, 2, &node, 3, &conn, -1 );
     if( node != null ) {
-      _canvas.set_current_connection( null );
-      _canvas.set_current_node( node );
-      _canvas.see();
+      da.set_current_connection( null );
+      da.set_current_node( node );
+      da.see();
     } else if( conn != null ) {
-      _canvas.set_current_node( null );
-      _canvas.set_current_connection( conn );
-      _canvas.see();
+      da.set_current_node( null );
+      da.set_current_connection( conn );
+      da.see();
     }
     _search.closed();
-    _canvas.grab_focus();
+    da.grab_focus();
   }
 
   /* Exports the model to various formats */
@@ -1044,29 +1103,30 @@ public class MainWindow : ApplicationWindow {
 
       var fname  = dialog.get_filename();
       var filter = dialog.get_filter();
+      var da     = get_current_da();
 
       if( bmp_filter == filter ) {
-        ExportImage.export( repair_filename( fname, {".bmp"} ), "bmp", _canvas );
+        ExportImage.export( repair_filename( fname, {".bmp"} ), "bmp", da );
       } else if( csv_filter == filter ) {
-        ExportCSV.export( repair_filename( fname, {".csv"} ), _canvas );
+        ExportCSV.export( repair_filename( fname, {".csv"} ), da );
       } else if( jpeg_filter == filter ) {
-        ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", _canvas );
+        ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", da );
       } else if( md_filter == filter ) {
-        ExportMarkdown.export( repair_filename( fname, {".md", ".markdown"} ), _canvas );
+        ExportMarkdown.export( repair_filename( fname, {".md", ".markdown"} ), da );
       } else if( mmd_filter == filter ) {
-        ExportMermaid.export( repair_filename( fname, {".mmd"} ), _canvas );
+        ExportMermaid.export( repair_filename( fname, {".mmd"} ), da );
       } else if( opml_filter == filter ) {
-        ExportOPML.export( repair_filename( fname, {".opml"} ), _canvas );
+        ExportOPML.export( repair_filename( fname, {".opml"} ), da );
       } else if( pdf_filter == filter ) {
-        ExportPDF.export( repair_filename( fname, {".pdf"} ), _canvas );
+        ExportPDF.export( repair_filename( fname, {".pdf"} ), da );
       } else if( pngt_filter == filter ) {
-        ExportPNG.export( repair_filename( fname, {".png"} ), _canvas, true );
+        ExportPNG.export( repair_filename( fname, {".png"} ), da, true );
       } else if( pngo_filter == filter ) {
-        ExportPNG.export( repair_filename( fname, {".png"} ), _canvas, false );
+        ExportPNG.export( repair_filename( fname, {".png"} ), da, false );
       } else if( txt_filter == filter ) {
-        ExportText.export( repair_filename( fname, {".txt"} ), _canvas );
+        ExportText.export( repair_filename( fname, {".txt"} ), da );
       } else if( svg_filter == filter ) {
-        ExportSVG.export( repair_filename( fname, {".svg"} ), _canvas );
+        ExportSVG.export( repair_filename( fname, {".svg"} ), da );
       }
     }
 
@@ -1089,7 +1149,7 @@ public class MainWindow : ApplicationWindow {
   /* Exports the model to the printer */
   private void action_print() {
     var print = new ExportPrint();
-    print.print( _canvas, this );
+    print.print( get_current_da(), this );
   }
 
 }

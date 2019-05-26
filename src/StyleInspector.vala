@@ -76,7 +76,7 @@ public enum StyleAffects {
 
 public class StyleInspector : Box {
 
-  private DrawArea                   _da;
+  private DrawArea?                  _da = null;
   private GLib.Settings              _settings;
   private Granite.Widgets.ModeButton _link_types;
   private Scale                      _link_width;
@@ -106,11 +106,10 @@ public class StyleInspector : Box {
 
   public static Styles styles = new Styles();
 
-  public StyleInspector( DrawArea da, GLib.Settings settings ) {
+  public StyleInspector( MainWindow win, GLib.Settings settings ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:20 );
 
-    _da       = da;
     _settings = settings;
 
     /* Initialize the affects */
@@ -140,12 +139,21 @@ public class StyleInspector : Box {
     pack_start( affect, false, true );
     pack_start( sw,     true,  true, 10 );
 
-    /* Listen for changes to the current node and connection */
-    _da.current_changed.connect( handle_current_changed );
+    /* Listen for changes to the current tab in the main window */
+    win.canvas_changed.connect( tab_changed );
 
-    /* Update the UI */
+  }
+
+  /* Listen for any changes to the current tab in the main window */
+  private void tab_changed( DrawArea? da ) {
+    if( _da != null ) {
+      _da.current_changed.disconnect( handle_current_changed );
+    }
+    if( da != null ) {
+      da.current_changed.connect( handle_current_changed );
+    }
+    _da = da;
     handle_ui_changed();
-
   }
 
   /* Creates the menubutton that changes the affect */

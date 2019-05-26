@@ -32,16 +32,14 @@ public class ConnectionInspector : Box {
   private TextView    _title;
   private ColorButton _color;
   private TextView    _note;
-  private DrawArea    _da;
+  private DrawArea?   _da                  = null;
   private string      _orig_note           = "";
   private Connection? _connection          = null;
   private bool        _ignore_title_change = false;
 
-  public ConnectionInspector( DrawArea da ) {
+  public ConnectionInspector( MainWindow win ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
-
-    _da = da;
 
     /* Create the node widgets */
     create_title();
@@ -49,10 +47,21 @@ public class ConnectionInspector : Box {
     create_note();
     create_buttons();
 
-    _da.current_changed.connect( connection_changed );
+    win.canvas_changed.connect( tab_changed );
 
     show_all();
 
+  }
+
+  /* Called whenever the tab in the main window changes */
+  private void tab_changed( DrawArea? da ) {
+    if( _da != null ) {
+      _da.current_changed.disconnect( connection_changed );
+    }
+    if( da != null ) {
+      da.current_changed.connect( connection_changed );
+    }
+    _da = da;
   }
 
   /* Returns the width of this window */
