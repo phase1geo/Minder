@@ -31,7 +31,6 @@ public class MainWindow : ApplicationWindow {
   private HeaderBar?        _header         = null;
   private Gtk.AccelGroup?   _accel_group    = null;
   private Granite.Widgets.DynamicNotebook? _nb = null;
-  private Document?         _doc            = null;
   private Revealer?         _inspector      = null;
   private Stack?            _stack          = null;
   private Popover?          _zoom           = null;
@@ -126,7 +125,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the notebook */
     _nb = new Granite.Widgets.DynamicNotebook();
-    _nb.new_tab_requested.connect( create_new_file );
+    _nb.new_tab_requested.connect( do_new_file );
     _nb.tab_switched.connect( tab_changed );
 
     /* Create title toolbar */
@@ -189,7 +188,7 @@ public class MainWindow : ApplicationWindow {
     show_all();
 
     /* Add an initial page - This is just temporary for now */
-    add_tab( null );
+    add_tab( null, true );
 
   }
 
@@ -200,10 +199,10 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds a new tab to the notebook */
-  public DrawArea add_tab( string? fname ) {
+  public DrawArea add_tab( string? fname, bool create_new ) {
 
     /* Create and pack the canvas */
-    var da = new DrawArea( _accel_group );
+    var da = new DrawArea( _settings, _accel_group );
     da.current_changed.connect( on_current_changed );
     da.scale_changed.connect( change_scale );
     da.show_properties.connect( show_properties );
@@ -212,9 +211,6 @@ public class MainWindow : ApplicationWindow {
     da.undo_buffer.buffer_changed.connect( do_buffer_changed );
     da.theme_changed.connect( on_theme_changed );
     da.animator.enable = _settings.get_boolean( "enable-animations" );
-
-    /* TBD - Create a new document */
-    _doc = new Document( da, _settings );
 
     /* Create the overlay that will hold the canvas so that we can put an entry box for emoji support */
     var overlay = new Overlay();
@@ -228,7 +224,7 @@ public class MainWindow : ApplicationWindow {
     _nb.insert_tab( tab, _nb.n_tabs );
 
     /* Make the drawing area new */
-    if( fname == null ) {
+    if( create_new ) {
       da.initialize_for_new();
     } else {
       da.initialize_for_open();
@@ -245,6 +241,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Returns the current drawing area */
   public DrawArea? get_current_da() {
+    if( _nb.current == null ) { return( null ); }
     var bin = (Gtk.Bin)_nb.current.page;
     return( (DrawArea)bin.get_child() );
   }
@@ -264,11 +261,12 @@ public class MainWindow : ApplicationWindow {
 
   /* Updates the title */
   private void update_title() {
-    string suffix = " \u2014 Minder";
-    if( (_doc == null) || !_doc.is_saved() ) {
+    var suffix = " \u2014 Minder";
+    var da     = get_current_da();
+    if( (da == null) || !da.get_doc().is_saved() ) {
       _header.set_title( _( "Unnamed Document" ) + suffix );
     } else {
-      _header.set_title( GLib.Path.get_basename( _doc.filename ) + suffix );
+      _header.set_title( GLib.Path.get_basename( da.get_doc().filename ) + suffix );
     }
   }
 
@@ -643,7 +641,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Displays the save warning dialog window */
-  public void show_save_warning( string type ) {
+  public bool show_save_warning() {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
       _( "Save current unnamed document?" ),
@@ -674,70 +672,32 @@ public class MainWindow : ApplicationWindow {
         }
       }
       if( (id == ResponseType.CLOSE) || (id == ResponseType.ACCEPT) ) {
-        switch( type ) {
-          case "new"  :  create_new_file();       break;
-          case "open" :  select_and_open_file();  break;
-        }
+        // We need to indicate that the close operation can complete successfully in the tab bar
       }
     });
 
     dialog.show_all();
 
-  }
-
-  /*
-   Allow the user to create a new Minder file.  Checks to see if the current
-   document needs to be saved and saves it (if necessary).
-  */
-  public void do_new_file() {
-
-    /* Save any changes to the current document */
-    if( _doc != null ) {
-      if( _doc.is_saved() ) {
-        _doc.auto_save();
-      } else {
-        show_save_warning( "new" );
-        return;
-      }
-    }
-
-    create_new_file();
+    return( true );
 
   }
 
   /*
    Creates a new file
   */
-  private void create_new_file() {
+  public void do_new_file() {
 
-    add_tab( _( "Untitled" ) );
+    add_tab( null, true );
 
     /* Set the title to indicate that we have an unnamed document */
     update_title();
 
   }
 
-  /* Allow the user to open a Minder file */
-  public void do_open_file() {
-
-    /* Automatically save the current file if one exists */
-    if( _doc != null ) {
-      if( _doc.is_saved() ) {
-        _doc.auto_save();
-      } else {
-        show_save_warning( "open" );
-        return;
-      }
-    }
-
-    select_and_open_file();
-
-  }
-
   /*
    Allows the user to select a file to open and opens it in the same window.
   */
-  private void select_and_open_file() {
+  public void do_open_file() {
 
     /* Get the file to open from the user */
     FileChooserNative dialog = new FileChooserNative( _( "Open File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
@@ -767,14 +727,13 @@ public class MainWindow : ApplicationWindow {
       return( false );
     }
     if( fname.has_suffix( ".minder" ) ) {
-      add_tab( fname );
-      _doc.filename = fname;
+      var da = add_tab( fname, true );
+      da.get_doc().filename = fname;
       update_title();
-      _doc.load();
+      da.get_doc().load();
       return( true );
     } else if( fname.has_suffix( ".opml" ) ) {
-      var da = add_tab( null );
-      da.initialize_for_open();
+      var da = add_tab( fname, false );
       update_title();
       ExportOPML.import( fname, da );
       return( true );
@@ -829,12 +788,13 @@ public class MainWindow : ApplicationWindow {
     filter.add_pattern( "*.minder" );
     dialog.add_filter( filter );
     if( dialog.run() == ResponseType.ACCEPT ) {
-      string fname = dialog.get_filename();
+      var fname = dialog.get_filename();
+      var da    = get_current_da();
       if( fname.substring( -7, -1 ) != ".minder" ) {
         fname += ".minder";
       }
-      _doc.filename = fname;
-      _doc.save();
+      da.get_doc().filename = fname;
+      da.get_doc().save();
       update_title();
       retval = true;
     }
@@ -931,8 +891,9 @@ public class MainWindow : ApplicationWindow {
 
   /* Called when the user uses the Control-s keyboard shortcut */
   private void action_save() {
-    if( _doc.is_saved() ) {
-      _doc.save();
+    var da = get_current_da();
+    if( da.get_doc().is_saved() ) {
+      da.get_doc().save();
     } else {
       save_file();
     }

@@ -32,6 +32,7 @@ public class DrawArea : Gtk.DrawingArea {
   };
   private const double focus_alpha = 0.1;
 
+  private Document         _doc;
   private double           _press_x;
   private double           _press_y;
   private double           _origin_x;
@@ -108,7 +109,9 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void loaded();
 
   /* Default constructor */
-  public DrawArea( AccelGroup accel_group ) {
+  public DrawArea( GLib.Settings settings, AccelGroup accel_group ) {
+
+    _doc = new Document( this, settings );
 
     /* Create the array of root nodes in the map */
     _nodes = new Array<Node>();
@@ -194,6 +197,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called to handle a sigterm signal to the application */
   public void handle_sigterm( int s ) {
     image_manager.cleanup();
+  }
+
+  /* Returns the stored document */
+  public Document get_doc() {
+    return( _doc );
   }
 
   /* Returns the name of the currently selected theme */
