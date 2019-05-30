@@ -40,7 +40,6 @@ public class Document : Object {
         }
         _filename  = value;
         _from_user = true;
-        _settings.set_string( "last-file", value );
       }
     }
     get {
@@ -58,9 +57,11 @@ public class Document : Object {
     /* Create the temporary file */
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
     if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
-      _filename  = GLib.Path.build_filename( dir, "unnamed.minder" );
+      int i = 1;
+      do {
+        _filename = GLib.Path.build_filename( dir, "unnamed%d.minder".printf( i++ ) );
+      } while( GLib.FileUtils.test( _filename, FileTest.EXISTS ) );
       _from_user = false;
-      _settings.set_string( "last-file", _filename );
     }
 
     /* Create the image manager */

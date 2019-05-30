@@ -22,6 +22,13 @@
 using Gtk;
 using Gdk;
 
+public enum TabAddReason {
+  NEW,
+  OPEN,
+  IMPORT,
+  LOAD
+}
+
 public class MainWindow : ApplicationWindow {
 
   private const string DESKTOP_SCHEMA = "io.elementary.desktop";
@@ -97,7 +104,6 @@ public class MainWindow : ApplicationWindow {
     /* Create the header bar */
     _header = new HeaderBar();
     _header.set_show_close_button( true );
-    update_title();
 
     /* Set the main window data */
     title = _( "Minder" );
@@ -187,19 +193,17 @@ public class MainWindow : ApplicationWindow {
     add( hbox );
     show_all();
 
-    /* Add an initial page - This is just temporary for now */
-    add_tab( null, true );
-
   }
 
   /* Called whenever the current tab is changed */
   private void tab_changed( Granite.Widgets.Tab? old_tab, Granite.Widgets.Tab new_tab ) {
     var bin = (Gtk.Bin)new_tab.page;
     canvas_changed( (DrawArea)bin.get_child() );
+    save_tab_state();
   }
 
   /* Adds a new tab to the notebook */
-  public DrawArea add_tab( string? fname, bool create_new ) {
+  public DrawArea add_tab( string? fname, TabAddReason reason ) {
 
     /* Create and pack the canvas */
     var da = new DrawArea( _settings, _accel_group );
@@ -212,6 +216,10 @@ public class MainWindow : ApplicationWindow {
     da.theme_changed.connect( on_theme_changed );
     da.animator.enable = _settings.get_boolean( "enable-animations" );
 
+    if( fname != null ) {
+      da.get_doc().filename = fname;
+    }
+
     /* Create the overlay that will hold the canvas so that we can put an entry box for emoji support */
     var overlay = new Overlay();
     overlay.add( da );
@@ -223,8 +231,11 @@ public class MainWindow : ApplicationWindow {
     /* Add the page to the notebook */
     _nb.insert_tab( tab, _nb.n_tabs );
 
+    /* Update the titlebar */
+    update_title();
+
     /* Make the drawing area new */
-    if( create_new ) {
+    if( reason == TabAddReason.NEW ) {
       da.initialize_for_new();
     } else {
       da.initialize_for_open();
@@ -232,8 +243,9 @@ public class MainWindow : ApplicationWindow {
     da.grab_focus();
 
     /* Indicate that the tab has changed */
-    _nb.current = tab;
-    canvas_changed( da );
+    if( reason != TabAddReason.LOAD ) {
+      _nb.current = tab;
+    }
 
     return( da );
 
@@ -687,7 +699,7 @@ public class MainWindow : ApplicationWindow {
   */
   public void do_new_file() {
 
-    add_tab( null, true );
+    add_tab( null, TabAddReason.NEW );
 
     /* Set the title to indicate that we have an unnamed document */
     update_title();
@@ -727,13 +739,13 @@ public class MainWindow : ApplicationWindow {
       return( false );
     }
     if( fname.has_suffix( ".minder" ) ) {
-      var da = add_tab( fname, true );
+      var da = add_tab( fname, TabAddReason.OPEN );
       da.get_doc().filename = fname;
       update_title();
       da.get_doc().load();
       return( true );
     } else if( fname.has_suffix( ".opml" ) ) {
-      var da = add_tab( fname, false );
+      var da = add_tab( fname, TabAddReason.IMPORT );
       update_title();
       ExportOPML.import( fname, da );
       return( true );
@@ -1111,6 +1123,73 @@ public class MainWindow : ApplicationWindow {
   private void action_print() {
     var print = new ExportPrint();
     print.print( get_current_da(), this );
+  }
+
+  /* Save the current tab state */
+  private void save_tab_state() {
+
+    var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
+
+    if( DirUtils.create_with_parents( dir, 0775 ) != 0 ) {
+      return;
+    }
+
+    var       fname        = GLib.Path.build_filename( dir, "tab_state.xml" );
+    var       selected_tab = -1;
+    var       i            = 0;
+    Xml.Doc*  doc          = new Xml.Doc( "1.0" );
+    Xml.Node* root         = new Xml.Node( null, "minder-tabs" );
+
+    doc->set_root_element( root );
+
+    _nb.tabs.foreach((tab) => {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      root->new_text_child( null, "tab", da.get_doc().filename );
+      if( tab == _nb.current ) {
+        selected_tab = i;
+      }
+      i++;
+    });
+
+    if( selected_tab > -1 ) {
+      root->new_prop( "selected", selected_tab.to_string() );
+    }
+
+    /* Save the file */
+    doc->save_format_file( fname, 1 );
+
+    delete doc;
+
+  }
+
+  /* Loads the tab state */
+  public bool load_tab_state() {
+
+    var      tab_state = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" );
+    Xml.Doc* doc       = Xml.Parser.parse_file( tab_state );
+
+    if( doc == null ) { return( false ); }
+
+    var root = doc->get_root_element();
+    for( Xml.Node* it = root->children; it != null; it = it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->children != null) && (it->children->type == Xml.ElementType.TEXT_NODE) ) {
+        var fname = it->children->get_content();
+        var da = add_tab( fname, TabAddReason.LOAD );
+        da.get_doc().filename = fname;
+        da.get_doc().load();
+      }
+    }
+
+    var s = root->get_prop( "selected" );
+    if( s != null ) {
+      _nb.current = _nb.get_tab_by_index( int.parse( s ) );
+    }
+
+    delete doc;
+
+    return( _nb.n_tabs > 0 );
+
   }
 
 }

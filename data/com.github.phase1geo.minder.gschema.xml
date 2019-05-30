@@ -21,11 +21,6 @@
       <summary>Most recent height of minder window</summary>
       <description>Most recent height of minder window</description>
     </key>
-    <key name="last-file" type="s">
-      <default>""</default>
-      <summary>Name of the last edited file</summary>
-      <description>Name of the last edited file (or the empty string if an unnamed file was last edited).</description>
-    </key>
     <key name="current-properties-shown" type="b">
       <default>false</default>
       <summary>Most recent state of the current item properties sidebar</summary>

@@ -39,8 +39,6 @@ public class Minder : Granite.Application {
     /* Initialize the settings */
     settings = new GLib.Settings( "com.github.phase1geo.minder" );
 
-    var last_file = settings.get_string( "last-file" );
-
     /* Add the application-specific icons */
     weak IconTheme default_theme = IconTheme.get_default();
     default_theme.add_resource_path( "/com/github/phase1geo/minder" );
@@ -71,10 +69,10 @@ public class Minder : Granite.Application {
       }
 
     /*
-     If the user specified that a new file should be created or the
-     saved last-file string is empty, create a new map.
+     If the user specified that a new file should be created or the saved tab state
+     was not loadable, create a new map.
     */
-    } else if( new_file || (last_file == "") || !appwin.open_file( last_file ) ) {
+    } else if( new_file || !appwin.load_tab_state() ) {
       appwin.do_new_file();
     }
 
