@@ -39,6 +39,8 @@ public class MainWindow : ApplicationWindow {
   private Gtk.AccelGroup?   _accel_group    = null;
   private Granite.Widgets.DynamicNotebook? _nb = null;
   private Revealer?         _inspector      = null;
+  private Box?              _pbox           = null;
+  private Paned             _pane           = null;
   private Stack?            _stack          = null;
   private Popover?          _zoom           = null;
   private Popover?          _search         = null;
@@ -184,13 +186,17 @@ public class MainWindow : ApplicationWindow {
     add_zoom_button();
     add_focus_button();
 
+    /* Create the panel so that we can resize */
+    _pane = new Paned( Orientation.HORIZONTAL );
+    _pane.pack1( _nb, true, true );
+
     /* Create the horizontal box that will contain the notebook and the properties sidebar */
-    var hbox = new Box( Orientation.HORIZONTAL, 0 );
-    hbox.pack_start( _nb,        true,  true, 0 );
-    hbox.pack_start( _inspector, false, true, 0 );
+    _pbox = new Box( Orientation.HORIZONTAL, 0 );
+    _pbox.pack_start( _pane,      true,  true, 0 );
+    _pbox.pack_start( _inspector, false, true, 0 );
 
     /* Display the UI */
-    add( hbox );
+    add( _pbox );
     show_all();
 
   }
@@ -851,6 +857,8 @@ public class MainWindow : ApplicationWindow {
         _stack.visible_child_name = tab;
       }
       if( !_inspector.reveal_child ) {
+        _pbox.remove( _inspector );
+        _pane.pack2( _inspector, false, false );
         _inspector.reveal_child = true;
         get_current_da().see( -300 );
       }
@@ -865,6 +873,8 @@ public class MainWindow : ApplicationWindow {
   private void hide_properties() {
     if( !_inspector.reveal_child ) return;
     _prop_btn.image = _prop_show;
+    _pane.remove( _inspector );
+    _pbox.pack_start( _inspector, false, true, 0 );
     _inspector.reveal_child = false;
     get_current_da().grab_focus();
     _settings.set_boolean( "current-properties-shown",  false );
