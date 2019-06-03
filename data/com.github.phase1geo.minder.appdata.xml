@@ -95,9 +95,9 @@
         </ul>
       </description>
     </release>
-    <release version="1.3" date="2019-05-17">
+    <release version="1.3.0" date="2019-05-20">
       <description>
-        <p>Let's stay connected!</p>
+        <p>Let's make a connection!</p>
         <ul>
           <li>Added support for creating a visual connection between any two nodes.</li>
           <li>Added ability to show/hide all connections in the map.</li>
