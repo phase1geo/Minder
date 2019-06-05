@@ -67,6 +67,7 @@ public class DrawArea : Gtk.DrawingArea {
   private IMContextSimple  _im_context;
   private bool             _debug        = true;
   private bool             _focus_mode   = false;
+  private bool             _create_new_from_edit;
 
   public UndoBuffer   undo_buffer    { set; get; }
   public Themes       themes         { set; get; default = new Themes(); }
@@ -136,6 +137,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
+
+    /* Get the value of the new node from edit */
+    _create_new_from_edit = settings.get_boolean( "new-node-from-edit" );
 
     /* Set the theme to the default theme */
     set_theme( "Default" );
@@ -607,7 +611,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       if( _current_node != null ) {
         _current_node.mode  = NodeMode.NONE;
-        _current_node.alpha = _focus_mode ? focus_alpha : 1.0; 
+        // _current_node.alpha = _focus_mode ? focus_alpha : 1.0; 
       }
       if( (n.parent != null) && n.parent.folded ) {
         var last = n.reveal();
@@ -615,7 +619,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       _current_node       = n;
       _current_node.mode  = NodeMode.CURRENT;
-      _current_node.alpha = 1.0;
+      // update_focus_mode();
       current_changed();
     }
   }
@@ -1096,7 +1100,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void zoom_to_selected() {
     double x, y, w, h;
     if( _current_node == null ) return;
-    animator.add_scale( "zoom to selected" );
+    animator.add_pan_scale( "zoom to selected" );
     _current_node.layout.bbox( _current_node, -1, out x, out y, out w, out h );
     position_box( x, y, w, h, 0.5, 0.5 );
     set_scaling_factor( get_scaling_factor( w, h ) );
@@ -1141,6 +1145,20 @@ public class DrawArea : Gtk.DrawingArea {
     /* Center the map and scale it to fit */
     position_box( x, y, w, h, 0.5, 0.5 );
     set_scaling_factor( get_scaling_factor( w, h ) );
+
+    /* Animate the scaling */
+    animator.animate();
+
+  }
+
+  /* Scale to actual size */
+  public void zoom_actual() {
+
+    /* Start animation */
+    animator.add_scale( "action_zoom_actual" );
+
+    /* Scale to a full scale */
+    set_scaling_factor( 1.0 );
 
     /* Animate the scaling */
     animator.animate();
@@ -1663,7 +1681,7 @@ public class DrawArea : Gtk.DrawingArea {
         _current_node       = n;
         _current_new        = false;
         _current_node.mode  = NodeMode.CURRENT;
-        _current_node.alpha = 1.0;
+        update_focus_mode();
         if( _current_node.parent != null ) {
           _current_node.parent.last_selected_child = n;
         }
@@ -1949,13 +1967,11 @@ public class DrawArea : Gtk.DrawingArea {
     node.style         = StyleInspector.styles.get_style_for_level( _current_node.get_level() );
     node.attach( _current_node.parent, (_current_node.index() + 1), _theme );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
-    if( select_node( node ) ) {
-      node.mode = NodeMode.EDITABLE;
-      _current_new = true;
-      queue_draw();
-    }
+    set_current_node( node );
+    node.mode = NodeMode.EDITABLE;
+    _current_new = true;
+    queue_draw();
     see();
-    changed();
   }
 
   /* Called whenever the return character is entered in the drawing area */
@@ -1971,8 +1987,16 @@ public class DrawArea : Gtk.DrawingArea {
         undo_buffer.add_item( new UndoNodeName( _current_node, _orig_name ) );
       }
       _current_node.mode = NodeMode.CURRENT;
-      current_changed();
-      queue_draw();
+      if( _create_new_from_edit ) {
+        if( !_current_node.is_root() ) {
+          add_sibling_node();
+        } else {
+          add_root_node();
+        }
+      } else {
+        current_changed();
+        queue_draw();
+      }
     } else if( is_connection_connecting() && (_attach_node != null) ) {
       end_connection( _attach_node );
     } else if( is_node_selected() ) {
@@ -2140,12 +2164,10 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     _current_node.folded = false;
     _current_node.layout.handle_update_by_fold( _current_node );
-    if( select_node( node ) ) {
-      node.mode = NodeMode.EDITABLE;
-      queue_draw();
-    }
+    set_current_node( node );
+    node.mode = NodeMode.EDITABLE;
+    queue_draw();
     see();
-    changed();
   }
 
   /* Called whenever the tab character is entered in the drawing area */
@@ -2155,8 +2177,12 @@ public class DrawArea : Gtk.DrawingArea {
         undo_buffer.add_item( new UndoNodeName( _current_node, _orig_name ) );
       }
       _current_node.mode = NodeMode.CURRENT;
-      current_changed();
-      queue_draw();
+      if( _create_new_from_edit ) {
+        add_child_node();
+      } else {
+        current_changed();
+        queue_draw();
+      }
     } else if( is_node_selected() ) {
       add_child_node();
     }
@@ -3103,20 +3129,31 @@ public class DrawArea : Gtk.DrawingArea {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).alpha = alpha;
     }
-    _connections.update_alpha();
     if( _current_node != null ) {
       if( focus ) {
-        var parent = _current_node.parent;
-        while( parent != null ) {
-          parent.set_alpha_only( 1.0 );
-          parent = parent.parent;
-        }
+        update_focus_mode();
+      } else {
+        // zoom_actual();
       }
-      _current_node.alpha = 1.0;
     } else if( _current_connection != null ) {
       _current_connection.alpha = 1.0;
     }
+    _connections.update_alpha();
     queue_draw();
+  }
+
+  /* Update the focus mode */
+  public void update_focus_mode() {
+    _current_node.alpha = 1.0;
+    if( _focus_mode ) {
+      var parent = _current_node.parent;
+      while( parent != null ) {
+        parent.set_alpha_only( 1.0 );
+        parent = parent.parent;
+      }
+      // zoom_to_selected();
+    }
+    _connections.update_alpha();
   }
 
 }

@@ -851,8 +851,7 @@ public class MainWindow : ApplicationWindow {
         _stack.visible_child_name = tab;
       }
       if( !_inspector.reveal_child ) {
-        _pbox.remove( _inspector );
-        _pane.pack2( _inspector, false, false );
+        Timeout.add( 501, move_inspector_to_pane );
         _inspector.reveal_child = true;
         get_current_da().see( -300 );
       }
@@ -861,6 +860,12 @@ public class MainWindow : ApplicationWindow {
     if( grab_note && (tab != null) && (tab == "current") ) {
       (_stack.get_child_by_name( tab ) as CurrentInspector).grab_note();
     }
+  }
+  
+  private bool move_inspector_to_pane() {
+    _pbox.remove( _inspector );
+    _pane.pack2( _inspector, false, false );
+    return( false );
   }
 
   /* Hides the node properties panel */
@@ -951,9 +956,7 @@ public class MainWindow : ApplicationWindow {
   /* Sets the zoom to 100% */
   private void action_zoom_actual() {
     var da = get_current_da();
-    da.animator.add_scale( "action_zoom_actual" );
-    da.set_scaling_factor( 1.0 );
-    da.animator.animate();
+    da.zoom_actual();
     da.grab_focus();
   }
 

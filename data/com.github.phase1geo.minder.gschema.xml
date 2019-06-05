@@ -97,7 +97,7 @@
       <description>Last used affects value in Style properties</description>
     </key>
     <key name="style-link-type" type="s">
-      <default>"straight"</default>
+      <default>"curved"</default>
       <summary>Last used link type style in Style properties</summary>
       <description>Last used link type style in Style properties</description>
     </key>
@@ -190,6 +190,11 @@
       <default>true</default>
       <summary>Specifies the expanded state of the Connection Options panel in the Style properties</summary>
       <description>Specifies the expanded state of the Connection Options panel in the Style properties</description>
+    </key>
+    <key name="new-node-from-edit" type="b">
+      <default>false</default>
+      <summary>Specifies if we should create a new node directly from edit mode if Return or Tab is pressed</summary>
+      <description>Specifies if we should create a new node directly from edit mode if Return or Tab is pressed</description>
     </key>
   </schema>
 </schemalist>
