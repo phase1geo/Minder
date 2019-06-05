@@ -556,8 +556,9 @@ public class MainWindow : ApplicationWindow {
   /* Adds the focus mode button to the headerbar */
   private void add_focus_button() {
 
-    _focus_btn = new ToggleButton.with_label( _( "Focus" ) );
-    _focus_btn.valign = Align.CENTER;
+    _focus_btn = new ToggleButton();
+    _focus_btn.image  = new Image.from_icon_name( "minder-focus.svg", IconSize.LARGE_TOOLBAR );
+    // _focus_btn.valign = Align.CENTER;
     _focus_btn.toggled.connect(() => {
       set_focus_btn_state();
       get_current_da().set_focus_mode( _focus_btn.active );

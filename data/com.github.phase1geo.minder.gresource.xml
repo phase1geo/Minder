@@ -22,5 +22,6 @@
     <file alias="minder-node-border-squared-symbolic.svg">icons/16/minder-node-border-squared-symbolic.svg</file>
     <file alias="minder-node-border-rounded-symbolic.svg">icons/16/minder-node-border-rounded-symbolic.svg</file>
     <file alias="minder-node-border-pill-symbolic.svg">icons/16/minder-node-border-pill-symbolic.svg</file>
+    <file alias="minder-focus.svg">icons/16/minder-focus.svg</file>
   </gresource>
 </gresources>
