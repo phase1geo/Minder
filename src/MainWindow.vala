@@ -140,7 +140,7 @@ public class MainWindow : ApplicationWindow {
     var new_btn = on_elementary
       ? new Button.from_icon_name( "document-new", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-new-symbolic" );
-    new_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "New File" ), "Control-N" ) );
+    new_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "New File" ), "Ctrl + N" ) );
     new_btn.add_accelerator( "clicked", _accel_group, 'n', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
@@ -148,7 +148,7 @@ public class MainWindow : ApplicationWindow {
     var open_btn = on_elementary
       ? new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-open-symbolic" );
-    open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open File" ), "Control-O" ) );
+    open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open File" ), "Ctrl + O" ) );
     open_btn.add_accelerator( "clicked", _accel_group, 'o', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
@@ -156,7 +156,7 @@ public class MainWindow : ApplicationWindow {
     var save_btn = on_elementary
       ? new Button.from_icon_name( "document-save-as", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-save-as-symbolic" );
-    save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "Control-Shift-S" ) );
+    save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "Ctrl + Shift + S" ) );
     open_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
@@ -164,7 +164,7 @@ public class MainWindow : ApplicationWindow {
     _undo_btn = on_elementary
       ? new Button.from_icon_name( "edit-undo", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "edit-undo-symbolic" );
-    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "Control-Z" ) );
+    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "Ctrl + Z" ) );
     _undo_btn.set_sensitive( false );
     _undo_btn.add_accelerator( "clicked", _accel_group, 'z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _undo_btn.clicked.connect( do_undo );
@@ -173,7 +173,7 @@ public class MainWindow : ApplicationWindow {
     _redo_btn = on_elementary
       ? new Button.from_icon_name( "edit-redo", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "edit-redo-symbolic" );
-    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Redo" ), "Control-Shift-Z" ) );
+    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Redo" ), "Ctrl + Shift + Z" ) );
     _redo_btn.set_sensitive( false );
     _redo_btn.add_accelerator( "clicked", _accel_group, 'z', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     _redo_btn.clicked.connect( do_redo );
@@ -372,7 +372,7 @@ public class MainWindow : ApplicationWindow {
     _search_btn.set_image( on_elementary
       ? new Image.from_icon_name( "edit-find", IconSize.LARGE_TOOLBAR )
       : new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
-    _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "Control-F" ) );
+    _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "Ctrl + F" ) );
     _search_btn.add_accelerator( "clicked", _accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _search_btn.clicked.connect( on_search_change );
     _header.pack_end( _search_btn );
@@ -559,7 +559,7 @@ public class MainWindow : ApplicationWindow {
     _focus_btn       = new ToggleButton();
     _focus_btn.image = new Image.from_icon_name( "minder-focus", IconSize.LARGE_TOOLBAR );
     _focus_btn.draw_indicator = true;
-    _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "Control-Shift-F" ) );
+    _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "Ctrl + Shift + F" ) );
     _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     _focus_btn.toggled.connect(() => {
       update_title();
