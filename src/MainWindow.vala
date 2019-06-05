@@ -140,7 +140,7 @@ public class MainWindow : ApplicationWindow {
     var new_btn = on_elementary
       ? new Button.from_icon_name( "document-new", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-new-symbolic" );
-    new_btn.set_tooltip_markup( _( "New File   <i>(Control-N)</i>" ) );
+    new_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "New File" ), "Control-N" ) );
     new_btn.add_accelerator( "clicked", _accel_group, 'n', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
@@ -148,7 +148,7 @@ public class MainWindow : ApplicationWindow {
     var open_btn = on_elementary
       ? new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-open-symbolic" );
-    open_btn.set_tooltip_markup( _( "Open File   <i>(Control-O)</i>" ) );
+    open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open File" ), "Control-O" ) );
     open_btn.add_accelerator( "clicked", _accel_group, 'o', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
@@ -156,7 +156,7 @@ public class MainWindow : ApplicationWindow {
     var save_btn = on_elementary
       ? new Button.from_icon_name( "document-save-as", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-save-as-symbolic" );
-    save_btn.set_tooltip_markup( _( "Save File As   <i>(Control-Shift-S)</i>" ) );
+    save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "Control-Shift-S" ) );
     open_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
@@ -164,7 +164,7 @@ public class MainWindow : ApplicationWindow {
     _undo_btn = on_elementary
       ? new Button.from_icon_name( "edit-undo", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "edit-undo-symbolic" );
-    _undo_btn.set_tooltip_markup( _( "Undo   <i>(Control-Z)</i>" ) );
+    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "Control-Z" ) );
     _undo_btn.set_sensitive( false );
     _undo_btn.add_accelerator( "clicked", _accel_group, 'z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _undo_btn.clicked.connect( do_undo );
@@ -173,7 +173,7 @@ public class MainWindow : ApplicationWindow {
     _redo_btn = on_elementary
       ? new Button.from_icon_name( "edit-redo", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "edit-redo-symbolic" );
-    _redo_btn.set_tooltip_markup( _( "Redo   <i>(Control-Shift-Z)</i>" ) );
+    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Redo" ), "Control-Shift-Z" ) );
     _redo_btn.set_sensitive( false );
     _redo_btn.add_accelerator( "clicked", _accel_group, 'z', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     _redo_btn.clicked.connect( do_redo );
@@ -286,6 +286,7 @@ public class MainWindow : ApplicationWindow {
     } else {
       _header.set_title( GLib.Path.get_basename( da.get_doc().filename ) + suffix );
     }
+    _header.set_subtitle( _focus_btn.active ? _( "Focus Mode" ) : null );
   }
 
   /* Adds keyboard shortcuts for the menu actions */
@@ -318,7 +319,6 @@ public class MainWindow : ApplicationWindow {
     var scale_lbl = new Label( _( "Zoom to Percent" ) );
     _zoom_scale   = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 );
     foreach (double mark in marks) {
-      // _zoom_scale.add_mark( mark, PositionType.BOTTOM, "'" );
       _zoom_scale.add_mark( mark, PositionType.BOTTOM, null );
     }
     _zoom_scale.has_origin = false;
@@ -372,7 +372,7 @@ public class MainWindow : ApplicationWindow {
     _search_btn.set_image( on_elementary
       ? new Image.from_icon_name( "edit-find", IconSize.LARGE_TOOLBAR )
       : new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
-    _search_btn.set_tooltip_markup( _( "Search   <i>(Control-F)</i>" ) );
+    _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "Control-F" ) );
     _search_btn.add_accelerator( "clicked", _accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _search_btn.clicked.connect( on_search_change );
     _header.pack_end( _search_btn );
@@ -558,26 +558,17 @@ public class MainWindow : ApplicationWindow {
 
     _focus_btn       = new ToggleButton();
     _focus_btn.image = new Image.from_icon_name( "minder-focus", IconSize.LARGE_TOOLBAR );
-    // _focus_btn.valign = Align.CENTER;
     _focus_btn.draw_indicator = true;
-    _focus_btn.set_tooltip_text( _( "Focus Mode" ) );
+    _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "Control-Shift-F" ) );
+    _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     _focus_btn.toggled.connect(() => {
-      set_focus_btn_state();
+      update_title();
       get_current_da().set_focus_mode( _focus_btn.active );
       get_current_da().grab_focus();
     });
 
     _header.pack_end( _focus_btn );
 
-  }
-
-  /* Sets the color of the focus button to match the current active state */
-  private void set_focus_btn_state() {
-    if( _focus_btn.active ) {
-      // _focus_btn.get_style_context().add_class( "suggested-action" );
-    } else {
-      // _focus_btn.get_style_context().remove_class( "suggested-action" );
-    }
   }
 
   /* Adds the property functionality */

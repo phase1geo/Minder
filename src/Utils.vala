@@ -91,4 +91,9 @@ public class Utils {
     return( "<b>" + str + "</b>" );
   }
 
+  /* Returns a string that is used to display a tooltip with displayed accelerator */
+  public static string tooltip_with_accel( string tooltip, string accel ) {
+    return( "%s  <i>(%s)</i>".printf( tooltip, accel ) );
+  }
+
 }
