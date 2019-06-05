@@ -3103,7 +3103,7 @@ public class DrawArea : Gtk.DrawingArea {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).alpha = alpha;
     }
-    _connections.set_alpha( alpha );
+    _connections.update_alpha();
     if( _current_node != null ) {
       if( focus ) {
         var parent = _current_node.parent;

@@ -86,7 +86,7 @@ public class NodeInspector : Box {
   private void create_title() {
 
     Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( _( "<b>Title</b>" ) );
+    Label lbl = new Label( Utils.make_title( _( "Title" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
@@ -108,7 +108,7 @@ public class NodeInspector : Box {
   private void create_task() {
 
     var box  = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl  = new Label( _( "<b>Task</b>" ) );
+    var lbl  = new Label( Utils.make_title( _( "Task" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
@@ -127,7 +127,7 @@ public class NodeInspector : Box {
   private void create_fold() {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "<b>Fold</b>" ) );
+    var lbl = new Label( Utils.make_title( _( "Fold" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
@@ -149,7 +149,7 @@ public class NodeInspector : Box {
   private void create_link() {
 
     _link_box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl   = new Label( _( "<b>Link Color</b>" ) );
+    var lbl   = new Label( Utils.make_title( _( "Link Color" ) ) );
 
     _link_box.homogeneous = true;
     lbl.xalign            = (float)0;
@@ -171,7 +171,7 @@ public class NodeInspector : Box {
   private void create_note() {
 
     Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( _( "<b>Note</b>" ) );
+    Label lbl = new Label( Utils.make_title( _( "Note" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
@@ -199,7 +199,7 @@ public class NodeInspector : Box {
   private void create_image() {
 
     var box = new Box( Orientation.VERTICAL, 0 );
-    var lbl = new Label( _( "<b>Image</b>" ) );
+    var lbl = new Label( Utils.make_title( _( "Image" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;

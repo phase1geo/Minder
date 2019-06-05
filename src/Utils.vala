@@ -86,4 +86,9 @@ public class Utils {
     return( (bx < x) && (x < (bx + bw)) && (by < y) && (y < (by + bh)) );
   }
 
+  /* Returns a string that is suitable to use as an inspector title */
+  public static string make_title( string str ) {
+    return( "<b>" + str + "</b>" );
+  }
+
 }

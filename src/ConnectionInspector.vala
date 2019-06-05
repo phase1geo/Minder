@@ -73,7 +73,7 @@ public class ConnectionInspector : Box {
   private void create_title() {
 
     Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( _( "<b>Title</b>" ) );
+    Label lbl = new Label( Utils.make_title( _( "Title" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
@@ -94,7 +94,7 @@ public class ConnectionInspector : Box {
   private void create_color() {
 
     Box box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "<b>Color</b>" ) );
+    var lbl = new Label( Utils.make_title( _( "Color" ) ) );
 
     box.homogeneous = true;
     lbl.xalign      = (float)0;
@@ -116,7 +116,7 @@ public class ConnectionInspector : Box {
   private void create_note() {
 
     Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( _( "<b>Note</b>" ) );
+    Label lbl = new Label( Utils.make_title( _( "Note" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;

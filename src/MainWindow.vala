@@ -556,9 +556,11 @@ public class MainWindow : ApplicationWindow {
   /* Adds the focus mode button to the headerbar */
   private void add_focus_button() {
 
-    _focus_btn = new ToggleButton();
-    _focus_btn.image  = new Image.from_icon_name( "minder-focus.svg", IconSize.LARGE_TOOLBAR );
+    _focus_btn       = new ToggleButton();
+    _focus_btn.image = new Image.from_icon_name( "minder-focus", IconSize.LARGE_TOOLBAR );
     // _focus_btn.valign = Align.CENTER;
+    _focus_btn.draw_indicator = true;
+    _focus_btn.set_tooltip_text( _( "Focus Mode" ) );
     _focus_btn.toggled.connect(() => {
       set_focus_btn_state();
       get_current_da().set_focus_mode( _focus_btn.active );
@@ -572,9 +574,9 @@ public class MainWindow : ApplicationWindow {
   /* Sets the color of the focus button to match the current active state */
   private void set_focus_btn_state() {
     if( _focus_btn.active ) {
-      _focus_btn.get_style_context().add_class( "suggested-action" );
+      // _focus_btn.get_style_context().add_class( "suggested-action" );
     } else {
-      _focus_btn.get_style_context().remove_class( "suggested-action" );
+      // _focus_btn.get_style_context().remove_class( "suggested-action" );
     }
   }
 

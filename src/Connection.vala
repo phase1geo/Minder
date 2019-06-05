@@ -605,7 +605,7 @@ public class Connection : Object {
     /* Draw the curve */
     ctx.save();
     style.draw_connection( ctx );
-    Utils.set_context_color( ctx, color );
+    Utils.set_context_color_with_alpha( ctx, color, alpha );
 
     /* Draw the curve as a quadratic curve (saves some additional calculations) */
     ctx.move_to( start_x, start_y );
@@ -638,26 +638,26 @@ public class Connection : Object {
     /* Draw the drag circle */
     } else if( mode != ConnMode.NONE ) {
       ctx.set_line_width( 1 );
-      ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
+      ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
       ctx.arc( dragx, dragy, RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
-      ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+      ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
       ctx.stroke();
     }
 
     /* If we are selected draw the endpoints */
     if( mode == ConnMode.SELECTED ) {
 
-      ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
+      ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
       ctx.arc( start_x, start_y, RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
-      ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+      ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
       ctx.stroke();
 
-      ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
+      ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
       ctx.arc( end_x, end_y, RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
-      ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+      ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
       ctx.stroke();
 
     }
@@ -679,14 +679,14 @@ public class Connection : Object {
     title_bbox( out x, out y, out w, out h );
 
     /* Draw the box */
-    ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+    ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
     Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)), (padding * 2) );
     // ctx.rectangle( (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)) );
     ctx.fill();
 
     /* Draw the text */
     if( _title != null ) {
-      _title.draw( ctx, theme, fg, _alpha );
+      _title.draw( ctx, theme, fg, alpha );
     }
 
     /* Draw the note, if necessary */
@@ -698,10 +698,10 @@ public class Connection : Object {
       RGBA bg = theme.nodesel_background;
 
       ctx.set_line_width( 1 );
-      ctx.set_source_rgba( bg.red, bg.green, bg.blue, bg.alpha );
+      ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
       ctx.arc( _dragx, (_dragy + (h / 2) + padding), RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
-      ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+      ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
       ctx.stroke();
 
     }
@@ -717,7 +717,7 @@ public class Connection : Object {
 
       note_bbox( out x, out y, out w, out h );
 
-      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, color, alpha );
       ctx.new_path();
       ctx.set_line_width( 1 );
       ctx.move_to( (x + 2), y );

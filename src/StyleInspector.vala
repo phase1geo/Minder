@@ -160,7 +160,7 @@ public class StyleInspector : Box {
   private Box create_affect_ui() {
 
     var box  = new Box( Orientation.HORIZONTAL, 10 );
-    var lbl  = new Label( _( "<b>Changes affect:</b>" ) );
+    var lbl  = new Label( Utils.make_title( _( "Changes affect:" ) ) );
     var mb   = new MenuButton();
     var menu = new Gtk.Menu();
 
@@ -206,7 +206,7 @@ public class StyleInspector : Box {
     var sep = new Separator( Orientation.HORIZONTAL );
 
     /* Create expander */
-    var exp = new Expander( "  " + _( "<b>Branch Options</b>" ) );
+    var exp = new Expander( "  " + Utils.make_title( _( "Branch Options" ) ) );
     exp.use_markup = true;
     exp.expanded   = _settings.get_boolean( "style-branch-options-expanded" );
     exp.activate.connect(() => {
@@ -286,7 +286,7 @@ public class StyleInspector : Box {
     var sep = new Separator( Orientation.HORIZONTAL );
 
     /* Create expander */
-    var exp = new Expander( "  " + _( "<b>Link Options</b>" ) );
+    var exp = new Expander( "  " + Utils.make_title( _( "Link Options" ) ) );
     exp.use_markup = true;
     exp.expanded   = _settings.get_boolean( "style-link-options-expanded" );
     exp.activate.connect(() => {
@@ -430,7 +430,7 @@ public class StyleInspector : Box {
     var sep = new Separator( Orientation.HORIZONTAL );
 
     /* Create expander */
-    var exp = new Expander( "  " + _( "<b>Node Options</b>" ) );
+    var exp = new Expander( "  " + Utils.make_title( _( "Node Options" ) ) );
     exp.use_markup = true;
     exp.expanded   = _settings.get_boolean( "style-node-options-expanded" );
     exp.activate.connect(() => {
@@ -715,7 +715,7 @@ public class StyleInspector : Box {
     var sep = new Separator( Orientation.HORIZONTAL );
 
     /* Create expander */
-    _conn_exp = new Expander( "  " + _( "<b>Connection Options</b>" ) );
+    _conn_exp = new Expander( "  " + Utils.make_title( _( "Connection Options" ) ) );
     _conn_exp.use_markup = true;
     _conn_exp.expanded   = _settings.get_boolean( "style-connection-options-expanded" );
     _conn_exp.activate.connect(() => {

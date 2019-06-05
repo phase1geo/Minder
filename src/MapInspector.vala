@@ -69,7 +69,7 @@ public class MapInspector : Box {
   private void add_animation_ui() {
 
     var box     = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl     = new Label( _( "<b>Enable animations</b>" ) );
+    var lbl     = new Label( Utils.make_title( _( "Enable animations" ) ) );
     var animate = _settings.get_boolean( "enable-animations" );
 
     lbl.xalign = (float)0;
@@ -97,7 +97,7 @@ public class MapInspector : Box {
   private void add_connection_ui() {
 
     var box       = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl       = new Label( _( "<b>Hide connections</b>" ) );
+    var lbl       = new Label( Utils.make_title( _( "Hide connections" ) ) );
     var hide_conn = _settings.get_boolean( "hide-connections" );
 
     lbl.xalign = (float)0;
@@ -130,7 +130,7 @@ public class MapInspector : Box {
     layouts.get_icons( ref icons );
 
     /* Create the modebutton to select the current layout */
-    var lbl = new Label( _( "<b>Node Layouts</b>" ) );
+    var lbl = new Label( Utils.make_title( _( "Node Layouts" ) ) );
     lbl.xalign = (float)0;
     lbl.use_markup = true;
 
@@ -181,7 +181,7 @@ public class MapInspector : Box {
   private void add_theme_ui() {
 
     /* Create the UI */
-    var lbl = new Label( _( "<b>Themes</b>" ) );
+    var lbl = new Label( Utils.make_title( _( "Themes" ) ) );
     lbl.xalign = (float)0;
     lbl.use_markup = true;
 

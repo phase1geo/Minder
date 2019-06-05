@@ -203,9 +203,11 @@ public class Connections {
   }
 
   /* Sets the focus mode to the given value and updates the alpha value of the stored connections */
-  public void set_alpha( double alpha ) {
+  public void update_alpha() {
     for( int i=0; i<_connections.length; i++ ) {
-      _connections.index( i ).alpha = alpha;
+      double from_alpha = _connections.index( i ).from_node.alpha;
+      double to_alpha   = _connections.index( i ).to_node.alpha;
+      _connections.index( i ).alpha = (from_alpha < to_alpha) ? from_alpha : to_alpha;
     }
   }
 
