@@ -36,6 +36,11 @@
       <summary>Most recent state of the style properties sidebar</summary>
       <description>Most recent state of the style properities sidebar</description>
     </key>
+    <key name="properties-width" type="i">
+      <default>300</default>
+      <summary>Width of the property sidebar when visible</summary>
+      <description>Width of the property sidebar when visible</description>
+    </key>
     <key name="enable-animations" type="b">
       <default>true</default>
       <summary>Enables/Disables canvas animations</summary>

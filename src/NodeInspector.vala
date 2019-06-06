@@ -29,21 +29,22 @@ public class NodeInspector : Box {
     {"text/uri-list", 0, 0}
   };
 
-  private TextView    _name;
-  private Switch      _task;
-  private Switch      _fold;
-  private Box         _link_box;
-  private ColorButton _link_color;
-  private TextView    _note;
-  private DrawArea?   _da = null;
-  private Button      _detach_btn;
-  private string      _orig_note = "";
-  private Node?       _node = null;
-  private EventBox    _image_area;
-  private Image       _image;
-  private Button      _image_btn;
-  private Label       _image_loc;
-  private bool        _ignore_name_change = false;
+  private ScrolledWindow _sw;
+  private TextView       _name;
+  private Switch         _task;
+  private Switch         _fold;
+  private Box            _link_box;
+  private ColorButton    _link_color;
+  private TextView       _note;
+  private DrawArea?      _da = null;
+  private Button         _detach_btn;
+  private string         _orig_note = "";
+  private Node?          _node = null;
+  private EventBox       _image_area;
+  private Image          _image;
+  private Button         _image_btn;
+  private Label          _image_loc;
+  private bool           _ignore_name_change = false;
 
   public NodeInspector( MainWindow win ) {
 
@@ -77,9 +78,9 @@ public class NodeInspector : Box {
     _da = da;
   }
 
-  /* Returns the width of this window */
-  public int get_width() {
-    return( 300 );
+  /* Sets the width of this inspector to the given value */
+  public void set_width( int width ) {
+    _sw.width_request = width;
   }
 
   /* Creates the name entry */
@@ -183,13 +184,13 @@ public class NodeInspector : Box {
     _note.focus_in_event.connect( note_focus_in );
     _note.focus_out_event.connect( note_focus_out );
 
-    ScrolledWindow sw = new ScrolledWindow( null, null );
-    sw.min_content_width  = 300;
-    sw.min_content_height = 100;
-    sw.add( _note );
+    _sw = new ScrolledWindow( null, null );
+    _sw.min_content_width  = 300;
+    _sw.min_content_height = 100;
+    _sw.add( _note );
 
     box.pack_start( lbl, false, false );
-    box.pack_start( sw,  true,  true );
+    box.pack_start( _sw, true,  true );
 
     pack_start( box, true, true );
 

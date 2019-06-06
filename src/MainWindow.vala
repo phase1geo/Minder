@@ -133,7 +133,8 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the notebook */
     _nb = new Granite.Widgets.DynamicNotebook();
-    _nb.new_tab_requested.connect( do_new_file );
+    _nb.add_button_visible = false;
+    // _nb.new_tab_requested.connect( do_new_file );
     _nb.tab_switched.connect( tab_changed );
 
     /* Create title toolbar */
@@ -189,6 +190,10 @@ public class MainWindow : ApplicationWindow {
     /* Create the panel so that we can resize */
     _pane = new Paned( Orientation.HORIZONTAL );
     _pane.pack1( _nb, true, true );
+    _pane.move_handle.connect(() => {
+      stdout.printf( "position: %d\n", _pane.position );
+      return( false );
+    });
 
     /* Create the horizontal box that will contain the notebook and the properties sidebar */
     _pbox = new Box( Orientation.HORIZONTAL, 0 );
@@ -863,6 +868,7 @@ public class MainWindow : ApplicationWindow {
   }
   
   private bool move_inspector_to_pane() {
+    (_stack.get_child_by_name( "current" ) as CurrentInspector).reset_width();
     _pbox.remove( _inspector );
     _pane.pack2( _inspector, false, false );
     return( false );
@@ -871,14 +877,17 @@ public class MainWindow : ApplicationWindow {
   /* Hides the node properties panel */
   private void hide_properties() {
     if( !_inspector.reveal_child ) return;
+    var prop_width = (_pane.get_allocated_width() - _pane.position) - 11;
+    (_stack.get_child_by_name( "current" ) as CurrentInspector).set_width( prop_width );
     _prop_btn.image = _prop_show;
     _pane.remove( _inspector );
     _pbox.pack_start( _inspector, false, true, 0 );
     _inspector.reveal_child = false;
     get_current_da().grab_focus();
-    _settings.set_boolean( "current-properties-shown",  false );
-    _settings.set_boolean( "map-properties-shown",   false );
-    _settings.set_boolean( "style-properties-shown", false );
+    _settings.set_boolean( "current-properties-shown", false );
+    _settings.set_boolean( "map-properties-shown",     false );
+    _settings.set_boolean( "style-properties-shown",   false );
+    _settings.set_int( "properties-width", prop_width );
   }
 
   /* Converts the given value from the scale to the zoom value to use */

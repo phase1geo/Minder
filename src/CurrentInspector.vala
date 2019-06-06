@@ -47,9 +47,15 @@ public class CurrentInspector : Stack {
 
   }
 
-  /* Returns the width of this window */
-  public int get_width() {
-    return( 300 );
+  /* Sets the width of this panel to the given value */
+  public void set_width( int width ) {
+    (get_child_by_name( "node" )       as NodeInspector).set_width( width );
+    (get_child_by_name( "connection" ) as ConnectionInspector).set_width( width );
+  }
+
+  /* Resets the width of this inspector to its default width */
+  public void reset_width() {
+    set_width( 300 );
   }
 
   /* Connected signal will provide us whenever the current tab changes in the main window */

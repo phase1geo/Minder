@@ -29,13 +29,14 @@ public class ConnectionInspector : Box {
     {"text/uri-list", 0, 0}
   };
 
-  private TextView    _title;
-  private ColorButton _color;
-  private TextView    _note;
-  private DrawArea?   _da                  = null;
-  private string      _orig_note           = "";
-  private Connection? _connection          = null;
-  private bool        _ignore_title_change = false;
+  private ScrolledWindow _sw;
+  private TextView       _title;
+  private ColorButton    _color;
+  private TextView       _note;
+  private DrawArea?      _da                  = null;
+  private string         _orig_note           = "";
+  private Connection?    _connection          = null;
+  private bool           _ignore_title_change = false;
 
   public ConnectionInspector( MainWindow win ) {
 
@@ -64,9 +65,9 @@ public class ConnectionInspector : Box {
     _da = da;
   }
 
-  /* Returns the width of this window */
-  public int get_width() {
-    return( 300 );
+  /* Sets the width of this inspector to the given value */
+  public void set_width( int width ) {
+    _sw.width_request = width;
   }
 
   /* Creates the name entry */
@@ -128,13 +129,13 @@ public class ConnectionInspector : Box {
     _note.focus_in_event.connect( note_focus_in );
     _note.focus_out_event.connect( note_focus_out );
 
-    ScrolledWindow sw = new ScrolledWindow( null, null );
-    sw.min_content_width  = 300;
-    sw.min_content_height = 100;
-    sw.add( _note );
+    _sw = new ScrolledWindow( null, null );
+    _sw.min_content_width  = 300;
+    _sw.min_content_height = 100;
+    _sw.add( _note );
 
     box.pack_start( lbl, false, false );
-    box.pack_start( sw,  true,  true );
+    box.pack_start( _sw,  true,  true );
 
     pack_start( box, true, true );
 
