@@ -371,6 +371,16 @@ public class Node : Object {
     _alpha = value;
   }
 
+  /* Updates the alpha value if it is not set to 1.0 */
+  public void update_alpha( double value ) {
+    if( _alpha < 1.0 ) {
+      _alpha = value;
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).update_alpha( value );
+    }
+  }
+
   /* Sets the posx value only, leaving the children positions alone */
   public void adjust_posx_only( double value ) {
     _posx += value;

@@ -30,7 +30,6 @@ public class DrawArea : Gtk.DrawingArea {
   private const Gtk.TargetEntry[] DRAG_TARGETS = {
     {"text/uri-list", 0, 0}
   };
-  private const double focus_alpha = 0.1;
 
   private Document         _doc;
   private double           _press_x;
@@ -67,6 +66,7 @@ public class DrawArea : Gtk.DrawingArea {
   private IMContextSimple  _im_context;
   private bool             _debug        = true;
   private bool             _focus_mode   = false;
+  private double           _focus_alpha  = 0.05;
   private bool             _create_new_from_edit;
 
   public UndoBuffer   undo_buffer    { set; get; }
@@ -139,7 +139,12 @@ public class DrawArea : Gtk.DrawingArea {
     _orig_info = new Array<NodeInfo?>();
 
     /* Get the value of the new node from edit */
-    _create_new_from_edit = settings.get_boolean( "new-node-from-edit" );
+    update_focus_mode_alpha( settings );
+    update_create_new_from_edit( settings );
+    settings.changed.connect(() => {
+      update_focus_mode_alpha( settings );
+      update_create_new_from_edit( settings );
+    });
 
     /* Set the theme to the default theme */
     set_theme( "Default" );
@@ -611,7 +616,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       if( _current_node != null ) {
         _current_node.mode  = NodeMode.NONE;
-        // _current_node.alpha = _focus_mode ? focus_alpha : 1.0; 
+        // _current_node.alpha = _focus_mode ? _focus_alpha : 1.0; 
       }
       if( (n.parent != null) && n.parent.folded ) {
         var last = n.reveal();
@@ -1676,7 +1681,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( n != _current_node ) {
         if( _current_node != null ) {
           _current_node.mode  = NodeMode.NONE;
-          _current_node.alpha = _focus_mode ? focus_alpha : 1.0;
+          _current_node.alpha = _focus_mode ? _focus_alpha : 1.0;
         }
         _current_node       = n;
         _current_new        = false;
@@ -3124,7 +3129,7 @@ public class DrawArea : Gtk.DrawingArea {
    to have the alpha state set to almost transparent (when focus mode is enabled) or fully opaque.
   */
   public void set_focus_mode( bool focus ) {
-    double alpha = focus ? focus_alpha : 1.0;
+    double alpha = focus ? _focus_alpha : 1.0;
     _focus_mode = focus;
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).alpha = alpha;
@@ -3154,6 +3159,28 @@ public class DrawArea : Gtk.DrawingArea {
       // zoom_to_selected();
     }
     _connections.update_alpha();
+    queue_draw();
+  }
+
+  /* Updates the create_new_from_edit variable */
+  private void update_create_new_from_edit( GLib.Settings settings ) {
+    _create_new_from_edit = settings.get_boolean( "new-node-from-edit" );
+  }
+
+  /* Updates all alpha values with the given value */
+  public void update_focus_mode_alpha( GLib.Settings settings ) {
+    var key   = "focus-mode-alpha";
+    var alpha = settings.get_double( key );
+    if( (alpha < 0) || (alpha >= 1.0) ) {
+      settings.set_double( key, _focus_alpha );
+    } else if( _focus_alpha != alpha ) {
+      _focus_alpha = alpha;
+      for( int i=0; i<_nodes.length; i++ ) {
+        _nodes.index( i ).update_alpha( alpha );
+      }
+      _connections.update_alpha();
+      queue_draw();
+    }
   }
 
 }

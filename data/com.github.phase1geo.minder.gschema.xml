@@ -196,5 +196,10 @@
       <summary>Specifies if we should create a new node directly from edit mode if Return or Tab is pressed</summary>
       <description>Specifies if we should create a new node directly from edit mode if Return or Tab is pressed</description>
     </key>
+    <key name="focus-mode-alpha" type="d">
+      <default>0.05</default>
+      <summary>Alpha value to use for all nodes/connections that are not within focus in focus mode</summary>
+      <description>Alpha value to use for all nodes/connections that are not within focus in focus mode.  Value must be between 0 and 1.</description>
+    </key>
   </schema>
 </schemalist>
