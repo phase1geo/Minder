@@ -93,13 +93,18 @@ public class NodeInspector : Box {
     lbl.use_markup = true;
 
     _name = new TextView();
-    _name.set_wrap_mode( Gtk.WrapMode.WORD );
+    _name.set_wrap_mode( Gtk.WrapMode.WORD_CHAR );
     _name.buffer.text = "";
     _name.buffer.changed.connect( name_changed );
     _name.focus_out_event.connect( name_focus_out );
 
-    box.pack_start( lbl,   true, false );
-    box.pack_start( _name, true, false );
+    var sw = new ScrolledWindow( null, null );
+    sw.min_content_width  = 300;
+    sw.min_content_height = 60;
+    sw.add( _name );
+
+    box.pack_start( lbl, true, false );
+    box.pack_start( sw,  true, false );
 
     pack_start( box, false, true );
 

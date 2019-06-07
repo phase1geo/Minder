@@ -85,8 +85,13 @@ public class ConnectionInspector : Box {
     _title.buffer.changed.connect( title_changed );
     _title.focus_out_event.connect( title_focus_out );
 
-    box.pack_start( lbl,   true, false );
-    box.pack_start( _title, true, false );
+    var sw = new ScrolledWindow( null, null );
+    sw.min_content_width  = 300;
+    sw.min_content_height = 20;
+    sw.add( _title );
+
+    box.pack_start( lbl, true, false );
+    box.pack_start( sw,  true, false );
 
     pack_start( box, false, true );
 
