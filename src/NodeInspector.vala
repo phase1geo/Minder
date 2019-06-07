@@ -93,7 +93,7 @@ public class NodeInspector : Box {
     lbl.use_markup = true;
 
     _name = new TextView();
-    _name.set_wrap_mode( Gtk.WrapMode.WORD_CHAR );
+    _name.set_wrap_mode( Gtk.WrapMode.WORD );
     _name.buffer.text = "";
     _name.buffer.changed.connect( name_changed );
     _name.focus_out_event.connect( name_focus_out );
