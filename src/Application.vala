@@ -20,6 +20,7 @@
 */
 
 using Gtk;
+using Gdk;
 using GLib;
 
 public class Minder : Granite.Application {

@@ -36,6 +36,7 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _fold;
   Gtk.MenuItem _detach;
   Gtk.MenuItem _root;
+  Gtk.MenuItem _parent;
   Gtk.MenuItem _child;
   Gtk.MenuItem _sibling;
   Gtk.MenuItem _selroot;
@@ -94,6 +95,9 @@ public class NodeMenu : Gtk.Menu {
     _root = new Gtk.MenuItem.with_label( _( "Add Root Node" ) );
     _root.activate.connect( add_root_node );
 
+    _parent = new Gtk.MenuItem.with_label( _( "Add Parent Node" ) );
+    _parent.activate.connect( add_parent_node );
+
     _child = new Gtk.MenuItem.with_label( _( "Add Child Node" ) );
     _child.activate.connect( add_child_node );
     Utils.add_accel_label( _child, 65289, 0 );
@@ -148,6 +152,7 @@ public class NodeMenu : Gtk.Menu {
     add( _fold );
     add( new SeparatorMenuItem() );
     add( _root );
+    add( _parent );
     add( _child );
     add( _sibling );
     add( new SeparatorMenuItem() );
@@ -197,6 +202,12 @@ public class NodeMenu : Gtk.Menu {
     return( (current != null) && !current.is_leaf() );
   }
 
+  /* Returns true if the currently selected node can have a parent node added */
+  private bool node_parentable() {
+    Node? current = _da.get_current_node();
+    return( (current != null) && !current.is_root() );
+  }
+
   /*
    Returns true if there is a currently selected node that is currently
    folded.
@@ -212,6 +223,7 @@ public class NodeMenu : Gtk.Menu {
     /* Set the menu sensitivity */
     _paste.set_sensitive( _da.node_pasteable() );
     _conn.set_sensitive( !_da.get_connections().hide );
+    _parent.set_sensitive( node_parentable() );
     _fold.set_sensitive( node_foldable() );
     _detach.set_sensitive( _da.detachable() );
     _selroot.set_sensitive( _da.root_selectable() );
@@ -301,6 +313,11 @@ public class NodeMenu : Gtk.Menu {
   /* Creates a new root node */
   private void add_root_node() {
     _da.add_root_node();
+  }
+
+  /* Creates a new parent node for the current node */
+  private void add_parent_node() {
+    _da.add_parent_node();
   }
 
   /* Creates a new child node from the current node */

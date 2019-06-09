@@ -46,6 +46,7 @@ sources += files(
     'undo_actions/UndoConnectionDelete.vala',
     'undo_actions/UndoConnectionNote.vala',
     'undo_actions/UndoConnectionTitle.vala',
+    'undo_actions/UndoNodeAddParent.vala',
     'undo_actions/UndoNodeAttach.vala',
     'undo_actions/UndoNodeBalance.vala',
     'undo_actions/UndoNodeCut.vala',

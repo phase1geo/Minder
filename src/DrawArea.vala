@@ -1977,6 +1977,7 @@ public class DrawArea : Gtk.DrawingArea {
     _current_new = true;
     queue_draw();
     see();
+    changed();
   }
 
   /* Called whenever the return character is entered in the drawing area */
@@ -2151,6 +2152,27 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /*
+   Re-parents a node by creating a new node whose parent matches the current node's parent
+   and then makes the current node's parent match the new node.
+  */
+  public void add_parent_node() {
+    if( _current_node.is_root() ) return;
+    var node = new Node( this, layouts.get_default() );
+    node.side       = _current_node.side;
+    node.style      = StyleInspector.styles.get_style_for_level( _current_node.get_level() );
+    node.link_color = _current_node.link_color;
+    node.attach( _current_node.parent, _current_node.index(), null );
+    _current_node.detach( node.side );
+    _current_node.attach( node, -1, null );
+    undo_buffer.add_item( new UndoNodeAddParent( node, _current_node ) );
+    set_current_node( node );
+    node.mode = NodeMode.EDITABLE;
+    queue_draw();
+    see();
+    changed();
+  }
+
   /* Adds a child node to the current node */
   public void add_child_node() {
     var node = new Node( this, layouts.get_default() );
@@ -2164,7 +2186,6 @@ public class DrawArea : Gtk.DrawingArea {
       node.style = _current_node.style;
     }
     node.style = StyleInspector.styles.get_style_for_level( _current_node.get_level() + 1 );
-    _current_node.mode   = NodeMode.NONE;
     node.attach( _current_node, -1, _theme );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     _current_node.folded = false;
@@ -2173,6 +2194,7 @@ public class DrawArea : Gtk.DrawingArea {
     node.mode = NodeMode.EDITABLE;
     queue_draw();
     see();
+    changed();
   }
 
   /* Called whenever the tab character is entered in the drawing area */
