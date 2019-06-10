@@ -2158,11 +2158,12 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void add_parent_node() {
     if( _current_node.is_root() ) return;
-    var node = new Node( this, layouts.get_default() );
+    var node  = new Node( this, layouts.get_default() );
+    var color = _current_node.link_color;
     node.side       = _current_node.side;
     node.style      = StyleInspector.styles.get_style_for_level( _current_node.get_level() );
-    node.link_color = _current_node.link_color;
     node.attach( _current_node.parent, _current_node.index(), null );
+    node.link_color = color;
     _current_node.detach( node.side );
     _current_node.attach( node, -1, null );
     undo_buffer.add_item( new UndoNodeAddParent( node, _current_node ) );
