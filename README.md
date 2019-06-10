@@ -57,7 +57,7 @@ Minder is packaged in Void Linux, install it with `xbps-install`:
 
 For Fedora users, install the RPM package with:
 
-`$ sudo dnf copr enable atim/minder -y && sudo dnf install minder -y`
+`$ sudo dnf install minder`
 
 ## Quick Guide to Creating a Mind-Map
 
