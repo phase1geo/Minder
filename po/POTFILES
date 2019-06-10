@@ -18,6 +18,7 @@ src/Node.vala
 src/NodeImage.vala
 src/NodeInspector.vala
 src/StyleInspector.vala
+src/EmptyInspector.vala
 
 src/styles/LinkTypeCurved.vala
 src/styles/LinkTypeSquared.vala

@@ -938,7 +938,9 @@ public class MainWindow : ApplicationWindow {
   /* Exports the model to various formats */
   private void action_export() {
 
-    FileChooserNative dialog = new FileChooserNative( _( "Export As" ), this, FileChooserAction.SAVE, _( "Export" ), _( "Cancel" ) );
+    // FileChooserNative dialog = new FileChooserNative( _( "Export As" ), this, FileChooserAction.SAVE, _( "Export" ), _( "Cancel" ) );
+    FileChooserDialog dialog = new FileChooserDialog( _( "Export As" ), this, FileChooserAction.SAVE,
+      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
 
     /* BMP */
     FileFilter bmp_filter = new FileFilter();
@@ -1037,6 +1039,8 @@ public class MainWindow : ApplicationWindow {
         ExportSVG.export( repair_filename( fname, {".svg"} ), _canvas );
       }
     }
+
+    dialog.close();
 
   }
 
