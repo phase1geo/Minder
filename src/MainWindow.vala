@@ -37,7 +37,7 @@ public class MainWindow : ApplicationWindow {
   private GLib.Settings     _settings;
   private HeaderBar?        _header         = null;
   private Gtk.AccelGroup?   _accel_group    = null;
-  private Granite.Widgets.DynamicNotebook? _nb = null;
+  private DynamicNotebook?  _nb             = null;
   private Revealer?         _inspector      = null;
   private Box?              _pbox           = null;
   private Paned             _pane           = null;
@@ -132,7 +132,7 @@ public class MainWindow : ApplicationWindow {
     add_keyboard_shortcuts( app );
 
     /* Create the notebook */
-    _nb = new Granite.Widgets.DynamicNotebook();
+    _nb = new DynamicNotebook();
     _nb.add_button_visible = false;
     // _nb.new_tab_requested.connect( do_new_file );
     _nb.tab_switched.connect( tab_changed );
@@ -207,7 +207,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Called whenever the current tab is changed */
-  private void tab_changed( Granite.Widgets.Tab? old_tab, Granite.Widgets.Tab new_tab ) {
+  private void tab_changed( Tab? old_tab, Tab new_tab ) {
     var bin = (Gtk.Bin)new_tab.page;
     canvas_changed( (DrawArea)bin.get_child() );
     save_tab_state();
@@ -236,7 +236,7 @@ public class MainWindow : ApplicationWindow {
     overlay.add( da );
 
     var title = (fname == null) ? _( "Unnamed" ) : GLib.Path.get_basename( fname );
-    var tab   = new Granite.Widgets.Tab( title, null, overlay );
+    var tab   = new Tab( title, null, overlay );
     tab.pinnable = false;
 
     /* Add the page to the notebook */

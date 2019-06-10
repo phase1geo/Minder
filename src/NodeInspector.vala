@@ -204,7 +204,7 @@ public class NodeInspector : Box {
   /* Creates the image widget */
   private void create_image() {
 
-    var box = new Box( Orientation.VERTICAL, 0 );
+    var box = new Box( Orientation.VERTICAL, 10 );
     var lbl = new Label( Utils.make_title( _( "Image" ) ) );
 
     lbl.xalign     = (float)0;
