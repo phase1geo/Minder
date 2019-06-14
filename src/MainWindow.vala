@@ -858,7 +858,9 @@ public class MainWindow : ApplicationWindow {
       if( !_inspector.reveal_child ) {
         Timeout.add( 501, move_inspector_to_pane );
         _inspector.reveal_child = true;
-        get_current_da().see( -300 );
+        if( get_current_da() != null ) {
+          get_current_da().see( -300 );
+        }
       }
       _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
     }
