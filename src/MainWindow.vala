@@ -134,6 +134,7 @@ public class MainWindow : ApplicationWindow {
     /* Create the notebook */
     _nb = new DynamicNotebook();
     _nb.add_button_visible = false;
+    _nb.tab_bar_behavior   = DynamicNotebook.TabBarBehavior.SINGLE;
     // _nb.new_tab_requested.connect( do_new_file );
     _nb.tab_switched.connect( tab_changed );
 
@@ -375,7 +376,7 @@ public class MainWindow : ApplicationWindow {
     /* Create the menu button */
     _search_btn = new MenuButton();
     _search_btn.set_image( on_elementary
-      ? new Image.from_icon_name( "edit-find", IconSize.LARGE_TOOLBAR )
+      ? new Image.from_icon_name( "edit-find-symbolic", IconSize.LARGE_TOOLBAR )
       : new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
     _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "Ctrl + F" ) );
     _search_btn.add_accelerator( "clicked", _accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
