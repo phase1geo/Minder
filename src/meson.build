@@ -7,6 +7,7 @@ sources += files(
     'animator/AnimatorScale.vala',
 
     'exports/ExportCSV.vala',
+    'exports/ExportFreemind.vala',
     'exports/ExportImage.vala',
     'exports/ExportMarkdown.vala',
     'exports/ExportMermaid.vala',

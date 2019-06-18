@@ -755,6 +755,11 @@ public class MainWindow : ApplicationWindow {
       update_title();
       ExportOPML.import( fname, da );
       return( true );
+    } else if( fname.has_suffix( ".mm" ) ) {
+      var da = add_tab( fname, TabAddReason.IMPORT );
+      update_title();
+      ExportFreemind.import( fname, da );
+      return( true );
     }
     return( false );
   }

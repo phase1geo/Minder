@@ -63,6 +63,11 @@ public class Connections {
     return( false );
   }
 
+  /* Complete the stored connections */
+  public void complete_connection( int index, Node to_node ) {
+    _connections.index( index ).connect_to( to_node );
+  }
+
   /* Returns the connection that is before or after the given connection */
   public Connection? get_connection( Connection conn, int dir ) {
     if( _connections.length == 1 ) return( null );
