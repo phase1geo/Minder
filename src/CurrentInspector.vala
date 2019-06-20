@@ -63,10 +63,11 @@ public class CurrentInspector : Stack {
     if( _da != null ) {
       _da.current_changed.disconnect( current_changed );
     }
+    _da = da;
     if( da != null ) {
       da.current_changed.connect( current_changed );
+      current_changed();
     }
-    _da = da;
   }
 
   /* Called whenever the user changes the current node in the canvas */

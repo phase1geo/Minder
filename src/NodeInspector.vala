@@ -66,16 +66,18 @@ public class NodeInspector : Box {
 
   }
 
+  /* Called whenever the user clicks on a tab in the tab bar */
   private void tab_changed( DrawArea? da ) {
     if( _da != null ) {
       _da.current_changed.disconnect( node_changed );
       _da.theme_changed.disconnect( theme_changed );
     }
+    _da = da;
     if( da != null ) {
       da.current_changed.connect( node_changed );
       da.theme_changed.connect( theme_changed );
+      node_changed();
     }
-    _da = da;
   }
 
   /* Sets the width of this inspector to the given value */
