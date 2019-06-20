@@ -81,12 +81,13 @@ public class Connections {
   }
 
   /*
-   Returns the first connection that is attached to the given node; otherwise, returns
+   Returns the index'th connection that is attached to the given node; otherwise, returns
    null if the node does not contain a connection.
   */
-  public Connection? get_attached_connection( Node node ) {
+  public Connection? get_attached_connection( Node node, int index = 0 ) {
+    int matches = 0;
     for( int i=0; i<_connections.length; i++ ) {
-      if( _connections.index( i ).attached_to_node( node ) ) {
+      if( _connections.index( i ).attached_to_node( node ) && (index == matches++) ) {
         return( _connections.index( i ) );
       }
     }

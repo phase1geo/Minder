@@ -727,6 +727,11 @@ public class MainWindow : ApplicationWindow {
     dialog.add_filter( filter );
 
     filter = new FileFilter();
+    filter.set_filter_name( "FreeMind" );
+    filter.add_pattern( "*.mm" );
+    dialog.add_filter( filter );
+
+    filter = new FileFilter();
     filter.set_filter_name( "OPML" );
     filter.add_pattern( "*.opml" );
     dialog.add_filter( filter );
@@ -751,12 +756,14 @@ public class MainWindow : ApplicationWindow {
       da.get_doc().load();
       return( true );
     } else if( fname.has_suffix( ".opml" ) ) {
-      var da = add_tab( fname, TabAddReason.IMPORT );
+      var new_fname = fname.substring( 0, (fname.length - 5) ) + ".minder";
+      var da        = add_tab( new_fname, TabAddReason.IMPORT );
       update_title();
       ExportOPML.import( fname, da );
       return( true );
     } else if( fname.has_suffix( ".mm" ) ) {
-      var da = add_tab( fname, TabAddReason.IMPORT );
+      var new_fname = fname.substring( 0, (fname.length - 3) ) + ".minder";
+      var da        = add_tab( new_fname, TabAddReason.IMPORT );
       update_title();
       ExportFreemind.import( fname, da );
       return( true );
@@ -1042,6 +1049,12 @@ public class MainWindow : ApplicationWindow {
     csv_filter.add_pattern( "*.csv" );
     dialog.add_filter( csv_filter );
 
+    /* FreeMind */
+    FileFilter mm_filter = new FileFilter();
+    mm_filter.set_filter_name( _( "FreeMind" ) );
+    mm_filter.add_pattern( "*.mm" );
+    dialog.add_filter( mm_filter );
+
     /* JPEG */
     FileFilter jpeg_filter = new FileFilter();
     jpeg_filter.set_filter_name( _( "JPEG" ) );
@@ -1108,6 +1121,8 @@ public class MainWindow : ApplicationWindow {
         ExportImage.export( repair_filename( fname, {".bmp"} ), "bmp", da );
       } else if( csv_filter == filter ) {
         ExportCSV.export( repair_filename( fname, {".csv"} ), da );
+      } else if( mm_filter == filter ) {
+        ExportFreemind.export( repair_filename( fname, {".mm"} ), da );
       } else if( jpeg_filter == filter ) {
         ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", da );
       } else if( md_filter == filter ) {
@@ -1155,6 +1170,9 @@ public class MainWindow : ApplicationWindow {
 
   /* Save the current tab state */
   private void save_tab_state() {
+
+    /* TEMPORARY - We are getting segmentation faults in this code */
+    return;
 
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
 
