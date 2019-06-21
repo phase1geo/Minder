@@ -347,6 +347,8 @@ public class ExportFreeplane : Object {
     var      str     = "";
     string[] bullets = {"-", "*", "+"};
     int      num     = 1;
+    bool     ul      = n->name.down() == "ul";
+    bool     ol      = n->name.down() == "ol";
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       switch( it->type ) {
@@ -358,9 +360,7 @@ public class ExportFreeplane : Object {
           break;
         case Xml.ElementType.ELEMENT_NODE :  
           if( it->name.down() != "head" ) {  // Skip anything within the header section
-            bool ol = it->name.down() == "ol";
-            bool ul = it->name.down() == "ul";
-            str += parse_richcontent( it, (level + ((ol || ul) ? 1 : 0)), (ul ? num++ : 0) );
+            str += parse_richcontent( it, (level + ((ol || ul) ? 1 : 0)), (ol ? num++ : 0) );
           }
           break;
       }
@@ -385,7 +385,7 @@ public class ExportFreeplane : Object {
         for( Xml.Attr* it=n->properties; it!=null; it=it->next ) {
           span += " " + it->name + "=\"" + n->get_prop( it->name ) + "\"";
         }
-        str = span + ">" + str + "</span";
+        str = span + ">" + str + "</span>";
         break;
       case "p"     :
         str = "\n" + str;
@@ -394,7 +394,7 @@ public class ExportFreeplane : Object {
         str += "\n";
         break;
       case "li"    :
-        str = "\n" + string.nfill( (level - 1), ' ' ) + ((number == 0) ? bullets[(level - 1) % 3] : (number.to_string() + ".")) + " " + str;
+        str = "\n" + string.nfill( ((level - 1) * 4), ' ' ) + ((number == 0) ? bullets[(level - 1) % 3] : (number.to_string() + ".")) + " " + str;
         break;
     }
 
