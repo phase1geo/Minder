@@ -1457,13 +1457,13 @@ public class DrawArea : Gtk.DrawingArea {
           set_cursor_from_name( "move" );
           return( false );
         } else if( _current_connection.within_note( scaled_x, scaled_y ) ) {
-          set_tooltip_text( _current_connection.note );
+          set_tooltip_markup( _current_connection.note );
           return( false );
         }
       } else {
         Connection? match_conn = _connections.within_note( scaled_x, scaled_y );
         if( match_conn != null ) {
-          set_tooltip_text( match_conn.note );
+          set_tooltip_markup( match_conn.note );
           return( false );
         }
       }
@@ -1475,21 +1475,21 @@ public class DrawArea : Gtk.DrawingArea {
             _attach_node.mode = NodeMode.ATTACHABLE;
           } else if( match.is_within_task( scaled_x, scaled_y ) ) {
             set_cursor( CursorType.HAND1 );
-            set_tooltip_text( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
+            set_tooltip_markup( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
           } else if( match.is_within_note( scaled_x, scaled_y ) ) {
-            set_tooltip_text( match.note );
+            set_tooltip_markup( match.note );
           } else if( match.is_within_resizer( scaled_x, scaled_y ) ) {
             set_cursor( CursorType.SB_H_DOUBLE_ARROW );
-            set_tooltip_text( null );
+            set_tooltip_markup( null );
           } else {
             set_cursor( null );
-            set_tooltip_text( null );
+            set_tooltip_markup( null );
           }
           return( false );
         }
       }
       set_cursor( null );
-      set_tooltip_text( null );
+      set_tooltip_markup( null );
     }
     return( false );
   }

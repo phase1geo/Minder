@@ -8,6 +8,7 @@ sources += files(
 
     'exports/ExportCSV.vala',
     'exports/ExportFreemind.vala',
+    'exports/ExportFreeplane.vala',
     'exports/ExportImage.vala',
     'exports/ExportMarkdown.vala',
     'exports/ExportMermaid.vala',

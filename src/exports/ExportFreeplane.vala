@@ -327,27 +327,79 @@ public class ExportFreeplane : Object {
 
   }
   
+  /* Import the richcontent section */
   private static void import_richcontent( Xml.Node* n, Node node ) {
   
-    string type = n->get_prop( "TYPE" ) ?? "NOTE";
-    
-    n->FOOBAR
-    for( Xml.Node* it = n->children; it != null; it = it->next ) {
-      if( (it->type == Xml.ElementType.ELEMENT_NODE)  ) {
-        switch( it->name ) {
-          case "node"      :  import_node( it, da, node, color_map, id_map, to_nodes );  break;
-          case "edge"      :  import_edge( it, node );  break;
-          case "font"      :  import_font( it, node );  break;
-          case "icon"      :  break;  // Not implemented
-          case "cloud"     :  break;  // Not implemented
-          case "arrowlink" :  import_arrowlink( it, da, node, to_nodes );  break;
-          case "richcontent" :  import_richcontent( it, node );  break;
-        }
+    string type    = n->get_prop( "TYPE" ) ?? "NOTE";
+    string content = parse_richcontent( n ).chug();
+
+    if( type == "NODE" ) {
+      node.name.text = content;
+    } else {
+      node.note = content;
+    }
+
+  }
+
+  /* Parses the given richcontent block and turns it into the equivalent Pango markup */
+  private static string parse_richcontent( Xml.Node* n, int level=0, int number=0 ) {
+
+    var      str     = "";
+    string[] bullets = {"-", "*", "+"};
+    int      num     = 1;
+
+    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
+      switch( it->type ) {
+        case Xml.ElementType.TEXT_NODE :
+          str += it->content.strip().replace( "&", "&amp;" ).replace( "<", "&lt;" ).replace( ">", "&gt;" );
+          break;
+        case Xml.ElementType.CDATA_SECTION_NODE :
+          str += it->content.strip();
+          break;
+        case Xml.ElementType.ELEMENT_NODE :  
+          if( it->name.down() != "head" ) {  // Skip anything within the header section
+            bool ol = it->name.down() == "ol";
+            bool ul = it->name.down() == "ul";
+            str += parse_richcontent( it, (level + ((ol || ul) ? 1 : 0)), (ul ? num++ : 0) );
+          }
+          break;
       }
     }
-    
-    switch( type ) {
-      case "NODE" :
+
+    var name = n->name.down();
+    var span = "<span";
+
+    switch( name ) {
+      case "b"     :
+      case "big"   :
+      case "i"     :
+      case "s"     :
+      case "sub"   :
+      case "sup"   :
+      case "small" :
+      case "tt"    :
+      case "u"     :
+        str = "<" + name + ">" + str + "</" + name + ">";
+        break;
+      case "span"  :
+        for( Xml.Attr* it=n->properties; it!=null; it=it->next ) {
+          span += " " + it->name + "=\"" + n->get_prop( it->name ) + "\"";
+        }
+        str = span + ">" + str + "</span";
+        break;
+      case "p"     :
+        str = "\n" + str;
+        break;
+      case "br"    :
+        str += "\n";
+        break;
+      case "li"    :
+        str = "\n" + string.nfill( (level - 1), ' ' ) + ((number == 0) ? bullets[(level - 1) % 3] : (number.to_string() + ".")) + " " + str;
+        break;
+    }
+
+    return( str );
+
   }
 
 }

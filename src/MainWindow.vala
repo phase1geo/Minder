@@ -727,7 +727,7 @@ public class MainWindow : ApplicationWindow {
     dialog.add_filter( filter );
 
     filter = new FileFilter();
-    filter.set_filter_name( "FreeMind" );
+    filter.set_filter_name( "Freemind / Freeplane" );
     filter.add_pattern( "*.mm" );
     dialog.add_filter( filter );
 
@@ -765,7 +765,7 @@ public class MainWindow : ApplicationWindow {
       var new_fname = fname.substring( 0, (fname.length - 3) ) + ".minder";
       var da        = add_tab( new_fname, TabAddReason.IMPORT );
       update_title();
-      ExportFreemind.import( fname, da );
+      ExportFreeplane.import( fname, da );
       return( true );
     }
     return( false );
@@ -1051,7 +1051,7 @@ public class MainWindow : ApplicationWindow {
 
     /* FreeMind */
     FileFilter mm_filter = new FileFilter();
-    mm_filter.set_filter_name( _( "FreeMind" ) );
+    mm_filter.set_filter_name( _( "Freemind / Freeplane" ) );
     mm_filter.add_pattern( "*.mm" );
     dialog.add_filter( mm_filter );
 
@@ -1122,7 +1122,7 @@ public class MainWindow : ApplicationWindow {
       } else if( csv_filter == filter ) {
         ExportCSV.export( repair_filename( fname, {".csv"} ), da );
       } else if( mm_filter == filter ) {
-        ExportFreemind.export( repair_filename( fname, {".mm"} ), da );
+        ExportFreeplane.export( repair_filename( fname, {".mm"} ), da );
       } else if( jpeg_filter == filter ) {
         ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", da );
       } else if( md_filter == filter ) {
