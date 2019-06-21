@@ -741,7 +741,7 @@ public class Node : Object {
     string? mw = n->get_prop( "maxwidth" );
     if( mw != null ) {
       _max_width = double.parse( mw );
-      // _pango_layout.set_width( (int)_max_width * Pango.SCALE );
+      _name.resize( _max_width - 200 );
     }
 
     string? w = n->get_prop( "width" );
