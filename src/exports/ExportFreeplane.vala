@@ -45,20 +45,43 @@ public class ExportFreeplane : Object {
     return( map );
   }
 
+  /* Returns true if the given node contains any markup that should be output as richcontent */
+  private static bool node_contains_markup( Node node, bool note ) {
+    if( node.name.markup ) {
+      string str = note ? node.note : node.name.text;
+      return( Regex.match_simple( """<(span.*|b|big|i|s|sub|sup|small|tt|u)>""", str ) ||
+              Regex.match_simple( """^\s*$""", str, RegexCompileFlags.MULTILINE ) );
+    }
+    return( false );
+  }
+
   /* Exports the given node information */
   private static Xml.Node* export_node( Node node, DrawArea da ) {
 
-    Xml.Node* n = new Xml.Node( null, "node" );
+    Xml.Node* n      = new Xml.Node( null, "node" );
+    bool      markup = node_contains_markup( node, false );
 
     n->new_prop( "ID", "id_" + node.id().to_string() );
-    n->new_prop( "TEXT", node.name.text );
     // TBD - Not supported yet  n->new_prop( "LINK", "" );
     n->new_prop( "FOLDED", node.folded.to_string() );
-    n->new_prop( "COLOR", Utils.color_from_rgba( node.link_color ) );
     n->new_prop( "POSITION", ((node.side == NodeSide.LEFT) ? "left" : "right") );
+
+    if( !markup ) {
+      n->new_prop( "TEXT", node.name.text );
+    } else {
+      n->add_child( export_richcontent( node, da, false ) );
+    }
+
+    if( node.style.node_fill ) {
+      n->new_prop( "BACKGROUND_COLOR", Utils.color_from_rgba( node.link_color ) );
+    }
 
     n->add_child( export_edge( node, da ) );
     n->add_child( export_font( node, da ) );
+
+    if( node.note != "" ) {
+      n->add_child( export_richcontent( node, da, true ) );
+    }
 
     /* Add arrowlinks */
     int         index = 0;
@@ -105,6 +128,45 @@ public class ExportFreeplane : Object {
     n->new_prop( "STARTARROW",  ((conn.style.connection_arrow == "none") || (conn.style.connection_arrow == "fromto")) ? "None" : "Default" );
     n->new_prop( "ENDARROW",    ((conn.style.connection_arrow == "none") || (conn.style.connection_arrow == "tofrom")) ? "None" : "Default" );
     return( n );
+  }
+
+  private static Xml.Node* export_richcontent( Node node, DrawArea da, bool note ) {
+
+    string    text = note ? node.note : node.name.text;
+    Xml.Node* rc   = new Xml.Node( null, "richcontent" );
+    rc->new_prop( "TYPE", (note ? "NOTE" : "NODE") );
+
+    Xml.Node* html = new Xml.Node( null, "html" );
+    Xml.Node* head = new Xml.Node( null, "head" );
+    Xml.Node* body = new Xml.Node( null, "body" );
+
+    var str = "";
+
+    foreach( string line in text.split( "\n" ) ) {
+      if( Regex.match_simple( """^\s*$""", line ) ) {
+        body->new_text_child( null, "p", str );
+        str = "";
+      } else if( Regex.match_simple( """^\s+""", line ) ) {
+        var i = 0;
+        while( line.get_char( i ) == ' ' ) {
+          str += "&#160;";
+          i++;
+        }
+        str += line.substring( i );
+      } else {
+        str += line;
+      }
+    }
+
+    body->new_text_child( null, "p", str );
+
+    html->add_child( head );
+    html->add_child( body );
+
+    rc->add_child( html );
+
+    return( rc );
+
   }
 
   /*
@@ -218,12 +280,12 @@ public class ExportFreeplane : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "node"      :  import_node( it, da, node, color_map, id_map, to_nodes );  break;
-          case "edge"      :  import_edge( it, node );  break;
-          case "font"      :  import_font( it, node );  break;
-          case "icon"      :  break;  // Not implemented
-          case "cloud"     :  break;  // Not implemented
-          case "arrowlink" :  import_arrowlink( it, da, node, to_nodes );  break;
+          case "node"        :  import_node( it, da, node, color_map, id_map, to_nodes );  break;
+          case "edge"        :  import_edge( it, node );  break;
+          case "font"        :  import_font( it, node );  break;
+          case "icon"        :  break;  // Not implemented
+          case "cloud"       :  break;  // Not implemented
+          case "arrowlink"   :  import_arrowlink( it, da, node, to_nodes );  break;
           case "richcontent" :  import_richcontent( it, node );  break;
         }
       }

@@ -167,9 +167,9 @@ public class CanvasText : Object {
 
   }
 
-  /* Removes < and > characters */
+  /* Removes <, > and & characters */
   private string unmarkup( string markup ) {
-    return( markup.replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
+    return( markup.replace( "&", "&amp;" ).replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
   }
 
   /* Generates the marked up name that will be displayed in the node */

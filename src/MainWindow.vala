@@ -1050,10 +1050,16 @@ public class MainWindow : ApplicationWindow {
     dialog.add_filter( csv_filter );
 
     /* FreeMind */
-    FileFilter mm_filter = new FileFilter();
-    mm_filter.set_filter_name( _( "Freemind / Freeplane" ) );
-    mm_filter.add_pattern( "*.mm" );
-    dialog.add_filter( mm_filter );
+    FileFilter fm_filter = new FileFilter();
+    fm_filter.set_filter_name( _( "Freemind" ) );
+    fm_filter.add_pattern( "*.mm" );
+    dialog.add_filter( fm_filter );
+
+    /* Freeplane */
+    FileFilter fp_filter = new FileFilter();
+    fp_filter.set_filter_name( _( "Freeplane" ) );
+    fp_filter.add_pattern( "*.mm" );
+    dialog.add_filter( fp_filter );
 
     /* JPEG */
     FileFilter jpeg_filter = new FileFilter();
@@ -1121,7 +1127,9 @@ public class MainWindow : ApplicationWindow {
         ExportImage.export( repair_filename( fname, {".bmp"} ), "bmp", da );
       } else if( csv_filter == filter ) {
         ExportCSV.export( repair_filename( fname, {".csv"} ), da );
-      } else if( mm_filter == filter ) {
+      } else if( fm_filter == filter ) {
+        ExportFreemind.export( repair_filename( fname, {".mm"} ), da );
+      } else if( fp_filter == filter ) {
         ExportFreeplane.export( repair_filename( fname, {".mm"} ), da );
       } else if( jpeg_filter == filter ) {
         ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", da );
