@@ -51,7 +51,6 @@ dependencies = [
     dependency('granite'),
     dependency('gtk+-3.0'),
     dependency('libxml-2.0'),
-    dependency('libarchive'),
     math_dep
 ]
 
