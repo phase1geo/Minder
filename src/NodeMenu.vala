@@ -39,6 +39,7 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _parent;
   Gtk.MenuItem _child;
   Gtk.MenuItem _sibling;
+  Gtk.MenuItem _sortby;
   Gtk.MenuItem _selroot;
   Gtk.MenuItem _selnext;
   Gtk.MenuItem _selprev;
@@ -138,6 +139,16 @@ public class NodeMenu : Gtk.Menu {
     _center.activate.connect( center_current_node );
     Utils.add_accel_label( _center, 'C', Gdk.ModifierType.SHIFT_MASK );
 
+    _sortby = new Gtk.MenuItem.with_label( _( "Sort Children" ) );
+    var sortmenu = new Gtk.Menu();
+    _sortby.set_submenu( sortmenu );
+
+    var sort_alpha = new Gtk.MenuItem.with_label( _( "Alphabetically" ) );
+    sort_alpha.activate.connect( sort_alphabetically );
+
+    var sort_rand = new Gtk.MenuItem.with_label( _( "Randomize" ) );
+    sort_rand.activate.connect( sort_randomly );
+
     /* Add the menu items to the menu */
     add( _copy );
     add( _cut );
@@ -159,7 +170,13 @@ public class NodeMenu : Gtk.Menu {
     add( selnode );
     add( _center );
     add( new SeparatorMenuItem() );
+    add( _sortby );
+    add( new SeparatorMenuItem() );
     add( _detach );
+
+    /* Add the items to the sort menu */
+    sortmenu.add( sort_alpha );
+    sortmenu.add( sort_rand );
 
     /* Add the items to the selection menu */
     selmenu.add( _selroot );
@@ -208,6 +225,12 @@ public class NodeMenu : Gtk.Menu {
     return( (current != null) && !current.is_root() );
   }
 
+  /* Returns true if the currently selected node has more than one child node */
+  private bool node_sortable() {
+    Node? current = _da.get_current_node();
+    return( (current != null) && (current.children().length > 1) );
+  }
+
   /*
    Returns true if there is a currently selected node that is currently
    folded.
@@ -226,6 +249,7 @@ public class NodeMenu : Gtk.Menu {
     _parent.set_sensitive( node_parentable() );
     _fold.set_sensitive( node_foldable() );
     _detach.set_sensitive( _da.detachable() );
+    _sortby.set_sensitive( node_sortable() );
     _selroot.set_sensitive( _da.root_selectable() );
     _selnext.set_sensitive( _da.sibling_selectable() );
     _selprev.set_sensitive( _da.sibling_selectable() );
@@ -368,6 +392,14 @@ public class NodeMenu : Gtk.Menu {
   /* Centers the current node */
   private void center_current_node() {
     _da.center_current_node();
+  }
+
+  private void sort_alphabetically() {
+    _da.sort_alphabetically();
+  }
+
+  private void sort_randomly() {
+    _da.sort_randomly();
   }
 
 }

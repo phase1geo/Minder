@@ -2670,6 +2670,7 @@ public class DrawArea : Gtk.DrawingArea {
             }
             break;
           case "s" :  see();  break;
+          case "S" :  sort_alphabetically();  break;
           case "z" :  zoom_out();  break;
           case "Z" :  zoom_in();  break;
           case "h" :  handle_left( false );  break;
@@ -3204,6 +3205,41 @@ public class DrawArea : Gtk.DrawingArea {
       _connections.update_alpha();
       queue_draw();
     }
+  }
+
+  /* Sorts and re-arranges the children of the given parent using the given array */
+  private void sort_children( Node parent, CompareFunc<Node> sort_fn ) {
+    var children = new SList<Node>();
+    undo_buffer.add_item( new UndoNodeSort( parent ) );
+    animator.add_nodes( "sort nodes" );
+    for( int i=0; i<parent.children().length; i++ ) {
+      children.append( parent.children().index( i ) );
+    }
+    children.@foreach( (child) => {
+      child.detach( child.side );
+    });
+    children.sort( sort_fn );
+    children.@foreach( (child) => {
+      child.attach( parent, -1, null, false );
+    });
+    animator.animate();
+    changed();
+  }
+
+  /* Sorts the current node's children alphabetically */
+  public void sort_alphabetically() {
+    CompareFunc<Node> sort_fn = (a, b) => {
+      return( strcmp( a.name.text, b.name.text ) );
+    };
+    sort_children( _current_node, sort_fn );
+  }
+
+  /* Sorts the current node's children in a random manner */
+  public void sort_randomly() {
+    CompareFunc<Node> sort_fn = (a, b) => {
+      return( (Random.int_range( 0, 2 ) == 0) ? -1 : 1 );
+    };
+    sort_children( _current_node, sort_fn );
   }
 
 }

@@ -66,6 +66,7 @@ sources += files(
     'undo_actions/UndoNodePaste.vala',
     'undo_actions/UndoNodeResize.vala',
     'undo_actions/UndoNodeReveal.vala',
+    'undo_actions/UndoNodeSort.vala',
     'undo_actions/UndoNodeTask.vala',
     'undo_actions/UndoStyleAffectChange.vala',
     'undo_actions/UndoStyleChange.vala',
