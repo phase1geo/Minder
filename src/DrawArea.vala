@@ -808,6 +808,31 @@ public class DrawArea : Gtk.DrawingArea {
     auto_save();
   }
 
+  /* Called when the linking process has successfully completed */
+  private void end_link( Node node ) {
+    if( _current_connection == null ) return;
+    _current_connection    = null;
+    _last_node.linked_node = node;
+    undo_buffer.add_item( new UndoNodeLink( _last_node, null ) );
+    _last_connection  = null;
+    _last_node        = null;
+    _attach_node.mode = NodeMode.NONE;
+    _attach_node      = null;
+    changed();
+    queue_draw();
+  }
+
+  /* Delete the current node link */
+  public void delete_current_link() {
+    if( _current_node != null ) {
+      Node? old_link = _current_node.linked_node;
+      _current_node.linked_node = null;
+      undo_buffer.add_item( new UndoNodeLink( _current_node, old_link ) );
+      changed();
+      queue_draw();
+    }
+  }
+
   /*
    Changes the current node's link color and propagates that color to all
    descendants.
@@ -899,6 +924,9 @@ public class DrawArea : Gtk.DrawingArea {
       toggle_task( node );
       current_changed();
       return( false );
+    } else if( node.is_within_linked_node( scaled_x, scaled_y ) ) {
+      select_linked_node();
+      return( false );
     } else if( node.is_within_fold( scaled_x, scaled_y ) ) {
       toggle_fold( node );
       current_changed();
@@ -972,7 +1000,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
     }
 
-    if( (_attach_node == null) || (_current_connection == null) || (_current_connection.mode != ConnMode.CONNECTING) ) {
+    if( (_attach_node == null) || (_current_connection == null) || ((_current_connection.mode != ConnMode.CONNECTING) && (_current_connection.mode != ConnMode.LINKING)) ) {
       Connection? match_conn = _current_connection;
       if( _current_connection == null ) {
         if( (match_conn = _connections.within_title( x, y )) == null ) {
@@ -1394,6 +1422,7 @@ public class DrawArea : Gtk.DrawingArea {
             queue_draw();
             break;
           case ConnMode.CONNECTING :
+          case ConnMode.LINKING    :
             update_connection( event.x, event.y );
             for( int i=0; i<_nodes.length; i++ ) {
               Node? match = _nodes.index( i ).contains( scaled_x, scaled_y, null );
@@ -1448,7 +1477,7 @@ public class DrawArea : Gtk.DrawingArea {
       _motion  = true;
     } else {
       if( _current_connection != null )  {
-        if( _current_connection.mode == ConnMode.CONNECTING ) {
+        if( (_current_connection.mode == ConnMode.CONNECTING) || (_current_connection.mode == ConnMode.LINKING) ) {
           update_connection( event.x, event.y );
         }
         if( _current_connection.within_drag_handle( scaled_x, scaled_y ) ||
@@ -1470,7 +1499,7 @@ public class DrawArea : Gtk.DrawingArea {
       for( int i=0; i<_nodes.length; i++ ) {
         Node match = _nodes.index( i ).contains( scaled_x, scaled_y, null );
         if( match != null ) {
-          if( (_current_connection != null) && (_current_connection.mode == ConnMode.CONNECTING) ) {
+          if( (_current_connection != null) && ((_current_connection.mode == ConnMode.CONNECTING) || (_current_connection.mode == ConnMode.LINKING)) ) {
             _attach_node      = match;
             _attach_node.mode = NodeMode.ATTACHABLE;
           } else if( match.is_within_task( scaled_x, scaled_y ) ) {
@@ -1478,6 +1507,8 @@ public class DrawArea : Gtk.DrawingArea {
             set_tooltip_markup( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
           } else if( match.is_within_note( scaled_x, scaled_y ) ) {
             set_tooltip_markup( match.note );
+          } else if( match.is_within_linked_node( scaled_x, scaled_y ) ) {
+            set_cursor( CursorType.HAND1 );
           } else if( match.is_within_resizer( scaled_x, scaled_y ) ) {
             set_cursor( CursorType.SB_H_DOUBLE_ARROW );
             set_tooltip_markup( null );
@@ -1516,9 +1547,13 @@ public class DrawArea : Gtk.DrawingArea {
 
       /* If the connection end is released on an attachable node, attach the connection to the node */
       if( _attach_node != null ) {
-        end_connection( _attach_node );
-        if( _last_connection != null ) {
-          undo_buffer.add_item( new UndoConnectionChange( _( "connection endpoint change" ), _last_connection, _current_connection ) );
+        if( _current_connection.mode == ConnMode.LINKING ) {
+          end_link( _attach_node );
+        } else {
+          end_connection( _attach_node );
+          if( _last_connection != null ) {
+            undo_buffer.add_item( new UndoConnectionChange( _( "connection endpoint change" ), _last_connection, _current_connection ) );
+          }
         }
         _last_connection = null;
 
@@ -1795,6 +1830,15 @@ public class DrawArea : Gtk.DrawingArea {
   public void select_parent_node() {
     if( (_current_node != null) && !_current_node.is_root() ) {
       if( select_node( _current_node.parent ) ) {
+        queue_draw();
+      }
+    }
+  }
+
+  /* Selects the node that is linked to this node */
+  public void select_linked_node() {
+    if( (_current_node != null) && (_current_node.linked_node != null) ) {
+      if( select_node( _current_node.linked_node ) ) {
         queue_draw();
       }
     }
@@ -2677,7 +2721,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "j" :  handle_down( false );  break;
           case "k" :  handle_up( false );  break;
           case "l" :  handle_right( false );  break;
-          case "x" :  start_connection( true );  break;
+          case "x" :  start_connection( true, false );  break;
           case "X" :  select_attached_connection();  break;
           default :
             // This is a key that doesn't have any associated functionality
@@ -3077,10 +3121,10 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Starts a connection from the current node */
-  public void start_connection( bool key ) {
+  public void start_connection( bool key, bool link ) {
     if( _current_node == null ) return;
     _current_connection      = new Connection( this, _current_node );
-    _current_connection.mode = ConnMode.CONNECTING;
+    _current_connection.mode = link ? ConnMode.LINKING : ConnMode.CONNECTING;
     if( key ) {
       double x, y, w, h;
       _current_node.bbox( out x, out y, out w, out h );

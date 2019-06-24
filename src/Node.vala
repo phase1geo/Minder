@@ -126,6 +126,7 @@ public class Node : Object {
   private   Style        _style        = new Style();
   private   double       _max_width    = 200;
   private   bool         _loaded       = true;
+  private   Node         _linked_node  = null;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -272,6 +273,15 @@ public class Node : Object {
       }
     }
   }
+  public Node? linked_node {
+    get {
+      return( _linked_node );
+    }
+    set {
+      _linked_node = value;
+      update_size();
+    }
+  }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -400,7 +410,7 @@ public class Node : Object {
     var orig_height = _height;
     var margin      = (style.node_margin  == null) ? 0 : style.node_margin;
     var padding     = (style.node_padding == null) ? 0 : style.node_padding;
-    var name_width  = task_width() + _name.width + note_width();
+    var name_width  = task_width() + _name.width + note_width() + linked_node_width();
     if( _image != null ) {
       _width  = (margin * 2) + (padding * 2) + ((name_width < _image.width) ? _image.width : name_width);
       _height = (margin * 2) + (padding * 2) + _image.height + padding + _name.height;
@@ -511,12 +521,22 @@ public class Node : Object {
     h = _task_radius * 2;
   }
 
+  protected virtual void linked_node_bbox( out double x, out double y, out double w, out double h ) {
+    int    margin     = style.node_margin  ?? 0;
+    int    padding    = style.node_padding ?? 0;
+    double img_height = (_image == null) ? 0 : (_image.height + padding);
+    x = posx + (_width - (linked_node_width() + padding + margin)) + _ipadx;
+    y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
+    w = 11;
+    h = 11;
+  }
+
   /* Returns the positional information for where the note item is located (if it exists) */
   protected virtual void note_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
-    x = posx + (_width - (note_width() + padding + margin)) + _ipadx;
+    x = posx + (_width - (note_width() + linked_node_width() + padding + margin)) + _ipadx;
     y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
     w = 11;
     h = 11;
@@ -563,6 +583,16 @@ public class Node : Object {
       double nx, ny, nw, nh;
       note_bbox( out nx, out ny, out nw, out nh );
       return( Utils.is_within_bounds( x, y, nx, ny, nw, nh ) );
+    } else {
+      return( false );
+    }
+  }
+
+  public virtual bool is_within_linked_node( double x, double y ) {
+    if( linked_node != null ) {
+      double lx, ly, lw, lh;
+      linked_node_bbox( out lx, out ly, out lw, out lh );
+      return( Utils.is_within_bounds( x, y, lx, ly, lw, lh ) );
     } else {
       return( false );
     }
@@ -1074,6 +1104,11 @@ public class Node : Object {
   /* Returns the width of the note indicator */
   public double note_width() {
     return( (note.length > 0) ? (10 + _ipadx) : 0 );
+  }
+
+  /* Returns the width of the linked node indicator */
+  public double linked_node_width() {
+    return( (linked_node != null) ? (10 + _ipadx) : 0 );
   }
 
   /* Moves this node into the proper position within the parent node */
@@ -1625,6 +1660,39 @@ public class Node : Object {
 
   }
 
+  protected virtual void draw_link_node( Context ctx, RGBA reg_color, RGBA sel_color, RGBA bg_color ) {
+
+    if( linked_node != null ) {
+
+      double x, y, w, h;
+      RGBA   color = (mode == NodeMode.CURRENT) ? sel_color :
+                     style.is_fillable()        ? bg_color  :
+                                                  reg_color;
+
+      linked_node_bbox( out x, out y, out w, out h );
+
+      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      ctx.new_path();
+      ctx.set_line_width( 1 );
+      ctx.move_to( (x + 3), y );
+      ctx.line_to( x, y );
+      ctx.line_to( x, (y + 10) );
+      ctx.line_to( (x + 10), (y + 10) );
+      ctx.line_to( (x + 10), (y + 7) );
+      ctx.stroke();
+      ctx.move_to( (x + 4), (y - 1) );
+      ctx.line_to( (x + 11), y );
+      ctx.line_to( (x + 11), (y + 6) );
+      ctx.close_path();
+      ctx.fill();
+      ctx.move_to( (x + 10), y );
+      ctx.line_to( (x + 4), (y + 6) );
+      ctx.stroke();
+
+    }
+
+  }
+
   /* Draw the fold indicator */
   protected virtual void draw_common_fold( Context ctx, RGBA bg_color, RGBA fg_color ) {
 
@@ -1789,6 +1857,7 @@ public class Node : Object {
         draw_acc_task( ctx, theme.root_foreground );
       }
       draw_common_note( ctx, theme.root_foreground, theme.nodesel_foreground, theme.root_foreground );
+      draw_link_node( ctx, theme.root_foreground, theme.nodesel_foreground, theme.root_foreground );
       draw_common_fold( ctx, theme.root_background, theme.root_foreground );
       draw_attachable( ctx, theme, theme.root_background );
       draw_resizer( ctx, theme );
@@ -1804,6 +1873,7 @@ public class Node : Object {
         draw_acc_task( ctx, (style.is_fillable() ? theme.background : _link_color) );
       }
       draw_common_note( ctx, theme.foreground, theme.nodesel_foreground, theme.background );
+      draw_link_node( ctx, theme.root_foreground, theme.nodesel_foreground, theme.root_foreground );
       draw_common_fold( ctx, _link_color, theme.background );
       draw_attachable( ctx, theme, theme.background );
       draw_resizer( ctx, theme );

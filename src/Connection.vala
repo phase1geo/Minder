@@ -28,6 +28,7 @@ using Gee;
 /* Connection mode value for the Connection.mode property */
 public enum ConnMode {
   NONE = 0,    // Normally drawn mode
+  LINKING,     // Indicates that the connection is being used to create a node link
   CONNECTING,  // Indicates that the connection is being made between two nodes
   SELECTED,    // Indicates that the connection is currently selected
   ADJUSTING,   // Indicates that we are moving the drag handle to change the line shape

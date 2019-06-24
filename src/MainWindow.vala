@@ -825,6 +825,7 @@ public class MainWindow : ApplicationWindow {
       }
       da.get_doc().filename = fname;
       da.get_doc().save();
+      _nb.current.label = GLib.Path.get_basename( fname );
       update_title();
       retval = true;
     }
