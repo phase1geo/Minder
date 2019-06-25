@@ -138,7 +138,7 @@ public class NodeMenu : Gtk.Menu {
 
     _sellink = new Gtk.MenuItem.with_label( _( "Linked Node" ) );
     _sellink.activate.connect( select_linked_node );
-    Utils.add_accel_label( _sellink, 'l', 0 );
+    Utils.add_accel_label( _sellink, 'Y', Gdk.ModifierType.SHIFT_MASK );
 
     _selconn = new Gtk.MenuItem.with_label( _( "Connection" ) );
     _selconn.activate.connect( select_connection );
@@ -421,6 +421,7 @@ public class NodeMenu : Gtk.Menu {
 
   /* Selects the node the current node is linked to */
   private void select_linked_node() {
+    stdout.printf( "In select_linked_node\n" );
     _da.select_linked_node();
   }
 

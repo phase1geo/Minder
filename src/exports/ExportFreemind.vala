@@ -52,7 +52,9 @@ public class ExportFreemind : Object {
 
     n->new_prop( "ID", "id_" + node.id().to_string() );
     n->new_prop( "TEXT", node.name.text );
-    // TBD - Not supported yet  n->new_prop( "LINK", "" );
+    if( node.linked_node != null ) {
+      n->new_prop( "LINK", "#id_" + node.linked_node.id().to_string() );
+    }
     n->new_prop( "FOLDED", node.folded.to_string() );
     n->new_prop( "COLOR", Utils.color_from_rgba( node.link_color ) );
     n->new_prop( "POSITION", ((node.side == NodeSide.LEFT) ? "left" : "right") );
@@ -137,6 +139,7 @@ public class ExportFreemind : Object {
 
     var color_map = new HashMap<string,RGBA?>();
     var id_map    = new HashMap<string,int>();
+    var link_ids  = new Array<NodeLinkInfo?>();
     var to_nodes  = new Array<string>();
 
     /* Not sure what to do with the version information */
@@ -148,10 +151,15 @@ public class ExportFreemind : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "node" ) {
-          var root = import_node( it, da, null, color_map, id_map, to_nodes );
+          var root = import_node( it, da, null, color_map, id_map, link_ids, to_nodes );
           da.get_nodes().append_val( root );
         }
       }
+    }
+
+    /* Connect linked nodes */
+    for( int i=0; i<link_ids.length; i++ ) {
+      link_ids.index( i ).node.linked_node = da.get_node( da.get_nodes(), id_map.get( link_ids.index( i ).id_str ) );
     }
 
     /* Finish up the connections */
@@ -167,7 +175,7 @@ public class ExportFreemind : Object {
   }
 
   /* Parses the given Freemind node */
-  public static Node import_node( Xml.Node* n, DrawArea da, Node? parent, HashMap<string,RGBA?> color_map, HashMap<string,int> id_map, Array<string> to_nodes ) {
+  public static Node import_node( Xml.Node* n, DrawArea da, Node? parent, HashMap<string,RGBA?> color_map, HashMap<string,int> id_map, Array<NodeLinkInfo?> link_ids, Array<string> to_nodes ) {
 
     var node = new Node( da, da.layouts.get_default() );
 
@@ -186,7 +194,7 @@ public class ExportFreemind : Object {
 
     string? l = n->get_prop( "LINK" );
     if( l != null ) {
-      /* Not currently supported */
+      link_ids.append_val( NodeLinkInfo( l.substring( 1 ), node ) );
     }
 
     string? f = n->get_prop( "FOLDED" );
@@ -213,7 +221,7 @@ public class ExportFreemind : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "node"      :  import_node( it, da, node, color_map, id_map, to_nodes );  break;
+          case "node"      :  import_node( it, da, node, color_map, id_map, link_ids, to_nodes );  break;
           case "edge"      :  import_edge( it, node );  break;
           case "font"      :  import_font( it, node );  break;
           case "icon"      :  break;  // Not implemented

@@ -98,6 +98,15 @@ public struct NodeInfo {
   }
 }
 
+public struct NodeLinkInfo {
+  string id_str;
+  Node   node;
+  public NodeLinkInfo( string id, Node n ) {
+    id_str = id;
+    node   = n;
+  }
+}
+
 public class Node : Object {
 
   private static int _next_id = 0;
@@ -748,7 +757,7 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, HashMap<int,int> id_map ) {
+  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, HashMap<int,int> id_map, Array<NodeLinkInfo?> link_ids ) {
 
     _loaded = false;
 
@@ -790,6 +799,11 @@ public class Node : Object {
       _task_done  = int.parse( tc );
     }
 
+    string? ln = n->get_prop( "link" );
+    if( ln != null ) {
+      link_ids.append_val( NodeLinkInfo( ln, this ) );
+    }
+
     string? s = n->get_prop( "side" );
     if( s != null ) {
       side = NodeSide.parse( s );
@@ -824,7 +838,7 @@ public class Node : Object {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var child = new Node( da, _layout );
-                child.load( da, it2, false, id_map );
+                child.load( da, it2, false, id_map, link_ids );
                 child.attach( this, -1, null );
               }
             }
@@ -869,6 +883,9 @@ public class Node : Object {
     node->new_prop( "height", _height.to_string() );
     if( (_task_count > 0) && is_leaf() ) {
       node->new_prop( "task", _task_done.to_string() );
+    }
+    if( _linked_node != null ) {
+      node->new_prop( "link", _linked_node.id().to_string() );
     }
     node->new_prop( "side", side.to_string() );
     node->new_prop( "fold", _folded.to_string() );
@@ -1674,20 +1691,18 @@ public class Node : Object {
       Utils.set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();
       ctx.set_line_width( 1 );
-      ctx.move_to( (x + 3), y );
-      ctx.line_to( x, y );
-      ctx.line_to( x, (y + 10) );
-      ctx.line_to( (x + 10), (y + 10) );
-      ctx.line_to( (x + 10), (y + 7) );
-      ctx.stroke();
-      ctx.move_to( (x + 4), (y - 1) );
-      ctx.line_to( (x + 11), y );
-      ctx.line_to( (x + 11), (y + 6) );
+      ctx.move_to( x, (y + 3) );
+      ctx.line_to( (x + 5), (y + 3) );
+      ctx.line_to( (x + 5), (y + 1) );
+      ctx.line_to( (x + 6), (y + 1) );
+      ctx.line_to( (x + 10), (y + 4) );
+      ctx.line_to( (x + 10), (y + 5) );
+      ctx.line_to( (x + 6), (y + 8) );
+      ctx.line_to( (x + 5), (y + 8) );
+      ctx.line_to( (x + 5), (y + 6) );
+      ctx.line_to( x, (y + 6) );
       ctx.close_path();
       ctx.fill();
-      ctx.move_to( (x + 10), y );
-      ctx.line_to( (x + 4), (y + 6) );
-      ctx.stroke();
 
     }
 
