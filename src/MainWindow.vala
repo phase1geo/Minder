@@ -210,7 +210,10 @@ public class MainWindow : ApplicationWindow {
   /* Called whenever the current tab is changed */
   private void tab_changed( Tab? old_tab, Tab new_tab ) {
     var bin = (Gtk.Bin)new_tab.page;
-    canvas_changed( (DrawArea)bin.get_child() );
+    var da  = bin.get_child() as DrawArea;
+    do_buffer_changed();
+    on_current_changed();
+    canvas_changed( da );
     save_tab_state();
   }
 
@@ -264,8 +267,12 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Returns the current drawing area */
-  public DrawArea? get_current_da() {
+  public DrawArea? get_current_da( string? caller ) {
+    if( caller != null ) {
+      stdout.printf( "get_current_da called from %s\n", caller );
+    }
     if( _nb.current == null ) { return( null ); }
+    stdout.printf( "In get_current_da, current: %s\n", _nb.current.label );
     var bin = (Gtk.Bin)_nb.current.page;
     return( (DrawArea)bin.get_child() );
   }
@@ -286,7 +293,7 @@ public class MainWindow : ApplicationWindow {
   /* Updates the title */
   private void update_title() {
     var suffix = " \u2014 Minder";
-    var da     = get_current_da();
+    var da     = get_current_da( "update_title" );
     if( (da == null) || !da.get_doc().is_saved() ) {
       _header.set_title( _( "Unnamed Document" ) + suffix );
     } else {
@@ -569,8 +576,8 @@ public class MainWindow : ApplicationWindow {
     _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     _focus_btn.toggled.connect(() => {
       update_title();
-      get_current_da().set_focus_mode( _focus_btn.active );
-      get_current_da().grab_focus();
+      get_current_da( "add_focus_button 1" ).set_focus_mode( _focus_btn.active );
+      get_current_da( "add_focus_button 2" ).grab_focus();
     });
 
     _header.pack_end( _focus_btn );
@@ -740,7 +747,7 @@ public class MainWindow : ApplicationWindow {
       open_file( dialog.get_filename() );
     }
 
-    get_current_da().grab_focus();
+    get_current_da( "do_open_file" ).grab_focus();
 
   }
 
@@ -773,19 +780,20 @@ public class MainWindow : ApplicationWindow {
 
   /* Perform an undo action */
   public void do_undo() {
-    var da = get_current_da();
+    var da = get_current_da( "do_undo" );
     da.undo_buffer.undo();
     da.grab_focus();
   }
 
   /* Perform a redo action */
   public void do_redo() {
-    get_current_da().undo_buffer.redo();
-    get_current_da().grab_focus();
+    var da = get_current_da( "do_redo" );
+    da.undo_buffer.redo();
+    da.grab_focus();
   }
 
   private bool on_canvas_mapped( Gdk.EventAny e ) {
-    get_current_da().queue_draw();
+    get_current_da( "on_canvas_mapped" ).queue_draw();
     return( false );
   }
 
@@ -793,7 +801,7 @@ public class MainWindow : ApplicationWindow {
   private void on_theme_changed() {
     Gtk.Settings? settings = Gtk.Settings.get_default();
     if( settings != null ) {
-      settings.gtk_application_prefer_dark_theme = _prefer_dark || get_current_da().get_theme().prefer_dark;
+      settings.gtk_application_prefer_dark_theme = _prefer_dark || get_current_da( "on_theme_changed" ).get_theme().prefer_dark;
     }
   }
 
@@ -802,7 +810,7 @@ public class MainWindow : ApplicationWindow {
    the undo and redo buffer buttons.
   */
   public void do_buffer_changed() {
-    var da = get_current_da();
+    var da = get_current_da( "do_buffer_changed" );
     _undo_btn.set_sensitive( da.undo_buffer.undoable() );
     _undo_btn.set_tooltip_text( da.undo_buffer.undo_tooltip() );
     _redo_btn.set_sensitive( da.undo_buffer.redoable() );
@@ -819,7 +827,7 @@ public class MainWindow : ApplicationWindow {
     dialog.add_filter( filter );
     if( dialog.run() == ResponseType.ACCEPT ) {
       var fname = dialog.get_filename();
-      var da    = get_current_da();
+      var da    = get_current_da( "save_file 1" );
       if( fname.substring( -7, -1 ) != ".minder" ) {
         fname += ".minder";
       }
@@ -829,7 +837,7 @@ public class MainWindow : ApplicationWindow {
       update_title();
       retval = true;
     }
-    get_current_da().grab_focus();
+    get_current_da( "save_file 2" ).grab_focus();
     return( retval );
   }
 
@@ -840,13 +848,14 @@ public class MainWindow : ApplicationWindow {
 
   /* Called whenever the node selection changes in the canvas */
   private void on_current_changed() {
-    var da = get_current_da();
+    var da = get_current_da( "on_current_changed" );
     _zoom_sel.set_sensitive( da.get_current_node() != null );
-    if( da.get_current_node() != null ) {
+    if( da.get_focus_mode() ) {
+      _focus_btn.active = true;
       _focus_btn.set_sensitive( true );
     } else {
       _focus_btn.active = false;
-      _focus_btn.set_sensitive( false );
+      _focus_btn.set_sensitive( da.get_current_node() != null );
     }
   }
 
@@ -872,8 +881,8 @@ public class MainWindow : ApplicationWindow {
       if( !_inspector.reveal_child ) {
         Timeout.add( 501, move_inspector_to_pane );
         _inspector.reveal_child = true;
-        if( get_current_da() != null ) {
-          get_current_da().see( -300 );
+        if( get_current_da( "show_properties 1" ) != null ) {
+          get_current_da( "show_properties 2" ).see( -300 );
         }
       }
       _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
@@ -899,7 +908,7 @@ public class MainWindow : ApplicationWindow {
     _pane.remove( _inspector );
     _pbox.pack_start( _inspector, false, true, 0 );
     _inspector.reveal_child = false;
-    get_current_da().grab_focus();
+    get_current_da( "hide_properties" ).grab_focus();
     _settings.set_boolean( "current-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",     false );
     _settings.set_boolean( "style-properties-shown",   false );
@@ -924,7 +933,7 @@ public class MainWindow : ApplicationWindow {
   private bool adjust_zoom( ScrollType scroll, double new_value ) {
     var value        = zoom_to_value( new_value );
     var scale_factor = value / 100;
-    var da           = get_current_da();
+    var da           = get_current_da( "adjust_zoom" );
     da.set_scaling_factor( scale_factor );
     da.queue_draw();
     return( false );
@@ -937,7 +946,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Called when the user uses the Control-s keyboard shortcut */
   private void action_save() {
-    var da = get_current_da();
+    var da = get_current_da( "action_save" );
     if( da.get_doc().is_saved() ) {
       da.get_doc().save();
     } else {
@@ -952,35 +961,35 @@ public class MainWindow : ApplicationWindow {
 
   /* Zooms into the image (makes things larger) */
   private void action_zoom_in() {
-    var da = get_current_da();
+    var da = get_current_da( "action_zoom_in" );
     da.zoom_in();
     da.grab_focus();
   }
 
   /* Zooms out of the image (makes things smaller) */
   private void action_zoom_out() {
-    var da = get_current_da();
+    var da = get_current_da( "action_zoom_out" );
     da.zoom_out();
     da.grab_focus();
   }
 
   /* Zooms to make all nodes visible within the viewer */
   private void action_zoom_fit() {
-    var da = get_current_da();
+    var da = get_current_da( "action_zoom_fit" );
     da.zoom_to_fit();
     da.grab_focus();
   }
 
   /* Zooms to make the currently selected node and its tree put into view */
   private void action_zoom_selected() {
-    var da = get_current_da();
+    var da = get_current_da( "action_zoom_selected" );
     da.zoom_to_selected();
     da.grab_focus();
   }
 
   /* Sets the zoom to 100% */
   private void action_zoom_actual() {
-    var da = get_current_da();
+    var da = get_current_da( "action_zoom_actual" );
     da.zoom_actual();
     da.grab_focus();
   }
@@ -999,7 +1008,7 @@ public class MainWindow : ApplicationWindow {
     };
     _search_items.clear();
     if( _search_entry.get_text() != "" ) {
-      get_current_da().get_match_items(
+      get_current_da( "on_search_change" ).get_match_items(
         _search_entry.get_text().casefold(),
         search_opts,
         ref _search_items
@@ -1015,7 +1024,7 @@ public class MainWindow : ApplicationWindow {
     TreeIter    it;
     Node?       node = null;
     Connection? conn = null;
-    var         da   = get_current_da();
+    var         da   = get_current_da( "on_search_clicked" );
     _search_items.get_iter( out it, path );
     _search_items.get( it, 2, &node, 3, &conn, -1 );
     if( node != null ) {
@@ -1122,7 +1131,7 @@ public class MainWindow : ApplicationWindow {
 
       var fname  = dialog.get_filename();
       var filter = dialog.get_filter();
-      var da     = get_current_da();
+      var da     = get_current_da( "action_export" );
 
       if( bmp_filter == filter ) {
         ExportImage.export( repair_filename( fname, {".bmp"} ), "bmp", da );
@@ -1174,7 +1183,7 @@ public class MainWindow : ApplicationWindow {
   /* Exports the model to the printer */
   private void action_print() {
     var print = new ExportPrint();
-    print.print( get_current_da(), this );
+    print.print( get_current_da( "action_print" ), this );
   }
 
   /* Save the current tab state */
