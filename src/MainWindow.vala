@@ -135,8 +135,9 @@ public class MainWindow : ApplicationWindow {
     _nb = new DynamicNotebook();
     _nb.add_button_visible = false;
     _nb.tab_bar_behavior   = DynamicNotebook.TabBarBehavior.SINGLE;
-    // _nb.new_tab_requested.connect( do_new_file );
+    _nb.allow_restoring    = true;
     _nb.tab_switched.connect( tab_changed );
+    _nb.close_tab_requested.connect( close_tab_requested );
 
     /* Create title toolbar */
     var new_btn = on_elementary
@@ -192,7 +193,6 @@ public class MainWindow : ApplicationWindow {
     _pane = new Paned( Orientation.HORIZONTAL );
     _pane.pack1( _nb, true, true );
     _pane.move_handle.connect(() => {
-      stdout.printf( "position: %d\n", _pane.position );
       return( false );
     });
 
@@ -211,10 +211,19 @@ public class MainWindow : ApplicationWindow {
   private void tab_changed( Tab? old_tab, Tab new_tab ) {
     var bin = (Gtk.Bin)new_tab.page;
     var da  = bin.get_child() as DrawArea;
-    do_buffer_changed();
-    on_current_changed();
+    update_title( da );
+    do_buffer_changed( da );
+    on_current_changed( da );
     canvas_changed( da );
-    save_tab_state();
+    save_tab_state( new_tab );
+  }
+
+  /* Called whenever the user clicks on the close button and the tab is unnamed */
+  private bool close_tab_requested( Tab tab ) {
+    var bin = (Gtk.Bin)tab.page;
+    var da  = bin.get_child() as DrawArea;
+    var ret = da.get_doc().is_saved() || show_save_warning( da );
+    return( ret );
   }
 
   /* Adds a new tab to the notebook */
@@ -239,15 +248,14 @@ public class MainWindow : ApplicationWindow {
     var overlay = new Overlay();
     overlay.add( da );
 
-    var title = (fname == null) ? _( "Unnamed" ) : GLib.Path.get_basename( fname );
-    var tab   = new Tab( title, null, overlay );
+    var tab = new Tab( da.get_doc().label, null, overlay );
     tab.pinnable = false;
 
     /* Add the page to the notebook */
     _nb.insert_tab( tab, _nb.n_tabs );
 
     /* Update the titlebar */
-    update_title();
+    update_title( da );
 
     /* Make the drawing area new */
     if( reason == TabAddReason.NEW ) {
@@ -267,12 +275,11 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Returns the current drawing area */
-  public DrawArea? get_current_da( string? caller ) {
+  public DrawArea? get_current_da( string? caller = null ) {
     if( caller != null ) {
       stdout.printf( "get_current_da called from %s\n", caller );
     }
     if( _nb.current == null ) { return( null ); }
-    stdout.printf( "In get_current_da, current: %s\n", _nb.current.label );
     var bin = (Gtk.Bin)_nb.current.page;
     return( (DrawArea)bin.get_child() );
   }
@@ -291,9 +298,8 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Updates the title */
-  private void update_title() {
+  private void update_title( DrawArea? da ) {
     var suffix = " \u2014 Minder";
-    var da     = get_current_da( "update_title" );
     if( (da == null) || !da.get_doc().is_saved() ) {
       _header.set_title( _( "Unnamed Document" ) + suffix );
     } else {
@@ -575,9 +581,10 @@ public class MainWindow : ApplicationWindow {
     _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "Ctrl + Shift + F" ) );
     _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     _focus_btn.toggled.connect(() => {
-      update_title();
-      get_current_da( "add_focus_button 1" ).set_focus_mode( _focus_btn.active );
-      get_current_da( "add_focus_button 2" ).grab_focus();
+      var da = get_current_da();
+      update_title( da );
+      da.set_focus_mode( _focus_btn.active );
+      da.grab_focus();
     });
 
     _header.pack_end( _focus_btn );
@@ -666,7 +673,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Displays the save warning dialog window */
-  public bool show_save_warning() {
+  public bool show_save_warning( DrawArea da ) {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
       _( "Save current unnamed document?" ),
@@ -689,21 +696,18 @@ public class MainWindow : ApplicationWindow {
     dialog.set_default_response( ResponseType.ACCEPT );
     dialog.set_title( "" );
 
-    dialog.response.connect((id) => {
-      dialog.destroy();
-      if( id == ResponseType.ACCEPT ) {
-        if( !save_file() ) {
-          id = ResponseType.CANCEL;
-        }
-      }
-      if( (id == ResponseType.CLOSE) || (id == ResponseType.ACCEPT) ) {
-        // We need to indicate that the close operation can complete successfully in the tab bar
-      }
-    });
-
     dialog.show_all();
 
-    return( true );
+    var res = dialog.run();
+
+    dialog.destroy();
+
+    switch( res ) {
+      case ResponseType.ACCEPT :  return( save_file( da ) );
+      case ResponseType.CLOSE  :  return( da.get_doc().remove() );
+    }
+
+    return( false );
 
   }
 
@@ -712,10 +716,10 @@ public class MainWindow : ApplicationWindow {
   */
   public void do_new_file() {
 
-    add_tab( null, TabAddReason.NEW );
+    var da = add_tab( null, TabAddReason.NEW );
 
     /* Set the title to indicate that we have an unnamed document */
-    update_title();
+    update_title( da );
 
   }
 
@@ -758,20 +762,19 @@ public class MainWindow : ApplicationWindow {
     }
     if( fname.has_suffix( ".minder" ) ) {
       var da = add_tab( fname, TabAddReason.OPEN );
-      da.get_doc().filename = fname;
-      update_title();
+      update_title( da );
       da.get_doc().load();
       return( true );
     } else if( fname.has_suffix( ".opml" ) ) {
       var new_fname = fname.substring( 0, (fname.length - 5) ) + ".minder";
       var da        = add_tab( new_fname, TabAddReason.IMPORT );
-      update_title();
+      update_title( da );
       ExportOPML.import( fname, da );
       return( true );
     } else if( fname.has_suffix( ".mm" ) ) {
       var new_fname = fname.substring( 0, (fname.length - 3) ) + ".minder";
       var da        = add_tab( new_fname, TabAddReason.IMPORT );
-      update_title();
+      update_title( da );
       ExportFreeplane.import( fname, da );
       return( true );
     }
@@ -809,8 +812,7 @@ public class MainWindow : ApplicationWindow {
    Called whenever the undo buffer changes state.  Updates the state of
    the undo and redo buffer buttons.
   */
-  public void do_buffer_changed() {
-    var da = get_current_da( "do_buffer_changed" );
+  public void do_buffer_changed( DrawArea da ) {
     _undo_btn.set_sensitive( da.undo_buffer.undoable() );
     _undo_btn.set_tooltip_text( da.undo_buffer.undo_tooltip() );
     _redo_btn.set_sensitive( da.undo_buffer.redoable() );
@@ -818,7 +820,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Allow the user to select a filename to save the document as */
-  public bool save_file() {
+  public bool save_file( DrawArea da ) {
     FileChooserNative dialog = new FileChooserNative( _( "Save File" ), this, FileChooserAction.SAVE, _( "Save" ), _( "Cancel" ) );
     FileFilter        filter = new FileFilter();
     bool              retval = false;
@@ -827,28 +829,27 @@ public class MainWindow : ApplicationWindow {
     dialog.add_filter( filter );
     if( dialog.run() == ResponseType.ACCEPT ) {
       var fname = dialog.get_filename();
-      var da    = get_current_da( "save_file 1" );
       if( fname.substring( -7, -1 ) != ".minder" ) {
         fname += ".minder";
       }
       da.get_doc().filename = fname;
       da.get_doc().save();
-      _nb.current.label = GLib.Path.get_basename( fname );
-      update_title();
+      _nb.current.label = da.get_doc().label;
+      update_title( da );
       retval = true;
     }
-    get_current_da( "save_file 2" ).grab_focus();
+    da.grab_focus();
     return( retval );
   }
 
   /* Called when the save as button is clicked */
   public void do_save_as_file() {
-    save_file();
+    var da = get_current_da( "do_save_as_file" );
+    save_file( da );
   }
 
   /* Called whenever the node selection changes in the canvas */
-  private void on_current_changed() {
-    var da = get_current_da( "on_current_changed" );
+  private void on_current_changed( DrawArea da ) {
     _zoom_sel.set_sensitive( da.get_current_node() != null );
     if( da.get_focus_mode() ) {
       _focus_btn.active = true;
@@ -950,7 +951,7 @@ public class MainWindow : ApplicationWindow {
     if( da.get_doc().is_saved() ) {
       da.get_doc().save();
     } else {
-      save_file();
+      save_file( da );
     }
   }
 
@@ -1187,10 +1188,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Save the current tab state */
-  private void save_tab_state() {
-
-    /* TEMPORARY - We are getting segmentation faults in this code */
-    return;
+  private void save_tab_state( Tab current_tab ) {
 
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
 
@@ -1202,15 +1200,18 @@ public class MainWindow : ApplicationWindow {
     var       selected_tab = -1;
     var       i            = 0;
     Xml.Doc*  doc          = new Xml.Doc( "1.0" );
-    Xml.Node* root         = new Xml.Node( null, "minder-tabs" );
+    Xml.Node* root         = new Xml.Node( null, "tabs" );
 
     doc->set_root_element( root );
 
     _nb.tabs.foreach((tab) => {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
-      root->new_text_child( null, "tab", da.get_doc().filename );
-      if( tab == _nb.current ) {
+      var       bin  = (Gtk.Bin)tab.page;
+      var       da   = (DrawArea)bin.get_child();
+      Xml.Node* node = new Xml.Node( null, "tab" );
+      node->new_prop( "path",  da.get_doc().filename );
+      node->new_prop( "saved", da.get_doc().is_saved().to_string() );
+      root->add_child( node );
+      if( tab == current_tab ) {
         selected_tab = i;
       }
       i++;
@@ -1237,10 +1238,11 @@ public class MainWindow : ApplicationWindow {
 
     var root = doc->get_root_element();
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
-      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->children != null) && (it->children->type == Xml.ElementType.TEXT_NODE) ) {
-        var fname = it->children->get_content();
-        var da = add_tab( fname, TabAddReason.LOAD );
-        da.get_doc().filename = fname;
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
+        var fname = it->get_prop( "path" );
+        var saved = it->get_prop( "saved" );
+        var da    = add_tab( fname, TabAddReason.LOAD );
+        da.get_doc().load_filename( fname, bool.parse( saved ) );
         da.get_doc().load();
       }
     }

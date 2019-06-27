@@ -46,6 +46,11 @@ public class Document : Object {
       return( _filename );
     }
   }
+  public string label {
+    owned get {
+      return( GLib.Path.get_basename( _filename ) );
+    }
+  }
   public bool save_needed { private set; get; default = false; }
 
   /* Default constructor */
@@ -78,6 +83,12 @@ public class Document : Object {
     auto_save();
   }
 
+  /* Called when a document filename is loaded from the tab state file */
+  public void load_filename( string fname, bool saved ) {
+    filename   = fname;
+    _from_user = saved;
+  }
+
   /* Returns true if the stored filename came from the user */
   public bool is_saved() {
     return( _from_user );
@@ -103,6 +114,14 @@ public class Document : Object {
     doc->save_format_file( filename, 1 );
     delete doc;
     save_needed = false;
+    return( true );
+  }
+
+  /* Deletes the given unnamed file when called */
+  public bool remove() {
+    if( !_from_user ) {
+      FileUtils.unlink( _filename );
+    }
     return( true );
   }
 

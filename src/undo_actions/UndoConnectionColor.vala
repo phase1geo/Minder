@@ -40,7 +40,7 @@ public class UndoConnectionColor : UndoItem {
   public override void undo( DrawArea da ) {
     _conn.color = _old_color;
     da.queue_draw();
-    da.current_changed();
+    da.current_changed( da );
     da.changed();
   }
 
@@ -48,7 +48,7 @@ public class UndoConnectionColor : UndoItem {
   public override void redo( DrawArea da ) {
     _conn.color = _new_color;
     da.queue_draw();
-    da.current_changed();
+    da.current_changed( da );
     da.changed();
   }
 

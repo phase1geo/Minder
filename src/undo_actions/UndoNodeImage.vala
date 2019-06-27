@@ -39,7 +39,7 @@ public class UndoNodeImage : UndoItem {
   private void change( DrawArea da, NodeImage? img ) {
     _node.set_image( da.image_manager, img );
     da.queue_draw();
-    da.current_changed();
+    da.current_changed( da );
     da.changed();
   }
 

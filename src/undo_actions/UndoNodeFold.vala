@@ -40,7 +40,7 @@ public class UndoNodeFold : UndoItem {
     _node.folded = _old_fold;
     _node.layout.handle_update_by_fold( _node );
     da.queue_draw();
-    da.current_changed();
+    da.current_changed( da );
     da.changed();
   }
 
@@ -49,7 +49,7 @@ public class UndoNodeFold : UndoItem {
     _node.folded = _new_fold;
     _node.layout.handle_update_by_fold( _node );
     da.queue_draw();
-    da.current_changed();
+    da.current_changed( da );
     da.changed();
   }
 
