@@ -185,10 +185,12 @@ public class ImageManager {
   public int add_image( string uri ) {
     var item = find_uri_match( uri );
     if( item == null ) {
+      stdout.printf( "HERE A\n" );
       item = new ImageItem( uri );
       if( !item.copy_file() ) return( -1 );
       _images.append_val( item );
     } else if( !item.exists() ) {
+      stdout.printf( "HERE B\n" );
       if( !item.copy_file() ) return( -1 );
     }
     return( item.id );

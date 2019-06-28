@@ -94,6 +94,11 @@ public class ExportFreeplane : Object {
       }
     }
 
+    /* Add hook if we have an image */
+    if( node.image != null ) {
+      n->add_child( export_hook( node, da ) );
+    }
+
     /* Add nodes */
     for( int i=0; i<node.children().length; i++ ) {
       n->add_child( export_node( node.children().index( i ), da ) );
@@ -171,6 +176,21 @@ public class ExportFreeplane : Object {
 
   }
 
+  /* Used to output a node image */
+  private static Xml.Node* export_hook( Node node, DrawArea da ) {
+
+    Xml.Node* hook  = new Xml.Node( null, "hook" );
+    var       uri   = da.image_manager.get_uri( node.image.id );
+    var       scale = (node.image.width * 1.0) / node.image.crop_w;
+
+    hook->new_prop( "URI",  uri );
+    hook->new_prop( "SIZE", scale.to_string() );
+    hook->new_prop( "NAME", "ExternalObject" );
+
+    return( hook );
+
+  }
+
   /*
    Reads the contents of an OPML file and creates a new document based on
    the stored information.
@@ -184,7 +204,7 @@ public class ExportFreeplane : Object {
     }
 
     /* Load the contents of the file */
-    import_map( da, doc->get_root_element() );
+    import_map( da, doc->get_root_element(), GLib.Path.get_dirname( fname ) );
 
     /* Update the drawing area */
     da.queue_draw();
@@ -197,7 +217,7 @@ public class ExportFreeplane : Object {
   }
 
   /* Parses the OPML head block for information that we will use */
-  private static void import_map( DrawArea da, Xml.Node* n ) {
+  private static void import_map( DrawArea da, Xml.Node* n, string dir ) {
 
     var color_map = new HashMap<string,RGBA?>();
     var id_map    = new HashMap<string,int>();
@@ -213,7 +233,7 @@ public class ExportFreeplane : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "node" ) {
-          var root = import_node( it, da, null, color_map, id_map, link_ids, to_nodes );
+          var root = import_node( it, da, null, color_map, id_map, link_ids, to_nodes, dir );
           da.get_nodes().append_val( root );
         }
       }
@@ -237,7 +257,7 @@ public class ExportFreeplane : Object {
   }
 
   /* Parses the given Freemind node */
-  public static Node import_node( Xml.Node* n, DrawArea da, Node? parent, HashMap<string,RGBA?> color_map, HashMap<string,int> id_map, Array<NodeLinkInfo?> link_ids, Array<string> to_nodes ) {
+  public static Node import_node( Xml.Node* n, DrawArea da, Node? parent, HashMap<string,RGBA?> color_map, HashMap<string,int> id_map, Array<NodeLinkInfo?> link_ids, Array<string> to_nodes, string dir ) {
 
     var node = new Node( da, da.layouts.get_default() );
 
@@ -288,13 +308,14 @@ public class ExportFreeplane : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "node"        :  import_node( it, da, node, color_map, id_map, link_ids, to_nodes );  break;
+          case "node"        :  import_node( it, da, node, color_map, id_map, link_ids, to_nodes, dir );  break;
           case "edge"        :  import_edge( it, node );  break;
           case "font"        :  import_font( it, node );  break;
           case "icon"        :  break;  // Not implemented
           case "cloud"       :  break;  // Not implemented
           case "arrowlink"   :  import_arrowlink( it, da, node, to_nodes );  break;
           case "richcontent" :  import_richcontent( it, node );  break;
+          case "hook"        :  import_hook( it, da, node, dir );  break;
         }
       }
     }
@@ -469,6 +490,40 @@ public class ExportFreeplane : Object {
     }
 
     return( str );
+
+  }
+
+  /* Imports in an image hook */
+  private static void import_hook( Xml.Node* n, DrawArea da, Node node, string dir ) {
+
+    string? name = n->get_prop( "NAME" );
+
+    stdout.printf( "In import_hook, name: %s\n", name );
+
+    if( (name != null) && (name == "ExternalObject") ) {
+
+      int    id    = -1;
+      double scale = 1;
+
+      string? uri = n->get_prop( "URI" );
+      if( uri != null ) {
+        if( !GLib.Path.is_absolute( uri ) ) {
+          uri = GLib.Path.build_path( GLib.Path.DIR_SEPARATOR_S, dir, uri );
+        }
+        id = da.image_manager.add_image( uri );
+        stdout.printf( "uri: %s, id: %d\n", uri, id );
+      }
+
+      string? size = n->get_prop( "SIZE" );
+      if( size != null ) {
+        scale = double.parse( size );
+      }
+
+      if( id != -1 ) {
+        node.set_image( da.image_manager, new NodeImage( da.image_manager, id, node.max_width() ) );
+      }
+
+    }
 
   }
 
