@@ -100,6 +100,7 @@ public class ImageManager {
       try {
         rfile.copy( lfile, FileCopyFlags.OVERWRITE );
       } catch( Error e ) {
+        stdout.printf( "ERROR:  %s, path: %s, uri: %s\n", e.message, get_path(), uri );
         return( false );
       }
       return( true );

@@ -197,6 +197,8 @@ public class ExportFreeplane : Object {
   */
   public static bool import( string fname, DrawArea da ) {
 
+    var ifile = File.new_for_path( Path.get_dirname( fname ) );
+
     /* Read in the contents of the Freemind file */
     var doc = Xml.Parser.parse_file( fname );
     if( doc == null ) {
@@ -204,7 +206,7 @@ public class ExportFreeplane : Object {
     }
 
     /* Load the contents of the file */
-    import_map( da, doc->get_root_element(), GLib.Path.get_dirname( fname ) );
+    import_map( da, doc->get_root_element(), ifile );
 
     /* Update the drawing area */
     da.queue_draw();
@@ -217,7 +219,7 @@ public class ExportFreeplane : Object {
   }
 
   /* Parses the OPML head block for information that we will use */
-  private static void import_map( DrawArea da, Xml.Node* n, string dir ) {
+  private static void import_map( DrawArea da, Xml.Node* n, File ifile ) {
 
     var color_map = new HashMap<string,RGBA?>();
     var id_map    = new HashMap<string,int>();
@@ -233,7 +235,7 @@ public class ExportFreeplane : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "node" ) {
-          var root = import_node( it, da, null, color_map, id_map, link_ids, to_nodes, dir );
+          var root = import_node( it, da, null, color_map, id_map, link_ids, to_nodes, ifile );
           da.get_nodes().append_val( root );
         }
       }
@@ -257,7 +259,7 @@ public class ExportFreeplane : Object {
   }
 
   /* Parses the given Freemind node */
-  public static Node import_node( Xml.Node* n, DrawArea da, Node? parent, HashMap<string,RGBA?> color_map, HashMap<string,int> id_map, Array<NodeLinkInfo?> link_ids, Array<string> to_nodes, string dir ) {
+  public static Node import_node( Xml.Node* n, DrawArea da, Node? parent, HashMap<string,RGBA?> color_map, HashMap<string,int> id_map, Array<NodeLinkInfo?> link_ids, Array<string> to_nodes, File ifile ) {
 
     var node = new Node( da, da.layouts.get_default() );
 
@@ -308,14 +310,14 @@ public class ExportFreeplane : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "node"        :  import_node( it, da, node, color_map, id_map, link_ids, to_nodes, dir );  break;
+          case "node"        :  import_node( it, da, node, color_map, id_map, link_ids, to_nodes, ifile );  break;
           case "edge"        :  import_edge( it, node );  break;
           case "font"        :  import_font( it, node );  break;
           case "icon"        :  break;  // Not implemented
           case "cloud"       :  break;  // Not implemented
           case "arrowlink"   :  import_arrowlink( it, da, node, to_nodes );  break;
           case "richcontent" :  import_richcontent( it, node );  break;
-          case "hook"        :  import_hook( it, da, node, dir );  break;
+          case "hook"        :  import_hook( it, da, node, ifile );  break;
         }
       }
     }
@@ -494,7 +496,7 @@ public class ExportFreeplane : Object {
   }
 
   /* Imports in an image hook */
-  private static void import_hook( Xml.Node* n, DrawArea da, Node node, string dir ) {
+  private static void import_hook( Xml.Node* n, DrawArea da, Node node, File ifile ) {
 
     string? name = n->get_prop( "NAME" );
 
@@ -508,7 +510,11 @@ public class ExportFreeplane : Object {
       string? uri = n->get_prop( "URI" );
       if( uri != null ) {
         if( !GLib.Path.is_absolute( uri ) ) {
-          uri = GLib.Path.build_path( GLib.Path.DIR_SEPARATOR_S, dir, uri );
+          var rfile = ifile.resolve_relative_path( uri );
+          uri = rfile.get_uri();
+        } else {
+          var rfile = File.new_for_path( uri );
+          uri = rfile.get_uri();
         }
         id = da.image_manager.add_image( uri );
         stdout.printf( "uri: %s, id: %d\n", uri, id );
