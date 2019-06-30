@@ -41,9 +41,9 @@ You will need the following dependencies to build Minder:
 * libgee-0.8-dev
 * libarchive-dev
 
-From the command-line within the top Minder directory, run `./app run` to build and run the application.
+From the command-line within the top Minder directory, run `./do run` to build and run the application.
 
-To install, run `sudo ./app install` and then run the application from your application launcher.
+To install, run `sudo ./do install` and then run the application from your application launcher.
 
 ## Distribution packages
 
