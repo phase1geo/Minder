@@ -121,7 +121,7 @@ public class Minder : Granite.Application {
 
     /* If the version was specified, output it and then exit */
     if( version ) {
-      stdout.printf( "1.3.1\n" );
+      stdout.printf( "1.4.0\n" );
       Process.exit( 0 );
     }
 

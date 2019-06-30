@@ -69,6 +69,7 @@ public class MainWindow : ApplicationWindow {
   private Image?            _prop_show      = null;
   private Image?            _prop_hide      = null;
   private bool              _prefer_dark    = false;
+  private bool              _debug          = false;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",          action_save },
@@ -135,7 +136,6 @@ public class MainWindow : ApplicationWindow {
     _nb = new DynamicNotebook();
     _nb.add_button_visible = false;
     _nb.tab_bar_behavior   = DynamicNotebook.TabBarBehavior.SINGLE;
-    _nb.allow_restoring    = true;
     _nb.tab_switched.connect( tab_changed );
     _nb.close_tab_requested.connect( close_tab_requested );
 
@@ -276,7 +276,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Returns the current drawing area */
   public DrawArea? get_current_da( string? caller = null ) {
-    if( caller != null ) {
+    if( _debug && (caller != null) ) {
       stdout.printf( "get_current_da called from %s\n", caller );
     }
     if( _nb.current == null ) { return( null ); }
