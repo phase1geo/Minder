@@ -312,7 +312,9 @@ public class Connection : Object {
     position_title();
     _curve.update_control_from_drag_handle( _dragx, _dragy );
     set_connect_point( _from_node );
-    set_connect_point( _to_node );
+    if( _to_node != null ) {
+      set_connect_point( _to_node );
+    }
   }
 
   /* Handles any resizing changes of either the to or from node */
