@@ -1,4 +1,4 @@
-app/
+build-flatpak/
 build/
 .flatpak-builder
 src/*.o
