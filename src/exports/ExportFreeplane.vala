@@ -22,6 +22,7 @@
 using GLib;
 using Gdk;
 using Gee;
+using Xml;
 
 public class ExportFreeplane : Object {
 
@@ -500,24 +501,27 @@ public class ExportFreeplane : Object {
 
     string? name = n->get_prop( "NAME" );
 
-    stdout.printf( "In import_hook, name: %s\n", name );
-
     if( (name != null) && (name == "ExternalObject") ) {
 
       int    id    = -1;
       double scale = 1;
 
-      string? uri = n->get_prop( "URI" );
-      if( uri != null ) {
-        if( !GLib.Path.is_absolute( uri ) ) {
-          var rfile = ifile.resolve_relative_path( uri );
-          uri = rfile.get_uri();
-        } else {
-          var rfile = File.new_for_path( uri );
-          uri = rfile.get_uri();
+      string? u = n->get_prop( "URI" );
+      if( u != null ) {
+       var uri = URI.parse( u );
+        if( uri != null ) {
+          string uri_str = u;
+          if( uri.scheme == null ) {
+            if( !GLib.Path.is_absolute( uri.path ) ) {
+              var rfile = ifile.resolve_relative_path( uri.path );
+              uri_str = rfile.get_uri();
+            } else {
+              var rfile = File.new_for_path( uri.path );
+              uri_str = rfile.get_uri();
+            }
+          }
+          id = da.image_manager.add_image( uri_str );
         }
-        id = da.image_manager.add_image( uri );
-        stdout.printf( "uri: %s, id: %d\n", uri, id );
       }
 
       string? size = n->get_prop( "SIZE" );
