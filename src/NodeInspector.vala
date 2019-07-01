@@ -452,7 +452,7 @@ public class NodeInspector : Box {
   }
 
   /* Called whenever the theme is changed */
-  private void theme_changed() {
+  private void theme_changed( DrawArea da ) {
 
     int    num_colors = _da.get_theme().num_link_colors();
     RGBA[] colors     = new RGBA[num_colors];

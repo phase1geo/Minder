@@ -62,6 +62,7 @@ public class MapInspector : Box {
     _da = da;
     _da.animator.enable        = _settings.get_boolean( "enable-animations" );
     _da.get_connections().hide = _settings.get_boolean( "hide-connections" );
+    _da.set_theme( _da.get_theme_name() );
     update_theme_layout();
   }
 

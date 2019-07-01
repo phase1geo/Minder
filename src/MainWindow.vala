@@ -292,7 +292,7 @@ public class MainWindow : ApplicationWindow {
       _prefer_dark = desktop_settings.get_boolean( DARK_KEY );
       desktop_settings.changed.connect(() => {
         _prefer_dark = desktop_settings.get_boolean( DARK_KEY );
-        on_theme_changed();
+        on_theme_changed( get_current_da( "handle_prefer_dark_changes" ) );
       });
     }
   }
@@ -801,10 +801,10 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Called whenever the theme is changed */
-  private void on_theme_changed() {
+  private void on_theme_changed( DrawArea da ) {
     Gtk.Settings? settings = Gtk.Settings.get_default();
     if( settings != null ) {
-      settings.gtk_application_prefer_dark_theme = _prefer_dark || get_current_da( "on_theme_changed" ).get_theme().prefer_dark;
+      settings.gtk_application_prefer_dark_theme = _prefer_dark || da.get_theme().prefer_dark;
     }
   }
 

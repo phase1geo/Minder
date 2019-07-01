@@ -103,7 +103,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   public signal void changed();
   public signal void current_changed( DrawArea da );
-  public signal void theme_changed();
+  public signal void theme_changed( DrawArea da );
   public signal void scale_changed( double scale );
   public signal void show_properties( string? tab, bool grab_note );
   public signal void hide_properties();
@@ -235,7 +235,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( orig_theme != null ) {
       map_theme_colors( orig_theme );
     }
-    theme_changed();
+    theme_changed( this );
     queue_draw();
   }
 
@@ -350,9 +350,10 @@ public class DrawArea : Gtk.DrawingArea {
         _theme.get_css_provider(),
         STYLE_PROVIDER_PRIORITY_APPLICATION
       );
-      theme_changed();
+      theme_changed( this );
     }
-/* Set the current theme index */
+
+    /* Set the current theme index */
     string? index = n->get_prop( "index" );
     if( index != null ) {
       _theme.index = int.parse( index );
