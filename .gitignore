@@ -1,4 +1,6 @@
+build-flatpak/
 build/
+.flatpak-builder
 src/*.o
 src/*.c
 src/*.swp

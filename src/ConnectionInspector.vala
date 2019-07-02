@@ -29,19 +29,18 @@ public class ConnectionInspector : Box {
     {"text/uri-list", 0, 0}
   };
 
-  private TextView    _title;
-  private ColorButton _color;
-  private TextView    _note;
-  private DrawArea    _da;
-  private string      _orig_note           = "";
-  private Connection? _connection          = null;
-  private bool        _ignore_title_change = false;
+  private ScrolledWindow _sw;
+  private TextView       _title;
+  private ColorButton    _color;
+  private TextView       _note;
+  private DrawArea?      _da                  = null;
+  private string         _orig_note           = "";
+  private Connection?    _connection          = null;
+  private bool           _ignore_title_change = false;
 
-  public ConnectionInspector( DrawArea da ) {
+  public ConnectionInspector( MainWindow win ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
-
-    _da = da;
 
     /* Create the node widgets */
     create_title();
@@ -49,22 +48,33 @@ public class ConnectionInspector : Box {
     create_note();
     create_buttons();
 
-    _da.current_changed.connect( connection_changed );
+    win.canvas_changed.connect( tab_changed );
 
     show_all();
 
   }
 
-  /* Returns the width of this window */
-  public int get_width() {
-    return( 300 );
+  /* Called whenever the tab in the main window changes */
+  private void tab_changed( DrawArea? da ) {
+    if( _da != null ) {
+      _da.current_changed.disconnect( connection_changed );
+    }
+    if( da != null ) {
+      da.current_changed.connect( connection_changed );
+    }
+    _da = da;
+  }
+
+  /* Sets the width of this inspector to the given value */
+  public void set_width( int width ) {
+    _sw.width_request = width;
   }
 
   /* Creates the name entry */
   private void create_title() {
 
     Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( _( "<b>Title</b>" ) );
+    Label lbl = new Label( Utils.make_title( _( "Title" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
@@ -75,8 +85,13 @@ public class ConnectionInspector : Box {
     _title.buffer.changed.connect( title_changed );
     _title.focus_out_event.connect( title_focus_out );
 
-    box.pack_start( lbl,   true, false );
-    box.pack_start( _title, true, false );
+    var sw = new ScrolledWindow( null, null );
+    sw.min_content_width  = 300;
+    sw.min_content_height = 20;
+    sw.add( _title );
+
+    box.pack_start( lbl, true, false );
+    box.pack_start( sw,  true, false );
 
     pack_start( box, false, true );
 
@@ -85,7 +100,7 @@ public class ConnectionInspector : Box {
   private void create_color() {
 
     Box box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "<b>Color</b>" ) );
+    var lbl = new Label( Utils.make_title( _( "Color" ) ) );
 
     box.homogeneous = true;
     lbl.xalign      = (float)0;
@@ -107,7 +122,7 @@ public class ConnectionInspector : Box {
   private void create_note() {
 
     Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( _( "<b>Note</b>" ) );
+    Label lbl = new Label( Utils.make_title( _( "Note" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
@@ -119,13 +134,13 @@ public class ConnectionInspector : Box {
     _note.focus_in_event.connect( note_focus_in );
     _note.focus_out_event.connect( note_focus_out );
 
-    ScrolledWindow sw = new ScrolledWindow( null, null );
-    sw.min_content_width  = 300;
-    sw.min_content_height = 100;
-    sw.add( _note );
+    _sw = new ScrolledWindow( null, null );
+    _sw.min_content_width  = 300;
+    _sw.min_content_height = 100;
+    _sw.add( _note );
 
     box.pack_start( lbl, false, false );
-    box.pack_start( sw,  true,  true );
+    box.pack_start( _sw,  true,  true );
 
     pack_start( box, true, true );
 

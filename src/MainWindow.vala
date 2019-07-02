@@ -22,6 +22,13 @@
 using Gtk;
 using Gdk;
 
+public enum TabAddReason {
+  NEW,
+  OPEN,
+  IMPORT,
+  LOAD
+}
+
 public class MainWindow : ApplicationWindow {
 
   private const string DESKTOP_SCHEMA = "io.elementary.desktop";
@@ -29,9 +36,11 @@ public class MainWindow : ApplicationWindow {
 
   private GLib.Settings     _settings;
   private HeaderBar?        _header         = null;
-  private DrawArea?         _canvas         = null;
-  private Document?         _doc            = null;
+  private Gtk.AccelGroup?   _accel_group    = null;
+  private DynamicNotebook?  _nb             = null;
   private Revealer?         _inspector      = null;
+  private Box?              _pbox           = null;
+  private Paned             _pane           = null;
   private Stack?            _stack          = null;
   private Popover?          _zoom           = null;
   private Popover?          _search         = null;
@@ -55,10 +64,12 @@ public class MainWindow : ApplicationWindow {
   private ModelButton?      _zoom_sel       = null;
   private Button?           _undo_btn       = null;
   private Button?           _redo_btn       = null;
+  private ToggleButton?     _focus_btn      = null;
   private Button?           _prop_btn       = null;
   private Image?            _prop_show      = null;
   private Image?            _prop_hide      = null;
   private bool              _prefer_dark    = false;
+  private bool              _debug          = false;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",          action_save },
@@ -75,6 +86,8 @@ public class MainWindow : ApplicationWindow {
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
 
   private delegate void ChangedFunc();
+
+  public signal void canvas_changed( DrawArea? da );
 
   /* Create the main window UI */
   public MainWindow( Gtk.Application app, GLib.Settings settings ) {
@@ -94,7 +107,6 @@ public class MainWindow : ApplicationWindow {
     /* Create the header bar */
     _header = new HeaderBar();
     _header.set_show_close_button( true );
-    update_title();
 
     /* Set the main window data */
     title = _( "Minder" );
@@ -113,85 +125,169 @@ public class MainWindow : ApplicationWindow {
     actions.add_action_entries( action_entries, this );
     insert_action_group( "win", actions );
 
-    AccelGroup accel_group = new Gtk.AccelGroup();
-    this.add_accel_group( accel_group );
+    /* Create the accelerator group for the window */
+    _accel_group = new Gtk.AccelGroup();
+    this.add_accel_group( _accel_group );
 
     /* Add keyboard shortcuts */
     add_keyboard_shortcuts( app );
 
-    /* Create and pack the canvas */
-    _canvas = new DrawArea( accel_group );
-    _canvas.current_changed.connect( on_current_changed );
-    _canvas.scale_changed.connect( change_scale );
-    _canvas.show_properties.connect( show_properties );
-    _canvas.hide_properties.connect( hide_properties );
-    _canvas.map_event.connect( on_canvas_mapped );
-    _canvas.undo_buffer.buffer_changed.connect( do_buffer_changed );
-    _canvas.theme_changed.connect( on_theme_changed );
-    _canvas.animator.enable = _settings.get_boolean( "enable-animations" );
+    /* Create the notebook */
+    _nb = new DynamicNotebook();
+    _nb.add_button_visible = false;
+    _nb.tab_bar_behavior   = DynamicNotebook.TabBarBehavior.SINGLE;
+    _nb.tab_switched.connect( tab_changed );
+    _nb.tab_reordered.connect( tab_reordered );
+    _nb.close_tab_requested.connect( close_tab_requested );
 
     /* Create title toolbar */
     var new_btn = on_elementary
       ? new Button.from_icon_name( "document-new", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-new-symbolic" );
-    new_btn.set_tooltip_markup( _( "New File   <i>(Control-N)</i>" ) );
-    new_btn.add_accelerator( "clicked", accel_group, 'n', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    new_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "New File" ), "Ctrl + N" ) );
+    new_btn.add_accelerator( "clicked", _accel_group, 'n', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
 
     var open_btn = on_elementary
       ? new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-open-symbolic" );
-    open_btn.set_tooltip_markup( _( "Open File   <i>(Control-O)</i>" ) );
-    open_btn.add_accelerator( "clicked", accel_group, 'o', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open File" ), "Ctrl + O" ) );
+    open_btn.add_accelerator( "clicked", _accel_group, 'o', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
     var save_btn = on_elementary
       ? new Button.from_icon_name( "document-save-as", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "document-save-as-symbolic" );
-    save_btn.set_tooltip_markup( _( "Save File As   <i>(Control-Shift-S)</i>" ) );
-    open_btn.add_accelerator( "clicked", accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
+    save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "Ctrl + Shift + S" ) );
+    open_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
     _undo_btn = on_elementary
       ? new Button.from_icon_name( "edit-undo", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "edit-undo-symbolic" );
-    _undo_btn.set_tooltip_markup( _( "Undo   <i>(Control-Z)</i>" ) );
+    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "Ctrl + Z" ) );
     _undo_btn.set_sensitive( false );
-    _undo_btn.add_accelerator( "clicked", accel_group, 'z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _undo_btn.add_accelerator( "clicked", _accel_group, 'z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _undo_btn.clicked.connect( do_undo );
     _header.pack_start( _undo_btn );
 
     _redo_btn = on_elementary
       ? new Button.from_icon_name( "edit-redo", IconSize.LARGE_TOOLBAR )
       : new Button.from_icon_name( "edit-redo-symbolic" );
-    _redo_btn.set_tooltip_markup( _( "Redo   <i>(Control-Shift-Z)</i>" ) );
+    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Redo" ), "Ctrl + Shift + Z" ) );
     _redo_btn.set_sensitive( false );
-    _redo_btn.add_accelerator( "clicked", accel_group, 'z', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
+    _redo_btn.add_accelerator( "clicked", _accel_group, 'z', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     _redo_btn.clicked.connect( do_redo );
     _header.pack_start( _redo_btn );
 
     /* Add the buttons on the right side in the reverse order */
-    add_property_button( accel_group );
-    add_export_button( accel_group );
-    add_search_button( accel_group );
-    add_zoom_button( accel_group );
+    add_property_button();
+    add_export_button();
+    add_search_button();
+    add_zoom_button();
+    add_focus_button();
 
-    /* Create the overlay that will hold the canvas so that we can put an entry box for emoji support */
-    var canvas_overlay = new Overlay();
-    canvas_overlay.add( _canvas );
+    /* Create the panel so that we can resize */
+    _pane = new Paned( Orientation.HORIZONTAL );
+    _pane.pack1( _nb, true, true );
+    _pane.move_handle.connect(() => {
+      return( false );
+    });
 
-    /* Create the horizontal box that will contain the canvas and the properties sidebar */
-    var hbox = new Box( Orientation.HORIZONTAL, 0 );
-    hbox.pack_start( canvas_overlay, true,  true, 0 );
-    hbox.pack_start( _inspector,     false, true, 0 );
+    /* Create the horizontal box that will contain the notebook and the properties sidebar */
+    _pbox = new Box( Orientation.HORIZONTAL, 0 );
+    _pbox.pack_start( _pane,      true,  true, 0 );
+    _pbox.pack_start( _inspector, false, true, 0 );
 
     /* Display the UI */
-    add( hbox );
+    add( _pbox );
     show_all();
 
+  }
+
+  /* Called whenever the current tab is changed */
+  private void tab_changed( Tab? old_tab, Tab new_tab ) {
+    var bin = (Gtk.Bin)new_tab.page;
+    var da  = bin.get_child() as DrawArea;
+    update_title( da );
+    do_buffer_changed( da );
+    on_current_changed( da );
+    canvas_changed( da );
+    save_tab_state( new_tab );
+  }
+
+  /* Called whenever the current tab is moved to a new position */
+  private void tab_reordered( Tab? tab, int new_pos ) {
+    save_tab_state( tab );
+  }
+
+  /* Called whenever the user clicks on the close button and the tab is unnamed */
+  private bool close_tab_requested( Tab tab ) {
+    var bin = (Gtk.Bin)tab.page;
+    var da  = bin.get_child() as DrawArea;
+    var ret = da.get_doc().is_saved() || show_save_warning( da );
+    return( ret );
+  }
+
+  /* Adds a new tab to the notebook */
+  public DrawArea add_tab( string? fname, TabAddReason reason ) {
+
+    /* Create and pack the canvas */
+    var da = new DrawArea( _settings, _accel_group );
+    da.current_changed.connect( on_current_changed );
+    da.scale_changed.connect( change_scale );
+    da.show_properties.connect( show_properties );
+    da.hide_properties.connect( hide_properties );
+    da.map_event.connect( on_canvas_mapped );
+    da.undo_buffer.buffer_changed.connect( do_buffer_changed );
+    da.theme_changed.connect( on_theme_changed );
+    da.animator.enable = _settings.get_boolean( "enable-animations" );
+
+    if( fname != null ) {
+      da.get_doc().filename = fname;
+    }
+
+    /* Create the overlay that will hold the canvas so that we can put an entry box for emoji support */
+    var overlay = new Overlay();
+    overlay.add( da );
+
+    var tab = new Tab( da.get_doc().label, null, overlay );
+    tab.pinnable = false;
+
+    /* Add the page to the notebook */
+    _nb.insert_tab( tab, _nb.n_tabs );
+
+    /* Update the titlebar */
+    update_title( da );
+
+    /* Make the drawing area new */
+    if( reason == TabAddReason.NEW ) {
+      da.initialize_for_new();
+    } else {
+      da.initialize_for_open();
+    }
+    da.grab_focus();
+
+    /* Indicate that the tab has changed */
+    if( reason != TabAddReason.LOAD ) {
+      _nb.current = tab;
+    }
+
+    return( da );
+
+  }
+
+  /* Returns the current drawing area */
+  public DrawArea? get_current_da( string? caller = null ) {
+    if( _debug && (caller != null) ) {
+      stdout.printf( "get_current_da called from %s\n", caller );
+    }
+    if( _nb.current == null ) { return( null ); }
+    var bin = (Gtk.Bin)_nb.current.page;
+    return( (DrawArea)bin.get_child() );
   }
 
   /* Handles any changes to the dark mode preference gsettings for the desktop */
@@ -202,19 +298,20 @@ public class MainWindow : ApplicationWindow {
       _prefer_dark = desktop_settings.get_boolean( DARK_KEY );
       desktop_settings.changed.connect(() => {
         _prefer_dark = desktop_settings.get_boolean( DARK_KEY );
-        on_theme_changed();
+        on_theme_changed( get_current_da( "handle_prefer_dark_changes" ) );
       });
     }
   }
 
   /* Updates the title */
-  private void update_title() {
-    string suffix = " \u2014 Minder";
-    if( (_doc == null) || !_doc.is_saved() ) {
+  private void update_title( DrawArea? da ) {
+    var suffix = " \u2014 Minder";
+    if( (da == null) || !da.get_doc().is_saved() ) {
       _header.set_title( _( "Unnamed Document" ) + suffix );
     } else {
-      _header.set_title( GLib.Path.get_basename( _doc.filename ) + suffix );
+      _header.set_title( GLib.Path.get_basename( da.get_doc().filename ) + suffix );
     }
+    _header.set_subtitle( _focus_btn.active ? _( "Focus Mode" ) : null );
   }
 
   /* Adds keyboard shortcuts for the menu actions */
@@ -230,7 +327,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the zoom functionality */
-  private void add_zoom_button( AccelGroup accel_group ) {
+  private void add_zoom_button() {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
@@ -243,11 +340,10 @@ public class MainWindow : ApplicationWindow {
     /* Create zoom menu popover */
     Box box = new Box( Orientation.VERTICAL, 5 );
 
-    var marks     = _canvas.get_scale_marks();
+    var marks     = DrawArea.get_scale_marks();
     var scale_lbl = new Label( _( "Zoom to Percent" ) );
     _zoom_scale   = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 );
     foreach (double mark in marks) {
-      // _zoom_scale.add_mark( mark, PositionType.BOTTOM, "'" );
       _zoom_scale.add_mark( mark, PositionType.BOTTOM, null );
     }
     _zoom_scale.has_origin = false;
@@ -294,15 +390,15 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the search functionality */
-  private void add_search_button( AccelGroup accel_group ) {
+  private void add_search_button() {
 
     /* Create the menu button */
     _search_btn = new MenuButton();
     _search_btn.set_image( on_elementary
-      ? new Image.from_icon_name( "edit-find", IconSize.LARGE_TOOLBAR )
+      ? new Image.from_icon_name( "edit-find-symbolic", IconSize.LARGE_TOOLBAR )
       : new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
-    _search_btn.set_tooltip_markup( _( "Search   <i>(Control-F)</i>" ) );
-    _search_btn.add_accelerator( "clicked", accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "Ctrl + F" ) );
+    _search_btn.add_accelerator( "clicked", _accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _search_btn.clicked.connect( on_search_change );
     _header.pack_end( _search_btn );
 
@@ -448,7 +544,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Adds the export functionality */
-  private void add_export_button( AccelGroup accel_group ) {
+  private void add_export_button() {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
@@ -482,8 +578,27 @@ public class MainWindow : ApplicationWindow {
 
   }
 
+  /* Adds the focus mode button to the headerbar */
+  private void add_focus_button() {
+
+    _focus_btn       = new ToggleButton();
+    _focus_btn.image = new Image.from_icon_name( "minder-focus", IconSize.LARGE_TOOLBAR );
+    _focus_btn.draw_indicator = true;
+    _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "Ctrl + Shift + F" ) );
+    _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
+    _focus_btn.toggled.connect(() => {
+      var da = get_current_da();
+      update_title( da );
+      da.set_focus_mode( _focus_btn.active );
+      da.grab_focus();
+    });
+
+    _header.pack_end( _focus_btn );
+
+  }
+
   /* Adds the property functionality */
-  private void add_property_button( AccelGroup accel_group ) {
+  private void add_property_button() {
 
     /* Add the menubutton */
     _prop_show = on_elementary
@@ -495,7 +610,7 @@ public class MainWindow : ApplicationWindow {
     _prop_btn  = new Button();
     _prop_btn.image = _prop_show;
     _prop_btn.set_tooltip_text( _( "Properties" ) );
-    _prop_btn.add_accelerator( "clicked", accel_group, '|', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _prop_btn.add_accelerator( "clicked", _accel_group, '|', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _prop_btn.clicked.connect( inspector_clicked );
     _header.pack_end( _prop_btn );
 
@@ -506,9 +621,9 @@ public class MainWindow : ApplicationWindow {
     _stack = new Stack();
     _stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
     _stack.set_transition_duration( 500 );
-    _stack.add_titled( new CurrentInspector( _canvas ), "current", _("Current") );
-    _stack.add_titled( new StyleInspector( _canvas, _settings ), "style", _("Style") );
-    _stack.add_titled( new MapInspector( _canvas, _settings ),  "map",  _("Map") );
+    _stack.add_titled( new CurrentInspector( this ), "current", _("Current") );
+    _stack.add_titled( new StyleInspector( this, _settings ), "style", _("Style") );
+    _stack.add_titled( new MapInspector( this, _settings ),  "map",  _("Map") );
 
     _stack.add_events( EventMask.KEY_PRESS_MASK );
     _stack.key_press_event.connect( stack_keypress );
@@ -564,7 +679,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Displays the save warning dialog window */
-  public void show_save_warning( string type ) {
+  public bool show_save_warning( DrawArea da ) {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
       _( "Save current unnamed document?" ),
@@ -587,81 +702,37 @@ public class MainWindow : ApplicationWindow {
     dialog.set_default_response( ResponseType.ACCEPT );
     dialog.set_title( "" );
 
-    dialog.response.connect((id) => {
-      dialog.destroy();
-      if( id == ResponseType.ACCEPT ) {
-        if( !save_file() ) {
-          id = ResponseType.CANCEL;
-        }
-      }
-      if( (id == ResponseType.CLOSE) || (id == ResponseType.ACCEPT) ) {
-        switch( type ) {
-          case "new"  :  create_new_file();       break;
-          case "open" :  select_and_open_file();  break;
-        }
-      }
-    });
-
     dialog.show_all();
 
-  }
+    var res = dialog.run();
 
-  /*
-   Allow the user to create a new Minder file.  Checks to see if the current
-   document needs to be saved and saves it (if necessary).
-  */
-  public void do_new_file() {
+    dialog.destroy();
 
-    /* Save any changes to the current document */
-    if( _doc != null ) {
-      if( _doc.is_saved() ) {
-        _doc.auto_save();
-      } else {
-        show_save_warning( "new" );
-        return;
-      }
+    switch( res ) {
+      case ResponseType.ACCEPT :  return( save_file( da ) );
+      case ResponseType.CLOSE  :  return( da.get_doc().remove() );
     }
 
-    create_new_file();
+    return( false );
 
   }
 
   /*
    Creates a new file
   */
-  private void create_new_file() {
+  public void do_new_file() {
 
-    /* Create a new document */
-    _doc = new Document( _canvas, _settings );
-    _canvas.initialize_for_new();
-    _canvas.grab_focus();
+    var da = add_tab( null, TabAddReason.NEW );
 
     /* Set the title to indicate that we have an unnamed document */
-    update_title();
-
-  }
-
-  /* Allow the user to open a Minder file */
-  public void do_open_file() {
-
-    /* Automatically save the current file if one exists */
-    if( _doc != null ) {
-      if( _doc.is_saved() ) {
-        _doc.auto_save();
-      } else {
-        show_save_warning( "open" );
-        return;
-      }
-    }
-
-    select_and_open_file();
+    update_title( da );
 
   }
 
   /*
    Allows the user to select a file to open and opens it in the same window.
   */
-  private void select_and_open_file() {
+  public void do_open_file() {
 
     /* Get the file to open from the user */
     FileChooserNative dialog = new FileChooserNative( _( "Open File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
@@ -673,6 +744,11 @@ public class MainWindow : ApplicationWindow {
     dialog.add_filter( filter );
 
     filter = new FileFilter();
+    filter.set_filter_name( "Freemind / Freeplane" );
+    filter.add_pattern( "*.mm" );
+    dialog.add_filter( filter );
+
+    filter = new FileFilter();
     filter.set_filter_name( "OPML" );
     filter.add_pattern( "*.opml" );
     dialog.add_filter( filter );
@@ -681,7 +757,7 @@ public class MainWindow : ApplicationWindow {
       open_file( dialog.get_filename() );
     }
 
-    _canvas.grab_focus();
+    get_current_da( "do_open_file" ).grab_focus();
 
   }
 
@@ -691,17 +767,21 @@ public class MainWindow : ApplicationWindow {
       return( false );
     }
     if( fname.has_suffix( ".minder" ) ) {
-      _doc = new Document( _canvas, _settings );
-      _canvas.initialize_for_open();
-      _doc.filename = fname;
-      update_title();
-      _doc.load();
+      var da = add_tab( fname, TabAddReason.OPEN );
+      update_title( da );
+      da.get_doc().load();
       return( true );
     } else if( fname.has_suffix( ".opml" ) ) {
-      _doc = new Document( _canvas, _settings );
-      _canvas.initialize_for_open();
-      update_title();
-      ExportOPML.import( fname, _canvas );
+      var new_fname = fname.substring( 0, (fname.length - 5) ) + ".minder";
+      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      update_title( da );
+      ExportOPML.import( fname, da );
+      return( true );
+    } else if( fname.has_suffix( ".mm" ) ) {
+      var new_fname = fname.substring( 0, (fname.length - 3) ) + ".minder";
+      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      update_title( da );
+      ExportFreeplane.import( fname, da );
       return( true );
     }
     return( false );
@@ -709,26 +789,28 @@ public class MainWindow : ApplicationWindow {
 
   /* Perform an undo action */
   public void do_undo() {
-    _canvas.undo_buffer.undo();
-    _canvas.grab_focus();
+    var da = get_current_da( "do_undo" );
+    da.undo_buffer.undo();
+    da.grab_focus();
   }
 
   /* Perform a redo action */
   public void do_redo() {
-    _canvas.undo_buffer.redo();
-    _canvas.grab_focus();
+    var da = get_current_da( "do_redo" );
+    da.undo_buffer.redo();
+    da.grab_focus();
   }
 
   private bool on_canvas_mapped( Gdk.EventAny e ) {
-    _canvas.queue_draw();
+    get_current_da( "on_canvas_mapped" ).queue_draw();
     return( false );
   }
 
   /* Called whenever the theme is changed */
-  private void on_theme_changed() {
+  private void on_theme_changed( DrawArea da ) {
     Gtk.Settings? settings = Gtk.Settings.get_default();
     if( settings != null ) {
-      settings.gtk_application_prefer_dark_theme = _prefer_dark || _canvas.get_theme().prefer_dark;
+      settings.gtk_application_prefer_dark_theme = _prefer_dark || da.get_theme().prefer_dark;
     }
   }
 
@@ -736,15 +818,15 @@ public class MainWindow : ApplicationWindow {
    Called whenever the undo buffer changes state.  Updates the state of
    the undo and redo buffer buttons.
   */
-  public void do_buffer_changed() {
-    _undo_btn.set_sensitive( _canvas.undo_buffer.undoable() );
-    _undo_btn.set_tooltip_text( _canvas.undo_buffer.undo_tooltip() );
-    _redo_btn.set_sensitive( _canvas.undo_buffer.redoable() );
-    _redo_btn.set_tooltip_text( _canvas.undo_buffer.redo_tooltip() );
+  public void do_buffer_changed( DrawArea da ) {
+    _undo_btn.set_sensitive( da.undo_buffer.undoable() );
+    _undo_btn.set_tooltip_text( da.undo_buffer.undo_tooltip() );
+    _redo_btn.set_sensitive( da.undo_buffer.redoable() );
+    _redo_btn.set_tooltip_text( da.undo_buffer.redo_tooltip() );
   }
 
   /* Allow the user to select a filename to save the document as */
-  public bool save_file() {
+  public bool save_file( DrawArea da ) {
     FileChooserNative dialog = new FileChooserNative( _( "Save File" ), this, FileChooserAction.SAVE, _( "Save" ), _( "Cancel" ) );
     FileFilter        filter = new FileFilter();
     bool              retval = false;
@@ -752,27 +834,36 @@ public class MainWindow : ApplicationWindow {
     filter.add_pattern( "*.minder" );
     dialog.add_filter( filter );
     if( dialog.run() == ResponseType.ACCEPT ) {
-      string fname = dialog.get_filename();
+      var fname = dialog.get_filename();
       if( fname.substring( -7, -1 ) != ".minder" ) {
         fname += ".minder";
       }
-      _doc.filename = fname;
-      _doc.save();
-      update_title();
+      da.get_doc().filename = fname;
+      da.get_doc().save();
+      _nb.current.label = da.get_doc().label;
+      update_title( da );
       retval = true;
     }
-    _canvas.grab_focus();
+    da.grab_focus();
     return( retval );
   }
 
   /* Called when the save as button is clicked */
   public void do_save_as_file() {
-    save_file();
+    var da = get_current_da( "do_save_as_file" );
+    save_file( da );
   }
 
   /* Called whenever the node selection changes in the canvas */
-  private void on_current_changed() {
-    _zoom_sel.set_sensitive( _canvas.get_current_node() != null );
+  private void on_current_changed( DrawArea da ) {
+    _zoom_sel.set_sensitive( da.get_current_node() != null );
+    if( da.get_focus_mode() ) {
+      _focus_btn.active = true;
+      _focus_btn.set_sensitive( true );
+    } else {
+      _focus_btn.active = false;
+      _focus_btn.set_sensitive( da.get_current_node() != null );
+    }
   }
 
   /*
@@ -780,7 +871,7 @@ public class MainWindow : ApplicationWindow {
    UI to match.
   */
   private void change_scale( double scale_factor ) {
-    var marks       = _canvas.get_scale_marks();
+    var marks       = DrawArea.get_scale_marks();
     var scale_value = scale_factor * 100;
     _zoom_scale.set_value( scale_value );
     _zoom_in.set_sensitive( scale_value < marks[marks.length-1] );
@@ -795,8 +886,11 @@ public class MainWindow : ApplicationWindow {
         _stack.visible_child_name = tab;
       }
       if( !_inspector.reveal_child ) {
+        Timeout.add( 501, move_inspector_to_pane );
         _inspector.reveal_child = true;
-        _canvas.see( -300 );
+        if( get_current_da( "show_properties 1" ) != null ) {
+          get_current_da( "show_properties 2" ).see( -300 );
+        }
       }
       _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
     }
@@ -804,22 +898,34 @@ public class MainWindow : ApplicationWindow {
       (_stack.get_child_by_name( tab ) as CurrentInspector).grab_note();
     }
   }
+  
+  private bool move_inspector_to_pane() {
+    (_stack.get_child_by_name( "current" ) as CurrentInspector).reset_width();
+    _pbox.remove( _inspector );
+    _pane.pack2( _inspector, false, false );
+    return( false );
+  }
 
   /* Hides the node properties panel */
   private void hide_properties() {
     if( !_inspector.reveal_child ) return;
+    var prop_width = (_pane.get_allocated_width() - _pane.position) - 11;
+    (_stack.get_child_by_name( "current" ) as CurrentInspector).set_width( prop_width );
     _prop_btn.image = _prop_show;
+    _pane.remove( _inspector );
+    _pbox.pack_start( _inspector, false, true, 0 );
     _inspector.reveal_child = false;
-    _canvas.grab_focus();
-    _settings.set_boolean( "current-properties-shown",  false );
-    _settings.set_boolean( "map-properties-shown",   false );
-    _settings.set_boolean( "style-properties-shown", false );
+    get_current_da( "hide_properties" ).grab_focus();
+    _settings.set_boolean( "current-properties-shown", false );
+    _settings.set_boolean( "map-properties-shown",     false );
+    _settings.set_boolean( "style-properties-shown",   false );
+    _settings.set_int( "properties-width", prop_width );
   }
 
   /* Converts the given value from the scale to the zoom value to use */
   private double zoom_to_value( double value ) {
     double last = -1;
-    foreach (double mark in _canvas.get_scale_marks()) {
+    foreach (double mark in DrawArea.get_scale_marks()) {
       if( last != -1 ) {
         if( value < ((mark + last) / 2) ) {
           return( last );
@@ -834,8 +940,9 @@ public class MainWindow : ApplicationWindow {
   private bool adjust_zoom( ScrollType scroll, double new_value ) {
     var value        = zoom_to_value( new_value );
     var scale_factor = value / 100;
-    _canvas.set_scaling_factor( scale_factor );
-    _canvas.queue_draw();
+    var da           = get_current_da( "adjust_zoom" );
+    da.set_scaling_factor( scale_factor );
+    da.queue_draw();
     return( false );
   }
 
@@ -846,10 +953,11 @@ public class MainWindow : ApplicationWindow {
 
   /* Called when the user uses the Control-s keyboard shortcut */
   private void action_save() {
-    if( _doc.is_saved() ) {
-      _doc.save();
+    var da = get_current_da( "action_save" );
+    if( da.get_doc().is_saved() ) {
+      da.get_doc().save();
     } else {
-      save_file();
+      save_file( da );
     }
   }
 
@@ -860,34 +968,37 @@ public class MainWindow : ApplicationWindow {
 
   /* Zooms into the image (makes things larger) */
   private void action_zoom_in() {
-    _canvas.zoom_in();
-    _canvas.grab_focus();
+    var da = get_current_da( "action_zoom_in" );
+    da.zoom_in();
+    da.grab_focus();
   }
 
   /* Zooms out of the image (makes things smaller) */
   private void action_zoom_out() {
-    _canvas.zoom_out();
-    _canvas.grab_focus();
+    var da = get_current_da( "action_zoom_out" );
+    da.zoom_out();
+    da.grab_focus();
   }
 
   /* Zooms to make all nodes visible within the viewer */
   private void action_zoom_fit() {
-    _canvas.zoom_to_fit();
-    _canvas.grab_focus();
+    var da = get_current_da( "action_zoom_fit" );
+    da.zoom_to_fit();
+    da.grab_focus();
   }
 
   /* Zooms to make the currently selected node and its tree put into view */
   private void action_zoom_selected() {
-    _canvas.zoom_to_selected();
-    _canvas.grab_focus();
+    var da = get_current_da( "action_zoom_selected" );
+    da.zoom_to_selected();
+    da.grab_focus();
   }
 
   /* Sets the zoom to 100% */
   private void action_zoom_actual() {
-    _canvas.animator.add_scale( "action_zoom_actual" );
-    _canvas.set_scaling_factor( 1.0 );
-    _canvas.animator.animate();
-    _canvas.grab_focus();
+    var da = get_current_da( "action_zoom_actual" );
+    da.zoom_actual();
+    da.grab_focus();
   }
 
   /* Display matched items to the search within the search popover */
@@ -904,7 +1015,7 @@ public class MainWindow : ApplicationWindow {
     };
     _search_items.clear();
     if( _search_entry.get_text() != "" ) {
-      _canvas.get_match_items(
+      get_current_da( "on_search_change" ).get_match_items(
         _search_entry.get_text().casefold(),
         search_opts,
         ref _search_items
@@ -920,25 +1031,28 @@ public class MainWindow : ApplicationWindow {
     TreeIter    it;
     Node?       node = null;
     Connection? conn = null;
+    var         da   = get_current_da( "on_search_clicked" );
     _search_items.get_iter( out it, path );
     _search_items.get( it, 2, &node, 3, &conn, -1 );
     if( node != null ) {
-      _canvas.set_current_connection( null );
-      _canvas.set_current_node( node );
-      _canvas.see();
+      da.set_current_connection( null );
+      da.set_current_node( node );
+      da.see();
     } else if( conn != null ) {
-      _canvas.set_current_node( null );
-      _canvas.set_current_connection( conn );
-      _canvas.see();
+      da.set_current_node( null );
+      da.set_current_connection( conn );
+      da.see();
     }
     _search.closed();
-    _canvas.grab_focus();
+    da.grab_focus();
   }
 
   /* Exports the model to various formats */
   private void action_export() {
 
-    FileChooserNative dialog = new FileChooserNative( _( "Export As" ), this, FileChooserAction.SAVE, _( "Export" ), _( "Cancel" ) );
+    // FileChooserNative dialog = new FileChooserNative( _( "Export As" ), this, FileChooserAction.SAVE, _( "Export" ), _( "Cancel" ) );
+    FileChooserDialog dialog = new FileChooserDialog( _( "Export As" ), this, FileChooserAction.SAVE,
+      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
 
     /* BMP */
     FileFilter bmp_filter = new FileFilter();
@@ -951,6 +1065,18 @@ public class MainWindow : ApplicationWindow {
     csv_filter.set_filter_name( _( "CSV" ) );
     csv_filter.add_pattern( "*.csv" );
     dialog.add_filter( csv_filter );
+
+    /* FreeMind */
+    FileFilter fm_filter = new FileFilter();
+    fm_filter.set_filter_name( _( "Freemind" ) );
+    fm_filter.add_pattern( "*.mm" );
+    dialog.add_filter( fm_filter );
+
+    /* Freeplane */
+    FileFilter fp_filter = new FileFilter();
+    fp_filter.set_filter_name( _( "Freeplane" ) );
+    fp_filter.add_pattern( "*.mm" );
+    dialog.add_filter( fp_filter );
 
     /* JPEG */
     FileFilter jpeg_filter = new FileFilter();
@@ -1012,31 +1138,38 @@ public class MainWindow : ApplicationWindow {
 
       var fname  = dialog.get_filename();
       var filter = dialog.get_filter();
+      var da     = get_current_da( "action_export" );
 
       if( bmp_filter == filter ) {
-        ExportImage.export( repair_filename( fname, {".bmp"} ), "bmp", _canvas );
+        ExportImage.export( repair_filename( fname, {".bmp"} ), "bmp", da );
       } else if( csv_filter == filter ) {
-        ExportCSV.export( repair_filename( fname, {".csv"} ), _canvas );
+        ExportCSV.export( repair_filename( fname, {".csv"} ), da );
+      } else if( fm_filter == filter ) {
+        ExportFreemind.export( repair_filename( fname, {".mm"} ), da );
+      } else if( fp_filter == filter ) {
+        ExportFreeplane.export( repair_filename( fname, {".mm"} ), da );
       } else if( jpeg_filter == filter ) {
-        ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", _canvas );
+        ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", da );
       } else if( md_filter == filter ) {
-        ExportMarkdown.export( repair_filename( fname, {".md", ".markdown"} ), _canvas );
+        ExportMarkdown.export( repair_filename( fname, {".md", ".markdown"} ), da );
       } else if( mmd_filter == filter ) {
-        ExportMermaid.export( repair_filename( fname, {".mmd"} ), _canvas );
+        ExportMermaid.export( repair_filename( fname, {".mmd"} ), da );
       } else if( opml_filter == filter ) {
-        ExportOPML.export( repair_filename( fname, {".opml"} ), _canvas );
+        ExportOPML.export( repair_filename( fname, {".opml"} ), da );
       } else if( pdf_filter == filter ) {
-        ExportPDF.export( repair_filename( fname, {".pdf"} ), _canvas );
+        ExportPDF.export( repair_filename( fname, {".pdf"} ), da );
       } else if( pngt_filter == filter ) {
-        ExportPNG.export( repair_filename( fname, {".png"} ), _canvas, true );
+        ExportPNG.export( repair_filename( fname, {".png"} ), da, true );
       } else if( pngo_filter == filter ) {
-        ExportPNG.export( repair_filename( fname, {".png"} ), _canvas, false );
+        ExportPNG.export( repair_filename( fname, {".png"} ), da, false );
       } else if( txt_filter == filter ) {
-        ExportText.export( repair_filename( fname, {".txt"} ), _canvas );
+        ExportText.export( repair_filename( fname, {".txt"} ), da );
       } else if( svg_filter == filter ) {
-        ExportSVG.export( repair_filename( fname, {".svg"} ), _canvas );
+        ExportSVG.export( repair_filename( fname, {".svg"} ), da );
       }
     }
+
+    dialog.close();
 
   }
 
@@ -1057,7 +1190,79 @@ public class MainWindow : ApplicationWindow {
   /* Exports the model to the printer */
   private void action_print() {
     var print = new ExportPrint();
-    print.print( _canvas, this );
+    print.print( get_current_da( "action_print" ), this );
+  }
+
+  /* Save the current tab state */
+  private void save_tab_state( Tab current_tab ) {
+
+    var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
+
+    if( DirUtils.create_with_parents( dir, 0775 ) != 0 ) {
+      return;
+    }
+
+    var       fname        = GLib.Path.build_filename( dir, "tab_state.xml" );
+    var       selected_tab = -1;
+    var       i            = 0;
+    Xml.Doc*  doc          = new Xml.Doc( "1.0" );
+    Xml.Node* root         = new Xml.Node( null, "tabs" );
+
+    doc->set_root_element( root );
+
+    _nb.tabs.foreach((tab) => {
+      var       bin  = (Gtk.Bin)tab.page;
+      var       da   = (DrawArea)bin.get_child();
+      Xml.Node* node = new Xml.Node( null, "tab" );
+      node->new_prop( "path",  da.get_doc().filename );
+      node->new_prop( "saved", da.get_doc().is_saved().to_string() );
+      root->add_child( node );
+      if( tab == current_tab ) {
+        selected_tab = i;
+      }
+      i++;
+    });
+
+    if( selected_tab > -1 ) {
+      root->new_prop( "selected", selected_tab.to_string() );
+    }
+
+    /* Save the file */
+    doc->save_format_file( fname, 1 );
+
+    delete doc;
+
+  }
+
+  /* Loads the tab state */
+  public bool load_tab_state() {
+
+    var      tab_state = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" );
+    Xml.Doc* doc       = Xml.Parser.parse_file( tab_state );
+
+    if( doc == null ) { return( false ); }
+
+    var root = doc->get_root_element();
+    for( Xml.Node* it = root->children; it != null; it = it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
+        var fname = it->get_prop( "path" );
+        var saved = it->get_prop( "saved" );
+        var da    = add_tab( fname, TabAddReason.LOAD );
+        da.get_doc().load_filename( fname, bool.parse( saved ) );
+        da.get_doc().load();
+      }
+    }
+
+    var s = root->get_prop( "selected" );
+    if( s != null ) {
+      _nb.current = _nb.get_tab_by_index( int.parse( s ) );
+      tab_changed( null, _nb.current );
+    }
+
+    delete doc;
+
+    return( _nb.n_tabs > 0 );
+
   }
 
 }

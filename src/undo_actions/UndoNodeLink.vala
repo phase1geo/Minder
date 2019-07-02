@@ -21,36 +21,32 @@
 
 using Gtk;
 
-public class UndoNodeImage : UndoItem {
+public class UndoNodeLink : UndoItem {
 
-  Node       _node;
-  NodeImage? _old_image;
-  NodeImage? _new_image;
+  Node  _node;
+  Node? _old_link;
+  Node? _new_link;
 
   /* Constructor for a node name change */
-  public UndoNodeImage( Node n, NodeImage? old_image ) {
-    base( _( "node image change" ) );
-    _node      = n;
-    _old_image = old_image;
-    _new_image = n.image;
-  }
-
-  /* Changes the node image, adjusts the layout and updates the UI */
-  private void change( DrawArea da, NodeImage? img ) {
-    _node.set_image( da.image_manager, img );
-    da.queue_draw();
-    da.current_changed( da );
-    da.changed();
+  public UndoNodeLink( Node n, Node? old_link ) {
+    base( _( "node link change" ) );
+    _node     = n;
+    _old_link = old_link;
+    _new_link = _node.linked_node;
   }
 
   /* Undoes a node image change */
   public override void undo( DrawArea da ) {
-    change( da, _old_image );
+    _node.linked_node = _old_link;
+    da.queue_draw();
+    da.changed();
   }
 
   /* Redoes a node image change */
   public override void redo( DrawArea da ) {
-    change( da, _new_image );
+    _node.linked_node = _new_link;
+    da.queue_draw();
+    da.changed();
   }
 
 }

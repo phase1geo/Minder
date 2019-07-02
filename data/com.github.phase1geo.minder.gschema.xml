@@ -21,11 +21,6 @@
       <summary>Most recent height of minder window</summary>
       <description>Most recent height of minder window</description>
     </key>
-    <key name="last-file" type="s">
-      <default>""</default>
-      <summary>Name of the last edited file</summary>
-      <description>Name of the last edited file (or the empty string if an unnamed file was last edited).</description>
-    </key>
     <key name="current-properties-shown" type="b">
       <default>false</default>
       <summary>Most recent state of the current item properties sidebar</summary>
@@ -40,6 +35,11 @@
       <default>false</default>
       <summary>Most recent state of the style properties sidebar</summary>
       <description>Most recent state of the style properities sidebar</description>
+    </key>
+    <key name="properties-width" type="i">
+      <default>300</default>
+      <summary>Width of the property sidebar when visible</summary>
+      <description>Width of the property sidebar when visible</description>
     </key>
     <key name="enable-animations" type="b">
       <default>true</default>
@@ -102,7 +102,7 @@
       <description>Last used affects value in Style properties</description>
     </key>
     <key name="style-link-type" type="s">
-      <default>"straight"</default>
+      <default>"curved"</default>
       <summary>Last used link type style in Style properties</summary>
       <description>Last used link type style in Style properties</description>
     </key>
@@ -195,6 +195,16 @@
       <default>true</default>
       <summary>Specifies the expanded state of the Connection Options panel in the Style properties</summary>
       <description>Specifies the expanded state of the Connection Options panel in the Style properties</description>
+    </key>
+    <key name="new-node-from-edit" type="b">
+      <default>false</default>
+      <summary>Specifies if we should create a new node directly from edit mode if Return or Tab is pressed</summary>
+      <description>Specifies if we should create a new node directly from edit mode if Return or Tab is pressed</description>
+    </key>
+    <key name="focus-mode-alpha" type="d">
+      <default>0.05</default>
+      <summary>Alpha value to use for all nodes/connections that are not within focus in focus mode</summary>
+      <description>Alpha value to use for all nodes/connections that are not within focus in focus mode.  Value must be between 0 and 1.</description>
     </key>
   </schema>
 </schemalist>

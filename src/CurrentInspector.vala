@@ -25,33 +25,49 @@ using Granite.Widgets;
 
 public class CurrentInspector : Stack {
 
-  private DrawArea _da;
+  private DrawArea? _da = null;
 
-  public CurrentInspector( DrawArea da ) {
-
-    _da = da;
+  public CurrentInspector( MainWindow win ) {
 
     /* Set the transition duration information */
     transition_duration = 500;
     transition_type     = StackTransitionType.NONE;
 
-    var node_box  = new NodeInspector( da );
-    var conn_box  = new ConnectionInspector( da );
-    var empty_box = new EmptyInspector( da );
+    var node_box  = new NodeInspector( win );
+    var conn_box  = new ConnectionInspector( win );
+    var empty_box = new EmptyInspector( win );
 
     add_named( node_box,  "node" );
     add_named( conn_box,  "connection" );
     add_named( empty_box, "empty" );
 
-    _da.current_changed.connect( current_changed );
+    win.canvas_changed.connect( tab_changed );
 
     show_all();
 
   }
 
-  /* Returns the width of this window */
-  public int get_width() {
-    return( 300 );
+  /* Sets the width of this panel to the given value */
+  public void set_width( int width ) {
+    (get_child_by_name( "node" )       as NodeInspector).set_width( width );
+    (get_child_by_name( "connection" ) as ConnectionInspector).set_width( width );
+  }
+
+  /* Resets the width of this inspector to its default width */
+  public void reset_width() {
+    set_width( 300 );
+  }
+
+  /* Connected signal will provide us whenever the current tab changes in the main window */
+  private void tab_changed( DrawArea? da ) {
+    if( _da != null ) {
+      _da.current_changed.disconnect( current_changed );
+    }
+    _da = da;
+    if( da != null ) {
+      da.current_changed.connect( current_changed );
+      current_changed();
+    }
   }
 
   /* Called whenever the user changes the current node in the canvas */

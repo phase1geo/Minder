@@ -29,27 +29,26 @@ public class NodeInspector : Box {
     {"text/uri-list", 0, 0}
   };
 
-  private TextView    _name;
-  private Switch      _task;
-  private Switch      _fold;
-  private Box         _link_box;
-  private ColorButton _link_color;
-  private TextView    _note;
-  private DrawArea    _da;
-  private Button      _detach_btn;
-  private string      _orig_note = "";
-  private Node?       _node = null;
-  private EventBox    _image_area;
-  private Image       _image;
-  private Button      _image_btn;
-  private Label       _image_loc;
-  private bool        _ignore_name_change = false;
+  private ScrolledWindow _sw;
+  private TextView       _name;
+  private Switch         _task;
+  private Switch         _fold;
+  private Box            _link_box;
+  private ColorButton    _link_color;
+  private TextView       _note;
+  private DrawArea?      _da = null;
+  private Button         _detach_btn;
+  private string         _orig_note = "";
+  private Node?          _node = null;
+  private EventBox       _image_area;
+  private Image          _image;
+  private Button         _image_btn;
+  private Label          _image_loc;
+  private bool           _ignore_name_change = false;
 
-  public NodeInspector( DrawArea da ) {
+  public NodeInspector( MainWindow win ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
-
-    _da = da;
 
     /* Create the node widgets */
     create_title();
@@ -60,23 +59,37 @@ public class NodeInspector : Box {
     create_image();
     create_buttons();
 
-    _da.current_changed.connect( node_changed );
-    _da.theme_changed.connect( theme_changed );
 
     show_all();
 
+    win.canvas_changed.connect( tab_changed );
+
   }
 
-  /* Returns the width of this window */
-  public int get_width() {
-    return( 300 );
+  /* Called whenever the user clicks on a tab in the tab bar */
+  private void tab_changed( DrawArea? da ) {
+    if( _da != null ) {
+      _da.current_changed.disconnect( node_changed );
+      _da.theme_changed.disconnect( theme_changed );
+    }
+    _da = da;
+    if( da != null ) {
+      da.current_changed.connect( node_changed );
+      da.theme_changed.connect( theme_changed );
+      node_changed();
+    }
+  }
+
+  /* Sets the width of this inspector to the given value */
+  public void set_width( int width ) {
+    _sw.width_request = width;
   }
 
   /* Creates the name entry */
   private void create_title() {
 
     Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( _( "<b>Title</b>" ) );
+    Label lbl = new Label( Utils.make_title( _( "Title" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
@@ -87,8 +100,13 @@ public class NodeInspector : Box {
     _name.buffer.changed.connect( name_changed );
     _name.focus_out_event.connect( name_focus_out );
 
-    box.pack_start( lbl,   true, false );
-    box.pack_start( _name, true, false );
+    var sw = new ScrolledWindow( null, null );
+    sw.min_content_width  = 300;
+    sw.min_content_height = 60;
+    sw.add( _name );
+
+    box.pack_start( lbl, true, false );
+    box.pack_start( sw,  true, false );
 
     pack_start( box, false, true );
 
@@ -98,7 +116,7 @@ public class NodeInspector : Box {
   private void create_task() {
 
     var box  = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl  = new Label( _( "<b>Task</b>" ) );
+    var lbl  = new Label( Utils.make_title( _( "Task" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
@@ -117,7 +135,7 @@ public class NodeInspector : Box {
   private void create_fold() {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "<b>Fold</b>" ) );
+    var lbl = new Label( Utils.make_title( _( "Fold" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
@@ -139,7 +157,7 @@ public class NodeInspector : Box {
   private void create_link() {
 
     _link_box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl   = new Label( _( "<b>Link Color</b>" ) );
+    var lbl   = new Label( Utils.make_title( _( "Link Color" ) ) );
 
     _link_box.homogeneous = true;
     lbl.xalign            = (float)0;
@@ -161,7 +179,7 @@ public class NodeInspector : Box {
   private void create_note() {
 
     Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( _( "<b>Note</b>" ) );
+    Label lbl = new Label( Utils.make_title( _( "Note" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
@@ -173,13 +191,13 @@ public class NodeInspector : Box {
     _note.focus_in_event.connect( note_focus_in );
     _note.focus_out_event.connect( note_focus_out );
 
-    ScrolledWindow sw = new ScrolledWindow( null, null );
-    sw.min_content_width  = 300;
-    sw.min_content_height = 100;
-    sw.add( _note );
+    _sw = new ScrolledWindow( null, null );
+    _sw.min_content_width  = 300;
+    _sw.min_content_height = 100;
+    _sw.add( _note );
 
     box.pack_start( lbl, false, false );
-    box.pack_start( sw,  true,  true );
+    box.pack_start( _sw, true,  true );
 
     pack_start( box, true, true );
 
@@ -188,8 +206,8 @@ public class NodeInspector : Box {
   /* Creates the image widget */
   private void create_image() {
 
-    var box = new Box( Orientation.VERTICAL, 0 );
-    var lbl = new Label( _( "<b>Image</b>" ) );
+    var box = new Box( Orientation.VERTICAL, 10 );
+    var lbl = new Label( Utils.make_title( _( "Image" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
@@ -434,7 +452,7 @@ public class NodeInspector : Box {
   }
 
   /* Called whenever the theme is changed */
-  private void theme_changed() {
+  private void theme_changed( DrawArea da ) {
 
     int    num_colors = _da.get_theme().num_link_colors();
     RGBA[] colors     = new RGBA[num_colors];

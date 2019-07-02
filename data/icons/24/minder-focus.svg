@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#4F5D73;}
+	.st1{opacity:0.2;}
+	.st2{fill:#231F20;}
+	.st3{fill:#C75C5C;}
+	.st4{fill:#FFFFFF;}
+</style>
+<g id="Layer_1">
+	<g>
+		<circle class="st0" cx="32" cy="32" r="32"/>
+	</g>
+	<g class="st1">
+		<g>
+			<circle class="st2" cx="32" cy="34" r="22"/>
+		</g>
+	</g>
+	<g>
+		<g>
+			<path class="st3" d="M32,52c-11,0-20-9-20-20s9-20,20-20s20,9,20,20S43,52,32,52z"/>
+		</g>
+		<g>
+			<path class="st4" d="M32,14c9.9,0,18,8.1,18,18s-8.1,18-18,18s-18-8.1-18-18S22.1,14,32,14 M32,10c-12.2,0-22,9.8-22,22
+				s9.8,22,22,22s22-9.8,22-22S44.2,10,32,10L32,10z"/>
+		</g>
+	</g>
+	<g>
+		<path class="st4" d="M32,22c5.5,0,10,4.5,10,10s-4.5,10-10,10s-10-4.5-10-10S26.5,22,32,22 M32,18c-7.7,0-14,6.3-14,14
+			s6.3,14,14,14s14-6.3,14-14S39.7,18,32,18L32,18z"/>
+	</g>
+	<g>
+		<circle class="st4" cx="32" cy="32" r="5"/>
+	</g>
+</g>
+<g id="Layer_2">
+</g>
+</svg>

@@ -22,33 +22,40 @@
 using Gtk;
 using Gdk;
 
-public class UndoNodeLinkColor : UndoItem {
+public class UndoNodeAddParent : UndoItem {
 
-  Node _node;
-  RGBA _old_color;
-  RGBA _new_color;
+  private Node _parent;
+  private Node _child;
 
-  /* Constructor for a node name change */
-  public UndoNodeLinkColor( Node n, RGBA old_color ) {
-    base( _( "link color change" ) );
-    _node      = n;
-    _old_color = old_color;
-    _new_color = n.link_color;
+  /* Default constructor */
+  public UndoNodeAddParent( Node parent, Node child ) {
+    base( _( "add parent node" ) );
+    _parent = parent;
+    _child  = child;
   }
 
-  /* Undoes a node name change */
+  /* Performs an undo operation for this data */
   public override void undo( DrawArea da ) {
-    _node.link_color = _old_color;
+    var parent = _parent.parent;
+    var index  = _parent.index();
+    stdout.printf( "parent: %s, _parent: %s, _child: %s\n", _parent.parent.name.text, _parent.name.text, _child.name.text );
+    _child.detach( _child.side );
+    _parent.detach( _parent.side );
+    _child.attach( parent, index, null );
+    da.set_current_node( _child );
     da.queue_draw();
-    da.current_changed( da );
     da.changed();
   }
 
-  /* Redoes a node name change */
+  /* Performs a redo operation */
   public override void redo( DrawArea da ) {
-    _node.link_color = _new_color;
+    var parent = _child.parent;
+    var index  = _child.index();
+    _child.detach( _child.side );
+    _parent.attach( parent, index, null );
+    _child.attach( _parent, -1, null );
+    da.set_current_node( _parent );
     da.queue_draw();
-    da.current_changed( da );
     da.changed();
   }
 

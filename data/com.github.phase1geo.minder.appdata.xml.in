@@ -15,7 +15,7 @@
       <li>Add node-to-node connections with optional text and notes.</li>
       <li>Stylize nodes, links and connections to add more meaning and improve readability.</li>
       <li>Quick search of node and connection titles and notes, including filtering options.</li>
-      <li>Zoom in to focus on certain ideas or zoom out to see the bigger picture.</li>
+      <li>Zoom in or enable focus mode to focus on certain ideas or zoom out to see the bigger picture.</li>
       <li>Unlimited undo/redo of any change.</li>
       <li>Automatically saves in the background.</li>
       <li>Colorized node branches.</li>
@@ -79,7 +79,47 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
-    <release version="1.3" date="2019-05-17">
+    <release version="1.4.0" date="2019-07-03">
+      <description>
+        <h3>New</h3>
+        <ul>
+          <li>Added support for focus mode.</li>
+          <li>Added support for multiple documents with tabs.</li>
+          <li>Added support for resizing the inspector sidebar.</li>
+          <li>Added support for creating a new node directly from editing an existing node presssing Return or Tab.</li>
+          <li>Added support for adding a new parent node to an existing node.</li>
+          <li>Added support for importing/exporting to FreeMind and Freeplane formats.</li>
+          <li>Added support for sorting children either alphabetically or randomly.</li>
+          <li>Added support for creating a link from one node to another node in the same map.</li>
+          <li>Added support for building a Flatpak.</li>
+        </ul>
+        <h3>Changes</h3>
+        <ul>
+          <li>Removed markup from translated strings.</li>
+          <li>Standardized tooltips that display accelerator information.</li>
+          <li>Changed the way that node/connection titles are displayed in inspector.</li>
+          <li>Changed app terminal script to allow command-line arguments to be passed to debug subcommand.</li>
+          <li>Changed header bar and widget colors to match Minder brand color.</li>
+          <li>Changed search icon in header bar to a symbolic icon to improve readability.</li>
+          <li>When note tooltip is displayed, markup text is rendered for improved readability.</li>
+          <li>Enhanced app script to allow command-line arguments to be passed to debug subcommand.</li>
+        </ul>
+        <h3>Bug Fixes</h3>
+        <ul>
+          <li>Fixed an issue with calculating connection endpoints when a portion of the node is not visible.</li>
+          <li>Fixed file naming issue when a file is imported.</li>
+          <li>Fixed issue with displaying resized nodes on open or application startup.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.3.1" date="2019-06-02">
+      <description>
+        <ul>
+          <li>Fixing issue with export functions.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.3.0" date="2019-05-20">
       <description>
         <p>Let's stay connected!</p>
         <ul>
