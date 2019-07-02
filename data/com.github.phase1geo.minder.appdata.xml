@@ -15,18 +15,26 @@
       <li>Quickly create visual mind-maps using the keyboard and automatic layout.</li>
       <li xml:lang="fr">Créez rapidement des cartes mentales visuelles en utilisant le clavier et la mise en forme automatique.</li>
       <li>Choose from many tree layout choices</li>
+      <li xml:lang="fr">Choisissez parmi différents choix de disposition d'arbre</li>
       <li>Add notes, tasks and images to your nodes.</li>
       <li xml:lang="fr">Ajoutez des notes, des tâches et des images à vos nœuds.</li>
       <li>Add node-to-node connections with optional text and notes.</li>
+      <li xml:lang="fr">Ajoutez des connexions nœud-vers-nœud avec en option du texte et des notes.</li>
       <li>Stylize nodes, links and connections to add more meaning and improve readability.</li>
+      <li xml:lang="fr">Stylisez les nœuds, liens et connexions pour ajouter plus de sens et améliorer la lisibilité.</li>
       <li>Quick search of node and connection titles and notes, including filtering options.</li>
-      <li>Zoom in to focus on certain ideas or zoom out to see the bigger picture.</li>
+      <li xml:lang="fr">Recherche rapide de notes et titres de nœuds et connexions, incluant des options de filtrage.</li>
+      <li>Zoom in or enable focus mode to focus on certain ideas or zoom out to see the bigger picture.</li>
       <li>Unlimited undo/redo of any change.</li>
+      <li xml:lang="fr">Possibilité infinie d'annuler/rétablir des modifications.</li>
       <li>Automatically saves in the background.</li>
+      <li xml:lang="fr">Sauvegarde automatique en arrière-plan.</li>
       <li>Colorized node branches.</li>
-      <li xml:lang="fr">Branches colorées.</li>
+      <li xml:lang="fr">Branches de nœuds colorées.</li>
       <li>Gorgeous themes and animations.</li>
+      <li xml:lang="fr">Magnifiques thèmes et animations.</li>
       <li>Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText and Mermaid formats.</li>
+      <li xml:lang="fr">Exportez aux formats PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Mardown, Texte brut et Mermaid.</li>
       <li>Printer support.</li>
       <li xml:lang="fr">Support des imprimantes.</li>
     </ul>
@@ -37,10 +45,12 @@
   <screenshots>
     <screenshot>
       <caption>Node/Connection Property Sidebar</caption>
+      <caption xml:lang="fr">Barre latérale des propriétés des nœuds et connexions</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-current-properties.png</image>
     </screenshot>
     <screenshot>
       <caption>Style Property Sidebar</caption>
+      <caption xml:lang="fr">Barre latérale des propriétés de style</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-style-properties.png</image>
     </screenshot>
     <screenshot>
@@ -88,32 +98,82 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
-    <release version="1.3.1" data="2019-06-02">
+    <release version="1.4.0" date="2019-07-03">
+      <description>
+        <h3>New</h3>
+        <ul>
+          <li>Added support for focus mode.</li>
+          <li>Added support for multiple documents with tabs.</li>
+          <li>Added support for resizing the inspector sidebar.</li>
+          <li>Added support for creating a new node directly from editing an existing node presssing Return or Tab.</li>
+          <li>Added support for adding a new parent node to an existing node.</li>
+          <li>Added support for importing/exporting to FreeMind and Freeplane formats.</li>
+          <li>Added support for sorting children either alphabetically or randomly.</li>
+          <li>Added support for creating a link from one node to another node in the same map.</li>
+          <li>Added support for building a Flatpak.</li>
+        </ul>
+        <h3>Changes</h3>
+        <ul>
+          <li>Removed markup from translated strings.</li>
+          <li>Standardized tooltips that display accelerator information.</li>
+          <li>Changed the way that node/connection titles are displayed in inspector.</li>
+          <li>Changed app terminal script to allow command-line arguments to be passed to debug subcommand.</li>
+          <li>Changed header bar and widget colors to match Minder brand color.</li>
+          <li>Changed search icon in header bar to a symbolic icon to improve readability.</li>
+          <li>When note tooltip is displayed, markup text is rendered for improved readability.</li>
+          <li>Enhanced app script to allow command-line arguments to be passed to debug subcommand.</li>
+        </ul>
+        <h3>Bug Fixes</h3>
+        <ul>
+          <li>Fixed an issue with calculating connection endpoints when a portion of the node is not visible.</li>
+          <li>Fixed file naming issue when a file is imported.</li>
+          <li>Fixed issue with displaying resized nodes on open or application startup.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.3.1" date="2019-06-02">
       <description>
         <ul>
           <li>Fixing issue with export functions.</li>
+          <li xml:lang="fr">Correction des problèmes avec les fonctions d'export.</li>
         </ul>
       </description>
     </release>
     <release version="1.3.0" date="2019-05-20">
       <description>
-        <p>Let's make a connection!</p>
+        <p>Let's stay connected!</p>
+        <p xml:lang="fr">Restons connectés !</p>
         <ul>
           <li>Added support for creating a visual connection between any two nodes.</li>
+          <li xml:lang="fr">Ajout de la prise en charge de la création d'une connexion visuelle entre deux nœuds quelconques.</li>
           <li>Added ability to show/hide all connections in the map.</li>
+          <li xml:lang="fr">Ajout de la possibilité d'afficher/masquer toutes les connexions dans la carte.</li>
           <li>Added support for remembering the last selected child of a node when navigating the map with the keyboard.</li>
+          <li xml:lang="fr">Ajout de la prise en charge de la mémorisation du dernier enfant sélectionné d'un nœud lors de la navigation sur la carte à l'aide du clavier.</li>
           <li>When escape key is used when editing text, editing mode is ended without reverting text.</li>
+          <li xml:lang="fr">Lorsque la touche d'échappement est utilisée lors de l'édition de texte, le mode d'édition est interrompu sans que le texte ne soit réinitialisé.</li>
           <li>Created unique contextual menus depending on what is selected in the mind map.</li>
+          <li xml:lang="fr">Création de menus contextuels uniques en fonction de ce qui est sélectionné dans la carte mentale.</li>
           <li>Changed Node sidebar tab to Current which shows either the currently selected node or connection.</li>
+          <li xml:lang="fr">Changement de l'onglet Nœud de la barre latérale à Courant qui affiche soit le nœud ou la connexion actuellement sélectionné(e).</li>
           <li>Improved link drawing when a node tree is being moved.</li>
+          <li xml:lang="fr">Amélioration du dessin des liens lorsqu'une arborescence de nœuds est déplacée.</li>
           <li>Switched from using GtkFileChooserDialog to GtkFileChooserNative.</li>
+          <li xml:lang="fr">Passage de GtkFileChooserDialog à GtkFileChooserNative.</li>
           <li>Added support for inserting emoji when editing text in the mind map (use Control-period).</li>
+          <li xml:lang="fr">Ajout du support pour l'insertion d'emojis lors de l'édition de texte dans la carte mentale (utilisez la combinaison CTRL + .).</li>
           <li>Improved readability of theme name when the theme is selected.</li>
+          <li xml:lang="fr">Meilleure lisibilité du nom du thème lorsque le thème est sélectionné.</li>
           <li>Fixed issue where changing a global style was not saved/applied to new nodes.</li>
+          <li xml:lang="fr">Correction d'un problème où le changement d'un style global n'était pas sauvegardé/appliqué aux nouveaux nœuds.</li>
           <li>Improved copy/paste support of nodes so that copied items can be pasted in other mind maps.</li>
+          <li xml:lang="fr">Amélioration du copier/coller des nœuds pour que les éléments copiés puissent être collés dans d'autres cartes mentales.</li>
           <li>Added support for dynamically changing to dark mode in the UI if the prefer-dark desktop gsetting is set.</li>
+          <li xml:lang="fr">Ajout de la prise en charge du passage dynamique en thème sombre dans l'interface utilisateur si l'option de thème sombre est activée.</li>
           <li>Added ability to show/hide each panel within the style inspector.</li>
+          <li xml:lang="fr">Ajout de la possibilité d'afficher/masquer chaque panneau dans l'inspecteur de style.</li>
           <li>Removed support for Loki builds.</li>
+          <li xml:lang="fr">Arrêt de la prise en charge pour Loki.</li>
         </ul>
       </description>
     </release>
@@ -121,7 +181,9 @@
       <description>
         <ul>
           <li>Fixing appdata.xml file omission.</li>
+          <li xml:lang="fr">Correction d'une omission dans le fichier appdata.xml.</li>
           <li>Removing automatic style apply when the affects is set to certain values.</li>
+          <li xml:lang="fr">La suppression du style automatique s'applique lorsque l'effet est réglé sur certaines valeurs.</li>
         </ul>
       </description>
     </release>
@@ -129,15 +191,25 @@
       <description>
         <ul>
           <li>Added Spanish translation.</li>
+          <li xml:lang="fr">Ajout des traductions en espagnol.</li>
           <li>Added support for Control-Return/Tab to support adding newlines/tabs in a node's title.</li>
+          <li xml:lang="fr">Ajout de la prise en charge du raccourci CTRL + Entrée/TAB pour ajouter des nouvelles lignes/tabulations dans le titre d'un nœud.</li>
           <li>Improved node title editing support for selection and cursor movement.</li>
+          <li xml:lang="fr">Amélioration de la prise en charge de l'édition du titre des nœuds pour la sélection et le déplacement du curseur.</li>
           <li>Added support for automatically opening Minder files from Files.</li>
+          <li xml:lang="fr">Ajout de la prise en charge de l'ouverture automatique des fichiers Minder à partir de Fichiers.</li>
           <li>Added ability to modify styles of nodes and links.</li>
+          <li xml:lang="fr">Ajout de la possibilité de modifier les styles des nœuds et des liens.</li>
           <li>Changed layouts to be stored on a per tree basis instead of a per document basis.</li>
+          <li xml:lang="fr">Modification de la disposition pour l'enregistrement par arbre au lieu de l'enregistrement par document.</li>
           <li>Added support for exporting to the Mermaid format.</li>
+          <li xml:lang="fr">Ajout de la prise en charge de l'exportation au format Mermaid.</li>
           <li>Added support for disabling/enabling displaying markup in node title.</li>
+          <li xml:lang="fr">Ajout de la prise en charge de la désactivation/activation de l'affichage du balisage dans le titre du nœud.</li>
           <li>Improved the look of the fold indicators.</li>
+          <li xml:lang="fr">Amélioration de l'apparence des indicateurs de pli.</li>
           <li>Lots of bug fixes.</li>
+          <li xml:lang="fr">Nombreuses corrections de bugs.</li>
         </ul>
       </description>
     </release>
