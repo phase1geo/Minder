@@ -137,6 +137,7 @@ public class MainWindow : ApplicationWindow {
     _nb.add_button_visible = false;
     _nb.tab_bar_behavior   = DynamicNotebook.TabBarBehavior.SINGLE;
     _nb.tab_switched.connect( tab_changed );
+    _nb.tab_reordered.connect( tab_reordered );
     _nb.close_tab_requested.connect( close_tab_requested );
 
     /* Create title toolbar */
@@ -216,6 +217,11 @@ public class MainWindow : ApplicationWindow {
     on_current_changed( da );
     canvas_changed( da );
     save_tab_state( new_tab );
+  }
+
+  /* Called whenever the current tab is moved to a new position */
+  private void tab_reordered( Tab? tab, int new_pos ) {
+    save_tab_state( tab );
   }
 
   /* Called whenever the user clicks on the close button and the tab is unnamed */
@@ -1250,6 +1256,7 @@ public class MainWindow : ApplicationWindow {
     var s = root->get_prop( "selected" );
     if( s != null ) {
       _nb.current = _nb.get_tab_by_index( int.parse( s ) );
+      tab_changed( null, _nb.current );
     }
 
     delete doc;
