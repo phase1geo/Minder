@@ -50,8 +50,11 @@
 
             set {
                 _label.label = value;
-                _label.set_tooltip_text (value);
             }
+        }
+        public string tooltip {
+            owned get { return _label.get_tooltip_text (); }
+            set { _label.set_tooltip_text (value); }
         }
 
         private bool _pinned = false;

@@ -136,7 +136,7 @@ public class MainWindow : ApplicationWindow {
     _nb = new DynamicNotebook();
     _nb.add_button_visible = false;
     _nb.tab_bar_behavior   = DynamicNotebook.TabBarBehavior.SINGLE;
-    _nb.tab_switched.connect( tab_changed );
+    _nb.tab_switched.connect( tab_switched );
     _nb.tab_reordered.connect( tab_reordered );
     _nb.close_tab_requested.connect( close_tab_requested );
 
@@ -208,15 +208,20 @@ public class MainWindow : ApplicationWindow {
 
   }
 
-  /* Called whenever the current tab is changed */
-  private void tab_changed( Tab? old_tab, Tab new_tab ) {
-    var bin = (Gtk.Bin)new_tab.page;
+  /* Called whenever the current tab is switched in the notebook */
+  private void tab_switched( Tab? old_tab, Tab new_tab ) {
+    tab_changed( new_tab );
+  }
+
+  /* This needs to be called whenever the tab is changed */
+  private void tab_changed( Tab tab ) {
+    var bin = (Gtk.Bin)tab.page;
     var da  = bin.get_child() as DrawArea;
-    update_title( da );
     do_buffer_changed( da );
     on_current_changed( da );
+    update_title( da );
     canvas_changed( da );
-    save_tab_state( new_tab );
+    save_tab_state( tab );
   }
 
   /* Called whenever the current tab is moved to a new position */
@@ -256,6 +261,7 @@ public class MainWindow : ApplicationWindow {
 
     var tab = new Tab( da.get_doc().label, null, overlay );
     tab.pinnable = false;
+    tab.tooltip  = fname;
 
     /* Add the page to the notebook */
     _nb.insert_tab( tab, _nb.n_tabs );
@@ -586,11 +592,13 @@ public class MainWindow : ApplicationWindow {
     _focus_btn.draw_indicator = true;
     _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "Ctrl + Shift + F" ) );
     _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
-    _focus_btn.toggled.connect(() => {
+    _focus_btn.button_release_event.connect((e) => {
+      _focus_btn.active = !_focus_btn.active;
       var da = get_current_da();
       update_title( da );
       da.set_focus_mode( _focus_btn.active );
       da.grab_focus();
+      return( true );
     });
 
     _header.pack_end( _focus_btn );
@@ -1256,7 +1264,7 @@ public class MainWindow : ApplicationWindow {
     var s = root->get_prop( "selected" );
     if( s != null ) {
       _nb.current = _nb.get_tab_by_index( int.parse( s ) );
-      tab_changed( null, _nb.current );
+      tab_changed( _nb.current );
     }
 
     delete doc;
