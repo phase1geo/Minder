@@ -25,16 +25,18 @@
       <li>Quick search of node and connection titles and notes, including filtering options.</li>
       <li xml:lang="fr">Recherche rapide de notes et titres de nœuds et connexions, incluant des options de filtrage.</li>
       <li>Zoom in or enable focus mode to focus on certain ideas or zoom out to see the bigger picture.</li>
+      <li>Enter focus mode to better view and understand portions of the map.</li>
       <li>Unlimited undo/redo of any change.</li>
       <li xml:lang="fr">Possibilité infinie d'annuler/rétablir des modifications.</li>
       <li>Automatically saves in the background.</li>
       <li xml:lang="fr">Sauvegarde automatique en arrière-plan.</li>
       <li>Colorized node branches.</li>
       <li xml:lang="fr">Branches de nœuds colorées.</li>
+      <li>Open multiple mindmaps with the use of tabs.</li>
       <li>Gorgeous themes and animations.</li>
       <li xml:lang="fr">Magnifiques thèmes et animations.</li>
-      <li>Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText and Mermaid formats.</li>
-      <li xml:lang="fr">Exportez aux formats PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Mardown, Texte brut et Mermaid.</li>
+      <li>Import from OPML, FreeMind and Freeplane formats.</li>
+      <li>Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText, FreeMind, Freeplane and Mermaid formats.</li>
       <li>Printer support.</li>
       <li xml:lang="fr">Support des imprimantes.</li>
     </ul>

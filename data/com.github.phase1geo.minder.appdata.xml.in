@@ -16,11 +16,14 @@
       <li>Stylize nodes, links and connections to add more meaning and improve readability.</li>
       <li>Quick search of node and connection titles and notes, including filtering options.</li>
       <li>Zoom in or enable focus mode to focus on certain ideas or zoom out to see the bigger picture.</li>
+      <li>Enter focus mode to better view and understand portions of the map.</li>
       <li>Unlimited undo/redo of any change.</li>
       <li>Automatically saves in the background.</li>
       <li>Colorized node branches.</li>
+      <li>Open multiple mindmaps with the use of tabs.</li>
       <li>Gorgeous themes and animations.</li>
-      <li>Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText and Mermaid formats.</li>
+      <li>Import from OPML, FreeMind and Freeplane formats.</li>
+      <li>Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText, FreeMind, Freeplane and Mermaid formats.</li>
       <li>Printer support.</li>
     </ul>
   </description>
