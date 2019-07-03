@@ -1890,7 +1890,7 @@ public class Node : Object {
         draw_acc_task( ctx, (style.is_fillable() ? theme.background : _link_color) );
       }
       draw_common_note( ctx, theme.foreground, theme.nodesel_foreground, theme.background );
-      draw_link_node( ctx, theme.root_foreground, theme.nodesel_foreground, theme.root_foreground );
+      draw_link_node( ctx, theme.foreground, theme.nodesel_foreground, theme.foreground );
       draw_common_fold( ctx, _link_color, theme.background );
       draw_attachable( ctx, theme, theme.background );
       draw_resizer( ctx, theme );
