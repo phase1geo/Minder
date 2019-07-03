@@ -1329,6 +1329,10 @@ public class Node : Object {
         _task_done  += children().index( i )._task_done;
       }
     }
+    if( enable != null ) {
+      position_name();
+      update_size();
+    }
   }
 
   /* Propagates a change in the task_done for this node to all parent nodes */
@@ -1337,6 +1341,8 @@ public class Node : Object {
     while( p != null ) {
       p._task_count += count_adjust;
       p._task_done  += done_adjust;
+      p.position_name();
+      p.update_size();
       p = p.parent;
     }
   }
@@ -1347,10 +1353,6 @@ public class Node : Object {
     int task_done  = _task_done;
     propagate_task_info_down( enable, done );
     propagate_task_info_up( (_task_count - task_count), (_task_done - task_done) );
-    if( enable != null ) {
-      position_name();
-      update_size();
-    }
   }
 
   /* Returns true if this node's task indicator is currently enabled */
