@@ -38,7 +38,6 @@ public class UndoNodeAddParent : UndoItem {
   public override void undo( DrawArea da ) {
     var parent = _parent.parent;
     var index  = _parent.index();
-    stdout.printf( "parent: %s, _parent: %s, _child: %s\n", _parent.parent.name.text, _parent.name.text, _child.name.text );
     _child.detach( _child.side );
     _parent.detach( _parent.side );
     _child.attach( parent, index, null );

@@ -421,7 +421,6 @@ public class NodeMenu : Gtk.Menu {
 
   /* Selects the node the current node is linked to */
   private void select_linked_node() {
-    stdout.printf( "In select_linked_node\n" );
     _da.select_linked_node();
   }
 
