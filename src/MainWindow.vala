@@ -275,12 +275,13 @@ public class MainWindow : ApplicationWindow {
     } else {
       da.initialize_for_open();
     }
-    da.grab_focus();
 
     /* Indicate that the tab has changed */
     if( reason != TabAddReason.LOAD ) {
       _nb.current = tab;
     }
+
+    da.grab_focus();
 
     return( da );
 
