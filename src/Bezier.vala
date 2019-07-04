@@ -201,14 +201,14 @@ public class Bezier {
   }
 
   /* Returns the intersecting point */
-  public double get_intersecting_point( double axis, bool axis_is_x, bool from ) {
+  public double? get_intersecting_point( double axis, bool axis_is_x, bool from ) {
 
     Array<double?> roots = new Array<double?>();
 
     get_roots( axis, axis_is_x, ref roots );
 
     switch( roots.length ) {
-      case 0  :  return( -1 );
+      case 0  :  return( null );
       case 1  :
         return( get_axis( roots.index( 0 ), axis_is_x ) );
       default :
@@ -236,32 +236,32 @@ public class Bezier {
   /* Given the bounds of a box, calculate the connection point to the box and store it locally */
   public void set_connect_point( bool from, double top, double bottom, double left, double right ) {
 
-    double isect;
+    double? isect;
 
     /* Check the top of the node */
     isect = get_intersecting_point( top, false, from );
-    if( (left <= isect) && (isect <= right) ) {
+    if( (isect != null) && (left <= isect) && (isect <= right) ) {
       if( from ) { _from.set_coordinate( isect, top ); } else { _to.set_coordinate( isect, top ); }
       return;
     }
 
     /* Check the bottom of the node */
     isect = get_intersecting_point( bottom, false, from );
-    if( (left <= isect) && (isect <= right) ) {
+    if( (isect != null) && (left <= isect) && (isect <= right) ) {
       if( from ) { _from.set_coordinate( isect, bottom ); } else { _to.set_coordinate( isect, bottom ); }
       return;
     }
 
     /* Check the left side of the node */
     isect = get_intersecting_point( left, true, from );
-    if( (top <= isect) && (isect <= bottom) ) {
+    if( (isect != null) && (top <= isect) && (isect <= bottom) ) {
       if( from ) { _from.set_coordinate( left, isect ); } else { _to.set_coordinate( left, isect ); }
       return;
     }
 
     /* Check the right side of the node */
     isect = get_intersecting_point( right, true, from );
-    if( (top <= isect) && (isect <= bottom) ) {
+    if( (isect != null) && (top <= isect) && (isect <= bottom) ) {
       if( from ) { _from.set_coordinate( right, isect ); } else { _to.set_coordinate( right, isect ); }
       return;
     }

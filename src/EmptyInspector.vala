@@ -25,7 +25,7 @@ using Granite.Widgets;
 
 public class EmptyInspector : Box {
 
-  public EmptyInspector( DrawArea da ) {
+  public EmptyInspector( MainWindow win ) {
 
     var empty_lbl = new Label( _( "<big>Select a node or connection\nto view/edit information</big>" ) );
     empty_lbl.use_markup = true;

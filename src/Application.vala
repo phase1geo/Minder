@@ -20,6 +20,7 @@
 */
 
 using Gtk;
+using Gdk;
 using GLib;
 
 public class Minder : Granite.Application {
@@ -38,8 +39,6 @@ public class Minder : Granite.Application {
 
     /* Initialize the settings */
     settings = new GLib.Settings( "com.github.phase1geo.minder" );
-
-    var last_file = settings.get_string( "last-file" );
 
     /* Add the application-specific icons */
     weak IconTheme default_theme = IconTheme.get_default();
@@ -71,10 +70,10 @@ public class Minder : Granite.Application {
       }
 
     /*
-     If the user specified that a new file should be created or the
-     saved last-file string is empty, create a new map.
+     If the user specified that a new file should be created or the saved tab state
+     was not loadable, create a new map.
     */
-    } else if( new_file || (last_file == "") || !appwin.open_file( last_file ) ) {
+    } else if( new_file || !appwin.load_tab_state() ) {
       appwin.do_new_file();
     }
 
@@ -122,7 +121,7 @@ public class Minder : Granite.Application {
 
     /* If the version was specified, output it and then exit */
     if( version ) {
-      stdout.printf( "1.3.1\n" );
+      stdout.printf( "1.4.0\n" );
       Process.exit( 0 );
     }
 

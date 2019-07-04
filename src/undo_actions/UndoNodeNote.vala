@@ -39,7 +39,7 @@ public class UndoNodeNote : UndoItem {
   public override void undo( DrawArea da ) {
     _node.note = _old_note;
     da.queue_draw();
-    da.current_changed();
+    da.current_changed( da );
     da.changed();
   }
 
@@ -47,7 +47,7 @@ public class UndoNodeNote : UndoItem {
   public override void redo( DrawArea da ) {
     _node.note = _new_note;
     da.queue_draw();
-    da.current_changed();
+    da.current_changed( da );
     da.changed();
   }
 

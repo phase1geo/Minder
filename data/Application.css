@@ -20,6 +20,11 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
+@define-color colorPrimary           @GRAPE_700;
+@define-color textColorPrimary       @SILVER_100;
+@define-color textColorPrimaryShadow @SILVER_500;
+@define-color colorAccent            @GRAPE_700;
+
 .theme-selected {
   background: blue;
   color: white;

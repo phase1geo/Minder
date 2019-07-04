@@ -98,6 +98,15 @@ public struct NodeInfo {
   }
 }
 
+public struct NodeLinkInfo {
+  string id_str;
+  Node   node;
+  public NodeLinkInfo( string id, Node n ) {
+    id_str = id;
+    node   = n;
+  }
+}
+
 public class Node : Object {
 
   private static int _next_id = 0;
@@ -126,6 +135,7 @@ public class Node : Object {
   private   Style        _style        = new Style();
   private   double       _max_width    = 200;
   private   bool         _loaded       = true;
+  private   Node         _linked_node  = null;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -272,6 +282,15 @@ public class Node : Object {
       }
     }
   }
+  public Node? linked_node {
+    get {
+      return( _linked_node );
+    }
+    set {
+      _linked_node = value;
+      update_size();
+    }
+  }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -366,6 +385,21 @@ public class Node : Object {
     position_name();
   }
 
+  /* Sets the alpha value without propagating this to the children */
+  public void set_alpha_only( double value ) {
+    _alpha = value;
+  }
+
+  /* Updates the alpha value if it is not set to 1.0 */
+  public void update_alpha( double value ) {
+    if( _alpha < 1.0 ) {
+      _alpha = value;
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).update_alpha( value );
+    }
+  }
+
   /* Sets the posx value only, leaving the children positions alone */
   public void adjust_posx_only( double value ) {
     _posx += value;
@@ -385,7 +419,7 @@ public class Node : Object {
     var orig_height = _height;
     var margin      = (style.node_margin  == null) ? 0 : style.node_margin;
     var padding     = (style.node_padding == null) ? 0 : style.node_padding;
-    var name_width  = task_width() + _name.width + note_width();
+    var name_width  = task_width() + _name.width + note_width() + linked_node_width();
     if( _image != null ) {
       _width  = (margin * 2) + (padding * 2) + ((name_width < _image.width) ? _image.width : name_width);
       _height = (margin * 2) + (padding * 2) + _image.height + padding + _name.height;
@@ -496,12 +530,22 @@ public class Node : Object {
     h = _task_radius * 2;
   }
 
+  protected virtual void linked_node_bbox( out double x, out double y, out double w, out double h ) {
+    int    margin     = style.node_margin  ?? 0;
+    int    padding    = style.node_padding ?? 0;
+    double img_height = (_image == null) ? 0 : (_image.height + padding);
+    x = posx + (_width - (linked_node_width() + padding + margin)) + _ipadx;
+    y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
+    w = 11;
+    h = 11;
+  }
+
   /* Returns the positional information for where the note item is located (if it exists) */
   protected virtual void note_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
-    x = posx + (_width - (note_width() + padding + margin)) + _ipadx;
+    x = posx + (_width - (note_width() + linked_node_width() + padding + margin)) + _ipadx;
     y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
     w = 11;
     h = 11;
@@ -548,6 +592,16 @@ public class Node : Object {
       double nx, ny, nw, nh;
       note_bbox( out nx, out ny, out nw, out nh );
       return( Utils.is_within_bounds( x, y, nx, ny, nw, nh ) );
+    } else {
+      return( false );
+    }
+  }
+
+  public virtual bool is_within_linked_node( double x, double y ) {
+    if( linked_node != null ) {
+      double lx, ly, lw, lh;
+      linked_node_bbox( out lx, out ly, out lw, out lh );
+      return( Utils.is_within_bounds( x, y, lx, ly, lw, lh ) );
     } else {
       return( false );
     }
@@ -703,7 +757,7 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, HashMap<int,int> id_map ) {
+  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, HashMap<int,int> id_map, Array<NodeLinkInfo?> link_ids ) {
 
     _loaded = false;
 
@@ -726,7 +780,7 @@ public class Node : Object {
     string? mw = n->get_prop( "maxwidth" );
     if( mw != null ) {
       _max_width = double.parse( mw );
-      // _pango_layout.set_width( (int)_max_width * Pango.SCALE );
+      _name.resize( _max_width - 200 );
     }
 
     string? w = n->get_prop( "width" );
@@ -743,6 +797,11 @@ public class Node : Object {
     if( tc != null ) {
       _task_count = 1;
       _task_done  = int.parse( tc );
+    }
+
+    string? ln = n->get_prop( "link" );
+    if( ln != null ) {
+      link_ids.append_val( NodeLinkInfo( ln, this ) );
     }
 
     string? s = n->get_prop( "side" );
@@ -779,7 +838,7 @@ public class Node : Object {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var child = new Node( da, _layout );
-                child.load( da, it2, false, id_map );
+                child.load( da, it2, false, id_map, link_ids );
                 child.attach( this, -1, null );
               }
             }
@@ -824,6 +883,9 @@ public class Node : Object {
     node->new_prop( "height", _height.to_string() );
     if( (_task_count > 0) && is_leaf() ) {
       node->new_prop( "task", _task_done.to_string() );
+    }
+    if( _linked_node != null ) {
+      node->new_prop( "link", _linked_node.id().to_string() );
     }
     node->new_prop( "side", side.to_string() );
     node->new_prop( "fold", _folded.to_string() );
@@ -1061,6 +1123,11 @@ public class Node : Object {
     return( (note.length > 0) ? (10 + _ipadx) : 0 );
   }
 
+  /* Returns the width of the linked node indicator */
+  public double linked_node_width() {
+    return( (linked_node != null) ? (10 + _ipadx) : 0 );
+  }
+
   /* Moves this node into the proper position within the parent node */
   public void move_to_position( Node child, NodeSide side, double x, double y ) {
     int   idx           = child.index();
@@ -1262,6 +1329,10 @@ public class Node : Object {
         _task_done  += children().index( i )._task_done;
       }
     }
+    if( enable != null ) {
+      position_name();
+      update_size();
+    }
   }
 
   /* Propagates a change in the task_done for this node to all parent nodes */
@@ -1270,6 +1341,8 @@ public class Node : Object {
     while( p != null ) {
       p._task_count += count_adjust;
       p._task_done  += done_adjust;
+      p.position_name();
+      p.update_size();
       p = p.parent;
     }
   }
@@ -1280,10 +1353,6 @@ public class Node : Object {
     int task_done  = _task_done;
     propagate_task_info_down( enable, done );
     propagate_task_info_up( (_task_count - task_count), (_task_done - task_done) );
-    if( enable != null ) {
-      position_name();
-      update_size();
-    }
   }
 
   /* Returns true if this node's task indicator is currently enabled */
@@ -1610,6 +1679,37 @@ public class Node : Object {
 
   }
 
+  protected virtual void draw_link_node( Context ctx, RGBA reg_color, RGBA sel_color, RGBA bg_color ) {
+
+    if( linked_node != null ) {
+
+      double x, y, w, h;
+      RGBA   color = (mode == NodeMode.CURRENT) ? sel_color :
+                     style.is_fillable()        ? bg_color  :
+                                                  reg_color;
+
+      linked_node_bbox( out x, out y, out w, out h );
+
+      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      ctx.new_path();
+      ctx.set_line_width( 1 );
+      ctx.move_to( x, (y + 3) );
+      ctx.line_to( (x + 5), (y + 3) );
+      ctx.line_to( (x + 5), (y + 1) );
+      ctx.line_to( (x + 6), (y + 1) );
+      ctx.line_to( (x + 10), (y + 4) );
+      ctx.line_to( (x + 10), (y + 5) );
+      ctx.line_to( (x + 6), (y + 8) );
+      ctx.line_to( (x + 5), (y + 8) );
+      ctx.line_to( (x + 5), (y + 6) );
+      ctx.line_to( x, (y + 6) );
+      ctx.close_path();
+      ctx.fill();
+
+    }
+
+  }
+
   /* Draw the fold indicator */
   protected virtual void draw_common_fold( Context ctx, RGBA bg_color, RGBA fg_color ) {
 
@@ -1670,7 +1770,7 @@ public class Node : Object {
     /* Get the parent's link point */
     parent.link_point( out parent_x, out parent_y );
 
-    Utils.set_context_color_with_alpha( ctx, _link_color, _alpha );
+    Utils.set_context_color_with_alpha( ctx, _link_color, ((_parent.alpha != 1.0) ? _parent.alpha : _alpha) );
     ctx.set_line_cap( LineCap.ROUND );
 
     switch( side ) {
@@ -1774,6 +1874,7 @@ public class Node : Object {
         draw_acc_task( ctx, theme.root_foreground );
       }
       draw_common_note( ctx, theme.root_foreground, theme.nodesel_foreground, theme.root_foreground );
+      draw_link_node( ctx, theme.root_foreground, theme.nodesel_foreground, theme.root_foreground );
       draw_common_fold( ctx, theme.root_background, theme.root_foreground );
       draw_attachable( ctx, theme, theme.root_background );
       draw_resizer( ctx, theme );
@@ -1789,6 +1890,7 @@ public class Node : Object {
         draw_acc_task( ctx, (style.is_fillable() ? theme.background : _link_color) );
       }
       draw_common_note( ctx, theme.foreground, theme.nodesel_foreground, theme.background );
+      draw_link_node( ctx, theme.foreground, theme.nodesel_foreground, theme.foreground );
       draw_common_fold( ctx, _link_color, theme.background );
       draw_attachable( ctx, theme, theme.background );
       draw_resizer( ctx, theme );

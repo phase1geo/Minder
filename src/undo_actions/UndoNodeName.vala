@@ -39,7 +39,7 @@ public class UndoNodeName : UndoItem {
   public override void undo( DrawArea da ) {
     _node.name.text = _old_name;
     da.queue_draw();
-    da.current_changed();
+    da.current_changed( da );
     da.changed();
   }
 
@@ -47,7 +47,7 @@ public class UndoNodeName : UndoItem {
   public override void redo( DrawArea da ) {
     _node.name.text = _new_name;
     da.queue_draw();
-    da.current_changed();
+    da.current_changed( da );
     da.changed();
   }
 

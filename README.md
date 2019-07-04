@@ -17,11 +17,14 @@ Use the power of mind-mapping to make your ideas come to life.
 - Stylize nodes, links and connections to add more meaning and improve readability.
 - Quick search of node and connection titles and notes, including filtering options.
 - Zoom in to focus on certain ideas or zoom out to see the bigger picture.
+- Enter focus mode to better view and understand portions of the map.
 - Unlimited undo/redo of any change.
 - Automatically saves in the background.
 - Colorized node branches.
+- Open multiple mindmaps with the use of tabs.
 - Gorgeous themes and animations.
-- Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText and Mermaid formats.
+- Import from OPML, FreeMind and Freeplane formats.
+- Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText, FreeMinde, Freeplane and Mermaid formats.
 - Printer support.
     
 ## Installation

@@ -103,7 +103,11 @@ public class Theme : Object {
   public CssProvider get_css_provider() {
     CssProvider provider = new CssProvider();
     try {
-      var css_data = ".theme-selected { background: #087DFF; } " +
+      var css_data = "@define-color colorPrimary #603461; " +
+                     "@define-color textColorPrimary @SILVER_100; " +
+                     // "@define-color textColorPrimaryShadow @SILVER_500; " +
+                     "@define-color colorAccent #603461; " +
+                     ".theme-selected { background: #087DFF; } " +
                      ".canvas { background: " + background.to_string() + "; }";
       provider.load_from_data( css_data );
     } catch( GLib.Error e ) {

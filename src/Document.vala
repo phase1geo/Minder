@@ -40,11 +40,15 @@ public class Document : Object {
         }
         _filename  = value;
         _from_user = true;
-        _settings.set_string( "last-file", value );
       }
     }
     get {
       return( _filename );
+    }
+  }
+  public string label {
+    owned get {
+      return( GLib.Path.get_basename( _filename ) );
     }
   }
   public bool save_needed { private set; get; default = false; }
@@ -58,9 +62,11 @@ public class Document : Object {
     /* Create the temporary file */
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
     if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
-      _filename  = GLib.Path.build_filename( dir, "unnamed.minder" );
+      int i = 1;
+      do {
+        _filename = GLib.Path.build_filename( dir, "unnamed%d.minder".printf( i++ ) );
+      } while( GLib.FileUtils.test( _filename, FileTest.EXISTS ) );
       _from_user = false;
-      _settings.set_string( "last-file", _filename );
     }
 
     /* Create the image manager */
@@ -75,6 +81,12 @@ public class Document : Object {
   private void canvas_changed() {
     save_needed = true;
     auto_save();
+  }
+
+  /* Called when a document filename is loaded from the tab state file */
+  public void load_filename( string fname, bool saved ) {
+    filename   = fname;
+    _from_user = saved;
   }
 
   /* Returns true if the stored filename came from the user */
@@ -102,6 +114,14 @@ public class Document : Object {
     doc->save_format_file( filename, 1 );
     delete doc;
     save_needed = false;
+    return( true );
+  }
+
+  /* Deletes the given unnamed file when called */
+  public bool remove() {
+    if( !_from_user ) {
+      FileUtils.unlink( _filename );
+    }
     return( true );
   }
 

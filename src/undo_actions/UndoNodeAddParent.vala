@@ -20,37 +20,42 @@
 */
 
 using Gtk;
+using Gdk;
 
-public class UndoNodeImage : UndoItem {
+public class UndoNodeAddParent : UndoItem {
 
-  Node       _node;
-  NodeImage? _old_image;
-  NodeImage? _new_image;
+  private Node _parent;
+  private Node _child;
 
-  /* Constructor for a node name change */
-  public UndoNodeImage( Node n, NodeImage? old_image ) {
-    base( _( "node image change" ) );
-    _node      = n;
-    _old_image = old_image;
-    _new_image = n.image;
+  /* Default constructor */
+  public UndoNodeAddParent( Node parent, Node child ) {
+    base( _( "add parent node" ) );
+    _parent = parent;
+    _child  = child;
   }
 
-  /* Changes the node image, adjusts the layout and updates the UI */
-  private void change( DrawArea da, NodeImage? img ) {
-    _node.set_image( da.image_manager, img );
+  /* Performs an undo operation for this data */
+  public override void undo( DrawArea da ) {
+    var parent = _parent.parent;
+    var index  = _parent.index();
+    _child.detach( _child.side );
+    _parent.detach( _parent.side );
+    _child.attach( parent, index, null );
+    da.set_current_node( _child );
     da.queue_draw();
-    da.current_changed( da );
     da.changed();
   }
 
-  /* Undoes a node image change */
-  public override void undo( DrawArea da ) {
-    change( da, _old_image );
-  }
-
-  /* Redoes a node image change */
+  /* Performs a redo operation */
   public override void redo( DrawArea da ) {
-    change( da, _new_image );
+    var parent = _child.parent;
+    var index  = _child.index();
+    _child.detach( _child.side );
+    _parent.attach( parent, index, null );
+    _child.attach( _parent, -1, null );
+    da.set_current_node( _parent );
+    da.queue_draw();
+    da.changed();
   }
 
 }

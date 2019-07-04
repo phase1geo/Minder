@@ -63,6 +63,11 @@ public class Connections {
     return( false );
   }
 
+  /* Complete the stored connections */
+  public void complete_connection( int index, Node to_node ) {
+    _connections.index( index ).connect_to( to_node );
+  }
+
   /* Returns the connection that is before or after the given connection */
   public Connection? get_connection( Connection conn, int dir ) {
     if( _connections.length == 1 ) return( null );
@@ -76,12 +81,13 @@ public class Connections {
   }
 
   /*
-   Returns the first connection that is attached to the given node; otherwise, returns
+   Returns the index'th connection that is attached to the given node; otherwise, returns
    null if the node does not contain a connection.
   */
-  public Connection? get_attached_connection( Node node ) {
+  public Connection? get_attached_connection( Node node, int index = 0 ) {
+    int matches = 0;
     for( int i=0; i<_connections.length; i++ ) {
-      if( _connections.index( i ).attached_to_node( node ) ) {
+      if( _connections.index( i ).attached_to_node( node ) && (index == matches++) ) {
         return( _connections.index( i ) );
       }
     }
@@ -199,6 +205,15 @@ public class Connections {
   public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     for( int i=0; i<_connections.length; i++ ) {
       _connections.index( i ).get_match_items( pattern, search_opts, ref matches );
+    }
+  }
+
+  /* Sets the focus mode to the given value and updates the alpha value of the stored connections */
+  public void update_alpha() {
+    for( int i=0; i<_connections.length; i++ ) {
+      double from_alpha = _connections.index( i ).from_node.alpha;
+      double to_alpha   = _connections.index( i ).to_node.alpha;
+      _connections.index( i ).alpha = (from_alpha < to_alpha) ? from_alpha : to_alpha;
     }
   }
 
