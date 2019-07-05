@@ -135,128 +135,125 @@ msgstr "Trevor Williams"
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:87
 msgid "New"
-msgstr ""
+msgstr "Nouveau"
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:89
-#, fuzzy
 msgid "Added support for focus mode."
-msgstr "Ajout de la prise en charge des images à l'intérieur des nœuds."
+msgstr "Ajout de la prise en charge du mode concentration."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:90
-#, fuzzy
 msgid "Added support for multiple documents with tabs."
-msgstr "Ajout de la prise en charge des images à l'intérieur des nœuds."
+msgstr "Ajout de la prise en charge de documents multiples avec onglets."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:91
-#, fuzzy
 msgid "Added support for resizing the inspector sidebar."
 msgstr ""
-"Ajout de la prise en charge du redimensionnement de la largeur des nœuds."
+"Ajout de la prise en charge du redimensionnement de la barre latérale de l'inspecteur."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:92
-#, fuzzy
 msgid ""
 "Added support for creating a new node directly from editing an existing node "
 "presssing Return or Tab."
 msgstr ""
-"Ajout de la prise en charge de la création d'une connexion visuelle entre "
-"deux nœuds quelconques."
+"Ajout de la prise en charge pour la création d'un nouveau nœud directement à partir de l'édition d'un nœud existant "
+"en appuyant sur Entrée ou Tab."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:93
-#, fuzzy
 msgid "Added support for adding a new parent node to an existing node."
 msgstr ""
-"Ajout de la prise en charge pour déplier tous les nœuds pliés dans "
-"l'inspecteur de carte."
+"Ajout de la prise en charge pour ajouter un nouveau nœud parent à un nœud existant."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:94
-#, fuzzy
 msgid ""
 "Added support for importing/exporting to FreeMind and Freeplane formats."
-msgstr "Ajout de la prise en charge de l'exportation au format Mermaid."
+msgstr "Ajout de la prise en charge de l'importation/exportation aux formats FreeMind et Freeplane."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:95
-#, fuzzy
 msgid "Added support for sorting children either alphabetically or randomly."
-msgstr "Ajout de la prise en charge de l'exportation au format Mermaid."
+msgstr "Ajout de la prise en charge du tri des enfants alphabétiquement ou aléatoirement."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:96
-#, fuzzy
 msgid ""
 "Added support for creating a link from one node to another node in the same "
 "map."
 msgstr ""
-"Ajout de la prise en charge de la création d'une connexion visuelle entre "
-"deux nœuds quelconques."
+"Ajout de la prise en charge pour la création d'un lien d'un nœud à un autre dans la même "
+"carte."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:97
-#, fuzzy
 msgid "Added support for building a Flatpak."
-msgstr ""
-"Ajout de la prise en charge du redimensionnement de la largeur des nœuds."
+msgstr "Ajout de la prise en charge pour Flatpak."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:99
 msgid "Changes"
-msgstr ""
+msgstr "Modifications"
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:101
 msgid "Removed markup from translated strings."
-msgstr ""
+msgstr "Suppression des balises des chaînes de caractères traduites."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:102
 msgid "Standardized tooltips that display accelerator information."
-msgstr ""
+msgstr "Indications standard pour afficher les informations des raccourcis clavier."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:103
 msgid "Changed the way that node/connection titles are displayed in inspector."
-msgstr ""
+msgstr "Modification de la façon dont les titres de nœud/connexion sont affichés dans l'inspecteur."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:104
 msgid ""
 "Changed app terminal script to allow command-line arguments to be passed to "
 "debug subcommand."
 msgstr ""
+"Modification du script du terminal de l'application pour autoriser les arguments en ligne de commande a être passés en "
+"sous-commandes de débogage."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:105
 msgid "Changed header bar and widget colors to match Minder brand color."
-msgstr ""
+msgstr "Modification des couleurs de la barre d'en-tête et des widgets pour correspondre à la couleur symbolique de Minder."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:106
 msgid ""
 "Changed search icon in header bar to a symbolic icon to improve readability."
 msgstr ""
+"Modification de l'icône de recherche dans la barre d'en-tête en icône symbolique pour améliorer la lisibilité."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:107
 msgid ""
 "When note tooltip is displayed, markup text is rendered for improved "
 "readability."
 msgstr ""
+"Lorsque l'indicateur des notes est affiché, le marquage du texte est restitué pour une meilleure lisibilité."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:108
 msgid ""
 "Enhanced app script to allow command-line arguments to be passed to debug "
 "subcommand."
 msgstr ""
+"Amélioration du script de l'application pour autoriser les arguments en ligne de commande à être passés en "
+"sous-commandes de débogage."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:110
-#, fuzzy
 msgid "Bug Fixes"
-msgstr "Corrections de bugs."
+msgstr "Corrections de bugs"
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:112
 msgid ""
 "Fixed an issue with calculating connection endpoints when a portion of the "
 "node is not visible."
 msgstr ""
+"Correction d'un problème avec le calcul des point de fin de connexion lorsqu'un bout du "
+"nœud n'est pas visible."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:113
 msgid "Fixed file naming issue when a file is imported."
-msgstr ""
+msgstr "Correction des problèmes de nommage du fichier lors de l'importation d'un fichier."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:114
 msgid ""
 "Fixed issue with displaying resized nodes on open or application startup."
 msgstr ""
+"Correction d'un problème lors de l'affichage des nœuds redimensionnés à l'ouverture ou au démarrage de l'application."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:121
 msgid "Fixing issue with export functions."
