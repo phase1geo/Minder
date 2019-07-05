@@ -51,9 +51,8 @@ msgid "Add Image"
 msgstr "Ajouter une image"
 
 #: src/NodeMenu.vala:87 src/NodeMenu.vala:288
-#, fuzzy
 msgid "Add Node Link"
-msgstr "Ajouter une note"
+msgstr "Ajouter un lien vers le nœud"
 
 #: src/NodeMenu.vala:90
 msgid "Add Connection"
@@ -72,9 +71,8 @@ msgid "Add Root Node"
 msgstr "Ajouter un nœud racine"
 
 #: src/NodeMenu.vala:104
-#, fuzzy
 msgid "Add Parent Node"
-msgstr "Nœud parent"
+msgstr "Ajouter un nœud parent"
 
 #: src/NodeMenu.vala:107
 msgid "Add Child Node"
@@ -109,9 +107,8 @@ msgid "Parent Node"
 msgstr "Nœud parent"
 
 #: src/NodeMenu.vala:139
-#, fuzzy
 msgid "Linked Node"
-msgstr "Terminer le nœud"
+msgstr "Nœud lié"
 
 #: src/NodeMenu.vala:143
 msgid "Connection"
@@ -122,17 +119,16 @@ msgid "Center Current Node"
 msgstr "Centrer sur le nœud"
 
 #: src/NodeMenu.vala:151
-#, fuzzy
 msgid "Sort Children"
-msgstr "Plier les enfants"
+msgstr "Trier les enfants"
 
 #: src/NodeMenu.vala:155
 msgid "Alphabetically"
-msgstr ""
+msgstr "Alphabétiquement"
 
 #: src/NodeMenu.vala:158
 msgid "Randomize"
-msgstr ""
+msgstr "Aléatoirement"
 
 #: src/NodeMenu.vala:285
 msgid "Remove Task"
@@ -147,9 +143,8 @@ msgid "Remove Image"
 msgstr "Supprimer l'image"
 
 #: src/NodeMenu.vala:288
-#, fuzzy
 msgid "Remove Node Link"
-msgstr "Supprimer la note"
+msgstr "Supprimer le lien vers le nœud"
 
 #: src/NodeMenu.vala:289
 msgid "Unfold Children"
@@ -289,7 +284,7 @@ msgstr "Document sans nom"
 
 #: src/MainWindow.vala:321 src/MainWindow.vala:594
 msgid "Focus Mode"
-msgstr ""
+msgstr "Mode concentration"
 
 #: src/MainWindow.vala:344
 msgid "Zoom"
@@ -431,11 +426,11 @@ msgstr "CSV"
 
 #: src/MainWindow.vala:1080
 msgid "Freemind"
-msgstr ""
+msgstr "Freemind"
 
 #: src/MainWindow.vala:1086
 msgid "Freeplane"
-msgstr ""
+msgstr "Freeplane"
 
 #: src/MainWindow.vala:1092
 msgid "JPEG"
@@ -813,7 +808,3 @@ msgstr "Annuler "
 #: src/UndoBuffer.vala:91
 msgid "Redo "
 msgstr "Rétablir "
-
-#, fuzzy
-#~ msgid "Unnamed"
-#~ msgstr "Document sans nom"
