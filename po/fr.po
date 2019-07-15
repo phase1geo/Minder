@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-03 18:17-0500\n"
+"POT-Creation-Date: 2019-07-05 14:03+0200\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: NathanBnm\n"
 "Language-Team: Français\n"
@@ -51,9 +51,8 @@ msgid "Add Image"
 msgstr "Ajouter une image"
 
 #: src/NodeMenu.vala:87 src/NodeMenu.vala:288
-#, fuzzy
 msgid "Add Node Link"
-msgstr "Ajouter une note"
+msgstr "Ajouter un lien vers le nœud"
 
 #: src/NodeMenu.vala:90
 msgid "Add Connection"
@@ -72,9 +71,8 @@ msgid "Add Root Node"
 msgstr "Ajouter un nœud racine"
 
 #: src/NodeMenu.vala:104
-#, fuzzy
 msgid "Add Parent Node"
-msgstr "Nœud parent"
+msgstr "Ajouter un nœud parent"
 
 #: src/NodeMenu.vala:107
 msgid "Add Child Node"
@@ -109,9 +107,8 @@ msgid "Parent Node"
 msgstr "Nœud parent"
 
 #: src/NodeMenu.vala:139
-#, fuzzy
 msgid "Linked Node"
-msgstr "Terminer le nœud"
+msgstr "Nœud lié"
 
 #: src/NodeMenu.vala:143
 msgid "Connection"
@@ -122,17 +119,16 @@ msgid "Center Current Node"
 msgstr "Centrer sur le nœud"
 
 #: src/NodeMenu.vala:151
-#, fuzzy
 msgid "Sort Children"
-msgstr "Plier les enfants"
+msgstr "Trier les enfants"
 
 #: src/NodeMenu.vala:155
 msgid "Alphabetically"
-msgstr ""
+msgstr "Alphabétiquement"
 
 #: src/NodeMenu.vala:158
 msgid "Randomize"
-msgstr ""
+msgstr "Aléatoirement"
 
 #: src/NodeMenu.vala:285
 msgid "Remove Task"
@@ -147,9 +143,8 @@ msgid "Remove Image"
 msgstr "Supprimer l'image"
 
 #: src/NodeMenu.vala:288
-#, fuzzy
 msgid "Remove Node Link"
-msgstr "Supprimer la note"
+msgstr "Supprimer le lien vers le nœud"
 
 #: src/NodeMenu.vala:289
 msgid "Unfold Children"
@@ -218,8 +213,8 @@ msgstr "Zone de découpe : %d,%d %3dx%3d"
 msgid "Cursor: %3d,%3d"
 msgstr "Curseur : %3d,%3d"
 
-#: src/ImageEditor.vala:360 src/MainWindow.vala:702 src/MainWindow.vala:746
-#: src/MainWindow.vala:838 src/MainWindow.vala:1063
+#: src/ImageEditor.vala:360 src/MainWindow.vala:703 src/MainWindow.vala:747
+#: src/MainWindow.vala:839 src/MainWindow.vala:1064
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -259,7 +254,7 @@ msgstr "Vers le haut"
 msgid "Vertical"
 msgstr "Vertical"
 
-#: src/MainWindow.vala:112 src/MainWindow.vala:841
+#: src/MainWindow.vala:112 src/MainWindow.vala:842
 msgid "Minder"
 msgstr "Minder"
 
@@ -267,7 +262,7 @@ msgstr "Minder"
 msgid "New File"
 msgstr "Nouveau fichier"
 
-#: src/MainWindow.vala:155 src/MainWindow.vala:746
+#: src/MainWindow.vala:155 src/MainWindow.vala:747
 msgid "Open File"
 msgstr "Ouvrir un fichier"
 
@@ -283,193 +278,193 @@ msgstr "Annuler"
 msgid "Redo"
 msgstr "Rétablir"
 
-#: src/MainWindow.vala:316
+#: src/MainWindow.vala:317
 msgid "Unnamed Document"
 msgstr "Document sans nom"
 
-#: src/MainWindow.vala:320 src/MainWindow.vala:593
+#: src/MainWindow.vala:321 src/MainWindow.vala:594
 msgid "Focus Mode"
-msgstr ""
+msgstr "Mode concentration"
 
-#: src/MainWindow.vala:343
+#: src/MainWindow.vala:344
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/MainWindow.vala:350
+#: src/MainWindow.vala:351
 msgid "Zoom to Percent"
 msgstr "Pourcentage de zoom"
 
-#: src/MainWindow.vala:361
+#: src/MainWindow.vala:362
 msgid "Zoom In"
 msgstr "Zoomer"
 
-#: src/MainWindow.vala:365
+#: src/MainWindow.vala:366
 msgid "Zoom Out"
 msgstr "Dézoomer"
 
-#: src/MainWindow.vala:369
+#: src/MainWindow.vala:370
 msgid "Zoom to Fit"
 msgstr "Voir l'ensemble du document"
 
-#: src/MainWindow.vala:373
+#: src/MainWindow.vala:374
 msgid "Zoom to Fit Selected Node"
 msgstr "Zoomer sur le nœud sélectionné"
 
-#: src/MainWindow.vala:377
+#: src/MainWindow.vala:378
 msgid "Zoom to Actual Size"
 msgstr "Zoom par défaut (100 %)"
 
-#: src/MainWindow.vala:406
+#: src/MainWindow.vala:407
 msgid "Search"
 msgstr "Rechercher"
 
-#: src/MainWindow.vala:416
+#: src/MainWindow.vala:417
 msgid "Search Nodes and Connections"
 msgstr "Rechercher des nœuds et des connexions"
 
-#: src/MainWindow.vala:439
+#: src/MainWindow.vala:440
 msgid "Search Criteria"
 msgstr "Critères de recherche"
 
-#: src/MainWindow.vala:461
+#: src/MainWindow.vala:462
 msgid "Nodes"
 msgstr "Nœuds"
 
-#: src/MainWindow.vala:462
+#: src/MainWindow.vala:463
 msgid "Connections"
 msgstr "Connexions"
 
-#: src/MainWindow.vala:463
+#: src/MainWindow.vala:464
 msgid "Titles"
 msgstr "Titres"
 
-#: src/MainWindow.vala:464
+#: src/MainWindow.vala:465
 msgid "Notes"
 msgstr "Notes"
 
-#: src/MainWindow.vala:465
+#: src/MainWindow.vala:466
 msgid "Folded"
 msgstr "Pliés"
 
-#: src/MainWindow.vala:466
+#: src/MainWindow.vala:467
 msgid "Unfolded"
 msgstr "Dépliés"
 
-#: src/MainWindow.vala:467
+#: src/MainWindow.vala:468
 msgid "Tasks"
 msgstr "Tâches"
 
-#: src/MainWindow.vala:468
+#: src/MainWindow.vala:469
 msgid "Non-tasks"
 msgstr "Non-tâches"
 
-#: src/MainWindow.vala:560 src/MainWindow.vala:1063
+#: src/MainWindow.vala:561 src/MainWindow.vala:1064
 msgid "Export"
 msgstr "Exporter"
 
-#: src/MainWindow.vala:567
+#: src/MainWindow.vala:568
 msgid "Export…"
 msgstr "Exporter…"
 
-#: src/MainWindow.vala:571
+#: src/MainWindow.vala:572
 msgid "Print"
 msgstr "Imprimer"
 
-#: src/MainWindow.vala:620
+#: src/MainWindow.vala:621
 msgid "Properties"
 msgstr "Propriétés"
 
-#: src/MainWindow.vala:632 src/StyleInspector.vala:48
+#: src/MainWindow.vala:633 src/StyleInspector.vala:48
 msgid "Current"
 msgstr "Courant"
 
-#: src/MainWindow.vala:633
+#: src/MainWindow.vala:634
 msgid "Style"
 msgstr "Style"
 
-#: src/MainWindow.vala:634
+#: src/MainWindow.vala:635
 msgid "Map"
 msgstr "Carte"
 
-#: src/MainWindow.vala:693
+#: src/MainWindow.vala:694
 msgid "Save current unnamed document?"
 msgstr "Enregistrer le document sans titre actuel ?"
 
-#: src/MainWindow.vala:694
+#: src/MainWindow.vala:695
 msgid "Changes will be permanently lost if not saved."
 msgstr ""
 "Les modifications seront définitivement perdues si elles ne sont pas "
 "enregistrées."
 
-#: src/MainWindow.vala:699
+#: src/MainWindow.vala:700
 msgid "Discard Changes"
 msgstr "Ignorer les modifications"
 
-#: src/MainWindow.vala:705 src/MainWindow.vala:838
+#: src/MainWindow.vala:706 src/MainWindow.vala:839
 msgid "Save"
 msgstr "Enregistrer"
 
-#: src/MainWindow.vala:746
+#: src/MainWindow.vala:747
 msgid "Open"
 msgstr "Ouvrir"
 
-#: src/MainWindow.vala:838
+#: src/MainWindow.vala:839
 msgid "Save File"
 msgstr "Enregistrer le fichier"
 
-#: src/MainWindow.vala:1062
+#: src/MainWindow.vala:1063
 msgid "Export As"
 msgstr "Exporter sous"
 
-#: src/MainWindow.vala:1067
+#: src/MainWindow.vala:1068
 msgid "BMP"
 msgstr "BMP"
 
-#: src/MainWindow.vala:1073
+#: src/MainWindow.vala:1074
 msgid "CSV"
 msgstr "CSV"
 
-#: src/MainWindow.vala:1079
+#: src/MainWindow.vala:1080
 msgid "Freemind"
-msgstr ""
+msgstr "Freemind"
 
-#: src/MainWindow.vala:1085
+#: src/MainWindow.vala:1086
 msgid "Freeplane"
-msgstr ""
+msgstr "Freeplane"
 
-#: src/MainWindow.vala:1091
+#: src/MainWindow.vala:1092
 msgid "JPEG"
 msgstr "JPEG"
 
-#: src/MainWindow.vala:1098
+#: src/MainWindow.vala:1099
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/MainWindow.vala:1105
+#: src/MainWindow.vala:1106
 msgid "Mermaid"
 msgstr "Mermaid"
 
-#: src/MainWindow.vala:1111
+#: src/MainWindow.vala:1112
 msgid "OPML"
 msgstr "OPML"
 
-#: src/MainWindow.vala:1117
+#: src/MainWindow.vala:1118
 msgid "PDF"
 msgstr "PDF"
 
-#: src/MainWindow.vala:1123
+#: src/MainWindow.vala:1124
 msgid "PNG (Transparent)"
 msgstr "PNG (transparent)"
 
-#: src/MainWindow.vala:1129
+#: src/MainWindow.vala:1130
 msgid "PNG (Opaque)"
 msgstr "PNG (opaque)"
 
-#: src/MainWindow.vala:1135
+#: src/MainWindow.vala:1136
 msgid "PlainText"
 msgstr "Texte brut"
 
-#: src/MainWindow.vala:1141
+#: src/MainWindow.vala:1142
 msgid "SVG"
 msgstr "SVG"
 
@@ -813,7 +808,3 @@ msgstr "Annuler "
 #: src/UndoBuffer.vala:91
 msgid "Redo "
 msgstr "Rétablir "
-
-#, fuzzy
-#~ msgid "Unnamed"
-#~ msgstr "Document sans nom"
