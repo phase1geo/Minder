@@ -1,0 +1,24 @@
+[Desktop Entry]
+Name[fr]=Minder
+Name=Minder
+GenericName[fr]=Créateur de cartes mentales
+GenericName=Mind-mapper
+Comment[fr]=Créez, développez et visualisez vos idées
+Comment=Create, develop and visualize your ideas
+Categories=Utility;Office;Development;
+Exec=com.github.phase1geo.minder %f
+Icon[fr]=com.github.phase1geo.minder
+Icon=com.github.phase1geo.minder
+Terminal=false
+Type=Application
+MimeType=application/com.github.phase1geo.minder;
+X-GNOME-Gettext-Domain=Minder
+X-GNOME-UsesNotifications=true
+Keywords[fr]=Mentale;Carte;
+Keywords=Mind;Mapping;
+Actions=NewDocument;
+
+[Desktop Action NewDocument]
+Name[fr]=Nouveau document
+Name=New Document
+Exec=com.github.phase1geo.minder -n

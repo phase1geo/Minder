@@ -427,7 +427,7 @@ public class Node : Object {
       _width  = (margin * 2) + (padding * 2) + name_width;
       _height = (margin * 2) + (padding * 2) + _name.height;
     }
-    if( (_layout != null) && (((_width - orig_width) != 0) || ((_height - orig_width) != 0)) ) {
+    if( (_layout != null) && (((_width - orig_width) != 0) || ((_height - orig_height) != 0)) ) {
       _layout.handle_update_by_edit( this, (_width - orig_width), (_height - orig_height) );
     }
   }

@@ -100,36 +100,66 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.4.1" date="2019-07-14">
+      <description>
+        <ul>
+          <li>Fixed issue with automatic layout that was introduced in 1.4.0.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.4.0" date="2019-07-03">
       <description>
         <h3>New</h3>
+        <h3 xml:lang="fr">Nouveau</h3>
         <ul>
           <li>Added support for focus mode.</li>
+          <li xml:lang="fr">Ajout de la prise en charge du mode concentration.</li>
           <li>Added support for multiple documents with tabs.</li>
+          <li xml:lang="fr">Ajout de la prise en charge de documents multiples avec onglets.</li>
           <li>Added support for resizing the inspector sidebar.</li>
+          <li xml:lang="fr">Ajout de la prise en charge du redimensionnement de la barre latérale de l'inspecteur.</li>
           <li>Added support for creating a new node directly from editing an existing node presssing Return or Tab.</li>
+          <li xml:lang="fr">Ajout de la prise en charge pour la création d'un nouveau nœud directement à partir de l'édition d'un nœud existant en appuyant sur Entrée ou Tab.</li>
           <li>Added support for adding a new parent node to an existing node.</li>
+          <li xml:lang="fr">Ajout de la prise en charge pour ajouter un nouveau nœud parent à un nœud existant.</li>
           <li>Added support for importing/exporting to FreeMind and Freeplane formats.</li>
+          <li xml:lang="fr">Ajout de la prise en charge de l'importation/exportation aux formats FreeMind et Freeplane.</li>
           <li>Added support for sorting children either alphabetically or randomly.</li>
+          <li xml:lang="fr">Ajout de la prise en charge du tri des enfants alphabétiquement ou aléatoirement.</li>
           <li>Added support for creating a link from one node to another node in the same map.</li>
+          <li xml:lang="fr">Ajout de la prise en charge pour la création d'un lien d'un nœud à un autre dans la même carte.</li>
           <li>Added support for building a Flatpak.</li>
+          <li xml:lang="fr">Ajout de la prise en charge pour Flatpak.</li>
         </ul>
         <h3>Changes</h3>
+        <h3 xml:lang="fr">Modifications</h3>
         <ul>
           <li>Removed markup from translated strings.</li>
+          <li xml:lang="fr">Suppression des balises des chaînes de caractères traduites.</li>
           <li>Standardized tooltips that display accelerator information.</li>
+          <li xml:lang="fr">Indications standard pour afficher les informations des raccourcis clavier.</li>
           <li>Changed the way that node/connection titles are displayed in inspector.</li>
+          <li xml:lang="fr">Modification de la façon dont les titres de nœud/connexion sont affichés dans l'inspecteur.</li>
           <li>Changed app terminal script to allow command-line arguments to be passed to debug subcommand.</li>
+          <li xml:lang="fr">Modification du script du terminal de l'application pour autoriser les arguments en ligne de commande a être passés en sous-commandes de débogage.</li>
           <li>Changed header bar and widget colors to match Minder brand color.</li>
+          <li xml:lang="fr">Modification des couleurs de la barre d'en-tête et des widgets pour correspondre à la couleur symbolique de Minder.</li>
           <li>Changed search icon in header bar to a symbolic icon to improve readability.</li>
+          <li xml:lang="fr">Modification de l'icône de recherche dans la barre d'en-tête en icône symbolique pour améliorer la lisibilité.</li>
           <li>When note tooltip is displayed, markup text is rendered for improved readability.</li>
+          <li xml:lang="fr">Lorsque l'indicateur des notes est affiché, le marquage du texte est restitué pour une meilleure lisibilité.</li>
           <li>Enhanced app script to allow command-line arguments to be passed to debug subcommand.</li>
+          <li xml:lang="fr">Amélioration du script de l'application pour autoriser les arguments en ligne de commande à être passés en sous-commandes de débogage.</li>
         </ul>
         <h3>Bug Fixes</h3>
+        <h3 xml:lang="fr">Corrections de bugs</h3>
         <ul>
           <li>Fixed an issue with calculating connection endpoints when a portion of the node is not visible.</li>
+          <li xml:lang="fr">Correction d'un problème avec le calcul des point de fin de connexion lorsqu'un bout du nœud n'est pas visible.</li>
           <li>Fixed file naming issue when a file is imported.</li>
+          <li xml:lang="fr">Correction des problèmes de nommage du fichier lors de l'importation d'un fichier.</li>
           <li>Fixed issue with displaying resized nodes on open or application startup.</li>
+          <li xml:lang="fr">Correction d'un problème lors de l'affichage des nœuds redimensionnés à l'ouverture ou au démarrage de l'application.</li>
         </ul>
       </description>
     </release>
