@@ -82,6 +82,13 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.4.1" date="2019-07-14">
+      <description>
+        <ul>
+          <li>Fixed issue with automatic layout that was introduced in 1.4.0.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.4.0" date="2019-07-03">
       <description>
         <h3>New</h3>
