@@ -1087,6 +1087,12 @@ public class MainWindow : ApplicationWindow {
     fp_filter.add_pattern( "*.mm" );
     dialog.add_filter( fp_filter );
 
+    /* GraphML */
+    FileFilter gml_filter = new FileFilter();
+    gml_filter.set_filter_name( _( "GraphML" ) );
+    gml_filter.add_pattern( "*.graphml" );
+    dialog.add_filter( gml_filter );
+
     /* JPEG */
     FileFilter jpeg_filter = new FileFilter();
     jpeg_filter.set_filter_name( _( "JPEG" ) );
@@ -1157,6 +1163,8 @@ public class MainWindow : ApplicationWindow {
         ExportFreemind.export( repair_filename( fname, {".mm"} ), da );
       } else if( fp_filter == filter ) {
         ExportFreeplane.export( repair_filename( fname, {".mm"} ), da );
+      } else if( gml_filter == filter ) {
+        ExportGraphML.export( repair_filename( fname, {".graphml"} ), da );
       } else if( jpeg_filter == filter ) {
         ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", da );
       } else if( md_filter == filter ) {
