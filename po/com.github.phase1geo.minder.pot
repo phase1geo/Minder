@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-14 21:35-0500\n"
+"POT-Creation-Date: 2019-07-23 09:21-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -464,6 +464,10 @@ msgstr ""
 
 #: src/MainWindow.vala:1142
 msgid "SVG"
+msgstr ""
+
+#: src/MainWindow.vala:1148
+msgid "yEd"
 msgstr ""
 
 #: src/MapInspector.vala:73

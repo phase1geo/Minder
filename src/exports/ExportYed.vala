@@ -21,7 +21,7 @@
 
 using GLib;
 
-public class ExportGraphML : Object {
+public class ExportYed : Object {
 
   /* Exports the given drawing area to the file of the given name */
   public static bool export( string fname, DrawArea da ) {

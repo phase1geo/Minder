@@ -9,7 +9,6 @@ sources += files(
     'exports/ExportCSV.vala',
     'exports/ExportFreemind.vala',
     'exports/ExportFreeplane.vala',
-    'exports/ExportGraphML.vala',
     'exports/ExportImage.vala',
     'exports/ExportMarkdown.vala',
     'exports/ExportMermaid.vala',
@@ -19,6 +18,7 @@ sources += files(
     'exports/ExportPrint.vala',
     'exports/ExportSVG.vala',
     'exports/ExportText.vala',
+    'exports/ExportYed.vala',
 
     'layouts/LayoutDown.vala',
     'layouts/LayoutHorizontal.vala',

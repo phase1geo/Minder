@@ -1087,12 +1087,6 @@ public class MainWindow : ApplicationWindow {
     fp_filter.add_pattern( "*.mm" );
     dialog.add_filter( fp_filter );
 
-    /* GraphML */
-    FileFilter gml_filter = new FileFilter();
-    gml_filter.set_filter_name( _( "GraphML" ) );
-    gml_filter.add_pattern( "*.graphml" );
-    dialog.add_filter( gml_filter );
-
     /* JPEG */
     FileFilter jpeg_filter = new FileFilter();
     jpeg_filter.set_filter_name( _( "JPEG" ) );
@@ -1149,6 +1143,12 @@ public class MainWindow : ApplicationWindow {
     svg_filter.add_pattern( "*.svg" );
     dialog.add_filter( svg_filter );
 
+    /* yEd */
+    FileFilter yed_filter = new FileFilter();
+    yed_filter.set_filter_name( _( "yEd" ) );
+    yed_filter.add_pattern( "*.graphml" );
+    dialog.add_filter( yed_filter );
+
     if( dialog.run() == ResponseType.ACCEPT ) {
 
       var fname  = dialog.get_filename();
@@ -1163,8 +1163,6 @@ public class MainWindow : ApplicationWindow {
         ExportFreemind.export( repair_filename( fname, {".mm"} ), da );
       } else if( fp_filter == filter ) {
         ExportFreeplane.export( repair_filename( fname, {".mm"} ), da );
-      } else if( gml_filter == filter ) {
-        ExportGraphML.export( repair_filename( fname, {".graphml"} ), da );
       } else if( jpeg_filter == filter ) {
         ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", da );
       } else if( md_filter == filter ) {
@@ -1183,7 +1181,10 @@ public class MainWindow : ApplicationWindow {
         ExportText.export( repair_filename( fname, {".txt"} ), da );
       } else if( svg_filter == filter ) {
         ExportSVG.export( repair_filename( fname, {".svg"} ), da );
+      } else if( yed_filter == filter ) {
+        ExportYed.export( repair_filename( fname, {".graphml"} ), da );
       }
+
     }
 
     dialog.close();
