@@ -73,23 +73,28 @@ public class ExportGraphML : Object {
 
   /* Exports each tree as a separate graph */
   private static void export_graphs( Xml.Node* root, Xml.Ns* yns, DrawArea da ) {
+
+    Xml.Node* graph = new Xml.Node( null, "graph" );
+    graph->new_prop( "edgedefault", "directed" );
+    graph->new_prop( "id", "G0" );
+    root->add_child( graph );
+
+    /* Add nodes */
     for( int i=0; i<da.get_nodes().length; i++ ) {
-      Xml.Node* graph = new Xml.Node( null, "graph" );
-      graph->new_prop( "edgedefault", "directed" );
-      graph->new_prop( "id", ("G" + i.to_string()) );
       export_node_edge( graph, yns, da.get_nodes().index( i ), da.get_theme() );
-
-      // TBD - Insert connections as edges here
-
-      Xml.Node* d7 = new Xml.Node( null, "data" );
-      d7->new_prop( "key", "d7" );
-
-      Xml.Node* res = new Xml.Node( yns, "Resources" );
-      d7->add_child( res );
-
-      graph->add_child( d7 );
-      root->add_child( graph );
     }
+
+    /* Add connections */
+    export_connections( graph, yns, da.get_connections().connections, da.get_theme() );
+
+    Xml.Node* d7 = new Xml.Node( null, "data" );
+    d7->new_prop( "key", "d7" );
+
+    Xml.Node* res = new Xml.Node( yns, "Resources" );
+    d7->add_child( res );
+
+    graph->add_child( d7 );
+
   }
 
   private static Xml.Node* export_node_shape( Node node, Theme theme, Xml.Ns* yns ) {
@@ -260,60 +265,108 @@ public class ExportGraphML : Object {
     }
   }
 
-  // -------------------------------------------------------------------
+  /* Create connection */
+  private static void export_connections( Xml.Node* graph, Xml.Ns* yns, Array<Connection> conns, Theme theme ) {
 
-  /*
-   Reads the contents of an OPML file and creates a new document based on
-   the stored information.
-  */
-  public static bool import( string fname, DrawArea da ) {
+    for( int i=0; i<conns.length; i++ ) {
 
-    /* Read in the contents of the OPML file */
-    var doc = Xml.Parser.parse_file( fname );
-    if( doc == null ) {
-      return( false );
-    }
+      var conn = conns.index( i );
 
-    /* Load the contents of the file */
-    for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
-      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
-        Array<int>? expand_state = null;
-        switch( it->name ) {
-          case "head" :
-            import_header( it, ref expand_state );
-            break;
-          case "body" :
-            da.import_opml( it, ref expand_state );
-            break;
-        }
+      Xml.Node* e = new Xml.Node( null, "edge" );
+      e->new_prop( "id", ("c" + i.to_string()) );
+      e->new_prop( "source", ("n" + conn.from_node.id().to_string()) );
+      e->new_prop( "target", ("n" + conn.to_node.id().to_string()) );
+
+      Xml.Node* d9 = new Xml.Node( null, "data" );
+      d9->new_prop( "key", "d9" );
+      e->add_child( d9 );
+
+      Xml.Node* d10 = new Xml.Node( null, "data" );
+      d10->new_prop( "key", "d10" );
+
+      Xml.Node* be = new Xml.Node( yns, "BezierEdge" );
+
+      Xml.Node* path = new Xml.Node( yns, "Path" );
+      path->new_prop( "sx", "0.0" );
+      path->new_prop( "sy", "0.0" );
+      path->new_prop( "tx", "0.0" );
+      path->new_prop( "ty", "0.0" );
+      be->add_child( path );
+
+      Xml.Node* ls = new Xml.Node( yns, "LineStyle" );
+      ls->new_prop( "color", Utils.color_from_rgba( theme.connection_color ) );
+      ls->new_prop( "type", (conn.style.connection_dash.name == "solid") ? "line" : "dashed" );
+      ls->new_prop( "width", conn.style.connection_width.to_string() );
+      be->add_child( ls );
+
+      Xml.Node* arrow = new Xml.Node( yns, "Arrows" );
+      var       atype = conn.style.connection_arrow;
+      arrow->new_prop( "source", ((atype == "tofrom") || (atype == "both")) ? "standard" : "none" );
+      arrow->new_prop( "target", ((atype == "fromto") || (atype == "both")) ? "standard" : "none" );
+      be->add_child( arrow );
+
+      if( conn.title != null ) {
+
+        Xml.Node* el = new Xml.Node( yns, "EdgeLabel" );
+        el->new_prop( "alignment", "center" );
+        el->new_prop( "fontFamily", conn.style.connection_font.get_family() );
+        el->new_prop( "fontSize", (conn.style.connection_font.get_size() / Pango.SCALE).to_string() );
+        el->new_prop( "hasBackgroundColor", "false" );
+        el->new_prop( "hasLineColor", "true" );
+        el->new_prop( "height", conn.title.height.to_string() );
+        el->new_prop( "horizontalTextPosition", "center" );
+        el->new_prop( "modelName", "custom" );
+        el->new_prop( "preferredPlacement", "anywhere" );
+        el->new_prop( "ratio", "0.5" );
+        el->new_prop( "textColor", Utils.color_from_rgba( theme.foreground ) );
+        el->new_prop( "verticalTextPosition", "top" );
+        el->new_prop( "visible", "true" );
+        el->new_prop( "width", conn.title.width.to_string() );
+        el->new_prop( "x", conn.title.posx.to_string() );
+        el->new_prop( "xml:space", "preserve" );
+        el->new_prop( "y", conn.title.posy.to_string() );
+        el->add_content( conn.title.get_wrapped_text() );
+
+        Xml.Node* lm  = new Xml.Node( yns, "LabelModel" );
+        Xml.Node* slm = new Xml.Node( yns, "SmartEdgeLabelModel" );
+        slm->new_prop( "autoRotationEnabled", "false" );
+        slm->new_prop( "defaultAngle", "0.0" );
+        slm->new_prop( "defaultDistance", "10.0" );
+        lm->add_child( slm );
+        el->add_child( lm );
+
+        Xml.Node* mp  = new Xml.Node( yns, "ModelParameter" );
+        Xml.Node* smp = new Xml.Node( yns, "SmartEdgeLabelModelParameter" );
+        smp->new_prop( "angle", "0.0" );
+        smp->new_prop( "distance", "30.0" );
+        smp->new_prop( "distanceToCenter", "true" );
+        smp->new_prop( "position", "left" );
+        smp->new_prop( "ratio", "0.5" );
+        smp->new_prop( "segment", "1" );
+        mp->add_child( smp );
+        el->add_child( mp );
+
+        Xml.Node* ppd = new Xml.Node( yns, "PreferredPlacementDescriptor" );
+        ppd->new_prop( "angle", "0.0" );
+        ppd->new_prop( "angleOffsetOnRightSide", "0" );
+        ppd->new_prop( "angleReference", "absolute" );
+        ppd->new_prop( "angleRotationOnRightSide", "co" );
+        ppd->new_prop( "distance", "-1.0" );
+        ppd->new_prop( "frozen", "true" );
+        ppd->new_prop( "placement", "anywhere" );
+        ppd->new_prop( "side", "anywhere" );
+        ppd->new_prop( "sideReference", "relative_to_edge_flow" );
+        el->add_child( ppd );
+
+        be->add_child( el );
       }
+
+      d10->add_child( be );
+      e->add_child( d10 );
+      graph->add_child( e );
+
     }
 
-    /* Delete the OPML document */
-    delete doc;
-
-    return( true );
-
-  }
-
-  /* Parses the OPML head block for information that we will use */
-  private static void import_header( Xml.Node* n, ref Array<int>? expand_state ) {
-    for( Xml.Node* it = n->children; it != null; it = it->next ) {
-      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
-        switch( it->name ) {
-          case "expansionState" :
-            if( (it->children != null) && (it->children->type == Xml.ElementType.TEXT_NODE) ) {
-              expand_state = new Array<int>();
-              string[] values = n->children->get_content().split( "," );
-              foreach (string val in values) {
-                int intval = int.parse( val );
-                expand_state.append_val( intval );
-              }
-            }
-            break;
-        }
-      }
-    }
   }
 
 }
