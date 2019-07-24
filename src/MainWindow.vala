@@ -1143,6 +1143,12 @@ public class MainWindow : ApplicationWindow {
     svg_filter.add_pattern( "*.svg" );
     dialog.add_filter( svg_filter );
 
+    /* yEd */
+    FileFilter yed_filter = new FileFilter();
+    yed_filter.set_filter_name( _( "yEd" ) );
+    yed_filter.add_pattern( "*.graphml" );
+    dialog.add_filter( yed_filter );
+
     if( dialog.run() == ResponseType.ACCEPT ) {
 
       var fname  = dialog.get_filename();
@@ -1175,7 +1181,10 @@ public class MainWindow : ApplicationWindow {
         ExportText.export( repair_filename( fname, {".txt"} ), da );
       } else if( svg_filter == filter ) {
         ExportSVG.export( repair_filename( fname, {".svg"} ), da );
+      } else if( yed_filter == filter ) {
+        ExportYed.export( repair_filename( fname, {".graphml"} ), da );
       }
+
     }
 
     dialog.close();

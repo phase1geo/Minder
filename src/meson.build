@@ -18,6 +18,7 @@ sources += files(
     'exports/ExportPrint.vala',
     'exports/ExportSVG.vala',
     'exports/ExportText.vala',
+    'exports/ExportYed.vala',
 
     'layouts/LayoutDown.vala',
     'layouts/LayoutHorizontal.vala',

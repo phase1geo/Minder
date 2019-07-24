@@ -25,6 +25,12 @@ public class Connections {
 
   private Array<Connection> _connections;
 
+  public Array<Connection> connections {
+    get {
+      return( _connections );
+    }
+  }
+
   public bool hide { set; get; default = false; }
 
   /* Default constructor */
