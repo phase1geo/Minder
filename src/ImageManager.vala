@@ -25,8 +25,8 @@ using Gdk;
 
 public class ImageManager {
 
-  public const int EDIT_WIDTH  = 600;
-  public const int EDIT_HEIGHT = 600;
+  public const int EDIT_WIDTH  = 500;
+  public const int EDIT_HEIGHT = 500;
 
   /* Returns the web pathname used to store downloaded images */
   private static string get_storage_path() {
@@ -143,20 +143,17 @@ public class ImageManager {
         Pixbuf buf;
         if( fname == null ) {
           var file = File.new_for_uri( uri );
-          stdout.printf( "get_path: %s\n", file.get_path() );
-          buf = new Pixbuf.from_file_at_scale( file.get_path(), EDIT_WIDTH, EDIT_HEIGHT, true );
+          buf = new Pixbuf.from_file_at_size( file.get_path(), EDIT_WIDTH, EDIT_HEIGHT );
         } else {
-          buf = new Pixbuf.from_file_at_scale( fname, EDIT_WIDTH, EDIT_HEIGHT, true );
+          buf = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
         }
-        stdout.printf( "get_pixels length: %u\n", buf.get_pixels().length );
-        _enc64     = Base64.encode( buf.get_pixels() );
+        _enc64     = Base64.encode( buf.get_pixels_with_length() );
         _alpha     = buf.has_alpha;
         _bps       = buf.bits_per_sample;
         _width     = buf.width;
         _height    = buf.height;
         _rowstride = buf.rowstride;
       } catch( Error e ) {
-        stdout.printf( "HERE :(\n" );
         return( false );
       }
       return( true );
