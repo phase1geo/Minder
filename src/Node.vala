@@ -112,6 +112,7 @@ public class Node : Object {
   private static int _next_id = 0;
 
   /* Member variables */
+  private   DrawArea     _da;
   protected int          _id;
   private   CanvasText   _name;
   private   string       _note         = "";
@@ -142,6 +143,11 @@ public class Node : Object {
   public signal void resized( double diffw, double diffh );
 
   /* Properties */
+  public DrawArea da {
+    get {
+      return( _da );
+    }
+  }
   public CanvasText name {
     get {
       return( _name );
@@ -291,9 +297,11 @@ public class Node : Object {
       update_size();
     }
   }
+  public NodeBounds tree_bbox { get; set; default = NodeBounds(); }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
+    _da       = da;
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
@@ -303,6 +311,7 @@ public class Node : Object {
 
   /* Constructor initializing string */
   public Node.with_name( DrawArea da, string n, Layout? layout ) {
+    _da       = da;
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
@@ -312,6 +321,7 @@ public class Node : Object {
 
   /* Copies an existing node to this node */
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
+    _da       = da;
     _id       = _next_id++;
     _name     = new CanvasText( da, _max_width );
     copy_variables( n, im );
@@ -325,6 +335,7 @@ public class Node : Object {
 
   /* Copies an existing node tree to this node */
   public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int> id_map ) {
+    _da       = da;
     _id       = _next_id++;
     _name     = new CanvasText( da, _max_width );
     _children = new Array<Node>();
@@ -490,6 +501,26 @@ public class Node : Object {
       p = p.parent;
     }
     return( p == node );
+  }
+
+  /* Returns true if this tree bounds of this node is left of the given bounds */
+  public bool is_left_of( NodeBounds nb ) {
+    return( (tree_bbox.x + tree_bbox.width) < nb.x ); 
+  }
+
+  /* Returns true if this tree bounds of this node is right of the given bounds */
+  public bool is_right_of( NodeBounds nb ) {
+    return( tree_bbox.x > (nb.x + nb.width) );
+  }
+
+  /* Returns true if this tree bounds of this node is above the given bounds */
+  public bool is_above( NodeBounds nb ) {
+    return( (tree_bbox.y + tree_bbox.height) < nb.y );
+  }
+
+  /* Returns true if this tree bounds of this node is below the given bounds */
+  public bool is_below( NodeBounds nb ) {
+    return( tree_bbox.y > (nb.y + nb.height) );
   }
 
   /* Returns the maximum width allowed for this node */
@@ -853,10 +884,11 @@ public class Node : Object {
       layout = da.layouts.get_layout( l );
     }
 
+    /* Get the tree bbox */
+    tree_bbox = layout.bbox( this, side );
+
     if( ts == null ) {
-      double bx, by, bw, bh;
-      layout.bbox( this, side, out bx, out by, out bw, out bh );
-      tree_size = ((side & NodeSide.horizontal()) != 0) ? bh : bw;
+      tree_size = ((side & NodeSide.horizontal()) != 0) ? tree_bbox.height : tree_bbox.width;
     }
 
     /* Make sure that the name is positioned properly */

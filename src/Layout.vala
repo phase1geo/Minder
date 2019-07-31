@@ -63,30 +63,32 @@ public class Layout : Object {
   }
 
   /* Get the bbox for the given parent to the given depth */
-  public virtual void bbox( Node parent, int side_mask, out double x, out double y, out double w, out double h ) {
+  public virtual NodeBounds bbox( Node parent, int side_mask ) {
 
-    uint num_children = parent.children().length;
+    NodeBounds nb           = {0, 0, 0, 0};
+    uint       num_children = parent.children().length;
 
-    parent.bbox( out x, out y, out w, out h );
+    parent.bbox( out nb.x, out nb.y, out nb.width, out nb.height );
 
-    double x2 = x + w;
-    double y2 = y + h;
+    double x2 = nb.x + nb.width;
+    double y2 = nb.y + nb.height;
 
     if( (num_children != 0) && !parent.folded ) {
-      double cx, cy, cw, ch;
       for( int i=0; i<parent.children().length; i++ ) {
         if( (parent.children().index( i ).side & side_mask) != 0 ) {
-          bbox( parent.children().index( i ), side_mask, out cx, out cy, out cw, out ch );
-          x  = (x < cx) ? x : cx;
-          y  = (y < cy) ? y : cy;
-          x2 = (x2 < (cx + cw)) ? (cx + cw) : x2;
-          y2 = (y2 < (cy + ch)) ? (cy + ch) : y2;
+          var cb = bbox( parent.children().index( i ), side_mask );
+          nb.x  = (nb.x < cb.x) ? nb.x : cb.x;
+          nb.y  = (nb.y < cb.y) ? nb.y : cb.y;
+          x2 = (x2 < (cb.x + cb.width))  ? (cb.x + cb.width)  : x2;
+          y2 = (y2 < (cb.y + cb.height)) ? (cb.y + cb.height) : y2;
         }
       }
     }
 
-    w = (x2 - x);
-    h = (y2 - y);
+    nb.width  = (x2 - nb.x);
+    nb.height = (y2 - nb.y);
+
+    return( nb );
 
   }
 
@@ -94,11 +96,13 @@ public class Layout : Object {
   private void update_tree_size( Node n ) {
 
     /* Get the node's tree dimensions */
-    double x, y, w, h;
-    bbox( n, -1, out x, out y, out w, out h );
+    var nb = bbox( n, -1 );
+
+    /* Store the newly calculated node bounds back to the node */
+    n.tree_bbox = nb;
 
     /* Set the tree size in the node */
-    n.tree_size = ((n.side & NodeSide.horizontal()) != 0) ? h : w;
+    n.tree_size = ((n.side & NodeSide.horizontal()) != 0) ? nb.height : nb.width;
 
   }
 
@@ -132,14 +136,17 @@ public class Layout : Object {
 
   /* Adjust the entire tree */
   public virtual void adjust_tree_all( Node n, double amount ) {
-    Node parent = n.parent;
-    int  index  = n.index();
+    Node       parent = n.parent;
+    int        index  = n.index();
+    NodeBounds prev   = {0, 0, 0, 0};
     while( parent != null ) {
       adjust_tree( parent, index, n.side, amount );
+      prev   = parent.tree_bbox;
       amount = 0 - (get_adjust( parent ) / 2);
       index  = parent.index();
       parent = parent.parent;
     }
+    n.da.handle_tree_overlap( prev );
   }
 
   /* Recursively sets the side property of this node and all children nodes */
@@ -269,13 +276,13 @@ public class Layout : Object {
   public virtual void handle_update_by_insert( Node parent, Node child, int pos ) {
 
     double ox, oy, ow, oh;
-    double cx, cy, cw, ch;
     double adjust;
 
     update_tree_size( child );
 
+    var cb = child.tree_bbox;
+
     child.bbox( out ox, out oy, out ow, out oh );
-    bbox( child, child.side, out cx, out cy, out cw, out ch );
     set_pc_gap( child );
     adjust = get_insert_adjust( child );
 
@@ -298,22 +305,20 @@ public class Layout : Object {
      place ourselves just below the next to last sibling.
     */
     } else if( ((pos + 1) == parent.children().length) || (parent.children().index( pos + 1 ).side != child.side) ) {
-      double sx, sy, sw, sh;
-      bbox( parent.children().index( pos - 1 ), child.side, out sx, out sy, out sw, out sh );
+      var sb = bbox( parent.children().index( pos - 1 ), child.side );
       if( (child.side & NodeSide.horizontal()) != 0 ) {
-        child.posy = (sy + sh + (oy - cy)) - adjust;
+        child.posy = (sb.y + sb.height + (oy - cb.y)) - adjust;
       } else {
-        child.posx = (sx + sw + (ox - cx)) - adjust;
+        child.posx = (sb.x + sb.width + (ox - cb.x)) - adjust;
       }
 
     /* Otherwise, place ourselves just above the next sibling */
     } else {
-      double sx, sy, sw, sh;
-      bbox( parent.children().index( pos + 1 ), child.side, out sx, out sy, out sw, out sh );
+      var sb = bbox( parent.children().index( pos + 1 ), child.side );
       if( (child.side & NodeSide.horizontal()) != 0 ) {
-        child.posy = sy + (oy - cy) - adjust;
+        child.posy = sb.y + (oy - cb.y) - adjust;
       } else {
-        child.posx = sx + (ox - cx) - adjust;
+        child.posx = sb.x + (ox - cb.x) - adjust;
       }
     }
 
@@ -348,10 +353,9 @@ public class Layout : Object {
 
   /* Positions the given root node based on the position of the last node */
   public virtual void position_root( Node last, Node n ) {
-    double x, y, w, h;
-    bbox( last, -1, out x, out y, out w, out h );
+    var nb = last.tree_bbox;
     n.posx = last.posx;
-    n.posy = y + h + _rt_gap;
+    n.posy = nb.y + nb.height + _rt_gap;
   }
 
 }
