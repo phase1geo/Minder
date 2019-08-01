@@ -3314,25 +3314,33 @@ public class DrawArea : Gtk.DrawingArea {
   /* Moves all trees to avoid overlapping */
   public void handle_tree_overlap( NodeBounds prev ) {
 
-    var curr  = _current_node.tree_bbox;
+    var root  = _current_node.get_root();
+    var curr  = root.tree_bbox;
     var ldiff = curr.x - prev.x;
     var rdiff = (curr.x + curr.width) - (prev.x + prev.width);
     var adiff = curr.y - prev.y;
     var bdiff = (curr.y + curr.height) - (prev.y + prev.height);
 
+    stdout.printf( "curr: %g,%g,%g,%g, prev: %g, %g, %g, %g\n", curr.x, curr.y, curr.width, curr.height, prev.x, prev.y, prev.width, prev.height );
+    stdout.printf( "ldiff: %g, rdiff: %g, adiff: %g, bdiff: %g\n", ldiff, rdiff, adiff, bdiff );
+
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
-      if( node != _current_node ) {
+      if( node != root ) {
         if( node.is_left_of( prev ) ) {
+          stdout.printf( "node left of root\n" );
           node.posx += ldiff;
         }
         if( node.is_right_of( prev ) ) {
+          stdout.printf( "node right of root\n" );
           node.posx += rdiff;
         }
         if( node.is_above( prev ) ) {
+          stdout.printf( "node above root\n" );
           node.posy += adiff;
         }
         if( node.is_below( prev ) ) {
+          stdout.printf( "node below root\n" );
           node.posy += bdiff;
         }
       }

@@ -135,10 +135,9 @@ public class Layout : Object {
   }
 
   /* Adjust the entire tree */
-  public virtual void adjust_tree_all( Node n, double amount ) {
+  public virtual void adjust_tree_all( Node n, NodeBounds prev, double amount ) {
     Node       parent = n.parent;
     int        index  = n.index();
-    NodeBounds prev   = {0, 0, 0, 0};
     while( parent != null ) {
       adjust_tree( parent, index, n.side, amount );
       prev   = parent.tree_bbox;
@@ -210,7 +209,7 @@ public class Layout : Object {
     if( (n.side & NodeSide.horizontal()) != 0 ) {
       if( (n.parent != null) && (diffh != 0) ) {
         n.adjust_posy_only( 0 - (diffh / 2) );
-        adjust_tree_all( n, adjust );
+        adjust_tree_all( n, n.tree_bbox, adjust );
       }
       if( diffw != 0 ) {
         if( n.side == NodeSide.LEFT ) {
@@ -224,7 +223,7 @@ public class Layout : Object {
     } else {
       if( (n.parent != null) && (diffw != 0) ) {
         n.adjust_posx_only( 0 - (diffw / 2) );
-        adjust_tree_all( n, adjust );
+        adjust_tree_all( n, n.tree_bbox, adjust );
       }
       if( diffh != 0 ) {
         if( n.side == NodeSide.TOP ) {
@@ -240,7 +239,7 @@ public class Layout : Object {
 
   /* Called when a node's fold indicator changes */
   public virtual void handle_update_by_fold( Node n ) {
-    adjust_tree_all( n, (0 - (get_adjust( n ) / 2)) );
+    adjust_tree_all( n, n.tree_bbox, (0 - (get_adjust( n ) / 2)) );
   }
 
   /* Adjusts the gap between the parent and child nodes */
@@ -322,7 +321,7 @@ public class Layout : Object {
       }
     }
 
-    adjust_tree_all( child, (0 - adjust) );
+    adjust_tree_all( child, child.tree_bbox, (0 - adjust) );
 
   }
 
@@ -346,7 +345,7 @@ public class Layout : Object {
 
     /* Adjust the rest of the tree */
     if( parent.parent != null ) {
-      adjust_tree_all( parent, (0 - (get_adjust( parent ) / 2)) );
+      adjust_tree_all( parent, parent.tree_bbox, (0 - (get_adjust( parent ) / 2)) );
     }
 
   }
