@@ -402,8 +402,9 @@ public class MainWindow : ApplicationWindow {
     /* Create the menu button */
     _search_btn = new MenuButton();
     _search_btn.set_image( on_elementary
-      ? new Image.from_icon_name( "edit-find-symbolic", IconSize.LARGE_TOOLBAR )
-      : new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
+      ? new Image.from_icon_name( "edit-find", IconSize.LARGE_TOOLBAR )
+      : new Image.from_icon_name( "edit-find", IconSize.SMALL_TOOLBAR ) );
+    _search_btn.get_style_context().add_class( "find" );
     _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "Ctrl + F" ) );
     _search_btn.add_accelerator( "clicked", _accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _search_btn.clicked.connect( on_search_change );
