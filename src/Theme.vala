@@ -108,6 +108,7 @@ public class Theme : Object {
                      // "@define-color textColorPrimaryShadow @SILVER_500; " +
                      "@define-color colorAccent #603461; " +
                      ".theme-selected { background: #087DFF; } " +
+                     ".find { -gtk-icon-source: -gtk-icontheme('edit-find'); -gtk-icon-theme: 'hicolor'; } " +
                      ".canvas { background: " + background.to_string() + "; }";
       provider.load_from_data( css_data );
     } catch( GLib.Error e ) {

@@ -1900,6 +1900,9 @@ public class Node : Object {
 
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Node? current, bool draw_current, bool motion ) {
+    if( !is_root() && !draw_current ) {
+      draw_link( ctx, theme );
+    }
     if( this != current ) {
       if( !folded ) {
         for( int i=0; i<_children.length; i++ ) {
@@ -1907,9 +1910,6 @@ public class Node : Object {
         }
       }
       draw( ctx, theme, motion );
-    }
-    if( !is_root() && !draw_current ) {
-      draw_link( ctx, theme );
     }
   }
 
