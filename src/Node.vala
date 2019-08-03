@@ -163,6 +163,7 @@ public class Node : Object {
     set {
       double diff = (value - _posx);
       _posx = value;
+      update_tree_bbox( diff, 0 );
       position_name();
       if( diff != 0 ) {
         moved( diff, 0 );
@@ -176,6 +177,7 @@ public class Node : Object {
     set {
       double diff = (value - _posy);
       _posy = value;
+      update_tree_bbox( 0, diff );
       position_name();
       if( diff != 0 ) {
         moved( 0, diff );
@@ -377,6 +379,7 @@ public class Node : Object {
     parent        = n.parent;
     side          = n.side;
     style         = n.style;
+    tree_bbox     = n.tree_bbox;
   }
 
   /* Returns the associated ID of this node */
@@ -386,13 +389,17 @@ public class Node : Object {
 
   /* Sets the posx value only, leaving the children positions alone */
   public void set_posx_only( double value ) {
+    var diff = value - _posx;
     _posx = value;
+    update_tree_bbox( diff, 0 );
     position_name();
   }
 
   /* Sets the posy value only, leaving the children positions alone */
   public void set_posy_only( double value ) {
+    var diff = value - _posy;
     _posy = value;
+    update_tree_bbox( 0, diff );
     position_name();
   }
 
@@ -414,13 +421,25 @@ public class Node : Object {
   /* Sets the posx value only, leaving the children positions alone */
   public void adjust_posx_only( double value ) {
     _posx += value;
+    update_tree_bbox( value, 0 );
     position_name();
   }
 
   /* Sets the posy value only, leaving the children positions alone */
   public void adjust_posy_only( double value ) {
     _posy += value;
+    update_tree_bbox( 0, value );
     position_name();
+  }
+
+  /* Updates the tree_bbox */
+  private void update_tree_bbox( double diffx, double diffy ) {
+    var nb = tree_bbox;
+    stdout.printf( "In update_tree_bbox, x: %g, y: %g, diffx: %g, diffy: %g\n", nb.x, nb.y, diffx, diffy );
+    nb.x += diffx;
+    nb.y += diffy;
+    stdout.printf( "  newx: %g, newy: %g\n", nb.x, nb.y );
+    tree_bbox = nb;
   }
 
   /* Called whenever the node size is changed */
@@ -510,6 +529,7 @@ public class Node : Object {
 
   /* Returns true if this tree bounds of this node is right of the given bounds */
   public bool is_right_of( NodeBounds nb ) {
+    stdout.printf( "In is_right_of, tb.x: %g, nb.x: %g, nb.w: %g, +: %g\n", tree_bbox.x, nb.x, nb.width, (nb.x + nb.width) );
     return( tree_bbox.x > (nb.x + nb.width) );
   }
 
@@ -1215,6 +1235,7 @@ public class Node : Object {
   private void parent_moved( Node parent, double diffx, double diffy ) {
     _posx += diffx;
     _posy += diffy;
+    update_tree_bbox( diffx, diffy );
     position_name();
     moved( diffx, diffy );
   }
@@ -1460,6 +1481,7 @@ public class Node : Object {
   public virtual void pan( double diffx, double diffy ) {
     _posx += diffx;
     _posy += diffy;
+    update_tree_bbox( diffx, diffy );
     position_name();
     moved( diffx, diffy );
   }
@@ -1501,11 +1523,15 @@ public class Node : Object {
   */
   public void set_node_info( Array<NodeInfo?> info, ref int index ) {
 
+    var diffx = info.index( index ).posx - _posx;
+    var diffy = info.index( index ).posy - _posy;
+
     _posx       = info.index( index ).posx;
     _posy       = info.index( index ).posy;
     side        = info.index( index ).side;
     _link_color = info.index( index ).color;
 
+    update_tree_bbox( diffx, diffy );
     position_name();
 
     for( int i=0; i<_children.length; i++ ) {
