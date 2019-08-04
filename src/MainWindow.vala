@@ -611,12 +611,8 @@ public class MainWindow : ApplicationWindow {
   private void add_property_button() {
 
     /* Add the menubutton */
-    _prop_show = on_elementary
-      ? new Image.from_icon_name( "pane-show-symbolic", IconSize.LARGE_TOOLBAR )
-      : new Image.from_icon_name( "go-previous-symbolic", IconSize.SMALL_TOOLBAR );
-    _prop_hide = on_elementary
-      ? new Image.from_icon_name( "pane-hide-symbolic", IconSize.LARGE_TOOLBAR )
-      : new Image.from_icon_name( "go-next-symbolic", IconSize.SMALL_TOOLBAR );
+    _prop_show = new Image.from_icon_name( "minder-sidebar-open",  IconSize.LARGE_TOOLBAR );
+    _prop_hide = new Image.from_icon_name( "minder-sidebar-close", IconSize.LARGE_TOOLBAR );
     _prop_btn  = new Button();
     _prop_btn.image = _prop_show;
     _prop_btn.set_tooltip_text( _( "Properties" ) );
