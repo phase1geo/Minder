@@ -49,24 +49,22 @@ public class LinkTypeStraight : Object, LinkType {
     return( 0 );
   }
 
-  private double calc_to_x( Node to_node, double from, double adjusted, double adjustA ) {
-    if( from < adjusted ) {
-      if( (to_node.posx - adjustA) >= adjusted ) {
-        return( to_node.posx - adjustA );
-      }
-    } else if( (to_node.posx + to_node.width + adjustA) <= adjusted ) {
-      return( to_node.posx + to_node.width + adjustA );
+  private double calc_to_x( Node to_node, bool from_lt_to, double adjusted, double adjustA, ref bool force ) {
+    var left  = to_node.posx - adjustA;
+    var right = to_node.posx + to_node.width + adjustA;
+    if( (adjusted < left) || (adjusted > right) || force ) {
+      force = true;
+      return( from_lt_to ? left : right );
     }
     return( adjusted );
   }
 
-  private double calc_to_y( Node to_node, double from, double adjusted, double adjustA ) {
-    if( from < adjusted ) {
-      if( (to_node.posy - adjustA) >= adjusted ) {
-        return( to_node.posy - adjustA );
-      }
-    } else if( (to_node.posy + to_node.height + adjustA) <= adjusted ) {
-      return( to_node.posy + to_node.height + adjustA );
+  private double calc_to_y( Node to_node, bool from_lt_to, double adjusted, double adjustA, ref bool force ) {
+    var top    = to_node.posy - adjustA;
+    var bottom = to_node.posy + to_node.height + adjustA;
+    if( (adjusted < top) || (adjusted > bottom) || force ) {
+      force = true;
+      return( from_lt_to ? top : bottom );
     }
     return( adjusted );
   }
@@ -83,22 +81,42 @@ public class LinkTypeStraight : Object, LinkType {
     var adjustA = adjust_a( style );
     var adjustB = style.link_arrow ? adjust_b( side, adjustA, x, y ) : 0;
     var adjustT = adjust_tip( style );
+    var force   = false;
 
-    tipx = tipy = 0;
+    tipx  = tipy = 0;
+    tailx = from_x;
+    taily = from_y;
 
     switch( side ) {
-      case NodeSide.LEFT   :  to_x += adjustA;  to_y = calc_to_y( to_node, from_y, (to_y + adjustB), adjustA );  tipx = to_x - adjustT;  tipy = calc_to_y( to_node, from_y, (to_y - adjust_b( side, adjustT, x, y )), adjustT );  break;
-      case NodeSide.RIGHT  :  to_x -= adjustA;  to_y = calc_to_y( to_node, from_y, (to_y - adjustB), adjustA );  tipx = to_x + adjustT;  tipy = calc_to_y( to_node, from_y, (to_y + adjust_b( side, adjustT, x, y )), adjustT );  break;
-      case NodeSide.TOP    :  to_y += adjustA;  to_x = calc_to_x( to_node, from_x, (to_x + adjustB), adjustA );  tipy = to_y - adjustT;  tipx = calc_to_x( to_node, from_x, (to_x - adjust_b( side, adjustT, x, y )), adjustT );  break;
-      case NodeSide.BOTTOM :  to_y -= adjustA;  to_x = calc_to_x( to_node, from_x, (to_x - adjustB), adjustA );  tipy = to_y + adjustT;  tipx = calc_to_x( to_node, from_x, (to_x + adjust_b( side, adjustT, x, y )), adjustT );  break;
+      case NodeSide.LEFT :
+        to_x += adjustA;
+        to_y  = calc_to_y( to_node, (from_y < to_y), (to_y + adjustB), adjustA, ref force );
+        tipx  = to_x - adjustT;
+        tipy  = calc_to_y( to_node, (from_y < to_y), (to_y - adjust_b( side, adjustT, x, y )), adjustT, ref force );
+        break;
+      case NodeSide.RIGHT :
+        to_x -= adjustA;
+        to_y  = calc_to_y( to_node, (from_y < to_y), (to_y - adjustB), adjustA, ref force );
+        tipx  = to_x + adjustT;
+        tipy  = calc_to_y( to_node, (from_y < to_y), (to_y + adjust_b( side, adjustT, x, y )), adjustT, ref force );
+        break;
+      case NodeSide.TOP :
+        to_y += adjustA;
+        to_x  = calc_to_x( to_node, (from_x < to_x), (to_x + adjustB), adjustA, ref force );
+        tipy  = to_y - adjustT;
+        tipx  = calc_to_x( to_node, (from_x < to_x), (to_x - adjust_b( side, adjustT, x, y )), adjustT, ref force );
+        break;
+      case NodeSide.BOTTOM :
+        to_y -= adjustA;
+        to_x  = calc_to_x( to_node, (from_x < to_x), (to_x - adjustB), adjustA, ref force );
+        tipy  = to_y + adjustT;
+        tipx  = calc_to_x( to_node, (from_x < to_x), (to_x + adjust_b( side, adjustT, x, y )), adjustT, ref force );
+        break;
     }
 
     ctx.move_to( from_x, from_y );
     ctx.line_to( to_x,   to_y );
     ctx.stroke();
-
-    tailx = from_x;
-    taily = from_y;
 
   }
 
