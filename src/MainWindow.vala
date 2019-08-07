@@ -83,7 +83,8 @@ public class MainWindow : ApplicationWindow {
     { "action_print",         action_print }
   };
 
-  private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
+  private bool     on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
+  private IconSize icon_size;
 
   private delegate void ChangedFunc();
 
@@ -95,6 +96,7 @@ public class MainWindow : ApplicationWindow {
     Object( application: app );
 
     _settings = settings;
+    icon_size = on_elementary ? IconSize.LARGE_TOOLBAR : IconSize.SMALL_TOOLBAR;
 
     /* Handle any changes to the dark mode preference setting */
     handle_prefer_dark_changes();
@@ -141,42 +143,32 @@ public class MainWindow : ApplicationWindow {
     _nb.close_tab_requested.connect( close_tab_requested );
 
     /* Create title toolbar */
-    var new_btn = on_elementary
-      ? new Button.from_icon_name( "document-new", IconSize.LARGE_TOOLBAR )
-      : new Button.from_icon_name( "document-new-symbolic" );
+    var new_btn = new Button.from_icon_name( (on_elementary ? "document-new" : "document-new-symbolic"), icon_size );
     new_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "New File" ), "Ctrl + N" ) );
     new_btn.add_accelerator( "clicked", _accel_group, 'n', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
 
-    var open_btn = on_elementary
-      ? new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR )
-      : new Button.from_icon_name( "document-open-symbolic" );
+    var open_btn = new Button.from_icon_name( (on_elementary ? "document-open" : "document-open-symbolic"), icon_size );
     open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open File" ), "Ctrl + O" ) );
     open_btn.add_accelerator( "clicked", _accel_group, 'o', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
-    var save_btn = on_elementary
-      ? new Button.from_icon_name( "document-save-as", IconSize.LARGE_TOOLBAR )
-      : new Button.from_icon_name( "document-save-as-symbolic" );
+    var save_btn = new Button.from_icon_name( (on_elementary ? "document-save-as" : "document-save-as-symbolic"), icon_size );
     save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "Ctrl + Shift + S" ) );
     open_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
-    _undo_btn = on_elementary
-      ? new Button.from_icon_name( "edit-undo", IconSize.LARGE_TOOLBAR )
-      : new Button.from_icon_name( "edit-undo-symbolic" );
+    _undo_btn = new Button.from_icon_name( (on_elementary ? "edit-undo" : "edit-undo-symbolic"), icon_size );
     _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "Ctrl + Z" ) );
     _undo_btn.set_sensitive( false );
     _undo_btn.add_accelerator( "clicked", _accel_group, 'z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _undo_btn.clicked.connect( do_undo );
     _header.pack_start( _undo_btn );
 
-    _redo_btn = on_elementary
-      ? new Button.from_icon_name( "edit-redo", IconSize.LARGE_TOOLBAR )
-      : new Button.from_icon_name( "edit-redo-symbolic" );
+    _redo_btn = new Button.from_icon_name( (on_elementary ? "edit-redo" : "edit-redo-symbolic"), icon_size );
     _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Redo" ), "Ctrl + Shift + Z" ) );
     _redo_btn.set_sensitive( false );
     _redo_btn.add_accelerator( "clicked", _accel_group, 'z', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
@@ -338,9 +330,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
-    menu_btn.set_image( on_elementary
-      ? new Image.from_icon_name( "zoom-fit-best", IconSize.LARGE_TOOLBAR )
-      : new Image.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR ) );
+    menu_btn.set_image( new Image.from_icon_name( (on_elementary ? "zoom-fit-best" : "zoom-fit-best-symbolic"), icon_size ) );
     menu_btn.set_tooltip_text( _( "Zoom" ) );
     _header.pack_end( menu_btn );
 
@@ -401,10 +391,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     _search_btn = new MenuButton();
-    _search_btn.set_image( on_elementary
-      ? new Image.from_icon_name( "edit-find", IconSize.LARGE_TOOLBAR )
-      : new Image.from_icon_name( "edit-find", IconSize.SMALL_TOOLBAR ) );
-    _search_btn.get_style_context().add_class( "find" );
+    _search_btn.set_image( new Image.from_icon_name( "minder-search", icon_size ) );
     _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "Ctrl + F" ) );
     _search_btn.add_accelerator( "clicked", _accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _search_btn.clicked.connect( on_search_change );
@@ -556,9 +543,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
-    menu_btn.set_image( on_elementary
-      ? new Image.from_icon_name( "document-export", IconSize.LARGE_TOOLBAR )
-      : new Image.from_icon_name( "document-send-symbolic", IconSize.SMALL_TOOLBAR ) );
+    menu_btn.set_image( new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic"), icon_size ) );
     menu_btn.set_tooltip_text( _( "Export" ) );
     _header.pack_end( menu_btn );
 
@@ -590,7 +575,7 @@ public class MainWindow : ApplicationWindow {
   private void add_focus_button() {
 
     _focus_btn       = new ToggleButton();
-    _focus_btn.image = new Image.from_icon_name( "minder-focus", IconSize.LARGE_TOOLBAR );
+    _focus_btn.image = new Image.from_icon_name( "minder-focus", icon_size );
     _focus_btn.draw_indicator = true;
     _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "Ctrl + Shift + F" ) );
     _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
@@ -611,12 +596,8 @@ public class MainWindow : ApplicationWindow {
   private void add_property_button() {
 
     /* Add the menubutton */
-    _prop_show = on_elementary
-      ? new Image.from_icon_name( "pane-show-symbolic", IconSize.LARGE_TOOLBAR )
-      : new Image.from_icon_name( "go-previous-symbolic", IconSize.SMALL_TOOLBAR );
-    _prop_hide = on_elementary
-      ? new Image.from_icon_name( "pane-hide-symbolic", IconSize.LARGE_TOOLBAR )
-      : new Image.from_icon_name( "go-next-symbolic", IconSize.SMALL_TOOLBAR );
+    _prop_show = new Image.from_icon_name( "minder-sidebar-open",  icon_size );
+    _prop_hide = new Image.from_icon_name( "minder-sidebar-close", icon_size );
     _prop_btn  = new Button();
     _prop_btn.image = _prop_show;
     _prop_btn.set_tooltip_text( _( "Properties" ) );
