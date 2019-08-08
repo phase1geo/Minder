@@ -435,10 +435,8 @@ public class Node : Object {
   /* Updates the tree_bbox */
   private void update_tree_bbox( double diffx, double diffy ) {
     var nb = tree_bbox;
-    stdout.printf( "In update_tree_bbox, x: %g, y: %g, diffx: %g, diffy: %g\n", nb.x, nb.y, diffx, diffy );
     nb.x += diffx;
     nb.y += diffy;
-    stdout.printf( "  newx: %g, newy: %g\n", nb.x, nb.y );
     tree_bbox = nb;
   }
 
@@ -529,7 +527,6 @@ public class Node : Object {
 
   /* Returns true if this tree bounds of this node is right of the given bounds */
   public bool is_right_of( NodeBounds nb ) {
-    stdout.printf( "In is_right_of, tb.x: %g, nb.x: %g, nb.w: %g, +: %g\n", tree_bbox.x, nb.x, nb.width, (nb.x + nb.width) );
     return( tree_bbox.x > (nb.x + nb.width) );
   }
 

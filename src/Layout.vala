@@ -209,7 +209,6 @@ public class Layout : Object {
     if( (n.side & NodeSide.horizontal()) != 0 ) {
       if( (n.parent != null) && (diffh != 0) ) {
         n.adjust_posy_only( 0 - (diffh / 2) );
-        adjust_tree_all( n, n.tree_bbox, adjust );
       }
       if( diffw != 0 ) {
         if( n.side == NodeSide.LEFT ) {
@@ -223,7 +222,6 @@ public class Layout : Object {
     } else {
       if( (n.parent != null) && (diffw != 0) ) {
         n.adjust_posx_only( 0 - (diffw / 2) );
-        adjust_tree_all( n, n.tree_bbox, adjust );
       }
       if( diffh != 0 ) {
         if( n.side == NodeSide.TOP ) {
@@ -235,6 +233,7 @@ public class Layout : Object {
         }
       }
     }
+    adjust_tree_all( n, n.tree_bbox, adjust );
   }
 
   /* Called when a node's fold indicator changes */
@@ -297,7 +296,6 @@ public class Layout : Object {
       } else {
         child.posx = px + ((pw / 2) - (ow / 2));
       }
-      return;
 
     /*
      If we are at the end of the list of children with the matching side as ours,
@@ -344,9 +342,7 @@ public class Layout : Object {
     }
 
     /* Adjust the rest of the tree */
-    if( parent.parent != null ) {
-      adjust_tree_all( parent, parent.tree_bbox, (0 - (get_adjust( parent ) / 2)) );
-    }
+    adjust_tree_all( parent, parent.tree_bbox, (0 - (get_adjust( parent ) / 2)) );
 
   }
 

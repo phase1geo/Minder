@@ -3321,26 +3321,26 @@ public class DrawArea : Gtk.DrawingArea {
     var adiff = curr.y - prev.y;
     var bdiff = (curr.y + curr.height) - (prev.y + prev.height);
 
-    stdout.printf( "curr: %g,%g,%g,%g, prev: %g, %g, %g, %g\n", curr.x, curr.y, curr.width, curr.height, prev.x, prev.y, prev.width, prev.height );
-    stdout.printf( "ldiff: %g, rdiff: %g, adiff: %g, bdiff: %g\n", ldiff, rdiff, adiff, bdiff );
+    stdout.printf( "curr: %g, %g, %g, %g, prev: %g, %g, %g, %g\n", curr.x, curr.y, curr.width, curr.height, prev.x, prev.y, prev.width, prev.height );
+    stdout.printf( "    ldiff: %g, rdiff: %g, adiff: %g, bdiff: %g\n", ldiff, rdiff, adiff, bdiff );
 
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
       if( node != root ) {
         if( node.is_left_of( prev ) ) {
-          stdout.printf( "node left of root\n" );
+          stdout.printf( "        node (%s) left of root\n", node.name.text );
           node.posx += ldiff;
         }
         if( node.is_right_of( prev ) ) {
-          stdout.printf( "node right of root\n" );
+          stdout.printf( "        node (%s) right of root\n", node.name.text );
           node.posx += rdiff;
         }
         if( node.is_above( prev ) ) {
-          stdout.printf( "node above root\n" );
+          stdout.printf( "        node (%s) above root\n", node.name.text );
           node.posy += adiff;
         }
         if( node.is_below( prev ) ) {
-          stdout.printf( "node below root\n" );
+          stdout.printf( "        node (%s) below root\n", node.name.text );
           node.posy += bdiff;
         }
       }
