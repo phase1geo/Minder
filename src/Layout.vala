@@ -76,7 +76,7 @@ public class Layout : Object {
     if( (num_children != 0) && !parent.folded ) {
       for( int i=0; i<parent.children().length; i++ ) {
         if( (parent.children().index( i ).side & side_mask) != 0 ) {
-          var cb = bbox( parent.children().index( i ), side_mask );
+          var cb = parent.children().index( i ).tree_bbox;
           nb.x  = (nb.x < cb.x) ? nb.x : cb.x;
           nb.y  = (nb.y < cb.y) ? nb.y : cb.y;
           x2 = (x2 < (cb.x + cb.width))  ? (cb.x + cb.width)  : x2;
@@ -111,13 +111,18 @@ public class Layout : Object {
    If the returned value is positive, it indicates a growth occurred.
   */
   public double get_adjust( Node parent ) {
+
     double orig_tree_size = parent.tree_size;
+
     update_tree_size( parent );
+
     return( (orig_tree_size == 0) ? 0 : (parent.tree_size - orig_tree_size) );
+
   }
 
   /* Adjusts the given tree by the given amount */
   public virtual void adjust_tree( Node parent, int child_index, int side_mask, double amount ) {
+
     for( int i=0; i<parent.children().length; i++ ) {
       if( i != child_index ) {
         Node n = parent.children().index( i );
@@ -132,26 +137,41 @@ public class Layout : Object {
         amount = 0 - amount;
       }
     }
+
   }
 
   /* Adjust the entire tree */
-  public virtual void adjust_tree_all( Node n, NodeBounds prev, double amount ) {
-    Node       parent = n.parent;
-    int        index  = n.index();
+  public virtual void adjust_tree_all( Node n, NodeBounds prev, double amount, string msg ) {
+
+    var parent = n.parent;
+    var last   = n;
+    var index  = n.index();
+    var nodes  = n.da.get_nodes();
+
     while( parent != null ) {
       adjust_tree( parent, index, n.side, amount );
       prev   = parent.tree_bbox;
       amount = 0 - (get_adjust( parent ) / 2);
       index  = parent.index();
+      last   = parent;
       parent = parent.parent;
     }
-    n.da.handle_tree_overlap( prev );
+
+    for( int i=0; i<nodes.length; i++ ) {
+      if( nodes.index( i ) == last ) {
+        n.da.handle_tree_overlap( prev );
+      }
+    }
+
   }
 
   /* Recursively sets the side property of this node and all children nodes */
   public virtual void propagate_side( Node parent, NodeSide side ) {
+
     double px, py, pw, ph;
+
     parent.bbox( out px, out py, out pw, out ph );
+
     for( int i=0; i<parent.children().length; i++ ) {
       Node n = parent.children().index( i );
       if( n.side != side ) {
@@ -177,6 +197,7 @@ public class Layout : Object {
         propagate_side( n, side );
       }
     }
+
   }
 
   /* Returns the side of the given node relative to its root */
@@ -233,12 +254,12 @@ public class Layout : Object {
         }
       }
     }
-    adjust_tree_all( n, n.tree_bbox, adjust );
+    adjust_tree_all( n, n.tree_bbox, adjust, "by_edit" );
   }
 
   /* Called when a node's fold indicator changes */
   public virtual void handle_update_by_fold( Node n ) {
-    adjust_tree_all( n, n.tree_bbox, (0 - (get_adjust( n ) / 2)) );
+    adjust_tree_all( n, n.tree_bbox, (0 - (get_adjust( n ) / 2)), "by_fold" );
   }
 
   /* Adjusts the gap between the parent and child nodes */
@@ -319,7 +340,7 @@ public class Layout : Object {
       }
     }
 
-    adjust_tree_all( child, child.tree_bbox, (0 - adjust) );
+    adjust_tree_all( child, child.tree_bbox, (0 - adjust), "by_insert" );
 
   }
 
@@ -342,7 +363,7 @@ public class Layout : Object {
     }
 
     /* Adjust the rest of the tree */
-    adjust_tree_all( parent, parent.tree_bbox, (0 - (get_adjust( parent ) / 2)) );
+    adjust_tree_all( parent, parent.tree_bbox, (0 - (get_adjust( parent ) / 2)), "by_delete" );
 
   }
 
