@@ -188,9 +188,11 @@ public class MapInspector : Box {
 
     var sw  = new ScrolledWindow( null, null );
     var vp  = new Viewport( null, null );
+    var tb  = new Box( Orientation.VERTICAL, 0 );
     _theme_box = new Box( Orientation.VERTICAL, 20 );
+    tb.pack_start( _theme_box, true, true );
     vp.set_size_request( 200, 600 );
-    vp.add( _theme_box );
+    vp.add( tb );
     sw.add( vp );
 
     /* Get the theme information to display */
@@ -217,6 +219,11 @@ public class MapInspector : Box {
       ebox.add( item );
       _theme_box.pack_start( ebox, false, true );
     }
+
+    var add = new Button.from_icon_name( "list-add-symbolic", IconSize.LARGE_TOOLBAR );
+    add.set_tooltip_text( _( "Add Custom Theme" ) );
+    add.clicked.connect( create_custom_theme );
+    tb.pack_start( add, true, true );
 
     /* Pack the panel */
     pack_start( lbl, false, true );
@@ -314,6 +321,12 @@ public class MapInspector : Box {
 
     /* Initialize the button states */
     current_changed();
+
+  }
+
+  private void create_custom_theme() {
+
+    /* TBD */
 
   }
 

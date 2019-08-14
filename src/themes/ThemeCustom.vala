@@ -55,57 +55,57 @@ public class ThemeCustom : Theme {
 
     string? b = n->get_prop( "background" );
     if( b != null ) {
-      background.parse( b );
+      background = get_color( b );
     }
 
     string? f = n->get_prop( "foreground" );
     if( f != null ) {
-      foreground.parse( f );
+      foreground = get_color( f );
     }
 
     string? rb = n->get_prop( "root_background" );
     if( rb != null ) {
-      root_background.parse( rb );
+      root_background = get_color( rb );
     }
 
     string? rf = n->get_prop( "root_foreground" );
     if( rf != null ) {
-      root_foreground.parse( rb );
+      root_foreground = get_color( rb );
     }
 
     string? nb = n->get_prop( "nodesel_background" );
     if( nb != null ) {
-      nodesel_background.parse( nb );
+      nodesel_background = get_color( nb );
     }
 
     string? nf = n->get_prop( "nodesel_foreground" );
     if( nf != null ) {
-      nodesel_foreground.parse( nf );
+      nodesel_foreground = get_color( nf );
     }
 
     string? tb = n->get_prop( "textsel_background" );
     if( tb != null ) {
-      textsel_background.parse( tb );
+      textsel_background = get_color( tb );
     }
 
     string? tf = n->get_prop( "textsel_foreground" );
     if( tf != null ) {
-      textsel_foreground.parse( tf );
+      textsel_foreground = get_color( tf );
     }
 
     string? tc = n->get_prop( "text_cursor" );
     if( tc != null ) {
-      text_cursor.parse( tc );
+      text_cursor = get_color( tc );
     }
 
     string? a = n->get_prop( "attachable" );
     if( a != null ) {
-      attachable_color.parse( a );
+      attachable_color = get_color( a );
     }
 
     string? c = n->get_prop( "connection" );
     if( c != null ) {
-      connection_color.parse( c );
+      connection_color = get_color( c );
     }
 
     string? d = n->get_prop( "prefer_dark" );
