@@ -38,6 +38,7 @@ sources += files(
     'styles/NodeBorderSquared.vala',
     'styles/NodeBorderUnderlined.vala',
 
+    'themes/ThemeCustom.vala',
     'themes/ThemeDark.vala',
     'themes/ThemeDefault.vala',
     'themes/ThemeSolarizedDark.vala',

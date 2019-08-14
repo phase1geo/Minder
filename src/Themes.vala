@@ -25,6 +25,7 @@ using GLib;
 public class Themes : Object {
 
   private Array<Theme> _themes;
+  private uint         _custom_start;
 
   /* Default constructor */
   public Themes() {
@@ -43,6 +44,11 @@ public class Themes : Object {
     _themes.append_val( dark_theme );
     _themes.append_val( solarized_light_theme );
     _themes.append_val( solarized_dark_theme );
+
+    _custom_start = _themes.length;
+
+    /* Load the customized themes */
+    load_custom();
 
   }
 
@@ -68,6 +74,47 @@ public class Themes : Object {
       }
     }
     return( _themes.index( 0 ) );
+  }
+
+  /* Loads the custom themes from XML */
+  private void load_custom() {
+    var themes = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "custom_themes.xml" );
+    Xml.Doc* doc = Xml.Parser.parse_file( themes );
+    if( doc == null ) return;
+    for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "theme") ) {
+        var theme = new ThemeCustom();
+        theme.load( it );
+        _themes.append_val( theme );
+      }
+    }
+    delete doc;
+  }
+
+  /* Saves the custom themes to XML */
+  public void save_custom() {
+
+    var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
+
+    if( DirUtils.create_with_parents( dir, 0775 ) != 0 ) {
+      return;
+    }
+
+    var       fname = GLib.Path.build_filename( dir, "custom_themes.xml" );
+    Xml.Doc*  doc   = new Xml.Doc( "1.0" );
+    Xml.Node* root  = new Xml.Node( null, "themes" );
+
+    doc->set_root_element( root );
+
+    for( uint i=_custom_start; i<_themes.length; i++ ) {
+      root->add_child( (_themes.index( i ) as ThemeCustom).save() );
+    }
+
+    /* Save the file */
+    doc->save_format_file( fname, 1 );
+
+    delete doc;
+
   }
 
 }
