@@ -1149,12 +1149,11 @@ public class DrawArea : Gtk.DrawingArea {
    If no node is currently selected, returns a value of 0.
   */
   public void zoom_to_selected() {
-    double x, y, w, h;
     if( _current_node == null ) return;
     animator.add_pan_scale( "zoom to selected" );
-    _current_node.layout.bbox( _current_node, -1, out x, out y, out w, out h );
-    position_box( x, y, w, h, 0.5, 0.5 );
-    set_scaling_factor( get_scaling_factor( w, h ) );
+    var nb = _current_node.tree_bbox;
+    position_box( nb.x, nb.y, nb.width, nb.height, 0.5, 0.5 );
+    set_scaling_factor( get_scaling_factor( nb.width, nb.height ) );
     animator.animate();
   }
 
@@ -1168,12 +1167,11 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Calculate the overall size of the map */
     for( int i=0; i<_nodes.length; i++ ) {
-      double nx, ny, nw, nh;
-      _nodes.index( i ).layout.bbox( _nodes.index( i ), -1, out nx, out ny, out nw, out nh );
-      x1 = (x1 < nx) ? x1 : nx;
-      y1 = (y1 < ny) ? y1 : ny;
-      x2 = (x2 < (nx + nw)) ? (nx + nw) : x2;
-      y2 = (y2 < (ny + nh)) ? (ny + nh) : y2;
+      var nb = _nodes.index( i ).tree_bbox;
+      x1 = (x1 < nb.x) ? x1 : nb.x;
+      y1 = (y1 < nb.y) ? y1 : nb.y;
+      x2 = (x2 < (nb.x + nb.width))  ? (nb.x + nb.width)  : x2;
+      y2 = (y2 < (nb.y + nb.height)) ? (nb.y + nb.height) : y2;
     }
 
     /* Set the outputs */
@@ -3311,6 +3309,28 @@ public class DrawArea : Gtk.DrawingArea {
       return( (Random.int_range( 0, 2 ) == 0) ? -1 : 1 );
     };
     sort_children( _current_node, sort_fn );
+  }
+
+  /* Moves all trees to avoid overlapping */
+  public void handle_tree_overlap( NodeBounds prev ) {
+
+    var root  = _current_node.get_root();
+    var curr  = root.tree_bbox;
+    var ldiff = curr.x - prev.x;
+    var rdiff = (curr.x + curr.width) - (prev.x + prev.width);
+    var adiff = curr.y - prev.y;
+    var bdiff = (curr.y + curr.height) - (prev.y + prev.height);
+
+    for( int i=0; i<_nodes.length; i++ ) {
+      var node = _nodes.index( i );
+      if( node != root ) {
+        if( node.is_left_of( prev ) )  node.posx += ldiff;
+        if( node.is_right_of( prev ) ) node.posx += rdiff;
+        if( node.is_above( prev ) )    node.posy += adiff;
+        if( node.is_below( prev ) )    node.posy += bdiff;
+      }
+    }
+
   }
 
 }

@@ -112,6 +112,7 @@ public class Node : Object {
   private static int _next_id = 0;
 
   /* Member variables */
+  private   DrawArea     _da;
   protected int          _id;
   private   CanvasText   _name;
   private   string       _note         = "";
@@ -142,6 +143,11 @@ public class Node : Object {
   public signal void resized( double diffw, double diffh );
 
   /* Properties */
+  public DrawArea da {
+    get {
+      return( _da );
+    }
+  }
   public CanvasText name {
     get {
       return( _name );
@@ -157,6 +163,7 @@ public class Node : Object {
     set {
       double diff = (value - _posx);
       _posx = value;
+      update_tree_bbox( diff, 0 );
       position_name();
       if( diff != 0 ) {
         moved( diff, 0 );
@@ -170,6 +177,7 @@ public class Node : Object {
     set {
       double diff = (value - _posy);
       _posy = value;
+      update_tree_bbox( 0, diff );
       position_name();
       if( diff != 0 ) {
         moved( 0, diff );
@@ -291,9 +299,11 @@ public class Node : Object {
       update_size();
     }
   }
+  public NodeBounds tree_bbox { get; set; default = NodeBounds(); }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
+    _da       = da;
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
@@ -303,6 +313,7 @@ public class Node : Object {
 
   /* Constructor initializing string */
   public Node.with_name( DrawArea da, string n, Layout? layout ) {
+    _da       = da;
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
@@ -312,6 +323,7 @@ public class Node : Object {
 
   /* Copies an existing node to this node */
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
+    _da       = da;
     _id       = _next_id++;
     _name     = new CanvasText( da, _max_width );
     copy_variables( n, im );
@@ -325,6 +337,7 @@ public class Node : Object {
 
   /* Copies an existing node tree to this node */
   public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int> id_map ) {
+    _da       = da;
     _id       = _next_id++;
     _name     = new CanvasText( da, _max_width );
     _children = new Array<Node>();
@@ -366,6 +379,7 @@ public class Node : Object {
     parent        = n.parent;
     side          = n.side;
     style         = n.style;
+    tree_bbox     = n.tree_bbox;
   }
 
   /* Returns the associated ID of this node */
@@ -375,13 +389,17 @@ public class Node : Object {
 
   /* Sets the posx value only, leaving the children positions alone */
   public void set_posx_only( double value ) {
+    var diff = value - _posx;
     _posx = value;
+    update_tree_bbox( diff, 0 );
     position_name();
   }
 
   /* Sets the posy value only, leaving the children positions alone */
   public void set_posy_only( double value ) {
+    var diff = value - _posy;
     _posy = value;
+    update_tree_bbox( 0, diff );
     position_name();
   }
 
@@ -403,13 +421,23 @@ public class Node : Object {
   /* Sets the posx value only, leaving the children positions alone */
   public void adjust_posx_only( double value ) {
     _posx += value;
+    update_tree_bbox( value, 0 );
     position_name();
   }
 
   /* Sets the posy value only, leaving the children positions alone */
   public void adjust_posy_only( double value ) {
     _posy += value;
+    update_tree_bbox( 0, value );
     position_name();
+  }
+
+  /* Updates the tree_bbox */
+  private void update_tree_bbox( double diffx, double diffy ) {
+    var nb = tree_bbox;
+    nb.x += diffx;
+    nb.y += diffy;
+    tree_bbox = nb;
   }
 
   /* Called whenever the node size is changed */
@@ -490,6 +518,26 @@ public class Node : Object {
       p = p.parent;
     }
     return( p == node );
+  }
+
+  /* Returns true if this tree bounds of this node is left of the given bounds */
+  public bool is_left_of( NodeBounds nb ) {
+    return( (tree_bbox.x + tree_bbox.width) < nb.x ); 
+  }
+
+  /* Returns true if this tree bounds of this node is right of the given bounds */
+  public bool is_right_of( NodeBounds nb ) {
+    return( tree_bbox.x > (nb.x + nb.width) );
+  }
+
+  /* Returns true if this tree bounds of this node is above the given bounds */
+  public bool is_above( NodeBounds nb ) {
+    return( (tree_bbox.y + tree_bbox.height) < nb.y );
+  }
+
+  /* Returns true if this tree bounds of this node is below the given bounds */
+  public bool is_below( NodeBounds nb ) {
+    return( tree_bbox.y > (nb.y + nb.height) );
   }
 
   /* Returns the maximum width allowed for this node */
@@ -624,7 +672,6 @@ public class Node : Object {
       double ix, iy, iw, ih;
       image_bbox( out ix, out iy, out iw, out ih );
       return( Utils.is_within_bounds( x, y, ix, iy, iw, ih ) );
-      // return( (ix <= x) && (x <= (ix + iw)) && (iy <= y) && (y <= (iy + ih)) );
     } else {
       return( false );
     }
@@ -636,7 +683,6 @@ public class Node : Object {
       double rx, ry, rw, rh;
       resizer_bbox( out rx, out ry, out rw, out rh );
       return( Utils.is_within_bounds( x, y, rx, ry, rw, rh ) );
-      // return( (rx < x) && (x <= (rx + rw)) && (ry < y) && (y <= (ry + rh)) );
     }
     return( false );
   }
@@ -853,10 +899,11 @@ public class Node : Object {
       layout = da.layouts.get_layout( l );
     }
 
+    /* Get the tree bbox */
+    tree_bbox = layout.bbox( this, -1 );
+
     if( ts == null ) {
-      double bx, by, bw, bh;
-      layout.bbox( this, side, out bx, out by, out bw, out bh );
-      tree_size = ((side & NodeSide.horizontal()) != 0) ? bh : bw;
+      tree_size = ((side & NodeSide.horizontal()) != 0) ? tree_bbox.height : tree_bbox.width;
     }
 
     /* Make sure that the name is positioned properly */
@@ -1183,6 +1230,7 @@ public class Node : Object {
   private void parent_moved( Node parent, double diffx, double diffy ) {
     _posx += diffx;
     _posy += diffy;
+    update_tree_bbox( diffx, diffy );
     position_name();
     moved( diffx, diffy );
   }
@@ -1428,6 +1476,7 @@ public class Node : Object {
   public virtual void pan( double diffx, double diffy ) {
     _posx += diffx;
     _posy += diffy;
+    update_tree_bbox( diffx, diffy );
     position_name();
     moved( diffx, diffy );
   }
@@ -1469,11 +1518,15 @@ public class Node : Object {
   */
   public void set_node_info( Array<NodeInfo?> info, ref int index ) {
 
+    var diffx = info.index( index ).posx - _posx;
+    var diffy = info.index( index ).posy - _posy;
+
     _posx       = info.index( index ).posx;
     _posy       = info.index( index ).posy;
     side        = info.index( index ).side;
     _link_color = info.index( index ).color;
 
+    update_tree_bbox( diffx, diffy );
     position_name();
 
     for( int i=0; i<_children.length; i++ ) {
