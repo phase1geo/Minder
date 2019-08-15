@@ -27,20 +27,20 @@ public class Theme : Object {
   private int          _index;
   private Array<RGBA?> _link_colors;
 
-  public    string name               { protected set; get; }
-  public    Image  icon               { protected set; get; }
-  public    RGBA   background         { protected set; get; }
-  public    RGBA   foreground         { protected set; get; }
-  public    RGBA   root_background    { protected set; get; }
-  public    RGBA   root_foreground    { protected set; get; }
-  public    RGBA   nodesel_background { protected set; get; }
-  public    RGBA   nodesel_foreground { protected set; get; }
-  public    RGBA   textsel_background { protected set; get; }
-  public    RGBA   textsel_foreground { protected set; get; }
-  public    RGBA   text_cursor        { protected set; get; }
-  public    RGBA   attachable_color   { protected set; get; }
-  public    RGBA   connection_color   { protected set; get; }
-  public    bool   prefer_dark        { protected set; get; }
+  public    string name               { set; get; }
+  public    Image  icon               { set; get; }
+  public    RGBA   background         { set; get; }
+  public    RGBA   foreground         { set; get; }
+  public    RGBA   root_background    { set; get; }
+  public    RGBA   root_foreground    { set; get; }
+  public    RGBA   nodesel_background { set; get; }
+  public    RGBA   nodesel_foreground { set; get; }
+  public    RGBA   textsel_background { set; get; }
+  public    RGBA   textsel_foreground { set; get; }
+  public    RGBA   text_cursor        { set; get; }
+  public    RGBA   attachable_color   { set; get; }
+  public    RGBA   connection_color   { set; get; }
+  public    bool   prefer_dark        { set; get; }
 
   public int index {
     set {

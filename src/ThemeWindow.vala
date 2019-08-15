@@ -22,47 +22,69 @@
 using Gtk;
 using Gdk;
 
-public class ThemeWindow : Window {
+public class ThemeWindow : Gtk.Window {
 
-  private int          _index;
-  private Array<RGBA?> _link_colors;
+  private ThemeCustom _theme;
 
-  public    string name               { protected set; get; }
-  public    Image  icon               { protected set; get; }
-  public    RGBA   background         { protected set; get; }
-  public    RGBA   foreground         { protected set; get; }
-  public    RGBA   root_background    { protected set; get; }
-  public    RGBA   root_foreground    { protected set; get; }
-  public    RGBA   nodesel_background { protected set; get; }
-  public    RGBA   nodesel_foreground { protected set; get; }
-  public    RGBA   textsel_background { protected set; get; }
-  public    RGBA   textsel_foreground { protected set; get; }
-  public    RGBA   text_cursor        { protected set; get; }
-  public    RGBA   attachable_color   { protected set; get; }
-  public    RGBA   connection_color   { protected set; get; }
-  public    bool   prefer_dark        { protected set; get; }
+  public ThemeWindow() {
 
-  /* Adds the given color to the list of link colors */
-  protected void add_link_color( RGBA color ) {
-    _link_colors.append_val( color );
+    _theme = new ThemeCustom();
+
+    var grid = new Grid();
+    grid.row_spacing        = 5;
+    grid.column_spacing     = 30;
+    // grid.column_homogeneous = true;
+
+    add_color( _( "Background" ),             _theme.background,         grid, 0 );
+    add_color( _( "Foreground" ),             _theme.foreground,         grid, 1 );
+    add_color( _( "Root Node Background" ),   _theme.root_background,    grid, 2 );
+    add_color( _( "Root Node Foreground" ),   _theme.root_foreground,    grid, 3 );
+    add_color( _( "Node Select Background" ), _theme.nodesel_background, grid, 4 );
+    add_color( _( "Node Select Foreground" ), _theme.nodesel_background, grid, 5 );
+    add_color( _( "Text Select Background" ), _theme.textsel_background, grid, 6 );
+    add_color( _( "Text Select Foreground" ), _theme.textsel_background, grid, 7 );
+    add_color( _( "Text Cursor" ),            _theme.text_cursor,        grid, 8 );
+    add_color( _( "Attachable Highlight" ),   _theme.attachable_color,   grid, 9 );
+    add_color( _( "Connection Color" ),       _theme.connection_color,   grid, 10 );
+
+    var dark_lbl        = new Label( Utils.make_title( _( "Prefer Dark Mode" ) ) );
+    dark_lbl.xalign     = (float)0;
+    dark_lbl.use_markup = true;
+
+    var dark_tgl = new Switch();
+    dark_tgl.set_active( _theme.prefer_dark );
+    dark_tgl.button_release_event.connect((e) => {
+      _theme.prefer_dark = !_theme.prefer_dark;
+      return( false );
+    });
+
+    grid.attach( dark_lbl, 0, 11 );
+    grid.attach( dark_tgl, 1, 11 );
+
+    add( grid );
+
+    border_width = 5;
+
+    show_all();
+
   }
 
-  /* Returns the CSS provider for this theme */
-  public CssProvider get_css_provider() {
-    CssProvider provider = new CssProvider();
-    try {
-      var css_data = "@define-color colorPrimary #603461; " +
-                     "@define-color textColorPrimary @SILVER_100; " +
-                     // "@define-color textColorPrimaryShadow @SILVER_500; " +
-                     "@define-color colorAccent #603461; " +
-                     ".theme-selected { background: #087DFF; } " +
-                     ".find { -gtk-icon-source: -gtk-icontheme('edit-find'); -gtk-icon-theme: 'hicolor'; } " +
-                     ".canvas { background: " + background.to_string() + "; }";
-      provider.load_from_data( css_data );
-    } catch( GLib.Error e ) {
-      stdout.printf( "Unable to load background color: %s", e.message );
-    }
-    return( provider );
+  /* Adds a coloring row */
+  private void add_color( string lbl_str, RGBA color, Grid grid, int row ) {
+
+    var lbl        = new Label( Utils.make_title( lbl_str ) );
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
+
+    var btn = new ColorButton();
+    btn.rgba = color;
+    btn.color_set.connect(() => {
+      color.parse( Utils.color_from_rgba( btn.rgba ) );
+    });
+
+    grid.attach( lbl, 0, row );
+    grid.attach( btn, 1, row, 2 );
+
   }
 
 }

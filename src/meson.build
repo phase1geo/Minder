@@ -123,6 +123,7 @@ sources += files(
     'Styles.vala',
     'Theme.vala',
     'Themes.vala',
+    'ThemeWindow.vala',
     'UndoBuffer.vala',
     'UndoItem.vala',
     'Utils.vala'

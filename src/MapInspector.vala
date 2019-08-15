@@ -326,7 +326,9 @@ public class MapInspector : Box {
 
   private void create_custom_theme() {
 
-    /* TBD */
+    stdout.printf( "In create_custom_theme\n" );
+
+    var win = new ThemeWindow();
 
   }
 
