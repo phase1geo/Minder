@@ -43,6 +43,16 @@ public class ThemeCustom : Theme {
     connection_color   = get_color( "#404040" );
     prefer_dark        = true;
 
+    /* Generate the link colors */
+    add_link_color( get_color( "#c6262e" ) );
+    add_link_color( get_color( "#f37329" ) );
+    add_link_color( get_color( "#f9c440" ) );
+    add_link_color( get_color( "#68b723" ) );
+    add_link_color( get_color( "#3689e6" ) );
+    add_link_color( get_color( "#7a36b1" ) );
+    add_link_color( get_color( "#715344" ) );
+    add_link_color( get_color( "#333333" ) );
+
   }
 
   /* Parses the specified XML node for theme coloring information */

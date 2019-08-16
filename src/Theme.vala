@@ -62,6 +62,11 @@ public class Theme : Object {
     _link_colors.append_val( color );
   }
 
+  /* Changes the given link color to the given color */
+  public void change_link_color( int index, RGBA color ) {
+    _link_colors.index( index ).parse( Utils.color_from_rgba( color ) );
+  }
+
   /* Returns the next available link color index */
   public RGBA next_color() {
     return( _link_colors.index( _index++ % _link_colors.length ) );

@@ -23,6 +23,7 @@ using Gtk;
 
 public class MapInspector : Box {
 
+  private MainWindow                  _win;
   private DrawArea?                   _da             = null;
   private GLib.Settings               _settings;
   private Granite.Widgets.ModeButton? _layouts        = null;
@@ -35,6 +36,7 @@ public class MapInspector : Box {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
 
+    _win      = win;
     _settings = settings;
 
     /* Create the interface */
@@ -221,6 +223,7 @@ public class MapInspector : Box {
     }
 
     var add = new Button.from_icon_name( "list-add-symbolic", IconSize.LARGE_TOOLBAR );
+    add.relief = ReliefStyle.NONE;
     add.set_tooltip_text( _( "Add Custom Theme" ) );
     add.clicked.connect( create_custom_theme );
     tb.pack_start( add, true, true );
@@ -324,12 +327,9 @@ public class MapInspector : Box {
 
   }
 
+  /* Displays the current theme editor */
   private void create_custom_theme() {
-
-    stdout.printf( "In create_custom_theme\n" );
-
-    var win = new ThemeWindow();
-
+    _win.show_theme_editor();
   }
 
   /* Called whenever the current item is changed */

@@ -122,8 +122,8 @@ sources += files(
     'StyleInspector.vala',
     'Styles.vala',
     'Theme.vala',
+    'ThemeEditor.vala',
     'Themes.vala',
-    'ThemeWindow.vala',
     'UndoBuffer.vala',
     'UndoItem.vala',
     'Utils.vala'
