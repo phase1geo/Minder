@@ -131,7 +131,7 @@ public class Connection : Object {
     _dragy     = _posy;
     position_title();
     _curve     = new Bezier.with_endpoints( _posx, _posy, _posx, _posy );
-    _color     = da.get_theme().connection_color;
+    _color     = da.get_theme().get_color( "connection" );
     style      = StyleInspector.styles.get_global_style();
   }
 
@@ -502,7 +502,7 @@ public class Connection : Object {
     if( c != null ) {
       _color.parse( c );
     } else {
-      _color = da.get_theme().connection_color;
+      _color = da.get_theme().get_color( "connection" );
     }
 
     /* Update the stored curve */
@@ -582,7 +582,7 @@ public class Connection : Object {
     double end_x,   end_y;
     double dragx = _dragx;
     double dragy = _dragy;
-    RGBA   bg    = (mode == ConnMode.NONE) ? theme.background : theme.nodesel_background;
+    RGBA   bg    = (mode == ConnMode.NONE) ? theme.get_color( "background" ) : theme.get_color( "nodesel_background" );
 
     if( _from_node == null ) {
       start_x = _posx;
@@ -674,7 +674,7 @@ public class Connection : Object {
   */
   private void draw_title( Cairo.Context ctx, Theme theme ) {
 
-    var    fg      = theme.background;
+    var    fg      = theme.get_color( "background" );
     var    padding = _style.connection_padding ?? 0;
     double x, y, w, h;
 
@@ -698,7 +698,7 @@ public class Connection : Object {
     /* Draw the drag handle */
     if( (mode == ConnMode.SELECTED) || (mode == ConnMode.ADJUSTING) ) {
 
-      RGBA bg = theme.nodesel_background;
+      RGBA bg = theme.get_color( "nodesel_background" );
 
       ctx.set_line_width( 1 );
       ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );

@@ -1575,11 +1575,11 @@ public class Node : Object {
 
     /* Set the fill color */
     if( mode == NodeMode.CURRENT ) {
-      Utils.set_context_color_with_alpha( ctx, theme.nodesel_background, _alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
     } else if( is_root() || style.is_fillable() ) {
       Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
     } else {
-      Utils.set_context_color_with_alpha( ctx, theme.background, _alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "background" ), _alpha );
     }
 
     /* Draw the fill */
@@ -1616,7 +1616,7 @@ public class Node : Object {
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( mode == NodeMode.CURRENT ) {
-      Utils.set_context_color_with_alpha( ctx, theme.nodesel_background, _alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
       ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin),
                      ((posy + style.node_padding + style.node_margin) - vmargin),
                      ((_width  - (style.node_padding * 2) - (style.node_margin * 2)) + (hmargin * 2)),
@@ -1626,13 +1626,13 @@ public class Node : Object {
 
     /* Draw the text */
     if( mode == NodeMode.CURRENT ) {
-      name.draw( ctx, theme, theme.nodesel_foreground, _alpha );
+      name.draw( ctx, theme, theme.get_color( "nodesel_foreground" ), _alpha );
     } else if( parent == null ) {
-      name.draw( ctx, theme, theme.root_foreground, _alpha );
+      name.draw( ctx, theme, theme.get_color( "root_foreground" ), _alpha );
     } else if( style.is_fillable() ) {
-      name.draw( ctx, theme, theme.background, _alpha );
+      name.draw( ctx, theme, theme.get_color( "background" ), _alpha );
     } else {
-      name.draw( ctx, theme, theme.foreground, _alpha );
+      name.draw( ctx, theme, theme.get_color( "foreground" ), _alpha );
     }
 
   }
@@ -1801,7 +1801,7 @@ public class Node : Object {
       bbox( out x, out y, out w, out h );
 
       /* Draw highlight border */
-      Utils.set_context_color_with_alpha( ctx, theme.attachable_color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable_color" ), _alpha );
       ctx.set_line_width( 4 );
       ctx.rectangle( x, y, w, h );
       ctx.stroke();
@@ -1870,7 +1870,7 @@ public class Node : Object {
     ctx.close_path();
     ctx.fill_preserve();
 
-    Utils.set_context_color_with_alpha( ctx, theme.background, _alpha );
+    Utils.set_context_color_with_alpha( ctx, theme.get_color( "background" ), _alpha );
     ctx.set_line_width( 2 );
     ctx.stroke();
 
@@ -1888,12 +1888,12 @@ public class Node : Object {
 
     resizer_bbox( out x, out y, out w, out h );
 
-    Utils.set_context_color( ctx, theme.background );
+    Utils.set_context_color( ctx, theme.get_color( "background" ) );
     ctx.set_line_width( 1 );
     ctx.rectangle( x, y, w, h );
     ctx.fill_preserve();
 
-    Utils.set_context_color_with_alpha( ctx, theme.foreground, _alpha );
+    Utils.set_context_color_with_alpha( ctx, theme.get_color( "foreground" ), _alpha );
     ctx.stroke();
 
   }
@@ -1901,37 +1901,46 @@ public class Node : Object {
   /* Draws the node on the screen */
   public virtual void draw( Context ctx, Theme theme, bool motion ) {
 
+    var nodesel_foreground = theme.get_color( "nodesel_foreground" );
+
     /* If this is a root node, draw specifically for a root node */
     if( is_root() ) {
 
-      draw_shape( ctx, theme, theme.root_background );
+      var background = theme.get_color( "root_background" );
+      var foreground = theme.get_color( "root_foreground" );
+
+      draw_shape( ctx, theme, background );
       draw_name( ctx, theme );
       draw_image( ctx, theme );
       if( is_leaf() ) {
-        draw_leaf_task( ctx, theme.root_foreground );
+        draw_leaf_task( ctx, foreground );
       } else {
-        draw_acc_task( ctx, theme.root_foreground );
+        draw_acc_task( ctx, foreground );
       }
-      draw_common_note( ctx, theme.root_foreground, theme.nodesel_foreground, theme.root_foreground );
-      draw_link_node( ctx, theme.root_foreground, theme.nodesel_foreground, theme.root_foreground );
-      draw_common_fold( ctx, theme.root_background, theme.root_foreground );
-      draw_attachable( ctx, theme, theme.root_background );
+      draw_common_note( ctx, foreground, nodesel_foreground, foreground );
+      draw_link_node(   ctx, foreground, nodesel_foreground, foreground );
+      draw_common_fold( ctx, background, foreground );
+      draw_attachable(  ctx, theme, background );
       draw_resizer( ctx, theme );
 
     /* Otherwise, draw the node as a non-root node */
     } else {
+
+      var background = theme.get_color( "background" );
+      var foreground = theme.get_color( "foreground" );
+
       draw_shape( ctx, theme, _link_color );
       draw_name( ctx, theme );
       draw_image( ctx, theme );
       if( is_leaf() ) {
-        draw_leaf_task( ctx, (style.is_fillable() ? theme.background : _link_color) );
+        draw_leaf_task( ctx, (style.is_fillable() ? background : _link_color) );
       } else {
-        draw_acc_task( ctx, (style.is_fillable() ? theme.background : _link_color) );
+        draw_acc_task( ctx, (style.is_fillable() ? background : _link_color) );
       }
-      draw_common_note( ctx, theme.foreground, theme.nodesel_foreground, theme.background );
-      draw_link_node( ctx, theme.foreground, theme.nodesel_foreground, theme.foreground );
-      draw_common_fold( ctx, _link_color, theme.background );
-      draw_attachable( ctx, theme, theme.background );
+      draw_common_note( ctx, foreground, nodesel_foreground, background );
+      draw_link_node(   ctx, foreground, nodesel_foreground, foreground );
+      draw_common_fold( ctx, _link_color, background );
+      draw_attachable(  ctx, theme, background );
       draw_resizer( ctx, theme );
     }
 

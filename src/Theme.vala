@@ -21,26 +21,16 @@
 
 using Gtk;
 using Gdk;
+using Gee;
 
 public class Theme : Object {
 
-  private int          _index;
-  private Array<RGBA?> _link_colors;
+  private int                   _index;
+  private HashMap<string,RGBA?> _colors;
 
-  public    string name               { set; get; }
-  public    Image  icon               { set; get; }
-  public    RGBA   background         { set; get; }
-  public    RGBA   foreground         { set; get; }
-  public    RGBA   root_background    { set; get; }
-  public    RGBA   root_foreground    { set; get; }
-  public    RGBA   nodesel_background { set; get; }
-  public    RGBA   nodesel_foreground { set; get; }
-  public    RGBA   textsel_background { set; get; }
-  public    RGBA   textsel_foreground { set; get; }
-  public    RGBA   text_cursor        { set; get; }
-  public    RGBA   attachable_color   { set; get; }
-  public    RGBA   connection_color   { set; get; }
-  public    bool   prefer_dark        { set; get; }
+  public    string name        { set; get; }
+  public    Image  icon        { set; get; }
+  public    bool   prefer_dark { set; get; }
 
   public int index {
     set {
@@ -53,33 +43,70 @@ public class Theme : Object {
 
   /* Default constructor */
   public Theme() {
-    _index       = 0;
-    _link_colors = new Array<RGBA?>();
+    _index  = 0;
+    _colors = new HashMap<string,RGBA?>();
+    _colors.set( "background",         null );
+    _colors.set( "foreground",         null );
+    _colors.set( "root_background",    null );
+    _colors.set( "root_foreground",    null );
+    _colors.set( "nodesel_background", null );
+    _colors.set( "nodesel_foreground", null );
+    _colors.set( "textsel_background", null );
+    _colors.set( "textsel_foreground", null );
+    _colors.set( "text_cursor",        null );
+    _colors.set( "attachable",         null );
+    _colors.set( "connection",         null );
+    _colors.set( "link_color0",        null );
+    _colors.set( "link_color1",        null );
+    _colors.set( "link_color2",        null );
+    _colors.set( "link_color3",        null );
+    _colors.set( "link_color4",        null );
+    _colors.set( "link_color5",        null );
+    _colors.set( "link_color6",        null );
+    _colors.set( "link_color7",        null );
+  }
+
+  /* Returns the list of stored theme names */
+  public Array<string> colors() {
+    var cs = new Array<string>();
+    var it = _colors.map_iterator();
+    while( it.next() ) {
+      var name = (string)it.get_key();
+      cs.append_val( name );
+    }
+    return( cs );
   }
 
   /* Adds the given color to the list of link colors */
-  protected void add_link_color( RGBA color ) {
-    _link_colors.append_val( color );
+  protected bool set_color( string name, RGBA color ) {
+    if( _colors.has_key( name ) ) {
+      _colors.set( name, color );
+      return( true );
+    }
+    return( false );
   }
 
-  /* Changes the given link color to the given color */
-  public void change_link_color( int index, RGBA color ) {
-    _link_colors.index( index ).parse( Utils.color_from_rgba( color ) );
+  /* Returns the given color */
+  public RGBA? get_color( string name ) {
+    if( _colors.has_key( name ) ) {
+      return( _colors.get( name ) );
+    }
+    return( null );
   }
 
   /* Returns the next available link color index */
-  public RGBA next_color() {
-    return( _link_colors.index( _index++ % _link_colors.length ) );
+  public RGBA? next_color() {
+    return( link_color( _index++ % 8 ) );
   }
 
   /* Returns the number of link colors */
   public int num_link_colors() {
-    return( (int)_link_colors.length );
+    return( 8 );
   }
 
   /* Returns the color associated with the given index */
   public RGBA link_color( int index ) {
-    return( _link_colors.index( index % _link_colors.length ) );
+    return( _colors.get( "link_color%d".printf( index % 8 ) ) );
   }
 
   /*
@@ -89,8 +116,9 @@ public class Theme : Object {
   */
   public int get_color_index( RGBA color ) {
     string color_str = color.to_string();
-    for( int i=0; i<_link_colors.length; i++ ) {
-      if( _link_colors.index( i ).to_string() == color_str ) {
+    for( int i=0; i<8; i++ ) {
+      RGBA? lc = link_color( i );
+      if( (lc != null) && (lc.to_string() == color_str) ) {
         return( i );
       }
     }
@@ -98,7 +126,7 @@ public class Theme : Object {
   }
 
   /* Returns the RGBA color for the given color value */
-  protected RGBA get_color( string value ) {
+  protected RGBA color_from_string( string value ) {
     RGBA c = {1.0, 1.0, 1.0, 1.0};
     c.parse( value );
     return( c );
@@ -114,7 +142,7 @@ public class Theme : Object {
                      "@define-color colorAccent #603461; " +
                      ".theme-selected { background: #087DFF; } " +
                      ".find { -gtk-icon-source: -gtk-icontheme('edit-find'); -gtk-icon-theme: 'hicolor'; } " +
-                     ".canvas { background: " + background.to_string() + "; }";
+                     ".canvas { background: " + get_color( "background" ).to_string() + "; }";
       provider.load_from_data( css_data );
     } catch( GLib.Error e ) {
       stdout.printf( "Unable to load background color: %s", e.message );
@@ -139,71 +167,71 @@ public class Theme : Object {
     font_desc.set_size( 10 * Pango.SCALE );
 
     /* Draw the background */
-    set_context_color( ctx, background );
+    set_context_color( ctx, get_color( "background" ) );
     ctx.rectangle( 0, 0, 200, 100 );
     ctx.fill();
 
     /* Draw subnode lines */
-    set_context_color( ctx, _link_colors.index( 0 ) );
+    set_context_color( ctx, link_color( 0 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 100, 50 );
     ctx.line_to( 50, 25 );
     ctx.stroke();
-    set_context_color( ctx, _link_colors.index( 0 ) );
+    set_context_color( ctx, link_color( 0 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 50, 25 );
     ctx.line_to( 10, 25 );
     ctx.stroke();
 
-    set_context_color( ctx, _link_colors.index( 1 ) );
+    set_context_color( ctx, link_color( 1 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 100, 50 );
     ctx.line_to( 10, 50 );
     ctx.stroke();
 
-    set_context_color( ctx, _link_colors.index( 2 ) );
+    set_context_color( ctx, link_color( 2 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 100, 50 );
     ctx.line_to( 50, 75 );
     ctx.stroke();
-    set_context_color( ctx, _link_colors.index( 2 ) );
+    set_context_color( ctx, link_color( 2 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 50, 75 );
     ctx.line_to( 10, 75 );
     ctx.stroke();
 
-    set_context_color( ctx, _link_colors.index( 3 ) );
+    set_context_color( ctx, link_color( 3 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 100, 50 );
     ctx.line_to( 150, 25 );
     ctx.stroke();
-    set_context_color( ctx, _link_colors.index( 3 ) );
+    set_context_color( ctx, link_color( 3 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 150, 25 );
     ctx.line_to( 190, 25 );
     ctx.stroke();
 
-    set_context_color( ctx, _link_colors.index( 4 ) );
+    set_context_color( ctx, link_color( 4 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 100, 50 );
     ctx.line_to( 190, 50 );
     ctx.stroke();
 
-    set_context_color( ctx, _link_colors.index( 5 ) );
+    set_context_color( ctx, link_color( 5 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 100, 50 );
     ctx.line_to( 150, 75 );
     ctx.stroke();
-    set_context_color( ctx, _link_colors.index( 5 ) );
+    set_context_color( ctx, link_color( 5 ) );
     ctx.set_line_cap( Cairo.LineCap.ROUND );
     ctx.set_line_width( 4 );
     ctx.move_to( 150, 75 );
@@ -226,7 +254,7 @@ public class Theme : Object {
     double y = (100 - height) / 2;
     double w = 70;
     double h = height;
-    set_context_color( ctx, root_background );
+    set_context_color( ctx, get_color( "root_background" ) );
     ctx.set_line_width( 1 );
     ctx.move_to(x+r,y);
     ctx.line_to(x+w-r,y);
@@ -247,7 +275,7 @@ public class Theme : Object {
     node_text.set_text( "Node", -1 );
 
     /* Add the text */
-    set_context_color( ctx, root_foreground );
+    set_context_color( ctx, get_color( "root_foreground" ) );
     ctx.move_to( (100 - (width / 2)), (50 - (height / 2)) );
     Pango.cairo_show_layout( ctx, root_text );
 
@@ -255,32 +283,32 @@ public class Theme : Object {
     width  /= Pango.SCALE;
     height /= Pango.SCALE;
 
-    set_context_color( ctx, foreground );
+    set_context_color( ctx, get_color( "foreground" ) );
     ctx.move_to( (30 - (width / 2)), (25 - (height + 2)) );
     Pango.cairo_show_layout( ctx, node_text );
 
-    set_context_color( ctx, foreground );
+    set_context_color( ctx, get_color( "foreground" ) );
     ctx.move_to( (30 - (width / 2)), (50 - (height + 2)) );
     Pango.cairo_show_layout( ctx, node_text );
 
-    set_context_color( ctx, foreground );
+    set_context_color( ctx, get_color( "foreground" ) );
     ctx.move_to( (30 - (width / 2)), (75 - (height + 2)) );
     Pango.cairo_show_layout( ctx, node_text );
 
-    set_context_color( ctx, foreground );
+    set_context_color( ctx, get_color( "foreground" ) );
     ctx.move_to( (170 - (width / 2)), (25 - (height + 2)) );
     Pango.cairo_show_layout( ctx, node_text );
 
-    set_context_color( ctx, foreground );
+    set_context_color( ctx, get_color( "foreground" ) );
     ctx.move_to( (170 - (width / 2)), (50 - (height + 2)) );
     Pango.cairo_show_layout( ctx, node_text );
 
-    set_context_color( ctx, foreground );
+    set_context_color( ctx, get_color( "foreground" ) );
     ctx.move_to( (170 - (width / 2)), (75 - (height + 2)) );
     Pango.cairo_show_layout( ctx, node_text );
 
     /* Draw connection */
-    set_context_color( ctx, connection_color );
+    set_context_color( ctx, get_color( "connection" ) );
     double p[6] = {60, 15, 100, 5, 140, 15};
     ctx.set_line_width( 2 );
     ctx.set_dash( {3, 5}, 0 );

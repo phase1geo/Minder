@@ -42,17 +42,17 @@ public class ThemeEditor : Gtk.Box {
     _preview = new Image.from_surface( _theme.make_icon() );
     pack_start( _preview, false, false );
 
-    add_color( _( "Background" ),             _theme.background,         "background",         0, grid, 0 );
-    add_color( _( "Foreground" ),             _theme.foreground,         "foreground",         0, grid, 1 );
-    add_color( _( "Root Node Background" ),   _theme.root_background,    "root_background",    0, grid, 2 );
-    add_color( _( "Root Node Foreground" ),   _theme.root_foreground,    "root_foreground",    0, grid, 3 );
-    add_color( _( "Node Select Background" ), _theme.nodesel_background, "nodesel_background", 0, grid, 4 );
-    add_color( _( "Node Select Foreground" ), _theme.nodesel_foreground, "nodesel_foreground", 0, grid, 5 );
-    add_color( _( "Text Select Background" ), _theme.textsel_background, "textsel_background", 0, grid, 6 );
-    add_color( _( "Text Select Foreground" ), _theme.textsel_foreground, "textsel_foreground", 0, grid, 7 );
-    add_color( _( "Text Cursor" ),            _theme.text_cursor,        "text_cursor",        0, grid, 8 );
-    add_color( _( "Attachable Highlight" ),   _theme.attachable_color,   "attachable_color",   0, grid, 9 );
-    add_color( _( "Connection Color" ),       _theme.connection_color,   "connection_color",   0, grid, 10 );
+    add_color( _( "Background" ),             "background",         grid, 0 );
+    add_color( _( "Foreground" ),             "foreground",         grid, 1 );
+    add_color( _( "Root Node Background" ),   "root_background",    grid, 2 );
+    add_color( _( "Root Node Foreground" ),   "root_foreground",    grid, 3 );
+    add_color( _( "Node Select Background" ), "nodesel_background", grid, 4 );
+    add_color( _( "Node Select Foreground" ), "nodesel_foreground", grid, 5 );
+    add_color( _( "Text Select Background" ), "textsel_background", grid, 6 );
+    add_color( _( "Text Select Foreground" ), "textsel_foreground", grid, 7 );
+    add_color( _( "Text Cursor" ),            "text_cursor",        grid, 8 );
+    add_color( _( "Attachable Highlight" ),   "attachable",         grid, 9 );
+    add_color( _( "Connection Color" ),       "connection",         grid, 10 );
 
     var dark_lbl        = new Label( Utils.make_title( _( "Prefer Dark Mode" ) ) );
     dark_lbl.xalign     = (float)0;
@@ -70,7 +70,7 @@ public class ThemeEditor : Gtk.Box {
 
     /* Add link colors */
     for( int i=0; i<_theme.num_link_colors(); i++ ) {
-      add_color( _( "Link Color" ) + " #%d".printf( i + 1 ), _theme.link_color( i ), "link_color", i, grid, (12 + i) );
+      add_color( _( "Link Color" ) + " #%d".printf( i + 1 ), "link_color%d".printf( i ), grid, (12 + i) );
     }
 
     pack_start( grid, true, true );
@@ -100,40 +100,22 @@ public class ThemeEditor : Gtk.Box {
   }
 
   /* Adds a coloring row */
-  private void add_color( string lbl_str, RGBA color, string type, int index, Grid grid, int row ) {
+  private void add_color( string lbl_str, string name, Grid grid, int row ) {
 
     var lbl        = new Label( Utils.make_title( lbl_str ) );
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
 
     var btn = new ColorButton();
-    btn.rgba = color;
+    btn.rgba = _theme.get_color( name );
     btn.color_set.connect(() => {
-      set_color( btn.rgba, type, index );
+      _theme.change_color( name, btn.rgba );
       _preview = new Image.from_surface( _theme.make_icon() );
     });
 
     grid.attach( lbl, 0, row );
     grid.attach( btn, 1, row, 2 );
 
-  }
-
-  /* Sets the color base on the given type and index */
-  private void set_color( RGBA color, string type, int index = 0 ) {
-    switch( type ) {
-      case "background"         :  _theme.background.parse( Utils.color_from_rgba( color ) );          stdout.printf( "background, old: %s, new: %s\n", color.to_string(), _theme.background.to_string() );  break;
-      case "foreground"         :  _theme.foreground.parse( Utils.color_from_rgba( color ) );          break;
-      case "root_background"    :  _theme.root_background.parse( Utils.color_from_rgba( color ) );     break;
-      case "root_foreground"    :  _theme.root_foreground.parse( Utils.color_from_rgba( color ) );     break;
-      case "nodesel_background" :  _theme.nodesel_background.parse( Utils.color_from_rgba( color ) );  break;
-      case "nodesel_foreground" :  _theme.nodesel_foreground.parse( Utils.color_from_rgba( color ) );  break;
-      case "textsel_background" :  _theme.textsel_background.parse( Utils.color_from_rgba( color ) );  break;
-      case "textsel_foreground" :  _theme.textsel_foreground.parse( Utils.color_from_rgba( color ) );  break;
-      case "text_cursor"        :  _theme.text_cursor.parse( Utils.color_from_rgba( color ) );         break;
-      case "attachable_color"   :  _theme.attachable_color.parse( Utils.color_from_rgba( color ) );    break;
-      case "connection_color"   :  _theme.connection_color.parse( Utils.color_from_rgba( color ) );    break;
-      default                   :  _theme.change_link_color( index, color );                           break;
-    }
   }
 
   /* Hides the theme editor panel without saving */

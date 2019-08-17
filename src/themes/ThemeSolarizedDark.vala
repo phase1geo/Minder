@@ -30,28 +30,28 @@ public class ThemeSolarizedDark : Theme {
     name = _( "Solarized Dark" ); 
 
     /* Generate the non-link colors */
-    background         = get_color( "#002B36" );  // Done
-    foreground         = get_color( "#93A1A1" );  // Done
-    root_background    = get_color( "#d4d4d4" );
-    root_foreground    = get_color( "#000000" );
-    nodesel_background = get_color( "#586E75" );  // Done
-    nodesel_foreground = get_color( "#ffffff" );  // Done
-    textsel_background = get_color( "#657B83" );  // Done
-    textsel_foreground = get_color( "#002B36" );  // Done
-    text_cursor        = get_color( "#93A1A1" );  // Done
-    attachable_color   = get_color( "#9bdb4d" );
-    connection_color   = get_color( "#606060" );
-    prefer_dark        = true;
+    set_color( "background",         color_from_string( "#002B36" ) );
+    set_color( "foreground",         color_from_string( "#93A1A1" ) );
+    set_color( "root_background",    color_from_string( "#d4d4d4" ) );
+    set_color( "root_foreground",    color_from_string( "#000000" ) );
+    set_color( "nodesel_background", color_from_string( "#586E75" ) );
+    set_color( "nodesel_foreground", color_from_string( "#ffffff" ) );
+    set_color( "textsel_background", color_from_string( "#657B83" ) );
+    set_color( "textsel_foreground", color_from_string( "#002B36" ) );
+    set_color( "text_cursor",        color_from_string( "#93A1A1" ) );
+    set_color( "attachable",         color_from_string( "#9bdb4d" ) );
+    set_color( "connection",         color_from_string( "#606060" ) );
 
-    /* Generate the link colors */
-    add_link_color( get_color( "#DC322F" ) );
-    add_link_color( get_color( "#CB4B16" ) );
-    add_link_color( get_color( "#B58900" ) );
-    add_link_color( get_color( "#859900" ) );
-    add_link_color( get_color( "#268BD2" ) );
-    add_link_color( get_color( "#6C71C4" ) );
-    add_link_color( get_color( "#D33682" ) );
-    add_link_color( get_color( "#2AA198" ) );
+    set_color( "link_color0", color_from_string( "#DC322F" ) );
+    set_color( "link_color1", color_from_string( "#CB4B16" ) );
+    set_color( "link_color2", color_from_string( "#B58900" ) );
+    set_color( "link_color3", color_from_string( "#859900" ) );
+    set_color( "link_color4", color_from_string( "#268BD2" ) );
+    set_color( "link_color5", color_from_string( "#6C71C4" ) );
+    set_color( "link_color6", color_from_string( "#D33682" ) );
+    set_color( "link_color7", color_from_string( "#2AA198" ) );
+
+    prefer_dark = true;
 
   }
 

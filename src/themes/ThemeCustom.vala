@@ -30,29 +30,34 @@ public class ThemeCustom : Theme {
     name = _( "Custom" );
 
     /* Generate the non-link colors */
-    background         = get_color( "#000000" );
-    foreground         = get_color( "White" );
-    root_background    = get_color( "#d4d4d4" );
-    root_foreground    = get_color( "Black" );
-    nodesel_background = get_color( "#64baff" );
-    nodesel_foreground = get_color( "Black" );
-    textsel_background = get_color( "#0d52bf" );
-    textsel_foreground = get_color( "White" );
-    text_cursor        = get_color( "White" );
-    attachable_color   = get_color( "#9bdb4d" );
-    connection_color   = get_color( "#404040" );
-    prefer_dark        = true;
+    set_color( "background",         color_from_string( "#000000" ) );
+    set_color( "foreground",         color_from_string( "White" ) );
+    set_color( "root_background",    color_from_string( "#d4d4d4" ) );
+    set_color( "root_foreground",    color_from_string( "Black" ) );
+    set_color( "nodesel_background", color_from_string( "#64baff" ) );
+    set_color( "nodesel_foreground", color_from_string( "Black" ) );
+    set_color( "textsel_background", color_from_string( "#0d52bf" ) );
+    set_color( "textsel_foreground", color_from_string( "White" ) );
+    set_color( "text_cursor",        color_from_string( "White" ) );
+    set_color( "attachable",         color_from_string( "#9bdb4d" ) );
+    set_color( "connection",         color_from_string( "#404040" ) );
 
-    /* Generate the link colors */
-    add_link_color( get_color( "#c6262e" ) );
-    add_link_color( get_color( "#f37329" ) );
-    add_link_color( get_color( "#f9c440" ) );
-    add_link_color( get_color( "#68b723" ) );
-    add_link_color( get_color( "#3689e6" ) );
-    add_link_color( get_color( "#7a36b1" ) );
-    add_link_color( get_color( "#715344" ) );
-    add_link_color( get_color( "#333333" ) );
+    set_color( "link_color0", color_from_string( "#c6262e" ) );
+    set_color( "link_color1", color_from_string( "#f37329" ) );
+    set_color( "link_color2", color_from_string( "#f9c440" ) );
+    set_color( "link_color3", color_from_string( "#68b723" ) );
+    set_color( "link_color4", color_from_string( "#3689e6" ) );
+    set_color( "link_color5", color_from_string( "#7a36b1" ) );
+    set_color( "link_color6", color_from_string( "#715344" ) );
+    set_color( "link_color7", color_from_string( "#333333" ) );
 
+    prefer_dark = true;
+
+  }
+
+  /* Allows outside code to change the stored color */
+  public void change_color( string name, RGBA color ) {
+    set_color( name, color );
   }
 
   /* Parses the specified XML node for theme coloring information */
@@ -63,73 +68,18 @@ public class ThemeCustom : Theme {
       name = nn;
     }
 
-    string? b = n->get_prop( "background" );
-    if( b != null ) {
-      background = get_color( b );
-    }
-
-    string? f = n->get_prop( "foreground" );
-    if( f != null ) {
-      foreground = get_color( f );
-    }
-
-    string? rb = n->get_prop( "root_background" );
-    if( rb != null ) {
-      root_background = get_color( rb );
-    }
-
-    string? rf = n->get_prop( "root_foreground" );
-    if( rf != null ) {
-      root_foreground = get_color( rb );
-    }
-
-    string? nb = n->get_prop( "nodesel_background" );
-    if( nb != null ) {
-      nodesel_background = get_color( nb );
-    }
-
-    string? nf = n->get_prop( "nodesel_foreground" );
-    if( nf != null ) {
-      nodesel_foreground = get_color( nf );
-    }
-
-    string? tb = n->get_prop( "textsel_background" );
-    if( tb != null ) {
-      textsel_background = get_color( tb );
-    }
-
-    string? tf = n->get_prop( "textsel_foreground" );
-    if( tf != null ) {
-      textsel_foreground = get_color( tf );
-    }
-
-    string? tc = n->get_prop( "text_cursor" );
-    if( tc != null ) {
-      text_cursor = get_color( tc );
-    }
-
-    string? a = n->get_prop( "attachable" );
-    if( a != null ) {
-      attachable_color = get_color( a );
-    }
-
-    string? c = n->get_prop( "connection" );
-    if( c != null ) {
-      connection_color = get_color( c );
+    var cs = colors();
+    for( int i=0; i<cs.length; i++ ) {
+      var name = cs.index( i );
+      string? s = n->get_prop( name );
+      if( s != null ) {
+        set_color( name, color_from_string( s ) );
+      }
     }
 
     string? d = n->get_prop( "prefer_dark" );
     if( d != null ) {
       prefer_dark = bool.parse( d );
-    }
-
-    for( Xml.Node* it = n->children; it != null; it = it->next ) {
-      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "linkcolor") ) {
-        string? color = it->get_prop( "color" );
-        if( color != null ) {
-          add_link_color( get_color( color ) );
-        }
-      }
     }
 
   }
@@ -139,24 +89,15 @@ public class ThemeCustom : Theme {
 
     Xml.Node* n = new Xml.Node( null, "theme" );
 
-    n->new_prop( "background",         Utils.color_from_rgba( background ) );
-    n->new_prop( "foreground",         Utils.color_from_rgba( foreground ) );
-    n->new_prop( "root_background",    Utils.color_from_rgba( root_background ) );
-    n->new_prop( "root_foreground",    Utils.color_from_rgba( root_foreground ) );
-    n->new_prop( "nodesel_background", Utils.color_from_rgba( nodesel_background ) );
-    n->new_prop( "nodesel_foreground", Utils.color_from_rgba( nodesel_foreground ) );
-    n->new_prop( "textsel_background", Utils.color_from_rgba( textsel_background ) );
-    n->new_prop( "textsel_foreground", Utils.color_from_rgba( textsel_foreground ) );
-    n->new_prop( "text_cursor",        Utils.color_from_rgba( text_cursor ) );
-    n->new_prop( "attachable",         Utils.color_from_rgba( attachable_color ) );
-    n->new_prop( "connection",         Utils.color_from_rgba( connection_color ) );
-    n->new_prop( "connection",         prefer_dark.to_string() );
+    n->new_prop( "name", name );
 
-    for( int i=0; i<num_link_colors(); i++ ) {
-      Xml.Node* color = new Xml.Node( null, "linkcolor" );
-      color->new_prop( "color", Utils.color_from_rgba( link_color( i ) ) );
-      n->add_child( color );
+    var cs = colors();
+    for( int i=0; i<cs.length; i++ ) {
+      var name = cs.index( i );
+      n->new_prop( name, Utils.color_from_rgba( get_color( name ) ) );
     }
+
+    n->new_prop( "prefer_dark", prefer_dark.to_string() );
 
     return( n );
 

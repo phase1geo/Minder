@@ -19,9 +19,6 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-using Gdk;
-using Gtk;
-
 public class ThemeDark : Theme {
 
   /* Create the theme colors */
@@ -30,28 +27,29 @@ public class ThemeDark : Theme {
     name = _( "Dark" );
 
     /* Generate the non-link colors */
-    background         = get_color( "#000000" );
-    foreground         = get_color( "White" );
-    root_background    = get_color( "#d4d4d4" );
-    root_foreground    = get_color( "Black" );
-    nodesel_background = get_color( "#64baff" );
-    nodesel_foreground = get_color( "Black" );
-    textsel_background = get_color( "#0d52bf" );
-    textsel_foreground = get_color( "White" );
-    text_cursor        = get_color( "White" );
-    attachable_color   = get_color( "#9bdb4d" );
-    connection_color   = get_color( "#404040" );
-    prefer_dark        = true;
+    set_color( "background",         color_from_string( "#000000" ) );
+    set_color( "foreground",         color_from_string( "White" ) );
+    set_color( "root_background",    color_from_string( "#d4d4d4" ) );
+    set_color( "root_foreground",    color_from_string( "Black" ) );
+    set_color( "nodesel_background", color_from_string( "#64baff" ) );
+    set_color( "nodesel_foreground", color_from_string( "Black" ) );
+    set_color( "textsel_background", color_from_string( "#0d52bf" ) );
+    set_color( "textsel_foreground", color_from_string( "White" ) );
+    set_color( "text_cursor",        color_from_string( "White" ) );
+    set_color( "attachable",         color_from_string( "#9bdb4d" ) );
+    set_color( "connection",         color_from_string( "#404040" ) );
 
     /* Generate the link colors */
-    add_link_color( get_color( "#c6262e" ) );
-    add_link_color( get_color( "#f37329" ) );
-    add_link_color( get_color( "#f9c440" ) );
-    add_link_color( get_color( "#68b723" ) );
-    add_link_color( get_color( "#3689e6" ) );
-    add_link_color( get_color( "#7a36b1" ) );
-    add_link_color( get_color( "#715344" ) );
-    add_link_color( get_color( "#bbbbbb" ) );
+    set_color( "link_color0", color_from_string( "#c6262e" ) );
+    set_color( "link_color1", color_from_string( "#f37329" ) );
+    set_color( "link_color2", color_from_string( "#f9c440" ) );
+    set_color( "link_color3", color_from_string( "#68b723" ) );
+    set_color( "link_color4", color_from_string( "#3689e6" ) );
+    set_color( "link_color5", color_from_string( "#7a36b1" ) );
+    set_color( "link_color6", color_from_string( "#715344" ) );
+    set_color( "link_color7", color_from_string( "#bbbbbb" ) );
+
+    prefer_dark = true;
 
   }
 
