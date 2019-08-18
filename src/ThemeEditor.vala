@@ -28,7 +28,7 @@ public class ThemeEditor : Gtk.Box {
   private MainWindow                  _win;
   private Theme                       _theme;
   private Image                       _preview;
-  private string                      _orig_name;
+  private Theme                       _orig_theme;
   private bool                        _edit;
   private Entry                       _name;
   private HashMap<string,ColorButton> _btns;
@@ -80,6 +80,7 @@ public class ThemeEditor : Gtk.Box {
     _prefer_dark = new Switch();
     _prefer_dark.button_release_event.connect((e) => {
       _theme.prefer_dark = !_theme.prefer_dark;
+      _win.get_current_da().set_theme( _theme );
       return( false );
     });
 
@@ -97,16 +98,18 @@ public class ThemeEditor : Gtk.Box {
     /* Create the button bar */
     var bbox = new Box( Orientation.HORIZONTAL, 5 );
 
+    var del = new Button.with_label( _( "Delete" ) );
+    del.get_style_context().add_class( "destructive-action" );
+    del.clicked.connect( delete_theme );
+
     var cancel = new Button.with_label( _( "Cancel" ) );
     cancel.clicked.connect( close_window );
 
     var save = new Button.with_label( _( "Save" ) );
+    save.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
     save.clicked.connect( save_theme );
 
-    var apply = new Button.with_label( _( "Apply" ) );
-    apply.clicked.connect( apply_theme );
-
-    bbox.pack_end( apply,  false, false );
+    bbox.pack_start( del,  false, false );
     bbox.pack_end( save,   false, false );
     bbox.pack_end( cancel, false, false );
 
@@ -129,6 +132,7 @@ public class ThemeEditor : Gtk.Box {
     btn.color_set.connect(() => {
       _theme.set_color( name, btn.rgba );
       _preview.surface = _theme.make_icon();
+      _win.get_current_da().set_theme( _theme );
     });
     _btns.set( name, btn );
 
@@ -141,21 +145,24 @@ public class ThemeEditor : Gtk.Box {
   public void initialize( Theme theme, bool edit ) {
     
     /* Initialize class variables */
-    _orig_name = theme.name;
-    _edit      = edit;
-    _theme     = new Theme.from_theme( theme );
+    _orig_theme = theme;
+    _edit       = edit;
+    _theme      = new Theme.from_theme( theme );
 
     /* Figure out a unique name for the new theme */
-    var names   = new Array<string>();
-    var largest = 0;
-    var index   = 0;
-    _win.themes.names( ref names );
-    for( int i=0; i<names.length; i++ ) {
-      if( (names.index( i ).scanf( (_( "Custom" ) + " #%d"), &index ) != 0) && (largest < index) ) {
-        largest = index;
+    if( !edit ) {
+      var names   = new Array<string>();
+      var largest = 0;
+      var index   = 0;
+      _win.themes.names( ref names );
+      for( int i=0; i<names.length; i++ ) {
+        stdout.printf( "name: %s\n", names.index( i ) );
+        if( (names.index( i ).scanf( (_( "Custom" ) + " #%d"), &index ) != 0) && (largest < index) ) {
+          largest = index;
+        }
       }
+      _theme.name = _( "Custom" ) + " #%d".printf( largest + 1 );
     }
-    _theme.name = _( "Custom" ) + " #%d".printf( largest );
 
     /* Initialize the UI */
     var colors = _theme.colors();
@@ -168,19 +175,28 @@ public class ThemeEditor : Gtk.Box {
 
   }
 
+  /* Deletes the current theme */
+  private void delete_theme() {
+    _win.themes.delete_theme( _orig_theme.name );
+    _win.hide_theme_editor();
+  }
+
   /* Hides the theme editor panel without saving */
   private void close_window() {
+    _win.get_current_da().set_theme( _orig_theme );
     _win.hide_theme_editor();
   }
 
   /* Saves the theme and hides the theme editor panel */
   private void save_theme() {
-    _win.themes.add_theme( _theme );
+    _theme.name = _name.text;
+    if( _edit ) {
+      _orig_theme.copy( _theme );
+      _win.themes.themes_changed();
+    } else {
+      _win.themes.add_theme( _theme );
+    }
     _win.hide_theme_editor();
-  }
-
-  private void apply_theme() {
-    _win.get_current_da().set_theme( _theme );
   }
 
 }

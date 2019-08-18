@@ -27,6 +27,16 @@ public class Themes : Object {
   private Array<Theme> _themes;
   private uint         _custom_start;
 
+  public virtual signal void themes_changed() {
+    save_custom();
+  }
+
+  public uint custom_start {
+    get {
+      return( _custom_start );
+    }
+  }
+
   /* Default constructor */
   public Themes() {
 
@@ -79,7 +89,7 @@ public class Themes : Object {
   /* Adds the given theme */
   public void add_theme( Theme theme ) {
     _themes.append_val( theme );
-    save_custom();
+    themes_changed();
   }
 
   /* Deletes the given theme */
@@ -87,7 +97,7 @@ public class Themes : Object {
     for( int i=0; i<_themes.length; i++ ) {
       if( _themes.index( i ).name == name ) {
         _themes.remove_index( i );
-        save_custom();
+        themes_changed();
         return;
       }
     }

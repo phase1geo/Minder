@@ -48,6 +48,7 @@ public class MapInspector : Box {
 
     /* Listen for changes to the current tab */
     win.canvas_changed.connect( tab_changed );
+    win.themes.themes_changed.connect( update_themes );
 
   }
 
@@ -197,30 +198,8 @@ public class MapInspector : Box {
     vp.add( tb );
     sw.add( vp );
 
-    /* Get the theme information to display */
-    var names  = new Array<string>();
-    var icons  = new Array<Gtk.Image>();
-    var themes = new Themes();
-
-    themes.names( ref names );
-    themes.icons( ref icons );
-
-    /* Add the themes */
-    for( int i=0; i<names.length; i++ ) {
-      var name  = names.index( i );
-      var ebox  = new EventBox();
-      var item  = new Box( Orientation.VERTICAL, 5 );
-      var label = new Label( name );
-      item.pack_start( icons.index( i ), false, false, 5 );
-      item.pack_start( label,            false, true );
-      ebox.button_press_event.connect((w, e) => {
-        select_theme( name );
-        _da.set_theme( _win.themes.get_theme( name ) );
-        return( false );
-      });
-      ebox.add( item );
-      _theme_box.pack_start( ebox, false, true );
-    }
+    /* Add the themes to the theme box */
+    update_themes();
 
     var add = new Button.from_icon_name( "list-add-symbolic", IconSize.LARGE_TOOLBAR );
     add.relief = ReliefStyle.NONE;
@@ -265,6 +244,48 @@ public class MapInspector : Box {
     grid.attach( _unfold_all,     2, 0 );
 
     pack_start( grid, false, true );
+
+  }
+
+  /* Updates the theme box widget with the current list of themes */
+  private void update_themes() {
+
+    /* Clear the contents of the theme box */
+    _theme_box.get_children().foreach((entry) => {
+      _theme_box.remove( entry );
+    });
+
+    /* Get the theme information to display */
+    var names  = new Array<string>();
+    var icons  = new Array<Gtk.Image>();
+    var themes = new Themes();
+
+    themes.names( ref names );
+    themes.icons( ref icons );
+
+    /* Add the themes */
+    for( int i=0; i<names.length; i++ ) {
+      var name  = names.index( i );
+      var ebox  = new EventBox();
+      var item  = new Box( Orientation.VERTICAL, 5 );
+      var label = new Label( name );
+      item.pack_start( icons.index( i ), false, false, 5 );
+      item.pack_start( label,            false, true );
+      ebox.button_press_event.connect((w, e) => {
+        select_theme( name );
+        _da.set_theme( _win.themes.get_theme( name ) );
+        if( (i >= _win.themes.custom_start) && (e.type == Gdk.EventType.DOUBLE_BUTTON_PRESS) ) {
+          edit_current_theme();
+        }
+        return( false );
+      });
+      ebox.add( item );
+      _theme_box.pack_start( ebox, false, true );
+    }
+    _theme_box.show_all();
+
+    /* Make sure that the current theme is selected */
+    select_theme( _da.get_theme_name() );
 
   }
 
@@ -330,6 +351,11 @@ public class MapInspector : Box {
   /* Displays the current theme editor */
   private void create_custom_theme() {
     _win.show_theme_editor( false );
+  }
+
+  /* Displays the current theme editor */
+  private void edit_current_theme() {
+    _win.show_theme_editor( true );
   }
 
   /* Called whenever the current item is changed */

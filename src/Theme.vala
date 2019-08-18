@@ -67,12 +67,16 @@ public class Theme : Object {
 
   /* Copy constructor */
   public Theme.from_theme( Theme theme ) {
-    stdout.printf( "In Theme.from_theme\n" );
-    _index  = 0;
-    _colors = new HashMap<string,RGBA?>();
+    copy( theme );
+  }
+
+  public void copy( Theme theme ) {
+    name        = theme.name;
+    prefer_dark = theme.prefer_dark;
+    _index      = 0;
+    _colors     = new HashMap<string,RGBA?>();
     var it = theme._colors.map_iterator();
     while( it.next() ) {
-      stdout.printf( "  %s - %s\n", (string)it.get_key(), ((RGBA)it.get_value()).to_string() );
       _colors.set( (string)it.get_key(), (RGBA)it.get_value() );
     }
   }
