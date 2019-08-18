@@ -55,52 +55,12 @@ public class ThemeCustom : Theme {
 
   }
 
+  public ThemeCustom.from_theme( Theme theme ) {
+    base.from_theme( D
+
   /* Allows outside code to change the stored color */
   public void change_color( string name, RGBA color ) {
     set_color( name, color );
-  }
-
-  /* Parses the specified XML node for theme coloring information */
-  public void load( Xml.Node* n ) {
-
-    string? nn = n->get_prop( "name" );
-    if( nn != null ) {
-      name = nn;
-    }
-
-    var cs = colors();
-    for( int i=0; i<cs.length; i++ ) {
-      var name = cs.index( i );
-      string? s = n->get_prop( name );
-      if( s != null ) {
-        set_color( name, color_from_string( s ) );
-      }
-    }
-
-    string? d = n->get_prop( "prefer_dark" );
-    if( d != null ) {
-      prefer_dark = bool.parse( d );
-    }
-
-  }
-
-  /* Returns an XML node containing the contents of this theme color scheme */
-  public Xml.Node* save() {
-
-    Xml.Node* n = new Xml.Node( null, "theme" );
-
-    n->new_prop( "name", name );
-
-    var cs = colors();
-    for( int i=0; i<cs.length; i++ ) {
-      var name = cs.index( i );
-      n->new_prop( name, Utils.color_from_rgba( get_color( name ) ) );
-    }
-
-    n->new_prop( "prefer_dark", prefer_dark.to_string() );
-
-    return( n );
-
   }
 
 }

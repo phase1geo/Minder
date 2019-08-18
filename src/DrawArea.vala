@@ -31,6 +31,7 @@ public class DrawArea : Gtk.DrawingArea {
     {"text/uri-list", 0, 0}
   };
 
+  private MainWindow       _win;
   private Document         _doc;
   private double           _press_x;
   private double           _press_y;
@@ -70,7 +71,6 @@ public class DrawArea : Gtk.DrawingArea {
   private bool             _create_new_from_edit;
 
   public UndoBuffer   undo_buffer    { set; get; }
-  public Themes       themes         { set; get; default = new Themes(); }
   public Layouts      layouts        { set; get; default = new Layouts(); }
   public Animator     animator       { set; get; }
   public Clipboard    node_clipboard { set; get; default = Clipboard.get_for_display( Display.get_default(), Atom.intern( "org.github.phase1geo.minder", false ) ); }
@@ -110,7 +110,9 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void loaded();
 
   /* Default constructor */
-  public DrawArea( GLib.Settings settings, AccelGroup accel_group ) {
+  public DrawArea( MainWindow win, GLib.Settings settings, AccelGroup accel_group ) {
+
+    _win = win;
 
     _doc = new Document( this, settings );
 
@@ -147,7 +149,7 @@ public class DrawArea : Gtk.DrawingArea {
     });
 
     /* Set the theme to the default theme */
-    set_theme( "Default" );
+    set_theme( _win.themes.get_theme( "Default" ) );
 
     /* Add event listeners */
     this.draw.connect( on_draw );
@@ -224,9 +226,9 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Sets the theme to the given value */
-  public void set_theme( string name ) {
+  public void set_theme( Theme theme ) {
     Theme? orig_theme = _theme;
-    _theme = themes.get_theme( name );
+    _theme = theme;
     StyleContext.add_provider_for_screen(
       Screen.get_default(),
       _theme.get_css_provider(),
@@ -344,7 +346,7 @@ public class DrawArea : Gtk.DrawingArea {
     /* Get the theme */
     string? name = n->get_prop( "name" );
     if( name != null ) {
-      _theme = themes.get_theme( name );
+      _theme = _win.themes.get_theme( name );
       StyleContext.add_provider_for_screen(
         Screen.get_default(),
         _theme.get_css_provider(),

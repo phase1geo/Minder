@@ -76,6 +76,23 @@ public class Themes : Object {
     return( _themes.index( 0 ) );
   }
 
+  /* Adds the given theme */
+  public void add_theme( Theme theme ) {
+    _themes.append_val( theme );
+    save_custom();
+  }
+
+  /* Deletes the given theme */
+  public void delete_theme( string name ) {
+    for( int i=0; i<_themes.length; i++ ) {
+      if( _themes.index( i ).name == name ) {
+        _themes.remove_index( i );
+        save_custom();
+        return;
+      }
+    }
+  }
+
   /* Loads the custom themes from XML */
   private void load_custom() {
     var themes = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "custom_themes.xml" );
@@ -83,7 +100,7 @@ public class Themes : Object {
     if( doc == null ) return;
     for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "theme") ) {
-        var theme = new ThemeCustom();
+        var theme = new Theme();
         theme.load( it );
         _themes.append_val( theme );
       }
@@ -107,7 +124,7 @@ public class Themes : Object {
     doc->set_root_element( root );
 
     for( uint i=_custom_start; i<_themes.length; i++ ) {
-      root->add_child( (_themes.index( i ) as ThemeCustom).save() );
+      root->add_child( _themes.index( i ).save() );
     }
 
     /* Save the file */

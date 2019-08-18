@@ -90,6 +90,8 @@ public class MainWindow : ApplicationWindow {
 
   private delegate void ChangedFunc();
 
+  public Themes themes { set; get; default = new Themes(); }
+
   public signal void canvas_changed( DrawArea? da );
 
   /* Create the main window UI */
@@ -235,7 +237,7 @@ public class MainWindow : ApplicationWindow {
   public DrawArea add_tab( string? fname, TabAddReason reason ) {
 
     /* Create and pack the canvas */
-    var da = new DrawArea( _settings, _accel_group );
+    var da = new DrawArea( this, _settings, _accel_group );
     da.current_changed.connect( on_current_changed );
     da.scale_changed.connect( change_scale );
     da.show_properties.connect( show_properties );
@@ -901,7 +903,8 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Displays the theme editor pane */
-  public void show_theme_editor() {
+  public void show_theme_editor( bool edit ) {
+    _themer.initialize( get_current_da().get_theme(), edit );
     _inspector_nb.page = 1;
   }
 

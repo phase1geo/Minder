@@ -64,7 +64,7 @@ public class MapInspector : Box {
     _da = da;
     _da.animator.enable        = _settings.get_boolean( "enable-animations" );
     _da.get_connections().hide = _settings.get_boolean( "hide-connections" );
-    _da.set_theme( _da.get_theme_name() );
+    _da.set_theme( _da.get_theme() );
     update_theme_layout();
   }
 
@@ -215,7 +215,7 @@ public class MapInspector : Box {
       item.pack_start( label,            false, true );
       ebox.button_press_event.connect((w, e) => {
         select_theme( name );
-        _da.set_theme( name );
+        _da.set_theme( _win.themes.get_theme( name ) );
         return( false );
       });
       ebox.add( item );
@@ -290,7 +290,7 @@ public class MapInspector : Box {
 
     int index = 0;
     var names = new Array<string>();
-    _da.themes.names( ref names );
+    _win.themes.names( ref names );
 
     /* Deselect all themes */
     _theme_box.get_children().foreach((entry) => {
@@ -329,7 +329,7 @@ public class MapInspector : Box {
 
   /* Displays the current theme editor */
   private void create_custom_theme() {
-    _win.show_theme_editor();
+    _win.show_theme_editor( false );
   }
 
   /* Called whenever the current item is changed */

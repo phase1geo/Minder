@@ -28,9 +28,8 @@ public class Theme : Object {
   private int                   _index;
   private HashMap<string,RGBA?> _colors;
 
-  public    string name        { set; get; }
-  public    Image  icon        { set; get; }
-  public    bool   prefer_dark { set; get; }
+  public string name        { set; get; }
+  public bool   prefer_dark { set; get; default = false; }
 
   public int index {
     set {
@@ -66,6 +65,18 @@ public class Theme : Object {
     _colors.set( "link_color7",        null );
   }
 
+  /* Copy constructor */
+  public Theme.from_theme( Theme theme ) {
+    stdout.printf( "In Theme.from_theme\n" );
+    _index  = 0;
+    _colors = new HashMap<string,RGBA?>();
+    var it = theme._colors.map_iterator();
+    while( it.next() ) {
+      stdout.printf( "  %s - %s\n", (string)it.get_key(), ((RGBA)it.get_value()).to_string() );
+      _colors.set( (string)it.get_key(), (RGBA)it.get_value() );
+    }
+  }
+
   /* Returns the list of stored theme names */
   public Array<string> colors() {
     var cs = new Array<string>();
@@ -78,7 +89,7 @@ public class Theme : Object {
   }
 
   /* Adds the given color to the list of link colors */
-  protected bool set_color( string name, RGBA color ) {
+  public bool set_color( string name, RGBA color ) {
     if( _colors.has_key( name ) ) {
       _colors.set( name, color );
       return( true );
@@ -100,7 +111,7 @@ public class Theme : Object {
   }
 
   /* Returns the number of link colors */
-  public int num_link_colors() {
+  public static int num_link_colors() {
     return( 8 );
   }
 
@@ -138,10 +149,8 @@ public class Theme : Object {
     try {
       var css_data = "@define-color colorPrimary #603461; " +
                      "@define-color textColorPrimary @SILVER_100; " +
-                     // "@define-color textColorPrimaryShadow @SILVER_500; " +
                      "@define-color colorAccent #603461; " +
                      ".theme-selected { background: #087DFF; } " +
-                     ".find { -gtk-icon-source: -gtk-icontheme('edit-find'); -gtk-icon-theme: 'hicolor'; } " +
                      ".canvas { background: " + get_color( "background" ).to_string() + "; }";
       provider.load_from_data( css_data );
     } catch( GLib.Error e ) {
@@ -153,6 +162,49 @@ public class Theme : Object {
   /* Sets the context color based on the theme RGBA color */
   private void set_context_color( Cairo.Context ctx, RGBA color ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
+  }
+
+  /* Parses the specified XML node for theme coloring information */
+  public void load( Xml.Node* n ) {
+
+    string? nn = n->get_prop( "name" );
+    if( nn != null ) {
+      name = nn;
+    }
+
+    var cs = colors();
+    for( int i=0; i<cs.length; i++ ) {
+      var name = cs.index( i );
+      string? s = n->get_prop( name );
+      if( s != null ) {
+        set_color( name, color_from_string( s ) );
+      }
+    }
+
+    string? d = n->get_prop( "prefer_dark" );
+    if( d != null ) {
+      prefer_dark = bool.parse( d );
+    }
+
+  }
+
+  /* Returns an XML node containing the contents of this theme color scheme */
+  public Xml.Node* save() {
+
+    Xml.Node* n = new Xml.Node( null, "theme" );
+
+    n->new_prop( "name", name );
+
+    var cs = colors();
+    for( int i=0; i<cs.length; i++ ) {
+      var name = cs.index( i );
+      n->new_prop( name, Utils.color_from_rgba( get_color( name ) ) );
+    }
+
+    n->new_prop( "prefer_dark", prefer_dark.to_string() );
+
+    return( n );
+
   }
 
   /* Creates the icon representation based on the theme's colors */
