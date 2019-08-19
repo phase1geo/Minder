@@ -27,26 +27,21 @@ public class ThemeEditor : Gtk.Box {
 
   private MainWindow                  _win;
   private Theme                       _theme;
-  private Image                       _preview;
   private Theme                       _orig_theme;
   private bool                        _edit;
   private Entry                       _name;
   private HashMap<string,ColorButton> _btns;
   private Switch                      _prefer_dark;
+  private Revealer                    _delrev;
 
   public ThemeEditor( MainWindow win ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
 
-    _win = win;
+    _win  = win;
+    _btns = new HashMap<string,ColorButton>();
 
-    var grid = new Grid();
-    grid.row_spacing    = 5;
-    grid.column_spacing = 30;
-
-    _preview = new Image();
-    pack_start( _preview, false, false );
-
+    /* Add name label */
     var nbox = new Box( Orientation.HORIZONTAL, 10 );
     var nlbl = new Label( Utils.make_title( _( "Name" ) + ":" ) );
     nlbl.xalign     = (float)0;
@@ -54,10 +49,22 @@ public class ThemeEditor : Gtk.Box {
     _name    = new Entry();
 
     nbox.pack_start( nlbl,  false, false );
-    nbox.pack_start( _name, true,  false );
-    pack_start( nbox, true, true );
+    nbox.pack_start( _name, true, true );
+    pack_start( nbox, false, true );
 
-    _btns = new HashMap<string,ColorButton>();
+    /* Create scrollable options grid */
+    var sw = new ScrolledWindow( null, null );
+    var vp = new Viewport( null, null );
+    vp.set_size_request( 180, 600 );
+    sw.add( vp );
+    pack_start( sw, true, true );
+
+    /* Add theme options to grid */
+    var grid = new Grid();
+    grid.row_spacing    = 5;
+    grid.column_spacing = 30;
+    grid.border_width   = 5;
+    vp.add( grid );
 
     add_color( _( "Background" ),             "background",         grid, 0 );
     add_color( _( "Foreground" ),             "foreground",         grid, 1 );
@@ -93,14 +100,14 @@ public class ThemeEditor : Gtk.Box {
       add_color( _( "Link Color" ) + " #%d".printf( i + 1 ), "link_color%d".printf( i ), grid, (14 + i) );
     }
 
-    pack_start( grid, true, true );
-
     /* Create the button bar */
     var bbox = new Box( Orientation.HORIZONTAL, 5 );
 
+    _delrev = new Revealer();
     var del = new Button.with_label( _( "Delete" ) );
     del.get_style_context().add_class( "destructive-action" );
     del.clicked.connect( delete_theme );
+    _delrev.add( del );
 
     var cancel = new Button.with_label( _( "Cancel" ) );
     cancel.clicked.connect( close_window );
@@ -109,9 +116,9 @@ public class ThemeEditor : Gtk.Box {
     save.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
     save.clicked.connect( save_theme );
 
-    bbox.pack_start( del,  false, false );
-    bbox.pack_end( save,   false, false );
-    bbox.pack_end( cancel, false, false );
+    bbox.pack_start( _delrev, false, false );
+    bbox.pack_end(   save,    false, false );
+    bbox.pack_end(   cancel,  false, false );
 
     pack_end( bbox, false, true );
 
@@ -131,7 +138,6 @@ public class ThemeEditor : Gtk.Box {
     var btn = new ColorButton();
     btn.color_set.connect(() => {
       _theme.set_color( name, btn.rgba );
-      _preview.surface = _theme.make_icon();
       _win.get_current_da().set_theme( _theme );
     });
     _btns.set( name, btn );
@@ -156,7 +162,6 @@ public class ThemeEditor : Gtk.Box {
       var index   = 0;
       _win.themes.names( ref names );
       for( int i=0; i<names.length; i++ ) {
-        stdout.printf( "name: %s\n", names.index( i ) );
         if( (names.index( i ).scanf( (_( "Custom" ) + " #%d"), &index ) != 0) && (largest < index) ) {
           largest = index;
         }
@@ -170,13 +175,14 @@ public class ThemeEditor : Gtk.Box {
       _btns.get( colors.index( i ) ).rgba = _theme.get_color( colors.index( i ) );
     }
     _name.text       = _theme.name;
-    _preview.surface = _theme.make_icon();
     _prefer_dark.set_active( _theme.prefer_dark );
+    _delrev.reveal_child = edit;
 
   }
 
   /* Deletes the current theme */
   private void delete_theme() {
+    _win.get_current_da().set_theme( _win.themes.get_theme( _( "Default" ) ) );
     _win.themes.delete_theme( _orig_theme.name );
     _win.hide_theme_editor();
   }

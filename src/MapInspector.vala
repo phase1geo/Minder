@@ -272,9 +272,10 @@ public class MapInspector : Box {
       item.pack_start( icons.index( i ), false, false, 5 );
       item.pack_start( label,            false, true );
       ebox.button_press_event.connect((w, e) => {
+        var theme = _win.themes.get_theme( name );
         select_theme( name );
-        _da.set_theme( _win.themes.get_theme( name ) );
-        if( (i >= _win.themes.custom_start) && (e.type == Gdk.EventType.DOUBLE_BUTTON_PRESS) ) {
+        _da.set_theme( theme );
+        if( theme.custom && (e.type == Gdk.EventType.DOUBLE_BUTTON_PRESS) ) {
           edit_current_theme();
         }
         return( false );

@@ -40,6 +40,8 @@ public class Theme : Object {
     }
   }
 
+  public bool custom { protected set; get; default = true; }
+
   /* Default constructor */
   public Theme() {
     _index  = 0;

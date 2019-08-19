@@ -149,7 +149,7 @@ public class DrawArea : Gtk.DrawingArea {
     });
 
     /* Set the theme to the default theme */
-    set_theme( _win.themes.get_theme( "Default" ) );
+    set_theme( _win.themes.get_theme( _( "Default" ) ) );
 
     /* Add event listeners */
     this.draw.connect( on_draw );

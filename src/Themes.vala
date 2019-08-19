@@ -25,16 +25,9 @@ using GLib;
 public class Themes : Object {
 
   private Array<Theme> _themes;
-  private uint         _custom_start;
 
   public virtual signal void themes_changed() {
     save_custom();
-  }
-
-  public uint custom_start {
-    get {
-      return( _custom_start );
-    }
   }
 
   /* Default constructor */
@@ -54,8 +47,6 @@ public class Themes : Object {
     _themes.append_val( dark_theme );
     _themes.append_val( solarized_light_theme );
     _themes.append_val( solarized_dark_theme );
-
-    _custom_start = _themes.length;
 
     /* Load the customized themes */
     load_custom();
@@ -133,8 +124,10 @@ public class Themes : Object {
 
     doc->set_root_element( root );
 
-    for( uint i=_custom_start; i<_themes.length; i++ ) {
-      root->add_child( _themes.index( i ).save() );
+    for( uint i=0; i<_themes.length; i++ ) {
+      if( _themes.index( i ).custom ) {
+        root->add_child( _themes.index( i ).save() );
+      }
     }
 
     /* Save the file */
