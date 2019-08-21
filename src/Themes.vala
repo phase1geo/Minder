@@ -21,6 +21,7 @@
 
 using Gtk;
 using GLib;
+using Gee;
 
 public class Themes : Object {
 
@@ -60,6 +61,13 @@ public class Themes : Object {
     }
   }
 
+  /* Returns a HashMap containing the list of stored names */
+  public void names_hash( ref HashMap<string,int> names ) {
+    for( int i=0; i<_themes.length; i++ ) {
+      names.set( _themes.index( i ).name, 1 );
+    }
+  }
+
   /* Returns a list of icons associated with each of the loaded themes */
   public void icons( ref Array<Image> icons ) {
     for( int i=0; i<_themes.length; i++ ) {
@@ -91,6 +99,14 @@ public class Themes : Object {
         themes_changed();
         return;
       }
+    }
+  }
+
+  /* Output the current list of themes to standard output */
+  private void display_themes( string msg ) {
+    stdout.printf( "%s\n", msg );
+    for( int i=0; i<_themes.length; i++ ) {
+      stdout.printf( "  %s\n", _themes.index( i ).name );
     }
   }
 

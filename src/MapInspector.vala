@@ -31,6 +31,7 @@ public class MapInspector : Box {
   private Button?                     _balance        = null;
   private Button?                     _fold_completed = null;
   private Button?                     _unfold_all     = null;
+  private bool                        _init           = true;
 
   public MapInspector( MainWindow win, GLib.Settings settings ) {
 
@@ -205,7 +206,7 @@ public class MapInspector : Box {
     add.relief = ReliefStyle.NONE;
     add.set_tooltip_text( _( "Add Custom Theme" ) );
     add.clicked.connect( create_custom_theme );
-    tb.pack_start( add, true, true );
+    tb.pack_start( add, false, true );
 
     /* Pack the panel */
     pack_start( lbl, false, true );
@@ -255,13 +256,16 @@ public class MapInspector : Box {
       _theme_box.remove( entry );
     });
 
+    if( !_init ) {
+      // return;
+    }
+
     /* Get the theme information to display */
     var names  = new Array<string>();
     var icons  = new Array<Gtk.Image>();
-    var themes = new Themes();
 
-    themes.names( ref names );
-    themes.icons( ref icons );
+    _win.themes.names( ref names );
+    _win.themes.icons( ref icons );
 
     /* Add the themes */
     for( int i=0; i<names.length; i++ ) {
@@ -287,6 +291,8 @@ public class MapInspector : Box {
 
     /* Make sure that the current theme is selected */
     select_theme( _da.get_theme_name() );
+
+    _init = false;
 
   }
 
