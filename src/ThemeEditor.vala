@@ -48,7 +48,9 @@ public class ThemeEditor : Gtk.Box {
     nlbl.use_markup = true;
     _name    = new Entry();
     _name.focus_out_event.connect((e) => {
-      _name.text = uniquify_name( _name.text );
+      if( !_edit || (_name.text != _orig_theme.name) ) {
+        _name.text = uniquify_name( _name.text );
+      }
       return( false );
     });
 
