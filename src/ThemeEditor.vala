@@ -47,6 +47,10 @@ public class ThemeEditor : Gtk.Box {
     nlbl.xalign     = (float)0;
     nlbl.use_markup = true;
     _name    = new Entry();
+    _name.focus_out_event.connect((e) => {
+      _name.text = uniquify_name( _name.text );
+      return( false );
+    });
 
     nbox.pack_start( nlbl,  false, false );
     nbox.pack_start( _name, true, true );
