@@ -241,7 +241,6 @@ public class DrawArea : Gtk.DrawingArea {
     theme_changed( this );
     queue_draw();
     if( save ) {
-      stdout.printf( "Calling changed in set_theme\n" );
       changed();
     }
   }

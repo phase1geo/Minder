@@ -41,6 +41,11 @@ public class ThemeEditor : Gtk.Box {
     _win  = win;
     _btns = new HashMap<string,ColorButton>();
 
+    /* Add title */
+    var title = new Label( Utils.make_title( _( "Customize Theme" ) + "\n" ) );
+    title.use_markup = true;
+    pack_start( title, false, true );
+
     /* Add name label */
     var nbox = new Box( Orientation.HORIZONTAL, 10 );
     var nlbl = new Label( Utils.make_title( _( "Name" ) + ":" ) );
@@ -72,19 +77,24 @@ public class ThemeEditor : Gtk.Box {
     grid.border_width   = 5;
     vp.add( grid );
 
-    add_color( _( "Background" ),             "background",         grid, 0 );
-    add_color( _( "Foreground" ),             "foreground",         grid, 1 );
-    add_color( _( "Root Node Background" ),   "root_background",    grid, 2 );
-    add_color( _( "Root Node Foreground" ),   "root_foreground",    grid, 3 );
-    add_color( _( "Node Select Background" ), "nodesel_background", grid, 4 );
-    add_color( _( "Node Select Foreground" ), "nodesel_foreground", grid, 5 );
-    add_color( _( "Text Select Background" ), "textsel_background", grid, 6 );
-    add_color( _( "Text Select Foreground" ), "textsel_foreground", grid, 7 );
-    add_color( _( "Text Cursor" ),            "text_cursor",        grid, 8 );
-    add_color( _( "Attachable Highlight" ),   "attachable",         grid, 9 );
-    add_color( _( "Connection Color" ),       "connection",         grid, 10 );
+    var color_lbl = new Label( Utils.make_title( _( "Base Colors" ) + "\n" ) );
+    color_lbl.xalign     = (float)0;
+    color_lbl.use_markup = true;
+    grid.attach( color_lbl, 0, 0, 2 );
 
-    grid.attach( new Label( "" ), 0, 11 );
+    add_color( _( "Background" ),             "background",         grid, 1 );
+    add_color( _( "Foreground" ),             "foreground",         grid, 2 );
+    add_color( _( "Root Node Background" ),   "root_background",    grid, 3 );
+    add_color( _( "Root Node Foreground" ),   "root_foreground",    grid, 4 );
+    add_color( _( "Node Select Background" ), "nodesel_background", grid, 5 );
+    add_color( _( "Node Select Foreground" ), "nodesel_foreground", grid, 6 );
+    add_color( _( "Text Select Background" ), "textsel_background", grid, 7 );
+    add_color( _( "Text Select Foreground" ), "textsel_foreground", grid, 8 );
+    add_color( _( "Text Cursor" ),            "text_cursor",        grid, 9 );
+    add_color( _( "Attachable Highlight" ),   "attachable",         grid, 10 );
+    add_color( _( "Connection Color" ),       "connection",         grid, 11 );
+
+    grid.attach( new Label( "" ), 0, 12 );
 
     var dark_lbl        = new Label( Utils.make_title( _( "Prefer Dark Mode" ) ) );
     dark_lbl.xalign     = (float)0;
@@ -97,13 +107,18 @@ public class ThemeEditor : Gtk.Box {
       return( false );
     });
 
-    grid.attach( dark_lbl,     0, 12 );
-    grid.attach( _prefer_dark, 1, 12 );
-    grid.attach( new Label( "" ), 0, 13 );
+    grid.attach( dark_lbl,     0, 13 );
+    grid.attach( _prefer_dark, 1, 13 );
+    grid.attach( new Label( "" ), 0, 14 );
+
+    var link_lbl = new Label( Utils.make_title( _( "Link Colors" ) + "\n" ) );
+    link_lbl.xalign     = (float)0;
+    link_lbl.use_markup = true;
+    grid.attach( link_lbl, 0, 15, 2 );
 
     /* Add link colors */
     for( int i=0; i<Theme.num_link_colors(); i++ ) {
-      add_color( _( "Link Color" ) + " #%d".printf( i + 1 ), "link_color%d".printf( i ), grid, (14 + i) );
+      add_color( _( "Link Color" ) + " #%d".printf( i + 1 ), "link_color%d".printf( i ), grid, (16 + i) );
     }
 
     /* Create the button bar */
@@ -137,9 +152,10 @@ public class ThemeEditor : Gtk.Box {
   /* Adds a coloring row */
   private void add_color( string lbl_str, string name, Grid grid, int row ) {
 
-    var lbl        = new Label( Utils.make_title( lbl_str ) );
+    // var lbl        = new Label( Utils.make_title( lbl_str ) );
+    var lbl        = new Label( "  " + lbl_str );
     lbl.xalign     = (float)0;
-    lbl.use_markup = true;
+    // lbl.use_markup = true;
 
     var btn = new ColorButton();
     btn.color_set.connect(() => {
