@@ -25,26 +25,16 @@ using Gee;
 
 public class Theme : Object {
 
-  private int                   _index;
   private HashMap<string,RGBA?> _colors;
 
   public string name        { set; get; }
+  public int    index       { set; get; default = 0; }
   public bool   prefer_dark { set; get; default = false; }
-
-  public int index {
-    set {
-      _index = value;
-    }
-    get {
-      return( _index );
-    }
-  }
-
-  public bool custom { protected set; get; default = true; }
+  public bool   custom      { protected set; get; default = true; }
+  public bool   temporary   { set; get; default = false; }
 
   /* Default constructor */
   public Theme() {
-    _index  = 0;
     _colors = new HashMap<string,RGBA?>();
     _colors.set( "background",         null );
     _colors.set( "foreground",         null );
@@ -72,10 +62,13 @@ public class Theme : Object {
     copy( theme );
   }
 
+  /* Copies the given theme to this theme */
   public void copy( Theme theme ) {
     name        = theme.name;
+    index       = theme.index;
     prefer_dark = theme.prefer_dark;
-    _index      = 0;
+    custom      = theme.custom;
+    temporary   = theme.temporary;
     _colors     = new HashMap<string,RGBA?>();
     var it = theme._colors.map_iterator();
     while( it.next() ) {
@@ -92,6 +85,24 @@ public class Theme : Object {
       cs.append_val( name );
     }
     return( cs );
+  }
+
+  /* Returns true if the given theme matches the current theme */
+  public bool matches( Theme theme ) {
+    if( name == theme.name ) {
+      if( custom ) {
+        var it = _colors.map_iterator();
+        while( it.next() ) {
+          var key = it.get_key();
+          if( !_colors.get( key ).equal( theme._colors.get( key ) ) ) {
+            return( false );
+          }
+        }
+        return( prefer_dark == theme.prefer_dark );
+      }
+      return( true );
+    }
+    return( false );
   }
 
   /* Adds the given color to the list of link colors */
@@ -113,7 +124,7 @@ public class Theme : Object {
 
   /* Returns the next available link color index */
   public RGBA? next_color() {
-    return( link_color( _index++ % 8 ) );
+    return( link_color( index++ % 8 ) );
   }
 
   /* Returns the number of link colors */
@@ -178,6 +189,11 @@ public class Theme : Object {
       name = nn;
     }
 
+    string? idx = n->get_prop( "index" );
+    if( idx != null ) {
+      index = int.parse( idx );
+    }
+
     var cs = colors();
     for( int i=0; i<cs.length; i++ ) {
       var name = cs.index( i );
@@ -199,15 +215,20 @@ public class Theme : Object {
 
     Xml.Node* n = new Xml.Node( null, "theme" );
 
-    n->new_prop( "name", name );
+    n->new_prop( "name",  name );
+    n->new_prop( "index", index.to_string() );
 
-    var cs = colors();
-    for( int i=0; i<cs.length; i++ ) {
-      var name = cs.index( i );
-      n->new_prop( name, Utils.color_from_rgba( get_color( name ) ) );
+    if( custom ) {
+
+      var cs = colors();
+      for( int i=0; i<cs.length; i++ ) {
+        var name = cs.index( i );
+        n->new_prop( name, Utils.color_from_rgba( get_color( name ) ) );
+      }
+
+      n->new_prop( "prefer_dark", prefer_dark.to_string() );
+
     }
-
-    n->new_prop( "prefer_dark", prefer_dark.to_string() );
 
     return( n );
 

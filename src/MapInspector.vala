@@ -66,7 +66,7 @@ public class MapInspector : Box {
     _da = da;
     _da.animator.enable        = _settings.get_boolean( "enable-animations" );
     _da.get_connections().hide = _settings.get_boolean( "hide-connections" );
-    _da.set_theme( _da.get_theme() );
+    _da.set_theme( _da.get_theme(), false );
     update_theme_layout();
   }
 
@@ -278,7 +278,7 @@ public class MapInspector : Box {
       ebox.button_press_event.connect((w, e) => {
         var theme = _win.themes.get_theme( name );
         select_theme( name );
-        _da.set_theme( theme );
+        _da.set_theme( theme, true );
         if( theme.custom && (e.type == Gdk.EventType.DOUBLE_BUTTON_PRESS) ) {
           edit_current_theme();
         }
@@ -290,7 +290,9 @@ public class MapInspector : Box {
     _theme_box.show_all();
 
     /* Make sure that the current theme is selected */
-    select_theme( _da.get_theme_name() );
+    if( _da != null ) {
+      select_theme( _da.get_theme_name() );
+    }
 
     _init = false;
 

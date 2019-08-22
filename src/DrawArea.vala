@@ -149,7 +149,7 @@ public class DrawArea : Gtk.DrawingArea {
     });
 
     /* Set the theme to the default theme */
-    set_theme( _win.themes.get_theme( _( "Default" ) ) );
+    set_theme( _win.themes.get_theme( _( "Default" ) ), false );
 
     /* Add event listeners */
     this.draw.connect( on_draw );
@@ -226,9 +226,10 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Sets the theme to the given value */
-  public void set_theme( Theme theme ) {
+  public void set_theme( Theme theme, bool save ) {
     Theme? orig_theme = _theme;
-    _theme = theme;
+    _theme       = theme;
+    _theme.index = (orig_theme != null) ? orig_theme.index : 0;
     StyleContext.add_provider_for_screen(
       Screen.get_default(),
       _theme.get_css_provider(),
@@ -239,6 +240,10 @@ public class DrawArea : Gtk.DrawingArea {
     }
     theme_changed( this );
     queue_draw();
+    if( save ) {
+      stdout.printf( "Calling changed in set_theme\n" );
+      changed();
+    }
   }
 
   /* Updates all nodes with the new theme colors */
@@ -343,23 +348,26 @@ public class DrawArea : Gtk.DrawingArea {
   /* Loads the given theme from the list of available options */
   private void load_theme( Xml.Node* n ) {
 
-    /* Get the theme */
-    string? name = n->get_prop( "name" );
-    if( name != null ) {
-      _theme = _win.themes.get_theme( name );
-      StyleContext.add_provider_for_screen(
-        Screen.get_default(),
-        _theme.get_css_provider(),
-        STYLE_PROVIDER_PRIORITY_APPLICATION
-      );
-      theme_changed( this );
+    /* Load the theme */
+    var theme = new Theme();
+    theme.temporary = true;
+    theme.load( n );
+
+    /* If this theme does not currently exist, add the theme temporarily */
+    if( !_win.themes.exists( theme ) ) {
+      theme.name = _win.themes.uniquify_name( theme.name );
+      _win.themes.add_theme( theme );
     }
 
-    /* Set the current theme index */
-    string? index = n->get_prop( "index" );
-    if( index != null ) {
-      _theme.index = int.parse( index );
-    }
+    /* Get the theme */
+    _theme = _win.themes.get_theme( theme.name );
+    StyleContext.add_provider_for_screen(
+      Screen.get_default(),
+      _theme.get_css_provider(),
+      STYLE_PROVIDER_PRIORITY_APPLICATION
+    );
+
+    theme_changed( this );
 
   }
 
@@ -437,10 +445,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Saves the contents of the drawing area to the data output stream */
   public bool save( Xml.Node* parent ) {
 
-    Xml.Node* theme = new Xml.Node( null, "theme" );
-    theme->new_prop( "name", _theme.name );
-    theme->new_prop( "index", _theme.index.to_string() );
-    parent->add_child( theme );
+    parent->add_child( _theme.save() );
 
     StyleInspector.styles.save( parent );
 

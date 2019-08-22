@@ -49,7 +49,7 @@ public class ThemeEditor : Gtk.Box {
     _name    = new Entry();
     _name.focus_out_event.connect((e) => {
       if( !_edit || (_name.text != _orig_theme.name) ) {
-        _name.text = uniquify_name( _name.text );
+        _name.text = _win.themes.uniquify_name( _name.text );
       }
       return( false );
     });
@@ -93,7 +93,7 @@ public class ThemeEditor : Gtk.Box {
     _prefer_dark = new Switch();
     _prefer_dark.button_release_event.connect((e) => {
       _theme.prefer_dark = !_theme.prefer_dark;
-      _win.get_current_da().set_theme( _theme );
+      _win.get_current_da().set_theme( _theme, true );
       return( false );
     });
 
@@ -144,7 +144,7 @@ public class ThemeEditor : Gtk.Box {
     var btn = new ColorButton();
     btn.color_set.connect(() => {
       _theme.set_color( name, btn.rgba );
-      _win.get_current_da().set_theme( _theme );
+      _win.get_current_da().set_theme( _theme, true );
     });
     _btns.set( name, btn );
 
@@ -163,7 +163,7 @@ public class ThemeEditor : Gtk.Box {
 
     /* Figure out a unique name for the new theme */
     if( !edit ) {
-      _theme.name = uniquify_name( _( "Custom" ) + " #1" );
+      _theme.name = _win.themes.uniquify_name( _( "Custom" ) + " #1" );
     }
 
     /* Initialize the UI */
@@ -174,41 +174,6 @@ public class ThemeEditor : Gtk.Box {
     _name.text       = _theme.name;
     _prefer_dark.set_active( _theme.prefer_dark );
     _delrev.reveal_child = edit;
-
-  }
-
-  /* Returns a uniquified version of the given name */
-  public string uniquify_name( string name ) {
-
-    var names = new HashMap<string,int>();
-    var check = name;
-    var index = 2;
-    _win.themes.names_hash( ref names );
-
-    if( names.has_key( check ) ) {
-
-      MatchInfo match_info;
-      string    n = name;
-      try {
-        var re = new Regex( "(.*)(\\d+)" );
-        if( re.match( name, 0, out match_info ) ) {
-          index = int.parse( match_info.fetch( 2 ) ) + 1;
-          n     = match_info.fetch( 1 );
-        } else {
-          n += " #";
-        }
-      } catch( RegexError e ) {
-        stdout.printf( "Error parsing regular expression\n" );
-        return "";
-      }
-
-      do {
-        check = n + "%d".printf( index++ );
-      } while( names.has_key( check ) );
-
-    }
-
-    return( check );
 
   }
 
@@ -247,14 +212,14 @@ public class ThemeEditor : Gtk.Box {
 
   /* Deletes the current theme */
   private void delete_theme() {
-    _win.get_current_da().set_theme( _win.themes.get_theme( _( "Default" ) ) );
+    _win.get_current_da().set_theme( _win.themes.get_theme( _( "Default" ) ), true );
     _win.themes.delete_theme( _orig_theme.name );
     _win.hide_theme_editor();
   }
 
   /* Hides the theme editor panel without saving */
   private void close_window() {
-    _win.get_current_da().set_theme( _orig_theme );
+    _win.get_current_da().set_theme( _orig_theme, true );
     _win.hide_theme_editor();
   }
 

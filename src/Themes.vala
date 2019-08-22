@@ -75,6 +75,16 @@ public class Themes : Object {
     }
   }
 
+  /* Returns true if the given theme currently exists */
+  public bool exists( Theme theme ) {
+    for( int i=0; i<_themes.length; i++ ) {
+      if( _themes.index( i ).matches( theme ) ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
   /* Returns the theme associated with the given name */
   public Theme get_theme( string name ) {
     for( int i=0; i<_themes.length; i++ ) {
@@ -141,7 +151,7 @@ public class Themes : Object {
     doc->set_root_element( root );
 
     for( uint i=0; i<_themes.length; i++ ) {
-      if( _themes.index( i ).custom ) {
+      if( _themes.index( i ).custom && !_themes.index( i ).temporary ) {
         root->add_child( _themes.index( i ).save() );
       }
     }
@@ -150,6 +160,42 @@ public class Themes : Object {
     doc->save_format_file( fname, 1 );
 
     delete doc;
+
+  }
+
+  /* Returns a uniquified version of the given name */
+  public string uniquify_name( string name ) {
+
+    var names = new HashMap<string,int>();
+    var check = name;
+    var index = 2;
+
+    names_hash( ref names );
+
+    if( names.has_key( check ) ) {
+
+      MatchInfo match_info;
+      string    n = name;
+      try {
+        var re = new Regex( "(.*)(\\d+)" );
+        if( re.match( name, 0, out match_info ) ) {
+          index = int.parse( match_info.fetch( 2 ) ) + 1;
+          n     = match_info.fetch( 1 );
+        } else {
+          n += " #";
+        }
+      } catch( RegexError e ) {
+        stdout.printf( "Error parsing regular expression\n" );
+        return "";
+      }
+
+      do {
+        check = n + "%d".printf( index++ );
+      } while( names.has_key( check ) );
+
+    }
+
+    return( check );
 
   }
 
