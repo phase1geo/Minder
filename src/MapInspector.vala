@@ -272,7 +272,7 @@ public class MapInspector : Box {
       var name  = names.index( i );
       var ebox  = new EventBox();
       var item  = new Box( Orientation.VERTICAL, 5 );
-      var label = new Label( name );
+      var label = new Label( theme_label( name ) );
       item.pack_start( icons.index( i ), false, false, 5 );
       item.pack_start( label,            false, true );
       ebox.button_press_event.connect((w, e) => {
@@ -315,6 +315,15 @@ public class MapInspector : Box {
 
   }
 
+  /* Returns the label to use for the given theme by name */
+  private string theme_label( string name ) {
+    var theme = _win.themes.get_theme( name );
+    if( theme.temporary ) {
+      return( name + " (" + _( "Unsaved" ) + ")" );
+    }
+    return( name );
+  }
+
   /* Makes sure that only the given theme is selected in the UI */
   private void select_theme( string name ) {
 
@@ -328,7 +337,7 @@ public class MapInspector : Box {
       var b = (Box)e.get_children().nth_data( 0 );
       var l = (Label)b.get_children().nth_data( 1 );
       e.get_style_context().remove_class( "theme-selected" );
-      l.set_markup( names.index( index ) );
+      l.set_markup( theme_label( names.index( index ) ) );
       index++;
     });
 
@@ -340,7 +349,7 @@ public class MapInspector : Box {
         var b = (Box)e.get_children().nth_data( 0 );
         var l = (Label)b.get_children().nth_data( 1 );
         e.get_style_context().add_class( "theme-selected" );
-        l.set_markup( "<span color=\"white\">%s</span>".printf( names.index( index ) ) );
+        l.set_markup( "<span color=\"white\">%s</span>".printf( theme_label( names.index( index ) ) ) );
       }
       index++;
     });

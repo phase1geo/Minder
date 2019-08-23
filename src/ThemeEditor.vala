@@ -187,9 +187,9 @@ public class ThemeEditor : Gtk.Box {
     for( int i=0; i<colors.length; i++ ) {
       _btns.get( colors.index( i ) ).rgba = _theme.get_color( colors.index( i ) );
     }
-    _name.text       = _theme.name;
+    _name.text = _theme.name;
     _prefer_dark.set_active( _theme.prefer_dark );
-    _delrev.reveal_child = edit;
+    _delrev.reveal_child = edit && !theme.temporary;
 
   }
 
@@ -242,7 +242,7 @@ public class ThemeEditor : Gtk.Box {
   /* Saves the theme and hides the theme editor panel */
   private void save_theme() {
     _theme.name = _name.text;
-    if( _edit ) {
+    if( _edit && !_theme.temporary ) {
       _orig_theme.copy( _theme );
       _win.themes.themes_changed();
     } else {
