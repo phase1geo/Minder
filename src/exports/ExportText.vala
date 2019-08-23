@@ -25,15 +25,19 @@ public class ExportText : Object {
 
   /* Exports the given drawing area to the file of the given name */
   public static bool export( string fname, DrawArea da ) {
+
     var  file   = File.new_for_path( fname );
     bool retval = true;
+
     try {
       var os = file.create( FileCreateFlags.PRIVATE );
       export_top_nodes( os, da );
     } catch( Error e ) {
       retval = false;
     }
+
     return( retval );
+
   }
 
   /* Draws each of the top-level nodes */
@@ -88,6 +92,51 @@ public class ExportText : Object {
 
     } catch( Error e ) {
       // Handle error
+    }
+
+  }
+
+  /* Imports a text file */
+  public static bool import( string fname, DrawArea da ) {
+
+    var str = "# This is a test string\n" +
+              "  - Do this item first\n" +
+              "  - Second item\n" +
+              "    + Subitem A\n" +
+              "    + Subitem B\n" +
+              "  - [x] Third item\n" +
+              "    > Quick note about the third item\n" +
+              " - Fourth item";
+
+    import_text( str, 8, da );
+
+    return( true );
+
+  }
+
+  /* Imports the given text string */
+  public static void import_text( string txt, int tab_spaces, DrawArea da ) {
+
+    try {
+
+      var lines      = txt.split( "\n" );
+      var re         = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
+      var tspace     = string.nfill( tab_spaces, ' ' );
+      var prev_space = "";
+
+      foreach( string line in lines ) {
+        MatchInfo match_info;
+        if( re.match( line, 0, out match_info ) ) {
+          var space  = match_info.fetch( 1 ).replace( "\t", tspace );
+          var bullet = match_info.fetch( 3 );
+          var task   = match_info.fetch( 5 );
+          var str    = match_info.fetch( 6 );
+          stdout.printf( "space (%s), bullet (%s), task (%s), str (%s)\n", space, bullet, task, str );
+        }
+      }
+
+    } catch( GLib.RegexError err ) {
+      /* TBD */
     }
 
   }
