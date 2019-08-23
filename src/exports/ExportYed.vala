@@ -110,7 +110,7 @@ public class ExportYed : Object {
     shape->add_child( geometry );
 
     Xml.Node* fill = new Xml.Node( yns, "Fill" );
-    fill->new_prop( "color", Utils.color_from_rgba( node.is_root() ? theme.root_background : (node.style.node_fill ? node.link_color : theme.background) ) );
+    fill->new_prop( "color", Utils.color_from_rgba( node.is_root() ? theme.get_color( "root_background" ) : (node.style.node_fill ? node.link_color : theme.get_color( "background" )) ) );
     fill->new_prop( "transparent", "false" );
     shape->add_child( fill );
 
@@ -132,7 +132,7 @@ public class ExportYed : Object {
     lbl->new_prop( "horizontalTextPosition", "left" );
     lbl->new_prop( "iconTextGap", "4" );
     lbl->new_prop( "modelName", "custom" );
-    lbl->new_prop( "textColor", Utils.color_from_rgba( node.is_root() ? theme.root_foreground : (node.style.node_fill ? theme.background : theme.foreground) ) );
+    lbl->new_prop( "textColor", Utils.color_from_rgba( node.is_root() ? theme.get_color( "root_foreground" ) : (node.style.node_fill ? theme.get_color( "background" ) : theme.get_color( "foreground" )) ) );
     lbl->new_prop( "verticalTextPosition", "top" );
     lbl->new_prop( "visible", node.folded ? "false" : "true" );
     lbl->new_prop( "width", node.name.width.to_string() );
@@ -277,7 +277,7 @@ public class ExportYed : Object {
       be->add_child( path );
 
       Xml.Node* ls = new Xml.Node( yns, "LineStyle" );
-      ls->new_prop( "color", Utils.color_from_rgba( theme.connection_color ) );
+      ls->new_prop( "color", Utils.color_from_rgba( theme.get_color( "connection" ) ) );
       ls->new_prop( "type", (conn.style.connection_dash.name == "solid") ? "line" : "dashed" );
       ls->new_prop( "width", conn.style.connection_width.to_string() );
       be->add_child( ls );
@@ -301,7 +301,7 @@ public class ExportYed : Object {
         el->new_prop( "modelName", "custom" );
         el->new_prop( "preferredPlacement", "anywhere" );
         el->new_prop( "ratio", "0.5" );
-        el->new_prop( "textColor", Utils.color_from_rgba( theme.foreground ) );
+        el->new_prop( "textColor", Utils.color_from_rgba( theme.get_color( "foreground" ) ) );
         el->new_prop( "verticalTextPosition", "top" );
         el->new_prop( "visible", "true" );
         el->new_prop( "width", conn.title.width.to_string() );

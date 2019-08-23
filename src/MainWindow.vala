@@ -41,6 +41,7 @@ public class MainWindow : ApplicationWindow {
   private Revealer?         _inspector      = null;
   private Box?              _pbox           = null;
   private Paned             _pane           = null;
+  private Notebook?         _inspector_nb   = null;
   private Stack?            _stack          = null;
   private Popover?          _zoom           = null;
   private Popover?          _search         = null;
@@ -70,6 +71,7 @@ public class MainWindow : ApplicationWindow {
   private Image?            _prop_hide      = null;
   private bool              _prefer_dark    = false;
   private bool              _debug          = false;
+  private ThemeEditor       _themer;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",          action_save },
@@ -87,6 +89,8 @@ public class MainWindow : ApplicationWindow {
   private IconSize icon_size;
 
   private delegate void ChangedFunc();
+
+  public Themes themes { set; get; default = new Themes(); }
 
   public signal void canvas_changed( DrawArea? da );
 
@@ -233,7 +237,7 @@ public class MainWindow : ApplicationWindow {
   public DrawArea add_tab( string? fname, TabAddReason reason ) {
 
     /* Create and pack the canvas */
-    var da = new DrawArea( _settings, _accel_group );
+    var da = new DrawArea( this, _settings, _accel_group );
     da.current_changed.connect( on_current_changed );
     da.scale_changed.connect( change_scale );
     da.show_properties.connect( show_properties );
@@ -606,6 +610,9 @@ public class MainWindow : ApplicationWindow {
     _header.pack_end( _prop_btn );
 
     /* Create the inspector sidebar */
+    _inspector_nb = new Notebook();
+    _inspector_nb.show_tabs = false;
+
     var box = new Box( Orientation.VERTICAL, 20 );
     var sb  = new StackSwitcher();
 
@@ -636,10 +643,15 @@ public class MainWindow : ApplicationWindow {
     box.pack_start( _stack, true,  true, 0 );
     box.show_all();
 
+    _themer = new ThemeEditor( this );
+
+    _inspector_nb.append_page( box );
+    _inspector_nb.append_page( _themer );
+
     _inspector = new Revealer();
     _inspector.set_transition_type( RevealerTransitionType.SLIDE_LEFT );
     _inspector.set_transition_duration( 500 );
-    _inspector.child = box;
+    _inspector.child = _inspector_nb;
 
     /* If the settings says to display the properties, do it now */
     if( _settings.get_boolean( "current-properties-shown" ) ) {
@@ -888,6 +900,17 @@ public class MainWindow : ApplicationWindow {
     if( grab_note && (tab != null) && (tab == "current") ) {
       (_stack.get_child_by_name( tab ) as CurrentInspector).grab_note();
     }
+  }
+
+  /* Displays the theme editor pane */
+  public void show_theme_editor( bool edit ) {
+    _themer.initialize( get_current_da().get_theme(), edit );
+    _inspector_nb.page = 1;
+  }
+
+  /* Hides the theme editor pane */
+  public void hide_theme_editor() {
+    _inspector_nb.page = 0;
   }
   
   private bool move_inspector_to_pane() {
