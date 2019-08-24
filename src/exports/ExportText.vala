@@ -20,8 +20,14 @@
 */
 
 using GLib;
+using Gee;
 
 public class ExportText : Object {
+
+  struct Hier {
+    public int  spaces;
+    public Node node;
+  }
 
   /* Exports the given drawing area to the file of the given name */
   public static bool export( string fname, DrawArea da ) {
@@ -114,26 +120,89 @@ public class ExportText : Object {
 
   }
 
+  public static Node make_node( DrawArea da, Node? parent, string task, string name ) {
+
+    var node = new Node.with_name( da, name, da.layouts.get_default() );
+
+    /* Add the style component to the node */
+    if( parent == null ) {
+      node.style = StyleInspector.styles.get_global_style();
+    } else {
+      node.style = StyleInspector.styles.get_style_for_level( parent.get_level() + 1 );
+      node.attach( parent, (int)parent.children().length, da.get_theme() );
+    }
+
+    /* Add the task information, if necessary */
+    if( task != "" ) {
+      node.enable_task( true );
+      if( (task == "x") || (task == "X") ) {
+        node.set_task_done( true );
+      }
+    }
+
+    return( node );
+
+  }
+
   /* Imports the given text string */
   public static void import_text( string txt, int tab_spaces, DrawArea da ) {
 
     try {
 
-      var lines      = txt.split( "\n" );
-      var re         = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
-      var tspace     = string.nfill( tab_spaces, ' ' );
-      var prev_space = "";
+      var stack  = new ArrayQueue<Hier?>();
+      var lines  = txt.split( "\n" );
+      var re     = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
+      var tspace = string.nfill( tab_spaces, ' ' );
 
       foreach( string line in lines ) {
         MatchInfo match_info;
         if( re.match( line, 0, out match_info ) ) {
-          var space  = match_info.fetch( 1 ).replace( "\t", tspace );
+
+          var spaces = match_info.fetch( 1 ).replace( "\t", tspace ).length;
           var bullet = match_info.fetch( 3 );
           var task   = match_info.fetch( 5 );
           var str    = match_info.fetch( 6 );
-          stdout.printf( "space (%s), bullet (%s), task (%s), str (%s)\n", space, bullet, task, str );
+
+          /* Add root node */
+          if( bullet == "#" ) {
+            var node = make_node( da, null, task, str );
+            da.add_root( node, -1 );
+            stack.offer_head( {spaces, node} );
+
+          /* Add note */
+          } else if( bullet == ">" ) {
+            stack.peek_head().node.note += str;
+
+          /* Add sibling node */
+          } else if( spaces == stack.peek_head().spaces ) {
+            var node = make_node( da, stack.peek_head().node.parent, task, str );
+            stack.poll_head();
+            stack.offer_head( {spaces, node} );
+
+          /* Add child node */
+          } else if( spaces > stack.peek_head().spaces ) {
+            var node = make_node( da, stack.peek_head().node, task, str );
+            stack.offer_head( {spaces, node} );
+
+          /* Add ancestor node */
+          } else {
+            while( !stack.is_empty && (spaces < stack.peek_head().spaces) ) {
+              stack.poll_head();
+            }
+            if( spaces == stack.peek_head().spaces ) {
+              var node = make_node( da, stack.peek_head().node.parent, task, str );
+              stack.poll_head();
+              stack.offer_head( {spaces, node} );
+            } else {
+              var node = make_node( da, stack.peek_head().node, task, str );
+              stack.offer_head( {spaces, node} );
+            }
+          }
         }
       }
+
+      da.changed();
+      da.queue_draw();
 
     } catch( GLib.RegexError err ) {
       /* TBD */
