@@ -585,9 +585,6 @@ public class DrawArea : Gtk.DrawingArea {
     set_current_node( n );
     n.mode = NodeMode.EDITABLE;
 
-    /* TEST */
-    ExportText.import( "", this );
-
     /* Redraw the canvas */
     queue_draw();
 

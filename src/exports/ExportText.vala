@@ -105,21 +105,30 @@ public class ExportText : Object {
   /* Imports a text file */
   public static bool import( string fname, DrawArea da ) {
 
-    var str = "# This is a test string\n" +
-              "  - Do this item first\n" +
-              "  - Second item\n" +
-              "    + Subitem A\n" +
-              "    + Subitem B\n" +
-              "  - [x] Third item\n" +
-              "    > Quick note about the third item\n" +
-              " - Fourth item";
+    try {
 
-    import_text( str, 8, da, false );
+      File            file = File.new_for_path( fname );
+  		FileIOStream    ios  = file.create_readwrite( FileCreateFlags.PRIVATE );
+      DataInputStream dis  = new DataInputStream( ios.input_stream );
+      size_t          len;
+
+      /* Read the entire file contents */
+      var str = dis.read_upto( "\0", 1, out len ) + "\0";
+
+      /* Import the text */
+      import_text( str, 8, da, false );
+
+    } catch( IOError err ) {
+      return( false );
+    } catch( Error err ) {
+      return( false );
+    }
 
     return( true );
 
   }
 
+  /* Creates a new node from the given information and attaches it to the specified parent node */
   public static Node make_node( DrawArea da, Node? parent, string task, string name ) {
 
     var node = new Node.with_name( da, name, da.layouts.get_default() );
