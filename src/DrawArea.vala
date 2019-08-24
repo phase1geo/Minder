@@ -31,7 +31,6 @@ public class DrawArea : Gtk.DrawingArea {
     {"text/uri-list", 0, 0}
   };
 
-  private MainWindow       _win;
   private Document         _doc;
   private double           _press_x;
   private double           _press_y;
@@ -70,6 +69,7 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _focus_alpha  = 0.05;
   private bool             _create_new_from_edit;
 
+  public MainWindow   win            { private set; get; }
   public UndoBuffer   undo_buffer    { set; get; }
   public Layouts      layouts        { set; get; default = new Layouts(); }
   public Animator     animator       { set; get; }
@@ -110,9 +110,9 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void loaded();
 
   /* Default constructor */
-  public DrawArea( MainWindow win, GLib.Settings settings, AccelGroup accel_group ) {
+  public DrawArea( MainWindow w, GLib.Settings settings, AccelGroup accel_group ) {
 
-    _win = win;
+    win = w;
 
     _doc = new Document( this, settings );
 
@@ -149,7 +149,7 @@ public class DrawArea : Gtk.DrawingArea {
     });
 
     /* Set the theme to the default theme */
-    set_theme( _win.themes.get_theme( _( "Default" ) ), false );
+    set_theme( win.themes.get_theme( _( "Default" ) ), false );
 
     /* Add event listeners */
     this.draw.connect( on_draw );
@@ -353,13 +353,13 @@ public class DrawArea : Gtk.DrawingArea {
     theme.load( n );
 
     /* If this theme does not currently exist, add the theme temporarily */
-    if( !_win.themes.exists( theme ) ) {
-      theme.name = _win.themes.uniquify_name( theme.name );
-      _win.themes.add_theme( theme );
+    if( !win.themes.exists( theme ) ) {
+      theme.name = win.themes.uniquify_name( theme.name );
+      win.themes.add_theme( theme );
     }
 
     /* Get the theme */
-    _theme = _win.themes.get_theme( theme.name );
+    _theme = win.themes.get_theme( theme.name );
     StyleContext.add_provider_for_screen(
       Screen.get_default(),
       _theme.get_css_provider(),
