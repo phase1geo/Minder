@@ -114,7 +114,7 @@ public class ExportText : Object {
               "    > Quick note about the third item\n" +
               " - Fourth item";
 
-    import_text( str, 8, da );
+    import_text( str, 8, da, false );
 
     return( true );
 
@@ -145,17 +145,21 @@ public class ExportText : Object {
   }
 
   /* Imports the given text string */
-  public static void import_text( string txt, int tab_spaces, DrawArea da ) {
+  public static void import_text( string txt, int tab_spaces, DrawArea da, bool imported ) {
 
     try {
 
       var stack  = new ArrayQueue<Hier?>();
+      var tops   = new Array<Node>();
       var lines  = txt.split( "\n" );
       var re     = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
       var tspace = string.nfill( tab_spaces, ' ' );
 
       foreach( string line in lines ) {
+
         MatchInfo match_info;
+
+        /* If we found some useful text, include it here */
         if( re.match( line, 0, out match_info ) ) {
 
           var spaces = match_info.fetch( 1 ).replace( "\t", tspace ).length;
@@ -168,6 +172,19 @@ public class ExportText : Object {
             var node = make_node( da, null, task, str );
             da.add_root( node, -1 );
             stack.offer_head( {spaces, node} );
+            tops.append_val( node );
+
+          /* If we are the first found node in the text input */
+          } else if( stack.is_empty ) {
+            Node node;
+            if( !imported && (da.get_current_node() != null) ) {
+              node = make_node( da, da.get_current_node(), task, str );
+            } else {
+              node = make_node( da, null, task, str );
+              da.add_root( node, -1 );
+            }
+            stack.offer_head( {spaces, node} );
+            tops.append_val( node );
 
           /* Add note */
           } else if( bullet == ">" ) {
@@ -198,7 +215,13 @@ public class ExportText : Object {
               stack.offer_head( {spaces, node} );
             }
           }
+
         }
+
+      }
+
+      if( !imported ) {
+        da.undo_buffer.add_item( new UndoNodesInsert( da, tops ) );
       }
 
       da.changed();

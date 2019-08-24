@@ -2100,6 +2100,16 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Returns the index of the given root node */
+  public int root_index( Node root ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      if( _nodes.index( i ) == root ) {
+        return( i );
+      }
+    }
+    return( -1 );
+  }
+
   /* Adds the given node to the list of root nodes */
   public void add_root( Node n, int index ) {
     if( index == -1 ) {
