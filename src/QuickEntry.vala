@@ -52,12 +52,12 @@ public class QuickEntry : Window {
     var ins = new Button.with_label( _( "Insert" ) );
     ins.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
     ins.clicked.connect(() => {
-      ExportText.import_text( _entry.buffer.text, _entry.indent, da, false );
+      ExportText.import_text( _entry.buffer.text, 8, da, false );
       close();
     });
 
-    bbox.pack_end( cancel, false, false );
     bbox.pack_end( ins,    false, false );
+    bbox.pack_end( cancel, false, false );
 
     box.pack_start( _entry, true,  true );
     box.pack_end(   bbox,   false, true );

@@ -161,7 +161,7 @@ public class ExportText : Object {
       var tops   = new Array<Node>();
       var lines  = txt.split( "\n" );
       var re     = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
-      var tspace = string.nfill( tab_spaces, ' ' );
+      var tspace = string.nfill( ((tab_spaces <= 0) ? 1 : tab_spaces), ' ' );
 
       foreach( string line in lines ) {
 
