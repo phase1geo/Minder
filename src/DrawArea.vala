@@ -3330,6 +3330,8 @@ public class DrawArea : Gtk.DrawingArea {
   /* Moves all trees to avoid overlapping */
   public void handle_tree_overlap( NodeBounds prev ) {
 
+    if( _current_node == null ) return;
+
     var root  = _current_node.get_root();
     var curr  = root.tree_bbox;
     var ldiff = curr.x - prev.x;

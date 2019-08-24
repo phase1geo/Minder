@@ -108,8 +108,7 @@ public class ExportText : Object {
     try {
 
       File            file = File.new_for_path( fname );
-  		FileIOStream    ios  = file.create_readwrite( FileCreateFlags.PRIVATE );
-      DataInputStream dis  = new DataInputStream( ios.input_stream );
+      DataInputStream dis  = new DataInputStream( file.read() );
       size_t          len;
 
       /* Read the entire file contents */
