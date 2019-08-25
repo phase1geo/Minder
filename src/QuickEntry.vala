@@ -79,13 +79,10 @@ public class QuickEntry : Gtk.Window {
 
   private bool on_keypress( EventKey e ) {
 
-    // stdout.printf( "On keypress, e.keyval: %u\n", e.keyval );
-
     switch( e.keyval ) {
       case 32    :  return( handle_space() );
       case 65293 :  return( handle_return() );
       case 65289 :  return( handle_tab() );
-      case 65056 :  return( handle_shift_tab() );
     }
 
     return( false );
@@ -104,14 +101,13 @@ public class QuickEntry : Gtk.Window {
 
     /* Adjust the line */
     if( adjust < 0 ) {
-      current.backward_lines( adjust );
+      current.backward_lines( 0 - adjust );
     } else if( adjust > 0 ) {
       current.backward_lines( adjust );
     }
 
     buf.get_iter_at_line( out startline, current.get_line() );
     buf.get_iter_at_line( out endline,   current.get_line() + 1 );
-    endline.backward_char();
 
     return( buf.get_text( startline, endline, true ) );
 
@@ -140,7 +136,7 @@ public class QuickEntry : Gtk.Window {
     try {
 
       MatchInfo match_info;
-      var       re = new Regex( "^(\\s*)" );
+      var       re = new Regex( "^([ \\t]*)" );
 
       if( re.match( line, 0, out match_info ) ) {
         wspace = match_info.fetch( 1 );
@@ -152,6 +148,15 @@ public class QuickEntry : Gtk.Window {
     }
 
     return( false );
+
+  }
+
+  /* Converts the given whitespace to all spaces */
+  private string tabs_to_spaces( string wspace ) {
+
+    var tspace = string.nfill( 8, ' ' );
+
+    return( wspace.replace( "\t", tspace ) );
 
   }
 
@@ -180,26 +185,19 @@ public class QuickEntry : Gtk.Window {
   /* If the Tab key is pressed, only allow it if it is valid to do so */
   private bool handle_tab() {
 
-    string before;
+    TextIter current;
+    var      prev = "";
+    var      curr = "";
 
-    if( get_whitespace( get_start_to_current_text(), out before ) ) {
-      var full = get_line_text( 0 );
+    _entry.buffer.get_iter_at_mark( out current, _entry.buffer.get_insert() );
+
+    if( current.get_line() == 0 ) {
+      return( true );
+    } else if( get_whitespace( get_line_text( 0 ), out curr ) && get_whitespace( get_line_text( -1 ), out prev ) ) {
+      return( tabs_to_spaces( curr ).length > tabs_to_spaces( prev ).length );
     }
 
     return( false );
-
-  }
-
-  /* If Shift-Tab is pressed, delete the previous Tab character (or the last 8 space characters) */
-  private bool handle_shift_tab() {
-
-    string wspace;
-
-    if( get_whitespace( get_start_to_current_text(), out wspace ) ) {
-      /* TBD */
-    }
-
-    return( true );
 
   }
 
