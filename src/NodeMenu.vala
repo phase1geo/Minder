@@ -397,8 +397,7 @@ public class NodeMenu : Gtk.Menu {
 
   /* Show the quick entry window */
   private void add_quick_entry() {
-    var quick_entry = new QuickEntry( _da );
-    quick_entry.show_all();
+    _da.handle_control_e();
   }
 
   /* Detaches the currently selected node and make it a root node */

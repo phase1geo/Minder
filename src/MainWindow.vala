@@ -225,6 +225,12 @@ public class MainWindow : ApplicationWindow {
     save_tab_state( tab );
   }
 
+  /* Closes the current tab */
+  public void close_current_tab() {
+    if( _nb.n_tabs == 1 ) return;
+    _nb.current.close();
+  }
+
   /* Called whenever the user clicks on the close button and the tab is unnamed */
   private bool close_tab_requested( Tab tab ) {
     var bin = (Gtk.Bin)tab.page;

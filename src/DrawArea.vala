@@ -2536,6 +2536,17 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Displays the quick entry UI */
+  public void handle_control_e() {
+    var quick_entry = new QuickEntry( this );
+    quick_entry.show_all();
+  }
+
+  /* Closes the current tab */
+  private void handle_control_w() {
+    win.close_current_tab();
+  }
+
   /* Called whenever the home key is entered in the drawing area */
   private void handle_home() {
     if( is_connection_editable() ) {
@@ -2793,6 +2804,8 @@ public class DrawArea : Gtk.DrawingArea {
           case 47    :  handle_control_slash();         break;
           case 92    :  handle_control_backslash();     break;
           case 46    :  handle_control_period();        break;
+          case 101   :  handle_control_e();             break;
+          case 119   :  handle_control_w();             break;
         }
       } else if( nomod || shift ) {
         if( _im_context.filter_keypress( e ) ) {
