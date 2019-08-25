@@ -158,9 +158,7 @@ public class QuickEntry : Gtk.Window {
   /* If the user attempts to hit the space bar when adding front-end whitespace, don't insert it */
   private bool handle_space() {
 
-    /* TBD */
-
-    return( false );
+    return( get_start_to_current_text().strip() == "" );
 
   }
 
