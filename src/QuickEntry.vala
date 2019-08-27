@@ -50,8 +50,48 @@ public class QuickEntry : Gtk.Window {
     var sw = new ScrolledWindow( null, null );
     sw.add( _entry );
 
+    var helprev    = new Revealer();
+    var helpgrid   = new Grid();
+    helpgrid.border_width = 5;
+    var help_title = make_help_label( _( "Help for inputting node information:" ) + "\n" );
+    var help_line  = make_help_label( "  - " + _( "Each line of text describes either the title of a node or note information for a node." ) );
+    var help_tab0  = make_help_label( "  - <b>" + _( "Tab" ) + "</b>:" );
+    var help_tab1  = make_help_label( "  " + _( "Creates a child node of the previous node." ) );
+    var help_hdr0  = make_help_label( "  - <b>#</b>:" );
+    var help_hdr1  = make_help_label( "  " + _( "If this character is the first non-whitespace character, makes a new root node from the title that follows." ) );
+    var help_node0 = make_help_label( "  - <b>*, - or +</b>:" );
+    var help_node1 = make_help_label( "  " + _( "If this character is the first non-whitespace character, make a new node from the title that follows." ) );
+    var help_note0 = make_help_label( "  - <b>&gt;</b>:" );
+    var help_note1 = make_help_label( "  " + _( "If this character is the first non-whitespace character, the following line is appended to the previous node's note." ) );
+    var help_utsk0 = make_help_label( "  - <b>[ ]</b>:" );
+    var help_utsk1 = make_help_label( "  " + _( "If this follows *, + or -, the node is made an uncompleted task." ) );
+    var help_ctsk0 = make_help_label( "  - <b>[x] or [X]</b>:" );
+    var help_ctsk1 = make_help_label( "  " + _( "If this follows *, + or -, the node is made a completed task." ) );
+    helpgrid.attach( help_title, 0, 0, 2 );
+    helpgrid.attach( help_line,  0, 1, 2 );
+    helpgrid.attach( help_tab0,  0, 2 );
+    helpgrid.attach( help_tab1,  1, 2 );
+    helpgrid.attach( help_hdr0,  0, 3 );
+    helpgrid.attach( help_hdr1,  1, 3 );
+    helpgrid.attach( help_node0, 0, 4 );
+    helpgrid.attach( help_node1, 1, 4 );
+    helpgrid.attach( help_note0, 0, 5 );
+    helpgrid.attach( help_note1, 1, 5 );
+    helpgrid.attach( help_utsk0, 0, 6 );
+    helpgrid.attach( help_utsk1, 1, 6 );
+    helpgrid.attach( help_ctsk0, 0, 7 );
+    helpgrid.attach( help_ctsk1, 1, 7 );
+    helprev.reveal_child = false;
+    helprev.add( helpgrid );
+
     var bbox = new Box( Orientation.HORIZONTAL, 5 );
     bbox.border_width = 5;
+
+    var info = new Button.from_icon_name( "dialog-information-symbolic", IconSize.BUTTON );
+    info.relief = ReliefStyle.NONE;
+    info.clicked.connect(() => {
+      helprev.reveal_child = !helprev.reveal_child;
+    });
 
     var cancel = new Button.with_label( _( "Cancel" ) );
     cancel.clicked.connect(() => {
@@ -65,16 +105,26 @@ public class QuickEntry : Gtk.Window {
       close();
     });
 
+    bbox.pack_start( info, false, false );
     bbox.pack_end( ins,    false, false );
     bbox.pack_end( cancel, false, false );
 
-    box.pack_start( sw,   true,  true );
-    box.pack_end(   bbox, false, true );
+    box.pack_start( sw,      true,  true );
+    box.pack_end(   bbox,    false, true );
+    box.pack_end(   helprev, false, true );
 
     add( box );
 
     show_all();
 
+  }
+
+  private Label make_help_label( string str ) {
+    var lbl = new Label( str );
+    lbl.use_markup = true;
+    lbl.xalign     = (float)0;
+    lbl.get_style_context().add_class( "greyed-label" );
+    return( lbl );
   }
 
   private bool on_keypress( EventKey e ) {
