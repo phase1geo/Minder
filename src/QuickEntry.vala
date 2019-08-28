@@ -26,7 +26,7 @@ public class QuickEntry : Gtk.Window {
 
   private TextView _entry;
 
-  public QuickEntry( DrawArea da ) {
+  public QuickEntry( DrawArea da, Settings settings ) {
 
     /* Configure the window */
     default_width   = 500;
