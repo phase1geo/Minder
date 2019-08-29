@@ -66,6 +66,7 @@ public class MainWindow : ApplicationWindow {
   private Button?           _undo_btn       = null;
   private Button?           _redo_btn       = null;
   private ToggleButton?     _focus_btn      = null;
+  private Button?           _misc_btn       = null;
   private Button?           _prop_btn       = null;
   private Image?            _prop_show      = null;
   private Image?            _prop_hide      = null;
@@ -181,6 +182,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Add the buttons on the right side in the reverse order */
     add_property_button();
+    add_miscellaneous_button();
     add_export_button();
     add_search_button();
     add_zoom_button();
@@ -599,6 +601,22 @@ public class MainWindow : ApplicationWindow {
     });
 
     _header.pack_end( _focus_btn );
+
+  }
+
+  /* Adds the miscellaneous functionality */
+  private void add_miscellaneous_button() {
+
+    _misc_btn = new Button.from_icon_name( "open-menu", icon_size );
+    _misc_btn.clicked.connect(() => {
+      var builder = new Builder.from_file( "../data/com.github.phase1geo.minder.shortcuts.ui" );
+      var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
+      win.section_name = "global";
+      win.view_name    = null;
+      win.show_all();
+    });
+
+    _header.pack_end( _misc_btn );
 
   }
 
