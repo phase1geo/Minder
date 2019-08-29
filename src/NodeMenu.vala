@@ -40,6 +40,7 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _parent;
   Gtk.MenuItem _child;
   Gtk.MenuItem _sibling;
+  Gtk.MenuItem _quick;
   Gtk.MenuItem _sortby;
   Gtk.MenuItem _selroot;
   Gtk.MenuItem _selnext;
@@ -112,6 +113,10 @@ public class NodeMenu : Gtk.Menu {
     _sibling.activate.connect( add_sibling_node );
     Utils.add_accel_label( _sibling, 65293, 0 );
 
+    _quick = new Gtk.MenuItem.with_label( _( "Add Nodes With Quick Entry" ) );
+    _quick.activate.connect( add_quick_entry );
+    Utils.add_accel_label( _quick, 'e', Gdk.ModifierType.CONTROL_MASK );
+
     var selnode = new Gtk.MenuItem.with_label( _( "Select" ) );
     var selmenu = new Gtk.Menu();
     selnode.set_submenu( selmenu );
@@ -176,6 +181,7 @@ public class NodeMenu : Gtk.Menu {
     add( _parent );
     add( _child );
     add( _sibling );
+    add( _quick );
     add( new SeparatorMenuItem() );
     add( selnode );
     add( _center );
@@ -387,6 +393,11 @@ public class NodeMenu : Gtk.Menu {
   /* Creates a sibling node of the current node */
   private void add_sibling_node() {
     _da.add_sibling_node();
+  }
+
+  /* Show the quick entry window */
+  private void add_quick_entry() {
+    _da.handle_control_e();
   }
 
   /* Detaches the currently selected node and make it a root node */

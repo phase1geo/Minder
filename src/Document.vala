@@ -26,7 +26,6 @@ using GLib;
 public class Document : Object {
 
   private DrawArea      _da;
-  private GLib.Settings _settings;
   private string        _filename;
   private bool          _from_user;  // Set to true if _filename was set by the user
   private ImageManager  _image_manager;
@@ -54,10 +53,9 @@ public class Document : Object {
   public bool save_needed { private set; get; default = false; }
 
   /* Default constructor */
-  public Document( DrawArea da, GLib.Settings settings ) {
+  public Document( DrawArea da ) {
 
-    _da       = da;
-    _settings = settings;
+    _da = da;
 
     /* Create the temporary file */
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );

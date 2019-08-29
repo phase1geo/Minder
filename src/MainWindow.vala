@@ -225,6 +225,12 @@ public class MainWindow : ApplicationWindow {
     save_tab_state( tab );
   }
 
+  /* Closes the current tab */
+  public void close_current_tab() {
+    if( _nb.n_tabs == 1 ) return;
+    _nb.current.close();
+  }
+
   /* Called whenever the user clicks on the close button and the tab is unnamed */
   private bool close_tab_requested( Tab tab ) {
     var bin = (Gtk.Bin)tab.page;
@@ -756,6 +762,11 @@ public class MainWindow : ApplicationWindow {
     filter.add_pattern( "*.opml" );
     dialog.add_filter( filter );
 
+    filter = new FileFilter();
+    filter.set_filter_name( _( "PlainText" ) );
+    filter.add_pattern( "*.txt" );
+    dialog.add_filter( filter );
+
     if( dialog.run() == ResponseType.ACCEPT ) {
       open_file( dialog.get_filename() );
     }
@@ -786,6 +797,11 @@ public class MainWindow : ApplicationWindow {
       update_title( da );
       ExportFreeplane.import( fname, da );
       return( true );
+    } else if( fname.has_suffix( ".txt" ) ) {
+      var new_fname = fname.substring( 0, (fname.length - 4) ) + ".minder";
+      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      update_title( da );
+      ExportText.import( fname, da );
     }
     return( false );
   }

@@ -31,8 +31,8 @@ public class DrawArea : Gtk.DrawingArea {
     {"text/uri-list", 0, 0}
   };
 
-  private MainWindow       _win;
   private Document         _doc;
+  private GLib.Settings    _settings;
   private double           _press_x;
   private double           _press_y;
   private double           _origin_x;
@@ -70,12 +70,18 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _focus_alpha  = 0.05;
   private bool             _create_new_from_edit;
 
-  public UndoBuffer   undo_buffer    { set; get; }
-  public Layouts      layouts        { set; get; default = new Layouts(); }
-  public Animator     animator       { set; get; }
-  public Clipboard    node_clipboard { set; get; default = Clipboard.get_for_display( Display.get_default(), Atom.intern( "org.github.phase1geo.minder", false ) ); }
-  public ImageManager image_manager  { set; get; default = new ImageManager(); }
+  public MainWindow    win            { private set; get; }
+  public UndoBuffer    undo_buffer    { set; get; }
+  public Layouts       layouts        { set; get; default = new Layouts(); }
+  public Animator      animator       { set; get; }
+  public Clipboard     node_clipboard { set; get; default = Clipboard.get_for_display( Display.get_default(), Atom.intern( "org.github.phase1geo.minder", false ) ); }
+  public ImageManager  image_manager  { set; get; default = new ImageManager(); }
 
+  public GLib.Settings settings {
+    get {
+      return( _settings );
+    }
+  }
   public double origin_x {
     set {
       _store_origin_x = _origin_x = value;
@@ -110,11 +116,12 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void loaded();
 
   /* Default constructor */
-  public DrawArea( MainWindow win, GLib.Settings settings, AccelGroup accel_group ) {
+  public DrawArea( MainWindow w, GLib.Settings settings, AccelGroup accel_group ) {
 
-    _win = win;
+    win = w;
 
-    _doc = new Document( this, settings );
+    _doc      = new Document( this );
+    _settings = settings;
 
     /* Create the array of root nodes in the map */
     _nodes = new Array<Node>();
@@ -149,7 +156,7 @@ public class DrawArea : Gtk.DrawingArea {
     });
 
     /* Set the theme to the default theme */
-    set_theme( _win.themes.get_theme( _( "Default" ) ), false );
+    set_theme( win.themes.get_theme( _( "Default" ) ), false );
 
     /* Add event listeners */
     this.draw.connect( on_draw );
@@ -353,13 +360,13 @@ public class DrawArea : Gtk.DrawingArea {
     theme.load( n );
 
     /* If this theme does not currently exist, add the theme temporarily */
-    if( !_win.themes.exists( theme ) ) {
-      theme.name = _win.themes.uniquify_name( theme.name );
-      _win.themes.add_theme( theme );
+    if( !win.themes.exists( theme ) ) {
+      theme.name = win.themes.uniquify_name( theme.name );
+      win.themes.add_theme( theme );
     }
 
     /* Get the theme */
-    _theme = _win.themes.get_theme( theme.name );
+    _theme = win.themes.get_theme( theme.name );
     StyleContext.add_provider_for_screen(
       Screen.get_default(),
       _theme.get_css_provider(),
@@ -2097,6 +2104,16 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Returns the index of the given root node */
+  public int root_index( Node root ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      if( _nodes.index( i ) == root ) {
+        return( i );
+      }
+    }
+    return( -1 );
+  }
+
   /* Adds the given node to the list of root nodes */
   public void add_root( Node n, int index ) {
     if( index == -1 ) {
@@ -2526,6 +2543,17 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Displays the quick entry UI */
+  public void handle_control_e() {
+    var quick_entry = new QuickEntry( this, _settings );
+    quick_entry.show_all();
+  }
+
+  /* Closes the current tab */
+  private void handle_control_w() {
+    win.close_current_tab();
+  }
+
   /* Called whenever the home key is entered in the drawing area */
   private void handle_home() {
     if( is_connection_editable() ) {
@@ -2783,6 +2811,8 @@ public class DrawArea : Gtk.DrawingArea {
           case 47    :  handle_control_slash();         break;
           case 92    :  handle_control_backslash();     break;
           case 46    :  handle_control_period();        break;
+          case 101   :  handle_control_e();             break;
+          case 119   :  handle_control_w();             break;
         }
       } else if( nomod || shift ) {
         if( _im_context.filter_keypress( e ) ) {
@@ -3319,6 +3349,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Moves all trees to avoid overlapping */
   public void handle_tree_overlap( NodeBounds prev ) {
+
+    if( _current_node == null ) return;
 
     var root  = _current_node.get_root();
     var curr  = root.tree_bbox;
