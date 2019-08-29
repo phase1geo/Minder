@@ -206,7 +206,7 @@
       <summary>Alpha value to use for all nodes/connections that are not within focus in focus mode</summary>
       <description>Alpha value to use for all nodes/connections that are not within focus in focus mode.  Value must be between 0 and 1.</description>
     </key>
-    <key name="quick-entry-spaces-per-tab">
+    <key name="quick-entry-spaces-per-tab" type="i">
       <default>8</default>
       <summary>Specifies the number of space characters that match the indentation of the tab character in quick entry mode and text import.</summary>
       <description>Specifies the number of space characters that match the indentation of the tab character in quick entry mode and text import.</description>

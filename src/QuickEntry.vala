@@ -26,7 +26,7 @@ public class QuickEntry : Gtk.Window {
 
   private TextView _entry;
 
-  public QuickEntry( DrawArea da, Settings settings ) {
+  public QuickEntry( DrawArea da, GLib.Settings settings ) {
 
     /* Configure the window */
     default_width   = 500;
@@ -101,7 +101,7 @@ public class QuickEntry : Gtk.Window {
     var ins = new Button.with_label( _( "Insert" ) );
     ins.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
     ins.clicked.connect(() => {
-      ExportText.import_text( _entry.buffer.text, 8, da, false );
+      ExportText.import_text( _entry.buffer.text, settings.get_int( "quick-entry-spaces-per-tab" ), da, false );
       close();
     });
 

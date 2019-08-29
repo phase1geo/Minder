@@ -115,7 +115,7 @@ public class ExportText : Object {
       var str = dis.read_upto( "\0", 1, out len ) + "\0";
 
       /* Import the text */
-      import_text( str, 8, da, false );
+      import_text( str, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, false );
 
     } catch( IOError err ) {
       return( false );

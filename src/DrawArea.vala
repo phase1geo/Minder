@@ -32,6 +32,7 @@ public class DrawArea : Gtk.DrawingArea {
   };
 
   private Document         _doc;
+  private GLib.Settings    _settings;
   private double           _press_x;
   private double           _press_y;
   private double           _origin_x;
@@ -69,13 +70,18 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _focus_alpha  = 0.05;
   private bool             _create_new_from_edit;
 
-  public MainWindow   win            { private set; get; }
-  public UndoBuffer   undo_buffer    { set; get; }
-  public Layouts      layouts        { set; get; default = new Layouts(); }
-  public Animator     animator       { set; get; }
-  public Clipboard    node_clipboard { set; get; default = Clipboard.get_for_display( Display.get_default(), Atom.intern( "org.github.phase1geo.minder", false ) ); }
-  public ImageManager image_manager  { set; get; default = new ImageManager(); }
+  public MainWindow    win            { private set; get; }
+  public UndoBuffer    undo_buffer    { set; get; }
+  public Layouts       layouts        { set; get; default = new Layouts(); }
+  public Animator      animator       { set; get; }
+  public Clipboard     node_clipboard { set; get; default = Clipboard.get_for_display( Display.get_default(), Atom.intern( "org.github.phase1geo.minder", false ) ); }
+  public ImageManager  image_manager  { set; get; default = new ImageManager(); }
 
+  public GLib.Settings settings {
+    get {
+      return( _settings );
+    }
+  }
   public double origin_x {
     set {
       _store_origin_x = _origin_x = value;
@@ -114,7 +120,8 @@ public class DrawArea : Gtk.DrawingArea {
 
     win = w;
 
-    _doc = new Document( this, settings );
+    _doc      = new Document( this );
+    _settings = settings;
 
     /* Create the array of root nodes in the map */
     _nodes = new Array<Node>();
@@ -2538,7 +2545,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Displays the quick entry UI */
   public void handle_control_e() {
-    var quick_entry = new QuickEntry( this );
+    var quick_entry = new QuickEntry( this, _settings );
     quick_entry.show_all();
   }
 
