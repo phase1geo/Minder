@@ -609,11 +609,12 @@ public class MainWindow : ApplicationWindow {
 
     _misc_btn = new Button.from_icon_name( "open-menu", icon_size );
     _misc_btn.clicked.connect(() => {
-      var builder = new Builder.from_file( "../data/com.github.phase1geo.minder.shortcuts.ui" );
+      var builder = new Builder.from_resource( "/com/github/phase1geo/minder/shortcuts.ui" );
       var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
-      win.section_name = "global";
-      win.view_name    = null;
-      win.show_all();
+      win.transient_for = this;
+      win.section_name  = "global";
+      win.view_name     = "file";
+      win.show();
     });
 
     _header.pack_end( _misc_btn );
