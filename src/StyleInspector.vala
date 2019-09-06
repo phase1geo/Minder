@@ -969,7 +969,7 @@ public class StyleInspector : Box {
       case StyleAffects.LEVEL7  :
       case StyleAffects.LEVEL8  :
       case StyleAffects.LEVEL9  :
-        update_ui_with_style( styles.get_style_for_level( _affects.level() ) );
+        update_ui_with_style( styles.get_style_for_level( _affects.level(), null ) );
         _branch_group.visible = true;
         _link_group.visible   = (_affects != StyleAffects.LEVEL0);
         _node_group.visible   = true;

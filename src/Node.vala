@@ -871,7 +871,7 @@ public class Node : Object {
     }
 
     /* Make sure the style has a default value */
-    style.copy( StyleInspector.styles.get_style_for_level( isroot ? 0 : 1 ) );
+    style.copy( StyleInspector.styles.get_style_for_level( (isroot ? 0 : 1), null ) );
 
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {

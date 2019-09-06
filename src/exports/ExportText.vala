@@ -136,7 +136,7 @@ public class ExportText : Object {
     if( parent == null ) {
       node.style = StyleInspector.styles.get_global_style();
     } else {
-      node.style = StyleInspector.styles.get_style_for_level( parent.get_level() + 1 );
+      node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), null );
       node.attach( parent, (int)parent.children().length, da.get_theme() );
     }
 
