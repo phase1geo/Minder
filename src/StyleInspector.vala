@@ -419,7 +419,11 @@ public class StyleInspector : Box {
 
   /* Called when the user clicks on the link arrow switch */
   private bool link_arrow_changed( Gdk.EventButton e ) {
-    _da.undo_buffer.add_item( new UndoStyleLinkArrow( _affects, !_link_arrow.get_active(), _da ) );
+    bool val = !_link_arrow.get_active();
+    Idle.add(() => {
+      _da.undo_buffer.add_item( new UndoStyleLinkArrow( _affects, val, _da ) );
+      return( Source.REMOVE );
+    });
     return( false );
   }
 
@@ -578,7 +582,11 @@ public class StyleInspector : Box {
 
   /* Called whenever the node fill status changes */
   private bool node_fill_changed( Gdk.EventButton e ) {
-    _da.undo_buffer.add_item( new UndoStyleNodeFill( _affects, !_node_fill.get_active(), _da ) );
+    bool val = !_node_fill.get_active();
+    Idle.add(() => {
+      _da.undo_buffer.add_item( new UndoStyleNodeFill( _affects, val, _da ) );
+      return( Source.REMOVE );
+    });
     return( false );
   }
 
@@ -704,7 +712,11 @@ public class StyleInspector : Box {
 
   /* Called whenever the node fill status changes */
   private bool node_markup_changed( Gdk.EventButton e ) {
-    _da.undo_buffer.add_item( new UndoStyleNodeMarkup( _affects, !_node_markup.get_active(), _da ) );
+    bool val = !_node_markup.get_active();
+    Idle.add(() => {
+      _da.undo_buffer.add_item( new UndoStyleNodeMarkup( _affects, val, _da ) );
+      return( Source.REMOVE );
+    });
     return( false );
   }
 
