@@ -2045,7 +2045,7 @@ public class DrawArea : Gtk.DrawingArea {
     _current_node.mode = NodeMode.NONE;
     node.side          = _current_node.side;
     node.style         = _current_node.style;
-    node.style         = StyleInspector.styles.get_style_for_level( _current_node.get_level() );
+    node.style         = StyleInspector.styles.get_style_for_level( _current_node.get_level(), _current_node.style );
     node.attach( _current_node.parent, (_current_node.index() + 1), _theme );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     set_current_node( node );
@@ -2247,7 +2247,7 @@ public class DrawArea : Gtk.DrawingArea {
     var node  = new Node( this, layouts.get_default() );
     var color = _current_node.link_color;
     node.side       = _current_node.side;
-    node.style      = StyleInspector.styles.get_style_for_level( _current_node.get_level() );
+    node.style      = StyleInspector.styles.get_style_for_level( _current_node.get_level(), _current_node.style );
     node.attach( _current_node.parent, _current_node.index(), null );
     node.link_color = color;
     _current_node.detach( node.side );
@@ -2272,7 +2272,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       node.style = _current_node.style;
     }
-    node.style = StyleInspector.styles.get_style_for_level( _current_node.get_level() + 1 );
+    node.style = StyleInspector.styles.get_style_for_level( (_current_node.get_level() + 1), _current_node.style );
     node.attach( _current_node, -1, _theme );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     _current_node.folded = false;

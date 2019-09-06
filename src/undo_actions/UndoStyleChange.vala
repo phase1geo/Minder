@@ -58,13 +58,12 @@ public class UndoStyleChange : UndoItem {
         for( int i=0; i<da.get_nodes().length; i++ ) {
           set_style_for_tree( da.get_nodes().index( i ), change_type, ref index );
         }
-        if( change_type != StyleChangeType.LOAD ) {
-          da.current_changed( da );
-        } else {
+        if( change_type == StyleChangeType.LOAD ) {
           Style new_style = new Style.templated();
           store_style_value( new_style, 0 );
           StyleInspector.styles.set_all_to_style( new_style );
         }
+        da.current_changed( da );
         break;
       case StyleAffects.LEVEL0      :
       case StyleAffects.LEVEL1      :
@@ -79,38 +78,29 @@ public class UndoStyleChange : UndoItem {
         for( int i=0; i<da.get_nodes().length; i++ ) {
           set_style_for_level( da.get_nodes().index( i ), (1 << (int)_affects.level()), change_type, ref index, 0 );
         }
-        if( change_type != StyleChangeType.LOAD ) {
-          da.current_changed( da );
-        } else {
+        if( change_type == StyleChangeType.LOAD ) {
           Style new_style = new Style.templated();
           store_style_value( new_style, 0 );
           StyleInspector.styles.set_levels_to_style( (1 << (int)_affects.level()), new_style );
         }
+        da.current_changed( da );
         break;
       case StyleAffects.CURRENT     :
         if( _node != null ) {
           set_node_style( _node, change_type, ref index );
-          if( change_type != StyleChangeType.LOAD ) {
-            da.current_changed( da );
-          }
+          da.current_changed( da );
         } else {
           set_connection_style( _conn, change_type, ref index );
-          if( change_type != StyleChangeType.LOAD ) {
-            da.current_changed( da );
-          }
+          da.current_changed( da );
         }
         break;
       case StyleAffects.CURRTREE    :
         set_style_for_tree( _node.get_root(), change_type, ref index );
-        if( change_type != StyleChangeType.LOAD ) {
-          da.current_changed( da );
-        }
+        da.current_changed( da );
         break;
       case StyleAffects.CURRSUBTREE :
         set_style_for_tree( _node, change_type, ref index );
-        if( change_type != StyleChangeType.LOAD ) {
-          da.current_changed( da );
-        }
+        da.current_changed( da );
         break;
     }
     da.changed();

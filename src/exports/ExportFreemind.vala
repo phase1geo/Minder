@@ -181,7 +181,7 @@ public class ExportFreemind : Object {
     var node = new Node( da, da.layouts.get_default() );
 
     /* Make sure the style has a default value */
-    node.style = StyleInspector.styles.get_style_for_level( (parent == null) ? 0 : 1 );
+    node.style = StyleInspector.styles.get_style_for_level( ((parent == null) ? 0 : 1), null );
 
     string? i = n->get_prop( "ID" );
     if( i != null ) {

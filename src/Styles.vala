@@ -23,10 +23,15 @@ using Gtk;
 
 public class Styles {
 
+  private class StyleLevel {
+    public Style style { set; get; default = new Style(); }
+    public bool  isset { set; get; default = false; }
+  }
+
   private static Array<LinkType>   _link_types;
   private static Array<LinkDash>   _link_dashes;
   private static Array<NodeBorder> _node_borders;
-  private        Array<Style>      _styles;
+  private        Array<StyleLevel> _styles;
 
   /* Default constructor */
   public Styles() {
@@ -73,29 +78,29 @@ public class Styles {
     _node_borders.append_val( nb_pilled );
 
     /* Allocate styles for each level */
-    _styles = new Array<Style>();
+    _styles = new Array<StyleLevel>();
     for( int i=0; i<=10; i++ ) {
-      var style = new Style();
-      style.link_type  = lt_straight;
-      style.link_width = 4;
-      style.link_arrow = false;
-      style.link_dash  = ld_solid;
+      var level = new StyleLevel();
+      level.style.link_type  = lt_straight;
+      level.style.link_width = 4;
+      level.style.link_arrow = false;
+      level.style.link_dash  = ld_solid;
       if( i == 0 ) {
-        style.node_border = nb_rounded;
+        level.style.node_border = nb_rounded;
       } else {
-        style.node_border = nb_underlined;
+        level.style.node_border = nb_underlined;
       }
-      style.node_width         = 200;
-      style.node_borderwidth   = 4;
-      style.node_fill          = false;
-      style.node_margin        = 8;
-      style.node_padding       = 6;
-      style.node_markup        = true;
-      style.connection_dash    = ld_dotted;
-      style.connection_width   = 2;
-      style.connection_arrow   = "fromto";
-      style.connection_padding = 3;
-      _styles.append_val( style );
+      level.style.node_width         = 200;
+      level.style.node_borderwidth   = 4;
+      level.style.node_fill          = false;
+      level.style.node_margin        = 8;
+      level.style.node_padding       = 6;
+      level.style.node_markup        = true;
+      level.style.connection_dash    = ld_dotted;
+      level.style.connection_width   = 2;
+      level.style.connection_arrow   = "fromto";
+      level.style.connection_padding = 3;
+      _styles.append_val( level );
     }
 
   }
@@ -107,10 +112,12 @@ public class Styles {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "style" ) {
           string? l = it->get_prop( "level" );
+          string? s = it->get_prop( "isset" );
           if( l != null ) {
             int level = int.parse( l );
-            _styles.index( level ).load_node( it );
-            _styles.index( level ).load_connection( it );
+            _styles.index( level ).style.load_node( it );
+            _styles.index( level ).style.load_connection( it );
+            _styles.index( level ).isset = (s != null) ? bool.parse( s ) : false;
           }
         }
       }
@@ -125,8 +132,9 @@ public class Styles {
     for( int i=0; i<_styles.length; i++ ) {
       Xml.Node* n = new Xml.Node( null, "style" );
       n->set_prop( "level", i.to_string() );
-      _styles.index( i ).save_node_in_node( n );
-      _styles.index( i ).save_connection_in_node( n );
+      n->set_prop( "isset", _styles.index( i ).isset.to_string() );
+      _styles.index( i ).style.save_node_in_node( n );
+      _styles.index( i ).style.save_connection_in_node( n );
       node->add_child( n );
     }
 
@@ -137,7 +145,8 @@ public class Styles {
   /* Sets all nodes in the mind-map to the given link style */
   public void set_all_to_style( Style style ) {
     for( int i=0; i<=10; i++ ) {
-      _styles.index( i ).copy( style );
+      _styles.index( i ).style.copy( style );
+      _styles.index( i ).isset = true;
     }
   }
 
@@ -145,7 +154,8 @@ public class Styles {
   public void set_levels_to_style( int levels, Style style ) {
     for( int i=0; i<10; i++ ) {
       if( (levels & (1 << i)) != 0 ) {
-        _styles.index( i ).copy( style );
+        _styles.index( i ).style.copy( style );
+        _styles.index( i ).isset = true;
       }
     }
   }
@@ -199,13 +209,14 @@ public class Styles {
   }
 
   /* Returns the style for the given level */
-  public Style get_style_for_level( uint level ) {
-    return( _styles.index( (level > 9) ? 9 : level ) );
+  public Style get_style_for_level( uint level, Style? alternative ) {
+    var slevel = _styles.index( (level > 9) ? 9 : level );
+    return( (slevel.isset || (alternative == null)) ? slevel.style : alternative  );
   }
 
   /* Returns the global style */
   public Style get_global_style() {
-    return( _styles.index( 10 ) );
+    return( _styles.index( 10 ).style );
   }
 
 }

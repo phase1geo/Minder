@@ -39,6 +39,9 @@ public class UndoStyleNodeBorder : UndoStyleChange {
 
   protected override void store_style_value( Style style, int index ) {
     style.node_border = _values.get( index );
+    if( !style.node_border.is_fillable() ) {
+      style.node_fill = false;
+    }
   }
 
 }
