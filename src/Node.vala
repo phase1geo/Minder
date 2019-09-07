@@ -1801,7 +1801,7 @@ public class Node : Object {
       bbox( out x, out y, out w, out h );
 
       /* Draw highlight border */
-      Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable_color" ), _alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), _alpha );
       ctx.set_line_width( 4 );
       ctx.rectangle( x, y, w, h );
       ctx.stroke();

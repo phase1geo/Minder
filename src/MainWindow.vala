@@ -592,13 +592,11 @@ public class MainWindow : ApplicationWindow {
     _focus_btn.draw_indicator = true;
     _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "Ctrl + Shift + F" ) );
     _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
-    _focus_btn.button_release_event.connect((e) => {
-      _focus_btn.active = !_focus_btn.active;
+    _focus_btn.clicked.connect((e) => {
       var da = get_current_da();
       update_title( da );
       da.set_focus_mode( _focus_btn.active );
       da.grab_focus();
-      return( true );
     });
 
     _header.pack_end( _focus_btn );
@@ -1274,13 +1272,27 @@ public class MainWindow : ApplicationWindow {
 
   /* Displays the shortcuts cheatsheet */
   private void action_shortcuts() {
+
     var builder = new Builder.from_resource( "/com/github/phase1geo/minder/shortcuts.ui" );
     var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
+    var da      = get_current_da();
+
     win.transient_for = this;
-    /* TBD - It would be good to display the section that is most relevant to what is happening in the drawing area */
-    win.section_name  = "global";
-    win.view_name     = "file";
+    win.view_name     = null;
+
+    /* Display the most relevant information based on the current state */
+    if( da.is_node_editable() || da.is_connection_editable() ) {
+      win.section_name = "text-editing";
+    } else if( da.is_node_selected() ) {
+      win.section_name = "node";
+    } else if( da.is_connection_selected() ) {
+      win.section_name = "connection";
+    } else {
+      win.section_name = "general";
+    }
+
     win.show();
+
   } 
 
   /* Save the current tab state */
