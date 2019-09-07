@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <object class="GtkShortcutsWindow" id="shortcuts">
-    <property name="modal">1</property>
-    <property name="resizable">1</property>
+    <property name="modal">0</property>
+    <property name="resizable">0</property>
     <property name="title" translatable="yes">Minder Shortcuts</property>
     <property name="section-name">global</property>
     <property name="view-name">file</property>
@@ -10,7 +10,6 @@
       <object class="GtkShortcutsSection">
         <property name="section-name">general</property>
         <property name="title" translatable="yes">General</property>
-        <property name="max-height">30</property>
         <property name="visible">1</property>
         <child>
           <object class="GtkShortcutsGroup">
@@ -128,7 +127,6 @@
       <object class="GtkShortcutsSection">
         <property name="section-name">node</property>
         <property name="title" translatable="yes">Node Commands</property>
-        <property name="max-height">30</property>
         <property name="visible">1</property>
         <child>
           <object class="GtkShortcutsGroup">
@@ -166,6 +164,33 @@
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Delete Node</property>
                 <property name="accelerator">BackSpace</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes">Clipboard</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Copy Node</property>
+                <property name="accelerator">&lt;ctrl&gt;c</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Cut Node</property>
+                <property name="accelerator">&lt;ctrl&gt;x</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Paste Node as Child</property>
+                <property name="accelerator">&lt;ctrl&gt;v</property>
                 <property name="visible">1</property>
               </object>
             </child>
@@ -475,6 +500,33 @@
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">End Of Text</property>
                 <property name="accelerator">End</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes">Clipboard</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Copy Selected Text</property>
+                <property name="accelerator">&lt;ctrl&gt;c</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Cut Selected Text</property>
+                <property name="accelerator">&lt;ctrl&gt;x</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Paste Text</property>
+                <property name="accelerator">&lt;ctrl&gt;v</property>
                 <property name="visible">1</property>
               </object>
             </child>
