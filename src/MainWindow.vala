@@ -66,7 +66,6 @@ public class MainWindow : ApplicationWindow {
   private Button?           _undo_btn       = null;
   private Button?           _redo_btn       = null;
   private ToggleButton?     _focus_btn      = null;
-  private Button?           _misc_btn       = null;
   private Button?           _prop_btn       = null;
   private Image?            _prop_show      = null;
   private Image?            _prop_hide      = null;
@@ -83,7 +82,8 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_selected", action_zoom_selected },
     { "action_zoom_actual",   action_zoom_actual },
     { "action_export",        action_export },
-    { "action_print",         action_print }
+    { "action_print",         action_print },
+    { "action_shortcuts",     action_shortcuts }
   };
 
   private bool     on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -334,6 +334,7 @@ public class MainWindow : ApplicationWindow {
     app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
     app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
     app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
+    app.set_accels_for_action( "win.action_shortcuts",   { "<Control>?" } );
 
   }
 
@@ -607,17 +608,37 @@ public class MainWindow : ApplicationWindow {
   /* Adds the miscellaneous functionality */
   private void add_miscellaneous_button() {
 
-    _misc_btn = new Button.from_icon_name( "open-menu", icon_size );
-    _misc_btn.clicked.connect(() => {
-      var builder = new Builder.from_resource( "/com/github/phase1geo/minder/shortcuts.ui" );
-      var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
-      win.transient_for = this;
-      win.section_name  = "global";
-      win.view_name     = "file";
-      win.show();
-    });
+    /* Create the menu button */
+    var misc_btn = new MenuButton();
+    misc_btn.set_image( new Image.from_icon_name( (on_elementary ? "open-menu" : "open-menu-symbolic"), icon_size ) );
 
-    _header.pack_end( _misc_btn );
+    /* Create export menu */
+    var box = new Box( Orientation.VERTICAL, 5 );
+
+    /*
+    var prefs = new ModelButton();
+    prefs.text = _( "Preferences" );
+    prefs.action_name = "win.action_prefs";
+    */
+
+    var shortcuts = new ModelButton();
+    shortcuts.text = _( "Shortcuts Cheatsheet" );
+    shortcuts.action_name = "win.action_shortcuts";
+
+    box.margin = 5;
+    /*
+    box.pack_start( export, false, true );
+    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
+    */
+    box.pack_start( shortcuts,  false, true );
+    box.show_all();
+
+    /* Create the popover and associate it with clicking on the menu button */
+    var misc_pop = new Popover( null );
+    misc_pop.add( box );
+    misc_btn.popover = misc_pop;
+
+    _header.pack_end( misc_btn );
 
   }
 
@@ -1250,6 +1271,17 @@ public class MainWindow : ApplicationWindow {
     var print = new ExportPrint();
     print.print( get_current_da( "action_print" ), this );
   }
+
+  /* Displays the shortcuts cheatsheet */
+  private void action_shortcuts() {
+    var builder = new Builder.from_resource( "/com/github/phase1geo/minder/shortcuts.ui" );
+    var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
+    win.transient_for = this;
+    /* TBD - It would be good to display the section that is most relevant to what is happening in the drawing area */
+    win.section_name  = "global";
+    win.view_name     = "file";
+    win.show();
+  } 
 
   /* Save the current tab state */
   private void save_tab_state( Tab current_tab ) {
