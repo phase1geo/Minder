@@ -1705,7 +1705,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Returns true if we are in node selected mode */
-  private bool is_node_selected() {
+  public bool is_node_selected() {
     return( (_current_node != null) && (_current_node.mode == NodeMode.CURRENT) );
   }
 
@@ -2922,8 +2922,12 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Copies the currently selected text to the clipboard */
   private void copy_selected_text() {
-    if( _current_node == null ) return;
-    string? value = _current_node.name.get_selected_text();
+    string? value = null;
+    if( _current_node != null ) {
+      value = _current_node.name.get_selected_text();
+    } else if( _current_connection != null ) {
+      value = _current_connection.title.get_selected_text();
+    }
     if( value != null ) {
       var clipboard = Clipboard.get_default( get_display() );
       clipboard.set_text( value, -1 );
@@ -2932,10 +2936,13 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Copies either the current node or the currently selected text to the clipboard */
   public void do_copy() {
-    if( _current_node == null ) return;
-    switch( _current_node.mode ) {
-      case NodeMode.CURRENT  :  copy_node_to_clipboard();  break;
-      case NodeMode.EDITABLE :  copy_selected_text();      break;
+    if( _current_node != null ) {
+      switch( _current_node.mode ) {
+        case NodeMode.CURRENT  :  copy_node_to_clipboard();  break;
+        case NodeMode.EDITABLE :  copy_selected_text();      break;
+      }
+    } else if( is_connection_editable() ) {
+      copy_selected_text();
     }
   }
 
@@ -2969,17 +2976,24 @@ public class DrawArea : Gtk.DrawingArea {
   /* Cuts the current selected text to the clipboard */
   private void cut_selected_text() {
     copy_selected_text();
-    _current_node.name.insert( "" );
+    if( _current_node != null ) {
+      _current_node.name.insert( "" );
+    } else if( _current_connection != null ) {
+      _current_connection.title.insert( "" );
+    }
     queue_draw();
     changed();
   }
 
   /* Either cuts the current node or cuts the currently selected text */
   public void do_cut() {
-    if( _current_node == null ) return;
-    switch( _current_node.mode ) {
-      case NodeMode.CURRENT  :  cut_node_to_clipboard();  break;
-      case NodeMode.EDITABLE :  cut_selected_text();      break;
+    if( _current_node != null ) {
+      switch( _current_node.mode ) {
+        case NodeMode.CURRENT  :  cut_node_to_clipboard();  break;
+        case NodeMode.EDITABLE :  cut_selected_text();      break;
+      }
+    } else if( is_connection_editable() ) {
+      cut_selected_text();
     }
   }
 
@@ -3033,7 +3047,11 @@ public class DrawArea : Gtk.DrawingArea {
     var clipboard = Clipboard.get_default( get_display() );
     string? value = clipboard.wait_for_text();
     if( value != null ) {
-      _current_node.name.insert( value );
+      if( _current_node != null ) {
+        _current_node.name.insert( value );
+      } else if( _current_connection != null ) {
+        _current_connection.title.insert( value );
+      }
       queue_draw();
       changed();
     }
@@ -3041,10 +3059,13 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Pastes the contents of the clipboard into the current node */
   public void do_paste() {
-    if( _current_node == null ) return;
-    switch( _current_node.mode ) {
-      case NodeMode.CURRENT  :  paste_node_from_clipboard();  break;
-      case NodeMode.EDITABLE :  paste_text();                 break;
+    if( _current_node != null ) {
+      switch( _current_node.mode ) {
+        case NodeMode.CURRENT  :  paste_node_from_clipboard();  break;
+        case NodeMode.EDITABLE :  paste_text();                 break;
+      }
+    } else if( is_connection_editable() ) {
+      paste_text();
     }
   }
 

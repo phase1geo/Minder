@@ -82,7 +82,8 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_selected", action_zoom_selected },
     { "action_zoom_actual",   action_zoom_actual },
     { "action_export",        action_export },
-    { "action_print",         action_print }
+    { "action_print",         action_print },
+    { "action_shortcuts",     action_shortcuts }
   };
 
   private bool     on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -181,6 +182,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Add the buttons on the right side in the reverse order */
     add_property_button();
+    add_miscellaneous_button();
     add_export_button();
     add_search_button();
     add_zoom_button();
@@ -332,6 +334,7 @@ public class MainWindow : ApplicationWindow {
     app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
     app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
     app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
+    app.set_accels_for_action( "win.action_shortcuts",   { "F1" } );
 
   }
 
@@ -589,16 +592,51 @@ public class MainWindow : ApplicationWindow {
     _focus_btn.draw_indicator = true;
     _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "Ctrl + Shift + F" ) );
     _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
-    _focus_btn.button_release_event.connect((e) => {
-      _focus_btn.active = !_focus_btn.active;
+    _focus_btn.clicked.connect((e) => {
       var da = get_current_da();
       update_title( da );
       da.set_focus_mode( _focus_btn.active );
       da.grab_focus();
-      return( true );
     });
 
     _header.pack_end( _focus_btn );
+
+  }
+
+  /* Adds the miscellaneous functionality */
+  private void add_miscellaneous_button() {
+
+    /* Create the menu button */
+    var misc_btn = new MenuButton();
+    misc_btn.set_image( new Image.from_icon_name( (on_elementary ? "open-menu" : "open-menu-symbolic"), icon_size ) );
+
+    /* Create export menu */
+    var box = new Box( Orientation.VERTICAL, 5 );
+
+    /*
+    var prefs = new ModelButton();
+    prefs.text = _( "Preferences" );
+    prefs.action_name = "win.action_prefs";
+    */
+
+    var shortcuts = new ModelButton();
+    shortcuts.text = _( "Shortcuts Cheatsheet" );
+    shortcuts.action_name = "win.action_shortcuts";
+
+    box.margin = 5;
+    /*
+    box.pack_start( export, false, true );
+    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
+    */
+    box.pack_start( shortcuts,  false, true );
+    box.show_all();
+
+    /* Create the popover and associate it with clicking on the menu button */
+    var misc_pop = new Popover( null );
+    misc_pop.add( box );
+    misc_btn.popover = misc_pop;
+
+    _header.pack_end( misc_btn );
 
   }
 
@@ -1231,6 +1269,31 @@ public class MainWindow : ApplicationWindow {
     var print = new ExportPrint();
     print.print( get_current_da( "action_print" ), this );
   }
+
+  /* Displays the shortcuts cheatsheet */
+  private void action_shortcuts() {
+
+    var builder = new Builder.from_resource( "/com/github/phase1geo/minder/shortcuts.ui" );
+    var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
+    var da      = get_current_da();
+
+    win.transient_for = this;
+    win.view_name     = null;
+
+    /* Display the most relevant information based on the current state */
+    if( da.is_node_editable() || da.is_connection_editable() ) {
+      win.section_name = "text-editing";
+    } else if( da.is_node_selected() ) {
+      win.section_name = "node";
+    } else if( da.is_connection_selected() ) {
+      win.section_name = "connection";
+    } else {
+      win.section_name = "general";
+    }
+
+    win.show();
+
+  } 
 
   /* Save the current tab state */
   private void save_tab_state( Tab current_tab ) {
