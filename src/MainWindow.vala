@@ -334,7 +334,7 @@ public class MainWindow : ApplicationWindow {
     app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
     app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
     app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
-    app.set_accels_for_action( "win.action_shortcuts",   { "<Control>?" } );
+    app.set_accels_for_action( "win.action_shortcuts",   { "F1" } );
 
   }
 
