@@ -137,6 +137,16 @@ public class CanvasText : Object {
     return( _pango_layout.is_wrapped() );
   }
 
+  /* Returns the string which contains newlines to mimic layout */
+  public string get_wrapped_text() {
+    unowned SList<LayoutLine> lines = _pango_layout.get_lines_readonly();
+    string str   = "";
+    lines.@foreach((item) => {
+      str += (text.substring( item.start_index, item.length ) + "\n");
+    });
+    return( str );
+  }
+
   /* Returns true if the given cursor coordinates lies within this node */
   public bool is_within( double x, double y ) {
     return( Utils.is_within_bounds( x, y, posx, posy, _width, _height ) );
@@ -175,8 +185,8 @@ public class CanvasText : Object {
   /* Generates the marked up name that will be displayed in the node */
   private string name_markup( Theme? theme ) {
     if( (_selstart != _selend) && (theme != null) ) {
-      var fg      = Utils.color_from_rgba( theme.textsel_foreground );
-      var bg      = Utils.color_from_rgba( theme.textsel_background );
+      var fg      = Utils.color_from_rgba( theme.get_color( "textsel_foreground" ) );
+      var bg      = Utils.color_from_rgba( theme.get_color( "textsel_background" ) );
       var spos    = text.index_of_nth_char( _selstart );
       var epos    = text.index_of_nth_char( _selend );
       var begtext = unmarkup( text.slice( 0, spos ) );
@@ -543,7 +553,7 @@ public class CanvasText : Object {
     if( edit ) {
       var cpos = text.index_of_nth_char( _cursor );
       var rect = _pango_layout.index_to_pos( cpos );
-      Utils.set_context_color_with_alpha( ctx, theme.text_cursor, alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "text_cursor" ), alpha );
       double ix, iy;
       ix = posx + (rect.x / Pango.SCALE) - 1;
       iy = posy + (rect.y / Pango.SCALE);

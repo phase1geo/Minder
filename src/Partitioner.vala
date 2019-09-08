@@ -30,12 +30,11 @@ public class PartNode : Object {
 
   /* Creates a single partitioner node */
   public PartNode( Node n ) {
-    double x, y, w, h;
-    n.layout.bbox( n, -1, out x, out y, out w, out h );
+    var nb = n.tree_bbox;
     if( (n.side == NodeSide.LEFT) || (n.side == NodeSide.RIGHT) ) {
-      _size = h;
+      _size = nb.height;
     } else {
-      _size = w;
+      _size = nb.width;
     }
     _node = n;
   }

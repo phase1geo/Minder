@@ -304,14 +304,14 @@ public class Style {
   }
 
   /* Draws the link with the given information, applying the stored styling */
-  public void draw_link( Cairo.Context ctx, Style parent_style, double from_x, double from_y,
-                         double to_x, double to_y, bool horizontal,
+  public void draw_link( Cairo.Context ctx, Style parent_style, Node to_node,
+                         double from_x, double from_y, double to_x, double to_y, 
                          out double tailx, out double taily, out double tipx, out double tipy ) {
 
     ctx.save();
     ctx.set_line_width( link_width );
     link_dash.set_context( ctx, link_width );
-    parent_style.link_type.draw( ctx, from_x, from_y, to_x, to_y, horizontal, out tailx, out taily, out tipx, out tipy );
+    parent_style.link_type.draw( ctx, to_node, from_x, from_y, to_x, to_y, out tailx, out taily, out tipx, out tipy );
     ctx.restore();
 
   }

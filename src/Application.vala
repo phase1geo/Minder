@@ -25,11 +25,13 @@ using GLib;
 
 public class Minder : Granite.Application {
 
-  private static bool          version   = false;
-  private static string?       open_file = null;
-  private static bool          new_file  = false;
-  private static bool          testing   = false;
+  private static bool          show_version = false;
+  private static string?       open_file    = null;
+  private static bool          new_file     = false;
+  private static bool          testing      = false;
+
   public  static GLib.Settings settings;
+  public  static string        version = "1.5.0";
 
   public Minder () {
     Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.HANDLES_OPEN );
@@ -102,7 +104,7 @@ public class Minder : Granite.Application {
     var options = new OptionEntry[5];
 
     /* Create the command-line options */
-    options[0] = {"version", 0, 0, OptionArg.NONE, ref version, "Display version number", null};
+    options[0] = {"version", 0, 0, OptionArg.NONE, ref show_version, "Display version number", null};
     options[1] = {"open", 'o', 0, OptionArg.FILENAME, ref open_file, "Open filename", "FILENAME"};
     options[2] = {"new", 'n', 0, OptionArg.NONE, ref new_file, "Starts Minder with a new file", null};
     options[3] = {"run-tests", 0, 0, OptionArg.NONE, ref testing, "Run testing", null};
@@ -120,8 +122,8 @@ public class Minder : Granite.Application {
     }
 
     /* If the version was specified, output it and then exit */
-    if( version ) {
-      stdout.printf( "1.4.1\n" );
+    if( show_version ) {
+      stdout.printf( version + "\n" );
       Process.exit( 0 );
     }
 

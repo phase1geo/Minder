@@ -40,15 +40,27 @@ public class LinkTypeSquared : Object, LinkType {
   }
 
   /* Draw method for the link */
-  public void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal,
+  public void draw( Cairo.Context ctx, Node to_node,
+                    double from_x, double from_y, double to_x, double to_y,
                     out double tailx, out double taily, out double tipx, out double tipy ) {
+
+    var side  = to_node.side;
+    var style = to_node.style;
+
+    tipx = tipy = 0;
+
+    switch( side ) {
+      case NodeSide.LEFT   :  to_x += adjust_a( style );  tipx = to_x - adjust_tip( style );  tipy = to_y;  break;
+      case NodeSide.RIGHT  :  to_x -= adjust_a( style );  tipx = to_x + adjust_tip( style );  tipy = to_y;  break;
+      case NodeSide.TOP    :  to_y += adjust_a( style );  tipy = to_y - adjust_tip( style );  tipx = to_x;  break;
+      case NodeSide.BOTTOM :  to_y -= adjust_a( style );  tipy = to_y + adjust_tip( style );  tipx = to_x;  break;
+    }
+
     ctx.move_to( from_x, from_y );
-    if( horizontal ) {
+    if( (side & NodeSide.horizontal()) != 0 ) {
       var mid_x = (from_x + to_x) / 2;
       tailx = mid_x;
       taily = to_y;
-      tipx  = to_x;
-      tipy  = to_y;
       ctx.line_to( mid_x, from_y );
       ctx.line_to( mid_x, to_y );
       ctx.line_to( to_x,  to_y );
@@ -56,13 +68,12 @@ public class LinkTypeSquared : Object, LinkType {
       var mid_y = (from_y + to_y) / 2;
       tailx = to_x;
       taily = mid_y;
-      tipx  = to_x;
-      tipy  = to_y;
       ctx.line_to( from_x, mid_y );
       ctx.line_to( to_x,   mid_y );
       ctx.line_to( to_x,   to_y );
     }
     ctx.stroke();
+
   }
 
 }

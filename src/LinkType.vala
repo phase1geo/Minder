@@ -30,8 +30,17 @@ public interface LinkType : Object {
   /* Returns the name of the link icon */
   public abstract string icon_name();
 
+  protected double adjust_a( Style style ) {
+    return( style.link_arrow ? ((style.link_width / 2) + ((style.node_borderwidth / 2) + 2)) : 0 );
+  }
+
+  protected double adjust_tip( Style style ) {
+    return( (style.link_width / 2) + 1 );
+  }
+
   /* Draw method for the link */
-  public abstract void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal,
+  public abstract void draw( Cairo.Context ctx, Node to_node,
+                             double from_x, double from_y, double to_x, double to_y,
                              out double fx, out double fy, out double tx, out double ty );
 
 }

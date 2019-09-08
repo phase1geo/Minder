@@ -41,6 +41,7 @@ public class MainWindow : ApplicationWindow {
   private Revealer?         _inspector      = null;
   private Box?              _pbox           = null;
   private Paned             _pane           = null;
+  private Notebook?         _inspector_nb   = null;
   private Stack?            _stack          = null;
   private Popover?          _zoom           = null;
   private Popover?          _search         = null;
@@ -70,6 +71,7 @@ public class MainWindow : ApplicationWindow {
   private Image?            _prop_hide      = null;
   private bool              _prefer_dark    = false;
   private bool              _debug          = false;
+  private ThemeEditor       _themer;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",          action_save },
@@ -80,12 +82,16 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_selected", action_zoom_selected },
     { "action_zoom_actual",   action_zoom_actual },
     { "action_export",        action_export },
-    { "action_print",         action_print }
+    { "action_print",         action_print },
+    { "action_shortcuts",     action_shortcuts }
   };
 
-  private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
+  private bool     on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
+  private IconSize icon_size;
 
   private delegate void ChangedFunc();
+
+  public Themes themes { set; get; default = new Themes(); }
 
   public signal void canvas_changed( DrawArea? da );
 
@@ -95,6 +101,7 @@ public class MainWindow : ApplicationWindow {
     Object( application: app );
 
     _settings = settings;
+    icon_size = on_elementary ? IconSize.LARGE_TOOLBAR : IconSize.SMALL_TOOLBAR;
 
     /* Handle any changes to the dark mode preference setting */
     handle_prefer_dark_changes();
@@ -141,42 +148,32 @@ public class MainWindow : ApplicationWindow {
     _nb.close_tab_requested.connect( close_tab_requested );
 
     /* Create title toolbar */
-    var new_btn = on_elementary
-      ? new Button.from_icon_name( "document-new", IconSize.LARGE_TOOLBAR )
-      : new Button.from_icon_name( "document-new-symbolic" );
+    var new_btn = new Button.from_icon_name( (on_elementary ? "document-new" : "document-new-symbolic"), icon_size );
     new_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "New File" ), "Ctrl + N" ) );
     new_btn.add_accelerator( "clicked", _accel_group, 'n', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
 
-    var open_btn = on_elementary
-      ? new Button.from_icon_name( "document-open", IconSize.LARGE_TOOLBAR )
-      : new Button.from_icon_name( "document-open-symbolic" );
+    var open_btn = new Button.from_icon_name( (on_elementary ? "document-open" : "document-open-symbolic"), icon_size );
     open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open File" ), "Ctrl + O" ) );
     open_btn.add_accelerator( "clicked", _accel_group, 'o', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
-    var save_btn = on_elementary
-      ? new Button.from_icon_name( "document-save-as", IconSize.LARGE_TOOLBAR )
-      : new Button.from_icon_name( "document-save-as-symbolic" );
+    var save_btn = new Button.from_icon_name( (on_elementary ? "document-save-as" : "document-save-as-symbolic"), icon_size );
     save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "Ctrl + Shift + S" ) );
     open_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
-    _undo_btn = on_elementary
-      ? new Button.from_icon_name( "edit-undo", IconSize.LARGE_TOOLBAR )
-      : new Button.from_icon_name( "edit-undo-symbolic" );
+    _undo_btn = new Button.from_icon_name( (on_elementary ? "edit-undo" : "edit-undo-symbolic"), icon_size );
     _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "Ctrl + Z" ) );
     _undo_btn.set_sensitive( false );
     _undo_btn.add_accelerator( "clicked", _accel_group, 'z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _undo_btn.clicked.connect( do_undo );
     _header.pack_start( _undo_btn );
 
-    _redo_btn = on_elementary
-      ? new Button.from_icon_name( "edit-redo", IconSize.LARGE_TOOLBAR )
-      : new Button.from_icon_name( "edit-redo-symbolic" );
+    _redo_btn = new Button.from_icon_name( (on_elementary ? "edit-redo" : "edit-redo-symbolic"), icon_size );
     _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Redo" ), "Ctrl + Shift + Z" ) );
     _redo_btn.set_sensitive( false );
     _redo_btn.add_accelerator( "clicked", _accel_group, 'z', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
@@ -185,6 +182,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Add the buttons on the right side in the reverse order */
     add_property_button();
+    add_miscellaneous_button();
     add_export_button();
     add_search_button();
     add_zoom_button();
@@ -229,6 +227,12 @@ public class MainWindow : ApplicationWindow {
     save_tab_state( tab );
   }
 
+  /* Closes the current tab */
+  public void close_current_tab() {
+    if( _nb.n_tabs == 1 ) return;
+    _nb.current.close();
+  }
+
   /* Called whenever the user clicks on the close button and the tab is unnamed */
   private bool close_tab_requested( Tab tab ) {
     var bin = (Gtk.Bin)tab.page;
@@ -241,7 +245,7 @@ public class MainWindow : ApplicationWindow {
   public DrawArea add_tab( string? fname, TabAddReason reason ) {
 
     /* Create and pack the canvas */
-    var da = new DrawArea( _settings, _accel_group );
+    var da = new DrawArea( this, _settings, _accel_group );
     da.current_changed.connect( on_current_changed );
     da.scale_changed.connect( change_scale );
     da.show_properties.connect( show_properties );
@@ -330,6 +334,7 @@ public class MainWindow : ApplicationWindow {
     app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
     app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
     app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
+    app.set_accels_for_action( "win.action_shortcuts",   { "F1" } );
 
   }
 
@@ -338,9 +343,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
-    menu_btn.set_image( on_elementary
-      ? new Image.from_icon_name( "zoom-fit-best", IconSize.LARGE_TOOLBAR )
-      : new Image.from_icon_name( "zoom-fit-best-symbolic", IconSize.SMALL_TOOLBAR ) );
+    menu_btn.set_image( new Image.from_icon_name( (on_elementary ? "zoom-fit-best" : "zoom-fit-best-symbolic"), icon_size ) );
     menu_btn.set_tooltip_text( _( "Zoom" ) );
     _header.pack_end( menu_btn );
 
@@ -401,9 +404,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     _search_btn = new MenuButton();
-    _search_btn.set_image( on_elementary
-      ? new Image.from_icon_name( "edit-find-symbolic", IconSize.LARGE_TOOLBAR )
-      : new Image.from_icon_name( "edit-find-symbolic", IconSize.SMALL_TOOLBAR ) );
+    _search_btn.set_image( new Image.from_icon_name( "minder-search", icon_size ) );
     _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "Ctrl + F" ) );
     _search_btn.add_accelerator( "clicked", _accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _search_btn.clicked.connect( on_search_change );
@@ -555,9 +556,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
-    menu_btn.set_image( on_elementary
-      ? new Image.from_icon_name( "document-export", IconSize.LARGE_TOOLBAR )
-      : new Image.from_icon_name( "document-send-symbolic", IconSize.SMALL_TOOLBAR ) );
+    menu_btn.set_image( new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic"), icon_size ) );
     menu_btn.set_tooltip_text( _( "Export" ) );
     _header.pack_end( menu_btn );
 
@@ -589,20 +588,55 @@ public class MainWindow : ApplicationWindow {
   private void add_focus_button() {
 
     _focus_btn       = new ToggleButton();
-    _focus_btn.image = new Image.from_icon_name( "minder-focus", IconSize.LARGE_TOOLBAR );
+    _focus_btn.image = new Image.from_icon_name( "minder-focus", icon_size );
     _focus_btn.draw_indicator = true;
     _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "Ctrl + Shift + F" ) );
     _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
-    _focus_btn.button_release_event.connect((e) => {
-      _focus_btn.active = !_focus_btn.active;
+    _focus_btn.clicked.connect((e) => {
       var da = get_current_da();
       update_title( da );
       da.set_focus_mode( _focus_btn.active );
       da.grab_focus();
-      return( true );
     });
 
     _header.pack_end( _focus_btn );
+
+  }
+
+  /* Adds the miscellaneous functionality */
+  private void add_miscellaneous_button() {
+
+    /* Create the menu button */
+    var misc_btn = new MenuButton();
+    misc_btn.set_image( new Image.from_icon_name( (on_elementary ? "open-menu" : "open-menu-symbolic"), icon_size ) );
+
+    /* Create export menu */
+    var box = new Box( Orientation.VERTICAL, 5 );
+
+    /*
+    var prefs = new ModelButton();
+    prefs.text = _( "Preferences" );
+    prefs.action_name = "win.action_prefs";
+    */
+
+    var shortcuts = new ModelButton();
+    shortcuts.text = _( "Shortcuts Cheatsheet" );
+    shortcuts.action_name = "win.action_shortcuts";
+
+    box.margin = 5;
+    /*
+    box.pack_start( export, false, true );
+    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
+    */
+    box.pack_start( shortcuts,  false, true );
+    box.show_all();
+
+    /* Create the popover and associate it with clicking on the menu button */
+    var misc_pop = new Popover( null );
+    misc_pop.add( box );
+    misc_btn.popover = misc_pop;
+
+    _header.pack_end( misc_btn );
 
   }
 
@@ -610,12 +644,8 @@ public class MainWindow : ApplicationWindow {
   private void add_property_button() {
 
     /* Add the menubutton */
-    _prop_show = on_elementary
-      ? new Image.from_icon_name( "pane-show-symbolic", IconSize.LARGE_TOOLBAR )
-      : new Image.from_icon_name( "go-previous-symbolic", IconSize.SMALL_TOOLBAR );
-    _prop_hide = on_elementary
-      ? new Image.from_icon_name( "pane-hide-symbolic", IconSize.LARGE_TOOLBAR )
-      : new Image.from_icon_name( "go-next-symbolic", IconSize.SMALL_TOOLBAR );
+    _prop_show = new Image.from_icon_name( "minder-sidebar-open",  icon_size );
+    _prop_hide = new Image.from_icon_name( "minder-sidebar-close", icon_size );
     _prop_btn  = new Button();
     _prop_btn.image = _prop_show;
     _prop_btn.set_tooltip_text( _( "Properties" ) );
@@ -624,6 +654,9 @@ public class MainWindow : ApplicationWindow {
     _header.pack_end( _prop_btn );
 
     /* Create the inspector sidebar */
+    _inspector_nb = new Notebook();
+    _inspector_nb.show_tabs = false;
+
     var box = new Box( Orientation.VERTICAL, 20 );
     var sb  = new StackSwitcher();
 
@@ -654,10 +687,15 @@ public class MainWindow : ApplicationWindow {
     box.pack_start( _stack, true,  true, 0 );
     box.show_all();
 
+    _themer = new ThemeEditor( this );
+
+    _inspector_nb.append_page( box );
+    _inspector_nb.append_page( _themer );
+
     _inspector = new Revealer();
     _inspector.set_transition_type( RevealerTransitionType.SLIDE_LEFT );
     _inspector.set_transition_duration( 500 );
-    _inspector.child = box;
+    _inspector.child = _inspector_nb;
 
     /* If the settings says to display the properties, do it now */
     if( _settings.get_boolean( "current-properties-shown" ) ) {
@@ -762,6 +800,11 @@ public class MainWindow : ApplicationWindow {
     filter.add_pattern( "*.opml" );
     dialog.add_filter( filter );
 
+    filter = new FileFilter();
+    filter.set_filter_name( _( "PlainText" ) );
+    filter.add_pattern( "*.txt" );
+    dialog.add_filter( filter );
+
     if( dialog.run() == ResponseType.ACCEPT ) {
       open_file( dialog.get_filename() );
     }
@@ -792,6 +835,11 @@ public class MainWindow : ApplicationWindow {
       update_title( da );
       ExportFreeplane.import( fname, da );
       return( true );
+    } else if( fname.has_suffix( ".txt" ) ) {
+      var new_fname = fname.substring( 0, (fname.length - 4) ) + ".minder";
+      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      update_title( da );
+      ExportText.import( fname, da );
     }
     return( false );
   }
@@ -906,6 +954,17 @@ public class MainWindow : ApplicationWindow {
     if( grab_note && (tab != null) && (tab == "current") ) {
       (_stack.get_child_by_name( tab ) as CurrentInspector).grab_note();
     }
+  }
+
+  /* Displays the theme editor pane */
+  public void show_theme_editor( bool edit ) {
+    _themer.initialize( get_current_da().get_theme(), edit );
+    _inspector_nb.page = 1;
+  }
+
+  /* Hides the theme editor pane */
+  public void hide_theme_editor() {
+    _inspector_nb.page = 0;
   }
   
   private bool move_inspector_to_pane() {
@@ -1143,6 +1202,12 @@ public class MainWindow : ApplicationWindow {
     svg_filter.add_pattern( "*.svg" );
     dialog.add_filter( svg_filter );
 
+    /* yEd */
+    FileFilter yed_filter = new FileFilter();
+    yed_filter.set_filter_name( _( "yEd" ) );
+    yed_filter.add_pattern( "*.graphml" );
+    dialog.add_filter( yed_filter );
+
     if( dialog.run() == ResponseType.ACCEPT ) {
 
       var fname  = dialog.get_filename();
@@ -1175,7 +1240,10 @@ public class MainWindow : ApplicationWindow {
         ExportText.export( repair_filename( fname, {".txt"} ), da );
       } else if( svg_filter == filter ) {
         ExportSVG.export( repair_filename( fname, {".svg"} ), da );
+      } else if( yed_filter == filter ) {
+        ExportYed.export( repair_filename( fname, {".graphml"} ), da );
       }
+
     }
 
     dialog.close();
@@ -1201,6 +1269,31 @@ public class MainWindow : ApplicationWindow {
     var print = new ExportPrint();
     print.print( get_current_da( "action_print" ), this );
   }
+
+  /* Displays the shortcuts cheatsheet */
+  private void action_shortcuts() {
+
+    var builder = new Builder.from_resource( "/com/github/phase1geo/minder/shortcuts.ui" );
+    var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
+    var da      = get_current_da();
+
+    win.transient_for = this;
+    win.view_name     = null;
+
+    /* Display the most relevant information based on the current state */
+    if( da.is_node_editable() || da.is_connection_editable() ) {
+      win.section_name = "text-editing";
+    } else if( da.is_node_selected() ) {
+      win.section_name = "node";
+    } else if( da.is_connection_selected() ) {
+      win.section_name = "connection";
+    } else {
+      win.section_name = "general";
+    }
+
+    win.show();
+
+  } 
 
   /* Save the current tab state */
   private void save_tab_state( Tab current_tab ) {

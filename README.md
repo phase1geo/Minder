@@ -22,9 +22,10 @@ Use the power of mind-mapping to make your ideas come to life.
 - Automatically saves in the background.
 - Colorized node branches.
 - Open multiple mindmaps with the use of tabs.
-- Gorgeous themes and animations.
+- Built-in and custom theme support.
+- Gorgeous animations.
 - Import from OPML, FreeMind and Freeplane formats.
-- Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText, FreeMind, Freeplane and Mermaid formats.
+- Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText, FreeMind, Freeplane, Mermaid and yEd formats.
 - Printer support.
     
 ## Installation

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-14 21:35-0500\n"
+"POT-Creation-Date: 2019-09-07 21:49-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,147 +18,151 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: src/NodeMenu.vala:58
+#: src/NodeMenu.vala:59
 msgid "Copy"
 msgstr "Kopiuj"
 
-#: src/NodeMenu.vala:62
+#: src/NodeMenu.vala:63
 msgid "Cut"
 msgstr "Wytnij"
 
-#: src/NodeMenu.vala:66
+#: src/NodeMenu.vala:67
 msgid "Paste"
 msgstr "Wklej"
 
-#: src/NodeMenu.vala:70 src/ConnectionMenu.vala:40
+#: src/NodeMenu.vala:71 src/ConnectionMenu.vala:40
 msgid "Delete"
 msgstr "Usuń"
 
-#: src/NodeMenu.vala:74 src/ConnectionMenu.vala:44
+#: src/NodeMenu.vala:75 src/ConnectionMenu.vala:44
 msgid "Edit…"
 msgstr "Edytuj…"
 
-#: src/NodeMenu.vala:78 src/NodeMenu.vala:285
+#: src/NodeMenu.vala:79 src/NodeMenu.vala:291
 msgid "Add Task"
 msgstr "Dodaj zadanie"
 
-#: src/NodeMenu.vala:81 src/NodeMenu.vala:286 src/ConnectionMenu.vala:48
+#: src/NodeMenu.vala:82 src/NodeMenu.vala:292 src/ConnectionMenu.vala:48
 #: src/ConnectionMenu.vala:104
 msgid "Add Note"
 msgstr "Dodaj notatkę"
 
-#: src/NodeMenu.vala:84 src/NodeMenu.vala:287
+#: src/NodeMenu.vala:85 src/NodeMenu.vala:293
 msgid "Add Image"
 msgstr ""
 
-#: src/NodeMenu.vala:87 src/NodeMenu.vala:288
+#: src/NodeMenu.vala:88 src/NodeMenu.vala:294
 #, fuzzy
 msgid "Add Node Link"
 msgstr "Dodaj notatkę"
 
-#: src/NodeMenu.vala:90
+#: src/NodeMenu.vala:91
 msgid "Add Connection"
 msgstr ""
 
-#: src/NodeMenu.vala:94 src/NodeMenu.vala:289
+#: src/NodeMenu.vala:95 src/NodeMenu.vala:295
 msgid "Fold Children"
 msgstr "Zwiń węzeł potomny"
 
-#: src/NodeMenu.vala:98
+#: src/NodeMenu.vala:99
 msgid "Detach"
 msgstr "Odczep"
 
-#: src/NodeMenu.vala:101 src/EmptyMenu.vala:35
+#: src/NodeMenu.vala:102 src/EmptyMenu.vala:35
 msgid "Add Root Node"
 msgstr "Dodaj węzeł główny"
 
-#: src/NodeMenu.vala:104
+#: src/NodeMenu.vala:105
 #, fuzzy
 msgid "Add Parent Node"
 msgstr "Szukaj węzłów"
 
-#: src/NodeMenu.vala:107
+#: src/NodeMenu.vala:108
 msgid "Add Child Node"
 msgstr "Dodaj węzeł potomny"
 
-#: src/NodeMenu.vala:111
+#: src/NodeMenu.vala:112
 msgid "Add Sibling Node"
 msgstr "Dodaj sąsiadujący węzeł"
 
-#: src/NodeMenu.vala:115 src/ConnectionMenu.vala:51
+#: src/NodeMenu.vala:116
+msgid "Add Nodes With Quick Entry"
+msgstr ""
+
+#: src/NodeMenu.vala:120 src/ConnectionMenu.vala:51
 #, fuzzy
 msgid "Select"
 msgstr "Wybierz węzeł"
 
-#: src/NodeMenu.vala:119
+#: src/NodeMenu.vala:124
 #, fuzzy
 msgid "Root Node"
 msgstr "Dodaj węzeł główny"
 
-#: src/NodeMenu.vala:123
+#: src/NodeMenu.vala:128
 #, fuzzy
 msgid "Next Sibling Node"
 msgstr "Następny sąsiadujący"
 
-#: src/NodeMenu.vala:127
+#: src/NodeMenu.vala:132
 #, fuzzy
 msgid "Previous Sibling Node"
 msgstr "Poprzedni sąsiadujący"
 
-#: src/NodeMenu.vala:131
+#: src/NodeMenu.vala:136
 #, fuzzy
 msgid "Child Node"
 msgstr "Dodaj węzeł potomny"
 
-#: src/NodeMenu.vala:135
+#: src/NodeMenu.vala:140
 #, fuzzy
 msgid "Parent Node"
 msgstr "Szukaj węzłów"
 
-#: src/NodeMenu.vala:139
+#: src/NodeMenu.vala:144
 #, fuzzy
 msgid "Linked Node"
 msgstr "Węzeł"
 
-#: src/NodeMenu.vala:143
+#: src/NodeMenu.vala:148
 msgid "Connection"
 msgstr ""
 
-#: src/NodeMenu.vala:147
+#: src/NodeMenu.vala:152
 msgid "Center Current Node"
 msgstr "Wyśrodkuj na wężle"
 
-#: src/NodeMenu.vala:151
+#: src/NodeMenu.vala:156
 #, fuzzy
 msgid "Sort Children"
 msgstr "Zwiń węzeł potomny"
 
-#: src/NodeMenu.vala:155
+#: src/NodeMenu.vala:160
 msgid "Alphabetically"
 msgstr ""
 
-#: src/NodeMenu.vala:158
+#: src/NodeMenu.vala:163
 msgid "Randomize"
 msgstr ""
 
-#: src/NodeMenu.vala:285
+#: src/NodeMenu.vala:291
 msgid "Remove Task"
 msgstr "Usuń zadanie"
 
-#: src/NodeMenu.vala:286 src/ConnectionMenu.vala:104
+#: src/NodeMenu.vala:292 src/ConnectionMenu.vala:104
 msgid "Remove Note"
 msgstr "Usuń notatkę"
 
-#: src/NodeMenu.vala:287 src/ImageEditor.vala:363 src/NodeInspector.vala:228
+#: src/NodeMenu.vala:293 src/ImageEditor.vala:363 src/NodeInspector.vala:228
 msgid "Remove Image"
 msgstr ""
 
-#: src/NodeMenu.vala:288
+#: src/NodeMenu.vala:294
 #, fuzzy
 msgid "Remove Node Link"
 msgstr "Usuń notatkę"
 
-#: src/NodeMenu.vala:289
+#: src/NodeMenu.vala:295
 msgid "Unfold Children"
 msgstr "Rozwiń węzeł potomny"
 
@@ -190,33 +194,37 @@ msgstr "Szukaj węzłów"
 msgid "Previous Connection"
 msgstr "Poprzedni sąsiadujący"
 
-#: src/DrawArea.vala:568
+#: src/DrawArea.vala:159 src/themes/ThemeDefault.vala:27
+msgid "Default"
+msgstr ""
+
+#: src/DrawArea.vala:581
 msgid "Main Idea"
 msgstr "Główny pomysł"
 
-#: src/DrawArea.vala:1525
+#: src/DrawArea.vala:1536
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "Ukończono %0.3g%%"
 
-#: src/DrawArea.vala:1573
+#: src/DrawArea.vala:1584
 #, fuzzy
 msgid "connection endpoint change"
 msgstr "zmiana notatki węzła"
 
-#: src/DrawArea.vala:1580
+#: src/DrawArea.vala:1591
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2012 src/DrawArea.vala:3097
+#: src/DrawArea.vala:2023 src/DrawArea.vala:3152
 msgid "Another Idea"
 msgstr "Inny pomysł"
 
-#: src/DrawArea.vala:2178
+#: src/DrawArea.vala:2199
 msgid "fold completed tasks"
 msgstr "zwinięcie ukończonych zadań"
 
-#: src/DrawArea.vala:2213
+#: src/DrawArea.vala:2234
 msgid "unfold all tasks"
 msgstr "rozwinięcie wszystkich zadań"
 
@@ -230,8 +238,8 @@ msgstr ""
 msgid "Cursor: %3d,%3d"
 msgstr ""
 
-#: src/ImageEditor.vala:360 src/MainWindow.vala:703 src/MainWindow.vala:747
-#: src/MainWindow.vala:839 src/MainWindow.vala:1064
+#: src/ImageEditor.vala:360 src/MainWindow.vala:741 src/MainWindow.vala:785
+#: src/MainWindow.vala:887 src/MainWindow.vala:1123
 msgid "Cancel"
 msgstr "Anuluj"
 
@@ -243,290 +251,311 @@ msgstr ""
 msgid "Change Image"
 msgstr ""
 
-#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:265
+#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:305
 msgid "Manual"
 msgstr "Ręcznie"
 
-#: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:269
+#: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:309
 msgid "To right"
 msgstr "Do prawej"
 
-#: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:268
+#: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:308
 msgid "To left"
 msgstr "Do lewej"
 
-#: src/layouts/LayoutHorizontal.vala:26 src/MapInspector.vala:267
+#: src/layouts/LayoutHorizontal.vala:26 src/MapInspector.vala:307
 msgid "Horizontal"
 msgstr "Horyzontalny"
 
-#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:271
+#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:311
 msgid "Downwards"
 msgstr "W dół"
 
-#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:270
+#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:310
 msgid "Upwards"
 msgstr "W górę"
 
-#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:266
+#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:306
 msgid "Vertical"
 msgstr "Wertykalny"
 
-#: src/MainWindow.vala:112 src/MainWindow.vala:842
+#: src/MainWindow.vala:119 src/MainWindow.vala:890
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:147
+#: src/MainWindow.vala:152
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:21
 #, fuzzy
 msgid "New File"
 msgstr "Nowy Plik"
 
-#: src/MainWindow.vala:155 src/MainWindow.vala:747
+#: src/MainWindow.vala:158 src/MainWindow.vala:785
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "Otwórz plik"
 
-#: src/MainWindow.vala:163
+#: src/MainWindow.vala:164
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:35
 #, fuzzy
 msgid "Save File As"
 msgstr "Zapisz jako"
 
-#: src/MainWindow.vala:171
+#: src/MainWindow.vala:170
 #, fuzzy
 msgid "Undo"
 msgstr "Cofnij"
 
-#: src/MainWindow.vala:180
+#: src/MainWindow.vala:177
 #, fuzzy
 msgid "Redo"
 msgstr "Ponów"
 
-#: src/MainWindow.vala:317
+#: src/MainWindow.vala:321
 msgid "Unnamed Document"
 msgstr "Dokument bez nazwy"
 
-#: src/MainWindow.vala:321 src/MainWindow.vala:594
+#: src/MainWindow.vala:325 src/MainWindow.vala:593
 msgid "Focus Mode"
 msgstr ""
 
-#: src/MainWindow.vala:344
+#: src/MainWindow.vala:347
 msgid "Zoom"
 msgstr "Przybliżenie"
 
-#: src/MainWindow.vala:351
+#: src/MainWindow.vala:354
 msgid "Zoom to Percent"
 msgstr "Przybliżenie "
 
-#: src/MainWindow.vala:362
+#: src/MainWindow.vala:365
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:75
 msgid "Zoom In"
 msgstr "Przybliż"
 
-#: src/MainWindow.vala:366
+#: src/MainWindow.vala:369
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:82
 msgid "Zoom Out"
 msgstr "Oddal"
 
-#: src/MainWindow.vala:370
+#: src/MainWindow.vala:373
 msgid "Zoom to Fit"
 msgstr "Przybliż do widoku"
 
-#: src/MainWindow.vala:374
+#: src/MainWindow.vala:377
 msgid "Zoom to Fit Selected Node"
 msgstr "Przybliż do zaznaczonego węzła"
 
-#: src/MainWindow.vala:378
+#: src/MainWindow.vala:381
 msgid "Zoom to Actual Size"
 msgstr "Naturalna wielkość"
 
-#: src/MainWindow.vala:407
+#: src/MainWindow.vala:408
 msgid "Search"
 msgstr "Szukaj"
 
-#: src/MainWindow.vala:417
+#: src/MainWindow.vala:418
 #, fuzzy
 msgid "Search Nodes and Connections"
 msgstr "Szukaj węzłów"
 
-#: src/MainWindow.vala:440
+#: src/MainWindow.vala:441
 msgid "Search Criteria"
 msgstr "Kryteria wyszukiwania"
 
-#: src/MainWindow.vala:462
+#: src/MainWindow.vala:463
 #, fuzzy
 msgid "Nodes"
 msgstr "Węzeł"
 
-#: src/MainWindow.vala:463
+#: src/MainWindow.vala:464
 msgid "Connections"
 msgstr ""
 
-#: src/MainWindow.vala:464
+#: src/MainWindow.vala:465
 msgid "Titles"
 msgstr "Tytuly"
 
-#: src/MainWindow.vala:465
+#: src/MainWindow.vala:466
 msgid "Notes"
 msgstr "Notatki"
 
-#: src/MainWindow.vala:466
+#: src/MainWindow.vala:467
 msgid "Folded"
 msgstr "Zwinięte"
 
-#: src/MainWindow.vala:467
+#: src/MainWindow.vala:468
 msgid "Unfolded"
 msgstr "Rozwinięte"
 
-#: src/MainWindow.vala:468
+#: src/MainWindow.vala:469
 msgid "Tasks"
 msgstr "Zadania"
 
-#: src/MainWindow.vala:469
+#: src/MainWindow.vala:470
 msgid "Non-tasks"
 msgstr "Nie zadania"
 
-#: src/MainWindow.vala:561 src/MainWindow.vala:1064
+#: src/MainWindow.vala:560 src/MainWindow.vala:1123
 msgid "Export"
 msgstr "Eksport"
 
-#: src/MainWindow.vala:568
+#: src/MainWindow.vala:567
 msgid "Export…"
 msgstr "Eksport…"
 
-#: src/MainWindow.vala:572
+#: src/MainWindow.vala:571
 msgid "Print"
 msgstr "Drukuj"
 
-#: src/MainWindow.vala:621
+#: src/MainWindow.vala:623
+msgid "Shortcuts Cheatsheet"
+msgstr ""
+
+#: src/MainWindow.vala:651
 msgid "Properties"
 msgstr "Właściwości"
 
-#: src/MainWindow.vala:633 src/StyleInspector.vala:48
+#: src/MainWindow.vala:666 src/StyleInspector.vala:48
 msgid "Current"
 msgstr ""
 
-#: src/MainWindow.vala:634
+#: src/MainWindow.vala:667
 msgid "Style"
 msgstr ""
 
-#: src/MainWindow.vala:635
+#: src/MainWindow.vala:668
 msgid "Map"
 msgstr "Mapa"
 
-#: src/MainWindow.vala:694
+#: src/MainWindow.vala:732
 msgid "Save current unnamed document?"
 msgstr "Zapisać nienazwany dokument?"
 
-#: src/MainWindow.vala:695
+#: src/MainWindow.vala:733
 msgid "Changes will be permanently lost if not saved."
 msgstr "Zmainy zostaną bezpowrotnie utracone jeśli nie zostaną zapisane."
 
-#: src/MainWindow.vala:700
+#: src/MainWindow.vala:738
 msgid "Discard Changes"
 msgstr "Odrzuć zmiany"
 
-#: src/MainWindow.vala:706 src/MainWindow.vala:839
+#: src/MainWindow.vala:744 src/MainWindow.vala:887
 msgid "Save"
 msgstr "Zapisz"
 
-#: src/MainWindow.vala:747
+#: src/MainWindow.vala:785
 msgid "Open"
 msgstr "Otwórz"
 
-#: src/MainWindow.vala:839
-msgid "Save File"
-msgstr "Zapisz plik"
-
-#: src/MainWindow.vala:1063
-msgid "Export As"
-msgstr "Eksportuj jako"
-
-#: src/MainWindow.vala:1068
-msgid "BMP"
-msgstr "BMP"
-
-#: src/MainWindow.vala:1074
-msgid "CSV"
-msgstr "CSV"
-
-#: src/MainWindow.vala:1080
-msgid "Freemind"
-msgstr ""
-
-#: src/MainWindow.vala:1086
-msgid "Freeplane"
-msgstr ""
-
-#: src/MainWindow.vala:1092
-msgid "JPEG"
-msgstr "JPEG"
-
-#: src/MainWindow.vala:1099
-msgid "Markdown"
-msgstr "Markdown"
-
-#: src/MainWindow.vala:1106
-msgid "Mermaid"
-msgstr ""
-
-#: src/MainWindow.vala:1112
-msgid "OPML"
-msgstr "OPML"
-
-#: src/MainWindow.vala:1118
-msgid "PDF"
-msgstr "PDF"
-
-#: src/MainWindow.vala:1124
-msgid "PNG (Transparent)"
-msgstr "PNG (z przeźroczystością)"
-
-#: src/MainWindow.vala:1130
-msgid "PNG (Opaque)"
-msgstr "PNG"
-
-#: src/MainWindow.vala:1136
+#: src/MainWindow.vala:804 src/MainWindow.vala:1195
 msgid "PlainText"
 msgstr "Dokument tekstowy"
 
-#: src/MainWindow.vala:1142
+#: src/MainWindow.vala:887
+msgid "Save File"
+msgstr "Zapisz plik"
+
+#: src/MainWindow.vala:1122
+msgid "Export As"
+msgstr "Eksportuj jako"
+
+#: src/MainWindow.vala:1127
+msgid "BMP"
+msgstr "BMP"
+
+#: src/MainWindow.vala:1133
+msgid "CSV"
+msgstr "CSV"
+
+#: src/MainWindow.vala:1139
+msgid "Freemind"
+msgstr ""
+
+#: src/MainWindow.vala:1145
+msgid "Freeplane"
+msgstr ""
+
+#: src/MainWindow.vala:1151
+msgid "JPEG"
+msgstr "JPEG"
+
+#: src/MainWindow.vala:1158
+msgid "Markdown"
+msgstr "Markdown"
+
+#: src/MainWindow.vala:1165
+msgid "Mermaid"
+msgstr ""
+
+#: src/MainWindow.vala:1171
+msgid "OPML"
+msgstr "OPML"
+
+#: src/MainWindow.vala:1177
+msgid "PDF"
+msgstr "PDF"
+
+#: src/MainWindow.vala:1183
+msgid "PNG (Transparent)"
+msgstr "PNG (z przeźroczystością)"
+
+#: src/MainWindow.vala:1189
+msgid "PNG (Opaque)"
+msgstr "PNG"
+
+#: src/MainWindow.vala:1201
 msgid "SVG"
 msgstr "SVG"
 
-#: src/MapInspector.vala:73
+#: src/MainWindow.vala:1207
+msgid "yEd"
+msgstr ""
+
+#: src/MapInspector.vala:77
 #, fuzzy
 msgid "Enable animations"
 msgstr "Włącz animacje"
 
-#: src/MapInspector.vala:101
+#: src/MapInspector.vala:105
 #, fuzzy
 msgid "Hide connections"
 msgstr "Szukaj węzłów"
 
-#: src/MapInspector.vala:134
+#: src/MapInspector.vala:138
 #, fuzzy
 msgid "Node Layouts"
 msgstr "Uklad węzłów"
 
-#: src/MapInspector.vala:185
+#: src/MapInspector.vala:189
 #, fuzzy
 msgid "Themes"
 msgstr "Motywy"
 
-#: src/MapInspector.vala:236
+#: src/MapInspector.vala:207
+msgid "Add Custom Theme"
+msgstr ""
+
+#: src/MapInspector.vala:226
 msgid "Balance Nodes"
 msgstr "Zbalansuj wężły"
 
-#: src/MapInspector.vala:242
+#: src/MapInspector.vala:232
 msgid "Fold Completed Tasks"
 msgstr "Zwiń ukończone zadania"
 
-#: src/MapInspector.vala:248
+#: src/MapInspector.vala:238
 msgid "Unfold All Nodes"
 msgstr "Rozwiń wszystkie węzły"
 
-#: src/Node.vala:1416
+#: src/MapInspector.vala:322
+msgid "Unsaved"
+msgstr ""
+
+#: src/Node.vala:1464
 #, fuzzy
 msgid "Node Title"
 msgstr "Tytuly"
 
-#: src/Node.vala:1419
+#: src/Node.vala:1467
 #, fuzzy
 msgid "Node Note"
 msgstr "Dodaj notatkę"
@@ -581,6 +610,8 @@ msgid "Detach Node"
 msgstr "Odczep węzeł"
 
 #: src/NodeInspector.vala:349
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:158
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:165
 msgid "Delete Node"
 msgstr "Usuń węzeł"
 
@@ -652,11 +683,11 @@ msgstr ""
 msgid "Link Options"
 msgstr ""
 
-#: src/StyleInspector.vala:322 src/StyleInspector.vala:755
+#: src/StyleInspector.vala:322 src/StyleInspector.vala:767
 msgid "Line Dash"
 msgstr ""
 
-#: src/StyleInspector.vala:361 src/StyleInspector.vala:832
+#: src/StyleInspector.vala:361 src/StyleInspector.vala:844
 msgid "Line Width"
 msgstr ""
 
@@ -664,44 +695,44 @@ msgstr ""
 msgid "Link Arrow"
 msgstr ""
 
-#: src/StyleInspector.vala:433
+#: src/StyleInspector.vala:437
 msgid "Node Options"
 msgstr ""
 
-#: src/StyleInspector.vala:472
+#: src/StyleInspector.vala:476
 msgid "Border Style"
 msgstr ""
 
-#: src/StyleInspector.vala:521
+#: src/StyleInspector.vala:525
 msgid "Border Width"
 msgstr ""
 
-#: src/StyleInspector.vala:566
+#: src/StyleInspector.vala:570
 msgid "Fill With Link Color"
 msgstr ""
 
-#: src/StyleInspector.vala:591
+#: src/StyleInspector.vala:599
 msgid "Margin"
 msgstr ""
 
-#: src/StyleInspector.vala:632 src/StyleInspector.vala:880
+#: src/StyleInspector.vala:640 src/StyleInspector.vala:892
 msgid "Padding"
 msgstr ""
 
-#: src/StyleInspector.vala:671 src/StyleInspector.vala:919
+#: src/StyleInspector.vala:679 src/StyleInspector.vala:931
 msgid "Font"
 msgstr ""
 
-#: src/StyleInspector.vala:692
+#: src/StyleInspector.vala:700
 msgid "Enable Markup"
 msgstr ""
 
-#: src/StyleInspector.vala:718
+#: src/StyleInspector.vala:730
 #, fuzzy
 msgid "Connection Options"
 msgstr "Szukaj węzłów"
 
-#: src/StyleInspector.vala:794
+#: src/StyleInspector.vala:806
 msgid "Arrows"
 msgstr ""
 
@@ -752,11 +783,7 @@ msgstr ""
 msgid "Solarized Light"
 msgstr ""
 
-#: src/themes/ThemeDefault.vala:30
-msgid "Default"
-msgstr ""
-
-#: src/themes/ThemeDark.vala:30
+#: src/themes/ThemeDark.vala:27
 msgid "Dark"
 msgstr ""
 
@@ -840,6 +867,357 @@ msgstr "Cofnij "
 #: src/UndoBuffer.vala:91
 msgid "Redo "
 msgstr "Ponów "
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:6
+msgid "Minder Shortcuts"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:12
+msgid "General"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:16
+#, fuzzy
+msgid "File"
+msgstr "Nowy Plik"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:42
+#, fuzzy
+msgid "Close File"
+msgstr "Nowy Plik"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:51
+#, fuzzy
+msgid "Undo/Redo"
+msgstr "Cofnij"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:55
+#, fuzzy
+msgid "Undo Last Change"
+msgstr "zmiana zadania"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:62
+msgid "Redo Last Undo"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:71
+#, fuzzy
+msgid "Zooming"
+msgstr "Przybliżenie"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:89
+#, fuzzy
+msgid "Zoom To Actual Size"
+msgstr "Naturalna wielkość"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:98
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:428
+msgid "Miscellaneous"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:102
+msgid "Toggle Focus Mode"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:110
+#, fuzzy
+msgid "Search Nodes/Connections"
+msgstr "Szukaj węzłów"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:117
+msgid "Quit Application"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:129
+msgid "Node Commands"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:133
+msgid "Creation/Deletion"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:137
+#, fuzzy
+msgid "New Sibling Node"
+msgstr "Następny sąsiadujący"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:144
+#, fuzzy
+msgid "New Child Node"
+msgstr "Dodaj węzeł potomny"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:151
+msgid "Quick Entry"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:174
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:510
+#, fuzzy
+msgid "Clipboard"
+msgstr "Wytnij węzeł"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:178
+#, fuzzy
+msgid "Copy Node"
+msgstr "Dodaj węzeł główny"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:185
+#, fuzzy
+msgid "Cut Node"
+msgstr "Dodaj węzeł główny"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:192
+msgid "Paste Node as Child"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:201
+msgid "Changing Current"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:205
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:364
+#, fuzzy
+msgid "Edit Title"
+msgstr "Tytuly"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:212
+#, fuzzy
+msgid "View Properties"
+msgstr "Właściwości"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:219
+msgid "Toggle Fold"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:226
+msgid "Toggle Task Done"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:233
+#, fuzzy
+msgid "Toggle Node Link"
+msgstr "Usuń notatkę"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:240
+#, fuzzy
+msgid "Create Connection"
+msgstr "Szukaj węzłów"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:247
+#, fuzzy
+msgid "Center In View"
+msgstr "Wyśrodkuj na wężle"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:254
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:378
+msgid "Place Into View"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:261
+msgid "Sort Child Nodes Alphabetically"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:270
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:387
+msgid "Traversal"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:274
+#, fuzzy
+msgid "Select Root"
+msgstr "Wybierz węzeł"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:281
+#, fuzzy
+msgid "Select Parent"
+msgstr "Wybierz węzeł"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:288
+#, fuzzy
+msgid "Select Next Sibling"
+msgstr "Następny sąsiadujący"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:295
+#, fuzzy
+msgid "Select Previous Sibling"
+msgstr "Poprzedni sąsiadujący"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:302
+#, fuzzy
+msgid "Select Child"
+msgstr "Wybierz węzeł"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:309
+#, fuzzy
+msgid "Select Node Below"
+msgstr "Wybierz węzeł"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:316
+#, fuzzy
+msgid "Select Node Above"
+msgstr "Wybierz węzeł"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:323
+#, fuzzy
+msgid "Select Node To Right"
+msgstr "Wybierz węzeł"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:330
+#, fuzzy
+msgid "Select Node To Left"
+msgstr "Wybierz węzeł"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:337
+#, fuzzy
+msgid "Select Linked Node"
+msgstr "Węzeł"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:344
+#, fuzzy
+msgid "Select Attached Connection"
+msgstr "Szukaj węzłów"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:356
+#, fuzzy
+msgid "Connection Commands"
+msgstr "Szukaj węzłów"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:360
+#, fuzzy
+msgid "Change Current"
+msgstr "Wyśrodkuj na wężle"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:371
+#, fuzzy
+msgid "Show Properties"
+msgstr "Właściwości"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:391
+#, fuzzy
+msgid "Select Start Node"
+msgstr "Wybierz węzeł"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:398
+#, fuzzy
+msgid "Select End Node"
+msgstr "Wybierz węzeł"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:405
+#, fuzzy
+msgid "Select Next Connection"
+msgstr "Szukaj węzłów"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:412
+#, fuzzy
+msgid "Select Previous Connection"
+msgstr "Poprzedni sąsiadujący"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:424
+msgid "Text Editing"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:432
+msgid "Show Emoji Picker"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:439
+msgid "End Editing"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:448
+msgid "Cursor Movement"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:452
+msgid "Next Character"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:459
+#, fuzzy
+msgid "Previous Character"
+msgstr "Poprzedni sąsiadujący"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:466
+msgid "Next Word"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:473
+#, fuzzy
+msgid "Previous Word"
+msgstr "Poprzedni sąsiadujący"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:480
+#, fuzzy
+msgid "Next Line"
+msgstr "Następny sąsiadujący"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:487
+#, fuzzy
+msgid "Previous Line"
+msgstr "Poprzedni sąsiadujący"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:494
+#, fuzzy
+msgid "Start Of Text"
+msgstr "Szukaj węzłów"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:501
+msgid "End Of Text"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:514
+msgid "Copy Selected Text"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:521
+msgid "Cut Selected Text"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:528
+#, fuzzy
+msgid "Paste Text"
+msgstr "Wklej"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:537
+#, fuzzy
+msgid "Selection"
+msgstr "Wybierz węzeł"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:541
+msgid "Add Next Character"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:548
+msgid "Add Previous Character"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:555
+#, fuzzy
+msgid "Add Next Word"
+msgstr "Szukaj węzłów"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:562
+#, fuzzy
+msgid "Add Previous Word"
+msgstr "Szukaj węzłów"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:569
+#, fuzzy
+msgid "Add Next Line"
+msgstr "Dodaj notatkę"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:576
+#, fuzzy
+msgid "Add Previous Line"
+msgstr "Poprzedni sąsiadujący"
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:583
+msgid "Add Start Of Text"
+msgstr ""
+
+#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:590
+msgid "Add End Of Text"
+msgstr ""
 
 #, fuzzy
 #~ msgid "Unnamed"

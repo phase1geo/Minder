@@ -40,13 +40,24 @@ public class LinkTypeCurved : Object, LinkType {
   }
 
   /* Draw method for the link */
-  public void draw( Cairo.Context ctx, double from_x, double from_y, double to_x, double to_y, bool horizontal,
+  public void draw( Cairo.Context ctx, Node to_node,
+                    double from_x, double from_y, double to_x, double to_y,
                     out double tailx, out double taily, out double tipx, out double tipy ) {
-    tipx = to_x;
-    tipy = to_y;
+
+    var side  = to_node.side;
+    var style = to_node.style;
+
+    tipx = tipy = 0;
+
+    switch( side ) {
+      case NodeSide.LEFT   :  to_x += adjust_a( style );  tipx = to_x - adjust_tip( style );  tipy = to_y;  break;
+      case NodeSide.RIGHT  :  to_x -= adjust_a( style );  tipx = to_x + adjust_tip( style );  tipy = to_y;  break;
+      case NodeSide.TOP    :  to_y += adjust_a( style );  tipx = to_x;  tipy = to_y - adjust_tip( style );  break;
+      case NodeSide.BOTTOM :  to_y -= adjust_a( style );  tipx = to_x;  tipy = to_y + adjust_tip( style );  break;
+    }
 
     ctx.move_to( from_x, from_y );
-    if( horizontal ) {
+    if( (side & NodeSide.horizontal()) != 0 ) {
       var x_adjust = (to_x - from_x) * 0.5;
       tailx = from_x + x_adjust;
       taily = from_y + ((to_y - from_y) * 0.95);
@@ -58,6 +69,7 @@ public class LinkTypeCurved : Object, LinkType {
       ctx.curve_to( from_x, (to_y - y_adjust), to_x, (from_y + y_adjust), to_x, to_y );
     }
     ctx.stroke();
+
   }
 
 }

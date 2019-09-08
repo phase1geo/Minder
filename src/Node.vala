@@ -112,6 +112,7 @@ public class Node : Object {
   private static int _next_id = 0;
 
   /* Member variables */
+  private   DrawArea     _da;
   protected int          _id;
   private   CanvasText   _name;
   private   string       _note         = "";
@@ -142,6 +143,11 @@ public class Node : Object {
   public signal void resized( double diffw, double diffh );
 
   /* Properties */
+  public DrawArea da {
+    get {
+      return( _da );
+    }
+  }
   public CanvasText name {
     get {
       return( _name );
@@ -157,6 +163,7 @@ public class Node : Object {
     set {
       double diff = (value - _posx);
       _posx = value;
+      update_tree_bbox( diff, 0 );
       position_name();
       if( diff != 0 ) {
         moved( diff, 0 );
@@ -170,6 +177,7 @@ public class Node : Object {
     set {
       double diff = (value - _posy);
       _posy = value;
+      update_tree_bbox( 0, diff );
       position_name();
       if( diff != 0 ) {
         moved( 0, diff );
@@ -291,9 +299,11 @@ public class Node : Object {
       update_size();
     }
   }
+  public NodeBounds tree_bbox { get; set; default = NodeBounds(); }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
+    _da       = da;
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
@@ -303,6 +313,7 @@ public class Node : Object {
 
   /* Constructor initializing string */
   public Node.with_name( DrawArea da, string n, Layout? layout ) {
+    _da       = da;
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
@@ -312,6 +323,7 @@ public class Node : Object {
 
   /* Copies an existing node to this node */
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
+    _da       = da;
     _id       = _next_id++;
     _name     = new CanvasText( da, _max_width );
     copy_variables( n, im );
@@ -325,6 +337,7 @@ public class Node : Object {
 
   /* Copies an existing node tree to this node */
   public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int> id_map ) {
+    _da       = da;
     _id       = _next_id++;
     _name     = new CanvasText( da, _max_width );
     _children = new Array<Node>();
@@ -366,6 +379,7 @@ public class Node : Object {
     parent        = n.parent;
     side          = n.side;
     style         = n.style;
+    tree_bbox     = n.tree_bbox;
   }
 
   /* Returns the associated ID of this node */
@@ -375,13 +389,17 @@ public class Node : Object {
 
   /* Sets the posx value only, leaving the children positions alone */
   public void set_posx_only( double value ) {
+    var diff = value - _posx;
     _posx = value;
+    update_tree_bbox( diff, 0 );
     position_name();
   }
 
   /* Sets the posy value only, leaving the children positions alone */
   public void set_posy_only( double value ) {
+    var diff = value - _posy;
     _posy = value;
+    update_tree_bbox( 0, diff );
     position_name();
   }
 
@@ -403,13 +421,23 @@ public class Node : Object {
   /* Sets the posx value only, leaving the children positions alone */
   public void adjust_posx_only( double value ) {
     _posx += value;
+    update_tree_bbox( value, 0 );
     position_name();
   }
 
   /* Sets the posy value only, leaving the children positions alone */
   public void adjust_posy_only( double value ) {
     _posy += value;
+    update_tree_bbox( 0, value );
     position_name();
+  }
+
+  /* Updates the tree_bbox */
+  private void update_tree_bbox( double diffx, double diffy ) {
+    var nb = tree_bbox;
+    nb.x += diffx;
+    nb.y += diffy;
+    tree_bbox = nb;
   }
 
   /* Called whenever the node size is changed */
@@ -490,6 +518,26 @@ public class Node : Object {
       p = p.parent;
     }
     return( p == node );
+  }
+
+  /* Returns true if this tree bounds of this node is left of the given bounds */
+  public bool is_left_of( NodeBounds nb ) {
+    return( (tree_bbox.x + tree_bbox.width) < nb.x ); 
+  }
+
+  /* Returns true if this tree bounds of this node is right of the given bounds */
+  public bool is_right_of( NodeBounds nb ) {
+    return( tree_bbox.x > (nb.x + nb.width) );
+  }
+
+  /* Returns true if this tree bounds of this node is above the given bounds */
+  public bool is_above( NodeBounds nb ) {
+    return( (tree_bbox.y + tree_bbox.height) < nb.y );
+  }
+
+  /* Returns true if this tree bounds of this node is below the given bounds */
+  public bool is_below( NodeBounds nb ) {
+    return( tree_bbox.y > (nb.y + nb.height) );
   }
 
   /* Returns the maximum width allowed for this node */
@@ -624,7 +672,6 @@ public class Node : Object {
       double ix, iy, iw, ih;
       image_bbox( out ix, out iy, out iw, out ih );
       return( Utils.is_within_bounds( x, y, ix, iy, iw, ih ) );
-      // return( (ix <= x) && (x <= (ix + iw)) && (iy <= y) && (y <= (iy + ih)) );
     } else {
       return( false );
     }
@@ -636,7 +683,6 @@ public class Node : Object {
       double rx, ry, rw, rh;
       resizer_bbox( out rx, out ry, out rw, out rh );
       return( Utils.is_within_bounds( x, y, rx, ry, rw, rh ) );
-      // return( (rx < x) && (x <= (rx + rw)) && (ry < y) && (y <= (ry + rh)) );
     }
     return( false );
   }
@@ -825,7 +871,7 @@ public class Node : Object {
     }
 
     /* Make sure the style has a default value */
-    style.copy( StyleInspector.styles.get_style_for_level( isroot ? 0 : 1 ) );
+    style.copy( StyleInspector.styles.get_style_for_level( (isroot ? 0 : 1), null ) );
 
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
@@ -853,10 +899,11 @@ public class Node : Object {
       layout = da.layouts.get_layout( l );
     }
 
+    /* Get the tree bbox */
+    tree_bbox = layout.bbox( this, -1 );
+
     if( ts == null ) {
-      double bx, by, bw, bh;
-      layout.bbox( this, side, out bx, out by, out bw, out bh );
-      tree_size = ((side & NodeSide.horizontal()) != 0) ? bh : bw;
+      tree_size = ((side & NodeSide.horizontal()) != 0) ? tree_bbox.height : tree_bbox.width;
     }
 
     /* Make sure that the name is positioned properly */
@@ -1183,6 +1230,7 @@ public class Node : Object {
   private void parent_moved( Node parent, double diffx, double diffy ) {
     _posx += diffx;
     _posy += diffy;
+    update_tree_bbox( diffx, diffy );
     position_name();
     moved( diffx, diffy );
   }
@@ -1428,6 +1476,7 @@ public class Node : Object {
   public virtual void pan( double diffx, double diffy ) {
     _posx += diffx;
     _posy += diffy;
+    update_tree_bbox( diffx, diffy );
     position_name();
     moved( diffx, diffy );
   }
@@ -1469,11 +1518,15 @@ public class Node : Object {
   */
   public void set_node_info( Array<NodeInfo?> info, ref int index ) {
 
+    var diffx = info.index( index ).posx - _posx;
+    var diffy = info.index( index ).posy - _posy;
+
     _posx       = info.index( index ).posx;
     _posy       = info.index( index ).posy;
     side        = info.index( index ).side;
     _link_color = info.index( index ).color;
 
+    update_tree_bbox( diffx, diffy );
     position_name();
 
     for( int i=0; i<_children.length; i++ ) {
@@ -1522,11 +1575,11 @@ public class Node : Object {
 
     /* Set the fill color */
     if( mode == NodeMode.CURRENT ) {
-      Utils.set_context_color_with_alpha( ctx, theme.nodesel_background, _alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
     } else if( is_root() || style.is_fillable() ) {
       Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
     } else {
-      Utils.set_context_color_with_alpha( ctx, theme.background, _alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "background" ), _alpha );
     }
 
     /* Draw the fill */
@@ -1563,7 +1616,7 @@ public class Node : Object {
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( mode == NodeMode.CURRENT ) {
-      Utils.set_context_color_with_alpha( ctx, theme.nodesel_background, _alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
       ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin),
                      ((posy + style.node_padding + style.node_margin) - vmargin),
                      ((_width  - (style.node_padding * 2) - (style.node_margin * 2)) + (hmargin * 2)),
@@ -1573,13 +1626,13 @@ public class Node : Object {
 
     /* Draw the text */
     if( mode == NodeMode.CURRENT ) {
-      name.draw( ctx, theme, theme.nodesel_foreground, _alpha );
+      name.draw( ctx, theme, theme.get_color( "nodesel_foreground" ), _alpha );
     } else if( parent == null ) {
-      name.draw( ctx, theme, theme.root_foreground, _alpha );
+      name.draw( ctx, theme, theme.get_color( "root_foreground" ), _alpha );
     } else if( style.is_fillable() ) {
-      name.draw( ctx, theme, theme.background, _alpha );
+      name.draw( ctx, theme, theme.get_color( "background" ), _alpha );
     } else {
-      name.draw( ctx, theme, theme.foreground, _alpha );
+      name.draw( ctx, theme, theme.get_color( "foreground" ), _alpha );
     }
 
   }
@@ -1748,7 +1801,7 @@ public class Node : Object {
       bbox( out x, out y, out w, out h );
 
       /* Draw highlight border */
-      Utils.set_context_color_with_alpha( ctx, theme.attachable_color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), _alpha );
       ctx.set_line_width( 4 );
       ctx.rectangle( x, y, w, h );
       ctx.stroke();
@@ -1762,10 +1815,10 @@ public class Node : Object {
 
     double parent_x;
     double parent_y;
-    double height = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
-    double tailx = 0, taily = 0, tipx = 0, tipy = 0;
-    double tip_adjust  = (style.link_width / 2) + 1;
-    double link_adjust = style.link_arrow ? (style.link_width / 2) + ((style.node_borderwidth / 2) + 2) : 0;
+    double height  = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
+    double tailx   = 0, taily = 0, tipx = 0, tipy = 0;
+    double child_x = 0;
+    double child_y = 0;
 
     /* Get the parent's link point */
     parent.link_point( out parent_x, out parent_y );
@@ -1774,27 +1827,13 @@ public class Node : Object {
     ctx.set_line_cap( LineCap.ROUND );
 
     switch( side ) {
-      case NodeSide.LEFT :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + _width - style.node_margin + link_adjust), (posy + height), true,
-                         out tailx, out taily, out tipx, out tipy );
-        tipx -= tip_adjust;
-        break;
-      case NodeSide.RIGHT :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + style.node_margin - link_adjust), (posy + height), true,
-                         out tailx, out taily, out tipx, out tipy );
-        tipx += tip_adjust;
-        break;
-      case NodeSide.TOP :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + _height - style.node_margin + link_adjust), false,
-                         out tailx, out taily, out tipx, out tipy );
-        tipy += tip_adjust;
-        break;
-      case NodeSide.BOTTOM :
-        style.draw_link( ctx, parent.style, parent_x, parent_y, (posx + (_width / 2)), (posy + style.node_margin - link_adjust), false,
-                         out tailx, out taily, out tipx, out tipy );
-        tipx -= tip_adjust;
-        break;
+      case NodeSide.LEFT   :  child_x = (posx + _width - style.node_margin);  child_y = (posy + height);                       break;
+      case NodeSide.RIGHT  :  child_x = (posx + style.node_margin);           child_y = (posy + height);                       break;
+      case NodeSide.TOP    :  child_x = (posx + (_width / 2));                child_y = (posy + _height - style.node_margin);  break;
+      case NodeSide.BOTTOM :  child_x = (posx + (_width / 2));                child_y = (posy + style.node_margin);            break;
     }
+
+    style.draw_link( ctx, parent.style, this, parent_x, parent_y, child_x, child_y, out tailx, out taily, out tipx, out tipy );
 
     /* Draw the arrow */
     if( style.link_arrow ) {
@@ -1831,7 +1870,7 @@ public class Node : Object {
     ctx.close_path();
     ctx.fill_preserve();
 
-    Utils.set_context_color_with_alpha( ctx, theme.background, _alpha );
+    Utils.set_context_color_with_alpha( ctx, theme.get_color( "background" ), _alpha );
     ctx.set_line_width( 2 );
     ctx.stroke();
 
@@ -1849,12 +1888,12 @@ public class Node : Object {
 
     resizer_bbox( out x, out y, out w, out h );
 
-    Utils.set_context_color( ctx, theme.background );
+    Utils.set_context_color( ctx, theme.get_color( "background" ) );
     ctx.set_line_width( 1 );
     ctx.rectangle( x, y, w, h );
     ctx.fill_preserve();
 
-    Utils.set_context_color_with_alpha( ctx, theme.foreground, _alpha );
+    Utils.set_context_color_with_alpha( ctx, theme.get_color( "foreground" ), _alpha );
     ctx.stroke();
 
   }
@@ -1862,37 +1901,46 @@ public class Node : Object {
   /* Draws the node on the screen */
   public virtual void draw( Context ctx, Theme theme, bool motion ) {
 
+    var nodesel_foreground = theme.get_color( "nodesel_foreground" );
+
     /* If this is a root node, draw specifically for a root node */
     if( is_root() ) {
 
-      draw_shape( ctx, theme, theme.root_background );
+      var background = theme.get_color( "root_background" );
+      var foreground = theme.get_color( "root_foreground" );
+
+      draw_shape( ctx, theme, background );
       draw_name( ctx, theme );
       draw_image( ctx, theme );
       if( is_leaf() ) {
-        draw_leaf_task( ctx, theme.root_foreground );
+        draw_leaf_task( ctx, foreground );
       } else {
-        draw_acc_task( ctx, theme.root_foreground );
+        draw_acc_task( ctx, foreground );
       }
-      draw_common_note( ctx, theme.root_foreground, theme.nodesel_foreground, theme.root_foreground );
-      draw_link_node( ctx, theme.root_foreground, theme.nodesel_foreground, theme.root_foreground );
-      draw_common_fold( ctx, theme.root_background, theme.root_foreground );
-      draw_attachable( ctx, theme, theme.root_background );
+      draw_common_note( ctx, foreground, nodesel_foreground, foreground );
+      draw_link_node(   ctx, foreground, nodesel_foreground, foreground );
+      draw_common_fold( ctx, background, foreground );
+      draw_attachable(  ctx, theme, background );
       draw_resizer( ctx, theme );
 
     /* Otherwise, draw the node as a non-root node */
     } else {
+
+      var background = theme.get_color( "background" );
+      var foreground = theme.get_color( "foreground" );
+
       draw_shape( ctx, theme, _link_color );
       draw_name( ctx, theme );
       draw_image( ctx, theme );
       if( is_leaf() ) {
-        draw_leaf_task( ctx, (style.is_fillable() ? theme.background : _link_color) );
+        draw_leaf_task( ctx, (style.is_fillable() ? background : _link_color) );
       } else {
-        draw_acc_task( ctx, (style.is_fillable() ? theme.background : _link_color) );
+        draw_acc_task( ctx, (style.is_fillable() ? background : _link_color) );
       }
-      draw_common_note( ctx, theme.foreground, theme.nodesel_foreground, theme.background );
-      draw_link_node( ctx, theme.foreground, theme.nodesel_foreground, theme.foreground );
-      draw_common_fold( ctx, _link_color, theme.background );
-      draw_attachable( ctx, theme, theme.background );
+      draw_common_note( ctx, foreground, nodesel_foreground, background );
+      draw_link_node(   ctx, foreground, nodesel_foreground, foreground );
+      draw_common_fold( ctx, _link_color, background );
+      draw_attachable(  ctx, theme, background );
       draw_resizer( ctx, theme );
     }
 
@@ -1900,6 +1948,9 @@ public class Node : Object {
 
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Node? current, bool draw_current, bool motion ) {
+    if( !is_root() && !draw_current ) {
+      draw_link( ctx, theme );
+    }
     if( this != current ) {
       if( !folded ) {
         for( int i=0; i<_children.length; i++ ) {
@@ -1907,9 +1958,6 @@ public class Node : Object {
         }
       }
       draw( ctx, theme, motion );
-    }
-    if( !is_root() && !draw_current ) {
-      draw_link( ctx, theme );
     }
   }
 
