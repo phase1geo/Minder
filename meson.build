@@ -1,5 +1,5 @@
 project('com.github.phase1geo.minder', ['vala', 'c'],
-    version : '1.4.0',
+    version : '1.5.0',
     license: 'GPL-3.0'
 )
 

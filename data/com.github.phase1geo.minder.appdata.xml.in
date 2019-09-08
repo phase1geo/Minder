@@ -21,9 +21,10 @@
       <li>Automatically saves in the background.</li>
       <li>Colorized node branches.</li>
       <li>Open multiple mindmaps with the use of tabs.</li>
-      <li>Gorgeous themes and animations.</li>
+      <li>Built-in and customizable theming.</li>
+      <li>Gorgeous animations.</li>
       <li>Import from OPML, FreeMind and Freeplane formats.</li>
-      <li>Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText, FreeMind, Freeplane and Mermaid formats.</li>
+      <li>Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText, FreeMind, Freeplane, yEd and Mermaid formats.</li>
       <li>Printer support.</li>
     </ul>
   </description>
@@ -82,6 +83,35 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.5.0" date="2019-09-07">
+      <description>
+        ### New
+        <ul>
+          <li>Added export to yEd.</li>
+          <li>Added ability to create, edit and delete custom themes.</li>
+          <li>Added new quick entry mode, allowing node trees to be input within a text editor.</li>
+          <li>Added Control-W keyboard shortcut to close the current tab.</li>
+          <li>Added shortcut exploration help window (use F1 key to display).</li>
+        </ul>
+        ### Changes
+        <ul>
+          <li>New search icon which has better contrast for Minder's themed header bar (thanks to Nararyans R.I.).</li>
+          <li>New non-symbolic sidebar icon in header bar (thanks to Nararyans R.I.).</li>
+          <li>New Minder application icon which fits in with the elementary OS color scheme better (thansk to Nararyans R.I.).</li>
+          <li>New focus icon in header bar (thanks to Nararyans R.I.).</li>
+          <li>Improved styling when creating a new node/connection.</li>
+        </ul>
+        ### Bug Fixes
+        <ul>
+          <li>Fixed issue where separate trees in same mind-map where allowed to overlap.</li>
+          <li>Fixed node link drawing issue when using manual layout mode.</li>
+          <li>Fixed issues drawing arrows properly when straight node links were being used.</li>
+          <li>Fixed display issues with the node fill switch in the style inspector.</li>
+          <li>Fixed support for cut, copy and pasting connection title text.</li>
+          <li>Fixed keyboard shortcut for toggling focus mode.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.4.1" date="2019-07-14">
       <description>
         <ul>

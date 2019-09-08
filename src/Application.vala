@@ -31,7 +31,7 @@ public class Minder : Granite.Application {
   private static bool          testing      = false;
 
   public  static GLib.Settings settings;
-  public  static string        version = "1.4.2";
+  public  static string        version = "1.5.0";
 
   public Minder () {
     Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.HANDLES_OPEN );
