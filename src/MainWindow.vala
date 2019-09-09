@@ -211,10 +211,17 @@ public class MainWindow : ApplicationWindow {
     tab_changed( new_tab );
   }
 
+  /* Extracts the DrawArea from the given tab */
+  private DrawArea da_from_tab( Tab tab ) {
+    var bin1 = tab.page as Gtk.Bin;  // ScrolledWindow
+    var bin2 = bin1.get_child() as Gtk.Bin;  // Viewport
+    var bin3 = bin2.get_child() as Gtk.Bin;  // Overlay
+    return( bin3.get_child() as DrawArea );
+  }
+
   /* This needs to be called whenever the tab is changed */
   private void tab_changed( Tab tab ) {
-    var bin = (Gtk.Bin)tab.page;
-    var da  = bin.get_child() as DrawArea;
+    var da = da_from_tab( tab );
     do_buffer_changed( da );
     on_current_changed( da );
     update_title( da );
@@ -235,8 +242,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Called whenever the user clicks on the close button and the tab is unnamed */
   private bool close_tab_requested( Tab tab ) {
-    var bin = (Gtk.Bin)tab.page;
-    var da  = bin.get_child() as DrawArea;
+    var da  = da_from_tab( tab );
     var ret = da.get_doc().is_saved() || show_save_warning( da );
     return( ret );
   }
@@ -263,7 +269,13 @@ public class MainWindow : ApplicationWindow {
     var overlay = new Overlay();
     overlay.add( da );
 
-    var tab = new Tab( da.get_doc().label, null, overlay );
+    /* Create the scrolled window for the treeview */
+    var scroll = new ScrolledWindow( null, null );
+    scroll.vscrollbar_policy = PolicyType.AUTOMATIC;
+    scroll.hscrollbar_policy = PolicyType.AUTOMATIC;
+    scroll.add( overlay );
+
+    var tab = new Tab( da.get_doc().label, null, scroll );
     tab.pinnable = false;
     tab.tooltip  = fname;
 
@@ -297,8 +309,7 @@ public class MainWindow : ApplicationWindow {
       stdout.printf( "get_current_da called from %s\n", caller );
     }
     if( _nb.current == null ) { return( null ); }
-    var bin = (Gtk.Bin)_nb.current.page;
-    return( (DrawArea)bin.get_child() );
+    return( da_from_tab( _nb.current ) );
   }
 
   /* Handles any changes to the dark mode preference gsettings for the desktop */
@@ -1313,8 +1324,7 @@ public class MainWindow : ApplicationWindow {
     doc->set_root_element( root );
 
     _nb.tabs.foreach((tab) => {
-      var       bin  = (Gtk.Bin)tab.page;
-      var       da   = (DrawArea)bin.get_child();
+      var da = da_from_tab( tab );
       Xml.Node* node = new Xml.Node( null, "tab" );
       node->new_prop( "path",  da.get_doc().filename );
       node->new_prop( "saved", da.get_doc().is_saved().to_string() );

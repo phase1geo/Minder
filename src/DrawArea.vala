@@ -35,11 +35,7 @@ public class DrawArea : Gtk.DrawingArea {
   private GLib.Settings    _settings;
   private double           _press_x;
   private double           _press_y;
-  private double           _origin_x;
-  private double           _origin_y;
   private double           _scale_factor;
-  private double           _store_origin_x;
-  private double           _store_origin_y;
   private double           _store_scale_factor;
   private bool             _pressed    = false;
   private EventType        _press_type = EventType.NOTHING;
@@ -80,22 +76,6 @@ public class DrawArea : Gtk.DrawingArea {
   public GLib.Settings settings {
     get {
       return( _settings );
-    }
-  }
-  public double origin_x {
-    set {
-      _store_origin_x = _origin_x = value;
-    }
-    get {
-      return( _origin_x );
-    }
-  }
-  public double origin_y {
-    set {
-      _store_origin_y = _origin_y = value;
-    }
-    get {
-      return( _origin_y );
     }
   }
   public double sfactor {
@@ -164,7 +144,7 @@ public class DrawArea : Gtk.DrawingArea {
     this.motion_notify_event.connect( on_motion );
     this.button_release_event.connect( on_release );
     this.key_press_event.connect( on_keypress );
-    this.scroll_event.connect( on_scroll );
+    // this.scroll_event.connect( on_scroll );
 
     /* Make sure the above events are listened for */
     this.add_events(
@@ -333,14 +313,16 @@ public class DrawArea : Gtk.DrawingArea {
   /* Loads the drawing area origin from the XML node */
   private void load_drawarea( Xml.Node* n ) {
 
+    var sw = parent.parent.parent as ScrolledWindow;
+
     string? x = n->get_prop( "x" );
     if( x != null ) {
-      origin_x = double.parse( x );
+      sw.hadjustment.value = double.parse( x );
     }
 
     string? y = n->get_prop( "y" );
     if( y != null ) {
-      origin_y = double.parse( y );
+      sw.vadjustment.value = double.parse( y );
     }
 
     string? sf = n->get_prop( "scale" );
@@ -435,6 +417,9 @@ public class DrawArea : Gtk.DrawingArea {
       link_ids.index( i ).node.linked_node = get_node( _nodes, id_map.get( int.parse( link_ids.index( i ).id_str ) ) );
     }
 
+    /* Set the canvas size */
+    center_document();
+
     queue_draw();
 
     /* Indicate to anyone listening that we have loaded a new file */
@@ -451,13 +436,15 @@ public class DrawArea : Gtk.DrawingArea {
   /* Saves the contents of the drawing area to the data output stream */
   public bool save( Xml.Node* parent ) {
 
+    var sw = this.parent.parent.parent as ScrolledWindow;
+
     parent->add_child( _theme.save() );
 
     StyleInspector.styles.save( parent );
 
     Xml.Node* origin = new Xml.Node( null, "drawarea" );
-    origin->new_prop( "x", _store_origin_x.to_string() );
-    origin->new_prop( "y", _store_origin_y.to_string() );
+    origin->new_prop( "x", sw.hadjustment.value.to_string() );
+    origin->new_prop( "y", sw.vadjustment.value.to_string() );
     origin->new_prop( "scale", _store_scale_factor.to_string() );
     parent->add_child( origin );
 
@@ -530,8 +517,6 @@ public class DrawArea : Gtk.DrawingArea {
     Node.reset();
 
     /* Initialize variables */
-    origin_x            = 0.0;
-    origin_y            = 0.0;
     sfactor             = 1.0;
     node_clipboard.clear();
     _pressed            = false;
@@ -565,8 +550,6 @@ public class DrawArea : Gtk.DrawingArea {
     Node.reset();
 
     /* Initialize variables */
-    origin_x            = 0.0;
-    origin_y            = 0.0;
     sfactor             = 1.0;
     node_clipboard.clear();
     _pressed            = false;
@@ -1083,8 +1066,8 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void set_scaling_factor( double sf ) {
     if( sfactor != sf ) {
-      int    width  = get_allocated_width()  / 2;
-      int    height = get_allocated_height() / 2;
+      int    width  = parent.parent.parent.get_allocated_width()  / 2;
+      int    height = parent.parent.parent.get_allocated_height() / 2;
       double diff_x = (width  / sfactor) - (width  / sf);
       double diff_y = (height / sfactor) - (height / sf);
       move_origin( diff_x, diff_y );
@@ -1095,8 +1078,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns the scaling factor based on the given width and height */
   private double get_scaling_factor( double width, double height ) {
-    double w  = get_allocated_width() / width;
-    double h  = get_allocated_height() / height;
+    double w  = parent.parent.parent.get_allocated_width() / width;
+    double h  = parent.parent.parent.get_allocated_height() / height;
     double sf = (w < h) ? w : h;
     return( (sf > 4) ? 4 : sf );
   }
@@ -1150,8 +1133,8 @@ public class DrawArea : Gtk.DrawingArea {
    x and y positions (values between 0 and 1).
   */
   private void position_box( double x, double y, double w, double h, double xpos, double ypos ) {
-    double ccx = scale_value( get_allocated_width()  * xpos );
-    double ccy = scale_value( get_allocated_height() * ypos );
+    double ccx = scale_value( parent.parent.parent.get_allocated_width()  * xpos );
+    double ccy = scale_value( parent.parent.parent.get_allocated_height() * ypos );
     double ncx = x + (w * xpos);
     double ncy = y + (h * ypos);
     move_origin( (ncx - ccx), (ncy - ccy) );
@@ -1258,8 +1241,8 @@ public class DrawArea : Gtk.DrawingArea {
 
     double diff_x = 0;
     double diff_y = 0;
-    double sw     = scale_value( get_allocated_width() + width_adjust );
-    double sh     = scale_value( get_allocated_height() );
+    double sw     = scale_value( parent.parent.parent.get_allocated_width() + width_adjust );
+    double sh     = scale_value( parent.parent.parent.get_allocated_height() );
     double sf     = get_scaling_factor( (w + (pad * 2)), (h + (pad * 2)) );
 
     if( (x - pad) < 0 ) {
@@ -1313,47 +1296,31 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns the origin */
   public void get_origin( out double x, out double y ) {
-    x = origin_x;
-    y = origin_y;
+    var sw = parent.parent.parent as ScrolledWindow;
+    x = sw.hadjustment.value;
+    y = sw.vadjustment.value;
+    stdout.printf( "In get_origin, x: %g, y: %g\n", x, y );
   }
 
   /* Sets the origin to the given x and y coordinates */
   public void set_origin( double x, double y ) {
-    move_origin( (x - origin_x), (y - origin_y) );
-  }
-
-  /* Checks to see if the boundary of the map never goes out of view */
-  private bool out_of_bounds( double diff_x, double diff_y ) {
-
-    double x, y, w, h;
-    double aw = scale_value( get_allocated_width() );
-    double ah = scale_value( get_allocated_height() );
-    double s  = 40;
-
-    document_rectangle( out x, out y, out w, out h );
-
-    x -= diff_x;
-    y -= diff_y;
-
-    return( ((x + w) < s) || ((y + h) < s) || ((aw - x) < s) || ((ah - y) < s) );
-
+    var sw = parent.parent.parent as ScrolledWindow;
+    stdout.printf( "In set_origin, before x: %g, y: %g, after x: %g, y: %g\n", sw.hadjustment.value, sw.vadjustment.value, x, y );
+    sw.hadjustment.value = x;
+    sw.vadjustment.value = y;
   }
 
   /*
-   Adjusts the x and y origins, panning all elements by the given amount.
+   Adjusts the scrolledwindow such by the given amount.
    Important Note:  When the canvas is panned to the left (causing all
-   nodes to be moved to the left, the origin_x value becomes a positive
+   nodes to be moved to the left, the hadjustment value becomes a positive
    number.
   */
   public void move_origin( double diff_x, double diff_y ) {
-    if( out_of_bounds( diff_x, diff_y ) ) {
-      return;
-    }
-    origin_x += diff_x;
-    origin_y += diff_y;
-    for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).pan( -diff_x, -diff_y );
-    }
+    var sw = parent.parent.parent as ScrolledWindow;
+    stdout.printf( "In set_origin, before x: %g, y: %g, diff_x: %g, diff_y: %g\n", sw.hadjustment.value, sw.vadjustment.value, diff_x, diff_y );
+    sw.hadjustment.value += diff_x;
+    sw.vadjustment.value += diff_y;
   }
 
   /* Draw the background from the stylesheet */
@@ -1490,13 +1457,12 @@ public class DrawArea : Gtk.DrawingArea {
         }
         queue_draw();
 
-      /* Otherwise, we are panning the canvas */
       } else {
-        double diff_x = _press_x - scaled_x;
-        double diff_y = _press_y - scaled_y;
-        move_origin( diff_x, diff_y );
-        queue_draw();
-        auto_save();
+        // double diff_x = _press_x - scaled_x;
+        // double diff_y = _press_y - scaled_y;
+        // move_origin( diff_x, diff_y );
+        // queue_draw();
+        // auto_save();
       }
       if( !_motion && !_resize && (_current_node != null) ) {
         _current_node.alpha = 0.3;
@@ -3073,38 +3039,38 @@ public class DrawArea : Gtk.DrawingArea {
    Called whenever the user scrolls on the canvas.  We will adjust the
    origin to give the canvas the appearance of scrolling.
   */
-  private bool on_scroll( EventScroll e ) {
+//  private bool on_scroll( EventScroll e ) {
 
-    double delta_x, delta_y;
-    e.get_scroll_deltas( out delta_x, out delta_y );
+//    double delta_x, delta_y;
+//    e.get_scroll_deltas( out delta_x, out delta_y );
 
-    bool shift   = (bool) e.state & ModifierType.SHIFT_MASK;
-    bool control = (bool) e.state & ModifierType.CONTROL_MASK;
+//    bool shift   = (bool) e.state & ModifierType.SHIFT_MASK;
+//    bool control = (bool) e.state & ModifierType.CONTROL_MASK;
 
     /* Swap the deltas if the SHIFT key is held down */
-    if( shift && !control ) {
-      double tmp = delta_x;
-      delta_x = delta_y;
-      delta_y = tmp;
-    } else if( control ) {
-      if( e.delta_y < 0 ) {
-        zoom_in();
-      } else if( e.delta_y > 0 ) {
-        zoom_out();
-      }
-      return( false );
-    }
+//    if( shift && !control ) {
+//      double tmp = delta_x;
+//      delta_x = delta_y;
+//      delta_y = tmp;
+//    } else if( control ) {
+//      if( e.delta_y < 0 ) {
+//        zoom_in();
+//      } else if( e.delta_y > 0 ) {
+//        zoom_out();
+//      }
+//      return( false );
+//    }
 
     /* Adjust the origin and redraw */
-    move_origin( (delta_x * 120), (delta_y * 120) );
-    queue_draw();
+//    move_origin( (delta_x * 120), (delta_y * 120) );
+//    queue_draw();
 
     /* When the end of the scroll occurs, save the scroll position to the file */
-    auto_save();
+//    auto_save();
 
-    return( false );
+//    return( false );
 
-  }
+//  }
 
   /* Perform an automatic save for times when changes may be happening rapidly */
   private void auto_save() {
@@ -3388,6 +3354,36 @@ public class DrawArea : Gtk.DrawingArea {
         if( node.is_above( prev ) )    node.posy += adiff;
         if( node.is_below( prev ) )    node.posy += bdiff;
       }
+    }
+
+    /* Update the size of the canvas to set the scrollbars correctly */
+    center_document();
+
+  }
+
+  /* Centers the document in the canvas, if necessary */
+  private void center_document() {
+
+    var alloc_width  = parent.parent.parent.get_allocated_width();
+    var alloc_height = parent.parent.parent.get_allocated_height();
+
+    /* Get the extents of the document */
+    double dx, dy, dw, dh;
+    document_rectangle( out dx, out dy, out dw, out dh );
+
+    /* Set the size of the canvas */
+    set_size_request( (int)(scale_value( dw ) + alloc_width), (int)(scale_value( dh ) + alloc_height) );
+
+    /* If we need to adjust the nodes, do it now */
+    var diffx = (alloc_width  / 2) - dx;
+    var diffy = (alloc_height / 2) - dy;
+    if( (diffx > 0) || (diffy > 0) ) {
+      stdout.printf( "Adjusting nodes, diffx: %g, diffy: %g\n", diffx, diffy );
+      for( int i=0; i<_nodes.length; i++ ) {
+        _nodes.index( i ).posx += diffx;
+        _nodes.index( i ).posy += diffy;
+      }
+//      move_origin( diffx, diffy );
     }
 
   }
