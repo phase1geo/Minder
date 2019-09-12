@@ -418,7 +418,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     /* Set the canvas size */
-    center_document();
+    center_document( "load" );
 
     queue_draw();
 
@@ -1073,6 +1073,7 @@ public class DrawArea : Gtk.DrawingArea {
       move_origin( diff_x, diff_y );
       sfactor = sf;
       scale_changed( sfactor );
+      center_document( "set_scaling_factor" );
     }
   }
 
@@ -2130,6 +2131,7 @@ public class DrawArea : Gtk.DrawingArea {
       var partitioner = new Partitioner();
       partitioner.partition_node( root_node );
     }
+    center_document( "balance_nodes" );
     animator.animate();
     grab_focus();
   }
@@ -3339,30 +3341,37 @@ public class DrawArea : Gtk.DrawingArea {
 
     if( _current_node == null ) return;
 
-    var root  = _current_node.get_root();
-    var curr  = root.tree_bbox;
-    var ldiff = curr.x - prev.x;
-    var rdiff = (curr.x + curr.width) - (prev.x + prev.width);
-    var adiff = curr.y - prev.y;
-    var bdiff = (curr.y + curr.height) - (prev.y + prev.height);
+    var root    = _current_node.get_root();
+    var curr    = root.tree_bbox;
+    var ldiff   = curr.x - prev.x;
+    var rdiff   = (curr.x + curr.width) - (prev.x + prev.width);
+    var adiff   = curr.y - prev.y;
+    var bdiff   = (curr.y + curr.height) - (prev.y + prev.height);
+    var changed = false;
 
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
       if( node != root ) {
-        if( node.is_left_of( prev ) )  node.posx += ldiff;
-        if( node.is_right_of( prev ) ) node.posx += rdiff;
-        if( node.is_above( prev ) )    node.posy += adiff;
-        if( node.is_below( prev ) )    node.posy += bdiff;
+        if( node.is_left_of( prev ) )  { node.posx += ldiff;  changed = true; }
+        if( node.is_right_of( prev ) ) { node.posx += rdiff;  changed = true; }
+        if( node.is_above( prev ) )    { node.posy += adiff;  changed = true; }
+        if( node.is_below( prev ) )    { node.posy += bdiff;  changed = true; }
       }
     }
 
     /* Update the size of the canvas to set the scrollbars correctly */
-    center_document();
+    if( changed ) {
+      center_document( "handle_tree_overlap" );
+    }
 
   }
 
   /* Centers the document in the canvas, if necessary */
-  private void center_document() {
+  private void center_document( string? msg ) {
+
+    if( msg != null ) {
+      stdout.printf( "In center_document from %s\n", msg );
+    }
 
     var alloc_width  = parent.parent.parent.get_allocated_width();
     var alloc_height = parent.parent.parent.get_allocated_height();
@@ -3371,13 +3380,15 @@ public class DrawArea : Gtk.DrawingArea {
     double dx, dy, dw, dh;
     document_rectangle( out dx, out dy, out dw, out dh );
 
+    stdout.printf( "sfactor: %g, dx: %g, dy: %g, dw: %g, dh: %g, sdw: %g, sdh: %g, aw: %g, ah: %g\n", sfactor, dx, dy, dw, dh, scale_value( dw ), scale_value( dh ), alloc_width, alloc_height );
+
     /* Set the size of the canvas */
-    set_size_request( (int)(scale_value( dw ) + alloc_width), (int)(scale_value( dh ) + alloc_height) );
+    set_size_request( (int)((sfactor * dw) + alloc_width), (int)((sfactor * dh) + alloc_height) );
 
     /* If we need to adjust the nodes, do it now */
     var diffx = (alloc_width  / 2) - dx;
     var diffy = (alloc_height / 2) - dy;
-    if( (diffx > 0) || (diffy > 0) ) {
+    if( (diffx != 0) || (diffy != 0) ) {
       stdout.printf( "Adjusting nodes, diffx: %g, diffy: %g\n", diffx, diffy );
       for( int i=0; i<_nodes.length; i++ ) {
         _nodes.index( i ).posx += diffx;
