@@ -882,14 +882,35 @@ public class MainWindow : ApplicationWindow {
     _redo_btn.set_tooltip_text( da.undo_buffer.redo_tooltip() );
   }
 
+  /* Converts the given node name to an appropriate filename */
+  private string convert_name_to_filename( string name ) {
+
+    /* If the name contains newline characters, just use the first line */
+    var first_line = name.split( "\n" )[0];
+    var base_name  = first_line.delimit( "~!@#$%^&*+`={}[]|\\/,.<>?;:\"' \t", '-' );
+
+    /* Remove consecutive - characters with a single dash */
+    try {
+      var re1 = new Regex( "-+" );
+      var re2 = new Regex( "^-|-$" );
+      base_name = re1.replace( base_name, base_name.length, 0, "-" );
+      base_name = re2.replace( base_name, base_name.length, 0, "" );
+    } catch( RegexError err ) {}
+
+    return( base_name );
+
+  }
+
   /* Allow the user to select a filename to save the document as */
   public bool save_file( DrawArea da ) {
-    FileChooserNative dialog = new FileChooserNative( _( "Save File" ), this, FileChooserAction.SAVE, _( "Save" ), _( "Cancel" ) );
-    FileFilter        filter = new FileFilter();
-    bool              retval = false;
+    var sname  = convert_name_to_filename( da.get_nodes().index( 0 ).name.text.strip() );
+    var dialog = new FileChooserNative( _( "Save File" ), this, FileChooserAction.SAVE, _( "Save" ), _( "Cancel" ) );
+    var filter = new FileFilter();
+    var retval = false;
     filter.set_filter_name( _( "Minder" ) );
     filter.add_pattern( "*.minder" );
     dialog.add_filter( filter );
+    dialog.set_current_name( sname );
     if( dialog.run() == ResponseType.ACCEPT ) {
       var fname = dialog.get_filename();
       if( fname.substring( -7, -1 ) != ".minder" ) {
