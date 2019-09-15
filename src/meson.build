@@ -119,6 +119,7 @@ sources += files(
     'NodeMenu.vala',
     'Partitioner.vala',
     'QuickEntry.vala',
+    'Selection.vala',
     'Style.vala',
     'StyleInspector.vala',
     'Styles.vala',
