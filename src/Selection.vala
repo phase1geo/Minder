@@ -36,7 +36,7 @@ public class Selection {
   }
 
   /* Returns true if the given connection is currently selected */
-  public bool is_sonnection_selected( Connection conn ) {
+  public bool is_connection_selected( Connection conn ) {
     return( conn.mode == ConnMode.SELECTED );
   }
 
@@ -150,12 +150,12 @@ public class Selection {
 
   /* Returns the number of nodes selected */
   public int num_nodes() {
-    return( _nodes.length );
+    return( (int)_nodes.length );
   }
 
   /* Returns the number of connections selected */
   public int num_connections() {
-    return( _conns.length );
+    return( (int)_conns.length );
   }
 
   /* Returns an array of currently selected nodes */

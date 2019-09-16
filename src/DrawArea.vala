@@ -604,11 +604,21 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Returns the current node */
+  public Node? get_current_node() {
+    return( _selected.current_node() );
+  }
+
+  /* Returns the current connection */
+  public Connection? get_current_connection() {
+    return( _selected.current_connection() );
+  }
+
+  /* Returns the array of selected nodes */
   public Array<Node> get_selected_nodes() {
     return( _selected.nodes() );
   }
 
-  /* Returns the current connection */
+  /* Returns the array of selected connections */
   public Array<Connection> get_selected_connections() {
     return( _selected.connections() );
   }
@@ -832,7 +842,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Called whenever the current node's image is changed */
   private void current_image_edited( NodeImage? orig_image ) {
-    var current = _selected.nodex().index( 0 );
+    var current = _selected.current_node();
     undo_buffer.add_item( new UndoNodeImage( current, orig_image ) );
     queue_draw();
     current_changed( this );
@@ -1905,12 +1915,13 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Selects the node that is linked to this node */
-  public void select_linked_node( Node? node=null ) {
-    if( node == null ) {
-      node = _selected.current_node();
+  public void select_linked_node( Node? node = null ) {
+    var n = node;
+    if( n == null ) {
+      n = _selected.current_node();
     }
-    if( (node != null) && (node.linked_node != null) ) {
-      if( select_node( node.linked_node ) ) {
+    if( (n != null) && (n.linked_node != null) ) {
+      if( select_node( n.linked_node ) ) {
         queue_draw();
       }
     }
@@ -3044,8 +3055,8 @@ public class DrawArea : Gtk.DrawingArea {
     var current_conn = _selected.current_connection();
     if( current_node != null ) {
       current_node.name.insert( "" );
-    } else if( current_connection != null ) {
-      current_connection.title.insert( "" );
+    } else if( current_conn != null ) {
+      current_conn.title.insert( "" );
     }
     queue_draw();
     changed();
@@ -3119,8 +3130,8 @@ public class DrawArea : Gtk.DrawingArea {
       var current_conn = _selected.current_connection();
       if( current_node != null ) {
         current_node.name.insert( value );
-      } else if( current_connection != null ) {
-        current_connection.title.insert( value );
+      } else if( current_conn != null ) {
+        current_conn.title.insert( value );
       }
       queue_draw();
       changed();
