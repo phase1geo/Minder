@@ -1054,9 +1054,9 @@ public class StyleInspector : Box {
         }
         break;
       case StyleAffects.CURRENT :
-        var node = _da.get_current_node();
-        if( node != null ) {
-          sensitive = !node.is_leaf();
+        var nodes = _da.get_selected_nodes();
+        for( int i=0; i<nodes.length; i++ ) {
+          sensitive |= !nodes.index( i ).is_leaf();
         }
         break;
       case StyleAffects.CURRTREE :
@@ -1143,15 +1143,16 @@ public class StyleInspector : Box {
 
   /* Called whenever the current node or connection changes */
   private void handle_ui_changed() {
-    var curr_is_node = _da.get_current_node() != null;
-    var curr_is_conn = _da.get_current_connection() != null;
+    var nodes = _da.get_selected_nodes().length;
+    var conns = _da.get_selected_connections().length;
     for( int i=0; i<_affect_items.length; i++ ) {
       var entry = _affect_items.index( i );
       switch( i ) {
-        case StyleAffects.CURRENT     :  entry.visible = curr_is_node || curr_is_conn;  break;
+        case StyleAffects.SEP0        :
+        case StyleAffects.CURRENT     :  entry.visible = (nodes > 0) || (conns > 0);  break;
         case StyleAffects.CURRTREE    :
-        case StyleAffects.CURRSUBTREE :  entry.visible = curr_is_node;  break;
-        case StyleAffects.SEP1        :  entry.visible = curr_is_node || curr_is_conn;  break;
+        case StyleAffects.CURRSUBTREE :
+        case StyleAffects.SEP1        :
         case StyleAffects.LEVEL0      :
         case StyleAffects.LEVEL1      :
         case StyleAffects.LEVEL2      :
@@ -1161,10 +1162,10 @@ public class StyleInspector : Box {
         case StyleAffects.LEVEL6      :
         case StyleAffects.LEVEL7      :
         case StyleAffects.LEVEL8      :
-        case StyleAffects.LEVEL9      :  entry.visible = !curr_is_conn;  break;
+        case StyleAffects.LEVEL9      :  entry.visible = (nodes == 1);  break;
       }
     }
-    if( curr_is_node || curr_is_conn ) {
+    if( (nodes > 0) || (conns > 0) ) {
       set_affects( StyleAffects.CURRENT );
     } else {
       set_affects( StyleAffects.ALL );

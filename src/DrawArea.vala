@@ -660,8 +660,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Sets the current connection to the given node */
   public void set_current_connection( Connection? c ) {
-    _selected.clear_connections();
-    _selected.add_connection( c );
+    _selected.set_current_connection( c );
     c.from_node.last_selected_connection = c;
     c.to_node.last_selected_connection   = c;
     current_changed( this );
@@ -945,9 +944,10 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the user clicks on a valid connection */
   private bool set_current_connection_from_position( Connection conn, EventButton e ) {
 
+    var shift = (bool) e.state & ModifierType.SHIFT_MASK;
+
     if( _selected.is_current_connection( conn ) ) {
       if( conn.mode == ConnMode.EDITABLE ) {
-        bool shift = (bool) e.state & ModifierType.SHIFT_MASK;
         switch( e.type ) {
           case EventType.BUTTON_PRESS        :  conn.title.set_cursor_at_char( e.x, e.y, shift );  break;
           case EventType.DOUBLE_BUTTON_PRESS :  conn.title.set_cursor_at_word( e.x, e.y, shift );  break;
@@ -971,8 +971,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the user clicks on node */
   private bool set_current_node_from_position( Node node, EventButton e ) {
 
-    double scaled_x = scale_value( e.x );
-    double scaled_y = scale_value( e.y );
+    var scaled_x = scale_value( e.x );
+    var scaled_y = scale_value( e.y );
+    var shift    = (bool) e.state & ModifierType.SHIFT_MASK;
 
     /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
     if( node.is_within_task( scaled_x, scaled_y ) ) {
@@ -997,7 +998,6 @@ public class DrawArea : Gtk.DrawingArea {
     node.get_node_info( ref _orig_info );
     if( _selected.is_current_node( node ) ) {
       if( node.mode == NodeMode.EDITABLE ) {
-        bool shift = (bool) e.state & ModifierType.SHIFT_MASK;
         switch( e.type ) {
           case EventType.BUTTON_PRESS        :  node.name.set_cursor_at_char( e.x, e.y, shift );  break;
           case EventType.DOUBLE_BUTTON_PRESS :  node.name.set_cursor_at_word( e.x, e.y, shift );  break;
@@ -1014,16 +1014,17 @@ public class DrawArea : Gtk.DrawingArea {
       return( true );
     } else {
       _current_new = false;
-      _selected.clear_nodes();
-      _selected.add_node( node );
+      if( shift ) {
+        _selected.add_node( node );
+      } else {
+        _selected.set_current_node( node );
+      }
       if( node.parent != null ) {
         node.parent.last_selected_child = node;
       }
       current_changed( this );
       return( true );
     }
-
-    return( false );
 
   }
 
