@@ -59,6 +59,7 @@ public class DrawArea : Gtk.DrawingArea {
   private Node?            _attach_node  = null;
   private NodeMenu         _node_menu;
   private ConnectionMenu   _conn_menu;
+  private NodesMenu        _nodes_menu;
   private EmptyMenu        _empty_menu;
   private uint?            _auto_save_id = null;
   private ImageEditor      _editor;
@@ -145,6 +146,7 @@ public class DrawArea : Gtk.DrawingArea {
     _node_menu  = new NodeMenu( this, accel_group );
     _conn_menu  = new ConnectionMenu( this, accel_group );
     _empty_menu = new EmptyMenu( this, accel_group );
+    _nodes_menu = new NodesMenu( this, accel_group );
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
@@ -974,6 +976,8 @@ public class DrawArea : Gtk.DrawingArea {
     var scaled_x = scale_value( e.x );
     var scaled_y = scale_value( e.y );
     var shift    = (bool) e.state & ModifierType.SHIFT_MASK;
+    var control  = (bool) e.state & ModifierType.CONTROL_MASK;
+    var dpress   = e.type == EventType.DOUBLE_BUTTON_PRESS;
 
     /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
     if( node.is_within_task( scaled_x, scaled_y ) ) {
@@ -996,7 +1000,7 @@ public class DrawArea : Gtk.DrawingArea {
     _orig_side = node.side;
     _orig_info.remove_range( 0, _orig_info.length );
     node.get_node_info( ref _orig_info );
-    if( _selected.is_current_node( node ) ) {
+    if( _selected.is_current_node( node ) && !control ) {
       if( node.mode == NodeMode.EDITABLE ) {
         switch( e.type ) {
           case EventType.BUTTON_PRESS        :  node.name.set_cursor_at_char( e.x, e.y, shift );  break;
@@ -1014,11 +1018,44 @@ public class DrawArea : Gtk.DrawingArea {
       return( true );
     } else {
       _current_new = false;
-      if( shift ) {
-        _selected.add_node( node );
+      if( shift ) {  /* This shift key has an additive, toggling effect */
+        if( _selected.remove_node( node ) ) {
+          if( control ) {
+            if( dpress ) {
+              _selected.remove_nodes_at_level( node );
+            } else {
+              _selected.remove_node_tree( node );
+            }
+          }
+        } else {
+          if( control ) {
+            if( dpress ) {
+              _selected.add_nodes_at_level( node );
+            } else {
+              _selected.add_node_tree( node );
+            }
+          } else {
+            _selected.add_node( node );
+          }
+        }
+
+      /*
+       The Control key + single click will select the current node tree.
+       The Control key + double click will select all nodes at the same level.
+      */
+      } else if( control ) {
+        _selected.set_current_node( node );
+        if( dpress ) {
+          _selected.add_nodes_at_level( node );
+        } else {
+          _selected.add_node_tree( node );
+        }
+
+      /* Otherwise, just select the current node */
       } else {
         _selected.set_current_node( node );
       }
+
       if( node.parent != null ) {
         node.parent.last_selected_child = node;
       }
@@ -1424,6 +1461,8 @@ public class DrawArea : Gtk.DrawingArea {
 #if GTK322
     if( current_node != null ) {
       _node_menu.popup_at_pointer( event );
+    } else if( _selected.num_nodes() > 1 ) {
+      _nodes_menu.popup_at_pointer( event );
     } else if( current_conn != null ) {
       _conn_menu.popup_at_pointer( event );
     } else {
@@ -1432,6 +1471,8 @@ public class DrawArea : Gtk.DrawingArea {
 #else
     if( current_node != null ) {
       _node_menu.popup( null, null, null, event.button, event.time );
+    } else if( _selected.num_nodes() > 1 ) {
+      _nodes_menu.popup_at_pointer( event );
     } else if( current_conn != null ) {
       _conn_menu.popup( null, null, null, event.button, event.time );
     } else {

@@ -80,6 +80,33 @@ public class Selection {
     return( true );
   }
 
+  /* Adds the entire node tree to the selection */
+  public void add_node_tree( Node node ) {
+    var children = node.children();
+    add_node( node );
+    for( int i=0; i<children.length; i++ ) {
+      add_node_tree( children.index( i ) );
+    }
+  }
+
+  /* Adds all of the nodes at the specified node's level to the selection */
+  public void add_nodes_at_level( Node node ) {
+    var level = node.get_level();
+    var root  = node.get_root();
+    add_nodes_at_level_helper( root, level, 0 );
+  }
+
+  private void add_nodes_at_level_helper( Node node, uint level, uint curr_level ) {
+    if( level == curr_level ) {
+      add_node( node );
+    } else {
+      var children = node.children();
+      for( int i=0; i<children.length; i++ ) {
+        add_nodes_at_level_helper( children.index( i ), level, (curr_level + 1) );
+      }
+    }
+  }
+
   /* Adds a connection to the current selection */
   public bool add_connection( Connection conn ) {
     if( is_connection_selected( conn ) ) return( false );
@@ -106,6 +133,32 @@ public class Selection {
     return( false );
   }
 
+  /* Removes an entire node tree from the selection */
+  public void remove_node_tree( Node node, double alpha = 1.0 ) {
+    var children = node.children();
+    remove_node( node, alpha );
+    for( int i=0; i<children.length; i++ ) {
+      remove_node_tree( children.index( i ), alpha );
+    }
+  }
+
+  /* Adds all of the nodes at the specified node's level to the selection */
+  public void remove_nodes_at_level( Node node, double alpha = 1.0 ) {
+    var level = node.get_level();
+    var root  = node.get_root();
+    remove_nodes_at_level_helper( root, alpha, level, 0 );
+  }
+
+  private void remove_nodes_at_level_helper( Node node, double alpha, uint level, uint curr_level ) {
+    if( level == curr_level ) {
+      remove_node( node, alpha );
+    } else {
+      var children = node.children();
+      for( int i=0; i<children.length; i++ ) {
+        remove_nodes_at_level_helper( children.index( i ), alpha, level, (curr_level + 1) );
+      }
+    }
+  }
   /*
    Removes the given connection from the current selection.  Returns true
    if the connection is removed.
