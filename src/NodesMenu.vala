@@ -24,17 +24,41 @@ using Gtk;
 public class NodesMenu : Gtk.Menu {
 
   DrawArea     _da;
-  Gtk.MenuItem _root;
-  Gtk.MenuItem _selroot;
+  Gtk.MenuItem _copy;
+  Gtk.MenuItem _cut;
+  Gtk.MenuItem _paste;
+  Gtk.MenuItem _delete;
+  Gtk.MenuItem _fold;
+  Gtk.MenuItem _connect;
+  Gtk.MenuItem _link;
 
   /* Default constructor */
   public NodesMenu( DrawArea da, AccelGroup accel_group ) {
 
     _da = da;
 
-    _root = new Gtk.MenuItem.with_label( _( "Add Root Node" ) );
-    _root.activate.connect( add_root_node );
+    _copy = new Gtk.MenuItem.with_label( _( "Copy" ) );
+    _copy.activate.connect( copy_nodes );
 
+    _cut = new Gtk.MenuItem.with_label( _( "Cut" ) );
+    _cut.activate.connect( cut_nodes );
+
+    _paste = new Gtk.MenuItem.with_label( _( "Paste" ) );
+    _paste.activate.connect( paste_to_nodes );
+
+    _delete = new Gtk.MenuItem.with_label( _( "Delete" ) );
+    _delete.activate.connect( delete_nodes );
+
+    _fold = new Gtk.MenuItem.with_label( _( "Fold Children" ) );
+    _fold.activate.connect( fold_nodes );
+
+    _connect = new Gtk.MenuItem.with_label( _( "Connect" ) );
+    _connect.activate.connect( connect_nodes );
+
+    _link = new Gtk.MenuItem.with_label( _( "Link Nodes" ) );
+    _link.activate.connect( link_nodes );
+
+    /*
     var selnode = new Gtk.MenuItem.with_label( _( "Select Node" ) );
     var selmenu = new Gtk.Menu();
     selnode.set_submenu( selmenu );
@@ -42,14 +66,25 @@ public class NodesMenu : Gtk.Menu {
     _selroot = new Gtk.MenuItem.with_label( _( "Root" ) );
     _selroot.activate.connect( select_root_node );
     Utils.add_accel_label( _selroot, 'm', 0 );
+    */
 
     /* Add the menu items to the menu */
-    add( _root );
+    add( _copy );
+    add( _cut );
+    add( _paste );
+    add( _delete );
     add( new SeparatorMenuItem() );
+    add( _fold );
+    add( new SeparatorMenuItem() );
+    add( _connect );
+    add( _link );
+
+    /*
     add( selnode );
 
-    /* Add the items to the selection menu */
+    // Add the items to the selection menu
     selmenu.add( _selroot );
+    */
 
     /* Make the menu visible */
     show_all();
@@ -64,23 +99,76 @@ public class NodesMenu : Gtk.Menu {
     return( _da.get_current_connection() != null );
   }
 
+  /* Returns true if there is a currently selected node that is foldable */
+  private void nodes_foldable_status( out bool foldable, out bool unfoldable ) {
+    foldable = unfoldable = false;
+    var nodes = _da.get_selected_nodes();
+    for( int i=0; i<nodes.length; i++ ) {
+      if( !nodes.index( i ).is_leaf() ) {
+        foldable   |= !nodes.index( i ).folded;
+        unfoldable |=  nodes.index( i ).folded;
+      }
+    }
+  }
+
   /* Called when the menu is popped up */
   private void on_popup() {
 
+    var node_num = _da.get_selected_nodes().length;
+
+    bool foldable, unfoldable;
+    nodes_foldable_status( out foldable, out unfoldable );
+
     /* Set the menu sensitivity */
-    _root.set_sensitive( !connection_selected() );
-    _selroot.set_sensitive( _da.root_selectable() );
+    _paste.set_sensitive( _da.node_pasteable() );
+    _fold.set_sensitive( foldable || unfoldable );
+    _connect.set_sensitive( node_num == 2 );
+    _link.set_sensitive( node_num == 2 );
+
+    _fold.label = unfoldable ? _( "Unfold Children" )  : _( "Fold Children" );
+
+    //_selroot.set_sensitive( _da.root_selectable() );
 
   }
 
-  /* Creates a new root node */
-  private void add_root_node() {
-    _da.add_root_node();
+  /* Copies all selected nodes to the node clipboard */
+  private void copy_nodes() {
+    /* TBD */
   }
 
-  /* Selects the current root node */
-  private void select_root_node() {
-    _da.select_root_node();
+  /* Cuts all selected nodes to the node clipboard */
+  private void cut_nodes() {
+    /* TBD */
+  }
+
+  /* Pastes the contents of the node clipboard to each selected node */
+  private void paste_to_nodes() {
+    /* TBD */
+  }
+
+  /* Delete all selected nodes, collapsing deselected descendants */
+  private void delete_nodes() {
+    /* TBD */
+  }
+
+  /* Folds/unfolds the selected nodes */
+  private void fold_nodes() {
+    /* TBD */
+  }
+
+  /*
+   Creates a connection between two selected nodes, where the first node is the from node and the
+   second node is the to node.
+  */
+  private void connect_nodes() {
+    /* TBD */
+  }
+
+  /*
+   Links two selected nodes such that the first selected node will link to the second selected node.
+  */
+  private void link_nodes() {
+    /* TBD */
   }
 
 }
