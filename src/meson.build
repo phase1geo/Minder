@@ -70,6 +70,7 @@ sources += files(
     'undo_actions/UndoNodeReveal.vala',
     'undo_actions/UndoNodeSort.vala',
     'undo_actions/UndoNodeTask.vala',
+    'undo_actions/UndoNodesFold.vala',
     'undo_actions/UndoNodesInsert.vala',
     'undo_actions/UndoStyleAffectChange.vala',
     'undo_actions/UndoStyleChange.vala',

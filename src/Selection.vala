@@ -227,4 +227,25 @@ public class Selection {
     return( _conns );
   }
 
+  /*
+   Returns all of the selected nodes that do not have ancestors that are also selected.  The
+   parent array must be allocated prior to calling this function.
+  */
+  public void get_parents( ref Array<Node> parents ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      var node = _nodes.index( i );
+      if( node.is_root() ) {
+        parents.append_val( node );
+      } else {
+        var parent = node.parent;
+        while( (parent != null) && !is_node_selected( parent ) ) {
+          parent = parent.parent;
+        }
+        if( parent == null ) {
+          parents.append_val( node );
+        }
+      }
+    }
+  }
+
 }

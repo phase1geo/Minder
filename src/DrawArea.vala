@@ -686,6 +686,22 @@ public class DrawArea : Gtk.DrawingArea {
     changed();
   }
 
+  /* Toggles the folding of all selected nodes that can be folded */
+  public void toggle_folds() {
+    var parents = new Array<Node>();
+    _selected.get_parents( ref parents );
+    if( parents.length > 0 ) {
+      for( int i=0; i<parents.length; i++ ) {
+        var node = parents.index( i );
+        node.folded = !node.folded;
+        node.layout.handle_update_by_fold( node );
+      }
+      undo_buffer.add_item( new UndoNodesFold( parents ) );
+      queue_draw();
+      changed();
+    }
+  }
+
   /*
    Changes the current node's name to the given name.  Updates the layout,
    adds the undo item, and redraws the canvas.
@@ -2962,6 +2978,7 @@ public class DrawArea : Gtk.DrawingArea {
         case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
         case "z" :  zoom_out();  break;
         case "Z" :  zoom_in();   break;
+        case "f" :  toggle_folds();  break;
       }
     }
     return( true );
