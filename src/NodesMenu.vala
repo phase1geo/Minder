@@ -153,7 +153,7 @@ public class NodesMenu : Gtk.Menu {
 
   /* Folds/unfolds the selected nodes */
   private void fold_nodes() {
-    /* TBD */
+    _da.toggle_folds();
   }
 
   /*
