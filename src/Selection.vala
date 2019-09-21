@@ -32,7 +32,7 @@ public class Selection {
 
   /* Returns true if the given node is currently selected */
   public bool is_node_selected( Node node ) {
-    return( node.mode == NodeMode.CURRENT );
+    return( (node.mode == NodeMode.CURRENT) || (node.mode == NodeMode.SELECTED) );
   }
 
   /* Returns true if the given connection is currently selected */
@@ -75,7 +75,10 @@ public class Selection {
   /* Adds a node to the current selection.  Returns true if the node was added. */
   public bool add_node( Node node ) {
     if( is_node_selected( node ) ) return( false );
-    node.mode = NodeMode.CURRENT;
+    node.mode = (_nodes.length == 0) ? NodeMode.CURRENT : NodeMode.SELECTED;
+    if( _nodes.length == 1 ) {
+      _nodes.index( 0 ).mode = NodeMode.SELECTED;
+    }
     _nodes.append_val( node );
     return( true );
   }
@@ -126,6 +129,9 @@ public class Selection {
       for( int i=0; i<_nodes.length; i++ ) {
         if( node == _nodes.index( i ) ) {
           _nodes.remove_index( i );
+          if( _nodes.length == 1 ) {
+            _nodes.index( 0 ).mode = NodeMode.CURRENT;
+          }
           return( true );
         }
       }

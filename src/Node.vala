@@ -29,6 +29,7 @@ using Gee;
 public enum NodeMode {
   NONE = 0,   // Specifies that this node is not the current node
   CURRENT,    // Specifies that this node is the current node and is not being edited
+  SELECTED,   // Specifies that this node is one of several selected nodes
   EDITABLE,   // Specifies that this node's text has been and currently is actively being edited
   ATTACHABLE, // Specifies that this node is the currently attachable node (affects display)
   DROPPABLE   // Specifies that this node can receive a dropped item
@@ -1574,7 +1575,7 @@ public class Node : Object {
     double h = _height - (style.node_margin * 2);
 
     /* Set the fill color */
-    if( mode == NodeMode.CURRENT ) {
+    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
     } else if( is_root() || style.is_fillable() ) {
       Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
@@ -1615,7 +1616,7 @@ public class Node : Object {
     int vmargin = 3;
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
-    if( mode == NodeMode.CURRENT ) {
+    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
       ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin),
                      ((posy + style.node_padding + style.node_margin) - vmargin),
@@ -1625,7 +1626,7 @@ public class Node : Object {
     }
 
     /* Draw the text */
-    if( mode == NodeMode.CURRENT ) {
+    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
       name.draw( ctx, theme, theme.get_color( "nodesel_foreground" ), _alpha );
     } else if( parent == null ) {
       name.draw( ctx, theme, theme.get_color( "root_foreground" ), _alpha );
@@ -1706,9 +1707,9 @@ public class Node : Object {
     if( note.length > 0 ) {
 
       double x, y, w, h;
-      RGBA   color = (mode == NodeMode.CURRENT) ? sel_color :
-                     style.is_fillable()        ? bg_color  :
-                                                  reg_color;
+      RGBA   color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color :
+                     style.is_fillable()                                         ? bg_color  :
+                                                                                   reg_color;
 
       note_bbox( out x, out y, out w, out h );
 
@@ -1737,9 +1738,9 @@ public class Node : Object {
     if( linked_node != null ) {
 
       double x, y, w, h;
-      RGBA   color = (mode == NodeMode.CURRENT) ? sel_color :
-                     style.is_fillable()        ? bg_color  :
-                                                  reg_color;
+      RGBA   color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color :
+                     style.is_fillable()                                         ? bg_color  :
+                                                                                   reg_color;
 
       linked_node_bbox( out x, out y, out w, out h );
 
@@ -1879,7 +1880,7 @@ public class Node : Object {
   /* Draw the node resizer area */
   protected virtual void draw_resizer( Context ctx, Theme theme ) {
 
-    /* Only draw the resizer if we are selected */
+    /* Only draw the resizer if we are the current node */
     if( mode != NodeMode.CURRENT ) {
       return;
     }
