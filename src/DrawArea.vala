@@ -887,6 +887,18 @@ public class DrawArea : Gtk.DrawingArea {
     queue_draw();
   }
 
+  /* Creates links between selected nodes */
+  public void create_links() {
+    if( _selected.num_nodes() < 2 ) return;
+    var nodes = _selected.nodes();
+    undo_buffer.add_item( new UndoNodesLink( nodes ) );
+    for( int i=0; i<(nodes.length - 1); i++ ) {
+      nodes.index( i ).linked_node = nodes.index( i + 1 );
+    }
+    changed();
+    queue_draw();
+  }
+
   /* Delete the current node link */
   public void delete_current_link() {
     var current = _selected.current_node();

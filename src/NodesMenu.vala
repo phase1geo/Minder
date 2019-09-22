@@ -123,7 +123,6 @@ public class NodesMenu : Gtk.Menu {
     _paste.set_sensitive( _da.node_pasteable() );
     _fold.set_sensitive( foldable || unfoldable );
     _connect.set_sensitive( node_num == 2 );
-    _link.set_sensitive( node_num == 2 );
 
     _fold.label = unfoldable ? _( "Unfold Children" )  : _( "Fold Children" );
 
@@ -168,7 +167,7 @@ public class NodesMenu : Gtk.Menu {
    Links two selected nodes such that the first selected node will link to the second selected node.
   */
   private void link_nodes() {
-    /* TBD */
+    _da.create_links();
   }
 
 }
