@@ -3406,6 +3406,26 @@ public class DrawArea : Gtk.DrawingArea {
     queue_draw();
   }
 
+  /*
+   If exactly two nodes are currently selected, draws a connection from the first selected node
+   to the second selected node.
+  */
+  public void create_connection() {
+    if( _selected.num_nodes() != 2 ) return;
+    double x, y, w, h;
+    var    nodes = _selected.nodes();
+    var    conn  = new Connection( this, nodes.index( 0 ) );
+    conn.connect_to( nodes.index( 1 ) );
+    nodes.index( 1 ).bbox( out x, out y, out w, out h );
+    conn.draw_to( (x + (w / 2)), (y + (h / 2)) );
+    _connections.add_connection( conn );
+    _selected.set_current_connection( conn );
+    undo_buffer.add_item( new UndoConnectionAdd( conn ) );
+    current_changed( this );
+    changed();
+    queue_draw();
+  }
+
   /* Deletes the current connection */
   public void delete_connection() {
     var current = _selected.current_connection();

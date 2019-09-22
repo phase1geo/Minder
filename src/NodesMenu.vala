@@ -161,7 +161,7 @@ public class NodesMenu : Gtk.Menu {
    second node is the to node.
   */
   private void connect_nodes() {
-    /* TBD */
+    _da.create_connection();
   }
 
   /*
