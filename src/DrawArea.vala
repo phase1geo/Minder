@@ -2079,6 +2079,22 @@ public class DrawArea : Gtk.DrawingArea {
     changed();
   }
 
+  /* Deletes all selected nodes */
+  public void delete_nodes() {
+    if( _selected.num_nodes() == 0 ) return;
+    var nodes     = _selected.nodes();
+    var conns     = new Array<Connection>();
+    var top_nodes = new Array<Node>();
+    // TBD
+    undo_buffer.add_item( new UndoNodesDelete( nodes, conns ) );
+    for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).delete_only( ref top_nodes );
+      for( int j=0; j<top_nodes.length; j++ ) {
+        _nodes.append_val( top_nodes.index( j ) );
+      }
+    }
+  }
+
   /* Called whenever the backspace character is entered in the drawing area */
   private void handle_backspace() {
     if( is_connection_editable() ) {
@@ -2107,6 +2123,8 @@ public class DrawArea : Gtk.DrawingArea {
           queue_draw();
         }
       }
+    } else if( _selected.num_nodes() > 0 ) {
+      delete_nodes();
     }
   }
 
@@ -2126,6 +2144,8 @@ public class DrawArea : Gtk.DrawingArea {
       changed();
     } else if( is_node_selected() ) {
       delete_node();
+    } else if( _selected.num_nodes() > 0 ) {
+      delete_nodes();
     }
   }
 

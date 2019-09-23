@@ -147,7 +147,7 @@ public class NodesMenu : Gtk.Menu {
 
   /* Delete all selected nodes, collapsing deselected descendants */
   private void delete_nodes() {
-    /* TBD */
+    _da.delete_nodes();
   }
 
   /* Folds/unfolds the selected nodes */

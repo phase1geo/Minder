@@ -1259,6 +1259,35 @@ public class Node : Object {
     detach( side );
   }
 
+  /*
+   Removes only this node from its parent, attaching all children nodes of this node to the
+   parent.  If the parent node does not exist (i.e., this node is a root node, the children
+   nodes will become top-level nodes themselves.
+  */
+  public virtual void delete_only( ref Array<Node> top_nodes ) {
+    if( parent == null ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).parent   = null;
+        _children.index( i ).attached = false;
+        top_nodes.append_val( _children.index( i ) );
+      }
+    } else {
+      int idx = index();
+      parent.children().remove_index( idx );
+      parent.moved.disconnect( this.parent_moved );
+      if( parent.last_selected_child == this ) {
+        parent.last_selected_child = null;
+      }
+      if( layout != null ) {
+        layout.handle_update_by_delete( parent, idx, side, tree_size );
+      }
+      attached = false;
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).attach( parent, idx, null );
+      }
+    }
+  }
+
   /* Attaches this node as a child of the given node */
   public virtual void attach( Node parent, int index, Theme? theme, bool set_side = true ) {
     this.parent = parent;
