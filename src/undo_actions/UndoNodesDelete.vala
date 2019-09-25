@@ -23,49 +23,69 @@ using Gtk;
 
 public class UndoNodesDelete : UndoItem {
 
-  Array<Node>       _nodes;
+  private class NodeInfo {
+    public Node  node;
+    public Node? parent;
+    public int   index;
+    public NodeInfo( Node n ) {
+      node   = n;
+      parent = n.parent;
+      index  = n.index();
+    }
+  }
+
+  Array<NodeInfo>   _nodes;
   Array<Connection> _conns;
 
   /* Default constructor */
   public UndoNodesDelete( Array<Node> nodes, Array<Connection> conns ) {
     base( _( "delete node" ) );
-    _nodes = new Array<Node>();
+    _nodes = new Array<NodeInfo>();
+    for( int i=0; i<nodes.length; i++ ) {
+      _nodes.append_val( new NodeInfo( nodes.index( i ) ) );
+    }
     _conns = conns;
   }
 
   /* Undoes a node deletion */
   public override void undo( DrawArea da ) {
-    /*
-    if( _parent == null ) {
-      da.add_root( _node, _index );
-    } else {
-      _node.attached = true;
-      _node.attach_init( _parent, _index );
+    da.get_selections().clear();
+    for( int i=0; i<_nodes.length; i++ ) {
+      var ni = _nodes.index( i );
+      ni.node.attached = true;
+      ni.node.attach_init( ni.parent, ni.index );
+      for( int j=0; j<ni.node.children().length; j++ ) {
+        var child = ni.node.children().index( j );
+        if( child.is_root() ) {
+          da.remove_root_node( child );
+        } else {
+          child.detach( child.side );
+        }
+      }
+      da.get_selections().add_node( ni.node );
     }
-    da.set_current_node( _node );
     for( int i=0; i<_conns.length; i++ ) {
       da.get_connections().add_connection( _conns.index( i ) );
     }
     da.queue_draw();
     da.changed();
-    */
   }
 
   /* Redoes a node deletion */
   public override void redo( DrawArea da ) {
-    /*
-    if( _parent == null ) {
-      da.remove_root( _index );
-    } else {
-      _node.detach( _node.side );
+    var top_nodes = new Array<Node>();
+    da.get_selections().clear();
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).node.delete_only( ref top_nodes );
+      for( int j=0; j<top_nodes.length; j++ ) {
+        da.get_nodes().append_val( top_nodes.index( j ) );
+      }
     }
-    da.set_current_node( null );
     for( int i=0; i<_conns.length; i++ ) {
       da.get_connections().remove_connection( _conns.index( i ), false );
     }
     da.queue_draw();
     da.changed();
-    */
   }
 
 }

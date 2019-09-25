@@ -2085,7 +2085,9 @@ public class DrawArea : Gtk.DrawingArea {
     var nodes     = _selected.nodes();
     var conns     = new Array<Connection>();
     var top_nodes = new Array<Node>();
-    // TBD
+    for( int i=0; i<nodes.length; i++ ) {
+      _connections.node_only_deleted( nodes.index( i ), conns );
+    }
     undo_buffer.add_item( new UndoNodesDelete( nodes, conns ) );
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).delete_only( ref top_nodes );
@@ -2093,6 +2095,10 @@ public class DrawArea : Gtk.DrawingArea {
         _nodes.append_val( top_nodes.index( j ) );
       }
     }
+    _selected.clear_nodes();
+    current_changed( this );
+    queue_draw();
+    changed();
   }
 
   /* Called whenever the backspace character is entered in the drawing area */
@@ -2294,6 +2300,16 @@ public class DrawArea : Gtk.DrawingArea {
   /* Removes the node at the given root index from the list of root nodes */
   public void remove_root( int index ) {
     _nodes.remove_index( index );
+  }
+
+  /* Removes the given root node from the node array */
+  public void remove_root_node( Node node ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      if( _nodes.index( i ) == node ) {
+        _nodes.remove_index( i );
+        return;
+      }
+    }
   }
 
   /* Returns true if the drawing area has a node that is available for detaching */
