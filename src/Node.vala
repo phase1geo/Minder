@@ -1264,13 +1264,14 @@ public class Node : Object {
    parent.  If the parent node does not exist (i.e., this node is a root node, the children
    nodes will become top-level nodes themselves.
   */
-  public virtual void delete_only( ref Array<Node> top_nodes ) {
+  public virtual void delete_only() {
     if( parent == null ) {
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).parent   = null;
         _children.index( i ).attached = false;
-        top_nodes.append_val( _children.index( i ) );
+        _da.get_nodes().append_val( _children.index( i ) );
       }
+      _da.remove_root_node( this );
     } else {
       int idx = index();
       parent.children().remove_index( idx );
@@ -1285,6 +1286,28 @@ public class Node : Object {
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).attach( parent, idx, null );
       }
+    }
+  }
+
+  /* Undoes a delete_only call by reattaching this node to the given parent */
+  public virtual void attach_only( Node? prev_parent, int prev_index ) {
+    if( index() == -1 ) {
+      attach_init( prev_parent, prev_index );
+    }
+    attached = true;
+    var temp = new Array<Node>();
+    for( int i=0; i<children().length; i++ ) {
+      temp.append_val( children().index( i ) );
+    }
+    children().remove_range( 0, children().length );
+    for( int i=0; i<temp.length; i++ ) {
+      var child = temp.index( i );
+      if( child.is_root() ) {
+        _da.remove_root_node( child );
+      } else {
+        child.detach( child.side );
+      }
+      child.attach_init( this, i );
     }
   }
 

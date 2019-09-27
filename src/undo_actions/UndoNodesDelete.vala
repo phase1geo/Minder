@@ -52,16 +52,7 @@ public class UndoNodesDelete : UndoItem {
     da.get_selections().clear();
     for( int i=0; i<_nodes.length; i++ ) {
       var ni = _nodes.index( i );
-      ni.node.attached = true;
-      ni.node.attach_init( ni.parent, ni.index );
-      for( int j=0; j<ni.node.children().length; j++ ) {
-        var child = ni.node.children().index( j );
-        if( child.is_root() ) {
-          da.remove_root_node( child );
-        } else {
-          child.detach( child.side );
-        }
-      }
+      ni.node.attach_only( ni.parent, ni.index );
       da.get_selections().add_node( ni.node );
     }
     for( int i=0; i<_conns.length; i++ ) {
@@ -73,13 +64,9 @@ public class UndoNodesDelete : UndoItem {
 
   /* Redoes a node deletion */
   public override void redo( DrawArea da ) {
-    var top_nodes = new Array<Node>();
     da.get_selections().clear();
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).node.delete_only( ref top_nodes );
-      for( int j=0; j<top_nodes.length; j++ ) {
-        da.get_nodes().append_val( top_nodes.index( j ) );
-      }
+      _nodes.index( i ).node.delete_only();
     }
     for( int i=0; i<_conns.length; i++ ) {
       da.get_connections().remove_connection( _conns.index( i ), false );
