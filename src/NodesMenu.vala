@@ -26,7 +26,6 @@ public class NodesMenu : Gtk.Menu {
   DrawArea     _da;
   Gtk.MenuItem _copy;
   Gtk.MenuItem _cut;
-  Gtk.MenuItem _paste;
   Gtk.MenuItem _delete;
   Gtk.MenuItem _fold;
   Gtk.MenuItem _connect;
@@ -42,9 +41,6 @@ public class NodesMenu : Gtk.Menu {
 
     _cut = new Gtk.MenuItem.with_label( _( "Cut" ) );
     _cut.activate.connect( cut_nodes );
-
-    _paste = new Gtk.MenuItem.with_label( _( "Paste" ) );
-    _paste.activate.connect( paste_to_nodes );
 
     _delete = new Gtk.MenuItem.with_label( _( "Delete" ) );
     _delete.activate.connect( delete_nodes );
@@ -71,7 +67,6 @@ public class NodesMenu : Gtk.Menu {
     /* Add the menu items to the menu */
     add( _copy );
     add( _cut );
-    add( _paste );
     add( _delete );
     add( new SeparatorMenuItem() );
     add( _fold );
@@ -120,7 +115,6 @@ public class NodesMenu : Gtk.Menu {
     nodes_foldable_status( out foldable, out unfoldable );
 
     /* Set the menu sensitivity */
-    _paste.set_sensitive( _da.node_pasteable() );
     _fold.set_sensitive( foldable || unfoldable );
     _connect.set_sensitive( node_num == 2 );
 
@@ -137,11 +131,6 @@ public class NodesMenu : Gtk.Menu {
 
   /* Cuts all selected nodes to the node clipboard */
   private void cut_nodes() {
-    /* TBD */
-  }
-
-  /* Pastes the contents of the node clipboard to each selected node */
-  private void paste_to_nodes() {
     /* TBD */
   }
 
