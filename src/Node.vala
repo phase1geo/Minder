@@ -336,6 +336,13 @@ public class Node : Object {
     }
   }
 
+  public Node.copy_only( DrawArea da, Node n, ImageManager im ) {
+    _da = da;
+    _id = _next_id++;
+    _name = new CanvasText( da, _max_width );
+    copy_variables( n, im );
+  }
+
   /* Copies an existing node tree to this node */
   public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int> id_map ) {
     _da       = da;

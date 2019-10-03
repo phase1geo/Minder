@@ -132,7 +132,7 @@ public class NodesMenu : Gtk.Menu {
 
   /* Copies all selected nodes to the node clipboard */
   private void copy_nodes() {
-    /* TBD */
+    _da.do_copy();
   }
 
   /* Cuts all selected nodes to the node clipboard */

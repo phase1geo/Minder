@@ -21,11 +21,13 @@
 
 public class Selection {
 
-  Array<Node>       _nodes;
-  Array<Connection> _conns;
+  private DrawArea          _da;
+  private Array<Node>       _nodes;
+  private Array<Connection> _conns;
 
   /* Default constructor */
-  public Selection() {
+  public Selection( DrawArea da ) {
+    _da    = da;
     _nodes = new Array<Node>();
     _conns = new Array<Connection>();
   }
@@ -246,6 +248,45 @@ public class Selection {
         }
       }
     }
+  }
+
+  /*
+   Iterates through the selections, create a list of subtrees containing only selected
+   nodes but maintaining their hierarchy.
+  */
+  public void get_subtrees( ref Array<Node> subtrees, ImageManager im ) {
+
+    /* Get the list of all parent nodes */
+    var parents = new Array<Node>();
+    get_parents( ref parents );
+
+    for( int i=0; i<parents.length; i++ ) {
+      var old_parent = parents.index( i );
+      var node       = new Node( _da, old_parent.layout );
+      node.copy_variables( old_parent, im );
+      subtrees.append_val( node );
+      get_subtrees_helper( old_parent, node, im );
+    }
+
+  }
+
+  /*
+   Helper function for the get_subtrees method.
+  */
+  private void get_subtrees_helper( Node old_parent, Node new_parent, ImageManager im ) {
+
+    for( int i=0; i<old_parent.children().length; i++ ) {
+      var old_child = old_parent.children().index( i );
+      if( is_node_selected( old_child ) ) {
+        var node = new Node( _da, old_child.layout );
+        node.copy_variables( old_child, im );
+        node.attach( new_parent, -1, null );
+        get_subtrees_helper( old_child, node, im );
+      } else {
+        get_subtrees_helper( old_child, new_parent, im );
+      }
+    }
+
   }
 
 }

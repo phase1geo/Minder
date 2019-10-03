@@ -125,7 +125,7 @@ public class DrawArea : Gtk.DrawingArea {
     _settings = settings;
 
     /* Create the selection */
-    _selected = new Selection();
+    _selected = new Selection( this );
 
     /* Create the array of root nodes in the map */
     _nodes = new Array<Node>();
@@ -3034,6 +3034,11 @@ public class DrawArea : Gtk.DrawingArea {
       }
 
     /* If there is no current node, allow some of the keyboard shortcuts */
+    } else if( control ) {
+      switch( e.keyval ) {
+        case 99 :  do_copy();  break;
+      }
+
     } else if( nomod || shift ) {
       switch( e.str ) {
         case "m" :  select_root_node();  break;
@@ -3069,16 +3074,20 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Serializes the current node tree */
-  public string serialize_for_copy( Node node ) {
+  public string serialize_for_copy( Array<Node> node_array ) {
     string    str;
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
     doc->set_root_element( root );
     Xml.Node* nodes = new Xml.Node( null, "nodes" );
-    node.save( nodes );
+    for( int i=0; i<node_array.length; i++ ) {
+      node_array.index( i ).save( nodes );
+    }
     root->add_child( nodes );
     Xml.Node* conns = new Xml.Node( null, "connections" );
-    _connections.save_if_in_node( conns, node );
+    for( int i=0; i<node_array.length; i++ ) {
+      _connections.save_if_in_node( conns, node_array.index( i ) );
+    }
     root->add_child( conns );
     doc->dump_memory( out str );
     delete doc;
@@ -3113,10 +3122,16 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Copies the current node to the node clipboard */
-  public void copy_node_to_clipboard() {
-    var current = _selected.current_node();
-    if( current == null ) return;
-    node_clipboard.set_text( serialize_for_copy( current ), -1 );
+  public void copy_nodes_to_clipboard() {
+    var nodes_to_copy = new Array<Node>();
+    if( _selected.current_node() != null ) {
+      nodes_to_copy.append_val( _selected.current_node() );
+    } else {
+      _selected.get_subtrees( ref nodes_to_copy, image_manager );
+    }
+    if( nodes_to_copy.length == 0 ) return;
+    var text = serialize_for_copy( nodes_to_copy );
+    node_clipboard.set_text( text, -1 );
     node_clipboard.store();
   }
 
@@ -3141,9 +3156,11 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     if( current != null ) {
       switch( current.mode ) {
-        case NodeMode.CURRENT  :  copy_node_to_clipboard();  break;
+        case NodeMode.CURRENT  :  copy_nodes_to_clipboard();  break;
         case NodeMode.EDITABLE :  copy_selected_text();      break;
       }
+    } else if( _selected.nodes().length > 1 ) {
+      copy_nodes_to_clipboard();
     } else if( is_connection_editable() ) {
       copy_selected_text();
     }
@@ -3156,7 +3173,7 @@ public class DrawArea : Gtk.DrawingArea {
     var next_node = next_node_to_select();
     var conns     = new Array<Connection>();
     _connections.node_deleted( current, conns );
-    copy_node_to_clipboard();
+    copy_nodes_to_clipboard();
     if( current.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
         if( _nodes.index( i ) == current ) {
