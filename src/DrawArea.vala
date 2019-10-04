@@ -3036,7 +3036,8 @@ public class DrawArea : Gtk.DrawingArea {
     /* If there is no current node, allow some of the keyboard shortcuts */
     } else if( control ) {
       switch( e.keyval ) {
-        case 99 :  do_copy();  break;
+        case 99  :  do_copy();  break;
+        case 120 :  do_cut();   break;
       }
 
     } else if( nomod || shift ) {
@@ -3193,6 +3194,24 @@ public class DrawArea : Gtk.DrawingArea {
     changed();
   }
 
+  public void cut_nodes_to_clipboard() {
+    if( _selected.num_nodes() == 0 ) return;
+    var nodes = _selected.nodes();
+    var conns = new Array<Connection>();
+    for( int i=0; i<nodes.length; i++ ) {
+      _connections.node_only_deleted( nodes.index( i ), conns );
+    }
+    copy_nodes_to_clipboard();
+    undo_buffer.add_item( new UndoNodesCut( nodes, conns ) );
+    for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).delete_only();
+    }
+    _selected.clear_nodes();
+    current_changed( this );
+    queue_draw();
+    changed();
+  }
+
   /* Cuts the current selected text to the clipboard */
   private void cut_selected_text() {
     copy_selected_text();
@@ -3215,6 +3234,8 @@ public class DrawArea : Gtk.DrawingArea {
         case NodeMode.CURRENT  :  cut_node_to_clipboard();  break;
         case NodeMode.EDITABLE :  cut_selected_text();      break;
       }
+    } else if( _selected.nodes().length > 1 ) {
+      cut_nodes_to_clipboard();
     } else if( is_connection_editable() ) {
       cut_selected_text();
     }

@@ -42,6 +42,7 @@ public class UndoNodeCut : UndoItem {
     if( _parent == null ) {
       da.add_root( _node, _index );
     } else {
+      _node.attached = true;
       _node.attach_init( _parent, _index );
     }
     da.set_current_node( _node );

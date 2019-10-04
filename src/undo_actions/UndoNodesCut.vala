@@ -21,7 +21,7 @@
 
 using Gtk;
 
-public class UndoNodesDelete : UndoItem {
+public class UndoNodesCut : UndoItem {
 
   private class NodeInfo {
     public Node  node;
@@ -38,8 +38,8 @@ public class UndoNodesDelete : UndoItem {
   Array<Connection> _conns;
 
   /* Default constructor */
-  public UndoNodesDelete( Array<Node> nodes, Array<Connection> conns ) {
-    base( _( "delete nodes" ) );
+  public UndoNodesCut( Array<Node> nodes, Array<Connection> conns ) {
+    base( _( "cut nodes" ) );
     _nodes = new Array<NodeInfo>();
     for( int i=0; i<nodes.length; i++ ) {
       _nodes.append_val( new NodeInfo( nodes.index( i ) ) );
@@ -49,6 +49,7 @@ public class UndoNodesDelete : UndoItem {
 
   /* Undoes a node deletion */
   public override void undo( DrawArea da ) {
+    da.node_clipboard.clear();
     da.get_selections().clear();
     for( int i=0; i<_nodes.length; i++ ) {
       var ni = _nodes.index( i );
@@ -64,6 +65,12 @@ public class UndoNodesDelete : UndoItem {
 
   /* Redoes a node deletion */
   public override void redo( DrawArea da ) {
+    var nodes_to_copy = new Array<Node>();
+    for( int i=0; i<_nodes.length; i++ ) {
+      nodes_to_copy.append_val( _nodes.index( i ).node );
+    }
+    da.node_clipboard.set_text( da.serialize_for_copy( nodes_to_copy ), -1 );
+    da.node_clipboard.store();
     da.get_selections().clear();
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).node.delete_only();

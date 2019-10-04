@@ -131,7 +131,7 @@ public class NodesMenu : Gtk.Menu {
 
   /* Cuts all selected nodes to the node clipboard */
   private void cut_nodes() {
-    /* TBD */
+    _da.do_cut();
   }
 
   /* Delete all selected nodes, collapsing deselected descendants */
