@@ -29,6 +29,7 @@ using Gee;
 public enum NodeMode {
   NONE = 0,   // Specifies that this node is not the current node
   CURRENT,    // Specifies that this node is the current node and is not being edited
+  SELECTED,   // Specifies that this node is one of several selected nodes
   EDITABLE,   // Specifies that this node's text has been and currently is actively being edited
   ATTACHABLE, // Specifies that this node is the currently attachable node (affects display)
   DROPPABLE   // Specifies that this node can receive a dropped item
@@ -333,6 +334,13 @@ public class Node : Object {
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).parent = this;
     }
+  }
+
+  public Node.copy_only( DrawArea da, Node n, ImageManager im ) {
+    _da = da;
+    _id = _next_id++;
+    _name = new CanvasText( da, _max_width );
+    copy_variables( n, im );
   }
 
   /* Copies an existing node tree to this node */
@@ -1258,6 +1266,58 @@ public class Node : Object {
     detach( side );
   }
 
+  /*
+   Removes only this node from its parent, attaching all children nodes of this node to the
+   parent.  If the parent node does not exist (i.e., this node is a root node, the children
+   nodes will become top-level nodes themselves.
+  */
+  public virtual void delete_only() {
+    if( parent == null ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).parent   = null;
+        _children.index( i ).attached = false;
+        _da.get_nodes().append_val( _children.index( i ) );
+      }
+      _da.remove_root_node( this );
+    } else {
+      int idx = index();
+      parent.children().remove_index( idx );
+      parent.moved.disconnect( this.parent_moved );
+      if( parent.last_selected_child == this ) {
+        parent.last_selected_child = null;
+      }
+      if( layout != null ) {
+        layout.handle_update_by_delete( parent, idx, side, tree_size );
+      }
+      attached = false;
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).attach( parent, idx, null );
+      }
+    }
+  }
+
+  /* Undoes a delete_only call by reattaching this node to the given parent */
+  public virtual void attach_only( Node? prev_parent, int prev_index ) {
+    if( index() == -1 ) {
+      attach_init( prev_parent, prev_index );
+    }
+    attached = true;
+    var temp = new Array<Node>();
+    for( int i=0; i<children().length; i++ ) {
+      temp.append_val( children().index( i ) );
+    }
+    children().remove_range( 0, children().length );
+    for( int i=0; i<temp.length; i++ ) {
+      var child = temp.index( i );
+      if( child.is_root() ) {
+        _da.remove_root_node( child );
+      } else {
+        child.detach( child.side );
+      }
+      child.attach_init( this, i );
+    }
+  }
+
   /* Attaches this node as a child of the given node */
   public virtual void attach( Node parent, int index, Theme? theme, bool set_side = true ) {
     this.parent = parent;
@@ -1574,7 +1634,7 @@ public class Node : Object {
     double h = _height - (style.node_margin * 2);
 
     /* Set the fill color */
-    if( mode == NodeMode.CURRENT ) {
+    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
     } else if( is_root() || style.is_fillable() ) {
       Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
@@ -1615,7 +1675,7 @@ public class Node : Object {
     int vmargin = 3;
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
-    if( mode == NodeMode.CURRENT ) {
+    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
       ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin),
                      ((posy + style.node_padding + style.node_margin) - vmargin),
@@ -1625,7 +1685,7 @@ public class Node : Object {
     }
 
     /* Draw the text */
-    if( mode == NodeMode.CURRENT ) {
+    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
       name.draw( ctx, theme, theme.get_color( "nodesel_foreground" ), _alpha );
     } else if( parent == null ) {
       name.draw( ctx, theme, theme.get_color( "root_foreground" ), _alpha );
@@ -1706,9 +1766,9 @@ public class Node : Object {
     if( note.length > 0 ) {
 
       double x, y, w, h;
-      RGBA   color = (mode == NodeMode.CURRENT) ? sel_color :
-                     style.is_fillable()        ? bg_color  :
-                                                  reg_color;
+      RGBA   color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color :
+                     style.is_fillable()                                         ? bg_color  :
+                                                                                   reg_color;
 
       note_bbox( out x, out y, out w, out h );
 
@@ -1737,9 +1797,9 @@ public class Node : Object {
     if( linked_node != null ) {
 
       double x, y, w, h;
-      RGBA   color = (mode == NodeMode.CURRENT) ? sel_color :
-                     style.is_fillable()        ? bg_color  :
-                                                  reg_color;
+      RGBA   color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color :
+                     style.is_fillable()                                         ? bg_color  :
+                                                                                   reg_color;
 
       linked_node_bbox( out x, out y, out w, out h );
 
@@ -1879,7 +1939,7 @@ public class Node : Object {
   /* Draw the node resizer area */
   protected virtual void draw_resizer( Context ctx, Theme theme ) {
 
-    /* Only draw the resizer if we are selected */
+    /* Only draw the resizer if we are the current node */
     if( mode != NodeMode.CURRENT ) {
       return;
     }

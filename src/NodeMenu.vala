@@ -28,6 +28,7 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _cut;
   Gtk.MenuItem _paste;
   Gtk.MenuItem _delete;
+  Gtk.MenuItem _delonly;
   Gtk.MenuItem _edit;
   Gtk.MenuItem _task;
   Gtk.MenuItem _note;
@@ -71,6 +72,9 @@ public class NodeMenu : Gtk.Menu {
     _delete = new Gtk.MenuItem.with_label( _( "Delete" ) );
     _delete.activate.connect( delete_node );
     Utils.add_accel_label( _delete, 65535, 0 );
+
+    _delonly = new Gtk.MenuItem.with_label( _( "Delete Single Node" ) );
+    _delonly.activate.connect( delete_node_only );
 
     _edit = new Gtk.MenuItem.with_label( _( "Edit…" ) );
     _edit.activate.connect( edit_node );
@@ -168,6 +172,7 @@ public class NodeMenu : Gtk.Menu {
     add( _cut );
     add( _paste );
     add( _delete );
+    add( _delonly );
     add( new SeparatorMenuItem() );
     add( _edit );
     add( _task );
@@ -318,6 +323,11 @@ public class NodeMenu : Gtk.Menu {
   /* Deletes the current node */
   private void delete_node() {
     _da.delete_node();
+  }
+
+  /* Deletes just the node that is selected */
+  private void delete_node_only() {
+    _da.delete_nodes();
   }
 
   /* Displays the sidebar to edit the node properties */

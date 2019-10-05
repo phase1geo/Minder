@@ -1,5 +1,6 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder) *
+* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+*
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
 * License as published by the Free Software Foundation; either
@@ -20,54 +21,37 @@
 
 using Gtk;
 
-public class UndoNodeCut : UndoItem {
+public class UndoConnectionsDelete : UndoItem {
 
-  Node              _node;
-  Node?             _parent;
-  int               _index;
   Array<Connection> _conns;
 
-  /* Default constructor */
-  public UndoNodeCut( Node n, int index, Array<Connection> conns ) {
-    base( _( "cut node" ) );
-    _node   = n;
-    _parent = n.parent;
-    _index  = index;
-    _conns  = conns;
+  /* Constructor for deleting connections */
+  public UndoConnectionsDelete( Array<Connection> conns ) {
+    base( _( "delete connections" ) );
+    _conns = new Array<Connection>();
+    for( int i=0; i<conns.length; i++ ) {
+      _conns.append_val( conns.index( i ) );
+    }
   }
 
-  /* Undoes a node deletion */
+  /* Undoes connection deletions */
   public override void undo( DrawArea da ) {
-    da.node_clipboard.clear();
-    if( _parent == null ) {
-      da.add_root( _node, _index );
-    } else {
-      _node.attached = true;
-      _node.attach_init( _parent, _index );
-    }
-    da.set_current_node( _node );
+    var selections = da.get_selections();
+    selections.clear();
     for( int i=0; i<_conns.length; i++ ) {
       da.get_connections().add_connection( _conns.index( i ) );
+      selections.add_connection( _conns.index( i ) );
     }
     da.queue_draw();
     da.changed();
   }
 
-  /* Redoes a node deletion */
+  /* Redoes connection deletions */
   public override void redo( DrawArea da ) {
-    var nodes_to_copy = new Array<Node>();
-    nodes_to_copy.append_val( _node );
-    da.node_clipboard.set_text( da.serialize_for_copy( nodes_to_copy ), -1 );
-    da.node_clipboard.store();
-    if( _parent == null ) {
-      da.remove_root( _index );
-    } else {
-      _node.detach( _node.side );
-    }
-    da.set_current_node( null );
     for( int i=0; i<_conns.length; i++ ) {
       da.get_connections().remove_connection( _conns.index( i ), false );
     }
+    da.get_selections().clear_connections();
     da.queue_draw();
     da.changed();
   }

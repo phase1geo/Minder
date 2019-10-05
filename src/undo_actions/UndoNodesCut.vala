@@ -1,5 +1,6 @@
 /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder) *
+* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+*
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
 * License as published by the Free Software Foundation; either
@@ -20,32 +21,41 @@
 
 using Gtk;
 
-public class UndoNodeCut : UndoItem {
+public class UndoNodesCut : UndoItem {
 
-  Node              _node;
-  Node?             _parent;
-  int               _index;
+  private class NodeInfo {
+    public Node  node;
+    public Node? parent;
+    public int   index;
+    public NodeInfo( Node n ) {
+      node   = n;
+      parent = n.parent;
+      index  = n.index();
+    }
+  }
+
+  Array<NodeInfo>   _nodes;
   Array<Connection> _conns;
 
   /* Default constructor */
-  public UndoNodeCut( Node n, int index, Array<Connection> conns ) {
-    base( _( "cut node" ) );
-    _node   = n;
-    _parent = n.parent;
-    _index  = index;
-    _conns  = conns;
+  public UndoNodesCut( Array<Node> nodes, Array<Connection> conns ) {
+    base( _( "cut nodes" ) );
+    _nodes = new Array<NodeInfo>();
+    for( int i=0; i<nodes.length; i++ ) {
+      _nodes.append_val( new NodeInfo( nodes.index( i ) ) );
+    }
+    _conns = conns;
   }
 
   /* Undoes a node deletion */
   public override void undo( DrawArea da ) {
     da.node_clipboard.clear();
-    if( _parent == null ) {
-      da.add_root( _node, _index );
-    } else {
-      _node.attached = true;
-      _node.attach_init( _parent, _index );
+    da.get_selections().clear();
+    for( int i=0; i<_nodes.length; i++ ) {
+      var ni = _nodes.index( i );
+      ni.node.attach_only( ni.parent, ni.index );
+      da.get_selections().add_node( ni.node );
     }
-    da.set_current_node( _node );
     for( int i=0; i<_conns.length; i++ ) {
       da.get_connections().add_connection( _conns.index( i ) );
     }
@@ -56,15 +66,15 @@ public class UndoNodeCut : UndoItem {
   /* Redoes a node deletion */
   public override void redo( DrawArea da ) {
     var nodes_to_copy = new Array<Node>();
-    nodes_to_copy.append_val( _node );
+    for( int i=0; i<_nodes.length; i++ ) {
+      nodes_to_copy.append_val( _nodes.index( i ).node );
+    }
     da.node_clipboard.set_text( da.serialize_for_copy( nodes_to_copy ), -1 );
     da.node_clipboard.store();
-    if( _parent == null ) {
-      da.remove_root( _index );
-    } else {
-      _node.detach( _node.side );
+    da.get_selections().clear();
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).node.delete_only();
     }
-    da.set_current_node( null );
     for( int i=0; i<_conns.length; i++ ) {
       da.get_connections().remove_connection( _conns.index( i ), false );
     }

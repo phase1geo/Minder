@@ -165,6 +165,19 @@ public class Connections {
     }
   }
 
+  /*
+   Called whenever a single node is deleted.  All attached connections also need to
+   be removed.
+  */
+  public void node_only_deleted( Node node, Array<Connection> conns ) {
+    for( int i=((int)_connections.length - 1); i>=0; i-- ) {
+      if( _connections.index( i ).attached_to_node( node ) ) {
+        conns.append_val( _connections.index( i ) );
+        _connections.remove_index( i );
+      }
+    }
+  }
+
   /* Loads the listed connections from the given XML data */
   public void load( DrawArea da, Xml.Node* node, Array<Connection>? conns, Array<Node> nodes, HashMap<int,int> id_map ) {
     for( Xml.Node* it = node->children; it != null; it = it->next ) {

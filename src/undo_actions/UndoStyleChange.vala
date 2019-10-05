@@ -23,9 +23,9 @@ using Gtk;
 
 public class UndoStyleChange : UndoItem {
 
-  private StyleAffects _affects;
-  private Node?        _node;
-  private Connection?  _conn;
+  private StyleAffects      _affects;
+  private Array<Node>       _nodes;
+  private Array<Connection> _conns;
 
   private enum StyleChangeType {
     LOAD = 0,
@@ -37,14 +37,26 @@ public class UndoStyleChange : UndoItem {
   public UndoStyleChange( StyleAffects affects, DrawArea da ) {
     base( _( "style change" ) );
     _affects = affects;
-    _node    = da.get_current_node();
-    _conn    = da.get_current_connection();
+    _nodes   = da.get_selected_nodes();
+    _conns   = da.get_selected_connections();
   }
 
   /* Returns true if the given undo item matches our item */
   protected override bool matches( UndoItem item ) {
     UndoStyleChange other = (UndoStyleChange)item;
-    return( (_affects == other._affects) && (_node == other._node) && (_conn == other._conn) );
+    if( (_affects == other._affects) && (_nodes.length == other._nodes.length) && (_conns.length == other._conns.length) ) {
+      for( int i=0; i<_nodes.length; i++ ) {
+        if( _nodes.index( i ) != other._nodes.index( i ) ) {
+          return( false );
+        }
+      }
+      for( int i=0; i<_conns.length; i++ ) {
+        if( _conns.index( i ) != other._conns.index( i ) ) {
+          return( false );
+        }
+      }
+    }
+    return( false );
   }
 
   protected void load_styles( DrawArea da ) {
@@ -86,20 +98,24 @@ public class UndoStyleChange : UndoItem {
         da.current_changed( da );
         break;
       case StyleAffects.CURRENT     :
-        if( _node != null ) {
-          set_node_style( _node, change_type, ref index );
+        if( _nodes.length > 0 ) {
+          for( int i=0; i<_nodes.length; i++ ) {
+            set_node_style( _nodes.index( i ), change_type, ref index );
+          }
           da.current_changed( da );
         } else {
-          set_connection_style( _conn, change_type, ref index );
+          for( int i=0; i<_conns.length; i++ ) {
+            set_connection_style( _conns.index( i ), change_type, ref index );
+          }
           da.current_changed( da );
         }
         break;
       case StyleAffects.CURRTREE    :
-        set_style_for_tree( _node.get_root(), change_type, ref index );
+        set_style_for_tree( _nodes.index( 0 ).get_root(), change_type, ref index );
         da.current_changed( da );
         break;
       case StyleAffects.CURRSUBTREE :
-        set_style_for_tree( _node, change_type, ref index );
+        set_style_for_tree( _nodes.index( 0 ), change_type, ref index );
         da.current_changed( da );
         break;
     }
