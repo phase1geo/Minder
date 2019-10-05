@@ -138,6 +138,7 @@ public class Node : Object {
   private   double       _max_width    = 200;
   private   bool         _loaded       = true;
   private   Node         _linked_node  = null;
+  private   string       _url_pattern  = "\\b(([a-zA-Z0-9]+://)?[a-z0-9\\-]+\\.[a-z0-9\\-\\.]+(?:/|(?:/[a-zA-Z0-9!#\\$%&'\\*\\+,\\-\\.:;=\\?@\\[\\]_~]+)*))\\b";
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -209,6 +210,7 @@ public class Node : Object {
         } else {
           name.edit = false;
           name.clear_selection();
+          parse_name_for_url();
         }
       }
     }
@@ -563,6 +565,14 @@ public class Node : Object {
     return( !is_root() && (side == NodeSide.LEFT) );
   }
 
+  /* Parse the name field for URLs */
+  private void parse_name_for_url() {
+    int spos, epos;
+    if( name.search_text( _url_pattern, out spos, out epos ) ) {
+      stdout.printf( "In parse_name_for_url, spos: %d, epos: %d, match: %s\n", spos, epos, name.text.substring( spos, (epos - spos) ) );
+    }
+  }
+
   /* Returns true if the given cursor coordinates lies within this node */
   public virtual bool is_within( double x, double y ) {
     double margin = style.node_margin ?? 0;
@@ -691,6 +701,17 @@ public class Node : Object {
       double rx, ry, rw, rh;
       resizer_bbox( out rx, out ry, out rw, out rh );
       return( Utils.is_within_bounds( x, y, rx, ry, rw, rh ) );
+    }
+    return( false );
+  }
+
+  /* Returns true if the given cursor coordinates lie within a URL */
+  public virtual bool is_within_url( double x, double y, out string url ) {
+    int spos, epos;
+    url = "";
+    if( name.search_text( _url_pattern, out spos, out epos ) && name.is_within_range( x, y, spos, epos ) ) {
+      url = name.text.substring( spos, (epos - spos) );
+      return( true );
     }
     return( false );
   }

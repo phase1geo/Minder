@@ -152,6 +152,18 @@ public class CanvasText : Object {
     return( Utils.is_within_bounds( x, y, posx, posy, _width, _height ) );
   }
 
+  /* Returns true if the given coordinate lies within the given text range */
+  public bool is_within_range( double x, double y, int spos, int epos ) {
+    int cursor, trailing;
+    int adjusted_x = (int)(x - posx) * Pango.SCALE;
+    int adjusted_y = (int)(y - posy) * Pango.SCALE;
+    if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
+      cursor += trailing;
+      return( (spos <= cursor) && (cursor <= epos) );
+    }
+    return( false );
+  }
+
   /* Loads the file contents into this instance */
   public virtual void load( Xml.Node* n ) {
 
@@ -526,6 +538,24 @@ public class CanvasText : Object {
       return( text.slice( spos, epos ) );
     }
     return( null );
+  }
+
+  /*
+   Searches the text using the specified regular expression.  If a match is found, returns
+   true and populates the spos/epos outputs with the location of the string within the text.
+  */
+  public bool search_text( string pattern, out int spos, out int epos ) {
+    spos = -1;
+    epos = -1;
+    try {
+      MatchInfo match_info;
+      var re = new Regex( pattern );
+      if( re.match( text, 0, out match_info ) ) {
+        match_info.fetch_pos( 0, out spos, out epos );
+        return( true );
+      }
+    } catch( RegexError e ) {}
+    return( false );
   }
 
   /* Returns the current cursor position */
