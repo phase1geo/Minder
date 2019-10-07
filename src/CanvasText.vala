@@ -544,16 +544,19 @@ public class CanvasText : Object {
    Searches the text using the specified regular expression.  If a match is found, returns
    true and populates the spos/epos outputs with the location of the string within the text.
   */
-  public bool search_text( string pattern, out int spos, out int epos ) {
-    spos = -1;
-    epos = -1;
+  public bool search_text( string pattern, ref Array<int> spos, ref Array<int> epos ) {
     try {
       MatchInfo match_info;
-      var re = new Regex( pattern );
-      if( re.match( text, 0, out match_info ) ) {
-        match_info.fetch_pos( 0, out spos, out epos );
-        return( true );
+      var re    = new Regex( pattern );
+      var start = 0;
+      while( re.match_all_full( text, -1, start, 0, out match_info ) ) {
+        int s, e;
+        match_info.fetch_pos( 0, out s, out e );
+        spos.append_val( s );
+        epos.append_val( e );
+        start = e;
       }
+      return( spos.length > 0 );
     } catch( RegexError e ) {}
     return( false );
   }
@@ -565,6 +568,14 @@ public class CanvasText : Object {
     x    = (int)(posx + (rect.x / Pango.SCALE));
     ytop = (int)(posy + (rect.y / Pango.SCALE));
     ybot = ytop + (int)(rect.height / Pango.SCALE);
+  }
+
+  /* Returns the x and y position of the given character position */
+  public void get_char_pos( int pos, out double x, out double y ) {
+    var index = text.index_of_nth_char( pos );
+    var rect  = _pango_layout.index_to_pos( index );
+    x = posx + (rect.x / Pango.SCALE);
+    y = posy + (rect.y / Pango.SCALE);
   }
 
   /* Draws the node font to the screen */

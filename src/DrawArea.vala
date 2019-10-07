@@ -1018,6 +1018,7 @@ public class DrawArea : Gtk.DrawingArea {
     var control  = (bool) e.state & ModifierType.CONTROL_MASK;
     var dpress   = e.type == EventType.DOUBLE_BUTTON_PRESS;
     var url      = "";
+    var left     = 0.0;
 
     /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
     if( node.is_within_task( scaled_x, scaled_y ) ) {
@@ -1035,8 +1036,8 @@ public class DrawArea : Gtk.DrawingArea {
       _resize     = true;
       _orig_width = node.max_width();
       return( true );
-    } else if( node.is_within_url( scaled_x, scaled_y, out url ) ) {
-      show_url_popover( e, node, url );
+    } else if( node.is_within_url( scaled_x, scaled_y, out url, out left ) ) {
+      show_url_popover( e, node, url, left );
       _selected.set_current_node( node );
       return( false );
     }
@@ -3661,7 +3662,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Displays the URL in a popup menu that allows the user to display the URL in a web browser */
-  private void show_url_popover( EventButton event, Node node, string url ) {
+  private void show_url_popover( EventButton event, Node node, string url, double left ) {
     var mnu  = new Gtk.Menu();
     var item = new Gtk.MenuItem.with_label( url );
     item.activate.connect(() => {
@@ -3669,8 +3670,9 @@ public class DrawArea : Gtk.DrawingArea {
     });
     mnu.add( item );
     mnu.show_all();
-    mnu.rect_anchor_dy = (int)(node.posy - event.y);
-    stdout.printf( "rect_anchor_dy: %d\n", mnu.rect_anchor_dy );
+    mnu.rect_anchor_dx = (int)(left - event.x);
+    mnu.rect_anchor_dy = (int)(node.posy - event.y - 40);
+    mnu.take_focus     = false;
 #if GTK322
     mnu.popup_at_pointer( event );
 #else
