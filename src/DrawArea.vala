@@ -3666,7 +3666,9 @@ public class DrawArea : Gtk.DrawingArea {
     var mnu  = new Gtk.Menu();
     var item = new Gtk.MenuItem.with_label( url );
     item.activate.connect(() => {
-      AppInfo.launch_default_for_uri( url, null );
+      try {
+        AppInfo.launch_default_for_uri( url, null );
+      } catch( GLib.Error e ) {}
     });
     mnu.add( item );
     mnu.show_all();

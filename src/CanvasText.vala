@@ -190,8 +190,26 @@ public class CanvasText : Object {
   }
 
   /* Removes <, > and & characters */
-  private string unmarkup( string markup ) {
-    return( markup.replace( "&", "&amp;" ).replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
+  private string unmarkup( string txt ) {
+    return( txt.replace( "&", "&amp;" ).replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
+  }
+
+  /* Parses the given string for URLs and adds their markup to the string */
+  private string markup_urls( string txt ) {
+    var markup = txt;
+    if( !edit ) {
+      var spos = new Array<int>();
+      var epos = new Array<int>();
+      if( search_text( Utils.get_url_pattern(), ref spos, ref epos ) ) {
+        for( int i=((int)spos.length - 1); i>=0; i-- ) {
+          var s = text.index_of_nth_char( spos.index( i ) );
+          var e = text.index_of_nth_char( epos.index( i ) );
+          markup = markup.splice( e, markup.char_count(), "</u>" + markup.substring( e, (markup.char_count() - e) ) );
+          markup = markup.splice( s, markup.char_count(), "<u>"  + markup.substring( s, (markup.char_count() - s) ) );
+        }
+      }
+    }
+    return( markup );
   }
 
   /* Generates the marked up name that will be displayed in the node */
@@ -206,7 +224,8 @@ public class CanvasText : Object {
       var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + unmarkup( text.slice( spos, epos ) ) + "</span>";
       return( begtext + seltext + endtext );
     }
-    return( (markup || edit) ? text : unmarkup( text ) );
+    var txt = markup_urls( text );
+    return( (markup || edit) ? txt : unmarkup( txt ) );
   }
 
   /*

@@ -138,7 +138,6 @@ public class Node : Object {
   private   double       _max_width    = 200;
   private   bool         _loaded       = true;
   private   Node         _linked_node  = null;
-  private   string       _url_pattern  = "\\b[a-zA-Z0-9]+://[a-z0-9-]+\\.[a-z0-9.-]+(?:/|(?:/[][a-zA-Z0-9!#$%&'*+,.:;=?@_~-]+)*)\\b";
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -702,7 +701,7 @@ public class Node : Object {
     var epos = new Array<int>();
     url  = "";
     left = 0;
-    if( name.search_text( _url_pattern, ref spos, ref epos ) ) {
+    if( name.search_text( Utils.get_url_pattern(), ref spos, ref epos ) ) {
       for( int i=0; i<spos.length; i++ ) {
         var s = spos.index( i );
         var e = epos.index( i );

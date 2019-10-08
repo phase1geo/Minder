@@ -96,4 +96,9 @@ public class Utils {
     return( "%s   <i>(%s)</i>".printf( tooltip, accel ) );
   }
 
+  /* Returns the string pattern to use for regex URL searching */
+  public static string get_url_pattern() {
+    return( "\\b[a-zA-Z0-9]+://[a-z0-9-]+\\.[a-z0-9.-]+(?:/|(?:/[][a-zA-Z0-9!#$%&'*+,.:;=?@_~-]+)*)\\b" );
+  }
+
 }
