@@ -1036,7 +1036,7 @@ public class DrawArea : Gtk.DrawingArea {
       _resize     = true;
       _orig_width = node.max_width();
       return( true );
-    } else if( node.is_within_url( scaled_x, scaled_y, out url, out left ) ) {
+    } else if( !shift && control && node.is_within_url( scaled_x, scaled_y, out url, out left ) ) {
       show_url_popover( e, node, url, left );
       _selected.set_current_node( node );
       return( false );
@@ -3670,16 +3670,20 @@ public class DrawArea : Gtk.DrawingArea {
         AppInfo.launch_default_for_uri( url, null );
       } catch( GLib.Error e ) {}
     });
-    mnu.add( item );
-    mnu.show_all();
     mnu.rect_anchor_dx = (int)(left - event.x);
     mnu.rect_anchor_dy = (int)(node.posy - event.y - 40);
     mnu.take_focus     = false;
+    mnu.add( item );
+    mnu.show_all();
 #if GTK322
     mnu.popup_at_pointer( event );
 #else
     mnu.popup( null, null, null, event.button, event.time );
 #endif
+    Timeout.add( 500, () => {
+      grab_focus();
+      return( Source.REMOVE );
+    });
   }
 
   /* Moves all trees to avoid overlapping */

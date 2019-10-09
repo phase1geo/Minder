@@ -309,6 +309,7 @@ public class Node : Object {
     _children = new Array<Node>();
     _layout   = layout;
     _name     = new CanvasText( da, _max_width );
+    _name.urls = true;
     _name.resized.connect( update_size );
   }
 

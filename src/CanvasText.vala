@@ -30,6 +30,7 @@ public class CanvasText : Object {
   /* Member variables */
   private string       _text         = "";
   private bool         _markup       = true;
+  private bool         _urls         = false;
   private bool         _edit         = false;
   private int          _cursor       = 0;   /* Location of the cursor when editing */
   private int          _column       = 0;   /* Character column to use when moving vertically */
@@ -75,6 +76,17 @@ public class CanvasText : Object {
     set {
       if( _markup != value ) {
         _markup = value;
+        update_size( true );
+      }
+    }
+  }
+  public bool urls {
+    get {
+      return( _urls );
+    }
+    set {
+      if( _urls != value ) {
+        _urls = value;
         update_size( true );
       }
     }
@@ -197,15 +209,15 @@ public class CanvasText : Object {
   /* Parses the given string for URLs and adds their markup to the string */
   private string markup_urls( string txt ) {
     var markup = txt;
-    if( !edit ) {
+    if( !edit && _urls ) {
       var spos = new Array<int>();
       var epos = new Array<int>();
       if( search_text( Utils.get_url_pattern(), ref spos, ref epos ) ) {
         for( int i=((int)spos.length - 1); i>=0; i-- ) {
           var s = text.index_of_nth_char( spos.index( i ) );
           var e = text.index_of_nth_char( epos.index( i ) );
-          markup = markup.splice( e, markup.char_count(), "</u>" + markup.substring( e, (markup.char_count() - e) ) );
-          markup = markup.splice( s, markup.char_count(), "<u>"  + markup.substring( s, (markup.char_count() - s) ) );
+          markup = markup.splice( e, markup.char_count(), "</span>" + markup.substring( e, (markup.char_count() - e) ) );
+          markup = markup.splice( s, markup.char_count(), "<span foreground=\"blue\" underline=\"single\">"  + markup.substring( s, (markup.char_count() - s) ) );
         }
       }
     }
