@@ -138,6 +138,7 @@ public class Node : Object {
   private   double       _max_width    = 200;
   private   bool         _loaded       = true;
   private   Node         _linked_node  = null;
+  private   UrlLinks     _urls         = null;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -308,9 +309,13 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
+    _urls     = new UrlLinks();
     _name     = new CanvasText( da, _max_width );
     _name.urls = true;
     _name.resized.connect( update_size );
+    _name.inserted.connect( _urls.insert_text );
+    _name.deleted.connect( _urls.delete_text );
+    _name.render_text.connect( _urls.markup_urls );
   }
 
   /* Constructor initializing string */
@@ -319,17 +324,25 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
+    _urls     = new UrlLinks();
     _name     = new CanvasText.with_text( da, _max_width, n );
     _name.resized.connect( update_size );
+    _name.inserted.connect( _urls.insert_text );
+    _name.deleted.connect( _urls.delete_text );
+    _name.render_text.connect( _urls.markup_urls );
   }
 
   /* Copies an existing node to this node */
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
     _da       = da;
     _id       = _next_id++;
+    _urls     = new UrlLinks();
     _name     = new CanvasText( da, _max_width );
     copy_variables( n, im );
     _name.resized.connect( update_size );
+    _name.inserted.connect( _urls.insert_text );
+    _name.deleted.connect( _urls.delete_text );
+    _name.render_text.connect( _urls.markup_urls );
     mode      = NodeMode.NONE;
     _children = n._children;
     for( int i=0; i<_children.length; i++ ) {
@@ -340,6 +353,7 @@ public class Node : Object {
   public Node.copy_only( DrawArea da, Node n, ImageManager im ) {
     _da = da;
     _id = _next_id++;
+    _urls = new UrlLinks();
     _name = new CanvasText( da, _max_width );
     copy_variables( n, im );
   }
@@ -348,10 +362,14 @@ public class Node : Object {
   public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int> id_map ) {
     _da       = da;
     _id       = _next_id++;
+    _urls     = new UrlLinks();
     _name     = new CanvasText( da, _max_width );
     _children = new Array<Node>();
     copy_variables( n, im );
     _name.resized.connect( update_size );
+    _name.inserted.connect( _urls.insert_text );
+    _name.deleted.connect( _urls.delete_text );
+    _name.render_text.connect( _urls.markup_urls );
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
     id_map.set( n._id, _id );
@@ -382,6 +400,7 @@ public class Node : Object {
     _link_color   = n._link_color;
     _max_width    = n._max_width;
     _image        = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, (int)n._max_width );
+    _urls.copy( n._urls );
     _name.copy( n._name );
     note          = n.note;
     mode          = n.mode;
@@ -832,6 +851,11 @@ public class Node : Object {
     _name.set_font( _style.node_font );
   }
 
+  /* Loads the URL links information from the given XML node */
+  private void load_url_links( Xml.Node* n ) {
+    _urls.load( n );
+  }
+
   /* Loads the file contents into this instance */
   public virtual void load( DrawArea da, Xml.Node* n, bool isroot, HashMap<int,int> id_map, Array<NodeLinkInfo?> link_ids ) {
 
@@ -910,6 +934,7 @@ public class Node : Object {
           case "nodenote"  :  load_note( it );  break;
           case "nodeimage" :  load_image( da.image_manager, it );  break;
           case "style"     :  load_style( it );  break;
+          case "urllinks"  :  load_url_links( it );  break;
           case "nodes"     :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
@@ -978,6 +1003,7 @@ public class Node : Object {
 
     style.save_node( node );
 
+    node->add_child( _urls.save() );
     node->new_text_child( null, "nodename", name.text );
     node->new_text_child( null, "nodenote", note );
 

@@ -44,6 +44,9 @@ public class CanvasText : Object {
 
   /* Signals */
   public signal void resized();
+  public signal void inserted( int spos, string str );
+  public signal void deleted( int spos, int epos );
+  public virtual signal string render_text( CanvasText ct ) { return( ct.text ); }
 
   /* Properties */
   public string text {
@@ -206,24 +209,6 @@ public class CanvasText : Object {
     return( txt.replace( "&", "&amp;" ).replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
   }
 
-  /* Parses the given string for URLs and adds their markup to the string */
-  private string markup_urls( string txt ) {
-    var markup = txt;
-    if( !edit && _urls ) {
-      var spos = new Array<int>();
-      var epos = new Array<int>();
-      if( search_text( Utils.get_url_pattern(), ref spos, ref epos ) ) {
-        for( int i=((int)spos.length - 1); i>=0; i-- ) {
-          var s = text.index_of_nth_char( spos.index( i ) );
-          var e = text.index_of_nth_char( epos.index( i ) );
-          markup = markup.splice( e, markup.char_count(), "</span>" + markup.substring( e, (markup.char_count() - e) ) );
-          markup = markup.splice( s, markup.char_count(), "<span foreground=\"blue\" underline=\"single\">"  + markup.substring( s, (markup.char_count() - s) ) );
-        }
-      }
-    }
-    return( markup );
-  }
-
   /* Generates the marked up name that will be displayed in the node */
   private string name_markup( Theme? theme ) {
     if( (_selstart != _selend) && (theme != null) ) {
@@ -236,7 +221,7 @@ public class CanvasText : Object {
       var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + unmarkup( text.slice( spos, epos ) ) + "</span>";
       return( begtext + seltext + endtext );
     }
-    var txt = markup_urls( text );
+    var txt = render_text( this );
     return( (markup || edit) ? txt : unmarkup( txt ) );
   }
 
@@ -516,11 +501,13 @@ public class CanvasText : Object {
         text     = text.splice( spos, epos );
         _cursor  = _selstart;
         _selend  = _selstart;
+        deleted( spos, epos );
       } else {
         var spos = text.index_of_nth_char( _cursor - 1 );
         var epos = text.index_of_nth_char( _cursor );
         text     = text.splice( spos, epos );
         _cursor--;
+        deleted( spos, epos );
       }
     }
   }
@@ -534,10 +521,12 @@ public class CanvasText : Object {
         text    = text.splice( spos, epos );
         _cursor = _selstart;
         _selend = _selstart;
+        deleted( spos, epos );
       } else {
         var spos = text.index_of_nth_char( _cursor );
         var epos = text.index_of_nth_char( _cursor + 1 );
         text = text.splice( spos, epos );
+        deleted( spos, epos );
       }
     }
   }
@@ -551,10 +540,13 @@ public class CanvasText : Object {
       text    = text.splice( spos, epos, s );
       _cursor = _selstart + slen;
       _selend = _selstart;
+      deleted( spos, epos );
+      inserted( spos, s );
     } else {
       var cpos = text.index_of_nth_char( _cursor );
       text = text.splice( cpos, cpos, s );
       _cursor += slen;
+      inserted( cpos, s );
     }
   }
 

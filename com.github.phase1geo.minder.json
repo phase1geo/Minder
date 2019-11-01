@@ -1,31 +1,40 @@
 {
-    "id": "com.github.phase1geo.minder",
-    "base": "io.elementary.BaseApp",
-    "base-version": "juno",
-    "runtime": "org.freedesktop.Platform",
-    "runtime-version": "18.08",
-    "sdk": "org.freedesktop.Sdk",
-    "command": "com.github.phase1geo.minder",
-    "finish-args": [
-        "--share=ipc", "--socket=x11",
+    "id" : "com.github.phase1geo.minder",
+    "base" : "io.elementary.BaseApp",
+    "base-version" : "juno",
+    "runtime" : "org.freedesktop.Platform",
+    "runtime-version" : "18.08",
+    "sdk" : "org.freedesktop.Sdk",
+    "command" : "com.github.phase1geo.minder",
+    "finish-args" : [
+        "--share=ipc",
+        "--socket=x11",
         "--socket=wayland",
         "--filesystem=home",
         "--talk-name=ca.desrt.dconf",
         "--filesystem=xdg-run/dconf",
         "--filesystem=~/.config/dconf:ro",
         "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
-	],
-	"modules":[{
-		"name": "minder",
-		"buildsystem": "meson",
-		"sources": [{
-			"type": "archive",
-			"url": "https://github.com/phase1geo/Minder/archive/1.3.1.tar.gz",
-			"sha256": "16d5fba1b2108f0cd4e67502555ac06dfed367344d17a365ce4f91d6f55e44a5"
-		},
-		{
-			"type": "patch",
-			"path": "elementary-theme.patch"
-		}]
-	}]
+    ],
+    "modules" : [
+        {
+            "name" : "minder",
+            "buildsystem" : "meson",
+            "sources" : [
+                {
+                    "type" : "archive",
+                    "url" : "https://github.com/phase1geo/Minder/archive/1.3.1.tar.gz",
+                    "sha256" : "16d5fba1b2108f0cd4e67502555ac06dfed367344d17a365ce4f91d6f55e44a5"
+                },
+                {
+                    "type" : "patch",
+                    "path" : "elementary-theme.patch"
+                }
+            ]
+        }
+    ],
+    "build-options" : {
+        "env" : {
+        }
+    }
 }
