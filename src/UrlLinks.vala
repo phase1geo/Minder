@@ -202,7 +202,7 @@ public class UrlLinks {
    Returns the index of the link that exists at the given character position.
    If no link exists at the given position, return -1.
   */
-  public int find_link( int pos ) {
+  private int find_link( int pos ) {
     for( int i=0; i<_links.length; i++ ) {
       var link = _links.index( i );
       if( (link.spos <= pos) && (pos < link.epos) ) {
@@ -210,6 +210,37 @@ public class UrlLinks {
       }
     }
     return( -1 );
+  }
+
+  /* Returns the URL at the given string position */
+  public bool get_url_at_pos( CanvasText ct, double x, double y, out string url, out double left ) {
+    var pos = ct.get_pos( x, y );
+    if( pos != -1 ) {
+      var link = find_link( pos );
+      if( link != -1 ) {
+        double top;
+        url = _links.index( link ).url;
+        ct.get_char_pos( _links.index( link ).spos, out left, out top );
+        return( true );
+      } else {
+        var spos = new Array<int>();
+        var epos = new Array<int>();
+        var txt  = ct.text;
+        if( ct.search_text( _url_pattern, ref spos, ref epos ) ) {
+          for( int i=0; i<spos.length; i++ ) {
+            int s = txt.index_of_nth_char( spos.index( i ) );
+            int e = txt.index_of_nth_char( epos.index( i ) );
+            if( (s <= pos) && (pos < e) ) {
+              double top;
+              url = txt.substring( s, (e - s) );
+              ct.get_char_pos( s, out left, out top );
+              return( true );
+            }
+          }
+        }
+      }
+    }
+    return( false );
   }
 
   /*

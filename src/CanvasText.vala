@@ -179,6 +179,17 @@ public class CanvasText : Object {
     return( false );
   }
 
+  /* Returns the character position of the given cursor coordinates */
+  public int get_pos( double x, double y ) {
+    int cursor, trailing;
+    int adjusted_x = (int)(x - posx) * Pango.SCALE;
+    int adjusted_y = (int)(y - posy) * Pango.SCALE;
+    if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
+      return( cursor + trailing );
+    }
+    return( -1 );
+  }
+
   /* Loads the file contents into this instance */
   public virtual void load( Xml.Node* n ) {
 

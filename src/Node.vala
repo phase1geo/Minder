@@ -717,23 +717,7 @@ public class Node : Object {
 
   /* Returns true if the given cursor coordinates lie within a URL */
   public virtual bool is_within_url( double x, double y, out string url, out double left ) {
-    var spos = new Array<int>();
-    var epos = new Array<int>();
-    url  = "";
-    left = 0;
-    if( name.search_text( Utils.get_url_pattern(), ref spos, ref epos ) ) {
-      for( int i=0; i<spos.length; i++ ) {
-        var s = spos.index( i );
-        var e = epos.index( i );
-        if( name.is_within_range( x, y, s, e ) ) {
-          double top;
-          url = name.text.substring( s, (e - s) );
-          name.get_char_pos( s, out left, out top );
-          return( true );
-        }
-      }
-    }
-    return( false );
+    return( _urls.get_url_at_pos( name, x, y, out url, out left ) );
   }
 
   /* Finds the node which contains the given pixel coordinates */
