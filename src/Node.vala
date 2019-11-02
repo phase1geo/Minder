@@ -302,6 +302,11 @@ public class Node : Object {
     }
   }
   public NodeBounds tree_bbox { get; set; default = NodeBounds(); }
+  public UrlLinks urls {
+    get {
+      return( _urls );
+    }
+  }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -550,7 +555,7 @@ public class Node : Object {
 
   /* Returns true if this tree bounds of this node is left of the given bounds */
   public bool is_left_of( NodeBounds nb ) {
-    return( (tree_bbox.x + tree_bbox.width) < nb.x ); 
+    return( (tree_bbox.x + tree_bbox.width) < nb.x );
   }
 
   /* Returns true if this tree bounds of this node is right of the given bounds */

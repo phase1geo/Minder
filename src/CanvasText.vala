@@ -574,6 +574,13 @@ public class CanvasText : Object {
     return( null );
   }
 
+  /* Returns the current cursor, selection start and selection end values. */
+  public void get_cursor_info( out int cursor, out int start, out int end ) {
+    cursor = _cursor;
+    start  = _selstart;
+    end    = _selend;
+  }
+
   /*
    Searches the text using the specified regular expression.  If a match is found, returns
    true and populates the spos/epos outputs with the location of the string within the text.

@@ -62,6 +62,7 @@ public class DrawArea : Gtk.DrawingArea {
   private ConnectionsMenu  _conns_menu;
   private NodesMenu        _nodes_menu;
   private EmptyMenu        _empty_menu;
+  private TextMenu         _text_menu;
   private uint?            _auto_save_id = null;
   private ImageEditor      _editor;
   private IMContextSimple  _im_context;
@@ -149,6 +150,7 @@ public class DrawArea : Gtk.DrawingArea {
     _conns_menu = new ConnectionsMenu( this, accel_group );
     _empty_menu = new EmptyMenu( this, accel_group );
     _nodes_menu = new NodesMenu( this, accel_group );
+    _text_menu  = new TextMenu( this, accel_group );
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
@@ -794,7 +796,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /*
-   Changes the current connection's note to the given value. 
+   Changes the current connection's note to the given value.
   */
   public void change_current_connection_note( string note ) {
     var conns = _selected.connections();
@@ -1505,7 +1507,11 @@ public class DrawArea : Gtk.DrawingArea {
 
 #if GTK322
     if( current_node != null ) {
-      _node_menu.popup_at_pointer( event );
+      if( current_node.mode == NodeMode.EDITABLE ) {
+        _text_menu.popup_at_pointer( event );
+      } else {
+        _node_menu.popup_at_pointer( event );
+      }
     } else if( _selected.num_nodes() > 1 ) {
       _nodes_menu.popup_at_pointer( event );
     } else if( current_conn != null ) {
@@ -1517,7 +1523,11 @@ public class DrawArea : Gtk.DrawingArea {
     }
 #else
     if( current_node != null ) {
-      _node_menu.popup( null, null, null, event.button, event.time );
+      if( current_node.mode == NodeMode.EDITABLE ) {
+        _text_menu.popup( null, null, null, event.button, event.time );
+      } else {
+        _node_menu.popup( null, null, null, event.button, event.time );
+      }
     } else if( _selected.num_nodes() > 1 ) {
       _nodes_menu.popup( null, null, null, event.button, event.time );
     } else if( current_conn != null ) {
@@ -2731,7 +2741,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Called whenever the period key is entered with the control key */
-  private void handle_control_period() {
+  public void handle_control_period() {
     if( is_node_editable() ) {
       insert_emoji( _selected.current_node().name );
     } else if( is_connection_editable() ) {
@@ -3143,7 +3153,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Copies the currently selected text to the clipboard */
-  private void copy_selected_text() {
+  public void copy_selected_text() {
     string? value        = null;
     var     current_node = _selected.current_node();
     var     current_conn = _selected.current_connection();
@@ -3219,7 +3229,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Cuts the current selected text to the clipboard */
-  private void cut_selected_text() {
+  public void cut_selected_text() {
     copy_selected_text();
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
@@ -3294,7 +3304,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Pastes the text that is in the clipboard to the node text */
-  private void paste_text() {
+  public void paste_text() {
     var clipboard = Clipboard.get_default( get_display() );
     string? value = clipboard.wait_for_text();
     if( value != null ) {

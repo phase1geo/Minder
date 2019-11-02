@@ -202,7 +202,7 @@ public class UrlLinks {
    Returns the index of the link that exists at the given character position.
    If no link exists at the given position, return -1.
   */
-  private int find_link( int pos ) {
+  public int find_link( int pos ) {
     for( int i=0; i<_links.length; i++ ) {
       var link = _links.index( i );
       if( (link.spos <= pos) && (pos < link.epos) ) {
@@ -212,9 +212,22 @@ public class UrlLinks {
     return( -1 );
   }
 
+  /* Returns true if the given range overlaps with one or more link ranges */
+  public bool overlaps_with( int spos, int epos, ref Array<int> indices ) {
+    for( int i=0; i<_links.length; i++ ) {
+      var link = _links.index( i );
+      if( (link.spos < epos) && (link.epos > spos) ) {
+        indices.append_val( i );
+      }
+    }
+    return( indices.length > 0 );
+  }
+
   /* Returns the URL at the given string position */
   public bool get_url_at_pos( CanvasText ct, double x, double y, out string url, out double left ) {
     var pos = ct.get_pos( x, y );
+    url  = "";
+    left = 0;
     if( pos != -1 ) {
       var link = find_link( pos );
       if( link != -1 ) {
