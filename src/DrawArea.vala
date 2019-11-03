@@ -64,7 +64,8 @@ public class DrawArea : Gtk.DrawingArea {
   private EmptyMenu        _empty_menu;
   private TextMenu         _text_menu;
   private uint?            _auto_save_id = null;
-  private ImageEditor      _editor;
+  private ImageEditor      _image_editor;
+  private UrlEditor        _url_editor;
   private IMContextSimple  _im_context;
   private bool             _debug        = true;
   private bool             _focus_mode   = false;
@@ -108,6 +109,11 @@ public class DrawArea : Gtk.DrawingArea {
       return( _scale_factor );
     }
   }
+  public UrlEditor url_editor {
+    get {
+      return( _url_editor );
+    }
+  }
 
   public signal void changed();
   public signal void current_changed( DrawArea da );
@@ -141,8 +147,11 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer = new UndoBuffer( this );
 
     /* Allocate the image editor popover */
-    _editor = new ImageEditor( this );
-    _editor.changed.connect( current_image_edited );
+    _image_editor = new ImageEditor( this );
+    _image_editor.changed.connect( current_image_edited );
+
+    /* Allocate the URL editor popover */
+    _url_editor = new UrlEditor( this );
 
     /* Create the popup menu */
     _node_menu  = new NodeMenu( this, accel_group );
@@ -861,7 +870,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( nodes.length == 1 ) {
       var current = nodes.index( 0 );
       if( current.image != null ) {
-        _editor.edit_image( image_manager, current, current.posx, current.posy );
+        _image_editor.edit_image( image_manager, current, current.posx, current.posy );
       }
     }
   }

@@ -198,6 +198,14 @@ public class UrlLinks {
     }
   }
 
+  /* Changes the stored URL to the given value */
+  public void change_link( int pos, string url ) {
+    var index = find_link( pos );
+    if( index != -1 ) {
+      _links.index( index ).url = url;
+    }
+  }
+
   /*
    Returns the index of the link that exists at the given character position.
    If no link exists at the given position, return -1.
@@ -221,6 +229,24 @@ public class UrlLinks {
       }
     }
     return( indices.length > 0 );
+  }
+
+  /* Returns the URL associated with the given text position */
+  public string? get_url( int pos ) {
+    var index = find_link( pos );
+    if( index != -1 ) {
+      return( _links.index( index ).url );
+    }
+    return( null );
+  }
+
+  /* Returns the starting character position with the given text position */
+  public int get_spos( int pos ) {
+    var index = find_link( pos );
+    if( index != -1 ) {
+      return( _links.index( index ).spos );
+    }
+    return( -1 );
   }
 
   /* Returns the URL at the given string position */

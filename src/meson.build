@@ -136,6 +136,7 @@ sources += files(
     'Themes.vala',
     'UndoBuffer.vala',
     'UndoItem.vala',
+    'UrlEditor.vala',
     'UrlLinks.vala',
     'Utils.vala'
 )

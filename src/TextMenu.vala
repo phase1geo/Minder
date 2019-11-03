@@ -115,17 +115,20 @@ public class TextMenu : Gtk.Menu {
    text that currently has a link associated with it.
   */
   private void add_link() {
-    /* TBD */
+    _da.url_editor.add_url();
   }
 
   /* Allows the user to remove the link located at the current cursor */
   private void remove_link() {
-    /* TBD */
+    var node = _da.get_current_node();
+    int cursor, selstart, selend;
+    node.name.get_cursor_info( out cursor, out selstart, out selend );
+    node.urls.remove_link( cursor );
   }
 
   /* Allows the user to edit the associated link. */
   private void edit_link() {
-    /* TBD */
+    _da.url_editor.edit_url();
   }
 
   /*
