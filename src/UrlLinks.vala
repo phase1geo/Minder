@@ -182,7 +182,7 @@ public class UrlLinks {
   public void add_link( int spos, int epos, string url ) {
     var link = new UrlLink( url, spos, epos );
     for( int i=0; i<_links.length; i++ ) {
-      if( spos < link.spos ) {
+      if( spos < _links.index( i ).spos ) {
         _links.insert_val( i, link );
         return;
       }
@@ -289,34 +289,33 @@ public class UrlLinks {
   private void get_url_pos( CanvasText ct, ref Array<int> spos, ref Array<int> epos ) {
     var url_spos = new Array<int>();
     var url_epos = new Array<int>();
-    if( ct.search_text( _url_pattern, ref url_spos, ref url_epos ) ) {
-      int link_index = 0;
-      int url_index  = 0;
-      while( (link_index < _links.length) || (url_index < url_spos.length) ) {
-        if( link_index == _links.length ) {
-          spos.append_val( url_spos.index( url_index ) );
-          epos.append_val( url_epos.index( url_index ) );
+    ct.search_text( _url_pattern, ref url_spos, ref url_epos );
+    int link_index = 0;
+    int url_index  = 0;
+    while( (link_index < _links.length) || (url_index < url_spos.length) ) {
+      if( link_index == _links.length ) {
+        spos.append_val( url_spos.index( url_index ) );
+        epos.append_val( url_epos.index( url_index ) );
+        url_index++;
+      } else if( url_index == url_spos.length ) {
+        spos.append_val( _links.index( link_index ).spos );
+        epos.append_val( _links.index( link_index ).epos );
+        link_index++;
+      } else {
+        var ls = _links.index( link_index ).spos;
+        var le = _links.index( link_index ).epos;
+        var us = url_spos.index( url_index );
+        var ue = url_epos.index( url_index );
+        if( ue < ls ) {
+          spos.append_val( us );
+          epos.append_val( ue );
           url_index++;
-        } else if( url_index == url_spos.length ) {
-          spos.append_val( _links.index( link_index ).spos );
-          epos.append_val( _links.index( link_index ).epos );
+        } else if( ls < ue ) {
+          spos.append_val( ls );
+          epos.append_val( le );
           link_index++;
-        } else {
-          var ls = _links.index( link_index ).spos;
-          var le = _links.index( link_index ).epos;
-          var us = url_spos.index( url_index );
-          var ue = url_epos.index( url_index );
-          if( ue < ls ) {
-            spos.append_val( us );
-            epos.append_val( ue );
+          if( le >= us ) {
             url_index++;
-          } else if( ls < ue ) {
-            spos.append_val( ls );
-            epos.append_val( le );
-            link_index++;
-            if( le >= us ) {
-              url_index++;
-            }
           }
         }
       }
@@ -329,6 +328,7 @@ public class UrlLinks {
     var spos = new Array<int>();
     var epos = new Array<int>();
     get_url_pos( ct, ref spos, ref epos );
+    stdout.printf( "ct.text: %s, spos: %u\n", markup, spos.length );
     for( int i=((int)spos.length - 1); i>=0; i-- ) {
       int s = ct.text.index_of_nth_char( spos.index( i ) );
       int e = ct.text.index_of_nth_char( epos.index( i ) );

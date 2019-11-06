@@ -40,14 +40,22 @@ public class UrlEditor : Popover {
     var ebox  = new Box( Orientation.HORIZONTAL, 5 );
     var lbl   = new Label( _( "URL" ) + ":" );
     _entry = new Entry();
+    _entry.key_press_event.connect((e) => {
+      if( e.keyval == 65293 ) {
+        set_url();
+        show_popover( false );
+      }
+      return( false );
+    });
 
     ebox.pack_start( lbl,    false, false );
     ebox.pack_start( _entry, true,  false );
 
-    var bbox   = new Box( Orientation.HORIZONTAL, 0 );
+    var bbox   = new Box( Orientation.HORIZONTAL, 5 );
     var ok     = new Button.with_label( _( "Apply" ) );
     var cancel = new Button.with_label( _( "Cancel" ) );
 
+    ok.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
     ok.clicked.connect(() => {
       set_url();
       show_popover( false );
