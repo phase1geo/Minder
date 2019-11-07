@@ -328,7 +328,6 @@ public class UrlLinks {
     var spos = new Array<int>();
     var epos = new Array<int>();
     get_url_pos( ct, ref spos, ref epos );
-    stdout.printf( "ct.text: %s, spos: %u\n", markup, spos.length );
     for( int i=((int)spos.length - 1); i>=0; i-- ) {
       int s = ct.text.index_of_nth_char( spos.index( i ) );
       int e = ct.text.index_of_nth_char( epos.index( i ) );

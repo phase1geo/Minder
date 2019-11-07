@@ -124,6 +124,7 @@ public class TextMenu : Gtk.Menu {
     int cursor, selstart, selend;
     node.name.get_cursor_info( out cursor, out selstart, out selend );
     node.urls.remove_link( cursor );
+    _da.changed();
   }
 
   /* Allows the user to edit the associated link. */

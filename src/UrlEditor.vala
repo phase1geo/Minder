@@ -40,6 +40,7 @@ public class UrlEditor : Popover {
     var ebox  = new Box( Orientation.HORIZONTAL, 5 );
     var lbl   = new Label( _( "URL" ) + ":" );
     _entry = new Entry();
+    _entry.width_chars = 50;
     _entry.key_press_event.connect((e) => {
       if( e.keyval == 65293 ) {
         set_url();
@@ -107,6 +108,7 @@ public class UrlEditor : Popover {
     } else {
       node.urls.change_link( cursor, _entry.text );
     }
+    _da.changed();
   }
 
   /* Called when we want to add a URL to the currently selected text of the given node. */
