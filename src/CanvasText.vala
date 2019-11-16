@@ -46,7 +46,7 @@ public class CanvasText : Object {
   public signal void resized();
   public signal void inserted( int spos, string str );
   public signal void deleted( int spos, int epos );
-  public virtual signal string render_text( CanvasText ct ) { return( ct.text ); }
+  public signal void render_text( CanvasText ct );
 
   /* Properties */
   public string text {
@@ -103,6 +103,11 @@ public class CanvasText : Object {
         _edit = value;
         update_size( true );
       }
+    }
+  }
+  public Pango.Layout pango_layout {
+    get {
+      return( _pango_layout );
     }
   }
 
@@ -232,8 +237,8 @@ public class CanvasText : Object {
       var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + unmarkup( text.slice( spos, epos ) ) + "</span>";
       return( begtext + seltext + endtext );
     }
-    var txt = render_text( this );
-    return( (markup || edit) ? txt : unmarkup( txt ) );
+    // return( (markup || edit) ? text : unmarkup( text ) );
+    return( markup ? text : unmarkup( text ) );
   }
 
   /*
@@ -243,6 +248,7 @@ public class CanvasText : Object {
     if( _pango_layout != null ) {
       int text_width, text_height;
       _pango_layout.set_markup( name_markup( null ), -1 );
+      render_text( this );
       _pango_layout.get_size( out text_width, out text_height );
       _width  = (text_width  / Pango.SCALE);
       _height = (text_height / Pango.SCALE);
@@ -624,6 +630,7 @@ public class CanvasText : Object {
 
     /* Make sure the the size is up-to-date */
     _pango_layout.set_markup( name_markup( theme ), -1 );
+    render_text( this );
 
     /* Output the text */
     ctx.move_to( posx, posy );

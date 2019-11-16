@@ -26,6 +26,7 @@ public class UrlEditor : Popover {
   private DrawArea _da;
   private bool     _add = true;
   private Entry    _entry;
+  private Button   _apply;
 
   /* Default constructor */
   public UrlEditor( DrawArea da ) {
@@ -41,32 +42,29 @@ public class UrlEditor : Popover {
     var lbl   = new Label( _( "URL" ) + ":" );
     _entry = new Entry();
     _entry.width_chars = 50;
-    _entry.key_press_event.connect((e) => {
-      if( e.keyval == 65293 ) {
-        set_url();
-        show_popover( false );
-      }
-      return( false );
+    _entry.input_purpose = InputPurpose.URL;
+    _entry.activate.connect(() => {
+      _apply.activate();
     });
+    _entry.changed.connect( check_entry );
 
     ebox.pack_start( lbl,    false, false );
     ebox.pack_start( _entry, true,  false );
 
-    var bbox   = new Box( Orientation.HORIZONTAL, 5 );
-    var ok     = new Button.with_label( _( "Apply" ) );
-    var cancel = new Button.with_label( _( "Cancel" ) );
-
-    ok.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
-    ok.clicked.connect(() => {
+    _apply = new Button.with_label( _( "Apply" ) );
+    _apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+    _apply.clicked.connect(() => {
       set_url();
       show_popover( false );
     });
 
+    var cancel = new Button.with_label( _( "Cancel" ) );
     cancel.clicked.connect(() => {
       show_popover( false );
     });
 
-    bbox.pack_end( ok,     false, false );
+    var bbox = new Box( Orientation.HORIZONTAL, 5 );
+    bbox.pack_end( _apply, false, false );
     bbox.pack_end( cancel, false, false );
 
     box.pack_start( ebox, false, true );
@@ -93,6 +91,15 @@ public class UrlEditor : Popover {
       hide();
     }
 #endif
+  }
+
+  /*
+   Checks the contents of the entry string.  If it is a URL, make the action button active;
+   otherwise, inactivate the action button.
+  */
+  private void check_entry() {
+    var node = _da.get_current_node();
+    _apply.set_sensitive( node.urls.is_url( _entry.text ) );
   }
 
   /*
@@ -127,6 +134,7 @@ public class UrlEditor : Popover {
 
     _add        = true;
     _entry.text = "";
+    _apply.set_sensitive( false );
 
     show_popover( true );
 
@@ -148,6 +156,7 @@ public class UrlEditor : Popover {
 
     _add        = false;
     _entry.text = node.urls.get_url( cursor );
+    _apply.set_sensitive( true );
 
     show_popover( true );
 

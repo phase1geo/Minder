@@ -19,6 +19,8 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
+using Pango;
+
 public class UrlLink {
 
   public string url  { get; set; default = ""; }  /* URL */
@@ -249,6 +251,11 @@ public class UrlLinks {
     return( -1 );
   }
 
+  /* Returns true if the given string is a URL pattern */
+  public bool is_url( string str ) {
+    return( Regex.match_simple( _url_pattern, str ) );
+  }
+
   /* Returns the URL at the given string position */
   public bool get_url_at_pos( CanvasText ct, double x, double y, out string url, out double left ) {
     var pos = ct.get_pos( x, y );
@@ -322,19 +329,32 @@ public class UrlLinks {
     }
   }
 
+  private void add_attributes( ref AttrList attrs, int start, int end ) {
+
+    var color = attr_foreground_new( 0, 0, 1 );
+    color.start_index = start;
+    color.end_index   = end;
+    attrs.insert( color.copy() );
+
+    var uline = attr_underline_new( Underline.SINGLE );
+    uline.start_index = start;
+    uline.end_index   = end;
+    attrs.insert( uline.copy() );
+
+  }
+
   /* Parses the given string for URLs and adds their markup to the string */
-  public string markup_urls( CanvasText ct ) {
-    var markup = ct.text;
-    var spos = new Array<int>();
-    var epos = new Array<int>();
+  public void markup_urls( CanvasText ct ) {
+    var spos   = new Array<int>();
+    var epos   = new Array<int>();
+    var attrs  = new AttrList();
     get_url_pos( ct, ref spos, ref epos );
-    for( int i=((int)spos.length - 1); i>=0; i-- ) {
-      int s = ct.text.index_of_nth_char( spos.index( i ) );
-      int e = ct.text.index_of_nth_char( epos.index( i ) );
-      markup = markup.splice( e, markup.char_count(), "</span>" + markup.substring( e, (markup.char_count() - e) ) );
-      markup = markup.splice( s, markup.char_count(), "<span foreground=\"blue\" underline=\"single\">"  + markup.substring( s, (markup.char_count() - s) ) );
+    for( int i=0; i<spos.length; i++ ) {
+      var s = ct.text.index_of_nth_char( spos.index( i ) );
+      var e = ct.text.index_of_nth_char( epos.index( i ) );
+      add_attributes( ref attrs, s, e );
     }
-    return( markup );
+    ct.pango_layout.set_attributes( attrs );
   }
 
 }
