@@ -345,9 +345,9 @@ public class UrlLinks {
 
   /* Parses the given string for URLs and adds their markup to the string */
   public void markup_urls( CanvasText ct ) {
-    var spos   = new Array<int>();
-    var epos   = new Array<int>();
-    var attrs  = new AttrList();
+    var spos  = new Array<int>();
+    var epos  = new Array<int>();
+    var attrs = ct.pango_layout.get_attributes();
     get_url_pos( ct, ref spos, ref epos );
     for( int i=0; i<spos.length; i++ ) {
       var s = ct.text.index_of_nth_char( spos.index( i ) );

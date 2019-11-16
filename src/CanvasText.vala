@@ -237,8 +237,7 @@ public class CanvasText : Object {
       var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + unmarkup( text.slice( spos, epos ) ) + "</span>";
       return( begtext + seltext + endtext );
     }
-    // return( (markup || edit) ? text : unmarkup( text ) );
-    return( markup ? text : unmarkup( text ) );
+    return( (markup || edit) ? text : unmarkup( text ) );
   }
 
   /*
