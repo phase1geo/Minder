@@ -981,7 +981,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the user clicks on a valid connection */
   private bool set_current_connection_from_position( Connection conn, EventButton e ) {
 
-    var shift = (bool) e.state & ModifierType.SHIFT_MASK;
+    var shift = (bool)(e.state & ModifierType.SHIFT_MASK);
 
     if( _selected.is_current_connection( conn ) ) {
       if( conn.mode == ConnMode.EDITABLE ) {
@@ -1014,8 +1014,8 @@ public class DrawArea : Gtk.DrawingArea {
 
     var scaled_x = scale_value( e.x );
     var scaled_y = scale_value( e.y );
-    var shift    = (bool) e.state & ModifierType.SHIFT_MASK;
-    var control  = (bool) e.state & ModifierType.CONTROL_MASK;
+    var shift    = (bool)(e.state & ModifierType.SHIFT_MASK);
+    var control  = (bool)(e.state & ModifierType.CONTROL_MASK);
     var dpress   = e.type == EventType.DOUBLE_BUTTON_PRESS;
 
     /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
@@ -2983,8 +2983,8 @@ public class DrawArea : Gtk.DrawingArea {
   private bool on_keypress( EventKey e ) {
 
     /* Figure out which modifiers were used */
-    var control = (bool) e.state & ModifierType.CONTROL_MASK;
-    var shift   = (bool) e.state & ModifierType.SHIFT_MASK;
+    var control = (bool)(e.state & ModifierType.CONTROL_MASK);
+    var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
     var nomod   = !(control || shift);
 
     /* If there is a current node or connection selected, operate on it */
@@ -3326,8 +3326,8 @@ public class DrawArea : Gtk.DrawingArea {
     double delta_x, delta_y;
     e.get_scroll_deltas( out delta_x, out delta_y );
 
-    bool shift   = (bool) e.state & ModifierType.SHIFT_MASK;
-    bool control = (bool) e.state & ModifierType.CONTROL_MASK;
+    bool shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
+    bool control = (bool)(e.state & ModifierType.CONTROL_MASK);
 
     /* Swap the deltas if the SHIFT key is held down */
     if( shift && !control ) {

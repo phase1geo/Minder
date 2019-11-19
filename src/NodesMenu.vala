@@ -89,11 +89,6 @@ public class NodesMenu : Gtk.Menu {
 
   }
 
-  /* Returns true if there is a currently selected connection */
-  private bool connection_selected() {
-    return( _da.get_current_connection() != null );
-  }
-
   /* Returns true if there is a currently selected node that is foldable */
   private void nodes_foldable_status( out bool foldable, out bool unfoldable ) {
     foldable = unfoldable = false;

@@ -113,12 +113,14 @@ public class Themes : Object {
   }
 
   /* Output the current list of themes to standard output */
+#if SKIP
   private void display_themes( string msg ) {
     stdout.printf( "%s\n", msg );
     for( int i=0; i<_themes.length; i++ ) {
       stdout.printf( "  %s\n", _themes.index( i ).name );
     }
   }
+#endif
 
   /* Loads the custom themes from XML */
   private void load_custom() {

@@ -1042,7 +1042,7 @@
                 }
             }
 
-            this.notebook.resize_children ();
+            // this.notebook.resize_children ();
         }
 
         private void restore_last_tab () {
