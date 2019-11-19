@@ -299,7 +299,7 @@ public class UrlLinks {
 
   /* Removes all URLs that were parsed as embedded URLs within the text */
   private void clear_embedded_urls() {
-    for( int i=(_links.length - 1); i>=0; i-- ) {
+    for( int i=((int)_links.length - 1); i>=0; i-- ) {
       if( _links.index( i ).embedded ) {
         _links.remove_index( i );
       }
@@ -315,8 +315,10 @@ public class UrlLinks {
     var epos = new Array<int>();
     ct.search_text( _url_pattern, ref spos, ref epos );
     clear_embedded_urls();
-    for( int i=0; i<url_spos; i++ ) {
-      _links.append_val( new UrlLink( ct.text.substring( spos, epos ), spos, epos, true ) );
+    for( int i=0; i<spos.length; i++ ) {
+      var s = spos.index( i );
+      var e = epos.index( i );
+      _links.append_val( new UrlLink( ct.text.substring( s, ((e - s) + 1) ), s, e, true ) );
     }
   }
 
