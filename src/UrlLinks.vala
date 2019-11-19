@@ -23,22 +23,25 @@ using Pango;
 
 public class UrlLink {
 
-  public string url  { get; set; default = ""; }  /* URL */
-  public int    spos { get; set; default = -1; }  /* Starting position of label text within string */
-  public int    epos { get; set; default = -1; }  /* Ending position of label text within string */
+  public string url      { get; set; default = ""; }
+  public int    spos     { get; set; default = -1; }
+  public int    epos     { get; set; default = -1; }
+  public bool   embedded { get; set; default = false; }
 
   /* Default constructor */
-  public UrlLink( string u, int s, int e ) {
-    url  = u;
-    spos = s;
-    epos = e;
+  public UrlLink( string u, int s, int e, bool b ) {
+    url      = u;
+    spos     = s;
+    epos     = e;
+    embedded = b;
   }
 
   /* Copy constructor */
   public UrlLink.from_url_link( UrlLink ul ) {
-    url  = ul.url;
-    spos = ul.spos;
-    epos = ul.epos;
+    url      = ul.url;
+    spos     = ul.spos;
+    epos     = ul.epos;
+    embedded = ul.embedded;
   }
 
   /* Default constructor */
@@ -52,6 +55,7 @@ public class UrlLink {
     node->set_prop( "url",  url );
     node->set_prop( "spos", spos.to_string() );
     node->set_prop( "epos", epos.to_string() );
+    node->set_prop( "embeded", embedded.to_string() );
     return( node );
   }
 
@@ -68,6 +72,10 @@ public class UrlLink {
     string? e = node->get_prop( "epos" );
     if( e != null ) {
       epos = int.parse( e );
+    }
+    string? em = node->get_prop( "embedded" );
+    if( em != null ) {
+      embedded = bool.parse( em );
     }
   }
 
@@ -182,7 +190,7 @@ public class UrlLinks {
 
   /* Adds a new link to this list */
   public void add_link( int spos, int epos, string url ) {
-    var link = new UrlLink( url, spos, epos );
+    var link = new UrlLink( url, spos, epos, false );
     for( int i=0; i<_links.length; i++ ) {
       if( spos < _links.index( i ).spos ) {
         _links.insert_val( i, link );
@@ -289,6 +297,29 @@ public class UrlLinks {
     return( false );
   }
 
+  /* Removes all URLs that were parsed as embedded URLs within the text */
+  private void clear_embedded_urls() {
+    for( int i=(_links.length - 1); i>=0; i-- ) {
+      if( _links.index( i ).embedded ) {
+        _links.remove_index( i );
+      }
+    }
+  }
+
+  /*
+   Called when the user ends the editing portion of the given text.  Adds all
+   found embedded URLs in the text to the list of URLs.
+  */
+  public void parse_embedded_urls( CanvasText ct ) {
+    var spos = new Array<int>();
+    var epos = new Array<int>();
+    ct.search_text( _url_pattern, ref spos, ref epos );
+    clear_embedded_urls();
+    for( int i=0; i<url_spos; i++ ) {
+      _links.append_val( new UrlLink( ct.text.substring( spos, epos ), spos, epos, true ) );
+    }
+  }
+
   /*
    Generate the URL pos values such that both URLs and user-created links are included and
    URLs do not overlap with user-created links.
@@ -329,6 +360,10 @@ public class UrlLinks {
     }
   }
 
+  /*
+   Adds all of the URL attributes for the URL specified with the
+   given start and end character index.
+  */
   private void add_attributes( ref AttrList attrs, int start, int end ) {
 
     var color = attr_foreground_new( 0, 0, 1 );
