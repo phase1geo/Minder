@@ -210,6 +210,7 @@ public class Node : Object {
         } else {
           name.edit = false;
           name.clear_selection();
+          _urls.parse_embedded_urls( name );
         }
       }
     }

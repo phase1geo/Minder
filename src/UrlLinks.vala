@@ -276,22 +276,6 @@ public class UrlLinks {
         url = _links.index( link ).url;
         ct.get_char_pos( _links.index( link ).spos, out left, out top );
         return( true );
-      } else {
-        var spos = new Array<int>();
-        var epos = new Array<int>();
-        var txt  = ct.text;
-        if( ct.search_text( _url_pattern, ref spos, ref epos ) ) {
-          for( int i=0; i<spos.length; i++ ) {
-            int s = txt.index_of_nth_char( spos.index( i ) );
-            int e = txt.index_of_nth_char( epos.index( i ) );
-            if( (s <= pos) && (pos < e) ) {
-              double top;
-              url = txt.substring( s, (e - s) );
-              ct.get_char_pos( s, out left, out top );
-              return( true );
-            }
-          }
-        }
       }
     }
     return( false );
@@ -306,6 +290,18 @@ public class UrlLinks {
     }
   }
 
+  /* Returns true if at least one stored link overlaps with the given range */
+  private bool overlaps( int us, int ue ) {
+    for( int i=0; i<_links.length; i++ ) {
+      var ls = _links.index( i ).spos;
+      var le = _links.index( i ).epos;
+      if( (ls < ue) && (le > us) ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
   /*
    Called when the user ends the editing portion of the given text.  Adds all
    found embedded URLs in the text to the list of URLs.
@@ -318,46 +314,8 @@ public class UrlLinks {
     for( int i=0; i<spos.length; i++ ) {
       var s = spos.index( i );
       var e = epos.index( i );
-      _links.append_val( new UrlLink( ct.text.substring( s, ((e - s) + 1) ), s, e, true ) );
-    }
-  }
-
-  /*
-   Generate the URL pos values such that both URLs and user-created links are included and
-   URLs do not overlap with user-created links.
-  */
-  private void get_url_pos( CanvasText ct, ref Array<int> spos, ref Array<int> epos ) {
-    var url_spos = new Array<int>();
-    var url_epos = new Array<int>();
-    ct.search_text( _url_pattern, ref url_spos, ref url_epos );
-    int link_index = 0;
-    int url_index  = 0;
-    while( (link_index < _links.length) || (url_index < url_spos.length) ) {
-      if( link_index == _links.length ) {
-        spos.append_val( url_spos.index( url_index ) );
-        epos.append_val( url_epos.index( url_index ) );
-        url_index++;
-      } else if( url_index == url_spos.length ) {
-        spos.append_val( _links.index( link_index ).spos );
-        epos.append_val( _links.index( link_index ).epos );
-        link_index++;
-      } else {
-        var ls = _links.index( link_index ).spos;
-        var le = _links.index( link_index ).epos;
-        var us = url_spos.index( url_index );
-        var ue = url_epos.index( url_index );
-        if( ue < ls ) {
-          spos.append_val( us );
-          epos.append_val( ue );
-          url_index++;
-        } else if( ls < ue ) {
-          spos.append_val( ls );
-          epos.append_val( le );
-          link_index++;
-          if( le >= us ) {
-            url_index++;
-          }
-        }
+      if( !overlaps( s, e ) ) {
+        _links.append_val( new UrlLink( ct.text.substring( s, (e - s) ), s, e, true ) );
       }
     }
   }
@@ -382,13 +340,10 @@ public class UrlLinks {
 
   /* Parses the given string for URLs and adds their markup to the string */
   public void markup_urls( CanvasText ct ) {
-    var spos  = new Array<int>();
-    var epos  = new Array<int>();
     var attrs = ct.pango_layout.get_attributes();
-    get_url_pos( ct, ref spos, ref epos );
-    for( int i=0; i<spos.length; i++ ) {
-      var s = ct.text.index_of_nth_char( spos.index( i ) );
-      var e = ct.text.index_of_nth_char( epos.index( i ) );
+    for( int i=0; i<_links.length; i++ ) {
+      var s = ct.text.index_of_nth_char( _links.index( i ).spos );
+      var e = ct.text.index_of_nth_char( _links.index( i ).epos );
       add_attributes( ref attrs, s, e );
     }
     ct.pango_layout.set_attributes( attrs );
