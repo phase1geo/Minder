@@ -84,7 +84,7 @@ public class UrlLink {
 public class UrlLinks {
 
   private Array<UrlLink> _links;
-  private string         _url_pattern = "\\b[a-zA-Z0-9]+://[a-z0-9-]+\\.[a-z0-9.-]+(?:/|(?:/[][a-zA-Z0-9!#$%&'*+,.:;=?@_~-]+)*)\\b";
+  private string         _url_pattern = "\\b(mailto:.+@[a-z0-9-]+\\.[a-z0-9.-]+|[a-zA-Z0-9]+://[a-z0-9-]+\\.[a-z0-9.-]+(?:/|(?:/[][a-zA-Z0-9!#$%&'*+,.:;=?@_~-]+)*))\\b";
 
   /* Default constructor */
   public UrlLinks() {

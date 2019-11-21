@@ -203,6 +203,9 @@ public class Node : Object {
     }
     set {
       if( _mode != value ) {
+        if( _mode == NodeMode.EDITABLE ) {
+          _urls.parse_embedded_urls( name );
+        }
         _mode = value;
         if( _mode == NodeMode.EDITABLE ) {
           name.edit = true;
@@ -210,7 +213,6 @@ public class Node : Object {
         } else {
           name.edit = false;
           name.clear_selection();
-          _urls.parse_embedded_urls( name );
         }
       }
     }
