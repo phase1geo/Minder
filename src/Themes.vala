@@ -112,6 +112,7 @@ public class Themes : Object {
     }
   }
 
+#if SKIP
   /* Output the current list of themes to standard output */
   private void display_themes( string msg ) {
     stdout.printf( "%s\n", msg );
@@ -119,6 +120,7 @@ public class Themes : Object {
       stdout.printf( "  %s\n", _themes.index( i ).name );
     }
   }
+#endif
 
   /* Loads the custom themes from XML */
   private void load_custom() {

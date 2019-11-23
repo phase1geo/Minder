@@ -309,7 +309,8 @@
                     this.duplicate ();
                 } else if (e.button == 3) {
                     menu.popup_at_pointer (e);
-                    uint num_tabs = (this.get_parent () as Gtk.Container).get_children ().length ();
+                    var cont = (this.get_parent() as Gtk.Container);
+                    uint num_tabs = (cont == null) ? 0 : cont.get_children ().length ();
                     close_other_m.label = ngettext (_("Close Other Tab"), _("Close Other Tabs"), num_tabs - 1);
                     close_other_m.sensitive = (num_tabs != 1);
                     new_window_m.sensitive = (num_tabs != 1);
@@ -413,7 +414,7 @@
         private Gee.LinkedList<Entry?> closed_tabs;
 
         public ClosedTabs () {
-            
+
         }
 
         construct {
@@ -940,7 +941,10 @@
         }
 
         void on_switch_page (Gtk.Widget page, uint pagenum) {
-            var new_tab = (page as TabPageContainer).tab;
+            var cont = (page as TabPageContainer);
+            if( cont == null ) return;
+
+            var new_tab = cont.tab;
 
             // update property accordingly for previous selected tab
             if (old_tab != null)
@@ -955,7 +959,9 @@
         }
 
         void on_page_added (Gtk.Widget page, uint pagenum) {
-            var t = (page as TabPageContainer).tab;
+            var cont = page as TabPageContainer;
+            if( cont == null ) return;
+            var t = cont.tab;
 
             insert_callbacks (t);
             tab_added (t);
@@ -963,7 +969,9 @@
         }
 
         void on_page_removed (Gtk.Widget page, uint pagenum) {
-            var t = (page as TabPageContainer).tab;
+            var cont = page as TabPageContainer;
+            if( cont == null ) return;
+            var t = cont.tab;
 
             remove_callbacks (t);
             tab_removed (t);
@@ -988,7 +996,8 @@
 
             var pinned_tabs = 0;
             for (var i = 0; i < this.notebook.get_n_pages (); i++) {
-                if ((this.notebook.get_tab_label (this.notebook.get_nth_page (i)) as Tab).pinned) {
+                var tab = this.notebook.get_tab_label (this.notebook.get_nth_page (i)) as Tab;
+                if ((tab != null) && tab.pinned) {
                     pinned_tabs++;
                 }
             }
@@ -996,7 +1005,8 @@
             for (var p = 0; p < pinned_tabs; p++) {
                 int sel = p;
                 for (var i = p; i < this.notebook.get_n_pages (); i++) {
-                    if ((this.notebook.get_tab_label (this.notebook.get_nth_page (i)) as Tab).pinned) {
+                    var tab = this.notebook.get_tab_label (this.notebook.get_nth_page (i)) as Tab;
+                    if ((tab != null) && tab.pinned) {
                         sel = i;
                         break;
                     }
@@ -1042,7 +1052,7 @@
                 }
             }
 
-            this.notebook.resize_children ();
+            // this.notebook.resize_children ();
         }
 
         private void restore_last_tab () {
@@ -1089,7 +1099,10 @@
             var list = new List<Gtk.Widget> ();
 
             foreach (var child in notebook.get_children ()) {
-                list.append ((child as Gtk.Container).get_children ().nth_data (0));
+                var cont = child as Gtk.Container;
+                if( cont != null ) {
+                    list.append (cont.get_children ().nth_data (0));
+                }
             }
 
             return list;
