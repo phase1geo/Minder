@@ -83,6 +83,19 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.5.1" date="2019-11-23">
+      <description>
+        <h3>Changes</h3>
+        <ul>
+          <li>Improved various icons (thanks to Nararyans R.I.)</li>
+        </ul>
+        <h3>Bug Fixes</h3>
+        <ul>
+          <li>Downgraded Node.js to fix Travis CI builds</li>
+          <li>Fixed various compiler errors/warnings</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.5.0" date="2019-09-07">
       <description>
         <h3>New</h3>
@@ -242,7 +255,7 @@
           <li>Added support for keeping the map from scrolling off screen.</li>
           <li>Added support for shift-mousewheel to scroll horizontally.</li>
           <li>Added support for control-mousewheel to zoom in/out.</li>
-          <li>Fixed issue with drawing background when zoom factor was small.</li> 
+          <li>Fixed issue with drawing background when zoom factor was small.</li>
           <li>Custom icons are now stored as a gresource rather than in the file system.</li>
           <li>Other minor bug fixes.</li>
         </ul>

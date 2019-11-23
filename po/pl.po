@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-08 08:29-0500\n"
+"POT-Creation-Date: 2019-11-23 15:17-0600\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -239,7 +239,7 @@ msgid "Cursor: %3d,%3d"
 msgstr ""
 
 #: src/ImageEditor.vala:360 src/MainWindow.vala:741 src/MainWindow.vala:785
-#: src/MainWindow.vala:887 src/MainWindow.vala:1123
+#: src/MainWindow.vala:887 src/MainWindow.vala:1132
 msgid "Cancel"
 msgstr "Anuluj"
 
@@ -394,7 +394,7 @@ msgstr "Zadania"
 msgid "Non-tasks"
 msgstr "Nie zadania"
 
-#: src/MainWindow.vala:560 src/MainWindow.vala:1123
+#: src/MainWindow.vala:560 src/MainWindow.vala:1132
 msgid "Export"
 msgstr "Eksport"
 
@@ -446,7 +446,7 @@ msgstr "Zapisz"
 msgid "Open"
 msgstr "Otwórz"
 
-#: src/MainWindow.vala:804 src/MainWindow.vala:1195
+#: src/MainWindow.vala:804 src/MainWindow.vala:1204
 msgid "PlainText"
 msgstr "Dokument tekstowy"
 
@@ -454,59 +454,59 @@ msgstr "Dokument tekstowy"
 msgid "Save File"
 msgstr "Zapisz plik"
 
-#: src/MainWindow.vala:1122
+#: src/MainWindow.vala:1131
 msgid "Export As"
 msgstr "Eksportuj jako"
 
-#: src/MainWindow.vala:1127
+#: src/MainWindow.vala:1136
 msgid "BMP"
 msgstr "BMP"
 
-#: src/MainWindow.vala:1133
+#: src/MainWindow.vala:1142
 msgid "CSV"
 msgstr "CSV"
 
-#: src/MainWindow.vala:1139
+#: src/MainWindow.vala:1148
 msgid "Freemind"
 msgstr ""
 
-#: src/MainWindow.vala:1145
+#: src/MainWindow.vala:1154
 msgid "Freeplane"
 msgstr ""
 
-#: src/MainWindow.vala:1151
+#: src/MainWindow.vala:1160
 msgid "JPEG"
 msgstr "JPEG"
 
-#: src/MainWindow.vala:1158
+#: src/MainWindow.vala:1167
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/MainWindow.vala:1165
+#: src/MainWindow.vala:1174
 msgid "Mermaid"
 msgstr ""
 
-#: src/MainWindow.vala:1171
+#: src/MainWindow.vala:1180
 msgid "OPML"
 msgstr "OPML"
 
-#: src/MainWindow.vala:1177
+#: src/MainWindow.vala:1186
 msgid "PDF"
 msgstr "PDF"
 
-#: src/MainWindow.vala:1183
+#: src/MainWindow.vala:1192
 msgid "PNG (Transparent)"
 msgstr "PNG (z przeźroczystością)"
 
-#: src/MainWindow.vala:1189
+#: src/MainWindow.vala:1198
 msgid "PNG (Opaque)"
 msgstr "PNG"
 
-#: src/MainWindow.vala:1201
+#: src/MainWindow.vala:1210
 msgid "SVG"
 msgstr "SVG"
 
-#: src/MainWindow.vala:1207
+#: src/MainWindow.vala:1216
 msgid "yEd"
 msgstr ""
 
