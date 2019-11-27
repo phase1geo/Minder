@@ -636,7 +636,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       if( _current_node != null ) {
         _current_node.mode  = NodeMode.NONE;
-        // _current_node.alpha = _focus_mode ? _focus_alpha : 1.0; 
+        // _current_node.alpha = _focus_mode ? _focus_alpha : 1.0;
       }
       if( (n.parent != null) && n.parent.folded ) {
         var last = n.reveal();
@@ -757,7 +757,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /*
-   Changes the current connection's note to the given value. 
+   Changes the current connection's note to the given value.
   */
   public void change_current_connection_note( string note ) {
     if( _current_connection != null ) {
@@ -924,7 +924,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     if( conn == _current_connection ) {
       if( conn.mode == ConnMode.EDITABLE ) {
-        bool shift = (bool) e.state & ModifierType.SHIFT_MASK;
+        bool shift = (bool)(e.state & ModifierType.SHIFT_MASK);
         switch( e.type ) {
           case EventType.BUTTON_PRESS        :  conn.title.set_cursor_at_char( e.x, e.y, shift );  break;
           case EventType.DOUBLE_BUTTON_PRESS :  conn.title.set_cursor_at_word( e.x, e.y, shift );  break;
@@ -973,7 +973,7 @@ public class DrawArea : Gtk.DrawingArea {
     node.get_node_info( ref _orig_info );
     if( node == _current_node ) {
       if( is_node_editable() ) {
-        bool shift = (bool) e.state & ModifierType.SHIFT_MASK;
+        bool shift = (bool)(e.state & ModifierType.SHIFT_MASK);
         switch( e.type ) {
           case EventType.BUTTON_PRESS        :  node.name.set_cursor_at_char( e.x, e.y, shift );  break;
           case EventType.DOUBLE_BUTTON_PRESS :  node.name.set_cursor_at_word( e.x, e.y, shift );  break;
@@ -2791,8 +2791,8 @@ public class DrawArea : Gtk.DrawingArea {
   private bool on_keypress( EventKey e ) {
 
     /* Figure out which modifiers were used */
-    var control = (bool) e.state & ModifierType.CONTROL_MASK;
-    var shift   = (bool) e.state & ModifierType.SHIFT_MASK;
+    var control = (bool)(e.state & ModifierType.CONTROL_MASK);
+    var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
     var nomod   = !(control || shift);
 
     /* If there is a current node or connection selected, operate on it */
@@ -3078,8 +3078,8 @@ public class DrawArea : Gtk.DrawingArea {
     double delta_x, delta_y;
     e.get_scroll_deltas( out delta_x, out delta_y );
 
-    bool shift   = (bool) e.state & ModifierType.SHIFT_MASK;
-    bool control = (bool) e.state & ModifierType.CONTROL_MASK;
+    bool shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
+    bool control = (bool)(e.state & ModifierType.CONTROL_MASK);
 
     /* Swap the deltas if the SHIFT key is held down */
     if( shift && !control ) {
