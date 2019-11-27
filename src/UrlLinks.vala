@@ -20,6 +20,7 @@
 */
 
 using Pango;
+using Gtk;
 
 public class UrlLink {
 
@@ -159,10 +160,9 @@ public class UrlLinks {
   /* Adjusts the stored links based on the given text deletion */
   public void delete_text( int spos, int epos ) {
 
-    var len     = epos - spos;
-    var indices = new Array<int>();
+    var len = epos - spos;
 
-    for( int i=0; i<_links.length; i++ ) {
+    for( int i=(int)(_links.length - 1); i>=0; i-- ) {
       var link = _links.index( i );
       if( epos < link.spos ) {
         link.spos -= len;
@@ -171,7 +171,7 @@ public class UrlLinks {
         if( epos < link.epos ) {
           link.spos = epos;
         } else {
-          indices.append_val( i );
+          _links.remove_index( i );
         }
       } else if( spos < link.epos ) {
         if( epos < link.epos ) {
@@ -180,10 +180,6 @@ public class UrlLinks {
           link.epos = spos;
         }
       }
-    }
-
-    for( int i=((int)indices.length - 1); i>=0; i-- ) {
-      _links.remove_index( indices.index( i ) );
     }
 
   }
@@ -339,7 +335,7 @@ public class UrlLinks {
   }
 
   /* Parses the given string for URLs and adds their markup to the string */
-  public void markup_urls( CanvasText ct ) {
+  public void markup_canvas_text( CanvasText ct ) {
     var attrs = ct.pango_layout.get_attributes();
     for( int i=0; i<_links.length; i++ ) {
       var s = ct.text.index_of_nth_char( _links.index( i ).spos );
@@ -347,6 +343,19 @@ public class UrlLinks {
       add_attributes( ref attrs, s, e );
     }
     ct.pango_layout.set_attributes( attrs );
+  }
+
+  /* Applies the URL markup to the given text buffer */
+  public void markup_text_buffer( TextBuffer buf, string tag ) {
+    TextIter s, e;
+    buf.get_start_iter( out s );
+    buf.get_end_iter( out e );
+    buf.remove_tag_by_name( tag, s, e );
+    for( int i=0; i<_links.length; i++ ) {
+      buf.get_iter_at_offset( out s, _links.index( i ).spos );
+      buf.get_iter_at_offset( out e, _links.index( i ).epos );
+      buf.apply_tag_by_name( tag, s, e );
+    }
   }
 
 }

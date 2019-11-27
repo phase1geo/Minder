@@ -547,6 +547,14 @@ public class CanvasText : Object {
     }
   }
 
+  /* Deletes a range of characters */
+  public void delete_range( int start, int end ) {
+    var spos = text.index_of_nth_char( start );
+    var epos = text.index_of_nth_char( end );
+    text = text.splice( spos, epos );
+    deleted( spos, epos );
+  }
+
   /* Inserts the given string at the current cursor position and adjusts cursor */
   public void insert( string s ) {
     var slen = s.char_count();
@@ -564,6 +572,13 @@ public class CanvasText : Object {
       _cursor += slen;
       inserted( cpos, s );
     }
+  }
+
+  /* Inserts the given string at the given position */
+  public void insert_at_pos( int start, string s ) {
+    var spos = text.index_of_nth_char( start );
+    text = text.splice( spos, spos, s );
+    inserted( spos, s );
   }
 
   /*

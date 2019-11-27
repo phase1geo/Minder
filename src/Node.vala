@@ -309,6 +309,9 @@ public class Node : Object {
     get {
       return( _urls );
     }
+    set {
+      _urls = value;
+    }
   }
 
   /* Default constructor */
@@ -323,7 +326,7 @@ public class Node : Object {
     _name.resized.connect( update_size );
     _name.inserted.connect( _urls.insert_text );
     _name.deleted.connect( _urls.delete_text );
-    _name.render_text.connect_after( _urls.markup_urls );
+    _name.render_text.connect_after( _urls.markup_canvas_text );
   }
 
   /* Constructor initializing string */
@@ -337,7 +340,7 @@ public class Node : Object {
     _name.resized.connect( update_size );
     _name.inserted.connect( _urls.insert_text );
     _name.deleted.connect( _urls.delete_text );
-    _name.render_text.connect_after( _urls.markup_urls );
+    _name.render_text.connect_after( _urls.markup_canvas_text );
   }
 
   /* Copies an existing node to this node */
@@ -350,7 +353,7 @@ public class Node : Object {
     _name.resized.connect( update_size );
     _name.inserted.connect( _urls.insert_text );
     _name.deleted.connect( _urls.delete_text );
-    _name.render_text.connect_after( _urls.markup_urls );
+    _name.render_text.connect_after( _urls.markup_canvas_text );
     mode      = NodeMode.NONE;
     _children = n._children;
     for( int i=0; i<_children.length; i++ ) {
@@ -377,7 +380,7 @@ public class Node : Object {
     _name.resized.connect( update_size );
     _name.inserted.connect( _urls.insert_text );
     _name.deleted.connect( _urls.delete_text );
-    _name.render_text.connect_after( _urls.markup_urls );
+    _name.render_text.connect_after( _urls.markup_canvas_text );
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
     id_map.set( n._id, _id );

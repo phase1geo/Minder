@@ -52,6 +52,7 @@ public class DrawArea : Gtk.DrawingArea {
   private Connections      _connections;
   private Theme            _theme;
   private string           _orig_name;
+  private UrlLinks         _orig_urls;
   private NodeSide         _orig_side;
   private Array<NodeInfo?> _orig_info;
   private int              _orig_width;
@@ -559,6 +560,7 @@ public class DrawArea : Gtk.DrawingArea {
     _motion             = false;
     _attach_node        = null;
     _orig_name          = "";
+    _orig_urls          = null;
     _current_new        = false;
     _last_connection    = null;
 
@@ -607,7 +609,8 @@ public class DrawArea : Gtk.DrawingArea {
     n.style = StyleInspector.styles.get_global_style();
 
     _nodes.append_val( n );
-    _orig_name    = "";
+    _orig_name = "";
+    _orig_urls = null;
 
     /* Make this initial node the current node */
     set_current_node( n );
@@ -729,10 +732,12 @@ public class DrawArea : Gtk.DrawingArea {
     if( nodes.length == 1 ) {
       var current = nodes.index( 0 );
       if( current.name.text != name ) {
-        string orig_name = current.name.text;
+        var orig_name = current.name.text;
+        var orig_urls = new UrlLinks();
+        orig_urls.copy( current.urls );
         current.name.text = name;
         if( !_current_new ) {
-          undo_buffer.add_item( new UndoNodeName( current, orig_name ) );
+          undo_buffer.add_item( new UndoNodeName( current, orig_name, orig_urls ) );
         }
         queue_draw();
         changed();
@@ -1761,6 +1766,8 @@ public class DrawArea : Gtk.DrawingArea {
         } else if( !_motion ) {
           current_node.name.set_cursor_all( false );
           _orig_name = current_node.name.text;
+          _orig_urls = new UrlLinks();
+          _orig_urls.copy( current_node.urls );
           current_node.name.move_cursor_to_end();
 
         /* If we are not a root node, move the node into the appropriate position */
@@ -2190,7 +2197,7 @@ public class DrawArea : Gtk.DrawingArea {
       var current = _selected.current_node();
       _im_context.reset();
       if( !_current_new ) {
-        undo_buffer.add_item( new UndoNodeName( current, _orig_name ) );
+        undo_buffer.add_item( new UndoNodeName( current, _orig_name, _orig_urls ) );
       }
       current.mode = NodeMode.CURRENT;
       current_changed( this );
@@ -2236,6 +2243,7 @@ public class DrawArea : Gtk.DrawingArea {
     var node    = new Node( this, layouts.get_default() );
     var current = _selected.current_node();
     _orig_name = "";
+    _orig_urls = null;
     node.side          = current.side;
     node.style         = current.style;
     node.style         = StyleInspector.styles.get_style_for_level( current.get_level(), current.style );
@@ -2261,7 +2269,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_node_editable() ) {
       var current = _selected.current_node();
       if( !_current_new ) {
-        undo_buffer.add_item( new UndoNodeName( current, _orig_name ) );
+        undo_buffer.add_item( new UndoNodeName( current, _orig_name, _orig_urls ) );
       }
       current.mode = NodeMode.CURRENT;
       if( _create_new_from_edit ) {
@@ -2478,6 +2486,7 @@ public class DrawArea : Gtk.DrawingArea {
     var node    = new Node( this, layouts.get_default() );
     var current = _selected.current_node();
     _orig_name = "";
+    _orig_urls = null;
     if( !current.is_root() ) {
       node.side = current.side;
     }
@@ -2503,7 +2512,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_node_editable() ) {
       var current = _selected.current_node();
       if( !_current_new ) {
-        undo_buffer.add_item( new UndoNodeName( current, _orig_name ) );
+        undo_buffer.add_item( new UndoNodeName( current, _orig_name, _orig_urls ) );
       }
       current.mode = NodeMode.CURRENT;
       if( _create_new_from_edit ) {

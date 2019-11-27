@@ -23,21 +23,27 @@ using Gtk;
 
 public class UndoNodeName : UndoItem {
 
-  Node   _node;
-  string _old_name;
-  string _new_name;
+  Node     _node;
+  string   _old_name;
+  UrlLinks _old_urls;
+  string   _new_name;
+  UrlLinks _new_urls;
 
   /* Constructor for a node name change */
-  public UndoNodeName( Node n, string old_name ) {
+  public UndoNodeName( Node n, string old_name, UrlLinks old_urls ) {
     base( _( "node name change" ) );
     _node     = n;
     _old_name = old_name;
+    _old_urls = old_urls;
     _new_name = n.name.text;
+    _new_urls = new UrlLinks();
+    _new_urls.copy( n.urls );
   }
 
   /* Undoes a node name change */
   public override void undo( DrawArea da ) {
     _node.name.text = _old_name;
+    _node.urls.copy( _old_urls );
     da.queue_draw();
     da.current_changed( da );
     da.changed();
@@ -46,6 +52,7 @@ public class UndoNodeName : UndoItem {
   /* Redoes a node name change */
   public override void redo( DrawArea da ) {
     _node.name.text = _new_name;
+    _node.urls.copy( _new_urls );
     da.queue_draw();
     da.current_changed( da );
     da.changed();
