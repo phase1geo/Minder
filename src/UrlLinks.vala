@@ -322,15 +322,15 @@ public class UrlLinks {
   */
   private void add_attributes( ref AttrList attrs, int start, int end ) {
 
-    var color = attr_foreground_new( 0, 0, 1 );
+    var color = attr_foreground_new( 0, 0, 65535 );
     color.start_index = start;
     color.end_index   = end;
-    attrs.insert( color.copy() );
+    attrs.change( color.copy() );
 
     var uline = attr_underline_new( Underline.SINGLE );
     uline.start_index = start;
     uline.end_index   = end;
-    attrs.insert( uline.copy() );
+    attrs.change( uline.copy() );
 
   }
 

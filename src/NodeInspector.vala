@@ -97,11 +97,11 @@ public class NodeInspector : Box {
     _name = new TextView();
     _name.set_wrap_mode( Gtk.WrapMode.WORD );
     _name.buffer.text = "";
-    _name.buffer.create_tag( "urllink", "background", "light blue" );
+    _name.buffer.create_tag( "urllink", "foreground", "blue" );
     _name.buffer.insert_text.connect( name_inserted );
     _name.buffer.delete_range.connect( name_deleted );
-    // _name.buffer.changed.connect( name_changed );
-    // _name.focus_out_event.connect( name_focus_out );
+    _name.focus_in_event.connect( name_focus_in );
+    _name.focus_out_event.connect( name_focus_out );
 
     var sw = new ScrolledWindow( null, null );
     sw.min_content_width  = 300;
@@ -190,7 +190,7 @@ public class NodeInspector : Box {
     _note = new TextView();
     _note.set_wrap_mode( Gtk.WrapMode.WORD );
     _note.buffer.text = "";
-    _note.buffer.create_tag( "urllink", "background", "light blue" );
+    _note.buffer.create_tag( "urllink", "foreground", "blue" );
     _note.buffer.changed.connect( note_changed );
     _note.focus_in_event.connect( note_focus_in );
     _note.focus_out_event.connect( note_focus_out );
@@ -377,18 +377,14 @@ public class NodeInspector : Box {
   private void name_deleted( TextIter start, TextIter end ) {
     if( !_ignore_name_change ) {
       var node = _da.get_current_node();
-      node.name.delete_range( start.get_offset(), end.get_offset() ); 
+      node.name.delete_range( start.get_offset(), end.get_offset() );
     }
   }
 
-  /*
-   Called whenever the node name is changed within the inspector.
-  */
-  private void name_changed() {
-    if( !_ignore_name_change ) {
-      _da.change_current_node_name( _name.buffer.text );
-    }
-    _ignore_name_change = false;
+  /* Called whenever the node name begins to be edited */
+  private bool name_focus_in( EventFocus e ) {
+    _da.capture_current_node_name();
+    return( false );
   }
 
   /*
@@ -396,13 +392,13 @@ public class NodeInspector : Box {
    node title in the canvas.
   */
   private bool name_focus_out( EventFocus e ) {
-    _da.change_current_node_name( _name.buffer.text );
+    _da.commit_current_node_name();
     return( false );
   }
 
   /* Called whenever the task enable switch is changed within the inspector */
   private bool task_changed( Gdk.EventButton e ) {
-    Node? current = _da.get_current_node();
+    var current = _da.get_current_node();
     if( current != null ) {
       _da.change_current_task( !current.task_enabled(), false );
     }
@@ -411,7 +407,7 @@ public class NodeInspector : Box {
 
   /* Called whenever the fold switch is changed within the inspector */
   private bool fold_changed( Gdk.EventButton e ) {
-    Node? current = _da.get_current_node();
+    var current = _da.get_current_node();
     if( current != null ) {
       _da.change_current_fold( !current.folded );
     }

@@ -723,21 +723,26 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Copy the current node name and URL links */
+  public void capture_current_node_name() {
+    var current = _selected.current_node();
+    if( current != null ) {
+      _orig_name = current.name.text;
+      _orig_urls = new UrlLinks();
+      _orig_urls.copy( current.urls );
+    }
+  }
+
   /*
-   Changes the current node's name to the given name.  Updates the layout,
+   Saves the current node's name.  Updates the layout,
    adds the undo item, and redraws the canvas.
   */
-  public void change_current_node_name( string name ) {
-    var nodes = _selected.nodes();
-    if( nodes.length == 1 ) {
-      var current = nodes.index( 0 );
-      if( current.name.text != name ) {
-        var orig_name = current.name.text;
-        var orig_urls = new UrlLinks();
-        orig_urls.copy( current.urls );
-        current.name.text = name;
+  public void commit_current_node_name() {
+    var current = _selected.current_node();
+    if( current != null ) {
+      if( current.name.text != _orig_name ) {
         if( !_current_new ) {
-          undo_buffer.add_item( new UndoNodeName( current, orig_name, orig_urls ) );
+          undo_buffer.add_item( new UndoNodeName( current, _orig_name, _orig_urls ) );
         }
         queue_draw();
         changed();
@@ -1648,12 +1653,14 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         auto_save();
       }
-      if( !_motion && !_resize && (current_node != null) ) {
+
+      if( !_motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
         current_node.alpha = 0.3;
       }
       _press_x = scaled_x;
       _press_y = scaled_y;
       _motion  = true;
+
     } else {
       if( current_conn != null )  {
         if( (current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING) ) {
@@ -1701,7 +1708,9 @@ public class DrawArea : Gtk.DrawingArea {
       set_cursor( null );
       set_tooltip_markup( null );
     }
+
     return( false );
+
   }
 
   /* Handle button release event */
@@ -2193,6 +2202,7 @@ public class DrawArea : Gtk.DrawingArea {
       current.mode = ConnMode.SELECTED;
       current_changed( this );
       queue_draw();
+      changed();
     } else if( is_node_editable() ) {
       var current = _selected.current_node();
       _im_context.reset();
@@ -2202,6 +2212,7 @@ public class DrawArea : Gtk.DrawingArea {
       current.mode = NodeMode.CURRENT;
       current_changed( this );
       queue_draw();
+      changed();
     } else if( is_connection_connecting() ) {
       var current = _selected.current_connection();
       _connections.remove_connection( current, true );
