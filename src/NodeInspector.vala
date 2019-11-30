@@ -97,7 +97,7 @@ public class NodeInspector : Box {
     _name = new TextView();
     _name.set_wrap_mode( Gtk.WrapMode.WORD );
     _name.buffer.text = "";
-    _name.buffer.create_tag( "urllink", "foreground", "blue" );
+    _name.buffer.create_tag( "urllink", "background_rgba", _da.get_theme().get_color( "url_background" ) );
     _name.buffer.insert_text.connect( name_inserted );
     _name.buffer.delete_range.connect( name_deleted );
     _name.focus_in_event.connect( name_focus_in );
@@ -190,7 +190,7 @@ public class NodeInspector : Box {
     _note = new TextView();
     _note.set_wrap_mode( Gtk.WrapMode.WORD );
     _note.buffer.text = "";
-    _note.buffer.create_tag( "urllink", "foreground", "blue" );
+    _note.buffer.create_tag( "urllink", "background_rgba", _da.get_theme().get_color( "url_background" ) );
     _note.buffer.changed.connect( note_changed );
     _note.focus_in_event.connect( note_focus_in );
     _note.focus_out_event.connect( note_focus_out );
@@ -484,6 +484,12 @@ public class NodeInspector : Box {
 
     /* Set the palette with the new theme colors */
     _link_color.add_palette( Orientation.HORIZONTAL, 10, colors );
+
+    /* Update the URL tags */
+    var tag = _name.buffer.tag_table.lookup( "urllink" );
+    if( tag != null ) {
+      tag.background_rgba = _da.get_theme().get_color( "url_background" );
+    }
 
   }
 

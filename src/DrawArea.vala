@@ -728,7 +728,7 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     if( current != null ) {
       _orig_name = current.name.text;
-      _orig_urls = new UrlLinks();
+      _orig_urls = new UrlLinks( this );
       _orig_urls.copy( current.urls );
     }
   }
@@ -1775,7 +1775,7 @@ public class DrawArea : Gtk.DrawingArea {
         } else if( !_motion ) {
           current_node.name.set_cursor_all( false );
           _orig_name = current_node.name.text;
-          _orig_urls = new UrlLinks();
+          _orig_urls = new UrlLinks( this );
           _orig_urls.copy( current_node.urls );
           current_node.name.move_cursor_to_end();
 

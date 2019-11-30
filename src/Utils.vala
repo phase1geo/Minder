@@ -46,6 +46,14 @@ public class Utils {
     ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
   }
 
+  /* Returns the red, green and blue color values that are needed by the Pango color attributes */
+  public static void get_attribute_color( RGBA color, out uint16 red, out uint16 green, out uint16 blue ) {
+    var maxval = 65535;
+    red   = (uint16)(color.red   * maxval);
+    green = (uint16)(color.green * maxval);
+    blue  = (uint16)(color.blue  * maxval);
+  }
+
   /*
    Adds the given accelerator label to the given menu item.
   */

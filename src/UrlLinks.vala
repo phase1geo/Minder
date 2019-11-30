@@ -21,6 +21,7 @@
 
 using Pango;
 using Gtk;
+using Gdk;
 
 public class UrlLink {
 
@@ -84,16 +85,18 @@ public class UrlLink {
 
 public class UrlLinks {
 
+  private DrawArea       _da;
   private Array<UrlLink> _links;
   private string         _url_pattern = "\\b(mailto:.+@[a-z0-9-]+\\.[a-z0-9.-]+|[a-zA-Z0-9]+://[a-z0-9-]+\\.[a-z0-9.-]+(?:/|(?:/[][a-zA-Z0-9!#$%&'*+,.:;=?@_~-]+)*))\\b";
 
   /* Default constructor */
-  public UrlLinks() {
+  public UrlLinks( DrawArea da ) {
+    _da    = da;
     _links = new Array<UrlLink>();
   }
 
   /* Constructor */
-  public UrlLinks.from_xml( Xml.Node* node ) {
+  public UrlLinks.from_xml( DrawArea da, Xml.Node* node ) {
     _links = new Array<UrlLink>();
     load( node );
   }
@@ -119,6 +122,7 @@ public class UrlLinks {
 
   /* Modifies this class to match the given UrlLinks instance */
   public void copy( UrlLinks uls ) {
+    _da = uls._da;
     if( _links.length > 0 ) {
       _links.remove_range( 0, _links.length );
     }
@@ -322,7 +326,10 @@ public class UrlLinks {
   */
   private void add_attributes( ref AttrList attrs, int start, int end ) {
 
-    var color = attr_foreground_new( 0, 0, 65535 );
+    uint16 red, green, blue;
+    Utils.get_attribute_color( _da.get_theme().get_color( "url_foreground" ), out red, out green, out blue );
+
+    var color = attr_foreground_new( red, green, blue );
     color.start_index = start;
     color.end_index   = end;
     attrs.change( color.copy() );

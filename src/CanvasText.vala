@@ -46,7 +46,7 @@ public class CanvasText : Object {
   public signal void resized();
   public signal void inserted( int spos, string str );
   public signal void deleted( int spos, int epos );
-  public signal void render_text( CanvasText ct );
+  public signal void render( CanvasText ct );
 
   /* Properties */
   public string text {
@@ -226,18 +226,40 @@ public class CanvasText : Object {
   }
 
   /* Generates the marked up name that will be displayed in the node */
-  private string name_markup( Theme? theme ) {
-    if( (_selstart != _selend) && (theme != null) ) {
-      var fg      = Utils.color_from_rgba( theme.get_color( "textsel_foreground" ) );
-      var bg      = Utils.color_from_rgba( theme.get_color( "textsel_background" ) );
-      var spos    = text.index_of_nth_char( _selstart );
-      var epos    = text.index_of_nth_char( _selend );
-      var begtext = unmarkup( text.slice( 0, spos ) );
-      var endtext = unmarkup( text.slice( epos, text.char_count() ) );
-      var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + unmarkup( text.slice( spos, epos ) ) + "</span>";
-      return( begtext + seltext + endtext );
-    }
+  private string name_markup() {
     return( (markup || edit) ? text : unmarkup( text ) );
+  }
+
+  /* Render the text, adding any necessary attributes to the text layout */
+  private void render_text( Theme? theme ) {
+
+    /* Allow everyone else to render */
+    render( this );
+
+    /* If we need to add a selection do it now */
+    if( (_selstart != _selend) && (theme != null) ) {
+
+      uint16 red, green, blue;
+      var attrs    = _pango_layout.get_attributes();
+      var selstart = text.index_of_nth_char( _selstart );
+      var selend   = text.index_of_nth_char( _selend );
+
+      Utils.get_attribute_color( theme.get_color( "textsel_background" ), out red, out green, out blue );
+      var bgcolor = attr_background_new( red, green, blue );
+      bgcolor.start_index = selstart;
+      bgcolor.end_index   = selend;
+      attrs.change( bgcolor.copy() );
+
+      Utils.get_attribute_color( theme.get_color( "textsel_foreground" ), out red, out green, out blue );
+      var fgcolor = attr_foreground_new( red, green, blue );
+      fgcolor.start_index = selstart;
+      fgcolor.end_index   = selend;
+      attrs.change( fgcolor.copy() );
+
+      _pango_layout.set_attributes( attrs );
+
+    }
+
   }
 
   /*
@@ -246,8 +268,8 @@ public class CanvasText : Object {
   public void update_size( bool call_resized ) {
     if( _pango_layout != null ) {
       int text_width, text_height;
-      _pango_layout.set_markup( name_markup( null ), -1 );
-      render_text( this );
+      _pango_layout.set_markup( name_markup(), -1 );
+      render_text( null );
       _pango_layout.get_size( out text_width, out text_height );
       _width  = (text_width  / Pango.SCALE);
       _height = (text_height / Pango.SCALE);
@@ -643,8 +665,8 @@ public class CanvasText : Object {
   public void draw( Cairo.Context ctx, Theme theme, RGBA fg, double alpha ) {
 
     /* Make sure the the size is up-to-date */
-    _pango_layout.set_markup( name_markup( theme ), -1 );
-    render_text( this );
+    _pango_layout.set_markup( name_markup(), -1 );
+    render_text( theme );
 
     /* Output the text */
     ctx.move_to( posx, posy );

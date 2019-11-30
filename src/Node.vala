@@ -320,13 +320,13 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
-    _urls     = new UrlLinks();
+    _urls     = new UrlLinks( da );
     _name     = new CanvasText( da, _max_width );
     _name.urls = true;
     _name.resized.connect( update_size );
     _name.inserted.connect( _urls.insert_text );
     _name.deleted.connect( _urls.delete_text );
-    _name.render_text.connect_after( _urls.markup_canvas_text );
+    _name.render.connect_after( _urls.markup_canvas_text );
   }
 
   /* Constructor initializing string */
@@ -335,25 +335,25 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
-    _urls     = new UrlLinks();
+    _urls     = new UrlLinks( da );
     _name     = new CanvasText.with_text( da, _max_width, n );
     _name.resized.connect( update_size );
     _name.inserted.connect( _urls.insert_text );
     _name.deleted.connect( _urls.delete_text );
-    _name.render_text.connect_after( _urls.markup_canvas_text );
+    _name.render.connect_after( _urls.markup_canvas_text );
   }
 
   /* Copies an existing node to this node */
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
     _da       = da;
     _id       = _next_id++;
-    _urls     = new UrlLinks();
+    _urls     = new UrlLinks( da );
     _name     = new CanvasText( da, _max_width );
     copy_variables( n, im );
     _name.resized.connect( update_size );
     _name.inserted.connect( _urls.insert_text );
     _name.deleted.connect( _urls.delete_text );
-    _name.render_text.connect_after( _urls.markup_canvas_text );
+    _name.render.connect_after( _urls.markup_canvas_text );
     mode      = NodeMode.NONE;
     _children = n._children;
     for( int i=0; i<_children.length; i++ ) {
@@ -364,7 +364,7 @@ public class Node : Object {
   public Node.copy_only( DrawArea da, Node n, ImageManager im ) {
     _da = da;
     _id = _next_id++;
-    _urls = new UrlLinks();
+    _urls = new UrlLinks( da );
     _name = new CanvasText( da, _max_width );
     copy_variables( n, im );
   }
@@ -373,14 +373,14 @@ public class Node : Object {
   public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int> id_map ) {
     _da       = da;
     _id       = _next_id++;
-    _urls     = new UrlLinks();
+    _urls     = new UrlLinks( da );
     _name     = new CanvasText( da, _max_width );
     _children = new Array<Node>();
     copy_variables( n, im );
     _name.resized.connect( update_size );
     _name.inserted.connect( _urls.insert_text );
     _name.deleted.connect( _urls.delete_text );
-    _name.render_text.connect_after( _urls.markup_canvas_text );
+    _name.render.connect_after( _urls.markup_canvas_text );
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
     id_map.set( n._id, _id );

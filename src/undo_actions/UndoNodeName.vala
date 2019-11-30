@@ -36,7 +36,7 @@ public class UndoNodeName : UndoItem {
     _old_name = old_name;
     _old_urls = old_urls;
     _new_name = n.name.text;
-    _new_urls = new UrlLinks();
+    _new_urls = new UrlLinks( n.da );
     _new_urls.copy( n.urls );
   }
 
