@@ -29,6 +29,7 @@ public class UrlLink {
   public int    spos     { get; set; default = -1; }
   public int    epos     { get; set; default = -1; }
   public bool   embedded { get; set; default = false; }
+  public bool   ignore   { get; set; default = false; }
 
   /* Default constructor */
   public UrlLink( string u, int s, int e, bool b ) {
@@ -44,6 +45,7 @@ public class UrlLink {
     spos     = ul.spos;
     epos     = ul.epos;
     embedded = ul.embedded;
+    ignore   = ul.ignore;
   }
 
   /* Default constructor */
@@ -54,10 +56,11 @@ public class UrlLink {
   /* Saves this URL link to a save file */
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "urllink" );
-    node->set_prop( "url",  url );
-    node->set_prop( "spos", spos.to_string() );
-    node->set_prop( "epos", epos.to_string() );
-    node->set_prop( "embeded", embedded.to_string() );
+    node->set_prop( "url",      url );
+    node->set_prop( "spos",     spos.to_string() );
+    node->set_prop( "epos",     epos.to_string() );
+    node->set_prop( "embedded", embedded.to_string() );
+    node->set_prop( "ignore",   ignore.to_string() );
     return( node );
   }
 
@@ -78,6 +81,10 @@ public class UrlLink {
     string? em = node->get_prop( "embedded" );
     if( em != null ) {
       embedded = bool.parse( em );
+    }
+    string? i = node->get_prop( "ignore" );
+    if( i != null ) {
+      ignore = bool.parse( i );
     }
   }
 
@@ -204,7 +211,19 @@ public class UrlLinks {
   public void remove_link( int pos ) {
     var index = find_link( pos );
     if( index != -1 ) {
-      _links.remove_index( index );
+      if( _links.index( index ).embedded ) {
+        _links.index( index ).ignore = true;
+      } else {
+        _links.remove_index( index );
+      }
+    }
+  }
+
+  /* Restores an embedded URL that was previously removed */
+  public void restore_link( int pos ) {
+    var index = find_link( pos );
+    if( index != -1 ) {
+      _links.index( index ).ignore = false;
     }
   }
 
@@ -259,6 +278,27 @@ public class UrlLinks {
     return( -1 );
   }
 
+  /* Returns true if the cursor is over an embedded URL */
+  public bool get_embedded( int pos ) {
+    var index = find_link( pos );
+    if( index != -1 ) {
+      return( _links.index( index ).embedded );
+    }
+    return( false );
+  }
+
+  /*
+   Returns true if we have a valid URL at the given cursor position and it was
+   previously marked as ignored.
+  */
+  public bool get_ignore( int pos ) {
+    var index = find_link( pos );
+    if( index != -1 ) {
+      return( _links.index( index ).ignore );
+    }
+    return( false );
+  }
+
   /* Returns true if the given string is a URL pattern */
   public bool is_url( string str ) {
     return( Regex.match_simple( _url_pattern, str ) );
@@ -271,7 +311,7 @@ public class UrlLinks {
     left = 0;
     if( pos != -1 ) {
       var link = find_link( pos );
-      if( link != -1 ) {
+      if( (link != -1) && !_links.index( link ).ignore ) {
         double top;
         url = _links.index( link ).url;
         ct.get_char_pos( _links.index( link ).spos, out left, out top );
@@ -284,7 +324,7 @@ public class UrlLinks {
   /* Removes all URLs that were parsed as embedded URLs within the text */
   private void clear_embedded_urls() {
     for( int i=((int)_links.length - 1); i>=0; i-- ) {
-      if( _links.index( i ).embedded ) {
+      if( _links.index( i ).embedded && !_links.index( i ).ignore ) {
         _links.remove_index( i );
       }
     }
@@ -345,6 +385,7 @@ public class UrlLinks {
   public void markup_canvas_text( CanvasText ct ) {
     var attrs = ct.pango_layout.get_attributes();
     for( int i=0; i<_links.length; i++ ) {
+      if( _links.index( i ).ignore ) continue;
       var s = ct.text.index_of_nth_char( _links.index( i ).spos );
       var e = ct.text.index_of_nth_char( _links.index( i ).epos );
       add_attributes( ref attrs, s, e );
@@ -359,6 +400,7 @@ public class UrlLinks {
     buf.get_end_iter( out e );
     buf.remove_tag_by_name( tag, s, e );
     for( int i=0; i<_links.length; i++ ) {
+      if( _links.index( i ).ignore ) continue;
       buf.get_iter_at_offset( out s, _links.index( i ).spos );
       buf.get_iter_at_offset( out e, _links.index( i ).epos );
       buf.apply_tag_by_name( tag, s, e );

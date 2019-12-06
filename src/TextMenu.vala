@@ -23,14 +23,16 @@ using Gtk;
 
 public class TextMenu : Gtk.Menu {
 
-  DrawArea     _da;
-  Gtk.MenuItem _copy;
-  Gtk.MenuItem _cut;
-  Gtk.MenuItem _paste;
-  Gtk.MenuItem _emoji;
-  Gtk.MenuItem _add_link;
-  Gtk.MenuItem _del_link;
-  Gtk.MenuItem _edit_link;
+  DrawArea              _da;
+  Gtk.MenuItem          _copy;
+  Gtk.MenuItem          _cut;
+  Gtk.MenuItem          _paste;
+  Gtk.MenuItem          _emoji;
+  Gtk.MenuItem          _add_link;
+  Gtk.MenuItem          _del_link;
+  Gtk.MenuItem          _edit_link;
+  Gtk.MenuItem          _rest_link;
+  Gtk.SeparatorMenuItem _link_div;
 
   public TextMenu( DrawArea da, AccelGroup accel_group ) {
 
@@ -56,13 +58,19 @@ public class TextMenu : Gtk.Menu {
     _add_link.activate.connect( add_link );
     // Utils.add_accel_label( _delete, 'v', Gdk.ModifierType.CONTROL_MASK );
 
+    _edit_link = new Gtk.MenuItem.with_label( _( "Edit Link" ) );
+    _edit_link.activate.connect( edit_link );
+    // Utils.add_accel_label( _del_link, 'v', Gdk.ModifierType.CONTROL_MASK );
+
     _del_link = new Gtk.MenuItem.with_label( _( "Remove Link" ) );
     _del_link.activate.connect( remove_link );
     // Utils.add_accel_label( _add_link, 'v', Gdk.ModifierType.CONTROL_MASK );
 
-    _edit_link = new Gtk.MenuItem.with_label( _( "Edit Link" ) );
-    _edit_link.activate.connect( edit_link );
+    _rest_link = new Gtk.MenuItem.with_label( _( "Restore Link" ) );
+    _rest_link.activate.connect( restore_link );
     // Utils.add_accel_label( _del_link, 'v', Gdk.ModifierType.CONTROL_MASK );
+
+    _link_div = new Gtk.SeparatorMenuItem();
 
     /* Add the menu items to the menu */
     add( _copy );
@@ -70,10 +78,11 @@ public class TextMenu : Gtk.Menu {
     add( _paste );
     add( new SeparatorMenuItem() );
     add( _emoji );
-    add( new SeparatorMenuItem() );
+    add( _link_div );
     add( _add_link );
-    add( _del_link );
     add( _edit_link );
+    add( _del_link );
+    add( _rest_link );
 
     /* Make the menu visible */
     show_all();
@@ -132,19 +141,42 @@ public class TextMenu : Gtk.Menu {
     _da.url_editor.edit_url();
   }
 
+  /* Restores an embedded link that was previously removed */
+  private void restore_link() {
+    var node = _da.get_current_node();
+    int cursor, selstart, selend;
+    node.name.get_cursor_info( out cursor, out selstart, out selend );
+    node.urls.restore_link( cursor );
+    _da.changed();
+  }
+
   /*
    Called when this menu is about to be displayed.  Allows the menu items to
    get set to contextually relevant states.
   */
   private void on_popup() {
 
+    bool embedded = current_embedded();
+    bool ignore   = restore_link_possible();
+
     /* Set the menu sensitivity */
     _copy.set_sensitive( copy_or_cut_possible() );
     _cut.set_sensitive( copy_or_cut_possible() );
     _paste.set_sensitive( paste_possible() );
-    _add_link.set_sensitive( add_link_possible() );
-    _del_link.set_sensitive( remove_link_possible() );
-    _edit_link.set_sensitive( edit_link_possible() );
+
+    // embedded ignore   RESULT
+    // -------- ------   ------
+    //    0       0       add, del, edit
+    //    0       1       add, del, edit
+    //    1       0       del
+    //    1       1       rest
+
+    /* Set view of all link menus */
+    _add_link.visible  = !embedded && !ignore && add_link_possible();
+    _edit_link.visible = !embedded && edit_link_possible();
+    _del_link.visible  = (!embedded || !ignore) && remove_link_possible();
+    _rest_link.visible =  embedded &&  ignore;
+    _link_div.visible  = _add_link.visible || _edit_link.visible || _del_link.visible || _rest_link.visible;
 
   }
 
@@ -209,7 +241,7 @@ public class TextMenu : Gtk.Menu {
     if( node != null ) {
       int cursor, selstart, selend;
       node.name.get_cursor_info( out cursor, out selstart, out selend );
-      return( (selstart == selend) && (node.urls.find_link( cursor ) != -1) );
+      return( (selstart == selend) && (node.urls.find_link( cursor ) != -1) && !node.urls.get_ignore( cursor ) );
     }
 
     return( false );
@@ -228,6 +260,38 @@ public class TextMenu : Gtk.Menu {
       int cursor, selstart, selend;
       node.name.get_cursor_info( out cursor, out selstart, out selend );
       return( (selstart == selend) && (node.urls.find_link( cursor ) != -1) );
+    }
+
+    return( false );
+
+  }
+
+  /*
+   A link can be restored if it was previously marked as ignore.
+  */
+  private bool restore_link_possible() {
+
+    var node = _da.get_current_node();
+
+    if( node != null ) {
+      int cursor, selstart, selend;
+      node.name.get_cursor_info( out cursor, out selstart, out selend );
+      return( (selstart == selend) && node.urls.get_ignore( cursor ) );
+    }
+
+    return( false );
+
+  }
+
+  /* Returns true if the current cursor is over an embedded URL */
+  private bool current_embedded() {
+
+    var node = _da.get_current_node();
+
+    if( node != null ) {
+      int cursor, selstart, selend;
+      node.name.get_cursor_info( out cursor, out selstart, out selend );
+      return( (selstart == selend) && node.urls.get_embedded( cursor ) );
     }
 
     return( false );

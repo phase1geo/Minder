@@ -204,7 +204,9 @@ public class Node : Object {
     set {
       if( _mode != value ) {
         if( _mode == NodeMode.EDITABLE ) {
-          _urls.parse_embedded_urls( name );
+          if( _da.settings.get_boolean( "auto-parse-embedded-urls" ) ) {
+            _urls.parse_embedded_urls( name );
+          }
         }
         _mode = value;
         if( _mode == NodeMode.EDITABLE ) {
