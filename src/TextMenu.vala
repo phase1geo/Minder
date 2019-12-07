@@ -28,11 +28,13 @@ public class TextMenu : Gtk.Menu {
   Gtk.MenuItem          _cut;
   Gtk.MenuItem          _paste;
   Gtk.MenuItem          _emoji;
+  Gtk.MenuItem          _open_link;
   Gtk.MenuItem          _add_link;
   Gtk.MenuItem          _del_link;
   Gtk.MenuItem          _edit_link;
   Gtk.MenuItem          _rest_link;
-  Gtk.SeparatorMenuItem _link_div;
+  Gtk.SeparatorMenuItem _link_div1;
+  Gtk.SeparatorMenuItem _link_div2;
 
   public TextMenu( DrawArea da, AccelGroup accel_group ) {
 
@@ -54,6 +56,10 @@ public class TextMenu : Gtk.Menu {
     _emoji.activate.connect( insert_emoji );
     Utils.add_accel_label( _emoji, '.', Gdk.ModifierType.CONTROL_MASK );
 
+    _open_link = new Gtk.MenuItem.with_label( _( "Open Link" ) );
+    _open_link.activate.connect( open_link );
+    // Utils.add_accel_label( _delete, 'v', Gdk.ModifierType.CONTROL_MASK );
+
     _add_link = new Gtk.MenuItem.with_label( _( "Add Link" ) );
     _add_link.activate.connect( add_link );
     // Utils.add_accel_label( _delete, 'v', Gdk.ModifierType.CONTROL_MASK );
@@ -70,7 +76,8 @@ public class TextMenu : Gtk.Menu {
     _rest_link.activate.connect( restore_link );
     // Utils.add_accel_label( _del_link, 'v', Gdk.ModifierType.CONTROL_MASK );
 
-    _link_div = new Gtk.SeparatorMenuItem();
+    _link_div1 = new Gtk.SeparatorMenuItem();
+    _link_div2 = new Gtk.SeparatorMenuItem();
 
     /* Add the menu items to the menu */
     add( _copy );
@@ -78,7 +85,9 @@ public class TextMenu : Gtk.Menu {
     add( _paste );
     add( new SeparatorMenuItem() );
     add( _emoji );
-    add( _link_div );
+    add( _link_div1 );
+    add( _open_link );
+    add( _link_div2 );
     add( _add_link );
     add( _edit_link );
     add( _del_link );
@@ -117,6 +126,14 @@ public class TextMenu : Gtk.Menu {
   */
   private void insert_emoji() {
     _da.handle_control_period();
+  }
+
+  private void open_link() {
+    var node = _da.get_current_node();
+    int cursor, selstart, selend;
+    node.name.get_cursor_info( out cursor, out selstart, out selend );
+    var link = node.urls.find_link( cursor );
+    Utils.open_url( link.url );
   }
 
   /*
@@ -190,19 +207,22 @@ public class TextMenu : Gtk.Menu {
       //    1       1       rest
 
       /* Set view of all link menus */
+      _open_link.visible = !ignore;
       _add_link.visible  = !embedded && !ignore && add_link_possible( node, selstart, selend );
       _edit_link.visible = !selected && !embedded;
       _del_link.visible  = !selected && (!embedded || !ignore);
       _rest_link.visible = !selected && embedded && ignore;
 
     } else {
+      _open_link.visible = false;
       _add_link.visible  = false;
       _edit_link.visible = false;
       _del_link.visible  = false;
       _rest_link.visible = false;
     }
 
-    _link_div.visible  = _add_link.visible || _edit_link.visible || _del_link.visible || _rest_link.visible;
+    _link_div1.visible = _open_link.visible;
+    _link_div2.visible = _add_link.visible || _edit_link.visible || _del_link.visible || _rest_link.visible;
 
   }
 
