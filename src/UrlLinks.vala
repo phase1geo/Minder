@@ -208,45 +208,48 @@ public class UrlLinks {
   }
 
   /* Removes the link that exists at the given character position */
-  public void remove_link( int pos ) {
-    var index = find_link( pos );
-    if( index != -1 ) {
-      if( _links.index( index ).embedded ) {
-        _links.index( index ).ignore = true;
-      } else {
-        _links.remove_index( index );
+  public void remove_link( int cursor ) {
+    for( int i=0; i<_links.length; i++ ) {
+      var link = _links.index( i );
+      if( (link.spos <= cursor) && (cursor < link.epos) ) {
+        if( link.embedded ) {
+          link.ignore = true;
+        } else {
+          _links.remove_index( i );
+        }
+        return;
       }
     }
   }
 
   /* Restores an embedded URL that was previously removed */
-  public void restore_link( int pos ) {
-    var index = find_link( pos );
-    if( index != -1 ) {
-      _links.index( index ).ignore = false;
+  public void restore_link( int cursor ) {
+    var link = find_link( cursor );
+    if( link != null ) {
+      link.ignore = false;
     }
   }
 
   /* Changes the stored URL to the given value */
-  public void change_link( int pos, string url ) {
-    var index = find_link( pos );
-    if( index != -1 ) {
-      _links.index( index ).url = url;
+  public void change_link( int cursor, string url ) {
+    var link = find_link( cursor );
+    if( link != null ) {
+      link.url = url;
     }
   }
 
   /*
-   Returns the index of the link that exists at the given character position.
-   If no link exists at the given position, return -1.
+   Returns the UrlLink of the link that exists at the given cursor position.
+   If no link exists at the given position, returns null.
   */
-  public int find_link( int pos ) {
+  public UrlLink? find_link( int cursor ) {
     for( int i=0; i<_links.length; i++ ) {
       var link = _links.index( i );
-      if( (link.spos <= pos) && (pos < link.epos) ) {
-        return( i );
+      if( (link.spos <= cursor) && (cursor < link.epos) ) {
+        return( _links.index( i ) );
       }
     }
-    return( -1 );
+    return( null );
   }
 
   /* Returns true if the given range overlaps with one or more link ranges */
@@ -258,45 +261,6 @@ public class UrlLinks {
       }
     }
     return( indices.length > 0 );
-  }
-
-  /* Returns the URL associated with the given text position */
-  public string? get_url( int pos ) {
-    var index = find_link( pos );
-    if( index != -1 ) {
-      return( _links.index( index ).url );
-    }
-    return( null );
-  }
-
-  /* Returns the starting character position with the given text position */
-  public int get_spos( int pos ) {
-    var index = find_link( pos );
-    if( index != -1 ) {
-      return( _links.index( index ).spos );
-    }
-    return( -1 );
-  }
-
-  /* Returns true if the cursor is over an embedded URL */
-  public bool get_embedded( int pos ) {
-    var index = find_link( pos );
-    if( index != -1 ) {
-      return( _links.index( index ).embedded );
-    }
-    return( false );
-  }
-
-  /*
-   Returns true if we have a valid URL at the given cursor position and it was
-   previously marked as ignored.
-  */
-  public bool get_ignore( int pos ) {
-    var index = find_link( pos );
-    if( index != -1 ) {
-      return( _links.index( index ).ignore );
-    }
-    return( false );
   }
 
   /* Returns true if the given string is a URL pattern */
@@ -311,10 +275,10 @@ public class UrlLinks {
     left = 0;
     if( pos != -1 ) {
       var link = find_link( pos );
-      if( (link != -1) && !_links.index( link ).ignore ) {
+      if( (link != null) && !link.ignore ) {
         double top;
-        url = _links.index( link ).url;
-        ct.get_char_pos( _links.index( link ).spos, out left, out top );
+        url = link.url;
+        ct.get_char_pos( link.spos, out left, out top );
         return( true );
       }
     }

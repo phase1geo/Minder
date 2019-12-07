@@ -89,6 +89,7 @@ public class TextMenu : Gtk.Menu {
 
     /* Make sure that we handle menu state when we are popped up */
     show.connect( on_popup );
+    hide.connect( on_popdown );
 
   }
 
@@ -133,6 +134,7 @@ public class TextMenu : Gtk.Menu {
     int cursor, selstart, selend;
     node.name.get_cursor_info( out cursor, out selstart, out selend );
     node.urls.remove_link( cursor );
+    node.name.clear_selection();
     _da.changed();
   }
 
@@ -147,6 +149,7 @@ public class TextMenu : Gtk.Menu {
     int cursor, selstart, selend;
     node.name.get_cursor_info( out cursor, out selstart, out selend );
     node.urls.restore_link( cursor );
+    node.name.clear_selection();
     _da.changed();
   }
 
@@ -156,27 +159,60 @@ public class TextMenu : Gtk.Menu {
   */
   private void on_popup() {
 
-    bool embedded = current_embedded();
-    bool ignore   = restore_link_possible();
+    var node = _da.get_current_node();
 
     /* Set the menu sensitivity */
     _copy.set_sensitive( copy_or_cut_possible() );
     _cut.set_sensitive( copy_or_cut_possible() );
     _paste.set_sensitive( paste_possible() );
 
-    // embedded ignore   RESULT
-    // -------- ------   ------
-    //    0       0       add, del, edit
-    //    0       1       add, del, edit
-    //    1       0       del
-    //    1       1       rest
+    if( node != null ) {
 
-    /* Set view of all link menus */
-    _add_link.visible  = !embedded && !ignore && add_link_possible();
-    _edit_link.visible = !embedded && edit_link_possible();
-    _del_link.visible  = (!embedded || !ignore) && remove_link_possible();
-    _rest_link.visible =  embedded &&  ignore;
+      int cursor, selstart, selend;
+      node.name.get_cursor_info( out cursor, out selstart, out selend );
+
+      var link     = node.urls.find_link( cursor );
+      var selected = (selstart != selend);
+
+      /* If we have found a link, select it */
+      if( !selected && (link != null) ) {
+        node.name.selection_set( link.spos, link.epos );
+      }
+
+      bool embedded = (link != null) ? link.embedded : false;
+      bool ignore   = (link != null) ? link.ignore   : false;
+
+      // embedded ignore   RESULT
+      // -------- ------   ------
+      //    0       0       add, del, edit
+      //    0       1       add, del, edit
+      //    1       0       del
+      //    1       1       rest
+
+      /* Set view of all link menus */
+      _add_link.visible  = !embedded && !ignore && add_link_possible( node, selstart, selend );
+      _edit_link.visible = !selected && !embedded;
+      _del_link.visible  = !selected && (!embedded || !ignore);
+      _rest_link.visible = !selected && embedded && ignore;
+
+    } else {
+      _add_link.visible  = false;
+      _edit_link.visible = false;
+      _del_link.visible  = false;
+      _rest_link.visible = false;
+    }
+
     _link_div.visible  = _add_link.visible || _edit_link.visible || _del_link.visible || _rest_link.visible;
+
+  }
+
+  /* Called when the menu is poppped down */
+  private void on_popdown() {
+
+    if( _edit_link.visible || _del_link.visible || _rest_link.visible ) {
+      var node = _da.get_current_node();
+      node.name.clear_selection();
+    }
 
   }
 
@@ -215,86 +251,11 @@ public class TextMenu : Gtk.Menu {
    A link can be added if text is selected and the selected text does not
    overlap with any existing links.
   */
-  private bool add_link_possible() {
+  private bool add_link_possible( Node node, int selstart, int selend ) {
 
-    var node = _da.get_current_node();
+    var indices = new Array<int>();
 
-    if( node != null ) {
-      int cursor, selstart, selend;
-      var indices = new Array<int>();
-      node.name.get_cursor_info( out cursor, out selstart, out selend );
-      return( (selstart != selend) && !node.urls.overlaps_with( selstart, selend, ref indices ) );
-    }
-
-    return( false );
-
-  }
-
-  /*
-   A link can be removed if no text is selected and the cursor is located on
-   an existing link.
-  */
-  private bool remove_link_possible() {
-
-    var node = _da.get_current_node();
-
-    if( node != null ) {
-      int cursor, selstart, selend;
-      node.name.get_cursor_info( out cursor, out selstart, out selend );
-      return( (selstart == selend) && (node.urls.find_link( cursor ) != -1) && !node.urls.get_ignore( cursor ) );
-    }
-
-    return( false );
-
-  }
-
-  /*
-   A link can be edited if no text is selected and the cursor is located on
-   an existing link.
-  */
-  private bool edit_link_possible() {
-
-    var node = _da.get_current_node();
-
-    if( node != null ) {
-      int cursor, selstart, selend;
-      node.name.get_cursor_info( out cursor, out selstart, out selend );
-      return( (selstart == selend) && (node.urls.find_link( cursor ) != -1) );
-    }
-
-    return( false );
-
-  }
-
-  /*
-   A link can be restored if it was previously marked as ignore.
-  */
-  private bool restore_link_possible() {
-
-    var node = _da.get_current_node();
-
-    if( node != null ) {
-      int cursor, selstart, selend;
-      node.name.get_cursor_info( out cursor, out selstart, out selend );
-      return( (selstart == selend) && node.urls.get_ignore( cursor ) );
-    }
-
-    return( false );
-
-  }
-
-  /* Returns true if the current cursor is over an embedded URL */
-  private bool current_embedded() {
-
-    var node = _da.get_current_node();
-
-    if( node != null ) {
-      int cursor, selstart, selend;
-      node.name.get_cursor_info( out cursor, out selstart, out selend );
-      return( (selstart == selend) && node.urls.get_embedded( cursor ) );
-    }
-
-    return( false );
+    return( (selstart != selend) && !node.urls.overlaps_with( selstart, selend, ref indices ) );
 
   }
 

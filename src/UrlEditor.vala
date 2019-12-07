@@ -60,6 +60,8 @@ public class UrlEditor : Popover {
 
     var cancel = new Button.with_label( _( "Cancel" ) );
     cancel.clicked.connect(() => {
+      var node = _da.get_current_node();
+      node.name.clear_selection();
       show_popover( false );
     });
 
@@ -114,6 +116,7 @@ public class UrlEditor : Popover {
       node.urls.add_link( selstart, selend, _entry.text );
     } else {
       node.urls.change_link( cursor, _entry.text );
+      node.name.clear_selection();
     }
     _da.changed();
   }
@@ -150,12 +153,13 @@ public class UrlEditor : Popover {
 
     /* Position the popover */
     double left, top;
-    node.name.get_char_pos( node.urls.get_spos( cursor ), out left, out top );
+    var link = node.urls.find_link( cursor );
+    node.name.get_char_pos( link.spos, out left, out top );
     Gdk.Rectangle rect = {(int)left, (int)top, 1, 1};
     pointing_to = rect;
 
     _add        = false;
-    _entry.text = node.urls.get_url( cursor );
+    _entry.text = link.url;
     _apply.set_sensitive( true );
 
     show_popover( true );

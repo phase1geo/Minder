@@ -530,6 +530,12 @@ public class CanvasText : Object {
     }
   }
 
+  /* Sets the selection to the given positions */
+  public void selection_set( int start, int end ) {
+    _selstart = start;
+    _selend   = end;
+  }
+
   /* Handles a backspace key event */
   public void backspace() {
     if( _cursor > 0 ) {
