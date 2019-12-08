@@ -211,5 +211,10 @@
       <summary>Specifies the number of space characters that match the indentation of the tab character in quick entry mode and text import.</summary>
       <description>Specifies the number of space characters that match the indentation of the tab character in quick entry mode and text import.</description>
     </key>
+    <key name="auto-parse-embedded-urls" type="b">
+      <default>true</default>
+      <summary>Specifies if embedded URLs found in node titles should be automatically highlighted.</summary>
+      <description>Specifies if embedded URLs found in node titles should be automatically highlighted.</description>
+    </key>
   </schema>
 </schemalist>

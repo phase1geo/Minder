@@ -39,6 +39,8 @@ public class ThemeDark : Theme {
     set_color( "text_cursor",        color_from_string( "White" ) );
     set_color( "attachable",         color_from_string( "#9bdb4d" ) );
     set_color( "connection",         color_from_string( "#404040" ) );
+    set_color( "url_background",     color_from_string( "Grey" ) );
+    set_color( "url_foreground",     color_from_string( "Blue" ) );
 
     /* Generate the link colors */
     set_color( "link_color0", color_from_string( "#c6262e" ) );

@@ -130,10 +130,13 @@ sources += files(
     'Style.vala',
     'StyleInspector.vala',
     'Styles.vala',
+    'TextMenu.vala',
     'Theme.vala',
     'ThemeEditor.vala',
     'Themes.vala',
     'UndoBuffer.vala',
     'UndoItem.vala',
+    'UrlEditor.vala',
+    'UrlLinks.vala',
     'Utils.vala'
 )
