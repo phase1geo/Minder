@@ -183,6 +183,13 @@ public class TextMenu : Gtk.Menu {
     _cut.set_sensitive( copy_or_cut_possible() );
     _paste.set_sensitive( paste_possible() );
 
+    /* Initialize the visible attribute */
+    _open_link.visible = false;
+    _add_link.visible  = false;
+    _edit_link.visible = false;
+    _del_link.visible  = false;
+    _rest_link.visible = false;
+
     if( node != null ) {
 
       int cursor, selstart, selend;
@@ -190,9 +197,10 @@ public class TextMenu : Gtk.Menu {
 
       var link     = node.urls.find_link( cursor );
       var selected = (selstart != selend);
+      var valid    = (link != null);
 
       /* If we have found a link, select it */
-      if( !selected && (link != null) ) {
+      if( !selected ) {
         node.name.selection_set( link.spos, link.epos );
       }
 
@@ -207,20 +215,15 @@ public class TextMenu : Gtk.Menu {
       //    1       1       rest
 
       /* Set view of all link menus */
-      _open_link.visible = !ignore;
+      _open_link.visible = valid && !ignore;
       _add_link.visible  = !embedded && !ignore && add_link_possible( node, selstart, selend );
-      _edit_link.visible = !selected && !embedded;
-      _del_link.visible  = !selected && (!embedded || !ignore);
-      _rest_link.visible = !selected && embedded && ignore;
+      _edit_link.visible = valid && !selected && !embedded;
+      _del_link.visible  = valid && !selected && (!embedded || !ignore);
+      _rest_link.visible = valid && !selected && embedded && ignore;
 
-    } else {
-      _open_link.visible = false;
-      _add_link.visible  = false;
-      _edit_link.visible = false;
-      _del_link.visible  = false;
-      _rest_link.visible = false;
     }
 
+    /* Set the visibility of the dividers */
     _link_div1.visible = _open_link.visible;
     _link_div2.visible = _add_link.visible || _edit_link.visible || _del_link.visible || _rest_link.visible;
 
