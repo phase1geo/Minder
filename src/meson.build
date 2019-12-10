@@ -124,6 +124,7 @@ sources += files(
     'NodeInspector.vala',
     'NodeMenu.vala',
     'NodesMenu.vala',
+    'NoteView.vala',
     'Partitioner.vala',
     'QuickEntry.vala',
     'Selection.vala',

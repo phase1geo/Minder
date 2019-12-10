@@ -52,6 +52,7 @@ dependencies = [
     dependency('gtk+-3.0'),
     dependency('libxml-2.0'),
     dependency('libarchive'),
+    dependency('gtksourceview-3.0'),
     math_dep
 ]
 
