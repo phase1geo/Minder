@@ -26,7 +26,10 @@ using Gdk;
 */
 public class NoteView : Gtk.SourceView {
 
-  public  SourceStyle  _srcstyle = null;
+  private int          _last_lnum = -1;
+  private string?      _last_url  = null;
+  private Regex?       _url_re;
+  public  SourceStyle  _srcstyle  = null;
   public  SourceBuffer _buffer;
 
   public string text {
@@ -74,10 +77,45 @@ public class NoteView : Gtk.SourceView {
     set_tab_width( 4 );
     set_insert_spaces_instead_of_tabs( true );
 
+    try {
+      _url_re = new Regex( Utils.get_url_pattern() );
+    } catch( RegexError e ) {
+      _url_re = null;
+    }
+
   }
 
   private string get_default_scheme () {
     return( "minder" );
+  }
+
+  /* Returns the string of text for the current line */
+  private string current_line( TextIter cursor ) {
+    var start = cursor;
+    var end   = cursor;
+    start.set_line( start.get_line() );
+    end.forward_line();
+    return( start.get_text( end ).chomp() );
+  }
+
+  /* Returns true if the specified cursor is within a parsed URL pattern */
+  private bool cursor_in_url( TextIter cursor, string line, out string url ) {
+    if( _url_re == null ) return( false );
+    MatchInfo match_info;
+    var       start  = 0;
+    var       offset = cursor.get_line_offset();
+    try {
+      while( _url_re.match_all_full( line, -1, start, 0, out match_info ) ) {
+        int s, e;
+        match_info.fetch_pos( 0, out s, out e );
+        if( (s <= offset) && (offset < e) ) {
+          url = line.substring( s, (e - s) );
+          return( true );
+        }
+        start = e;
+      }
+    } catch( RegexError e ) {}
+    return( false );
   }
 
   /*
@@ -86,17 +124,16 @@ public class NoteView : Gtk.SourceView {
   */
   private bool on_motion( EventMotion e ) {
     if( (bool)(e.state & ModifierType.CONTROL_MASK) ) {
-      TextIter it;
-      get_iter_at_location( out it, (int)e.x, (int)e.y );
-
-      stdout.printf( "it, offset: %d\n", start.get_offset() );
-      var end = start;
-      if( _buffer.iter_backward_to_context_class_toggle( start, "no-spell-check" ) ) {
-        stdout.printf( "  start, offset: %d\n", start.get_offset() );
-        if( _buffer.iter_forward_to_context_class_toggle( end, "no-spell-check" ) ) {
-          stdout.printf( "  end, offset: %d\n", end.get_offset() );
-          var str = _buffer.get_text( start, end, true );
-          stdout.printf( "str: %s\n", str );
+      TextIter cursor;
+      get_iter_at_location( out cursor, (int)e.x, (int)e.y );
+      if( _last_lnum != cursor.get_line() ) {
+        string matched_url;
+        _last_lnum = cursor.get_line();
+        if( cursor_in_url( cursor, current_line( cursor ), out matched_url ) ) {
+          _last_url = matched_url;
+          stdout.printf( "Found matched_url: %s\n", matched_url );
+        } else {
+          _last_url = null;
         }
       }
     }
