@@ -26,11 +26,12 @@ using Gdk;
 */
 public class NoteView : Gtk.SourceView {
 
-  private int          _last_lnum = -1;
-  private string?      _last_url  = null;
-  private Regex?       _url_re;
-  public  SourceStyle  _srcstyle  = null;
-  public  SourceBuffer _buffer;
+  private int            _last_lnum = -1;
+  private string?        _last_url  = null;
+  private Array<UrlLink> _last_urls;
+  private Regex?         _url_re;
+  public  SourceStyle    _srcstyle  = null;
+  public  SourceBuffer   _buffer;
 
   public string text {
     set {
@@ -44,6 +45,7 @@ public class NoteView : Gtk.SourceView {
   public bool modified {
     set {
       buffer.set_modified( value );
+      clear();
     }
     get {
       return( buffer.get_modified() );
@@ -68,7 +70,9 @@ public class NoteView : Gtk.SourceView {
     _buffer.changed.connect (() => {
       modified = true;
     });
+    this.focus_in_event.connect( on_focus );
     this.motion_notify_event.connect( on_motion );
+    this.button_press_event.connect( on_press );
 
     expand      = true;
     has_focus   = true;
@@ -83,10 +87,17 @@ public class NoteView : Gtk.SourceView {
       _url_re = null;
     }
 
+    _last_urls = new Array<UrlLink>();
+
   }
 
   private string get_default_scheme () {
     return( "minder" );
+  }
+
+  private void clear() {
+    _last_lnum = -1;
+    _last_url  = null;
   }
 
   /* Returns the string of text for the current line */
@@ -98,23 +109,36 @@ public class NoteView : Gtk.SourceView {
     return( start.get_text( end ).chomp() );
   }
 
-  /* Returns true if the specified cursor is within a parsed URL pattern */
-  private bool cursor_in_url( TextIter cursor, string line, out string url ) {
-    if( _url_re == null ) return( false );
+  /*
+   Parses all of the URLs in the given line and stores their positions within
+   the _last_match_pos private member array.
+  */
+  private void parse_line_for_urls( string line ) {
+    if( _url_re == null ) return;
     MatchInfo match_info;
-    var       start  = 0;
-    var       offset = cursor.get_line_offset();
+    var       start = 0;
+    _last_urls.remove_range( 0, _last_urls.length );
     try {
       while( _url_re.match_all_full( line, -1, start, 0, out match_info ) ) {
         int s, e;
         match_info.fetch_pos( 0, out s, out e );
-        if( (s <= offset) && (offset < e) ) {
-          url = line.substring( s, (e - s) );
-          return( true );
-        }
+        _last_urls.append_val( new UrlLink( line.substring( s, (e - s) ), s, e, true ) );
         start = e;
       }
     } catch( RegexError e ) {}
+  }
+
+  /* Returns true if the specified cursor is within a parsed URL pattern */
+  private bool cursor_in_url( TextIter cursor ) {
+    var offset = cursor.get_line_offset();
+    for( int i=0; i<_last_urls.length; i++ ) {
+      var link = _last_urls.index( i );
+      if( (link.spos <= offset) && (offset < link.epos) ) {
+        _last_url = link.url;
+        return( true );
+      }
+    }
+    _last_url = null;
     return( false );
   }
 
@@ -123,20 +147,44 @@ public class NoteView : Gtk.SourceView {
    check to see if the cursor is over a URL.
   */
   private bool on_motion( EventMotion e ) {
+    var win = get_window( TextWindowType.TEXT );
     if( (bool)(e.state & ModifierType.CONTROL_MASK) ) {
       TextIter cursor;
       get_iter_at_location( out cursor, (int)e.x, (int)e.y );
       if( _last_lnum != cursor.get_line() ) {
-        string matched_url;
+        parse_line_for_urls( current_line( cursor ) );
         _last_lnum = cursor.get_line();
-        if( cursor_in_url( cursor, current_line( cursor ), out matched_url ) ) {
-          _last_url = matched_url;
-          stdout.printf( "Found matched_url: %s\n", matched_url );
-        } else {
-          _last_url = null;
-        }
       }
+      if( cursor_in_url( cursor ) ) {
+        win.set_cursor( new Cursor.for_display( get_display(), CursorType.HAND1 ) );
+      } else {
+        win.set_cursor( null );
+      }
+      return( true );
+    } else {
+      _last_lnum = -1;
     }
+    win.set_cursor( null );
+    return( false );
+  }
+
+  /*
+   Called when the user clicks with the mouse.  If the cursor is over a URL,
+   open the URL in an external application.
+  */
+  private bool on_press( EventButton e ) {
+    if( (bool)(e.state & ModifierType.CONTROL_MASK) ) {
+      if( _last_url != null ) {
+        Utils.open_url( _last_url );
+      }
+      return( true );
+    }
+    return( false );
+  }
+
+  /* Clears the stored URL information */
+  private bool on_focus( EventFocus e ) {
+    clear();
     return( false );
   }
 
