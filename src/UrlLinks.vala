@@ -94,7 +94,12 @@ public class UrlLinks {
 
   private DrawArea       _da;
   private Array<UrlLink> _links;
-  private string         _url_pattern = "\\b(mailto:.+@[a-z0-9-]+\\.[a-z0-9.-]+|[a-zA-Z0-9]+://[a-z0-9-]+\\.[a-z0-9.-]+(?:/|(?:/[][a-zA-Z0-9!#$%&'*+,.:;=?@_~-]+)*))\\b";
+
+  public static string url_pattern {
+    get {
+      return( "\\b(mailto:.+@[a-z0-9-]+\\.[a-z0-9.-]+|[a-zA-Z0-9]+://[a-z0-9-]+\\.[a-z0-9.-]+(?:/|(?:/[][a-zA-Z0-9!#$%&'*+,.:;=?@_~-]+)*))\\b" );
+    }
+  }
 
   /* Default constructor */
   public UrlLinks( DrawArea da ) {
@@ -265,7 +270,7 @@ public class UrlLinks {
 
   /* Returns true if the given string is a URL pattern */
   public bool is_url( string str ) {
-    return( Regex.match_simple( _url_pattern, str ) );
+    return( Regex.match_simple( url_pattern, str ) );
   }
 
   /* Returns the URL at the given string position */
@@ -313,7 +318,7 @@ public class UrlLinks {
   public void parse_embedded_urls( CanvasText ct ) {
     var spos = new Array<int>();
     var epos = new Array<int>();
-    ct.search_text( _url_pattern, ref spos, ref epos );
+    ct.search_text( url_pattern, ref spos, ref epos );
     clear_embedded_urls();
     for( int i=0; i<spos.length; i++ ) {
       var s = spos.index( i );

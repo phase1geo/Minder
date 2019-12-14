@@ -52,6 +52,7 @@ public class NoteView : Gtk.SourceView {
     }
   }
 
+  /* Default constructor */
   public NoteView() {
 
     var manager       = Gtk.SourceLanguageManager.get_default();
@@ -82,7 +83,7 @@ public class NoteView : Gtk.SourceView {
     set_insert_spaces_instead_of_tabs( true );
 
     try {
-      _url_re = new Regex( Utils.get_url_pattern() );
+      _url_re = new Regex( UrlLinks.url_pattern );
     } catch( RegexError e ) {
       _url_re = null;
     }
@@ -91,10 +92,12 @@ public class NoteView : Gtk.SourceView {
 
   }
 
+  /* Returns the coloring scheme to use to highlight the text */
   private string get_default_scheme () {
     return( "minder" );
   }
 
+  /* Clears the URL handler code to force it reparse the current line for URLs */
   private void clear() {
     _last_lnum = -1;
     _last_url  = null;
@@ -142,29 +145,39 @@ public class NoteView : Gtk.SourceView {
     return( false );
   }
 
+  /* Called when URL checking should be performed on the current line (if necessary) */
+  private void enable_url_checking( int x, int y ) {
+    TextIter cursor;
+    var      win = get_window( TextWindowType.TEXT );
+    get_iter_at_location( out cursor, x, y );
+    if( _last_lnum != cursor.get_line() ) {
+      parse_line_for_urls( current_line( cursor ) );
+      _last_lnum = cursor.get_line();
+    }
+    if( cursor_in_url( cursor ) ) {
+      win.set_cursor( new Cursor.for_display( get_display(), CursorType.HAND1 ) );
+    } else {
+      win.set_cursor( null );
+    }
+  }
+
+  /* Called when URL checking should no longer be performed on the current line */
+  private void disable_url_checking() {
+    var win = get_window( TextWindowType.TEXT );
+    win.set_cursor( null );
+    _last_lnum = -1;
+  }
+
   /*
    If the cursor is moved in the text viewer when the control key is held down,
    check to see if the cursor is over a URL.
   */
   private bool on_motion( EventMotion e ) {
-    var win = get_window( TextWindowType.TEXT );
     if( (bool)(e.state & ModifierType.CONTROL_MASK) ) {
-      TextIter cursor;
-      get_iter_at_location( out cursor, (int)e.x, (int)e.y );
-      if( _last_lnum != cursor.get_line() ) {
-        parse_line_for_urls( current_line( cursor ) );
-        _last_lnum = cursor.get_line();
-      }
-      if( cursor_in_url( cursor ) ) {
-        win.set_cursor( new Cursor.for_display( get_display(), CursorType.HAND1 ) );
-      } else {
-        win.set_cursor( null );
-      }
+      enable_url_checking( (int)e.x, (int)e.y );
       return( true );
-    } else {
-      _last_lnum = -1;
     }
-    win.set_cursor( null );
+    disable_url_checking();
     return( false );
   }
 
@@ -174,6 +187,7 @@ public class NoteView : Gtk.SourceView {
   */
   private bool on_press( EventButton e ) {
     if( (bool)(e.state & ModifierType.CONTROL_MASK) ) {
+      enable_url_checking( (int)e.x, (int)e.y );
       if( _last_url != null ) {
         Utils.open_url( _last_url );
       }
