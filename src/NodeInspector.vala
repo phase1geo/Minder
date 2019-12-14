@@ -35,7 +35,7 @@ public class NodeInspector : Box {
   private Switch         _fold;
   private Box            _link_box;
   private ColorButton    _link_color;
-  private TextView       _note;
+  private NoteView       _note;
   private DrawArea?      _da = null;
   private Button         _detach_btn;
   private string         _orig_note = "";
@@ -58,7 +58,6 @@ public class NodeInspector : Box {
     create_note();
     create_image();
     create_buttons();
-
 
     show_all();
 
@@ -97,7 +96,7 @@ public class NodeInspector : Box {
     _name = new TextView();
     _name.set_wrap_mode( Gtk.WrapMode.WORD );
     _name.buffer.text = "";
-    _name.buffer.create_tag( "urllink", "background_rgba", _da.get_theme().get_color( "url_background" ) );
+    _name.buffer.create_tag( "urllink" );
     _name.buffer.insert_text.connect( name_inserted );
     _name.buffer.delete_range.connect( name_deleted );
     _name.focus_in_event.connect( name_focus_in );
@@ -111,7 +110,7 @@ public class NodeInspector : Box {
     box.pack_start( lbl, true, false );
     box.pack_start( sw,  true, false );
 
-    pack_start( box, false, true );
+    // pack_start( box, false, true );
 
   }
 
@@ -187,10 +186,9 @@ public class NodeInspector : Box {
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
 
-    _note = new TextView();
+    _note = new NoteView();
     _note.set_wrap_mode( Gtk.WrapMode.WORD );
     _note.buffer.text = "";
-    _note.buffer.create_tag( "urllink", "background_rgba", _da.get_theme().get_color( "url_background" ) );
     _note.buffer.changed.connect( note_changed );
     _note.focus_in_event.connect( note_focus_in );
     _note.focus_out_event.connect( note_focus_out );
