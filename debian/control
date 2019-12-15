@@ -9,7 +9,8 @@ Build-Depends: meson,
                libgranite-dev,
                libgtk-3-dev,
                libxml2-dev,
-               libarchive-dev
+               libarchive-dev,
+               libgtksourceview-3.0-dev
 
 Standards-Version: 3.9.3
 Package: com.github.phase1geo.minder
