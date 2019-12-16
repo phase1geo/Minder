@@ -43,6 +43,10 @@ endif
 cc = meson.get_compiler('c')
 math_dep = cc.find_library('m', required: false)
 
+# Add the Markdown library
+cc = meson.get_compiler('c')
+libmarkdown = cc.find_library('markdown', required: true)
+
 dependencies = [
     dependency('gobject-2.0'),
     dependency('glib-2.0'),
@@ -53,6 +57,7 @@ dependencies = [
     dependency('libxml-2.0'),
     dependency('libarchive'),
     dependency('gtksourceview-3.0'),
+    libmarkdown,
     math_dep
 ]
 
