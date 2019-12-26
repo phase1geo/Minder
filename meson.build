@@ -43,6 +43,16 @@ endif
 cc = meson.get_compiler('c')
 math_dep = cc.find_library('m', required: false)
 
+# Add the Markdown library
+cc = meson.get_compiler('c')
+libmarkdown = cc.find_library('markdown', required: true)
+
+add_project_arguments([
+        '--vapidir', join_paths(meson.current_source_dir(), 'vapi')
+    ],
+    language: 'vala',
+)
+
 dependencies = [
     dependency('gobject-2.0'),
     dependency('glib-2.0'),
@@ -53,6 +63,7 @@ dependencies = [
     dependency('libxml-2.0'),
     dependency('libarchive'),
     dependency('gtksourceview-3.0'),
+    libmarkdown,
     math_dep
 ]
 
@@ -61,6 +72,9 @@ e = executable('com.github.phase1geo.minder',
     gresource,
     c_args: c_args,
     dependencies: dependencies,
+    vala_args: [
+        meson.source_root() + '/vapi/libmarkdown.vapi'
+    ],
     install : true
 )
 

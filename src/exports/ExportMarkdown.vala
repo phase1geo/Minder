@@ -45,6 +45,10 @@ public class ExportMarkdown : Object {
       for( int i=0; i<nodes.length; i++ ) {
         string title = "# " + nodes.index( i ).name.text + "\n\n";
         os.write( title.data );
+        if( nodes.index( i ).note != "" ) {
+          string note = "  > " + nodes.index( i ).note.replace( "\n", "\n  > " );
+          os.write( note.data );
+        }
         var children = nodes.index( i ).children();
         for( int j=0; j<children.length; j++ ) {
           export_node( os, children.index( j ) );
@@ -59,7 +63,7 @@ public class ExportMarkdown : Object {
 
   /* Draws the given node and its children to the output stream */
   private static void export_node( FileOutputStream os, Node node, string prefix = "  " ) {
-    
+
     try {
 
       string title = prefix + "- ";
@@ -72,17 +76,17 @@ public class ExportMarkdown : Object {
         }
       }
 
-      title += node.name.text + "\n";
+      title += node.name.text.replace( "\n", prefix + " " ) + "\n";
 
       os.write( title.data );
 
       if( node.note != "" ) {
-        string note = prefix + "  " + node.note + "\n";
+        string note = prefix + "  > " + node.note.replace( "\n", "\n" + prefix + "  > " ) + "\n";
         os.write( note.data );
       }
 
       os.write( "\n".data );
-  
+
       var children = node.children();
       for( int i=0; i<children.length; i++ ) {
         export_node( os, children.index( i ), prefix + "  " );

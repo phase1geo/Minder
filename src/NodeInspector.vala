@@ -494,7 +494,9 @@ public class NodeInspector : Box {
   /* Updates the given text buffer with the string and link information */
   private void update_text_buffer( TextView tv, string str, UrlLinks links ) {
     tv.buffer.text = str;
-    links.markup_text_buffer( tv.buffer, "urllink" );
+    if( _name.buffer.tag_table.lookup( "urllink" ) != null ) {
+      links.markup_text_buffer( tv.buffer, "urllink" );
+    }
   }
 
   /* Called whenever the user changes the current node in the canvas */
