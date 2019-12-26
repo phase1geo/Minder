@@ -185,7 +185,7 @@ public class ExportFreeplane : Object {
     Xml.Node* html = new Xml.Node( null, "html" );
     Xml.Node* head = new Xml.Node( null, "head" );
 
-    var note_html = Utils.markdown_to_html( node.note );
+    var note_html = Utils.markdown_to_html( node.note, "body" );
     var note_doc  = Xml.Parser.parse_memory( note_html, note_html.length );
     var body      = note_doc->get_root_element()->copy( 1 );
 

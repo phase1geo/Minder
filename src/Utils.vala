@@ -112,14 +112,14 @@ public class Utils {
   }
 
   /* Converts the given Markdown into HTML */
-  public static string markdown_to_html( string md ) {
+  public static string markdown_to_html( string md, string tag ) {
     string html;
     // var    flags = 0x57607000;
     var    flags = 0x47607004;
     var    mkd = new Markdown.Document.gfm_format( md.data, flags );
     mkd.compile( flags );
     mkd.get_document( out html );
-    return( "<body>" + html + "</body>" );
+    return( "<" + tag + ">" + html + "</" + tag + ">" );
   }
 
 }
