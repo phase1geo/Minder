@@ -47,6 +47,8 @@ public class Theme : Object {
     _colors.set( "text_cursor",        null );
     _colors.set( "attachable",         null );
     _colors.set( "connection",         null );
+    _colors.set( "url_background",     null );
+    _colors.set( "url_foreground",     null );
     _colors.set( "link_color0",        null );
     _colors.set( "link_color1",        null );
     _colors.set( "link_color2",        null );

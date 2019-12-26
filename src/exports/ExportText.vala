@@ -69,7 +69,7 @@ public class ExportText : Object {
 
   /* Draws the given node and its children to the output stream */
   private static void export_node( FileOutputStream os, Node node, string prefix = "        " ) {
-    
+
     try {
 
       string title = prefix;
@@ -87,7 +87,7 @@ public class ExportText : Object {
       os.write( title.data );
 
       if( node.note != "" ) {
-        string note = prefix + "  " + node.note + "\n";
+        string note = prefix + "  " + node.note.replace( "\n", "\n  " ) + "\n";
         os.write( note.data );
       }
 

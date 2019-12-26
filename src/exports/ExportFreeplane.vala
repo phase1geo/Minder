@@ -73,7 +73,7 @@ public class ExportFreeplane : Object {
     if( !markup ) {
       n->new_prop( "TEXT", node.name.text );
     } else {
-      n->add_child( export_richcontent( node, da, false ) );
+      n->add_child( export_title( node ) );
     }
 
     if( node.style.node_fill ) {
@@ -84,7 +84,7 @@ public class ExportFreeplane : Object {
     n->add_child( export_font( node, da ) );
 
     if( node.note != "" ) {
-      n->add_child( export_richcontent( node, da, true ) );
+      n->add_child( export_note( node ) );
     }
 
     /* Add arrowlinks */
@@ -139,11 +139,12 @@ public class ExportFreeplane : Object {
     return( n );
   }
 
-  private static Xml.Node* export_richcontent( Node node, DrawArea da, bool note ) {
+  /* Exports the node title as richtext */
+  private static Xml.Node* export_title( Node node ) {
 
-    string    text = note ? node.note : node.name.text;
+    string    text = node.name.text;
     Xml.Node* rc   = new Xml.Node( null, "richcontent" );
-    rc->new_prop( "TYPE", (note ? "NOTE" : "NODE") );
+    rc->new_prop( "TYPE", "NODE" );
 
     Xml.Node* html = new Xml.Node( null, "html" );
     Xml.Node* head = new Xml.Node( null, "head" );
@@ -176,6 +177,27 @@ public class ExportFreeplane : Object {
 
     return( rc );
 
+  }
+
+  private static Xml.Node* export_note( Node node ) {
+
+    Xml.Node* rc   = new Xml.Node( null, "richcontent" );
+    Xml.Node* html = new Xml.Node( null, "html" );
+    Xml.Node* head = new Xml.Node( null, "head" );
+
+    var note_html = Utils.markdown_to_html( node.note, "body" );
+    var note_doc  = Xml.Parser.parse_memory( note_html, note_html.length );
+    var body      = note_doc->get_root_element()->copy( 1 );
+
+    html->add_child( head );
+    html->add_child( body );
+
+    rc->new_prop( "TYPE", "NOTE" );
+    rc->add_child( html );
+
+    delete note_doc;
+
+    return( rc );
   }
 
   /* Used to output a node image */
@@ -287,7 +309,7 @@ public class ExportFreeplane : Object {
     if( f != null ) {
       node.folded = bool.parse( f );
     }
-    
+
     string? bc = n->get_prop( "BACKGROUND_COLOR" );
     if( bc != null ) {
       node.style.node_fill = true;
@@ -421,10 +443,10 @@ public class ExportFreeplane : Object {
     da.get_connections().add_connection( conn );
 
   }
-  
+
   /* Import the richcontent section */
   private static void import_richcontent( Xml.Node* n, Node node ) {
-  
+
     string type    = n->get_prop( "TYPE" ) ?? "NOTE";
     string content = parse_richcontent( n ).chug();
 
@@ -453,7 +475,7 @@ public class ExportFreeplane : Object {
         case Xml.ElementType.CDATA_SECTION_NODE :
           str += it->content.strip();
           break;
-        case Xml.ElementType.ELEMENT_NODE :  
+        case Xml.ElementType.ELEMENT_NODE :
           if( it->name.down() != "head" ) {  // Skip anything within the header section
             str += parse_richcontent( it, (level + ((ol || ul) ? 1 : 0)), (ol ? num++ : 0) );
           }

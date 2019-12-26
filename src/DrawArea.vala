@@ -52,6 +52,7 @@ public class DrawArea : Gtk.DrawingArea {
   private Connections      _connections;
   private Theme            _theme;
   private string           _orig_name;
+  private UrlLinks         _orig_urls;
   private NodeSide         _orig_side;
   private Array<NodeInfo?> _orig_info;
   private int              _orig_width;
@@ -62,8 +63,10 @@ public class DrawArea : Gtk.DrawingArea {
   private ConnectionsMenu  _conns_menu;
   private NodesMenu        _nodes_menu;
   private EmptyMenu        _empty_menu;
+  private TextMenu         _text_menu;
   private uint?            _auto_save_id = null;
-  private ImageEditor      _editor;
+  private ImageEditor      _image_editor;
+  private UrlEditor        _url_editor;
   private IMContextSimple  _im_context;
   private bool             _debug        = true;
   private bool             _focus_mode   = false;
@@ -107,6 +110,11 @@ public class DrawArea : Gtk.DrawingArea {
       return( _scale_factor );
     }
   }
+  public UrlEditor url_editor {
+    get {
+      return( _url_editor );
+    }
+  }
 
   public signal void changed();
   public signal void current_changed( DrawArea da );
@@ -140,8 +148,11 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer = new UndoBuffer( this );
 
     /* Allocate the image editor popover */
-    _editor = new ImageEditor( this );
-    _editor.changed.connect( current_image_edited );
+    _image_editor = new ImageEditor( this );
+    _image_editor.changed.connect( current_image_edited );
+
+    /* Allocate the URL editor popover */
+    _url_editor = new UrlEditor( this );
 
     /* Create the popup menu */
     _node_menu  = new NodeMenu( this, accel_group );
@@ -149,6 +160,7 @@ public class DrawArea : Gtk.DrawingArea {
     _conns_menu = new ConnectionsMenu( this, accel_group );
     _empty_menu = new EmptyMenu( this, accel_group );
     _nodes_menu = new NodesMenu( this, accel_group );
+    _text_menu  = new TextMenu( this, accel_group );
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
@@ -548,6 +560,7 @@ public class DrawArea : Gtk.DrawingArea {
     _motion             = false;
     _attach_node        = null;
     _orig_name          = "";
+    _orig_urls          = null;
     _current_new        = false;
     _last_connection    = null;
 
@@ -596,7 +609,8 @@ public class DrawArea : Gtk.DrawingArea {
     n.style = StyleInspector.styles.get_global_style();
 
     _nodes.append_val( n );
-    _orig_name    = "";
+    _orig_name = "";
+    _orig_urls = null;
 
     /* Make this initial node the current node */
     set_current_node( n );
@@ -709,19 +723,26 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Copy the current node name and URL links */
+  public void capture_current_node_name() {
+    var current = _selected.current_node();
+    if( current != null ) {
+      _orig_name = current.name.text;
+      _orig_urls = new UrlLinks( this );
+      _orig_urls.copy( current.urls );
+    }
+  }
+
   /*
-   Changes the current node's name to the given name.  Updates the layout,
+   Saves the current node's name.  Updates the layout,
    adds the undo item, and redraws the canvas.
   */
-  public void change_current_node_name( string name ) {
-    var nodes = _selected.nodes();
-    if( nodes.length == 1 ) {
-      var current = nodes.index( 0 );
-      if( current.name.text != name ) {
-        string orig_name = current.name.text;
-        current.name.text = name;
+  public void commit_current_node_name() {
+    var current = _selected.current_node();
+    if( current != null ) {
+      if( current.name.text != _orig_name ) {
         if( !_current_new ) {
-          undo_buffer.add_item( new UndoNodeName( current, orig_name ) );
+          undo_buffer.add_item( new UndoNodeName( current, _orig_name, _orig_urls ) );
         }
         queue_draw();
         changed();
@@ -794,7 +815,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /*
-   Changes the current connection's note to the given value. 
+   Changes the current connection's note to the given value.
   */
   public void change_current_connection_note( string note ) {
     var conns = _selected.connections();
@@ -859,7 +880,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( nodes.length == 1 ) {
       var current = nodes.index( 0 );
       if( current.image != null ) {
-        _editor.edit_image( image_manager, current, current.posx, current.posy );
+        _image_editor.edit_image( image_manager, current, current.posx, current.posy );
       }
     }
   }
@@ -981,7 +1002,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the user clicks on a valid connection */
   private bool set_current_connection_from_position( Connection conn, EventButton e ) {
 
-    var shift = (bool) e.state & ModifierType.SHIFT_MASK;
+    var shift = (bool)(e.state & ModifierType.SHIFT_MASK);
 
     if( _selected.is_current_connection( conn ) ) {
       if( conn.mode == ConnMode.EDITABLE ) {
@@ -1014,9 +1035,11 @@ public class DrawArea : Gtk.DrawingArea {
 
     var scaled_x = scale_value( e.x );
     var scaled_y = scale_value( e.y );
-    var shift    = (bool) e.state & ModifierType.SHIFT_MASK;
-    var control  = (bool) e.state & ModifierType.CONTROL_MASK;
+    var shift    = (bool)(e.state & ModifierType.SHIFT_MASK);
+    var control  = (bool)(e.state & ModifierType.CONTROL_MASK);
     var dpress   = e.type == EventType.DOUBLE_BUTTON_PRESS;
+    var url      = "";
+    var left     = 0.0;
 
     /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
     if( node.is_within_task( scaled_x, scaled_y ) ) {
@@ -1034,6 +1057,10 @@ public class DrawArea : Gtk.DrawingArea {
       _resize     = true;
       _orig_width = node.max_width();
       return( true );
+    } else if( !shift && control && node.is_within_url( scaled_x, scaled_y, out url, out left ) ) {
+      show_url_popover( e, node, url, left );
+      _selected.set_current_node( node );
+      return( false );
     }
 
     _orig_side = node.side;
@@ -1499,7 +1526,11 @@ public class DrawArea : Gtk.DrawingArea {
 
 #if GTK322
     if( current_node != null ) {
-      _node_menu.popup_at_pointer( event );
+      if( current_node.mode == NodeMode.EDITABLE ) {
+        _text_menu.popup_at_pointer( event );
+      } else {
+        _node_menu.popup_at_pointer( event );
+      }
     } else if( _selected.num_nodes() > 1 ) {
       _nodes_menu.popup_at_pointer( event );
     } else if( current_conn != null ) {
@@ -1511,7 +1542,11 @@ public class DrawArea : Gtk.DrawingArea {
     }
 #else
     if( current_node != null ) {
-      _node_menu.popup( null, null, null, event.button, event.time );
+      if( current_node.mode == NodeMode.EDITABLE ) {
+        _text_menu.popup( null, null, null, event.button, event.time );
+      } else {
+        _node_menu.popup( null, null, null, event.button, event.time );
+      }
     } else if( _selected.num_nodes() > 1 ) {
       _nodes_menu.popup( null, null, null, event.button, event.time );
     } else if( current_conn != null ) {
@@ -1618,12 +1653,14 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         auto_save();
       }
-      if( !_motion && !_resize && (current_node != null) ) {
+
+      if( !_motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
         current_node.alpha = 0.3;
       }
       _press_x = scaled_x;
       _press_y = scaled_y;
       _motion  = true;
+
     } else {
       if( current_conn != null )  {
         if( (current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING) ) {
@@ -1671,7 +1708,9 @@ public class DrawArea : Gtk.DrawingArea {
       set_cursor( null );
       set_tooltip_markup( null );
     }
+
     return( false );
+
   }
 
   /* Handle button release event */
@@ -1736,6 +1775,8 @@ public class DrawArea : Gtk.DrawingArea {
         } else if( !_motion ) {
           current_node.name.set_cursor_all( false );
           _orig_name = current_node.name.text;
+          _orig_urls = new UrlLinks( this );
+          _orig_urls.copy( current_node.urls );
           current_node.name.move_cursor_to_end();
 
         /* If we are not a root node, move the node into the appropriate position */
@@ -2161,15 +2202,17 @@ public class DrawArea : Gtk.DrawingArea {
       current.mode = ConnMode.SELECTED;
       current_changed( this );
       queue_draw();
+      changed();
     } else if( is_node_editable() ) {
       var current = _selected.current_node();
       _im_context.reset();
       if( !_current_new ) {
-        undo_buffer.add_item( new UndoNodeName( current, _orig_name ) );
+        undo_buffer.add_item( new UndoNodeName( current, _orig_name, _orig_urls ) );
       }
       current.mode = NodeMode.CURRENT;
       current_changed( this );
       queue_draw();
+      changed();
     } else if( is_connection_connecting() ) {
       var current = _selected.current_connection();
       _connections.remove_connection( current, true );
@@ -2211,6 +2254,7 @@ public class DrawArea : Gtk.DrawingArea {
     var node    = new Node( this, layouts.get_default() );
     var current = _selected.current_node();
     _orig_name = "";
+    _orig_urls = null;
     node.side          = current.side;
     node.style         = current.style;
     node.style         = StyleInspector.styles.get_style_for_level( current.get_level(), current.style );
@@ -2236,7 +2280,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_node_editable() ) {
       var current = _selected.current_node();
       if( !_current_new ) {
-        undo_buffer.add_item( new UndoNodeName( current, _orig_name ) );
+        undo_buffer.add_item( new UndoNodeName( current, _orig_name, _orig_urls ) );
       }
       current.mode = NodeMode.CURRENT;
       if( _create_new_from_edit ) {
@@ -2453,6 +2497,7 @@ public class DrawArea : Gtk.DrawingArea {
     var node    = new Node( this, layouts.get_default() );
     var current = _selected.current_node();
     _orig_name = "";
+    _orig_urls = null;
     if( !current.is_root() ) {
       node.side = current.side;
     }
@@ -2478,7 +2523,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_node_editable() ) {
       var current = _selected.current_node();
       if( !_current_new ) {
-        undo_buffer.add_item( new UndoNodeName( current, _orig_name ) );
+        undo_buffer.add_item( new UndoNodeName( current, _orig_name, _orig_urls ) );
       }
       current.mode = NodeMode.CURRENT;
       if( _create_new_from_edit ) {
@@ -2725,7 +2770,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Called whenever the period key is entered with the control key */
-  private void handle_control_period() {
+  public void handle_control_period() {
     if( is_node_editable() ) {
       insert_emoji( _selected.current_node().name );
     } else if( is_connection_editable() ) {
@@ -2983,8 +3028,8 @@ public class DrawArea : Gtk.DrawingArea {
   private bool on_keypress( EventKey e ) {
 
     /* Figure out which modifiers were used */
-    var control = (bool) e.state & ModifierType.CONTROL_MASK;
-    var shift   = (bool) e.state & ModifierType.SHIFT_MASK;
+    var control = (bool)(e.state & ModifierType.CONTROL_MASK);
+    var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
     var nomod   = !(control || shift);
 
     /* If there is a current node or connection selected, operate on it */
@@ -3137,7 +3182,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Copies the currently selected text to the clipboard */
-  private void copy_selected_text() {
+  public void copy_selected_text() {
     string? value        = null;
     var     current_node = _selected.current_node();
     var     current_conn = _selected.current_connection();
@@ -3213,7 +3258,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Cuts the current selected text to the clipboard */
-  private void cut_selected_text() {
+  public void cut_selected_text() {
     copy_selected_text();
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
@@ -3288,7 +3333,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Pastes the text that is in the clipboard to the node text */
-  private void paste_text() {
+  public void paste_text() {
     var clipboard = Clipboard.get_default( get_display() );
     string? value = clipboard.wait_for_text();
     if( value != null ) {
@@ -3326,8 +3371,8 @@ public class DrawArea : Gtk.DrawingArea {
     double delta_x, delta_y;
     e.get_scroll_deltas( out delta_x, out delta_y );
 
-    bool shift   = (bool) e.state & ModifierType.SHIFT_MASK;
-    bool control = (bool) e.state & ModifierType.CONTROL_MASK;
+    bool shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
+    bool control = (bool)(e.state & ModifierType.CONTROL_MASK);
 
     /* Swap the deltas if the SHIFT key is held down */
     if( shift && !control ) {
@@ -3653,6 +3698,29 @@ public class DrawArea : Gtk.DrawingArea {
       return( (Random.int_range( 0, 2 ) == 0) ? -1 : 1 );
     };
     sort_children( _selected.current_node(), sort_fn );
+  }
+
+  /* Displays the URL in a popup menu that allows the user to display the URL in a web browser */
+  private void show_url_popover( EventButton event, Node node, string url, double left ) {
+    var mnu  = new Gtk.Menu();
+    var item = new Gtk.MenuItem.with_label( url );
+    item.activate.connect(() => {
+      Utils.open_url( url );
+    });
+    mnu.rect_anchor_dx = (int)(left - event.x);
+    mnu.rect_anchor_dy = (int)(node.posy - event.y - 40);
+    mnu.take_focus     = false;
+    mnu.add( item );
+    mnu.show_all();
+#if GTK322
+    mnu.popup_at_pointer( event );
+#else
+    mnu.popup( null, null, null, event.button, event.time );
+#endif
+    Timeout.add( 500, () => {
+      grab_focus();
+      return( Source.REMOVE );
+    });
   }
 
   /* Moves all trees to avoid overlapping */

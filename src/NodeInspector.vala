@@ -35,7 +35,7 @@ public class NodeInspector : Box {
   private Switch         _fold;
   private Box            _link_box;
   private ColorButton    _link_color;
-  private TextView       _note;
+  private NoteView       _note;
   private DrawArea?      _da = null;
   private Button         _detach_btn;
   private string         _orig_note = "";
@@ -58,7 +58,6 @@ public class NodeInspector : Box {
     create_note();
     create_image();
     create_buttons();
-
 
     show_all();
 
@@ -97,7 +96,10 @@ public class NodeInspector : Box {
     _name = new TextView();
     _name.set_wrap_mode( Gtk.WrapMode.WORD );
     _name.buffer.text = "";
-    _name.buffer.changed.connect( name_changed );
+    _name.buffer.create_tag( "urllink" );
+    _name.buffer.insert_text.connect( name_inserted );
+    _name.buffer.delete_range.connect( name_deleted );
+    _name.focus_in_event.connect( name_focus_in );
     _name.focus_out_event.connect( name_focus_out );
 
     var sw = new ScrolledWindow( null, null );
@@ -108,7 +110,7 @@ public class NodeInspector : Box {
     box.pack_start( lbl, true, false );
     box.pack_start( sw,  true, false );
 
-    pack_start( box, false, true );
+    // pack_start( box, false, true );
 
   }
 
@@ -184,7 +186,7 @@ public class NodeInspector : Box {
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
 
-    _note = new TextView();
+    _note = new NoteView();
     _note.set_wrap_mode( Gtk.WrapMode.WORD );
     _note.buffer.text = "";
     _note.buffer.changed.connect( note_changed );
@@ -360,14 +362,27 @@ public class NodeInspector : Box {
 
   }
 
-  /*
-   Called whenever the node name is changed within the inspector.
-  */
-  private void name_changed() {
+  /* Called whenever the node name text is inserted into */
+  private void name_inserted( ref TextIter pos, string new_text, int new_text_length ) {
     if( !_ignore_name_change ) {
-      _da.change_current_node_name( _name.buffer.text );
+      var node = _da.get_current_node();
+      node.name.insert_at_pos( pos.get_offset(), new_text );
     }
     _ignore_name_change = false;
+  }
+
+  /* Called whenever the node name text is deleted */
+  private void name_deleted( TextIter start, TextIter end ) {
+    if( !_ignore_name_change ) {
+      var node = _da.get_current_node();
+      node.name.delete_range( start.get_offset(), end.get_offset() );
+    }
+  }
+
+  /* Called whenever the node name begins to be edited */
+  private bool name_focus_in( EventFocus e ) {
+    _da.capture_current_node_name();
+    return( false );
   }
 
   /*
@@ -375,13 +390,13 @@ public class NodeInspector : Box {
    node title in the canvas.
   */
   private bool name_focus_out( EventFocus e ) {
-    _da.change_current_node_name( _name.buffer.text );
+    _da.commit_current_node_name();
     return( false );
   }
 
   /* Called whenever the task enable switch is changed within the inspector */
   private bool task_changed( Gdk.EventButton e ) {
-    Node? current = _da.get_current_node();
+    var current = _da.get_current_node();
     if( current != null ) {
       _da.change_current_task( !current.task_enabled(), false );
     }
@@ -390,7 +405,7 @@ public class NodeInspector : Box {
 
   /* Called whenever the fold switch is changed within the inspector */
   private bool fold_changed( Gdk.EventButton e ) {
-    Node? current = _da.get_current_node();
+    var current = _da.get_current_node();
     if( current != null ) {
       _da.change_current_fold( !current.folded );
     }
@@ -468,6 +483,20 @@ public class NodeInspector : Box {
     /* Set the palette with the new theme colors */
     _link_color.add_palette( Orientation.HORIZONTAL, 10, colors );
 
+    /* Update the URL tags */
+    var tag = _name.buffer.tag_table.lookup( "urllink" );
+    if( tag != null ) {
+      tag.background_rgba = _da.get_theme().get_color( "url_background" );
+    }
+
+  }
+
+  /* Updates the given text buffer with the string and link information */
+  private void update_text_buffer( TextView tv, string str, UrlLinks links ) {
+    tv.buffer.text = str;
+    if( _name.buffer.tag_table.lookup( "urllink" ) != null ) {
+      links.markup_text_buffer( tv.buffer, "urllink" );
+    }
   }
 
   /* Called whenever the user changes the current node in the canvas */
@@ -477,7 +506,7 @@ public class NodeInspector : Box {
 
     if( current != null ) {
       _ignore_name_change = true;
-      _name.buffer.text = current.name.text;
+      update_text_buffer( _name, current.name.text, current.urls );
       _task.set_active( current.task_enabled() );
       if( current.is_leaf() ) {
         _fold.set_active( false );

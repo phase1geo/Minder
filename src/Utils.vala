@@ -46,6 +46,14 @@ public class Utils {
     ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
   }
 
+  /* Returns the red, green and blue color values that are needed by the Pango color attributes */
+  public static void get_attribute_color( RGBA color, out uint16 red, out uint16 green, out uint16 blue ) {
+    var maxval = 65535;
+    red   = (uint16)(color.red   * maxval);
+    green = (uint16)(color.green * maxval);
+    blue  = (uint16)(color.blue  * maxval);
+  }
+
   /*
    Adds the given accelerator label to the given menu item.
   */
@@ -94,6 +102,24 @@ public class Utils {
   /* Returns a string that is used to display a tooltip with displayed accelerator */
   public static string tooltip_with_accel( string tooltip, string accel ) {
     return( "%s   <i>(%s)</i>".printf( tooltip, accel ) );
+  }
+
+  /* Opens the given URL in the proper external default application */
+  public static void open_url( string url ) {
+    try {
+      AppInfo.launch_default_for_uri( url, null );
+    } catch( GLib.Error e ) {}
+  }
+
+  /* Converts the given Markdown into HTML */
+  public static string markdown_to_html( string md, string tag ) {
+    string html;
+    // var    flags = 0x57607000;
+    var    flags = 0x47607004;
+    var    mkd = new Markdown.Document.gfm_format( md.data, flags );
+    mkd.compile( flags );
+    mkd.get_document( out html );
+    return( "<" + tag + ">" + html + "</" + tag + ">" );
   }
 
 }

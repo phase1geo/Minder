@@ -1,0 +1,285 @@
+/*
+* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Trevor Williams <phase1geo@gmail.com>
+*/
+
+using Gtk;
+
+public class TextMenu : Gtk.Menu {
+
+  DrawArea              _da;
+  Gtk.MenuItem          _copy;
+  Gtk.MenuItem          _cut;
+  Gtk.MenuItem          _paste;
+  Gtk.MenuItem          _emoji;
+  Gtk.MenuItem          _open_link;
+  Gtk.MenuItem          _add_link;
+  Gtk.MenuItem          _del_link;
+  Gtk.MenuItem          _edit_link;
+  Gtk.MenuItem          _rest_link;
+  Gtk.SeparatorMenuItem _link_div1;
+  Gtk.SeparatorMenuItem _link_div2;
+
+  public TextMenu( DrawArea da, AccelGroup accel_group ) {
+
+    _da = da;
+
+    _copy = new Gtk.MenuItem.with_label( _( "Copy" ) );
+    _copy.activate.connect( copy );
+    Utils.add_accel_label( _copy, 'c', Gdk.ModifierType.CONTROL_MASK );
+
+    _cut = new Gtk.MenuItem.with_label( _( "Cut" ) );
+    _cut.activate.connect( cut );
+    Utils.add_accel_label( _cut, 'x', Gdk.ModifierType.CONTROL_MASK );
+
+    _paste = new Gtk.MenuItem.with_label( _( "Paste" ) );
+    _paste.activate.connect( paste );
+    Utils.add_accel_label( _paste, 'v', Gdk.ModifierType.CONTROL_MASK );
+
+    _emoji = new Gtk.MenuItem.with_label( _( "Insert Emoji" ) );
+    _emoji.activate.connect( insert_emoji );
+    Utils.add_accel_label( _emoji, '.', Gdk.ModifierType.CONTROL_MASK );
+
+    _open_link = new Gtk.MenuItem.with_label( _( "Open Link" ) );
+    _open_link.activate.connect( open_link );
+    // Utils.add_accel_label( _delete, 'v', Gdk.ModifierType.CONTROL_MASK );
+
+    _add_link = new Gtk.MenuItem.with_label( _( "Add Link" ) );
+    _add_link.activate.connect( add_link );
+    // Utils.add_accel_label( _delete, 'v', Gdk.ModifierType.CONTROL_MASK );
+
+    _edit_link = new Gtk.MenuItem.with_label( _( "Edit Link" ) );
+    _edit_link.activate.connect( edit_link );
+    // Utils.add_accel_label( _del_link, 'v', Gdk.ModifierType.CONTROL_MASK );
+
+    _del_link = new Gtk.MenuItem.with_label( _( "Remove Link" ) );
+    _del_link.activate.connect( remove_link );
+    // Utils.add_accel_label( _add_link, 'v', Gdk.ModifierType.CONTROL_MASK );
+
+    _rest_link = new Gtk.MenuItem.with_label( _( "Restore Link" ) );
+    _rest_link.activate.connect( restore_link );
+    // Utils.add_accel_label( _del_link, 'v', Gdk.ModifierType.CONTROL_MASK );
+
+    _link_div1 = new Gtk.SeparatorMenuItem();
+    _link_div2 = new Gtk.SeparatorMenuItem();
+
+    /* Add the menu items to the menu */
+    add( _copy );
+    add( _cut );
+    add( _paste );
+    add( new SeparatorMenuItem() );
+    add( _emoji );
+    add( _link_div1 );
+    add( _open_link );
+    add( _link_div2 );
+    add( _add_link );
+    add( _edit_link );
+    add( _del_link );
+    add( _rest_link );
+
+    /* Make the menu visible */
+    show_all();
+
+    /* Make sure that we handle menu state when we are popped up */
+    show.connect( on_popup );
+    hide.connect( on_popdown );
+
+  }
+
+  /* Copies the selected text to the clipboard */
+  private void copy() {
+    _da.copy_selected_text();
+  }
+
+  /* Copies the selected text to the clipboard and removes the text */
+  private void cut() {
+    _da.cut_selected_text();
+  }
+
+  /*
+   Pastes text in the clipboard to the current location of the cursor, replacing
+   any selected text.
+  */
+  private void paste() {
+    _da.paste_text();
+  }
+
+  /*
+   Displays the emoji selection window to allow the user to insert an emoji
+   character at the current cursor location.
+  */
+  private void insert_emoji() {
+    _da.handle_control_period();
+  }
+
+  private void open_link() {
+    var node = _da.get_current_node();
+    int cursor, selstart, selend;
+    node.name.get_cursor_info( out cursor, out selstart, out selend );
+    var link = node.urls.find_link( cursor );
+    Utils.open_url( link.url );
+  }
+
+  /*
+   Adds a link to text that is currently selected.  This item should not be
+   allowed if there is either nothing selected or the current selection overlaps
+   text that currently has a link associated with it.
+  */
+  private void add_link() {
+    _da.url_editor.add_url();
+  }
+
+  /* Allows the user to remove the link located at the current cursor */
+  private void remove_link() {
+    var node = _da.get_current_node();
+    int cursor, selstart, selend;
+    node.name.get_cursor_info( out cursor, out selstart, out selend );
+    node.urls.remove_link( cursor );
+    node.name.clear_selection();
+    _da.changed();
+  }
+
+  /* Allows the user to edit the associated link. */
+  private void edit_link() {
+    _da.url_editor.edit_url();
+  }
+
+  /* Restores an embedded link that was previously removed */
+  private void restore_link() {
+    var node = _da.get_current_node();
+    int cursor, selstart, selend;
+    node.name.get_cursor_info( out cursor, out selstart, out selend );
+    node.urls.restore_link( cursor );
+    node.name.clear_selection();
+    _da.changed();
+  }
+
+  /*
+   Called when this menu is about to be displayed.  Allows the menu items to
+   get set to contextually relevant states.
+  */
+  private void on_popup() {
+
+    var node = _da.get_current_node();
+
+    /* Set the menu sensitivity */
+    _copy.set_sensitive( copy_or_cut_possible() );
+    _cut.set_sensitive( copy_or_cut_possible() );
+    _paste.set_sensitive( paste_possible() );
+
+    /* Initialize the visible attribute */
+    _open_link.visible = false;
+    _add_link.visible  = false;
+    _edit_link.visible = false;
+    _del_link.visible  = false;
+    _rest_link.visible = false;
+
+    if( node != null ) {
+
+      int cursor, selstart, selend;
+      node.name.get_cursor_info( out cursor, out selstart, out selend );
+
+      var link     = node.urls.find_link( cursor );
+      var selected = (selstart != selend);
+      var valid    = (link != null);
+
+      /* If we have found a link, select it */
+      if( !selected ) {
+        node.name.selection_set( link.spos, link.epos );
+      }
+
+      bool embedded = (link != null) ? link.embedded : false;
+      bool ignore   = (link != null) ? link.ignore   : false;
+
+      // embedded ignore   RESULT
+      // -------- ------   ------
+      //    0       0       add, del, edit
+      //    0       1       add, del, edit
+      //    1       0       del
+      //    1       1       rest
+
+      /* Set view of all link menus */
+      _open_link.visible = valid && !ignore;
+      _add_link.visible  = !embedded && !ignore && add_link_possible( node, selstart, selend );
+      _edit_link.visible = valid && !selected && !embedded;
+      _del_link.visible  = valid && !selected && (!embedded || !ignore);
+      _rest_link.visible = valid && !selected && embedded && ignore;
+
+    }
+
+    /* Set the visibility of the dividers */
+    _link_div1.visible = _open_link.visible;
+    _link_div2.visible = _add_link.visible || _edit_link.visible || _del_link.visible || _rest_link.visible;
+
+  }
+
+  /* Called when the menu is poppped down */
+  private void on_popdown() {
+
+    if( _edit_link.visible || _del_link.visible || _rest_link.visible ) {
+      var node = _da.get_current_node();
+      node.name.clear_selection();
+    }
+
+  }
+
+  /*
+   We can copy or cut text if it is selected.
+  */
+  private bool copy_or_cut_possible() {
+
+    var node     = _da.get_current_node();
+    var conn     = _da.get_current_connection();
+    int cursor   = 0;
+    int selstart = 0;
+    int selend   = 0;
+
+    if( node != null ) {
+      node.name.get_cursor_info( out cursor, out selstart, out selend );
+    } else if( conn != null ) {
+      conn.title.get_cursor_info( out cursor, out selstart, out selend );
+    }
+
+    return( selstart != selend );
+
+  }
+
+  /* Returns true if there is text in the clipboard to paste */
+  private bool paste_possible() {
+
+    var clipboard = Clipboard.get_default( get_display() );
+    string? value = clipboard.wait_for_text();
+
+    return( value != null );
+
+  }
+
+  /*
+   A link can be added if text is selected and the selected text does not
+   overlap with any existing links.
+  */
+  private bool add_link_possible( Node node, int selstart, int selend ) {
+
+    var indices = new Array<int>();
+
+    return( (selstart != selend) && !node.urls.overlaps_with( selstart, selend, ref indices ) );
+
+  }
+
+}
