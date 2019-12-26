@@ -2123,7 +2123,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Deletes all selected nodes */
   public void delete_nodes() {
     if( _selected.num_nodes() == 0 ) return;
-    var nodes = _selected.nodes();
+    var nodes = _selected.ordered_nodes();
     var conns = new Array<Connection>();
     for( int i=0; i<nodes.length; i++ ) {
       _connections.node_only_deleted( nodes.index( i ), conns );
@@ -3241,7 +3241,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   public void cut_nodes_to_clipboard() {
     if( _selected.num_nodes() == 0 ) return;
-    var nodes = _selected.nodes();
+    var nodes = _selected.ordered_nodes();
     var conns = new Array<Connection>();
     for( int i=0; i<nodes.length; i++ ) {
       _connections.node_only_deleted( nodes.index( i ), conns );
