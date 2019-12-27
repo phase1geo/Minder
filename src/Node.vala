@@ -927,12 +927,12 @@ public class Node : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "nodename"  :  load_name( it );  break;
-          case "nodenote"  :  load_note( it );  break;
-          case "nodeimage" :  load_image( da.image_manager, it );  break;
-          case "style"     :  load_style( it );  break;
-          case "urllinks"  :  load_url_links( it );  break;
-          case "nodes"     :
+          case "nodename"   :  load_name( it );  break;
+          case "nodenote"   :  load_note( it );  break;
+          case "nodeimage"  :  load_image( da.image_manager, it );  break;
+          case "style"      :  load_style( it );  break;
+          case "formatting" :  load_url_links( it );  break;
+          case "nodes"      :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var child = new Node( da, _layout );

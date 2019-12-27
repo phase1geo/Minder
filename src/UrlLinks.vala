@@ -115,7 +115,7 @@ public class UrlLinks {
 
   /* Called when the URL link needs to be saved */
   public Xml.Node* save() {
-    Xml.Node* node = new Xml.Node( null, "urllinks" );
+    Xml.Node* node = new Xml.Node( null, "formatting" );
     for( int i=0; i<_links.length; i++ ) {
       node->add_child( _links.index( i ).save() );
     }
