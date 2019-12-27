@@ -49,8 +49,14 @@ public class CurrentInspector : Stack {
 
   /* Sets the width of this panel to the given value */
   public void set_width( int width ) {
-    (get_child_by_name( "node" )       as NodeInspector).set_width( width );
-    (get_child_by_name( "connection" ) as ConnectionInspector).set_width( width );
+    var ni = get_child_by_name( "node" )       as NodeInspector;
+    var ci = get_child_by_name( "connection" ) as ConnectionInspector;
+    if( ni != null ) {
+      ni.set_width( width );
+    }
+    if( ci != null ) {
+      ci.set_width( width );
+    }
   }
 
   /* Resets the width of this inspector to its default width */
@@ -94,9 +100,15 @@ public class CurrentInspector : Stack {
   public void grab_note() {
 
     if( _da.get_current_node() != null ) {
-      (get_child_by_name( "node" ) as NodeInspector).grab_note();
+      var ni = get_child_by_name( "node" ) as NodeInspector;
+      if( ni != null ) {
+        ni.grab_note();
+      }
     } else if( _da.get_current_connection() != null ) {
-      (get_child_by_name( "connection" ) as ConnectionInspector).grab_note();
+      var ci = get_child_by_name( "connection" ) as ConnectionInspector;
+      if( ci != null ) {
+        ci.grab_note();
+      }
     }
 
   }

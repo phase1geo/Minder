@@ -112,8 +112,8 @@ public class Themes : Object {
     }
   }
 
-  /* Output the current list of themes to standard output */
 #if SKIP
+  /* Output the current list of themes to standard output */
   private void display_themes( string msg ) {
     stdout.printf( "%s\n", msg );
     for( int i=0; i<_themes.length; i++ ) {

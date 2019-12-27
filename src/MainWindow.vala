@@ -973,7 +973,10 @@ public class MainWindow : ApplicationWindow {
       _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
     }
     if( grab_note && (tab != null) && (tab == "current") ) {
-      (_stack.get_child_by_name( tab ) as CurrentInspector).grab_note();
+      var ci = _stack.get_child_by_name( tab ) as CurrentInspector;
+      if( ci != null ) {
+        ci.grab_note();
+      }
     }
   }
 
@@ -987,9 +990,12 @@ public class MainWindow : ApplicationWindow {
   public void hide_theme_editor() {
     _inspector_nb.page = 0;
   }
-  
+
   private bool move_inspector_to_pane() {
-    (_stack.get_child_by_name( "current" ) as CurrentInspector).reset_width();
+    var ci = _stack.get_child_by_name( "current" ) as CurrentInspector;
+    if( ci != null ) {
+      ci.reset_width();
+    }
     _pbox.remove( _inspector );
     _pane.pack2( _inspector, false, false );
     return( false );
@@ -999,7 +1005,10 @@ public class MainWindow : ApplicationWindow {
   private void hide_properties() {
     if( !_inspector.reveal_child ) return;
     var prop_width = (_pane.get_allocated_width() - _pane.position) - 11;
-    (_stack.get_child_by_name( "current" ) as CurrentInspector).set_width( prop_width );
+    var ci         = _stack.get_child_by_name( "current" ) as CurrentInspector;
+    if( ci != null ) {
+      ci.set_width( prop_width );
+    }
     _prop_btn.image = _prop_show;
     _pane.remove( _inspector );
     _pbox.pack_start( _inspector, false, true, 0 );
@@ -1314,7 +1323,7 @@ public class MainWindow : ApplicationWindow {
 
     win.show();
 
-  } 
+  }
 
   /* Save the current tab state */
   private void save_tab_state( Tab current_tab ) {
