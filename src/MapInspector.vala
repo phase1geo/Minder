@@ -27,7 +27,7 @@ public class MapInspector : Box {
   private DrawArea?                   _da             = null;
   private GLib.Settings               _settings;
   private Granite.Widgets.ModeButton? _layouts        = null;
-  private Box?                        _theme_box      = null;
+  private Grid?                       _theme_grid     = null;
   private Button?                     _balance        = null;
   private Button?                     _fold_completed = null;
   private Button?                     _unfold_all     = null;
@@ -193,8 +193,9 @@ public class MapInspector : Box {
     var sw  = new ScrolledWindow( null, null );
     var vp  = new Viewport( null, null );
     var tb  = new Box( Orientation.VERTICAL, 0 );
-    _theme_box = new Box( Orientation.VERTICAL, 20 );
-    tb.pack_start( _theme_box, true, true );
+    _theme_grid = new Grid();
+    _theme_grid.column_homogeneous = true;
+    tb.pack_start( _theme_grid, true, true );
     vp.set_size_request( 200, 600 );
     vp.add( tb );
     sw.add( vp );
@@ -252,12 +253,12 @@ public class MapInspector : Box {
   private void update_themes() {
 
     /* Clear the contents of the theme box */
-    _theme_box.get_children().foreach((entry) => {
-      _theme_box.remove( entry );
+    _theme_grid.get_children().foreach((entry) => {
+      _theme_grid.remove( entry );
     });
 
     if( !_init ) {
-      // return;
+      return;
     }
 
     /* Get the theme information to display */
@@ -271,10 +272,11 @@ public class MapInspector : Box {
     for( int i=0; i<names.length; i++ ) {
       var name  = names.index( i );
       var ebox  = new EventBox();
-      var item  = new Box( Orientation.VERTICAL, 5 );
+      var item  = new Box( Orientation.VERTICAL, 0 );
       var label = new Label( theme_label( name ) );
-      item.pack_start( icons.index( i ), false, false, 5 );
-      item.pack_start( label,            false, true );
+      item.border_width = 5;
+      item.pack_start( icons.index( i ), false, false );
+      item.pack_start( label,            false, true, 5 );
       ebox.button_press_event.connect((w, e) => {
         var theme = _win.themes.get_theme( name );
         select_theme( name );
@@ -285,9 +287,9 @@ public class MapInspector : Box {
         return( false );
       });
       ebox.add( item );
-      _theme_box.pack_start( ebox, false, true );
+      _theme_grid.attach( ebox, (i % 2), (i / 2) );
     }
-    _theme_box.show_all();
+    _theme_grid.show_all();
 
     /* Make sure that the current theme is selected */
     if( _da != null ) {
@@ -327,12 +329,15 @@ public class MapInspector : Box {
   /* Makes sure that only the given theme is selected in the UI */
   private void select_theme( string name ) {
 
-    int index = 0;
-    var names = new Array<string>();
+    int index    = 0;
+    var names    = new Array<string>();
+    var children = _theme_grid.get_children();
     _win.themes.names( ref names );
 
+    children.reverse();
+
     /* Deselect all themes */
-    _theme_box.get_children().foreach((entry) => {
+    children.foreach((entry) => {
       var e = (EventBox)entry;
       var b = (Box)e.get_children().nth_data( 0 );
       var l = (Label)b.get_children().nth_data( 1 );
@@ -343,7 +348,7 @@ public class MapInspector : Box {
 
     /* Select the matching theme */
     index = 0;
-    _theme_box.get_children().foreach((entry) => {
+    children.foreach((entry) => {
       if( names.index( index ) == name ) {
         var e = (EventBox)entry;
         var b = (Box)e.get_children().nth_data( 0 );

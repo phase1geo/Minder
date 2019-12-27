@@ -40,9 +40,9 @@ public class ExportCSV : Object {
 
   private static void export_levels( FileOutputStream os, int levels ) {
     try {
-      string str = "level0";
+      string str = "level0,note0";
       for( int i=1; i<levels; i++ ) {
-        str += ",level" + i.to_string();
+        str += ",level" + i.to_string() + ",note" + i.to_string();
       }
       str += "\n";
       os.write( str.data );
@@ -78,8 +78,8 @@ public class ExportCSV : Object {
   /* Convert the given string to one that is valid for CSV files */
   private static string stringify( string val ) {
 
-    /* Strip and double-quotes found */
-    string newval = val.replace( "\"", "" );
+    /* Strip any double-quotes and newlines found */
+    string newval = val.replace( "\"", "" ).replace( "\n", " " );
 
     /* If the value contains any comma characters, quote the entire string */
     if( newval.index_of( "," ) != -1 ) {
@@ -97,15 +97,15 @@ public class ExportCSV : Object {
 
       var nodes = da.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
-        string title = stringify( nodes.index( i ).name.text );
+        string title = stringify( nodes.index( i ).name.text ) + "," + stringify( nodes.index( i ).note );
         for( int j=0; j<(levels - 1); j++ ) {
-          title += ",";
+          title += ",,";
         }
         title += "\n";
         os.write( title.data );
         var children = nodes.index( i ).children();
         for( int j=0; j<children.length; j++ ) {
-          export_node( os, children.index( j ), ",", levels );
+          export_node( os, children.index( j ), ",,", levels );
         }
       }
 
@@ -117,7 +117,7 @@ public class ExportCSV : Object {
 
   /* Draws the given node and its children to the output stream */
   private static void export_node( FileOutputStream os, Node node, string prefix, int levels ) {
-    
+
     try {
 
       string title = prefix;
@@ -130,10 +130,10 @@ public class ExportCSV : Object {
         }
       }
 
-      title += stringify( node.name.text );
+      title += stringify( node.name.text ) + "," + stringify( node.note );
 
-      for( int i=0; i<(levels - 1 - prefix.length); i++ ) {
-        title += ",";
+      for( int i=0; i<(levels - 1 - (prefix.length / 2)); i++ ) {
+        title += ",,";
       }
 
       title += "\n";
@@ -142,7 +142,7 @@ public class ExportCSV : Object {
 
       var children = node.children();
       for( int i=0; i<children.length; i++ ) {
-        export_node( os, children.index( i ), prefix + ",", levels );
+        export_node( os, children.index( i ), prefix + ",,", levels );
       }
 
     } catch( Error e ) {

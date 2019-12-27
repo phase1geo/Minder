@@ -125,16 +125,18 @@ public class Themes : Object {
   /* Loads the custom themes from XML */
   private void load_custom() {
     var themes = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "custom_themes.xml" );
-    Xml.Doc* doc = Xml.Parser.parse_file( themes );
-    if( doc == null ) return;
-    for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
-      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "theme") ) {
-        var theme = new Theme();
-        theme.load( it );
-        _themes.append_val( theme );
+    if( FileUtils.test( themes, FileTest.EXISTS ) ) {
+      Xml.Doc* doc = Xml.Parser.parse_file( themes );
+      if( doc == null ) return;
+      for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
+        if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "theme") ) {
+          var theme = new Theme();
+          theme.load( it );
+          _themes.append_val( theme );
+        }
       }
+      delete doc;
     }
-    delete doc;
   }
 
   /* Saves the custom themes to XML */

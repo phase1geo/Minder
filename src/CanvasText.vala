@@ -30,6 +30,7 @@ public class CanvasText : Object {
   /* Member variables */
   private string       _text         = "";
   private bool         _markup       = true;
+  private bool         _urls         = false;
   private bool         _edit         = false;
   private int          _cursor       = 0;   /* Location of the cursor when editing */
   private int          _column       = 0;   /* Character column to use when moving vertically */
@@ -43,6 +44,9 @@ public class CanvasText : Object {
 
   /* Signals */
   public signal void resized();
+  public signal void inserted( int spos, string str );
+  public signal void deleted( int spos, int epos );
+  public signal void render( CanvasText ct );
 
   /* Properties */
   public string text {
@@ -79,6 +83,17 @@ public class CanvasText : Object {
       }
     }
   }
+  public bool urls {
+    get {
+      return( _urls );
+    }
+    set {
+      if( _urls != value ) {
+        _urls = value;
+        update_size( true );
+      }
+    }
+  }
   public bool edit {
     get {
       return( _edit );
@@ -88,6 +103,11 @@ public class CanvasText : Object {
         _edit = value;
         update_size( true );
       }
+    }
+  }
+  public Pango.Layout pango_layout {
+    get {
+      return( _pango_layout );
     }
   }
 
@@ -152,6 +172,29 @@ public class CanvasText : Object {
     return( Utils.is_within_bounds( x, y, posx, posy, _width, _height ) );
   }
 
+  /* Returns true if the given coordinate lies within the given text range */
+  public bool is_within_range( double x, double y, int spos, int epos ) {
+    int cursor, trailing;
+    int adjusted_x = (int)(x - posx) * Pango.SCALE;
+    int adjusted_y = (int)(y - posy) * Pango.SCALE;
+    if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
+      cursor += trailing;
+      return( (spos <= cursor) && (cursor <= epos) );
+    }
+    return( false );
+  }
+
+  /* Returns the character position of the given cursor coordinates */
+  public int get_pos( double x, double y ) {
+    int cursor, trailing;
+    int adjusted_x = (int)(x - posx) * Pango.SCALE;
+    int adjusted_y = (int)(y - posy) * Pango.SCALE;
+    if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
+      return( cursor + trailing );
+    }
+    return( -1 );
+  }
+
   /* Loads the file contents into this instance */
   public virtual void load( Xml.Node* n ) {
 
@@ -178,23 +221,45 @@ public class CanvasText : Object {
   }
 
   /* Removes <, > and & characters */
-  private string unmarkup( string markup ) {
-    return( markup.replace( "&", "&amp;" ).replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
+  private string unmarkup( string txt ) {
+    return( txt.replace( "&", "&amp;" ).replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
   }
 
   /* Generates the marked up name that will be displayed in the node */
-  private string name_markup( Theme? theme ) {
-    if( (_selstart != _selend) && (theme != null) ) {
-      var fg      = Utils.color_from_rgba( theme.get_color( "textsel_foreground" ) );
-      var bg      = Utils.color_from_rgba( theme.get_color( "textsel_background" ) );
-      var spos    = text.index_of_nth_char( _selstart );
-      var epos    = text.index_of_nth_char( _selend );
-      var begtext = unmarkup( text.slice( 0, spos ) );
-      var endtext = unmarkup( text.slice( epos, text.char_count() ) );
-      var seltext = "<span foreground=\"" + fg + "\" background=\"" + bg + "\">" + unmarkup( text.slice( spos, epos ) ) + "</span>";
-      return( begtext + seltext + endtext );
-    }
+  private string name_markup() {
     return( (markup || edit) ? text : unmarkup( text ) );
+  }
+
+  /* Render the text, adding any necessary attributes to the text layout */
+  private void render_text( Theme? theme ) {
+
+    /* Allow everyone else to render */
+    render( this );
+
+    /* If we need to add a selection do it now */
+    if( (_selstart != _selend) && (theme != null) ) {
+
+      uint16 red, green, blue;
+      var attrs    = _pango_layout.get_attributes();
+      var selstart = text.index_of_nth_char( _selstart );
+      var selend   = text.index_of_nth_char( _selend );
+
+      Utils.get_attribute_color( theme.get_color( "textsel_background" ), out red, out green, out blue );
+      var bgcolor = attr_background_new( red, green, blue );
+      bgcolor.start_index = selstart;
+      bgcolor.end_index   = selend;
+      attrs.change( bgcolor.copy() );
+
+      Utils.get_attribute_color( theme.get_color( "textsel_foreground" ), out red, out green, out blue );
+      var fgcolor = attr_foreground_new( red, green, blue );
+      fgcolor.start_index = selstart;
+      fgcolor.end_index   = selend;
+      attrs.change( fgcolor.copy() );
+
+      _pango_layout.set_attributes( attrs );
+
+    }
+
   }
 
   /*
@@ -203,7 +268,8 @@ public class CanvasText : Object {
   public void update_size( bool call_resized ) {
     if( _pango_layout != null ) {
       int text_width, text_height;
-      _pango_layout.set_markup( name_markup( null ), -1 );
+      _pango_layout.set_markup( name_markup(), -1 );
+      render_text( null );
       _pango_layout.get_size( out text_width, out text_height );
       _width  = (text_width  / Pango.SCALE);
       _height = (text_height / Pango.SCALE);
@@ -464,6 +530,12 @@ public class CanvasText : Object {
     }
   }
 
+  /* Sets the selection to the given positions */
+  public void selection_set( int start, int end ) {
+    _selstart = start;
+    _selend   = end;
+  }
+
   /* Handles a backspace key event */
   public void backspace() {
     if( _cursor > 0 ) {
@@ -473,11 +545,13 @@ public class CanvasText : Object {
         text     = text.splice( spos, epos );
         _cursor  = _selstart;
         _selend  = _selstart;
+        deleted( spos, epos );
       } else {
         var spos = text.index_of_nth_char( _cursor - 1 );
         var epos = text.index_of_nth_char( _cursor );
         text     = text.splice( spos, epos );
         _cursor--;
+        deleted( spos, epos );
       }
     }
   }
@@ -491,12 +565,22 @@ public class CanvasText : Object {
         text    = text.splice( spos, epos );
         _cursor = _selstart;
         _selend = _selstart;
+        deleted( spos, epos );
       } else {
         var spos = text.index_of_nth_char( _cursor );
         var epos = text.index_of_nth_char( _cursor + 1 );
         text = text.splice( spos, epos );
+        deleted( spos, epos );
       }
     }
+  }
+
+  /* Deletes a range of characters */
+  public void delete_range( int start, int end ) {
+    var spos = text.index_of_nth_char( start );
+    var epos = text.index_of_nth_char( end );
+    text = text.splice( spos, epos );
+    deleted( spos, epos );
   }
 
   /* Inserts the given string at the current cursor position and adjusts cursor */
@@ -508,11 +592,21 @@ public class CanvasText : Object {
       text    = text.splice( spos, epos, s );
       _cursor = _selstart + slen;
       _selend = _selstart;
+      deleted( spos, epos );
+      inserted( spos, s );
     } else {
       var cpos = text.index_of_nth_char( _cursor );
       text = text.splice( cpos, cpos, s );
       _cursor += slen;
+      inserted( cpos, s );
     }
+  }
+
+  /* Inserts the given string at the given position */
+  public void insert_at_pos( int start, string s ) {
+    var spos = text.index_of_nth_char( start );
+    text = text.splice( spos, spos, s );
+    inserted( spos, s );
   }
 
   /*
@@ -528,6 +622,34 @@ public class CanvasText : Object {
     return( null );
   }
 
+  /* Returns the current cursor, selection start and selection end values. */
+  public void get_cursor_info( out int cursor, out int start, out int end ) {
+    cursor = _cursor;
+    start  = _selstart;
+    end    = _selend;
+  }
+
+  /*
+   Searches the text using the specified regular expression.  If a match is found, returns
+   true and populates the spos/epos outputs with the location of the string within the text.
+  */
+  public bool search_text( string pattern, ref Array<int> spos, ref Array<int> epos ) {
+    try {
+      MatchInfo match_info;
+      var re    = new Regex( pattern );
+      var start = 0;
+      while( re.match_all_full( text, -1, start, 0, out match_info ) ) {
+        int s, e;
+        match_info.fetch_pos( 0, out s, out e );
+        spos.append_val( s );
+        epos.append_val( e );
+        start = e;
+      }
+      return( spos.length > 0 );
+    } catch( RegexError e ) {}
+    return( false );
+  }
+
   /* Returns the current cursor position */
   public void get_cursor_pos( out int x, out int ytop, out int ybot ) {
     var index = text.index_of_nth_char( _cursor );
@@ -537,11 +659,20 @@ public class CanvasText : Object {
     ybot = ytop + (int)(rect.height / Pango.SCALE);
   }
 
+  /* Returns the x and y position of the given character position */
+  public void get_char_pos( int pos, out double x, out double y ) {
+    var index = text.index_of_nth_char( pos );
+    var rect  = _pango_layout.index_to_pos( index );
+    x = posx + (rect.x / Pango.SCALE);
+    y = posy + (rect.y / Pango.SCALE);
+  }
+
   /* Draws the node font to the screen */
   public void draw( Cairo.Context ctx, Theme theme, RGBA fg, double alpha ) {
 
     /* Make sure the the size is up-to-date */
-    _pango_layout.set_markup( name_markup( theme ), -1 );
+    _pango_layout.set_markup( name_markup(), -1 );
+    render_text( theme );
 
     /* Output the text */
     ctx.move_to( posx, posy );

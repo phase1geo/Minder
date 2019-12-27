@@ -21,40 +21,38 @@
 
 using Gtk;
 
-public class UndoNodeName : UndoItem {
+public class UndoConnectionsDelete : UndoItem {
 
-  Node     _node;
-  string   _old_name;
-  UrlLinks _old_urls;
-  string   _new_name;
-  UrlLinks _new_urls;
+  Array<Connection> _conns;
 
-  /* Constructor for a node name change */
-  public UndoNodeName( Node n, string old_name, UrlLinks old_urls ) {
-    base( _( "node name change" ) );
-    _node     = n;
-    _old_name = old_name;
-    _old_urls = old_urls;
-    _new_name = n.name.text;
-    _new_urls = new UrlLinks( n.da );
-    _new_urls.copy( n.urls );
+  /* Constructor for deleting connections */
+  public UndoConnectionsDelete( Array<Connection> conns ) {
+    base( _( "delete connections" ) );
+    _conns = new Array<Connection>();
+    for( int i=0; i<conns.length; i++ ) {
+      _conns.append_val( conns.index( i ) );
+    }
   }
 
-  /* Undoes a node name change */
+  /* Undoes connection deletions */
   public override void undo( DrawArea da ) {
-    _node.name.text = _old_name;
-    _node.urls.copy( _old_urls );
+    var selections = da.get_selections();
+    selections.clear();
+    for( int i=0; i<_conns.length; i++ ) {
+      da.get_connections().add_connection( _conns.index( i ) );
+      selections.add_connection( _conns.index( i ) );
+    }
     da.queue_draw();
-    da.current_changed( da );
     da.changed();
   }
 
-  /* Redoes a node name change */
+  /* Redoes connection deletions */
   public override void redo( DrawArea da ) {
-    _node.name.text = _new_name;
-    _node.urls.copy( _new_urls );
+    for( int i=0; i<_conns.length; i++ ) {
+      da.get_connections().remove_connection( _conns.index( i ), false );
+    }
+    da.get_selections().clear_connections();
     da.queue_draw();
-    da.current_changed( da );
     da.changed();
   }
 

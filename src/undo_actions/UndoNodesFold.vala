@@ -21,41 +21,36 @@
 
 using Gtk;
 
-public class UndoNodeName : UndoItem {
+public class UndoNodesFold : UndoItem {
 
-  Node     _node;
-  string   _old_name;
-  UrlLinks _old_urls;
-  string   _new_name;
-  UrlLinks _new_urls;
+  Array<Node> _nodes;
 
-  /* Constructor for a node name change */
-  public UndoNodeName( Node n, string old_name, UrlLinks old_urls ) {
-    base( _( "node name change" ) );
-    _node     = n;
-    _old_name = old_name;
-    _old_urls = old_urls;
-    _new_name = n.name.text;
-    _new_urls = new UrlLinks( n.da );
-    _new_urls.copy( n.urls );
+  /* Default constructor */
+  public UndoNodesFold( Array<Node> nodes ) {
+    base( _( "node change folds" ) );
+    _nodes = nodes;
   }
 
-  /* Undoes a node name change */
+  /* Toggles the fold indicators */
+  private void change( DrawArea da ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      var node = _nodes.index( i );
+      node.folded = !node.folded;
+      node.layout.handle_update_by_fold( node );
+    }
+    da.queue_draw();
+    da.current_changed( da );
+    da.changed();
+  }
+
+  /* Undoes a node fold operation */
   public override void undo( DrawArea da ) {
-    _node.name.text = _old_name;
-    _node.urls.copy( _old_urls );
-    da.queue_draw();
-    da.current_changed( da );
-    da.changed();
+    change( da );
   }
 
-  /* Redoes a node name change */
+  /* Redoes a node fold operation */
   public override void redo( DrawArea da ) {
-    _node.name.text = _new_name;
-    _node.urls.copy( _new_urls );
-    da.queue_draw();
-    da.current_changed( da );
-    da.changed();
+    change( da );
   }
 
 }

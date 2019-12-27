@@ -47,6 +47,8 @@ public class Theme : Object {
     _colors.set( "text_cursor",        null );
     _colors.set( "attachable",         null );
     _colors.set( "connection",         null );
+    _colors.set( "url_background",     null );
+    _colors.set( "url_foreground",     null );
     _colors.set( "link_color0",        null );
     _colors.set( "link_color1",        null );
     _colors.set( "link_color2",        null );
@@ -237,158 +239,64 @@ public class Theme : Object {
   /* Creates the icon representation based on the theme's colors */
   public Cairo.Surface make_icon() {
 
-    Cairo.ImageSurface surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 200, 100 );
+    int                side    = 140;
+    int                nrad    = 15;
+    Cairo.ImageSurface surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, side, side );
     Cairo.Context      ctx     = new Cairo.Context( surface );
+    int                hside   = side / 2;
+    double             ypos[6];
     int                width, height;
 
     var font_desc = new Pango.FontDescription();
     font_desc.set_family( "Sans" );
-    font_desc.set_size( 10 * Pango.SCALE );
+    font_desc.set_size( 11 * Pango.SCALE );
 
     /* Draw the background */
     set_context_color( ctx, get_color( "background" ) );
-    ctx.rectangle( 0, 0, 200, 100 );
+    ctx.rectangle( 0, 0, side, side );
     ctx.fill();
-
-    /* Draw subnode lines */
-    set_context_color( ctx, link_color( 0 ) );
-    ctx.set_line_cap( Cairo.LineCap.ROUND );
-    ctx.set_line_width( 4 );
-    ctx.move_to( 100, 50 );
-    ctx.line_to( 50, 25 );
-    ctx.stroke();
-    set_context_color( ctx, link_color( 0 ) );
-    ctx.set_line_cap( Cairo.LineCap.ROUND );
-    ctx.set_line_width( 4 );
-    ctx.move_to( 50, 25 );
-    ctx.line_to( 10, 25 );
-    ctx.stroke();
-
-    set_context_color( ctx, link_color( 1 ) );
-    ctx.set_line_cap( Cairo.LineCap.ROUND );
-    ctx.set_line_width( 4 );
-    ctx.move_to( 100, 50 );
-    ctx.line_to( 10, 50 );
-    ctx.stroke();
-
-    set_context_color( ctx, link_color( 2 ) );
-    ctx.set_line_cap( Cairo.LineCap.ROUND );
-    ctx.set_line_width( 4 );
-    ctx.move_to( 100, 50 );
-    ctx.line_to( 50, 75 );
-    ctx.stroke();
-    set_context_color( ctx, link_color( 2 ) );
-    ctx.set_line_cap( Cairo.LineCap.ROUND );
-    ctx.set_line_width( 4 );
-    ctx.move_to( 50, 75 );
-    ctx.line_to( 10, 75 );
-    ctx.stroke();
-
-    set_context_color( ctx, link_color( 3 ) );
-    ctx.set_line_cap( Cairo.LineCap.ROUND );
-    ctx.set_line_width( 4 );
-    ctx.move_to( 100, 50 );
-    ctx.line_to( 150, 25 );
-    ctx.stroke();
-    set_context_color( ctx, link_color( 3 ) );
-    ctx.set_line_cap( Cairo.LineCap.ROUND );
-    ctx.set_line_width( 4 );
-    ctx.move_to( 150, 25 );
-    ctx.line_to( 190, 25 );
-    ctx.stroke();
-
-    set_context_color( ctx, link_color( 4 ) );
-    ctx.set_line_cap( Cairo.LineCap.ROUND );
-    ctx.set_line_width( 4 );
-    ctx.move_to( 100, 50 );
-    ctx.line_to( 190, 50 );
-    ctx.stroke();
-
-    set_context_color( ctx, link_color( 5 ) );
-    ctx.set_line_cap( Cairo.LineCap.ROUND );
-    ctx.set_line_width( 4 );
-    ctx.move_to( 100, 50 );
-    ctx.line_to( 150, 75 );
-    ctx.stroke();
-    set_context_color( ctx, link_color( 5 ) );
-    ctx.set_line_cap( Cairo.LineCap.ROUND );
-    ctx.set_line_width( 4 );
-    ctx.move_to( 150, 75 );
-    ctx.line_to( 190, 75 );
-    ctx.stroke();
 
     /* Create root node text */
     var root_text = Pango.cairo_create_layout( ctx );
     root_text.set_font_description( font_desc );
-    root_text.set_width( 70 * Pango.SCALE );
-    root_text.set_wrap( Pango.WrapMode.WORD_CHAR );
-    root_text.set_text( name, -1 );
+    // root_text.set_width( 70 * Pango.SCALE );
+    root_text.set_text( _( "Root" ), -1 );
     root_text.get_pixel_size( out width, out height );
 
-    height += 4;
+    var rrad   = (width + 20) / 2;
+    var hspace = ((side - (rrad * 2) - (nrad * 4)) / 4) + nrad;
+    var vspace = ((side - (nrad * 6))              / 4) + nrad;
+
+    ypos[0] = ypos[3] = vspace;
+    ypos[1] = ypos[4] = (side / 2);
+    ypos[2] = ypos[5] = (side - vspace);
 
     /* Draw root node */
-    double r = 4;
-    double x = 65;
-    double y = (100 - height) / 2;
-    double w = 70;
-    double h = height;
     set_context_color( ctx, get_color( "root_background" ) );
-    ctx.set_line_width( 1 );
-    ctx.move_to(x+r,y);
-    ctx.line_to(x+w-r,y);
-    ctx.curve_to(x+w,y,x+w,y,x+w,y+r);
-    ctx.line_to(x+w,y+h-r);
-    ctx.curve_to(x+w,y+h,x+w,y+h,x+w-r,y+h);
-    ctx.line_to(x+r,y+h);
-    ctx.curve_to(x,y+h,x,y+h,x,y+h-r);
-    ctx.line_to(x,y+r);
-    ctx.curve_to(x,y,x,y,x+r,y);
+    ctx.arc( hside, hside, rrad, 0, (2 * Math.PI) );
     ctx.fill();
-
-    /* Create non-root node text */
-    var node_text = Pango.cairo_create_layout( ctx );
-    node_text.set_font_description( font_desc );
-    node_text.set_width( 40 * Pango.SCALE );
-    node_text.set_wrap( Pango.WrapMode.WORD_CHAR );
-    node_text.set_text( "Node", -1 );
 
     /* Add the text */
     set_context_color( ctx, get_color( "root_foreground" ) );
-    ctx.move_to( (100 - (width / 2)), (50 - (height / 2)) );
+    ctx.move_to( (hside - (width / 2)), (hside - (height / 2)) );
     Pango.cairo_show_layout( ctx, root_text );
 
-    node_text.get_size( out width, out height );
-    width  /= Pango.SCALE;
-    height /= Pango.SCALE;
-
-    set_context_color( ctx, get_color( "foreground" ) );
-    ctx.move_to( (30 - (width / 2)), (25 - (height + 2)) );
-    Pango.cairo_show_layout( ctx, node_text );
-
-    set_context_color( ctx, get_color( "foreground" ) );
-    ctx.move_to( (30 - (width / 2)), (50 - (height + 2)) );
-    Pango.cairo_show_layout( ctx, node_text );
-
-    set_context_color( ctx, get_color( "foreground" ) );
-    ctx.move_to( (30 - (width / 2)), (75 - (height + 2)) );
-    Pango.cairo_show_layout( ctx, node_text );
-
-    set_context_color( ctx, get_color( "foreground" ) );
-    ctx.move_to( (170 - (width / 2)), (25 - (height + 2)) );
-    Pango.cairo_show_layout( ctx, node_text );
-
-    set_context_color( ctx, get_color( "foreground" ) );
-    ctx.move_to( (170 - (width / 2)), (50 - (height + 2)) );
-    Pango.cairo_show_layout( ctx, node_text );
-
-    set_context_color( ctx, get_color( "foreground" ) );
-    ctx.move_to( (170 - (width / 2)), (75 - (height + 2)) );
-    Pango.cairo_show_layout( ctx, node_text );
+    /* Draw subnodes */
+    for( int i=0; i<6; i++ ) {
+      set_context_color( ctx, link_color( i ) );
+      ctx.arc( ((i < 3) ? hspace : (side - hspace)), ypos[i], nrad, 0, (2 * Math.PI) );
+      ctx.fill();
+    }
 
     /* Draw connection */
     set_context_color( ctx, get_color( "connection" ) );
-    double p[6] = {60, 15, 100, 5, 140, 15};
+    double p[6];
+    p[0] = hspace + nrad + 2;
+    p[1] = vspace + 2;
+    p[2] = hside;
+    p[3] = p[1] - nrad;
+    p[4] = side - (hspace + nrad + 2);
+    p[5] = p[1];
     ctx.set_line_width( 2 );
     ctx.set_dash( {3, 5}, 0 );
     ctx.move_to( p[0], p[1] );

@@ -21,40 +21,37 @@
 
 using Gtk;
 
-public class UndoNodeName : UndoItem {
+public class UndoNodesLink : UndoItem {
 
-  Node     _node;
-  string   _old_name;
-  UrlLinks _old_urls;
-  string   _new_name;
-  UrlLinks _new_urls;
+  Array<Node>  _nodes;
+  Array<Node?> _linked;
 
   /* Constructor for a node name change */
-  public UndoNodeName( Node n, string old_name, UrlLinks old_urls ) {
-    base( _( "node name change" ) );
-    _node     = n;
-    _old_name = old_name;
-    _old_urls = old_urls;
-    _new_name = n.name.text;
-    _new_urls = new UrlLinks( n.da );
-    _new_urls.copy( n.urls );
+  public UndoNodesLink( Array<Node> nodes ) {
+    base( _( "node link changes" ) );
+    _nodes  = new Array<Node>();
+    _linked = new Array<Node>();
+    for( int i=0; i<nodes.length; i++ ) {
+      _nodes.append_val( nodes.index( i ) );
+      _linked.append_val( nodes.index( i ).linked_node );
+    }
   }
 
-  /* Undoes a node name change */
+  /* Undoes a node image change */
   public override void undo( DrawArea da ) {
-    _node.name.text = _old_name;
-    _node.urls.copy( _old_urls );
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).linked_node = _linked.index( i );
+    }
     da.queue_draw();
-    da.current_changed( da );
     da.changed();
   }
 
-  /* Redoes a node name change */
+  /* Redoes a node image change */
   public override void redo( DrawArea da ) {
-    _node.name.text = _new_name;
-    _node.urls.copy( _new_urls );
+    for( int i=0; i<(_nodes.length - 1); i++ ) {
+      _nodes.index( i ).linked_node = _nodes.index( i + 1 );
+    }
     da.queue_draw();
-    da.current_changed( da );
     da.changed();
   }
 

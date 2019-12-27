@@ -100,6 +100,42 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.6.0" date="2019-12-26">
+      <description>
+        <h3>New</h3>
+        <h3 xml:lang="fr">Nouveau</h3>
+        <ul>
+          <li>Added ability to delete a single node (instead of the node and its subtree) in the contextual menu.</li>
+          <li>When a new document is first saved, the first root node text is used as the default filename.</li>
+          <li>Added multi-select support which includes:
+            <ul>
+              <li>Changing styles</li>
+              <li>Copy, cut, paste and delete support</li>
+              <li>Connect two selected nodes</li>
+              <li>Create node links between two or more selected nodes</li>
+              <li>Fold/unfold selected nodes</li>
+            </ul>
+          </li>
+          <li>Added support for URLs in node titles.</li>
+          <li>Added support for Markdown within a note
+            <ul><li>Notes are syntax highlighted</li><li>Embedded URLs can be opened by Control-Clicking on them</li></ul>
+          </li>
+        </ul>
+        <h3>Changes</h3>
+        <h3 xml:lang="fr">Modifications</h3>
+        <ul>
+          <li>Updated application icon and other recently improved icons for improved readability (thanks to Nararyans R.I.).</li>
+          <li>Improved look and readability of theme icons in the sidebar.</li>
+          <li>Changed sidebar to display theme icons in a grid layout.</li>
+          <li>Improved various export format output.</li>
+        </ul>
+        <h3>Bug Fixes</h3>
+        <h3 xml:lang="fr">Corrections de bugs</h3>
+        <ul>
+          <li>Fixed various compiler warnings/errors after compiling with latest version of Vala compiler.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.5.1" date="2019-11-23">
       <description>
         <h3>Changes</h3>

@@ -29,6 +29,7 @@ using Gee;
 public enum NodeMode {
   NONE = 0,   // Specifies that this node is not the current node
   CURRENT,    // Specifies that this node is the current node and is not being edited
+  SELECTED,   // Specifies that this node is one of several selected nodes
   EDITABLE,   // Specifies that this node's text has been and currently is actively being edited
   ATTACHABLE, // Specifies that this node is the currently attachable node (affects display)
   DROPPABLE   // Specifies that this node can receive a dropped item
@@ -137,6 +138,7 @@ public class Node : Object {
   private   double       _max_width    = 200;
   private   bool         _loaded       = true;
   private   Node         _linked_node  = null;
+  private   UrlLinks     _urls         = null;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -201,6 +203,11 @@ public class Node : Object {
     }
     set {
       if( _mode != value ) {
+        if( _mode == NodeMode.EDITABLE ) {
+          if( _da.settings.get_boolean( "auto-parse-embedded-urls" ) ) {
+            _urls.parse_embedded_urls( name );
+          }
+        }
         _mode = value;
         if( _mode == NodeMode.EDITABLE ) {
           name.edit = true;
@@ -300,6 +307,14 @@ public class Node : Object {
     }
   }
   public NodeBounds tree_bbox { get; set; default = NodeBounds(); }
+  public UrlLinks urls {
+    get {
+      return( _urls );
+    }
+    set {
+      _urls = value;
+    }
+  }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -307,8 +322,13 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
+    _urls     = new UrlLinks( da );
     _name     = new CanvasText( da, _max_width );
+    _name.urls = true;
     _name.resized.connect( update_size );
+    _name.inserted.connect( _urls.insert_text );
+    _name.deleted.connect( _urls.delete_text );
+    _name.render.connect_after( _urls.markup_canvas_text );
   }
 
   /* Constructor initializing string */
@@ -317,17 +337,25 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
+    _urls     = new UrlLinks( da );
     _name     = new CanvasText.with_text( da, _max_width, n );
     _name.resized.connect( update_size );
+    _name.inserted.connect( _urls.insert_text );
+    _name.deleted.connect( _urls.delete_text );
+    _name.render.connect_after( _urls.markup_canvas_text );
   }
 
   /* Copies an existing node to this node */
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
     _da       = da;
     _id       = _next_id++;
+    _urls     = new UrlLinks( da );
     _name     = new CanvasText( da, _max_width );
     copy_variables( n, im );
     _name.resized.connect( update_size );
+    _name.inserted.connect( _urls.insert_text );
+    _name.deleted.connect( _urls.delete_text );
+    _name.render.connect_after( _urls.markup_canvas_text );
     mode      = NodeMode.NONE;
     _children = n._children;
     for( int i=0; i<_children.length; i++ ) {
@@ -335,14 +363,26 @@ public class Node : Object {
     }
   }
 
+  public Node.copy_only( DrawArea da, Node n, ImageManager im ) {
+    _da = da;
+    _id = _next_id++;
+    _urls = new UrlLinks( da );
+    _name = new CanvasText( da, _max_width );
+    copy_variables( n, im );
+  }
+
   /* Copies an existing node tree to this node */
   public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int> id_map ) {
     _da       = da;
     _id       = _next_id++;
+    _urls     = new UrlLinks( da );
     _name     = new CanvasText( da, _max_width );
     _children = new Array<Node>();
     copy_variables( n, im );
     _name.resized.connect( update_size );
+    _name.inserted.connect( _urls.insert_text );
+    _name.deleted.connect( _urls.delete_text );
+    _name.render.connect_after( _urls.markup_canvas_text );
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
     id_map.set( n._id, _id );
@@ -373,6 +413,7 @@ public class Node : Object {
     _link_color   = n._link_color;
     _max_width    = n._max_width;
     _image        = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, (int)n._max_width );
+    _urls.copy( n._urls );
     _name.copy( n._name );
     note          = n.note;
     mode          = n.mode;
@@ -522,7 +563,7 @@ public class Node : Object {
 
   /* Returns true if this tree bounds of this node is left of the given bounds */
   public bool is_left_of( NodeBounds nb ) {
-    return( (tree_bbox.x + tree_bbox.width) < nb.x ); 
+    return( (tree_bbox.x + tree_bbox.width) < nb.x );
   }
 
   /* Returns true if this tree bounds of this node is right of the given bounds */
@@ -687,6 +728,11 @@ public class Node : Object {
     return( false );
   }
 
+  /* Returns true if the given cursor coordinates lie within a URL */
+  public virtual bool is_within_url( double x, double y, out string url, out double left ) {
+    return( _urls.get_url_at_pos( name, x, y, out url, out left ) );
+  }
+
   /* Finds the node which contains the given pixel coordinates */
   public virtual Node? contains( double x, double y, Node? n ) {
     if( (this != n) && (is_within( x, y ) || is_within_fold( x, y )) ) {
@@ -802,6 +848,11 @@ public class Node : Object {
     _name.set_font( _style.node_font );
   }
 
+  /* Loads the URL links information from the given XML node */
+  private void load_url_links( Xml.Node* n ) {
+    _urls.load( n );
+  }
+
   /* Loads the file contents into this instance */
   public virtual void load( DrawArea da, Xml.Node* n, bool isroot, HashMap<int,int> id_map, Array<NodeLinkInfo?> link_ids ) {
 
@@ -876,11 +927,12 @@ public class Node : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "nodename"  :  load_name( it );  break;
-          case "nodenote"  :  load_note( it );  break;
-          case "nodeimage" :  load_image( da.image_manager, it );  break;
-          case "style"     :  load_style( it );  break;
-          case "nodes"     :
+          case "nodename"   :  load_name( it );  break;
+          case "nodenote"   :  load_note( it );  break;
+          case "nodeimage"  :  load_image( da.image_manager, it );  break;
+          case "style"      :  load_style( it );  break;
+          case "formatting" :  load_url_links( it );  break;
+          case "nodes"      :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var child = new Node( da, _layout );
@@ -948,6 +1000,7 @@ public class Node : Object {
 
     style.save_node( node );
 
+    node->add_child( _urls.save() );
     node->new_text_child( null, "nodename", name.text );
     node->new_text_child( null, "nodenote", note );
 
@@ -1256,6 +1309,58 @@ public class Node : Object {
   /* Removes this node from the node tree along with all descendents */
   public virtual void delete() {
     detach( side );
+  }
+
+  /*
+   Removes only this node from its parent, attaching all children nodes of this node to the
+   parent.  If the parent node does not exist (i.e., this node is a root node, the children
+   nodes will become top-level nodes themselves.
+  */
+  public virtual void delete_only() {
+    if( parent == null ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).parent   = null;
+        _children.index( i ).attached = false;
+        _da.get_nodes().append_val( _children.index( i ) );
+      }
+      _da.remove_root_node( this );
+    } else {
+      int idx = index();
+      parent.children().remove_index( idx );
+      parent.moved.disconnect( this.parent_moved );
+      if( parent.last_selected_child == this ) {
+        parent.last_selected_child = null;
+      }
+      if( layout != null ) {
+        layout.handle_update_by_delete( parent, idx, side, tree_size );
+      }
+      attached = false;
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).attach( parent, idx, null );
+      }
+    }
+  }
+
+  /* Undoes a delete_only call by reattaching this node to the given parent */
+  public virtual void attach_only( Node? prev_parent, int prev_index ) {
+    if( index() == -1 ) {
+      attach_init( prev_parent, prev_index );
+    }
+    attached = true;
+    var temp = new Array<Node>();
+    for( int i=0; i<children().length; i++ ) {
+      temp.append_val( children().index( i ) );
+    }
+    children().remove_range( 0, children().length );
+    for( int i=0; i<temp.length; i++ ) {
+      var child = temp.index( i );
+      if( child.is_root() ) {
+        _da.remove_root_node( child );
+      } else {
+        child.detach( child.side );
+      }
+      child.attach_init( this, i );
+    }
   }
 
   /* Attaches this node as a child of the given node */
@@ -1574,7 +1679,7 @@ public class Node : Object {
     double h = _height - (style.node_margin * 2);
 
     /* Set the fill color */
-    if( mode == NodeMode.CURRENT ) {
+    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
     } else if( is_root() || style.is_fillable() ) {
       Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
@@ -1615,7 +1720,7 @@ public class Node : Object {
     int vmargin = 3;
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
-    if( mode == NodeMode.CURRENT ) {
+    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
       ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin),
                      ((posy + style.node_padding + style.node_margin) - vmargin),
@@ -1625,7 +1730,7 @@ public class Node : Object {
     }
 
     /* Draw the text */
-    if( mode == NodeMode.CURRENT ) {
+    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
       name.draw( ctx, theme, theme.get_color( "nodesel_foreground" ), _alpha );
     } else if( parent == null ) {
       name.draw( ctx, theme, theme.get_color( "root_foreground" ), _alpha );
@@ -1706,9 +1811,9 @@ public class Node : Object {
     if( note.length > 0 ) {
 
       double x, y, w, h;
-      RGBA   color = (mode == NodeMode.CURRENT) ? sel_color :
-                     style.is_fillable()        ? bg_color  :
-                                                  reg_color;
+      RGBA   color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color :
+                     style.is_fillable()                                         ? bg_color  :
+                                                                                   reg_color;
 
       note_bbox( out x, out y, out w, out h );
 
@@ -1737,9 +1842,9 @@ public class Node : Object {
     if( linked_node != null ) {
 
       double x, y, w, h;
-      RGBA   color = (mode == NodeMode.CURRENT) ? sel_color :
-                     style.is_fillable()        ? bg_color  :
-                                                  reg_color;
+      RGBA   color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color :
+                     style.is_fillable()                                         ? bg_color  :
+                                                                                   reg_color;
 
       linked_node_bbox( out x, out y, out w, out h );
 
@@ -1879,7 +1984,7 @@ public class Node : Object {
   /* Draw the node resizer area */
   protected virtual void draw_resizer( Context ctx, Theme theme ) {
 
-    /* Only draw the resizer if we are selected */
+    /* Only draw the resizer if we are the current node */
     if( mode != NodeMode.CURRENT ) {
       return;
     }

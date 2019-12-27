@@ -93,8 +93,12 @@ public class ThemeEditor : Gtk.Box {
     add_color( _( "Text Cursor" ),            "text_cursor",        grid, 9 );
     add_color( _( "Attachable Highlight" ),   "attachable",         grid, 10 );
     add_color( _( "Connection Color" ),       "connection",         grid, 11 );
+    add_color( _( "URL Link Background" ),    "url_background",     grid, 12 );
+    add_color( _( "URL Link Foreground" ),    "url_foreground",     grid, 13 );
 
-    grid.attach( new Label( "" ), 0, 12 );
+    var row = 14;
+
+    grid.attach( new Label( "" ), 0, row );
 
     var dark_lbl        = new Label( Utils.make_title( _( "Prefer Dark Mode" ) ) );
     dark_lbl.xalign     = (float)0;
@@ -107,18 +111,18 @@ public class ThemeEditor : Gtk.Box {
       return( false );
     });
 
-    grid.attach( dark_lbl,     0, 13 );
-    grid.attach( _prefer_dark, 1, 13 );
-    grid.attach( new Label( "" ), 0, 14 );
+    grid.attach( dark_lbl,     0, (row + 1) );
+    grid.attach( _prefer_dark, 1, (row + 1) );
+    grid.attach( new Label( "" ), 0, (row + 2) );
 
     var link_lbl = new Label( Utils.make_title( _( "Link Colors" ) + "\n" ) );
     link_lbl.xalign     = (float)0;
     link_lbl.use_markup = true;
-    grid.attach( link_lbl, 0, 15, 2 );
+    grid.attach( link_lbl, 0, (row + 3), 2 );
 
     /* Add link colors */
     for( int i=0; i<Theme.num_link_colors(); i++ ) {
-      add_color( _( "Link Color" ) + " #%d".printf( i + 1 ), "link_color%d".printf( i ), grid, (16 + i) );
+      add_color( _( "Link Color" ) + " #%d".printf( i + 1 ), "link_color%d".printf( i ), grid, ((row + 4) + i) );
     }
 
     /* Create the button bar */
@@ -171,7 +175,7 @@ public class ThemeEditor : Gtk.Box {
 
   /* This should be called prior to editing a theme */
   public void initialize( Theme theme, bool edit ) {
-    
+
     /* Initialize class variables */
     _orig_theme = theme;
     _edit       = edit;
