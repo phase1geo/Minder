@@ -921,6 +921,15 @@ public class Node : Object {
       _link_color.parse( c );
     }
 
+    /* If the posx and posy values are not set, set the layout now */
+    if( (x == null) && (y == null) ) {
+      string? l = n->get_prop( "layout" );
+      if( l != null ) {
+        layout = da.layouts.get_layout( l );
+        stdout.printf( "get_layout early, name: %s\n", layout.name );
+      }
+    }
+
     /* Make sure the style has a default value */
     style.copy( StyleInspector.styles.get_style_for_level( (isroot ? 0 : 1), null ) );
 
@@ -945,10 +954,12 @@ public class Node : Object {
       }
     }
 
-    /* Apply the stored layout */
-    string? l = n->get_prop( "layout" );
-    if( l != null ) {
-      layout = da.layouts.get_layout( l );
+    /* Load the layout after the nodes are loaded if the posx/posy information is set */
+    if( (x != null) || (y != null) ) {
+      string? l = n->get_prop( "layout" );
+      if( l != null ) {
+        layout = da.layouts.get_layout( l );
+      }
     }
 
     /* Get the tree bbox */
@@ -1161,6 +1172,11 @@ public class Node : Object {
         _children.index( i ).set_fold( value, ref changed );
       }
     }
+  }
+
+  /* Sets the folded indicator for this node only without affecting child nodes. */
+  public void set_fold_only( bool value ) {
+    _folded = value;
   }
 
   /* Returns true if there is at least one node that is foldable due to its tasks being completed. */
