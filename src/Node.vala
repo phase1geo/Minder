@@ -926,7 +926,6 @@ public class Node : Object {
       string? l = n->get_prop( "layout" );
       if( l != null ) {
         layout = da.layouts.get_layout( l );
-        stdout.printf( "get_layout early, name: %s\n", layout.name );
       }
     }
 
