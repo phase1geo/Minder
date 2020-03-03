@@ -39,8 +39,8 @@ public class MainWindow : ApplicationWindow {
   private Gtk.AccelGroup?   _accel_group    = null;
   private DynamicNotebook?  _nb             = null;
   private Revealer?         _inspector      = null;
-  private Box?              _pbox           = null;
   private Paned             _pane           = null;
+  private int               _pane_position  = -1;
   private Notebook?         _inspector_nb   = null;
   private Stack?            _stack          = null;
   private Popover?          _zoom           = null;
@@ -190,18 +190,14 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the panel so that we can resize */
     _pane = new Paned( Orientation.HORIZONTAL );
-    _pane.pack1( _nb, true, true );
+    _pane.pack1( _nb,        true, true );
+    _pane.pack2( _inspector, true, false );
     _pane.move_handle.connect(() => {
       return( false );
     });
 
-    /* Create the horizontal box that will contain the notebook and the properties sidebar */
-    _pbox = new Box( Orientation.HORIZONTAL, 0 );
-    _pbox.pack_start( _pane,      true,  true, 0 );
-    _pbox.pack_start( _inspector, false, true, 0 );
-
     /* Display the UI */
-    add( _pbox );
+    add( _pane );
     show_all();
 
   }
@@ -693,8 +689,8 @@ public class MainWindow : ApplicationWindow {
     _inspector_nb.append_page( _themer );
 
     _inspector = new Revealer();
-    _inspector.set_transition_type( RevealerTransitionType.SLIDE_LEFT );
-    _inspector.set_transition_duration( 500 );
+    _inspector.set_transition_type( RevealerTransitionType.NONE );
+    _inspector.set_transition_duration( 0 );
     _inspector.child = _inspector_nb;
 
     /* If the settings says to display the properties, do it now */
@@ -964,8 +960,10 @@ public class MainWindow : ApplicationWindow {
         _stack.visible_child_name = tab;
       }
       if( !_inspector.reveal_child ) {
-        Timeout.add( 501, move_inspector_to_pane );
         _inspector.reveal_child = true;
+        var prop_width = _settings.get_int( "properties-width" );
+        stdout.printf( "allocated_width: %d\n", _pane.get_allocated_width() );
+        _pane.position = 0 - (prop_width + 11);
         if( get_current_da( "show_properties 1" ) != null ) {
           get_current_da( "show_properties 2" ).see( -300 );
         }
@@ -991,32 +989,19 @@ public class MainWindow : ApplicationWindow {
     _inspector_nb.page = 0;
   }
 
-  private bool move_inspector_to_pane() {
-    var ci = _stack.get_child_by_name( "current" ) as CurrentInspector;
-    if( ci != null ) {
-      ci.reset_width();
-    }
-    _pbox.remove( _inspector );
-    _pane.pack2( _inspector, false, false );
-    return( false );
-  }
-
   /* Hides the node properties panel */
   private void hide_properties() {
     if( !_inspector.reveal_child ) return;
-    var prop_width = (_pane.get_allocated_width() - _pane.position) - 11;
-    var ci         = _stack.get_child_by_name( "current" ) as CurrentInspector;
-    if( ci != null ) {
-      ci.set_width( prop_width );
-    }
+    var prop_width  = (_pane.get_allocated_width() - _pane.position) - 11;
+    _pane_position  = _pane.position;
     _prop_btn.image = _prop_show;
-    _pane.remove( _inspector );
-    _pbox.pack_start( _inspector, false, true, 0 );
+    _pane.position_set = false;
     _inspector.reveal_child = false;
     get_current_da( "hide_properties" ).grab_focus();
     _settings.set_boolean( "current-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",     false );
     _settings.set_boolean( "style-properties-shown",   false );
+    stdout.printf( "HIDE prop_width: %d\n", prop_width );
     _settings.set_int( "properties-width", prop_width );
   }
 
