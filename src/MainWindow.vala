@@ -40,7 +40,6 @@ public class MainWindow : ApplicationWindow {
   private DynamicNotebook?  _nb             = null;
   private Revealer?         _inspector      = null;
   private Paned             _pane           = null;
-  private int               _pane_position  = -1;
   private Notebook?         _inspector_nb   = null;
   private Stack?            _stack          = null;
   private Popover?          _zoom           = null;
@@ -195,10 +194,23 @@ public class MainWindow : ApplicationWindow {
     _pane.move_handle.connect(() => {
       return( false );
     });
+    _pane.button_release_event.connect((e) => {
+      _settings.set_int( "properties-width", ((_pane.get_allocated_width() - _pane.position) - 11) );
+      return( false );
+    });
 
     /* Display the UI */
     add( _pane );
     show_all();
+
+    /* If the settings says to display the properties, do it now */
+    if( _settings.get_boolean( "current-properties-shown" ) ) {
+      show_properties( "current", false );
+    } else if( _settings.get_boolean( "map-properties-shown" ) ) {
+      show_properties( "map", false );
+    } else if( _settings.get_boolean( "style-properties-shown" ) ) {
+      show_properties( "style", false );
+    }
 
   }
 
@@ -693,15 +705,6 @@ public class MainWindow : ApplicationWindow {
     _inspector.set_transition_duration( 0 );
     _inspector.child = _inspector_nb;
 
-    /* If the settings says to display the properties, do it now */
-    if( _settings.get_boolean( "current-properties-shown" ) ) {
-      show_properties( "current", false );
-    } else if( _settings.get_boolean( "map-properties-shown" ) ) {
-      show_properties( "map", false );
-    } else if( _settings.get_boolean( "style-properties-shown" ) ) {
-      show_properties( "style", false );
-    }
-
   }
 
   private bool stack_keypress( EventKey e ) {
@@ -962,8 +965,11 @@ public class MainWindow : ApplicationWindow {
       if( !_inspector.reveal_child ) {
         _inspector.reveal_child = true;
         var prop_width = _settings.get_int( "properties-width" );
-        stdout.printf( "allocated_width: %d\n", _pane.get_allocated_width() );
-        _pane.position = 0 - (prop_width + 11);
+        var pane_width = _pane.get_allocated_width();
+        if( pane_width <= 1 ) {
+          pane_width = _settings.get_int( "window-w" ) + 4;
+        }
+        _pane.set_position( pane_width - (prop_width + 11) );
         if( get_current_da( "show_properties 1" ) != null ) {
           get_current_da( "show_properties 2" ).see( -300 );
         }
@@ -992,17 +998,13 @@ public class MainWindow : ApplicationWindow {
   /* Hides the node properties panel */
   private void hide_properties() {
     if( !_inspector.reveal_child ) return;
-    var prop_width  = (_pane.get_allocated_width() - _pane.position) - 11;
-    _pane_position  = _pane.position;
-    _prop_btn.image = _prop_show;
-    _pane.position_set = false;
+    _prop_btn.image         = _prop_show;
+    _pane.position_set      = false;
     _inspector.reveal_child = false;
     get_current_da( "hide_properties" ).grab_focus();
     _settings.set_boolean( "current-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",     false );
     _settings.set_boolean( "style-properties-shown",   false );
-    stdout.printf( "HIDE prop_width: %d\n", prop_width );
-    _settings.set_int( "properties-width", prop_width );
   }
 
   /* Converts the given value from the scale to the zoom value to use */
