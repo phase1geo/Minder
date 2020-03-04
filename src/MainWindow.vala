@@ -839,6 +839,11 @@ public class MainWindow : ApplicationWindow {
       var da        = add_tab( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportText.import( fname, da );
+    } else if( fname.has_suffix( ".outliner" ) ) {
+      var new_fname = fname.substring( 0, (fname.length - 9) ) + ".minder";
+      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      update_title( da );
+      ExportOutliner.import( fname, da );
     }
     return( false );
   }
@@ -1189,6 +1194,12 @@ public class MainWindow : ApplicationWindow {
     opml_filter.add_pattern( "*.opml" );
     dialog.add_filter( opml_filter );
 
+    /* Outliner */
+    FileFilter outliner_filter = new FileFilter();
+    outliner_filter.set_filter_name( _( "Outliner" ) );
+    outliner_filter.add_pattern( "*.outliner" );
+    dialog.add_filter( outliner_filter );
+
     /* PDF */
     FileFilter pdf_filter = new FileFilter();
     pdf_filter.set_filter_name( _( "PDF" ) );
@@ -1247,6 +1258,8 @@ public class MainWindow : ApplicationWindow {
         ExportMermaid.export( repair_filename( fname, {".mmd"} ), da );
       } else if( opml_filter == filter ) {
         ExportOPML.export( repair_filename( fname, {".opml"} ), da );
+      } else if( outliner_filter == filter ) {
+        ExportOutliner.export( repair_filename( fname, {".outliner"} ), da );
       } else if( pdf_filter == filter ) {
         ExportPDF.export( repair_filename( fname, {".pdf"} ), da );
       } else if( pngt_filter == filter ) {

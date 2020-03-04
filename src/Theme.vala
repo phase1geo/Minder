@@ -28,6 +28,7 @@ public class Theme : Object {
   private HashMap<string,RGBA?> _colors;
 
   public string name        { set; get; }
+  public string label       { set; get; }
   public int    index       { set; get; default = 0; }
   public bool   prefer_dark { set; get; default = false; }
   public bool   custom      { protected set; get; default = true; }

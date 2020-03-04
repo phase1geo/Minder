@@ -27,7 +27,8 @@ public class ThemeSolarizedDark : Theme {
   /* Create the theme colors */
   public ThemeSolarizedDark() {
 
-    name   = _( "Solarized Dark" );
+    name   = "solarized_dark";
+    label  = _( "Solarized Dark" );
     custom = false;
 
     /* Generate the non-link colors */

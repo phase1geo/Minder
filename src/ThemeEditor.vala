@@ -183,7 +183,7 @@ public class ThemeEditor : Gtk.Box {
 
     /* Figure out a unique name for the new theme */
     if( !edit ) {
-      _theme.name = _win.themes.uniquify_name( _( "Custom" ) + " #1" );
+      _theme.name = _theme.label = _win.themes.uniquify_name( _( "Custom" ) + " #1" );
     }
 
     /* Initialize the UI */

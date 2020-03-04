@@ -24,7 +24,8 @@ public class ThemeDark : Theme {
   /* Create the theme colors */
   public ThemeDark() {
 
-    name   = _( "Dark" );
+    name   = "dark";
+    label  = _( "Dark" );
     custom = false;
 
     /* Generate the non-link colors */
