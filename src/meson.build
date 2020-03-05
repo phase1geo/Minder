@@ -13,6 +13,7 @@ sources += files(
     'exports/ExportMarkdown.vala',
     'exports/ExportMermaid.vala',
     'exports/ExportOPML.vala',
+    'exports/ExportOutliner.vala',
     'exports/ExportPDF.vala',
     'exports/ExportPNG.vala',
     'exports/ExportPrint.vala',

@@ -39,7 +39,6 @@ public class MainWindow : ApplicationWindow {
   private Gtk.AccelGroup?   _accel_group    = null;
   private DynamicNotebook?  _nb             = null;
   private Revealer?         _inspector      = null;
-  private Box?              _pbox           = null;
   private Paned             _pane           = null;
   private Notebook?         _inspector_nb   = null;
   private Stack?            _stack          = null;
@@ -190,19 +189,28 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the panel so that we can resize */
     _pane = new Paned( Orientation.HORIZONTAL );
-    _pane.pack1( _nb, true, true );
+    _pane.pack1( _nb,        true, true );
+    _pane.pack2( _inspector, true, false );
     _pane.move_handle.connect(() => {
       return( false );
     });
-
-    /* Create the horizontal box that will contain the notebook and the properties sidebar */
-    _pbox = new Box( Orientation.HORIZONTAL, 0 );
-    _pbox.pack_start( _pane,      true,  true, 0 );
-    _pbox.pack_start( _inspector, false, true, 0 );
+    _pane.button_release_event.connect((e) => {
+      _settings.set_int( "properties-width", ((_pane.get_allocated_width() - _pane.position) - 11) );
+      return( false );
+    });
 
     /* Display the UI */
-    add( _pbox );
+    add( _pane );
     show_all();
+
+    /* If the settings says to display the properties, do it now */
+    if( _settings.get_boolean( "current-properties-shown" ) ) {
+      show_properties( "current", false );
+    } else if( _settings.get_boolean( "map-properties-shown" ) ) {
+      show_properties( "map", false );
+    } else if( _settings.get_boolean( "style-properties-shown" ) ) {
+      show_properties( "style", false );
+    }
 
   }
 
@@ -693,18 +701,9 @@ public class MainWindow : ApplicationWindow {
     _inspector_nb.append_page( _themer );
 
     _inspector = new Revealer();
-    _inspector.set_transition_type( RevealerTransitionType.SLIDE_LEFT );
-    _inspector.set_transition_duration( 500 );
+    _inspector.set_transition_type( RevealerTransitionType.NONE );
+    _inspector.set_transition_duration( 0 );
     _inspector.child = _inspector_nb;
-
-    /* If the settings says to display the properties, do it now */
-    if( _settings.get_boolean( "current-properties-shown" ) ) {
-      show_properties( "current", false );
-    } else if( _settings.get_boolean( "map-properties-shown" ) ) {
-      show_properties( "map", false );
-    } else if( _settings.get_boolean( "style-properties-shown" ) ) {
-      show_properties( "style", false );
-    }
 
   }
 
@@ -840,6 +839,11 @@ public class MainWindow : ApplicationWindow {
       var da        = add_tab( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportText.import( fname, da );
+    } else if( fname.has_suffix( ".outliner" ) ) {
+      var new_fname = fname.substring( 0, (fname.length - 9) ) + ".minder";
+      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      update_title( da );
+      ExportOutliner.import( fname, da );
     }
     return( false );
   }
@@ -964,8 +968,13 @@ public class MainWindow : ApplicationWindow {
         _stack.visible_child_name = tab;
       }
       if( !_inspector.reveal_child ) {
-        Timeout.add( 501, move_inspector_to_pane );
         _inspector.reveal_child = true;
+        var prop_width = _settings.get_int( "properties-width" );
+        var pane_width = _pane.get_allocated_width();
+        if( pane_width <= 1 ) {
+          pane_width = _settings.get_int( "window-w" ) + 4;
+        }
+        _pane.set_position( pane_width - (prop_width + 11) );
         if( get_current_da( "show_properties 1" ) != null ) {
           get_current_da( "show_properties 2" ).see( -300 );
         }
@@ -991,33 +1000,16 @@ public class MainWindow : ApplicationWindow {
     _inspector_nb.page = 0;
   }
 
-  private bool move_inspector_to_pane() {
-    var ci = _stack.get_child_by_name( "current" ) as CurrentInspector;
-    if( ci != null ) {
-      ci.reset_width();
-    }
-    _pbox.remove( _inspector );
-    _pane.pack2( _inspector, false, false );
-    return( false );
-  }
-
   /* Hides the node properties panel */
   private void hide_properties() {
     if( !_inspector.reveal_child ) return;
-    var prop_width = (_pane.get_allocated_width() - _pane.position) - 11;
-    var ci         = _stack.get_child_by_name( "current" ) as CurrentInspector;
-    if( ci != null ) {
-      ci.set_width( prop_width );
-    }
-    _prop_btn.image = _prop_show;
-    _pane.remove( _inspector );
-    _pbox.pack_start( _inspector, false, true, 0 );
+    _prop_btn.image         = _prop_show;
+    _pane.position_set      = false;
     _inspector.reveal_child = false;
     get_current_da( "hide_properties" ).grab_focus();
     _settings.set_boolean( "current-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",     false );
     _settings.set_boolean( "style-properties-shown",   false );
-    _settings.set_int( "properties-width", prop_width );
   }
 
   /* Converts the given value from the scale to the zoom value to use */
@@ -1202,6 +1194,12 @@ public class MainWindow : ApplicationWindow {
     opml_filter.add_pattern( "*.opml" );
     dialog.add_filter( opml_filter );
 
+    /* Outliner */
+    FileFilter outliner_filter = new FileFilter();
+    outliner_filter.set_filter_name( _( "Outliner" ) );
+    outliner_filter.add_pattern( "*.outliner" );
+    dialog.add_filter( outliner_filter );
+
     /* PDF */
     FileFilter pdf_filter = new FileFilter();
     pdf_filter.set_filter_name( _( "PDF" ) );
@@ -1260,6 +1258,8 @@ public class MainWindow : ApplicationWindow {
         ExportMermaid.export( repair_filename( fname, {".mmd"} ), da );
       } else if( opml_filter == filter ) {
         ExportOPML.export( repair_filename( fname, {".opml"} ), da );
+      } else if( outliner_filter == filter ) {
+        ExportOutliner.export( repair_filename( fname, {".outliner"} ), da );
       } else if( pdf_filter == filter ) {
         ExportPDF.export( repair_filename( fname, {".pdf"} ), da );
       } else if( pngt_filter == filter ) {
