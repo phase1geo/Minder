@@ -24,7 +24,8 @@ public class ThemeDefault : Theme {
   /* Create the theme colors */
   public ThemeDefault() {
 
-    name   = _( "Default" );
+    name   = "default";
+    label  = _( "Default" );
     custom = false;
 
     /* Generate the non-link colors */

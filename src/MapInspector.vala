@@ -321,7 +321,7 @@ public class MapInspector : Box {
   private string theme_label( string name ) {
     var theme = _win.themes.get_theme( name );
     if( theme.temporary ) {
-      return( name + " (" + _( "Unsaved" ) + ")" );
+      return( theme.label + " (" + _( "Unsaved" ) + ")" );
     }
     return( name );
   }

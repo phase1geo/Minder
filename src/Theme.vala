@@ -28,6 +28,7 @@ public class Theme : Object {
   private HashMap<string,RGBA?> _colors;
 
   public string name        { set; get; }
+  public string label       { set; get; }
   public int    index       { set; get; default = 0; }
   public bool   prefer_dark { set; get; default = false; }
   public bool   custom      { protected set; get; default = true; }
@@ -91,7 +92,7 @@ public class Theme : Object {
 
   /* Returns true if the given theme matches the current theme */
   public bool matches( Theme theme ) {
-    if( name == theme.name ) {
+    if( (name == theme.name) || (label == theme.name) ) {
       if( custom ) {
         var it = _colors.map_iterator();
         while( it.next() ) {
@@ -191,6 +192,13 @@ public class Theme : Object {
       name = nn;
     }
 
+    string? ll = n->get_prop( "label" );
+    if( ll != null ) {
+      label = ll;
+    } else if( nn != null ) {  /* This is for backwards compatibility */
+      label = nn;
+    }
+
     string? idx = n->get_prop( "index" );
     if( idx != null ) {
       index = int.parse( idx );
@@ -218,6 +226,7 @@ public class Theme : Object {
     Xml.Node* n = new Xml.Node( null, "theme" );
 
     n->new_prop( "name",  name );
+    n->new_prop( "label", label );
     n->new_prop( "index", index.to_string() );
 
     if( custom ) {

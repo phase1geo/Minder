@@ -44,6 +44,8 @@ You will need the following dependencies to build Minder:
 * libxml2-dev
 * libgee-0.8-dev
 * libarchive-dev
+* libgtksourceview-3.0-dev
+* libmarkdown2-dev
 
 From the command-line within the top Minder directory, run `./app run` to build and run the application.
 

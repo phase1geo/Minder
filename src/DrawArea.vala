@@ -2509,7 +2509,7 @@ public class DrawArea : Gtk.DrawingArea {
     node.style = StyleInspector.styles.get_style_for_level( (current.get_level() + 1), current.style );
     node.attach( current, -1, _theme );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
-    current.folded = false;
+    current.set_fold_only( false );
     current.layout.handle_update_by_fold( current );
     set_current_node( node );
     node.mode = NodeMode.EDITABLE;
