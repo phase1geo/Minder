@@ -190,7 +190,7 @@ public class MainWindow : ApplicationWindow {
     /* Create the panel so that we can resize */
     _pane = new Paned( Orientation.HORIZONTAL );
     _pane.pack1( _nb,        true, true );
-    _pane.pack2( _inspector, true, false );
+    _pane.pack2( _inspector, false, false );
     _pane.move_handle.connect(() => {
       return( false );
     });
