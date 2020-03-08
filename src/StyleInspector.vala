@@ -1166,7 +1166,9 @@ public class StyleInspector : Box {
       }
     }
     if( (nodes > 0) || (conns > 0) ) {
-      set_affects( StyleAffects.CURRENT );
+      if( (nodes != 1) && (_affects > StyleAffects.CURRENT) ) {
+        set_affects( StyleAffects.CURRENT );
+      }
     } else {
       set_affects( StyleAffects.ALL );
     }
