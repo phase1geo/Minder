@@ -227,7 +227,7 @@ public class CanvasText : Object {
 
   /* Generates the marked up name that will be displayed in the node */
   private string name_markup() {
-    return( (markup || edit) ? text : unmarkup( text ) );
+    return( (markup && !edit) ? text : unmarkup( text ) );
   }
 
   /* Render the text, adding any necessary attributes to the text layout */

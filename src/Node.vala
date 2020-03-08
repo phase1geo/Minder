@@ -254,6 +254,7 @@ public class Node : Object {
     set {
       if( _style.copy( value ) ) {
         name.set_font( _style.node_font );
+        name.markup = _style.node_markup;
         position_name();
       }
     }
@@ -846,6 +847,7 @@ public class Node : Object {
   private void load_style( Xml.Node* n ) {
     _style.load_node( n );
     _name.set_font( _style.node_font );
+    _name.markup = _style.node_markup;
   }
 
   /* Loads the URL links information from the given XML node */
