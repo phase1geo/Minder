@@ -162,6 +162,7 @@ public class ExportOutliner : Object {
 
   private static void import_node( Xml.Node* n, DrawArea da, Node? parent ) {
     var node = new Node( da, null );
+    node.style.copy( StyleInspector.styles.get_global_style() );
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
@@ -171,7 +172,14 @@ public class ExportOutliner : Object {
       }
     }
     if( parent == null ) {
-      da.get_nodes().append_val( node );
+      var nodes = da.get_nodes();
+      if( nodes.length == 0 ) {
+        node.posx = (da.get_allocated_width()  / 2) - 30;
+        node.posy = (da.get_allocated_height() / 2) - 10;
+      } else {
+        nodes.index( nodes.length - 1 ).layout.position_root( nodes.index( nodes.length - 1 ), node );
+      }
+      nodes.append_val( node );
     } else {
       node.attach( parent, -1, null );
     }

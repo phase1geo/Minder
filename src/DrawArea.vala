@@ -509,6 +509,12 @@ public class DrawArea : Gtk.DrawingArea {
         if( it->name == "outline") {
           var root = new Node( this, layouts.get_default() );
           root.import_opml( this, it, node_id, ref expand_state, _theme );
+          if (_nodes.length == 0) {
+            root.posx = (get_allocated_width()  / 2) - 30;
+            root.posy = (get_allocated_height() / 2) - 10;
+          } else {
+            _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), root );
+          }
           _nodes.append_val( root );
         }
       }
