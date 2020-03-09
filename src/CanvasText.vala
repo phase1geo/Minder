@@ -227,7 +227,7 @@ public class CanvasText : Object {
 
   /* Generates the marked up name that will be displayed in the node */
   private string name_markup() {
-    stdout.printf( "markup: %s, edit: %s, text: %s, unmarkup: %s\n", markup.to_string(), edit.to_string(), text, unmarkup( text ) );
+    // stdout.printf( "markup: %s, edit: %s, text: %s, unmarkup: %s\n", markup.to_string(), edit.to_string(), text, unmarkup( text ) );
     return( (markup && !edit) ? text : unmarkup( text ) );
   }
 
@@ -274,7 +274,7 @@ public class CanvasText : Object {
       _pango_layout.get_size( out text_width, out text_height );
       _width  = (text_width  / Pango.SCALE);
       _height = (text_height / Pango.SCALE);
-      stdout.printf( "In ct.update_size, width: %g, height: %g, call_resized: %s, text: %s\n", _width, _height, call_resized.to_string(), _text );
+      // stdout.printf( "In ct.update_size, width: %g, height: %g, call_resized: %s, text: %s\n", _width, _height, call_resized.to_string(), _text );
       if( call_resized ) {
         resized();
       }

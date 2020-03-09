@@ -484,7 +484,6 @@ public class Node : Object {
 
   /* Called whenever the node size is changed */
   private void update_size() {
-    stdout.printf( "In node.update_size, loaded: %s\n", _loaded.to_string() );
     if( !_loaded ) return;
     var orig_width  = _width;
     var orig_height = _height;
@@ -498,9 +497,7 @@ public class Node : Object {
       _width  = (margin * 2) + (padding * 2) + name_width;
       _height = (margin * 2) + (padding * 2) + _name.height;
     }
-    stdout.printf( "In node.update_size, orig.width: %g, orig.height: %g, width: %g, height: %g, text: %s\n", orig_width, orig_height, _width, _height, _name.text );
     if( (_layout != null) && (((_width - orig_width) != 0) || ((_height - orig_height) != 0)) ) {
-      stdout.printf( "  Calling update_by_edit\n" );
       _layout.handle_update_by_edit( this, (_width - orig_width), (_height - orig_height) );
     }
   }

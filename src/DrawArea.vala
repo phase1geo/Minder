@@ -603,20 +603,23 @@ public class DrawArea : Gtk.DrawingArea {
     _press_type         = EventType.NOTHING;
     _motion             = false;
     _attach_node        = null;
-    _current_new        = false;
+    _current_new        = true;
     _last_connection    = null;
 
     /* Create the main idea node */
     var n = new Node.with_name( this, _("Main Idea"), layouts.get_default() );
 
     /* Set the node information */
-    n.posx  = (get_allocated_width()  / 2) - 30;
-    n.posy  = (get_allocated_height() / 2) - 10;
+    var sidebar_width = _settings.get_boolean( "current-properties-shown" ) ||
+                        _settings.get_boolean( "map-properties-shown" ) ||
+                        _settings.get_boolean( "style-properties-shown" ) ? _settings.get_int( "properties-width" ) : 0;
+    var wwidth  = _settings.get_int( "window-w" ) - sidebar_width;
+    var wheight = _settings.get_int( "window-h" );
+    n.posx  = (wwidth  / 2) - 30;
+    n.posy  = (wheight / 2) - 10;
     n.style = StyleInspector.styles.get_global_style();
 
     _nodes.append_val( n );
-    _orig_name = "";
-    _orig_urls = null;
 
     /* Make this initial node the current node */
     set_current_node( n );
@@ -2237,9 +2240,9 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a new root node to the canvas */
   public void add_root_node() {
-    var node = new Node.with_name( this, _( "Another Idea" ), _nodes.index( 0 ).layout );
+    var node = new Node.with_name( this, _( "Another Idea" ), ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
     node.style = StyleInspector.styles.get_global_style();
-    if (_nodes.length == 0) {
+    if( _nodes.length == 0 ) {
       node.posx = (get_allocated_width()  / 2) - 30;
       node.posy = (get_allocated_height() / 2) - 10;
     } else {
