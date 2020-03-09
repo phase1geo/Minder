@@ -627,6 +627,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Redraw the canvas */
     queue_draw();
+    changed();
 
   }
 
