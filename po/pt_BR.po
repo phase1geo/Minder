@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-26 16:57-0600\n"
+"POT-Creation-Date: 2020-03-10 22:50-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Helder Bertoldo <helder.bertoldo@gmail.com>\n"
 "Language-Team: none\n"
@@ -195,36 +195,36 @@ msgstr "Buscar Nós"
 msgid "Previous Connection"
 msgstr ""
 
-#: src/DrawArea.vala:177 src/themes/ThemeDefault.vala:27
+#: src/DrawArea.vala:177 src/themes/ThemeDefault.vala:28
 msgid "Default"
 msgstr ""
 
-#: src/DrawArea.vala:604
+#: src/DrawArea.vala:619
 msgid "Main Idea"
 msgstr ""
 
-#: src/DrawArea.vala:1693
+#: src/DrawArea.vala:1711
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "0.3g%% completados"
 
-#: src/DrawArea.vala:1746
+#: src/DrawArea.vala:1764
 msgid "connection endpoint change"
 msgstr ""
 
-#: src/DrawArea.vala:1753
+#: src/DrawArea.vala:1771
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2234 src/DrawArea.vala:3445
+#: src/DrawArea.vala:2252 src/DrawArea.vala:3463
 msgid "Another Idea"
 msgstr "Outra Ideia"
 
-#: src/DrawArea.vala:2428
+#: src/DrawArea.vala:2446
 msgid "fold completed tasks"
 msgstr ""
 
-#: src/DrawArea.vala:2465
+#: src/DrawArea.vala:2483
 msgid "unfold all tasks"
 msgstr ""
 
@@ -238,8 +238,8 @@ msgstr ""
 msgid "Cursor: %3d,%3d"
 msgstr ""
 
-#: src/ImageEditor.vala:360 src/MainWindow.vala:741 src/MainWindow.vala:785
-#: src/MainWindow.vala:907 src/MainWindow.vala:1144
+#: src/ImageEditor.vala:360 src/MainWindow.vala:740 src/MainWindow.vala:784
+#: src/MainWindow.vala:916 src/MainWindow.vala:1150
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -279,233 +279,237 @@ msgstr "Para cima"
 msgid "Vertical"
 msgstr "Vertical"
 
-#: src/MainWindow.vala:119 src/MainWindow.vala:910
+#: src/MainWindow.vala:118 src/MainWindow.vala:919
 msgid "Minder"
 msgstr ""
 
-#: src/MainWindow.vala:152
+#: src/MainWindow.vala:151
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:21
 #, fuzzy
 msgid "New File"
 msgstr "Novo Arquivo"
 
-#: src/MainWindow.vala:158 src/MainWindow.vala:785
+#: src/MainWindow.vala:157 src/MainWindow.vala:784
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "Abrir Arquivo"
 
-#: src/MainWindow.vala:164
+#: src/MainWindow.vala:163
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:35
 #, fuzzy
 msgid "Save File As"
 msgstr "Salvar Arquivo Como"
 
-#: src/MainWindow.vala:170
+#: src/MainWindow.vala:169
 #, fuzzy
 msgid "Undo"
 msgstr "Desfazer"
 
-#: src/MainWindow.vala:177
+#: src/MainWindow.vala:176
 #, fuzzy
 msgid "Redo"
 msgstr "Refazer"
 
-#: src/MainWindow.vala:321
+#: src/MainWindow.vala:329
 msgid "Unnamed Document"
 msgstr "Documento sem Nome"
 
-#: src/MainWindow.vala:325 src/MainWindow.vala:593
+#: src/MainWindow.vala:333 src/MainWindow.vala:601
 msgid "Focus Mode"
 msgstr ""
 
-#: src/MainWindow.vala:347
+#: src/MainWindow.vala:355
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/MainWindow.vala:354
+#: src/MainWindow.vala:362
 msgid "Zoom to Percent"
 msgstr "Zoom para Porcentagem"
 
-#: src/MainWindow.vala:365
+#: src/MainWindow.vala:373
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:75
 msgid "Zoom In"
 msgstr "Mais Zoom"
 
-#: src/MainWindow.vala:369
+#: src/MainWindow.vala:377
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:82
 msgid "Zoom Out"
 msgstr "Reduzir o Zoom"
 
-#: src/MainWindow.vala:373
+#: src/MainWindow.vala:381
 msgid "Zoom to Fit"
 msgstr "Ajustar Zoom ao Projeto"
 
-#: src/MainWindow.vala:377
+#: src/MainWindow.vala:385
 msgid "Zoom to Fit Selected Node"
 msgstr "Ajustar Zoom para o nó Selecionado"
 
-#: src/MainWindow.vala:381
+#: src/MainWindow.vala:389
 msgid "Zoom to Actual Size"
 msgstr "Zoom para o Tamanho Atual"
 
-#: src/MainWindow.vala:408
+#: src/MainWindow.vala:416
 msgid "Search"
 msgstr "Buscar"
 
-#: src/MainWindow.vala:418
+#: src/MainWindow.vala:426
 #, fuzzy
 msgid "Search Nodes and Connections"
 msgstr "Buscar Nós"
 
-#: src/MainWindow.vala:441
+#: src/MainWindow.vala:449
 msgid "Search Criteria"
 msgstr "Critérios de Busca"
 
-#: src/MainWindow.vala:463
+#: src/MainWindow.vala:471
 msgid "Nodes"
 msgstr ""
 
-#: src/MainWindow.vala:464
+#: src/MainWindow.vala:472
 msgid "Connections"
 msgstr ""
 
-#: src/MainWindow.vala:465
+#: src/MainWindow.vala:473
 msgid "Titles"
 msgstr "Títulos"
 
-#: src/MainWindow.vala:466
+#: src/MainWindow.vala:474
 msgid "Notes"
 msgstr "Notas"
 
-#: src/MainWindow.vala:467
+#: src/MainWindow.vala:475
 msgid "Folded"
 msgstr ""
 
-#: src/MainWindow.vala:468
+#: src/MainWindow.vala:476
 msgid "Unfolded"
 msgstr ""
 
-#: src/MainWindow.vala:469
+#: src/MainWindow.vala:477
 msgid "Tasks"
 msgstr "Tarefas"
 
-#: src/MainWindow.vala:470
+#: src/MainWindow.vala:478
 msgid "Non-tasks"
 msgstr "Não-Tarefas"
 
-#: src/MainWindow.vala:560 src/MainWindow.vala:1144
+#: src/MainWindow.vala:568 src/MainWindow.vala:1150
 msgid "Export"
 msgstr "Exportar"
 
-#: src/MainWindow.vala:567
+#: src/MainWindow.vala:575
 msgid "Export…"
 msgstr "Exportar…"
 
-#: src/MainWindow.vala:571
+#: src/MainWindow.vala:579
 msgid "Print"
 msgstr "Imprimir"
 
-#: src/MainWindow.vala:623
+#: src/MainWindow.vala:631
 msgid "Shortcuts Cheatsheet"
 msgstr ""
 
-#: src/MainWindow.vala:651
+#: src/MainWindow.vala:659
 msgid "Properties"
 msgstr "Propriedades"
 
-#: src/MainWindow.vala:666 src/StyleInspector.vala:48
+#: src/MainWindow.vala:674 src/StyleInspector.vala:48
 msgid "Current"
 msgstr ""
 
-#: src/MainWindow.vala:667
+#: src/MainWindow.vala:675
 msgid "Style"
 msgstr ""
 
-#: src/MainWindow.vala:668
+#: src/MainWindow.vala:676
 msgid "Map"
 msgstr ""
 
-#: src/MainWindow.vala:732
+#: src/MainWindow.vala:731
 msgid "Save current unnamed document?"
 msgstr ""
 
-#: src/MainWindow.vala:733
+#: src/MainWindow.vala:732
 msgid "Changes will be permanently lost if not saved."
 msgstr ""
 
-#: src/MainWindow.vala:738
+#: src/MainWindow.vala:737
 msgid "Discard Changes"
 msgstr "Descartar Mudanças"
 
-#: src/MainWindow.vala:744 src/MainWindow.vala:907
+#: src/MainWindow.vala:743 src/MainWindow.vala:916
 msgid "Save"
 msgstr "Salvar"
 
-#: src/MainWindow.vala:785
+#: src/MainWindow.vala:784
 msgid "Open"
 msgstr "Abrir"
 
-#: src/MainWindow.vala:804 src/MainWindow.vala:1216
+#: src/MainWindow.vala:808 src/MainWindow.vala:1228
 msgid "PlainText"
 msgstr ""
 
-#: src/MainWindow.vala:907
+#: src/MainWindow.vala:916
 msgid "Save File"
 msgstr "Salvar Arquivo"
 
-#: src/MainWindow.vala:1143
+#: src/MainWindow.vala:1149
 msgid "Export As"
 msgstr ""
 
-#: src/MainWindow.vala:1148
+#: src/MainWindow.vala:1154
 msgid "BMP"
 msgstr ""
 
-#: src/MainWindow.vala:1154
+#: src/MainWindow.vala:1160
 msgid "CSV"
 msgstr ""
 
-#: src/MainWindow.vala:1160
+#: src/MainWindow.vala:1166
 msgid "Freemind"
 msgstr ""
 
-#: src/MainWindow.vala:1166
+#: src/MainWindow.vala:1172
 msgid "Freeplane"
 msgstr ""
 
-#: src/MainWindow.vala:1172
+#: src/MainWindow.vala:1178
 msgid "JPEG"
 msgstr ""
 
-#: src/MainWindow.vala:1179
+#: src/MainWindow.vala:1185
 msgid "Markdown"
 msgstr ""
 
-#: src/MainWindow.vala:1186
+#: src/MainWindow.vala:1192
 msgid "Mermaid"
 msgstr ""
 
-#: src/MainWindow.vala:1192
+#: src/MainWindow.vala:1198
 msgid "OPML"
 msgstr ""
 
-#: src/MainWindow.vala:1198
-msgid "PDF"
-msgstr ""
-
 #: src/MainWindow.vala:1204
-msgid "PNG (Transparent)"
+msgid "Outliner"
 msgstr ""
 
 #: src/MainWindow.vala:1210
-msgid "PNG (Opaque)"
+msgid "PDF"
+msgstr ""
+
+#: src/MainWindow.vala:1216
+msgid "PNG (Transparent)"
 msgstr ""
 
 #: src/MainWindow.vala:1222
+msgid "PNG (Opaque)"
+msgstr ""
+
+#: src/MainWindow.vala:1234
 msgid "SVG"
 msgstr ""
 
-#: src/MainWindow.vala:1228
+#: src/MainWindow.vala:1240
 msgid "yEd"
 msgstr ""
 
@@ -549,12 +553,12 @@ msgstr ""
 msgid "Unsaved"
 msgstr ""
 
-#: src/Node.vala:1569
+#: src/Node.vala:1611
 #, fuzzy
 msgid "Node Title"
 msgstr "Títulos"
 
-#: src/Node.vala:1572
+#: src/Node.vala:1614
 #, fuzzy
 msgid "Node Note"
 msgstr "Adicionar Nota"
@@ -777,15 +781,15 @@ msgstr ""
 msgid "Underlined"
 msgstr ""
 
-#: src/themes/ThemeSolarizedLight.vala:30
+#: src/themes/ThemeSolarizedLight.vala:31
 msgid "Solarized Light"
 msgstr ""
 
-#: src/themes/ThemeDark.vala:27
+#: src/themes/ThemeDark.vala:28
 msgid "Dark"
 msgstr ""
 
-#: src/themes/ThemeSolarizedDark.vala:30
+#: src/themes/ThemeSolarizedDark.vala:31
 msgid "Solarized Dark"
 msgstr ""
 
