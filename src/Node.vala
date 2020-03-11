@@ -865,7 +865,7 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, Theme theme, HashMap<int,int> id_map, Array<NodeLinkInfo?> link_ids ) {
+  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, HashMap<int,int> id_map, Array<NodeLinkInfo?> link_ids ) {
 
     _loaded = false;
 
@@ -957,7 +957,7 @@ public class Node : Object {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var child = new Node( da, _layout );
-                child.load( da, it2, false, theme, id_map, link_ids );
+                child.load( da, it2, false, id_map, link_ids );
                 child.attach( this, -1, null );
               }
             }
@@ -979,7 +979,7 @@ public class Node : Object {
       for( int j=0; j<_children.length; j++ ) {
         var child = _children.index( j );
         if( !child._link_color_set ) {
-          child.link_color = theme.next_color();
+          child.link_color = da.get_theme().next_color();
         }
       }
     }

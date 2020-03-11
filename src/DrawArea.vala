@@ -436,7 +436,7 @@ public class DrawArea : Gtk.DrawingArea {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var node = new Node.with_name( this, "temp", null );
-                node.load( this, it2, true, get_theme(), id_map, link_ids );
+                node.load( this, it2, true, id_map, link_ids );
                 if( use_layout != null ) {
                   node.layout = use_layout;
                 }
@@ -576,6 +576,15 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Retrieves canvas size settings and returns the approximate dimensions */
+  public void get_dimensions( out int width, out int height ) {
+    var sidebar_width = _settings.get_boolean( "current-properties-shown" ) ||
+                        _settings.get_boolean( "map-properties-shown" ) ||
+                        _settings.get_boolean( "style-properties-shown" ) ? _settings.get_int( "properties-width" ) : 0;
+    width  = _settings.get_int( "window-w" ) - sidebar_width;
+    height = _settings.get_int( "window-h" );
+  }
+
   /* Initialize the empty drawing area with a node */
   public void initialize_for_new() {
 
@@ -609,12 +618,11 @@ public class DrawArea : Gtk.DrawingArea {
     /* Create the main idea node */
     var n = new Node.with_name( this, _("Main Idea"), layouts.get_default() );
 
+    /* Get the rough dimensions of the canvas */
+    int wwidth, wheight;
+    get_dimensions( out wwidth, out wheight );
+
     /* Set the node information */
-    var sidebar_width = _settings.get_boolean( "current-properties-shown" ) ||
-                        _settings.get_boolean( "map-properties-shown" ) ||
-                        _settings.get_boolean( "style-properties-shown" ) ? _settings.get_int( "properties-width" ) : 0;
-    var wwidth  = _settings.get_int( "window-w" ) - sidebar_width;
-    var wheight = _settings.get_int( "window-h" );
     n.posx  = (wwidth  / 2) - 30;
     n.posy  = (wheight / 2) - 10;
     n.style = StyleInspector.styles.get_global_style();
@@ -3163,7 +3171,7 @@ public class DrawArea : Gtk.DrawingArea {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var node = new Node.with_name( this, "temp", null );
-                node.load( this, it2, true, get_theme(), id_map, link_ids );
+                node.load( this, it2, true, id_map, link_ids );
                 nodes.append_val( node );
               }
             }
