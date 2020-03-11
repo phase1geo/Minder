@@ -436,7 +436,7 @@ public class DrawArea : Gtk.DrawingArea {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var node = new Node.with_name( this, "temp", null );
-                node.load( this, it2, true, id_map, link_ids );
+                node.load( this, it2, true, get_theme(), id_map, link_ids );
                 if( use_layout != null ) {
                   node.layout = use_layout;
                 }
@@ -509,6 +509,12 @@ public class DrawArea : Gtk.DrawingArea {
         if( it->name == "outline") {
           var root = new Node( this, layouts.get_default() );
           root.import_opml( this, it, node_id, ref expand_state, _theme );
+          if (_nodes.length == 0) {
+            root.posx = (get_allocated_width()  / 2) - 30;
+            root.posy = (get_allocated_height() / 2) - 10;
+          } else {
+            _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), root );
+          }
           _nodes.append_val( root );
         }
       }
@@ -597,20 +603,23 @@ public class DrawArea : Gtk.DrawingArea {
     _press_type         = EventType.NOTHING;
     _motion             = false;
     _attach_node        = null;
-    _current_new        = false;
+    _current_new        = true;
     _last_connection    = null;
 
     /* Create the main idea node */
     var n = new Node.with_name( this, _("Main Idea"), layouts.get_default() );
 
     /* Set the node information */
-    n.posx  = (get_allocated_width()  / 2) - 30;
-    n.posy  = (get_allocated_height() / 2) - 10;
+    var sidebar_width = _settings.get_boolean( "current-properties-shown" ) ||
+                        _settings.get_boolean( "map-properties-shown" ) ||
+                        _settings.get_boolean( "style-properties-shown" ) ? _settings.get_int( "properties-width" ) : 0;
+    var wwidth  = _settings.get_int( "window-w" ) - sidebar_width;
+    var wheight = _settings.get_int( "window-h" );
+    n.posx  = (wwidth  / 2) - 30;
+    n.posy  = (wheight / 2) - 10;
     n.style = StyleInspector.styles.get_global_style();
 
     _nodes.append_val( n );
-    _orig_name = "";
-    _orig_urls = null;
 
     /* Make this initial node the current node */
     set_current_node( n );
@@ -618,6 +627,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Redraw the canvas */
     queue_draw();
+    changed();
 
   }
 
@@ -2231,9 +2241,9 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a new root node to the canvas */
   public void add_root_node() {
-    var node = new Node.with_name( this, _( "Another Idea" ), _nodes.index( 0 ).layout );
+    var node = new Node.with_name( this, _( "Another Idea" ), ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
     node.style = StyleInspector.styles.get_global_style();
-    if (_nodes.length == 0) {
+    if( _nodes.length == 0 ) {
       node.posx = (get_allocated_width()  / 2) - 30;
       node.posy = (get_allocated_height() / 2) - 10;
     } else {
@@ -3153,7 +3163,7 @@ public class DrawArea : Gtk.DrawingArea {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var node = new Node.with_name( this, "temp", null );
-                node.load( this, it2, true, id_map, link_ids );
+                node.load( this, it2, true, get_theme(), id_map, link_ids );
                 nodes.append_val( node );
               }
             }
