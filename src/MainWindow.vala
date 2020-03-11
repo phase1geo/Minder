@@ -800,6 +800,11 @@ public class MainWindow : ApplicationWindow {
     dialog.add_filter( filter );
 
     filter = new FileFilter();
+    filter.set_filter_name( "Outliner" );
+    filter.add_pattern( "*.outliner" );
+    dialog.add_filter( filter );
+
+    filter = new FileFilter();
     filter.set_filter_name( _( "PlainText" ) );
     filter.add_pattern( "*.txt" );
     dialog.add_filter( filter );
