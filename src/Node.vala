@@ -131,14 +131,15 @@ public class Node : Object {
   private   double       _posx         = 0;
   private   double       _posy         = 0;
   private   RGBA         _link_color;
-  private   double       _min_width    = 50;
-  private   NodeImage?   _image        = null;
-  private   Layout?      _layout       = null;
-  private   Style        _style        = new Style();
-  private   double       _max_width    = 200;
-  private   bool         _loaded       = true;
-  private   Node         _linked_node  = null;
-  private   UrlLinks     _urls         = null;
+  private   bool         _link_color_set = false;
+  private   double       _min_width      = 50;
+  private   NodeImage?   _image          = null;
+  private   Layout?      _layout         = null;
+  private   Style        _style          = new Style();
+  private   double       _max_width      = 200;
+  private   bool         _loaded         = true;
+  private   Node         _linked_node    = null;
+  private   UrlLinks     _urls           = null;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -240,10 +241,17 @@ public class Node : Object {
     set {
       if( !is_root() ) {
         _link_color = value;
+        _link_color_set = true;
         for( int i=0; i<_children.length; i++ ) {
           _children.index( i ).link_color = value;
         }
       }
+    }
+  }
+  public RGBA     link_color_only {
+    set {
+      _link_color     = value;
+      _link_color_set = true;
     }
   }
   public bool     attached   { get; set; default = false; }
@@ -401,27 +409,28 @@ public class Node : Object {
 
   /* Copies just the variables of the node, minus the children nodes */
   public void copy_variables( Node n, ImageManager im ) {
-    _width        = n._width;
-    _height       = n._height;
-    _task_radius  = n._task_radius;
-    _alpha        = n._alpha;
-    _task_count   = n._task_count;
-    _task_done    = n._task_done;
-    _folded       = n._folded;
-    _layout       = n._layout;
-    _posx         = n._posx;
-    _posy         = n._posy;
-    _link_color   = n._link_color;
-    _max_width    = n._max_width;
-    _image        = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, (int)n._max_width );
+    _width          = n._width;
+    _height         = n._height;
+    _task_radius    = n._task_radius;
+    _alpha          = n._alpha;
+    _task_count     = n._task_count;
+    _task_done      = n._task_done;
+    _folded         = n._folded;
+    _layout         = n._layout;
+    _posx           = n._posx;
+    _posy           = n._posy;
+    _max_width      = n._max_width;
+    _image          = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, (int)n._max_width );
     _urls.copy( n._urls );
     _name.copy( n._name );
-    note          = n.note;
-    mode          = n.mode;
-    parent        = n.parent;
-    side          = n.side;
-    style         = n.style;
-    tree_bbox     = n.tree_bbox;
+    _link_color     = n._link_color;
+    _link_color_set = n._link_color_set;
+    note            = n.note;
+    mode            = n.mode;
+    parent          = n.parent;
+    side            = n.side;
+    style           = n.style;
+    tree_bbox       = n.tree_bbox;
   }
 
   /* Returns the associated ID of this node */
@@ -856,7 +865,7 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, HashMap<int,int> id_map, Array<NodeLinkInfo?> link_ids ) {
+  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, Theme theme, HashMap<int,int> id_map, Array<NodeLinkInfo?> link_ids ) {
 
     _loaded = false;
 
@@ -921,6 +930,7 @@ public class Node : Object {
     string? c = n->get_prop( "color" );
     if( c != null ) {
       _link_color.parse( c );
+      _link_color_set = true;
     }
 
     /* If the posx and posy values are not set, set the layout now */
@@ -947,7 +957,7 @@ public class Node : Object {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var child = new Node( da, _layout );
-                child.load( da, it2, false, id_map, link_ids );
+                child.load( da, it2, false, theme, id_map, link_ids );
                 child.attach( this, -1, null );
               }
             }
@@ -961,6 +971,16 @@ public class Node : Object {
       string? l = n->get_prop( "layout" );
       if( l != null ) {
         layout = da.layouts.get_layout( l );
+      }
+    }
+
+    /* If a color was not specified and this node is a root node, colorize the children */
+    if( isroot ) {
+      for( int j=0; j<_children.length; j++ ) {
+        var child = _children.index( j );
+        if( !child._link_color_set ) {
+          child.link_color = theme.next_color();
+        }
       }
     }
 
@@ -1619,7 +1639,7 @@ public class Node : Object {
   public void map_theme_colors( Theme old_theme, Theme new_theme ) {
     int old_index = old_theme.get_color_index( _link_color );
     if( old_index != -1 ) {
-      _link_color = new_theme.link_color( old_index );
+      link_color_only = new_theme.link_color( old_index );
     }
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).map_theme_colors( old_theme, new_theme );
@@ -1648,10 +1668,10 @@ public class Node : Object {
     var diffx = info.index( index ).posx - _posx;
     var diffy = info.index( index ).posy - _posy;
 
-    _posx       = info.index( index ).posx;
-    _posy       = info.index( index ).posy;
-    side        = info.index( index ).side;
-    _link_color = info.index( index ).color;
+    _posx           = info.index( index ).posx;
+    _posy           = info.index( index ).posy;
+    side            = info.index( index ).side;
+    link_color_only = info.index( index ).color;
 
     update_tree_bbox( diffx, diffy );
     position_name();

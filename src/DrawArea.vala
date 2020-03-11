@@ -436,7 +436,7 @@ public class DrawArea : Gtk.DrawingArea {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var node = new Node.with_name( this, "temp", null );
-                node.load( this, it2, true, id_map, link_ids );
+                node.load( this, it2, true, get_theme(), id_map, link_ids );
                 if( use_layout != null ) {
                   node.layout = use_layout;
                 }
@@ -3163,7 +3163,7 @@ public class DrawArea : Gtk.DrawingArea {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var node = new Node.with_name( this, "temp", null );
-                node.load( this, it2, true, id_map, link_ids );
+                node.load( this, it2, true, get_theme(), id_map, link_ids );
                 nodes.append_val( node );
               }
             }
