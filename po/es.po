@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-10 22:50-0500\n"
+"POT-Creation-Date: 2020-03-11 00:19-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: none\n"
@@ -202,33 +202,33 @@ msgstr "Anterior del mismo nivel"
 msgid "Default"
 msgstr "Predeterminado"
 
-#: src/DrawArea.vala:619
+#: src/DrawArea.vala:620
 msgid "Main Idea"
 msgstr "Idea principal"
 
-#: src/DrawArea.vala:1711
+#: src/DrawArea.vala:1712
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g %% completo"
 
-#: src/DrawArea.vala:1764
+#: src/DrawArea.vala:1765
 #, fuzzy
 msgid "connection endpoint change"
 msgstr "cambio de nota de nodo"
 
-#: src/DrawArea.vala:1771
+#: src/DrawArea.vala:1772
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2252 src/DrawArea.vala:3463
+#: src/DrawArea.vala:2253 src/DrawArea.vala:3464
 msgid "Another Idea"
 msgstr "Otra idea"
 
-#: src/DrawArea.vala:2446
+#: src/DrawArea.vala:2447
 msgid "fold completed tasks"
 msgstr "plegar las tareas completadas"
 
-#: src/DrawArea.vala:2483
+#: src/DrawArea.vala:2484
 msgid "unfold all tasks"
 msgstr "desplegar todas las tareas"
 
@@ -255,31 +255,31 @@ msgstr "Aplicar"
 msgid "Change Image"
 msgstr "Cambiar la imagen"
 
-#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:307
+#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:336
 msgid "Manual"
 msgstr "Manual"
 
-#: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:311
+#: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:340
 msgid "To right"
 msgstr "A la derecha"
 
-#: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:310
+#: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:339
 msgid "To left"
 msgstr "A la izquierda"
 
-#: src/layouts/LayoutHorizontal.vala:26 src/MapInspector.vala:309
+#: src/layouts/LayoutHorizontal.vala:26 src/MapInspector.vala:338
 msgid "Horizontal"
 msgstr "Horizontal"
 
-#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:313
+#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:342
 msgid "Downwards"
 msgstr "Hacia abajo"
 
-#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:312
+#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:341
 msgid "Upwards"
 msgstr "Hacia arriba"
 
-#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:308
+#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:337
 msgid "Vertical"
 msgstr "Vertical"
 
@@ -518,42 +518,46 @@ msgstr "SVG"
 msgid "yEd"
 msgstr ""
 
-#: src/MapInspector.vala:77
+#: src/MapInspector.vala:78
 #, fuzzy
 msgid "Enable animations"
 msgstr "Activar las animaciones"
 
-#: src/MapInspector.vala:105
+#: src/MapInspector.vala:106
 #, fuzzy
 msgid "Hide connections"
 msgstr "Buscar en los nodos"
 
-#: src/MapInspector.vala:138
+#: src/MapInspector.vala:135
+msgid "Rotate main branch colors"
+msgstr ""
+
+#: src/MapInspector.vala:167
 #, fuzzy
 msgid "Node Layouts"
 msgstr "Disposiciones de los nodos"
 
-#: src/MapInspector.vala:189
+#: src/MapInspector.vala:218
 msgid "Themes"
 msgstr "Temas"
 
-#: src/MapInspector.vala:208
+#: src/MapInspector.vala:237
 msgid "Add Custom Theme"
 msgstr ""
 
-#: src/MapInspector.vala:227
+#: src/MapInspector.vala:256
 msgid "Balance Nodes"
 msgstr "Balancear los nodos"
 
-#: src/MapInspector.vala:233
+#: src/MapInspector.vala:262
 msgid "Fold Completed Tasks"
 msgstr "Plegar las tareas completadas"
 
-#: src/MapInspector.vala:239
+#: src/MapInspector.vala:268
 msgid "Unfold All Nodes"
 msgstr "Desplegar todos los nodos"
 
-#: src/MapInspector.vala:324
+#: src/MapInspector.vala:353
 msgid "Unsaved"
 msgstr ""
 

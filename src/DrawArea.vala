@@ -253,8 +253,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Sets the theme to the given value */
   public void set_theme( Theme theme, bool save ) {
     Theme? orig_theme = _theme;
-    _theme       = theme;
-    _theme.index = (orig_theme != null) ? orig_theme.index : 0;
+    _theme        = theme;
+    _theme.index  = (orig_theme != null) ? orig_theme.index : -1;
+    _theme.rotate = _settings.get_boolean( "rotate-main-link-colors" );
     StyleContext.add_provider_for_screen(
       Screen.get_default(),
       _theme.get_css_provider(),

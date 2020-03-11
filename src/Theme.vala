@@ -29,10 +29,11 @@ public class Theme : Object {
 
   public string name        { set; get; }
   public string label       { set; get; }
-  public int    index       { set; get; default = 0; }
+  public int    index       { set; get; default = -1; }
   public bool   prefer_dark { set; get; default = false; }
   public bool   custom      { protected set; get; default = true; }
   public bool   temporary   { set; get; default = false; }
+  public bool   rotate      { set; get; default = true; }
 
   /* Default constructor */
   public Theme() {
@@ -72,6 +73,7 @@ public class Theme : Object {
     prefer_dark = theme.prefer_dark;
     custom      = theme.custom;
     temporary   = theme.temporary;
+    rotate      = theme.rotate;
     _colors     = new HashMap<string,RGBA?>();
     var it = theme._colors.map_iterator();
     while( it.next() ) {
@@ -127,7 +129,12 @@ public class Theme : Object {
 
   /* Returns the next available link color index */
   public RGBA? next_color() {
-    return( link_color( index++ % 8 ) );
+    if( index == -1 ) {
+      index = 0;
+    } else if( rotate ) {
+      index = (index + 1) % 8;
+    }
+    return( link_color( index  ) );
   }
 
   /* Returns the number of link colors */
