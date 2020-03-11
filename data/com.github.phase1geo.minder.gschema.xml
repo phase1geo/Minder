@@ -216,5 +216,10 @@
       <summary>Specifies if embedded URLs found in node titles should be automatically highlighted.</summary>
       <description>Specifies if embedded URLs found in node titles should be automatically highlighted.</description>
     </key>
+    <key name="rotate-main-link-colors" type="b">
+      <default>true</default>
+      <summary>If set to true, rotates link colors in the main branches when adding.  If set to false, the same color will be used as the last color.</summary>
+      <description>If set to true, rotates link colors in the main branches when adding.  If set to false, the same color will be used as the last color.</description>
+    </key>
   </schema>
 </schemalist>
