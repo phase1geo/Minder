@@ -987,6 +987,8 @@ public class DrawArea : Gtk.DrawingArea {
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).link_color = color;
     }
+    queue_draw();
+    changed();
   }
 
   /* Randomizes the link colors of the selected nodes */
@@ -998,6 +1000,19 @@ public class DrawArea : Gtk.DrawingArea {
       nodes.index( i ).link_color = _theme.random_link_color();
     }
     undo_buffer.add_item( new UndoNodesRandLinkColor( nodes, colors ) );
+    queue_draw();
+    changed();
+  }
+
+  /* Causes the selected nodes to use the link color of their parent */
+  public void reparent_link_colors() {
+    var nodes = _selected.nodes();
+    undo_buffer.add_item( new UndoNodesReparentLinkColor( nodes ) );
+    for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).link_color_root = false;
+    }
+    queue_draw();
+    changed();
   }
 
   /*
