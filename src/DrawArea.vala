@@ -980,6 +980,26 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Changes the link colors of all selected nodes to the specified color */
+  public void change_link_colors( RGBA color ) {
+    var nodes = _selected.nodes();
+    undo_buffer.add_item( new UndoNodesLinkColor( nodes, color ) );
+    for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).link_color = color;
+    }
+  }
+
+  /* Randomizes the link colors of the selected nodes */
+  public void randomize_link_colors() {
+    var nodes  = _selected.nodes();
+    var colors = new Array<RGBA?>();
+    for( int i=0; i<nodes.length; i++ ) {
+      colors.append_val( nodes.index( i ).link_color );
+      nodes.index( i ).link_color = _theme.random_link_color();
+    }
+    undo_buffer.add_item( new UndoNodesRandLinkColor( nodes, colors ) );
+  }
+
   /*
    Changes the current connection's color to the specified color.
   */

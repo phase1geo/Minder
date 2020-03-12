@@ -77,6 +77,8 @@ sources += files(
     'undo_actions/UndoNodesFold.vala',
     'undo_actions/UndoNodesInsert.vala',
     'undo_actions/UndoNodesLink.vala',
+    'undo_actions/UndoNodesLinkColor.vala',
+    'undo_actions/UndoNodesRandLinkColor.vala',
     'undo_actions/UndoStyleAffectChange.vala',
     'undo_actions/UndoStyleChange.vala',
     'undo_actions/UndoStyleConnectionArrow.vala',

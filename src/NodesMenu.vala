@@ -30,6 +30,7 @@ public class NodesMenu : Gtk.Menu {
   Gtk.MenuItem _fold;
   Gtk.MenuItem _connect;
   Gtk.MenuItem _link;
+  Gtk.MenuItem _link_colors;
 
   /* Default constructor */
   public NodesMenu( DrawArea da, AccelGroup accel_group ) {
@@ -54,6 +55,20 @@ public class NodesMenu : Gtk.Menu {
     _link = new Gtk.MenuItem.with_label( _( "Link Nodes" ) );
     _link.activate.connect( link_nodes );
 
+    var link_color_menu = new Gtk.Menu();
+
+    _link_colors = new Gtk.MenuItem.with_label( _( "Link Colors" ) );
+    _link_colors.set_submenu( link_color_menu );
+
+    var set_link_colors = new Gtk.MenuItem.with_label( _( "Set to color…" ) );
+    set_link_colors.activate.connect( change_link_colors );
+
+    var rand_link_colors = new Gtk.MenuItem.with_label( _( "Randomize colors" ) );
+    rand_link_colors.activate.connect( randomize_link_colors );
+
+    link_color_menu.add( set_link_colors );
+    link_color_menu.add( rand_link_colors );
+
     /*
     var selnode = new Gtk.MenuItem.with_label( _( "Select Node" ) );
     var selmenu = new Gtk.Menu();
@@ -73,6 +88,7 @@ public class NodesMenu : Gtk.Menu {
     add( new SeparatorMenuItem() );
     add( _connect );
     add( _link );
+    add( _link_colors );
 
     /*
     add( selnode );
@@ -152,6 +168,20 @@ public class NodesMenu : Gtk.Menu {
   */
   private void link_nodes() {
     _da.create_links();
+  }
+
+  /* Changes the color of all selected nodes */
+  private void change_link_colors() {
+    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
+    if( color_picker.run() == ResponseType.OK ) {
+      _da.change_link_colors( color_picker.get_rgba() );
+    }
+    color_picker.close();
+  }
+
+  /* Randomize the selected link colors */
+  private void randomize_link_colors() {
+    _da.randomize_link_colors();
   }
 
 }
