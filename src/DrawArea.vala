@@ -1147,55 +1147,63 @@ public class DrawArea : Gtk.DrawingArea {
     _orig_side = node.side;
     _orig_info.remove_range( 0, _orig_info.length );
     node.get_node_info( ref _orig_info );
-    if( _selected.is_current_node( node ) && !control ) {
-      if( node.mode == NodeMode.EDITABLE ) {
-        switch( e.type ) {
-          case EventType.BUTTON_PRESS        :  node.name.set_cursor_at_char( e.x, e.y, shift );  break;
-          case EventType.DOUBLE_BUTTON_PRESS :  node.name.set_cursor_at_word( e.x, e.y, shift );  break;
-          case EventType.TRIPLE_BUTTON_PRESS :  node.name.set_cursor_all( false );                break;
-        }
-      } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
-        if( node.is_within_image( scaled_x, scaled_y ) ) {
-          edit_current_image();
-          return( false );
-        } else {
-          node.mode = NodeMode.EDITABLE;
-        }
+
+    /* If the node is being edited, go handle the click */
+    if( node.mode == NodeMode.EDITABLE ) {
+      switch( e.type ) {
+        case EventType.BUTTON_PRESS        :  node.name.set_cursor_at_char( e.x, e.y, shift );  break;
+        case EventType.DOUBLE_BUTTON_PRESS :  node.name.set_cursor_at_word( e.x, e.y, shift );  break;
+        case EventType.TRIPLE_BUTTON_PRESS :  node.name.set_cursor_all( false );                break;
       }
       return( true );
+
+    /*
+     If the user double-clicked a node.  If an image was clicked on, edit the image;
+     otherwise, set the node's mode to editable.
+    */
+    } else if( !control && !shift && (e.type == EventType.DOUBLE_BUTTON_PRESS) ) {
+      if( node.is_within_image( scaled_x, scaled_y ) ) {
+        edit_current_image();
+        return( false );
+      } else {
+        node.mode = NodeMode.EDITABLE;
+      }
+      return( true );
+
+    /* Otherwise, we need to adjust the selection */
     } else {
+
       _current_new = false;
-      if( shift ) {  /* This shift key has an additive, toggling effect */
-        if( _selected.remove_node( node ) ) {
-          if( control ) {
-            if( tpress ) {
-              _selected.remove_nodes_at_level( node );
-            } else if( dpress ) {
-              _selected.remove_node_tree( node );
-            } else {
-              _selected.remove_child_nodes( node );
+
+      /* The shift key has a toggling effect */
+      if( shift ) {
+        if( control ) {
+          if( tpress ) {
+            if( !_selected.remove_nodes_at_level( node ) ) {
+              _selected.add_nodes_at_level( node );
+            }
+          } else if( dpress ) {
+            if( !_selected.remove_node_tree( node ) ) {
+              _selected.add_node_tree( node );
+            }
+          } else {
+            if( !_selected.remove_child_nodes( node ) ) {
+              _selected.add_child_nodes( node );
             }
           }
         } else {
-          if( control ) {
-            if( tpress ) {
-              _selected.add_nodes_at_level( node );
-            } else if( dpress ) {
-              _selected.add_node_tree( node );
-            } else {
-              _selected.add_child_nodes( node );
-            }
-          } else {
+          if( !_selected.remove_node( node ) ) {
             _selected.add_node( node );
           }
         }
 
       /*
-       The Control key + single click will select the current node tree.
-       The Control key + double click will select all nodes at the same level.
+       The Control key + single click will select the current node's children
+       The Control key + double click will select the current node tree.
+       The Control key + triple click will select all nodes at the same level.
       */
       } else if( control ) {
-        _selected.set_current_node( node );
+        _selected.clear_nodes();
         if( tpress ) {
           _selected.add_nodes_at_level( node );
         } else if( dpress ) {
