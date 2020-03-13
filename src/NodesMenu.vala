@@ -79,11 +79,11 @@ public class NodesMenu : Gtk.Menu {
     add( _cut );
     add( _delete );
     add( new SeparatorMenuItem() );
+    add( _link_colors );
     add( _fold );
     add( new SeparatorMenuItem() );
     add( _connect );
     add( _link );
-    add( _link_colors );
 
     /* Make the menu visible */
     show_all();

@@ -991,6 +991,20 @@ public class DrawArea : Gtk.DrawingArea {
     changed();
   }
 
+  public void randomize_current_link_color() {
+    var current = _selected.current_node();
+    if( current != null ) {
+      RGBA orig_color = current.link_color;
+      do {
+        current.link_color = _theme.random_link_color();
+      } while( orig_color.equal( current.link_color ) );
+      undo_buffer.add_item( new UndoNodeLinkColor( current, orig_color ) );
+      queue_draw();
+      changed();
+      current_changed( this );
+    }
+  }
+
   /* Randomizes the link colors of the selected nodes */
   public void randomize_link_colors() {
     var nodes  = _selected.nodes();
@@ -1002,6 +1016,18 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer.add_item( new UndoNodesRandLinkColor( nodes, colors ) );
     queue_draw();
     changed();
+  }
+
+  /* Reparents the current node's link color */
+  public void reparent_current_link_color() {
+    var current = _selected.current_node();
+    if( current != null ) {
+      undo_buffer.add_item( new UndoNodeReparentLinkColor( current ) );
+      current.link_color_root = false;
+      queue_draw();
+      changed();
+      current_changed( this );
+    }
   }
 
   /* Causes the selected nodes to use the link color of their parent */
