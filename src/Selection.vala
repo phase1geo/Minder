@@ -85,6 +85,14 @@ public class Selection {
     return( true );
   }
 
+  /* Adds the children nodes of the current node */
+  public void add_child_nodes( Node node ) {
+    var children = node.children();
+    for( int i=0; i<children.length; i++ ) {
+      add_node( children.index( i ) );
+    }
+  }
+
   /* Adds the entire node tree to the selection */
   public void add_node_tree( Node node ) {
     var children = node.children();
@@ -139,6 +147,14 @@ public class Selection {
       }
     }
     return( false );
+  }
+
+  /* Removes child nodes of the given parent from the selection */
+  public void remove_child_nodes( Node node, double alpha = 1.0 ) {
+    var children = node.children();
+    for( int i=0; i<children.length; i++ ) {
+      remove_node( children.index( i ), alpha );
+    }
   }
 
   /* Removes an entire node tree from the selection */

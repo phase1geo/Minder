@@ -1118,6 +1118,7 @@ public class DrawArea : Gtk.DrawingArea {
     var shift    = (bool)(e.state & ModifierType.SHIFT_MASK);
     var control  = (bool)(e.state & ModifierType.CONTROL_MASK);
     var dpress   = e.type == EventType.DOUBLE_BUTTON_PRESS;
+    var tpress   = e.type == EventType.TRIPLE_BUTTON_PRESS;
     var url      = "";
     var left     = 0.0;
 
@@ -1167,18 +1168,22 @@ public class DrawArea : Gtk.DrawingArea {
       if( shift ) {  /* This shift key has an additive, toggling effect */
         if( _selected.remove_node( node ) ) {
           if( control ) {
-            if( dpress ) {
+            if( tpress ) {
               _selected.remove_nodes_at_level( node );
-            } else {
+            } else if( dpress ) {
               _selected.remove_node_tree( node );
+            } else {
+              _selected.remove_child_nodes( node );
             }
           }
         } else {
           if( control ) {
-            if( dpress ) {
+            if( tpress ) {
               _selected.add_nodes_at_level( node );
-            } else {
+            } else if( dpress ) {
               _selected.add_node_tree( node );
+            } else {
+              _selected.add_child_nodes( node );
             }
           } else {
             _selected.add_node( node );
@@ -1191,10 +1196,12 @@ public class DrawArea : Gtk.DrawingArea {
       */
       } else if( control ) {
         _selected.set_current_node( node );
-        if( dpress ) {
+        if( tpress ) {
           _selected.add_nodes_at_level( node );
-        } else {
+        } else if( dpress ) {
           _selected.add_node_tree( node );
+        } else {
+          _selected.add_child_nodes( node );
         }
 
       /* Otherwise, just select the current node */
