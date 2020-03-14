@@ -252,9 +252,8 @@ public class Node : Object {
   }
   public RGBA     link_color_only {
     set {
-      _link_color      = value;
-      _link_color_set  = true;
-      _link_color_root = true;
+      _link_color     = value;
+      _link_color_set = true;
     }
   }
   private RGBA    link_color_child {
@@ -276,7 +275,7 @@ public class Node : Object {
       if( (_link_color_root != value) && !is_root() && !main_branch() ) {
         _link_color_root = value;
         if( !_link_color_root ) {
-          link_color = parent.link_color;
+          link_color_child = parent.link_color;
         }
       }
     }
@@ -450,14 +449,15 @@ public class Node : Object {
     _image          = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, (int)n._max_width );
     _urls.copy( n._urls );
     _name.copy( n._name );
-    _link_color     = n._link_color;
-    _link_color_set = n._link_color_set;
-    note            = n.note;
-    mode            = n.mode;
-    parent          = n.parent;
-    side            = n.side;
-    style           = n.style;
-    tree_bbox       = n.tree_bbox;
+    _link_color      = n._link_color;
+    _link_color_set  = n._link_color_set;
+    _link_color_root = n._link_color_root;
+    note             = n.note;
+    mode             = n.mode;
+    parent           = n.parent;
+    side             = n.side;
+    style            = n.style;
+    tree_bbox        = n.tree_bbox;
   }
 
   /* Returns the associated ID of this node */
@@ -1011,7 +1011,7 @@ public class Node : Object {
       for( int j=0; j<_children.length; j++ ) {
         var child = _children.index( j );
         if( !child._link_color_set ) {
-          child.link_color = da.get_theme().next_color();
+          child.link_color_child = da.get_theme().next_color();
         }
       }
     }
@@ -1486,7 +1486,7 @@ public class Node : Object {
       layout.handle_update_by_insert( parent, this, index );
     }
     if( theme != null ) {
-      link_color = main_branch() ? theme.next_color() : parent.link_color;
+      link_color_child = main_branch() ? theme.next_color() : parent.link_color;
     }
     attached = true;
   }

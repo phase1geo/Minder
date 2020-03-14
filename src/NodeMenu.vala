@@ -305,7 +305,7 @@ public class NodeMenu : Gtk.Menu {
     _conn.set_sensitive( !_da.get_connections().hide );
     _parent.set_sensitive( node_parentable() );
     _link_color.set_sensitive( !current.is_root() );
-    _parent_link_color.set_sensitive( !current.is_root() && !current.main_branch() );
+    _parent_link_color.set_sensitive( !current.main_branch() && current.link_color_root );
     _fold.set_sensitive( node_foldable() );
     _link.set_sensitive( node_linkable() );
     _detach.set_sensitive( _da.detachable() );
