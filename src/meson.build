@@ -16,6 +16,7 @@ sources += files(
     'exports/ExportOutliner.vala',
     'exports/ExportPDF.vala',
     'exports/ExportPNG.vala',
+    'exports/ExportPortableMinder.vala',
     'exports/ExportPrint.vala',
     'exports/ExportSVG.vala',
     'exports/ExportText.vala',
