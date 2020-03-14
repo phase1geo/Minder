@@ -130,30 +130,22 @@ public class NodeImage {
     this.id    = id;
     this.valid = true;
 
-    /* Get the file into the stored pixbuf */
-    try {
-
-      /* Get the name of the file to read from the ImageManager */
-      var fname = im.get_file( id );
-      if( fname == null ) {
-        this.valid = false;
-        return( false );
-      }
-
-      /* Read in the file into the given buffer */
-      var buf   = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
-      _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
-
-      /* Initialize the variables */
-      if( init ) {
-        crop_x = 0;
-        crop_y = 0;
-        crop_w = _surface.get_width();
-        crop_h = _surface.get_height();
-      }
-
-    } catch( Error e ) {
+    /* Get the name of the file to read from the ImageManager */
+    var buf = im.get_pixbuf( id );
+    if( buf == null ) {
       this.valid = false;
+      return( false );
+    }
+
+    /* Read in the file into the given buffer */
+    _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
+
+    /* Initialize the variables */
+    if( init ) {
+      crop_x = 0;
+      crop_y = 0;
+      crop_w = _surface.get_width();
+      crop_h = _surface.get_height();
     }
 
     return( this.valid );
