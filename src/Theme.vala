@@ -147,6 +147,12 @@ public class Theme : Object {
     return( _colors.get( "link_color%d".printf( index % 8 ) ) );
   }
 
+  /* Returns a randomly selected link color */
+  public RGBA random_link_color() {
+    var rand = new Rand();
+    return( _colors.get( "link_color%d".printf( rand.int_range( 0, 8 ) ) ) );
+  }
+
   /*
    Searches the stored link colors for one that matches the given color.
    If a match is found, returns the index of the stored color.  If no match

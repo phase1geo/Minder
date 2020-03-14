@@ -928,7 +928,9 @@ public class MainWindow : ApplicationWindow {
       da.get_doc().filename = fname;
       da.get_doc().save();
       _nb.current.label = da.get_doc().label;
+      _nb.current.tooltip = fname;
       update_title( da );
+      save_tab_state( _nb.current );
       retval = true;
     }
     da.grab_focus();

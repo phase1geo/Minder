@@ -85,6 +85,14 @@ public class Selection {
     return( true );
   }
 
+  /* Adds the children nodes of the current node */
+  public void add_child_nodes( Node node ) {
+    var children = node.children();
+    for( int i=0; i<children.length; i++ ) {
+      add_node( children.index( i ) );
+    }
+  }
+
   /* Adds the entire node tree to the selection */
   public void add_node_tree( Node node ) {
     var children = node.children();
@@ -141,32 +149,47 @@ public class Selection {
     return( false );
   }
 
-  /* Removes an entire node tree from the selection */
-  public void remove_node_tree( Node node, double alpha = 1.0 ) {
+  /* Removes child nodes of the given parent from the selection */
+  public bool remove_child_nodes( Node node, double alpha = 1.0 ) {
     var children = node.children();
-    remove_node( node, alpha );
+    var retval   = false;
     for( int i=0; i<children.length; i++ ) {
-      remove_node_tree( children.index( i ), alpha );
+      retval |= remove_node( children.index( i ), alpha );
     }
+    return( retval );
+  }
+
+  /* Removes an entire node tree from the selection */
+  public bool remove_node_tree( Node node, double alpha = 1.0 ) {
+    var children = node.children();
+    var retval   = remove_node( node, alpha );
+    for( int i=0; i<children.length; i++ ) {
+      retval |= remove_node_tree( children.index( i ), alpha );
+    }
+    return( retval );
   }
 
   /* Adds all of the nodes at the specified node's level to the selection */
-  public void remove_nodes_at_level( Node node, double alpha = 1.0 ) {
+  public bool remove_nodes_at_level( Node node, double alpha = 1.0 ) {
     var level = node.get_level();
     var root  = node.get_root();
-    remove_nodes_at_level_helper( root, alpha, level, 0 );
+    return( remove_nodes_at_level_helper( root, alpha, level, 0 ) );
   }
 
-  private void remove_nodes_at_level_helper( Node node, double alpha, uint level, uint curr_level ) {
+  /* Helper function for remove_nodes_at_level */
+  private bool remove_nodes_at_level_helper( Node node, double alpha, uint level, uint curr_level ) {
     if( level == curr_level ) {
-      remove_node( node, alpha );
+      return( remove_node( node, alpha ) );
     } else {
       var children = node.children();
+      var retval   = false;
       for( int i=0; i<children.length; i++ ) {
-        remove_nodes_at_level_helper( children.index( i ), alpha, level, (curr_level + 1) );
+        retval |= remove_nodes_at_level_helper( children.index( i ), alpha, level, (curr_level + 1) );
       }
+      return( retval );
     }
   }
+
   /*
    Removes the given connection from the current selection.  Returns true
    if the connection is removed.

@@ -131,7 +131,8 @@ public class Node : Object {
   private   double       _posx         = 0;
   private   double       _posy         = 0;
   private   RGBA         _link_color;
-  private   bool         _link_color_set = false;
+  private   bool         _link_color_set  = false;
+  private   bool         _link_color_root = false;
   private   double       _min_width      = 50;
   private   NodeImage?   _image          = null;
   private   Layout?      _layout         = null;
@@ -240,10 +241,11 @@ public class Node : Object {
     }
     set {
       if( !is_root() ) {
-        _link_color = value;
-        _link_color_set = true;
+        _link_color      = value;
+        _link_color_set  = true;
+        _link_color_root = true;
         for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).link_color = value;
+          _children.index( i ).link_color_child = value;
         }
       }
     }
@@ -252,6 +254,30 @@ public class Node : Object {
     set {
       _link_color     = value;
       _link_color_set = true;
+    }
+  }
+  private RGBA    link_color_child {
+    set {
+      if( !link_color_root ) {
+        _link_color     = value;
+        _link_color_set = true;
+        for( int i=0; i<_children.length; i++ ) {
+          _children.index( i ).link_color_child = value;
+        }
+      }
+    }
+  }
+  public bool     link_color_root {
+    get {
+      return( _link_color_root || main_branch() );
+    }
+    set {
+      if( (_link_color_root != value) && !is_root() && !main_branch() ) {
+        _link_color_root = value;
+        if( !_link_color_root ) {
+          link_color_child = parent.link_color;
+        }
+      }
     }
   }
   public bool     attached   { get; set; default = false; }
@@ -423,14 +449,15 @@ public class Node : Object {
     _image          = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, (int)n._max_width );
     _urls.copy( n._urls );
     _name.copy( n._name );
-    _link_color     = n._link_color;
-    _link_color_set = n._link_color_set;
-    note            = n.note;
-    mode            = n.mode;
-    parent          = n.parent;
-    side            = n.side;
-    style           = n.style;
-    tree_bbox       = n.tree_bbox;
+    _link_color      = n._link_color;
+    _link_color_set  = n._link_color_set;
+    _link_color_root = n._link_color_root;
+    note             = n.note;
+    mode             = n.mode;
+    parent           = n.parent;
+    side             = n.side;
+    style            = n.style;
+    tree_bbox        = n.tree_bbox;
   }
 
   /* Returns the associated ID of this node */
@@ -933,6 +960,11 @@ public class Node : Object {
       _link_color_set = true;
     }
 
+    string? cr = n->get_prop( "colorroot" );
+    if( cr != null ) {
+      _link_color_root = bool.parse( cr );
+    }
+
     /* If the posx and posy values are not set, set the layout now */
     if( (x == null) && (y == null) ) {
       string? l = n->get_prop( "layout" );
@@ -979,7 +1011,7 @@ public class Node : Object {
       for( int j=0; j<_children.length; j++ ) {
         var child = _children.index( j );
         if( !child._link_color_set ) {
-          child.link_color = da.get_theme().next_color();
+          child.link_color_child = da.get_theme().next_color();
         }
       }
     }
@@ -1024,6 +1056,7 @@ public class Node : Object {
     node->new_prop( "treesize", tree_size.to_string() );
     if( !is_root() ) {
       node->new_prop( "color", Utils.color_from_rgba( _link_color ) );
+      node->new_prop( "colorroot", link_color_root.to_string() );
     }
     node->new_prop( "layout", _layout.name );
 
@@ -1453,7 +1486,7 @@ public class Node : Object {
       layout.handle_update_by_insert( parent, this, index );
     }
     if( theme != null ) {
-      link_color = main_branch() ? theme.next_color() : parent.link_color;
+      link_color_child = main_branch() ? theme.next_color() : parent.link_color;
     }
     attached = true;
   }

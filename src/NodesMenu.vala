@@ -30,6 +30,8 @@ public class NodesMenu : Gtk.Menu {
   Gtk.MenuItem _fold;
   Gtk.MenuItem _connect;
   Gtk.MenuItem _link;
+  Gtk.MenuItem _link_colors;
+  Gtk.MenuItem _parent_link_colors;
 
   /* Default constructor */
   public NodesMenu( DrawArea da, AccelGroup accel_group ) {
@@ -54,32 +56,34 @@ public class NodesMenu : Gtk.Menu {
     _link = new Gtk.MenuItem.with_label( _( "Link Nodes" ) );
     _link.activate.connect( link_nodes );
 
-    /*
-    var selnode = new Gtk.MenuItem.with_label( _( "Select Node" ) );
-    var selmenu = new Gtk.Menu();
-    selnode.set_submenu( selmenu );
+    var link_color_menu = new Gtk.Menu();
 
-    _selroot = new Gtk.MenuItem.with_label( _( "Root" ) );
-    _selroot.activate.connect( select_root_node );
-    Utils.add_accel_label( _selroot, 'm', 0 );
-    */
+    _link_colors = new Gtk.MenuItem.with_label( _( "Link Colors" ) );
+    _link_colors.set_submenu( link_color_menu );
+
+    var set_link_colors = new Gtk.MenuItem.with_label( _( "Set to color…" ) );
+    set_link_colors.activate.connect( change_link_colors );
+
+    var rand_link_colors = new Gtk.MenuItem.with_label( _( "Randomize colors" ) );
+    rand_link_colors.activate.connect( randomize_link_colors );
+
+    _parent_link_colors = new Gtk.MenuItem.with_label( _( "Use parent color" ) );
+    _parent_link_colors.activate.connect( reparent_link_colors );
+
+    link_color_menu.add( set_link_colors );
+    link_color_menu.add( rand_link_colors );
+    link_color_menu.add( _parent_link_colors );
 
     /* Add the menu items to the menu */
     add( _copy );
     add( _cut );
     add( _delete );
     add( new SeparatorMenuItem() );
+    add( _link_colors );
     add( _fold );
     add( new SeparatorMenuItem() );
     add( _connect );
     add( _link );
-
-    /*
-    add( selnode );
-
-    // Add the items to the selection menu
-    selmenu.add( _selroot );
-    */
 
     /* Make the menu visible */
     show_all();
@@ -101,6 +105,17 @@ public class NodesMenu : Gtk.Menu {
     }
   }
 
+  /* Returns true if at least one selected node has its local_link_color indicator set */
+  private bool link_colors_parentable() {
+    var nodes = _da.get_selected_nodes();
+    for( int i=0; i<nodes.length; i++ ) {
+      if( nodes.index( i ).link_color_root ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
   /* Called when the menu is popped up */
   private void on_popup() {
 
@@ -112,10 +127,9 @@ public class NodesMenu : Gtk.Menu {
     /* Set the menu sensitivity */
     _fold.set_sensitive( foldable || unfoldable );
     _connect.set_sensitive( node_num == 2 );
+    _parent_link_colors.set_sensitive( link_colors_parentable() );
 
     _fold.label = unfoldable ? _( "Unfold Children" )  : _( "Fold Children" );
-
-    //_selroot.set_sensitive( _da.root_selectable() );
 
   }
 
@@ -152,6 +166,25 @@ public class NodesMenu : Gtk.Menu {
   */
   private void link_nodes() {
     _da.create_links();
+  }
+
+  /* Changes the color of all selected nodes */
+  private void change_link_colors() {
+    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
+    if( color_picker.run() == ResponseType.OK ) {
+      _da.change_link_colors( color_picker.get_rgba() );
+    }
+    color_picker.close();
+  }
+
+  /* Randomize the selected link colors */
+  private void randomize_link_colors() {
+    _da.randomize_link_colors();
+  }
+
+  /* Changes the selected nodes to use parent node's colors */
+  private void reparent_link_colors() {
+    _da.reparent_link_colors();
   }
 
 }

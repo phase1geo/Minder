@@ -980,6 +980,67 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Changes the link colors of all selected nodes to the specified color */
+  public void change_link_colors( RGBA color ) {
+    var nodes = _selected.nodes();
+    undo_buffer.add_item( new UndoNodesLinkColor( nodes, color ) );
+    for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).link_color = color;
+    }
+    queue_draw();
+    changed();
+  }
+
+  public void randomize_current_link_color() {
+    var current = _selected.current_node();
+    if( current != null ) {
+      RGBA orig_color = current.link_color;
+      do {
+        current.link_color = _theme.random_link_color();
+      } while( orig_color.equal( current.link_color ) );
+      undo_buffer.add_item( new UndoNodeLinkColor( current, orig_color ) );
+      queue_draw();
+      changed();
+      current_changed( this );
+    }
+  }
+
+  /* Randomizes the link colors of the selected nodes */
+  public void randomize_link_colors() {
+    var nodes  = _selected.nodes();
+    var colors = new Array<RGBA?>();
+    for( int i=0; i<nodes.length; i++ ) {
+      colors.append_val( nodes.index( i ).link_color );
+      nodes.index( i ).link_color = _theme.random_link_color();
+    }
+    undo_buffer.add_item( new UndoNodesRandLinkColor( nodes, colors ) );
+    queue_draw();
+    changed();
+  }
+
+  /* Reparents the current node's link color */
+  public void reparent_current_link_color() {
+    var current = _selected.current_node();
+    if( current != null ) {
+      undo_buffer.add_item( new UndoNodeReparentLinkColor( current ) );
+      current.link_color_root = false;
+      queue_draw();
+      changed();
+      current_changed( this );
+    }
+  }
+
+  /* Causes the selected nodes to use the link color of their parent */
+  public void reparent_link_colors() {
+    var nodes = _selected.nodes();
+    undo_buffer.add_item( new UndoNodesReparentLinkColor( nodes ) );
+    for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).link_color_root = false;
+    }
+    queue_draw();
+    changed();
+  }
+
   /*
    Changes the current connection's color to the specified color.
   */
@@ -1057,6 +1118,7 @@ public class DrawArea : Gtk.DrawingArea {
     var shift    = (bool)(e.state & ModifierType.SHIFT_MASK);
     var control  = (bool)(e.state & ModifierType.CONTROL_MASK);
     var dpress   = e.type == EventType.DOUBLE_BUTTON_PRESS;
+    var tpress   = e.type == EventType.TRIPLE_BUTTON_PRESS;
     var url      = "";
     var left     = 0.0;
 
@@ -1085,55 +1147,69 @@ public class DrawArea : Gtk.DrawingArea {
     _orig_side = node.side;
     _orig_info.remove_range( 0, _orig_info.length );
     node.get_node_info( ref _orig_info );
-    if( _selected.is_current_node( node ) && !control ) {
-      if( node.mode == NodeMode.EDITABLE ) {
-        switch( e.type ) {
-          case EventType.BUTTON_PRESS        :  node.name.set_cursor_at_char( e.x, e.y, shift );  break;
-          case EventType.DOUBLE_BUTTON_PRESS :  node.name.set_cursor_at_word( e.x, e.y, shift );  break;
-          case EventType.TRIPLE_BUTTON_PRESS :  node.name.set_cursor_all( false );                break;
-        }
-      } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
-        if( node.is_within_image( scaled_x, scaled_y ) ) {
-          edit_current_image();
-          return( false );
-        } else {
-          node.mode = NodeMode.EDITABLE;
-        }
+
+    /* If the node is being edited, go handle the click */
+    if( node.mode == NodeMode.EDITABLE ) {
+      switch( e.type ) {
+        case EventType.BUTTON_PRESS        :  node.name.set_cursor_at_char( e.x, e.y, shift );  break;
+        case EventType.DOUBLE_BUTTON_PRESS :  node.name.set_cursor_at_word( e.x, e.y, shift );  break;
+        case EventType.TRIPLE_BUTTON_PRESS :  node.name.set_cursor_all( false );                break;
       }
       return( true );
+
+    /*
+     If the user double-clicked a node.  If an image was clicked on, edit the image;
+     otherwise, set the node's mode to editable.
+    */
+    } else if( !control && !shift && (e.type == EventType.DOUBLE_BUTTON_PRESS) ) {
+      if( node.is_within_image( scaled_x, scaled_y ) ) {
+        edit_current_image();
+        return( false );
+      } else {
+        node.mode = NodeMode.EDITABLE;
+      }
+      return( true );
+
+    /* Otherwise, we need to adjust the selection */
     } else {
+
       _current_new = false;
-      if( shift ) {  /* This shift key has an additive, toggling effect */
-        if( _selected.remove_node( node ) ) {
-          if( control ) {
-            if( dpress ) {
-              _selected.remove_nodes_at_level( node );
-            } else {
-              _selected.remove_node_tree( node );
-            }
-          }
-        } else {
-          if( control ) {
-            if( dpress ) {
+
+      /* The shift key has a toggling effect */
+      if( shift ) {
+        if( control ) {
+          if( tpress ) {
+            if( !_selected.remove_nodes_at_level( node ) ) {
               _selected.add_nodes_at_level( node );
-            } else {
+            }
+          } else if( dpress ) {
+            if( !_selected.remove_node_tree( node ) ) {
               _selected.add_node_tree( node );
             }
           } else {
+            if( !_selected.remove_child_nodes( node ) ) {
+              _selected.add_child_nodes( node );
+            }
+          }
+        } else {
+          if( !_selected.remove_node( node ) ) {
             _selected.add_node( node );
           }
         }
 
       /*
-       The Control key + single click will select the current node tree.
-       The Control key + double click will select all nodes at the same level.
+       The Control key + single click will select the current node's children
+       The Control key + double click will select the current node tree.
+       The Control key + triple click will select all nodes at the same level.
       */
       } else if( control ) {
-        _selected.set_current_node( node );
-        if( dpress ) {
+        _selected.clear_nodes();
+        if( tpress ) {
           _selected.add_nodes_at_level( node );
-        } else {
+        } else if( dpress ) {
           _selected.add_node_tree( node );
+        } else {
+          _selected.add_child_nodes( node );
         }
 
       /* Otherwise, just select the current node */
