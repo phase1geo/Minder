@@ -21,12 +21,8 @@
 
 using GLib;
 using Gtk;
-using Gdk;
 
 public class ImageManager {
-
-  public const int EDIT_WIDTH  = 500;
-  public const int EDIT_HEIGHT = 500;
 
   /* Returns the web pathname used to store downloaded images */
   private static string get_storage_path() {
@@ -36,17 +32,10 @@ public class ImageManager {
   /* Private class used by the image manager to store image information */
   private class ImageItem {
 
-    private string _enc64 = "";
-    private bool   _alpha;
-    private int    _bps;
-    private int    _width;
-    private int    _height;
-    private int    _rowstride;
-
-    public int    id        { set; get; default = -1; }
-    public string uri       { set; get; default = ""; }
-    public string ext       { set; get; default = ""; }
-    public bool   valid     { set; get; default = false; }
+    public int    id    { set; get; default = -1; }
+    public string uri   { set; get; default = ""; }
+    public string ext   { set; get; default = ""; }
+    public bool   valid { set; get; default = false; }
 
     /* Default constructor */
     public ImageItem( string uri ) {
@@ -71,55 +60,21 @@ public class ImageManager {
       if( e != null ) {
         ext = e;
       }
-      string? enc = n->get_prop( "enc64" );
-      if( enc != null ) {
-        _enc64 = enc;
-        valid  = true;
-      } else {
-        var basename = "img%06x%s".printf( id, ext );
-        var fname    = GLib.Path.build_filename( get_storage_path(), basename );
-        if( FileUtils.test( fname, FileTest.EXISTS ) ) {
-          if( copy_file( fname ) ) {
-            FileUtils.unlink( fname );
-            valid = true;
-          }
-        }
-      }
-      string? a = n->get_prop( "alpha" );
-      if( a != null ) {
-        _alpha = bool.parse( a );
-      }
-      string? b = n->get_prop( "bps" );
-      if( b != null ) {
-        _bps = int.parse( b );
-      }
-      string? w = n->get_prop( "width" );
-      if( w != null ) {
-        _width = int.parse( w );
-      }
-      string? h = n->get_prop( "height" );
-      if( h != null ) {
-        _height = int.parse( h );
-      }
-      string? r = n->get_prop( "rowstride" );
-      if( r != null ) {
-        _rowstride = int.parse( r );
-      }
+      valid = true;
     }
 
     /* Saves the given image item to the specified XML node */
     public void save( Xml.Node* parent ) {
       Xml.Node* n = new Xml.Node( null, "image" );
-      n->new_prop( "id",        id.to_string() );
-      n->new_prop( "uri",       uri );
-      n->new_prop( "ext",       ext );
-      n->new_prop( "enc64",     _enc64 );
-      n->new_prop( "alpha",     _alpha.to_string() );
-      n->new_prop( "bps",       _bps.to_string() );
-      n->new_prop( "width",     _width.to_string() );
-      n->new_prop( "height",    _height.to_string() );
-      n->new_prop( "rowstride", _rowstride.to_string() );
+      n->new_prop( "id",  id.to_string() );
+      n->new_prop( "uri", uri );
+      n->new_prop( "ext", ext );
       parent->add_child( n );
+    }
+
+    /* Returns true if the file exists */
+    public bool exists() {
+      return( FileUtils.test( get_path(), FileTest.EXISTS ) );
     }
 
     /* Returns the extension associated with the filename */
@@ -132,31 +87,29 @@ public class ImageManager {
       return( "" );
     }
    
-    /* Returns a pixbuf based on the stored data */
-    public Pixbuf get_pixbuf() {
-      return( new Pixbuf.from_data( Base64.decode( _enc64 ), Colorspace.RGB, _alpha, _bps, _width, _height, _rowstride ) );
+    /* Returns the full pathname to the given fname */
+    public string get_path() {
+      var basename = "img%06x%s".printf( id, ext );
+      return( GLib.Path.build_filename( get_storage_path(), basename ) );
     }
 
     /* Copies the given URI to the given filename in the storage directory */
-    public bool copy_file( string? fname = null ) {
+    public bool copy_file() {
+      var rfile = File.new_for_uri( uri );
+      var lfile = File.new_for_path( get_path() );
       try {
-        Pixbuf buf;
-        if( fname == null ) {
-          var file = File.new_for_uri( uri );
-          buf = new Pixbuf.from_file_at_size( file.get_path(), EDIT_WIDTH, EDIT_HEIGHT );
-        } else {
-          buf = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
-        }
-        _enc64     = Base64.encode( buf.get_pixels_with_length() );
-        _alpha     = buf.has_alpha;
-        _bps       = buf.bits_per_sample;
-        _width     = buf.width;
-        _height    = buf.height;
-        _rowstride = buf.rowstride;
+        rfile.copy( lfile, FileCopyFlags.OVERWRITE );
       } catch( Error e ) {
         return( false );
       }
       return( true );
+    }
+
+    /* If the current item is no longer valid, remove it from the file system */
+    public void cleanup() {
+      if( !valid && exists() ) {
+        FileUtils.unlink( get_path() );
+      }
     }
 
   }
@@ -235,17 +188,27 @@ public class ImageManager {
       item = new ImageItem( uri );
       if( !item.copy_file() ) return( -1 );
       _images.append_val( item );
+    } else if( !item.exists() ) {
+      if( !item.copy_file() ) return( -1 );
     }
     return( item.id );
   }
 
-  /* Returns a newly allocated pixbuf containing the stored data in this item */
-  public Pixbuf? get_pixbuf( int id ) {
+  /* Returns the full pathname of the stored file for the given image ID */
+  public string? get_file( int id ) {
     var item = find_match( id );
     if( item != null ) {
-      return( item.get_pixbuf() );
+      return( item.get_path() );
     }
     return( null );
+  }
+
+  /* Returns the list of stored files */
+  public void get_files( out Array<string> files ) {
+    files = new Array<string>();
+    for( int i=0; i<_images.length; i++ ) {
+      files.append_val( _images.index( i ).get_path() );
+    }
   }
 
   /* Returns the stored URI for the given imaged ID */
@@ -266,6 +229,13 @@ public class ImageManager {
     var item = find_match( id );
     if( item != null ) {
       item.valid = value;
+    }
+  }
+
+  /* Cleans up the contents of the stored images */
+  public void cleanup() {
+    for( int i=0; i<_images.length; i++ ) {
+      _images.index( i ).cleanup();
     }
   }
 

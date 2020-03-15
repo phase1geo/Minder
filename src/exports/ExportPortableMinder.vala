@@ -32,12 +32,19 @@ public class ExportPortableMinder : Object {
 
     /* Create the tar.gz archive named according the the first argument */
     Archive.Write archive = new Archive.Write ();
-    archive.add_filter_gzip ();
-    archive.set_format_pax_restricted ();
+    archive.add_filter_gzip();
+    archive.set_format_pax_restricted();
     archive.open_filename( fname );
 
-    /* Add the files to the archive */
+    /* Add the Minder file to the archive */
     archive_file( archive, da.get_doc().filename );
+
+    /* Add the images */
+    Array<string> files;
+    da.image_manager.get_files( out files );
+    for( int i=0; i<files.length; i++ ) {
+      archive_file( archive, files.index( i ) );
+    }
 
     /* Close the archive */
     if( archive.close() != Archive.Result.OK ) {
@@ -51,19 +58,16 @@ public class ExportPortableMinder : Object {
   /* Adds the given file to the archive */
   public static bool archive_file( Archive.Write archive, string fname ) {
 
-    GLib.File file               = GLib.File.new_for_path( fname );
-    GLib.File parent_working_dir = GLib.File.new_for_path( "." );
-
     try {
 
-      GLib.FileInfo   file_info         = file.query_info( GLib.FileAttribute.STANDARD_SIZE, GLib.FileQueryInfoFlags.NONE );
-      FileInputStream input_stream      = file.read ();
-      DataInputStream data_input_stream = new DataInputStream( input_stream );
+      var file              = GLib.File.new_for_path( fname );
+      var file_info         = file.query_info( GLib.FileAttribute.STANDARD_SIZE, GLib.FileQueryInfoFlags.NONE );
+      var input_stream      = file.read ();
+      var data_input_stream = new DataInputStream( input_stream );
 
       /* Add an entry to the archive */
-      Archive.Entry entry = new Archive.Entry();
-      stdout.printf( "Setting pathname to %s\n", parent_working_dir.get_relative_path( file ) );
-      entry.set_pathname( parent_working_dir.get_relative_path( file ) );
+      var entry = new Archive.Entry();
+      entry.set_pathname( file.get_basename() );
       entry.set_size( file_info.get_size() );
       entry.set_filetype( (uint)Posix.S_IFREG );
       entry.set_perm( 0644 );
@@ -100,38 +104,65 @@ public class ExportPortableMinder : Object {
   public static bool import( string fname, DrawArea da ) {
 
     Archive.Read archive = new Archive.Read();
-    archive.support_filter_all ();
-    archive.support_format_raw ();
+    archive.support_filter_gzip();
+    archive.support_format_all();
 
     if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
       error ("Error: %s (%d)", archive.error_string (), archive.errno () );
-      return( false );
     }
 
-    int8[]                buffer = null;
+    /* Create the image directory */
+    string img_dir = ".";
+    try {
+      img_dir = DirUtils.make_tmp( "minder-images-XXXXXX" );
+    } catch( Error e ) {
+      critical( e.message );
+    }
+
+    int8[]                buffer      = null;
     unowned Archive.Entry entry;
     ssize_t               size;
+    string?               minder_path = null;
 
     while( archive.next_header( out entry ) == Archive.Result.OK ) {
-      stdout.printf( "Filename: %s\n", entry.pathname() );
+      File file;
+      stdout.printf( "entry.pathname: %s\n", entry.pathname() );
       /*
-      var file = File.new_for_path( entry.get_pathname() );
+      if( entry.pathname().has_suffix( ".minder" ) ) {
+        minder_path = fname.substring( 0, (fname.length - 8) ) + ".minder";
+        file        = File.new_for_path( minder_path );
+        stdout.printf( "minder_path: %s\n", minder_path );
+      } else {
+        file = File.new_build_filename( img_dir, entry.pathname() );
+      }
       try {
         var os = file.create( FileCreateFlags.PRIVATE );
-        while( (size = archive.read_data( buffer, buffer.length ) ) > 0 ) {
-          // Write the content of the buffer
+        while( (size = archive.read_data( buffer, buffer.length )) > 0 ) {
+          if( buffer != null ) {
+            os.write( (uint8[])buffer );
+          }
         }
+        os.close();
       } catch( Error e ) {
         critical( e.message );
         return( false );
       }
+      if( file.get_parent().get_path() == img_dir ) {
+        da.image_manager.add_image( file.get_path() );
+      }
       */
     }
 
+    /* Close the archive */
     if( archive.close () != Archive.Result.OK) {
       error ("Error: %s (%d)", archive.error_string (), archive.errno ());
-      return( false );
     }
+
+    /* Delete the image directory */
+    DirUtils.remove( img_dir );
+
+    /* Finally, load the minder file */
+    // da.win.open_file( minder_path );
 
     return( true );
 
