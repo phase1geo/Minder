@@ -62,7 +62,7 @@ public class ExportPortableMinder : Object {
 
       var file              = GLib.File.new_for_path( fname );
       var file_info         = file.query_info( GLib.FileAttribute.STANDARD_SIZE, GLib.FileQueryInfoFlags.NONE );
-      var input_stream      = file.read ();
+      var input_stream      = file.read();
       var data_input_stream = new DataInputStream( input_stream );
 
       /* Add an entry to the archive */
@@ -107,9 +107,15 @@ public class ExportPortableMinder : Object {
     archive.support_filter_gzip();
     archive.support_format_all();
 
-    if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
-      error ("Error: %s (%d)", archive.error_string (), archive.errno () );
-    }
+    Archive.ExtractFlags flags;
+    flags  = Archive.ExtractFlags.TIME;
+    flags |= Archive.ExtractFlags.PERM;
+    flags |= Archive.ExtractFlags.ACL;
+    flags |= Archive.ExtractFlags.FFLAGS;
+
+    Archive.WriteDisk extractor = new Archive.WriteDisk();
+    extractor.set_options( flags );
+    extractor.set_standard_lookup();
 
     /* Create the image directory */
     string img_dir = ".";
@@ -119,38 +125,47 @@ public class ExportPortableMinder : Object {
       critical( e.message );
     }
 
-    int8[]                buffer      = null;
-    unowned Archive.Entry entry;
-    ssize_t               size;
+    /* Open the portable Minder file for reading */
+    if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
+      error ("Error: %s (%d)", archive.error_string (), archive.errno () );
+    }
+
     string?               minder_path = null;
+    unowned Archive.Entry entry;
 
     while( archive.next_header( out entry ) == Archive.Result.OK ) {
-      File file;
-      stdout.printf( "entry.pathname: %s\n", entry.pathname() );
+
       /*
-      if( entry.pathname().has_suffix( ".minder" ) ) {
-        minder_path = fname.substring( 0, (fname.length - 8) ) + ".minder";
-        file        = File.new_for_path( minder_path );
-        stdout.printf( "minder_path: %s\n", minder_path );
-      } else {
-        file = File.new_build_filename( img_dir, entry.pathname() );
-      }
-      try {
-        var os = file.create( FileCreateFlags.PRIVATE );
-        while( (size = archive.read_data( buffer, buffer.length )) > 0 ) {
-          if( buffer != null ) {
-            os.write( (uint8[])buffer );
-          }
-        }
-        os.close();
-      } catch( Error e ) {
-        critical( e.message );
-        return( false );
-      }
-      if( file.get_parent().get_path() == img_dir ) {
-        da.image_manager.add_image( file.get_path() );
-      }
+       We will need to modify the entry pathname so the file is written to the
+       proper location.
       */
+      if( entry.pathname().has_suffix( ".minder" ) ) {
+        entry.set_pathname( fname.substring( 0, (fname.length - 8) ) + ".minder" );
+        minder_path = entry.pathname();
+      } else {
+        var file = File.new_build_filename( img_dir, entry.pathname() );
+        entry.set_pathname( file.get_path() );
+      }
+
+      /* Read from the archive and write the files to disk */
+      void*       buffer = null;
+      size_t      buffer_length;
+      Posix.off_t offset;
+
+      if( extractor.write_header( entry ) != Archive.Result.OK ) {
+        continue;
+      }
+      while( archive.read_data_block( out buffer, out buffer_length, out offset ) == Archive.Result.OK ) {
+        if( extractor.write_data_block( buffer, buffer_length, offset ) != Archive.Result.OK ) {
+          break;
+        }
+      }
+
+      /* If the file was an image file, make sure it gets added to the image manager */
+      if( !entry.pathname().has_suffix( ".minder" ) ) {
+        da.image_manager.add_image( entry.pathname() );
+      }
+
     }
 
     /* Close the archive */
@@ -162,7 +177,7 @@ public class ExportPortableMinder : Object {
     DirUtils.remove( img_dir );
 
     /* Finally, load the minder file */
-    // da.win.open_file( minder_path );
+    da.win.open_file( minder_path );
 
     return( true );
 
