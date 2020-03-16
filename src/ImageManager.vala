@@ -21,6 +21,7 @@
 
 using GLib;
 using Gtk;
+using Gee;
 
 public class ImageManager {
 
@@ -86,7 +87,7 @@ public class ImageManager {
       }
       return( "" );
     }
-   
+
     /* Returns the full pathname to the given fname */
     public string get_path() {
       var basename = "img%06x%s".printf( id, ext );
@@ -97,9 +98,11 @@ public class ImageManager {
     public bool copy_file() {
       var rfile = File.new_for_uri( uri );
       var lfile = File.new_for_path( get_path() );
+      stdout.printf( "In copy_file, uri: %s, rfile: %s, lfile: %s\n", uri, rfile.get_path(), lfile.get_path() );
       try {
         rfile.copy( lfile, FileCopyFlags.OVERWRITE );
       } catch( Error e ) {
+        stdout.printf( "  e.message: %s\n", e.message );
         return( false );
       }
       return( true );
@@ -116,6 +119,7 @@ public class ImageManager {
 
   private Array<ImageItem> _images;
   private bool             _available = true;
+  private HashMap<int,int> _id_map;
 
   /* Default constructor */
   public ImageManager() {
@@ -127,6 +131,7 @@ public class ImageManager {
 
     /* Allocate the images array */
     _images = new Array<ImageItem>();
+    _id_map = new HashMap<int,int>();
 
   }
 
@@ -135,7 +140,10 @@ public class ImageManager {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "image" ) {
-          _images.append_val( new ImageItem.from_xml( it ) );
+          var ii = new ImageItem.from_xml( it );
+          if( !_id_map.has_key( ii.id ) ) {
+            _images.append_val( ii );
+          }
         }
       }
     }
@@ -182,7 +190,7 @@ public class ImageManager {
    the NodeImage class will store to reference the image details.  If the image
    could not be added, returns a value of -1.
   */
-  public int add_image( string uri ) {
+  public int add_image( string uri, int? orig_id = null ) {
     var item = find_uri_match( uri );
     if( item == null ) {
       item = new ImageItem( uri );
@@ -190,6 +198,9 @@ public class ImageManager {
       _images.append_val( item );
     } else if( !item.exists() ) {
       if( !item.copy_file() ) return( -1 );
+    }
+    if( orig_id != null ) {
+      _id_map.set( orig_id, item.id );
     }
     return( item.id );
   }
@@ -204,11 +215,12 @@ public class ImageManager {
   }
 
   /* Returns the list of stored files */
-  public void get_files( out Array<string> files ) {
-    files = new Array<string>();
+  public Array<int> get_ids() {
+    var ids = new Array<int>();
     for( int i=0; i<_images.length; i++ ) {
-      files.append_val( _images.index( i ).get_path() );
+      ids.append_val( _images.index( i ).id );
     }
+    return( ids );
   }
 
   /* Returns the stored URI for the given imaged ID */
@@ -239,8 +251,16 @@ public class ImageManager {
     }
   }
 
+  /* Returns the ID to use for the given ID */
+  public int get_id( int id ) {
+    if( _id_map.has_key( id ) ) {
+      return( _id_map.get( id ) );
+    }
+    return( id );
+  }
+
   /*
-   Allows the user to choose an image file.  If the user selects an existing file, 
+   Allows the user to choose an image file.  If the user selects an existing file,
    adds the image to the manager and returns the image ID to the calling function.
    If no image was selected, a value of -1 will be returned.
   */

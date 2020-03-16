@@ -40,10 +40,10 @@ public class ExportPortableMinder : Object {
     archive_file( archive, da.get_doc().filename );
 
     /* Add the images */
-    Array<string> files;
-    da.image_manager.get_files( out files );
-    for( int i=0; i<files.length; i++ ) {
-      archive_file( archive, files.index( i ) );
+    var image_ids = da.image_manager.get_ids();
+    for( int i=0; i<image_ids.length; i++ ) {
+      var id = image_ids.index( i );
+      archive_file( archive, da.image_manager.get_file( id ), id );
     }
 
     /* Close the archive */
@@ -56,7 +56,7 @@ public class ExportPortableMinder : Object {
   }
 
   /* Adds the given file to the archive */
-  public static bool archive_file( Archive.Write archive, string fname ) {
+  public static bool archive_file( Archive.Write archive, string fname, int? image_id = null ) {
 
     try {
 
@@ -71,6 +71,11 @@ public class ExportPortableMinder : Object {
       entry.set_size( file_info.get_size() );
       entry.set_filetype( (uint)Posix.S_IFREG );
       entry.set_perm( 0644 );
+
+      if( image_id != null ) {
+        entry.xattr_add_entry( "image_id", (void*)image_id, sizeof( int ) );
+      }
+
       if( archive.write_header( entry ) != Archive.Result.OK ) {
         critical ("Error writing '%s': %s (%d)", file.get_path (), archive.error_string (), archive.errno ());
         return( false );
@@ -127,7 +132,7 @@ public class ExportPortableMinder : Object {
 
     /* Open the portable Minder file for reading */
     if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
-      error ("Error: %s (%d)", archive.error_string (), archive.errno () );
+      error( "Error: %s (%d)", archive.error_string(), archive.errno() );
     }
 
     string?               minder_path = null;
@@ -163,21 +168,29 @@ public class ExportPortableMinder : Object {
 
       /* If the file was an image file, make sure it gets added to the image manager */
       if( !entry.pathname().has_suffix( ".minder" ) ) {
-        da.image_manager.add_image( entry.pathname() );
+        string name;
+        void*  value;
+        size_t size;
+        entry.xattr_reset();
+        if( (entry.xattr_next( out name, out value, out size ) == Archive.Result.OK) && (name == "image_id") ) {
+          int* id = (int*)value;
+          da.image_manager.add_image( "file://" + entry.pathname(), *id );
+        }
       }
 
     }
 
     /* Close the archive */
     if( archive.close () != Archive.Result.OK) {
-      error ("Error: %s (%d)", archive.error_string (), archive.errno ());
+      error( "Error: %s (%d)", archive.error_string(), archive.errno() );
     }
 
     /* Delete the image directory */
     DirUtils.remove( img_dir );
 
-    /* Finally, load the minder file */
-    da.win.open_file( minder_path );
+    /* Finally, load the minder file and re-save it */
+    da.get_doc().load();
+    da.changed();
 
     return( true );
 
