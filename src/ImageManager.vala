@@ -98,11 +98,9 @@ public class ImageManager {
     public bool copy_file() {
       var rfile = File.new_for_uri( uri );
       var lfile = File.new_for_path( get_path() );
-      stdout.printf( "In copy_file, uri: %s, rfile: %s, lfile: %s\n", uri, rfile.get_path(), lfile.get_path() );
       try {
         rfile.copy( lfile, FileCopyFlags.OVERWRITE );
       } catch( Error e ) {
-        stdout.printf( "  e.message: %s\n", e.message );
         return( false );
       }
       return( true );
