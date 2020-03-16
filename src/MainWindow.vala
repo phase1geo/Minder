@@ -809,6 +809,11 @@ public class MainWindow : ApplicationWindow {
     filter.add_pattern( "*.txt" );
     dialog.add_filter( filter );
 
+    filter = new FileFilter();
+    filter.set_filter_name( _( "Portable Minder" ) );
+    filter.add_pattern( "*.pminder" );
+    dialog.add_filter( filter );
+
     if( dialog.run() == ResponseType.ACCEPT ) {
       open_file( dialog.get_filename() );
     }
@@ -849,6 +854,11 @@ public class MainWindow : ApplicationWindow {
       var da        = add_tab( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportOutliner.import( fname, da );
+    } else if( fname.has_suffix( ".pminder" ) ) {
+      var new_fname = fname.substring( 0, (fname.length - 8) ) + ".minder";
+      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      update_title( da );
+      ExportPortableMinder.import( fname, da );
     }
     return( false );
   }
@@ -1231,6 +1241,12 @@ public class MainWindow : ApplicationWindow {
     txt_filter.add_pattern( "*.txt" );
     dialog.add_filter( txt_filter );
 
+    /* PortableMinder */
+    FileFilter pmind_filter = new FileFilter();
+    pmind_filter.set_filter_name( _( "Portable Minder" ) );
+    pmind_filter.add_pattern( "*.pminder" );
+    dialog.add_filter( pmind_filter );
+
     /* SVG */
     FileFilter svg_filter = new FileFilter();
     svg_filter.set_filter_name( _( "SVG" ) );
@@ -1273,6 +1289,8 @@ public class MainWindow : ApplicationWindow {
         ExportPNG.export( repair_filename( fname, {".png"} ), da, true );
       } else if( pngo_filter == filter ) {
         ExportPNG.export( repair_filename( fname, {".png"} ), da, false );
+      } else if( pmind_filter == filter ) {
+        ExportPortableMinder.export( repair_filename( fname, {".pminder"} ), da );
       } else if( txt_filter == filter ) {
         ExportText.export( repair_filename( fname, {".txt"} ), da );
       } else if( svg_filter == filter ) {
