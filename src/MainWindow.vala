@@ -1211,6 +1211,12 @@ public class MainWindow : ApplicationWindow {
     opml_filter.add_pattern( "*.opml" );
     dialog.add_filter( opml_filter );
 
+    /* Org-Mode */
+    FileFilter org_filter = new FileFilter();
+    org_filter.set_filter_name( _( "Org-Mode" ) );
+    org_filter.add_pattern( "*.org" );
+    dialog.add_filter( org_filter );
+
     /* Outliner */
     FileFilter outliner_filter = new FileFilter();
     outliner_filter.set_filter_name( _( "Outliner" ) );
@@ -1281,6 +1287,8 @@ public class MainWindow : ApplicationWindow {
         ExportMermaid.export( repair_filename( fname, {".mmd"} ), da );
       } else if( opml_filter == filter ) {
         ExportOPML.export( repair_filename( fname, {".opml"} ), da );
+      } else if( org_filter == filter ) {
+        ExportOrgMode.export( repair_filename( fname, {".org"} ), da );
       } else if( outliner_filter == filter ) {
         ExportOutliner.export( repair_filename( fname, {".outliner"} ), da );
       } else if( pdf_filter == filter ) {
