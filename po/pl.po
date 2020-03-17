@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-11 00:19-0500\n"
+"POT-Creation-Date: 2020-03-16 22:24-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,158 +18,180 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: src/NodeMenu.vala:60
+#: src/NodeMenu.vala:62
 msgid "Copy"
 msgstr "Kopiuj"
 
-#: src/NodeMenu.vala:64
+#: src/NodeMenu.vala:66
 msgid "Cut"
 msgstr "Wytnij"
 
-#: src/NodeMenu.vala:68
+#: src/NodeMenu.vala:70
 msgid "Paste"
 msgstr "Wklej"
 
-#: src/NodeMenu.vala:72 src/ConnectionMenu.vala:40
+#: src/NodeMenu.vala:74 src/ConnectionMenu.vala:40
 msgid "Delete"
 msgstr "Usuń"
 
-#: src/NodeMenu.vala:76
+#: src/NodeMenu.vala:78
 #, fuzzy
 msgid "Delete Single Node"
 msgstr "Usuń węzeł"
 
-#: src/NodeMenu.vala:79 src/ConnectionMenu.vala:44
+#: src/NodeMenu.vala:81 src/ConnectionMenu.vala:44
 msgid "Edit…"
 msgstr "Edytuj…"
 
-#: src/NodeMenu.vala:83 src/NodeMenu.vala:296
+#: src/NodeMenu.vala:85 src/NodeMenu.vala:321
 msgid "Add Task"
 msgstr "Dodaj zadanie"
 
-#: src/NodeMenu.vala:86 src/NodeMenu.vala:297 src/ConnectionMenu.vala:48
+#: src/NodeMenu.vala:88 src/NodeMenu.vala:322 src/ConnectionMenu.vala:48
 #: src/ConnectionMenu.vala:104
 msgid "Add Note"
 msgstr "Dodaj notatkę"
 
-#: src/NodeMenu.vala:89 src/NodeMenu.vala:298
+#: src/NodeMenu.vala:91 src/NodeMenu.vala:323
 msgid "Add Image"
 msgstr ""
 
-#: src/NodeMenu.vala:92 src/NodeMenu.vala:299
+#: src/NodeMenu.vala:94 src/NodeMenu.vala:324
 #, fuzzy
 msgid "Add Node Link"
 msgstr "Dodaj notatkę"
 
-#: src/NodeMenu.vala:95
+#: src/NodeMenu.vala:97
 msgid "Add Connection"
 msgstr ""
 
-#: src/NodeMenu.vala:99 src/NodeMenu.vala:300
+#: src/NodeMenu.vala:101 src/NodeInspector.vala:162
+#, fuzzy
+msgid "Link Color"
+msgstr "Kolor połączenia"
+
+#: src/NodeMenu.vala:105
+msgid "Set to color…"
+msgstr ""
+
+#: src/NodeMenu.vala:108
+msgid "Randomize color"
+msgstr ""
+
+#: src/NodeMenu.vala:111
+msgid "Use parent color"
+msgstr ""
+
+#: src/NodeMenu.vala:114 src/NodeMenu.vala:325
 msgid "Fold Children"
 msgstr "Zwiń węzeł potomny"
 
-#: src/NodeMenu.vala:103
+#: src/NodeMenu.vala:118
 msgid "Detach"
 msgstr "Odczep"
 
-#: src/NodeMenu.vala:106 src/EmptyMenu.vala:35
+#: src/NodeMenu.vala:121 src/EmptyMenu.vala:35
 msgid "Add Root Node"
 msgstr "Dodaj węzeł główny"
 
-#: src/NodeMenu.vala:109
+#: src/NodeMenu.vala:124
 #, fuzzy
 msgid "Add Parent Node"
 msgstr "Szukaj węzłów"
 
-#: src/NodeMenu.vala:112
+#: src/NodeMenu.vala:127
 msgid "Add Child Node"
 msgstr "Dodaj węzeł potomny"
 
-#: src/NodeMenu.vala:116
+#: src/NodeMenu.vala:131
 msgid "Add Sibling Node"
 msgstr "Dodaj sąsiadujący węzeł"
 
-#: src/NodeMenu.vala:120
+#: src/NodeMenu.vala:135
 msgid "Add Nodes With Quick Entry"
 msgstr ""
 
-#: src/NodeMenu.vala:124 src/ConnectionMenu.vala:51
+#: src/NodeMenu.vala:139 src/ConnectionMenu.vala:51
 #, fuzzy
 msgid "Select"
 msgstr "Wybierz węzeł"
 
-#: src/NodeMenu.vala:128
+#: src/NodeMenu.vala:143
 #, fuzzy
 msgid "Root Node"
 msgstr "Dodaj węzeł główny"
 
-#: src/NodeMenu.vala:132
+#: src/NodeMenu.vala:147
 #, fuzzy
 msgid "Next Sibling Node"
 msgstr "Następny sąsiadujący"
 
-#: src/NodeMenu.vala:136
+#: src/NodeMenu.vala:151
 #, fuzzy
 msgid "Previous Sibling Node"
 msgstr "Poprzedni sąsiadujący"
 
-#: src/NodeMenu.vala:140
+#: src/NodeMenu.vala:155
 #, fuzzy
 msgid "Child Node"
 msgstr "Dodaj węzeł potomny"
 
-#: src/NodeMenu.vala:144
+#: src/NodeMenu.vala:159
 #, fuzzy
 msgid "Parent Node"
 msgstr "Szukaj węzłów"
 
-#: src/NodeMenu.vala:148
+#: src/NodeMenu.vala:163
 #, fuzzy
 msgid "Linked Node"
 msgstr "Węzeł"
 
-#: src/NodeMenu.vala:152
+#: src/NodeMenu.vala:167
 msgid "Connection"
 msgstr ""
 
-#: src/NodeMenu.vala:156
+#: src/NodeMenu.vala:171
 msgid "Center Current Node"
 msgstr "Wyśrodkuj na wężle"
 
-#: src/NodeMenu.vala:160
+#: src/NodeMenu.vala:175
 #, fuzzy
 msgid "Sort Children"
 msgstr "Zwiń węzeł potomny"
 
-#: src/NodeMenu.vala:164
+#: src/NodeMenu.vala:179
 msgid "Alphabetically"
 msgstr ""
 
-#: src/NodeMenu.vala:167
+#: src/NodeMenu.vala:182
 msgid "Randomize"
 msgstr ""
 
-#: src/NodeMenu.vala:296
+#: src/NodeMenu.vala:321
 msgid "Remove Task"
 msgstr "Usuń zadanie"
 
-#: src/NodeMenu.vala:297 src/ConnectionMenu.vala:104
+#: src/NodeMenu.vala:322 src/ConnectionMenu.vala:104
 msgid "Remove Note"
 msgstr "Usuń notatkę"
 
-#: src/NodeMenu.vala:298 src/ImageEditor.vala:363 src/NodeInspector.vala:230
+#: src/NodeMenu.vala:323 src/ImageEditor.vala:363 src/NodeInspector.vala:230
 msgid "Remove Image"
 msgstr ""
 
-#: src/NodeMenu.vala:299
+#: src/NodeMenu.vala:324
 #, fuzzy
 msgid "Remove Node Link"
 msgstr "Usuń notatkę"
 
-#: src/NodeMenu.vala:300
+#: src/NodeMenu.vala:325
 msgid "Unfold Children"
 msgstr "Rozwiń węzeł potomny"
+
+#: src/NodeMenu.vala:492
+#, fuzzy
+msgid "Select a link color"
+msgstr "Węzeł"
 
 #: src/EmptyMenu.vala:38
 msgid "Select Node"
@@ -203,33 +225,33 @@ msgstr "Poprzedni sąsiadujący"
 msgid "Default"
 msgstr ""
 
-#: src/DrawArea.vala:620
+#: src/DrawArea.vala:601
 msgid "Main Idea"
 msgstr "Główny pomysł"
 
-#: src/DrawArea.vala:1712
+#: src/DrawArea.vala:1769
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "Ukończono %0.3g%%"
 
-#: src/DrawArea.vala:1765
+#: src/DrawArea.vala:1822
 #, fuzzy
 msgid "connection endpoint change"
 msgstr "zmiana notatki węzła"
 
-#: src/DrawArea.vala:1772
+#: src/DrawArea.vala:1829
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2253 src/DrawArea.vala:3464
+#: src/DrawArea.vala:2310 src/DrawArea.vala:3521
 msgid "Another Idea"
 msgstr "Inny pomysł"
 
-#: src/DrawArea.vala:2447
+#: src/DrawArea.vala:2504
 msgid "fold completed tasks"
 msgstr "zwinięcie ukończonych zadań"
 
-#: src/DrawArea.vala:2484
+#: src/DrawArea.vala:2541
 msgid "unfold all tasks"
 msgstr "rozwinięcie wszystkich zadań"
 
@@ -244,7 +266,7 @@ msgid "Cursor: %3d,%3d"
 msgstr ""
 
 #: src/ImageEditor.vala:360 src/MainWindow.vala:740 src/MainWindow.vala:784
-#: src/MainWindow.vala:916 src/MainWindow.vala:1150
+#: src/MainWindow.vala:926 src/MainWindow.vala:1162
 msgid "Cancel"
 msgstr "Anuluj"
 
@@ -284,7 +306,7 @@ msgstr "W górę"
 msgid "Vertical"
 msgstr "Wertykalny"
 
-#: src/MainWindow.vala:118 src/MainWindow.vala:919
+#: src/MainWindow.vala:118 src/MainWindow.vala:929
 msgid "Minder"
 msgstr "Minder"
 
@@ -399,7 +421,7 @@ msgstr "Zadania"
 msgid "Non-tasks"
 msgstr "Nie zadania"
 
-#: src/MainWindow.vala:568 src/MainWindow.vala:1150
+#: src/MainWindow.vala:568 src/MainWindow.vala:1162
 msgid "Export"
 msgstr "Eksport"
 
@@ -443,7 +465,7 @@ msgstr "Zmainy zostaną bezpowrotnie utracone jeśli nie zostaną zapisane."
 msgid "Discard Changes"
 msgstr "Odrzuć zmiany"
 
-#: src/MainWindow.vala:743 src/MainWindow.vala:916
+#: src/MainWindow.vala:743 src/MainWindow.vala:926
 msgid "Save"
 msgstr "Zapisz"
 
@@ -451,71 +473,79 @@ msgstr "Zapisz"
 msgid "Open"
 msgstr "Otwórz"
 
-#: src/MainWindow.vala:808 src/MainWindow.vala:1228
+#: src/MainWindow.vala:808 src/MainWindow.vala:1246
 msgid "PlainText"
 msgstr "Dokument tekstowy"
 
-#: src/MainWindow.vala:916
+#: src/MainWindow.vala:813 src/MainWindow.vala:1252
+msgid "Portable Minder"
+msgstr ""
+
+#: src/MainWindow.vala:926
 msgid "Save File"
 msgstr "Zapisz plik"
 
-#: src/MainWindow.vala:1149
+#: src/MainWindow.vala:1161
 msgid "Export As"
 msgstr "Eksportuj jako"
 
-#: src/MainWindow.vala:1154
+#: src/MainWindow.vala:1166
 msgid "BMP"
 msgstr "BMP"
 
-#: src/MainWindow.vala:1160
+#: src/MainWindow.vala:1172
 msgid "CSV"
 msgstr "CSV"
 
-#: src/MainWindow.vala:1166
+#: src/MainWindow.vala:1178
 msgid "Freemind"
 msgstr ""
 
-#: src/MainWindow.vala:1172
+#: src/MainWindow.vala:1184
 msgid "Freeplane"
 msgstr ""
 
-#: src/MainWindow.vala:1178
+#: src/MainWindow.vala:1190
 msgid "JPEG"
 msgstr "JPEG"
 
-#: src/MainWindow.vala:1185
+#: src/MainWindow.vala:1197
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/MainWindow.vala:1192
+#: src/MainWindow.vala:1204
 msgid "Mermaid"
 msgstr ""
 
-#: src/MainWindow.vala:1198
+#: src/MainWindow.vala:1210
 msgid "OPML"
 msgstr "OPML"
 
-#: src/MainWindow.vala:1204
+#: src/MainWindow.vala:1216
+msgid "Org-Mode"
+msgstr ""
+
+#: src/MainWindow.vala:1222
 msgid "Outliner"
 msgstr ""
 
-#: src/MainWindow.vala:1210
+#: src/MainWindow.vala:1228
 msgid "PDF"
 msgstr "PDF"
 
-#: src/MainWindow.vala:1216
+#: src/MainWindow.vala:1234
 msgid "PNG (Transparent)"
 msgstr "PNG (z przeźroczystością)"
 
-#: src/MainWindow.vala:1222
+#: src/MainWindow.vala:1240
 msgid "PNG (Opaque)"
 msgstr "PNG"
 
-#: src/MainWindow.vala:1234
+#: src/MainWindow.vala:1258
 msgid "SVG"
 msgstr "SVG"
 
-#: src/MainWindow.vala:1240
+#: src/MainWindow.vala:1264
 msgid "yEd"
 msgstr ""
 
@@ -563,12 +593,12 @@ msgstr "Rozwiń wszystkie węzły"
 msgid "Unsaved"
 msgstr ""
 
-#: src/Node.vala:1611
+#: src/Node.vala:1644
 #, fuzzy
 msgid "Node Title"
 msgstr "Tytuly"
 
-#: src/Node.vala:1614
+#: src/Node.vala:1647
 #, fuzzy
 msgid "Node Note"
 msgstr "Dodaj notatkę"
@@ -587,11 +617,6 @@ msgstr "Zadania"
 #, fuzzy
 msgid "Fold"
 msgstr "Zwinięte"
-
-#: src/NodeInspector.vala:162
-#, fuzzy
-msgid "Link Color"
-msgstr "Kolor połączenia"
 
 #: src/NodeInspector.vala:184
 #, fuzzy
