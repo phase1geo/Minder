@@ -92,7 +92,7 @@ public class NodeImage {
 
     string? i = n->get_prop( "id" );
     if( i != null ) {
-      id = int.parse( i );
+      id = im.get_id( int.parse( i ) );
     }
 
     string? x = n->get_prop( "x" );

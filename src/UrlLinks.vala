@@ -95,6 +95,12 @@ public class UrlLinks {
   private DrawArea       _da;
   private Array<UrlLink> _links;
 
+  public Array<UrlLink> links {
+    get {
+      return( _links );
+    }
+  }
+
   public static string url_pattern {
     get {
       return( "\\b(mailto:.+@[a-z0-9-]+\\.[a-z0-9.-]+|[a-zA-Z0-9]+://[a-z0-9-]+\\.[a-z0-9.-]+(?:/|(?:/[][a-zA-Z0-9!#$%&'*+,.:;=?@_~-]+)*))\\b" );

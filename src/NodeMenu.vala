@@ -35,6 +35,8 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _image;
   Gtk.MenuItem _link;
   Gtk.MenuItem _conn;
+  Gtk.MenuItem _link_color;
+  Gtk.MenuItem _parent_link_color;
   Gtk.MenuItem _fold;
   Gtk.MenuItem _detach;
   Gtk.MenuItem _root;
@@ -95,6 +97,19 @@ public class NodeMenu : Gtk.Menu {
     _conn = new Gtk.MenuItem.with_label( _( "Add Connection" ) );
     _conn.activate.connect( add_connection );
     Utils.add_accel_label( _conn, 'x', 0 );
+
+    _link_color = new Gtk.MenuItem.with_label( _( "Link Color" ) );
+    var link_color_menu = new Gtk.Menu();
+    _link_color.set_submenu( link_color_menu );
+
+    var set_link_color = new Gtk.MenuItem.with_label( _( "Set to color…" ) );
+    set_link_color.activate.connect( change_link_color );
+
+    var rand_link_color = new Gtk.MenuItem.with_label( _( "Randomize color" ) );
+    rand_link_color.activate.connect( randomize_link_color );
+
+    _parent_link_color = new Gtk.MenuItem.with_label( _( "Use parent color" ) );
+    _parent_link_color.activate.connect( reparent_link_color );
 
     _fold = new Gtk.MenuItem.with_label( _( "Fold Children" ) );
     _fold.activate.connect( fold_node );
@@ -180,6 +195,7 @@ public class NodeMenu : Gtk.Menu {
     add( _image );
     add( _link );
     add( _conn );
+    add( _link_color );
     add( _fold );
     add( new SeparatorMenuItem() );
     add( _root );
@@ -208,6 +224,11 @@ public class NodeMenu : Gtk.Menu {
     selmenu.add( _sellink );
     selmenu.add( new SeparatorMenuItem() );
     selmenu.add( _selconn );
+
+    /* Add the items to the link color menu */
+    link_color_menu.add( set_link_color );
+    link_color_menu.add( rand_link_color );
+    link_color_menu.add( _parent_link_color );
 
     /* Make the menu visible */
     show_all();
@@ -277,10 +298,14 @@ public class NodeMenu : Gtk.Menu {
   /* Called when the menu is popped up */
   private void on_popup() {
 
+    var current = _da.get_current_node();
+
     /* Set the menu sensitivity */
     _paste.set_sensitive( _da.node_pasteable() );
     _conn.set_sensitive( !_da.get_connections().hide );
     _parent.set_sensitive( node_parentable() );
+    _link_color.set_sensitive( !current.is_root() );
+    _parent_link_color.set_sensitive( !current.main_branch() && current.link_color_root );
     _fold.set_sensitive( node_foldable() );
     _link.set_sensitive( node_linkable() );
     _detach.set_sensitive( _da.detachable() );
@@ -461,6 +486,22 @@ public class NodeMenu : Gtk.Menu {
 
   private void sort_randomly() {
     _da.sort_randomly();
+  }
+
+  private void change_link_color() {
+    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
+    if( color_picker.run() == ResponseType.OK ) {
+      _da.change_current_link_color( color_picker.get_rgba() );
+    }
+    color_picker.close();
+  }
+
+  private void randomize_link_color() {
+    _da.randomize_current_link_color();
+  }
+
+  private void reparent_link_color() {
+    _da.reparent_current_link_color();
   }
 
 }

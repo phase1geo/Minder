@@ -189,8 +189,8 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the panel so that we can resize */
     _pane = new Paned( Orientation.HORIZONTAL );
-    _pane.pack1( _nb,        true, true );
-    _pane.pack2( _inspector, true, false );
+    _pane.pack1( _nb,        true,  true );
+    _pane.pack2( _inspector, false, false );
     _pane.move_handle.connect(() => {
       return( false );
     });
@@ -800,8 +800,18 @@ public class MainWindow : ApplicationWindow {
     dialog.add_filter( filter );
 
     filter = new FileFilter();
+    filter.set_filter_name( "Outliner" );
+    filter.add_pattern( "*.outliner" );
+    dialog.add_filter( filter );
+
+    filter = new FileFilter();
     filter.set_filter_name( _( "PlainText" ) );
     filter.add_pattern( "*.txt" );
+    dialog.add_filter( filter );
+
+    filter = new FileFilter();
+    filter.set_filter_name( _( "Portable Minder" ) );
+    filter.add_pattern( "*.pminder" );
     dialog.add_filter( filter );
 
     if( dialog.run() == ResponseType.ACCEPT ) {
@@ -844,6 +854,11 @@ public class MainWindow : ApplicationWindow {
       var da        = add_tab( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportOutliner.import( fname, da );
+    } else if( fname.has_suffix( ".pminder" ) ) {
+      var new_fname = fname.substring( 0, (fname.length - 8) ) + ".minder";
+      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      update_title( da );
+      ExportPortableMinder.import( fname, da );
     }
     return( false );
   }
@@ -923,7 +938,9 @@ public class MainWindow : ApplicationWindow {
       da.get_doc().filename = fname;
       da.get_doc().save();
       _nb.current.label = da.get_doc().label;
+      _nb.current.tooltip = fname;
       update_title( da );
+      save_tab_state( _nb.current );
       retval = true;
     }
     da.grab_focus();
@@ -1194,6 +1211,12 @@ public class MainWindow : ApplicationWindow {
     opml_filter.add_pattern( "*.opml" );
     dialog.add_filter( opml_filter );
 
+    /* Org-Mode */
+    FileFilter org_filter = new FileFilter();
+    org_filter.set_filter_name( _( "Org-Mode" ) );
+    org_filter.add_pattern( "*.org" );
+    dialog.add_filter( org_filter );
+
     /* Outliner */
     FileFilter outliner_filter = new FileFilter();
     outliner_filter.set_filter_name( _( "Outliner" ) );
@@ -1223,6 +1246,12 @@ public class MainWindow : ApplicationWindow {
     txt_filter.set_filter_name( _( "PlainText" ) );
     txt_filter.add_pattern( "*.txt" );
     dialog.add_filter( txt_filter );
+
+    /* PortableMinder */
+    FileFilter pmind_filter = new FileFilter();
+    pmind_filter.set_filter_name( _( "Portable Minder" ) );
+    pmind_filter.add_pattern( "*.pminder" );
+    dialog.add_filter( pmind_filter );
 
     /* SVG */
     FileFilter svg_filter = new FileFilter();
@@ -1258,6 +1287,8 @@ public class MainWindow : ApplicationWindow {
         ExportMermaid.export( repair_filename( fname, {".mmd"} ), da );
       } else if( opml_filter == filter ) {
         ExportOPML.export( repair_filename( fname, {".opml"} ), da );
+      } else if( org_filter == filter ) {
+        ExportOrgMode.export( repair_filename( fname, {".org"} ), da );
       } else if( outliner_filter == filter ) {
         ExportOutliner.export( repair_filename( fname, {".outliner"} ), da );
       } else if( pdf_filter == filter ) {
@@ -1266,6 +1297,8 @@ public class MainWindow : ApplicationWindow {
         ExportPNG.export( repair_filename( fname, {".png"} ), da, true );
       } else if( pngo_filter == filter ) {
         ExportPNG.export( repair_filename( fname, {".png"} ), da, false );
+      } else if( pmind_filter == filter ) {
+        ExportPortableMinder.export( repair_filename( fname, {".pminder"} ), da );
       } else if( txt_filter == filter ) {
         ExportText.export( repair_filename( fname, {".txt"} ), da );
       } else if( svg_filter == filter ) {

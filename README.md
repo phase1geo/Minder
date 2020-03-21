@@ -24,10 +24,13 @@ Use the power of mind-mapping to make your ideas come to life.
 - Open multiple mindmaps with the use of tabs.
 - Built-in and custom theme support.
 - Gorgeous animations.
-- Import from OPML, FreeMind and Freeplane formats.
-- Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText, FreeMind, Freeplane, Mermaid and yEd formats.
+- Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner and
+  Portable Minder formats.
+- Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML,
+  Org-Mode, Outliner, PDF, PNG, Portable Minder, SVG, PlainText and yEd
+  formats.
 - Printer support.
-    
+
 ## Installation
 
 You will need the following dependencies to build Minder:

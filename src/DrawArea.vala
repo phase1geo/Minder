@@ -201,20 +201,6 @@ public class DrawArea : Gtk.DrawingArea {
     this.drag_motion.connect( handle_drag_motion );
     this.drag_data_received.connect( handle_drag_data_received );
 
-    /*
-     Make sure that the images are cleaned up when the user exits the application or we received
-     a terminate signal.
-    */
-    this.destroy.connect(() => {
-      image_manager.cleanup();
-    });
-
-    /*
-    TBD - This code does not compile
-    Posix.sighandler_t? t = this.handle_sigterm;
-    Posix.@signal( Posix.Signal.TERM, t );
-    */
-
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
 
@@ -228,11 +214,6 @@ public class DrawArea : Gtk.DrawingArea {
     _im_context = new IMContextSimple();
     _im_context.commit.connect( handle_printable );
 
-  }
-
-  /* Called to handle a sigterm signal to the application */
-  public void handle_sigterm( int s ) {
-    image_manager.cleanup();
   }
 
   /* Returns the stored document */
@@ -253,8 +234,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Sets the theme to the given value */
   public void set_theme( Theme theme, bool save ) {
     Theme? orig_theme = _theme;
-    _theme       = theme;
-    _theme.index = (orig_theme != null) ? orig_theme.index : 0;
+    _theme        = theme;
+    _theme.index  = (orig_theme != null) ? orig_theme.index : -1;
+    _theme.rotate = _settings.get_boolean( "rotate-main-link-colors" );
     StyleContext.add_provider_for_screen(
       Screen.get_default(),
       _theme.get_css_provider(),
@@ -509,6 +491,12 @@ public class DrawArea : Gtk.DrawingArea {
         if( it->name == "outline") {
           var root = new Node( this, layouts.get_default() );
           root.import_opml( this, it, node_id, ref expand_state, _theme );
+          if (_nodes.length == 0) {
+            root.posx = (get_allocated_width()  / 2) - 30;
+            root.posy = (get_allocated_height() / 2) - 10;
+          } else {
+            _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), root );
+          }
           _nodes.append_val( root );
         }
       }
@@ -570,6 +558,15 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Retrieves canvas size settings and returns the approximate dimensions */
+  public void get_dimensions( out int width, out int height ) {
+    var sidebar_width = _settings.get_boolean( "current-properties-shown" ) ||
+                        _settings.get_boolean( "map-properties-shown" ) ||
+                        _settings.get_boolean( "style-properties-shown" ) ? _settings.get_int( "properties-width" ) : 0;
+    width  = _settings.get_int( "window-w" ) - sidebar_width;
+    height = _settings.get_int( "window-h" );
+  }
+
   /* Initialize the empty drawing area with a node */
   public void initialize_for_new() {
 
@@ -597,20 +594,22 @@ public class DrawArea : Gtk.DrawingArea {
     _press_type         = EventType.NOTHING;
     _motion             = false;
     _attach_node        = null;
-    _current_new        = false;
+    _current_new        = true;
     _last_connection    = null;
 
     /* Create the main idea node */
     var n = new Node.with_name( this, _("Main Idea"), layouts.get_default() );
 
+    /* Get the rough dimensions of the canvas */
+    int wwidth, wheight;
+    get_dimensions( out wwidth, out wheight );
+
     /* Set the node information */
-    n.posx  = (get_allocated_width()  / 2) - 30;
-    n.posy  = (get_allocated_height() / 2) - 10;
+    n.posx  = (wwidth  / 2) - 30;
+    n.posy  = (wheight / 2) - 10;
     n.style = StyleInspector.styles.get_global_style();
 
     _nodes.append_val( n );
-    _orig_name = "";
-    _orig_urls = null;
 
     /* Make this initial node the current node */
     set_current_node( n );
@@ -618,6 +617,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Redraw the canvas */
     queue_draw();
+    changed();
 
   }
 
@@ -961,6 +961,67 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Changes the link colors of all selected nodes to the specified color */
+  public void change_link_colors( RGBA color ) {
+    var nodes = _selected.nodes();
+    undo_buffer.add_item( new UndoNodesLinkColor( nodes, color ) );
+    for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).link_color = color;
+    }
+    queue_draw();
+    changed();
+  }
+
+  public void randomize_current_link_color() {
+    var current = _selected.current_node();
+    if( current != null ) {
+      RGBA orig_color = current.link_color;
+      do {
+        current.link_color = _theme.random_link_color();
+      } while( orig_color.equal( current.link_color ) );
+      undo_buffer.add_item( new UndoNodeLinkColor( current, orig_color ) );
+      queue_draw();
+      changed();
+      current_changed( this );
+    }
+  }
+
+  /* Randomizes the link colors of the selected nodes */
+  public void randomize_link_colors() {
+    var nodes  = _selected.nodes();
+    var colors = new Array<RGBA?>();
+    for( int i=0; i<nodes.length; i++ ) {
+      colors.append_val( nodes.index( i ).link_color );
+      nodes.index( i ).link_color = _theme.random_link_color();
+    }
+    undo_buffer.add_item( new UndoNodesRandLinkColor( nodes, colors ) );
+    queue_draw();
+    changed();
+  }
+
+  /* Reparents the current node's link color */
+  public void reparent_current_link_color() {
+    var current = _selected.current_node();
+    if( current != null ) {
+      undo_buffer.add_item( new UndoNodeReparentLinkColor( current ) );
+      current.link_color_root = false;
+      queue_draw();
+      changed();
+      current_changed( this );
+    }
+  }
+
+  /* Causes the selected nodes to use the link color of their parent */
+  public void reparent_link_colors() {
+    var nodes = _selected.nodes();
+    undo_buffer.add_item( new UndoNodesReparentLinkColor( nodes ) );
+    for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).link_color_root = false;
+    }
+    queue_draw();
+    changed();
+  }
+
   /*
    Changes the current connection's color to the specified color.
   */
@@ -1038,6 +1099,7 @@ public class DrawArea : Gtk.DrawingArea {
     var shift    = (bool)(e.state & ModifierType.SHIFT_MASK);
     var control  = (bool)(e.state & ModifierType.CONTROL_MASK);
     var dpress   = e.type == EventType.DOUBLE_BUTTON_PRESS;
+    var tpress   = e.type == EventType.TRIPLE_BUTTON_PRESS;
     var url      = "";
     var left     = 0.0;
 
@@ -1066,55 +1128,69 @@ public class DrawArea : Gtk.DrawingArea {
     _orig_side = node.side;
     _orig_info.remove_range( 0, _orig_info.length );
     node.get_node_info( ref _orig_info );
-    if( _selected.is_current_node( node ) && !control ) {
-      if( node.mode == NodeMode.EDITABLE ) {
-        switch( e.type ) {
-          case EventType.BUTTON_PRESS        :  node.name.set_cursor_at_char( e.x, e.y, shift );  break;
-          case EventType.DOUBLE_BUTTON_PRESS :  node.name.set_cursor_at_word( e.x, e.y, shift );  break;
-          case EventType.TRIPLE_BUTTON_PRESS :  node.name.set_cursor_all( false );                break;
-        }
-      } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
-        if( node.is_within_image( scaled_x, scaled_y ) ) {
-          edit_current_image();
-          return( false );
-        } else {
-          node.mode = NodeMode.EDITABLE;
-        }
+
+    /* If the node is being edited, go handle the click */
+    if( node.mode == NodeMode.EDITABLE ) {
+      switch( e.type ) {
+        case EventType.BUTTON_PRESS        :  node.name.set_cursor_at_char( e.x, e.y, shift );  break;
+        case EventType.DOUBLE_BUTTON_PRESS :  node.name.set_cursor_at_word( e.x, e.y, shift );  break;
+        case EventType.TRIPLE_BUTTON_PRESS :  node.name.set_cursor_all( false );                break;
       }
       return( true );
+
+    /*
+     If the user double-clicked a node.  If an image was clicked on, edit the image;
+     otherwise, set the node's mode to editable.
+    */
+    } else if( !control && !shift && (e.type == EventType.DOUBLE_BUTTON_PRESS) ) {
+      if( node.is_within_image( scaled_x, scaled_y ) ) {
+        edit_current_image();
+        return( false );
+      } else {
+        node.mode = NodeMode.EDITABLE;
+      }
+      return( true );
+
+    /* Otherwise, we need to adjust the selection */
     } else {
+
       _current_new = false;
-      if( shift ) {  /* This shift key has an additive, toggling effect */
-        if( _selected.remove_node( node ) ) {
-          if( control ) {
-            if( dpress ) {
-              _selected.remove_nodes_at_level( node );
-            } else {
-              _selected.remove_node_tree( node );
-            }
-          }
-        } else {
-          if( control ) {
-            if( dpress ) {
+
+      /* The shift key has a toggling effect */
+      if( shift ) {
+        if( control ) {
+          if( tpress ) {
+            if( !_selected.remove_nodes_at_level( node ) ) {
               _selected.add_nodes_at_level( node );
-            } else {
+            }
+          } else if( dpress ) {
+            if( !_selected.remove_node_tree( node ) ) {
               _selected.add_node_tree( node );
             }
           } else {
+            if( !_selected.remove_child_nodes( node ) ) {
+              _selected.add_child_nodes( node );
+            }
+          }
+        } else {
+          if( !_selected.remove_node( node ) ) {
             _selected.add_node( node );
           }
         }
 
       /*
-       The Control key + single click will select the current node tree.
-       The Control key + double click will select all nodes at the same level.
+       The Control key + single click will select the current node's children
+       The Control key + double click will select the current node tree.
+       The Control key + triple click will select all nodes at the same level.
       */
       } else if( control ) {
-        _selected.set_current_node( node );
-        if( dpress ) {
+        _selected.clear_nodes();
+        if( tpress ) {
           _selected.add_nodes_at_level( node );
-        } else {
+        } else if( dpress ) {
           _selected.add_node_tree( node );
+        } else {
+          _selected.add_child_nodes( node );
         }
 
       /* Otherwise, just select the current node */
@@ -2231,9 +2307,9 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a new root node to the canvas */
   public void add_root_node() {
-    var node = new Node.with_name( this, _( "Another Idea" ), _nodes.index( 0 ).layout );
+    var node = new Node.with_name( this, _( "Another Idea" ), ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
     node.style = StyleInspector.styles.get_global_style();
-    if (_nodes.length == 0) {
+    if( _nodes.length == 0 ) {
       node.posx = (get_allocated_width()  / 2) - 30;
       node.posy = (get_allocated_height() / 2) - 10;
     } else {

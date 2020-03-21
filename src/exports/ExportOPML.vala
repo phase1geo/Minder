@@ -58,6 +58,8 @@ public class ExportOPML : Object {
     return( body );
   }
 
+  //----------------------------------------------------------------------------
+
   /*
    Reads the contents of an OPML file and creates a new document based on
    the stored information.

@@ -43,6 +43,7 @@ public class MapInspector : Box {
     /* Create the interface */
     add_animation_ui();
     add_connection_ui();
+    add_link_color_ui();
     add_layout_ui();
     add_theme_ui();
     add_button_ui();
@@ -124,6 +125,34 @@ public class MapInspector : Box {
     _da.get_connections().hide = !_da.get_connections().hide;
     _settings.set_boolean( "hide-connections", _da.get_connections().hide );
     _da.queue_draw();
+    return( false );
+  }
+
+  /* Add link color rotation UI */
+  private void add_link_color_ui() {
+
+    var box    = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl    = new Label( Utils.make_title( _( "Rotate main branch colors" ) ) );
+    var rotate = _settings.get_boolean( "rotate-main-link-colors" );
+
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
+
+    var rotate_colors = new Switch();
+    rotate_colors.set_active( rotate );
+    rotate_colors.button_release_event.connect( rotate_colors_changed );
+
+    box.pack_start( lbl,           false, true, 0 );
+    box.pack_end(   rotate_colors, false, true, 0 );
+
+    pack_start( box, false, true );
+
+  }
+
+  /* Called whenever the rotate color switch is changed within the inspector */
+  private bool rotate_colors_changed( Gdk.EventButton e ) {
+    _da.get_theme().rotate = !_da.get_theme().rotate;
+    _settings.set_boolean( "rotate-main-link-colors", _da.get_theme().rotate );
     return( false );
   }
 
