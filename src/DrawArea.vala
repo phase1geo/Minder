@@ -357,6 +357,7 @@ public class DrawArea : Gtk.DrawingArea {
     /* Load the theme */
     var theme = new Theme();
     theme.temporary = true;
+    theme.rotate    = _settings.get_boolean( "rotate-main-link-colors" );
     theme.load( n );
 
     /* If this theme does not currently exist, add the theme temporarily */
