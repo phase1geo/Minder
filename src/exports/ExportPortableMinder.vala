@@ -69,7 +69,7 @@ public class ExportPortableMinder : Object {
       var entry = new Archive.Entry();
       entry.set_pathname( file.get_basename() );
 #if LIBARCHIVE340
-      entry.set_size( (Archive.int64)file_info.get_size() );
+      entry.set_size( (Archive.int64_t)file_info.get_size() );
       entry.set_filetype( Archive.FileType.IFREG );
 #else
       entry.set_size( file_info.get_size() );
