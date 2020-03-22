@@ -83,6 +83,40 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.7.1" date="2020-03-22">
+      <description>
+        <h3>New</h3>
+        <ul>
+          <li>Added support for importing/exporting Outliner files (new app in AppCenter!).</li>
+          <li>Added map inspector switch to enable/disable automatic rotation of main branch link color selection.</li>
+          <li>Added ability to set all selected nodes to a specific color.</li>
+          <li>Added ability to set all selected nodes to a randomly selected link color.</li>
+          <li>Added ability to allow descendant nodes to have different link colors than ancestor nodes.</li>
+          <li>Added ability to cause a descendant node with a different color than its parent to re-use the parent color.</li>
+          <li>Added ability to select children nodes using Control-click.</li>
+          <li>Added ability to export a mind-map as a new <b>Portable Minder</b> filetype which will allow Minder files to be copied between different users/filesystems.</li>
+          <li>Added ability to export to Org-Mode format.</li>
+        </ul>
+        <h3>Changes</h3>
+        <ul>
+          <li>Updated French translation (thanks to Nathan Bonnemains).</li>
+          <li>Improved OPML import support.</li>
+          <li>Changed ability to select a subtree by Control + double-click.</li>
+          <li>Changed ability to select all nodes of the current level by Control + triple-click.</li>
+        </ul>
+        <h3>Bug Fixes</h3>
+        <ul>
+          <li>Fixed Travis CI version.</li>
+          <li>Fixed issue with adding a new child node that doesn't cause other descendant nodes to unfold.</li>
+          <li>Fixed issue with showing/hiding sidebar.</li>
+          <li>Fixed segmentation faults when loading a theme.</li>
+          <li>Fixed issue with the style inspector <b>Change Affect</b> value when selection changes (thanks to Viliam K.).</li>
+          <li>Fixed issue with node markup within the node text (thanks to Viliam K).</li>
+          <li>Fixed issue with tab state not being properly saved when a new tab is added.</li>
+          <li>Fixed bug with updating tab tooltip and saving tab state when filename is changed.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.7.0" date="2020-03-20">
       <description>
         <h3>New</h3>
