@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-20 23:41-0500\n"
+"POT-Creation-Date: 2020-03-22 14:14-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -206,32 +206,32 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: src/DrawArea.vala:601
+#: src/DrawArea.vala:602
 msgid "Main Idea"
 msgstr ""
 
-#: src/DrawArea.vala:1769
+#: src/DrawArea.vala:1770
 #, c-format
 msgid "%0.3g%% complete"
 msgstr ""
 
-#: src/DrawArea.vala:1822
+#: src/DrawArea.vala:1823
 msgid "connection endpoint change"
 msgstr ""
 
-#: src/DrawArea.vala:1829
+#: src/DrawArea.vala:1830
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2310 src/DrawArea.vala:3521
+#: src/DrawArea.vala:2311 src/DrawArea.vala:3522
 msgid "Another Idea"
 msgstr ""
 
-#: src/DrawArea.vala:2504
+#: src/DrawArea.vala:2505
 msgid "fold completed tasks"
 msgstr ""
 
-#: src/DrawArea.vala:2541
+#: src/DrawArea.vala:2542
 msgid "unfold all tasks"
 msgstr ""
 
