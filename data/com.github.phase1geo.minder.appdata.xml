@@ -25,7 +25,9 @@
       <li>Quick search of node and connection titles and notes, including filtering options.</li>
       <li xml:lang="fr">Recherche rapide de notes et titres de nœuds et connexions, incluant des options de filtrage.</li>
       <li>Zoom in or enable focus mode to focus on certain ideas or zoom out to see the bigger picture.</li>
+      <li xml:lang="fr">Zoomez pour vous concentrer sur certaines idées ou dézoomez pour visualiser une image plus grande.</li>
       <li>Enter focus mode to better view and understand portions of the map.</li>
+      <li xml:lang="fr">Entrez en mode concentration pour une vue plus claire et mieux apréhender les zones de la carte.</li>
       <li>Unlimited undo/redo of any change.</li>
       <li xml:lang="fr">Possibilité infinie d'annuler/rétablir des modifications.</li>
       <li>Automatically saves in the background.</li>
@@ -33,12 +35,15 @@
       <li>Colorized node branches.</li>
       <li xml:lang="fr">Branches de nœuds colorées.</li>
       <li>Open multiple mindmaps with the use of tabs.</li>
+      <li xml:lang="fr">Ouvrez plusieurs carte mentales en utilisant les onglets.</li>
       <li>Built-in and customizable theming.</li>
+      <li xml:lang="fr">Thèmes intégrés et personnalisables.</li>
       <li>Gorgeous animations.</li>
-      <li>Import from OPML, FreeMind and Freeplane formats.</li>
-      <li>Export to PDF, PNG, JPEG, BMP, SVG, OPML, CSV, Markdown, PlainText, FreeMind, Freeplane, yEd and Mermaid formats.</li>
+      <li xml:lang="fr">Magnifiques animations.</li>
+      <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner and Portable Minder formats.</li>
+      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, Portable Minder, SVG, PlainText and yEd formats.</li>
       <li>Printer support.</li>
-      <li xml:lang="fr">Support des imprimantes.</li>
+      <li xml:lang="fr">Prise en charge de l'impression.</li>
     </ul>
   </description>
   <provides>
@@ -100,39 +105,78 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.7.0" date="2020-03-20">
+      <description>
+        <h3>New</h3>
+        <h3 xml:lang="fr">Nouveau</h3>
+        <ul>
+          <li>Added support for importing/exporting Outliner files (new app in AppCenter!).</li>
+          <li>Added map inspector switch to enable/disable automatic rotation of main branch link color selection.</li>
+          <li>Added ability to set all selected nodes to a specific color.</li>
+          <li>Added ability to set all selected nodes to a randomly selected link color.</li>
+          <li>Added ability to allow descendant nodes to have different link colors than ancestor nodes.</li>
+          <li>Added ability to cause a descendant node with a different color than its parent to re-use the parent color.</li>
+          <li>Added ability to select children nodes using Control-click.</li>
+          <li>Added ability to export a mind-map as a new <b>Portable Minder</b> filetype which will allow Minder files to be copied between different users/filesystems.</li>
+          <li>Added ability to export to Org-Mode format.</li>
+        </ul>
+        <h3>Changes</h3>
+        <h3 xml:lang="fr">Modifications</h3>
+        <ul>
+          <li>Updated French translation (thanks to Nathan Bonnemains).</li>
+          <li>Improved OPML import support.</li>
+          <li>Changed ability to select a subtree by Control + double-click.</li>
+          <li>Changed ability to select all nodes of the current level by Control + triple-click.</li>
+        </ul>
+        <h3>Bug Fixes</h3>
+        <h3 xml:lang="fr">Corrections de bugs</h3>
+        <ul>
+          <li>Fixed Travis CI version.</li>
+          <li>Fixed issue with adding a new child node that doesn't cause other descendant nodes to unfold.</li>
+          <li>Fixed issue with showing/hiding sidebar.</li>
+          <li>Fixed segmentation faults when loading a theme.</li>
+          <li>Fixed issue with the style inspector <b>Change Affect</b> value when selection changes (thanks to Viliam K.).</li>
+          <li>Fixed issue with node markup within the node text (thanks to Viliam K).</li>
+          <li>Fixed issue with tab state not being properly saved when a new tab is added.</li>
+          <li>Fixed bug with updating tab tooltip and saving tab state when filename is changed.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.6.0" date="2019-12-26">
       <description>
         <h3>New</h3>
         <h3 xml:lang="fr">Nouveau</h3>
         <ul>
           <li>Added ability to delete a single node (instead of the node and its subtree) in the contextual menu.</li>
+          <li xml:lang="fr">Ajout de la possibilité de supprimer un nœud seul (au lieu du nœud et de ses enfants) dans le menu contextuel.</li>
           <li>When a new document is first saved, the first root node text is used as the default filename.</li>
+          <li xml:lang="fr">Lorsqu'un document est enregistré pour la première fois, le nom du premier nœud racine est utilisé comme nom de fichier par défaut.</li>
           <li>Added multi-select support which includes:
-            <ul>
-              <li>Changing styles</li>
-              <li>Copy, cut, paste and delete support</li>
-              <li>Connect two selected nodes</li>
-              <li>Create node links between two or more selected nodes</li>
-              <li>Fold/unfold selected nodes</li>
-            </ul>
+            <ul><li>Changing styles</li><li xml:lang="fr">Modification des styles</li><li>Copy, cut, paste and delete support</li><li xml:lang="fr">Prise en charge des fonctions copier, couper, coller et supprimer</li><li>Connect two selected nodes</li><li xml:lang="fr">Connectez deux nœuds sélectionnés</li><li>Create node links between two or more selected nodes</li><li xml:lang="fr">Créez des liens entre deux nœuds sélectionnés ou plus</li><li>Fold/unfold selected nodes</li><li xml:lang="fr">Pliez/Dépliez les nœuds sélectionnés</li></ul>
           </li>
           <li>Added support for URLs in node titles.</li>
+          <li xml:lang="fr">Ajout de la prise en charge des URL dans le titre des nœuds.</li>
           <li>Added support for Markdown within a note
-            <ul><li>Notes are syntax highlighted</li><li>Embedded URLs can be opened by Control-Clicking on them</li></ul>
+            <ul><li>Notes are syntax highlighted</li><li xml:lang="fr">La correction orthographique fonctionne dans les notes</li><li>Embedded URLs can be opened by Control-Clicking on them</li><li xml:lang="fr">Les URL peuvent être ouvertes en effectuant Ctrl + Clic dessus</li></ul>
           </li>
         </ul>
         <h3>Changes</h3>
         <h3 xml:lang="fr">Modifications</h3>
         <ul>
           <li>Updated application icon and other recently improved icons for improved readability (thanks to Nararyans R.I.).</li>
+          <li xml:lang="fr">Mise à jour de l'icône de l'application et des autres icônes pour plus de lisibilité (grâce à Nararyans R.I.).</li>
           <li>Improved look and readability of theme icons in the sidebar.</li>
+          <li xml:lang="fr">Meilleure apparence et lisibilité des icônes de thème dans la barre latérale.</li>
           <li>Changed sidebar to display theme icons in a grid layout.</li>
+          <li xml:lang="fr">Modification de la barre latérale pour afficher les icônes de thème dans une grille.</li>
           <li>Improved various export format output.</li>
+          <li xml:lang="fr">Amélioration des différents formats d'exportation.</li>
         </ul>
         <h3>Bug Fixes</h3>
         <h3 xml:lang="fr">Corrections de bugs</h3>
         <ul>
           <li>Fixed various compiler warnings/errors after compiling with latest version of Vala compiler.</li>
+          <li xml:lang="fr">Correction de divers avertissements/erreurs après compilation avec la dernière version du compilateur Vala.</li>
         </ul>
       </description>
     </release>
@@ -142,12 +186,15 @@
         <h3 xml:lang="fr">Modifications</h3>
         <ul>
           <li>Improved various icons (thanks to Nararyans R.I.)</li>
+          <li xml:lang="fr">Amélioration de diverses icônes (grâce à Nararyans R.I.)</li>
         </ul>
         <h3>Bug Fixes</h3>
         <h3 xml:lang="fr">Corrections de bugs</h3>
         <ul>
           <li>Downgraded Node.js to fix Travis CI builds</li>
+          <li xml:lang="fr">Rétrogradation de Node.js pour corriger les problèmes d'intégration continue avec Travis CI</li>
           <li>Fixed various compiler errors/warnings</li>
+          <li xml:lang="fr">Correction de diverses erreurs/avertissements lors de la compilation</li>
         </ul>
       </description>
     </release>
@@ -157,29 +204,45 @@
         <h3 xml:lang="fr">Nouveau</h3>
         <ul>
           <li>Added export to yEd.</li>
+          <li xml:lang="fr">Ajout de l'exportation au format yEd.</li>
           <li>Added ability to create, edit and delete custom themes.</li>
+          <li xml:lang="fr">Ajout de la possibilité de créer, modifier et supprimer des thèmes personnalisés</li>
           <li>Added new quick entry mode, allowing node trees to be input within a text editor.</li>
+          <li xml:lang="fr">Ajout d'un nouveau mode d'entrée rapide, permettant aux arbres de nœuds d'être saisis depuis l'éditeur de texte.</li>
           <li>Added Control-W keyboard shortcut to close the current tab.</li>
+          <li xml:lang="fr">Ajout du raccourci clavier Ctrl + W pour fermer l'onglet actif.</li>
           <li>Added shortcut exploration help window (use F1 key to display).</li>
+          <li xml:lang="fr">Ajouter du raccourci pour parcourir la fenêtre d'aide (utilisez la touche F1 pour l'afficher).</li>
         </ul>
         <h3>Changes</h3>
         <h3 xml:lang="fr">Modifications</h3>
         <ul>
           <li>New search icon which has better contrast for Minder's themed header bar (thanks to Nararyans R.I.).</li>
+          <li xml:lang="fr">Nouvelle icône de recherche avec un meilleur contraste pour le thème de l'entête de Minder(grâce à Nararyans R.I.).</li>
           <li>New non-symbolic sidebar icon in header bar (thanks to Nararyans R.I.).</li>
+          <li xml:lang="fr">Nouvelle icône non symbolique pour la barre latérale dans l'entête (grâce à Nararyans R.I.).</li>
           <li>New Minder application icon which fits in with the elementary OS color scheme better (thansk to Nararyans R.I.).</li>
+          <li xml:lang="fr">Nouvelle icône de l'application Minder qui correspond mieux au schéma de couleurs d'elementary OS (grâce à Nararyans R.I.).</li>
           <li>New focus icon in header bar (thanks to Nararyans R.I.).</li>
+          <li xml:lang="fr">Nouvelle icône de mode concentration dans l'entête (grâce à Nararyans R.I.).</li>
           <li>Improved styling when creating a new node/connection.</li>
+          <li xml:lang="fr">Amélioration du style lors de la création d'un nouveau nœud/connexion.</li>
         </ul>
         <h3>Bug Fixes</h3>
         <h3 xml:lang="fr">Corrections de bugs</h3>
         <ul>
           <li>Fixed issue where separate trees in same mind-map where allowed to overlap.</li>
+          <li xml:lang="fr">Correction d'un problème ou les arbres séparés dans la même carte mentale pouvaient déborder.</li>
           <li>Fixed node link drawing issue when using manual layout mode.</li>
+          <li xml:lang="fr">Correction d'un problème de dessin des liens de nœud lors de l'utilisation du mode de disposition manuelle.</li>
           <li>Fixed issues drawing arrows properly when straight node links were being used.</li>
+          <li xml:lang="fr">Correction de problèmes de dessin correct des flèches lors de l'utilisation de liens de nœuds droits.</li>
           <li>Fixed display issues with the node fill switch in the style inspector.</li>
+          <li xml:lang="fr">Correction de problèmes d'affichage avec le bouton de remplissage de nœud dans l'inspecteur de style.</li>
           <li>Fixed support for cut, copy and pasting connection title text.</li>
+          <li xml:lang="fr">Correction de la prise en charge des fonctions couper, copier et coller du titre des connexions.</li>
           <li>Fixed keyboard shortcut for toggling focus mode.</li>
+          <li xml:lang="fr">Correction du raccourci clavier pour activer/désactiver le mode concentration.</li>
         </ul>
       </description>
     </release>
@@ -187,6 +250,7 @@
       <description>
         <ul>
           <li>Fixed issue with automatic layout that was introduced in 1.4.0.</li>
+          <li xml:lang="fr">Correction d'un problème avec la disposition automatique introduite en 1.4.0.</li>
         </ul>
       </description>
     </release>
