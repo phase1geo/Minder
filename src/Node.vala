@@ -269,10 +269,10 @@ public class Node : Object {
   }
   public bool     link_color_root {
     get {
-      return( _link_color_root || main_branch() );
+      return( _link_color_root );
     }
     set {
-      if( (_link_color_root != value) && !is_root() && !main_branch() ) {
+      if( (_link_color_root != value) && !is_root() ) {
         _link_color_root = value;
         if( !_link_color_root ) {
           link_color_child = parent.link_color;
