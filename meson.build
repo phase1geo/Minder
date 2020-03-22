@@ -33,10 +33,17 @@ subdir('po')
 subdir('src')
 subdir('tests')
 
+# If the GTK version is higher than 3.22, add a define to indicate that
 gtk_dep = dependency('gtk+-3.0')
-
 if gtk_dep.version().version_compare('>=3.22.0')
   add_project_arguments(['--define=GTK322'], language: 'vala')
+endif
+
+# If the libarchive version is greater than ???, add a define for cross-compile purposes
+archive_dep = dependency('libarchive')
+if archive_dep.version().version_compare('>=3.4.0')
+  add_project_arguments(['--define=LIBARCHIVE340'], language: 'vala')
+  warning('Using LIBARCHIVE: ' + archive_dep.version())
 endif
 
 # Add the math library
