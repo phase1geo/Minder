@@ -148,32 +148,32 @@ public class MainWindow : ApplicationWindow {
 
     /* Create title toolbar */
     var new_btn = new Button.from_icon_name( (on_elementary ? "document-new" : "document-new-symbolic"), icon_size );
-    new_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "New File" ), "Ctrl + N" ) );
+    new_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "New File" ), "<Control>n" ) );
     new_btn.add_accelerator( "clicked", _accel_group, 'n', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
 
     var open_btn = new Button.from_icon_name( (on_elementary ? "document-open" : "document-open-symbolic"), icon_size );
-    open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open File" ), "Ctrl + O" ) );
+    open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open File" ), "<Control>o" ) );
     open_btn.add_accelerator( "clicked", _accel_group, 'o', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
     var save_btn = new Button.from_icon_name( (on_elementary ? "document-save-as" : "document-save-as-symbolic"), icon_size );
-    save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "Ctrl + Shift + S" ) );
+    save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "<Control><Shift>s" ) );
     open_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
     _undo_btn = new Button.from_icon_name( (on_elementary ? "edit-undo" : "edit-undo-symbolic"), icon_size );
-    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "Ctrl + Z" ) );
+    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "<Control>z" ) );
     _undo_btn.set_sensitive( false );
     _undo_btn.add_accelerator( "clicked", _accel_group, 'z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _undo_btn.clicked.connect( do_undo );
     _header.pack_start( _undo_btn );
 
     _redo_btn = new Button.from_icon_name( (on_elementary ? "edit-redo" : "edit-redo-symbolic"), icon_size );
-    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Redo" ), "Ctrl + Shift + Z" ) );
+    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Redo" ), "<Control><Shift>z" ) );
     _redo_btn.set_sensitive( false );
     _redo_btn.add_accelerator( "clicked", _accel_group, 'z', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     _redo_btn.clicked.connect( do_redo );
@@ -413,7 +413,7 @@ public class MainWindow : ApplicationWindow {
     /* Create the menu button */
     _search_btn = new MenuButton();
     _search_btn.set_image( new Image.from_icon_name( "minder-search", icon_size ) );
-    _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "Ctrl + F" ) );
+    _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "<Control>f" ) );
     _search_btn.add_accelerator( "clicked", _accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _search_btn.clicked.connect( on_search_change );
     _header.pack_end( _search_btn );
@@ -598,7 +598,7 @@ public class MainWindow : ApplicationWindow {
     _focus_btn       = new ToggleButton();
     _focus_btn.image = new Image.from_icon_name( "minder-focus", icon_size );
     _focus_btn.draw_indicator = true;
-    _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "Ctrl + Shift + F" ) );
+    _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "<Control><Shift>f" ) );
     _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     _focus_btn.clicked.connect((e) => {
       var da = get_current_da();
@@ -896,9 +896,9 @@ public class MainWindow : ApplicationWindow {
   */
   public void do_buffer_changed( DrawArea da ) {
     _undo_btn.set_sensitive( da.undo_buffer.undoable() );
-    _undo_btn.set_tooltip_text( da.undo_buffer.undo_tooltip() );
+    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( da.undo_buffer.undo_tooltip(), "<Control>z" ) );
     _redo_btn.set_sensitive( da.undo_buffer.redoable() );
-    _redo_btn.set_tooltip_text( da.undo_buffer.redo_tooltip() );
+    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( da.undo_buffer.redo_tooltip(), "<Control><Shift>z" ) );
   }
 
   /* Converts the given node name to an appropriate filename */

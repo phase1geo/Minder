@@ -101,7 +101,8 @@ public class Utils {
 
   /* Returns a string that is used to display a tooltip with displayed accelerator */
   public static string tooltip_with_accel( string tooltip, string accel ) {
-    return( "%s   <i>(%s)</i>".printf( tooltip, accel ) );
+    string[] accels = {accel};
+    return( Granite.markup_accel_tooltip( accels, tooltip ) );
   }
 
   /* Opens the given URL in the proper external default application */

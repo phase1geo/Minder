@@ -81,13 +81,13 @@ public class UndoBuffer : Object {
 
   /* Returns the undo tooltip */
   public string undo_tooltip() {
-    if( _undo_buffer.length == 0 ) return( "" );
+    if( _undo_buffer.length == 0 ) return( _( "Undo" ) );
     return( _( "Undo " ) + _undo_buffer.index( _undo_buffer.length - 1 ).name );
   }
 
   /* Returns the undo tooltip */
   public string redo_tooltip() {
-    if( _redo_buffer.length == 0 ) return( "" );
+    if( _redo_buffer.length == 0 ) return( _( "Redo" ) );
     return( _( "Redo " ) + _redo_buffer.index( _redo_buffer.length - 1 ).name );
   }
 
