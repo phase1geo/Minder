@@ -83,9 +83,9 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
-    <release version="1.7.1" date="2020-03-22">
+    <release version="1.7.2" date="2020-03-26">
       <description>
-        <h3>New</h3>
+        <p>New</p>
         <ul>
           <li>Added support for importing/exporting Outliner files (new app in AppCenter!).</li>
           <li>Added map inspector switch to enable/disable automatic rotation of main branch link color selection.</li>
@@ -94,57 +94,23 @@
           <li>Added ability to allow descendant nodes to have different link colors than ancestor nodes.</li>
           <li>Added ability to cause a descendant node with a different color than its parent to re-use the parent color.</li>
           <li>Added ability to select children nodes using Control-click.</li>
-          <li>Added ability to export a mind-map as a new <b>Portable Minder</b> filetype which will allow Minder files to be copied between different users/filesystems.</li>
+          <li>Added ability to export a mind-map as a new <em>Portable Minder</em> filetype which will allow Minder files to be copied between different users/filesystems.</li>
           <li>Added ability to export to Org-Mode format.</li>
         </ul>
-        <h3>Changes</h3>
+        <p>Changes</p>
         <ul>
           <li>Updated French translation (thanks to Nathan Bonnemains).</li>
           <li>Improved OPML import support.</li>
           <li>Changed ability to select a subtree by Control + double-click.</li>
           <li>Changed ability to select all nodes of the current level by Control + triple-click.</li>
         </ul>
-        <h3>Bug Fixes</h3>
+        <p>Bug Fixes</p>
         <ul>
           <li>Fixed Travis CI version.</li>
           <li>Fixed issue with adding a new child node that doesn't cause other descendant nodes to unfold.</li>
           <li>Fixed issue with showing/hiding sidebar.</li>
           <li>Fixed segmentation faults when loading a theme.</li>
-          <li>Fixed issue with the style inspector <b>Change Affect</b> value when selection changes (thanks to Viliam K.).</li>
-          <li>Fixed issue with node markup within the node text (thanks to Viliam K).</li>
-          <li>Fixed issue with tab state not being properly saved when a new tab is added.</li>
-          <li>Fixed bug with updating tab tooltip and saving tab state when filename is changed.</li>
-        </ul>
-      </description>
-    </release>
-    <release version="1.7.0" date="2020-03-20">
-      <description>
-        <h3>New</h3>
-        <ul>
-          <li>Added support for importing/exporting Outliner files (new app in AppCenter!).</li>
-          <li>Added map inspector switch to enable/disable automatic rotation of main branch link color selection.</li>
-          <li>Added ability to set all selected nodes to a specific color.</li>
-          <li>Added ability to set all selected nodes to a randomly selected link color.</li>
-          <li>Added ability to allow descendant nodes to have different link colors than ancestor nodes.</li>
-          <li>Added ability to cause a descendant node with a different color than its parent to re-use the parent color.</li>
-          <li>Added ability to select children nodes using Control-click.</li>
-          <li>Added ability to export a mind-map as a new <b>Portable Minder</b> filetype which will allow Minder files to be copied between different users/filesystems.</li>
-          <li>Added ability to export to Org-Mode format.</li>
-        </ul>
-        <h3>Changes</h3>
-        <ul>
-          <li>Updated French translation (thanks to Nathan Bonnemains).</li>
-          <li>Improved OPML import support.</li>
-          <li>Changed ability to select a subtree by Control + double-click.</li>
-          <li>Changed ability to select all nodes of the current level by Control + triple-click.</li>
-        </ul>
-        <h3>Bug Fixes</h3>
-        <ul>
-          <li>Fixed Travis CI version.</li>
-          <li>Fixed issue with adding a new child node that doesn't cause other descendant nodes to unfold.</li>
-          <li>Fixed issue with showing/hiding sidebar.</li>
-          <li>Fixed segmentation faults when loading a theme.</li>
-          <li>Fixed issue with the style inspector <b>Change Affect</b> value when selection changes (thanks to Viliam K.).</li>
+          <li>Fixed issue with the style inspector <em>Change Affect</em> value when selection changes (thanks to Viliam K.).</li>
           <li>Fixed issue with node markup within the node text (thanks to Viliam K).</li>
           <li>Fixed issue with tab state not being properly saved when a new tab is added.</li>
           <li>Fixed bug with updating tab tooltip and saving tab state when filename is changed.</li>
@@ -153,7 +119,7 @@
     </release>
     <release version="1.6.0" date="2019-12-26">
       <description>
-        <h3>New</h3>
+        <p>New</p>
         <ul>
           <li>Added ability to delete a single node (instead of the node and its subtree) in the contextual menu.</li>
           <li>When a new document is first saved, the first root node text is used as the default filename.</li>
@@ -174,14 +140,14 @@
             </ul>
           </li>
         </ul>
-        <h3>Changes</h3>
+        <p>Changes</p>
         <ul>
           <li>Updated application icon and other recently improved icons for improved readability (thanks to Nararyans R.I.).</li>
           <li>Improved look and readability of theme icons in the sidebar.</li>
           <li>Changed sidebar to display theme icons in a grid layout.</li>
           <li>Improved various export format output.</li>
         </ul>
-        <h3>Bug Fixes</h3>
+        <p>Bug Fixes</p>
         <ul>
           <li>Fixed various compiler warnings/errors after compiling with latest version of Vala compiler.</li>
         </ul>
@@ -189,11 +155,11 @@
     </release>
     <release version="1.5.1" date="2019-11-23">
       <description>
-        <h3>Changes</h3>
+        <p>Changes</p>
         <ul>
           <li>Improved various icons (thanks to Nararyans R.I.)</li>
         </ul>
-        <h3>Bug Fixes</h3>
+        <p>Bug Fixes</p>
         <ul>
           <li>Downgraded Node.js to fix Travis CI builds</li>
           <li>Fixed various compiler errors/warnings</li>
@@ -202,7 +168,7 @@
     </release>
     <release version="1.5.0" date="2019-09-07">
       <description>
-        <h3>New</h3>
+        <p>New</p>
         <ul>
           <li>Added export to yEd.</li>
           <li>Added ability to create, edit and delete custom themes.</li>
@@ -210,7 +176,7 @@
           <li>Added Control-W keyboard shortcut to close the current tab.</li>
           <li>Added shortcut exploration help window (use F1 key to display).</li>
         </ul>
-        <h3>Changes</h3>
+        <p>Changes</p>
         <ul>
           <li>New search icon which has better contrast for Minder's themed header bar (thanks to Nararyans R.I.).</li>
           <li>New non-symbolic sidebar icon in header bar (thanks to Nararyans R.I.).</li>
@@ -218,7 +184,7 @@
           <li>New focus icon in header bar (thanks to Nararyans R.I.).</li>
           <li>Improved styling when creating a new node/connection.</li>
         </ul>
-        <h3>Bug Fixes</h3>
+        <p>Bug Fixes</p>
         <ul>
           <li>Fixed issue where separate trees in same mind-map where allowed to overlap.</li>
           <li>Fixed node link drawing issue when using manual layout mode.</li>
@@ -238,7 +204,7 @@
     </release>
     <release version="1.4.0" date="2019-07-03">
       <description>
-        <h3>New</h3>
+        <p>New</p>
         <ul>
           <li>Added support for focus mode.</li>
           <li>Added support for multiple documents with tabs.</li>
@@ -250,7 +216,7 @@
           <li>Added support for creating a link from one node to another node in the same map.</li>
           <li>Added support for building a Flatpak.</li>
         </ul>
-        <h3>Changes</h3>
+        <p>Changes</p>
         <ul>
           <li>Removed markup from translated strings.</li>
           <li>Standardized tooltips that display accelerator information.</li>
@@ -261,7 +227,7 @@
           <li>When note tooltip is displayed, markup text is rendered for improved readability.</li>
           <li>Enhanced app script to allow command-line arguments to be passed to debug subcommand.</li>
         </ul>
-        <h3>Bug Fixes</h3>
+        <p>Bug Fixes</p>
         <ul>
           <li>Fixed an issue with calculating connection endpoints when a portion of the node is not visible.</li>
           <li>Fixed file naming issue when a file is imported.</li>

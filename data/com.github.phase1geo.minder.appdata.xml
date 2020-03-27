@@ -105,10 +105,10 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
-    <release version="1.7.1" date="2020-03-22">
+    <release version="1.7.2" date="2020-03-26">
       <description>
-        <h3>New</h3>
-        <h3 xml:lang="fr">Nouveau</h3>
+        <p>New</p>
+        <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added support for importing/exporting Outliner files (new app in AppCenter!).</li>
           <li>Added map inspector switch to enable/disable automatic rotation of main branch link color selection.</li>
@@ -117,62 +117,25 @@
           <li>Added ability to allow descendant nodes to have different link colors than ancestor nodes.</li>
           <li>Added ability to cause a descendant node with a different color than its parent to re-use the parent color.</li>
           <li>Added ability to select children nodes using Control-click.</li>
-          <li>Added ability to export a mind-map as a new <b>Portable Minder</b> filetype which will allow Minder files to be copied between different users/filesystems.</li>
+          <li>Added ability to export a mind-map as a new <em>Portable Minder</em> filetype which will allow Minder files to be copied between different users/filesystems.</li>
           <li>Added ability to export to Org-Mode format.</li>
         </ul>
-        <h3>Changes</h3>
-        <h3 xml:lang="fr">Modifications</h3>
+        <p>Changes</p>
+        <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated French translation (thanks to Nathan Bonnemains).</li>
           <li>Improved OPML import support.</li>
           <li>Changed ability to select a subtree by Control + double-click.</li>
           <li>Changed ability to select all nodes of the current level by Control + triple-click.</li>
         </ul>
-        <h3>Bug Fixes</h3>
-        <h3 xml:lang="fr">Corrections de bugs</h3>
+        <p>Bug Fixes</p>
+        <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed Travis CI version.</li>
           <li>Fixed issue with adding a new child node that doesn't cause other descendant nodes to unfold.</li>
           <li>Fixed issue with showing/hiding sidebar.</li>
           <li>Fixed segmentation faults when loading a theme.</li>
-          <li>Fixed issue with the style inspector <b>Change Affect</b> value when selection changes (thanks to Viliam K.).</li>
-          <li>Fixed issue with node markup within the node text (thanks to Viliam K).</li>
-          <li>Fixed issue with tab state not being properly saved when a new tab is added.</li>
-          <li>Fixed bug with updating tab tooltip and saving tab state when filename is changed.</li>
-        </ul>
-      </description>
-    </release>
-    <release version="1.7.0" date="2020-03-20">
-      <description>
-        <h3>New</h3>
-        <h3 xml:lang="fr">Nouveau</h3>
-        <ul>
-          <li>Added support for importing/exporting Outliner files (new app in AppCenter!).</li>
-          <li>Added map inspector switch to enable/disable automatic rotation of main branch link color selection.</li>
-          <li>Added ability to set all selected nodes to a specific color.</li>
-          <li>Added ability to set all selected nodes to a randomly selected link color.</li>
-          <li>Added ability to allow descendant nodes to have different link colors than ancestor nodes.</li>
-          <li>Added ability to cause a descendant node with a different color than its parent to re-use the parent color.</li>
-          <li>Added ability to select children nodes using Control-click.</li>
-          <li>Added ability to export a mind-map as a new <b>Portable Minder</b> filetype which will allow Minder files to be copied between different users/filesystems.</li>
-          <li>Added ability to export to Org-Mode format.</li>
-        </ul>
-        <h3>Changes</h3>
-        <h3 xml:lang="fr">Modifications</h3>
-        <ul>
-          <li>Updated French translation (thanks to Nathan Bonnemains).</li>
-          <li>Improved OPML import support.</li>
-          <li>Changed ability to select a subtree by Control + double-click.</li>
-          <li>Changed ability to select all nodes of the current level by Control + triple-click.</li>
-        </ul>
-        <h3>Bug Fixes</h3>
-        <h3 xml:lang="fr">Corrections de bugs</h3>
-        <ul>
-          <li>Fixed Travis CI version.</li>
-          <li>Fixed issue with adding a new child node that doesn't cause other descendant nodes to unfold.</li>
-          <li>Fixed issue with showing/hiding sidebar.</li>
-          <li>Fixed segmentation faults when loading a theme.</li>
-          <li>Fixed issue with the style inspector <b>Change Affect</b> value when selection changes (thanks to Viliam K.).</li>
+          <li>Fixed issue with the style inspector <em>Change Affect</em> value when selection changes (thanks to Viliam K.).</li>
           <li>Fixed issue with node markup within the node text (thanks to Viliam K).</li>
           <li>Fixed issue with tab state not being properly saved when a new tab is added.</li>
           <li>Fixed bug with updating tab tooltip and saving tab state when filename is changed.</li>
@@ -181,8 +144,8 @@
     </release>
     <release version="1.6.0" date="2019-12-26">
       <description>
-        <h3>New</h3>
-        <h3 xml:lang="fr">Nouveau</h3>
+        <p>New</p>
+        <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added ability to delete a single node (instead of the node and its subtree) in the contextual menu.</li>
           <li xml:lang="fr">Ajout de la possibilité de supprimer un nœud seul (au lieu du nœud et de ses enfants) dans le menu contextuel.</li>
@@ -197,8 +160,8 @@
             <ul><li>Notes are syntax highlighted</li><li xml:lang="fr">La correction orthographique fonctionne dans les notes</li><li>Embedded URLs can be opened by Control-Clicking on them</li><li xml:lang="fr">Les URL peuvent être ouvertes en effectuant Ctrl + Clic dessus</li></ul>
           </li>
         </ul>
-        <h3>Changes</h3>
-        <h3 xml:lang="fr">Modifications</h3>
+        <p>Changes</p>
+        <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated application icon and other recently improved icons for improved readability (thanks to Nararyans R.I.).</li>
           <li xml:lang="fr">Mise à jour de l'icône de l'application et des autres icônes pour plus de lisibilité (grâce à Nararyans R.I.).</li>
@@ -209,8 +172,8 @@
           <li>Improved various export format output.</li>
           <li xml:lang="fr">Amélioration des différents formats d'exportation.</li>
         </ul>
-        <h3>Bug Fixes</h3>
-        <h3 xml:lang="fr">Corrections de bugs</h3>
+        <p>Bug Fixes</p>
+        <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed various compiler warnings/errors after compiling with latest version of Vala compiler.</li>
           <li xml:lang="fr">Correction de divers avertissements/erreurs après compilation avec la dernière version du compilateur Vala.</li>
@@ -219,14 +182,14 @@
     </release>
     <release version="1.5.1" date="2019-11-23">
       <description>
-        <h3>Changes</h3>
-        <h3 xml:lang="fr">Modifications</h3>
+        <p>Changes</p>
+        <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Improved various icons (thanks to Nararyans R.I.)</li>
           <li xml:lang="fr">Amélioration de diverses icônes (grâce à Nararyans R.I.)</li>
         </ul>
-        <h3>Bug Fixes</h3>
-        <h3 xml:lang="fr">Corrections de bugs</h3>
+        <p>Bug Fixes</p>
+        <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Downgraded Node.js to fix Travis CI builds</li>
           <li xml:lang="fr">Rétrogradation de Node.js pour corriger les problèmes d'intégration continue avec Travis CI</li>
@@ -237,8 +200,8 @@
     </release>
     <release version="1.5.0" date="2019-09-07">
       <description>
-        <h3>New</h3>
-        <h3 xml:lang="fr">Nouveau</h3>
+        <p>New</p>
+        <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added export to yEd.</li>
           <li xml:lang="fr">Ajout de l'exportation au format yEd.</li>
@@ -251,8 +214,8 @@
           <li>Added shortcut exploration help window (use F1 key to display).</li>
           <li xml:lang="fr">Ajouter du raccourci pour parcourir la fenêtre d'aide (utilisez la touche F1 pour l'afficher).</li>
         </ul>
-        <h3>Changes</h3>
-        <h3 xml:lang="fr">Modifications</h3>
+        <p>Changes</p>
+        <p xml:lang="fr">Modifications</p>
         <ul>
           <li>New search icon which has better contrast for Minder's themed header bar (thanks to Nararyans R.I.).</li>
           <li xml:lang="fr">Nouvelle icône de recherche avec un meilleur contraste pour le thème de l'entête de Minder(grâce à Nararyans R.I.).</li>
@@ -265,8 +228,8 @@
           <li>Improved styling when creating a new node/connection.</li>
           <li xml:lang="fr">Amélioration du style lors de la création d'un nouveau nœud/connexion.</li>
         </ul>
-        <h3>Bug Fixes</h3>
-        <h3 xml:lang="fr">Corrections de bugs</h3>
+        <p>Bug Fixes</p>
+        <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed issue where separate trees in same mind-map where allowed to overlap.</li>
           <li xml:lang="fr">Correction d'un problème ou les arbres séparés dans la même carte mentale pouvaient déborder.</li>
@@ -293,8 +256,8 @@
     </release>
     <release version="1.4.0" date="2019-07-03">
       <description>
-        <h3>New</h3>
-        <h3 xml:lang="fr">Nouveau</h3>
+        <p>New</p>
+        <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added support for focus mode.</li>
           <li xml:lang="fr">Ajout de la prise en charge du mode concentration.</li>
@@ -315,8 +278,8 @@
           <li>Added support for building a Flatpak.</li>
           <li xml:lang="fr">Ajout de la prise en charge pour Flatpak.</li>
         </ul>
-        <h3>Changes</h3>
-        <h3 xml:lang="fr">Modifications</h3>
+        <p>Changes</p>
+        <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Removed markup from translated strings.</li>
           <li xml:lang="fr">Suppression des balises des chaînes de caractères traduites.</li>
@@ -335,8 +298,8 @@
           <li>Enhanced app script to allow command-line arguments to be passed to debug subcommand.</li>
           <li xml:lang="fr">Amélioration du script de l'application pour autoriser les arguments en ligne de commande à être passés en sous-commandes de débogage.</li>
         </ul>
-        <h3>Bug Fixes</h3>
-        <h3 xml:lang="fr">Corrections de bugs</h3>
+        <p>Bug Fixes</p>
+        <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed an issue with calculating connection endpoints when a portion of the node is not visible.</li>
           <li xml:lang="fr">Correction d'un problème avec le calcul des point de fin de connexion lorsqu'un bout du nœud n'est pas visible.</li>
