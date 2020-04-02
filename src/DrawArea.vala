@@ -215,9 +215,6 @@ public class DrawArea : Gtk.DrawingArea {
     _im_context.set_client_window( this.get_window() );
     _im_context.set_use_preedit( false );
     _im_context.commit.connect( handle_im_commit );
-    _im_context.preedit_start.connect( handle_im_preedit_start );
-    _im_context.preedit_end.connect( handle_im_preedit_end );
-    _im_context.preedit_changed.connect( handle_im_preedit_changed );
     _im_context.retrieve_surrounding.connect( handle_im_retrieve_surrounding );
     _im_context.delete_surrounding.connect( handle_im_delete_surrounding );
 
@@ -692,12 +689,19 @@ public class DrawArea : Gtk.DrawingArea {
   /* Needs to be called whenever the user changes the mode of the current node */
   public void set_node_mode( Node node, NodeMode mode ) {
     if( (node.mode != NodeMode.EDITABLE) && (mode == NodeMode.EDITABLE) ) {
+      update_im_cursor( node.name );
       _im_context.focus_in();
     } else if( (node.mode == NodeMode.EDITABLE) && (mode != NodeMode.EDITABLE) ) {
       _im_context.reset();
       _im_context.focus_out();
     }
     node.mode = mode;
+  }
+
+  /* Updates the IM context cursor location based on the canvas text position */
+  private void update_im_cursor( CanvasText ct ) {
+    Gdk.Rectangle rect = {(int)ct.posx, (int)ct.posy, 0, (int)ct.height};
+    _im_context.set_cursor_location( rect );
   }
 
   /* Sets the current connection to the given node */
@@ -1087,9 +1091,18 @@ public class DrawArea : Gtk.DrawingArea {
     if( _selected.is_current_connection( conn ) ) {
       if( conn.mode == ConnMode.EDITABLE ) {
         switch( e.type ) {
-          case EventType.BUTTON_PRESS        :  conn.title.set_cursor_at_char( e.x, e.y, shift );  break;
-          case EventType.DOUBLE_BUTTON_PRESS :  conn.title.set_cursor_at_word( e.x, e.y, shift );  break;
-          case EventType.TRIPLE_BUTTON_PRESS :  conn.title.set_cursor_all( false );                break;
+          case EventType.BUTTON_PRESS        :
+            conn.title.set_cursor_at_char( e.x, e.y, shift );
+            _im_context.reset();
+            break;
+          case EventType.DOUBLE_BUTTON_PRESS :
+            conn.title.set_cursor_at_word( e.x, e.y, shift );
+            _im_context.reset();
+            break;
+          case EventType.TRIPLE_BUTTON_PRESS :
+            conn.title.set_cursor_all( false );
+            _im_context.reset();
+            break;
         }
       } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
         var current = _selected.current_connection();
@@ -1151,9 +1164,18 @@ public class DrawArea : Gtk.DrawingArea {
     /* If the node is being edited, go handle the click */
     if( node.mode == NodeMode.EDITABLE ) {
       switch( e.type ) {
-        case EventType.BUTTON_PRESS        :  node.name.set_cursor_at_char( e.x, e.y, shift );  break;
-        case EventType.DOUBLE_BUTTON_PRESS :  node.name.set_cursor_at_word( e.x, e.y, shift );  break;
-        case EventType.TRIPLE_BUTTON_PRESS :  node.name.set_cursor_all( false );                break;
+        case EventType.BUTTON_PRESS        :
+          node.name.set_cursor_at_char( e.x, e.y, shift );
+          _im_context.reset();
+          break;
+        case EventType.DOUBLE_BUTTON_PRESS :
+          node.name.set_cursor_at_word( e.x, e.y, shift );
+          _im_context.reset();
+          break;
+        case EventType.TRIPLE_BUTTON_PRESS :
+          node.name.set_cursor_all( false );
+          _im_context.reset();
+          break;
       }
       return( true );
 
@@ -2888,9 +2910,11 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_home() {
     if( is_connection_editable() ) {
       _selected.current_connection().title.move_cursor_to_start();
+      _im_context.reset();
       queue_draw();
     } else if( is_node_editable() ) {
       _selected.current_node().name.move_cursor_to_start();
+      _im_context.reset();
       queue_draw();
     }
   }
@@ -2899,9 +2923,11 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_end() {
     if( is_connection_editable() ) {
       _selected.current_connection().title.move_cursor_to_end();
+      _im_context.reset();
       queue_draw();
     } else if( is_node_editable() ) {
       _selected.current_node().name.move_cursor_to_end();
+      _im_context.reset();
       queue_draw();
     }
   }
@@ -2914,6 +2940,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         _selected.current_connection().title.move_cursor_vertically( -1 );
       }
+      _im_context.reset();
       queue_draw();
     } else if( is_node_editable() ) {
       if( shift ) {
@@ -2921,6 +2948,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         _selected.current_node().name.move_cursor_vertically( -1 );
       }
+      _im_context.reset();
       queue_draw();
     } else if( is_connection_connecting() && (_attach_node != null) ) {
       update_connection_by_node( get_node_up( _attach_node ) );
@@ -2942,6 +2970,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         _selected.current_connection().title.move_cursor_to_start();
       }
+      _im_context.reset();
       queue_draw();
     } else if( is_node_editable() ) {
       if( shift ) {
@@ -2949,6 +2978,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         _selected.current_node().name.move_cursor_to_start();
       }
+      _im_context.reset();
       queue_draw();
     }
   }
@@ -2961,6 +2991,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         _selected.current_connection().title.move_cursor_vertically( 1 );
       }
+      _im_context.reset();
       queue_draw();
     } else if( is_node_editable() ) {
       if( shift ) {
@@ -2968,6 +2999,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         _selected.current_node().name.move_cursor_vertically( 1 );
       }
+      _im_context.reset();
       queue_draw();
     } else if( is_connection_connecting() && (_attach_node != null) ) {
       update_connection_by_node( get_node_down( _attach_node ) );
@@ -2989,6 +3021,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         _selected.current_connection().title.move_cursor_to_end();
       }
+      _im_context.reset();
       queue_draw();
     } else if( is_node_editable() ) {
       if( shift ) {
@@ -2996,6 +3029,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         _selected.current_node().name.move_cursor_to_end();
       }
+      _im_context.reset();
       queue_draw();
     }
   }
@@ -3023,44 +3057,48 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void handle_im_commit( string str ) {
-    stdout.printf( "In handle_im_commit\n" );
-    if( is_node_editable() ) {
-      stdout.printf( "im_commit: %s\n", str );
+    if( is_node_editable() || is_connection_editable() ) {
       handle_printable( str );
     }
   }
 
-  private void handle_im_preedit_start() {
-    stdout.printf( "In handle_im_preedit_start\n" );
+  /* Helper class for the handle_im_retrieve_surrounding method */
+  private void retrieve_surrounding_in_text( CanvasText ct ) {
+    int cursor, selstart, selend;
+    ct.get_cursor_info( out cursor, out selstart, out selend );
+    _im_context.set_surrounding( ct.text, ct.text.length, ct.text.index_of_nth_char( cursor ) );
   }
 
-  private void handle_im_preedit_end() {
-    stdout.printf( "In handle_im_preedit_end\n" );
-  }
-
-  private void handle_im_preedit_changed() {
-    string         str;
-    Pango.AttrList attrs;
-    int            cursor_pos;
-    _im_context.get_preedit_string(out str, out attrs, out cursor_pos );
-    stdout.printf( "In handle_im_preedit_changed, str: %s\n", str );
-  }
-
+  /* Called in IMContext callback of the same name */
   private bool handle_im_retrieve_surrounding() {
-    stdout.printf( "In handle_im_retrieve_surrounding\n" );
-    var current = _selected.current_node();
-    if( current != null ) {
-      int cursor, selstart, selend;
-      var text = current.name.text;
-      current.name.get_cursor_info( out cursor, out selstart, out selend );
-      _im_context.set_surrounding( text, text.length, text.index_of_nth_char( cursor ) );
+    if( is_node_editable() ) {
+      retrieve_surrounding_in_text( _selected.current_node().name );
+      return( true );
+    } else if( is_connection_editable() ) {
+      retrieve_surrounding_in_text( _selected.current_connection().title );
       return( true );
     }
     return( false );
   }
 
+  /* Helper class for the handle_im_delete_surrounding method */
+  private void delete_surrounding_in_text( CanvasText ct, int offset, int chars ) {
+    int cursor, selstart, selend;
+    ct.get_cursor_info( out cursor, out selstart, out selend );
+    var startpos = cursor - offset;
+    var endpos   = startpos + chars;
+    ct.delete_range( startpos, endpos );
+  }
+
+  /* Called in IMContext callback of the same name */
   private bool handle_im_delete_surrounding( int offset, int nchars ) {
-    stdout.printf( "In handle_im_delete_surrounding, offset: %d, nchars: %d\n", offset, nchars );
+    if( is_node_editable() ) {
+      delete_surrounding_in_text( _selected.current_node().name, offset, nchars );
+      return( true );
+    } else if( is_connection_editable() ) {
+      delete_surrounding_in_text( _selected.current_connection().title, offset, nchars );
+      return( true );
+    }
     return( false );
   }
 
