@@ -3057,9 +3057,9 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void handle_im_commit( string str ) {
-    if( is_node_editable() || is_connection_editable() ) {
+    // if( is_node_editable() || is_connection_editable() ) {
       handle_printable( str );
-    }
+    // }
   }
 
   /* Helper class for the handle_im_retrieve_surrounding method */
