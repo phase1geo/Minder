@@ -107,6 +107,7 @@ public class Document : Object {
   public bool save() {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
+    root->set_prop( "version", Minder.version );
     doc->set_root_element( root );
     _da.save( root );
     doc->save_format_file( filename, 1 );
