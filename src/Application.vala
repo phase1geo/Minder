@@ -59,6 +59,9 @@ public class Minder : Granite.Application {
     stdout.printf( "home_dir: %s\n", GLib.Environment.get_home_dir() );
     */
 
+    /* Load the tab data */
+    var loaded = appwin.load_tab_state();
+
     /*
      If the user specified to open a specific filename from
      the command-line, attempt to open it.  Display an error
@@ -75,7 +78,7 @@ public class Minder : Granite.Application {
      If the user specified that a new file should be created or the saved tab state
      was not loadable, create a new map.
     */
-    } else if( new_file || !appwin.load_tab_state() ) {
+    } else if( new_file || !loaded ) {
       appwin.do_new_file();
     }
 
