@@ -71,11 +71,12 @@ public class ExportPortableMinder : Object {
 #if LIBARCHIVE340
       entry.set_size( (Archive.int64_t)file_info.get_size() );
       entry.set_filetype( Archive.FileType.IFREG );
+      entry.set_perm( (Archive.FileMode)0644 );
 #else
       entry.set_size( file_info.get_size() );
       entry.set_filetype( (uint)Posix.S_IFREG );
-#endif
       entry.set_perm( 0644 );
+#endif
 
       if( image_id != null ) {
         entry.xattr_add_entry( "image_id", (void*)image_id, sizeof( int ) );
