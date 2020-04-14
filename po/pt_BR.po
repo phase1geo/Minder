@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-26 18:23-0500\n"
+"POT-Creation-Date: 2020-04-13 20:44-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Helder Bertoldo <helder.bertoldo@gmail.com>\n"
 "Language-Team: none\n"
@@ -221,32 +221,32 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: src/DrawArea.vala:602
+#: src/DrawArea.vala:606
 msgid "Main Idea"
 msgstr ""
 
-#: src/DrawArea.vala:1770
+#: src/DrawArea.vala:1810
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "0.3g%% completados"
 
-#: src/DrawArea.vala:1823
+#: src/DrawArea.vala:1863
 msgid "connection endpoint change"
 msgstr ""
 
-#: src/DrawArea.vala:1830
+#: src/DrawArea.vala:1870
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2311 src/DrawArea.vala:3522
+#: src/DrawArea.vala:2351 src/DrawArea.vala:3620
 msgid "Another Idea"
 msgstr "Outra Ideia"
 
-#: src/DrawArea.vala:2505
+#: src/DrawArea.vala:2545
 msgid "fold completed tasks"
 msgstr ""
 
-#: src/DrawArea.vala:2542
+#: src/DrawArea.vala:2582
 msgid "unfold all tasks"
 msgstr ""
 
@@ -322,12 +322,12 @@ msgstr "Abrir Arquivo"
 msgid "Save File As"
 msgstr "Salvar Arquivo Como"
 
-#: src/MainWindow.vala:169
+#: src/MainWindow.vala:169 src/UndoBuffer.vala:84
 #, fuzzy
 msgid "Undo"
 msgstr "Desfazer"
 
-#: src/MainWindow.vala:176
+#: src/MainWindow.vala:176 src/UndoBuffer.vala:90
 #, fuzzy
 msgid "Redo"
 msgstr "Refazer"

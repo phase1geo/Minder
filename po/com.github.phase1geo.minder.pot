@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-26 18:23-0500\n"
+"POT-Creation-Date: 2020-04-13 20:44-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -206,32 +206,32 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: src/DrawArea.vala:602
+#: src/DrawArea.vala:606
 msgid "Main Idea"
 msgstr ""
 
-#: src/DrawArea.vala:1770
+#: src/DrawArea.vala:1810
 #, c-format
 msgid "%0.3g%% complete"
 msgstr ""
 
-#: src/DrawArea.vala:1823
+#: src/DrawArea.vala:1863
 msgid "connection endpoint change"
 msgstr ""
 
-#: src/DrawArea.vala:1830
+#: src/DrawArea.vala:1870
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2311 src/DrawArea.vala:3522
+#: src/DrawArea.vala:2351 src/DrawArea.vala:3620
 msgid "Another Idea"
 msgstr ""
 
-#: src/DrawArea.vala:2505
+#: src/DrawArea.vala:2545
 msgid "fold completed tasks"
 msgstr ""
 
-#: src/DrawArea.vala:2542
+#: src/DrawArea.vala:2582
 msgid "unfold all tasks"
 msgstr ""
 
@@ -305,11 +305,11 @@ msgstr ""
 msgid "Save File As"
 msgstr ""
 
-#: src/MainWindow.vala:169
+#: src/MainWindow.vala:169 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr ""
 
-#: src/MainWindow.vala:176
+#: src/MainWindow.vala:176 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr ""
 
