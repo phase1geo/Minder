@@ -62,7 +62,7 @@ public class Document : Object {
     if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
       int i = 1;
       do {
-        _filename = GLib.Path.build_filename( dir, "unnamed%d.minder".printf( i++ ) );
+        _filename = GLib.Path.build_filename( dir, _( "unnamed" ) + "%d.minder".printf( i++ ) );
       } while( GLib.FileUtils.test( _filename, FileTest.EXISTS ) );
       _from_user = false;
     }
