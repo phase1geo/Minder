@@ -24,7 +24,7 @@
       <li>Built-in and customizable theming.</li>
       <li>Gorgeous animations.</li>
       <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner and Portable Minder formats.</li>
-      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, Portable Minder, SVG, PlainText and yEd formats.</li>
+      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, Portable Minder, PlainText and yEd formats.</li>
       <li>Printer support.</li>
     </ul>
   </description>
@@ -106,7 +106,7 @@
         </ul>
         <p>Bug Fixes</p>
         <ul>
-          <li>Fixed Travis CI version.</li>
+          <li>Fixed NodeJS version for Travis CI.</li>
           <li>Fixed issue with adding a new child node that doesn't cause other descendant nodes to unfold.</li>
           <li>Fixed issue with showing/hiding sidebar.</li>
           <li>Fixed segmentation faults when loading a theme.</li>
