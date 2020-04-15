@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-13 20:44-0500\n"
+"POT-Creation-Date: 2020-04-14 23:21-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Jan Marek <janmarek28@gmail.com>\n"
 "Language-Team: none\n"
@@ -309,18 +309,19 @@ msgstr "Vertikální"
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:151
+#: src/MainWindow.vala:151 data/com.github.phase1geo.minder.shortcuts.ui:21
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:21
 #, fuzzy
 msgid "New File"
 msgstr "Otevřít soubor"
 
 #: src/MainWindow.vala:157 src/MainWindow.vala:784
+#: data/com.github.phase1geo.minder.shortcuts.ui:28
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "Otevřít soubor"
 
-#: src/MainWindow.vala:163
+#: src/MainWindow.vala:163 data/com.github.phase1geo.minder.shortcuts.ui:35
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:35
 #, fuzzy
 msgid "Save File As"
@@ -352,12 +353,12 @@ msgstr "Přiblížení"
 msgid "Zoom to Percent"
 msgstr "Procentuální přiblížení"
 
-#: src/MainWindow.vala:373
+#: src/MainWindow.vala:373 data/com.github.phase1geo.minder.shortcuts.ui:75
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:75
 msgid "Zoom In"
 msgstr "Přiblížit"
 
-#: src/MainWindow.vala:377
+#: src/MainWindow.vala:377 data/com.github.phase1geo.minder.shortcuts.ui:82
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:82
 msgid "Zoom Out"
 msgstr "Oddálit"
@@ -645,7 +646,8 @@ msgstr "Vyjmout uzel do schránky"
 msgid "Detach Node"
 msgstr "Odpojit uzel"
 
-#: src/NodeInspector.vala:351
+#: src/NodeInspector.vala:351 data/com.github.phase1geo.minder.shortcuts.ui:158
+#: data/com.github.phase1geo.minder.shortcuts.ui:165
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:158
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:165
 msgid "Delete Node"
@@ -904,353 +906,433 @@ msgstr "Zpět"
 msgid "Redo "
 msgstr "Znovu"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:6
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:6
 msgid "Minder Shortcuts"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:12
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:12
 msgid "General"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:16
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:16
 #, fuzzy
 msgid "File"
 msgstr "Otevřít soubor"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:42
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:42
 #, fuzzy
 msgid "Close File"
 msgstr "Otevřít soubor"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:51
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:51
 #, fuzzy
 msgid "Undo/Redo"
 msgstr "Zpět"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:55
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:55
 #, fuzzy
 msgid "Undo Last Change"
 msgstr "změna úkolu uzlu"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:62
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:62
 msgid "Redo Last Undo"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:71
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:71
 #, fuzzy
 msgid "Zooming"
 msgstr "Přiblížení"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:89
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:89
 #, fuzzy
 msgid "Zoom To Actual Size"
 msgstr "Přiblížení dle skutečných rozměrů"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:98
+#: data/com.github.phase1geo.minder.shortcuts.ui:428
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:98
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:428
 msgid "Miscellaneous"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:102
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:102
 msgid "Toggle Focus Mode"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:110
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:110
 #, fuzzy
 msgid "Search Nodes/Connections"
 msgstr "Hledat uzly"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:117
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:117
 msgid "Quit Application"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:129
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:129
 msgid "Node Commands"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:133
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:133
 msgid "Creation/Deletion"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:137
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:137
 #, fuzzy
 msgid "New Sibling Node"
 msgstr "Další sourozenec"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:144
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:144
 #, fuzzy
 msgid "New Child Node"
 msgstr "Přidat uzel potomka"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:151
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:151
 msgid "Quick Entry"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:174
+#: data/com.github.phase1geo.minder.shortcuts.ui:510
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:174
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:510
 #, fuzzy
 msgid "Clipboard"
 msgstr "Vyjmout uzel do schránky"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:178
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:178
 #, fuzzy
 msgid "Copy Node"
 msgstr "Přidat kořenový uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:185
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:185
 #, fuzzy
 msgid "Cut Node"
 msgstr "Přidat kořenový uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:192
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:192
 msgid "Paste Node as Child"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:201
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:201
 msgid "Changing Current"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:205
+#: data/com.github.phase1geo.minder.shortcuts.ui:364
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:205
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:364
 #, fuzzy
 msgid "Edit Title"
 msgstr "Názvy"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:212
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:212
 #, fuzzy
 msgid "View Properties"
 msgstr "Parametry"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:219
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:219
 msgid "Toggle Fold"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:226
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:226
 msgid "Toggle Task Done"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:233
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:233
 #, fuzzy
 msgid "Toggle Node Link"
 msgstr "Odstranit poznámku"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:240
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:240
 #, fuzzy
 msgid "Create Connection"
 msgstr "Hledat uzly"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:247
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:247
 #, fuzzy
 msgid "Center In View"
 msgstr "Vystředit aktuální uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:254
+#: data/com.github.phase1geo.minder.shortcuts.ui:378
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:254
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:378
 msgid "Place Into View"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:261
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:261
 msgid "Sort Child Nodes Alphabetically"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:270
+#: data/com.github.phase1geo.minder.shortcuts.ui:387
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:270
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:387
 msgid "Traversal"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:274
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:274
 #, fuzzy
 msgid "Select Root"
 msgstr "Vybrat uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:281
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:281
 #, fuzzy
 msgid "Select Parent"
 msgstr "Vybrat uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:288
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:288
 #, fuzzy
 msgid "Select Next Sibling"
 msgstr "Další sourozenec"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:295
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:295
 #, fuzzy
 msgid "Select Previous Sibling"
 msgstr "Předchozí sourozenec"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:302
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:302
 #, fuzzy
 msgid "Select Child"
 msgstr "Vybrat uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:309
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:309
 #, fuzzy
 msgid "Select Node Below"
 msgstr "Vybrat uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:316
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:316
 #, fuzzy
 msgid "Select Node Above"
 msgstr "Vybrat uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:323
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:323
 #, fuzzy
 msgid "Select Node To Right"
 msgstr "Vybrat uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:330
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:330
 #, fuzzy
 msgid "Select Node To Left"
 msgstr "Vybrat uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:337
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:337
 #, fuzzy
 msgid "Select Linked Node"
 msgstr "Přidat poznámku"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:344
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:344
 #, fuzzy
 msgid "Select Attached Connection"
 msgstr "Hledat uzly"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:356
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:356
 #, fuzzy
 msgid "Connection Commands"
 msgstr "Hledat uzly"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:360
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:360
 #, fuzzy
 msgid "Change Current"
 msgstr "Vystředit aktuální uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:371
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:371
 #, fuzzy
 msgid "Show Properties"
 msgstr "Parametry"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:391
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:391
 #, fuzzy
 msgid "Select Start Node"
 msgstr "Vybrat uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:398
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:398
 #, fuzzy
 msgid "Select End Node"
 msgstr "Vybrat uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:405
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:405
 #, fuzzy
 msgid "Select Next Connection"
 msgstr "Hledat uzly"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:412
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:412
 #, fuzzy
 msgid "Select Previous Connection"
 msgstr "Předchozí sourozenec"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:424
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:424
 msgid "Text Editing"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:432
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:432
 msgid "Show Emoji Picker"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:439
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:439
 msgid "End Editing"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:448
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:448
 msgid "Cursor Movement"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:452
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:452
 msgid "Next Character"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:459
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:459
 #, fuzzy
 msgid "Previous Character"
 msgstr "Předchozí sourozenec"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:466
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:466
 msgid "Next Word"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:473
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:473
 #, fuzzy
 msgid "Previous Word"
 msgstr "Předchozí sourozenec"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:480
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:480
 #, fuzzy
 msgid "Next Line"
 msgstr "Další sourozenec"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:487
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:487
 #, fuzzy
 msgid "Previous Line"
 msgstr "Předchozí sourozenec"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:494
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:494
 #, fuzzy
 msgid "Start Of Text"
 msgstr "Hledat uzly"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:501
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:501
 msgid "End Of Text"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:514
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:514
 msgid "Copy Selected Text"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:521
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:521
 msgid "Cut Selected Text"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:528
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:528
 #, fuzzy
 msgid "Paste Text"
 msgstr "Vložit"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:537
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:537
 #, fuzzy
 msgid "Selection"
 msgstr "Vybrat uzel"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:541
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:541
 msgid "Add Next Character"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:548
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:548
 msgid "Add Previous Character"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:555
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:555
 #, fuzzy
 msgid "Add Next Word"
 msgstr "Hledat uzly"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:562
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:562
 #, fuzzy
 msgid "Add Previous Word"
 msgstr "Hledat uzly"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:569
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:569
 #, fuzzy
 msgid "Add Next Line"
 msgstr "Přidat poznámku"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:576
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:576
 #, fuzzy
 msgid "Add Previous Line"
 msgstr "Předchozí sourozenec"
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:583
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:583
 msgid "Add Start Of Text"
 msgstr ""
 
+#: data/com.github.phase1geo.minder.shortcuts.ui:590
 #: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:590
 msgid "Add End Of Text"
 msgstr ""

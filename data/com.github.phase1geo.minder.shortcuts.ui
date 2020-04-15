@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<interface>
+<interface domain="com.github.phase1geo.minder">
   <object class="GtkShortcutsWindow" id="shortcuts">
     <property name="modal">0</property>
     <property name="resizable">0</property>
