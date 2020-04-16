@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-15 04:19-0500\n"
+"POT-Creation-Date: 2020-04-15 19:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -233,6 +233,10 @@ msgstr ""
 
 #: src/DrawArea.vala:2582
 msgid "unfold all tasks"
+msgstr ""
+
+#: src/Document.vala:65
+msgid "unnamed"
 msgstr ""
 
 #: src/ImageEditor.vala:179
