@@ -145,6 +145,7 @@ public class MainWindow : ApplicationWindow {
     _nb.tab_switched.connect( tab_switched );
     _nb.tab_reordered.connect( tab_reordered );
     _nb.close_tab_requested.connect( close_tab_requested );
+    _nb.get_style_context().add_class( Gtk.STYLE_CLASS_INLINE_TOOLBAR );
 
     /* Create title toolbar */
     var new_btn = new Button.from_icon_name( (on_elementary ? "document-new" : "document-new-symbolic"), icon_size );

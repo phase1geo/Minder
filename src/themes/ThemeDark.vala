@@ -29,7 +29,7 @@ public class ThemeDark : Theme {
     custom = false;
 
     /* Generate the non-link colors */
-    set_color( "background",         color_from_string( "#000000" ) );
+    set_color( "background",         color_from_string( "#333333" ) );
     set_color( "foreground",         color_from_string( "White" ) );
     set_color( "root_background",    color_from_string( "#d4d4d4" ) );
     set_color( "root_foreground",    color_from_string( "Black" ) );
