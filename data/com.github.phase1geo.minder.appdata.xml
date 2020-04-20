@@ -41,7 +41,9 @@
       <li>Gorgeous animations.</li>
       <li xml:lang="fr">Magnifiques animations.</li>
       <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner and Portable Minder formats.</li>
-      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, Portable Minder, SVG, PlainText and yEd formats.</li>
+      <li xml:lang="fr">Importation depuis les formats OPML, FreeMind et Freeplane, Texte brut (mis en forme), Outliner et Minder portable.</li>
+      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, Portable Minder, PlainText and yEd formats.</li>
+      <li xml:lang="fr">Exportation aux formats CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, Minder portable, Texte brut et yEd.</li>
       <li>Printer support.</li>
       <li xml:lang="fr">Prise en charge de l'impression.</li>
     </ul>
@@ -105,40 +107,83 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.7.3" date="2020-04-20">
+      <description>
+        <p>New</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Added support for using input methods.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated README.md to indicate which version of valac should be used if building from source.</li>
+          <li>Changed <em>unnamed</em> default filename to use translated value.</li>
+          <li>Updated French translations (thanks to Nathan Bonnemains).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed issue with <em>New Document</em> plank command to load application data before opening new tab.</li>
+          <li>Fixed build issues with compiling libarchive code using newer versions of libarchive and valac.</li>
+          <li>Fixed issues with translating shortcut cheetsheat strings.</li>
+          <li>Fixed issue with exporting images when manual layout mode is selected.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.7.2" date="2020-03-26">
       <description>
         <p>New</p>
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added support for importing/exporting Outliner files (new app in AppCenter!).</li>
+          <li xml:lang="fr">Ajout de la prise en charge de l'importation/exportation au format Outliner (nouvelle application dans le Centre d'Applications !).</li>
           <li>Added map inspector switch to enable/disable automatic rotation of main branch link color selection.</li>
+          <li xml:lang="fr">Ajout d'un inspecteur de carte pour activer/désactiver la rotation automatique de la couleur de sélection du lien de la branche principale.</li>
           <li>Added ability to set all selected nodes to a specific color.</li>
+          <li xml:lang="fr">Ajout de la possibilité de définir une couleur spécifique pour tous les nœuds sélectionnés.</li>
           <li>Added ability to set all selected nodes to a randomly selected link color.</li>
+          <li xml:lang="fr">Ajout de la possibilité de définir une couleur de lien sélectionné aléatoire pour tous les nœuds sélectionnés</li>
           <li>Added ability to allow descendant nodes to have different link colors than ancestor nodes.</li>
+          <li xml:lang="fr">Ajout de la possibilité aux nœuds enfants d'avoir une couleur de lien différente des nœuds parents.</li>
           <li>Added ability to cause a descendant node with a different color than its parent to re-use the parent color.</li>
+          <li xml:lang="fr">Ajout de la possibilité de créer un nœud enfant avec une couleur diffénte de son parent pour réutiliser la couleur du parent.</li>
           <li>Added ability to select children nodes using Control-click.</li>
           <li>Added ability to export a mind-map as a new <em>Portable Minder</em> filetype which will allow Minder files to be copied between different users/filesystems.</li>
+          <li xml:lang="fr">Ajout de la possibilité d'exporter une carte mentale au nouveau format de fichier &lt;em&gt;Minder portable&lt;/em&gt; qui permet de partager des fichiers Minder avec d'autres utilisateurs/systèmes de fichiers.</li>
           <li>Added ability to export to Org-Mode format.</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated French translation (thanks to Nathan Bonnemains).</li>
+          <li xml:lang="fr">Ajout des traductions en français (grâce à Nathan Bonnemains).</li>
           <li>Improved OPML import support.</li>
+          <li xml:lang="fr">Amélioration de l'import de fichiers OPML.</li>
           <li>Changed ability to select a subtree by Control + double-click.</li>
+          <li xml:lang="fr">Modification de la sélection des sous-arbres avec Control + Double clic.</li>
           <li>Changed ability to select all nodes of the current level by Control + triple-click.</li>
+          <li xml:lang="fr">Modification de la sélection de tous les nœuds du niveau courant avec Control + Triple clic.</li>
         </ul>
         <p>Bug Fixes</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
-          <li>Fixed Travis CI version.</li>
+          <li>Fixed NodeJS version for Travis CI.</li>
+          <li xml:lang="fr">Correction de la version de NodeJS dans Travis CI.</li>
           <li>Fixed issue with adding a new child node that doesn't cause other descendant nodes to unfold.</li>
+          <li xml:lang="fr">Correction du problème lors de l'ajout d'un nœud enfant qui empêchait les autres nœuds enfants d'être dépliés.</li>
           <li>Fixed issue with showing/hiding sidebar.</li>
+          <li xml:lang="fr">Correction d'un problème avec l'action d'afficher/masquer la barre latérale.</li>
           <li>Fixed segmentation faults when loading a theme.</li>
+          <li xml:lang="fr">Correction d'une erreur de segmentation lors du chargement d'un thème.</li>
           <li>Fixed issue with the style inspector <em>Change Affect</em> value when selection changes (thanks to Viliam K.).</li>
+          <li xml:lang="fr">Correction d'un problème avec l'inspecteur de style lorsque la valeur du sélécteur &lt;em&gt;Les modifications affectent&lt;/em&gt; change (grâce à Vilian K.).</li>
           <li>Fixed issue with node markup within the node text (thanks to Viliam K).</li>
+          <li xml:lang="fr">Correction d'un problème avec le style de nœud dans le texte (grâce à Viliam K.).</li>
           <li>Fixed issue with tab state not being properly saved when a new tab is added.</li>
+          <li xml:lang="fr">Correction d'un problème avec l'état des onglets qui n'étaient pas correctement enregistré lors de l'ajout d'un nouvel onglet.</li>
           <li>Fixed bug with updating tab tooltip and saving tab state when filename is changed.</li>
+          <li xml:lang="fr">Correction d'un bug lors de la mise à jour de l'infobulle de l'onglet et l'enregistrement de l'état de l'onglet lorsque le nom de fichier est différent.</li>
         </ul>
       </description>
     </release>
