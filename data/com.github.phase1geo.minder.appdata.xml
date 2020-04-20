@@ -120,6 +120,8 @@
           <li>Updated README.md to indicate which version of valac should be used if building from source.</li>
           <li>Changed <em>unnamed</em> default filename to use translated value.</li>
           <li>Updated French translations (thanks to Nathan Bonnemains).</li>
+          <li>Changed tab colors to match current document background.</li>
+          <li>Adjusted dark theme to help with current tab contrast.</li>
         </ul>
         <p>Bug Fixes</p>
         <p xml:lang="fr">Corrections de bugs</p>

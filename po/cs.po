@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-19 22:08-0500\n"
+"POT-Creation-Date: 2020-04-20 02:04-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Jan Marek <janmarek28@gmail.com>\n"
 "Language-Team: none\n"
@@ -269,8 +269,8 @@ msgstr ""
 msgid "Cursor: %3d,%3d"
 msgstr ""
 
-#: src/ImageEditor.vala:360 src/MainWindow.vala:740 src/MainWindow.vala:784
-#: src/MainWindow.vala:926 src/MainWindow.vala:1162
+#: src/ImageEditor.vala:360 src/MainWindow.vala:741 src/MainWindow.vala:785
+#: src/MainWindow.vala:927 src/MainWindow.vala:1163
 msgid "Cancel"
 msgstr "Zrušit"
 
@@ -310,241 +310,241 @@ msgstr "Vzhůru"
 msgid "Vertical"
 msgstr "Vertikální"
 
-#: src/MainWindow.vala:118 src/MainWindow.vala:929
+#: src/MainWindow.vala:118 src/MainWindow.vala:930
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:151 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:152 data/com.github.phase1geo.minder.shortcuts.ui:21
 #, fuzzy
 msgid "New File"
 msgstr "Otevřít soubor"
 
-#: src/MainWindow.vala:157 src/MainWindow.vala:784
+#: src/MainWindow.vala:158 src/MainWindow.vala:785
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "Otevřít soubor"
 
-#: src/MainWindow.vala:163 data/com.github.phase1geo.minder.shortcuts.ui:35
+#: src/MainWindow.vala:164 data/com.github.phase1geo.minder.shortcuts.ui:35
 #, fuzzy
 msgid "Save File As"
 msgstr "Uložit soubor jako"
 
-#: src/MainWindow.vala:169 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:170 src/UndoBuffer.vala:84
 #, fuzzy
 msgid "Undo"
 msgstr "Zpět"
 
-#: src/MainWindow.vala:176 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:177 src/UndoBuffer.vala:90
 #, fuzzy
 msgid "Redo"
 msgstr "Znovu"
 
-#: src/MainWindow.vala:329
+#: src/MainWindow.vala:330
 msgid "Unnamed Document"
 msgstr "Nepojmenovaný dokument"
 
-#: src/MainWindow.vala:333 src/MainWindow.vala:601
+#: src/MainWindow.vala:334 src/MainWindow.vala:602
 msgid "Focus Mode"
 msgstr ""
 
-#: src/MainWindow.vala:355
+#: src/MainWindow.vala:356
 msgid "Zoom"
 msgstr "Přiblížení"
 
-#: src/MainWindow.vala:362
+#: src/MainWindow.vala:363
 msgid "Zoom to Percent"
 msgstr "Procentuální přiblížení"
 
-#: src/MainWindow.vala:373 data/com.github.phase1geo.minder.shortcuts.ui:75
+#: src/MainWindow.vala:374 data/com.github.phase1geo.minder.shortcuts.ui:75
 msgid "Zoom In"
 msgstr "Přiblížit"
 
-#: src/MainWindow.vala:377 data/com.github.phase1geo.minder.shortcuts.ui:82
+#: src/MainWindow.vala:378 data/com.github.phase1geo.minder.shortcuts.ui:82
 msgid "Zoom Out"
 msgstr "Oddálit"
 
-#: src/MainWindow.vala:381
+#: src/MainWindow.vala:382
 msgid "Zoom to Fit"
 msgstr "Vměstnat do okna"
 
-#: src/MainWindow.vala:385
+#: src/MainWindow.vala:386
 msgid "Zoom to Fit Selected Node"
 msgstr "Vměstnat do okna vybraný uzel"
 
-#: src/MainWindow.vala:389
+#: src/MainWindow.vala:390
 msgid "Zoom to Actual Size"
 msgstr "Přiblížení dle skutečných rozměrů"
 
-#: src/MainWindow.vala:416
+#: src/MainWindow.vala:417
 msgid "Search"
 msgstr "Hledat"
 
-#: src/MainWindow.vala:426
+#: src/MainWindow.vala:427
 #, fuzzy
 msgid "Search Nodes and Connections"
 msgstr "Hledat uzly"
 
-#: src/MainWindow.vala:449
+#: src/MainWindow.vala:450
 msgid "Search Criteria"
 msgstr "Kritéria hledání"
 
-#: src/MainWindow.vala:471
+#: src/MainWindow.vala:472
 msgid "Nodes"
 msgstr ""
 
-#: src/MainWindow.vala:472
+#: src/MainWindow.vala:473
 msgid "Connections"
 msgstr ""
 
-#: src/MainWindow.vala:473
+#: src/MainWindow.vala:474
 msgid "Titles"
 msgstr "Názvy"
 
-#: src/MainWindow.vala:474
+#: src/MainWindow.vala:475
 msgid "Notes"
 msgstr "Poznámky"
 
-#: src/MainWindow.vala:475
+#: src/MainWindow.vala:476
 msgid "Folded"
 msgstr "Sbalené"
 
-#: src/MainWindow.vala:476
+#: src/MainWindow.vala:477
 msgid "Unfolded"
 msgstr "Rozbalené"
 
-#: src/MainWindow.vala:477
+#: src/MainWindow.vala:478
 msgid "Tasks"
 msgstr "Úkoly"
 
-#: src/MainWindow.vala:478
+#: src/MainWindow.vala:479
 msgid "Non-tasks"
 msgstr "Nejsou úkoly"
 
-#: src/MainWindow.vala:568 src/MainWindow.vala:1162
+#: src/MainWindow.vala:569 src/MainWindow.vala:1163
 msgid "Export"
 msgstr "Export"
 
-#: src/MainWindow.vala:575
+#: src/MainWindow.vala:576
 msgid "Export…"
 msgstr "Export…"
 
-#: src/MainWindow.vala:579
+#: src/MainWindow.vala:580
 msgid "Print"
 msgstr "Vytisknout"
 
-#: src/MainWindow.vala:631
+#: src/MainWindow.vala:632
 msgid "Shortcuts Cheatsheet"
 msgstr ""
 
-#: src/MainWindow.vala:659
+#: src/MainWindow.vala:660
 msgid "Properties"
 msgstr "Parametry"
 
-#: src/MainWindow.vala:674 src/StyleInspector.vala:48
+#: src/MainWindow.vala:675 src/StyleInspector.vala:48
 msgid "Current"
 msgstr ""
 
-#: src/MainWindow.vala:675
+#: src/MainWindow.vala:676
 msgid "Style"
 msgstr ""
 
-#: src/MainWindow.vala:676
+#: src/MainWindow.vala:677
 msgid "Map"
 msgstr ""
 
-#: src/MainWindow.vala:731
+#: src/MainWindow.vala:732
 msgid "Save current unnamed document?"
 msgstr "Uložit aktuální nepojmenovaný dokument?"
 
-#: src/MainWindow.vala:732
+#: src/MainWindow.vala:733
 msgid "Changes will be permanently lost if not saved."
 msgstr "Pokud soubor neuložíte, provedené změny se navždy ztratí."
 
-#: src/MainWindow.vala:737
+#: src/MainWindow.vala:738
 msgid "Discard Changes"
 msgstr "Zahodit změny"
 
-#: src/MainWindow.vala:743 src/MainWindow.vala:926
+#: src/MainWindow.vala:744 src/MainWindow.vala:927
 msgid "Save"
 msgstr "Uložit"
 
-#: src/MainWindow.vala:784
+#: src/MainWindow.vala:785
 msgid "Open"
 msgstr "Otevřít"
 
-#: src/MainWindow.vala:808 src/MainWindow.vala:1246
+#: src/MainWindow.vala:809 src/MainWindow.vala:1247
 msgid "PlainText"
 msgstr ""
 
-#: src/MainWindow.vala:813 src/MainWindow.vala:1252
+#: src/MainWindow.vala:814 src/MainWindow.vala:1253
 msgid "Portable Minder"
 msgstr ""
 
-#: src/MainWindow.vala:926
+#: src/MainWindow.vala:927
 msgid "Save File"
 msgstr "Uložit soubor"
 
-#: src/MainWindow.vala:1161
+#: src/MainWindow.vala:1162
 msgid "Export As"
 msgstr ""
 
-#: src/MainWindow.vala:1166
+#: src/MainWindow.vala:1167
 msgid "BMP"
 msgstr ""
 
-#: src/MainWindow.vala:1172
+#: src/MainWindow.vala:1173
 msgid "CSV"
 msgstr ""
 
-#: src/MainWindow.vala:1178
+#: src/MainWindow.vala:1179
 msgid "Freemind"
 msgstr ""
 
-#: src/MainWindow.vala:1184
+#: src/MainWindow.vala:1185
 msgid "Freeplane"
 msgstr ""
 
-#: src/MainWindow.vala:1190
+#: src/MainWindow.vala:1191
 msgid "JPEG"
 msgstr ""
 
-#: src/MainWindow.vala:1197
+#: src/MainWindow.vala:1198
 msgid "Markdown"
 msgstr ""
 
-#: src/MainWindow.vala:1204
+#: src/MainWindow.vala:1205
 msgid "Mermaid"
 msgstr ""
 
-#: src/MainWindow.vala:1210
+#: src/MainWindow.vala:1211
 msgid "OPML"
 msgstr "OPML"
 
-#: src/MainWindow.vala:1216
+#: src/MainWindow.vala:1217
 msgid "Org-Mode"
 msgstr ""
 
-#: src/MainWindow.vala:1222
+#: src/MainWindow.vala:1223
 msgid "Outliner"
 msgstr ""
 
-#: src/MainWindow.vala:1228
+#: src/MainWindow.vala:1229
 msgid "PDF"
 msgstr "PDF"
 
-#: src/MainWindow.vala:1234
+#: src/MainWindow.vala:1235
 msgid "PNG (Transparent)"
 msgstr ""
 
-#: src/MainWindow.vala:1240
+#: src/MainWindow.vala:1241
 msgid "PNG (Opaque)"
 msgstr ""
 
-#: src/MainWindow.vala:1258
+#: src/MainWindow.vala:1259
 msgid "SVG"
 msgstr ""
 
-#: src/MainWindow.vala:1264
+#: src/MainWindow.vala:1265
 msgid "yEd"
 msgstr ""
 
