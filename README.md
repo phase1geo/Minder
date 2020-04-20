@@ -39,7 +39,7 @@ You will need the following dependencies to build Minder:
 * python3-pip
 * python3-setuptools
 * meson
-* valac
+* valac (version 0.48.3 or later is recommended to avoid compile issues with libarchive)
 * debhelper
 * libcairo2-dev
 * libgranite-dev

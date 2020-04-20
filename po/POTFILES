@@ -2,6 +2,7 @@ src/NodeMenu.vala
 src/EmptyMenu.vala
 src/ConnectionMenu.vala
 src/DrawArea.vala
+src/Document.vala
 src/ImageEditor.vala
 
 src/layouts/LayoutManual.vala
@@ -55,3 +56,5 @@ src/undo_actions/UndoNodeDetach.vala
 src/undo_actions/UndoNodeName.vala
 
 src/UndoBuffer.vala
+
+data/com.github.phase1geo.minder.shortcuts.ui

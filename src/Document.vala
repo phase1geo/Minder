@@ -62,7 +62,7 @@ public class Document : Object {
     if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
       int i = 1;
       do {
-        _filename = GLib.Path.build_filename( dir, "unnamed%d.minder".printf( i++ ) );
+        _filename = GLib.Path.build_filename( dir, _( "unnamed" ) + "%d.minder".printf( i++ ) );
       } while( GLib.FileUtils.test( _filename, FileTest.EXISTS ) );
       _from_user = false;
     }
@@ -107,6 +107,7 @@ public class Document : Object {
   public bool save() {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
+    root->set_prop( "version", Minder.version );
     doc->set_root_element( root );
     _da.save( root );
     doc->save_format_file( filename, 1 );

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-26 18:23-0500\n"
+"POT-Creation-Date: 2020-04-20 02:04-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: none\n"
@@ -224,35 +224,40 @@ msgstr "Anterior del mismo nivel"
 msgid "Default"
 msgstr "Predeterminado"
 
-#: src/DrawArea.vala:602
+#: src/DrawArea.vala:606
 msgid "Main Idea"
 msgstr "Idea principal"
 
-#: src/DrawArea.vala:1770
+#: src/DrawArea.vala:1810
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g %% completo"
 
-#: src/DrawArea.vala:1823
+#: src/DrawArea.vala:1863
 #, fuzzy
 msgid "connection endpoint change"
 msgstr "cambio de nota de nodo"
 
-#: src/DrawArea.vala:1830
+#: src/DrawArea.vala:1870
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2311 src/DrawArea.vala:3522
+#: src/DrawArea.vala:2351 src/DrawArea.vala:3620
 msgid "Another Idea"
 msgstr "Otra idea"
 
-#: src/DrawArea.vala:2505
+#: src/DrawArea.vala:2545
 msgid "fold completed tasks"
 msgstr "plegar las tareas completadas"
 
-#: src/DrawArea.vala:2542
+#: src/DrawArea.vala:2582
 msgid "unfold all tasks"
 msgstr "desplegar todas las tareas"
+
+#: src/Document.vala:65
+#, fuzzy
+msgid "unnamed"
+msgstr "Documento sin nombre"
 
 #: src/ImageEditor.vala:179
 #, c-format
@@ -264,8 +269,8 @@ msgstr "Área de recorte: %d,%d %3d×%3d"
 msgid "Cursor: %3d,%3d"
 msgstr "Puntero: %3d,%3d"
 
-#: src/ImageEditor.vala:360 src/MainWindow.vala:740 src/MainWindow.vala:784
-#: src/MainWindow.vala:926 src/MainWindow.vala:1162
+#: src/ImageEditor.vala:360 src/MainWindow.vala:741 src/MainWindow.vala:785
+#: src/MainWindow.vala:927 src/MainWindow.vala:1163
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -305,246 +310,242 @@ msgstr "Hacia arriba"
 msgid "Vertical"
 msgstr "Vertical"
 
-#: src/MainWindow.vala:118 src/MainWindow.vala:929
+#: src/MainWindow.vala:118 src/MainWindow.vala:930
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:151
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:152 data/com.github.phase1geo.minder.shortcuts.ui:21
 #, fuzzy
 msgid "New File"
 msgstr "Archivo nuevo"
 
-#: src/MainWindow.vala:157 src/MainWindow.vala:784
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:28
+#: src/MainWindow.vala:158 src/MainWindow.vala:785
+#: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "Abrir un archivo"
 
-#: src/MainWindow.vala:163
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:35
+#: src/MainWindow.vala:164 data/com.github.phase1geo.minder.shortcuts.ui:35
 #, fuzzy
 msgid "Save File As"
 msgstr "Guardar el archivo como"
 
-#: src/MainWindow.vala:169
+#: src/MainWindow.vala:170 src/UndoBuffer.vala:84
 #, fuzzy
 msgid "Undo"
 msgstr "Deshacer "
 
-#: src/MainWindow.vala:176
+#: src/MainWindow.vala:177 src/UndoBuffer.vala:90
 #, fuzzy
 msgid "Redo"
 msgstr "Rehacer "
 
-#: src/MainWindow.vala:329
+#: src/MainWindow.vala:330
 msgid "Unnamed Document"
 msgstr "Documento sin nombre"
 
-#: src/MainWindow.vala:333 src/MainWindow.vala:601
+#: src/MainWindow.vala:334 src/MainWindow.vala:602
 msgid "Focus Mode"
 msgstr ""
 
-#: src/MainWindow.vala:355
+#: src/MainWindow.vala:356
 msgid "Zoom"
 msgstr "Escala"
 
-#: src/MainWindow.vala:362
+#: src/MainWindow.vala:363
 msgid "Zoom to Percent"
 msgstr "Escala a porcentaje"
 
-#: src/MainWindow.vala:373
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:75
+#: src/MainWindow.vala:374 data/com.github.phase1geo.minder.shortcuts.ui:75
 msgid "Zoom In"
 msgstr "Ampliar"
 
-#: src/MainWindow.vala:377
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:82
+#: src/MainWindow.vala:378 data/com.github.phase1geo.minder.shortcuts.ui:82
 msgid "Zoom Out"
 msgstr "Reducir"
 
-#: src/MainWindow.vala:381
+#: src/MainWindow.vala:382
 msgid "Zoom to Fit"
 msgstr "Mejor ajuste"
 
-#: src/MainWindow.vala:385
+#: src/MainWindow.vala:386
 msgid "Zoom to Fit Selected Node"
 msgstr "Ajustar escala al nodo seleccionado"
 
-#: src/MainWindow.vala:389
+#: src/MainWindow.vala:390
 msgid "Zoom to Actual Size"
 msgstr "Escala real"
 
-#: src/MainWindow.vala:416
+#: src/MainWindow.vala:417
 msgid "Search"
 msgstr "Buscar"
 
-#: src/MainWindow.vala:426
+#: src/MainWindow.vala:427
 #, fuzzy
 msgid "Search Nodes and Connections"
 msgstr "Buscar en los nodos"
 
-#: src/MainWindow.vala:449
+#: src/MainWindow.vala:450
 msgid "Search Criteria"
 msgstr "Criterios de búsqueda"
 
-#: src/MainWindow.vala:471
+#: src/MainWindow.vala:472
 #, fuzzy
 msgid "Nodes"
 msgstr "Nodo"
 
-#: src/MainWindow.vala:472
+#: src/MainWindow.vala:473
 msgid "Connections"
 msgstr ""
 
-#: src/MainWindow.vala:473
+#: src/MainWindow.vala:474
 msgid "Titles"
 msgstr "Títulos"
 
-#: src/MainWindow.vala:474
+#: src/MainWindow.vala:475
 msgid "Notes"
 msgstr "Notas"
 
-#: src/MainWindow.vala:475
+#: src/MainWindow.vala:476
 msgid "Folded"
 msgstr "Plegados"
 
-#: src/MainWindow.vala:476
+#: src/MainWindow.vala:477
 msgid "Unfolded"
 msgstr "Desplegados"
 
-#: src/MainWindow.vala:477
+#: src/MainWindow.vala:478
 msgid "Tasks"
 msgstr "Tareas"
 
-#: src/MainWindow.vala:478
+#: src/MainWindow.vala:479
 msgid "Non-tasks"
 msgstr "No tareas"
 
-#: src/MainWindow.vala:568 src/MainWindow.vala:1162
+#: src/MainWindow.vala:569 src/MainWindow.vala:1163
 msgid "Export"
 msgstr "Exportar"
 
-#: src/MainWindow.vala:575
+#: src/MainWindow.vala:576
 msgid "Export…"
 msgstr "Exportar…"
 
-#: src/MainWindow.vala:579
+#: src/MainWindow.vala:580
 msgid "Print"
 msgstr "Imprimir"
 
-#: src/MainWindow.vala:631
+#: src/MainWindow.vala:632
 msgid "Shortcuts Cheatsheet"
 msgstr ""
 
-#: src/MainWindow.vala:659
+#: src/MainWindow.vala:660
 msgid "Properties"
 msgstr "Propiedades"
 
-#: src/MainWindow.vala:674 src/StyleInspector.vala:48
+#: src/MainWindow.vala:675 src/StyleInspector.vala:48
 msgid "Current"
 msgstr ""
 
-#: src/MainWindow.vala:675
+#: src/MainWindow.vala:676
 msgid "Style"
 msgstr ""
 
-#: src/MainWindow.vala:676
+#: src/MainWindow.vala:677
 msgid "Map"
 msgstr "Mapa"
 
-#: src/MainWindow.vala:731
+#: src/MainWindow.vala:732
 msgid "Save current unnamed document?"
 msgstr "¿Quiere guardar el documento sin nombre actual?"
 
-#: src/MainWindow.vala:732
+#: src/MainWindow.vala:733
 msgid "Changes will be permanently lost if not saved."
 msgstr "Los cambios se perderán permanentemente si no los guarda."
 
-#: src/MainWindow.vala:737
+#: src/MainWindow.vala:738
 msgid "Discard Changes"
 msgstr "Descartar los cambios"
 
-#: src/MainWindow.vala:743 src/MainWindow.vala:926
+#: src/MainWindow.vala:744 src/MainWindow.vala:927
 msgid "Save"
 msgstr "Guardar"
 
-#: src/MainWindow.vala:784
+#: src/MainWindow.vala:785
 msgid "Open"
 msgstr "Abrir"
 
-#: src/MainWindow.vala:808 src/MainWindow.vala:1246
+#: src/MainWindow.vala:809 src/MainWindow.vala:1247
 msgid "PlainText"
 msgstr "Texto sin formato"
 
-#: src/MainWindow.vala:813 src/MainWindow.vala:1252
+#: src/MainWindow.vala:814 src/MainWindow.vala:1253
 msgid "Portable Minder"
 msgstr ""
 
-#: src/MainWindow.vala:926
+#: src/MainWindow.vala:927
 msgid "Save File"
 msgstr "Guardar el archivo"
 
-#: src/MainWindow.vala:1161
+#: src/MainWindow.vala:1162
 msgid "Export As"
 msgstr "Exportar como"
 
-#: src/MainWindow.vala:1166
+#: src/MainWindow.vala:1167
 msgid "BMP"
 msgstr "BMP"
 
-#: src/MainWindow.vala:1172
+#: src/MainWindow.vala:1173
 msgid "CSV"
 msgstr "CSV"
 
-#: src/MainWindow.vala:1178
+#: src/MainWindow.vala:1179
 msgid "Freemind"
 msgstr ""
 
-#: src/MainWindow.vala:1184
+#: src/MainWindow.vala:1185
 msgid "Freeplane"
 msgstr ""
 
-#: src/MainWindow.vala:1190
+#: src/MainWindow.vala:1191
 msgid "JPEG"
 msgstr "JPEG"
 
-#: src/MainWindow.vala:1197
+#: src/MainWindow.vala:1198
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/MainWindow.vala:1204
+#: src/MainWindow.vala:1205
 msgid "Mermaid"
 msgstr ""
 
-#: src/MainWindow.vala:1210
+#: src/MainWindow.vala:1211
 msgid "OPML"
 msgstr "OPML"
 
-#: src/MainWindow.vala:1216
+#: src/MainWindow.vala:1217
 msgid "Org-Mode"
 msgstr ""
 
-#: src/MainWindow.vala:1222
+#: src/MainWindow.vala:1223
 msgid "Outliner"
 msgstr ""
 
-#: src/MainWindow.vala:1228
+#: src/MainWindow.vala:1229
 msgid "PDF"
 msgstr "PDF"
 
-#: src/MainWindow.vala:1234
+#: src/MainWindow.vala:1235
 msgid "PNG (Transparent)"
 msgstr "PNG (transparente)"
 
-#: src/MainWindow.vala:1240
+#: src/MainWindow.vala:1241
 msgid "PNG (Opaque)"
 msgstr "PNG (opaco)"
 
-#: src/MainWindow.vala:1258
+#: src/MainWindow.vala:1259
 msgid "SVG"
 msgstr "SVG"
 
-#: src/MainWindow.vala:1264
+#: src/MainWindow.vala:1265
 msgid "yEd"
 msgstr ""
 
@@ -646,9 +647,8 @@ msgstr "Cortar el nodo en el portapapeles"
 msgid "Detach Node"
 msgstr "Desprender el nodo"
 
-#: src/NodeInspector.vala:351
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:158
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:165
+#: src/NodeInspector.vala:351 data/com.github.phase1geo.minder.shortcuts.ui:158
+#: data/com.github.phase1geo.minder.shortcuts.ui:165
 msgid "Delete Node"
 msgstr "Eliminar el nodo"
 
@@ -906,360 +906,356 @@ msgstr "Deshacer "
 msgid "Redo "
 msgstr "Rehacer "
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:6
+#: data/com.github.phase1geo.minder.shortcuts.ui:6
 msgid "Minder Shortcuts"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:12
+#: data/com.github.phase1geo.minder.shortcuts.ui:12
 msgid "General"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:16
+#: data/com.github.phase1geo.minder.shortcuts.ui:16
 #, fuzzy
 msgid "File"
 msgstr "Archivo nuevo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:42
+#: data/com.github.phase1geo.minder.shortcuts.ui:42
 #, fuzzy
 msgid "Close File"
 msgstr "Archivo nuevo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:51
+#: data/com.github.phase1geo.minder.shortcuts.ui:51
 #, fuzzy
 msgid "Undo/Redo"
 msgstr "Deshacer "
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:55
+#: data/com.github.phase1geo.minder.shortcuts.ui:55
 #, fuzzy
 msgid "Undo Last Change"
 msgstr "cambio de tarea de nodo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:62
+#: data/com.github.phase1geo.minder.shortcuts.ui:62
 msgid "Redo Last Undo"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:71
+#: data/com.github.phase1geo.minder.shortcuts.ui:71
 #, fuzzy
 msgid "Zooming"
 msgstr "Escala"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:89
+#: data/com.github.phase1geo.minder.shortcuts.ui:89
 #, fuzzy
 msgid "Zoom To Actual Size"
 msgstr "Escala real"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:98
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:428
+#: data/com.github.phase1geo.minder.shortcuts.ui:98
+#: data/com.github.phase1geo.minder.shortcuts.ui:428
 msgid "Miscellaneous"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:102
+#: data/com.github.phase1geo.minder.shortcuts.ui:102
 msgid "Toggle Focus Mode"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:110
+#: data/com.github.phase1geo.minder.shortcuts.ui:110
 #, fuzzy
 msgid "Search Nodes/Connections"
 msgstr "Buscar en los nodos"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:117
+#: data/com.github.phase1geo.minder.shortcuts.ui:117
 msgid "Quit Application"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:129
+#: data/com.github.phase1geo.minder.shortcuts.ui:129
 msgid "Node Commands"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:133
+#: data/com.github.phase1geo.minder.shortcuts.ui:133
 msgid "Creation/Deletion"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:137
+#: data/com.github.phase1geo.minder.shortcuts.ui:137
 #, fuzzy
 msgid "New Sibling Node"
 msgstr "Siguiente del mismo nivel"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:144
+#: data/com.github.phase1geo.minder.shortcuts.ui:144
 #, fuzzy
 msgid "New Child Node"
 msgstr "Añadir un nodo secundario"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:151
+#: data/com.github.phase1geo.minder.shortcuts.ui:151
 msgid "Quick Entry"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:174
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:510
+#: data/com.github.phase1geo.minder.shortcuts.ui:174
+#: data/com.github.phase1geo.minder.shortcuts.ui:510
 #, fuzzy
 msgid "Clipboard"
 msgstr "Cortar el nodo en el portapapeles"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:178
+#: data/com.github.phase1geo.minder.shortcuts.ui:178
 #, fuzzy
 msgid "Copy Node"
 msgstr "Añadir un nodo raíz"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:185
+#: data/com.github.phase1geo.minder.shortcuts.ui:185
 #, fuzzy
 msgid "Cut Node"
 msgstr "Añadir un nodo raíz"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:192
+#: data/com.github.phase1geo.minder.shortcuts.ui:192
 msgid "Paste Node as Child"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:201
+#: data/com.github.phase1geo.minder.shortcuts.ui:201
 msgid "Changing Current"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:205
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:364
+#: data/com.github.phase1geo.minder.shortcuts.ui:205
+#: data/com.github.phase1geo.minder.shortcuts.ui:364
 #, fuzzy
 msgid "Edit Title"
 msgstr "Títulos"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:212
+#: data/com.github.phase1geo.minder.shortcuts.ui:212
 #, fuzzy
 msgid "View Properties"
 msgstr "Propiedades"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:219
+#: data/com.github.phase1geo.minder.shortcuts.ui:219
 msgid "Toggle Fold"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:226
+#: data/com.github.phase1geo.minder.shortcuts.ui:226
 msgid "Toggle Task Done"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:233
+#: data/com.github.phase1geo.minder.shortcuts.ui:233
 #, fuzzy
 msgid "Toggle Node Link"
 msgstr "Quitar la nota"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:240
+#: data/com.github.phase1geo.minder.shortcuts.ui:240
 #, fuzzy
 msgid "Create Connection"
 msgstr "Buscar en los nodos"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:247
+#: data/com.github.phase1geo.minder.shortcuts.ui:247
 #, fuzzy
 msgid "Center In View"
 msgstr "Centrar el nodo actual"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:254
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:378
+#: data/com.github.phase1geo.minder.shortcuts.ui:254
+#: data/com.github.phase1geo.minder.shortcuts.ui:378
 msgid "Place Into View"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:261
+#: data/com.github.phase1geo.minder.shortcuts.ui:261
 msgid "Sort Child Nodes Alphabetically"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:270
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:387
+#: data/com.github.phase1geo.minder.shortcuts.ui:270
+#: data/com.github.phase1geo.minder.shortcuts.ui:387
 msgid "Traversal"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:274
+#: data/com.github.phase1geo.minder.shortcuts.ui:274
 #, fuzzy
 msgid "Select Root"
 msgstr "Seleccionar un nodo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:281
+#: data/com.github.phase1geo.minder.shortcuts.ui:281
 #, fuzzy
 msgid "Select Parent"
 msgstr "Seleccionar un nodo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:288
+#: data/com.github.phase1geo.minder.shortcuts.ui:288
 #, fuzzy
 msgid "Select Next Sibling"
 msgstr "Siguiente del mismo nivel"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:295
+#: data/com.github.phase1geo.minder.shortcuts.ui:295
 #, fuzzy
 msgid "Select Previous Sibling"
 msgstr "Anterior del mismo nivel"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:302
+#: data/com.github.phase1geo.minder.shortcuts.ui:302
 #, fuzzy
 msgid "Select Child"
 msgstr "Seleccionar un nodo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:309
+#: data/com.github.phase1geo.minder.shortcuts.ui:309
 #, fuzzy
 msgid "Select Node Below"
 msgstr "Seleccionar un nodo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:316
+#: data/com.github.phase1geo.minder.shortcuts.ui:316
 #, fuzzy
 msgid "Select Node Above"
 msgstr "Seleccionar un nodo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:323
+#: data/com.github.phase1geo.minder.shortcuts.ui:323
 #, fuzzy
 msgid "Select Node To Right"
 msgstr "Seleccionar un nodo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:330
+#: data/com.github.phase1geo.minder.shortcuts.ui:330
 #, fuzzy
 msgid "Select Node To Left"
 msgstr "Seleccionar un nodo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:337
+#: data/com.github.phase1geo.minder.shortcuts.ui:337
 #, fuzzy
 msgid "Select Linked Node"
 msgstr "Nodo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:344
+#: data/com.github.phase1geo.minder.shortcuts.ui:344
 #, fuzzy
 msgid "Select Attached Connection"
 msgstr "Buscar en los nodos"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:356
+#: data/com.github.phase1geo.minder.shortcuts.ui:356
 #, fuzzy
 msgid "Connection Commands"
 msgstr "Buscar en los nodos"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:360
+#: data/com.github.phase1geo.minder.shortcuts.ui:360
 #, fuzzy
 msgid "Change Current"
 msgstr "Centrar el nodo actual"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:371
+#: data/com.github.phase1geo.minder.shortcuts.ui:371
 #, fuzzy
 msgid "Show Properties"
 msgstr "Propiedades"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:391
+#: data/com.github.phase1geo.minder.shortcuts.ui:391
 #, fuzzy
 msgid "Select Start Node"
 msgstr "Seleccionar un nodo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:398
+#: data/com.github.phase1geo.minder.shortcuts.ui:398
 #, fuzzy
 msgid "Select End Node"
 msgstr "Seleccionar un nodo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:405
+#: data/com.github.phase1geo.minder.shortcuts.ui:405
 #, fuzzy
 msgid "Select Next Connection"
 msgstr "Buscar en los nodos"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:412
+#: data/com.github.phase1geo.minder.shortcuts.ui:412
 #, fuzzy
 msgid "Select Previous Connection"
 msgstr "Anterior del mismo nivel"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:424
+#: data/com.github.phase1geo.minder.shortcuts.ui:424
 msgid "Text Editing"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:432
+#: data/com.github.phase1geo.minder.shortcuts.ui:432
 msgid "Show Emoji Picker"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:439
+#: data/com.github.phase1geo.minder.shortcuts.ui:439
 msgid "End Editing"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:448
+#: data/com.github.phase1geo.minder.shortcuts.ui:448
 msgid "Cursor Movement"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:452
+#: data/com.github.phase1geo.minder.shortcuts.ui:452
 msgid "Next Character"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:459
+#: data/com.github.phase1geo.minder.shortcuts.ui:459
 #, fuzzy
 msgid "Previous Character"
 msgstr "Anterior del mismo nivel"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:466
+#: data/com.github.phase1geo.minder.shortcuts.ui:466
 msgid "Next Word"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:473
+#: data/com.github.phase1geo.minder.shortcuts.ui:473
 #, fuzzy
 msgid "Previous Word"
 msgstr "Anterior del mismo nivel"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:480
+#: data/com.github.phase1geo.minder.shortcuts.ui:480
 #, fuzzy
 msgid "Next Line"
 msgstr "Siguiente del mismo nivel"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:487
+#: data/com.github.phase1geo.minder.shortcuts.ui:487
 #, fuzzy
 msgid "Previous Line"
 msgstr "Anterior del mismo nivel"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:494
+#: data/com.github.phase1geo.minder.shortcuts.ui:494
 #, fuzzy
 msgid "Start Of Text"
 msgstr "Buscar en los nodos"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:501
+#: data/com.github.phase1geo.minder.shortcuts.ui:501
 msgid "End Of Text"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:514
+#: data/com.github.phase1geo.minder.shortcuts.ui:514
 msgid "Copy Selected Text"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:521
+#: data/com.github.phase1geo.minder.shortcuts.ui:521
 msgid "Cut Selected Text"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:528
+#: data/com.github.phase1geo.minder.shortcuts.ui:528
 #, fuzzy
 msgid "Paste Text"
 msgstr "Pegar"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:537
+#: data/com.github.phase1geo.minder.shortcuts.ui:537
 #, fuzzy
 msgid "Selection"
 msgstr "Seleccionar un nodo"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:541
+#: data/com.github.phase1geo.minder.shortcuts.ui:541
 msgid "Add Next Character"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:548
+#: data/com.github.phase1geo.minder.shortcuts.ui:548
 msgid "Add Previous Character"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:555
+#: data/com.github.phase1geo.minder.shortcuts.ui:555
 #, fuzzy
 msgid "Add Next Word"
 msgstr "Buscar en los nodos"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:562
+#: data/com.github.phase1geo.minder.shortcuts.ui:562
 #, fuzzy
 msgid "Add Previous Word"
 msgstr "Buscar en los nodos"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:569
+#: data/com.github.phase1geo.minder.shortcuts.ui:569
 #, fuzzy
 msgid "Add Next Line"
 msgstr "Añadir una nota"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:576
+#: data/com.github.phase1geo.minder.shortcuts.ui:576
 #, fuzzy
 msgid "Add Previous Line"
 msgstr "Anterior del mismo nivel"
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:583
+#: data/com.github.phase1geo.minder.shortcuts.ui:583
 msgid "Add Start Of Text"
 msgstr ""
 
-#: /home/trevorw/projects/Minder/data/com.github.phase1geo.minder.shortcuts.ui:590
+#: data/com.github.phase1geo.minder.shortcuts.ui:590
 msgid "Add End Of Text"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Unnamed"
-#~ msgstr "Documento sin nombre"
 
 #, fuzzy
 #~ msgid "Child"

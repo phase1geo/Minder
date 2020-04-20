@@ -183,6 +183,7 @@ public class Theme : Object {
       var css_data = "@define-color colorPrimary #603461; " +
                      "@define-color textColorPrimary @SILVER_100; " +
                      "@define-color colorAccent #603461; " +
+                     "@define-color tab_base_color " + get_color( "background" ).to_string() + ";" +
                      ".theme-selected { background: #087DFF; } " +
                      ".canvas { background: " + get_color( "background" ).to_string() + "; }";
       provider.load_from_data( css_data );

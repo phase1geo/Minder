@@ -24,7 +24,7 @@
       <li>Built-in and customizable theming.</li>
       <li>Gorgeous animations.</li>
       <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner and Portable Minder formats.</li>
-      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, Portable Minder, SVG, PlainText and yEd formats.</li>
+      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, Portable Minder, PlainText and yEd formats.</li>
       <li>Printer support.</li>
     </ul>
   </description>
@@ -83,6 +83,29 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.7.3" date="2020-04-20">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for using input methods.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated README.md to indicate which version of valac should be used if building from source.</li>
+          <li>Changed <em>unnamed</em> default filename to use translated value.</li>
+          <li>Updated French translations (thanks to Nathan Bonnemains).</li>
+          <li>Changed tab colors to match current document background.</li>
+          <li>Adjusted dark theme to help with current tab contrast.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue with <em>New Document</em> plank command to load application data before opening new tab.</li>
+          <li>Fixed build issues with compiling libarchive code using newer versions of libarchive and valac.</li>
+          <li>Fixed issues with translating shortcut cheetsheat strings.</li>
+          <li>Fixed issue with exporting images when manual layout mode is selected.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.7.2" date="2020-03-26">
       <description>
         <p>New</p>
@@ -106,7 +129,7 @@
         </ul>
         <p>Bug Fixes</p>
         <ul>
-          <li>Fixed Travis CI version.</li>
+          <li>Fixed NodeJS version for Travis CI.</li>
           <li>Fixed issue with adding a new child node that doesn't cause other descendant nodes to unfold.</li>
           <li>Fixed issue with showing/hiding sidebar.</li>
           <li>Fixed segmentation faults when loading a theme.</li>
