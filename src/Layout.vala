@@ -93,7 +93,7 @@ public class Layout : Object {
   }
 
   /* Updates the tree size */
-  private void update_tree_size( Node n ) {
+  protected void update_tree_size( Node n ) {
 
     /* Get the node's tree dimensions */
     var nb = bbox( n, -1 );
