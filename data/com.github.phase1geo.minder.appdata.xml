@@ -113,6 +113,7 @@
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added support for using input methods.</li>
+          <li>Added Dutch translation (thanks to Heimen Stoffels).</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="fr">Modifications</p>
