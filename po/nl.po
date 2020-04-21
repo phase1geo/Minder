@@ -3,1171 +3,1174 @@
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-20 19:02-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2020-04-20 14:26+0200\n"
+"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
+"Language-Team: \n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/NodeMenu.vala:62
 msgid "Copy"
-msgstr ""
+msgstr "Kopiëren"
 
 #: src/NodeMenu.vala:66
 msgid "Cut"
-msgstr ""
+msgstr "Knippen"
 
 #: src/NodeMenu.vala:70
 msgid "Paste"
-msgstr ""
+msgstr "Plakken"
 
 #: src/NodeMenu.vala:74 src/ConnectionMenu.vala:40
 msgid "Delete"
-msgstr ""
+msgstr "Verwijderen"
 
 #: src/NodeMenu.vala:78
 msgid "Delete Single Node"
-msgstr ""
+msgstr "Knoop verwijderen"
 
 #: src/NodeMenu.vala:81 src/ConnectionMenu.vala:44
 msgid "Edit…"
-msgstr ""
+msgstr "Aanpassen…"
 
 #: src/NodeMenu.vala:85 src/NodeMenu.vala:321
 msgid "Add Task"
-msgstr ""
+msgstr "Taak toevoegen"
 
 #: src/NodeMenu.vala:88 src/NodeMenu.vala:322 src/ConnectionMenu.vala:48
 #: src/ConnectionMenu.vala:104
 msgid "Add Note"
-msgstr ""
+msgstr "Aantekening maken"
 
 #: src/NodeMenu.vala:91 src/NodeMenu.vala:323
 msgid "Add Image"
-msgstr ""
+msgstr "Afbeelding toevoegen"
 
 #: src/NodeMenu.vala:94 src/NodeMenu.vala:324
 msgid "Add Node Link"
-msgstr ""
+msgstr "Knopen verbinden"
 
 #: src/NodeMenu.vala:97
 msgid "Add Connection"
-msgstr ""
+msgstr "Verbinding toevoegen"
 
 #: src/NodeMenu.vala:101 src/NodeInspector.vala:162
 msgid "Link Color"
-msgstr ""
+msgstr "Verbindingskleur"
 
 #: src/NodeMenu.vala:105
 msgid "Set to color…"
-msgstr ""
+msgstr "Kleur instellen…"
 
 #: src/NodeMenu.vala:108
 msgid "Randomize color"
-msgstr ""
+msgstr "Willekeurig"
 
 #: src/NodeMenu.vala:111
 msgid "Use parent color"
-msgstr ""
+msgstr "Overnemen van vorige"
 
 #: src/NodeMenu.vala:114 src/NodeMenu.vala:325
 msgid "Fold Children"
-msgstr ""
+msgstr "Subknopen inklappen"
 
 #: src/NodeMenu.vala:118
 msgid "Detach"
-msgstr ""
+msgstr "Losmaken"
 
 #: src/NodeMenu.vala:121 src/EmptyMenu.vala:35
 msgid "Add Root Node"
-msgstr ""
+msgstr "Beginpunt toevoegen"
 
 #: src/NodeMenu.vala:124
 msgid "Add Parent Node"
-msgstr ""
+msgstr "Tak toevoegen"
 
 #: src/NodeMenu.vala:127
 msgid "Add Child Node"
-msgstr ""
+msgstr "Subknoop toevoegen"
 
 #: src/NodeMenu.vala:131
 msgid "Add Sibling Node"
-msgstr ""
+msgstr "Afgeleide knoop toevoegen"
 
 #: src/NodeMenu.vala:135
 msgid "Add Nodes With Quick Entry"
-msgstr ""
+msgstr "Snel knopen toevoegen"
 
 #: src/NodeMenu.vala:139 src/ConnectionMenu.vala:51
 msgid "Select"
-msgstr ""
+msgstr "Kiezen"
 
 #: src/NodeMenu.vala:143
 msgid "Root Node"
-msgstr ""
+msgstr "Beginpunt"
 
 #: src/NodeMenu.vala:147
 msgid "Next Sibling Node"
-msgstr ""
+msgstr "Volgende afgeleide knoop"
 
 #: src/NodeMenu.vala:151
 msgid "Previous Sibling Node"
-msgstr ""
+msgstr "Vorige afgeleide knoop"
 
 #: src/NodeMenu.vala:155
 msgid "Child Node"
-msgstr ""
+msgstr "Subknoop"
 
 #: src/NodeMenu.vala:159
 msgid "Parent Node"
-msgstr ""
+msgstr "Tak"
 
 #: src/NodeMenu.vala:163
 msgid "Linked Node"
-msgstr ""
+msgstr "Verbonden knoop"
 
 #: src/NodeMenu.vala:167
 msgid "Connection"
-msgstr ""
+msgstr "Verbinding"
 
 #: src/NodeMenu.vala:171
 msgid "Center Current Node"
-msgstr ""
+msgstr "Huidige knoop centreren"
 
 #: src/NodeMenu.vala:175
 msgid "Sort Children"
-msgstr ""
+msgstr "Subknopen sorteren"
 
 #: src/NodeMenu.vala:179
 msgid "Alphabetically"
-msgstr ""
+msgstr "Alfabetisch"
 
 #: src/NodeMenu.vala:182
 msgid "Randomize"
-msgstr ""
+msgstr "Willekeurig"
 
 #: src/NodeMenu.vala:321
 msgid "Remove Task"
-msgstr ""
+msgstr "Taak verwijderen"
 
 #: src/NodeMenu.vala:322 src/ConnectionMenu.vala:104
 msgid "Remove Note"
-msgstr ""
+msgstr "Aantekening wissen"
 
 #: src/NodeMenu.vala:323 src/ImageEditor.vala:363 src/NodeInspector.vala:230
 msgid "Remove Image"
-msgstr ""
+msgstr "Afbeelding verwijderen"
 
 #: src/NodeMenu.vala:324
 msgid "Remove Node Link"
-msgstr ""
+msgstr "Verbindingsknooop verwijderen"
 
 #: src/NodeMenu.vala:325
 msgid "Unfold Children"
-msgstr ""
+msgstr "Subknopen uitklappen"
 
 #: src/NodeMenu.vala:492
 msgid "Select a link color"
-msgstr ""
+msgstr "Verbindingskleur kiezen"
 
 #: src/EmptyMenu.vala:38
 msgid "Select Node"
-msgstr ""
+msgstr "Knoop kiezen"
 
 #: src/EmptyMenu.vala:42
 msgid "Root"
-msgstr ""
+msgstr "Beginpunt"
 
 #: src/ConnectionMenu.vala:55
 msgid "Start Node"
-msgstr ""
+msgstr "Beginknoop"
 
 #: src/ConnectionMenu.vala:59
 msgid "End Node"
-msgstr ""
+msgstr "Eindknoop"
 
 #: src/ConnectionMenu.vala:63
 msgid "Next Connection"
-msgstr ""
+msgstr "Volgende verbinding"
 
 #: src/ConnectionMenu.vala:67
 msgid "Previous Connection"
-msgstr ""
+msgstr "Vorige verbinding"
 
 #: src/DrawArea.vala:177 src/themes/ThemeDefault.vala:28
 msgid "Default"
-msgstr ""
+msgstr "Standaard"
 
 #: src/DrawArea.vala:606
 msgid "Main Idea"
-msgstr ""
+msgstr "Hoofdidee"
 
 #: src/DrawArea.vala:1810
 #, c-format
 msgid "%0.3g%% complete"
-msgstr ""
+msgstr "%0.3g%% afgerond"
 
 #: src/DrawArea.vala:1863
 msgid "connection endpoint change"
-msgstr ""
+msgstr "eindknoop van verbinding aanpassen"
 
 #: src/DrawArea.vala:1870
 msgid "connection drag"
-msgstr ""
+msgstr "verbinding verslepen"
 
 #: src/DrawArea.vala:2351 src/DrawArea.vala:3620
 msgid "Another Idea"
-msgstr ""
+msgstr "Nóg een idee"
 
 #: src/DrawArea.vala:2545
 msgid "fold completed tasks"
-msgstr ""
+msgstr "afgeronde taken inklappen"
 
 #: src/DrawArea.vala:2582
 msgid "unfold all tasks"
-msgstr ""
+msgstr "alle taken uitklappen"
 
 #: src/Document.vala:65
 msgid "unnamed"
-msgstr ""
+msgstr "naamloos"
 
 #: src/ImageEditor.vala:179
 #, c-format
 msgid "Crop Area: %d,%d %3dx%3d"
-msgstr ""
+msgstr "Bijsnijdgebied: %d,%d %3dx%3d"
 
 #: src/ImageEditor.vala:353
 #, c-format
 msgid "Cursor: %3d,%3d"
-msgstr ""
+msgstr "Cursor: %3d,%3d"
 
 #: src/ImageEditor.vala:360 src/MainWindow.vala:741 src/MainWindow.vala:785
 #: src/MainWindow.vala:927 src/MainWindow.vala:1163
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #: src/ImageEditor.vala:361
 msgid "Apply"
-msgstr ""
+msgstr "Toepassen"
 
 #: src/ImageEditor.vala:362
 msgid "Change Image"
-msgstr ""
+msgstr "Afbeelding wijzigen"
 
 #: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:336
 msgid "Manual"
-msgstr ""
+msgstr "Handmatig"
 
 #: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:340
 msgid "To right"
-msgstr ""
+msgstr "Naar rechts"
 
 #: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:339
 msgid "To left"
-msgstr ""
+msgstr "Naar links"
 
 #: src/layouts/LayoutHorizontal.vala:26 src/MapInspector.vala:338
 msgid "Horizontal"
-msgstr ""
+msgstr "Horizontaal"
 
 #: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:342
 msgid "Downwards"
-msgstr ""
+msgstr "Omlaag"
 
 #: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:341
 msgid "Upwards"
-msgstr ""
+msgstr "Omhoog"
 
 #: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:337
 msgid "Vertical"
-msgstr ""
+msgstr "Verticaal"
 
 #: src/MainWindow.vala:118 src/MainWindow.vala:930
 msgid "Minder"
-msgstr ""
+msgstr "Minder"
 
 #: src/MainWindow.vala:152 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
-msgstr ""
+msgstr "Nieuw bestand"
 
 #: src/MainWindow.vala:158 src/MainWindow.vala:785
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
-msgstr ""
+msgstr "Bestand openen"
 
 #: src/MainWindow.vala:164 data/com.github.phase1geo.minder.shortcuts.ui:35
 msgid "Save File As"
-msgstr ""
+msgstr "Bestand opslaan als"
 
 #: src/MainWindow.vala:170 src/UndoBuffer.vala:84
 msgid "Undo"
-msgstr ""
+msgstr "Ongedaan maken"
 
 #: src/MainWindow.vala:177 src/UndoBuffer.vala:90
 msgid "Redo"
-msgstr ""
+msgstr "Opnieuw uitvoeren"
 
 #: src/MainWindow.vala:330
 msgid "Unnamed Document"
-msgstr ""
+msgstr "Naamloos document"
 
 #: src/MainWindow.vala:334 src/MainWindow.vala:602
 msgid "Focus Mode"
-msgstr ""
+msgstr "Focusmodus"
 
 #: src/MainWindow.vala:356
 msgid "Zoom"
-msgstr ""
+msgstr "Zoomen"
 
 #: src/MainWindow.vala:363
 msgid "Zoom to Percent"
-msgstr ""
+msgstr "Percentage zoomen"
 
 #: src/MainWindow.vala:374 data/com.github.phase1geo.minder.shortcuts.ui:75
 msgid "Zoom In"
-msgstr ""
+msgstr "Inzoomen"
 
 #: src/MainWindow.vala:378 data/com.github.phase1geo.minder.shortcuts.ui:82
 msgid "Zoom Out"
-msgstr ""
+msgstr "Uitzoomen"
 
 #: src/MainWindow.vala:382
 msgid "Zoom to Fit"
-msgstr ""
+msgstr "Passend zoomen"
 
 #: src/MainWindow.vala:386
 msgid "Zoom to Fit Selected Node"
-msgstr ""
+msgstr "Zoomen om gekozen knoop te laten passen"
 
 #: src/MainWindow.vala:390
 msgid "Zoom to Actual Size"
-msgstr ""
+msgstr "Ware grootte"
 
 #: src/MainWindow.vala:417
 msgid "Search"
-msgstr ""
+msgstr "Zoeken"
 
 #: src/MainWindow.vala:427
 msgid "Search Nodes and Connections"
-msgstr ""
+msgstr "Knopen en verbindingen zoeken"
 
 #: src/MainWindow.vala:450
 msgid "Search Criteria"
-msgstr ""
+msgstr "Zoeken naar"
 
 #: src/MainWindow.vala:472
 msgid "Nodes"
-msgstr ""
+msgstr "Knopen"
 
 #: src/MainWindow.vala:473
 msgid "Connections"
-msgstr ""
+msgstr "Verbindingen"
 
 #: src/MainWindow.vala:474
 msgid "Titles"
-msgstr ""
+msgstr "Titels"
 
 #: src/MainWindow.vala:475
 msgid "Notes"
-msgstr ""
+msgstr "Aantekeningen"
 
 #: src/MainWindow.vala:476
 msgid "Folded"
-msgstr ""
+msgstr "Ingeklapt"
 
 #: src/MainWindow.vala:477
 msgid "Unfolded"
-msgstr ""
+msgstr "Uitgeklapt"
 
 #: src/MainWindow.vala:478
 msgid "Tasks"
-msgstr ""
+msgstr "Taken"
 
 #: src/MainWindow.vala:479
 msgid "Non-tasks"
-msgstr ""
+msgstr "Niet-taken"
 
 #: src/MainWindow.vala:569 src/MainWindow.vala:1163
 msgid "Export"
-msgstr ""
+msgstr "Exporteren"
 
 #: src/MainWindow.vala:576
 msgid "Export…"
-msgstr ""
+msgstr "Exporteren…"
 
 #: src/MainWindow.vala:580
 msgid "Print"
-msgstr ""
+msgstr "Afdrukken"
 
 #: src/MainWindow.vala:632
 msgid "Shortcuts Cheatsheet"
-msgstr ""
+msgstr "Sneltoetsoverzicht"
 
 #: src/MainWindow.vala:660
 msgid "Properties"
-msgstr ""
+msgstr "Eigenschappen"
 
 #: src/MainWindow.vala:675 src/StyleInspector.vala:48
 msgid "Current"
-msgstr ""
+msgstr "Huidige"
 
 #: src/MainWindow.vala:676
 msgid "Style"
-msgstr ""
+msgstr "Stijl"
 
 #: src/MainWindow.vala:677
 msgid "Map"
-msgstr ""
+msgstr "Kaart"
 
 #: src/MainWindow.vala:732
 msgid "Save current unnamed document?"
-msgstr ""
+msgstr "Wil je het huidige naamloze document opslaan?"
 
 #: src/MainWindow.vala:733
 msgid "Changes will be permanently lost if not saved."
-msgstr ""
+msgstr "Als je dat niet doen, gaan de aanpassingen permanent verloren."
 
 #: src/MainWindow.vala:738
 msgid "Discard Changes"
-msgstr ""
+msgstr "Aanpassingen verwerpen"
 
 #: src/MainWindow.vala:744 src/MainWindow.vala:927
 msgid "Save"
-msgstr ""
+msgstr "Opslaan"
 
 #: src/MainWindow.vala:785
 msgid "Open"
-msgstr ""
+msgstr "Openen"
 
 #: src/MainWindow.vala:809 src/MainWindow.vala:1247
 msgid "PlainText"
-msgstr ""
+msgstr "Platte tekst"
 
 #: src/MainWindow.vala:814 src/MainWindow.vala:1253
 msgid "Portable Minder"
-msgstr ""
+msgstr "Meeneembare Minder"
 
 #: src/MainWindow.vala:927
 msgid "Save File"
-msgstr ""
+msgstr "Bestand opslaan"
 
 #: src/MainWindow.vala:1162
 msgid "Export As"
-msgstr ""
+msgstr "Exporteren als"
 
 #: src/MainWindow.vala:1167
 msgid "BMP"
-msgstr ""
+msgstr "BMP"
 
 #: src/MainWindow.vala:1173
 msgid "CSV"
-msgstr ""
+msgstr "CSV"
 
 #: src/MainWindow.vala:1179
 msgid "Freemind"
-msgstr ""
+msgstr "Freemind"
 
 #: src/MainWindow.vala:1185
 msgid "Freeplane"
-msgstr ""
+msgstr "Freeplane"
 
 #: src/MainWindow.vala:1191
 msgid "JPEG"
-msgstr ""
+msgstr "JPEG"
 
 #: src/MainWindow.vala:1198
 msgid "Markdown"
-msgstr ""
+msgstr "Markdown"
 
 #: src/MainWindow.vala:1205
 msgid "Mermaid"
-msgstr ""
+msgstr "Mermaid"
 
 #: src/MainWindow.vala:1211
 msgid "OPML"
-msgstr ""
+msgstr "OPML"
 
 #: src/MainWindow.vala:1217
 msgid "Org-Mode"
-msgstr ""
+msgstr "Org-Mode"
 
 #: src/MainWindow.vala:1223
 msgid "Outliner"
-msgstr ""
+msgstr "Outliner"
 
 #: src/MainWindow.vala:1229
 msgid "PDF"
-msgstr ""
+msgstr "PDF"
 
 #: src/MainWindow.vala:1235
 msgid "PNG (Transparent)"
-msgstr ""
+msgstr "PNG (doorzichtig)"
 
 #: src/MainWindow.vala:1241
 msgid "PNG (Opaque)"
-msgstr ""
+msgstr "PNG (ondoorzichtig)"
 
 #: src/MainWindow.vala:1259
 msgid "SVG"
-msgstr ""
+msgstr "SVG"
 
 #: src/MainWindow.vala:1265
 msgid "yEd"
-msgstr ""
+msgstr "yEd"
 
 #: src/MapInspector.vala:78
 msgid "Enable animations"
-msgstr ""
+msgstr "Animaties gebruiken"
 
 #: src/MapInspector.vala:106
 msgid "Hide connections"
-msgstr ""
+msgstr "Verbindingen verbergen"
 
 #: src/MapInspector.vala:135
 msgid "Rotate main branch colors"
-msgstr ""
+msgstr "Kleuren van hoofdtak omdraaien"
 
 #: src/MapInspector.vala:167
 msgid "Node Layouts"
-msgstr ""
+msgstr "Knoopindelingen"
 
 #: src/MapInspector.vala:218
 msgid "Themes"
-msgstr ""
+msgstr "Thema's"
 
 #: src/MapInspector.vala:237
 msgid "Add Custom Theme"
-msgstr ""
+msgstr "Aangepast thema toevoegen"
 
 #: src/MapInspector.vala:256
 msgid "Balance Nodes"
-msgstr ""
+msgstr "Knopen uitlijnen"
 
 #: src/MapInspector.vala:262
 msgid "Fold Completed Tasks"
-msgstr ""
+msgstr "Afgeronde taken inklappen"
 
 #: src/MapInspector.vala:268
 msgid "Unfold All Nodes"
-msgstr ""
+msgstr "Alle knopen uitklappen"
 
 #: src/MapInspector.vala:353
 msgid "Unsaved"
-msgstr ""
+msgstr "Niet-opgeslagen"
 
 #: src/Node.vala:1644
 msgid "Node Title"
-msgstr ""
+msgstr "Titel van knoop"
 
 #: src/Node.vala:1647
 msgid "Node Note"
-msgstr ""
+msgstr "Aantekening"
 
 #: src/NodeInspector.vala:91
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #: src/NodeInspector.vala:121
 msgid "Task"
-msgstr ""
+msgstr "Taak"
 
 #: src/NodeInspector.vala:140
 msgid "Fold"
-msgstr ""
+msgstr "Inklappen"
 
 #: src/NodeInspector.vala:184
 msgid "Note"
-msgstr ""
+msgstr "Aantekening"
 
 #: src/NodeInspector.vala:212
 msgid "Image"
-msgstr ""
+msgstr "Afbeelding"
 
 #: src/NodeInspector.vala:217
 msgid "Add Image…"
-msgstr ""
+msgstr "Afbeelding toevoegen…"
 
 #: src/NodeInspector.vala:224
 msgid "Edit Image"
-msgstr ""
+msgstr "Afbeelding bewerken"
 
 #: src/NodeInspector.vala:337
 msgid "Copy Node To Clipboard"
-msgstr ""
+msgstr "Knoop kopiëren naar klembord"
 
 #: src/NodeInspector.vala:341
 msgid "Cut Node To Clipboard"
-msgstr ""
+msgstr "Knoop knippen naar klembord"
 
 #: src/NodeInspector.vala:346
 msgid "Detach Node"
-msgstr ""
+msgstr "Knoop losmaken"
 
 #: src/NodeInspector.vala:351 data/com.github.phase1geo.minder.shortcuts.ui:158
 #: data/com.github.phase1geo.minder.shortcuts.ui:165
 msgid "Delete Node"
-msgstr ""
+msgstr "Knoop verwijderen"
 
 #: src/StyleInspector.vala:47
 msgid "All"
-msgstr ""
+msgstr "Alle"
 
 #: src/StyleInspector.vala:49
 msgid "Current Tree"
-msgstr ""
+msgstr "Huidige tak"
 
 #: src/StyleInspector.vala:50
 msgid "Current Node + Descendants"
-msgstr ""
+msgstr "Huidige knoop + afgeleiden"
 
 #: src/StyleInspector.vala:51
 msgid "Root Nodes"
-msgstr ""
+msgstr "Beginpunten"
 
 #: src/StyleInspector.vala:52
 msgid "Level 1 Nodes"
-msgstr ""
+msgstr "Niveau 1-knopen"
 
 #: src/StyleInspector.vala:53
 msgid "Level 2 Nodes"
-msgstr ""
+msgstr "Niveau 2-knopen"
 
 #: src/StyleInspector.vala:54
 msgid "Level 3 Nodes"
-msgstr ""
+msgstr "Niveau 3-knopen"
 
 #: src/StyleInspector.vala:55
 msgid "Level 4 Nodes"
-msgstr ""
+msgstr "Niveau 4-knopen"
 
 #: src/StyleInspector.vala:56
 msgid "Level 5 Nodes"
-msgstr ""
+msgstr "Niveau 5-knopen"
 
 #: src/StyleInspector.vala:57
 msgid "Level 6 Nodes"
-msgstr ""
+msgstr "Niveau 6-knopen"
 
 #: src/StyleInspector.vala:58
 msgid "Level 7 Nodes"
-msgstr ""
+msgstr "Niveau 7-knopen"
 
 #: src/StyleInspector.vala:59
 msgid "Level 8 Nodes"
-msgstr ""
+msgstr "Niveau 8-knopen"
 
 #: src/StyleInspector.vala:60
 msgid "Level 9 Nodes"
-msgstr ""
+msgstr "Niveau 9-knopen"
 
 #: src/StyleInspector.vala:163
 msgid "Changes affect:"
-msgstr ""
+msgstr "De aanpassingen hebben betrekking op:"
 
 #: src/StyleInspector.vala:209
 msgid "Branch Options"
-msgstr ""
+msgstr "Takopties"
 
 #: src/StyleInspector.vala:238
 msgid "Branch Style"
-msgstr ""
+msgstr "Takstijl"
 
 #: src/StyleInspector.vala:289
 msgid "Link Options"
-msgstr ""
+msgstr "Verbindingsopties"
 
 #: src/StyleInspector.vala:322 src/StyleInspector.vala:767
 msgid "Line Dash"
-msgstr ""
+msgstr "Steepjeslijn"
 
 #: src/StyleInspector.vala:361 src/StyleInspector.vala:844
 msgid "Line Width"
-msgstr ""
+msgstr "Lijnbreedte"
 
 #: src/StyleInspector.vala:407
 msgid "Link Arrow"
-msgstr ""
+msgstr "Verbindingspijl"
 
 #: src/StyleInspector.vala:437
 msgid "Node Options"
-msgstr ""
+msgstr "Knoopopties"
 
 #: src/StyleInspector.vala:476
 msgid "Border Style"
-msgstr ""
+msgstr "Randstijl"
 
 #: src/StyleInspector.vala:525
 msgid "Border Width"
-msgstr ""
+msgstr "Randbreedte"
 
 #: src/StyleInspector.vala:570
 msgid "Fill With Link Color"
-msgstr ""
+msgstr "Opvullen met verbindingskleur"
 
 #: src/StyleInspector.vala:599
 msgid "Margin"
-msgstr ""
+msgstr "Marge"
 
 #: src/StyleInspector.vala:640 src/StyleInspector.vala:892
 msgid "Padding"
-msgstr ""
+msgstr "Opvulling"
 
 #: src/StyleInspector.vala:679 src/StyleInspector.vala:931
 msgid "Font"
-msgstr ""
+msgstr "Lettertype"
 
 #: src/StyleInspector.vala:700
 msgid "Enable Markup"
-msgstr ""
+msgstr "Opmaak gebruiken"
 
 #: src/StyleInspector.vala:730
 msgid "Connection Options"
-msgstr ""
+msgstr "Verbindingsopties"
 
 #: src/StyleInspector.vala:806
 msgid "Arrows"
-msgstr ""
+msgstr "Pijlen"
 
 #: src/EmptyInspector.vala:30
 msgid ""
 "<big>Select a node or connection\n"
 "to view/edit information</big>"
 msgstr ""
+"<big>Kies een knoop of verbinding\n"
+"om informatie te tonen/aan te passen</big>"
 
 #: src/styles/LinkTypeCurved.vala:34
 msgid "Curved"
-msgstr ""
+msgstr "Gebogen"
 
 #: src/styles/LinkTypeSquared.vala:34
 msgid "Squared"
-msgstr ""
+msgstr "Vierkant"
 
 #: src/styles/LinkTypeStraight.vala:34
 msgid "Straight"
-msgstr ""
+msgstr "Recht"
 
 #: src/styles/NodeBorderBracket.vala:34
 msgid "Square Bracket"
-msgstr ""
+msgstr "Recht haakje"
 
 #: src/styles/NodeBorderNone.vala:34
 msgid "None"
-msgstr ""
+msgstr "Niks"
 
 #: src/styles/NodeBorderPill.vala:34
 msgid "Pill-shaped"
-msgstr ""
+msgstr "Pilvorm"
 
 #: src/styles/NodeBorderRounded.vala:34
 msgid "Rounded Rectangle"
-msgstr ""
+msgstr "Afgeronde rechthoek"
 
 #: src/styles/NodeBorderSquared.vala:34
 msgid "Squared Off"
-msgstr ""
+msgstr "Vierkant"
 
 #: src/styles/NodeBorderUnderlined.vala:34
 msgid "Underlined"
-msgstr ""
+msgstr "Onderstreept"
 
 #: src/themes/ThemeSolarizedLight.vala:31
 msgid "Solarized Light"
-msgstr ""
+msgstr "Gesolariseerd (licht)"
 
 #: src/themes/ThemeDark.vala:28
 msgid "Dark"
-msgstr ""
+msgstr "Donker"
 
 #: src/themes/ThemeSolarizedDark.vala:31
 msgid "Solarized Dark"
-msgstr ""
+msgstr "Gesolariseerd (donker)"
 
 #: src/undo_actions/UndoNodePaste.vala:34
 msgid "paste node"
-msgstr ""
+msgstr "knoop plakken"
 
 #: src/undo_actions/UndoNodeMove.vala:34
 msgid "move node"
-msgstr ""
+msgstr "knoop verplaatsen"
 
 #: src/undo_actions/UndoNodeNote.vala:32
 msgid "node note change"
-msgstr ""
+msgstr "aantekening aanpassen"
 
 #: src/undo_actions/UndoNodeReveal.vala:32
 msgid "node reveal"
-msgstr ""
+msgstr "knoop tonen"
 
 #: src/undo_actions/UndoNodeDelete.vala:33
 msgid "delete node"
-msgstr ""
+msgstr "knoop verwijderen"
 
 #: src/undo_actions/UndoNodeCut.vala:32
 msgid "cut node"
-msgstr ""
+msgstr "knoop knippen"
 
 #: src/undo_actions/UndoNodeResize.vala:32
 msgid "node resize"
-msgstr ""
+msgstr "knoopafmetingen aanpassen"
 
 #: src/undo_actions/UndoNodeInsert.vala:33
 msgid "insert node"
-msgstr ""
+msgstr "knoop invoegen"
 
 #: src/undo_actions/UndoNodeTask.vala:34
 msgid "node task change"
-msgstr ""
+msgstr "taak aanpassen"
 
 #: src/undo_actions/UndoNodeAttach.vala:39
 #: src/undo_actions/UndoNodeAttach.vala:54
 msgid "attach node"
-msgstr ""
+msgstr "knoop vastmaken"
 
 #: src/undo_actions/UndoNodeLinkColor.vala:33
 msgid "link color change"
-msgstr ""
+msgstr "verbindingskleur aanpassen"
 
 #: src/undo_actions/UndoNodeLayout.vala:30
 msgid "change layout"
-msgstr ""
+msgstr "indeling aanpassen"
 
 #: src/undo_actions/UndoNodeFold.vala:32
 msgid "node change fold"
-msgstr ""
+msgstr "in-/uitklappen"
 
 #: src/undo_actions/UndoNodeBalance.vala:61
 msgid "balance nodes"
-msgstr ""
+msgstr "knopen uitlijnen"
 
 #: src/undo_actions/UndoNodeImage.vala:32
 msgid "node image change"
-msgstr ""
+msgstr "afbeelding wijzigen"
 
 #: src/undo_actions/UndoNodeDetach.vala:34
 msgid "detach node"
-msgstr ""
+msgstr "knoop losmaken"
 
 #: src/undo_actions/UndoNodeName.vala:34
 msgid "node name change"
-msgstr ""
+msgstr "naam wijzigen"
 
 #: src/UndoBuffer.vala:85
 msgid "Undo "
-msgstr ""
+msgstr "Ongedaan maken "
 
 #: src/UndoBuffer.vala:91
 msgid "Redo "
-msgstr ""
+msgstr "Opnieuw uitvoeren "
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:6
 msgid "Minder Shortcuts"
-msgstr ""
+msgstr "Minder-sneltoetsen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:12
 msgid "General"
-msgstr ""
+msgstr "Algemeen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:16
 msgid "File"
-msgstr ""
+msgstr "Bestand"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Close File"
-msgstr ""
+msgstr "Bestand sluiten"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:51
 msgid "Undo/Redo"
-msgstr ""
+msgstr "Ongedaan maken/Opnieuw"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:55
 msgid "Undo Last Change"
-msgstr ""
+msgstr "Recentste aanpassing ongedaan maken"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:62
 msgid "Redo Last Undo"
-msgstr ""
+msgstr "Recentste aanpassing opnieuw uitvoeren"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:71
 msgid "Zooming"
-msgstr ""
+msgstr "Zoomen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:89
 msgid "Zoom To Actual Size"
-msgstr ""
+msgstr "Ware grootte"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:98
 #: data/com.github.phase1geo.minder.shortcuts.ui:428
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Overig"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:102
 msgid "Toggle Focus Mode"
-msgstr ""
+msgstr "Focusmodus aan/uit"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:110
 msgid "Search Nodes/Connections"
-msgstr ""
+msgstr "Knopen en verbindingen zoeken"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:117
 msgid "Quit Application"
-msgstr ""
+msgstr "Afsluiten"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:129
 msgid "Node Commands"
-msgstr ""
+msgstr "Knoopopdrachten"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:133
 msgid "Creation/Deletion"
-msgstr ""
+msgstr "Toevoegen/Verwijderen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:137
 msgid "New Sibling Node"
-msgstr ""
+msgstr "Nieuwe afgeleide knoop"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:144
 msgid "New Child Node"
-msgstr ""
+msgstr "Nieuwe subknoop"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:151
 msgid "Quick Entry"
-msgstr ""
+msgstr "Snel toevoegen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:174
 #: data/com.github.phase1geo.minder.shortcuts.ui:510
 msgid "Clipboard"
-msgstr ""
+msgstr "Klembord"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:178
 msgid "Copy Node"
-msgstr ""
+msgstr "Knoop kopiëren"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:185
 msgid "Cut Node"
-msgstr ""
+msgstr "Knoop knippen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:192
 msgid "Paste Node as Child"
-msgstr ""
+msgstr "Plakken als subknoop"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:201
 msgid "Changing Current"
-msgstr ""
+msgstr "Huidige aanpassen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:205
 #: data/com.github.phase1geo.minder.shortcuts.ui:364
 msgid "Edit Title"
-msgstr ""
+msgstr "Titel aanpassen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:212
 msgid "View Properties"
-msgstr ""
+msgstr "Weergave-eigenschappen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:219
 msgid "Toggle Fold"
-msgstr ""
+msgstr "In-/Uitklappen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:226
 msgid "Toggle Task Done"
-msgstr ""
+msgstr "Taak (de)markeren als afgerond"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:233
 msgid "Toggle Node Link"
-msgstr ""
+msgstr "Verbindingsknoop aan/uit"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:240
 msgid "Create Connection"
-msgstr ""
+msgstr "Verbinding maken"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:247
 msgid "Center In View"
-msgstr ""
+msgstr "Centreren"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:254
 #: data/com.github.phase1geo.minder.shortcuts.ui:378
 msgid "Place Into View"
-msgstr ""
+msgstr "In weergave plaatsen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:261
 msgid "Sort Child Nodes Alphabetically"
-msgstr ""
+msgstr "Subknopen alfabetisch sorteren"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:270
 #: data/com.github.phase1geo.minder.shortcuts.ui:387
 msgid "Traversal"
-msgstr ""
+msgstr "Traversieel"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:274
 msgid "Select Root"
-msgstr ""
+msgstr "Beginpunt kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:281
 msgid "Select Parent"
-msgstr ""
+msgstr "Tak kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:288
 msgid "Select Next Sibling"
-msgstr ""
+msgstr "Volgende afgeleide kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:295
 msgid "Select Previous Sibling"
-msgstr ""
+msgstr "Vorige afgeleide kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:302
 msgid "Select Child"
-msgstr ""
+msgstr "Subknoop kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:309
 msgid "Select Node Below"
-msgstr ""
+msgstr "Onderstaande knoop kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:316
 msgid "Select Node Above"
-msgstr ""
+msgstr "Bovenstaande knoop kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:323
 msgid "Select Node To Right"
-msgstr ""
+msgstr "Rechterknoop kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:330
 msgid "Select Node To Left"
-msgstr ""
+msgstr "Linkerknoop kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:337
 msgid "Select Linked Node"
-msgstr ""
+msgstr "Verbindingsknoop kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:344
 msgid "Select Attached Connection"
-msgstr ""
+msgstr "Vastgemaakte verbinding kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:356
 msgid "Connection Commands"
-msgstr ""
+msgstr "Verbindingsopdrachten"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:360
 msgid "Change Current"
-msgstr ""
+msgstr "Huidige aanpassen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:371
 msgid "Show Properties"
-msgstr ""
+msgstr "Eigenschappen tonen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:391
 msgid "Select Start Node"
-msgstr ""
+msgstr "Beginknoop kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:398
 msgid "Select End Node"
-msgstr ""
+msgstr "Eindknoop kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:405
 msgid "Select Next Connection"
-msgstr ""
+msgstr "Volgende verbinding kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:412
 msgid "Select Previous Connection"
-msgstr ""
+msgstr "Vorige verbinding kiezen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:424
 msgid "Text Editing"
-msgstr ""
+msgstr "Tekst bewerken"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:432
 msgid "Show Emoji Picker"
-msgstr ""
+msgstr "Emojikiezer tonen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:439
 msgid "End Editing"
-msgstr ""
+msgstr "Stoppen met bewerken"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:448
 msgid "Cursor Movement"
-msgstr ""
+msgstr "Cursorverplaatsing"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:452
 msgid "Next Character"
-msgstr ""
+msgstr "Volgende teken"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:459
 msgid "Previous Character"
-msgstr ""
+msgstr "Vorige teken"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:466
 msgid "Next Word"
-msgstr ""
+msgstr "Volgende woord"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:473
 msgid "Previous Word"
-msgstr ""
+msgstr "Vorige woord"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:480
 msgid "Next Line"
-msgstr ""
+msgstr "Volgende regel"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:487
 msgid "Previous Line"
-msgstr ""
+msgstr "Vorige regel"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:494
 msgid "Start Of Text"
-msgstr ""
+msgstr "Begin van de tekst"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:501
 msgid "End Of Text"
-msgstr ""
+msgstr "Einde van de tekst"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:514
 msgid "Copy Selected Text"
-msgstr ""
+msgstr "Geselecteerde tekst kopiëren"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:521
 msgid "Cut Selected Text"
-msgstr ""
+msgstr "Geselecteerde tekst knippen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:528
 msgid "Paste Text"
-msgstr ""
+msgstr "Tekst plakken"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:537
 msgid "Selection"
-msgstr ""
+msgstr "Selectie"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:541
 msgid "Add Next Character"
-msgstr ""
+msgstr "Volgende teken toevoegen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:548
 msgid "Add Previous Character"
-msgstr ""
+msgstr "Vorige teken toevoegen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:555
 msgid "Add Next Word"
-msgstr ""
+msgstr "Volgende woord toevoegen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:562
 msgid "Add Previous Word"
-msgstr ""
+msgstr "Vorige woord toevoegen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:569
 msgid "Add Next Line"
-msgstr ""
+msgstr "Volgende regel toevoegen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:576
 msgid "Add Previous Line"
-msgstr ""
+msgstr "Vorige regel toevoegen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:583
 msgid "Add Start Of Text"
-msgstr ""
+msgstr "Begin van de tekst toevoegen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:590
 msgid "Add End Of Text"
-msgstr ""
+msgstr "Einde van de tekst toevoegen"
