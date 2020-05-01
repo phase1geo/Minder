@@ -342,7 +342,7 @@ public class NodeMenu : Gtk.Menu {
    node.
   */
   private void paste() {
-    _da.do_paste();
+    _da.do_paste( false );
   }
 
   /* Deletes the current node */

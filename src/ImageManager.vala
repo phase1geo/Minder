@@ -80,10 +80,14 @@ public class ImageManager {
 
     /* Returns the extension associated with the filename */
     public string get_extension() {
-      var parts = uri.split( "." );
-      var ext   = parts[parts.length - 1].split( "?" )[0];
-      if( (ext == "bmp") || (ext == "png") || (ext == "jpg") || (ext == "jpeg") || (ext == "svg") ) {
-        return( "." + ext );
+      if( uri != "" ) {
+        var parts = uri.split( "." );
+        var ext   = parts[parts.length - 1].split( "?" )[0];
+        if( (ext == "bmp") || (ext == "png") || (ext == "jpg") || (ext == "jpeg") || (ext == "svg") ) {
+          return( "." + ext );
+        }
+      } else {
+        return( ".png" );
       }
       return( "" );
     }
@@ -199,6 +203,23 @@ public class ImageManager {
     }
     if( orig_id != null ) {
       _id_map.set( orig_id, item.id );
+    }
+    return( item.id );
+  }
+
+  /*
+   Creates a file with the contents of the given pixbuf and adds the file information
+   to the manager list.  Returns the image ID that the NodeImage class will store
+   to reference the image details.  If the image could not be added, returns a
+   value of -1.
+  */
+  public int add_pixbuf( Gdk.Pixbuf buf, int? orig_id = null ) {
+    var item = new ImageItem( "" );
+    try {
+      buf.save( item.get_path(), "png", null );
+      _images.append_val( item );
+    } catch( Error e ) {
+      return( -1 );
     }
     return( item.id );
   }
