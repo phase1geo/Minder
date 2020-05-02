@@ -2346,9 +2346,12 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Adds a new root node to the canvas */
-  public void add_root_node() {
-    var node = new Node.with_name( this, _( "Another Idea" ), ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
+  /*
+   Creates a root node with the given name, positions it and appends it to the
+   root node list.
+  */
+  public Node create_root_node( string name = "" ) {
+    var node = new Node.with_name( this, name, ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
     node.style = StyleInspector.styles.get_global_style();
     if( _nodes.length == 0 ) {
       node.posx = (get_allocated_width()  / 2) - 30;
@@ -2357,6 +2360,62 @@ public class DrawArea : Gtk.DrawingArea {
       _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
     }
     _nodes.append_val( node );
+    return( node );
+  }
+
+  /*
+   Creates a sibling node, positions it and appends immediately after the given
+   sibling node.
+  */
+  public Node create_sibling_node( Node sibling, string name = "" ) {
+    var node   = new Node.with_name( this, name, layouts.get_default() );
+    node.side  = sibling.side;
+    node.style = sibling.style;
+    node.style = StyleInspector.styles.get_style_for_level( sibling.get_level(), sibling.style );
+    node.attach( sibling.parent, (sibling.index() + 1), _theme );
+    return( node );
+  }
+
+  /*
+   Creates a parent node, positions it, and inserts it just above the child node.
+  */
+  public Node create_parent_node( Node child, string name = "" ) {
+    var node  = new Node.with_name( this, name, layouts.get_default() );
+    var color = child.link_color;
+    node.side  = child.side;
+    node.style = StyleInspector.styles.get_style_for_level( child.get_level(), child.style );
+    node.attach( child.parent, child.index(), null );
+    node.link_color = color;
+    child.detach( node.side );
+    child.attach( node, -1, null );
+    return( node );
+  }
+
+  /*
+   Creates a child node, positions it, and inserts it into the parent node.
+  */
+  public Node create_child_node( Node parent, string name = "" ) {
+    var node    = new Node.with_name( this, name, layouts.get_default() );
+    _orig_name = "";
+    _orig_urls = null;
+    if( !parent.is_root() ) {
+      node.side = parent.side;
+    }
+    if( parent.children().length > 0 ) {
+      node.style = parent.last_child().style;
+    } else {
+      node.style = parent.style;
+    }
+    node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), parent.style );
+    node.attach( parent, -1, _theme );
+    parent.set_fold_only( false );
+    parent.layout.handle_update_by_fold( parent );
+    return( node );
+  }
+
+  /* Adds a new root node to the canvas */
+  public void add_root_node() {
+    var node = create_root_node( _( "Another Idea" ) );
     if( select_node( node ) ) {
       set_node_mode( node, NodeMode.EDITABLE );
       _current_new = true;
@@ -2368,18 +2427,43 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a new sibling node to the current node */
   public void add_sibling_node() {
-    var node    = new Node( this, layouts.get_default() );
-    var current = _selected.current_node();
+    var node = create_sibling_node( _selected.current_node() );
     _orig_name = "";
     _orig_urls = null;
-    node.side          = current.side;
-    node.style         = current.style;
-    node.style         = StyleInspector.styles.get_style_for_level( current.get_level(), current.style );
-    node.attach( current.parent, (current.index() + 1), _theme );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE );
     _current_new = true;
+    queue_draw();
+    see();
+    changed();
+  }
+
+  /*
+   Re-parents a node by creating a new node whose parent matches the current node's parent
+   and then makes the current node's parent match the new node.
+  */
+  public void add_parent_node() {
+    var current = _selected.current_node();
+    if( current.is_root() ) return;
+    var node  = create_parent_node( current );
+    undo_buffer.add_item( new UndoNodeAddParent( node, current ) );
+    set_current_node( node );
+    set_node_mode( node, NodeMode.EDITABLE );
+    queue_draw();
+    see();
+    changed();
+  }
+
+  /* Adds a child node to the current node */
+  public void add_child_node() {
+    var current = _selected.current_node();
+    var node    = create_child_node( current );
+    _orig_name = "";
+    _orig_urls = null;
+    undo_buffer.add_item( new UndoNodeInsert( node ) );
+    set_current_node( node );
+    set_node_mode( node, NodeMode.EDITABLE );
     queue_draw();
     see();
     changed();
@@ -2586,54 +2670,6 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /*
-   Re-parents a node by creating a new node whose parent matches the current node's parent
-   and then makes the current node's parent match the new node.
-  */
-  public void add_parent_node() {
-    var current = _selected.current_node();
-    if( current.is_root() ) return;
-    var node  = new Node( this, layouts.get_default() );
-    var color = current.link_color;
-    node.side       = current.side;
-    node.style      = StyleInspector.styles.get_style_for_level( current.get_level(), current.style );
-    node.attach( current.parent, current.index(), null );
-    node.link_color = color;
-    current.detach( node.side );
-    current.attach( node, -1, null );
-    undo_buffer.add_item( new UndoNodeAddParent( node, current ) );
-    set_current_node( node );
-    set_node_mode( node, NodeMode.EDITABLE );
-    queue_draw();
-    see();
-    changed();
-  }
-
-  /* Adds a child node to the current node */
-  public void add_child_node() {
-    var node    = new Node( this, layouts.get_default() );
-    var current = _selected.current_node();
-    _orig_name = "";
-    _orig_urls = null;
-    if( !current.is_root() ) {
-      node.side = current.side;
-    }
-    if( current.children().length > 0 ) {
-      node.style = current.last_child().style;
-    } else {
-      node.style = current.style;
-    }
-    node.style = StyleInspector.styles.get_style_for_level( (current.get_level() + 1), current.style );
-    node.attach( current, -1, _theme );
-    undo_buffer.add_item( new UndoNodeInsert( node ) );
-    current.set_fold_only( false );
-    current.layout.handle_update_by_fold( current );
-    set_current_node( node );
-    set_node_mode( node, NodeMode.EDITABLE );
-    queue_draw();
-    see();
-    changed();
-  }
 
   /* Called whenever the tab character is entered in the drawing area */
   private void handle_tab() {
@@ -3057,9 +3093,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void handle_im_commit( string str ) {
-    // if( is_node_editable() || is_connection_editable() ) {
-      handle_printable( str );
-    // }
+    handle_printable( str );
   }
 
   /* Helper class for the handle_im_retrieve_surrounding method */
@@ -3213,7 +3247,8 @@ public class DrawArea : Gtk.DrawingArea {
         switch( e.keyval ) {
           case 99    :  do_copy();                      break;
           case 120   :  do_cut();                       break;
-          case 118   :  do_paste();                     break;
+          case 118   :  do_paste( false );              break;
+          case 86    :  do_paste( true );               break;
           case 65293 :  handle_control_return();        break;
           case 65289 :  handle_control_tab();           break;
           case 65363 :  handle_control_right( shift );  break;
@@ -3465,43 +3500,99 @@ public class DrawArea : Gtk.DrawingArea {
    Pastes the clipboard content as either a root node or to the currently
    selected node.
   */
-  public void paste_node_from_clipboard() {
+  public void paste_node_from_clipboard( Node? parent ) {
     if( !node_clipboard.wait_is_text_available() ) return;
     var nodes    = new Array<Node>();
     var conns    = new Array<Connection>();
     var id_map   = new HashMap<int,int>();
     var link_ids = new Array<NodeLinkInfo?>();
-    var current  = _selected.current_node();
     deserialize_for_paste( node_clipboard.wait_for_text(), nodes, conns, id_map, link_ids );
-    if( current == null ) {
+    if( parent == null ) {
       for( int i=0; i<nodes.length; i++ ) {
         _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), nodes.index( i ) );
         add_root( nodes.index( i ), -1 );
       }
-    } else {
-      if( current.is_root() ) {
-        uint num_children = current.children().length;
-        if( num_children > 0 ) {
-          for( int i=0; i<nodes.length; i++ ) {
-            nodes.index( i ).side = current.children().index( num_children - 1 ).side;
-            nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
-            nodes.index( i ).attach( current, -1, _theme );
-          }
-        } else {
-          for( int i=0; i<nodes.length; i++ ) {
-            nodes.index( i ).attach( current, -1, _theme );
-          }
+    } else if( parent.is_root() ) {
+      uint num_children = parent.children().length;
+      if( num_children > 0 ) {
+        for( int i=0; i<nodes.length; i++ ) {
+          nodes.index( i ).side = parent.children().index( num_children - 1 ).side;
+          nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
+          nodes.index( i ).attach( parent, -1, _theme );
         }
       } else {
         for( int i=0; i<nodes.length; i++ ) {
-          nodes.index( i ).side = current.side;
-          nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
-          nodes.index( i ).attach( current, -1, _theme );
+          nodes.index( i ).attach( parent, -1, _theme );
         }
+      }
+    } else {
+      for( int i=0; i<nodes.length; i++ ) {
+        nodes.index( i ).side = parent.side;
+        nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
+        nodes.index( i ).attach( parent, -1, _theme );
       }
     }
     undo_buffer.add_item( new UndoNodePaste( nodes, conns ) );
     select_node( nodes.index( 0 ) );
+    queue_draw();
+    current_changed( this );
+    changed();
+  }
+
+  /* Pastes the image stored in the clipboard as a new node */
+  public void paste_image_as_node( Clipboard clipboard, Node? parent ) {
+    Node node;
+    var buf = clipboard.wait_for_image();
+    if( parent == null ) {
+      node = create_root_node();
+    } else {
+      node = create_child_node( parent );
+    }
+    var image = new NodeImage.from_pixbuf( image_manager, buf, 200 );
+    if( image.valid ) {
+      node.set_image( image_manager, image );
+    }
+    undo_buffer.add_item( new UndoNodeInsert( node ) );
+    select_node( node );
+    queue_draw();
+    current_changed( this );
+    changed();
+  }
+
+  /* Pastes the text stored in the clipboard as a new node */
+  public void paste_text_as_node( Clipboard clipboard, Node? parent ) {
+    Node node;
+    var  text = clipboard.wait_for_text();
+    if( parent == null ) {
+      node = create_root_node( text );
+    } else {
+      node = create_child_node( parent, text );
+    }
+    undo_buffer.add_item( new UndoNodeInsert( node ) );
+    select_node( node );
+    queue_draw();
+    current_changed( this );
+    changed();
+  }
+
+  /* Pastes the given text, replacing the original node text */
+  public void paste_text_replace_node( Clipboard clipboard, Node node ) {
+    var name = clipboard.wait_for_text();
+    var orig_name = node.name.text;
+    var orig_urls = new UrlLinks( this );
+    orig_urls.copy( node.urls );
+    node.name.text = name;
+    undo_buffer.add_item( new UndoNodeName( node, orig_name, orig_urls ) );
+    queue_draw();
+    changed();
+  }
+
+  /* Pastes the given text, replacing the original connection text */
+  public void paste_text_replace_connection( Clipboard clipboard, Connection conn ) {
+    var title = clipboard.wait_for_text();
+    var orig_title = conn.title.text;
+    conn.title.text = title;
+    undo_buffer.add_item( new UndoConnectionTitle( conn, orig_title ) );
     queue_draw();
     current_changed( this );
     changed();
@@ -3524,16 +3615,45 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /*
+   Interrogates the clipboard and pastes the stored content into the document.
+  */
+  public void paste_new_node( Node? parent, bool shift ) {
+    var clipboard = Clipboard.get_default( get_display() );
+    if( clipboard.wait_is_image_available() ) {
+      if( shift ) {
+        update_current_image_from_pixbuf( clipboard.wait_for_image() );
+      } else {
+        paste_image_as_node( clipboard, parent );
+      }
+    } else if( clipboard.wait_is_text_available() ) {
+      if( shift ) {
+        paste_text_replace_node( clipboard, parent );
+      } else {
+        paste_text_as_node( clipboard, parent );
+      }
+    } else {
+      paste_node_from_clipboard( parent );
+    }
+  }
+
   /* Pastes the contents of the clipboard into the current node */
-  public void do_paste() {
-    var current = _selected.current_node();
+  public void do_paste( bool shift ) {
+    var current   = _selected.current_node();
+    var clipboard = Clipboard.get_default( get_display() );
     if( current != null ) {
       switch( current.mode ) {
-        case NodeMode.CURRENT  :  paste_node_from_clipboard();  break;
-        case NodeMode.EDITABLE :  paste_text();                 break;
+        case NodeMode.CURRENT  :  paste_new_node( current, shift );  break;
+        case NodeMode.EDITABLE :  paste_text();                      break;
       }
     } else if( is_connection_editable() ) {
       paste_text();
+    } else if( _selected.current_connection() != null ) {
+      if( shift && clipboard.wait_is_text_available() ) {
+        paste_text_replace_connection( clipboard, _selected.current_connection() );
+      }
+    } else {
+      paste_new_node( null, shift );
     }
   }
 
@@ -3659,6 +3779,22 @@ public class DrawArea : Gtk.DrawingArea {
   public bool update_current_image( string uri ) {
     var current = _selected.current_node();
     var image   = new NodeImage.from_uri( image_manager, uri, current.max_width() );
+    if( image.valid ) {
+      var orig_image = current.image;
+      current.set_image( image_manager, image );
+      undo_buffer.add_item( new UndoNodeImage( current, orig_image ) );
+      queue_draw();
+      current_changed( this );
+      auto_save();
+      return( true );
+    }
+    return( false );
+  }
+
+  /* Sets the image of the current node to the given pixbuf */
+  public bool update_current_image_from_pixbuf( Pixbuf buf ) {
+    var current = _selected.current_node();
+    var image   = new NodeImage.from_pixbuf( image_manager, buf, current.max_width() );
     if( image.valid ) {
       var orig_image = current.image;
       current.set_image( image_manager, image );
