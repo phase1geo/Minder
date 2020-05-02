@@ -40,10 +40,10 @@ public class NodeInspector : Box {
   private Button         _detach_btn;
   private string         _orig_note = "";
   private Node?          _node = null;
-  private EventBox       _image_area;
   private Image          _image;
   private Button         _image_btn;
   private Label          _image_loc;
+  private Box            _image_btn_box;
   private bool           _ignore_name_change = false;
 
   public NodeInspector( MainWindow win ) {
@@ -208,17 +208,12 @@ public class NodeInspector : Box {
   /* Creates the image widget */
   private void create_image() {
 
-    var box = new Box( Orientation.VERTICAL, 10 );
-    var lbl = new Label( Utils.make_title( _( "Image" ) ) );
+    var box  = new Box( Orientation.VERTICAL, 10 );
+    var tbox = new Box( Orientation.HORIZONTAL, 10 );
 
+    var lbl  = new Label( Utils.make_title( _( "Image" ) ) );
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
-
-    _image_btn = new Button.with_label( _( "Add Image…" ) );
-    _image_btn.visible = true;
-    _image_btn.clicked.connect( image_button_clicked );
-
-    _image = new Image();
 
     var btn_edit = new Button.from_icon_name( "document-edit-symbolic" );
     btn_edit.set_tooltip_text( _( "Edit Image" ) );
@@ -232,34 +227,18 @@ public class NodeInspector : Box {
       _da.delete_current_image();
     });
 
-    var btn_box = new Box( Orientation.HORIZONTAL, 20 );
-    btn_box.halign       = Align.END;
-    btn_box.valign       = Align.START;
-    btn_box.border_width = 5;
-    btn_box.pack_start( btn_edit, false, false );
-    btn_box.pack_start( btn_del,  false, false );
+    _image_btn_box = new Box( Orientation.HORIZONTAL, 10 );
+    _image_btn_box.pack_start( btn_edit, false, false );
+    _image_btn_box.pack_start( btn_del,  false, false );
 
-    var reveal_box = new Revealer();
-    reveal_box.transition_duration = 500;
-    reveal_box.transition_type     = RevealerTransitionType.CROSSFADE;
-    reveal_box.add( btn_box );
+    tbox.pack_start( lbl,            false, false );
+    tbox.pack_end(   _image_btn_box, false, false );
 
-    var img_overlay = new Overlay();
-    img_overlay.add_overlay( reveal_box );
-    img_overlay.add( _image );
+    _image = new Image();
 
-    _image_area = new EventBox();
-    _image_area.visible = false;
-    _image_area.add_events( EventMask.ENTER_NOTIFY_MASK | EventMask.LEAVE_NOTIFY_MASK );
-    _image_area.enter_notify_event.connect((e) => {
-      reveal_box.reveal_child = true;
-      return( false );
-    });
-    _image_area.leave_notify_event.connect((e) => {
-      reveal_box.reveal_child = false;
-      return( false );
-    });
-    _image_area.add( img_overlay );
+    _image_btn = new Button.with_label( _( "Add Image…" ) );
+    _image_btn.visible = true;
+    _image_btn.clicked.connect( image_button_clicked );
 
     _image_loc = new Label( "" );
     _image_loc.visible    = false;
@@ -268,9 +247,9 @@ public class NodeInspector : Box {
     _image_loc.max_width_chars = 40;
     _image_loc.activate_link.connect( image_link_clicked );
 
-    box.pack_start( lbl,         false, false );
+    box.pack_start( tbox,        false, false );
+    box.pack_start( _image,      true,  true );
     box.pack_start( _image_btn,  false, false );
-    box.pack_start( _image_area, true,  true );
     box.pack_start( _image_loc,  false, true );
 
     pack_start( box, false, true );
@@ -298,9 +277,10 @@ public class NodeInspector : Box {
   /* Sets the visibility of the image widget to the given value */
   private void set_image_visible( bool show ) {
 
-    _image_btn.visible  = !show;
-    _image_area.visible = show;
-    _image_loc.visible  = show;
+    _image_btn.visible     = !show;
+    _image_btn_box.visible = show;
+    _image.visible         = show;
+    _image_loc.visible     = show;
 
   }
 
