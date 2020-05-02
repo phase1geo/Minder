@@ -32,9 +32,11 @@ class ImageEditor {
   };
 
   private Popover         _popover;
+  private ImageManager    _im;
   private DrawingArea     _da;
   private Node            _node;
   private NodeImage       _image;
+  private Button          _paste;
   private int             _crop_target = -1;
   private double          _last_x;
   private double          _last_y;
@@ -47,6 +49,8 @@ class ImageEditor {
 
   /* Default constructor */
   public ImageEditor( DrawArea da ) {
+
+    _im = da.image_manager;
 
     /* Allocate crop points */
     _crop_points  = new Gdk.Rectangle[9];
@@ -249,6 +253,36 @@ class ImageEditor {
     /* Add the box to the popover */
     _popover.add( box );
 
+    /* Set the stage for keyboard shortcuts */
+    _popover.key_press_event.connect( (e) => {
+      var control = (bool)(e.state & ModifierType.CONTROL_MASK);
+      if( control ) {
+        switch( e.keyval ) {
+          case 99    :  action_copy();    break;
+          case 118   :  action_paste();   break;
+          case 120   :  action_cut();     break;
+          default    :  return( false );
+        }
+      } else {
+        switch( e.keyval ) {
+          case 65293 :  action_apply();   break;
+          case 65307 :  action_cancel();  break;
+          case 65535 :  action_delete();  break;
+          default    :  return( false );
+        }
+      }
+      return( true );
+    });
+
+    /* Update the UI state whenever the mouse enters the popover area */
+    _popover.enter_notify_event.connect( (e) => {
+      update_ui();
+      return( true );
+    });
+
+    /* Initialize the past button state */
+    update_ui();
+
   }
 
   /* Create the image editing area */
@@ -359,18 +393,22 @@ class ImageEditor {
     var box    = new Box( Orientation.HORIZONTAL, 5 );
     var cancel = new Button.with_label( _( "Cancel" ) );
     var apply  = new Button.with_label( _( "Apply" ) );
-    var change = new Button.with_label( _( "Change Image" ) );
-    var remove = new Button.with_label( _( "Remove Image" ) );
+    var open   = new Button.from_icon_name( "folder-open-symbolic", IconSize.SMALL_TOOLBAR );
+    var copy   = new Button.from_icon_name( "edit-copy-symbolic",   IconSize.SMALL_TOOLBAR );
+    var cut    = new Button.from_icon_name( "edit-cut-symbolic",    IconSize.SMALL_TOOLBAR );
+    var paste  = new Button.from_icon_name( "edit-paste-symbolic",  IconSize.SMALL_TOOLBAR );
+    var del    = new Button.from_icon_name( "edit-delete-symbolic", IconSize.SMALL_TOOLBAR );
 
-    cancel.clicked.connect(() => {
-      show_popover( false );
-    });
+    _paste = paste;
 
-    apply.clicked.connect(() => {
-      set_image( im );
-    });
+    /* Create tooltips for all buttons */
+    open.set_tooltip_markup(  Utils.tooltip_with_accel( _( "Change Image" ),               "<Control>o" ) );
+    copy.set_tooltip_markup(  Utils.tooltip_with_accel( _( "Copy Image to Clipboard" ),    "<Control>c" ) );
+    cut.set_tooltip_markup(   Utils.tooltip_with_accel( _( "Cut Image to Clipboard" ),     "<Control>x" ) );
+    paste.set_tooltip_markup( Utils.tooltip_with_accel( _( "Paste Image from Clipboard" ), "<Control>v" ) );
+    del.set_tooltip_markup(   Utils.tooltip_with_accel( _( "Remove Image" ),              "Delete" ) );
 
-    change.clicked.connect(() => {
+    open.clicked.connect(() => {
       var id = im.choose_image( parent );
       if( id != -1 ) {
         var ni = new NodeImage( im, id, _node.max_width() );
@@ -380,12 +418,18 @@ class ImageEditor {
       }
     });
 
-    remove.clicked.connect(() => {
-      remove_image( im );
-    });
+    cancel.clicked.connect( action_cancel );
+    apply.clicked.connect(  action_apply );
+    copy.clicked.connect( action_copy );
+    cut.clicked.connect(  action_cut );
+    paste.clicked.connect( action_paste );
+    del.clicked.connect( action_delete );
 
-    box.pack_start( change, false, false );
-    box.pack_start( remove, false, false );
+    box.pack_start( open,   false, false );
+    box.pack_start( paste,  false, false );
+    box.pack_start( del,    false, false );
+    box.pack_start( copy,   false, false );
+    box.pack_start( cut,    false, false );
     box.pack_end(   apply,  false, false );
     box.pack_end(   cancel, false, false );
 
@@ -486,6 +530,69 @@ class ImageEditor {
     /* Close the popover */
     show_popover( false );
 
+  }
+
+  /* Returns true if an image is pasteable from the clipboard */
+  private bool image_pasteable() {
+    var clipboard = Clipboard.get_default( _popover.get_display() );
+    return( clipboard.wait_is_image_available() );
+  }
+
+  /* Updates the state of the UI */
+  private void update_ui() {
+    _paste.set_sensitive( image_pasteable() );
+  }
+
+  /* Copies the current image to the clipboard */
+  private void action_copy() {
+    var fname = _im.get_file( _node.image.id );
+    if( fname != null ) {
+      try {
+        var buf       = new Gdk.Pixbuf.from_file( fname );
+        var clipboard = Clipboard.get_default( _popover.get_display() );
+        clipboard.clear();
+        clipboard.set_image( buf );
+        update_ui();
+      } catch( Error e ) {}
+    }
+  }
+
+  /* Copies the image to the clipboard and removes the current image */
+  private void action_cut() {
+    action_copy();
+    remove_image( _im );
+  }
+
+  /* Pastes the image from the clipboard */
+  private void action_paste() {
+    if( image_pasteable() ) {
+      var clipboard = Clipboard.get_default( _popover.get_display() );
+      var buf       = clipboard.wait_for_image();
+      var image     = new NodeImage.from_pixbuf( _im, buf, _node.max_width() );
+      image.crop_x = _image.crop_x;
+      image.crop_y = _image.crop_y;
+      image.crop_w = _image.crop_w;
+      image.crop_h = _image.crop_h;
+      _image       = image;
+      _da.queue_draw();
+    } else {
+      update_ui();
+    }
+  }
+
+  /* Deletes the current image */
+  private void action_delete() {
+    remove_image( _im );
+  }
+
+  /* Cancels this editing session */
+  private void action_cancel() {
+    show_popover( false );
+  }
+
+  /* Applies the current edits and closes the window */
+  private void action_apply() {
+    set_image( _im );
   }
 
 }
