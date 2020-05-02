@@ -59,6 +59,9 @@ public class ExportOutliner : Object {
     Xml.Node* n = new Xml.Node( null, "node" );
     n->set_prop( "expanded", (!node.folded).to_string() );
     n->set_prop( "hidenote", "true" );
+    if( node.is_task() ) {
+      n->set_prop( "task_done", node.is_task_done().to_string() );
+    }
     n->add_child( export_name( node, node.name ) );
     if( node.note != "" ) {
       n->add_child( export_note( node.note ) );
@@ -191,6 +194,11 @@ public class ExportOutliner : Object {
       }
     }
     node.attach( parent, -1, da.get_theme() );
+    var t = n->get_prop( "task_done" );
+    if( (t != null) && node.is_leaf() ) {
+      node.enable_task( true );
+      node.set_task_done( bool.parse( t ) );
+    }
   }
 
   private static void import_name( Xml.Node* n, Node node ) {
