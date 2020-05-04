@@ -25,6 +25,38 @@ using Gdk;
 using Cairo;
 using Gee;
 
+public enum ClipboardProtocol {
+  NODES,
+  IMAGE,
+  UTF8_STRING
+}
+
+public void da_get_clipboard_func( Clipboard clipboard, SelectionData seldata, uint info, void* owner ) {
+  Array<Node>* nodes = (Array<Node>*)owner;
+  if( nodes == null ) return;
+  switch( info ) {
+    case ClipboardProtocol.UTF8_STRING :
+      if( nodes->length == 1 ) {
+        seldata.set_text( nodes->index( 0 ).name.text, -1 );
+      }
+      break;
+    case ClipboardProtocol.IMAGE :
+      if( nodes->length == 1 ) {
+        seldata.set_pixbuf( nodes->index( 0 ).image.get_pixbuf().copy() );
+      }
+      break;
+    case ClipboardProtocol.NODES :
+      if( nodes->length > 0 ) {
+        seldata.set_text( da.serialize_for_copy( *nodes ), -1 );
+      }
+      break;
+  }
+}
+
+private void da_clear_clipboard_func( Clipboard clipboard, void* owner ) {
+  /* Nothing to do */
+}
+
 public class DrawArea : Gtk.DrawingArea {
 
   private const Gtk.TargetEntry[] DRAG_TARGETS = {
@@ -74,12 +106,11 @@ public class DrawArea : Gtk.DrawingArea {
   private bool             _create_new_from_edit;
   private Selection        _selected;
 
-  public MainWindow    win            { private set; get; }
-  public UndoBuffer    undo_buffer    { set; get; }
-  public Layouts       layouts        { set; get; default = new Layouts(); }
-  public Animator      animator       { set; get; }
-  public Clipboard     node_clipboard { set; get; default = Clipboard.get_for_display( Display.get_default(), Atom.intern( "org.github.phase1geo.minder", false ) ); }
-  public ImageManager  image_manager  { set; get; default = new ImageManager(); }
+  public MainWindow    win           { private set; get; }
+  public UndoBuffer    undo_buffer   { set; get; }
+  public Layouts       layouts       { set; get; default = new Layouts(); }
+  public Animator      animator      { set; get; }
+  public ImageManager  image_manager { set; get; default = new ImageManager(); }
 
   public GLib.Settings settings {
     get {
@@ -234,6 +265,7 @@ public class DrawArea : Gtk.DrawingArea {
   public Theme get_theme() {
     return( _theme );
   }
+
 
   /* Sets the theme to the given value */
   public void set_theme( Theme theme, bool save ) {
@@ -547,7 +579,6 @@ public class DrawArea : Gtk.DrawingArea {
     origin_x            = 0.0;
     origin_y            = 0.0;
     sfactor             = 1.0;
-    node_clipboard.clear();
     _pressed            = false;
     _press_type         = EventType.NOTHING;
     _motion             = false;
@@ -594,7 +625,6 @@ public class DrawArea : Gtk.DrawingArea {
     origin_x            = 0.0;
     origin_y            = 0.0;
     sfactor             = 1.0;
-    node_clipboard.clear();
     _pressed            = false;
     _press_type         = EventType.NOTHING;
     _motion             = false;
@@ -3347,7 +3377,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns true if we can perform a node paste operation */
   public bool node_pasteable() {
-    return( node_clipboard.wait_is_text_available() );
+    var clipboard = Clipboard.get_default( get_display() );
+    return( clipboard.wait_is_target_available( ClipboardProtocol.NODES ) );
   }
 
   /* Serializes the current node tree */
@@ -3398,20 +3429,36 @@ public class DrawArea : Gtk.DrawingArea {
     delete doc;
   }
 
+  /* Copies the given nodes to the clipboard */
+  public void copy_nodes_to_clipboard( Array<Node> nodes ) {
+
+    var clipboard = Clipboard.get_default( get_display() );
+    var targets   = new TargetEntry[3];
+
+    targets[0] = { "UTF8_STRING", 0, ClipboardProtocol.UTF8_STRING };
+    targets[1] = { "NODES",       0, ClipboardProtocol.NODES };
+    targets[2] = { "IMAGE",       0, ClipboardProtocol.IMAGE };
+
+    var rc = clipboard.set_with_owner( targets, da_get_clipboard_func, da_clear_clipboard_func, nodes );
+    assert( rc );
+    clipboard.store();
+
+  }
+
   /* Copies the current node to the node clipboard */
-  public void copy_nodes_to_clipboard() {
+  public void copy_selected_nodes_to_clipboard() {
+
     var nodes_to_copy = new Array<Node>();
+
+    /* Setup the nodes that will be copied */
     if( _selected.current_node() != null ) {
       nodes_to_copy.append_val( _selected.current_node() );
     } else {
       _selected.get_subtrees( ref nodes_to_copy, image_manager );
     }
-    if( nodes_to_copy.length == 0 ) return;
-    var text = serialize_for_copy( nodes_to_copy );
-    var clipboard = Clipboard.get_default( get_display() );
-    clipboard.clear();
-    node_clipboard.set_text( text, -1 );
-    node_clipboard.store();
+
+    copy_nodes_to_clipboard( nodes_to_copy );
+
   }
 
   /* Copies the currently selected text to the clipboard */
@@ -3435,11 +3482,11 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     if( current != null ) {
       switch( current.mode ) {
-        case NodeMode.CURRENT  :  copy_nodes_to_clipboard();  break;
+        case NodeMode.CURRENT  :  copy_selected_nodes_to_clipboard();  break;
         case NodeMode.EDITABLE :  copy_selected_text();      break;
       }
     } else if( _selected.nodes().length > 1 ) {
-      copy_nodes_to_clipboard();
+      copy_selected_nodes_to_clipboard();
     } else if( is_connection_editable() ) {
       copy_selected_text();
     }
@@ -3452,7 +3499,7 @@ public class DrawArea : Gtk.DrawingArea {
     var next_node = next_node_to_select();
     var conns     = new Array<Connection>();
     _connections.node_deleted( current, conns );
-    copy_nodes_to_clipboard();
+    copy_selected_nodes_to_clipboard();
     if( current.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
         if( _nodes.index( i ) == current ) {
@@ -3472,14 +3519,14 @@ public class DrawArea : Gtk.DrawingArea {
     changed();
   }
 
-  public void cut_nodes_to_clipboard() {
+  public void cut_selected_nodes_to_clipboard() {
     if( _selected.num_nodes() == 0 ) return;
     var nodes = _selected.ordered_nodes();
     var conns = new Array<Connection>();
     for( int i=0; i<nodes.length; i++ ) {
       _connections.node_only_deleted( nodes.index( i ), conns );
     }
-    copy_nodes_to_clipboard();
+    copy_selected_nodes_to_clipboard();
     undo_buffer.add_item( new UndoNodesCut( nodes, conns ) );
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).delete_only();
@@ -3513,7 +3560,7 @@ public class DrawArea : Gtk.DrawingArea {
         case NodeMode.EDITABLE :  cut_selected_text();      break;
       }
     } else if( _selected.nodes().length > 1 ) {
-      cut_nodes_to_clipboard();
+      cut_selected_nodes_to_clipboard();
     } else if( is_connection_editable() ) {
       cut_selected_text();
     }
@@ -3524,12 +3571,13 @@ public class DrawArea : Gtk.DrawingArea {
    selected node.
   */
   public void paste_node_from_clipboard( Node? parent, bool shift ) {
-    if( !node_clipboard.wait_is_text_available() ) return;
+    var clipboard = Clipboard.get_default( get_display() );
+    if( !clipboard.wait_is_target_available() ) return;
     var nodes    = new Array<Node>();
     var conns    = new Array<Connection>();
     var id_map   = new HashMap<int,int>();
     var link_ids = new Array<NodeLinkInfo?>();
-    deserialize_for_paste( node_clipboard.wait_for_text(), nodes, conns, id_map, link_ids );
+    deserialize_for_paste( clipboard.wait_for_contents( ClipboardProtocol.NODES ).get_text(), nodes, conns, id_map, link_ids );
     if( nodes.length == 0 ) return;
     if( shift ) {
       if( !replace_node_with_node( parent, nodes.index( 0 ) ) ) return;
@@ -3566,11 +3614,6 @@ public class DrawArea : Gtk.DrawingArea {
     queue_draw();
     current_changed( this );
     changed();
-  }
-
-  /* Replaces the given node with the node from the clipboard */
-  public void paste_replace_node( Node node ) {
-
   }
 
   /* Pastes the image stored in the clipboard as a new node */
@@ -3661,7 +3704,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         paste_text_as_node( clipboard, parent );
       }
-    } else {
+    } else if( clipboard.wait_is_target_available( ClipboardProtocol.NODES ) ) {
       paste_node_from_clipboard( parent, shift );
     }
   }

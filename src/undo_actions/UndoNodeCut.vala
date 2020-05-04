@@ -55,10 +55,10 @@ public class UndoNodeCut : UndoItem {
 
   /* Redoes a node deletion */
   public override void redo( DrawArea da ) {
+    var clipboard     = Clipboard.get_default( da.get_display() );
     var nodes_to_copy = new Array<Node>();
     nodes_to_copy.append_val( _node );
-    da.node_clipboard.set_text( da.serialize_for_copy( nodes_to_copy ), -1 );
-    da.node_clipboard.store();
+    da.copy_nodes_to_clipboard( nodes_to_copy );
     if( _parent == null ) {
       da.remove_root( _index );
     } else {
