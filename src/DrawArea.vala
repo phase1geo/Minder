@@ -2502,6 +2502,8 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         add_root_node();
       }
+    } else if( _selected.num_nodes() == 0 ) {
+      add_root_node();
     }
   }
 
@@ -2932,7 +2934,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Displays the quick entry UI */
-  public void handle_control_e() {
+  public void handle_control_E() {
     var quick_entry = new QuickEntry( this, _settings );
     quick_entry.show_all();
   }
@@ -3258,8 +3260,9 @@ public class DrawArea : Gtk.DrawingArea {
           case 47    :  handle_control_slash();         break;
           case 92    :  handle_control_backslash();     break;
           case 46    :  handle_control_period();        break;
-          case 101   :  handle_control_e();             break;
+          case 69    :  handle_control_E();             break;
           case 119   :  handle_control_w();             break;
+          default    :  return( false );
         }
       } else if( nomod || shift ) {
         if( _im_context.filter_keypress( e ) ) {
@@ -3279,20 +3282,17 @@ public class DrawArea : Gtk.DrawingArea {
           case 65364 :  handle_down( shift );  break;
           case 65365 :  handle_pageup();       break;
           case 65366 :  handle_pagedn();       break;
-          default :
-            //if( !e.str.get_char( 0 ).isprint() ) {
-            //  stdout.printf( "In on_keypress, keyval: %s\n", e.keyval.to_string() );
-            //}
-            // handle_printable( e.str );
-            break;
+          default    :  return( false );
         }
       }
 
     /* If there is no current node, allow some of the keyboard shortcuts */
     } else if( control ) {
       switch( e.keyval ) {
-        case 99  :  do_copy();  break;
-        case 120 :  do_cut();   break;
+        case 69    :  handle_control_E();  break;
+        case 99    :  do_copy();           break;
+        case 120   :  do_cut();            break;
+        default    :  return( false );
       }
 
     } else if( nomod || shift ) {
@@ -3307,6 +3307,8 @@ public class DrawArea : Gtk.DrawingArea {
           switch( e.keyval ) {
             case 65288 :  handle_backspace();  break;
             case 65535 :  handle_delete();     break;
+            case 65293 :  handle_return();     break;
+            default    :  return( false );
           }
           break;
       }
@@ -3387,6 +3389,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
     if( nodes_to_copy.length == 0 ) return;
     var text = serialize_for_copy( nodes_to_copy );
+    var clipboard = Clipboard.get_default( get_display() );
+    clipboard.clear();
     node_clipboard.set_text( text, -1 );
     node_clipboard.store();
   }
