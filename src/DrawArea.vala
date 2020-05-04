@@ -2469,6 +2469,25 @@ public class DrawArea : Gtk.DrawingArea {
     changed();
   }
 
+  /*
+   Replaces the original node with the new node.  The new_node must not
+   have any children.  Returns true if the replacement was successful; otherwise,
+   returns false.
+  */
+  public bool replace_node_with_node( Node orig_node, Node new_node ) {
+    if( new_node.children().length > 0 ) return( false );
+    var parent = orig_node.parent;
+    var index  = orig_node.index();
+    orig_node.detach( orig_node.side );
+    new_node.attach( parent, index, _theme );
+    for( int i=0; i<orig_node.children().length; i++ ) {
+      var child = orig_node.children().index( i );
+      child.detach( child.side );
+      child.attach( new_node, -1, _theme );
+    }
+    return( true );
+  }
+
   /* Called whenever the return character is entered in the drawing area */
   private void handle_return() {
     if( is_connection_editable() ) {
@@ -3504,43 +3523,54 @@ public class DrawArea : Gtk.DrawingArea {
    Pastes the clipboard content as either a root node or to the currently
    selected node.
   */
-  public void paste_node_from_clipboard( Node? parent ) {
+  public void paste_node_from_clipboard( Node? parent, bool shift ) {
     if( !node_clipboard.wait_is_text_available() ) return;
     var nodes    = new Array<Node>();
     var conns    = new Array<Connection>();
     var id_map   = new HashMap<int,int>();
     var link_ids = new Array<NodeLinkInfo?>();
     deserialize_for_paste( node_clipboard.wait_for_text(), nodes, conns, id_map, link_ids );
-    if( parent == null ) {
-      for( int i=0; i<nodes.length; i++ ) {
-        _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), nodes.index( i ) );
-        add_root( nodes.index( i ), -1 );
-      }
-    } else if( parent.is_root() ) {
-      uint num_children = parent.children().length;
-      if( num_children > 0 ) {
+    if( nodes.length == 0 ) return;
+    if( shift ) {
+      if( !replace_node_with_node( parent, nodes.index( 0 ) ) ) return;
+      undo_buffer.add_item( new UndoNodeReplace( nodes.index( 0 ), parent ) );
+    } else {
+      if( parent == null ) {
         for( int i=0; i<nodes.length; i++ ) {
-          nodes.index( i ).side = parent.children().index( num_children - 1 ).side;
-          nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
-          nodes.index( i ).attach( parent, -1, _theme );
+          _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), nodes.index( i ) );
+          add_root( nodes.index( i ), -1 );
+        }
+      } else if( parent.is_root() ) {
+        uint num_children = parent.children().length;
+        if( num_children > 0 ) {
+          for( int i=0; i<nodes.length; i++ ) {
+            nodes.index( i ).side = parent.children().index( num_children - 1 ).side;
+            nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
+            nodes.index( i ).attach( parent, -1, _theme );
+          }
+        } else {
+          for( int i=0; i<nodes.length; i++ ) {
+            nodes.index( i ).attach( parent, -1, _theme );
+          }
         }
       } else {
         for( int i=0; i<nodes.length; i++ ) {
+          nodes.index( i ).side = parent.side;
+          nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
           nodes.index( i ).attach( parent, -1, _theme );
         }
       }
-    } else {
-      for( int i=0; i<nodes.length; i++ ) {
-        nodes.index( i ).side = parent.side;
-        nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
-        nodes.index( i ).attach( parent, -1, _theme );
-      }
+      undo_buffer.add_item( new UndoNodePaste( nodes, conns ) );
     }
-    undo_buffer.add_item( new UndoNodePaste( nodes, conns ) );
     select_node( nodes.index( 0 ) );
     queue_draw();
     current_changed( this );
     changed();
+  }
+
+  /* Replaces the given node with the node from the clipboard */
+  public void paste_replace_node( Node node ) {
+
   }
 
   /* Pastes the image stored in the clipboard as a new node */
@@ -3632,7 +3662,7 @@ public class DrawArea : Gtk.DrawingArea {
         paste_text_as_node( clipboard, parent );
       }
     } else {
-      paste_node_from_clipboard( parent );
+      paste_node_from_clipboard( parent, shift );
     }
   }
 
