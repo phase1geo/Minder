@@ -2502,6 +2502,8 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         add_root_node();
       }
+    } else if( _selected.num_nodes() == 0 ) {
+      add_root_node();
     }
   }
 
@@ -2932,7 +2934,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Displays the quick entry UI */
-  public void handle_control_e() {
+  public void handle_control_E() {
     var quick_entry = new QuickEntry( this, _settings );
     quick_entry.show_all();
   }
@@ -3258,8 +3260,9 @@ public class DrawArea : Gtk.DrawingArea {
           case 47    :  handle_control_slash();         break;
           case 92    :  handle_control_backslash();     break;
           case 46    :  handle_control_period();        break;
-          case 101   :  handle_control_e();             break;
+          case 69    :  handle_control_E();             break;
           case 119   :  handle_control_w();             break;
+          default    :  return( false );
         }
       } else if( nomod || shift ) {
         if( _im_context.filter_keypress( e ) ) {
@@ -3279,20 +3282,17 @@ public class DrawArea : Gtk.DrawingArea {
           case 65364 :  handle_down( shift );  break;
           case 65365 :  handle_pageup();       break;
           case 65366 :  handle_pagedn();       break;
-          default :
-            //if( !e.str.get_char( 0 ).isprint() ) {
-            //  stdout.printf( "In on_keypress, keyval: %s\n", e.keyval.to_string() );
-            //}
-            // handle_printable( e.str );
-            break;
+          default    :  return( false );
         }
       }
 
     /* If there is no current node, allow some of the keyboard shortcuts */
     } else if( control ) {
       switch( e.keyval ) {
-        case 99  :  do_copy();  break;
-        case 120 :  do_cut();   break;
+        case 69    :  handle_control_E();  break;
+        case 99    :  do_copy();           break;
+        case 120   :  do_cut();            break;
+        default    :  return( false );
       }
 
     } else if( nomod || shift ) {
@@ -3307,6 +3307,8 @@ public class DrawArea : Gtk.DrawingArea {
           switch( e.keyval ) {
             case 65288 :  handle_backspace();  break;
             case 65535 :  handle_delete();     break;
+            case 65293 :  handle_return();     break;
+            default    :  return( false );
           }
           break;
       }
@@ -3387,6 +3389,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
     if( nodes_to_copy.length == 0 ) return;
     var text = serialize_for_copy( nodes_to_copy );
+    var clipboard = Clipboard.get_default( get_display() );
+    clipboard.clear();
     node_clipboard.set_text( text, -1 );
     node_clipboard.store();
   }
@@ -3561,13 +3565,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Pastes the text stored in the clipboard as a new node */
   public void paste_text_as_node( Clipboard clipboard, Node? parent ) {
-    Node node;
-    var  text = clipboard.wait_for_text();
-    if( parent == null ) {
-      node = create_root_node( text );
-    } else {
-      node = create_child_node( parent, text );
-    }
+    var text = clipboard.wait_for_text().strip();
+    var node = (parent == null) ? create_root_node( text ) : create_child_node( parent, text );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     select_node( node );
     queue_draw();
@@ -3577,7 +3576,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Pastes the given text, replacing the original node text */
   public void paste_text_replace_node( Clipboard clipboard, Node node ) {
-    var name = clipboard.wait_for_text();
+    var name = clipboard.wait_for_text().strip();
     var orig_name = node.name.text;
     var orig_urls = new UrlLinks( this );
     orig_urls.copy( node.urls );
@@ -3589,7 +3588,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Pastes the given text, replacing the original connection text */
   public void paste_text_replace_connection( Clipboard clipboard, Connection conn ) {
-    var title = clipboard.wait_for_text();
+    var title = clipboard.wait_for_text().strip();
     var orig_title = conn.title.text;
     conn.title.text = title;
     undo_buffer.add_item( new UndoConnectionTitle( conn, orig_title ) );
