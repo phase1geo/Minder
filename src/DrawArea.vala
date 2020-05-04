@@ -3561,13 +3561,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Pastes the text stored in the clipboard as a new node */
   public void paste_text_as_node( Clipboard clipboard, Node? parent ) {
-    Node node;
-    var  text = clipboard.wait_for_text();
-    if( parent == null ) {
-      node = create_root_node( text );
-    } else {
-      node = create_child_node( parent, text );
-    }
+    var text = clipboard.wait_for_text().strip();
+    var node = (parent == null) ? create_root_node( text ) : create_child_node( parent, text );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     select_node( node );
     queue_draw();
@@ -3577,7 +3572,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Pastes the given text, replacing the original node text */
   public void paste_text_replace_node( Clipboard clipboard, Node node ) {
-    var name = clipboard.wait_for_text();
+    var name = clipboard.wait_for_text().strip();
     var orig_name = node.name.text;
     var orig_urls = new UrlLinks( this );
     orig_urls.copy( node.urls );
@@ -3589,7 +3584,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Pastes the given text, replacing the original connection text */
   public void paste_text_replace_connection( Clipboard clipboard, Connection conn ) {
-    var title = clipboard.wait_for_text();
+    var title = clipboard.wait_for_text().strip();
     var orig_title = conn.title.text;
     conn.title.text = title;
     undo_buffer.add_item( new UndoConnectionTitle( conn, orig_title ) );
