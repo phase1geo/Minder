@@ -193,11 +193,13 @@ public class ExportOutliner : Object {
         }
       }
     }
-    node.attach( parent, -1, da.get_theme() );
-    var t = n->get_prop( "task_done" );
-    if( (t != null) && node.is_leaf() ) {
-      node.enable_task( true );
-      node.set_task_done( bool.parse( t ) );
+    if( (node.name.text.strip() != "") || (node.children().length > 0) ) {
+      node.attach( parent, -1, da.get_theme() );
+      var t = n->get_prop( "task_done" );
+      if( (t != null) && node.is_leaf() ) {
+        node.enable_task( true );
+        node.set_task_done( bool.parse( t ) );
+      }
     }
   }
 
