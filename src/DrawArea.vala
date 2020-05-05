@@ -31,23 +31,33 @@ public enum ClipboardProtocol {
   UTF8_STRING
 }
 
+public class NodeClipboardObject : Object {
+  public Array<Node> nodes;
+  public Connections conns;
+  public NodeClipboardObject( Array<Node> nodes, Connections conns ) {
+    this.nodes = nodes;
+    this.conns = conns;
+  }
+}
+
 public void da_get_clipboard_func( Clipboard clipboard, SelectionData seldata, uint info, void* owner ) {
-  Array<Node>* nodes = (Array<Node>*)owner;
-  if( nodes == null ) return;
+  stdout.printf( "IN da_get_clipboard_func, info: %u\n", info );
+  NodeClipboardObject* obj = (NodeClipboardObject*)owner;
+  if( obj->nodes == null ) return;
   switch( info ) {
     case ClipboardProtocol.UTF8_STRING :
-      if( nodes->length == 1 ) {
-        seldata.set_text( nodes->index( 0 ).name.text, -1 );
+      if( obj->nodes.length == 1 ) {
+        seldata.set_text( obj->nodes.index( 0 ).name.text, -1 );
       }
       break;
     case ClipboardProtocol.IMAGE :
-      if( nodes->length == 1 ) {
-        seldata.set_pixbuf( nodes->index( 0 ).image.get_pixbuf().copy() );
+      if( obj->nodes.length == 1 ) {
+        seldata.set_pixbuf( obj->nodes.index( 0 ).image.get_pixbuf().copy() );
       }
       break;
     case ClipboardProtocol.NODES :
-      if( nodes->length > 0 ) {
-        seldata.set_text( da.serialize_for_copy( *nodes ), -1 );
+      if( obj->nodes.length > 0 ) {
+        seldata.set_text( DrawArea.serialize_for_copy( obj->nodes, obj->conns ), -1 );
       }
       break;
   }
@@ -3382,21 +3392,21 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Serializes the current node tree */
-  public string serialize_for_copy( Array<Node> node_array ) {
+  public static string serialize_for_copy( Array<Node> nodes, Connections conns ) {
     string    str;
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
     doc->set_root_element( root );
-    Xml.Node* nodes = new Xml.Node( null, "nodes" );
-    for( int i=0; i<node_array.length; i++ ) {
-      node_array.index( i ).save( nodes );
+    Xml.Node* ns = new Xml.Node( null, "nodes" );
+    for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).save( ns );
     }
-    root->add_child( nodes );
-    Xml.Node* conns = new Xml.Node( null, "connections" );
-    for( int i=0; i<node_array.length; i++ ) {
-      _connections.save_if_in_node( conns, node_array.index( i ) );
+    root->add_child( ns );
+    Xml.Node* cs = new Xml.Node( null, "connections" );
+    for( int i=0; i<nodes.length; i++ ) {
+      conns.save_if_in_node( cs, nodes.index( i ) );
     }
-    root->add_child( conns );
+    root->add_child( cs );
     doc->dump_memory( out str );
     delete doc;
     return( str );
@@ -3434,14 +3444,21 @@ public class DrawArea : Gtk.DrawingArea {
 
     var clipboard = Clipboard.get_default( get_display() );
     var targets   = new TargetEntry[3];
+    var owner     = new NodeClipboardObject( nodes, _connections );
+    var widget    = clipboard.get_data<Widget>( "gtk-clipboard-widget" );
+
+    stdout.printf( "widget: %s\n", (widget == null) ? "NA" : "FOUND" );
 
     targets[0] = { "UTF8_STRING", 0, ClipboardProtocol.UTF8_STRING };
     targets[1] = { "NODES",       0, ClipboardProtocol.NODES };
     targets[2] = { "IMAGE",       0, ClipboardProtocol.IMAGE };
 
-    var rc = clipboard.set_with_owner( targets, da_get_clipboard_func, da_clear_clipboard_func, nodes );
+    stdout.printf( "In copy_nodes_to_clipboard\n" );
+    clipboard.set_can_store( null );
+    var rc = clipboard.set_with_owner( targets, da_get_clipboard_func, da_clear_clipboard_func, owner );
     assert( rc );
     clipboard.store();
+    stdout.printf( "HERE!!!!\n" );
 
   }
 
@@ -3571,8 +3588,10 @@ public class DrawArea : Gtk.DrawingArea {
    selected node.
   */
   public void paste_node_from_clipboard( Node? parent, bool shift ) {
+    stdout.printf( "In paste_node_from_clipboard\n" );
     var clipboard = Clipboard.get_default( get_display() );
-    if( !clipboard.wait_is_target_available() ) return;
+    if( !clipboard.wait_is_target_available( ClipboardProtocol.NODES ) ) return;
+    stdout.printf( "HERE\n" );
     var nodes    = new Array<Node>();
     var conns    = new Array<Connection>();
     var id_map   = new HashMap<int,int>();
@@ -3691,26 +3710,37 @@ public class DrawArea : Gtk.DrawingArea {
    Interrogates the clipboard and pastes the stored content into the document.
   */
   public void paste_new_node( Node? parent, bool shift ) {
+    stdout.printf( "In paste_new_node\n" );
     var clipboard = Clipboard.get_default( get_display() );
+    Atom[] targets;
+    clipboard.wait_for_targets( out targets );
+    stdout.printf( "Targets:\n" );
+    foreach( Atom target in targets ) {
+      stdout.printf( "  target: %s\n", target.name() );
+    }
     if( clipboard.wait_is_image_available() ) {
+      stdout.printf( "Image available\n" );
       if( shift ) {
         update_current_image_from_pixbuf( clipboard.wait_for_image() );
       } else {
         paste_image_as_node( clipboard, parent );
       }
     } else if( clipboard.wait_is_text_available() ) {
+      stdout.printf( "Text available\n" );
       if( shift ) {
         paste_text_replace_node( clipboard, parent );
       } else {
         paste_text_as_node( clipboard, parent );
       }
-    } else if( clipboard.wait_is_target_available( ClipboardProtocol.NODES ) ) {
+    } else if( clipboard.wait_is_target_available( Atom.intern_static_string( "NODES" ) ) ) {
+      stdout.printf( "Nodes available\n" );
       paste_node_from_clipboard( parent, shift );
     }
   }
 
   /* Pastes the contents of the clipboard into the current node */
   public void do_paste( bool shift ) {
+    stdout.printf( "In do_paste\n" );
     var current   = _selected.current_node();
     var clipboard = Clipboard.get_default( get_display() );
     if( current != null ) {
