@@ -66,11 +66,7 @@ public class UndoNodesCut : UndoItem {
 
   /* Redoes a node deletion */
   public override void redo( DrawArea da ) {
-    var nodes_to_copy = new Array<Node>();
-    for( int i=0; i<_nodes.length; i++ ) {
-      nodes_to_copy.append_val( _nodes.index( i ).node );
-    }
-    da.copy_nodes_to_clipboard( nodes_to_copy );
+    MinderClipboard.copy_nodes( da );
     da.get_selections().clear();
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).node.delete_only();
