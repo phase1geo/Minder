@@ -34,6 +34,7 @@ public class MinderClipboard {
   private static Connections? conns = null;
   private static string?      text  = null;
   private static Pixbuf       image = null;
+  private static bool         set_internally = false;
 
   enum Target {
     STRING,
@@ -60,7 +61,6 @@ public class MinderClipboard {
   public static void set_with_data( Clipboard clipboard, SelectionData selection_data, uint info, void* user_data_or_owner) {
     switch( info ) {
       case Target.STRING:
-        debug( "String requested\n" );
         if( text != null ) {
           selection_data.set_text( text, -1 );
         } else if( (nodes != null) && (nodes.length == 1) ) {
@@ -68,7 +68,6 @@ public class MinderClipboard {
         }
         break;
       case Target.IMAGE:
-        debug ("Image requested\n");
         if( image != null ) {
           selection_data.set_pixbuf( image );
         } else if( (nodes != null) && (nodes.length == 1) && (nodes.index( 0 ).image != null) ) {
@@ -76,34 +75,32 @@ public class MinderClipboard {
         }
         break;
       case Target.NODES:
-        debug ("Nodes requested\n");
-        stdout.printf( "Nodes requested, nodes: %u\n", ((nodes == null) ? 0 : nodes.length) );
         if( (nodes != null) && (nodes.length > 0) ) {
           var text = da.serialize_for_copy( nodes, conns );
-          stdout.printf( "  text: %s\n", text );
           selection_data.@set( NODES_ATOM, 0, text.data );
         }
-        break;
-      default:
-        debug ("Other data %u\n", info);
         break;
     }
   }
 
   /* Clears the class structure */
   public static void clear_data( Clipboard clipboard, void* user_data_or_owner ) {
-    da    = null;
-    nodes = null;
-    conns = null;
-    text  = null;
-    image = null;
+    if( !set_internally ) {
+      da    = null;
+      nodes = null;
+      conns = null;
+      text  = null;
+      image = null;
+    }
+    set_internally = false;
   }
 
   /* Copies the selected text to the clipboard */
   public static void copy_text( string txt ) {
 
     /* Store the data to copy */
-    text = txt;
+    text           = txt;
+    set_internally = true;
 
     /* Inform the clipboard */
     var clipboard = Clipboard.get_default( Gdk.Display.get_default() );
@@ -114,7 +111,8 @@ public class MinderClipboard {
   public static void copy_image( Pixbuf img ) {
 
     /* Store the data to copy */
-    image = img;
+    image          = img;
+    set_internally = true;
 
     /* Inform the clipboard */
     var clipboard = Clipboard.get_default( Gdk.Display.get_default() );
@@ -129,7 +127,7 @@ public class MinderClipboard {
     da = d;
     da.get_nodes_for_clipboard( out nodes, out conns );
 
-    stdout.printf( "In copy_nodes, nodes: %u\n", nodes.length );
+    set_internally = true;
 
     /* Inform the clipboard */
     var clipboard = Gtk.Clipboard.get_default( Gdk.Display.get_default() );
@@ -157,7 +155,6 @@ public class MinderClipboard {
 
     /* Get the list of targets that we will support */
     foreach( var target in targets ) {
-      stdout.printf( "target: %s\n", target.name() );
       switch( target.name() ) {
         case NODES_TARGET_NAME :  nodes_atom = target;  break;
         case "text/plain"      :  text_atom  = target;  break;

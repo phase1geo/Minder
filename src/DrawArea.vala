@@ -422,7 +422,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var node = new Node.with_name( this, "temp", null );
+                var node = new Node.with_name( this, "", null );
                 node.load( this, it2, true, id_map, link_ids );
                 if( use_layout != null ) {
                   node.layout = use_layout;
@@ -2473,17 +2473,41 @@ public class DrawArea : Gtk.DrawingArea {
    returns false.
   */
   public bool replace_node_with_node( Node orig_node, Node new_node ) {
-    if( new_node.children().length > 0 ) return( false );
+
     var parent = orig_node.parent;
     var index  = orig_node.index();
-    orig_node.detach( orig_node.side );
-    new_node.attach( parent, index, _theme );
-    for( int i=0; i<orig_node.children().length; i++ ) {
+
+    /* Cleanup node that will replace the given node */
+    for( int i=((int)new_node.children().length - 1); i>=0; i-- ) {
+      var child = new_node.children().index( i );
+      child.detach( child.side );
+    }
+
+    /* Perform the replacement */
+    if( parent == null ) {
+      add_root( new_node, remove_root_node( orig_node ) );
+    } else {
+      orig_node.detach( orig_node.side );
+      new_node.attach( parent, index, _theme );
+    }
+
+    /* Copy over a few attributes */
+    new_node.set_fold_only( orig_node.folded );
+    new_node.set_posx_only( orig_node.posx );
+    new_node.set_posy_only( orig_node.posy );
+    if( new_node.main_branch() ) {
+      new_node.link_color_only = orig_node.link_color;
+    }
+
+    /* Add the original children back to the new node */
+    for( int i=((int)orig_node.children().length - 1); i>=0; i-- ) {
       var child = orig_node.children().index( i );
       child.detach( child.side );
-      child.attach( new_node, -1, _theme );
+      child.attach( new_node, 0, _theme );
     }
+
     return( true );
+
   }
 
   /* Called whenever the return character is entered in the drawing area */
@@ -2563,13 +2587,14 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Removes the given root node from the node array */
-  public void remove_root_node( Node node ) {
+  public int remove_root_node( Node node ) {
     for( int i=0; i<_nodes.length; i++ ) {
       if( _nodes.index( i ) == node ) {
         _nodes.remove_index( i );
-        return;
+        return( i );
       }
     }
+    return( -1 );
   }
 
   /* Returns true if the drawing area has a node that is available for detaching */
@@ -3381,7 +3406,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var node = new Node.with_name( this, "temp", null );
+                var node = new Node.with_name( this, "", null );
                 node.load( this, it2, true, id_map, link_ids );
                 nodes.append_val( node );
               }
