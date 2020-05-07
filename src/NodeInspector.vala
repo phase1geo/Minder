@@ -417,7 +417,7 @@ public class NodeInspector : Box {
 
   /* Copies the current node to the clipboard */
   private void node_copy() {
-    _da.copy_nodes_to_clipboard();
+    MinderClipboard.copy_nodes( _da );
   }
 
   /* Cuts the current node to the clipboard */

@@ -74,12 +74,11 @@ public class DrawArea : Gtk.DrawingArea {
   private bool             _create_new_from_edit;
   private Selection        _selected;
 
-  public MainWindow    win            { private set; get; }
-  public UndoBuffer    undo_buffer    { set; get; }
-  public Layouts       layouts        { set; get; default = new Layouts(); }
-  public Animator      animator       { set; get; }
-  public Clipboard     node_clipboard { set; get; default = Clipboard.get_for_display( Display.get_default(), Atom.intern( "org.github.phase1geo.minder", false ) ); }
-  public ImageManager  image_manager  { set; get; default = new ImageManager(); }
+  public MainWindow    win           { private set; get; }
+  public UndoBuffer    undo_buffer   { set; get; }
+  public Layouts       layouts       { set; get; default = new Layouts(); }
+  public Animator      animator      { set; get; }
+  public ImageManager  image_manager { set; get; default = new ImageManager(); }
 
   public GLib.Settings settings {
     get {
@@ -234,6 +233,7 @@ public class DrawArea : Gtk.DrawingArea {
   public Theme get_theme() {
     return( _theme );
   }
+
 
   /* Sets the theme to the given value */
   public void set_theme( Theme theme, bool save ) {
@@ -422,7 +422,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var node = new Node.with_name( this, "temp", null );
+                var node = new Node.with_name( this, "", null );
                 node.load( this, it2, true, id_map, link_ids );
                 if( use_layout != null ) {
                   node.layout = use_layout;
@@ -547,7 +547,6 @@ public class DrawArea : Gtk.DrawingArea {
     origin_x            = 0.0;
     origin_y            = 0.0;
     sfactor             = 1.0;
-    node_clipboard.clear();
     _pressed            = false;
     _press_type         = EventType.NOTHING;
     _motion             = false;
@@ -594,7 +593,6 @@ public class DrawArea : Gtk.DrawingArea {
     origin_x            = 0.0;
     origin_y            = 0.0;
     sfactor             = 1.0;
-    node_clipboard.clear();
     _pressed            = false;
     _press_type         = EventType.NOTHING;
     _motion             = false;
@@ -2475,17 +2473,41 @@ public class DrawArea : Gtk.DrawingArea {
    returns false.
   */
   public bool replace_node_with_node( Node orig_node, Node new_node ) {
-    if( new_node.children().length > 0 ) return( false );
+
     var parent = orig_node.parent;
     var index  = orig_node.index();
-    orig_node.detach( orig_node.side );
-    new_node.attach( parent, index, _theme );
-    for( int i=0; i<orig_node.children().length; i++ ) {
+
+    /* Cleanup node that will replace the given node */
+    for( int i=((int)new_node.children().length - 1); i>=0; i-- ) {
+      var child = new_node.children().index( i );
+      child.detach( child.side );
+    }
+
+    /* Perform the replacement */
+    if( parent == null ) {
+      add_root( new_node, remove_root_node( orig_node ) );
+    } else {
+      orig_node.detach( orig_node.side );
+      new_node.attach( parent, index, _theme );
+    }
+
+    /* Copy over a few attributes */
+    new_node.set_fold_only( orig_node.folded );
+    new_node.set_posx_only( orig_node.posx );
+    new_node.set_posy_only( orig_node.posy );
+    if( new_node.main_branch() ) {
+      new_node.link_color_only = orig_node.link_color;
+    }
+
+    /* Add the original children back to the new node */
+    for( int i=((int)orig_node.children().length - 1); i>=0; i-- ) {
       var child = orig_node.children().index( i );
       child.detach( child.side );
-      child.attach( new_node, -1, _theme );
+      child.attach( new_node, 0, _theme );
     }
+
     return( true );
+
   }
 
   /* Called whenever the return character is entered in the drawing area */
@@ -2565,13 +2587,14 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Removes the given root node from the node array */
-  public void remove_root_node( Node node ) {
+  public int remove_root_node( Node node ) {
     for( int i=0; i<_nodes.length; i++ ) {
       if( _nodes.index( i ) == node ) {
         _nodes.remove_index( i );
-        return;
+        return( i );
       }
     }
+    return( -1 );
   }
 
   /* Returns true if the drawing area has a node that is available for detaching */
@@ -3347,25 +3370,25 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns true if we can perform a node paste operation */
   public bool node_pasteable() {
-    return( node_clipboard.wait_is_text_available() );
+    return( MinderClipboard.node_pasteable() );
   }
 
   /* Serializes the current node tree */
-  public string serialize_for_copy( Array<Node> node_array ) {
+  public string serialize_for_copy( Array<Node> nodes, Connections conns ) {
     string    str;
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
     doc->set_root_element( root );
-    Xml.Node* nodes = new Xml.Node( null, "nodes" );
-    for( int i=0; i<node_array.length; i++ ) {
-      node_array.index( i ).save( nodes );
+    Xml.Node* ns = new Xml.Node( null, "nodes" );
+    for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).save( ns );
     }
-    root->add_child( nodes );
-    Xml.Node* conns = new Xml.Node( null, "connections" );
-    for( int i=0; i<node_array.length; i++ ) {
-      _connections.save_if_in_node( conns, node_array.index( i ) );
+    root->add_child( ns );
+    Xml.Node* cs = new Xml.Node( null, "connections" );
+    for( int i=0; i<nodes.length; i++ ) {
+      conns.save_if_in_node( cs, nodes.index( i ) );
     }
-    root->add_child( conns );
+    root->add_child( cs );
     doc->dump_memory( out str );
     delete doc;
     return( str );
@@ -3383,7 +3406,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var node = new Node.with_name( this, "temp", null );
+                var node = new Node.with_name( this, "", null );
                 node.load( this, it2, true, id_map, link_ids );
                 nodes.append_val( node );
               }
@@ -3399,19 +3422,18 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Copies the current node to the node clipboard */
-  public void copy_nodes_to_clipboard() {
-    var nodes_to_copy = new Array<Node>();
+  public void get_nodes_for_clipboard( out Array<Node> nodes, out Connections conns ) {
+
+    nodes = new Array<Node>();
+    conns = _connections;
+
+    /* Setup the nodes that will be copied */
     if( _selected.current_node() != null ) {
-      nodes_to_copy.append_val( _selected.current_node() );
+      nodes.append_val( _selected.current_node() );
     } else {
-      _selected.get_subtrees( ref nodes_to_copy, image_manager );
+      _selected.get_subtrees( ref nodes, image_manager );
     }
-    if( nodes_to_copy.length == 0 ) return;
-    var text = serialize_for_copy( nodes_to_copy );
-    var clipboard = Clipboard.get_default( get_display() );
-    clipboard.clear();
-    node_clipboard.set_text( text, -1 );
-    node_clipboard.store();
+
   }
 
   /* Copies the currently selected text to the clipboard */
@@ -3425,8 +3447,7 @@ public class DrawArea : Gtk.DrawingArea {
       value = current_conn.title.get_selected_text();
     }
     if( value != null ) {
-      var clipboard = Clipboard.get_default( get_display() );
-      clipboard.set_text( value, -1 );
+      MinderClipboard.copy_text( value );
     }
   }
 
@@ -3435,11 +3456,11 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     if( current != null ) {
       switch( current.mode ) {
-        case NodeMode.CURRENT  :  copy_nodes_to_clipboard();  break;
-        case NodeMode.EDITABLE :  copy_selected_text();      break;
+        case NodeMode.CURRENT  :  MinderClipboard.copy_nodes( this );  break;
+        case NodeMode.EDITABLE :  copy_selected_text();                break;
       }
     } else if( _selected.nodes().length > 1 ) {
-      copy_nodes_to_clipboard();
+      MinderClipboard.copy_nodes( this );
     } else if( is_connection_editable() ) {
       copy_selected_text();
     }
@@ -3452,7 +3473,7 @@ public class DrawArea : Gtk.DrawingArea {
     var next_node = next_node_to_select();
     var conns     = new Array<Connection>();
     _connections.node_deleted( current, conns );
-    copy_nodes_to_clipboard();
+    MinderClipboard.copy_nodes( this );
     if( current.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
         if( _nodes.index( i ) == current ) {
@@ -3472,14 +3493,14 @@ public class DrawArea : Gtk.DrawingArea {
     changed();
   }
 
-  public void cut_nodes_to_clipboard() {
+  public void cut_selected_nodes_to_clipboard() {
     if( _selected.num_nodes() == 0 ) return;
     var nodes = _selected.ordered_nodes();
     var conns = new Array<Connection>();
     for( int i=0; i<nodes.length; i++ ) {
       _connections.node_only_deleted( nodes.index( i ), conns );
     }
-    copy_nodes_to_clipboard();
+    MinderClipboard.copy_nodes( this );
     undo_buffer.add_item( new UndoNodesCut( nodes, conns ) );
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).delete_only();
@@ -3513,177 +3534,179 @@ public class DrawArea : Gtk.DrawingArea {
         case NodeMode.EDITABLE :  cut_selected_text();      break;
       }
     } else if( _selected.nodes().length > 1 ) {
-      cut_nodes_to_clipboard();
+      cut_selected_nodes_to_clipboard();
     } else if( is_connection_editable() ) {
       cut_selected_text();
     }
   }
 
-  /*
-   Pastes the clipboard content as either a root node or to the currently
-   selected node.
-  */
-  public void paste_node_from_clipboard( Node? parent, bool shift ) {
-    if( !node_clipboard.wait_is_text_available() ) return;
-    var nodes    = new Array<Node>();
-    var conns    = new Array<Connection>();
-    var id_map   = new HashMap<int,int>();
-    var link_ids = new Array<NodeLinkInfo?>();
-    deserialize_for_paste( node_clipboard.wait_for_text(), nodes, conns, id_map, link_ids );
-    if( nodes.length == 0 ) return;
-    if( shift ) {
-      if( !replace_node_with_node( parent, nodes.index( 0 ) ) ) return;
-      undo_buffer.add_item( new UndoNodeReplace( nodes.index( 0 ), parent ) );
-    } else {
-      if( parent == null ) {
-        for( int i=0; i<nodes.length; i++ ) {
-          _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), nodes.index( i ) );
-          add_root( nodes.index( i ), -1 );
-        }
-      } else if( parent.is_root() ) {
-        uint num_children = parent.children().length;
-        if( num_children > 0 ) {
-          for( int i=0; i<nodes.length; i++ ) {
-            nodes.index( i ).side = parent.children().index( num_children - 1 ).side;
-            nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
-            nodes.index( i ).attach( parent, -1, _theme );
-          }
-        } else {
-          for( int i=0; i<nodes.length; i++ ) {
-            nodes.index( i ).attach( parent, -1, _theme );
-          }
-        }
-      } else {
-        for( int i=0; i<nodes.length; i++ ) {
-          nodes.index( i ).side = parent.side;
-          nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
-          nodes.index( i ).attach( parent, -1, _theme );
-        }
-      }
-      undo_buffer.add_item( new UndoNodePaste( nodes, conns ) );
-    }
-    select_node( nodes.index( 0 ) );
-    queue_draw();
-    current_changed( this );
-    changed();
-  }
-
-  /* Replaces the given node with the node from the clipboard */
-  public void paste_replace_node( Node node ) {
-
-  }
-
-  /* Pastes the image stored in the clipboard as a new node */
-  public void paste_image_as_node( Clipboard clipboard, Node? parent ) {
-    Node node;
-    var buf = clipboard.wait_for_image();
-    if( parent == null ) {
-      node = create_root_node();
-    } else {
-      node = create_child_node( parent );
-    }
-    var image = new NodeImage.from_pixbuf( image_manager, buf, 200 );
-    if( image.valid ) {
-      node.set_image( image_manager, image );
-    }
-    undo_buffer.add_item( new UndoNodeInsert( node ) );
-    select_node( node );
-    queue_draw();
-    current_changed( this );
-    changed();
-  }
-
-  /* Pastes the text stored in the clipboard as a new node */
-  public void paste_text_as_node( Clipboard clipboard, Node? parent ) {
-    var text = clipboard.wait_for_text().strip();
-    var node = (parent == null) ? create_root_node( text ) : create_child_node( parent, text );
-    undo_buffer.add_item( new UndoNodeInsert( node ) );
-    select_node( node );
-    queue_draw();
-    current_changed( this );
-    changed();
-  }
-
-  /* Pastes the given text, replacing the original node text */
-  public void paste_text_replace_node( Clipboard clipboard, Node node ) {
-    var name = clipboard.wait_for_text().strip();
+  private void replace_node_text( Node node, string text ) {
     var orig_name = node.name.text;
     var orig_urls = new UrlLinks( this );
     orig_urls.copy( node.urls );
-    node.name.text = name;
+    node.name.text = text.strip();
     undo_buffer.add_item( new UndoNodeName( node, orig_name, orig_urls ) );
     queue_draw();
     changed();
   }
 
-  /* Pastes the given text, replacing the original connection text */
-  public void paste_text_replace_connection( Clipboard clipboard, Connection conn ) {
-    var title = clipboard.wait_for_text().strip();
+  private void replace_connection_text( Connection conn, string text ) {
     var orig_title = conn.title.text;
-    conn.title.text = title;
+    conn.title.text = text.strip();
     undo_buffer.add_item( new UndoConnectionTitle( conn, orig_title ) );
     queue_draw();
     current_changed( this );
     changed();
   }
 
-  /* Pastes the text that is in the clipboard to the node text */
-  public void paste_text() {
-    var clipboard = Clipboard.get_default( get_display() );
-    string? value = clipboard.wait_for_text();
-    if( value != null ) {
-      var current_node = _selected.current_node();
-      var current_conn = _selected.current_connection();
-      if( current_node != null ) {
-        current_node.name.insert( value );
-      } else if( current_conn != null ) {
-        current_conn.title.insert( value );
-      }
+  private void replace_node_image( Node node, Pixbuf image ) {
+    var ni = new NodeImage.from_pixbuf( image_manager, image, node.max_width() );
+    if( ni.valid ) {
+      var orig_image = node.image;
+      node.set_image( image_manager, ni );
+      undo_buffer.add_item( new UndoNodeImage( node, orig_image ) );
       queue_draw();
-      changed();
+      current_changed( this );
+      auto_save();
     }
   }
 
-  /*
-   Interrogates the clipboard and pastes the stored content into the document.
-  */
-  public void paste_new_node( Node? parent, bool shift ) {
-    var clipboard = Clipboard.get_default( get_display() );
-    if( clipboard.wait_is_image_available() ) {
-      if( shift ) {
-        update_current_image_from_pixbuf( clipboard.wait_for_image() );
-      } else {
-        paste_image_as_node( clipboard, parent );
+  private void replace_node( Node node, string text ) {
+    var nodes    = new Array<Node>();
+    var conns    = new Array<Connection>();
+    var id_map   = new HashMap<int,int>();
+    var link_ids = new Array<NodeLinkInfo?>();
+    deserialize_for_paste( text, nodes, conns, id_map, link_ids );
+    if( nodes.length == 0 ) return;
+    if( !replace_node_with_node( node, nodes.index( 0 ) ) ) return;
+    undo_buffer.add_item( new UndoNodeReplace( nodes.index( 0 ), node ) );
+    select_node( nodes.index( 0 ) );
+    queue_draw();
+    current_changed( this );
+    changed();
+  }
+
+  private void insert_node_text( Node node, string text ) {
+    node.name.insert( text );
+    queue_draw();
+    changed();
+  }
+
+  private void insert_connection_text( Connection conn, string text ) {
+    conn.title.insert( text );
+    queue_draw();
+    changed();
+  }
+
+  private void paste_text_as_node( Node? node, string text ) {
+    var new_node = (node == null) ? create_root_node( text ) : create_child_node( node, text );
+    undo_buffer.add_item( new UndoNodeInsert( new_node ) );
+    select_node( new_node );
+    queue_draw();
+    current_changed( this );
+    changed();
+  }
+
+  private void paste_image_as_node( Node? node, Pixbuf image ) {
+    var new_node = (node == null) ? create_root_node() : create_child_node( node );
+    var ni = new NodeImage.from_pixbuf( image_manager, image, 200 );
+    if( ni.valid ) {
+      new_node.set_image( image_manager, ni );
+    }
+    undo_buffer.add_item( new UndoNodeInsert( new_node ) );
+    select_node( new_node );
+    queue_draw();
+    current_changed( this );
+    changed();
+  }
+
+  private void paste_as_nodes( Node? node, string text ) {
+    var nodes    = new Array<Node>();
+    var conns    = new Array<Connection>();
+    var id_map   = new HashMap<int,int>();
+    var link_ids = new Array<NodeLinkInfo?>();
+    deserialize_for_paste( text, nodes, conns, id_map, link_ids );
+    if( nodes.length == 0 ) return;
+    if( node == null ) {
+      for( int i=0; i<nodes.length; i++ ) {
+        _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), nodes.index( i ) );
+        add_root( nodes.index( i ), -1 );
       }
-    } else if( clipboard.wait_is_text_available() ) {
-      if( shift ) {
-        paste_text_replace_node( clipboard, parent );
+    } else if( node.is_root() ) {
+      uint num_children = node.children().length;
+      if( num_children > 0 ) {
+        for( int i=0; i<nodes.length; i++ ) {
+          nodes.index( i ).side = node.children().index( num_children - 1 ).side;
+          nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
+          nodes.index( i ).attach( node, -1, _theme );
+        }
       } else {
-        paste_text_as_node( clipboard, parent );
+        for( int i=0; i<nodes.length; i++ ) {
+          nodes.index( i ).attach( node, -1, _theme );
+        }
       }
     } else {
-      paste_node_from_clipboard( parent, shift );
+      for( int i=0; i<nodes.length; i++ ) {
+        nodes.index( i ).side = node.side;
+        nodes.index( i ).layout.propagate_side( nodes.index( i ), nodes.index( i ).side );
+        nodes.index( i ).attach( node, -1, _theme );
+      }
+    }
+    undo_buffer.add_item( new UndoNodePaste( nodes, conns ) );
+    select_node( nodes.index( 0 ) );
+    queue_draw();
+    current_changed( this );
+    changed();
+  }
+
+  /* Called by the clipboard to paste text */
+  public void paste_text( string text, bool shift ) {
+    var node = _selected.current_node();
+    var conn = _selected.current_connection();
+    if( shift ) {
+      if( (node != null) && (node.mode == NodeMode.CURRENT) ) {
+        replace_node_text( node, text );
+      } else if( (conn != null) && (conn.mode == ConnMode.SELECTED) ) {
+        replace_connection_text( conn, text );
+      }
+    } else {
+      if( (node != null) && (node.mode == NodeMode.EDITABLE) ) {
+        insert_node_text( node, text );
+      } else if( (conn != null) && (conn.mode == ConnMode.EDITABLE) ) {
+        insert_connection_text( conn, text );
+      } else if( conn == null ) {
+        paste_text_as_node( node, text );
+      }
+    }
+  }
+
+  /* Called by the clipboard to paste image */
+  public void paste_image( Pixbuf image, bool shift ) {
+    var node = _selected.current_node();
+    if( shift ) {
+      if( (node != null) && (node.mode == NodeMode.CURRENT) ) {
+        replace_node_image( node, image );
+      }
+    } else {
+      paste_image_as_node( node, image );
+    }
+  }
+
+  /* Called by the clipboard to paste nodes */
+  public void paste_nodes( string text, bool shift ) {
+    var node = _selected.current_node();
+    if( shift ) {
+      if( (node != null) && (node.mode == NodeMode.CURRENT) ) {
+        replace_node( node, text );
+      }
+    } else {
+      paste_as_nodes( node, text );
     }
   }
 
   /* Pastes the contents of the clipboard into the current node */
   public void do_paste( bool shift ) {
-    var current   = _selected.current_node();
-    var clipboard = Clipboard.get_default( get_display() );
-    if( current != null ) {
-      switch( current.mode ) {
-        case NodeMode.CURRENT  :  paste_new_node( current, shift );  break;
-        case NodeMode.EDITABLE :  paste_text();                      break;
-      }
-    } else if( is_connection_editable() ) {
-      paste_text();
-    } else if( _selected.current_connection() != null ) {
-      if( shift && clipboard.wait_is_text_available() ) {
-        paste_text_replace_connection( clipboard, _selected.current_connection() );
-      }
-    } else {
-      paste_new_node( null, shift );
-    }
+    MinderClipboard.paste( this, shift );
   }
 
   /*
@@ -3808,22 +3831,6 @@ public class DrawArea : Gtk.DrawingArea {
   public bool update_current_image( string uri ) {
     var current = _selected.current_node();
     var image   = new NodeImage.from_uri( image_manager, uri, current.max_width() );
-    if( image.valid ) {
-      var orig_image = current.image;
-      current.set_image( image_manager, image );
-      undo_buffer.add_item( new UndoNodeImage( current, orig_image ) );
-      queue_draw();
-      current_changed( this );
-      auto_save();
-      return( true );
-    }
-    return( false );
-  }
-
-  /* Sets the image of the current node to the given pixbuf */
-  public bool update_current_image_from_pixbuf( Pixbuf buf ) {
-    var current = _selected.current_node();
-    var image   = new NodeImage.from_pixbuf( image_manager, buf, current.max_width() );
     if( image.valid ) {
       var orig_image = current.image;
       current.set_image( image_manager, image );

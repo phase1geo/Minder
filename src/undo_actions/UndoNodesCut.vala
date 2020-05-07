@@ -49,7 +49,8 @@ public class UndoNodesCut : UndoItem {
 
   /* Undoes a node deletion */
   public override void undo( DrawArea da ) {
-    da.node_clipboard.clear();
+    var clipboard = Clipboard.get_default( da.get_display() );
+    clipboard.clear();
     da.get_selections().clear();
     for( int i=0; i<_nodes.length; i++ ) {
       var ni = _nodes.index( i );
@@ -65,12 +66,7 @@ public class UndoNodesCut : UndoItem {
 
   /* Redoes a node deletion */
   public override void redo( DrawArea da ) {
-    var nodes_to_copy = new Array<Node>();
-    for( int i=0; i<_nodes.length; i++ ) {
-      nodes_to_copy.append_val( _nodes.index( i ).node );
-    }
-    da.node_clipboard.set_text( da.serialize_for_copy( nodes_to_copy ), -1 );
-    da.node_clipboard.store();
+    MinderClipboard.copy_nodes( da );
     da.get_selections().clear();
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).node.delete_only();

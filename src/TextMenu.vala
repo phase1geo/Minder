@@ -117,7 +117,7 @@ public class TextMenu : Gtk.Menu {
    any selected text.
   */
   private void paste() {
-    _da.paste_text();
+    MinderClipboard.paste( _da, false );
   }
 
   /*

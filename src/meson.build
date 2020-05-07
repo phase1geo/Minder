@@ -107,6 +107,7 @@ sources += files(
     'Application.vala',
     'Bezier.vala',
     'CanvasText.vala',
+    'Clipboard.vala',
     'Connection.vala',
     'ConnectionInspector.vala',
     'ConnectionMenu.vala',
