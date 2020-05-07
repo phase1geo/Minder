@@ -128,6 +128,7 @@ sources += files(
     'MainWindow.vala',
     'MapInspector.vala',
     'Node.vala',
+    'NodeAlign.vala',
     'NodeBorder.vala',
     'NodeImage.vala',
     'NodeInspector.vala',
