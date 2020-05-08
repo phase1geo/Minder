@@ -31,55 +31,75 @@ public enum NodeAlignType {
 public class NodeAlign {
 
   /* Aligns all of the given nodes to the top of the first node */
-  public static void align_top( Array<Node> nodes ) {
+  public static void align_top( DrawArea da, Array<Node> nodes ) {
     var top = nodes.index( 0 ).posy;
     for( int i=1; i<nodes.length; i++ ) {
-      nodes.index( i ).posy = top;
+      var node = nodes.index( i );
+      da.animator.add_node( node, "align_top" );
+      node.posy = top;
     }
+    da.animator.animate();
+    da.changed();
   }
 
   /* Aligns all of the given nodes to the bottom of the first node */
-  public static void align_bottom( Array<Node> nodes ) {
+  public static void align_bottom( DrawArea da, Array<Node> nodes ) {
     var bot = nodes.index( 0 ).posy + nodes.index( 0 ).height;
     for( int i=1; i<nodes.length; i++ ) {
       var node = nodes.index( i );
+      da.animator.add_node( node, "align_bottom" );
       node.posy = bot - node.height;
     }
+    da.animator.animate();
+    da.changed();
   }
 
   /* Aligns all of the given nodes to the left side of the first node */
-  public static void align_left( Array<Node> nodes ) {
+  public static void align_left( DrawArea da, Array<Node> nodes ) {
     var left = nodes.index( 0 ).posx;
     for( int i=1; i<nodes.length; i++ ) {
-      nodes.index( i ).posx = left;
+      var node = nodes.index( i );
+      da.animator.add_node( node, "align_left" );
+      node.posx = left;
     }
+    da.animator.animate();
+    da.changed();
   }
 
   /* Aligns all of the given nodes to the right side of the first node */
-  public static void align_right( Array<Node> nodes ) {
+  public static void align_right( DrawArea da, Array<Node> nodes ) {
     var right = nodes.index( 0 ).posx + nodes.index( 0 ).width;
     for( int i=1; i<nodes.length; i++ ) {
       var node = nodes.index( i );
+      da.animator.add_node( node, "align_right" );
       node.posx = right - node.width;
     }
+    da.animator.animate();
+    da.changed();
   }
 
   /* Aligns all of the given nodes to the center of the first node horizontally */
-  public static void align_hcenter( Array<Node> nodes ) {
+  public static void align_hcenter( DrawArea da, Array<Node> nodes ) {
     var center = nodes.index( 0 ).posy + (nodes.index( 0 ).height / 2);
     for( int i=1; i<nodes.length; i++ ) {
       var node = nodes.index( i );
+      da.animator.add_node( node, "align_hcenter" );
       node.posy = center - (node.height / 2);
     }
+    da.animator.animate();
+    da.changed();
   }
 
   /* Aligns all of the given nodes to the center of the first node vertically */
-  public static void align_vcenter( Array<Node> nodes ) {
+  public static void align_vcenter( DrawArea da, Array<Node> nodes ) {
     var center = nodes.index( 0 ).posx + (nodes.index( 0 ).width / 2);
     for( int i=1; i<nodes.length; i++ ) {
       var node = nodes.index( i );
+      da.animator.add_node( node, "align_vcenter" );
       node.posx = center - (node.width / 2);
     }
+    da.animator.animate();
+    da.changed();
   }
 
 }

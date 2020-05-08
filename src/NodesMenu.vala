@@ -225,32 +225,32 @@ public class NodesMenu : Gtk.Menu {
 
   /* Aligns all selected nodes to the top of the first node */
   private void align_to_top() {
-    NodeAlign.align_top( _da.get_selected_nodes() );
+    NodeAlign.align_top( _da, _da.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the center of the first node horizontally */
   private void align_to_hcenter() {
-    NodeAlign.align_hcenter( _da.get_selected_nodes() );
+    NodeAlign.align_hcenter( _da, _da.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the bottom of the first node */
   private void align_to_bottom() {
-    NodeAlign.align_bottom( _da.get_selected_nodes() );
+    NodeAlign.align_bottom( _da, _da.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the left side of the first node */
   private void align_to_left() {
-    NodeAlign.align_left( _da.get_selected_nodes() );
+    NodeAlign.align_left( _da, _da.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the center of the first node vertically */
   private void align_to_vcenter() {
-    NodeAlign.align_vcenter( _da.get_selected_nodes() );
+    NodeAlign.align_vcenter( _da, _da.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the right side of the first node */
   private void align_to_right() {
-    NodeAlign.align_right( _da.get_selected_nodes() );
+    NodeAlign.align_right( _da, _da.get_selected_nodes() );
   }
 
 }
