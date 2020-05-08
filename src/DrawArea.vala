@@ -1254,6 +1254,7 @@ public class DrawArea : Gtk.DrawingArea {
   private bool set_current_at_position( double x, double y, EventButton e ) {
 
     var current_conn = _selected.current_connection();
+    var shift        = (bool)(e.state & ModifierType.SHIFT_MASK);
 
     /* If the user clicked on a selected connection endpoint, disconnect that endpoint */
     if( (current_conn != null) && (current_conn.mode == ConnMode.SELECTED) ) {
@@ -1294,7 +1295,9 @@ public class DrawArea : Gtk.DrawingArea {
             return( set_current_node_from_position( match_node, e ) );
           }
         }
-        clear_current_node( true );
+        if( !shift ) {
+          clear_current_node( true );
+        }
         clear_current_connection( true );
         if( _last_node != null ) {
           _selected.set_current_node( _last_node );
