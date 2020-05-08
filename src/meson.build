@@ -76,6 +76,7 @@ sources += files(
     'undo_actions/UndoNodeReveal.vala',
     'undo_actions/UndoNodeSort.vala',
     'undo_actions/UndoNodeTask.vala',
+    'undo_actions/UndoNodesAlign.vala',
     'undo_actions/UndoNodesCut.vala',
     'undo_actions/UndoNodesDelete.vala',
     'undo_actions/UndoNodesFold.vala',

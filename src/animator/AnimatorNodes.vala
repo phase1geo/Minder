@@ -23,19 +23,19 @@ using GLib;
 
 public class AnimatorNodes : AnimatorAction {
 
-  private Node?              _node = null;
-  private AnimatorPositions? _pos  = null;
+  uint                      _num;
+  private AnimatorPositions _pos;
 
   /* Default constructor */
-  public AnimatorNodes( DrawArea da, Node? n = null, string name = "unnamed" ) {
+  public AnimatorNodes( DrawArea da, Array<Node> n, string name = "unnamed" ) {
     base( name );
-    _node = n;
-    _pos  = new AnimatorPositions( da, n );
+    _num = n.length;
+    _pos = new AnimatorPositions( da, n );
   }
 
   /* Returns the NODES types */
   public override AnimationType type() {
-    return( (_node == null) ? AnimationType.NODES : AnimationType.NODE );
+    return( (_num > 1) ? AnimationType.NODES : AnimationType.NODE );
   }
 
   /* Captures the end state */

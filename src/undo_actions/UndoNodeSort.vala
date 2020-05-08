@@ -60,7 +60,7 @@ public class UndoNodeSort : UndoItem {
 
   /* Perform the swap */
   private void change( DrawArea da, SortNodes nodes ) {
-    da.animator.add_nodes( "undo sorted nodes" );
+    da.animator.add_nodes( da.get_nodes(), "undo sorted nodes" );
     nodes.change( _parent );
     da.animator.animate();
   }

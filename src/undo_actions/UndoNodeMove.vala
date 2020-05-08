@@ -42,7 +42,7 @@ public class UndoNodeMove : UndoItem {
   /* Perform the node move change */
   public void change( DrawArea da, NodeSide old_side, NodeSide new_side, int new_index ) {
     Node parent = _n.parent;
-    da.animator.add_nodes( "undo move" );
+    da.animator.add_nodes( da.get_nodes(), "undo move" );
     _n.detach( old_side );
     _n.side = new_side;
     _n.layout.propagate_side( _n, new_side );

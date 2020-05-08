@@ -271,7 +271,7 @@ public class DrawArea : Gtk.DrawingArea {
       undo_buffer.add_item( new UndoNodeLayout( old_layout, new_layout, root_node ) );
     }
     var old_balanceable = old_layout.balanceable;
-    animator.add_nodes( "set layout" );
+    animator.add_nodes( _nodes, "set layout" );
     if( root_node == null ) {
       for( int i=0; i<_nodes.length; i++ ) {
         _nodes.index( i ).layout = new_layout;
@@ -1900,7 +1900,7 @@ public class DrawArea : Gtk.DrawingArea {
         /* If we are not a root node, move the node into the appropriate position */
         } else if( current_node.parent != null ) {
           int orig_index = current_node.index();
-          animator.add_nodes( "move to position" );
+          animator.add_nodes( _nodes, "move to position" );
           current_node.parent.move_to_position( current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) );
           undo_buffer.add_item( new UndoNodeMove( current_node, _orig_side, orig_index ) );
           animator.animate();
@@ -2629,7 +2629,7 @@ public class DrawArea : Gtk.DrawingArea {
       undo_buffer.add_item( new UndoNodeBalance( this, root_node ) );
     }
     if( (current == null) || !undoable ) {
-      animator.add_nodes( "balance nodes" );
+      animator.add_nodes( _nodes, "balance nodes" );
       for( int i=0; i<_nodes.length; i++ ) {
         var partitioner = new Partitioner();
         partitioner.partition_node( _nodes.index( i ) );
@@ -4019,7 +4019,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void sort_children( Node parent, CompareFunc<Node> sort_fn ) {
     var children = new SList<Node>();
     undo_buffer.add_item( new UndoNodeSort( parent ) );
-    animator.add_nodes( "sort nodes" );
+    animator.add_nodes( _nodes, "sort nodes" );
     for( int i=0; i<parent.children().length; i++ ) {
       children.append( parent.children().index( i ) );
     }
