@@ -2429,10 +2429,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a connected node to the currently selected node */
   public void add_connected_node() {
-    var node  = create_root_node( _( "Another Idea" ) );
     var index = (int)_nodes.length;
+    var node  = create_root_node( _( "Another Idea" ) );
     var conn  = new Connection( this, _selected.current_node() );
-    _nodes.append_val( node );
+    conn.connect_to( _selected.current_node() );
     conn.connect_to( node );
     _connections.add_connection( conn );
     undo_buffer.add_item( new UndoConnectedNode( node, index, conn ) );
