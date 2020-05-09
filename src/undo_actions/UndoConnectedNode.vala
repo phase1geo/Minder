@@ -34,16 +34,20 @@ public class UndoConnectedNode : UndoItem {
     _index = index;
   }
 
-  public void undo( DrawArea da ) {
+  public override void undo( DrawArea da ) {
     da.remove_root( _index );
     da.get_connections().remove_connection( _conn, false );
+    if( da.get_current_node() == _node ) {
+      da.set_current_node( null );
+    }
     da.queue_draw();
     da.changed();
   }
 
-  public void redo( DrawArea da ) {
+  public override void redo( DrawArea da ) {
     da.get_nodes().insert_val( _index, _node );
     da.get_connections().add_connection( _conn );
+    da.set_current_node( _node );
     da.queue_draw();
     da.changed();
   }
