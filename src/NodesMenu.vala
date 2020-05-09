@@ -163,7 +163,7 @@ public class NodesMenu : Gtk.Menu {
     _fold.set_sensitive( foldable || unfoldable );
     _connect.set_sensitive( node_num == 2 );
     _parent_link_colors.set_sensitive( link_colors_parentable() );
-    _align.set_sensitive( (nodes.length > 1) && (nodes.index( 0 ).layout.name == _( "Manual")) );
+    _align.set_sensitive( _da.nodes_alignable() );
 
     _fold.label = unfoldable ? _( "Unfold Children" )  : _( "Fold Children" );
 

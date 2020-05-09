@@ -376,6 +376,54 @@
             </child>
           </object>
         </child>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes">Alignment</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Align Top Side</property>
+                <property name="accelerator">minus</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Align Center Horizontally</property>
+                <property name="accelerator">equal</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Align Bottom Side</property>
+                <property name="accelerator">underscore</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Align Left Side</property>
+                <property name="accelerator">bracketleft</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Align Center Vertically</property>
+                <property name="accelerator">bar</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Align Right Side</property>
+                <property name="accelerator">bracketright</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
     <child>

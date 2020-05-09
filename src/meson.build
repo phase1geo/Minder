@@ -46,6 +46,7 @@ sources += files(
     'themes/ThemeSolarizedDark.vala',
     'themes/ThemeSolarizedLight.vala',
 
+    'undo_actions/UndoConnectedNode.vala',
     'undo_actions/UndoConnectionAdd.vala',
     'undo_actions/UndoConnectionChange.vala',
     'undo_actions/UndoConnectionColor.vala',

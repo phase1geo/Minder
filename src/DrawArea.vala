@@ -2417,6 +2417,25 @@ public class DrawArea : Gtk.DrawingArea {
   /* Adds a new root node to the canvas */
   public void add_root_node() {
     var node = create_root_node( _( "Another Idea" ) );
+    undo_buffer.add_item( new UndoNodeInsert( node ) );
+    if( select_node( node ) ) {
+      set_node_mode( node, NodeMode.EDITABLE );
+      _current_new = true;
+      queue_draw();
+    }
+    see();
+    changed();
+  }
+
+  /* Adds a connected node to the currently selected node */
+  public void add_connected_node() {
+    var node  = create_root_node( _( "Another Idea" ) );
+    var index = (int)_nodes.length;
+    var conn  = new Connection( this, _selected.current_node() );
+    _nodes.append_val( node );
+    conn.connect_to( node );
+    _connections.add_connection( conn );
+    undo_buffer.add_item( new UndoConnectedNode( node, index, conn ) );
     if( select_node( node ) ) {
       set_node_mode( node, NodeMode.EDITABLE );
       _current_new = true;
@@ -2562,6 +2581,8 @@ public class DrawArea : Gtk.DrawingArea {
       see();
       current_changed( this );
       queue_draw();
+    } else if( is_node_selected() ) {
+      add_connected_node();
     }
   }
 
@@ -3348,6 +3369,12 @@ public class DrawArea : Gtk.DrawingArea {
         case "z" :  zoom_out();  break;
         case "Z" :  zoom_in();   break;
         case "f" :  toggle_folds();  break;
+        case "[" :  if( nodes_alignable() ) NodeAlign.align_left( this, _selected.nodes() );  break;
+        case "]" :  if( nodes_alignable() ) NodeAlign.align_right( this, _selected.nodes() );  break;
+        case "|" :  if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() );  break;
+        case "-" :  if( nodes_alignable() ) NodeAlign.align_top( this, _selected.nodes() );  break;
+        case "_" :  if( nodes_alignable() ) NodeAlign.align_bottom( this, _selected.nodes() );  break;
+        case "=" :  if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() );  break;
         default  :
           switch( e.keyval ) {
             case 65288 :  handle_backspace();  break;
@@ -3374,6 +3401,19 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns true if we can perform a node paste operation */
   public bool node_pasteable() {
     return( MinderClipboard.node_pasteable() );
+  }
+
+  /* Returns true if the currently selected nodes are alignable */
+  public bool nodes_alignable() {
+    var nodes = _selected.nodes();
+    if( nodes.length < 2 ) return( false );
+    for( int i=0; i<nodes.length; i++ ) {
+      var node = nodes.index( i );
+      if( !node.is_root() && (node.layout.name != _( "Manual" )) ) {
+        return( false );
+      }
+    }
+    return( true );
   }
 
   /* Serializes the current node tree */
