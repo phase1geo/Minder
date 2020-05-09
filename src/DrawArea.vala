@@ -2533,7 +2533,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Called whenever the return character is entered in the drawing area */
-  private void handle_return() {
+  private void handle_return( bool shift ) {
     if( is_connection_editable() ) {
       var current = _selected.current_connection();
       current.edit_title_end();
@@ -2562,6 +2562,8 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_node_selected() ) {
       if( !_selected.current_node().is_root() ) {
         add_sibling_node();
+      } else if( shift ) {
+        add_connected_node();
       } else {
         add_root_node();
       }
@@ -2581,8 +2583,6 @@ public class DrawArea : Gtk.DrawingArea {
       see();
       current_changed( this );
       queue_draw();
-    } else if( is_node_selected() ) {
-      add_connected_node();
     }
   }
 
@@ -3335,19 +3335,19 @@ public class DrawArea : Gtk.DrawingArea {
           return( true );
         }
         switch( e.keyval ) {
-          case 65288 :  handle_backspace();    break;
-          case 65535 :  handle_delete();       break;
-          case 65307 :  handle_escape();       break;
-          case 65293 :  handle_return();       break;
-          case 65289 :  handle_tab();          break;
-          case 65363 :  handle_right( shift ); break;
-          case 65361 :  handle_left( shift );  break;
-          case 65360 :  handle_home();         break;
-          case 65367 :  handle_end();          break;
-          case 65362 :  handle_up( shift );    break;
-          case 65364 :  handle_down( shift );  break;
-          case 65365 :  handle_pageup();       break;
-          case 65366 :  handle_pagedn();       break;
+          case 65288 :  handle_backspace();      break;
+          case 65535 :  handle_delete();         break;
+          case 65307 :  handle_escape();         break;
+          case 65293 :  handle_return( shift );  break;
+          case 65289 :  handle_tab();            break;
+          case 65363 :  handle_right( shift );   break;
+          case 65361 :  handle_left( shift );    break;
+          case 65360 :  handle_home();           break;
+          case 65367 :  handle_end();            break;
+          case 65362 :  handle_up( shift );      break;
+          case 65364 :  handle_down( shift );    break;
+          case 65365 :  handle_pageup();         break;
+          case 65366 :  handle_pagedn();         break;
           default    :  return( false );
         }
       }
@@ -3377,9 +3377,9 @@ public class DrawArea : Gtk.DrawingArea {
         case "=" :  if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() );  break;
         default  :
           switch( e.keyval ) {
-            case 65288 :  handle_backspace();  break;
-            case 65535 :  handle_delete();     break;
-            case 65293 :  handle_return();     break;
+            case 65288 :  handle_backspace();      break;
+            case 65535 :  handle_delete();         break;
+            case 65293 :  handle_return( shift );  break;
             default    :  return( false );
           }
           break;

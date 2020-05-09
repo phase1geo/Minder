@@ -162,6 +162,13 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">New Connected Node</property>
+                <property name="accelerator">&lt;shift&gt;Return</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">New Child Node</property>
                 <property name="accelerator">Tab</property>
                 <property name="visible">1</property>
