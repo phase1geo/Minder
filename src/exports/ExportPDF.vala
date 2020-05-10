@@ -46,7 +46,10 @@ public class ExportPDF : Object {
 
     /* Scale and translate the image */
     context.scale( sf, sf );
-    context.translate( ((0 - x) + margin), ((0 - y) + margin) );
+    context.translate( ((0 - x) + (margin / sf)), ((0 - y) + (margin / sf)) );
+
+    /* Draw background */
+    da.get_style_context().render_background( context, x, y, w, h );
 
     /* Recreate the image */
     da.draw_all( context );
