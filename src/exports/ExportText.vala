@@ -36,8 +36,10 @@ public class ExportText : Object {
     bool retval = true;
 
     try {
-      var os = file.create( FileCreateFlags.PRIVATE );
-      export_top_nodes( os, da );
+      var os  = file.create( FileCreateFlags.PRIVATE );
+      var str = export_top_nodes( da );
+      os.write( str.data );
+      os.close();
     } catch( Error e ) {
       retval = false;
     }
@@ -47,60 +49,56 @@ public class ExportText : Object {
   }
 
   /* Draws each of the top-level nodes */
-  private static void export_top_nodes( FileOutputStream os, DrawArea da ) {
+  public static string export_top_nodes( DrawArea da ) {
 
-    try {
+    var value = "";
+    var nodes = da.get_nodes();
 
-      var nodes = da.get_nodes();
-      for( int i=0; i<nodes.length; i++ ) {
-        string title = nodes.index( i ).name.text + "\n";
-        os.write( title.data );
-        var children = nodes.index( i ).children();
-        for( int j=0; j<children.length; j++ ) {
-          export_node( os, children.index( j ) );
-        }
+    for( int i=0; i<nodes.length; i++ ) {
+      value += "# " + nodes.index( i ).name.text + "\n";
+      var children = nodes.index( i ).children();
+      for( int j=0; j<children.length; j++ ) {
+        value += export_node( children.index( j ) );
       }
-
-    } catch( Error e ) {
-      // Handle the error
     }
+
+    return( value );
 
   }
 
   /* Draws the given node and its children to the output stream */
-  private static void export_node( FileOutputStream os, Node node, string prefix = "        " ) {
+  public static string export_node( Node node, string prefix = "\t" ) {
 
-    try {
+    string value = prefix + "- ";
 
-      string title = prefix;
-
-      if( node.is_task() ) {
-        if( node.is_task_done() ) {
-          title += "- [x] ";
-        } else {
-          title += "- [ ] ";
-        }
+    /* Add the task information, if necessary */
+    if( node.is_task() ) {
+      if( node.is_task_done() ) {
+        value += "[x] ";
+      } else {
+        value += "[ ] ";
       }
-
-      title += node.name.text + "\n";
-
-      os.write( title.data );
-
-      if( node.note != "" ) {
-        string note = prefix + "  " + node.note.replace( "\n", "\n  " ) + "\n";
-        os.write( note.data );
-      }
-
-      var children = node.children();
-      for( int i=0; i<children.length; i++ ) {
-        export_node( os, children.index( i ), prefix + "        " );
-      }
-
-    } catch( Error e ) {
-      // Handle error
     }
 
+    /* Add the node title */
+    value += node.name.text + "\n";
+
+    /* Add the node note, if specified */
+    if( node.note != "" ) {
+      value += prefix + "  > " + node.note.replace( "\n", "\n%s  > ".printf( prefix ) ) + "\n";
+    }
+
+    /* Add the children */
+    var children = node.children();
+    for( int i=0; i<children.length; i++ ) {
+      value += export_node( children.index( i ), prefix + "\t" );
+    }
+
+    return( value );
+
   }
+
+  /****************************************************************************/
 
   /* Imports a text file */
   public static bool import( string fname, DrawArea da ) {
@@ -110,12 +108,21 @@ public class ExportText : Object {
       File            file = File.new_for_path( fname );
       DataInputStream dis  = new DataInputStream( file.read() );
       size_t          len;
+      Array<Node>     nodes;
 
       /* Read the entire file contents */
       var str = dis.read_upto( "\0", 1, out len ) + "\0";
 
       /* Import the text */
-      import_text( str, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, false );
+      import_text( str, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, out nodes );
+
+      /* Add all of the root nodes */
+      for( int i=0; i<nodes.length; i++ ) {
+        da.add_root( nodes.index( i ), -1 );
+      }
+
+      da.queue_draw();
+      da.changed();
 
     } catch( IOError err ) {
       return( false );
@@ -153,12 +160,13 @@ public class ExportText : Object {
   }
 
   /* Imports the given text string */
-  public static void import_text( string txt, int tab_spaces, DrawArea da, bool imported ) {
+  public static void import_text( string txt, int tab_spaces, DrawArea da, out Array<Node> nodes ) {
+
+    nodes = new Array<Node>();
 
     try {
 
       var stack  = new ArrayQueue<Hier?>();
-      var tops   = new Array<Node>();
       var lines  = txt.split( "\n" );
       var re     = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
       var tspace = string.nfill( ((tab_spaces <= 0) ? 1 : tab_spaces), ' ' );
@@ -176,23 +184,10 @@ public class ExportText : Object {
           var str    = match_info.fetch( 6 );
 
           /* Add root node */
-          if( bullet == "#" ) {
+          if( (bullet == "#") || stack.is_empty ) {
             var node = make_node( da, null, task, str );
-            da.add_root( node, -1 );
             stack.offer_head( {spaces, node} );
-            tops.append_val( node );
-
-          /* If we are the first found node in the text input */
-          } else if( stack.is_empty ) {
-            Node node;
-            if( !imported && (da.get_current_node() != null) ) {
-              node = make_node( da, da.get_current_node(), task, str );
-            } else {
-              node = make_node( da, null, task, str );
-              da.add_root( node, -1 );
-            }
-            stack.offer_head( {spaces, node} );
-            tops.append_val( node );
+            nodes.append_val( node );
 
           /* Add note */
           } else if( bullet == ">" ) {
@@ -227,13 +222,6 @@ public class ExportText : Object {
         }
 
       }
-
-      if( !imported ) {
-        da.undo_buffer.add_item( new UndoNodesInsert( da, tops ) );
-      }
-
-      da.changed();
-      da.queue_draw();
 
     } catch( GLib.RegexError err ) {
       /* TBD */

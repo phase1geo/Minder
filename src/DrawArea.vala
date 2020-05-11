@@ -2999,9 +2999,16 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Displays the quick entry UI */
+  /* Displays the quick entry UI in insertion mode */
   public void handle_control_E() {
-    var quick_entry = new QuickEntry( this, _settings );
+    var quick_entry = new QuickEntry( this, false, _settings );
+    quick_entry.show_all();
+  }
+
+  /* Displays the quick entry UI in replacement mode */
+  public void handle_control_R() {
+    var quick_entry = new QuickEntry( this, true, _settings );
+    quick_entry.preload( ExportText.export_node( _selected.current_node(), "" ) );
     quick_entry.show_all();
   }
 
@@ -3327,6 +3334,7 @@ public class DrawArea : Gtk.DrawingArea {
           case 92    :  handle_control_backslash();     break;
           case 46    :  handle_control_period();        break;
           case 69    :  handle_control_E();             break;
+          case 82    :  handle_control_R();             break;
           case 119   :  handle_control_w();             break;
           default    :  return( false );
         }
