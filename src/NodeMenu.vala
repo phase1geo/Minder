@@ -44,7 +44,8 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _parent;
   Gtk.MenuItem _child;
   Gtk.MenuItem _sibling;
-  Gtk.MenuItem _quick;
+  Gtk.MenuItem _quick_insert;
+  Gtk.MenuItem _quick_replace;
   Gtk.MenuItem _sortby;
   Gtk.MenuItem _selroot;
   Gtk.MenuItem _selnext;
@@ -137,9 +138,17 @@ public class NodeMenu : Gtk.Menu {
     _sibling.activate.connect( add_sibling_node );
     Utils.add_accel_label( _sibling, 65293, 0 );
 
-    _quick = new Gtk.MenuItem.with_label( _( "Add Nodes With Quick Entry" ) );
-    _quick.activate.connect( add_quick_entry );
-    Utils.add_accel_label( _quick, 'e', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK) );
+    var quick_menu = new Gtk.Menu();
+    var quick = new Gtk.MenuItem.with_label( _( "Quick Entry" ) );
+    quick.set_submenu( quick_menu );
+
+    _quick_insert = new Gtk.MenuItem.with_label( _( "Insert Nodes" ) );
+    _quick_insert.activate.connect( quick_entry_insert );
+    Utils.add_accel_label( _quick_insert, 'e', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK) );
+
+    _quick_replace = new Gtk.MenuItem.with_label( _( "Replace Nodes" ) );
+    _quick_replace.activate.connect( quick_entry_replace );
+    Utils.add_accel_label( _quick_replace, 'r', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK) );
 
     var selnode = new Gtk.MenuItem.with_label( _( "Select" ) );
     var selmenu = new Gtk.Menu();
@@ -208,7 +217,7 @@ public class NodeMenu : Gtk.Menu {
     add( _parent );
     add( _child );
     add( _sibling );
-    add( _quick );
+    add( quick );
     add( new SeparatorMenuItem() );
     add( selnode );
     add( _center );
@@ -235,6 +244,10 @@ public class NodeMenu : Gtk.Menu {
     link_color_menu.add( set_link_color );
     link_color_menu.add( rand_link_color );
     link_color_menu.add( _parent_link_color );
+
+    /* Add the items to the quick entry menu */
+    quick_menu.add( _quick_insert );
+    quick_menu.add( _quick_replace );
 
     /* Make the menu visible */
     show_all();
@@ -461,9 +474,14 @@ public class NodeMenu : Gtk.Menu {
     _da.add_sibling_node();
   }
 
-  /* Show the quick entry window */
-  private void add_quick_entry() {
+  /* Show the quick entry insert window */
+  private void quick_entry_insert() {
     _da.handle_control_E();
+  }
+
+  /* Show the quick entry replace window */
+  private void quick_entry_replace() {
+    _da.handle_control_R();
   }
 
   /* Detaches the currently selected node and make it a root node */
