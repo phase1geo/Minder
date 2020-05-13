@@ -27,7 +27,7 @@ public class UndoNodesReplace : UndoItem {
   private Array<Node> _new_nodes;
 
   /* Default constructor */
-  public UndoNodesReplace( DrawArea da, Node? orig_node, Array<Node> new_nodes ) {
+  public UndoNodesReplace( Node? orig_node, Array<Node> new_nodes ) {
     base( _( "replace nodes" ) );
     _orig_node = orig_node;
     _new_nodes = new Array<Node>();
@@ -38,35 +38,25 @@ public class UndoNodesReplace : UndoItem {
 
   /* Performs an undo operation for this data */
   public override void undo( DrawArea da ) {
-    var first_node  = _new_nodes.index( 0 );
-    var first_index = (first_node.parent == null) ? da.root_index( first_node ) : first_node.index();
-    for( int i=0; i<_new_nodes.length; i++ ) {
-      var node = _new_nodes.index( i );
-      if( node.parent == null ) {
-        da.remove_root_node( node );
-      } else {
-        node.detach( node.side );
-      }
+    da.replace_node( _new_nodes.index( 0 ), _orig_node );
+    for( int i=1; i<_new_nodes.length; i++ ) {
+      da.remove_root_node( _new_nodes.index( i ) );
     }
-    if( first_node.parent == null ) {
-      da.add_root( _orig_node, first_index );
-    } else {
-      _orig_node.attach( first_node.parent, first_index, null );
-    }
+    da.set_current_node( _orig_node );
     da.queue_draw();
+    da.current_changed( da );
     da.changed();
   }
 
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
-    var parent = _orig_node.parent;
-    var index  = _orig_node.index();
-    _orig_node.detach( _orig_node.side );
-    _new_nodes.index( 0 ).attach( parent, index, null );
+    da.replace_node( _orig_node, _new_nodes.index( 0 ) );
     for( int i=1; i<_new_nodes.length; i++ ) {
       da.add_root( _new_nodes.index( i ), -1 );
     }
+    da.set_current_node( _new_nodes.index( 0 ) );
     da.queue_draw();
+    da.current_changed( da );
     da.changed();
   }
 

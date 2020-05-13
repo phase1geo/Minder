@@ -2494,7 +2494,7 @@ public class DrawArea : Gtk.DrawingArea {
    have any children.  Returns true if the replacement was successful; otherwise,
    returns false.
   */
-  public bool replace_node( Node orig_node, Node new_node ) {
+  public void replace_node( Node orig_node, Node new_node ) {
 
     var parent = orig_node.parent;
     var index  = (parent == null) ? root_index( orig_node ) : orig_node.index();
@@ -2511,20 +2511,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     /* Copy over a few attributes */
-    new_node.set_posx_only( orig_node.posx );
-    new_node.set_posy_only( orig_node.posy );
     if( new_node.main_branch() ) {
-      new_node.link_color_only = orig_node.link_color;
+      new_node.link_color = orig_node.link_color;
     }
-
-    /* Add the original children back to the new node */
-    for( int i=((int)orig_node.children().length - 1); i>=0; i-- ) {
-      var child = orig_node.children().index( i );
-      child.detach( child.side );
-      child.attach( new_node, 0, _theme );
-    }
-
-    return( true );
 
   }
 
@@ -3623,8 +3612,11 @@ public class DrawArea : Gtk.DrawingArea {
     var link_ids = new Array<NodeLinkInfo?>();
     deserialize_for_paste( text, nodes, conns, id_map, link_ids );
     if( nodes.length == 0 ) return;
-    if( !replace_node( node, nodes.index( 0 ) ) ) return;
-    undo_buffer.add_item( new UndoNodeReplace( nodes.index( 0 ), node ) );
+    replace_node( node, nodes.index( 0 ) );
+    for( int i=1; i<nodes.length; i++ ) {
+      add_root( nodes.index( i ), -1 );
+    }
+    undo_buffer.add_item( new UndoNodesReplace( node, nodes ) );
     select_node( nodes.index( 0 ) );
     queue_draw();
     current_changed( this );
@@ -3742,7 +3734,7 @@ public class DrawArea : Gtk.DrawingArea {
     var node = _selected.current_node();
     if( shift ) {
       if( (node != null) && (node.mode == NodeMode.CURRENT) ) {
-        replace_node( node, text );
+        replace_node_xml( node, text );
       }
     } else {
       paste_as_nodes( node, text );

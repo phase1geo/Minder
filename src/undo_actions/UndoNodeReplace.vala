@@ -35,7 +35,7 @@ public class UndoNodeReplace : UndoItem {
 
   /* Performs an undo operation for this data */
   public override void undo( DrawArea da ) {
-    da.replace_node_with_node( _new_node, _orig_node );
+    da.replace_node( _new_node, _orig_node );
     da.set_current_node( _orig_node );
     da.queue_draw();
     da.current_changed( da );
@@ -44,7 +44,7 @@ public class UndoNodeReplace : UndoItem {
 
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
-    da.replace_node_with_node( _orig_node, _new_node );
+    da.replace_node( _orig_node, _new_node );
     da.set_current_node( _new_node );
     da.queue_draw();
     da.current_changed( da );

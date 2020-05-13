@@ -277,6 +277,7 @@ public class QuickEntry : Gtk.Window {
         da.add_root( nodes.index( i ), -1 );
       }
     }
+    da.undo_buffer.add_item( new UndoNodesInsert( da, nodes ) );
     da.set_current_node( nodes.index( 0 ) );
     da.queue_draw();
     da.changed();
@@ -290,19 +291,11 @@ public class QuickEntry : Gtk.Window {
     var parent = node.parent;
     ExportText.import_text( _entry.buffer.text, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, out nodes );
     if( nodes.length == 0 ) return;
-    if( parent == null ) {
-      da.remove_root_node( node );
-      for( int i=0; i<nodes.length; i++ ) {
-        da.add_root( nodes.index( 0 ), -1 );
-      }
-    } else {
-      var index = node.index();
-      node.detach( node.side );
-      nodes.index( 0 ).attach( parent, index, da.get_theme() );
-      for( int i=1; i<nodes.length; i++ ) {
-        da.add_root( nodes.index( 1 ), -1 );
-      }
+    da.replace_node( node, nodes.index( 0 ) );
+    for( int i=1; i<nodes.length; i++ ) {
+      da.add_root( nodes.index( i ), -1 );
     }
+    da.undo_buffer.add_item( new UndoNodesReplace( node, nodes ) );
     da.set_current_node( nodes.index( 0 ) );
     da.queue_draw();
     da.changed();
