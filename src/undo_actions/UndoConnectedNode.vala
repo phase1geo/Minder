@@ -28,7 +28,7 @@ public class UndoConnectedNode : UndoItem {
   private int        _index;
 
   public UndoConnectedNode( Node node, int index, Connection conn ) {
-    base( "connected node" );
+    base( _( "connected node" ) );
     _node  = node;
     _conn  = conn;
     _index = index;
