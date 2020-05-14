@@ -27,6 +27,8 @@ using Gee;
 
 public class DrawArea : Gtk.DrawingArea {
 
+  private const CursorType url_cursor = CursorType.HAND2;
+
   private const Gtk.TargetEntry[] DRAG_TARGETS = {
     {"text/uri-list", 0, 0}
   };
@@ -35,6 +37,8 @@ public class DrawArea : Gtk.DrawingArea {
   private GLib.Settings    _settings;
   private double           _press_x;
   private double           _press_y;
+  private double           _scaled_x;
+  private double           _scaled_y;
   private double           _origin_x;
   private double           _origin_y;
   private double           _scale_factor;
@@ -181,6 +185,7 @@ public class DrawArea : Gtk.DrawingArea {
     this.motion_notify_event.connect( on_motion );
     this.button_release_event.connect( on_release );
     this.key_press_event.connect( on_keypress );
+    this.key_release_event.connect( on_keyrelease );
     this.scroll_event.connect( on_scroll );
 
     /* Make sure the above events are listened for */
@@ -1149,9 +1154,8 @@ public class DrawArea : Gtk.DrawingArea {
       _resize     = true;
       _orig_width = node.max_width();
       return( true );
-    } else if( !shift && control && node.is_within_url( scaled_x, scaled_y, out url, out left ) ) {
-      show_url_popover( e, node, url, left );
-      _selected.set_current_node( node );
+    } else if( !shift && control && node.is_within_url( scaled_x, scaled_y, out url ) ) {
+      Utils.open_url( url );
       return( false );
     }
 
@@ -1707,8 +1711,8 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     }
 
-    double scaled_x = scale_value( event.x );
-    double scaled_y = scale_value( event.y );
+    _scaled_x = scale_value( event.x );
+    _scaled_y = scale_value( event.y );
 
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
@@ -1720,14 +1724,14 @@ public class DrawArea : Gtk.DrawingArea {
       if( current_conn != null ) {
         switch( current_conn.mode ) {
           case ConnMode.ADJUSTING :
-            current_conn.move_drag_handle( scaled_x, scaled_y );
+            current_conn.move_drag_handle( _scaled_x, _scaled_y );
             queue_draw();
             break;
           case ConnMode.CONNECTING :
           case ConnMode.LINKING    :
             update_connection( event.x, event.y );
             for( int i=0; i<_nodes.length; i++ ) {
-              Node? match = _nodes.index( i ).contains( scaled_x, scaled_y, null );
+              Node? match = _nodes.index( i ).contains( _scaled_x, _scaled_y, null );
               if( match != null ) {
                 _attach_node      = match;
                 set_node_mode( _attach_node, NodeMode.ATTACHABLE );
@@ -1739,14 +1743,14 @@ public class DrawArea : Gtk.DrawingArea {
 
       /* If we are dealing with a node, handle it based on its mode */
       } else if( current_node != null ) {
-        double diffx = scaled_x - _press_x;
-        double diffy = scaled_y - _press_y;
+        double diffx = _scaled_x - _press_x;
+        double diffy = _scaled_y - _press_y;
         if( current_node.mode == NodeMode.CURRENT ) {
           if( _resize ) {
             current_node.resize( diffx );
             auto_save();
           } else {
-            Node attach_node = attachable_node( scaled_x, scaled_y );
+            Node attach_node = attachable_node( _scaled_x, _scaled_y );
             if( attach_node != null ) {
               set_node_mode( attach_node, NodeMode.ATTACHABLE );
               _attach_node = attach_node;
@@ -1757,16 +1761,16 @@ public class DrawArea : Gtk.DrawingArea {
           }
         } else {
           switch( _press_type ) {
-            case EventType.BUTTON_PRESS        :  current_node.name.set_cursor_at_char( scaled_x, scaled_y, true );  break;
-            case EventType.DOUBLE_BUTTON_PRESS :  current_node.name.set_cursor_at_word( scaled_x, scaled_y, true );  break;
+            case EventType.BUTTON_PRESS        :  current_node.name.set_cursor_at_char( _scaled_x, _scaled_y, true );  break;
+            case EventType.DOUBLE_BUTTON_PRESS :  current_node.name.set_cursor_at_word( _scaled_x, _scaled_y, true );  break;
           }
         }
         queue_draw();
 
       /* Otherwise, we are panning the canvas */
       } else {
-        double diff_x = _press_x - scaled_x;
-        double diff_y = _press_y - scaled_y;
+        double diff_x = _press_x - _scaled_x;
+        double diff_y = _press_y - _scaled_y;
         move_origin( diff_x, diff_y );
         queue_draw();
         auto_save();
@@ -1775,47 +1779,52 @@ public class DrawArea : Gtk.DrawingArea {
       if( !_motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
         current_node.alpha = 0.3;
       }
-      _press_x = scaled_x;
-      _press_y = scaled_y;
+      _press_x = _scaled_x;
+      _press_y = _scaled_y;
       _motion  = true;
 
     } else {
+      var url     = "";
+      var control = (bool)(event.state & ModifierType.CONTROL_MASK);
       if( current_conn != null )  {
         if( (current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING) ) {
           update_connection( event.x, event.y );
         }
-        if( current_conn.within_drag_handle( scaled_x, scaled_y ) ||
-            current_conn.within_from_handle( scaled_x, scaled_y ) ||
-            current_conn.within_to_handle( scaled_x, scaled_y ) ) {
+        if( current_conn.within_drag_handle( _scaled_x, _scaled_y ) ||
+            current_conn.within_from_handle( _scaled_x, _scaled_y ) ||
+            current_conn.within_to_handle( _scaled_x, _scaled_y ) ) {
           set_cursor_from_name( "move" );
           return( false );
-        } else if( current_conn.within_note( scaled_x, scaled_y ) ) {
+        } else if( current_conn.within_note( _scaled_x, _scaled_y ) ) {
           set_tooltip_markup( current_conn.note );
           return( false );
         }
       } else {
-        Connection? match_conn = _connections.within_note( scaled_x, scaled_y );
+        Connection? match_conn = _connections.within_note( _scaled_x, _scaled_y );
         if( match_conn != null ) {
           set_tooltip_markup( match_conn.note );
           return( false );
         }
       }
       for( int i=0; i<_nodes.length; i++ ) {
-        Node match = _nodes.index( i ).contains( scaled_x, scaled_y, null );
+        Node match = _nodes.index( i ).contains( _scaled_x, _scaled_y, null );
         if( match != null ) {
           if( (current_conn != null) && ((current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING)) ) {
             _attach_node = match;
             set_node_mode( _attach_node, NodeMode.ATTACHABLE );
-          } else if( match.is_within_task( scaled_x, scaled_y ) ) {
+          } else if( match.is_within_task( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.HAND1 );
             set_tooltip_markup( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
-          } else if( match.is_within_note( scaled_x, scaled_y ) ) {
+          } else if( match.is_within_note( _scaled_x, _scaled_y ) ) {
             set_tooltip_markup( match.note );
-          } else if( match.is_within_linked_node( scaled_x, scaled_y ) ) {
+          } else if( match.is_within_linked_node( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.HAND1 );
-          } else if( match.is_within_resizer( scaled_x, scaled_y ) ) {
+          } else if( match.is_within_resizer( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.SB_H_DOUBLE_ARROW );
             set_tooltip_markup( null );
+          } else if( control && match.is_within_url( _scaled_x, _scaled_y, out url ) ) {
+            set_cursor( url_cursor );
+            set_tooltip_markup( url );
           } else {
             set_cursor( null );
             set_tooltip_markup( null );
@@ -3339,6 +3348,7 @@ public class DrawArea : Gtk.DrawingArea {
           case 65364 :  handle_down( shift );    break;
           case 65365 :  handle_pageup();         break;
           case 65366 :  handle_pagedn();         break;
+          case 65507 :  handle_control( true );  break;
           default    :  return( false );
         }
       }
@@ -3371,12 +3381,41 @@ public class DrawArea : Gtk.DrawingArea {
             case 65288 :  handle_backspace();      break;
             case 65535 :  handle_delete();         break;
             case 65293 :  handle_return( shift );  break;
+            case 65507 :  handle_control( true );  break;
             default    :  return( false );
           }
           break;
       }
     }
     return( true );
+  }
+
+  /* Handles a key release event */
+  private bool on_keyrelease( EventKey e ) {
+    if( e.keyval == 65507 ) {
+      handle_control( false );
+    }
+    return( true );
+  }
+
+  /*
+   Handles a key press/release of the control key.  Checks to see if the current
+   cursor is over a URL.  If it is, sets the cursor appropriately.
+  */
+  private void handle_control( bool pressed ) {
+    var url = "";
+    for( int i=0; i<_nodes.length; i++ ) {
+      var match = _nodes.index( i ).contains( _scaled_x, _scaled_y, null );
+      if( (match != null) && match.is_within_url( _scaled_x, _scaled_y, out url ) ) {
+        if( pressed ) {
+          set_cursor( url_cursor );
+          set_tooltip_markup( url );
+        } else {
+          set_cursor( null );
+          set_tooltip_markup( null );
+        }
+      }
+    }
   }
 
   /* Returns true if we can perform a node copy operation */
@@ -4082,29 +4121,6 @@ public class DrawArea : Gtk.DrawingArea {
       return( (Random.int_range( 0, 2 ) == 0) ? -1 : 1 );
     };
     sort_children( _selected.current_node(), sort_fn );
-  }
-
-  /* Displays the URL in a popup menu that allows the user to display the URL in a web browser */
-  private void show_url_popover( EventButton event, Node node, string url, double left ) {
-    var mnu  = new Gtk.Menu();
-    var item = new Gtk.MenuItem.with_label( url );
-    item.activate.connect(() => {
-      Utils.open_url( url );
-    });
-    mnu.rect_anchor_dx = (int)(left - event.x);
-    mnu.rect_anchor_dy = (int)(node.posy - event.y - 40);
-    mnu.take_focus     = false;
-    mnu.add( item );
-    mnu.show_all();
-#if GTK322
-    mnu.popup_at_pointer( event );
-#else
-    mnu.popup( null, null, null, event.button, event.time );
-#endif
-    Timeout.add( 500, () => {
-      grab_focus();
-      return( Source.REMOVE );
-    });
   }
 
   /* Moves all trees to avoid overlapping */

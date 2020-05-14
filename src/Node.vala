@@ -776,8 +776,8 @@ public class Node : Object {
   }
 
   /* Returns true if the given cursor coordinates lie within a URL */
-  public virtual bool is_within_url( double x, double y, out string url, out double left ) {
-    return( _urls.get_url_at_pos( name, x, y, out url, out left ) );
+  public virtual bool is_within_url( double x, double y, out string url ) {
+    return( _urls.get_url_at_pos( name, x, y, out url ) );
   }
 
   /* Finds the node which contains the given pixel coordinates */

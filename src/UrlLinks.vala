@@ -280,16 +280,13 @@ public class UrlLinks {
   }
 
   /* Returns the URL at the given string position */
-  public bool get_url_at_pos( CanvasText ct, double x, double y, out string url, out double left ) {
+  public bool get_url_at_pos( CanvasText ct, double x, double y, out string url ) {
     var pos = ct.get_pos( x, y );
-    url  = "";
-    left = 0;
+    url = "";
     if( pos != -1 ) {
       var link = find_link( pos );
       if( (link != null) && !link.ignore ) {
-        double top;
         url = link.url;
-        ct.get_char_pos( link.spos, out left, out top );
         return( true );
       }
     }
