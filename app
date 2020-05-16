@@ -49,6 +49,8 @@ case $1 in
     initialize
     ninja com.github.phase1geo.minder-pot
     ninja com.github.phase1geo.minder-update-po
+    ninja extra-pot
+    ninja extra-update-po
     ;;
 "install")
     initialize
