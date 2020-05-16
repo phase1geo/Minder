@@ -36,7 +36,7 @@ public class ExportText : Object {
     bool retval = true;
 
     try {
-      var os  = file.create( FileCreateFlags.PRIVATE );
+      var os  = file.replace( null, false, FileCreateFlags.NONE );
       var str = export_top_nodes( da );
       os.write( str.data );
       os.close();

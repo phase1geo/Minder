@@ -28,7 +28,7 @@ public class ExportCSV : Object {
     var  file   = File.new_for_path( fname );
     bool retval = true;
     try {
-      var os     = file.create( FileCreateFlags.PRIVATE );
+      var os     = file.replace( null, false, FileCreateFlags.NONE );
       int levels = levels( da );
       export_levels( os, levels );
       export_top_nodes( os, da, levels );
