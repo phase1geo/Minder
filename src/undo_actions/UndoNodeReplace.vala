@@ -21,43 +21,34 @@
 
 using Gtk;
 
-public class UndoNodeMove : UndoItem {
+public class UndoNodeReplace : UndoItem {
 
-  private Node     _n;
-  private NodeSide _old_side;
-  private int      _old_index;
-  private NodeSide _new_side;
-  private int      _new_index;
+  private Node _orig_node;
+  private Node _new_node;
 
   /* Default constructor */
-  public UndoNodeMove( Node n, NodeSide old_side, int old_index ) {
-    base( _( "move node" ) );
-    _n         = n;
-    _old_side  = old_side;
-    _old_index = old_index;
-    _new_side  = n.side;
-    _new_index = n.index();
-  }
-
-  /* Perform the node move change */
-  public void change( DrawArea da, NodeSide old_side, NodeSide new_side, int new_index ) {
-    Node parent = _n.parent;
-    da.animator.add_nodes( da.get_nodes(), "undo move" );
-    _n.detach( old_side );
-    _n.side = new_side;
-    _n.layout.propagate_side( _n, new_side );
-    _n.attach( parent, new_index, null, false );
-    da.animator.animate();
+  public UndoNodeReplace( Node new_node, Node orig_node ) {
+    base( _( "replace node" ) );
+    _orig_node = orig_node;
+    _new_node  = new_node;
   }
 
   /* Performs an undo operation for this data */
   public override void undo( DrawArea da ) {
-    change( da, _new_side, _old_side, _old_index );
+    da.replace_node( _new_node, _orig_node );
+    da.set_current_node( _orig_node );
+    da.queue_draw();
+    da.current_changed( da );
+    da.changed();
   }
 
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
-    change( da, _old_side, _new_side, _new_index );
+    da.replace_node( _orig_node, _new_node );
+    da.set_current_node( _new_node );
+    da.queue_draw();
+    da.current_changed( da );
+    da.changed();
   }
 
 }

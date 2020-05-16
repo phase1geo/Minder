@@ -24,7 +24,9 @@ using Gtk;
 public class EmptyMenu : Gtk.Menu {
 
   DrawArea     _da;
+  Gtk.MenuItem _paste;
   Gtk.MenuItem _root;
+  Gtk.MenuItem _quick;
   Gtk.MenuItem _selroot;
 
   /* Default constructor */
@@ -32,8 +34,17 @@ public class EmptyMenu : Gtk.Menu {
 
     _da = da;
 
+    _paste = new Gtk.MenuItem.with_label( _( "Paste" ) );
+    _paste.activate.connect( paste );
+    Utils.add_accel_label( _paste, 'v', Gdk.ModifierType.CONTROL_MASK );
+
     _root = new Gtk.MenuItem.with_label( _( "Add Root Node" ) );
     _root.activate.connect( add_root_node );
+    Utils.add_accel_label( _root, 65293, 0 );
+
+    _quick = new Gtk.MenuItem.with_label( _( "Add Nodes With Quick Entry" ) );
+    _quick.activate.connect( add_quick_entry );
+    Utils.add_accel_label( _quick, 'e', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK) );
 
     var selnode = new Gtk.MenuItem.with_label( _( "Select Node" ) );
     var selmenu = new Gtk.Menu();
@@ -44,7 +55,10 @@ public class EmptyMenu : Gtk.Menu {
     Utils.add_accel_label( _selroot, 'm', 0 );
 
     /* Add the menu items to the menu */
+    add( _paste );
+    add( new SeparatorMenuItem() );
     add( _root );
+    add( _quick );
     add( new SeparatorMenuItem() );
     add( selnode );
 
@@ -68,14 +82,25 @@ public class EmptyMenu : Gtk.Menu {
   private void on_popup() {
 
     /* Set the menu sensitivity */
+    _paste.set_sensitive( _da.node_pasteable() );
     _root.set_sensitive( !connection_selected() );
     _selroot.set_sensitive( _da.root_selectable() );
 
   }
 
+  /* Pastes node tree as root from clipboard */
+  private void paste() {
+    _da.do_paste( false );
+  }
+
   /* Creates a new root node */
   private void add_root_node() {
     _da.add_root_node();
+  }
+
+  /* Adds top-level nodes via the quick entry facility */
+  private void add_quick_entry() {
+    _da.handle_control_E();
   }
 
   /* Selects the current root node */

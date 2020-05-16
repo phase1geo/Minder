@@ -68,6 +68,18 @@ public class NodeImage {
     }
   }
 
+  /* Constructor from a pixbuf */
+  public NodeImage.from_pixbuf( ImageManager im, Pixbuf buf, int width ) {
+    int id = im.add_pixbuf( buf );
+    if( id != -1 ) {
+      if( load( im, id, true ) ) {
+        set_width( width );
+      } else {
+        im.set_valid( id, false );
+      }
+    }
+  }
+
   /* Constructor from another node image */
   public NodeImage.from_node_image( ImageManager im, NodeImage ni, int width ) {
     string uri = im.get_uri( ni.id );

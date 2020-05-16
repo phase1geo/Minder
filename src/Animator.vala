@@ -42,17 +42,19 @@ public class Animator : Object {
     return( _running );
   }
 
-  /* Animates all of the nodes on the canvas */
-  public void add_nodes( string name ) {
+  /* Animates all of the specified nodes */
+  public void add_nodes( Array<Node> n, string name ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.NODES) ) {
-      _actions.push_tail( new AnimatorNodes( _da, null, name ) );
+      _actions.push_tail( new AnimatorNodes( _da, n, name ) );
     }
   }
 
   /* Animates the specified node on the canvas */
   public void add_node( Node n, string name ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.NODE) ) {
-      _actions.push_tail( new AnimatorNodes( _da, n, name ) );
+      var ns = new Array<Node>();
+      ns.append_val( n );
+      _actions.push_tail( new AnimatorNodes( _da, ns, name ) );
     }
   }
 

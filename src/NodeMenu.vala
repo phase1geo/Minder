@@ -27,6 +27,7 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _copy;
   Gtk.MenuItem _cut;
   Gtk.MenuItem _paste;
+  Gtk.MenuItem _replace;
   Gtk.MenuItem _delete;
   Gtk.MenuItem _delonly;
   Gtk.MenuItem _edit;
@@ -43,7 +44,8 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _parent;
   Gtk.MenuItem _child;
   Gtk.MenuItem _sibling;
-  Gtk.MenuItem _quick;
+  Gtk.MenuItem _quick_insert;
+  Gtk.MenuItem _quick_replace;
   Gtk.MenuItem _sortby;
   Gtk.MenuItem _selroot;
   Gtk.MenuItem _selnext;
@@ -70,6 +72,10 @@ public class NodeMenu : Gtk.Menu {
     _paste = new Gtk.MenuItem.with_label( _( "Paste" ) );
     _paste.activate.connect( paste );
     Utils.add_accel_label( _paste, 'v', Gdk.ModifierType.CONTROL_MASK );
+
+    _replace = new Gtk.MenuItem.with_label( _( "Paste and Replace Node" ) );
+    _replace.activate.connect( replace );
+    Utils.add_accel_label( _replace, 'v', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK) );
 
     _delete = new Gtk.MenuItem.with_label( _( "Delete" ) );
     _delete.activate.connect( delete_node );
@@ -132,9 +138,17 @@ public class NodeMenu : Gtk.Menu {
     _sibling.activate.connect( add_sibling_node );
     Utils.add_accel_label( _sibling, 65293, 0 );
 
-    _quick = new Gtk.MenuItem.with_label( _( "Add Nodes With Quick Entry" ) );
-    _quick.activate.connect( add_quick_entry );
-    Utils.add_accel_label( _quick, 'e', Gdk.ModifierType.CONTROL_MASK );
+    var quick_menu = new Gtk.Menu();
+    var quick = new Gtk.MenuItem.with_label( _( "Quick Entry" ) );
+    quick.set_submenu( quick_menu );
+
+    _quick_insert = new Gtk.MenuItem.with_label( _( "Insert Nodes" ) );
+    _quick_insert.activate.connect( quick_entry_insert );
+    Utils.add_accel_label( _quick_insert, 'e', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK) );
+
+    _quick_replace = new Gtk.MenuItem.with_label( _( "Replace Nodes" ) );
+    _quick_replace.activate.connect( quick_entry_replace );
+    Utils.add_accel_label( _quick_replace, 'r', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK) );
 
     var selnode = new Gtk.MenuItem.with_label( _( "Select" ) );
     var selmenu = new Gtk.Menu();
@@ -186,6 +200,7 @@ public class NodeMenu : Gtk.Menu {
     add( _copy );
     add( _cut );
     add( _paste );
+    add( _replace );
     add( _delete );
     add( _delonly );
     add( new SeparatorMenuItem() );
@@ -202,7 +217,7 @@ public class NodeMenu : Gtk.Menu {
     add( _parent );
     add( _child );
     add( _sibling );
-    add( _quick );
+    add( quick );
     add( new SeparatorMenuItem() );
     add( selnode );
     add( _center );
@@ -229,6 +244,10 @@ public class NodeMenu : Gtk.Menu {
     link_color_menu.add( set_link_color );
     link_color_menu.add( rand_link_color );
     link_color_menu.add( _parent_link_color );
+
+    /* Add the items to the quick entry menu */
+    quick_menu.add( _quick_insert );
+    quick_menu.add( _quick_replace );
 
     /* Make the menu visible */
     show_all();
@@ -301,7 +320,8 @@ public class NodeMenu : Gtk.Menu {
     var current = _da.get_current_node();
 
     /* Set the menu sensitivity */
-    _paste.set_sensitive( _da.node_pasteable() );
+    _paste.set_sensitive( true );
+    _replace.set_sensitive( true );
     _conn.set_sensitive( !_da.get_connections().hide );
     _parent.set_sensitive( node_parentable() );
     _link_color.set_sensitive( !current.is_root() );
@@ -324,6 +344,22 @@ public class NodeMenu : Gtk.Menu {
     _link.label  = node_has_link()  ? _( "Remove Node Link" ) : _( "Add Node Link" );
     _fold.label  = node_is_folded() ? _( "Unfold Children" )  : _( "Fold Children" );
 
+    /* Set the paste and replace text */
+    var clipboard = Clipboard.get_default( get_display() );
+    if( clipboard.wait_is_text_available() ) {
+      _paste.label   = _( "Paste Text As Child Node" );
+      _replace.label = _( "Paste and Replace Node Text" );
+    } else if( clipboard.wait_is_image_available() ) {
+      _paste.label   = _( "Paste Image As Child Node" );
+      _replace.label = _( "Paste and Replace Node Image" );
+    } else if( _da.node_pasteable() ) {
+      _paste.label   = _( "Paste Node As Child" );
+      _replace.label = _( "Paste and Replace Node" );
+    } else {
+      _paste.set_sensitive( false );
+      _replace.set_sensitive( false );
+    }
+
   }
 
   /* Copies the current node to the clipboard */
@@ -342,7 +378,15 @@ public class NodeMenu : Gtk.Menu {
    node.
   */
   private void paste() {
-    _da.do_paste();
+    _da.do_paste( false );
+  }
+
+  /*
+   Replaces the node's text, image or entire node with the contents stored
+   in the clipboard.
+  */
+  private void replace() {
+    _da.do_paste( true );
   }
 
   /* Deletes the current node */
@@ -430,9 +474,14 @@ public class NodeMenu : Gtk.Menu {
     _da.add_sibling_node();
   }
 
-  /* Show the quick entry window */
-  private void add_quick_entry() {
-    _da.handle_control_e();
+  /* Show the quick entry insert window */
+  private void quick_entry_insert() {
+    _da.handle_control_E();
+  }
+
+  /* Show the quick entry replace window */
+  private void quick_entry_replace() {
+    _da.handle_control_R();
   }
 
   /* Detaches the currently selected node and make it a root node */

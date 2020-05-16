@@ -32,8 +32,29 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Import File</property>
+                <property name="accelerator">&lt;ctrl&gt;o</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Save File As</property>
                 <property name="accelerator">&lt;ctrl&gt;&lt;shift&gt;s</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Export File</property>
+                <property name="accelerator">&lt;ctrl&gt;e</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Print File</property>
+                <property name="accelerator">&lt;ctrl&gt;p</property>
                 <property name="visible">1</property>
               </object>
             </child>
@@ -104,7 +125,6 @@
                 <property name="visible">1</property>
               </object>
             </child>
-            
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Search Nodes/Connections</property>
@@ -112,6 +132,7 @@
                 <property name="visible">1</property>
               </object>
             </child>
+
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Quit Application</property>
@@ -141,6 +162,13 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">New Connected Node</property>
+                <property name="accelerator">&lt;shift&gt;Return</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">New Child Node</property>
                 <property name="accelerator">Tab</property>
                 <property name="visible">1</property>
@@ -148,8 +176,15 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">Quick Entry</property>
+                <property name="title" translatable="yes">Quick Entry Insertion</property>
                 <property name="accelerator">&lt;ctrl&gt;E</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Quick Entry Replacement</property>
+                <property name="accelerator">&lt;ctrl&gt;R</property>
                 <property name="visible">1</property>
               </object>
             </child>
@@ -189,8 +224,15 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">Paste Node as Child</property>
+                <property name="title" translatable="yes">Add Child Node With Clipboard</property>
                 <property name="accelerator">&lt;ctrl&gt;v</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Replace With Clipboard</property>
+                <property name="accelerator">&lt;ctrl&gt;&lt;shift&gt;v</property>
                 <property name="visible">1</property>
               </object>
             </child>
@@ -343,6 +385,54 @@
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Select Attached Connection</property>
                 <property name="accelerator">&lt;shift&gt;x</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes">Alignment</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Align Top Side</property>
+                <property name="accelerator">minus</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Align Center Horizontally</property>
+                <property name="accelerator">equal</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Align Bottom Side</property>
+                <property name="accelerator">underscore</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Align Left Side</property>
+                <property name="accelerator">bracketleft</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Align Center Vertically</property>
+                <property name="accelerator">bar</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Align Right Side</property>
+                <property name="accelerator">bracketright</property>
                 <property name="visible">1</property>
               </object>
             </child>

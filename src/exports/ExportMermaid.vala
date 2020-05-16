@@ -28,7 +28,7 @@ public class ExportMermaid : Object {
     var  file   = File.new_for_path( fname );
     bool retval = true;
     try {
-      var os = file.create( FileCreateFlags.PRIVATE );
+      var os = file.replace( null, false, FileCreateFlags.NONE );
       export_top_nodes( os, da );
     } catch( Error e ) {
       retval = false;
@@ -136,7 +136,7 @@ public class ExportMermaid : Object {
     int    lid         = link_id++;
     var    pattern     = n.style.link_dash.pattern;
     string pattern_str = "";
-    
+
     if( pattern.length > 0 ) {
       pattern_str = ",stroke-dasharray:";
       for( int i=0; i<pattern.length; i++ ) {
@@ -152,7 +152,7 @@ public class ExportMermaid : Object {
 
   /* Draws the given node and its children to the output stream */
   private static void export_node( FileOutputStream os, Node node, ref int link_id ) {
-    
+
     try {
 
       var title    = make_title( node );

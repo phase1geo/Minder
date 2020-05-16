@@ -66,7 +66,7 @@ public class UndoNodeAttach : UndoItem {
   /* Performs an undo operation for this data */
   public override void undo( DrawArea da ) {
     int index = 0;
-    da.animator.add_nodes( "undo attach" );
+    da.animator.add_nodes( da.get_nodes(), "undo attach" );
     _n.detach( _new_side );
     if( _old_parent == null ) {
       da.add_root( _n, _old_index );
@@ -85,7 +85,7 @@ public class UndoNodeAttach : UndoItem {
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
     int index = 0;
-    da.animator.add_nodes( "redo attach" );
+    da.animator.add_nodes( da.get_nodes(), "redo attach" );
     if( _old_parent == null ) {
       da.remove_root( _old_index );
     } else {

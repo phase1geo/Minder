@@ -49,6 +49,8 @@ case $1 in
     initialize
     ninja com.github.phase1geo.minder-pot
     ninja com.github.phase1geo.minder-update-po
+    ninja extra-pot
+    ninja extra-update-po
     ;;
 "install")
     initialize
@@ -76,7 +78,8 @@ case $1 in
     ;;
 "debug")
     initialize
-    G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.minder "${@:2}"
+    # G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.minder "${@:2}"
+    gdb --args ./com.github.phase1geo.minder "${@:2}"
     ;;
 "test")
     test

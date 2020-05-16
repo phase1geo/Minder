@@ -26,7 +26,7 @@ public class QuickEntry : Gtk.Window {
 
   private TextView _entry;
 
-  public QuickEntry( DrawArea da, GLib.Settings settings ) {
+  public QuickEntry( DrawArea da, bool replace, GLib.Settings settings ) {
 
     /* Configure the window */
     default_width   = 500;
@@ -92,21 +92,31 @@ public class QuickEntry : Gtk.Window {
     info.clicked.connect(() => {
       helprev.reveal_child = !helprev.reveal_child;
     });
+    bbox.pack_start( info, false, false );
+
+    if( replace ) {
+      var apply = new Button.with_label( _( "Replace" ) );
+      apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+      apply.clicked.connect( () => {
+        handle_replace( da );
+        close();
+      });
+      if( !da.is_node_selected() ) apply.set_sensitive( false );
+      bbox.pack_end( apply, false, false );
+    } else {
+      var apply = new Button.with_label( _( "Insert" ) );
+      apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+      apply.clicked.connect(() => {
+        handle_insert( da );
+        close();
+      });
+      bbox.pack_end( apply, false, false );
+    }
 
     var cancel = new Button.with_label( _( "Cancel" ) );
     cancel.clicked.connect(() => {
       close();
     });
-
-    var ins = new Button.with_label( _( "Insert" ) );
-    ins.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
-    ins.clicked.connect(() => {
-      ExportText.import_text( _entry.buffer.text, settings.get_int( "quick-entry-spaces-per-tab" ), da, false );
-      close();
-    });
-
-    bbox.pack_start( info, false, false );
-    bbox.pack_end( ins,    false, false );
     bbox.pack_end( cancel, false, false );
 
     box.pack_start( sw,      true,  true );
@@ -249,6 +259,52 @@ public class QuickEntry : Gtk.Window {
 
     return( false );
 
+  }
+
+  /* Inserts the specified nodes into the given drawing area */
+  private void handle_insert( DrawArea da ) {
+    Array<Node> nodes;
+    var         node = da.get_current_node();
+    ExportText.import_text( _entry.buffer.text, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, out nodes );
+    if( nodes.length == 0 ) return;
+    if( node == null ) {
+      for( int i=0; i<nodes.length; i++ ) {
+        da.add_root( nodes.index( i ), -1 );
+      }
+    } else {
+      nodes.index( 0 ).attach( node, -1, da.get_theme() );
+      for( int i=1; i<nodes.length; i++ ) {
+        da.add_root( nodes.index( i ), -1 );
+      }
+    }
+    da.undo_buffer.add_item( new UndoNodesInsert( da, nodes ) );
+    da.set_current_node( nodes.index( 0 ) );
+    da.queue_draw();
+    da.changed();
+    da.see();
+  }
+
+  /* Replaces the specified nodes into the given drawing area */
+  private void handle_replace( DrawArea da ) {
+    Array<Node> nodes;
+    var node   = da.get_current_node();
+    var parent = node.parent;
+    ExportText.import_text( _entry.buffer.text, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, out nodes );
+    if( nodes.length == 0 ) return;
+    da.replace_node( node, nodes.index( 0 ) );
+    for( int i=1; i<nodes.length; i++ ) {
+      da.add_root( nodes.index( i ), -1 );
+    }
+    da.undo_buffer.add_item( new UndoNodesReplace( node, nodes ) );
+    da.set_current_node( nodes.index( 0 ) );
+    da.queue_draw();
+    da.changed();
+    da.see();
+  }
+
+  /* Preloads the text buffer with the given text */
+  public void preload( string value ) {
+    _entry.buffer.insert_at_cursor( value, value.length );
   }
 
 }

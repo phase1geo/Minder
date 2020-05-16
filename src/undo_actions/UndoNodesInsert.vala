@@ -59,6 +59,7 @@ public class UndoNodesInsert : UndoItem {
         node.n.detach( node.n.side );
       }
     }
+    da.set_current_node( null );
     da.queue_draw();
     da.changed();
   }
@@ -74,6 +75,7 @@ public class UndoNodesInsert : UndoItem {
         node.n.attach( node.parent, node.index, null );
       }
     }
+    da.set_current_node( _nodes.index( 0 ).n );
     da.queue_draw();
     da.changed();
   }

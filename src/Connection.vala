@@ -105,7 +105,7 @@ public class Connection : Object {
       _to_node = value;
     }
   }
-  public Style style { 
+  public Style style {
     get {
       return( _style );
     }
@@ -380,7 +380,7 @@ public class Connection : Object {
         title_bbox( out tx, out ty, out tw, out th );
         return( within_handle( _dragx, (_dragy + (th / 2) + _style.connection_padding), x, y ) );
       }
-    } 
+    }
     return( false );
   }
 
@@ -520,7 +520,7 @@ public class Connection : Object {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           case "style" :  style.load_connection( it );  break;
-          case "title" :  
+          case "title" :
            if( (it->children != null) && (it->children->type == Xml.ElementType.TEXT_NODE) ) {
              change_title( da, it->children->get_content() );
            }

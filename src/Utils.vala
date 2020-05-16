@@ -109,7 +109,9 @@ public class Utils {
   public static void open_url( string url ) {
     try {
       AppInfo.launch_default_for_uri( url, null );
-    } catch( GLib.Error e ) {}
+    } catch( GLib.Error e ) {
+      stdout.printf( "error: %s\n", e.message );
+    }
   }
 
   /* Converts the given Markdown into HTML */

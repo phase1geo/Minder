@@ -28,6 +28,7 @@ public class ExportOutliner : Object {
     Xml.Doc*  doc      = new Xml.Doc( "1.0" );
     Xml.Node* outliner = new Xml.Node( null, "outliner" );
     outliner->new_prop( "condensed", "false" );
+    outliner->new_prop( "show-tasks", "true" );
     outliner->add_child( export_theme( da ) );
     outliner->add_child( export_top_nodes( da ) );
     doc->set_root_element( outliner );
@@ -59,6 +60,10 @@ public class ExportOutliner : Object {
     Xml.Node* n = new Xml.Node( null, "node" );
     n->set_prop( "expanded", (!node.folded).to_string() );
     n->set_prop( "hidenote", "true" );
+    if( node.task_count > 0 ) {
+      n->set_prop( "task", ((node.task_count == node.done_count) ? "done" :
+                            (node.done_count == 0) ? "open" : "doing") );
+    }
     n->add_child( export_name( node, node.name ) );
     if( node.note != "" ) {
       n->add_child( export_note( node.note ) );
@@ -190,7 +195,14 @@ public class ExportOutliner : Object {
         }
       }
     }
-    node.attach( parent, -1, da.get_theme() );
+    if( (node.name.text.strip() != "") || (node.children().length > 0) ) {
+      node.attach( parent, -1, da.get_theme() );
+      var t = n->get_prop( "task" );
+      if( (t != null) && node.is_leaf() ) {
+        node.enable_task( true );
+        node.set_task_done( t == "done" );
+      }
+    }
   }
 
   private static void import_name( Xml.Node* n, Node node ) {

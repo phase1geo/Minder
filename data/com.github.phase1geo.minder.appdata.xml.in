@@ -83,6 +83,42 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.8.0" date="2020-05-17">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for pasting an image or text as a new node.</li>
+          <li>Added support for pasting an image or text, replacing the current node content.</li>
+          <li>Added support for pasting text, replacing the current connection content.</li>
+          <li>Added task support to Outliner import/export.</li>
+          <li>Added keyboard shortcut (Control-E) to display export interface.</li>
+          <li>Added support for creating a new root node hitting the Return key when no node is selected.</li>
+          <li>Added ability to add a new root node via the contextual menu when no node is selected.</li>
+          <li>Added ability to launch quick entry dialog via the contextual menu when no node is selected.</li>
+          <li>Added node alignment support for manual node layouts.</li>
+          <li>Added ability to create a connected root node.</li>
+          <li>Added ability to replace/edit nodes via the Quick Entry feature.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated image editor dialog button bar to include support for clipboard operations.</li>
+          <li>Improved display of buttons in image area of the node inspector sidebar.</li>
+          <li>Updated keyboard shortcut cheatsheet.</li>
+          <li>Changed quick text entry keyboard shortcut from Control-E to Control-Shift-E.</li>
+          <li>Changed the paste text in contextual menu to indicate what will be pasted.</li>
+          <li>Updated Outliner import/export support for tasks.</li>
+          <li>Added tooltip and changed cursor when cursor is over a link and the Control key is held down.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Removed empty Outliner rows from being added when Outliner file is imported.</li>
+          <li>Fixed loss of selection when shift key is held down and the background is clicked.</li>
+          <li>Added themed background color to exported PDF format.</li>
+          <li>Fixed exports to allow existing files to be overwritten.</li>
+          <li>Fixed Org-Mode export syntax errors.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.7.3" date="2020-04-20">
       <description>
         <p>New</p>
@@ -364,7 +400,7 @@
           <li>Added support for unfolding all folded nodes in map inspector.</li>
           <li>Added Solarized Dark and Solarized Light themes.</li>
           <li>Changing button display in map inspector.</li>
-          <li>Cleaning up Export menu to include a single "Export…" option.</li>
+          <li>Cleaning up Export menu to include a single "Export" option.</li>
           <li>Fixing issue where modified node title in node inspector was lost when input focus was changed.</li>
           <li>Fixing issue where an entire tree is attached to another tree.</li>
           <li>Added Czech translation (thanks to Jan Marek!).</li>

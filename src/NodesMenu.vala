@@ -32,6 +32,7 @@ public class NodesMenu : Gtk.Menu {
   Gtk.MenuItem _link;
   Gtk.MenuItem _link_colors;
   Gtk.MenuItem _parent_link_colors;
+  Gtk.MenuItem _align;
 
   /* Default constructor */
   public NodesMenu( DrawArea da, AccelGroup accel_group ) {
@@ -74,6 +75,37 @@ public class NodesMenu : Gtk.Menu {
     link_color_menu.add( rand_link_colors );
     link_color_menu.add( _parent_link_colors );
 
+    var align_menu = new Gtk.Menu();
+
+    _align = new Gtk.MenuItem.with_label( _( "Align Nodes" ) );
+    _align.set_submenu( align_menu );
+
+    var align_top = new Gtk.MenuItem.with_label( _( "Align Top" ) );
+    align_top.activate.connect( align_to_top );
+
+    var align_hcenter = new Gtk.MenuItem.with_label( _( "Align Center Horizontally" ) );
+    align_hcenter.activate.connect( align_to_hcenter );
+
+    var align_bottom = new Gtk.MenuItem.with_label( _( "Align Bottom" ) );
+    align_bottom.activate.connect( align_to_bottom );
+
+    var align_left = new Gtk.MenuItem.with_label( _( "Align Left" ) );
+    align_left.activate.connect( align_to_left );
+
+    var align_vcenter = new Gtk.MenuItem.with_label( _( "Align Center Veritically" ) );
+    align_vcenter.activate.connect( align_to_vcenter );
+
+    var align_right = new Gtk.MenuItem.with_label( _( "Align Right" ) );
+    align_right.activate.connect( align_to_right );
+
+    align_menu.add( align_top );
+    align_menu.add( align_hcenter );
+    align_menu.add( align_bottom );
+    align_menu.add( new SeparatorMenuItem() );
+    align_menu.add( align_left );
+    align_menu.add( align_vcenter );
+    align_menu.add( align_right );
+
     /* Add the menu items to the menu */
     add( _copy );
     add( _cut );
@@ -84,6 +116,8 @@ public class NodesMenu : Gtk.Menu {
     add( new SeparatorMenuItem() );
     add( _connect );
     add( _link );
+    add( new SeparatorMenuItem() );
+    add( _align );
 
     /* Make the menu visible */
     show_all();
@@ -119,7 +153,8 @@ public class NodesMenu : Gtk.Menu {
   /* Called when the menu is popped up */
   private void on_popup() {
 
-    var node_num = _da.get_selected_nodes().length;
+    var nodes    = _da.get_selected_nodes();
+    var node_num = nodes.length;
 
     bool foldable, unfoldable;
     nodes_foldable_status( out foldable, out unfoldable );
@@ -128,6 +163,7 @@ public class NodesMenu : Gtk.Menu {
     _fold.set_sensitive( foldable || unfoldable );
     _connect.set_sensitive( node_num == 2 );
     _parent_link_colors.set_sensitive( link_colors_parentable() );
+    _align.set_sensitive( _da.nodes_alignable() );
 
     _fold.label = unfoldable ? _( "Unfold Children" )  : _( "Fold Children" );
 
@@ -185,6 +221,36 @@ public class NodesMenu : Gtk.Menu {
   /* Changes the selected nodes to use parent node's colors */
   private void reparent_link_colors() {
     _da.reparent_link_colors();
+  }
+
+  /* Aligns all selected nodes to the top of the first node */
+  private void align_to_top() {
+    NodeAlign.align_top( _da, _da.get_selected_nodes() );
+  }
+
+  /* Aligns all selected nodes to the center of the first node horizontally */
+  private void align_to_hcenter() {
+    NodeAlign.align_hcenter( _da, _da.get_selected_nodes() );
+  }
+
+  /* Aligns all selected nodes to the bottom of the first node */
+  private void align_to_bottom() {
+    NodeAlign.align_bottom( _da, _da.get_selected_nodes() );
+  }
+
+  /* Aligns all selected nodes to the left side of the first node */
+  private void align_to_left() {
+    NodeAlign.align_left( _da, _da.get_selected_nodes() );
+  }
+
+  /* Aligns all selected nodes to the center of the first node vertically */
+  private void align_to_vcenter() {
+    NodeAlign.align_vcenter( _da, _da.get_selected_nodes() );
+  }
+
+  /* Aligns all selected nodes to the right side of the first node */
+  private void align_to_right() {
+    NodeAlign.align_right( _da, _da.get_selected_nodes() );
   }
 
 }

@@ -28,7 +28,7 @@ public class ExportOrgMode : Object {
     var  file   = File.new_for_path( fname );
     bool retval = true;
     try {
-      var os = file.create( FileCreateFlags.PRIVATE );
+      var os = file.replace( null, false, FileCreateFlags.NONE );
       export_top_nodes( os, da );
     } catch( Error e ) {
       retval = false;
@@ -43,10 +43,10 @@ public class ExportOrgMode : Object {
 
       var nodes = da.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
-        string title = "# " + nodes.index( i ).name.text + "\n\n";
+        string title = "* " + nodes.index( i ).name.text + "\n\n";
         os.write( title.data );
         if( nodes.index( i ).note != "" ) {
-          string note = "  > " + nodes.index( i ).note.replace( "\n", "\n  > " );
+          string note = "  " + nodes.index( i ).note.replace( "\n", "\n  " );
           os.write( note.data );
         }
         var children = nodes.index( i ).children();
@@ -81,7 +81,7 @@ public class ExportOrgMode : Object {
       os.write( title.data );
 
       if( node.note != "" ) {
-        string note = prefix + "  > " + node.note.replace( "\n", "\n" + prefix + "  > " ) + "\n";
+        string note = prefix + "  " + node.note.replace( "\n", "\n" + prefix + "  " ) + "\n";
         os.write( note.data );
       }
 

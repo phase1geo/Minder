@@ -1,5 +1,5 @@
 project('com.github.phase1geo.minder', ['vala', 'c'],
-    version : '1.7.3',
+    version : '1.8.0',
     license: 'GPL-3.0'
 )
 
@@ -55,7 +55,8 @@ cc = meson.get_compiler('c')
 libmarkdown = cc.find_library('markdown', required: true)
 
 add_project_arguments([
-        '--vapidir', join_paths(meson.current_source_dir(), 'vapi')
+        '--vapidir', join_paths(meson.current_source_dir(), 'vapi'),
+        '--disable-warnings'
     ],
     language: 'vala',
 )

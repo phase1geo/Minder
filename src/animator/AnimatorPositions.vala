@@ -34,18 +34,14 @@ public class AnimatorPositions : Object {
   private Array<Node?>   _node;
 
   /* Default constructor */
-  public AnimatorPositions( DrawArea da, Node? n ) {
+  public AnimatorPositions( DrawArea da, Array<Node> nodes ) {
     _old_x = new Array<double?>();
     _old_y = new Array<double?>();
     _new_x = new Array<double?>();
     _new_y = new Array<double?>();
     _node  = new Array<Node?>();
-    if( n == null ) {
-      for( int i=0; i<da.get_nodes().length; i++ ) {
-        gather_old_positions( da.get_nodes().index( i ) );
-      }
-    } else {
-      gather_old_positions( n );
+    for( int i=0; i<nodes.length; i++ ) {
+      gather_old_positions( nodes.index( i ) );
     }
   }
 

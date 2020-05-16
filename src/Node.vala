@@ -350,6 +350,16 @@ public class Node : Object {
       _urls = value;
     }
   }
+  public int task_count {
+    get {
+      return( _task_count );
+    }
+  }
+  public int done_count {
+    get {
+      return( _task_done );
+    }
+  }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -766,8 +776,8 @@ public class Node : Object {
   }
 
   /* Returns true if the given cursor coordinates lie within a URL */
-  public virtual bool is_within_url( double x, double y, out string url, out double left ) {
-    return( _urls.get_url_at_pos( name, x, y, out url, out left ) );
+  public virtual bool is_within_url( double x, double y, out string url ) {
+    return( _urls.get_url_at_pos( name, x, y, out url ) );
   }
 
   /* Finds the node which contains the given pixel coordinates */
@@ -1045,7 +1055,7 @@ public class Node : Object {
     node->new_prop( "maxwidth", _max_width.to_string() );
     node->new_prop( "width", _width.to_string() );
     node->new_prop( "height", _height.to_string() );
-    if( (_task_count > 0) && is_leaf() ) {
+    if( is_task() ) {
       node->new_prop( "task", _task_done.to_string() );
     }
     if( _linked_node != null ) {
@@ -1146,7 +1156,7 @@ public class Node : Object {
   private Xml.Node* export_opml_node( ref int node_id, ref Array<int> expand_state ) {
     Xml.Node* node = new Xml.Node( null, "outline" );
     node->new_prop( "text", name.text );
-    if( is_leaf() && (_task_count > 0) ) {
+    if( is_task() ) {
       bool checked = _task_done > 0;
       node->new_prop( "checked", checked.to_string() );
     }
