@@ -2204,6 +2204,25 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Selects all of the child nodes */
+  public void select_child_nodes() {
+    var nodes = _selected.nodes_copy();
+    _selected.clear_nodes();
+    for( int i=0; i<nodes.length; i++ ) {
+      _selected.add_child_nodes( nodes.index( i ) );
+    }
+    current_changed( this );
+    queue_draw();
+  }
+
+  /* Selects all of the nodes in the current node's tree */
+  public void select_node_tree() {
+    var current = _selected.current_node();
+    _selected.add_node_tree( current );
+    current_changed( this );
+    queue_draw();
+  }
+
   /* Returns true if there is a parent node of the current node */
   public bool parent_selectable() {
     var current = _selected.current_node();
@@ -2219,6 +2238,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
     }
   }
+
 
   /* Selects the node that is linked to this node */
   public void select_linked_node( Node? node = null ) {
@@ -3300,33 +3320,29 @@ public class DrawArea : Gtk.DrawingArea {
       } else if( is_node_selected() ) {
         var current = _selected.current_node();
         switch( str ) {
+          case "a" :  select_parent_node();  break;
+          case "c" :  select_child_node();  break;
+          case "C" :  center_current_node();  break;
+          case "d" :  select_child_nodes();  break;
+          case "D" :  select_node_tree();  break;
           case "e" :
             set_node_mode( current, NodeMode.EDITABLE );
             queue_draw();
             break;
-          case "n" :  select_sibling_node( 1 );  break;
-          case "p" :  select_sibling_node( -1 );  break;
-          case "a" :  select_parent_node();  break;
           case "f" :  toggle_fold( current );  break;
-          case "t" :  // Toggle the task done indicator
-            if( current.is_task() ) {
-              toggle_task( current );
-            }
-            break;
-          case "m" :  select_root_node();  break;
-          case "c" :  select_child_node();  break;
-          case "C" :  center_current_node();  break;
+          case "h" :  handle_left( false );  break;
           case "i" :  show_properties( "current", false );  break;
           case "I" :
             if( _debug ) {
               current.display();
             }
             break;
-          case "u" :  // Perform undo
-            if( undo_buffer.undoable() ) {
-              undo_buffer.undo();
-            }
-            break;
+          case "j" :  handle_down( false );  break;
+          case "k" :  handle_up( false );  break;
+          case "l" :  handle_right( false );  break;
+          case "m" :  select_root_node();  break;
+          case "n" :  select_sibling_node( 1 );  break;
+          case "p" :  select_sibling_node( -1 );  break;
           case "r" :  // Perform redo
             if( undo_buffer.redoable() ) {
               undo_buffer.redo();
@@ -3334,16 +3350,22 @@ public class DrawArea : Gtk.DrawingArea {
             break;
           case "s" :  see();  break;
           case "S" :  sort_alphabetically();  break;
-          case "z" :  zoom_out();  break;
-          case "Z" :  zoom_in();  break;
-          case "h" :  handle_left( false );  break;
-          case "j" :  handle_down( false );  break;
-          case "k" :  handle_up( false );  break;
-          case "l" :  handle_right( false );  break;
-          case "y" :  toggle_link();  break;
-          case "Y" :  select_linked_node();  break;
+          case "t" :  // Toggle the task done indicator
+            if( current.is_task() ) {
+              toggle_task( current );
+            }
+            break;
+          case "u" :  // Perform undo
+            if( undo_buffer.undoable() ) {
+              undo_buffer.undo();
+            }
+            break;
           case "x" :  start_connection( true, false );  break;
           case "X" :  select_attached_connection();  break;
+          case "y" :  toggle_link();  break;
+          case "z" :  zoom_out();  break;
+          case "Z" :  zoom_in();  break;
+          case "Y" :  select_linked_node();  break;
           default :
             // This is a key that doesn't have any associated functionality
             // so just return immediately so that we don't force a redraw
@@ -3417,6 +3439,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     } else if( nomod || shift ) {
       switch( e.str ) {
+        case "d" :  select_child_nodes();  break;
         case "m" :  select_root_node();  break;
         case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
         case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;

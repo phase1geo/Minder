@@ -25,6 +25,7 @@ using Gdk;
 public enum StyleAffects {
 
   ALL = 0,         // Applies changes to all nodes and connections
+  SELECTED,        // Applies changes to all selected nodes
   SEP0,            // Indicates a separator (not a value)
   CURRENT,         // Applies changes to the current node/connection
   CURRTREE,        // Applies changes to the current tree
@@ -45,6 +46,7 @@ public enum StyleAffects {
   public string label() {
     switch( this ) {
       case ALL         :  return( _( "All" ) );
+      case SELECTED    :  return( _( "Selected" ) );
       case CURRENT     :  return( _( "Current" ) );
       case CURRTREE    :  return( _( "Current Tree" ) );
       case CURRSUBTREE :  return( _( "Current Node + Descendants" ) );
@@ -959,6 +961,13 @@ public class StyleInspector : Box {
         _conn_group.visible   = true;
         _conn_exp.expanded    = _settings.get_boolean( "style-connection-options-expanded" );
         break;
+      case StyleAffects.SELECTED :
+        update_ui_with_style( _da.get_selected_nodes().index( 0 ).style );
+        _branch_group.visible = true;
+        _link_group.visible   = true;
+        _node_group.visible   = true;
+        _conn_group.visible   = false;
+        break;
       case StyleAffects.LEVEL0  :
       case StyleAffects.LEVEL1  :
       case StyleAffects.LEVEL2  :
@@ -1031,6 +1040,14 @@ public class StyleInspector : Box {
       case StyleAffects.ALL     :
         for( int i=0; i<_da.get_nodes().length; i++ ) {
           if( !_da.get_nodes().index( i ).is_leaf() ) {
+            sensitive = true;
+            break;
+          }
+        }
+        break;
+      case StyleAffects.SELECTED :
+        for( int i=0; i<_da.get_selected_nodes().length; i++ ) {
+          if( !_da.get_selected_nodes().index( i ).is_leaf() ) {
             sensitive = true;
             break;
           }
@@ -1168,6 +1185,8 @@ public class StyleInspector : Box {
     if( (nodes > 0) || (conns > 0) ) {
       if( (nodes != 1) && (_affects > StyleAffects.CURRENT) ) {
         set_affects( StyleAffects.CURRENT );
+      } else if( nodes > 1 ) {
+        set_affects( StyleAffects.SELECTED );
       }
     } else {
       set_affects( StyleAffects.ALL );

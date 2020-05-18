@@ -77,6 +77,14 @@ public class UndoStyleChange : UndoItem {
         }
         da.current_changed( da );
         break;
+      case StyleAffects.SELECTED    :
+        if( da.get_selected_nodes().length > 0 ) {
+          for( int i=0; i<da.get_selected_nodes().length; i++ ) {
+            set_node_style( da.get_selected_nodes().index( i ), change_type, ref index );
+          }
+          da.current_changed( da );
+        }
+        break;
       case StyleAffects.LEVEL0      :
       case StyleAffects.LEVEL1      :
       case StyleAffects.LEVEL2      :
