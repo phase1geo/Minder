@@ -67,15 +67,22 @@ public class UndoStyleChange : UndoItem {
     int index = 1;
     switch( _affects ) {
       case StyleAffects.ALL         :
-        for( int i=0; i<da.get_nodes().length; i++ ) {
-          set_style_for_tree( da.get_nodes().index( i ), change_type, ref index );
+        {
+          var nodes = da.get_nodes();
+          var conns = da.get_connections().connections;
+          for( int i=0; i<nodes.length; i++ ) {
+            set_style_for_tree( nodes.index( i ), change_type, ref index );
+          }
+          for( int i=0; i<conns.length; i++ ) {
+            set_connection_style( conns.index( i ), change_type, ref index );
+          }
+          if( change_type == StyleChangeType.LOAD ) {
+            Style new_style = new Style.templated();
+            store_style_value( new_style, 0 );
+            StyleInspector.styles.set_all_to_style( new_style );
+          }
+          da.current_changed( da );
         }
-        if( change_type == StyleChangeType.LOAD ) {
-          Style new_style = new Style.templated();
-          store_style_value( new_style, 0 );
-          StyleInspector.styles.set_all_to_style( new_style );
-        }
-        da.current_changed( da );
         break;
       case StyleAffects.LEVEL0      :
       case StyleAffects.LEVEL1      :
