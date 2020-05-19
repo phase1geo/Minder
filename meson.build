@@ -39,11 +39,11 @@ if gtk_dep.version().version_compare('>=3.22.0')
   add_project_arguments(['--define=GTK322'], language: 'vala')
 endif
 
-# If the libarchive version is greater than 3.3.3, add a define for cross-compile purposes
-archive_dep = dependency('libarchive')
-if archive_dep.version().version_compare('>=3.3.3')
-  add_project_arguments(['--define=LIBARCHIVE340'], language: 'vala')
-  warning('Using LIBARCHIVE: ' + archive_dep.version())
+# If the valac version is greater than or equal to 0.48, add a define for cross-compile purposes
+valac_version = run_command('valac', ['--version'])
+if valac_version.stdout().version_compare('>=0.48.0')
+  add_project_arguments(['--define=VALAC048'], language: 'vala')
+  warning('Using LIBARCHIVE340')
 endif
 
 # Add the math library

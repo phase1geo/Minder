@@ -68,7 +68,7 @@ public class ExportPortableMinder : Object {
       /* Add an entry to the archive */
       var entry = new Archive.Entry();
       entry.set_pathname( file.get_basename() );
-#if LIBARCHIVE340
+#if VALAC048
       entry.set_size( (Archive.int64_t)file_info.get_size() );
       entry.set_filetype( Archive.FileType.IFREG );
       entry.set_perm( (Archive.FileMode)0644 );
@@ -94,7 +94,7 @@ public class ExportPortableMinder : Object {
         if( bytes_read <= 0 ) {
           break;
         }
-#if LIBARCHIVE340
+#if VALAC048
         archive.write_data( buffer );
 #else
         archive.write_data( buffer, bytes_read );
@@ -158,7 +158,7 @@ public class ExportPortableMinder : Object {
         entry.set_pathname( fname.substring( 0, (fname.length - 8) ) + ".minder" );
         minder_path = entry.pathname();
       } else {
-        var file = File.new_build_filename( img_dir, entry.pathname() );
+        var file = File.new_for_path( Path.build_filename( img_dir, entry.pathname() ) );
         entry.set_pathname( file.get_path() );
       }
 

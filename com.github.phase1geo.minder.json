@@ -1,7 +1,7 @@
 {
     "app-id" : "com.github.phase1geo.minder",
     "base" : "io.elementary.BaseApp",
-    "base-version" : "juno",
+    "base-version" : "juno-19.08",
     "runtime" : "org.freedesktop.Platform",
     "runtime-version" : "19.08",
     "sdk" : "org.freedesktop.Sdk",
@@ -47,7 +47,7 @@
            ]
         },
         {
-            "name" : "libgtksourceview3",
+            "name" : "gtksourceview",
             "config-opts" : [
                 "--disable-static"
             ],
@@ -64,9 +64,8 @@
             "buildsystem" : "meson",
             "sources" : [
                 {
-                    "type" : "archive",
-                    "url" : "https://github.com/phase1geo/Minder/archive/1.8.0.tar.gz",
-                    "sha256" : "0cfa00f75c1f43445965428abb450a6b279276a23e7346b6184ec24086b2aedb"
+                    "type" : "dir",
+                    "path" : "/home/trevorw/projects/Minder"
                 },
                 {
                     "type" : "patch",
