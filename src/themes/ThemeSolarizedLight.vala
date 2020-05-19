@@ -32,19 +32,20 @@ public class ThemeSolarizedLight : Theme {
     custom = false;
 
     /* Generate the non-link colors */
-    set_color( "background",         color_from_string( "#FDF6E3" ) );
-    set_color( "foreground",         color_from_string( "#586E75" ) );
-    set_color( "root_background",    color_from_string( "#839496" ) );
-    set_color( "root_foreground",    color_from_string( "#FDF6E3" ) );
-    set_color( "nodesel_background", color_from_string( "#586E75" ) );
-    set_color( "nodesel_foreground", color_from_string( "#ffffff" ) );
-    set_color( "textsel_background", color_from_string( "#93A1A1" ) );
-    set_color( "textsel_foreground", color_from_string( "#002B36" ) );
-    set_color( "text_cursor",        color_from_string( "#586E75" ) );
-    set_color( "attachable",         color_from_string( "#9bdb4d" ) );
-    set_color( "connection",         color_from_string( "#606060" ) );
-    set_color( "url_background",     color_from_string( "Grey" ) );
-    set_color( "url_foreground",     color_from_string( "Blue" ) );
+    set_color( "background",            color_from_string( "#FDF6E3" ) );
+    set_color( "foreground",            color_from_string( "#586E75" ) );
+    set_color( "root_background",       color_from_string( "#839496" ) );
+    set_color( "root_foreground",       color_from_string( "#FDF6E3" ) );
+    set_color( "nodesel_background",    color_from_string( "#586E75" ) );
+    set_color( "nodesel_foreground",    color_from_string( "#ffffff" ) );
+    set_color( "textsel_background",    color_from_string( "#93A1A1" ) );
+    set_color( "textsel_foreground",    color_from_string( "#002B36" ) );
+    set_color( "text_cursor",           color_from_string( "#586E75" ) );
+    set_color( "attachable",            color_from_string( "#9bdb4d" ) );
+    set_color( "connection_background", color_from_string( "#606060" ) );
+    set_color( "connection_foreground", color_from_string( "#FDF6E3" ) );
+    set_color( "url_background",        color_from_string( "Grey" ) );
+    set_color( "url_foreground",        color_from_string( "Blue" ) );
 
     set_color( "link_color0", color_from_string( "#DC322F" ) );
     set_color( "link_color1", color_from_string( "#CB4B16" ) );

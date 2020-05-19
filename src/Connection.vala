@@ -131,7 +131,7 @@ public class Connection : Object {
     _dragy     = _posy;
     position_title();
     _curve     = new Bezier.with_endpoints( _posx, _posy, _posx, _posy );
-    _color     = da.get_theme().get_color( "connection" );
+    _color     = da.get_theme().get_color( "connection_background" );
     style      = StyleInspector.styles.get_global_style();
   }
 
@@ -502,7 +502,7 @@ public class Connection : Object {
     if( c != null ) {
       _color.parse( c );
     } else {
-      _color = da.get_theme().get_color( "connection" );
+      _color = da.get_theme().get_color( "connection_background" );
     }
 
     /* Update the stored curve */
@@ -674,7 +674,7 @@ public class Connection : Object {
   */
   private void draw_title( Cairo.Context ctx, Theme theme ) {
 
-    var    fg      = theme.get_color( "background" );
+    var    fg      = theme.get_color( "connection_foreground" ) ?? theme.get_color( "background" );
     var    padding = _style.connection_padding ?? 0;
     double x, y, w, h;
 
@@ -684,7 +684,6 @@ public class Connection : Object {
     /* Draw the box */
     ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
     Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)), (padding * 2) );
-    // ctx.rectangle( (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)) );
     ctx.fill();
 
     /* Draw the text */
