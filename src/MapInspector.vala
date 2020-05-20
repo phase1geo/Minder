@@ -255,7 +255,7 @@ public class MapInspector : Box {
     _balance = new Button.from_icon_name( "minder-balance-symbolic", IconSize.SMALL_TOOLBAR );
     _balance.set_tooltip_text( _( "Balance Nodes" ) );
     _balance.clicked.connect(() => {
-      _da.balance_nodes();
+      _da.balance_nodes( true, true );
     });
 
     _fold_completed = new Button.from_icon_name( "minder-fold-completed-symbolic", IconSize.SMALL_TOOLBAR );

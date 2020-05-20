@@ -287,10 +287,9 @@ public class DrawArea : Gtk.DrawingArea {
       new_layout.initialize( root_node );
     }
     if( !old_balanceable && new_layout.balanceable ) {
-      balance_nodes( false );
-    } else {
-      animator.animate();
+      balance_nodes( false, false );
     }
+    animator.animate();
   }
 
   /* Returns the list of nodes */
@@ -2635,24 +2634,30 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Balances the existing nodes based on the current layout */
-  public void balance_nodes( bool undoable = true ) {
+  public void balance_nodes( bool undoable, bool animate ) {
     var current   = _selected.current_node();
     var root_node = (current == null) ? null : current.get_root();
     if( undoable ) {
       undo_buffer.add_item( new UndoNodeBalance( this, root_node ) );
     }
     if( (current == null) || !undoable ) {
-      animator.add_nodes( _nodes, "balance nodes" );
+      if( animate ) {
+        animator.add_nodes( _nodes, "balance nodes" );
+      }
       for( int i=0; i<_nodes.length; i++ ) {
         var partitioner = new Partitioner();
         partitioner.partition_node( _nodes.index( i ) );
       }
     } else {
-      animator.add_node( root_node, "balance tree" );
+      if( animate ) {
+        animator.add_node( root_node, "balance tree" );
+      }
       var partitioner = new Partitioner();
       partitioner.partition_node( root_node );
     }
-    animator.animate();
+    if( animate ) {
+      animator.animate();
+    }
     grab_focus();
   }
 
