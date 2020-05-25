@@ -1812,12 +1812,12 @@ public class DrawArea : Gtk.DrawingArea {
             _attach_node = match;
             set_node_mode( _attach_node, NodeMode.ATTACHABLE );
           } else if( match.is_within_task( _scaled_x, _scaled_y ) ) {
-            set_cursor( CursorType.HAND1 );
+            set_cursor( CursorType.HAND2 );
             set_tooltip_markup( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
           } else if( match.is_within_note( _scaled_x, _scaled_y ) ) {
             set_tooltip_markup( match.note );
           } else if( match.is_within_linked_node( _scaled_x, _scaled_y ) ) {
-            set_cursor( CursorType.HAND1 );
+            set_cursor( CursorType.HAND2 );
           } else if( match.is_within_resizer( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.SB_H_DOUBLE_ARROW );
             set_tooltip_markup( null );
