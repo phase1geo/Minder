@@ -354,238 +354,240 @@ msgstr "Un'altra idea"
 
 #: src/DrawArea.vala:2689
 msgid "fold completed tasks"
-msgstr ""
+msgstr "piega attività completate"
 
 #: src/DrawArea.vala:2726
 msgid "unfold all tasks"
-msgstr ""
+msgstr "non piegare tutte le attività"
 
 #: src/DynamicNotebook.vala:234 src/DynamicNotebook.vala:258
 msgid "Close Tab"
-msgstr ""
+msgstr "Chiudi Scheda"
 
 #: src/DynamicNotebook.vala:261
 msgid "Open in a New Window"
-msgstr ""
+msgstr "Apri in una Nuova Finestra"
 
 #: src/DynamicNotebook.vala:262
 msgid "Duplicate"
-msgstr ""
+msgstr "Duplicato"
 
 #: src/DynamicNotebook.vala:314
 msgid "Close Other Tab"
-msgstr ""
+msgstr "Chiudi Altra Scheda"
 
 #: src/DynamicNotebook.vala:314
 msgid "Close Other Tabs"
-msgstr ""
+msgstr "Chiudi le Altre Schede"
 
 #: src/DynamicNotebook.vala:485
 msgid "Clear All"
-msgstr ""
+msgstr "Cancella Tutto"
 
 #: src/DynamicNotebook.vala:767 src/DynamicNotebook.vala:798
 msgid "New Tab"
-msgstr ""
+msgstr "Nuova Finestra"
 
 #: src/DynamicNotebook.vala:768
 msgid "Undo Close Tab"
-msgstr ""
+msgstr "Annulla Chiudi Scheda"
 
 #: src/DynamicNotebook.vala:810
 msgid "Closed Tabs"
-msgstr ""
+msgstr "Schede Chiuse"
 
 #: src/EmptyInspector.vala:30
 msgid ""
 "<big>Select a node or connection\n"
 "to view/edit information</big>"
 msgstr ""
+"<big>Seleziona un nodo o una connessione\n "
+"per visualizzare / modificare le informazioni</big>"
 
 #: src/EmptyMenu.vala:37 src/NodeMenu.vala:72 src/TextMenu.vala:51
 msgid "Paste"
-msgstr ""
+msgstr "Incolla"
 
 #: src/EmptyMenu.vala:41 src/NodeMenu.vala:127
 msgid "Add Root Node"
-msgstr ""
+msgstr "Aggiungi radice nodo"
 
 #: src/EmptyMenu.vala:45
 msgid "Add Nodes With Quick Entry"
-msgstr ""
+msgstr "Aggiungi nodi con immissione rapida"
 
 #: src/EmptyMenu.vala:49
 msgid "Select Node"
-msgstr ""
+msgstr "Seleziona Nodo"
 
 #: src/EmptyMenu.vala:53 src/Theme.vala:286
 msgid "Root"
-msgstr ""
+msgstr "Radice"
 
 #: src/ImageEditor.vala:183
 #, c-format
 msgid "Crop Area: %d,%d %3dx%3d"
-msgstr ""
+msgstr "Area di ritaglio: %d,%d%3dx%3d"
 
 #: src/ImageEditor.vala:387
 #, c-format
 msgid "Cursor: %3d,%3d"
-msgstr ""
+msgstr "Cursore: %3d,%3d"
 
 #: src/ImageEditor.vala:394 src/ImageManager.vala:290 src/MainWindow.vala:742
 #: src/MainWindow.vala:786 src/MainWindow.vala:928 src/MainWindow.vala:1164
 #: src/QuickEntry.vala:116 src/ThemeEditor.vala:137 src/UrlEditor.vala:61
 msgid "Cancel"
-msgstr ""
+msgstr "Cancella"
 
 #: src/ImageEditor.vala:395 src/UrlEditor.vala:54
 msgid "Apply"
-msgstr ""
+msgstr "Applica"
 
 #: src/ImageEditor.vala:405
 msgid "Change Image"
-msgstr ""
+msgstr "Cambia Immagine"
 
 #: src/ImageEditor.vala:406
 msgid "Copy Image to Clipboard"
-msgstr ""
+msgstr "Copia Immagine negli Appunti"
 
 #: src/ImageEditor.vala:407
 msgid "Cut Image to Clipboard"
-msgstr ""
+msgstr "Taglia immagine negli Appunti"
 
 #: src/ImageEditor.vala:408
 msgid "Paste Image from Clipboard"
-msgstr ""
+msgstr "Incolla immagine dagli Appunti"
 
 #: src/ImageEditor.vala:409 src/NodeInspector.vala:225 src/NodeMenu.vala:343
 msgid "Remove Image"
-msgstr ""
+msgstr "Rimuovi Immagine"
 
 #: src/ImageManager.vala:290
 msgid "Select Image"
-msgstr ""
+msgstr "Seleziona Immagine"
 
 #: src/ImageManager.vala:294
 msgid "Images"
-msgstr ""
+msgstr "Immagini"
 
 #: src/MainWindow.vala:118 src/MainWindow.vala:931
 msgid "Minder"
-msgstr ""
+msgstr "Minder"
 
 #: src/MainWindow.vala:152 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
-msgstr ""
+msgstr "Nuovo File"
 
 #: src/MainWindow.vala:158 src/MainWindow.vala:786
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
-msgstr ""
+msgstr "Apri FIle"
 
 #: src/MainWindow.vala:164 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
-msgstr ""
+msgstr "Salva FIle Come"
 
 #: src/MainWindow.vala:170 src/UndoBuffer.vala:84
 msgid "Undo"
-msgstr ""
+msgstr "Annulla"
 
 #: src/MainWindow.vala:177 src/UndoBuffer.vala:90
 msgid "Redo"
-msgstr ""
+msgstr "Rifai"
 
 #: src/MainWindow.vala:330
 msgid "Unnamed Document"
-msgstr ""
+msgstr "Documento senza nome"
 
 #: src/MainWindow.vala:334 src/MainWindow.vala:603
 msgid "Focus Mode"
-msgstr ""
+msgstr "Modalità messa a fuoco"
 
 #: src/MainWindow.vala:357
 msgid "Zoom"
-msgstr ""
+msgstr "Zoom"
 
 #: src/MainWindow.vala:364
 msgid "Zoom to Percent"
-msgstr ""
+msgstr "Zoom in percentuale"
 
 #: src/MainWindow.vala:375 data/com.github.phase1geo.minder.shortcuts.ui:96
 msgid "Zoom In"
-msgstr ""
+msgstr "Zoom avanti"
 
 #: src/MainWindow.vala:379 data/com.github.phase1geo.minder.shortcuts.ui:103
 msgid "Zoom Out"
-msgstr ""
+msgstr "Zoom Indietro"
 
 #: src/MainWindow.vala:383
 msgid "Zoom to Fit"
-msgstr ""
+msgstr "Zoom adattivo"
 
 #: src/MainWindow.vala:387
 msgid "Zoom to Fit Selected Node"
-msgstr ""
+msgstr "Zoom adattato al nodo selezionato"
 
 #: src/MainWindow.vala:391
 msgid "Zoom to Actual Size"
-msgstr ""
+msgstr "Zoom su dimensione reale"
 
 #: src/MainWindow.vala:418
 msgid "Search"
-msgstr ""
+msgstr "Cerca"
 
 #: src/MainWindow.vala:428
 msgid "Search Nodes and Connections"
-msgstr ""
+msgstr "Cerca Nodi e Connessioni"
 
 #: src/MainWindow.vala:451
 msgid "Search Criteria"
-msgstr ""
+msgstr "Criterio di ricerca"
 
 #: src/MainWindow.vala:473
 msgid "Nodes"
-msgstr ""
+msgstr "Nodi"
 
 #: src/MainWindow.vala:474
 msgid "Connections"
-msgstr ""
+msgstr "Connessioni"
 
 #: src/MainWindow.vala:475
 msgid "Titles"
-msgstr ""
+msgstr "Titoli"
 
 #: src/MainWindow.vala:476
 msgid "Notes"
-msgstr ""
+msgstr "Note"
 
 #: src/MainWindow.vala:477
 msgid "Folded"
-msgstr ""
+msgstr "Piegato"
 
 #: src/MainWindow.vala:478
 msgid "Unfolded"
-msgstr ""
+msgstr "Non piegato"
 
 #: src/MainWindow.vala:479
 msgid "Tasks"
-msgstr ""
+msgstr "Attività"
 
 #: src/MainWindow.vala:480
 msgid "Non-tasks"
-msgstr ""
+msgstr "Non-attività"
 
 #: src/MainWindow.vala:570 src/MainWindow.vala:1164
 msgid "Export"
-msgstr ""
+msgstr "Esporta"
 
 #: src/MainWindow.vala:577
 msgid "Export…"
-msgstr ""
+msgstr "Esporta..."
 
 #: src/MainWindow.vala:581
 msgid "Print"
-msgstr ""
+msgstr "Stampa"
 
 #: src/MainWindow.vala:633
 msgid "Shortcuts Cheatsheet"
@@ -593,240 +595,240 @@ msgstr ""
 
 #: src/MainWindow.vala:661
 msgid "Properties"
-msgstr ""
+msgstr "Proprietà"
 
 #: src/MainWindow.vala:676 src/StyleInspector.vala:48
 msgid "Current"
-msgstr ""
+msgstr "Corrente"
 
 #: src/MainWindow.vala:677
 msgid "Style"
-msgstr ""
+msgstr "Stile"
 
 #: src/MainWindow.vala:678
 msgid "Map"
-msgstr ""
+msgstr "Mappa"
 
 #: src/MainWindow.vala:733
 msgid "Save current unnamed document?"
-msgstr ""
+msgstr "Salvare il documento attuale senza nome?"
 
 #: src/MainWindow.vala:734
 msgid "Changes will be permanently lost if not saved."
-msgstr ""
+msgstr "Le modifiche andranno perse in modo permanente se non vengono salvate."
 
 #: src/MainWindow.vala:739
 msgid "Discard Changes"
-msgstr ""
+msgstr "Annullare le Modifiche"
 
 #: src/MainWindow.vala:745 src/MainWindow.vala:928 src/ThemeEditor.vala:140
 msgid "Save"
-msgstr ""
+msgstr "Salva"
 
 #: src/MainWindow.vala:786
 msgid "Open"
-msgstr ""
+msgstr "Apri"
 
 #: src/MainWindow.vala:810 src/MainWindow.vala:1248
 msgid "PlainText"
-msgstr ""
+msgstr "Testo Semplice"
 
 #: src/MainWindow.vala:815 src/MainWindow.vala:1254
 msgid "Portable Minder"
-msgstr ""
+msgstr "Minder portatile"
 
 #: src/MainWindow.vala:928
 msgid "Save File"
-msgstr ""
+msgstr "Salva File"
 
 #: src/MainWindow.vala:1163
 msgid "Export As"
-msgstr ""
+msgstr "Esporta COme"
 
 #: src/MainWindow.vala:1168
 msgid "BMP"
-msgstr ""
+msgstr "BMP"
 
 #: src/MainWindow.vala:1174
 msgid "CSV"
-msgstr ""
+msgstr "CSV"
 
 #: src/MainWindow.vala:1180
 msgid "Freemind"
-msgstr ""
+msgstr "Freemind"
 
 #: src/MainWindow.vala:1186
 msgid "Freeplane"
-msgstr ""
+msgstr "Freeplane"
 
 #: src/MainWindow.vala:1192
 msgid "JPEG"
-msgstr ""
+msgstr "JPEG"
 
 #: src/MainWindow.vala:1199
 msgid "Markdown"
-msgstr ""
+msgstr "Markdown"
 
 #: src/MainWindow.vala:1206
 msgid "Mermaid"
-msgstr ""
+msgstr "Mermaid"
 
 #: src/MainWindow.vala:1212
 msgid "OPML"
-msgstr ""
+msgid "OPML"
 
 #: src/MainWindow.vala:1218
 msgid "Org-Mode"
-msgstr ""
+msgstr "Modalità-Org"
 
 #: src/MainWindow.vala:1224
 msgid "Outliner"
-msgstr ""
+msgstr "Outliner"
 
 #: src/MainWindow.vala:1230
 msgid "PDF"
-msgstr ""
+msgstr "PDF"
 
 #: src/MainWindow.vala:1236
 msgid "PNG (Transparent)"
-msgstr ""
+msgstr "PNG (Trasparente)"
 
 #: src/MainWindow.vala:1242
 msgid "PNG (Opaque)"
-msgstr ""
+msgstr "PNG (Opaco)"
 
 #: src/MainWindow.vala:1260
 msgid "SVG"
-msgstr ""
+msgstr "SVG"
 
 #: src/MainWindow.vala:1266
 msgid "yEd"
-msgstr ""
+msgstr "yEd"
 
 #: src/MapInspector.vala:78
 msgid "Enable animations"
-msgstr ""
+msgstr "Abilita animazioni"
 
 #: src/MapInspector.vala:106
 msgid "Hide connections"
-msgstr ""
+msgstr "Nascondi connessioni"
 
 #: src/MapInspector.vala:135
 msgid "Rotate main branch colors"
-msgstr ""
+msgstr "Ruota i colori del ramo principale"
 
 #: src/MapInspector.vala:167
 msgid "Node Layouts"
-msgstr ""
+msgstr "Layout dei nodi"
 
 #: src/MapInspector.vala:218
 msgid "Themes"
-msgstr ""
+msgstr "Temi"
 
 #: src/MapInspector.vala:237
 msgid "Add Custom Theme"
-msgstr ""
+msgstr "Aggiungi tema personalizzato"
 
 #: src/MapInspector.vala:256
 msgid "Balance Nodes"
-msgstr ""
+msgstr "BIlancia Nodi"
 
 #: src/MapInspector.vala:262
 msgid "Fold Completed Tasks"
-msgstr ""
+msgstr "Piega attività completate"
 
 #: src/MapInspector.vala:268
 msgid "Unfold All Nodes"
-msgstr ""
+msgstr "Spiega tutti i nodi"
 
 #: src/MapInspector.vala:353
 msgid "Unsaved"
-msgstr ""
+msgstr "Non salvato"
 
 #: src/NodeInspector.vala:121
 msgid "Task"
-msgstr ""
+msgstr "Compito"
 
 #: src/NodeInspector.vala:140
 msgid "Fold"
-msgstr ""
+msgstr "Piega"
 
 #: src/NodeInspector.vala:162 src/NodeMenu.vala:107 src/ThemeEditor.vala:125
 msgid "Link Color"
-msgstr ""
+msgstr "Colore collegamento"
 
 #: src/NodeInspector.vala:214
 msgid "Image"
-msgstr ""
+msgstr "Immagine"
 
 #: src/NodeInspector.vala:219
 msgid "Edit Image"
-msgstr ""
+msgstr "Modifica Immagine"
 
 #: src/NodeInspector.vala:239
 msgid "Add Image…"
-msgstr ""
+msgstr "Aggiungi Immagine..."
 
 #: src/NodeInspector.vala:317
 msgid "Copy Node To Clipboard"
-msgstr ""
+msgstr "Copia nodo negli Appunti"
 
 #: src/NodeInspector.vala:321
 msgid "Cut Node To Clipboard"
-msgstr ""
+msgstr "Taglia nodo negli Appunti"
 
 #: src/NodeInspector.vala:326
 msgid "Detach Node"
-msgstr ""
+msgstr "Scollega nodo"
 
 #: src/NodeInspector.vala:331 data/com.github.phase1geo.minder.shortcuts.ui:193
 #: data/com.github.phase1geo.minder.shortcuts.ui:200
 msgid "Delete Node"
-msgstr ""
+msgstr "Elimina nodo"
 
 #: src/NodeMenu.vala:64 src/NodesMenu.vala:42 src/TextMenu.vala:43
 msgid "Copy"
-msgstr ""
+msgstr "Copia"
 
 #: src/NodeMenu.vala:68 src/NodesMenu.vala:45 src/TextMenu.vala:47
 msgid "Cut"
-msgstr ""
+msgstr "Taglia"
 
 #: src/NodeMenu.vala:76 src/NodeMenu.vala:357
 msgid "Paste and Replace Node"
-msgstr ""
+msgstr "Incolla e Sostituisci Nodo"
 
 #: src/NodeMenu.vala:84
 msgid "Delete Single Node"
-msgstr ""
+msgstr "Elimina Nodo singolo"
 
 #: src/NodeMenu.vala:91 src/NodeMenu.vala:341
 msgid "Add Task"
-msgstr ""
+msgstr "Aggiungi Compito"
 
 #: src/NodeMenu.vala:97 src/NodeMenu.vala:343
 msgid "Add Image"
-msgstr ""
+msgstr "Aggiungi Immagine"
 
 #: src/NodeMenu.vala:100 src/NodeMenu.vala:344
 msgid "Add Node Link"
-msgstr ""
+msgstr "Aggiungi collegamento nodo"
 
 #: src/NodeMenu.vala:103
 msgid "Add Connection"
-msgstr ""
+msgstr "Aggiungi connessione"
 
 #: src/NodeMenu.vala:111 src/NodesMenu.vala:65
 msgid "Set to color…"
-msgstr ""
+msgstr "Imposta per colorare..."
 
 #: src/NodeMenu.vala:114
 msgid "Randomize color"
-msgstr ""
+msgstr "Randomizza il colore"
 
 #: src/NodeMenu.vala:117 src/NodesMenu.vala:71
 msgid "Use parent color"
-msgstr ""
+msgstr "Usa il colore principale"
 
 #: src/NodeMenu.vala:120 src/NodeMenu.vala:345 src/NodesMenu.vala:51
 #: src/NodesMenu.vala:168
@@ -835,11 +837,11 @@ msgstr ""
 
 #: src/NodeMenu.vala:124
 msgid "Detach"
-msgstr ""
+msgstr "Dissocia"
 
 #: src/NodeMenu.vala:130
 msgid "Add Parent Node"
-msgstr ""
+msgstr "Aggiungi Nodo Genitore"
 
 #: src/NodeMenu.vala:133
 msgid "Add Child Node"
@@ -851,15 +853,15 @@ msgstr ""
 
 #: src/NodeMenu.vala:142 src/QuickEntry.vala:36
 msgid "Quick Entry"
-msgstr ""
+msgstr "Inserimento Rapido"
 
 #: src/NodeMenu.vala:145
 msgid "Insert Nodes"
-msgstr ""
+msgstr "Inserisci nodi"
 
 #: src/NodeMenu.vala:149
 msgid "Replace Nodes"
-msgstr ""
+msgstr "Sostituisci nodi"
 
 #: src/NodeMenu.vala:157
 msgid "Root Node"
