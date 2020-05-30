@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-16 03:01-0500\n"
+"POT-Creation-Date: 2020-05-19 17:26-0500\n"
 "PO-Revision-Date: 2019-03-24 15:37+0100\n"
 "Last-Translator: Nathan Bonnemains (@NathanBnm)\n"
 "Language-Team: none\n"
@@ -338,7 +338,7 @@ msgid ""
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:132
-msgid "Changed <em>unnamed</em> default filename to use translated value."
+msgid "Changed unnamed default filename to use translated value."
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:133
@@ -356,8 +356,8 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:139
 msgid ""
-"Fixed issue with <em>New Document</em> plank command to load application "
-"data before opening new tab."
+"Fixed issue with New Document plank command to load application data before "
+"opening new tab."
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:140
@@ -431,10 +431,10 @@ msgstr ""
 "Control-Click."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:157
+#, fuzzy
 msgid ""
-"Added ability to export a mind-map as a new <em>Portable Minder</em> "
-"filetype which will allow Minder files to be copied between different users/"
-"filesystems."
+"Added ability to export a mind-map as a new Portable Minder filetype which "
+"will allow Minder files to be copied between different users/filesystems."
 msgstr ""
 "Ajout de la possibilité d'exporter une carte mentale au nouveau format de "
 "fichier <em>Minder portable</em> qui permet de partager des fichiers Minder "
@@ -488,9 +488,10 @@ msgid "Fixed segmentation faults when loading a theme."
 msgstr "Correction d'une erreur de segmentation lors du chargement d'un thème."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:173
+#, fuzzy
 msgid ""
-"Fixed issue with the style inspector <em>Change Affect</em> value when "
-"selection changes (thanks to Viliam K.)."
+"Fixed issue with the style inspector Change Affect value when selection "
+"changes (thanks to Viliam K.)."
 msgstr ""
 "Correction d'un problème avec l'inspecteur de style lorsque la valeur du "
 "sélécteur <em>Les modifications affectent</em> change (grâce à Vilian K.)."

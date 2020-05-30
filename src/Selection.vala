@@ -76,7 +76,7 @@ public class Selection {
 
   /* Adds a node to the current selection.  Returns true if the node was added. */
   public bool add_node( Node node ) {
-    if( is_node_selected( node ) ) return( false );
+    if( is_node_selected( node ) || ((node.parent != null) && node.parent.folded) ) return( false );
     node.mode = (_nodes.length == 0) ? NodeMode.CURRENT : NodeMode.SELECTED;
     if( _nodes.length == 1 ) {
       _nodes.index( 0 ).mode = NodeMode.SELECTED;
@@ -245,6 +245,15 @@ public class Selection {
   /* Returns an array of currently selected nodes */
   public Array<Node> nodes() {
     return( _nodes );
+  }
+
+  /* Returns a copy of the given nodes array */
+  public Array<Node> nodes_copy() {
+    var nodes = new Array<Node>();
+    for( int i=0; i<_nodes.length; i++ ) {
+      nodes.append_val( _nodes.index( i ) );
+    }
+    return( nodes );
   }
 
   /* Returns an array of currently selected nodes in index order */

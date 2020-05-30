@@ -77,6 +77,7 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _focus_alpha  = 0.05;
   private bool             _create_new_from_edit;
   private Selection        _selected;
+  private Gdk.Rectangle    _select_box;
 
   public MainWindow    win           { private set; get; }
   public UndoBuffer    undo_buffer   { set; get; }
@@ -156,6 +157,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Allocate the URL editor popover */
     _url_editor = new UrlEditor( this );
+
+    /* Initialize the selection box */
+    _select_box = {0, 0, 0, 0};
 
     /* Create the popup menu */
     _node_menu  = new NodeMenu( this, accel_group );
@@ -1298,6 +1302,8 @@ public class DrawArea : Gtk.DrawingArea {
             return( set_current_node_from_position( match_node, e ) );
           }
         }
+        _select_box.x = (int)x;
+        _select_box.y = (int)y;
         if( !shift ) {
           clear_current_node( true );
         }
@@ -1613,22 +1619,37 @@ public class DrawArea : Gtk.DrawingArea {
     get_style_context().render_background( ctx, 0, 0, (get_allocated_width() / _scale_factor), (get_allocated_height() / _scale_factor) );
   }
 
+  /* Draws the selection box, if one is set */
+  public void draw_select_box( Context ctx ) {
+    if( _select_box.width == 0 ) return;
+    Utils.set_context_color_with_alpha( ctx, _theme.get_color( "nodesel_background" ), 0.1 );
+    ctx.rectangle( _select_box.x, _select_box.y, _select_box.width, _select_box.height );
+    ctx.fill();
+  }
+
   /* Draws all of the root node trees */
   public void draw_all( Context ctx ) {
+
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).draw_all( ctx, _theme, current_node, false, false );
     }
+
     /* Draw the current node on top of all others */
     if( (current_node != null) && ((current_node.parent == null) || !current_node.parent.folded) ) {
       current_node.draw_all( ctx, _theme, null, true, (!is_node_editable() && _pressed && _motion && !_resize) );
     }
+
     /* Draw the current connection on top of everything else */
     _connections.draw_all( ctx, _theme );
     if( current_conn != null ) {
       current_conn.draw( ctx, _theme );
     }
+
+    /* Draw the select box if one exists */
+    draw_select_box( ctx );
+
   }
 
   /* Draw the available nodes */
@@ -1700,8 +1721,25 @@ public class DrawArea : Gtk.DrawingArea {
     return( false );
   }
 
+  /* Selects all nodes within the selected box */
+  private void select_nodes_within_box() {
+    Gdk.Rectangle box = {
+      ((_select_box.width  < 0) ? (_select_box.x + _select_box.width)  : _select_box.x),
+      ((_select_box.height < 0) ? (_select_box.y + _select_box.height) : _select_box.y),
+      ((_select_box.width  < 0) ? (0 - _select_box.width)  : _select_box.width),
+      ((_select_box.height < 0) ? (0 - _select_box.height) : _select_box.height)
+    };
+    _selected.clear_nodes();
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).select_within_box( box, _selected );
+    }
+  }
+
   /* Handle mouse motion */
   private bool on_motion( EventMotion event ) {
+
+    var control = (bool)(event.state & ModifierType.CONTROL_MASK);
+    var shift   = (bool)(event.state & ModifierType.SHIFT_MASK);
 
     /* If the node is attached, clear it */
     if( _attach_node != null ) {
@@ -1710,6 +1748,8 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     }
 
+    var last_x = _scaled_x;
+    var last_y = _scaled_y;
     _scaled_x = scale_value( event.x );
     _scaled_y = scale_value( event.y );
 
@@ -1741,7 +1781,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
 
       /* If we are dealing with a node, handle it based on its mode */
-      } else if( current_node != null ) {
+      } else if( (current_node != null) && (_select_box.width == 0) ) {
         double diffx = _scaled_x - _press_x;
         double diffy = _scaled_y - _press_y;
         if( current_node.mode == NodeMode.CURRENT ) {
@@ -1766,13 +1806,12 @@ public class DrawArea : Gtk.DrawingArea {
         }
         queue_draw();
 
-      /* Otherwise, we are panning the canvas */
+      /* Otherwise, we are drawing a selection rectangle */
       } else {
-        double diff_x = _press_x - _scaled_x;
-        double diff_y = _press_y - _scaled_y;
-        move_origin( diff_x, diff_y );
+        _select_box.width  = (int)(_scaled_x - _select_box.x);
+        _select_box.height = (int)(_scaled_y - _select_box.y);
+        select_nodes_within_box();
         queue_draw();
-        auto_save();
       }
 
       if( !_motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
@@ -1782,9 +1821,18 @@ public class DrawArea : Gtk.DrawingArea {
       _press_y = _scaled_y;
       _motion  = true;
 
+    /* If the Control key is held down, we are panning the canvas */
+    } else if( shift ) {
+
+      double diff_x = last_x - _scaled_x;
+      double diff_y = last_y - _scaled_y;
+      move_origin( diff_x, diff_y );
+      queue_draw();
+      auto_save();
+
     } else {
+
       var url     = "";
-      var control = (bool)(event.state & ModifierType.CONTROL_MASK);
       if( current_conn != null )  {
         if( (current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING) ) {
           update_connection( event.x, event.y );
@@ -1846,6 +1894,11 @@ public class DrawArea : Gtk.DrawingArea {
     var current_conn = _selected.current_connection();
 
     _pressed = false;
+
+    if( _select_box.width != 0 ) {
+      _select_box = {0, 0, 0, 0};
+      queue_draw();
+    }
 
     /* Return the cursor to the default cursor */
     if( _motion ) {
@@ -2150,6 +2203,25 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Selects all of the child nodes */
+  public void select_child_nodes() {
+    var nodes = _selected.nodes_copy();
+    _selected.clear_nodes();
+    for( int i=0; i<nodes.length; i++ ) {
+      _selected.add_child_nodes( nodes.index( i ) );
+    }
+    current_changed( this );
+    queue_draw();
+  }
+
+  /* Selects all of the nodes in the current node's tree */
+  public void select_node_tree() {
+    var current = _selected.current_node();
+    _selected.add_node_tree( current );
+    current_changed( this );
+    queue_draw();
+  }
+
   /* Returns true if there is a parent node of the current node */
   public bool parent_selectable() {
     var current = _selected.current_node();
@@ -2165,6 +2237,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
     }
   }
+
 
   /* Selects the node that is linked to this node */
   public void select_linked_node( Node? node = null ) {
@@ -3252,33 +3325,29 @@ public class DrawArea : Gtk.DrawingArea {
       } else if( is_node_selected() ) {
         var current = _selected.current_node();
         switch( str ) {
+          case "a" :  select_parent_node();  break;
+          case "c" :  select_child_node();  break;
+          case "C" :  center_current_node();  break;
+          case "d" :  select_child_nodes();  break;
+          case "D" :  select_node_tree();  break;
           case "e" :
             set_node_mode( current, NodeMode.EDITABLE );
             queue_draw();
             break;
-          case "n" :  select_sibling_node( 1 );  break;
-          case "p" :  select_sibling_node( -1 );  break;
-          case "a" :  select_parent_node();  break;
           case "f" :  toggle_fold( current );  break;
-          case "t" :  // Toggle the task done indicator
-            if( current.is_task() ) {
-              toggle_task( current );
-            }
-            break;
-          case "m" :  select_root_node();  break;
-          case "c" :  select_child_node();  break;
-          case "C" :  center_current_node();  break;
+          case "h" :  handle_left( false );  break;
           case "i" :  show_properties( "current", false );  break;
           case "I" :
             if( _debug ) {
               current.display();
             }
             break;
-          case "u" :  // Perform undo
-            if( undo_buffer.undoable() ) {
-              undo_buffer.undo();
-            }
-            break;
+          case "j" :  handle_down( false );  break;
+          case "k" :  handle_up( false );  break;
+          case "l" :  handle_right( false );  break;
+          case "m" :  select_root_node();  break;
+          case "n" :  select_sibling_node( 1 );  break;
+          case "p" :  select_sibling_node( -1 );  break;
           case "r" :  // Perform redo
             if( undo_buffer.redoable() ) {
               undo_buffer.redo();
@@ -3286,16 +3355,22 @@ public class DrawArea : Gtk.DrawingArea {
             break;
           case "s" :  see();  break;
           case "S" :  sort_alphabetically();  break;
-          case "z" :  zoom_out();  break;
-          case "Z" :  zoom_in();  break;
-          case "h" :  handle_left( false );  break;
-          case "j" :  handle_down( false );  break;
-          case "k" :  handle_up( false );  break;
-          case "l" :  handle_right( false );  break;
-          case "y" :  toggle_link();  break;
-          case "Y" :  select_linked_node();  break;
+          case "t" :  // Toggle the task done indicator
+            if( current.is_task() ) {
+              toggle_task( current );
+            }
+            break;
+          case "u" :  // Perform undo
+            if( undo_buffer.undoable() ) {
+              undo_buffer.undo();
+            }
+            break;
           case "x" :  start_connection( true, false );  break;
           case "X" :  select_attached_connection();  break;
+          case "y" :  toggle_link();  break;
+          case "z" :  zoom_out();  break;
+          case "Z" :  zoom_in();  break;
+          case "Y" :  select_linked_node();  break;
           default :
             // This is a key that doesn't have any associated functionality
             // so just return immediately so that we don't force a redraw
@@ -3369,6 +3444,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     } else if( nomod || shift ) {
       switch( e.str ) {
+        case "d" :  select_child_nodes();  break;
         case "m" :  select_root_node();  break;
         case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
         case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
