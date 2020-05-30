@@ -675,7 +675,7 @@ msgstr "Mermaid"
 
 #: src/MainWindow.vala:1212
 msgid "OPML"
-msgid "OPML"
+msgstr "OPML"
 
 #: src/MainWindow.vala:1218
 msgid "Org-Mode"
