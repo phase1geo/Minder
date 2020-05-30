@@ -1004,7 +1004,7 @@ msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
 msgstr """Ogni riga di testo descrive il titolo di un nodo o le informazioni sulla nota"
-"per un nodo".
+"per un nodo."
 
 
 #: src/QuickEntry.vala:58
