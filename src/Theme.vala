@@ -72,7 +72,6 @@ public class Theme : Object {
     name        = theme.name;
     index       = theme.index;
     prefer_dark = theme.prefer_dark;
-    custom      = theme.custom;
     temporary   = theme.temporary;
     rotate      = theme.rotate;
     _colors     = new HashMap<string,RGBA?>();

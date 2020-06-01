@@ -31,7 +31,6 @@ public class MapInspector : Box {
   private Button?                     _balance        = null;
   private Button?                     _fold_completed = null;
   private Button?                     _unfold_all     = null;
-  private bool                        _init           = true;
 
   public MapInspector( MainWindow win, GLib.Settings settings ) {
 
@@ -286,10 +285,6 @@ public class MapInspector : Box {
       _theme_grid.remove( entry );
     });
 
-    if( !_init ) {
-      return;
-    }
-
     /* Get the theme information to display */
     var names  = new Array<string>();
     var icons  = new Array<Gtk.Image>();
@@ -324,8 +319,6 @@ public class MapInspector : Box {
     if( _da != null ) {
       select_theme( _da.get_theme_name() );
     }
-
-    _init = false;
 
   }
 
