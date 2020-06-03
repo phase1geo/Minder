@@ -1109,7 +1109,7 @@ msgstr ""
 
 #: src/QuickEntry.vala:67
 msgid "If this follows *, + or -, the node is made an uncompleted task."
-msgstr "Si esto sigue *, + o -, el nodo es marcado como tarea no completada.
+msgstr "Si esto sigue *, + o -, el nodo es marcado como tarea no completada.”
 
 #: src/QuickEntry.vala:69
 msgid "If this follows *, + or -, the node is made a completed task."
