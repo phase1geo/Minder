@@ -1843,13 +1843,13 @@ public class DrawArea : Gtk.DrawingArea {
           set_cursor_from_name( "move" );
           return( false );
         } else if( current_conn.within_note( _scaled_x, _scaled_y ) ) {
-          set_tooltip_markup( current_conn.note );
+          set_tooltip_markup( prepare_note_markup( current_conn.note ) );
           return( false );
         }
       } else {
         Connection? match_conn = _connections.within_note( _scaled_x, _scaled_y );
         if( match_conn != null ) {
-          set_tooltip_markup( match_conn.note );
+          set_tooltip_markup( prepare_note_markup( match_conn.note ) );
           return( false );
         }
       }
@@ -1863,7 +1863,7 @@ public class DrawArea : Gtk.DrawingArea {
             set_cursor( CursorType.HAND2 );
             set_tooltip_markup( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
           } else if( match.is_within_note( _scaled_x, _scaled_y ) ) {
-            set_tooltip_markup( match.note );
+            set_tooltip_markup( prepare_note_markup( match.note ) );
           } else if( match.is_within_linked_node( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.HAND2 );
           } else if( match.is_within_resizer( _scaled_x, _scaled_y ) ) {
@@ -1885,6 +1885,11 @@ public class DrawArea : Gtk.DrawingArea {
 
     return( false );
 
+  }
+
+  /* Prepares the given note string for use in a markup tooltip */
+  private string prepare_note_markup( string note ) {
+    return( note.replace( "<", "&lt;" ) );
   }
 
   /* Handle button release event */
