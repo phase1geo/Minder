@@ -166,7 +166,7 @@ public class ExportPortableMinder : Object {
       if( extractor.write_header( entry ) != Archive.Result.OK ) {
         continue;
       }
-#if LIBARCHIVE340
+#if VALAC048
       uint8[]         buffer;
       Archive.int64_t offset;
 
