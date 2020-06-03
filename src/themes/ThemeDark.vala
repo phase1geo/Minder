@@ -39,7 +39,7 @@ public class ThemeDark : Theme {
     set_color( "textsel_foreground",    color_from_string( "White" ) );
     set_color( "text_cursor",           color_from_string( "White" ) );
     set_color( "attachable",            color_from_string( "#9bdb4d" ) );
-    set_color( "connection_background", color_from_string( "#555761" ) );
+    set_color( "connection_background", color_from_string( "#7e8087" ) );
     set_color( "connection_foreground", color_from_string( "White" ) );
     set_color( "url_background",        color_from_string( "Grey" ) );
     set_color( "url_foreground",        color_from_string( "Blue" ) );

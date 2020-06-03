@@ -42,8 +42,8 @@ public class ThemeSolarizedDark : Theme {
     set_color( "textsel_foreground",    color_from_string( "#002B36" ) );
     set_color( "text_cursor",           color_from_string( "#93A1A1" ) );
     set_color( "attachable",            color_from_string( "#9bdb4d" ) );
-    set_color( "connection_background", color_from_string( "#606060" ) );
-    set_color( "connection_foreground", color_from_string( "#93A1A1" ) );
+    set_color( "connection_background", color_from_string( "#7e8087" ) );
+    set_color( "connection_foreground", color_from_string( "#d4d4d4" ) );
     set_color( "url_background",        color_from_string( "Grey") );
     set_color( "url_foreground",        color_from_string( "Blue" ) );
 

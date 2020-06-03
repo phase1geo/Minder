@@ -50,6 +50,8 @@ public class Connection : Object {
   private CanvasText? _title     = null;
   private string      _note      = "";
   private double      _max_width = 100;
+  private RGBA        _color;
+  private bool        _color_set = false;
 
   public CanvasText? title {
     get {
@@ -117,7 +119,17 @@ public class Connection : Object {
     }
   }
   public double alpha { get; set; default=1.0; }
-  public RGBA   color { get; set; }
+  public RGBA   color {
+    get {
+      return( _color );
+    }
+    set {
+      if( !_color.equal( value ) ) {
+        _color     = value;
+        _color_set = true;
+      }
+    }
+  }
 
   /* Default constructor */
   public Connection( DrawArea da, Node from_node ) {
@@ -608,7 +620,7 @@ public class Connection : Object {
     /* Draw the curve */
     ctx.save();
     style.draw_connection( ctx );
-    Utils.set_context_color_with_alpha( ctx, color, alpha );
+    Utils.set_context_color_with_alpha( ctx, (_color_set ? _color : theme.get_color( "connection_background" )), alpha );
 
     /* Draw the curve as a quadratic curve (saves some additional calculations) */
     ctx.move_to( start_x, start_y );
