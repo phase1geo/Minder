@@ -82,6 +82,7 @@ public class Animator : Object {
   /* User method which performs the animation */
   public void animate() {
     if( !enable ) {
+      _actions.clear();
       _da.changed();
       _da.queue_draw();
       return;

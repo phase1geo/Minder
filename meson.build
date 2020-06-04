@@ -41,7 +41,6 @@ endif
 
 # If the valac version is greater than or equal to 0.48, add a define for cross-compile purposes
 valac_version = run_command('valac', ['--version'])
-message(valac_version.stdout().split().get(1))
 if valac_version.stdout().split().get(1).version_compare('>=0.48.0')
   add_project_arguments(['--define=VALAC048'], language: 'vala')
   message('Using VALAC048')
