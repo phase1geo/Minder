@@ -1722,14 +1722,16 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Selects all nodes within the selected box */
-  private void select_nodes_within_box() {
+  private void select_nodes_within_box( bool shift ) {
     Gdk.Rectangle box = {
       ((_select_box.width  < 0) ? (_select_box.x + _select_box.width)  : _select_box.x),
       ((_select_box.height < 0) ? (_select_box.y + _select_box.height) : _select_box.y),
       ((_select_box.width  < 0) ? (0 - _select_box.width)  : _select_box.width),
       ((_select_box.height < 0) ? (0 - _select_box.height) : _select_box.height)
     };
-    _selected.clear_nodes();
+    if( !shift ) {
+      _selected.clear_nodes();
+    }
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).select_within_box( box, _selected );
     }
@@ -1810,7 +1812,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else {
         _select_box.width  = (int)(_scaled_x - _select_box.x);
         _select_box.height = (int)(_scaled_y - _select_box.y);
-        select_nodes_within_box();
+        select_nodes_within_box( shift );
         queue_draw();
       }
 
@@ -1822,7 +1824,7 @@ public class DrawArea : Gtk.DrawingArea {
       _motion  = true;
 
     /* If the Control key is held down, we are panning the canvas */
-    } else if( shift ) {
+    } else if( control ) {
 
       double diff_x = last_x - _scaled_x;
       double diff_y = last_y - _scaled_y;
