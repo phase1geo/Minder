@@ -1783,7 +1783,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
 
       /* If we are dealing with a node, handle it based on its mode */
-      } else if( (current_node != null) && (_select_box.width == 0) ) {
+      } else if( (current_node != null) && current_node.is_within( _scaled_x, _scaled_y ) && (_select_box.width == 0) ) {
         double diffx = _scaled_x - _press_x;
         double diffy = _scaled_y - _press_y;
         if( current_node.mode == NodeMode.CURRENT ) {
@@ -1816,7 +1816,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
       }
 
-      if( !_motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
+      if( !_motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within( _scaled_x, _scaled_y ) ) {
         current_node.alpha = 0.3;
       }
       _press_x = _scaled_x;
