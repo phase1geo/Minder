@@ -33,6 +33,9 @@ public class NodesMenu : Gtk.Menu {
   Gtk.MenuItem _link_colors;
   Gtk.MenuItem _parent_link_colors;
   Gtk.MenuItem _align;
+  Gtk.MenuItem _selnodes;
+  Gtk.MenuItem _selparent;
+  Gtk.MenuItem _selchildren;
 
   /* Default constructor */
   public NodesMenu( DrawArea da, AccelGroup accel_group ) {
@@ -75,6 +78,22 @@ public class NodesMenu : Gtk.Menu {
     link_color_menu.add( rand_link_colors );
     link_color_menu.add( _parent_link_colors );
 
+    var selmenu = new Gtk.Menu();
+
+    _selnodes = new Gtk.MenuItem.with_label( _( "Select" ) );
+    _selnodes.set_submenu( selmenu );
+
+    _selparent = new Gtk.MenuItem.with_label( _( "Parent Nodes" ) );
+    _selparent.activate.connect( select_parent_nodes );
+    Utils.add_accel_label( _selparent, 'a', 0 );
+
+    _selchildren = new Gtk.MenuItem.with_label( _( "Child Nodes" ) );
+    _selchildren.activate.connect( select_child_nodes );
+    Utils.add_accel_label( _selchildren, 'd', 0 );
+
+    selmenu.add( _selparent );
+    selmenu.add( _selchildren );
+
     var align_menu = new Gtk.Menu();
 
     _align = new Gtk.MenuItem.with_label( _( "Align Nodes" ) );
@@ -116,6 +135,8 @@ public class NodesMenu : Gtk.Menu {
     add( new SeparatorMenuItem() );
     add( _connect );
     add( _link );
+    add( new SeparatorMenuItem() );
+    add( _selnodes );
     add( new SeparatorMenuItem() );
     add( _align );
 
@@ -164,6 +185,8 @@ public class NodesMenu : Gtk.Menu {
     _connect.set_sensitive( node_num == 2 );
     _parent_link_colors.set_sensitive( link_colors_parentable() );
     _align.set_sensitive( _da.nodes_alignable() );
+    _selparent.set_sensitive( _da.parent_selectable() );
+    _selchildren.set_sensitive( _da.children_selectable() );
 
     _fold.label = unfoldable ? _( "Unfold Children" )  : _( "Fold Children" );
 
@@ -221,6 +244,16 @@ public class NodesMenu : Gtk.Menu {
   /* Changes the selected nodes to use parent node's colors */
   private void reparent_link_colors() {
     _da.reparent_link_colors();
+  }
+
+  /* Selects all of the parent nodes of the selected nodes */
+  private void select_parent_nodes() {
+    _da.select_parent_nodes();
+  }
+
+  /* Selects all child nodes of selected nodes */
+  private void select_child_nodes() {
+    _da.select_child_nodes();
   }
 
   /* Aligns all selected nodes to the top of the first node */

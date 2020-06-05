@@ -2195,9 +2195,14 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Returns true if there is a child node of the current node */
-  public bool child_selectable() {
-    var current = _selected.current_node();
-    return( (current != null) && !current.is_leaf() && !current.folded );
+  public bool children_selectable() {
+    var nodes      = _selected.nodes();
+    var selectable = false;
+    for( int i=0; i<nodes.length; i++ ) {
+      var node = nodes.index( i );
+      selectable |= (!node.is_leaf() && !node.folded);
+    }
+    return( selectable );
   }
 
   /* Selects the last selected child node of the current node */
@@ -2231,12 +2236,16 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Returns true if there is a parent node of the current node */
   public bool parent_selectable() {
-    var current = _selected.current_node();
-    return( (current != null) && !current.is_root() );
+    var nodes      = _selected.nodes();
+    var selectable = false;
+    for( int i=0; i<nodes.length; i++ ) {
+      selectable |= !nodes.index( i ).is_root();
+    }
+    return( selectable );
   }
 
-  /* Selects the parent node of the current node */
-  public void select_parent_node() {
+  /* Selects the parent nodes of the selected nodes */
+  public void select_parent_nodes() {
     var child_nodes  = _selected.nodes();
     var parent_nodes = new Array<Node>();
     for( int i=0; i<child_nodes.length; i++ ) {
@@ -3340,7 +3349,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else if( is_node_selected() ) {
         var current = _selected.current_node();
         switch( str ) {
-          case "a" :  select_parent_node();  break;
+          case "a" :  select_parent_nodes();  break;
           case "c" :  select_child_node();  break;
           case "C" :  center_current_node();  break;
           case "d" :  select_child_nodes();  break;
@@ -3459,7 +3468,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     } else if( nomod || shift ) {
       switch( e.str ) {
-        case "a" :  select_parent_node();  break;
+        case "a" :  select_parent_nodes();  break;
         case "d" :  select_child_nodes();  break;
         case "m" :  select_root_node();  break;
         case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;

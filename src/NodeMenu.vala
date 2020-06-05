@@ -176,12 +176,12 @@ public class NodeMenu : Gtk.Menu {
     _selchildren.activate.connect( select_child_nodes );
     Utils.add_accel_label( _selchildren, 'd', 0 );
 
-    _seltree = new Gtk.MenuItem.with_label( _( "Descendant Nodes" ) );
+    _seltree = new Gtk.MenuItem.with_label( _( "Subtree" ) );
     _seltree.activate.connect( select_node_tree );
     Utils.add_accel_label( _seltree, 'd', Gdk.ModifierType.SHIFT_MASK );
 
     _selparent = new Gtk.MenuItem.with_label( _( "Parent Node" ) );
-    _selparent.activate.connect( select_parent_node );
+    _selparent.activate.connect( select_parent_nodes );
     Utils.add_accel_label( _selparent, 'a', 0 );
 
     _sellink = new Gtk.MenuItem.with_label( _( "Linked Node" ) );
@@ -345,7 +345,7 @@ public class NodeMenu : Gtk.Menu {
     _selroot.set_sensitive( _da.root_selectable() );
     _selnext.set_sensitive( _da.sibling_selectable() );
     _selprev.set_sensitive( _da.sibling_selectable() );
-    _selchild.set_sensitive( _da.child_selectable() );
+    _selchild.set_sensitive( _da.children_selectable() );
     _selparent.set_sensitive( _da.parent_selectable() );
     _sellink.set_sensitive( node_has_link() );
 
@@ -532,8 +532,8 @@ public class NodeMenu : Gtk.Menu {
   }
 
   /* Selects the parent node of the current node */
-  private void select_parent_node() {
-    _da.select_parent_node();
+  private void select_parent_nodes() {
+    _da.select_parent_nodes();
   }
 
   /* Selects the node the current node is linked to */
