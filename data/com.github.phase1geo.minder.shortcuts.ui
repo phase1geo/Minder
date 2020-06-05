@@ -316,7 +316,7 @@
         </child>
         <child>
           <object class="GtkShortcutsGroup">
-            <property name="title" translatable="yes">Traversal</property>
+            <property name="title" translatable="yes">Selection</property>
             <property name="visible">1</property>
             <child>
               <object class="GtkShortcutsShortcut">
@@ -350,6 +350,20 @@
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Select Child</property>
                 <property name="accelerator">c</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Select Children</property>
+                <property name="accelerator">d</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Select Subtree</property>
+                <property name="accelerator">&lt;shift&gt;d</property>
                 <property name="visible">1</property>
               </object>
             </child>
