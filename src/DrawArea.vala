@@ -2237,14 +2237,22 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Selects the parent node of the current node */
   public void select_parent_node() {
-    var current = _selected.current_node();
-    if( (current != null) && !current.is_root() ) {
-      if( select_node( current.parent ) ) {
-        queue_draw();
+    var child_nodes  = _selected.nodes();
+    var parent_nodes = new Array<Node>();
+    for( int i=0; i<child_nodes.length; i++ ) {
+      var node = child_nodes.index( i );
+      if( (node != null) && !node.is_root() ) {
+        parent_nodes.append_val( node.parent );
       }
     }
+    if( parent_nodes.length > 0 ) {
+      _selected.clear_nodes();
+      for( int i=0; i<parent_nodes.length; i++ ) {
+        _selected.add_node( parent_nodes.index( i ) );
+      }
+      queue_draw();
+    }
   }
-
 
   /* Selects the node that is linked to this node */
   public void select_linked_node( Node? node = null ) {
@@ -3451,6 +3459,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     } else if( nomod || shift ) {
       switch( e.str ) {
+        case "a" :  select_parent_node();  break;
         case "d" :  select_child_nodes();  break;
         case "m" :  select_root_node();  break;
         case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
