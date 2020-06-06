@@ -2452,6 +2452,16 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Positions the given node that will added as a root prior to adding it */
+  public void position_root_node( Node node ) {
+    if( _nodes.length == 0 ) {
+      node.posx = (get_allocated_width()  / 2) - 30;
+      node.posy = (get_allocated_height() / 2) - 10;
+    } else {
+      _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+    }
+  }
+
   /*
    Creates a root node with the given name, positions it and appends it to the
    root node list.
@@ -2459,12 +2469,7 @@ public class DrawArea : Gtk.DrawingArea {
   public Node create_root_node( string name = "" ) {
     var node = new Node.with_name( this, name, ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
     node.style = StyleInspector.styles.get_global_style();
-    if( _nodes.length == 0 ) {
-      node.posx = (get_allocated_width()  / 2) - 30;
-      node.posy = (get_allocated_height() / 2) - 10;
-    } else {
-      _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
-    }
+    position_root_node( node );
     _nodes.append_val( node );
     return( node );
   }

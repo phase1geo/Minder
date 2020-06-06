@@ -114,12 +114,7 @@ public class ExportText : Object {
       var str = dis.read_upto( "\0", 1, out len ) + "\0";
 
       /* Import the text */
-      import_text( str, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, out nodes );
-
-      /* Add all of the root nodes */
-      for( int i=0; i<nodes.length; i++ ) {
-        da.add_root( nodes.index( i ), -1 );
-      }
+      import_text( str, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, false );
 
       da.queue_draw();
       da.changed();
@@ -135,16 +130,21 @@ public class ExportText : Object {
   }
 
   /* Creates a new node from the given information and attaches it to the specified parent node */
-  public static Node make_node( DrawArea da, Node? parent, string task, string name ) {
+  public static Node make_node( DrawArea da, Node? parent, string task, string name, Array<Node>? nodes, bool attach = true ) {
 
     var node = new Node.with_name( da, name, da.layouts.get_default() );
 
     /* Add the style component to the node */
-    if( parent == null ) {
-      node.style = StyleInspector.styles.get_global_style();
-    } else {
-      node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), null );
-      node.attach( parent, (int)parent.children().length, da.get_theme() );
+    if( attach ) {
+      if( parent == null ) {
+        node.style = StyleInspector.styles.get_global_style();
+        da.position_root_node( node );
+        da.add_root( node, -1 );
+        da.set_current_node( node );
+      } else {
+        node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), null );
+        node.attach( parent, (int)parent.children().length, da.get_theme() );
+      }
     }
 
     /* Add the task information, if necessary */
@@ -155,18 +155,28 @@ public class ExportText : Object {
       }
     }
 
+    /* Add the node to the nodes array if it exists */
+    if( nodes != null ) {
+      nodes.append_val( node );
+    }
+
     return( node );
 
   }
 
-  /* Imports the given text string */
-  public static void import_text( string txt, int tab_spaces, DrawArea da, out Array<Node> nodes ) {
+  /* Append the given string to the note */
+  public static void append_note( Node node, string str ) {
+    node.note = "%s\n%s".printf( node.note, str ).strip();
+  }
 
-    nodes = new Array<Node>();
+  /* Imports the given text string */
+  public static void import_text( string txt, int tab_spaces, DrawArea da, bool replace, Array<Node>? nodes = null ) {
+
+    var current = da.get_current_node();
 
     try {
 
-      var stack  = new ArrayQueue<Hier?>();
+      var stack  = new Array<Hier?>();
       var lines  = txt.split( "\n" );
       var re     = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
       var tspace = string.nfill( ((tab_spaces <= 0) ? 1 : tab_spaces), ' ' );
@@ -174,6 +184,7 @@ public class ExportText : Object {
       foreach( string line in lines ) {
 
         MatchInfo match_info;
+        Node      node;
 
         /* If we found some useful text, include it here */
         if( re.match( line, 0, out match_info ) ) {
@@ -184,38 +195,58 @@ public class ExportText : Object {
           var str    = match_info.fetch( 6 );
 
           /* Add root node */
-          if( (bullet == "#") || stack.is_empty ) {
-            var node = make_node( da, null, task, str );
-            stack.offer_head( {spaces, node} );
-            nodes.append_val( node );
+          if( (bullet == "#") || (stack.length == 0) ) {
+            if( (bullet == ">") && (current != null) ) {
+              if( replace ) {
+                current.note = str;
+                replace = false;
+              } else {
+                append_note( current, str );
+              }
+            } else if( (bullet != "#") && (current != null) ) {
+              if( replace ) {
+                node = make_node( da, null, task, str, nodes, false );
+                da.replace_node( current, node );
+                replace = false;
+              } else {
+                node = make_node( da, current.parent, task, str, nodes );
+              }
+              stack.append_val( {spaces, node} );
+            } else {
+              node = make_node( da, null, task, str, nodes );
+              stack.append_val( {spaces, node} );
+            }
 
           /* Add note */
           } else if( bullet == ">" ) {
-            stack.peek_head().node.note += str;
+            append_note( stack.index( stack.length - 1 ).node, str );
 
           /* Add sibling node */
-          } else if( spaces == stack.peek_head().spaces ) {
-            var node = make_node( da, stack.peek_head().node.parent, task, str );
-            stack.poll_head();
-            stack.offer_head( {spaces, node} );
+          } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
+            node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, nodes );
+            stack.remove_index( stack.length - 1 );
+            stack.append_val( {spaces, node} );
 
           /* Add child node */
-          } else if( spaces > stack.peek_head().spaces ) {
-            var node = make_node( da, stack.peek_head().node, task, str );
-            stack.offer_head( {spaces, node} );
+          } else if( spaces > stack.index( stack.length - 1 ).spaces ) {
+            node = make_node( da, stack.index( stack.length - 1 ).node, task, str, nodes );
+            stack.append_val( {spaces, node} );
 
           /* Add ancestor node */
           } else {
-            while( !stack.is_empty && (spaces < stack.peek_head().spaces) ) {
-              stack.poll_head();
+            while( (stack.length > 0) && (spaces < stack.index( stack.length - 1 ).spaces) ) {
+              stack.remove_index( stack.length - 1 );
             }
-            if( spaces == stack.peek_head().spaces ) {
-              var node = make_node( da, stack.peek_head().node.parent, task, str );
-              stack.poll_head();
-              stack.offer_head( {spaces, node} );
+            if( stack.length == 0 ) {
+              node = make_node( da, null, task, str, nodes );
+              stack.append_val( {spaces, node} );
+            } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
+              node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, nodes );
+              stack.remove_index( stack.length - 1 );
+              stack.append_val( {spaces, node} );
             } else {
-              var node = make_node( da, stack.peek_head().node, task, str );
-              stack.offer_head( {spaces, node} );
+              node = make_node( da, stack.index( stack.length - 1 ).node, task, str, nodes );
+              stack.append_val( {spaces, node} );
             }
           }
 
