@@ -45,9 +45,7 @@ public class QuickEntry : Gtk.Window {
     _entry.border_width = 5;
     _entry.set_wrap_mode( Gtk.WrapMode.WORD );
     _entry.key_press_event.connect( on_keypress );
-    _entry.paste_clipboard.connect(() => {
-      stdout.printf( "In paste_clipboard\n" );
-    });
+    _entry.buffer.insert_text.connect( handle_text_insertion );
 
     /* Create the scrolled window for the text entry area */
     var sw = new ScrolledWindow( null, null );
@@ -130,6 +128,22 @@ public class QuickEntry : Gtk.Window {
 
     show_all();
 
+  }
+
+  private void handle_text_insertion( ref TextIter pos, string new_text, int new_text_length ) {
+    var filtered = "";
+    foreach( string str in new_text.split( "\n" ) ) {
+      if( str.chomp() != "" ) {
+        filtered += str.chomp() + "\n";
+      }
+    }
+    var cleaned  = (pos.get_offset() == 0) ? filtered.strip() : filtered.chomp();
+    if( cleaned != new_text ) {
+      SignalHandler.block_by_func( (void*)_entry, (void*)handle_text_insertion, this );
+      _entry.buffer.insert_text( ref pos, cleaned, cleaned.length );
+      SignalHandler.unblock_by_func( (void*)_entry, (void*)handle_text_insertion, this );
+      Signal.stop_emission_by_name( _entry.buffer, "insert_text" );
+    }
   }
 
   private Label make_help_label( string str ) {
