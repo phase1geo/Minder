@@ -131,13 +131,7 @@ public class QuickEntry : Gtk.Window {
   }
 
   private void handle_text_insertion( ref TextIter pos, string new_text, int new_text_length ) {
-    var filtered = "";
-    foreach( string str in new_text.split( "\n" ) ) {
-      if( str.chomp() != "" ) {
-        filtered += str.chomp() + "\n";
-      }
-    }
-    var cleaned  = (pos.get_offset() == 0) ? filtered.strip() : filtered.chomp();
+    var cleaned  = (pos.get_offset() == 0) ? new_text.chug() : new_text;
     if( cleaned != new_text ) {
       SignalHandler.block_by_func( (void*)_entry, (void*)handle_text_insertion, this );
       _entry.buffer.insert_text( ref pos, cleaned, cleaned.length );

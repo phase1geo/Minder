@@ -204,6 +204,7 @@ public class ExportText : Object {
           var str    = match_info.fetch( 6 );
 
           /* Add note */
+          if( str.strip() == "" ) continue;
           if( bullet == ">" ) {
             if( stack.length > 0 ) {
               if( replace ) {
