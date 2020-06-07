@@ -135,14 +135,16 @@ public class ExportText : Object {
     var node = new Node.with_name( da, name, da.layouts.get_default() );
 
     /* Add the style component to the node */
-    if( attach ) {
-      if( parent == null ) {
-        node.style = StyleInspector.styles.get_global_style();
+    if( parent == null ) {
+      node.style = StyleInspector.styles.get_global_style();
+      if( attach ) {
         da.position_root_node( node );
         da.add_root( node, -1 );
         da.set_current_node( node );
-      } else {
-        node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), null );
+      }
+    } else {
+      node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), null );
+      if( attach ) {
         node.attach( parent, (int)parent.children().length, da.get_theme() );
       }
     }
@@ -172,14 +174,21 @@ public class ExportText : Object {
   /* Imports the given text string */
   public static void import_text( string txt, int tab_spaces, DrawArea da, bool replace, Array<Node>? nodes = null ) {
 
-    var current = da.get_current_node();
-
     try {
 
-      var stack  = new Array<Hier?>();
-      var lines  = txt.split( "\n" );
-      var re     = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
-      var tspace = string.nfill( ((tab_spaces <= 0) ? 1 : tab_spaces), ' ' );
+      var stack   = new Array<Hier?>();
+      var lines   = txt.split( "\n" );
+      var re      = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
+      var tspace  = string.nfill( ((tab_spaces <= 0) ? 1 : tab_spaces), ' ' );
+      var current = da.get_current_node();
+
+      /*
+       Populate the stack with the current node, if one exists.  Set the spaces
+       count to -1 so that everything but a new header is added to this node.
+      */
+      if( current != null ) {
+        stack.append_val( {(replace ? 0 : -1), current} );
+      }
 
       foreach( string line in lines ) {
 
@@ -194,36 +203,29 @@ public class ExportText : Object {
           var task   = match_info.fetch( 5 );
           var str    = match_info.fetch( 6 );
 
-          /* Add root node */
-          if( (bullet == "#") || (stack.length == 0) ) {
-            if( (bullet == ">") && (current != null) ) {
+          /* Add note */
+          if( bullet == ">" ) {
+            if( stack.length > 0 ) {
               if( replace ) {
-                current.note = str;
+                stack.index( stack.length - 1 ).node.note = str;
                 replace = false;
               } else {
-                append_note( current, str );
+                append_note( stack.index( stack.length - 1 ).node, str );
               }
-            } else if( (bullet != "#") && (current != null) ) {
-              if( replace ) {
-                node = make_node( da, null, task, str, nodes, false );
-                da.replace_node( current, node );
-                replace = false;
-              } else {
-                node = make_node( da, current.parent, task, str, nodes );
-              }
-              stack.append_val( {spaces, node} );
-            } else {
-              node = make_node( da, null, task, str, nodes );
-              stack.append_val( {spaces, node} );
             }
 
-          /* Add note */
-          } else if( bullet == ">" ) {
-            append_note( stack.index( stack.length - 1 ).node, str );
+          /* If the stack is empty */
+          } else if( stack.length == 0 ) {
+            node = make_node( da, null, task, str, nodes );
+            stack.append_val( {spaces, node} );
 
           /* Add sibling node */
           } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
-            node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, nodes );
+            node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, nodes, !replace );
+            if( replace ) {
+              da.replace_node( stack.index( stack.length - 1 ).node, node );
+              replace = false;
+            }
             stack.remove_index( stack.length - 1 );
             stack.append_val( {spaces, node} );
 

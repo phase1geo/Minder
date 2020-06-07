@@ -2481,7 +2481,6 @@ public class DrawArea : Gtk.DrawingArea {
   public Node create_sibling_node( Node sibling, string name = "" ) {
     var node   = new Node.with_name( this, name, layouts.get_default() );
     node.side  = sibling.side;
-    node.style = sibling.style;
     node.style = StyleInspector.styles.get_style_for_level( sibling.get_level(), sibling.style );
     node.attach( sibling.parent, (sibling.index() + 1), _theme );
     return( node );
