@@ -33,6 +33,14 @@ public class DrawArea : Gtk.DrawingArea {
     {"text/uri-list", 0, 0}
   };
 
+  private struct SelectBox {
+    double x;
+    double y;
+    double w;
+    double h;
+    bool   valid;
+  }
+
   private Document         _doc;
   private GLib.Settings    _settings;
   private double           _press_x;
@@ -77,7 +85,7 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _focus_alpha  = 0.05;
   private bool             _create_new_from_edit;
   private Selection        _selected;
-  private Gdk.Rectangle    _select_box;
+  private SelectBox        _select_box;
 
   public MainWindow    win           { private set; get; }
   public UndoBuffer    undo_buffer   { set; get; }
@@ -159,7 +167,7 @@ public class DrawArea : Gtk.DrawingArea {
     _url_editor = new UrlEditor( this );
 
     /* Initialize the selection box */
-    _select_box = {0, 0, 0, 0};
+    _select_box = {0, 0, 0, 0, false};
 
     /* Create the popup menu */
     _node_menu  = new NodeMenu( this, accel_group );
@@ -1302,8 +1310,9 @@ public class DrawArea : Gtk.DrawingArea {
             return( set_current_node_from_position( match_node, e ) );
           }
         }
-        _select_box.x = (int)x;
-        _select_box.y = (int)y;
+        _select_box.x     = x;
+        _select_box.y     = y;
+        _select_box.valid = true;
         if( !shift ) {
           clear_current_node( true );
         }
@@ -1621,9 +1630,9 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Draws the selection box, if one is set */
   public void draw_select_box( Context ctx ) {
-    if( _select_box.width == 0 ) return;
+    if( !_select_box.valid ) return;
     Utils.set_context_color_with_alpha( ctx, _theme.get_color( "nodesel_background" ), 0.1 );
-    ctx.rectangle( _select_box.x, _select_box.y, _select_box.width, _select_box.height );
+    ctx.rectangle( _select_box.x, _select_box.y, _select_box.w, _select_box.h );
     ctx.fill();
   }
 
@@ -1724,10 +1733,10 @@ public class DrawArea : Gtk.DrawingArea {
   /* Selects all nodes within the selected box */
   private void select_nodes_within_box( bool shift ) {
     Gdk.Rectangle box = {
-      ((_select_box.width  < 0) ? (_select_box.x + _select_box.width)  : _select_box.x),
-      ((_select_box.height < 0) ? (_select_box.y + _select_box.height) : _select_box.y),
-      ((_select_box.width  < 0) ? (0 - _select_box.width)  : _select_box.width),
-      ((_select_box.height < 0) ? (0 - _select_box.height) : _select_box.height)
+      (int)((_select_box.w < 0) ? (_select_box.x + _select_box.w) : _select_box.x),
+      (int)((_select_box.h < 0) ? (_select_box.y + _select_box.h) : _select_box.y),
+      (int)((_select_box.w < 0) ? (0 - _select_box.w) : _select_box.w),
+      (int)((_select_box.h < 0) ? (0 - _select_box.h) : _select_box.h)
     };
     if( !shift ) {
       _selected.clear_nodes();
@@ -1783,7 +1792,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
 
       /* If we are dealing with a node, handle it based on its mode */
-      } else if( (current_node != null) && current_node.is_within( _scaled_x, _scaled_y ) && (_select_box.width == 0) ) {
+      } else if( (current_node != null) && !_select_box.valid ) {
         double diffx = _scaled_x - _press_x;
         double diffy = _scaled_y - _press_y;
         if( current_node.mode == NodeMode.CURRENT ) {
@@ -1810,8 +1819,8 @@ public class DrawArea : Gtk.DrawingArea {
 
       /* Otherwise, we are drawing a selection rectangle */
       } else {
-        _select_box.width  = (int)(_scaled_x - _select_box.x);
-        _select_box.height = (int)(_scaled_y - _select_box.y);
+        _select_box.w = (_scaled_x - _select_box.x);
+        _select_box.h = (_scaled_y - _select_box.y);
         select_nodes_within_box( shift );
         queue_draw();
       }
@@ -1902,8 +1911,8 @@ public class DrawArea : Gtk.DrawingArea {
 
     _pressed = false;
 
-    if( _select_box.width != 0 ) {
-      _select_box = {0, 0, 0, 0};
+    if( _select_box.valid ) {
+      _select_box = {0, 0, 0, 0, false};
       queue_draw();
     }
 
