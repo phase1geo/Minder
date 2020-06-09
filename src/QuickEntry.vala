@@ -130,16 +130,6 @@ public class QuickEntry : Gtk.Window {
 
   }
 
-  private void handle_text_insertion( ref TextIter pos, string new_text, int new_text_length ) {
-    var cleaned  = (pos.get_offset() == 0) ? new_text.chug() : new_text;
-    if( cleaned != new_text ) {
-      SignalHandler.block_by_func( (void*)_entry, (void*)handle_text_insertion, this );
-      _entry.buffer.insert_text( ref pos, cleaned, cleaned.length );
-      SignalHandler.unblock_by_func( (void*)_entry, (void*)handle_text_insertion, this );
-      Signal.stop_emission_by_name( _entry.buffer, "insert_text" );
-    }
-  }
-
   private Label make_help_label( string str ) {
     var lbl = new Label( str );
     lbl.use_markup = true;
@@ -158,6 +148,17 @@ public class QuickEntry : Gtk.Window {
 
     return( false );
 
+  }
+
+  /* Called whenever text is inserted by the user (either by entry or by paste) */
+  private void handle_text_insertion( ref TextIter pos, string new_text, int new_text_length ) {
+    var cleaned  = (pos.get_offset() == 0) ? new_text.chug() : new_text;
+    if( cleaned != new_text ) {
+      SignalHandler.block_by_func( (void*)_entry, (void*)handle_text_insertion, this );
+      _entry.buffer.insert_text( ref pos, cleaned, cleaned.length );
+      SignalHandler.unblock_by_func( (void*)_entry, (void*)handle_text_insertion, this );
+      Signal.stop_emission_by_name( _entry.buffer, "insert_text" );
+    }
   }
 
   /* Returns the text from the start of the current line to the current insertion cursor */

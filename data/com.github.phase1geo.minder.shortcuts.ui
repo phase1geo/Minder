@@ -177,14 +177,14 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Quick Entry Insertion</property>
-                <property name="accelerator">&lt;ctrl&gt;E</property>
+                <property name="accelerator">&lt;ctrl&gt;&lt;shift&gt;E</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Quick Entry Replacement</property>
-                <property name="accelerator">&lt;ctrl&gt;R</property>
+                <property name="accelerator">&lt;ctrl&gt;&lt;shift&gt;R</property>
                 <property name="visible">1</property>
               </object>
             </child>
