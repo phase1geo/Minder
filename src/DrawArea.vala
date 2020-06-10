@@ -1062,17 +1062,16 @@ public class DrawArea : Gtk.DrawingArea {
   /*
    Changes the current connection's color to the specified color.
   */
-  public void change_current_connection_color( RGBA color ) {
-    var conns = _selected.connections();
-    if( conns.length == 1 ) {
-      var current = conns.index( 0 );
-      RGBA orig_color = current.color;
-      if( orig_color != color ) {
-        current.color = color;
-        undo_buffer.add_item( new UndoConnectionColor( current, orig_color ) );
-        queue_draw();
-        changed();
-      }
+  public void change_current_connection_color( RGBA? color ) {
+    var conn = _selected.current_connection();
+    if( conn == null ) return;
+    var orig_color = conn.color;
+    if( orig_color != color ) {
+      conn.color = color;
+      undo_buffer.add_item( new UndoConnectionColor( conn, orig_color ) );
+      queue_draw();
+      changed();
+      current_changed( this );
     }
   }
 

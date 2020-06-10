@@ -25,11 +25,11 @@ using Gdk;
 public class UndoConnectionColor : UndoItem {
 
   Connection _conn;
-  RGBA       _old_color;
-  RGBA       _new_color;
+  RGBA?      _old_color;
+  RGBA?      _new_color;
 
   /* Constructor for a node name change */
-  public UndoConnectionColor( Connection c, RGBA old_color ) {
+  public UndoConnectionColor( Connection c, RGBA? old_color ) {
     base( _( "connection color change" ) );
     _conn      = c;
     _old_color = old_color;

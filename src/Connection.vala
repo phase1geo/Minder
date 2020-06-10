@@ -50,8 +50,7 @@ public class Connection : Object {
   private CanvasText? _title     = null;
   private string      _note      = "";
   private double      _max_width = 100;
-  private RGBA        _color;
-  private bool        _color_set = false;
+  private RGBA?       _color;
 
   public CanvasText? title {
     get {
@@ -119,15 +118,12 @@ public class Connection : Object {
     }
   }
   public double alpha { get; set; default=1.0; }
-  public RGBA   color {
+  public RGBA? color {
     get {
       return( _color );
     }
     set {
-      if( !_color.equal( value ) ) {
-        _color     = value;
-        _color_set = true;
-      }
+      _color = value;
     }
   }
 
@@ -143,7 +139,6 @@ public class Connection : Object {
     _dragy     = _posy;
     position_title();
     _curve     = new Bezier.with_endpoints( _posx, _posy, _posx, _posy );
-    _color     = da.get_theme().get_color( "connection_background" );
     style      = StyleInspector.styles.get_global_style();
   }
 
@@ -161,10 +156,10 @@ public class Connection : Object {
 
   /* Copies the given connection to this instance */
   public void copy( DrawArea da, Connection conn ) {
-    _from_node    = conn._from_node;
-    _to_node      = conn._to_node;
-    _dragx        = conn._dragx;
-    _dragy        = conn._dragy;
+    _from_node = conn._from_node;
+    _to_node   = conn._to_node;
+    _dragx     = conn._dragx;
+    _dragy     = conn._dragy;
     position_title();
     _curve.copy( conn._curve );
     if( conn.title == null ) {
@@ -179,9 +174,9 @@ public class Connection : Object {
       }
       _title.copy( conn.title );
     }
-    mode          = conn.mode;
-    style         = conn.style;
-    color         = conn.color;
+    mode  = conn.mode;
+    style = conn.style;
+    color = conn.color;
   }
 
   /* Returns the canvas box that contains both the from and to nodes */
@@ -512,9 +507,8 @@ public class Connection : Object {
 
     string? c = node->get_prop( "color" );
     if( c != null ) {
-      _color.parse( c );
-    } else {
       _color = da.get_theme().get_color( "connection_background" );
+      _color.parse( c );
     }
 
     /* Update the stored curve */
@@ -552,11 +546,14 @@ public class Connection : Object {
   public void save( Xml.Node* parent ) {
 
     Xml.Node* n = new Xml.Node( null, "connection" );
-    n->set_prop( "from_id",      _from_node.id().to_string() );
-    n->set_prop( "to_id",        _to_node.id().to_string() );
-    n->set_prop( "drag_x",       _dragx.to_string() );
-    n->set_prop( "drag_y",       _dragy.to_string() );
-    n->set_prop( "color",        _color.to_string() );
+    n->set_prop( "from_id", _from_node.id().to_string() );
+    n->set_prop( "to_id",   _to_node.id().to_string() );
+    n->set_prop( "drag_x",  _dragx.to_string() );
+    n->set_prop( "drag_y",  _dragy.to_string() );
+
+    if( _color != null ) {
+      n->set_prop( "color", Utils.color_from_rgba( _color ) );
+    }
 
     /* Save the style connection */
     style.save_connection( n );
@@ -592,9 +589,10 @@ public class Connection : Object {
 
     double start_x, start_y;
     double end_x,   end_y;
-    double dragx = _dragx;
-    double dragy = _dragy;
-    RGBA   bg    = (mode == ConnMode.NONE) ? theme.get_color( "background" ) : theme.get_color( "nodesel_background" );
+    double dragx  = _dragx;
+    double dragy  = _dragy;
+    RGBA   ccolor = (_color != null) ? _color : theme.get_color( "connection_background" );
+    RGBA   bg     = (mode == ConnMode.NONE) ? theme.get_color( "background" ) : theme.get_color( "nodesel_background" );
 
     if( _from_node == null ) {
       start_x = _posx;
@@ -620,7 +618,7 @@ public class Connection : Object {
     /* Draw the curve */
     ctx.save();
     style.draw_connection( ctx );
-    Utils.set_context_color_with_alpha( ctx, (_color_set ? _color : theme.get_color( "connection_background" )), alpha );
+    Utils.set_context_color_with_alpha( ctx, ccolor, alpha );
 
     /* Draw the curve as a quadratic curve (saves some additional calculations) */
     ctx.move_to( start_x, start_y );
@@ -656,7 +654,7 @@ public class Connection : Object {
       ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
       ctx.arc( dragx, dragy, RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
-      ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
+      ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
       ctx.stroke();
     }
 
@@ -666,13 +664,13 @@ public class Connection : Object {
       ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
       ctx.arc( start_x, start_y, RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
-      ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
+      ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
       ctx.stroke();
 
       ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
       ctx.arc( end_x, end_y, RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
-      ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
+      ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
       ctx.stroke();
 
     }
@@ -686,6 +684,7 @@ public class Connection : Object {
   */
   private void draw_title( Cairo.Context ctx, Theme theme ) {
 
+    var    ccolor  = (_color != null) ? _color : theme.get_color( "connection_background" );
     var    fg      = theme.get_color( "connection_foreground" ) ?? theme.get_color( "background" );
     var    padding = _style.connection_padding ?? 0;
     double x, y, w, h;
@@ -694,7 +693,7 @@ public class Connection : Object {
     title_bbox( out x, out y, out w, out h );
 
     /* Draw the box */
-    ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
+    ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
     Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)), (padding * 2) );
     ctx.fill();
 
@@ -715,7 +714,7 @@ public class Connection : Object {
       ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
       ctx.arc( _dragx, (_dragy + (h / 2) + padding), RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
-      ctx.set_source_rgba( color.red, color.green, color.blue, alpha );
+      ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
       ctx.stroke();
 
     }
