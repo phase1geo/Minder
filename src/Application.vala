@@ -29,15 +29,23 @@ public class Minder : Granite.Application {
   private static string?       open_file    = null;
   private static bool          new_file     = false;
   private static bool          testing      = false;
+  private        bool          loaded       = false;
+  private        MainWindow    appwin;
 
   public  static GLib.Settings settings;
   public  static string        version = "1.8.0";
 
   public Minder () {
+
     Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.HANDLES_OPEN );
+
+    startup.connect( start_application );
+    open.connect( open_files );
+
   }
 
-  protected override void activate() {
+  /* First method called in the startup process */
+  private void start_application() {
 
     /* Initialize the settings */
     settings = new GLib.Settings( "com.github.phase1geo.minder" );
@@ -47,40 +55,10 @@ public class Minder : Granite.Application {
     default_theme.add_resource_path( "/com/github/phase1geo/minder" );
 
     /* Create the main window */
-    var appwin = new MainWindow( this, settings );
-
-    /*
-    stdout.printf( "user_cache_dir: %s\n", GLib.Environment.get_user_cache_dir() );
-    stdout.printf( "user_config_dir: %s\n", GLib.Environment.get_user_config_dir() );
-    stdout.printf( "user_data_dir: %s\n", GLib.Environment.get_user_data_dir() );
-    stdout.printf( "user_runtime_dir: %s\n", GLib.Environment.get_user_runtime_dir() );
-    stdout.printf( "user_special_dir: %s\n", GLib.Environment.get_user_special_dir( UserDirectory.PUBLIC_SHARE ) );
-    stdout.printf( "current_dir: %s\n", GLib.Environment.get_current_dir() );
-    stdout.printf( "home_dir: %s\n", GLib.Environment.get_home_dir() );
-    */
+    appwin = new MainWindow( this, settings );
 
     /* Load the tab data */
-    var loaded = appwin.load_tab_state();
-
-    /*
-     If the user specified to open a specific filename from
-     the command-line, attempt to open it.  Display an error
-     message and exit immediately if there is an error opening
-     the file.
-    */
-    if( open_file != null ) {
-      if( !appwin.open_file( open_file ) ) {
-        stdout.printf( "ERROR:  Unable to open file '%s'\n", open_file );
-        Process.exit( 1 );
-      }
-
-    /*
-     If the user specified that a new file should be created or the saved tab state
-     was not loadable, create a new map.
-    */
-    } else if( new_file || !loaded ) {
-      appwin.do_new_file();
-    }
+    loaded = appwin.load_tab_state();
 
     /* Handle any changes to the position of the window */
     appwin.configure_event.connect(() => {
@@ -95,23 +73,42 @@ public class Minder : Granite.Application {
       return( false );
     });
 
-    /* Run the main loop */
-    Gtk.main();
+  }
 
+  /* Called whenever files need to be opened */
+  private void open_files( File[] files, string hint ) {
+    hold();
+    foreach( File open_file in files ) {
+      var file = open_file.get_path();
+      if( !appwin.open_file( file ) ) {
+        stdout.printf( "ERROR:  Unable to open file '%s'\n", file );
+      }
+    }
+    Gtk.main();
+    release();
+  }
+
+  /* Called if we have no files to open */
+  protected override void activate() {
+    hold();
+    if( new_file || !loaded ) {
+      appwin.do_new_file();
+    }
+    Gtk.main();
+    release();
   }
 
   /* Parse the command-line arguments */
   private void parse_arguments( ref unowned string[] args ) {
 
     var context = new OptionContext( "- Minder Options" );
-    var options = new OptionEntry[5];
+    var options = new OptionEntry[4];
 
     /* Create the command-line options */
     options[0] = {"version", 0, 0, OptionArg.NONE, ref show_version, "Display version number", null};
-    options[1] = {"open", 'o', 0, OptionArg.FILENAME, ref open_file, "Open filename", "FILENAME"};
-    options[2] = {"new", 'n', 0, OptionArg.NONE, ref new_file, "Starts Minder with a new file", null};
-    options[3] = {"run-tests", 0, 0, OptionArg.NONE, ref testing, "Run testing", null};
-    options[4] = {null};
+    options[1] = {"new", 'n', 0, OptionArg.NONE, ref new_file, "Starts Minder with a new file", null};
+    options[2] = {"run-tests", 0, 0, OptionArg.NONE, ref testing, "Run testing", null};
+    options[3] = {null};
 
     /* Parse the arguments */
     try {
@@ -134,12 +131,6 @@ public class Minder : Granite.Application {
     if( args.length >= 2 ) {
       open_file = args[1];
     }
-
-  }
-
-  protected override void open( File[] files, string hint ) {
-
-    activate();
 
   }
 
