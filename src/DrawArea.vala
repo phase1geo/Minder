@@ -1750,6 +1750,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     var control = (bool)(event.state & ModifierType.CONTROL_MASK);
     var shift   = (bool)(event.state & ModifierType.SHIFT_MASK);
+    var alt     = (bool)(event.state & ModifierType.MOD1_MASK);
 
     /* If the node is attached, clear it */
     if( _attach_node != null ) {
@@ -1832,7 +1833,7 @@ public class DrawArea : Gtk.DrawingArea {
       _motion  = true;
 
     /* If the Control key is held down, we are panning the canvas */
-    } else if( control ) {
+    } else if( alt ) {
 
       double diff_x = last_x - _scaled_x;
       double diff_y = last_y - _scaled_y;
