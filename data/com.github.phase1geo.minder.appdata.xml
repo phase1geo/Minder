@@ -107,6 +107,42 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.9.0" date="2020-06-14">
+      <description>
+        <p>New</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Added support for selecting nodes by dragging out a selection box.</li>
+          <li>Added ability to configure the color used in connection titles.</li>
+          <li>Added Italian translation (thanks to albanobattistella on GitHub).</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Refined and pixel fitted the application icon (thanks to Fatih20 on GitHub).</li>
+          <li>Changed panning with mouse from left-click with motion to Alt with motion.</li>
+          <li>Changed select parent to work with multiple selected nodes.</li>
+          <li>Updated keyboard shortcuts cheatsheet for task commands.</li>
+          <li>Updated Spanish translation (thanks to febrezo on GitHub).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed issues with changing connection styles.</li>
+          <li>Fixed application crashes associated with changing layout to a balanceable layout with animations enabled.</li>
+          <li>Fixed display of cursor when it is over a clickable feature in the mind map.</li>
+          <li>Fixed issues with creating custom themes.</li>
+          <li>Fixed cursor in note editor when Control key is held over a URL link.</li>
+          <li>Fixed meson.build issue when comparing valac version.</li>
+          <li>Fixed connection colors in dark themes to help them be more visible.</li>
+          <li>Fixed issue where connection colors don't follow theme if they have not been manually changed.</li>
+          <li>Fixed application crash when animation is disabled, a node is moved, animation is enabled and a node is moved.</li>
+          <li>Fixed various issues with quick entry.</li>
+          <li>Fixed ability to open one or more files from the command-line or from a file browser.</li>
+          <li>Fixed issues with connection coloring.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.8.0" date="2020-05-17">
       <description>
         <p>New</p>
