@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-03 22:58-0500\n"
+"POT-Creation-Date: 2020-06-11 22:26-0500\n"
 "PO-Revision-Date: 2020-05-29 15:00+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -41,7 +41,7 @@ msgstr "A sinistra"
 msgid "Upwards"
 msgstr "Verso l'alto"
 
-#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:3528
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:3561
 #: src/MapInspector.vala:329
 msgid "Manual"
 msgstr "Manuale"
@@ -94,7 +94,7 @@ msgstr "Sottolineato"
 msgid "Solarized Light"
 msgstr "Luce Solarizzata"
 
-#: src/themes/ThemeDefault.vala:28 src/DrawArea.vala:184
+#: src/themes/ThemeDefault.vala:28 src/DrawArea.vala:192
 #: src/ThemeEditor.vala:236
 msgid "Default"
 msgstr "Predefinito"
@@ -265,24 +265,28 @@ msgstr "sostituisci nodi"
 msgid "style change"
 msgstr "cambia stile"
 
-#: src/ConnectionInspector.vala:77 src/NodeInspector.vala:91
+#: src/ConnectionInspector.vala:78 src/NodeInspector.vala:91
 msgid "Title"
 msgstr "Titolo"
 
-#: src/ConnectionInspector.vala:103
+#: src/ConnectionInspector.vala:104
 msgid "Color"
 msgstr "Colore"
 
-#: src/ConnectionInspector.vala:125 src/NodeInspector.vala:184
+#: src/ConnectionInspector.vala:118
+msgid "Use Theme Default Color"
+msgstr ""
+
+#: src/ConnectionInspector.vala:137 src/NodeInspector.vala:184
 msgid "Note"
 msgstr "Note"
 
-#: src/ConnectionInspector.vala:158
+#: src/ConnectionInspector.vala:170
 msgid "Delete Connection"
 msgstr "Elimina connessione"
 
 #: src/ConnectionMenu.vala:40 src/ConnectionsMenu.vala:34 src/NodeMenu.vala:82
-#: src/NodesMenu.vala:48 src/ThemeEditor.vala:133
+#: src/NodesMenu.vala:51 src/ThemeEditor.vala:133
 msgid "Delete"
 msgstr "Cancella"
 
@@ -296,6 +300,7 @@ msgid "Add Note"
 msgstr "Aggiungi nota"
 
 #: src/ConnectionMenu.vala:51 src/ImageManager.vala:290 src/NodeMenu.vala:155
+#: src/NodesMenu.vala:83
 msgid "Select"
 msgstr "Seleziona"
 
@@ -319,11 +324,11 @@ msgstr "Connessione precedente"
 msgid "Remove Note"
 msgstr "Rimuovi Nodo"
 
-#: src/Connection.vala:577
+#: src/Connection.vala:574
 msgid "Connection Title"
 msgstr "Titolo della connessione"
 
-#: src/Connection.vala:580
+#: src/Connection.vala:577
 msgid "Connection Note"
 msgstr "Nota sulla connessione"
 
@@ -331,32 +336,32 @@ msgstr "Nota sulla connessione"
 msgid "unnamed"
 msgstr "senza nome"
 
-#: src/DrawArea.vala:612
+#: src/DrawArea.vala:620
 msgid "Main Idea"
 msgstr "Idea principale"
 
-#: src/DrawArea.vala:1864
+#: src/DrawArea.vala:1875
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "% 0,3 g %% completo"
 
-#: src/DrawArea.vala:1930
+#: src/DrawArea.vala:1941
 msgid "connection endpoint change"
 msgstr "modifica dell'endpoint di connessione"
 
-#: src/DrawArea.vala:1937
+#: src/DrawArea.vala:1948
 msgid "connection drag"
 msgstr "trascina della connessione"
 
-#: src/DrawArea.vala:2505 src/DrawArea.vala:2519 src/DrawArea.vala:3954
+#: src/DrawArea.vala:2537 src/DrawArea.vala:2551 src/DrawArea.vala:3987
 msgid "Another Idea"
 msgstr "Un'altra idea"
 
-#: src/DrawArea.vala:2772
+#: src/DrawArea.vala:2804
 msgid "fold completed tasks"
 msgstr "piega attività completate"
 
-#: src/DrawArea.vala:2809
+#: src/DrawArea.vala:2841
 msgid "unfold all tasks"
 msgstr "non piegare tutte le attività"
 
@@ -436,7 +441,7 @@ msgstr "Cursore: %3d,%3d"
 
 #: src/ImageEditor.vala:394 src/ImageManager.vala:290 src/MainWindow.vala:742
 #: src/MainWindow.vala:786 src/MainWindow.vala:928 src/MainWindow.vala:1164
-#: src/QuickEntry.vala:116 src/ThemeEditor.vala:138 src/UrlEditor.vala:61
+#: src/QuickEntry.vala:117 src/ThemeEditor.vala:138 src/UrlEditor.vala:61
 msgid "Cancel"
 msgstr "Cancella"
 
@@ -786,11 +791,11 @@ msgstr "Scollega nodo"
 msgid "Delete Node"
 msgstr "Elimina nodo"
 
-#: src/NodeMenu.vala:66 src/NodesMenu.vala:42 src/TextMenu.vala:43
+#: src/NodeMenu.vala:66 src/NodesMenu.vala:45 src/TextMenu.vala:43
 msgid "Copy"
 msgstr "Copia"
 
-#: src/NodeMenu.vala:70 src/NodesMenu.vala:45 src/TextMenu.vala:47
+#: src/NodeMenu.vala:70 src/NodesMenu.vala:48 src/TextMenu.vala:47
 msgid "Cut"
 msgstr "Taglia"
 
@@ -818,7 +823,7 @@ msgstr "Aggiungi collegamento nodo"
 msgid "Add Connection"
 msgstr "Aggiungi connessione"
 
-#: src/NodeMenu.vala:113 src/NodesMenu.vala:65
+#: src/NodeMenu.vala:113 src/NodesMenu.vala:68
 msgid "Set to color…"
 msgstr "Imposta per colorare..."
 
@@ -826,12 +831,12 @@ msgstr "Imposta per colorare..."
 msgid "Randomize color"
 msgstr "Randomizza il colore"
 
-#: src/NodeMenu.vala:119 src/NodesMenu.vala:71
+#: src/NodeMenu.vala:119 src/NodesMenu.vala:74
 msgid "Use parent color"
 msgstr "Usa il colore principale"
 
-#: src/NodeMenu.vala:122 src/NodeMenu.vala:357 src/NodesMenu.vala:51
-#: src/NodesMenu.vala:168
+#: src/NodeMenu.vala:122 src/NodeMenu.vala:357 src/NodesMenu.vala:54
+#: src/NodesMenu.vala:191
 msgid "Fold Children"
 msgstr ""
 
@@ -879,15 +884,14 @@ msgstr "Nodo fratello precedente"
 msgid "Child Node"
 msgstr ""
 
-#: src/NodeMenu.vala:175
+#: src/NodeMenu.vala:175 src/NodesMenu.vala:90
 #, fuzzy
 msgid "Child Nodes"
 msgstr "Nodi di Collegamento"
 
 #: src/NodeMenu.vala:179
-#, fuzzy
-msgid "Descendant Nodes"
-msgstr "Elimina nodo"
+msgid "Subtree"
+msgstr ""
 
 #: src/NodeMenu.vala:183
 msgid "Parent Node"
@@ -925,7 +929,7 @@ msgstr "Rimuovi Attività"
 msgid "Remove Node Link"
 msgstr "Rimuovi collegamento nodo"
 
-#: src/NodeMenu.vala:357 src/NodesMenu.vala:168
+#: src/NodeMenu.vala:357 src/NodesMenu.vala:191
 msgid "Unfold Children"
 msgstr ""
 
@@ -949,51 +953,56 @@ msgstr "Incolla e Sostituisci Immagine Nodo"
 msgid "Paste Node As Child"
 msgstr ""
 
-#: src/NodeMenu.vala:563 src/NodesMenu.vala:209
+#: src/NodeMenu.vala:563 src/NodesMenu.vala:232
 msgid "Select a link color"
 msgstr "Seleziona un colore di collegamento"
 
-#: src/NodesMenu.vala:54
+#: src/NodesMenu.vala:57
 msgid "Connect"
 msgstr "Collegare"
 
-#: src/NodesMenu.vala:57
+#: src/NodesMenu.vala:60
 msgid "Link Nodes"
 msgstr "Nodi di Collegamento"
 
-#: src/NodesMenu.vala:62 src/ThemeEditor.vala:119
+#: src/NodesMenu.vala:65 src/ThemeEditor.vala:119
 msgid "Link Colors"
 msgstr "Colori di Collegamento"
 
-#: src/NodesMenu.vala:68
+#: src/NodesMenu.vala:71
 msgid "Randomize colors"
 msgstr "Randomizza i colori"
 
-#: src/NodesMenu.vala:80
+#: src/NodesMenu.vala:86
+#, fuzzy
+msgid "Parent Nodes"
+msgstr "Nodo Genitore"
+
+#: src/NodesMenu.vala:99
 msgid "Align Nodes"
 msgstr "Allinea nodi"
 
-#: src/NodesMenu.vala:83
+#: src/NodesMenu.vala:102
 msgid "Align Top"
 msgstr "Allinea in Alto"
 
-#: src/NodesMenu.vala:86 data/com.github.phase1geo.minder.shortcuts.ui:413
+#: src/NodesMenu.vala:105 data/com.github.phase1geo.minder.shortcuts.ui:427
 msgid "Align Center Horizontally"
 msgstr "Allinea al centro in orizzontale"
 
-#: src/NodesMenu.vala:89
+#: src/NodesMenu.vala:108
 msgid "Align Bottom"
 msgstr "Allinea in basso"
 
-#: src/NodesMenu.vala:92
+#: src/NodesMenu.vala:111
 msgid "Align Left"
 msgstr "Allineare a sinistra"
 
-#: src/NodesMenu.vala:95
+#: src/NodesMenu.vala:114
 msgid "Align Center Veritically"
 msgstr "Allinea al centro verticalmente"
 
-#: src/NodesMenu.vala:98
+#: src/NodesMenu.vala:117
 msgid "Align Right"
 msgstr "Allinea a destra"
 
@@ -1005,11 +1014,11 @@ msgstr "Titolo Nodo"
 msgid "Node Note"
 msgstr "Nota Nodo"
 
-#: src/QuickEntry.vala:56
+#: src/QuickEntry.vala:57
 msgid "Help for inputting node information:"
 msgstr "Aiuto per l'immissione delle informazioni sul nodo:"
 
-#: src/QuickEntry.vala:57
+#: src/QuickEntry.vala:58
 msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
@@ -1017,15 +1026,15 @@ msgstr ""
 "Ogni riga di testo descrive il titolo di un nodo o le informazioni sulla "
 "notaper un nodo."
 
-#: src/QuickEntry.vala:58
+#: src/QuickEntry.vala:59
 msgid "Tab"
 msgstr "Scheda"
 
-#: src/QuickEntry.vala:59
+#: src/QuickEntry.vala:60
 msgid "Creates a child node of the previous node."
 msgstr "Crea un nodo figlio del nodo precedente."
 
-#: src/QuickEntry.vala:61
+#: src/QuickEntry.vala:62
 msgid ""
 "If this character is the first non-whitespace character, makes a new root "
 "node from the title that follows."
@@ -1033,7 +1042,7 @@ msgstr ""
 "Se questo carattere è il primo carattere non bianco, crea una nuova "
 "radicenodo dal titolo che segue."
 
-#: src/QuickEntry.vala:63
+#: src/QuickEntry.vala:64
 msgid ""
 "If this character is the first non-whitespace character, make a new node "
 "from the title that follows."
@@ -1041,7 +1050,7 @@ msgstr ""
 "Se questo carattere è il primo carattere non bianco, crea un nuovo nododal "
 "titolo che segue."
 
-#: src/QuickEntry.vala:65
+#: src/QuickEntry.vala:66
 msgid ""
 "If this character is the first non-whitespace character, the following line "
 "is appended to the previous node's note."
@@ -1049,19 +1058,19 @@ msgstr ""
 "Se questo carattere è il primo carattere non bianco, la seguente rigaviene "
 "aggiunto alla nota del nodo precedente."
 
-#: src/QuickEntry.vala:67
+#: src/QuickEntry.vala:68
 msgid "If this follows *, + or -, the node is made an uncompleted task."
 msgstr "Se questo segue *, + o -, il nodo diventa un'attività non completata."
 
-#: src/QuickEntry.vala:69
+#: src/QuickEntry.vala:70
 msgid "If this follows *, + or -, the node is made a completed task."
 msgstr "Se questo segue *, + o -, il nodo diventa un'attività completata."
 
-#: src/QuickEntry.vala:98
+#: src/QuickEntry.vala:99
 msgid "Replace"
 msgstr "Sostituire"
 
-#: src/QuickEntry.vala:107
+#: src/QuickEntry.vala:108
 msgid "Insert"
 msgstr "Inserire"
 
@@ -1384,7 +1393,7 @@ msgid "Zoom To Actual Size"
 msgstr "Zoom su Dimensioni Reali"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:119
-#: data/com.github.phase1geo.minder.shortcuts.ui:525
+#: data/com.github.phase1geo.minder.shortcuts.ui:539
 msgid "Miscellaneous"
 msgstr ""
 
@@ -1429,7 +1438,7 @@ msgid "Quick Entry Replacement"
 msgstr "Sostituzione dell'Entrata Rapida"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:209
-#: data/com.github.phase1geo.minder.shortcuts.ui:607
+#: data/com.github.phase1geo.minder.shortcuts.ui:621
 msgid "Clipboard"
 msgstr "Appunti"
 
@@ -1454,7 +1463,7 @@ msgid "Changing Current"
 msgstr "Cambiare Corrente"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:247
-#: data/com.github.phase1geo.minder.shortcuts.ui:461
+#: data/com.github.phase1geo.minder.shortcuts.ui:475
 msgid "Edit Title"
 msgstr "Modifica Titolo"
 
@@ -1488,7 +1497,7 @@ msgid "Center In View"
 msgstr "Centra in Vista"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:303
-#: data/com.github.phase1geo.minder.shortcuts.ui:475
+#: data/com.github.phase1geo.minder.shortcuts.ui:489
 msgid "Place Into View"
 msgstr "Posiziona in vista"
 
@@ -1497,9 +1506,9 @@ msgid "Sort Child Nodes Alphabetically"
 msgstr "Ordina i nodi figlio in ordine alfabetico"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:319
-#: data/com.github.phase1geo.minder.shortcuts.ui:484
-msgid "Traversal"
-msgstr "Trasversale"
+#: data/com.github.phase1geo.minder.shortcuts.ui:648
+msgid "Selection"
+msgstr "Seleziona"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:323
 msgid "Select Root"
@@ -1522,173 +1531,187 @@ msgid "Select Child"
 msgstr "Seleziona Figlio"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:358
+#, fuzzy
+msgid "Select Children"
+msgstr "Seleziona Figlio"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:365
+#, fuzzy
+msgid "Select Subtree"
+msgstr "Seleziona Avvia nodo"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:372
 msgid "Select Node Below"
 msgstr "Seleziona Nodo Sotto"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:365
+#: data/com.github.phase1geo.minder.shortcuts.ui:379
 msgid "Select Node Above"
 msgstr "Seleziona Nodo Sopra"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:372
+#: data/com.github.phase1geo.minder.shortcuts.ui:386
 msgid "Select Node To Right"
 msgstr "Seleziona Nodo a Destra"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:379
+#: data/com.github.phase1geo.minder.shortcuts.ui:393
 msgid "Select Node To Left"
 msgstr "Seleziona Nodo a Sinistra"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:386
+#: data/com.github.phase1geo.minder.shortcuts.ui:400
 msgid "Select Linked Node"
 msgstr "Seleziona Nodo Collegato"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:393
+#: data/com.github.phase1geo.minder.shortcuts.ui:407
 msgid "Select Attached Connection"
 msgstr "Seleziona Connessione Collegata"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:402
+#: data/com.github.phase1geo.minder.shortcuts.ui:416
 msgid "Alignment"
 msgstr "Allineamento"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:406
+#: data/com.github.phase1geo.minder.shortcuts.ui:420
 msgid "Align Top Side"
 msgstr "Allinea Lato Superiore"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:420
+#: data/com.github.phase1geo.minder.shortcuts.ui:434
 msgid "Align Bottom Side"
 msgstr "Allinea Lato Inferiore"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:427
+#: data/com.github.phase1geo.minder.shortcuts.ui:441
 msgid "Align Left Side"
 msgstr "Allinea a Sinistra"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:434
+#: data/com.github.phase1geo.minder.shortcuts.ui:448
 msgid "Align Center Vertically"
 msgstr "Allinea al Centro Verticalmente"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:441
+#: data/com.github.phase1geo.minder.shortcuts.ui:455
 msgid "Align Right Side"
 msgstr "Allineare Lato Destro"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:453
+#: data/com.github.phase1geo.minder.shortcuts.ui:467
 msgid "Connection Commands"
 msgstr "Comandi di Connessione"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:457
+#: data/com.github.phase1geo.minder.shortcuts.ui:471
 msgid "Change Current"
 msgstr "Cambia Corrente"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:468
+#: data/com.github.phase1geo.minder.shortcuts.ui:482
 msgid "Show Properties"
 msgstr "Mostra proprietà"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:488
+#: data/com.github.phase1geo.minder.shortcuts.ui:498
+msgid "Traversal"
+msgstr "Trasversale"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:502
 msgid "Select Start Node"
 msgstr "Seleziona Avvia nodo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:495
+#: data/com.github.phase1geo.minder.shortcuts.ui:509
 msgid "Select End Node"
 msgstr "Seleziona Fine Nodo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:502
+#: data/com.github.phase1geo.minder.shortcuts.ui:516
 msgid "Select Next Connection"
 msgstr "Seleziona Connessione Successiva"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:509
+#: data/com.github.phase1geo.minder.shortcuts.ui:523
 msgid "Select Previous Connection"
 msgstr "Seleziona Connessione precedente"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:521
+#: data/com.github.phase1geo.minder.shortcuts.ui:535
 msgid "Text Editing"
 msgstr "Modifica Testo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:529
+#: data/com.github.phase1geo.minder.shortcuts.ui:543
 msgid "Show Emoji Picker"
 msgstr "Mostra selettore Emoji"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:536
+#: data/com.github.phase1geo.minder.shortcuts.ui:550
 msgid "End Editing"
 msgstr "Termina Modifica"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:545
+#: data/com.github.phase1geo.minder.shortcuts.ui:559
 msgid "Cursor Movement"
 msgstr "Movimento del Cursore"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:549
+#: data/com.github.phase1geo.minder.shortcuts.ui:563
 msgid "Next Character"
 msgstr "Successivo Carattere"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:556
+#: data/com.github.phase1geo.minder.shortcuts.ui:570
 msgid "Previous Character"
 msgstr "Carattere Precedente"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:563
+#: data/com.github.phase1geo.minder.shortcuts.ui:577
 msgid "Next Word"
 msgstr "Parola Successiva"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:570
+#: data/com.github.phase1geo.minder.shortcuts.ui:584
 msgid "Previous Word"
 msgstr "Parola Precedente"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:577
+#: data/com.github.phase1geo.minder.shortcuts.ui:591
 msgid "Next Line"
 msgstr "Linea Successiva"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:584
+#: data/com.github.phase1geo.minder.shortcuts.ui:598
 msgid "Previous Line"
 msgstr "Linea Precedente"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:591
+#: data/com.github.phase1geo.minder.shortcuts.ui:605
 msgid "Start Of Text"
 msgstr "Inizio del Testo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:598
+#: data/com.github.phase1geo.minder.shortcuts.ui:612
 msgid "End Of Text"
 msgstr "Fine del Testo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:611
+#: data/com.github.phase1geo.minder.shortcuts.ui:625
 msgid "Copy Selected Text"
 msgstr "Copia Testo Selezionato"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:618
+#: data/com.github.phase1geo.minder.shortcuts.ui:632
 msgid "Cut Selected Text"
 msgstr "Taglia Testo Selezionato"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:625
+#: data/com.github.phase1geo.minder.shortcuts.ui:639
 msgid "Paste Text"
 msgstr "Incolla Testo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:634
-msgid "Selection"
-msgstr "Seleziona"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:638
+#: data/com.github.phase1geo.minder.shortcuts.ui:652
 msgid "Add Next Character"
 msgstr "Aggiungi Carattere Successivo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:645
+#: data/com.github.phase1geo.minder.shortcuts.ui:659
 msgid "Add Previous Character"
 msgstr "Aggiungi Carattere Precedente"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:652
+#: data/com.github.phase1geo.minder.shortcuts.ui:666
 msgid "Add Next Word"
 msgstr "Aggiungi Parola Successiva"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:659
+#: data/com.github.phase1geo.minder.shortcuts.ui:673
 msgid "Add Previous Word"
 msgstr "Aggiungi Parola Precedente"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:666
+#: data/com.github.phase1geo.minder.shortcuts.ui:680
 msgid "Add Next Line"
 msgstr "Aggiungi Linea successiva"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:673
+#: data/com.github.phase1geo.minder.shortcuts.ui:687
 msgid "Add Previous Line"
 msgstr "Aggiungi Linea Precedente"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:680
+#: data/com.github.phase1geo.minder.shortcuts.ui:694
 msgid "Add Start Of Text"
 msgstr "Aggiungi Inizio Testo"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:687
+#: data/com.github.phase1geo.minder.shortcuts.ui:701
 msgid "Add End Of Text"
 msgstr "Aggiungi Fine Testo"
+
+#, fuzzy
+#~ msgid "Descendant Nodes"
+#~ msgstr "Elimina nodo"
