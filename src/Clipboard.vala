@@ -156,9 +156,11 @@ public class MinderClipboard {
     /* Get the list of targets that we will support */
     foreach( var target in targets ) {
       switch( target.name() ) {
-        case NODES_TARGET_NAME :  nodes_atom = target;  break;
-        case "text/plain"      :  text_atom  = target;  break;
-        case "image/png"       :  image_atom = target;  break;
+        case NODES_TARGET_NAME :  nodes_atom = nodes_atom ?? target;  break;
+        case "UTF8_STRING"     :
+        case "STRING"          :
+        case "text/plain"      :  text_atom  = text_atom  ?? target;  break;
+        case "image/png"       :  image_atom = image_atom ?? target;  break;
       }
     }
 
