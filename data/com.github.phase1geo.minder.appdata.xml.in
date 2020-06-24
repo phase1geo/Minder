@@ -83,7 +83,7 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
-    <release version="1.9.0" date="2020-06-14">
+    <release version="1.9.0" date="2020-06-26">
       <description>
         <p>New</p>
         <ul>
@@ -113,6 +113,7 @@
           <li>Fixed various issues with quick entry.</li>
           <li>Fixed ability to open one or more files from the command-line or from a file browser.</li>
           <li>Fixed issues with connection coloring.</li>
+          <li>Fixed issue with pasting UTF8 strings from clipboard.</li>
         </ul>
       </description>
     </release>
