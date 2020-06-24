@@ -43,8 +43,9 @@ public class MinderClipboard {
   }
 
   const TargetEntry[] text_target_list = {
-    { "text/plain", 0, Target.STRING },
-    { "STRING",     0, Target.STRING }
+    { "UTF8_STRING", 0, Target.STRING },
+    { "text/plain",  0, Target.STRING },
+    { "STRING",      0, Target.STRING }
   };
 
   const TargetEntry[] image_target_list = {
@@ -52,6 +53,7 @@ public class MinderClipboard {
   };
 
   const TargetEntry[] node_target_list = {
+    { "UTF8_STRING",     0, Target.STRING },
     { "text/plain",      0, Target.STRING },
     { "STRING",          0, Target.STRING },
     { "image/png",       0, Target.IMAGE },
