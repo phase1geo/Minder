@@ -31,7 +31,6 @@ public class MapInspector : Box {
   private Button?                     _balance        = null;
   private Button?                     _fold_completed = null;
   private Button?                     _unfold_all     = null;
-  private bool                        _init           = true;
 
   public MapInspector( MainWindow win, GLib.Settings settings ) {
 
@@ -255,7 +254,7 @@ public class MapInspector : Box {
     _balance = new Button.from_icon_name( "minder-balance-symbolic", IconSize.SMALL_TOOLBAR );
     _balance.set_tooltip_text( _( "Balance Nodes" ) );
     _balance.clicked.connect(() => {
-      _da.balance_nodes();
+      _da.balance_nodes( true, true );
     });
 
     _fold_completed = new Button.from_icon_name( "minder-fold-completed-symbolic", IconSize.SMALL_TOOLBAR );
@@ -285,10 +284,6 @@ public class MapInspector : Box {
     _theme_grid.get_children().foreach((entry) => {
       _theme_grid.remove( entry );
     });
-
-    if( !_init ) {
-      return;
-    }
 
     /* Get the theme information to display */
     var names  = new Array<string>();
@@ -324,8 +319,6 @@ public class MapInspector : Box {
     if( _da != null ) {
       select_theme( _da.get_theme_name() );
     }
-
-    _init = false;
 
   }
 

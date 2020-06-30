@@ -177,14 +177,14 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Quick Entry Insertion</property>
-                <property name="accelerator">&lt;ctrl&gt;E</property>
+                <property name="accelerator">&lt;ctrl&gt;&lt;shift&gt;E</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Quick Entry Replacement</property>
-                <property name="accelerator">&lt;ctrl&gt;R</property>
+                <property name="accelerator">&lt;ctrl&gt;&lt;shift&gt;R</property>
                 <property name="visible">1</property>
               </object>
             </child>
@@ -251,6 +251,13 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Change Task State</property>
+                <property name="accelerator">t</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">View Properties</property>
                 <property name="accelerator">i</property>
                 <property name="visible">1</property>
@@ -309,7 +316,7 @@
         </child>
         <child>
           <object class="GtkShortcutsGroup">
-            <property name="title" translatable="yes">Traversal</property>
+            <property name="title" translatable="yes">Selection</property>
             <property name="visible">1</property>
             <child>
               <object class="GtkShortcutsShortcut">
@@ -343,6 +350,20 @@
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Select Child</property>
                 <property name="accelerator">c</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Select Children</property>
+                <property name="accelerator">d</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Select Subtree</property>
+                <property name="accelerator">&lt;shift&gt;d</property>
                 <property name="visible">1</property>
               </object>
             </child>

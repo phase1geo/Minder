@@ -82,21 +82,22 @@ public class ThemeEditor : Gtk.Box {
     color_lbl.use_markup = true;
     grid.attach( color_lbl, 0, 0, 2 );
 
-    add_color( _( "Background" ),             "background",         grid, 1 );
-    add_color( _( "Foreground" ),             "foreground",         grid, 2 );
-    add_color( _( "Root Node Background" ),   "root_background",    grid, 3 );
-    add_color( _( "Root Node Foreground" ),   "root_foreground",    grid, 4 );
-    add_color( _( "Node Select Background" ), "nodesel_background", grid, 5 );
-    add_color( _( "Node Select Foreground" ), "nodesel_foreground", grid, 6 );
-    add_color( _( "Text Select Background" ), "textsel_background", grid, 7 );
-    add_color( _( "Text Select Foreground" ), "textsel_foreground", grid, 8 );
-    add_color( _( "Text Cursor" ),            "text_cursor",        grid, 9 );
-    add_color( _( "Attachable Highlight" ),   "attachable",         grid, 10 );
-    add_color( _( "Connection Color" ),       "connection",         grid, 11 );
-    add_color( _( "URL Link Background" ),    "url_background",     grid, 12 );
-    add_color( _( "URL Link Foreground" ),    "url_foreground",     grid, 13 );
+    add_color( _( "Background" ),             "background",            grid, 1 );
+    add_color( _( "Foreground" ),             "foreground",            grid, 2 );
+    add_color( _( "Root Node Background" ),   "root_background",       grid, 3 );
+    add_color( _( "Root Node Foreground" ),   "root_foreground",       grid, 4 );
+    add_color( _( "Node Select Background" ), "nodesel_background",    grid, 5 );
+    add_color( _( "Node Select Foreground" ), "nodesel_foreground",    grid, 6 );
+    add_color( _( "Text Select Background" ), "textsel_background",    grid, 7 );
+    add_color( _( "Text Select Foreground" ), "textsel_foreground",    grid, 8 );
+    add_color( _( "Text Cursor" ),            "text_cursor",           grid, 9 );
+    add_color( _( "Attachable Highlight" ),   "attachable",            grid, 10 );
+    add_color( _( "Connection Color" ),       "connection_background", grid, 11 );
+    add_color( _( "Connection Title Color" ), "connection_foreground", grid, 12 );
+    add_color( _( "URL Link Background" ),    "url_background",        grid, 13 );
+    add_color( _( "URL Link Foreground" ),    "url_foreground",        grid, 14 );
 
-    var row = 14;
+    var row = 15;
 
     grid.attach( new Label( "" ), 0, row );
 

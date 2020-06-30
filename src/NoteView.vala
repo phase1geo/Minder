@@ -29,6 +29,8 @@ public class NoteView : Gtk.SourceView {
   private int            _last_lnum = -1;
   private string?        _last_url  = null;
   private Array<UrlLink> _last_urls;
+  private int            _last_x;
+  private int            _last_y;
   private Regex?         _url_re;
   public  SourceStyle    _srcstyle  = null;
   public  SourceBuffer   _buffer;
@@ -74,6 +76,8 @@ public class NoteView : Gtk.SourceView {
     this.focus_in_event.connect( on_focus );
     this.motion_notify_event.connect( on_motion );
     this.button_press_event.connect( on_press );
+    this.key_press_event.connect( on_keypress );
+    this.key_release_event.connect( on_keyrelease );
 
     expand      = true;
     has_focus   = true;
@@ -155,7 +159,7 @@ public class NoteView : Gtk.SourceView {
       _last_lnum = cursor.get_line();
     }
     if( cursor_in_url( cursor ) ) {
-      win.set_cursor( new Cursor.for_display( get_display(), CursorType.HAND1 ) );
+      win.set_cursor( new Cursor.for_display( get_display(), CursorType.HAND2 ) );
     } else {
       win.set_cursor( null );
     }
@@ -173,6 +177,8 @@ public class NoteView : Gtk.SourceView {
    check to see if the cursor is over a URL.
   */
   private bool on_motion( EventMotion e ) {
+    _last_x = (int)e.x;
+    _last_y = (int)e.y;
     if( (bool)(e.state & ModifierType.CONTROL_MASK) ) {
       enable_url_checking( (int)e.x, (int)e.y );
       return( true );
@@ -192,6 +198,20 @@ public class NoteView : Gtk.SourceView {
         Utils.open_url( _last_url );
       }
       return( true );
+    }
+    return( false );
+  }
+
+  private bool on_keypress( EventKey e ) {
+    if( e.keyval == 65507 ) {
+      enable_url_checking( _last_x, _last_y );
+    }
+    return( false );
+  }
+
+  private bool on_keyrelease( EventKey e ) {
+    if( e.keyval == 65507 ) {
+      disable_url_checking();
     }
     return( false );
   }

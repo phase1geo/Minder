@@ -51,6 +51,8 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _selnext;
   Gtk.MenuItem _selprev;
   Gtk.MenuItem _selchild;
+  Gtk.MenuItem _selchildren;
+  Gtk.MenuItem _seltree;
   Gtk.MenuItem _selparent;
   Gtk.MenuItem _selconn;
   Gtk.MenuItem _sellink;
@@ -170,8 +172,16 @@ public class NodeMenu : Gtk.Menu {
     _selchild.activate.connect( select_child_node );
     Utils.add_accel_label( _selchild, 'c', 0 );
 
+    _selchildren = new Gtk.MenuItem.with_label( _( "Child Nodes" ) );
+    _selchildren.activate.connect( select_child_nodes );
+    Utils.add_accel_label( _selchildren, 'd', 0 );
+
+    _seltree = new Gtk.MenuItem.with_label( _( "Subtree" ) );
+    _seltree.activate.connect( select_node_tree );
+    Utils.add_accel_label( _seltree, 'd', Gdk.ModifierType.SHIFT_MASK );
+
     _selparent = new Gtk.MenuItem.with_label( _( "Parent Node" ) );
-    _selparent.activate.connect( select_parent_node );
+    _selparent.activate.connect( select_parent_nodes );
     Utils.add_accel_label( _selparent, 'a', 0 );
 
     _sellink = new Gtk.MenuItem.with_label( _( "Linked Node" ) );
@@ -235,6 +245,8 @@ public class NodeMenu : Gtk.Menu {
     selmenu.add( _selnext );
     selmenu.add( _selprev );
     selmenu.add( _selchild );
+    selmenu.add( _selchildren );
+    selmenu.add( _seltree );
     selmenu.add( _selparent );
     selmenu.add( _sellink );
     selmenu.add( new SeparatorMenuItem() );
@@ -333,7 +345,7 @@ public class NodeMenu : Gtk.Menu {
     _selroot.set_sensitive( _da.root_selectable() );
     _selnext.set_sensitive( _da.sibling_selectable() );
     _selprev.set_sensitive( _da.sibling_selectable() );
-    _selchild.set_sensitive( _da.child_selectable() );
+    _selchild.set_sensitive( _da.children_selectable() );
     _selparent.set_sensitive( _da.parent_selectable() );
     _sellink.set_sensitive( node_has_link() );
 
@@ -509,9 +521,19 @@ public class NodeMenu : Gtk.Menu {
     _da.select_child_node();
   }
 
+  /* Selects all of the child nodes of the current node */
+  private void select_child_nodes() {
+    _da.select_child_nodes();
+  }
+
+  /* Selects all of the descendant nodes of the current node */
+  private void select_node_tree() {
+    _da.select_node_tree();
+  }
+
   /* Selects the parent node of the current node */
-  private void select_parent_node() {
-    _da.select_parent_node();
+  private void select_parent_nodes() {
+    _da.select_parent_nodes();
   }
 
   /* Selects the node the current node is linked to */

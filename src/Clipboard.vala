@@ -43,8 +43,9 @@ public class MinderClipboard {
   }
 
   const TargetEntry[] text_target_list = {
-    { "text/plain", 0, Target.STRING },
-    { "STRING",     0, Target.STRING }
+    { "UTF8_STRING", 0, Target.STRING },
+    { "text/plain",  0, Target.STRING },
+    { "STRING",      0, Target.STRING }
   };
 
   const TargetEntry[] image_target_list = {
@@ -52,6 +53,7 @@ public class MinderClipboard {
   };
 
   const TargetEntry[] node_target_list = {
+    { "UTF8_STRING",     0, Target.STRING },
     { "text/plain",      0, Target.STRING },
     { "STRING",          0, Target.STRING },
     { "image/png",       0, Target.IMAGE },
@@ -156,9 +158,11 @@ public class MinderClipboard {
     /* Get the list of targets that we will support */
     foreach( var target in targets ) {
       switch( target.name() ) {
-        case NODES_TARGET_NAME :  nodes_atom = target;  break;
-        case "text/plain"      :  text_atom  = target;  break;
-        case "image/png"       :  image_atom = target;  break;
+        case NODES_TARGET_NAME :  nodes_atom = nodes_atom ?? target;  break;
+        case "UTF8_STRING"     :
+        case "STRING"          :
+        case "text/plain"      :  text_atom  = text_atom  ?? target;  break;
+        case "image/png"       :  image_atom = image_atom ?? target;  break;
       }
     }
 

@@ -45,6 +45,7 @@ public class QuickEntry : Gtk.Window {
     _entry.border_width = 5;
     _entry.set_wrap_mode( Gtk.WrapMode.WORD );
     _entry.key_press_event.connect( on_keypress );
+    _entry.buffer.insert_text.connect( handle_text_insertion );
 
     /* Create the scrolled window for the text entry area */
     var sw = new ScrolledWindow( null, null );
@@ -147,6 +148,17 @@ public class QuickEntry : Gtk.Window {
 
     return( false );
 
+  }
+
+  /* Called whenever text is inserted by the user (either by entry or by paste) */
+  private void handle_text_insertion( ref TextIter pos, string new_text, int new_text_length ) {
+    var cleaned  = (pos.get_offset() == 0) ? new_text.chug() : new_text;
+    if( cleaned != new_text ) {
+      SignalHandler.block_by_func( (void*)_entry, (void*)handle_text_insertion, this );
+      _entry.buffer.insert_text( ref pos, cleaned, cleaned.length );
+      SignalHandler.unblock_by_func( (void*)_entry, (void*)handle_text_insertion, this );
+      Signal.stop_emission_by_name( _entry.buffer, "insert_text" );
+    }
   }
 
   /* Returns the text from the start of the current line to the current insertion cursor */
@@ -263,20 +275,10 @@ public class QuickEntry : Gtk.Window {
 
   /* Inserts the specified nodes into the given drawing area */
   private void handle_insert( DrawArea da ) {
-    Array<Node> nodes;
-    var         node = da.get_current_node();
-    ExportText.import_text( _entry.buffer.text, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, out nodes );
+    var nodes = new Array<Node>();
+    var node  = da.get_current_node();
+    ExportText.import_text( _entry.buffer.text, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, false, nodes );
     if( nodes.length == 0 ) return;
-    if( node == null ) {
-      for( int i=0; i<nodes.length; i++ ) {
-        da.add_root( nodes.index( i ), -1 );
-      }
-    } else {
-      nodes.index( 0 ).attach( node, -1, da.get_theme() );
-      for( int i=1; i<nodes.length; i++ ) {
-        da.add_root( nodes.index( i ), -1 );
-      }
-    }
     da.undo_buffer.add_item( new UndoNodesInsert( da, nodes ) );
     da.set_current_node( nodes.index( 0 ) );
     da.queue_draw();
@@ -286,15 +288,11 @@ public class QuickEntry : Gtk.Window {
 
   /* Replaces the specified nodes into the given drawing area */
   private void handle_replace( DrawArea da ) {
-    Array<Node> nodes;
+    var nodes  = new Array<Node>();;
     var node   = da.get_current_node();
     var parent = node.parent;
-    ExportText.import_text( _entry.buffer.text, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, out nodes );
+    ExportText.import_text( _entry.buffer.text, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, true, nodes );
     if( nodes.length == 0 ) return;
-    da.replace_node( node, nodes.index( 0 ) );
-    for( int i=1; i<nodes.length; i++ ) {
-      da.add_root( nodes.index( i ), -1 );
-    }
     da.undo_buffer.add_item( new UndoNodesReplace( node, nodes ) );
     da.set_current_node( nodes.index( 0 ) );
     da.queue_draw();

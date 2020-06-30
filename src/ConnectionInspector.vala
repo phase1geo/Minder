@@ -32,6 +32,7 @@ public class ConnectionInspector : Box {
   private ScrolledWindow _sw;
   private TextView       _title;
   private ColorButton    _color;
+  private Button         _reset;
   private TextView       _note;
   private DrawArea?      _da                  = null;
   private string         _orig_note           = "";
@@ -99,20 +100,31 @@ public class ConnectionInspector : Box {
 
   private void create_color() {
 
-    Box box = new Box( Orientation.HORIZONTAL, 0 );
+    var box = new Box( Orientation.HORIZONTAL, 0 );
     var lbl = new Label( Utils.make_title( _( "Color" ) ) );
 
     box.homogeneous = true;
     lbl.xalign      = (float)0;
     lbl.use_markup  = true;
 
+    var bbox = new Box( Orientation.HORIZONTAL, 5 );
+
     _color = new ColorButton();
     _color.color_set.connect(() => {
       _da.change_current_connection_color( _color.rgba );
     });
 
-    box.pack_start( lbl,    false, true, 0 );
-    box.pack_end(   _color, true,  true, 0 );
+    _reset = new Button.from_icon_name( "edit-undo-symbolic", IconSize.SMALL_TOOLBAR );
+    _reset.set_tooltip_text( _( "Use Theme Default Color" ) );
+    _reset.clicked.connect(() => {
+      _da.change_current_connection_color( null );
+    });
+
+    bbox.pack_start( _color, true,  true,  0 );
+    bbox.pack_start( _reset, false, false, 0 );
+
+    box.pack_start( lbl,  false, true, 0 );
+    box.pack_end(   bbox, true,  true, 0 );
 
     pack_start( box, false, true );
 
@@ -231,9 +243,10 @@ public class ConnectionInspector : Box {
     if( current != null ) {
       _ignore_title_change = true;
       _title.buffer.text   = (current.title != null) ? current.title.text : "";
-      _color.rgba          = current.color;
+      _color.rgba          = (current.color != null) ? current.color : _da.get_theme().get_color( "connection_background" );
       _color.alpha         = 65535;
       _note.buffer.text    = current.note;
+      _reset.set_sensitive( current.color != null );
     }
 
   }

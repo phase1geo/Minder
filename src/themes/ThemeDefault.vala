@@ -29,19 +29,20 @@ public class ThemeDefault : Theme {
     custom = false;
 
     /* Generate the non-link colors */
-    set_color( "background",         color_from_string( "#ffffff" ) );
-    set_color( "foreground",         color_from_string( "Black" ) );
-    set_color( "root_background",    color_from_string( "#d4d4d4" ) );
-    set_color( "root_foreground",    color_from_string( "Black" ) );
-    set_color( "nodesel_background", color_from_string( "#64baff" ) );
-    set_color( "nodesel_foreground", color_from_string( "Black" ) );
-    set_color( "textsel_background", color_from_string( "#0d52bf" ) );
-    set_color( "textsel_foreground", color_from_string( "White" ) );
-    set_color( "text_cursor",        color_from_string( "Black" ) );
-    set_color( "attachable",         color_from_string( "#9bdb4d" ) );
-    set_color( "connection",         color_from_string( "#777777" ) );
-    set_color( "url_background",     color_from_string( "Grey") );
-    set_color( "url_foreground",     color_from_string( "Blue" ) );
+    set_color( "background",            color_from_string( "#ffffff" ) );
+    set_color( "foreground",            color_from_string( "Black" ) );
+    set_color( "root_background",       color_from_string( "#d4d4d4" ) );
+    set_color( "root_foreground",       color_from_string( "Black" ) );
+    set_color( "nodesel_background",    color_from_string( "#64baff" ) );
+    set_color( "nodesel_foreground",    color_from_string( "Black" ) );
+    set_color( "textsel_background",    color_from_string( "#0d52bf" ) );
+    set_color( "textsel_foreground",    color_from_string( "White" ) );
+    set_color( "text_cursor",           color_from_string( "Black" ) );
+    set_color( "attachable",            color_from_string( "#9bdb4d" ) );
+    set_color( "connection_background", color_from_string( "#777777" ) );
+    set_color( "connection_foreground", color_from_string( "#ffffff" ) );
+    set_color( "url_background",        color_from_string( "Grey") );
+    set_color( "url_foreground",        color_from_string( "Blue" ) );
 
     set_color( "link_color0", color_from_string( "#c6262e" ) );
     set_color( "link_color1", color_from_string( "#f37329" ) );

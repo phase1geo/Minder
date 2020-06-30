@@ -809,6 +809,22 @@ public class Node : Object {
     }
   }
 
+  /* Returns true if the given box intersects with this node box */
+  public bool intersects_with( Gdk.Rectangle box ) {
+    Gdk.Rectangle node_box = { (int)posx, (int)posy, (int)width, (int)height };
+    return( box.intersect( node_box, null ) );
+  }
+
+  /* Adds all nodes within this tree that intersect with the given box */
+  public void select_within_box( Gdk.Rectangle box, Selection select ) {
+    if( intersects_with( box ) ) {
+      select.add_node( this );
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).select_within_box( box, select );
+    }
+  }
+
   /* Returns the children nodes of this node */
   public Array<Node> children() {
     return( _children );

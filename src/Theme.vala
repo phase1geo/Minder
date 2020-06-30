@@ -38,27 +38,28 @@ public class Theme : Object {
   /* Default constructor */
   public Theme() {
     _colors = new HashMap<string,RGBA?>();
-    _colors.set( "background",         null );
-    _colors.set( "foreground",         null );
-    _colors.set( "root_background",    null );
-    _colors.set( "root_foreground",    null );
-    _colors.set( "nodesel_background", null );
-    _colors.set( "nodesel_foreground", null );
-    _colors.set( "textsel_background", null );
-    _colors.set( "textsel_foreground", null );
-    _colors.set( "text_cursor",        null );
-    _colors.set( "attachable",         null );
-    _colors.set( "connection",         null );
-    _colors.set( "url_background",     null );
-    _colors.set( "url_foreground",     null );
-    _colors.set( "link_color0",        null );
-    _colors.set( "link_color1",        null );
-    _colors.set( "link_color2",        null );
-    _colors.set( "link_color3",        null );
-    _colors.set( "link_color4",        null );
-    _colors.set( "link_color5",        null );
-    _colors.set( "link_color6",        null );
-    _colors.set( "link_color7",        null );
+    _colors.set( "background",            null );
+    _colors.set( "foreground",            null );
+    _colors.set( "root_background",       null );
+    _colors.set( "root_foreground",       null );
+    _colors.set( "nodesel_background",    null );
+    _colors.set( "nodesel_foreground",    null );
+    _colors.set( "textsel_background",    null );
+    _colors.set( "textsel_foreground",    null );
+    _colors.set( "text_cursor",           null );
+    _colors.set( "attachable",            null );
+    _colors.set( "connection_background", null );
+    _colors.set( "connection_foreground", null );
+    _colors.set( "url_background",        null );
+    _colors.set( "url_foreground",        null );
+    _colors.set( "link_color0",           null );
+    _colors.set( "link_color1",           null );
+    _colors.set( "link_color2",           null );
+    _colors.set( "link_color3",           null );
+    _colors.set( "link_color4",           null );
+    _colors.set( "link_color5",           null );
+    _colors.set( "link_color6",           null );
+    _colors.set( "link_color7",           null );
   }
 
   /* Copy constructor */
@@ -71,7 +72,6 @@ public class Theme : Object {
     name        = theme.name;
     index       = theme.index;
     prefer_dark = theme.prefer_dark;
-    custom      = theme.custom;
     temporary   = theme.temporary;
     rotate      = theme.rotate;
     _colors     = new HashMap<string,RGBA?>();
@@ -312,7 +312,7 @@ public class Theme : Object {
     }
 
     /* Draw connection */
-    set_context_color( ctx, get_color( "connection" ) );
+    set_context_color( ctx, get_color( "connection_background" ) );
     double p[6];
     p[0] = hspace + nrad + 2;
     p[1] = vspace + 2;
