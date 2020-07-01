@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-23 20:49-0500\n"
-"PO-Revision-Date: 2020-05-29 15:00+0100\n"
+"PO-Revision-Date: 2020-07-01 15:00+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -76,7 +76,7 @@ msgstr "Niente"
 
 #: src/styles/NodeBorderPill.vala:34
 msgid "Pill-shaped"
-msgstr ""
+msgstr "A forma di pastiglia"
 
 #: src/styles/NodeBorderRounded.vala:34
 msgid "Rounded Rectangle"
@@ -838,7 +838,7 @@ msgstr "Usa il colore principale"
 #: src/NodeMenu.vala:122 src/NodeMenu.vala:357 src/NodesMenu.vala:54
 #: src/NodesMenu.vala:191
 msgid "Fold Children"
-msgstr ""
+msgstr "Piega Figli"
 
 #: src/NodeMenu.vala:126
 msgid "Detach"
@@ -850,11 +850,11 @@ msgstr "Aggiungi Nodo Genitore"
 
 #: src/NodeMenu.vala:135
 msgid "Add Child Node"
-msgstr ""
+msgstr "Aggiungi nodo figlio"
 
 #: src/NodeMenu.vala:139
 msgid "Add Sibling Node"
-msgstr ""
+msgstr "Aggiungi nodo fratello"
 
 #: src/NodeMenu.vala:144 src/QuickEntry.vala:36
 msgid "Quick Entry"
@@ -882,16 +882,15 @@ msgstr "Nodo fratello precedente"
 
 #: src/NodeMenu.vala:171
 msgid "Child Node"
-msgstr ""
+msgstr "Nodo Figlio"
 
 #: src/NodeMenu.vala:175 src/NodesMenu.vala:90
-#, fuzzy
 msgid "Child Nodes"
-msgstr "Nodi di Collegamento"
+msgstr "Nodi Figlio"
 
 #: src/NodeMenu.vala:179
 msgid "Subtree"
-msgstr ""
+msgstr "Sottoalbero"
 
 #: src/NodeMenu.vala:183
 msgid "Parent Node"
@@ -911,7 +910,7 @@ msgstr "Centra nodo corrente"
 
 #: src/NodeMenu.vala:199
 msgid "Sort Children"
-msgstr ""
+msgstr "Ordina Figli"
 
 #: src/NodeMenu.vala:203
 msgid "Alphabetically"
@@ -935,7 +934,7 @@ msgstr ""
 
 #: src/NodeMenu.vala:362
 msgid "Paste Text As Child Node"
-msgstr ""
+msgstr "Incolla testo come nodo figlio"
 
 #: src/NodeMenu.vala:363
 msgid "Paste and Replace Node Text"
@@ -943,7 +942,7 @@ msgstr "Incolla e sostituisci testo nodo"
 
 #: src/NodeMenu.vala:365
 msgid "Paste Image As Child Node"
-msgstr ""
+msgstr "Incolla immagine come nodo figlio"
 
 #: src/NodeMenu.vala:366
 msgid "Paste and Replace Node Image"
@@ -951,7 +950,7 @@ msgstr "Incolla e Sostituisci Immagine Nodo"
 
 #: src/NodeMenu.vala:368
 msgid "Paste Node As Child"
-msgstr ""
+msgstr "Incolla Nodo Come Figlio"
 
 #: src/NodeMenu.vala:563 src/NodesMenu.vala:232
 msgid "Select a link color"
@@ -1149,7 +1148,7 @@ msgstr "Opzioni Collegamento"
 
 #: src/StyleInspector.vala:324 src/StyleInspector.vala:769
 msgid "Line Dash"
-msgstr ""
+msgstr "Linea a Trattino"
 
 #: src/StyleInspector.vala:363 src/StyleInspector.vala:846
 msgid "Line Width"
@@ -1296,9 +1295,8 @@ msgid "Connection Color"
 msgstr "Colore Connessione"
 
 #: src/ThemeEditor.vala:96
-#, fuzzy
 msgid "Connection Title Color"
-msgstr "Titolo della connessione"
+msgstr "Colore Connessione Titolo"
 
 #: src/ThemeEditor.vala:97
 msgid "URL Link Background"
@@ -1314,7 +1312,7 @@ msgstr "Preferire Modalità Scura"
 
 #: src/ThemeEditor.vala:187
 msgid "Custom"
-msgstr ""
+msgstr "Personalizza"
 
 #: src/ThemeEditor.vala:205
 msgid "Delete theme?"
@@ -1427,7 +1425,7 @@ msgstr "Nuovo Nodo Connesso"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:172
 msgid "New Child Node"
-msgstr ""
+msgstr "Nuovo Nodo Figlio"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:179
 msgid "Quick Entry Insertion"
@@ -1468,9 +1466,8 @@ msgid "Edit Title"
 msgstr "Modifica Titolo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:254
-#, fuzzy
 msgid "Change Task State"
-msgstr "Le modifiche influiscono:"
+msgstr "Cambia stato attività"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:261
 msgid "View Properties"
@@ -1531,14 +1528,12 @@ msgid "Select Child"
 msgstr "Seleziona Figlio"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:358
-#, fuzzy
 msgid "Select Children"
-msgstr "Seleziona Figlio"
+msgstr "Seleziona Figlii"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:365
-#, fuzzy
 msgid "Select Subtree"
-msgstr "Seleziona Avvia nodo"
+msgstr "Seleziona Sottoalbero"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:372
 msgid "Select Node Below"
@@ -1712,6 +1707,5 @@ msgstr "Aggiungi Inizio Testo"
 msgid "Add End Of Text"
 msgstr "Aggiungi Fine Testo"
 
-#, fuzzy
 #~ msgid "Descendant Nodes"
-#~ msgstr "Elimina nodo"
+#~ msgstr "Nodi Discendenti"
