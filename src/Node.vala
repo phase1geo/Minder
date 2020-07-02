@@ -140,7 +140,6 @@ public class Node : Object {
   private   double       _max_width      = 200;
   private   bool         _loaded         = true;
   private   Node         _linked_node    = null;
-  private   UrlLinks     _urls           = null;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -207,7 +206,7 @@ public class Node : Object {
       if( _mode != value ) {
         if( _mode == NodeMode.EDITABLE ) {
           if( _da.settings.get_boolean( "auto-parse-embedded-urls" ) ) {
-            _urls.parse_embedded_urls( name );
+            // TBD - _urls.parse_embedded_urls( name );
           }
         }
         _mode = value;
@@ -342,14 +341,6 @@ public class Node : Object {
     }
   }
   public NodeBounds tree_bbox { get; set; default = NodeBounds(); }
-  public UrlLinks urls {
-    get {
-      return( _urls );
-    }
-    set {
-      _urls = value;
-    }
-  }
   public int task_count {
     get {
       return( _task_count );
@@ -367,13 +358,8 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
-    _urls     = new UrlLinks( da );
     _name     = new CanvasText( da, _max_width );
-    _name.urls = true;
     _name.resized.connect( update_size );
-    _name.inserted.connect( _urls.insert_text );
-    _name.deleted.connect( _urls.delete_text );
-    _name.render.connect_after( _urls.markup_canvas_text );
   }
 
   /* Constructor initializing string */
@@ -382,25 +368,17 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
-    _urls     = new UrlLinks( da );
     _name     = new CanvasText.with_text( da, _max_width, n );
     _name.resized.connect( update_size );
-    _name.inserted.connect( _urls.insert_text );
-    _name.deleted.connect( _urls.delete_text );
-    _name.render.connect_after( _urls.markup_canvas_text );
   }
 
   /* Copies an existing node to this node */
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
     _da       = da;
     _id       = _next_id++;
-    _urls     = new UrlLinks( da );
     _name     = new CanvasText( da, _max_width );
     copy_variables( n, im );
     _name.resized.connect( update_size );
-    _name.inserted.connect( _urls.insert_text );
-    _name.deleted.connect( _urls.delete_text );
-    _name.render.connect_after( _urls.markup_canvas_text );
     mode      = NodeMode.NONE;
     _children = n._children;
     for( int i=0; i<_children.length; i++ ) {
@@ -411,7 +389,6 @@ public class Node : Object {
   public Node.copy_only( DrawArea da, Node n, ImageManager im ) {
     _da = da;
     _id = _next_id++;
-    _urls = new UrlLinks( da );
     _name = new CanvasText( da, _max_width );
     copy_variables( n, im );
   }
@@ -420,14 +397,10 @@ public class Node : Object {
   public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int> id_map ) {
     _da       = da;
     _id       = _next_id++;
-    _urls     = new UrlLinks( da );
     _name     = new CanvasText( da, _max_width );
     _children = new Array<Node>();
     copy_variables( n, im );
     _name.resized.connect( update_size );
-    _name.inserted.connect( _urls.insert_text );
-    _name.deleted.connect( _urls.delete_text );
-    _name.render.connect_after( _urls.markup_canvas_text );
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
     id_map.set( n._id, _id );
@@ -457,7 +430,6 @@ public class Node : Object {
     _posy           = n._posy;
     _max_width      = n._max_width;
     _image          = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, (int)n._max_width );
-    _urls.copy( n._urls );
     _name.copy( n._name );
     _link_color      = n._link_color;
     _link_color_set  = n._link_color_set;
@@ -775,11 +747,6 @@ public class Node : Object {
     return( false );
   }
 
-  /* Returns true if the given cursor coordinates lie within a URL */
-  public virtual bool is_within_url( double x, double y, out string url ) {
-    return( _urls.get_url_at_pos( name, x, y, out url ) );
-  }
-
   /* Finds the node which contains the given pixel coordinates */
   public virtual Node? contains( double x, double y, Node? n ) {
     if( (this != n) && (is_within( x, y ) || is_within_fold( x, y )) ) {
@@ -912,11 +879,6 @@ public class Node : Object {
     _name.markup = _style.node_markup;
   }
 
-  /* Loads the URL links information from the given XML node */
-  private void load_url_links( Xml.Node* n ) {
-    _urls.load( n );
-  }
-
   /* Loads the file contents into this instance */
   public virtual void load( DrawArea da, Xml.Node* n, bool isroot, HashMap<int,int> id_map, Array<NodeLinkInfo?> link_ids ) {
 
@@ -1010,7 +972,6 @@ public class Node : Object {
           case "nodenote"   :  load_note( it );  break;
           case "nodeimage"  :  load_image( da.image_manager, it );  break;
           case "style"      :  load_style( it );  break;
-          case "formatting" :  load_url_links( it );  break;
           case "nodes"      :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
@@ -1092,7 +1053,6 @@ public class Node : Object {
 
     style.save_node( node );
 
-    node->add_child( _urls.save() );
     node->new_text_child( null, "nodename", name.text );
     node->new_text_child( null, "nodenote", note );
 

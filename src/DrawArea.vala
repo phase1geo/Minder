@@ -63,8 +63,7 @@ public class DrawArea : Gtk.DrawingArea {
   private Array<Node>      _nodes;
   private Connections      _connections;
   private Theme            _theme;
-  private string           _orig_name;
-  private UrlLinks         _orig_urls;
+  private CanvasText       _orig_text;
   private NodeSide         _orig_side;
   private Array<NodeInfo?> _orig_info;
   private int              _orig_width;
@@ -87,11 +86,12 @@ public class DrawArea : Gtk.DrawingArea {
   private Selection        _selected;
   private SelectBox        _select_box;
 
-  public MainWindow    win           { private set; get; }
-  public UndoBuffer    undo_buffer   { set; get; }
-  public Layouts       layouts       { set; get; default = new Layouts(); }
-  public Animator      animator      { set; get; }
-  public ImageManager  image_manager { set; get; default = new ImageManager(); }
+  public MainWindow     win           { private set; get; }
+  public UndoBuffer     undo_buffer   { set; get; }
+  public UndoTextBuffer undo_text    { set; get; }
+  public Layouts        layouts       { set; get; default = new Layouts(); }
+  public Animator       animator      { set; get; }
+  public ImageManager   image_manager { set; get; default = new ImageManager(); }
 
   public GLib.Settings settings {
     get {
@@ -158,6 +158,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Allocate memory for the undo buffer */
     undo_buffer = new UndoBuffer( this );
+    undo_text   = new UndoTextBuffer( this );
 
     /* Allocate the image editor popover */
     _image_editor = new ImageEditor( this );
@@ -567,8 +568,7 @@ public class DrawArea : Gtk.DrawingArea {
     _press_type         = EventType.NOTHING;
     _motion             = false;
     _attach_node        = null;
-    _orig_name          = "";
-    _orig_urls          = null;
+    _orig_text          = new CanvasText( this, 0 );
     _current_new        = false;
     _last_connection    = null;
 
@@ -764,9 +764,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void capture_current_node_name() {
     var current = _selected.current_node();
     if( current != null ) {
-      _orig_name = current.name.text;
-      _orig_urls = new UrlLinks( this );
-      _orig_urls.copy( current.urls );
+      _orig_text.copy( current.name );
     }
   }
 
@@ -777,9 +775,9 @@ public class DrawArea : Gtk.DrawingArea {
   public void commit_current_node_name() {
     var current = _selected.current_node();
     if( current != null ) {
-      if( current.name.text != _orig_name ) {
+      if( current.name.text.text != _orig_text.text.text ) {
         if( !_current_new ) {
-          undo_buffer.add_item( new UndoNodeName( current, _orig_name, _orig_urls ) );
+          undo_buffer.add_item( new UndoNodeName( this, current, _orig_text ) );
         }
         queue_draw();
         changed();
@@ -1969,9 +1967,7 @@ public class DrawArea : Gtk.DrawingArea {
         /* If we are not in motion, set the cursor */
         } else if( !_motion ) {
           current_node.name.set_cursor_all( false );
-          _orig_name = current_node.name.text;
-          _orig_urls = new UrlLinks( this );
-          _orig_urls.copy( current_node.urls );
+          _orig_text.copy( current_node.name );
           current_node.name.move_cursor_to_end();
 
         /* If we are not a root node, move the node into the appropriate position */
@@ -2439,7 +2435,7 @@ public class DrawArea : Gtk.DrawingArea {
       var current = _selected.current_node();
       _im_context.reset();
       if( !_current_new ) {
-        undo_buffer.add_item( new UndoNodeName( current, _orig_name, _orig_urls ) );
+        undo_buffer.add_item( new UndoNodeName( this, current, _orig_text ) );
       }
       set_node_mode( current, NodeMode.CURRENT );
       current_changed( this );
@@ -2515,8 +2511,7 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public Node create_child_node( Node parent, string name = "" ) {
     var node    = new Node.with_name( this, name, layouts.get_default() );
-    _orig_name = "";
-    _orig_urls = null;
+    _orig_text.clear();
     if( !parent.is_root() ) {
       node.side = parent.side;
     }
@@ -2566,8 +2561,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Adds a new sibling node to the current node */
   public void add_sibling_node() {
     var node = create_sibling_node( _selected.current_node() );
-    _orig_name = "";
-    _orig_urls = null;
+    _orig_text.clear();
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE );
@@ -2597,8 +2591,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void add_child_node() {
     var current = _selected.current_node();
     var node    = create_child_node( current );
-    _orig_name = "";
-    _orig_urls = null;
+    _orig_text.clear();
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE );
@@ -2647,7 +2640,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_node_editable() ) {
       var current = _selected.current_node();
       if( !_current_new ) {
-        undo_buffer.add_item( new UndoNodeName( current, _orig_name, _orig_urls ) );
+        undo_buffer.add_item( new UndoNodeName( this, current, _orig_text ) );
       }
       set_node_mode( current, NodeMode.CURRENT );
       if( _create_new_from_edit ) {
@@ -2851,7 +2844,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_node_editable() ) {
       var current = _selected.current_node();
       if( !_current_new ) {
-        undo_buffer.add_item( new UndoNodeName( current, _orig_name, _orig_urls ) );
+        undo_buffer.add_item( new UndoNodeName( this, current, _orig_text ) );
       }
       set_node_mode( current, NodeMode.CURRENT );
       if( _create_new_from_edit ) {
@@ -3733,11 +3726,10 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void replace_node_text( Node node, string text ) {
-    var orig_name = node.name.text;
-    var orig_urls = new UrlLinks( this );
-    orig_urls.copy( node.urls );
+    var orig_text = new CanvasText( this, 0 );
+    orig_text.copy( node.name );
     node.name.text = text.strip();
-    undo_buffer.add_item( new UndoNodeName( node, orig_name, orig_urls ) );
+    undo_buffer.add_item( new UndoNodeName( this, node, orig_text ) );
     queue_draw();
     changed();
   }

@@ -23,13 +23,13 @@ using GLib;
 
 public class UndoBuffer : Object {
 
-  private DrawArea        _da;
-  private Array<UndoItem> _undo_buffer;
-  private Array<UndoItem> _redo_buffer;
-  private bool            _debug = false;
-  private static int      _current_id = 0;
+  protected DrawArea        _da;
+  protected Array<UndoItem> _undo_buffer;
+  protected Array<UndoItem> _redo_buffer;
+  private   bool            _debug = false;
+  private   static int      _current_id = 0;
 
-  public signal void buffer_changed( DrawArea da );
+  public signal void buffer_changed( UndoBuffer buf );
 
   /* Default constructor */
   public UndoBuffer( DrawArea da ) {
@@ -42,7 +42,7 @@ public class UndoBuffer : Object {
   public void clear() {
     _undo_buffer.remove_range( 0, _undo_buffer.length );
     _redo_buffer.remove_range( 0, _redo_buffer.length );
-    buffer_changed( _da );
+    buffer_changed( this );
   }
 
   /* Returns true if we can perform an undo action */
@@ -56,25 +56,25 @@ public class UndoBuffer : Object {
   }
 
   /* Performs the next undo action in the buffer */
-  public void undo() {
+  public virtual void undo() {
     if( undoable() ) {
       UndoItem item = _undo_buffer.index( _undo_buffer.length - 1 );
       item.undo( _da );
       _undo_buffer.remove_index( _undo_buffer.length - 1 );
       _redo_buffer.append_val( item );
-      buffer_changed( _da );
+      buffer_changed( this );
     }
     output( "AFTER UNDO" );
   }
 
   /* Performs the next redo action in the buffer */
-  public void redo() {
+  public virtual void redo() {
     if( redoable() ) {
       UndoItem item = _redo_buffer.index( _redo_buffer.length - 1 );
       item.redo( _da );
       _redo_buffer.remove_index( _redo_buffer.length - 1 );
       _undo_buffer.append_val( item );
-      buffer_changed( _da );
+      buffer_changed( this );
     }
     output( "AFTER REDO" );
   }
@@ -96,7 +96,7 @@ public class UndoBuffer : Object {
     item.id = _current_id++;
     _undo_buffer.append_val( item );
     _redo_buffer.remove_range( 0, _redo_buffer.length );
-    buffer_changed( _da );
+    buffer_changed( this );
     output( "ITEM ADDED" );
   }
 
@@ -110,7 +110,7 @@ public class UndoBuffer : Object {
       UndoItem last = _undo_buffer.index( _undo_buffer.length - 1 );
       if( (last.get_type() == item.get_type()) && last.matches( item ) ) {
         last.replace_with_item( item );
-        buffer_changed( _da );
+        buffer_changed( this );
         output( "ITEM REPLACED" );
         return;
       }

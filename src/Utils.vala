@@ -125,4 +125,34 @@ public class Utils {
     return( "<" + tag + ">" + html + "</" + tag + ">" );
   }
 
+  /* Returns the line height of the first line of the given pango layout */
+  public static double get_line_height( Pango.Layout layout ) {
+    int height;
+    var line = layout.get_line_readonly( 0 );
+    if( line == null ) {
+      int width;
+      layout.get_size( out width, out height );
+    } else {
+      Pango.Rectangle ink_rect, log_rect;
+      line.get_extents( out ink_rect, out log_rect );
+      height = log_rect.height;
+    }
+    return( height / Pango.SCALE );
+  }
+
+  /* Searches for the beginning or ending word */
+  public static int find_word( string str, int cursor, bool wordstart ) {
+    try {
+      MatchInfo match_info;
+      var substr = wordstart ? str.substring( 0, cursor ) : str.substring( cursor );
+      var re = new Regex( wordstart ? ".*(\\W\\w|[\\w\\s][^\\w\\s])" : "(\\w\\W|[^\\w\\s][\\w\\s])" );
+      if( re.match( substr, 0, out match_info ) ) {
+        int start_pos, end_pos;
+        match_info.fetch_pos( 1, out start_pos, out end_pos );
+        return( wordstart ? (start_pos + 1) : (cursor + start_pos + 1) );
+      }
+    } catch( RegexError e ) {}
+    return( -1 );
+  }
+
 }
