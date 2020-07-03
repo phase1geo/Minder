@@ -181,6 +181,16 @@ public class CanvasText : Object {
     return( _pango_layout.is_wrapped() );
   }
 
+  /* Returns the string which contains newlines to mimic layout */
+  public string get_wrapped_text() {
+    unowned SList<LayoutLine> lines = _pango_layout.get_lines_readonly();
+    string str   = "";
+    lines.@foreach((item) => {
+      str += (text.text.substring( item.start_index, item.length ) + "\n");
+    });
+    return( str );
+  }
+
   /* Returns true if the given cursor coordinates lies within this node */
   public bool is_within( double x, double y ) {
     return( Utils.is_within_bounds( x, y, posx, posy, _width, _height ) );
@@ -691,6 +701,18 @@ public class CanvasText : Object {
       set_cursor_only( _cursor + slen );
       undo_buffer.add_insert( cpos, s, cur );
     }
+  }
+
+  /* Inserts the given string at the given position */
+  public void insert_at_pos( int start, string s, UndoTextBuffer undo_buffer ) {
+    var slen = s.char_count();
+    var cur  = _cursor;
+    var spos = text.text.index_of_nth_char( start );
+    text.insert_text( spos, s );
+    if( start <= cursor ) {
+      set_cursor_only( _cursor + slen );
+    }
+    undo_buffer.add_insert( spos, s, cur );
   }
 
   /* Inserts the given formatted text at the current cursor position */

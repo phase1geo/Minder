@@ -242,7 +242,7 @@ public class ConnectionInspector : Box {
 
     if( current != null ) {
       _ignore_title_change = true;
-      _title.buffer.text   = (current.title != null) ? current.title.text : "";
+      _title.buffer.text   = (current.title != null) ? current.title.text.text : "";
       _color.rgba          = (current.color != null) ? current.color : _da.get_theme().get_color( "connection_background" );
       _color.alpha         = 65535;
       _note.buffer.text    = current.note;

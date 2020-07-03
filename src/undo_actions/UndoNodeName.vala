@@ -28,7 +28,7 @@ public class UndoNodeName : UndoItem {
   private CanvasText _orig_text;
 
   /* Constructor for a node name change */
-  public UndoNodeName( DrawArea da, Node node, CanvasText old_text ) {
+  public UndoNodeName( DrawArea da, Node node, CanvasText orig_text ) {
     base( _( "node name change" ) );
     _node      = node;
     _text      = new CanvasText( da, 0 );

@@ -224,7 +224,7 @@ public class MainWindow : ApplicationWindow {
   private void tab_changed( Tab tab ) {
     var bin = (Gtk.Bin)tab.page;
     var da  = bin.get_child() as DrawArea;
-    do_buffer_changed( da );
+    do_buffer_changed( da.undo_buffer );
     on_current_changed( da );
     update_title( da );
     canvas_changed( da );
@@ -896,11 +896,11 @@ public class MainWindow : ApplicationWindow {
    Called whenever the undo buffer changes state.  Updates the state of
    the undo and redo buffer buttons.
   */
-  public void do_buffer_changed( DrawArea da ) {
-    _undo_btn.set_sensitive( da.undo_buffer.undoable() );
-    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( da.undo_buffer.undo_tooltip(), "<Control>z" ) );
-    _redo_btn.set_sensitive( da.undo_buffer.redoable() );
-    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( da.undo_buffer.redo_tooltip(), "<Control><Shift>z" ) );
+  public void do_buffer_changed( UndoBuffer buf ) {
+    _undo_btn.set_sensitive( buf.undoable() );
+    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buf.undo_tooltip(), "<Control>z" ) );
+    _redo_btn.set_sensitive( buf.redoable() );
+    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buf.redo_tooltip(), "<Control><Shift>z" ) );
   }
 
   /* Converts the given node name to an appropriate filename */

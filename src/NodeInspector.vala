@@ -346,7 +346,7 @@ public class NodeInspector : Box {
   private void name_inserted( ref TextIter pos, string new_text, int new_text_length ) {
     if( !_ignore_name_change ) {
       var node = _da.get_current_node();
-      node.name.insert_at_pos( pos.get_offset(), new_text );
+      node.name.insert_at_pos( pos.get_offset(), new_text, _da.undo_text );
     }
     _ignore_name_change = false;
   }
@@ -355,7 +355,7 @@ public class NodeInspector : Box {
   private void name_deleted( TextIter start, TextIter end ) {
     if( !_ignore_name_change ) {
       var node = _da.get_current_node();
-      node.name.delete_range( start.get_offset(), end.get_offset() );
+      node.name.delete_range( start.get_offset(), end.get_offset(), _da.undo_text );
     }
   }
 

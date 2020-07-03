@@ -52,7 +52,7 @@ public class ExportFreemind : Object {
     Xml.Node* n = new Xml.Node( null, "node" );
 
     n->new_prop( "ID", "id_" + node.id().to_string() );
-    n->new_prop( "TEXT", node.name.text );
+    n->new_prop( "TEXT", node.name.text.text );
     if( node.linked_node != null ) {
       n->new_prop( "LINK", "#id_" + node.linked_node.id().to_string() );
     }
@@ -95,8 +95,8 @@ public class ExportFreemind : Object {
     Xml.Node* n = new Xml.Node( null, "font" );
     n->new_prop( "NAME",   node.style.node_font.get_family() );
     n->new_prop( "SIZE",   (node.style.node_font.get_size() / Pango.SCALE).to_string() );
-    n->new_prop( "BOLD",   ((node.name.text.substring( 0, 3 ) == "<b>") || (node.name.text.substring( 0, 6 ) == "<i><b>")).to_string() );
-    n->new_prop( "ITALIC", ((node.name.text.substring( 0, 3 ) == "<i>") || (node.name.text.substring( 0, 6 ) == "<b><i>")).to_string() );
+    n->new_prop( "BOLD",   ((node.name.text.text.substring( 0, 3 ) == "<b>") || (node.name.text.text.substring( 0, 6 ) == "<i><b>")).to_string() );
+    n->new_prop( "ITALIC", ((node.name.text.text.substring( 0, 3 ) == "<i>") || (node.name.text.text.substring( 0, 6 ) == "<b><i>")).to_string() );
     return( n );
   }
 
@@ -190,7 +190,7 @@ public class ExportFreemind : Object {
 
     string? t = n->get_prop( "TEXT" );
     if( t != null ) {
-      node.name.text = t;
+      node.name.text.insert_text( 0, t );
     }
 
     string? l = n->get_prop( "LINK" );
@@ -278,14 +278,14 @@ public class ExportFreemind : Object {
     string? b = n->get_prop( "BOLD" );
     if( b != null ) {
       if( bool.parse( b ) ) {
-        node.name.text = "<b>" + node.name.text + "</b>";
+        node.name.text.insert_text( 0, "<b>" + node.name.text.text + "</b>" );
       }
     }
 
     string? i = n->get_prop( "ITALIC" );
     if( i != null ) {
       if( bool.parse( i ) ) {
-        node.name.text = "<i>" + node.name.text + "</i>";
+        node.name.text.insert_text( 0, "<i>" + node.name.text.text + "</i>" );
       }
     }
 

@@ -43,7 +43,7 @@ public class ExportOrgMode : Object {
 
       var nodes = da.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
-        string title = "* " + nodes.index( i ).name.text + "\n\n";
+        string title = "* " + nodes.index( i ).name.text.text + "\n\n";
         os.write( title.data );
         if( nodes.index( i ).note != "" ) {
           string note = "  " + nodes.index( i ).note.replace( "\n", "\n  " );
@@ -76,7 +76,7 @@ public class ExportOrgMode : Object {
         }
       }
 
-      title += node.name.text.replace( "\n", prefix + " " ) + "\n";
+      title += node.name.text.text.replace( "\n", prefix + " " ) + "\n";
 
       os.write( title.data );
 
