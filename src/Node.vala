@@ -286,8 +286,7 @@ public class Node : Object {
     }
     set {
       if( _style.copy( value ) ) {
-        name.set_font( _style.node_font );
-        name.markup = _style.node_markup;
+        name.set_font( _style.node_font.get_family(), _style.node_font.get_size() );
         position_name();
       }
     }
@@ -851,9 +850,7 @@ public class Node : Object {
 
   /* Loads the name value from the given XML node */
   private void load_name( Xml.Node* n ) {
-    if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
-      name.text = n->children->get_content();
-    }
+    name.load( n );
   }
 
   /* Loads the note value from the given XML node */
@@ -875,8 +872,7 @@ public class Node : Object {
   /* Loads the style information from the given XML node */
   private void load_style( Xml.Node* n ) {
     _style.load_node( n );
-    _name.set_font( _style.node_font );
-    _name.markup = _style.node_markup;
+    _name.set_font( _style.node_font.get_family(), _style.node_font.get_size() );
   }
 
   /* Loads the file contents into this instance */
@@ -1053,7 +1049,7 @@ public class Node : Object {
 
     style.save_node( node );
 
-    node->new_text_child( null, "nodename", name.text );
+    node->add_child( name.save( "nodename" ) );
     node->new_text_child( null, "nodenote", note );
 
     if( _children.length > 0 ) {
@@ -1074,7 +1070,7 @@ public class Node : Object {
     /* Get the node name */
     string? n = parent->get_prop( "text" );
     if( n != null ) {
-      name.text = n;
+      name.text.insert_text( 0, n );
     }
 
     /* Get the task information */
@@ -1131,7 +1127,7 @@ public class Node : Object {
   /* Traverses the node tree exporting XML nodes in OPML format */
   private Xml.Node* export_opml_node( ref int node_id, ref Array<int> expand_state ) {
     Xml.Node* node = new Xml.Node( null, "outline" );
-    node->new_prop( "text", name.text );
+    node->new_prop( "text", name.text.text );
     if( is_task() ) {
       bool checked = _task_done > 0;
       node->new_prop( "checked", checked.to_string() );
@@ -1627,7 +1623,7 @@ public class Node : Object {
         (((parent != null) && parent.folded && search_opts[4]) ||
          (((parent == null) || !parent.folded) && search_opts[5])) ) {
       if( search_opts[2] ) {
-        Utils.match_string( pattern, name.text, "<b><i>%s:</i></b>".printf( _( "Node Title" ) ), this, null, ref matches );
+        Utils.match_string( pattern, name.text.text, "<b><i>%s:</i></b>".printf( _( "Node Title" ) ), this, null, ref matches );
       }
       if( search_opts[3] ) {
         Utils.match_string( pattern, note, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), this, null, ref matches );
@@ -1792,13 +1788,13 @@ public class Node : Object {
 
     /* Draw the text */
     if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
-      name.draw( ctx, theme, theme.get_color( "nodesel_foreground" ), _alpha );
+      name.draw( ctx, theme, theme.get_color( "nodesel_foreground" ), _alpha, false );
     } else if( parent == null ) {
-      name.draw( ctx, theme, theme.get_color( "root_foreground" ), _alpha );
+      name.draw( ctx, theme, theme.get_color( "root_foreground" ), _alpha, false );
     } else if( style.is_fillable() ) {
-      name.draw( ctx, theme, theme.get_color( "background" ), _alpha );
+      name.draw( ctx, theme, theme.get_color( "background" ), _alpha, false );
     } else {
-      name.draw( ctx, theme, theme.get_color( "foreground" ), _alpha );
+      name.draw( ctx, theme, theme.get_color( "foreground" ), _alpha, false );
     }
 
   }
@@ -2129,7 +2125,7 @@ public class Node : Object {
 
   /* Outputs the node's information to standard output */
   public void display( bool recursive = false, string prefix = "" ) {
-    stdout.printf( "%sNode, name: %s, posx: %g, posy: %g, side: %s, layout: %s\n", prefix, name.text, posx, posy, side.to_string(), ((layout == null) ? "Unknown" : layout.name) );
+    stdout.printf( "%sNode, name: %s, posx: %g, posy: %g, side: %s, layout: %s\n", prefix, name.text.text, posx, posy, side.to_string(), ((layout == null) ? "Unknown" : layout.name) );
     if( recursive ) {
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).display( recursive, prefix + "  " );

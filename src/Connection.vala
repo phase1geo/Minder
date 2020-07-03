@@ -112,7 +112,7 @@ public class Connection : Object {
     }
     set {
       if( _style.copy( value ) && (_title != null) ) {
-        _title.set_font( _style.connection_font );
+        _title.set_font( _style.connection_font.get_family(), _style.connection_font.get_size() );
         position_title();
       }
     }
@@ -207,13 +207,13 @@ public class Connection : Object {
     if( _title != null ) return;
     _title = new CanvasText.with_text( da, _max_width, "" );
     _title.resized.connect( position_title );
-    _title.set_font( style.connection_font );
+    _title.set_font( style.connection_font.get_family(), style.connection_font.get_size() );
     position_title();
   }
 
   /* Called when the title text is done being edited */
   public void edit_title_end() {
-    if( (_title == null) || (_title.text != "") ) return;
+    if( (_title == null) || (_title.text.text != "") ) return;
     _title.resized.disconnect( position_title );
     _title = null;
   }
@@ -228,10 +228,10 @@ public class Connection : Object {
     } else if( _title == null ) {
       _title = new CanvasText.with_text( da, _max_width, title );
       _title.resized.connect( position_title );
-      _title.set_font( style.connection_font );
+      _title.set_font( style.connection_font.get_family(), style.connection_font.get_size() );
       position_title();
     } else {
-      _title.text = title;
+      _title.text.insert_text( 0, title );
     }
   }
 
@@ -558,7 +558,7 @@ public class Connection : Object {
     /* Save the style connection */
     style.save_connection( n );
 
-    n->new_text_child( null, "title", ((title != null) ? title.text : "") );
+    n->new_text_child( null, "title", ((title != null) ? title.text.text : "") );
     n->new_text_child( null, "note",  note );
 
     parent->add_child( n );
@@ -571,7 +571,7 @@ public class Connection : Object {
   */
   public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     if( search_opts[2] && (title != null) ) {
-      Utils.match_string( pattern, title.text, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), null, this, ref matches );
+      Utils.match_string( pattern, title.text.text, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), null, this, ref matches );
     }
     if( search_opts[3] ) {
       Utils.match_string( pattern, note, "<b><i>%s:</i></b>".printf( _( "Connection Note" ) ), null, this, ref matches );
@@ -699,7 +699,7 @@ public class Connection : Object {
 
     /* Draw the text */
     if( _title != null ) {
-      _title.draw( ctx, theme, fg, alpha );
+      _title.draw( ctx, theme, fg, alpha, false );
     }
 
     /* Draw the note, if necessary */

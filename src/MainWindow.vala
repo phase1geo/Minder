@@ -924,7 +924,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Allow the user to select a filename to save the document as */
   public bool save_file( DrawArea da ) {
-    var sname  = convert_name_to_filename( da.get_nodes().index( 0 ).name.text.strip() );
+    var sname  = convert_name_to_filename( da.get_nodes().index( 0 ).name.text.text.strip() );
     var dialog = new FileChooserNative( _( "Save File" ), this, FileChooserAction.SAVE, _( "Save" ), _( "Cancel" ) );
     var filter = new FileFilter();
     var retval = false;

@@ -25,6 +25,8 @@ using Cairo;
 
 public class Utils {
 
+  public const string url_re = "^(mailto:.+@[a-z0-9-]+\\.[a-z0-9.-]+|[a-zA-Z0-9]+://[a-z0-9-]+\\.[a-z0-9.-]+(?:/|(?:/[][a-zA-Z0-9!#$%&'*+,.:;=?@_~-]+)*))$";
+
   /*
    Helper function for converting an RGBA color value to a stringified color
    that can be used by a markup parser.
@@ -153,6 +155,11 @@ public class Utils {
       }
     } catch( RegexError e ) {}
     return( -1 );
+  }
+
+  /* Returns true if the given string is a valid URL */
+  public static bool is_url( string str ) {
+    return( Regex.match_simple( url_re, str ) );
   }
 
 }

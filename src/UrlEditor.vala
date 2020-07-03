@@ -101,7 +101,7 @@ public class UrlEditor : Popover {
   */
   private void check_entry() {
     var node = _da.get_current_node();
-    _apply.set_sensitive( node.urls.is_url( _entry.text ) );
+    _apply.set_sensitive( Utils.is_url( _entry.text ) );
   }
 
   /*
@@ -112,12 +112,11 @@ public class UrlEditor : Popover {
     var node = _da.get_current_node();
     int selstart, selend, cursor;
     node.name.get_cursor_info( out cursor, out selstart, out selend );
-    if( _add ) {
-      node.urls.add_link( selstart, selend, _entry.text );
-    } else {
-      node.urls.change_link( cursor, _entry.text );
-      node.name.clear_selection();
+    if( !_add ) {
+      node.name.remove_tag( FormatTag.URL, _da.undo_text );
     }
+    node.name.add_tag( FormatTag.URL, _entry.text, _da.undo_text );
+    node.name.clear_selection();
     _da.changed();
   }
 
@@ -130,8 +129,9 @@ public class UrlEditor : Popover {
     node.name.get_cursor_info( out cursor, out selstart, out selend );
 
     /* Position the popover */
-    double left, top;
-    node.name.get_char_pos( selstart, out left, out top );
+    double left, top, bottom;
+    int line;
+    node.name.get_char_pos( selstart, out left, out top, out bottom, out line );
     Gdk.Rectangle rect = {(int)left, (int)top, 1, 1};
     pointing_to = rect;
 
@@ -152,14 +152,15 @@ public class UrlEditor : Popover {
     node.name.get_cursor_info( out cursor, out selstart, out selend );
 
     /* Position the popover */
-    double left, top;
-    var link = node.urls.find_link( cursor );
-    node.name.get_char_pos( link.spos, out left, out top );
+    double left, top, bottom;
+    int    line;
+    var links = node.name.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
+    node.name.get_char_pos( links.index( 0 ).start, out left, out top, out bottom, out line );
     Gdk.Rectangle rect = {(int)left, (int)top, 1, 1};
     pointing_to = rect;
 
     _add        = false;
-    _entry.text = link.url;
+    _entry.text = links.index( 0 ).extra;
     _apply.set_sensitive( true );
 
     show_popover( true );

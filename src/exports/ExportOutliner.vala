@@ -89,23 +89,6 @@ public class ExportOutliner : Object {
     t->set_prop( "data",     ct.text );
     t->set_prop( "parse-as", "html" );
     n->add_child( t );
-    if( links.length > 0 ) {
-      t->add_child( export_urls( links ) );
-    }
-    return( n );
-  }
-
-  /* Exports any embedded links */
-  private static Xml.Node* export_urls( Array<UrlLink> links ) {
-    Xml.Node* n = new Xml.Node( null, "url" );
-    for( int i=0; i<links.length; i++ ) {
-      Xml.Node* r    = new Xml.Node( null, "range" );
-      var       link = links.index( i );
-      r->set_prop( "start", link.spos.to_string() );
-      r->set_prop( "end",   link.epos.to_string() );
-      r->set_prop( "extra", link.url );
-      n->add_child( r );
-    }
     return( n );
   }
 
