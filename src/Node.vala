@@ -359,6 +359,7 @@ public class Node : Object {
     _layout   = layout;
     _name     = new CanvasText( da, _max_width );
     _name.resized.connect( update_size );
+    set_parsers();
   }
 
   /* Constructor initializing string */
@@ -369,6 +370,7 @@ public class Node : Object {
     _layout   = layout;
     _name     = new CanvasText.with_text( da, _max_width, n );
     _name.resized.connect( update_size );
+    set_parsers();
   }
 
   /* Copies an existing node to this node */
@@ -378,6 +380,7 @@ public class Node : Object {
     _name     = new CanvasText( da, _max_width );
     copy_variables( n, im );
     _name.resized.connect( update_size );
+    set_parsers();
     mode      = NodeMode.NONE;
     _children = n._children;
     for( int i=0; i<_children.length; i++ ) {
@@ -400,6 +403,7 @@ public class Node : Object {
     _children = new Array<Node>();
     copy_variables( n, im );
     _name.resized.connect( update_size );
+    set_parsers();
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
     id_map.set( n._id, _id );
@@ -408,6 +412,13 @@ public class Node : Object {
       child.parent = this;
       _children.append_val( child );
     }
+  }
+
+  /* Adds the valid parsers */
+  public void set_parsers() {
+    _name.text.add_parser( _da.markdown_parser );
+    // _name.text.add_parser( _da.tagger_parser );
+    _name.text.add_parser( _da.url_parser );
   }
 
   /* Resets the ID generator.  This should be called whenever a new document is started. */
