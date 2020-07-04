@@ -50,6 +50,7 @@ public class ThemeSolarizedLight : Theme {
     set_color( "syntax",                color_from_string( "Grey" ) );
     set_color( "match_background",      color_from_string( "Gold" ) );
     set_color( "match_foreground",      color_from_string( "Black" ) );
+    set_color( "markdown_listitem",     color_from_string( "Red" ) );
 
     set_color( "link_color0", color_from_string( "#DC322F" ) );
     set_color( "link_color1", color_from_string( "#CB4B16" ) );

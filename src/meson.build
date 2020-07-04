@@ -31,6 +31,10 @@ sources += files(
     'layouts/LayoutUp.vala',
     'layouts/LayoutVertical.vala',
 
+    'parsers/MarkdownParser.vala',
+    'parsers/TaggerParser.vala',
+    'parsers/UrlParser.vala',
+
     'styles/LinkTypeCurved.vala',
     'styles/LinkTypeSquared.vala',
     'styles/LinkTypeStraight.vala',
@@ -152,6 +156,8 @@ sources += files(
     'Style.vala',
     'StyleInspector.vala',
     'Styles.vala',
+    'Tagger.vala',
+    'TextCompletion.vala',
     'TextMenu.vala',
     'TextParser.vala',
     'Theme.vala',

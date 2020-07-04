@@ -112,7 +112,7 @@ public class Connection : Object {
     }
     set {
       if( _style.copy( value ) && (_title != null) ) {
-        _title.set_font( _style.connection_font.get_family(), _style.connection_font.get_size() );
+        _title.set_font( _style.connection_font.get_family(), (_style.connection_font.get_size() / Pango.SCALE) );
         position_title();
       }
     }
@@ -207,7 +207,7 @@ public class Connection : Object {
     if( _title != null ) return;
     _title = new CanvasText.with_text( da, _max_width, "" );
     _title.resized.connect( position_title );
-    _title.set_font( style.connection_font.get_family(), style.connection_font.get_size() );
+    _title.set_font( style.connection_font.get_family(), (style.connection_font.get_size() / Pango.SCALE) );
     position_title();
   }
 
@@ -228,7 +228,7 @@ public class Connection : Object {
     } else if( _title == null ) {
       _title = new CanvasText.with_text( da, _max_width, title );
       _title.resized.connect( position_title );
-      _title.set_font( style.connection_font.get_family(), style.connection_font.get_size() );
+      _title.set_font( style.connection_font.get_family(), (style.connection_font.get_size() / Pango.SCALE) );
       position_title();
     } else {
       _title.text.insert_text( 0, title );

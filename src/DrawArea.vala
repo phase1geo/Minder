@@ -85,6 +85,8 @@ public class DrawArea : Gtk.DrawingArea {
   private bool             _create_new_from_edit;
   private Selection        _selected;
   private SelectBox        _select_box;
+  private Tagger           _tagger;
+  private TextCompletion   _completion;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -127,6 +129,16 @@ public class DrawArea : Gtk.DrawingArea {
       return( _url_editor );
     }
   }
+  public Tagger tagger {
+    get {
+      return( _tagger );
+    }
+  }
+
+  /* Allocate static parsers */
+  public MarkdownParser markdown_parser { get; private set; }
+  public TaggerParser   tagger_parser   { get; private set; }
+  public UrlParser      url_parser      { get; private set; }
 
   public signal void changed();
   public signal void current_changed( DrawArea da );
@@ -180,6 +192,14 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
+
+    /* Create the parsers */
+    tagger_parser   = new TaggerParser( this );
+    markdown_parser = new MarkdownParser( this );
+    url_parser      = new UrlParser();
+
+    /* Create text completion */
+    _completion = new TextCompletion( this );
 
     /* Get the value of the new node from edit */
     update_focus_mode_alpha( settings );
@@ -313,6 +333,15 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns the connections list */
   public Connections get_connections() {
     return( _connections );
+  }
+
+  /* Gets the top and bottom y position of this draw area */
+  public void get_window_ys( out int top, out int bottom ) {
+    var vp = parent.parent as Viewport;
+    var vh = vp.get_allocated_height();
+    var sw = parent.parent.parent as ScrolledWindow;
+    top    = (int)sw.vadjustment.value;
+    bottom = top + vh;
   }
 
   /* Returns the current focus mode value */
@@ -4207,6 +4236,35 @@ public class DrawArea : Gtk.DrawingArea {
       _connections.update_alpha();
       queue_draw();
     }
+  }
+
+  /* Called by the Tagger class to actually add the tag to the currently selected row */
+  public void add_tag( string tag ) {
+    var node = _selected.current_node();
+    if( node == null ) return;
+    var name = node.name;
+    _orig_text.copy( name );
+    tagger.preedit_load_tags( name.text );
+    name.text.insert_text( name.text.text.length, (" @" + tag) );
+    name.text.changed();
+    tagger.postedit_load_tags( name.text );
+    undo_buffer.add_item( new UndoNodeName( this, node, _orig_text ) );
+    changed();
+  }
+
+  /* Displays the auto-completion widget with the given list of values */
+  public void show_auto_completion( GLib.List<string> values, int start_pos, int end_pos ) {
+    var node = _selected.current_node();
+    if( is_node_editable() ) {
+      _completion.show( node.name, values, start_pos, end_pos );
+    } else {
+      _completion.hide();
+    }
+  }
+
+  /* Hides the auto-completion widget from view */
+  public void hide_auto_completion() {
+    _completion.hide();
   }
 
   /* Sorts and re-arranges the children of the given parent using the given array */

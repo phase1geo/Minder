@@ -55,14 +55,14 @@ public class UrlEditor : Popover {
     _apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
     _apply.clicked.connect(() => {
       set_url();
-      show_popover( false );
+      Utils.hide_popover( this );
     });
 
     var cancel = new Button.with_label( _( "Cancel" ) );
     cancel.clicked.connect(() => {
       var node = _da.get_current_node();
       node.name.clear_selection();
-      show_popover( false );
+      Utils.hide_popover( this );
     });
 
     var bbox = new Box( Orientation.HORIZONTAL, 5 );
@@ -75,24 +75,6 @@ public class UrlEditor : Popover {
 
     add( box );
 
-  }
-
-  /* Shows or hides this popover */
-  private void show_popover( bool show ) {
-
-#if GTK322
-    if( show ) {
-      popup();
-    } else {
-      popdown();
-    }
-#else
-    if( show ) {
-      show();
-    } else {
-      hide();
-    }
-#endif
   }
 
   /*
@@ -139,7 +121,7 @@ public class UrlEditor : Popover {
     _entry.text = "";
     _apply.set_sensitive( false );
 
-    show_popover( true );
+    Utils.show_popover( this );
 
   }
 
@@ -163,7 +145,7 @@ public class UrlEditor : Popover {
     _entry.text = links.index( 0 ).extra;
     _apply.set_sensitive( true );
 
-    show_popover( true );
+    Utils.show_popover( this );
 
   }
 

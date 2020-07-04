@@ -56,6 +56,7 @@ public class Theme : Object {
     _colors.set( "syntax",                null );
     _colors.set( "match_background",      null );
     _colors.set( "match_foreground",      null );
+    _colors.set( "markdown_listitem",     null );
     _colors.set( "link_color0",           null );
     _colors.set( "link_color1",           null );
     _colors.set( "link_color2",           null );

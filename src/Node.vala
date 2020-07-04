@@ -286,7 +286,7 @@ public class Node : Object {
     }
     set {
       if( _style.copy( value ) ) {
-        name.set_font( _style.node_font.get_family(), _style.node_font.get_size() );
+        name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
         position_name();
       }
     }
@@ -872,7 +872,7 @@ public class Node : Object {
   /* Loads the style information from the given XML node */
   private void load_style( Xml.Node* n ) {
     _style.load_node( n );
-    _name.set_font( _style.node_font.get_family(), _style.node_font.get_size() );
+    _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
   }
 
   /* Loads the file contents into this instance */

@@ -162,4 +162,22 @@ public class Utils {
     return( Regex.match_simple( url_re, str ) );
   }
 
+  /* Show the specified popover */
+  public static void show_popover( Popover popover ) {
+#if GTK322
+    popover.popup();
+#else
+    popover.show();
+#endif
+  }
+
+  /* Hide the specified popover */
+  public static void hide_popover( Popover popover ) {
+#if GTK322
+    popover.popdown();
+#else
+    popover.hide();
+#endif
+  }
+
 }
