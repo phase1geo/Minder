@@ -989,7 +989,9 @@ public class FormattedText {
   private void parse( bool force_clear = false ) {
     if( (_parsers.length > 0) || force_clear ) {
       for( int i=0; i<FormatTag.LENGTH-2; i++ ) {
-        _formats[i].remove_tag_all();
+        if( !save_tag( (FormatTag)i ) ) {
+          _formats[i].remove_tag_all();
+        }
       }
     }
     for( int i=0; i<_parsers.length; i++ ) {
