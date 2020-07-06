@@ -861,7 +861,11 @@ public class Node : Object {
 
   /* Loads the name value from the given XML node */
   private void load_name( Xml.Node* n ) {
-    name.load( n );
+    if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
+      name.text.insert_text( 0, n->children->get_content() );
+    } else {
+      name.load( n );
+    }
   }
 
   /* Loads the note value from the given XML node */
