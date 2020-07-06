@@ -1177,11 +1177,11 @@ public class DrawArea : Gtk.DrawingArea {
     if( node.mode == NodeMode.EDITABLE ) {
       switch( e.type ) {
         case EventType.BUTTON_PRESS        :
-          node.name.set_cursor_at_char( e.x, e.y, shift );
+          node.name.set_cursor_at_char( scaled_x, scaled_y, shift );
           _im_context.reset();
           break;
         case EventType.DOUBLE_BUTTON_PRESS :
-          node.name.set_cursor_at_word( e.x, e.y, shift );
+          node.name.set_cursor_at_word( scaled_x, scaled_y, shift );
           _im_context.reset();
           break;
         case EventType.TRIPLE_BUTTON_PRESS :
