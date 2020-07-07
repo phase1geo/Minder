@@ -3288,7 +3288,6 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void handle_im_commit( string str ) {
-    stdout.printf( "In handle_im_commit, str: %s\n", str );
     if( !str.get_char( 0 ).isprint() ) return;
     if( is_connection_editable() ) {
       _selected.current_connection().title.insert( str );
@@ -3375,7 +3374,6 @@ public class DrawArea : Gtk.DrawingArea {
           default    :  return( false );
         }
       } else if( nomod || shift ) {
-        stdout.printf( "Calling filter_keypress, str: %s, keyval: %u\n", e.str, e.keyval );
         switch( e.keyval ) {
           case 65288 :  handle_backspace();      break;
           case 65535 :  handle_delete();         break;
