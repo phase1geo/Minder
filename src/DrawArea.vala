@@ -27,7 +27,9 @@ using Gee;
 
 public class DrawArea : Gtk.DrawingArea {
 
-  private const CursorType url_cursor = CursorType.HAND2;
+  private const CursorType move_cursor = CursorType.HAND1;
+  private const CursorType url_cursor  = CursorType.HAND2;
+  private const CursorType text_cursor = CursorType.XTERM;
 
   private const Gtk.TargetEntry[] DRAG_TARGETS = {
     {"text/uri-list", 0, 0}
@@ -230,7 +232,7 @@ public class DrawArea : Gtk.DrawingArea {
     _im_context = new IMMulticontext();
     _im_context.set_client_window( this.get_window() );
     _im_context.set_use_preedit( false );
-    _im_context.commit.connect( handle_im_commit );
+    // _im_context.commit.connect( handle_im_commit );
     _im_context.retrieve_surrounding.connect( handle_im_retrieve_surrounding );
     _im_context.delete_surrounding.connect( handle_im_delete_surrounding );
 
@@ -703,11 +705,19 @@ public class DrawArea : Gtk.DrawingArea {
   /* Needs to be called whenever the user changes the mode of the current node */
   public void set_node_mode( Node node, NodeMode mode ) {
     if( (node.mode != NodeMode.EDITABLE) && (mode == NodeMode.EDITABLE) ) {
+      _im_context.commit.connect( handle_im_commit );
       update_im_cursor( node.name );
       _im_context.focus_in();
+      if( node.name.is_within( _scaled_x, _scaled_y ) ) {
+        set_cursor( text_cursor );
+      }
     } else if( (node.mode == NodeMode.EDITABLE) && (mode != NodeMode.EDITABLE) ) {
       _im_context.reset();
       _im_context.focus_out();
+      _im_context.commit.disconnect( handle_im_commit );
+      if( node.name.is_within( _scaled_x, _scaled_y ) ) {
+        set_cursor( null );
+      }
     }
     node.mode = mode;
   }
@@ -1883,6 +1893,9 @@ public class DrawArea : Gtk.DrawingArea {
           } else if( control && match.is_within_url( _scaled_x, _scaled_y, out url ) ) {
             set_cursor( url_cursor );
             set_tooltip_markup( url );
+          } else if( match.mode == NodeMode.EDITABLE ) {
+            set_cursor( text_cursor );
+            set_tooltip_markup( null );
           } else {
             set_cursor( null );
             set_tooltip_markup( null );
@@ -3275,7 +3288,18 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void handle_im_commit( string str ) {
-    handle_printable( str );
+    stdout.printf( "In handle_im_commit, str: %s\n", str );
+    if( !str.get_char( 0 ).isprint() ) return;
+    if( is_connection_editable() ) {
+      _selected.current_connection().title.insert( str );
+      queue_draw();
+      changed();
+    } else if( is_node_editable() ) {
+      _selected.current_node().name.insert( str );
+      see();
+      queue_draw();
+      changed();
+    }
   }
 
   /* Helper class for the handle_im_retrieve_surrounding method */
@@ -3318,115 +3342,18 @@ public class DrawArea : Gtk.DrawingArea {
     return( false );
   }
 
-  /* Called whenever a printable character is entered in the drawing area */
-  private void handle_printable( string str ) {
-    if( str.get_char( 0 ).isprint() ) {
-      if( is_connection_editable() ) {
-        _selected.current_connection().title.insert( str );
-        queue_draw();
-        changed();
-      } else if( is_node_editable() ) {
-        _selected.current_node().name.insert( str );
-        see();
-        queue_draw();
-        changed();
-      } else if( is_connection_selected() ) {
-        var current = _selected.current_connection();
-        switch( str ) {
-          case "e" :
-            current.edit_title_begin( this );
-            current.mode = ConnMode.EDITABLE;
-            queue_draw();
-            break;
-          case "t" :  select_connection_node( false );  break;
-          case "f" :  select_connection_node( true );   break;
-          case "n" :  select_connection( 1 );  break;
-          case "p" :  select_connection( -1 );  break;
-          case "i" :  show_properties( "current", false );  break;
-          case "u" :  // Perform undo
-            if( undo_buffer.undoable() ) {
-              undo_buffer.undo();
-            }
-            break;
-          case "r" :  // Perform redo
-            if( undo_buffer.redoable() ) {
-              undo_buffer.redo();
-            }
-            break;
-          case "s" :  see();  break;
-          case "z" :  zoom_out();  break;
-          case "Z" :  zoom_in();  break;
-          default :
-            return;
-        }
-      } else if( is_node_selected() ) {
-        var current = _selected.current_node();
-        switch( str ) {
-          case "a" :  select_parent_nodes();  break;
-          case "c" :  select_child_node();  break;
-          case "C" :  center_current_node();  break;
-          case "d" :  select_child_nodes();  break;
-          case "D" :  select_node_tree();  break;
-          case "e" :
-            set_node_mode( current, NodeMode.EDITABLE );
-            queue_draw();
-            break;
-          case "f" :  toggle_fold( current );  break;
-          case "h" :  handle_left( false );  break;
-          case "i" :  show_properties( "current", false );  break;
-          case "I" :
-            if( _debug ) {
-              current.display();
-            }
-            break;
-          case "j" :  handle_down( false );  break;
-          case "k" :  handle_up( false );  break;
-          case "l" :  handle_right( false );  break;
-          case "m" :  select_root_node();  break;
-          case "n" :  select_sibling_node( 1 );  break;
-          case "p" :  select_sibling_node( -1 );  break;
-          case "r" :  // Perform redo
-            if( undo_buffer.redoable() ) {
-              undo_buffer.redo();
-            }
-            break;
-          case "s" :  see();  break;
-          case "S" :  sort_alphabetically();  break;
-          case "t" :  // Toggle the task done indicator
-            if( current.is_task() ) {
-              toggle_task( current );
-            }
-            break;
-          case "u" :  // Perform undo
-            if( undo_buffer.undoable() ) {
-              undo_buffer.undo();
-            }
-            break;
-          case "x" :  start_connection( true, false );  break;
-          case "X" :  select_attached_connection();  break;
-          case "y" :  toggle_link();  break;
-          case "z" :  zoom_out();  break;
-          case "Z" :  zoom_in();  break;
-          case "Y" :  select_linked_node();  break;
-          default :
-            // This is a key that doesn't have any associated functionality
-            // so just return immediately so that we don't force a redraw
-            return;
-        }
-      }
-    }
-  }
-
   /* Handle a key event */
   private bool on_keypress( EventKey e ) {
 
     /* Figure out which modifiers were used */
-    var control = (bool)(e.state & ModifierType.CONTROL_MASK);
-    var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
-    var nomod   = !(control || shift);
+    var control      = (bool)(e.state & ModifierType.CONTROL_MASK);
+    var shift        = (bool)(e.state & ModifierType.SHIFT_MASK);
+    var nomod        = !(control || shift);
+    var current_node = _selected.current_node();
+    var current_conn = _selected.current_connection();
 
     /* If there is a current node or connection selected, operate on it */
-    if( (_selected.current_node() != null) || (_selected.current_connection() != null) ) {
+    if( (current_node != null) || (current_conn != null) ) {
       if( control ) {
         switch( e.keyval ) {
           case 99    :  do_copy();                      break;
@@ -3448,9 +3375,7 @@ public class DrawArea : Gtk.DrawingArea {
           default    :  return( false );
         }
       } else if( nomod || shift ) {
-        if( _im_context.filter_keypress( e ) ) {
-          return( true );
-        }
+        stdout.printf( "Calling filter_keypress, str: %s, keyval: %u\n", e.str, e.keyval );
         switch( e.keyval ) {
           case 65288 :  handle_backspace();      break;
           case 65535 :  handle_delete();         break;
@@ -3466,8 +3391,17 @@ public class DrawArea : Gtk.DrawingArea {
           case 65365 :  handle_pageup();         break;
           case 65366 :  handle_pagedn();         break;
           case 65507 :  handle_control( true );  break;
-          default    :  return( false );
+          default    :
+            if( current_node != null ) {
+              return( handle_node_keypress( e ) );
+            } else if( current_conn != null ) {
+              return( handle_connection_keypress( e ) );
+            } else {
+              return( false );
+            }
+            break;
         }
+
       }
 
     /* If there is no current node, allow some of the keyboard shortcuts */
@@ -3480,31 +3414,113 @@ public class DrawArea : Gtk.DrawingArea {
       }
 
     } else if( nomod || shift ) {
-      switch( e.str ) {
-        case "a" :  select_parent_nodes();  break;
-        case "d" :  select_child_nodes();  break;
-        case "m" :  select_root_node();  break;
-        case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
-        case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
-        case "z" :  zoom_out();  break;
-        case "Z" :  zoom_in();   break;
-        case "f" :  toggle_folds();  break;
-        case "[" :  if( nodes_alignable() ) NodeAlign.align_left( this, _selected.nodes() );  break;
-        case "]" :  if( nodes_alignable() ) NodeAlign.align_right( this, _selected.nodes() );  break;
-        case "|" :  if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() );  break;
-        case "-" :  if( nodes_alignable() ) NodeAlign.align_top( this, _selected.nodes() );  break;
-        case "_" :  if( nodes_alignable() ) NodeAlign.align_bottom( this, _selected.nodes() );  break;
-        case "=" :  if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() );  break;
-        default  :
-          switch( e.keyval ) {
-            case 65288 :  handle_backspace();      break;
-            case 65535 :  handle_delete();         break;
-            case 65293 :  handle_return( shift );  break;
-            case 65507 :  handle_control( true );  break;
-            default    :  return( false );
-          }
-          break;
+      switch( e.keyval ) {
+        case 45    /* - */:  if( nodes_alignable() ) NodeAlign.align_top( this, _selected.nodes() );  break;
+        case 61    /* = */:  if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() );  break;
+        case 90    /* Z */:  zoom_in();   break;
+        case 91    /* [ */:  if( nodes_alignable() ) NodeAlign.align_left( this, _selected.nodes() );  break;
+        case 93    /* ] */:  if( nodes_alignable() ) NodeAlign.align_right( this, _selected.nodes() );  break;
+        case 95    /* _ */:  if( nodes_alignable() ) NodeAlign.align_bottom( this, _selected.nodes() );  break;
+        case 97    /* a */:  select_parent_nodes();  break;
+        case 100   /* d */:  select_child_nodes();  break;
+        case 102   /* f */:  toggle_folds();  break;
+        case 109   /* m */:  select_root_node();  break;
+        case 114   /* r */:  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
+        case 117   /* u */:  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
+        case 122   /* z */:  zoom_out();  break;
+        case 124   /* | */:  if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() );  break;
+        case 65288 :  handle_backspace();      break;
+        case 65535 :  handle_delete();         break;
+        case 65293 :  handle_return( shift );  break;
+        case 65507 :  handle_control( true );  break;
+        default    :  return( false );
       }
+    }
+    return( true );
+  }
+
+  private bool handle_connection_keypress( EventKey e ) {
+    var current = _selected.current_connection();
+    switch( e.keyval ) {
+      case 90  /* Z */:  zoom_in();  break;
+      case 101 /* e */:
+        current.edit_title_begin( this );
+        current.mode = ConnMode.EDITABLE;
+        queue_draw();
+        break;
+      case 102 /* f */:  select_connection_node( true );   break;
+      case 105 /* i */:  show_properties( "current", false );  break;
+      case 110 /* n */:  select_connection( 1 );  break;
+      case 112 /* p */:  select_connection( -1 );  break;
+      case 114 /* r */:  // Perform redo
+        if( undo_buffer.redoable() ) {
+          undo_buffer.redo();
+        }
+        break;
+      case 115 /* s */:  see();  break;
+      case 116 /* t */:  select_connection_node( false );  break;
+      case 117 /* u */:  // Perform undo
+        if( undo_buffer.undoable() ) {
+          undo_buffer.undo();
+        }
+        break;
+      case 122 /* z */:  zoom_out();  break;
+      default  :  return( false );
+    }
+    return( true );
+  }
+
+  /* Handles keypresses when a single node is currenly selected */
+  private bool handle_node_keypress( EventKey e ) {
+    var current = _selected.current_node();
+    switch( e.keyval ) {
+      case 67  /* C */:  center_current_node();  break;
+      case 68  /* D */:  select_node_tree();  break;
+      case 73  /* I */:
+        if( _debug ) {
+          current.display();
+        }
+        break;
+      case 83  /* S */:  sort_alphabetically();  break;
+      case 88  /* X */:  select_attached_connection();  break;
+      case 89  /* Y */:  select_linked_node();  break;
+      case 90  /* Z */:  zoom_in();  break;
+      case 97  /* a */:  select_parent_nodes();  break;
+      case 99  /* c */:  select_child_node();  break;
+      case 100 /* d */:  select_child_nodes();  break;
+      case 101 /* e */:
+        set_node_mode( current, NodeMode.EDITABLE );
+        queue_draw();
+        break;
+      case 102 /* f */:  toggle_fold( current );  break;
+      case 104 /* h */:  handle_left( false );  break;
+      case 105 /* i */:  show_properties( "current", false );  break;
+      case 106 /* j */:  handle_down( false );  break;
+      case 107 /* k */:  handle_up( false );  break;
+      case 108 /* l */:  handle_right( false );  break;
+      case 109 /* m */:  select_root_node();  break;
+      case 110 /* n */:  select_sibling_node( 1 );  break;
+      case 112 /* p */:  select_sibling_node( -1 );  break;
+      case 114 /* r */:  // Perform redo
+        if( undo_buffer.redoable() ) {
+          undo_buffer.redo();
+        }
+        break;
+      case 115 /* s */:  see();  break;
+      case 116 /* t */:  // Toggle the task done indicator
+        if( current.is_task() ) {
+          toggle_task( current );
+        }
+        break;
+      case 117 /* u */:  // Perform undo
+        if( undo_buffer.undoable() ) {
+          undo_buffer.undo();
+        }
+        break;
+      case 120 /* x */:  start_connection( true, false );  break;
+      case 121 /* y */:  toggle_link();  break;
+      case 122 /* z */:  zoom_out();  break;
+      default :  return( false );
     }
     return( true );
   }
