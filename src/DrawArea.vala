@@ -232,7 +232,7 @@ public class DrawArea : Gtk.DrawingArea {
     _im_context = new IMMulticontext();
     _im_context.set_client_window( this.get_window() );
     _im_context.set_use_preedit( false );
-    // _im_context.commit.connect( handle_im_commit );
+    _im_context.commit.connect( handle_im_commit );
     _im_context.retrieve_surrounding.connect( handle_im_retrieve_surrounding );
     _im_context.delete_surrounding.connect( handle_im_delete_surrounding );
 
@@ -706,8 +706,6 @@ public class DrawArea : Gtk.DrawingArea {
   public void set_node_mode( Node node, NodeMode mode ) {
     if( (node.mode != NodeMode.EDITABLE) && (mode == NodeMode.EDITABLE) ) {
       update_im_cursor( node.name );
-      _im_context.commit.connect( handle_im_commit );
-      stdout.printf( "handle_im_commit connected\n" );
       _im_context.focus_in();
       if( node.name.is_within( _scaled_x, _scaled_y ) ) {
         set_cursor( text_cursor );
@@ -715,8 +713,6 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( (node.mode == NodeMode.EDITABLE) && (mode != NodeMode.EDITABLE) ) {
       _im_context.reset();
       _im_context.focus_out();
-      _im_context.commit.disconnect( handle_im_commit );
-      stdout.printf( "handle_im_commit disconnected\n" );
       if( node.name.is_within( _scaled_x, _scaled_y ) ) {
         set_cursor( null );
       }
@@ -3289,8 +3285,14 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Handle input method */
   private void handle_im_commit( string str ) {
-    if( !str.get_char( 0 ).isprint() ) return;
+    insert_text( str );
+  }
+
+  /* Inserts text */
+  private bool insert_text( string str ) {
+    if( !str.get_char( 0 ).isprint() ) return( false );
     if( is_connection_editable() ) {
       _selected.current_connection().title.insert( str );
       queue_draw();
@@ -3300,7 +3302,10 @@ public class DrawArea : Gtk.DrawingArea {
       see();
       queue_draw();
       changed();
+    } else {
+      return( false );
     }
+    return( true );
   }
 
   /* Helper class for the handle_im_retrieve_surrounding method */
@@ -3378,32 +3383,33 @@ public class DrawArea : Gtk.DrawingArea {
           default            :  return( false );
         }
       } else if( nomod || shift ) {
-        switch( e.keyval ) {
-          case Key.BackSpace :  handle_backspace();      break;
-          case Key.Delete    :  handle_delete();         break;
-          case Key.Escape    :  handle_escape();         break;
-          case Key.Return    :  handle_return( shift );  break;
-          case Key.Tab       :  handle_tab();            break;
-          case Key.Right     :  handle_right( shift );   break;
-          case Key.Left      :  handle_left( shift );    break;
-          case Key.Home      :  handle_home();           break;
-          case Key.End       :  handle_end();            break;
-          case Key.Up        :  handle_up( shift );      break;
-          case Key.Down      :  handle_down( shift );    break;
-          case Key.Page_Up   :  handle_pageup();         break;
-          case Key.Page_Down :  handle_pagedn();         break;
-          case Key.Control_L :  handle_control( true );  break;
-          default            :
-            if( current_node != null ) {
-              return( handle_node_keypress( e ) );
-            } else if( current_conn != null ) {
-              return( handle_connection_keypress( e ) );
-            } else {
-              return( false );
-            }
-            break;
+        if( !insert_text( e.str ) ) {
+          switch( e.keyval ) {
+            case Key.BackSpace :  handle_backspace();      break;
+            case Key.Delete    :  handle_delete();         break;
+            case Key.Escape    :  handle_escape();         break;
+            case Key.Return    :  handle_return( shift );  break;
+            case Key.Tab       :  handle_tab();            break;
+            case Key.Right     :  handle_right( shift );   break;
+            case Key.Left      :  handle_left( shift );    break;
+            case Key.Home      :  handle_home();           break;
+            case Key.End       :  handle_end();            break;
+            case Key.Up        :  handle_up( shift );      break;
+            case Key.Down      :  handle_down( shift );    break;
+            case Key.Page_Up   :  handle_pageup();         break;
+            case Key.Page_Down :  handle_pagedn();         break;
+            case Key.Control_L :  handle_control( true );  break;
+            default            :
+              if( current_node != null ) {
+                return( handle_node_keypress( e ) );
+              } else if( current_conn != null ) {
+                return( handle_connection_keypress( e ) );
+              } else {
+                return( false );
+              }
+              break;
+          }
         }
-
       }
 
     /* If there is no current node, allow some of the keyboard shortcuts */
