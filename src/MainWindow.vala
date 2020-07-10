@@ -71,6 +71,7 @@ public class MainWindow : ApplicationWindow {
   private bool              _prefer_dark    = false;
   private bool              _debug          = false;
   private ThemeEditor       _themer;
+  private Label             _scale_lbl;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",          action_save },
@@ -91,6 +92,11 @@ public class MainWindow : ApplicationWindow {
   private delegate void ChangedFunc();
 
   public Themes themes { set; get; default = new Themes(); }
+  public GLib.Settings settings {
+    get {
+      return( _settings );
+    }
+  }
 
   public signal void canvas_changed( DrawArea? da );
 
@@ -224,7 +230,7 @@ public class MainWindow : ApplicationWindow {
   private void tab_changed( Tab tab ) {
     var bin = (Gtk.Bin)tab.page;
     var da  = bin.get_child() as DrawArea;
-    do_buffer_changed( da );
+    do_buffer_changed( da.undo_buffer );
     on_current_changed( da );
     update_title( da );
     canvas_changed( da );
@@ -360,9 +366,9 @@ public class MainWindow : ApplicationWindow {
     /* Create zoom menu popover */
     Box box = new Box( Orientation.VERTICAL, 5 );
 
-    var marks     = DrawArea.get_scale_marks();
-    var scale_lbl = new Label( _( "Zoom to Percent" ) );
-    _zoom_scale   = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 );
+    var marks   = DrawArea.get_scale_marks();
+    _scale_lbl  = new Label( _( "Zoom to Percent" ) );
+    _zoom_scale = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 );
     foreach (double mark in marks) {
       _zoom_scale.add_mark( mark, PositionType.BOTTOM, null );
     }
@@ -392,7 +398,7 @@ public class MainWindow : ApplicationWindow {
     actual.action_name = "win.action_zoom_actual";
 
     box.margin = 5;
-    box.pack_start( scale_lbl,   false, true );
+    box.pack_start( _scale_lbl,  false, true );
     box.pack_start( _zoom_scale, false, true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
     box.pack_start( _zoom_in,    false, true );
@@ -896,11 +902,11 @@ public class MainWindow : ApplicationWindow {
    Called whenever the undo buffer changes state.  Updates the state of
    the undo and redo buffer buttons.
   */
-  public void do_buffer_changed( DrawArea da ) {
-    _undo_btn.set_sensitive( da.undo_buffer.undoable() );
-    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( da.undo_buffer.undo_tooltip(), "<Control>z" ) );
-    _redo_btn.set_sensitive( da.undo_buffer.redoable() );
-    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( da.undo_buffer.redo_tooltip(), "<Control><Shift>z" ) );
+  public void do_buffer_changed( UndoBuffer buf ) {
+    _undo_btn.set_sensitive( buf.undoable() );
+    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buf.undo_tooltip(), "<Control>z" ) );
+    _redo_btn.set_sensitive( buf.redoable() );
+    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buf.redo_tooltip(), "<Control><Shift>z" ) );
   }
 
   /* Converts the given node name to an appropriate filename */
@@ -924,7 +930,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Allow the user to select a filename to save the document as */
   public bool save_file( DrawArea da ) {
-    var sname  = convert_name_to_filename( da.get_nodes().index( 0 ).name.text.strip() );
+    var sname  = convert_name_to_filename( da.get_nodes().index( 0 ).name.text.text.strip() );
     var dialog = new FileChooserNative( _( "Save File" ), this, FileChooserAction.SAVE, _( "Save" ), _( "Cancel" ) );
     var filter = new FileFilter();
     var retval = false;
@@ -1430,6 +1436,13 @@ public class MainWindow : ApplicationWindow {
 
     return( _nb.n_tabs > 0 );
 
+  }
+
+  /* Returns the height of a single line label */
+  public int get_label_height() {
+    int min_height, nat_height;
+    _scale_lbl.get_preferred_height( out min_height, out nat_height );
+    return( nat_height );
   }
 
 }

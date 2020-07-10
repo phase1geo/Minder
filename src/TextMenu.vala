@@ -132,8 +132,8 @@ public class TextMenu : Gtk.Menu {
     var node = _da.get_current_node();
     int cursor, selstart, selend;
     node.name.get_cursor_info( out cursor, out selstart, out selend );
-    var link = node.urls.find_link( cursor );
-    Utils.open_url( link.url );
+    var links = node.name.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
+    Utils.open_url( links.index( 0 ).extra );
   }
 
   /*
@@ -148,9 +148,7 @@ public class TextMenu : Gtk.Menu {
   /* Allows the user to remove the link located at the current cursor */
   private void remove_link() {
     var node = _da.get_current_node();
-    int cursor, selstart, selend;
-    node.name.get_cursor_info( out cursor, out selstart, out selend );
-    node.urls.remove_link( cursor );
+    node.name.remove_tag( FormatTag.URL, _da.undo_text );
     node.name.clear_selection();
     _da.changed();
   }
@@ -165,7 +163,7 @@ public class TextMenu : Gtk.Menu {
     var node = _da.get_current_node();
     int cursor, selstart, selend;
     node.name.get_cursor_info( out cursor, out selstart, out selend );
-    node.urls.restore_link( cursor );
+    // TBD - node.urls.restore_link( cursor );
     node.name.clear_selection();
     _da.changed();
   }
@@ -195,17 +193,18 @@ public class TextMenu : Gtk.Menu {
       int cursor, selstart, selend;
       node.name.get_cursor_info( out cursor, out selstart, out selend );
 
-      var link     = node.urls.find_link( cursor );
+      var links    = node.name.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
+      var link     = (links.length > 0) ? links.index( 0 ) : null;
       var selected = (selstart != selend);
       var valid    = (link != null);
 
       /* If we have found a link, select it */
       if( !selected ) {
-        node.name.selection_set( link.spos, link.epos );
+        node.name.change_selection( link.start, link.end );
       }
 
-      bool embedded = (link != null) ? link.embedded : false;
-      bool ignore   = (link != null) ? link.ignore   : false;
+      bool embedded = (links.length > 0) ? (link.extra == node.name.text.text.slice( link.start, link.end )) : false;
+      bool ignore   = false;  // TBD
 
       // embedded ignore   RESULT
       // -------- ------   ------
@@ -276,9 +275,7 @@ public class TextMenu : Gtk.Menu {
   */
   private bool add_link_possible( Node node, int selstart, int selend ) {
 
-    var indices = new Array<int>();
-
-    return( (selstart != selend) && !node.urls.overlaps_with( selstart, selend, ref indices ) );
+    return( (selstart != selend) && !node.name.text.is_tag_applied_in_range( FormatTag.URL, selstart, selend ) );
 
   }
 

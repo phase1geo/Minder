@@ -76,25 +76,6 @@ class ImageEditor {
 
   }
 
-  /* Handles the display of the image editor popover */
-  private void show_popover( bool show ) {
-
-#if GTK322
-    if( show ) {
-      _popover.popup();
-    } else {
-      _popover.popdown();
-    }
-#else
-    if( show ) {
-      _popover.show();
-    } else {
-      _popover.hide();
-    }
-#endif
-
-  }
-
   /* Opens an image editor popup containing the image of the specified node */
   public void edit_image( ImageManager im, Node node, double x, double y ) {
 
@@ -121,7 +102,7 @@ class ImageEditor {
       _da.queue_draw();
 
       /* Display ourselves */
-      show_popover( true );
+      Utils.show_popover( _popover );
 
     }
 
@@ -508,7 +489,7 @@ class ImageEditor {
     changed( orig_image );
 
     /* Hide the popover */
-    show_popover( false );
+    Utils.hide_popover( _popover );
 
   }
 
@@ -528,7 +509,7 @@ class ImageEditor {
     changed( orig_image );
 
     /* Close the popover */
-    show_popover( false );
+    Utils.hide_popover( _popover );
 
   }
 
@@ -587,7 +568,7 @@ class ImageEditor {
 
   /* Cancels this editing session */
   private void action_cancel() {
-    show_popover( false );
+    Utils.hide_popover( _popover );
   }
 
   /* Applies the current edits and closes the window */

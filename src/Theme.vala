@@ -52,6 +52,11 @@ public class Theme : Object {
     _colors.set( "connection_foreground", null );
     _colors.set( "url_background",        null );
     _colors.set( "url_foreground",        null );
+    _colors.set( "tag",                   null );
+    _colors.set( "syntax",                null );
+    _colors.set( "match_background",      null );
+    _colors.set( "match_foreground",      null );
+    _colors.set( "markdown_listitem",     null );
     _colors.set( "link_color0",           null );
     _colors.set( "link_color1",           null );
     _colors.set( "link_color2",           null );

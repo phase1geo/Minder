@@ -346,7 +346,7 @@ public class NodeInspector : Box {
   private void name_inserted( ref TextIter pos, string new_text, int new_text_length ) {
     if( !_ignore_name_change ) {
       var node = _da.get_current_node();
-      node.name.insert_at_pos( pos.get_offset(), new_text );
+      node.name.insert_at_pos( pos.get_offset(), new_text, _da.undo_text );
     }
     _ignore_name_change = false;
   }
@@ -355,7 +355,7 @@ public class NodeInspector : Box {
   private void name_deleted( TextIter start, TextIter end ) {
     if( !_ignore_name_change ) {
       var node = _da.get_current_node();
-      node.name.delete_range( start.get_offset(), end.get_offset() );
+      node.name.delete_range( start.get_offset(), end.get_offset(), _da.undo_text );
     }
   }
 
@@ -471,14 +471,6 @@ public class NodeInspector : Box {
 
   }
 
-  /* Updates the given text buffer with the string and link information */
-  private void update_text_buffer( TextView tv, string str, UrlLinks links ) {
-    tv.buffer.text = str;
-    if( _name.buffer.tag_table.lookup( "urllink" ) != null ) {
-      links.markup_text_buffer( tv.buffer, "urllink" );
-    }
-  }
-
   /* Called whenever the user changes the current node in the canvas */
   private void node_changed() {
 
@@ -486,7 +478,6 @@ public class NodeInspector : Box {
 
     if( current != null ) {
       _ignore_name_change = true;
-      update_text_buffer( _name, current.name.text, current.urls );
       _task.set_active( current.task_enabled() );
       if( current.is_leaf() ) {
         _fold.set_active( false );

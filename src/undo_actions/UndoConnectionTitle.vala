@@ -32,7 +32,7 @@ public class UndoConnectionTitle : UndoItem {
     base( _( "connection title change" ) );
     _conn      = c;
     _old_title = old_title;
-    _new_title = (c.title == null) ? null : c.title.text;
+    _new_title = (c.title == null) ? null : c.title.text.text;
   }
 
   private void change( DrawArea da, string? title ) {

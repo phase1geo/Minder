@@ -66,7 +66,7 @@ public class MinderClipboard {
         if( text != null ) {
           selection_data.set_text( text, -1 );
         } else if( (nodes != null) && (nodes.length == 1) ) {
-          selection_data.set_text( nodes.index( 0 ).name.text, -1 );
+          selection_data.set_text( nodes.index( 0 ).name.text.text, -1 );
         }
         break;
       case Target.IMAGE:

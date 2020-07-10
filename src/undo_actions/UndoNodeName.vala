@@ -23,27 +23,23 @@ using Gtk;
 
 public class UndoNodeName : UndoItem {
 
-  Node     _node;
-  string   _old_name;
-  UrlLinks _old_urls;
-  string   _new_name;
-  UrlLinks _new_urls;
+  private Node       _node;
+  private CanvasText _text;
+  private CanvasText _orig_text;
 
   /* Constructor for a node name change */
-  public UndoNodeName( Node n, string old_name, UrlLinks old_urls ) {
+  public UndoNodeName( DrawArea da, Node node, CanvasText orig_text ) {
     base( _( "node name change" ) );
-    _node     = n;
-    _old_name = old_name;
-    _old_urls = old_urls;
-    _new_name = n.name.text;
-    _new_urls = new UrlLinks( n.da );
-    _new_urls.copy( n.urls );
+    _node      = node;
+    _text      = new CanvasText( da, 0 );
+    _orig_text = new CanvasText( da, 0 );
+    _text.copy( node.name );
+    _orig_text.copy( orig_text );
   }
 
   /* Undoes a node name change */
   public override void undo( DrawArea da ) {
-    _node.name.text = _old_name;
-    _node.urls.copy( _old_urls );
+    _node.name.copy( _orig_text );
     da.queue_draw();
     da.current_changed( da );
     da.changed();
@@ -51,8 +47,7 @@ public class UndoNodeName : UndoItem {
 
   /* Redoes a node name change */
   public override void redo( DrawArea da ) {
-    _node.name.text = _new_name;
-    _node.urls.copy( _new_urls );
+    _node.name.copy( _text );
     da.queue_draw();
     da.current_changed( da );
     da.changed();

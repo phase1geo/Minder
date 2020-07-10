@@ -49,12 +49,9 @@ public class ExportFreeplane : Object {
 
   /* Returns true if the given node contains any markup that should be output as richcontent */
   private static bool node_contains_markup( Node node, bool note ) {
-    if( node.name.markup ) {
-      string str = note ? node.note : node.name.text;
-      return( Regex.match_simple( """<(span.*|b|big|i|s|sub|sup|small|tt|u)>""", str ) ||
-              Regex.match_simple( """^\s*$""", str, RegexCompileFlags.MULTILINE ) );
-    }
-    return( false );
+    string str = note ? node.note : node.name.text.text;
+    return( Regex.match_simple( """<(span.*|b|big|i|s|sub|sup|small|tt|u)>""", str ) ||
+            Regex.match_simple( """^\s*$""", str, RegexCompileFlags.MULTILINE ) );
   }
 
   /* Exports the given node information */
@@ -71,7 +68,7 @@ public class ExportFreeplane : Object {
     n->new_prop( "POSITION", ((node.side == NodeSide.LEFT) ? "left" : "right") );
 
     if( !markup ) {
-      n->new_prop( "TEXT", node.name.text );
+      n->new_prop( "TEXT", node.name.text.text );
     } else {
       n->add_child( export_title( node ) );
     }
@@ -124,8 +121,8 @@ public class ExportFreeplane : Object {
     Xml.Node* n = new Xml.Node( null, "font" );
     n->new_prop( "NAME",   node.style.node_font.get_family() );
     n->new_prop( "SIZE",   (node.style.node_font.get_size() / Pango.SCALE).to_string() );
-    n->new_prop( "BOLD",   ((node.name.text.substring( 0, 3 ) == "<b>") || (node.name.text.substring( 0, 6 ) == "<i><b>")).to_string() );
-    n->new_prop( "ITALIC", ((node.name.text.substring( 0, 3 ) == "<i>") || (node.name.text.substring( 0, 6 ) == "<b><i>")).to_string() );
+    n->new_prop( "BOLD",   ((node.name.text.text.substring( 0, 3 ) == "<b>") || (node.name.text.text.substring( 0, 6 ) == "<i><b>")).to_string() );
+    n->new_prop( "ITALIC", ((node.name.text.text.substring( 0, 3 ) == "<i>") || (node.name.text.text.substring( 0, 6 ) == "<b><i>")).to_string() );
     return( n );
   }
 
@@ -142,7 +139,7 @@ public class ExportFreeplane : Object {
   /* Exports the node title as richtext */
   private static Xml.Node* export_title( Node node ) {
 
-    string    text = node.name.text;
+    string    text = node.name.text.text;
     Xml.Node* rc   = new Xml.Node( null, "richcontent" );
     rc->new_prop( "TYPE", "NODE" );
 
@@ -297,7 +294,7 @@ public class ExportFreeplane : Object {
 
     string? t = n->get_prop( "TEXT" );
     if( t != null ) {
-      node.name.text = t;
+      node.name.text.insert_text( 0, t );
     }
 
     string? l = n->get_prop( "LINK" );
@@ -392,14 +389,14 @@ public class ExportFreeplane : Object {
     string? b = n->get_prop( "BOLD" );
     if( b != null ) {
       if( bool.parse( b ) ) {
-        node.name.text = "<b>" + node.name.text + "</b>";
+        node.name.text.insert_text( 0, "<b>" + node.name.text.text + "</b>" );
       }
     }
 
     string? i = n->get_prop( "ITALIC" );
     if( i != null ) {
       if( bool.parse( i ) ) {
-        node.name.text = "<i>" + node.name.text + "</i>";
+        node.name.text.insert_text( 0, "<i>" + node.name.text.text + "</i>" );
       }
     }
 
@@ -451,7 +448,7 @@ public class ExportFreeplane : Object {
     string content = parse_richcontent( n ).chug();
 
     if( type == "NODE" ) {
-      node.name.text = content;
+      node.name.text.insert_text( 0, content );
     } else {
       node.note = content;
     }
