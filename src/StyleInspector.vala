@@ -90,6 +90,7 @@ public class StyleInspector : Box {
   private Scale                      _node_margin;
   private Scale                      _node_padding;
   private FontButton                 _node_font;
+  private SpinButton                 _node_width;
   private Switch                     _node_markup;
   private Image                      _conn_dash;
   private Image                      _conn_arrow;
@@ -452,6 +453,7 @@ public class StyleInspector : Box {
     var node_margin      = create_node_margin_ui();
     var node_padding     = create_node_padding_ui();
     var node_font        = create_node_font_ui();
+    var node_width       = create_node_width_ui();
     var node_markup      = create_node_markup_ui();
 
     cbox.pack_start( node_border,      false, true );
@@ -460,6 +462,7 @@ public class StyleInspector : Box {
     cbox.pack_start( node_margin,      false, true );
     cbox.pack_start( node_padding,     false, true );
     cbox.pack_start( node_font,        false, true );
+    cbox.pack_start( node_width,       false, true );
     cbox.pack_start( node_markup,      false, true );
 
     exp.add( cbox );
@@ -691,6 +694,27 @@ public class StyleInspector : Box {
 
     box.pack_start( lbl,      false, true );
     box.pack_end( _node_font, false, true );
+
+    return( box );
+
+  }
+
+  /* Creates the node width selector */
+  private Box create_node_width_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Width" ) );
+    lbl.xalign = (float)0;
+
+    _node_width = new SpinButton.with_range( 200, 2000, 100 );
+    _node_width.set_value( _settings.get_int( "style-node-width" ) );
+    _node_width.value_changed.connect(() => {
+      var width = (int)_node_width.get_value();
+      _da.undo_buffer.add_item( new UndoStyleNodeWidth( _affects, width, _da ) );
+    });
+
+    box.pack_start( lbl,       false, true );
+    box.pack_end( _node_width, false, true );
 
     return( box );
 
@@ -1141,6 +1165,7 @@ public class StyleInspector : Box {
     _node_margin.set_value( (double)style.node_margin );
     _node_padding.set_value( (double)style.node_padding );
     _node_font.set_font( style.node_font.to_string() );
+    _node_width.set_value( (float)style.node_width );
     _node_markup.set_active( (bool)style.node_markup );
     _conn_arrow.surface = Connection.make_arrow_icon( style.connection_arrow );
     _conn_width.set_value( (double)style.connection_width );

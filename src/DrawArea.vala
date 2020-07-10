@@ -92,7 +92,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
-  public UndoTextBuffer undo_text    { set; get; }
+  public UndoTextBuffer undo_text     { set; get; }
   public Layouts        layouts       { set; get; default = new Layouts(); }
   public Animator       animator      { set; get; }
   public ImageManager   image_manager { set; get; default = new ImageManager(); }

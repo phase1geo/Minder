@@ -127,7 +127,7 @@
       <description>Last used node border type in Style properties</description>
     </key>
     <key name="style-node-width" type="i">
-      <default>200</default>
+      <default>400</default>
       <summary>Last used maximum node width in Style properties</summary>
       <description>Last used maximum node width in Style properties</description>
     </key>

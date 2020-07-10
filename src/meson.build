@@ -109,6 +109,7 @@ sources += files(
     'undo_actions/UndoStyleNodeMargin.vala',
     'undo_actions/UndoStyleNodeMarkup.vala',
     'undo_actions/UndoStyleNodePadding.vala',
+    'undo_actions/UndoStyleNodeWidth.vala',
     'undo_actions/UndoTextClearTags.vala',
     'undo_actions/UndoTextDelete.vala',
     'undo_actions/UndoTextInsert.vala',
