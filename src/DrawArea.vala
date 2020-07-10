@@ -27,7 +27,9 @@ using Gee;
 
 public class DrawArea : Gtk.DrawingArea {
 
-  private const CursorType url_cursor = CursorType.HAND2;
+  private const CursorType move_cursor = CursorType.HAND1;
+  private const CursorType url_cursor  = CursorType.HAND2;
+  private const CursorType text_cursor = CursorType.XTERM;
 
   private const Gtk.TargetEntry[] DRAG_TARGETS = {
     {"text/uri-list", 0, 0}
@@ -705,9 +707,15 @@ public class DrawArea : Gtk.DrawingArea {
     if( (node.mode != NodeMode.EDITABLE) && (mode == NodeMode.EDITABLE) ) {
       update_im_cursor( node.name );
       _im_context.focus_in();
+      if( node.name.is_within( _scaled_x, _scaled_y ) ) {
+        set_cursor( text_cursor );
+      }
     } else if( (node.mode == NodeMode.EDITABLE) && (mode != NodeMode.EDITABLE) ) {
       _im_context.reset();
       _im_context.focus_out();
+      if( node.name.is_within( _scaled_x, _scaled_y ) ) {
+        set_cursor( null );
+      }
     }
     node.mode = mode;
   }
@@ -1883,6 +1891,9 @@ public class DrawArea : Gtk.DrawingArea {
           } else if( control && match.is_within_url( _scaled_x, _scaled_y, out url ) ) {
             set_cursor( url_cursor );
             set_tooltip_markup( url );
+          } else if( match.mode == NodeMode.EDITABLE ) {
+            set_cursor( text_cursor );
+            set_tooltip_markup( null );
           } else {
             set_cursor( null );
             set_tooltip_markup( null );
@@ -3274,8 +3285,27 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Handle input method */
   private void handle_im_commit( string str ) {
-    handle_printable( str );
+    insert_text( str );
+  }
+
+  /* Inserts text */
+  private bool insert_text( string str ) {
+    if( !str.get_char( 0 ).isprint() ) return( false );
+    if( is_connection_editable() ) {
+      _selected.current_connection().title.insert( str );
+      queue_draw();
+      changed();
+    } else if( is_node_editable() ) {
+      _selected.current_node().name.insert( str );
+      see();
+      queue_draw();
+      changed();
+    } else {
+      return( false );
+    }
+    return( true );
   }
 
   /* Helper class for the handle_im_retrieve_surrounding method */
@@ -3318,193 +3348,187 @@ public class DrawArea : Gtk.DrawingArea {
     return( false );
   }
 
-  /* Called whenever a printable character is entered in the drawing area */
-  private void handle_printable( string str ) {
-    if( str.get_char( 0 ).isprint() ) {
-      if( is_connection_editable() ) {
-        _selected.current_connection().title.insert( str );
-        queue_draw();
-        changed();
-      } else if( is_node_editable() ) {
-        _selected.current_node().name.insert( str );
-        see();
-        queue_draw();
-        changed();
-      } else if( is_connection_selected() ) {
-        var current = _selected.current_connection();
-        switch( str ) {
-          case "e" :
-            current.edit_title_begin( this );
-            current.mode = ConnMode.EDITABLE;
-            queue_draw();
-            break;
-          case "t" :  select_connection_node( false );  break;
-          case "f" :  select_connection_node( true );   break;
-          case "n" :  select_connection( 1 );  break;
-          case "p" :  select_connection( -1 );  break;
-          case "i" :  show_properties( "current", false );  break;
-          case "u" :  // Perform undo
-            if( undo_buffer.undoable() ) {
-              undo_buffer.undo();
-            }
-            break;
-          case "r" :  // Perform redo
-            if( undo_buffer.redoable() ) {
-              undo_buffer.redo();
-            }
-            break;
-          case "s" :  see();  break;
-          case "z" :  zoom_out();  break;
-          case "Z" :  zoom_in();  break;
-          default :
-            return;
-        }
-      } else if( is_node_selected() ) {
-        var current = _selected.current_node();
-        switch( str ) {
-          case "a" :  select_parent_nodes();  break;
-          case "c" :  select_child_node();  break;
-          case "C" :  center_current_node();  break;
-          case "d" :  select_child_nodes();  break;
-          case "D" :  select_node_tree();  break;
-          case "e" :
-            set_node_mode( current, NodeMode.EDITABLE );
-            queue_draw();
-            break;
-          case "f" :  toggle_fold( current );  break;
-          case "h" :  handle_left( false );  break;
-          case "i" :  show_properties( "current", false );  break;
-          case "I" :
-            if( _debug ) {
-              current.display();
-            }
-            break;
-          case "j" :  handle_down( false );  break;
-          case "k" :  handle_up( false );  break;
-          case "l" :  handle_right( false );  break;
-          case "m" :  select_root_node();  break;
-          case "n" :  select_sibling_node( 1 );  break;
-          case "p" :  select_sibling_node( -1 );  break;
-          case "r" :  // Perform redo
-            if( undo_buffer.redoable() ) {
-              undo_buffer.redo();
-            }
-            break;
-          case "s" :  see();  break;
-          case "S" :  sort_alphabetically();  break;
-          case "t" :  // Toggle the task done indicator
-            if( current.is_task() ) {
-              toggle_task( current );
-            }
-            break;
-          case "u" :  // Perform undo
-            if( undo_buffer.undoable() ) {
-              undo_buffer.undo();
-            }
-            break;
-          case "x" :  start_connection( true, false );  break;
-          case "X" :  select_attached_connection();  break;
-          case "y" :  toggle_link();  break;
-          case "z" :  zoom_out();  break;
-          case "Z" :  zoom_in();  break;
-          case "Y" :  select_linked_node();  break;
-          default :
-            // This is a key that doesn't have any associated functionality
-            // so just return immediately so that we don't force a redraw
-            return;
-        }
-      }
-    }
-  }
-
   /* Handle a key event */
   private bool on_keypress( EventKey e ) {
 
     /* Figure out which modifiers were used */
-    var control = (bool)(e.state & ModifierType.CONTROL_MASK);
-    var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
-    var nomod   = !(control || shift);
+    var control      = (bool)(e.state & ModifierType.CONTROL_MASK);
+    var shift        = (bool)(e.state & ModifierType.SHIFT_MASK);
+    var nomod        = !(control || shift);
+    var current_node = _selected.current_node();
+    var current_conn = _selected.current_connection();
+
+    // var keymap = Keymap.get_default();
 
     /* If there is a current node or connection selected, operate on it */
-    if( (_selected.current_node() != null) || (_selected.current_connection() != null) ) {
+    if( (current_node != null) || (current_conn != null) ) {
       if( control ) {
         switch( e.keyval ) {
-          case 99    :  do_copy();                      break;
-          case 120   :  do_cut();                       break;
-          case 118   :  do_paste( false );              break;
-          case 86    :  do_paste( true );               break;
-          case 65293 :  handle_control_return();        break;
-          case 65289 :  handle_control_tab();           break;
-          case 65363 :  handle_control_right( shift );  break;
-          case 65361 :  handle_control_left( shift );   break;
-          case 65362 :  handle_control_up( shift );     break;
-          case 65364 :  handle_control_down( shift );   break;
-          case 47    :  handle_control_slash();         break;
-          case 92    :  handle_control_backslash();     break;
-          case 46    :  handle_control_period();        break;
-          case 69    :  handle_control_E();             break;
-          case 82    :  handle_control_R();             break;
-          case 119   :  handle_control_w();             break;
-          default    :  return( false );
+          case Key.c         :  do_copy();                      break;
+          case Key.x         :  do_cut();                       break;
+          case Key.v         :  do_paste( false );              break;
+          case Key.V         :  do_paste( true );               break;
+          case Key.Return    :  handle_control_return();        break;
+          case Key.Tab       :  handle_control_tab();           break;
+          case Key.Right     :  handle_control_right( shift );  break;
+          case Key.Left      :  handle_control_left( shift );   break;
+          case Key.Up        :  handle_control_up( shift );     break;
+          case Key.Down      :  handle_control_down( shift );   break;
+          case Key.slash     :  handle_control_slash();         break;
+          case Key.backslash :  handle_control_backslash();     break;
+          case Key.period    :  handle_control_period();        break;
+          case Key.E         :  handle_control_E();             break;
+          case Key.R         :  handle_control_R();             break;
+          case Key.w         :  handle_control_w();             break;
+          default            :  return( false );
         }
       } else if( nomod || shift ) {
-        if( _im_context.filter_keypress( e ) ) {
-          return( true );
-        }
-        switch( e.keyval ) {
-          case 65288 :  handle_backspace();      break;
-          case 65535 :  handle_delete();         break;
-          case 65307 :  handle_escape();         break;
-          case 65293 :  handle_return( shift );  break;
-          case 65289 :  handle_tab();            break;
-          case 65363 :  handle_right( shift );   break;
-          case 65361 :  handle_left( shift );    break;
-          case 65360 :  handle_home();           break;
-          case 65367 :  handle_end();            break;
-          case 65362 :  handle_up( shift );      break;
-          case 65364 :  handle_down( shift );    break;
-          case 65365 :  handle_pageup();         break;
-          case 65366 :  handle_pagedn();         break;
-          case 65507 :  handle_control( true );  break;
-          default    :  return( false );
+        if( !insert_text( e.str ) ) {
+          switch( e.keyval ) {
+            case Key.BackSpace :  handle_backspace();      break;
+            case Key.Delete    :  handle_delete();         break;
+            case Key.Escape    :  handle_escape();         break;
+            case Key.Return    :  handle_return( shift );  break;
+            case Key.Tab       :  handle_tab();            break;
+            case Key.Right     :  handle_right( shift );   break;
+            case Key.Left      :  handle_left( shift );    break;
+            case Key.Home      :  handle_home();           break;
+            case Key.End       :  handle_end();            break;
+            case Key.Up        :  handle_up( shift );      break;
+            case Key.Down      :  handle_down( shift );    break;
+            case Key.Page_Up   :  handle_pageup();         break;
+            case Key.Page_Down :  handle_pagedn();         break;
+            case Key.Control_L :  handle_control( true );  break;
+            default            :
+              if( current_node != null ) {
+                return( handle_node_keypress( e ) );
+              } else if( current_conn != null ) {
+                return( handle_connection_keypress( e ) );
+              } else {
+                return( false );
+              }
+              break;
+          }
         }
       }
 
     /* If there is no current node, allow some of the keyboard shortcuts */
     } else if( control ) {
       switch( e.keyval ) {
-        case 69    :  handle_control_E();  break;
-        case 99    :  do_copy();           break;
-        case 120   :  do_cut();            break;
+        case Key.E :  handle_control_E();  break;
+        case Key.c :  do_copy();           break;
+        case Key.x :  do_cut();            break;
         default    :  return( false );
       }
 
     } else if( nomod || shift ) {
-      switch( e.str ) {
-        case "a" :  select_parent_nodes();  break;
-        case "d" :  select_child_nodes();  break;
-        case "m" :  select_root_node();  break;
-        case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
-        case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
-        case "z" :  zoom_out();  break;
-        case "Z" :  zoom_in();   break;
-        case "f" :  toggle_folds();  break;
-        case "[" :  if( nodes_alignable() ) NodeAlign.align_left( this, _selected.nodes() );  break;
-        case "]" :  if( nodes_alignable() ) NodeAlign.align_right( this, _selected.nodes() );  break;
-        case "|" :  if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() );  break;
-        case "-" :  if( nodes_alignable() ) NodeAlign.align_top( this, _selected.nodes() );  break;
-        case "_" :  if( nodes_alignable() ) NodeAlign.align_bottom( this, _selected.nodes() );  break;
-        case "=" :  if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() );  break;
-        default  :
-          switch( e.keyval ) {
-            case 65288 :  handle_backspace();      break;
-            case 65535 :  handle_delete();         break;
-            case 65293 :  handle_return( shift );  break;
-            case 65507 :  handle_control( true );  break;
-            default    :  return( false );
-          }
-          break;
+      switch( e.keyval ) {
+        case Key.minus        :  if( nodes_alignable() ) NodeAlign.align_top( this, _selected.nodes() );  break;
+        case Key.equal        :  if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() );  break;
+        case Key.Z            :  zoom_in();   break;
+        case Key.bracketleft  :  if( nodes_alignable() ) NodeAlign.align_left( this, _selected.nodes() );  break;
+        case Key.bracketright :  if( nodes_alignable() ) NodeAlign.align_right( this, _selected.nodes() );  break;
+        case Key.underscore   :  if( nodes_alignable() ) NodeAlign.align_bottom( this, _selected.nodes() );  break;
+        case Key.a            :  select_parent_nodes();  break;
+        case Key.d            :  select_child_nodes();  break;
+        case Key.f            :  toggle_folds();  break;
+        case Key.m            :  select_root_node();  break;
+        case Key.r            :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
+        case Key.u            :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
+        case Key.z            :  zoom_out();  break;
+        case Key.bar          :  if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() );  break;
+        case Key.BackSpace    :  handle_backspace();      break;
+        case Key.Delete       :  handle_delete();         break;
+        case Key.Return       :  handle_return( shift );  break;
+        case Key.Control_L    :  handle_control( true );  break;
+        default               :  return( false );
       }
+    }
+    return( true );
+  }
+
+  private bool handle_connection_keypress( EventKey e ) {
+    var current = _selected.current_connection();
+    switch( e.keyval ) {
+      case Key.Z :  zoom_in();  break;
+      case Key.e :
+        current.edit_title_begin( this );
+        current.mode = ConnMode.EDITABLE;
+        queue_draw();
+        break;
+      case Key.f :  select_connection_node( true );   break;
+      case Key.i :  show_properties( "current", false );  break;
+      case Key.n :  select_connection( 1 );  break;
+      case Key.p :  select_connection( -1 );  break;
+      case Key.r :  // Perform redo
+        if( undo_buffer.redoable() ) {
+          undo_buffer.redo();
+        }
+        break;
+      case Key.s :  see();  break;
+      case Key.t :  select_connection_node( false );  break;
+      case Key.u :  // Perform undo
+        if( undo_buffer.undoable() ) {
+          undo_buffer.undo();
+        }
+        break;
+      case Key.z :  zoom_out();  break;
+      default    :  return( false );
+    }
+    return( true );
+  }
+
+  /* Handles keypresses when a single node is currenly selected */
+  private bool handle_node_keypress( EventKey e ) {
+    var current = _selected.current_node();
+    switch( e.keyval ) {
+      case Key.C :  center_current_node();  break;
+      case Key.D :  select_node_tree();  break;
+      case Key.I :
+        if( _debug ) {
+          current.display();
+        }
+        break;
+      case Key.S :  sort_alphabetically();  break;
+      case Key.X :  select_attached_connection();  break;
+      case Key.Y :  select_linked_node();  break;
+      case Key.Z :  zoom_in();  break;
+      case Key.a :  select_parent_nodes();  break;
+      case Key.c :  select_child_node();  break;
+      case Key.d :  select_child_nodes();  break;
+      case Key.e :
+        set_node_mode( current, NodeMode.EDITABLE );
+        queue_draw();
+        break;
+      case Key.f :  toggle_fold( current );  break;
+      case Key.h :  handle_left( false );  break;
+      case Key.i :  show_properties( "current", false );  break;
+      case Key.j :  handle_down( false );  break;
+      case Key.k :  handle_up( false );  break;
+      case Key.l :  handle_right( false );  break;
+      case Key.m :  select_root_node();  break;
+      case Key.n :  select_sibling_node( 1 );  break;
+      case Key.p :  select_sibling_node( -1 );  break;
+      case Key.r :  // Perform redo
+        if( undo_buffer.redoable() ) {
+          undo_buffer.redo();
+        }
+        break;
+      case Key.s :  see();  break;
+      case Key.t :  // Toggle the task done indicator
+        if( current.is_task() ) {
+          toggle_task( current );
+        }
+        break;
+      case Key.u :  // Perform undo
+        if( undo_buffer.undoable() ) {
+          undo_buffer.undo();
+        }
+        break;
+      case Key.x :  start_connection( true, false );  break;
+      case Key.y :  toggle_link();  break;
+      case Key.z :  zoom_out();  break;
+      default    :  return( false );
     }
     return( true );
   }
