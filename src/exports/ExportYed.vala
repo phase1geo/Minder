@@ -279,7 +279,7 @@ public class ExportYed : Object {
       Xml.Node* ls = new Xml.Node( yns, "LineStyle" );
       ls->new_prop( "color", Utils.color_from_rgba( theme.get_color( "connection" ) ) );
       ls->new_prop( "type", (conn.style.connection_dash.name == "solid") ? "line" : "dashed" );
-      ls->new_prop( "width", conn.style.connection_width.to_string() );
+      ls->new_prop( "width", conn.style.connection_line_width.to_string() );
       be->add_child( ls );
 
       Xml.Node* arrow = new Xml.Node( yns, "Arrows" );

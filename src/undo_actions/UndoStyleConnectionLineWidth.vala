@@ -21,36 +21,28 @@
 
 using Gtk;
 
-public class UndoNodeName : UndoItem {
+public class UndoStyleConnectionLineWidth : UndoStyleChange {
 
-  private Node       _node;
-  private CanvasText _text;
-  private CanvasText _orig_text;
+  GenericArray<int> _values;
 
   /* Constructor for a node name change */
-  public UndoNodeName( DrawArea da, Node node, CanvasText orig_text ) {
-    base( _( "node name change" ) );
-    _node      = node;
-    _text      = new CanvasText( da );
-    _orig_text = new CanvasText( da );
-    _text.copy( node.name );
-    _orig_text.copy( orig_text );
+  public UndoStyleConnectionLineWidth( StyleAffects affects, int line_width, DrawArea da ) {
+    base( affects, da );
+    _values = new GenericArray<int>();
+    _values.add( line_width );
+    load_styles( da );
   }
 
-  /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
-    _node.name.copy( _orig_text );
-    da.queue_draw();
-    da.current_changed( da );
-    da.changed();
+  protected override void load_style_value( Style style ) {
+    _values.add( style.connection_line_width );
   }
 
-  /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
-    _node.name.copy( _text );
-    da.queue_draw();
-    da.current_changed( da );
-    da.changed();
+  protected override void store_style_value( Style style, int index ) {
+    style.connection_line_width = _values.get( index );
+  }
+
+  protected override void replace_with_item( UndoItem item ) {
+    _values.set( 0, ((UndoStyleConnectionLineWidth)item)._values.get( 0 ) );
   }
 
 }

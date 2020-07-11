@@ -137,7 +137,6 @@ public class Node : Object {
   private   NodeImage?   _image          = null;
   private   Layout?      _layout         = null;
   private   Style        _style          = new Style();
-  private   double       _max_width      = 200;
   private   bool         _loaded         = true;
   private   Node         _linked_node    = null;
 
@@ -287,6 +286,7 @@ public class Node : Object {
     set {
       if( _style.copy( value ) ) {
         name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+        name.max_width = style.node_width;
         position_name();
       }
     }
@@ -357,7 +357,7 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
-    _name     = new CanvasText( da, _max_width );
+    _name     = new CanvasText( da );
     _name.resized.connect( update_size );
     set_parsers();
   }
@@ -368,7 +368,7 @@ public class Node : Object {
     _id       = _next_id++;
     _children = new Array<Node>();
     _layout   = layout;
-    _name     = new CanvasText.with_text( da, _max_width, n );
+    _name     = new CanvasText.with_text( da, n );
     _name.resized.connect( update_size );
     set_parsers();
   }
@@ -377,7 +377,7 @@ public class Node : Object {
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
     _da       = da;
     _id       = _next_id++;
-    _name     = new CanvasText( da, _max_width );
+    _name     = new CanvasText( da );
     copy_variables( n, im );
     _name.resized.connect( update_size );
     set_parsers();
@@ -391,7 +391,7 @@ public class Node : Object {
   public Node.copy_only( DrawArea da, Node n, ImageManager im ) {
     _da = da;
     _id = _next_id++;
-    _name = new CanvasText( da, _max_width );
+    _name = new CanvasText( da );
     copy_variables( n, im );
   }
 
@@ -399,7 +399,7 @@ public class Node : Object {
   public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int> id_map ) {
     _da       = da;
     _id       = _next_id++;
-    _name     = new CanvasText( da, _max_width );
+    _name     = new CanvasText( da );
     _children = new Array<Node>();
     copy_variables( n, im );
     _name.resized.connect( update_size );
@@ -438,8 +438,7 @@ public class Node : Object {
     _layout         = n._layout;
     _posx           = n._posx;
     _posy           = n._posy;
-    _max_width      = n._max_width;
-    _image          = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, (int)n._max_width );
+    _image          = (n._image == null) ? null : new NodeImage.from_node_image( im, n._image, n.style.node_width );
     _name.copy( n._name );
     _link_color      = n._link_color;
     _link_color_set  = n._link_color_set;
@@ -608,11 +607,6 @@ public class Node : Object {
   /* Returns true if this tree bounds of this node is below the given bounds */
   public bool is_below( NodeBounds nb ) {
     return( tree_bbox.y > (nb.y + nb.height) );
-  }
-
-  /* Returns the maximum width allowed for this node */
-  public int max_width() {
-    return( (int)_max_width );
   }
 
   /* Returns the task completion percentage value */
@@ -877,7 +871,7 @@ public class Node : Object {
 
   /* Loads the image information from the given XML node */
   private void load_image( ImageManager im, Xml.Node* n ) {
-    _image = new NodeImage.from_xml( im, n, (int)_max_width );
+    _image = new NodeImage.from_xml( im, n, style.node_width );
     if( !_image.valid ) {
       _image = null;
       update_size();
@@ -909,12 +903,6 @@ public class Node : Object {
     string? y = n->get_prop( "posy" );
     if( y != null ) {
       posy = double.parse( y );
-    }
-
-    string? mw = n->get_prop( "maxwidth" );
-    if( mw != null ) {
-      _max_width = double.parse( mw );
-      _name.resize( _max_width - 200 );
     }
 
     string? w = n->get_prop( "width" );
@@ -1040,7 +1028,6 @@ public class Node : Object {
     node->new_prop( "id", _id.to_string() );
     node->new_prop( "posx", posx.to_string() );
     node->new_prop( "posy", posy.to_string() );
-    node->new_prop( "maxwidth", _max_width.to_string() );
     node->new_prop( "width", _width.to_string() );
     node->new_prop( "height", _height.to_string() );
     if( is_task() ) {
@@ -1164,12 +1151,12 @@ public class Node : Object {
   public virtual void resize( double diff ) {
     diff = resizer_on_left() ? (0 - diff) : diff;
     if( _image == null ) {
-      if( (diff < 0) ? ((_max_width + diff) <= _min_width) : !_name.is_wrapped() ) return;
-      _max_width += diff;
+      if( (diff < 0) ? ((style.node_width + diff) <= _min_width) : !_name.is_wrapped() ) return;
+      style.node_width += (int)diff;
     } else {
-      if( (_max_width + diff) < _min_width ) return;
-      _max_width += diff;
-      _image.set_width( (int)_max_width );
+      if( (style.node_width + diff) < _min_width ) return;
+      style.node_width += (int)diff;
+      _image.set_width( (int)style.node_width );
     }
     _name.resize( diff );
   }

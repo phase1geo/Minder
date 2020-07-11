@@ -550,7 +550,7 @@ public class ExportFreeplane : Object {
       }
 
       if( id != -1 ) {
-        node.set_image( da.image_manager, new NodeImage( da.image_manager, id, node.max_width() ) );
+        node.set_image( da.image_manager, new NodeImage( da.image_manager, id, node.style.node_width ) );
       }
 
     }

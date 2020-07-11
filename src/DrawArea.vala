@@ -599,7 +599,7 @@ public class DrawArea : Gtk.DrawingArea {
     _press_type         = EventType.NOTHING;
     _motion             = false;
     _attach_node        = null;
-    _orig_text          = new CanvasText( this, 0 );
+    _orig_text          = new CanvasText( this );
     _current_new        = false;
     _last_connection    = null;
 
@@ -912,8 +912,7 @@ public class DrawArea : Gtk.DrawingArea {
         var parent = (Gtk.Window)get_toplevel();
         var id     = image_manager.choose_image( parent );
         if( id != -1 ) {
-          var max_width = current.max_width();
-          current.set_image( image_manager, new NodeImage( image_manager, id, max_width ) );
+          current.set_image( image_manager, new NodeImage( image_manager, id, current.style.node_width ) );
           if( current.image != null ) {
             undo_buffer.add_item( new UndoNodeImage( current, null ) );
             queue_draw();
@@ -1198,7 +1197,7 @@ public class DrawArea : Gtk.DrawingArea {
       return( false );
     } else if( node.is_within_resizer( scaled_x, scaled_y ) ) {
       _resize     = true;
-      _orig_width = node.max_width();
+      _orig_width = node.style.node_width;
       return( true );
     } else if( !shift && control && node.name.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
       if( tag == FormatTag.URL ) {
@@ -1870,7 +1869,7 @@ public class DrawArea : Gtk.DrawingArea {
       _press_y = _scaled_y;
       _motion  = true;
 
-    /* If the Control key is held down, we are panning the canvas */
+    /* If the Alt key is held down, we are panning the canvas */
     } else if( alt ) {
 
       double diff_x = last_x - _scaled_x;
@@ -2557,7 +2556,7 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public Node create_child_node( Node parent, string name = "" ) {
     var node    = new Node.with_name( this, name, layouts.get_default() );
-    _orig_text = new CanvasText( this, 0 );
+    _orig_text = new CanvasText( this );
     if( !parent.is_root() ) {
       node.side = parent.side;
     }
@@ -2607,7 +2606,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Adds a new sibling node to the current node */
   public void add_sibling_node() {
     var node = create_sibling_node( _selected.current_node() );
-    _orig_text = new CanvasText( this, 0 );
+    _orig_text = new CanvasText( this );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE );
@@ -2637,7 +2636,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void add_child_node() {
     var current = _selected.current_node();
     var node    = create_child_node( current );
-    _orig_text = new CanvasText( this, 0 );
+    _orig_text = new CanvasText( this );
     undo_buffer.add_item( new UndoNodeInsert( node ) );
     set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE );
@@ -3789,7 +3788,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void replace_node_text( Node node, string text ) {
-    var orig_text = new CanvasText( this, 0 );
+    var orig_text = new CanvasText( this );
     orig_text.copy( node.name );
     node.name.text.replace_text( 0, node.name.text.text.char_count(), text.strip() );
     undo_buffer.add_item( new UndoNodeName( this, node, orig_text ) );
@@ -3807,7 +3806,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void replace_node_image( Node node, Pixbuf image ) {
-    var ni = new NodeImage.from_pixbuf( image_manager, image, node.max_width() );
+    var ni = new NodeImage.from_pixbuf( image_manager, image, node.style.node_width );
     if( ni.valid ) {
       var orig_image = node.image;
       node.set_image( image_manager, ni );
@@ -4060,7 +4059,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     } else if( (_attach_node.mode == NodeMode.DROPPABLE) && (data.get_uris().length == 1) ) {
 
-      var image = new NodeImage.from_uri( image_manager, data.get_uris()[0], _attach_node.max_width() );
+      var image = new NodeImage.from_uri( image_manager, data.get_uris()[0], _attach_node.style.node_width );
       if( image.valid ) {
         var orig_image = _attach_node.image;
         _attach_node.set_image( image_manager, image );
@@ -4080,7 +4079,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Sets the image of the current node to the given filename */
   public bool update_current_image( string uri ) {
     var current = _selected.current_node();
-    var image   = new NodeImage.from_uri( image_manager, uri, current.max_width() );
+    var image   = new NodeImage.from_uri( image_manager, uri, current.style.node_width );
     if( image.valid ) {
       var orig_image = current.image;
       current.set_image( image_manager, image );

@@ -113,6 +113,7 @@ public class Connection : Object {
     set {
       if( _style.copy( value ) && (_title != null) ) {
         _title.set_font( _style.connection_font.get_family(), (_style.connection_font.get_size() / Pango.SCALE) );
+        _title.max_width = _style.connection_title_width;
         position_title();
       }
     }
@@ -169,7 +170,7 @@ public class Connection : Object {
       _title = null;
     } else {
       if( title == null ) {
-        _title = new CanvasText( da, _max_width );
+        _title = new CanvasText( da );
         _title.resized.connect( position_title );
       }
       _title.copy( conn.title );
@@ -205,7 +206,7 @@ public class Connection : Object {
   /* Makes sure that the title is ready to be edited */
   public void edit_title_begin( DrawArea da ) {
     if( _title != null ) return;
-    _title = new CanvasText.with_text( da, _max_width, "" );
+    _title = new CanvasText.with_text( da, "" );
     _title.resized.connect( position_title );
     _title.set_font( style.connection_font.get_family(), (style.connection_font.get_size() / Pango.SCALE) );
     position_title();
@@ -226,7 +227,7 @@ public class Connection : Object {
       }
       _title = null;
     } else if( _title == null ) {
-      _title = new CanvasText.with_text( da, _max_width, title );
+      _title = new CanvasText.with_text( da, title );
       _title.resized.connect( position_title );
       _title.set_font( style.connection_font.get_family(), (style.connection_font.get_size() / Pango.SCALE) );
       position_title();
@@ -347,7 +348,7 @@ public class Connection : Object {
 
     double x, y, w, h;
     double bw     = node.style.node_borderwidth;
-    double extra  = bw + (style.connection_width / 2);
+    double extra  = bw + (style.connection_line_width / 2);
     double margin = node.style.node_margin;
 
     node.bbox( out x, out y, out w, out h );
@@ -636,10 +637,10 @@ public class Connection : Object {
     /* Draw the arrow */
     if( mode != ConnMode.SELECTED ) {
       if( (style.connection_arrow == "fromto") || (style.connection_arrow == "both") ) {
-        draw_arrow( ctx, style.connection_width, end_x, end_y, cx, cy );
+        draw_arrow( ctx, style.connection_line_width, end_x, end_y, cx, cy );
       }
       if( (style.connection_arrow == "tofrom") || (style.connection_arrow == "both") ) {
-        draw_arrow( ctx, style.connection_width, start_x, start_y, cx, cy );
+        draw_arrow( ctx, style.connection_line_width, start_x, start_y, cx, cy );
       }
     }
 

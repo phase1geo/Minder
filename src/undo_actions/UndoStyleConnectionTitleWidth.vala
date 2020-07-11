@@ -21,28 +21,28 @@
 
 using Gtk;
 
-public class UndoStyleConnectionWidth : UndoStyleChange {
+public class UndoStyleConnectionTitleWidth : UndoStyleChange {
 
   GenericArray<int> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleConnectionWidth( StyleAffects affects, int connection_width, DrawArea da ) {
+  public UndoStyleConnectionTitleWidth( StyleAffects affects, int title_width, DrawArea da ) {
     base( affects, da );
     _values = new GenericArray<int>();
-    _values.add( connection_width );
+    _values.add( title_width );
     load_styles( da );
   }
 
   protected override void load_style_value( Style style ) {
-    _values.add( style.connection_width );
+    _values.add( style.connection_title_width );
   }
 
   protected override void store_style_value( Style style, int index ) {
-    style.connection_width = _values.get( index );
+    style.connection_title_width = _values.get( index );
   }
 
   protected override void replace_with_item( UndoItem item ) {
-    _values.set( 0, ((UndoStyleConnectionWidth)item)._values.get( 0 ) );
+    _values.set( 0, ((UndoStyleConnectionTitleWidth)item)._values.get( 0 ) );
   }
 
 }

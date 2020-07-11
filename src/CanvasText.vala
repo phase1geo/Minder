@@ -109,10 +109,9 @@ public class CanvasText : Object {
   }
 
   /* Default constructor */
-  public CanvasText( DrawArea da, double max_width ) {
+  public CanvasText( DrawArea da ) {
     _text         = new FormattedText( da );
     _text.changed.connect( text_changed );
-    _max_width    = max_width;
     _line_layout  = da.create_pango_layout( "M" );
     _pango_layout = da.create_pango_layout( null );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
@@ -122,10 +121,9 @@ public class CanvasText : Object {
   }
 
   /* Constructor initializing string */
-  public CanvasText.with_text( DrawArea da, double max_width, string txt ) {
+  public CanvasText.with_text( DrawArea da, string txt ) {
     _text         = new FormattedText.with_text( da, txt );
     _text.changed.connect( text_changed );
-    _max_width    = max_width;
     _line_layout  = da.create_pango_layout( "M" );
     _pango_layout = da.create_pango_layout( txt );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );

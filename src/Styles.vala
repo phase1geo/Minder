@@ -90,16 +90,17 @@ public class Styles {
       } else {
         level.style.node_border = nb_underlined;
       }
-      level.style.node_width         = 200;
-      level.style.node_borderwidth   = 4;
-      level.style.node_fill          = false;
-      level.style.node_margin        = 8;
-      level.style.node_padding       = 6;
-      level.style.node_markup        = true;
-      level.style.connection_dash    = ld_dotted;
-      level.style.connection_width   = 2;
-      level.style.connection_arrow   = "fromto";
-      level.style.connection_padding = 3;
+      level.style.node_width             = 200;
+      level.style.node_borderwidth       = 4;
+      level.style.node_fill              = false;
+      level.style.node_margin            = 8;
+      level.style.node_padding           = 6;
+      level.style.node_markup            = true;
+      level.style.connection_dash        = ld_dotted;
+      level.style.connection_line_width  = 2;
+      level.style.connection_arrow       = "fromto";
+      level.style.connection_padding     = 3;
+      level.style.connection_title_width = 100;
       _styles.append_val( level );
     }
 

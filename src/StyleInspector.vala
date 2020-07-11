@@ -94,9 +94,10 @@ public class StyleInspector : Box {
   private Switch                     _node_markup;
   private Image                      _conn_dash;
   private Image                      _conn_arrow;
-  private Scale                      _conn_width;
+  private Scale                      _conn_lwidth;
   private Scale                      _conn_padding;
   private FontButton                 _conn_font;
+  private SpinButton                 _conn_twidth;
   private StyleAffects               _affects;
   private Array<Gtk.MenuItem>        _affect_items;
   private Label                      _affects_label;
@@ -217,11 +218,12 @@ public class StyleInspector : Box {
     });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
+    cbox.homogeneous  = true;
     cbox.border_width = 10;
 
     var branch_type = create_branch_type_ui();
 
-    cbox.pack_start( branch_type, false, true );
+    cbox.pack_start( branch_type, false, false );
 
     exp.add( cbox );
 
@@ -297,15 +299,16 @@ public class StyleInspector : Box {
     });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
+    cbox.homogeneous  = true;
     cbox.border_width = 10;
 
     var link_dash  = create_link_dash_ui();
     var link_width = create_link_width_ui();
     var link_arrow = create_link_arrow_ui();
 
-    cbox.pack_start( link_dash,  false, true );
-    cbox.pack_start( link_width, false, true );
-    cbox.pack_start( link_arrow, false, true );
+    cbox.pack_start( link_dash,  false, false );
+    cbox.pack_start( link_width, false, false );
+    cbox.pack_start( link_arrow, false, false );
 
     exp.add( cbox );
 
@@ -445,6 +448,7 @@ public class StyleInspector : Box {
     });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
+    cbox.homogeneous  = true;
     cbox.border_width = 10;
 
     var node_border      = create_node_border_ui();
@@ -456,14 +460,14 @@ public class StyleInspector : Box {
     var node_width       = create_node_width_ui();
     var node_markup      = create_node_markup_ui();
 
-    cbox.pack_start( node_border,      false, true );
-    cbox.pack_start( node_borderwidth, false, true );
-    cbox.pack_start( node_fill,        false, true );
-    cbox.pack_start( node_margin,      false, true );
-    cbox.pack_start( node_padding,     false, true );
-    cbox.pack_start( node_font,        false, true );
-    cbox.pack_start( node_width,       false, true );
-    cbox.pack_start( node_markup,      false, true );
+    cbox.pack_start( node_border,      false, false );
+    cbox.pack_start( node_borderwidth, false, false );
+    cbox.pack_start( node_fill,        false, false );
+    cbox.pack_start( node_margin,      false, false );
+    cbox.pack_start( node_padding,     false, false );
+    cbox.pack_start( node_font,        false, false );
+    cbox.pack_start( node_width,       false, false );
+    cbox.pack_start( node_markup,      false, false );
 
     exp.add( cbox );
 
@@ -572,7 +576,7 @@ public class StyleInspector : Box {
   private Box create_node_fill_ui() {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Fill With Link Color") );
+    var lbl = new Label( _( "Color Fill") );
     lbl.xalign = (float)0;
 
     _node_fill = new Switch();
@@ -761,19 +765,22 @@ public class StyleInspector : Box {
     });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
+    cbox.homogeneous  = true;
     cbox.border_width = 10;
 
     var conn_dash    = create_connection_dash_ui();
     var conn_arrow   = create_connection_arrow_ui();
-    var conn_width   = create_connection_width_ui();
+    var conn_lwidth  = create_connection_line_width_ui();
     var conn_padding = create_connection_padding_ui();
     var conn_font    = create_connection_font_ui();
+    var conn_twidth  = create_connection_title_width_ui();
 
-    cbox.pack_start( conn_dash,    false, true );
-    cbox.pack_start( conn_arrow,   false, true );
-    cbox.pack_start( conn_width,   false, true );
-    cbox.pack_start( conn_padding, false, true );
-    cbox.pack_start( conn_font,    false, true );
+    cbox.pack_start( conn_dash,    false, false );
+    cbox.pack_start( conn_arrow,   false, false );
+    cbox.pack_start( conn_lwidth,  false, false );
+    cbox.pack_start( conn_padding, false, false );
+    cbox.pack_start( conn_font,    false, false );
+    cbox.pack_start( conn_twidth,  false, false );
 
     _conn_exp.add( cbox );
 
@@ -862,7 +869,7 @@ public class StyleInspector : Box {
   }
 
   /* Create widget for handling the width of a connection */
-  private Box create_connection_width_ui() {
+  private Box create_connection_line_width_ui() {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
     box.homogeneous = true;
@@ -870,31 +877,31 @@ public class StyleInspector : Box {
     var lbl = new Label( _( "Line Width" ) );
     lbl.xalign = (float)0;
 
-    _conn_width = new Scale.with_range( Orientation.HORIZONTAL, 1, 8, 1 );
-    _conn_width.draw_value = false;
+    _conn_lwidth = new Scale.with_range( Orientation.HORIZONTAL, 1, 8, 1 );
+    _conn_lwidth.draw_value = false;
 
     for( int i=2; i<=8; i++ ) {
       if( (i % 2) == 0 ) {
-        _conn_width.add_mark( i, PositionType.BOTTOM, "%d".printf( i ) );
+        _conn_lwidth.add_mark( i, PositionType.BOTTOM, "%d".printf( i ) );
       } else {
-        _conn_width.add_mark( i, PositionType.BOTTOM, null );
+        _conn_lwidth.add_mark( i, PositionType.BOTTOM, null );
       }
     }
 
-    _conn_width.change_value.connect( connection_width_changed );
-    _conn_width.button_release_event.connect( connection_width_released );
+    _conn_lwidth.change_value.connect( connection_line_width_changed );
+    _conn_lwidth.button_release_event.connect( connection_line_width_released );
 
-    box.pack_start( lbl,         false, true );
-    box.pack_end(   _conn_width, false, true );
+    box.pack_start( lbl,          false, true );
+    box.pack_end(   _conn_lwidth, false, true );
 
     return( box );
 
   }
 
   /* Called whenever the user changes the link width value */
-  private bool connection_width_changed( ScrollType scroll, double value ) {
+  private bool connection_line_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
-    var width = new UndoStyleConnectionWidth( _affects, (int)value, _da );
+    var width = new UndoStyleConnectionLineWidth( _affects, (int)value, _da );
     if( _change_add ) {
       _da.undo_buffer.add_item( width );
       _change_add = false;
@@ -904,7 +911,7 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  private bool connection_width_released( EventButton e ) {
+  private bool connection_line_width_released( EventButton e ) {
     _change_add = true;
     return( false );
   }
@@ -954,7 +961,7 @@ public class StyleInspector : Box {
   private Box create_connection_font_ui() {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Font" ) );
+    var lbl = new Label( _( "Title Font" ) );
     lbl.xalign = (float)0;
 
     _conn_font = new FontButton();
@@ -967,6 +974,26 @@ public class StyleInspector : Box {
 
     box.pack_start( lbl,      false, true );
     box.pack_end( _conn_font, false, true );
+
+    return( box );
+
+  }
+
+  /* Creates the connection title width selector */
+  private Box create_connection_title_width_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Title Width" ) );
+    lbl.xalign = (float)0;
+
+    _conn_twidth = new SpinButton.with_range( 100, 400, 50 );
+    _conn_twidth.value_changed.connect(() => {
+      var width = (int)_conn_twidth.get_value();
+      _da.undo_buffer.add_item( new UndoStyleConnectionTitleWidth( _affects, width, _da ) );
+    });
+
+    box.pack_start( lbl,        false, true );
+    box.pack_end( _conn_twidth, false, true );
 
     return( box );
 
@@ -1168,8 +1195,9 @@ public class StyleInspector : Box {
     _node_width.set_value( (float)style.node_width );
     _node_markup.set_active( (bool)style.node_markup );
     _conn_arrow.surface = Connection.make_arrow_icon( style.connection_arrow );
-    _conn_width.set_value( (double)style.connection_width );
+    _conn_lwidth.set_value( (double)style.connection_line_width );
     _conn_font.set_font( style.connection_font.to_string() );
+    _conn_twidth.set_value( style.connection_title_width );
     _conn_padding.set_value( (double)style.connection_padding );
   }
 
