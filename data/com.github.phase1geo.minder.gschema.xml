@@ -151,10 +151,15 @@
       <summary>Last used connection type in Style properties</summary>
       <description>Last used connection type in Style properties</description>
     </key>
-    <key name="style-connection-width" type="i">
+    <key name="style-connection-line-width" type="i">
       <default>2</default>
-      <summary>Last used connection width in Style properties</summary>
-      <description>Last used connection width in Style properties</description>
+      <summary>Last used connection line width in Style properties</summary>
+      <description>Last used connection line width in Style properties</description>
+    </key>
+    <key name="style-connection-title-width" type="i">
+      <default>100</default>
+      <summary>Last used connection title width in Style properties</summary>
+      <description>Last used connection title width in Style properties</description>
     </key>
     <key name="style-connection-arrow" type="s">
       <default>"to"</default>

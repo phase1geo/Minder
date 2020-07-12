@@ -714,7 +714,7 @@ public class StyleInspector : Box {
     _node_width.set_value( _settings.get_int( "style-node-width" ) );
     _node_width.value_changed.connect(() => {
       var width = (int)_node_width.get_value();
-      _da.undo_buffer.add_item( new UndoStyleNodeWidth( _affects, width, _da ) );
+      _da.undo_buffer.replace_item( new UndoStyleNodeWidth( _affects, width, _da ) );
     });
 
     box.pack_start( lbl,       false, true );
@@ -987,9 +987,10 @@ public class StyleInspector : Box {
     lbl.xalign = (float)0;
 
     _conn_twidth = new SpinButton.with_range( 100, 400, 50 );
+    _conn_twidth.set_value( _settings.get_int( "style-connection-title-width" ) );
     _conn_twidth.value_changed.connect(() => {
       var width = (int)_conn_twidth.get_value();
-      _da.undo_buffer.add_item( new UndoStyleConnectionTitleWidth( _affects, width, _da ) );
+      _da.undo_buffer.replace_item( new UndoStyleConnectionTitleWidth( _affects, width, _da ) );
     });
 
     box.pack_start( lbl,        false, true );
