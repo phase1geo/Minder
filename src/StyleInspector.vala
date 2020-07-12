@@ -24,54 +24,16 @@ using Gdk;
 
 public enum StyleAffects {
 
-  ALL = 0,         // Applies changes to all nodes and connections
-  SELECTED,        // Applies changes to all selected nodes
-  SEP0,            // Indicates a separator (not a value)
-  CURRENT,         // Applies changes to the current node/connection
-  CURRTREE,        // Applies changes to the current tree
-  CURRSUBTREE,     // Applies changes to the current nodes and all descendants
-  SEP1,            // Indicates a separator (not a value)
-  LEVEL0,          // Applies changes to all root nodes
-  LEVEL1,          // Applies changes to all level-1 nodes
-  LEVEL2,          // Applies changes to all level-2 nodes
-  LEVEL3,          // Applies changes to all level-2 nodes
-  LEVEL4,          // Applies changes to all level-2 nodes
-  LEVEL5,          // Applies changes to all level-2 nodes
-  LEVEL6,          // Applies changes to all level-2 nodes
-  LEVEL7,          // Applies changes to all level-2 nodes
-  LEVEL8,          // Applies changes to all level-2 nodes
-  LEVEL9;          // Applies changes to all level-2 nodes
+  ALL = 0,    // Applies changes to all nodes and connections
+  SELECTION;  // Applies changes
 
   /* Displays the label to display for this enumerated value */
   public string label() {
     switch( this ) {
-      case ALL         :  return( _( "All" ) );
-      case SELECTED    :  return( _( "Selected" ) );
-      case CURRENT     :  return( _( "Current" ) );
-      case CURRTREE    :  return( _( "Current Tree" ) );
-      case CURRSUBTREE :  return( _( "Current Node + Descendants" ) );
-      case LEVEL0      :  return( _( "Root Nodes" ) );
-      case LEVEL1      :  return( _( "Level 1 Nodes" ) );
-      case LEVEL2      :  return( _( "Level 2 Nodes" ) );
-      case LEVEL3      :  return( _( "Level 3 Nodes" ) );
-      case LEVEL4      :  return( _( "Level 4 Nodes" ) );
-      case LEVEL5      :  return( _( "Level 5 Nodes" ) );
-      case LEVEL6      :  return( _( "Level 6 Nodes" ) );
-      case LEVEL7      :  return( _( "Level 7 Nodes" ) );
-      case LEVEL8      :  return( _( "Level 8 Nodes" ) );
-      case LEVEL9      :  return( _( "Level 9 Nodes" ) );
+      case ALL       :  return( _( "All" ) );
+      case SELECTION :  return( _( "Selection" ) );
     }
     return( "Unknown" );
-  }
-
-  /* Returns true if this is a separator */
-  public bool is_separator() {
-    return( (this == SEP0) || (this == SEP1) );
-  }
-
-  /* Returns the level associated with this value */
-  public uint level() {
-    return( (uint)this - (uint)LEVEL0 );
   }
 
 }
@@ -99,7 +61,6 @@ public class StyleInspector : Box {
   private FontButton                 _conn_font;
   private SpinButton                 _conn_twidth;
   private StyleAffects               _affects;
-  private Array<Gtk.MenuItem>        _affect_items;
   private Label                      _affects_label;
   private Box                        _branch_group;
   private Box                        _link_group;
@@ -165,39 +126,13 @@ public class StyleInspector : Box {
 
     var box  = new Box( Orientation.HORIZONTAL, 10 );
     var lbl  = new Label( Utils.make_title( _( "Changes affect:" ) ) );
-    var mb   = new MenuButton();
-    var menu = new Gtk.Menu();
+    lbl.use_markup = true;
 
     _affects_label = new Label( "" );
 
-    lbl.use_markup = true;
-
-    mb.add( _affects_label );
-    mb.popup = menu;
-
-    /* Allocate memory for menu items */
-    _affect_items = new Array<Gtk.MenuItem>();
-
-    /* Add all of the enumerations */
-    EnumClass eclass = (EnumClass)typeof( StyleAffects ).class_ref();
-    for( int i=0; i<eclass.n_values; i++ ) {
-      var affect = (StyleAffects)eclass.get_value( i ).value;
-      if( affect.is_separator() ) {
-        var mi = new Gtk.SeparatorMenuItem();
-        menu.add( mi );
-        _affect_items.append_val( mi );
-      } else {
-        var mi = new Gtk.MenuItem.with_label( affect.label() );
-        menu.add( mi );
-        mi.activate.connect(() => { set_affects( affect ); });
-        _affect_items.append_val( mi );
-      }
-    }
-    menu.show_all();
-
     /* Pack the menubutton box */
-    box.pack_start( lbl, false, false );
-    box.pack_start( mb,  true,  true );
+    box.pack_start( lbl,            false, false );
+    box.pack_start( _affects_label, true,  true );
 
     return( box );
 
@@ -1013,60 +948,22 @@ public class StyleInspector : Box {
         _conn_group.visible   = true;
         _conn_exp.expanded    = _settings.get_boolean( "style-connection-options-expanded" );
         break;
-      case StyleAffects.SELECTED :
-        update_ui_with_style( _da.get_selected_nodes().index( 0 ).style );
-        _branch_group.visible = true;
-        _link_group.visible   = true;
-        _node_group.visible   = true;
-        _conn_group.visible   = false;
-        break;
-      case StyleAffects.LEVEL0  :
-      case StyleAffects.LEVEL1  :
-      case StyleAffects.LEVEL2  :
-      case StyleAffects.LEVEL3  :
-      case StyleAffects.LEVEL4  :
-      case StyleAffects.LEVEL5  :
-      case StyleAffects.LEVEL6  :
-      case StyleAffects.LEVEL7  :
-      case StyleAffects.LEVEL8  :
-      case StyleAffects.LEVEL9  :
-        update_ui_with_style( styles.get_style_for_level( _affects.level(), null ) );
-        _branch_group.visible = true;
-        _link_group.visible   = (_affects != StyleAffects.LEVEL0);
-        _node_group.visible   = true;
-        _conn_group.visible   = false;
-        break;
-      case StyleAffects.CURRENT :
-        var node = _da.get_current_node();
-        var conn = _da.get_current_connection();
-        if( node != null ) {
-          update_ui_with_style( node.style );
+      case StyleAffects.SELECTION :
+        var selected = _da.get_selections();
+        if( selected.num_nodes() > 0 ) {
+          update_ui_with_style( selected.nodes().index( 0 ).style );
           _branch_group.visible = true;
           _link_group.visible   = true;
           _node_group.visible   = true;
           _conn_group.visible   = false;
-        } else if( conn != null ) {
-          update_ui_with_style( conn.style );
+        } else {
+          update_ui_with_style( selected.connections().index( 0 ).style );
           _branch_group.visible = false;
           _link_group.visible   = false;
           _node_group.visible   = false;
           _conn_group.visible   = true;
           _conn_exp.expanded    = true;
         }
-        break;
-      case StyleAffects.CURRTREE :
-        update_ui_with_style( _da.get_current_node().get_root().style );
-        _branch_group.visible = true;
-        _link_group.visible   = true;
-        _node_group.visible   = true;
-        _conn_group.visible   = false;
-        break;
-      case StyleAffects.CURRSUBTREE :
-        update_ui_with_style( _da.get_current_node().style );
-        _branch_group.visible = true;
-        _link_group.visible   = true;
-        _node_group.visible   = true;
-        _conn_group.visible   = false;
         break;
     }
   }
@@ -1089,7 +986,7 @@ public class StyleInspector : Box {
   private void update_link_types_state() {
     bool sensitive = false;
     switch( _affects ) {
-      case StyleAffects.ALL     :
+      case StyleAffects.ALL :
         for( int i=0; i<_da.get_nodes().length; i++ ) {
           if( !_da.get_nodes().index( i ).is_leaf() ) {
             sensitive = true;
@@ -1097,42 +994,17 @@ public class StyleInspector : Box {
           }
         }
         break;
-      case StyleAffects.SELECTED :
-        for( int i=0; i<_da.get_selected_nodes().length; i++ ) {
-          if( !_da.get_selected_nodes().index( i ).is_leaf() ) {
-            sensitive = true;
-            break;
+      case StyleAffects.SELECTION :
+        var selected = _da.get_selections();
+        if( selected.num_nodes() > 0 ) {
+          var nodes = selected.nodes();
+          for( int i=0; i<nodes.length; i++ ) {
+            if( !nodes.index( i ).is_leaf() ) {
+              sensitive = true;
+              break;
+            }
           }
         }
-        break;
-      case StyleAffects.LEVEL0  :
-      case StyleAffects.LEVEL1  :
-      case StyleAffects.LEVEL2  :
-      case StyleAffects.LEVEL3  :
-      case StyleAffects.LEVEL4  :
-      case StyleAffects.LEVEL5  :
-      case StyleAffects.LEVEL6  :
-      case StyleAffects.LEVEL7  :
-      case StyleAffects.LEVEL8  :
-      case StyleAffects.LEVEL9  :
-        for( int i=0; i<_da.get_nodes().length; i++ ) {
-          if( check_level_for_branches( _da.get_nodes().index( i ), (1 << (int)_affects.level()), 0 ) ) {
-            sensitive = true;
-            break;
-          }
-        }
-        break;
-      case StyleAffects.CURRENT :
-        var nodes = _da.get_selected_nodes();
-        for( int i=0; i<nodes.length; i++ ) {
-          sensitive |= !nodes.index( i ).is_leaf();
-        }
-        break;
-      case StyleAffects.CURRTREE :
-        sensitive = !_da.get_current_node().get_root().is_leaf();
-        break;
-      case StyleAffects.CURRSUBTREE :
-        sensitive = !_da.get_current_node().is_leaf();
         break;
     }
     _link_types.set_sensitive( sensitive );
@@ -1214,36 +1086,11 @@ public class StyleInspector : Box {
 
   /* Called whenever the current node or connection changes */
   private void handle_ui_changed() {
-    var nodes = _da.get_selected_nodes().length;
-    var conns = _da.get_selected_connections().length;
-    for( int i=0; i<_affect_items.length; i++ ) {
-      var entry = _affect_items.index( i );
-      switch( i ) {
-        case StyleAffects.SEP0        :
-        case StyleAffects.CURRENT     :  entry.visible = (nodes > 0) || (conns > 0);  break;
-        case StyleAffects.CURRTREE    :
-        case StyleAffects.CURRSUBTREE :
-        case StyleAffects.SEP1        :
-        case StyleAffects.LEVEL0      :
-        case StyleAffects.LEVEL1      :
-        case StyleAffects.LEVEL2      :
-        case StyleAffects.LEVEL3      :
-        case StyleAffects.LEVEL4      :
-        case StyleAffects.LEVEL5      :
-        case StyleAffects.LEVEL6      :
-        case StyleAffects.LEVEL7      :
-        case StyleAffects.LEVEL8      :
-        case StyleAffects.LEVEL9      :  entry.visible = (nodes == 1);  break;
-      }
-    }
-    if( (nodes > 0) || (conns > 0) ) {
-      if( (nodes != 1) && (_affects > StyleAffects.CURRENT) ) {
-        set_affects( StyleAffects.CURRENT );
-      } else if( nodes > 1 ) {
-        set_affects( StyleAffects.SELECTED );
-      }
-    } else {
+    var selected = _da.get_selections();
+    if( (selected.num_nodes() == 0) && (selected.num_connections() == 0) ) {
       set_affects( StyleAffects.ALL );
+    } else {
+      set_affects( StyleAffects.SELECTION );
     }
   }
 

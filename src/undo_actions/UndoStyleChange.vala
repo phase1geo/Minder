@@ -81,59 +81,24 @@ public class UndoStyleChange : UndoItem {
             store_style_value( new_style, 0 );
             StyleInspector.styles.set_all_to_style( new_style );
           }
-          da.current_changed( da );
         }
         break;
-      case StyleAffects.SELECTED    :
-        if( da.get_selected_nodes().length > 0 ) {
-          for( int i=0; i<da.get_selected_nodes().length; i++ ) {
-            set_node_style( da.get_selected_nodes().index( i ), change_type, ref index );
+      case StyleAffects.SELECTION   :
+        var selected = da.get_selections();
+        if( selected.num_nodes() > 0 ) {
+          var nodes = selected.nodes();
+          for( int i=0; i<nodes.length; i++ ) {
+            set_node_style( nodes.index( i ), change_type, ref index );
           }
-          da.current_changed( da );
-        }
-        break;
-      case StyleAffects.LEVEL0      :
-      case StyleAffects.LEVEL1      :
-      case StyleAffects.LEVEL2      :
-      case StyleAffects.LEVEL3      :
-      case StyleAffects.LEVEL4      :
-      case StyleAffects.LEVEL5      :
-      case StyleAffects.LEVEL6      :
-      case StyleAffects.LEVEL7      :
-      case StyleAffects.LEVEL8      :
-      case StyleAffects.LEVEL9      :
-        for( int i=0; i<da.get_nodes().length; i++ ) {
-          set_style_for_level( da.get_nodes().index( i ), (1 << (int)_affects.level()), change_type, ref index, 0 );
-        }
-        if( change_type == StyleChangeType.LOAD ) {
-          Style new_style = new Style.templated();
-          store_style_value( new_style, 0 );
-          StyleInspector.styles.set_levels_to_style( (1 << (int)_affects.level()), new_style );
-        }
-        da.current_changed( da );
-        break;
-      case StyleAffects.CURRENT     :
-        if( _nodes.length > 0 ) {
-          for( int i=0; i<_nodes.length; i++ ) {
-            set_node_style( _nodes.index( i ), change_type, ref index );
-          }
-          da.current_changed( da );
         } else {
-          for( int i=0; i<_conns.length; i++ ) {
-            set_connection_style( _conns.index( i ), change_type, ref index );
+          var conns = selected.connections();
+          for( int i=0; i<conns.length; i++ ) {
+            set_connection_style( conns.index( i ), change_type, ref index );
           }
-          da.current_changed( da );
         }
-        break;
-      case StyleAffects.CURRTREE    :
-        set_style_for_tree( _nodes.index( 0 ).get_root(), change_type, ref index );
-        da.current_changed( da );
-        break;
-      case StyleAffects.CURRSUBTREE :
-        set_style_for_tree( _nodes.index( 0 ), change_type, ref index );
-        da.current_changed( da );
         break;
     }
+    da.current_changed( da );
     da.changed();
     da.queue_draw();
   }
