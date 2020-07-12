@@ -24,14 +24,16 @@ using Gdk;
 
 public enum StyleAffects {
 
-  ALL = 0,    // Applies changes to all nodes and connections
-  SELECTION;  // Applies changes
+  ALL = 0,               // Applies changes to all nodes and connections
+  SELECTED_NODES,        // Applies changes to selected nodes
+  SELECTED_CONNECTIONS;  // Applies changes to selected connections
 
   /* Displays the label to display for this enumerated value */
   public string label() {
     switch( this ) {
-      case ALL       :  return( _( "All" ) );
-      case SELECTION :  return( _( "Selection" ) );
+      case ALL                  :  return( _( "All" ) );
+      case SELECTED_NODES       :  return( _( "Selected Nodes" ) );
+      case SELECTED_CONNECTIONS :  return( _( "Selected Connections" ) );
     }
     return( "Unknown" );
   }
@@ -937,6 +939,7 @@ public class StyleInspector : Box {
 
   /* Sets the affects value and save the change to the settings */
   private void set_affects( StyleAffects affects ) {
+    var selected         = _da.get_selections();
     _affects             = affects;
     _affects_label.label = affects.label();
     switch( _affects ) {
@@ -948,22 +951,20 @@ public class StyleInspector : Box {
         _conn_group.visible   = true;
         _conn_exp.expanded    = _settings.get_boolean( "style-connection-options-expanded" );
         break;
-      case StyleAffects.SELECTION :
-        var selected = _da.get_selections();
-        if( selected.num_nodes() > 0 ) {
-          update_ui_with_style( selected.nodes().index( 0 ).style );
-          _branch_group.visible = true;
-          _link_group.visible   = true;
-          _node_group.visible   = true;
-          _conn_group.visible   = false;
-        } else {
-          update_ui_with_style( selected.connections().index( 0 ).style );
-          _branch_group.visible = false;
-          _link_group.visible   = false;
-          _node_group.visible   = false;
-          _conn_group.visible   = true;
-          _conn_exp.expanded    = true;
-        }
+      case StyleAffects.SELECTED_NODES :
+        update_ui_with_style( selected.nodes().index( 0 ).style );
+        _branch_group.visible = true;
+        _link_group.visible   = true;
+        _node_group.visible   = true;
+        _conn_group.visible   = false;
+        break;
+      case StyleAffects.SELECTED_CONNECTIONS :
+        update_ui_with_style( selected.connections().index( 0 ).style );
+        _branch_group.visible = false;
+        _link_group.visible   = false;
+        _node_group.visible   = false;
+        _conn_group.visible   = true;
+        _conn_exp.expanded    = true;
         break;
     }
   }
@@ -986,23 +987,12 @@ public class StyleInspector : Box {
   private void update_link_types_state() {
     bool sensitive = false;
     switch( _affects ) {
-      case StyleAffects.ALL :
+      case StyleAffects.ALL            :
+      case StyleAffects.SELECTED_NODES :
         for( int i=0; i<_da.get_nodes().length; i++ ) {
           if( !_da.get_nodes().index( i ).is_leaf() ) {
             sensitive = true;
             break;
-          }
-        }
-        break;
-      case StyleAffects.SELECTION :
-        var selected = _da.get_selections();
-        if( selected.num_nodes() > 0 ) {
-          var nodes = selected.nodes();
-          for( int i=0; i<nodes.length; i++ ) {
-            if( !nodes.index( i ).is_leaf() ) {
-              sensitive = true;
-              break;
-            }
           }
         }
         break;
@@ -1087,10 +1077,12 @@ public class StyleInspector : Box {
   /* Called whenever the current node or connection changes */
   private void handle_ui_changed() {
     var selected = _da.get_selections();
-    if( (selected.num_nodes() == 0) && (selected.num_connections() == 0) ) {
-      set_affects( StyleAffects.ALL );
+    if( selected.num_nodes() > 0 ) {
+      set_affects( StyleAffects.SELECTED_NODES );
+    } else if( selected.num_connections() > 0 ) {
+      set_affects( StyleAffects.SELECTED_CONNECTIONS );
     } else {
-      set_affects( StyleAffects.SELECTION );
+      set_affects( StyleAffects.ALL );
     }
   }
 

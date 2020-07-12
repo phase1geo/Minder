@@ -64,7 +64,8 @@ public class UndoStyleChange : UndoItem {
   }
 
   private void traverse_styles( DrawArea da, StyleChangeType change_type ) {
-    int index = 1;
+    var index    = 1;
+    var selected = da.get_selections();
     switch( _affects ) {
       case StyleAffects.ALL         :
         {
@@ -83,18 +84,16 @@ public class UndoStyleChange : UndoItem {
           }
         }
         break;
-      case StyleAffects.SELECTION   :
-        var selected = da.get_selections();
-        if( selected.num_nodes() > 0 ) {
-          var nodes = selected.nodes();
-          for( int i=0; i<nodes.length; i++ ) {
-            set_node_style( nodes.index( i ), change_type, ref index );
-          }
-        } else {
-          var conns = selected.connections();
-          for( int i=0; i<conns.length; i++ ) {
-            set_connection_style( conns.index( i ), change_type, ref index );
-          }
+      case StyleAffects.SELECTED_NODES :
+        var nodes = selected.nodes();
+        for( int i=0; i<nodes.length; i++ ) {
+          set_node_style( nodes.index( i ), change_type, ref index );
+        }
+        break;
+      case StyleAffects.SELECTED_CONNECTIONS :
+        var conns = selected.connections();
+        for( int i=0; i<conns.length; i++ ) {
+          set_connection_style( conns.index( i ), change_type, ref index );
         }
         break;
     }
