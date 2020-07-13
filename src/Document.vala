@@ -94,7 +94,7 @@ public class Document : Object {
 
   /* Opens the given filename */
   public bool load() {
-    Xml.Doc* doc = Xml.Parser.parse_file( filename );
+    Xml.Doc* doc = Xml.Parser.read_file( filename, null, Xml.ParserOption.HUGE );
     if( doc == null ) {
       return( false );
     }
