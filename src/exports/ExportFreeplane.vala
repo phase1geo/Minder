@@ -224,7 +224,7 @@ public class ExportFreeplane : Object {
     var ifile = File.new_for_path( Path.get_dirname( fname ) );
 
     /* Read in the contents of the Freemind file */
-    var doc = Xml.Parser.parse_file( fname );
+    var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
     if( doc == null ) {
       return( false );
     }
