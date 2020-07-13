@@ -140,6 +140,10 @@ public class Minder : Granite.Application {
     var app = new Minder();
     app.parse_arguments( ref args );
 
+    stdout.printf( "Markdown from HTML:\n" );
+    stdout.printf( HtmlToMarkdown.parse_file( "/home/trevorw/Documents/release_notes_1-4-0.html" ) );
+    stdout.printf( "END\n" );
+
     if( testing ) {
       Gtk.init( ref args );
       var testing = new App.Tests.Testing( args );

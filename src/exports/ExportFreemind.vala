@@ -222,12 +222,13 @@ public class ExportFreemind : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "node"      :  import_node( it, da, node, color_map, id_map, link_ids, to_nodes );  break;
-          case "edge"      :  import_edge( it, node );  break;
-          case "font"      :  import_font( it, node );  break;
-          case "icon"      :  break;  // Not implemented
-          case "cloud"     :  break;  // Not implemented
-          case "arrowlink" :  import_arrowlink( it, da, node, to_nodes );  break;
+          case "node"        :  import_node( it, da, node, color_map, id_map, link_ids, to_nodes );  break;
+          case "edge"        :  import_edge( it, node );  break;
+          case "font"        :  import_font( it, node );  break;
+          case "icon"        :  break;  // Not implemented
+          case "cloud"       :  break;  // Not implemented
+          case "arrowlink"   :  import_arrowlink( it, da, node, to_nodes );  break;
+          case "richcontent" :  import_richcontent( it, da, node );  break;
         }
       }
     }
@@ -327,6 +328,21 @@ public class ExportFreemind : Object {
 
     /* Add the connection to the connections list */
     da.get_connections().add_connection( conn );
+
+  }
+
+  /* Parses richcontent for a note.  If found parses the note */
+  private static void import_richcontent( Xml.Node* n, DrawArea da, Node node ) {
+
+    string? t = n->get_prop( "TYPE" );
+    if( (t != null) && (t == "NOTE") ) {
+      for( Xml.Node* it = n->children; it != null; it = it->next ) {
+        if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "html") ) {
+          HtmlToMarkdown.reset();
+          node.note = HtmlToMarkdown.parse_xml( it ).strip();
+        }
+      }
+    }
 
   }
 
