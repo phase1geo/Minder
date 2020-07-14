@@ -337,7 +337,7 @@ public class ExportFreemind : Object {
     string? t = n->get_prop( "TYPE" );
     if( (t != null) && (t == "NOTE") ) {
       for( Xml.Node* it = n->children; it != null; it = it->next ) {
-        if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "html") ) {
+        if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name.down() == "html") ) {
           HtmlToMarkdown.reset();
           node.note = HtmlToMarkdown.parse_xml( it ).strip();
         }
