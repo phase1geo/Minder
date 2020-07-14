@@ -136,6 +136,7 @@ sources += files(
     'EmptyInspector.vala',
     'EmptyMenu.vala',
     'FormattedText.vala',
+    'HtmlToMarkdown.vala',
     'ImageEditor.vala',
     'ImageManager.vala',
     'Layout.vala',
