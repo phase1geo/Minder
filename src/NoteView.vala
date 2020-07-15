@@ -68,6 +68,8 @@ public class NoteView : Gtk.SourceView {
   /* Default constructor */
   public NoteView() {
 
+    get_style_context().add_class( "textfield" );
+
     var manager       = Gtk.SourceLanguageManager.get_default();
     var language      = manager.guess_language( null, "text/markdown" );
     var style_manager = Gtk.SourceStyleSchemeManager.get_default();

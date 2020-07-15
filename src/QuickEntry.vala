@@ -44,6 +44,7 @@ public class QuickEntry : Gtk.Window {
     _entry = new TextView();
     _entry.border_width = 5;
     _entry.set_wrap_mode( Gtk.WrapMode.WORD );
+    _entry.get_style_context().add_class( "textfield" );
     _entry.key_press_event.connect( on_keypress );
     _entry.buffer.insert_text.connect( handle_text_insertion );
 

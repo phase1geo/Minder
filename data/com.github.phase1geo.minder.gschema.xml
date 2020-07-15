@@ -96,11 +96,6 @@
       <summary>Unique ID added to image names</summary>
       <description>Specifies the current unique image ID value</description>
     </key>
-    <key name="style-affects" type="i">
-      <default>10</default>
-      <summary>Last used affects value in Style properties</summary>
-      <description>Last used affects value in Style properties</description>
-    </key>
     <key name="style-link-type" type="s">
       <default>"curved"</default>
       <summary>Last used link type style in Style properties</summary>
@@ -225,6 +220,11 @@
       <default>true</default>
       <summary>If set to true, rotates link colors in the main branches when adding.  If set to false, the same color will be used as the last color.</summary>
       <description>If set to true, rotates link colors in the main branches when adding.  If set to false, the same color will be used as the last color.</description>
+    </key>
+    <key name="text-field-font-size" type="i">
+      <default>-1</default>
+      <summary>Specifies the font size to use in text editing fields (i.e, quick entry or notes field)</summary>
+      <description>Specifies the font size to use in text editing fields (i.e, quick entry or notes field).  A value of -1 specifies to use the system font size.</description>
     </key>
   </schema>
 </schemalist>

@@ -72,6 +72,7 @@ public class MainWindow : ApplicationWindow {
   private bool              _debug          = false;
   private ThemeEditor       _themer;
   private Label             _scale_lbl;
+  private int               _text_size;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",          action_save },
@@ -218,6 +219,16 @@ public class MainWindow : ApplicationWindow {
     } else if( _settings.get_boolean( "style-properties-shown" ) ) {
       show_properties( "style", false );
     }
+
+    /* Look for any changes to the settings */
+    _text_size = settings.get_int( "text-field-font-size" );
+    settings.changed.connect(() => {
+      var text_size = settings.get_int( "text-field-font-size" );
+      if( _text_size != text_size ) {
+        get_current_da( "settings changed" ).update_css();
+        _text_size = text_size;
+      }
+    });
 
   }
 

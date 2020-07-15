@@ -182,13 +182,16 @@ public class Theme : Object {
   }
 
   /* Returns the CSS provider for this theme */
-  public CssProvider get_css_provider() {
+  public CssProvider get_css_provider( int text_size ) {
     CssProvider provider = new CssProvider();
     try {
+      var tv_size  = (text_size == -1) ? ".textfield { font: 1em \"Sans\" } " :
+                                         ".textfield { font: %dpx \"Sans\"; } ".printf( text_size );
       var css_data = "@define-color colorPrimary #603461; " +
                      "@define-color textColorPrimary @SILVER_100; " +
                      "@define-color colorAccent #603461; " +
                      "@define-color tab_base_color " + get_color( "background" ).to_string() + ";" +
+                     tv_size +
                      ".theme-selected { background: #087DFF; } " +
                      ".canvas { background: " + get_color( "background" ).to_string() + "; }";
       provider.load_from_data( css_data );

@@ -281,11 +281,7 @@ public class DrawArea : Gtk.DrawingArea {
     _theme        = theme;
     _theme.index  = (orig_theme != null) ? orig_theme.index : -1;
     _theme.rotate = _settings.get_boolean( "rotate-main-link-colors" );
-    StyleContext.add_provider_for_screen(
-      Screen.get_default(),
-      _theme.get_css_provider(),
-      STYLE_PROVIDER_PRIORITY_APPLICATION
-    );
+    update_css();
     if( orig_theme != null ) {
       map_theme_colors( orig_theme );
     }
@@ -294,6 +290,15 @@ public class DrawArea : Gtk.DrawingArea {
     if( save ) {
       changed();
     }
+  }
+
+  /* Updates the CSS for the current theme */
+  public void update_css() {
+    StyleContext.add_provider_for_screen(
+      Screen.get_default(),
+      _theme.get_css_provider( settings.get_int( "text-field-font-size" ) ),
+      STYLE_PROVIDER_PRIORITY_APPLICATION
+    );
   }
 
   /* Updates all nodes with the new theme colors */
@@ -420,11 +425,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Get the theme */
     _theme = win.themes.get_theme( theme.name );
-    StyleContext.add_provider_for_screen(
-      Screen.get_default(),
-      _theme.get_css_provider(),
-      STYLE_PROVIDER_PRIORITY_APPLICATION
-    );
+    update_css();
 
     theme_changed( this );
 
