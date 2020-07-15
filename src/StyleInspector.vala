@@ -70,6 +70,7 @@ public class StyleInspector : Box {
   private Box                        _conn_group;
   private Expander                   _conn_exp;
   private bool                       _change_add = true;
+  private bool                       _ignore     = false;
 
   public static Styles styles = new Styles();
 
@@ -647,11 +648,13 @@ public class StyleInspector : Box {
     var lbl = new Label( _( "Width" ) );
     lbl.xalign = (float)0;
 
-    _node_width = new SpinButton.with_range( 200, 2000, 100 );
+    _node_width = new SpinButton.with_range( 200, 1000, 100 );
     _node_width.set_value( _settings.get_int( "style-node-width" ) );
     _node_width.value_changed.connect(() => {
-      var width = (int)_node_width.get_value();
-      _da.undo_buffer.replace_item( new UndoStyleNodeWidth( _affects, width, _da ) );
+      if( !_ignore ) {
+        var width = (int)_node_width.get_value();
+        _da.undo_buffer.replace_item( new UndoStyleNodeWidth( _affects, width, _da ) );
+      }
     });
 
     box.pack_start( lbl,       false, true );
@@ -926,8 +929,10 @@ public class StyleInspector : Box {
     _conn_twidth = new SpinButton.with_range( 100, 400, 50 );
     _conn_twidth.set_value( _settings.get_int( "style-connection-title-width" ) );
     _conn_twidth.value_changed.connect(() => {
-      var width = (int)_conn_twidth.get_value();
-      _da.undo_buffer.replace_item( new UndoStyleConnectionTitleWidth( _affects, width, _da ) );
+      if( !_ignore ) {
+        var width = (int)_conn_twidth.get_value();
+        _da.undo_buffer.replace_item( new UndoStyleConnectionTitleWidth( _affects, width, _da ) );
+      }
     });
 
     box.pack_start( lbl,        false, true );
@@ -1043,6 +1048,7 @@ public class StyleInspector : Box {
 
   /* Update the user interface elements to match the selected level */
   private void update_ui_with_style( Style style ) {
+    _ignore = true;
     update_link_types_with_style( style );
     update_link_dashes_with_style( style );
     update_node_borders_with_style( style );
@@ -1062,6 +1068,7 @@ public class StyleInspector : Box {
     _conn_font.set_font( style.connection_font.to_string() );
     _conn_twidth.set_value( style.connection_title_width );
     _conn_padding.set_value( (double)style.connection_padding );
+    _ignore = false;
   }
 
   /* Called whenever the current node changes */
