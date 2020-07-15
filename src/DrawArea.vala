@@ -403,7 +403,7 @@ public class DrawArea : Gtk.DrawingArea {
     string? sf = n->get_prop( "scale" );
     if( sf != null ) {
       sfactor = double.parse( sf );
-      scale_changed( sfactor );
+      scale_changed( (sfactor > 0) ? sfactor : 1.0 );
     }
 
   }
