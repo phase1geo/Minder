@@ -904,8 +904,11 @@ public class CanvasText : Object {
       layout.set_attributes( attrs );
     }
 
+    Pango.Rectangle ink_rect, log_rect;
+    layout.get_extents( out ink_rect, out log_rect );
+
     /* Output the text */
-    ctx.move_to( posx, posy );
+    ctx.move_to( (posx - (log_rect.x / Pango.SCALE)), posy );
     Utils.set_context_color_with_alpha( ctx, fg, alpha );
     Pango.cairo_show_layout( ctx, layout );
     ctx.new_path();
@@ -916,7 +919,7 @@ public class CanvasText : Object {
       var rect = layout.index_to_pos( cpos );
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "text_cursor" ), alpha );
       double ix, iy;
-      ix = posx + (rect.x / Pango.SCALE) - 1;
+      ix = (posx + (rect.x / Pango.SCALE) - 1) - (log_rect.x / Pango.SCALE);
       iy = posy + (rect.y / Pango.SCALE);
       ctx.rectangle( ix, iy, 1, (rect.height / Pango.SCALE) );
       ctx.fill();
