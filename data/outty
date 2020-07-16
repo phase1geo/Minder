@@ -1,33 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<gresources>
-  <gresource prefix="/com/github/phase1geo/minder">
-    <file alias="Application.css" compressed="true">Application.css</file>
-    <file alias="shortcuts.ui" compressed="true">com.github.phase1geo.minder.shortcuts.ui</file>
-    <file alias="minder-balance-symbolic.svg">icons/16/minder-balance-symbolic.svg</file>
-    <file alias="minder-detach-symbolic.svg">icons/16/minder-detach-symbolic.svg</file>
-    <file alias="minder-fold-completed-symbolic.svg">icons/16/minder-fold-completed-symbolic.svg</file>
-    <file alias="minder-layout-down-symbolic.svg">icons/16/minder-layout-down-symbolic.svg</file>
-    <file alias="minder-layout-horizontal-symbolic.svg">icons/16/minder-layout-horizontal-symbolic.svg</file>
-    <file alias="minder-layout-left-symbolic.svg">icons/16/minder-layout-left-symbolic.svg</file>
-    <file alias="minder-layout-manual-symbolic.svg">icons/16/minder-layout-manual-symbolic.svg</file>
-    <file alias="minder-layout-right-symbolic.svg">icons/16/minder-layout-right-symbolic.svg</file>
-    <file alias="minder-layout-up-symbolic.svg">icons/16/minder-layout-up-symbolic.svg</file>
-    <file alias="minder-layout-vertical-symbolic.svg">icons/16/minder-layout-vertical-symbolic.svg</file>
-    <file alias="minder-unfold-symbolic.svg">icons/16/minder-unfold-symbolic.svg</file>
-    <file alias="minder-link-curved-symbolic.svg">icons/16/minder-link-curved-symbolic.svg</file>
-    <file alias="minder-link-straight-symbolic.svg">icons/16/minder-link-straight-symbolic.svg</file>
-    <file alias="minder-link-squared-symbolic.svg">icons/16/minder-link-squared-symbolic.svg</file>
-    <file alias="minder-node-border-none-symbolic.svg">icons/16/minder-node-border-none-symbolic.svg</file>
-    <file alias="minder-node-border-underlined-symbolic.svg">icons/16/minder-node-border-underlined-symbolic.svg</file>
-    <file alias="minder-node-border-bracket-symbolic.svg">icons/16/minder-node-border-bracket-symbolic.svg</file>
-    <file alias="minder-node-border-squared-symbolic.svg">icons/16/minder-node-border-squared-symbolic.svg</file>
-    <file alias="minder-node-border-rounded-symbolic.svg">icons/16/minder-node-border-rounded-symbolic.svg</file>
-    <file alias="minder-node-border-pill-symbolic.svg">icons/16/minder-node-border-pill-symbolic.svg</file>
-    <file alias="minder-focus.svg">icons/16/minder-focus.svg</file>
-    <file alias="minder-sidebar-open.svg">icons/scalable/mindi-sidebar-open.svg</file>
-    <file alias="minder-sidebar-close.svg">icons/scalable/mindi-sidebar-close.svg</file>
-    <file alias="minder-search.svg">icons/scalable/minder-search.svg</file>
-
     <file alias="data_encryption.svg">icons/flat-color-icons/svg/data_encryption.svg</file>
     <file alias="factory_breakdown.svg">icons/flat-color-icons/svg/factory_breakdown.svg</file>
     <file alias="like_placeholder.svg">icons/flat-color-icons/svg/like_placeholder.svg</file>
@@ -357,5 +327,3 @@
     <file alias="full_trash.svg">icons/flat-color-icons/svg/full_trash.svg</file>
     <file alias="linux.svg">icons/flat-color-icons/svg/linux.svg</file>
     <file alias="multiple_cameras.svg">icons/flat-color-icons/svg/multiple_cameras.svg</file>
-  </gresource>
-</gresources>
