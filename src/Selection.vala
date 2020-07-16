@@ -25,6 +25,8 @@ public class Selection {
   private Array<Node>       _nodes;
   private Array<Connection> _conns;
 
+  public signal void selection_changed();
+
   /* Default constructor */
   public Selection( DrawArea da ) {
     _da    = da;
@@ -64,59 +66,86 @@ public class Selection {
 
   /* Sets the current node, clearing all other selected nodes and connections */
   public void set_current_node( Node node, double clear_alpha = 1.0 ) {
-    clear( clear_alpha );
+    clear( false, clear_alpha );
     add_node( node );
   }
 
   /* Sets the current connection, clearing all other selected nodes and connections */
   public void set_current_connection( Connection conn, double clear_alpha = 1.0 ) {
-    clear( clear_alpha );
+    clear( false, clear_alpha );
     add_connection( conn );
   }
 
   /* Adds a node to the current selection.  Returns true if the node was added. */
-  public bool add_node( Node node ) {
+  public bool add_node( Node node, bool signal_change = true ) {
     if( is_node_selected( node ) || ((node.parent != null) && node.parent.folded) ) return( false );
     node.mode = (_nodes.length == 0) ? NodeMode.CURRENT : NodeMode.SELECTED;
     if( _nodes.length == 1 ) {
       _nodes.index( 0 ).mode = NodeMode.SELECTED;
     }
     _nodes.append_val( node );
+    if( signal_change ) {
+      selection_changed();
+    }
     return( true );
   }
 
   /* Adds the children nodes of the current node */
-  public void add_child_nodes( Node node ) {
+  public bool add_child_nodes( Node node, bool signal_change = true ) {
     var children = node.children();
+    var changed  = false;
     for( int i=0; i<children.length; i++ ) {
-      add_node( children.index( i ) );
+      changed |= add_node( children.index( i ), false );
     }
+    if( changed && signal_change ) {
+      selection_changed();
+    }
+    return( changed );
   }
 
   /* Adds the entire node tree to the selection */
-  public void add_node_tree( Node node ) {
-    var children = node.children();
-    add_node( node );
-    for( int i=0; i<children.length; i++ ) {
-      add_node_tree( children.index( i ) );
+  public bool add_node_tree( Node node ) {
+    if( add_node_tree_helper( node ) ) {
+      selection_changed();
+      return( true );
     }
+    return( false );
+  }
+
+  /* Helper method to add the entire node tree to the selection */
+  private bool add_node_tree_helper( Node node ) {
+    var children = node.children();
+    var changed  = add_node( node, false );
+    for( int i=0; i<children.length; i++ ) {
+      changed |= add_node_tree_helper( children.index( i ) );
+    }
+    return( changed );
   }
 
   /* Adds all of the nodes at the specified node's level to the selection */
-  public void add_nodes_at_level( Node node ) {
+  public bool add_nodes_at_level( Node node ) {
     var level = node.get_level();
     var root  = node.get_root();
-    add_nodes_at_level_helper( root, level, 0 );
+    if( add_nodes_at_level_helper( root, level, 0 ) ) {
+      selection_changed();
+      return( true );
+    }
+    return( false );
   }
 
-  private void add_nodes_at_level_helper( Node node, uint level, uint curr_level ) {
+  private bool add_nodes_at_level_helper( Node node, uint level, uint curr_level ) {
     if( level == curr_level ) {
-      add_node( node );
+      return( add_node( node, false ) );
     } else {
       var children = node.children();
+      var changed  = false;
       for( int i=0; i<children.length; i++ ) {
-        add_nodes_at_level_helper( children.index( i ), level, (curr_level + 1) );
+        changed |= add_nodes_at_level_helper( children.index( i ), level, (curr_level + 1) );
       }
+      if( changed ) {
+        selection_changed();
+      }
+      return( changed );
     }
   }
 
@@ -125,6 +154,7 @@ public class Selection {
     if( is_connection_selected( conn ) ) return( false );
     conn.mode = ConnMode.SELECTED;
     _conns.append_val( conn );
+    selection_changed();
     return( true );
   }
 
@@ -132,7 +162,7 @@ public class Selection {
    Removes the given node from the current selection.  Returns true if the
    node is removed.
   */
-  public bool remove_node( Node node, double alpha = 1.0 ) {
+  public bool remove_node( Node node, double alpha = 1.0, bool signal_change = true ) {
     if( is_node_selected( node ) ) {
       node.mode  = NodeMode.NONE;
       node.alpha = alpha;
@@ -141,6 +171,9 @@ public class Selection {
           _nodes.remove_index( i );
           if( _nodes.length == 1 ) {
             _nodes.index( 0 ).mode = NodeMode.CURRENT;
+          }
+          if( signal_change ) {
+            selection_changed();
           }
           return( true );
         }
@@ -154,17 +187,29 @@ public class Selection {
     var children = node.children();
     var retval   = false;
     for( int i=0; i<children.length; i++ ) {
-      retval |= remove_node( children.index( i ), alpha );
+      retval |= remove_node( children.index( i ), alpha, false );
+    }
+    if( retval ) {
+      selection_changed();
     }
     return( retval );
   }
 
   /* Removes an entire node tree from the selection */
   public bool remove_node_tree( Node node, double alpha = 1.0 ) {
+    if( remove_node_tree_helper( node, alpha ) ) {
+      selection_changed();
+      return( true );
+    }
+    return( false );
+  }
+
+  /* Removes an entire node tree from the selection */
+  public bool remove_node_tree_helper( Node node, double alpha = 1.0 ) {
     var children = node.children();
-    var retval   = remove_node( node, alpha );
+    var retval   = remove_node( node, alpha, false );
     for( int i=0; i<children.length; i++ ) {
-      retval |= remove_node_tree( children.index( i ), alpha );
+      retval |= remove_node_tree_helper( children.index( i ), alpha );
     }
     return( retval );
   }
@@ -173,13 +218,17 @@ public class Selection {
   public bool remove_nodes_at_level( Node node, double alpha = 1.0 ) {
     var level = node.get_level();
     var root  = node.get_root();
-    return( remove_nodes_at_level_helper( root, alpha, level, 0 ) );
+    if( remove_nodes_at_level_helper( root, alpha, level, 0 ) ) {
+      selection_changed();
+      return( true );
+    }
+    return( false );
   }
 
   /* Helper function for remove_nodes_at_level */
   private bool remove_nodes_at_level_helper( Node node, double alpha, uint level, uint curr_level ) {
     if( level == curr_level ) {
-      return( remove_node( node, alpha ) );
+      return( remove_node( node, alpha, false ) );
     } else {
       var children = node.children();
       var retval   = false;
@@ -201,6 +250,7 @@ public class Selection {
       for( int i=0; i<_conns.length; i++ ) {
         if( conn == _conns.index( i ) ) {
           _conns.remove_index( i );
+          selection_changed();
           return( true );
         }
       }
@@ -209,27 +259,38 @@ public class Selection {
   }
 
   /* Clears all of the selected nodes */
-  public void clear_nodes( double alpha = 1.0 ) {
-    for( int i=0; i<_nodes.length; i++ ) {
+  public bool clear_nodes( bool signal_change = true, double alpha = 1.0 ) {
+    var num = _nodes.length;
+    for( int i=0; i<num; i++ ) {
       _nodes.index( i ).mode  = NodeMode.NONE;
       _nodes.index( i ).alpha = alpha;
     }
     _nodes.remove_range( 0, _nodes.length );
+    if( (num > 0) && signal_change ) {
+      selection_changed();
+    }
+    return( num > 0 );
   }
 
   /* Clears all of the selected connections */
-  public void clear_connections( double alpha = 1.0 ) {
-    for( int i=0; i<_conns.length; i++ ) {
+  public bool clear_connections( bool signal_change = true, double alpha = 1.0 ) {
+    var num = _conns.length;
+    for( int i=0; i<num; i++ ) {
       _conns.index( i ).mode  = ConnMode.NONE;
       _conns.index( i ).alpha = alpha;
     }
     _conns.remove_range( 0, _conns.length );
+    if( (num > 0) && signal_change ) {
+      selection_changed();
+    }
+    return( num > 0 );
   }
 
   /* Clears the current selection */
-  public void clear( double alpha = 1.0 ) {
-    clear_nodes( alpha );
-    clear_connections( alpha );
+  public bool clear( bool signal_change = true, double alpha = 1.0 ) {
+    var changed = clear_nodes( false, alpha );
+    changed |= clear_connections( signal_change, alpha );
+    return( changed );
   }
 
   /* Returns the number of nodes selected */
