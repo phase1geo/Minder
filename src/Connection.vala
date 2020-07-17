@@ -232,7 +232,7 @@ public class Connection : Object {
       _title.set_font( style.connection_font.get_family(), (style.connection_font.get_size() / Pango.SCALE) );
       position_title();
     } else {
-      _title.text.insert_text( 0, title );
+      _title.text.set_text( title );
     }
   }
 

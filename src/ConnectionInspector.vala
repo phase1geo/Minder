@@ -94,7 +94,7 @@ public class ConnectionInspector : Box {
     box.pack_start( lbl, true, false );
     box.pack_start( sw,  true, false );
 
-    pack_start( box, false, true );
+    // pack_start( box, false, true );
 
   }
 
