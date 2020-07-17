@@ -156,6 +156,7 @@ sources += files(
     'Partitioner.vala',
     'QuickEntry.vala',
     'Selection.vala',
+    'StickerInspector.vala',
     'Style.vala',
     'StyleInspector.vala',
     'Styles.vala',

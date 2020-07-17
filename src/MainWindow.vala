@@ -218,6 +218,8 @@ public class MainWindow : ApplicationWindow {
       show_properties( "map", false );
     } else if( _settings.get_boolean( "style-properties-shown" ) ) {
       show_properties( "style", false );
+    } else if( _settings.get_boolean( "sticker-properties-shown" ) ) {
+      show_properties( "sticker", false );
     }
 
     /* Look for any changes to the settings */
@@ -692,6 +694,7 @@ public class MainWindow : ApplicationWindow {
     _stack.set_transition_duration( 500 );
     _stack.add_titled( new CurrentInspector( this ), "current", _("Current") );
     _stack.add_titled( new StyleInspector( this, _settings ), "style", _("Style") );
+    _stack.add_titled( new StickerInspector( this, _settings ), "sticker", _("Stickers") );
     _stack.add_titled( new MapInspector( this, _settings ),  "map",  _("Map") );
 
     _stack.add_events( EventMask.KEY_PRESS_MASK );
@@ -701,8 +704,9 @@ public class MainWindow : ApplicationWindow {
     _stack.notify.connect((ps) => {
       if( ps.name == "visible-child" ) {
         _settings.set_boolean( "current-properties-shown", (_stack.visible_child_name == "current") );
-        _settings.set_boolean( "map-properties-shown",  (_stack.visible_child_name == "map") );
         _settings.set_boolean( "style-properties-shown", (_stack.visible_child_name == "style" ) );
+        _settings.set_boolean( "sticker-properties-shown", (_stack.visible_child_name == "sticker" ) );
+        _settings.set_boolean( "map-properties-shown",  (_stack.visible_child_name == "map") );
       }
     });
 
@@ -1046,6 +1050,7 @@ public class MainWindow : ApplicationWindow {
     _settings.set_boolean( "current-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",     false );
     _settings.set_boolean( "style-properties-shown",   false );
+    _settings.set_boolean( "sticker-properties-shown", false );
   }
 
   /* Converts the given value from the scale to the zoom value to use */
