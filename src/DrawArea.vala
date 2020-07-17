@@ -3121,6 +3121,8 @@ public class DrawArea : Gtk.DrawingArea {
     entry.margin_top   = ytop + ((ybot - ytop) / 2);
     entry.changed.connect(() => {
       text.insert( entry.text, undo_text );
+      queue_draw();
+      changed();
       entry.unparent();
       grab_focus();
     });
