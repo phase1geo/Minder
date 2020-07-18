@@ -1,0 +1,86 @@
+/*
+* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public
+* License as published by the Free Software Foundation; either
+* version 2 of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public
+* License along with this program; if not, write to the
+* Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301 USA
+*
+* Authored by: Trevor Williams <phase1geo@gmail.com>
+*/
+
+using Cairo;
+using Gdk;
+
+public class Stickers {
+
+  private Array<Sticker> _stickers;
+
+  /* Constructor */
+  public Stickers() {
+    _stickers = new Array<Sticker>();
+  }
+
+  /* Adds a new sticker to this list */
+  public void add_sticker( string name, double posx, double posy ) {
+    _stickers.append_val( new Sticker( name, posx, posy ) );
+  }
+
+  /* Deletes the given sticker from this list */
+  public void delete_sticker( Sticker sticker ) {
+    for( int i=0; i<_stickers.length; i++ ) {
+      if( _stickers.index( i ) == sticker ) {
+        _stickers.remove_index( i );
+        return;
+      }
+    }
+  }
+
+  /* Returns the sticker located at the given cursor position */
+  public Sticker? is_within( double x, double y ) {
+    for( int i=0; i<_stickers.length; i++ ) {
+      var s = _stickers.index( i );
+      if( Utils.is_within_bounds( x, y, s.posx, s.posy, s.width, s.height ) ) {
+        return( s );
+      }
+    }
+    return( null );
+  }
+
+  /* Saves the sticker to the XML tree */
+  public Xml.Node* save() {
+    Xml.Node* n = new Xml.Node( null, "stickers" );
+    for( int i=0; i<_stickers.length; i++ ) {
+      n->add_child( _stickers.index( i ).save() );
+    }
+    return( n );
+  }
+
+  /* Loads the sticker from the XML tree */
+  public void load( Xml.Node* n ) {
+    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "sticker") ) {
+        var sticker = new Sticker.from_xml( it );
+        _stickers.append_val( sticker );
+      }
+    }
+  }
+
+  /* Draw the sticker on the mind map */
+  public void draw( Cairo.Context ctx, double opacity ) {
+    for( int i=0; i<_stickers.length; i++ ) {
+      _stickers.index( i ).draw( ctx, opacity );
+    }
+  }
+
+}

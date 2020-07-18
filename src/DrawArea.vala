@@ -31,8 +31,9 @@ public class DrawArea : Gtk.DrawingArea {
   private const CursorType url_cursor  = CursorType.HAND2;
   private const CursorType text_cursor = CursorType.XTERM;
 
-  private const Gtk.TargetEntry[] DRAG_TARGETS = {
-    {"text/uri-list", 0, 0}
+  public static const Gtk.TargetEntry[] DRAG_TARGETS = {
+    {"text/uri-list", 0, 0},
+    {"application/minder-sticker", 0, 1}
   };
 
   private struct SelectBox {
@@ -64,6 +65,7 @@ public class DrawArea : Gtk.DrawingArea {
   private Connection?      _last_connection = null;
   private Array<Node>      _nodes;
   private Connections      _connections;
+  private Stickers         _stickers;
   private Theme            _theme;
   private CanvasText       _orig_text;
   private NodeSide         _orig_side;
@@ -167,6 +169,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Create the connections */
     _connections = new Connections();
+
+    /* Create the stickers */
+    _stickers = new Stickers();
 
     /* Allocate memory for the animator */
     animator = new Animator( this );

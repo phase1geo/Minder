@@ -20,6 +20,7 @@
 */
 
 using Gtk;
+using Gdk;
 
 public class StickerInspector : Box {
 
@@ -103,6 +104,17 @@ public class StickerInspector : Box {
     var img = new Image.from_resource( ("/com/github/phase1geo/minder/" + name) );
     img.set_tooltip_text( name.slice( 0, (name.length - 4) ).replace( "_", "-" ) );
     box.add( img );
+    drag_source_set( img, ModifierType.BUTTON1_MASK, DrawArea.DRAG_TARGETS, DragAction.COPY );
+    img.drag_data_get.connect( on_drag_data_get );
+  }
+
+  private void on_drag_data_get( DragContext context, SelectionData selection_data, uint target_type, uint time ) {
+    string string_data = "test";
+    if( target_type == 1 ) {
+      selection_data.set_text( string_data, string_data.length );
+    } else {
+      assert_not_reached();
+    }
   }
 
 }
