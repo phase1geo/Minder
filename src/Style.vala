@@ -25,6 +25,7 @@ public class Style {
 
   private bool _template;
 
+  public int?             branch_margin          { get; set; default = null; }
   public LinkType?        link_type              { get; set; default = null; }
   public int?             link_width             { get; set; default = null; }
   public bool?            link_arrow             { get; set; default = null; }
@@ -73,6 +74,7 @@ public class Style {
   public void clear_template() {
 
     if( _template ) {
+      branch_margin          = null;
       link_type              = null;
       link_width             = null;
       link_arrow             = null;
@@ -100,6 +102,7 @@ public class Style {
 
     bool changed = false;
 
+    if( ((s.branch_margin          != null) || !s._template) && (branch_margin          != s.branch_margin) )          { changed = true;  branch_margin          = s.branch_margin; }
     if( ((s.link_type              != null) || !s._template) && (link_type              != s.link_type) )              { changed = true;  link_type              = s.link_type; }
     if( ((s.link_width             != null) || !s._template) && (link_width             != s.link_width) )             { changed = true;  link_width             = s.link_width; }
     if( ((s.link_arrow             != null) || !s._template) && (link_arrow             != s.link_arrow) )             { changed = true;  link_arrow             = s.link_arrow; }
@@ -125,6 +128,7 @@ public class Style {
 
   public string to_string() {
     string[] arr = {};
+    if( branch_margin          != null ) arr += "bmargin[%d]".printf( branch_margin );
     if( link_type              != null ) arr += "ltype[%s]".printf( link_type.name() );
     if( link_width             != null ) arr += "lwidth[%d]".printf( link_width );
     if( link_arrow             != null ) arr += "larrow[%s]".printf( link_arrow.to_string() );
@@ -149,6 +153,10 @@ public class Style {
   /* Loads the style information in the given XML node */
   public void load_node( Xml.Node* node ) {
 
+    string? bm = node->get_prop( "branchmargin" );
+    if( bm != null ) {
+      branch_margin = int.parse( bm );
+    }
     string? lt = node->get_prop( "linktype" );
     if( lt != null ) {
       link_type = StyleInspector.styles.get_link_type( lt );
@@ -236,6 +244,9 @@ public class Style {
 
   public void save_node_in_node( Xml.Node* n ) {
 
+    if( branch_margin != null ) {
+      n->set_prop( "branchmargin", branch_margin.to_string() );
+    }
     if( link_type != null ) {
       n->set_prop( "linktype", link_type.name() );
     }

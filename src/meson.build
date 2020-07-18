@@ -92,6 +92,7 @@ sources += files(
     'undo_actions/UndoNodesReparentLinkColor.vala',
     'undo_actions/UndoNodesReplace.vala',
     'undo_actions/UndoStyleAffectChange.vala',
+    'undo_actions/UndoStyleBranchMargin.vala',
     'undo_actions/UndoStyleChange.vala',
     'undo_actions/UndoStyleConnectionArrow.vala',
     'undo_actions/UndoStyleConnectionDash.vala',

@@ -81,10 +81,11 @@ public class Styles {
     _styles = new Array<StyleLevel>();
     for( int i=0; i<=10; i++ ) {
       var level = new StyleLevel();
-      level.style.link_type  = lt_straight;
-      level.style.link_width = 4;
-      level.style.link_arrow = false;
-      level.style.link_dash  = ld_solid;
+      level.style.branch_margin = 100;
+      level.style.link_type     = lt_straight;
+      level.style.link_width    = 4;
+      level.style.link_arrow    = false;
+      level.style.link_dash     = ld_solid;
       if( i == 0 ) {
         level.style.node_border = nb_rounded;
       } else {
