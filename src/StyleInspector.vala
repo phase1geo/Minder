@@ -44,6 +44,7 @@ public class StyleInspector : Box {
 
   private DrawArea?                  _da = null;
   private GLib.Settings              _settings;
+  private Scale                      _branch_margin;
   private Granite.Widgets.ModeButton _link_types;
   private Scale                      _link_width;
   private Switch                     _link_arrow;
@@ -159,9 +160,11 @@ public class StyleInspector : Box {
     cbox.homogeneous  = true;
     cbox.border_width = 10;
 
-    var branch_type = create_branch_type_ui();
+    var branch_type   = create_branch_type_ui();
+    var branch_margin = create_branch_margin_ui();
 
-    cbox.pack_start( branch_type, false, false );
+    cbox.pack_start( branch_type,   false, false );
+    cbox.pack_start( branch_margin, false, false );
 
     exp.add( cbox );
 
@@ -178,7 +181,7 @@ public class StyleInspector : Box {
     var box = new Box( Orientation.HORIZONTAL, 0 );
     box.homogeneous = true;
 
-    var lbl = new Label( _( "Branch Style" ) );
+    var lbl = new Label( _( "Style" ) );
     lbl.xalign = (float)0;
 
     /* Create the line types mode button */
@@ -219,6 +222,46 @@ public class StyleInspector : Box {
       tooltip.set_text( link_types.index( x / button_width ).display_name() );
       return( true );
     }
+    return( false );
+  }
+
+  private Box create_branch_margin_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Margin" ) );
+    lbl.xalign = (float)0;
+
+    _branch_margin = new Scale.with_range( Orientation.HORIZONTAL, 20, 150, 10 );
+    _branch_margin.draw_value = true;
+    _branch_margin.change_value.connect( branch_margin_changed );
+    _branch_margin.button_release_event.connect( branch_margin_released );
+
+    box.pack_start( lbl,          false, true );
+    box.pack_end(   _branch_margin, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the node margin value is changed */
+  private bool branch_margin_changed( ScrollType scroll, double value ) {
+    if( (int)value > 150 ) {
+      return( false );
+    }
+    var margin = new UndoStyleBranchMargin( _affects, (int)value, _da );
+    if( _change_add ) {
+      _da.undo_buffer.add_item( margin );
+      _change_add = false;
+    } else {
+      _da.undo_buffer.replace_item( margin );
+    }
+    return( false );
+  }
+
+  private bool branch_margin_released( EventButton e ) {
+    _change_add = true;
     return( false );
   }
 
@@ -546,7 +589,7 @@ public class StyleInspector : Box {
     var lbl = new Label( _( "Margin" ) );
     lbl.xalign = (float)0;
 
-    _node_margin = new Scale.with_range( Orientation.HORIZONTAL, 5, 20, 1 );
+    _node_margin = new Scale.with_range( Orientation.HORIZONTAL, 1, 20, 1 );
     _node_margin.draw_value = true;
     _node_margin.change_value.connect( node_margin_changed );
     _node_margin.button_release_event.connect( node_margin_released );
@@ -1049,6 +1092,7 @@ public class StyleInspector : Box {
   /* Update the user interface elements to match the selected level */
   private void update_ui_with_style( Style style ) {
     _ignore = true;
+    _branch_margin.set_value( (double)style.branch_margin );
     update_link_types_with_style( style );
     update_link_dashes_with_style( style );
     update_node_borders_with_style( style );

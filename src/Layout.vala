@@ -21,7 +21,6 @@
 
 public class Layout : Object {
 
-  protected double _pc_gap = 100;  /* Parent/child gap */
   protected double _rt_gap = 100;  /* Root node gaps */
 
   public string name        { protected set; get; default = ""; }
@@ -169,6 +168,7 @@ public class Layout : Object {
   public virtual void propagate_side( Node parent, NodeSide side ) {
 
     double px, py, pw, ph;
+    var margin = parent.style.branch_margin;
 
     parent.bbox( out px, out py, out pw, out ph );
 
@@ -180,18 +180,18 @@ public class Layout : Object {
           case NodeSide.LEFT :
             double cx, cy, cw, ch;
             n.bbox( out cx, out cy, out cw, out ch );
-            n.posx = px - _pc_gap - cw;
+            n.posx = px - margin - cw;
             break;
           case NodeSide.RIGHT :
-            n.posx = px + pw + _pc_gap;
+            n.posx = px + pw + margin;
             break;
           case NodeSide.TOP :
             double cx, cy, cw, ch;
             n.bbox( out cx, out cy, out cw, out ch );
-            n.posy = py - _pc_gap - ch;
+            n.posy = py - margin - ch;
             break;
           case NodeSide.BOTTOM :
-            n.posy = py + ph + _pc_gap;
+            n.posy = py + ph + margin;
             break;
         }
         propagate_side( n, side );
@@ -263,25 +263,26 @@ public class Layout : Object {
   }
 
   /* Adjusts the gap between the parent and child nodes */
-  private void set_pc_gap( Node n ) {
+  public void apply_margin( Node n ) {
     double px, py, pw, ph;
+    var margin = n.parent.style.branch_margin;
     n.parent.bbox( out px, out py, out pw, out ph );
     switch( n.side ) {
       case NodeSide.LEFT :
         double cx, cy, cw, ch;
         n.bbox( out cx, out cy, out cw, out ch );
-        n.posx = px - (cw + _pc_gap);
+        n.posx = px - (cw + margin);
         break;
       case NodeSide.RIGHT :
-        n.posx = px + (pw + _pc_gap) - n.parent.task_width();
+        n.posx = px + (pw + margin) - n.parent.task_width();
         break;
       case NodeSide.TOP :
         double cx, cy, cw, ch;
         n.bbox( out cx, out cy, out cw, out ch );
-        n.posy = py - (ch + _pc_gap);
+        n.posy = py - (ch + margin);
         break;
       case NodeSide.BOTTOM :
-        n.posy = py + (ph + _pc_gap);
+        n.posy = py + (ph + margin);
         break;
     }
   }
@@ -302,7 +303,7 @@ public class Layout : Object {
     var cb = child.tree_bbox;
 
     child.bbox( out ox, out oy, out ow, out oh );
-    set_pc_gap( child );
+    apply_margin( child );
     adjust = get_insert_adjust( child );
 
     /*

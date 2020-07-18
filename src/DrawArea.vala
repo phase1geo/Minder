@@ -742,12 +742,14 @@ public class DrawArea : Gtk.DrawingArea {
       if( node.name.is_within( _scaled_x, _scaled_y ) ) {
         set_cursor( text_cursor );
       }
+      undo_text.ct = node.name;
     } else if( (node.mode == NodeMode.EDITABLE) && (mode != NodeMode.EDITABLE) ) {
       _im_context.reset();
       _im_context.focus_out();
       if( node.name.is_within( _scaled_x, _scaled_y ) ) {
         set_cursor( null );
       }
+      undo_text.ct = null;
     }
     node.mode = mode;
   }
