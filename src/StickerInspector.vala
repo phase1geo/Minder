@@ -29,8 +29,7 @@ public class StickerInspector : Box {
   private GLib.Settings _settings;
   private SearchEntry   _search;
   private Array<string> _names;
-  private Revealer      _all;
-  private Revealer      _matched;
+  private Stack         _stack;
   private FlowBox       _matched_box;
 
   public StickerInspector( MainWindow win, GLib.Settings settings ) {
@@ -41,19 +40,11 @@ public class StickerInspector : Box {
     _settings = settings;
     _names    = new Array<string>();
 
-    _all = new Revealer();
-    _all.reveal_child = true;
-    _all.transition_duration = 0;
-
-    _matched = new Revealer();
-    _matched.reveal_child = false;
-    _matched.transition_duration = 0;
-
     /*
      Create instruction label (this will always be visible so it will not be
      within the scrolled box
     */
-    var lbl = new Label( _( "Drag and drop sticker to a node or anywhere else in the map to add a sticker." ) );
+    var lbl = new Label( _( "Drag and drop sticker onto a node or anywhere else in the map to add a sticker." ) );
     lbl.wrap      = true;
     lbl.wrap_mode = Pango.WrapMode.WORD;
 
@@ -62,6 +53,9 @@ public class StickerInspector : Box {
     _search.placeholder_text = _( "Search Stickers" );
     _search.search_changed.connect( do_search );
 
+    /* Create stack */
+    _stack = new Stack();
+
     /* Create main scrollable pane */
     var box    = new Box( Orientation.VERTICAL, 0 );
     var sw     = new ScrolledWindow( null, null );
@@ -69,7 +63,6 @@ public class StickerInspector : Box {
     vp.set_size_request( 200, 600 );
     vp.add( box );
     sw.add( vp );
-    _all.add( sw );
 
     /* Create search result flowbox */
     _matched_box = new FlowBox();
@@ -77,11 +70,12 @@ public class StickerInspector : Box {
     _matched_box.selection_mode = SelectionMode.NONE;
 
     var msw = new ScrolledWindow( null, null );
-    var mvp = new Viewport( null, null );
-    mvp.set_size_request( 200, 600 );
-    mvp.add( _matched_box );
-    msw.add( mvp );
-    _matched.add( msw );
+    msw.expand = false;
+    msw.get_style_context().add_class( Gtk.STYLE_CLASS_VIEW );
+    msw.add( _matched_box );
+
+    _stack.add_named( sw, "all" );
+    _stack.add_named( msw, "matched" );
 
     /* Pack the elements into this widget */
     create_via_xml( box );
@@ -89,8 +83,7 @@ public class StickerInspector : Box {
     /* Add the scrollable widget to the box */
     pack_start( lbl,      false, false, 5 );
     pack_start( _search,  false, false, 5 );
-    pack_start( _all,     true,  true,  5 );
-    pack_start( _matched, false, true,  5 );
+    pack_start( _stack,   true,  true,  5 );
 
     /* Make sure all elements are visible */
     show_all();
@@ -179,15 +172,12 @@ public class StickerInspector : Box {
 
     var search_text = _search.text;
 
+    /* If the search field is empty, show all of the icons by category again */
     if( search_text == "" ) {
+      _stack.set_visible_child_name( "all" );
 
-      _matched.reveal_child = false;
-      _all.reveal_child = true;
-
+    /* Otherwise, show only the currently matching icons */
     } else {
-
-      _matched.reveal_child = true;
-      _all.reveal_child = false;
 
       /* Clear the matched flowbox */
       foreach( Widget w in _matched_box.get_children() ) {
@@ -196,14 +186,13 @@ public class StickerInspector : Box {
 
       /* Add the matching stickers */
       for( int i=0; i<_names.length; i++ ) {
-        stdout.printf( "name: %s, search_Text: %s\n", _names.index( i ), search_text );
         if( _names.index( i ).contains( search_text ) ) {
-          stdout.printf( "  MATCH FOUND!\n" );
           create_image( _matched_box, _names.index( i ) );
         }
       }
 
       _matched_box.show_all();
+      _stack.set_visible_child_name( "matched" );
 
     }
 
