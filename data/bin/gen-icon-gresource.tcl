@@ -3,5 +3,5 @@
 set svg_dir [file join icons flat-color-icons svg]
 
 foreach item [glob -nocomplain -directory $svg_dir -tails *.svg] {
-  puts "    <file alias=\"$item\">[file join $svg_dir $item]</file>"
+  puts "    <file alias=\"[string range $item 0 end-4]\">[file join $svg_dir $item]</file>"
 }
