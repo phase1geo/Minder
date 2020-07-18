@@ -671,6 +671,13 @@ public class StyleInspector : Box {
 
     _node_font = new FontButton();
     _node_font.use_font = true;
+    _node_font.show_style = false;
+    _node_font.set_filter_func( (family, face) => {
+      var fd     = face.describe();
+      var weight = fd.get_weight();
+      var style  = fd.get_style();
+      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+    });
     _node_font.font_set.connect(() => {
       var family = _node_font.get_font_family().get_name();
       var size   = _node_font.get_font_size();
@@ -949,6 +956,13 @@ public class StyleInspector : Box {
 
     _conn_font = new FontButton();
     _conn_font.use_font = true;
+    _conn_font.show_style = false;
+    _conn_font.set_filter_func( (family, face) => {
+      var fd     = face.describe();
+      var weight = fd.get_weight();
+      var style  = fd.get_style();
+      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+    });
     _conn_font.font_set.connect(() => {
       var family = _conn_font.get_font_family().get_name();
       var size   = _conn_font.get_font_size();
