@@ -30,6 +30,7 @@ public class StickerInspector : Box {
   private SearchEntry   _search;
   private Stack         _stack;
   private FlowBox       _matched_box;
+  private Image         _dragged_sticker;
 
   public StickerInspector( MainWindow win, GLib.Settings settings ) {
 
@@ -65,7 +66,8 @@ public class StickerInspector : Box {
     /* Create search result flowbox */
     _matched_box = new FlowBox();
     _matched_box.homogeneous = true;
-    _matched_box.selection_mode = SelectionMode.NONE;
+    _matched_box.selection_mode = SelectionMode.SINGLE;
+    make_flowbox_drag_source( _matched_box );
 
     var msw = new ScrolledWindow( null, null );
     msw.expand = false;
@@ -127,6 +129,7 @@ public class StickerInspector : Box {
     /* Create the flowbox which will contain the stickers */
     var fbox = new FlowBox();
     fbox.homogeneous = true;
+    make_flowbox_drag_source( fbox );
     exp.add( fbox );
 
     box.pack_start( exp, false, false, 20 );
@@ -137,33 +140,27 @@ public class StickerInspector : Box {
 
   /* Creates the image from the given name and adds it to the flow box */
   private void create_image( FlowBox box, string name ) {
-
-    /* Create the icon and give it a tooltip */
     var img = new Image.from_resource( "/com/github/phase1geo/minder/" + name );
     img.name = name;
     img.set_tooltip_text( name );
     box.add( img );
-
-    /* Add support for being a drag source */
-    var w = img.get_parent();
-    drag_source_set( w, ModifierType.BUTTON1_MASK, DrawArea.DRAG_TARGETS, DragAction.COPY );
-    w.drag_begin.connect((c) => {
-      stdout.printf( "Drag started\n" );
-    });
-    w.drag_data_get.connect( on_drag_data_get );
-    w.drag_end.connect((c) => {
-      stdout.printf( "Drag ended\n" );
-    });
-
   }
 
-  private void on_drag_data_get( DragContext context, SelectionData selection_data, uint target_type, uint time ) {
-    string string_data = "test";
-    if( target_type == 1 ) {
-      selection_data.set_text( string_data, string_data.length );
-    } else {
-      assert_not_reached();
-    }
+  private void make_flowbox_drag_source( FlowBox fbox ) {
+    drag_source_set( fbox, Gdk.ModifierType.BUTTON1_MASK, DrawArea.DRAG_TARGETS, Gdk.DragAction.COPY );
+    fbox.drag_begin.connect( on_drag_begin );
+    fbox.drag_data_get.connect( on_drag_data_get );
+  }
+
+  /* When the sticker drag begins, set the sticker image to the dragged content */
+  private void on_drag_begin( Widget widget, DragContext context ) {
+    var fbox = (FlowBox)widget;
+    _dragged_sticker = (Image)fbox.get_selected_children().nth_data( 0 ).get_child();
+    Gtk.drag_set_icon_pixbuf( context, _dragged_sticker.pixbuf, 0, 0 );
+  }
+
+  private void on_drag_data_get( Widget widget, DragContext context, SelectionData selection_data, uint target_type, uint time ) {
+    selection_data.set_text( _dragged_sticker.name, _dragged_sticker.name.length );
   }
 
   /* Performs search */

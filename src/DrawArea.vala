@@ -4029,6 +4029,8 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called when something is dropped on the DrawArea */
   private void handle_drag_data_received( Gdk.DragContext ctx, int x, int y, Gtk.SelectionData data, uint info, uint t ) {
 
+    stdout.printf( "In handle_drag_data_received, info: %u\n", info );
+
     if( (_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE) ) {
 
       foreach (var uri in data.get_uris()) {
