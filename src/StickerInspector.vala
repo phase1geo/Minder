@@ -28,7 +28,6 @@ public class StickerInspector : Box {
   private DrawArea?     _da = null;
   private GLib.Settings _settings;
   private SearchEntry   _search;
-  private Array<string> _names;
   private Stack         _stack;
   private FlowBox       _matched_box;
 
@@ -38,7 +37,6 @@ public class StickerInspector : Box {
 
     _win      = win;
     _settings = settings;
-    _names    = new Array<string>();
 
     /*
      Create instruction label (this will always be visible so it will not be
@@ -105,8 +103,7 @@ public class StickerInspector : Box {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "img") ) {
                 var name = it2->get_prop( "title" );
                 create_image( category, name );
-                _names.append_val( name );
-
+                create_image( _matched_box, name );
               }
             }
           }
@@ -143,16 +140,18 @@ public class StickerInspector : Box {
 
     /* Create the icon and give it a tooltip */
     var img = new Image.from_resource( "/com/github/phase1geo/minder/" + name );
+    img.name = name;
     img.set_tooltip_text( name );
     box.add( img );
 
     /* Add support for being a drag source */
-    drag_source_set( img, ModifierType.BUTTON1_MASK, DrawArea.DRAG_TARGETS, DragAction.COPY );
-    img.drag_begin.connect((c) => {
+    var w = img.get_parent();
+    drag_source_set( w, ModifierType.BUTTON1_MASK, DrawArea.DRAG_TARGETS, DragAction.COPY );
+    w.drag_begin.connect((c) => {
       stdout.printf( "Drag started\n" );
     });
-    img.drag_data_get.connect( on_drag_data_get );
-    img.drag_end.connect((c) => {
+    w.drag_data_get.connect( on_drag_data_get );
+    w.drag_end.connect((c) => {
       stdout.printf( "Drag ended\n" );
     });
 
@@ -174,26 +173,15 @@ public class StickerInspector : Box {
 
     /* If the search field is empty, show all of the icons by category again */
     if( search_text == "" ) {
+      _matched_box.invalidate_filter();
       _stack.set_visible_child_name( "all" );
 
     /* Otherwise, show only the currently matching icons */
     } else {
-
-      /* Clear the matched flowbox */
-      foreach( Widget w in _matched_box.get_children() ) {
-        _matched_box.remove( w );
-      }
-
-      /* Add the matching stickers */
-      for( int i=0; i<_names.length; i++ ) {
-        if( _names.index( i ).contains( search_text ) ) {
-          create_image( _matched_box, _names.index( i ) );
-        }
-      }
-
-      _matched_box.show_all();
+      _matched_box.set_filter_func((item) => {
+        return( item.get_child().name.contains( search_text ) );
+      });
       _stack.set_visible_child_name( "matched" );
-
     }
 
   }
