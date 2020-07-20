@@ -25,6 +25,11 @@ using Gdk;
 using Cairo;
 using Gee;
 
+public enum DragTypes {
+  URI,
+  STICKER
+}
+
 public class DrawArea : Gtk.DrawingArea {
 
   private const CursorType move_cursor = CursorType.HAND1;
@@ -32,8 +37,8 @@ public class DrawArea : Gtk.DrawingArea {
   private const CursorType text_cursor = CursorType.XTERM;
 
   public static const Gtk.TargetEntry[] DRAG_TARGETS = {
-    {"text/uri-list", 0, 0},
-    {"application/minder-sticker", 0, 1}
+    {"text/uri-list", 0,                    DragTypes.URI},
+    {"STRING",        TargetFlags.SAME_APP, DragTypes.STICKER}
   };
 
   private struct SelectBox {
@@ -479,6 +484,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "drawarea"    :  load_drawarea( it );  break;
           case "images"      :  image_manager.load( it );  break;
           case "connections" :  _connections.load( this, it, null, _nodes, id_map );  break;
+          case "stickers"    :  _stickers.load( it );  break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
@@ -537,6 +543,7 @@ public class DrawArea : Gtk.DrawingArea {
     parent->add_child( nodes );
 
     _connections.save( parent );
+    parent->add_child( _stickers.save() );
 
     return( true );
 
@@ -1691,6 +1698,9 @@ public class DrawArea : Gtk.DrawingArea {
     if( current_conn != null ) {
       current_conn.draw( ctx, _theme );
     }
+
+    /* Draw the floating stickers */
+    _stickers.draw_all( ctx, 1.0 /*TBD*/ );
 
     /* Draw the select box if one exists */
     draw_select_box( ctx );
@@ -4029,23 +4039,26 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called when something is dropped on the DrawArea */
   private void handle_drag_data_received( Gdk.DragContext ctx, int x, int y, Gtk.SelectionData data, uint info, uint t ) {
 
-    stdout.printf( "In handle_drag_data_received, info: %u\n", info );
-
     if( (_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE) ) {
 
-      foreach (var uri in data.get_uris()) {
-        var image = new NodeImage.from_uri( image_manager, uri, 200 );
-        if( image.valid ) {
-          var node = new Node.with_name( this, _( "Another Idea" ), layouts.get_default() );
-          node.set_image( image_manager, image );
-          _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
-          _nodes.append_val( node );
-          if( select_node( node ) ) {
-            set_node_mode( node, NodeMode.EDITABLE );
-            _current_new = true;
-            queue_draw();
+      if( info == DragTypes.URI ) {
+        foreach (var uri in data.get_uris()) {
+          var image = new NodeImage.from_uri( image_manager, uri, 200 );
+          if( image.valid ) {
+            var node = new Node.with_name( this, _( "Another Idea" ), layouts.get_default() );
+            node.set_image( image_manager, image );
+            _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
+            _nodes.append_val( node );
+            if( select_node( node ) ) {
+              set_node_mode( node, NodeMode.EDITABLE );
+              _current_new = true;
+              queue_draw();
+            }
           }
         }
+      } else if( info == DragTypes.STICKER ) {
+        _stickers.add_sticker( data.get_text(), (double)x, (double)y );
+        // TBD - Add support for undo'ing this operation
       }
 
       Gtk.drag_finish( ctx, true, false, t );
@@ -4055,20 +4068,30 @@ public class DrawArea : Gtk.DrawingArea {
       current_changed( this );
       auto_save();
 
-    } else if( (_attach_node.mode == NodeMode.DROPPABLE) && (data.get_uris().length == 1) ) {
+    } else {
 
-      var image = new NodeImage.from_uri( image_manager, data.get_uris()[0], _attach_node.style.node_width );
-      if( image.valid ) {
-        var orig_image = _attach_node.image;
-        _attach_node.set_image( image_manager, image );
-        undo_buffer.add_item( new UndoNodeImage( _attach_node, orig_image ) );
+      if( info == DragTypes.URI ) {
+        if( data.get_uris().length == 1 ) {
+          var image = new NodeImage.from_uri( image_manager, data.get_uris()[0], _attach_node.style.node_width );
+          if( image.valid ) {
+            var orig_image = _attach_node.image;
+            _attach_node.set_image( image_manager, image );
+            undo_buffer.add_item( new UndoNodeImage( _attach_node, orig_image ) );
+            set_node_mode( _attach_node, NodeMode.NONE );
+            _attach_node = null;
+          }
+        }
+      } else if( info == DragTypes.STICKER ) {
+        _attach_node.sticker = data.get_text();
+        // TBD - Add support for undo'ing this operation
         set_node_mode( _attach_node, NodeMode.NONE );
-        _attach_node      = null;
-        Gtk.drag_finish( ctx, true, false, t );
-        queue_draw();
-        current_changed( this );
-        auto_save();
+        _attach_node = null;
       }
+
+      Gtk.drag_finish( ctx, true, false, t );
+      queue_draw();
+      current_changed( this );
+      auto_save();
 
     }
 

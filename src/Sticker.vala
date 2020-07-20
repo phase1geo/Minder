@@ -67,6 +67,7 @@ public class Sticker {
     string? nm = n->get_prop( "name" );
     if( nm != null ) {
       _name = nm;
+      set_pixbuf();
     }
     string? x = n->get_prop( "posx" );
     if( x != null ) {

@@ -77,7 +77,7 @@ public class Stickers {
   }
 
   /* Draw the sticker on the mind map */
-  public void draw( Cairo.Context ctx, double opacity ) {
+  public void draw_all( Cairo.Context ctx, double opacity ) {
     for( int i=0; i<_stickers.length; i++ ) {
       _stickers.index( i ).draw( ctx, opacity );
     }

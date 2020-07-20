@@ -139,6 +139,8 @@ public class Node : Object {
   private   Style        _style          = new Style();
   private   bool         _loaded         = true;
   private   Node         _linked_node    = null;
+  private   string?      _sticker        = null;
+  private   Pixbuf?      _sticker_buf    = null;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -350,6 +352,22 @@ public class Node : Object {
       return( _task_done );
     }
   }
+  public string? sticker {
+    get {
+      return( _sticker );
+    }
+    set {
+      if( _sticker != value ) {
+        _sticker = value;
+        if( _sticker != null ) {
+          _sticker_buf = new Pixbuf.from_resource( "/com/github/phase1geo/minder/" + _sticker );
+        } else {
+          _sticker_buf = null;
+        }
+        position_name_and_update_size();
+      }
+    }
+  }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -358,7 +376,7 @@ public class Node : Object {
     _children = new Array<Node>();
     _layout   = layout;
     _name     = new CanvasText( da );
-    _name.resized.connect( update_size );
+    _name.resized.connect( position_name_and_update_size );
     set_parsers();
   }
 
@@ -369,7 +387,7 @@ public class Node : Object {
     _children = new Array<Node>();
     _layout   = layout;
     _name     = new CanvasText.with_text( da, n );
-    _name.resized.connect( update_size );
+    _name.resized.connect( position_name_and_update_size );
     set_parsers();
   }
 
@@ -379,7 +397,7 @@ public class Node : Object {
     _id       = _next_id++;
     _name     = new CanvasText( da );
     copy_variables( n, im );
-    _name.resized.connect( update_size );
+    _name.resized.connect( position_name_and_update_size );
     set_parsers();
     mode      = NodeMode.NONE;
     _children = n._children;
@@ -402,7 +420,7 @@ public class Node : Object {
     _name     = new CanvasText( da );
     _children = new Array<Node>();
     copy_variables( n, im );
-    _name.resized.connect( update_size );
+    _name.resized.connect( position_name_and_update_size );
     set_parsers();
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
@@ -509,6 +527,12 @@ public class Node : Object {
     tree_bbox = nb;
   }
 
+  /* Called whenever the canvas text is resized */
+  private void position_name_and_update_size() {
+    position_name();
+    update_size();
+  }
+
   /* Called whenever the node size is changed */
   private void update_size() {
     if( !_loaded ) return;
@@ -516,13 +540,15 @@ public class Node : Object {
     var orig_height = _height;
     var margin      = (style.node_margin  == null) ? 0 : style.node_margin;
     var padding     = (style.node_padding == null) ? 0 : style.node_padding;
-    var name_width  = task_width() + _name.width + note_width() + linked_node_width();
+    var stk_height  = sticker_height();
+    var name_width  = task_width() + sticker_width() + _name.width + note_width() + linked_node_width();
+    var name_height = (_name.height < stk_height) ? stk_height : _name.height;
     if( _image != null ) {
       _width  = (margin * 2) + (padding * 2) + ((name_width < _image.width) ? _image.width : name_width);
-      _height = (margin * 2) + (padding * 2) + _image.height + padding + _name.height;
+      _height = (margin * 2) + (padding * 2) + _image.height + padding + name_height;
     } else {
       _width  = (margin * 2) + (padding * 2) + name_width;
-      _height = (margin * 2) + (padding * 2) + _name.height;
+      _height = (margin * 2) + (padding * 2) + name_height;
     }
     if( (_layout != null) && (((_width - orig_width) != 0) || ((_height - orig_height) != 0)) ) {
       _layout.handle_update_by_edit( this, (_width - orig_width), (_height - orig_height) );
@@ -640,6 +666,17 @@ public class Node : Object {
     y = posy + margin + padding + img_height + (((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - _task_radius);
     w = _task_radius * 2;
     h = _task_radius * 2;
+  }
+
+  protected virtual void sticker_bbox( out double x, out double y, out double w, out double h ) {
+    int    margin     = style.node_margin  ?? 0;
+    int    padding    = style.node_padding ?? 0;
+    double img_height = (_image == null) ? 0 : (_image.height + padding);
+    double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
+    x = posx + margin + padding + task_width();
+    y = posy + margin + padding + img_height + ((_height - (img_height + (padding * 2) + (margin + 2))) / 2) - (stk_height / 2);
+    w = (_sticker_buf == null) ? 0 : _sticker_buf.width;
+    h = (_sticker_buf == null) ? 0 : _sticker_buf.height;
   }
 
   protected virtual void linked_node_bbox( out double x, out double y, out double w, out double h ) {
@@ -952,6 +989,11 @@ public class Node : Object {
       _link_color_root = bool.parse( cr );
     }
 
+    string? sk = n->get_prop( "sticker" );
+    if( sk != null ) {
+      sticker = sk;
+    }
+
     /* If the posx and posy values are not set, set the layout now */
     if( (x == null) && (y == null) ) {
       string? l = n->get_prop( "layout" );
@@ -1044,6 +1086,9 @@ public class Node : Object {
       node->new_prop( "colorroot", link_color_root.to_string() );
     }
     node->new_prop( "layout", _layout.name );
+    if( _sticker != null ) {
+      node->new_prop( "sticker", _sticker );
+    }
 
     if( _image != null ) {
       _image.save( node );
@@ -1272,6 +1317,16 @@ public class Node : Object {
     }
   }
 
+  /* Returns the width of the sticker */
+  public double sticker_width() {
+    return( (_sticker_buf != null) ? (_sticker_buf.width + _ipadx) : 0 );
+  }
+
+  /* Returns the height of the sticker */
+  public double sticker_height() {
+    return( (_sticker_buf != null) ? _sticker_buf.height : 0 );
+  }
+
   /* Returns the amount of internal width to draw the task checkbutton */
   public double task_width() {
     return( (_task_count > 0) ? ((_task_radius * 2) + _ipadx) : 0 );
@@ -1333,9 +1388,10 @@ public class Node : Object {
   private void position_name() {
     int margin  = (style.node_margin  == null) ? 0 : style.node_margin;
     int padding = (style.node_padding == null) ? 0 : style.node_padding;
+    double stk_height = sticker_height();
     double img_height = (_image != null) ? (_image.height + padding) : 0;
-    name.posx = posx + margin + padding + task_width();
-    name.posy = posy + margin + padding + img_height;
+    name.posx = posx + margin + padding + task_width() + sticker_width();
+    name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0);
   }
 
   /* If the parent node is moved, we will move ourselves the same amount */
@@ -1864,6 +1920,29 @@ public class Node : Object {
 
   }
 
+  protected virtual void draw_sticker( Context ctx, RGBA sel_color, RGBA bg_color ) {
+
+    if( _sticker_buf != null ) {
+
+      double x, y, w, h;
+      RGBA color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color : bg_color;
+
+      sticker_bbox( out x, out y, out w, out h );
+
+      /* Draw background */
+      Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      ctx.move_to( x, y );
+      ctx.rectangle( x, y, w, h );
+      ctx.fill();
+
+      /* Draw sticker */
+      cairo_set_source_pixbuf( ctx, _sticker_buf, x, y );
+      ctx.paint_with_alpha( _alpha );
+
+    }
+
+  }
+
   /* Draws the icon indicating that a note is associated with this node */
   protected virtual void draw_common_note( Context ctx, RGBA reg_color, RGBA sel_color, RGBA bg_color ) {
 
@@ -2081,6 +2160,7 @@ public class Node : Object {
       } else {
         draw_acc_task( ctx, foreground );
       }
+      draw_sticker( ctx, nodesel_foreground, foreground );
       draw_common_note( ctx, foreground, nodesel_foreground, foreground );
       draw_link_node(   ctx, foreground, nodesel_foreground, foreground );
       draw_common_fold( ctx, background, foreground );
@@ -2101,6 +2181,7 @@ public class Node : Object {
       } else {
         draw_acc_task( ctx, (style.is_fillable() ? background : _link_color) );
       }
+      draw_sticker( ctx, nodesel_foreground, background );
       draw_common_note( ctx, foreground, nodesel_foreground, background );
       draw_link_node(   ctx, foreground, nodesel_foreground, foreground );
       draw_common_fold( ctx, _link_color, background );

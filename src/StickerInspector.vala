@@ -31,6 +31,12 @@ public class StickerInspector : Box {
   private Stack         _stack;
   private FlowBox       _matched_box;
   private Image         _dragged_sticker;
+  private double        _motion_x;
+  private double        _motion_y;
+
+  public const Gtk.TargetEntry[] DRAG_TARGETS = {
+    {"STRING", TargetFlags.SAME_APP, DragTypes.STICKER}
+  };
 
   public StickerInspector( MainWindow win, GLib.Settings settings ) {
 
@@ -66,7 +72,6 @@ public class StickerInspector : Box {
     /* Create search result flowbox */
     _matched_box = new FlowBox();
     _matched_box.homogeneous = true;
-    _matched_box.selection_mode = SelectionMode.SINGLE;
     make_flowbox_drag_source( _matched_box );
 
     var msw = new ScrolledWindow( null, null );
@@ -147,20 +152,28 @@ public class StickerInspector : Box {
   }
 
   private void make_flowbox_drag_source( FlowBox fbox ) {
-    drag_source_set( fbox, Gdk.ModifierType.BUTTON1_MASK, DrawArea.DRAG_TARGETS, Gdk.DragAction.COPY );
+    drag_source_set( fbox, Gdk.ModifierType.BUTTON1_MASK, DRAG_TARGETS, Gdk.DragAction.COPY );
+    fbox.selection_mode = SelectionMode.NONE;
     fbox.drag_begin.connect( on_drag_begin );
     fbox.drag_data_get.connect( on_drag_data_get );
+    fbox.motion_notify_event.connect((e) => {
+      _motion_x = e.x;
+      _motion_y = e.y;
+      return( true );
+    });
   }
 
   /* When the sticker drag begins, set the sticker image to the dragged content */
   private void on_drag_begin( Widget widget, DragContext context ) {
     var fbox = (FlowBox)widget;
-    _dragged_sticker = (Image)fbox.get_selected_children().nth_data( 0 ).get_child();
+    _dragged_sticker = (Image)fbox.get_child_at_pos( (int)_motion_x, (int)_motion_y ).get_child();
     Gtk.drag_set_icon_pixbuf( context, _dragged_sticker.pixbuf, 0, 0 );
   }
 
   private void on_drag_data_get( Widget widget, DragContext context, SelectionData selection_data, uint target_type, uint time ) {
-    selection_data.set_text( _dragged_sticker.name, _dragged_sticker.name.length );
+    if( target_type == DragTypes.STICKER ) {
+      selection_data.set_text( _dragged_sticker.name, -1 );
+    }
   }
 
   /* Performs search */
