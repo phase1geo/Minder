@@ -24,14 +24,16 @@ public class Selection {
   private DrawArea          _da;
   private Array<Node>       _nodes;
   private Array<Connection> _conns;
+  private Array<Sticker>    _stickers;
 
   public signal void selection_changed();
 
   /* Default constructor */
   public Selection( DrawArea da ) {
-    _da    = da;
-    _nodes = new Array<Node>();
-    _conns = new Array<Connection>();
+    _da       = da;
+    _nodes    = new Array<Node>();
+    _conns    = new Array<Connection>();
+    _stickers = new Array<Sticker>();
   }
 
   /* Returns true if the given node is currently selected */
@@ -44,6 +46,11 @@ public class Selection {
     return( conn.mode == ConnMode.SELECTED );
   }
 
+  /* Returns true if the given sticker is currently selected */
+  public bool is_sticker_selected( Sticker sticker ) {
+    return( sticker.mode == StickerMode.SELECTED );
+  }
+
   /* Returns true if the given node is the only selected item */
   public bool is_current_node( Node node ) {
     return( (_nodes.length == 1) && (_nodes.index( 0 ) == node) );
@@ -52,6 +59,11 @@ public class Selection {
   /* Returns true if the given connection is the only selected item */
   public bool is_current_connection( Connection conn ) {
     return( (_conns.length == 1) && (_conns.index( 0 ) == conn) );
+  }
+
+  /* Returns true if the given sticker is the only selected item */
+  public bool is_current_sticker( Sticker sticker ) {
+    return( (_stickers.length == 1) && (_stickers.index( 0 ) == sticker) );
   }
 
   /* Returns the currently selected node */
@@ -64,16 +76,27 @@ public class Selection {
     return( (_conns.length == 1) ? _conns.index( 0 ) : null );
   }
 
-  /* Sets the current node, clearing all other selected nodes and connections */
+  /* Returns the currently selected sticker */
+  public Sticker? current_sticker() {
+    return( (_stickers.length == 1) ? _stickers.index( 0 ) : null );
+  }
+
+  /* Sets the current node, clearing all other selected items */
   public void set_current_node( Node node, double clear_alpha = 1.0 ) {
     clear( false, clear_alpha );
     add_node( node );
   }
 
-  /* Sets the current connection, clearing all other selected nodes and connections */
+  /* Sets the current connection, clearing all other selected items */
   public void set_current_connection( Connection conn, double clear_alpha = 1.0 ) {
     clear( false, clear_alpha );
     add_connection( conn );
+  }
+
+  /* Sets the current sticker, clearing all other selected items */
+  public void set_current_sticker( Sticker sticker, double clear_alpha = 1.0 ) {
+    clear( false, clear_alpha );
+    add_sticker( sticker );
   }
 
   /* Adds a node to the current selection.  Returns true if the node was added. */
@@ -154,6 +177,15 @@ public class Selection {
     if( is_connection_selected( conn ) ) return( false );
     conn.mode = ConnMode.SELECTED;
     _conns.append_val( conn );
+    selection_changed();
+    return( true );
+  }
+
+  /* Adds a sticker to the current selection */
+  public bool add_sticker( Sticker sticker ) {
+    if( is_sticker_selected( sticker ) ) return( false );
+    sticker.mode = StickerMode.SELECTED;
+    _stickers.append_val( sticker );
     selection_changed();
     return( true );
   }
@@ -258,6 +290,24 @@ public class Selection {
     return( false );
   }
 
+  /*
+   Removes the given sticker from the current selection.  Returns true
+   if the sticker is removed.
+  */
+  public bool remove_sticker( Sticker sticker, double alpha = 1.0 ) {
+    if( is_sticker_selected( sticker ) ) {
+      sticker.mode = StickerMode.NONE;
+      for( int i=0; i<_stickers.length; i++ ) {
+        if( sticker == _stickers.index( i ) ) {
+          _stickers.remove_index( i );
+          selection_changed();
+          return( true );
+        }
+      }
+    }
+    return( false );
+  }
+
   /* Clears all of the selected nodes */
   public bool clear_nodes( bool signal_change = true, double alpha = 1.0 ) {
     var num = _nodes.length;
@@ -265,7 +315,7 @@ public class Selection {
       _nodes.index( i ).mode  = NodeMode.NONE;
       _nodes.index( i ).alpha = alpha;
     }
-    _nodes.remove_range( 0, _nodes.length );
+    _nodes.remove_range( 0, num );
     if( (num > 0) && signal_change ) {
       selection_changed();
     }
@@ -279,7 +329,20 @@ public class Selection {
       _conns.index( i ).mode  = ConnMode.NONE;
       _conns.index( i ).alpha = alpha;
     }
-    _conns.remove_range( 0, _conns.length );
+    _conns.remove_range( 0, num );
+    if( (num > 0) && signal_change ) {
+      selection_changed();
+    }
+    return( num > 0 );
+  }
+
+  /* Clears all of the selected stickers */
+  public bool clear_stickers( bool signal_change = true ) {
+    var num = _stickers.length;
+    for( int i=0; i<num; i++ ) {
+      _stickers.index( i ).mode  = StickerMode.NONE;
+    }
+    _stickers.remove_range( 0, num );
     if( (num > 0) && signal_change ) {
       selection_changed();
     }
@@ -288,8 +351,13 @@ public class Selection {
 
   /* Clears the current selection */
   public bool clear( bool signal_change = true, double alpha = 1.0 ) {
-    var changed = clear_nodes( false, alpha );
-    changed |= clear_connections( signal_change, alpha );
+    var changed = false;
+    changed |= clear_nodes( false, alpha );
+    changed |= clear_connections( false, alpha );
+    changed |= clear_stickers( false );
+    if( changed && signal_change ) {
+      selection_changed();
+    }
     return( changed );
   }
 
@@ -301,6 +369,11 @@ public class Selection {
   /* Returns the number of connections selected */
   public int num_connections() {
     return( (int)_conns.length );
+  }
+
+  /* Returns the number of stickers selected */
+  public int num_stickers() {
+    return( (int)_stickers.length );
   }
 
   /* Returns an array of currently selected nodes */
@@ -338,6 +411,11 @@ public class Selection {
   /* Returns an array of currently selected connections */
   public Array<Connection> connections() {
     return( _conns );
+  }
+
+  /* Returns an array of currently selected stickers */
+  public Array<Sticker> stickers() {
+    return( _stickers );
   }
 
   /*

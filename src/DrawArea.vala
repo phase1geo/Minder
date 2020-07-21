@@ -1138,6 +1138,13 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Clears the current sticker (if it is set) and updates the UI accordingly */
+  private void clear_current_sticker( bool signal_change ) {
+    if( _selected.num_stickers() > 0 ) {
+      _selected.clear_stickers( signal_change );
+    }
+  }
+
   /* Called whenever the user clicks on a valid connection */
   private bool set_current_connection_from_position( Connection conn, EventButton e ) {
 
@@ -1304,6 +1311,15 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  public bool set_current_sticker_from_position( Sticker sticker, EventButton e ) {
+
+    /* Add the sticker to the selection */
+    _selected.set_current_sticker( sticker );
+
+    return( true );
+
+  }
+
   /*
    Sets the current node pointer to the node that is within the given coordinates.
    Returns true if we sucessfully set current_node to a valid node and made it
@@ -1344,14 +1360,22 @@ public class DrawArea : Gtk.DrawingArea {
       }
       if( match_conn != null ) {
         clear_current_node( false );
+        clear_current_sticker( false );
         return( set_current_connection_from_position( match_conn, e ) );
       } else {
         for( int i=0; i<_nodes.length; i++ ) {
           var match_node = _nodes.index( i ).contains( x, y, null );
           if( match_node != null ) {
             clear_current_connection( false );
+            clear_current_sticker( false );
             return( set_current_node_from_position( match_node, e ) );
           }
+        }
+        var sticker = _stickers.is_within( x, y );
+        if( sticker != null ) {
+          clear_current_node( false );
+          clear_current_connection( false );
+          return( set_current_sticker_from_position( sticker, e ) );
         }
         _select_box.x     = x;
         _select_box.y     = y;
@@ -1360,6 +1384,7 @@ public class DrawArea : Gtk.DrawingArea {
           clear_current_node( true );
         }
         clear_current_connection( true );
+        clear_current_sticker( true );
         if( _last_node != null ) {
           _selected.set_current_node( _last_node );
         }
@@ -1664,6 +1689,7 @@ public class DrawArea : Gtk.DrawingArea {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).pan( -diff_x, -diff_y );
     }
+    _stickers.pan( -diff_x, -diff_y );
   }
 
   /* Draw the background from the stylesheet */
@@ -1700,7 +1726,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     /* Draw the floating stickers */
-    _stickers.draw_all( ctx, 1.0 /*TBD*/ );
+    _stickers.draw_all( ctx, _theme, 1.0 /*TBD*/ );
 
     /* Draw the select box if one exists */
     draw_select_box( ctx );
@@ -1811,8 +1837,9 @@ public class DrawArea : Gtk.DrawingArea {
     _scaled_x = scale_value( event.x );
     _scaled_y = scale_value( event.y );
 
-    var current_node = _selected.current_node();
-    var current_conn = _selected.current_connection();
+    var current_node    = _selected.current_node();
+    var current_conn    = _selected.current_connection();
+    var current_sticker = _selected.current_sticker();
 
     /* If the mouse button is current pressed, handle it */
     if( _pressed ) {
@@ -1863,6 +1890,15 @@ public class DrawArea : Gtk.DrawingArea {
           }
         }
         queue_draw();
+
+      /* If we are dealing with a sticker, handle it */
+      } else if( current_sticker != null ) {
+        double diffx = _scaled_x - _press_x;
+        double diffy = _scaled_y - _press_y;
+        current_sticker.posx += diffx;
+        current_sticker.posy += diffy;
+        queue_draw();
+        auto_save();
 
       /* Otherwise, we are drawing a selection rectangle */
       } else {
@@ -2123,6 +2159,12 @@ public class DrawArea : Gtk.DrawingArea {
   public bool is_node_selected() {
     var current = _selected.current_node();
     return( (current != null) && (current.mode == NodeMode.CURRENT) );
+  }
+
+  /* Returns true if we are in sticker selected mode */
+  public bool is_sticker_selected() {
+    var current = _selected.current_sticker();
+    return( (current != null) && (current.mode == StickerMode.SELECTED) );
   }
 
   /* Returns the next node to select after the current node is removed */
@@ -2419,6 +2461,17 @@ public class DrawArea : Gtk.DrawingArea {
     changed();
   }
 
+  /* Deletes the currently selected sticker */
+  public void delete_sticker() {
+    var current = _selected.current_sticker();
+    if( current == null ) return;
+    /* TBD - Add item to undo/redo stack */
+    _stickers.delete_sticker( current );
+    _selected.remove_sticker( current );
+    queue_draw();
+    changed();
+  }
+
   /* Called whenever the backspace character is entered in the drawing area */
   private void handle_backspace() {
     if( is_connection_editable() ) {
@@ -2449,6 +2502,8 @@ public class DrawArea : Gtk.DrawingArea {
       }
     } else if( _selected.num_nodes() > 0 ) {
       delete_nodes();
+    } else if( is_sticker_selected() ) {
+      delete_sticker();
     }
   }
 
@@ -2470,6 +2525,8 @@ public class DrawArea : Gtk.DrawingArea {
       delete_node();
     } else if( _selected.num_nodes() > 0 ) {
       delete_nodes();
+    } else if( is_sticker_selected() ) {
+      delete_sticker();
     }
   }
 

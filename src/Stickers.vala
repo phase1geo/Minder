@@ -57,6 +57,15 @@ public class Stickers {
     return( null );
   }
 
+  /* Handles a pan of the canvas */
+  public void pan( double diff_x, double diff_y ) {
+    for( int i=0; i<_stickers.length; i++ ) {
+      var s = _stickers.index( i );
+      s.posx += diff_x;
+      s.posy += diff_y;
+    }
+  }
+
   /* Saves the sticker to the XML tree */
   public Xml.Node* save() {
     Xml.Node* n = new Xml.Node( null, "stickers" );
@@ -77,9 +86,9 @@ public class Stickers {
   }
 
   /* Draw the sticker on the mind map */
-  public void draw_all( Cairo.Context ctx, double opacity ) {
+  public void draw_all( Cairo.Context ctx, Theme theme, double opacity ) {
     for( int i=0; i<_stickers.length; i++ ) {
-      _stickers.index( i ).draw( ctx, opacity );
+      _stickers.index( i ).draw( ctx, theme, opacity );
     }
   }
 

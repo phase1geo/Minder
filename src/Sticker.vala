@@ -22,11 +22,17 @@
 using Cairo;
 using Gdk;
 
+public enum StickerMode {
+  NONE = 0,
+  SELECTED
+}
+
 public class Sticker {
 
   private string _name;
   private Pixbuf _buf;
 
+  public StickerMode mode { get; set; default = StickerMode.NONE; }
   public double posx { get; set; default = 0.0; }
   public double posy { get; set; default = 0.0; }
   public double width {
@@ -84,7 +90,12 @@ public class Sticker {
   }
 
   /* Draw the sticker on the mind map */
-  public void draw( Cairo.Context ctx, double opacity ) {
+  public void draw( Cairo.Context ctx, Theme theme, double opacity ) {
+    if( mode == StickerMode.SELECTED ) {
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), opacity );
+      ctx.rectangle( (posx - 2), (posy - 2), (_buf.width + 4), (_buf.height + 4) );
+      ctx.fill();
+    }
     cairo_set_source_pixbuf( ctx, _buf, posx, posy );
     ctx.paint_with_alpha( opacity );
   }
