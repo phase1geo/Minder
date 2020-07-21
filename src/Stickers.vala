@@ -31,13 +31,13 @@ public class Stickers {
     _stickers = new Array<Sticker>();
   }
 
-  /* Adds a new sticker to this list */
-  public void add_sticker( string name, double posx, double posy ) {
-    _stickers.append_val( new Sticker( name, posx, posy ) );
+  /* Adds the given sticker to our list */
+  public void add_sticker( Sticker sticker ) {
+    _stickers.append_val( sticker );
   }
 
   /* Deletes the given sticker from this list */
-  public void delete_sticker( Sticker sticker ) {
+  public void remove_sticker( Sticker sticker ) {
     for( int i=0; i<_stickers.length; i++ ) {
       if( _stickers.index( i ) == sticker ) {
         _stickers.remove_index( i );

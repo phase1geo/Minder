@@ -58,6 +58,7 @@ sources += files(
     'undo_actions/UndoConnectionNote.vala',
     'undo_actions/UndoConnectionTitle.vala',
     'undo_actions/UndoConnectionsDelete.vala',
+
     'undo_actions/UndoNodeAddParent.vala',
     'undo_actions/UndoNodeAttach.vala',
     'undo_actions/UndoNodeBalance.vala',
@@ -81,6 +82,7 @@ sources += files(
     'undo_actions/UndoNodeReveal.vala',
     'undo_actions/UndoNodeSort.vala',
     'undo_actions/UndoNodeTask.vala',
+
     'undo_actions/UndoNodesAlign.vala',
     'undo_actions/UndoNodesCut.vala',
     'undo_actions/UndoNodesDelete.vala',
@@ -91,6 +93,11 @@ sources += files(
     'undo_actions/UndoNodesRandLinkColor.vala',
     'undo_actions/UndoNodesReparentLinkColor.vala',
     'undo_actions/UndoNodesReplace.vala',
+
+    'undo_actions/UndoStickerAdd.vala',
+    'undo_actions/UndoStickerMove.vala',
+    'undo_actions/UndoStickerRemove.vala',
+
     'undo_actions/UndoStyleAffectChange.vala',
     'undo_actions/UndoStyleChange.vala',
     'undo_actions/UndoStyleConnectionArrow.vala',
@@ -111,6 +118,7 @@ sources += files(
     'undo_actions/UndoStyleNodeMarkup.vala',
     'undo_actions/UndoStyleNodePadding.vala',
     'undo_actions/UndoStyleNodeWidth.vala',
+
     'undo_actions/UndoTextClearTags.vala',
     'undo_actions/UndoTextDelete.vala',
     'undo_actions/UndoTextInsert.vala',

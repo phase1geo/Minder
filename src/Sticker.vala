@@ -46,9 +46,9 @@ public class Sticker {
     }
   }
 
-  /* Constructor */
-  public Sticker( string name, double x, double y ) {
-    _name = name;
+  /* Default constructor */
+  public Sticker( string n, double x, double y ) {
+    _name = n;
     posx  = x;
     posy  = y;
     set_pixbuf();

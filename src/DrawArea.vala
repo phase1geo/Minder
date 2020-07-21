@@ -96,6 +96,8 @@ public class DrawArea : Gtk.DrawingArea {
   private SelectBox        _select_box;
   private Tagger           _tagger;
   private TextCompletion   _completion;
+  private double           _sticker_posx;
+  private double           _sticker_posy;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -141,6 +143,11 @@ public class DrawArea : Gtk.DrawingArea {
   public Tagger tagger {
     get {
       return( _tagger );
+    }
+  }
+  public Stickers stickers {
+    get {
+      return( _stickers );
     }
   }
 
@@ -777,6 +784,11 @@ public class DrawArea : Gtk.DrawingArea {
     c.to_node.last_selected_connection   = c;
   }
 
+  /* Sets the current selected sticker to the specified sticker */
+  public void set_current_sticker( Sticker? s ) {
+    _selected.set_current_sticker( s );
+  }
+
   /* Toggles the value of the specified node, if possible */
   public void toggle_task( Node n ) {
     undo_buffer.add_item( new UndoNodeTask( n, true, !n.task_done() ) );
@@ -1315,6 +1327,10 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Add the sticker to the selection */
     _selected.set_current_sticker( sticker );
+
+    /* Save the location of the sticker */
+    _sticker_posx = sticker.posx;
+    _sticker_posy = sticker.posy;
 
     return( true );
 
@@ -1995,8 +2011,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Handle button release event */
   private bool on_release( EventButton event ) {
 
-    var current_node = _selected.current_node();
-    var current_conn = _selected.current_connection();
+    var current_node    = _selected.current_node();
+    var current_conn    = _selected.current_connection();
+    var current_sticker = _selected.current_sticker();
 
     _pressed = false;
 
@@ -2076,6 +2093,11 @@ public class DrawArea : Gtk.DrawingArea {
 
       }
 
+    /* If a sticker is selected, deal with the possiblities */
+    } else if( current_sticker != null ) {
+      if( current_sticker.mode == StickerMode.SELECTED ) {
+        undo_buffer.add_item( new UndoStickerMove( current_sticker, _sticker_posx, _sticker_posy ) );
+      }
     }
 
     /* If motion is set, clear it and clear the alpha */
@@ -2462,11 +2484,11 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Deletes the currently selected sticker */
-  public void delete_sticker() {
+  public void remove_sticker() {
     var current = _selected.current_sticker();
     if( current == null ) return;
-    /* TBD - Add item to undo/redo stack */
-    _stickers.delete_sticker( current );
+    undo_buffer.add_item( new UndoStickerRemove( current ) );
+    _stickers.remove_sticker( current );
     _selected.remove_sticker( current );
     queue_draw();
     changed();
@@ -2503,7 +2525,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( _selected.num_nodes() > 0 ) {
       delete_nodes();
     } else if( is_sticker_selected() ) {
-      delete_sticker();
+      remove_sticker();
     }
   }
 
@@ -2526,7 +2548,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( _selected.num_nodes() > 0 ) {
       delete_nodes();
     } else if( is_sticker_selected() ) {
-      delete_sticker();
+      remove_sticker();
     }
   }
 
@@ -4114,12 +4136,15 @@ public class DrawArea : Gtk.DrawingArea {
           }
         }
       } else if( info == DragTypes.STICKER ) {
-        _stickers.add_sticker( data.get_text(), (double)x, (double)y );
-        // TBD - Add support for undo'ing this operation
+        var sticker = new Sticker( data.get_text(), (double)x, (double)y );
+        _stickers.add_sticker( sticker );
+        _selected.set_current_sticker( sticker );
+        _undo_buffer.add_item( new UndoStickerAdd( sticker ) );
       }
 
       Gtk.drag_finish( ctx, true, false, t );
 
+      grab_focus();
       see();
       queue_draw();
       current_changed( this );
