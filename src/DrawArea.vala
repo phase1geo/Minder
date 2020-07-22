@@ -77,8 +77,9 @@ public class DrawArea : Gtk.DrawingArea {
   private Array<NodeInfo?> _orig_info;
   private int              _orig_width;
   private string           _orig_title;
-  private Node?            _attach_node  = null;
-  private Connection?      _attach_conn  = null;
+  private Node?            _attach_node    = null;
+  private Connection?      _attach_conn    = null;
+  private Sticker?         _attach_sticker = null;
   private NodeMenu         _node_menu;
   private ConnectionMenu   _conn_menu;
   private ConnectionsMenu  _conns_menu;
@@ -626,6 +627,8 @@ public class DrawArea : Gtk.DrawingArea {
     _press_type         = EventType.NOTHING;
     _motion             = false;
     _attach_node        = null;
+    _attach_conn        = null;
+    _attach_sticker     = null;
     _orig_text          = new CanvasText( this );
     _current_new        = false;
     _last_connection    = null;
@@ -671,6 +674,8 @@ public class DrawArea : Gtk.DrawingArea {
     _press_type         = EventType.NOTHING;
     _motion             = false;
     _attach_node        = null;
+    _attach_conn        = null;
+    _attach_sticker     = null;
     _current_new        = true;
     _last_connection    = null;
 
@@ -1667,7 +1672,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Returns the droppable node or connection if one is found */
-  private void get_droppable( double x, double y, out Node? node, out Connection? conn ) {
+  private void get_droppable( double x, double y, out Node? node, out Connection? conn, out Sticker? sticker ) {
     node = null;
     conn = null;
     for( int i=0; i<_nodes.length; i++ ) {
@@ -1677,7 +1682,8 @@ public class DrawArea : Gtk.DrawingArea {
         return;
       }
     }
-    conn = _connections.within_title_box( x, y );
+    conn    = _connections.within_title_box( x, y );
+    sticker = _stickers.is_within( x, y );
   }
 
   /* Returns the origin */
@@ -1891,7 +1897,7 @@ public class DrawArea : Gtk.DrawingArea {
             for( int i=0; i<_nodes.length; i++ ) {
               Node? match = _nodes.index( i ).contains( _scaled_x, _scaled_y, null );
               if( match != null ) {
-                _attach_node      = match;
+                _attach_node = match;
                 set_node_mode( _attach_node, NodeMode.ATTACHABLE );
                 break;
               }
@@ -2611,7 +2617,7 @@ public class DrawArea : Gtk.DrawingArea {
       _selected.remove_connection( current );
       if( _attach_node != null ) {
         set_node_mode( _attach_node, NodeMode.NONE );
-        _attach_node      = null;
+        _attach_node = null;
       }
       _selected.set_current_node( _last_node );
       _last_connection = null;
@@ -4132,10 +4138,12 @@ public class DrawArea : Gtk.DrawingArea {
 
     Node       attach_node;
     Connection attach_conn;
-    var scaled_x    = scale_value( x );
-    var scaled_y    = scale_value( y );
+    Sticker    attach_sticker;
 
-    get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn );
+    var scaled_x = scale_value( x );
+    var scaled_y = scale_value( y );
+
+    get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
 
     /* Clear the mode of any previous attach node/connection */
     if( _attach_node != null ) {
@@ -4143,6 +4151,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
     if( _attach_conn != null ) {
       _attach_conn.mode = ConnMode.NONE;
+    }
+    if( _attach_sticker != null ) {
+      _attach_sticker.mode = StickerMode.NONE;
     }
 
     if( attach_node != null ) {
@@ -4153,11 +4164,18 @@ public class DrawArea : Gtk.DrawingArea {
       attach_conn.mode = ConnMode.DROPPABLE;
       _attach_conn = attach_conn;
       queue_draw();
+    } else if( attach_sticker != null ) {
+      attach_sticker.mode = StickerMode.DROPPABLE;
+      _attach_sticker = attach_sticker;
+      queue_draw();
     } else if( _attach_node != null ) {
       _attach_node = null;
       queue_draw();
     } else if( _attach_conn != null ) {
       _attach_conn = null;
+      queue_draw();
+    } else if( _attach_sticker != null ) {
+      _attach_sticker = null;
       queue_draw();
     }
 
@@ -4187,10 +4205,20 @@ public class DrawArea : Gtk.DrawingArea {
           }
         }
       } else if( info == DragTypes.STICKER ) {
-        var sticker = new Sticker( data.get_text(), (double)x, (double)y );
-        _stickers.add_sticker( sticker );
-        _selected.set_current_sticker( sticker );
-        _undo_buffer.add_item( new UndoStickerAdd( sticker ) );
+        if( _attach_sticker != null ) {
+          var sticker = new Sticker( data.get_text(), _attach_sticker.posx, _attach_sticker.posy, (int)_attach_sticker.width );
+          _stickers.remove_sticker( _attach_sticker );
+          _stickers.add_sticker( sticker );
+          _selected.set_current_sticker( sticker );
+          _undo_buffer.add_item( new UndoStickerChange( _attach_sticker, sticker ) );
+          _attach_sticker.mode = StickerMode.NONE;
+          _attach_sticker = null;
+        } else {
+          var sticker = new Sticker( data.get_text(), (double)x, (double)y );
+          _stickers.add_sticker( sticker );
+          _selected.set_current_sticker( sticker );
+          _undo_buffer.add_item( new UndoStickerAdd( sticker ) );
+        }
       }
 
       Gtk.drag_finish( ctx, true, false, t );

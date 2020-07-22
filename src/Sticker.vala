@@ -23,8 +23,9 @@ using Cairo;
 using Gdk;
 
 public enum StickerMode {
-  NONE = 0,
-  SELECTED
+  NONE = 0,   // Sticker should be drawn nomrally
+  SELECTED,   // Sticker has been selected
+  DROPPABLE   // Sticker is a dropzone for another sticker
 }
 
 public class Sticker {
@@ -47,11 +48,11 @@ public class Sticker {
   }
 
   /* Default constructor */
-  public Sticker( string n, double x, double y ) {
+  public Sticker( string n, double x, double y, int width = -1 ) {
     _name = n;
     posx  = x;
     posy  = y;
-    set_pixbuf();
+    set_pixbuf( width );
   }
 
   /* Constructor from XML */
@@ -138,6 +139,14 @@ public class Sticker {
     /* Draw sticker image */
     cairo_set_source_pixbuf( ctx, _buf, posx, posy );
     ctx.paint_with_alpha( opacity );
+
+    /* Draw droppable box, if necessary */
+    if( mode == StickerMode.DROPPABLE ) {
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), opacity );
+      ctx.set_line_width( 4 );
+      ctx.rectangle( posx, posy, _buf.width, _buf.height );
+      ctx.stroke();
+    }
 
   }
 
