@@ -78,6 +78,7 @@ public class DrawArea : Gtk.DrawingArea {
   private int              _orig_width;
   private string           _orig_title;
   private Node?            _attach_node  = null;
+  private Connection?      _attach_conn  = null;
   private NodeMenu         _node_menu;
   private ConnectionMenu   _conn_menu;
   private ConnectionsMenu  _conns_menu;
@@ -1665,15 +1666,18 @@ public class DrawArea : Gtk.DrawingArea {
     return( null );
   }
 
-  /* Returns the droppable node if one is found */
-  private Node? droppable_node( double x, double y ) {
+  /* Returns the droppable node or connection if one is found */
+  private void get_droppable( double x, double y, out Node? node, out Connection? conn ) {
+    node = null;
+    conn = null;
     for( int i=0; i<_nodes.length; i++ ) {
       Node tmp = _nodes.index( i ).contains( x, y, null );
       if( tmp != null ) {
-        return( tmp );
+        node = tmp;
+        return;
       }
     }
-    return( null );
+    conn = _connections.within_title_box( x, y );
   }
 
   /* Returns the origin */
@@ -4126,16 +4130,34 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever we drag something over the canvas */
   private bool handle_drag_motion( Gdk.DragContext ctx, int x, int y, uint t ) {
 
-    Node attach_node = droppable_node( scale_value( x ), scale_value( y ) );
+    Node       attach_node;
+    Connection attach_conn;
+    var scaled_x    = scale_value( x );
+    var scaled_y    = scale_value( y );
+
+    get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn );
+
+    /* Clear the mode of any previous attach node/connection */
     if( _attach_node != null ) {
       set_node_mode( _attach_node, NodeMode.NONE );
     }
+    if( _attach_conn != null ) {
+      _attach_conn.mode = ConnMode.NONE;
+    }
+
     if( attach_node != null ) {
       set_node_mode( attach_node, NodeMode.DROPPABLE );
       _attach_node = attach_node;
       queue_draw();
+    } else if( attach_conn != null ) {
+      attach_conn.mode = ConnMode.DROPPABLE;
+      _attach_conn = attach_conn;
+      queue_draw();
     } else if( _attach_node != null ) {
       _attach_node = null;
+      queue_draw();
+    } else if( _attach_conn != null ) {
+      _attach_conn = null;
       queue_draw();
     }
 
@@ -4146,7 +4168,8 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called when something is dropped on the DrawArea */
   private void handle_drag_data_received( Gdk.DragContext ctx, int x, int y, Gtk.SelectionData data, uint info, uint t ) {
 
-    if( (_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE) ) {
+    if( ((_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE)) &&
+        ((_attach_conn == null) || (_attach_conn.mode != ConnMode.DROPPABLE)) ) {
 
       if( info == DragTypes.URI ) {
         foreach (var uri in data.get_uris()) {
@@ -4192,10 +4215,17 @@ public class DrawArea : Gtk.DrawingArea {
           }
         }
       } else if( info == DragTypes.STICKER ) {
-        _attach_node.sticker = data.get_text();
-        // TBD - Add support for undo'ing this operation
-        set_node_mode( _attach_node, NodeMode.NONE );
-        _attach_node = null;
+        if( _attach_node != null ) {
+          _attach_node.sticker = data.get_text();
+          // TBD - Add support for undo'ing this operation
+          set_node_mode( _attach_node, NodeMode.NONE );
+          _attach_node = null;
+        } else if( _attach_conn != null ) {
+          _attach_conn.sticker = data.get_text();
+          // TBD - Add support for undo'ing this operation
+          _attach_conn.mode = ConnMode.NONE;
+          _attach_conn = null;
+        }
       }
 
       Gtk.drag_finish( ctx, true, false, t );

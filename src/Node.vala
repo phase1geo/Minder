@@ -2144,6 +2144,7 @@ public class Node : Object {
   /* Draws the node on the screen */
   public virtual void draw( Context ctx, Theme theme, bool motion ) {
 
+    var nodesel_background = theme.get_color( "nodesel_background" );
     var nodesel_foreground = theme.get_color( "nodesel_foreground" );
 
     /* If this is a root node, draw specifically for a root node */
@@ -2160,7 +2161,7 @@ public class Node : Object {
       } else {
         draw_acc_task( ctx, foreground );
       }
-      draw_sticker( ctx, nodesel_foreground, foreground );
+      draw_sticker( ctx, nodesel_background, background );
       draw_common_note( ctx, foreground, nodesel_foreground, foreground );
       draw_link_node(   ctx, foreground, nodesel_foreground, foreground );
       draw_common_fold( ctx, background, foreground );
@@ -2181,7 +2182,7 @@ public class Node : Object {
       } else {
         draw_acc_task( ctx, (style.is_fillable() ? background : _link_color) );
       }
-      draw_sticker( ctx, nodesel_foreground, background );
+      draw_sticker( ctx, nodesel_background, background );
       draw_common_note( ctx, foreground, nodesel_foreground, background );
       draw_link_node(   ctx, foreground, nodesel_foreground, foreground );
       draw_common_fold( ctx, _link_color, background );
