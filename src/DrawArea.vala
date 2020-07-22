@@ -1323,10 +1323,24 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Handles a click on the specified sticker */
   public bool set_current_sticker_from_position( Sticker sticker, EventButton e ) {
 
-    /* Add the sticker to the selection */
-    _selected.set_current_sticker( sticker );
+    var scaled_x = scale_value( e.x );
+    var scaled_y = scale_value( e.y );
+
+    /* If the sticker is selected, check to see if the cursor is over other parts */
+    if( sticker.mode == StickerMode.SELECTED ) {
+      if( sticker.is_within_resizer( scaled_x, scaled_y ) ) {
+        _resize     = true;
+        _orig_width = (int)sticker.width;
+        return( true );
+      }
+
+    /* Otherwise, add the sticker to the selection */
+    } else {
+      _selected.set_current_sticker( sticker );
+    }
 
     /* Save the location of the sticker */
     _sticker_posx = sticker.posx;
@@ -1911,8 +1925,12 @@ public class DrawArea : Gtk.DrawingArea {
       } else if( current_sticker != null ) {
         double diffx = _scaled_x - _press_x;
         double diffy = _scaled_y - _press_y;
-        current_sticker.posx += diffx;
-        current_sticker.posy += diffy;
+        if( _resize ) {
+          current_sticker.resize( diffx );
+        } else {
+          current_sticker.posx += diffx;
+          current_sticker.posy += diffy;
+        }
         queue_draw();
         auto_save();
 
@@ -1944,6 +1962,12 @@ public class DrawArea : Gtk.DrawingArea {
 
       var tag = FormatTag.LENGTH;
       var url = "";
+      if( current_sticker != null ) {
+        if( current_sticker.is_within_resizer( _scaled_x, _scaled_y ) ) {
+          set_cursor( CursorType.SB_H_DOUBLE_ARROW );
+          return( false );
+        }
+      }
       if( current_conn != null )  {
         if( (current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING) ) {
           update_connection( event.x, event.y );
@@ -2030,7 +2054,11 @@ public class DrawArea : Gtk.DrawingArea {
     /* If we were resizing a node, end the resize */
     if( _resize ) {
       _resize = false;
-      undo_buffer.add_item( new UndoNodeResize( current_node, _orig_width ) );
+      if( current_sticker != null ) {
+        undo_buffer.add_item( new UndoStickerResize( current_sticker, _orig_width ) );
+      } else if( current_node != null ) {
+        undo_buffer.add_item( new UndoNodeResize( current_node, _orig_width ) );
+      }
       return( false );
     }
 

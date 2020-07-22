@@ -97,6 +97,7 @@ sources += files(
     'undo_actions/UndoStickerAdd.vala',
     'undo_actions/UndoStickerMove.vala',
     'undo_actions/UndoStickerRemove.vala',
+    'undo_actions/UndoStickerResize.vala',
 
     'undo_actions/UndoStyleAffectChange.vala',
     'undo_actions/UndoStyleChange.vala',

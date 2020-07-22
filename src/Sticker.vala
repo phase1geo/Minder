@@ -59,6 +59,26 @@ public class Sticker {
     load( n );
   }
 
+  /* Returns the area of the resizer box */
+  public void resizer_bbox( out double x, out double y, out double w, out double h ) {
+    x = (posx + _buf.width) - 8;
+    y = posy;
+    w = 8;
+    h = 8;
+  }
+
+  /* Returns true if the given coordinates are within the area of the resizer box */
+  public bool is_within_resizer( double x, double y ) {
+    double rx, ry, rw, rh;
+    resizer_bbox( out rx, out ry, out rw, out rh );
+    return( Utils.is_within_bounds( x, y, rx, ry, rw, rh ) );
+  }
+
+  /* Resizes the given image */
+  public void resize( double diff ) {
+    set_pixbuf( (int)(_buf.width + diff) );
+  }
+
   /* Saves the sticker to the XML tree */
   public Xml.Node* save() {
     Xml.Node* n = new Xml.Node( null, "sticker" );
@@ -85,19 +105,40 @@ public class Sticker {
     }
   }
 
-  private void set_pixbuf() {
-    _buf = new Pixbuf.from_resource( "/com/github/phase1geo/minder/" + _name );
+  /* Creates the pixbuf for the stored image */
+  public void set_pixbuf( int width = -1 ) {
+    _buf = new Pixbuf.from_resource_at_scale( ("/com/github/phase1geo/minder/" + _name), width, -1, true );
   }
 
   /* Draw the sticker on the mind map */
   public void draw( Cairo.Context ctx, Theme theme, double opacity ) {
+
     if( mode == StickerMode.SELECTED ) {
+
+      /* Draw selection box */
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), opacity );
-      ctx.rectangle( (posx - 2), (posy - 2), (_buf.width + 4), (_buf.height + 4) );
+      ctx.rectangle( posx, posy, _buf.width, _buf.height );
       ctx.fill();
+
+      /* Draw resize handle */
+      double x, y, w, h;
+
+      resizer_bbox( out x, out y, out w, out h );
+
+      Utils.set_context_color( ctx, theme.get_color( "background" ) );
+      ctx.set_line_width( 1 );
+      ctx.rectangle( x, y, w, h );
+      ctx.fill_preserve();
+
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "foreground" ), opacity );
+      ctx.stroke();
+
     }
+
+    /* Draw sticker image */
     cairo_set_source_pixbuf( ctx, _buf, posx, posy );
     ctx.paint_with_alpha( opacity );
+
   }
 
 }
