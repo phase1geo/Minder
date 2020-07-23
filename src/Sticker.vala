@@ -77,24 +77,27 @@ public class Sticker {
 
   /* Resizes the given image */
   public void resize( double diff ) {
+    var width = (int)(_buf.width + diff);
+    if( (width < 24) || (width > 256) ) return;
     set_pixbuf( (int)(_buf.width + diff) );
   }
 
   /* Saves the sticker to the XML tree */
   public Xml.Node* save() {
     Xml.Node* n = new Xml.Node( null, "sticker" );
-    n->set_prop( "name", _name );
-    n->set_prop( "posx", posx.to_string() );
-    n->set_prop( "posy", posy.to_string() );
+    n->set_prop( "name",  _name );
+    n->set_prop( "posx",  posx.to_string() );
+    n->set_prop( "posy",  posy.to_string() );
+    n->set_prop( "width", _buf.width.to_string() );
     return( n );
   }
 
   /* Loads the sticker from the XML tree */
   public void load( Xml.Node* n ) {
+    var width = -1;
     string? nm = n->get_prop( "name" );
     if( nm != null ) {
       _name = nm;
-      set_pixbuf();
     }
     string? x = n->get_prop( "posx" );
     if( x != null ) {
@@ -104,6 +107,11 @@ public class Sticker {
     if( y != null ) {
       posy = double.parse( y );
     }
+    string? w = n->get_prop( "width" );
+    if( w != null ) {
+      width = int.parse( w );
+    }
+    set_pixbuf( width );
   }
 
   /* Creates the pixbuf for the stored image */
