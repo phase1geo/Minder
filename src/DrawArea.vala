@@ -4243,14 +4243,23 @@ public class DrawArea : Gtk.DrawingArea {
           }
         }
       } else if( info == DragTypes.STICKER ) {
+        var sticker = data.get_text();
         if( _attach_node != null ) {
+          if( _attach_node.sticker == null ) {
+            undo_buffer.add_item( new UndoNodeStickerAdd( _attach_node, sticker ) );
+          } else {
+            undo_buffer.add_item( new UndoNodeStickerChange( _attach_node, _attach_node.sticker ) );
+          }
           _attach_node.sticker = data.get_text();
-          // TBD - Add support for undo'ing this operation
           set_node_mode( _attach_node, NodeMode.NONE );
           _attach_node = null;
         } else if( _attach_conn != null ) {
+          if( _attach_conn.sticker == null ) {
+            undo_buffer.add_item( new UndoConnectionStickerAdd( _attach_conn, sticker ) );
+          } else {
+            undo_buffer.add_item( new UndoConnectionStickerChange( _attach_conn, _attach_conn.sticker ) );
+          }
           _attach_conn.sticker = data.get_text();
-          // TBD - Add support for undo'ing this operation
           _attach_conn.mode = ConnMode.NONE;
           _attach_conn = null;
         }

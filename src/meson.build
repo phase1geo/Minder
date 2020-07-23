@@ -56,6 +56,9 @@ sources += files(
     'undo_actions/UndoConnectionColor.vala',
     'undo_actions/UndoConnectionDelete.vala',
     'undo_actions/UndoConnectionNote.vala',
+    'undo_actions/UndoConnectionStickerAdd.vala',
+    'undo_actions/UndoConnectionStickerChange.vala',
+    'undo_actions/UndoConnectionStickerRemove.vala',
     'undo_actions/UndoConnectionTitle.vala',
     'undo_actions/UndoConnectionsDelete.vala',
 
@@ -81,6 +84,9 @@ sources += files(
     'undo_actions/UndoNodeResize.vala',
     'undo_actions/UndoNodeReveal.vala',
     'undo_actions/UndoNodeSort.vala',
+    'undo_actions/UndoNodeStickerAdd.vala',
+    'undo_actions/UndoNodeStickerChange.vala',
+    'undo_actions/UndoNodeStickerRemove.vala',
     'undo_actions/UndoNodeTask.vala',
 
     'undo_actions/UndoNodesAlign.vala',
