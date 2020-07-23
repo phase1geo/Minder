@@ -199,6 +199,45 @@ public class Connection : Object {
     color = conn.color;
   }
 
+  private int sticker_width() {
+    var padding = style.connection_padding ?? 0;
+    return( (_sticker_buf != null) ? (_sticker_buf.width + padding) : 0 );
+  }
+
+  private int sticker_height() {
+    return( (_sticker_buf != null) ? _sticker_buf.height : 0 );
+  }
+
+  private int title_width() {
+    return( (_title != null) ? (int)_title.width : 0 );
+  }
+
+  private int title_height() {
+    return( (_title != null) ? (int)_title.height : 0 );
+  }
+
+  private int note_width() {
+    var padding = style.connection_padding ?? 0;
+    return( (note.length > 0) ? 11 : 0 );
+  }
+
+  private int note_height() {
+    return( (note.length > 0) ? 11 : 0 );
+  }
+
+  private int get_width() {
+    return( sticker_width() + title_width() + note_width() );
+  }
+
+  private int get_height() {
+    int sh = sticker_height();
+    int th = title_height();
+    int nh = note_height();
+         if( (sh < th) && (nh < th) ) { return( th ); }
+    else if( (th < sh) && (nh < sh) ) { return( sh ); }
+    else                              { return( nh ); }
+  }
+
   /* Returns the canvas box that contains both the from and to nodes */
   public void bbox( out double x, out double y, out double w, out double h ) {
     double fx, fy, fw, fh;
@@ -258,14 +297,12 @@ public class Connection : Object {
   /* Positions the given title according to the location of the _dragx and _dragy values */
   private void position_title() {
     if( title != null ) {
-      var swidth  = (_sticker_buf != null) ? (_sticker_buf.width + style.connection_padding) : 0;
-      var nwidth  = (note.length > 0) ? (style.connection_padding + 11) : 0;
-      var width   = swidth + title.width + nwidth;
-      var sheight = (_sticker_buf != null) ? _sticker_buf.height : 0;
-      var height  = (title.height < sheight) ? sheight :
-                    (title.height < 11)      ? 11      : title.height;
-      _title.posx = _dragx - (width  / 2);
-      _title.posy = _dragy - (height / 2);
+      var width   = get_width();
+      var swidth  = sticker_width();
+      var theight = title_height();
+
+      _title.posx = _dragx - ((width / 2) - swidth);
+      _title.posy = _dragy - (theight / 2);
     }
   }
 
@@ -467,53 +504,40 @@ public class Connection : Object {
     return( Utils.is_within_bounds( x, y, sw, sy, sw, sh ) );
   }
 
-  /* Returns the bounding box for the stored title and note icon */
+  /* Returns the bounding box for the sticker, title and note icon */
   private void title_bbox( out double x, out double y, out double w, out double h ) {
     var padding = style.connection_padding ?? 0;
-    if( (_sticker_buf != null) || (_title != null) || (note.length > 0) ) {
-      var swidth  = (_sticker_buf != null) ? (_sticker_buf.width + padding) : 0;
-      var nwidth  = (note.length > 0) ? (padding + 11) : 0;
-      var sheight = (_sticker_buf != null) ? _sticker_buf.height : 0;
-      x = _title.posx - swidth - padding;
-      y = _title.posy - padding;
-      w = swidth + _title.width + nwidth + (padding * 2);
-      h = ((_title.height < sheight) ? sheight : ((_title.height < 11) ? 11 : _title.height)) + (padding * 2);
-    } else {
-      x = _dragx - (padding + 5);
-      y = _dragy - (padding + 5);
-      w = 11 + (padding * 2);
-      h = 11 + (padding * 2);
-    }
+    var width   = get_width();
+    var height  = get_height();
+
+    x = _dragx - ((width / 2) + padding);
+    y = _dragy - ((height / 2) + padding);
+    w = width  + (padding * 2);
+    h = height + (padding * 2);
   }
 
   /* Returns the positional information for where the note item is located (if it exists) */
   private void note_bbox( out double x, out double y, out double w, out double h ) {
+    var width   = get_width();
+    var nwidth  = note_width();
+    var nheight = note_height();
 
-    double tx, ty, tw, th;
-    var    padding = style.connection_padding ?? 0;
-
-    title_bbox( out tx, out ty, out tw, out th );
-
-    x = (tx + tw) - (padding + 11);
-    y = ty + (th / 2) - 5;
-    w = 11;
-    h = 11;
-
+    x = _dragx + (width / 2) - nwidth;
+    y = _dragy - (nwidth / 2);
+    w = nwidth;
+    h = nheight;
   }
 
   /* Returns the position information for where the sticker item is located (if it exists) */
   private void sticker_bbox( out double x, out double y, out double w, out double h ) {
+    var width   = get_width();
+    var swidth  = sticker_width();
+    var sheight = sticker_height();
 
-    double tx, ty, tw, th;
-    var    padding = style.connection_padding ?? 0;
-
-    title_bbox( out tx, out ty, out tw, out th );
-
-    x = (tx + padding);
-    y = ty + ((th / 2) - (_sticker_buf.height / 2));
-    w = _sticker_buf.width;
-    h = _sticker_buf.height;
-
+    x = _dragx - (width / 2);
+    y = _dragy - (swidth / 2);
+    w = swidth;
+    h = sheight;
   }
 
   /* Updates the location of the drag handle */
