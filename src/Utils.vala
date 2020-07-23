@@ -180,4 +180,13 @@ public class Utils {
 #endif
   }
 
+  /* Pops up the given menu */
+  public static void popup_menu( Gtk.Menu menu, EventButton e ) {
+#if GTK322
+    menu.popup_at_pointer( e );
+#else
+    menu.popup( null, null, null, e.button, e.time );
+#endif
+  }
+
 }

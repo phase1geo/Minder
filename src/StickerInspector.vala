@@ -24,15 +24,22 @@ using Gdk;
 
 public class StickerInspector : Box {
 
+  private string favorites = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "favorites.xml" );
+
   private MainWindow    _win;
   private DrawArea?     _da = null;
   private GLib.Settings _settings;
   private SearchEntry   _search;
   private Stack         _stack;
+  private FlowBox       _favorites;
   private FlowBox       _matched_box;
   private Image         _dragged_sticker;
   private double        _motion_x;
   private double        _motion_y;
+  private Gtk.Menu      _menu;
+  private Gtk.MenuItem  _favorite;
+  private FlowBox       _clicked_category;
+  private string        _clicked_sticker;
 
   public const Gtk.TargetEntry[] DRAG_TARGETS = {
     {"STRING", TargetFlags.SAME_APP, DragTypes.STICKER}
@@ -44,6 +51,22 @@ public class StickerInspector : Box {
 
     _win      = win;
     _settings = settings;
+
+    /* Setup favoriting menu */
+    _menu     = new Gtk.Menu();
+    _menu.show.connect(() => {
+      if( _clicked_category == _favorites ) {
+        _favorite.label = _( "Remove From Favorites" );
+        _favorite.set_sensitive( true );
+      } else {
+        _favorite.label = _( "Add To Favorites" );
+        _favorite.set_sensitive( !is_favorite( _clicked_sticker ) );
+      }
+    });
+    _favorite = new Gtk.MenuItem.with_label( _( "Add To Favorites" ) );
+    _favorite.activate.connect( handle_favorite );
+    _menu.add( _favorite );
+    _menu.show_all();
 
     /*
      Create instruction label (this will always be visible so it will not be
@@ -70,9 +93,7 @@ public class StickerInspector : Box {
     sw.add( vp );
 
     /* Create search result flowbox */
-    _matched_box = new FlowBox();
-    _matched_box.homogeneous = true;
-    make_flowbox_drag_source( _matched_box );
+    _matched_box = create_icon_box();
 
     var msw = new ScrolledWindow( null, null );
     msw.expand = false;
@@ -81,6 +102,10 @@ public class StickerInspector : Box {
 
     _stack.add_named( sw, "all" );
     _stack.add_named( msw, "matched" );
+
+    /* Create Favorites */
+    _favorites = create_category( box, _( "Favorites" ) );
+    load_favorites();
 
     /* Pack the elements into this widget */
     create_via_xml( box );
@@ -132,9 +157,7 @@ public class StickerInspector : Box {
     exp.expanded   = true;
 
     /* Create the flowbox which will contain the stickers */
-    var fbox = new FlowBox();
-    fbox.homogeneous = true;
-    make_flowbox_drag_source( fbox );
+    var fbox = create_icon_box();
     exp.add( fbox );
 
     box.pack_start( exp, false, false, 20 );
@@ -151,9 +174,12 @@ public class StickerInspector : Box {
     box.add( img );
   }
 
-  private void make_flowbox_drag_source( FlowBox fbox ) {
-    drag_source_set( fbox, Gdk.ModifierType.BUTTON1_MASK, DRAG_TARGETS, Gdk.DragAction.COPY );
+  /* Creates the icon box and sets it up */
+  private FlowBox create_icon_box() {
+    var fbox = new FlowBox();
+    fbox.homogeneous = true;
     fbox.selection_mode = SelectionMode.NONE;
+    drag_source_set( fbox, Gdk.ModifierType.BUTTON1_MASK, DRAG_TARGETS, Gdk.DragAction.COPY );
     fbox.drag_begin.connect( on_drag_begin );
     fbox.drag_data_get.connect( on_drag_data_get );
     fbox.motion_notify_event.connect((e) => {
@@ -161,6 +187,90 @@ public class StickerInspector : Box {
       _motion_y = e.y;
       return( true );
     });
+    fbox.button_press_event.connect((e) => {
+      if( e.button == Gdk.BUTTON_SECONDARY ) {
+        _clicked_category = fbox;
+        _clicked_sticker  = fbox.get_child_at_pos( (int)e.x, (int)e.y ).get_child().name;
+        Utils.popup_menu( _menu, e );
+      }
+      return( true );
+    });
+
+    return( fbox );
+  }
+
+  /* Called whenever the user selects the favorite/unfavorite menu item */
+  private void handle_favorite() {
+    if( _clicked_category == _favorites ) {
+      make_unfavorite();
+    } else {
+      make_favorite();
+    }
+  }
+
+  /* Returns true if the given icon name is favorited */
+  private bool is_favorite( string name ) {
+    bool exists = false;
+    _favorites.get_children().foreach((w) => {
+      exists |= (w as FlowBoxChild).get_child().name == name;
+    });
+    return( exists );
+  }
+
+  /* Make the current sticker a favorite */
+  private void make_favorite() {
+
+    /* Add the sticker to the favorites section */
+    create_image( _favorites, _clicked_sticker );
+    _favorites.show_all();
+
+    /* Save the favorited status */
+    save_favorites();
+
+  }
+
+  /* Remove the current sticker as a favorite */
+  private void make_unfavorite() {
+
+    /* Remove the sticker from the favorites section */
+    _favorites.get_children().foreach((w) => {
+      if( (w as FlowBoxChild).get_child().name == _clicked_sticker ) {
+        _favorites.remove( w );
+      }
+    });
+
+    /* Save the favorites */
+    save_favorites();
+
+  }
+
+  /* Save the favorited stickers to the save file */
+  private void save_favorites() {
+    Xml.Doc*  doc  = new Xml.Doc();
+    Xml.Node* root = new Xml.Node( null, "favorites" );
+    doc->set_root_element( root );
+    _favorites.get_children().foreach((w) => {
+      var name = (w as FlowBoxChild).get_child().name;
+      Xml.Node* n = new Xml.Node( null, "sticker" );
+      n->set_prop( "name", name );
+      root->add_child( n );
+    });
+    doc->save_format_file( favorites, 1 );
+    delete doc;
+  }
+
+  /* Load the favorite stickers from the file */
+  private void load_favorites() {
+    Xml.Doc* doc = Xml.Parser.parse_file( favorites );
+    if( doc == null ) {
+      return;
+    }
+    for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "sticker") ) {
+        create_image( _favorites, it->get_prop( "name" ) );
+      }
+    }
+    delete doc;
   }
 
   /* When the sticker drag begins, set the sticker image to the dragged content */
