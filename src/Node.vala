@@ -235,6 +235,7 @@ public class Node : Object {
     }
   }
   public double   tree_size  { get; set; default = 0; }
+  public bool     group      { get; set; default = false; }
   public RGBA     link_color {
     get {
       return( _link_color );
@@ -1000,6 +1001,11 @@ public class Node : Object {
       sticker = sk;
     }
 
+    string? g = n->get_prop( "group" );
+    if( g != null ) {
+      group = bool.parse( g );
+    }
+
     /* If the posx and posy values are not set, set the layout now */
     if( (x == null) && (y == null) ) {
       string? l = n->get_prop( "layout" );
@@ -1095,6 +1101,7 @@ public class Node : Object {
     if( _sticker != null ) {
       node->new_prop( "sticker", _sticker );
     }
+    node->new_prop( "group", group.to_string() );
 
     if( _image != null ) {
       _image.save( node );
@@ -2147,6 +2154,22 @@ public class Node : Object {
 
   }
 
+  /* Draw the group box */
+  protected virtual void draw_group( Context ctx ) {
+
+    var b = tree_bbox;
+
+    Utils.set_context_color_with_alpha( ctx, _link_color, ((_alpha == 1.0) ? 0.3 : _alpha) );
+    ctx.rectangle( b.x, b.y, b.width, b.height );
+    ctx.fill();
+
+    Utils.set_context_color_with_alpha( ctx, _link_color, _alpha );
+    ctx.set_line_width( 2 );
+    ctx.rectangle( b.x, b.y, b.width, b.height );
+    ctx.stroke();
+
+  }
+
   /* Draws the node on the screen */
   public virtual void draw( Context ctx, Theme theme, bool motion ) {
 
@@ -2200,6 +2223,9 @@ public class Node : Object {
 
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Node? current, bool draw_current, bool motion ) {
+    if( group ) {
+      draw_group( ctx );
+    }
     if( !is_root() && !draw_current ) {
       draw_link( ctx, theme );
     }

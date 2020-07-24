@@ -832,6 +832,16 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Toggles the group setting of the selected nodes */
+  public void toggle_groups() {
+    var nodes = _selected.nodes();
+    for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).group = !nodes.index( i ).group;
+    }
+    queue_draw();
+    changed();
+  }
+
   /* Copy the current node name and URL links */
   public void capture_current_node_name() {
     var current = _selected.current_node();
@@ -3590,6 +3600,7 @@ public class DrawArea : Gtk.DrawingArea {
         case Key.a            :  select_parent_nodes();  break;
         case Key.d            :  select_child_nodes();  break;
         case Key.f            :  toggle_folds();  break;
+        case Key.g            :  toggle_groups();  break;
         case Key.m            :  select_root_node();  break;
         case Key.r            :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
         case Key.u            :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
@@ -3659,6 +3670,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         break;
       case Key.f :  toggle_fold( current );  break;
+      case Key.g :  toggle_groups();  break;
       case Key.h :  handle_left( false );  break;
       case Key.i :  show_properties( "current", false );  break;
       case Key.j :  handle_down( false );  break;
