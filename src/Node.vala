@@ -590,6 +590,18 @@ public class Node : Object {
     return( parent == null );
   }
 
+  /* Returns true if this node exists within a group */
+  public bool is_grouped() {
+    var node = this;
+    while( !node.is_root() ) {
+      if( node.group ) {
+        return( true );
+      }
+      node = node.parent;
+    }
+    return( false );
+  }
+
   /*
    Returns true if this node is a "main branch" which is a node attached
    directly to the parent.
@@ -1805,18 +1817,23 @@ public class Node : Object {
     double y = posy + style.node_margin;
     double w = _width  - (style.node_margin * 2);
     double h = _height - (style.node_margin * 2);
+    RGBA   group_color;
 
-    /* Set the fill color */
-    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
-      Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
-    } else if( is_root() || style.is_fillable() ) {
-      Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
-    } else {
-      Utils.set_context_color_with_alpha( ctx, theme.get_color( "background" ), _alpha );
+    if( !is_grouped() ) {
+
+      /* Set the fill color */
+      if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
+        Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
+      } else if( is_root() || style.is_fillable() ) {
+        Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
+      } else {
+        Utils.set_context_color_with_alpha( ctx, theme.get_color( "background" ), _alpha );
+      }
+
+      /* Draw the fill */
+      style.draw_node_fill( ctx, x, y, w, h, side );
+
     }
-
-    /* Draw the fill */
-    style.draw_node_fill( ctx, x, y, w, h, side );
 
     if( !is_root() || style.is_fillable() ) {
 
