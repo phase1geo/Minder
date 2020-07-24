@@ -95,10 +95,13 @@ public class StickerInspector : Box {
     /* Create search result flowbox */
     _matched_box = create_icon_box();
 
+    var mbox = new Box( Orientation.VERTICAL, 0 );
     var msw = new ScrolledWindow( null, null );
     msw.expand = false;
     msw.get_style_context().add_class( Gtk.STYLE_CLASS_VIEW );
-    msw.add( _matched_box );
+    msw.add( mbox );
+
+    mbox.pack_start( _matched_box, false, false, 0 );
 
     _stack.add_named( sw, "all" );
     _stack.add_named( msw, "matched" );
