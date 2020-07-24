@@ -125,7 +125,7 @@ public class Sticker {
     if( mode == StickerMode.SELECTED ) {
 
       /* Draw selection box */
-      Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), opacity );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), ((opacity == 1.0) ? 0.5 : opacity) );
       ctx.rectangle( posx, posy, _buf.width, _buf.height );
       ctx.fill();
 

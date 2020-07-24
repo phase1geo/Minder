@@ -793,6 +793,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Sets the current selected sticker to the specified sticker */
   public void set_current_sticker( Sticker? s ) {
     _selected.set_current_sticker( s );
+    _stickers.select_sticker( s );
   }
 
   /* Toggles the value of the specified node, if possible */
@@ -1345,7 +1346,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Otherwise, add the sticker to the selection */
     } else {
-      _selected.set_current_sticker( sticker );
+      set_current_sticker( sticker );
     }
 
     /* Save the location of the sticker */

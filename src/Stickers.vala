@@ -46,9 +46,15 @@ public class Stickers {
     }
   }
 
+  /* This should be called whenever we select a sticker */
+  public void select_sticker( Sticker sticker ) {
+    remove_sticker( sticker );
+    add_sticker( sticker );
+  }
+
   /* Returns the sticker located at the given cursor position */
   public Sticker? is_within( double x, double y ) {
-    for( int i=0; i<_stickers.length; i++ ) {
+    for( int i=(int)(_stickers.length - 1); i>=0; i-- ) {
       var s = _stickers.index( i );
       if( Utils.is_within_bounds( x, y, s.posx, s.posy, s.width, s.height ) ) {
         return( s );
