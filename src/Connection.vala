@@ -199,8 +199,8 @@ public class Connection : Object {
     color = conn.color;
   }
 
-  private int sticker_width() {
-    var padding = style.connection_padding ?? 0;
+  private int sticker_width( bool add_padding ) {
+    var padding = add_padding ? (style.connection_padding ?? 0) : 0;
     return( (_sticker_buf != null) ? (_sticker_buf.width + padding) : 0 );
   }
 
@@ -208,17 +208,18 @@ public class Connection : Object {
     return( (_sticker_buf != null) ? _sticker_buf.height : 0 );
   }
 
-  private int title_width() {
-    return( (_title != null) ? (int)_title.width : 0 );
+  private int title_width( bool add_padding ) {
+    var padding = add_padding ? (style.connection_padding ?? 0) : 0;
+    return( (_title != null) ? ((int)_title.width + padding) : 0 );
   }
 
   private int title_height() {
     return( (_title != null) ? (int)_title.height : 0 );
   }
 
-  private int note_width() {
-    var padding = style.connection_padding ?? 0;
-    return( (note.length > 0) ? 11 : 0 );
+  private int note_width( bool add_padding ) {
+    var padding = add_padding ? (style.connection_padding ?? 0) : 0;
+    return( (note.length > 0) ? (11 + padding) : 0 );
   }
 
   private int note_height() {
@@ -226,16 +227,19 @@ public class Connection : Object {
   }
 
   private int get_width() {
-    return( sticker_width() + title_width() + note_width() );
+    var sw = sticker_width( false );
+    var tw = title_width( sw > 0 );
+    var nw = note_width( (sw + tw) > 0 );
+    return( sw + tw + nw );
   }
 
   private int get_height() {
     int sh = sticker_height();
     int th = title_height();
     int nh = note_height();
-         if( (sh < th) && (nh < th) ) { return( th ); }
-    else if( (th < sh) && (nh < sh) ) { return( sh ); }
-    else                              { return( nh ); }
+         if( (sh <= th) && (nh <= th) ) { return( th ); }
+    else if( (th <= sh) && (nh <= sh) ) { return( sh ); }
+    else                                { return( nh ); }
   }
 
   /* Returns the canvas box that contains both the from and to nodes */
@@ -298,7 +302,7 @@ public class Connection : Object {
   private void position_title() {
     if( title != null ) {
       var width   = get_width();
-      var swidth  = sticker_width();
+      var swidth  = sticker_width( true );
       var theight = title_height();
 
       _title.posx = _dragx - ((width / 2) - swidth);
@@ -519,11 +523,11 @@ public class Connection : Object {
   /* Returns the positional information for where the note item is located (if it exists) */
   private void note_bbox( out double x, out double y, out double w, out double h ) {
     var width   = get_width();
-    var nwidth  = note_width();
+    var nwidth  = note_width( false );
     var nheight = note_height();
 
     x = _dragx + (width / 2) - nwidth;
-    y = _dragy - (nwidth / 2);
+    y = _dragy - (nheight / 2);
     w = nwidth;
     h = nheight;
   }
@@ -531,11 +535,11 @@ public class Connection : Object {
   /* Returns the position information for where the sticker item is located (if it exists) */
   private void sticker_bbox( out double x, out double y, out double w, out double h ) {
     var width   = get_width();
-    var swidth  = sticker_width();
+    var swidth  = sticker_width( false );
     var sheight = sticker_height();
 
     x = _dragx - (width / 2);
-    y = _dragy - (swidth / 2);
+    y = _dragy - (sheight / 2);
     w = swidth;
     h = sheight;
   }
