@@ -445,7 +445,7 @@ public class Connection : Object {
   /* Returns true if the given point is within the drag handle */
   public bool within_drag_handle( double x, double y ) {
     if( mode == ConnMode.SELECTED ) {
-      if( (title == null) && (note.length == 0) ) {
+      if( (_sticker == null) && (title == null) && (note.length == 0) ) {
         return( within_handle( _dragx, _dragy, x, y ) );
       } else {
         double tx, ty, tw, th;
