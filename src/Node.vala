@@ -2176,6 +2176,9 @@ public class Node : Object {
 
     var b = tree_bbox;
 
+    NodeGroup.draw_tight( ctx, this );
+
+    /*
     Utils.set_context_color_with_alpha( ctx, _link_color, ((_alpha == 1.0) ? 0.3 : _alpha) );
     ctx.rectangle( b.x, b.y, b.width, b.height );
     ctx.fill();
@@ -2184,6 +2187,7 @@ public class Node : Object {
     ctx.set_line_width( 2 );
     ctx.rectangle( b.x, b.y, b.width, b.height );
     ctx.stroke();
+    */
 
   }
 

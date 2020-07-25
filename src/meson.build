@@ -165,6 +165,7 @@ sources += files(
     'Node.vala',
     'NodeAlign.vala',
     'NodeBorder.vala',
+    'NodeGroup.vala',
     'NodeImage.vala',
     'NodeInspector.vala',
     'NodeMenu.vala',
