@@ -602,6 +602,17 @@ public class Node : Object {
     return( false );
   }
 
+  /* Returns the number of groups betwen the current node and the specified ancestor node */
+  public int groups_between( Node node ) {
+    var curr  = this;
+    var count = 0;
+    while( !curr.is_root() && (curr != node) ) {
+      count += curr.group ? 1 : 0;
+      curr = curr.parent;
+    }
+    return( count );
+  }
+
   /*
    Returns true if this node is a "main branch" which is a node attached
    directly to the parent.

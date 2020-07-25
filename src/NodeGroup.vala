@@ -46,18 +46,18 @@ public class NodeGroup {
   public static void draw_tight( Context ctx, Node node ) {
     var points = new Array<NodePoint?>();
     var hull   = new Array<NodePoint?>();
-    get_points( node, points );
+    get_points( node, node, points );
     get_convex_hull( points, hull );
     draw_cloud( ctx, node.link_color, node.alpha, hull );
   }
 
-  public static void get_points( Node node, Array<NodePoint?> points ) {
+  public static void get_points( Node origin, Node node, Array<NodePoint?> points ) {
 
-    var pad = 0;
-    var x1 = node.posx - pad;
-    var y1 = node.posy - pad;
-    var x2 = node.posx + node.width + pad;
-    var y2 = node.posy + node.height + pad;
+    var pad = node.groups_between( origin ) * 5;
+    var x1  = node.posx - pad;
+    var y1  = node.posy - pad;
+    var x2  = node.posx + node.width + pad;
+    var y2  = node.posy + node.height + pad;
 
     points.append_val( new NodePoint( x1, y1 ) );
     points.append_val( new NodePoint( x2, y1 ) );
@@ -65,7 +65,7 @@ public class NodeGroup {
     points.append_val( new NodePoint( x2, y2 ) );
 
     for( int i=0; i<node.children().length; i++ ) {
-      get_points( node.children().index( i ), points );
+      get_points( origin, node.children().index( i ), points );
     }
 
   }
