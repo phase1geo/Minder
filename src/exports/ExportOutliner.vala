@@ -110,7 +110,7 @@ public class ExportOutliner : Object {
   public static bool import( string fname, DrawArea da ) {
 
     /* Read in the contents of the OPML file */
-    var doc = Xml.Parser.parse_file( fname );
+    var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
     if( doc == null ) {
       return( false );
     }
