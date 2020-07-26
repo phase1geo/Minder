@@ -1391,6 +1391,15 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  public bool set_current_group_from_position( NodeGroup group, EventButton e ) {
+
+    /* Select the current group */
+    group.mode = GroupMode.SELECTED;
+
+    return( true );
+
+  }
+
   /*
    Sets the current node pointer to the node that is within the given coordinates.
    Returns true if we sucessfully set current_node to a valid node and made it
@@ -1447,6 +1456,10 @@ public class DrawArea : Gtk.DrawingArea {
           clear_current_node( false );
           clear_current_connection( false );
           return( set_current_sticker_from_position( sticker, e ) );
+        }
+        var group = groups.node_group_containing( _scaled_x, _scaled_y );
+        if( group != null ) {
+          return( set_current_group_from_position( group, e ) );
         }
         _select_box.x     = x;
         _select_box.y     = y;
@@ -1783,7 +1796,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Draws all of the root node trees */
   public void draw_all( Context ctx ) {
 
-    _groups.draw_all( ctx );
+    _groups.draw_all( ctx, _theme );
 
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();

@@ -88,6 +88,16 @@ public class NodeGroups {
     }
   }
 
+  /* Returns the node group that contains the given cursor */
+  public NodeGroup? node_group_containing( double x, double y ) {
+    for( int i=0; i<_groups.length; i++ ) {
+      if( _groups.index( i ).is_within( x, y ) ) {
+        return( _groups.index( i ) );
+      }
+    }
+    return( null );
+  }
+
   /* Saves the current group in Minder XML format */
   public Xml.Node* save() {
     Xml.Node* g = new Xml.Node( null, "groups" );
@@ -107,9 +117,9 @@ public class NodeGroups {
   }
 
   /* Draws a group around the stored set of nodes from this structure */
-  public void draw_all( Context ctx ) {
+  public void draw_all( Context ctx, Theme theme ) {
     for( int i=0; i<_groups.length; i++ ) {
-      _groups.index( i ).draw( ctx );
+      _groups.index( i ).draw( ctx, theme );
     }
   }
 

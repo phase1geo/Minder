@@ -31,12 +31,18 @@ public struct NodePoint {
   }
 }
 
+public enum GroupMode {
+  NONE = 0,
+  SELECTED
+}
+
 public class NodeGroup {
 
   private Array<Node> _nodes;
 
-  public RGBA   color { get; set; }
-  public double alpha { get; set; default = 1.0; }
+  public GroupMode mode  { get; set; default = GroupMode.NONE; }
+  public RGBA      color { get; set; }
+  public double    alpha { get; set; default = 1.0; }
 
   /* Default constructor */
   public NodeGroup( DrawArea da, Array<Node> nodes ) {
@@ -68,6 +74,24 @@ public class NodeGroup {
       }
     }
     return( false );
+  }
+
+  /* Returns true if the given coordinates are within a group */
+  public bool is_within( double x, double y ) {
+    var cursor = new NodePoint( x, y );
+    var points = new Array<NodePoint?>();
+    var hull   = new Array<NodePoint?>();
+    points.append_val( cursor );
+    for( int i=0; i<_nodes.length; i++ ) {
+      add_node_points( points, _nodes.index( i ) );
+    }
+    get_convex_hull( points, hull );
+    for( int i=0; i<hull.length; i++ ) {
+      if( (cursor.x == hull.index( i ).x) && (cursor.y == hull.index( i ).y) ) {
+        return( false );
+      }
+    }
+    return( true );
   }
 
   /* Saves the current group in Minder XML format */
@@ -108,16 +132,17 @@ public class NodeGroup {
   }
 
   /* Draws a group around the stored set of nodes from this structure */
-  public void draw( Context ctx ) {
+  public void draw( Context ctx, Theme theme ) {
     var points = new Array<NodePoint?>();
     for( int i=0; i<_nodes.length; i++ ) {
       add_node_points( points, _nodes.index( i ) );
     }
-    draw_cloud( ctx, color, alpha, points );
+    // draw_cloud( ctx, ((mode == GroupMode.NONE) ? color : theme.get_color( "nodesel_background" )), alpha, points );
+    draw_cloud( ctx, ((mode == GroupMode.NONE) ? color : theme.get_color( "tag" )), alpha, points );
   }
 
   /* Draws a group around this given node's tree */
-  public static void draw_tree( Context ctx, Node node ) {
+  public static void draw_tree( Context ctx, Node node, Theme theme ) {
     var points = new Array<NodePoint?>();
     get_tree_points( node, node, points );
     draw_cloud( ctx, node.link_color, node.alpha, points );
