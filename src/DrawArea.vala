@@ -100,6 +100,7 @@ public class DrawArea : Gtk.DrawingArea {
   private TextCompletion   _completion;
   private double           _sticker_posx;
   private double           _sticker_posy;
+  private NodeGroups       _groups;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -152,6 +153,11 @@ public class DrawArea : Gtk.DrawingArea {
       return( _stickers );
     }
   }
+  public NodeGroups groups {
+    get {
+      return( _groups );
+    }
+  }
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -186,6 +192,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Create the stickers */
     _stickers = new Stickers();
+
+    /* Create groups */
+    _groups = new NodeGroups( this );
 
     /* Allocate memory for the animator */
     animator = new Animator( this );
@@ -493,6 +502,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "drawarea"    :  load_drawarea( it );  break;
           case "images"      :  image_manager.load( it );  break;
           case "connections" :  _connections.load( this, it, null, _nodes, id_map );  break;
+          case "groups"      :  groups.load( this, it );  break;
           case "stickers"    :  _stickers.load( it );  break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
@@ -550,6 +560,7 @@ public class DrawArea : Gtk.DrawingArea {
       _nodes.index( i ).save( nodes );
     }
     parent->add_child( nodes );
+    parent->add_child( groups.save() );
 
     _connections.save( parent );
     parent->add_child( _stickers.save() );
@@ -840,6 +851,17 @@ public class DrawArea : Gtk.DrawingArea {
     }
     queue_draw();
     changed();
+  }
+
+  /* Adds a new group for the given list of nodes */
+  public void add_group() {
+    var nodes = _selected.nodes();
+    if( nodes.length > 0 ) {
+      groups.add_group( nodes );
+      /* TBD - Add undo/redo support */
+      queue_draw();
+      changed();
+    }
   }
 
   /* Copy the current node name and URL links */
@@ -1760,6 +1782,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Draws all of the root node trees */
   public void draw_all( Context ctx ) {
+
+    _groups.draw_all( ctx );
 
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
@@ -3600,7 +3624,7 @@ public class DrawArea : Gtk.DrawingArea {
         case Key.a            :  select_parent_nodes();  break;
         case Key.d            :  select_child_nodes();  break;
         case Key.f            :  toggle_folds();  break;
-        case Key.g            :  toggle_groups();  break;
+        case Key.g            :  add_group();  break;
         case Key.m            :  select_root_node();  break;
         case Key.r            :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
         case Key.u            :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;

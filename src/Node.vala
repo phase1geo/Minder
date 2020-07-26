@@ -2184,22 +2184,7 @@ public class Node : Object {
 
   /* Draw the group box */
   protected virtual void draw_group( Context ctx ) {
-
-    var b = tree_bbox;
-
-    NodeGroup.draw_tight( ctx, this );
-
-    /*
-    Utils.set_context_color_with_alpha( ctx, _link_color, ((_alpha == 1.0) ? 0.3 : _alpha) );
-    ctx.rectangle( b.x, b.y, b.width, b.height );
-    ctx.fill();
-
-    Utils.set_context_color_with_alpha( ctx, _link_color, _alpha );
-    ctx.set_line_width( 2 );
-    ctx.rectangle( b.x, b.y, b.width, b.height );
-    ctx.stroke();
-    */
-
+    NodeGroup.draw_tree( ctx, this );
   }
 
   /* Draws the node on the screen */

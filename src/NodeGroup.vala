@@ -33,7 +33,102 @@ public struct NodePoint {
 
 public class NodeGroup {
 
-  public static void draw_cloud( Context ctx, RGBA color, double alpha, Array<NodePoint?> hull ) {
+  private Array<Node> _nodes;
+
+  public RGBA   color { get; set; }
+  public double alpha { get; set; default = 1.0; }
+
+  /* Default constructor */
+  public NodeGroup( DrawArea da, Array<Node> nodes ) {
+    _nodes = new Array<Node>();
+    color  = da.get_theme().get_color( "nodesel_background" );
+    for( int i=0; i<nodes.length; i++ ) {
+      _nodes.append_val( nodes.index( i ) );
+    }
+  }
+
+  /* Constructor from XML */
+  public NodeGroup.from_xml( DrawArea da, Xml.Node* n ) {
+    _nodes = new Array<Node>();
+    color  = da.get_theme().get_color( "nodesel_background" );
+    load( da, n );
+  }
+
+  /* Adds the given node to this node group */
+  public void add_node( Node node ) {
+    _nodes.append_val( node );
+  }
+
+  /* Checks to see if this group contains the given node and removes it if found */
+  public bool remove_node( Node node ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      if( _nodes.index( i ) == node ) {
+        _nodes.remove_index( i );
+        return( true );
+      }
+    }
+    return( false );
+  }
+
+  /* Saves the current group in Minder XML format */
+  public Xml.Node* save() {
+    Xml.Node* g = new Xml.Node( null, "group" );
+    g->set_prop( "color", Utils.color_from_rgba( color ) );
+    for( int i=0; i<_nodes.length; i++ ) {
+      Xml.Node* n = new Xml.Node( null, "node" );
+      n->set_prop( "id", _nodes.index( i ).id().to_string() );
+      g->add_child( n );
+    }
+    return( g );
+  }
+
+  /* Loads the given group information */
+  public void load( DrawArea da, Xml.Node* g ) {
+    string? c = g->get_prop( "color" );
+    if( c != null ) {
+      color.parse( c );
+    }
+    for( Xml.Node* it = g->children; it != null; it = it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "node") ) {
+        load_node( da, it );
+      }
+    }
+  }
+
+  /* Loads the given node */
+  private void load_node( DrawArea da, Xml.Node* n ) {
+    string? i = n->get_prop( "id" );
+    if( i != null ) {
+      var id   = int.parse( i );
+      var node = da.get_node( da.get_nodes(), id );
+      if( node != null ) {
+        _nodes.append_val( node );
+      }
+    }
+  }
+
+  /* Draws a group around the stored set of nodes from this structure */
+  public void draw( Context ctx ) {
+    var points = new Array<NodePoint?>();
+    for( int i=0; i<_nodes.length; i++ ) {
+      add_node_points( points, _nodes.index( i ) );
+    }
+    draw_cloud( ctx, color, alpha, points );
+  }
+
+  /* Draws a group around this given node's tree */
+  public static void draw_tree( Context ctx, Node node ) {
+    var points = new Array<NodePoint?>();
+    get_tree_points( node, node, points );
+    draw_cloud( ctx, node.link_color, node.alpha, points );
+  }
+
+  private static void draw_cloud( Context ctx, RGBA color, double alpha, Array<NodePoint?> points ) {
+
+    /* Calculate the hull points */
+    var hull = new Array<NodePoint?>();
+    get_convex_hull( points, hull );
+
     Utils.set_context_color_with_alpha( ctx, color, ((alpha == 1.0) ? 0.3 : alpha) );
     ctx.move_to( hull.index( 0 ).x, hull.index( 0 ).y );
     for( int i=0; i<hull.length; i++ ) {
@@ -41,19 +136,12 @@ public class NodeGroup {
     }
     ctx.close_path();
     ctx.fill();
+
   }
 
-  public static void draw_tight( Context ctx, Node node ) {
-    var points = new Array<NodePoint?>();
-    var hull   = new Array<NodePoint?>();
-    get_points( node, node, points );
-    get_convex_hull( points, hull );
-    draw_cloud( ctx, node.link_color, node.alpha, hull );
-  }
+  /* Add the given node points to the points array */
+  public static void add_node_points( Array<NodePoint?> points, Node node, int pad = 0 ) {
 
-  public static void get_points( Node origin, Node node, Array<NodePoint?> points ) {
-
-    var pad = node.groups_between( origin ) * 5;
     var x1  = node.posx - pad;
     var y1  = node.posy - pad;
     var x2  = node.posx + node.width + pad;
@@ -64,12 +152,18 @@ public class NodeGroup {
     points.append_val( new NodePoint( x1, y2 ) );
     points.append_val( new NodePoint( x2, y2 ) );
 
-    for( int i=0; i<node.children().length; i++ ) {
-      get_points( origin, node.children().index( i ), points );
-    }
-
   }
 
+  /* Gets the set of all points in the given node tree */
+  public static void get_tree_points( Node origin, Node node, Array<NodePoint?> points ) {
+    var pad = node.groups_between( origin ) * 5;
+    add_node_points( points, node, pad );
+    for( int i=0; i<node.children().length; i++ ) {
+      get_tree_points( origin, node.children().index( i ), points );
+    }
+  }
+
+  /* Gets the array of all points necessary to draw a tight perimeter around the given set of node points */
   public static void get_convex_hull( Array<NodePoint?> points, Array<NodePoint?> hull ) {
 
     var n = (int)points.length;
@@ -93,6 +187,7 @@ public class NodeGroup {
 
   }
 
+  /* Returns the side of the line that point 'r' lands on */
   public static int calc_orientation( NodePoint p, NodePoint q, NodePoint r ) {
     var val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
     if( val == 0 ) return( 0 );
