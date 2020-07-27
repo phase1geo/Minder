@@ -47,7 +47,7 @@ public class NodeGroup {
   /* Default constructor */
   public NodeGroup( DrawArea da, Array<Node> nodes ) {
     _nodes = new Array<Node>();
-    color  = da.get_theme().get_color( "nodesel_background" );
+    color  = da.get_theme().get_color( "tag" );
     for( int i=0; i<nodes.length; i++ ) {
       _nodes.append_val( nodes.index( i ) );
     }
@@ -56,7 +56,7 @@ public class NodeGroup {
   /* Constructor from XML */
   public NodeGroup.from_xml( DrawArea da, Xml.Node* n ) {
     _nodes = new Array<Node>();
-    color  = da.get_theme().get_color( "nodesel_background" );
+    color  = da.get_theme().get_color( "tag" );
     load( da, n );
   }
 
@@ -133,27 +133,28 @@ public class NodeGroup {
 
   /* Draws a group around the stored set of nodes from this structure */
   public void draw( Context ctx, Theme theme ) {
-    var points = new Array<NodePoint?>();
+    var points   = new Array<NodePoint?>();
+    var selected = mode == GroupMode.SELECTED;
     for( int i=0; i<_nodes.length; i++ ) {
       add_node_points( points, _nodes.index( i ) );
     }
-    // draw_cloud( ctx, ((mode == GroupMode.NONE) ? color : theme.get_color( "nodesel_background" )), alpha, points );
-    draw_cloud( ctx, ((mode == GroupMode.NONE) ? color : theme.get_color( "tag" )), alpha, points );
+    draw_cloud( ctx, (selected ? theme.get_color( "nodesel_background" ) : color), selected, alpha, points );
   }
 
   /* Draws a group around this given node's tree */
   public static void draw_tree( Context ctx, Node node, Theme theme ) {
     var points = new Array<NodePoint?>();
     get_tree_points( node, node, points );
-    draw_cloud( ctx, node.link_color, node.alpha, points );
+    draw_cloud( ctx, node.link_color, false, node.alpha, points );
   }
 
-  private static void draw_cloud( Context ctx, RGBA color, double alpha, Array<NodePoint?> points ) {
+  private static void draw_cloud( Context ctx, RGBA color, bool selected, double alpha, Array<NodePoint?> points ) {
 
     /* Calculate the hull points */
     var hull = new Array<NodePoint?>();
     get_convex_hull( points, hull );
 
+    /* Draw the fill */
     Utils.set_context_color_with_alpha( ctx, color, ((alpha == 1.0) ? 0.3 : alpha) );
     ctx.move_to( hull.index( 0 ).x, hull.index( 0 ).y );
     for( int i=0; i<hull.length; i++ ) {
@@ -161,6 +162,18 @@ public class NodeGroup {
     }
     ctx.close_path();
     ctx.fill();
+
+    /* Draw the stroke */
+    if( selected ) {
+      Utils.set_context_color_with_alpha( ctx, color, alpha );
+      ctx.move_to( hull.index( 0 ).x, hull.index( 0 ).y );
+      ctx.set_line_width( 2 );
+      for( int i=0; i<hull.length; i++ ) {
+        ctx.line_to( hull.index( i ).x, hull.index( i ).y );
+      }
+      ctx.close_path();
+      ctx.stroke();
+    }
 
   }
 

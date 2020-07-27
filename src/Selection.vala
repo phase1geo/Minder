@@ -25,6 +25,7 @@ public class Selection {
   private Array<Node>       _nodes;
   private Array<Connection> _conns;
   private Array<Sticker>    _stickers;
+  private Array<NodeGroup>  _groups;
 
   public signal void selection_changed();
 
@@ -34,6 +35,7 @@ public class Selection {
     _nodes    = new Array<Node>();
     _conns    = new Array<Connection>();
     _stickers = new Array<Sticker>();
+    _groups   = new Array<NodeGroup>();
   }
 
   /* Returns true if the given node is currently selected */
@@ -51,6 +53,11 @@ public class Selection {
     return( sticker.mode == StickerMode.SELECTED );
   }
 
+  /* Returns true if the given group is currently selected */
+  public bool is_group_selected( NodeGroup group ) {
+    return( group.mode == GroupMode.SELECTED );
+  }
+
   /* Returns true if the given node is the only selected item */
   public bool is_current_node( Node node ) {
     return( (_nodes.length == 1) && (_nodes.index( 0 ) == node) );
@@ -66,6 +73,11 @@ public class Selection {
     return( (_stickers.length == 1) && (_stickers.index( 0 ) == sticker) );
   }
 
+  /* Returns true if the given group is the only selected item */
+  public bool is_current_group( NodeGroup group ) {
+    return( (_groups.length == 1) && (_groups.index( 0 ) == group ) );
+  }
+
   /* Returns the currently selected node */
   public Node? current_node() {
     return( (_nodes.length == 1) ? _nodes.index( 0 ) : null );
@@ -79,6 +91,11 @@ public class Selection {
   /* Returns the currently selected sticker */
   public Sticker? current_sticker() {
     return( (_stickers.length == 1) ? _stickers.index( 0 ) : null );
+  }
+
+  /* Returns the currently selected group */
+  public NodeGroup? current_group() {
+    return( (_groups.length == 1) ? _groups.index( 0 ) : null );
   }
 
   /* Sets the current node, clearing all other selected items */
@@ -97,6 +114,12 @@ public class Selection {
   public void set_current_sticker( Sticker sticker, double clear_alpha = 1.0 ) {
     clear( false, clear_alpha );
     add_sticker( sticker );
+  }
+
+  /* Sets the current group, clearing all other selected items */
+  public void set_current_group( NodeGroup group, double clear_alpha = 1.0 ) {
+    clear( false, clear_alpha );
+    add_group( group );
   }
 
   /* Adds a node to the current selection.  Returns true if the node was added. */
@@ -186,6 +209,15 @@ public class Selection {
     if( is_sticker_selected( sticker ) ) return( false );
     sticker.mode = StickerMode.SELECTED;
     _stickers.append_val( sticker );
+    selection_changed();
+    return( true );
+  }
+
+  /* Adds a sticker to the current selection */
+  public bool add_group( NodeGroup group ) {
+    if( is_group_selected( group ) ) return( false );
+    group.mode = GroupMode.SELECTED;
+    _groups.append_val( group );
     selection_changed();
     return( true );
   }
@@ -308,6 +340,24 @@ public class Selection {
     return( false );
   }
 
+  /*
+   Removes the given group from the current selection.  Returns true
+   if the group is removed.
+  */
+  public bool remove_group( NodeGroup group, double alpha = 1.0 ) {
+    if( is_group_selected( group ) ) {
+      group.mode = GroupMode.NONE;
+      for( int i=0; i<_groups.length; i++ ) {
+        if( group == _groups.index( i ) ) {
+          _groups.remove_index( i );
+          selection_changed();
+          return( true );
+        }
+      }
+    }
+    return( false );
+  }
+
   /* Clears all of the selected nodes */
   public bool clear_nodes( bool signal_change = true, double alpha = 1.0 ) {
     var num = _nodes.length;
@@ -349,12 +399,26 @@ public class Selection {
     return( num > 0 );
   }
 
+  /* Clears all of the selected groups */
+  public bool clear_groups( bool signal_change = true ) {
+    var num = _groups.length;
+    for( int i=0; i<num; i++ ) {
+      _groups.index( i ).mode  = GroupMode.NONE;
+    }
+    _groups.remove_range( 0, num );
+    if( (num > 0) && signal_change ) {
+      selection_changed();
+    }
+    return( num > 0 );
+  }
+
   /* Clears the current selection */
   public bool clear( bool signal_change = true, double alpha = 1.0 ) {
     var changed = false;
     changed |= clear_nodes( false, alpha );
     changed |= clear_connections( false, alpha );
     changed |= clear_stickers( false );
+    changed |= clear_groups( false );
     if( changed && signal_change ) {
       selection_changed();
     }
@@ -374,6 +438,11 @@ public class Selection {
   /* Returns the number of stickers selected */
   public int num_stickers() {
     return( (int)_stickers.length );
+  }
+
+  /* Returns the number of groups selected */
+  public int num_groups() {
+    return( (int)_groups.length );
   }
 
   /* Returns an array of currently selected nodes */
@@ -416,6 +485,11 @@ public class Selection {
   /* Returns an array of currently selected stickers */
   public Array<Sticker> stickers() {
     return( _stickers );
+  }
+
+  /* Returns an array of currently selected groups */
+  public Array<NodeGroup> groups() {
+    return( _groups );
   }
 
   /*

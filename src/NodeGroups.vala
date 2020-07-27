@@ -90,7 +90,7 @@ public class NodeGroups {
 
   /* Returns the node group that contains the given cursor */
   public NodeGroup? node_group_containing( double x, double y ) {
-    for( int i=0; i<_groups.length; i++ ) {
+    for( int i=(int)(_groups.length - 1); i>=0; i-- ) {
       if( _groups.index( i ).is_within( x, y ) ) {
         return( _groups.index( i ) );
       }

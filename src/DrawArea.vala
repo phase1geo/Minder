@@ -809,6 +809,11 @@ public class DrawArea : Gtk.DrawingArea {
     _stickers.select_sticker( s );
   }
 
+  /* Sets the current selected group to the specified group */
+  public void set_current_group( NodeGroup? g ) {
+    _selected.set_current_group( g );
+  }
+
   /* Toggles the value of the specified node, if possible */
   public void toggle_task( Node n ) {
     undo_buffer.add_item( new UndoNodeTask( n, true, !n.task_done() ) );
@@ -1198,6 +1203,13 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Clears the current group (if it is set) and updates the UI accordingly */
+  private void clear_current_group( bool signal_change ) {
+    if( _selected.num_groups() > 0 ) {
+      _selected.clear_groups( signal_change );
+    }
+  }
+
   /* Called whenever the user clicks on a valid connection */
   private bool set_current_connection_from_position( Connection conn, EventButton e ) {
 
@@ -1393,8 +1405,14 @@ public class DrawArea : Gtk.DrawingArea {
 
   public bool set_current_group_from_position( NodeGroup group, EventButton e ) {
 
+    var shift = (bool)(e.state & ModifierType.SHIFT_MASK);
+
     /* Select the current group */
-    group.mode = GroupMode.SELECTED;
+    if( shift ) {
+      _selected.add_group( group );
+    } else {
+      set_current_group( group );
+    }
 
     return( true );
 
@@ -1441,6 +1459,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( match_conn != null ) {
         clear_current_node( false );
         clear_current_sticker( false );
+        clear_current_group( false );
         return( set_current_connection_from_position( match_conn, e ) );
       } else {
         for( int i=0; i<_nodes.length; i++ ) {
@@ -1448,6 +1467,7 @@ public class DrawArea : Gtk.DrawingArea {
           if( match_node != null ) {
             clear_current_connection( false );
             clear_current_sticker( false );
+            clear_current_group( false );
             return( set_current_node_from_position( match_node, e ) );
           }
         }
@@ -1455,6 +1475,7 @@ public class DrawArea : Gtk.DrawingArea {
         if( sticker != null ) {
           clear_current_node( false );
           clear_current_connection( false );
+          clear_current_group( false );
           return( set_current_sticker_from_position( sticker, e ) );
         }
         var group = groups.node_group_containing( _scaled_x, _scaled_y );
@@ -1469,6 +1490,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
         clear_current_connection( true );
         clear_current_sticker( true );
+        clear_current_group( true );
         if( _last_node != null ) {
           _selected.set_current_node( _last_node );
         }
