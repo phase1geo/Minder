@@ -60,8 +60,16 @@ public class ExportFreemind : Object {
     n->new_prop( "COLOR", Utils.color_from_rgba( node.link_color ) );
     n->new_prop( "POSITION", ((node.side == NodeSide.LEFT) ? "left" : "right") );
 
+    if( node.group ) {
+      n->add_child( export_cloud( node, da ) );
+    }
+
     n->add_child( export_edge( node, da ) );
     n->add_child( export_font( node, da ) );
+
+    if( node.note != "" ) {
+      n->add_child( export_note( node ) );
+    }
 
     /* Add arrowlinks */
     int         index = 0;
@@ -81,6 +89,12 @@ public class ExportFreemind : Object {
 
   }
 
+  /* Exports the cloud information */
+  private static Xml.Node* export_cloud( Node node, DrawArea da ) {
+    Xml.Node* n = new Xml.Node( null, "cloud" );
+    return( n );
+  }
+
   /* Exports the given node link as an edge */
   private static Xml.Node* export_edge( Node node, DrawArea da ) {
     Xml.Node* n = new Xml.Node( null, "edge" );
@@ -98,6 +112,28 @@ public class ExportFreemind : Object {
     n->new_prop( "BOLD",   ((node.name.text.text.substring( 0, 3 ) == "<b>") || (node.name.text.text.substring( 0, 6 ) == "<i><b>")).to_string() );
     n->new_prop( "ITALIC", ((node.name.text.text.substring( 0, 3 ) == "<i>") || (node.name.text.text.substring( 0, 6 ) == "<b><i>")).to_string() );
     return( n );
+  }
+
+  private static Xml.Node* export_note( Node node ) {
+
+    Xml.Node* rc   = new Xml.Node( null, "richcontent" );
+    Xml.Node* html = new Xml.Node( null, "html" );
+    Xml.Node* head = new Xml.Node( null, "head" );
+
+    var note_html = Utils.markdown_to_html( node.note, "body" );
+    var note_doc  = Xml.Parser.parse_memory( note_html, note_html.length );
+    var body      = note_doc->get_root_element()->copy( 1 );
+
+    html->add_child( head );
+    html->add_child( body );
+
+    rc->new_prop( "TYPE", "NOTE" );
+    rc->add_child( html );
+
+    delete note_doc;
+
+    return( rc );
+
   }
 
   /* Exports the given connection as an arrowlink */
