@@ -226,7 +226,7 @@ public class ExportFreemind : Object {
           case "edge"        :  import_edge( it, node );  break;
           case "font"        :  import_font( it, node );  break;
           case "icon"        :  break;  // Not implemented
-          case "cloud"       :  break;  // Not implemented
+          case "cloud"       :  import_cloud( it, node );  break;
           case "arrowlink"   :  import_arrowlink( it, da, node, to_nodes );  break;
           case "richcontent" :  import_richcontent( it, da, node );  break;
         }
@@ -289,6 +289,12 @@ public class ExportFreemind : Object {
         node.name.text.insert_text( 0, "<i>" + node.name.text.text + "</i>" );
       }
     }
+
+  }
+
+  private static void import_cloud( Xml.Node* n, Node node ) {
+
+    node.group = true;
 
   }
 
