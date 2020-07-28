@@ -1283,6 +1283,12 @@ public class MainWindow : ApplicationWindow {
     svg_filter.add_pattern( "*.svg" );
     dialog.add_filter( svg_filter );
 
+    /* XMind */
+    FileFilter xmind_filter = new FileFilter();
+    xmind_filter.set_filter_name( _( "XMind 8" ) );
+    xmind_filter.add_pattern( "*.xmind" );
+    dialog.add_filter( xmind_filter );
+
     /* yEd */
     FileFilter yed_filter = new FileFilter();
     yed_filter.set_filter_name( _( "yEd" ) );
@@ -1327,6 +1333,8 @@ public class MainWindow : ApplicationWindow {
         ExportText.export( repair_filename( fname, {".txt"} ), da );
       } else if( svg_filter == filter ) {
         ExportSVG.export( repair_filename( fname, {".svg"} ), da );
+      } else if( xmind_filter == filter ) {
+        ExportXMind.export( repair_filename( fname, {".xmind"} ), da );
       } else if( yed_filter == filter ) {
         ExportYed.export( repair_filename( fname, {".graphml"} ), da );
       }
