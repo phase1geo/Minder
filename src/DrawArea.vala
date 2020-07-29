@@ -854,6 +854,7 @@ public class DrawArea : Gtk.DrawingArea {
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).group = !nodes.index( i ).group;
     }
+    undo_buffer.add_item( new UndoNodesGroup( nodes ) );
     queue_draw();
     changed();
   }
@@ -861,12 +862,21 @@ public class DrawArea : Gtk.DrawingArea {
   /* Adds a new group for the given list of nodes */
   public void add_group() {
     var nodes = _selected.nodes();
-    if( nodes.length > 0 ) {
-      groups.add_group( nodes );
-      /* TBD - Add undo/redo support */
-      queue_draw();
-      changed();
-    }
+    if( nodes.length == 0 ) return;
+    groups.add_group( nodes );
+    undo_buffer.add_item( new UndoGroupAdd( nodes ) );
+    queue_draw();
+    changed();
+  }
+  
+  /* Removes the currently selected group */
+  public void remove_group() {
+    var group = _selected.get_current_group();
+    if( group == null ) return;
+    groups.remove_group( group );
+    undo_buffer.add_item( new UndoGroupRemove( group ) );
+    queue_draw();
+    changed();
   }
 
   /* Copy the current node name and URL links */
@@ -2298,6 +2308,12 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_sticker();
     return( (current != null) && (current.mode == StickerMode.SELECTED) );
   }
+  
+  /* Returns true if we are in group selected mode */
+  public bool is_group_selected() {
+    var current = _selected.current_group();
+    return( (current != null) && (current.mode == GroupMode.SELECTED) );
+  }
 
   /* Returns the next node to select after the current node is removed */
   private Node? next_node_to_select() {
@@ -2636,6 +2652,8 @@ public class DrawArea : Gtk.DrawingArea {
       delete_nodes();
     } else if( is_sticker_selected() ) {
       remove_sticker();
+    } else if( is_group_selected() ) {
+      remove_group();
     }
   }
 
@@ -2659,6 +2677,8 @@ public class DrawArea : Gtk.DrawingArea {
       delete_nodes();
     } else if( is_sticker_selected() ) {
       remove_sticker();
+    } else if( is_group_selected() ) {
+      remove_group();
     }
   }
 
