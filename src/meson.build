@@ -62,6 +62,9 @@ sources += files(
     'undo_actions/UndoConnectionTitle.vala',
     'undo_actions/UndoConnectionsDelete.vala',
 
+    'undo_actions/UndoGroupAdd.vala',
+    'undo_actions/UndoGroupRemove.vala',
+
     'undo_actions/UndoNodeAddParent.vala',
     'undo_actions/UndoNodeAttach.vala',
     'undo_actions/UndoNodeBalance.vala',
@@ -93,6 +96,7 @@ sources += files(
     'undo_actions/UndoNodesCut.vala',
     'undo_actions/UndoNodesDelete.vala',
     'undo_actions/UndoNodesFold.vala',
+    'undo_actions/UndoNodesGroup.vala',
     'undo_actions/UndoNodesInsert.vala',
     'undo_actions/UndoNodesLink.vala',
     'undo_actions/UndoNodesLinkColor.vala',

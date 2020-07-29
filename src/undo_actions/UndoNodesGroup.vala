@@ -21,28 +21,35 @@
 
 using Gtk;
 
-public class UndoGroupAdd : UndoItem {
+public class UndoNodesGroup : UndoItem {
 
-  private NodeGroup _group;
+  private Array<Node> _nodes;
 
-  /* Constructor for adding a group */
-  public UndoGroupAdd( NodeGroup group ) {
-    base( _( "add group" ) );
-    _group = group;
+  /* Default constructor */
+  public UndoNodesGroup( Array<Node> nodes ) {
+    base( _( "change node groups" ) );
+    _nodes = new Array<Node>();
+    for( int i=0; i<nodes.length; i++ ) {
+      _nodes.append_val( nodes.index( i ) );
+    }
   }
 
-  /* Undoes a connection change */
+  private void toggle( DrawArea da ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).group = !_nodes.index( i ).group;
+    }
+    da.queue_draw();
+    da.changed();
+  }
+
+  /* Performs an undo operation for this data */
   public override void undo( DrawArea da ) {
-    da.groups.remove_group( _group );
-    da.queue_draw();
-    da.changed();
+    toggle( da );
   }
 
-  /* Redoes a connection change */
+  /* Performs a redo operation */
   public override void redo( DrawArea da ) {
-    da.groups.add_group( _group );
-    da.queue_draw();
-    da.changed();
+    toggle( da );
   }
 
 }

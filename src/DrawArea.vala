@@ -863,15 +863,16 @@ public class DrawArea : Gtk.DrawingArea {
   public void add_group() {
     var nodes = _selected.nodes();
     if( nodes.length == 0 ) return;
-    groups.add_group( nodes );
-    undo_buffer.add_item( new UndoGroupAdd( nodes ) );
+    var group = new NodeGroup( this, nodes );
+    groups.add_group( group );
+    undo_buffer.add_item( new UndoGroupAdd( group ) );
     queue_draw();
     changed();
   }
-  
+
   /* Removes the currently selected group */
   public void remove_group() {
-    var group = _selected.get_current_group();
+    var group = _selected.current_group();
     if( group == null ) return;
     groups.remove_group( group );
     undo_buffer.add_item( new UndoGroupRemove( group ) );
@@ -2308,7 +2309,7 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_sticker();
     return( (current != null) && (current.mode == StickerMode.SELECTED) );
   }
-  
+
   /* Returns true if we are in group selected mode */
   public bool is_group_selected() {
     var current = _selected.current_group();

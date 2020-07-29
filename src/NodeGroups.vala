@@ -43,8 +43,18 @@ public class NodeGroups {
   }
 
   /* Creates a new group for the array of nodes */
-  public void add_group( Array<Node> nodes ) {
-    _groups.append_val( new NodeGroup( _da, nodes ) );
+  public void add_group( NodeGroup group ) {
+    _groups.append_val( group );
+  }
+
+  /* Removes the given group from this list */
+  public void remove_group( NodeGroup group ) {
+    for( int i=0; i<_groups.length; i++ ) {
+      if( _groups.index( i ) == group ) {
+        _groups.remove_index( i );
+        return;
+      }
+    }
   }
 
   /* Checks to see if this group contains the given node and removes it if found */

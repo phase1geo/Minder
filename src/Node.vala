@@ -1830,21 +1830,18 @@ public class Node : Object {
     double h = _height - (style.node_margin * 2);
     RGBA   group_color;
 
-    if( !is_grouped() ) {
-
-      /* Set the fill color */
-      if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
-        Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
-      } else if( is_root() || style.is_fillable() ) {
-        Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
-      } else {
-        Utils.set_context_color_with_alpha( ctx, theme.get_color( "background" ), _alpha );
-      }
-
-      /* Draw the fill */
+    /* Set the fill color */
+    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
       style.draw_node_fill( ctx, x, y, w, h, side );
-
+    } else if( is_root() || style.is_fillable() ) {
+      Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
+      style.draw_node_fill( ctx, x, y, w, h, side );
+    } else if( !is_grouped() ) {
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "background" ), _alpha );
+      style.draw_node_fill( ctx, x, y, w, h, side );
     }
+
 
     if( !is_root() || style.is_fillable() ) {
 
@@ -1886,16 +1883,16 @@ public class Node : Object {
     }
 
     /* Draw the text */
+    var color = theme.get_color( "foreground" );
     if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
-      name.draw( ctx, theme, theme.get_color( "nodesel_foreground" ), _alpha, false );
+      color = theme.get_color( "nodesel_foreground" );
     } else if( parent == null ) {
-      name.draw( ctx, theme, theme.get_color( "root_foreground" ), _alpha, false );
+      color = theme.get_color( "root_foreground" );
     } else if( style.is_fillable() ) {
-      name.draw( ctx, theme, theme.get_color( "background" ), _alpha, false );
-    } else {
-      name.draw( ctx, theme, theme.get_color( "foreground" ), _alpha, false );
+      color = Granite.contrasting_foreground_color( link_color );
     }
 
+    name.draw( ctx, theme, color, _alpha, false );
   }
 
   /* Draws the task checkbutton for leaf nodes */
@@ -1991,7 +1988,7 @@ public class Node : Object {
 
       double x, y, w, h;
       RGBA   color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color :
-                     style.is_fillable()                                         ? bg_color  :
+                     style.is_fillable()                                         ? Granite.contrasting_foreground_color( link_color )  :
                                                                                    reg_color;
 
       note_bbox( out x, out y, out w, out h );
@@ -2022,7 +2019,7 @@ public class Node : Object {
 
       double x, y, w, h;
       RGBA   color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color :
-                     style.is_fillable()                                         ? bg_color  :
+                     style.is_fillable()                                         ? Granite.contrasting_foreground_color( link_color )  :
                                                                                    reg_color;
 
       linked_node_bbox( out x, out y, out w, out h );
