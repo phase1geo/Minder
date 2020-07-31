@@ -593,7 +593,7 @@ public class Node : Object {
   /* Returns true if this node exists within a group */
   public bool is_grouped() {
     var node = this;
-    while( !node.is_root() ) {
+    while( node != null ) {
       if( node.group ) {
         return( true );
       }
@@ -1967,11 +1967,12 @@ public class Node : Object {
 
       sticker_bbox( out x, out y, out w, out h );
 
-      /* Draw background */
-      Utils.set_context_color_with_alpha( ctx, color, _alpha );
-      ctx.move_to( x, y );
-      ctx.rectangle( x, y, w, h );
-      ctx.fill();
+      if( _mode == NodeMode.SELECTED ) {
+        Utils.set_context_color_with_alpha( ctx, color, _alpha );
+        ctx.move_to( x, y );
+        ctx.rectangle( x, y, w, h );
+        ctx.fill();
+      }
 
       /* Draw sticker */
       cairo_set_source_pixbuf( ctx, _sticker_buf, x, y );
