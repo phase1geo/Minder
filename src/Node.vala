@@ -2180,11 +2180,6 @@ public class Node : Object {
 
   }
 
-  /* Draw the group box */
-  protected virtual void draw_group( Context ctx, Theme theme ) {
-    NodeGroup.draw_tree( ctx, this, theme );
-  }
-
   /* Draws the node on the screen */
   public virtual void draw( Context ctx, Theme theme, bool motion ) {
 
@@ -2238,9 +2233,6 @@ public class Node : Object {
 
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Node? current, bool draw_current, bool motion ) {
-    if( group ) {
-      draw_group( ctx, theme );
-    }
     if( !is_root() && !draw_current ) {
       draw_link( ctx, theme );
     }

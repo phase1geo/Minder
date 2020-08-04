@@ -851,9 +851,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Toggles the group setting of the selected nodes */
   public void toggle_groups() {
     var nodes = _selected.nodes();
-    for( int i=0; i<nodes.length; i++ ) {
-      nodes.index( i ).group = !nodes.index( i ).group;
-    }
+    groups.add_group( new NodeGroup.array( this, nodes ) );
     undo_buffer.add_item( new UndoNodesGroup( nodes ) );
     queue_draw();
     changed();
@@ -861,13 +859,19 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a new group for the given list of nodes */
   public void add_group() {
-    var nodes = _selected.nodes();
-    if( nodes.length == 0 ) return;
-    var group = new NodeGroup( this, nodes );
-    groups.add_group( group );
-    undo_buffer.add_item( new UndoGroupAdd( group ) );
-    queue_draw();
-    changed();
+    if( _selected.num_groups() > 1 ) {
+      groups.merge_groups( _selected.groups() );
+      /* TBD - Add undo/redo support */
+      queue_draw();
+      changed();
+    } else if( _selected.num_nodes() > 0 ) {
+      var nodes = _selected.nodes();
+      var group = new NodeGroup.array( this, nodes );
+      groups.add_group( group );
+      undo_buffer.add_item( new UndoGroupAdd( group ) );
+      queue_draw();
+      changed();
+    }
   }
 
   /* Removes the currently selected group */

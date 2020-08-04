@@ -45,10 +45,19 @@ public class NodeGroup {
   public double    alpha { get; set; default = 1.0; }
 
   /* Default constructor */
-  public NodeGroup( DrawArea da, Array<Node> nodes ) {
+  public NodeGroup( DrawArea da, Node node ) {
+    color = da.get_theme().get_color( "tag" );
+    node.group = true;
     _nodes = new Array<Node>();
+    _nodes.append_val( node );
+  }
+
+  /* Constructor */
+  public NodeGroup.array( DrawArea da, Array<Node> nodes ) {
     color  = da.get_theme().get_color( "tag" );
+    _nodes = new Array<Node>();
     for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).group = true;
       _nodes.append_val( nodes.index( i ) );
     }
   }
@@ -76,6 +85,13 @@ public class NodeGroup {
     return( false );
   }
 
+  /* Merges the other node group into this one */
+  public void merge( NodeGroup other ) {
+    for( int i=0; i<other._nodes.length; i++ ) {
+      _nodes.append_val( other._nodes.index( i ) );
+    }
+  }
+
   /* Returns true if the given coordinates are within a group */
   public bool is_within( double x, double y ) {
     var cursor = new NodePoint( x, y );
@@ -83,7 +99,7 @@ public class NodeGroup {
     var hull   = new Array<NodePoint?>();
     points.append_val( cursor );
     for( int i=0; i<_nodes.length; i++ ) {
-      add_node_points( points, _nodes.index( i ) );
+      get_tree_points( _nodes.index( i ), _nodes.index( i ), points );
     }
     get_convex_hull( points, hull );
     for( int i=0; i<hull.length; i++ ) {
@@ -125,6 +141,7 @@ public class NodeGroup {
     if( i != null ) {
       var id   = int.parse( i );
       var node = da.get_node( da.get_nodes(), id );
+      node.group = true;
       if( node != null ) {
         _nodes.append_val( node );
       }
@@ -136,7 +153,7 @@ public class NodeGroup {
     var points   = new Array<NodePoint?>();
     var selected = mode == GroupMode.SELECTED;
     for( int i=0; i<_nodes.length; i++ ) {
-      add_node_points( points, _nodes.index( i ) );
+      get_tree_points( _nodes.index( i ), _nodes.index( i ), points );
     }
     draw_cloud( ctx, (selected ? theme.get_color( "nodesel_background" ) : color), selected, alpha, points );
   }
