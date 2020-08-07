@@ -46,31 +46,47 @@ public class NodeGroup {
 
   /* Default constructor */
   public NodeGroup( DrawArea da, Node node ) {
-    color = da.get_theme().get_color( "tag" );
-    node.group = true;
+    color  = node.link_color;
     _nodes = new Array<Node>();
-    _nodes.append_val( node );
+    add_node( node );
   }
 
   /* Constructor */
   public NodeGroup.array( DrawArea da, Array<Node> nodes ) {
-    color  = da.get_theme().get_color( "tag" );
+    color  = nodes.index( 0 ).link_color;
     _nodes = new Array<Node>();
     for( int i=0; i<nodes.length; i++ ) {
-      nodes.index( i ).group = true;
-      _nodes.append_val( nodes.index( i ) );
+      add_node( nodes.index( i ) );
+    }
+  }
+
+  /* Copy constructor */
+  public NodeGroup.copy( NodeGroup group ) {
+    color  = group.color.copy();
+    _nodes = new Array<Node>();
+    for( int i=0; i<group._nodes.length; i++ ) {
+      _nodes.append_val( group._nodes.index( i ) );
     }
   }
 
   /* Constructor from XML */
   public NodeGroup.from_xml( DrawArea da, Xml.Node* n ) {
     _nodes = new Array<Node>();
-    color  = da.get_theme().get_color( "tag" );
     load( da, n );
   }
 
   /* Adds the given node to this node group */
   public void add_node( Node node ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      var n = _nodes.index( i );
+      if( n.is_descendant_of( node ) ) {
+        _nodes.index( i ).group = false;
+        _nodes.remove_index( i );
+      } else if( node.is_descendant_of( n ) ) {
+        return;
+      }
+    }
+    node.group = true;
     _nodes.append_val( node );
   }
 
@@ -78,6 +94,7 @@ public class NodeGroup {
   public bool remove_node( Node node ) {
     for( int i=0; i<_nodes.length; i++ ) {
       if( _nodes.index( i ) == node ) {
+        node.group = false;
         _nodes.remove_index( i );
         return( true );
       }
@@ -88,7 +105,7 @@ public class NodeGroup {
   /* Merges the other node group into this one */
   public void merge( NodeGroup other ) {
     for( int i=0; i<other._nodes.length; i++ ) {
-      _nodes.append_val( other._nodes.index( i ) );
+      add_node( other._nodes.index( i ) );
     }
   }
 
@@ -126,7 +143,9 @@ public class NodeGroup {
   public void load( DrawArea da, Xml.Node* g ) {
     string? c = g->get_prop( "color" );
     if( c != null ) {
-      color.parse( c );
+      RGBA clr = {1.0, 1.0, 1.0, 1.0};
+      clr.parse( c );
+      color = clr.copy();
     }
     for( Xml.Node* it = g->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "node") ) {
@@ -141,8 +160,8 @@ public class NodeGroup {
     if( i != null ) {
       var id   = int.parse( i );
       var node = da.get_node( da.get_nodes(), id );
-      node.group = true;
       if( node != null ) {
+        node.group = true;
         _nodes.append_val( node );
       }
     }

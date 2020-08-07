@@ -84,10 +84,14 @@ public class NodeGroups {
 
   /* Merges the specifies groups into a single group */
   public void merge_groups( Array<NodeGroup> groups ) {
+    if( groups.length == 0 ) return;
+    var group = new NodeGroup.copy( groups.index( 0 ) );
+    remove_group( groups.index( 0 ) );
     for( int i=1; i<groups.length; i++ ) {
-      groups.index( 0 ).merge( groups.index( i ) );
+      group.merge( groups.index( i ) );
       remove_group( groups.index( i ) );
     }
+    add_group( group );
   }
 
   /* Applies the given undo */

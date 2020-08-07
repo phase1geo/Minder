@@ -65,6 +65,9 @@ sources += files(
     'undo_actions/UndoGroupAdd.vala',
     'undo_actions/UndoGroupRemove.vala',
 
+    'undo_actions/UndoGroupsMerge.vala',
+    'undo_actions/UndoGroupsRemove.vala',
+
     'undo_actions/UndoNodeAddParent.vala',
     'undo_actions/UndoNodeAttach.vala',
     'undo_actions/UndoNodeBalance.vala',
