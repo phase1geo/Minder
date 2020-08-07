@@ -157,6 +157,7 @@ public class ExportFreemind : Object {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "node" ) {
           var root = import_node( it, da, null, color_map, id_map, link_ids, to_nodes );
+          da.position_root_node( root );
           da.get_nodes().append_val( root );
         }
       }
