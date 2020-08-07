@@ -132,7 +132,11 @@ public class ExportFreeplane : Object {
   /* Exports the given connection as an arrowlink */
   private static Xml.Node* export_arrowlink( Connection conn, DrawArea da ) {
     Xml.Node* n = new Xml.Node( null, "arrowlink" );
-    n->new_prop( "COLOR", Utils.color_from_rgba( conn.color ) );
+    if( conn.color != null ) {
+      n->new_prop( "COLOR", Utils.color_from_rgba( conn.color ) );
+    } else {
+      n->new_prop( "COLOR", Utils.color_from_rgba( da.get_theme().get_color( "connection_background" ) ) );
+    }
     n->new_prop( "DESTINATION", "id_" + conn.to_node.id().to_string() );
     n->new_prop( "STARTARROW",  ((conn.style.connection_arrow == "none") || (conn.style.connection_arrow == "fromto")) ? "None" : "Default" );
     n->new_prop( "ENDARROW",    ((conn.style.connection_arrow == "none") || (conn.style.connection_arrow == "tofrom")) ? "None" : "Default" );
