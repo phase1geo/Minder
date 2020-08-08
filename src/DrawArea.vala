@@ -84,6 +84,7 @@ public class DrawArea : Gtk.DrawingArea {
   private ConnectionMenu   _conn_menu;
   private ConnectionsMenu  _conns_menu;
   private NodesMenu        _nodes_menu;
+  private GroupsMenu       _groups_menu;
   private EmptyMenu        _empty_menu;
   private TextMenu         _text_menu;
   private uint?            _auto_save_id = null;
@@ -214,12 +215,13 @@ public class DrawArea : Gtk.DrawingArea {
     _select_box = {0, 0, 0, 0, false};
 
     /* Create the popup menu */
-    _node_menu  = new NodeMenu( this, accel_group );
-    _conn_menu  = new ConnectionMenu( this, accel_group );
-    _conns_menu = new ConnectionsMenu( this, accel_group );
-    _empty_menu = new EmptyMenu( this, accel_group );
-    _nodes_menu = new NodesMenu( this, accel_group );
-    _text_menu  = new TextMenu( this, accel_group );
+    _node_menu   = new NodeMenu( this, accel_group );
+    _conn_menu   = new ConnectionMenu( this, accel_group );
+    _conns_menu  = new ConnectionsMenu( this, accel_group );
+    _empty_menu  = new EmptyMenu( this, accel_group );
+    _nodes_menu  = new NodesMenu( this, accel_group );
+    _groups_menu = new GroupsMenu( this, accel_group );
+    _text_menu   = new TextMenu( this, accel_group );
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
@@ -734,6 +736,11 @@ public class DrawArea : Gtk.DrawingArea {
     return( _selected.connections() );
   }
 
+  /* Returns the array of selected groups */
+  public Array<NodeGroup> get_selected_groups() {
+    return( _selected.groups() );
+  }
+
   /* Returns the selection instance associated with this DrawArea */
   public Selection get_selections() {
     return( _selected );
@@ -887,6 +894,17 @@ public class DrawArea : Gtk.DrawingArea {
     }
     undo_buffer.add_item( new UndoGroupsRemove( selgroups ) );
     _selected.clear();
+    queue_draw();
+    changed();
+  }
+
+  public void change_group_color( RGBA color ) {
+    var selgroups = _selected.groups();
+    if( selgroups.length == 0 ) return;
+    undo_buffer.add_item( new UndoGroupsColor( selgroups, color ) );
+    for( int i=0; i<selgroups.length; i++ ) {
+      selgroups.index( i ).color = color;
+    }
     queue_draw();
     changed();
   }
@@ -1884,39 +1902,23 @@ public class DrawArea : Gtk.DrawingArea {
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
 
-#if GTK322
     if( current_node != null ) {
       if( current_node.mode == NodeMode.EDITABLE ) {
-        _text_menu.popup_at_pointer( event );
+        Utils.popup_menu( _text_menu, event );
       } else {
-        _node_menu.popup_at_pointer( event );
+        Utils.popup_menu( _node_menu, event );
       }
     } else if( _selected.num_nodes() > 1 ) {
-      _nodes_menu.popup_at_pointer( event );
+      Utils.popup_menu( _nodes_menu, event );
     } else if( current_conn != null ) {
-      _conn_menu.popup_at_pointer( event );
+      Utils.popup_menu( _conn_menu, event );
     } else if( _selected.num_connections() > 1 ) {
-      _conns_menu.popup_at_pointer( event );
+      Utils.popup_menu( _conns_menu, event );
+    } else if( _selected.num_groups() > 0 ) {
+      Utils.popup_menu( _groups_menu, event );
     } else {
-      _empty_menu.popup_at_pointer( event );
+      Utils.popup_menu( _empty_menu, event );
     }
-#else
-    if( current_node != null ) {
-      if( current_node.mode == NodeMode.EDITABLE ) {
-        _text_menu.popup( null, null, null, event.button, event.time );
-      } else {
-        _node_menu.popup( null, null, null, event.button, event.time );
-      }
-    } else if( _selected.num_nodes() > 1 ) {
-      _nodes_menu.popup( null, null, null, event.button, event.time );
-    } else if( current_conn != null ) {
-      _conn_menu.popup( null, null, null, event.button, event.time );
-    } else if( _selected.num_connections() > 1 ) {
-      _conns_menu.popup( null, null, null, event.button, event.time );
-    } else {
-      _empty_menu.popup( null, null, null, event.button, event.time );
-    }
-#endif
 
   }
 

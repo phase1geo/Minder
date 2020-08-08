@@ -150,9 +150,11 @@ public class Selection {
   }
 
   /* Adds the entire node tree to the selection */
-  public bool add_node_tree( Node node ) {
+  public bool add_node_tree( Node node, bool signal_change = true ) {
     if( add_node_tree_helper( node ) ) {
-      selection_changed();
+      if( signal_change ) {
+        selection_changed();
+      }
       return( true );
     }
     return( false );
@@ -169,11 +171,13 @@ public class Selection {
   }
 
   /* Adds all of the nodes at the specified node's level to the selection */
-  public bool add_nodes_at_level( Node node ) {
+  public bool add_nodes_at_level( Node node, bool signal_change = true ) {
     var level = node.get_level();
     var root  = node.get_root();
-    if( add_nodes_at_level_helper( root, level, 0 ) ) {
-      selection_changed();
+    if( add_nodes_at_level_helper( root, level, 0 ) && signal_change ) {
+      if( signal_change ) {
+        selection_changed();
+      }
       return( true );
     }
     return( false );
@@ -187,9 +191,6 @@ public class Selection {
       var changed  = false;
       for( int i=0; i<children.length; i++ ) {
         changed |= add_nodes_at_level_helper( children.index( i ), level, (curr_level + 1) );
-      }
-      if( changed ) {
-        selection_changed();
       }
       return( changed );
     }

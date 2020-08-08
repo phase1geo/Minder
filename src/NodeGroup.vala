@@ -43,6 +43,11 @@ public class NodeGroup {
   public GroupMode mode  { get; set; default = GroupMode.NONE; }
   public RGBA      color { get; set; }
   public double    alpha { get; set; default = 1.0; }
+  public Array<Node> nodes {
+    get {
+      return( _nodes );
+    }
+  }
 
   /* Default constructor */
   public NodeGroup( DrawArea da, Node node ) {

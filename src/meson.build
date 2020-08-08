@@ -65,6 +65,7 @@ sources += files(
     'undo_actions/UndoGroupAdd.vala',
     'undo_actions/UndoGroupRemove.vala',
 
+    'undo_actions/UndoGroupsColor.vala',
     'undo_actions/UndoGroupsMerge.vala',
     'undo_actions/UndoGroupsRemove.vala',
 
@@ -160,6 +161,7 @@ sources += files(
     'EmptyInspector.vala',
     'EmptyMenu.vala',
     'FormattedText.vala',
+    'GroupsMenu.vala',
     'HtmlToMarkdown.vala',
     'ImageEditor.vala',
     'ImageManager.vala',
