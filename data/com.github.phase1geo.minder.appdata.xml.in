@@ -83,6 +83,15 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.9.2" date="2020-08-07">
+      <description>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue with setting cursor position with mouse when zoom factor is not 100 percent.</li>
+          <li>Fixed issue with reading in Minder files that exceed the XML parser size limitations.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.9.1" date="2020-07-12">
       <description>
         <p>Changes</p>

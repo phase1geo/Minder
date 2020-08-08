@@ -33,7 +33,7 @@ public class Minder : Granite.Application {
   private        MainWindow    appwin;
 
   public  static GLib.Settings settings;
-  public  static string        version = "1.9.1";
+  public  static string        version = "1.9.2";
 
   public Minder () {
 
