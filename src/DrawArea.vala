@@ -860,10 +860,14 @@ public class DrawArea : Gtk.DrawingArea {
   /* Adds a new group for the given list of nodes */
   public void add_group() {
     if( _selected.num_groups() > 1 ) {
-      groups.merge_groups( _selected.groups() );
-      /* TBD - Add undo/redo support */
-      queue_draw();
-      changed();
+      var selgroups = _selected.groups();
+      var merged    = groups.merge_groups( selgroups );
+      if( merged != null ) {
+        undo_buffer.add_item( new UndoGroupsMerge( selgroups, merged ) );
+        _selected.set_current_group( merged );
+        queue_draw();
+        changed();
+      }
     } else if( _selected.num_nodes() > 0 ) {
       var nodes = _selected.nodes();
       var group = new NodeGroup.array( this, nodes );
@@ -875,11 +879,14 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Removes the currently selected group */
-  public void remove_group() {
-    var group = _selected.current_group();
-    if( group == null ) return;
-    groups.remove_group( group );
-    undo_buffer.add_item( new UndoGroupRemove( group ) );
+  public void remove_groups() {
+    var selgroups = _selected.groups();
+    if( selgroups.length == 0 ) return;
+    for( int i=0; i<selgroups.length; i++ ) {
+      groups.remove_group( selgroups.index( i ) );
+    }
+    undo_buffer.add_item( new UndoGroupsRemove( selgroups ) );
+    _selected.clear();
     queue_draw();
     changed();
   }
@@ -1495,6 +1502,9 @@ public class DrawArea : Gtk.DrawingArea {
         }
         var group = groups.node_group_containing( _scaled_x, _scaled_y );
         if( group != null ) {
+          clear_current_node( false );
+          clear_current_connection( false );
+          clear_current_sticker( false );
           return( set_current_group_from_position( group, e ) );
         }
         _select_box.x     = x;
@@ -2657,8 +2667,8 @@ public class DrawArea : Gtk.DrawingArea {
       delete_nodes();
     } else if( is_sticker_selected() ) {
       remove_sticker();
-    } else if( is_group_selected() ) {
-      remove_group();
+    } else if( _selected.num_groups() > 0 ) {
+      remove_groups();
     }
   }
 
@@ -2682,8 +2692,8 @@ public class DrawArea : Gtk.DrawingArea {
       delete_nodes();
     } else if( is_sticker_selected() ) {
       remove_sticker();
-    } else if( is_group_selected() ) {
-      remove_group();
+    } else if( _selected.num_groups() > 0 ) {
+      remove_groups();
     }
   }
 

@@ -83,8 +83,8 @@ public class NodeGroups {
   }
 
   /* Merges the specifies groups into a single group */
-  public void merge_groups( Array<NodeGroup> groups ) {
-    if( groups.length == 0 ) return;
+  public NodeGroup? merge_groups( Array<NodeGroup> groups ) {
+    if( groups.length == 0 ) return( null );
     var group = new NodeGroup.copy( groups.index( 0 ) );
     remove_group( groups.index( 0 ) );
     for( int i=1; i<groups.length; i++ ) {
@@ -92,6 +92,7 @@ public class NodeGroups {
       remove_group( groups.index( i ) );
     }
     add_group( group );
+    return( group );
   }
 
   /* Applies the given undo */

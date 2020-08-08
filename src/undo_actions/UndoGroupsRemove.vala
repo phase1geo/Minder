@@ -36,8 +36,10 @@ public class UndoGroupsRemove : UndoItem {
 
   /* Undoes a connection change */
   public override void undo( DrawArea da ) {
+    da.get_selections().clear();
     for( int i=0; i<_groups.length; i++ ) {
       da.groups.add_group( _groups.index( i ) );
+      da.get_selections().add_group( _groups.index( i ) );
     }
     da.queue_draw();
     da.changed();
@@ -45,6 +47,7 @@ public class UndoGroupsRemove : UndoItem {
 
   /* Redoes a connection change */
   public override void redo( DrawArea da ) {
+    da.get_selections().clear();
     for( int i=0; i<_groups.length; i++ ) {
       da.groups.remove_group( _groups.index( i ) );
     }
