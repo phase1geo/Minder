@@ -202,18 +202,14 @@ public class NodeGroup {
       ctx.line_to( hull.index( i ).x, hull.index( i ).y );
     }
     ctx.close_path();
-    ctx.fill();
 
     /* Draw the stroke */
     if( selected ) {
+      ctx.fill_preserve();
       Utils.set_context_color_with_alpha( ctx, color, alpha );
-      ctx.move_to( hull.index( 0 ).x, hull.index( 0 ).y );
-      ctx.set_line_width( 2 );
-      for( int i=0; i<hull.length; i++ ) {
-        ctx.line_to( hull.index( i ).x, hull.index( i ).y );
-      }
-      ctx.close_path();
       ctx.stroke();
+    } else {
+      ctx.fill();
     }
 
   }
