@@ -37,6 +37,7 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _sticker;
   Gtk.MenuItem _link;
   Gtk.MenuItem _conn;
+  Gtk.MenuItem _group;
   Gtk.MenuItem _link_color;
   Gtk.MenuItem _parent_link_color;
   Gtk.MenuItem _fold;
@@ -87,7 +88,7 @@ public class NodeMenu : Gtk.Menu {
     _delonly = new Gtk.MenuItem.with_label( _( "Delete Single Node" ) );
     _delonly.activate.connect( delete_node_only );
 
-    _edit = new Gtk.MenuItem.with_label( _( "Edit…" ) );
+    _edit = new Gtk.MenuItem.with_label( _( "Edit Text…" ) );
     _edit.activate.connect( edit_node );
     Utils.add_accel_label( _edit, 'e', 0 );
 
@@ -109,6 +110,10 @@ public class NodeMenu : Gtk.Menu {
     _conn = new Gtk.MenuItem.with_label( _( "Add Connection" ) );
     _conn.activate.connect( add_connection );
     Utils.add_accel_label( _conn, 'x', 0 );
+
+    _group = new Gtk.MenuItem.with_label( _( "Add Group" ) );
+    _group.activate.connect( add_group );
+    Utils.add_accel_label( _group, 'g', 0 );
 
     _link_color = new Gtk.MenuItem.with_label( _( "Link Color" ) );
     var link_color_menu = new Gtk.Menu();
@@ -225,6 +230,7 @@ public class NodeMenu : Gtk.Menu {
     add( _sticker );
     add( _link );
     add( _conn );
+    add( _group );
     add( _link_color );
     add( _fold );
     add( new SeparatorMenuItem() );
@@ -473,6 +479,10 @@ public class NodeMenu : Gtk.Menu {
   /* Changes the connection of the currently selected node */
   private void add_connection() {
     _da.start_connection( false, false );
+  }
+
+  private void add_group() {
+    _da.add_group();
   }
 
   /* Fold the currently selected node */

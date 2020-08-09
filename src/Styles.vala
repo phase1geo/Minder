@@ -87,15 +87,18 @@ public class Styles {
       level.style.link_arrow    = false;
       level.style.link_dash     = ld_solid;
       if( i == 0 ) {
-        level.style.node_border = nb_rounded;
+        level.style.node_border  = nb_rounded;
+        level.style.node_margin  = 10;
+        level.style.node_padding = 10;
+//        level.style.node_font    = FOOBAR;
       } else {
-        level.style.node_border = nb_underlined;
+        level.style.node_border  = nb_underlined;
+        level.style.node_margin  = 8;
+        level.style.node_padding = 6;
       }
       level.style.node_width             = 200;
       level.style.node_borderwidth       = 4;
       level.style.node_fill              = false;
-      level.style.node_margin            = 8;
-      level.style.node_padding           = 6;
       level.style.node_markup            = true;
       level.style.connection_dash        = ld_dotted;
       level.style.connection_line_width  = 2;

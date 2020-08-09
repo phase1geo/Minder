@@ -84,6 +84,7 @@ public class DrawArea : Gtk.DrawingArea {
   private ConnectionMenu   _conn_menu;
   private ConnectionsMenu  _conns_menu;
   private NodesMenu        _nodes_menu;
+  private GroupsMenu       _groups_menu;
   private EmptyMenu        _empty_menu;
   private TextMenu         _text_menu;
   private uint?            _auto_save_id = null;
@@ -100,6 +101,7 @@ public class DrawArea : Gtk.DrawingArea {
   private TextCompletion   _completion;
   private double           _sticker_posx;
   private double           _sticker_posy;
+  private NodeGroups       _groups;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -152,6 +154,11 @@ public class DrawArea : Gtk.DrawingArea {
       return( _stickers );
     }
   }
+  public NodeGroups groups {
+    get {
+      return( _groups );
+    }
+  }
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -187,6 +194,9 @@ public class DrawArea : Gtk.DrawingArea {
     /* Create the stickers */
     _stickers = new Stickers();
 
+    /* Create groups */
+    _groups = new NodeGroups( this );
+
     /* Allocate memory for the animator */
     animator = new Animator( this );
 
@@ -205,12 +215,13 @@ public class DrawArea : Gtk.DrawingArea {
     _select_box = {0, 0, 0, 0, false};
 
     /* Create the popup menu */
-    _node_menu  = new NodeMenu( this, accel_group );
-    _conn_menu  = new ConnectionMenu( this, accel_group );
-    _conns_menu = new ConnectionsMenu( this, accel_group );
-    _empty_menu = new EmptyMenu( this, accel_group );
-    _nodes_menu = new NodesMenu( this, accel_group );
-    _text_menu  = new TextMenu( this, accel_group );
+    _node_menu   = new NodeMenu( this, accel_group );
+    _conn_menu   = new ConnectionMenu( this, accel_group );
+    _conns_menu  = new ConnectionsMenu( this, accel_group );
+    _empty_menu  = new EmptyMenu( this, accel_group );
+    _nodes_menu  = new NodesMenu( this, accel_group );
+    _groups_menu = new GroupsMenu( this, accel_group );
+    _text_menu   = new TextMenu( this, accel_group );
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
@@ -493,6 +504,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "drawarea"    :  load_drawarea( it );  break;
           case "images"      :  image_manager.load( it );  break;
           case "connections" :  _connections.load( this, it, null, _nodes, id_map );  break;
+          case "groups"      :  groups.load( this, it );  break;
           case "stickers"    :  _stickers.load( it );  break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
@@ -550,6 +562,7 @@ public class DrawArea : Gtk.DrawingArea {
       _nodes.index( i ).save( nodes );
     }
     parent->add_child( nodes );
+    parent->add_child( groups.save() );
 
     _connections.save( parent );
     parent->add_child( _stickers.save() );
@@ -723,6 +736,11 @@ public class DrawArea : Gtk.DrawingArea {
     return( _selected.connections() );
   }
 
+  /* Returns the array of selected groups */
+  public Array<NodeGroup> get_selected_groups() {
+    return( _selected.groups() );
+  }
+
   /* Returns the selection instance associated with this DrawArea */
   public Selection get_selections() {
     return( _selected );
@@ -798,6 +816,11 @@ public class DrawArea : Gtk.DrawingArea {
     _stickers.select_sticker( s );
   }
 
+  /* Sets the current selected group to the specified group */
+  public void set_current_group( NodeGroup? g ) {
+    _selected.set_current_group( g );
+  }
+
   /* Toggles the value of the specified node, if possible */
   public void toggle_task( Node n ) {
     undo_buffer.add_item( new UndoNodeTask( n, true, !n.task_done() ) );
@@ -830,6 +853,51 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
       changed();
     }
+  }
+
+  /* Adds a new group for the given list of nodes */
+  public void add_group() {
+    if( _selected.num_groups() > 1 ) {
+      var selgroups = _selected.groups();
+      var merged    = groups.merge_groups( selgroups );
+      if( merged != null ) {
+        undo_buffer.add_item( new UndoGroupsMerge( selgroups, merged ) );
+        _selected.set_current_group( merged );
+        queue_draw();
+        changed();
+      }
+    } else if( _selected.num_nodes() > 0 ) {
+      var nodes = _selected.nodes();
+      var group = new NodeGroup.array( this, nodes );
+      groups.add_group( group );
+      undo_buffer.add_item( new UndoGroupAdd( group ) );
+      queue_draw();
+      changed();
+    }
+  }
+
+  /* Removes the currently selected group */
+  public void remove_groups() {
+    var selgroups = _selected.groups();
+    if( selgroups.length == 0 ) return;
+    for( int i=0; i<selgroups.length; i++ ) {
+      groups.remove_group( selgroups.index( i ) );
+    }
+    undo_buffer.add_item( new UndoGroupsRemove( selgroups ) );
+    _selected.clear();
+    queue_draw();
+    changed();
+  }
+
+  public void change_group_color( RGBA color ) {
+    var selgroups = _selected.groups();
+    if( selgroups.length == 0 ) return;
+    undo_buffer.add_item( new UndoGroupsColor( selgroups, color ) );
+    for( int i=0; i<selgroups.length; i++ ) {
+      selgroups.index( i ).color = color;
+    }
+    queue_draw();
+    changed();
   }
 
   /* Copy the current node name and URL links */
@@ -1166,6 +1234,13 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Clears the current group (if it is set) and updates the UI accordingly */
+  private void clear_current_group( bool signal_change ) {
+    if( _selected.num_groups() > 0 ) {
+      _selected.clear_groups( signal_change );
+    }
+  }
+
   /* Called whenever the user clicks on a valid connection */
   private bool set_current_connection_from_position( Connection conn, EventButton e ) {
 
@@ -1359,6 +1434,21 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  public bool set_current_group_from_position( NodeGroup group, EventButton e ) {
+
+    var shift = (bool)(e.state & ModifierType.SHIFT_MASK);
+
+    /* Select the current group */
+    if( shift ) {
+      _selected.add_group( group );
+    } else {
+      set_current_group( group );
+    }
+
+    return( true );
+
+  }
+
   /*
    Sets the current node pointer to the node that is within the given coordinates.
    Returns true if we sucessfully set current_node to a valid node and made it
@@ -1400,6 +1490,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( match_conn != null ) {
         clear_current_node( false );
         clear_current_sticker( false );
+        clear_current_group( false );
         return( set_current_connection_from_position( match_conn, e ) );
       } else {
         for( int i=0; i<_nodes.length; i++ ) {
@@ -1407,6 +1498,7 @@ public class DrawArea : Gtk.DrawingArea {
           if( match_node != null ) {
             clear_current_connection( false );
             clear_current_sticker( false );
+            clear_current_group( false );
             return( set_current_node_from_position( match_node, e ) );
           }
         }
@@ -1414,7 +1506,15 @@ public class DrawArea : Gtk.DrawingArea {
         if( sticker != null ) {
           clear_current_node( false );
           clear_current_connection( false );
+          clear_current_group( false );
           return( set_current_sticker_from_position( sticker, e ) );
+        }
+        var group = groups.node_group_containing( _scaled_x, _scaled_y );
+        if( group != null ) {
+          clear_current_node( false );
+          clear_current_connection( false );
+          clear_current_sticker( false );
+          return( set_current_group_from_position( group, e ) );
         }
         _select_box.x     = x;
         _select_box.y     = y;
@@ -1424,6 +1524,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
         clear_current_connection( true );
         clear_current_sticker( true );
+        clear_current_group( true );
         if( _last_node != null ) {
           _selected.set_current_node( _last_node );
         }
@@ -1751,6 +1852,8 @@ public class DrawArea : Gtk.DrawingArea {
   /* Draws all of the root node trees */
   public void draw_all( Context ctx ) {
 
+    _groups.draw_all( ctx, _theme );
+
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
     for( int i=0; i<_nodes.length; i++ ) {
@@ -1790,39 +1893,23 @@ public class DrawArea : Gtk.DrawingArea {
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
 
-#if GTK322
     if( current_node != null ) {
       if( current_node.mode == NodeMode.EDITABLE ) {
-        _text_menu.popup_at_pointer( event );
+        Utils.popup_menu( _text_menu, event );
       } else {
-        _node_menu.popup_at_pointer( event );
+        Utils.popup_menu( _node_menu, event );
       }
     } else if( _selected.num_nodes() > 1 ) {
-      _nodes_menu.popup_at_pointer( event );
+      Utils.popup_menu( _nodes_menu, event );
     } else if( current_conn != null ) {
-      _conn_menu.popup_at_pointer( event );
+      Utils.popup_menu( _conn_menu, event );
     } else if( _selected.num_connections() > 1 ) {
-      _conns_menu.popup_at_pointer( event );
+      Utils.popup_menu( _conns_menu, event );
+    } else if( _selected.num_groups() > 0 ) {
+      Utils.popup_menu( _groups_menu, event );
     } else {
-      _empty_menu.popup_at_pointer( event );
+      Utils.popup_menu( _empty_menu, event );
     }
-#else
-    if( current_node != null ) {
-      if( current_node.mode == NodeMode.EDITABLE ) {
-        _text_menu.popup( null, null, null, event.button, event.time );
-      } else {
-        _node_menu.popup( null, null, null, event.button, event.time );
-      }
-    } else if( _selected.num_nodes() > 1 ) {
-      _nodes_menu.popup( null, null, null, event.button, event.time );
-    } else if( current_conn != null ) {
-      _conn_menu.popup( null, null, null, event.button, event.time );
-    } else if( _selected.num_connections() > 1 ) {
-      _conns_menu.popup( null, null, null, event.button, event.time );
-    } else {
-      _empty_menu.popup( null, null, null, event.button, event.time );
-    }
-#endif
 
   }
 
@@ -2230,6 +2317,12 @@ public class DrawArea : Gtk.DrawingArea {
     return( (current != null) && (current.mode == StickerMode.SELECTED) );
   }
 
+  /* Returns true if we are in group selected mode */
+  public bool is_group_selected() {
+    var current = _selected.current_group();
+    return( (current != null) && (current.mode == GroupMode.SELECTED) );
+  }
+
   /* Returns the next node to select after the current node is removed */
   private Node? next_node_to_select() {
     var current = _selected.current_node();
@@ -2567,6 +2660,8 @@ public class DrawArea : Gtk.DrawingArea {
       delete_nodes();
     } else if( is_sticker_selected() ) {
       remove_sticker();
+    } else if( _selected.num_groups() > 0 ) {
+      remove_groups();
     }
   }
 
@@ -2590,6 +2685,8 @@ public class DrawArea : Gtk.DrawingArea {
       delete_nodes();
     } else if( is_sticker_selected() ) {
       remove_sticker();
+    } else if( _selected.num_groups() > 0 ) {
+      remove_groups();
     }
   }
 
@@ -3590,6 +3687,7 @@ public class DrawArea : Gtk.DrawingArea {
         case Key.a            :  select_parent_nodes();  break;
         case Key.d            :  select_child_nodes();  break;
         case Key.f            :  toggle_folds();  break;
+        case Key.g            :  add_group();  break;
         case Key.m            :  select_root_node();  break;
         case Key.r            :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
         case Key.u            :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
@@ -3659,6 +3757,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         break;
       case Key.f :  toggle_fold( current );  break;
+      case Key.g :  add_group();  break;
       case Key.h :  handle_left( false );  break;
       case Key.i :  show_properties( "current", false );  break;
       case Key.j :  handle_down( false );  break;

@@ -77,6 +77,10 @@ public class ExportFreeplane : Object {
       n->new_prop( "BACKGROUND_COLOR", Utils.color_from_rgba( node.link_color ) );
     }
 
+    if( node.group ) {
+      n->add_child( export_cloud( node, da ) );
+    }
+
     n->add_child( export_edge( node, da ) );
     n->add_child( export_font( node, da ) );
 
@@ -137,6 +141,13 @@ public class ExportFreeplane : Object {
     n->new_prop( "DESTINATION", "id_" + conn.to_node.id().to_string() );
     n->new_prop( "STARTARROW",  ((conn.style.connection_arrow == "none") || (conn.style.connection_arrow == "fromto")) ? "None" : "Default" );
     n->new_prop( "ENDARROW",    ((conn.style.connection_arrow == "none") || (conn.style.connection_arrow == "tofrom")) ? "None" : "Default" );
+    return( n );
+  }
+
+  /* Exports the cloud information */
+  private static Xml.Node* export_cloud( Node node, DrawArea da ) {
+    Xml.Node* n = new Xml.Node( null, "cloud" );
+    n->new_prop( "COLOR", Utils.color_from_rgba( node.link_color ) );
     return( n );
   }
 
@@ -339,7 +350,7 @@ public class ExportFreeplane : Object {
           case "edge"        :  import_edge( it, node );  break;
           case "font"        :  import_font( it, node );  break;
           case "icon"        :  break;  // Not implemented
-          case "cloud"       :  break;  // Not implemented
+          case "cloud"       :  import_cloud( it, da, node );  break;
           case "arrowlink"   :  import_arrowlink( it, da, node, to_nodes );  break;
           case "richcontent" :  import_richcontent( it, node );  break;
           case "hook"        :  import_hook( it, da, node, ifile );  break;
@@ -406,6 +417,18 @@ public class ExportFreeplane : Object {
 
   }
 
+  private static void import_cloud( Xml.Node* n, DrawArea da, Node node ) {
+
+    /*
+     NOTE - Currently groups associated with a node inherit the link color from the node
+     so I won't use the value from Freeplane.
+    */
+
+    /* Indicate that the node should be drawn as a group */
+    node.group = true;
+
+  }
+
   private static void import_arrowlink( Xml.Node* n, DrawArea da, Node from_node, Array<string> to_nodes ) {
 
     var conn        = new Connection( da, from_node );
@@ -448,75 +471,19 @@ public class ExportFreeplane : Object {
   /* Import the richcontent section */
   private static void import_richcontent( Xml.Node* n, Node node ) {
 
-    string type    = n->get_prop( "TYPE" ) ?? "NOTE";
-    string content = parse_richcontent( n ).chug();
+    string type = n->get_prop( "TYPE" ) ?? "NOTE";
 
-    if( type == "NODE" ) {
-      node.name.text.insert_text( 0, content );
-    } else {
-      node.note = content;
-    }
-
-  }
-
-  /* Parses the given richcontent block and turns it into the equivalent Pango markup */
-  private static string parse_richcontent( Xml.Node* n, int level=0, int number=0 ) {
-
-    var      str     = "";
-    string[] bullets = {"-", "*", "+"};
-    int      num     = 1;
-    bool     ul      = n->name.down() == "ul";
-    bool     ol      = n->name.down() == "ol";
-
-    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
-      switch( it->type ) {
-        case Xml.ElementType.TEXT_NODE :
-          str += it->content.strip().replace( "&", "&amp;" ).replace( "<", "&lt;" ).replace( ">", "&gt;" );
-          break;
-        case Xml.ElementType.CDATA_SECTION_NODE :
-          str += it->content.strip();
-          break;
-        case Xml.ElementType.ELEMENT_NODE :
-          if( it->name.down() != "head" ) {  // Skip anything within the header section
-            str += parse_richcontent( it, (level + ((ol || ul) ? 1 : 0)), (ol ? num++ : 0) );
-          }
-          break;
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name.down() == "html") ) {
+        HtmlToMarkdown.reset();
+        var text = HtmlToMarkdown.parse_xml( it ).strip();
+        if( type == "NODE" ) {
+          node.name.text.insert_text( 0, text );
+        } else {
+          node.note = text;
+        }
       }
     }
-
-    var name = n->name.down();
-    var span = "<span";
-
-    switch( name ) {
-      case "b"     :
-      case "big"   :
-      case "i"     :
-      case "s"     :
-      case "sub"   :
-      case "sup"   :
-      case "small" :
-      case "tt"    :
-      case "u"     :
-        str = "<" + name + ">" + str + "</" + name + ">";
-        break;
-      case "span"  :
-        for( Xml.Attr* it=n->properties; it!=null; it=it->next ) {
-          span += " " + it->name + "=\"" + n->get_prop( it->name ) + "\"";
-        }
-        str = span + ">" + str + "</span>";
-        break;
-      case "p"     :
-        str = "\n" + str;
-        break;
-      case "br"    :
-        str += "\n";
-        break;
-      case "li"    :
-        str = "\n" + string.nfill( ((level - 1) * 4), ' ' ) + ((number == 0) ? bullets[(level - 1) % 3] : (number.to_string() + ".")) + " " + str;
-        break;
-    }
-
-    return( str );
 
   }
 
