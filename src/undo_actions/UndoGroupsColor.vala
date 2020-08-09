@@ -30,7 +30,7 @@ public class UndoGroupsColor : UndoItem {
 
   /* Constructor for removing a group */
   public UndoGroupsColor( Array<NodeGroup> groups, RGBA new_color ) {
-    base( _( "merge groups" ) );
+    base( _( "group color change" ) );
     _groups     = new Array<NodeGroup>();
     _old_colors = new Array<RGBA?>();
     _new_color  = new_color;

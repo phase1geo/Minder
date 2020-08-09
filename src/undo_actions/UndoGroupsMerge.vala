@@ -28,7 +28,7 @@ public class UndoGroupsMerge : UndoItem {
 
   /* Constructor for removing a group */
   public UndoGroupsMerge( Array<NodeGroup> groups, NodeGroup merged ) {
-    base( _( "merge groups" ) );
+    base( _( "group merge" ) );
     _groups = new Array<NodeGroup>();
     _merged = merged;
     for( int i=0; i<groups.length; i++ ) {
