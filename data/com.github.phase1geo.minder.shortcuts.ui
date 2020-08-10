@@ -191,14 +191,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Delete Node</property>
-                <property name="accelerator">Delete</property>
-                <property name="visible">1</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">Delete Node</property>
-                <property name="accelerator">BackSpace</property>
+                <property name="accelerator">Delete BackSpace</property>
                 <property name="visible">1</property>
               </object>
             </child>
