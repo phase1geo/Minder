@@ -33,7 +33,6 @@ public class ExportXMind : Object {
 
     /* Create temporary directory to place contents in */
     var dir = DirUtils.mkdtemp( "minderXXXXXX" );
-    stdout.printf( "dir: %s\n", dir );
 
     /* Create manifest director */
     DirUtils.create( Path.build_filename( dir, "META-INF" ), 0755 );
@@ -271,6 +270,13 @@ public class ExportXMind : Object {
         var conn     = conns.index( i );
         var conn_id  = ids++;
         var style_id = ids++;
+        var color    = (conn.color == null) ? da.get_theme().get_color( "connection_background" ) : conn.color;
+        var dash     = "dash";
+
+        switch( conn.style.connection_dash.name ) {
+          case "solid"  :  dash = "solid";  break;
+          case "dotted" :  dash = "dot";    break;
+        }
 
         Xml.Node* relation = new Xml.Node( null, "relationship" );
         relation->set_prop( "end1", conn.from_node.id().to_string() );
@@ -295,8 +301,8 @@ public class ExportXMind : Object {
         var to_arrow   = (conn.style.connection_arrow == "fromto") || (conn.style.connection_arrow == "both");
         props->set_prop( "arrow-begin-class", "org.xmind.arrowShape.%s".printf( from_arrow ? "triangle" : "none" ) );
         props->set_prop( "arrow-end-class",   "org.xmind.arrowShape.%s".printf( to_arrow   ? "triangle" : "none" ) );
-        props->set_prop( "line-color", Utils.color_from_rgba( conn.color ) );
-        // props->set_prop( "line-pattern", conn.style.connection_dash );
+        props->set_prop( "line-color", Utils.color_from_rgba( color ) );
+        props->set_prop( "line-pattern", dash );
         props->set_prop( "line-width", "%dpt".printf( conn.style.connection_line_width ) );
         props->set_prop( "shape-class", "org.xmind.relationshipShape.curved" );
         style->add_child( props );
