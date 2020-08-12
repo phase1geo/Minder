@@ -113,9 +113,11 @@ public class ExportXMind : Object {
 
   private static void export_map( DrawArea da, Xml.Node* sheet, string timestamp, Array<Xml.Node*> styles ) {
     var nodes = da.get_nodes();
+    var conns = da.get_connections().connections;
     for( int i=0; i<nodes.length; i++ ) {
       sheet->add_child( export_node( da, nodes.index( i ), timestamp, true, styles ) );
     }
+    export_connections( da, sheet, timestamp, styles );
   }
 
   private static Xml.Node* export_node( DrawArea da, Node node, string timestamp, bool top, Array<Xml.Node*> styles ) {
@@ -257,6 +259,57 @@ public class ExportXMind : Object {
 
   }
 
+  private static void export_connections( DrawArea da, Xml.Node* sheet, string timestamp, Array<Xml.Node*> styles ) {
+
+    var conns = da.get_connections().connections;
+
+    if( conns.length > 0 ) {
+
+      Xml.Node* relations = new Xml.Node( null, "relationships" );
+
+      for( int i=0; i<conns.length; i++ ) {
+        var conn     = conns.index( i );
+        var conn_id  = ids++;
+        var style_id = ids++;
+
+        Xml.Node* relation = new Xml.Node( null, "relationship" );
+        relation->set_prop( "end1", conn.from_node.id().to_string() );
+        relation->set_prop( "end2", conn.to_node.id().to_string() );
+        relation->set_prop( "id", conn_id.to_string() );
+        relation->set_prop( "style-id", style_id.to_string() );
+        // relation->set_prop( "modified-by", TBD );
+        relation->set_prop( "timestamp", timestamp );
+
+        if( conn.title != null ) {
+          Xml.Node* title = new Xml.Node( null, "title" );
+          title->add_content( conn.title.text.text );
+          relation->add_child( title );
+        }
+
+        relations->add_child( relation );
+
+        /* Create style */
+        Xml.Node* style = new Xml.Node( null, "style" );
+        Xml.Node* props = new Xml.Node( null, "relationship-properties" );
+        var from_arrow = (conn.style.connection_arrow == "tofrom") || (conn.style.connection_arrow == "both");
+        var to_arrow   = (conn.style.connection_arrow == "fromto") || (conn.style.connection_arrow == "both");
+        props->set_prop( "arrow-begin-class", "org.xmind.arrowShape.%s".printf( from_arrow ? "triangle" : "none" ) );
+        props->set_prop( "arrow-end-class",   "org.xmind.arrowShape.%s".printf( to_arrow   ? "triangle" : "none" ) );
+        props->set_prop( "line-color", Utils.color_from_rgba( conn.color ) );
+        // props->set_prop( "line-pattern", conn.style.connection_dash );
+        props->set_prop( "line-width", "%dpt".printf( conn.style.connection_line_width ) );
+        props->set_prop( "shape-class", "org.xmind.relationshipShape.curved" );
+        style->add_child( props );
+        styles.append_val( style );
+
+      }
+
+      sheet->add_child( relations );
+
+    }
+
+  }
+
   /* Creates the styles.xml file in the main directory */
   private static void export_styles( string fname, Array<Xml.Node*> nodes ) {
 
@@ -288,7 +341,7 @@ public class ExportXMind : Object {
 
     // Create the tar.gz archive named according the the first argument.
     Archive.Write archive = new Archive.Write();
-    archive.add_filter_compress();
+    archive.add_filter_none();
     archive.set_format_zip();
     archive.open_filename( outname );
 
