@@ -837,6 +837,11 @@ public class MainWindow : ApplicationWindow {
     filter.add_pattern( "*.pminder" );
     dialog.add_filter( filter );
 
+    filter = new FileFilter();
+    filter.set_filter_name( _( "XMind 8" ) );
+    filter.add_pattern( "*.xmind" );
+    dialog.add_filter( filter );
+
     if( dialog.run() == ResponseType.ACCEPT ) {
       open_file( dialog.get_filename() );
     }
@@ -882,6 +887,11 @@ public class MainWindow : ApplicationWindow {
       var da        = add_tab( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportPortableMinder.import( fname, da );
+    } else if( fname.has_suffix( ".xmind" ) ) {
+      var new_fname = fname.substring( 0, (fname.length - 6) ) + ".minder";
+      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      update_title( da );
+      ExportXMind.import( fname, da );
     }
     return( false );
   }

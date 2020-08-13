@@ -28,6 +28,33 @@ public class ExportXMind : Object {
 
   public static int ids = 10000000;
 
+  public enum IdObjectType {
+    NODE = 0,
+    CONNECTION,
+    BOUNDARY
+  }
+
+  public class IdObject {
+    public IdObjectType typ   { get; set; default = IdObjectType.NODE; }
+    public Node?        node  { get; set; default = null; }
+    public Connection?  conn  { get; set; default = null; }
+    // public NodeGroup?   group { get; set; default = null; }
+    public IdObject.for_node( Node n ) {
+      typ  = IdObjectType.NODE;
+      node = n;
+    }
+    public IdObject.for_connection( Connection c ) {
+      typ  = IdObjectType.CONNECTION;
+      conn = c;
+    }
+    /*
+    public IdObject.for_boundary( NodeGroup g ) {
+      typ   = IdObjectType.BOUNDARY;
+      group = g;
+    }
+    */
+  }
+
   /* Exports the given drawing area to the file of the given name */
   public static bool export( string fname, DrawArea da ) {
 
@@ -386,6 +413,357 @@ public class ExportXMind : Object {
 
     if( archive.close() != Archive.Result.OK ) {
       error( "Error : %s (%d)", archive.error_string(), archive.errno() );
+    }
+
+  }
+
+  // --------------------------------------------------------------------------------------
+
+  /* Main method used to import an XMind mind-map into Minder */
+  public static void import( string fname, DrawArea da ) {
+
+    /* Create temporary directory to place contents in */
+    var dir = DirUtils.mkdtemp( "minderXXXXXX" );
+
+    /* Unarchive the files */
+    unarchive_contents( fname, dir );
+
+    var content = Path.build_filename( dir, "content.xml" );
+    var id_map  = new HashMap<string,IdObject>();
+    import_content( da, content, id_map );
+
+    var styles = Path.build_filename( dir, "styles.xml" );
+    import_styles( da, styles, id_map );
+
+    /* Update the drawing area and save the result */
+    da.queue_draw();
+    da.changed();
+
+  }
+
+  /* Import the content file */
+  private static bool import_content( DrawArea da, string fname, HashMap<string,IdObject> id_map ) {
+
+    /* Read in the contents of the Freemind file */
+    var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
+    if( doc == null ) {
+      return( false );
+    }
+
+    /* Load the contents of the file */
+    import_map( da, doc->get_root_element(), id_map );
+
+    /* Delete the OPML document */
+    delete doc;
+
+    return( true );
+
+  }
+
+  /* Import the xmind map */
+  private static void import_map( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+
+    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
+      if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "sheet") ) {
+        import_sheet( da, it, id_map );
+        return;
+      }
+    }
+  }
+
+  /* Import a sheet */
+  private static void import_sheet( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+
+    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
+      if( it->type == ElementType.ELEMENT_NODE ) {
+        switch( it->name ) {
+          case "topic"         :  import_topic( da, null, it, id_map );  break;
+          case "relationships" :  import_relationships( da, it, id_map );  break;
+        }
+      }
+    }
+
+  }
+
+  /* Imports an XMind topic (this is a node in Minder) */
+  private static void import_topic( DrawArea da, Node? parent, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+
+    Node node;
+
+    string? sclass = n->get_prop( "structure-class" );
+    if( sclass != null ) {
+      node = da.create_root_node();
+      if( sclass == "org.xmind.ui.map.unbalanced" ) {
+        node.layout = da.layouts.get_layout( _( "Horizontal" ) );
+      } else {
+        node.layout = da.layouts.get_layout( _( "To right" ) );
+      }
+    } else {
+      node = da.create_child_node( parent );
+    }
+
+    /* Handle the ID */
+    string? id = n->get_prop( "id" );
+    if( id != null ) {
+      id_map.set( id, new IdObject.for_node( node ) );
+    }
+
+    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
+      if( it->type == ElementType.ELEMENT_NODE ) {
+        switch( it->name ) {
+          case "title"    :  import_node_name( node, it );   break;
+          case "notes"    :  import_node_notes( node, it );  break;
+          case "img"      :  import_image( da, node, it, id_map );     break;
+          case "children" :  import_children( da, node, it, id_map );  break;
+        }
+      }
+    }
+
+  }
+
+  /* Returns the string stored in a <title> node */
+  private static string get_title( Xml.Node* n ) {
+    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
+      if( it->type == ElementType.TEXT_NODE ) {
+        return( it->content );
+      }
+    }
+    return( "" );
+  }
+
+  /* Imports the node name information */
+  private static void import_node_name( Node node, Xml.Node* n ) {
+    node.name.text.insert_text( 0, get_title( n ) );
+  }
+
+  /* Imports the node note */
+  private static void import_node_notes( Node node, Xml.Node* n ) {
+
+    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
+      if( it->type == ElementType.ELEMENT_NODE ) {
+        switch( it->name ) {
+          case "plain" :  import_note_plain( node, it );  break;
+        }
+      }
+    }
+
+  }
+
+  /* Imports the node note as plain text */
+  private static void import_note_plain( Node node, Xml.Node* n ) {
+    node.note = get_title( n );
+  }
+
+  /* Imports an image from a file */
+  private static void import_image( DrawArea da, Node node, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+
+    int height = 1;
+    int width  = 1;
+
+    string? sid = n->get_prop( "style-id" );
+    if( sid != null ) {
+      // TBD - We need to associate styles to things that are not just nodes
+    }
+
+    string? h = n->get_prop( "svg:height" );
+    if( h != null ) {
+      height = int.parse( h );
+    }
+
+    string? w = n->get_prop( "svg:width" );
+    if( w != null ) {
+      width = int.parse( w );
+    }
+
+    string? src = n->get_prop( "xhtml:src" );
+    if( src != null ) {
+      node.set_image( da.image_manager, new NodeImage.from_uri( da.image_manager, src, width ) );
+    }
+
+  }
+
+  /* Importa child nodes */
+  private static void import_children( DrawArea da, Node node, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+
+    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
+      if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "topics") ) {
+        for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
+          if( it2->type == ElementType.ELEMENT_NODE ) {
+            switch( it2->name ) {
+              case "topic"      :  import_topic( da, node, it2, id_map );       break;
+              case "boundaries" :  import_boundaries( da, node, it2, id_map );  break;
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+  /* Imports boundary information */
+  private static void import_boundaries( DrawArea da, Node node, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+
+    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
+      if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "boundary") ) {
+        string? id = it->get_prop( "id" );
+        string? r  = it->get_prop( "range" );
+        if( r != null ) {
+          int start   = -1;
+          int end     = -1;
+          if( r.scanf( "(%d,%d)", &start, &end ) == 2 ) {
+            var nodes = new Array<Node>();
+            for( int i=start; i<=end; i++ ) {
+              nodes.append_val( node.children().index( i ) );
+            }
+            // da.groups.FOOBAR
+          }
+        }
+      }
+    }
+
+  }
+
+  /* Import connections */
+  private static void import_relationships( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+
+    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
+      if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "relationship") ) {
+
+        Node? from_node = null;
+        Node? to_node   = null;
+
+        string? id = it->get_prop( "id" );
+
+        string? sp = it->get_prop( "end1" );
+        if( sp != null ) {
+          var obj = id_map.get( sp );
+          if( obj.typ == IdObjectType.NODE ) {
+            from_node = obj.node;
+          }
+        }
+
+        string? ep = it->get_prop( "end2" );
+        if( ep != null ) {
+          var obj = id_map.get( ep );
+          if( obj.typ == IdObjectType.NODE ) {
+            to_node = obj.node;
+          }
+        }
+
+        string title = "";
+        for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
+          if( (it2->type == ElementType.ELEMENT_NODE) && (it2->name == "title") ) {
+            title = get_title( it2 );
+          }
+        }
+
+        if( (from_node != null) && (to_node != null) ) {
+
+          var conn = new Connection( da, from_node );
+          conn.change_title( da, title );
+          conn.connect_to( to_node );
+          da.get_connections().add_connection( conn );
+
+          if( id != null ) {
+            id_map.set( id, new IdObject.for_connection( conn ) );
+          }
+
+        }
+
+      }
+    }
+
+  }
+
+  /* Imports and applies styling information */
+  private static bool import_styles( DrawArea da, string fname, HashMap<string,IdObject> id_map ) {
+
+    /* Read in the contents of the Freemind file */
+    var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
+    if( doc == null ) {
+      return( false );
+    }
+
+    /* Load the contents of the file */
+    import_styles_content( da, doc->get_root_element() );
+
+    /* Update the drawing area */
+    da.queue_draw();
+
+    /* Delete the OPML document */
+    delete doc;
+
+    return( true );
+
+  }
+
+  /* Imports tha main styles XML node */
+  private static void import_styles_content( DrawArea da, Xml.Node* n ) {
+
+    /* TBD */
+
+  }
+
+  /* Unarchives all of the files within the given XMind 8 file */
+  private static void unarchive_contents( string fname, string dir ) {
+
+    Archive.Read archive = new Archive.Read();
+    archive.support_filter_none();
+    archive.support_format_zip();
+
+    Archive.ExtractFlags flags;
+    flags  = Archive.ExtractFlags.TIME;
+    flags |= Archive.ExtractFlags.PERM;
+    flags |= Archive.ExtractFlags.ACL;
+    flags |= Archive.ExtractFlags.FFLAGS;
+
+    Archive.WriteDisk extractor = new Archive.WriteDisk();
+    extractor.set_options( flags );
+    extractor.set_standard_lookup();
+
+    /* Open the file for reading */
+    if( archive.open_filename( fname, 16384 ) != Archive.Result.OK ) {
+      error( "Error: %s (%d)", archive.error_string(), archive.errno() );
+    }
+
+    unowned Archive.Entry entry;
+
+    while( archive.next_header( out entry ) == Archive.Result.OK ) {
+
+      var file = File.new_for_path( Path.build_filename( dir, entry.pathname() ) );
+      entry.set_pathname( file.get_path() );
+
+      /* Read from the archive and write the files to disk */
+      if( extractor.write_header( entry ) != Archive.Result.OK ) {
+        continue;
+      }
+
+#if VALAC048
+      uint8[]         buffer;
+      Archive.int64_t offset;
+
+      while( archive.read_data_block( out buffer, out offset ) == Archive.Result.OK ) {
+        if( extractor.write_data_block( buffer, offset ) != Archive.Result.OK ) {
+          break;
+        }
+      }
+#else
+      void*       buffer = null;
+      size_t      buffer_length;
+      Posix.off_t offset;
+
+      while( archive.read_data_block( out buffer, out buffer_length, out offset ) == Archive.Result.OK ) {
+        if( extractor.write_data_block( buffer, buffer_length, offset ) != Archive.Result.OK ) {
+          break;
+        }
+      }
+#endif
+
+    }
+
+    /* Close the archive */
+    if( archive.close () != Archive.Result.OK) {
+      error( "Error: %s (%d)", archive.error_string(), archive.errno() );
     }
 
   }
