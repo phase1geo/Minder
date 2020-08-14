@@ -38,7 +38,7 @@ public class ExportXMind : Object {
     public IdObjectType typ   { get; set; default = IdObjectType.NODE; }
     public Node?        node  { get; set; default = null; }
     public Connection?  conn  { get; set; default = null; }
-    // public NodeGroup?   group { get; set; default = null; }
+    public NodeGroup?   group { get; set; default = null; }
     public IdObject.for_node( Node n ) {
       typ  = IdObjectType.NODE;
       node = n;
@@ -47,12 +47,10 @@ public class ExportXMind : Object {
       typ  = IdObjectType.CONNECTION;
       conn = c;
     }
-    /*
     public IdObject.for_boundary( NodeGroup g ) {
       typ   = IdObjectType.BOUNDARY;
       group = g;
     }
-    */
   }
 
   /* Exports the given drawing area to the file of the given name */
@@ -189,11 +187,9 @@ public class ExportXMind : Object {
       for( int i=0; i<node.children().length; i++ ) {
         var child = node.children().index( i );
         topics->add_child( export_node( da, child, timestamp, false, styles ) );
-        /*
         if( child.group ) {
           groups.append_val( i );
         }
-        */
       }
 
       /* Add boundaries, if found */
@@ -508,13 +504,19 @@ public class ExportXMind : Object {
       id_map.set( id, new IdObject.for_node( node ) );
     }
 
+    string? sid = n->get_prop( "style-id" );
+    if( sid != null ) {
+      id_map.set( sid, new IdObject.for_node( node ) );
+    }
+
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "title"    :  import_node_name( node, it );   break;
-          case "notes"    :  import_node_notes( node, it );  break;
-          case "img"      :  import_image( da, node, it, id_map );     break;
-          case "children" :  import_children( da, node, it, id_map );  break;
+          case "title"      :  import_node_name( node, it );               break;
+          case "notes"      :  import_node_notes( node, it );              break;
+          case "img"        :  import_image( da, node, it, id_map );       break;
+          case "children"   :  import_children( da, node, it, id_map );    break;
+          case "boundaries" :  import_boundaries( da, node, it, id_map );  break;
         }
       }
     }
@@ -565,17 +567,17 @@ public class ExportXMind : Object {
       // TBD - We need to associate styles to things that are not just nodes
     }
 
-    string? h = n->get_prop( "svg:height" );
+    string? h = n->get_prop( "height" );
     if( h != null ) {
       height = int.parse( h );
     }
 
-    string? w = n->get_prop( "svg:width" );
+    string? w = n->get_prop( "width" );
     if( w != null ) {
       width = int.parse( w );
     }
 
-    string? src = n->get_prop( "xhtml:src" );
+    string? src = n->get_prop( "src" );
     if( src != null ) {
       node.set_image( da.image_manager, new NodeImage.from_uri( da.image_manager, src, width ) );
     }
@@ -588,11 +590,8 @@ public class ExportXMind : Object {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "topics") ) {
         for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
-          if( it2->type == ElementType.ELEMENT_NODE ) {
-            switch( it2->name ) {
-              case "topic"      :  import_topic( da, node, it2, id_map );       break;
-              case "boundaries" :  import_boundaries( da, node, it2, id_map );  break;
-            }
+          if( (it2->type == ElementType.ELEMENT_NODE) && (it2->name == "topic") ) {
+            import_topic( da, node, it2, id_map );
           }
         }
       }
@@ -605,8 +604,8 @@ public class ExportXMind : Object {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "boundary") ) {
-        string? id = it->get_prop( "id" );
-        string? r  = it->get_prop( "range" );
+        string? sid = it->get_prop( "style-id" );
+        string? r   = it->get_prop( "range" );
         if( r != null ) {
           int start   = -1;
           int end     = -1;
@@ -615,7 +614,11 @@ public class ExportXMind : Object {
             for( int i=start; i<=end; i++ ) {
               nodes.append_val( node.children().index( i ) );
             }
-            // da.groups.FOOBAR
+            var group = new NodeGroup.array( da, nodes );
+            da.groups.add_group( group );
+            if( sid != null ) {
+              id_map.set( sid, new IdObject.for_boundary( group ) );
+            }
           }
         }
       }
@@ -704,7 +707,7 @@ public class ExportXMind : Object {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "styles") ) {
         for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
           if( (it->type == ElementType.ELEMENT_NODE) && (it2->name == "style") ) {
-            import_styles_style( da, n, id_map );
+            import_styles_style( da, it2, id_map );
           }
         }
       }
@@ -712,17 +715,90 @@ public class ExportXMind : Object {
 
   }
 
+  /* Imports the style information for one of the supported objects */
   private static void import_styles_style( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     string? id = n->get_prop( "id" );
+    if( (id == null) || !id_map.has_key( id ) ) return;
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
+          case "topic-properties"        :   import_styles_topic( da, it, id_map.get( id ).node );       break;
           case "relationship-properties" :   import_styles_connection( da, it, id_map.get( id ).conn );  break;
-          // case "boundary-properties"     :   import_styles_boundary( da, it, id_map.get( id ).group );   break;
+          case "boundary-properties"     :   import_styles_boundary( da, it, id_map.get( id ).group );   break;
         }
       }
+    }
+
+  }
+
+  /* Imports the style information for a given node */
+  private static void import_styles_topic( DrawArea da, Xml.Node* n, Node node ) {
+
+    string? sc = n->get_prop( "shape-class" );
+    if( sc != null ) {
+      var border = "squared";
+      switch( sc ) {
+        case "org.xmind.topicShape.roundedRect" :  border = "rounded";     break;
+        case "org.xmind.topicShape.rect"        :  border = "squared";     break;
+        case "org.xmind.topicShape.underline"   :  border = "underlined";  break;
+      }
+      node.style.node_border = StyleInspector.styles.get_node_border( border );
+    }
+
+    string? blc = n->get_prop( "border-line-color" );
+    if( blc != null ) {
+      RGBA c = {1.0, 1.0, 1.0, 1.0};
+      c.parse( blc );
+      node.link_color = c;
+    }
+
+    string? blw = n->get_prop( "border-line-width" );
+    if( blw != null ) {
+      int width = 1;
+      if( blw.scanf( "%dpt", &width ) == 1 ) {
+        node.style.node_borderwidth = width;
+      }
+    }
+
+    string? f = n->get_prop( "fill" );
+    if( f != null ) {
+      RGBA c = {1.0, 1.0, 1.0, 1.0};
+      c.parse( f );
+      node.link_color = c;
+      node.style.node_fill = true;
+    }
+
+    string? lc = n->get_prop( "line-color" );
+    if( lc != null ) {
+      RGBA c = {1.0, 1.0, 1.0, 1.0};
+      c.parse( lc );
+      node.link_color = c;
+    }
+
+    string? lw = n->get_prop( "line-width" );
+    if( lw != null ) {
+      int width = 1;
+      if( lw.scanf( "^dpt", &width ) == 1 ) {
+        node.style.link_width = width;
+      }
+    }
+
+    string? lcl = n->get_prop( "line-class" );
+    if( lcl != null ) {
+      var type = "straight";
+      switch( lcl ) {
+        case "org.xmind.branchConnection.curve"        :  type = "curved";    break;
+        case "org.xmind.branchConnection.straight"     :  type = "straight";  break;
+        case "org.xmind.branchConnection.elbow"        :
+        case "org.xmind.branchConnection.roundedElbow" :  type = "squared";   break;
+        case "org.xmind.branchConnection.arrowedCurve" :
+          type = "curved";
+          node.style.link_arrow = true;
+          break;
+      }
+      node.style.link_type = StyleInspector.styles.get_link_type( type );
     }
 
   }
@@ -730,7 +806,7 @@ public class ExportXMind : Object {
   /* Imports connection styling information */
   private static void import_styles_connection( DrawArea da, Xml.Node* n, Connection conn ) {
 
-    string? arrow_start = n->get_prop( "arrow-start-class" );
+    string? arrow_start = n->get_prop( "arrow-begin-class" );
     if( arrow_start != null ) {
       switch( arrow_start ) {
         case "org.xmind.arrowShape.triangle"  :
@@ -751,7 +827,9 @@ public class ExportXMind : Object {
 
     string? lc = n->get_prop( "line-color" );
     if( lc != null ) {
-      conn.color.parse( lc );
+      RGBA c = {1.0, 1.0, 1.0, 1.0};
+      c.parse( lc );
+      conn.color = c;
     }
 
     string? lp = n->get_prop( "line-pattern" );
@@ -773,16 +851,17 @@ public class ExportXMind : Object {
 
   }
 
-  /*
+  /* Imports styling information for a node group */
   private static void import_styles_boundary( DrawArea da, Xml.Node* n, NodeGroup group ) {
 
-    string? sf = n->get_prop( "svg:fill" );
-    if( sf != null ) {
-      group.color.parse( sf );
+    string? f = n->get_prop( "fill" );
+    if( f != null ) {
+      RGBA c = {1.0, 1.0, 1.0, 1.0};
+      c.parse( f );
+      group.color = c;
     }
 
   }
-  */
 
   /* Unarchives all of the files within the given XMind 8 file */
   private static void unarchive_contents( string fname, string dir ) {
