@@ -632,7 +632,7 @@ public class ExportXMind : Object {
         Node? from_node = null;
         Node? to_node   = null;
 
-        string? id = it->get_prop( "id" );
+        string? sid = it->get_prop( "style-id" );
 
         string? sp = it->get_prop( "end1" );
         if( sp != null ) {
@@ -664,8 +664,8 @@ public class ExportXMind : Object {
           conn.connect_to( to_node );
           da.get_connections().add_connection( conn );
 
-          if( id != null ) {
-            id_map.set( id, new IdObject.for_connection( conn ) );
+          if( sid != null ) {
+            id_map.set( sid, new IdObject.for_connection( conn ) );
           }
 
         }
@@ -685,7 +685,7 @@ public class ExportXMind : Object {
     }
 
     /* Load the contents of the file */
-    import_styles_content( da, doc->get_root_element() );
+    import_styles_content( da, doc->get_root_element(), id_map );
 
     /* Update the drawing area */
     da.queue_draw();
@@ -698,11 +698,91 @@ public class ExportXMind : Object {
   }
 
   /* Imports tha main styles XML node */
-  private static void import_styles_content( DrawArea da, Xml.Node* n ) {
+  private static void import_styles_content( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
-    /* TBD */
+    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
+      if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "styles") ) {
+        for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
+          if( (it->type == ElementType.ELEMENT_NODE) && (it2->name == "style") ) {
+            import_styles_style( da, n, id_map );
+          }
+        }
+      }
+    }
 
   }
+
+  private static void import_styles_style( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+
+    string? id = n->get_prop( "id" );
+
+    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
+      if( it->type == ElementType.ELEMENT_NODE ) {
+        switch( it->name ) {
+          case "relationship-properties" :   import_styles_connection( da, it, id_map.get( id ).conn );  break;
+          // case "boundary-properties"     :   import_styles_boundary( da, it, id_map.get( id ).group );   break;
+        }
+      }
+    }
+
+  }
+
+  /* Imports connection styling information */
+  private static void import_styles_connection( DrawArea da, Xml.Node* n, Connection conn ) {
+
+    string? arrow_start = n->get_prop( "arrow-start-class" );
+    if( arrow_start != null ) {
+      switch( arrow_start ) {
+        case "org.xmind.arrowShape.triangle"  :
+        case "org.xmind.arrowShape.spearhead" :  conn.style.connection_arrow = "tofrom";  break;
+        default                               :  conn.style.connection_arrow = "none";    break;
+      }
+    }
+
+    string? arrow_end = n->get_prop( "arrow-end-class" );
+    if( arrow_end != null ) {
+      switch( arrow_end ) {
+        case "org.xmind.arrowShape.triangle"  :
+        case "org.xmind.arrowShape.spearhead" :
+          conn.style.connection_arrow = (conn.style.connection_arrow == "tofrom") ? "both" : "fromto";
+          break;
+      }
+    }
+
+    string? lc = n->get_prop( "line-color" );
+    if( lc != null ) {
+      conn.color.parse( lc );
+    }
+
+    string? lp = n->get_prop( "line-pattern" );
+    if( lp != null ) {
+      switch( lp ) {
+        case "solid" :  conn.style.connection_dash = StyleInspector.styles.get_link_dash( "solid" );   break;
+        case "dot"   :  conn.style.connection_dash = StyleInspector.styles.get_link_dash( "dotted" );  break;
+        default      :  conn.style.connection_dash = StyleInspector.styles.get_link_dash( "dash" );    break;
+      }
+    }
+
+    string? lw = n->get_prop( "line-width" );
+    if( lw != null ) {
+      int width = 1;
+      if( lw.scanf( "%dpt", &width ) == 1 ) {
+        conn.style.connection_line_width = width;
+      }
+    }
+
+  }
+
+  /*
+  private static void import_styles_boundary( DrawArea da, Xml.Node* n, NodeGroup group ) {
+
+    string? sf = n->get_prop( "svg:fill" );
+    if( sf != null ) {
+      group.color.parse( sf );
+    }
+
+  }
+  */
 
   /* Unarchives all of the files within the given XMind 8 file */
   private static void unarchive_contents( string fname, string dir ) {
