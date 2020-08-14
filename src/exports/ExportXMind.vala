@@ -498,6 +498,8 @@ public class ExportXMind : Object {
       node = da.create_child_node( parent );
     }
 
+    stdout.printf( "Creating node: %d\n", node.id() );
+
     /* Handle the ID */
     string? id = n->get_prop( "id" );
     if( id != null ) {
@@ -612,7 +614,9 @@ public class ExportXMind : Object {
           if( r.scanf( "(%d,%d)", &start, &end ) == 2 ) {
             var nodes = new Array<Node>();
             for( int i=start; i<=end; i++ ) {
-              nodes.append_val( node.children().index( i ) );
+              var child = node.children().index( i );
+              stdout.printf( "Adding child %d to group\n", child.id() );
+              nodes.append_val( child );
             }
             var group = new NodeGroup.array( da, nodes );
             da.groups.add_group( group );

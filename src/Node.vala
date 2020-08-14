@@ -958,7 +958,6 @@ public class Node : Object {
 
     string? i = n->get_prop( "id" );
     if( i != null ) {
-      _id = _next_id++;
       id_map.set( int.parse( i ), _id );
     }
 

@@ -21,6 +21,7 @@
 
 using Cairo;
 using Gdk;
+using Gee;
 
 public struct NodePoint {
   double x;
@@ -67,7 +68,7 @@ public class NodeGroup {
 
   /* Copy constructor */
   public NodeGroup.copy( NodeGroup group ) {
-    color  = group.color.copy();
+    color  = group.color;
     _nodes = new Array<Node>();
     for( int i=0; i<group._nodes.length; i++ ) {
       _nodes.append_val( group._nodes.index( i ) );
@@ -75,9 +76,9 @@ public class NodeGroup {
   }
 
   /* Constructor from XML */
-  public NodeGroup.from_xml( DrawArea da, Xml.Node* n ) {
+  public NodeGroup.from_xml( DrawArea da, Xml.Node* n, HashMap<int,int> id_map ) {
     _nodes = new Array<Node>();
-    load( da, n );
+    load( da, n, id_map );
   }
 
   /* Adds the given node to this node group */
@@ -145,25 +146,25 @@ public class NodeGroup {
   }
 
   /* Loads the given group information */
-  public void load( DrawArea da, Xml.Node* g ) {
+  public void load( DrawArea da, Xml.Node* g, HashMap<int,int> id_map ) {
     string? c = g->get_prop( "color" );
     if( c != null ) {
       RGBA clr = {1.0, 1.0, 1.0, 1.0};
       clr.parse( c );
-      color = clr.copy();
+      color = clr;
     }
     for( Xml.Node* it = g->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "node") ) {
-        load_node( da, it );
+        load_node( da, it, id_map );
       }
     }
   }
 
   /* Loads the given node */
-  private void load_node( DrawArea da, Xml.Node* n ) {
+  private void load_node( DrawArea da, Xml.Node* n, HashMap<int,int> id_map ) {
     string? i = n->get_prop( "id" );
     if( i != null ) {
-      var id   = int.parse( i );
+      var id   = id_map.get( int.parse( i ) );
       var node = da.get_node( da.get_nodes(), id );
       if( node != null ) {
         node.group = true;
