@@ -63,6 +63,13 @@ sources += files(
     'undo_actions/UndoConnectionTitle.vala',
     'undo_actions/UndoConnectionsDelete.vala',
 
+    'undo_actions/UndoGroupAdd.vala',
+    'undo_actions/UndoGroupRemove.vala',
+
+    'undo_actions/UndoGroupsColor.vala',
+    'undo_actions/UndoGroupsMerge.vala',
+    'undo_actions/UndoGroupsRemove.vala',
+
     'undo_actions/UndoNodeAddParent.vala',
     'undo_actions/UndoNodeAttach.vala',
     'undo_actions/UndoNodeBalance.vala',
@@ -94,6 +101,7 @@ sources += files(
     'undo_actions/UndoNodesCut.vala',
     'undo_actions/UndoNodesDelete.vala',
     'undo_actions/UndoNodesFold.vala',
+    'undo_actions/UndoNodesGroup.vala',
     'undo_actions/UndoNodesInsert.vala',
     'undo_actions/UndoNodesLink.vala',
     'undo_actions/UndoNodesLinkColor.vala',
@@ -154,6 +162,7 @@ sources += files(
     'EmptyInspector.vala',
     'EmptyMenu.vala',
     'FormattedText.vala',
+    'GroupsMenu.vala',
     'HtmlToMarkdown.vala',
     'ImageEditor.vala',
     'ImageManager.vala',
@@ -166,6 +175,8 @@ sources += files(
     'Node.vala',
     'NodeAlign.vala',
     'NodeBorder.vala',
+    'NodeGroup.vala',
+    'NodeGroups.vala',
     'NodeImage.vala',
     'NodeInspector.vala',
     'NodeMenu.vala',

@@ -235,6 +235,7 @@ public class Node : Object {
     }
   }
   public double   tree_size  { get; set; default = 0; }
+  public bool     group      { get; set; default = false; }
   public RGBA     link_color {
     get {
       return( _link_color );
@@ -587,6 +588,29 @@ public class Node : Object {
   /* Returns true if the node does not have a parent */
   public bool is_root() {
     return( parent == null );
+  }
+
+  /* Returns true if this node exists within a group */
+  public bool is_grouped() {
+    var node = this;
+    while( node != null ) {
+      if( node.group ) {
+        return( true );
+      }
+      node = node.parent;
+    }
+    return( false );
+  }
+
+  /* Returns the number of groups betwen the current node and the specified ancestor node */
+  public int groups_between( Node node ) {
+    var curr  = this;
+    var count = 0;
+    while( !curr.is_root() && (curr != node) ) {
+      count += curr.group ? 1 : 0;
+      curr = curr.parent;
+    }
+    return( count );
   }
 
   /*
@@ -1000,6 +1024,11 @@ public class Node : Object {
       sticker = sk;
     }
 
+    string? g = n->get_prop( "group" );
+    if( g != null ) {
+      group = bool.parse( g );
+    }
+
     /* If the posx and posy values are not set, set the layout now */
     if( (x == null) && (y == null) ) {
       string? l = n->get_prop( "layout" );
@@ -1095,6 +1124,7 @@ public class Node : Object {
     if( _sticker != null ) {
       node->new_prop( "sticker", _sticker );
     }
+    node->new_prop( "group", group.to_string() );
 
     if( _image != null ) {
       _image.save( node );
@@ -1798,18 +1828,20 @@ public class Node : Object {
     double y = posy + style.node_margin;
     double w = _width  - (style.node_margin * 2);
     double h = _height - (style.node_margin * 2);
+    RGBA   group_color;
 
     /* Set the fill color */
     if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
+      style.draw_node_fill( ctx, x, y, w, h, side );
     } else if( is_root() || style.is_fillable() ) {
       Utils.set_context_color_with_alpha( ctx, border_color, _alpha );
-    } else {
+      style.draw_node_fill( ctx, x, y, w, h, side );
+    } else if( !is_grouped() ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "background" ), _alpha );
+      style.draw_node_fill( ctx, x, y, w, h, side );
     }
 
-    /* Draw the fill */
-    style.draw_node_fill( ctx, x, y, w, h, side );
 
     if( !is_root() || style.is_fillable() ) {
 
@@ -1851,16 +1883,16 @@ public class Node : Object {
     }
 
     /* Draw the text */
+    var color = theme.get_color( "foreground" );
     if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
-      name.draw( ctx, theme, theme.get_color( "nodesel_foreground" ), _alpha, false );
+      color = theme.get_color( "nodesel_foreground" );
     } else if( parent == null ) {
-      name.draw( ctx, theme, theme.get_color( "root_foreground" ), _alpha, false );
+      color = theme.get_color( "root_foreground" );
     } else if( style.is_fillable() ) {
-      name.draw( ctx, theme, theme.get_color( "background" ), _alpha, false );
-    } else {
-      name.draw( ctx, theme, theme.get_color( "foreground" ), _alpha, false );
+      color = Granite.contrasting_foreground_color( link_color );
     }
 
+    name.draw( ctx, theme, color, _alpha, false );
   }
 
   /* Draws the task checkbutton for leaf nodes */
@@ -1935,11 +1967,12 @@ public class Node : Object {
 
       sticker_bbox( out x, out y, out w, out h );
 
-      /* Draw background */
-      Utils.set_context_color_with_alpha( ctx, color, _alpha );
-      ctx.move_to( x, y );
-      ctx.rectangle( x, y, w, h );
-      ctx.fill();
+      if( _mode == NodeMode.SELECTED ) {
+        Utils.set_context_color_with_alpha( ctx, color, _alpha );
+        ctx.move_to( x, y );
+        ctx.rectangle( x, y, w, h );
+        ctx.fill();
+      }
 
       /* Draw sticker */
       cairo_set_source_pixbuf( ctx, _sticker_buf, x, y );
@@ -1956,7 +1989,7 @@ public class Node : Object {
 
       double x, y, w, h;
       RGBA   color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color :
-                     style.is_fillable()                                         ? bg_color  :
+                     style.is_fillable()                                         ? Granite.contrasting_foreground_color( link_color )  :
                                                                                    reg_color;
 
       note_bbox( out x, out y, out w, out h );
@@ -1987,7 +2020,7 @@ public class Node : Object {
 
       double x, y, w, h;
       RGBA   color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color :
-                     style.is_fillable()                                         ? bg_color  :
+                     style.is_fillable()                                         ? Granite.contrasting_foreground_color( link_color )  :
                                                                                    reg_color;
 
       linked_node_bbox( out x, out y, out w, out h );
