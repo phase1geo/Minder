@@ -21,6 +21,7 @@
 
 using Cairo;
 using Gdk;
+using Gee;
 
 public struct UndoNodeGroups {
   Node              node;
@@ -131,10 +132,10 @@ public class NodeGroups {
   }
 
   /* Loads the given group information */
-  public void load( DrawArea da, Xml.Node* g ) {
+  public void load( DrawArea da, Xml.Node* g, HashMap<int,int> id_map ) {
     for( Xml.Node* it = g->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "group") ) {
-        _groups.append_val( new NodeGroup.from_xml( da, it ) );
+        _groups.append_val( new NodeGroup.from_xml( da, it, id_map ) );
       }
     }
   }

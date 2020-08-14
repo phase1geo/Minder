@@ -837,6 +837,11 @@ public class MainWindow : ApplicationWindow {
     filter.add_pattern( "*.pminder" );
     dialog.add_filter( filter );
 
+    filter = new FileFilter();
+    filter.set_filter_name( _( "XMind 8" ) );
+    filter.add_pattern( "*.xmind" );
+    dialog.add_filter( filter );
+
     if( dialog.run() == ResponseType.ACCEPT ) {
       open_file( dialog.get_filename() );
     }
@@ -882,6 +887,11 @@ public class MainWindow : ApplicationWindow {
       var da        = add_tab( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportPortableMinder.import( fname, da );
+    } else if( fname.has_suffix( ".xmind" ) ) {
+      var new_fname = fname.substring( 0, (fname.length - 6) ) + ".minder";
+      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      update_title( da );
+      ExportXMind.import( fname, da );
     }
     return( false );
   }
@@ -1283,6 +1293,12 @@ public class MainWindow : ApplicationWindow {
     svg_filter.add_pattern( "*.svg" );
     dialog.add_filter( svg_filter );
 
+    /* XMind */
+    FileFilter xmind_filter = new FileFilter();
+    xmind_filter.set_filter_name( _( "XMind 8" ) );
+    xmind_filter.add_pattern( "*.xmind" );
+    dialog.add_filter( xmind_filter );
+
     /* yEd */
     FileFilter yed_filter = new FileFilter();
     yed_filter.set_filter_name( _( "yEd" ) );
@@ -1327,6 +1343,8 @@ public class MainWindow : ApplicationWindow {
         ExportText.export( repair_filename( fname, {".txt"} ), da );
       } else if( svg_filter == filter ) {
         ExportSVG.export( repair_filename( fname, {".svg"} ), da );
+      } else if( xmind_filter == filter ) {
+        ExportXMind.export( repair_filename( fname, {".xmind"} ), da );
       } else if( yed_filter == filter ) {
         ExportYed.export( repair_filename( fname, {".graphml"} ), da );
       }
