@@ -782,7 +782,8 @@ public class Connection : Object {
       sticker_bbox( out x, out y, out w, out h );
 
       /* Draw background */
-      Utils.set_context_color_with_alpha( ctx, theme.get_color( "connection_background" ), alpha );
+      var clr = _color ?? theme.get_color( "connection_background" );
+      Utils.set_context_color_with_alpha( ctx, clr, alpha );
       ctx.rectangle( x, y, w, h );
       ctx.fill();
 
