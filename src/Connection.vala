@@ -781,12 +781,6 @@ public class Connection : Object {
       double x, y, w, h;
       sticker_bbox( out x, out y, out w, out h );
 
-      /* Draw background */
-      var clr = _color ?? theme.get_color( "connection_background" );
-      Utils.set_context_color_with_alpha( ctx, clr, alpha );
-      ctx.rectangle( x, y, w, h );
-      ctx.fill();
-
       /* Draw sticker */
       cairo_set_source_pixbuf( ctx, _sticker_buf, x, y );
       ctx.paint_with_alpha( alpha );
