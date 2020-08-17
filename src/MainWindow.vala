@@ -380,6 +380,7 @@ public class MainWindow : ApplicationWindow {
     app.set_accels_for_action( "win.action_save",        { "<Control>s" } );
     app.set_accels_for_action( "win.action_quit",        { "<Control>q" } );
     app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
+    app.set_accels_for_action( "win.action_zoom_fit",    { "<Control>1" } );
     app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
     app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
     app.set_accels_for_action( "win.action_export",      { "<Control>e" } );
