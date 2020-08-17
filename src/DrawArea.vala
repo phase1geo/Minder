@@ -623,6 +623,12 @@ public class DrawArea : Gtk.DrawingArea {
     /* Clear the list of connections */
     _connections.clear_all_connections();
 
+    /* Clear the stickers */
+    _stickers.clear();
+
+    /* Clear the groups */
+    _groups.clear();
+
     /* Clear the undo buffer */
     undo_buffer.clear();
 
@@ -669,6 +675,12 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Clear the list of connections */
     _connections.clear_all_connections();
+
+    /* Clear the stickers */
+    _stickers.clear();
+
+    /* Clear the groups */
+    _groups.clear();
 
     /* Clear the undo buffer */
     undo_buffer.clear();

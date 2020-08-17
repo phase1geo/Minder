@@ -169,7 +169,7 @@ public class MainWindow : ApplicationWindow {
 
     var save_btn = new Button.from_icon_name( (on_elementary ? "document-save-as" : "document-save-as-symbolic"), icon_size );
     save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "<Control><Shift>s" ) );
-    open_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
+    save_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
@@ -316,6 +316,27 @@ public class MainWindow : ApplicationWindow {
     da.grab_focus();
 
     return( da );
+
+  }
+
+  /*
+   Checks to see if any other tab contains the given filename.  If the filename
+   is already found, refresh the tab with the file contents and make it the current
+   tab; otherwise, add the new tab and populate it.
+  */
+  private DrawArea add_tab_conditionally( string fname, TabAddReason reason ) {
+
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      if( da.get_doc().filename == fname ) {
+        da.initialize_for_open();
+        _nb.current = tab;
+        return( da );
+      }
+    }
+
+    return( add_tab( fname, reason ) );
 
   }
 
@@ -856,45 +877,46 @@ public class MainWindow : ApplicationWindow {
       return( false );
     }
     if( fname.has_suffix( ".minder" ) ) {
-      var da = add_tab( fname, TabAddReason.OPEN );
+      var da = add_tab_conditionally( fname, TabAddReason.OPEN );
       update_title( da );
       da.get_doc().load();
       return( true );
     } else if( fname.has_suffix( ".opml" ) ) {
       var new_fname = fname.substring( 0, (fname.length - 5) ) + ".minder";
-      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportOPML.import( fname, da );
       return( true );
     } else if( fname.has_suffix( ".mm" ) ) {
       var new_fname = fname.substring( 0, (fname.length - 3) ) + ".minder";
-      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportFreeplane.import( fname, da );
       return( true );
     } else if( fname.has_suffix( ".txt" ) ) {
       var new_fname = fname.substring( 0, (fname.length - 4) ) + ".minder";
-      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportText.import( fname, da );
     } else if( fname.has_suffix( ".outliner" ) ) {
       var new_fname = fname.substring( 0, (fname.length - 9) ) + ".minder";
-      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportOutliner.import( fname, da );
     } else if( fname.has_suffix( ".pminder" ) ) {
       var new_fname = fname.substring( 0, (fname.length - 8) ) + ".minder";
-      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportPortableMinder.import( fname, da );
     } else if( fname.has_suffix( ".xmind" ) ) {
       var new_fname = fname.substring( 0, (fname.length - 6) ) + ".minder";
-      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportXMind.import( fname, da );
     }
     return( false );
   }
+
 
   /* Perform an undo action */
   public void do_undo() {
@@ -955,14 +977,17 @@ public class MainWindow : ApplicationWindow {
 
   /* Allow the user to select a filename to save the document as */
   public bool save_file( DrawArea da ) {
-    var sname  = convert_name_to_filename( da.get_nodes().index( 0 ).name.text.text.strip() );
     var dialog = new FileChooserNative( _( "Save File" ), this, FileChooserAction.SAVE, _( "Save" ), _( "Cancel" ) );
     var filter = new FileFilter();
     var retval = false;
     filter.set_filter_name( _( "Minder" ) );
     filter.add_pattern( "*.minder" );
     dialog.add_filter( filter );
-    dialog.set_current_name( sname );
+    if( da.get_doc().is_saved() ) {
+      dialog.set_filename( da.get_doc().filename );
+    } else {
+      dialog.set_current_name( convert_name_to_filename( da.get_nodes().index( 0 ).name.text.text.strip() ) );
+    }
     if( dialog.run() == ResponseType.ACCEPT ) {
       var fname = dialog.get_filename();
       if( fname.substring( -7, -1 ) != ".minder" ) {

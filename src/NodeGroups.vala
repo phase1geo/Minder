@@ -43,6 +43,11 @@ public class NodeGroups {
     _groups = new Array<NodeGroup>();
   }
 
+  /* Removes all stored groups from memory */
+  public void clear() {
+    _groups.remove_range( 0, _groups.length );
+  }
+
   /* Creates a new group for the array of nodes */
   public void add_group( NodeGroup group ) {
     _groups.append_val( group );

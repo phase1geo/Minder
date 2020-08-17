@@ -31,6 +31,11 @@ public class Stickers {
     _stickers = new Array<Sticker>();
   }
 
+  /* Clears all of the stored stickers */
+  public void clear() {
+    _stickers.remove_range( 0, _stickers.length );
+  }
+
   /* Adds the given sticker to our list */
   public void add_sticker( Sticker sticker ) {
     _stickers.append_val( sticker );
