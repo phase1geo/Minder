@@ -61,10 +61,11 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _store_origin_x;
   private double           _store_origin_y;
   private double           _store_scale_factor;
-  private bool             _pressed    = false;
-  private EventType        _press_type = EventType.NOTHING;
-  private bool             _resize     = false;
-  private bool             _motion     = false;
+  private bool             _pressed      = false;
+  private EventType        _press_type   = EventType.NOTHING;
+  private bool             _press_middle = false;
+  private bool             _resize       = false;
+  private bool             _motion       = false;
   private Node?            _last_node    = null;
   private bool             _current_new  = false;
   private Connection?      _last_connection = null;
@@ -1929,12 +1930,14 @@ public class DrawArea : Gtk.DrawingArea {
   private bool on_press( EventButton event ) {
     switch( event.button ) {
       case Gdk.BUTTON_PRIMARY :
+      case Gdk.BUTTON_MIDDLE  :
         grab_focus();
-        _press_x    = scale_value( event.x );
-        _press_y    = scale_value( event.y );
-        _pressed    = set_current_at_position( _press_x, _press_y, event );
-        _press_type = event.type;
-        _motion     = false;
+        _press_x      = scale_value( event.x );
+        _press_y      = scale_value( event.y );
+        _pressed      = set_current_at_position( _press_x, _press_y, event );
+        _press_type   = event.type;
+        _press_middle = event.button == Gdk.BUTTON_MIDDLE;
+        _motion       = false;
         queue_draw();
         break;
       case Gdk.BUTTON_SECONDARY :
@@ -2043,6 +2046,14 @@ public class DrawArea : Gtk.DrawingArea {
           current_sticker.posx += diffx;
           current_sticker.posy += diffy;
         }
+        queue_draw();
+        auto_save();
+
+      /* If we are holding the middle mouse button while moving, pan the canvas */
+      } else if( _press_middle ) {
+        double diff_x = last_x - _scaled_x;
+        double diff_y = last_y - _scaled_y;
+        move_origin( diff_x, diff_y );
         queue_draw();
         auto_save();
 
