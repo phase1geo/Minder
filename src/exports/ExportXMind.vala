@@ -385,9 +385,15 @@ public class ExportXMind : Object {
         // Add an entry to the archive
         Archive.Entry entry = new Archive.Entry();
         entry.set_pathname( pwd.get_relative_path( file ) );
+#if VALAC048
+        entry.set_size( (Archive.int64_t)file_info.get_size() );
+        entry.set_filetype( Archive.FileType.IFREG );
+        entry.set_perm( (Archive.FileMode)0644 );
+#else
         entry.set_size( file_info.get_size() );
         entry.set_filetype( (uint)Posix.S_IFREG );
         entry.set_perm( 0644 );
+#endif
         if( archive.write_header( entry ) != Archive.Result.OK ) {
           critical( "Error writing '%s': %s (%d)", file.get_path(), archive.error_string(), archive.errno() );
           continue;
@@ -400,7 +406,11 @@ public class ExportXMind : Object {
           if( bytes_read <= 0 ) {
             break;
           }
+#if VALAC048
+          archive.write_data( buffer );
+#else
           archive.write_data( buffer, bytes_read );
+#endif
         }
       } catch( GLib.Error e ) {
         critical( e.message );
