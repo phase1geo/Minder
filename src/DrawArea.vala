@@ -2384,6 +2384,7 @@ public class DrawArea : Gtk.DrawingArea {
   private bool select_node( Node? n ) {
     if( n != null ) {
       if( n != _selected.current_node() ) {
+        n.reveal();
         _selected.set_current_node( n, (_focus_mode ? _focus_alpha : 1.0) );
         _current_new = false;
         update_focus_mode();
