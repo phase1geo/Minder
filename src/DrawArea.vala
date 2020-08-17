@@ -1277,7 +1277,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
       } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
         var current = _selected.current_connection();
-        _orig_title = current.title.text.text;
+        _orig_title = (current.title != null) ? current.title.text.text : "";
         current.edit_title_begin( this );
         current.mode = ConnMode.EDITABLE;
       }
