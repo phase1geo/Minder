@@ -84,10 +84,11 @@ public class Connection : Object {
             _title.edit = true;
             _title.set_cursor_all( false );
           }
-        } else {
-          if( _title != null ) {
-            _title.edit = false;
-            _title.clear_selection();
+        } else if( _title != null ) {
+          _title.edit = false;
+          _title.clear_selection();
+          if( (_title.text.text == "") && (_sticker == null) && (_note == "") ) {
+            _title = null;
           }
         }
       }
@@ -748,7 +749,12 @@ public class Connection : Object {
       ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
       ctx.arc( dragx, dragy, RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
-      ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
+      if( mode == ConnMode.DROPPABLE ) {
+        Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
+        ctx.set_line_width( 4 );
+      } else {
+        ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
+      }
       ctx.stroke();
     }
 

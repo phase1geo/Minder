@@ -1799,7 +1799,10 @@ public class DrawArea : Gtk.DrawingArea {
         return;
       }
     }
-    conn    = _connections.within_title_box( x, y );
+    conn = _connections.within_title_box( x, y );
+    if( conn == null ) {
+      conn = _connections.on_curve( x, y );
+    }
     sticker = _stickers.is_within( x, y );
   }
 
