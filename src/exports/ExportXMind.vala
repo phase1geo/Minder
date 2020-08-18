@@ -62,29 +62,39 @@ public class ExportXMind : Object {
     /* Create manifest director */
     DirUtils.create( Path.build_filename( dir, "META-INF" ), 0755 );
 
-    /* Export manifest file */
-    var manifest = Path.build_filename( dir, "META-INF", "manifest.xml" );
-    export_manifest( manifest );
+    var meta_path     = Path.build_filename( dir, "meta.xml" );
+    var content_path  = Path.build_filename( dir, "content.xml" );
+    var styles_path   = Path.build_filename( dir, "styles.xml" );
+    var manifest_path = Path.build_filename( dir, "META-INF", "manifest.xml" );
+    var styles        = new Array<Xml.Node*>();
+    var file_list     = new Array<string>();
+
+    /* Export the meta file */
+    export_meta( da, meta_path );
+    file_list.append_val( meta_path );
 
     /* Export the content file */
-    var content = Path.build_filename( dir, "content.xml" );
-    var styles  = new Array<Xml.Node*>();
-    export_content( da, content, styles );
+    export_content( da, content_path, styles );
+    file_list.append_val( content_path );
 
     if( styles.length > 0 ) {
-      var path = Path.build_filename( dir, "styles.xml" );
-      export_styles( path, styles );
+      export_styles( styles_path, styles );
+      file_list.append_val( styles_path );
     }
 
-    /* Zip the contents of the temporary directory */
-    archive_contents( dir, fname, {manifest, content} );
+    /* Export manifest file */
+    export_manifest( manifest_path, (styles.length > 0) );
+    file_list.append_val( manifest_path );
+
+    /* Archive the contents */
+    archive_contents( dir, fname, file_list );
 
     return( true );
 
   }
 
   /* Generates the manifest file */
-  private static bool export_manifest( string fname ) {
+  private static bool export_manifest( string fname, bool include_styles ) {
     Xml.Doc* doc = new Xml.Doc( "1.0" );
     Xml.Node* manifest = new Xml.Node( null, "manifest" );
     manifest->set_prop( "xmlns", "urn:xmind:xmap:xmlns:manifest:1.0" );
@@ -93,6 +103,9 @@ public class ExportXMind : Object {
     manifest->add_child( manifest_file_entry( "META-INF/manifest.xml", "text/xml" ) );
     manifest->add_child( manifest_file_entry( "meta.xml", "text/xml" ) );
     manifest->add_child( manifest_file_entry( "content.xml", "text/xml" ) );
+    if( include_styles ) {
+      manifest->add_child( manifest_file_entry( "styles.xml", "text/xml" ) );
+    }
     doc->set_root_element( manifest );
     doc->save_format_file( fname, 1 );
     delete doc;
@@ -135,12 +148,31 @@ public class ExportXMind : Object {
     return( false );
   }
 
+  /* Exports the map contents */
   private static void export_map( DrawArea da, Xml.Node* sheet, string timestamp, Array<Xml.Node*> styles ) {
     var nodes = da.get_nodes();
     var conns = da.get_connections().connections;
-    for( int i=0; i<nodes.length; i++ ) {
-      sheet->add_child( export_node( da, nodes.index( i ), timestamp, true, styles ) );
+    Xml.Node* top = export_node( da, nodes.index( 0 ), timestamp, true, styles );
+    if( nodes.length > 1 ) {
+      for( Xml.Node* it=top->children; it!=null; it=it->next ) {
+        if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "children") ) {
+          Xml.Node* topics = new Xml.Node( null, "topics" );
+          topics->set_prop( "type", "detached" );
+          for( int i=1; i<nodes.length; i++ ) {
+            Xml.Node* topic = export_node( da, nodes.index( i ), timestamp, false, styles );
+            Xml.Node* pos   = new Xml.Node( null, "position" );
+            var       x     = (int)(nodes.index( i ).posx - nodes.index( 0 ).posx);
+            var       y     = (int)(nodes.index( i ).posy - nodes.index( 0 ).posy);
+            pos->set_prop( "svg:x", x.to_string() );
+            pos->set_prop( "svg:y", y.to_string() );
+            topic->add_child( pos );
+            topics->add_child( topic );
+          }
+          it->add_child( topics );
+        }
+      }
     }
+    sheet->add_child( top );
     export_connections( da, sheet, timestamp, styles );
   }
 
@@ -148,8 +180,10 @@ public class ExportXMind : Object {
 
     Xml.Node* topic = new Xml.Node( null, "topic" );
     Xml.Node* title = new Xml.Node( null, "title" );
+    var       sid   = ids++;
 
     topic->set_prop( "id", node.id().to_string() );
+    topic->set_prop( "style-id", sid.to_string() );
     // topic->set_prop( "modified-by", TBD );
     topic->set_prop( "timestamp", timestamp );
     if( top ) {
@@ -163,6 +197,15 @@ public class ExportXMind : Object {
     if( node.note != "" ) {
       topic->add_child( export_node_note( node, styles ) );
     }
+
+    /* Add styling information */
+    Xml.Node* nstyle = new Xml.Node( null, "style" );
+    Xml.Node* nprops = new Xml.Node( null, "topic-properties" );
+    nstyle->set_prop( "id", sid.to_string() );
+    nstyle->set_prop( "type", "topic" );
+    export_node_style( node, nprops );
+    nstyle->add_child( nprops );
+    styles.append_val( nstyle );
 
     /* Add image, if needed */
     if( node.image != null ) {
@@ -192,6 +235,9 @@ public class ExportXMind : Object {
         }
       }
 
+      children->add_child( topics );
+      topic->add_child( children );
+
       /* Add boundaries, if found */
       if( groups.length > 0 ) {
         Xml.Node* boundaries = new Xml.Node( null, "boundaries" );
@@ -201,30 +247,56 @@ public class ExportXMind : Object {
           Xml.Node* style    = new Xml.Node( null, "style" );
           Xml.Node* props    = new Xml.Node( null, "boundary-properties" );
           int       id       = ids++;
+          int       stid     = ids++;
 
           /* Create boundary */
           boundary->set_prop( "id", id.to_string() );
+          boundary->set_prop( "style-id", stid.to_string() );
           boundary->set_prop( "range", "(%d,%d)".printf( groups.index( i ), groups.index( i ) ) );
           boundary->set_prop( "timestamp", timestamp );
           boundaries->add_child( boundary );
 
           /* Create styling node */
-          style->set_prop( "id", id.to_string() );
+          style->set_prop( "id", stid.to_string() );
           style->set_prop( "type", "boundary" );
           props->set_prop( "svg:fill", Utils.color_from_rgba( node.children().index( groups.index( i ) ).link_color ) );
           style->add_child( props );
           styles.append_val( style );
 
         }
-        topics->add_child( boundaries );
+        topic->add_child( boundaries );
       }
-
-      children->add_child( topics );
-      topic->add_child( children );
 
     }
 
     return( topic );
+
+  }
+
+  /* Exports node styling information */
+  private static void export_node_style( Node node, Xml.Node* n ) {
+
+    /* Node border shape */
+    switch( node.style.node_border.name() ) {
+      case "rounded"    :  n->set_prop( "shape-class", "org.xmind.topicShape.roundedRect" );  break;
+      case "underlined" :  n->set_prop( "shape-class", "org.xmind.topicShape.underline" );    break;
+      default           :  n->set_prop( "shape-class", "org.xmind.topicShape.rect" );         break;
+    }
+
+    n->set_prop( "border-line-color", Utils.color_from_rgba( node.link_color ) );
+    n->set_prop( "border-line-width", "%dpt".printf( node.style.node_borderwidth ) );
+    n->set_prop( "line-color",        Utils.color_from_rgba( node.link_color ) );
+    n->set_prop( "line-width",        "%dpt".printf( node.style.link_width ) );
+
+    if( node.style.node_fill ) {
+      n->set_prop( "svg:fill", Utils.color_from_rgba( node.link_color ) );
+    }
+
+    switch( node.style.link_type.name() ) {
+      case "curved"   :  n->set_prop( "line-class", "org.xmind.branchConnection.%s".printf( node.style.link_arrow ? "arrowedCurve" : "curve" ) );  break;
+      case "straight" :  n->set_prop( "line-class", "org.xmind.branchConnection.straight" );  break;
+      case "squared"  :  n->set_prop( "line-class", "org.xmind.branchConnection.elbow" );     break;
+    }
 
   }
 
@@ -363,8 +435,40 @@ public class ExportXMind : Object {
 
   }
 
+  /* Exports the contents of the meta file */
+  private static void export_meta( DrawArea da, string fname ) {
+
+    Xml.Doc*  doc       = new Xml.Doc( "1.0" );
+    Xml.Node* meta      = new Xml.Node( null, "meta" );
+    Xml.Node* create    = new Xml.Node( null, "Create" );
+    Xml.Node* time      = new Xml.Node( null, "Time" );
+    Xml.Node* creator   = new Xml.Node( null, "Creator" );
+    Xml.Node* name      = new Xml.Node( null, "Name" );
+    Xml.Node* version   = new Xml.Node( null, "Version" );
+    var       timestamp = new DateTime.now().to_string();
+
+    meta->set_prop( "xmlns", "urn:xmind:xmap:xmlns:meta:2.0" );
+    meta->set_prop( "version", "2.0" );
+
+    time->set_content( timestamp );
+    name->set_content( "Minder" );
+    version->set_content( Minder.version );
+
+    create->add_child( time );
+    meta->add_child( create );
+
+    creator->add_child( name );
+    creator->add_child( version );
+    meta->add_child( creator );
+
+    doc->set_root_element( meta );
+    doc->save_format_file( fname, 1 );
+    delete doc;
+
+  }
+
   /* Write the contents as a zip file */
-  private static void archive_contents( string dir, string outname, string[] files ) {
+  private static void archive_contents( string dir, string outname, Array<string> files ) {
 
     GLib.File pwd = GLib.File.new_for_path( dir );
 
@@ -375,8 +479,8 @@ public class ExportXMind : Object {
     archive.open_filename( outname );
 
     // Add all the other arguments into the archive
-    foreach( string ifile in files ) {
-      GLib.File file = GLib.File.new_for_path( ifile );
+    for( int i=0; i<files.length; i++ ) {
+      GLib.File file = GLib.File.new_for_path( files.index( i ) );
       try {
         GLib.FileInfo file_info = file.query_info( GLib.FileAttribute.STANDARD_SIZE, GLib.FileQueryInfoFlags.NONE );
         FileInputStream input_stream = file.read();
@@ -483,7 +587,7 @@ public class ExportXMind : Object {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "topic"         :  import_topic( da, null, it, id_map );  break;
+          case "topic"         :  import_topic( da, null, it, false, id_map );  break;
           case "relationships" :  import_relationships( da, it, id_map );  break;
         }
       }
@@ -492,7 +596,7 @@ public class ExportXMind : Object {
   }
 
   /* Imports an XMind topic (this is a node in Minder) */
-  private static void import_topic( DrawArea da, Node? parent, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private static void import_topic( DrawArea da, Node? parent, Xml.Node* n, bool attached, HashMap<string,IdObject> id_map ) {
 
     Node node;
 
@@ -504,11 +608,11 @@ public class ExportXMind : Object {
       } else {
         node.layout = da.layouts.get_layout( _( "To right" ) );
       }
+    } else if( !attached ) {
+      node = da.create_root_node();
     } else {
       node = da.create_child_node( parent );
     }
-
-    stdout.printf( "Creating node: %d\n", node.id() );
 
     /* Handle the ID */
     string? id = n->get_prop( "id" );
@@ -601,9 +705,11 @@ public class ExportXMind : Object {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "topics") ) {
+        string? t = it->get_prop( "type" );
+        var     attached = (t != null) && (t == "attached");
         for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
           if( (it2->type == ElementType.ELEMENT_NODE) && (it2->name == "topic") ) {
-            import_topic( da, node, it2, id_map );
+            import_topic( da, node, it2, attached, id_map );
           }
         }
       }
@@ -625,7 +731,6 @@ public class ExportXMind : Object {
             var nodes = new Array<Node>();
             for( int i=start; i<=end; i++ ) {
               var child = node.children().index( i );
-              stdout.printf( "Adding child %d to group\n", child.id() );
               nodes.append_val( child );
             }
             var group = new NodeGroup.array( da, nodes );
