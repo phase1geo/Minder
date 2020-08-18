@@ -810,6 +810,26 @@ public class DrawArea : Gtk.DrawingArea {
     node.mode = mode;
   }
 
+  /* Needs to be called whenever the user changes the mode of the current connection */
+  public void set_connection_mode( Connection conn, ConnMode mode ) {
+    if( (conn.mode != ConnMode.EDITABLE) && (mode == ConnMode.EDITABLE) ) {
+      update_im_cursor( conn.title );
+      _im_context.focus_in();
+      if( (conn.title != null) && conn.title.is_within( _scaled_x, _scaled_y ) ) {
+        set_cursor( text_cursor );
+      }
+      undo_text.ct = conn.title;
+    } else if( (conn.mode == ConnMode.EDITABLE) && (mode != ConnMode.EDITABLE) ) {
+      _im_context.reset();
+      _im_context.focus_out();
+      if( (conn.title != null) && conn.title.is_within( _scaled_x, _scaled_y ) ) {
+        set_cursor( null );
+      }
+      undo_text.ct = null;
+    }
+    conn.mode = mode;
+  }
+
   /* Updates the IM context cursor location based on the canvas text position */
   private void update_im_cursor( CanvasText ct ) {
     Gdk.Rectangle rect = {(int)ct.posx, (int)ct.posy, 0, (int)ct.height};
@@ -1277,14 +1297,15 @@ public class DrawArea : Gtk.DrawingArea {
         }
       } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
         var current = _selected.current_connection();
-        _orig_title = current.title.text.text;
+        _orig_title = (current.title != null) ? current.title.text.text : "";
         current.edit_title_begin( this );
-        current.mode = ConnMode.EDITABLE;
+        set_connection_mode( current, ConnMode.EDITABLE );
       }
       return( true );
     } else {
       if( shift ) {
         _selected.add_connection( conn );
+        handle_connection_edit_on_creation( conn );
       } else {
         set_current_connection( conn );
       }
@@ -1483,7 +1504,7 @@ public class DrawArea : Gtk.DrawingArea {
         current_conn.disconnect_from_node( false );
         return( true );
       } else if( current_conn.within_drag_handle( x, y ) ) {
-        current_conn.mode = ConnMode.ADJUSTING;
+        set_connection_mode( current_conn, ConnMode.ADJUSTING );
         return( true );
       }
     }
@@ -2724,7 +2745,7 @@ public class DrawArea : Gtk.DrawingArea {
       _im_context.reset();
       current.edit_title_end();
       undo_buffer.add_item( new UndoConnectionTitle( current, _orig_title ) );
-      current.mode = ConnMode.SELECTED;
+      set_connection_mode( current, ConnMode.SELECTED );
       current_changed( this );
       queue_draw();
       changed();
@@ -2931,7 +2952,7 @@ public class DrawArea : Gtk.DrawingArea {
       var current = _selected.current_connection();
       current.edit_title_end();
       undo_buffer.add_item( new UndoConnectionTitle( current, _orig_title ) );
-      current.mode = ConnMode.SELECTED;
+      set_connection_mode( current, ConnMode.SELECTED );
       current_changed( this );
       queue_draw();
     } else if( is_node_editable() ) {
@@ -3736,7 +3757,7 @@ public class DrawArea : Gtk.DrawingArea {
       case Key.Z :  zoom_in();  break;
       case Key.e :
         current.edit_title_begin( this );
-        current.mode = ConnMode.EDITABLE;
+        set_connection_mode( current, ConnMode.EDITABLE );
         queue_draw();
         break;
       case Key.f :  select_connection_node( true );   break;
@@ -4281,7 +4302,7 @@ public class DrawArea : Gtk.DrawingArea {
       set_node_mode( _attach_node, NodeMode.NONE );
     }
     if( _attach_conn != null ) {
-      _attach_conn.mode = ConnMode.NONE;
+      set_connection_mode( _attach_conn, ConnMode.NONE );
     }
     if( _attach_sticker != null ) {
       _attach_sticker.mode = StickerMode.NONE;
@@ -4292,7 +4313,7 @@ public class DrawArea : Gtk.DrawingArea {
       _attach_node = attach_node;
       queue_draw();
     } else if( attach_conn != null ) {
-      attach_conn.mode = ConnMode.DROPPABLE;
+      set_connection_mode( attach_conn, ConnMode.DROPPABLE );
       _attach_conn = attach_conn;
       queue_draw();
     } else if( attach_sticker != null ) {
@@ -4390,8 +4411,8 @@ public class DrawArea : Gtk.DrawingArea {
           } else {
             undo_buffer.add_item( new UndoConnectionStickerChange( _attach_conn, _attach_conn.sticker ) );
           }
+          set_connection_mode( _attach_conn, ConnMode.NONE );
           _attach_conn.sticker = data.get_text();
-          _attach_conn.mode = ConnMode.NONE;
           _attach_conn = null;
         }
       }
@@ -4474,6 +4495,7 @@ public class DrawArea : Gtk.DrawingArea {
     _connections.add_connection( current );
     undo_buffer.add_item( new UndoConnectionAdd( current ) );
     _selected.set_current_connection( current );
+    handle_connection_edit_on_creation( current );
     _last_connection = null;
     _last_node       = null;
     set_node_mode( _attach_node, NodeMode.NONE );
@@ -4497,6 +4519,7 @@ public class DrawArea : Gtk.DrawingArea {
     _connections.add_connection( conn );
     _selected.set_current_connection( conn );
     undo_buffer.add_item( new UndoConnectionAdd( conn ) );
+    handle_connection_edit_on_creation( conn );
     changed();
     queue_draw();
   }
@@ -4524,6 +4547,14 @@ public class DrawArea : Gtk.DrawingArea {
     _selected.clear_connections();
     changed();
     queue_draw();
+  }
+
+  /* Handles the edit on creation of a newly created connection */
+  private void handle_connection_edit_on_creation( Connection conn ) {
+    if( _settings.get_boolean( "edit-connection-title-on-creation" ) ) {
+      conn.change_title( this, "", true );
+      set_connection_mode( conn, ConnMode.EDITABLE );
+    }
   }
 
   /*

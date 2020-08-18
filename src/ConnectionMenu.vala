@@ -123,7 +123,7 @@ public class ConnectionMenu : Gtk.Menu {
     if( conn.title == null ) {
       conn.change_title( _da, "", true );
     }
-    conn.mode = ConnMode.EDITABLE;
+    _da.set_connection_mode( conn, ConnMode.EDITABLE );
   }
 
   /* Changes the note status of the currently selected node */
