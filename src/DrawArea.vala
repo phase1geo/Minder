@@ -1285,6 +1285,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       if( shift ) {
         _selected.add_connection( conn );
+        handle_connection_edit_on_creation( conn );
       } else {
         set_current_connection( conn );
       }
@@ -4473,6 +4474,7 @@ public class DrawArea : Gtk.DrawingArea {
     _connections.add_connection( current );
     undo_buffer.add_item( new UndoConnectionAdd( current ) );
     _selected.set_current_connection( current );
+    handle_connection_edit_on_creation( current );
     _last_connection = null;
     _last_node       = null;
     set_node_mode( _attach_node, NodeMode.NONE );
@@ -4496,6 +4498,7 @@ public class DrawArea : Gtk.DrawingArea {
     _connections.add_connection( conn );
     _selected.set_current_connection( conn );
     undo_buffer.add_item( new UndoConnectionAdd( conn ) );
+    handle_connection_edit_on_creation( conn );
     changed();
     queue_draw();
   }
@@ -4523,6 +4526,14 @@ public class DrawArea : Gtk.DrawingArea {
     _selected.clear_connections();
     changed();
     queue_draw();
+  }
+
+  /* Handles the edit on creation of a newly created connection */
+  private void handle_connection_edit_on_creation( Connection conn ) {
+    if( _settings.get_boolean( "edit-connection-title-on-creation" ) ) {
+      conn.change_title( this, "", true );
+      conn.mode = ConnMode.EDITABLE;
+    }
   }
 
   /*

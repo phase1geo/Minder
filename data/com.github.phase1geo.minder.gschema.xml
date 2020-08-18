@@ -231,5 +231,10 @@
       <summary>Specifies the font size to use in text editing fields (i.e, quick entry or notes field)</summary>
       <description>Specifies the font size to use in text editing fields (i.e, quick entry or notes field).  A value of -1 specifies to use the system font size.</description>
     </key>
+    <key name="edit-connection-title-on-creation" type="b">
+      <default>false</default>
+      <summary>If true, the connection title will be added and put into edit mode immediately after the connection is made.</summary>
+      <description>If true, the connection title will be added and put into edit mode immediately after the connection is made.</description>
+    </key>
   </schema>
 </schemalist>
