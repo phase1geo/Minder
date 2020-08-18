@@ -223,6 +223,17 @@ public class NodeGroup {
     var x2  = node.posx + node.width + pad;
     var y2  = node.posy + node.height + pad;
 
+    if( node.folded ) {
+      double fx, fy, fw, fh;
+      node.fold_bbox( out fx, out fy, out fw, out fh );
+      switch( node.side ) {
+        case NodeSide.LEFT   :  x1 = fx - pad;       break;
+        case NodeSide.RIGHT  :  x2 = fx + fw + pad;  break;
+        case NodeSide.TOP    :  y1 = fy - pad;       break;
+        case NodeSide.BOTTOM :  y2 = fy + fh + pad;  break;
+      }
+    }
+
     points.append_val( new NodePoint( x1, y1 ) );
     points.append_val( new NodePoint( x2, y1 ) );
     points.append_val( new NodePoint( x1, y2 ) );
@@ -234,8 +245,10 @@ public class NodeGroup {
   public static void get_tree_points( Node origin, Node node, Array<NodePoint?> points ) {
     var pad = node.groups_between( origin ) * 5;
     add_node_points( points, node, pad );
-    for( int i=0; i<node.children().length; i++ ) {
-      get_tree_points( origin, node.children().index( i ), points );
+    if( !node.folded ) {
+      for( int i=0; i<node.children().length; i++ ) {
+        get_tree_points( origin, node.children().index( i ), points );
+      }
     }
   }
 

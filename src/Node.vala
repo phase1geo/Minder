@@ -1257,7 +1257,7 @@ public class Node : Object {
   }
 
   /* Returns the bounding box for the fold indicator for this node */
-  private void fold_bbox( out double x, out double y, out double w, out double h ) {
+  public void fold_bbox( out double x, out double y, out double w, out double h ) {
     double bw, bh;
     bbox( out x, out y, out bw, out bh );
     w = 16;
@@ -1273,7 +1273,7 @@ public class Node : Object {
         break;
       case NodeSide.TOP :
         x += (bw / 2) - 8;
-        y -= style.node_padding + bh;
+        y -= style.node_padding + h;
         break;
       case NodeSide.BOTTOM :
         x += (bw / 2) - 8;
