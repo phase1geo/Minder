@@ -27,14 +27,16 @@ public class UndoNodeDelete : UndoItem {
   Node?             _parent;
   int               _index;
   Array<Connection> _conns;
+  UndoNodeGroups    _groups;
 
   /* Default constructor */
-  public UndoNodeDelete( Node n, int index, Array<Connection> conns ) {
+  public UndoNodeDelete( Node n, int index, Array<Connection> conns, UndoNodeGroups groups ) {
     base( _( "delete node" ) );
     _node   = n;
     _parent = n.parent;
     _index  = index;
     _conns  = conns;
+    _groups = groups;
   }
 
   /* Undoes a node deletion */
@@ -49,12 +51,14 @@ public class UndoNodeDelete : UndoItem {
     for( int i=0; i<_conns.length; i++ ) {
       da.get_connections().add_connection( _conns.index( i ) );
     }
+    da.groups.apply_undo( _groups );
     da.queue_draw();
     da.changed();
   }
 
   /* Redoes a node deletion */
   public override void redo( DrawArea da ) {
+    UndoNodeGroups? tmp_groups = null;
     if( _parent == null ) {
       da.remove_root( _index );
     } else {
@@ -64,6 +68,7 @@ public class UndoNodeDelete : UndoItem {
     for( int i=0; i<_conns.length; i++ ) {
       da.get_connections().remove_connection( _conns.index( i ), false );
     }
+    da.groups.remove_node( _node, ref tmp_groups );
     da.queue_draw();
     da.changed();
   }
