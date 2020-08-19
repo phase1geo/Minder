@@ -53,38 +53,49 @@ public class ExportXMind : Object {
     }
   }
 
+  public class FileItem {
+    public string name;
+    public string type;
+    public FileItem( string n, string t ) {
+      name = n;
+      type = t;
+    }
+  }
+
+  public class FileItems {
+    public Array<FileItem> items;
+    public FileItems() {
+      items = new Array<FileItem>();
+    }
+    public void add( string name, string type ) {
+      for( int i=0; i<items.length; i++ ) {
+        if( items.index( i ).name == name ) return;
+      }
+      items.append_val( new FileItem( name, type ) );
+    }
+  }
+
   /* Exports the given drawing area to the file of the given name */
   public static bool export( string fname, DrawArea da ) {
 
     /* Create temporary directory to place contents in */
     var dir = DirUtils.mkdtemp( "minderXXXXXX" );
 
-    /* Create manifest director */
-    DirUtils.create( Path.build_filename( dir, "META-INF" ), 0755 );
-
-    var meta_path     = Path.build_filename( dir, "meta.xml" );
-    var content_path  = Path.build_filename( dir, "content.xml" );
-    var styles_path   = Path.build_filename( dir, "styles.xml" );
-    var manifest_path = Path.build_filename( dir, "META-INF", "manifest.xml" );
-    var styles        = new Array<Xml.Node*>();
-    var file_list     = new Array<string>();
+    var styles    = new Array<Xml.Node*>();
+    var file_list = new FileItems();
 
     /* Export the meta file */
-    export_meta( da, meta_path );
-    file_list.append_val( meta_path );
+    export_meta( da, dir, file_list );
 
     /* Export the content file */
-    export_content( da, content_path, styles );
-    file_list.append_val( content_path );
+    export_content( da, dir, file_list, styles );
 
     if( styles.length > 0 ) {
-      export_styles( styles_path, styles );
-      file_list.append_val( styles_path );
+      export_styles( dir, file_list, styles );
     }
 
     /* Export manifest file */
-    export_manifest( manifest_path, (styles.length > 0) );
-    file_list.append_val( manifest_path );
+    export_manifest( dir, file_list );
 
     /* Archive the contents */
     archive_contents( dir, fname, file_list );
@@ -94,22 +105,35 @@ public class ExportXMind : Object {
   }
 
   /* Generates the manifest file */
-  private static bool export_manifest( string fname, bool include_styles ) {
+  private static bool export_manifest( string dir, FileItems file_list ) {
+
     Xml.Doc* doc = new Xml.Doc( "1.0" );
     Xml.Node* manifest = new Xml.Node( null, "manifest" );
+
     manifest->set_prop( "xmlns", "urn:xmind:xmap:xmlns:manifest:1.0" );
     manifest->set_prop( "password-hint", "" );
+
     manifest->add_child( manifest_file_entry( "META-INF", "" ) );
     manifest->add_child( manifest_file_entry( "META-INF/manifest.xml", "text/xml" ) );
-    manifest->add_child( manifest_file_entry( "meta.xml", "text/xml" ) );
-    manifest->add_child( manifest_file_entry( "content.xml", "text/xml" ) );
-    if( include_styles ) {
-      manifest->add_child( manifest_file_entry( "styles.xml", "text/xml" ) );
+
+    for( int i=0; i<file_list.items.length; i++ ) {
+      var mfile = file_list.items.index( i );
+      manifest->add_child( manifest_file_entry( mfile.name, mfile.type ) );
     }
+
     doc->set_root_element( manifest );
-    doc->save_format_file( fname, 1 );
+
+    var meta_dir = Path.build_filename( dir, "META-INF" );
+    DirUtils.create( meta_dir, 0755 );
+    doc->save_format_file( Path.build_filename( meta_dir, "manifest.xml" ), 1 );
+
+    file_list.add( "META-INF", "" );
+    file_list.add( Path.build_filename( "META-INF", "manifest.xml" ), "text/xml" );
+
     delete doc;
+
     return( false );
+
   }
 
   /* Creates the file-entry node within the manifest */
@@ -121,12 +145,14 @@ public class ExportXMind : Object {
   }
 
   /* Generate the main content file from  */
-  private static bool export_content( DrawArea da, string fname, Array<Xml.Node*> styles ) {
+  private static bool export_content( DrawArea da, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
+
     Xml.Doc*  doc       = new Xml.Doc( "1.0" );
     Xml.Node* xmap      = new Xml.Node( null, "xmap-content" );
     Xml.Node* sheet     = new Xml.Node( null, "sheet" );
     Xml.Node* title     = new Xml.Node( null, "title" );
     var       timestamp = new DateTime.now().to_unix().to_string();
+
     xmap->set_prop( "xmlns", "urn:xmind:xmap:xmlns:content:2.0" );
     xmap->set_prop( "xmlns:fo", "http://www.w3.org/1999/XSL/Format" );
     xmap->set_prop( "xmlns:svg", "http://www.w3.org/2000/svg" );
@@ -137,29 +163,35 @@ public class ExportXMind : Object {
     sheet->set_prop( "id", "1" );
     sheet->set_prop( "timestamp", timestamp );
 
-    export_map( da, sheet, timestamp, styles );
+    export_map( da, sheet, timestamp, dir, file_list, styles );
 
     title->add_content( "Sheet 1" );
     sheet->add_child( title );
     xmap->add_child( sheet );
+
     doc->set_root_element( xmap );
-    doc->save_format_file( fname, 1 );
+    doc->save_format_file( Path.build_filename( dir, "content.xml" ), 1 );
+
+    file_list.add( "content.xml", "text/xml" );
+
     delete doc;
+
     return( false );
+
   }
 
   /* Exports the map contents */
-  private static void export_map( DrawArea da, Xml.Node* sheet, string timestamp, Array<Xml.Node*> styles ) {
+  private static void export_map( DrawArea da, Xml.Node* sheet, string timestamp, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
     var nodes = da.get_nodes();
     var conns = da.get_connections().connections;
-    Xml.Node* top = export_node( da, nodes.index( 0 ), timestamp, true, styles );
+    Xml.Node* top = export_node( da, nodes.index( 0 ), timestamp, true, dir, file_list, styles );
     if( nodes.length > 1 ) {
       for( Xml.Node* it=top->children; it!=null; it=it->next ) {
         if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "children") ) {
           Xml.Node* topics = new Xml.Node( null, "topics" );
           topics->set_prop( "type", "detached" );
           for( int i=1; i<nodes.length; i++ ) {
-            Xml.Node* topic = export_node( da, nodes.index( i ), timestamp, false, styles );
+            Xml.Node* topic = export_node( da, nodes.index( i ), timestamp, false, dir, file_list, styles );
             Xml.Node* pos   = new Xml.Node( null, "position" );
             var       x     = (int)(nodes.index( i ).posx - nodes.index( 0 ).posx);
             var       y     = (int)(nodes.index( i ).posy - nodes.index( 0 ).posy);
@@ -176,7 +208,7 @@ public class ExportXMind : Object {
     export_connections( da, sheet, timestamp, styles );
   }
 
-  private static Xml.Node* export_node( DrawArea da, Node node, string timestamp, bool top, Array<Xml.Node*> styles ) {
+  private static Xml.Node* export_node( DrawArea da, Node node, string timestamp, bool top, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
 
     Xml.Node* topic = new Xml.Node( null, "topic" );
     Xml.Node* title = new Xml.Node( null, "title" );
@@ -209,14 +241,7 @@ public class ExportXMind : Object {
 
     /* Add image, if needed */
     if( node.image != null ) {
-      var img_name = da.image_manager.get_file( node.image.id );
-      Xml.Node* img = new Xml.Node( "xhtml", "img" );
-      img->set_prop( "style-id", (ids++).to_string() );  /* TBD - We need to store this for later use */
-      img->set_prop( "svg:height", node.image.height.to_string() );
-      img->set_prop( "svg:width",  node.image.width.to_string() );
-      img->set_prop( "xhtml:src",  Path.build_filename( "attachments", Filename.display_basename( img_name ) ) );
-      topic->add_child( img );
-      /* TBD - We need to copy over the file to the attachments directory */
+      export_image( da, node, dir, file_list, topic );
     }
 
     if( node.children().length > 0 ) {
@@ -229,7 +254,7 @@ public class ExportXMind : Object {
 
       for( int i=0; i<node.children().length; i++ ) {
         var child = node.children().index( i );
-        topics->add_child( export_node( da, child, timestamp, false, styles ) );
+        topics->add_child( export_node( da, child, timestamp, false, dir, file_list, styles ) );
         if( child.group ) {
           groups.append_val( i );
         }
@@ -270,6 +295,36 @@ public class ExportXMind : Object {
     }
 
     return( topic );
+
+  }
+
+  /* Exports the given node's image */
+  private static void export_image( DrawArea da, Node node, string dir, FileItems file_list, Xml.Node* topic ) {
+
+    var img_name  = da.image_manager.get_file( node.image.id );
+    var mime_type = da.image_manager.get_mime_type( node.image.id );
+    var src       = Path.build_filename( "attachments", Filename.display_basename( img_name ) );
+    var parts     = src.split( "." );
+    Xml.Node* img = new Xml.Node( null, "xhtml:img" );
+
+    /* Copy the image file to the XMind bundle */
+    DirUtils.create( Path.build_filename( dir, "attachments" ), 0755 );
+    var lfile = File.new_for_path( Path.build_filename( dir, src ) );
+    var rfile = File.new_for_path( img_name );
+    try {
+      rfile.copy( lfile, FileCopyFlags.OVERWRITE );
+    } catch( GLib.Error e ) {
+      return;
+    }
+
+    img->set_prop( "style-id", (ids++).to_string() );  /* TBD - We need to store this for later use */
+    img->set_prop( "svg:height", node.image.height.to_string() );
+    img->set_prop( "svg:width",  node.image.width.to_string() );
+    img->set_prop( "xhtml:src",  "xap:%s".printf( src ) );
+    topic->add_child( img );
+
+    file_list.add( "attachments", "" );
+    file_list.add( src, mime_type );
 
   }
 
@@ -412,7 +467,7 @@ public class ExportXMind : Object {
   }
 
   /* Creates the styles.xml file in the main directory */
-  private static void export_styles( string fname, Array<Xml.Node*> nodes ) {
+  private static void export_styles( string dir, FileItems file_list, Array<Xml.Node*> nodes ) {
 
     Xml.Doc*  doc    = new Xml.Doc( "1.0" );
     Xml.Node* xmap   = new Xml.Node( null, "xmap-styles" );
@@ -430,13 +485,16 @@ public class ExportXMind : Object {
     xmap->add_child( styles );
 
     doc->set_root_element( xmap );
-    doc->save_format_file( fname, 1 );
+    doc->save_format_file( Path.build_filename( dir, "styles.xml" ), 1 );
+
+    file_list.add( "styles.xml", "text/xml" );
+
     delete doc;
 
   }
 
   /* Exports the contents of the meta file */
-  private static void export_meta( DrawArea da, string fname ) {
+  private static void export_meta( DrawArea da, string dir, FileItems file_list ) {
 
     Xml.Doc*  doc       = new Xml.Doc( "1.0" );
     Xml.Node* meta      = new Xml.Node( null, "meta" );
@@ -462,13 +520,16 @@ public class ExportXMind : Object {
     meta->add_child( creator );
 
     doc->set_root_element( meta );
-    doc->save_format_file( fname, 1 );
+    doc->save_format_file( Path.build_filename( dir, "meta.xml" ), 1 );
+
+    file_list.add( "meta.xml", "text/xml" );
+
     delete doc;
 
   }
 
   /* Write the contents as a zip file */
-  private static void archive_contents( string dir, string outname, Array<string> files ) {
+  private static void archive_contents( string dir, string outname, FileItems files ) {
 
     GLib.File pwd = GLib.File.new_for_path( dir );
 
@@ -479,8 +540,9 @@ public class ExportXMind : Object {
     archive.open_filename( outname );
 
     // Add all the other arguments into the archive
-    for( int i=0; i<files.length; i++ ) {
-      GLib.File file = GLib.File.new_for_path( files.index( i ) );
+    for( int i=0; i<files.items.length; i++ ) {
+      if( files.items.index( i ).type == "" ) continue;
+      GLib.File file = GLib.File.new_for_path( Path.build_filename( dir, files.items.index( i ).name ) );
       try {
         GLib.FileInfo file_info = file.query_info( GLib.FileAttribute.STANDARD_SIZE, GLib.FileQueryInfoFlags.NONE );
         FileInputStream input_stream = file.read();
@@ -540,7 +602,7 @@ public class ExportXMind : Object {
 
     var content = Path.build_filename( dir, "content.xml" );
     var id_map  = new HashMap<string,IdObject>();
-    import_content( da, content, id_map );
+    import_content( da, content, dir, id_map );
 
     var styles = Path.build_filename( dir, "styles.xml" );
     import_styles( da, styles, id_map );
@@ -552,7 +614,7 @@ public class ExportXMind : Object {
   }
 
   /* Import the content file */
-  private static bool import_content( DrawArea da, string fname, HashMap<string,IdObject> id_map ) {
+  private static bool import_content( DrawArea da, string fname, string dir, HashMap<string,IdObject> id_map ) {
 
     /* Read in the contents of the Freemind file */
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
@@ -561,7 +623,7 @@ public class ExportXMind : Object {
     }
 
     /* Load the contents of the file */
-    import_map( da, doc->get_root_element(), id_map );
+    import_map( da, doc->get_root_element(), dir, id_map );
 
     /* Delete the OPML document */
     delete doc;
@@ -571,23 +633,23 @@ public class ExportXMind : Object {
   }
 
   /* Import the xmind map */
-  private static void import_map( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private static void import_map( DrawArea da, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "sheet") ) {
-        import_sheet( da, it, id_map );
+        import_sheet( da, it, dir, id_map );
         return;
       }
     }
   }
 
   /* Import a sheet */
-  private static void import_sheet( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private static void import_sheet( DrawArea da, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "topic"         :  import_topic( da, null, it, false, id_map );  break;
+          case "topic"         :  import_topic( da, null, it, false, dir, id_map );  break;
           case "relationships" :  import_relationships( da, it, id_map );  break;
         }
       }
@@ -596,7 +658,7 @@ public class ExportXMind : Object {
   }
 
   /* Imports an XMind topic (this is a node in Minder) */
-  private static void import_topic( DrawArea da, Node? parent, Xml.Node* n, bool attached, HashMap<string,IdObject> id_map ) {
+  private static void import_topic( DrawArea da, Node? parent, Xml.Node* n, bool attached, string dir, HashMap<string,IdObject> id_map ) {
 
     Node node;
 
@@ -630,8 +692,8 @@ public class ExportXMind : Object {
         switch( it->name ) {
           case "title"      :  import_node_name( node, it );               break;
           case "notes"      :  import_node_notes( node, it );              break;
-          case "img"        :  import_image( da, node, it, id_map );       break;
-          case "children"   :  import_children( da, node, it, id_map );    break;
+          case "img"        :  import_image( da, node, it, dir, id_map );     break;
+          case "children"   :  import_children( da, node, it, dir, id_map );  break;
           case "boundaries" :  import_boundaries( da, node, it, id_map );  break;
         }
       }
@@ -673,7 +735,7 @@ public class ExportXMind : Object {
   }
 
   /* Imports an image from a file */
-  private static void import_image( DrawArea da, Node node, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private static void import_image( DrawArea da, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
 
     int height = 1;
     int width  = 1;
@@ -695,13 +757,14 @@ public class ExportXMind : Object {
 
     string? src = n->get_prop( "src" );
     if( src != null ) {
-      node.set_image( da.image_manager, new NodeImage.from_uri( da.image_manager, src, width ) );
+      var img_file = File.new_for_path( Path.build_filename( dir, src.substring( 4 ) ) );
+      node.set_image( da.image_manager, new NodeImage.from_uri( da.image_manager, img_file.get_uri(), width ) );
     }
 
   }
 
   /* Importa child nodes */
-  private static void import_children( DrawArea da, Node node, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private static void import_children( DrawArea da, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "topics") ) {
@@ -709,7 +772,7 @@ public class ExportXMind : Object {
         var     attached = (t != null) && (t == "attached");
         for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
           if( (it2->type == ElementType.ELEMENT_NODE) && (it2->name == "topic") ) {
-            import_topic( da, node, it2, attached, id_map );
+            import_topic( da, node, it2, attached, dir, id_map );
           }
         }
       }
