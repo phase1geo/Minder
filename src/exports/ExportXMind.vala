@@ -307,6 +307,9 @@ public class ExportXMind : Object {
     var parts     = src.split( "." );
     Xml.Node* img = new Xml.Node( null, "xhtml:img" );
 
+    /* XMind doesn't support SVG images so cut short if we have this type of image */
+    if( mime_type == "image/svg" ) return;
+
     /* Copy the image file to the XMind bundle */
     DirUtils.create( Path.build_filename( dir, "attachments" ), 0755 );
     var lfile = File.new_for_path( Path.build_filename( dir, src ) );
