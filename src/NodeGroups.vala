@@ -66,9 +66,12 @@ public class NodeGroups {
   /* Checks to see if this group contains the given node and removes it if found */
   public void remove_node( Node node, ref UndoNodeGroups? affected ) {
     var groups = new Array<NodeGroup>();
-    for( int i=0; i<_groups.length; i++ ) {
+    for( int i=(int)(_groups.length - 1); i>=0; i-- ) {
       if( _groups.index( i ).remove_node( node ) ) {
         groups.append_val( _groups.index( i ) );
+        if( _groups.index( i ).nodes.length == 0 ) {
+          _groups.remove_index( i );
+        }
       }
     }
     if( groups.length > 0 ) {
@@ -101,11 +104,24 @@ public class NodeGroups {
     return( group );
   }
 
+  /* Returns true if the specified node group exists in this list */
+  private bool group_exists( NodeGroup group ) {
+    for( int i=0; i<_groups.length; i++ ) {
+      if( _groups.index( i ) == group ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
   /* Applies the given undo */
   public void apply_undo( UndoNodeGroups? g ) {
     if( g != null ) {
       for( int i=0; i<g.groups.length; i++ ) {
         g.groups.index( i ).add_node( g.node );
+        if( !group_exists( g.groups.index( i ) ) ) {
+          _groups.append_val( g.groups.index( i ) );
+        }
       }
     }
   }

@@ -2629,17 +2629,19 @@ public class DrawArea : Gtk.DrawingArea {
     if( current == null ) return;
     Node? next_node = next_node_to_select();
     var   conns     = new Array<Connection>();
+    UndoNodeGroups? undo_groups = null;
     _connections.node_deleted( current, conns );
+    _groups.remove_node( current, ref undo_groups );
     if( current.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
         if( _nodes.index( i ) == current ) {
-          undo_buffer.add_item( new UndoNodeDelete( current, i, conns ) );
+          undo_buffer.add_item( new UndoNodeDelete( current, i, conns, undo_groups ) );
           _nodes.remove_index( i );
           break;
         }
       }
     } else {
-      undo_buffer.add_item( new UndoNodeDelete( current, current.index(), conns ) );
+      undo_buffer.add_item( new UndoNodeDelete( current, current.index(), conns, undo_groups ) );
       current.delete();
     }
     _selected.remove_node( current );
@@ -2653,10 +2655,12 @@ public class DrawArea : Gtk.DrawingArea {
     if( _selected.num_nodes() == 0 ) return;
     var nodes = _selected.ordered_nodes();
     var conns = new Array<Connection>();
+    Array<UndoNodeGroups?> undo_groups = null;
     for( int i=0; i<nodes.length; i++ ) {
       _connections.node_only_deleted( nodes.index( i ), conns );
     }
-    undo_buffer.add_item( new UndoNodesDelete( nodes, conns ) );
+    _groups.remove_nodes( nodes, out undo_groups );
+    undo_buffer.add_item( new UndoNodesDelete( nodes, conns, undo_groups ) );
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).delete_only();
     }
@@ -3996,18 +4000,20 @@ public class DrawArea : Gtk.DrawingArea {
     if( current == null ) return;
     var next_node = next_node_to_select();
     var conns     = new Array<Connection>();
+    UndoNodeGroups? undo_groups = null;
     _connections.node_deleted( current, conns );
+    _groups.remove_node( current, ref undo_groups );
     MinderClipboard.copy_nodes( this );
     if( current.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
         if( _nodes.index( i ) == current ) {
-          undo_buffer.add_item( new UndoNodeCut( current, i, conns ) );
+          undo_buffer.add_item( new UndoNodeCut( current, i, conns, undo_groups ) );
           _nodes.remove_index( i );
           break;
         }
       }
     } else {
-      undo_buffer.add_item( new UndoNodeCut( current, current.index(), conns ) );
+      undo_buffer.add_item( new UndoNodeCut( current, current.index(), conns, undo_groups ) );
       current.delete();
     }
     _selected.remove_node( current );
@@ -4020,11 +4026,13 @@ public class DrawArea : Gtk.DrawingArea {
     if( _selected.num_nodes() == 0 ) return;
     var nodes = _selected.ordered_nodes();
     var conns = new Array<Connection>();
+    Array<UndoNodeGroups?> undo_groups = null;
     for( int i=0; i<nodes.length; i++ ) {
       _connections.node_only_deleted( nodes.index( i ), conns );
     }
+    _groups.remove_nodes( nodes, out undo_groups );
     MinderClipboard.copy_nodes( this );
-    undo_buffer.add_item( new UndoNodesCut( nodes, conns ) );
+    undo_buffer.add_item( new UndoNodesCut( nodes, conns, undo_groups ) );
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).delete_only();
     }
