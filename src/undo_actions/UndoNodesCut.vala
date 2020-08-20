@@ -34,17 +34,19 @@ public class UndoNodesCut : UndoItem {
     }
   }
 
-  Array<NodeInfo>   _nodes;
-  Array<Connection> _conns;
+  Array<NodeInfo>        _nodes;
+  Array<Connection>      _conns;
+  Array<UndoNodeGroups?> _groups;
 
   /* Default constructor */
-  public UndoNodesCut( Array<Node> nodes, Array<Connection> conns ) {
+  public UndoNodesCut( Array<Node> nodes, Array<Connection> conns, Array<UndoNodeGroups?> groups ) {
     base( _( "cut nodes" ) );
     _nodes = new Array<NodeInfo>();
     for( int i=0; i<nodes.length; i++ ) {
       _nodes.append_val( new NodeInfo( nodes.index( i ) ) );
     }
-    _conns = conns;
+    _conns  = conns;
+    _groups = groups;
   }
 
   /* Undoes a node deletion */
@@ -60,6 +62,7 @@ public class UndoNodesCut : UndoItem {
     for( int i=0; i<_conns.length; i++ ) {
       da.get_connections().add_connection( _conns.index( i ) );
     }
+    da.groups.apply_undos( _groups );
     da.queue_draw();
     da.changed();
   }
@@ -69,7 +72,9 @@ public class UndoNodesCut : UndoItem {
     MinderClipboard.copy_nodes( da );
     da.get_selections().clear();
     for( int i=0; i<_nodes.length; i++ ) {
+      UndoNodeGroups? tmp_group = null;
       _nodes.index( i ).node.delete_only();
+      da.groups.remove_node( _nodes.index( i ).node, ref tmp_group );
     }
     for( int i=0; i<_conns.length; i++ ) {
       da.get_connections().remove_connection( _conns.index( i ), false );
