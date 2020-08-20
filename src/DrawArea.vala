@@ -2653,8 +2653,8 @@ public class DrawArea : Gtk.DrawingArea {
   /* Deletes all selected nodes */
   public void delete_nodes() {
     if( _selected.num_nodes() == 0 ) return;
-    var nodes       = _selected.ordered_nodes();
-    var conns       = new Array<Connection>();
+    var nodes = _selected.ordered_nodes();
+    var conns = new Array<Connection>();
     Array<UndoNodeGroups?> undo_groups = null;
     for( int i=0; i<nodes.length; i++ ) {
       _connections.node_only_deleted( nodes.index( i ), conns );

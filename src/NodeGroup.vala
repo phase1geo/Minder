@@ -190,6 +190,7 @@ public class NodeGroup {
     draw_cloud( ctx, node.link_color, false, node.alpha, points );
   }
 
+  /* Draws the cloud associated with this group */
   private static void draw_cloud( Context ctx, RGBA color, bool selected, double alpha, Array<NodePoint?> points ) {
 
     /* Calculate the hull points */
