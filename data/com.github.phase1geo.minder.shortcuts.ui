@@ -714,5 +714,79 @@
         </child>
       </object>
     </child>
+    <child>
+      <object class="GtkShortcutsSection">
+        <property name="section-name">mouse</property>
+        <property name="title" translatable="yes">Mouse Events</property>
+        <property name="visible">1</property>
+        <child>
+          <object class="gtkShortcutsGroup">
+            <property name="title" translatable="yes">General</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Show Contextual Menu</property>
+                <property name="subtitle" translatable="yes">Right-click when item is selected</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="gtkShortcutsGroup">
+            <property name="title" translatable="yes">Canvas Movement</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Pan Canvas</property>
+                <property name="subtitle" translatable="yes">Middle-click + Drag / Alt + Motion</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Scroll Vertically</property>
+                <property name="subtitle" translatable="yes">Scrollwheel up/down</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Scroll Horizontally</property>
+                <property name="subtitle" translatable="yes">Shift + Scrollwheel up/down</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="gtkShortcutsGroup">
+            <property name="title" translatable="yes">Selection</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Select Single Item</property>
+                <property name="subtitle" translatable="yes">Left-click on item</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Add Item to Selection</property>
+                <property name="subtitle" translatable="yes">Shift + Left-click on item</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Block Selection</property>
+                <property name="subtitle" translatable="yes">Left-click + Motion</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
   </object>
 </interface>
