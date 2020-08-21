@@ -83,6 +83,46 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.10.0" date="2020-08-23">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added Markdown highlighting support to node titles.</li>
+          <li>Added ability to set the maximum node size in style inspector.</li>
+          <li>Added ability to set the maximum connection title size in style inspector.</li>
+          <li>Added ability to set text field font size via gsetting.</li>
+          <li>Added ability to set branch margin in the style inspector.</li>
+          <li>Added ability to add stickers to nodes, connections and anywhere else in the mind map.</li>
+          <li>Added ability to visually create and display node groupings.</li>
+          <li>Added import/export support for XMind.</li>
+          <li>Added support for specifying if connection titles should be added immediately after creating a connection.</li>
+          <li>Added support for middle-click-and-drag to pan the canvas (Alt + mouse movement still supported).</li>
+          <li>Added keyboard shortcut for the Zoom to Fit option (Control-1).</li>
+          <li>Added new Mouse Events shortcut panel in shortcut cheatsheet.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Removed the sidebar style affects selector and using the status of the current selection instead.</li>
+          <li>Lowered the minimum node margin from 5 pixels to 1 pixel to allow for greater node density.</li>
+          <li>Removed connection title editing field in sidebar for better UI consistency.</li>
+          <li>Removed bold and italicized fonts from the style inspector font selectors.</li>
+          <li>If connection title is empty, the title will be automatically removed.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue with importing Freemind notes.</li>
+          <li>Fixed display of right-to-left text within nodes.</li>
+          <li>Fixed issues with loading a .minder file that contains errant information.</li>
+          <li>Fixed issues with the layout of connection titles.</li>
+          <li>Fixed input method support when editing connection titles.</li>
+          <li>Fixed position of fold indicator when tree layout is Upwards.</li>
+          <li>Fixed node display issue when a node link is clicked to a node that is folded.</li>
+          <li>Fixed error when connection title is double clicked when no text is present.</li>
+          <li>Fixed issue with opening the same document twice (only one tab will now exist per file).</li>
+          <li>Fixed Shift-Control-s keyboard shortcut to display the 'Save As' dialog instead of the 'Open' dialog.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.9.2" date="2020-08-07">
       <description>
         <p>Bug Fixes</p>
