@@ -726,7 +726,14 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Show Contextual Menu</property>
-                <property name="subtitle" translatable="yes">Right-click when item is selected</property>
+                <property name="subtitle" translatable="yes">[Right-click when item is selected]</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Edit Image in Canvas</property>
+                <property name="subtitle" translatable="yes">[Double left-click on image]</property>
                 <property name="visible">1</property>
               </object>
             </child>
@@ -739,21 +746,21 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Pan Canvas</property>
-                <property name="subtitle" translatable="yes">Middle-click + Drag / Alt + Motion</property>
+                <property name="subtitle" translatable="yes">[Middle-click + Drag / Alt + Motion]</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Scroll Vertically</property>
-                <property name="subtitle" translatable="yes">Scrollwheel up/down</property>
+                <property name="subtitle" translatable="yes">[Scrollwheel up/down]</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Scroll Horizontally</property>
-                <property name="subtitle" translatable="yes">Shift + Scrollwheel up/down</property>
+                <property name="subtitle" translatable="yes">[Shift + Scrollwheel up/down]</property>
                 <property name="visible">1</property>
               </object>
             </child>
@@ -761,26 +768,101 @@
         </child>
         <child>
           <object class="gtkShortcutsGroup">
-            <property name="title" translatable="yes">Selection</property>
+            <property name="title" translatable="yes">Item Selection</property>
             <property name="visible">1</property>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Select Single Item</property>
-                <property name="subtitle" translatable="yes">Left-click on item</property>
+                <property name="subtitle" translatable="yes">[Left-click on item]</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">Add Item to Selection</property>
-                <property name="subtitle" translatable="yes">Shift + Left-click on item</property>
+                <property name="title" translatable="yes">Select Child Nodes</property>
+                <property name="subtitle" translatable="yes">[Control + Left-click on parent node]</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Select Node Tree/Subtree</property>
+                <property name="subtitle" translatable="yes">[Control + Double left-click on parent node]</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Select All Nodes at Same Depth Level</property>
+                <property name="subtitle" translatable="yes">[Control + Triple left-click on node]</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Block Selection</property>
-                <property name="subtitle" translatable="yes">Left-click + Motion</property>
+                <property name="subtitle" translatable="yes">[Left-click + Drag]</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="gtkShortcutsGroup">
+            <property name="title" translatable="yes">Item Selection Toggle (Add to/Remove from Selection)</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Toggle Selection of Item</property>
+                <property name="subtitle" translatable="yes">[Shift + Left-click on item]</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Toggle Selection of Child Nodes</property>
+                <property name="subtitle" translatable="yes">[Shift + Control + Left-click on item]</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Toggle Selection of Node Tree/Subtree</property>
+                <property name="subtitle" translatable="yes">[Shift + Control + Double left-click on parent node]</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Toggle Selection of All Nodes at Same Depth Level</property>
+                <property name="subtitle" translatable="yes">[Shift + Control + Triple left-click on node]</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="gtkShortcutsGroup">
+            <property name="title" translatable="yes">Text Selection</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Set Cursor Insert Point</property>
+                <property name="subtitle" translatable="yes">[Left-click anywhere in text]</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Select current word</property>
+                <property name="subtitle" translatable="yes">[Double left-click on word]</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Select all text</property>
+                <property name="subtitle" translatable="yes">[Triple left-click anywhere in text]</property>
                 <property name="visible">1</property>
               </object>
             </child>
