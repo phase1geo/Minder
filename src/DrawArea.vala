@@ -1468,6 +1468,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Handles a click on the specified group */
   public bool set_current_group_from_position( NodeGroup group, EventButton e ) {
 
     var shift = (bool)(e.state & ModifierType.SHIFT_MASK);
