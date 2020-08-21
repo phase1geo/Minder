@@ -32,7 +32,8 @@ public enum ConnMode {
   CONNECTING,  // Indicates that the connection is being made between two nodes
   SELECTED,    // Indicates that the connection is currently selected
   ADJUSTING,   // Indicates that we are moving the drag handle to change the line shape
-  EDITABLE     // Indicates that the connection title is in edit mode
+  EDITABLE,    // Indicates that the connection title is in edit mode
+  DROPPABLE    // Indicates that the connection is a drop zone for stickers
 }
 
 public class Connection : Object {
@@ -51,6 +52,8 @@ public class Connection : Object {
   private string      _note      = "";
   private double      _max_width = 100;
   private RGBA?       _color;
+  private string?     _sticker     = null;
+  private Pixbuf?     _sticker_buf = null;
 
   public CanvasText? title {
     get {
@@ -81,10 +84,11 @@ public class Connection : Object {
             _title.edit = true;
             _title.set_cursor_all( false );
           }
-        } else {
-          if( _title != null ) {
-            _title.edit = false;
-            _title.clear_selection();
+        } else if( _title != null ) {
+          _title.edit = false;
+          _title.clear_selection();
+          if( (_title.text.text == "") && (_sticker == null) && (_note == "") ) {
+            _title = null;
           }
         }
       }
@@ -112,7 +116,8 @@ public class Connection : Object {
     }
     set {
       if( _style.copy( value ) && (_title != null) ) {
-        _title.set_font( _style.connection_font );
+        _title.set_font( _style.connection_font.get_family(), (_style.connection_font.get_size() / Pango.SCALE) );
+        _title.max_width = _style.connection_title_width;
         position_title();
       }
     }
@@ -124,6 +129,22 @@ public class Connection : Object {
     }
     set {
       _color = value;
+    }
+  }
+  public string? sticker {
+    get {
+      return( _sticker );
+    }
+    set {
+      if( _sticker != value ) {
+        _sticker = value;
+        if( _sticker != null ) {
+          _sticker_buf = new Pixbuf.from_resource( "/com/github/phase1geo/minder/" + _sticker );
+        } else {
+          _sticker_buf = null;
+        }
+        position_title();
+      }
     }
   }
 
@@ -169,7 +190,7 @@ public class Connection : Object {
       _title = null;
     } else {
       if( title == null ) {
-        _title = new CanvasText( da, _max_width );
+        _title = new CanvasText( da );
         _title.resized.connect( position_title );
       }
       _title.copy( conn.title );
@@ -177,6 +198,49 @@ public class Connection : Object {
     mode  = conn.mode;
     style = conn.style;
     color = conn.color;
+  }
+
+  private int sticker_width( bool add_padding ) {
+    var padding = add_padding ? (style.connection_padding ?? 0) : 0;
+    return( (_sticker_buf != null) ? (_sticker_buf.width + padding) : 0 );
+  }
+
+  private int sticker_height() {
+    return( (_sticker_buf != null) ? _sticker_buf.height : 0 );
+  }
+
+  private int title_width( bool add_padding ) {
+    var padding = add_padding ? (style.connection_padding ?? 0) : 0;
+    return( (_title != null) ? ((int)_title.width + padding) : 0 );
+  }
+
+  private int title_height() {
+    return( (_title != null) ? (int)_title.height : 0 );
+  }
+
+  private int note_width( bool add_padding ) {
+    var padding = add_padding ? (style.connection_padding ?? 0) : 0;
+    return( (note.length > 0) ? (11 + padding) : 0 );
+  }
+
+  private int note_height() {
+    return( (note.length > 0) ? 11 : 0 );
+  }
+
+  private int get_width() {
+    var sw = sticker_width( false );
+    var tw = title_width( sw > 0 );
+    var nw = note_width( (sw + tw) > 0 );
+    return( sw + tw + nw );
+  }
+
+  private int get_height() {
+    int sh = sticker_height();
+    int th = title_height();
+    int nh = note_height();
+         if( (sh <= th) && (nh <= th) ) { return( th ); }
+    else if( (th <= sh) && (nh <= sh) ) { return( sh ); }
+    else                                { return( nh ); }
   }
 
   /* Returns the canvas box that contains both the from and to nodes */
@@ -205,15 +269,15 @@ public class Connection : Object {
   /* Makes sure that the title is ready to be edited */
   public void edit_title_begin( DrawArea da ) {
     if( _title != null ) return;
-    _title = new CanvasText.with_text( da, _max_width, "" );
+    _title = new CanvasText.with_text( da, "" );
     _title.resized.connect( position_title );
-    _title.set_font( style.connection_font );
+    _title.set_font( style.connection_font.get_family(), (style.connection_font.get_size() / Pango.SCALE) );
     position_title();
   }
 
   /* Called when the title text is done being edited */
   public void edit_title_end() {
-    if( (_title == null) || (_title.text != "") ) return;
+    if( (_title == null) || (_title.text.text != "") ) return;
     _title.resized.disconnect( position_title );
     _title = null;
   }
@@ -226,22 +290,24 @@ public class Connection : Object {
       }
       _title = null;
     } else if( _title == null ) {
-      _title = new CanvasText.with_text( da, _max_width, title );
+      _title = new CanvasText.with_text( da, title );
       _title.resized.connect( position_title );
-      _title.set_font( style.connection_font );
+      _title.set_font( style.connection_font.get_family(), (style.connection_font.get_size() / Pango.SCALE) );
       position_title();
     } else {
-      _title.text = title;
+      _title.text.set_text( title );
     }
   }
 
   /* Positions the given title according to the location of the _dragx and _dragy values */
   private void position_title() {
     if( title != null ) {
-      var width  = title.width  + ((note.length > 0) ? (style.connection_padding + 11) : 0);
-      var height = (title.height < 11) ? 11 : title.height;
-      _title.posx = _dragx - (width  / 2);
-      _title.posy = _dragy - (height / 2);
+      var width   = get_width();
+      var swidth  = sticker_width( true );
+      var theight = title_height();
+
+      _title.posx = _dragx - ((width / 2) - swidth);
+      _title.posy = _dragy - (theight / 2);
     }
   }
 
@@ -347,7 +413,7 @@ public class Connection : Object {
 
     double x, y, w, h;
     double bw     = node.style.node_borderwidth;
-    double extra  = bw + (style.connection_width / 2);
+    double extra  = bw + (style.connection_line_width / 2);
     double margin = node.style.node_margin;
 
     node.bbox( out x, out y, out w, out h );
@@ -380,7 +446,7 @@ public class Connection : Object {
   /* Returns true if the given point is within the drag handle */
   public bool within_drag_handle( double x, double y ) {
     if( mode == ConnMode.SELECTED ) {
-      if( (title == null) && (note.length == 0) ) {
+      if( (_sticker == null) && (title == null) && (note.length == 0) ) {
         return( within_handle( _dragx, _dragy, x, y ) );
       } else {
         double tx, ty, tw, th;
@@ -415,6 +481,13 @@ public class Connection : Object {
     return( false );
   }
 
+  public bool within_title_box( double x, double y ) {
+    if( (_sticker_buf == null) && (_title == null) && (note.length == 0) ) return( false );
+    double bx, by, bw, bh;
+    title_bbox( out bx, out by, out bw, out bh );
+    return( Utils.is_within_bounds( x, y, bx, by, bw, bh ) );
+  }
+
   /* Returns true if the given coordinates are within the title text area. */
   public bool within_title( double x, double y ) {
     return( (_title != null) && _title.is_within( x, y ) );
@@ -428,35 +501,48 @@ public class Connection : Object {
     return( Utils.is_within_bounds( x, y, nx, ny, nw, nh ) );
   }
 
-  /* Returns the bounding box for the stored title and note icon */
+  /* Returns true if the given coordinates lies within the connection sticker */
+  public bool within_sticker( double x, double y ) {
+    if( _sticker_buf == null ) return( false );
+    double sx, sy, sw, sh;
+    sticker_bbox( out sx, out sy, out sw, out sh );
+    return( Utils.is_within_bounds( x, y, sw, sy, sw, sh ) );
+  }
+
+  /* Returns the bounding box for the sticker, title and note icon */
   private void title_bbox( out double x, out double y, out double w, out double h ) {
     var padding = style.connection_padding ?? 0;
-    if( _title != null ) {
-      x = _title.posx - padding;
-      y = _title.posy - padding;
-      w = _title.width + (padding * 2) + ((note.length > 0) ? (padding + 11) : 0);
-      h = ((_title.height < 11) ? 11 : _title.height) + (padding * 2);
-    } else {
-      x = _dragx - (padding + 5);
-      y = _dragy - (padding + 5);
-      w = 11 + (padding * 2);
-      h = 11 + (padding * 2);
-    }
+    var width   = get_width();
+    var height  = get_height();
+
+    x = _dragx - ((width / 2) + padding);
+    y = _dragy - ((height / 2) + padding);
+    w = width  + (padding * 2);
+    h = height + (padding * 2);
   }
 
   /* Returns the positional information for where the note item is located (if it exists) */
   private void note_bbox( out double x, out double y, out double w, out double h ) {
+    var width   = get_width();
+    var nwidth  = note_width( false );
+    var nheight = note_height();
 
-    double tx, ty, tw, th;
-    var    padding = style.connection_padding ?? 0;
+    x = _dragx + (width / 2) - nwidth;
+    y = _dragy - (nheight / 2);
+    w = nwidth;
+    h = nheight;
+  }
 
-    title_bbox( out tx, out ty, out tw, out th );
+  /* Returns the position information for where the sticker item is located (if it exists) */
+  private void sticker_bbox( out double x, out double y, out double w, out double h ) {
+    var width   = get_width();
+    var swidth  = sticker_width( false );
+    var sheight = sticker_height();
 
-    x = (tx + tw) - (padding + 11);
-    y = ty + (th / 2) - 5;
-    w = 11;
-    h = 11;
-
+    x = _dragx - (width / 2);
+    y = _dragy - (sheight / 2);
+    w = swidth;
+    h = sheight;
   }
 
   /* Updates the location of the drag handle */
@@ -511,6 +597,11 @@ public class Connection : Object {
       _color.parse( c );
     }
 
+    string? sk = node->get_prop( "sticker" );
+    if( sk != null ) {
+      sticker = sk;
+    }
+
     /* Update the stored curve */
     double fx, fy, fw, fh;
     double tx, ty, tw, th;
@@ -555,10 +646,14 @@ public class Connection : Object {
       n->set_prop( "color", Utils.color_from_rgba( _color ) );
     }
 
+    if( _sticker != null ) {
+      n->set_prop( "sticker", _sticker );
+    }
+
     /* Save the style connection */
     style.save_connection( n );
 
-    n->new_text_child( null, "title", ((title != null) ? title.text : "") );
+    n->new_text_child( null, "title", ((title != null) ? title.text.text : "") );
     n->new_text_child( null, "note",  note );
 
     parent->add_child( n );
@@ -571,7 +666,7 @@ public class Connection : Object {
   */
   public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     if( search_opts[2] && (title != null) ) {
-      Utils.match_string( pattern, title.text, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), null, this, ref matches );
+      Utils.match_string( pattern, title.text.text, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), null, this, ref matches );
     }
     if( search_opts[3] ) {
       Utils.match_string( pattern, note, "<b><i>%s:</i></b>".printf( _( "Connection Note" ) ), null, this, ref matches );
@@ -636,15 +731,15 @@ public class Connection : Object {
     /* Draw the arrow */
     if( mode != ConnMode.SELECTED ) {
       if( (style.connection_arrow == "fromto") || (style.connection_arrow == "both") ) {
-        draw_arrow( ctx, style.connection_width, end_x, end_y, cx, cy );
+        draw_arrow( ctx, style.connection_line_width, end_x, end_y, cx, cy );
       }
       if( (style.connection_arrow == "tofrom") || (style.connection_arrow == "both") ) {
-        draw_arrow( ctx, style.connection_width, start_x, start_y, cx, cy );
+        draw_arrow( ctx, style.connection_line_width, start_x, start_y, cx, cy );
       }
     }
 
     /* Draw the connection title if it exists */
-    if( (title != null) || (note.length > 0) ) {
+    if( (_sticker != null) || (title != null) || (note.length > 0) ) {
 
       draw_title( ctx, theme );
 
@@ -654,7 +749,12 @@ public class Connection : Object {
       ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
       ctx.arc( dragx, dragy, RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
-      ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
+      if( mode == ConnMode.DROPPABLE ) {
+        Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
+        ctx.set_line_width( 4 );
+      } else {
+        ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
+      }
       ctx.stroke();
     }
 
@@ -679,6 +779,22 @@ public class Connection : Object {
 
   }
 
+  /* Draws the sticker associated with this connection, if necessary */
+  private void draw_sticker( Cairo.Context ctx, Theme theme ) {
+
+    if( _sticker_buf != null ) {
+
+      double x, y, w, h;
+      sticker_bbox( out x, out y, out w, out h );
+
+      /* Draw sticker */
+      cairo_set_source_pixbuf( ctx, _sticker_buf, x, y );
+      ctx.paint_with_alpha( alpha );
+
+    }
+
+  }
+
   /*
    Draws the connection title if it has been enabled.
   */
@@ -697,9 +813,20 @@ public class Connection : Object {
     Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)), (padding * 2) );
     ctx.fill();
 
+    /* Draw the droppable indicator, if necessary */
+    if( mode == ConnMode.DROPPABLE ) {
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
+      ctx.set_line_width( 4 );
+      Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)), (padding * 2) );
+      ctx.stroke();
+    }
+
+    /* Draw the sticker, if necessary */
+    draw_sticker( ctx, theme );
+
     /* Draw the text */
     if( _title != null ) {
-      _title.draw( ctx, theme, fg, alpha );
+      _title.draw( ctx, theme, fg, alpha, false );
     }
 
     /* Draw the note, if necessary */

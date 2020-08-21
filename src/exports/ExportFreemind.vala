@@ -52,7 +52,7 @@ public class ExportFreemind : Object {
     Xml.Node* n = new Xml.Node( null, "node" );
 
     n->new_prop( "ID", "id_" + node.id().to_string() );
-    n->new_prop( "TEXT", node.name.text );
+    n->new_prop( "TEXT", node.name.text.text );
     if( node.linked_node != null ) {
       n->new_prop( "LINK", "#id_" + node.linked_node.id().to_string() );
     }
@@ -60,8 +60,16 @@ public class ExportFreemind : Object {
     n->new_prop( "COLOR", Utils.color_from_rgba( node.link_color ) );
     n->new_prop( "POSITION", ((node.side == NodeSide.LEFT) ? "left" : "right") );
 
+    if( node.group ) {
+      n->add_child( export_cloud( node, da ) );
+    }
+
     n->add_child( export_edge( node, da ) );
     n->add_child( export_font( node, da ) );
+
+    if( node.note != "" ) {
+      n->add_child( export_note( node ) );
+    }
 
     /* Add arrowlinks */
     int         index = 0;
@@ -81,6 +89,12 @@ public class ExportFreemind : Object {
 
   }
 
+  /* Exports the cloud information */
+  private static Xml.Node* export_cloud( Node node, DrawArea da ) {
+    Xml.Node* n = new Xml.Node( null, "cloud" );
+    return( n );
+  }
+
   /* Exports the given node link as an edge */
   private static Xml.Node* export_edge( Node node, DrawArea da ) {
     Xml.Node* n = new Xml.Node( null, "edge" );
@@ -95,9 +109,31 @@ public class ExportFreemind : Object {
     Xml.Node* n = new Xml.Node( null, "font" );
     n->new_prop( "NAME",   node.style.node_font.get_family() );
     n->new_prop( "SIZE",   (node.style.node_font.get_size() / Pango.SCALE).to_string() );
-    n->new_prop( "BOLD",   ((node.name.text.substring( 0, 3 ) == "<b>") || (node.name.text.substring( 0, 6 ) == "<i><b>")).to_string() );
-    n->new_prop( "ITALIC", ((node.name.text.substring( 0, 3 ) == "<i>") || (node.name.text.substring( 0, 6 ) == "<b><i>")).to_string() );
+    n->new_prop( "BOLD",   ((node.name.text.text.substring( 0, 3 ) == "<b>") || (node.name.text.text.substring( 0, 6 ) == "<i><b>")).to_string() );
+    n->new_prop( "ITALIC", ((node.name.text.text.substring( 0, 3 ) == "<i>") || (node.name.text.text.substring( 0, 6 ) == "<b><i>")).to_string() );
     return( n );
+  }
+
+  private static Xml.Node* export_note( Node node ) {
+
+    Xml.Node* rc   = new Xml.Node( null, "richcontent" );
+    Xml.Node* html = new Xml.Node( null, "html" );
+    Xml.Node* head = new Xml.Node( null, "head" );
+
+    var note_html = Utils.markdown_to_html( node.note, "body" );
+    var note_doc  = Xml.Parser.parse_memory( note_html, note_html.length );
+    var body      = note_doc->get_root_element()->copy( 1 );
+
+    html->add_child( head );
+    html->add_child( body );
+
+    rc->new_prop( "TYPE", "NOTE" );
+    rc->add_child( html );
+
+    delete note_doc;
+
+    return( rc );
+
   }
 
   /* Exports the given connection as an arrowlink */
@@ -195,7 +231,7 @@ public class ExportFreemind : Object {
 
     string? t = n->get_prop( "TEXT" );
     if( t != null ) {
-      node.name.text = t;
+      node.name.text.insert_text( 0, t );
     }
 
     string? l = n->get_prop( "LINK" );
@@ -227,12 +263,13 @@ public class ExportFreemind : Object {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "node"      :  import_node( it, da, node, color_map, id_map, link_ids, to_nodes );  break;
-          case "edge"      :  import_edge( it, node );  break;
-          case "font"      :  import_font( it, node );  break;
-          case "icon"      :  break;  // Not implemented
-          case "cloud"     :  break;  // Not implemented
-          case "arrowlink" :  import_arrowlink( it, da, node, to_nodes );  break;
+          case "node"        :  import_node( it, da, node, color_map, id_map, link_ids, to_nodes );  break;
+          case "edge"        :  import_edge( it, node );  break;
+          case "font"        :  import_font( it, node );  break;
+          case "icon"        :  break;  // Not implemented
+          case "cloud"       :  import_cloud( it, node );  break;
+          case "arrowlink"   :  import_arrowlink( it, da, node, to_nodes );  break;
+          case "richcontent" :  import_richcontent( it, da, node );  break;
         }
       }
     }
@@ -283,16 +320,22 @@ public class ExportFreemind : Object {
     string? b = n->get_prop( "BOLD" );
     if( b != null ) {
       if( bool.parse( b ) ) {
-        node.name.text = "<b>" + node.name.text + "</b>";
+        node.name.text.insert_text( 0, "<b>" + node.name.text.text + "</b>" );
       }
     }
 
     string? i = n->get_prop( "ITALIC" );
     if( i != null ) {
       if( bool.parse( i ) ) {
-        node.name.text = "<i>" + node.name.text + "</i>";
+        node.name.text.insert_text( 0, "<i>" + node.name.text.text + "</i>" );
       }
     }
+
+  }
+
+  private static void import_cloud( Xml.Node* n, Node node ) {
+
+    node.group = true;
 
   }
 
@@ -332,6 +375,21 @@ public class ExportFreemind : Object {
 
     /* Add the connection to the connections list */
     da.get_connections().add_connection( conn );
+
+  }
+
+  /* Parses richcontent for a note.  If found parses the note */
+  private static void import_richcontent( Xml.Node* n, DrawArea da, Node node ) {
+
+    string? t = n->get_prop( "TYPE" );
+    if( (t != null) && (t == "NOTE") ) {
+      for( Xml.Node* it = n->children; it != null; it = it->next ) {
+        if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name.down() == "html") ) {
+          HtmlToMarkdown.reset();
+          node.note = HtmlToMarkdown.parse_xml( it ).strip();
+        }
+      }
+    }
 
   }
 

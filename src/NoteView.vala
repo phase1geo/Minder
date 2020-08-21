@@ -26,14 +26,25 @@ using Gdk;
 */
 public class NoteView : Gtk.SourceView {
 
-  private int            _last_lnum = -1;
-  private string?        _last_url  = null;
-  private Array<UrlLink> _last_urls;
-  private int            _last_x;
-  private int            _last_y;
-  private Regex?         _url_re;
-  public  SourceStyle    _srcstyle  = null;
-  public  SourceBuffer   _buffer;
+  private class UrlPos {
+    public string url;
+    public int    start;
+    public int    end;
+    public UrlPos( string u, int s, int e ) {
+      url   = u;
+      start = s;
+      end   = e;
+    }
+  }
+
+  private int           _last_lnum = -1;
+  private string?       _last_url  = null;
+  private Array<UrlPos> _last_urls;
+  private int           _last_x;
+  private int           _last_y;
+  private Regex?        _url_re;
+  public  SourceStyle   _srcstyle  = null;
+  public  SourceBuffer  _buffer;
 
   public string text {
     set {
@@ -56,6 +67,8 @@ public class NoteView : Gtk.SourceView {
 
   /* Default constructor */
   public NoteView() {
+
+    get_style_context().add_class( "textfield" );
 
     var manager       = Gtk.SourceLanguageManager.get_default();
     var language      = manager.guess_language( null, "text/markdown" );
@@ -87,12 +100,12 @@ public class NoteView : Gtk.SourceView {
     set_insert_spaces_instead_of_tabs( true );
 
     try {
-      _url_re = new Regex( UrlLinks.url_pattern );
+      _url_re = new Regex( Utils.url_re );
     } catch( RegexError e ) {
       _url_re = null;
     }
 
-    _last_urls = new Array<UrlLink>();
+    _last_urls = new Array<UrlPos>();
 
   }
 
@@ -129,7 +142,7 @@ public class NoteView : Gtk.SourceView {
       while( _url_re.match_all_full( line, -1, start, 0, out match_info ) ) {
         int s, e;
         match_info.fetch_pos( 0, out s, out e );
-        _last_urls.append_val( new UrlLink( line.substring( s, (e - s) ), s, e, true ) );
+        _last_urls.append_val( new UrlPos( line.substring( s, (e - s) ), s, e ) );
         start = e;
       }
     } catch( RegexError e ) {}
@@ -140,7 +153,7 @@ public class NoteView : Gtk.SourceView {
     var offset = cursor.get_line_offset();
     for( int i=0; i<_last_urls.length; i++ ) {
       var link = _last_urls.index( i );
-      if( (link.spos <= offset) && (offset < link.epos) ) {
+      if( (link.start <= offset) && (offset < link.end) ) {
         _last_url = link.url;
         return( true );
       }

@@ -24,54 +24,18 @@ using Gdk;
 
 public enum StyleAffects {
 
-  ALL = 0,         // Applies changes to all nodes and connections
-  SELECTED,        // Applies changes to all selected nodes
-  SEP0,            // Indicates a separator (not a value)
-  CURRENT,         // Applies changes to the current node/connection
-  CURRTREE,        // Applies changes to the current tree
-  CURRSUBTREE,     // Applies changes to the current nodes and all descendants
-  SEP1,            // Indicates a separator (not a value)
-  LEVEL0,          // Applies changes to all root nodes
-  LEVEL1,          // Applies changes to all level-1 nodes
-  LEVEL2,          // Applies changes to all level-2 nodes
-  LEVEL3,          // Applies changes to all level-2 nodes
-  LEVEL4,          // Applies changes to all level-2 nodes
-  LEVEL5,          // Applies changes to all level-2 nodes
-  LEVEL6,          // Applies changes to all level-2 nodes
-  LEVEL7,          // Applies changes to all level-2 nodes
-  LEVEL8,          // Applies changes to all level-2 nodes
-  LEVEL9;          // Applies changes to all level-2 nodes
+  ALL = 0,               // Applies changes to all nodes and connections
+  SELECTED_NODES,        // Applies changes to selected nodes
+  SELECTED_CONNECTIONS;  // Applies changes to selected connections
 
   /* Displays the label to display for this enumerated value */
   public string label() {
     switch( this ) {
-      case ALL         :  return( _( "All" ) );
-      case SELECTED    :  return( _( "Selected" ) );
-      case CURRENT     :  return( _( "Current" ) );
-      case CURRTREE    :  return( _( "Current Tree" ) );
-      case CURRSUBTREE :  return( _( "Current Node + Descendants" ) );
-      case LEVEL0      :  return( _( "Root Nodes" ) );
-      case LEVEL1      :  return( _( "Level 1 Nodes" ) );
-      case LEVEL2      :  return( _( "Level 2 Nodes" ) );
-      case LEVEL3      :  return( _( "Level 3 Nodes" ) );
-      case LEVEL4      :  return( _( "Level 4 Nodes" ) );
-      case LEVEL5      :  return( _( "Level 5 Nodes" ) );
-      case LEVEL6      :  return( _( "Level 6 Nodes" ) );
-      case LEVEL7      :  return( _( "Level 7 Nodes" ) );
-      case LEVEL8      :  return( _( "Level 8 Nodes" ) );
-      case LEVEL9      :  return( _( "Level 9 Nodes" ) );
+      case ALL                  :  return( _( "All" ) );
+      case SELECTED_NODES       :  return( _( "Selected Nodes" ) );
+      case SELECTED_CONNECTIONS :  return( _( "Selected Connections" ) );
     }
     return( "Unknown" );
-  }
-
-  /* Returns true if this is a separator */
-  public bool is_separator() {
-    return( (this == SEP0) || (this == SEP1) );
-  }
-
-  /* Returns the level associated with this value */
-  public uint level() {
-    return( (uint)this - (uint)LEVEL0 );
   }
 
 }
@@ -80,6 +44,7 @@ public class StyleInspector : Box {
 
   private DrawArea?                  _da = null;
   private GLib.Settings              _settings;
+  private Scale                      _branch_margin;
   private Granite.Widgets.ModeButton _link_types;
   private Scale                      _link_width;
   private Switch                     _link_arrow;
@@ -90,14 +55,15 @@ public class StyleInspector : Box {
   private Scale                      _node_margin;
   private Scale                      _node_padding;
   private FontButton                 _node_font;
+  private SpinButton                 _node_width;
   private Switch                     _node_markup;
   private Image                      _conn_dash;
   private Image                      _conn_arrow;
-  private Scale                      _conn_width;
+  private Scale                      _conn_lwidth;
   private Scale                      _conn_padding;
   private FontButton                 _conn_font;
+  private SpinButton                 _conn_twidth;
   private StyleAffects               _affects;
-  private Array<Gtk.MenuItem>        _affect_items;
   private Label                      _affects_label;
   private Box                        _branch_group;
   private Box                        _link_group;
@@ -105,6 +71,7 @@ public class StyleInspector : Box {
   private Box                        _conn_group;
   private Expander                   _conn_exp;
   private bool                       _change_add = true;
+  private bool                       _ignore     = false;
 
   public static Styles styles = new Styles();
 
@@ -163,39 +130,13 @@ public class StyleInspector : Box {
 
     var box  = new Box( Orientation.HORIZONTAL, 10 );
     var lbl  = new Label( Utils.make_title( _( "Changes affect:" ) ) );
-    var mb   = new MenuButton();
-    var menu = new Gtk.Menu();
+    lbl.use_markup = true;
 
     _affects_label = new Label( "" );
 
-    lbl.use_markup = true;
-
-    mb.add( _affects_label );
-    mb.popup = menu;
-
-    /* Allocate memory for menu items */
-    _affect_items = new Array<Gtk.MenuItem>();
-
-    /* Add all of the enumerations */
-    EnumClass eclass = (EnumClass)typeof( StyleAffects ).class_ref();
-    for( int i=0; i<eclass.n_values; i++ ) {
-      var affect = (StyleAffects)eclass.get_value( i ).value;
-      if( affect.is_separator() ) {
-        var mi = new Gtk.SeparatorMenuItem();
-        menu.add( mi );
-        _affect_items.append_val( mi );
-      } else {
-        var mi = new Gtk.MenuItem.with_label( affect.label() );
-        menu.add( mi );
-        mi.activate.connect(() => { set_affects( affect ); });
-        _affect_items.append_val( mi );
-      }
-    }
-    menu.show_all();
-
     /* Pack the menubutton box */
-    box.pack_start( lbl, false, false );
-    box.pack_start( mb,  true,  true );
+    box.pack_start( lbl,            false, false );
+    box.pack_start( _affects_label, true,  true );
 
     return( box );
 
@@ -216,11 +157,14 @@ public class StyleInspector : Box {
     });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
+    cbox.homogeneous  = true;
     cbox.border_width = 10;
 
-    var branch_type = create_branch_type_ui();
+    var branch_type   = create_branch_type_ui();
+    var branch_margin = create_branch_margin_ui();
 
-    cbox.pack_start( branch_type, false, true );
+    cbox.pack_start( branch_type,   false, false );
+    cbox.pack_start( branch_margin, false, false );
 
     exp.add( cbox );
 
@@ -237,7 +181,7 @@ public class StyleInspector : Box {
     var box = new Box( Orientation.HORIZONTAL, 0 );
     box.homogeneous = true;
 
-    var lbl = new Label( _( "Branch Style" ) );
+    var lbl = new Label( _( "Style" ) );
     lbl.xalign = (float)0;
 
     /* Create the line types mode button */
@@ -281,6 +225,46 @@ public class StyleInspector : Box {
     return( false );
   }
 
+  private Box create_branch_margin_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Margin" ) );
+    lbl.xalign = (float)0;
+
+    _branch_margin = new Scale.with_range( Orientation.HORIZONTAL, 20, 150, 10 );
+    _branch_margin.draw_value = true;
+    _branch_margin.change_value.connect( branch_margin_changed );
+    _branch_margin.button_release_event.connect( branch_margin_released );
+
+    box.pack_start( lbl,          false, true );
+    box.pack_end(   _branch_margin, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the node margin value is changed */
+  private bool branch_margin_changed( ScrollType scroll, double value ) {
+    if( (int)value > 150 ) {
+      return( false );
+    }
+    var margin = new UndoStyleBranchMargin( _affects, (int)value, _da );
+    if( _change_add ) {
+      _da.undo_buffer.add_item( margin );
+      _change_add = false;
+    } else {
+      _da.undo_buffer.replace_item( margin );
+    }
+    return( false );
+  }
+
+  private bool branch_margin_released( EventButton e ) {
+    _change_add = true;
+    return( false );
+  }
+
   /* Adds the options to manipulate line options */
   private Box create_link_ui() {
 
@@ -296,15 +280,16 @@ public class StyleInspector : Box {
     });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
+    cbox.homogeneous  = true;
     cbox.border_width = 10;
 
     var link_dash  = create_link_dash_ui();
     var link_width = create_link_width_ui();
     var link_arrow = create_link_arrow_ui();
 
-    cbox.pack_start( link_dash,  false, true );
-    cbox.pack_start( link_width, false, true );
-    cbox.pack_start( link_arrow, false, true );
+    cbox.pack_start( link_dash,  false, false );
+    cbox.pack_start( link_width, false, false );
+    cbox.pack_start( link_arrow, false, false );
 
     exp.add( cbox );
 
@@ -444,6 +429,7 @@ public class StyleInspector : Box {
     });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
+    cbox.homogeneous  = true;
     cbox.border_width = 10;
 
     var node_border      = create_node_border_ui();
@@ -452,15 +438,17 @@ public class StyleInspector : Box {
     var node_margin      = create_node_margin_ui();
     var node_padding     = create_node_padding_ui();
     var node_font        = create_node_font_ui();
+    var node_width       = create_node_width_ui();
     var node_markup      = create_node_markup_ui();
 
-    cbox.pack_start( node_border,      false, true );
-    cbox.pack_start( node_borderwidth, false, true );
-    cbox.pack_start( node_fill,        false, true );
-    cbox.pack_start( node_margin,      false, true );
-    cbox.pack_start( node_padding,     false, true );
-    cbox.pack_start( node_font,        false, true );
-    cbox.pack_start( node_markup,      false, true );
+    cbox.pack_start( node_border,      false, false );
+    cbox.pack_start( node_borderwidth, false, false );
+    cbox.pack_start( node_fill,        false, false );
+    cbox.pack_start( node_margin,      false, false );
+    cbox.pack_start( node_padding,     false, false );
+    cbox.pack_start( node_font,        false, false );
+    cbox.pack_start( node_width,       false, false );
+    cbox.pack_start( node_markup,      false, false );
 
     exp.add( cbox );
 
@@ -569,7 +557,7 @@ public class StyleInspector : Box {
   private Box create_node_fill_ui() {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Fill With Link Color") );
+    var lbl = new Label( _( "Color Fill") );
     lbl.xalign = (float)0;
 
     _node_fill = new Switch();
@@ -601,7 +589,7 @@ public class StyleInspector : Box {
     var lbl = new Label( _( "Margin" ) );
     lbl.xalign = (float)0;
 
-    _node_margin = new Scale.with_range( Orientation.HORIZONTAL, 5, 20, 1 );
+    _node_margin = new Scale.with_range( Orientation.HORIZONTAL, 1, 20, 1 );
     _node_margin.draw_value = true;
     _node_margin.change_value.connect( node_margin_changed );
     _node_margin.button_release_event.connect( node_margin_released );
@@ -683,6 +671,13 @@ public class StyleInspector : Box {
 
     _node_font = new FontButton();
     _node_font.use_font = true;
+    _node_font.show_style = false;
+    _node_font.set_filter_func( (family, face) => {
+      var fd     = face.describe();
+      var weight = fd.get_weight();
+      var style  = fd.get_style();
+      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+    });
     _node_font.font_set.connect(() => {
       var family = _node_font.get_font_family().get_name();
       var size   = _node_font.get_font_size();
@@ -691,6 +686,29 @@ public class StyleInspector : Box {
 
     box.pack_start( lbl,      false, true );
     box.pack_end( _node_font, false, true );
+
+    return( box );
+
+  }
+
+  /* Creates the node width selector */
+  private Box create_node_width_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Width" ) );
+    lbl.xalign = (float)0;
+
+    _node_width = new SpinButton.with_range( 200, 1000, 100 );
+    _node_width.set_value( _settings.get_int( "style-node-width" ) );
+    _node_width.value_changed.connect(() => {
+      if( !_ignore ) {
+        var width = (int)_node_width.get_value();
+        _da.undo_buffer.replace_item( new UndoStyleNodeWidth( _affects, width, _da ) );
+      }
+    });
+
+    box.pack_start( lbl,       false, true );
+    box.pack_end( _node_width, false, true );
 
     return( box );
 
@@ -737,19 +755,22 @@ public class StyleInspector : Box {
     });
 
     var cbox = new Box( Orientation.VERTICAL, 10 );
+    cbox.homogeneous  = true;
     cbox.border_width = 10;
 
     var conn_dash    = create_connection_dash_ui();
     var conn_arrow   = create_connection_arrow_ui();
-    var conn_width   = create_connection_width_ui();
+    var conn_lwidth  = create_connection_line_width_ui();
     var conn_padding = create_connection_padding_ui();
     var conn_font    = create_connection_font_ui();
+    var conn_twidth  = create_connection_title_width_ui();
 
-    cbox.pack_start( conn_dash,    false, true );
-    cbox.pack_start( conn_arrow,   false, true );
-    cbox.pack_start( conn_width,   false, true );
-    cbox.pack_start( conn_padding, false, true );
-    cbox.pack_start( conn_font,    false, true );
+    cbox.pack_start( conn_dash,    false, false );
+    cbox.pack_start( conn_arrow,   false, false );
+    cbox.pack_start( conn_lwidth,  false, false );
+    cbox.pack_start( conn_padding, false, false );
+    cbox.pack_start( conn_font,    false, false );
+    cbox.pack_start( conn_twidth,  false, false );
 
     _conn_exp.add( cbox );
 
@@ -838,7 +859,7 @@ public class StyleInspector : Box {
   }
 
   /* Create widget for handling the width of a connection */
-  private Box create_connection_width_ui() {
+  private Box create_connection_line_width_ui() {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
     box.homogeneous = true;
@@ -846,31 +867,31 @@ public class StyleInspector : Box {
     var lbl = new Label( _( "Line Width" ) );
     lbl.xalign = (float)0;
 
-    _conn_width = new Scale.with_range( Orientation.HORIZONTAL, 1, 8, 1 );
-    _conn_width.draw_value = false;
+    _conn_lwidth = new Scale.with_range( Orientation.HORIZONTAL, 1, 8, 1 );
+    _conn_lwidth.draw_value = false;
 
     for( int i=2; i<=8; i++ ) {
       if( (i % 2) == 0 ) {
-        _conn_width.add_mark( i, PositionType.BOTTOM, "%d".printf( i ) );
+        _conn_lwidth.add_mark( i, PositionType.BOTTOM, "%d".printf( i ) );
       } else {
-        _conn_width.add_mark( i, PositionType.BOTTOM, null );
+        _conn_lwidth.add_mark( i, PositionType.BOTTOM, null );
       }
     }
 
-    _conn_width.change_value.connect( connection_width_changed );
-    _conn_width.button_release_event.connect( connection_width_released );
+    _conn_lwidth.change_value.connect( connection_line_width_changed );
+    _conn_lwidth.button_release_event.connect( connection_line_width_released );
 
-    box.pack_start( lbl,         false, true );
-    box.pack_end(   _conn_width, false, true );
+    box.pack_start( lbl,          false, true );
+    box.pack_end(   _conn_lwidth, false, true );
 
     return( box );
 
   }
 
   /* Called whenever the user changes the link width value */
-  private bool connection_width_changed( ScrollType scroll, double value ) {
+  private bool connection_line_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
-    var width = new UndoStyleConnectionWidth( _affects, (int)value, _da );
+    var width = new UndoStyleConnectionLineWidth( _affects, (int)value, _da );
     if( _change_add ) {
       _da.undo_buffer.add_item( width );
       _change_add = false;
@@ -880,7 +901,7 @@ public class StyleInspector : Box {
     return( false );
   }
 
-  private bool connection_width_released( EventButton e ) {
+  private bool connection_line_width_released( EventButton e ) {
     _change_add = true;
     return( false );
   }
@@ -930,11 +951,18 @@ public class StyleInspector : Box {
   private Box create_connection_font_ui() {
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( _( "Font" ) );
+    var lbl = new Label( _( "Title Font" ) );
     lbl.xalign = (float)0;
 
     _conn_font = new FontButton();
     _conn_font.use_font = true;
+    _conn_font.show_style = false;
+    _conn_font.set_filter_func( (family, face) => {
+      var fd     = face.describe();
+      var weight = fd.get_weight();
+      var style  = fd.get_style();
+      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+    });
     _conn_font.font_set.connect(() => {
       var family = _conn_font.get_font_family().get_name();
       var size   = _conn_font.get_font_size();
@@ -948,8 +976,32 @@ public class StyleInspector : Box {
 
   }
 
+  /* Creates the connection title width selector */
+  private Box create_connection_title_width_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Title Width" ) );
+    lbl.xalign = (float)0;
+
+    _conn_twidth = new SpinButton.with_range( 100, 400, 50 );
+    _conn_twidth.set_value( _settings.get_int( "style-connection-title-width" ) );
+    _conn_twidth.value_changed.connect(() => {
+      if( !_ignore ) {
+        var width = (int)_conn_twidth.get_value();
+        _da.undo_buffer.replace_item( new UndoStyleConnectionTitleWidth( _affects, width, _da ) );
+      }
+    });
+
+    box.pack_start( lbl,        false, true );
+    box.pack_end( _conn_twidth, false, true );
+
+    return( box );
+
+  }
+
   /* Sets the affects value and save the change to the settings */
   private void set_affects( StyleAffects affects ) {
+    var selected         = _da.get_selections();
     _affects             = affects;
     _affects_label.label = affects.label();
     switch( _affects ) {
@@ -961,60 +1013,20 @@ public class StyleInspector : Box {
         _conn_group.visible   = true;
         _conn_exp.expanded    = _settings.get_boolean( "style-connection-options-expanded" );
         break;
-      case StyleAffects.SELECTED :
-        update_ui_with_style( _da.get_selected_nodes().index( 0 ).style );
+      case StyleAffects.SELECTED_NODES :
+        update_ui_with_style( selected.nodes().index( 0 ).style );
         _branch_group.visible = true;
         _link_group.visible   = true;
         _node_group.visible   = true;
         _conn_group.visible   = false;
         break;
-      case StyleAffects.LEVEL0  :
-      case StyleAffects.LEVEL1  :
-      case StyleAffects.LEVEL2  :
-      case StyleAffects.LEVEL3  :
-      case StyleAffects.LEVEL4  :
-      case StyleAffects.LEVEL5  :
-      case StyleAffects.LEVEL6  :
-      case StyleAffects.LEVEL7  :
-      case StyleAffects.LEVEL8  :
-      case StyleAffects.LEVEL9  :
-        update_ui_with_style( styles.get_style_for_level( _affects.level(), null ) );
-        _branch_group.visible = true;
-        _link_group.visible   = (_affects != StyleAffects.LEVEL0);
-        _node_group.visible   = true;
-        _conn_group.visible   = false;
-        break;
-      case StyleAffects.CURRENT :
-        var node = _da.get_current_node();
-        var conn = _da.get_current_connection();
-        if( node != null ) {
-          update_ui_with_style( node.style );
-          _branch_group.visible = true;
-          _link_group.visible   = true;
-          _node_group.visible   = true;
-          _conn_group.visible   = false;
-        } else if( conn != null ) {
-          update_ui_with_style( conn.style );
-          _branch_group.visible = false;
-          _link_group.visible   = false;
-          _node_group.visible   = false;
-          _conn_group.visible   = true;
-          _conn_exp.expanded    = true;
-        }
-        break;
-      case StyleAffects.CURRTREE :
-        update_ui_with_style( _da.get_current_node().get_root().style );
-        _branch_group.visible = true;
-        _link_group.visible   = true;
-        _node_group.visible   = true;
-        _conn_group.visible   = false;
-        break;
-      case StyleAffects.CURRSUBTREE :
-        update_ui_with_style( _da.get_current_node().style );
-        _branch_group.visible = true;
-        _link_group.visible   = true;
-        _node_group.visible   = true;
-        _conn_group.visible   = false;
+      case StyleAffects.SELECTED_CONNECTIONS :
+        update_ui_with_style( selected.connections().index( 0 ).style );
+        _branch_group.visible = false;
+        _link_group.visible   = false;
+        _node_group.visible   = false;
+        _conn_group.visible   = true;
+        _conn_exp.expanded    = true;
         break;
     }
   }
@@ -1037,50 +1049,14 @@ public class StyleInspector : Box {
   private void update_link_types_state() {
     bool sensitive = false;
     switch( _affects ) {
-      case StyleAffects.ALL     :
+      case StyleAffects.ALL            :
+      case StyleAffects.SELECTED_NODES :
         for( int i=0; i<_da.get_nodes().length; i++ ) {
           if( !_da.get_nodes().index( i ).is_leaf() ) {
             sensitive = true;
             break;
           }
         }
-        break;
-      case StyleAffects.SELECTED :
-        for( int i=0; i<_da.get_selected_nodes().length; i++ ) {
-          if( !_da.get_selected_nodes().index( i ).is_leaf() ) {
-            sensitive = true;
-            break;
-          }
-        }
-        break;
-      case StyleAffects.LEVEL0  :
-      case StyleAffects.LEVEL1  :
-      case StyleAffects.LEVEL2  :
-      case StyleAffects.LEVEL3  :
-      case StyleAffects.LEVEL4  :
-      case StyleAffects.LEVEL5  :
-      case StyleAffects.LEVEL6  :
-      case StyleAffects.LEVEL7  :
-      case StyleAffects.LEVEL8  :
-      case StyleAffects.LEVEL9  :
-        for( int i=0; i<_da.get_nodes().length; i++ ) {
-          if( check_level_for_branches( _da.get_nodes().index( i ), (1 << (int)_affects.level()), 0 ) ) {
-            sensitive = true;
-            break;
-          }
-        }
-        break;
-      case StyleAffects.CURRENT :
-        var nodes = _da.get_selected_nodes();
-        for( int i=0; i<nodes.length; i++ ) {
-          sensitive |= !nodes.index( i ).is_leaf();
-        }
-        break;
-      case StyleAffects.CURRTREE :
-        sensitive = !_da.get_current_node().get_root().is_leaf();
-        break;
-      case StyleAffects.CURRSUBTREE :
-        sensitive = !_da.get_current_node().is_leaf();
         break;
     }
     _link_types.set_sensitive( sensitive );
@@ -1129,6 +1105,8 @@ public class StyleInspector : Box {
 
   /* Update the user interface elements to match the selected level */
   private void update_ui_with_style( Style style ) {
+    _ignore = true;
+    _branch_margin.set_value( (double)style.branch_margin );
     update_link_types_with_style( style );
     update_link_dashes_with_style( style );
     update_node_borders_with_style( style );
@@ -1141,11 +1119,14 @@ public class StyleInspector : Box {
     _node_margin.set_value( (double)style.node_margin );
     _node_padding.set_value( (double)style.node_padding );
     _node_font.set_font( style.node_font.to_string() );
+    _node_width.set_value( (float)style.node_width );
     _node_markup.set_active( (bool)style.node_markup );
     _conn_arrow.surface = Connection.make_arrow_icon( style.connection_arrow );
-    _conn_width.set_value( (double)style.connection_width );
+    _conn_lwidth.set_value( (double)style.connection_line_width );
     _conn_font.set_font( style.connection_font.to_string() );
+    _conn_twidth.set_value( style.connection_title_width );
     _conn_padding.set_value( (double)style.connection_padding );
+    _ignore = false;
   }
 
   /* Called whenever the current node changes */
@@ -1160,34 +1141,11 @@ public class StyleInspector : Box {
 
   /* Called whenever the current node or connection changes */
   private void handle_ui_changed() {
-    var nodes = _da.get_selected_nodes().length;
-    var conns = _da.get_selected_connections().length;
-    for( int i=0; i<_affect_items.length; i++ ) {
-      var entry = _affect_items.index( i );
-      switch( i ) {
-        case StyleAffects.SEP0        :
-        case StyleAffects.CURRENT     :  entry.visible = (nodes > 0) || (conns > 0);  break;
-        case StyleAffects.CURRTREE    :
-        case StyleAffects.CURRSUBTREE :
-        case StyleAffects.SEP1        :
-        case StyleAffects.LEVEL0      :
-        case StyleAffects.LEVEL1      :
-        case StyleAffects.LEVEL2      :
-        case StyleAffects.LEVEL3      :
-        case StyleAffects.LEVEL4      :
-        case StyleAffects.LEVEL5      :
-        case StyleAffects.LEVEL6      :
-        case StyleAffects.LEVEL7      :
-        case StyleAffects.LEVEL8      :
-        case StyleAffects.LEVEL9      :  entry.visible = (nodes == 1);  break;
-      }
-    }
-    if( (nodes > 0) || (conns > 0) ) {
-      if( (nodes != 1) && (_affects > StyleAffects.CURRENT) ) {
-        set_affects( StyleAffects.CURRENT );
-      } else if( nodes > 1 ) {
-        set_affects( StyleAffects.SELECTED );
-      }
+    var selected = _da.get_selections();
+    if( selected.num_nodes() > 0 ) {
+      set_affects( StyleAffects.SELECTED_NODES );
+    } else if( selected.num_connections() > 0 ) {
+      set_affects( StyleAffects.SELECTED_CONNECTIONS );
     } else {
       set_affects( StyleAffects.ALL );
     }

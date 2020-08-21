@@ -34,8 +34,10 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _task;
   Gtk.MenuItem _note;
   Gtk.MenuItem _image;
+  Gtk.MenuItem _sticker;
   Gtk.MenuItem _link;
   Gtk.MenuItem _conn;
+  Gtk.MenuItem _group;
   Gtk.MenuItem _link_color;
   Gtk.MenuItem _parent_link_color;
   Gtk.MenuItem _fold;
@@ -86,7 +88,7 @@ public class NodeMenu : Gtk.Menu {
     _delonly = new Gtk.MenuItem.with_label( _( "Delete Single Node" ) );
     _delonly.activate.connect( delete_node_only );
 
-    _edit = new Gtk.MenuItem.with_label( _( "Edit…" ) );
+    _edit = new Gtk.MenuItem.with_label( _( "Edit Text…" ) );
     _edit.activate.connect( edit_node );
     Utils.add_accel_label( _edit, 'e', 0 );
 
@@ -99,12 +101,19 @@ public class NodeMenu : Gtk.Menu {
     _image = new Gtk.MenuItem.with_label( _( "Add Image" ) );
     _image.activate.connect( change_image );
 
+    _sticker = new Gtk.MenuItem.with_label( _( "Remove Sticker" ) );
+    _sticker.activate.connect( remove_sticker );
+
     _link = new Gtk.MenuItem.with_label( _( "Add Node Link" ) );
     _link.activate.connect( change_link );
 
     _conn = new Gtk.MenuItem.with_label( _( "Add Connection" ) );
     _conn.activate.connect( add_connection );
     Utils.add_accel_label( _conn, 'x', 0 );
+
+    _group = new Gtk.MenuItem.with_label( _( "Add Group" ) );
+    _group.activate.connect( add_group );
+    Utils.add_accel_label( _group, 'g', 0 );
 
     _link_color = new Gtk.MenuItem.with_label( _( "Link Color" ) );
     var link_color_menu = new Gtk.Menu();
@@ -218,8 +227,10 @@ public class NodeMenu : Gtk.Menu {
     add( _task );
     add( _note );
     add( _image );
+    add( _sticker );
     add( _link );
     add( _conn );
+    add( _group );
     add( _link_color );
     add( _fold );
     add( new SeparatorMenuItem() );
@@ -348,6 +359,7 @@ public class NodeMenu : Gtk.Menu {
     _selchild.set_sensitive( _da.children_selectable() );
     _selparent.set_sensitive( _da.parent_selectable() );
     _sellink.set_sensitive( node_has_link() );
+    _sticker.set_sensitive( current.sticker != null );
 
     /* Set the menu item labels */
     _task.label  = node_is_task()   ? _( "Remove Task" )      : _( "Add Task" );
@@ -446,6 +458,15 @@ public class NodeMenu : Gtk.Menu {
     _da.current_changed( _da );
   }
 
+  /* Removes the sticker from the node */
+  private void remove_sticker() {
+    var current = _da.get_current_node();
+    _da.undo_buffer.add_item( new UndoNodeStickerRemove( current ) );
+    current.sticker = null;
+    _da.queue_draw();
+    _da.changed();
+  }
+
   /* Changes the node link of the currently selected node */
   private void change_link() {
     if( node_has_link() ) {
@@ -458,6 +479,10 @@ public class NodeMenu : Gtk.Menu {
   /* Changes the connection of the currently selected node */
   private void add_connection() {
     _da.start_connection( false, false );
+  }
+
+  private void add_group() {
+    _da.add_group();
   }
 
   /* Fold the currently selected node */

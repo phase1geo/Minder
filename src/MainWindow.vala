@@ -71,6 +71,8 @@ public class MainWindow : ApplicationWindow {
   private bool              _prefer_dark    = false;
   private bool              _debug          = false;
   private ThemeEditor       _themer;
+  private Label             _scale_lbl;
+  private int               _text_size;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",          action_save },
@@ -91,6 +93,11 @@ public class MainWindow : ApplicationWindow {
   private delegate void ChangedFunc();
 
   public Themes themes { set; get; default = new Themes(); }
+  public GLib.Settings settings {
+    get {
+      return( _settings );
+    }
+  }
 
   public signal void canvas_changed( DrawArea? da );
 
@@ -162,7 +169,7 @@ public class MainWindow : ApplicationWindow {
 
     var save_btn = new Button.from_icon_name( (on_elementary ? "document-save-as" : "document-save-as-symbolic"), icon_size );
     save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "<Control><Shift>s" ) );
-    open_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
+    save_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
@@ -211,7 +218,19 @@ public class MainWindow : ApplicationWindow {
       show_properties( "map", false );
     } else if( _settings.get_boolean( "style-properties-shown" ) ) {
       show_properties( "style", false );
+    } else if( _settings.get_boolean( "sticker-properties-shown" ) ) {
+      show_properties( "sticker", false );
     }
+
+    /* Look for any changes to the settings */
+    _text_size = settings.get_int( "text-field-font-size" );
+    settings.changed.connect(() => {
+      var text_size = settings.get_int( "text-field-font-size" );
+      if( _text_size != text_size ) {
+        get_current_da( "settings changed" ).update_css();
+        _text_size = text_size;
+      }
+    });
 
   }
 
@@ -224,7 +243,7 @@ public class MainWindow : ApplicationWindow {
   private void tab_changed( Tab tab ) {
     var bin = (Gtk.Bin)tab.page;
     var da  = bin.get_child() as DrawArea;
-    do_buffer_changed( da );
+    do_buffer_changed( da.undo_buffer );
     on_current_changed( da );
     update_title( da );
     canvas_changed( da );
@@ -300,6 +319,27 @@ public class MainWindow : ApplicationWindow {
 
   }
 
+  /*
+   Checks to see if any other tab contains the given filename.  If the filename
+   is already found, refresh the tab with the file contents and make it the current
+   tab; otherwise, add the new tab and populate it.
+  */
+  private DrawArea add_tab_conditionally( string fname, TabAddReason reason ) {
+
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      if( da.get_doc().filename == fname ) {
+        da.initialize_for_open();
+        _nb.current = tab;
+        return( da );
+      }
+    }
+
+    return( add_tab( fname, reason ) );
+
+  }
+
   /* Returns the current drawing area */
   public DrawArea? get_current_da( string? caller = null ) {
     if( _debug && (caller != null) ) {
@@ -340,6 +380,7 @@ public class MainWindow : ApplicationWindow {
     app.set_accels_for_action( "win.action_save",        { "<Control>s" } );
     app.set_accels_for_action( "win.action_quit",        { "<Control>q" } );
     app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
+    app.set_accels_for_action( "win.action_zoom_fit",    { "<Control>1" } );
     app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
     app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
     app.set_accels_for_action( "win.action_export",      { "<Control>e" } );
@@ -360,9 +401,9 @@ public class MainWindow : ApplicationWindow {
     /* Create zoom menu popover */
     Box box = new Box( Orientation.VERTICAL, 5 );
 
-    var marks     = DrawArea.get_scale_marks();
-    var scale_lbl = new Label( _( "Zoom to Percent" ) );
-    _zoom_scale   = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 );
+    var marks   = DrawArea.get_scale_marks();
+    _scale_lbl  = new Label( _( "Zoom to Percent" ) );
+    _zoom_scale = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 );
     foreach (double mark in marks) {
       _zoom_scale.add_mark( mark, PositionType.BOTTOM, null );
     }
@@ -392,7 +433,7 @@ public class MainWindow : ApplicationWindow {
     actual.action_name = "win.action_zoom_actual";
 
     box.margin = 5;
-    box.pack_start( scale_lbl,   false, true );
+    box.pack_start( _scale_lbl,  false, true );
     box.pack_start( _zoom_scale, false, true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
     box.pack_start( _zoom_in,    false, true );
@@ -675,6 +716,7 @@ public class MainWindow : ApplicationWindow {
     _stack.set_transition_duration( 500 );
     _stack.add_titled( new CurrentInspector( this ), "current", _("Current") );
     _stack.add_titled( new StyleInspector( this, _settings ), "style", _("Style") );
+    _stack.add_titled( new StickerInspector( this, _settings ), "sticker", _("Stickers") );
     _stack.add_titled( new MapInspector( this, _settings ),  "map",  _("Map") );
 
     _stack.add_events( EventMask.KEY_PRESS_MASK );
@@ -684,8 +726,9 @@ public class MainWindow : ApplicationWindow {
     _stack.notify.connect((ps) => {
       if( ps.name == "visible-child" ) {
         _settings.set_boolean( "current-properties-shown", (_stack.visible_child_name == "current") );
-        _settings.set_boolean( "map-properties-shown",  (_stack.visible_child_name == "map") );
         _settings.set_boolean( "style-properties-shown", (_stack.visible_child_name == "style" ) );
+        _settings.set_boolean( "sticker-properties-shown", (_stack.visible_child_name == "sticker" ) );
+        _settings.set_boolean( "map-properties-shown",  (_stack.visible_child_name == "map") );
       }
     });
 
@@ -816,6 +859,11 @@ public class MainWindow : ApplicationWindow {
     filter.add_pattern( "*.pminder" );
     dialog.add_filter( filter );
 
+    filter = new FileFilter();
+    filter.set_filter_name( _( "XMind 8" ) );
+    filter.add_pattern( "*.xmind" );
+    dialog.add_filter( filter );
+
     if( dialog.run() == ResponseType.ACCEPT ) {
       open_file( dialog.get_filename() );
     }
@@ -830,40 +878,46 @@ public class MainWindow : ApplicationWindow {
       return( false );
     }
     if( fname.has_suffix( ".minder" ) ) {
-      var da = add_tab( fname, TabAddReason.OPEN );
+      var da = add_tab_conditionally( fname, TabAddReason.OPEN );
       update_title( da );
       da.get_doc().load();
       return( true );
     } else if( fname.has_suffix( ".opml" ) ) {
       var new_fname = fname.substring( 0, (fname.length - 5) ) + ".minder";
-      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportOPML.import( fname, da );
       return( true );
     } else if( fname.has_suffix( ".mm" ) ) {
       var new_fname = fname.substring( 0, (fname.length - 3) ) + ".minder";
-      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportFreeplane.import( fname, da );
       return( true );
     } else if( fname.has_suffix( ".txt" ) ) {
       var new_fname = fname.substring( 0, (fname.length - 4) ) + ".minder";
-      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportText.import( fname, da );
     } else if( fname.has_suffix( ".outliner" ) ) {
       var new_fname = fname.substring( 0, (fname.length - 9) ) + ".minder";
-      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportOutliner.import( fname, da );
     } else if( fname.has_suffix( ".pminder" ) ) {
       var new_fname = fname.substring( 0, (fname.length - 8) ) + ".minder";
-      var da        = add_tab( new_fname, TabAddReason.IMPORT );
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportPortableMinder.import( fname, da );
+    } else if( fname.has_suffix( ".xmind" ) ) {
+      var new_fname = fname.substring( 0, (fname.length - 6) ) + ".minder";
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
+      update_title( da );
+      ExportXMind.import( fname, da );
     }
     return( false );
   }
+
 
   /* Perform an undo action */
   public void do_undo() {
@@ -896,11 +950,11 @@ public class MainWindow : ApplicationWindow {
    Called whenever the undo buffer changes state.  Updates the state of
    the undo and redo buffer buttons.
   */
-  public void do_buffer_changed( DrawArea da ) {
-    _undo_btn.set_sensitive( da.undo_buffer.undoable() );
-    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( da.undo_buffer.undo_tooltip(), "<Control>z" ) );
-    _redo_btn.set_sensitive( da.undo_buffer.redoable() );
-    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( da.undo_buffer.redo_tooltip(), "<Control><Shift>z" ) );
+  public void do_buffer_changed( UndoBuffer buf ) {
+    _undo_btn.set_sensitive( buf.undoable() );
+    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buf.undo_tooltip(), "<Control>z" ) );
+    _redo_btn.set_sensitive( buf.redoable() );
+    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buf.redo_tooltip(), "<Control><Shift>z" ) );
   }
 
   /* Converts the given node name to an appropriate filename */
@@ -924,14 +978,17 @@ public class MainWindow : ApplicationWindow {
 
   /* Allow the user to select a filename to save the document as */
   public bool save_file( DrawArea da ) {
-    var sname  = convert_name_to_filename( da.get_nodes().index( 0 ).name.text.strip() );
     var dialog = new FileChooserNative( _( "Save File" ), this, FileChooserAction.SAVE, _( "Save" ), _( "Cancel" ) );
     var filter = new FileFilter();
     var retval = false;
     filter.set_filter_name( _( "Minder" ) );
     filter.add_pattern( "*.minder" );
     dialog.add_filter( filter );
-    dialog.set_current_name( sname );
+    if( da.get_doc().is_saved() ) {
+      dialog.set_filename( da.get_doc().filename );
+    } else {
+      dialog.set_current_name( convert_name_to_filename( da.get_nodes().index( 0 ).name.text.text.strip() ) );
+    }
     if( dialog.run() == ResponseType.ACCEPT ) {
       var fname = dialog.get_filename();
       if( fname.substring( -7, -1 ) != ".minder" ) {
@@ -1029,6 +1086,7 @@ public class MainWindow : ApplicationWindow {
     _settings.set_boolean( "current-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",     false );
     _settings.set_boolean( "style-properties-shown",   false );
+    _settings.set_boolean( "sticker-properties-shown", false );
   }
 
   /* Converts the given value from the scale to the zoom value to use */
@@ -1261,6 +1319,12 @@ public class MainWindow : ApplicationWindow {
     svg_filter.add_pattern( "*.svg" );
     dialog.add_filter( svg_filter );
 
+    /* XMind */
+    FileFilter xmind_filter = new FileFilter();
+    xmind_filter.set_filter_name( _( "XMind 8" ) );
+    xmind_filter.add_pattern( "*.xmind" );
+    dialog.add_filter( xmind_filter );
+
     /* yEd */
     FileFilter yed_filter = new FileFilter();
     yed_filter.set_filter_name( _( "yEd" ) );
@@ -1305,6 +1369,8 @@ public class MainWindow : ApplicationWindow {
         ExportText.export( repair_filename( fname, {".txt"} ), da );
       } else if( svg_filter == filter ) {
         ExportSVG.export( repair_filename( fname, {".svg"} ), da );
+      } else if( xmind_filter == filter ) {
+        ExportXMind.export( repair_filename( fname, {".xmind"} ), da );
       } else if( yed_filter == filter ) {
         ExportYed.export( repair_filename( fname, {".graphml"} ), da );
       }
@@ -1430,6 +1496,13 @@ public class MainWindow : ApplicationWindow {
 
     return( _nb.n_tabs > 0 );
 
+  }
+
+  /* Returns the height of a single line label */
+  public int get_label_height() {
+    int min_height, nat_height;
+    _scale_lbl.get_preferred_height( out min_height, out nat_height );
+    return( nat_height );
   }
 
 }

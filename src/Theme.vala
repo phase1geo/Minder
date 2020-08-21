@@ -52,6 +52,11 @@ public class Theme : Object {
     _colors.set( "connection_foreground", null );
     _colors.set( "url_background",        null );
     _colors.set( "url_foreground",        null );
+    _colors.set( "tag",                   null );
+    _colors.set( "syntax",                null );
+    _colors.set( "match_background",      null );
+    _colors.set( "match_foreground",      null );
+    _colors.set( "markdown_listitem",     null );
     _colors.set( "link_color0",           null );
     _colors.set( "link_color1",           null );
     _colors.set( "link_color2",           null );
@@ -177,13 +182,16 @@ public class Theme : Object {
   }
 
   /* Returns the CSS provider for this theme */
-  public CssProvider get_css_provider() {
+  public CssProvider get_css_provider( int text_size ) {
     CssProvider provider = new CssProvider();
     try {
+      var tv_size  = (text_size == -1) ? ".textfield { font: 1em \"Sans\" } " :
+                                         ".textfield { font: %dpx \"Sans\"; } ".printf( text_size );
       var css_data = "@define-color colorPrimary #603461; " +
                      "@define-color textColorPrimary @SILVER_100; " +
                      "@define-color colorAccent #603461; " +
                      "@define-color tab_base_color " + get_color( "background" ).to_string() + ";" +
+                     tv_size +
                      ".theme-selected { background: #087DFF; } " +
                      ".canvas { background: " + get_color( "background" ).to_string() + "; }";
       provider.load_from_data( css_data );

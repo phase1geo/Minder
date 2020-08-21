@@ -233,6 +233,15 @@ public class ImageManager {
     return( null );
   }
 
+  /* Returns the MIME type associated with the given image file */
+  public string? get_mime_type( int id ) {
+    var item = find_match( id );
+    if( item != null ) {
+      return( "image/%s".printf( item.get_extension().substring( 1 ) ) );
+    }
+    return( null );
+  }
+
   /* Returns the list of stored files */
   public Array<int> get_ids() {
     var ids = new Array<int>();

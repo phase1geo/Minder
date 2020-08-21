@@ -94,7 +94,7 @@ public class ConnectionInspector : Box {
     box.pack_start( lbl, true, false );
     box.pack_start( sw,  true, false );
 
-    pack_start( box, false, true );
+    // pack_start( box, false, true );
 
   }
 
@@ -242,7 +242,7 @@ public class ConnectionInspector : Box {
 
     if( current != null ) {
       _ignore_title_change = true;
-      _title.buffer.text   = (current.title != null) ? current.title.text : "";
+      _title.buffer.text   = (current.title != null) ? current.title.text.text : "";
       _color.rgba          = (current.color != null) ? current.color : _da.get_theme().get_color( "connection_background" );
       _color.alpha         = 65535;
       _note.buffer.text    = current.note;

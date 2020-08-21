@@ -97,7 +97,7 @@ public class ExportCSV : Object {
 
       var nodes = da.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
-        string title = stringify( nodes.index( i ).name.text ) + "," + stringify( nodes.index( i ).note );
+        string title = stringify( nodes.index( i ).name.text.text ) + "," + stringify( nodes.index( i ).note );
         for( int j=0; j<(levels - 1); j++ ) {
           title += ",,";
         }
@@ -130,7 +130,7 @@ public class ExportCSV : Object {
         }
       }
 
-      title += stringify( node.name.text ) + "," + stringify( node.note );
+      title += stringify( node.name.text.text ) + "," + stringify( node.note );
 
       for( int i=0; i<(levels - 1 - (prefix.length / 2)); i++ ) {
         title += ",,";

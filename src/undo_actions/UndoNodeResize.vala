@@ -32,7 +32,7 @@ public class UndoNodeResize : UndoItem {
     base( _( "node resize" ) );
     _node      = n;
     _old_width = old_width;
-    _new_width = n.max_width();
+    _new_width = n.style.node_width;
   }
 
   /* Undoes a node name change */

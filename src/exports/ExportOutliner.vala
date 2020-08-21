@@ -85,27 +85,9 @@ public class ExportOutliner : Object {
   private static Xml.Node* export_name( Node node, CanvasText ct ) {
     Xml.Node* n     = new Xml.Node( null, "name" );
     Xml.Node* t     = new Xml.Node( null, "text" );
-    var       links = node.urls.links;
-    t->set_prop( "data",     ct.text );
+    t->set_prop( "data",     ct.text.text );
     t->set_prop( "parse-as", "html" );
     n->add_child( t );
-    if( links.length > 0 ) {
-      t->add_child( export_urls( links ) );
-    }
-    return( n );
-  }
-
-  /* Exports any embedded links */
-  private static Xml.Node* export_urls( Array<UrlLink> links ) {
-    Xml.Node* n = new Xml.Node( null, "url" );
-    for( int i=0; i<links.length; i++ ) {
-      Xml.Node* r    = new Xml.Node( null, "range" );
-      var       link = links.index( i );
-      r->set_prop( "start", link.spos.to_string() );
-      r->set_prop( "end",   link.epos.to_string() );
-      r->set_prop( "extra", link.url );
-      n->add_child( r );
-    }
     return( n );
   }
 
@@ -195,7 +177,7 @@ public class ExportOutliner : Object {
         }
       }
     }
-    if( (node.name.text.strip() != "") || (node.children().length > 0) ) {
+    if( (node.name.text.text.strip() != "") || (node.children().length > 0) ) {
       node.attach( parent, -1, da.get_theme() );
       var t = n->get_prop( "task" );
       if( (t != null) && node.is_leaf() ) {
@@ -206,19 +188,7 @@ public class ExportOutliner : Object {
   }
 
   private static void import_name( Xml.Node* n, Node node ) {
-    for( Xml.Node* it = n->children; it != null; it = it->next ) {
-      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "text") ) {
-        var text = it->get_prop( "data" );
-        if( text != null ) {
-          node.name.text = text;
-        }
-        for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
-          if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "url") ) {
-            import_url( it2, node );
-          }
-        }
-      }
-    }
+    node.name.load( n );
   }
 
   private static void import_note( Xml.Node* n, Node node ) {
@@ -230,20 +200,6 @@ public class ExportOutliner : Object {
         }
       }
     }
-  }
-
-  private static void import_url( Xml.Node* n, Node node ) {
-    for( Xml.Node* it = n->children; it != null; it = it->next ) {
-      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "range") ) {
-        var start = it->get_prop( "start" );
-        var end   = it->get_prop( "end" );
-        var url   = it->get_prop( "extra" );
-        if( (start != null) && (end != null) && (url != null) ) {
-          node.urls.add_link( int.parse( start ), int.parse( end ), url );
-        }
-      }
-    }
-
   }
 
 }

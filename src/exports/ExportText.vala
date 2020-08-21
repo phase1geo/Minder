@@ -55,7 +55,7 @@ public class ExportText : Object {
     var nodes = da.get_nodes();
 
     for( int i=0; i<nodes.length; i++ ) {
-      value += "# " + nodes.index( i ).name.text + "\n";
+      value += "# " + nodes.index( i ).name.text.text + "\n";
       var children = nodes.index( i ).children();
       for( int j=0; j<children.length; j++ ) {
         value += export_node( children.index( j ) );
@@ -81,7 +81,7 @@ public class ExportText : Object {
     }
 
     /* Add the node title */
-    value += node.name.text + "\n";
+    value += node.name.text.text + "\n";
 
     /* Add the node note, if specified */
     if( node.note != "" ) {

@@ -76,25 +76,6 @@ class ImageEditor {
 
   }
 
-  /* Handles the display of the image editor popover */
-  private void show_popover( bool show ) {
-
-#if GTK322
-    if( show ) {
-      _popover.popup();
-    } else {
-      _popover.popdown();
-    }
-#else
-    if( show ) {
-      _popover.show();
-    } else {
-      _popover.hide();
-    }
-#endif
-
-  }
-
   /* Opens an image editor popup containing the image of the specified node */
   public void edit_image( ImageManager im, Node node, double x, double y ) {
 
@@ -103,7 +84,7 @@ class ImageEditor {
 
     /* Set the defaults */
     _node  = node;
-    _image = new NodeImage( im, node.image.id, _node.max_width() );
+    _image = new NodeImage( im, node.image.id, _node.style.node_width );
 
     if( _image.valid ) {
 
@@ -121,7 +102,7 @@ class ImageEditor {
       _da.queue_draw();
 
       /* Display ourselves */
-      show_popover( true );
+      Utils.show_popover( _popover );
 
     }
 
@@ -354,7 +335,7 @@ class ImageEditor {
 
     da.drag_data_received.connect((ctx, x, y, data, info, t) => {
       if( data.get_uris().length == 1 ) {
-        NodeImage? ni = new NodeImage.from_uri( im, data.get_uris()[0], _node.max_width() );
+        NodeImage? ni = new NodeImage.from_uri( im, data.get_uris()[0], _node.style.node_width );
         if( (ni != null) && initialize( ni ) ) {
           Gtk.drag_finish( ctx, true, false, t );
         }
@@ -411,7 +392,7 @@ class ImageEditor {
     open.clicked.connect(() => {
       var id = im.choose_image( parent );
       if( id != -1 ) {
-        var ni = new NodeImage( im, id, _node.max_width() );
+        var ni = new NodeImage( im, id, _node.style.node_width );
         if( ni != null ) {
           initialize( ni );
         }
@@ -508,7 +489,7 @@ class ImageEditor {
     changed( orig_image );
 
     /* Hide the popover */
-    show_popover( false );
+    Utils.hide_popover( _popover );
 
   }
 
@@ -519,7 +500,7 @@ class ImageEditor {
     var orig_image = _node.image;
 
     /* Set the image width to match the node's max width */
-    _image.set_width( _node.max_width() );
+    _image.set_width( _node.style.node_width );
 
     /* Set the node image */
     _node.set_image( im, _image );
@@ -528,7 +509,7 @@ class ImageEditor {
     changed( orig_image );
 
     /* Close the popover */
-    show_popover( false );
+    Utils.hide_popover( _popover );
 
   }
 
@@ -568,7 +549,7 @@ class ImageEditor {
     if( image_pasteable() ) {
       var clipboard = Clipboard.get_default( _popover.get_display() );
       var buf       = clipboard.wait_for_image();
-      var image     = new NodeImage.from_pixbuf( _im, buf, _node.max_width() );
+      var image     = new NodeImage.from_pixbuf( _im, buf, _node.style.node_width );
       image.crop_x = _image.crop_x;
       image.crop_y = _image.crop_y;
       image.crop_w = _image.crop_w;
@@ -587,7 +568,7 @@ class ImageEditor {
 
   /* Cancels this editing session */
   private void action_cancel() {
-    show_popover( false );
+    Utils.hide_popover( _popover );
   }
 
   /* Applies the current edits and closes the window */

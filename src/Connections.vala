@@ -62,7 +62,7 @@ public class Connections {
           _connections.index( i ).disconnect_from_node( true );
           _connections.index( i ).disconnect_from_node( false );
         }
-        _connections.remove_index( i ); 
+        _connections.remove_index( i );
         return( true );
       }
     }
@@ -107,6 +107,19 @@ public class Connections {
   public Connection? on_curve( double x, double y ) {
     for( int i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ).on_curve( x, y ) ) {
+        return( _connections.index( i ) );
+      }
+    }
+    return( null );
+  }
+
+  /*
+   Returns the associated connection if the given point is within the connection's
+   title box.
+  */
+  public Connection? within_title_box( double x, double y ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ).within_title_box( x, y ) ) {
         return( _connections.index( i ) );
       }
     }

@@ -27,6 +27,7 @@ public class ConnectionMenu : Gtk.Menu {
   Gtk.MenuItem _delete;
   Gtk.MenuItem _edit;
   Gtk.MenuItem _note;
+  Gtk.MenuItem _sticker;
   Gtk.MenuItem _selstart;
   Gtk.MenuItem _selend;
   Gtk.MenuItem _selnext;
@@ -47,6 +48,9 @@ public class ConnectionMenu : Gtk.Menu {
 
     _note = new Gtk.MenuItem.with_label( _( "Add Note" ) );
     _note.activate.connect( change_note );
+
+    _sticker = new Gtk.MenuItem.with_label( _( "Remove Sticker" ) );
+    _sticker.activate.connect( remove_sticker );
 
     var selnode = new Gtk.MenuItem.with_label( _( "Select" ) );
     var selmenu = new Gtk.Menu();
@@ -73,6 +77,7 @@ public class ConnectionMenu : Gtk.Menu {
     add( new SeparatorMenuItem() );
     add( _edit );
     add( _note );
+    add( _sticker );
     add( new SeparatorMenuItem() );
     add( selnode );
 
@@ -100,6 +105,8 @@ public class ConnectionMenu : Gtk.Menu {
   /* Called when the menu is popped up */
   private void on_popup() {
 
+    _sticker.set_sensitive( _da.get_current_connection().sticker != null );
+
     /* Set the menu item labels */
     _note.label = connection_has_note() ? _( "Remove Note" ) : _( "Add Note" );
 
@@ -116,7 +123,7 @@ public class ConnectionMenu : Gtk.Menu {
     if( conn.title == null ) {
       conn.change_title( _da, "", true );
     }
-    conn.mode = ConnMode.EDITABLE;
+    _da.set_connection_mode( conn, ConnMode.EDITABLE );
   }
 
   /* Changes the note status of the currently selected node */
@@ -127,6 +134,15 @@ public class ConnectionMenu : Gtk.Menu {
       _da.show_properties( "current", true );
     }
     _da.current_changed( _da );
+  }
+
+  /* Removes the sticker attached to the connection */
+  private void remove_sticker() {
+    var current = _da.get_current_connection();
+    _da.undo_buffer.add_item( new UndoConnectionStickerRemove( current ) );
+    current.sticker = null;
+    _da.queue_draw();
+    _da.changed();
   }
 
   /* Selects the next sibling node of the current node */

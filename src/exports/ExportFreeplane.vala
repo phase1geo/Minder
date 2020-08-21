@@ -49,12 +49,9 @@ public class ExportFreeplane : Object {
 
   /* Returns true if the given node contains any markup that should be output as richcontent */
   private static bool node_contains_markup( Node node, bool note ) {
-    if( node.name.markup ) {
-      string str = note ? node.note : node.name.text;
-      return( Regex.match_simple( """<(span.*|b|big|i|s|sub|sup|small|tt|u)>""", str ) ||
-              Regex.match_simple( """^\s*$""", str, RegexCompileFlags.MULTILINE ) );
-    }
-    return( false );
+    string str = note ? node.note : node.name.text.text;
+    return( Regex.match_simple( """<(span.*|b|big|i|s|sub|sup|small|tt|u)>""", str ) ||
+            Regex.match_simple( """^\s*$""", str, RegexCompileFlags.MULTILINE ) );
   }
 
   /* Exports the given node information */
@@ -71,13 +68,17 @@ public class ExportFreeplane : Object {
     n->new_prop( "POSITION", ((node.side == NodeSide.LEFT) ? "left" : "right") );
 
     if( !markup ) {
-      n->new_prop( "TEXT", node.name.text );
+      n->new_prop( "TEXT", node.name.text.text );
     } else {
       n->add_child( export_title( node ) );
     }
 
     if( node.style.node_fill ) {
       n->new_prop( "BACKGROUND_COLOR", Utils.color_from_rgba( node.link_color ) );
+    }
+
+    if( node.group ) {
+      n->add_child( export_cloud( node, da ) );
     }
 
     n->add_child( export_edge( node, da ) );
@@ -124,8 +125,8 @@ public class ExportFreeplane : Object {
     Xml.Node* n = new Xml.Node( null, "font" );
     n->new_prop( "NAME",   node.style.node_font.get_family() );
     n->new_prop( "SIZE",   (node.style.node_font.get_size() / Pango.SCALE).to_string() );
-    n->new_prop( "BOLD",   ((node.name.text.substring( 0, 3 ) == "<b>") || (node.name.text.substring( 0, 6 ) == "<i><b>")).to_string() );
-    n->new_prop( "ITALIC", ((node.name.text.substring( 0, 3 ) == "<i>") || (node.name.text.substring( 0, 6 ) == "<b><i>")).to_string() );
+    n->new_prop( "BOLD",   ((node.name.text.text.substring( 0, 3 ) == "<b>") || (node.name.text.text.substring( 0, 6 ) == "<i><b>")).to_string() );
+    n->new_prop( "ITALIC", ((node.name.text.text.substring( 0, 3 ) == "<i>") || (node.name.text.text.substring( 0, 6 ) == "<b><i>")).to_string() );
     return( n );
   }
 
@@ -143,10 +144,17 @@ public class ExportFreeplane : Object {
     return( n );
   }
 
+  /* Exports the cloud information */
+  private static Xml.Node* export_cloud( Node node, DrawArea da ) {
+    Xml.Node* n = new Xml.Node( null, "cloud" );
+    n->new_prop( "COLOR", Utils.color_from_rgba( node.link_color ) );
+    return( n );
+  }
+
   /* Exports the node title as richtext */
   private static Xml.Node* export_title( Node node ) {
 
-    string    text = node.name.text;
+    string    text = node.name.text.text;
     Xml.Node* rc   = new Xml.Node( null, "richcontent" );
     rc->new_prop( "TYPE", "NODE" );
 
@@ -302,7 +310,7 @@ public class ExportFreeplane : Object {
 
     string? t = n->get_prop( "TEXT" );
     if( t != null ) {
-      node.name.text = t;
+      node.name.text.insert_text( 0, t );
     }
 
     string? l = n->get_prop( "LINK" );
@@ -343,7 +351,7 @@ public class ExportFreeplane : Object {
           case "edge"        :  import_edge( it, node );  break;
           case "font"        :  import_font( it, node );  break;
           case "icon"        :  break;  // Not implemented
-          case "cloud"       :  break;  // Not implemented
+          case "cloud"       :  import_cloud( it, da, node );  break;
           case "arrowlink"   :  import_arrowlink( it, da, node, to_nodes );  break;
           case "richcontent" :  import_richcontent( it, node );  break;
           case "hook"        :  import_hook( it, da, node, ifile );  break;
@@ -397,16 +405,28 @@ public class ExportFreeplane : Object {
     string? b = n->get_prop( "BOLD" );
     if( b != null ) {
       if( bool.parse( b ) ) {
-        node.name.text = "<b>" + node.name.text + "</b>";
+        node.name.text.insert_text( 0, "<b>" + node.name.text.text + "</b>" );
       }
     }
 
     string? i = n->get_prop( "ITALIC" );
     if( i != null ) {
       if( bool.parse( i ) ) {
-        node.name.text = "<i>" + node.name.text + "</i>";
+        node.name.text.insert_text( 0, "<i>" + node.name.text.text + "</i>" );
       }
     }
+
+  }
+
+  private static void import_cloud( Xml.Node* n, DrawArea da, Node node ) {
+
+    /*
+     NOTE - Currently groups associated with a node inherit the link color from the node
+     so I won't use the value from Freeplane.
+    */
+
+    /* Indicate that the node should be drawn as a group */
+    node.group = true;
 
   }
 
@@ -452,75 +472,19 @@ public class ExportFreeplane : Object {
   /* Import the richcontent section */
   private static void import_richcontent( Xml.Node* n, Node node ) {
 
-    string type    = n->get_prop( "TYPE" ) ?? "NOTE";
-    string content = parse_richcontent( n ).chug();
+    string type = n->get_prop( "TYPE" ) ?? "NOTE";
 
-    if( type == "NODE" ) {
-      node.name.text = content;
-    } else {
-      node.note = content;
-    }
-
-  }
-
-  /* Parses the given richcontent block and turns it into the equivalent Pango markup */
-  private static string parse_richcontent( Xml.Node* n, int level=0, int number=0 ) {
-
-    var      str     = "";
-    string[] bullets = {"-", "*", "+"};
-    int      num     = 1;
-    bool     ul      = n->name.down() == "ul";
-    bool     ol      = n->name.down() == "ol";
-
-    for( Xml.Node* it=n->children; it!=null; it=it->next ) {
-      switch( it->type ) {
-        case Xml.ElementType.TEXT_NODE :
-          str += it->content.strip().replace( "&", "&amp;" ).replace( "<", "&lt;" ).replace( ">", "&gt;" );
-          break;
-        case Xml.ElementType.CDATA_SECTION_NODE :
-          str += it->content.strip();
-          break;
-        case Xml.ElementType.ELEMENT_NODE :
-          if( it->name.down() != "head" ) {  // Skip anything within the header section
-            str += parse_richcontent( it, (level + ((ol || ul) ? 1 : 0)), (ol ? num++ : 0) );
-          }
-          break;
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name.down() == "html") ) {
+        HtmlToMarkdown.reset();
+        var text = HtmlToMarkdown.parse_xml( it ).strip();
+        if( type == "NODE" ) {
+          node.name.text.insert_text( 0, text );
+        } else {
+          node.note = text;
+        }
       }
     }
-
-    var name = n->name.down();
-    var span = "<span";
-
-    switch( name ) {
-      case "b"     :
-      case "big"   :
-      case "i"     :
-      case "s"     :
-      case "sub"   :
-      case "sup"   :
-      case "small" :
-      case "tt"    :
-      case "u"     :
-        str = "<" + name + ">" + str + "</" + name + ">";
-        break;
-      case "span"  :
-        for( Xml.Attr* it=n->properties; it!=null; it=it->next ) {
-          span += " " + it->name + "=\"" + n->get_prop( it->name ) + "\"";
-        }
-        str = span + ">" + str + "</span>";
-        break;
-      case "p"     :
-        str = "\n" + str;
-        break;
-      case "br"    :
-        str += "\n";
-        break;
-      case "li"    :
-        str = "\n" + string.nfill( ((level - 1) * 4), ' ' ) + ((number == 0) ? bullets[(level - 1) % 3] : (number.to_string() + ".")) + " " + str;
-        break;
-    }
-
-    return( str );
 
   }
 
@@ -558,7 +522,7 @@ public class ExportFreeplane : Object {
       }
 
       if( id != -1 ) {
-        node.set_image( da.image_manager, new NodeImage( da.image_manager, id, node.max_width() ) );
+        node.set_image( da.image_manager, new NodeImage( da.image_manager, id, node.style.node_width ) );
       }
 
     }
