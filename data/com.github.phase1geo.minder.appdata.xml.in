@@ -126,6 +126,7 @@
           <li>Fixed error when connection title is double clicked when no text is present.</li>
           <li>Fixed issue with opening the same document twice (only one tab will now exist per file).</li>
           <li>Fixed Shift-Control-s keyboard shortcut to display the 'Save As' dialog instead of the 'Open' dialog.</li>
+          <li>Fixed issue that allows you to click on or drag onto a hidden node.</li>
         </ul>
       </description>
     </release>
