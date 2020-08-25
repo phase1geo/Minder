@@ -26,10 +26,10 @@ public class UndoNodeCut : UndoItem {
   Node?             _parent;
   int               _index;
   Array<Connection> _conns;
-  UndoNodeGroups    _groups;
+  UndoNodeGroups?   _groups;
 
   /* Default constructor */
-  public UndoNodeCut( Node n, int index, Array<Connection> conns, UndoNodeGroups groups ) {
+  public UndoNodeCut( Node n, int index, Array<Connection> conns, UndoNodeGroups? groups ) {
     base( _( "cut node" ) );
     _node   = n;
     _parent = n.parent;
