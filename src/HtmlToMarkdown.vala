@@ -126,11 +126,12 @@ public class HtmlToMarkdown {
 
   /* Returns the link text */
   public static string parse_link( Xml.Node* n ) {
+    var item = parse_item( n );
     string? h = n->get_prop( "href" );
-    if( h != null ) {
-      return( "[" + parse_item( n ) + "](" + h + ")" );
+    if( (h != null) && (h != item) ) {
+      return( "[" + item + "](" + h + ")" );
     }
-    return( parse_item( n ) );
+    return( item );
   }
 
   /* Returns the image text */

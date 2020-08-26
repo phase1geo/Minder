@@ -157,7 +157,7 @@ public class ExportFreemind : Object {
   public static bool import( string fname, DrawArea da ) {
 
     /* Read in the contents of the Freemind file */
-    var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
+    var doc = Xml.Parser.read_file( fname, null, (Xml.ParserOption.HUGE | Xml.ParserOption.RECOVER) );
     if( doc == null ) {
       return( false );
     }
