@@ -235,7 +235,7 @@ public class ExportFreemind : Object {
     }
 
     string? l = n->get_prop( "LINK" );
-    if( l != null ) {
+    if( (l != null) && (l.substring( 0, 1 ) == "#") ) {
       link_ids.append_val( NodeLinkInfo( l.substring( 1 ), node ) );
     }
 
