@@ -89,7 +89,7 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
-    <release version="1.10.0" date="2020-08-23">
+    <release version="1.10.0" date="2020-08-27">
       <description>
         <p>New</p>
         <ul>
@@ -113,6 +113,7 @@
           <li>Removed connection title editing field in sidebar for better UI consistency.</li>
           <li>Removed bold and italicized fonts from the style inspector font selectors.</li>
           <li>If connection title is empty, the title will be automatically removed.</li>
+          <li>Updated application icon (thanks to Fatih20).</li>
         </ul>
         <p>Bug Fixes</p>
         <ul>
