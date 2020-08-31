@@ -27,10 +27,10 @@ public class UndoNodeDelete : UndoItem {
   Node?             _parent;
   int               _index;
   Array<Connection> _conns;
-  UndoNodeGroups    _groups;
+  UndoNodeGroups?   _groups;
 
   /* Default constructor */
-  public UndoNodeDelete( Node n, int index, Array<Connection> conns, UndoNodeGroups groups ) {
+  public UndoNodeDelete( Node n, int index, Array<Connection> conns, UndoNodeGroups? groups ) {
     base( _( "delete node" ) );
     _node   = n;
     _parent = n.parent;

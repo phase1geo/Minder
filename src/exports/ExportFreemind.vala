@@ -157,7 +157,7 @@ public class ExportFreemind : Object {
   public static bool import( string fname, DrawArea da ) {
 
     /* Read in the contents of the Freemind file */
-    var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
+    var doc = Xml.Parser.read_file( fname, null, (Xml.ParserOption.HUGE | Xml.ParserOption.RECOVER) );
     if( doc == null ) {
       return( false );
     }
@@ -234,14 +234,14 @@ public class ExportFreemind : Object {
       node.name.text.insert_text( 0, t );
     }
 
-    string? l = n->get_prop( "LINK" );
-    if( l != null ) {
-      link_ids.append_val( NodeLinkInfo( l.substring( 1 ), node ) );
-    }
-
     string? f = n->get_prop( "FOLDED" );
     if( f != null ) {
       node.folded = bool.parse( f );
+    }
+
+    string? l = n->get_prop( "LINK" );
+    if( (l != null) && (l.substring( 0, 1 ) == "#") ) {
+      link_ids.append_val( NodeLinkInfo( l.substring( 1 ), node ) );
     }
 
     string? c = n->get_prop( "COLOR" );

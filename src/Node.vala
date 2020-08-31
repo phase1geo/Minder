@@ -822,15 +822,15 @@ public class Node : Object {
   public virtual Node? contains( double x, double y, Node? n ) {
     if( (this != n) && (is_within( x, y ) || is_within_fold( x, y )) ) {
       return( this );
-    } else {
+    } else if( !_folded ) {
       for( int i=0; i<_children.length; i++ ) {
         Node tmp = _children.index( i ).contains( x, y, n );
         if( tmp != null ) {
           return( tmp );
         }
       }
-      return( null );
     }
+    return( null );
   }
 
   /* Returns true if this node contains the given node */

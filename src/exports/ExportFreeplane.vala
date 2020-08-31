@@ -236,7 +236,8 @@ public class ExportFreeplane : Object {
     var ifile = File.new_for_path( Path.get_dirname( fname ) );
 
     /* Read in the contents of the Freemind file */
-    var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
+    stdout.printf( "HERE!\n" );
+    var doc = Xml.Parser.read_file( fname, null, (Xml.ParserOption.HUGE | Xml.ParserOption.RECOVER) );
     if( doc == null ) {
       return( false );
     }
@@ -313,14 +314,16 @@ public class ExportFreeplane : Object {
       node.name.text.insert_text( 0, t );
     }
 
-    string? l = n->get_prop( "LINK" );
-    if( l != null ) {
-      link_ids.append_val( NodeLinkInfo( l.substring( 1 ), node ) );
-    }
-
+    /*
     string? f = n->get_prop( "FOLDED" );
     if( f != null ) {
       node.folded = bool.parse( f );
+    }
+    */
+
+    string? l = n->get_prop( "LINK" );
+    if( (l != null) && (l.substring( 0, 1 ) == "#") ) {
+      link_ids.append_val( NodeLinkInfo( l.substring( 1 ), node ) );
     }
 
     string? bc = n->get_prop( "BACKGROUND_COLOR" );
