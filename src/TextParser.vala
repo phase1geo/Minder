@@ -30,17 +30,32 @@ public class TextParser {
 
   private string             _name;
   private Array<ReCallback?> _res;
+  private bool               _enable;
 
   public string name {
     get {
       return( _name );
     }
   }
+  public bool enable {
+    get {
+      return( _enable );
+    }
+    set {
+      if( _enable != value ) {
+        _enable = value;
+        enable_changed();
+      }
+    }
+  }
+
+  public signal void enable_changed();
 
   /* Default constructor */
   public TextParser( string name ) {
-    _name = name;
-    _res  = new Array<ReCallback?>();
+    _name   = name;
+    _res    = new Array<ReCallback?>();
+    _enable = true;
   }
 
   /* Adds a regular expression to this parser */
@@ -67,6 +82,7 @@ public class TextParser {
 
   /* Called to parse the text within the given FormattedText element */
   public void parse( FormattedText text ) {
+    if( !_enable ) return;
     for( int i=0; i<_res.length; i++ ) {
       MatchInfo matches;
       var       start = 0;

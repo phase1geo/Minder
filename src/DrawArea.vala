@@ -232,6 +232,9 @@ public class DrawArea : Gtk.DrawingArea {
     markdown_parser = new MarkdownParser( this );
     url_parser      = new UrlParser();
 
+    markdown_parser.enable = settings.get_boolean( "enable-markdown" );
+    url_parser.enable      = settings.get_boolean( "auto-parse-embedded-urls" );
+
     /* Create text completion */
     _completion = new TextCompletion( this );
 
@@ -333,7 +336,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void update_css() {
     StyleContext.add_provider_for_screen(
       Screen.get_default(),
-      _theme.get_css_provider( settings.get_int( "text-field-font-size" ) ),
+      _theme.get_css_provider( win.text_size ),
       STYLE_PROVIDER_PRIORITY_APPLICATION
     );
   }

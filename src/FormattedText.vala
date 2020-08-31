@@ -743,6 +743,13 @@ public class FormattedText {
   /* Adds the given parser */
   public void add_parser( TextParser parser ) {
     _parsers.append_val( parser );
+    parser.enable_changed.connect( handle_parser_enable_change );
+    parse();
+    changed();
+  }
+
+  /* Called whenever the user changes the enablement for one of its parsers */
+  private void handle_parser_enable_change() {
     parse();
     changed();
   }
@@ -751,6 +758,7 @@ public class FormattedText {
   public void remove_parser( TextParser parser ) {
     for( int i=0; i<_parsers.length; i++ ) {
       if( _parsers.index( i ) == parser ) {
+        parser.enable_changed.disconnect( handle_parser_enable_change );
         _parsers.remove_index( i );
         parse( true );
         changed();
