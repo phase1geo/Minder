@@ -850,9 +850,13 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Sets the current connection to the given node */
   public void set_current_connection( Connection? c ) {
-    _selected.set_current_connection( c );
-    c.from_node.last_selected_connection = c;
-    c.to_node.last_selected_connection   = c;
+    if( c != null ) {
+      _selected.set_current_connection( c );
+      c.from_node.last_selected_connection = c;
+      c.to_node.last_selected_connection   = c;
+    } else {
+      _selected.clear_connections();
+    }
   }
 
   /* Sets the current selected sticker to the specified sticker */
