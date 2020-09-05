@@ -148,6 +148,13 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Show Preferences</property>
+                <property name="accelerator">&lt;ctrl&gt;comma</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Quit Application</property>
                 <property name="accelerator">&lt;ctrl&gt;q</property>
                 <property name="visible">1</property>
