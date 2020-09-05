@@ -246,5 +246,10 @@
       <summary>If true, the connection title will be added and put into edit mode immediately after the connection is made.</summary>
       <description>If true, the connection title will be added and put into edit mode immediately after the connection is made.</description>
     </key>
+    <key name="default-theme" type="s">
+      <default>"default"</default>
+      <summary>Specifies the name of the default theme to use when creating new mind maps.</summary>
+      <description>Specifies the name of the default theme to use when creating new mind maps.</description>
+    </key>
   </schema>
 </schemalist>
