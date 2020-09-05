@@ -30,7 +30,6 @@ public class NodeInspector : Box {
   };
 
   private ScrolledWindow _sw;
-  private TextView       _name;
   private Switch         _task;
   private Switch         _fold;
   private Box            _link_box;
@@ -44,14 +43,12 @@ public class NodeInspector : Box {
   private Button         _image_btn;
   private Label          _image_loc;
   private Box            _image_btn_box;
-  private bool           _ignore_name_change = false;
 
   public NodeInspector( MainWindow win ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
 
     /* Create the node widgets */
-    create_title();
     create_task();
     create_fold();
     create_link();
@@ -82,36 +79,6 @@ public class NodeInspector : Box {
   /* Sets the width of this inspector to the given value */
   public void set_width( int width ) {
     _sw.width_request = width;
-  }
-
-  /* Creates the name entry */
-  private void create_title() {
-
-    Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( Utils.make_title( _( "Title" ) ) );
-
-    lbl.xalign     = (float)0;
-    lbl.use_markup = true;
-
-    _name = new TextView();
-    _name.set_wrap_mode( Gtk.WrapMode.WORD );
-    _name.buffer.text = "";
-    _name.buffer.create_tag( "urllink" );
-    _name.buffer.insert_text.connect( name_inserted );
-    _name.buffer.delete_range.connect( name_deleted );
-    _name.focus_in_event.connect( name_focus_in );
-    _name.focus_out_event.connect( name_focus_out );
-
-    var sw = new ScrolledWindow( null, null );
-    sw.min_content_width  = 300;
-    sw.min_content_height = 60;
-    sw.add( _name );
-
-    box.pack_start( lbl, true, false );
-    box.pack_start( sw,  true, false );
-
-    // pack_start( box, false, true );
-
   }
 
   /* Creates the task UI elements */
@@ -342,38 +309,6 @@ public class NodeInspector : Box {
 
   }
 
-  /* Called whenever the node name text is inserted into */
-  private void name_inserted( ref TextIter pos, string new_text, int new_text_length ) {
-    if( !_ignore_name_change ) {
-      var node = _da.get_current_node();
-      node.name.insert_at_pos( pos.get_offset(), new_text, _da.undo_text );
-    }
-    _ignore_name_change = false;
-  }
-
-  /* Called whenever the node name text is deleted */
-  private void name_deleted( TextIter start, TextIter end ) {
-    if( !_ignore_name_change ) {
-      var node = _da.get_current_node();
-      node.name.delete_range( start.get_offset(), end.get_offset(), _da.undo_text );
-    }
-  }
-
-  /* Called whenever the node name begins to be edited */
-  private bool name_focus_in( EventFocus e ) {
-    _da.capture_current_node_name();
-    return( false );
-  }
-
-  /*
-   Called whenever the node title loses input focus. Updates the
-   node title in the canvas.
-  */
-  private bool name_focus_out( EventFocus e ) {
-    _da.commit_current_node_name();
-    return( false );
-  }
-
   /* Called whenever the task enable switch is changed within the inspector */
   private bool task_changed( Gdk.EventButton e ) {
     var current = _da.get_current_node();
@@ -436,11 +371,6 @@ public class NodeInspector : Box {
     _da.delete_node();
   }
 
-  /* Grabs the input focus on the name entry */
-  public void grab_name() {
-    _name.grab_focus();
-  }
-
   /* Grabs the focus on the note widget */
   public void grab_note() {
     _note.grab_focus();
@@ -463,12 +393,6 @@ public class NodeInspector : Box {
     /* Set the palette with the new theme colors */
     _link_color.add_palette( Orientation.HORIZONTAL, 10, colors );
 
-    /* Update the URL tags */
-    var tag = _name.buffer.tag_table.lookup( "urllink" );
-    if( tag != null ) {
-      tag.background_rgba = _da.get_theme().get_color( "url_background" );
-    }
-
   }
 
   /* Called whenever the user changes the current node in the canvas */
@@ -477,7 +401,6 @@ public class NodeInspector : Box {
     Node? current = _da.get_current_node();
 
     if( current != null ) {
-      _ignore_name_change = true;
       _task.set_active( current.task_enabled() );
       if( current.is_leaf() ) {
         _fold.set_active( false );
