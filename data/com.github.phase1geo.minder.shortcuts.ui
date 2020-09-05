@@ -139,7 +139,13 @@
                 <property name="visible">1</property>
               </object>
             </child>
-
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Show Contextual Menu</property>
+                <property name="accelerator">Menu &lt;shift&gt;F10</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Quit Application</property>

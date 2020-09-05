@@ -1926,7 +1926,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Displays the contextual menu based on what is currently selected */
-  private void show_contextual_menu( EventButton event ) {
+  private void show_contextual_menu( Event event ) {
 
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
@@ -3666,8 +3666,6 @@ public class DrawArea : Gtk.DrawingArea {
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
 
-    // var keymap = Keymap.get_default();
-
     /* If there is a current node or connection selected, operate on it */
     if( (current_node != null) || (current_conn != null) ) {
       if( control ) {
@@ -3707,6 +3705,8 @@ public class DrawArea : Gtk.DrawingArea {
             case Key.Page_Up   :  handle_pageup();         break;
             case Key.Page_Down :  handle_pagedn();         break;
             case Key.Control_L :  handle_control( true );  break;
+            case Key.F10       :  if( shift ) show_contextual_menu( e );  break;
+            case Key.Menu      :  show_contextual_menu( e );  break;
             default            :
               if( current_node != null ) {
                 return( handle_node_keypress( e ) );
@@ -3750,6 +3750,8 @@ public class DrawArea : Gtk.DrawingArea {
         case Key.Delete       :  handle_delete();         break;
         case Key.Return       :  handle_return( shift );  break;
         case Key.Control_L    :  handle_control( true );  break;
+        case Key.F10          :  if( shift ) show_contextual_menu( e );  break;
+        case Key.Menu         :  show_contextual_menu( e );  break;
         default               :  return( false );
       }
     }

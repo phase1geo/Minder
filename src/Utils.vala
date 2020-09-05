@@ -181,7 +181,7 @@ public class Utils {
   }
 
   /* Pops up the given menu */
-  public static void popup_menu( Gtk.Menu menu, EventButton e ) {
+  public static void popup_menu( Gtk.Menu menu, Event e ) {
 #if GTK322
     menu.popup_at_pointer( e );
 #else
