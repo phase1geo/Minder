@@ -183,6 +183,7 @@ sources += files(
     'NodesMenu.vala',
     'NoteView.vala',
     'Partitioner.vala',
+    'Preferences.vala',
     'QuickEntry.vala',
     'Selection.vala',
     'Sticker.vala',

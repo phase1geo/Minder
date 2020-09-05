@@ -40,7 +40,6 @@ public class MapInspector : Box {
     _settings = settings;
 
     /* Create the interface */
-    add_animation_ui();
     add_connection_ui();
     add_link_color_ui();
     add_layout_ui();
@@ -68,34 +67,6 @@ public class MapInspector : Box {
     _da.get_connections().hide = _settings.get_boolean( "hide-connections" );
     _da.set_theme( _da.get_theme(), false );
     update_theme_layout();
-  }
-
-  /* Add the animation enable UI */
-  private void add_animation_ui() {
-
-    var box     = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl     = new Label( Utils.make_title( _( "Enable animations" ) ) );
-    var animate = _settings.get_boolean( "enable-animations" );
-
-    lbl.xalign = (float)0;
-    lbl.use_markup = true;
-
-    var enable = new Switch();
-    enable.set_active( animate );
-    enable.button_release_event.connect( animation_changed );
-
-    box.pack_start( lbl,    false, true, 0 );
-    box.pack_end(   enable, false, true, 0 );
-
-    pack_start( box, false, true );
-
-  }
-
-  /* Called whenever the animation switch is changed within the inspector */
-  private bool animation_changed( Gdk.EventButton e ) {
-    _da.animator.enable = !_da.animator.enable;
-    _settings.set_boolean( "enable-animations", _da.animator.enable );
-    return( false );
   }
 
   /* Add the connection show/hide UI */

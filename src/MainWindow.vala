@@ -84,6 +84,7 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_actual",   action_zoom_actual },
     { "action_export",        action_export },
     { "action_print",         action_print },
+    { "action_prefs",         action_prefs },
     { "action_shortcuts",     action_shortcuts }
   };
 
@@ -96,6 +97,11 @@ public class MainWindow : ApplicationWindow {
   public GLib.Settings settings {
     get {
       return( _settings );
+    }
+  }
+  public int text_size {
+    get {
+      return( _text_size );
     }
   }
 
@@ -223,12 +229,20 @@ public class MainWindow : ApplicationWindow {
     }
 
     /* Look for any changes to the settings */
-    _text_size = settings.get_int( "text-field-font-size" );
+    _text_size = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
     settings.changed.connect(() => {
-      var text_size = settings.get_int( "text-field-font-size" );
-      if( _text_size != text_size ) {
-        get_current_da( "settings changed" ).update_css();
-        _text_size = text_size;
+      var ts = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
+      var ae = settings.get_boolean( "enable-animations" );
+      var ap = settings.get_boolean( "auto-parse-embedded-urls" );
+      var em = settings.get_boolean( "enable-markdown" );
+      _text_size = ts;
+      foreach( Tab tab in _nb.tabs ) {
+        var bin = (Gtk.Bin)tab.page;
+        var da  = (DrawArea)bin.get_child();
+        da.update_css();
+        da.animator.enable = ae;
+        da.url_parser.enable = ap;
+        da.markdown_parser.enable = em;
       }
     });
 
@@ -385,6 +399,7 @@ public class MainWindow : ApplicationWindow {
     app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
     app.set_accels_for_action( "win.action_export",      { "<Control>e" } );
     app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
+    app.set_accels_for_action( "win.action_prefs",       { "<Control>comma" } );
     app.set_accels_for_action( "win.action_shortcuts",   { "F1" } );
 
   }
@@ -664,22 +679,18 @@ public class MainWindow : ApplicationWindow {
     /* Create export menu */
     var box = new Box( Orientation.VERTICAL, 5 );
 
-    /*
     var prefs = new ModelButton();
     prefs.text = _( "Preferences" );
     prefs.action_name = "win.action_prefs";
-    */
 
     var shortcuts = new ModelButton();
     shortcuts.text = _( "Shortcuts Cheatsheet" );
     shortcuts.action_name = "win.action_shortcuts";
 
     box.margin = 5;
-    /*
-    box.pack_start( export, false, true );
+    box.pack_start( prefs,     false, true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
-    */
-    box.pack_start( shortcuts,  false, true );
+    box.pack_start( shortcuts, false, true );
     box.show_all();
 
     /* Create the popover and associate it with clicking on the menu button */
@@ -1399,6 +1410,12 @@ public class MainWindow : ApplicationWindow {
   private void action_print() {
     var print = new ExportPrint();
     print.print( get_current_da( "action_print" ), this );
+  }
+
+  /* Displays the preferences dialog */
+  private void action_prefs() {
+    var prefs = new Preferences( this, _settings );
+    prefs.show_all();
   }
 
   /* Displays the shortcuts cheatsheet */
