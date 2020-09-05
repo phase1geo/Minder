@@ -505,10 +505,12 @@ public class CanvasText : Object {
   }
 
   /* Causes the selection to continue from the start of the text */
-  public void selection_to_start() {
-    if( _selstart == _selend ) {
+  public void selection_to_start( bool home ) {
+    if( (_selstart == _selend) || home ) {
       change_selection( 0, _cursor, "selection_to_start A" );
-      set_cursor_only( 0 );
+      if( !home ) {
+        set_cursor_only( 0 );
+      }
     } else {
       change_selection( _cursor, null, "selection_to_start B" );
       set_cursor_only( 0 );
@@ -516,10 +518,12 @@ public class CanvasText : Object {
   }
 
   /* Causes the selection to continue to the end of the text */
-  public void selection_to_end() {
-    if( _selstart == _selend ) {
+  public void selection_to_end( bool end ) {
+    if( (_selstart == _selend) || end ) {
       change_selection( _cursor, text.text.char_count(), "selection_to_end A" );
-      set_cursor_only( text.text.char_count() );
+      if( !end ) {
+        set_cursor_only( text.text.char_count() );
+      }
     } else {
       change_selection( null, text.text.char_count(), "selection_to_end B" );
       set_cursor_only( text.text.char_count() );
