@@ -245,7 +245,7 @@ public class DrawArea : Gtk.DrawingArea {
     });
 
     /* Set the theme to the default theme */
-    set_theme( win.themes.get_theme( _( "Default" ) ), false );
+    set_theme( win.themes.get_theme( settings.get_string( "default-theme" ) ), false );
 
     /* Create the undo text buffer */
     undo_text   = new UndoTextBuffer( this );

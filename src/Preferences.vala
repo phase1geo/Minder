@@ -23,19 +23,21 @@ using Gtk;
 
 public class Preferences : Gtk.Dialog {
 
+  private MainWindow    _win;
   private GLib.Settings _settings;
 
   /* Constructor */
-  public Preferences( Gtk.Window? parent, GLib.Settings settings ) {
+  public Preferences( MainWindow win, GLib.Settings settings ) {
 
     Object(
       border_width: 5,
       deletable: false,
       resizable: false,
       title: _("Preferences"),
-      transient_for: parent
+      transient_for: win
     );
 
+    _win      = win;
     _settings = settings;
 
     var stack = new Stack();
@@ -96,12 +98,15 @@ public class Preferences : Gtk.Dialog {
     grid.column_spacing = 12;
     grid.row_spacing    = 6;
 
-    grid.attach( make_label( "Enable animations" ),  0, 0 );
-    grid.attach( make_switch( "enable-animations" ), 1, 0 );
+    grid.attach( make_label( "Default theme" ), 0, 0 );
+    grid.attach( make_themes(), 1, 0, 2 );
 
-    grid.attach( make_label( "Text field font size" ), 0, 1 );
-    grid.attach( make_switch( "text-field-use-custom-font-size" ), 1, 1 );
-    grid.attach( make_spinner( "text-field-custom-font-size", 8, 24, 1 ), 2, 1 );
+    grid.attach( make_label( "Enable animations" ),  0, 1 );
+    grid.attach( make_switch( "enable-animations" ), 1, 1 );
+
+    grid.attach( make_label( "Text field font size" ), 0, 2 );
+    grid.attach( make_switch( "text-field-use-custom-font-size" ), 1, 2 );
+    grid.attach( make_spinner( "text-field-custom-font-size", 8, 24, 1 ), 2, 2 );
     grid.attach( make_info( _( "Specifies the custom font size to use in text editing fields (i.e, quick entry or notes field)." ) ), 3, 1 );
 
     return( grid );
@@ -137,6 +142,36 @@ public class Preferences : Gtk.Dialog {
     w.halign       = Align.START;
     w.tooltip_text = detail;
     return( w );
+  }
+
+  /* Creates the theme menu button */
+  private MenuButton make_themes() {
+
+    var mb  = new MenuButton();
+    var mnu = new Gtk.Menu();
+
+    mb.label = _win.themes.get_theme( _settings.get_string( "default-theme" ) ).label;
+    mb.popup = mnu;
+
+    /* Get the available theme names */
+    var names = new Array<string>();
+    _win.themes.names( ref names );
+
+    for( int i=0; i<names.length; i++ ) {
+      var name = names.index( i );
+      var lbl  = _win.themes.get_theme( name ).label;
+      var item = new Gtk.MenuItem.with_label( lbl );
+      item.activate.connect(() => {
+        _settings.set_string( "default-theme", name );
+        mb.label = lbl;
+      });
+      mnu.add( item );
+    }
+
+    mnu.show_all();
+
+    return( mb );
+
   }
 
 }
