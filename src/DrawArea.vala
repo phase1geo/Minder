@@ -4532,7 +4532,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Handles the edit on creation of a newly created connection */
   private void handle_connection_edit_on_creation( Connection conn ) {
-    if( _settings.get_boolean( "edit-connection-title-on-creation" ) ) {
+    if( (conn.title == null) && _settings.get_boolean( "edit-connection-title-on-creation" ) ) {
       conn.change_title( this, "", true );
       set_connection_mode( conn, ConnMode.EDITABLE, false );
     }
