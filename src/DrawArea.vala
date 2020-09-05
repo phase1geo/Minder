@@ -3418,26 +3418,42 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Called whenever the home key is entered in the drawing area */
-  private void handle_home() {
+  private void handle_home( bool shift ) {
     if( is_connection_editable() ) {
-      _selected.current_connection().title.move_cursor_to_start();
+      if( shift ) {
+        _selected.current_connection().title.selection_to_start( true );
+      } else {
+        _selected.current_connection().title.move_cursor_to_start();
+      }
       _im_context.reset();
       queue_draw();
     } else if( is_node_editable() ) {
-      _selected.current_node().name.move_cursor_to_start();
+      if( shift ) {
+        _selected.current_node().name.selection_to_start( true );
+      } else {
+        _selected.current_node().name.move_cursor_to_start();
+      }
       _im_context.reset();
       queue_draw();
     }
   }
 
   /* Called whenever the end key is entered in the drawing area */
-  private void handle_end() {
+  private void handle_end( bool shift ) {
     if( is_connection_editable() ) {
-      _selected.current_connection().title.move_cursor_to_end();
+      if( shift ) {
+        _selected.current_connection().title.selection_to_end( true );
+      } else {
+        _selected.current_connection().title.move_cursor_to_end();
+      }
       _im_context.reset();
       queue_draw();
     } else if( is_node_editable() ) {
-      _selected.current_node().name.move_cursor_to_end();
+      if( shift ) {
+        _selected.current_node().name.selection_to_end( true );
+      } else {
+        _selected.current_node().name.move_cursor_to_end();
+      }
       _im_context.reset();
       queue_draw();
     }
@@ -3477,7 +3493,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_control_up( bool shift ) {
     if( is_connection_editable() ) {
       if( shift ) {
-        _selected.current_connection().title.selection_to_start();
+        _selected.current_connection().title.selection_to_start( false );
       } else {
         _selected.current_connection().title.move_cursor_to_start();
       }
@@ -3485,7 +3501,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     } else if( is_node_editable() ) {
       if( shift ) {
-        _selected.current_node().name.selection_to_start();
+        _selected.current_node().name.selection_to_start( false );
       } else {
         _selected.current_node().name.move_cursor_to_start();
       }
@@ -3528,7 +3544,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void handle_control_down( bool shift ) {
     if( is_connection_editable() ) {
       if( shift ) {
-        _selected.current_connection().title.selection_to_end();
+        _selected.current_connection().title.selection_to_end( false );
       } else {
         _selected.current_connection().title.move_cursor_to_end();
       }
@@ -3536,7 +3552,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     } else if( is_node_editable() ) {
       if( shift ) {
-        _selected.current_node().name.selection_to_end();
+        _selected.current_node().name.selection_to_end( false );
       } else {
         _selected.current_node().name.move_cursor_to_end();
       }
@@ -3673,8 +3689,8 @@ public class DrawArea : Gtk.DrawingArea {
             case Key.Tab       :  handle_tab();            break;
             case Key.Right     :  handle_right( shift );   break;
             case Key.Left      :  handle_left( shift );    break;
-            case Key.Home      :  handle_home();           break;
-            case Key.End       :  handle_end();            break;
+            case Key.Home      :  handle_home( shift );    break;
+            case Key.End       :  handle_end( shift );     break;
             case Key.Up        :  handle_up( shift );      break;
             case Key.Down      :  handle_down( shift );    break;
             case Key.Page_Up   :  handle_pageup();         break;
