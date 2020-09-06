@@ -88,6 +88,10 @@ public class Preferences : Gtk.Dialog {
     grid.attach( make_switch( "edit-connection-title-on-creation" ), 1, 3 );
     grid.attach( make_info( _( "Specifies if the connection title will be added and put into edit mode immediately after the connection is made." ) ), 2, 3 );
 
+    grid.attach( make_label( "Select items on mouse hover" ), 0, 4 );
+    grid.attach( make_switch( "select-on-hover" ), 1, 4 );
+    grid.attach( make_info( _( "If enabled, selects items when mouse cursor hovers over the item." ) ), 2, 4 );
+
     return( grid );
 
   }
