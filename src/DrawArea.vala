@@ -102,6 +102,7 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _sticker_posx;
   private double           _sticker_posy;
   private NodeGroups       _groups;
+  private uint             _select_hover_id = 0;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -1984,6 +1985,12 @@ public class DrawArea : Gtk.DrawingArea {
   /* Handle mouse motion */
   private bool on_motion( EventMotion event ) {
 
+    /* Clear the hover */
+    if( _select_hover_id > 0 ) {
+      Source.remove( _select_hover_id );
+      _select_hover_id = 0;
+    }
+
     var control = (bool)(event.state & ModifierType.CONTROL_MASK);
     var shift   = (bool)(event.state & ModifierType.SHIFT_MASK);
     var alt     = (bool)(event.state & ModifierType.MOD1_MASK);
@@ -2121,12 +2128,21 @@ public class DrawArea : Gtk.DrawingArea {
         } else if( current_conn.within_note( _scaled_x, _scaled_y ) ) {
           set_tooltip_markup( prepare_note_markup( current_conn.note ) );
           return( false );
+        } else {
+          Connection? match_conn = _connections.on_curve( _scaled_x, _scaled_y );
+          if( (match_conn != null) && select_connection_on_hover( match_conn, shift ) ) {
+            return( false );
+          }
         }
       } else {
-        Connection? match_conn = _connections.within_note( _scaled_x, _scaled_y );
+        Connection? match_conn = _connections.on_curve( _scaled_x, _scaled_y );
         if( match_conn != null ) {
-          set_tooltip_markup( prepare_note_markup( match_conn.note ) );
-          return( false );
+          if( match_conn.within_note( _scaled_x, _scaled_y ) ) {
+            set_tooltip_markup( prepare_note_markup( match_conn.note ) );
+            return( false );
+          } else if( select_connection_on_hover( match_conn, shift ) ) {
+            return( false );
+          }
         }
       }
       for( int i=0; i<_nodes.length; i++ ) {
@@ -2156,16 +2172,94 @@ public class DrawArea : Gtk.DrawingArea {
           } else {
             set_cursor( null );
             set_tooltip_markup( null );
+            select_node_on_hover( match, shift );
           }
           return( false );
         }
       }
+
       set_cursor( null );
       set_tooltip_markup( null );
+      select_sticker_group_on_hover( shift );
+
     }
 
     return( false );
 
+  }
+
+  /* Selects the given node on hover, if enabled */
+  private bool select_node_on_hover( Node node, bool shift ) {
+    if( _settings.get_boolean( "select-on-hover" ) ) {
+      var timeout = _settings.get_int( "select-on-hover-timeout" );
+      _select_hover_id = Timeout.add( timeout, () => {
+        _select_hover_id = 0;
+        if( !shift || (_selected.num_nodes() == 0) ) {
+          _selected.set_current_node( node );
+        } else {
+          _selected.add_node( node );
+        }
+        queue_draw();
+        return( false );
+      });
+      return( true );
+    }
+    return( false );
+  }
+
+  /* Selects the given connection on hover, if enabled */
+  private bool select_connection_on_hover( Connection conn, bool shift ) {
+    if( _settings.get_boolean( "select-on-hover" ) ) {
+      var timeout = _settings.get_int( "select-on-hover-timeout" );
+      _select_hover_id = Timeout.add( timeout, () => {
+        _select_hover_id = 0;
+        if( !shift || (_selected.num_connections() == 0) ) {
+          _selected.set_current_connection( conn );
+        } else {
+          _selected.add_connection( conn );
+        }
+        queue_draw();
+        return( false );
+      });
+      return( true );
+    }
+    return( false );
+  }
+
+  /* Selects the current sticker/group on hover */
+  private bool select_sticker_group_on_hover( bool shift ) {
+    if( _settings.get_boolean( "select-on-hover" ) ) {
+      var timeout = _settings.get_int( "select-on-hover-timeout" );
+      var sticker = _stickers.is_within( _scaled_x, _scaled_y );
+      if( sticker != null ) {
+        _select_hover_id = Timeout.add( timeout, () => {
+          _select_hover_id = 0;
+          if( !shift || (_selected.num_stickers() == 0) ) {
+            _selected.set_current_sticker( sticker );
+          } else {
+            _selected.add_sticker( sticker );
+          }
+          queue_draw();
+          return( false );
+        });
+        return( true );
+      }
+      var group = _groups.node_group_containing( _scaled_x, _scaled_y );
+      if( group != null ) {
+        _select_hover_id = Timeout.add( timeout, () => {
+          _select_hover_id = 0;
+          if( !shift || (_selected.num_groups() == 0) ) {
+            _selected.set_current_group( group );
+          } else {
+            _selected.add_group( group );
+          }
+          queue_draw();
+          return( false );
+        });
+        return( true );
+      }
+    }
+    return( false );
   }
 
   /* Prepares the given note string for use in a markup tooltip */
