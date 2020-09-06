@@ -257,7 +257,7 @@
       <description>If enabled, selects items when mouse cursor hovers over the item.</description>
     </key>
     <key name="select-on-hover-timeout" type="i">
-      <default>500</default>
+      <default>300</default>
       <summary>If select-on-hover set, specifies hover time (in milliseconds).</summary>
       <description>If select-on-hover set, specifies hover time (in milliseconds).</description>
     </key>
