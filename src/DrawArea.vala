@@ -4220,11 +4220,10 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void paste_text_as_node( Node? node, string text ) {
-    var new_node = (node == null) ? create_root_node( text ) : create_child_node( node, text );
-    undo_buffer.add_item( new UndoNodeInsert( new_node ) );
-    select_node( new_node );
+    var nodes = new Array<Node>();
+    ExportText.import_text( text, 0, this, false, nodes );
+    undo_buffer.add_item( new UndoNodesInsert( this, nodes ) );
     queue_draw();
-    current_changed( this );
     changed();
   }
 
