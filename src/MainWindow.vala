@@ -1300,6 +1300,13 @@ public class MainWindow : ApplicationWindow {
     pdf_filter.add_pattern( "*.pdf" );
     dialog.add_filter( pdf_filter );
 
+    /* PlantUML */
+    FileFilter puml_filter = new FileFilter();
+    puml_filter.set_filter_name( _( "PlantUML" ) );
+    puml_filter.add_pattern( ".puml" );
+    puml_filter.add_pattern( ".txt" );
+    dialog.add_filter( puml_filter );
+
     /* PNG (transparent) */
     FileFilter pngt_filter = new FileFilter();
     pngt_filter.set_filter_name( _( "PNG (Transparent)" ) );
@@ -1370,6 +1377,8 @@ public class MainWindow : ApplicationWindow {
         ExportOutliner.export( repair_filename( fname, {".outliner"} ), da );
       } else if( pdf_filter == filter ) {
         ExportPDF.export( repair_filename( fname, {".pdf"} ), da );
+      } else if( puml_filter == filter ) {
+        ExportPlantUML.export( repair_filename( fname, {".txt"} ), da );
       } else if( pngt_filter == filter ) {
         ExportPNG.export( repair_filename( fname, {".png"} ), da, true );
       } else if( pngo_filter == filter ) {
