@@ -203,8 +203,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the panel so that we can resize */
     _pane = new Paned( Orientation.HORIZONTAL );
-    _pane.pack1( _nb,        true,  true );
-    _pane.pack2( _inspector, false, false );
+    _pane.pack1( _nb, true, true );
     _pane.move_handle.connect(() => {
       return( false );
     });
@@ -756,11 +755,6 @@ public class MainWindow : ApplicationWindow {
     _inspector_nb.append_page( box );
     _inspector_nb.append_page( _themer );
 
-    _inspector = new Revealer();
-    _inspector.set_transition_type( RevealerTransitionType.NONE );
-    _inspector.set_transition_duration( 0 );
-    _inspector.child = _inspector_nb;
-
   }
 
   private bool stack_keypress( EventKey e ) {
@@ -773,7 +767,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Show or hides the inspector sidebar */
   private void inspector_clicked() {
-    if( _inspector.child_revealed ) {
+    if( _inspector_nb.get_mapped() ) {
       hide_properties();
     } else {
       show_properties( null, false );
@@ -1049,13 +1043,13 @@ public class MainWindow : ApplicationWindow {
 
   /* Displays the node properties panel for the current node */
   private void show_properties( string? tab, bool grab_note ) {
-    if( !_inspector.reveal_child || ((tab != null) && (_stack.visible_child_name != tab)) ) {
+    if( !_inspector_nb.get_mapped() || ((tab != null) && (_stack.visible_child_name != tab)) ) {
       _prop_btn.image = _prop_hide;
       if( tab != null ) {
         _stack.visible_child_name = tab;
       }
-      if( !_inspector.reveal_child ) {
-        _inspector.reveal_child = true;
+      if( !_inspector_nb.get_mapped() ) {
+        _pane.pack2( _inspector_nb, false, false );
         var prop_width = _settings.get_int( "properties-width" );
         var pane_width = _pane.get_allocated_width();
         if( pane_width <= 1 ) {
@@ -1065,6 +1059,7 @@ public class MainWindow : ApplicationWindow {
         if( get_current_da( "show_properties 1" ) != null ) {
           get_current_da( "show_properties 2" ).see( -300 );
         }
+        _pane.show_all();
       }
       _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
     }
@@ -1089,10 +1084,10 @@ public class MainWindow : ApplicationWindow {
 
   /* Hides the node properties panel */
   private void hide_properties() {
-    if( !_inspector.reveal_child ) return;
+    if( !_inspector_nb.get_mapped() ) return;
     _prop_btn.image         = _prop_show;
     _pane.position_set      = false;
-    _inspector.reveal_child = false;
+    _pane.remove( _inspector_nb );
     get_current_da( "hide_properties" ).grab_focus();
     _settings.set_boolean( "current-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",     false );
