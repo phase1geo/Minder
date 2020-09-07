@@ -2888,6 +2888,22 @@ public class DrawArea : Gtk.DrawingArea {
    Creates a sibling node, positions it and appends immediately after the given
    sibling node.
   */
+  public Node create_main_node( Node root, NodeSide side, string name = "" ) {
+    var node   = new Node.with_name( this, name, layouts.get_default() );
+    node.side  = side;
+    node.style = StyleInspector.styles.get_style_for_level( 1, null );
+    if( root.layout.balanceable && ((side == NodeSide.LEFT) || (side == NodeSide.TOP)) ) {
+      node.attach( root, root.side_count( side ), _theme, false );
+    } else {
+      node.attach( root, -1, _theme, false );
+    }
+    return( node );
+  }
+
+  /*
+   Creates a sibling node, positions it and appends immediately after the given
+   sibling node.
+  */
   public Node create_sibling_node( Node sibling, string name = "" ) {
     var node   = new Node.with_name( this, name, layouts.get_default() );
     node.side  = sibling.side;
