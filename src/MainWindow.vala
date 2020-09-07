@@ -866,6 +866,11 @@ public class MainWindow : ApplicationWindow {
     dialog.add_filter( filter );
 
     filter = new FileFilter();
+    filter.set_filter_name( _( "PlantUML" ) );
+    filter.add_pattern( "*.puml" );
+    dialog.add_filter( filter );
+
+    filter = new FileFilter();
     filter.set_filter_name( _( "Portable Minder" ) );
     filter.add_pattern( "*.pminder" );
     dialog.add_filter( filter );
@@ -925,6 +930,11 @@ public class MainWindow : ApplicationWindow {
       var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportXMind.import( fname, da );
+    } else if( fname.has_suffix( ".puml" ) ) {
+      var new_fname = fname.substring( 0, (fname.length - 5) ) + ".minder";
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
+      update_title( da );
+      ExportPlantUML.import( fname, da );
     }
     return( false );
   }
@@ -1304,7 +1314,6 @@ public class MainWindow : ApplicationWindow {
     FileFilter puml_filter = new FileFilter();
     puml_filter.set_filter_name( _( "PlantUML" ) );
     puml_filter.add_pattern( ".puml" );
-    puml_filter.add_pattern( ".txt" );
     dialog.add_filter( puml_filter );
 
     /* PNG (transparent) */
@@ -1378,7 +1387,7 @@ public class MainWindow : ApplicationWindow {
       } else if( pdf_filter == filter ) {
         ExportPDF.export( repair_filename( fname, {".pdf"} ), da );
       } else if( puml_filter == filter ) {
-        ExportPlantUML.export( repair_filename( fname, {".txt"} ), da );
+        ExportPlantUML.export( repair_filename( fname, {".puml"} ), da );
       } else if( pngt_filter == filter ) {
         ExportPNG.export( repair_filename( fname, {".png"} ), da, true );
       } else if( pngo_filter == filter ) {
