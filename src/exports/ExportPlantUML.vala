@@ -29,9 +29,7 @@ public class ExportPlantUML : Object {
     bool retval = true;
     try {
       var os = file.replace( null, false, FileCreateFlags.NONE );
-      export_header( os, da );
       export_top_nodes( os, da );
-      export_footer( os, da );
     } catch( Error e ) {
       retval = false;
     }
@@ -44,7 +42,7 @@ public class ExportPlantUML : Object {
   }
 
   private static void export_footer( FileOutputStream os, DrawArea da ) {
-    var start = "@endmindmap\n";
+    var start = "@endmindmap\n\n";
     os.write( start.data );
 
   }
@@ -56,7 +54,9 @@ public class ExportPlantUML : Object {
 
       var nodes = da.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
+        export_header( os, da );
         export_node( os, nodes.index( i ), 1 );
+        export_footer( os, da );
       }
 
     } catch( Error e ) {
@@ -71,13 +71,17 @@ public class ExportPlantUML : Object {
     try {
 
       string layout_name = node.layout.name;
-      var    li          = '*';
+      var    title       = "";
 
-      if( !node.is_root() && ((layout_name == _( "Horizontal" )) || (layout_name == _( "Vertical" ))) ) {
-        li = ((node.side == NodeSide.LEFT) || (node.side == NodeSide.TOP)) ? '-' : '+';
+      if( node.main_branch() && ((node.index() == 0) || (node.side != node.parent.prev_child( node ).side)) ) {
+        switch( node.side ) {
+          case NodeSide.LEFT :
+          case NodeSide.TOP  :  title += "\nleft side\n";   break;
+          default            :  title += "\nright side\n";  break;
+        }
       }
 
-      var title = string.nfill( depth, li );
+      title += string.nfill( depth, '*' );
 
       if( !node.is_root() ) {
         if( node.style.node_border.is_fillable() ) {
@@ -89,7 +93,7 @@ public class ExportPlantUML : Object {
         title += " ";
       }
 
-      title += node.name.text.text + "\n";
+      title += node.name.text.text.replace( "\n", "\\n" ) + "\n";
 
       os.write( title.data );
 
