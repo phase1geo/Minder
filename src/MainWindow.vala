@@ -427,23 +427,28 @@ public class MainWindow : ApplicationWindow {
     _zoom_scale.format_value.connect( set_zoom_value );
 
     _zoom_in = new ModelButton();
-    _zoom_in.text = _( "Zoom In" );
+    _zoom_in.get_child().destroy();
+    _zoom_in.add( new Granite.AccelLabel.from_action_name( _( "Zoom In" ), "win.action_zoom_in" ) );
     _zoom_in.action_name = "win.action_zoom_in";
 
     _zoom_out = new ModelButton();
-    _zoom_out.text = _( "Zoom Out" );
+    _zoom_out.get_child().destroy();
+    _zoom_out.add( new Granite.AccelLabel.from_action_name( _( "Zoom Out" ), "win.action_zoom_out" ) );
     _zoom_out.action_name = "win.action_zoom_out";
 
     var fit = new ModelButton();
-    fit.text = _( "Zoom to Fit" );
+    fit.get_child().destroy();
+    fit.add( new Granite.AccelLabel.from_action_name( _( "Zoom to Fit" ), "win.action_zoom_fit" ) );
     fit.action_name = "win.action_zoom_fit";
 
     _zoom_sel = new ModelButton();
-    _zoom_sel.text = _( "Zoom to Fit Selected Node" );
+    _zoom_sel.get_child().destroy();
+    _zoom_sel.add( new Granite.AccelLabel.from_action_name( _( "Zoom to Fit Selected Node" ), "win.action_zoom_selected" ) );
     _zoom_sel.action_name = "win.action_zoom_selected";
 
     var actual = new ModelButton();
-    actual.text = _( "Zoom to Actual Size" );
+    actual.get_child().destroy();
+    actual.add( new Granite.AccelLabel.from_action_name( _( "Zoom to Actual Size" ), "win.action_zoom_actual" ) );
     actual.action_name = "win.action_zoom_actual";
 
     box.margin = 5;
@@ -629,11 +634,13 @@ public class MainWindow : ApplicationWindow {
     var box = new Box( Orientation.VERTICAL, 5 );
 
     var export = new ModelButton();
-    export.text = _( "Export…" );
+    export.get_child().destroy();
+    export.add( new Granite.AccelLabel.from_action_name( _( "Export…" ), "win.action_export" ) );
     export.action_name = "win.action_export";
 
     var print = new ModelButton();
-    print.text = _( "Print" );
+    print.get_child().destroy();
+    print.add( new Granite.AccelLabel.from_action_name( _( "Print…" ), "win.action_print" ) );
     print.action_name = "win.action_print";
 
     box.margin = 5;
@@ -679,11 +686,13 @@ public class MainWindow : ApplicationWindow {
     var box = new Box( Orientation.VERTICAL, 5 );
 
     var prefs = new ModelButton();
-    prefs.text = _( "Preferences" );
+    prefs.get_child().destroy();
+    prefs.add( new Granite.AccelLabel.from_action_name( _( "Preferences" ), "win.action_prefs" ) );
     prefs.action_name = "win.action_prefs";
 
     var shortcuts = new ModelButton();
-    shortcuts.text = _( "Shortcuts Cheatsheet" );
+    shortcuts.get_child().destroy();
+    shortcuts.add( new Granite.AccelLabel.from_action_name( _( "Shortcuts Cheatsheet" ), "win.action_shortcuts" ) );
     shortcuts.action_name = "win.action_shortcuts";
 
     box.margin = 5;

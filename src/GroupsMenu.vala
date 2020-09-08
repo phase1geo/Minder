@@ -35,7 +35,8 @@ public class GroupsMenu : Gtk.Menu {
 
     _da = da;
 
-    _delete = new Gtk.MenuItem.with_label( _( "Delete" ) );
+    _delete = new Gtk.MenuItem();
+    _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
     _delete.activate.connect( delete_groups );
 
     _merge = new Gtk.MenuItem.with_label( _( "Merge" ) );
