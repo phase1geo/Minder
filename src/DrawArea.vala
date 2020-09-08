@@ -3790,34 +3790,33 @@ public class DrawArea : Gtk.DrawingArea {
           default            :  return( false );
         }
       } else if( nomod || shift ) {
-        if( !insert_text( e.str ) ) {
-          switch( e.keyval ) {
-            case Key.BackSpace :  handle_backspace();      break;
-            case Key.Delete    :  handle_delete();         break;
-            case Key.Escape    :  handle_escape();         break;
-            case Key.Return    :  handle_return( shift );  break;
-            case Key.Tab       :  handle_tab();            break;
-            case Key.Right     :  handle_right( shift );   break;
-            case Key.Left      :  handle_left( shift );    break;
-            case Key.Home      :  handle_home( shift );    break;
-            case Key.End       :  handle_end( shift );     break;
-            case Key.Up        :  handle_up( shift );      break;
-            case Key.Down      :  handle_down( shift );    break;
-            case Key.Page_Up   :  handle_pageup();         break;
-            case Key.Page_Down :  handle_pagedn();         break;
-            case Key.Control_L :  handle_control( true );  break;
-            case Key.F10       :  if( shift ) show_contextual_menu( e );  break;
-            case Key.Menu      :  show_contextual_menu( e );  break;
-            default            :
-              if( current_node != null ) {
-                return( handle_node_keypress( e ) );
-              } else if( current_conn != null ) {
-                return( handle_connection_keypress( e ) );
-              } else {
-                return( false );
-              }
-              break;
-          }
+        switch( e.keyval ) {
+          case Key.BackSpace :  handle_backspace();      break;
+          case Key.Delete    :  handle_delete();         break;
+          case Key.Escape    :  handle_escape();         break;
+          case Key.Return    :  handle_return( shift );  break;
+          case Key.Tab       :  handle_tab();            break;
+          case Key.Right     :  handle_right( shift );   break;
+          case Key.Left      :  handle_left( shift );    break;
+          case Key.Home      :  handle_home( shift );    break;
+          case Key.End       :  handle_end( shift );     break;
+          case Key.Up        :  handle_up( shift );      break;
+          case Key.Down      :  handle_down( shift );    break;
+          case Key.Page_Up   :  handle_pageup();         break;
+          case Key.Page_Down :  handle_pagedn();         break;
+          case Key.Control_L :  handle_control( true );  break;
+          case Key.F10       :  if( shift ) show_contextual_menu( e );  break;
+          case Key.Menu      :  show_contextual_menu( e );  break;
+          default            :
+            if( (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
+              return( handle_node_keypress( e ) );
+            } else if( (current_conn != null) && (current_node.mode != NodeMode.EDITABLE) ) {
+              return( handle_connection_keypress( e ) );
+            } else {
+              _im_context.filter_keypress( e );
+              return( false );
+            }
+            break;
         }
       }
 
