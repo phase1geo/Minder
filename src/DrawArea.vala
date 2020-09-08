@@ -3810,7 +3810,7 @@ public class DrawArea : Gtk.DrawingArea {
           default            :
             if( (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
               return( handle_node_keypress( e ) );
-            } else if( (current_conn != null) && (current_node.mode != NodeMode.EDITABLE) ) {
+            } else if( (current_conn != null) && (current_conn.mode != ConnMode.EDITABLE) ) {
               return( handle_connection_keypress( e ) );
             } else {
               _im_context.filter_keypress( e );
