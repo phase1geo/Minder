@@ -31,9 +31,9 @@ public class ConnectionsMenu : Gtk.Menu {
 
     _da = da;
 
-    _delete = new Gtk.MenuItem.with_label( _( "Delete" ) );
+    _delete = new Gtk.MenuItem();
+    _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
     _delete.activate.connect( delete_connections );
-    Utils.add_accel_label( _delete, 65535, 0 );
 
     /* Add the menu items to the menu */
     add( _delete );
