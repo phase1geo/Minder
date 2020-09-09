@@ -42,16 +42,20 @@ public class NodesMenu : Gtk.Menu {
 
     _da = da;
 
-    _copy = new Gtk.MenuItem.with_label( _( "Copy" ) );
+    _copy = new Gtk.MenuItem();
+    _copy.add( new Granite.AccelLabel( _( "Copy" ), "<Control>c" ) );
     _copy.activate.connect( copy_nodes );
 
-    _cut = new Gtk.MenuItem.with_label( _( "Cut" ) );
+    _cut = new Gtk.MenuItem();
+    _cut.add( new Granite.AccelLabel( _( "Cut" ), "<Control>x" ) );
     _cut.activate.connect( cut_nodes );
 
-    _delete = new Gtk.MenuItem.with_label( _( "Delete" ) );
+    _delete = new Gtk.MenuItem();
+    _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
     _delete.activate.connect( delete_nodes );
 
-    _fold = new Gtk.MenuItem.with_label( _( "Fold Children" ) );
+    _fold = new Gtk.MenuItem();
+    _fold.add( new Granite.AccelLabel( _( "Fold Children" ), "f" ) );
     _fold.activate.connect( fold_nodes );
 
     _connect = new Gtk.MenuItem.with_label( _( "Connect" ) );
@@ -83,13 +87,15 @@ public class NodesMenu : Gtk.Menu {
     _selnodes = new Gtk.MenuItem.with_label( _( "Select" ) );
     _selnodes.set_submenu( selmenu );
 
-    _selparent = new Gtk.MenuItem.with_label( _( "Parent Nodes" ) );
+    _selparent = new Gtk.MenuItem();
+    _selparent.add( new Granite.AccelLabel( _( "Parent Nodes" ), "a" ) );
     _selparent.activate.connect( select_parent_nodes );
-    Utils.add_accel_label( _selparent, 'a', 0 );
+    // Utils.add_accel_label( _selparent, 'a', 0 );
 
-    _selchildren = new Gtk.MenuItem.with_label( _( "Child Nodes" ) );
+    _selchildren = new Gtk.MenuItem();
+    _selchildren.add( new Granite.AccelLabel( _( "Child Nodes" ), "d" ) );
     _selchildren.activate.connect( select_child_nodes );
-    Utils.add_accel_label( _selchildren, 'd', 0 );
+    // Utils.add_accel_label( _selchildren, 'd', 0 );
 
     selmenu.add( _selparent );
     selmenu.add( _selchildren );
@@ -99,22 +105,28 @@ public class NodesMenu : Gtk.Menu {
     _align = new Gtk.MenuItem.with_label( _( "Align Nodes" ) );
     _align.set_submenu( align_menu );
 
-    var align_top = new Gtk.MenuItem.with_label( _( "Align Top" ) );
+    var align_top = new Gtk.MenuItem();
+    align_top.add( new Granite.AccelLabel( _( "Align Top" ), "minus" ) );
     align_top.activate.connect( align_to_top );
 
-    var align_hcenter = new Gtk.MenuItem.with_label( _( "Align Center Horizontally" ) );
+    var align_hcenter = new Gtk.MenuItem();
+    align_hcenter.add( new Granite.AccelLabel( _( "Align Center Horizontally" ), "equal" ) );
     align_hcenter.activate.connect( align_to_hcenter );
 
-    var align_bottom = new Gtk.MenuItem.with_label( _( "Align Bottom" ) );
+    var align_bottom = new Gtk.MenuItem();
+    align_bottom.add( new Granite.AccelLabel( _( "Align Bottom" ), "underscore" ) );
     align_bottom.activate.connect( align_to_bottom );
 
-    var align_left = new Gtk.MenuItem.with_label( _( "Align Left" ) );
+    var align_left = new Gtk.MenuItem();
+    align_left.add( new Granite.AccelLabel( _( "Align Left" ), "bracketleft" ) );
     align_left.activate.connect( align_to_left );
 
-    var align_vcenter = new Gtk.MenuItem.with_label( _( "Align Center Veritically" ) );
+    var align_vcenter = new Gtk.MenuItem();
+    align_vcenter.add( new Granite.AccelLabel( _( "Align Center Vertically" ), "bar" ) );
     align_vcenter.activate.connect( align_to_vcenter );
 
-    var align_right = new Gtk.MenuItem.with_label( _( "Align Right" ) );
+    var align_right = new Gtk.MenuItem();
+    align_right.add( new Granite.AccelLabel( _( "Align Right" ), "bracketright" ) );
     align_right.activate.connect( align_to_right );
 
     align_menu.add( align_top );

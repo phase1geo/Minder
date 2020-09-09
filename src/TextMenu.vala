@@ -40,21 +40,25 @@ public class TextMenu : Gtk.Menu {
 
     _da = da;
 
-    _copy = new Gtk.MenuItem.with_label( _( "Copy" ) );
+    _copy = new Gtk.MenuItem();
+    _copy.add( new Granite.AccelLabel( _( "Copy" ), "<Control>c" ) );
     _copy.activate.connect( copy );
-    Utils.add_accel_label( _copy, 'c', Gdk.ModifierType.CONTROL_MASK );
+    // Utils.add_accel_label( _copy, 'c', Gdk.ModifierType.CONTROL_MASK );
 
-    _cut = new Gtk.MenuItem.with_label( _( "Cut" ) );
+    _cut = new Gtk.MenuItem();
+    _cut.add( new Granite.AccelLabel( _( "Cut" ), "<Control>x" ) );
     _cut.activate.connect( cut );
-    Utils.add_accel_label( _cut, 'x', Gdk.ModifierType.CONTROL_MASK );
+    // Utils.add_accel_label( _cut, 'x', Gdk.ModifierType.CONTROL_MASK );
 
-    _paste = new Gtk.MenuItem.with_label( _( "Paste" ) );
+    _paste = new Gtk.MenuItem();
+    _paste.add( new Granite.AccelLabel( _( "Paste" ), "<Control>v" ) );
     _paste.activate.connect( paste );
-    Utils.add_accel_label( _paste, 'v', Gdk.ModifierType.CONTROL_MASK );
+    // Utils.add_accel_label( _paste, 'v', Gdk.ModifierType.CONTROL_MASK );
 
-    _emoji = new Gtk.MenuItem.with_label( _( "Insert Emoji" ) );
+    _emoji = new Gtk.MenuItem();
+    _emoji.add( new Granite.AccelLabel( _( "Insert Emoji" ), "<Control>period" ) );
     _emoji.activate.connect( insert_emoji );
-    Utils.add_accel_label( _emoji, '.', Gdk.ModifierType.CONTROL_MASK );
+    // Utils.add_accel_label( _emoji, '.', Gdk.ModifierType.CONTROL_MASK );
 
     _open_link = new Gtk.MenuItem.with_label( _( "Open Link" ) );
     _open_link.activate.connect( open_link );

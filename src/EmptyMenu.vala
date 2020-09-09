@@ -34,25 +34,25 @@ public class EmptyMenu : Gtk.Menu {
 
     _da = da;
 
-    _paste = new Gtk.MenuItem.with_label( _( "Paste" ) );
+    _paste = new Gtk.MenuItem();
+    _paste.add( new Granite.AccelLabel( _( "Paste" ), "<Control>v" ) );
     _paste.activate.connect( paste );
-    Utils.add_accel_label( _paste, 'v', Gdk.ModifierType.CONTROL_MASK );
 
-    _root = new Gtk.MenuItem.with_label( _( "Add Root Node" ) );
+    _root = new Gtk.MenuItem();
+    _root.add( new Granite.AccelLabel( _( "Add Root Node" ), "Return" ) );
     _root.activate.connect( add_root_node );
-    Utils.add_accel_label( _root, 65293, 0 );
 
-    _quick = new Gtk.MenuItem.with_label( _( "Add Nodes With Quick Entry" ) );
+    _quick = new Gtk.MenuItem();
+    _quick.add( new Granite.AccelLabel( _( "Add Nodes With Quick Entry" ), "<Control><Shift>e" ) );
     _quick.activate.connect( add_quick_entry );
-    Utils.add_accel_label( _quick, 'e', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK) );
 
     var selnode = new Gtk.MenuItem.with_label( _( "Select Node" ) );
     var selmenu = new Gtk.Menu();
     selnode.set_submenu( selmenu );
 
-    _selroot = new Gtk.MenuItem.with_label( _( "Root" ) );
+    _selroot = new Gtk.MenuItem();
+    _selroot.add( new Granite.AccelLabel( _( "Root" ), "m" ) );
     _selroot.activate.connect( select_root_node );
-    Utils.add_accel_label( _selroot, 'm', 0 );
 
     /* Add the menu items to the menu */
     add( _paste );
