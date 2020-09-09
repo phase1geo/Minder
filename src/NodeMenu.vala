@@ -68,27 +68,22 @@ public class NodeMenu : Gtk.Menu {
     _copy = new Gtk.MenuItem();
     _copy.add( new Granite.AccelLabel( _( "Copy" ), "<Control>c" ) );
     _copy.activate.connect( copy );
-    // Utils.add_accel_label( _copy, 'c', Gdk.ModifierType.CONTROL_MASK );
 
     _cut = new Gtk.MenuItem();
     _cut.add( new Granite.AccelLabel( _( "Cut" ), "<Control>x" ) );
     _cut.activate.connect( cut );
-    // Utils.add_accel_label( _cut, 'x', Gdk.ModifierType.CONTROL_MASK );
 
     _paste = new Gtk.MenuItem();
     _paste.add( new Granite.AccelLabel( _( "Paste" ), "<Control>v" ) );
     _paste.activate.connect( paste );
-    // Utils.add_accel_label( _paste, 'v', Gdk.ModifierType.CONTROL_MASK );
 
     _replace = new Gtk.MenuItem();
     _replace.add( new Granite.AccelLabel( _( "Paste and Replace Node" ), "<Control><Shift>v" ) );
     _replace.activate.connect( replace );
-    // Utils.add_accel_label( _replace, 'v', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK) );
 
     _delete = new Gtk.MenuItem();
     _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
     _delete.activate.connect( delete_node );
-    // Utils.add_accel_label( _delete, 65535, 0 );
 
     _delonly = new Gtk.MenuItem.with_label( _( "Delete Single Node" ) );
     _delonly.activate.connect( delete_node_only );
@@ -96,9 +91,9 @@ public class NodeMenu : Gtk.Menu {
     _edit = new Gtk.MenuItem();
     _edit.add( new Granite.AccelLabel( _( "Edit Text…" ), "e" ) );
     _edit.activate.connect( edit_node );
-    // Utils.add_accel_label( _edit, 'e', 0 );
 
-    _task = new Gtk.MenuItem.with_label( _( "Add Task" ) );
+    _task = new Gtk.MenuItem();
+    _task.add( new Granite.AccelLabel( _( "Add Task" ), "t" ) );
     _task.activate.connect( change_task );
 
     _note = new Gtk.MenuItem.with_label( _( "Add Note" ) );
@@ -110,18 +105,17 @@ public class NodeMenu : Gtk.Menu {
     _sticker = new Gtk.MenuItem.with_label( _( "Remove Sticker" ) );
     _sticker.activate.connect( remove_sticker );
 
-    _link = new Gtk.MenuItem.with_label( _( "Add Node Link" ) );
+    _link = new Gtk.MenuItem();
+    _link.add( new Granite.AccelLabel( _( "Add Node Link" ), "y" ) );
     _link.activate.connect( change_link );
 
     _conn = new Gtk.MenuItem();
     _conn.add( new Granite.AccelLabel( _( "Add Connection" ), "x" ) );
     _conn.activate.connect( add_connection );
-    // Utils.add_accel_label( _conn, 'x', 0 );
 
     _group = new Gtk.MenuItem();
     _group.add( new Granite.AccelLabel( _( "Add Group" ), "g" ) );
     _group.activate.connect( add_group );
-    // Utils.add_accel_label( _group, 'g', 0 );
 
     _link_color = new Gtk.MenuItem.with_label( _( "Link Color" ) );
     var link_color_menu = new Gtk.Menu();
@@ -139,7 +133,6 @@ public class NodeMenu : Gtk.Menu {
     _fold = new Gtk.MenuItem();
     _fold.add( new Granite.AccelLabel( _( "Fold Children" ), "f" ) );
     _fold.activate.connect( fold_node );
-    // Utils.add_accel_label( _fold, 'f', 0 );
 
     _detach = new Gtk.MenuItem.with_label( _( "Detach" ) );
     _detach.activate.connect( detach_node );
@@ -153,12 +146,10 @@ public class NodeMenu : Gtk.Menu {
     _child = new Gtk.MenuItem();
     _child.add( new Granite.AccelLabel( _( "Add Child Node" ), "Tab" ) );
     _child.activate.connect( add_child_node );
-    // Utils.add_accel_label( _child, 65289, 0 );
 
     _sibling = new Gtk.MenuItem();
     _sibling.add( new Granite.AccelLabel( _( "Add Sibling Node" ), "Return" ) );
     _sibling.activate.connect( add_sibling_node );
-    // Utils.add_accel_label( _sibling, 65293, 0 );
 
     var quick_menu = new Gtk.Menu();
     var quick = new Gtk.MenuItem.with_label( _( "Quick Entry" ) );
@@ -167,7 +158,6 @@ public class NodeMenu : Gtk.Menu {
     _quick_insert = new Gtk.MenuItem();
     _quick_insert.add( new Granite.AccelLabel( _( "Insert Nodes" ), "<Control><Shift>e" ) );
     _quick_insert.activate.connect( quick_entry_insert );
-    // Utils.add_accel_label( _quick_insert, 'e', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK) );
 
     _quick_replace = new Gtk.MenuItem();
     _quick_replace.add( new Granite.AccelLabel( _( "Replace Nodes" ), "<Control><Shift>r" ) );
@@ -309,6 +299,12 @@ public class NodeMenu : Gtk.Menu {
     return( (current != null) && current.task_enabled() );
   }
 
+  /* Returns true if the currently selected node task is marked as done */
+  private bool node_task_is_done() {
+    Node? current = _da.get_current_node();
+    return( node_is_task() && current.task_done() );
+  }
+
   /* Returns true if a note is associated with the currently selected node */
   private bool node_has_note() {
     Node? current = _da.get_current_node();
@@ -385,11 +381,17 @@ public class NodeMenu : Gtk.Menu {
     _sticker.set_sensitive( current.sticker != null );
 
     /* Set the menu item labels */
-    _task.label  = node_is_task()   ? _( "Remove Task" )      : _( "Add Task" );
-    _note.label  = node_has_note()  ? _( "Remove Note" )      : _( "Add Note" );
-    _image.label = node_has_image() ? _( "Remove Image" )     : _( "Add Image" );
-    _link.label  = node_has_link()  ? _( "Remove Node Link" ) : _( "Add Node Link" );
-    _fold.label  = node_is_folded() ? _( "Unfold Children" )  : _( "Fold Children" );
+    var task_acc = (Granite.AccelLabel)_task.get_child();
+    var link_acc = (Granite.AccelLabel)_link.get_child();
+    var fold_acc = (Granite.AccelLabel)_fold.get_child();
+    task_acc.label = node_is_task()   ?
+                     node_task_is_done() ? _( "Remove Task" ) :
+                                           _( "Mark Task As Done" ) :
+                                           _( "Add Task" );
+    _note.label    = node_has_note()  ? _( "Remove Note" )      : _( "Add Note" );
+    _image.label   = node_has_image() ? _( "Remove Image" )     : _( "Add Image" );
+    link_acc.label = node_has_link()  ? _( "Remove Node Link" ) : _( "Add Node Link" );
+    fold_acc.label = node_is_folded() ? _( "Unfold Children" )  : _( "Fold Children" );
 
     /* Set the paste and replace text */
     var clipboard = Clipboard.get_default( get_display() );
@@ -454,7 +456,11 @@ public class NodeMenu : Gtk.Menu {
   /* Changes the task status of the currently selected node */
   private void change_task() {
     if( node_is_task() ) {
-      _da.change_current_task( false, false );
+      if( node_task_is_done() ) {
+        _da.change_current_task( false, false );
+      } else {
+        _da.change_current_task( true, true );
+      }
     } else {
       _da.change_current_task( true, false );
     }

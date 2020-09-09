@@ -3929,7 +3929,13 @@ public class DrawArea : Gtk.DrawingArea {
       case Key.s :  see();  break;
       case Key.t :  // Toggle the task done indicator
         if( current.is_task() ) {
-          toggle_task( current );
+          if( current.task_done() ) {
+            change_current_task( false, false );
+          } else {
+            change_current_task( true, true );
+          }
+        } else {
+          change_current_task( true, false );
         }
         break;
       case Key.u :  // Perform undo
