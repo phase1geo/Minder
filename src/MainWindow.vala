@@ -1548,12 +1548,13 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Generate a notification */
-  public void notification( string title, string msg ) {
+  public void notification( string title, string msg, NotificationPriority priority = NotificationPriority.NORMAL ) {
     GLib.Application? app = null;
     @get( "application", ref app );
     if( app != null ) {
       var notification = new Notification( title );
       notification.set_body( msg );
+      notification.set_priority( priority );
       app.send_notification( "com.github.phase1geo.minder", notification );
     }
   }
