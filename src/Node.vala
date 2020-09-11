@@ -1125,11 +1125,11 @@ public class Node : Object {
     }
     node->new_prop( "group", group.to_string() );
 
+    style.save_node( node );
+
     if( _image != null ) {
       _image.save( node );
     }
-
-    style.save_node( node );
 
     node->add_child( name.save( "nodename" ) );
     node->new_text_child( null, "nodenote", note );
