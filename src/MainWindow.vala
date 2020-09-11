@@ -1369,44 +1369,47 @@ public class MainWindow : ApplicationWindow {
       var da     = get_current_da( "action_export" );
 
       if( bmp_filter == filter ) {
-        ExportImage.export( repair_filename( fname, {".bmp"} ), "bmp", da );
+        ExportImage.export( fname = repair_filename( fname, {".bmp"} ), "bmp", da );
       } else if( csv_filter == filter ) {
-        ExportCSV.export( repair_filename( fname, {".csv"} ), da );
+        ExportCSV.export( fname = repair_filename( fname, {".csv"} ), da );
       } else if( fm_filter == filter ) {
-        ExportFreemind.export( repair_filename( fname, {".mm"} ), da );
+        ExportFreemind.export( fname = repair_filename( fname, {".mm"} ), da );
       } else if( fp_filter == filter ) {
-        ExportFreeplane.export( repair_filename( fname, {".mm"} ), da );
+        ExportFreeplane.export( fname = repair_filename( fname, {".mm"} ), da );
       } else if( jpeg_filter == filter ) {
-        ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", da );
+        ExportImage.export( fname = repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", da );
       } else if( md_filter == filter ) {
-        ExportMarkdown.export( repair_filename( fname, {".md", ".markdown"} ), da );
+        ExportMarkdown.export( fname = repair_filename( fname, {".md", ".markdown"} ), da );
       } else if( mmd_filter == filter ) {
-        ExportMermaid.export( repair_filename( fname, {".mmd"} ), da );
+        ExportMermaid.export( fname = repair_filename( fname, {".mmd"} ), da );
       } else if( opml_filter == filter ) {
-        ExportOPML.export( repair_filename( fname, {".opml"} ), da );
+        ExportOPML.export( fname = repair_filename( fname, {".opml"} ), da );
       } else if( org_filter == filter ) {
-        ExportOrgMode.export( repair_filename( fname, {".org"} ), da );
+        ExportOrgMode.export( fname = repair_filename( fname, {".org"} ), da );
       } else if( outliner_filter == filter ) {
-        ExportOutliner.export( repair_filename( fname, {".outliner"} ), da );
+        ExportOutliner.export( fname = repair_filename( fname, {".outliner"} ), da );
       } else if( pdf_filter == filter ) {
-        ExportPDF.export( repair_filename( fname, {".pdf"} ), da );
+        ExportPDF.export( fname = repair_filename( fname, {".pdf"} ), da );
       } else if( puml_filter == filter ) {
-        ExportPlantUML.export( repair_filename( fname, {".puml"} ), da );
+        ExportPlantUML.export( fname = repair_filename( fname, {".puml"} ), da );
       } else if( pngt_filter == filter ) {
-        ExportPNG.export( repair_filename( fname, {".png"} ), da, true );
+        ExportPNG.export( fname = repair_filename( fname, {".png"} ), da, true );
       } else if( pngo_filter == filter ) {
-        ExportPNG.export( repair_filename( fname, {".png"} ), da, false );
+        ExportPNG.export( fname = repair_filename( fname, {".png"} ), da, false );
       } else if( pmind_filter == filter ) {
-        ExportPortableMinder.export( repair_filename( fname, {".pminder"} ), da );
+        ExportPortableMinder.export( fname = repair_filename( fname, {".pminder"} ), da );
       } else if( txt_filter == filter ) {
-        ExportText.export( repair_filename( fname, {".txt"} ), da );
+        ExportText.export( fname = repair_filename( fname, {".txt"} ), da );
       } else if( svg_filter == filter ) {
-        ExportSVG.export( repair_filename( fname, {".svg"} ), da );
+        ExportSVG.export( fname = repair_filename( fname, {".svg"} ), da );
       } else if( xmind_filter == filter ) {
-        ExportXMind.export( repair_filename( fname, {".xmind"} ), da );
+        ExportXMind.export( fname = repair_filename( fname, {".xmind"} ), da );
       } else if( yed_filter == filter ) {
-        ExportYed.export( repair_filename( fname, {".graphml"} ), da );
+        ExportYed.export( fname = repair_filename( fname, {".graphml"} ), da );
       }
+
+      /* Generate notification to indicate that the export completed */
+      notification( _( "Minder Export Completed" ), fname );
 
     }
 
@@ -1542,6 +1545,17 @@ public class MainWindow : ApplicationWindow {
     int min_height, nat_height;
     _scale_lbl.get_preferred_height( out min_height, out nat_height );
     return( nat_height );
+  }
+
+  /* Generate a notification */
+  public void notification( string title, string msg ) {
+    GLib.Application? app = null;
+    @get( "application", ref app );
+    if( app != null ) {
+      var notification = new Notification( title );
+      notification.set_body( msg );
+      app.send_notification( "com.github.phase1geo.minder", notification );
+    }
   }
 
 }
