@@ -450,7 +450,7 @@ public class NodeMenu : Gtk.Menu {
 
   /* Displays the sidebar to edit the node properties */
   private void edit_node() {
-    _da.show_properties( "current", false );
+    _da.show_properties( "current", PropertyGrab.FIRST );
   }
 
   /* Changes the task status of the currently selected node */
@@ -472,7 +472,7 @@ public class NodeMenu : Gtk.Menu {
     if( node_has_note() ) {
       _da.change_current_node_note( "" );
     } else {
-      _da.show_properties( "current", true );
+      _da.show_properties( "current", PropertyGrab.NOTE );
     }
     _da.current_changed( _da );
   }

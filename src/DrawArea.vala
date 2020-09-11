@@ -170,7 +170,7 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void current_changed( DrawArea da );
   public signal void theme_changed( DrawArea da );
   public signal void scale_changed( double scale );
-  public signal void show_properties( string? tab, bool grab_note );
+  public signal void show_properties( string? tab, PropertyGrab grab_type );
   public signal void hide_properties();
   public signal void loaded();
 
@@ -3868,7 +3868,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         break;
       case Key.f :  select_connection_node( true );   break;
-      case Key.i :  show_properties( "current", false );  break;
+      case Key.i :  show_properties( "current", PropertyGrab.FIRST );  break;
       case Key.n :  select_connection( 1 );  break;
       case Key.p :  select_connection( -1 );  break;
       case Key.r :  // Perform redo
@@ -3914,7 +3914,7 @@ public class DrawArea : Gtk.DrawingArea {
       case Key.f :  toggle_fold( current );  break;
       case Key.g :  add_group();  break;
       case Key.h :  handle_left( false );  break;
-      case Key.i :  show_properties( "current", false );  break;
+      case Key.i :  show_properties( "current", PropertyGrab.FIRST );  break;
       case Key.j :  handle_down( false );  break;
       case Key.k :  handle_up( false );  break;
       case Key.l :  handle_right( false );  break;

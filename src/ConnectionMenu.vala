@@ -131,7 +131,7 @@ public class ConnectionMenu : Gtk.Menu {
     if( connection_has_note() ) {
       _da.change_current_connection_note( "" );
     } else {
-      _da.show_properties( "current", true );
+      _da.show_properties( "current", PropertyGrab.NOTE );
     }
     _da.current_changed( _da );
   }

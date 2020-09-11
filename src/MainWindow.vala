@@ -29,6 +29,12 @@ public enum TabAddReason {
   LOAD
 }
 
+public enum PropertyGrab {
+  NONE,
+  FIRST,
+  NOTE
+}
+
 public class MainWindow : ApplicationWindow {
 
   private const string DESKTOP_SCHEMA = "io.elementary.desktop";
@@ -85,7 +91,11 @@ public class MainWindow : ApplicationWindow {
     { "action_export",        action_export },
     { "action_print",         action_print },
     { "action_prefs",         action_prefs },
-    { "action_shortcuts",     action_shortcuts }
+    { "action_shortcuts",     action_shortcuts },
+    { "action_show_current",  action_show_current },
+    { "action_show_style",    action_show_style },
+    { "action_show_stickers", action_show_stickers },
+    { "action_show_map",      action_show_map }
   };
 
   private bool     on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -218,13 +228,13 @@ public class MainWindow : ApplicationWindow {
 
     /* If the settings says to display the properties, do it now */
     if( _settings.get_boolean( "current-properties-shown" ) ) {
-      show_properties( "current", false );
+      show_properties( "current", PropertyGrab.NONE );
     } else if( _settings.get_boolean( "map-properties-shown" ) ) {
-      show_properties( "map", false );
+      show_properties( "map", PropertyGrab.NONE );
     } else if( _settings.get_boolean( "style-properties-shown" ) ) {
-      show_properties( "style", false );
+      show_properties( "style", PropertyGrab.NONE );
     } else if( _settings.get_boolean( "sticker-properties-shown" ) ) {
-      show_properties( "sticker", false );
+      show_properties( "sticker", PropertyGrab.NONE );
     }
 
     /* Look for any changes to the settings */
@@ -390,16 +400,20 @@ public class MainWindow : ApplicationWindow {
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
 
-    app.set_accels_for_action( "win.action_save",        { "<Control>s" } );
-    app.set_accels_for_action( "win.action_quit",        { "<Control>q" } );
-    app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
-    app.set_accels_for_action( "win.action_zoom_fit",    { "<Control>1" } );
-    app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
-    app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
-    app.set_accels_for_action( "win.action_export",      { "<Control>e" } );
-    app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
-    app.set_accels_for_action( "win.action_prefs",       { "<Control>comma" } );
-    app.set_accels_for_action( "win.action_shortcuts",   { "F1" } );
+    app.set_accels_for_action( "win.action_save",          { "<Control>s" } );
+    app.set_accels_for_action( "win.action_quit",          { "<Control>q" } );
+    app.set_accels_for_action( "win.action_zoom_actual",   { "<Control>0" } );
+    app.set_accels_for_action( "win.action_zoom_fit",      { "<Control>1" } );
+    app.set_accels_for_action( "win.action_zoom_in",       { "<Control>plus" } );
+    app.set_accels_for_action( "win.action_zoom_out",      { "<Control>minus" } );
+    app.set_accels_for_action( "win.action_export",        { "<Control>e" } );
+    app.set_accels_for_action( "win.action_print",         { "<Control>p" } );
+    app.set_accels_for_action( "win.action_prefs",         { "<Control>comma" } );
+    app.set_accels_for_action( "win.action_shortcuts",     { "F1" } );
+    app.set_accels_for_action( "win.action_show_current",  { "<Control>6" } );
+    app.set_accels_for_action( "win.action_show_style",    { "<Control>7" } );
+    app.set_accels_for_action( "win.action_show_stickers", { "<Control>8" } );
+    app.set_accels_for_action( "win.action_show_map",      { "<Control>9" } );
 
   }
 
@@ -779,7 +793,7 @@ public class MainWindow : ApplicationWindow {
     if( _inspector_nb.get_mapped() ) {
       hide_properties();
     } else {
-      show_properties( null, false );
+      show_properties( null, PropertyGrab.NONE );
     }
   }
 
@@ -1061,7 +1075,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Displays the node properties panel for the current node */
-  private void show_properties( string? tab, bool grab_note ) {
+  private void show_properties( string? tab, PropertyGrab grab_type ) {
     if( !_inspector_nb.get_mapped() || ((tab != null) && (_stack.visible_child_name != tab)) ) {
       _prop_btn.image = _prop_hide;
       if( tab != null ) {
@@ -1082,12 +1096,28 @@ public class MainWindow : ApplicationWindow {
       }
       _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
     }
-    if( grab_note && (tab != null) && (tab == "current") ) {
-      var ci = _stack.get_child_by_name( tab ) as CurrentInspector;
-      if( ci != null ) {
-        ci.grab_note();
-      }
+    switch( grab_type ) {
+      case PropertyGrab.FIRST :
+        if( tab != null ) {
+          var box = (Box)_stack.get_child_by_name( tab );
+          box.get_children().foreach((item) => {
+            if( item.can_focus ) {
+              item.grab_focus();
+              return;
+            }
+          });
+        }
+        break;
+      case PropertyGrab.NOTE  :
+        if( (tab != null) && (tab == "current") ) {
+          var ci = _stack.get_child_by_name( tab ) as CurrentInspector;
+          if( ci != null ) {
+            ci.grab_note();
+          }
+        }
+        break;
     }
+
   }
 
   /* Displays the theme editor pane */
@@ -1466,6 +1496,26 @@ public class MainWindow : ApplicationWindow {
 
     win.show();
 
+  }
+
+  /* Displays the current sidebar tab */
+  private void action_show_current() {
+    show_properties( "current", PropertyGrab.FIRST );
+  }
+
+  /* Displays the style sidebar tab */
+  private void action_show_style() {
+    show_properties( "style", PropertyGrab.FIRST );
+  }
+
+  /* Displays the stickers sidebar tab */
+  private void action_show_stickers() {
+    show_properties( "sticker", PropertyGrab.FIRST );
+  }
+
+  /* Displays the map sidebar tab */
+  private void action_show_map() {
+    show_properties( "map", PropertyGrab.FIRST );
   }
 
   /* Save the current tab state */
