@@ -431,4 +431,9 @@ public class NodeInspector : Box {
 
   }
 
+  /* Sets the input focus on the first widget in this inspector */
+  public void grab_first() {
+    _task.grab_focus();
+  }
+
 }

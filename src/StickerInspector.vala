@@ -309,4 +309,9 @@ public class StickerInspector : Box {
 
   }
 
+  /* Grabbing input focus on the first UI element */
+  public void grab_first() {
+    _search.grab_focus();
+  }
+
 }

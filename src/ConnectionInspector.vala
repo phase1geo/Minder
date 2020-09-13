@@ -195,4 +195,9 @@ public class ConnectionInspector : Box {
 
   }
 
+  /* Sets the input focus on the first widget in this inspector */
+  public void grab_first() {
+    _color.grab_focus();
+  }
+
 }

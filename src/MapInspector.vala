@@ -403,4 +403,9 @@ public class MapInspector : Box {
 
   }
 
+  /* Grabs input focus on the first UI element */
+  public void grab_first() {
+    _layouts.grab_focus();
+  }
+
 }

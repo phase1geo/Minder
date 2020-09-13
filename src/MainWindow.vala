@@ -1098,14 +1098,11 @@ public class MainWindow : ApplicationWindow {
     }
     switch( grab_type ) {
       case PropertyGrab.FIRST :
-        if( tab != null ) {
-          var box = (Box)_stack.get_child_by_name( tab );
-          box.get_children().foreach((item) => {
-            if( item.can_focus ) {
-              item.grab_focus();
-              return;
-            }
-          });
+        switch( _stack.visible_child_name ) {
+          case "current" :  (_stack.get_child_by_name( "current" ) as CurrentInspector).grab_first();  break;
+          case "style"   :  (_stack.get_child_by_name( "style" )   as StyleInspector).grab_first();    break;
+          case "sticker" :  (_stack.get_child_by_name( "sticker" ) as StickerInspector).grab_first();  break;
+          case "map"     :  (_stack.get_child_by_name( "map" )     as MapInspector).grab_first();      break;
         }
         break;
       case PropertyGrab.NOTE  :
