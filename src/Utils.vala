@@ -109,6 +109,7 @@ public class Utils {
 
   /* Opens the given URL in the proper external default application */
   public static void open_url( string url ) {
+    stdout.printf( "In open_url: %s\n", url );
     try {
       AppInfo.launch_default_for_uri( url, null );
     } catch( GLib.Error e ) {
