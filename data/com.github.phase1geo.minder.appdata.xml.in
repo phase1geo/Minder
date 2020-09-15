@@ -94,7 +94,7 @@
         <p>New</p>
         <ul>
           <li>Added Preferences dialog.</li>
-          <li>Added Portuguese translation (thanks to André Barata).</li>
+          <li>Added Portuguese translation (thanks to Andre Barata).</li>
           <li>Added keyboard shortcut (Menu or Shift-F10) to display contextual menus in mindmap.</li>
           <li>Added default theme preference option.</li>
           <li>Added preference option to select map items on cursor hover.</li>
