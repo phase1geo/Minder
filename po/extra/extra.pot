@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-14 21:04-0500\n"
+"POT-Creation-Date: 2020-09-15 08:49-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -122,14 +122,14 @@ msgstr ""
 #: data/com.github.phase1geo.minder.appdata.xml.in:28
 msgid ""
 "Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, "
-"Portable Minder and XMind formats."
+"PlantUML, Portable Minder and XMind formats."
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:29
 msgid ""
 "Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, "
-"Org-Mode, Outliner, PDF, PNG, Portable Minder, PlainText, XMind and yEd "
-"formats."
+"Org-Mode, Outliner, PDF, PNG, PlainText, PlantUML, Portable Minder, XMind "
+"and yEd formats."
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:30
