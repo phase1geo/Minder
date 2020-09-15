@@ -150,7 +150,8 @@ public class MinderClipboard {
   /* Called to paste current item in clipboard to the given DrawArea */
   public static void paste( DrawArea da, bool shift ) {
 
-    var clipboard = Clipboard.get_default( Gdk.Display.get_default() );
+    var clipboard   = Clipboard.get_default( Gdk.Display.get_default() );
+    var text_needed = da.is_node_editable() || da.is_connection_editable();
 
     Atom[] targets;
     clipboard.wait_for_targets( out targets );
@@ -179,7 +180,7 @@ public class MinderClipboard {
       });
 
     /* If we need to handle pasting text, do it here */
-    } else if( image_atom != null ) {
+    } else if( (image_atom != null) && ((text_atom == null) || !text_needed) ) {
       clipboard.request_contents( image_atom, (c, raw_data) => {
         var data = raw_data.get_pixbuf();
         if( data == null ) return;
