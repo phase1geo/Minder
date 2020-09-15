@@ -30,21 +30,18 @@ public class ConnectionInspector : Box {
   };
 
   private ScrolledWindow _sw;
-  private TextView       _title;
   private ColorButton    _color;
   private Button         _reset;
   private TextView       _note;
-  private DrawArea?      _da                  = null;
-  private string         _orig_note           = "";
-  private Connection?    _connection          = null;
-  private bool           _ignore_title_change = false;
+  private DrawArea?      _da         = null;
+  private string         _orig_note  = "";
+  private Connection?    _connection = null;
 
   public ConnectionInspector( MainWindow win ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
 
     /* Create the node widgets */
-    create_title();
     create_color();
     create_note();
     create_buttons();
@@ -69,33 +66,6 @@ public class ConnectionInspector : Box {
   /* Sets the width of this inspector to the given value */
   public void set_width( int width ) {
     _sw.width_request = width;
-  }
-
-  /* Creates the name entry */
-  private void create_title() {
-
-    Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( Utils.make_title( _( "Title" ) ) );
-
-    lbl.xalign     = (float)0;
-    lbl.use_markup = true;
-
-    _title = new TextView();
-    _title.set_wrap_mode( Gtk.WrapMode.WORD );
-    _title.buffer.text = "";
-    _title.buffer.changed.connect( title_changed );
-    _title.focus_out_event.connect( title_focus_out );
-
-    var sw = new ScrolledWindow( null, null );
-    sw.min_content_width  = 300;
-    sw.min_content_height = 20;
-    sw.add( _title );
-
-    box.pack_start( lbl, true, false );
-    box.pack_start( sw,  true, false );
-
-    // pack_start( box, false, true );
-
   }
 
   private void create_color() {
@@ -179,25 +149,6 @@ public class ConnectionInspector : Box {
   }
 
   /*
-   Called whenever the node name is changed within the inspector.
-  */
-  private void title_changed() {
-    if( !_ignore_title_change ) {
-      _da.change_current_connection_title( _title.buffer.text );
-    }
-    _ignore_title_change = false;
-  }
-
-  /*
-   Called whenever the node title loses input focus. Updates the
-   node title in the canvas.
-  */
-  private bool title_focus_out( EventFocus e ) {
-    _da.change_current_connection_title( _title.buffer.text );
-    return( false );
-  }
-
-  /*
    Called whenever the text widget is changed.  Updates the current node
    and redraws the canvas when needed.
   */
@@ -225,11 +176,6 @@ public class ConnectionInspector : Box {
     _da.delete_connection();
   }
 
-  /* Grabs the input focus on the name entry */
-  public void grab_title() {
-    _title.grab_focus();
-  }
-
   /* Grabs the focus on the note widget */
   public void grab_note() {
     _note.grab_focus();
@@ -241,14 +187,17 @@ public class ConnectionInspector : Box {
     Connection? current = _da.get_current_connection();
 
     if( current != null ) {
-      _ignore_title_change = true;
-      _title.buffer.text   = (current.title != null) ? current.title.text.text : "";
       _color.rgba          = (current.color != null) ? current.color : _da.get_theme().get_color( "connection_background" );
       _color.alpha         = 65535;
       _note.buffer.text    = current.note;
       _reset.set_sensitive( current.color != null );
     }
 
+  }
+
+  /* Sets the input focus on the first widget in this inspector */
+  public void grab_first() {
+    _color.grab_focus();
   }
 
 }

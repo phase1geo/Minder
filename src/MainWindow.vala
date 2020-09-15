@@ -29,6 +29,12 @@ public enum TabAddReason {
   LOAD
 }
 
+public enum PropertyGrab {
+  NONE,
+  FIRST,
+  NOTE
+}
+
 public class MainWindow : ApplicationWindow {
 
   private const string DESKTOP_SCHEMA = "io.elementary.desktop";
@@ -84,7 +90,12 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_actual",   action_zoom_actual },
     { "action_export",        action_export },
     { "action_print",         action_print },
-    { "action_shortcuts",     action_shortcuts }
+    { "action_prefs",         action_prefs },
+    { "action_shortcuts",     action_shortcuts },
+    { "action_show_current",  action_show_current },
+    { "action_show_style",    action_show_style },
+    { "action_show_stickers", action_show_stickers },
+    { "action_show_map",      action_show_map }
   };
 
   private bool     on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -96,6 +107,11 @@ public class MainWindow : ApplicationWindow {
   public GLib.Settings settings {
     get {
       return( _settings );
+    }
+  }
+  public int text_size {
+    get {
+      return( _text_size );
     }
   }
 
@@ -197,8 +213,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the panel so that we can resize */
     _pane = new Paned( Orientation.HORIZONTAL );
-    _pane.pack1( _nb,        true,  true );
-    _pane.pack2( _inspector, false, false );
+    _pane.pack1( _nb, true, true );
     _pane.move_handle.connect(() => {
       return( false );
     });
@@ -213,22 +228,30 @@ public class MainWindow : ApplicationWindow {
 
     /* If the settings says to display the properties, do it now */
     if( _settings.get_boolean( "current-properties-shown" ) ) {
-      show_properties( "current", false );
+      show_properties( "current", PropertyGrab.NONE );
     } else if( _settings.get_boolean( "map-properties-shown" ) ) {
-      show_properties( "map", false );
+      show_properties( "map", PropertyGrab.NONE );
     } else if( _settings.get_boolean( "style-properties-shown" ) ) {
-      show_properties( "style", false );
+      show_properties( "style", PropertyGrab.NONE );
     } else if( _settings.get_boolean( "sticker-properties-shown" ) ) {
-      show_properties( "sticker", false );
+      show_properties( "sticker", PropertyGrab.NONE );
     }
 
     /* Look for any changes to the settings */
-    _text_size = settings.get_int( "text-field-font-size" );
+    _text_size = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
     settings.changed.connect(() => {
-      var text_size = settings.get_int( "text-field-font-size" );
-      if( _text_size != text_size ) {
-        get_current_da( "settings changed" ).update_css();
-        _text_size = text_size;
+      var ts = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
+      var ae = settings.get_boolean( "enable-animations" );
+      var ap = settings.get_boolean( "auto-parse-embedded-urls" );
+      var em = settings.get_boolean( "enable-markdown" );
+      _text_size = ts;
+      foreach( Tab tab in _nb.tabs ) {
+        var bin = (Gtk.Bin)tab.page;
+        var da  = (DrawArea)bin.get_child();
+        da.update_css();
+        da.animator.enable = ae;
+        da.url_parser.enable = ap;
+        da.markdown_parser.enable = em;
       }
     });
 
@@ -377,15 +400,20 @@ public class MainWindow : ApplicationWindow {
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
 
-    app.set_accels_for_action( "win.action_save",        { "<Control>s" } );
-    app.set_accels_for_action( "win.action_quit",        { "<Control>q" } );
-    app.set_accels_for_action( "win.action_zoom_actual", { "<Control>0" } );
-    app.set_accels_for_action( "win.action_zoom_fit",    { "<Control>1" } );
-    app.set_accels_for_action( "win.action_zoom_in",     { "<Control>plus" } );
-    app.set_accels_for_action( "win.action_zoom_out",    { "<Control>minus" } );
-    app.set_accels_for_action( "win.action_export",      { "<Control>e" } );
-    app.set_accels_for_action( "win.action_print",       { "<Control>p" } );
-    app.set_accels_for_action( "win.action_shortcuts",   { "F1" } );
+    app.set_accels_for_action( "win.action_save",          { "<Control>s" } );
+    app.set_accels_for_action( "win.action_quit",          { "<Control>q" } );
+    app.set_accels_for_action( "win.action_zoom_actual",   { "<Control>0" } );
+    app.set_accels_for_action( "win.action_zoom_fit",      { "<Control>1" } );
+    app.set_accels_for_action( "win.action_zoom_in",       { "<Control>plus" } );
+    app.set_accels_for_action( "win.action_zoom_out",      { "<Control>minus" } );
+    app.set_accels_for_action( "win.action_export",        { "<Control>e" } );
+    app.set_accels_for_action( "win.action_print",         { "<Control>p" } );
+    app.set_accels_for_action( "win.action_prefs",         { "<Control>comma" } );
+    app.set_accels_for_action( "win.action_shortcuts",     { "F1" } );
+    app.set_accels_for_action( "win.action_show_current",  { "<Control>6" } );
+    app.set_accels_for_action( "win.action_show_style",    { "<Control>7" } );
+    app.set_accels_for_action( "win.action_show_stickers", { "<Control>8" } );
+    app.set_accels_for_action( "win.action_show_map",      { "<Control>9" } );
 
   }
 
@@ -413,23 +441,28 @@ public class MainWindow : ApplicationWindow {
     _zoom_scale.format_value.connect( set_zoom_value );
 
     _zoom_in = new ModelButton();
-    _zoom_in.text = _( "Zoom In" );
+    _zoom_in.get_child().destroy();
+    _zoom_in.add( new Granite.AccelLabel.from_action_name( _( "Zoom In" ), "win.action_zoom_in" ) );
     _zoom_in.action_name = "win.action_zoom_in";
 
     _zoom_out = new ModelButton();
-    _zoom_out.text = _( "Zoom Out" );
+    _zoom_out.get_child().destroy();
+    _zoom_out.add( new Granite.AccelLabel.from_action_name( _( "Zoom Out" ), "win.action_zoom_out" ) );
     _zoom_out.action_name = "win.action_zoom_out";
 
     var fit = new ModelButton();
-    fit.text = _( "Zoom to Fit" );
+    fit.get_child().destroy();
+    fit.add( new Granite.AccelLabel.from_action_name( _( "Zoom to Fit" ), "win.action_zoom_fit" ) );
     fit.action_name = "win.action_zoom_fit";
 
     _zoom_sel = new ModelButton();
-    _zoom_sel.text = _( "Zoom to Fit Selected Node" );
+    _zoom_sel.get_child().destroy();
+    _zoom_sel.add( new Granite.AccelLabel.from_action_name( _( "Zoom to Fit Selected Node" ), "win.action_zoom_selected" ) );
     _zoom_sel.action_name = "win.action_zoom_selected";
 
     var actual = new ModelButton();
-    actual.text = _( "Zoom to Actual Size" );
+    actual.get_child().destroy();
+    actual.add( new Granite.AccelLabel.from_action_name( _( "Zoom to Actual Size" ), "win.action_zoom_actual" ) );
     actual.action_name = "win.action_zoom_actual";
 
     box.margin = 5;
@@ -615,11 +648,13 @@ public class MainWindow : ApplicationWindow {
     var box = new Box( Orientation.VERTICAL, 5 );
 
     var export = new ModelButton();
-    export.text = _( "Export…" );
+    export.get_child().destroy();
+    export.add( new Granite.AccelLabel.from_action_name( _( "Export…" ), "win.action_export" ) );
     export.action_name = "win.action_export";
 
     var print = new ModelButton();
-    print.text = _( "Print" );
+    print.get_child().destroy();
+    print.add( new Granite.AccelLabel.from_action_name( _( "Print…" ), "win.action_print" ) );
     print.action_name = "win.action_print";
 
     box.margin = 5;
@@ -664,22 +699,20 @@ public class MainWindow : ApplicationWindow {
     /* Create export menu */
     var box = new Box( Orientation.VERTICAL, 5 );
 
-    /*
     var prefs = new ModelButton();
-    prefs.text = _( "Preferences" );
+    prefs.get_child().destroy();
+    prefs.add( new Granite.AccelLabel.from_action_name( _( "Preferences" ), "win.action_prefs" ) );
     prefs.action_name = "win.action_prefs";
-    */
 
     var shortcuts = new ModelButton();
-    shortcuts.text = _( "Shortcuts Cheatsheet" );
+    shortcuts.get_child().destroy();
+    shortcuts.add( new Granite.AccelLabel.from_action_name( _( "Shortcuts Cheatsheet" ), "win.action_shortcuts" ) );
     shortcuts.action_name = "win.action_shortcuts";
 
     box.margin = 5;
-    /*
-    box.pack_start( export, false, true );
+    box.pack_start( prefs,     false, true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
-    */
-    box.pack_start( shortcuts,  false, true );
+    box.pack_start( shortcuts, false, true );
     box.show_all();
 
     /* Create the popover and associate it with clicking on the menu button */
@@ -745,11 +778,6 @@ public class MainWindow : ApplicationWindow {
     _inspector_nb.append_page( box );
     _inspector_nb.append_page( _themer );
 
-    _inspector = new Revealer();
-    _inspector.set_transition_type( RevealerTransitionType.NONE );
-    _inspector.set_transition_duration( 0 );
-    _inspector.child = _inspector_nb;
-
   }
 
   private bool stack_keypress( EventKey e ) {
@@ -762,10 +790,10 @@ public class MainWindow : ApplicationWindow {
 
   /* Show or hides the inspector sidebar */
   private void inspector_clicked() {
-    if( _inspector.child_revealed ) {
+    if( _inspector_nb.get_mapped() ) {
       hide_properties();
     } else {
-      show_properties( null, false );
+      show_properties( null, PropertyGrab.NONE );
     }
   }
 
@@ -855,6 +883,11 @@ public class MainWindow : ApplicationWindow {
     dialog.add_filter( filter );
 
     filter = new FileFilter();
+    filter.set_filter_name( _( "PlantUML" ) );
+    filter.add_pattern( "*.puml" );
+    dialog.add_filter( filter );
+
+    filter = new FileFilter();
     filter.set_filter_name( _( "Portable Minder" ) );
     filter.add_pattern( "*.pminder" );
     dialog.add_filter( filter );
@@ -914,6 +947,11 @@ public class MainWindow : ApplicationWindow {
       var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
       update_title( da );
       ExportXMind.import( fname, da );
+    } else if( fname.has_suffix( ".puml" ) ) {
+      var new_fname = fname.substring( 0, (fname.length - 5) ) + ".minder";
+      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
+      update_title( da );
+      ExportPlantUML.import( fname, da );
     }
     return( false );
   }
@@ -1037,14 +1075,14 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Displays the node properties panel for the current node */
-  private void show_properties( string? tab, bool grab_note ) {
-    if( !_inspector.reveal_child || ((tab != null) && (_stack.visible_child_name != tab)) ) {
+  private void show_properties( string? tab, PropertyGrab grab_type ) {
+    if( !_inspector_nb.get_mapped() || ((tab != null) && (_stack.visible_child_name != tab)) ) {
       _prop_btn.image = _prop_hide;
       if( tab != null ) {
         _stack.visible_child_name = tab;
       }
-      if( !_inspector.reveal_child ) {
-        _inspector.reveal_child = true;
+      if( !_inspector_nb.get_mapped() ) {
+        _pane.pack2( _inspector_nb, false, false );
         var prop_width = _settings.get_int( "properties-width" );
         var pane_width = _pane.get_allocated_width();
         if( pane_width <= 1 ) {
@@ -1054,15 +1092,29 @@ public class MainWindow : ApplicationWindow {
         if( get_current_da( "show_properties 1" ) != null ) {
           get_current_da( "show_properties 2" ).see( -300 );
         }
+        _pane.show_all();
       }
       _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
     }
-    if( grab_note && (tab != null) && (tab == "current") ) {
-      var ci = _stack.get_child_by_name( tab ) as CurrentInspector;
-      if( ci != null ) {
-        ci.grab_note();
-      }
+    switch( grab_type ) {
+      case PropertyGrab.FIRST :
+        switch( _stack.visible_child_name ) {
+          case "current" :  (_stack.get_child_by_name( "current" ) as CurrentInspector).grab_first();  break;
+          case "style"   :  (_stack.get_child_by_name( "style" )   as StyleInspector).grab_first();    break;
+          case "sticker" :  (_stack.get_child_by_name( "sticker" ) as StickerInspector).grab_first();  break;
+          case "map"     :  (_stack.get_child_by_name( "map" )     as MapInspector).grab_first();      break;
+        }
+        break;
+      case PropertyGrab.NOTE  :
+        if( (tab != null) && (tab == "current") ) {
+          var ci = _stack.get_child_by_name( tab ) as CurrentInspector;
+          if( ci != null ) {
+            ci.grab_note();
+          }
+        }
+        break;
     }
+
   }
 
   /* Displays the theme editor pane */
@@ -1078,10 +1130,10 @@ public class MainWindow : ApplicationWindow {
 
   /* Hides the node properties panel */
   private void hide_properties() {
-    if( !_inspector.reveal_child ) return;
+    if( !_inspector_nb.get_mapped() ) return;
     _prop_btn.image         = _prop_show;
     _pane.position_set      = false;
-    _inspector.reveal_child = false;
+    _pane.remove( _inspector_nb );
     get_current_da( "hide_properties" ).grab_focus();
     _settings.set_boolean( "current-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",     false );
@@ -1289,6 +1341,12 @@ public class MainWindow : ApplicationWindow {
     pdf_filter.add_pattern( "*.pdf" );
     dialog.add_filter( pdf_filter );
 
+    /* PlantUML */
+    FileFilter puml_filter = new FileFilter();
+    puml_filter.set_filter_name( _( "PlantUML" ) );
+    puml_filter.add_pattern( ".puml" );
+    dialog.add_filter( puml_filter );
+
     /* PNG (transparent) */
     FileFilter pngt_filter = new FileFilter();
     pngt_filter.set_filter_name( _( "PNG (Transparent)" ) );
@@ -1338,42 +1396,47 @@ public class MainWindow : ApplicationWindow {
       var da     = get_current_da( "action_export" );
 
       if( bmp_filter == filter ) {
-        ExportImage.export( repair_filename( fname, {".bmp"} ), "bmp", da );
+        ExportImage.export( fname = repair_filename( fname, {".bmp"} ), "bmp", da );
       } else if( csv_filter == filter ) {
-        ExportCSV.export( repair_filename( fname, {".csv"} ), da );
+        ExportCSV.export( fname = repair_filename( fname, {".csv"} ), da );
       } else if( fm_filter == filter ) {
-        ExportFreemind.export( repair_filename( fname, {".mm"} ), da );
+        ExportFreemind.export( fname = repair_filename( fname, {".mm"} ), da );
       } else if( fp_filter == filter ) {
-        ExportFreeplane.export( repair_filename( fname, {".mm"} ), da );
+        ExportFreeplane.export( fname = repair_filename( fname, {".mm"} ), da );
       } else if( jpeg_filter == filter ) {
-        ExportImage.export( repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", da );
+        ExportImage.export( fname = repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", da );
       } else if( md_filter == filter ) {
-        ExportMarkdown.export( repair_filename( fname, {".md", ".markdown"} ), da );
+        ExportMarkdown.export( fname = repair_filename( fname, {".md", ".markdown"} ), da );
       } else if( mmd_filter == filter ) {
-        ExportMermaid.export( repair_filename( fname, {".mmd"} ), da );
+        ExportMermaid.export( fname = repair_filename( fname, {".mmd"} ), da );
       } else if( opml_filter == filter ) {
-        ExportOPML.export( repair_filename( fname, {".opml"} ), da );
+        ExportOPML.export( fname = repair_filename( fname, {".opml"} ), da );
       } else if( org_filter == filter ) {
-        ExportOrgMode.export( repair_filename( fname, {".org"} ), da );
+        ExportOrgMode.export( fname = repair_filename( fname, {".org"} ), da );
       } else if( outliner_filter == filter ) {
-        ExportOutliner.export( repair_filename( fname, {".outliner"} ), da );
+        ExportOutliner.export( fname = repair_filename( fname, {".outliner"} ), da );
       } else if( pdf_filter == filter ) {
-        ExportPDF.export( repair_filename( fname, {".pdf"} ), da );
+        ExportPDF.export( fname = repair_filename( fname, {".pdf"} ), da );
+      } else if( puml_filter == filter ) {
+        ExportPlantUML.export( fname = repair_filename( fname, {".puml"} ), da );
       } else if( pngt_filter == filter ) {
-        ExportPNG.export( repair_filename( fname, {".png"} ), da, true );
+        ExportPNG.export( fname = repair_filename( fname, {".png"} ), da, true );
       } else if( pngo_filter == filter ) {
-        ExportPNG.export( repair_filename( fname, {".png"} ), da, false );
+        ExportPNG.export( fname = repair_filename( fname, {".png"} ), da, false );
       } else if( pmind_filter == filter ) {
-        ExportPortableMinder.export( repair_filename( fname, {".pminder"} ), da );
+        ExportPortableMinder.export( fname = repair_filename( fname, {".pminder"} ), da );
       } else if( txt_filter == filter ) {
-        ExportText.export( repair_filename( fname, {".txt"} ), da );
+        ExportText.export( fname = repair_filename( fname, {".txt"} ), da );
       } else if( svg_filter == filter ) {
-        ExportSVG.export( repair_filename( fname, {".svg"} ), da );
+        ExportSVG.export( fname = repair_filename( fname, {".svg"} ), da );
       } else if( xmind_filter == filter ) {
-        ExportXMind.export( repair_filename( fname, {".xmind"} ), da );
+        ExportXMind.export( fname = repair_filename( fname, {".xmind"} ), da );
       } else if( yed_filter == filter ) {
-        ExportYed.export( repair_filename( fname, {".graphml"} ), da );
+        ExportYed.export( fname = repair_filename( fname, {".graphml"} ), da );
       }
+
+      /* Generate notification to indicate that the export completed */
+      notification( _( "Minder Export Completed" ), fname );
 
     }
 
@@ -1401,6 +1464,12 @@ public class MainWindow : ApplicationWindow {
     print.print( get_current_da( "action_print" ), this );
   }
 
+  /* Displays the preferences dialog */
+  private void action_prefs() {
+    var prefs = new Preferences( this, _settings );
+    prefs.show_all();
+  }
+
   /* Displays the shortcuts cheatsheet */
   private void action_shortcuts() {
 
@@ -1424,6 +1493,26 @@ public class MainWindow : ApplicationWindow {
 
     win.show();
 
+  }
+
+  /* Displays the current sidebar tab */
+  private void action_show_current() {
+    show_properties( "current", PropertyGrab.FIRST );
+  }
+
+  /* Displays the style sidebar tab */
+  private void action_show_style() {
+    show_properties( "style", PropertyGrab.FIRST );
+  }
+
+  /* Displays the stickers sidebar tab */
+  private void action_show_stickers() {
+    show_properties( "sticker", PropertyGrab.FIRST );
+  }
+
+  /* Displays the map sidebar tab */
+  private void action_show_map() {
+    show_properties( "map", PropertyGrab.FIRST );
   }
 
   /* Save the current tab state */
@@ -1503,6 +1592,18 @@ public class MainWindow : ApplicationWindow {
     int min_height, nat_height;
     _scale_lbl.get_preferred_height( out min_height, out nat_height );
     return( nat_height );
+  }
+
+  /* Generate a notification */
+  public void notification( string title, string msg, NotificationPriority priority = NotificationPriority.NORMAL ) {
+    GLib.Application? app = null;
+    @get( "application", ref app );
+    if( app != null ) {
+      var notification = new Notification( title );
+      notification.set_body( msg );
+      notification.set_priority( priority );
+      app.send_notification( "com.github.phase1geo.minder", notification );
+    }
   }
 
 }

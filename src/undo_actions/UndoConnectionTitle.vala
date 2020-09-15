@@ -23,33 +23,34 @@ using Gtk;
 
 public class UndoConnectionTitle : UndoItem {
 
-  Connection _conn;
-  string?    _old_title;
-  string?    _new_title;
+  private Connection _conn;
+  private CanvasText _text;
+  private CanvasText _orig_text;
 
-  /* Constructor for a connection title change */
-  public UndoConnectionTitle( Connection c, string? old_title ) {
+  /* Constructor for a node name change */
+  public UndoConnectionTitle( DrawArea da, Connection conn, CanvasText orig_text ) {
     base( _( "connection title change" ) );
-    _conn      = c;
-    _old_title = old_title;
-    _new_title = (c.title == null) ? null : c.title.text.text;
+    _conn      = conn;
+    _text      = new CanvasText( da );
+    _orig_text = new CanvasText( da );
+    _text.copy( conn.title );
+    _orig_text.copy( orig_text );
   }
 
-  private void change( DrawArea da, string? title ) {
-    _conn.change_title( da, title );
+  /* Undoes a node name change */
+  public override void undo( DrawArea da ) {
+    _conn.title.copy( _orig_text );
     da.queue_draw();
     da.current_changed( da );
     da.changed();
   }
 
-  /* Undoes a connection title change */
-  public override void undo( DrawArea da ) {
-    change( da, _old_title );
-  }
-
-  /* Redoes a connection title change */
+  /* Redoes a node name change */
   public override void redo( DrawArea da ) {
-    change( da, _new_title );
+    _conn.title.copy( _text );
+    da.queue_draw();
+    da.current_changed( da );
+    da.changed();
   }
 
 }

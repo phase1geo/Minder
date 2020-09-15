@@ -1151,4 +1151,9 @@ public class StyleInspector : Box {
     }
   }
 
+  /* Grabbing focus on the first UI element */
+  public void grab_first() {
+    _link_types.grab_focus();
+  }
+
 }

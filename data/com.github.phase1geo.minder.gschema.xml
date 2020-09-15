@@ -221,20 +221,45 @@
       <summary>Specifies if embedded URLs found in node titles should be automatically highlighted.</summary>
       <description>Specifies if embedded URLs found in node titles should be automatically highlighted.</description>
     </key>
+    <key name="enable-markdown" type="b">
+      <default>true</default>
+      <summary>Specifies if node/connection title text will be treated as Markdown syntax.</summary>
+      <description>Specifies if node/connection title text will be treated as Markdown syntax.</description>
+    </key>
     <key name="rotate-main-link-colors" type="b">
       <default>true</default>
-      <summary>If set to true, rotates link colors in the main branches when adding.  If set to false, the same color will be used as the last color.</summary>
-      <description>If set to true, rotates link colors in the main branches when adding.  If set to false, the same color will be used as the last color.</description>
+      <summary>If set, rotates link colors in the main branches when adding.  If set to false, the same color will be used as the last color.</summary>
+      <description>If set, rotates link colors in the main branches when adding.  If set to false, the same color will be used as the last color.</description>
     </key>
-    <key name="text-field-font-size" type="i">
-      <default>-1</default>
-      <summary>Specifies the font size to use in text editing fields (i.e, quick entry or notes field)</summary>
-      <description>Specifies the font size to use in text editing fields (i.e, quick entry or notes field).  A value of -1 specifies to use the system font size.</description>
+    <key name="text-field-use-custom-font-size" type="b">
+      <default>false</default>
+      <summary>If set, uses the text-field-custom-font-size setting to determine text field font size; otherwise, the system default is used.</summary>
+      <description>If set, uses the text-field-custom-font-size setting to determine text field font size; otherwise, the system default is used.</description>
+    </key>
+    <key name="text-field-custom-font-size" type="i">
+      <default>14</default>
+      <summary>Specifies the font size to use in text editing fields (i.e, quick entry or notes field) if text-field-use-custom-font-size is set.</summary>
+      <description>Specifies the font size to use in text editing fields (i.e, quick entry or notes field) if text-field-use-custom-font-size is set.</description>
     </key>
     <key name="edit-connection-title-on-creation" type="b">
       <default>false</default>
       <summary>If true, the connection title will be added and put into edit mode immediately after the connection is made.</summary>
       <description>If true, the connection title will be added and put into edit mode immediately after the connection is made.</description>
+    </key>
+    <key name="default-theme" type="s">
+      <default>"default"</default>
+      <summary>Specifies the name of the default theme to use when creating new mind maps.</summary>
+      <description>Specifies the name of the default theme to use when creating new mind maps.</description>
+    </key>
+    <key name="select-on-hover" type="b">
+      <default>false</default>
+      <summary>If enabled, selects items when mouse cursor hovers over the item.</summary>
+      <description>If enabled, selects items when mouse cursor hovers over the item.</description>
+    </key>
+    <key name="select-on-hover-timeout" type="i">
+      <default>300</default>
+      <summary>If select-on-hover set, specifies hover time (in milliseconds).</summary>
+      <description>If select-on-hover set, specifies hover time (in milliseconds).</description>
     </key>
   </schema>
 </schemalist>

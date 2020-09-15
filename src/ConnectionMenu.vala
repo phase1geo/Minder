@@ -38,13 +38,13 @@ public class ConnectionMenu : Gtk.Menu {
 
     _da = da;
 
-    _delete = new Gtk.MenuItem.with_label( _( "Delete" ) );
+    _delete = new Gtk.MenuItem();
+    _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
     _delete.activate.connect( delete_connection );
-    Utils.add_accel_label( _delete, 65535, 0 );
 
-    _edit = new Gtk.MenuItem.with_label( _( "Edit…" ) );
+    _edit = new Gtk.MenuItem();
+    _edit.add( new Granite.AccelLabel( _( "Edit…" ), "e" ) );
     _edit.activate.connect( edit_title );
-    Utils.add_accel_label( _edit, 'e', 0 );
 
     _note = new Gtk.MenuItem.with_label( _( "Add Note" ) );
     _note.activate.connect( change_note );
@@ -56,21 +56,21 @@ public class ConnectionMenu : Gtk.Menu {
     var selmenu = new Gtk.Menu();
     selnode.set_submenu( selmenu );
 
-    _selstart = new Gtk.MenuItem.with_label( _( "Start Node" ) );
+    _selstart = new Gtk.MenuItem();
+    _selstart.add( new Granite.AccelLabel( _( "Start Node" ), "f" ) );
     _selstart.activate.connect( select_start_node );
-    Utils.add_accel_label( _selstart, 'f', 0 );
 
-    _selend = new Gtk.MenuItem.with_label( _( "End Node" ) );
+    _selend = new Gtk.MenuItem();
+    _selend.add( new Granite.AccelLabel( _( "End Node" ), "t" ) );
     _selend.activate.connect( select_end_node );
-    Utils.add_accel_label( _selend, 't', 0 );
 
-    _selnext = new Gtk.MenuItem.with_label( _( "Next Connection" ) );
+    _selnext = new Gtk.MenuItem();
+    _selnext.add( new Granite.AccelLabel( _( "Next Connection" ), "Right" ) );
     _selnext.activate.connect( select_next_connection );
-    Utils.add_accel_label( _selnext, 65363, 0 );
 
-    _selprev = new Gtk.MenuItem.with_label( _( "Previous Connection" ) );
+    _selprev = new Gtk.MenuItem();
+    _selprev.add( new Granite.AccelLabel( _( "Previous Connection" ), "Left" ) );
     _selprev.activate.connect( select_prev_connection );
-    Utils.add_accel_label( _selprev, 65361, 0 );
 
     /* Add the menu items to the menu */
     add( _delete );
@@ -131,7 +131,7 @@ public class ConnectionMenu : Gtk.Menu {
     if( connection_has_note() ) {
       _da.change_current_connection_note( "" );
     } else {
-      _da.show_properties( "current", true );
+      _da.show_properties( "current", PropertyGrab.NOTE );
     }
     _da.current_changed( _da );
   }

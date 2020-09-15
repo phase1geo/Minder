@@ -24,11 +24,14 @@ using GLib;
 public class UndoTextBuffer : UndoBuffer {
 
   public CanvasText? ct        { set; get; default = null; }
+  public CanvasText  orig      { private set; get; }
   public bool        mergeable { set; get; default = true; }
+  public bool        do_undo   { set; get; default = true; }
 
   /* Default constructor */
   public UndoTextBuffer( DrawArea da ) {
     base( da );
+    orig = new CanvasText( da );
   }
 
   /*

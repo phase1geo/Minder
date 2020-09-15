@@ -89,6 +89,40 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.11.0" date="2020-09-16">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added Preferences dialog.</li>
+          <li>Added Portuguese translation (thanks to Andre Barata).</li>
+          <li>Added keyboard shortcut (Menu or Shift-F10) to display contextual menus in mindmap.</li>
+          <li>Added default theme preference option.</li>
+          <li>Added preference option to select map items on cursor hover.</li>
+          <li>Added Shift+Home/End support for selecting all text from current cursor to beginning/end of node or connection titles when editing.</li>
+          <li>Added support for PlantUML import/export.</li>
+          <li>Added support for displaying notifications on completion of export operation.</li>
+          <li>Added keyboard shortcuts for displaying tabs in sidebar.</li>
+          <li>Added support for making filepath URIs clickable in nodes, connections and notes (displays the files in the file manager application).</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>When nodes are copied to clipboard, pasting them as text in an external application will be displayed as in text export format.</li>
+          <li>When text is copied to the clipboard from an external application, pasting as nodes in Minder will parse in text import format.</li>
+          <li>Improved look of menu accelerators and added missing accelerators.</li>
+          <li>Changed 't' command to transition task status from disabled to enabled to done and back to disabled.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issues with undo/redo of node/connection title changes.</li>
+          <li>Fixed issue with undoing a connection add operation.</li>
+          <li>Fixed issue with connection titles being clear when connection is moved to a different node.</li>
+          <li>Fixed UI issue with changing window width by dragging right side of window when sidebar is hidden.</li>
+          <li>Fixed issues with inputting special characters with US international keyboard.</li>
+          <li>Fixed issue where images in resized nodes were not displaying properly on application restart.</li>
+          <li>Fixed issue where copying a filename in a file manager and pasting in Minder would attempt to past the icon image instead of the filename when editing text.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.10.0" date="2020-08-27">
       <description>
         <p>New</p>

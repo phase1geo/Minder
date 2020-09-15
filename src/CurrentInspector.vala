@@ -113,4 +113,12 @@ public class CurrentInspector : Stack {
 
   }
 
+  /* Grabs the focus on the first field of the displayed pane */
+  public void grab_first() {
+    switch( visible_child_name ) {
+      case "node"       :  (get_child_by_name( "node" ) as NodeInspector).grab_first();  break;
+      case "connection" :  (get_child_by_name( "connection" ) as ConnectionInspector).grab_first();  break;
+    }
+  }
+
 }

@@ -28,6 +28,7 @@ public class UrlParser : TextParser {
     /* Links */
     add_regex( "((mailto:)?[a-z0-9.-]+@[-a-z0-9]+(\\.[-a-z0-9]+)*\\.[a-z]+)", highlight_url );
     add_regex( "((https?|ftp):[^'\">\\s]+)", highlight_url );
+    add_regex( "((file:///|/)([^,\\/:*\\?\\<>\"\\|]+(/|\\\\){0,1})+)", highlight_url );
 
   }
 

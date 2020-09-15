@@ -25,7 +25,17 @@ using Cairo;
 
 public class Utils {
 
-  public const string url_re = "^(mailto:.+@[a-z0-9-]+\\.[a-z0-9.-]+|[a-zA-Z0-9]+://[a-z0-9-]+\\.[a-z0-9.-]+(?:/|(?:/[][a-zA-Z0-9!#$%&'*+,.:;=?@_~-]+)*))$";
+  /*
+   Returns a regular expression useful for parsing clickable URLs.
+  */
+  public static string url_re() {
+    string[] res = {
+      "mailto:.+@[a-z0-9-]+\\.[a-z0-9.-]+",
+      "[a-zA-Z0-9]+://[a-z0-9-]+\\.[a-z0-9.-]+(?:/|(?:/[][a-zA-Z0-9!#$%&'*+,.:;=?@_~-]+)*)",
+      "file:///([^,\\/:*\\?\\<>\"\\|]+(/|\\\\){0,1})+"
+    };
+    return( "(" + string.joinv( "|",res ) + ")" );
+  }
 
   /*
    Helper function for converting an RGBA color value to a stringified color
@@ -109,10 +119,21 @@ public class Utils {
 
   /* Opens the given URL in the proper external default application */
   public static void open_url( string url ) {
-    try {
-      AppInfo.launch_default_for_uri( url, null );
-    } catch( GLib.Error e ) {
-      stdout.printf( "error: %s\n", e.message );
+    if( (url.substring( 0, 7 ) == "file://") || (url.get_char( 0 ) == '/') ) {
+      var app = AppInfo.get_default_for_type( "inode/directory", true );
+      var uris = new List<string>();
+      uris.append( url );
+      try {
+        app.launch_uris( uris, null );
+      } catch( GLib.Error e ) {
+        stdout.printf( "error: %s\n", e.message );
+      }
+    } else {
+      try {
+        AppInfo.launch_default_for_uri( url, null );
+      } catch( GLib.Error e ) {
+        stdout.printf( "error: %s\n", e.message );
+      }
     }
   }
 
@@ -159,7 +180,7 @@ public class Utils {
 
   /* Returns true if the given string is a valid URL */
   public static bool is_url( string str ) {
-    return( Regex.match_simple( url_re, str ) );
+    return( Regex.match_simple( url_re(), str ) );
   }
 
   /* Show the specified popover */
@@ -181,7 +202,7 @@ public class Utils {
   }
 
   /* Pops up the given menu */
-  public static void popup_menu( Gtk.Menu menu, EventButton e ) {
+  public static void popup_menu( Gtk.Menu menu, Event e ) {
 #if GTK322
     menu.popup_at_pointer( e );
 #else

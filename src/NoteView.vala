@@ -100,7 +100,7 @@ public class NoteView : Gtk.SourceView {
     set_insert_spaces_instead_of_tabs( true );
 
     try {
-      _url_re = new Regex( Utils.url_re );
+      _url_re = new Regex( Utils.url_re() );
     } catch( RegexError e ) {
       _url_re = null;
     }
