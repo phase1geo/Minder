@@ -3928,7 +3928,7 @@ public class DrawArea : Gtk.DrawingArea {
         break;
       case Key.s :  see();  break;
       case Key.t :  // Toggle the task done indicator
-        if( current.is_task() ) {
+        if( current.task_enabled() ) {
           if( current.task_done() ) {
             change_current_task( false, false );
           } else {
