@@ -381,17 +381,25 @@ public class NodeMenu : Gtk.Menu {
     _sticker.set_sensitive( current.sticker != null );
 
     /* Set the menu item labels */
-    var task_acc = (Granite.AccelLabel)_task.get_child();
-    var link_acc = (Granite.AccelLabel)_link.get_child();
-    var fold_acc = (Granite.AccelLabel)_fold.get_child();
-    task_acc.label = node_is_task()   ?
-                     node_task_is_done() ? _( "Remove Task" ) :
-                                           _( "Mark Task As Done" ) :
-                                           _( "Add Task" );
-    _note.label    = node_has_note()  ? _( "Remove Note" )      : _( "Add Note" );
-    _image.label   = node_has_image() ? _( "Remove Image" )     : _( "Add Image" );
-    link_acc.label = node_has_link()  ? _( "Remove Node Link" ) : _( "Add Node Link" );
-    fold_acc.label = node_is_folded() ? _( "Unfold Children" )  : _( "Fold Children" );
+    var task_lbl = node_is_task()   ?
+                   node_task_is_done() ? _( "Remove Task" ) :
+                                         _( "Mark Task As Done" ) :
+                                         _( "Add Task" );
+    var link_lbl = node_has_link()  ? _( "Remove Node Link" ) : _( "Add Node Link" );
+    var fold_lbl = node_is_folded() ? _( "Unfold Children" )  : _( "Fold Children" );
+    var task_acc = (_task.get_child() as Granite.AccelLabel).accel_string;
+    var link_acc = (_link.get_child() as Granite.AccelLabel).accel_string;
+    var fold_acc = (_fold.get_child() as Granite.AccelLabel).accel_string;
+
+    _task.get_child().destroy();
+    _task.add( new Granite.AccelLabel( task_lbl, task_acc ) );
+    _link.get_child().destroy();
+    _link.add( new Granite.AccelLabel( link_lbl, link_acc ) );
+    _fold.get_child().destroy();
+    _fold.add( new Granite.AccelLabel( fold_lbl, fold_acc ) );
+
+    _note.label  = node_has_note()  ? _( "Remove Note" )  : _( "Add Note" );
+    _image.label = node_has_image() ? _( "Remove Image" ) : _( "Add Image" );
 
     /* Set the paste and replace text */
     var clipboard = Clipboard.get_default( get_display() );
