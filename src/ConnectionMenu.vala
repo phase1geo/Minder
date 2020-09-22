@@ -108,9 +108,6 @@ public class ConnectionMenu : Gtk.Menu {
 
     _sticker.set_sensitive( _da.get_current_connection().sticker != null );
 
-    /* Set the menu item labels */
-    _note.label = connection_has_note() ? _( "Remove Note" ) : _( "Add Note" );
-
   }
 
   /* Deletes the current node */
