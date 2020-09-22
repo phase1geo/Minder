@@ -92,12 +92,13 @@ public class NodeMenu : Gtk.Menu {
     _edit.add( new Granite.AccelLabel( _( "Edit Text…" ), "e" ) );
     _edit.activate.connect( edit_node );
 
+    _note = new Gtk.MenuItem();
+    _note.add( new Granite.AccelLabel( _( "Edit Note" ), "<Shift>e" ) );
+    _note.activate.connect( edit_note );
+
     _task = new Gtk.MenuItem();
     _task.add( new Granite.AccelLabel( _( "Add Task" ), "t" ) );
     _task.activate.connect( change_task );
-
-    _note = new Gtk.MenuItem.with_label( _( "Add Note" ) );
-    _note.activate.connect( change_note );
 
     _image = new Gtk.MenuItem.with_label( _( "Add Image" ) );
     _image.activate.connect( change_image );
@@ -237,8 +238,8 @@ public class NodeMenu : Gtk.Menu {
     add( _delonly );
     add( new SeparatorMenuItem() );
     add( _edit );
-    add( _task );
     add( _note );
+    add( _task );
     add( _image );
     add( _sticker );
     add( _link );
@@ -398,7 +399,6 @@ public class NodeMenu : Gtk.Menu {
     _fold.get_child().destroy();
     _fold.add( new Granite.AccelLabel( fold_lbl, fold_acc ) );
 
-    _note.label  = node_has_note()  ? _( "Remove Note" )  : _( "Add Note" );
     _image.label = node_has_image() ? _( "Remove Image" ) : _( "Add Image" );
 
     /* Set the paste and replace text */
@@ -476,13 +476,8 @@ public class NodeMenu : Gtk.Menu {
   }
 
   /* Changes the note status of the currently selected node */
-  private void change_note() {
-    if( node_has_note() ) {
-      _da.change_current_node_note( "" );
-    } else {
-      _da.show_properties( "current", PropertyGrab.NOTE );
-    }
-    _da.current_changed( _da );
+  private void edit_note() {
+    _da.show_properties( "current", PropertyGrab.NOTE );
   }
 
   /* Changes the image of the currently selected node */

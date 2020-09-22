@@ -43,11 +43,12 @@ public class ConnectionMenu : Gtk.Menu {
     _delete.activate.connect( delete_connection );
 
     _edit = new Gtk.MenuItem();
-    _edit.add( new Granite.AccelLabel( _( "Edit…" ), "e" ) );
+    _edit.add( new Granite.AccelLabel( _( "Edit Title…" ), "e" ) );
     _edit.activate.connect( edit_title );
 
-    _note = new Gtk.MenuItem.with_label( _( "Add Note" ) );
-    _note.activate.connect( change_note );
+    _note = new Gtk.MenuItem();
+    _note.add( new Granite.AccelLabel( _( "Edit Note" ), "<Shift>e" ) );
+    _note.activate.connect( edit_note );
 
     _sticker = new Gtk.MenuItem.with_label( _( "Remove Sticker" ) );
     _sticker.activate.connect( remove_sticker );
@@ -127,13 +128,8 @@ public class ConnectionMenu : Gtk.Menu {
   }
 
   /* Changes the note status of the currently selected node */
-  private void change_note() {
-    if( connection_has_note() ) {
-      _da.change_current_connection_note( "" );
-    } else {
-      _da.show_properties( "current", PropertyGrab.NOTE );
-    }
-    _da.current_changed( _da );
+  private void edit_note() {
+    _da.show_properties( "current", PropertyGrab.NOTE );
   }
 
   /* Removes the sticker attached to the connection */

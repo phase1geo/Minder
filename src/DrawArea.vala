@@ -3861,6 +3861,7 @@ public class DrawArea : Gtk.DrawingArea {
   private bool handle_connection_keypress( EventKey e ) {
     var current = _selected.current_connection();
     switch( e.keyval ) {
+      case Key.E :  show_properties( "current", PropertyGrab.NOTE );  break;
       case Key.Z :  zoom_in();  break;
       case Key.e :
         current.edit_title_begin( this );
@@ -3895,6 +3896,7 @@ public class DrawArea : Gtk.DrawingArea {
     switch( e.keyval ) {
       case Key.C :  center_current_node();  break;
       case Key.D :  select_node_tree();  break;
+      case Key.E :  show_properties( "current", PropertyGrab.NOTE );  break;
       case Key.I :
         if( _debug ) {
           current.display();
