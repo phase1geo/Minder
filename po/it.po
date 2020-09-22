@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-14 21:04-0500\n"
-"PO-Revision-Date: 2020-07-01 15:00+0100\n"
+"POT-Creation-Date: 2020-09-15 08:49-0500\n"
+"PO-Revision-Date: 2020-09-19 15:00+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -202,7 +202,7 @@ msgstr "incolla nodo"
 #: src/undo_actions/UndoNodeReparentLinkColor.vala:32
 #: src/undo_actions/UndoNodesReparentLinkColor.vala:33
 msgid "node link color reparent"
-msgstr ""
+msgstr "colore del collegamento del nodo riparatore"
 
 #: src/undo_actions/UndoNodeReplace.vala:31
 msgid "replace node"
@@ -270,7 +270,7 @@ msgstr "Colore"
 
 #: src/ConnectionInspector.vala:88
 msgid "Use Theme Default Color"
-msgstr ""
+msgstr "Usa il colore predefinito del tema"
 
 #: src/ConnectionInspector.vala:107 src/NodeInspector.vala:151
 msgid "Note"
@@ -601,7 +601,7 @@ msgstr ""
 
 #: src/MainWindow.vala:709
 msgid "Shortcuts Cheatsheet"
-msgstr ""
+msgstr "collegamenti note"
 
 #: src/MainWindow.vala:735
 msgid "Properties"
@@ -617,7 +617,7 @@ msgstr "Stile"
 
 #: src/MainWindow.vala:752
 msgid "Stickers"
-msgstr ""
+msgstr "Etichette"
 
 #: src/MainWindow.vala:753
 msgid "Map"
@@ -656,9 +656,8 @@ msgid "Portable Minder"
 msgstr "Minder portatile"
 
 #: src/MainWindow.vala:896 src/MainWindow.vala:1382
-#, fuzzy
 msgid "XMind 8"
-msgstr "Minder"
+msgstr "XMind 8"
 
 #: src/MainWindow.vala:1019
 msgid "Save File"
@@ -730,7 +729,7 @@ msgstr "yEd"
 
 #: src/MainWindow.vala:1439
 msgid "Minder Export Completed"
-msgstr ""
+msgstr "Esportazione Minder completata"
 
 #: src/MapInspector.vala:76
 msgid "Hide connections"
@@ -825,9 +824,8 @@ msgid "Delete Single Node"
 msgstr "Elimina Nodo singolo"
 
 #: src/NodeMenu.vala:92
-#, fuzzy
 msgid "Edit Text…"
-msgstr "Modifica..."
+msgstr "Modifica Testo..."
 
 #: src/NodeMenu.vala:96 src/NodeMenu.vala:390
 msgid "Add Task"
@@ -847,7 +845,7 @@ msgstr "Aggiungi connessione"
 
 #: src/NodeMenu.vala:117
 msgid "Add Group"
-msgstr ""
+msgstr "Aggiungi Gruppo"
 
 #: src/NodeMenu.vala:124 src/NodesMenu.vala:72
 msgid "Set to color…"
@@ -961,7 +959,7 @@ msgstr "Rimuovi collegamento nodo"
 
 #: src/NodeMenu.vala:394 src/NodesMenu.vala:203
 msgid "Unfold Children"
-msgstr ""
+msgstr "Rivela Figli"
 
 #: src/NodeMenu.vala:399
 msgid "Paste Text As Child Node"
@@ -1004,9 +1002,8 @@ msgid "Randomize colors"
 msgstr "Randomizza i colori"
 
 #: src/NodesMenu.vala:91
-#, fuzzy
 msgid "Parent Nodes"
-msgstr "Nodo Genitore"
+msgstr "Nodi Genitore"
 
 #: src/NodesMenu.vala:105
 msgid "Align Nodes"
@@ -1109,14 +1106,12 @@ msgid "All"
 msgstr "Tutto"
 
 #: src/StyleInspector.vala:35
-#, fuzzy
 msgid "Selected Nodes"
-msgstr "Seleziona Nodo"
+msgstr "Nodi selezionati"
 
 #: src/StyleInspector.vala:36
-#, fuzzy
 msgid "Selected Connections"
-msgstr "Elimina connessione"
+msgstr "Connessioni selezionate"
 
 #: src/StyleInspector.vala:132
 msgid "Changes affect:"
@@ -1159,9 +1154,8 @@ msgid "Border Width"
 msgstr "Larghezza del Bordo"
 
 #: src/StyleInspector.vala:560
-#, fuzzy
 msgid "Color Fill"
-msgstr "Chiudi File"
+msgstr "Riempimento colore"
 
 #: src/StyleInspector.vala:630 src/StyleInspector.vala:915
 msgid "Padding"
@@ -1172,9 +1166,8 @@ msgid "Font"
 msgstr "Font"
 
 #: src/StyleInspector.vala:698
-#, fuzzy
 msgid "Width"
-msgstr "Larghezza della Linea"
+msgstr "Larghezza"
 
 #: src/StyleInspector.vala:720
 msgid "Enable Markup"
@@ -1392,7 +1385,6 @@ msgid "Zoom To Actual Size"
 msgstr "Zoom su Dimensioni Reali"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:117
-#, fuzzy
 msgid "Zoom To Fit"
 msgstr "Zoom adattivo"
 
@@ -1408,7 +1400,7 @@ msgstr "Albero Corrente"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:137
 msgid "Show Style Tab"
-msgstr ""
+msgstr "Mostra Stile Scheda "
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:144
 #, fuzzy
@@ -1417,7 +1409,7 @@ msgstr "Mostra selettore Emoji"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:151
 msgid "Show Map Tab"
-msgstr ""
+msgstr "Mostra scheda mappa"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:160
 #: data/com.github.phase1geo.minder.shortcuts.ui:593
@@ -1435,7 +1427,7 @@ msgstr "Cerca Nodi/Connessioni"
 #: data/com.github.phase1geo.minder.shortcuts.ui:178
 #: data/com.github.phase1geo.minder.shortcuts.ui:775
 msgid "Show Contextual Menu"
-msgstr ""
+msgstr "Mostra menu contestuale"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:185
 #, fuzzy
@@ -1526,7 +1518,7 @@ msgstr "Attiva/disattiva Collegamento Nodo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:336
 msgid "Create Group"
-msgstr ""
+msgstr "Crea Gruppo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:343
 msgid "Create Connection"
@@ -1748,11 +1740,11 @@ msgstr "Aggiungi Fine Testo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:767
 msgid "Mouse Events"
-msgstr ""
+msgstr "Eventi del Mouse"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:776
 msgid "[Right-click when item is selected]"
-msgstr ""
+msgstr "[Fare clic con il pulsante destro del mouse quando l'elemento è selezionato]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:782
 #, fuzzy
@@ -1761,7 +1753,7 @@ msgstr "Modifica Immagine"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:783
 msgid "[Double left-click on image]"
-msgstr ""
+msgstr "[Doppio clic sinistro sull'immagine]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:791
 #, fuzzy

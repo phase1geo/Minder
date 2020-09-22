@@ -5,45 +5,65 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Minder</name>
+  <name xml:lang="pt">Minder</name>
   <name xml:lang="fr">Minder</name>
   <summary>Create, develop and visualize your ideas</summary>
+  <summary xml:lang="pt">Crie, desenvolva e visualize as suas ideias</summary>
   <summary xml:lang="fr">Créez, développez et visualisez vos idées</summary>
   <description>
     <p>Use the power of mind-mapping to make your ideas come to life.</p>
+    <p xml:lang="pt">Use o poder de mapear a mente para fazer com que as suas ideias ganhem vida.</p>
     <p xml:lang="fr">Utilisez le pouvoir des cartes mentales pour donner vie à vos idées.</p>
     <ul>
       <li>Quickly create visual mind-maps using the keyboard and automatic layout.</li>
+      <li xml:lang="pt">Crie mapas mentais visuais rapidamente usando o teclado e o layout automático.</li>
       <li xml:lang="fr">Créez rapidement des cartes mentales visuelles en utilisant le clavier et la mise en forme automatique.</li>
       <li>Choose from many tree layout choices.</li>
+      <li xml:lang="pt">Escolha entre várias opções de leyout de árvore.</li>
       <li>Support for Markdown formatting.</li>
+      <li xml:lang="pt">Suporte para formatação Markdown.</li>
       <li>Add notes, tasks and images to your nodes.</li>
+      <li xml:lang="pt">Adicione notas, tarefas e imagens aos seus nós.</li>
       <li xml:lang="fr">Ajoutez des notes, des tâches et des images à vos nœuds.</li>
       <li>Add node-to-node connections with optional text and notes.</li>
+      <li xml:lang="pt">Adicione conexões nó a nó com texto opcional e notas.</li>
       <li xml:lang="fr">Ajoutez des connexions nœud-vers-nœud avec en option du texte et des notes.</li>
       <li>Stylize nodes, links and connections to add more meaning and improve readability.</li>
+      <li xml:lang="pt">Personalize o estilo de nós, ligações e conexões para adicionar mais significado e melhorar a legibilidade.</li>
       <li xml:lang="fr">Stylisez les nœuds, liens et connexions pour ajouter plus de sens et améliorer la lisibilité.</li>
       <li>Add stickers and node groups to call out and visibly organize information.</li>
+      <li xml:lang="pt">Adicione autocolantes e grupos de nós para destacar e organizar a informação para esta se tornar mais visível.</li>
       <li>Quick search of node and connection titles and notes, including filtering options.</li>
+      <li xml:lang="pt">Procura rápida de títulos e notas de nós e conexões, incluindo opções de filtragem.</li>
       <li xml:lang="fr">Recherche rapide de notes et titres de nœuds et connexions, incluant des options de filtrage.</li>
       <li>Zoom in or enable focus mode to focus on certain ideas or zoom out to see the bigger picture.</li>
+      <li xml:lang="pt">Amplie ou ative o modo de concentração para se focar mais em certas ideias ou reduza a ampliação para ver a grande imagem.</li>
       <li xml:lang="fr">Zoomez pour vous concentrer sur certaines idées ou dézoomez pour visualiser une image plus grande.</li>
       <li>Enter focus mode to better view and understand portions of the map.</li>
+      <li xml:lang="pt">Entre no modo de concentração para visualizar e perceber melhor as porções do mapa.</li>
       <li xml:lang="fr">Entrez en mode concentration pour une vue plus claire et mieux apréhender les zones de la carte.</li>
       <li>Unlimited undo/redo of any change.</li>
+      <li xml:lang="pt">Desfazer/refazer ilimitado para qualquer alteração.</li>
       <li xml:lang="fr">Possibilité infinie d'annuler/rétablir des modifications.</li>
       <li>Automatically saves in the background.</li>
+      <li xml:lang="pt">Grava automaticamente em segundo plano.</li>
       <li xml:lang="fr">Sauvegarde automatique en arrière-plan.</li>
       <li>Colorized node branches.</li>
+      <li xml:lang="pt">Ramificações de nós coloridas.</li>
       <li xml:lang="fr">Branches de nœuds colorées.</li>
       <li>Open multiple mindmaps with the use of tabs.</li>
+      <li xml:lang="pt">Abrir múltiplos mapas mentais com o uso de guias.</li>
       <li xml:lang="fr">Ouvrez plusieurs carte mentales en utilisant les onglets.</li>
       <li>Built-in and customizable theming.</li>
+      <li xml:lang="pt">Tema incorporado e personalizável.</li>
       <li xml:lang="fr">Thèmes intégrés et personnalisables.</li>
       <li>Gorgeous animations.</li>
+      <li xml:lang="pt">Animações lindas.</li>
       <li xml:lang="fr">Magnifiques animations.</li>
-      <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, Portable Minder and XMind formats.</li>
-      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, Portable Minder, PlainText, XMind and yEd formats.</li>
+      <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, PlantUML, Portable Minder and XMind formats.</li>
+      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, PlantUML, Portable Minder, XMind and yEd formats.</li>
       <li>Printer support.</li>
+      <li xml:lang="pt">Suporte para impressora.</li>
       <li xml:lang="fr">Prise en charge de l'impression.</li>
     </ul>
   </description>
@@ -53,25 +73,30 @@
   <screenshots>
     <screenshot>
       <caption>Node/Connection Property Sidebar</caption>
+      <caption xml:lang="pt">Barra Lateral das Propriedades de Nó/Conexão</caption>
       <caption xml:lang="fr">Barre latérale des propriétés des nœuds et connexions</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-current-properties.png</image>
     </screenshot>
     <screenshot>
       <caption>Style Property Sidebar</caption>
+      <caption xml:lang="pt">Personalizar Propriedades da Barra Lateral</caption>
       <caption xml:lang="fr">Barre latérale des propriétés de style</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-style-properties.png</image>
     </screenshot>
     <screenshot>
       <caption>Sticker Property Sidebar</caption>
+      <caption xml:lang="pt">Barra Lateral das Propriedades de Autocolantes</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-stickers-properties.png</image>
     </screenshot>
     <screenshot>
       <caption>Map Property Sidebar</caption>
+      <caption xml:lang="pt">Barra Lateral das Propriedades do Mapa</caption>
       <caption xml:lang="fr">Barre latérale des propriétés de la carte</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-map-properties.png</image>
     </screenshot>
   </screenshots>
   <developer_name>Trevor Williams</developer_name>
+  <developer_name xml:lang="pt">Trevor Williams</developer_name>
   <developer_name xml:lang="fr">Trevor Williams</developer_name>
   <url type="homepage">https://github.com/phase1geo/minder/</url>
   <url type="bugtracker">https://github.com/phase1geo/minder/issues/</url>
@@ -113,6 +138,7 @@
     <release version="1.11.0" date="2020-09-16">
       <description>
         <p>New</p>
+        <p xml:lang="pt">Novo</p>
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added Preferences dialog.</li>
@@ -127,6 +153,7 @@
           <li>Added support for making filepath URIs clickable in nodes, connections and notes (displays the files in the file manager application).</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>When nodes are copied to clipboard, pasting them as text in an external application will be displayed as in text export format.</li>
@@ -135,6 +162,7 @@
           <li>Changed 't' command to transition task status from disabled to enabled to done and back to disabled.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed issues with undo/redo of node/connection title changes.</li>
@@ -150,226 +178,354 @@
     <release version="1.10.0" date="2020-08-27">
       <description>
         <p>New</p>
+        <p xml:lang="pt">Novo</p>
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added Markdown highlighting support to node titles.</li>
+          <li xml:lang="pt">Adicionado o suporte para destaque em Markdown para os títulos de nós.</li>
           <li>Added ability to set the maximum node size in style inspector.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de definir um tamanho máximo ao nó no inspetor de estilo.</li>
           <li>Added ability to set the maximum connection title size in style inspector.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de definir um tamanho máximo ao título de conexão no inspetor de estilo.</li>
           <li>Added ability to set text field font size via gsetting.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de definir o tamanho da fonte num campo de texto via o gsetting.</li>
           <li>Added ability to set branch margin in the style inspector.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de definir a margem da ramificação no inspetor de estilo.</li>
           <li>Added ability to add stickers to nodes, connections and anywhere else in the mind map.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de adicionar autocolantes a nós, conexões e em qualquer lado dentro do mapa de mente.</li>
           <li>Added ability to visually create and display node groupings.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de criar visualmente e exibir grupos de nós.</li>
           <li>Added import/export support for XMind.</li>
+          <li xml:lang="pt">Suporte adicionado para importar/exportar ao XMind.</li>
           <li>Added support for specifying if connection titles should be added immediately after creating a connection.</li>
+          <li xml:lang="pt">Suporte adicionado para especificar se os títulos de conexões devem ser adicionados imediatamente depois de criar uma conexão.</li>
           <li>Added support for middle-click-and-drag to pan the canvas (Alt + mouse movement still supported).</li>
+          <li xml:lang="pt">Suporte adicionado para o clique no botão do meio do rato + arrastar para mover a tela (Alt + movimento do rato ainda é suportado).</li>
           <li>Added keyboard shortcut for the Zoom to Fit option (Control-1).</li>
+          <li xml:lang="pt">Atalho de teclado adicionado para a opção Ampliar até preencher (Control-1).</li>
           <li>Added new Mouse Events shortcut panel in shortcut cheatsheet.</li>
+          <li xml:lang="pt">Painel de atalhos de eventos do rato adicionado na cábula de atalhos.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Removed the sidebar style affects selector and using the status of the current selection instead.</li>
+          <li xml:lang="pt">Estilo da barra lateral que afeta o seletor removido, passa a usar o estado corrente da seleção atual.</li>
           <li>Lowered the minimum node margin from 5 pixels to 1 pixel to allow for greater node density.</li>
+          <li xml:lang="pt">Margem mínima do nó reduzida de 5 pixeis para 1 pixel para permitir uma maior densidade de nós.</li>
           <li>Removed connection title editing field in sidebar for better UI consistency.</li>
+          <li xml:lang="pt">Campo de edição do título da conexão removida da barra lateral para uma melhor consistência da interface do utilizador.</li>
           <li>Removed bold and italicized fonts from the style inspector font selectors.</li>
+          <li xml:lang="pt">Fontes a negrito e em itálico removidas do inspetor de fontes no selecionador de fontes.</li>
           <li>If connection title is empty, the title will be automatically removed.</li>
+          <li xml:lang="pt">Se o título da conexão estiver vazio, o título é removido automaticamente.</li>
           <li>Updated application icon (thanks to Fatih20).</li>
+          <li xml:lang="pt">Ícone da aplicação atualizado (obrigado a Fatih20).</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed issue with importing Freemind notes.</li>
+          <li xml:lang="pt">Problema ao importar notas Freemind corrigido.</li>
           <li>Fixed display of right-to-left text within nodes.</li>
+          <li xml:lang="pt">Corrigida a exibição de texto da direita para a esquerda no interior de nós.</li>
           <li>Fixed issues with loading a .minder file that contains errant information.</li>
+          <li xml:lang="pt">Problemas com o carregamento de ficheiros .minder que contenham informação errada corrigidos.</li>
           <li>Fixed issues with the layout of connection titles.</li>
+          <li xml:lang="pt">Problemas com o layout de títulos de conexão corrigidos.</li>
           <li>Fixed input method support when editing connection titles.</li>
+          <li xml:lang="pt">Correção do suporte para o método de entrada quando editar títulos de conexão.</li>
           <li>Fixed position of fold indicator when tree layout is Upwards.</li>
+          <li xml:lang="pt">Correção da posição do indicador de dobra quando o layout da árvore estiver para cima.</li>
           <li>Fixed node display issue when a node link is clicked to a node that is folded.</li>
+          <li xml:lang="pt">Correção do problema de exibição de nós ao clicar numa ligação de um nó que por sua vez está dobrado.</li>
           <li>Fixed error when connection title is double clicked when no text is present.</li>
+          <li xml:lang="pt">Correção de um erro quando o título da conexão é clicado duas vezes quando não está presente nenhum texto.</li>
           <li>Fixed issue with opening the same document twice (only one tab will now exist per file).</li>
+          <li xml:lang="pt">Correção de um problema ao abrir o mesmo documento duas vezes (só vai existir agora uma guia por ficheiro).</li>
           <li>Fixed Shift-Control-s keyboard shortcut to display the 'Save As' dialog instead of the 'Open' dialog.</li>
+          <li xml:lang="pt">Correção do atalho de teclado Shift-Control-s que mostra agora o dialogo "Gravar Como" em vez de o dialogo "Abrir".</li>
           <li>Fixed issue that allows you to click on or drag onto a hidden node.</li>
+          <li xml:lang="pt">Corrigido um problema em que era permitido clicar ou arrastar uma nota escondida.</li>
         </ul>
       </description>
     </release>
     <release version="1.9.2" date="2020-08-07">
       <description>
         <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed issue with setting cursor position with mouse when zoom factor is not 100 percent.</li>
+          <li xml:lang="pt">Corrigido um problema com a configuração da posição do cursor com o rato quando o fator de Ampliação não é 100 por cento.</li>
           <li>Fixed issue with reading in Minder files that exceed the XML parser size limitations.</li>
+          <li xml:lang="pt">Corrigido um problema com a leitura de ficheiros de Minder que excediam as limitações do tamanho do analisador de XML.</li>
         </ul>
       </description>
     </release>
     <release version="1.9.1" date="2020-07-12">
       <description>
         <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li xml:lang="pt">Tradução em Italiano atualizada (obrigado a @albanobattistella).</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed issue with setting cursor position with mouse when zoom factor is not 100 percent.</li>
+          <li xml:lang="pt">Corrigido um problema com a configuração da posição do cursor com o rato quando o fator de Ampliação não é 100 por cento.</li>
           <li>Fixed issue with reading in Minder files that exceed the XML parser size limitations.</li>
+          <li xml:lang="pt">Corrigido um problema com a leitura de ficheiros de Minder que excediam as limitações do tamanho do analisador de XML.</li>
         </ul>
       </description>
     </release>
     <release version="1.9.0" date="2020-06-26">
       <description>
         <p>New</p>
+        <p xml:lang="pt">Novo</p>
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added support for selecting nodes by dragging out a selection box.</li>
+          <li xml:lang="pt">Suporte adicionado para selecionar nós ao arrastar uma caixa de seleção.</li>
           <li>Added ability to configure the color used in connection titles.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de configurar a cor usada nos títulos de conexão.</li>
           <li>Added Italian translation (thanks to albanobattistella on GitHub).</li>
+          <li xml:lang="pt">Tradução em Italiano adicionada (obrigado a albanobattistella no GitHub).</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Refined and pixel fitted the application icon (thanks to Fatih20 on GitHub).</li>
+          <li xml:lang="pt">Ícone da aplicação mais refinado e com pixeis ajustados (obrigado a Fatih20 no GitHub).</li>
           <li>Changed panning with mouse from left-click with motion to Alt with motion.</li>
+          <li xml:lang="pt">Movimento com o rato alterado, de clique no botão esquerdo com movimento para Alt com movimento.</li>
           <li>Changed select parent to work with multiple selected nodes.</li>
+          <li xml:lang="pt">Alteração do pai selecionado para funcionar com múltiplos nós selecionados.</li>
           <li>Updated keyboard shortcuts cheatsheet for task commands.</li>
+          <li xml:lang="pt">Cábula de atalhos de teclado atualizada para comandos de tarefa.</li>
           <li>Updated Spanish translation (thanks to febrezo on GitHub).</li>
+          <li xml:lang="pt">Tradução em Espanhol atualizada (obrigado a febrezo no GitHub).</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed issues with changing connection styles.</li>
+          <li xml:lang="pt">Correção de problemas ao alterar os estilos de conexões.</li>
           <li>Fixed application crashes associated with changing layout to a balanceable layout with animations enabled.</li>
+          <li xml:lang="pt">Correção de falhas da aplicação associadas à alteração do layout para um layout equilibrável com animações ativadas.</li>
           <li>Fixed display of cursor when it is over a clickable feature in the mind map.</li>
+          <li xml:lang="pt">Corrigida a exibição do cursor do rato quando esta está por cima de um funcionalidade que é clicável no mapa da mente.</li>
           <li>Fixed issues with creating custom themes.</li>
+          <li xml:lang="pt">Problemas corrigidos com a criação de temas personalizáveis.</li>
           <li>Fixed cursor in note editor when Control key is held over a URL link.</li>
+          <li xml:lang="pt">Correção do cursor do rato no editor de nota quando a tecla Ctrl é pressionada numa Ligação URL.</li>
           <li>Fixed meson.build issue when comparing valac version.</li>
+          <li xml:lang="pt">Correção de um problema com o meson.build ao comparar a versão do valac.</li>
           <li>Fixed connection colors in dark themes to help them be more visible.</li>
+          <li xml:lang="pt">Correção de cores de conexão no tema escuro para ajudar a torna-las mais visíveis.</li>
           <li>Fixed issue where connection colors don't follow theme if they have not been manually changed.</li>
+          <li xml:lang="pt">Corrigido um problema em que as cores de conexão não seguiam o tema se estas não tivessem sido alteradas manualmente.</li>
           <li>Fixed application crash when animation is disabled, a node is moved, animation is enabled and a node is moved.</li>
+          <li xml:lang="pt">Correção de uma falha da aplicação quando as animações são desativadas, um nó é movido, animação está ativada e um nó é movido.</li>
           <li>Fixed various issues with quick entry.</li>
+          <li xml:lang="pt">Correção de vários problemas com a entrada rápida.</li>
           <li>Fixed ability to open one or more files from the command-line or from a file browser.</li>
+          <li xml:lang="pt">Corrigida a possibilidade de abrir um ou mais ficheiros da linha de comandos ou de um explorador de ficheiros.</li>
           <li>Fixed issues with connection coloring.</li>
+          <li xml:lang="pt">Problemas corrigidos com a coloração de conexões.</li>
           <li>Fixed issue with pasting UTF8 strings from clipboard.</li>
+          <li xml:lang="pt">Corrigido um problema ao colar strings UTF8 da área de transferência.</li>
         </ul>
       </description>
     </release>
     <release version="1.8.0" date="2020-05-17">
       <description>
         <p>New</p>
+        <p xml:lang="pt">Novo</p>
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added support for pasting an image or text as a new node.</li>
+          <li xml:lang="pt">Suporte adicionado para colar uma imagem ou texto como um nó novo.</li>
           <li>Added support for pasting an image or text, replacing the current node content.</li>
+          <li xml:lang="pt">Suporte adicionado para colar uma imagem ou texto, substituindo o conteúdo do nó atual.</li>
           <li>Added support for pasting text, replacing the current connection content.</li>
+          <li xml:lang="pt">Suporte adicionado para colar texto, substituindo o conteúdo da conexão atual.</li>
           <li>Added task support to Outliner import/export.</li>
+          <li xml:lang="pt">Suporte de tarefa adicionado para o importar/exportar do Outliner.</li>
           <li>Added keyboard shortcut (Control-E) to display export interface.</li>
+          <li xml:lang="pt">Atalho de teclado (Control-E) adicionado para exibir a interface de exportar.</li>
           <li>Added support for creating a new root node hitting the Return key when no node is selected.</li>
+          <li xml:lang="pt">Suporte adicionado para criar um novo nó de raiz ao pressionar a tecla Return quando não estiver nenhum nó selecionado.</li>
           <li>Added ability to add a new root node via the contextual menu when no node is selected.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de adicionar um novo nó de raiz através do menu contextual quando não estiver nenhum nó selecionado.</li>
           <li>Added ability to launch quick entry dialog via the contextual menu when no node is selected.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de abrir o dialogo de entrada rápida através do menu contextual quando não estiver nenhum nó selecionado.</li>
           <li>Added node alignment support for manual node layouts.</li>
+          <li xml:lang="pt">Suporte adicionado para o alinhamento de nós para layouts manuais de nós.</li>
           <li>Added ability to create a connected root node.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de criar um nó raiz conectado.</li>
           <li>Added ability to replace/edit nodes via the Quick Entry feature.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de substituir/editar nós através da funcionalidade Entrada Rápida.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated image editor dialog button bar to include support for clipboard operations.</li>
+          <li xml:lang="pt">Barra do botão de dialogo do editor de imagem atualizado para incluir suporte para operações da área de transferência.</li>
           <li>Improved display of buttons in image area of the node inspector sidebar.</li>
+          <li xml:lang="pt">Melhorada a exibição de botões na área de imagem da barra do inspetor de nós.</li>
           <li>Updated keyboard shortcut cheatsheet.</li>
+          <li xml:lang="pt">Cábula de atalhos de teclado atualizada.</li>
           <li>Changed quick text entry keyboard shortcut from Control-E to Control-Shift-E.</li>
+          <li xml:lang="pt">Atalho de teclado alterado para entrada rápida de texto de Ctrl-E para Ctrl-Shift-E.</li>
           <li>Changed the paste text in contextual menu to indicate what will be pasted.</li>
+          <li xml:lang="pt">Alteração do texto copiado no menu de contexto para indicar o que vai ser colado.</li>
           <li>Updated Outliner import/export support for tasks.</li>
+          <li xml:lang="pt">O Importar/Exportar do Outliner foi atualizado para suportar tarefas.</li>
           <li>Added tooltip and changed cursor when cursor is over a link and the Control key is held down.</li>
+          <li xml:lang="pt">Ferramenta de dicas adicionado e o cursor do rato foi alterado para quando este se sobrepor a uma ligação e a tecla Ctrl estiver pressionada.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Removed empty Outliner rows from being added when Outliner file is imported.</li>
+          <li xml:lang="pt">Filas vazias do Outline removidas para não serem adicionadas quando um ficheiro Outliner for importado.</li>
           <li>Fixed loss of selection when shift key is held down and the background is clicked.</li>
+          <li xml:lang="pt">Perca de seleção corrigida quando a tecla shift é pressionada e o fundo é clicado.</li>
           <li>Added themed background color to exported PDF format.</li>
+          <li xml:lang="pt">Cor de fundo do tema adicionada ao formato exportado PDF.</li>
           <li>Fixed exports to allow existing files to be overwritten.</li>
+          <li xml:lang="pt">Correção da exportação de ficheiros para permitir que ficheiros existentes sejam substituídos.</li>
           <li>Fixed Org-Mode export syntax errors.</li>
+          <li xml:lang="pt">Correção de erros de sintaxe para exportações em Modo Org.</li>
         </ul>
       </description>
     </release>
     <release version="1.7.3" date="2020-04-20">
       <description>
         <p>New</p>
+        <p xml:lang="pt">Novo</p>
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added support for using input methods.</li>
+          <li xml:lang="pt">Suporte adicionado para usar métodos de entrada.</li>
           <li>Added Dutch translation (thanks to Heimen Stoffels).</li>
+          <li xml:lang="pt">Tradução em Holandês adicionada (obrigado a Heimen Stoffels).</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated README.md to indicate which version of valac should be used if building from source.</li>
+          <li xml:lang="pt">README.md atualizado para indicar qual a versão do valac que deve ser usada s construir a partir da fonte.</li>
           <li>Changed unnamed default filename to use translated value.</li>
+          <li xml:lang="pt">Alteração do nome do ficheiro padrão sem nome para usar o valor traduzido.</li>
           <li>Updated French translations (thanks to Nathan Bonnemains).</li>
+          <li xml:lang="pt">Tradução em Francês atualizada (obrigado a Nathan Bonnemains).</li>
           <li>Changed tab colors to match current document background.</li>
+          <li xml:lang="pt">Alteração das cores das guias para combinar com o fundo do documento atual.</li>
           <li>Adjusted dark theme to help with current tab contrast.</li>
+          <li xml:lang="pt">Tema escuro ajustado para ajudar com o contraste da guia atual.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed issue with New Document plank command to load application data before opening new tab.</li>
+          <li xml:lang="pt">Correção de um problema com o comando plank do Novo Documento para carregar os dados da aplicação antes de abrir uma nova guia.</li>
           <li>Fixed build issues with compiling libarchive code using newer versions of libarchive and valac.</li>
+          <li xml:lang="pt">Correção de problemas de compilação com a compilação de código libarchive ao usar novas versões do libarchive e valac.</li>
           <li>Fixed issues with translating shortcut cheetsheat strings.</li>
+          <li xml:lang="pt">Correção de problemas com a tradução de strings de atalhos na cábula.</li>
           <li>Fixed issue with exporting images when manual layout mode is selected.</li>
+          <li xml:lang="pt">Correção de um problema ao exportar imagens quando o modo de layout manual está selecionado.</li>
         </ul>
       </description>
     </release>
     <release version="1.7.2" date="2020-03-26">
       <description>
         <p>New</p>
+        <p xml:lang="pt">Novo</p>
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added support for importing/exporting Outliner files (new app in AppCenter!).</li>
+          <li xml:lang="pt">Suporte adicionado para importar/exportar ficheiros Outliner (nova aplicação no Centro de Aplicações!).</li>
           <li xml:lang="fr">Ajout de la prise en charge de l'importation/exportation au format Outliner (nouvelle application dans le Centre d'Applications !).</li>
           <li>Added map inspector switch to enable/disable automatic rotation of main branch link color selection.</li>
+          <li xml:lang="pt">Interruptor para o Inspetor de mapa adicionado para ativar/desativar a rotação automática da seleção de cor da ligação do ramo principal.</li>
           <li xml:lang="fr">Ajout d'un inspecteur de carte pour activer/désactiver la rotation automatique de la couleur de sélection du lien de la branche principale.</li>
           <li>Added ability to set all selected nodes to a specific color.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de definir todos os nós selecionados para uma cor específica.</li>
           <li xml:lang="fr">Ajout de la possibilité de définir une couleur spécifique pour tous les nœuds sélectionnés.</li>
           <li>Added ability to set all selected nodes to a randomly selected link color.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de definir todos os nós selecionados para uma cor de ligação aleatória.</li>
           <li xml:lang="fr">Ajout de la possibilité de définir une couleur de lien sélectionné aléatoire pour tous les nœuds sélectionnés</li>
           <li>Added ability to allow descendant nodes to have different link colors than ancestor nodes.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de permitir que nós descendentes tenham cores de ligação diferentes dos nós ancestrais.</li>
           <li xml:lang="fr">Ajout de la possibilité aux nœuds enfants d'avoir une couleur de lien différente des nœuds parents.</li>
           <li>Added ability to cause a descendant node with a different color than its parent to re-use the parent color.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de fazer com que um nó descendente com uma cor diferente de seu pai reutilize a cor do mesmo.</li>
           <li xml:lang="fr">Ajout de la possibilité de créer un nœud enfant avec une couleur diffénte de son parent pour réutiliser la couleur du parent.</li>
           <li>Added ability to select children nodes using Control-click.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de selecionar nós filhos usando o Ctrl-clique.</li>
           <li>Added ability to export a mind-map as a new Portable Minder filetype which will allow Minder files to be copied between different users/filesystems.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de exportar um mapa mental como um novo tipo de ficheiro do Portable Minder, que permitirá que os ficheiros do Minder sejam copiados entre diferentes utilizadores/sistemas de ficheiros.</li>
           <li>Added ability to export to Org-Mode format.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de exportar para o formato Modo Org.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated French translation (thanks to Nathan Bonnemains).</li>
+          <li xml:lang="pt">Tradução Francesa adicionada (obrigado a Nathan Bonnemains).</li>
           <li xml:lang="fr">Ajout des traductions en français (grâce à Nathan Bonnemains).</li>
           <li>Improved OPML import support.</li>
+          <li xml:lang="pt">Suporte para importar OPML melhorado.</li>
           <li xml:lang="fr">Amélioration de l'import de fichiers OPML.</li>
           <li>Changed ability to select a subtree by Control + double-click.</li>
+          <li xml:lang="pt">Alterada a possibilidade de selecionar uma sub árvore pressionado em Ctrl + cliq.</li>
           <li xml:lang="fr">Modification de la sélection des sous-arbres avec Control + Double clic.</li>
           <li>Changed ability to select all nodes of the current level by Control + triple-click.</li>
+          <li xml:lang="pt">Alterada a possibilidade de selecionar todos os nós do nível atual pressionado em Ctrl + clique triplo.</li>
           <li xml:lang="fr">Modification de la sélection de tous les nœuds du niveau courant avec Control + Triple clic.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed NodeJS version for Travis CI.</li>
+          <li xml:lang="pt">Correção da versão do NodeJS para o Travis CI.</li>
           <li xml:lang="fr">Correction de la version de NodeJS dans Travis CI.</li>
           <li>Fixed issue with adding a new child node that doesn't cause other descendant nodes to unfold.</li>
+          <li xml:lang="pt">Corrigido um problema com a adição de um novo nó filho que não fazia com que outros nós descendentes se desdobrassem.</li>
           <li xml:lang="fr">Correction du problème lors de l'ajout d'un nœud enfant qui empêchait les autres nœuds enfants d'être dépliés.</li>
           <li>Fixed issue with showing/hiding sidebar.</li>
+          <li xml:lang="pt">Corrigido o problema de mostrar/esconder a barra lateral.</li>
           <li xml:lang="fr">Correction d'un problème avec l'action d'afficher/masquer la barre latérale.</li>
           <li>Fixed segmentation faults when loading a theme.</li>
+          <li xml:lang="pt">Falhas de segmentação corrigidas ao carregar um tema.</li>
           <li xml:lang="fr">Correction d'une erreur de segmentation lors du chargement d'un thème.</li>
           <li>Fixed issue with the style inspector Change Affect value when selection changes (thanks to Viliam K.).</li>
+          <li xml:lang="pt">Corrigido um problema com o valor do inspetor de estilo Alterar Afeto ao alterar a seleção (obrigado a Viliam K.).</li>
           <li>Fixed issue with node markup within the node text (thanks to Viliam K).</li>
+          <li xml:lang="pt">Corrigido um problema com o markup de um nó no texto do nó (obrigado a Viliam K).</li>
           <li xml:lang="fr">Correction d'un problème avec le style de nœud dans le texte (grâce à Viliam K.).</li>
           <li>Fixed issue with tab state not being properly saved when a new tab is added.</li>
+          <li xml:lang="pt">Corrigido um problema com o estado da guia que não era gravado corretamente quando uma nova guia é adicionada.</li>
           <li xml:lang="fr">Correction d'un problème avec l'état des onglets qui n'étaient pas correctement enregistré lors de l'ajout d'un nouvel onglet.</li>
           <li>Fixed bug with updating tab tooltip and saving tab state when filename is changed.</li>
+          <li xml:lang="pt">Corrigido um problema com a atualização da ferramenta de dica da guia e o gravar do estado da guia quando o nome do ficheiro é alterado.</li>
           <li xml:lang="fr">Correction d'un bug lors de la mise à jour de l'infobulle de l'onglet et l'enregistrement de l'état de l'onglet lorsque le nom de fichier est différent.</li>
         </ul>
       </description>
@@ -377,37 +533,48 @@
     <release version="1.6.0" date="2019-12-26">
       <description>
         <p>New</p>
+        <p xml:lang="pt">Novo</p>
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added ability to delete a single node (instead of the node and its subtree) in the contextual menu.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de excluir um único nó (em vez do nó e sua sub árvore) no menu contextual.</li>
           <li xml:lang="fr">Ajout de la possibilité de supprimer un nœud seul (au lieu du nœud et de ses enfants) dans le menu contextuel.</li>
           <li>When a new document is first saved, the first root node text is used as the default filename.</li>
+          <li xml:lang="pt">Quando um novo documento é gravado pela primeira vez, o texto do primeiro nó raiz é usado como o nome do ficheiro padrão.</li>
           <li xml:lang="fr">Lorsqu'un document est enregistré pour la première fois, le nom du premier nœud racine est utilisé comme nom de fichier par défaut.</li>
           <li>Added multi-select support which includes:
-            <ul><li>Changing styles</li><li xml:lang="fr">Modification des styles</li><li>Copy, cut, paste and delete support</li><li xml:lang="fr">Prise en charge des fonctions copier, couper, coller et supprimer</li><li>Connect two selected nodes</li><li xml:lang="fr">Connectez deux nœuds sélectionnés</li><li>Create node links between two or more selected nodes</li><li xml:lang="fr">Créez des liens entre deux nœuds sélectionnés ou plus</li><li>Fold/unfold selected nodes</li><li xml:lang="fr">Pliez/Dépliez les nœuds sélectionnés</li></ul>
+            <ul><li>Changing styles</li><li xml:lang="pt">Alterações de estilo</li><li xml:lang="fr">Modification des styles</li><li>Copy, cut, paste and delete support</li><li xml:lang="pt">Suporte para copiar, cortar, colar e apagar</li><li xml:lang="fr">Prise en charge des fonctions copier, couper, coller et supprimer</li><li>Connect two selected nodes</li><li xml:lang="pt">Conecte dois nós selecionados</li><li xml:lang="fr">Connectez deux nœuds sélectionnés</li><li>Create node links between two or more selected nodes</li><li xml:lang="pt">Crie ligações de nó entre dois ou mais nós selecionados</li><li xml:lang="fr">Créez des liens entre deux nœuds sélectionnés ou plus</li><li>Fold/unfold selected nodes</li><li xml:lang="pt">Dobrar/desdobrar nós selecionados</li><li xml:lang="fr">Pliez/Dépliez les nœuds sélectionnés</li></ul>
           </li>
           <li>Added support for URLs in node titles.</li>
+          <li xml:lang="pt">Suporte adicionado para URLs nos títulos de nós.</li>
           <li xml:lang="fr">Ajout de la prise en charge des URL dans le titre des nœuds.</li>
           <li>Added support for Markdown within a note
-            <ul><li>Notes are syntax highlighted</li><li xml:lang="fr">La correction orthographique fonctionne dans les notes</li><li>Embedded URLs can be opened by Control-Clicking on them</li><li xml:lang="fr">Les URL peuvent être ouvertes en effectuant Ctrl + Clic dessus</li></ul>
+            <ul><li>Notes are syntax highlighted</li><li xml:lang="pt">Notas são em destaque de sintaxe</li><li xml:lang="fr">La correction orthographique fonctionne dans les notes</li><li>Embedded URLs can be opened by Control-Clicking on them</li><li xml:lang="pt">URLs incorporados podem ser abertos ao clicar com o botão direito do rato nos mesmos</li><li xml:lang="fr">Les URL peuvent être ouvertes en effectuant Ctrl + Clic dessus</li></ul>
           </li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated application icon and other recently improved icons for improved readability (thanks to Nararyans R.I.).</li>
+          <li xml:lang="pt">Ícone da aplicação atualizado e outros ícones aprimorados recentemente para facilitar a sua leitura (obrigado a Nararyans R.I.).</li>
           <li xml:lang="fr">Mise à jour de l'icône de l'application et des autres icônes pour plus de lisibilité (grâce à Nararyans R.I.).</li>
           <li>Improved look and readability of theme icons in the sidebar.</li>
+          <li xml:lang="pt">Aparência e legibilidade melhorada dos ícones do tema na barra lateral.</li>
           <li xml:lang="fr">Meilleure apparence et lisibilité des icônes de thème dans la barre latérale.</li>
           <li>Changed sidebar to display theme icons in a grid layout.</li>
+          <li xml:lang="pt">Barra lateral alterada para exibir ícones de tema num layout de grelha.</li>
           <li xml:lang="fr">Modification de la barre latérale pour afficher les icônes de thème dans une grille.</li>
           <li>Improved various export format output.</li>
+          <li xml:lang="pt">Melhoria na saída de vários formatos de formatação.</li>
           <li xml:lang="fr">Amélioration des différents formats d'exportation.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed various compiler warnings/errors after compiling with latest version of Vala compiler.</li>
+          <li xml:lang="pt">Vários avisos/erros do compilador corrigidos após a compilação com a versão mais recente do compilador Vala.</li>
           <li xml:lang="fr">Correction de divers avertissements/erreurs après compilation avec la dernière version du compilateur Vala.</li>
         </ul>
       </description>
@@ -415,17 +582,22 @@
     <release version="1.5.1" date="2019-11-23">
       <description>
         <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Improved various icons (thanks to Nararyans R.I.)</li>
+          <li xml:lang="pt">Vários ícones melhorados (obrigado a Nararyans R.I.)</li>
           <li xml:lang="fr">Amélioration de diverses icônes (grâce à Nararyans R.I.)</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Downgraded Node.js to fix Travis CI builds</li>
+          <li xml:lang="pt">Versão anterior do Node.js para corrigir construções do Travis CI</li>
           <li xml:lang="fr">Rétrogradation de Node.js pour corriger les problèmes d'intégration continue avec Travis CI</li>
           <li>Fixed various compiler errors/warnings</li>
+          <li xml:lang="pt">Correção de vários erros/avisos do compilador</li>
           <li xml:lang="fr">Correction de diverses erreurs/avertissements lors de la compilation</li>
         </ul>
       </description>
@@ -433,47 +605,66 @@
     <release version="1.5.0" date="2019-09-07">
       <description>
         <p>New</p>
+        <p xml:lang="pt">Novo</p>
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added export to yEd.</li>
+          <li xml:lang="pt">Exportar em yEd adicionado.</li>
           <li xml:lang="fr">Ajout de l'exportation au format yEd.</li>
           <li>Added ability to create, edit and delete custom themes.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de criar, editar e apagar temas personalizados.</li>
           <li xml:lang="fr">Ajout de la possibilité de créer, modifier et supprimer des thèmes personnalisés</li>
           <li>Added new quick entry mode, allowing node trees to be input within a text editor.</li>
+          <li xml:lang="pt">Modo de entrada rápida adicionada, permitindo que árvores de nós sejam entradas dentro de um editor de texto.</li>
           <li xml:lang="fr">Ajout d'un nouveau mode d'entrée rapide, permettant aux arbres de nœuds d'être saisis depuis l'éditeur de texte.</li>
           <li>Added Control-W keyboard shortcut to close the current tab.</li>
+          <li xml:lang="pt">Atalho de teclado Ctrl-W adicionado para fechar a guia atual.</li>
           <li xml:lang="fr">Ajout du raccourci clavier Ctrl + W pour fermer l'onglet actif.</li>
           <li>Added shortcut exploration help window (use F1 key to display).</li>
+          <li xml:lang="pt">Adicionada janela de ajuda para exploração de atalhos (use a tecla F1 para exibir).</li>
           <li xml:lang="fr">Ajouter du raccourci pour parcourir la fenêtre d'aide (utilisez la touche F1 pour l'afficher).</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>New search icon which has better contrast for Minder's themed header bar (thanks to Nararyans R.I.).</li>
+          <li xml:lang="pt">Novo ícone de pesquisa que tem um melhor contraste para a barra de cabeçalho temática do Minder (obrigado a Nararyans R.I.).</li>
           <li xml:lang="fr">Nouvelle icône de recherche avec un meilleur contraste pour le thème de l'entête de Minder(grâce à Nararyans R.I.).</li>
           <li>New non-symbolic sidebar icon in header bar (thanks to Nararyans R.I.).</li>
+          <li xml:lang="pt">Novo ícone não simbólico da barra lateral na barra de cabeçalho (obrigado a Nararyans R.I.).</li>
           <li xml:lang="fr">Nouvelle icône non symbolique pour la barre latérale dans l'entête (grâce à Nararyans R.I.).</li>
           <li>New Minder application icon which fits in with the elementary OS color scheme better (thansk to Nararyans R.I.).</li>
+          <li xml:lang="pt">Novo ícone da aplicação Minder que se encaixa melhor no esquema de cores do sistema operativo elementary (obrigado a Nararyans R.I.).</li>
           <li xml:lang="fr">Nouvelle icône de l'application Minder qui correspond mieux au schéma de couleurs d'elementary OS (grâce à Nararyans R.I.).</li>
           <li>New focus icon in header bar (thanks to Nararyans R.I.).</li>
+          <li xml:lang="pt">Novo ícone de concentração na barra do cabeçalho (obrigado a Nararyans R.I.).</li>
           <li xml:lang="fr">Nouvelle icône de mode concentration dans l'entête (grâce à Nararyans R.I.).</li>
           <li>Improved styling when creating a new node/connection.</li>
+          <li xml:lang="pt">Estilo melhorado ao criar um novo nó/conexão.</li>
           <li xml:lang="fr">Amélioration du style lors de la création d'un nouveau nœud/connexion.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed issue where separate trees in same mind-map where allowed to overlap.</li>
+          <li xml:lang="pt">Correção de um problema em que as árvores separadas no mesmo mapa mental podiam-se sobrepor.</li>
           <li xml:lang="fr">Correction d'un problème ou les arbres séparés dans la même carte mentale pouvaient déborder.</li>
           <li>Fixed node link drawing issue when using manual layout mode.</li>
+          <li xml:lang="pt">Corrigido um problema de desenho de link de nó ao usar o modo de layout manual.</li>
           <li xml:lang="fr">Correction d'un problème de dessin des liens de nœud lors de l'utilisation du mode de disposition manuelle.</li>
           <li>Fixed issues drawing arrows properly when straight node links were being used.</li>
+          <li xml:lang="pt">Correção de problemas ao desenhar setas corretamente quando as ligações de nós retos estavam a ser usadas.</li>
           <li xml:lang="fr">Correction de problèmes de dessin correct des flèches lors de l'utilisation de liens de nœuds droits.</li>
           <li>Fixed display issues with the node fill switch in the style inspector.</li>
+          <li xml:lang="pt">Correção de problemas de exibição com a opção de preenchimento de nó no inspetor de estilo.</li>
           <li xml:lang="fr">Correction de problèmes d'affichage avec le bouton de remplissage de nœud dans l'inspecteur de style.</li>
           <li>Fixed support for cut, copy and pasting connection title text.</li>
+          <li xml:lang="pt">Correção do suporte para cortar, copiar e colar texto do título de conexão.</li>
           <li xml:lang="fr">Correction de la prise en charge des fonctions couper, copier et coller du titre des connexions.</li>
           <li>Fixed keyboard shortcut for toggling focus mode.</li>
+          <li xml:lang="pt">Correção do atalho de teclado para alternar o modo de concentração.</li>
           <li xml:lang="fr">Correction du raccourci clavier pour activer/désactiver le mode concentration.</li>
         </ul>
       </description>
@@ -482,6 +673,7 @@
       <description>
         <ul>
           <li>Fixed issue with automatic layout that was introduced in 1.4.0.</li>
+          <li xml:lang="pt">Correção de um problema com o layout automático que foi introduzido na versão 1.4.0.</li>
           <li xml:lang="fr">Correction d'un problème avec la disposition automatique introduite en 1.4.0.</li>
         </ul>
       </description>
@@ -489,55 +681,78 @@
     <release version="1.4.0" date="2019-07-03">
       <description>
         <p>New</p>
+        <p xml:lang="pt">Novo</p>
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added support for focus mode.</li>
+          <li xml:lang="pt">Suporte adicionado para o modo de concentração.</li>
           <li xml:lang="fr">Ajout de la prise en charge du mode concentration.</li>
           <li>Added support for multiple documents with tabs.</li>
+          <li xml:lang="pt">Suporte adicionado para múltiplos documentos com guias.</li>
           <li xml:lang="fr">Ajout de la prise en charge de documents multiples avec onglets.</li>
           <li>Added support for resizing the inspector sidebar.</li>
+          <li xml:lang="pt">Suporte adicionado para redimensionar a barra lateral do inspetor.</li>
           <li xml:lang="fr">Ajout de la prise en charge du redimensionnement de la barre latérale de l'inspecteur.</li>
           <li>Added support for creating a new node directly from editing an existing node presssing Return or Tab.</li>
+          <li xml:lang="pt">Suporte adicionado para criar um novo nó diretamente da edição de um nó existente pressionando a tecla Return ou Tab.</li>
           <li xml:lang="fr">Ajout de la prise en charge pour la création d'un nouveau nœud directement à partir de l'édition d'un nœud existant en appuyant sur Entrée ou Tab.</li>
           <li>Added support for adding a new parent node to an existing node.</li>
+          <li xml:lang="pt">Suporte adicionado para adicionar um novo nó pai a um já existente.</li>
           <li xml:lang="fr">Ajout de la prise en charge pour ajouter un nouveau nœud parent à un nœud existant.</li>
           <li>Added support for importing/exporting to FreeMind and Freeplane formats.</li>
+          <li xml:lang="pt">Suporte adicionado para importar/exportar para os formatos FreeMind e Freeplane.</li>
           <li xml:lang="fr">Ajout de la prise en charge de l'importation/exportation aux formats FreeMind et Freeplane.</li>
           <li>Added support for sorting children either alphabetically or randomly.</li>
+          <li xml:lang="pt">Suporte adicionado para ordenar filhos em ordem alfabética ou aleatória.</li>
           <li xml:lang="fr">Ajout de la prise en charge du tri des enfants alphabétiquement ou aléatoirement.</li>
           <li>Added support for creating a link from one node to another node in the same map.</li>
+          <li xml:lang="pt">Suporte adicionado para criar uma ligação de um nó para outro nó no mesmo mapa.</li>
           <li xml:lang="fr">Ajout de la prise en charge pour la création d'un lien d'un nœud à un autre dans la même carte.</li>
           <li>Added support for building a Flatpak.</li>
+          <li xml:lang="pt">Suporte adicionado para construir um Flatpack.</li>
           <li xml:lang="fr">Ajout de la prise en charge pour Flatpak.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Removed markup from translated strings.</li>
+          <li xml:lang="pt">Markup removido de strings traduzidas.</li>
           <li xml:lang="fr">Suppression des balises des chaînes de caractères traduites.</li>
           <li>Standardized tooltips that display accelerator information.</li>
+          <li xml:lang="pt">Ferramenta de dicas padrão para exibir informações do acelerador.</li>
           <li xml:lang="fr">Indications standard pour afficher les informations des raccourcis clavier.</li>
           <li>Changed the way that node/connection titles are displayed in inspector.</li>
+          <li xml:lang="pt">Alterada a forma como os títulos dos nós/conexões são exibidos no inspetor.</li>
           <li xml:lang="fr">Modification de la façon dont les titres de nœud/connexion sont affichés dans l'inspecteur.</li>
           <li>Changed app terminal script to allow command-line arguments to be passed to debug subcommand.</li>
+          <li xml:lang="pt">Alteração do script do terminal da aplicação para permitir que argumentos da linha de comandos sejam passados para o sub comando de depuração.</li>
           <li xml:lang="fr">Modification du script du terminal de l'application pour autoriser les arguments en ligne de commande a être passés en sous-commandes de débogage.</li>
           <li>Changed header bar and widget colors to match Minder brand color.</li>
+          <li xml:lang="pt">Barra de cabeçalho e cores do widget alterados para corresponder à cor da marca Minder.</li>
           <li xml:lang="fr">Modification des couleurs de la barre d'en-tête et des widgets pour correspondre à la couleur symbolique de Minder.</li>
           <li>Changed search icon in header bar to a symbolic icon to improve readability.</li>
+          <li xml:lang="pt">Ícone de pesquisa alterado na barra de cabeçalho para um ícone simbólico para melhorar a legibilidade.</li>
           <li xml:lang="fr">Modification de l'icône de recherche dans la barre d'en-tête en icône symbolique pour améliorer la lisibilité.</li>
           <li>When note tooltip is displayed, markup text is rendered for improved readability.</li>
+          <li xml:lang="pt">Quando a ferramenta de dicas da nota é exibida, o texto em markup é renderizado para facilitar a leitura.</li>
           <li xml:lang="fr">Lorsque l'indicateur des notes est affiché, le marquage du texte est restitué pour une meilleure lisibilité.</li>
           <li>Enhanced app script to allow command-line arguments to be passed to debug subcommand.</li>
+          <li xml:lang="pt">Script da aplicação melhorado para permitir que os argumentos de linha de comandos sejam passados para o sub comando de depuração.</li>
           <li xml:lang="fr">Amélioration du script de l'application pour autoriser les arguments en ligne de commande à être passés en sous-commandes de débogage.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
           <li>Fixed an issue with calculating connection endpoints when a portion of the node is not visible.</li>
+          <li xml:lang="pt">Corrigido um problema com o cálculo de pontos de extremidade de conexão quando uma parte do nó não está visível.</li>
           <li xml:lang="fr">Correction d'un problème avec le calcul des point de fin de connexion lorsqu'un bout du nœud n'est pas visible.</li>
           <li>Fixed file naming issue when a file is imported.</li>
+          <li xml:lang="pt">Correção de um problema de nomenclatura de ficheiro quando este é importado.</li>
           <li xml:lang="fr">Correction des problèmes de nommage du fichier lors de l'importation d'un fichier.</li>
           <li>Fixed issue with displaying resized nodes on open or application startup.</li>
+          <li xml:lang="pt">Corrigido um problema com a exibição de nós redimensionados na abertura ou inicialização da aplicação.</li>
           <li xml:lang="fr">Correction d'un problème lors de l'affichage des nœuds redimensionnés à l'ouverture ou au démarrage de l'application.</li>
         </ul>
       </description>
@@ -546,6 +761,7 @@
       <description>
         <ul>
           <li>Fixing issue with export functions.</li>
+          <li xml:lang="pt">Correção de um problema com as funções de exportar.</li>
           <li xml:lang="fr">Correction des problèmes avec les fonctions d'export.</li>
         </ul>
       </description>
@@ -553,37 +769,53 @@
     <release version="1.3.0" date="2019-05-20">
       <description>
         <p>Let's stay connected!</p>
+        <p xml:lang="pt">Vamos ficar conectados!</p>
         <p xml:lang="fr">Restons connectés !</p>
         <ul>
           <li>Added support for creating a visual connection between any two nodes.</li>
+          <li xml:lang="pt">Suporte adicionado para a criação de uma conexão visual entre quaisquer dois nós.</li>
           <li xml:lang="fr">Ajout de la prise en charge de la création d'une connexion visuelle entre deux nœuds quelconques.</li>
           <li>Added ability to show/hide all connections in the map.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de mostrar/esconder todas as conexões no mapa.</li>
           <li xml:lang="fr">Ajout de la possibilité d'afficher/masquer toutes les connexions dans la carte.</li>
           <li>Added support for remembering the last selected child of a node when navigating the map with the keyboard.</li>
+          <li xml:lang="pt">Suporte adicionado para lembrar o último filho selecionado de um nó ao navegar no mapa com o teclado.</li>
           <li xml:lang="fr">Ajout de la prise en charge de la mémorisation du dernier enfant sélectionné d'un nœud lors de la navigation sur la carte à l'aide du clavier.</li>
           <li>When escape key is used when editing text, editing mode is ended without reverting text.</li>
+          <li xml:lang="pt">Quando a tecla de Escape é usada ao editar texto, o modo de edição é encerrado sem reverter o texto.</li>
           <li xml:lang="fr">Lorsque la touche d'échappement est utilisée lors de l'édition de texte, le mode d'édition est interrompu sans que le texte ne soit réinitialisé.</li>
           <li>Created unique contextual menus depending on what is selected in the mind map.</li>
+          <li xml:lang="pt">Criados menus contextuais exclusivos, dependendo do que é selecionado no mapa mental.</li>
           <li xml:lang="fr">Création de menus contextuels uniques en fonction de ce qui est sélectionné dans la carte mentale.</li>
           <li>Changed Node sidebar tab to Current which shows either the currently selected node or connection.</li>
+          <li xml:lang="pt">Alteração da guia da barra lateral do nó para Atual, que mostra o nó ou a conexão atualmente selecionada.</li>
           <li xml:lang="fr">Changement de l'onglet Nœud de la barre latérale à Courant qui affiche soit le nœud ou la connexion actuellement sélectionné(e).</li>
           <li>Improved link drawing when a node tree is being moved.</li>
+          <li xml:lang="pt">Desenho da ligação melhorado quando uma árvore de nó está a ser movida.</li>
           <li xml:lang="fr">Amélioration du dessin des liens lorsqu'une arborescence de nœuds est déplacée.</li>
           <li>Switched from using GtkFileChooserDialog to GtkFileChooserNative.</li>
+          <li xml:lang="pt">Alteração do uso de GtkFileChooserDialog para GtkFileChooserNative.</li>
           <li xml:lang="fr">Passage de GtkFileChooserDialog à GtkFileChooserNative.</li>
           <li>Added support for inserting emoji when editing text in the mind map (use Control-period).</li>
+          <li xml:lang="pt">Suporte adicionado para inserir um emoji enquanto se edita texto no mapa mental (use Ctrl-ponto).</li>
           <li xml:lang="fr">Ajout du support pour l'insertion d'emojis lors de l'édition de texte dans la carte mentale (utilisez la combinaison CTRL + .).</li>
           <li>Improved readability of theme name when the theme is selected.</li>
+          <li xml:lang="pt">Legibilidade melhorada do nome do tema quando o tema é selecionado.</li>
           <li xml:lang="fr">Meilleure lisibilité du nom du thème lorsque le thème est sélectionné.</li>
           <li>Fixed issue where changing a global style was not saved/applied to new nodes.</li>
+          <li xml:lang="pt">Corrigido um problema em que a alteração de um estilo global não era gravada/aplicada a novos nós.</li>
           <li xml:lang="fr">Correction d'un problème où le changement d'un style global n'était pas sauvegardé/appliqué aux nouveaux nœuds.</li>
           <li>Improved copy/paste support of nodes so that copied items can be pasted in other mind maps.</li>
+          <li xml:lang="pt">Suporte melhorado para o copiar/colar de nós para que os itens copiados possam ser colados em outros mapas mentais.</li>
           <li xml:lang="fr">Amélioration du copier/coller des nœuds pour que les éléments copiés puissent être collés dans d'autres cartes mentales.</li>
           <li>Added support for dynamically changing to dark mode in the UI if the prefer-dark desktop gsetting is set.</li>
+          <li xml:lang="pt">Suporte adicionado para alterar dinamicamente para o modo escuro na interface do utilizador se a definição preferir escuro no gsetting da área de trabalho estiver definido.</li>
           <li xml:lang="fr">Ajout de la prise en charge du passage dynamique en thème sombre dans l'interface utilisateur si l'option de thème sombre est activée.</li>
           <li>Added ability to show/hide each panel within the style inspector.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de mostrar/esconder cada painel no inspetor de estilo.</li>
           <li xml:lang="fr">Ajout de la possibilité d'afficher/masquer chaque panneau dans l'inspecteur de style.</li>
           <li>Removed support for Loki builds.</li>
+          <li xml:lang="pt">Suporte para Loki removido.</li>
           <li xml:lang="fr">Arrêt de la prise en charge pour Loki.</li>
         </ul>
       </description>
@@ -592,8 +824,10 @@
       <description>
         <ul>
           <li>Fixing appdata.xml file omission.</li>
+          <li xml:lang="pt">Correção da omissão do ficheiro appdata.xml.</li>
           <li xml:lang="fr">Correction d'une omission dans le fichier appdata.xml.</li>
           <li>Removing automatic style apply when the affects is set to certain values.</li>
+          <li xml:lang="pt">A remoção do estilo automático aplica-se quando os efeitos são definidos para determinados valores.</li>
           <li xml:lang="fr">La suppression du style automatique s'applique lorsque l'effet est réglé sur certaines valeurs.</li>
         </ul>
       </description>
@@ -602,24 +836,34 @@
       <description>
         <ul>
           <li>Added Spanish translation.</li>
+          <li xml:lang="pt">Tradução em Espanhol adicionada.</li>
           <li xml:lang="fr">Ajout des traductions en espagnol.</li>
           <li>Added support for Control-Return/Tab to support adding newlines/tabs in a node's title.</li>
+          <li xml:lang="pt">Suporte adicionado para Ctrl-Return/Tab para o suporte de novas linhas/guias num título de nó.</li>
           <li xml:lang="fr">Ajout de la prise en charge du raccourci CTRL + Entrée/TAB pour ajouter des nouvelles lignes/tabulations dans le titre d'un nœud.</li>
           <li>Improved node title editing support for selection and cursor movement.</li>
+          <li xml:lang="pt">Suporte de edição de título de nó melhorado para seleção e movimento do cursor.</li>
           <li xml:lang="fr">Amélioration de la prise en charge de l'édition du titre des nœuds pour la sélection et le déplacement du curseur.</li>
           <li>Added support for automatically opening Minder files from Files.</li>
+          <li xml:lang="pt">Suporte adicionado para abrir ficheiros Minder automaticamente a partir de Ficheiros.</li>
           <li xml:lang="fr">Ajout de la prise en charge de l'ouverture automatique des fichiers Minder à partir de Fichiers.</li>
           <li>Added ability to modify styles of nodes and links.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de modificar estilos de nós e ligações.</li>
           <li xml:lang="fr">Ajout de la possibilité de modifier les styles des nœuds et des liens.</li>
           <li>Changed layouts to be stored on a per tree basis instead of a per document basis.</li>
+          <li xml:lang="pt">Layouts alterados para serem armazenados por árvore em vez de por documento.</li>
           <li xml:lang="fr">Modification de la disposition pour l'enregistrement par arbre au lieu de l'enregistrement par document.</li>
           <li>Added support for exporting to the Mermaid format.</li>
+          <li xml:lang="pt">Suporte adicionado para exportar para o formato Mermaid.</li>
           <li xml:lang="fr">Ajout de la prise en charge de l'exportation au format Mermaid.</li>
           <li>Added support for disabling/enabling displaying markup in node title.</li>
+          <li xml:lang="pt">Suporte adicionado para desativar/ativar a exibição de markup no título de um nó.</li>
           <li xml:lang="fr">Ajout de la prise en charge de la désactivation/activation de l'affichage du balisage dans le titre du nœud.</li>
           <li>Improved the look of the fold indicators.</li>
+          <li xml:lang="pt">Aparência melhorada dos indicadores de dobra.</li>
           <li xml:lang="fr">Amélioration de l'apparence des indicateurs de pli.</li>
           <li>Lots of bug fixes.</li>
+          <li xml:lang="pt">Muitas correções.</li>
           <li xml:lang="fr">Nombreuses corrections de bugs.</li>
         </ul>
       </description>
@@ -628,8 +872,10 @@
       <description>
         <ul>
           <li>Adding Spanish translation (thanks to Adolfo Jayme-Barrientos).</li>
+          <li xml:lang="pt">Tradução em Espanhol adicionada (obrigado a Adolfo Jayme-Barrientos).</li>
           <li xml:lang="fr">Ajout des traductions en espagnol (grâce à Adolfo Jayme-Barrientos).</li>
           <li>Adding support for special character insertion via the Compose key.</li>
+          <li xml:lang="pt">Suporte adicionado para a inserção de caracteres especiais por meio da tecla Compor.</li>
           <li xml:lang="fr">Ajout du support pour l'insertion de caractères spéciaux avec la touche Compose.</li>
         </ul>
       </description>
@@ -637,21 +883,27 @@
     <release version="1.1.2" date="2018-10-09">
       <description>
         <p>Updating French translation.</p>
+        <p xml:lang="pt">Tradução em Francês atualizada.</p>
         <p xml:lang="fr">Mises à jour des traductions en français.</p>
       </description>
     </release>
     <release version="1.1.1" date="2018-09-27">
       <description>
         <p>Bug fix release</p>
+        <p xml:lang="pt">Lançamento com correções</p>
         <p xml:lang="fr">Version corrective</p>
         <ul>
           <li>Fixed bugs related to editing unicode characters in map area.</li>
+          <li xml:lang="pt">Erros corrigidos relacionados com a edição de caracteres Unicode na área do mapa.</li>
           <li xml:lang="fr">Correction de bugs liés à l'édition de caractères unicode dans la zone de la carte.</li>
           <li>Reduced height of node textbox in sidebar to help alleviate window sizing problems.</li>
+          <li xml:lang="pt">Altura reduzida da caixa de texto do nó na barra lateral para ajudar a aliviar os problemas de dimensionamento da janela.</li>
           <li xml:lang="fr">Réduction de la hauteur de la zone de texte du nœud dans la barre latérale pour aider à diminuer les problèmes de dimensionnement de la fenêtre.</li>
           <li>Fixed issue with moving a node to a different position within a parent node.</li>
+          <li xml:lang="pt">Corrigido um problema com o mover um nó para uma posição diferente dentro de um nó pai.</li>
           <li xml:lang="fr">Correction d'un problème avec le déplacement d'un nœud vers une position différente au sein d'un nœud parent.</li>
           <li>Fixed issue connecting a root node to another node.</li>
+          <li xml:lang="pt">Corrigido  problema ao conectar um nó raiz a outro nó.</li>
           <li xml:lang="fr">Correction d'un problème de connexion d'un nœud racine à un autre nœud.</li>
         </ul>
       </description>
@@ -659,31 +911,44 @@
     <release version="1.1" date="2018-09-18">
       <description>
         <p>Images now supported!</p>
+        <p xml:lang="pt">Imagens são agora suportadas!</p>
         <p xml:lang="fr">Les images sont désormais prises en charge !</p>
         <ul>
           <li>Added support for images within nodes.</li>
+          <li xml:lang="pt">Suporte adicionado para imagens dentro de nós.</li>
           <li xml:lang="fr">Ajout de la prise en charge des images à l'intérieur des nœuds.</li>
           <li>Added basic image editing support.</li>
+          <li xml:lang="pt">Suporte adicionado para edição básica de imagem.</li>
           <li xml:lang="fr">Ajout de la prise en charge mimimale de la modification d'image.</li>
           <li>Added support for dragging and dropping local and web images.</li>
+          <li xml:lang="pt">Suporte adicionado para arrastar e largar imagens locais ou da Internet.</li>
           <li xml:lang="fr">Ajout de la prise en charge du glisser-déposer d'images locales ou web.</li>
           <li>Added support for resizing node width.</li>
+          <li xml:lang="pt">Suporte adicionado para redimensionar a largura de um nó.</li>
           <li xml:lang="fr">Ajout de la prise en charge du redimensionnement de la largeur des nœuds.</li>
           <li>Changed cursors when over a task button.</li>
+          <li xml:lang="pt">Cursores de rato alterados quando se sobrepõe a um botão de tarefa.</li>
           <li xml:lang="fr">Modification du curseur au survol d'un bouton de tâche.</li>
           <li>Changed location of task and note elements in a node.</li>
+          <li xml:lang="pt">Alteração da localização da tarefa e dos elementos de nota num nó.</li>
           <li xml:lang="fr">Modification de l'emplacement des éléments de tâche et de note dans un nœud.</li>
           <li>Added support for keeping the map from scrolling off screen.</li>
+          <li xml:lang="pt">Suporte adicionado para impedir que o mapa saía para fora do ecrã ao deslizar.</li>
           <li xml:lang="fr">Ajout de la prise en charge du maintien du défilement de la carte de l'écran.</li>
           <li>Added support for shift-mousewheel to scroll horizontally.</li>
+          <li xml:lang="pt">Suporte adicionado para deslizar na horizontal com a tecla Shift-roda do rato.</li>
           <li xml:lang="fr">Ajout de la prise en charge de la molette de la souris avec shift pour le défilement horizontal.</li>
           <li>Added support for control-mousewheel to zoom in/out.</li>
+          <li xml:lang="pt">Suporte adicionado para ampliar mais/ampliar menos com a tecla Ctrl-roda do rado.</li>
           <li xml:lang="fr">Ajout de la prise en charge de la molette de la souris pour effectuer un zoom avant/arrière.</li>
           <li>Fixed issue with drawing background when zoom factor was small.</li>
+          <li xml:lang="pt">Corrigido um problema com o desenho do fundo quando o fator de ampliação era pequeno.</li>
           <li xml:lang="fr">Correction d'un problème avec l'arrière-plan du graphique lorsque le facteur de zoom était faible.</li>
           <li>Custom icons are now stored as a gresource rather than in the file system.</li>
+          <li xml:lang="pt">Os ícones personalizados agora são armazenados como uma fonte em vez de no sistema de ficheiros.</li>
           <li xml:lang="fr">Les icônes personnalisées sont maintenant stockées en tant que ressource gresource plutôt que dans le système de fichiers.</li>
           <li>Other minor bug fixes.</li>
+          <li xml:lang="pt">Outras pequenas correções.</li>
           <li xml:lang="fr">Autres corrections de bugs mineures.</li>
         </ul>
       </description>
@@ -691,28 +956,40 @@
     <release version="1.0.8" date="2018-08-06">
       <description>
         <p>Support for more export types and bug fixes.</p>
+        <p xml:lang="pt">Suporte para mais tipos de formatos de exportação e correções.</p>
         <p xml:lang="fr">Prise en charge de plus de types d'exportation et corrections de bugs.</p>
         <ul>
           <li>Added support for exporting to SVG, JPEG, BMP, Markdown, PlainText and CSV formats.</li>
+          <li xml:lang="pt">Suporte adicionado para exportar formatos em SVG, JPEG, BMP, Markdown, Texto Simples e CSV.</li>
           <li xml:lang="fr">Ajout de la prise en charge pour l'exportation vers les formats SVG, JPEG, BMP, Mardown, Texte brut et CSV.</li>
           <li>Added support for folding all completed tasks in map inspector.</li>
+          <li xml:lang="pt">Suporte adicionado para dobrar todas as tarefas completadas no inspetor do mapa.</li>
           <li xml:lang="fr">Ajout de la prise en charge pour plier toutes les tâches complétées dans l'inspecteur de carte.</li>
           <li>Added support for unfolding all folded nodes in map inspector.</li>
+          <li xml:lang="pt">Suporte adicionado para desdobrar todas as notas dobradas no inspetor do mapa.</li>
           <li xml:lang="fr">Ajout de la prise en charge pour déplier tous les nœuds pliés dans l'inspecteur de carte.</li>
           <li>Added Solarized Dark and Solarized Light themes.</li>
+          <li xml:lang="pt">Tema Escuro e Tema Claro adicionados.</li>
           <li xml:lang="fr">AJout des thèmes Solarized Dark et Solarized Light.</li>
           <li>Changing button display in map inspector.</li>
+          <li xml:lang="pt">Alterada a exibição do botão no inspetor de mapa.</li>
           <li xml:lang="fr">Modification de l'affichage du bouton dans l'inspecteur de carte.</li>
           <li>Cleaning up Export menu to include a single "Export" option.</li>
+          <li xml:lang="pt">Menu Exportar limpo para incluir uma única opção "Exportar".</li>
           <li>Fixing issue where modified node title in node inspector was lost when input focus was changed.</li>
+          <li xml:lang="pt">Corrigido um problema em que o título do nó modificado no inspetor de nó era perdido quando o foco de entrada era alterado.</li>
           <li xml:lang="fr">Correction d'un problème où le titre de nœud modifié dans l'inspecteur de nœud était perdu lorsque le point focalisé en entrée était modifié.</li>
           <li>Fixing issue where an entire tree is attached to another tree.</li>
+          <li xml:lang="pt">Corrigido um problema em que uma árvore inteira é anexada a outra árvore.</li>
           <li xml:lang="fr">Correction d'un problème où un arbre entier est attaché à un autre arbre.</li>
           <li>Added Czech translation (thanks to Jan Marek!).</li>
+          <li xml:lang="pt">Tradução em Checo adicionada (obrigado a Jan Marek!).</li>
           <li xml:lang="fr">Ajout des traductions en tchèque (grâce à Jan Marek !).</li>
           <li>Added French translation (thanks to Yannick A.!).</li>
+          <li xml:lang="pt">Tradução em Francês adicionada (obrigado a Yannick A.!).</li>
           <li xml:lang="fr">Ajout des traductions en français (grâce à Yannick A. !).</li>
           <li>Added Brazilian Portuguese translation (thanks to btd1337!)</li>
+          <li xml:lang="pt">Tradução em Português do Brasil adicionada (obrigado a btd1337!)</li>
           <li xml:lang="fr">Ajout des traductions en portugais brésilien (grâce à btd1337 !)</li>
         </ul>
       </description>
@@ -720,29 +997,39 @@
     <release version="1.0.7" date="2018-07-13">
       <description>
         <p>Initial startup bug fix.</p>
+        <p xml:lang="pt">Correções iniciais.</p>
         <p xml:lang="fr">Correction de bug au premier démarrage.</p>
       </description>
     </release>
     <release version="1.0.4" date="2018-07-11">
       <description>
         <p>Search improvements and bug fixes</p>
+        <p xml:lang="pt">Melhorias na procura e correções</p>
         <p xml:lang="fr">Amélioration de la recherche et corrections de bugs</p>
         <ul>
           <li>Added ability to search within notes.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de pesquisar dentro de notas.</li>
           <li xml:lang="fr">Ajout de la possibilité de chercher parmi les notes.</li>
           <li>Added ability to optionally control search criteria within search popover.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de controlar opcionalmente os critérios de pesquisa no menu flutuante de pesquisa.</li>
           <li xml:lang="fr">Ajout de la possibilité pour optionnellement contrôler les critères de recherche dans le volet de recherche.</li>
           <li>Fixed screenshots.</li>
+          <li xml:lang="pt">Correção das capturas de ecrã.</li>
           <li xml:lang="fr">Correction des captures d'écran.</li>
           <li>Changed properties header bar icon to a sidebar hide/show icon for clarity.</li>
+          <li xml:lang="pt">Alteração do ícone da barra de cabeçalho de propriedades para um ícone esconder/mostrar da barra lateral para maior clareza.</li>
           <li xml:lang="fr">L'icône de la barre supérieure des propriétés a été changée en icône de masquage/affichage dans la barre latérale pour plus de clarté.</li>
           <li>Several minor UI improvements.</li>
+          <li xml:lang="pt">Algumas pequenass melhorias na interface do utilizador.</li>
           <li xml:lang="fr">Améliorations mineures diverses de l'interface.</li>
           <li>Removing deprecated GTK calls.</li>
+          <li xml:lang="pt">Chamadas de GTK descontinuadas removidas.</li>
           <li xml:lang="fr">Suprresion des éléments GTK dépréciés.</li>
           <li>Added ability to double-click on a node to make it editable.</li>
+          <li xml:lang="pt">Adicionada a possibilidade de clicar duas vezes num nó para o tornar editável.</li>
           <li xml:lang="fr">Ajout de la possibilité de double-cliquer sur un nœud pour le rendre éditable.</li>
           <li>Bug fixes.</li>
+          <li xml:lang="pt">Correções.</li>
           <li xml:lang="fr">Corrections de bugs.</li>
         </ul>
       </description>
@@ -750,6 +1037,7 @@
     <release version="1.0.2" date="2018-06-29">
       <description>
         <p>Initial release</p>
+        <p xml:lang="pt">Lançamento inicial</p>
         <p xml:lang="fr">Version initiale</p>
       </description>
     </release>
