@@ -4816,7 +4816,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
-      if( node != root ) {
+      if( (node != root) && curr.overlaps( node.tree_bbox ) ) {
         if( node.is_left_of( prev ) )  node.posx += ldiff;
         if( node.is_right_of( prev ) ) node.posx += rdiff;
         if( node.is_above( prev ) )    node.posy += adiff;

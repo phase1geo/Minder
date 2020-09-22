@@ -84,6 +84,10 @@ public struct NodeBounds {
   double y;
   double width;
   double height;
+  public bool overlaps( NodeBounds other ) {
+    return( ((x < (other.x + other.width))  && ((x + width) > other.x)) ||
+            ((y < (other.y + other.height)) && ((y + height) > other.y)) );
+  }
 }
 
 public struct NodeInfo {
