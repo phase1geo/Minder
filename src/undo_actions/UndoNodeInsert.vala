@@ -29,20 +29,24 @@ public class UndoNodeInsert : UndoItem {
   private bool  _parent_folded;
 
   /* Default constructor */
-  public UndoNodeInsert( Node n ) {
+  public UndoNodeInsert( Node n, int index ) {
     base( _( "insert node" ) );
     _n             = n;
-    _index         = n.index();
+    _index         = index;
     _parent        = n.parent;
-    _parent_folded = _parent.folded;
+    _parent_folded = (_parent == null) ? false : _parent.folded;
   }
 
   /* Performs an undo operation for this data */
   public override void undo( DrawArea da ) {
-    if( _parent_folded ) {
-      _parent.folded = true;
+    if( _parent == null ) {
+      da.remove_root( _index );
+    } else {
+      if( _parent_folded ) {
+        _parent.folded = true;
+      }
+      _n.detach( _n.side );
     }
-    _n.detach( _n.side );
     if( da.get_current_node() == _n ) {
       da.set_current_node( null );
     }
@@ -52,8 +56,12 @@ public class UndoNodeInsert : UndoItem {
 
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
-    _parent.folded = _parent_folded;
-    _n.attach( _parent, _index, null );
+    if( _parent == null ) {
+      da.add_root( _n, _index );
+    } else {
+      _parent.folded = _parent_folded;
+      _n.attach( _parent, _index, null );
+    }
     da.set_current_node( _n );
     da.queue_draw();
     da.changed();
