@@ -40,7 +40,7 @@ public class UndoNodeInsert : UndoItem {
   /* Performs an undo operation for this data */
   public override void undo( DrawArea da ) {
     if( _parent == null ) {
-      da.get_nodes().remove_index( _index );
+      da.remove_root( _index );
     } else {
       if( _parent_folded ) {
         _parent.folded = true;
@@ -57,7 +57,7 @@ public class UndoNodeInsert : UndoItem {
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
     if( _parent == null ) {
-      da.get_nodes().insert_val( _index, _n );
+      da.add_root( _n, _index );
     } else {
       _parent.folded = _parent_folded;
       _n.attach( _parent, _index, null );
