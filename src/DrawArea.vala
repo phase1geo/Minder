@@ -2950,7 +2950,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Adds a new root node to the canvas */
   public void add_root_node() {
     var node = create_root_node( _( "Another Idea" ) );
-    undo_buffer.add_item( new UndoNodeInsert( node ) );
+    undo_buffer.add_item( new UndoNodeInsert( node, (int)(_nodes.length - 1) ) );
     if( select_node( node ) ) {
       set_node_mode( node, NodeMode.EDITABLE, false );
       queue_draw();
@@ -2979,7 +2979,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Adds a new sibling node to the current node */
   public void add_sibling_node() {
     var node = create_sibling_node( _selected.current_node() );
-    undo_buffer.add_item( new UndoNodeInsert( node ) );
+    undo_buffer.add_item( new UndoNodeInsert( node, node.index() ) );
     set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );
     queue_draw();
@@ -3007,7 +3007,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void add_child_node() {
     var current = _selected.current_node();
     var node    = create_child_node( current );
-    undo_buffer.add_item( new UndoNodeInsert( node ) );
+    undo_buffer.add_item( new UndoNodeInsert( node, node.index() ) );
     set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );
     queue_draw();
@@ -4256,7 +4256,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( ni.valid ) {
       new_node.set_image( image_manager, ni );
     }
-    undo_buffer.add_item( new UndoNodeInsert( new_node ) );
+    undo_buffer.add_item( new UndoNodeInsert( new_node, ((node == null) ? (int)(_nodes.length - 1) : new_node.index()) ) );
     select_node( new_node );
     queue_draw();
     current_changed( this );
