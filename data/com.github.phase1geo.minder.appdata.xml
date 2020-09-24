@@ -135,6 +135,33 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.11.1" date="2020-09-25">
+      <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Added Shift-e keyboard shortcut to edit note text for nodes and connections.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li xml:lang="pt">Tradução em Italiano atualizada (obrigado a @albanobattistella).</li>
+          <li>Improved automatic layout of node trees when adjacent tree sizes change.</li>
+          <li>Changed node and connection contextual menus to show (Edit Note) instead of (Add Note) and (Remove Note) options.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixing compilation issues.</li>
+          <li>Fixing behavior of 't' command when node is selected.</li>
+          <li>Fixing support for undo/redo of root node insertion.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.11.0" date="2020-09-16">
       <description>
         <p>New</p>
