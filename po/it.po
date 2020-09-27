@@ -1814,7 +1814,7 @@ msgstr "[Clic sinistro + trascina]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:859
 msgid "Item Selection Toggle (Add to/Remove from Selection)"
-msgstr ""Commuta selezione elemento (Aggiungi/Rimuovi dalla selezione)"
+msgstr "Commuta selezione elemento (Aggiungi/Rimuovi dalla selezione)"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:863
 msgid "Toggle Selection of Item"
