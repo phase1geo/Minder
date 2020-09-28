@@ -104,7 +104,7 @@ public class Theme : Object {
         var it = _colors.map_iterator();
         while( it.next() ) {
           var key = it.get_key();
-          if( theme._colors.has_key( key ) && !_colors.get( key ).equal( theme._colors.get( key ) ) ) {
+          if( !theme._colors.has_key( key ) || !_colors.get( key ).equal( theme._colors.get( key ) ) ) {
             return( false );
           }
         }
