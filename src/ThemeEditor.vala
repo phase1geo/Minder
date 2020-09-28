@@ -96,8 +96,13 @@ public class ThemeEditor : Gtk.Box {
     add_color( _( "Connection Title Color" ), "connection_foreground", grid, 12 );
     add_color( _( "URL Link Background" ),    "url_background",        grid, 13 );
     add_color( _( "URL Link Foreground" ),    "url_foreground",        grid, 14 );
+    add_color( _( "Tag" ),                    "tag",                   grid, 15 );
+    add_color( _( "Markdown Syntax Chars" ),  "syntax",                grid, 16 );
+    add_color( _( "Match Background" ),       "match_background",      grid, 17 );
+    add_color( _( "Match Foreground" ),       "match_foreground",      grid, 18 );
+    add_color( _( "Markdown List Item" ),     "markdown_listitem",     grid, 19 );
 
-    var row = 15;
+    var row = 20;
 
     grid.attach( new Label( "" ), 0, row );
 
