@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-24 07:56-0500\n"
+"POT-Creation-Date: 2020-10-16 19:30-0500\n"
 "PO-Revision-Date: 2020-09-27 10:00+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -94,7 +94,7 @@ msgstr "Sottolineato"
 msgid "Solarized Light"
 msgstr "Luce Solarizzata"
 
-#: src/themes/ThemeDefault.vala:28 src/ThemeEditor.vala:236
+#: src/themes/ThemeDefault.vala:28 src/ThemeEditor.vala:241
 msgid "Default"
 msgstr "Predefinito"
 
@@ -281,7 +281,7 @@ msgid "Delete Connection"
 msgstr "Elimina Connessione"
 
 #: src/ConnectionMenu.vala:42 src/ConnectionsMenu.vala:35 src/NodeMenu.vala:85
-#: src/NodesMenu.vala:54 src/ThemeEditor.vala:133
+#: src/NodesMenu.vala:54 src/ThemeEditor.vala:138
 msgid "Delete"
 msgstr "Cancella"
 
@@ -435,7 +435,7 @@ msgstr "Cursore: %3d,%3d"
 
 #: src/ImageEditor.vala:375 src/ImageManager.vala:299 src/MainWindow.vala:813
 #: src/MainWindow.vala:857 src/MainWindow.vala:1019 src/MainWindow.vala:1274
-#: src/QuickEntry.vala:118 src/ThemeEditor.vala:138 src/UrlEditor.vala:61
+#: src/QuickEntry.vala:118 src/ThemeEditor.vala:143 src/UrlEditor.vala:61
 msgid "Cancel"
 msgstr "Cancella"
 
@@ -628,7 +628,7 @@ msgstr "Le modifiche andranno perse in modo permanente se non vengono salvate."
 msgid "Discard Changes"
 msgstr "Annullare le Modifiche"
 
-#: src/MainWindow.vala:816 src/MainWindow.vala:1019 src/ThemeEditor.vala:141
+#: src/MainWindow.vala:816 src/MainWindow.vala:1019 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Salva"
 
@@ -768,7 +768,7 @@ msgstr "Compito"
 msgid "Fold"
 msgstr "Piega"
 
-#: src/NodeInspector.vala:129 src/NodeMenu.vala:121 src/ThemeEditor.vala:126
+#: src/NodeInspector.vala:129 src/NodeMenu.vala:121 src/ThemeEditor.vala:131
 msgid "Link Color"
 msgstr "Colore collegamento"
 
@@ -985,7 +985,7 @@ msgstr "Collegare"
 msgid "Link Nodes"
 msgstr "Nodi di Collegamento"
 
-#: src/NodesMenu.vala:69 src/ThemeEditor.vala:119
+#: src/NodesMenu.vala:69 src/ThemeEditor.vala:124
 msgid "Link Colors"
 msgstr "Colori di Collegamento"
 
@@ -1289,27 +1289,51 @@ msgstr "Sfondo Collegamento URL"
 msgid "URL Link Foreground"
 msgstr "URL del collegamento di primo piano"
 
-#: src/ThemeEditor.vala:104
+#: src/ThemeEditor.vala:99
+#, fuzzy
+msgid "Tag"
+msgstr "Scheda"
+
+#: src/ThemeEditor.vala:100
+msgid "Markdown Syntax Chars"
+msgstr ""
+
+#: src/ThemeEditor.vala:101
+#, fuzzy
+msgid "Match Background"
+msgstr "Sfondo"
+
+#: src/ThemeEditor.vala:102
+#, fuzzy
+msgid "Match Foreground"
+msgstr "Primo piano"
+
+#: src/ThemeEditor.vala:103
+#, fuzzy
+msgid "Markdown List Item"
+msgstr "Markdown"
+
+#: src/ThemeEditor.vala:109
 msgid "Prefer Dark Mode"
 msgstr "Preferire Modalità Scura"
 
-#: src/ThemeEditor.vala:187
+#: src/ThemeEditor.vala:192
 msgid "Custom"
 msgstr "Personalizza"
 
-#: src/ThemeEditor.vala:205
+#: src/ThemeEditor.vala:210
 msgid "Delete theme?"
 msgstr "Eliminare il Tema?"
 
-#: src/ThemeEditor.vala:206
+#: src/ThemeEditor.vala:211
 msgid "This operation cannot be undone."
 msgstr "Questa operazione non può essere annullata."
 
-#: src/ThemeEditor.vala:211
+#: src/ThemeEditor.vala:216
 msgid "No"
 msgstr "No"
 
-#: src/ThemeEditor.vala:214
+#: src/ThemeEditor.vala:219
 msgid "Yes"
 msgstr "Si"
 
@@ -1730,7 +1754,8 @@ msgstr "Eventi del Mouse"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:776
 msgid "[Right-click when item is selected]"
-msgstr "[Fare clic con il pulsante destro del mouse quando l'elemento è selezionato]"
+msgstr ""
+"[Fare clic con il pulsante destro del mouse quando l'elemento è selezionato]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:782
 msgid "Edit Image in Canvas"
@@ -1834,7 +1859,7 @@ msgstr "[Maiusc + Ctrl + clic sinistro sull'elemento]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:877
 msgid "Toggle Selection of Node Tree/Subtree"
-msgstr"Alterna la selezione dell'albero dei nodi/sottostruttura"
+msgstr "Alterna la selezione dell'albero dei nodi/sottostruttura"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:878
 msgid "[Shift + Control + Double left-click on parent node]"
@@ -1842,7 +1867,9 @@ msgstr "[MAIUSC + CTRL + Doppio clic sinistro sul nodo genitore]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:884
 msgid "Toggle Selection of All Nodes at Same Depth Level"
-msgstr "Attiva/disattiva la selezione di tutti i nodi allo stesso livello di profondità"
+msgstr ""
+"Attiva/disattiva la selezione di tutti i nodi allo stesso livello di "
+"profondità"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:885
 msgid "[Shift + Control + Triple left-click on node]"

@@ -89,6 +89,21 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.11.2" date="2020-10-16">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to Albano Battistella).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed application crash issues due to using custom themes.</li>
+          <li>Added missing theme colors in custom theme pane.</li>
+          <li>Fixed issues with application crash when editing a root node.</li>
+          <li>Fixed issue with filepath parser highlighting normal text that contains slash characters.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.11.1" date="2020-09-25">
       <description>
         <p>New</p>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-24 07:56-0500\n"
+"POT-Creation-Date: 2020-10-16 19:30-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Jan Marek <janmarek28@gmail.com>\n"
 "Language-Team: none\n"
@@ -95,7 +95,7 @@ msgstr ""
 msgid "Solarized Light"
 msgstr ""
 
-#: src/themes/ThemeDefault.vala:28 src/ThemeEditor.vala:236
+#: src/themes/ThemeDefault.vala:28 src/ThemeEditor.vala:241
 msgid "Default"
 msgstr ""
 
@@ -306,7 +306,7 @@ msgid "Delete Connection"
 msgstr "Hledat uzly"
 
 #: src/ConnectionMenu.vala:42 src/ConnectionsMenu.vala:35 src/NodeMenu.vala:85
-#: src/NodesMenu.vala:54 src/ThemeEditor.vala:133
+#: src/NodesMenu.vala:54 src/ThemeEditor.vala:138
 msgid "Delete"
 msgstr "Smazat"
 
@@ -472,7 +472,7 @@ msgstr ""
 
 #: src/ImageEditor.vala:375 src/ImageManager.vala:299 src/MainWindow.vala:813
 #: src/MainWindow.vala:857 src/MainWindow.vala:1019 src/MainWindow.vala:1274
-#: src/QuickEntry.vala:118 src/ThemeEditor.vala:138 src/UrlEditor.vala:61
+#: src/QuickEntry.vala:118 src/ThemeEditor.vala:143 src/UrlEditor.vala:61
 msgid "Cancel"
 msgstr "Zrušit"
 
@@ -675,7 +675,7 @@ msgstr "Pokud soubor neuložíte, provedené změny se navždy ztratí."
 msgid "Discard Changes"
 msgstr "Zahodit změny"
 
-#: src/MainWindow.vala:816 src/MainWindow.vala:1019 src/ThemeEditor.vala:141
+#: src/MainWindow.vala:816 src/MainWindow.vala:1019 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Uložit"
 
@@ -821,7 +821,7 @@ msgstr "Úkoly"
 msgid "Fold"
 msgstr "Sbalené"
 
-#: src/NodeInspector.vala:129 src/NodeMenu.vala:121 src/ThemeEditor.vala:126
+#: src/NodeInspector.vala:129 src/NodeMenu.vala:121 src/ThemeEditor.vala:131
 #, fuzzy
 msgid "Link Color"
 msgstr "Barva odkazu"
@@ -1059,7 +1059,7 @@ msgstr "Hledat uzly"
 msgid "Link Nodes"
 msgstr "Přidat poznámku"
 
-#: src/NodesMenu.vala:69 src/ThemeEditor.vala:119
+#: src/NodesMenu.vala:69 src/ThemeEditor.vala:124
 #, fuzzy
 msgid "Link Colors"
 msgstr "Barva odkazu"
@@ -1378,29 +1378,51 @@ msgstr ""
 msgid "URL Link Foreground"
 msgstr ""
 
-#: src/ThemeEditor.vala:104
+#: src/ThemeEditor.vala:99
+msgid "Tag"
+msgstr ""
+
+#: src/ThemeEditor.vala:100
+msgid "Markdown Syntax Chars"
+msgstr ""
+
+#: src/ThemeEditor.vala:101
+#, fuzzy
+msgid "Match Background"
+msgstr "Přidat kořenový uzel"
+
+#: src/ThemeEditor.vala:102
+#, fuzzy
+msgid "Match Foreground"
+msgstr "Přidat kořenový uzel"
+
+#: src/ThemeEditor.vala:103
+msgid "Markdown List Item"
+msgstr ""
+
+#: src/ThemeEditor.vala:109
 msgid "Prefer Dark Mode"
 msgstr ""
 
-#: src/ThemeEditor.vala:187
+#: src/ThemeEditor.vala:192
 msgid "Custom"
 msgstr ""
 
-#: src/ThemeEditor.vala:205
+#: src/ThemeEditor.vala:210
 #, fuzzy
 msgid "Delete theme?"
 msgstr "Smazat uzel"
 
-#: src/ThemeEditor.vala:206
+#: src/ThemeEditor.vala:211
 msgid "This operation cannot be undone."
 msgstr ""
 
-#: src/ThemeEditor.vala:211
+#: src/ThemeEditor.vala:216
 #, fuzzy
 msgid "No"
 msgstr "Poznámky"
 
-#: src/ThemeEditor.vala:214
+#: src/ThemeEditor.vala:219
 msgid "Yes"
 msgstr ""
 

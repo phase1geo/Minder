@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-24 07:56-0500\n"
+"POT-Creation-Date: 2020-10-16 19:30-0500\n"
 "PO-Revision-Date: 2020-08-30 14:45+0100\n"
 "Last-Translator: André Barata <andretiagob@protonmail.com>\n"
 "Language-Team: none\n"
@@ -96,7 +96,7 @@ msgstr "Sublinhado"
 msgid "Solarized Light"
 msgstr "Luz de Sol"
 
-#: src/themes/ThemeDefault.vala:28 src/ThemeEditor.vala:236
+#: src/themes/ThemeDefault.vala:28 src/ThemeEditor.vala:241
 msgid "Default"
 msgstr "Padrão"
 
@@ -283,7 +283,7 @@ msgid "Delete Connection"
 msgstr "Apagar Conexão"
 
 #: src/ConnectionMenu.vala:42 src/ConnectionsMenu.vala:35 src/NodeMenu.vala:85
-#: src/NodesMenu.vala:54 src/ThemeEditor.vala:133
+#: src/NodesMenu.vala:54 src/ThemeEditor.vala:138
 msgid "Delete"
 msgstr "Apagar"
 
@@ -439,7 +439,7 @@ msgstr "Cursor: %3d,%3d"
 
 #: src/ImageEditor.vala:375 src/ImageManager.vala:299 src/MainWindow.vala:813
 #: src/MainWindow.vala:857 src/MainWindow.vala:1019 src/MainWindow.vala:1274
-#: src/QuickEntry.vala:118 src/ThemeEditor.vala:138 src/UrlEditor.vala:61
+#: src/QuickEntry.vala:118 src/ThemeEditor.vala:143 src/UrlEditor.vala:61
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -633,7 +633,7 @@ msgstr "As alterações serão perdidas permanentemente se não gravar."
 msgid "Discard Changes"
 msgstr "Descartar Alterações"
 
-#: src/MainWindow.vala:816 src/MainWindow.vala:1019 src/ThemeEditor.vala:141
+#: src/MainWindow.vala:816 src/MainWindow.vala:1019 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Gravar"
 
@@ -773,7 +773,7 @@ msgstr "Tarefa"
 msgid "Fold"
 msgstr "Dobrar"
 
-#: src/NodeInspector.vala:129 src/NodeMenu.vala:121 src/ThemeEditor.vala:126
+#: src/NodeInspector.vala:129 src/NodeMenu.vala:121 src/ThemeEditor.vala:131
 msgid "Link Color"
 msgstr "Cor da Ligação"
 
@@ -991,7 +991,7 @@ msgstr "Conectar"
 msgid "Link Nodes"
 msgstr "Ligar Nós"
 
-#: src/NodesMenu.vala:69 src/ThemeEditor.vala:119
+#: src/NodesMenu.vala:69 src/ThemeEditor.vala:124
 msgid "Link Colors"
 msgstr "Cores de Ligação"
 
@@ -1295,27 +1295,51 @@ msgstr "Fundo da Ligação URL"
 msgid "URL Link Foreground"
 msgstr "Primeiro Plano da Ligação URL"
 
-#: src/ThemeEditor.vala:104
+#: src/ThemeEditor.vala:99
+#, fuzzy
+msgid "Tag"
+msgstr "Guia"
+
+#: src/ThemeEditor.vala:100
+msgid "Markdown Syntax Chars"
+msgstr ""
+
+#: src/ThemeEditor.vala:101
+#, fuzzy
+msgid "Match Background"
+msgstr "Fundo"
+
+#: src/ThemeEditor.vala:102
+#, fuzzy
+msgid "Match Foreground"
+msgstr "Primeiro Plano"
+
+#: src/ThemeEditor.vala:103
+#, fuzzy
+msgid "Markdown List Item"
+msgstr "Markdown"
+
+#: src/ThemeEditor.vala:109
 msgid "Prefer Dark Mode"
 msgstr "Preferir Tema Escuro"
 
-#: src/ThemeEditor.vala:187
+#: src/ThemeEditor.vala:192
 msgid "Custom"
 msgstr "Personalizado"
 
-#: src/ThemeEditor.vala:205
+#: src/ThemeEditor.vala:210
 msgid "Delete theme?"
 msgstr "Apagar este tema?"
 
-#: src/ThemeEditor.vala:206
+#: src/ThemeEditor.vala:211
 msgid "This operation cannot be undone."
 msgstr "Esta operação não pode ser desfeita."
 
-#: src/ThemeEditor.vala:211
+#: src/ThemeEditor.vala:216
 msgid "No"
 msgstr "Não"
 
-#: src/ThemeEditor.vala:214
+#: src/ThemeEditor.vala:219
 msgid "Yes"
 msgstr "Sim"
 
