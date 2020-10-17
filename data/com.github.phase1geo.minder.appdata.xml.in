@@ -356,22 +356,10 @@
         <ul>
           <li>Added ability to delete a single node (instead of the node and its subtree) in the contextual menu.</li>
           <li>When a new document is first saved, the first root node text is used as the default filename.</li>
-          <li>Added multi-select support which includes:
-            <ul>
-              <li>Changing styles</li>
-              <li>Copy, cut, paste and delete support</li>
-              <li>Connect two selected nodes</li>
-              <li>Create node links between two or more selected nodes</li>
-              <li>Fold/unfold selected nodes</li>
-            </ul>
-          </li>
+          <li>Added multi-select support which includes:  Changing styles; Copy, cut, paste and delete support; Connect two selected nodes;
+            Create node links between two or more selected nodes; and Fold/unfold selected nodes.</li>
           <li>Added support for URLs in node titles.</li>
-          <li>Added support for Markdown within a note
-            <ul>
-              <li>Notes are syntax highlighted</li>
-              <li>Embedded URLs can be opened by Control-Clicking on them</li>
-            </ul>
-          </li>
+          <li>Added support for Markdown within a note:  Notes are syntax highlighted; and Embedded URLs can be opened by Control-Clicking on them.</li>
         </ul>
         <p>Changes</p>
         <ul>

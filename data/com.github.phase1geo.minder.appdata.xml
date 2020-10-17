@@ -588,15 +588,12 @@
           <li>When a new document is first saved, the first root node text is used as the default filename.</li>
           <li xml:lang="pt">Quando um novo documento é gravado pela primeira vez, o texto do primeiro nó raiz é usado como o nome do ficheiro padrão.</li>
           <li xml:lang="fr">Lorsqu'un document est enregistré pour la première fois, le nom du premier nœud racine est utilisé comme nom de fichier par défaut.</li>
-          <li>Added multi-select support which includes:
-            <ul><li>Changing styles</li><li xml:lang="pt">Alterações de estilo</li><li xml:lang="fr">Modification des styles</li><li>Copy, cut, paste and delete support</li><li xml:lang="pt">Suporte para copiar, cortar, colar e apagar</li><li xml:lang="fr">Prise en charge des fonctions copier, couper, coller et supprimer</li><li>Connect two selected nodes</li><li xml:lang="pt">Conecte dois nós selecionados</li><li xml:lang="fr">Connectez deux nœuds sélectionnés</li><li>Create node links between two or more selected nodes</li><li xml:lang="pt">Crie ligações de nó entre dois ou mais nós selecionados</li><li xml:lang="fr">Créez des liens entre deux nœuds sélectionnés ou plus</li><li>Fold/unfold selected nodes</li><li xml:lang="pt">Dobrar/desdobrar nós selecionados</li><li xml:lang="fr">Pliez/Dépliez les nœuds sélectionnés</li></ul>
-          </li>
+          <li>Added multi-select support which includes:  Changing styles; Copy, cut, paste and delete support; Connect two selected nodes;
+            Create node links between two or more selected nodes; and Fold/unfold selected nodes.</li>
           <li>Added support for URLs in node titles.</li>
           <li xml:lang="pt">Suporte adicionado para URLs nos títulos de nós.</li>
           <li xml:lang="fr">Ajout de la prise en charge des URL dans le titre des nœuds.</li>
-          <li>Added support for Markdown within a note
-            <ul><li>Notes are syntax highlighted</li><li xml:lang="pt">Notas são em destaque de sintaxe</li><li xml:lang="fr">La correction orthographique fonctionne dans les notes</li><li>Embedded URLs can be opened by Control-Clicking on them</li><li xml:lang="pt">URLs incorporados podem ser abertos ao clicar com o botão direito do rato nos mesmos</li><li xml:lang="fr">Les URL peuvent être ouvertes en effectuant Ctrl + Clic dessus</li></ul>
-          </li>
+          <li>Added support for Markdown within a note:  Notes are syntax highlighted; and Embedded URLs can be opened by Control-Clicking on them.</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="pt">Alterações</p>
