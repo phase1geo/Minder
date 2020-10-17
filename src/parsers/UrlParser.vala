@@ -26,9 +26,9 @@ public class UrlParser : TextParser {
     base( "URL" );
 
     /* Links */
-    add_regex( "((mailto:)?[a-z0-9.-]+@[-a-z0-9]+(\\.[-a-z0-9]+)*\\.[a-z]+)", highlight_url );
-    add_regex( "((https?|ftp):[^'\">\\s]+)", highlight_url );
-    add_regex( "((file:///|/)([^,\\/:*\\?\\<>\"\\|]+(/|\\\\){0,1})+)", highlight_url );
+    add_regex( """((mailto:)?[a-z0-9.-]+@[-a-z0-9]+(\.[-a-z0-9]+)*\.[a-z]+)""", highlight_url );
+    add_regex( """((https?|ftp):[^'">\s]+)""", highlight_url );
+    add_regex( """((file:///|/)(([^,/:*\?\<>"\|\s](\\\s)?)+(/|\\){0,1})+)""", highlight_filepath );
 
   }
 
@@ -37,4 +37,10 @@ public class UrlParser : TextParser {
     add_tag( text, match, 0, FormatTag.URL, get_text( match, 0 ) );
   }
 
+  /* Add the URL filepath if the matched text is a valid file path */
+  private void highlight_filepath( FormattedText text, MatchInfo match ) {
+    if( FileUtils.test( match.fetch( 0 ), FileTest.EXISTS ) ) {
+      add_tag( text, match, 0, FormatTag.URL, get_text( match, 0 ) );
+    }
+  }
 }
