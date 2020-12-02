@@ -239,22 +239,53 @@ public class MainWindow : ApplicationWindow {
 
     /* Look for any changes to the settings */
     _text_size = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
-    settings.changed.connect(() => {
-      var ts = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
-      var ae = settings.get_boolean( "enable-animations" );
-      var ap = settings.get_boolean( "auto-parse-embedded-urls" );
-      var em = settings.get_boolean( "enable-markdown" );
-      _text_size = ts;
-      foreach( Tab tab in _nb.tabs ) {
-        var bin = (Gtk.Bin)tab.page;
-        var da  = (DrawArea)bin.get_child();
-        da.update_css();
-        da.animator.enable = ae;
-        da.url_parser.enable = ap;
-        da.markdown_parser.enable = em;
+    settings.changed.connect((key) => {
+      switch( key ) {
+        case "text-field-use-custom-font-size" :
+        case "text-field-custom-font-size"     :  setting_changed_text_size();      break;
+        case "enable-animations"               :  setting_changed_animations();     break;
+        case "auto-parse-embedded-urls"        :  setting_changed_embedded_urls();  break;
+        case "enable-markdown"                 :  setting_changed_markdown();       break;
       }
     });
 
+  }
+
+  private void setting_changed_text_size() {
+    var value = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
+    _text_size = value;
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      da.update_css();
+    }
+  }
+
+  private void setting_changed_animations() {
+    var value = settings.get_boolean( "enable-animations" );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      da.animator.enable = value;
+    }
+  }
+
+  private void setting_changed_embedded_urls() {
+    var value = settings.get_boolean( "auto-parse-embedded-urls" );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      da.url_parser.enable = value;
+    }
+  }
+
+  private void setting_changed_markdown() {
+    var value = settings.get_boolean( "enable-markdown" );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      da.markdown_parser.enable = value;
+    }
   }
 
   /* Called whenever the current tab is switched in the notebook */
