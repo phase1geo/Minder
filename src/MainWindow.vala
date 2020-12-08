@@ -95,7 +95,9 @@ public class MainWindow : ApplicationWindow {
     { "action_show_current",  action_show_current },
     { "action_show_style",    action_show_style },
     { "action_show_stickers", action_show_stickers },
-    { "action_show_map",      action_show_map }
+    { "action_show_map",      action_show_map },
+    { "action_next_tab",      action_next_tab },
+    { "action_prev_tab",      action_prev_tab }
   };
 
   private bool     on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -394,6 +396,14 @@ public class MainWindow : ApplicationWindow {
 
   }
 
+  public void next_tab() {
+    _nb.next_page();
+  }
+
+  public void previous_tab() {
+    _nb.previous_page();
+  }
+
   /* Returns the current drawing area */
   public DrawArea? get_current_da( string? caller = null ) {
     if( _debug && (caller != null) ) {
@@ -445,6 +455,8 @@ public class MainWindow : ApplicationWindow {
     app.set_accels_for_action( "win.action_show_style",    { "<Control>7" } );
     app.set_accels_for_action( "win.action_show_stickers", { "<Control>8" } );
     app.set_accels_for_action( "win.action_show_map",      { "<Control>9" } );
+    app.set_accels_for_action( "win.action_next_tab",      { "<Control>Tab" } );
+    app.set_accels_for_action( "win.action_prev_tab",      { "<Control><Shift>Tab" } );
 
   }
 
@@ -1544,6 +1556,16 @@ public class MainWindow : ApplicationWindow {
   /* Displays the map sidebar tab */
   private void action_show_map() {
     show_properties( "map", PropertyGrab.FIRST );
+  }
+
+  /* Shows the next tab in the tabbar */
+  private void action_next_tab() {
+    _nb.next_page();
+  }
+
+  /* Shows the previous tab in the tabbar */
+  private void action_prev_tab() {
+    _nb.previous_page();
   }
 
   /* Save the current tab state */
