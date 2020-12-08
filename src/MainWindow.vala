@@ -897,7 +897,8 @@ public class MainWindow : ApplicationWindow {
   public void do_open_file() {
 
     /* Get the file to open from the user */
-    FileChooserNative dialog = new FileChooserNative( _( "Open File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
+    var dialog   = new FileChooserNative( _( "Open File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
+    Utils.set_chooser_folder( dialog );
 
     /* Create file filters */
     var filter = new FileFilter();
@@ -941,7 +942,9 @@ public class MainWindow : ApplicationWindow {
     dialog.add_filter( filter );
 
     if( dialog.run() == ResponseType.ACCEPT ) {
-      open_file( dialog.get_filename() );
+      var filename = dialog.get_filename();
+      open_file( filename );
+      Utils.store_chooser_folder( filename );
     }
 
     get_current_da( "do_open_file" ).grab_focus();
@@ -1059,7 +1062,10 @@ public class MainWindow : ApplicationWindow {
 
   /* Allow the user to select a filename to save the document as */
   public bool save_file( DrawArea da ) {
+
     var dialog = new FileChooserNative( _( "Save File" ), this, FileChooserAction.SAVE, _( "Save" ), _( "Cancel" ) );
+    Utils.set_chooser_folder( dialog );
+
     var filter = new FileFilter();
     var retval = false;
     filter.set_filter_name( _( "Minder" ) );
@@ -1082,6 +1088,7 @@ public class MainWindow : ApplicationWindow {
       update_title( da );
       save_tab_state( _nb.current );
       retval = true;
+      Utils.store_chooser_folder( fname );
     }
     da.grab_focus();
     return( retval );
@@ -1313,8 +1320,9 @@ public class MainWindow : ApplicationWindow {
   private void action_export() {
 
     // FileChooserNative dialog = new FileChooserNative( _( "Export As" ), this, FileChooserAction.SAVE, _( "Export" ), _( "Cancel" ) );
-    FileChooserDialog dialog = new FileChooserDialog( _( "Export As" ), this, FileChooserAction.SAVE,
+    var dialog = new FileChooserDialog( _( "Export As" ), this, FileChooserAction.SAVE,
       _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
+    Utils.set_chooser_folder( dialog );
 
     /* BMP */
     FileFilter bmp_filter = new FileFilter();
@@ -1477,6 +1485,8 @@ public class MainWindow : ApplicationWindow {
       } else if( yed_filter == filter ) {
         ExportYed.export( fname = repair_filename( fname, {".graphml"} ), da );
       }
+
+      Utils.store_chooser_folder( fname );
 
       /* Generate notification to indicate that the export completed */
       notification( _( "Minder Export Completed" ), fname );

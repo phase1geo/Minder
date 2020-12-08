@@ -261,5 +261,10 @@
       <summary>If select-on-hover set, specifies hover time (in milliseconds).</summary>
       <description>If select-on-hover set, specifies hover time (in milliseconds).</description>
     </key>
+    <key name="last-directory" type="s">
+      <default>""</default>
+      <summary>Last used directory in open/save file dialog</summary>
+      <description>Stores last used directory in the open/save dialog and uses it when open/save is later invoked</description>
+    </key>
   </schema>
 </schemalist>

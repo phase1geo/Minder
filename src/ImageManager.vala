@@ -296,7 +296,8 @@ public class ImageManager {
 
     int id = -1;
 
-    FileChooserNative dialog = new FileChooserNative( _( "Select Image" ), parent, FileChooserAction.OPEN, _( "Select" ), _( "Cancel" ) );
+    var dialog = new FileChooserNative( _( "Select Image" ), parent, FileChooserAction.OPEN, _( "Select" ), _( "Cancel" ) );
+    Utils.set_chooser_folder( dialog );
 
     /* Allow pixbuf image types */
     FileFilter filter = new FileFilter();
@@ -310,6 +311,7 @@ public class ImageManager {
 
     if( dialog.run() == ResponseType.ACCEPT ) {
       id = add_image( dialog.get_uri() );
+      Utils.store_chooser_folder( dialog.get_filename() );
     }
 
     /* Close the dialog */
