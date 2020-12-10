@@ -15,5 +15,4 @@ if not environ.get('DESTDIR'):
     print('Compiling mime types…')
     subprocess.call(['update-mime-database', path.join(datadir, 'mime')])
     print('Updating application database…')
-    subprocess.call(['update-mime-database', path.join(datadir, 'mime')])
     subprocess.call(['update-desktop-database', path.join(datadir, 'applications')])
