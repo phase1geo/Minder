@@ -23,10 +23,14 @@ using Cairo;
 using Gdk;
 using Gtk;
 
-public class ExportImage : Object {
+public class ExportImage : Export {
+
+  public ExportImage( string type, string label, string[] patterns ) {
+    base( type, label, patterns, true, false );
+  }
 
   /* Default constructor */
-  public static void export( string fname, string type, DrawArea da ) {
+  public override bool export( string fname, DrawArea da ) {
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
@@ -45,10 +49,13 @@ public class ExportImage : Object {
     var pixbuf = pixbuf_get_from_surface( surface, 0, 0, ((int)w + 20), ((int)h + 20) );
 
     try {
-      pixbuf.save( fname, type );
+      pixbuf.save( fname, name );
     } catch( Error e ) {
-      stdout.printf( "Error writing %s: %s\n", type, e.message );
+      stdout.printf( "Error writing %s: %s\n", name, e.message );
+      return( false );
     }
+
+    return( true );
 
   }
 

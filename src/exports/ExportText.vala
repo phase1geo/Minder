@@ -22,15 +22,20 @@
 using GLib;
 using Gee;
 
-public class ExportText : Object {
+public class ExportText : Export {
 
   struct Hier {
     public int  spaces;
     public Node node;
   }
 
+  /* Constructor */
+  public ExportText() {
+    base( "text", _( "PlainText" ), { "*.txt" }, true, true );
+  }
+
   /* Exports the given drawing area to the file of the given name */
-  public static bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, DrawArea da ) {
 
     var  file   = File.new_for_path( fname );
     bool retval = true;
@@ -49,7 +54,7 @@ public class ExportText : Object {
   }
 
   /* Draws each of the top-level nodes */
-  public static string export_top_nodes( DrawArea da ) {
+  public string export_top_nodes( DrawArea da ) {
 
     var value = "";
     var nodes = da.get_nodes();
@@ -67,7 +72,7 @@ public class ExportText : Object {
   }
 
   /* Draws the given node and its children to the output stream */
-  public static string export_node( Node node, string prefix = "\t" ) {
+  public string export_node( Node node, string prefix = "\t" ) {
 
     string value = prefix + "- ";
 
@@ -101,7 +106,7 @@ public class ExportText : Object {
   /****************************************************************************/
 
   /* Imports a text file */
-  public static bool import( string fname, DrawArea da ) {
+  public override bool import( string fname, DrawArea da ) {
 
     try {
 
@@ -130,7 +135,7 @@ public class ExportText : Object {
   }
 
   /* Creates a new node from the given information and attaches it to the specified parent node */
-  public static Node make_node( DrawArea da, Node? parent, string task, string name, Array<Node>? nodes, bool attach = true ) {
+  public Node make_node( DrawArea da, Node? parent, string task, string name, Array<Node>? nodes, bool attach = true ) {
 
     var node = new Node.with_name( da, name, da.layouts.get_default() );
 
@@ -167,12 +172,12 @@ public class ExportText : Object {
   }
 
   /* Append the given string to the note */
-  public static void append_note( Node node, string str ) {
+  public void append_note( Node node, string str ) {
     node.note = "%s\n%s".printf( node.note, str ).strip();
   }
 
   /* Imports the given text string */
-  public static void import_text( string txt, int tab_spaces, DrawArea da, bool replace, Array<Node>? nodes = null ) {
+  public void import_text( string txt, int tab_spaces, DrawArea da, bool replace, Array<Node>? nodes = null ) {
 
     try {
 

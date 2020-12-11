@@ -20,22 +20,30 @@
 */
 
 using Cairo;
+using Gtk;
 
-public class ExportPNG : Object {
+public class ExportPNG : Export {
+
+  private bool _transparent;
+
+  /* Constructor */
+  public ExportPNG() {
+    base( "png", _( "PNG" ), { "*.png" }, true, false );
+  }
 
   /* Default constructor */
-  public static void export( string fname, DrawArea da, bool transparent ) {
+  public override bool export( string fname, DrawArea da ) {
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
     da.document_rectangle( out x, out y, out w, out h );
 
     /* Create the drawing surface */
-    var surface = new ImageSurface( (transparent ? Format.ARGB32 : Format.RGB24), ((int)w + 20), ((int)h + 20) );
+    var surface = new ImageSurface( (_transparent ? Format.ARGB32 : Format.RGB24), ((int)w + 20), ((int)h + 20) );
     var context = new Context( surface );
 
     /* Recreate the image */
-    if( !transparent ) {
+    if( !_transparent ) {
       da.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
     }
 
@@ -46,6 +54,35 @@ public class ExportPNG : Object {
     /* Write the image to the PNG file */
     surface.write_to_png( fname );
 
+    return( true );
+
+  }
+
+  /* Add the PNG settings */
+  public override void add_settings( Box box ) {
+
+    var tlbl = new Label( _( "Enable Transparent Background" ) );
+    var tsw  = new Switch();
+
+    var tbox = new Box( Orientation.HORIZONTAL, 5 );
+    tbox.pack_start( tlbl, false, false );
+    tbox.pack_start( tsw,  false, false );
+
+    box.pack_start( tbox );
+
+  }
+
+  /* Save the settings */
+  public override void save_settings( Xml.Node* node ) {
+    node->set_prop( "transparent", _transparent.to_string() );
+  }
+
+  /* Load the settings */
+  public override void load_settings( Xml.Node* node ) {
+    var trans = node->get_prop( "transparent" );
+    if( trans != null ) {
+      _transparent = bool.parse( trans );
+    }
   }
 
 }

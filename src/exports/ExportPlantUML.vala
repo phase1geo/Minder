@@ -22,10 +22,15 @@
 using GLib;
 using Gdk;
 
-public class ExportPlantUML : Object {
+public class ExportPlantUML : Export {
+
+  /* Constructor */
+  public ExportPlantUML() {
+    base( "plant-uml", _( "PlantUML" ), { "*.puml" }, true, true );
+  }
 
   /* Exports the given drawing area to the file of the given name */
-  public static bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, DrawArea da ) {
     var  file   = File.new_for_path( fname );
     bool retval = true;
     try {
@@ -37,19 +42,19 @@ public class ExportPlantUML : Object {
     return( retval );
   }
 
-  private static void export_header( FileOutputStream os, DrawArea da ) {
+  private void export_header( FileOutputStream os, DrawArea da ) {
     var start = "@startmindmap\n";
     os.write( start.data );
   }
 
-  private static void export_footer( FileOutputStream os, DrawArea da ) {
+  private void export_footer( FileOutputStream os, DrawArea da ) {
     var start = "@endmindmap\n\n";
     os.write( start.data );
 
   }
 
   /* Draws each of the top-level nodes */
-  private static void export_top_nodes( FileOutputStream os, DrawArea da ) {
+  private void export_top_nodes( FileOutputStream os, DrawArea da ) {
 
     try {
 
@@ -67,7 +72,7 @@ public class ExportPlantUML : Object {
   }
 
   /* Draws the given node and its children to the output stream */
-  private static void export_node( FileOutputStream os, Node node, int depth ) {
+  private void export_node( FileOutputStream os, Node node, int depth ) {
 
     try {
 
@@ -112,7 +117,7 @@ public class ExportPlantUML : Object {
   //----------------------------------------------------------------------------
 
   /* Imports a PlantUML document */
-  public static bool import( string fname, DrawArea da ) {
+  public override bool import( string fname, DrawArea da ) {
 
     try {
 
@@ -139,7 +144,7 @@ public class ExportPlantUML : Object {
     return( true );
   }
 
-  private static void import_doc( string str, DrawArea da ) {
+  private void import_doc( string str, DrawArea da ) {
 
     var lines = str.split( "\n" );
     var parse = false;
@@ -176,7 +181,7 @@ public class ExportPlantUML : Object {
   }
 
   /* Imports the given node information and adds the new node to the mind map */
-  private static void import_node( DrawArea da, MatchInfo matches, NodeSide side, ref Node? last_node ) {
+  private void import_node( DrawArea da, MatchInfo matches, NodeSide side, ref Node? last_node ) {
 
     var li    = matches.fetch( 1 );
     var color = matches.fetch( 2 );

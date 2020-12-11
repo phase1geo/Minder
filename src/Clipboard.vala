@@ -67,8 +67,9 @@ public class MinderClipboard {
           selection_data.set_text( text, -1 );
         } else if( (nodes != null) && (nodes.length == 1) ) {
           var str = "";
+          var export = (ExportText)da.win.exports.get_by_name( "text" );
           for( int i=0; i<nodes.length; i++ ) {
-            str += ExportText.export_node( nodes.index( i ), "" );
+            str += export.export_node( nodes.index( i ), "" );
           }
           selection_data.set_text( str, -1 );
         }

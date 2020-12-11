@@ -19,12 +19,15 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-using GLib;
+public class ExportCSV : Export {
 
-public class ExportCSV : Object {
+  /* Constructor */
+  public ExportCSV() {
+    base( "csv", _( "CSV" ), { "*.bmp" }, true, false );
+  }
 
   /* Exports the given drawing area to the file of the given name */
-  public static bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, DrawArea da ) {
     var  file   = File.new_for_path( fname );
     bool retval = true;
     try {
@@ -38,7 +41,7 @@ public class ExportCSV : Object {
     return( retval );
   }
 
-  private static void export_levels( FileOutputStream os, int levels ) {
+  private void export_levels( FileOutputStream os, int levels ) {
     try {
       string str = "level0,note0";
       for( int i=1; i<levels; i++ ) {
@@ -51,7 +54,7 @@ public class ExportCSV : Object {
     }
   }
 
-  private static int levels( DrawArea da ) {
+  private int levels( DrawArea da ) {
     var nodes      = da.get_nodes();
     int max_levels = 0;
     for( int i=0; i<nodes.length; i++ ) {
@@ -63,7 +66,7 @@ public class ExportCSV : Object {
     return( max_levels );
   }
 
-  private static int child_levels( Node node ) {
+  private int child_levels( Node node ) {
     var children   = node.children();
     int max_levels = 0;
     for( int i=0; i<children.length; i++ ) {
@@ -76,7 +79,7 @@ public class ExportCSV : Object {
   }
 
   /* Convert the given string to one that is valid for CSV files */
-  private static string stringify( string val ) {
+  private string stringify( string val ) {
 
     /* Strip any double-quotes and newlines found */
     string newval = val.replace( "\"", "" ).replace( "\n", " " );
@@ -91,7 +94,7 @@ public class ExportCSV : Object {
   }
 
   /* Draws each of the top-level nodes */
-  private static void export_top_nodes( FileOutputStream os, DrawArea da, int levels ) {
+  private void export_top_nodes( FileOutputStream os, DrawArea da, int levels ) {
 
     try {
 
@@ -116,7 +119,7 @@ public class ExportCSV : Object {
   }
 
   /* Draws the given node and its children to the output stream */
-  private static void export_node( FileOutputStream os, Node node, string prefix, int levels ) {
+  private void export_node( FileOutputStream os, Node node, string prefix, int levels ) {
 
     try {
 

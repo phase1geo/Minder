@@ -19,12 +19,15 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-using GLib;
+public class ExportMermaid : Export {
 
-public class ExportMermaid : Object {
+  /* Constructor */
+  public ExportMermaid() {
+    base( "mermaid", _( "Mermaid" ), { "*.mmd" }, true, false );
+  }
 
   /* Exports the given drawing area to the file of the given name */
-  public static bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, DrawArea da ) {
     var  file   = File.new_for_path( fname );
     bool retval = true;
     try {
@@ -36,7 +39,7 @@ public class ExportMermaid : Object {
     return( retval );
   }
 
-  private static string map_layout_to_direction( Node n ) {
+  private string map_layout_to_direction( Node n ) {
 
     string lname = n.layout.name;
 
@@ -53,7 +56,7 @@ public class ExportMermaid : Object {
   }
 
   /* Draws each of the top-level nodes */
-  private static void export_top_nodes( FileOutputStream os, DrawArea da ) {
+  private void export_top_nodes( FileOutputStream os, DrawArea da ) {
 
     try {
 
@@ -77,13 +80,13 @@ public class ExportMermaid : Object {
 
   }
 
-  private static string make_id( Node n ) {
+  private string make_id( Node n ) {
 
     return( "id" + n.id().to_string() );
 
   }
 
-  private static string make_title( Node n ) {
+  private string make_title( Node n ) {
 
     bool   rounded = n.style.node_border.name() == "rounded";
     string left    = rounded ? "(" : "[";
@@ -98,7 +101,7 @@ public class ExportMermaid : Object {
 
   }
 
-  private static string make_link( Node n ) {
+  private string make_link( Node n ) {
 
     bool arrow = n.style.link_arrow;
     bool solid = n.style.link_dash.name == "solid";
@@ -111,7 +114,7 @@ public class ExportMermaid : Object {
 
   }
 
-  private static string make_link_color( Node n ) {
+  private string make_link_color( Node n ) {
 
     var rgba = n.link_color;
 
@@ -119,7 +122,7 @@ public class ExportMermaid : Object {
 
   }
 
-  private static string make_node_style( Node n ) {
+  private string make_node_style( Node n ) {
 
     string color = make_link_color( n );
     string fill  = n.style.node_fill ? ("fill:" + color + ",") : "";
@@ -129,7 +132,7 @@ public class ExportMermaid : Object {
 
   }
 
-  private static string make_link_style( Node n, ref int link_id ) {
+  private string make_link_style( Node n, ref int link_id ) {
 
     string color       = make_link_color( n );
     string width       = n.style.link_width.to_string();
@@ -151,7 +154,7 @@ public class ExportMermaid : Object {
   }
 
   /* Draws the given node and its children to the output stream */
-  private static void export_node( FileOutputStream os, Node node, ref int link_id ) {
+  private void export_node( FileOutputStream os, Node node, ref int link_id ) {
 
     try {
 

@@ -24,9 +24,9 @@ using Gdk;
 using Gee;
 using Xml;
 
-public class ExportXMind : Object {
+public class ExportXMind : Export {
 
-  public static int ids = 10000000;
+  private int ids = 10000000;
 
   public enum IdObjectType {
     NODE = 0,
@@ -75,8 +75,13 @@ public class ExportXMind : Object {
     }
   }
 
+  /* Constructor */
+  public ExportXMind() {
+    base( "xmind-8", _( "XMind 8" ), { "*.xmind" }, true, true );
+  }
+
   /* Exports the given drawing area to the file of the given name */
-  public static bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, DrawArea da ) {
 
     /* Create temporary directory to place contents in */
     var dir = DirUtils.mkdtemp( "minderXXXXXX" );
@@ -105,7 +110,7 @@ public class ExportXMind : Object {
   }
 
   /* Generates the manifest file */
-  private static bool export_manifest( string dir, FileItems file_list ) {
+  private bool export_manifest( string dir, FileItems file_list ) {
 
     Xml.Doc* doc = new Xml.Doc( "1.0" );
     Xml.Node* manifest = new Xml.Node( null, "manifest" );
@@ -137,7 +142,7 @@ public class ExportXMind : Object {
   }
 
   /* Creates the file-entry node within the manifest */
-  private static Xml.Node* manifest_file_entry( string path, string type ) {
+  private Xml.Node* manifest_file_entry( string path, string type ) {
     Xml.Node* n = new Xml.Node( null, "file-entry" );
     n->set_prop( "full-path", path );
     n->set_prop( "media-type", type );
@@ -145,7 +150,7 @@ public class ExportXMind : Object {
   }
 
   /* Generate the main content file from  */
-  private static bool export_content( DrawArea da, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
+  private bool export_content( DrawArea da, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
 
     Xml.Doc*  doc       = new Xml.Doc( "1.0" );
     Xml.Node* xmap      = new Xml.Node( null, "xmap-content" );
@@ -181,7 +186,7 @@ public class ExportXMind : Object {
   }
 
   /* Exports the map contents */
-  private static void export_map( DrawArea da, Xml.Node* sheet, string timestamp, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
+  private void export_map( DrawArea da, Xml.Node* sheet, string timestamp, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
     var nodes = da.get_nodes();
     var conns = da.get_connections().connections;
     Xml.Node* top = export_node( da, nodes.index( 0 ), timestamp, true, dir, file_list, styles );
@@ -208,7 +213,7 @@ public class ExportXMind : Object {
     export_connections( da, sheet, timestamp, styles );
   }
 
-  private static Xml.Node* export_node( DrawArea da, Node node, string timestamp, bool top, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
+  private Xml.Node* export_node( DrawArea da, Node node, string timestamp, bool top, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
 
     Xml.Node* topic = new Xml.Node( null, "topic" );
     Xml.Node* title = new Xml.Node( null, "title" );
@@ -299,7 +304,7 @@ public class ExportXMind : Object {
   }
 
   /* Exports the given node's image */
-  private static void export_image( DrawArea da, Node node, string dir, FileItems file_list, Xml.Node* topic ) {
+  private void export_image( DrawArea da, Node node, string dir, FileItems file_list, Xml.Node* topic ) {
 
     var img_name  = da.image_manager.get_file( node.image.id );
     var mime_type = da.image_manager.get_mime_type( node.image.id );
@@ -332,7 +337,7 @@ public class ExportXMind : Object {
   }
 
   /* Exports node styling information */
-  private static void export_node_style( Node node, Xml.Node* n ) {
+  private void export_node_style( Node node, Xml.Node* n ) {
 
     /* Node border shape */
     switch( node.style.node_border.name() ) {
@@ -359,7 +364,7 @@ public class ExportXMind : Object {
   }
 
   /* Exports a node note */
-  private static Xml.Node* export_node_note( Node node, Array<Xml.Node*> styles ) {
+  private Xml.Node* export_node_note( Node node, Array<Xml.Node*> styles ) {
 
     Xml.Node* note  = new Xml.Node( null, "notes" );
     Xml.Node* plain = new Xml.Node( null, "plain" );
@@ -378,7 +383,7 @@ public class ExportXMind : Object {
   }
 
   /* Converts the given HTML string into the XHTML equivalent */
-  private static string replace_formatting( string str, Array<Xml.Node*> styles ) {
+  private string replace_formatting( string str, Array<Xml.Node*> styles ) {
 
     var bold_id = ids++;
     var em_id   = ids++;
@@ -411,7 +416,7 @@ public class ExportXMind : Object {
 
   }
 
-  private static void export_connections( DrawArea da, Xml.Node* sheet, string timestamp, Array<Xml.Node*> styles ) {
+  private void export_connections( DrawArea da, Xml.Node* sheet, string timestamp, Array<Xml.Node*> styles ) {
 
     var conns = da.get_connections().connections;
 
@@ -470,7 +475,7 @@ public class ExportXMind : Object {
   }
 
   /* Creates the styles.xml file in the main directory */
-  private static void export_styles( string dir, FileItems file_list, Array<Xml.Node*> nodes ) {
+  private void export_styles( string dir, FileItems file_list, Array<Xml.Node*> nodes ) {
 
     Xml.Doc*  doc    = new Xml.Doc( "1.0" );
     Xml.Node* xmap   = new Xml.Node( null, "xmap-styles" );
@@ -497,7 +502,7 @@ public class ExportXMind : Object {
   }
 
   /* Exports the contents of the meta file */
-  private static void export_meta( DrawArea da, string dir, FileItems file_list ) {
+  private void export_meta( DrawArea da, string dir, FileItems file_list ) {
 
     Xml.Doc*  doc       = new Xml.Doc( "1.0" );
     Xml.Node* meta      = new Xml.Node( null, "meta" );
@@ -532,7 +537,7 @@ public class ExportXMind : Object {
   }
 
   /* Write the contents as a zip file */
-  private static void archive_contents( string dir, string outname, FileItems files ) {
+  private void archive_contents( string dir, string outname, FileItems files ) {
 
     GLib.File pwd = GLib.File.new_for_path( dir );
 
@@ -595,7 +600,7 @@ public class ExportXMind : Object {
   // --------------------------------------------------------------------------------------
 
   /* Main method used to import an XMind mind-map into Minder */
-  public static void import( string fname, DrawArea da ) {
+  public override bool import( string fname, DrawArea da ) {
 
     /* Create temporary directory to place contents in */
     var dir = DirUtils.mkdtemp( "minderXXXXXX" );
@@ -614,10 +619,12 @@ public class ExportXMind : Object {
     da.queue_draw();
     da.changed();
 
+    return( true );
+
   }
 
   /* Import the content file */
-  private static bool import_content( DrawArea da, string fname, string dir, HashMap<string,IdObject> id_map ) {
+  private bool import_content( DrawArea da, string fname, string dir, HashMap<string,IdObject> id_map ) {
 
     /* Read in the contents of the Freemind file */
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
@@ -636,7 +643,7 @@ public class ExportXMind : Object {
   }
 
   /* Import the xmind map */
-  private static void import_map( DrawArea da, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_map( DrawArea da, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "sheet") ) {
@@ -647,7 +654,7 @@ public class ExportXMind : Object {
   }
 
   /* Import a sheet */
-  private static void import_sheet( DrawArea da, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_sheet( DrawArea da, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
@@ -661,7 +668,7 @@ public class ExportXMind : Object {
   }
 
   /* Imports an XMind topic (this is a node in Minder) */
-  private static void import_topic( DrawArea da, Node? parent, Xml.Node* n, bool attached, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_topic( DrawArea da, Node? parent, Xml.Node* n, bool attached, string dir, HashMap<string,IdObject> id_map ) {
 
     Node node;
 
@@ -705,7 +712,7 @@ public class ExportXMind : Object {
   }
 
   /* Returns the string stored in a <title> node */
-  private static string get_title( Xml.Node* n ) {
+  private string get_title( Xml.Node* n ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.TEXT_NODE ) {
         return( it->content );
@@ -715,12 +722,12 @@ public class ExportXMind : Object {
   }
 
   /* Imports the node name information */
-  private static void import_node_name( Node node, Xml.Node* n ) {
+  private void import_node_name( Node node, Xml.Node* n ) {
     node.name.text.insert_text( 0, get_title( n ) );
   }
 
   /* Imports the node note */
-  private static void import_node_notes( Node node, Xml.Node* n ) {
+  private void import_node_notes( Node node, Xml.Node* n ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
@@ -733,12 +740,12 @@ public class ExportXMind : Object {
   }
 
   /* Imports the node note as plain text */
-  private static void import_note_plain( Node node, Xml.Node* n ) {
+  private void import_note_plain( Node node, Xml.Node* n ) {
     node.note = get_title( n );
   }
 
   /* Imports an image from a file */
-  private static void import_image( DrawArea da, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_image( DrawArea da, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
 
     int height = 1;
     int width  = 1;
@@ -767,7 +774,7 @@ public class ExportXMind : Object {
   }
 
   /* Importa child nodes */
-  private static void import_children( DrawArea da, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_children( DrawArea da, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "topics") ) {
@@ -784,7 +791,7 @@ public class ExportXMind : Object {
   }
 
   /* Imports boundary information */
-  private static void import_boundaries( DrawArea da, Node node, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private void import_boundaries( DrawArea da, Node node, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "boundary") ) {
@@ -812,7 +819,7 @@ public class ExportXMind : Object {
   }
 
   /* Import connections */
-  private static void import_relationships( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private void import_relationships( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "relationship") ) {
@@ -864,7 +871,7 @@ public class ExportXMind : Object {
   }
 
   /* Imports and applies styling information */
-  private static bool import_styles( DrawArea da, string fname, HashMap<string,IdObject> id_map ) {
+  private bool import_styles( DrawArea da, string fname, HashMap<string,IdObject> id_map ) {
 
     /* Read in the contents of the Freemind file */
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
@@ -886,7 +893,7 @@ public class ExportXMind : Object {
   }
 
   /* Imports tha main styles XML node */
-  private static void import_styles_content( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private void import_styles_content( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "styles") ) {
@@ -901,7 +908,7 @@ public class ExportXMind : Object {
   }
 
   /* Imports the style information for one of the supported objects */
-  private static void import_styles_style( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private void import_styles_style( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     string? id = n->get_prop( "id" );
     if( (id == null) || !id_map.has_key( id ) ) return;
@@ -919,7 +926,7 @@ public class ExportXMind : Object {
   }
 
   /* Imports the style information for a given node */
-  private static void import_styles_topic( DrawArea da, Xml.Node* n, Node node ) {
+  private void import_styles_topic( DrawArea da, Xml.Node* n, Node node ) {
 
     string? sc = n->get_prop( "shape-class" );
     if( sc != null ) {
@@ -989,7 +996,7 @@ public class ExportXMind : Object {
   }
 
   /* Imports connection styling information */
-  private static void import_styles_connection( DrawArea da, Xml.Node* n, Connection conn ) {
+  private void import_styles_connection( DrawArea da, Xml.Node* n, Connection conn ) {
 
     string? arrow_start = n->get_prop( "arrow-begin-class" );
     if( arrow_start != null ) {
@@ -1037,7 +1044,7 @@ public class ExportXMind : Object {
   }
 
   /* Imports styling information for a node group */
-  private static void import_styles_boundary( DrawArea da, Xml.Node* n, NodeGroup group ) {
+  private void import_styles_boundary( DrawArea da, Xml.Node* n, NodeGroup group ) {
 
     string? f = n->get_prop( "fill" );
     if( f != null ) {
@@ -1049,7 +1056,7 @@ public class ExportXMind : Object {
   }
 
   /* Unarchives all of the files within the given XMind 8 file */
-  private static void unarchive_contents( string fname, string dir ) {
+  private void unarchive_contents( string fname, string dir ) {
 
     Archive.Read archive = new Archive.Read();
     archive.support_filter_none();

@@ -19,12 +19,15 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-using GLib;
+public class ExportOPML : Export {
 
-public class ExportOPML : Object {
+  /* Constructor */
+  public ExportOPML() {
+    base( "opml", _( "OPML" ), { "*.opml" }, true, true );
+  }
 
   /* Exports the given drawing area to the file of the given name */
-  public static bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, DrawArea da ) {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* opml = new Xml.Node( null, "opml" );
     string    expand_state;
@@ -40,7 +43,7 @@ public class ExportOPML : Object {
   }
 
   /* Generates the header for the document */
-  private static Xml.Node* export_head( string? title, string expand_state ) {
+  private Xml.Node* export_head( string? title, string expand_state ) {
     Xml.Node* head = new Xml.Node( null, "head" );
     var now  = new DateTime.now_local();
     head->new_text_child( null, "title", (title ?? "Mind Map") );
@@ -52,7 +55,7 @@ public class ExportOPML : Object {
   }
 
   /* Generates the body for the document */
-  private static Xml.Node* export_body( DrawArea da, out string expand_state ) {
+  private Xml.Node* export_body( DrawArea da, out string expand_state ) {
     Xml.Node* body = new Xml.Node( null, "body" );
     da.export_opml( body, out expand_state );
     return( body );
@@ -64,7 +67,7 @@ public class ExportOPML : Object {
    Reads the contents of an OPML file and creates a new document based on
    the stored information.
   */
-  public static bool import( string fname, DrawArea da ) {
+  public override bool import( string fname, DrawArea da ) {
 
     /* Read in the contents of the OPML file */
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
@@ -95,7 +98,7 @@ public class ExportOPML : Object {
   }
 
   /* Parses the OPML head block for information that we will use */
-  private static void import_header( Xml.Node* n, ref Array<int>? expand_state ) {
+  private void import_header( Xml.Node* n, ref Array<int>? expand_state ) {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {

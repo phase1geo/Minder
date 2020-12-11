@@ -3518,7 +3518,8 @@ public class DrawArea : Gtk.DrawingArea {
   /* Displays the quick entry UI in replacement mode */
   public void handle_control_R() {
     var quick_entry = new QuickEntry( this, true, _settings );
-    quick_entry.preload( ExportText.export_node( _selected.current_node(), "" ) );
+    var export      = (ExportText)win.exports.get_by_name( "text" );
+    quick_entry.preload( export.export_node( _selected.current_node(), "" ) );
     quick_entry.show_all();
   }
 
@@ -4243,8 +4244,9 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void paste_text_as_node( Node? node, string text ) {
-    var nodes = new Array<Node>();
-    ExportText.import_text( text, 0, this, false, nodes );
+    var nodes  = new Array<Node>();
+    var export = (ExportText)win.exports.get_by_name( "text" );
+    export.import_text( text, 0, this, false, nodes );
     undo_buffer.add_item( new UndoNodesInsert( this, nodes ) );
     queue_draw();
     changed();
