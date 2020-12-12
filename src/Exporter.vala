@@ -26,37 +26,35 @@ public class Exporter : Box {
   private Notebook _nb;
 
   /* Constructor */
-  public Exporter( MainWindow win, Gtk.Window parent ) {
+  public Exporter( MainWindow win ) {
 
-    Object( orientation: Orientation.HORIZONTAL, spacing: 0 );
+    Object( orientation: Orientation.VERTICAL, spacing: 0 );
 
     _nb = new Notebook();
     _nb.scrollable = true;
 
-    populate_notebook( win, parent );
+    populate_notebook( win );
 
     pack_start( _nb, true, true, 0 );
 
-    show_all();
-
   }
 
-  private void populate_notebook( MainWindow win, Gtk.Window parent ) {
+  private void populate_notebook( MainWindow win ) {
     for( int i=0; i<win.exports.length(); i++ ) {
       if( win.exports.index( i ).exportable ) {
-        add_export( win, parent, win.exports.index( i ) );
+        add_export( win, win.exports.index( i ) );
       }
     }
   }
 
   /* Add the given export */
-  private void add_export( MainWindow win, Gtk.Window parent, Export export ) {
+  private void add_export( MainWindow win, Export export ) {
 
     /* Create the button bar at the bottom of the page */
     var ebtn  = new Button.with_label( _( "Export" ) );
     ebtn.get_style_context().add_class( "suggested-action" );
     ebtn.clicked.connect(() => {
-      do_export( win, parent, export );
+      do_export( win, export );
     });
     var bbox  = new Box( Orientation.HORIZONTAL, 0 );
     bbox.pack_end( ebtn, false, false, 5 );
@@ -73,9 +71,9 @@ public class Exporter : Box {
   }
 
   /* Perform the export */
-  private void do_export( MainWindow win, Gtk.Window parent, Export export ) {
+  private void do_export( MainWindow win, Export export ) {
 
-    var dialog = new FileChooserDialog( _( "Export (%s)".printf( export.label ) ), parent, FileChooserAction.SAVE,
+    var dialog = new FileChooserDialog( _( "Export (%s)".printf( export.label ) ), win, FileChooserAction.SAVE,
       _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
     Utils.set_chooser_folder( dialog );
 
@@ -91,7 +89,6 @@ public class Exporter : Box {
 
       /* Close the dialog and parent window */
       dialog.close();
-      parent.close();
 
       /* Perform the export */
       var fname = dialog.get_filename();

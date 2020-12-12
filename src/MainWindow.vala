@@ -141,6 +141,9 @@ public class MainWindow : ApplicationWindow {
     var window_w = settings.get_int( "window-w" );
     var window_h = settings.get_int( "window-h" );
 
+    /* Create the exports and load it */
+    _exports = new Exports();
+
     /* Create the header bar */
     _header = new HeaderBar();
     _header.set_show_close_button( true );
@@ -256,9 +259,6 @@ public class MainWindow : ApplicationWindow {
         case "enable-markdown"                 :  setting_changed_markdown();       break;
       }
     });
-
-    /* Create the exports and load it */
-    _exports = new Exports();
 
   }
 
@@ -697,18 +697,15 @@ public class MainWindow : ApplicationWindow {
     _header.pack_end( menu_btn );
 
     /* Create export menu */
-    var box = new Box( Orientation.VERTICAL, 5 );
+    var export = new Exporter( this );
 
-    var export = new ModelButton();
-    export.get_child().destroy();
-    export.add( new Granite.AccelLabel.from_action_name( _( "Export…" ), "win.action_export" ) );
-    export.action_name = "win.action_export";
-
+    /* Create print menu */
     var print = new ModelButton();
     print.get_child().destroy();
     print.add( new Granite.AccelLabel.from_action_name( _( "Print…" ), "win.action_print" ) );
     print.action_name = "win.action_print";
 
+    var box = new Box( Orientation.VERTICAL, 5 );
     box.margin = 5;
     box.pack_start( export, false, true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
@@ -1279,14 +1276,16 @@ public class MainWindow : ApplicationWindow {
   /* Exports the model to various formats */
   private void action_export() {
 
+    /*
     var win = new Gtk.Window();
     win.transient_for = this;
     // win.modal         = true;
 
-    var exporter = new Exporter( this, win );
+//    var exporter = new Exporter( this, win );
 
-    win.add( exporter );
-    win.show_all();
+ //   win.add( exporter );
+ //   win.show_all();
+ */
 
   }
 
