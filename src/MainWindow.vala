@@ -1281,9 +1281,9 @@ public class MainWindow : ApplicationWindow {
 
     var win = new Gtk.Window();
     win.transient_for = this;
-    win.modal         = true;
+    // win.modal         = true;
 
-    var exporter = new Exporter( this );
+    var exporter = new Exporter( this, win );
 
     win.add( exporter );
     win.show_all();

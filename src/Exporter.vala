@@ -26,14 +26,14 @@ public class Exporter : Box {
   private Notebook _nb;
 
   /* Constructor */
-  public Exporter( MainWindow win ) {
+  public Exporter( MainWindow win, Gtk.Window parent ) {
 
     Object( orientation: Orientation.HORIZONTAL, spacing: 0 );
 
     _nb = new Notebook();
     _nb.scrollable = true;
 
-    populate_notebook( win );
+    populate_notebook( win, parent );
 
     pack_start( _nb, true, true, 0 );
 
@@ -41,21 +41,22 @@ public class Exporter : Box {
 
   }
 
-  private void populate_notebook( MainWindow win ) {
+  private void populate_notebook( MainWindow win, Gtk.Window parent ) {
     for( int i=0; i<win.exports.length(); i++ ) {
       if( win.exports.index( i ).exportable ) {
-        add_export( win, win.exports.index( i ) );
+        add_export( win, parent, win.exports.index( i ) );
       }
     }
   }
 
   /* Add the given export */
-  private void add_export( MainWindow win, Export export ) {
+  private void add_export( MainWindow win, Gtk.Window parent, Export export ) {
 
     /* Create the button bar at the bottom of the page */
     var ebtn  = new Button.with_label( _( "Export" ) );
+    ebtn.get_style_context().add_class( "suggested-action" );
     ebtn.clicked.connect(() => {
-      do_export( win, export );
+      do_export( win, parent, export );
     });
     var bbox  = new Box( Orientation.HORIZONTAL, 0 );
     bbox.pack_end( ebtn, false, false, 5 );
@@ -72,23 +73,27 @@ public class Exporter : Box {
   }
 
   /* Perform the export */
-  private void do_export( MainWindow win, Export export ) {
+  private void do_export( MainWindow win, Gtk.Window parent, Export export ) {
 
-    var dialog = new FileChooserDialog( _( "Export (%s)".printf( export.label ) ), win, FileChooserAction.SAVE,
+    var dialog = new FileChooserDialog( _( "Export (%s)".printf( export.label ) ), parent, FileChooserAction.SAVE,
       _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
     Utils.set_chooser_folder( dialog );
 
-    /* Add filter */
+    /* Set the filter */
     FileFilter filter = new FileFilter();
     filter.set_filter_name( export.label );
     foreach( string pattern in export.patterns ) {
       filter.add_pattern( pattern );
     }
-    dialog.add_filter( filter );
+    dialog.set_filter( filter );
 
     if( dialog.run() == ResponseType.ACCEPT ) {
 
-      /* Perfor the export */
+      /* Close the dialog and parent window */
+      dialog.close();
+      parent.close();
+
+      /* Perform the export */
       var fname = dialog.get_filename();
       export.export( fname = win.repair_filename( fname, export.patterns ), win.get_current_da() );
       Utils.store_chooser_folder( fname );
@@ -96,10 +101,11 @@ public class Exporter : Box {
       /* Generate notification to indicate that the export completed */
       win.notification( _( "Minder Export Completed" ), fname );
 
-    }
+    } else {
 
-    /* Close the dialog */
-    dialog.close();
+      dialog.close();
+
+    }
 
   }
 
