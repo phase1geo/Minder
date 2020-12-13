@@ -138,6 +138,10 @@ public class NodeMenu : Gtk.Menu {
     _detach = new Gtk.MenuItem.with_label( _( "Detach" ) );
     _detach.activate.connect( detach_node );
 
+    var addnode = new Gtk.MenuItem.with_label( _( "Add Node" ) );
+    var addmenu = new Gtk.Menu();
+    addnode.set_submenu( addmenu );
+
     _root = new Gtk.MenuItem.with_label( _( "Add Root Node" ) );
     _root.activate.connect( add_root_node );
 
@@ -248,10 +252,7 @@ public class NodeMenu : Gtk.Menu {
     add( _link_color );
     add( _fold );
     add( new SeparatorMenuItem() );
-    add( _root );
-    add( _parent );
-    add( _child );
-    add( _sibling );
+    add( addnode );
     add( quick );
     add( new SeparatorMenuItem() );
     add( selnode );
@@ -260,6 +261,12 @@ public class NodeMenu : Gtk.Menu {
     add( _sortby );
     add( new SeparatorMenuItem() );
     add( _detach );
+
+    /* Add the items to the add node menu */
+    addmenu.add( _root );
+    addmenu.add( _parent );
+    addmenu.add( _child );
+    addmenu.add( _sibling );
 
     /* Add the items to the sort menu */
     sortmenu.add( sort_alpha );
