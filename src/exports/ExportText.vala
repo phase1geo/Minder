@@ -31,7 +31,7 @@ public class ExportText : Export {
 
   /* Constructor */
   public ExportText() {
-    base( "text", _( "PlainText" ), { "*.txt" }, true, true );
+    base( "text", _( "PlainText" ), { ".txt" }, true, true );
   }
 
   /* Exports the given drawing area to the file of the given name */

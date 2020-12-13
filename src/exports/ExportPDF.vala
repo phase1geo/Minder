@@ -25,7 +25,7 @@ public class ExportPDF : Export {
 
   /* Constructor */
   public ExportPDF() {
-    base( "pdf", _( "PDF" ), { "*.pdf" }, true, false );
+    base( "pdf", _( "PDF" ), { ".pdf" }, true, false );
   }
 
   /* Default constructor */

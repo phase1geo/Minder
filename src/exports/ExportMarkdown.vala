@@ -23,7 +23,7 @@ public class ExportMarkdown : Export {
 
   /* Constructor */
   public ExportMarkdown() {
-    base( "markdown", _( "Markdown" ), { "*.md", "*.markdown" }, true, false );
+    base( "markdown", _( "Markdown" ), { ".md", ".markdown" }, true, false );
   }
 
   /* Exports the given drawing area to the file of the given name */

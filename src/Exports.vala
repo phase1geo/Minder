@@ -29,11 +29,10 @@ public class Exports {
     _exports = new Array<Export>();
 
     /* Add the exports */
-    add( new ExportImage( "bmp", _( "BMP" ), { "*.bmp" } ) );
     add( new ExportCSV() );
     add( new ExportFreemind() );
     add( new ExportFreeplane() );
-    add( new ExportImage( "jpeg", _( "JPEG" ), { "*.jpg", "*.jpeg" } ) );
+    add( new ExportImage( "jpeg", _( "JPEG" ), { ".jpg", ".jpeg" } ) );
     add( new ExportMarkdown() );
     add( new ExportMermaid() );
     add( new ExportOPML() );
@@ -54,6 +53,9 @@ public class Exports {
   }
 
   private void add( Export export ) {
+    export.settings_changed.connect(() => {
+      save();
+    });
     _exports.append_val( export );
   }
 

@@ -916,8 +916,8 @@ public class MainWindow : ApplicationWindow {
       if( exports.index( i ).importable ) {
         filter = new FileFilter();
         filter.set_filter_name( exports.index( i ).label );
-        foreach( string pattern in exports.index( i ).patterns ) {
-          filter.add_pattern( pattern );
+        foreach( string extension in exports.index( i ).extensions ) {
+          filter.add_pattern( "*" + extension );
         }
         dialog.add_filter( filter );
       }

@@ -25,7 +25,7 @@ public class ExportOutliner : Export {
 
   /* Constructor */
   public ExportOutliner() {
-    base( "outliner", _( "Outliner" ), { "*.outliner" }, true, true );
+    base( "outliner", _( "Outliner" ), { ".outliner" }, true, true );
   }
 
   /* Exports the given drawing area to the file of the given name */

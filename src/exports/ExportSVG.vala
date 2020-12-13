@@ -25,7 +25,7 @@ public class ExportSVG : Export {
 
   /* Constructor */
   public ExportSVG() {
-    base( "svg", _( "SVG" ), { "*.svg" }, true, false );
+    base( "svg", _( "SVG" ), { ".svg" }, true, false );
   }
 
   /* Default constructor */

@@ -77,7 +77,7 @@ public class ExportXMind : Export {
 
   /* Constructor */
   public ExportXMind() {
-    base( "xmind-8", _( "XMind 8" ), { "*.xmind" }, true, true );
+    base( "xmind-8", _( "XMind 8" ), { ".xmind" }, true, true );
   }
 
   /* Exports the given drawing area to the file of the given name */

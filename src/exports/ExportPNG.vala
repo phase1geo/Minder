@@ -24,11 +24,11 @@ using Gtk;
 
 public class ExportPNG : Export {
 
-  private bool _transparent;
+  private Switch _transparent;
 
   /* Constructor */
   public ExportPNG() {
-    base( "png", _( "PNG" ), { "*.png" }, true, false );
+    base( "png", _( "PNG" ), { ".png" }, true, false );
   }
 
   /* Default constructor */
@@ -39,11 +39,11 @@ public class ExportPNG : Export {
     da.document_rectangle( out x, out y, out w, out h );
 
     /* Create the drawing surface */
-    var surface = new ImageSurface( (_transparent ? Format.ARGB32 : Format.RGB24), ((int)w + 20), ((int)h + 20) );
+    var surface = new ImageSurface( (_transparent.get_active() ? Format.ARGB32 : Format.RGB24), ((int)w + 20), ((int)h + 20) );
     var context = new Context( surface );
 
     /* Recreate the image */
-    if( !_transparent ) {
+    if( !_transparent.get_active() ) {
       da.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
     }
 
@@ -67,11 +67,14 @@ public class ExportPNG : Export {
   public override void add_settings( Box box ) {
 
     var tlbl = new Label( _( "Enable Transparent Background" ) );
-    var tsw  = new Switch();
+    _transparent = new Switch();
+    _transparent.activate.connect(() => {
+      settings_changed();
+    });
 
     var tbox = new Box( Orientation.HORIZONTAL, 10 );
-    tbox.pack_start( tlbl, false, false );
-    tbox.pack_start( tsw,  false, false );
+    tbox.pack_start( tlbl,         false, false );
+    tbox.pack_start( _transparent, false, false );
 
     box.pack_start( tbox );
 
@@ -79,14 +82,14 @@ public class ExportPNG : Export {
 
   /* Save the settings */
   public override void save_settings( Xml.Node* node ) {
-    node->set_prop( "transparent", _transparent.to_string() );
+    node->set_prop( "transparent", _transparent.get_active().to_string() );
   }
 
   /* Load the settings */
   public override void load_settings( Xml.Node* node ) {
-    var trans = node->get_prop( "transparent" );
-    if( trans != null ) {
-      _transparent = bool.parse( trans );
+    var t = node->get_prop( "transparent" );
+    if( t != null ) {
+      _transparent.set_active( bool.parse( t ) );
     }
   }
 

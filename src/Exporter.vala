@@ -127,8 +127,8 @@ public class Exporter : Box {
     /* Set the filter */
     FileFilter filter = new FileFilter();
     filter.set_filter_name( export.label );
-    foreach( string pattern in export.patterns ) {
-      filter.add_pattern( pattern );
+    foreach( string extension in export.extensions ) {
+      filter.add_pattern( "*" + extension );
     }
     dialog.set_filter( filter );
 
@@ -139,7 +139,7 @@ public class Exporter : Box {
 
       /* Perform the export */
       var fname = dialog.get_filename();
-      export.export( fname = win.repair_filename( fname, export.patterns ), win.get_current_da() );
+      export.export( fname = win.repair_filename( fname, export.extensions ), win.get_current_da() );
       Utils.store_chooser_folder( fname );
 
       /* Generate notification to indicate that the export completed */

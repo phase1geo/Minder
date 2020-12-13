@@ -25,18 +25,20 @@ public class Export {
 
   public string   name       { get; private set; }
   public string   label      { get; private set; }
-  public string[] patterns   { get; private set; }
+  public string[] extensions { get; private set; }
   public bool     importable { get; private set; }
   public bool     exportable { get; private set; }
 
   /* Constructor */
-  public Export( string name, string label, string[] patterns, bool exportable, bool importable ) {
+  public Export( string name, string label, string[] extensions, bool exportable, bool importable ) {
     this.name       = name;
     this.label      = label;
-    this.patterns   = patterns;
+    this.extensions = extensions;
     this.exportable = exportable;
     this.importable = importable;
   }
+
+  public signal void settings_changed();
 
   /* Performs export to the given filename */
   public virtual bool export( string fname, DrawArea da ) {
@@ -63,10 +65,9 @@ public class Export {
 
   /* Returns true if the given filename is targetted for this export type */
   public bool filename_matches( string fname, out string basename ) {
-    foreach( string pattern in patterns ) {
-      var ext = pattern.slice( pattern.index_of_nth_char( 1 ), fname.length );
-      if( fname.has_suffix( ext ) ) {
-        basename = fname.slice( 0, (fname.length - ext.length) );
+    foreach( string extension in extensions ) {
+      if( fname.has_suffix( extension ) ) {
+        basename = fname.slice( 0, (fname.length - extension.length) );
         return( true );
       }
     }

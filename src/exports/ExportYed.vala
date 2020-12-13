@@ -23,7 +23,7 @@ public class ExportYed : Export {
 
   /* Constructor */
   public ExportYed() {
-    base( "yed", _( "Yed" ), { "*.graphml" }, true, false );
+    base( "yed", _( "Yed" ), { ".graphml" }, true, false );
   }
 
   /* Exports the given drawing area to the file of the given name */
