@@ -38,8 +38,8 @@ public class Exporter : Box {
     _mb.image_position = PositionType.RIGHT;
     _mb.always_show_image = true;
 
-    var export = new Button.with_label( _( "Export" ) );
-    export.get_style_context().add_class( "suggested-action" );
+    var export = new Button.with_label( _( "Export…" ) );
+    export.set_tooltip_markup( Utils.tooltip_with_accel( _( "Export With Current Settings" ), "<Control>e" ) );
     export.clicked.connect(() => {
       do_export( win );
     });
@@ -50,6 +50,8 @@ public class Exporter : Box {
 
     _stack = new Stack();
     _stack.transition_type = StackTransitionType.NONE;
+    _stack.hhomogeneous    = true;
+    _stack.vhomogeneous    = false;
 
     _stack_reveal = new Revealer();
     _stack_reveal.add( _stack );
@@ -96,8 +98,9 @@ public class Exporter : Box {
     _mb.popup.add( mnu );
 
     /* Add the page */
-    var opts = new Box( Orientation.VERTICAL, 5 );
+    var opts = new Grid();
     opts.margin = 5;
+    opts.column_spacing = 5;
     export.add_settings( opts );
 
     var label = new Label( "<i>" + "Export Options" + "</i>" );
@@ -116,11 +119,12 @@ public class Exporter : Box {
   }
 
   /* Perform the export */
-  private void do_export( MainWindow win ) {
+  public void do_export( MainWindow win ) {
 
     var name   = _stack.visible_child_name;
     var export = win.exports.get_by_name( name );
-    var dialog = new FileChooserDialog( _( "Export (%s)".printf( export.label ) ), win, FileChooserAction.SAVE,
+
+    var dialog = new FileChooserDialog( _( "Export As %s" ).printf( export.label ), win, FileChooserAction.SAVE,
       _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
     Utils.set_chooser_folder( dialog );
 

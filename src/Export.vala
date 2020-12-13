@@ -20,8 +20,11 @@
 */
 
 using Gtk;
+using Gee;
 
 public class Export {
+
+  private HashMap<string,Widget> _settings;
 
   public string   name       { get; private set; }
   public string   label      { get; private set; }
@@ -31,6 +34,7 @@ public class Export {
 
   /* Constructor */
   public Export( string name, string label, string[] extensions, bool exportable, bool importable ) {
+    _settings = new HashMap<string,Widget>();
     this.name       = name;
     this.label      = label;
     this.extensions = extensions;
@@ -50,12 +54,79 @@ public class Export {
     return( false );
   }
 
-  public virtual bool settings_available() {
-    return( false );
+  public bool settings_available() {
+    return( _settings.size > 0 );
   }
 
   /* Adds settings to the export dialog page */
-  public virtual void add_settings( Box box ) {}
+  public virtual void add_settings( Grid grid ) {}
+
+  protected void add_setting_bool( string name, Grid grid, string label, bool dflt ) {
+
+    var row = _settings.size;
+
+    var lbl = new Label( label );
+    lbl.halign = Align.START;
+
+    var sw  = new Switch();
+    sw.halign = Align.END;
+    sw.activate.connect(() => {
+      settings_changed();
+    });
+
+    grid.attach( lbl, 0, row );
+    grid.attach( sw,  1, row );
+
+    _settings.@set( name, sw );
+
+  }
+
+  protected void add_setting_scale( string name, Grid grid, string label, int min, int max, int step, int dflt ) {
+
+    var row = _settings.size;
+
+    var lbl = new Label( label );
+    lbl.halign = Align.START;
+
+    var scale = new Scale.with_range( Orientation.HORIZONTAL, min, max, step );
+    scale.halign = Align.END;
+    scale.draw_value   = true;
+    scale.round_digits = max.to_string().char_count();
+    scale.value_changed.connect(() => {
+      settings_changed();
+    });
+    scale.set_size_request( 150, -1 );
+
+    grid.attach( lbl,   0, row );
+    grid.attach( scale, 1, row );
+
+    _settings.@set( name, scale );
+
+  }
+
+  protected void set_bool( string name, bool value ) {
+    assert( _settings.has_key( name ) );
+    var sw = (Switch)_settings.@get( name );
+    sw.active = value;
+  }
+
+  protected bool get_bool( string name ) {
+    assert( _settings.has_key( name ) );
+    var sw = (Switch)_settings.@get( name );
+    return( sw.active );
+  }
+
+  protected void set_scale( string name, int value ) {
+    assert( _settings.has_key( name ) );
+    var scale = (Scale)_settings.@get( name );
+    scale.set_value( (double)value );
+  }
+
+  protected int get_scale( string name ) {
+    assert( _settings.has_key( name ) );
+    var scale = (Scale)_settings.@get( name );
+    return( (int)scale.get_value() );
+  }
 
   /* Saves the settings */
   public virtual void save_settings( Xml.Node* node ) {}

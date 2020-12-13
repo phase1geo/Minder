@@ -63,6 +63,7 @@ public class MainWindow : ApplicationWindow {
   private CheckButton       _search_unfolded;
   private CheckButton       _search_tasks;
   private CheckButton       _search_nontasks;
+  private Exporter          _exporter;
   private Popover?          _export         = null;
   private Scale?            _zoom_scale     = null;
   private ModelButton?      _zoom_in        = null;
@@ -259,6 +260,9 @@ public class MainWindow : ApplicationWindow {
         case "enable-markdown"                 :  setting_changed_markdown();       break;
       }
     });
+
+    /* Load the exports data */
+    _exports.load();
 
   }
 
@@ -697,7 +701,7 @@ public class MainWindow : ApplicationWindow {
     _header.pack_end( menu_btn );
 
     /* Create export menu */
-    var export = new Exporter( this );
+    _exporter = new Exporter( this );
 
     /* Create print menu */
     var print = new ModelButton();
@@ -707,7 +711,7 @@ public class MainWindow : ApplicationWindow {
 
     var box = new Box( Orientation.VERTICAL, 5 );
     box.margin = 5;
-    box.pack_start( export, false, true );
+    box.pack_start( _exporter, false, true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
     box.pack_start( print,  false, true );
     box.show_all();
@@ -1275,18 +1279,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Exports the model to various formats */
   private void action_export() {
-
-    /*
-    var win = new Gtk.Window();
-    win.transient_for = this;
-    // win.modal         = true;
-
-//    var exporter = new Exporter( this, win );
-
- //   win.add( exporter );
- //   win.show_all();
- */
-
+    _exporter.do_export( this );
   }
 
   /*

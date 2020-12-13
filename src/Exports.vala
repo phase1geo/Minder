@@ -47,9 +47,6 @@ public class Exports {
     add( new ExportXMind() );
     add( new ExportYed() );
 
-    /* Automatically load from saved settings */
-    load();
-
   }
 
   private void add( Export export ) {

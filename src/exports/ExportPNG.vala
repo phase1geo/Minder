@@ -19,12 +19,11 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-using Cairo;
 using Gtk;
+using Gdk;
+using Cairo;
 
 public class ExportPNG : Export {
-
-  private Switch _transparent;
 
   /* Constructor */
   public ExportPNG() {
@@ -34,16 +33,18 @@ public class ExportPNG : Export {
   /* Default constructor */
   public override bool export( string fname, DrawArea da ) {
 
+    var transparent = get_bool( "transparent" );
+
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
     da.document_rectangle( out x, out y, out w, out h );
 
     /* Create the drawing surface */
-    var surface = new ImageSurface( (_transparent.get_active() ? Format.ARGB32 : Format.RGB24), ((int)w + 20), ((int)h + 20) );
+    var surface = new ImageSurface( (transparent ? Format.ARGB32 : Format.RGB24), ((int)w + 20), ((int)h + 20) );
     var context = new Context( surface );
 
     /* Recreate the image */
-    if( !_transparent.get_active() ) {
+    if( !transparent ) {
       da.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
     }
 
@@ -51,46 +52,51 @@ public class ExportPNG : Export {
     context.translate( (10 - x), (10 - y) );
     da.draw_all( context );
 
-    /* Write the image to the PNG file */
-    surface.write_to_png( fname );
+    /* Write the pixbuf to the file */
+    var pixbuf = pixbuf_get_from_surface( surface, 0, 0, ((int)w + 20), ((int)h + 20) );
+
+    string[] option_keys   = {};
+    string[] option_values = {};
+
+    var value = get_scale( "compression" );
+    option_keys += "compression";  option_values += value.to_string();
+
+    try {
+      pixbuf.savev( fname, "png", option_keys, option_values );
+    } catch( Error e ) {
+      stdout.printf( "Error writing %s: %s\n", name, e.message );
+      return( false );
+    }
 
     return( true );
 
-  }
-
-  /* Indicate that settings are available */
-  public override bool settings_available() {
-    return( true );
   }
 
   /* Add the PNG settings */
-  public override void add_settings( Box box ) {
-
-    var tlbl = new Label( _( "Enable Transparent Background" ) );
-    _transparent = new Switch();
-    _transparent.activate.connect(() => {
-      settings_changed();
-    });
-
-    var tbox = new Box( Orientation.HORIZONTAL, 10 );
-    tbox.pack_start( tlbl,         false, false );
-    tbox.pack_start( _transparent, false, false );
-
-    box.pack_start( tbox );
-
+  public override void add_settings( Grid grid ) {
+    add_setting_bool( "transparent", grid, _( "Enable Transparent Background" ), false );
+    add_setting_scale( "compression", grid, _( "Compression" ), 0, 9, 1, 5 );
   }
 
   /* Save the settings */
   public override void save_settings( Xml.Node* node ) {
-    node->set_prop( "transparent", _transparent.get_active().to_string() );
+    node->set_prop( "transparent", get_bool( "transparent" ).to_string() );
+    node->set_prop( "compression", get_scale( "compression" ).to_string() );
   }
 
   /* Load the settings */
   public override void load_settings( Xml.Node* node ) {
+
     var t = node->get_prop( "transparent" );
     if( t != null ) {
-      _transparent.set_active( bool.parse( t ) );
+      set_bool( "transparent", bool.parse( t ) );
     }
+
+    var c = node->get_prop( "compression" );
+    if( c != null ) {
+      set_scale( "compression", int.parse( c ) );
+    }
+
   }
 
 }

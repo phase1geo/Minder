@@ -25,8 +25,6 @@ using Gtk;
 
 public class ExportImage : Export {
 
-  private Gtk.Scale _quality;
-
   public ExportImage( string type, string label, string[] extensions ) {
     base( type, label, extensions, true, false );
   }
@@ -41,6 +39,7 @@ public class ExportImage : Export {
     /* Create the drawing surface */
     var surface = new ImageSurface( Format.RGB24, ((int)w + 20), ((int)h + 20) );
     var context = new Context( surface );
+
     /* Recreate the image */
     da.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
     context.translate( (10 - x), (10 - y) );
@@ -54,7 +53,7 @@ public class ExportImage : Export {
 
     switch( name ) {
       case "jpeg" :
-        var value = (int)_quality.get_value();
+        var value = get_scale( "quality" );
         option_keys += "quality";  option_values += value.to_string();
         break;
     }
@@ -70,36 +69,14 @@ public class ExportImage : Export {
 
   }
 
-  public override bool settings_available() {
-    return( (name == "jpeg") );
-  }
-
-  public override void add_settings( Box box ) {
-
+  public override void add_settings( Grid grid ) {
     switch( name ) {
-      case "jpeg" :  add_settings_jpeg( box );  break;
+      case "jpeg" :  add_settings_jpeg( grid );  break;
     }
-
   }
 
-  private void add_settings_jpeg( Box box ) {
-
-    var qlbl   = new Label( _( "Quality" ) );
-    var qscale = new Scale.with_range( Orientation.HORIZONTAL, 1, 100, 1 );
-    qscale.draw_value   = true;
-    qscale.value_pos    = PositionType.TOP;
-    qscale.round_digits = 3;
-    qscale.change_value.connect((scroll, value) => {
-      settings_changed();
-      return( false );
-    });
-
-    var qbox = new Box( Orientation.HORIZONTAL, 10 );
-    qbox.pack_start( qlbl, false, false );
-    qbox.pack_end( qscale, true,  true );
-
-    box.pack_start( qbox, false, true );
-
+  private void add_settings_jpeg( Grid grid ) {
+    add_setting_scale( "quality", grid, _( "Quality" ), 0, 100, 1, 90 );
   }
 
   /* Save the settings */
@@ -110,7 +87,7 @@ public class ExportImage : Export {
   }
 
   private void save_settings_jpeg( Xml.Node* node ) {
-    var value = (int)_quality.get_value();
+    var value = get_scale( "quality" );
     node->set_prop( "quality", value.to_string() );
   }
 
@@ -125,7 +102,7 @@ public class ExportImage : Export {
     var q = node->get_prop( "quality" );
     if( q != null ) {
       var value = int.parse( q );
-      _quality.set_value( (double)value );
+      set_scale( "quality", value );
     }
   }
 
