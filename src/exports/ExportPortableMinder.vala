@@ -19,16 +19,20 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-using GLib;
 using Archive;
 
-public class ExportPortableMinder : Object {
+public class ExportPortableMinder : Export {
+
+  /* Constructor */
+  public ExportPortableMinder() {
+    base( "portable-minder", _( "Portable Minder" ), { ".pminder" }, true, true );
+  }
 
   /*
    Exports the current mindmap along with all images to a single file that can
    be imported in a different computer/location.
   */
-  public static bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, DrawArea da ) {
 
     /* Create the tar.gz archive named according the the first argument */
     Archive.Write archive = new Archive.Write ();
@@ -56,7 +60,7 @@ public class ExportPortableMinder : Object {
   }
 
   /* Adds the given file to the archive */
-  public static bool archive_file( Archive.Write archive, string fname, int? image_id = null ) {
+  public bool archive_file( Archive.Write archive, string fname, int? image_id = null ) {
 
     try {
 
@@ -116,7 +120,7 @@ public class ExportPortableMinder : Object {
    Converts the portable Minder file into the Minder document and moves all
    stored images to the ImageManager on the local computer.
   */
-  public static bool import( string fname, DrawArea da ) {
+  public override bool import( string fname, DrawArea da ) {
 
     Archive.Read archive = new Archive.Read();
     archive.support_filter_gzip();

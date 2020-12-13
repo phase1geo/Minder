@@ -21,10 +21,15 @@
 
 using Cairo;
 
-public class ExportSVG : Object {
+public class ExportSVG : Export {
+
+  /* Constructor */
+  public ExportSVG() {
+    base( "svg", _( "SVG" ), { ".svg" }, true, false );
+  }
 
   /* Default constructor */
-  public static void export( string fname, DrawArea da ) {
+  public override bool export( string fname, DrawArea da ) {
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
@@ -44,6 +49,8 @@ public class ExportSVG : Object {
 
     /* Draw the page to the PDF file */
     context.show_page();
+
+    return( true );
 
   }
 

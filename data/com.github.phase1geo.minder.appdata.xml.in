@@ -89,6 +89,21 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.11.3" date="2020-10-16">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to Albano Battistella).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed application crash issues due to using custom themes.</li>
+          <li>Added missing theme colors in custom theme pane.</li>
+          <li>Fixed issues with application crash when editing a root node.</li>
+          <li>Fixed issue with filepath parser highlighting normal text that contains slash characters.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.11.1" date="2020-09-25">
       <description>
         <p>New</p>
@@ -341,22 +356,10 @@
         <ul>
           <li>Added ability to delete a single node (instead of the node and its subtree) in the contextual menu.</li>
           <li>When a new document is first saved, the first root node text is used as the default filename.</li>
-          <li>Added multi-select support which includes:
-            <ul>
-              <li>Changing styles</li>
-              <li>Copy, cut, paste and delete support</li>
-              <li>Connect two selected nodes</li>
-              <li>Create node links between two or more selected nodes</li>
-              <li>Fold/unfold selected nodes</li>
-            </ul>
-          </li>
+          <li>Added multi-select support which includes:  Changing styles; Copy, cut, paste and delete support; Connect two selected nodes;
+            Create node links between two or more selected nodes; and Fold/unfold selected nodes.</li>
           <li>Added support for URLs in node titles.</li>
-          <li>Added support for Markdown within a note
-            <ul>
-              <li>Notes are syntax highlighted</li>
-              <li>Embedded URLs can be opened by Control-Clicking on them</li>
-            </ul>
-          </li>
+          <li>Added support for Markdown within a note:  Notes are syntax highlighted; and Embedded URLs can be opened by Control-Clicking on them.</li>
         </ul>
         <p>Changes</p>
         <ul>

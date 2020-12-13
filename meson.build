@@ -1,5 +1,5 @@
 project('com.github.phase1geo.minder', ['vala', 'c'],
-    version : '1.11.1',
+    version : '1.11.3',
     license: 'GPL-3.0'
 )
 
@@ -40,8 +40,7 @@ if gtk_dep.version().version_compare('>=3.22.0')
 endif
 
 # If the valac version is greater than or equal to 0.48, add a define for cross-compile purposes
-valac_version = run_command('valac', ['--version'])
-if valac_version.stdout().split().get(1).version_compare('>=0.48.0')
+if meson.get_compiler('vala').version().version_compare('>=0.48.0')
   add_project_arguments(['--define=VALAC048'], language: 'vala')
   message('Using VALAC048')
 endif

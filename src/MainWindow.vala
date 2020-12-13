@@ -63,6 +63,7 @@ public class MainWindow : ApplicationWindow {
   private CheckButton       _search_unfolded;
   private CheckButton       _search_tasks;
   private CheckButton       _search_nontasks;
+  private Exporter          _exporter;
   private Popover?          _export         = null;
   private Scale?            _zoom_scale     = null;
   private ModelButton?      _zoom_in        = null;
@@ -79,6 +80,7 @@ public class MainWindow : ApplicationWindow {
   private ThemeEditor       _themer;
   private Label             _scale_lbl;
   private int               _text_size;
+  private Exports           _exports;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",          action_save },
@@ -95,7 +97,9 @@ public class MainWindow : ApplicationWindow {
     { "action_show_current",  action_show_current },
     { "action_show_style",    action_show_style },
     { "action_show_stickers", action_show_stickers },
-    { "action_show_map",      action_show_map }
+    { "action_show_map",      action_show_map },
+    { "action_next_tab",      action_next_tab },
+    { "action_prev_tab",      action_prev_tab }
   };
 
   private bool     on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -112,6 +116,11 @@ public class MainWindow : ApplicationWindow {
   public int text_size {
     get {
       return( _text_size );
+    }
+  }
+  public Exports exports {
+    get {
+      return( _exports );
     }
   }
 
@@ -132,6 +141,9 @@ public class MainWindow : ApplicationWindow {
     var window_y = settings.get_int( "window-y" );
     var window_w = settings.get_int( "window-w" );
     var window_h = settings.get_int( "window-h" );
+
+    /* Create the exports and load it */
+    _exports = new Exports();
 
     /* Create the header bar */
     _header = new HeaderBar();
@@ -239,22 +251,56 @@ public class MainWindow : ApplicationWindow {
 
     /* Look for any changes to the settings */
     _text_size = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
-    settings.changed.connect(() => {
-      var ts = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
-      var ae = settings.get_boolean( "enable-animations" );
-      var ap = settings.get_boolean( "auto-parse-embedded-urls" );
-      var em = settings.get_boolean( "enable-markdown" );
-      _text_size = ts;
-      foreach( Tab tab in _nb.tabs ) {
-        var bin = (Gtk.Bin)tab.page;
-        var da  = (DrawArea)bin.get_child();
-        da.update_css();
-        da.animator.enable = ae;
-        da.url_parser.enable = ap;
-        da.markdown_parser.enable = em;
+    settings.changed.connect((key) => {
+      switch( key ) {
+        case "text-field-use-custom-font-size" :
+        case "text-field-custom-font-size"     :  setting_changed_text_size();      break;
+        case "enable-animations"               :  setting_changed_animations();     break;
+        case "auto-parse-embedded-urls"        :  setting_changed_embedded_urls();  break;
+        case "enable-markdown"                 :  setting_changed_markdown();       break;
       }
     });
 
+    /* Load the exports data */
+    _exports.load();
+
+  }
+
+  private void setting_changed_text_size() {
+    var value = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
+    _text_size = value;
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      da.update_css();
+    }
+  }
+
+  private void setting_changed_animations() {
+    var value = settings.get_boolean( "enable-animations" );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      da.animator.enable = value;
+    }
+  }
+
+  private void setting_changed_embedded_urls() {
+    var value = settings.get_boolean( "auto-parse-embedded-urls" );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      da.url_parser.enable = value;
+    }
+  }
+
+  private void setting_changed_markdown() {
+    var value = settings.get_boolean( "enable-markdown" );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      da.markdown_parser.enable = value;
+    }
   }
 
   /* Called whenever the current tab is switched in the notebook */
@@ -363,6 +409,14 @@ public class MainWindow : ApplicationWindow {
 
   }
 
+  public void next_tab() {
+    _nb.next_page();
+  }
+
+  public void previous_tab() {
+    _nb.previous_page();
+  }
+
   /* Returns the current drawing area */
   public DrawArea? get_current_da( string? caller = null ) {
     if( _debug && (caller != null) ) {
@@ -414,6 +468,8 @@ public class MainWindow : ApplicationWindow {
     app.set_accels_for_action( "win.action_show_style",    { "<Control>7" } );
     app.set_accels_for_action( "win.action_show_stickers", { "<Control>8" } );
     app.set_accels_for_action( "win.action_show_map",      { "<Control>9" } );
+    app.set_accels_for_action( "win.action_next_tab",      { "<Control>Tab" } );
+    app.set_accels_for_action( "win.action_prev_tab",      { "<Control><Shift>Tab" } );
 
   }
 
@@ -645,20 +701,17 @@ public class MainWindow : ApplicationWindow {
     _header.pack_end( menu_btn );
 
     /* Create export menu */
-    var box = new Box( Orientation.VERTICAL, 5 );
+    _exporter = new Exporter( this );
 
-    var export = new ModelButton();
-    export.get_child().destroy();
-    export.add( new Granite.AccelLabel.from_action_name( _( "Export…" ), "win.action_export" ) );
-    export.action_name = "win.action_export";
-
+    /* Create print menu */
     var print = new ModelButton();
     print.get_child().destroy();
     print.add( new Granite.AccelLabel.from_action_name( _( "Print…" ), "win.action_print" ) );
     print.action_name = "win.action_print";
 
+    var box = new Box( Orientation.VERTICAL, 5 );
     box.margin = 5;
-    box.pack_start( export, false, true );
+    box.pack_start( _exporter, false, true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
     box.pack_start( print,  false, true );
     box.show_all();
@@ -854,7 +907,8 @@ public class MainWindow : ApplicationWindow {
   public void do_open_file() {
 
     /* Get the file to open from the user */
-    FileChooserNative dialog = new FileChooserNative( _( "Open File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
+    var dialog   = new FileChooserNative( _( "Open File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
+    Utils.set_chooser_folder( dialog );
 
     /* Create file filters */
     var filter = new FileFilter();
@@ -862,43 +916,21 @@ public class MainWindow : ApplicationWindow {
     filter.add_pattern( "*.minder" );
     dialog.add_filter( filter );
 
-    filter = new FileFilter();
-    filter.set_filter_name( "Freemind / Freeplane" );
-    filter.add_pattern( "*.mm" );
-    dialog.add_filter( filter );
-
-    filter = new FileFilter();
-    filter.set_filter_name( "OPML" );
-    filter.add_pattern( "*.opml" );
-    dialog.add_filter( filter );
-
-    filter = new FileFilter();
-    filter.set_filter_name( "Outliner" );
-    filter.add_pattern( "*.outliner" );
-    dialog.add_filter( filter );
-
-    filter = new FileFilter();
-    filter.set_filter_name( _( "PlainText" ) );
-    filter.add_pattern( "*.txt" );
-    dialog.add_filter( filter );
-
-    filter = new FileFilter();
-    filter.set_filter_name( _( "PlantUML" ) );
-    filter.add_pattern( "*.puml" );
-    dialog.add_filter( filter );
-
-    filter = new FileFilter();
-    filter.set_filter_name( _( "Portable Minder" ) );
-    filter.add_pattern( "*.pminder" );
-    dialog.add_filter( filter );
-
-    filter = new FileFilter();
-    filter.set_filter_name( _( "XMind 8" ) );
-    filter.add_pattern( "*.xmind" );
-    dialog.add_filter( filter );
+    for( int i=0; i<exports.length(); i++ ) {
+      if( exports.index( i ).importable ) {
+        filter = new FileFilter();
+        filter.set_filter_name( exports.index( i ).label );
+        foreach( string extension in exports.index( i ).extensions ) {
+          filter.add_pattern( "*" + extension );
+        }
+        dialog.add_filter( filter );
+      }
+    }
 
     if( dialog.run() == ResponseType.ACCEPT ) {
-      open_file( dialog.get_filename() );
+      var filename = dialog.get_filename();
+      open_file( filename );
+      Utils.store_chooser_folder( filename );
     }
 
     get_current_da( "do_open_file" ).grab_focus();
@@ -915,47 +947,22 @@ public class MainWindow : ApplicationWindow {
       update_title( da );
       da.get_doc().load();
       return( true );
-    } else if( fname.has_suffix( ".opml" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 5) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportOPML.import( fname, da );
-      return( true );
-    } else if( fname.has_suffix( ".mm" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 3) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportFreeplane.import( fname, da );
-      return( true );
-    } else if( fname.has_suffix( ".txt" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 4) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportText.import( fname, da );
-    } else if( fname.has_suffix( ".outliner" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 9) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportOutliner.import( fname, da );
-    } else if( fname.has_suffix( ".pminder" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 8) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportPortableMinder.import( fname, da );
-    } else if( fname.has_suffix( ".xmind" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 6) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportXMind.import( fname, da );
-    } else if( fname.has_suffix( ".puml" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 5) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportPlantUML.import( fname, da );
+    } else {
+      for( int i=0; i<exports.length(); i++ ) {
+        if( exports.index( i ).importable ) {
+          string new_fname;
+          if( exports.index( i ).filename_matches( fname, out new_fname ) ) {
+            new_fname += ".minder";
+            var da = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
+            update_title( da );
+            exports.index( i ).import( fname, da );
+            return( true );
+          }
+        }
+      }
     }
     return( false );
   }
-
 
   /* Perform an undo action */
   public void do_undo() {
@@ -1016,7 +1023,10 @@ public class MainWindow : ApplicationWindow {
 
   /* Allow the user to select a filename to save the document as */
   public bool save_file( DrawArea da ) {
+
     var dialog = new FileChooserNative( _( "Save File" ), this, FileChooserAction.SAVE, _( "Save" ), _( "Cancel" ) );
+    Utils.set_chooser_folder( dialog );
+
     var filter = new FileFilter();
     var retval = false;
     filter.set_filter_name( _( "Minder" ) );
@@ -1039,6 +1049,7 @@ public class MainWindow : ApplicationWindow {
       update_title( da );
       save_tab_state( _nb.current );
       retval = true;
+      Utils.store_chooser_folder( fname );
     }
     da.grab_focus();
     return( retval );
@@ -1268,180 +1279,7 @@ public class MainWindow : ApplicationWindow {
 
   /* Exports the model to various formats */
   private void action_export() {
-
-    // FileChooserNative dialog = new FileChooserNative( _( "Export As" ), this, FileChooserAction.SAVE, _( "Export" ), _( "Cancel" ) );
-    FileChooserDialog dialog = new FileChooserDialog( _( "Export As" ), this, FileChooserAction.SAVE,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
-
-    /* BMP */
-    FileFilter bmp_filter = new FileFilter();
-    bmp_filter.set_filter_name( _( "BMP" ) );
-    bmp_filter.add_pattern( "*.bmp" );
-    dialog.add_filter( bmp_filter );
-
-    /* CSV */
-    FileFilter csv_filter = new FileFilter();
-    csv_filter.set_filter_name( _( "CSV" ) );
-    csv_filter.add_pattern( "*.csv" );
-    dialog.add_filter( csv_filter );
-
-    /* FreeMind */
-    FileFilter fm_filter = new FileFilter();
-    fm_filter.set_filter_name( _( "Freemind" ) );
-    fm_filter.add_pattern( "*.mm" );
-    dialog.add_filter( fm_filter );
-
-    /* Freeplane */
-    FileFilter fp_filter = new FileFilter();
-    fp_filter.set_filter_name( _( "Freeplane" ) );
-    fp_filter.add_pattern( "*.mm" );
-    dialog.add_filter( fp_filter );
-
-    /* JPEG */
-    FileFilter jpeg_filter = new FileFilter();
-    jpeg_filter.set_filter_name( _( "JPEG" ) );
-    jpeg_filter.add_pattern( "*.jpeg" );
-    jpeg_filter.add_pattern( "*.jpg" );
-    dialog.add_filter( jpeg_filter );
-
-    /* Markdown */
-    FileFilter md_filter = new FileFilter();
-    md_filter.set_filter_name( _( "Markdown" ) );
-    md_filter.add_pattern( "*.md" );
-    md_filter.add_pattern( "*.markdown" );
-    dialog.add_filter( md_filter );
-
-    /* Mermaid */
-    FileFilter mmd_filter = new FileFilter();
-    mmd_filter.set_filter_name( _( "Mermaid" ) );
-    mmd_filter.add_pattern( "*.mmd" );
-    dialog.add_filter( mmd_filter );
-
-    /* OPML */
-    FileFilter opml_filter = new FileFilter();
-    opml_filter.set_filter_name( _( "OPML" ) );
-    opml_filter.add_pattern( "*.opml" );
-    dialog.add_filter( opml_filter );
-
-    /* Org-Mode */
-    FileFilter org_filter = new FileFilter();
-    org_filter.set_filter_name( _( "Org-Mode" ) );
-    org_filter.add_pattern( "*.org" );
-    dialog.add_filter( org_filter );
-
-    /* Outliner */
-    FileFilter outliner_filter = new FileFilter();
-    outliner_filter.set_filter_name( _( "Outliner" ) );
-    outliner_filter.add_pattern( "*.outliner" );
-    dialog.add_filter( outliner_filter );
-
-    /* PDF */
-    FileFilter pdf_filter = new FileFilter();
-    pdf_filter.set_filter_name( _( "PDF" ) );
-    pdf_filter.add_pattern( "*.pdf" );
-    dialog.add_filter( pdf_filter );
-
-    /* PlantUML */
-    FileFilter puml_filter = new FileFilter();
-    puml_filter.set_filter_name( _( "PlantUML" ) );
-    puml_filter.add_pattern( ".puml" );
-    dialog.add_filter( puml_filter );
-
-    /* PNG (transparent) */
-    FileFilter pngt_filter = new FileFilter();
-    pngt_filter.set_filter_name( _( "PNG (Transparent)" ) );
-    pngt_filter.add_pattern( "*.png" );
-    dialog.add_filter( pngt_filter );
-
-    /* PNG (opaque) */
-    FileFilter pngo_filter = new FileFilter();
-    pngo_filter.set_filter_name( _( "PNG (Opaque)" ) );
-    pngo_filter.add_pattern( "*.png" );
-    dialog.add_filter( pngo_filter );
-
-    /* PlainText */
-    FileFilter txt_filter = new FileFilter();
-    txt_filter.set_filter_name( _( "PlainText" ) );
-    txt_filter.add_pattern( "*.txt" );
-    dialog.add_filter( txt_filter );
-
-    /* PortableMinder */
-    FileFilter pmind_filter = new FileFilter();
-    pmind_filter.set_filter_name( _( "Portable Minder" ) );
-    pmind_filter.add_pattern( "*.pminder" );
-    dialog.add_filter( pmind_filter );
-
-    /* SVG */
-    FileFilter svg_filter = new FileFilter();
-    svg_filter.set_filter_name( _( "SVG" ) );
-    svg_filter.add_pattern( "*.svg" );
-    dialog.add_filter( svg_filter );
-
-    /* XMind */
-    FileFilter xmind_filter = new FileFilter();
-    xmind_filter.set_filter_name( _( "XMind 8" ) );
-    xmind_filter.add_pattern( "*.xmind" );
-    dialog.add_filter( xmind_filter );
-
-    /* yEd */
-    FileFilter yed_filter = new FileFilter();
-    yed_filter.set_filter_name( _( "yEd" ) );
-    yed_filter.add_pattern( "*.graphml" );
-    dialog.add_filter( yed_filter );
-
-    if( dialog.run() == ResponseType.ACCEPT ) {
-
-      var fname  = dialog.get_filename();
-      var filter = dialog.get_filter();
-      var da     = get_current_da( "action_export" );
-
-      if( bmp_filter == filter ) {
-        ExportImage.export( fname = repair_filename( fname, {".bmp"} ), "bmp", da );
-      } else if( csv_filter == filter ) {
-        ExportCSV.export( fname = repair_filename( fname, {".csv"} ), da );
-      } else if( fm_filter == filter ) {
-        ExportFreemind.export( fname = repair_filename( fname, {".mm"} ), da );
-      } else if( fp_filter == filter ) {
-        ExportFreeplane.export( fname = repair_filename( fname, {".mm"} ), da );
-      } else if( jpeg_filter == filter ) {
-        ExportImage.export( fname = repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", da );
-      } else if( md_filter == filter ) {
-        ExportMarkdown.export( fname = repair_filename( fname, {".md", ".markdown"} ), da );
-      } else if( mmd_filter == filter ) {
-        ExportMermaid.export( fname = repair_filename( fname, {".mmd"} ), da );
-      } else if( opml_filter == filter ) {
-        ExportOPML.export( fname = repair_filename( fname, {".opml"} ), da );
-      } else if( org_filter == filter ) {
-        ExportOrgMode.export( fname = repair_filename( fname, {".org"} ), da );
-      } else if( outliner_filter == filter ) {
-        ExportOutliner.export( fname = repair_filename( fname, {".outliner"} ), da );
-      } else if( pdf_filter == filter ) {
-        ExportPDF.export( fname = repair_filename( fname, {".pdf"} ), da );
-      } else if( puml_filter == filter ) {
-        ExportPlantUML.export( fname = repair_filename( fname, {".puml"} ), da );
-      } else if( pngt_filter == filter ) {
-        ExportPNG.export( fname = repair_filename( fname, {".png"} ), da, true );
-      } else if( pngo_filter == filter ) {
-        ExportPNG.export( fname = repair_filename( fname, {".png"} ), da, false );
-      } else if( pmind_filter == filter ) {
-        ExportPortableMinder.export( fname = repair_filename( fname, {".pminder"} ), da );
-      } else if( txt_filter == filter ) {
-        ExportText.export( fname = repair_filename( fname, {".txt"} ), da );
-      } else if( svg_filter == filter ) {
-        ExportSVG.export( fname = repair_filename( fname, {".svg"} ), da );
-      } else if( xmind_filter == filter ) {
-        ExportXMind.export( fname = repair_filename( fname, {".xmind"} ), da );
-      } else if( yed_filter == filter ) {
-        ExportYed.export( fname = repair_filename( fname, {".graphml"} ), da );
-      }
-
-      /* Generate notification to indicate that the export completed */
-      notification( _( "Minder Export Completed" ), fname );
-
-    }
-
-    dialog.close();
-
+    _exporter.do_export( this );
   }
 
   /*
@@ -1449,7 +1287,7 @@ public class MainWindow : ApplicationWindow {
    If a valid suffix is found, return the filename without modification; otherwise,
    returns the filename with the extension added.
   */
-  private string repair_filename( string fname, string[] extensions ) {
+  public string repair_filename( string fname, string[] extensions ) {
     foreach (string ext in extensions) {
       if( fname.has_suffix( ext ) ) {
         return( fname );
@@ -1513,6 +1351,16 @@ public class MainWindow : ApplicationWindow {
   /* Displays the map sidebar tab */
   private void action_show_map() {
     show_properties( "map", PropertyGrab.FIRST );
+  }
+
+  /* Shows the next tab in the tabbar */
+  private void action_next_tab() {
+    _nb.next_page();
+  }
+
+  /* Shows the previous tab in the tabbar */
+  private void action_prev_tab() {
+    _nb.previous_page();
   }
 
   /* Save the current tab state */

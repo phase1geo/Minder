@@ -14,3 +14,5 @@ if not environ.get('DESTDIR'):
     subprocess.call(['gtk-update-icon-cache', '-qtf', path.join(datadir, 'icons', 'hicolor')])
     print('Compiling mime types…')
     subprocess.call(['update-mime-database', path.join(datadir, 'mime')])
+    print('Updating application database…')
+    subprocess.call(['update-desktop-database', path.join(datadir, 'applications')])

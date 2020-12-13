@@ -210,4 +210,16 @@ public class Utils {
 #endif
   }
 
+  public static void set_chooser_folder( FileChooser chooser ) {
+    var dir = Minder.settings.get_string( "last-directory" );
+    if( dir != "" ) {
+      chooser.set_current_folder( dir );
+    }
+  }
+
+  public static void store_chooser_folder( string file ) {
+    var dir = GLib.Path.get_dirname( file );
+    Minder.settings.set_string( "last-directory", dir );
+  }
+
 }

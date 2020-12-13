@@ -67,6 +67,10 @@ For Fedora users, install the RPM package with:
 
 `$ sudo dnf install minder`
 
+Debian/Ubuntu package is also available:
+
+`$ sudo apt install minder`
+
 ## Quick Guide to Creating a Mind-Map
 
 When the application is first launched, a main idea node will be displayed in the center of the mind-map canvas. The following actions can be performed on this node:

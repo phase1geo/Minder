@@ -23,10 +23,14 @@ using Cairo;
 using Gdk;
 using Gtk;
 
-public class ExportImage : Object {
+public class ExportImage : Export {
+
+  public ExportImage( string type, string label, string[] extensions ) {
+    base( type, label, extensions, true, false );
+  }
 
   /* Default constructor */
-  public static void export( string fname, string type, DrawArea da ) {
+  public override bool export( string fname, DrawArea da ) {
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
@@ -44,12 +48,62 @@ public class ExportImage : Object {
     /* Write the pixbuf to the file */
     var pixbuf = pixbuf_get_from_surface( surface, 0, 0, ((int)w + 20), ((int)h + 20) );
 
-    try {
-      pixbuf.save( fname, type );
-    } catch( Error e ) {
-      stdout.printf( "Error writing %s: %s\n", type, e.message );
+    string[] option_keys   = {};
+    string[] option_values = {};
+
+    switch( name ) {
+      case "jpeg" :
+        var value = get_scale( "quality" );
+        option_keys += "quality";  option_values += value.to_string();
+        break;
     }
 
+    try {
+      pixbuf.savev( fname, name, option_keys, option_values );
+    } catch( Error e ) {
+      stdout.printf( "Error writing %s: %s\n", name, e.message );
+      return( false );
+    }
+
+    return( true );
+
+  }
+
+  public override void add_settings( Grid grid ) {
+    switch( name ) {
+      case "jpeg" :  add_settings_jpeg( grid );  break;
+    }
+  }
+
+  private void add_settings_jpeg( Grid grid ) {
+    add_setting_scale( "quality", grid, _( "Quality" ), 0, 100, 1, 90 );
+  }
+
+  /* Save the settings */
+  public override void save_settings( Xml.Node* node ) {
+    switch( name ) {
+      case "jpeg" :  save_settings_jpeg( node );  break;
+    }
+  }
+
+  private void save_settings_jpeg( Xml.Node* node ) {
+    var value = get_scale( "quality" );
+    node->set_prop( "quality", value.to_string() );
+  }
+
+  /* Load the settings */
+  public override void load_settings( Xml.Node* node ) {
+    switch( name ) {
+      case "jpeg" :  load_settings_jpeg( node );  break;
+    }
+  }
+
+  private void load_settings_jpeg( Xml.Node* node ) {
+    var q = node->get_prop( "quality" );
+    if( q != null ) {
+      var value = int.parse( q );
+      set_scale( "quality", value );
+    }
   }
 
 }

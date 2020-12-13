@@ -1845,7 +1845,6 @@ public class Node : Object {
       style.draw_node_fill( ctx, x, y, w, h, side );
     }
 
-
     if( !is_root() || style.is_fillable() ) {
 
       /* Draw the border */

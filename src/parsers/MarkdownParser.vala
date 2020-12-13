@@ -57,6 +57,10 @@ public class MarkdownParser : TextParser {
     add_regex( "(<)((mailto:)?[a-z0-9.-]+@[-a-z0-9]+(\\.[-a-z0-9]+)*\\.[a-z]+)(>)", highlight_url2 );
     add_regex( "(<)((https?|ftp):[^'\">\\s]+)(>)", highlight_url3 );
 
+    /* Subscript/Superscript */
+    add_regex( "(<sub>)(.*?)(</sub>)", highlight_subscript );
+    add_regex( "(<sup>)(.*?)(</sup>)", highlight_superscript );
+
   }
 
   private void make_grey( FormattedText text, MatchInfo match, int paren ) {
@@ -96,6 +100,18 @@ public class MarkdownParser : TextParser {
     make_grey( text, match, 1 );
     add_tag( text, match, 2, FormatTag.URL, get_text( match, 2 ) );
     make_grey( text, match, 4 );
+  }
+
+  private void highlight_subscript( FormattedText text, MatchInfo match ) {
+    make_grey( text, match, 1 );
+    add_tag( text, match, 2, FormatTag.SUB, get_text( match, 2 ) );
+    make_grey( text, match, 3 );
+  }
+
+  private void highlight_superscript( FormattedText text, MatchInfo match ) {
+    make_grey( text, match, 1 );
+    add_tag( text, match, 2, FormatTag.SUPER, get_text( match, 2 ) );
+    make_grey( text, match, 3 );
   }
 
   /* Returns true if the associated tag should enable the associated FormatBar button */

@@ -21,10 +21,15 @@
 
 using GLib;
 
-public class ExportOutliner : Object {
+public class ExportOutliner : Export {
+
+  /* Constructor */
+  public ExportOutliner() {
+    base( "outliner", _( "Outliner" ), { ".outliner" }, true, true );
+  }
 
   /* Exports the given drawing area to the file of the given name */
-  public static bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, DrawArea da ) {
     Xml.Doc*  doc      = new Xml.Doc( "1.0" );
     Xml.Node* outliner = new Xml.Node( null, "outliner" );
     outliner->new_prop( "condensed", "false" );
@@ -38,7 +43,7 @@ public class ExportOutliner : Object {
   }
 
   /* Outputs the theme to use */
-  private static Xml.Node* export_theme( DrawArea da ) {
+  private Xml.Node* export_theme( DrawArea da ) {
     Xml.Node* node = new Xml.Node( null, "theme" );
     var theme = da.get_theme();
     node->set_prop( "name", theme.custom ? "default" : theme.name );
@@ -46,7 +51,7 @@ public class ExportOutliner : Object {
   }
 
   /* Outputs the top-level nodes */
-  private static Xml.Node* export_top_nodes( DrawArea da ) {
+  private Xml.Node* export_top_nodes( DrawArea da ) {
     Xml.Node* n = new Xml.Node( null, "nodes" );
     var nodes = da.get_nodes();
     for( int i=0; i<nodes.length; i++ ) {
@@ -56,7 +61,7 @@ public class ExportOutliner : Object {
   }
 
   /* Outputs a single node */
-  private static Xml.Node* export_node( Node node ) {
+  private Xml.Node* export_node( Node node ) {
     Xml.Node* n = new Xml.Node( null, "node" );
     n->set_prop( "expanded", (!node.folded).to_string() );
     n->set_prop( "hidenote", "true" );
@@ -73,7 +78,7 @@ public class ExportOutliner : Object {
   }
 
   /* Outputs all of the children nodes of the given node */
-  private static Xml.Node* export_nodes( Node node ) {
+  private Xml.Node* export_nodes( Node node ) {
     Xml.Node* n = new Xml.Node( null, "nodes" );
     for( int i=0; i<node.children().length; i++ ) {
       n->add_child( export_node( node.children().index( i ) ) );
@@ -82,7 +87,7 @@ public class ExportOutliner : Object {
   }
 
   /* Exports the name of the given node */
-  private static Xml.Node* export_name( Node node, CanvasText ct ) {
+  private Xml.Node* export_name( Node node, CanvasText ct ) {
     Xml.Node* n     = new Xml.Node( null, "name" );
     Xml.Node* t     = new Xml.Node( null, "text" );
     t->set_prop( "data",     ct.text.text );
@@ -92,7 +97,7 @@ public class ExportOutliner : Object {
   }
 
   /* Exports the note of the given node */
-  private static Xml.Node* export_note( string note ) {
+  private Xml.Node* export_note( string note ) {
     Xml.Node* n = new Xml.Node( null, "note" );
     Xml.Node* t = new Xml.Node( null, "text" );
     t->set_prop( "data",     note );
@@ -107,7 +112,7 @@ public class ExportOutliner : Object {
    Reads the contents of an Outliner file and creates a new document based on
    the stored information.
   */
-  public static bool import( string fname, DrawArea da ) {
+  public override bool import( string fname, DrawArea da ) {
 
     /* Read in the contents of the OPML file */
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
@@ -145,14 +150,14 @@ public class ExportOutliner : Object {
 
   }
 
-  private static void import_theme( Xml.Node* n, DrawArea da ) {
+  private void import_theme( Xml.Node* n, DrawArea da ) {
     var m = n->get_prop( "name" );
     if( m != null ) {
       da.set_theme( da.win.themes.get_theme( m ), false );
     }
   }
 
-  private static void import_nodes( Xml.Node* n, DrawArea da, Node? parent ) {
+  private void import_nodes( Xml.Node* n, DrawArea da, Node? parent ) {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "node") ) {
         import_node( it, da, parent );
@@ -160,7 +165,7 @@ public class ExportOutliner : Object {
     }
   }
 
-  private static void import_node( Xml.Node* n, DrawArea da, Node? parent ) {
+  private void import_node( Xml.Node* n, DrawArea da, Node? parent ) {
     var node = new Node( da, null );
     var e = n->get_prop( "expanded" );
     if( e != null ) {
@@ -187,11 +192,11 @@ public class ExportOutliner : Object {
     }
   }
 
-  private static void import_name( Xml.Node* n, Node node ) {
+  private void import_name( Xml.Node* n, Node node ) {
     node.name.load( n );
   }
 
-  private static void import_note( Xml.Node* n, Node node ) {
+  private void import_note( Xml.Node* n, Node node ) {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "text") ) {
         var text = it->get_prop( "data" );
