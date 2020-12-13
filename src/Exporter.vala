@@ -23,23 +23,54 @@ using Gtk;
 
 public class Exporter : Box {
 
-  private Notebook _nb;
+  private MenuButton _mb;
+  private Revealer   _stack_reveal;
+  private Stack      _stack;
 
   /* Constructor */
   public Exporter( MainWindow win ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 0 );
 
-    _nb = new Notebook();
-    _nb.scrollable = true;
+    _mb       = new MenuButton();
+    _mb.popup = new Gtk.Menu();
+    _mb.image = new Image.from_icon_name( "pan-down-symbolic", IconSize.SMALL_TOOLBAR );
+    _mb.image_position = PositionType.RIGHT;
+    _mb.always_show_image = true;
 
-    populate_notebook( win );
+    var export = new Button.with_label( _( "Export" ) );
+    export.get_style_context().add_class( "suggested-action" );
+    export.clicked.connect(() => {
+      do_export( win );
+    });
 
-    pack_start( _nb, true, true, 0 );
+    var bbox = new Box( Orientation.HORIZONTAL, 5 );
+    bbox.pack_start( _mb,    true,  true );
+    bbox.pack_end(   export, false, false );
+
+    _stack = new Stack();
+    _stack.transition_type = StackTransitionType.NONE;
+
+    _stack_reveal = new Revealer();
+    _stack_reveal.add( _stack );
+
+    populate( win );
+
+    _mb.popup.show_all();
+
+    pack_start( bbox,          false, true, 0 );
+    pack_start( _stack_reveal, true,  true, 0 );
+    show_all();
+
+    /* Initialize the UI */
+    var last    = win.settings.get_string( "last-export" );
+    var current = win.exports.get_by_name( last );
+    handle_mb_change( win, current );
 
   }
 
-  private void populate_notebook( MainWindow win ) {
+  /* Populates the exporter widget with the available export types */
+  private void populate( MainWindow win ) {
     for( int i=0; i<win.exports.length(); i++ ) {
       if( win.exports.index( i ).exportable ) {
         add_export( win, win.exports.index( i ) );
@@ -47,32 +78,48 @@ public class Exporter : Box {
     }
   }
 
+  private void handle_mb_change( MainWindow win, Export export ) {
+    _mb.label                  = export.label;
+    _stack.visible_child_name  = export.name;
+    _stack_reveal.reveal_child = export.settings_available();
+    win.settings.set_string( "last-export", export.name );
+  }
+
   /* Add the given export */
   private void add_export( MainWindow win, Export export ) {
 
-    /* Create the button bar at the bottom of the page */
-    var ebtn  = new Button.with_label( _( "Export" ) );
-    ebtn.get_style_context().add_class( "suggested-action" );
-    ebtn.clicked.connect(() => {
-      do_export( win, export );
+    /* Add menu option to the menubutton */
+    var mnu = new Gtk.MenuItem.with_label( export.label );
+    mnu.activate.connect(() => {
+      handle_mb_change( win, export );
     });
-    var bbox  = new Box( Orientation.HORIZONTAL, 0 );
-    bbox.pack_end( ebtn, false, false, 5 );
+    _mb.popup.add( mnu );
 
     /* Add the page */
-    var page = new Box( Orientation.VERTICAL, 0 );
-    page.pack_end( bbox, false, true, 5 );
-    page.pack_end( new Separator( Orientation.HORIZONTAL ), false, true, 5 );
-    export.add_settings( page );
+    var opts = new Box( Orientation.VERTICAL, 5 );
+    opts.margin = 5;
+    export.add_settings( opts );
 
-    var label = new Label( export.label );
-    _nb.append_page( page, label );
+    var label = new Label( "<i>" + "Export Options" + "</i>" );
+    label.use_markup = true;
+
+    var frame = new Frame( null );
+    frame.label_widget  = label;
+    frame.label_xalign  = (float)0.5;
+    frame.margin_top    = 5;
+    frame.margin_bottom = 5;
+    frame.add( opts );
+
+    /* Add the options to the options stack */
+    _stack.add_named( frame, export.name );
 
   }
 
   /* Perform the export */
-  private void do_export( MainWindow win, Export export ) {
+  private void do_export( MainWindow win ) {
 
+    var name   = _stack.visible_child_name;
+    var export = win.exports.get_by_name( name );
     var dialog = new FileChooserDialog( _( "Export (%s)".printf( export.label ) ), win, FileChooserAction.SAVE,
       _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
     Utils.set_chooser_folder( dialog );

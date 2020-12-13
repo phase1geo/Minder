@@ -58,13 +58,18 @@ public class ExportPNG : Export {
 
   }
 
+  /* Indicate that settings are available */
+  public override bool settings_available() {
+    return( true );
+  }
+
   /* Add the PNG settings */
   public override void add_settings( Box box ) {
 
     var tlbl = new Label( _( "Enable Transparent Background" ) );
     var tsw  = new Switch();
 
-    var tbox = new Box( Orientation.HORIZONTAL, 5 );
+    var tbox = new Box( Orientation.HORIZONTAL, 10 );
     tbox.pack_start( tlbl, false, false );
     tbox.pack_start( tsw,  false, false );
 

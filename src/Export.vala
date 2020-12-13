@@ -48,6 +48,10 @@ public class Export {
     return( false );
   }
 
+  public virtual bool settings_available() {
+    return( false );
+  }
+
   /* Adds settings to the export dialog page */
   public virtual void add_settings( Box box ) {}
 

@@ -266,5 +266,10 @@
       <summary>Last used directory in open/save file dialog</summary>
       <description>Stores last used directory in the open/save dialog and uses it when open/save is later invoked</description>
     </key>
+    <key name="last-export" type="s">
+      <default>"png"</default>
+      <summary>Last used export</summary>
+      <description>Stores last used export and uses it when it is later invoked</description>
+    </key>
   </schema>
 </schemalist>
