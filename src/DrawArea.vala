@@ -298,6 +298,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* If the current selection ever changes, let the sidebar know about it. */
   private void selection_changed() {
+    update_focus_mode();
     current_changed( this );
   }
 
@@ -2495,7 +2496,6 @@ public class DrawArea : Gtk.DrawingArea {
       if( n != _selected.current_node() ) {
         n.reveal();
         _selected.set_current_node( n, (_focus_mode ? _focus_alpha : 1.0) );
-        update_focus_mode();
         if( n.parent != null ) {
           n.parent.last_selected_child = n;
         }
@@ -4684,35 +4684,32 @@ public class DrawArea : Gtk.DrawingArea {
   public void set_focus_mode( bool focus ) {
     double alpha = focus ? _focus_alpha : 1.0;
     _focus_mode = focus;
-    for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).alpha = alpha;
-    }
-    if( _selected.current_node() != null ) {
-      if( focus ) {
-        update_focus_mode();
-      } else {
-        // zoom_actual();
-      }
-    } else if( _selected.current_connection() != null ) {
-      _selected.current_connection().alpha = 1.0;
-    }
-    _connections.update_alpha();
-    queue_draw();
+    update_focus_mode();
   }
 
   /* Update the focus mode */
   public void update_focus_mode() {
-    var current = _selected.current_node();
-    current.alpha = 1.0;
-    if( _focus_mode ) {
-      var parent = current.parent;
-      while( parent != null ) {
-        parent.set_alpha_only( 1.0 );
-        parent = parent.parent;
-      }
-      // zoom_to_selected();
+    var nodes = _selected.nodes();
+    var conns = _selected.connections();
+    var alpha = (_focus_mode && ((nodes.length > 0) || (conns.length > 0))) ? _focus_alpha : 1.0;
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).alpha = alpha;
     }
-    _connections.update_alpha();
+    if( _focus_mode ) {
+      for( int i=0; i<nodes.length; i++ ) {
+        var current = nodes.index( i );
+        current.alpha = 1.0;
+        var parent = current.parent;
+        while( parent != null ) {
+          parent.set_alpha_only( 1.0 );
+          parent = parent.parent;
+        }
+      }
+      _connections.update_alpha();
+      for( int i=0; i<conns.length; i++ ) {
+        conns.index( i ).alpha = 1.0;
+      }
+    }
     queue_draw();
   }
 

@@ -54,6 +54,7 @@ public class Connection : Object {
   private RGBA?       _color;
   private string?     _sticker     = null;
   private Pixbuf?     _sticker_buf = null;
+  private double      _alpha       = 1.0;
 
   public CanvasText? title {
     get {
@@ -122,7 +123,22 @@ public class Connection : Object {
       }
     }
   }
-  public double alpha { get; set; default=1.0; }
+  public double alpha {
+    get {
+      return( _alpha );
+    }
+    set {
+      if( _alpha != value ) {
+        _alpha = value;
+        if( _from_node != null ) {
+          _from_node.set_alpha_only( value );
+        }
+        if( _to_node != null ) {
+          _to_node.set_alpha_only( value );
+        }
+      }
+    }
+  }
   public RGBA? color {
     get {
       return( _color );
