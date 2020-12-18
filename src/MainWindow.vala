@@ -1064,13 +1064,7 @@ public class MainWindow : ApplicationWindow {
   /* Called whenever the node selection changes in the canvas */
   private void on_current_changed( DrawArea da ) {
     _zoom_sel.set_sensitive( da.get_current_node() != null );
-    if( da.get_focus_mode() ) {
-      _focus_btn.active = true;
-      _focus_btn.set_sensitive( true );
-    } else {
-      _focus_btn.active = false;
-      _focus_btn.set_sensitive( da.get_current_node() != null );
-    }
+    _focus_btn.active = da.get_focus_mode();
   }
 
   /*
