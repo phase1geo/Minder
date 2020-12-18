@@ -1423,6 +1423,32 @@ public class Node : Object {
     last_selected_child = last_selected;
   }
 
+  /*
+   Checks to see if the given node is a sibling node on the same side.  If it is,
+   swaps the position of the given node with the given node.  Returns true if
+   the nodes are swapped.
+  */
+  public bool swap_with_sibling( Node? other ) {
+    if( (other != null) && (other.parent == parent) ) {
+      var other_index = other.index();
+      var our_index   = index();
+      var our_parent  = parent;
+      if( (other_index + 1) == our_index ) {
+        detach( side );
+        attached = true;
+        attach( our_parent, other_index, null, false );
+        our_parent.last_selected_child = this;
+        return( true );
+      } else if( (our_index + 1) == other_index ) {
+        other.detach( other.side );
+        other.attached = true;
+        other.attach( our_parent, our_index, null, false );
+        return( true );
+      }
+    }
+    return( false );
+  }
+
   /* Adjusts the position of the text object */
   private void position_name() {
     int margin  = (style.node_margin  == null) ? 0 : style.node_margin;
