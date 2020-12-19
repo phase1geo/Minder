@@ -72,7 +72,7 @@ public class MainWindow : ApplicationWindow {
   private Button?           _undo_btn       = null;
   private Button?           _redo_btn       = null;
   private ToggleButton?     _focus_btn      = null;
-  private Button?           _prop_btn       = null;
+  private ToggleButton?     _prop_btn       = null;
   private Image?            _prop_show      = null;
   private Image?            _prop_hide      = null;
   private bool              _prefer_dark    = false;
@@ -544,7 +544,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     _search_btn = new MenuButton();
-    _search_btn.set_image( new Image.from_icon_name( "minder-search", icon_size ) );
+    _search_btn.set_image( new Image.from_icon_name( (on_elementary ? "minder-search" : "system-search-symbolic"), icon_size ) );
     _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "<Control>f" ) );
     _search_btn.add_accelerator( "clicked", _accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _search_btn.clicked.connect( on_search_change );
@@ -727,7 +727,7 @@ public class MainWindow : ApplicationWindow {
   private void add_focus_button() {
 
     _focus_btn       = new ToggleButton();
-    _focus_btn.image = new Image.from_icon_name( "minder-focus", icon_size );
+    _focus_btn.image = new Image.from_icon_name( (on_elementary ? "minder-focus" : "media-optical-symbolic"), icon_size );
     _focus_btn.draw_indicator = true;
     _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "<Control><Shift>f" ) );
     _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
@@ -781,13 +781,14 @@ public class MainWindow : ApplicationWindow {
   private void add_property_button() {
 
     /* Add the menubutton */
-    _prop_show = new Image.from_icon_name( "minder-sidebar-open",  icon_size );
-    _prop_hide = new Image.from_icon_name( "minder-sidebar-close", icon_size );
-    _prop_btn  = new Button();
-    _prop_btn.image = _prop_show;
-    _prop_btn.set_tooltip_text( _( "Properties" ) );
-    _prop_btn.add_accelerator( "clicked", _accel_group, '|', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
-    _prop_btn.clicked.connect( inspector_clicked );
+    _prop_show = new Image.from_icon_name( (on_elementary ? "minder-sidebar-open"  : "pane-show-symbolic"), icon_size );
+    _prop_hide = new Image.from_icon_name( (on_elementary ? "minder-sidebar-close" : "pane-hide-symbolic"), icon_size );
+    _prop_btn  = new ToggleButton();
+    _prop_btn.image  = _prop_show;
+    _prop_btn.active = false;
+    _prop_btn.set_tooltip_text( _( "Show Property Sidebar" ) );
+    _prop_btn.add_accelerator( "clicked", _accel_group, Key.F9, 0, AccelFlags.VISIBLE );
+    _prop_btn.toggled.connect( inspector_clicked );
     _header.pack_end( _prop_btn );
 
     /* Create the inspector sidebar */
@@ -1083,6 +1084,8 @@ public class MainWindow : ApplicationWindow {
   private void show_properties( string? tab, PropertyGrab grab_type ) {
     if( !_inspector_nb.get_mapped() || ((tab != null) && (_stack.visible_child_name != tab)) ) {
       _prop_btn.image = _prop_hide;
+      _prop_btn.set_tooltip_text( _( "Hide Property Sidebar" ) );
+      _prop_btn.active = true;
       if( tab != null ) {
         _stack.visible_child_name = tab;
       }
@@ -1137,6 +1140,8 @@ public class MainWindow : ApplicationWindow {
   private void hide_properties() {
     if( !_inspector_nb.get_mapped() ) return;
     _prop_btn.image         = _prop_show;
+    _prop_btn.set_tooltip_text( _( "Show Property Sidebar" ) );
+    _prop_btn.active        = false;
     _pane.position_set      = false;
     _pane.remove( _inspector_nb );
     get_current_da( "hide_properties" ).grab_focus();
