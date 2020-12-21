@@ -906,6 +906,15 @@ public class Node : Object {
     return( count );
   }
 
+  /* Returns the node side relative to its parent node */
+  public NodeSide relative_side() {
+    switch( side ) {
+      case NodeSide.LEFT  :
+      case NodeSide.RIGHT :  return( (posy < parent.posy) ? NodeSide.TOP  : NodeSide.BOTTOM );
+      default             :  return( (posx < parent.posx) ? NodeSide.LEFT : NodeSide.RIGHT );
+    }
+  }
+
   /*
    Returns a reference to the node with the given ID.  If the ID was
    not found in this node's tree, returns null.
@@ -2259,6 +2268,22 @@ public class Node : Object {
 
   }
 
+  /*
+   Draws all of the nodes on the same side of the parent.  Draws the nodes such that
+   overlapping links are drawn in a more meaningful way.
+  */
+  private void draw_side( Context ctx, Theme theme, Node? current, bool motion, int first, int last ) {
+    var first_rside = _children.index( first ).relative_side();
+    var mid         = first + 1;
+    while( (mid < last) && (_children.index( mid ).relative_side() == first_rside) ) mid++;
+    for( int i=first; i<mid; i++ ) {
+      _children.index( i ).draw_all( ctx, theme, current, false, motion );
+    }
+    for( int i=(last - 1); i>=mid; i-- ) {
+      _children.index( i ).draw_all( ctx, theme, current, false, motion );
+    }
+  }
+
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Node? current, bool draw_current, bool motion ) {
     if( !is_root() && !draw_current ) {
@@ -2266,8 +2291,12 @@ public class Node : Object {
     }
     if( this != current ) {
       if( !folded ) {
-        for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).draw_all( ctx, theme, current, false, motion );
+        if( _children.length > 0 ) {
+          var first_side = side_count( _children.index( 0 ).side );
+          draw_side( ctx, theme, current, motion, 0, first_side );
+          if( first_side < _children.length ) {
+            draw_side( ctx, theme, current, motion, first_side, (int)_children.length );
+          }
         }
       }
       draw( ctx, theme, motion );
