@@ -667,7 +667,8 @@ public class DrawArea : Gtk.DrawingArea {
   /* Retrieves canvas size settings and returns the approximate dimensions */
   public void get_dimensions( out int width, out int height ) {
     var sidebar_width = _settings.get_boolean( "current-properties-shown" ) ||
-                        _settings.get_boolean( "map-properties-shown" ) ||
+                        _settings.get_boolean( "map-properties-shown" )     ||
+                        _settings.get_boolean( "sticker-properties-shown" ) ||
                         _settings.get_boolean( "style-properties-shown" ) ? _settings.get_int( "properties-width" ) : 0;
     width  = _settings.get_int( "window-w" ) - sidebar_width;
     height = _settings.get_int( "window-h" );

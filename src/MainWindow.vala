@@ -230,7 +230,9 @@ public class MainWindow : ApplicationWindow {
       return( false );
     });
     _pane.button_release_event.connect((e) => {
-      _settings.set_int( "properties-width", ((_pane.get_allocated_width() - _pane.position) - 11) );
+      if( e.window == _pane.get_handle_window() ) {
+        _settings.set_int( "properties-width", ((_pane.get_allocated_width() - _pane.position) - 11) );
+      }
       return( false );
     });
 
@@ -813,9 +815,9 @@ public class MainWindow : ApplicationWindow {
     _stack.notify.connect((ps) => {
       if( ps.name == "visible-child" ) {
         _settings.set_boolean( "current-properties-shown", (_stack.visible_child_name == "current") );
-        _settings.set_boolean( "style-properties-shown", (_stack.visible_child_name == "style" ) );
+        _settings.set_boolean( "style-properties-shown",   (_stack.visible_child_name == "style" ) );
         _settings.set_boolean( "sticker-properties-shown", (_stack.visible_child_name == "sticker" ) );
-        _settings.set_boolean( "map-properties-shown",  (_stack.visible_child_name == "map") );
+        _settings.set_boolean( "map-properties-shown",     (_stack.visible_child_name == "map") );
       }
     });
 
