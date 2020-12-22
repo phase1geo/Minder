@@ -1443,15 +1443,22 @@ public class Node : Object {
       var our_index   = index();
       var our_parent  = parent;
       if( (other_index + 1) == our_index ) {
+        da.animator.add_nodes( da.get_nodes(), "swap_with_sibling" );
         detach( side );
         attached = true;
         attach( our_parent, other_index, null, false );
         our_parent.last_selected_child = this;
+        da.undo_buffer.add_item( new UndoNodeMove( this, side, our_index ) );
+        da.animator.animate();
         return( true );
       } else if( (our_index + 1) == other_index ) {
-        other.detach( other.side );
+        var other_side = other.side;
+        da.animator.add_nodes( da.get_nodes(), "swap_with_sibling" );
+        other.detach( other_side );
         other.attached = true;
         other.attach( our_parent, our_index, null, false );
+        da.undo_buffer.add_item( new UndoNodeMove( other, other_side, other_index ) );
+        da.animator.animate();
         return( true );
       }
     }
