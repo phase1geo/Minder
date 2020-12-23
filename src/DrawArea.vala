@@ -886,10 +886,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Toggles the fold for the given node */
   public void toggle_fold( Node n ) {
-    bool fold = !n.folded;
-    undo_buffer.add_item( new UndoNodeFold( n, fold ) );
-    n.folded = fold;
-    n.layout.handle_update_by_fold( n );
+    var fold    = !n.folded;
+    var changes = new Array<Node>();
+    n.set_fold( fold, changes );
+    undo_buffer.add_item( new UndoNodeFolds( changes ) );
     queue_draw();
     changed();
   }
@@ -897,14 +897,14 @@ public class DrawArea : Gtk.DrawingArea {
   /* Toggles the folding of all selected nodes that can be folded */
   public void toggle_folds() {
     var parents = new Array<Node>();
+    var changes = new Array<Node>();
     _selected.get_parents( ref parents );
     if( parents.length > 0 ) {
       for( int i=0; i<parents.length; i++ ) {
         var node = parents.index( i );
-        node.folded = !node.folded;
-        node.layout.handle_update_by_fold( node );
+        node.set_fold( !node.folded, changes );
       }
-      undo_buffer.add_item( new UndoNodesFold( parents ) );
+      undo_buffer.add_item( new UndoNodeFolds( changes ) );
       queue_draw();
       changed();
     }
@@ -999,9 +999,9 @@ public class DrawArea : Gtk.DrawingArea {
     var nodes = _selected.nodes();
     if( nodes.length == 1 ) {
       var current = nodes.index( 0 );
-      undo_buffer.add_item( new UndoNodeFold( current, folded ) );
-      current.folded = folded;
-      current.layout.handle_update_by_fold( current );
+      var changes = new Array<Node>();
+      current.set_fold( folded, changes );
+      undo_buffer.add_item( new UndoNodeFolds( changes ) );
       queue_draw();
       changed();
     }
@@ -2943,8 +2943,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
     node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), parent.style );
     node.attach( parent, -1, _theme );
-    parent.set_fold_only( false );
-    parent.layout.handle_update_by_fold( parent );
+    parent.set_fold( false );
     return( node );
   }
 
@@ -3197,16 +3196,13 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     if( current == null ) {
       for( int i=0; i<_nodes.length; i++ ) {
-        _nodes.index( i ).fold_completed_tasks( ref changes );
+        _nodes.index( i ).fold_completed_tasks( changes );
       }
     } else {
-      current.get_root().fold_completed_tasks( ref changes );
+      current.get_root().fold_completed_tasks( changes );
     }
     if( changes.length > 0 ) {
-      for( int i=0; i<changes.length; i++ ) {
-        changes.index( i ).layout.handle_update_by_fold( changes.index( i ) );
-      }
-      undo_buffer.add_item( new UndoNodeFoldChanges( _( "fold completed tasks" ), changes, true ) );
+      undo_buffer.add_item( new UndoNodeFolds( changes ) );
       queue_draw();
       changed();
       current_changed( this );
@@ -3233,17 +3229,14 @@ public class DrawArea : Gtk.DrawingArea {
     var changes = new Array<Node>();
     var current = _selected.current_node();
     if( current != null ) {
-      current.get_root().set_fold( false, ref changes );
+      current.get_root().set_fold( false, changes );
     } else {
       for( int i=0; i<_nodes.length; i++ ) {
-        _nodes.index( i ).set_fold( false, ref changes );
+        _nodes.index( i ).set_fold( false, changes );
       }
     }
     if( changes.length > 0 ) {
-      for( int i=0; i<changes.length; i++ ) {
-        changes.index( i ).layout.handle_update_by_fold( changes.index( i ) );
-      }
-      undo_buffer.add_item( new UndoNodeFoldChanges( _( "unfold all tasks" ), changes, false ) );
+      undo_buffer.add_item( new UndoNodeFolds( changes ) );
       queue_draw();
       changed();
       current_changed( this );
