@@ -31,6 +31,12 @@ public class UndoNodeFolds : UndoItem {
     _nodes = nodes;
   }
 
+  public UndoNodeFolds.single( Node node ) {
+    base( _( "node fold changes" ) );
+    _nodes = new Array<Node>();
+    _nodes.append_val( node );
+  }
+
   /* Toggles the fold indicators */
   private void change( DrawArea da ) {
     for( int i=0; i<_nodes.length; i++ ) {

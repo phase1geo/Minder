@@ -788,9 +788,10 @@ public class DrawArea : Gtk.DrawingArea {
       set_node_mode( _selected.nodes().index( 0 ), NodeMode.CURRENT );
     } else {
       _selected.clear_nodes( false );
-      if( (n.parent != null) && n.parent.folded ) {
-        var last = n.reveal();
-        undo_buffer.add_item( new UndoNodeReveal( this, n, last ) );
+      var last_folded = n.folded_ancestor();
+      if( last_folded != null ) {
+        last_folded.set_fold_only( false );
+        undo_buffer.add_item( new UndoNodeFolds.single( last_folded ) );
       }
       _selected.add_node( n );
     }
@@ -1895,7 +1896,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     /* Draw the current node on top of all others */
-    if( (current_node != null) && ((current_node.parent == null) || !current_node.parent.folded) ) {
+    if( (current_node != null) && (current_node.folded_ancestor() == null) ) {
       current_node.draw_all( ctx, _theme, null, true, (!is_node_editable() && _pressed && _motion && !_resize) );
     }
 
@@ -2495,7 +2496,10 @@ public class DrawArea : Gtk.DrawingArea {
   private bool select_node( Node? n ) {
     if( n != null ) {
       if( n != _selected.current_node() ) {
-        n.reveal();
+        var folded = n.folded_ancestor();
+        if( folded != null ) {
+          folded.set_fold_only( false );
+        }
         _selected.set_current_node( n, (_focus_mode ? _focus_alpha : 1.0) );
         if( n.parent != null ) {
           n.parent.last_selected_child = n;

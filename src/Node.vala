@@ -1747,20 +1747,13 @@ public class Node : Object {
   }
 
   /*
-   Set all ancestor nodes fold indicators to false.  Returns the last node
-   that is last node that is folded.
+   Returns the ancestor node that is folded or returns null if no ancestor nodes
+   are folded.
   */
-  public Node reveal() {
-    var tmp = parent;
-    while( tmp != null ) {
-      if( !tmp.folded ) {
-        return( tmp );
-      }
-      tmp.folded = false;
-      layout.handle_update_by_fold( tmp );
-      tmp  = tmp.parent;
-    }
-    return( tmp );
+  public Node folded_ancestor() {
+    var node = parent;
+    while( (node != null) && !node.folded ) node = node.parent;
+    return( node );
   }
 
   /*
