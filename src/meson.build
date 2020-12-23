@@ -90,7 +90,6 @@ sources += files(
     'undo_actions/UndoNodeReparentLinkColor.vala',
     'undo_actions/UndoNodeReplace.vala',
     'undo_actions/UndoNodeResize.vala',
-    'undo_actions/UndoNodeReveal.vala',
     'undo_actions/UndoNodeSort.vala',
     'undo_actions/UndoNodeStickerAdd.vala',
     'undo_actions/UndoNodeStickerChange.vala',
