@@ -131,7 +131,6 @@ public class Node : Object {
   private   NodeMode     _mode         = NodeMode.NONE;
   private   int          _task_count   = 0;
   private   int          _task_done    = 0;
-  private   bool         _folded       = false;
   private   double       _posx         = 0;
   private   double       _posy         = 0;
   private   RGBA         _link_color;
@@ -227,17 +226,7 @@ public class Node : Object {
   }
   public Node?    parent     { get; protected set; default = null; }
   public NodeSide side       { get; set; default = NodeSide.RIGHT; }
-  public bool     folded {
-    get {
-      return( _folded );
-    }
-    set {
-      _folded = value;
-      for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).folded = value;
-      }
-    }
-  }
+  public bool     folded     { get; set; default = false; }
   public double   tree_size  { get; set; default = 0; }
   public bool     group      { get; set; default = false; }
   public RGBA     link_color {
@@ -463,7 +452,6 @@ public class Node : Object {
     _alpha          = n._alpha;
     _task_count     = n._task_count;
     _task_done      = n._task_done;
-    _folded         = n._folded;
     _layout         = n._layout;
     _posx           = n._posx;
     _posy           = n._posy;
@@ -472,6 +460,7 @@ public class Node : Object {
     _link_color      = n._link_color;
     _link_color_set  = n._link_color_set;
     _link_color_root = n._link_color_root;
+    folded           = n.folded;
     note             = n.note;
     mode             = n.mode;
     parent           = n.parent;
@@ -826,7 +815,7 @@ public class Node : Object {
   public virtual Node? contains( double x, double y, Node? n ) {
     if( (this != n) && (is_within( x, y ) || is_within_fold( x, y )) ) {
       return( this );
-    } else if( !_folded ) {
+    } else if( !folded ) {
       for( int i=0; i<_children.length; i++ ) {
         Node tmp = _children.index( i ).contains( x, y, n );
         if( tmp != null ) {
@@ -1012,7 +1001,7 @@ public class Node : Object {
 
     string? f = n->get_prop( "fold" );
     if( f != null ) {
-      _folded = bool.parse( f );
+      folded = bool.parse( f );
     }
 
     string? ts = n->get_prop( "treesize" );
@@ -1126,7 +1115,7 @@ public class Node : Object {
       node->new_prop( "link", _linked_node.id().to_string() );
     }
     node->new_prop( "side", side.to_string() );
-    node->new_prop( "fold", _folded.to_string() );
+    node->new_prop( "fold", folded.to_string() );
     node->new_prop( "treesize", tree_size.to_string() );
     if( !is_root() ) {
       node->new_prop( "color", Utils.color_from_rgba( _link_color ) );
@@ -1187,10 +1176,10 @@ public class Node : Object {
 
     /* Figure out if this node is folded */
     if( expand_state != null ) {
-      _folded = true;
+      folded = true;
       for( int i=0; i<expand_state.length; i++ ) {
         if( expand_state.index( i ) == node_id ) {
-          _folded = false;
+          folded = false;
           expand_state.remove_index( i );
           break;
         }
@@ -1299,25 +1288,47 @@ public class Node : Object {
    Sets the fold for this node to the given value.  Appends this node to
    the changed list if the folded value changed.
   */
-  public void set_fold( bool value, ref Array<Node> changed ) {
-    if( _folded != value ) {
-      changed.append_val( this );
-      folded = value;
-    } else if( !_folded ) {
+  public void set_fold( bool value, Array<Node>? changed = null ) {
+    if( !folded && value ) {
       for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).set_fold( value, ref changed );
+        _children.index( i ).clear_tree_folds( changed );
       }
+    }
+    if( folded != value ) {
+      folded = value;
+      if( changed != null ) {
+        changed.append_val( this );
+      }
+      layout.handle_update_by_fold( this );
     }
   }
 
-  /* Sets the folded indicator for this node only without affecting child nodes. */
+  /*
+   Sets the fold value of this node only.  This should only be used when we
+   are undo'ing a fold operation.
+  */
   public void set_fold_only( bool value ) {
-    _folded = value;
+    folded = value;
+    layout.handle_update_by_fold( this );
+  }
+
+  /* Clears all of the folds below the current node */
+  private void clear_tree_folds( Array<Node>? changed ) {
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).clear_tree_folds( changed );
+    }
+    if( folded ) {
+      folded = false;
+      if( changed != null ) {
+        changed.append_val( this );
+      }
+      layout.handle_update_by_fold( this );
+    }
   }
 
   /* Returns true if there is at least one node that is foldable due to its tasks being completed. */
   public bool completed_tasks_foldable() {
-    if( !_folded && (_task_count > 0) ) {
+    if( !folded && (_task_count > 0) ) {
       if( _task_count == _task_done ) {
         for( int i=0; i<_children.length; i++ ) {
           if( _children.index( i ).is_leaf() && (_children.index( i )._task_done == 1) ) {
@@ -1336,7 +1347,7 @@ public class Node : Object {
 
   /* Returns true if any node is found to be unfoldable */
   public bool unfoldable() {
-    if( _folded ) {
+    if( folded ) {
       return( true );
     } else {
       for( int i=0; i<_children.length; i++ ) {
@@ -1349,18 +1360,18 @@ public class Node : Object {
   }
 
   /* Recursively spans node tree folding any nodes which contain fully completed tasks */
-  public void fold_completed_tasks( ref Array<Node> changed ) {
-    if( !_folded && (_task_count > 0) ) {
+  public void fold_completed_tasks( Array<Node> changed ) {
+    if( !folded && (_task_count > 0) ) {
       if( _task_count == _task_done ) {
         for( int i=0; i<_children.length; i++ ) {
           if( _children.index( i ).is_leaf() && (_children.index( i )._task_done == 1) ) {
-            set_fold( true, ref changed );
+            set_fold( true, changed );
             return;
           }
         }
       }
       for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).fold_completed_tasks( ref changed );
+        _children.index( i ).fold_completed_tasks( changed );
       }
     }
   }
@@ -1736,20 +1747,13 @@ public class Node : Object {
   }
 
   /*
-   Set all ancestor nodes fold indicators to false.  Returns the last node
-   that is last node that is folded.
+   Returns the ancestor node that is folded or returns null if no ancestor nodes
+   are folded.
   */
-  public Node reveal() {
-    var tmp = parent;
-    while( tmp != null ) {
-      if( !tmp._folded ) {
-        return( tmp );
-      }
-      tmp._folded = false;
-      layout.handle_update_by_fold( tmp );
-      tmp  = tmp.parent;
-    }
-    return( tmp );
+  public Node folded_ancestor() {
+    var node = parent;
+    while( (node != null) && !node.folded ) node = node.parent;
+    return( node );
   }
 
   /*
