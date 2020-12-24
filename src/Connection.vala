@@ -525,6 +525,11 @@ public class Connection : Object {
     return( Utils.is_within_bounds( x, y, sw, sy, sw, sh ) );
   }
 
+  /* Returns true if the given coordinates are on this connection */
+  public bool within( double x, double y ) {
+    return( within_title_box( x, y ) || within_drag_handle( x, y ) || on_curve( x, y ) );
+  }
+
   /* Returns the bounding box for the sticker, title and note icon */
   private void title_bbox( out double x, out double y, out double w, out double h ) {
     var padding = style.connection_padding ?? 0;

@@ -30,6 +30,14 @@ public enum DragTypes {
   STICKER
 }
 
+public struct SelectBox {
+  double x;
+  double y;
+  double w;
+  double h;
+  bool   valid;
+}
+
 public class DrawArea : Gtk.DrawingArea {
 
   private const CursorType move_cursor = CursorType.HAND1;
@@ -40,14 +48,6 @@ public class DrawArea : Gtk.DrawingArea {
     {"text/uri-list", 0,                    DragTypes.URI},
     {"STRING",        TargetFlags.SAME_APP, DragTypes.STICKER}
   };
-
-  private struct SelectBox {
-    double x;
-    double y;
-    double w;
-    double h;
-    bool   valid;
-  }
 
   private Document         _doc;
   private GLib.Settings    _settings;
@@ -103,6 +103,7 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _sticker_posy;
   private NodeGroups       _groups;
   private uint             _select_hover_id = 0;
+  private MouseHandler     _mouse_handler;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -160,6 +161,16 @@ public class DrawArea : Gtk.DrawingArea {
       return( _groups );
     }
   }
+  public Selection selected {
+    get {
+      return( _selected );
+    }
+  }
+  public SelectBox select_box {
+    get {
+      return( _select_box );
+    }
+  }
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -197,6 +208,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Create groups */
     _groups = new NodeGroups( this );
+
+    /* Create a mouse handler */
+    _mouse_handler = new MouseHandler( this );
 
     /* Allocate memory for the animator */
     animator = new Animator( this );
@@ -411,7 +425,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Sets the cursor of the drawing area */
-  private void set_cursor( CursorType? type = null ) {
+  public void set_cursor( CursorType? type = null ) {
 
     var     win    = get_window();
     Cursor? cursor = win.get_cursor();
@@ -651,7 +665,6 @@ public class DrawArea : Gtk.DrawingArea {
     sfactor             = 1.0;
     _pressed            = false;
     _press_type         = EventType.NOTHING;
-    _motion             = false;
     _attach_node        = null;
     _attach_conn        = null;
     _attach_sticker     = null;
@@ -704,7 +717,6 @@ public class DrawArea : Gtk.DrawingArea {
     sfactor             = 1.0;
     _pressed            = false;
     _press_type         = EventType.NOTHING;
-    _motion             = false;
     _attach_node        = null;
     _attach_conn        = null;
     _attach_sticker     = null;
@@ -1425,15 +1437,18 @@ public class DrawArea : Gtk.DrawingArea {
           _selected.add_child_nodes( node );
         }
 
-      /* Otherwise, just select the current node */
-      } else {
+      /* Otherwise, just select the current node if it is not already selected */
+      } else if( !_selected.is_node_selected( node ) ) {
         _selected.set_current_node( node );
       }
 
+      /* Track the last selected child of a parent */
       if( node.parent != null ) {
         node.parent.last_selected_child = node;
       }
+
       return( true );
+
     }
 
   }
@@ -1948,27 +1963,6 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
-  /* Handle button press event */
-  private bool on_press( EventButton event ) {
-    switch( event.button ) {
-      case Gdk.BUTTON_PRIMARY :
-      case Gdk.BUTTON_MIDDLE  :
-        grab_focus();
-        _press_x      = scale_value( event.x );
-        _press_y      = scale_value( event.y );
-        _pressed      = set_current_at_position( _press_x, _press_y, event );
-        _press_type   = event.type;
-        _press_middle = event.button == Gdk.BUTTON_MIDDLE;
-        _motion       = false;
-        queue_draw();
-        break;
-      case Gdk.BUTTON_SECONDARY :
-        show_contextual_menu( event );
-        break;
-    }
-    return( false );
-  }
-
   /* Selects all nodes within the selected box */
   private void select_nodes_within_box( bool shift ) {
     Gdk.Rectangle box = {
@@ -1985,8 +1979,28 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Handle button press event */
+  private bool on_press( EventButton event ) {
+    _mouse_handler.on_press( event );
+    if( _mouse_handler.pressed_button_right() ) {
+      show_contextual_menu( event );
+    } else {
+      grab_focus();
+      _press_x      = scale_value( event.x );
+      _press_y      = scale_value( event.y );
+      _pressed      = set_current_at_position( _press_x, _press_y, event );
+      _press_type   = event.type;
+      _press_middle = event.button == Gdk.BUTTON_MIDDLE;
+      _motion       = false;
+      queue_draw();
+    }
+    return( false );
+  }
+
   /* Handle mouse motion */
   private bool on_motion( EventMotion event ) {
+
+    _mouse_handler.on_motion( event );
 
     /* Clear the hover */
     if( _select_hover_id > 0 ) {
@@ -1994,120 +2008,69 @@ public class DrawArea : Gtk.DrawingArea {
       _select_hover_id = 0;
     }
 
-    var control = (bool)(event.state & ModifierType.CONTROL_MASK);
-    var shift   = (bool)(event.state & ModifierType.SHIFT_MASK);
-    var alt     = (bool)(event.state & ModifierType.MOD1_MASK);
+    var x = _mouse_handler.motion_scaled_x();
+    var y = _mouse_handler.motion_scaled_y();
 
-    /* If the node is attached, clear it */
-    if( _attach_node != null ) {
-      set_node_mode( _attach_node, NodeMode.NONE );
-      _attach_node = null;
-      queue_draw();
-    }
+    /* If we are dealing with a connection, update it based on its mode */
+    if( _mouse_handler.pressed_connection() != null ) {
+      switch( _mouse_handler.pressed_connect().mode ) {
+        case ConnMode.ADJUSTING :
+          _mouse_handler.pressed_connection().move_drag_handle( x, y );
+          queue_draw();
+          break;
+        case ConnMode.CONNECTING :
+        case ConnMode.LINKING    :
+          update_connection( event.x, event.y );
+          break;
+      }
 
-    var last_x = _scaled_x;
-    var last_y = _scaled_y;
-    _scaled_x = scale_value( event.x );
-    _scaled_y = scale_value( event.y );
-
-    var current_node    = _selected.current_node();
-    var current_conn    = _selected.current_connection();
-    var current_sticker = _selected.current_sticker();
-
-    /* If the mouse button is current pressed, handle it */
-    if( _pressed ) {
-
-      /* If we are dealing with a connection, update it based on its mode */
-      if( current_conn != null ) {
-        switch( current_conn.mode ) {
-          case ConnMode.ADJUSTING :
-            current_conn.move_drag_handle( _scaled_x, _scaled_y );
-            queue_draw();
-            break;
-          case ConnMode.CONNECTING :
-          case ConnMode.LINKING    :
-            update_connection( event.x, event.y );
-            for( int i=0; i<_nodes.length; i++ ) {
-              Node? match = _nodes.index( i ).contains( _scaled_x, _scaled_y, null );
-              if( match != null ) {
-                _attach_node = match;
-                set_node_mode( _attach_node, NodeMode.ATTACHABLE );
-                break;
-              }
-            }
-            break;
-        }
-
-      /* If we are dealing with a node, handle it based on its mode */
-      } else if( (current_node != null) && !_select_box.valid ) {
-        double diffx = _scaled_x - _press_x;
-        double diffy = _scaled_y - _press_y;
-        if( current_node.mode == NodeMode.CURRENT ) {
-          if( _resize ) {
-            current_node.resize( diffx );
-            auto_save();
-          } else {
-            Node attach_node = attachable_node( _scaled_x, _scaled_y );
-            if( attach_node != null ) {
-              set_node_mode( attach_node, NodeMode.ATTACHABLE );
-              _attach_node = attach_node;
-            }
-            current_node.posx += diffx;
-            current_node.posy += diffy;
-            current_node.layout.set_side( current_node );
-          }
-        } else {
-          switch( _press_type ) {
-            case EventType.BUTTON_PRESS        :  current_node.name.set_cursor_at_char( _scaled_x, _scaled_y, true );  break;
-            case EventType.DOUBLE_BUTTON_PRESS :  current_node.name.set_cursor_at_word( _scaled_x, _scaled_y, true );  break;
-          }
-        }
-        queue_draw();
-
-      /* If we are dealing with a sticker, handle it */
-      } else if( current_sticker != null ) {
-        double diffx = _scaled_x - _press_x;
-        double diffy = _scaled_y - _press_y;
+    /* If we are dealing with a node, handle it based on its mode */
+    } else if( (_mouse_handler.pressed_node() != null) && !_select_box.valid ) {
+      double diffx = _mouse_handler.motion_diff_x();
+      double diffy = _mouse_handler.motion_diff_y();
+      if( _mouse_handler.pressed_node().mode == NodeMode.CURRENT ) {
         if( _resize ) {
-          current_sticker.resize( diffx );
+          _mouse_handler.pressed_node().resize( diffx );
+          auto_save();
         } else {
-          current_sticker.posx += diffx;
-          current_sticker.posy += diffy;
+          _mouse_handler.pressed_node().posx += diffx;
+          _mouse_handler.pressed_node().posy += diffy;
+          _mouse_handler.pressed_node().layout.set_side( _mouse_handler.pressed_node() );
         }
-        queue_draw();
-        auto_save();
-
-      /* If we are holding the middle mouse button while moving, pan the canvas */
-      } else if( _press_middle ) {
-        double diff_x = last_x - _scaled_x;
-        double diff_y = last_y - _scaled_y;
-        move_origin( diff_x, diff_y );
-        queue_draw();
-        auto_save();
-
-      /* Otherwise, we are drawing a selection rectangle */
       } else {
-        _select_box.w = (_scaled_x - _select_box.x);
-        _select_box.h = (_scaled_y - _select_box.y);
-        select_nodes_within_box( shift );
-        queue_draw();
+        if( _mouse_handler.press_single() ) {
+          _mouse_handler.pressed_node().name.set_cursor_at_char( scaled_x, scaled_y, true );
+        } else if( _mouse_handler.press_double() ) {
+          _mouse_handler.pressed_node().name.set_cursor_at_word( scaled_x, scaled_y, true );
+        }
       }
+      queue_draw();
 
-      if( !_motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within( _scaled_x, _scaled_y ) ) {
-        current_node.alpha = 0.3;
+    /* If we are dealing with a sticker, handle it */
+    } else if( current_sticker != null ) {
+      double diffx = _mouse_handler.motion_diff_x();
+      double diffy = _mouse_handler.motion_diff_y();
+      if( _resize ) {
+        current_sticker.resize( diffx );
+      } else {
+        current_sticker.posx += diffx;
+        current_sticker.posy += diffy;
       }
-      _press_x = _scaled_x;
-      _press_y = _scaled_y;
-      _motion  = true;
+      queue_draw();
+      auto_save();
 
-    /* If the Alt key is held down, we are panning the canvas */
-    } else if( alt ) {
-
-      double diff_x = last_x - _scaled_x;
-      double diff_y = last_y - _scaled_y;
+    /* If we are holding the middle mouse button while moving, pan the canvas */
+    } else if( _mouse_handler.pressed_middle() || _mouse_handler.motion_alt() ) {
+      double diff_x = _mouse_handler.motion_last_diff_x();
+      double diff_y = _mouse_handler.motion_last_diff_y();
       move_origin( diff_x, diff_y );
       queue_draw();
       auto_save();
+
+    /* Otherwise, we are drawing a selection rectangle */
+    } else if( _select_box.valid ) {
+      select_nodes_within_box( pressed_shift() );
+      queue_draw();
 
     } else {
 
@@ -2273,23 +2236,13 @@ public class DrawArea : Gtk.DrawingArea {
   /* Handle button release event */
   private bool on_release( EventButton event ) {
 
-    var current_node    = _selected.current_node();
-    var current_conn    = _selected.current_connection();
-    var current_sticker = _selected.current_sticker();
+    _mouse_handler.on_release( event );
 
-    _pressed = false;
+    var current_conn    = _selected.get_current_connection();
+    var current_node    = _selected.get_current_node();
+    var current_sticker = _selected.get_current_sticker();
 
-    if( _select_box.valid ) {
-      _select_box = {0, 0, 0, 0, false};
-      queue_draw();
-    }
-
-    /* Return the cursor to the default cursor */
-    if( _motion ) {
-      set_cursor( null );
-    }
-
-    /* If we were resizing a node, end the resize */
+    /* TODO - If we were resizing a node, end the resize */
     if( _resize ) {
       _resize = false;
       if( current_sticker != null ) {
@@ -2304,11 +2257,11 @@ public class DrawArea : Gtk.DrawingArea {
     if( current_conn != null ) {
 
       /* If the connection end is released on an attachable node, attach the connection to the node */
-      if( _attach_node != null ) {
+      if( _mouse_handler.attach_node() != null ) {
         if( current_conn.mode == ConnMode.LINKING ) {
-          end_link( _attach_node );
+          end_link( _mouse_handler.attach_node() );
         } else {
-          end_connection( _attach_node );
+          end_connection( _mouse_handler.attach_node() );
           if( _last_connection != null ) {
             undo_buffer.add_item( new UndoConnectionChange( _( "connection endpoint change" ), _last_connection, current_conn ) );
           }
@@ -2335,7 +2288,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( current_node.mode == NodeMode.CURRENT ) {
 
         /* If we are hovering over an attach node, perform the attachment */
-        if( _attach_node != null ) {
+        if( _mouse_handler.attach_node() != null ) {
           attach_current_node();
 
         /* If we are not in motion, set the cursor */
@@ -2364,14 +2317,6 @@ public class DrawArea : Gtk.DrawingArea {
       if( current_sticker.mode == StickerMode.SELECTED ) {
         undo_buffer.add_item( new UndoStickerMove( current_sticker, _sticker_posx, _sticker_posy ) );
       }
-    }
-
-    /* If motion is set, clear it and clear the alpha */
-    if( _motion ) {
-      if( current_node != null ) {
-        current_node.alpha = 1.0;
-      }
-      _motion = false;
     }
 
     return( false );

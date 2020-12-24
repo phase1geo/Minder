@@ -163,6 +163,19 @@ public class Connections {
   }
 
   /*
+   Returns the connection that is under the given coordinates or null if the coordinates
+   do not refer to a connection.
+  */
+  public Connection? within_connection( double x, double y ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ).within( x, y ) ) {
+        return( _connection.index( i ) );
+      }
+    }
+    return( null );
+  }
+
+  /*
    Called whenever a node is deleted in the mind map.  All attached connections
    also need to be removed.
   */
