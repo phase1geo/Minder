@@ -173,6 +173,7 @@ sources += files(
     'LinkType.vala',
     'MainWindow.vala',
     'MapInspector.vala',
+    'MouseHandler.vala',
     'Node.vala',
     'NodeAlign.vala',
     'NodeBorder.vala',

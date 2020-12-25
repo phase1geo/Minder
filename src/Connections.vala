@@ -169,7 +169,7 @@ public class Connections {
   public Connection? within_connection( double x, double y ) {
     for( int i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ).within( x, y ) ) {
-        return( _connection.index( i ) );
+        return( _connections.index( i ) );
       }
     }
     return( null );

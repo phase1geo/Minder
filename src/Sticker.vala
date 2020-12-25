@@ -70,9 +70,12 @@ public class Sticker {
 
   /* Returns true if the given coordinates are within the area of the resizer box */
   public bool is_within_resizer( double x, double y ) {
-    double rx, ry, rw, rh;
-    resizer_bbox( out rx, out ry, out rw, out rh );
-    return( Utils.is_within_bounds( x, y, rx, ry, rw, rh ) );
+    if( mode == StickerMode.SELECTED ) {
+      double rx, ry, rw, rh;
+      resizer_bbox( out rx, out ry, out rw, out rh );
+      return( Utils.is_within_bounds( x, y, rx, ry, rw, rh ) );
+    }
+    return( false );
   }
 
   /* Resizes the given image */

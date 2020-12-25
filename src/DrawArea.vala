@@ -51,8 +51,6 @@ public class DrawArea : Gtk.DrawingArea {
 
   private Document         _doc;
   private GLib.Settings    _settings;
-  private double           _press_x;
-  private double           _press_y;
   private double           _scaled_x;
   private double           _scaled_y;
   private double           _origin_x;
@@ -62,10 +60,7 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _store_origin_y;
   private double           _store_scale_factor;
   private bool             _pressed      = false;
-  private EventType        _press_type   = EventType.NOTHING;
-  private bool             _press_middle = false;
   private bool             _resize       = false;
-  private bool             _motion       = false;
   private Node?            _last_node    = null;
   private Connection?      _last_connection = null;
   private Array<Node>      _nodes;
@@ -96,7 +91,6 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _focus_alpha  = 0.05;
   private bool             _create_new_from_edit;
   private Selection        _selected;
-  private SelectBox        _select_box;
   private Tagger           _tagger;
   private TextCompletion   _completion;
   private double           _sticker_posx;
@@ -111,6 +105,7 @@ public class DrawArea : Gtk.DrawingArea {
   public Layouts        layouts       { set; get; default = new Layouts(); }
   public Animator       animator      { set; get; }
   public ImageManager   image_manager { set; get; default = new ImageManager(); }
+  public SelectBox      select_box;
 
   public GLib.Settings settings {
     get {
@@ -164,11 +159,6 @@ public class DrawArea : Gtk.DrawingArea {
   public Selection selected {
     get {
       return( _selected );
-    }
-  }
-  public SelectBox select_box {
-    get {
-      return( _select_box );
     }
   }
 
@@ -226,7 +216,7 @@ public class DrawArea : Gtk.DrawingArea {
     _url_editor = new UrlEditor( this );
 
     /* Initialize the selection box */
-    _select_box = {0, 0, 0, 0, false};
+    select_box = {0, 0, 0, 0, false};
 
     /* Create the popup menu */
     _node_menu   = new NodeMenu( this, accel_group );
@@ -664,7 +654,6 @@ public class DrawArea : Gtk.DrawingArea {
     origin_y            = 0.0;
     sfactor             = 1.0;
     _pressed            = false;
-    _press_type         = EventType.NOTHING;
     _attach_node        = null;
     _attach_conn        = null;
     _attach_sticker     = null;
@@ -716,7 +705,6 @@ public class DrawArea : Gtk.DrawingArea {
     origin_y            = 0.0;
     sfactor             = 1.0;
     _pressed            = false;
-    _press_type         = EventType.NOTHING;
     _attach_node        = null;
     _attach_conn        = null;
     _attach_sticker     = null;
@@ -1285,302 +1273,6 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Called whenever the user clicks on a valid connection */
-  private bool set_current_connection_from_position( Connection conn, EventButton e ) {
-
-    var shift = (bool)(e.state & ModifierType.SHIFT_MASK);
-
-    if( _selected.is_current_connection( conn ) ) {
-      if( conn.mode == ConnMode.EDITABLE ) {
-        switch( e.type ) {
-          case EventType.BUTTON_PRESS        :
-            conn.title.set_cursor_at_char( e.x, e.y, shift );
-            _im_context.reset();
-            break;
-          case EventType.DOUBLE_BUTTON_PRESS :
-            conn.title.set_cursor_at_word( e.x, e.y, shift );
-            _im_context.reset();
-            break;
-          case EventType.TRIPLE_BUTTON_PRESS :
-            conn.title.set_cursor_all( false );
-            _im_context.reset();
-            break;
-        }
-      } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
-        var current = _selected.current_connection();
-        _orig_title = (current.title != null) ? current.title.text.text : "";
-        current.edit_title_begin( this );
-        set_connection_mode( current, ConnMode.EDITABLE );
-      }
-      return( true );
-    } else {
-      if( shift ) {
-        _selected.add_connection( conn );
-        handle_connection_edit_on_creation( conn );
-      } else {
-        set_current_connection( conn );
-      }
-    }
-
-    return( false );
-
-  }
-
-  /* Called whenever the user clicks on node */
-  private bool set_current_node_from_position( Node node, EventButton e ) {
-
-    var scaled_x = scale_value( e.x );
-    var scaled_y = scale_value( e.y );
-    var shift    = (bool)(e.state & ModifierType.SHIFT_MASK);
-    var control  = (bool)(e.state & ModifierType.CONTROL_MASK);
-    var dpress   = e.type == EventType.DOUBLE_BUTTON_PRESS;
-    var tpress   = e.type == EventType.TRIPLE_BUTTON_PRESS;
-    var tag      = FormatTag.LENGTH;
-    var url      = "";
-    var left     = 0.0;
-
-    /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
-    if( node.is_within_task( scaled_x, scaled_y ) ) {
-      toggle_task( node );
-      current_changed( this );
-      return( false );
-    } else if( node.is_within_linked_node( scaled_x, scaled_y ) ) {
-      select_linked_node( node );
-      return( false );
-    } else if( node.is_within_fold( scaled_x, scaled_y ) ) {
-      toggle_fold( node );
-      current_changed( this );
-      return( false );
-    } else if( node.is_within_resizer( scaled_x, scaled_y ) ) {
-      _resize     = true;
-      _orig_width = node.style.node_width;
-      return( true );
-    } else if( !shift && control && node.name.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
-      if( tag == FormatTag.URL ) {
-        Utils.open_url( url );
-      }
-      return( false );
-    }
-
-    _orig_side = node.side;
-    _orig_info.remove_range( 0, _orig_info.length );
-    node.get_node_info( ref _orig_info );
-
-    /* If the node is being edited, go handle the click */
-    if( node.mode == NodeMode.EDITABLE ) {
-      switch( e.type ) {
-        case EventType.BUTTON_PRESS        :
-          node.name.set_cursor_at_char( scaled_x, scaled_y, shift );
-          _im_context.reset();
-          break;
-        case EventType.DOUBLE_BUTTON_PRESS :
-          node.name.set_cursor_at_word( scaled_x, scaled_y, shift );
-          _im_context.reset();
-          break;
-        case EventType.TRIPLE_BUTTON_PRESS :
-          node.name.set_cursor_all( false );
-          _im_context.reset();
-          break;
-      }
-      return( true );
-
-    /*
-     If the user double-clicked a node.  If an image was clicked on, edit the image;
-     otherwise, set the node's mode to editable.
-    */
-    } else if( !control && !shift && (e.type == EventType.DOUBLE_BUTTON_PRESS) ) {
-      if( node.is_within_image( scaled_x, scaled_y ) ) {
-        edit_current_image();
-        return( false );
-      } else {
-        set_node_mode( node, NodeMode.EDITABLE );
-      }
-      return( true );
-
-    /* Otherwise, we need to adjust the selection */
-    } else {
-
-      /* The shift key has a toggling effect */
-      if( shift ) {
-        if( control ) {
-          if( tpress ) {
-            if( !_selected.remove_nodes_at_level( node ) ) {
-              _selected.add_nodes_at_level( node );
-            }
-          } else if( dpress ) {
-            if( !_selected.remove_node_tree( node ) ) {
-              _selected.add_node_tree( node );
-            }
-          } else {
-            if( !_selected.remove_child_nodes( node ) ) {
-              _selected.add_child_nodes( node );
-            }
-          }
-        } else {
-          if( !_selected.remove_node( node ) ) {
-            _selected.add_node( node );
-          }
-        }
-
-      /*
-       The Control key + single click will select the current node's children
-       The Control key + double click will select the current node tree.
-       The Control key + triple click will select all nodes at the same level.
-      */
-      } else if( control ) {
-        _selected.clear_nodes();
-        if( tpress ) {
-          _selected.add_nodes_at_level( node );
-        } else if( dpress ) {
-          _selected.add_node_tree( node );
-        } else {
-          _selected.add_child_nodes( node );
-        }
-
-      /* Otherwise, just select the current node if it is not already selected */
-      } else if( !_selected.is_node_selected( node ) ) {
-        _selected.set_current_node( node );
-      }
-
-      /* Track the last selected child of a parent */
-      if( node.parent != null ) {
-        node.parent.last_selected_child = node;
-      }
-
-      return( true );
-
-    }
-
-  }
-
-  /* Handles a click on the specified sticker */
-  public bool set_current_sticker_from_position( Sticker sticker, EventButton e ) {
-
-    var scaled_x = scale_value( e.x );
-    var scaled_y = scale_value( e.y );
-
-    /* If the sticker is selected, check to see if the cursor is over other parts */
-    if( sticker.mode == StickerMode.SELECTED ) {
-      if( sticker.is_within_resizer( scaled_x, scaled_y ) ) {
-        _resize     = true;
-        _orig_width = (int)sticker.width;
-        return( true );
-      }
-
-    /* Otherwise, add the sticker to the selection */
-    } else {
-      set_current_sticker( sticker );
-    }
-
-    /* Save the location of the sticker */
-    _sticker_posx = sticker.posx;
-    _sticker_posy = sticker.posy;
-
-    return( true );
-
-  }
-
-  /* Handles a click on the specified group */
-  public bool set_current_group_from_position( NodeGroup group, EventButton e ) {
-
-    var shift = (bool)(e.state & ModifierType.SHIFT_MASK);
-
-    /* Select the current group */
-    if( shift ) {
-      _selected.add_group( group );
-    } else {
-      set_current_group( group );
-    }
-
-    return( true );
-
-  }
-
-  /*
-   Sets the current node pointer to the node that is within the given coordinates.
-   Returns true if we sucessfully set current_node to a valid node and made it
-   selected.
-  */
-  private bool set_current_at_position( double x, double y, EventButton e ) {
-
-    var current_conn = _selected.current_connection();
-    var shift        = (bool)(e.state & ModifierType.SHIFT_MASK);
-
-    /* If the user clicked on a selected connection endpoint, disconnect that endpoint */
-    if( (current_conn != null) && (current_conn.mode == ConnMode.SELECTED) ) {
-      if( current_conn.within_from_handle( x, y ) ) {
-        _last_connection = new Connection.from_connection( this, current_conn );
-        current_conn.disconnect_from_node( true );
-        return( true );
-      } else if( current_conn.within_to_handle( x, y ) ) {
-        _last_connection = new Connection.from_connection( this, current_conn );
-        current_conn.disconnect_from_node( false );
-        return( true );
-      } else if( current_conn.within_drag_handle( x, y ) ) {
-        set_connection_mode( current_conn, ConnMode.ADJUSTING );
-        return( true );
-      }
-    }
-
-    if( (_attach_node == null) || (current_conn == null) ||
-        ((current_conn.mode != ConnMode.CONNECTING) && (current_conn.mode != ConnMode.LINKING)) ) {
-      Connection? match_conn = current_conn;
-      if( current_conn == null ) {
-        if( (match_conn = _connections.within_title( x, y )) == null ) {
-          match_conn = _connections.on_curve( x, y );
-        }
-      } else if( !current_conn.within_drag_handle( x, y ) ) {
-        if( (match_conn = _connections.within_title( x, y )) == null ) {
-          match_conn = _connections.on_curve( x, y );
-        }
-      }
-      if( match_conn != null ) {
-        clear_current_node( false );
-        clear_current_sticker( false );
-        clear_current_group( false );
-        return( set_current_connection_from_position( match_conn, e ) );
-      } else {
-        for( int i=0; i<_nodes.length; i++ ) {
-          var match_node = _nodes.index( i ).contains( x, y, null );
-          if( match_node != null ) {
-            clear_current_connection( false );
-            clear_current_sticker( false );
-            clear_current_group( false );
-            return( set_current_node_from_position( match_node, e ) );
-          }
-        }
-        var sticker = _stickers.is_within( x, y );
-        if( sticker != null ) {
-          clear_current_node( false );
-          clear_current_connection( false );
-          clear_current_group( false );
-          return( set_current_sticker_from_position( sticker, e ) );
-        }
-        var group = groups.node_group_containing( _scaled_x, _scaled_y );
-        if( group != null ) {
-          clear_current_node( false );
-          clear_current_connection( false );
-          clear_current_sticker( false );
-          return( set_current_group_from_position( group, e ) );
-        }
-        _select_box.x     = x;
-        _select_box.y     = y;
-        _select_box.valid = true;
-        if( !shift ) {
-          clear_current_node( true );
-        }
-        clear_current_connection( true );
-        clear_current_sticker( true );
-        clear_current_group( true );
-        if( _last_node != null ) {
-          _selected.set_current_node( _last_node );
-        }
-      }
-    }
-
-    return( true );
-
-  }
 
   /* Returns the supported scale points */
   public static double[] get_scale_marks() {
@@ -1589,7 +1281,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Returns a properly scaled version of the given value */
-  private double scale_value( double val ) {
+  public double scale_value( double val ) {
     return( val / sfactor );
   }
 
@@ -1893,9 +1585,9 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Draws the selection box, if one is set */
   public void draw_select_box( Context ctx ) {
-    if( !_select_box.valid ) return;
+    if( !select_box.valid ) return;
     Utils.set_context_color_with_alpha( ctx, _theme.get_color( "nodesel_background" ), 0.1 );
-    ctx.rectangle( _select_box.x, _select_box.y, _select_box.w, _select_box.h );
+    ctx.rectangle( select_box.x, select_box.y, select_box.w, select_box.h );
     ctx.fill();
   }
 
@@ -1912,7 +1604,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Draw the current node on top of all others */
     if( (current_node != null) && (current_node.folded_ancestor() == null) ) {
-      current_node.draw_all( ctx, _theme, null, true, (!is_node_editable() && _pressed && _motion && !_resize) );
+      current_node.draw_all( ctx, _theme, null, true, _mouse_handler.moving_node() );
     }
 
     /* Draw the current connection on top of everything else */
@@ -1966,32 +1658,190 @@ public class DrawArea : Gtk.DrawingArea {
   /* Selects all nodes within the selected box */
   private void select_nodes_within_box( bool shift ) {
     Gdk.Rectangle box = {
-      (int)((_select_box.w < 0) ? (_select_box.x + _select_box.w) : _select_box.x),
-      (int)((_select_box.h < 0) ? (_select_box.y + _select_box.h) : _select_box.y),
-      (int)((_select_box.w < 0) ? (0 - _select_box.w) : _select_box.w),
-      (int)((_select_box.h < 0) ? (0 - _select_box.h) : _select_box.h)
+      (int)((select_box.w < 0) ? (select_box.x + select_box.w) : select_box.x),
+      (int)((select_box.h < 0) ? (select_box.y + select_box.h) : select_box.y),
+      (int)((select_box.w < 0) ? (0 - select_box.w) : select_box.w),
+      (int)((select_box.h < 0) ? (0 - select_box.h) : select_box.h)
     };
     if( !shift ) {
-      _selected.clear_nodes();
+      _selected.clear_nodes( false );
     }
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).select_within_box( box, _selected );
     }
   }
 
+  /* Called whenever the user clicks on a valid connection */
+  private void set_current_connection_from_position() {
+
+    var conn    = _mouse_handler.pressed_connection();
+    var shift   = _mouse_handler.pressed_shift();
+    var control = _mouse_handler.pressed_control();
+    var x       = _mouse_handler.pressed_scaled_x();
+    var y       = _mouse_handler.pressed_scaled_y();
+
+    /* If the pressed connection is also the current connection, do stuff */
+    if( _selected.is_current_connection( conn ) ) {
+      if( conn.mode == ConnMode.EDITABLE ) {
+        if( _mouse_handler.pressed_single() ) {
+          conn.title.set_cursor_at_char( x, y, shift );
+          _im_context.reset();
+        } else if( _mouse_handler.pressed_double() ) {
+          conn.title.set_cursor_at_word( x, y, shift );
+          _im_context.reset();
+        } else if( _mouse_handler.pressed_triple() ) {
+          conn.title.set_cursor_all( false );
+          _im_context.reset();
+        }
+      } else if( _mouse_handler.pressed_double() ) {
+        var current = _selected.current_connection();
+        _orig_title = (current.title != null) ? current.title.text.text : "";
+        current.edit_title_begin( this );
+        set_connection_mode( current, ConnMode.EDITABLE );
+      }
+
+    /* Otherwise, do some different stuff */
+    } else {
+      if( control ) {
+        handle_connection_edit_on_creation( conn );
+      }
+    }
+
+  }
+
+  /* Called whenever the user clicks on node */
+  private void set_current_node_from_position() {
+
+    var node     = _mouse_handler.pressed_node();
+    var scaled_x = _mouse_handler.pressed_scaled_x();
+    var scaled_y = _mouse_handler.pressed_scaled_y();
+    var shift    = _mouse_handler.pressed_shift();
+    var control  = _mouse_handler.pressed_control();
+    var tag      = FormatTag.LENGTH;
+    var url      = "";
+    var left     = 0.0;
+
+    /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
+    if( node.is_within_task( scaled_x, scaled_y ) ) {
+      toggle_task( node );
+      current_changed( this );
+      return;
+    } else if( node.is_within_linked_node( scaled_x, scaled_y ) ) {
+      select_linked_node( node );
+      return;
+    } else if( node.is_within_fold( scaled_x, scaled_y ) ) {
+      toggle_fold( node );
+      current_changed( this );
+      return;
+    } else if( _mouse_handler.pressed_resizer() ) {
+      return;
+    } else if( !shift && control && node.name.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
+      if( tag == FormatTag.URL ) {
+        Utils.open_url( url );
+      }
+      return;
+    }
+
+    _orig_side = node.side;
+    _orig_info.remove_range( 0, _orig_info.length );
+    node.get_node_info( ref _orig_info );
+
+    /* If the node is being edited, go handle the click */
+    if( node.mode == NodeMode.EDITABLE ) {
+      if( _mouse_handler.pressed_single() ) {
+        node.name.set_cursor_at_char( scaled_x, scaled_y, shift );
+        _im_context.reset();
+      } else if( _mouse_handler.pressed_double() ) {
+        node.name.set_cursor_at_word( scaled_x, scaled_y, shift );
+        _im_context.reset();
+      } else if( _mouse_handler.pressed_triple() ) {
+        node.name.set_cursor_all( false );
+        _im_context.reset();
+      }
+
+    /*
+     If the user double-clicked a node.  If an image was clicked on, edit the image;
+     otherwise, set the node's mode to editable.
+    */
+    } else if( !control && !shift && _mouse_handler.pressed_double() ) {
+      if( node.is_within_image( scaled_x, scaled_y ) ) {
+        edit_current_image();
+      } else {
+        set_node_mode( node, NodeMode.EDITABLE );
+      }
+
+    /* Track the last selected child of a parent */
+    } else if( node.parent != null ) {
+      node.parent.last_selected_child = node;
+    }
+
+  }
+
+  /* Handles a click on the specified sticker */
+  public void set_current_sticker_from_position() {
+
+    /* Nothing to do */
+
+  }
+
+  /* Handles a click on the specified group */
+  public void set_current_group_from_position() {
+
+    /* Nothing to do */
+
+  }
+
+
+  /*
+   Sets the current node pointer to the node that is within the given coordinates.
+   Returns true if we sucessfully set current_node to a valid node and made it
+   selected.
+  */
+  private void set_current_at_position() {
+
+    var current_conn = _selected.current_connection();
+    var x            = _mouse_handler.pressed_scaled_x();
+    var y            = _mouse_handler.pressed_scaled_y();
+
+    /* If the user clicked on a selected connection endpoint, disconnect that endpoint */
+    if( (current_conn != null) && (current_conn.mode == ConnMode.SELECTED) ) {
+      if( current_conn.within_from_handle( x, y ) ) {
+        _last_connection = new Connection.from_connection( this, current_conn );
+        current_conn.disconnect_from_node( true );
+        return;
+      } else if( current_conn.within_to_handle( x, y ) ) {
+        _last_connection = new Connection.from_connection( this, current_conn );
+        current_conn.disconnect_from_node( false );
+        return;
+      } else if( current_conn.within_drag_handle( x, y ) ) {
+        set_connection_mode( current_conn, ConnMode.ADJUSTING );
+        return;
+      }
+    }
+
+    /* Figure out what the user clicked on and handle that item further */
+    if( _mouse_handler.pressed_connection() != null ) {
+      set_current_connection_from_position();
+    } else if( _mouse_handler.pressed_node() != null ) {
+      set_current_node_from_position();
+    } else if( _mouse_handler.pressed_sticker() != null ) {
+      set_current_sticker_from_position();
+    } else if( _mouse_handler.pressed_group() != null ) {
+      set_current_group_from_position();
+    } else if( _last_node != null ) {
+      _selected.set_current_node( _last_node );
+    }
+
+  }
+
   /* Handle button press event */
   private bool on_press( EventButton event ) {
     _mouse_handler.on_press( event );
-    if( _mouse_handler.pressed_button_right() ) {
+    if( _mouse_handler.pressed_right() ) {
       show_contextual_menu( event );
     } else {
       grab_focus();
-      _press_x      = scale_value( event.x );
-      _press_y      = scale_value( event.y );
-      _pressed      = set_current_at_position( _press_x, _press_y, event );
-      _press_type   = event.type;
-      _press_middle = event.button == Gdk.BUTTON_MIDDLE;
-      _motion       = false;
+      set_current_at_position();
       queue_draw();
     }
     return( false );
@@ -2008,14 +1858,19 @@ public class DrawArea : Gtk.DrawingArea {
       _select_hover_id = 0;
     }
 
-    var x = _mouse_handler.motion_scaled_x();
-    var y = _mouse_handler.motion_scaled_y();
+    var x       = _mouse_handler.motion_scaled_x();
+    var y       = _mouse_handler.motion_scaled_y();
+    var conn    = _mouse_handler.pressed_connection();
+    var node    = _mouse_handler.pressed_node();
+    var sticker = _mouse_handler.pressed_sticker();
+    var group   = _mouse_handler.pressed_group();
+    var control = _mouse_handler.pressed_control();
 
     /* If we are dealing with a connection, update it based on its mode */
-    if( _mouse_handler.pressed_connection() != null ) {
-      switch( _mouse_handler.pressed_connect().mode ) {
+    if( conn != null ) {
+      switch( conn.mode ) {
         case ConnMode.ADJUSTING :
-          _mouse_handler.pressed_connection().move_drag_handle( x, y );
+          conn.move_drag_handle( x, y );
           queue_draw();
           break;
         case ConnMode.CONNECTING :
@@ -2025,128 +1880,107 @@ public class DrawArea : Gtk.DrawingArea {
       }
 
     /* If we are dealing with a node, handle it based on its mode */
-    } else if( (_mouse_handler.pressed_node() != null) && !_select_box.valid ) {
+    } else if( (node != null) && !select_box.valid ) {
       double diffx = _mouse_handler.motion_diff_x();
       double diffy = _mouse_handler.motion_diff_y();
-      if( _mouse_handler.pressed_node().mode == NodeMode.CURRENT ) {
+      if( node.mode == NodeMode.CURRENT ) {
         if( _resize ) {
-          _mouse_handler.pressed_node().resize( diffx );
-          auto_save();
+          node.resize( diffx );
+          auto_save();  // TBD - It would be better to do the auto_save call in on_release
         } else {
-          _mouse_handler.pressed_node().posx += diffx;
-          _mouse_handler.pressed_node().posy += diffy;
-          _mouse_handler.pressed_node().layout.set_side( _mouse_handler.pressed_node() );
+          node.posx += diffx;
+          node.posy += diffy;
+          node.layout.set_side( _mouse_handler.pressed_node() );
         }
       } else {
-        if( _mouse_handler.press_single() ) {
-          _mouse_handler.pressed_node().name.set_cursor_at_char( scaled_x, scaled_y, true );
-        } else if( _mouse_handler.press_double() ) {
-          _mouse_handler.pressed_node().name.set_cursor_at_word( scaled_x, scaled_y, true );
+        if( _mouse_handler.pressed_single() ) {
+          node.name.set_cursor_at_char( x, y, true );
+        } else if( _mouse_handler.pressed_double() ) {
+          node.name.set_cursor_at_word( x, y, true );
         }
       }
       queue_draw();
 
     /* If we are dealing with a sticker, handle it */
-    } else if( current_sticker != null ) {
+    } else if( sticker != null ) {
       double diffx = _mouse_handler.motion_diff_x();
       double diffy = _mouse_handler.motion_diff_y();
       if( _resize ) {
-        current_sticker.resize( diffx );
+        sticker.resize( diffx );
       } else {
-        current_sticker.posx += diffx;
-        current_sticker.posy += diffy;
+        sticker.posx += diffx;
+        sticker.posy += diffy;
       }
       queue_draw();
-      auto_save();
+      auto_save();  // Again, it would be better to auto_save in the release
 
     /* If we are holding the middle mouse button while moving, pan the canvas */
     } else if( _mouse_handler.pressed_middle() || _mouse_handler.motion_alt() ) {
-      double diff_x = _mouse_handler.motion_last_diff_x();
-      double diff_y = _mouse_handler.motion_last_diff_y();
+      double diff_x = _mouse_handler.motion_diff_x();
+      double diff_y = _mouse_handler.motion_diff_y();
       move_origin( diff_x, diff_y );
       queue_draw();
       auto_save();
 
     /* Otherwise, we are drawing a selection rectangle */
-    } else if( _select_box.valid ) {
-      select_nodes_within_box( pressed_shift() );
+    } else if( select_box.valid ) {
+      select_nodes_within_box( control );
       queue_draw();
 
     } else {
 
       var tag = FormatTag.LENGTH;
       var url = "";
-      if( current_sticker != null ) {
-        if( current_sticker.is_within_resizer( _scaled_x, _scaled_y ) ) {
-          set_cursor( CursorType.SB_H_DOUBLE_ARROW );
-          return( false );
-        }
-      }
-      if( current_conn != null )  {
-        if( (current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING) ) {
+      var mconn = _mouse_handler.motion_connection();
+      var mnode = _mouse_handler.motion_node();
+      if( mconn != null )  {
+        if( (mconn.mode == ConnMode.CONNECTING) || (mconn.mode == ConnMode.LINKING) ) {
           update_connection( event.x, event.y );
         }
-        if( current_conn.within_drag_handle( _scaled_x, _scaled_y ) ||
-            current_conn.within_from_handle( _scaled_x, _scaled_y ) ||
-            current_conn.within_to_handle( _scaled_x, _scaled_y ) ) {
+        if( mconn.within_drag_handle( x, y ) ||
+            mconn.within_from_handle( x, y ) ||
+            mconn.within_to_handle( x, y ) ) {
           set_cursor_from_name( "move" );
           return( false );
-        } else if( current_conn.within_note( _scaled_x, _scaled_y ) ) {
-          set_tooltip_markup( prepare_note_markup( current_conn.note ) );
+        } else if( mconn.within_note( x, y ) ) {
+          set_tooltip_markup( prepare_note_markup( mconn.note ) );
           return( false );
         } else {
-          Connection? match_conn = _connections.on_curve( _scaled_x, _scaled_y );
-          if( (match_conn != null) && select_connection_on_hover( match_conn, shift ) ) {
+          if( select_connection_on_hover( mconn, control ) ) {
             return( false );
           }
         }
-      } else {
-        Connection? match_conn = _connections.on_curve( _scaled_x, _scaled_y );
-        if( match_conn != null ) {
-          if( match_conn.within_note( _scaled_x, _scaled_y ) ) {
-            set_tooltip_markup( prepare_note_markup( match_conn.note ) );
-            return( false );
-          } else if( select_connection_on_hover( match_conn, shift ) ) {
-            return( false );
+
+      } else if( mnode != null ) {
+        if( mnode.is_within_task( x, y ) ) {
+          set_cursor( CursorType.HAND2 );
+          set_tooltip_markup( _( "%0.3g%% complete" ).printf( mnode.task_completion_percentage() ) );
+        } else if( mnode.is_within_note( x, y ) ) {
+          set_tooltip_markup( prepare_note_markup( mnode.note ) );
+        } else if( mnode.is_within_linked_node( x, y ) ) {
+          set_cursor( CursorType.HAND2 );
+        } else if( mnode.is_within_resizer( x, y ) ) {
+          set_cursor( CursorType.SB_H_DOUBLE_ARROW );
+          set_tooltip_markup( null );
+        } else if( control && mnode.name.is_within_clickable( x, y, out tag, out url ) ) {
+          if( tag == FormatTag.URL ) {
+            set_cursor( url_cursor );
+            set_tooltip_markup( url );
           }
+        } else if( mnode.mode == NodeMode.EDITABLE ) {
+          set_cursor( text_cursor );
+          set_tooltip_markup( null );
+        } else {
+          set_cursor( null );
+          set_tooltip_markup( null );
+          select_node_on_hover( mnode, control );
         }
-      }
-      for( int i=0; i<_nodes.length; i++ ) {
-        Node match = _nodes.index( i ).contains( _scaled_x, _scaled_y, null );
-        if( match != null ) {
-          if( (current_conn != null) && ((current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING)) ) {
-            _attach_node = match;
-            set_node_mode( _attach_node, NodeMode.ATTACHABLE );
-          } else if( match.is_within_task( _scaled_x, _scaled_y ) ) {
-            set_cursor( CursorType.HAND2 );
-            set_tooltip_markup( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
-          } else if( match.is_within_note( _scaled_x, _scaled_y ) ) {
-            set_tooltip_markup( prepare_note_markup( match.note ) );
-          } else if( match.is_within_linked_node( _scaled_x, _scaled_y ) ) {
-            set_cursor( CursorType.HAND2 );
-          } else if( match.is_within_resizer( _scaled_x, _scaled_y ) ) {
-            set_cursor( CursorType.SB_H_DOUBLE_ARROW );
-            set_tooltip_markup( null );
-          } else if( control && match.name.is_within_clickable( _scaled_x, _scaled_y, out tag, out url ) ) {
-            if( tag == FormatTag.URL ) {
-              set_cursor( url_cursor );
-              set_tooltip_markup( url );
-            }
-          } else if( match.mode == NodeMode.EDITABLE ) {
-            set_cursor( text_cursor );
-            set_tooltip_markup( null );
-          } else {
-            set_cursor( null );
-            set_tooltip_markup( null );
-            select_node_on_hover( match, shift );
-          }
-          return( false );
-        }
+        return( false );
       }
 
       set_cursor( null );
       set_tooltip_markup( null );
-      select_sticker_group_on_hover( shift );
+      select_sticker_group_on_hover( x, y, control );
 
     }
 
@@ -2193,10 +2027,10 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Selects the current sticker/group on hover */
-  private bool select_sticker_group_on_hover( bool shift ) {
+  private bool select_sticker_group_on_hover( double x, double y, bool shift ) {
     if( _settings.get_boolean( "select-on-hover" ) ) {
       var timeout = _settings.get_int( "select-on-hover-timeout" );
-      var sticker = _stickers.is_within( _scaled_x, _scaled_y );
+      var sticker = _stickers.is_within( x, y );
       if( sticker != null ) {
         _select_hover_id = Timeout.add( timeout, () => {
           _select_hover_id = 0;
@@ -2210,7 +2044,7 @@ public class DrawArea : Gtk.DrawingArea {
         });
         return( true );
       }
-      var group = _groups.node_group_containing( _scaled_x, _scaled_y );
+      var group = _groups.node_group_containing( x, y );
       if( group != null ) {
         _select_hover_id = Timeout.add( timeout, () => {
           _select_hover_id = 0;
@@ -2238,13 +2072,12 @@ public class DrawArea : Gtk.DrawingArea {
 
     _mouse_handler.on_release( event );
 
-    var current_conn    = _selected.get_current_connection();
-    var current_node    = _selected.get_current_node();
-    var current_sticker = _selected.get_current_sticker();
+    var current_conn    = _selected.current_connection();
+    var current_node    = _selected.current_node();
+    var current_sticker = _selected.current_sticker();
 
     /* TODO - If we were resizing a node, end the resize */
     if( _resize ) {
-      _resize = false;
       if( current_sticker != null ) {
         undo_buffer.add_item( new UndoStickerResize( current_sticker, _orig_width ) );
       } else if( current_node != null ) {
@@ -2292,7 +2125,7 @@ public class DrawArea : Gtk.DrawingArea {
           attach_current_node();
 
         /* If we are not in motion, set the cursor */
-        } else if( !_motion ) {
+        } else if( !_mouse_handler.motion() ) {
           current_node.name.set_cursor_all( false );
           _orig_text.copy( current_node.name );
           current_node.name.move_cursor_to_end();
@@ -2317,7 +2150,14 @@ public class DrawArea : Gtk.DrawingArea {
       if( current_sticker.mode == StickerMode.SELECTED ) {
         undo_buffer.add_item( new UndoStickerMove( current_sticker, _sticker_posx, _sticker_posy ) );
       }
+
+    } else if( select_box.valid ) {
+      select_box.valid = false;
+      queue_draw();
     }
+
+    /* Reset the mouse handler */
+    _mouse_handler.clear();
 
     return( false );
 
@@ -3931,19 +3771,17 @@ public class DrawArea : Gtk.DrawingArea {
    cursor is over a URL.  If it is, sets the cursor appropriately.
   */
   private void handle_control( bool pressed ) {
-    var tag = FormatTag.LENGTH;
-    var url = "";
-    for( int i=0; i<_nodes.length; i++ ) {
-      var match = _nodes.index( i ).contains( _scaled_x, _scaled_y, null );
-      if( (match != null) && match.name.is_within_clickable( _scaled_x, _scaled_y, out tag, out url ) ) {
-        if( tag == FormatTag.URL ) {
-          if( pressed ) {
-            set_cursor( url_cursor );
-            set_tooltip_markup( url );
-          } else {
-            set_cursor( null );
-            set_tooltip_markup( null );
-          }
+    var tag  = FormatTag.LENGTH;
+    var url  = "";
+    var node = _mouse_handler.motion_node();
+    if( (node != null) && node.name.is_within_clickable( _mouse_handler.motion_scaled_x(), _mouse_handler.motion_scaled_y(), out tag, out url ) ) {
+      if( tag == FormatTag.URL ) {
+        if( pressed ) {
+          set_cursor( url_cursor );
+          set_tooltip_markup( url );
+        } else {
+          set_cursor( null );
+          set_tooltip_markup( null );
         }
       }
     }
@@ -4543,7 +4381,7 @@ public class DrawArea : Gtk.DrawingArea {
       _attach_node = current_node;
       set_node_mode( _attach_node, NodeMode.ATTACHABLE );
     } else {
-      conn.draw_to( _press_x, _press_y );
+      conn.draw_to( _mouse_handler.pressed_scaled_x(), _mouse_handler.pressed_scaled_y() );
     }
     _last_node = current_node;
     queue_draw();
