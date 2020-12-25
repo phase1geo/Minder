@@ -299,6 +299,128 @@ public class DrawArea : Gtk.DrawingArea {
     _im_context.delete_surrounding.connect( handle_im_delete_surrounding );
 
   }
+  
+  private void setup_mouse_handler() {
+  
+    _mouse_handler = new MouseHandler( this );
+    
+    _mouse_handler.node_pressed.connect( node_pressed );
+	  _mouse_handler.connection_pressed.connect( connection_pressed );
+	  _mouse_handler.sticker_pressed.connect( sticker_pressed );
+	  _mouse_handler.group_pressed.connect( group_pressed );
+	  _mouse_handler.node_clicked.connect( node_clicked );
+	  _mouse_handler.connection_clicked.connect( connection_clicked );
+	  _mouse_handler.sticker_clicked.connect( sticker_clicked );
+	  _mouse_handler.group_clicked.connect( group_clicked );
+    _mouse_handler.node_dropped.connect( node_dropped );
+	  _mouse_handler.sticker_dropped.connect( sticker_dropped );
+	  _mouse_handler.over_node.connect( over_node );
+	  _mouse_handler.over_connection.connect( over_connection );
+	  _mouse_handler.over_sticker.connect( over_sticker );
+	  _mouse_handler.over_group.connect( over_group );
+    _mouse_handler.select_box_changed.connect(() => {
+      queue_draw();
+    });
+    
+  }
+  
+  private void node_pressed( Node node, double x, double y ) {
+  
+    var shift    = _mouse_handler.pressed_shift();
+    var control  = _mouse_handler.pressed_control();
+    var tag      = FormatTag.LENGTH;
+    var url      = "";
+    var left     = 0.0;
+
+    /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
+    if( node.is_within_task( x, y ) ) {
+      toggle_task( node );
+      current_changed( this );
+      return;
+    } else if( node.is_within_linked_node( x, y ) ) {
+      select_linked_node( node );
+      return;
+    } else if( node.is_within_fold( x, y ) ) {
+      toggle_fold( node );
+      current_changed( this );
+      return;
+    } else if( _mouse_handler.pressed_resizer() ) {
+      return;
+    } else if( !shift && control && node.name.is_within_clickable( x, y, out tag, out url ) ) {
+      if( tag == FormatTag.URL ) {
+        Utils.open_url( url );
+      }
+      return;
+    }
+
+    _orig_side = node.side;
+    _orig_info.remove_range( 0, _orig_info.length );
+    node.get_node_info( ref _orig_info );
+
+    /* If the node is being edited, go handle the click */
+    if( node.mode == NodeMode.EDITABLE ) {
+      if( _mouse_handler.pressed_single() ) {
+        node.name.set_cursor_at_char( x, y, shift );
+        _im_context.reset();
+      } else if( _mouse_handler.pressed_double() ) {
+        node.name.set_cursor_at_word( x, y, shift );
+        _im_context.reset();
+      } else if( _mouse_handler.pressed_triple() ) {
+        node.name.set_cursor_all( false );
+        _im_context.reset();
+      }
+
+    /*
+     If the user double-clicked a node.  If an image was clicked on, edit the image;
+     otherwise, set the node's mode to editable.
+    */
+    } else if( !control && !shift && _mouse_handler.pressed_double() ) {
+      if( node.is_within_image( x, y ) ) {
+        edit_current_image();
+      } else {
+        set_node_mode( node, NodeMode.EDITABLE );
+      }
+
+    /* Track the last selected child of a parent */
+    } else if( node.parent != null ) {
+      node.parent.last_selected_child = node;
+    }
+    
+  }
+  
+  private void connection_pressed( Connection conn, double x, double y ) {
+    
+    var shift   = _mouse_handler.pressed_shift();
+    var control = _mouse_handler.pressed_control();
+
+    /* If the pressed connection is also the current connection, do stuff */
+    if( _selected.is_current_connection( conn ) ) {
+      if( conn.mode == ConnMode.EDITABLE ) {
+        if( _mouse_handler.pressed_single() ) {
+          conn.title.set_cursor_at_char( x, y, shift );
+          _im_context.reset();
+        } else if( _mouse_handler.pressed_double() ) {
+          conn.title.set_cursor_at_word( x, y, shift );
+          _im_context.reset();
+        } else if( _mouse_handler.pressed_triple() ) {
+          conn.title.set_cursor_all( false );
+          _im_context.reset();
+        }
+      } else if( _mouse_handler.pressed_double() ) {
+        var current = _selected.current_connection();
+        _orig_title = (current.title != null) ? current.title.text.text : "";
+        current.edit_title_begin( this );
+        set_connection_mode( current, ConnMode.EDITABLE );
+      }
+
+    /* Otherwise, do some different stuff */
+    } else {
+      if( control ) {
+        handle_connection_edit_on_creation( conn );
+      }
+    }
+    
+  }
 
   /* If the current selection ever changes, let the sidebar know about it. */
   private void selection_changed() {
@@ -1674,106 +1796,14 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the user clicks on a valid connection */
   private void set_current_connection_from_position() {
 
-    var conn    = _mouse_handler.pressed_connection();
-    var shift   = _mouse_handler.pressed_shift();
-    var control = _mouse_handler.pressed_control();
-    var x       = _mouse_handler.pressed_scaled_x();
-    var y       = _mouse_handler.pressed_scaled_y();
-
-    /* If the pressed connection is also the current connection, do stuff */
-    if( _selected.is_current_connection( conn ) ) {
-      if( conn.mode == ConnMode.EDITABLE ) {
-        if( _mouse_handler.pressed_single() ) {
-          conn.title.set_cursor_at_char( x, y, shift );
-          _im_context.reset();
-        } else if( _mouse_handler.pressed_double() ) {
-          conn.title.set_cursor_at_word( x, y, shift );
-          _im_context.reset();
-        } else if( _mouse_handler.pressed_triple() ) {
-          conn.title.set_cursor_all( false );
-          _im_context.reset();
-        }
-      } else if( _mouse_handler.pressed_double() ) {
-        var current = _selected.current_connection();
-        _orig_title = (current.title != null) ? current.title.text.text : "";
-        current.edit_title_begin( this );
-        set_connection_mode( current, ConnMode.EDITABLE );
-      }
-
-    /* Otherwise, do some different stuff */
-    } else {
-      if( control ) {
-        handle_connection_edit_on_creation( conn );
-      }
-    }
+    
 
   }
 
   /* Called whenever the user clicks on node */
   private void set_current_node_from_position() {
 
-    var node     = _mouse_handler.pressed_node();
-    var scaled_x = _mouse_handler.pressed_scaled_x();
-    var scaled_y = _mouse_handler.pressed_scaled_y();
-    var shift    = _mouse_handler.pressed_shift();
-    var control  = _mouse_handler.pressed_control();
-    var tag      = FormatTag.LENGTH;
-    var url      = "";
-    var left     = 0.0;
-
-    /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
-    if( node.is_within_task( scaled_x, scaled_y ) ) {
-      toggle_task( node );
-      current_changed( this );
-      return;
-    } else if( node.is_within_linked_node( scaled_x, scaled_y ) ) {
-      select_linked_node( node );
-      return;
-    } else if( node.is_within_fold( scaled_x, scaled_y ) ) {
-      toggle_fold( node );
-      current_changed( this );
-      return;
-    } else if( _mouse_handler.pressed_resizer() ) {
-      return;
-    } else if( !shift && control && node.name.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
-      if( tag == FormatTag.URL ) {
-        Utils.open_url( url );
-      }
-      return;
-    }
-
-    _orig_side = node.side;
-    _orig_info.remove_range( 0, _orig_info.length );
-    node.get_node_info( ref _orig_info );
-
-    /* If the node is being edited, go handle the click */
-    if( node.mode == NodeMode.EDITABLE ) {
-      if( _mouse_handler.pressed_single() ) {
-        node.name.set_cursor_at_char( scaled_x, scaled_y, shift );
-        _im_context.reset();
-      } else if( _mouse_handler.pressed_double() ) {
-        node.name.set_cursor_at_word( scaled_x, scaled_y, shift );
-        _im_context.reset();
-      } else if( _mouse_handler.pressed_triple() ) {
-        node.name.set_cursor_all( false );
-        _im_context.reset();
-      }
-
-    /*
-     If the user double-clicked a node.  If an image was clicked on, edit the image;
-     otherwise, set the node's mode to editable.
-    */
-    } else if( !control && !shift && _mouse_handler.pressed_double() ) {
-      if( node.is_within_image( scaled_x, scaled_y ) ) {
-        edit_current_image();
-      } else {
-        set_node_mode( node, NodeMode.EDITABLE );
-      }
-
-    /* Track the last selected child of a parent */
-    } else if( node.parent != null ) {
-      node.parent.last_selected_child = node;
-    }
+    
 
   }
 

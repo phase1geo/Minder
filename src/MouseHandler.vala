@@ -44,7 +44,27 @@ public class MouseHandler {
   private double       _orig_w;
 
   public bool first_motion { get; private set; default = true; }
-
+	
+	public signal void node_pressed( Node node, double x, double y );
+	public signal void connection_pressed( Connection conn, double x, double y );
+	public signal void sticker_pressed( Sticker sticker, double x, double y );
+	public signal void group_pressed( NodeGroup group, double x, double y );
+	
+	public signal void node_clicked( Node node, double x, double y );
+	public signal void connection_clicked( Connection conn, double x, double y );
+	public signal void sticker_clicked( Sticker sticker, double x, double y );
+	public signal void group_clicked( NodeGroup group, double x, double y );
+	
+	public signal void node_dropped( double x, double y );
+	public signal void sticker_dropped( double x, double y );
+	
+	public signal void over_node( Node node, double x, double y );
+	public signal void over_connection( Connection conn, double x, double y );
+	public signal void over_sticker( Sticker sticker, double x, double y );
+	public signal void over_group( NodeGroup group; double x, double y );
+  
+  public signal void select_box_changed();
+	
   /* Constructor */
   public MouseHandler( DrawArea da ) {
     _da            = da;
@@ -290,8 +310,11 @@ public class MouseHandler {
     _press_sticker = (_press_node    == null) ? find_sticker( x, y ) : null;
     _press_group   = (_press_sticker == null) ? find_group( x, y )   : null;
 
+    if( _press_conn != null ) {
+      connection_pressed( _press_conn, x, y );
+    
     /* If we clicked on a node or sticker, get some information about them */
-    if( _press_node != null ) {
+    } else if( _press_node != null ) {
       _orig_x = _press_node.posx;
       _orig_y = _press_node.posy;
       _orig_w = _press_node.width;
@@ -299,6 +322,7 @@ public class MouseHandler {
         _press_resizer = true;
         _da.set_cursor( CursorType.SB_H_DOUBLE_ARROW );
       }
+			node_pressed( _press_node, x, y );
 
     } else if( _press_sticker != null ) {
       _orig_x = _press_sticker.posx;
@@ -308,6 +332,10 @@ public class MouseHandler {
         _press_resizer = true;
         _da.set_cursor( CursorType.SB_H_DOUBLE_ARROW );
       }
+			sticker_pressed( _press_sticker, x, y );
+			
+    } else if( _press_group != null ) {
+      group_pressed( _press_group, x, y );
     }
 
     /* If nothing was clicked, we are starting a selection box drag */
@@ -345,6 +373,7 @@ public class MouseHandler {
     if( _da.select_box.valid ) {
       _da.select_box.w = x - _da.select_box.x;
       _da.select_box.h = y - _da.select_box.y;
+      select_box_changed();
 
     /* If we are moving a node, calculate the attach node */
     } else if( _press_node != null ) {
@@ -364,6 +393,17 @@ public class MouseHandler {
       _motion_node    = (_motion_conn    == null) ? find_node( x, y )    : null;
       _motion_sticker = (_motion_node    == null) ? find_sticker( x, y ) : null;
       _motion_group   = (_motion_sticker == null) ? find_group( x, y )   : null;
+      
+      /* Signal the event */
+      if( _motion_conn != null ) {
+        over_connection( _motion_conn, x, y );
+      } else if( _motion_node != null ) {
+        over_node( _motion_node, x, y );
+      } else if( _motion_sticker != null ) {
+        over_sticker( _motion_sticker, x, y );
+      } else if( _motion_group != null ) {
+        over_group( _motion_group, x, y );
+      }
     }
 
   }
@@ -371,6 +411,9 @@ public class MouseHandler {
   public void on_release( EventButton e ) {
 
     _release_event = e;
+    
+    var x = _da.scale_value( e.x, e.y );
+    var y = _da.scale_value( e.x, e.y );
 
     /* Update the selection */
     if( pressed_left() && pressed_single() ) {
@@ -379,36 +422,55 @@ public class MouseHandler {
       } else {
         set_item();
       }
+    }
 
-    /* Special case when a node is selected (but not moved) */
-    } else if( (pressed_node() != null) && (_motion_event == null) ) {
-      var node = pressed_node();
-      if( pressed_control() ) {
-        if( pressed_double() ) {
-          if( !_da.selected.remove_node_tree( node ) ) {
-            _da.selected.add_node_tree( node );
+    /* Special case when a node is clicked */
+    if( motion_event == null ) {
+    
+      if( _press_conn != null ) {
+        connection_clicked( _press_conn, x, y );
+        
+      } else if( _press_node != null ) {
+        var node = pressed_node();
+        if( pressed_control() ) {
+          if( pressed_double() ) {
+            if( !_da.selected.remove_node_tree( node ) ) {
+              _da.selected.add_node_tree( node );
+            }
+          } else if( pressed_triple() ) {
+            if( !_da.selected.remove_child_nodes( node ) ) {
+              _da.selected.add_child_nodes( node );
+            }
           }
-        } else if( pressed_triple() ) {
-          if( !_da.selected.remove_child_nodes( node ) ) {
+        } else if( pressed_alt() ) {
+          if( pressed_double() ) {
+            _da.selected.clear_nodes();
+            _da.selected.add_node_tree( node );
+          } else if( pressed_triple() ) {
+            _da.selected.clear_nodes();
             _da.selected.add_child_nodes( node );
           }
         }
-      } else if( pressed_alt() ) {
-        if( pressed_double() ) {
-          _da.selected.clear_nodes();
-          _da.selected.add_node_tree( node );
-        } else if( pressed_triple() ) {
-          _da.selected.clear_nodes();
-          _da.selected.add_child_nodes( node );
-        }
+        node_clicked( _press_node, x, y );
+        
+      } else if( _press_sticker != null ) {
+        sticker_clicked( _press_sticker, x, y );
+        
+      } else if( _press_group != null ) {
+        group_clicked( _press_group, x, y );
       }
-    }
-
-    /* Clear the cursor and clear the node's alpha value */
-    if( _motion_event != null ) {
+    
+    /* Otherwise, handle a drop event */
+    } else {
       _da.set_cursor( null );
       if( _press_node != null ) {
         _press_node.alpha = 1.0;
+        node_dropped( x, y );
+      } else if( _press_sticker != null ) {
+        sticker_dropped( x, y );
+      } else {
+        _da.select_box.valid = false;
+        select_box_changed();
       }
     }
 
@@ -427,7 +489,6 @@ public class MouseHandler {
     _press_sticker       = null;
     _press_group         = null;
     _motion_event        = null;
-    _da.select_box.valid = false;
 
     /* If the attach node is set, clear the attached node */
     if( _attach_node != null ) {
