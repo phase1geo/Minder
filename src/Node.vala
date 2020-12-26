@@ -849,7 +849,7 @@ public class Node : Object {
   /* Adds all nodes within this tree that intersect with the given box */
   public void select_within_box( Gdk.Rectangle box, Selection select, bool toggle ) {
     if( intersects_with( box ) ) {
-      if( !toggle || !select.remove_node( this, false ) ) {
+      if( !toggle || !select.remove_node( this, 1.0, false ) ) {
         select.add_node( this, false );
       }
     }

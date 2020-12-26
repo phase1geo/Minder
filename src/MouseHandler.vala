@@ -55,19 +55,23 @@ public class MouseHandler {
 	public signal void connection_clicked( Connection conn, double x, double y );
 	public signal void sticker_clicked( Sticker sticker, double x, double y );
 	public signal void group_clicked( NodeGroup group, double x, double y );
-  
+	public signal void nothing_clicked( double x, double y );
+
   public signal void node_moved( Node node, double x, double y );
   public signal void connection_moved( Connection conn, double x, double y );
   public signal void sticker_moved( Sticker sticker, double x, double y );
+  public signal void nothing_moved( double x, double y );
 	
-	public signal void node_dropped( double x, double y );
-	public signal void sticker_dropped( double x, double y );
+	public signal void node_dropped( Node node, double x, double y );
+	public signal void connection_dropped( Connection conn, double x, double y );
+	public signal void sticker_dropped( Sticker sticker, double x, double y );
 	
 	public signal void over_node( Node node, double x, double y );
 	public signal void over_connection( Connection conn, double x, double y );
 	public signal void over_sticker( Sticker sticker, double x, double y );
-	public signal void over_group( NodeGroup group; double x, double y );
-  
+	public signal void over_group( NodeGroup group, double x, double y );
+	public signal void over_nothing( double x, double y );
+
   public signal void select_box_changed();
 	
   /* Constructor */
@@ -168,6 +172,10 @@ public class MouseHandler {
 
   public double motion_diff_y() {
     return( (_motion_event == null) ? 0.0 : (_da.scale_value( _motion_event.y ) - _last_motion_y) );
+  }
+
+  public bool motion_control() {
+    return( (_motion_event != null) ? false : (bool)(_motion_event.state & ModifierType.CONTROL_MASK) );
   }
 
   public bool motion_alt() {
@@ -317,7 +325,7 @@ public class MouseHandler {
 
     if( _press_conn != null ) {
       connection_pressed( _press_conn, x, y );
-    
+
     /* If we clicked on a node or sticker, get some information about them */
     } else if( _press_node != null ) {
       _orig_x = _press_node.posx;
@@ -341,7 +349,7 @@ public class MouseHandler {
 			
     } else if( _press_group != null ) {
       group_pressed( _press_group, x, y );
-      
+
     } else {
       nothing_pressed( x, y );
     }
@@ -396,18 +404,22 @@ public class MouseHandler {
         set_attach_node( find_node( x, y ) );
       }
       connection_moved( _press_conn, x, y );
-      
+
     /* If a sticker is being moved, send the signal */
     } else if( _press_sticker != null ) {
       sticker_moved( _press_sticker, x, y );
 
+    /* If we pressed down on nothing and moved the mouse, call the nothing moved event */
+    } else if( _press_event != null ) {
+      nothing_moved( x, y );
+
     /* If we have not been pressed, check to see if the cursor is within an item */
-    } else if( _press_event == null ) {
+    } else {
       _motion_conn    = find_connection( x, y );
       _motion_node    = (_motion_conn    == null) ? find_node( x, y )    : null;
       _motion_sticker = (_motion_node    == null) ? find_sticker( x, y ) : null;
       _motion_group   = (_motion_sticker == null) ? find_group( x, y )   : null;
-      
+
       /* Signal the event */
       if( _motion_conn != null ) {
         over_connection( _motion_conn, x, y );
@@ -417,6 +429,8 @@ public class MouseHandler {
         over_sticker( _motion_sticker, x, y );
       } else if( _motion_group != null ) {
         over_group( _motion_group, x, y );
+      } else {
+        over_nothing( x, y );
       }
     }
 
@@ -425,9 +439,9 @@ public class MouseHandler {
   public void on_release( EventButton e ) {
 
     _release_event = e;
-    
-    var x = _da.scale_value( e.x, e.y );
-    var y = _da.scale_value( e.x, e.y );
+
+    var x = _da.scale_value( e.x );
+    var y = _da.scale_value( e.y );
 
     /* Update the selection */
     if( pressed_left() && pressed_single() ) {
@@ -439,11 +453,13 @@ public class MouseHandler {
     }
 
     /* Special case when a node is clicked */
-    if( motion_event == null ) {
-    
+    if( _motion_event == null ) {
+
+      stdout.printf( "Clicked!\n" );
+
       if( _press_conn != null ) {
         connection_clicked( _press_conn, x, y );
-        
+
       } else if( _press_node != null ) {
         var node = pressed_node();
         if( pressed_control() ) {
@@ -466,22 +482,29 @@ public class MouseHandler {
           }
         }
         node_clicked( _press_node, x, y );
-        
+
       } else if( _press_sticker != null ) {
         sticker_clicked( _press_sticker, x, y );
-        
+
       } else if( _press_group != null ) {
         group_clicked( _press_group, x, y );
+
+      } else {
+        stdout.printf( "Calling nothing_clicked\n" );
+        nothing_clicked( x, y );
+        stdout.printf( "  Called!\n" );
       }
-    
+
     /* Otherwise, handle a drop event */
     } else {
       _da.set_cursor( null );
       if( _press_node != null ) {
         _press_node.alpha = 1.0;
-        node_dropped( x, y );
+        node_dropped( _press_node, x, y );
+      } else if( _press_conn != null ) {
+        connection_dropped( _press_conn, x, y );
       } else if( _press_sticker != null ) {
-        sticker_dropped( x, y );
+        sticker_dropped( _press_sticker, x, y );
       } else {
         _da.select_box.valid = false;
         select_box_changed();
