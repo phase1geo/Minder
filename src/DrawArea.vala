@@ -199,9 +199,6 @@ public class DrawArea : Gtk.DrawingArea {
     /* Create groups */
     _groups = new NodeGroups( this );
 
-    /* Create a mouse handler */
-    _mouse_handler = new MouseHandler( this );
-
     /* Allocate memory for the animator */
     animator = new Animator( this );
 
@@ -240,6 +237,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Create text completion */
     _completion = new TextCompletion( this );
+
+    /* Allocate and setup mouse handler */
+    setup_mouse_handler();
 
     /* Get the value of the new node from edit */
     update_focus_mode_alpha( settings );
@@ -310,8 +310,6 @@ public class DrawArea : Gtk.DrawingArea {
 
 	  _mouse_handler.node_clicked.connect( node_clicked );
 	  _mouse_handler.connection_clicked.connect( connection_clicked );
-	  // _mouse_handler.sticker_clicked.connect( sticker_clicked );
-	  // _mouse_handler.group_clicked.connect( group_clicked );
 	  _mouse_handler.nothing_clicked.connect( nothing_clicked );
 	
 	  _mouse_handler.node_moved.connect( node_moved );
@@ -331,6 +329,8 @@ public class DrawArea : Gtk.DrawingArea {
     _mouse_handler.select_box_changed.connect(() => {
       if( select_box.valid ) {
         select_nodes_within_box( _mouse_handler.pressed_control() );
+      } else {
+        selection_changed();
       }
       queue_draw();
     });
@@ -1826,7 +1826,9 @@ public class DrawArea : Gtk.DrawingArea {
 
   private void nothing_pressed( double x, double y ) {
 
-    _selected.set_current_node( _last_node );
+    if( _last_node != null ) {
+      _selected.set_current_node( _last_node );
+    }
 
   }
 
@@ -2102,12 +2104,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   private void nothing_clicked( double x, double y ) {
 
-    stdout.printf( "In nothing_clicked\n" );
-
     _selected.clear();
     queue_draw();
-
-    stdout.printf( "Cleared selection\n" );
 
   }
 

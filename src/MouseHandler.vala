@@ -455,8 +455,6 @@ public class MouseHandler {
     /* Special case when a node is clicked */
     if( _motion_event == null ) {
 
-      stdout.printf( "Clicked!\n" );
-
       if( _press_conn != null ) {
         connection_clicked( _press_conn, x, y );
 
@@ -490,9 +488,7 @@ public class MouseHandler {
         group_clicked( _press_group, x, y );
 
       } else {
-        stdout.printf( "Calling nothing_clicked\n" );
         nothing_clicked( x, y );
-        stdout.printf( "  Called!\n" );
       }
 
     /* Otherwise, handle a drop event */
