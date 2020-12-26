@@ -49,11 +49,16 @@ public class MouseHandler {
 	public signal void connection_pressed( Connection conn, double x, double y );
 	public signal void sticker_pressed( Sticker sticker, double x, double y );
 	public signal void group_pressed( NodeGroup group, double x, double y );
+  public signal void nothing_pressed( double x, double y );
 	
 	public signal void node_clicked( Node node, double x, double y );
 	public signal void connection_clicked( Connection conn, double x, double y );
 	public signal void sticker_clicked( Sticker sticker, double x, double y );
 	public signal void group_clicked( NodeGroup group, double x, double y );
+  
+  public signal void node_moved( Node node, double x, double y );
+  public signal void connection_moved( Connection conn, double x, double y );
+  public signal void sticker_moved( Sticker sticker, double x, double y );
 	
 	public signal void node_dropped( double x, double y );
 	public signal void sticker_dropped( double x, double y );
@@ -336,6 +341,9 @@ public class MouseHandler {
 			
     } else if( _press_group != null ) {
       group_pressed( _press_group, x, y );
+      
+    } else {
+      nothing_pressed( x, y );
     }
 
     /* If nothing was clicked, we are starting a selection box drag */
@@ -380,12 +388,18 @@ public class MouseHandler {
       if( _da.selected.is_node_selected( _press_node ) ) {
         set_attach_node( find_attach_node( x, y ) );
       }
+      node_moved( _press_node, x, y );
 
     /* If we are connecting or linking a connection, calculate the attach node */
     } else if( _press_conn != null ) {
       if( (_press_conn.mode == ConnMode.CONNECTING) || (_press_conn.mode == ConnMode.LINKING) ) {
         set_attach_node( find_node( x, y ) );
       }
+      connection_moved( _press_conn, x, y );
+      
+    /* If a sticker is being moved, send the signal */
+    } else if( _press_sticker != null ) {
+      sticker_moved( _press_sticker, x, y );
 
     /* If we have not been pressed, check to see if the cursor is within an item */
     } else if( _press_event == null ) {

@@ -847,12 +847,14 @@ public class Node : Object {
   }
 
   /* Adds all nodes within this tree that intersect with the given box */
-  public void select_within_box( Gdk.Rectangle box, Selection select ) {
+  public void select_within_box( Gdk.Rectangle box, Selection select, bool toggle ) {
     if( intersects_with( box ) ) {
-      select.add_node( this );
+      if( !toggle || !select.remove_node( this, false ) ) {
+        select.add_node( this, false );
+      }
     }
     for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).select_within_box( box, select );
+      _children.index( i ).select_within_box( box, select, toggle );
     }
   }
 
