@@ -90,7 +90,7 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_fit",      action_zoom_fit },
     { "action_zoom_selected", action_zoom_selected },
     { "action_zoom_actual",   action_zoom_actual },
-    { "action_export",        action_export },
+//    { "action_export",        action_export },
     { "action_print",         action_print },
     { "action_prefs",         action_prefs },
     { "action_shortcuts",     action_shortcuts },
@@ -1245,12 +1245,16 @@ public class MainWindow : ApplicationWindow {
       _search_nontasks.active     // 7
     };
     _search_items.clear();
-    if( _search_entry.get_text() != "" ) {
-      get_current_da( "on_search_change" ).get_match_items(
-        _search_entry.get_text().casefold(),
-        search_opts,
-        ref _search_items
-      );
+    foreach (var tab in _nb.tabs ) {
+      if( _search_entry.get_text() != "" ) {
+        var da = (DrawArea)((Gtk.Bin)tab.page).get_child();
+        var name = tab.label;
+          da.get_match_items(name,
+          _search_entry.get_text().casefold(),
+          search_opts,
+          ref _search_items
+        );
+      }
     }
   }
 
@@ -1260,11 +1264,19 @@ public class MainWindow : ApplicationWindow {
   */
   private void on_search_clicked( TreePath path, TreeViewColumn col ) {
     TreeIter    it;
+    string   tabname = "";
     Node?       node = null;
     Connection? conn = null;
-    var         da   = get_current_da( "on_search_clicked" );
+    DrawArea    da   = get_current_da( "on_search_clicked" );
     _search_items.get_iter( out it, path );
-    _search_items.get( it, 2, &node, 3, &conn, -1 );
+    _search_items.get( it, 2, &node, 3, &conn, 4, &tabname, -1 );
+    foreach (var tab in _nb.tabs ) {
+      if(tab.label == tabname) {
+        da = (DrawArea)((Gtk.Bin)tab.page).get_child();
+        _nb.current = tab;
+        break;
+      }
+    }
     if( node != null ) {
       da.set_current_connection( null );
       da.set_current_node( node );
@@ -1276,11 +1288,6 @@ public class MainWindow : ApplicationWindow {
     }
     _search.closed();
     da.grab_focus();
-  }
-
-  /* Exports the model to various formats */
-  private void action_export() {
-    _exporter.do_export( this );
   }
 
   /*

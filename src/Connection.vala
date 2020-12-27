@@ -19,6 +19,7 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
+using Gtk;
 using Cairo;
 using Pango;
 using Gdk;
@@ -680,15 +681,25 @@ public class Connection : Object {
    Populates the given ListStore with all nodes that have names that match
    the given string pattern.
   */
-  public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+    string str = "";
+    string type = "";
     if( search_opts[2] && (title != null) ) {
-      Utils.match_string( pattern, title.text.text, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), null, this, ref matches );
+      str = Utils.match_string( pattern, title.text.text);
+      if(str.length > 0) {
+        type += "<b><i>%s:</i></b>".printf( _( "Connection Title" ) );
+        TreeIter it;
+        matches.append( out it );
+        matches.set( it, 0, type, 1, str, 2, null, 3, this, 4, tabname, -1 );
+      }
     }
-    if( search_opts[3] ) {
-      Utils.match_string( pattern, note, "<b><i>%s:</i></b>".printf( _( "Connection Note" ) ), null, this, ref matches );
-    }
-  }
-
+  /* if( search_opts[3] ) {
+      str = Utils.match_string( pattern, note);
+      if(str.length > 0) {
+        type += "<b><i>%s:</i></b>".printf( _( "Connection Note" ) );
+      }
+  }*/
+}
   /* Draws the connection to the given context */
   public virtual void draw( Cairo.Context ctx, Theme theme ) {
 

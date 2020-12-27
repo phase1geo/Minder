@@ -769,14 +769,14 @@ public class DrawArea : Gtk.DrawingArea {
    Populates the list of matches with any nodes that match the given string
    pattern.
   */
-  public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     if( search_opts[0] ) {
       for( int i=0; i<_nodes.length; i++ ) {
-        _nodes.index( i ).get_match_items( pattern, search_opts, ref matches );
+        _nodes.index( i ).get_match_items(tabname, pattern, search_opts, ref matches );
       }
     }
     if( search_opts[1] ) {
-      _connections.get_match_items( pattern, search_opts, ref matches );
+      _connections.get_match_items(tabname, pattern, search_opts, ref matches );
     }
   }
 
