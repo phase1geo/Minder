@@ -561,7 +561,7 @@ public class MainWindow : ApplicationWindow {
     _search_entry.width_chars = 60;
     _search_entry.search_changed.connect( on_search_change );
 
-    _search_items = new Gtk.ListStore( 4, typeof(string), typeof(string), typeof(Node), typeof(Connection) );
+    _search_items = new Gtk.ListStore( 5, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(string) );
 
     /* Create the treeview */
     _search_list  = new TreeView.with_model( _search_items );
