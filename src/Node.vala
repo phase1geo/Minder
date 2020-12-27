@@ -1761,27 +1761,26 @@ public class Node : Object {
    the given string pattern.
   */
   public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
-    string str = "";
-    string type = "";
     if( ((((_task_count == 0) || !is_leaf()) && search_opts[7]) ||
          ((_task_count != 0) && is_leaf()   && search_opts[6])) &&
         (((parent != null) && parent.folded && search_opts[4]) ||
          (((parent == null) || !parent.folded) && search_opts[5])) ) {
       if( search_opts[2] ) {
-        str = Utils.match_string( pattern, name.text.text);
+        string str = Utils.match_string( pattern, name.text.text);
         if(str.length > 0) {
-          type += "<b><i>%s:</i></b><br\\>".printf( _( "Node Title" ) );
           TreeIter it;
           matches.append( out it );
-          matches.set( it, 0, type, 1, str, 2, this, 3, null, 4, tabname, -1 );  
+          matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Node Title" ) ), 1, str, 2, this, 3, null, 4, tabname, -1 );  
         }
       }
-    /*  if( search_opts[3] ) {
-        str = Utils.match_string( pattern, name.text.text);
+      if( search_opts[3] ) {
+        string str = Utils.match_string( pattern, note);
         if(str.length > 0) {
-          type += "<b><i>%s:</i></b>".printf( _( "Node Note" ) );
+          TreeIter it;
+          matches.append( out it );
+          matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), 1, str, 2, this, 3, null, 4, tabname, -1 );  
         }
-      }*/
+      }
     }
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).get_match_items(tabname, pattern, search_opts, ref matches );
