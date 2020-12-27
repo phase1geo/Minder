@@ -35,7 +35,6 @@ public class MouseHandler {
   private Sticker?     _motion_sticker;
   private NodeGroup?   _motion_group;
   private EventButton? _release_event;
-  private Node?        _attach_node;
   private double       _last_motion_x;
   private double       _last_motion_y;
   private bool         _press_resizer;
@@ -43,7 +42,8 @@ public class MouseHandler {
   private double       _orig_y;
   private double       _orig_w;
 
-  public bool first_motion { get; private set; default = true; }
+  public bool  first_motion { get; private set; default = true; }
+  public Node? attach_node  { get; set; default = null; }
 	
 	public signal void node_pressed( Node node, double x, double y );
 	public signal void connection_pressed( Connection conn, double x, double y );
@@ -150,10 +150,6 @@ public class MouseHandler {
     return( _press_group );
   }
 
-  public Node? attach_node() {
-    return( _attach_node );
-  }
-
   public bool motion() {
     return( _motion_event != null );
   }
@@ -175,11 +171,11 @@ public class MouseHandler {
   }
 
   public bool motion_control() {
-    return( (_motion_event != null) ? false : (bool)(_motion_event.state & ModifierType.CONTROL_MASK) );
+    return( (_motion_event == null) ? false : (bool)(_motion_event.state & ModifierType.CONTROL_MASK) );
   }
 
   public bool motion_alt() {
-    return( (_motion_event != null) ? false : (bool)(_motion_event.state & ModifierType.MOD1_MASK) );
+    return( (_motion_event == null) ? false : (bool)(_motion_event.state & ModifierType.MOD1_MASK) );
   }
 
   public bool motion_resizing() {
@@ -291,14 +287,14 @@ public class MouseHandler {
     }
   }
 
-  private void set_attach_node( Node? node ) {
-    if( _attach_node != null ) {
-      _da.set_node_mode( _attach_node, NodeMode.NONE );
-      _attach_node = null;
+  private void change_attach_node( Node? node ) {
+    if( attach_node != null ) {
+      _da.set_node_mode( attach_node, NodeMode.NONE );
+      attach_node = null;
     }
     if( node != null ) {
       _da.set_node_mode( node, NodeMode.ATTACHABLE );
-      _attach_node = node;
+      attach_node = node;
     }
   }
 
@@ -312,10 +308,6 @@ public class MouseHandler {
 
     var x = pressed_scaled_x();
     var y = pressed_scaled_y();
-
-    /* Save off the motion coordinates */
-    _last_motion_x = x;
-    _last_motion_y = y;
 
     /* Figure out item has been pressed */
     _press_conn    = find_connection( x, y );
@@ -374,11 +366,13 @@ public class MouseHandler {
           _press_node.alpha = 0.3;
         }
       } else {
-        _last_motion_x = motion_scaled_x();
-        _last_motion_y = motion_scaled_y();
-        first_motion   = false;
+        first_motion = false;
       }
     }
+
+    /* Save off last motion coordinates */
+    _last_motion_x = first_motion ? _da.scale_value( e.x ) : motion_scaled_x();
+    _last_motion_y = first_motion ? _da.scale_value( e.y ) : motion_scaled_y();
 
     _motion_event = e;
 
@@ -394,14 +388,14 @@ public class MouseHandler {
     /* If we are moving a node, calculate the attach node */
     } else if( _press_node != null ) {
       if( _da.selected.is_node_selected( _press_node ) ) {
-        set_attach_node( find_attach_node( x, y ) );
+        change_attach_node( find_attach_node( x, y ) );
       }
       node_moved( _press_node, x, y );
 
     /* If we are connecting or linking a connection, calculate the attach node */
     } else if( _press_conn != null ) {
       if( (_press_conn.mode == ConnMode.CONNECTING) || (_press_conn.mode == ConnMode.LINKING) ) {
-        set_attach_node( find_node( x, y ) );
+        change_attach_node( find_node( x, y ) );
       }
       connection_moved( _press_conn, x, y );
 
@@ -524,9 +518,9 @@ public class MouseHandler {
     _motion_event        = null;
 
     /* If the attach node is set, clear the attached node */
-    if( _attach_node != null ) {
-      _da.set_node_mode( _attach_node, NodeMode.NONE );
-      _attach_node = null;
+    if( attach_node != null ) {
+      _da.set_node_mode( attach_node, NodeMode.NONE );
+      attach_node = null;
     }
 
   }
