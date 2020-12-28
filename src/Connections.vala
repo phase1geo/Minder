@@ -234,9 +234,9 @@ public class Connections {
   }
 
   /* Searches the connections for ones that match the given pattern and search options */
-  public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     for( int i=0; i<_connections.length; i++ ) {
-      _connections.index( i ).get_match_items( pattern, search_opts, ref matches );
+      _connections.index( i ).get_match_items(tabname, pattern, search_opts, ref matches );
     }
   }
 
