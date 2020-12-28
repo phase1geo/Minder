@@ -225,6 +225,7 @@ public class Node : Object {
     }
   }
   public Node?    parent     { get; protected set; default = null; }
+  public NodeInfo info       { get; protected set; }
   public NodeSide side       { get; set; default = NodeSide.RIGHT; }
   public bool     folded     { get; set; default = false; }
   public double   tree_size  { get; set; default = 0; }
@@ -1807,38 +1808,58 @@ public class Node : Object {
   }
 
   /*
-   Gathers the information from all stored nodes for positional and link color information.
+   Stores the current node information into its internal NodeInfo structure.
    This information is used by the undo/redo functions.
   */
-  public void get_node_info( ref Array<NodeInfo?> info ) {
+  public void save_info() {
 
-    info.append_val( NodeInfo( _posx, _posy, side, _link_color ) );
+    info = NodeInfo( _posx, _posy, side, _link_color );
 
     for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).get_node_info( ref info );
+      _children.index( i ).save_info();
     }
 
   }
 
   /*
-   Restores the give information in the node info array to the node and subnodes.
+   Gathers the node info for the given node tree, excluding subtrees that are
+   currently selected.
   */
-  public void set_node_info( Array<NodeInfo?> info, ref int index ) {
+  public void gather_info( Array<NodeInfo?> info_array ) {
+    info_array.append_val( info );
+    for( int i=0; i<_children.length; i++ ) {
+      if( _children.index( i ).mode != NodeMode.SELECTED ) {
+        _children.index( i ).gather_info( info_array );
+      }
+    }
+  }
 
-    var diffx = info.index( index ).posx - _posx;
-    var diffy = info.index( index ).posy - _posy;
+  /*
+   Restores the give information in the node info array to the node and subnodes
+   while saving the original values to the NodeInfo array.
+  */
+  public void return_info( Array<NodeInfo?> info_array, ref int index ) {
 
-    _posx           = info.index( index ).posx;
-    _posy           = info.index( index ).posy;
-    side            = info.index( index ).side;
-    link_color_only = info.index( index ).color;
+    var tmp = info_array.index( index++ );
+
+    var diffx = tmp.posx - _posx;
+    var diffy = tmp.posy - _posy;
+
+    _posx           = tmp.posx;
+    _posy           = tmp.posy;
+    side            = tmp.side;
+    link_color_only = tmp.color;
 
     update_tree_bbox( diffx, diffy );
     position_name();
 
+    info = tmp;
+
+    /* Propagate the changes to the children, unless the child is selected */
     for( int i=0; i<_children.length; i++ ) {
-      index++;
-      _children.index( i ).set_node_info( info, ref index );
+      if( _children.index( i ).mode != NodeMode.SELECTED ) {
+        _children.index( i ).return_info( info_array, ref index );
+      }
     }
 
   }

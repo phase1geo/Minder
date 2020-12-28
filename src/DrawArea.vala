@@ -51,8 +51,6 @@ public class DrawArea : Gtk.DrawingArea {
 
   private Document         _doc;
   private GLib.Settings    _settings;
-  private double           _scaled_x;
-  private double           _scaled_y;
   private double           _origin_x;
   private double           _origin_y;
   private double           _scale_factor;
@@ -68,8 +66,6 @@ public class DrawArea : Gtk.DrawingArea {
   private Stickers         _stickers;
   private Theme            _theme;
   private CanvasText       _orig_text;
-  private NodeSide         _orig_side;
-  private Array<NodeInfo?> _orig_info;
   private int              _orig_width;
   private string           _orig_title;
   private Connection?      _attach_conn    = null;
@@ -222,9 +218,6 @@ public class DrawArea : Gtk.DrawingArea {
     _nodes_menu  = new NodesMenu( this, accel_group );
     _groups_menu = new GroupsMenu( this, accel_group );
     _text_menu   = new TextMenu( this, accel_group );
-
-    /* Create the node information array */
-    _orig_info = new Array<NodeInfo?>();
 
     /* Create the parsers */
     tagger_parser   = new TaggerParser( this );
@@ -835,7 +828,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( (node.mode != NodeMode.EDITABLE) && (mode == NodeMode.EDITABLE) ) {
       update_im_cursor( node.name );
       _im_context.focus_in();
-      if( node.name.is_within( _scaled_x, _scaled_y ) ) {
+      if( node.name.is_within( _mouse_handler.motion_scaled_x(), _mouse_handler.motion_scaled_y() ) ) {
         set_cursor( text_cursor );
       }
       undo_text.orig.copy( node.name );
@@ -844,7 +837,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( (node.mode == NodeMode.EDITABLE) && (mode != NodeMode.EDITABLE) ) {
       _im_context.reset();
       _im_context.focus_out();
-      if( node.name.is_within( _scaled_x, _scaled_y ) ) {
+      if( node.name.is_within( _mouse_handler.motion_scaled_x(), _mouse_handler.motion_scaled_y() ) ) {
         set_cursor( null );
       }
       if( undo_text.do_undo ) {
@@ -861,7 +854,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( (conn.mode != ConnMode.EDITABLE) && (mode == ConnMode.EDITABLE) ) {
       update_im_cursor( conn.title );
       _im_context.focus_in();
-      if( (conn.title != null) && conn.title.is_within( _scaled_x, _scaled_y ) ) {
+      if( (conn.title != null) && conn.title.is_within( _mouse_handler.motion_scaled_x(), _mouse_handler.motion_scaled_y() ) ) {
         set_cursor( text_cursor );
       }
       undo_text.orig.copy( conn.title );
@@ -870,7 +863,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( (conn.mode == ConnMode.EDITABLE) && (mode != ConnMode.EDITABLE) ) {
       _im_context.reset();
       _im_context.focus_out();
-      if( (conn.title != null) && conn.title.is_within( _scaled_x, _scaled_y ) ) {
+      if( (conn.title != null) && conn.title.is_within( _mouse_handler.motion_scaled_x(), _mouse_handler.motion_scaled_y() ) ) {
         set_cursor( null );
       }
       if( undo_text.do_undo ) {
@@ -1732,10 +1725,6 @@ public class DrawArea : Gtk.DrawingArea {
       return;
     }
 
-    _orig_side = node.side;
-    _orig_info.remove_range( 0, _orig_info.length );
-    node.get_node_info( ref _orig_info );
-
     /* If the node is being edited, go handle the click */
     if( node.mode == NodeMode.EDITABLE ) {
       if( _mouse_handler.pressed_single() ) {
@@ -2145,8 +2134,8 @@ public class DrawArea : Gtk.DrawingArea {
       if( node.parent != null ) {
         int orig_index = node.index();
         animator.add_nodes( _nodes, "move to position" );
-        node.parent.move_to_position( node, _orig_side, x, y );
-        undo_buffer.add_item( new UndoNodeMove( node, _orig_side, orig_index ) );
+        node.parent.move_to_position( node, node.info.side, x, y );
+        undo_buffer.add_item( new UndoNodeMove( node, node.info.side, orig_index ) );
         animator.animate();
 
       /* Otherwise, redraw everything after the move */
@@ -2206,9 +2195,6 @@ public class DrawArea : Gtk.DrawingArea {
 
     _mouse_handler.on_release( event );
 
-    /* Reset the mouse handler */
-    _mouse_handler.clear();
-
     return( false );
 
   }
@@ -2217,9 +2203,7 @@ public class DrawArea : Gtk.DrawingArea {
    Helper function for the attach_selected_nodes routine.  Attaches the current
    node to the attach node.
   */
-  private void attach_node( Node node ) {
-
-    stdout.printf( "Attaching node (%s) to node (%s)\n", node.name.text.text, _mouse_handler.attach_node.name.text.text );
+  public void attach_node( Node node ) {
 
     /* Remove the node from its current location */
     if( node.is_root() ) {
@@ -2230,7 +2214,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
     } else {
-      node.detach( _orig_side );
+      node.detach( node.info.side );
     }
 
     /* Attach the node */
@@ -2244,17 +2228,12 @@ public class DrawArea : Gtk.DrawingArea {
     var nodes = _selected.nodes();
 
     /* Add the attachment information to the undo buffer */
-    // undo_buffer.add_item( new UndoNodesAttach( nodes, _mouse_handler.attach_node ) );
-
-    stdout.printf( "In attach_selected_nodes, attach_node (%s)\n", _mouse_handler.attach_node.name.text.text );
-    stdout.printf( "  length: %u\n", nodes.length );
+    undo_buffer.add_item( new UndoNodesAttach( this, nodes, _mouse_handler.attach_node ) );
 
     /* Attach all selected nodes */
     for( int i=0; i<nodes.length; i++ ) {
       attach_node( nodes.index( i ) );
     }
-
-    stdout.printf( "  DONE!\n" );
 
     queue_draw();
     changed();

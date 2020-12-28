@@ -327,6 +327,7 @@ public class MouseHandler {
         _press_resizer = true;
         _da.set_cursor( CursorType.SB_H_DOUBLE_ARROW );
       }
+      _press_node.save_info();
 			node_pressed( _press_node, x, y );
 
     } else if( _press_sticker != null ) {
@@ -354,6 +355,9 @@ public class MouseHandler {
       _da.select_box.h     = 0;
       _da.select_box.valid = true;
     }
+
+    /* Update the selection */
+    press_selection();
 
   }
 
@@ -437,14 +441,6 @@ public class MouseHandler {
     var x = _da.scale_value( e.x );
     var y = _da.scale_value( e.y );
 
-    /* Update the selection */
-    if( pressed_left() && pressed_single() ) {
-      if( pressed_control() ) {
-        toggle_item();
-      } else {
-        set_item();
-      }
-    }
 
     /* Special case when a node is clicked */
     if( _motion_event == null ) {
@@ -501,6 +497,39 @@ public class MouseHandler {
       }
     }
 
+    /* Handle the selection */
+    press_selection();
+
+    /* Clear out the mouse events */
+    clear();
+
+  }
+
+  /*
+   If the pressed node is not selected, immediately select it.
+  */
+  public void press_selection() {
+
+    /* Update the selection */
+    if( pressed_left() && pressed_single() ) {
+      if( pressed_control() ) {
+        toggle_item();
+      } else {
+        set_item();
+      }
+    }
+
+  }
+
+  /*
+   If the node is clicked, set the node to be the exclusively selected node.
+  */
+  private void release_selection() {
+
+    if( pressed_left() && pressed_single() && (_motion_event == null) && (_press_node != null) ) {
+      _da.selected.set_current_node( _press_node );
+    }
+
   }
 
   /*
@@ -510,12 +539,14 @@ public class MouseHandler {
   public void clear() {
 
     /* Clear variables */
-    _press_event         = null;
-    _press_node          = null;
-    _press_conn          = null;
-    _press_sticker       = null;
-    _press_group         = null;
-    _motion_event        = null;
+    _press_event   = null;
+    _press_node    = null;
+    _press_conn    = null;
+    _press_sticker = null;
+    _press_group   = null;
+    _motion_event  = null;
+
+    _da.select_box.valid = false;
 
     /* If the attach node is set, clear the attached node */
     if( attach_node != null ) {
