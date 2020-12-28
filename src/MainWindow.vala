@@ -90,7 +90,7 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_fit",      action_zoom_fit },
     { "action_zoom_selected", action_zoom_selected },
     { "action_zoom_actual",   action_zoom_actual },
-//    { "action_export",        action_export },
+  //  { "action_export",        action_export },
     { "action_print",         action_print },
     { "action_prefs",         action_prefs },
     { "action_shortcuts",     action_shortcuts },

@@ -85,18 +85,31 @@ public class Utils {
   /*
    Checks the given string to see if it is a match to the given pattern.  If
    it is, the matching portion of the string appended to the list of matches.
+
+   See : https://valadoc.org/glib-2.0/string.substring.html
   */
   public static string match_string( string pattern, string value) {
-    int index = value.casefold().index_of( pattern );
-    if( index != -1 ) {
-      int    start_index = (index > 20) ? (index - 20) : 0;
-      string prefix      = (index > 20) ? "…"        : "";
-      string str         = prefix +
-                           value.substring( start_index, (index - start_index) ) + "<u>" +
-                           value.substring( index, pattern.length ) + "</u>" +
-                           value.substring( (index + pattern.length), -1 );
-      return str;
-    }
+      int pattern_byte_idx = value.casefold().index_of( pattern );
+      if( pattern_byte_idx != -1 ) {
+        unichar  c = 0;
+        int i = 0;
+        int current_index = pattern_byte_idx;
+        while (value.get_prev_char(ref current_index, out c) && i < 10) {
+          i++;
+        }
+        int start = i < 10 ? 0 : current_index;
+        i = 0;
+        current_index = pattern_byte_idx + pattern.length;
+        while (value.get_next_char(ref current_index, out c) && i < 10) {
+          i++;
+        }
+        int end = i < 10 ? -1 : current_index - ( pattern_byte_idx + pattern.length );
+        string str = (start > 0 ? "..." : "") +
+        value.substring(start, pattern_byte_idx - start) + 
+        "<u>" + pattern + "</u>" +
+        value.substring(pattern_byte_idx + pattern.length, end);
+        return str;
+      }
     return "";
   }
 
