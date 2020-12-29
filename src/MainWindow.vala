@@ -32,7 +32,8 @@ public enum TabAddReason {
 public enum PropertyGrab {
   NONE,
   FIRST,
-  NOTE
+  NOTE,
+  TEXT
 }
 
 public class MainWindow : ApplicationWindow {
@@ -1119,9 +1120,19 @@ public class MainWindow : ApplicationWindow {
         if( (tab != null) && (tab == "current") ) {
           var ci = _stack.get_child_by_name( tab ) as CurrentInspector;
           if( ci != null ) {
-            ci.grab_note();
+            ci.grab(PropertyGrab.NOTE);
           }
         }
+        break;
+        case PropertyGrab.TEXT :
+        if( (tab != null) && (tab == "current") ) {
+          var ci = _stack.get_child_by_name( tab ) as CurrentInspector;
+          if( ci != null ) {
+            ci.grab(PropertyGrab.TEXT);
+          }
+        }
+        break;
+        default:
         break;
     }
 

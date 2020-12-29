@@ -300,6 +300,10 @@ msgstr ""
 msgid "Note"
 msgstr "Note"
 
+#: src/ConnectionInspector.vala:107 src/NodeInspector.vala:181
+msgid "Text"
+msgstr "Texte"
+
 #: src/ConnectionInspector.vala:140
 #, fuzzy
 msgid "Delete Connection"

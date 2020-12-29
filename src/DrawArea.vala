@@ -205,7 +205,8 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer = new UndoBuffer( this );
 
     /* Allocate the image editor popover */
-    _image_editor = new ImageEditor( this );
+    Gtk.Window window = (Gtk.Window) get_toplevel();
+    _image_editor = new ImageEditor( _image_manager, window);
     _image_editor.changed.connect( current_image_edited );
 
     /* Allocate the URL editor popover */
@@ -1016,6 +1017,17 @@ public class DrawArea : Gtk.DrawingArea {
     var nodes = _selected.nodes();
     if( nodes.length == 1 ) {
       nodes.index( 0 ).note = note;
+      queue_draw();
+      auto_save();
+    }
+  }
+
+  public void change_current_node_text( string text ) {
+    var nodes = _selected.nodes();
+    if( nodes.length == 1 ) {
+      CanvasText ct = nodes.index( 0 ).name;
+      ct.text.set_text(text);
+      ct.update_size();
       queue_draw();
       auto_save();
     }
@@ -3930,7 +3942,8 @@ public class DrawArea : Gtk.DrawingArea {
       case Key.c :  select_child_node();  break;
       case Key.d :  select_child_nodes();  break;
       case Key.e :
-        set_node_mode( current, NodeMode.EDITABLE );
+        //set_node_mode( current, NodeMode.EDITABLE );
+        show_properties( "current", PropertyGrab.TEXT );
         queue_draw();
         break;
       case Key.f :  toggle_fold( current );  break;

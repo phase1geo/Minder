@@ -33,6 +33,7 @@ public class ConnectionInspector : Box {
   private ColorButton    _color;
   private Button         _reset;
   private TextView       _note;
+  private TextView       _text;
   private DrawArea?      _da         = null;
   private string         _orig_note  = "";
   private Connection?    _connection = null;
@@ -177,8 +178,17 @@ public class ConnectionInspector : Box {
   }
 
   /* Grabs the focus on the note widget */
-  public void grab_note() {
-    _note.grab_focus();
+  public void grab(PropertyGrab prop_grab) {
+    switch (prop_grab) {
+      case PropertyGrab.NOTE:
+        _note.grab_focus();
+      break;
+      case PropertyGrab.TEXT:
+        _text.grab_focus();
+      break;
+      default:
+      break;
+    }
   }
 
   /* Called whenever the user changes the current node in the canvas */

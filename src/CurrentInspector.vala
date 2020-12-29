@@ -97,17 +97,17 @@ public class CurrentInspector : Stack {
   }
 
   /* Gives the node or connection note field keyboard focus */
-  public void grab_note() {
+  public void grab(PropertyGrab prop_grab) {
 
     if( _da.get_current_node() != null ) {
       var ni = get_child_by_name( "node" ) as NodeInspector;
       if( ni != null ) {
-        ni.grab_note();
+        ni.grab(prop_grab);
       }
     } else if( _da.get_current_connection() != null ) {
       var ci = get_child_by_name( "connection" ) as ConnectionInspector;
       if( ci != null ) {
-        ci.grab_note();
+        ci.grab(prop_grab);
       }
     }
 

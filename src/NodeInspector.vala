@@ -35,9 +35,11 @@ public class NodeInspector : Box {
   private Box            _link_box;
   private ColorButton    _link_color;
   private NoteView       _note;
+  private NoteView       _text;
   private DrawArea?      _da = null;
   private Button         _detach_btn;
   private string         _orig_note = "";
+  private string         _orig_text = "";
   private Node?          _node = null;
   private Image          _image;
   private Button         _image_btn;
@@ -53,6 +55,7 @@ public class NodeInspector : Box {
     create_fold();
     create_link();
     create_note();
+    create_text();
     create_image();
     create_buttons();
 
@@ -164,6 +167,34 @@ public class NodeInspector : Box {
     _sw.min_content_width  = 300;
     _sw.min_content_height = 100;
     _sw.add( _note );
+
+    box.pack_start( lbl, false, false );
+    box.pack_start( _sw, true,  true );
+
+    pack_start( box, true, true );
+
+  }
+
+  /* Create the node and connection text widget */
+  private void create_text() {
+
+    Box   box = new Box( Orientation.VERTICAL, 10 );
+    Label lbl = new Label( Utils.make_title( _( "Text" ) ) );
+
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
+
+    _text = new NoteView();
+    _text.set_wrap_mode( Gtk.WrapMode.WORD );
+    _text.buffer.text = "";
+    _text.buffer.changed.connect( text_changed );
+    _text.focus_in_event.connect( text_focus_in );
+//    _text.focus_out_event.connect( text_focus_out );
+
+    _sw = new ScrolledWindow( null, null );
+    _sw.min_content_width  = 300;
+    _sw.min_content_height = 100;
+    _sw.add( _text );
 
     box.pack_start( lbl, false, false );
     box.pack_start( _sw, true,  true );
@@ -335,10 +366,20 @@ public class NodeInspector : Box {
     _da.change_current_node_note( _note.buffer.text );
   }
 
+  private void text_changed() {
+    _da.change_current_node_text( _text.buffer.text );
+  }
+
   /* Saves the original version of the node's note so that we can */
   private bool note_focus_in( EventFocus e ) {
     _node      = _da.get_current_node();
     _orig_note = _note.buffer.text;
+    return( false );
+  }
+
+  private bool text_focus_in( EventFocus e ) {
+    _node      = _da.get_current_node();
+    _orig_text = _text.buffer.text;
     return( false );
   }
 
@@ -372,8 +413,17 @@ public class NodeInspector : Box {
   }
 
   /* Grabs the focus on the note widget */
-  public void grab_note() {
-    _note.grab_focus();
+  public void grab(PropertyGrab prop_grab) {
+    switch (prop_grab) {
+      case PropertyGrab.NOTE:
+        _note.grab_focus();
+      break;
+      case PropertyGrab.TEXT:
+        _text.grab_focus();
+      break;
+      default:
+      break;
+    }
   }
 
   /* Called whenever the theme is changed */
@@ -418,6 +468,7 @@ public class NodeInspector : Box {
       }
       _detach_btn.set_sensitive( current.parent != null );
       _note.buffer.text = current.note;
+      _text.buffer.text = current.name.text.text;
       if( current.image != null ) {
         var url = _da.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
         var str = "<a href=\"" + url + "\">" + url + "</a>";

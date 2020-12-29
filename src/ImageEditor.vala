@@ -48,9 +48,9 @@ class ImageEditor {
   public signal void changed( NodeImage? orig_image );
 
   /* Default constructor */
-  public ImageEditor( DrawArea da ) {
+  public ImageEditor ( ImageManager im, Gtk.Window parent ) {
 
-    _im = da.image_manager;
+    _im = im;
 
     /* Allocate crop points */
     _crop_points  = new Gdk.Rectangle[9];
@@ -72,7 +72,7 @@ class ImageEditor {
     _crop_cursors[7] = CursorType.TOP_LEFT_CORNER;
 
     /* Create the user interface of the editor window */
-    create_ui( (Gtk.Window)da.get_toplevel(), da.image_manager );
+    create_ui( parent );
 
   }
 
@@ -211,7 +211,7 @@ class ImageEditor {
   }
 
   /* Creates the user interface */
-  public void create_ui( Gtk.Window parent, ImageManager im ) {
+  public void create_ui( Gtk.Window parent ) {
 
     _popover = new Popover( parent );
     _popover.modal = true;
@@ -220,9 +220,9 @@ class ImageEditor {
 
     box.border_width = 5;
 
-    _da = create_drawing_area( im );
+    _da = create_drawing_area( _im );
     var status  = create_status_area();
-    var buttons = create_buttons( parent, im );
+    var buttons = create_buttons( parent, _im );
 
     /* Pack the widgets into the window */
     box.pack_start( _da,     true,  true );
