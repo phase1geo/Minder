@@ -1404,46 +1404,41 @@ public class Node : Object {
     return( (linked_node != null) ? (10 + _ipadx) : 0 );
   }
 
+  public void move_child( Node child, NodeSide side, int index ) {
+    var idx = (index == -1) ? -1 : (index - ((child.index() < index) ? 1 : 0));
+    child.detach( side );
+    child.attached = true;
+    child.attach( this, idx, null, false );
+  }
+
   /* Moves this node into the proper position within the parent node */
-  public void move_to_position( Node child, NodeSide side, double x, double y ) {
-    int   idx           = child.index();
-    Node? last_selected = last_selected_child;
+  public int move_to_position( Node child, NodeSide side, double x, double y ) {
+    int idx = child.index();
     for( int i=0; i<_children.length; i++ ) {
       if( _children.index( i ).side == child.side ) {
         switch( child.side ) {
           case NodeSide.LEFT  :
           case NodeSide.RIGHT :
             if( y < _children.index( i ).posy ) {
-              child.detach( side );
-              child.attached = true;
-              child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
-              last_selected_child = last_selected;
-              return;
+              move_child( child, side, i );
+              return( i );
             }
             break;
           case NodeSide.TOP :
           case NodeSide.BOTTOM :
             if( x < _children.index( i ).posx ) {
-              child.detach( side );
-              child.attached = true;
-              child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
-              last_selected_child = last_selected;
-              return;
+              move_child( child, side, i );
+              return( i );
             }
             break;
         }
       } else if( _children.index( i ).side > child.side ) {
-        child.detach( side );
-        child.attached = true;
-        child.attach( this, (i - ((idx < i) ? 1 : 0)), null, false );
-        last_selected_child = last_selected;
-        return;
+        move_child( child, side, i );
+        return( i );
       }
     }
-    child.detach( side );
-    child.attached = true;
-    child.attach( this, -1, null, false );
-    last_selected_child = last_selected;
+    move_child( child, side, -1 );
+    return( (int)_children.length - 1 );
   }
 
   /*
@@ -1753,9 +1748,19 @@ public class Node : Object {
    Returns the ancestor node that is folded or returns null if no ancestor nodes
    are folded.
   */
-  public Node folded_ancestor() {
+  public Node? folded_ancestor() {
     var node = parent;
     while( (node != null) && !node.folded ) node = node.parent;
+    return( node );
+  }
+
+  /*
+   Returns the ancestor node that is selected or returns null if no ancestor nodes
+   are selected.
+  */
+  public Node? selected_ancestor() {
+    var node = parent;
+    while( (node != null) && (node.mode != NodeMode.CURRENT) && (node.mode != NodeMode.SELECTED) ) node = node.parent;
     return( node );
   }
 
@@ -1817,6 +1822,27 @@ public class Node : Object {
 
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).save_info();
+    }
+
+  }
+
+  public void restore_info() {
+
+    var diffx = info.posx - _posx;
+    var diffy = info.posy - _posy;
+
+    _posx           = info.posx;
+    _posy           = info.posy;
+    side            = info.side;
+    link_color_only = info.color;
+
+    update_tree_bbox( diffx, diffy );
+    position_name();
+
+    for( int i=0; i<_children.length; i++ ) {
+      if( _children.index( i ).mode != NodeMode.SELECTED ) {
+        _children.index( i ).restore_info();
+      }
     }
 
   }

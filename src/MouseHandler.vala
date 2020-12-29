@@ -315,6 +315,9 @@ public class MouseHandler {
     _press_sticker = (_press_node    == null) ? find_sticker( x, y ) : null;
     _press_group   = (_press_sticker == null) ? find_group( x, y )   : null;
 
+    /* Update the selection */
+    press_selection();
+
     if( _press_conn != null ) {
       connection_pressed( _press_conn, x, y );
 
@@ -327,7 +330,7 @@ public class MouseHandler {
         _press_resizer = true;
         _da.set_cursor( CursorType.SB_H_DOUBLE_ARROW );
       }
-      _press_node.save_info();
+      _da.selected.save_node_info();
 			node_pressed( _press_node, x, y );
 
     } else if( _press_sticker != null ) {
@@ -356,9 +359,6 @@ public class MouseHandler {
       _da.select_box.valid = true;
     }
 
-    /* Update the selection */
-    press_selection();
-
   }
 
   public void on_motion( EventMotion e ) {
@@ -367,7 +367,10 @@ public class MouseHandler {
       if( _motion_event == null ) {
         first_motion = true;
         if( !_press_resizer && (_press_node != null) && (_press_node.mode != NodeMode.EDITABLE) ) {
-          _press_node.alpha = 0.3;
+          var nodes = _da.selected.nodes();
+          for( int i=0; i<nodes.length; i++ ) {
+            nodes.index( i ).alpha = 0.3;
+          }
         }
       } else {
         first_motion = false;
@@ -485,7 +488,10 @@ public class MouseHandler {
     } else {
       _da.set_cursor( null );
       if( _press_node != null ) {
-        _press_node.alpha = 1.0;
+        var nodes = _da.selected.nodes();
+        for( int i=0; i<nodes.length; i++ ) {
+          nodes.index( i ).alpha = 1.0;
+        }
         node_dropped( _press_node, x, y );
       } else if( _press_conn != null ) {
         connection_dropped( _press_conn, x, y );
@@ -498,7 +504,7 @@ public class MouseHandler {
     }
 
     /* Handle the selection */
-    press_selection();
+    release_selection();
 
     /* Clear out the mouse events */
     clear();
@@ -514,7 +520,7 @@ public class MouseHandler {
     if( pressed_left() && pressed_single() ) {
       if( pressed_control() ) {
         toggle_item();
-      } else {
+      } else if( !_da.selected.is_node_selected( _press_node ) ) {
         set_item();
       }
     }
@@ -526,7 +532,7 @@ public class MouseHandler {
   */
   private void release_selection() {
 
-    if( pressed_left() && pressed_single() && (_motion_event == null) && (_press_node != null) ) {
+    if( pressed_left() && pressed_single() && !pressed_control() && (_motion_event == null) && (_press_node != null) ) {
       _da.selected.set_current_node( _press_node );
     }
 

@@ -124,14 +124,12 @@ public class Selection {
 
   /* Adds a node to the current selection.  Returns true if the node was added. */
   public bool add_node( Node node, bool signal_change = true ) {
-    stdout.printf( "Adding node to selection\n" );
     if( is_node_selected( node ) || (node.folded_ancestor() != null) ) return( false );
     node.mode = (_nodes.length == 0) ? NodeMode.CURRENT : NodeMode.SELECTED;
     if( _nodes.length == 1 ) {
       _nodes.index( 0 ).mode = NodeMode.SELECTED;
     }
     _nodes.append_val( node );
-    stdout.printf( "  length: %u\n", _nodes.length );
     if( signal_change ) {
       selection_changed();
     }
@@ -359,6 +357,13 @@ public class Selection {
       }
     }
     return( false );
+  }
+
+  /* Saves all node information for all selected nodes */
+  public void save_node_info() {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).save_info();
+    }
   }
 
   /* Clears all of the selected nodes */

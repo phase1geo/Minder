@@ -1829,6 +1829,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void move_node( Node node, double diffx, double diffy ) {
+    if( node.selected_ancestor() != null ) return;
     node.posx += diffx;
     node.posy += diffy;
     node.layout.set_side( node );
@@ -1856,9 +1857,6 @@ public class DrawArea : Gtk.DrawingArea {
     /* Otherwise, we need to adjust the position of the node */
     } else {
       var nodes = _selected.nodes();
-      if( !_selected.is_node_selected( node ) ) {
-        move_node( node, diffx, diffy );
-      }
       for( int i=0; i<nodes.length; i++ ) {
         move_node( nodes.index( i ), diffx, diffy );
       }
@@ -2117,6 +2115,59 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Moves the selected nodes into the appropriate places */
+  private void move_selected_nodes( Node node, double x, double y ) {
+
+    var nodes    = selected.nodes();
+    var children = node.parent.children();
+    var moved    = new Array<Node>();
+    var unmoved  = new GLib.List<Node>();
+
+    /* Consider all nodes in the unmoved category to begin with */
+    for( int i=0; i<nodes.length; i++ ) {
+      if( nodes.index( i ).selected_ancestor() == null ) {
+        unmoved.append( nodes.index( i ) );
+      }
+    }
+
+    /*
+     Sort out the moved from the unmoved, making sure that the the moved nodes
+     are sorted in index order.
+    */
+    for( int i=0; i<children.length; i++ ) {
+      var c = children.index( i );
+      foreach( Node n in unmoved) {
+        if( n == c ) {
+          moved.append_val( n );
+          unmoved.remove( n );
+          break;
+        }
+      }
+    }
+
+    animator.add_nodes( _nodes, "move selected nodes" );
+
+    /* Insert the moved nodes */
+    var m   = moved.index( moved.length - 1 );
+    var pos = m.parent.move_to_position( m, m.info.side, x, y );
+    for( int i=(int)(moved.length - 2); i>=0; i-- ) {
+      m = moved.index( i );
+      node.parent.move_child( m, m.info.side, pos );
+    }
+
+    /* Move the unmoved nodes back to their original positions */
+    foreach( Node n in unmoved) {
+      n.restore_info();
+    }
+
+    /* Add the undo item */
+    // TBD - undo_buffer.add_item( new UndoNodesMove( moved ) );
+
+    /* Animate the movements */
+    animator.animate();
+
+  }
+
   private void node_dropped( Node node, double x, double y ) {
 
     /* If we resized the node, add the change to the undo buffer and save the map */
@@ -2128,21 +2179,18 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( _mouse_handler.attach_node != null ) {
       attach_selected_nodes();
 
-    } else if( node.mode == NodeMode.CURRENT ) {
+    /* If the moved node was the only node selected, move it to the parent position */
+    } else if( node.parent != null ) {
+      move_selected_nodes( node, x, y );
 
-      /* If we are not a root node, move the node into the appropriate position */
-      if( node.parent != null ) {
-        int orig_index = node.index();
-        animator.add_nodes( _nodes, "move to position" );
-        node.parent.move_to_position( node, node.info.side, x, y );
-        undo_buffer.add_item( new UndoNodeMove( node, node.info.side, orig_index ) );
-        animator.animate();
-
-      /* Otherwise, redraw everything after the move */
-      } else {
-        queue_draw();
+    /* Otherwise, move everything that was moved back */
+    } else {
+      var nodes = selected.nodes();
+      animator.add_nodes( _nodes, "move to position" );
+      for( int i=0; i<nodes.length; i++ ) {
+        nodes.index( i ).restore_info();
       }
-
+      animator.animate();
     }
 
   }
