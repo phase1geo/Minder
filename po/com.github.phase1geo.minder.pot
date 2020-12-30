@@ -1886,3 +1886,11 @@ msgstr ""
 #: data/com.github.phase1geo.minder.shortcuts.ui:912
 msgid "[Triple left-click anywhere in text]"
 msgstr ""
+
+#: src/NodeInspector.vala:181
+msgid "Text"
+msgstr ""
+
+#: src/FileInspector.vala:63
+msgid "Files"
+msgstr ""

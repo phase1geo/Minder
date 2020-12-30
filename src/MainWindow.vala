@@ -808,6 +808,7 @@ public class MainWindow : ApplicationWindow {
     _stack.add_titled( new StyleInspector( this, _settings ), "style", _("Style") );
     _stack.add_titled( new StickerInspector( this, _settings ), "sticker", _("Stickers") );
     _stack.add_titled( new MapInspector( this, _settings ),  "map",  _("Map") );
+    _stack.add_titled( new FileInspector( this, _settings ),  "navigator",  _("Navigator") );
 
     _stack.add_events( EventMask.KEY_PRESS_MASK );
     _stack.key_press_event.connect( stack_keypress );
