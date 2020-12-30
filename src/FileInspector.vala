@@ -21,15 +21,24 @@
 
 using Gtk;
 using GLib;
+using Gee;
 using Granite.Widgets;
+
+public class NodeSchema {
+    public string id;
+    public string filename;
+    public string node_text;
+    public string node_note;
+}
 
 public class FileInspector : Box {
     
-    private Gtk.TreeView    _view;
-    private TreeStore       _tree;
-    private string          files_path = "";
-    private ScrolledWindow  _sw;
-    public MainWindow      _win;
+    private Gtk.TreeView              _view;
+    private TreeStore                 _tree;
+    private string                    files_path = "";
+    private ScrolledWindow            _sw;
+    public  MainWindow                _win;
+    private HashTable<string, string> _files;
 
     public string directory {
         get {
@@ -43,13 +52,15 @@ public class FileInspector : Box {
     public FileInspector( MainWindow win, GLib.Settings settings ) {
         Object( orientation:Orientation.VERTICAL, spacing:10 );
         _win = win;
+        directory = "/tmp/minder";
+        _files = new HashTable<string, string>(str_hash, str_equal);
+
         _view  = new TreeView();
         _sw = new ScrolledWindow( null, null );
         _sw.min_content_width  = 300;
         _sw.min_content_height = 100;
         _sw.add( _view );
         pack_start( _sw,  true,  true );
-        directory = "/tmp/minder";
 
         init_tree();
         pack_start(_view);
@@ -82,6 +93,7 @@ public class FileInspector : Box {
                 if (FileUtils.test (path, FileTest.IS_REGULAR)) {
                     _tree.append(out child_folder, root);
                     _tree.set(child_folder, 0, name, -1);
+                    _files.insert(name, path);
                 }
     
                 if (FileUtils.test (path, FileTest.IS_DIR)) {
@@ -97,19 +109,47 @@ public class FileInspector : Box {
 
     private void on_row_activated( TreePath path, TreeViewColumn col ) {
         TreeIter iter;
-        TreeIter parent;
         string select_name = "";
-        string concat = "";
         _tree.get_iter(out iter, path);
-        _tree.get(iter, 0, &concat);
-        while (_tree.iter_parent(out parent, iter)) {
-            _tree.get(parent, 0, &select_name);
-             concat = Path.build_filename(select_name, concat);
-            iter = parent;
-        };
-        concat = directory + GLib.Path.DIR_SEPARATOR.to_string() + concat;
-        if (FileUtils.test (concat, FileTest.IS_REGULAR)) {
-            _win.open_file(concat);
+        _tree.get(iter, 0, &select_name);
+        string complete_name = _files.get(select_name);
+        _win.open_file(complete_name);
+    }
+
+    public GLib.List<NodeSchema> search(string pattern) {
+        GLib.List<NodeSchema> list = new GLib.List<NodeSchema>();
+        foreach (var file in _files.get_values()) {
+            Xml.Doc* doc = Xml.Parser.parse_file( file );
+            if (doc != null) {
+                Xml.XPath.Context cntx = new Xml.XPath.Context(doc);
+                Xml.XPath.Object* res  = cntx.eval_expression("//node[@id]");
+                for (int i = 0; i < res->nodesetval->length (); i++) {
+                    Xml.Node* node = res->nodesetval->item (i);
+                    string id = node->get_prop("id");
+                    string text = "";
+                    string note = "";
+                    for( Xml.Node* node_child = node->children; node_child != null; node_child = node_child->next ) {
+                        if(node_child->name == "nodename") {
+                            text = Utils.match_string(pattern, node_child->first_element_child()->get_prop("data"));
+                        }
+                        if(node_child->name == "nodenote") {
+                            note = Utils.match_string(pattern, node_child->get_content());
+                        }
+                    }
+                    if(text != "" || note != "") {
+                        list.append(new NodeSchema() {
+                            id = id,
+                            filename = file,
+                            node_text = text,
+                            node_note = note
+                         });
+                    }
+                    //print ("%s\n", node->get_prop("data"));
+                }
+                delete res;
+                delete doc;
+            }
         }
+        return list;
     }
 }

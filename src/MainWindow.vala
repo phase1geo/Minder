@@ -562,7 +562,7 @@ public class MainWindow : ApplicationWindow {
     _search_entry.width_chars = 60;
     _search_entry.search_changed.connect( on_search_change );
 
-    _search_items = new Gtk.ListStore( 5, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(string) );
+    _search_items = new Gtk.ListStore( 5, typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
 
     /* Create the treeview */
     _search_list  = new TreeView.with_model( _search_items );
@@ -943,7 +943,7 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Opens the file and display it in the canvas */
-  public bool open_file( string fname ) {
+  public bool open_file( string fname) {
     if( !FileUtils.test( fname, FileTest.IS_REGULAR ) ) {
       return( false );
     }
@@ -1257,16 +1257,17 @@ public class MainWindow : ApplicationWindow {
       _search_nontasks.active     // 7
     };
     _search_items.clear();
-    foreach (var tab in _nb.tabs ) {
-      if( _search_entry.get_text() != "" ) {
-        var da = (DrawArea)((Gtk.Bin)tab.page).get_child();
-        var name = tab.label;
-          da.get_match_items(name,
-          _search_entry.get_text().casefold(),
-          search_opts,
-          ref _search_items
-        );
+    if( _search_entry.get_text().length > 3) {
+      FileInspector fe = _stack.get_child_by_name("navigator") as FileInspector;
+      GLib.List<NodeSchema> results = fe.search(_search_entry.get_text());
+      foreach (var entry in results) {
+        TreeIter it;
+        _search_items.append(out it);
+        _search_items.set( it, 0, "<b><i>%s:</i></b>".printf( GLib.Path.get_basename(entry.filename).split(".")[0] ), 1, entry.node_text, 2, entry.id, 3, "", 4, entry.filename, -1 );
       }
+    }else{
+   /*    MessageDialog md = new MessageDialog(this, DialogFlags.MODAL, MessageType.INFO, ButtonsType.OK, "3 characters minimum");
+      md.show();*/
     }
   }
 
@@ -1276,26 +1277,30 @@ public class MainWindow : ApplicationWindow {
   */
   private void on_search_clicked( TreePath path, TreeViewColumn col ) {
     TreeIter    it;
-    string   tabname = "";
+    string[]    data = new string[4]; // 0 = text, 1 = node id, 2 = connection, 3 = filename
     Node?       node = null;
     Connection? conn = null;
-    DrawArea    da   = get_current_da( "on_search_clicked" );
+    DrawArea    da   = null;
+    Tab   tab_search = null;
     _search_items.get_iter( out it, path );
-    _search_items.get( it, 2, &node, 3, &conn, 4, &tabname, -1 );
-    foreach (var tab in _nb.tabs ) {
-      if(tab.label == tabname) {
-        da = (DrawArea)((Gtk.Bin)tab.page).get_child();
-        _nb.current = tab;
-        break;
-      }
-    }
-    if( node != null ) {
-      da.set_current_connection( null );
+    _search_items.get( it, 1, &data[0], 2, &data[1], 3, &data[2], 4, &data[3], -1 );
+    string base_name = GLib.Path.get_basename(data[3]);
+    _nb.tabs.foreach((tab) => { if(tab.label == base_name) { tab_search = tab; } });
+    if(tab_search != null) {
+      da = (DrawArea)((Gtk.Bin)tab_search.page).get_child();
+      _nb.current = tab_search;
+      node = da.get_node(da.get_nodes(), int.parse(data[1]));
       da.set_current_node( node );
-      da.see();
-    } else if( conn != null ) {
-      da.set_current_node( null );
-      da.set_current_connection( conn );
+    }else if(open_file(data[3])){
+      da = get_current_da( "do_open_file" );
+      if( data[1] != "" ) {
+        node = da.get_node(da.get_nodes(), int.parse(data[1]));
+        da.set_current_connection( null );
+        da.set_current_node( node );
+      } else if( data[2] != "" ) {
+        da.set_current_node( null );
+        da.set_current_connection( conn );
+      }
       da.see();
     }
     _search.closed();

@@ -119,6 +119,7 @@ public class Node : Object {
   /* Member variables */
   private   DrawArea     _da;
   protected int          _id;
+  protected int          _id_file;
   private   CanvasText   _name;
   private   string       _note         = "";
   protected double       _width        = 0;
@@ -909,7 +910,7 @@ public class Node : Object {
    not found in this node's tree, returns null.
   */
   public virtual Node? get_node( int id ) {
-    if( _id == id ) {
+    if( _id == id || _id_file == id ) {
       return( this );
     } else {
       for( int i=0; i<children().length; i++ ) {
@@ -960,7 +961,9 @@ public class Node : Object {
 
     string? i = n->get_prop( "id" );
     if( i != null ) {
-      id_map.set( int.parse( i ), _id );
+      int i_int = int.parse( i );
+       _id_file = i_int;
+      id_map.set( i_int, _id );
     }
 
     string? x = n->get_prop( "posx" );
