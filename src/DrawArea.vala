@@ -2997,7 +2997,7 @@ public class DrawArea : Gtk.DrawingArea {
     var node = create_sibling_node( _selected.current_node() );
     undo_buffer.add_item( new UndoNodeInsert( node, node.index() ) );
     set_current_node( node );
-    set_node_mode( node, NodeMode.EDITABLE, false );
+    set_node_mode( node, NodeMode.SELECTED, false );
     queue_draw();
     see();
     changed();
@@ -3025,7 +3025,7 @@ public class DrawArea : Gtk.DrawingArea {
     var node    = create_child_node( current );
     undo_buffer.add_item( new UndoNodeInsert( node, node.index() ) );
     set_current_node( node );
-    set_node_mode( node, NodeMode.EDITABLE, false );
+    set_node_mode( node, NodeMode.SELECTED, false );
     queue_draw();
     see();
     changed();
