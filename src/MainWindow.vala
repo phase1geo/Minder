@@ -22,11 +22,13 @@
 using Gtk;
 using Gdk;
 
-public enum TabAddReason {
+public enum TabReason {
   NEW,
   OPEN,
   IMPORT,
-  LOAD
+  LOAD,
+  SHOW,
+  CLOSE
 }
 
 public enum PropertyGrab {
@@ -91,7 +93,7 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_fit",      action_zoom_fit },
     { "action_zoom_selected", action_zoom_selected },
     { "action_zoom_actual",   action_zoom_actual },
-  //  { "action_export",        action_export },
+    { "action_export",        action_export },
     { "action_print",         action_print },
     { "action_prefs",         action_prefs },
     { "action_shortcuts",     action_shortcuts },
@@ -125,7 +127,12 @@ public class MainWindow : ApplicationWindow {
     }
   }
 
+
   public signal void canvas_changed( DrawArea? da );
+
+  public signal void file_loaded( string fname );
+
+  public signal void tab_event( string tabname, TabReason reason );
 
   /* Create the main window UI */
   public MainWindow( Gtk.Application app, GLib.Settings settings ) {
@@ -250,6 +257,8 @@ public class MainWindow : ApplicationWindow {
       show_properties( "style", PropertyGrab.NONE );
     } else if( _settings.get_boolean( "sticker-properties-shown" ) ) {
       show_properties( "sticker", PropertyGrab.NONE );
+    } else if( _settings.get_boolean( "explorer-properties-shown" ) ) {
+      show_properties( "explorer", PropertyGrab.NONE );
     }
 
     /* Look for any changes to the settings */
@@ -320,6 +329,7 @@ public class MainWindow : ApplicationWindow {
     update_title( da );
     canvas_changed( da );
     save_tab_state( tab );
+    tab_event( tab.label, TabReason.SHOW );
   }
 
   /* Called whenever the current tab is moved to a new position */
@@ -331,6 +341,7 @@ public class MainWindow : ApplicationWindow {
   public void close_current_tab() {
     if( _nb.n_tabs == 1 ) return;
     _nb.current.close();
+    tab_event( _nb.current.label, TabReason.CLOSE );
   }
 
   /* Called whenever the user clicks on the close button and the tab is unnamed */
@@ -338,11 +349,12 @@ public class MainWindow : ApplicationWindow {
     var bin = (Gtk.Bin)tab.page;
     var da  = bin.get_child() as DrawArea;
     var ret = da.get_doc().is_saved() || show_save_warning( da );
+    tab_event( tab.label, TabReason.CLOSE );
     return( ret );
   }
 
   /* Adds a new tab to the notebook */
-  public DrawArea add_tab( string? fname, TabAddReason reason ) {
+  public DrawArea add_tab( string? fname, TabReason reason ) {
 
     /* Create and pack the canvas */
     var da = new DrawArea( this, _settings, _accel_group );
@@ -374,14 +386,14 @@ public class MainWindow : ApplicationWindow {
     update_title( da );
 
     /* Make the drawing area new */
-    if( reason == TabAddReason.NEW ) {
+    if( reason == TabReason.NEW ) {
       da.initialize_for_new();
     } else {
       da.initialize_for_open();
     }
 
     /* Indicate that the tab has changed */
-    if( reason != TabAddReason.LOAD ) {
+    if( reason != TabReason.LOAD ) {
       _nb.current = tab;
     }
 
@@ -396,7 +408,7 @@ public class MainWindow : ApplicationWindow {
    is already found, refresh the tab with the file contents and make it the current
    tab; otherwise, add the new tab and populate it.
   */
-  private DrawArea add_tab_conditionally( string fname, TabAddReason reason ) {
+  private DrawArea add_tab_conditionally( string fname, TabReason reason ) {
 
     foreach( Tab tab in _nb.tabs ) {
       var bin = (Gtk.Bin)tab.page;
@@ -808,7 +820,7 @@ public class MainWindow : ApplicationWindow {
     _stack.add_titled( new StyleInspector( this, _settings ), "style", _("Style") );
     _stack.add_titled( new StickerInspector( this, _settings ), "sticker", _("Stickers") );
     _stack.add_titled( new MapInspector( this, _settings ),  "map",  _("Map") );
-    _stack.add_titled( new FileInspector( this, _settings ),  "navigator",  _("Navigator") );
+    _stack.add_titled( new FileInspector( this, _settings ),  "explorer",  _("Explorer") );
 
     _stack.add_events( EventMask.KEY_PRESS_MASK );
     _stack.key_press_event.connect( stack_keypress );
@@ -820,6 +832,7 @@ public class MainWindow : ApplicationWindow {
         _settings.set_boolean( "style-properties-shown",   (_stack.visible_child_name == "style" ) );
         _settings.set_boolean( "sticker-properties-shown", (_stack.visible_child_name == "sticker" ) );
         _settings.set_boolean( "map-properties-shown",     (_stack.visible_child_name == "map") );
+        _settings.set_boolean( "explorer-properties-shown",(_stack.visible_child_name == "explorer") );
       }
     });
 
@@ -899,7 +912,7 @@ public class MainWindow : ApplicationWindow {
   */
   public void do_new_file() {
 
-    var da = add_tab( null, TabAddReason.NEW );
+    var da = add_tab( null, TabReason.NEW );
 
     /* Set the title to indicate that we have an unnamed document */
     update_title( da );
@@ -933,13 +946,20 @@ public class MainWindow : ApplicationWindow {
     }
 
     if( dialog.run() == ResponseType.ACCEPT ) {
-      var filename = dialog.get_filename();
-      open_file( filename );
-      Utils.store_chooser_folder( filename );
+      var pathfile = dialog.get_filename();
+      FileInspector fe = _stack.get_child_by_name("explorer") as FileInspector;
+      if(fe.file_is_loading(pathfile)) {
+        MessageDialog information = new MessageDialog(this, DialogFlags.MODAL, MessageType.WARNING, ButtonsType.YES_NO, "The %s is already opened. Do you want to open another file ?", pathfile);
+        var response = information.run();
+        information.destroy();
+        if(response == ResponseType.YES){ do_open_file(); }
+        else{ return; }
+      }else{
+        open_file( pathfile );
+        Utils.store_chooser_folder( pathfile );
+        get_current_da( "do_open_file" ).grab_focus();  
+      }
     }
-
-    get_current_da( "do_open_file" ).grab_focus();
-
   }
 
   /* Opens the file and display it in the canvas */
@@ -948,9 +968,10 @@ public class MainWindow : ApplicationWindow {
       return( false );
     }
     if( fname.has_suffix( ".minder" ) ) {
-      var da = add_tab_conditionally( fname, TabAddReason.OPEN );
+      var da = add_tab_conditionally( fname, TabReason.OPEN );
       update_title( da );
       da.get_doc().load();
+      file_loaded(fname);
       return( true );
     } else {
       for( int i=0; i<exports.length(); i++ ) {
@@ -958,7 +979,7 @@ public class MainWindow : ApplicationWindow {
           string new_fname;
           if( exports.index( i ).filename_matches( fname, out new_fname ) ) {
             new_fname += ".minder";
-            var da = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
+            var da = add_tab_conditionally( new_fname, TabReason.IMPORT );
             update_title( da );
             exports.index( i ).import( fname, da );
             return( true );
@@ -1106,15 +1127,16 @@ public class MainWindow : ApplicationWindow {
         }
         _pane.show_all();
       }
-      _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
+      _settings.set_boolean(_(_stack.visible_child_name + "-properties-shown"), true );
     }
     switch( grab_type ) {
       case PropertyGrab.FIRST :
         switch( _stack.visible_child_name ) {
-          case "current" :  (_stack.get_child_by_name( "current" ) as CurrentInspector).grab_first();  break;
-          case "style"   :  (_stack.get_child_by_name( "style" )   as StyleInspector).grab_first();    break;
-          case "sticker" :  (_stack.get_child_by_name( "sticker" ) as StickerInspector).grab_first();  break;
-          case "map"     :  (_stack.get_child_by_name( "map" )     as MapInspector).grab_first();      break;
+          case "current" :  (_stack.get_child_by_name( "current" )  as CurrentInspector).grab_first();  break;
+          case "style"   :  (_stack.get_child_by_name( "style" )    as StyleInspector).grab_first();    break;
+          case "sticker" :  (_stack.get_child_by_name( "sticker" )  as StickerInspector).grab_first();  break;
+          case "map"     :  (_stack.get_child_by_name( "map" )      as MapInspector).grab_first();      break;
+          case "explorer":  (_stack.get_child_by_name( "explorer" ) as FileInspector).grab_first();     break;
         }
         break;
       case PropertyGrab.NOTE  :
@@ -1159,10 +1181,11 @@ public class MainWindow : ApplicationWindow {
     _pane.position_set      = false;
     _pane.remove( _inspector_nb );
     get_current_da( "hide_properties" ).grab_focus();
-    _settings.set_boolean( "current-properties-shown", false );
-    _settings.set_boolean( "map-properties-shown",     false );
-    _settings.set_boolean( "style-properties-shown",   false );
-    _settings.set_boolean( "sticker-properties-shown", false );
+    _settings.set_boolean( "current-properties-shown",  false );
+    _settings.set_boolean( "map-properties-shown",      false );
+    _settings.set_boolean( "style-properties-shown",    false );
+    _settings.set_boolean( "sticker-properties-shown",  false );
+    _settings.set_boolean( "explorer-properties-shown", false );
   }
 
   /* Converts the given value from the scale to the zoom value to use */
@@ -1258,12 +1281,12 @@ public class MainWindow : ApplicationWindow {
     };
     _search_items.clear();
     if( _search_entry.get_text().length > 3) {
-      FileInspector fe = _stack.get_child_by_name("navigator") as FileInspector;
-      GLib.List<NodeSchema> results = fe.search(_search_entry.get_text());
+      FileInspector fe = _stack.get_child_by_name("explorer") as FileInspector;
+      GLib.List<NodeData> results = fe.search(_search_entry.get_text());
       foreach (var entry in results) {
         TreeIter it;
         _search_items.append(out it);
-        _search_items.set( it, 0, "<b><i>%s:</i></b>".printf( GLib.Path.get_basename(entry.filename).split(".")[0] ), 1, entry.node_text, 2, entry.id, 3, "", 4, entry.filename, -1 );
+        _search_items.set( it, 0, "<b><i>%s:</i></b>".printf( GLib.Path.get_basename(entry.pathfile) ), 1, entry.node_text, 2, entry.id, 3, "", 4, entry.pathfile, -1 );
       }
     }else{
    /*    MessageDialog md = new MessageDialog(this, DialogFlags.MODAL, MessageType.INFO, ButtonsType.OK, "3 characters minimum");
@@ -1280,31 +1303,34 @@ public class MainWindow : ApplicationWindow {
     string[]    data = new string[4]; // 0 = text, 1 = node id, 2 = connection, 3 = filename
     Node?       node = null;
     Connection? conn = null;
-    DrawArea    da   = null;
+    DrawArea?    da  = null;
     Tab   tab_search = null;
     _search_items.get_iter( out it, path );
     _search_items.get( it, 1, &data[0], 2, &data[1], 3, &data[2], 4, &data[3], -1 );
     string base_name = GLib.Path.get_basename(data[3]);
-    _nb.tabs.foreach((tab) => { if(tab.label == base_name) { tab_search = tab; } });
+    _nb.tabs.foreach((tab) => { if(tab.label == base_name) { tab_search = tab; } });// find or search method are little strange...
     if(tab_search != null) {
       da = (DrawArea)((Gtk.Bin)tab_search.page).get_child();
-      _nb.current = tab_search;
-      node = da.get_node(da.get_nodes(), int.parse(data[1]));
-      da.set_current_node( node );
     }else if(open_file(data[3])){
       da = get_current_da( "do_open_file" );
+    }
+    if(da != null) {
+      _nb.current = tab_search;
       if( data[1] != "" ) {
         node = da.get_node(da.get_nodes(), int.parse(data[1]));
-        da.set_current_connection( null );
-        da.set_current_node( node );
-      } else if( data[2] != "" ) {
+        if(node != null){
+          da.set_current_connection( null );
+          da.set_current_node( node );
+          //da.see(0,1);
+        }
+      }/*else if( data[2] != "" ) {
         da.set_current_node( null );
         da.set_current_connection( conn );
-      }
-      da.see();
+        da.see();
+      }*/
+      _search.closed();
+      da.grab_focus();
     }
-    _search.closed();
-    da.grab_focus();
   }
 
   /*
@@ -1319,6 +1345,11 @@ public class MainWindow : ApplicationWindow {
       }
     }
     return( fname + extensions[0] );
+  }
+
+  /* Workaround to be able compile the program */
+  private void action_export() {
+    //TODO
   }
 
   /* Exports the model to the printer */
@@ -1388,6 +1419,17 @@ public class MainWindow : ApplicationWindow {
     _nb.previous_page();
   }
 
+  /* Change the current tab in the tabbar */
+  public void action_change_tab(string tabname) {
+    foreach (Tab tab in _nb.tabs) {
+      if(tab.label == tabname) {
+        _nb.current = tab;
+        tab_changed(tab);
+        break;
+      }
+    }
+  }
+  
   /* Save the current tab state */
   private void save_tab_state( Tab current_tab ) {
 
@@ -1442,9 +1484,10 @@ public class MainWindow : ApplicationWindow {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
         var fname = it->get_prop( "path" );
         var saved = it->get_prop( "saved" );
-        var da    = add_tab( fname, TabAddReason.LOAD );
+        var da    = add_tab( fname, TabReason.LOAD );
         da.get_doc().load_filename( fname, bool.parse( saved ) );
         da.get_doc().load();
+        file_loaded(fname);
       }
     }
 
@@ -1478,6 +1521,5 @@ public class MainWindow : ApplicationWindow {
       app.send_notification( "com.github.phase1geo.minder", notification );
     }
   }
-
 }
 

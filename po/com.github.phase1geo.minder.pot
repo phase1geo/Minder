@@ -615,6 +615,10 @@ msgstr ""
 msgid "Map"
 msgstr ""
 
+#: src/MainWindow.vala:753
+msgid "Explorer"
+msgstr ""
+
 #: src/MainWindow.vala:804
 msgid "Save current unnamed document?"
 msgstr ""
@@ -1894,3 +1898,7 @@ msgstr ""
 #: src/FileInspector.vala:63
 msgid "Files"
 msgstr ""
+
+#: src/FileInspector.vala:63
+msgid "Fileopened"
+msgstr "The %s is already opened. Do you want to open another file ?"

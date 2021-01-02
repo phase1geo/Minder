@@ -185,6 +185,8 @@ public class NodeInspector : Box {
     lbl.use_markup = true;
 
     _text = new NoteView();
+    //var manager = _text.get_style_context();
+    
     _text.set_wrap_mode( Gtk.WrapMode.WORD );
     _text.buffer.text = "";
     _text.buffer.changed.connect( text_changed );
