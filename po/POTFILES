@@ -40,7 +40,7 @@ src/undo_actions/UndoNodeBalance.vala
 src/undo_actions/UndoNodeCut.vala
 src/undo_actions/UndoNodeDelete.vala
 src/undo_actions/UndoNodeDetach.vala
-src/undo_actions/UndoNodeFold.vala
+src/undo_actions/UndoNodeFolds.vala
 src/undo_actions/UndoNodeImage.vala
 src/undo_actions/UndoNodeInsert.vala
 src/undo_actions/UndoNodeLayout.vala
@@ -53,13 +53,11 @@ src/undo_actions/UndoNodePaste.vala
 src/undo_actions/UndoNodeReparentLinkColor.vala
 src/undo_actions/UndoNodeReplace.vala
 src/undo_actions/UndoNodeResize.vala
-src/undo_actions/UndoNodeReveal.vala
 src/undo_actions/UndoNodeSort.vala
 src/undo_actions/UndoNodeTask.vala
 src/undo_actions/UndoNodesAlign.vala
 src/undo_actions/UndoNodesCut.vala
 src/undo_actions/UndoNodesDelete.vala
-src/undo_actions/UndoNodesFold.vala
 src/undo_actions/UndoNodesInsert.vala
 src/undo_actions/UndoNodesLink.vala
 src/undo_actions/UndoNodesLinkColor.vala
@@ -93,5 +91,6 @@ src/ThemeEditor.vala
 src/Theme.vala
 src/UndoBuffer.vala
 src/UrlEditor.vala
+src/FileInspector.vala
 
 data/com.github.phase1geo.minder.shortcuts.ui
