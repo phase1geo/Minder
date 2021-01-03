@@ -53,12 +53,15 @@ public class Document : Object {
   public bool save_needed { private set; get; default = false; }
 
   /* Default constructor */
-  public Document( DrawArea da ) {
+  public Document( DrawArea da, string directory = "") {
 
     _da = da;
 
     /* Create the temporary file */
-    var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
+    var dir = directory;
+    if(dir == "") {
+      dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
+    }
     if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
       int i = 1;
       do {

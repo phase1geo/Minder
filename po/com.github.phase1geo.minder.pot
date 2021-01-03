@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-03 09:55+0900\n"
+"POT-Creation-Date: 2021-01-03 17:41+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -437,8 +437,8 @@ msgstr ""
 msgid "Cursor: %3d,%3d"
 msgstr ""
 
-#: src/ImageEditor.vala:375 src/ImageManager.vala:299 src/MainWindow.vala:884
-#: src/MainWindow.vala:928 src/MainWindow.vala:1053 src/QuickEntry.vala:118
+#: src/ImageEditor.vala:375 src/ImageManager.vala:299 src/MainWindow.vala:886
+#: src/MainWindow.vala:930 src/MainWindow.vala:1055 src/QuickEntry.vala:118
 #: src/ThemeEditor.vala:143 src/UrlEditor.vala:61
 msgid "Cancel"
 msgstr ""
@@ -475,180 +475,180 @@ msgstr ""
 msgid "Images"
 msgstr ""
 
-#: src/MainWindow.vala:161 src/MainWindow.vala:1058
+#: src/MainWindow.vala:163 src/MainWindow.vala:1060
 msgid "Minder"
 msgstr ""
 
-#: src/MainWindow.vala:195 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:197 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
 msgstr ""
 
-#: src/MainWindow.vala:201 src/MainWindow.vala:928
+#: src/MainWindow.vala:203 src/MainWindow.vala:930
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr ""
 
-#: src/MainWindow.vala:207 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:209 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
 msgstr ""
 
-#: src/MainWindow.vala:213 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:215 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr ""
 
-#: src/MainWindow.vala:220 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:222 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr ""
 
-#: src/MainWindow.vala:462
+#: src/MainWindow.vala:464
 msgid "Unnamed Document"
 msgstr ""
 
-#: src/MainWindow.vala:466 src/MainWindow.vala:747
+#: src/MainWindow.vala:468 src/MainWindow.vala:749
 msgid "Focus Mode"
 msgstr ""
 
-#: src/MainWindow.vala:497
+#: src/MainWindow.vala:499
 msgid "Zoom"
 msgstr ""
 
-#: src/MainWindow.vala:504
+#: src/MainWindow.vala:506
 msgid "Zoom to Percent"
 msgstr ""
 
-#: src/MainWindow.vala:516 data/com.github.phase1geo.minder.shortcuts.ui:96
+#: src/MainWindow.vala:518 data/com.github.phase1geo.minder.shortcuts.ui:96
 msgid "Zoom In"
 msgstr ""
 
-#: src/MainWindow.vala:521 data/com.github.phase1geo.minder.shortcuts.ui:103
+#: src/MainWindow.vala:523 data/com.github.phase1geo.minder.shortcuts.ui:103
 msgid "Zoom Out"
 msgstr ""
 
-#: src/MainWindow.vala:526
+#: src/MainWindow.vala:528
 msgid "Zoom to Fit"
 msgstr ""
 
-#: src/MainWindow.vala:531
+#: src/MainWindow.vala:533
 msgid "Zoom to Fit Selected Node"
 msgstr ""
 
-#: src/MainWindow.vala:536
+#: src/MainWindow.vala:538
 msgid "Zoom to Actual Size"
 msgstr ""
 
-#: src/MainWindow.vala:563
+#: src/MainWindow.vala:565
 msgid "Search"
 msgstr ""
 
-#: src/MainWindow.vala:573
+#: src/MainWindow.vala:575
 msgid "Search Nodes and Connections"
 msgstr ""
 
-#: src/MainWindow.vala:596
+#: src/MainWindow.vala:598
 msgid "Search Criteria"
 msgstr ""
 
-#: src/MainWindow.vala:618
+#: src/MainWindow.vala:620
 msgid "Nodes"
 msgstr ""
 
-#: src/MainWindow.vala:619
+#: src/MainWindow.vala:621
 msgid "Connections"
 msgstr ""
 
-#: src/MainWindow.vala:620
+#: src/MainWindow.vala:622
 msgid "Titles"
 msgstr ""
 
-#: src/MainWindow.vala:621
+#: src/MainWindow.vala:623
 msgid "Notes"
 msgstr ""
 
-#: src/MainWindow.vala:622
+#: src/MainWindow.vala:624
 msgid "Folded"
 msgstr ""
 
-#: src/MainWindow.vala:623
+#: src/MainWindow.vala:625
 msgid "Unfolded"
 msgstr ""
 
-#: src/MainWindow.vala:624
+#: src/MainWindow.vala:626
 msgid "Tasks"
 msgstr ""
 
-#: src/MainWindow.vala:625
+#: src/MainWindow.vala:627
 msgid "Non-tasks"
 msgstr ""
 
-#: src/MainWindow.vala:715
+#: src/MainWindow.vala:717
 msgid "Export"
 msgstr ""
 
-#: src/MainWindow.vala:724
+#: src/MainWindow.vala:726
 msgid "Print…"
 msgstr ""
 
-#: src/MainWindow.vala:772
+#: src/MainWindow.vala:774
 msgid "Preferences"
 msgstr ""
 
-#: src/MainWindow.vala:777
+#: src/MainWindow.vala:779
 msgid "Shortcuts Cheatsheet"
 msgstr ""
 
-#: src/MainWindow.vala:804 src/MainWindow.vala:1179
+#: src/MainWindow.vala:806 src/MainWindow.vala:1181
 msgid "Show Property Sidebar"
 msgstr ""
 
-#: src/MainWindow.vala:819
+#: src/MainWindow.vala:821
 msgid "Current"
 msgstr ""
 
-#: src/MainWindow.vala:820 src/StyleInspector.vala:184
+#: src/MainWindow.vala:822 src/StyleInspector.vala:184
 msgid "Style"
 msgstr ""
 
-#: src/MainWindow.vala:821
+#: src/MainWindow.vala:823
 msgid "Stickers"
 msgstr ""
 
-#: src/MainWindow.vala:822
+#: src/MainWindow.vala:824
 msgid "Map"
 msgstr ""
 
-#: src/MainWindow.vala:823
+#: src/MainWindow.vala:825
 msgid "Explorer"
 msgstr ""
 
-#: src/MainWindow.vala:875
+#: src/MainWindow.vala:877
 msgid "Save current unnamed document?"
 msgstr ""
 
-#: src/MainWindow.vala:876
+#: src/MainWindow.vala:878
 msgid "Changes will be permanently lost if not saved."
 msgstr ""
 
-#: src/MainWindow.vala:881
+#: src/MainWindow.vala:883
 msgid "Discard Changes"
 msgstr ""
 
-#: src/MainWindow.vala:887 src/MainWindow.vala:1053 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:889 src/MainWindow.vala:1055 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr ""
 
-#: src/MainWindow.vala:928
+#: src/MainWindow.vala:930
 msgid "Open"
 msgstr ""
 
-#: src/MainWindow.vala:1053
+#: src/MainWindow.vala:1055
 msgid "Save File"
 msgstr ""
 
-#: src/MainWindow.vala:1112
+#: src/MainWindow.vala:1114
 msgid "Hide Property Sidebar"
 msgstr ""
 
-#: src/MainWindow.vala:1130
+#: src/MainWindow.vala:1132
 msgid "-properties-shown"
 msgstr ""
 
@@ -701,7 +701,7 @@ msgid "Link Color"
 msgstr ""
 
 #: src/NodeInspector.vala:182
-msgid "Text"
+msgid "Node text"
 msgstr ""
 
 #: src/NodeInspector.vala:214
@@ -1273,8 +1273,8 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
-#: src/FileInspector.vala:87
-msgid "Files"
+#: src/FileInspector.vala:187
+msgid "Directory : "
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:6

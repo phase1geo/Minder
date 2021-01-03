@@ -179,7 +179,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     win = w;
 
-    _doc      = new Document( this );
+    _doc      = new Document( this, settings.get_string("default-directory") );
     _settings = settings;
 
     /* Create the selection */

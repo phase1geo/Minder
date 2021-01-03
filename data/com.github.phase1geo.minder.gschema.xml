@@ -276,5 +276,10 @@
       <summary>Last used export</summary>
       <description>Stores last used export and uses it when it is later invoked</description>
     </key>
+    <key name="default-directory" type="s">
+      <default>""</default>
+      <summary>The directory default </summary>
+      <description>The directory to save the new files by default</description>
+    </key>
   </schema>
 </schemalist>

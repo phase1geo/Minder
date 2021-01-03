@@ -45,7 +45,8 @@ public class FileInspector : Box {
     private TreeStore                   _tree;
     private string                      default_path = "";
     private ScrolledWindow              _sw;
-    public  MainWindow                  _win;
+    private MainWindow                  _win;
+    private GLib.Settings               _settings;
     private HashTable<string, FileData> _files;
     private string                      _cur_selected;
 
@@ -60,10 +61,12 @@ public class FileInspector : Box {
 
     public FileInspector( MainWindow win, GLib.Settings settings ) {
         Object( orientation:Orientation.VERTICAL, spacing:10 );
+        _settings = settings;
         _win = win;
         _win.file_loaded.connect(file_loaded);
         _win.tab_event.connect(highlight_tree);
-        directory = settings.get_string( "last-directory" );
+        _win.preference_changed.connect(settings_changed);
+        directory = settings.get_string( "default-directory" );
         _files = new HashTable<string, FileData>(str_hash, str_equal);
 
         init_tree();
@@ -84,7 +87,7 @@ public class FileInspector : Box {
         CellRendererText renderer = new CellRendererText();
         renderer.set_property("foreground-set",true);
         col.pack_start (renderer, true);
-        col.set_title(_("Files"));
+        col.set_title(create_title());
         col.add_attribute(renderer, "text", 0);
         col.add_attribute(renderer, "foreground", 1);
 //        col.set_clickable(true);
@@ -98,7 +101,7 @@ public class FileInspector : Box {
         _view.enable_search = true;
         _view.row_activated.connect( on_row_activated );
 
-        load_files(null, directory);
+        load_files(null, default_path);
     }
 
     private void load_files( TreeIter? root, string dir_name ) {
@@ -106,7 +109,7 @@ public class FileInspector : Box {
             GLib.Dir dir = GLib.Dir.open(dir_name);
             string? name = null;
             TreeIter child_folder;
-
+            _tree.clear();
             while ((name = dir.read_name ()) != null) {
                 string path = Path.build_filename (dir_name, name);
                 if (FileUtils.test (path, FileTest.IS_REGULAR) && name.has_suffix(".minder")) {
@@ -129,22 +132,6 @@ public class FileInspector : Box {
             }            
         } catch (GLib.FileError fe) {
             printerr("FileInspector Load files : " + fe.message);
-        }
-    }
-
-    private void on_row_activated( TreePath path, TreeViewColumn col ) {
-        TreeIter iter;
-        string select_name = "";
-        _tree.get_iter(out iter, path);
-        _tree.get(iter, 0, &select_name);
-        if(select_name != null) {
-            FileData ft = _files.get(select_name);
-            if(!ft.loaded) {
-                string complete_name = Path.build_filename(ft.path, ft.name);
-                _win.open_file(complete_name);
-            }else{
-                _win.action_change_tab(select_name);
-            }
         }
     }
 
@@ -195,7 +182,42 @@ public class FileInspector : Box {
     _view.grab_focus();
   }
 
-  /* On file loaded : */
+  private string create_title() {
+    int idx = default_path.length;
+    string prefix = _("Directory : ");
+    if(idx > 30) {
+        unichar  c = 0;
+        int i = 0;
+        prefix += "...";
+        while (default_path.get_prev_char(ref idx, out c) && i < 30) {
+          i++;
+        }
+      }
+      return prefix + default_path.substring(idx);
+  }
+
+  /**********************
+        SIGNAL HANDLER
+  **********************/
+
+  /* Get the selected file and open it */
+  private void on_row_activated( TreePath path, TreeViewColumn col ) {
+    TreeIter iter;
+    string select_name = "";
+    _tree.get_iter(out iter, path);
+    _tree.get(iter, 0, &select_name);
+    if(select_name != null) {
+        FileData ft = _files.get(select_name);
+        if(!ft.loaded) {
+            string complete_name = Path.build_filename(ft.path, ft.name);
+            _win.open_file(complete_name);
+        }else{
+            _win.action_change_tab(select_name);
+        }
+    }
+}
+
+  /* On file loaded : highlight the selected file */
   private void file_loaded(string fname) {
       highlight_tree(fname, TabReason.LOAD);
   }
@@ -206,6 +228,12 @@ public class FileInspector : Box {
           return _files.get(filename).loaded;
       }
       return false;
+  }
+
+  private void settings_changed() {
+      default_path = _settings.get_string("default-directory");
+      load_files(null, default_path);
+      _view.get_column(0).set_title(create_title());
   }
 
   /* 

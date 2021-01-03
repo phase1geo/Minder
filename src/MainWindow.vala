@@ -134,6 +134,8 @@ public class MainWindow : ApplicationWindow {
 
   public signal void tab_event( string tabname, TabReason reason );
 
+  public signal void preference_changed();
+
   /* Create the main window UI */
   public MainWindow( Gtk.Application app, GLib.Settings settings ) {
 

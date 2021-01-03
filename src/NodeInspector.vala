@@ -179,7 +179,7 @@ public class NodeInspector : Box {
   private void create_text() {
 
     Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( Utils.make_title( _( "Text" ) ) );
+    Label lbl = new Label( Utils.make_title( _( "Node text" ) ) );
 
     lbl.xalign     = (float)0;
     lbl.use_markup = true;

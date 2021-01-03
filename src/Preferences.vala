@@ -50,6 +50,7 @@ public class Preferences : Gtk.Dialog {
     var switcher = new StackSwitcher();
     switcher.set_stack( stack );
     switcher.halign = Align.CENTER;
+    switcher.focus_on_click = true;
 
     var box = new Box( Orientation.VERTICAL, 0 );
     box.pack_start( switcher, false, true, 0 );
@@ -60,6 +61,7 @@ public class Preferences : Gtk.Dialog {
     /* Create close button at bottom of window */
     var close_button = new Button.with_label( _( "Close" ) );
     close_button.clicked.connect(() => {
+      _win.preference_changed();
       destroy();
     });
 
@@ -91,6 +93,9 @@ public class Preferences : Gtk.Dialog {
     grid.attach( make_label( "Select items on mouse hover" ), 0, 4 );
     grid.attach( make_switch( "select-on-hover" ), 1, 4 );
     grid.attach( make_info( _( "If enabled, selects items when mouse cursor hovers over the item." ) ), 2, 4 );
+
+    grid.attach( make_label( _("Select the default directory") ), 0, 5 );
+    grid.attach( create_button( _("Select...")), 1, 5 );
 
     return( grid );
 
@@ -178,4 +183,24 @@ public class Preferences : Gtk.Dialog {
 
   }
 
+  private Button create_button(string label) {
+    var bt = new Button();
+    bt.label = label;
+    bt.clicked.connect(choose_directory);
+    return bt;
+  }
+
+  private void choose_directory() {
+    FileChooserNative fcd = new FileChooserNative(_("Select the default directory"), _win, FileChooserAction.SELECT_FOLDER, "Choose", "Cancel");
+    if( fcd.run() == ResponseType.ACCEPT ) {
+      try{
+        var location = GLib.Filename.from_uri(fcd.get_uri());
+        _settings.set_string("default-directory", location);
+      }catch(ConvertError e){
+        printerr("Convert pathfile from uri : " + e.message);
+      }finally {
+        fcd.destroy();
+      }
+    }
+  }
 }

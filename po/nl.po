@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-03 09:55+0900\n"
+"POT-Creation-Date: 2021-01-03 17:41+0900\n"
 "PO-Revision-Date: 2020-04-20 14:26+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: \n"
@@ -470,8 +470,8 @@ msgstr "Bijsnijdgebied: %d,%d %3dx%3d"
 msgid "Cursor: %3d,%3d"
 msgstr "Cursor: %3d,%3d"
 
-#: src/ImageEditor.vala:375 src/ImageManager.vala:299 src/MainWindow.vala:884
-#: src/MainWindow.vala:928 src/MainWindow.vala:1053 src/QuickEntry.vala:118
+#: src/ImageEditor.vala:375 src/ImageManager.vala:299 src/MainWindow.vala:886
+#: src/MainWindow.vala:930 src/MainWindow.vala:1055 src/QuickEntry.vala:118
 #: src/ThemeEditor.vala:143 src/UrlEditor.vala:61
 msgid "Cancel"
 msgstr "Annuleren"
@@ -513,183 +513,183 @@ msgstr "Tak kiezen"
 msgid "Images"
 msgstr "Afbeelding"
 
-#: src/MainWindow.vala:161 src/MainWindow.vala:1058
+#: src/MainWindow.vala:163 src/MainWindow.vala:1060
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:195 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:197 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
 msgstr "Nieuw bestand"
 
-#: src/MainWindow.vala:201 src/MainWindow.vala:928
+#: src/MainWindow.vala:203 src/MainWindow.vala:930
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "Bestand openen"
 
-#: src/MainWindow.vala:207 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:209 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
 msgstr "Bestand opslaan als"
 
-#: src/MainWindow.vala:213 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:215 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Ongedaan maken"
 
-#: src/MainWindow.vala:220 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:222 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Opnieuw uitvoeren"
 
-#: src/MainWindow.vala:462
+#: src/MainWindow.vala:464
 msgid "Unnamed Document"
 msgstr "Naamloos document"
 
-#: src/MainWindow.vala:466 src/MainWindow.vala:747
+#: src/MainWindow.vala:468 src/MainWindow.vala:749
 msgid "Focus Mode"
 msgstr "Focusmodus"
 
-#: src/MainWindow.vala:497
+#: src/MainWindow.vala:499
 msgid "Zoom"
 msgstr "Zoomen"
 
-#: src/MainWindow.vala:504
+#: src/MainWindow.vala:506
 msgid "Zoom to Percent"
 msgstr "Percentage zoomen"
 
-#: src/MainWindow.vala:516 data/com.github.phase1geo.minder.shortcuts.ui:96
+#: src/MainWindow.vala:518 data/com.github.phase1geo.minder.shortcuts.ui:96
 msgid "Zoom In"
 msgstr "Inzoomen"
 
-#: src/MainWindow.vala:521 data/com.github.phase1geo.minder.shortcuts.ui:103
+#: src/MainWindow.vala:523 data/com.github.phase1geo.minder.shortcuts.ui:103
 msgid "Zoom Out"
 msgstr "Uitzoomen"
 
-#: src/MainWindow.vala:526
+#: src/MainWindow.vala:528
 msgid "Zoom to Fit"
 msgstr "Passend zoomen"
 
-#: src/MainWindow.vala:531
+#: src/MainWindow.vala:533
 msgid "Zoom to Fit Selected Node"
 msgstr "Zoomen om gekozen knoop te laten passen"
 
-#: src/MainWindow.vala:536
+#: src/MainWindow.vala:538
 msgid "Zoom to Actual Size"
 msgstr "Ware grootte"
 
-#: src/MainWindow.vala:563
+#: src/MainWindow.vala:565
 msgid "Search"
 msgstr "Zoeken"
 
-#: src/MainWindow.vala:573
+#: src/MainWindow.vala:575
 msgid "Search Nodes and Connections"
 msgstr "Knopen en verbindingen zoeken"
 
-#: src/MainWindow.vala:596
+#: src/MainWindow.vala:598
 msgid "Search Criteria"
 msgstr "Zoeken naar"
 
-#: src/MainWindow.vala:618
+#: src/MainWindow.vala:620
 msgid "Nodes"
 msgstr "Knopen"
 
-#: src/MainWindow.vala:619
+#: src/MainWindow.vala:621
 msgid "Connections"
 msgstr "Verbindingen"
 
-#: src/MainWindow.vala:620
+#: src/MainWindow.vala:622
 msgid "Titles"
 msgstr "Titels"
 
-#: src/MainWindow.vala:621
+#: src/MainWindow.vala:623
 msgid "Notes"
 msgstr "Aantekeningen"
 
-#: src/MainWindow.vala:622
+#: src/MainWindow.vala:624
 msgid "Folded"
 msgstr "Ingeklapt"
 
-#: src/MainWindow.vala:623
+#: src/MainWindow.vala:625
 msgid "Unfolded"
 msgstr "Uitgeklapt"
 
-#: src/MainWindow.vala:624
+#: src/MainWindow.vala:626
 msgid "Tasks"
 msgstr "Taken"
 
-#: src/MainWindow.vala:625
+#: src/MainWindow.vala:627
 msgid "Non-tasks"
 msgstr "Niet-taken"
 
-#: src/MainWindow.vala:715
+#: src/MainWindow.vala:717
 msgid "Export"
 msgstr "Exporteren"
 
-#: src/MainWindow.vala:724
+#: src/MainWindow.vala:726
 #, fuzzy
 msgid "Print…"
 msgstr "Afdrukken"
 
-#: src/MainWindow.vala:772
+#: src/MainWindow.vala:774
 msgid "Preferences"
 msgstr ""
 
-#: src/MainWindow.vala:777
+#: src/MainWindow.vala:779
 msgid "Shortcuts Cheatsheet"
 msgstr "Sneltoetsoverzicht"
 
-#: src/MainWindow.vala:804 src/MainWindow.vala:1179
+#: src/MainWindow.vala:806 src/MainWindow.vala:1181
 #, fuzzy
 msgid "Show Property Sidebar"
 msgstr "Eigenschappen tonen"
 
-#: src/MainWindow.vala:819
+#: src/MainWindow.vala:821
 msgid "Current"
 msgstr "Huidige"
 
-#: src/MainWindow.vala:820 src/StyleInspector.vala:184
+#: src/MainWindow.vala:822 src/StyleInspector.vala:184
 msgid "Style"
 msgstr "Stijl"
 
-#: src/MainWindow.vala:821
+#: src/MainWindow.vala:823
 msgid "Stickers"
 msgstr ""
 
-#: src/MainWindow.vala:822
+#: src/MainWindow.vala:824
 msgid "Map"
 msgstr "Kaart"
 
-#: src/MainWindow.vala:823
+#: src/MainWindow.vala:825
 msgid "Explorer"
 msgstr ""
 
-#: src/MainWindow.vala:875
+#: src/MainWindow.vala:877
 msgid "Save current unnamed document?"
 msgstr "Wil je het huidige naamloze document opslaan?"
 
-#: src/MainWindow.vala:876
+#: src/MainWindow.vala:878
 msgid "Changes will be permanently lost if not saved."
 msgstr "Als je dat niet doen, gaan de aanpassingen permanent verloren."
 
-#: src/MainWindow.vala:881
+#: src/MainWindow.vala:883
 msgid "Discard Changes"
 msgstr "Aanpassingen verwerpen"
 
-#: src/MainWindow.vala:887 src/MainWindow.vala:1053 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:889 src/MainWindow.vala:1055 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Opslaan"
 
-#: src/MainWindow.vala:928
+#: src/MainWindow.vala:930
 msgid "Open"
 msgstr "Openen"
 
-#: src/MainWindow.vala:1053
+#: src/MainWindow.vala:1055
 msgid "Save File"
 msgstr "Bestand opslaan"
 
-#: src/MainWindow.vala:1112
+#: src/MainWindow.vala:1114
 #, fuzzy
 msgid "Hide Property Sidebar"
 msgstr "Eigenschappen"
 
-#: src/MainWindow.vala:1130
+#: src/MainWindow.vala:1132
 #, fuzzy
 msgid "-properties-shown"
 msgstr "Eigenschappen"
@@ -744,8 +744,8 @@ msgstr "Verbindingskleur"
 
 #: src/NodeInspector.vala:182
 #, fuzzy
-msgid "Text"
-msgstr "Platte tekst"
+msgid "Node text"
+msgstr "Aantekening"
 
 #: src/NodeInspector.vala:214
 msgid "Image"
@@ -1358,10 +1358,9 @@ msgstr "Opnieuw uitvoeren "
 msgid "URL"
 msgstr ""
 
-#: src/FileInspector.vala:87
-#, fuzzy
-msgid "Files"
-msgstr "Bestand"
+#: src/FileInspector.vala:187
+msgid "Directory : "
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:6
 msgid "Minder Shortcuts"
@@ -1940,6 +1939,14 @@ msgstr "Tak kiezen"
 #: data/com.github.phase1geo.minder.shortcuts.ui:912
 msgid "[Triple left-click anywhere in text]"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Text"
+#~ msgstr "Platte tekst"
+
+#, fuzzy
+#~ msgid "Files"
+#~ msgstr "Bestand"
 
 #~ msgid "node change fold"
 #~ msgstr "in-/uitklappen"
