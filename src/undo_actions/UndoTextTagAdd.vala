@@ -21,18 +21,20 @@
 
 public class UndoTextTagAdd : UndoTextItem {
 
-  public int       start { private set; get; }
-  public int       end   { private set; get; }
-  public FormatTag tag   { private set; get; }
-  public string?   extra { private set; get; }
+  public int       start  { private set; get; }
+  public int       end    { private set; get; }
+  public FormatTag tag    { private set; get; }
+  public string?   extra  { private set; get; }
+  public bool      parsed { private set; get; }
 
   /* Default constructor */
-  public UndoTextTagAdd( int start, int end, FormatTag tag, string? extra, int cursor ) {
+  public UndoTextTagAdd( int start, int end, FormatTag tag, string? extra, bool parsed, int cursor ) {
     base( _( "format tag add" ), UndoTextOp.TAGADD, cursor, cursor );
-    this.start = start;
-    this.end   = end;
-    this.tag   = tag;
-    this.extra = extra;
+    this.start  = start;
+    this.end    = end;
+    this.tag    = tag;
+    this.extra  = extra;
+    this.parsed = parsed;
   }
 
   /* Causes the stored item to be put into the before state */
@@ -44,7 +46,7 @@ public class UndoTextTagAdd : UndoTextItem {
 
   /* Causes the stored item to be put into the after state */
   public override void redo_text( DrawArea da, CanvasText ct ) {
-    ct.text.add_tag( tag, start, end, extra );
+    ct.text.add_tag( tag, start, end, parsed, extra );
     ct.set_cursor_only( end_cursor );
     da.queue_draw();
   }
