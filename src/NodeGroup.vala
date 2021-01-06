@@ -43,7 +43,6 @@ public class NodeGroup {
 
   public GroupMode mode  { get; set; default = GroupMode.NONE; }
   public RGBA      color { get; set; }
-  public double    alpha { get; set; default = 1.0; }
   public Array<Node> nodes {
     get {
       return( _nodes );
@@ -177,8 +176,10 @@ public class NodeGroup {
   public void draw( Context ctx, Theme theme ) {
     var points   = new Array<NodePoint?>();
     var selected = mode == GroupMode.SELECTED;
+    var alpha    = 0.0;
     for( int i=0; i<_nodes.length; i++ ) {
       get_tree_points( _nodes.index( i ), _nodes.index( i ), points );
+      alpha = (_nodes.index( i ).alpha > alpha) ? _nodes.index( i ).alpha : alpha;
     }
     draw_cloud( ctx, (selected ? theme.get_color( "nodesel_background" ) : color), selected, alpha, points );
   }
@@ -201,7 +202,7 @@ public class NodeGroup {
     if( hull.length == 0 ) return;
 
     /* Draw the fill */
-    Utils.set_context_color_with_alpha( ctx, color, ((alpha == 1.0) ? 0.3 : alpha) );
+    Utils.set_context_color_with_alpha( ctx, color, (alpha * 0.3) );
     ctx.move_to( hull.index( 0 ).x, hull.index( 0 ).y );
     for( int i=0; i<hull.length; i++ ) {
       ctx.line_to( hull.index( i ).x, hull.index( i ).y );
