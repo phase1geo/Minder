@@ -197,6 +197,9 @@ public class NodeGroup {
     var hull = new Array<NodePoint?>();
     get_convex_hull( points, hull );
 
+    /* If there is nothing to draw, return */
+    if( hull.length == 0 ) return;
+
     /* Draw the fill */
     Utils.set_context_color_with_alpha( ctx, color, ((alpha == 1.0) ? 0.3 : alpha) );
     ctx.move_to( hull.index( 0 ).x, hull.index( 0 ).y );
@@ -244,9 +247,9 @@ public class NodeGroup {
 
   /* Gets the set of all points in the given node tree */
   public static void get_tree_points( Node origin, Node node, Array<NodePoint?> points ) {
-    var pad = node.groups_between( origin ) * 5;
-    add_node_points( points, node, pad );
-    if( !node.folded ) {
+    if( node.folded_ancestor() == null ) {
+      var pad = node.groups_between( origin ) * 5;
+      add_node_points( points, node, pad );
       for( int i=0; i<node.children().length; i++ ) {
         get_tree_points( origin, node.children().index( i ), points );
       }
@@ -257,6 +260,8 @@ public class NodeGroup {
   public static void get_convex_hull( Array<NodePoint?> points, Array<NodePoint?> hull ) {
 
     var n = (int)points.length;
+
+    if( n == 0 ) return;
 
     /* Get the left-most point */
     var l = 0;
