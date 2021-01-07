@@ -314,7 +314,7 @@ public class MainWindow : ApplicationWindow {
   private void tab_changed( Tab tab ) {
     var bin = (Gtk.Bin)tab.page;
     var da  = bin.get_child() as DrawArea;
-    do_buffer_changed( da.undo_buffer );
+    do_buffer_changed( da.current_undo_buffer() );
     on_current_changed( da );
     update_title( da );
     canvas_changed( da );
@@ -351,6 +351,7 @@ public class MainWindow : ApplicationWindow {
     da.hide_properties.connect( hide_properties );
     da.map_event.connect( on_canvas_mapped );
     da.undo_buffer.buffer_changed.connect( do_buffer_changed );
+    da.undo_text.buffer_changed.connect( do_buffer_changed );
     da.theme_changed.connect( on_theme_changed );
     da.animator.enable = _settings.get_boolean( "enable-animations" );
 
@@ -970,14 +971,14 @@ public class MainWindow : ApplicationWindow {
   /* Perform an undo action */
   public void do_undo() {
     var da = get_current_da( "do_undo" );
-    da.undo_buffer.undo();
+    da.current_undo_buffer().undo();
     da.grab_focus();
   }
 
   /* Perform a redo action */
   public void do_redo() {
     var da = get_current_da( "do_redo" );
-    da.undo_buffer.redo();
+    da.current_undo_buffer().redo();
     da.grab_focus();
   }
 

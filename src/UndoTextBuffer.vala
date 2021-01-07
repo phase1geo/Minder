@@ -79,14 +79,14 @@ public class UndoTextBuffer : UndoBuffer {
   }
 
   /* Call after tag has been applied to text */
-  public void add_tag_add( int start, int end, FormatTag tag, string? extra, int cursor ) {
-    var item = new UndoTextTagAdd( start, end, tag, extra, cursor );
+  public void add_tag_add( int start, int end, FormatTag tag, string? extra, bool parsed, int cursor ) {
+    var item = new UndoTextTagAdd( start, end, tag, extra, parsed, cursor );
     add_item( item );
   }
 
   /* Call after tag has been removed from text */
-  public void add_tag_remove( int start, int end, FormatTag tag, string? extra, int cursor ) {
-    var item = new UndoTextTagRemove( start, end, tag, extra, cursor );
+  public void add_tag_remove( int start, int end, FormatTag tag, string? extra, bool parsed, int cursor ) {
+    var item = new UndoTextTagRemove( start, end, tag, extra, parsed, cursor );
     add_item( item );
   }
 

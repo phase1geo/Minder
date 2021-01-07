@@ -849,6 +849,15 @@ public class DrawArea : Gtk.DrawingArea {
     conn.mode = mode;
   }
 
+  /* Returns the undo buffer associated with the current state */
+  public UndoBuffer current_undo_buffer() {
+    var current = _selected.current_node();
+    if( (current != null) && (current.mode == NodeMode.EDITABLE) ) {
+      return( undo_text );
+    }
+    return( undo_buffer );
+  }
+
   /* Updates the IM context cursor location based on the canvas text position */
   private void update_im_cursor( CanvasText ct ) {
     Gdk.Rectangle rect = {(int)ct.posx, (int)ct.posy, 0, (int)ct.height};

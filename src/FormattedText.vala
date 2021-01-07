@@ -86,18 +86,20 @@ public enum FormatTag {
 
 /* Stores information for undo/redo operation on tags */
 public class UndoTagInfo {
-  public int     start { private set; get; }
-  public int     end   { private set; get; }
-  public int     tag   { private set; get; }
-  public string? extra { private set; get; }
-  public UndoTagInfo( int tag, int start, int end, string? extra ) {
-    this.tag   = tag;
-    this.start = start;
-    this.end   = end;
-    this.extra = extra;
+  public int     start  { private set; get; }
+  public int     end    { private set; get; }
+  public int     tag    { private set; get; }
+  public bool    parsed { private set; get; }
+  public string? extra  { private set; get; }
+  public UndoTagInfo( int tag, int start, int end, string? extra, bool parsed ) {
+    this.tag    = tag;
+    this.start  = start;
+    this.end    = end;
+    this.parsed = parsed;
+    this.extra  = extra;
   }
   public string to_string() {
-    return( "tag: %s, start: %d, end: %d, extra: %s".printf( tag.to_string(), start, end, extra ) );
+    return( "tag: %s, start: %d, end: %d, extra: %s, parsed: %s".printf( tag.to_string(), start, end, extra, parsed.to_string() ) );
   }
 }
 
@@ -107,13 +109,15 @@ public class FormattedText {
   private class TagInfo {
 
     public class FormattedRange {
-      public int     start { get; set; default = 0; }
-      public int     end   { get; set; default = 0; }
-      public string? extra { get; set; default = null; }
-      public FormattedRange( int s, int e, string? x ) {
-        start = s;
-        end   = e;
-        extra = x;
+      public int     start  { get; set; default = 0; }
+      public int     end    { get; set; default = 0; }
+      public bool    parsed { get; set; default = false; }
+      public string? extra  { get; set; default = null; }
+      public FormattedRange( int s, int e, string? x, bool p ) {
+        start  = s;
+        end    = e;
+        extra  = x;
+        parsed = p;
       }
       public FormattedRange.from_xml( Xml.Node* n ) {
         load( n );
@@ -178,13 +182,23 @@ public class FormattedText {
       _info.remove_range( 0, _info.length );
       for( int i=0; i<other._info.length; i++ ) {
         var other_info = other._info.index( i );
-        _info.append_val( new FormattedRange( other_info.start, other_info.end, other_info.extra ) );
+        _info.append_val( new FormattedRange( other_info.start, other_info.end, other_info.extra, other_info.parsed ) );
       }
     }
 
     /* Returns true if this info array is empty */
     public bool is_empty() {
       return( _info.length == 0 );
+    }
+
+    /* Returns true if we have at least one unparsed range */
+    public bool save_needed() {
+      for( int i=0; i<_info.length; i++ ) {
+        if( !_info.index( i ).parsed ) {
+          return( true );
+        }
+      }
+      return( false );
     }
 
     public void adjust( int index, int length ) {
@@ -203,13 +217,13 @@ public class FormattedText {
     }
 
     /* Adds the given range from this format type */
-    public void add_tag( int start, int end, string? extra ) {
+    public void add_tag( int start, int end, string? extra, bool parsed ) {
       for( int i=0; i<_info.length; i++ ) {
         if( _info.index( i ).combine( start, end, extra ) ) {
           return;
         }
       }
-      _info.append_val( new FormattedRange( start, end, extra ) );
+      _info.append_val( new FormattedRange( start, end, extra, parsed ) );
       _info.sort( (CompareFunc)FormattedRange.compare );
     }
 
@@ -217,14 +231,14 @@ public class FormattedText {
     public void add_tags_at_offset( TagInfo other, int offset ) {
       for( int i=0; i<other._info.length; i++ ) {
         var other_info = other._info.index( i );
-        add_tag( (other_info.start + offset), (other_info.end + offset), other_info.extra );
+        add_tag( (other_info.start + offset), (other_info.end + offset), other_info.extra, other_info.parsed );
       }
     }
 
     /* Replaces the given range(s) with the given range */
-    public void replace_tag( int start, int end, string? extra ) {
+    public void replace_tag( int start, int end, string? extra, bool parsed ) {
       _info.remove_range( 0, _info.length );
-      _info.append_val( new FormattedRange( start, end, extra ) );
+      _info.append_val( new FormattedRange( start, end, extra, parsed ) );
       _info.sort( (CompareFunc)FormattedRange.compare );
     }
 
@@ -241,7 +255,7 @@ public class FormattedText {
             }
           } else {
             if( info.end > end ) {
-              _info.append_val( new FormattedRange( end, info.end, info.extra ) );
+              _info.append_val( new FormattedRange( end, info.end, info.extra, info.parsed ) );
             }
             info.end = start;
           }
@@ -253,6 +267,15 @@ public class FormattedText {
     /* Removes all ranges for this tag */
     public void remove_tag_all() {
       _info.remove_range( 0, _info.length );
+    }
+
+    /* Removes all tags added due to parsing */
+    public void remove_parsed_tags() {
+      for( int i=(int)(_info.length - 1); i>=0; i-- ) {
+        if( _info.index( i ).parsed ) {
+          _info.remove_index( i );
+        }
+      }
     }
 
     /*
@@ -288,7 +311,7 @@ public class FormattedText {
       for( int i=0; i<_info.length; i++ ) {
         var info = _info.index( i );
         if( (start < info.end) && (end > info.start) ) {
-          tags.append_val( new UndoTagInfo( tag, info.start, info.end, info.extra ) );
+          tags.append_val( new UndoTagInfo( tag, info.start, info.end, info.extra, info.parsed ) );
         }
       }
     }
@@ -300,7 +323,7 @@ public class FormattedText {
         if( (start < info.end) && (end > info.start) ) {
           var save_start = (info.start < start) ? start : info.start;
           var save_end   = (info.end   > end)   ? end   : info.end;
-          tags.append_val( new UndoTagInfo( tag, (save_start - start), (save_end - start), info.extra ) );
+          tags.append_val( new UndoTagInfo( tag, (save_start - start), (save_end - start), info.extra, info.parsed ) );
         }
       }
     }
@@ -349,6 +372,20 @@ public class FormattedText {
       return( null );
     }
 
+    /* Returns the extra and parsed data associated with the given cursor position */
+    public void get_extra_parsed( int index, out string? extra, out bool parsed ) {
+      extra  = null;
+      parsed = false;
+      for( int i=0; i<_info.length; i++ ) {
+        var info = _info.index( i );
+        if( (info.start <= index) && (index < info.end) ) {
+          extra  = info.extra;
+          parsed = info.parsed;
+          return;
+        }
+      }
+    }
+
     /* Returns the first extra value found within the given range */
     public string? get_first_extra_in_range( int start, int end ) {
       for( int i=0; i<_info.length; i++ ) {
@@ -365,7 +402,9 @@ public class FormattedText {
       Xml.Node* n = new Xml.Node( null, tag );
       for( int i=0; i<_info.length; i++ ) {
         var info = _info.index( i );
-        n->add_child( info.save() );
+        if( !info.parsed ) {
+          n->add_child( info.save() );
+        }
       }
       return( n );
     }
@@ -686,7 +725,7 @@ public class FormattedText {
     var tags = text.get_tags_in_range( start, end );
     for( int i=0; i<tags.length; i++ ) {
       var tag = tags.index( i );
-      _formats[tag.tag].add_tag( (tag.start - start), (tag.end - start), tag.extra );
+      _formats[tag.tag].add_tag( (tag.start - start), (tag.end - start), tag.extra, tag.parsed );
     }
   }
 
@@ -822,14 +861,14 @@ public class FormattedText {
   }
 
   /* Adds the given tag */
-  public void add_tag( FormatTag tag, int start, int end, string? extra=null ) {
-    _formats[tag].add_tag( start, end, extra );
+  public void add_tag( FormatTag tag, int start, int end, bool parsed, string? extra=null ) {
+    _formats[tag].add_tag( start, end, extra, parsed );
     changed();
   }
 
   /* Replaces the given tag with the given range */
-  public void replace_tag( FormatTag tag, int start, int end, string? extra=null ) {
-    _formats[tag].replace_tag( start, end, extra );
+  public void replace_tag( FormatTag tag, int start, int end, bool parsed, string? extra=null ) {
+    _formats[tag].replace_tag( start, end, extra, parsed );
     changed();
   }
 
@@ -839,7 +878,13 @@ public class FormattedText {
     changed();
   }
 
-  /* Removes all ranges for the given tag */
+  /* Removes all parsed ranges for the given tag */
+  public void remove_parsed_tags( FormatTag tag ) {
+    _formats[tag].remove_parsed_tags();
+    changed();
+  }
+
+  /* Removes all parsed ranges for the given tag */
   public void remove_tag_all( FormatTag tag ) {
     _formats[tag].remove_tag_all();
     changed();
@@ -910,7 +955,7 @@ public class FormattedText {
   public void apply_tags( Array<UndoTagInfo> tags, int start = 0 ) {
     for( int i=((int)tags.length - 1); i>=0; i-- ) {
       var info = tags.index( i );
-      _formats[info.tag].add_tag( (info.start + start), (info.end + start), info.extra );
+      _formats[info.tag].add_tag( (info.start + start), (info.end + start), info.extra, info.parsed );
     }
     changed();
   }
@@ -967,6 +1012,13 @@ public class FormattedText {
   }
 
   /*
+   Returns the parsed data stored at the gven index location.
+  */
+  public void get_extra_parsed( FormatTag tag, int index, out string? extra, out bool parsed ) {
+    _formats[tag].get_extra_parsed( index, out extra, out parsed );
+  }
+
+  /*
    Returns the first extra data stored in the given range, if any exist.  If nothing
    is found, returns null.
   */
@@ -985,7 +1037,7 @@ public class FormattedText {
       var start = 0;
       while( (start = text.index_of( pattern, start )) != -1 ) {
         var end = start + pattern.index_of_nth_char( pattern.length );
-        tags.append_val( new UndoTagInfo( FormatTag.MATCH, start++, end, null ) );
+        tags.append_val( new UndoTagInfo( FormatTag.MATCH, start++, end, null, true ) );
       }
       apply_tags( tags );
       return( true );
@@ -997,9 +1049,7 @@ public class FormattedText {
   private void parse( bool force_clear = false ) {
     if( (_parsers.length > 0) || force_clear ) {
       for( int i=0; i<FormatTag.LENGTH-2; i++ ) {
-        if( !save_tag( (FormatTag)i ) ) {
-          _formats[i].remove_tag_all();
-        }
+        _formats[i].remove_parsed_tags();
       }
     }
     for( int i=0; i<_parsers.length; i++ ) {
@@ -1007,21 +1057,12 @@ public class FormattedText {
     }
   }
 
-  /* Determines if the given tag should be saved */
-  private bool save_tag( FormatTag tag ) {
-    bool save = true;
-    for( int i=0; i<_parsers.length; i++ ) {
-      save &= !_parsers.index( i ).tag_handled( tag );
-    }
-    return( save );
-  }
-
   /* Saves the text as the given XML node */
   public Xml.Node* save() {
     Xml.Node* n = new Xml.Node( null, "text" );
     n->new_prop( "data", text );
     for( int i=0; i<(FormatTag.LENGTH-4); i++ ) {
-      if( !_formats[i].is_empty() && save_tag( (FormatTag)i ) ) {
+      if( _formats[i].save_needed() ) {
         var tag = (FormatTag)i;
         n->add_child( _formats[i].save( tag.to_string() ) );
       }
@@ -1049,7 +1090,7 @@ public class FormattedText {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         var tag = FormatTag.from_string( it->name );
-        if( (tag != FormatTag.LENGTH) && save_tag( tag ) ) {
+        if( tag != FormatTag.LENGTH ) {
           _formats[tag].load( it );
         }
       }

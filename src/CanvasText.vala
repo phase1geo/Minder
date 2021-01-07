@@ -730,7 +730,7 @@ public class CanvasText : Object {
       text.replace_text( spos, (epos - spos), t.text );
       for( int i=0; i<ttags.length; i++ ) {
         var ttag = ttags.index( i );
-        text.add_tag( (FormatTag)ttag.tag, (ttag.start + spos), (ttag.end + spos), ttag.extra );
+        text.add_tag( (FormatTag)ttag.tag, (ttag.start + spos), (ttag.end + spos), ttag.parsed, ttag.extra );
       }
       set_cursor_only( _selstart + slen );
       change_selection( null, _selstart, "insert" );
@@ -740,7 +740,7 @@ public class CanvasText : Object {
       text.insert_text( cpos, t.text );
       for( int i=0; i<ttags.length; i++ ) {
         var ttag = ttags.index( i );
-        text.add_tag( (FormatTag)ttag.tag, (ttag.start + cpos), (ttag.end + cpos), ttag.extra );
+        text.add_tag( (FormatTag)ttag.tag, (ttag.start + cpos), (ttag.end + cpos), ttag.parsed, ttag.extra );
       }
       set_cursor_only( _cursor + slen );
       undo_buffer.add_insert( cpos, t.text, cur );
@@ -827,20 +827,22 @@ public class CanvasText : Object {
   }
 
   /* Add tag to selected area */
-  public void add_tag( FormatTag tag, string? extra, UndoTextBuffer undo_buffer ) {
+  public void add_tag( FormatTag tag, string? extra, bool parsed, UndoTextBuffer undo_buffer ) {
     var spos = text.text.index_of_nth_char( _selstart );
     var epos = text.text.index_of_nth_char( _selend );
-    text.add_tag( tag, spos, epos, extra );
-    undo_buffer.add_tag_add( spos, epos, tag, extra, _cursor );
+    text.add_tag( tag, spos, epos, parsed, extra );
+    undo_buffer.add_tag_add( spos, epos, tag, extra, parsed, _cursor );
   }
 
   /* Removes the specified tag for the selected range */
   public void remove_tag( FormatTag tag, UndoTextBuffer undo_buffer ) {
-    var spos  = text.text.index_of_nth_char( _selstart );
-    var epos  = text.text.index_of_nth_char( _selend );
-    var extra = text.get_extra( tag, spos );
+    string? extra  = null;
+    bool    parsed = false;
+    var spos   = text.text.index_of_nth_char( _selstart );
+    var epos   = text.text.index_of_nth_char( _selend );
+    text.get_extra_parsed( tag, spos, out extra, out parsed );
     text.remove_tag( tag, spos, epos );
-    undo_buffer.add_tag_remove( spos, epos, tag, extra, _cursor );
+    undo_buffer.add_tag_remove( spos, epos, tag, extra, parsed, _cursor );
   }
 
   /* Removes the specified tag for the selected range */
@@ -874,7 +876,7 @@ public class CanvasText : Object {
 
     /* Update the selection tag */
     if( new_selected ) {
-      _text.replace_tag( FormatTag.SELECT, text.text.index_of_nth_char( _selstart ), text.text.index_of_nth_char( _selend ) );
+      _text.replace_tag( FormatTag.SELECT, text.text.index_of_nth_char( _selstart ), text.text.index_of_nth_char( _selend ), false );
     } else if( old_selected ) {
       _text.remove_tag_all( FormatTag.SELECT );
     }
