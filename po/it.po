@@ -1,14 +1,15 @@
-# SOME DESCRIPTIVE TITLE.
+# ITALIAN TRANSLATION FOR MINDER.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
 # ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2020.
+#ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-16 20:46-0500\n"
-"PO-Revision-Date: 2020-09-27 10:00+0100\n"
+"PO-Revision-Date: 2021-01-31 10:00+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -1290,9 +1291,8 @@ msgid "URL Link Foreground"
 msgstr "URL del collegamento di primo piano"
 
 #: src/ThemeEditor.vala:99
-#, fuzzy
 msgid "Tag"
-msgstr "Scheda"
+msgstr "Etichetta"
 
 #: src/ThemeEditor.vala:100
 msgid "Markdown Syntax Chars"
@@ -1425,7 +1425,7 @@ msgstr "Mostra scheda mappa"
 #: data/com.github.phase1geo.minder.shortcuts.ui:160
 #: data/com.github.phase1geo.minder.shortcuts.ui:593
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Eterogeneo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:164
 msgid "Toggle Focus Mode"
@@ -1771,7 +1771,7 @@ msgstr "Movimento della Tela"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:795
 msgid "Pan Canvas"
-msgstr ""
+msgstr "Panoramica Tela"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:796
 msgid "[Middle-click + Drag / Alt + Motion]"
