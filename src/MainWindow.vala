@@ -562,14 +562,20 @@ public class MainWindow : ApplicationWindow {
     _search_entry.width_chars = 60;
     _search_entry.search_changed.connect( on_search_change );
 
-    _search_items = new Gtk.ListStore( 5, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(string) );
+    _search_items = new Gtk.ListStore( 6, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(string), typeof(string) );
 
     /* Create the treeview */
     _search_list  = new TreeView.with_model( _search_items );
     var type_cell = new CellRendererText();
-    type_cell.xalign = 1;
-    _search_list.insert_column_with_attributes( -1, null, type_cell,              "markup", 0, null );
-    _search_list.insert_column_with_attributes( -1, null, new CellRendererText(), "markup", 1, null );
+    var str_cell  = new CellRendererText();
+    var tab_cell  = new CellRendererText();
+    type_cell.xalign       = 1;
+    str_cell.ellipsize     = Pango.EllipsizeMode.END;
+    str_cell.ellipsize_set = true;
+    str_cell.width_chars   = 50;
+    _search_list.insert_column_with_attributes( -1, null, type_cell, "markup", 0, null );
+    _search_list.insert_column_with_attributes( -1, null, str_cell,  "markup", 1, null );
+    _search_list.insert_column_with_attributes( -1, null, tab_cell,  "markup", 5, null );
     _search_list.headers_visible = false;
     _search_list.activate_on_single_click = true;
     _search_list.enable_search = false;
@@ -1260,11 +1266,7 @@ public class MainWindow : ApplicationWindow {
       if( _search_entry.get_text() != "" ) {
         var da = (DrawArea)((Gtk.Bin)tab.page).get_child();
         var name = tab.label;
-          da.get_match_items(name,
-          _search_entry.get_text().casefold(),
-          search_opts,
-          ref _search_items
-        );
+        da.get_match_items( name, _search_entry.get_text().casefold(), search_opts, ref _search_items );
       }
     }
   }
