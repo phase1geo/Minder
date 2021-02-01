@@ -105,12 +105,23 @@ public class Utils {
         }
         int end = i < 10 ? -1 : current_index - ( pattern_byte_idx + pattern.length );
         string str = (start > 0 ? "..." : "") +
-        value.substring(start, pattern_byte_idx - start) + 
+        value.substring(start, pattern_byte_idx - start) +
         "<u>" + pattern + "</u>" +
-        value.substring(pattern_byte_idx + pattern.length, end);
+        value.substring(pattern_byte_idx + pattern.length);
         return str;
       }
     return "";
+  }
+
+  /* Returns the rootname of the given filename */
+  public static string rootname( string filename ) {
+    var basename = Filename.display_basename( filename );
+    var parts    = basename.split( "." );
+    if( parts.length > 2 ) {
+      return( string.joinv( ".", parts[0:parts.length-1] ) );
+    } else {
+      return( parts[0] );
+    }
   }
 
   /* Returns true if the given coordinates are within the specified bounds */

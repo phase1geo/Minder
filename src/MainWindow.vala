@@ -63,6 +63,7 @@ public class MainWindow : ApplicationWindow {
   private CheckButton       _search_unfolded;
   private CheckButton       _search_tasks;
   private CheckButton       _search_nontasks;
+  private Switch            _search_all_tabs;
   private Exporter          _exporter;
   private Popover?          _export         = null;
   private Scale?            _zoom_scale     = null;
@@ -562,14 +563,20 @@ public class MainWindow : ApplicationWindow {
     _search_entry.width_chars = 60;
     _search_entry.search_changed.connect( on_search_change );
 
-    _search_items = new Gtk.ListStore( 5, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(string) );
+    _search_items = new Gtk.ListStore( 6, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(string), typeof(string) );
 
     /* Create the treeview */
     _search_list  = new TreeView.with_model( _search_items );
     var type_cell = new CellRendererText();
-    type_cell.xalign = 1;
-    _search_list.insert_column_with_attributes( -1, null, type_cell,              "markup", 0, null );
-    _search_list.insert_column_with_attributes( -1, null, new CellRendererText(), "markup", 1, null );
+    var str_cell  = new CellRendererText();
+    var tab_cell  = new CellRendererText();
+    type_cell.xalign       = 1;
+    str_cell.ellipsize     = Pango.EllipsizeMode.END;
+    str_cell.ellipsize_set = true;
+    str_cell.width_chars   = 50;
+    _search_list.insert_column_with_attributes( -1, null, type_cell, "markup", 0, null );
+    _search_list.insert_column_with_attributes( -1, null, str_cell,  "markup", 1, null );
+    _search_list.insert_column_with_attributes( -1, null, tab_cell,  "markup", 5, null );
     _search_list.headers_visible = false;
     _search_list.activate_on_single_click = true;
     _search_list.enable_search = false;
@@ -584,11 +591,28 @@ public class MainWindow : ApplicationWindow {
     var search_opts = new Expander( _( "Search Criteria" ) );
     search_opts.add( create_search_options_box() );
 
+    var search_all_label = new Label( _( "Search all tabs" ) );
+    search_all_label.halign = Align.START;
+
+    _search_all_tabs = new Switch();
+    _search_all_tabs.active = _settings.get_boolean( "search-opt-all-tabs" );
+    _search_all_tabs.button_press_event.connect((e) => {
+      _settings.set_boolean( "search-opt-all-tabs", !_search_all_tabs.active );
+      on_search_change();
+      return( false );
+    });
+
+    var search_all_box = new Box( Orientation.HORIZONTAL, 0 );
+    search_all_box.pack_start( search_all_label, false, false );
+    search_all_box.pack_end(   _search_all_tabs, false, false );
+
     box.margin = 5;
     box.pack_start( _search_entry,  false, true );
     box.pack_start( _search_scroll, true,  true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ) );
     box.pack_start( search_opts,    false, true, 5 );
+    box.pack_start( new Separator( Orientation.HORIZONTAL ) );
+    box.pack_start( search_all_box, false, true );
     box.show_all();
 
     /* Create the popover and associate it with the menu button */
@@ -600,8 +624,6 @@ public class MainWindow : ApplicationWindow {
 
   /* Creates the UI for the search criteria box */
   private Grid create_search_options_box() {
-
-    var grid = new Grid();
 
     _search_nodes       = new CheckButton.with_label( _( "Nodes" ) );
     _search_connections = new CheckButton.with_label( _( "Connections" ) );
@@ -678,6 +700,7 @@ public class MainWindow : ApplicationWindow {
       on_search_change();
     });
 
+    var grid = new Grid();
     grid.margin_top         = 10;
     grid.column_homogeneous = true;
     grid.column_spacing     = 10;
@@ -1256,15 +1279,18 @@ public class MainWindow : ApplicationWindow {
       _search_nontasks.active     // 7
     };
     _search_items.clear();
-    foreach (var tab in _nb.tabs ) {
-      if( _search_entry.get_text() != "" ) {
+    var all_tabs = _settings.get_boolean( "search-opt-all-tabs" );
+    var current  = get_current_da( "on_search_change" );
+    var text     = _search_entry.get_text().casefold();
+    var name     = all_tabs ? _nb.current.label : "";
+    if( text == "" ) return;
+    current.get_match_items( name, text, search_opts, ref _search_items );
+    if( all_tabs ) {
+      foreach (var tab in _nb.tabs ) {
         var da = (DrawArea)((Gtk.Bin)tab.page).get_child();
-        var name = tab.label;
-          da.get_match_items(name,
-          _search_entry.get_text().casefold(),
-          search_opts,
-          ref _search_items
-        );
+        if( da != current ) {
+          da.get_match_items( tab.label, text, search_opts, ref _search_items );
+        }
       }
     }
   }
