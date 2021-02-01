@@ -96,6 +96,11 @@
       <summary>Search option for non-task nodes</summary>
       <description>Specifies whether non-task nodes should be searched or not</description>
     </key>
+    <key name="search-opt-all-tabs" type="b">
+      <default>false</default>
+      <summary>Search option which searches all tabs when true</summary>
+      <description>Specifies whether all tabs will be searched (true) or only the current tab (false)</description>
+    </key>
     <key name="image-id" type="i">
       <default>1</default>
       <summary>Unique ID added to image names</summary>
