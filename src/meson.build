@@ -143,6 +143,7 @@ sources += files(
     'undo_actions/UndoTextTagAdd.vala',
     'undo_actions/UndoTextTagRemove.vala',
 
+    'About.vala',
     'Animator.vala',
     'Application.vala',
     'Bezier.vala',

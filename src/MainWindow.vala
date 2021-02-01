@@ -765,10 +765,20 @@ public class MainWindow : ApplicationWindow {
     shortcuts.add( new Granite.AccelLabel.from_action_name( _( "Shortcuts Cheatsheet" ), "win.action_shortcuts" ) );
     shortcuts.action_name = "win.action_shortcuts";
 
+    var about = new ModelButton();
+    about.text = _( "About Minder" );
+    about.clicked.connect(() => {
+      var about_win = new About( this );
+      about_win.present();
+    });
+
     box.margin = 5;
     box.pack_start( prefs,     false, true );
-    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
     box.pack_start( shortcuts, false, true );
+    if( !on_elementary ) {
+      box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
+      box.pack_start( about, false, true );
+    }
     box.show_all();
 
     /* Create the popover and associate it with clicking on the menu button */
