@@ -814,12 +814,12 @@ public class DrawArea : Gtk.DrawingArea {
       if( node.name.is_within( _scaled_x, _scaled_y ) ) {
         set_cursor( null );
       }
+      undo_text.clear();
       if( undo_text.do_undo ) {
         undo_buffer.add_item( new UndoNodeName( this, node, undo_text.orig ) );
       }
       undo_text.ct      = null;
       undo_text.do_undo = false;
-      undo_text.clear();
     }
     node.mode = mode;
   }
