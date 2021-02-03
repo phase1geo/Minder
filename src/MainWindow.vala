@@ -904,6 +904,7 @@ public class MainWindow : ApplicationWindow {
     dialog.add_action_widget( cancel, ResponseType.CANCEL );
 
     var save = new Button.with_label( _( "Save" ) );
+    save.set_can_default( true );
     save.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
     dialog.add_action_widget( save, ResponseType.ACCEPT );
 
