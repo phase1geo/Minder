@@ -1464,7 +1464,10 @@ public class MainWindow : ApplicationWindow {
         var saved = it->get_prop( "saved" );
         var da    = add_tab( fname, TabAddReason.LOAD );
         da.get_doc().load_filename( fname, bool.parse( saved ) );
-        da.get_doc().load();
+        Idle.add(() => {
+          da.get_doc().load();
+          return( false );
+        });
       }
     }
 
