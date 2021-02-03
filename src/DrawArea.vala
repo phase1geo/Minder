@@ -819,6 +819,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       undo_text.ct      = null;
       undo_text.do_undo = false;
+      undo_text.clear();
     }
     node.mode = mode;
   }
