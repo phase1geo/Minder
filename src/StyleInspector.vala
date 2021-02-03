@@ -247,10 +247,11 @@ public class StyleInspector : Box {
 
   /* Called whenever the node margin value is changed */
   private bool branch_margin_changed( ScrollType scroll, double value ) {
-    if( (int)value > 150 ) {
+    var intval = (int)Math.round( value );
+    if( intval > 150 ) {
       return( false );
     }
-    var margin = new UndoStyleBranchMargin( _affects, (int)value, _da );
+    var margin = new UndoStyleBranchMargin( _affects, intval, _da );
     if( _change_add ) {
       _da.undo_buffer.add_item( margin );
       _change_add = false;
@@ -538,7 +539,8 @@ public class StyleInspector : Box {
 
   /* Called whenever the user changes the link width value */
   private bool node_borderwidth_changed( ScrollType scroll, double value ) {
-    var borderwidth = new UndoStyleNodeBorderwidth( _affects, (int)value, _da );
+    var intval = (int)Math.round( value );
+    var borderwidth = new UndoStyleNodeBorderwidth( _affects, intval, _da );
     if( _change_add ) {
       _da.undo_buffer.add_item( borderwidth );
       _change_add = false;
@@ -603,10 +605,11 @@ public class StyleInspector : Box {
 
   /* Called whenever the node margin value is changed */
   private bool node_margin_changed( ScrollType scroll, double value ) {
-    if( (int)value > 20 ) {
+    var intval = (int)Math.round( value );
+    if( intval > 20 ) {
       return( false );
     }
-    var margin = new UndoStyleNodeMargin( _affects, (int)value, _da );
+    var margin = new UndoStyleNodeMargin( _affects, intval, _da );
     if( _change_add ) {
       _da.undo_buffer.add_item( margin );
       _change_add = false;
@@ -644,10 +647,11 @@ public class StyleInspector : Box {
 
   /* Called whenever the node margin value is changed */
   private bool node_padding_changed( ScrollType scroll, double value ) {
-    if( (int) value > 20 ) {
+    var intval = (int)Math.round( value );
+    if( intval > 20 ) {
       return( false );
     }
-    var padding = new UndoStyleNodePadding( _affects, (int)value, _da );
+    var padding = new UndoStyleNodePadding( _affects, intval, _da );
     if( _change_add ) {
       _da.undo_buffer.add_item( padding );
       _change_add = false;
@@ -890,8 +894,9 @@ public class StyleInspector : Box {
 
   /* Called whenever the user changes the link width value */
   private bool connection_line_width_changed( ScrollType scroll, double value ) {
-    if( value > 8 ) value = 8;
-    var width = new UndoStyleConnectionLineWidth( _affects, (int)value, _da );
+    var intval = (int)Math.round( value );
+    if( intval > 8 ) intval = 8;
+    var width = new UndoStyleConnectionLineWidth( _affects, intval, _da );
     if( _change_add ) {
       _da.undo_buffer.add_item( width );
       _change_add = false;
@@ -929,10 +934,11 @@ public class StyleInspector : Box {
 
   /* Called whenever the node margin value is changed */
   private bool connection_padding_changed( ScrollType scroll, double value ) {
-    if( (int) value > 20 ) {
+    var intval = (int)Math.round( value );
+    if( intval > 20 ) {
       return( false );
     }
-    var padding = new UndoStyleConnectionPadding( _affects, (int)value, _da );
+    var padding = new UndoStyleConnectionPadding( _affects, intval, _da );
     if( _change_add ) {
       _da.undo_buffer.add_item( padding );
       _change_add = false;
