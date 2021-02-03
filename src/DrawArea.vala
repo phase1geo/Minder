@@ -841,6 +841,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( (conn.title != null) && conn.title.is_within( _scaled_x, _scaled_y ) ) {
         set_cursor( null );
       }
+      undo_text.clear();
       if( undo_text.do_undo ) {
         undo_buffer.add_item( new UndoConnectionTitle( this, conn, undo_text.orig ) );
       }

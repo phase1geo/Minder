@@ -199,7 +199,7 @@ public class Selection {
   /* Adds a connection to the current selection */
   public bool add_connection( Connection conn ) {
     if( is_connection_selected( conn ) ) return( false );
-    conn.mode = ConnMode.SELECTED;
+    _da.set_connection_mode( conn, ConnMode.SELECTED );
     _conns.append_val( conn );
     selection_changed();
     return( true );
@@ -310,7 +310,7 @@ public class Selection {
   */
   public bool remove_connection( Connection conn, double alpha = 1.0 ) {
     if( is_connection_selected( conn ) ) {
-      conn.mode  = ConnMode.NONE;
+      _da.set_connection_mode( conn, ConnMode.NONE );
       conn.alpha = alpha;
       for( int i=0; i<_conns.length; i++ ) {
         if( conn == _conns.index( i ) ) {
@@ -377,7 +377,7 @@ public class Selection {
   public bool clear_connections( bool signal_change = true, double alpha = 1.0 ) {
     var num = _conns.length;
     for( int i=0; i<num; i++ ) {
-      _conns.index( i ).mode  = ConnMode.NONE;
+      _da.set_connection_mode( _conns.index( i ), ConnMode.NONE );
       _conns.index( i ).alpha = alpha;
     }
     _conns.remove_range( 0, num );
