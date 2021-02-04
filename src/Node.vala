@@ -1542,7 +1542,8 @@ public class Node : Object {
         layout.handle_update_by_delete( parent, idx, side, tree_size );
       }
       attached = false;
-      for( int i=0; i<_children.length; i++ ) {
+      for( int i=(int)(_children.length - 1); i>=0; i-- ) {
+        moved.disconnect( _children.index( i ).parent_moved );
         _children.index( i ).attach( parent, idx, null );
       }
     }
@@ -1550,10 +1551,6 @@ public class Node : Object {
 
   /* Undoes a delete_only call by reattaching this node to the given parent */
   public virtual void attach_only( Node? prev_parent, int prev_index ) {
-    if( index() == -1 ) {
-      attach_init( prev_parent, prev_index );
-    }
-    attached = true;
     var temp = new Array<Node>();
     for( int i=0; i<children().length; i++ ) {
       temp.append_val( children().index( i ) );
@@ -1566,8 +1563,12 @@ public class Node : Object {
       } else {
         child.detach( child.side );
       }
-      child.attach_init( this, i );
+      child.attach_init( this, -1 );
     }
+    if( index() == -1 ) {
+      attach_init( prev_parent, prev_index );
+    }
+    attached = true;
   }
 
   /* Attaches this node as a child of the given node */
