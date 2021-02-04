@@ -289,7 +289,7 @@ public class Node : Object {
             _layout.apply_margin( _children.index( i ) );
           }
         }
-        position_name();
+        position_name_and_update_size();
       }
     }
   }
@@ -538,8 +538,8 @@ public class Node : Object {
     if( !_loaded ) return;
     var orig_width  = _width;
     var orig_height = _height;
-    var margin      = (style.node_margin  == null) ? 0 : style.node_margin;
-    var padding     = (style.node_padding == null) ? 0 : style.node_padding;
+    var margin      = style.node_margin  ?? 0;
+    var padding     = style.node_padding ?? 0;
     var stk_height  = sticker_height();
     var name_width  = task_width() + sticker_width() + _name.width + note_width() + linked_node_width();
     var name_height = (_name.height < stk_height) ? stk_height : _name.height;
@@ -1478,10 +1478,10 @@ public class Node : Object {
 
   /* Adjusts the position of the text object */
   private void position_name() {
-    int margin  = (style.node_margin  == null) ? 0 : style.node_margin;
-    int padding = (style.node_padding == null) ? 0 : style.node_padding;
-    double stk_height = sticker_height();
-    double img_height = (_image != null) ? (_image.height + padding) : 0;
+    var margin  = style.node_margin  ?? 0;
+    var padding = style.node_padding ?? 0;
+    var stk_height = sticker_height();
+    var img_height = (_image != null) ? (_image.height + padding) : 0;
     name.posx = posx + margin + padding + task_width() + sticker_width();
     name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0);
   }
@@ -1888,7 +1888,6 @@ public class Node : Object {
     double y = posy + style.node_margin;
     double w = _width  - (style.node_margin * 2);
     double h = _height - (style.node_margin * 2);
-    RGBA   group_color;
 
     /* Set the fill color */
     if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
