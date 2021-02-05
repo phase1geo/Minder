@@ -123,7 +123,7 @@ public class NodeInspector : Box {
   */
   private void create_link() {
 
-    var lbl = new Label( Utils.make_title( _( "Link Color" ) ) );
+    var lbl = new Label( Utils.make_title( _( "Color" ) ) );
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
 
