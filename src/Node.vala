@@ -1449,10 +1449,13 @@ public class Node : Object {
    the nodes are swapped.
   */
   public bool swap_with_sibling( Node? other ) {
+
     if( (other != null) && (other.parent == parent) ) {
+
       var other_index = other.index();
       var our_index   = index();
       var our_parent  = parent;
+
       if( (other_index + 1) == our_index ) {
         da.animator.add_nodes( da.get_nodes(), "swap_with_sibling" );
         detach( side );
@@ -1462,6 +1465,7 @@ public class Node : Object {
         da.undo_buffer.add_item( new UndoNodeMove( this, side, our_index ) );
         da.animator.animate();
         return( true );
+
       } else if( (our_index + 1) == other_index ) {
         var other_side = other.side;
         da.animator.add_nodes( da.get_nodes(), "swap_with_sibling" );
@@ -1472,8 +1476,41 @@ public class Node : Object {
         da.animator.animate();
         return( true );
       }
+
     }
+
     return( false );
+
+  }
+
+  /*
+   Moves all children of the given node to the node's parent, placed just
+   before the parent node.
+  */
+  public bool make_children_siblings( Node? potential_parent, bool add_undo = true ) {
+
+    if( (potential_parent != null) && (potential_parent == parent) ) {
+
+      var idx          = index();
+      var num_children = (int)_children.length;
+
+      da.animator.add_nodes( da.get_nodes(), "make_children_siblings" );
+      for( int i=(num_children - 1); i>=0; i-- ) {
+        var child = _children.index( i );
+        child.detach( child.side );
+        child.attach( parent, idx, null );
+      }
+      if( add_undo ) {
+        da.undo_buffer.add_item( new UndoNodeReparent( this, idx, idx + num_children ) );
+      }
+      da.animator.animate();
+
+      return( true );
+
+    }
+
+    return( false );
+
   }
 
   /* Adjusts the position of the text object */
@@ -1980,12 +2017,6 @@ public class Node : Object {
   protected virtual void draw_acc_task( Context ctx, RGBA color, RGBA? background ) {
 
     if( _task_count > 0 ) {
-
-      // fillable    done    stroke    fill
-      // no          0       lc        bg
-      // no          1       lc        lc
-      // yes         0       bg        bg
-      // yes         1       bg        lc
 
       double x, y, w, h;
       double complete = _task_done / (_task_count * 1.0);

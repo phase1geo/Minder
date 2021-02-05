@@ -87,6 +87,7 @@ sources += files(
     'undo_actions/UndoNodeName.vala',
     'undo_actions/UndoNodeNote.vala',
     'undo_actions/UndoNodePaste.vala',
+    'undo_actions/UndoNodeReparent.vala',
     'undo_actions/UndoNodeReparentLinkColor.vala',
     'undo_actions/UndoNodeReplace.vala',
     'undo_actions/UndoNodeResize.vala',

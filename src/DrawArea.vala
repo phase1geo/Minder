@@ -3391,10 +3391,13 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_connection_selected() ) {
       select_connection( 1 );
     } else if( is_node_selected() ) {
-      var right_node = get_node_right( _selected.current_node() );
+      var current    = _selected.current_node();
+      var right_node = get_node_right( current );
       if( alt ) {
-        if( _selected.current_node().swap_with_sibling( right_node ) ) {
+        if( current.swap_with_sibling( right_node ) ||
+            current.make_children_siblings( right_node ) ) {
           queue_draw();
+          changed();
         }
       } else if( select_node( right_node ) ) {
         queue_draw();
@@ -3445,10 +3448,13 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_connection_selected() ) {
       select_connection( -1 );
     } else if( is_node_selected() ) {
-      var left_node = get_node_left( _selected.current_node() );
+      var current   = _selected.current_node();
+      var left_node = get_node_left( current );
       if( alt ) {
-        if( _selected.current_node().swap_with_sibling( left_node ) ) {
+        if( current.swap_with_sibling( left_node ) ||
+            current.make_children_siblings( left_node ) ) {
           queue_draw();
+          changed();
         }
       } else if( select_node( left_node ) ) {
         queue_draw();
@@ -3610,12 +3616,15 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_connection_connecting() && (_attach_node != null) ) {
       update_connection_by_node( get_node_up( _attach_node ) );
     } else if( is_node_selected() ) {
-      var up_node = get_node_up( _selected.current_node() );
+      var current = _selected.current_node();
+      var up_node = get_node_up( current );
       if( alt ) {
-        if( _selected.current_node().swap_with_sibling( up_node ) ) {
+        if( current.swap_with_sibling( up_node ) ||
+            current.make_children_siblings( up_node ) ) {
           queue_draw();
+          changed();
         }
-      } else if( select_node( get_node_up( _selected.current_node() ) ) ) {
+      } else if( select_node( up_node ) ) {
         queue_draw();
       }
     }
@@ -3666,12 +3675,15 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_connection_connecting() && (_attach_node != null) ) {
       update_connection_by_node( get_node_down( _attach_node ) );
     } else if( is_node_selected() ) {
-      var down_node = get_node_down( _selected.current_node() );
+      var current   = _selected.current_node();
+      var down_node = get_node_down( current );
       if( alt ) {
-        if( _selected.current_node().swap_with_sibling( down_node ) ) {
+        if( current.swap_with_sibling( down_node ) ||
+            current.make_children_siblings( down_node ) ) {
           queue_draw();
+          changed();
         }
-      } else if( select_node( get_node_down( _selected.current_node() ) ) ) {
+      } else if( select_node( down_node ) ) {
         queue_draw();
       }
     }
