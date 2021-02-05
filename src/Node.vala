@@ -125,7 +125,7 @@ public class Node : Object {
   protected double       _height       = 0;
   protected double       _ipadx        = 6;
   protected double       _ipady        = 3;
-  protected double       _task_radius  = 5;
+  protected double       _task_radius  = 7;
   protected double       _alpha        = 1.0;
   protected Array<Node>  _children;
   private   NodeMode     _mode         = NodeMode.NONE;
@@ -1955,33 +1955,37 @@ public class Node : Object {
   }
 
   /* Draws the task checkbutton for leaf nodes */
-  protected virtual void draw_leaf_task( Context ctx, RGBA color ) {
+  protected virtual void draw_leaf_task( Context ctx, RGBA color, RGBA? background ) {
 
     if( _task_count > 0 ) {
 
       double x, y, w, h;
-
       task_bbox( out x, out y, out w, out h );
 
-      Utils.set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();
-      ctx.set_line_width( 1 );
+      ctx.set_line_width( 2 );
       ctx.arc( (x + _task_radius), (y + _task_radius), _task_radius, 0, (2 * Math.PI) );
 
-      if( _task_done == 0 ) {
-        ctx.stroke();
-      } else {
-        ctx.fill();
-      }
+      Utils.set_context_color_with_alpha( ctx, (((_task_done == 0) && (background != null)) ? background : color), _alpha );
+      ctx.fill_preserve();
+
+      Utils.set_context_color_with_alpha( ctx, ((style.is_fillable() && (background != null)) ? background : color), _alpha );
+      ctx.stroke();
 
     }
 
   }
 
   /* Draws the task checkbutton for non-leaf nodes */
-  protected virtual void draw_acc_task( Context ctx, RGBA color ) {
+  protected virtual void draw_acc_task( Context ctx, RGBA color, RGBA? background ) {
 
     if( _task_count > 0 ) {
+
+      // fillable    done    stroke    fill
+      // no          0       lc        bg
+      // no          1       lc        lc
+      // yes         0       bg        bg
+      // yes         1       bg        lc
 
       double x, y, w, h;
       double complete = _task_done / (_task_count * 1.0);
@@ -1994,21 +1998,25 @@ public class Node : Object {
 
       /* Draw circle outline */
       if( complete < 1 ) {
-        Utils.set_context_color_with_alpha( ctx, color, _alpha );
+        Utils.set_context_color_with_alpha( ctx, ((style.is_fillable() && (background != null)) ? background : color), _alpha );
         ctx.new_path();
-        ctx.set_line_width( 1 );
+        ctx.set_line_width( 2 );
         ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
-        ctx.stroke();
+        if( style.is_fillable() && (background != null) ) {
+          ctx.fill();
+        } else {
+          ctx.stroke();
+        }
       }
 
       /* Draw completeness pie */
       if( _task_done > 0 ) {
         Utils.set_context_color_with_alpha( ctx, color, _alpha );
         ctx.new_path();
-        ctx.set_line_width( 1 );
-        ctx.arc( x, y, _task_radius, (1.5 * Math.PI), angle );
+        ctx.set_line_width( 2 );
+        ctx.arc( x, y, (_task_radius - 1), (1.5 * Math.PI), angle );
         ctx.line_to( x, y );
-        ctx.arc( x, y, _task_radius, (1.5 * Math.PI), (1.5 * Math.PI) );
+        ctx.arc( x, y, (_task_radius - 1), (1.5 * Math.PI), (1.5 * Math.PI) );
         ctx.line_to( x, y );
         ctx.fill();
       }
@@ -2255,9 +2263,9 @@ public class Node : Object {
       draw_name( ctx, theme );
       draw_image( ctx, theme );
       if( is_leaf() ) {
-        draw_leaf_task( ctx, foreground );
+        draw_leaf_task( ctx, foreground, null );
       } else {
-        draw_acc_task( ctx, foreground );
+        draw_acc_task( ctx, foreground, null );
       }
       draw_sticker( ctx, nodesel_background, background );
       draw_common_note( ctx, foreground, nodesel_foreground, foreground );
@@ -2276,9 +2284,9 @@ public class Node : Object {
       draw_name( ctx, theme );
       draw_image( ctx, theme );
       if( is_leaf() ) {
-        draw_leaf_task( ctx, (style.is_fillable() ? background : _link_color) );
+        draw_leaf_task( ctx, _link_color, background );
       } else {
-        draw_acc_task( ctx, (style.is_fillable() ? background : _link_color) );
+        draw_acc_task( ctx, _link_color, background );
       }
       draw_sticker( ctx, nodesel_background, background );
       draw_common_note( ctx, foreground, nodesel_foreground, background );
