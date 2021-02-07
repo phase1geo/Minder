@@ -1515,25 +1515,32 @@ public class Node : Object {
 
   /* Adjusts the position of the text object */
   private void position_name() {
-    var margin  = style.node_margin  ?? 0;
-    var padding = style.node_padding ?? 0;
+
+    var margin     = style.node_margin  ?? 0;
+    var padding    = style.node_padding ?? 0;
     var stk_height = sticker_height();
     var img_height = (_image != null) ? (_image.height + padding) : 0;
+
     name.posx = posx + margin + padding + task_width() + sticker_width();
     name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0);
+
   }
 
   /* If the parent node is moved, we will move ourselves the same amount */
   private void parent_moved( Node parent, double diffx, double diffy ) {
+
     _posx += diffx;
     _posy += diffy;
+
     update_tree_bbox( diffx, diffy );
     position_name();
     moved( diffx, diffy );
+
   }
 
   /* Detaches this node from its parent node */
   public virtual void detach( NodeSide side ) {
+
     if( parent != null ) {
       int idx = index();
       propagate_task_info_up( (0 - _task_count), (0 - _task_done) );
@@ -1548,11 +1555,14 @@ public class Node : Object {
       parent   = null;
       attached = false;
     }
+
   }
 
   /* Removes this node from the node tree along with all descendents */
   public virtual void delete() {
+
     detach( side );
+
   }
 
   /*

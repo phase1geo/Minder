@@ -224,6 +224,32 @@ public class Layout : Object {
     }
   }
 
+  /* Adjusts the gap between the parent and child nodes */
+  public void apply_margin( Node n ) {
+    if( n.parent == null ) return;
+    double px, py, pw, ph;
+    var margin = n.parent.style.branch_margin;
+    n.parent.bbox( out px, out py, out pw, out ph );
+    switch( n.side ) {
+      case NodeSide.LEFT :
+        double cx, cy, cw, ch;
+        n.bbox( out cx, out cy, out cw, out ch );
+        n.posx = px - (cw + margin);
+        break;
+      case NodeSide.RIGHT :
+        n.posx = px + (pw + margin) - n.parent.task_width();
+        break;
+      case NodeSide.TOP :
+        double cx, cy, cw, ch;
+        n.bbox( out cx, out cy, out cw, out ch );
+        n.posy = py - (ch + margin);
+        break;
+      case NodeSide.BOTTOM :
+        n.posy = py + (ph + margin);
+        break;
+    }
+  }
+
   /* Updates the layout when necessary when a node is edited */
   public virtual void handle_update_by_edit( Node n, double diffw, double diffh ) {
     double adjust = 0 - (get_adjust( n ) / 2);
@@ -261,32 +287,6 @@ public class Layout : Object {
   /* Called when a node's fold indicator changes */
   public virtual void handle_update_by_fold( Node n ) {
     adjust_tree_all( n, n.tree_bbox, (0 - (get_adjust( n ) / 2)), "by_fold" );
-  }
-
-  /* Adjusts the gap between the parent and child nodes */
-  public void apply_margin( Node n ) {
-    if( n.parent == null ) return;
-    double px, py, pw, ph;
-    var margin = n.parent.style.branch_margin;
-    n.parent.bbox( out px, out py, out pw, out ph );
-    switch( n.side ) {
-      case NodeSide.LEFT :
-        double cx, cy, cw, ch;
-        n.bbox( out cx, out cy, out cw, out ch );
-        n.posx = px - (cw + margin);
-        break;
-      case NodeSide.RIGHT :
-        n.posx = px + (pw + margin) - n.parent.task_width();
-        break;
-      case NodeSide.TOP :
-        double cx, cy, cw, ch;
-        n.bbox( out cx, out cy, out cw, out ch );
-        n.posy = py - (ch + margin);
-        break;
-      case NodeSide.BOTTOM :
-        n.posy = py + (ph + margin);
-        break;
-    }
   }
 
   /* Returns the adjustment value */
