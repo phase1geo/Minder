@@ -728,6 +728,9 @@ public class MainWindow : ApplicationWindow {
 
     /* Create export menu */
     _exporter = new Exporter( this );
+    _exporter.export_done.connect(() => {
+      Utils.hide_popover( menu_btn.popover );
+    });
 
     /* Create print menu */
     var print = new ModelButton();

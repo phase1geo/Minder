@@ -27,6 +27,8 @@ public class Exporter : Box {
   private Revealer   _stack_reveal;
   private Stack      _stack;
 
+  public signal void export_done();
+
   /* Constructor */
   public Exporter( MainWindow win ) {
 
@@ -42,6 +44,7 @@ public class Exporter : Box {
     export.set_tooltip_markup( Utils.tooltip_with_accel( _( "Export With Current Settings" ), "<Control>e" ) );
     export.clicked.connect(() => {
       do_export( win );
+      export_done();
     });
 
     var bbox = new Box( Orientation.HORIZONTAL, 5 );

@@ -19,6 +19,8 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
+using Gtk;
+
 public class ExportMarkdown : Export {
 
   /* Constructor */
@@ -54,7 +56,7 @@ public class ExportMarkdown : Export {
         }
         var children = nodes.index( i ).children();
         for( int j=0; j<children.length; j++ ) {
-          export_node( os, children.index( j ) );
+          export_node( os, da.image_manager, children.index( j ) );
         }
       }
 
@@ -65,7 +67,7 @@ public class ExportMarkdown : Export {
   }
 
   /* Draws the given node and its children to the output stream */
-  private void export_node( FileOutputStream os, Node node, string prefix = "  " ) {
+  private void export_node( FileOutputStream os, ImageManager im, Node node, string prefix = "  " ) {
 
     try {
 
@@ -77,6 +79,12 @@ public class ExportMarkdown : Export {
         } else {
           title += "[ ] ";
         }
+      }
+
+      if( (node.image != null) && get_bool( "include-image-links" ) ) {
+        title += "<img src=\"" + im.get_file( node.image.id ) +
+                 "\" alt=\"image\" width=\"" + node.image.width.to_string() +
+                 "\" height=\"" + node.image.height.to_string() + "\"/>\n" + prefix + "  ";
       }
 
       title += node.name.text.text.replace( "\n", prefix + " " ) + "\n";
@@ -92,11 +100,35 @@ public class ExportMarkdown : Export {
 
       var children = node.children();
       for( int i=0; i<children.length; i++ ) {
-        export_node( os, children.index( i ), prefix + "  " );
+        export_node( os, im, children.index( i ), prefix + "  " );
       }
 
     } catch( Error e ) {
       // Handle error
+    }
+
+  }
+
+  /* Add the PNG settings */
+  public override void add_settings( Grid grid ) {
+
+    add_setting_bool( "include-image-links", grid, _( "Include image links" ), false );
+
+  }
+
+  /* Save the settings */
+  public override void save_settings( Xml.Node* node ) {
+
+    node->set_prop( "include-image-links", get_bool( "include-image-links" ).to_string() );
+
+  }
+
+  /* Load the settings */
+  public override void load_settings( Xml.Node* node ) {
+
+    var i = node->get_prop( "include-image-links" );
+    if( i != null ) {
+      set_bool( "include-image-links", bool.parse( i ) );
     }
 
   }
