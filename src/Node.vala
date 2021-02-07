@@ -244,13 +244,13 @@ public class Node : Object {
       }
     }
   }
-  public RGBA     link_color_only {
+  public RGBA link_color_only {
     set {
       _link_color     = value;
       _link_color_set = true;
     }
   }
-  private RGBA    link_color_child {
+  private RGBA link_color_child {
     set {
       if( !link_color_root ) {
         _link_color     = value;
@@ -261,7 +261,7 @@ public class Node : Object {
       }
     }
   }
-  public bool     link_color_root {
+  public bool link_color_root {
     get {
       return( _link_color_root );
     }
@@ -274,8 +274,8 @@ public class Node : Object {
       }
     }
   }
-  public bool     attached   { get; set; default = false; }
-  public Style    style {
+  public bool  attached { get; set; default = false; }
+  public Style style {
     get {
       return( _style );
     }
@@ -293,7 +293,7 @@ public class Node : Object {
       }
     }
   }
-  public Layout?  layout {
+  public Layout? layout {
     get {
       return( _layout );
     }
