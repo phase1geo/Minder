@@ -395,16 +395,16 @@ public class NodeMenu : Gtk.Menu {
                                          _( "Add Task" );
     var link_lbl = node_has_link()  ? _( "Remove Node Link" ) : _( "Add Node Link" );
     var fold_lbl = node_is_folded() ? _( "Unfold Children" )  : _( "Fold Children" );
-    var task_acc = (_task.get_child() as Granite.AccelLabel).accel_string;
-    var link_acc = (_link.get_child() as Granite.AccelLabel).accel_string;
-    var fold_acc = (_fold.get_child() as Granite.AccelLabel).accel_string;
+    var task_acc = (Granite.AccelLabel)_task.get_child();
+    var link_acc = (Granite.AccelLabel)_link.get_child();
+    var fold_acc = (Granite.AccelLabel)_fold.get_child();
 
     _task.get_child().destroy();
-    _task.add( new Granite.AccelLabel( task_lbl, task_acc ) );
+    _task.add( new Granite.AccelLabel( task_lbl, task_acc.accel_string ) );
     _link.get_child().destroy();
-    _link.add( new Granite.AccelLabel( link_lbl, link_acc ) );
+    _link.add( new Granite.AccelLabel( link_lbl, link_acc.accel_string ) );
     _fold.get_child().destroy();
-    _fold.add( new Granite.AccelLabel( fold_lbl, fold_acc ) );
+    _fold.add( new Granite.AccelLabel( fold_lbl, fold_acc.accel_string ) );
 
     _image.label = node_has_image() ? _( "Remove Image" ) : _( "Add Image" );
 
