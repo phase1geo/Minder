@@ -28,13 +28,37 @@ public class ExportMarkdown : Export {
     base( "markdown", _( "Markdown" ), { ".md", ".markdown" }, true, false );
   }
 
+  private bool handle_directory( string fname, out string mdfile, out string imgdir ) {
+    mdfile = fname;
+    imgdir = fname;
+    if( get_bool( "include-image-links" ) ) {
+      var filename = fname;
+      var dirname  = fname;
+      if( fname.has_suffix( ".md" ) ) {
+        var parts = fname.split( "." );
+        dirname = string.joinv( ".", parts[0:parts.length-1] );
+      }
+      if( DirUtils.create_with_parents( dirname, 0775 ) == 0 ) {
+        imgdir = GLib.Path.build_filename( dirname, "images" );
+        if( DirUtils.create_with_parents( imgdir, 0775 ) == 0 ) {
+          mdfile = GLib.Path.build_filename( dirname, GLib.Path.get_basename( fname ) );
+          return( true );
+        }
+      }
+      return( false );
+    }
+    return( true );
+  }
+
   /* Exports the given drawing area to the file of the given name */
   public override bool export( string fname, DrawArea da ) {
-    var  file   = File.new_for_path( fname );
-    bool retval = true;
+    string filename, imgdir;
+    if( !handle_directory( fname, out filename, out imgdir ) ) return( false );
+    var  file     = File.new_for_path( filename );
+    bool retval   = true;
     try {
       var os = file.replace( null, false, FileCreateFlags.NONE );
-      export_top_nodes( os, da );
+      export_top_nodes( os, da, imgdir );
     } catch( Error e ) {
       retval = false;
     }
@@ -42,7 +66,7 @@ public class ExportMarkdown : Export {
   }
 
   /* Draws each of the top-level nodes */
-  private void export_top_nodes( FileOutputStream os, DrawArea da ) {
+  private void export_top_nodes( FileOutputStream os, DrawArea da, string imgdir ) {
 
     try {
 
@@ -56,7 +80,7 @@ public class ExportMarkdown : Export {
         }
         var children = nodes.index( i ).children();
         for( int j=0; j<children.length; j++ ) {
-          export_node( os, da.image_manager, children.index( j ) );
+          export_node( os, da.image_manager, children.index( j ), imgdir );
         }
       }
 
@@ -66,12 +90,28 @@ public class ExportMarkdown : Export {
 
   }
 
+  /* Copies the given image file to the image directory */
+  private bool copy_file( string imgdir, string filename ) {
+    var basename = GLib.Path.get_basename( filename );
+    var lname    = GLib.Path.build_filename( imgdir, basename );
+    var rfile    = File.new_for_path( filename );
+    var lfile    = File.new_for_path( lname );
+    stdout.printf( "basename: %s, lname: %s, filename: %s\n", basename, lname, filename );
+    try {
+      rfile.copy( lfile, FileCopyFlags.OVERWRITE );
+    } catch( Error e ) {
+      stdout.printf( "message: %s\n", e.message );
+      return( false );
+    }
+    return( true );
+  }
+
   /* Draws the given node and its children to the output stream */
-  private void export_node( FileOutputStream os, ImageManager im, Node node, string prefix = "  " ) {
+  private void export_node( FileOutputStream os, ImageManager im, Node node, string imgdir, string prefix = "  " ) {
 
     try {
 
-      string title = prefix + "- ";
+      var title = prefix + "- ";
 
       if( node.is_task() ) {
         if( node.is_task_done() ) {
@@ -82,9 +122,13 @@ public class ExportMarkdown : Export {
       }
 
       if( (node.image != null) && get_bool( "include-image-links" ) ) {
-        title += "<img src=\"" + im.get_file( node.image.id ) +
-                 "\" alt=\"image\" width=\"" + node.image.width.to_string() +
-                 "\" height=\"" + node.image.height.to_string() + "\"/>\n" + prefix + "  ";
+        var file = im.get_file( node.image.id );
+        if( copy_file( imgdir, file ) ) {
+          var basename = GLib.Path.get_basename( file );
+          title += "<img src=\"images/" + basename +
+                   "\" alt=\"image\" width=\"" + node.image.width.to_string() +
+                   "\" height=\"" + node.image.height.to_string() + "\"/>\n" + prefix + "  ";
+        }
       }
 
       title += node.name.text.text.replace( "\n", prefix + " " ) + "\n";
@@ -100,7 +144,7 @@ public class ExportMarkdown : Export {
 
       var children = node.children();
       for( int i=0; i<children.length; i++ ) {
-        export_node( os, im, children.index( i ), prefix + "  " );
+        export_node( os, im, children.index( i ), imgdir, prefix + "  " );
       }
 
     } catch( Error e ) {

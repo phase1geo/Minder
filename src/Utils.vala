@@ -122,7 +122,7 @@ public class Utils {
 
   /* Returns the rootname of the given filename */
   public static string rootname( string filename ) {
-    var basename = Filename.display_basename( filename );
+    var basename = GLib.Path.get_basename( filename );
     var parts    = basename.split( "." );
     if( parts.length > 2 ) {
       return( string.joinv( ".", parts[0:parts.length-1] ) );
