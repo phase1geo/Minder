@@ -61,15 +61,32 @@ public class Export {
   /* Adds settings to the export dialog page */
   public virtual void add_settings( Grid grid ) {}
 
-  protected void add_setting_bool( string name, Grid grid, string label, bool dflt ) {
+  private Label make_help( string help ) {
 
-    var row = _settings.size;
+    var lbl = new Label( help );
+    lbl.margin_left     = 10;
+    lbl.margin_bottom   = 10;
+    lbl.xalign          = (float)0;
+    lbl.justify         = Justification.LEFT;
+    lbl.max_width_chars = 40;
+    lbl.wrap_mode       = Pango.WrapMode.WORD;
+    lbl.set_line_wrap( true );
 
-    var lbl = new Label( label );
-    lbl.halign = Align.START;
+    return( lbl );
+
+  }
+
+  protected void add_setting_bool( string name, Grid grid, string label, string? help, bool dflt ) {
+
+    var row = _settings.size * 2;
+
+    var lbl = new Label( Utils.make_title( label ) );
+    lbl.halign     = Align.START;
+    lbl.use_markup = true;
 
     var sw  = new Switch();
     sw.halign = Align.END;
+    sw.expand = true;
     sw.activate.connect(() => {
       settings_changed();
     });
@@ -77,19 +94,26 @@ public class Export {
     grid.attach( lbl, 0, row );
     grid.attach( sw,  1, row );
 
+    if( help != null ) {
+      var hlp = make_help( help );
+      grid.attach( hlp, 0, (row + 1) );
+    }
+
     _settings.@set( name, sw );
 
   }
 
-  protected void add_setting_scale( string name, Grid grid, string label, int min, int max, int step, int dflt ) {
+  protected void add_setting_scale( string name, Grid grid, string label, string? help, int min, int max, int step, int dflt ) {
 
-    var row = _settings.size;
+    var row = _settings.size * 2;
 
-    var lbl = new Label( label );
-    lbl.halign = Align.START;
+    var lbl = new Label( Utils.make_title( label ) );
+    lbl.halign     = Align.START;
+    lbl.use_markup = true;
 
     var scale = new Scale.with_range( Orientation.HORIZONTAL, min, max, step );
-    scale.halign = Align.END;
+    scale.halign       = Align.END;
+    scale.expand       = true;
     scale.draw_value   = true;
     scale.round_digits = max.to_string().char_count();
     scale.value_changed.connect(() => {
@@ -99,6 +123,11 @@ public class Export {
 
     grid.attach( lbl,   0, row );
     grid.attach( scale, 1, row );
+
+    if( help != null ) {
+      var hlp = make_help( help );
+      grid.attach( hlp, 0, (row + 1) );
+    }
 
     _settings.@set( name, scale );
 

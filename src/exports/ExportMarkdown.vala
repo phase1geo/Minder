@@ -112,7 +112,8 @@ public class ExportMarkdown : Export {
   /* Add the PNG settings */
   public override void add_settings( Grid grid ) {
 
-    add_setting_bool( "include-image-links", grid, _( "Include image links" ), false );
+    add_setting_bool( "include-image-links", grid, _( "Include image links" ),
+      _( "Creates a directory containing the Markdown and embedded images" ), false );
 
   }
 

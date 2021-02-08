@@ -76,7 +76,7 @@ public class ExportImage : Export {
   }
 
   private void add_settings_jpeg( Grid grid ) {
-    add_setting_scale( "quality", grid, _( "Quality" ), 0, 100, 1, 90 );
+    add_setting_scale( "quality", grid, _( "Quality" ), null, 0, 100, 1, 90 );
   }
 
   /* Save the settings */
