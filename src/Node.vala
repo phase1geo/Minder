@@ -284,10 +284,8 @@ public class Node : Object {
       if( _style.copy( value ) ) {
         name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
         name.max_width = style.node_width;
-        if( branch_margin != style.branch_margin ) {
-          for( int i=0; i<_children.length; i++ ) {
-            _layout.apply_margin( _children.index( i ) );
-          }
+        for( int i=0; i<_children.length; i++ ) {
+          _layout.apply_margin( _children.index( i ) );
         }
         position_name_and_update_size();
       }

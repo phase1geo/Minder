@@ -253,7 +253,6 @@ public class Layout : Object {
   /* Updates the layout when necessary when a node is edited */
   public virtual void handle_update_by_edit( Node n, double diffw, double diffh ) {
     double adjust = 0 - (get_adjust( n ) / 2);
-    apply_margin( n );
     if( (n.side & NodeSide.horizontal()) != 0 ) {
       if( (n.parent != null) && (diffh != 0) ) {
         n.adjust_posy_only( 0 - (diffh / 2) );
