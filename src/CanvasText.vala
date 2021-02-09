@@ -340,7 +340,7 @@ public class CanvasText : Object {
     int adjusted_x = (int)(x - posx) * Pango.SCALE;
     int adjusted_y = (int)(y - posy) * Pango.SCALE;
     if( !_pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
-      cursor   = text.text.index_of_nth_char( text.text.length );
+      cursor   = text.text.index_of_nth_char( text.text.char_count() );
       trailing = 0;
     }
     var cindex = text.text.char_count( cursor + trailing );
