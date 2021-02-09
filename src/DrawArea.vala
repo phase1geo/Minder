@@ -468,9 +468,12 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Get the theme */
     _theme = win.themes.get_theme( theme.name );
-    update_css();
 
-    theme_changed( this );
+    /* If we are the current drawarea, update the CSS and indicate the theme change */
+    if( win.get_current_da() == this ) {
+      update_css();
+      theme_changed( this );
+    }
 
   }
 
