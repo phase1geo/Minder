@@ -89,6 +89,55 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.12.0" date="2021-02-11">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added subscript and superscript support to Markdown parser.</li>
+          <li>Added support for switching tabs with Control-Tab and Shift-Control-Tab.</li>
+          <li>Added support for remembering last used open/save dialog directories.</li>
+          <li>Added support for Alt-Left/Right/Up/Down keyboard shortcuts to rearrange sibling nodes.</li>
+          <li>Added support for searching all tabs (thanks to @Messius58).</li>
+          <li>Added about window for non-elementary builds.</li>
+          <li>Added ability to move child nodes to parent via Alt+direction.</li>
+          <li>Added support for including images in Markdown export.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Added installation instructions to README.md for Debian (thanks to Róbert Hubinák).</li>
+          <li>Replaced export UI with a new, improved UI with support for export options.</li>
+          <li>Moved add node menu items to a submenu.</li>
+          <li>Improved focus mode behavior.</li>
+          <li>Changed property header button to a toggle button and clarified the tooltip.</li>
+          <li>Changed keyboard shortcut to open sidebar from Control-| to F9.</li>
+          <li>Changed non-symbolic header bar icons to symbolic icons for non-elementary OS environments.</li>
+          <li>Improved link drawing algorithm to make link connections easier to see.</li>
+          <li>Changed Link Color in node inspector to Color to reflect the colors use.</li>
+          <li>Improved task button drawing.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue where tab background colors were incorrect when changing tabs.</li>
+          <li>Fixed issue with getting valac pathname from Meson (thanks to paluszak).</li>
+          <li>Added desktop update call to post_install.py script.</li>
+          <li>Fixed issue with sidebar sizing.</li>
+          <li>Fixed issue with remembering the sticker sidebar panel was last opened when restarting.</li>
+          <li>Fixed layout issues when unfolding a parent with folded children.</li>
+          <li>Fixed issue with hiding node groups when the main node in group is folded.</li>
+          <li>Fixed issue with displaying link color in sidebar when root node is selected.</li>
+          <li>Fixed alpha value used for drawing node grouping when encompassed nodes are not in focus when focus mode is enabled.</li>
+          <li>Fixed issue with saving manually added embedded links in node text.</li>
+          <li>Fixed undo/redo text editing support.</li>
+          <li>Updated keyboard shortcuts in help window.</li>
+          <li>Fixed issue of tab content flashing when application opens with multiple tabs.</li>
+          <li>Fixed error when closing a tab.</li>
+          <li>Fixed issue with undo'ing text modifications.</li>
+          <li>Fixed issues with style inspector scale widgets not properly reflecting their current value.</li>
+          <li>Fixed various issues with node layout.</li>
+          <li>Fixed issue with undo'ing the deletion of a single node.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.11.3" date="2020-10-16">
       <description>
         <p>Changes</p>

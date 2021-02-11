@@ -125,9 +125,9 @@ public class Selection {
   /* Adds a node to the current selection.  Returns true if the node was added. */
   public bool add_node( Node node, bool signal_change = true ) {
     if( is_node_selected( node ) || ((node.parent != null) && node.parent.folded) ) return( false );
-    node.mode = (_nodes.length == 0) ? NodeMode.CURRENT : NodeMode.SELECTED;
+    _da.set_node_mode( node, ((_nodes.length == 0) ? NodeMode.CURRENT : NodeMode.SELECTED) );
     if( _nodes.length == 1 ) {
-      _nodes.index( 0 ).mode = NodeMode.SELECTED;
+      _da.set_node_mode( _nodes.index( 0 ), NodeMode.SELECTED );
     }
     _nodes.append_val( node );
     if( signal_change ) {
@@ -199,7 +199,7 @@ public class Selection {
   /* Adds a connection to the current selection */
   public bool add_connection( Connection conn ) {
     if( is_connection_selected( conn ) ) return( false );
-    conn.mode = ConnMode.SELECTED;
+    _da.set_connection_mode( conn, ConnMode.SELECTED );
     _conns.append_val( conn );
     selection_changed();
     return( true );
@@ -229,13 +229,13 @@ public class Selection {
   */
   public bool remove_node( Node node, double alpha = 1.0, bool signal_change = true ) {
     if( is_node_selected( node ) ) {
-      node.mode  = NodeMode.NONE;
+      _da.set_node_mode( node, NodeMode.NONE );
       node.alpha = alpha;
       for( int i=0; i<_nodes.length; i++ ) {
         if( node == _nodes.index( i ) ) {
           _nodes.remove_index( i );
           if( _nodes.length == 1 ) {
-            _nodes.index( 0 ).mode = NodeMode.CURRENT;
+            _da.set_node_mode( _nodes.index( 0 ), NodeMode.CURRENT );
           }
           if( signal_change ) {
             selection_changed();
@@ -310,7 +310,7 @@ public class Selection {
   */
   public bool remove_connection( Connection conn, double alpha = 1.0 ) {
     if( is_connection_selected( conn ) ) {
-      conn.mode  = ConnMode.NONE;
+      _da.set_connection_mode( conn, ConnMode.NONE );
       conn.alpha = alpha;
       for( int i=0; i<_conns.length; i++ ) {
         if( conn == _conns.index( i ) ) {
@@ -363,7 +363,7 @@ public class Selection {
   public bool clear_nodes( bool signal_change = true, double alpha = 1.0 ) {
     var num = _nodes.length;
     for( int i=0; i<num; i++ ) {
-      _nodes.index( i ).mode  = NodeMode.NONE;
+      _da.set_node_mode( _nodes.index( i ), NodeMode.NONE );
       _nodes.index( i ).alpha = alpha;
     }
     _nodes.remove_range( 0, num );
@@ -377,7 +377,7 @@ public class Selection {
   public bool clear_connections( bool signal_change = true, double alpha = 1.0 ) {
     var num = _conns.length;
     for( int i=0; i<num; i++ ) {
-      _conns.index( i ).mode  = ConnMode.NONE;
+      _da.set_connection_mode( _conns.index( i ), ConnMode.NONE );
       _conns.index( i ).alpha = alpha;
     }
     _conns.remove_range( 0, num );

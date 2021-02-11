@@ -19,12 +19,15 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-using GLib;
+public class ExportYed : Export {
 
-public class ExportYed : Object {
+  /* Constructor */
+  public ExportYed() {
+    base( "yed", _( "Yed" ), { ".graphml" }, true, false );
+  }
 
   /* Exports the given drawing area to the file of the given name */
-  public static bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, DrawArea da ) {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "graphml" );
     root->new_prop( "xmlns", "http://graphml.graphdrawing.org/xmlns" );
@@ -46,7 +49,7 @@ public class ExportYed : Object {
   }
 
   /* Returns a single key populated with the specified information */
-  private static Xml.Node* export_key_attr( string id, string for_item, string attr_name, string attr_type ) {
+  private Xml.Node* export_key_attr( string id, string for_item, string attr_name, string attr_type ) {
     Xml.Node* n = new Xml.Node( null, "key" );
     n->new_prop( "id", id );
     n->new_prop( "for", for_item );
@@ -56,7 +59,7 @@ public class ExportYed : Object {
   }
 
   /* Returns a single key populated with the specified information */
-  private static Xml.Node* export_key_yfiles( string id, string for_item, string yfiles_type ) {
+  private Xml.Node* export_key_yfiles( string id, string for_item, string yfiles_type ) {
     Xml.Node* n = new Xml.Node( null, "key" );
     n->new_prop( "id", id );
     n->new_prop( "for", for_item );
@@ -65,7 +68,7 @@ public class ExportYed : Object {
   }
 
   /* Adds all of the keys to the root node */
-  private static void export_keys( Xml.Node* root ) {
+  private void export_keys( Xml.Node* root ) {
     root->add_child( export_key_attr(   "d5", "node", "description", "string" ) );
     root->add_child( export_key_yfiles( "d6", "node", "nodegraphics" ) );
     root->add_child( export_key_yfiles( "d7", "graphml", "resources" ) );
@@ -74,7 +77,7 @@ public class ExportYed : Object {
   }
 
   /* Exports each tree as a separate graph */
-  private static void export_graphs( Xml.Node* root, Xml.Ns* yns, DrawArea da ) {
+  private void export_graphs( Xml.Node* root, Xml.Ns* yns, DrawArea da ) {
 
     Xml.Node* graph = new Xml.Node( null, "graph" );
     graph->new_prop( "edgedefault", "directed" );
@@ -99,7 +102,7 @@ public class ExportYed : Object {
 
   }
 
-  private static Xml.Node* export_node_shape( Node node, Theme theme, Xml.Ns* yns ) {
+  private Xml.Node* export_node_shape( Node node, Theme theme, Xml.Ns* yns ) {
     Xml.Node* shape = new Xml.Node( yns, "ShapeNode" );
 
     Xml.Node* geometry = new Xml.Node( yns, "Geometry" );
@@ -173,7 +176,7 @@ public class ExportYed : Object {
 
   }
 
-  private static Xml.Node* export_node( Node node, Theme theme, Xml.Ns* yns ) {
+  private Xml.Node* export_node( Node node, Theme theme, Xml.Ns* yns ) {
     Xml.Node* n  = new Xml.Node( null, "node" );
     Xml.Node* d5 = new Xml.Node( null, "data" );
     Xml.Node* d6 = new Xml.Node( null, "data" );
@@ -190,7 +193,7 @@ public class ExportYed : Object {
     return( n );
   }
 
-  private static Xml.Node* export_node_bezieredge( Node node, Xml.Ns* yns ) {
+  private Xml.Node* export_node_bezieredge( Node node, Xml.Ns* yns ) {
 
     Xml.Node* be   = new Xml.Node( yns, "BezierEdge" );
 
@@ -217,7 +220,7 @@ public class ExportYed : Object {
   }
 
   /* Adds the node link as an edge */
-  private static Xml.Node* export_link( Node node, Xml.Ns* yns ) {
+  private Xml.Node* export_link( Node node, Xml.Ns* yns ) {
     if( node.is_root() ) return( null );
     Xml.Node* e = new Xml.Node( null, "edge" );
     e->new_prop( "id", ("e" + node.id().to_string()) );
@@ -238,7 +241,7 @@ public class ExportYed : Object {
   }
 
   /* Adds a node along with its edge */
-  private static void export_node_edge( Xml.Node* graph, Xml.Ns* yns, Node node, Theme theme ) {
+  private void export_node_edge( Xml.Node* graph, Xml.Ns* yns, Node node, Theme theme ) {
     graph->add_child( export_node( node, theme, yns ) );
     if( !node.is_root() ) {
       graph->add_child( export_link( node, yns ) );
@@ -249,7 +252,7 @@ public class ExportYed : Object {
   }
 
   /* Create connection */
-  private static void export_connections( Xml.Node* graph, Xml.Ns* yns, Array<Connection> conns, Theme theme ) {
+  private void export_connections( Xml.Node* graph, Xml.Ns* yns, Array<Connection> conns, Theme theme ) {
 
     for( int i=0; i<conns.length; i++ ) {
 

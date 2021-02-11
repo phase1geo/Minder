@@ -96,6 +96,11 @@
       <summary>Search option for non-task nodes</summary>
       <description>Specifies whether non-task nodes should be searched or not</description>
     </key>
+    <key name="search-opt-all-tabs" type="b">
+      <default>false</default>
+      <summary>Search option which searches all tabs when true</summary>
+      <description>Specifies whether all tabs will be searched (true) or only the current tab (false)</description>
+    </key>
     <key name="image-id" type="i">
       <default>1</default>
       <summary>Unique ID added to image names</summary>
@@ -265,6 +270,11 @@
       <default>""</default>
       <summary>Last used directory in open/save file dialog</summary>
       <description>Stores last used directory in the open/save dialog and uses it when open/save is later invoked</description>
+    </key>
+    <key name="last-export" type="s">
+      <default>"png"</default>
+      <summary>Last used export</summary>
+      <description>Stores last used export and uses it when it is later invoked</description>
     </key>
   </schema>
 </schemalist>

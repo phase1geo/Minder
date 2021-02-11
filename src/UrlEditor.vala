@@ -97,7 +97,7 @@ public class UrlEditor : Popover {
     if( !_add ) {
       node.name.remove_tag( FormatTag.URL, _da.undo_text );
     }
-    node.name.add_tag( FormatTag.URL, _entry.text, _da.undo_text );
+    node.name.add_tag( FormatTag.URL, _entry.text, false, _da.undo_text );
     node.name.clear_selection();
     _da.changed();
   }

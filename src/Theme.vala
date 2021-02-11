@@ -176,9 +176,7 @@ public class Theme : Object {
 
   /* Returns the RGBA color for the given color value */
   protected RGBA color_from_string( string value ) {
-    RGBA c = {1.0, 1.0, 1.0, 1.0};
-    c.parse( value );
-    return( c );
+    return( Utils.color_from_string( value ) );
   }
 
   /* Returns the CSS provider for this theme */

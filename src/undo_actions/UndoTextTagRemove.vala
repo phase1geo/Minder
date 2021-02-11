@@ -21,23 +21,25 @@
 
 public class UndoTextTagRemove : UndoTextItem {
 
-  public int       start { private set; get; }
-  public int       end   { private set; get; }
-  public FormatTag tag   { private set; get; }
-  public string?   extra { private set; get; }
+  public int       start  { private set; get; }
+  public int       end    { private set; get; }
+  public FormatTag tag    { private set; get; }
+  public string?   extra  { private set; get; }
+  public bool      parsed { private set; get; }
 
   /* Default constructor */
-  public UndoTextTagRemove( int start, int end, FormatTag tag, string? extra, int cursor ) {
+  public UndoTextTagRemove( int start, int end, FormatTag tag, string? extra, bool parsed, int cursor ) {
     base( _( "format tag remove" ), UndoTextOp.TAGDEL, cursor, cursor );
-    this.start = start;
-    this.end   = end;
-    this.tag   = tag;
-    this.extra = extra;
+    this.start  = start;
+    this.end    = end;
+    this.tag    = tag;
+    this.extra  = extra;
+    this.parsed = parsed;
   }
 
   /* Causes the stored item to be put into the before state */
   public override void undo_text( DrawArea da, CanvasText ct ) {
-    ct.text.add_tag( tag, start, end, extra );
+    ct.text.add_tag( tag, start, end, parsed, extra );
     ct.set_cursor_only( start_cursor );
     da.queue_draw();
   }

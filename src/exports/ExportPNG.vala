@@ -19,12 +19,21 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
+using Gtk;
+using Gdk;
 using Cairo;
 
-public class ExportPNG : Object {
+public class ExportPNG : Export {
+
+  /* Constructor */
+  public ExportPNG() {
+    base( "png", _( "PNG" ), { ".png" }, true, false );
+  }
 
   /* Default constructor */
-  public static void export( string fname, DrawArea da, bool transparent ) {
+  public override bool export( string fname, DrawArea da ) {
+
+    var transparent = get_bool( "transparent" );
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
@@ -43,8 +52,50 @@ public class ExportPNG : Object {
     context.translate( (10 - x), (10 - y) );
     da.draw_all( context );
 
-    /* Write the image to the PNG file */
-    surface.write_to_png( fname );
+    /* Write the pixbuf to the file */
+    var pixbuf = pixbuf_get_from_surface( surface, 0, 0, ((int)w + 20), ((int)h + 20) );
+
+    string[] option_keys   = {};
+    string[] option_values = {};
+
+    var value = get_scale( "compression" );
+    option_keys += "compression";  option_values += value.to_string();
+
+    try {
+      pixbuf.savev( fname, "png", option_keys, option_values );
+    } catch( Error e ) {
+      stdout.printf( "Error writing %s: %s\n", name, e.message );
+      return( false );
+    }
+
+    return( true );
+
+  }
+
+  /* Add the PNG settings */
+  public override void add_settings( Grid grid ) {
+    add_setting_bool( "transparent", grid, _( "Enable Transparent Background" ), _( "This is something that is great" ), false );
+    add_setting_scale( "compression", grid, _( "Compression" ), _( "This is something that is also great and we think that we are really good, right?" ), 0, 9, 1, 5 );
+  }
+
+  /* Save the settings */
+  public override void save_settings( Xml.Node* node ) {
+    node->set_prop( "transparent", get_bool( "transparent" ).to_string() );
+    node->set_prop( "compression", get_scale( "compression" ).to_string() );
+  }
+
+  /* Load the settings */
+  public override void load_settings( Xml.Node* node ) {
+
+    var t = node->get_prop( "transparent" );
+    if( t != null ) {
+      set_bool( "transparent", bool.parse( t ) );
+    }
+
+    var c = node->get_prop( "compression" );
+    if( c != null ) {
+      set_scale( "compression", int.parse( c ) );
+    }
 
   }
 

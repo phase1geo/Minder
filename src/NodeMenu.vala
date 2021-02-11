@@ -138,6 +138,10 @@ public class NodeMenu : Gtk.Menu {
     _detach = new Gtk.MenuItem.with_label( _( "Detach" ) );
     _detach.activate.connect( detach_node );
 
+    var addnode = new Gtk.MenuItem.with_label( _( "Add Node" ) );
+    var addmenu = new Gtk.Menu();
+    addnode.set_submenu( addmenu );
+
     _root = new Gtk.MenuItem.with_label( _( "Add Root Node" ) );
     _root.activate.connect( add_root_node );
 
@@ -248,10 +252,7 @@ public class NodeMenu : Gtk.Menu {
     add( _link_color );
     add( _fold );
     add( new SeparatorMenuItem() );
-    add( _root );
-    add( _parent );
-    add( _child );
-    add( _sibling );
+    add( addnode );
     add( quick );
     add( new SeparatorMenuItem() );
     add( selnode );
@@ -260,6 +261,12 @@ public class NodeMenu : Gtk.Menu {
     add( _sortby );
     add( new SeparatorMenuItem() );
     add( _detach );
+
+    /* Add the items to the add node menu */
+    addmenu.add( _root );
+    addmenu.add( _parent );
+    addmenu.add( _child );
+    addmenu.add( _sibling );
 
     /* Add the items to the sort menu */
     sortmenu.add( sort_alpha );
@@ -388,16 +395,16 @@ public class NodeMenu : Gtk.Menu {
                                          _( "Add Task" );
     var link_lbl = node_has_link()  ? _( "Remove Node Link" ) : _( "Add Node Link" );
     var fold_lbl = node_is_folded() ? _( "Unfold Children" )  : _( "Fold Children" );
-    var task_acc = (_task.get_child() as Granite.AccelLabel).accel_string;
-    var link_acc = (_link.get_child() as Granite.AccelLabel).accel_string;
-    var fold_acc = (_fold.get_child() as Granite.AccelLabel).accel_string;
+    var task_acc = (Granite.AccelLabel)_task.get_child();
+    var link_acc = (Granite.AccelLabel)_link.get_child();
+    var fold_acc = (Granite.AccelLabel)_fold.get_child();
 
     _task.get_child().destroy();
-    _task.add( new Granite.AccelLabel( task_lbl, task_acc ) );
+    _task.add( new Granite.AccelLabel( task_lbl, task_acc.accel_string ) );
     _link.get_child().destroy();
-    _link.add( new Granite.AccelLabel( link_lbl, link_acc ) );
+    _link.add( new Granite.AccelLabel( link_lbl, link_acc.accel_string ) );
     _fold.get_child().destroy();
-    _fold.add( new Granite.AccelLabel( fold_lbl, fold_acc ) );
+    _fold.add( new Granite.AccelLabel( fold_lbl, fold_acc.accel_string ) );
 
     _image.label = node_has_image() ? _( "Remove Image" ) : _( "Add Image" );
 

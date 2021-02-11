@@ -276,9 +276,10 @@ public class QuickEntry : Gtk.Window {
 
   /* Inserts the specified nodes into the given drawing area */
   private void handle_insert( DrawArea da ) {
-    var nodes = new Array<Node>();
-    var node  = da.get_current_node();
-    ExportText.import_text( _entry.buffer.text, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, false, nodes );
+    var nodes  = new Array<Node>();
+    var node   = da.get_current_node();
+    var export = (ExportText)da.win.exports.get_by_name( "text" );
+    export.import_text( _entry.buffer.text, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, false, nodes );
     if( nodes.length == 0 ) return;
     da.undo_buffer.add_item( new UndoNodesInsert( da, nodes ) );
     da.set_current_node( nodes.index( 0 ) );
@@ -292,7 +293,8 @@ public class QuickEntry : Gtk.Window {
     var nodes  = new Array<Node>();;
     var node   = da.get_current_node();
     var parent = node.parent;
-    ExportText.import_text( _entry.buffer.text, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, true, nodes );
+    var export = (ExportText)da.win.exports.get_by_name( "text" );
+    export.import_text( _entry.buffer.text, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, true, nodes );
     if( nodes.length == 0 ) return;
     da.undo_buffer.add_item( new UndoNodesReplace( node, nodes ) );
     da.set_current_node( nodes.index( 0 ) );

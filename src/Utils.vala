@@ -45,6 +45,13 @@ public class Utils {
     return( "#%02x%02x%02x".printf( (int)(rgba.red * 255), (int)(rgba.green * 255), (int)(rgba.blue * 255) ) );
   }
 
+  /* Returns the RGBA color for the given color value */
+  public static RGBA color_from_string( string value ) {
+    RGBA c = {1.0, 1.0, 1.0, 1.0};
+    c.parse( value );
+    return( c );
+  }
+
   /* Sets the context source color to the given color value */
   public static void set_context_color( Context ctx, RGBA color ) {
     ctx.set_source_rgba( color.red, color.green, color.blue, color.alpha );
@@ -85,19 +92,42 @@ public class Utils {
   /*
    Checks the given string to see if it is a match to the given pattern.  If
    it is, the matching portion of the string appended to the list of matches.
+
+   See : https://valadoc.org/glib-2.0/string.substring.html
   */
-  public static void match_string( string pattern, string value, string type, Node? node, Connection? conn, ref Gtk.ListStore matches ) {
-    int index = value.casefold().index_of( pattern );
-    if( index != -1 ) {
-      TreeIter it;
-      int    start_index = (index > 20) ? (index - 20) : 0;
-      string prefix      = (index > 20) ? "…"        : "";
-      string str         = prefix +
-                           value.substring( start_index, (index - start_index) ) + "<u>" +
-                           value.substring( index, pattern.length ) + "</u>" +
-                           value.substring( (index + pattern.length), -1 );
-      matches.append( out it );
-      matches.set( it, 0, type, 1, str, 2, node, 3, conn, -1 );
+  public static string match_string( string pattern, string value) {
+      int pattern_byte_idx = value.casefold().index_of( pattern );
+      if( pattern_byte_idx != -1 ) {
+        unichar  c = 0;
+        int i = 0;
+        int current_index = pattern_byte_idx;
+        while (value.get_prev_char(ref current_index, out c) && i < 10) {
+          i++;
+        }
+        int start = i < 10 ? 0 : current_index;
+        i = 0;
+        current_index = pattern_byte_idx + pattern.length;
+        while (value.get_next_char(ref current_index, out c) && i < 10) {
+          i++;
+        }
+        int end = i < 10 ? -1 : current_index - ( pattern_byte_idx + pattern.length );
+        string str = (start > 0 ? "..." : "") +
+        value.substring(start, pattern_byte_idx - start) +
+        "<u>" + pattern + "</u>" +
+        value.substring(pattern_byte_idx + pattern.length);
+        return str;
+      }
+    return "";
+  }
+
+  /* Returns the rootname of the given filename */
+  public static string rootname( string filename ) {
+    var basename = GLib.Path.get_basename( filename );
+    var parts    = basename.split( "." );
+    if( parts.length > 2 ) {
+      return( string.joinv( ".", parts[0:parts.length-1] ) );
+    } else {
+      return( parts[0] );
     }
   }
 

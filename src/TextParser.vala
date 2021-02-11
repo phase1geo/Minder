@@ -72,7 +72,7 @@ public class TextParser {
   protected void add_tag( FormattedText text, MatchInfo matches, int paren, FormatTag tag, string? extra = null ) {
     int start, end;
     matches.fetch_pos( paren, out start, out end );
-    text.add_tag( tag, start, end, extra );
+    text.add_tag( tag, start, end, true, extra );
   }
 
   /* Helper function that returns the matched string */
@@ -104,7 +104,7 @@ public class TextParser {
 
   /* This is called when the associated FormatBar button is clicked */
   public virtual void insert_tag( CanvasText ct, FormatTag tag, int start_pos, int end_pos, UndoTextBuffer undo_buffer, string? extra = null ) {
-    ct.text.add_tag( tag, start_pos, end_pos, extra );
+    ct.text.add_tag( tag, start_pos, end_pos, false, extra );
   }
 
   /* This is called when the associated FormatBar button is unclicked */

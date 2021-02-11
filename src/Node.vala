@@ -125,13 +125,12 @@ public class Node : Object {
   protected double       _height       = 0;
   protected double       _ipadx        = 6;
   protected double       _ipady        = 3;
-  protected double       _task_radius  = 5;
+  protected double       _task_radius  = 7;
   protected double       _alpha        = 1.0;
   protected Array<Node>  _children;
   private   NodeMode     _mode         = NodeMode.NONE;
   private   int          _task_count   = 0;
   private   int          _task_done    = 0;
-  private   bool         _folded       = false;
   private   double       _posx         = 0;
   private   double       _posy         = 0;
   private   RGBA         _link_color;
@@ -227,17 +226,7 @@ public class Node : Object {
   }
   public Node?    parent     { get; protected set; default = null; }
   public NodeSide side       { get; set; default = NodeSide.RIGHT; }
-  public bool     folded {
-    get {
-      return( _folded );
-    }
-    set {
-      _folded = value;
-      for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).folded = value;
-      }
-    }
-  }
+  public bool     folded     { get; set; default = false; }
   public double   tree_size  { get; set; default = 0; }
   public bool     group      { get; set; default = false; }
   public RGBA     link_color {
@@ -255,13 +244,13 @@ public class Node : Object {
       }
     }
   }
-  public RGBA     link_color_only {
+  public RGBA link_color_only {
     set {
       _link_color     = value;
       _link_color_set = true;
     }
   }
-  private RGBA    link_color_child {
+  private RGBA link_color_child {
     set {
       if( !link_color_root ) {
         _link_color     = value;
@@ -272,7 +261,7 @@ public class Node : Object {
       }
     }
   }
-  public bool     link_color_root {
+  public bool link_color_root {
     get {
       return( _link_color_root );
     }
@@ -285,8 +274,8 @@ public class Node : Object {
       }
     }
   }
-  public bool     attached   { get; set; default = false; }
-  public Style    style {
+  public bool  attached { get; set; default = false; }
+  public Style style {
     get {
       return( _style );
     }
@@ -295,16 +284,14 @@ public class Node : Object {
       if( _style.copy( value ) ) {
         name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
         name.max_width = style.node_width;
-        if( branch_margin != style.branch_margin ) {
-          for( int i=0; i<_children.length; i++ ) {
-            _layout.apply_margin( _children.index( i ) );
-          }
+        for( int i=0; i<_children.length; i++ ) {
+          _layout.apply_margin( _children.index( i ) );
         }
-        position_name();
+        position_name_and_update_size();
       }
     }
   }
-  public Layout?  layout {
+  public Layout? layout {
     get {
       return( _layout );
     }
@@ -463,7 +450,6 @@ public class Node : Object {
     _alpha          = n._alpha;
     _task_count     = n._task_count;
     _task_done      = n._task_done;
-    _folded         = n._folded;
     _layout         = n._layout;
     _posx           = n._posx;
     _posy           = n._posy;
@@ -472,6 +458,7 @@ public class Node : Object {
     _link_color      = n._link_color;
     _link_color_set  = n._link_color_set;
     _link_color_root = n._link_color_root;
+    folded           = n.folded;
     note             = n.note;
     mode             = n.mode;
     parent           = n.parent;
@@ -549,8 +536,8 @@ public class Node : Object {
     if( !_loaded ) return;
     var orig_width  = _width;
     var orig_height = _height;
-    var margin      = (style.node_margin  == null) ? 0 : style.node_margin;
-    var padding     = (style.node_padding == null) ? 0 : style.node_padding;
+    var margin      = style.node_margin  ?? 0;
+    var padding     = style.node_padding ?? 0;
     var stk_height  = sticker_height();
     var name_width  = task_width() + sticker_width() + _name.width + note_width() + linked_node_width();
     var name_height = (_name.height < stk_height) ? stk_height : _name.height;
@@ -826,7 +813,7 @@ public class Node : Object {
   public virtual Node? contains( double x, double y, Node? n ) {
     if( (this != n) && (is_within( x, y ) || is_within_fold( x, y )) ) {
       return( this );
-    } else if( !_folded ) {
+    } else if( !folded ) {
       for( int i=0; i<_children.length; i++ ) {
         Node tmp = _children.index( i ).contains( x, y, n );
         if( tmp != null ) {
@@ -904,6 +891,15 @@ public class Node : Object {
       }
     }
     return( count );
+  }
+
+  /* Returns the node side relative to its parent node */
+  public NodeSide relative_side() {
+    switch( side ) {
+      case NodeSide.LEFT  :
+      case NodeSide.RIGHT :  return( (posy < parent.posy) ? NodeSide.TOP  : NodeSide.BOTTOM );
+      default             :  return( (posx < parent.posx) ? NodeSide.LEFT : NodeSide.RIGHT );
+    }
   }
 
   /*
@@ -1003,7 +999,7 @@ public class Node : Object {
 
     string? f = n->get_prop( "fold" );
     if( f != null ) {
-      _folded = bool.parse( f );
+      folded = bool.parse( f );
     }
 
     string? ts = n->get_prop( "treesize" );
@@ -1117,7 +1113,7 @@ public class Node : Object {
       node->new_prop( "link", _linked_node.id().to_string() );
     }
     node->new_prop( "side", side.to_string() );
-    node->new_prop( "fold", _folded.to_string() );
+    node->new_prop( "fold", folded.to_string() );
     node->new_prop( "treesize", tree_size.to_string() );
     if( !is_root() ) {
       node->new_prop( "color", Utils.color_from_rgba( _link_color ) );
@@ -1178,10 +1174,10 @@ public class Node : Object {
 
     /* Figure out if this node is folded */
     if( expand_state != null ) {
-      _folded = true;
+      folded = true;
       for( int i=0; i<expand_state.length; i++ ) {
         if( expand_state.index( i ) == node_id ) {
-          _folded = false;
+          folded = false;
           expand_state.remove_index( i );
           break;
         }
@@ -1290,25 +1286,47 @@ public class Node : Object {
    Sets the fold for this node to the given value.  Appends this node to
    the changed list if the folded value changed.
   */
-  public void set_fold( bool value, ref Array<Node> changed ) {
-    if( _folded != value ) {
-      changed.append_val( this );
-      folded = value;
-    } else if( !_folded ) {
+  public void set_fold( bool value, Array<Node>? changed = null ) {
+    if( !folded && value ) {
       for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).set_fold( value, ref changed );
+        _children.index( i ).clear_tree_folds( changed );
       }
+    }
+    if( folded != value ) {
+      folded = value;
+      if( changed != null ) {
+        changed.append_val( this );
+      }
+      layout.handle_update_by_fold( this );
     }
   }
 
-  /* Sets the folded indicator for this node only without affecting child nodes. */
+  /*
+   Sets the fold value of this node only.  This should only be used when we
+   are undo'ing a fold operation.
+  */
   public void set_fold_only( bool value ) {
-    _folded = value;
+    folded = value;
+    layout.handle_update_by_fold( this );
+  }
+
+  /* Clears all of the folds below the current node */
+  private void clear_tree_folds( Array<Node>? changed ) {
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).clear_tree_folds( changed );
+    }
+    if( folded ) {
+      folded = false;
+      if( changed != null ) {
+        changed.append_val( this );
+      }
+      layout.handle_update_by_fold( this );
+    }
   }
 
   /* Returns true if there is at least one node that is foldable due to its tasks being completed. */
   public bool completed_tasks_foldable() {
-    if( !_folded && (_task_count > 0) ) {
+    if( !folded && (_task_count > 0) ) {
       if( _task_count == _task_done ) {
         for( int i=0; i<_children.length; i++ ) {
           if( _children.index( i ).is_leaf() && (_children.index( i )._task_done == 1) ) {
@@ -1327,7 +1345,7 @@ public class Node : Object {
 
   /* Returns true if any node is found to be unfoldable */
   public bool unfoldable() {
-    if( _folded ) {
+    if( folded ) {
       return( true );
     } else {
       for( int i=0; i<_children.length; i++ ) {
@@ -1340,18 +1358,18 @@ public class Node : Object {
   }
 
   /* Recursively spans node tree folding any nodes which contain fully completed tasks */
-  public void fold_completed_tasks( ref Array<Node> changed ) {
-    if( !_folded && (_task_count > 0) ) {
+  public void fold_completed_tasks( Array<Node> changed ) {
+    if( !folded && (_task_count > 0) ) {
       if( _task_count == _task_done ) {
         for( int i=0; i<_children.length; i++ ) {
           if( _children.index( i ).is_leaf() && (_children.index( i )._task_done == 1) ) {
-            set_fold( true, ref changed );
+            set_fold( true, changed );
             return;
           }
         }
       }
       for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).fold_completed_tasks( ref changed );
+        _children.index( i ).fold_completed_tasks( changed );
       }
     }
   }
@@ -1423,27 +1441,104 @@ public class Node : Object {
     last_selected_child = last_selected;
   }
 
+  /*
+   Checks to see if the given node is a sibling node on the same side.  If it is,
+   swaps the position of the given node with the given node.  Returns true if
+   the nodes are swapped.
+  */
+  public bool swap_with_sibling( Node? other ) {
+
+    if( (other != null) && (other.parent == parent) ) {
+
+      var other_index = other.index();
+      var our_index   = index();
+      var our_parent  = parent;
+
+      if( (other_index + 1) == our_index ) {
+        da.animator.add_nodes( da.get_nodes(), "swap_with_sibling" );
+        detach( side );
+        attached = true;
+        attach( our_parent, other_index, null, false );
+        our_parent.last_selected_child = this;
+        da.undo_buffer.add_item( new UndoNodeMove( this, side, our_index ) );
+        da.animator.animate();
+        return( true );
+
+      } else if( (our_index + 1) == other_index ) {
+        var other_side = other.side;
+        da.animator.add_nodes( da.get_nodes(), "swap_with_sibling" );
+        other.detach( other_side );
+        other.attached = true;
+        other.attach( our_parent, our_index, null, false );
+        da.undo_buffer.add_item( new UndoNodeMove( other, other_side, other_index ) );
+        da.animator.animate();
+        return( true );
+      }
+
+    }
+
+    return( false );
+
+  }
+
+  /*
+   Moves all children of the given node to the node's parent, placed just
+   before the parent node.
+  */
+  public bool make_children_siblings( Node? potential_parent, bool add_undo = true ) {
+
+    if( (potential_parent != null) && (potential_parent == parent) ) {
+
+      var idx          = index();
+      var num_children = (int)_children.length;
+
+      da.animator.add_nodes( da.get_nodes(), "make_children_siblings" );
+      for( int i=(num_children - 1); i>=0; i-- ) {
+        var child = _children.index( i );
+        child.detach( child.side );
+        child.attach( parent, idx, null );
+      }
+      if( add_undo ) {
+        da.undo_buffer.add_item( new UndoNodeReparent( this, idx, idx + num_children ) );
+      }
+      da.animator.animate();
+
+      return( true );
+
+    }
+
+    return( false );
+
+  }
+
   /* Adjusts the position of the text object */
   private void position_name() {
-    int margin  = (style.node_margin  == null) ? 0 : style.node_margin;
-    int padding = (style.node_padding == null) ? 0 : style.node_padding;
-    double stk_height = sticker_height();
-    double img_height = (_image != null) ? (_image.height + padding) : 0;
+
+    var margin     = style.node_margin  ?? 0;
+    var padding    = style.node_padding ?? 0;
+    var stk_height = sticker_height();
+    var img_height = (_image != null) ? (_image.height + padding) : 0;
+
     name.posx = posx + margin + padding + task_width() + sticker_width();
     name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0);
+
   }
 
   /* If the parent node is moved, we will move ourselves the same amount */
   private void parent_moved( Node parent, double diffx, double diffy ) {
+
     _posx += diffx;
     _posy += diffy;
+
     update_tree_bbox( diffx, diffy );
     position_name();
     moved( diffx, diffy );
+
   }
 
   /* Detaches this node from its parent node */
   public virtual void detach( NodeSide side ) {
+
     if( parent != null ) {
       int idx = index();
       propagate_task_info_up( (0 - _task_count), (0 - _task_done) );
@@ -1458,11 +1553,14 @@ public class Node : Object {
       parent   = null;
       attached = false;
     }
+
   }
 
   /* Removes this node from the node tree along with all descendents */
   public virtual void delete() {
+
     detach( side );
+
   }
 
   /*
@@ -1489,7 +1587,8 @@ public class Node : Object {
         layout.handle_update_by_delete( parent, idx, side, tree_size );
       }
       attached = false;
-      for( int i=0; i<_children.length; i++ ) {
+      for( int i=(int)(_children.length - 1); i>=0; i-- ) {
+        moved.disconnect( _children.index( i ).parent_moved );
         _children.index( i ).attach( parent, idx, null );
       }
     }
@@ -1497,10 +1596,6 @@ public class Node : Object {
 
   /* Undoes a delete_only call by reattaching this node to the given parent */
   public virtual void attach_only( Node? prev_parent, int prev_index ) {
-    if( index() == -1 ) {
-      attach_init( prev_parent, prev_index );
-    }
-    attached = true;
     var temp = new Array<Node>();
     for( int i=0; i<children().length; i++ ) {
       temp.append_val( children().index( i ) );
@@ -1513,8 +1608,12 @@ public class Node : Object {
       } else {
         child.detach( child.side );
       }
-      child.attach_init( this, i );
+      child.attach_init( this, -1 );
     }
+    if( index() == -1 ) {
+      attach_init( prev_parent, prev_index );
+    }
+    attached = true;
   }
 
   /* Attaches this node as a child of the given node */
@@ -1694,40 +1793,44 @@ public class Node : Object {
   }
 
   /*
-   Set all ancestor nodes fold indicators to false.  Returns the last node
-   that is last node that is folded.
+   Returns the ancestor node that is folded or returns null if no ancestor nodes
+   are folded.
   */
-  public Node reveal() {
-    var tmp = parent;
-    while( tmp != null ) {
-      if( !tmp._folded ) {
-        return( tmp );
-      }
-      tmp._folded = false;
-      layout.handle_update_by_fold( tmp );
-      tmp  = tmp.parent;
-    }
-    return( tmp );
+  public Node folded_ancestor() {
+    var node = parent;
+    while( (node != null) && !node.folded ) node = node.parent;
+    return( node );
   }
 
   /*
    Populates the given ListStore with all nodes that have names that match
    the given string pattern.
   */
-  public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     if( ((((_task_count == 0) || !is_leaf()) && search_opts[7]) ||
          ((_task_count != 0) && is_leaf()   && search_opts[6])) &&
         (((parent != null) && parent.folded && search_opts[4]) ||
          (((parent == null) || !parent.folded) && search_opts[5])) ) {
+      var tab = "<i>" + Utils.rootname( tabname ) + "</i>";
       if( search_opts[2] ) {
-        Utils.match_string( pattern, name.text.text, "<b><i>%s:</i></b>".printf( _( "Node Title" ) ), this, null, ref matches );
+        string str = Utils.match_string( pattern, name.text.text);
+        if(str.length > 0) {
+          TreeIter it;
+          matches.append( out it );
+          matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Node Title" ) ), 1, str, 2, this, 3, null, 4, tabname, 5, tab, -1 );
+        }
       }
       if( search_opts[3] ) {
-        Utils.match_string( pattern, note, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), this, null, ref matches );
+        string str = Utils.match_string( pattern, note);
+        if(str.length > 0) {
+          TreeIter it;
+          matches.append( out it );
+          matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Node Note" ) ), 1, str, 2, this, 3, null, 4, tabname, 5, tab, -1 );
+        }
       }
     }
     for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).get_match_items( pattern, search_opts, ref matches );
+      _children.index( i ).get_match_items( tabname, pattern, search_opts, ref matches );
     }
   }
 
@@ -1831,7 +1934,6 @@ public class Node : Object {
     double y = posy + style.node_margin;
     double w = _width  - (style.node_margin * 2);
     double h = _height - (style.node_margin * 2);
-    RGBA   group_color;
 
     /* Set the fill color */
     if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
@@ -1898,31 +2000,29 @@ public class Node : Object {
   }
 
   /* Draws the task checkbutton for leaf nodes */
-  protected virtual void draw_leaf_task( Context ctx, RGBA color ) {
+  protected virtual void draw_leaf_task( Context ctx, RGBA color, RGBA? background ) {
 
     if( _task_count > 0 ) {
 
       double x, y, w, h;
-
       task_bbox( out x, out y, out w, out h );
 
-      Utils.set_context_color_with_alpha( ctx, color, _alpha );
       ctx.new_path();
-      ctx.set_line_width( 1 );
+      ctx.set_line_width( 2 );
       ctx.arc( (x + _task_radius), (y + _task_radius), _task_radius, 0, (2 * Math.PI) );
 
-      if( _task_done == 0 ) {
-        ctx.stroke();
-      } else {
-        ctx.fill();
-      }
+      Utils.set_context_color_with_alpha( ctx, (((_task_done == 0) && (background != null)) ? background : color), _alpha );
+      ctx.fill_preserve();
+
+      Utils.set_context_color_with_alpha( ctx, ((style.is_fillable() && (background != null)) ? background : color), _alpha );
+      ctx.stroke();
 
     }
 
   }
 
   /* Draws the task checkbutton for non-leaf nodes */
-  protected virtual void draw_acc_task( Context ctx, RGBA color ) {
+  protected virtual void draw_acc_task( Context ctx, RGBA color, RGBA? background ) {
 
     if( _task_count > 0 ) {
 
@@ -1937,21 +2037,25 @@ public class Node : Object {
 
       /* Draw circle outline */
       if( complete < 1 ) {
-        Utils.set_context_color_with_alpha( ctx, color, _alpha );
+        Utils.set_context_color_with_alpha( ctx, ((style.is_fillable() && (background != null)) ? background : color), _alpha );
         ctx.new_path();
-        ctx.set_line_width( 1 );
+        ctx.set_line_width( 2 );
         ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
-        ctx.stroke();
+        if( style.is_fillable() && (background != null) ) {
+          ctx.fill();
+        } else {
+          ctx.stroke();
+        }
       }
 
       /* Draw completeness pie */
       if( _task_done > 0 ) {
         Utils.set_context_color_with_alpha( ctx, color, _alpha );
         ctx.new_path();
-        ctx.set_line_width( 1 );
-        ctx.arc( x, y, _task_radius, (1.5 * Math.PI), angle );
+        ctx.set_line_width( 2 );
+        ctx.arc( x, y, (_task_radius - 1), (1.5 * Math.PI), angle );
         ctx.line_to( x, y );
-        ctx.arc( x, y, _task_radius, (1.5 * Math.PI), (1.5 * Math.PI) );
+        ctx.arc( x, y, (_task_radius - 1), (1.5 * Math.PI), (1.5 * Math.PI) );
         ctx.line_to( x, y );
         ctx.fill();
       }
@@ -2198,9 +2302,9 @@ public class Node : Object {
       draw_name( ctx, theme );
       draw_image( ctx, theme );
       if( is_leaf() ) {
-        draw_leaf_task( ctx, foreground );
+        draw_leaf_task( ctx, foreground, null );
       } else {
-        draw_acc_task( ctx, foreground );
+        draw_acc_task( ctx, foreground, null );
       }
       draw_sticker( ctx, nodesel_background, background );
       draw_common_note( ctx, foreground, nodesel_foreground, foreground );
@@ -2219,9 +2323,9 @@ public class Node : Object {
       draw_name( ctx, theme );
       draw_image( ctx, theme );
       if( is_leaf() ) {
-        draw_leaf_task( ctx, (style.is_fillable() ? background : _link_color) );
+        draw_leaf_task( ctx, _link_color, background );
       } else {
-        draw_acc_task( ctx, (style.is_fillable() ? background : _link_color) );
+        draw_acc_task( ctx, _link_color, background );
       }
       draw_sticker( ctx, nodesel_background, background );
       draw_common_note( ctx, foreground, nodesel_foreground, background );
@@ -2233,6 +2337,22 @@ public class Node : Object {
 
   }
 
+  /*
+   Draws all of the nodes on the same side of the parent.  Draws the nodes such that
+   overlapping links are drawn in a more meaningful way.
+  */
+  private void draw_side( Context ctx, Theme theme, Node? current, bool motion, int first, int last ) {
+    var first_rside = _children.index( first ).relative_side();
+    var mid         = first + 1;
+    while( (mid < last) && (_children.index( mid ).relative_side() == first_rside) ) mid++;
+    for( int i=first; i<mid; i++ ) {
+      _children.index( i ).draw_all( ctx, theme, current, false, motion );
+    }
+    for( int i=(last - 1); i>=mid; i-- ) {
+      _children.index( i ).draw_all( ctx, theme, current, false, motion );
+    }
+  }
+
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Node? current, bool draw_current, bool motion ) {
     if( !is_root() && !draw_current ) {
@@ -2240,8 +2360,12 @@ public class Node : Object {
     }
     if( this != current ) {
       if( !folded ) {
-        for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).draw_all( ctx, theme, current, false, motion );
+        if( _children.length > 0 ) {
+          var first_side = side_count( _children.index( 0 ).side );
+          draw_side( ctx, theme, current, motion, 0, first_side );
+          if( first_side < _children.length ) {
+            draw_side( ctx, theme, current, motion, first_side, (int)_children.length );
+          }
         }
       }
       draw( ctx, theme, motion );

@@ -21,43 +21,35 @@
 
 using Gtk;
 
-public class UndoNodeReveal : UndoItem {
+public class UndoNodeReparent : UndoItem {
 
-  Node _current;
-  Node _node;
-  Node _last;
+  private Node _node;
+  private int  _first_index;
+  private int  _last_index;
 
   /* Default constructor */
-  public UndoNodeReveal( DrawArea da, Node n, Node last ) {
-    base( _( "node reveal" ) );
-    _current = da.get_current_node();
-    _node    = n;
-    _last    = last;
+  public UndoNodeReparent( Node node, int first_index, int last_index ) {
+    base( _( "reparent children" ) );
+    _node        = node;
+    _first_index = first_index;
+    _last_index  = last_index;
   }
 
-  /* Performs the reveal/unreveal operation */
-  private void set_folds( DrawArea da, bool value ) {
-    var tmp = _node.parent;
-    while( tmp != _last ) {
-      tmp.folded = value;
-      tmp.layout.handle_update_by_fold( tmp );
-      tmp = tmp.parent;
-    }
-  }
-
-  /* Undoes a node reveal operation */
+  /* Performs an undo operation for this data */
   public override void undo( DrawArea da ) {
-    set_folds( da, true );
-    da.set_current_node( _current );
-    da.queue_draw();
+    da.animator.add_nodes( da.get_nodes(), "undo_make_children_siblings" );
+    for( int i=(_last_index - 1); i>=_first_index; i-- ) {
+      var child = _node.parent.children().index( i );
+      child.detach( child.side );
+      child.attach( _node, 0, null );
+    }
+    da.animator.animate();
     da.changed();
   }
 
-  /* Redoes a node reveal operation */
+  /* Performs a redo operation */
   public override void redo( DrawArea da ) {
-    set_folds( da, false );
-    da.set_current_node( _node );
-    da.queue_draw();
+    _node.make_children_siblings( _node.parent, false );
     da.changed();
   }
 

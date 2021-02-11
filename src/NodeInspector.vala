@@ -32,7 +32,7 @@ public class NodeInspector : Box {
   private ScrolledWindow _sw;
   private Switch         _task;
   private Switch         _fold;
-  private Box            _link_box;
+  private Revealer       _link_reveal;
   private ColorButton    _link_color;
   private NoteView       _note;
   private DrawArea?      _da = null;
@@ -46,7 +46,7 @@ public class NodeInspector : Box {
 
   public NodeInspector( MainWindow win ) {
 
-    Object( orientation:Orientation.VERTICAL, spacing:10 );
+    Object( orientation:Orientation.VERTICAL, spacing:0 );
 
     /* Create the node widgets */
     create_task();
@@ -84,38 +84,36 @@ public class NodeInspector : Box {
   /* Creates the task UI elements */
   private void create_task() {
 
-    var box  = new Box( Orientation.HORIZONTAL, 0 );
     var lbl  = new Label( Utils.make_title( _( "Task" ) ) );
-
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
 
     _task = new Switch();
     _task.button_release_event.connect( task_changed );
 
+    var box = new Box( Orientation.HORIZONTAL, 0 );
     box.pack_start( lbl,   false, true, 0 );
     box.pack_end(   _task, false, true, 0 );
 
-    pack_start( box, false, true );
+    pack_start( box, false, true, 5 );
 
   }
 
   /* Creates the fold UI elements */
   private void create_fold() {
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
     var lbl = new Label( Utils.make_title( _( "Fold" ) ) );
-
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
 
     _fold = new Switch();
     _fold.button_release_event.connect( fold_changed );
 
+    var box = new Box( Orientation.HORIZONTAL, 0 );
     box.pack_start( lbl,   false, true, 0 );
     box.pack_end(   _fold, false, true, 0 );
 
-    pack_start( box, false, true );
+    pack_start( box, false, true, 5 );
 
   }
 
@@ -125,29 +123,33 @@ public class NodeInspector : Box {
   */
   private void create_link() {
 
-    _link_box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl   = new Label( Utils.make_title( _( "Link Color" ) ) );
-
-    _link_box.homogeneous = true;
-    lbl.xalign            = (float)0;
-    lbl.use_markup        = true;
+    var lbl = new Label( Utils.make_title( _( "Color" ) ) );
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
 
     _link_color = new ColorButton();
     _link_color.color_set.connect(() => {
       _da.change_current_link_color( _link_color.rgba );
     });
 
-    _link_box.pack_start( lbl,         false, true, 0 );
-    _link_box.pack_end(   _link_color, true,  true, 0 );
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous   = true;
+    box.margin_top    = 5;
+    box.margin_bottom = 5;
+    box.pack_start( lbl,         false, true, 0 );
+    box.pack_end(   _link_color, true,  true, 0 );
 
-    pack_start( _link_box, false, true );
+    _link_reveal = new Revealer();
+    _link_reveal.transition_type = RevealerTransitionType.NONE;
+    _link_reveal.add( box );
+
+    pack_start( _link_reveal, false, true );
 
   }
 
   /* Creates the note widget */
   private void create_note() {
 
-    Box   box = new Box( Orientation.VERTICAL, 10 );
     Label lbl = new Label( Utils.make_title( _( "Note" ) ) );
 
     lbl.xalign     = (float)0;
@@ -165,18 +167,16 @@ public class NodeInspector : Box {
     _sw.min_content_height = 100;
     _sw.add( _note );
 
+    var box = new Box( Orientation.VERTICAL, 0 );
     box.pack_start( lbl, false, false );
     box.pack_start( _sw, true,  true );
 
-    pack_start( box, true, true );
+    pack_start( box, true, true, 5 );
 
   }
 
   /* Creates the image widget */
   private void create_image() {
-
-    var box  = new Box( Orientation.VERTICAL, 10 );
-    var tbox = new Box( Orientation.HORIZONTAL, 10 );
 
     var lbl  = new Label( Utils.make_title( _( "Image" ) ) );
     lbl.xalign     = (float)0;
@@ -198,6 +198,7 @@ public class NodeInspector : Box {
     _image_btn_box.pack_start( btn_edit, false, false );
     _image_btn_box.pack_start( btn_del,  false, false );
 
+    var tbox = new Box( Orientation.HORIZONTAL, 10 );
     tbox.pack_start( lbl,            false, false );
     tbox.pack_end(   _image_btn_box, false, false );
 
@@ -214,12 +215,13 @@ public class NodeInspector : Box {
     _image_loc.max_width_chars = 40;
     _image_loc.activate_link.connect( image_link_clicked );
 
+    var box  = new Box( Orientation.VERTICAL, 10 );
     box.pack_start( tbox,        false, false );
     box.pack_start( _image,      true,  true );
     box.pack_start( _image_btn,  false, false );
     box.pack_start( _image_loc,  false, true );
 
-    pack_start( box, false, true );
+    pack_start( box, false, true, 5 );
 
     /* Set ourselves up to be a drag target */
     Gtk.drag_dest_set( _image, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
@@ -410,9 +412,9 @@ public class NodeInspector : Box {
         _fold.set_sensitive( true );
       }
       if( current.is_root() ) {
-        _link_box.visible = false;
+        _link_reveal.reveal_child = false;
       } else {
-        _link_box.visible = true;
+        _link_reveal.reveal_child = true;
         _link_color.rgba  = current.link_color;
         _link_color.alpha = 65535;
       }

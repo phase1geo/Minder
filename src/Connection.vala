@@ -19,6 +19,7 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
+using Gtk;
 using Cairo;
 using Pango;
 using Gdk;
@@ -54,6 +55,7 @@ public class Connection : Object {
   private RGBA?       _color;
   private string?     _sticker     = null;
   private Pixbuf?     _sticker_buf = null;
+  private double      _alpha       = 1.0;
 
   public CanvasText? title {
     get {
@@ -122,7 +124,22 @@ public class Connection : Object {
       }
     }
   }
-  public double alpha { get; set; default=1.0; }
+  public double alpha {
+    get {
+      return( _alpha );
+    }
+    set {
+      if( _alpha != value ) {
+        _alpha = value;
+        if( _from_node != null ) {
+          _from_node.set_alpha_only( value );
+        }
+        if( _to_node != null ) {
+          _to_node.set_alpha_only( value );
+        }
+      }
+    }
+  }
   public RGBA? color {
     get {
       return( _color );
@@ -664,15 +681,25 @@ public class Connection : Object {
    Populates the given ListStore with all nodes that have names that match
    the given string pattern.
   */
-  public void get_match_items( string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
-    if( search_opts[2] && (title != null) ) {
-      Utils.match_string( pattern, title.text.text, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), null, this, ref matches );
-    }
-    if( search_opts[3] ) {
-      Utils.match_string( pattern, note, "<b><i>%s:</i></b>".printf( _( "Connection Note" ) ), null, this, ref matches );
+public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+  var tab = Utils.rootname( tabname );
+  if( search_opts[2] && (title != null) ) {
+    string str = Utils.match_string( pattern, title.text.text);
+    if(str.length > 0) {
+      TreeIter it;
+      matches.append( out it );
+      matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), 1, str, 2, null, 3, this, 4, tabname, 5, tab, -1 );
     }
   }
-
+  if( search_opts[3] ) {
+    string str = Utils.match_string( pattern, note);
+    if(str.length > 0) {
+      TreeIter it;
+      matches.append( out it );
+      matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Connection Note" ) ), 1, str, 2, null, 3, this, 4, tabname, 5, tab, -1 );
+    }
+  }
+}
   /* Draws the connection to the given context */
   public virtual void draw( Cairo.Context ctx, Theme theme ) {
 

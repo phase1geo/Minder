@@ -19,12 +19,15 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-using GLib;
+public class ExportOrgMode : Export {
 
-public class ExportOrgMode : Object {
+  /* Constructor */
+  public ExportOrgMode() {
+    base( "org-mode", _( "Org-Mode" ), { ".org" }, true, false );
+  }
 
   /* Exports the given drawing area to the file of the given name */
-  public static bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, DrawArea da ) {
     var  file   = File.new_for_path( fname );
     bool retval = true;
     try {
@@ -37,7 +40,7 @@ public class ExportOrgMode : Object {
   }
 
   /* Draws each of the top-level nodes */
-  private static void export_top_nodes( FileOutputStream os, DrawArea da ) {
+  private void export_top_nodes( FileOutputStream os, DrawArea da ) {
 
     try {
 
@@ -62,7 +65,7 @@ public class ExportOrgMode : Object {
   }
 
   /* Draws the given node and its children to the output stream */
-  private static void export_node( FileOutputStream os, Node node, string prefix = "  " ) {
+  private void export_node( FileOutputStream os, Node node, string prefix = "  " ) {
 
     try {
 

@@ -63,6 +63,8 @@ public class MainWindow : ApplicationWindow {
   private CheckButton       _search_unfolded;
   private CheckButton       _search_tasks;
   private CheckButton       _search_nontasks;
+  private Switch            _search_all_tabs;
+  private Exporter          _exporter;
   private Popover?          _export         = null;
   private Scale?            _zoom_scale     = null;
   private ModelButton?      _zoom_in        = null;
@@ -71,7 +73,7 @@ public class MainWindow : ApplicationWindow {
   private Button?           _undo_btn       = null;
   private Button?           _redo_btn       = null;
   private ToggleButton?     _focus_btn      = null;
-  private Button?           _prop_btn       = null;
+  private ToggleButton?     _prop_btn       = null;
   private Image?            _prop_show      = null;
   private Image?            _prop_hide      = null;
   private bool              _prefer_dark    = false;
@@ -79,6 +81,7 @@ public class MainWindow : ApplicationWindow {
   private ThemeEditor       _themer;
   private Label             _scale_lbl;
   private int               _text_size;
+  private Exports           _exports;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",          action_save },
@@ -88,7 +91,7 @@ public class MainWindow : ApplicationWindow {
     { "action_zoom_fit",      action_zoom_fit },
     { "action_zoom_selected", action_zoom_selected },
     { "action_zoom_actual",   action_zoom_actual },
-    { "action_export",        action_export },
+  //  { "action_export",        action_export },
     { "action_print",         action_print },
     { "action_prefs",         action_prefs },
     { "action_shortcuts",     action_shortcuts },
@@ -116,6 +119,11 @@ public class MainWindow : ApplicationWindow {
       return( _text_size );
     }
   }
+  public Exports exports {
+    get {
+      return( _exports );
+    }
+  }
 
   public signal void canvas_changed( DrawArea? da );
 
@@ -134,6 +142,9 @@ public class MainWindow : ApplicationWindow {
     var window_y = settings.get_int( "window-y" );
     var window_w = settings.get_int( "window-w" );
     var window_h = settings.get_int( "window-h" );
+
+    /* Create the exports and load it */
+    _exports = new Exports();
 
     /* Create the header bar */
     _header = new HeaderBar();
@@ -220,7 +231,9 @@ public class MainWindow : ApplicationWindow {
       return( false );
     });
     _pane.button_release_event.connect((e) => {
-      _settings.set_int( "properties-width", ((_pane.get_allocated_width() - _pane.position) - 11) );
+      if( e.window == _pane.get_handle_window() ) {
+        _settings.set_int( "properties-width", ((_pane.get_allocated_width() - _pane.position) - 11) );
+      }
       return( false );
     });
 
@@ -250,6 +263,9 @@ public class MainWindow : ApplicationWindow {
         case "enable-markdown"                 :  setting_changed_markdown();       break;
       }
     });
+
+    /* Load the exports data */
+    _exports.load();
 
   }
 
@@ -299,7 +315,7 @@ public class MainWindow : ApplicationWindow {
   private void tab_changed( Tab tab ) {
     var bin = (Gtk.Bin)tab.page;
     var da  = bin.get_child() as DrawArea;
-    do_buffer_changed( da.undo_buffer );
+    do_buffer_changed( da.current_undo_buffer() );
     on_current_changed( da );
     update_title( da );
     canvas_changed( da );
@@ -336,6 +352,7 @@ public class MainWindow : ApplicationWindow {
     da.hide_properties.connect( hide_properties );
     da.map_event.connect( on_canvas_mapped );
     da.undo_buffer.buffer_changed.connect( do_buffer_changed );
+    da.undo_text.buffer_changed.connect( do_buffer_changed );
     da.theme_changed.connect( on_theme_changed );
     da.animator.enable = _settings.get_boolean( "enable-animations" );
 
@@ -531,7 +548,7 @@ public class MainWindow : ApplicationWindow {
 
     /* Create the menu button */
     _search_btn = new MenuButton();
-    _search_btn.set_image( new Image.from_icon_name( "minder-search", icon_size ) );
+    _search_btn.set_image( new Image.from_icon_name( (on_elementary ? "minder-search" : "system-search-symbolic"), icon_size ) );
     _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "<Control>f" ) );
     _search_btn.add_accelerator( "clicked", _accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _search_btn.clicked.connect( on_search_change );
@@ -546,14 +563,20 @@ public class MainWindow : ApplicationWindow {
     _search_entry.width_chars = 60;
     _search_entry.search_changed.connect( on_search_change );
 
-    _search_items = new Gtk.ListStore( 4, typeof(string), typeof(string), typeof(Node), typeof(Connection) );
+    _search_items = new Gtk.ListStore( 6, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(string), typeof(string) );
 
     /* Create the treeview */
     _search_list  = new TreeView.with_model( _search_items );
     var type_cell = new CellRendererText();
-    type_cell.xalign = 1;
-    _search_list.insert_column_with_attributes( -1, null, type_cell,              "markup", 0, null );
-    _search_list.insert_column_with_attributes( -1, null, new CellRendererText(), "markup", 1, null );
+    var str_cell  = new CellRendererText();
+    var tab_cell  = new CellRendererText();
+    type_cell.xalign       = 1;
+    str_cell.ellipsize     = Pango.EllipsizeMode.END;
+    str_cell.ellipsize_set = true;
+    str_cell.width_chars   = 50;
+    _search_list.insert_column_with_attributes( -1, null, type_cell, "markup", 0, null );
+    _search_list.insert_column_with_attributes( -1, null, str_cell,  "markup", 1, null );
+    _search_list.insert_column_with_attributes( -1, null, tab_cell,  "markup", 5, null );
     _search_list.headers_visible = false;
     _search_list.activate_on_single_click = true;
     _search_list.enable_search = false;
@@ -568,11 +591,28 @@ public class MainWindow : ApplicationWindow {
     var search_opts = new Expander( _( "Search Criteria" ) );
     search_opts.add( create_search_options_box() );
 
+    var search_all_label = new Label( _( "Search all tabs" ) );
+    search_all_label.halign = Align.START;
+
+    _search_all_tabs = new Switch();
+    _search_all_tabs.active = _settings.get_boolean( "search-opt-all-tabs" );
+    _search_all_tabs.button_press_event.connect((e) => {
+      _settings.set_boolean( "search-opt-all-tabs", !_search_all_tabs.active );
+      on_search_change();
+      return( false );
+    });
+
+    var search_all_box = new Box( Orientation.HORIZONTAL, 0 );
+    search_all_box.pack_start( search_all_label, false, false );
+    search_all_box.pack_end(   _search_all_tabs, false, false );
+
     box.margin = 5;
     box.pack_start( _search_entry,  false, true );
     box.pack_start( _search_scroll, true,  true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ) );
     box.pack_start( search_opts,    false, true, 5 );
+    box.pack_start( new Separator( Orientation.HORIZONTAL ) );
+    box.pack_start( search_all_box, false, true );
     box.show_all();
 
     /* Create the popover and associate it with the menu button */
@@ -584,8 +624,6 @@ public class MainWindow : ApplicationWindow {
 
   /* Creates the UI for the search criteria box */
   private Grid create_search_options_box() {
-
-    var grid = new Grid();
 
     _search_nodes       = new CheckButton.with_label( _( "Nodes" ) );
     _search_connections = new CheckButton.with_label( _( "Connections" ) );
@@ -662,6 +700,7 @@ public class MainWindow : ApplicationWindow {
       on_search_change();
     });
 
+    var grid = new Grid();
     grid.margin_top         = 10;
     grid.column_homogeneous = true;
     grid.column_spacing     = 10;
@@ -688,20 +727,20 @@ public class MainWindow : ApplicationWindow {
     _header.pack_end( menu_btn );
 
     /* Create export menu */
-    var box = new Box( Orientation.VERTICAL, 5 );
+    _exporter = new Exporter( this );
+    _exporter.export_done.connect(() => {
+      Utils.hide_popover( menu_btn.popover );
+    });
 
-    var export = new ModelButton();
-    export.get_child().destroy();
-    export.add( new Granite.AccelLabel.from_action_name( _( "Export…" ), "win.action_export" ) );
-    export.action_name = "win.action_export";
-
+    /* Create print menu */
     var print = new ModelButton();
     print.get_child().destroy();
     print.add( new Granite.AccelLabel.from_action_name( _( "Print…" ), "win.action_print" ) );
     print.action_name = "win.action_print";
 
+    var box = new Box( Orientation.VERTICAL, 5 );
     box.margin = 5;
-    box.pack_start( export, false, true );
+    box.pack_start( _exporter, false, true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
     box.pack_start( print,  false, true );
     box.show_all();
@@ -717,7 +756,7 @@ public class MainWindow : ApplicationWindow {
   private void add_focus_button() {
 
     _focus_btn       = new ToggleButton();
-    _focus_btn.image = new Image.from_icon_name( "minder-focus", icon_size );
+    _focus_btn.image = new Image.from_icon_name( (on_elementary ? "minder-focus" : "media-optical-symbolic"), icon_size );
     _focus_btn.draw_indicator = true;
     _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "<Control><Shift>f" ) );
     _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
@@ -752,10 +791,20 @@ public class MainWindow : ApplicationWindow {
     shortcuts.add( new Granite.AccelLabel.from_action_name( _( "Shortcuts Cheatsheet" ), "win.action_shortcuts" ) );
     shortcuts.action_name = "win.action_shortcuts";
 
+    var about = new ModelButton();
+    about.text = _( "About Minder" );
+    about.clicked.connect(() => {
+      var about_win = new About( this );
+      about_win.present();
+    });
+
     box.margin = 5;
     box.pack_start( prefs,     false, true );
-    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
     box.pack_start( shortcuts, false, true );
+    if( !on_elementary ) {
+      box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
+      box.pack_start( about, false, true );
+    }
     box.show_all();
 
     /* Create the popover and associate it with clicking on the menu button */
@@ -771,13 +820,14 @@ public class MainWindow : ApplicationWindow {
   private void add_property_button() {
 
     /* Add the menubutton */
-    _prop_show = new Image.from_icon_name( "minder-sidebar-open",  icon_size );
-    _prop_hide = new Image.from_icon_name( "minder-sidebar-close", icon_size );
-    _prop_btn  = new Button();
-    _prop_btn.image = _prop_show;
-    _prop_btn.set_tooltip_text( _( "Properties" ) );
-    _prop_btn.add_accelerator( "clicked", _accel_group, '|', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
-    _prop_btn.clicked.connect( inspector_clicked );
+    _prop_show = new Image.from_icon_name( (on_elementary ? "minder-sidebar-open"  : "pane-show-symbolic"), icon_size );
+    _prop_hide = new Image.from_icon_name( (on_elementary ? "minder-sidebar-close" : "pane-hide-symbolic"), icon_size );
+    _prop_btn  = new ToggleButton();
+    _prop_btn.image  = _prop_show;
+    _prop_btn.active = false;
+    _prop_btn.set_tooltip_text( _( "Show Property Sidebar" ) );
+    _prop_btn.add_accelerator( "clicked", _accel_group, Key.F9, 0, AccelFlags.VISIBLE );
+    _prop_btn.toggled.connect( inspector_clicked );
     _header.pack_end( _prop_btn );
 
     /* Create the inspector sidebar */
@@ -802,9 +852,9 @@ public class MainWindow : ApplicationWindow {
     _stack.notify.connect((ps) => {
       if( ps.name == "visible-child" ) {
         _settings.set_boolean( "current-properties-shown", (_stack.visible_child_name == "current") );
-        _settings.set_boolean( "style-properties-shown", (_stack.visible_child_name == "style" ) );
+        _settings.set_boolean( "style-properties-shown",   (_stack.visible_child_name == "style" ) );
         _settings.set_boolean( "sticker-properties-shown", (_stack.visible_child_name == "sticker" ) );
-        _settings.set_boolean( "map-properties-shown",  (_stack.visible_child_name == "map") );
+        _settings.set_boolean( "map-properties-shown",     (_stack.visible_child_name == "map") );
       }
     });
 
@@ -857,6 +907,7 @@ public class MainWindow : ApplicationWindow {
     dialog.add_action_widget( cancel, ResponseType.CANCEL );
 
     var save = new Button.with_label( _( "Save" ) );
+    save.set_can_default( true );
     save.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
     dialog.add_action_widget( save, ResponseType.ACCEPT );
 
@@ -906,40 +957,16 @@ public class MainWindow : ApplicationWindow {
     filter.add_pattern( "*.minder" );
     dialog.add_filter( filter );
 
-    filter = new FileFilter();
-    filter.set_filter_name( "Freemind / Freeplane" );
-    filter.add_pattern( "*.mm" );
-    dialog.add_filter( filter );
-
-    filter = new FileFilter();
-    filter.set_filter_name( "OPML" );
-    filter.add_pattern( "*.opml" );
-    dialog.add_filter( filter );
-
-    filter = new FileFilter();
-    filter.set_filter_name( "Outliner" );
-    filter.add_pattern( "*.outliner" );
-    dialog.add_filter( filter );
-
-    filter = new FileFilter();
-    filter.set_filter_name( _( "PlainText" ) );
-    filter.add_pattern( "*.txt" );
-    dialog.add_filter( filter );
-
-    filter = new FileFilter();
-    filter.set_filter_name( _( "PlantUML" ) );
-    filter.add_pattern( "*.puml" );
-    dialog.add_filter( filter );
-
-    filter = new FileFilter();
-    filter.set_filter_name( _( "Portable Minder" ) );
-    filter.add_pattern( "*.pminder" );
-    dialog.add_filter( filter );
-
-    filter = new FileFilter();
-    filter.set_filter_name( _( "XMind 8" ) );
-    filter.add_pattern( "*.xmind" );
-    dialog.add_filter( filter );
+    for( int i=0; i<exports.length(); i++ ) {
+      if( exports.index( i ).importable ) {
+        filter = new FileFilter();
+        filter.set_filter_name( exports.index( i ).label );
+        foreach( string extension in exports.index( i ).extensions ) {
+          filter.add_pattern( "*" + extension );
+        }
+        dialog.add_filter( filter );
+      }
+    }
 
     if( dialog.run() == ResponseType.ACCEPT ) {
       var filename = dialog.get_filename();
@@ -961,59 +988,34 @@ public class MainWindow : ApplicationWindow {
       update_title( da );
       da.get_doc().load();
       return( true );
-    } else if( fname.has_suffix( ".opml" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 5) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportOPML.import( fname, da );
-      return( true );
-    } else if( fname.has_suffix( ".mm" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 3) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportFreeplane.import( fname, da );
-      return( true );
-    } else if( fname.has_suffix( ".txt" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 4) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportText.import( fname, da );
-    } else if( fname.has_suffix( ".outliner" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 9) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportOutliner.import( fname, da );
-    } else if( fname.has_suffix( ".pminder" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 8) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportPortableMinder.import( fname, da );
-    } else if( fname.has_suffix( ".xmind" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 6) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportXMind.import( fname, da );
-    } else if( fname.has_suffix( ".puml" ) ) {
-      var new_fname = fname.substring( 0, (fname.length - 5) ) + ".minder";
-      var da        = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
-      update_title( da );
-      ExportPlantUML.import( fname, da );
+    } else {
+      for( int i=0; i<exports.length(); i++ ) {
+        if( exports.index( i ).importable ) {
+          string new_fname;
+          if( exports.index( i ).filename_matches( fname, out new_fname ) ) {
+            new_fname += ".minder";
+            var da = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
+            update_title( da );
+            exports.index( i ).import( fname, da );
+            return( true );
+          }
+        }
+      }
     }
     return( false );
   }
 
-
   /* Perform an undo action */
   public void do_undo() {
     var da = get_current_da( "do_undo" );
-    da.undo_buffer.undo();
+    da.current_undo_buffer().undo();
     da.grab_focus();
   }
 
   /* Perform a redo action */
   public void do_redo() {
     var da = get_current_da( "do_redo" );
-    da.undo_buffer.redo();
+    da.current_undo_buffer().redo();
     da.grab_focus();
   }
 
@@ -1103,13 +1105,7 @@ public class MainWindow : ApplicationWindow {
   /* Called whenever the node selection changes in the canvas */
   private void on_current_changed( DrawArea da ) {
     _zoom_sel.set_sensitive( da.get_current_node() != null );
-    if( da.get_focus_mode() ) {
-      _focus_btn.active = true;
-      _focus_btn.set_sensitive( true );
-    } else {
-      _focus_btn.active = false;
-      _focus_btn.set_sensitive( da.get_current_node() != null );
-    }
+    _focus_btn.active = da.get_focus_mode();
   }
 
   /*
@@ -1128,6 +1124,8 @@ public class MainWindow : ApplicationWindow {
   private void show_properties( string? tab, PropertyGrab grab_type ) {
     if( !_inspector_nb.get_mapped() || ((tab != null) && (_stack.visible_child_name != tab)) ) {
       _prop_btn.image = _prop_hide;
+      _prop_btn.set_tooltip_text( _( "Hide Property Sidebar" ) );
+      _prop_btn.active = true;
       if( tab != null ) {
         _stack.visible_child_name = tab;
       }
@@ -1182,6 +1180,8 @@ public class MainWindow : ApplicationWindow {
   private void hide_properties() {
     if( !_inspector_nb.get_mapped() ) return;
     _prop_btn.image         = _prop_show;
+    _prop_btn.set_tooltip_text( _( "Show Property Sidebar" ) );
+    _prop_btn.active        = false;
     _pane.position_set      = false;
     _pane.remove( _inspector_nb );
     get_current_da( "hide_properties" ).grab_focus();
@@ -1283,12 +1283,19 @@ public class MainWindow : ApplicationWindow {
       _search_nontasks.active     // 7
     };
     _search_items.clear();
-    if( _search_entry.get_text() != "" ) {
-      get_current_da( "on_search_change" ).get_match_items(
-        _search_entry.get_text().casefold(),
-        search_opts,
-        ref _search_items
-      );
+    var all_tabs = _settings.get_boolean( "search-opt-all-tabs" );
+    var current  = get_current_da( "on_search_change" );
+    var text     = _search_entry.get_text().casefold();
+    var name     = all_tabs ? _nb.current.label : "";
+    if( text == "" ) return;
+    current.get_match_items( name, text, search_opts, ref _search_items );
+    if( all_tabs ) {
+      foreach (var tab in _nb.tabs ) {
+        var da = (DrawArea)((Gtk.Bin)tab.page).get_child();
+        if( da != current ) {
+          da.get_match_items( tab.label, text, search_opts, ref _search_items );
+        }
+      }
     }
   }
 
@@ -1298,11 +1305,19 @@ public class MainWindow : ApplicationWindow {
   */
   private void on_search_clicked( TreePath path, TreeViewColumn col ) {
     TreeIter    it;
+    string   tabname = "";
     Node?       node = null;
     Connection? conn = null;
-    var         da   = get_current_da( "on_search_clicked" );
+    DrawArea    da   = get_current_da( "on_search_clicked" );
     _search_items.get_iter( out it, path );
-    _search_items.get( it, 2, &node, 3, &conn, -1 );
+    _search_items.get( it, 2, &node, 3, &conn, 4, &tabname, -1 );
+    foreach (var tab in _nb.tabs ) {
+      if(tab.label == tabname) {
+        da = (DrawArea)((Gtk.Bin)tab.page).get_child();
+        _nb.current = tab;
+        break;
+      }
+    }
     if( node != null ) {
       da.set_current_connection( null );
       da.set_current_node( node );
@@ -1316,193 +1331,12 @@ public class MainWindow : ApplicationWindow {
     da.grab_focus();
   }
 
-  /* Exports the model to various formats */
-  private void action_export() {
-
-    // FileChooserNative dialog = new FileChooserNative( _( "Export As" ), this, FileChooserAction.SAVE, _( "Export" ), _( "Cancel" ) );
-    var dialog = new FileChooserDialog( _( "Export As" ), this, FileChooserAction.SAVE,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
-    Utils.set_chooser_folder( dialog );
-
-    /* BMP */
-    FileFilter bmp_filter = new FileFilter();
-    bmp_filter.set_filter_name( _( "BMP" ) );
-    bmp_filter.add_pattern( "*.bmp" );
-    dialog.add_filter( bmp_filter );
-
-    /* CSV */
-    FileFilter csv_filter = new FileFilter();
-    csv_filter.set_filter_name( _( "CSV" ) );
-    csv_filter.add_pattern( "*.csv" );
-    dialog.add_filter( csv_filter );
-
-    /* FreeMind */
-    FileFilter fm_filter = new FileFilter();
-    fm_filter.set_filter_name( _( "Freemind" ) );
-    fm_filter.add_pattern( "*.mm" );
-    dialog.add_filter( fm_filter );
-
-    /* Freeplane */
-    FileFilter fp_filter = new FileFilter();
-    fp_filter.set_filter_name( _( "Freeplane" ) );
-    fp_filter.add_pattern( "*.mm" );
-    dialog.add_filter( fp_filter );
-
-    /* JPEG */
-    FileFilter jpeg_filter = new FileFilter();
-    jpeg_filter.set_filter_name( _( "JPEG" ) );
-    jpeg_filter.add_pattern( "*.jpeg" );
-    jpeg_filter.add_pattern( "*.jpg" );
-    dialog.add_filter( jpeg_filter );
-
-    /* Markdown */
-    FileFilter md_filter = new FileFilter();
-    md_filter.set_filter_name( _( "Markdown" ) );
-    md_filter.add_pattern( "*.md" );
-    md_filter.add_pattern( "*.markdown" );
-    dialog.add_filter( md_filter );
-
-    /* Mermaid */
-    FileFilter mmd_filter = new FileFilter();
-    mmd_filter.set_filter_name( _( "Mermaid" ) );
-    mmd_filter.add_pattern( "*.mmd" );
-    dialog.add_filter( mmd_filter );
-
-    /* OPML */
-    FileFilter opml_filter = new FileFilter();
-    opml_filter.set_filter_name( _( "OPML" ) );
-    opml_filter.add_pattern( "*.opml" );
-    dialog.add_filter( opml_filter );
-
-    /* Org-Mode */
-    FileFilter org_filter = new FileFilter();
-    org_filter.set_filter_name( _( "Org-Mode" ) );
-    org_filter.add_pattern( "*.org" );
-    dialog.add_filter( org_filter );
-
-    /* Outliner */
-    FileFilter outliner_filter = new FileFilter();
-    outliner_filter.set_filter_name( _( "Outliner" ) );
-    outliner_filter.add_pattern( "*.outliner" );
-    dialog.add_filter( outliner_filter );
-
-    /* PDF */
-    FileFilter pdf_filter = new FileFilter();
-    pdf_filter.set_filter_name( _( "PDF" ) );
-    pdf_filter.add_pattern( "*.pdf" );
-    dialog.add_filter( pdf_filter );
-
-    /* PlantUML */
-    FileFilter puml_filter = new FileFilter();
-    puml_filter.set_filter_name( _( "PlantUML" ) );
-    puml_filter.add_pattern( ".puml" );
-    dialog.add_filter( puml_filter );
-
-    /* PNG (transparent) */
-    FileFilter pngt_filter = new FileFilter();
-    pngt_filter.set_filter_name( _( "PNG (Transparent)" ) );
-    pngt_filter.add_pattern( "*.png" );
-    dialog.add_filter( pngt_filter );
-
-    /* PNG (opaque) */
-    FileFilter pngo_filter = new FileFilter();
-    pngo_filter.set_filter_name( _( "PNG (Opaque)" ) );
-    pngo_filter.add_pattern( "*.png" );
-    dialog.add_filter( pngo_filter );
-
-    /* PlainText */
-    FileFilter txt_filter = new FileFilter();
-    txt_filter.set_filter_name( _( "PlainText" ) );
-    txt_filter.add_pattern( "*.txt" );
-    dialog.add_filter( txt_filter );
-
-    /* PortableMinder */
-    FileFilter pmind_filter = new FileFilter();
-    pmind_filter.set_filter_name( _( "Portable Minder" ) );
-    pmind_filter.add_pattern( "*.pminder" );
-    dialog.add_filter( pmind_filter );
-
-    /* SVG */
-    FileFilter svg_filter = new FileFilter();
-    svg_filter.set_filter_name( _( "SVG" ) );
-    svg_filter.add_pattern( "*.svg" );
-    dialog.add_filter( svg_filter );
-
-    /* XMind */
-    FileFilter xmind_filter = new FileFilter();
-    xmind_filter.set_filter_name( _( "XMind 8" ) );
-    xmind_filter.add_pattern( "*.xmind" );
-    dialog.add_filter( xmind_filter );
-
-    /* yEd */
-    FileFilter yed_filter = new FileFilter();
-    yed_filter.set_filter_name( _( "yEd" ) );
-    yed_filter.add_pattern( "*.graphml" );
-    dialog.add_filter( yed_filter );
-
-    if( dialog.run() == ResponseType.ACCEPT ) {
-
-      var fname  = dialog.get_filename();
-      var filter = dialog.get_filter();
-      var da     = get_current_da( "action_export" );
-
-      if( bmp_filter == filter ) {
-        ExportImage.export( fname = repair_filename( fname, {".bmp"} ), "bmp", da );
-      } else if( csv_filter == filter ) {
-        ExportCSV.export( fname = repair_filename( fname, {".csv"} ), da );
-      } else if( fm_filter == filter ) {
-        ExportFreemind.export( fname = repair_filename( fname, {".mm"} ), da );
-      } else if( fp_filter == filter ) {
-        ExportFreeplane.export( fname = repair_filename( fname, {".mm"} ), da );
-      } else if( jpeg_filter == filter ) {
-        ExportImage.export( fname = repair_filename( fname, {".jpeg", ".jpg"} ), "jpeg", da );
-      } else if( md_filter == filter ) {
-        ExportMarkdown.export( fname = repair_filename( fname, {".md", ".markdown"} ), da );
-      } else if( mmd_filter == filter ) {
-        ExportMermaid.export( fname = repair_filename( fname, {".mmd"} ), da );
-      } else if( opml_filter == filter ) {
-        ExportOPML.export( fname = repair_filename( fname, {".opml"} ), da );
-      } else if( org_filter == filter ) {
-        ExportOrgMode.export( fname = repair_filename( fname, {".org"} ), da );
-      } else if( outliner_filter == filter ) {
-        ExportOutliner.export( fname = repair_filename( fname, {".outliner"} ), da );
-      } else if( pdf_filter == filter ) {
-        ExportPDF.export( fname = repair_filename( fname, {".pdf"} ), da );
-      } else if( puml_filter == filter ) {
-        ExportPlantUML.export( fname = repair_filename( fname, {".puml"} ), da );
-      } else if( pngt_filter == filter ) {
-        ExportPNG.export( fname = repair_filename( fname, {".png"} ), da, true );
-      } else if( pngo_filter == filter ) {
-        ExportPNG.export( fname = repair_filename( fname, {".png"} ), da, false );
-      } else if( pmind_filter == filter ) {
-        ExportPortableMinder.export( fname = repair_filename( fname, {".pminder"} ), da );
-      } else if( txt_filter == filter ) {
-        ExportText.export( fname = repair_filename( fname, {".txt"} ), da );
-      } else if( svg_filter == filter ) {
-        ExportSVG.export( fname = repair_filename( fname, {".svg"} ), da );
-      } else if( xmind_filter == filter ) {
-        ExportXMind.export( fname = repair_filename( fname, {".xmind"} ), da );
-      } else if( yed_filter == filter ) {
-        ExportYed.export( fname = repair_filename( fname, {".graphml"} ), da );
-      }
-
-      Utils.store_chooser_folder( fname );
-
-      /* Generate notification to indicate that the export completed */
-      notification( _( "Minder Export Completed" ), fname );
-
-    }
-
-    dialog.close();
-
-  }
-
   /*
    Checks the given filename to see if it contains any of the given suffixes.
    If a valid suffix is found, return the filename without modification; otherwise,
    returns the filename with the extension added.
   */
-  private string repair_filename( string fname, string[] extensions ) {
+  public string repair_filename( string fname, string[] extensions ) {
     foreach (string ext in extensions) {
       if( fname.has_suffix( ext ) ) {
         return( fname );
@@ -1634,7 +1468,10 @@ public class MainWindow : ApplicationWindow {
         var saved = it->get_prop( "saved" );
         var da    = add_tab( fname, TabAddReason.LOAD );
         da.get_doc().load_filename( fname, bool.parse( saved ) );
-        da.get_doc().load();
+        Idle.add(() => {
+          da.get_doc().load();
+          return( false );
+        });
       }
     }
 
