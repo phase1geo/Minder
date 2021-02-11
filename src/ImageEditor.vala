@@ -72,7 +72,7 @@ class ImageEditor {
     _crop_cursors[7] = CursorType.TOP_LEFT_CORNER;
 
     /* Create the user interface of the editor window */
-    create_ui( (Gtk.Window)da.get_toplevel(), da.image_manager );
+    create_ui( da, da.image_manager );
 
   }
 
@@ -211,9 +211,9 @@ class ImageEditor {
   }
 
   /* Creates the user interface */
-  public void create_ui( Gtk.Window parent, ImageManager im ) {
+  public void create_ui( DrawArea da, ImageManager im ) {
 
-    _popover = new Popover( parent );
+    _popover = new Popover( da );
     _popover.modal = true;
 
     var box = new Box( Orientation.VERTICAL, 5 );
@@ -222,7 +222,7 @@ class ImageEditor {
 
     _da = create_drawing_area( im );
     var status  = create_status_area();
-    var buttons = create_buttons( parent, im );
+    var buttons = create_buttons( da, im );
 
     /* Pack the widgets into the window */
     box.pack_start( _da,     true,  true );
@@ -369,7 +369,7 @@ class ImageEditor {
   }
 
   /* Creates the button bar at the bottom of the window */
-  private Box create_buttons( Gtk.Window parent, ImageManager im ) {
+  private Box create_buttons( DrawArea da, ImageManager im ) {
 
     var box    = new Box( Orientation.HORIZONTAL, 5 );
     var cancel = new Button.with_label( _( "Cancel" ) );
@@ -390,7 +390,7 @@ class ImageEditor {
     del.set_tooltip_markup(   Utils.tooltip_with_accel( _( "Remove Image" ),              "Delete" ) );
 
     open.clicked.connect(() => {
-      var id = im.choose_image( parent );
+      var id = im.choose_image( (Gtk.Window)da.get_toplevel() );
       if( id != -1 ) {
         var ni = new NodeImage( im, id, _node.style.node_width );
         if( ni != null ) {

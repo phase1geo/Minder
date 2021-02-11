@@ -33,7 +33,7 @@ public class UrlEditor : Popover {
 
     _da = da;
 
-    relative_to = (Gtk.Window)da.get_toplevel();
+    relative_to = da;
 
     var box   = new Box( Orientation.VERTICAL, 5 );
     box.border_width = 5;
