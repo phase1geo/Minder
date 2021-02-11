@@ -8,13 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-09 22:15-0600\n"
+"POT-Creation-Date: 2021-02-10 20:52-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: data/com.github.phase1geo.minder.desktop.in:3
@@ -224,8 +224,8 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:107
 msgid ""
-"Added installation instructions to README.md for Debian (thanks to Róbert "
-"Hubinák)."
+"Added installation instructions to README.md for Debian (thanks to Robert "
+"Hubinak)."
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:108

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-09 22:15-0600\n"
+"POT-Creation-Date: 2021-02-10 20:52-0600\n"
 "PO-Revision-Date: 2020-08-31 14:53+0100\n"
 "Last-Translator: André Barata <andretiagob@protonmail.com>\n"
 "Language-Team: none\n"
@@ -252,8 +252,8 @@ msgstr "Alterações"
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:107
 msgid ""
-"Added installation instructions to README.md for Debian (thanks to Róbert "
-"Hubinák)."
+"Added installation instructions to README.md for Debian (thanks to Robert "
+"Hubinak)."
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:108

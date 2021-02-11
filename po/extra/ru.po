@@ -205,8 +205,8 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:107
 msgid ""
-"Added installation instructions to README.md for Debian (thanks to Rbert "
-"Hubink)."
+"Added installation instructions to README.md for Debian (thanks to Robert "
+"Hubinak)."
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:108

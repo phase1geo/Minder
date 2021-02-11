@@ -104,7 +104,7 @@
         </ul>
         <p>Changes</p>
         <ul>
-          <li>Added installation instructions to README.md for Debian (thanks to Róbert Hubinák).</li>
+          <li>Added installation instructions to README.md for Debian (thanks to Robert Hubinak).</li>
           <li>Replaced export UI with a new, improved UI with support for export options.</li>
           <li>Moved add node menu items to a submenu.</li>
           <li>Improved focus mode behavior.</li>
