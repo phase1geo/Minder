@@ -26,11 +26,10 @@ using Archive;
 
 public class Document : Object {
 
-  private DrawArea      _da;
-  private string        _filename;
-  private string        _temp_dir;
-  private bool          _from_user;  // Set to true if _filename was set by the user
-  private ImageManager  _image_manager;
+  private DrawArea _da;
+  private string   _filename;
+  private string   _temp_dir;
+  private bool     _from_user;  // Set to true if _filename was set by the user
 
   /* Properties */
   public string filename {
@@ -69,8 +68,8 @@ public class Document : Object {
       _from_user = false;
     }
 
-    /* Create the image manager */
-    _image_manager = new ImageManager();
+    /* Create the temporary directory to store the mind map */
+    make_temp_dir();
 
     /* Listen for any changes from the canvas */
     _da.changed.connect( canvas_changed );
@@ -105,7 +104,6 @@ public class Document : Object {
     _da.save( root );
     doc->save_format_file( get_map_file(), 1 );
     delete doc;
-    save_needed = false;
 
     return( true );
 
@@ -126,6 +124,7 @@ public class Document : Object {
     archive_file( archive, get_map_file() );
 
     /* Add the images */
+    var image_ids = _da.image_manager.get_ids();
     for( int i=0; i<image_ids.length; i++ ) {
       var id = image_ids.index( i );
       archive_file( archive, _da.image_manager.get_file( id ), id );
@@ -135,6 +134,9 @@ public class Document : Object {
     if( archive.close() != Archive.Result.OK ) {
       error( "Error : %s (%d)", archive.error_string(), archive.errno() );
     }
+
+    /* Indicate that a save is no longer needed */
+    save_needed = false;
 
     return( true );
 
@@ -229,12 +231,12 @@ public class Document : Object {
 
   /* Returns the name of the map file to save to */
   private string get_map_file() {
-    return( GLib.build_filename( _temp_dir, "map.xml" ) );
+    return( GLib.Path.build_filename( _temp_dir, "map.xml" ) );
   }
 
   /* Returns the name of the image directory within the temp directory */
   private string get_image_dir() {
-    return( GLib.Path.build_pathname( _temp_dir, "images" ) );
+    return( GLib.Path.build_filename( _temp_dir, "images" ) );
   }
 
   /*
@@ -243,8 +245,7 @@ public class Document : Object {
   */
   private bool upgrade() {
 
-    /* Create a temporary directory to create the archive with */
-    make_temp_dir();
+    stdout.printf( "In upgrading %s\n", filename );
 
     /* Move the Minder XML file to the temporary directory */
     move_file( filename, get_map_file() );
@@ -256,16 +257,24 @@ public class Document : Object {
     var image_ids = _da.image_manager.get_ids();
     for( int i=0; i<image_ids.length; i++ ) {
       var img_file = _da.image_manager.get_file( image_ids.index( i ) );
-      copy_file( img_file, GLib.build_filename( _temp_dir, GLib.Path.get_basename( img_file ) ) );
+      stdout.printf( "img_file: %s, basename: %s\n", img_file, GLib.Path.get_basename( img_file ) );
+      copy_file( img_file, GLib.Path.build_filename( get_image_dir(), GLib.Path.get_basename( img_file ) ) );
     }
+
+    /* Set the image directory in the image manager */
+    _da.image_manager.set_image_dir( get_image_dir() );
 
     /* Finally, create the new .minder file (it will act as a backup) */
     save();
+
+    return( true );
 
   }
 
   /* Opens the given filename */
   private bool load_xml() {
+
+    stdout.printf( "Loading XML: %s\n", get_map_file() );
 
     Xml.Doc* doc = Xml.Parser.read_file( get_map_file(), null, Xml.ParserOption.HUGE );
     if( doc == null ) {
@@ -286,6 +295,8 @@ public class Document : Object {
   */
   public bool load() {
 
+    stdout.printf( "In load, filename: %s\n", filename );
+
     Archive.Read archive = new Archive.Read();
     archive.support_filter_gzip();
     archive.support_format_all();
@@ -299,9 +310,6 @@ public class Document : Object {
     Archive.WriteDisk extractor = new Archive.WriteDisk();
     extractor.set_options( flags );
     extractor.set_standard_lookup();
-
-    /* Create the temporary directory */
-    make_temp_dir();
 
     /* Open the portable Minder file for reading */
     if( archive.open_filename( filename, 16384 ) != Archive.Result.OK ) {
@@ -317,10 +325,9 @@ public class Document : Object {
        proper location.
       */
       if( entry.pathname() == "map.xml" ) {
-        entry.set_pathname( filename.substring( 0, (filename.length - 5) ) + ".xml" );
+        entry.set_pathname( GLib.Path.build_filename( _temp_dir, entry.pathname() ) );
       } else {
-        var file = File.new_for_path( GLib.Path.build_filename( img_dir, entry.pathname() ) );
-        entry.set_pathname( file.get_path() );
+        entry.set_pathname( GLib.Path.build_filename( get_image_dir(), entry.pathname() ) );
       }
 
       /* Read from the archive and write the files to disk */
@@ -367,11 +374,11 @@ public class Document : Object {
       error( "Error: %s (%d)", archive.error_string(), archive.errno() );
     }
 
-    /* Delete the image directory */
-    DirUtils.remove( img_dir );
+    /* Set the image directory in the image manager */
+    _da.image_manager.set_image_dir( get_image_dir() );
 
     /* Finally, load the minder file and re-save it */
-    load_xml( false );
+    load_xml();
     _da.changed();
 
     return( true );
@@ -388,9 +395,23 @@ public class Document : Object {
 
   /* Auto-saves the document */
   public void auto_save() {
+    save_xml();
+  }
+
+  /*
+   This should be called when the application is closing.  This will cause the
+   document to be stored in .minder format and will clean up tmp space.
+  */
+  public void cleanup() {
+
+    /* Force the save to occur */
     if( save_needed ) {
-      save_xml();
+      save();
     }
+
+    /* Delete the temporary directory */
+    DirUtils.remove( _temp_dir );
+
   }
 
 }

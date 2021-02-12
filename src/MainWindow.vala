@@ -180,6 +180,7 @@ public class MainWindow : ApplicationWindow {
     _nb.tab_bar_behavior   = DynamicNotebook.TabBarBehavior.SINGLE;
     _nb.tab_switched.connect( tab_switched );
     _nb.tab_reordered.connect( tab_reordered );
+    _nb.tab_removed.connect( tab_closed );
     _nb.close_tab_requested.connect( close_tab_requested );
     _nb.get_style_context().add_class( Gtk.STYLE_CLASS_INLINE_TOOLBAR );
 
@@ -341,6 +342,13 @@ public class MainWindow : ApplicationWindow {
     return( ret );
   }
 
+  /* When the tab is removed, cleanup the document */
+  private void tab_closed( Tab tab ) {
+    var bin = (Gtk.Bin)tab.page;
+    var da  = bin.get_child() as DrawArea;
+    da.get_doc().cleanup();
+  }
+
   /* Adds a new tab to the notebook */
   public DrawArea add_tab( string? fname, TabAddReason reason ) {
 
@@ -354,6 +362,9 @@ public class MainWindow : ApplicationWindow {
     da.undo_buffer.buffer_changed.connect( do_buffer_changed );
     da.undo_text.buffer_changed.connect( do_buffer_changed );
     da.theme_changed.connect( on_theme_changed );
+    da.destroy.connect(() => {
+      da.get_doc().cleanup();
+    });
     da.animator.enable = _settings.get_boolean( "enable-animations" );
 
     if( fname != null ) {
@@ -1024,6 +1035,12 @@ public class MainWindow : ApplicationWindow {
     return( false );
   }
 
+  /* Cleanup the document when the canvas is deleted */
+  private void on_canvas_destroy() {
+    stdout.printf( "In canvas destroy\n" );
+    get_current_da( "on_canvas_destroy" ).get_doc().cleanup();
+  }
+
   /* Called whenever the theme is changed */
   private void on_theme_changed( DrawArea da ) {
     Gtk.Settings? settings = Gtk.Settings.get_default();
@@ -1223,6 +1240,7 @@ public class MainWindow : ApplicationWindow {
   /* Called when the user uses the Control-s keyboard shortcut */
   private void action_save() {
     var da = get_current_da( "action_save" );
+    stdout.printf( "is_saved: %s\n", da.get_doc().is_saved().to_string() );
     if( da.get_doc().is_saved() ) {
       da.get_doc().save();
     } else {

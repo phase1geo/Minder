@@ -45,6 +45,7 @@ public class ImageManager {
       this.ext   = get_extension();
       this.valid = true;
       Minder.settings.set_int( "image-id", (this.id + 1) );
+      stdout.printf( "Creating image item with id %x\n", this.id );
     }
 
     /* Loads the item information from given XML node */
@@ -74,8 +75,8 @@ public class ImageManager {
     }
 
     /* Returns true if the file exists */
-    public bool exists() {
-      return( FileUtils.test( get_path(), FileTest.EXISTS ) );
+    public bool exists( string image_dir ) {
+      return( FileUtils.test( get_path( image_dir ), FileTest.EXISTS ) );
     }
 
     /* Returns the extension associated with the filename */
@@ -93,15 +94,15 @@ public class ImageManager {
     }
 
     /* Returns the full pathname to the given fname */
-    public string get_path() {
+    public string get_path( string image_dir ) {
       var basename = "img%06x%s".printf( id, ext );
-      return( GLib.Path.build_filename( get_storage_path(), basename ) );
+      return( GLib.Path.build_filename( image_dir, basename ) );
     }
 
     /* Copies the given URI to the given filename in the storage directory */
-    public bool copy_file() {
+    public bool copy_file( string image_dir ) {
       var rfile = File.new_for_uri( uri );
-      var lfile = File.new_for_path( get_path() );
+      var lfile = File.new_for_path( get_path( image_dir ) );
       try {
         rfile.copy( lfile, FileCopyFlags.OVERWRITE );
       } catch( Error e ) {
@@ -111,9 +112,9 @@ public class ImageManager {
     }
 
     /* If the current item is no longer valid, remove it from the file system */
-    public void cleanup() {
-      if( !valid && exists() ) {
-        FileUtils.unlink( get_path() );
+    public void cleanup( string image_dir ) {
+      if( !valid && exists( image_dir ) ) {
+        FileUtils.unlink( get_path( image_dir ) );
       }
     }
 
@@ -122,19 +123,18 @@ public class ImageManager {
   private Array<ImageItem> _images;
   private bool             _available = true;
   private HashMap<int,int> _id_map;
+  private string           _image_dir;
 
   /* Default constructor */
   public ImageManager() {
+    _images    = new Array<ImageItem>();
+    _id_map    = new HashMap<int,int>();
+    _image_dir = get_storage_path();
+  }
 
-    /* Create the images directory if it does not exist */
-    if( DirUtils.create_with_parents( get_storage_path(), 0775 ) == 0 ) {
-      _available = true;
-    }
-
-    /* Allocate the images array */
-    _images = new Array<ImageItem>();
-    _id_map = new HashMap<int,int>();
-
+  /* Sets the image directory to the given value */
+  public void set_image_dir( string image_dir ) {
+    _image_dir = image_dir;
   }
 
   /* Loads the image manager information from the specified XML node */
@@ -196,10 +196,10 @@ public class ImageManager {
     var item = find_uri_match( uri );
     if( item == null ) {
       item = new ImageItem( uri );
-      if( !item.copy_file() ) return( -1 );
+      if( !item.copy_file( _image_dir ) ) return( -1 );
       _images.append_val( item );
-    } else if( !item.exists() ) {
-      if( !item.copy_file() ) return( -1 );
+    } else if( !item.exists( _image_dir ) ) {
+      if( !item.copy_file( _image_dir ) ) return( -1 );
     }
     if( orig_id != null ) {
       _id_map.set( orig_id, item.id );
@@ -216,7 +216,7 @@ public class ImageManager {
   public int add_pixbuf( Gdk.Pixbuf buf, int? orig_id = null ) {
     var item = new ImageItem( "" );
     try {
-      buf.save( item.get_path(), "png", null );
+      buf.save( item.get_path( _image_dir ), "png", null );
       _images.append_val( item );
     } catch( Error e ) {
       return( -1 );
@@ -228,7 +228,7 @@ public class ImageManager {
   public string? get_file( int id ) {
     var item = find_match( id );
     if( item != null ) {
-      return( item.get_path() );
+      return( item.get_path( _image_dir ) );
     }
     return( null );
   }
@@ -275,7 +275,7 @@ public class ImageManager {
   /* Cleans up the contents of the stored images */
   public void cleanup() {
     for( int i=0; i<_images.length; i++ ) {
-      _images.index( i ).cleanup();
+      _images.index( i ).cleanup( _image_dir );
     }
   }
 
