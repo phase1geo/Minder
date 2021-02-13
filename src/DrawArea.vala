@@ -110,6 +110,7 @@ public class DrawArea : Gtk.DrawingArea {
   public Layouts        layouts       { set; get; default = new Layouts(); }
   public Animator       animator      { set; get; }
   public ImageManager   image_manager { set; get; default = new ImageManager(); }
+  public bool           is_loaded     { get; private set; default = false; }
 
   public GLib.Settings settings {
     get {
@@ -540,6 +541,7 @@ public class DrawArea : Gtk.DrawingArea {
     queue_draw();
 
     /* Indicate to anyone listening that we have loaded a new file */
+    is_loaded = true;
     loaded();
 
     /* Make sure that the inspector is updated */
