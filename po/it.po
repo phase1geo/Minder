@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-10 20:52-0600\n"
+"POT-Creation-Date: 2021-02-13 08:26-0600\n"
 "PO-Revision-Date: 2021-02-13 10:00+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -98,21 +98,9 @@ msgstr "PNG"
 msgid "Enable Transparent Background"
 msgstr "Abilita sfondo trasparente"
 
-#: src/exports/ExportPNG.vala:77
-msgid "This is something that is great"
-msgstr "Questo è qualcosa di fantastico"
-
 #: src/exports/ExportPNG.vala:78
 msgid "Compression"
 msgstr "Compressione"
-
-#: src/exports/ExportPNG.vala:78
-msgid ""
-"This is something that is also great and we think that we are really good, "
-"right?"
-msgstr "
-"Questo è anche qualcosa di eccezionale e pensiamo di essere davvero bravi, "
-"giusto?"
 
 #: src/exports/ExportPlantUML.vala:29
 msgid "PlantUML"
@@ -1214,36 +1202,38 @@ msgid ""
 "Specifies if we should create a new node directly from edit mode if Return "
 "or Tab is pressed."
 msgstr ""
-"Specifica se dobbiamo creare un nuovo nodo direttamente dalla modalità di modifica in caso che Return "
-"o Tab sia premuto."
+"Specifica se dobbiamo creare un nuovo nodo direttamente dalla modalità di "
+"modifica in caso che Return o Tab sia premuto."
 
 #: src/Preferences.vala:82
 msgid ""
 "Specifies if embedded URLs found in node titles should be automatically "
 "highlighted."
 msgstr ""
-"Specifica se gli URL incorporati trovati nei titoli dei nodi devono essere automaticamente "
-"evidenziati."
+"Specifica se gli URL incorporati trovati nei titoli dei nodi devono essere "
+"automaticamente evidenziati."
 
 #: src/Preferences.vala:89
 msgid ""
 "Specifies if the connection title will be added and put into edit mode "
 "immediately after the connection is made."
 msgstr ""
-"Specifica se il titolo della connessione verrà aggiunto e messo in modalità di modifica "
-"subito dopo aver stabilito la connessione."
+"Specifica se il titolo della connessione verrà aggiunto e messo in modalità "
+"di modifica subito dopo aver stabilito la connessione."
 
 #: src/Preferences.vala:93
 msgid "If enabled, selects items when mouse cursor hovers over the item."
-msgstr "Se abilitato, seleziona gli elementi quando il cursore del mouse passa sopra l'elemento."
+msgstr ""
+"Se abilitato, seleziona gli elementi quando il cursore del mouse passa sopra "
+"l'elemento."
 
 #: src/Preferences.vala:114
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
 msgstr ""
-"Specifica la dimensione del carattere personalizzato da utilizzare nei campi di modifica del testo (ad esempio, veloce "
-"campo voce o note)."
+"Specifica la dimensione del carattere personalizzato da utilizzare nei campi "
+"di modifica del testo (ad esempio, veloce campo voce o note)."
 
 #: src/QuickEntry.vala:58
 msgid "Help for inputting node information:"
@@ -1318,8 +1308,8 @@ msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
 msgstr ""
-"Trascina e rilascia sticker su un nodo o in qualsiasi altro punto della mappa per aggiungere uno "
-"sticker."
+"Trascina e rilascia sticker su un nodo o in qualsiasi altro punto della "
+"mappa per aggiungere uno sticker."
 
 #: src/StickerInspector.vala:81
 msgid "Search Stickers"

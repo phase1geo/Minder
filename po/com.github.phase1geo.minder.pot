@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-10 20:52-0600\n"
+"POT-Creation-Date: 2021-02-13 08:26-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,18 +98,8 @@ msgstr ""
 msgid "Enable Transparent Background"
 msgstr ""
 
-#: src/exports/ExportPNG.vala:77
-msgid "This is something that is great"
-msgstr ""
-
 #: src/exports/ExportPNG.vala:78
 msgid "Compression"
-msgstr ""
-
-#: src/exports/ExportPNG.vala:78
-msgid ""
-"This is something that is also great and we think that we are really good, "
-"right?"
 msgstr ""
 
 #: src/exports/ExportPlantUML.vala:29

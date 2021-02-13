@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-10 20:52-0600\n"
+"POT-Creation-Date: 2021-02-13 08:26-0600\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Helder Bertoldo <helder.bertoldo@gmail.com>\n"
 "Language-Team: none\n"
@@ -98,19 +98,9 @@ msgstr ""
 msgid "Enable Transparent Background"
 msgstr "Habilitar Fundo Transparente"
 
-#: src/exports/ExportPNG.vala:77
-msgid "This is something that is great"
-msgstr "Isso é algo grandioso"
-
 #: src/exports/ExportPNG.vala:78
 msgid "Compression"
 msgstr "Compressão"
-
-#: src/exports/ExportPNG.vala:78
-msgid ""
-"This is something that is also great and we think that we are really good, "
-"right?"
-msgstr "Isso é algo que também é grandioso e nós pensamos que somos muito bons, certo?"
 
 #: src/exports/ExportPlantUML.vala:29
 msgid "PlantUML"
@@ -2340,6 +2330,16 @@ msgstr "Selecionar Nó"
 #: data/com.github.phase1geo.minder.shortcuts.ui:1009
 msgid "[Triple left-click anywhere in text]"
 msgstr ""
+
+#~ msgid "This is something that is great"
+#~ msgstr "Isso é algo grandioso"
+
+#~ msgid ""
+#~ "This is something that is also great and we think that we are really "
+#~ "good, right?"
+#~ msgstr ""
+#~ "Isso é algo que também é grandioso e nós pensamos que somos muito bons, "
+#~ "certo?"
 
 #, fuzzy
 #~ msgid "node change folds"
