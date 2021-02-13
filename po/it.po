@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-10 20:52-0600\n"
-"PO-Revision-Date: 2021-01-31 10:00+0100\n"
+"PO-Revision-Date: 2021-02-13 10:00+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -36,20 +36,19 @@ msgstr "Freeplane"
 
 #: src/exports/ExportImage.vala:79
 msgid "Quality"
-msgstr ""
+msgstr "Qualità"
 
 #: src/exports/ExportMarkdown.vala:28
 msgid "Markdown"
 msgstr "Markdown"
 
 #: src/exports/ExportMarkdown.vala:159
-#, fuzzy
 msgid "Include image links"
-msgstr "modifica immagine nodo"
+msgstr "Includi link immagine"
 
 #: src/exports/ExportMarkdown.vala:160
 msgid "Creates a directory containing the Markdown and embedded images"
-msgstr ""
+msgstr "Crea una directory contenente il Markdown e le immagini incorporate"
 
 #: src/exports/ExportMermaid.vala:26
 msgid "Mermaid"
@@ -93,25 +92,27 @@ msgstr "PDF"
 
 #: src/exports/ExportPNG.vala:30
 msgid "PNG"
-msgstr ""
+msgstr "PNG"
 
 #: src/exports/ExportPNG.vala:77
 msgid "Enable Transparent Background"
-msgstr ""
+msgstr "Abilita sfondo trasparente"
 
 #: src/exports/ExportPNG.vala:77
 msgid "This is something that is great"
-msgstr ""
+msgstr "Questo è qualcosa di fantastico"
 
 #: src/exports/ExportPNG.vala:78
 msgid "Compression"
-msgstr ""
+msgstr "Compressione"
 
 #: src/exports/ExportPNG.vala:78
 msgid ""
 "This is something that is also great and we think that we are really good, "
 "right?"
-msgstr ""
+msgstr "
+"Questo è anche qualcosa di eccezionale e pensiamo di essere davvero bravi, "
+"giusto?"
 
 #: src/exports/ExportPlantUML.vala:29
 msgid "PlantUML"
@@ -226,19 +227,16 @@ msgid "connection note change"
 msgstr "modifica della nota di connessione"
 
 #: src/undo_actions/UndoConnectionStickerAdd.vala:31
-#, fuzzy
 msgid "add connection sticker"
-msgstr "aggiungi connessione"
+msgstr "aggiungi sticker di connessione"
 
 #: src/undo_actions/UndoConnectionStickerChange.vala:31
-#, fuzzy
 msgid "change connection sticker"
-msgstr "Nascondi connessioni"
+msgstr "Cambia sticker di connessione"
 
 #: src/undo_actions/UndoConnectionStickerRemove.vala:31
-#, fuzzy
 msgid "remove connection sticker"
-msgstr "cancella connessioni"
+msgstr "Rimuovi sticker di  connessione"
 
 #: src/undo_actions/UndoConnectionTitle.vala:32
 msgid "connection title change"
@@ -249,28 +247,24 @@ msgid "delete connections"
 msgstr "cancella connessioni"
 
 #: src/undo_actions/UndoGroupAdd.vala:30
-#, fuzzy
 msgid "add group"
-msgstr "Aggiungi Gruppo"
+msgstr "Aggiungi gruppo"
 
 #: src/undo_actions/UndoGroupRemove.vala:30
-#, fuzzy
 msgid "remove group"
-msgstr "Crea Gruppo"
+msgstr "Rimuovi gruppo"
 
 #: src/undo_actions/UndoGroupsColor.vala:33
-#, fuzzy
 msgid "group color change"
-msgstr "cambia colore collegamento"
+msgstr "cambio colore del gruppo"
 
 #: src/undo_actions/UndoGroupsMerge.vala:31
 msgid "group merge"
-msgstr ""
+msgstr "fusione gruppo"
 
 #: src/undo_actions/UndoGroupsRemove.vala:30
-#, fuzzy
 msgid "remove groups"
-msgstr "Crea Gruppo"
+msgstr "Rimuovi gruppi"
 
 #: src/undo_actions/UndoNodeAddParent.vala:32
 msgid "add parent node"
@@ -304,9 +298,8 @@ msgid "node fold changes"
 msgstr "cambia collegamento nodo"
 
 #: src/undo_actions/UndoNodeGroup.vala:30
-#, fuzzy
 msgid "node group change"
-msgstr "cambia nota nodo"
+msgstr "cambio gruppo di nodi"
 
 #: src/undo_actions/UndoNodeImage.vala:32
 msgid "node image change"
@@ -345,9 +338,8 @@ msgid "paste node"
 msgstr "incolla nodo"
 
 #: src/undo_actions/UndoNodeReparent.vala:32
-#, fuzzy
 msgid "reparent children"
-msgstr "Seleziona Figlii"
+msgstr "Ripara figli"
 
 #: src/undo_actions/UndoNodeReparentLinkColor.vala:32
 #: src/undo_actions/UndoNodesReparentLinkColor.vala:33
@@ -367,19 +359,16 @@ msgid "sort nodes"
 msgstr "ordina i nodi"
 
 #: src/undo_actions/UndoNodeStickerAdd.vala:31
-#, fuzzy
 msgid "add node sticker"
-msgstr "Aggiungi collegamento nodo"
+msgstr "Aggiungi sticker al nodo"
 
 #: src/undo_actions/UndoNodeStickerChange.vala:31
-#, fuzzy
 msgid "change node sticker"
-msgstr "Rimuovi adesivo"
+msgstr "Cambia sitcker al nodo"
 
 #: src/undo_actions/UndoNodeStickerRemove.vala:31
-#, fuzzy
 msgid "remove node sticker"
-msgstr "Rimuovi adesivo"
+msgstr "Rimuovi stiker al nodo"
 
 #: src/undo_actions/UndoNodeTask.vala:34
 msgid "node task change"
@@ -399,7 +388,7 @@ msgstr "cancella nodi"
 
 #: src/undo_actions/UndoNodesGroup.vala:30
 msgid "change node groups"
-msgstr ""
+msgstr "cambia gruppi di nodi"
 
 #: src/undo_actions/UndoNodesInsert.vala:37
 msgid "insert nodes"
@@ -423,23 +412,20 @@ msgstr "sostituisci nodi"
 
 #: src/undo_actions/UndoStickerAdd.vala:30
 #: src/undo_actions/UndoStickerMove.vala:32
-#, fuzzy
 msgid "add sticker"
-msgstr "Etichette"
+msgstr "aggiungi sticker"
 
 #: src/undo_actions/UndoStickerChange.vala:31
 msgid "change sticker"
-msgstr ""
+msgstr "Cambia sticker"
 
 #: src/undo_actions/UndoStickerRemove.vala:30
-#, fuzzy
 msgid "remove sticker"
-msgstr "Rimuovi adesivo"
+msgstr "Rimuovi  sticker"
 
 #: src/undo_actions/UndoStickerResize.vala:31
-#, fuzzy
 msgid "resize sticker"
-msgstr "Rimuovi adesivo"
+msgstr "Ridimensiona sticker"
 
 #: src/undo_actions/UndoStyleChange.vala:38
 msgid "style change"
@@ -447,44 +433,40 @@ msgstr "cambia stile"
 
 #: src/undo_actions/UndoTextClearTags.vala:30
 msgid "clear formatting"
-msgstr ""
+msgstr "formattazione chiara"
 
 #: src/undo_actions/UndoTextDelete.vala:30
-#, fuzzy
 msgid "text deletion"
-msgstr "Seleziona Testo"
+msgstr "cancellazione testo"
 
 #: src/undo_actions/UndoTextInsert.vala:29
 #: src/undo_actions/UndoTextMultiInsert.vala:33
-#, fuzzy
 msgid "text insertion"
-msgstr "Prossima connessione"
+msgstr "inserimento testo"
 
 #: src/undo_actions/UndoTextReplace.vala:31
-#, fuzzy
 msgid "text replacement"
-msgstr "Sostituzione dell'Entrata Rapida"
+msgstr "sostituzione del testo"
 
 #: src/undo_actions/UndoTextTagAdd.vala:32
 msgid "format tag add"
-msgstr ""
+msgstr "aggiungi formato tag"
 
 #: src/undo_actions/UndoTextTagRemove.vala:32
 msgid "format tag remove"
-msgstr ""
+msgstr "rimuovi formato tag"
 
 #: src/About.vala:36
-#, fuzzy
 msgid "Mind-mapping application"
-msgstr "Esci dall'Applicazione"
+msgstr "Applicazione di mappe mentali"
 
 #: src/About.vala:37
 msgid "Copyright © 2018-2021 Trevor Williams"
-msgstr ""
+msgstr "Copyright © 2018-2021 Trevor Williams"
 
 #: src/About.vala:41
 msgid "Minder in AppCenter"
-msgstr ""
+msgstr "Minder in AppCenter"
 
 #: src/Connection.vala:691
 msgid "Connection Title"
@@ -646,12 +628,12 @@ msgstr "Esporta..."
 
 #: src/Exporter.vala:44
 msgid "Export With Current Settings"
-msgstr ""
+msgstr "Esporta Con Impostazioni Correnti"
 
 #: src/Exporter.vala:131
 #, fuzzy, c-format
 msgid "Export As %s"
-msgstr "Esporta COme"
+msgstr "Esporta Come %s"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:375 src/ImageManager.vala:299
 #: src/MainWindow.vala:906 src/MainWindow.vala:951 src/MainWindow.vala:1068
@@ -673,21 +655,19 @@ msgstr "JPEG"
 
 #: src/GroupsMenu.vala:42
 msgid "Merge"
-msgstr ""
+msgstr "Unisci"
 
 #: src/GroupsMenu.vala:45
-#, fuzzy
 msgid "Change color…"
-msgstr "Imposta per colorare..."
+msgstr "Cambia colore..."
 
 #: src/GroupsMenu.vala:52
-#, fuzzy
 msgid "Top Nodes"
-msgstr "Copia Nodo"
+msgstr "Nodi Principali"
 
 #: src/GroupsMenu.vala:55
 msgid "All Grouped Nodes"
-msgstr ""
+msgstr "Tutti i nodi raggruppati"
 
 #: src/GroupsMenu.vala:100 src/NodeMenu.vala:627 src/NodesMenu.vala:244
 msgid "Select a link color"
@@ -809,9 +789,8 @@ msgid "Search Criteria"
 msgstr "Criterio di ricerca"
 
 #: src/MainWindow.vala:594
-#, fuzzy
 msgid "Search all tabs"
-msgstr "Criterio di ricerca"
+msgstr "Cerca in tutte le schede"
 
 #: src/MainWindow.vala:628
 msgid "Nodes"
@@ -858,14 +837,12 @@ msgid "Shortcuts Cheatsheet"
 msgstr "collegamenti note"
 
 #: src/MainWindow.vala:795
-#, fuzzy
 msgid "About Minder"
-msgstr "Minder portatile"
+msgstr "Informazioni su Minder"
 
 #: src/MainWindow.vala:828 src/MainWindow.vala:1183
-#, fuzzy
 msgid "Show Property Sidebar"
-msgstr "Mostra proprietà"
+msgstr "Mostra barra laterale della proprietà"
 
 #: src/MainWindow.vala:843
 msgid "Current"
@@ -908,9 +885,8 @@ msgid "Save File"
 msgstr "Salva File"
 
 #: src/MainWindow.vala:1127
-#, fuzzy
 msgid "Hide Property Sidebar"
-msgstr "Barra laterale delle proprietà"
+msgstr "Nascondi barra laterale delle proprietà"
 
 #: src/MapInspector.vala:76
 msgid "Hide connections"
@@ -1058,9 +1034,8 @@ msgid "Detach"
 msgstr "Dissocia"
 
 #: src/NodeMenu.vala:141
-#, fuzzy
 msgid "Add Node"
-msgstr "Aggiungi nota"
+msgstr "Aggiungi Nodo"
 
 #: src/NodeMenu.vala:148
 msgid "Add Parent Node"
@@ -1080,7 +1055,7 @@ msgstr "Inserimento Rapido"
 
 #: src/NodeMenu.vala:164
 msgid "Insert Nodes"
-msgstr "Inserisci nodi"
+msgstr "Inserisci Nodi"
 
 #: src/NodeMenu.vala:168
 msgid "Replace Nodes"
@@ -1224,44 +1199,51 @@ msgstr "Allinea a destra"
 
 #: src/Preferences.vala:47
 msgid "Behavior"
-msgstr ""
+msgstr "Comportamento"
 
 #: src/Preferences.vala:48
 msgid "Appearance"
-msgstr ""
+msgstr "Aspetto"
 
 #: src/Preferences.vala:61
-#, fuzzy
 msgid "Close"
-msgstr "Chiudi Scheda"
+msgstr "Chiudi"
 
 #: src/Preferences.vala:78
 msgid ""
 "Specifies if we should create a new node directly from edit mode if Return "
 "or Tab is pressed."
 msgstr ""
+"Specifica se dobbiamo creare un nuovo nodo direttamente dalla modalità di modifica in caso che Return "
+"o Tab sia premuto."
 
 #: src/Preferences.vala:82
 msgid ""
 "Specifies if embedded URLs found in node titles should be automatically "
 "highlighted."
 msgstr ""
+"Specifica se gli URL incorporati trovati nei titoli dei nodi devono essere automaticamente "
+"evidenziati."
 
 #: src/Preferences.vala:89
 msgid ""
 "Specifies if the connection title will be added and put into edit mode "
 "immediately after the connection is made."
 msgstr ""
+"Specifica se il titolo della connessione verrà aggiunto e messo in modalità di modifica "
+"subito dopo aver stabilito la connessione."
 
 #: src/Preferences.vala:93
 msgid "If enabled, selects items when mouse cursor hovers over the item."
-msgstr ""
+msgstr "Se abilitato, seleziona gli elementi quando il cursore del mouse passa sopra l'elemento."
 
 #: src/Preferences.vala:114
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
 msgstr ""
+"Specifica la dimensione del carattere personalizzato da utilizzare nei campi di modifica del testo (ad esempio, veloce "
+"campo voce o note)."
 
 #: src/QuickEntry.vala:58
 msgid "Help for inputting node information:"
@@ -1324,28 +1306,28 @@ msgid "Insert"
 msgstr "Inserire"
 
 #: src/StickerInspector.vala:59
-#, fuzzy
 msgid "Remove From Favorites"
-msgstr "Rimuovi Nodo"
+msgstr "Rimuovi dai Preferiti"
 
 #: src/StickerInspector.vala:62 src/StickerInspector.vala:66
 msgid "Add To Favorites"
-msgstr ""
+msgstr "Aggiungi ai Preferiti"
 
 #: src/StickerInspector.vala:75
 msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
 msgstr ""
+"Trascina e rilascia sticker su un nodo o in qualsiasi altro punto della mappa per aggiungere uno "
+"sticker."
 
 #: src/StickerInspector.vala:81
-#, fuzzy
 msgid "Search Stickers"
-msgstr "Etichette"
+msgstr "Cerca Sticker"
 
 #: src/StickerInspector.vala:110
 msgid "Favorites"
-msgstr ""
+msgstr "Preferiti"
 
 #: src/StyleInspector.vala:34
 msgid "All"
@@ -1452,9 +1434,8 @@ msgid "Long Dash"
 msgstr "Trattino Lungo"
 
 #: src/Tagger.vala:121
-#, fuzzy
 msgid "Add Tag"
-msgstr "Aggiungi Compito"
+msgstr "Aggiungi Tag"
 
 #: src/TextMenu.vala:59
 msgid "Insert Emoji"
@@ -1567,9 +1548,8 @@ msgid "Match Foreground"
 msgstr "Primo piano"
 
 #: src/ThemeEditor.vala:103
-#, fuzzy
 msgid "Markdown List Item"
-msgstr "Markdown"
+msgstr "Voce di elenco Markdown"
 
 #: src/ThemeEditor.vala:109
 msgid "Prefer Dark Mode"
@@ -1633,22 +1613,20 @@ msgid "Print File"
 msgstr "Stampa File"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:65
-#, fuzzy
 msgid "Notebook Tabs"
-msgstr "Nuova Finestra"
+msgstr "Schede Notebook"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:70
-#, fuzzy
 msgid "Close Current Tab"
-msgstr "Mostra scheda corrente"
+msgstr "Chiudi Scheda Corrente"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:77
 msgid "Go to Next Tab"
-msgstr ""
+msgstr "Vai alla Prossima Scheda"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:84
 msgid "Go to Previous Tab"
-msgstr ""
+msgstr "Vai alla Scheda Precedente"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:93
 msgid "Undo/Redo"
@@ -1717,9 +1695,8 @@ msgid "Show Preferences"
 msgstr "Mostra Preferenze"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:213
-#, fuzzy
 msgid "Show Keyboard Shortcuts"
-msgstr "Scorciatoie di Minder"
+msgstr "Mostra Scorciatoie da Tastiera"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:220
 msgid "Quit Application"
@@ -1875,26 +1852,23 @@ msgstr "Seleziona Connessione Collegata"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:491
 msgid "Move"
-msgstr ""
+msgstr "Muovi"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:495
 msgid "Swap with Sibling Node to Right"
-msgstr ""
+msgstr "Scambia con Nodo Fratello a Destra"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:502
-#, fuzzy
 msgid "Swap with Sibling Node to Left"
-msgstr "Nuovo nodo di pari livello"
+msgstr "Scambia con nodo fratello a Sinistra"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:509
-#, fuzzy
 msgid "Swap with Sibling Node Above"
-msgstr "Nuovo nodo di pari livello"
+msgstr "Scambia con nodo fratello Sopra"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:516
-#, fuzzy
 msgid "Swap with Sibling Node Below"
-msgstr "Nuovo nodo di pari livello"
+msgstr "Scambia con nodo fratello Sotto"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:523
 msgid "Sort Child Nodes Alphabetically"
@@ -1957,14 +1931,12 @@ msgid "Text Editing"
 msgstr "Modifica Testo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:666
-#, fuzzy
 msgid "Insert Newline Character"
-msgstr "Successivo Carattere"
+msgstr "Inserisci carattere nuova riga"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:673
-#, fuzzy
 msgid "Insert Tab Character"
-msgstr "Successivo Carattere"
+msgstr "Inserire Carattere di Tabulazione"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:680
 msgid "Show Emoji Picker"
@@ -2055,14 +2027,12 @@ msgid "Add End Of Text"
 msgstr "Aggiungi Fine Testo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:845
-#, fuzzy
 msgid "Select All Text"
-msgstr "Seleziona tutto il testo"
+msgstr "Seleziona Tutto il Testo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:852
-#, fuzzy
 msgid "Clear Selection"
-msgstr "Seleziona elemento"
+msgstr "Cancella selezione"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:864
 msgid "Mouse Events"
