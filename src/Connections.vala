@@ -250,7 +250,7 @@ public class Connections {
   }
 
   /* Takes the given extents and extends them if the connections go outside of the given extents */
-  public void add_connection_extents( ref double x1, ref double y1, ref double x2, ref double y2 ) {
+  public void add_extents( ref double x1, ref double y1, ref double x2, ref double y2 ) {
     for( int i=0; i<_connections.length; i++ ) {
       var conn = _connections.index( i );
       x1 = (conn.extent_x1 < x1) ? conn.extent_x1 : x1;
