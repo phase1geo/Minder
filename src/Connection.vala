@@ -164,6 +164,10 @@ public class Connection : Object {
       }
     }
   }
+  public double extent_x1 { get; private set; default = 0.0; }
+  public double extent_y1 { get; private set; default = 0.0; }
+  public double extent_x2 { get; private set; default = 0.0; }
+  public double extent_y2 { get; private set; default = 0.0; }
 
   /* Default constructor */
   public Connection( DrawArea da, Node from_node ) {
@@ -751,6 +755,14 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
       (((2.0 / 3.0) * cy) + ((1.0 / 3.0) * end_y)),
       end_x, end_y
     );
+
+    double x1, y1, x2, y2;
+    ctx.stroke_extents( out x1, out y1, out x2, out y2 );
+    extent_x1 = x1;
+    extent_y1 = y1;
+    extent_x2 = x2;
+    extent_y2 = y2;
+
     ctx.stroke();
 
     ctx.set_dash( {}, 0 );
@@ -834,17 +846,27 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
 
     /* Get the bbox for the entire title box */
     title_bbox( out x, out y, out w, out h );
+    x -= padding;
+    y -= padding;
+    w += (padding * 2);
+    h += (padding * 2);
+
+    /* Calculate the extents */
+    extent_x1 = (x < extent_x1) ? x : extent_x1;
+    extent_y1 = (y < extent_y1) ? y : extent_y1;
+    extent_x2 = ((x + w) > extent_x2) ? (x + w) : extent_x2;
+    extent_y2 = ((y + h) > extent_y2) ? (y + h) : extent_y2;
 
     /* Draw the box */
     ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
-    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)), (padding * 2) );
+    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
     ctx.fill();
 
     /* Draw the droppable indicator, if necessary */
     if( mode == ConnMode.DROPPABLE ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
       ctx.set_line_width( 4 );
-      Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)), (padding * 2) );
+      Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
       ctx.stroke();
     }
 

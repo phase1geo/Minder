@@ -1703,6 +1703,9 @@ public class DrawArea : Gtk.DrawingArea {
       y2 = (y2 < (nb.y + nb.height)) ? (nb.y + nb.height) : y2;
     }
 
+    /* Include the connection bounds */
+    _connections.add_connection_extents( ref x1, ref y1, ref x2, ref y2 );
+
     /* Set the outputs */
     x      = x1;
     y      = y1;
