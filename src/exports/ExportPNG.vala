@@ -74,8 +74,8 @@ public class ExportPNG : Export {
 
   /* Add the PNG settings */
   public override void add_settings( Grid grid ) {
-    add_setting_bool( "transparent", grid, _( "Enable Transparent Background" ), _( "This is something that is great" ), false );
-    add_setting_scale( "compression", grid, _( "Compression" ), _( "This is something that is also great and we think that we are really good, right?" ), 0, 9, 1, 5 );
+    add_setting_bool( "transparent", grid, _( "Enable Transparent Background" ), null, false );
+    add_setting_scale( "compression", grid, _( "Compression" ), null, 0, 9, 1, 5 );
   }
 
   /* Save the settings */
