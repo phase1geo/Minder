@@ -1508,16 +1508,16 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* If the user clicked on a selected connection endpoint, disconnect that endpoint */
     if( (current_conn != null) && (current_conn.mode == ConnMode.SELECTED) ) {
-      if( current_conn.within_from_handle( x, y ) ) {
+      if( current_conn.within_drag_handle( x, y ) ) {
+        set_connection_mode( current_conn, ConnMode.ADJUSTING );
+        return( true );
+      } else if( current_conn.within_from_handle( x, y ) ) {
         _last_connection = new Connection.from_connection( this, current_conn );
         current_conn.disconnect_from_node( true );
         return( true );
       } else if( current_conn.within_to_handle( x, y ) ) {
         _last_connection = new Connection.from_connection( this, current_conn );
         current_conn.disconnect_from_node( false );
-        return( true );
-      } else if( current_conn.within_drag_handle( x, y ) ) {
-        set_connection_mode( current_conn, ConnMode.ADJUSTING );
         return( true );
       }
     }

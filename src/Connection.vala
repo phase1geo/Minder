@@ -777,26 +777,6 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
       }
     }
 
-    /* Draw the connection title if it exists */
-    if( (_sticker != null) || (title != null) || (note.length > 0) ) {
-
-      draw_title( ctx, theme );
-
-    /* Draw the drag circle */
-    } else if( mode != ConnMode.NONE ) {
-      ctx.set_line_width( 1 );
-      ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
-      ctx.arc( dragx, dragy, RADIUS, 0, (2 * Math.PI) );
-      ctx.fill_preserve();
-      if( mode == ConnMode.DROPPABLE ) {
-        Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
-        ctx.set_line_width( 4 );
-      } else {
-        ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
-      }
-      ctx.stroke();
-    }
-
     /* If we are selected draw the endpoints */
     if( mode == ConnMode.SELECTED ) {
 
@@ -810,6 +790,28 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
       ctx.arc( end_x, end_y, RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
       ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
+      ctx.stroke();
+
+    }
+
+    /* Draw the connection title if it exists */
+    if( (_sticker != null) || (title != null) || (note.length > 0) ) {
+
+      draw_title( ctx, theme );
+
+    /* Draw the drag handle */
+    } else if( mode != ConnMode.NONE ) {
+
+      ctx.set_line_width( 1 );
+      Utils.set_context_color_with_alpha( ctx, Utils.color_from_string( "yellow" ), alpha );
+      ctx.arc( dragx, dragy, RADIUS, 0, (2 * Math.PI) );
+      ctx.fill_preserve();
+      if( mode == ConnMode.DROPPABLE ) {
+        Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
+        ctx.set_line_width( 4 );
+      } else {
+        ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
+      }
       ctx.stroke();
 
     }
@@ -884,10 +886,8 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
     /* Draw the drag handle */
     if( (mode == ConnMode.SELECTED) || (mode == ConnMode.ADJUSTING) ) {
 
-      RGBA bg = theme.get_color( "nodesel_background" );
-
+      Utils.set_context_color_with_alpha( ctx, Utils.color_from_string( "yellow" ), alpha );
       ctx.set_line_width( 1 );
-      ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
       ctx.arc( _dragx, (_dragy + (h / 2) + padding), RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
       ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
