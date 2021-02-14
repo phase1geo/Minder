@@ -83,7 +83,7 @@ public class Animator : Object {
   public void animate() {
     if( !enable ) {
       _actions.clear();
-      _da.changed();
+      _da.auto_save();
       _da.queue_draw();
       return;
     }
@@ -100,7 +100,7 @@ public class Animator : Object {
     _actions.peek_head().adjust( _da );
     if( _actions.peek_head().done() ) {
       _actions.pop_head();
-      _da.changed();
+      _da.auto_save();
     }
     _da.queue_draw();
     return( _running = (_actions.length > 0) );

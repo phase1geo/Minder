@@ -38,7 +38,7 @@ public class UndoConnectionStickerChange : UndoItem {
     _conn.sticker = _name;
     _name = name;
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Performs an undo operation for this data */

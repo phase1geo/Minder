@@ -503,7 +503,7 @@ public class NodeMenu : Gtk.Menu {
     _da.undo_buffer.add_item( new UndoNodeStickerRemove( current ) );
     current.sticker = null;
     _da.queue_draw();
-    _da.changed();
+    _da.auto_save();
   }
 
   /* Changes the node link of the currently selected node */

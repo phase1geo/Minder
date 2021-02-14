@@ -40,7 +40,7 @@ public class UndoConnectionChange : UndoItem {
     }
     da.set_current_connection( _old_connection );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a connection change */
@@ -50,7 +50,7 @@ public class UndoConnectionChange : UndoItem {
     }
     da.set_current_connection( _new_connection );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

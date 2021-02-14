@@ -98,7 +98,7 @@ public class UndoStyleChange : UndoItem {
         break;
     }
     da.current_changed( da );
-    da.changed();
+    da.auto_save();
     da.queue_draw();
   }
 

@@ -50,7 +50,7 @@ public class UndoNodesReparentLinkColor : UndoItem {
       }
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a node link color change */
@@ -59,7 +59,7 @@ public class UndoNodesReparentLinkColor : UndoItem {
       _nodes.index( i ).link_color_root = false;
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

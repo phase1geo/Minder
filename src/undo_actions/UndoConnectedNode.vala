@@ -41,7 +41,7 @@ public class UndoConnectedNode : UndoItem {
       da.set_current_node( null );
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   public override void redo( DrawArea da ) {
@@ -49,7 +49,7 @@ public class UndoConnectedNode : UndoItem {
     da.get_connections().add_connection( _conn );
     da.set_current_node( _node );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

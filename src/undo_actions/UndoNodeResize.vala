@@ -39,14 +39,14 @@ public class UndoNodeResize : UndoItem {
   public override void undo( DrawArea da ) {
     _node.resize( _old_width - _new_width );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a node name change */
   public override void redo( DrawArea da ) {
     _node.resize( _new_width - _old_width );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

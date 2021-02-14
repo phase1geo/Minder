@@ -38,7 +38,7 @@ public class UndoStickerChange : UndoItem {
     da.stickers.remove_sticker( prev );
     da.stickers.add_sticker( next );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Performs an undo operation for this data */

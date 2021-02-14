@@ -62,7 +62,7 @@ public class UndoNodesDelete : UndoItem {
     }
     da.groups.apply_undos( _groups );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a node deletion */
@@ -77,7 +77,7 @@ public class UndoNodesDelete : UndoItem {
       da.get_connections().remove_connection( _conns.index( i ), false );
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

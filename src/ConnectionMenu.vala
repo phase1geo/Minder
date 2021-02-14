@@ -135,7 +135,7 @@ public class ConnectionMenu : Gtk.Menu {
     _da.undo_buffer.add_item( new UndoConnectionStickerRemove( current ) );
     current.sticker = null;
     _da.queue_draw();
-    _da.changed();
+    _da.auto_save();
   }
 
   /* Selects the next sibling node of the current node */

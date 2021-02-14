@@ -36,14 +36,14 @@ public class UndoStickerRemove : UndoItem {
     da.stickers.add_sticker( _sticker );
     da.set_current_sticker( _sticker );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
     da.stickers.remove_sticker( _sticker );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

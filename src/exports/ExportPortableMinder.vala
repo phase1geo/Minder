@@ -215,7 +215,7 @@ public class ExportPortableMinder : Export {
 
     /* Finally, load the minder file and re-save it */
     da.get_doc().load();
-    da.changed();
+    da.auto_save();
 
     return( true );
 

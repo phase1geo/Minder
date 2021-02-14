@@ -37,14 +37,14 @@ public class UndoNodeStickerRemove : UndoItem {
   public override void undo( DrawArea da ) {
     _node.sticker = _name;
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
     _node.sticker = null;
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

@@ -43,7 +43,7 @@ public class UndoNodeAddParent : UndoItem {
     _child.attach( parent, index, null );
     da.set_current_node( _child );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Performs a redo operation */
@@ -55,7 +55,7 @@ public class UndoNodeAddParent : UndoItem {
     _child.attach( _parent, -1, null );
     da.set_current_node( _parent );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

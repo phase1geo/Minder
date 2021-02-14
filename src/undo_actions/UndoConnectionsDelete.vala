@@ -43,7 +43,7 @@ public class UndoConnectionsDelete : UndoItem {
       selections.add_connection( _conns.index( i ) );
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes connection deletions */
@@ -53,7 +53,7 @@ public class UndoConnectionsDelete : UndoItem {
     }
     da.get_selections().clear_connections();
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

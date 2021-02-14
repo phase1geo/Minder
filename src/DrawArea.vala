@@ -332,7 +332,7 @@ public class DrawArea : Gtk.DrawingArea {
     theme_changed( this );
     queue_draw();
     if( save ) {
-      changed();
+      auto_save();
     }
   }
 
@@ -736,7 +736,6 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Redraw the canvas */
     queue_draw();
-    changed();
 
   }
 
@@ -898,7 +897,7 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer.add_item( new UndoNodeTask( n, true, !n.task_done() ) );
     n.toggle_task_done();
     queue_draw();
-    changed();
+    auto_save();
   }
 
   /* Toggles the fold for the given node */
@@ -908,7 +907,7 @@ public class DrawArea : Gtk.DrawingArea {
     n.set_fold( fold, changes );
     undo_buffer.add_item( new UndoNodeFolds( changes ) );
     queue_draw();
-    changed();
+    auto_save();
   }
 
   /* Toggles the folding of all selected nodes that can be folded */
@@ -923,7 +922,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       undo_buffer.add_item( new UndoNodeFolds( changes ) );
       queue_draw();
-      changed();
+      auto_save();
     }
   }
 
@@ -936,7 +935,7 @@ public class DrawArea : Gtk.DrawingArea {
         undo_buffer.add_item( new UndoGroupsMerge( selgroups, merged ) );
         _selected.set_current_group( merged );
         queue_draw();
-        changed();
+        auto_save();
       }
     } else if( _selected.num_nodes() > 0 ) {
       var nodes = _selected.nodes();
@@ -944,7 +943,7 @@ public class DrawArea : Gtk.DrawingArea {
       groups.add_group( group );
       undo_buffer.add_item( new UndoGroupAdd( group ) );
       queue_draw();
-      changed();
+      auto_save();
     }
   }
 
@@ -958,7 +957,7 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer.add_item( new UndoGroupsRemove( selgroups ) );
     _selected.clear();
     queue_draw();
-    changed();
+    auto_save();
   }
 
   public void change_group_color( RGBA color ) {
@@ -969,7 +968,7 @@ public class DrawArea : Gtk.DrawingArea {
       selgroups.index( i ).color = color;
     }
     queue_draw();
-    changed();
+    auto_save();
   }
 
   /*
@@ -987,7 +986,7 @@ public class DrawArea : Gtk.DrawingArea {
           undo_buffer.add_item( new UndoConnectionTitle( this, current, orig_title ) );
         // }
         queue_draw();
-        changed();
+        auto_save();
       }
     }
   }
@@ -1004,7 +1003,7 @@ public class DrawArea : Gtk.DrawingArea {
       current.enable_task( enable );
       current.set_task_done( done );
       queue_draw();
-      changed();
+      auto_save();
     }
   }
 
@@ -1020,7 +1019,7 @@ public class DrawArea : Gtk.DrawingArea {
       current.set_fold( folded, changes );
       undo_buffer.add_item( new UndoNodeFolds( changes ) );
       queue_draw();
-      changed();
+      auto_save();
     }
   }
 
@@ -1126,7 +1125,7 @@ public class DrawArea : Gtk.DrawingArea {
     _last_node        = null;
     set_node_mode( _attach_node, NodeMode.NONE );
     _attach_node      = null;
-    changed();
+    auto_save();
     queue_draw();
   }
 
@@ -1138,7 +1137,7 @@ public class DrawArea : Gtk.DrawingArea {
     for( int i=0; i<(nodes.length - 1); i++ ) {
       nodes.index( i ).linked_node = nodes.index( i + 1 );
     }
-    changed();
+    auto_save();
     queue_draw();
   }
 
@@ -1149,7 +1148,7 @@ public class DrawArea : Gtk.DrawingArea {
       Node? old_link = current.linked_node;
       current.linked_node = null;
       undo_buffer.add_item( new UndoNodeLink( current, old_link ) );
-      changed();
+      auto_save();
       queue_draw();
     }
   }
@@ -1178,7 +1177,7 @@ public class DrawArea : Gtk.DrawingArea {
         current.link_color = color;
         undo_buffer.add_item( new UndoNodeLinkColor( current, orig_color ) );
         queue_draw();
-        changed();
+        auto_save();
       }
     }
   }
@@ -1191,7 +1190,7 @@ public class DrawArea : Gtk.DrawingArea {
       nodes.index( i ).link_color = color;
     }
     queue_draw();
-    changed();
+    auto_save();
   }
 
   public void randomize_current_link_color() {
@@ -1203,7 +1202,7 @@ public class DrawArea : Gtk.DrawingArea {
       } while( orig_color.equal( current.link_color ) );
       undo_buffer.add_item( new UndoNodeLinkColor( current, orig_color ) );
       queue_draw();
-      changed();
+      auto_save();
       current_changed( this );
     }
   }
@@ -1218,7 +1217,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
     undo_buffer.add_item( new UndoNodesRandLinkColor( nodes, colors ) );
     queue_draw();
-    changed();
+    auto_save();
   }
 
   /* Reparents the current node's link color */
@@ -1228,7 +1227,7 @@ public class DrawArea : Gtk.DrawingArea {
       undo_buffer.add_item( new UndoNodeReparentLinkColor( current ) );
       current.link_color_root = false;
       queue_draw();
-      changed();
+      auto_save();
       current_changed( this );
     }
   }
@@ -1241,7 +1240,7 @@ public class DrawArea : Gtk.DrawingArea {
       nodes.index( i ).link_color_root = false;
     }
     queue_draw();
-    changed();
+    auto_save();
   }
 
   /*
@@ -1255,7 +1254,7 @@ public class DrawArea : Gtk.DrawingArea {
       conn.color = color;
       undo_buffer.add_item( new UndoConnectionColor( conn, orig_color ) );
       queue_draw();
-      changed();
+      auto_save();
       current_changed( this );
     }
   }
@@ -2434,7 +2433,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     queue_draw();
-    changed();
+    auto_save();
     current_changed( this );
 
   }
@@ -2759,7 +2758,7 @@ public class DrawArea : Gtk.DrawingArea {
     _selected.remove_node( current );
     select_node( next_node );
     queue_draw();
-    changed();
+    auto_save();
   }
 
   /* Deletes all selected nodes */
@@ -2778,7 +2777,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
     _selected.clear_nodes();
     queue_draw();
-    changed();
+    auto_save();
   }
 
   /* Deletes the currently selected sticker */
@@ -2789,7 +2788,7 @@ public class DrawArea : Gtk.DrawingArea {
     _stickers.remove_sticker( current );
     _selected.remove_sticker( current );
     queue_draw();
-    changed();
+    auto_save();
   }
 
   /* Called whenever the backspace character is entered in the drawing area */
@@ -2797,7 +2796,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_connection_editable() ) {
       _selected.current_connection().title.backspace( undo_text );
       queue_draw();
-      changed();
+      auto_save();
     } else if( is_connection_selected() ) {
       delete_connection();
     } else if( _selected.num_connections() > 0 ) {
@@ -2805,7 +2804,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_node_editable() ) {
       _selected.current_node().name.backspace( undo_text );
       queue_draw();
-      changed();
+      auto_save();
     } else if( is_node_selected() ) {
       Node? next;
       var   current = _selected.current_node();
@@ -2834,7 +2833,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_connection_editable() ) {
       _selected.current_connection().title.delete( undo_text );
       queue_draw();
-      changed();
+      auto_save();
     } else if( is_connection_selected() ) {
       delete_connection();
     } else if( _selected.num_connections() > 0 ) {
@@ -2842,7 +2841,7 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_node_editable() ) {
       _selected.current_node().name.delete( undo_text );
       queue_draw();
-      changed();
+      auto_save();
     } else if( is_node_selected() ) {
       delete_node();
     } else if( _selected.num_nodes() > 0 ) {
@@ -2863,14 +2862,14 @@ public class DrawArea : Gtk.DrawingArea {
       set_connection_mode( current, ConnMode.SELECTED );
       current_changed( this );
       queue_draw();
-      changed();
+      auto_save();
     } else if( is_node_editable() ) {
       var current = _selected.current_node();
       _im_context.reset();
       set_node_mode( current, NodeMode.CURRENT );
       current_changed( this );
       queue_draw();
-      changed();
+      auto_save();
     } else if( is_connection_connecting() ) {
       var current = _selected.current_connection();
       _connections.remove_connection( current, true );
@@ -2980,7 +2979,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     }
     see();
-    changed();
+    auto_save();
   }
 
   /* Adds a connected node to the currently selected node */
@@ -2997,7 +2996,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     }
     see();
-    changed();
+    auto_save();
   }
 
   /* Adds a new sibling node to the current node */
@@ -3008,7 +3007,7 @@ public class DrawArea : Gtk.DrawingArea {
     set_node_mode( node, NodeMode.EDITABLE, false );
     queue_draw();
     see();
-    changed();
+    auto_save();
   }
 
   /*
@@ -3024,7 +3023,7 @@ public class DrawArea : Gtk.DrawingArea {
     set_node_mode( node, NodeMode.EDITABLE, false );
     queue_draw();
     see();
-    changed();
+    auto_save();
   }
 
   /* Adds a child node to the current node */
@@ -3036,7 +3035,7 @@ public class DrawArea : Gtk.DrawingArea {
     set_node_mode( node, NodeMode.EDITABLE, false );
     queue_draw();
     see();
-    changed();
+    auto_save();
   }
 
   /*
@@ -3168,7 +3167,7 @@ public class DrawArea : Gtk.DrawingArea {
     add_root( current, -1 );
     undo_buffer.add_item( new UndoNodeDetach( current, root_index, parent, side, index ) );
     queue_draw();
-    changed();
+    auto_save();
   }
 
   /* Balances the existing nodes based on the current layout */
@@ -3228,7 +3227,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( changes.length > 0 ) {
       undo_buffer.add_item( new UndoNodeFolds( changes ) );
       queue_draw();
-      changed();
+      auto_save();
       current_changed( this );
     }
   }
@@ -3262,7 +3261,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( changes.length > 0 ) {
       undo_buffer.add_item( new UndoNodeFolds( changes ) );
       queue_draw();
-      changed();
+      auto_save();
       current_changed( this );
     }
   }
@@ -3406,7 +3405,7 @@ public class DrawArea : Gtk.DrawingArea {
         if( current.swap_with_sibling( right_node ) ||
             current.make_children_siblings( right_node ) ) {
           queue_draw();
-          changed();
+          auto_save();
         }
       } else if( select_node( right_node ) ) {
         queue_draw();
@@ -3463,7 +3462,7 @@ public class DrawArea : Gtk.DrawingArea {
         if( current.swap_with_sibling( left_node ) ||
             current.make_children_siblings( left_node ) ) {
           queue_draw();
-          changed();
+          auto_save();
         }
       } else if( select_node( left_node ) ) {
         queue_draw();
@@ -3526,7 +3525,7 @@ public class DrawArea : Gtk.DrawingArea {
     entry.changed.connect(() => {
       text.insert( entry.text, undo_text );
       queue_draw();
-      changed();
+      auto_save();
       entry.unparent();
       grab_focus();
     });
@@ -3631,7 +3630,7 @@ public class DrawArea : Gtk.DrawingArea {
         if( current.swap_with_sibling( up_node ) ||
             current.make_children_siblings( up_node ) ) {
           queue_draw();
-          changed();
+          auto_save();
         }
       } else if( select_node( up_node ) ) {
         queue_draw();
@@ -3690,7 +3689,7 @@ public class DrawArea : Gtk.DrawingArea {
         if( current.swap_with_sibling( down_node ) ||
             current.make_children_siblings( down_node ) ) {
           queue_draw();
-          changed();
+          auto_save();
         }
       } else if( select_node( down_node ) ) {
         queue_draw();
@@ -3755,12 +3754,12 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_connection_editable() ) {
       _selected.current_connection().title.insert( str, undo_text );
       queue_draw();
-      changed();
+      auto_save();
     } else if( is_node_editable() ) {
       _selected.current_node().name.insert( str, undo_text );
       see();
       queue_draw();
-      changed();
+      auto_save();
     } else {
       return( false );
     }
@@ -4182,7 +4181,7 @@ public class DrawArea : Gtk.DrawingArea {
     _selected.remove_node( current );
     select_node( next_node );
     queue_draw();
-    changed();
+    auto_save();
   }
 
   public void cut_selected_nodes_to_clipboard() {
@@ -4201,7 +4200,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
     _selected.clear_nodes();
     queue_draw();
-    changed();
+    auto_save();
   }
 
   /* Cuts the current selected text to the clipboard */
@@ -4215,7 +4214,7 @@ public class DrawArea : Gtk.DrawingArea {
       current_conn.title.insert( "", undo_text );
     }
     queue_draw();
-    changed();
+    auto_save();
   }
 
   /* Either cuts the current node or cuts the currently selected text */
@@ -4239,7 +4238,7 @@ public class DrawArea : Gtk.DrawingArea {
     node.name.text.replace_text( 0, node.name.text.text.char_count(), text.strip() );
     undo_buffer.add_item( new UndoNodeName( this, node, orig_text ) );
     queue_draw();
-    changed();
+    auto_save();
   }
 
   private void replace_connection_text( Connection conn, string text ) {
@@ -4249,7 +4248,7 @@ public class DrawArea : Gtk.DrawingArea {
     undo_buffer.add_item( new UndoConnectionTitle( this, conn, orig_title ) );
     queue_draw();
     current_changed( this );
-    changed();
+    auto_save();
   }
 
   private void replace_node_image( Node node, Pixbuf image ) {
@@ -4279,19 +4278,19 @@ public class DrawArea : Gtk.DrawingArea {
     select_node( nodes.index( 0 ) );
     queue_draw();
     current_changed( this );
-    changed();
+    auto_save();
   }
 
   private void insert_node_text( Node node, string text ) {
     node.name.insert( text, undo_text );
     queue_draw();
-    changed();
+    auto_save();
   }
 
   private void insert_connection_text( Connection conn, string text ) {
     conn.title.insert( text, undo_text );
     queue_draw();
-    changed();
+    auto_save();
   }
 
   private void paste_text_as_node( Node? node, string text ) {
@@ -4300,7 +4299,7 @@ public class DrawArea : Gtk.DrawingArea {
     export.import_text( text, 0, this, false, nodes );
     undo_buffer.add_item( new UndoNodesInsert( this, nodes ) );
     queue_draw();
-    changed();
+    auto_save();
   }
 
   private void paste_image_as_node( Node? node, Pixbuf image ) {
@@ -4313,7 +4312,7 @@ public class DrawArea : Gtk.DrawingArea {
     select_node( new_node );
     queue_draw();
     current_changed( this );
-    changed();
+    auto_save();
   }
 
   private void paste_as_nodes( Node? node, string text ) {
@@ -4352,7 +4351,7 @@ public class DrawArea : Gtk.DrawingArea {
     select_node( nodes.index( 0 ) );
     queue_draw();
     current_changed( this );
-    changed();
+    auto_save();
   }
 
   /* Called by the clipboard to paste text */
@@ -4443,7 +4442,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Perform an automatic save for times when changes may be happening rapidly */
-  private void auto_save() {
+  public void auto_save() {
     if( _auto_save_id != null ) {
       Source.remove( _auto_save_id );
     }
@@ -4453,6 +4452,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Allows the document to be auto-saved after a scroll event */
   private bool do_auto_save() {
     _auto_save_id = null;
+    is_loaded = true;
     changed();
     return( false );
   }
@@ -4671,7 +4671,7 @@ public class DrawArea : Gtk.DrawingArea {
     _last_node       = null;
     set_node_mode( _attach_node, NodeMode.NONE );
     _attach_node     = null;
-    changed();
+    auto_save();
     queue_draw();
   }
 
@@ -4691,7 +4691,7 @@ public class DrawArea : Gtk.DrawingArea {
     _selected.set_current_connection( conn );
     undo_buffer.add_item( new UndoConnectionAdd( conn ) );
     handle_connection_edit_on_creation( conn );
-    changed();
+    auto_save();
     queue_draw();
   }
 
@@ -4703,7 +4703,7 @@ public class DrawArea : Gtk.DrawingArea {
     _connections.remove_connection( current, false );
     _selected.remove_connection( current );
     _last_connection = null;
-    changed();
+    auto_save();
     queue_draw();
   }
 
@@ -4716,7 +4716,7 @@ public class DrawArea : Gtk.DrawingArea {
       _connections.remove_connection( conns.index( i ), false );
     }
     _selected.clear_connections();
-    changed();
+    auto_save();
     queue_draw();
   }
 
@@ -4797,7 +4797,7 @@ public class DrawArea : Gtk.DrawingArea {
     name.text.changed();
     tagger.postedit_load_tags( name.text );
     undo_buffer.add_item( new UndoNodeName( this, node, orig_text ) );
-    changed();
+    auto_save();
   }
 
   /* Displays the auto-completion widget with the given list of values */
@@ -4831,7 +4831,7 @@ public class DrawArea : Gtk.DrawingArea {
       child.attach( parent, -1, null, false );
     });
     animator.animate();
-    changed();
+    auto_save();
   }
 
   /* Sorts the current node's children alphabetically */

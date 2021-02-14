@@ -44,13 +44,13 @@ public class UndoNodeReparent : UndoItem {
       child.attach( _node, 0, null );
     }
     da.animator.animate();
-    da.changed();
+    da.auto_save();
   }
 
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
     _node.make_children_siblings( _node.parent, false );
-    da.changed();
+    da.auto_save();
   }
 
 }

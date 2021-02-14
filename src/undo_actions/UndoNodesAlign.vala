@@ -70,7 +70,7 @@ public class UndoNodesAlign : UndoItem {
       _info.index( i ).swap_with_node( node );
     }
     da.animator.animate();
-    da.changed();
+    da.auto_save();
   }
 
   /* Undoes a node image change */

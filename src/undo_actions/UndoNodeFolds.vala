@@ -45,7 +45,7 @@ public class UndoNodeFolds : UndoItem {
     }
     da.queue_draw();
     da.current_changed( da );
-    da.changed();
+    da.auto_save();
   }
 
   /* Undoes a node fold operation */

@@ -46,7 +46,7 @@ public class UndoNodesRandLinkColor : UndoItem {
       _nodes.index( i ).link_color = colors.index( i );
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Undoes a node link color change */

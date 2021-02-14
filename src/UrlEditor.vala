@@ -99,7 +99,7 @@ public class UrlEditor : Popover {
     }
     node.name.add_tag( FormatTag.URL, _entry.text, false, _da.undo_text );
     node.name.clear_selection();
-    _da.changed();
+    _da.auto_save();
   }
 
   /* Called when we want to add a URL to the currently selected text of the given node. */

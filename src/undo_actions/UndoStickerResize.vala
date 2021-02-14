@@ -39,7 +39,7 @@ public class UndoStickerResize : UndoItem {
     _width = width;
     da.set_current_sticker( _sticker );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Performs an undo operation for this data */

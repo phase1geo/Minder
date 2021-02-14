@@ -36,7 +36,7 @@ public class UndoGroupRemove : UndoItem {
     da.groups.add_group( _group );
     da.get_selections().add_group( _group );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a connection change */
@@ -44,7 +44,7 @@ public class UndoGroupRemove : UndoItem {
     da.groups.remove_group( _group );
     da.get_selections().remove_group( _group );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }
