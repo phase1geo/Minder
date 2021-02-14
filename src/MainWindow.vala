@@ -393,6 +393,36 @@ public class MainWindow : ApplicationWindow {
   }
 
   /*
+   Closes all tabs that contain documents that have not been changed.
+  */
+  private void close_unchanged_tabs() {
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      if( !da.is_loaded ) {
+        tab.close();
+        return;
+      }
+    }
+  }
+
+  /*
+   Searches the current tabs for an unchanged tab.  If one is found, make it the
+   current tab.
+  */
+  private bool find_unchanged_tab() {
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      if( !da.is_loaded ) {
+        _nb.current = tab;
+        return( true );
+      }
+    }
+    return( false );
+  }
+
+  /*
    Checks to see if any other tab contains the given filename.  If the filename
    is already found, refresh the tab with the file contents and make it the current
    tab; otherwise, add the new tab and populate it.
@@ -935,6 +965,9 @@ public class MainWindow : ApplicationWindow {
   */
   public void do_new_file() {
 
+    /* Close any unchanged tabs */
+    if( find_unchanged_tab() ) return;
+
     var da = add_tab( null, TabAddReason.NEW );
 
     /* Set the title to indicate that we have an unnamed document */
@@ -983,6 +1016,7 @@ public class MainWindow : ApplicationWindow {
     if( !FileUtils.test( fname, FileTest.IS_REGULAR ) ) {
       return( false );
     }
+    close_unchanged_tabs();
     if( fname.has_suffix( ".minder" ) ) {
       var da = add_tab_conditionally( fname, TabAddReason.OPEN );
       update_title( da );
