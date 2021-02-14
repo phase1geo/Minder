@@ -812,6 +812,7 @@ public class DrawArea : Gtk.DrawingArea {
       undo_text.orig.copy( node.name );
       undo_text.ct      = node.name;
       undo_text.do_undo = undoable;
+      node.mode = mode;
     } else if( (node.mode == NodeMode.EDITABLE) && (mode != NodeMode.EDITABLE) ) {
       _im_context.reset();
       _im_context.focus_out();
@@ -824,8 +825,11 @@ public class DrawArea : Gtk.DrawingArea {
       }
       undo_text.ct      = null;
       undo_text.do_undo = false;
+      node.mode = mode;
+      auto_save();
+    } else {
+      node.mode = mode;
     }
-    node.mode = mode;
   }
 
   /* Needs to be called whenever the user changes the mode of the current connection */
@@ -3284,7 +3288,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /*
-   Called whenever the Control-Tab key combo is entered.  Causes a tabe character
+   Called whenever the Control-Tab key combo is entered.  Causes a tab character
    to be inserted into the title.
   */
   private void handle_control_tab() {
@@ -3525,7 +3529,6 @@ public class DrawArea : Gtk.DrawingArea {
     entry.changed.connect(() => {
       text.insert( entry.text, undo_text );
       queue_draw();
-      auto_save();
       entry.unparent();
       grab_focus();
     });
@@ -3754,12 +3757,10 @@ public class DrawArea : Gtk.DrawingArea {
     if( is_connection_editable() ) {
       _selected.current_connection().title.insert( str, undo_text );
       queue_draw();
-      auto_save();
     } else if( is_node_editable() ) {
       _selected.current_node().name.insert( str, undo_text );
       see();
       queue_draw();
-      auto_save();
     } else {
       return( false );
     }
@@ -4284,13 +4285,11 @@ public class DrawArea : Gtk.DrawingArea {
   private void insert_node_text( Node node, string text ) {
     node.name.insert( text, undo_text );
     queue_draw();
-    auto_save();
   }
 
   private void insert_connection_text( Connection conn, string text ) {
     conn.title.insert( text, undo_text );
     queue_draw();
-    auto_save();
   }
 
   private void paste_text_as_node( Node? node, string text ) {
