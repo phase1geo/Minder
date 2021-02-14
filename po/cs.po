@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-13 08:26-0600\n"
+"POT-Creation-Date: 2021-02-13 21:20-0600\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Jan Marek <janmarek28@gmail.com>\n"
 "Language-Team: none\n"
@@ -137,7 +137,7 @@ msgstr "Do prava"
 msgid "Yed"
 msgstr ""
 
-#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4054
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4059
 #: src/MapInspector.vala:300
 msgid "Manual"
 msgstr "Ruční"
@@ -490,12 +490,12 @@ msgstr ""
 msgid "Minder in AppCenter"
 msgstr ""
 
-#: src/Connection.vala:691
+#: src/Connection.vala:695
 #, fuzzy
 msgid "Connection Title"
 msgstr "změna poznámky uzlu"
 
-#: src/Connection.vala:699
+#: src/Connection.vala:703
 #, fuzzy
 msgid "Connection Note"
 msgstr "Hledat uzly"
@@ -573,25 +573,25 @@ msgstr "Předchozí sourozenec"
 msgid "unnamed"
 msgstr "Nepojmenovaný dokument"
 
-#: src/DrawArea.vala:718
+#: src/DrawArea.vala:720
 msgid "Main Idea"
 msgstr ""
 
-#: src/DrawArea.vala:2173
+#: src/DrawArea.vala:2178
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% hotovo"
 
-#: src/DrawArea.vala:2327
+#: src/DrawArea.vala:2332
 #, fuzzy
 msgid "connection endpoint change"
 msgstr "změna poznámky uzlu"
 
-#: src/DrawArea.vala:2334
+#: src/DrawArea.vala:2339
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2970 src/DrawArea.vala:2983 src/DrawArea.vala:4514
+#: src/DrawArea.vala:2975 src/DrawArea.vala:2988 src/DrawArea.vala:4520
 msgid "Another Idea"
 msgstr "Další nápad"
 
@@ -673,12 +673,12 @@ msgid "Export As %s"
 msgstr "Export"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:375 src/ImageManager.vala:299
-#: src/MainWindow.vala:906 src/MainWindow.vala:951 src/MainWindow.vala:1068
+#: src/MainWindow.vala:936 src/MainWindow.vala:984 src/MainWindow.vala:1102
 #: src/QuickEntry.vala:118 src/ThemeEditor.vala:143 src/UrlEditor.vala:61
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: src/Exporter.vala:132 src/MainWindow.vala:726
+#: src/Exporter.vala:132 src/MainWindow.vala:756
 msgid "Export"
 msgstr "Export"
 
@@ -758,7 +758,7 @@ msgstr "Vybrat uzel"
 msgid "Images"
 msgstr ""
 
-#: src/MainWindow.vala:154 src/MainWindow.vala:1073
+#: src/MainWindow.vala:154 src/MainWindow.vala:1107
 msgid "Minder"
 msgstr "Minder"
 
@@ -767,7 +767,7 @@ msgstr "Minder"
 msgid "New File"
 msgstr "Otevřít soubor"
 
-#: src/MainWindow.vala:194 src/MainWindow.vala:951
+#: src/MainWindow.vala:194 src/MainWindow.vala:984
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "Otevřít soubor"
@@ -787,156 +787,156 @@ msgstr "Zpět"
 msgid "Redo"
 msgstr "Znovu"
 
-#: src/MainWindow.vala:451
+#: src/MainWindow.vala:481
 msgid "Unnamed Document"
 msgstr "Nepojmenovaný dokument"
 
-#: src/MainWindow.vala:455 src/MainWindow.vala:761
+#: src/MainWindow.vala:485 src/MainWindow.vala:791
 msgid "Focus Mode"
 msgstr ""
 
-#: src/MainWindow.vala:486
+#: src/MainWindow.vala:516
 msgid "Zoom"
 msgstr "Přiblížení"
 
-#: src/MainWindow.vala:493
+#: src/MainWindow.vala:523
 msgid "Zoom to Percent"
 msgstr "Procentuální přiblížení"
 
-#: src/MainWindow.vala:505 data/com.github.phase1geo.minder.shortcuts.ui:117
+#: src/MainWindow.vala:535 data/com.github.phase1geo.minder.shortcuts.ui:117
 msgid "Zoom In"
 msgstr "Přiblížit"
 
-#: src/MainWindow.vala:510 data/com.github.phase1geo.minder.shortcuts.ui:124
+#: src/MainWindow.vala:540 data/com.github.phase1geo.minder.shortcuts.ui:124
 msgid "Zoom Out"
 msgstr "Oddálit"
 
-#: src/MainWindow.vala:515
+#: src/MainWindow.vala:545
 msgid "Zoom to Fit"
 msgstr "Vměstnat do okna"
 
-#: src/MainWindow.vala:520
+#: src/MainWindow.vala:550
 msgid "Zoom to Fit Selected Node"
 msgstr "Vměstnat do okna vybraný uzel"
 
-#: src/MainWindow.vala:525
+#: src/MainWindow.vala:555
 msgid "Zoom to Actual Size"
 msgstr "Přiblížení dle skutečných rozměrů"
 
-#: src/MainWindow.vala:552
+#: src/MainWindow.vala:582
 msgid "Search"
 msgstr "Hledat"
 
-#: src/MainWindow.vala:562
+#: src/MainWindow.vala:592
 #, fuzzy
 msgid "Search Nodes and Connections"
 msgstr "Hledat uzly"
 
-#: src/MainWindow.vala:591
+#: src/MainWindow.vala:621
 msgid "Search Criteria"
 msgstr "Kritéria hledání"
 
-#: src/MainWindow.vala:594
+#: src/MainWindow.vala:624
 #, fuzzy
 msgid "Search all tabs"
 msgstr "Kritéria hledání"
 
-#: src/MainWindow.vala:628
+#: src/MainWindow.vala:658
 msgid "Nodes"
 msgstr ""
 
-#: src/MainWindow.vala:629
+#: src/MainWindow.vala:659
 msgid "Connections"
 msgstr ""
 
-#: src/MainWindow.vala:630
+#: src/MainWindow.vala:660
 msgid "Titles"
 msgstr "Názvy"
 
-#: src/MainWindow.vala:631
+#: src/MainWindow.vala:661
 msgid "Notes"
 msgstr "Poznámky"
 
-#: src/MainWindow.vala:632
+#: src/MainWindow.vala:662
 msgid "Folded"
 msgstr "Sbalené"
 
-#: src/MainWindow.vala:633
+#: src/MainWindow.vala:663
 msgid "Unfolded"
 msgstr "Rozbalené"
 
-#: src/MainWindow.vala:634
+#: src/MainWindow.vala:664
 msgid "Tasks"
 msgstr "Úkoly"
 
-#: src/MainWindow.vala:635
+#: src/MainWindow.vala:665
 msgid "Non-tasks"
 msgstr "Nejsou úkoly"
 
-#: src/MainWindow.vala:738
+#: src/MainWindow.vala:768
 #, fuzzy
 msgid "Print…"
 msgstr "Vytisknout"
 
-#: src/MainWindow.vala:786 src/Preferences.vala:36
+#: src/MainWindow.vala:816 src/Preferences.vala:36
 msgid "Preferences"
 msgstr ""
 
-#: src/MainWindow.vala:791
+#: src/MainWindow.vala:821
 msgid "Shortcuts Cheatsheet"
 msgstr ""
 
-#: src/MainWindow.vala:795
+#: src/MainWindow.vala:825
 #, fuzzy
 msgid "About Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:828 src/MainWindow.vala:1183
+#: src/MainWindow.vala:858 src/MainWindow.vala:1217
 #, fuzzy
 msgid "Show Property Sidebar"
 msgstr "Parametry"
 
-#: src/MainWindow.vala:843
+#: src/MainWindow.vala:873
 msgid "Current"
 msgstr ""
 
-#: src/MainWindow.vala:844 src/StyleInspector.vala:184
+#: src/MainWindow.vala:874 src/StyleInspector.vala:184
 msgid "Style"
 msgstr ""
 
-#: src/MainWindow.vala:845
+#: src/MainWindow.vala:875
 msgid "Stickers"
 msgstr ""
 
-#: src/MainWindow.vala:846
+#: src/MainWindow.vala:876
 msgid "Map"
 msgstr ""
 
-#: src/MainWindow.vala:897
+#: src/MainWindow.vala:927
 msgid "Save current unnamed document?"
 msgstr "Uložit aktuální nepojmenovaný dokument?"
 
-#: src/MainWindow.vala:898
+#: src/MainWindow.vala:928
 msgid "Changes will be permanently lost if not saved."
 msgstr "Pokud soubor neuložíte, provedené změny se navždy ztratí."
 
-#: src/MainWindow.vala:903
+#: src/MainWindow.vala:933
 msgid "Discard Changes"
 msgstr "Zahodit změny"
 
-#: src/MainWindow.vala:909 src/MainWindow.vala:1068 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:939 src/MainWindow.vala:1102 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Uložit"
 
-#: src/MainWindow.vala:951
+#: src/MainWindow.vala:984
 msgid "Open"
 msgstr "Otevřít"
 
-#: src/MainWindow.vala:1068
+#: src/MainWindow.vala:1102
 msgid "Save File"
 msgstr "Uložit soubor"
 
-#: src/MainWindow.vala:1127
+#: src/MainWindow.vala:1161
 #, fuzzy
 msgid "Hide Property Sidebar"
 msgstr "Parametry"

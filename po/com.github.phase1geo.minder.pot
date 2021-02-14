@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-13 08:26-0600\n"
+"POT-Creation-Date: 2021-02-13 21:20-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -136,7 +136,7 @@ msgstr ""
 msgid "Yed"
 msgstr ""
 
-#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4054
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4059
 #: src/MapInspector.vala:300
 msgid "Manual"
 msgstr ""
@@ -454,11 +454,11 @@ msgstr ""
 msgid "Minder in AppCenter"
 msgstr ""
 
-#: src/Connection.vala:691
+#: src/Connection.vala:695
 msgid "Connection Title"
 msgstr ""
 
-#: src/Connection.vala:699
+#: src/Connection.vala:703
 msgid "Connection Note"
 msgstr ""
 
@@ -523,24 +523,24 @@ msgstr ""
 msgid "unnamed"
 msgstr ""
 
-#: src/DrawArea.vala:718
+#: src/DrawArea.vala:720
 msgid "Main Idea"
 msgstr ""
 
-#: src/DrawArea.vala:2173
+#: src/DrawArea.vala:2178
 #, c-format
 msgid "%0.3g%% complete"
 msgstr ""
 
-#: src/DrawArea.vala:2327
+#: src/DrawArea.vala:2332
 msgid "connection endpoint change"
 msgstr ""
 
-#: src/DrawArea.vala:2334
+#: src/DrawArea.vala:2339
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2970 src/DrawArea.vala:2983 src/DrawArea.vala:4514
+#: src/DrawArea.vala:2975 src/DrawArea.vala:2988 src/DrawArea.vala:4520
 msgid "Another Idea"
 msgstr ""
 
@@ -620,12 +620,12 @@ msgid "Export As %s"
 msgstr ""
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:375 src/ImageManager.vala:299
-#: src/MainWindow.vala:906 src/MainWindow.vala:951 src/MainWindow.vala:1068
+#: src/MainWindow.vala:936 src/MainWindow.vala:984 src/MainWindow.vala:1102
 #: src/QuickEntry.vala:118 src/ThemeEditor.vala:143 src/UrlEditor.vala:61
 msgid "Cancel"
 msgstr ""
 
-#: src/Exporter.vala:132 src/MainWindow.vala:726
+#: src/Exporter.vala:132 src/MainWindow.vala:756
 msgid "Export"
 msgstr ""
 
@@ -699,7 +699,7 @@ msgstr ""
 msgid "Images"
 msgstr ""
 
-#: src/MainWindow.vala:154 src/MainWindow.vala:1073
+#: src/MainWindow.vala:154 src/MainWindow.vala:1107
 msgid "Minder"
 msgstr ""
 
@@ -707,7 +707,7 @@ msgstr ""
 msgid "New File"
 msgstr ""
 
-#: src/MainWindow.vala:194 src/MainWindow.vala:951
+#: src/MainWindow.vala:194 src/MainWindow.vala:984
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr ""
@@ -724,151 +724,151 @@ msgstr ""
 msgid "Redo"
 msgstr ""
 
-#: src/MainWindow.vala:451
+#: src/MainWindow.vala:481
 msgid "Unnamed Document"
 msgstr ""
 
-#: src/MainWindow.vala:455 src/MainWindow.vala:761
+#: src/MainWindow.vala:485 src/MainWindow.vala:791
 msgid "Focus Mode"
 msgstr ""
 
-#: src/MainWindow.vala:486
+#: src/MainWindow.vala:516
 msgid "Zoom"
 msgstr ""
 
-#: src/MainWindow.vala:493
+#: src/MainWindow.vala:523
 msgid "Zoom to Percent"
 msgstr ""
 
-#: src/MainWindow.vala:505 data/com.github.phase1geo.minder.shortcuts.ui:117
+#: src/MainWindow.vala:535 data/com.github.phase1geo.minder.shortcuts.ui:117
 msgid "Zoom In"
 msgstr ""
 
-#: src/MainWindow.vala:510 data/com.github.phase1geo.minder.shortcuts.ui:124
+#: src/MainWindow.vala:540 data/com.github.phase1geo.minder.shortcuts.ui:124
 msgid "Zoom Out"
 msgstr ""
 
-#: src/MainWindow.vala:515
+#: src/MainWindow.vala:545
 msgid "Zoom to Fit"
 msgstr ""
 
-#: src/MainWindow.vala:520
+#: src/MainWindow.vala:550
 msgid "Zoom to Fit Selected Node"
 msgstr ""
 
-#: src/MainWindow.vala:525
+#: src/MainWindow.vala:555
 msgid "Zoom to Actual Size"
 msgstr ""
 
-#: src/MainWindow.vala:552
+#: src/MainWindow.vala:582
 msgid "Search"
 msgstr ""
 
-#: src/MainWindow.vala:562
+#: src/MainWindow.vala:592
 msgid "Search Nodes and Connections"
 msgstr ""
 
-#: src/MainWindow.vala:591
+#: src/MainWindow.vala:621
 msgid "Search Criteria"
 msgstr ""
 
-#: src/MainWindow.vala:594
+#: src/MainWindow.vala:624
 msgid "Search all tabs"
 msgstr ""
 
-#: src/MainWindow.vala:628
+#: src/MainWindow.vala:658
 msgid "Nodes"
 msgstr ""
 
-#: src/MainWindow.vala:629
+#: src/MainWindow.vala:659
 msgid "Connections"
 msgstr ""
 
-#: src/MainWindow.vala:630
+#: src/MainWindow.vala:660
 msgid "Titles"
 msgstr ""
 
-#: src/MainWindow.vala:631
+#: src/MainWindow.vala:661
 msgid "Notes"
 msgstr ""
 
-#: src/MainWindow.vala:632
+#: src/MainWindow.vala:662
 msgid "Folded"
 msgstr ""
 
-#: src/MainWindow.vala:633
+#: src/MainWindow.vala:663
 msgid "Unfolded"
 msgstr ""
 
-#: src/MainWindow.vala:634
+#: src/MainWindow.vala:664
 msgid "Tasks"
 msgstr ""
 
-#: src/MainWindow.vala:635
+#: src/MainWindow.vala:665
 msgid "Non-tasks"
 msgstr ""
 
-#: src/MainWindow.vala:738
+#: src/MainWindow.vala:768
 msgid "Print…"
 msgstr ""
 
-#: src/MainWindow.vala:786 src/Preferences.vala:36
+#: src/MainWindow.vala:816 src/Preferences.vala:36
 msgid "Preferences"
 msgstr ""
 
-#: src/MainWindow.vala:791
+#: src/MainWindow.vala:821
 msgid "Shortcuts Cheatsheet"
 msgstr ""
 
-#: src/MainWindow.vala:795
+#: src/MainWindow.vala:825
 msgid "About Minder"
 msgstr ""
 
-#: src/MainWindow.vala:828 src/MainWindow.vala:1183
+#: src/MainWindow.vala:858 src/MainWindow.vala:1217
 msgid "Show Property Sidebar"
 msgstr ""
 
-#: src/MainWindow.vala:843
+#: src/MainWindow.vala:873
 msgid "Current"
 msgstr ""
 
-#: src/MainWindow.vala:844 src/StyleInspector.vala:184
+#: src/MainWindow.vala:874 src/StyleInspector.vala:184
 msgid "Style"
 msgstr ""
 
-#: src/MainWindow.vala:845
+#: src/MainWindow.vala:875
 msgid "Stickers"
 msgstr ""
 
-#: src/MainWindow.vala:846
+#: src/MainWindow.vala:876
 msgid "Map"
 msgstr ""
 
-#: src/MainWindow.vala:897
+#: src/MainWindow.vala:927
 msgid "Save current unnamed document?"
 msgstr ""
 
-#: src/MainWindow.vala:898
+#: src/MainWindow.vala:928
 msgid "Changes will be permanently lost if not saved."
 msgstr ""
 
-#: src/MainWindow.vala:903
+#: src/MainWindow.vala:933
 msgid "Discard Changes"
 msgstr ""
 
-#: src/MainWindow.vala:909 src/MainWindow.vala:1068 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:939 src/MainWindow.vala:1102 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr ""
 
-#: src/MainWindow.vala:951
+#: src/MainWindow.vala:984
 msgid "Open"
 msgstr ""
 
-#: src/MainWindow.vala:1068
+#: src/MainWindow.vala:1102
 msgid "Save File"
 msgstr ""
 
-#: src/MainWindow.vala:1127
+#: src/MainWindow.vala:1161
 msgid "Hide Property Sidebar"
 msgstr ""
 
