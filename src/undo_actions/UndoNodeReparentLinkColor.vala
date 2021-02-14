@@ -39,14 +39,14 @@ public class UndoNodeReparentLinkColor : UndoItem {
     _node.link_color_root = true;
     _node.link_color      = _old_color;
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a node link color change */
   public override void redo( DrawArea da ) {
     _node.link_color_root = false;
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

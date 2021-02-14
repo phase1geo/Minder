@@ -284,7 +284,7 @@ public class QuickEntry : Gtk.Window {
     da.undo_buffer.add_item( new UndoNodesInsert( da, nodes ) );
     da.set_current_node( nodes.index( 0 ) );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
     da.see();
   }
 
@@ -299,7 +299,7 @@ public class QuickEntry : Gtk.Window {
     da.undo_buffer.add_item( new UndoNodesReplace( node, nodes ) );
     da.set_current_node( nodes.index( 0 ) );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
     da.see();
   }
 

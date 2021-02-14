@@ -29,11 +29,10 @@ public class Minder : Granite.Application {
   private static string?       open_file    = null;
   private static bool          new_file     = false;
   private static bool          testing      = false;
-  private        bool          loaded       = false;
   private        MainWindow    appwin;
 
   public  static GLib.Settings settings;
-  public  static string        version = "1.12.0";
+  public  static string        version = "1.12.1";
 
   public Minder () {
 
@@ -58,7 +57,7 @@ public class Minder : Granite.Application {
     appwin = new MainWindow( this, settings );
 
     /* Load the tab data */
-    loaded = appwin.load_tab_state();
+    appwin.load_tab_state();
 
     /* Handle any changes to the position of the window */
     appwin.configure_event.connect(() => {
@@ -91,7 +90,7 @@ public class Minder : Granite.Application {
   /* Called if we have no files to open */
   protected override void activate() {
     hold();
-    if( new_file || !loaded ) {
+    if( new_file ) {
       appwin.do_new_file();
     }
     Gtk.main();

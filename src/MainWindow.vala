@@ -337,7 +337,7 @@ public class MainWindow : ApplicationWindow {
   private bool close_tab_requested( Tab tab ) {
     var bin = (Gtk.Bin)tab.page;
     var da  = bin.get_child() as DrawArea;
-    var ret = da.get_doc().is_saved() || show_save_warning( da );
+    var ret = !da.is_loaded || da.get_doc().is_saved() || show_save_warning( da );
     return( ret );
   }
 
@@ -390,6 +390,36 @@ public class MainWindow : ApplicationWindow {
 
     return( da );
 
+  }
+
+  /*
+   Closes all tabs that contain documents that have not been changed.
+  */
+  private void close_unchanged_tabs() {
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      if( !da.is_loaded ) {
+        tab.close();
+        return;
+      }
+    }
+  }
+
+  /*
+   Searches the current tabs for an unchanged tab.  If one is found, make it the
+   current tab.
+  */
+  private bool find_unchanged_tab() {
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      if( !da.is_loaded ) {
+        _nb.current = tab;
+        return( true );
+      }
+    }
+    return( false );
   }
 
   /*
@@ -935,6 +965,9 @@ public class MainWindow : ApplicationWindow {
   */
   public void do_new_file() {
 
+    /* Close any unchanged tabs */
+    if( find_unchanged_tab() ) return;
+
     var da = add_tab( null, TabAddReason.NEW );
 
     /* Set the title to indicate that we have an unnamed document */
@@ -983,6 +1016,7 @@ public class MainWindow : ApplicationWindow {
     if( !FileUtils.test( fname, FileTest.IS_REGULAR ) ) {
       return( false );
     }
+    close_unchanged_tabs();
     if( fname.has_suffix( ".minder" ) ) {
       var da = add_tab_conditionally( fname, TabAddReason.OPEN );
       update_title( da );
@@ -1454,12 +1488,16 @@ public class MainWindow : ApplicationWindow {
   }
 
   /* Loads the tab state */
-  public bool load_tab_state() {
+  public void load_tab_state() {
 
     var      tab_state = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" );
     Xml.Doc* doc       = Xml.Parser.parse_file( tab_state );
+    var      tabs      = 0;
 
-    if( doc == null ) { return( false ); }
+    if( doc == null ) {
+      do_new_file();
+      return;
+    }
 
     var root = doc->get_root_element();
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
@@ -1469,9 +1507,15 @@ public class MainWindow : ApplicationWindow {
         var da    = add_tab( fname, TabAddReason.LOAD );
         da.get_doc().load_filename( fname, bool.parse( saved ) );
         Idle.add(() => {
-          da.get_doc().load();
+          if( !da.get_doc().load() ) {
+            _nb.current.close();
+          }
+          if( (--tabs == 0) && (_nb.n_tabs == 0) ) {
+            do_new_file();
+          }
           return( false );
         });
+        tabs++;
       }
     }
 
@@ -1482,8 +1526,6 @@ public class MainWindow : ApplicationWindow {
     }
 
     delete doc;
-
-    return( _nb.n_tabs > 0 );
 
   }
 

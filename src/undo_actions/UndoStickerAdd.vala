@@ -35,7 +35,7 @@ public class UndoStickerAdd : UndoItem {
   public override void undo( DrawArea da ) {
     da.stickers.remove_sticker( _sticker );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Performs a redo operation */
@@ -43,7 +43,7 @@ public class UndoStickerAdd : UndoItem {
     da.stickers.add_sticker( _sticker );
     da.set_current_sticker( _sticker );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

@@ -44,7 +44,7 @@ public class UndoStickerMove : UndoItem {
     _posy = posy;
     da.set_current_sticker( _sticker );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Performs an undo operation for this data */

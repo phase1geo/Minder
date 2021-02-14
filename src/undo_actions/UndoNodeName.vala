@@ -42,7 +42,7 @@ public class UndoNodeName : UndoItem {
     _node.name.copy( _orig_text );
     da.queue_draw();
     da.current_changed( da );
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a node name change */
@@ -50,7 +50,7 @@ public class UndoNodeName : UndoItem {
     _node.name.copy( _text );
     da.queue_draw();
     da.current_changed( da );
-    da.changed();
+    da.auto_save();
   }
 
 }

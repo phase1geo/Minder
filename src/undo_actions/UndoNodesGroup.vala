@@ -39,7 +39,7 @@ public class UndoNodesGroup : UndoItem {
       _nodes.index( i ).group = !_nodes.index( i ).group;
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Performs an undo operation for this data */

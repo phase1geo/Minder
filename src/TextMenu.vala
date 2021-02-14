@@ -154,7 +154,7 @@ public class TextMenu : Gtk.Menu {
     var node = _da.get_current_node();
     node.name.remove_tag( FormatTag.URL, _da.undo_text );
     node.name.clear_selection();
-    _da.changed();
+    _da.auto_save();
   }
 
   /* Allows the user to edit the associated link. */
@@ -169,7 +169,7 @@ public class TextMenu : Gtk.Menu {
     node.name.get_cursor_info( out cursor, out selstart, out selend );
     // TBD - node.urls.restore_link( cursor );
     node.name.clear_selection();
-    _da.changed();
+    _da.auto_save();
   }
 
   /*

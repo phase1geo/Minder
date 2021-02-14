@@ -35,14 +35,14 @@ public class UndoGroupAdd : UndoItem {
   public override void undo( DrawArea da ) {
     da.groups.remove_group( _group );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a connection change */
   public override void redo( DrawArea da ) {
     da.groups.add_group( _group );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

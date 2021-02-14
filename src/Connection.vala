@@ -164,6 +164,10 @@ public class Connection : Object {
       }
     }
   }
+  public double extent_x1 { get; private set; default = 0.0; }
+  public double extent_y1 { get; private set; default = 0.0; }
+  public double extent_x2 { get; private set; default = 0.0; }
+  public double extent_y2 { get; private set; default = 0.0; }
 
   /* Default constructor */
   public Connection( DrawArea da, Node from_node ) {
@@ -751,6 +755,14 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
       (((2.0 / 3.0) * cy) + ((1.0 / 3.0) * end_y)),
       end_x, end_y
     );
+
+    double x1, y1, x2, y2;
+    ctx.stroke_extents( out x1, out y1, out x2, out y2 );
+    extent_x1 = x1;
+    extent_y1 = y1;
+    extent_x2 = x2;
+    extent_y2 = y2;
+
     ctx.stroke();
 
     ctx.set_dash( {}, 0 );
@@ -763,26 +775,6 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
       if( (style.connection_arrow == "tofrom") || (style.connection_arrow == "both") ) {
         draw_arrow( ctx, style.connection_line_width, start_x, start_y, cx, cy );
       }
-    }
-
-    /* Draw the connection title if it exists */
-    if( (_sticker != null) || (title != null) || (note.length > 0) ) {
-
-      draw_title( ctx, theme );
-
-    /* Draw the drag circle */
-    } else if( mode != ConnMode.NONE ) {
-      ctx.set_line_width( 1 );
-      ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
-      ctx.arc( dragx, dragy, RADIUS, 0, (2 * Math.PI) );
-      ctx.fill_preserve();
-      if( mode == ConnMode.DROPPABLE ) {
-        Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
-        ctx.set_line_width( 4 );
-      } else {
-        ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
-      }
-      ctx.stroke();
     }
 
     /* If we are selected draw the endpoints */
@@ -798,6 +790,28 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
       ctx.arc( end_x, end_y, RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
       ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
+      ctx.stroke();
+
+    }
+
+    /* Draw the connection title if it exists */
+    if( (_sticker != null) || (title != null) || (note.length > 0) ) {
+
+      draw_title( ctx, theme );
+
+    /* Draw the drag handle */
+    } else if( mode != ConnMode.NONE ) {
+
+      ctx.set_line_width( 1 );
+      Utils.set_context_color_with_alpha( ctx, Utils.color_from_string( "yellow" ), alpha );
+      ctx.arc( dragx, dragy, RADIUS, 0, (2 * Math.PI) );
+      ctx.fill_preserve();
+      if( mode == ConnMode.DROPPABLE ) {
+        Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
+        ctx.set_line_width( 4 );
+      } else {
+        ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
+      }
       ctx.stroke();
 
     }
@@ -834,17 +848,27 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
 
     /* Get the bbox for the entire title box */
     title_bbox( out x, out y, out w, out h );
+    x -= padding;
+    y -= padding;
+    w += (padding * 2);
+    h += (padding * 2);
+
+    /* Calculate the extents */
+    extent_x1 = (x < extent_x1) ? x : extent_x1;
+    extent_y1 = (y < extent_y1) ? y : extent_y1;
+    extent_x2 = ((x + w) > extent_x2) ? (x + w) : extent_x2;
+    extent_y2 = ((y + h) > extent_y2) ? (y + h) : extent_y2;
 
     /* Draw the box */
     ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
-    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)), (padding * 2) );
+    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
     ctx.fill();
 
     /* Draw the droppable indicator, if necessary */
     if( mode == ConnMode.DROPPABLE ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
       ctx.set_line_width( 4 );
-      Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, (x - padding), (y - padding), (w + (padding * 2)), (h + (padding * 2)), (padding * 2) );
+      Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
       ctx.stroke();
     }
 
@@ -862,10 +886,8 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
     /* Draw the drag handle */
     if( (mode == ConnMode.SELECTED) || (mode == ConnMode.ADJUSTING) ) {
 
-      RGBA bg = theme.get_color( "nodesel_background" );
-
+      Utils.set_context_color_with_alpha( ctx, Utils.color_from_string( "yellow" ), alpha );
       ctx.set_line_width( 1 );
-      ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
       ctx.arc( _dragx, (_dragy + (h / 2) + padding), RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
       ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );

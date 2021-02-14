@@ -39,14 +39,14 @@ public class UndoNodeLink : UndoItem {
   public override void undo( DrawArea da ) {
     _node.linked_node = _old_link;
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a node image change */
   public override void redo( DrawArea da ) {
     _node.linked_node = _new_link;
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

@@ -43,7 +43,7 @@ public class UndoNodesLink : UndoItem {
       _nodes.index( i ).linked_node = _linked.index( i );
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a node image change */
@@ -52,7 +52,7 @@ public class UndoNodesLink : UndoItem {
       _nodes.index( i ).linked_node = _nodes.index( i + 1 );
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

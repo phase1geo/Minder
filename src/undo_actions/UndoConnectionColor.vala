@@ -41,7 +41,7 @@ public class UndoConnectionColor : UndoItem {
     _conn.color = _old_color;
     da.queue_draw();
     da.current_changed( da );
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a node name change */
@@ -49,7 +49,7 @@ public class UndoConnectionColor : UndoItem {
     _conn.color = _new_color;
     da.queue_draw();
     da.current_changed( da );
-    da.changed();
+    da.auto_save();
   }
 
 }

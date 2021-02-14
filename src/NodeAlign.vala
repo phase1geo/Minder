@@ -45,7 +45,7 @@ public class NodeAlign {
       }
     }
     da.animator.animate();
-    da.changed();
+    da.auto_save();
   }
 
   /* Aligns all of the given nodes to the top of the first node */

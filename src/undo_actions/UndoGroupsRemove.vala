@@ -42,7 +42,7 @@ public class UndoGroupsRemove : UndoItem {
       da.get_selections().add_group( _groups.index( i ) );
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a connection change */
@@ -52,7 +52,7 @@ public class UndoGroupsRemove : UndoItem {
       da.groups.remove_group( _groups.index( i ) );
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

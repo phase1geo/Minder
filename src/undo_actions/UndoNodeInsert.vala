@@ -51,7 +51,7 @@ public class UndoNodeInsert : UndoItem {
       da.set_current_node( null );
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Performs a redo operation */
@@ -64,7 +64,7 @@ public class UndoNodeInsert : UndoItem {
     }
     da.set_current_node( _n );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

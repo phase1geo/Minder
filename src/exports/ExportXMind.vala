@@ -617,7 +617,7 @@ public class ExportXMind : Export {
 
     /* Update the drawing area and save the result */
     da.queue_draw();
-    da.changed();
+    da.auto_save();
 
     return( true );
 

@@ -40,7 +40,7 @@ public class UndoNodeImage : UndoItem {
     _node.set_image( da.image_manager, img );
     da.queue_draw();
     da.current_changed( da );
-    da.changed();
+    da.auto_save();
   }
 
   /* Undoes a node image change */

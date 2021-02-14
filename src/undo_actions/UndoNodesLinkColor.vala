@@ -46,7 +46,7 @@ public class UndoNodesLinkColor : UndoItem {
       _nodes.index( i ).link_color = _old_colors.index( i );
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a node link color change */
@@ -55,7 +55,7 @@ public class UndoNodesLinkColor : UndoItem {
       _nodes.index( i ).link_color = _new_color;
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

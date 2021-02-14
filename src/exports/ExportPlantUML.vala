@@ -133,7 +133,7 @@ public class ExportPlantUML : Export {
       import_doc( str, da );
 
       da.queue_draw();
-      da.changed();
+      da.auto_save();
 
     } catch( IOError err ) {
       return( false );

@@ -40,7 +40,7 @@ public class UndoNodeNote : UndoItem {
     _node.note = _old_note;
     da.queue_draw();
     da.current_changed( da );
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a node name change */
@@ -48,7 +48,7 @@ public class UndoNodeNote : UndoItem {
     _node.note = _new_note;
     da.queue_draw();
     da.current_changed( da );
-    da.changed();
+    da.auto_save();
   }
 
 }

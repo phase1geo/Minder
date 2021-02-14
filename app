@@ -79,7 +79,7 @@ case $1 in
 "debug")
     initialize
     G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.minder "${@:2}"
-    # gdb --args ./com.github.phase1geo.minder "${@:2}"
+    # G_DEBUG=fatal-warnings gdb --args ./com.github.phase1geo.minder "${@:2}"
     ;;
 "test")
     test

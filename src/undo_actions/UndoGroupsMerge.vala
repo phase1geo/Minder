@@ -45,7 +45,7 @@ public class UndoGroupsMerge : UndoItem {
       da.get_selections().add_group( _groups.index( i ) );
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a connection change */
@@ -57,7 +57,7 @@ public class UndoGroupsMerge : UndoItem {
     da.groups.add_group( _merged );
     da.get_selections().add_group( _merged );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

@@ -122,7 +122,7 @@ public class ExportText : Export {
       import_text( str, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, false );
 
       da.queue_draw();
-      da.changed();
+      da.auto_save();
 
     } catch( IOError err ) {
       return( false );

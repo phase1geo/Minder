@@ -249,6 +249,17 @@ public class Connections {
     }
   }
 
+  /* Takes the given extents and extends them if the connections go outside of the given extents */
+  public void add_extents( ref double x1, ref double y1, ref double x2, ref double y2 ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      var conn = _connections.index( i );
+      x1 = (conn.extent_x1 < x1) ? conn.extent_x1 : x1;
+      y1 = (conn.extent_y1 < y1) ? conn.extent_y1 : y1;
+      x2 = (conn.extent_x2 > x2) ? conn.extent_x2 : x2;
+      y2 = (conn.extent_y2 > y2) ? conn.extent_y2 : y2;
+    }
+  }
+
   /* Draws all of the connections onto the given context */
   public void draw_all( Cairo.Context ctx, Theme theme ) {
     if( hide ) return;

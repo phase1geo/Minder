@@ -77,6 +77,17 @@ public class Stickers {
     }
   }
 
+  /* Adds the sticker extents to the current extents */
+  public void add_extents( ref double x1, ref double y1, ref double x2, ref double y2 ) {
+    for( int i=0; i<_stickers.length; i++ ) {
+      var s = _stickers.index( i );
+      x1 = (s.posx < x1) ? s.posx : x1;
+      y1 = (s.posy < y1) ? s.posx : y1;
+      x2 = ((s.posx + s.width)  > x2) ? (s.posx + s.width)  : x2;
+      y2 = ((s.posy + s.height) > y2) ? (s.posy + s.height) : y2;
+    }
+  }
+
   /* Saves the sticker to the XML tree */
   public Xml.Node* save() {
     Xml.Node* n = new Xml.Node( null, "stickers" );

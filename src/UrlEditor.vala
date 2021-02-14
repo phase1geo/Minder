@@ -33,7 +33,7 @@ public class UrlEditor : Popover {
 
     _da = da;
 
-    relative_to = (Gtk.Window)da.get_toplevel();
+    relative_to = da;
 
     var box   = new Box( Orientation.VERTICAL, 5 );
     box.border_width = 5;
@@ -99,7 +99,7 @@ public class UrlEditor : Popover {
     }
     node.name.add_tag( FormatTag.URL, _entry.text, false, _da.undo_text );
     node.name.clear_selection();
-    _da.changed();
+    _da.auto_save();
   }
 
   /* Called when we want to add a URL to the currently selected text of the given node. */

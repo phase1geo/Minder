@@ -53,7 +53,7 @@ public class UndoNodeDelete : UndoItem {
     }
     da.groups.apply_undo( _groups );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a node deletion */
@@ -70,7 +70,7 @@ public class UndoNodeDelete : UndoItem {
     }
     da.groups.remove_node( _node, ref tmp_groups );
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }

@@ -46,7 +46,7 @@ public class UndoGroupsColor : UndoItem {
       _groups.index( i ).color = _old_colors.index( i );
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
   /* Redoes a connection change */
@@ -55,7 +55,7 @@ public class UndoGroupsColor : UndoItem {
       _groups.index( i ).color = _new_color;
     }
     da.queue_draw();
-    da.changed();
+    da.auto_save();
   }
 
 }
