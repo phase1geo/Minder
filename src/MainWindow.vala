@@ -1474,9 +1474,10 @@ public class MainWindow : ApplicationWindow {
   /* Loads the tab state */
   public bool load_tab_state() {
 
-    var      tab_state = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" );
-    Xml.Doc* doc       = Xml.Parser.parse_file( tab_state );
+    var tab_state = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" );
 
+    if( !FileUtils.test( tab_state, FileTest.EXISTS ) ) return( false );
+    Xml.Doc* doc = Xml.Parser.parse_file( tab_state );
     if( doc == null ) { return( false ); }
 
     var root = doc->get_root_element();

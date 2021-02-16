@@ -123,6 +123,8 @@ public class Document : Object {
     /* Add the Minder file to the archive */
     archive_file( archive, get_map_file() );
 
+    stdout.printf( "Saving: %s\n", filename );
+
     /* Add the images */
     var image_ids = _da.image_manager.get_ids();
     for( int i=0; i<image_ids.length; i++ ) {
@@ -144,6 +146,8 @@ public class Document : Object {
 
   /* Adds the given file to the archive */
   public bool archive_file( Archive.Write archive, string fname, int? image_id = null ) {
+
+    stdout.printf( "Archiving file: %s\n", fname );
 
     try {
 
@@ -256,7 +260,8 @@ public class Document : Object {
     /* Move all image files that are related to the temp images directory */
     var image_ids = _da.image_manager.get_ids();
     for( int i=0; i<image_ids.length; i++ ) {
-      var img_file = _da.image_manager.get_file( image_ids.index( i ) );
+      var id       = image_ids.index( i );
+      var img_file = _da.image_manager.get_file( id );
       stdout.printf( "img_file: %s, basename: %s\n", img_file, GLib.Path.get_basename( img_file ) );
       copy_file( img_file, GLib.Path.build_filename( get_image_dir(), GLib.Path.get_basename( img_file ) ) );
     }
@@ -363,6 +368,7 @@ public class Document : Object {
         entry.xattr_reset();
         if( (entry.xattr_next( out name, out value, out size ) == Archive.Result.OK) && (name == "image_id") ) {
           int* id = (int*)value;
+          stdout.printf( "document.load: %x\n", *id );
           _da.image_manager.add_image( "file://" + entry.pathname(), *id );
         }
       }

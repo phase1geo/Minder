@@ -108,7 +108,7 @@ public class Exports {
   /* Loads the settings from the save file */
   public void load() {
     var sfile = settings_file( false );
-    if( sfile == null ) {
+    if( (sfile == null) || !FileUtils.test( sfile, FileTest.EXISTS ) ) {
       return;
     }
     Xml.Doc* doc = Xml.Parser.read_file( sfile, null, Xml.ParserOption.HUGE );

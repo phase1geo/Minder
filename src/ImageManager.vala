@@ -48,6 +48,13 @@ public class ImageManager {
       stdout.printf( "Creating image item with id %x\n", this.id );
     }
 
+    public ImageItem.with_id( string uri, int id ) {
+      this.id    = id;
+      this.uri   = uri;
+      this.ext   = get_extension();
+      this.valid = true;
+    }
+
     /* Loads the item information from given XML node */
     public ImageItem.from_xml( Xml.Node* n ) {
       string? i = n->get_prop( "id" );
@@ -106,6 +113,7 @@ public class ImageManager {
       try {
         rfile.copy( lfile, FileCopyFlags.OVERWRITE );
       } catch( Error e ) {
+        stdout.printf( "error: %s\n", e.message );
         return( false );
       }
       return( true );
@@ -122,19 +130,18 @@ public class ImageManager {
 
   private Array<ImageItem> _images;
   private bool             _available = true;
-  private HashMap<int,int> _id_map;
   private string           _image_dir;
 
   /* Default constructor */
   public ImageManager() {
     _images    = new Array<ImageItem>();
-    _id_map    = new HashMap<int,int>();
     _image_dir = get_storage_path();
   }
 
   /* Sets the image directory to the given value */
   public void set_image_dir( string image_dir ) {
     _image_dir = image_dir;
+    DirUtils.create_with_parents( _image_dir, 0775 );
   }
 
   /* Loads the image manager information from the specified XML node */
@@ -143,9 +150,7 @@ public class ImageManager {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "image" ) {
           var ii = new ImageItem.from_xml( it );
-          if( !_id_map.has_key( ii.id ) ) {
-            _images.append_val( ii );
-          }
+          _images.append_val( ii );
         }
       }
     }
@@ -193,17 +198,22 @@ public class ImageManager {
    could not be added, returns a value of -1.
   */
   public int add_image( string uri, int? orig_id = null ) {
+    stdout.printf( "In add_image, uri: %s\n", uri );
     var item = find_uri_match( uri );
     if( item == null ) {
-      item = new ImageItem( uri );
+      if( orig_id != null ) {
+        item = new ImageItem.with_id( uri, orig_id );
+      } else {
+        item = new ImageItem( uri );
+      }
+      stdout.printf( "A copying file from image_dir: %s\n", _image_dir );
       if( !item.copy_file( _image_dir ) ) return( -1 );
       _images.append_val( item );
     } else if( !item.exists( _image_dir ) ) {
+      stdout.printf( "B copying file from image_dir: %s\n", _image_dir );
       if( !item.copy_file( _image_dir ) ) return( -1 );
     }
-    if( orig_id != null ) {
-      _id_map.set( orig_id, item.id );
-    }
+    stdout.printf( "Image created in image manager with id: %d\n", item.id );
     return( item.id );
   }
 
@@ -214,7 +224,7 @@ public class ImageManager {
    value of -1.
   */
   public int add_pixbuf( Gdk.Pixbuf buf, int? orig_id = null ) {
-    var item = new ImageItem( "" );
+    var item = (orig_id != null) ? new ImageItem.with_id( "", orig_id ) : new ImageItem( "" );
     try {
       buf.save( item.get_path( _image_dir ), "png", null );
       _images.append_val( item );
@@ -277,14 +287,6 @@ public class ImageManager {
     for( int i=0; i<_images.length; i++ ) {
       _images.index( i ).cleanup( _image_dir );
     }
-  }
-
-  /* Returns the ID to use for the given ID */
-  public int get_id( int id ) {
-    if( _id_map.has_key( id ) ) {
-      return( _id_map.get( id ) );
-    }
-    return( id );
   }
 
   /*
