@@ -1037,7 +1037,6 @@ public class MainWindow : ApplicationWindow {
 
   /* Cleanup the document when the canvas is deleted */
   private void on_canvas_destroy() {
-    stdout.printf( "In canvas destroy\n" );
     get_current_da( "on_canvas_destroy" ).get_doc().cleanup();
   }
 
@@ -1240,7 +1239,6 @@ public class MainWindow : ApplicationWindow {
   /* Called when the user uses the Control-s keyboard shortcut */
   private void action_save() {
     var da = get_current_da( "action_save" );
-    stdout.printf( "is_saved: %s\n", da.get_doc().is_saved().to_string() );
     if( da.get_doc().is_saved() ) {
       da.get_doc().save();
     } else {
