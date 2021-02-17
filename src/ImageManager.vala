@@ -45,7 +45,6 @@ public class ImageManager {
       this.ext   = get_extension();
       this.valid = true;
       Minder.settings.set_int( "image-id", (this.id + 1) );
-      stdout.printf( "Creating image item with id %x\n", this.id );
     }
 
     public ImageItem.with_id( string uri, int id ) {
@@ -198,7 +197,6 @@ public class ImageManager {
    could not be added, returns a value of -1.
   */
   public int add_image( string uri, int? orig_id = null ) {
-    stdout.printf( "In add_image, uri: %s\n", uri );
     var item = find_uri_match( uri );
     if( item == null ) {
       if( orig_id != null ) {
@@ -206,14 +204,11 @@ public class ImageManager {
       } else {
         item = new ImageItem( uri );
       }
-      stdout.printf( "A copying file from image_dir: %s\n", _image_dir );
       if( !item.copy_file( _image_dir ) ) return( -1 );
       _images.append_val( item );
     } else if( !item.exists( _image_dir ) ) {
-      stdout.printf( "B copying file from image_dir: %s\n", _image_dir );
       if( !item.copy_file( _image_dir ) ) return( -1 );
     }
-    stdout.printf( "Image created in image manager with id: %d\n", item.id );
     return( item.id );
   }
 

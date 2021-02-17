@@ -147,7 +147,6 @@ public class NodeImage {
 
       /* Get the name of the file to read from the ImageManager */
       var fname = im.get_file( id );
-      stdout.printf( "Loading image: %s\n", fname );
       if( fname == null ) {
         this.valid = false;
         return( false );

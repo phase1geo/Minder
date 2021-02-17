@@ -123,8 +123,6 @@ public class Document : Object {
     /* Add the Minder file to the archive */
     archive_file( archive, get_map_file() );
 
-    stdout.printf( "Saving: %s\n", filename );
-
     /* Add the images */
     var image_ids = _da.image_manager.get_ids();
     for( int i=0; i<image_ids.length; i++ ) {
@@ -146,8 +144,6 @@ public class Document : Object {
 
   /* Adds the given file to the archive */
   public bool archive_file( Archive.Write archive, string fname, int? image_id = null ) {
-
-    stdout.printf( "Archiving file: %s\n", fname );
 
     try {
 
@@ -249,8 +245,6 @@ public class Document : Object {
   */
   private bool upgrade() {
 
-    stdout.printf( "In upgrading %s\n", filename );
-
     /* Move the Minder XML file to the temporary directory */
     move_file( filename, get_map_file() );
 
@@ -262,7 +256,6 @@ public class Document : Object {
     for( int i=0; i<image_ids.length; i++ ) {
       var id       = image_ids.index( i );
       var img_file = _da.image_manager.get_file( id );
-      stdout.printf( "img_file: %s, basename: %s\n", img_file, GLib.Path.get_basename( img_file ) );
       copy_file( img_file, GLib.Path.build_filename( get_image_dir(), GLib.Path.get_basename( img_file ) ) );
     }
 
@@ -278,8 +271,6 @@ public class Document : Object {
 
   /* Opens the given filename */
   private bool load_xml() {
-
-    stdout.printf( "Loading XML: %s\n", get_map_file() );
 
     Xml.Doc* doc = Xml.Parser.read_file( get_map_file(), null, Xml.ParserOption.HUGE );
     if( doc == null ) {
@@ -299,8 +290,6 @@ public class Document : Object {
    stored images to the ImageManager on the local computer.
   */
   public bool load() {
-
-    stdout.printf( "In load, filename: %s\n", filename );
 
     Archive.Read archive = new Archive.Read();
     archive.support_filter_gzip();
@@ -368,7 +357,6 @@ public class Document : Object {
         entry.xattr_reset();
         if( (entry.xattr_next( out name, out value, out size ) == Archive.Result.OK) && (name == "image_id") ) {
           int* id = (int*)value;
-          stdout.printf( "document.load: %x\n", *id );
           _da.image_manager.add_image( "file://" + entry.pathname(), *id );
         }
       }
