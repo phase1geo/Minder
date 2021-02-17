@@ -70,6 +70,7 @@ public class MainWindow : ApplicationWindow {
   private ModelButton?      _zoom_in        = null;
   private ModelButton?      _zoom_out       = null;
   private ModelButton?      _zoom_sel       = null;
+  private Button            _save_btn;
   private Button?           _undo_btn       = null;
   private Button?           _redo_btn       = null;
   private ToggleButton?     _focus_btn      = null;
@@ -84,7 +85,8 @@ public class MainWindow : ApplicationWindow {
   private Exports           _exports;
 
   private const GLib.ActionEntry[] action_entries = {
-    { "action_save",          action_save },
+//    { "action_save",          action_save },
+//    { "action_saveas",        action_saveas },
     { "action_quit",          action_quit },
     { "action_zoom_in",       action_zoom_in },
     { "action_zoom_out",      action_zoom_out },
@@ -197,11 +199,17 @@ public class MainWindow : ApplicationWindow {
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
-    var save_btn = new Button.from_icon_name( (on_elementary ? "document-save-as" : "document-save-as-symbolic"), icon_size );
-    save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "<Control><Shift>s" ) );
-    save_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
-    save_btn.clicked.connect( do_save_as_file );
-    _header.pack_start( save_btn );
+    _save_btn = new Button.from_icon_name( (on_elementary ? "document-save" : "document-save-symbolic"), icon_size );
+    _save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File" ), "<Control>s" ) );
+    _save_btn.add_accelerator( "clicked", _accel_group, 's', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _save_btn.clicked.connect( action_save );
+    _header.pack_start( _save_btn );
+
+    var saveas_btn = new Button.from_icon_name( (on_elementary ? "document-save-as" : "document-save-as-symbolic"), icon_size );
+    saveas_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "<Control><Shift>s" ) );
+    saveas_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
+    saveas_btn.clicked.connect( action_saveas );
+    _header.pack_start( saveas_btn );
 
     _undo_btn = new Button.from_icon_name( (on_elementary ? "edit-undo" : "edit-undo-symbolic"), icon_size );
     _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "<Control>z" ) );
@@ -473,13 +481,15 @@ public class MainWindow : ApplicationWindow {
    current save state.
   */
   private void on_save_state_change() {
-    update_title( get_current_da( "save_state_changed" ) );
+    var da = get_current_da( "save_state_changed" );
+    update_title( da );
+    _save_btn.set_sensitive( da.get_doc().save_needed );
   }
 
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
 
-    app.set_accels_for_action( "win.action_save",          { "<Control>s" } );
+    // app.set_accels_for_action( "win.action_save",          { "<Control>s" } );
     app.set_accels_for_action( "win.action_quit",          { "<Control>q" } );
     app.set_accels_for_action( "win.action_zoom_actual",   { "<Control>0" } );
     app.set_accels_for_action( "win.action_zoom_fit",      { "<Control>1" } );
@@ -1122,12 +1132,6 @@ public class MainWindow : ApplicationWindow {
     return( retval );
   }
 
-  /* Called when the save as button is clicked */
-  public void do_save_as_file() {
-    var da = get_current_da( "do_save_as_file" );
-    save_file( da );
-  }
-
   /* Called whenever the node selection changes in the canvas */
   private void on_current_changed( DrawArea da ) {
     _zoom_sel.set_sensitive( da.get_current_node() != null );
@@ -1254,6 +1258,15 @@ public class MainWindow : ApplicationWindow {
     } else {
       save_file( da );
     }
+  }
+
+  /*
+   Called when the user uses the Control-Shift-s keyboard shortcut.  Perforcs
+   a save-as operation.
+  */
+  private void action_saveas() {
+    var da = get_current_da( "action_saveas" );
+    save_file( da );
   }
 
   /* Called when the user uses the Control-q keyboard shortcut */
