@@ -70,6 +70,7 @@ public class MainWindow : ApplicationWindow {
   private ModelButton?      _zoom_in        = null;
   private ModelButton?      _zoom_out       = null;
   private ModelButton?      _zoom_sel       = null;
+  private Button            _save_btn;
   private Button?           _undo_btn       = null;
   private Button?           _redo_btn       = null;
   private ToggleButton?     _focus_btn      = null;
@@ -84,7 +85,8 @@ public class MainWindow : ApplicationWindow {
   private Exports           _exports;
 
   private const GLib.ActionEntry[] action_entries = {
-    { "action_save",          action_save },
+//    { "action_save",          action_save },
+//    { "action_saveas",        action_saveas },
     { "action_quit",          action_quit },
     { "action_zoom_in",       action_zoom_in },
     { "action_zoom_out",      action_zoom_out },
@@ -180,6 +182,7 @@ public class MainWindow : ApplicationWindow {
     _nb.tab_bar_behavior   = DynamicNotebook.TabBarBehavior.SINGLE;
     _nb.tab_switched.connect( tab_switched );
     _nb.tab_reordered.connect( tab_reordered );
+    _nb.tab_removed.connect( tab_closed );
     _nb.close_tab_requested.connect( close_tab_requested );
     _nb.get_style_context().add_class( Gtk.STYLE_CLASS_INLINE_TOOLBAR );
 
@@ -196,11 +199,17 @@ public class MainWindow : ApplicationWindow {
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
-    var save_btn = new Button.from_icon_name( (on_elementary ? "document-save-as" : "document-save-as-symbolic"), icon_size );
-    save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "<Control><Shift>s" ) );
-    save_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
-    save_btn.clicked.connect( do_save_as_file );
-    _header.pack_start( save_btn );
+    _save_btn = new Button.from_icon_name( (on_elementary ? "document-save" : "document-save-symbolic"), icon_size );
+    _save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File" ), "<Control>s" ) );
+    _save_btn.add_accelerator( "clicked", _accel_group, 's', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _save_btn.clicked.connect( action_save );
+    _header.pack_start( _save_btn );
+
+    var saveas_btn = new Button.from_icon_name( (on_elementary ? "document-save-as" : "document-save-as-symbolic"), icon_size );
+    saveas_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "<Control><Shift>s" ) );
+    saveas_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
+    saveas_btn.clicked.connect( action_saveas );
+    _header.pack_start( saveas_btn );
 
     _undo_btn = new Button.from_icon_name( (on_elementary ? "edit-undo" : "edit-undo-symbolic"), icon_size );
     _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "<Control>z" ) );
@@ -341,6 +350,13 @@ public class MainWindow : ApplicationWindow {
     return( ret );
   }
 
+  /* When the tab is removed, cleanup the document */
+  private void tab_closed( Tab tab ) {
+    var bin = (Gtk.Bin)tab.page;
+    var da  = bin.get_child() as DrawArea;
+    da.get_doc().cleanup();
+  }
+
   /* Adds a new tab to the notebook */
   public DrawArea add_tab( string? fname, TabAddReason reason ) {
 
@@ -354,6 +370,10 @@ public class MainWindow : ApplicationWindow {
     da.undo_buffer.buffer_changed.connect( do_buffer_changed );
     da.undo_text.buffer_changed.connect( do_buffer_changed );
     da.theme_changed.connect( on_theme_changed );
+    da.destroy.connect(() => {
+      da.get_doc().cleanup();
+    });
+    da.get_doc().save_state_changed.connect( on_save_state_change );
     da.animator.enable = _settings.get_boolean( "enable-animations" );
 
     if( fname != null ) {
@@ -476,19 +496,30 @@ public class MainWindow : ApplicationWindow {
 
   /* Updates the title */
   private void update_title( DrawArea? da ) {
+    var prefix = ((da != null) && da.get_doc().save_needed) ? "* " : "";
     var suffix = " \u2014 Minder";
     if( (da == null) || !da.get_doc().is_saved() ) {
-      _header.set_title( _( "Unnamed Document" ) + suffix );
+      _header.set_title( prefix + _( "Unnamed Document" ) + suffix );
     } else {
-      _header.set_title( GLib.Path.get_basename( da.get_doc().filename ) + suffix );
+      _header.set_title( prefix + GLib.Path.get_basename( da.get_doc().filename ) + suffix );
     }
     _header.set_subtitle( _focus_btn.active ? _( "Focus Mode" ) : null );
+  }
+
+  /*
+   Called whenever the save state changes.  Updates the title to reflect the
+   current save state.
+  */
+  private void on_save_state_change() {
+    var da = get_current_da( "save_state_changed" );
+    update_title( da );
+    _save_btn.set_sensitive( da.get_doc().save_needed );
   }
 
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
 
-    app.set_accels_for_action( "win.action_save",          { "<Control>s" } );
+    // app.set_accels_for_action( "win.action_save",          { "<Control>s" } );
     app.set_accels_for_action( "win.action_quit",          { "<Control>q" } );
     app.set_accels_for_action( "win.action_zoom_actual",   { "<Control>0" } );
     app.set_accels_for_action( "win.action_zoom_fit",      { "<Control>1" } );
@@ -1058,6 +1089,11 @@ public class MainWindow : ApplicationWindow {
     return( false );
   }
 
+  /* Cleanup the document when the canvas is deleted */
+  private void on_canvas_destroy() {
+    get_current_da( "on_canvas_destroy" ).get_doc().cleanup();
+  }
+
   /* Called whenever the theme is changed */
   private void on_theme_changed( DrawArea da ) {
     Gtk.Settings? settings = Gtk.Settings.get_default();
@@ -1128,12 +1164,6 @@ public class MainWindow : ApplicationWindow {
     }
     da.grab_focus();
     return( retval );
-  }
-
-  /* Called when the save as button is clicked */
-  public void do_save_as_file() {
-    var da = get_current_da( "do_save_as_file" );
-    save_file( da );
   }
 
   /* Called whenever the node selection changes in the canvas */
@@ -1262,6 +1292,15 @@ public class MainWindow : ApplicationWindow {
     } else {
       save_file( da );
     }
+  }
+
+  /*
+   Called when the user uses the Control-Shift-s keyboard shortcut.  Perforcs
+   a save-as operation.
+  */
+  private void action_saveas() {
+    var da = get_current_da( "action_saveas" );
+    save_file( da );
   }
 
   /* Called when the user uses the Control-q keyboard shortcut */
@@ -1490,14 +1529,11 @@ public class MainWindow : ApplicationWindow {
   /* Loads the tab state */
   public void load_tab_state() {
 
-    var      tab_state = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" );
-    Xml.Doc* doc       = Xml.Parser.parse_file( tab_state );
-    var      tabs      = 0;
+    var tab_state = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" );
 
-    if( doc == null ) {
-      do_new_file();
-      return;
-    }
+    if( !FileUtils.test( tab_state, FileTest.EXISTS ) ) return( false );
+    Xml.Doc* doc = Xml.Parser.parse_file( tab_state );
+    if( doc == null ) { return( false ); }
 
     var root = doc->get_root_element();
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
