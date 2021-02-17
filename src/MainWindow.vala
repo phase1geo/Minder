@@ -365,6 +365,7 @@ public class MainWindow : ApplicationWindow {
     da.destroy.connect(() => {
       da.get_doc().cleanup();
     });
+    da.get_doc().save_state_changed.connect( on_save_state_change );
     da.animator.enable = _settings.get_boolean( "enable-animations" );
 
     if( fname != null ) {
@@ -457,13 +458,22 @@ public class MainWindow : ApplicationWindow {
 
   /* Updates the title */
   private void update_title( DrawArea? da ) {
+    var prefix = ((da != null) && da.get_doc().save_needed) ? "* " : "";
     var suffix = " \u2014 Minder";
     if( (da == null) || !da.get_doc().is_saved() ) {
-      _header.set_title( _( "Unnamed Document" ) + suffix );
+      _header.set_title( prefix + _( "Unnamed Document" ) + suffix );
     } else {
-      _header.set_title( GLib.Path.get_basename( da.get_doc().filename ) + suffix );
+      _header.set_title( prefix + GLib.Path.get_basename( da.get_doc().filename ) + suffix );
     }
     _header.set_subtitle( _focus_btn.active ? _( "Focus Mode" ) : null );
+  }
+
+  /*
+   Called whenever the save state changes.  Updates the title to reflect the
+   current save state.
+  */
+  private void on_save_state_change() {
+    update_title( get_current_da( "save_state_changed" ) );
   }
 
   /* Adds keyboard shortcuts for the menu actions */

@@ -30,6 +30,7 @@ public class Document : Object {
   private string   _filename;
   private string   _temp_dir;
   private bool     _from_user;  // Set to true if _filename was set by the user
+  private bool     _save_needed = false;
 
   /* Properties */
   public string filename {
@@ -51,7 +52,19 @@ public class Document : Object {
       return( GLib.Path.get_basename( _filename ) );
     }
   }
-  public bool save_needed { private set; get; default = false; }
+  public bool save_needed {
+    get {
+      return( _save_needed );
+    }
+    private set {
+      if( _save_needed != value ) {
+        _save_needed = value;
+        save_state_changed();
+      }
+    }
+  }
+
+  public signal void save_state_changed();
 
   /* Default constructor */
   public Document( DrawArea da ) {
