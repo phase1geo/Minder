@@ -349,18 +349,6 @@ public class Document : Object {
       }
 #endif
 
-      /* If the file was an image file, make sure it gets added to the image manager */
-      if( !entry.pathname().has_suffix( ".minder" ) ) {
-        string name;
-        void*  value;
-        size_t size;
-        entry.xattr_reset();
-        if( (entry.xattr_next( out name, out value, out size ) == Archive.Result.OK) && (name == "image_id") ) {
-          int* id = (int*)value;
-          _da.image_manager.add_image( "file://" + entry.pathname(), *id );
-        }
-      }
-
     }
 
     /* Close the archive */
