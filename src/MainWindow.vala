@@ -512,8 +512,10 @@ public class MainWindow : ApplicationWindow {
   */
   private void on_save_state_change() {
     var da = get_current_da( "save_state_changed" );
-    update_title( da );
-    _save_btn.set_sensitive( da.get_doc().save_needed );
+    if( da != null ) {
+      update_title( da );
+      _save_btn.set_sensitive( da.get_doc().save_needed );
+    }
   }
 
   /* Adds keyboard shortcuts for the menu actions */
@@ -1531,10 +1533,11 @@ public class MainWindow : ApplicationWindow {
 
     var tab_state = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" );
 
-    if( !FileUtils.test( tab_state, FileTest.EXISTS ) ) return( false );
+    if( !FileUtils.test( tab_state, FileTest.EXISTS ) ) return;
     Xml.Doc* doc = Xml.Parser.parse_file( tab_state );
-    if( doc == null ) { return( false ); }
+    if( doc == null ) return;
 
+    var tabs = 0;
     var root = doc->get_root_element();
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
