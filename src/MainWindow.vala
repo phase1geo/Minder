@@ -278,12 +278,20 @@ public class MainWindow : ApplicationWindow {
 
   }
 
+  /* Returns the DrawArea from the given tab */
+  private DrawArea get_drawarea( Tab tab ) {
+    var sw = (Gtk.ScrolledWindow)tab.page;
+    var vp = (Gtk.Bin)sw.get_child();
+    var ol = (Gtk.Bin)vp.get_child();
+    var da = (DrawArea)ol.get_child();
+    return( da );
+  }
+
   private void setting_changed_text_size() {
     var value = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
     _text_size = value;
     foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+      var da = get_drawarea( tab );
       da.update_css();
     }
   }
@@ -291,8 +299,7 @@ public class MainWindow : ApplicationWindow {
   private void setting_changed_animations() {
     var value = settings.get_boolean( "enable-animations" );
     foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+      var da = get_drawarea( tab );
       da.animator.enable = value;
     }
   }
@@ -300,8 +307,7 @@ public class MainWindow : ApplicationWindow {
   private void setting_changed_embedded_urls() {
     var value = settings.get_boolean( "auto-parse-embedded-urls" );
     foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+      var da = get_drawarea( tab );
       da.url_parser.enable = value;
     }
   }
@@ -309,8 +315,7 @@ public class MainWindow : ApplicationWindow {
   private void setting_changed_markdown() {
     var value = settings.get_boolean( "enable-markdown" );
     foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+      var da = get_drawarea( tab );
       da.markdown_parser.enable = value;
     }
   }
@@ -322,8 +327,7 @@ public class MainWindow : ApplicationWindow {
 
   /* This needs to be called whenever the tab is changed */
   private void tab_changed( Tab tab ) {
-    var bin = (Gtk.Bin)tab.page;
-    var da  = bin.get_child() as DrawArea;
+    var da = get_drawarea( tab );
     do_buffer_changed( da.current_undo_buffer() );
     on_current_changed( da );
     update_title( da );
@@ -344,16 +348,14 @@ public class MainWindow : ApplicationWindow {
 
   /* Called whenever the user clicks on the close button and the tab is unnamed */
   private bool close_tab_requested( Tab tab ) {
-    var bin = (Gtk.Bin)tab.page;
-    var da  = bin.get_child() as DrawArea;
+    var da  = get_drawarea( tab );
     var ret = !da.is_loaded || da.get_doc().is_saved() || show_save_warning( da );
     return( ret );
   }
 
   /* When the tab is removed, cleanup the document */
   private void tab_closed( Tab tab ) {
-    var bin = (Gtk.Bin)tab.page;
-    var da  = bin.get_child() as DrawArea;
+    var da = get_drawarea( tab );
     da.get_doc().cleanup();
   }
 
@@ -384,7 +386,13 @@ public class MainWindow : ApplicationWindow {
     var overlay = new Overlay();
     overlay.add( da );
 
-    var tab = new Tab( da.get_doc().label, null, overlay );
+    /* Create scrollable area */
+    var scroll = new ScrolledWindow( null, null );
+    scroll.vscrollbar_policy = PolicyType.AUTOMATIC;
+    scroll.hscrollbar_policy = PolicyType.AUTOMATIC;
+    scroll.add( overlay );
+
+    var tab = new Tab( da.get_doc().label, null, scroll );
     tab.pinnable = false;
     tab.tooltip  = fname;
 
@@ -417,8 +425,7 @@ public class MainWindow : ApplicationWindow {
   */
   private void close_unchanged_tabs() {
     foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+      var da = get_drawarea( tab );
       if( !da.is_loaded ) {
         tab.close();
         return;
@@ -432,8 +439,7 @@ public class MainWindow : ApplicationWindow {
   */
   private bool find_unchanged_tab() {
     foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+      var da = get_drawarea( tab );
       if( !da.is_loaded ) {
         _nb.current = tab;
         return( true );
@@ -450,8 +456,7 @@ public class MainWindow : ApplicationWindow {
   private DrawArea add_tab_conditionally( string fname, TabAddReason reason ) {
 
     foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+      var da = get_drawarea( tab );
       if( da.get_doc().filename == fname ) {
         da.initialize_for_open();
         _nb.current = tab;
@@ -477,8 +482,7 @@ public class MainWindow : ApplicationWindow {
       stdout.printf( "get_current_da called from %s\n", caller );
     }
     if( _nb.current == null ) { return( null ); }
-    var bin = (Gtk.Bin)_nb.current.page;
-    return( (DrawArea)bin.get_child() );
+    return( get_drawarea( _nb.current ) );
   }
 
   /* Handles any changes to the dark mode preference gsettings for the desktop */
@@ -1366,7 +1370,7 @@ public class MainWindow : ApplicationWindow {
     current.get_match_items( name, text, search_opts, ref _search_items );
     if( all_tabs ) {
       foreach (var tab in _nb.tabs ) {
-        var da = (DrawArea)((Gtk.Bin)tab.page).get_child();
+        var da = get_drawarea( tab );
         if( da != current ) {
           da.get_match_items( tab.label, text, search_opts, ref _search_items );
         }
@@ -1388,7 +1392,7 @@ public class MainWindow : ApplicationWindow {
     _search_items.get( it, 2, &node, 3, &conn, 4, &tabname, -1 );
     foreach (var tab in _nb.tabs ) {
       if(tab.label == tabname) {
-        da = (DrawArea)((Gtk.Bin)tab.page).get_child();
+        da = get_drawarea( tab );
         _nb.current = tab;
         break;
       }
@@ -1505,8 +1509,7 @@ public class MainWindow : ApplicationWindow {
     doc->set_root_element( root );
 
     _nb.tabs.foreach((tab) => {
-      var       bin  = (Gtk.Bin)tab.page;
-      var       da   = (DrawArea)bin.get_child();
+      var       da   = get_drawarea( tab );
       Xml.Node* node = new Xml.Node( null, "tab" );
       node->new_prop( "path",  da.get_doc().filename );
       node->new_prop( "saved", da.get_doc().is_saved().to_string() );

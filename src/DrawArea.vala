@@ -547,6 +547,9 @@ public class DrawArea : Gtk.DrawingArea {
     /* Make sure that the inspector is updated */
     current_changed( this );
 
+    /* Set the size of this drawing area widget */
+    update_size();
+
     /* Reset the animator enable */
     animator.enable = animate;
 
@@ -1859,6 +1862,27 @@ public class DrawArea : Gtk.DrawingArea {
     move_origin( (x - origin_x), (y - origin_y) );
   }
 
+  /*
+   Sets the size of the drawing area widget based on the size of the map and the size of
+   the window.
+  */
+  private void update_size() {
+
+    double x, y, w, h;
+
+    var aw = scale_value( get_allocated_width() );
+    var ah = scale_value( get_allocated_height() );
+    var s  = 40;
+
+    document_rectangle( out x, out y, out w, out h );
+
+    var width  = w + (aw * 2) - (s * 2);
+    var height = h + (ah * 2) - (s * 2);
+
+    set_size_request( (int)width, (int)height );
+
+  }
+
   /* Checks to see if the boundary of the map never goes out of view */
   private bool out_of_bounds( double diff_x, double diff_y ) {
 
@@ -1883,6 +1907,7 @@ public class DrawArea : Gtk.DrawingArea {
    number.
   */
   public void move_origin( double diff_x, double diff_y ) {
+    return;  // TBD - This method should not be necessary when scrolling is working
     if( out_of_bounds( diff_x, diff_y ) ) {
       return;
     }
@@ -4872,6 +4897,9 @@ public class DrawArea : Gtk.DrawingArea {
         if( node.is_below( prev ) )    node.posy += bdiff;
       }
     }
+
+    /* We will update the size of the drawing area */
+    update_size();
 
   }
 
