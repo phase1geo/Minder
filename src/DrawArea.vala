@@ -737,6 +737,12 @@ public class DrawArea : Gtk.DrawingArea {
     set_current_node( n );
     set_node_mode( n, NodeMode.EDITABLE, false );
 
+    /* Updating the size */
+    Idle.add(() => {
+      update_size();
+      return( false );
+    });
+
     /* Redraw the canvas */
     queue_draw();
 
@@ -1868,18 +1874,37 @@ public class DrawArea : Gtk.DrawingArea {
   */
   private void update_size() {
 
-    double x, y, w, h;
+    var ol = (Overlay)get_parent();
+    var vp = (Viewport)ol.get_parent();
+    var sw = (ScrolledWindow)vp.get_parent();
 
-    var aw = scale_value( get_allocated_width() );
-    var ah = scale_value( get_allocated_height() );
+    var aw = scale_value( vp.get_allocated_width() );
+    var ah = scale_value( vp.get_allocated_height() );
     var s  = 40;
 
+    double x, y, w, h;
     document_rectangle( out x, out y, out w, out h );
 
-    var width  = w + (aw * 2) - (s * 2);
-    var height = h + (ah * 2) - (s * 2);
+    var width  = (int)(w + (aw * 2) - (s * 2));
+    var height = (int)(h + (ah * 2) - (s * 2));
 
-    set_size_request( (int)width, (int)height );
+    int iw, ih;
+    get_size_request( out iw, out ih );
+
+    if( (iw != width) || (ih != height) ) {
+
+      /* Set the canvas size */
+      set_size_request( width, height );
+
+      /* Center the nodes in the newly sized canvas */
+      var posx  = (width  / 2) - (w / 2);
+      var posy  = (height / 2) - (h / 2);
+      var diffx = posx - x;
+      var diffy = posy - y;
+
+      move_origin_by( diffx, diffy );
+
+    }
 
   }
 
@@ -1908,15 +1933,15 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void move_origin( double diff_x, double diff_y ) {
     return;  // TBD - This method should not be necessary when scrolling is working
-    if( out_of_bounds( diff_x, diff_y ) ) {
-      return;
-    }
+  }
+
+  public void move_origin_by( double diff_x, double diff_y ) {
     origin_x += diff_x;
     origin_y += diff_y;
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).pan( -diff_x, -diff_y );
+      _nodes.index( i ).pan( diff_x, diff_y );
     }
-    _stickers.pan( -diff_x, -diff_y );
+    _stickers.pan( diff_x, diff_y );
   }
 
   /* Draw the background from the stylesheet */
