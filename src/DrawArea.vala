@@ -2182,6 +2182,8 @@ public class DrawArea : Gtk.DrawingArea {
             set_tooltip_markup( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
           } else if( match.is_within_note( _scaled_x, _scaled_y ) ) {
             set_tooltip_markup( prepare_note_markup( match.note ) );
+          } else if( match.is_within_fold( _scaled_x, _scaled_y ) ) {
+            set_tooltip_markup( prepare_folded_count_markup( match ) );
           } else if( match.is_within_linked_node( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.HAND2 );
           } else if( match.is_within_resizer( _scaled_x, _scaled_y ) ) {
@@ -2291,6 +2293,14 @@ public class DrawArea : Gtk.DrawingArea {
   /* Prepares the given note string for use in a markup tooltip */
   private string prepare_note_markup( string note ) {
     return( note.replace( "<", "&lt;" ) );
+  }
+
+  /* Prepare the given folded count for use in a markup tooltip */
+  private string prepare_folded_count_markup( Node node ) {
+    var tooltip = "";
+    tooltip += "Children: %u\n".printf( node.children().length );
+    tooltip += "Total: %d".printf( node.descendant_count() );
+    return( tooltip );
   }
 
   /* Handle button release event */
