@@ -612,6 +612,15 @@ public class Node : Object {
     return( (parent != null) && (parent.parent == null) );
   }
 
+  /* Returns the number of descendants within this node */
+  public int descendant_count() {
+    var count = (int)_children.length;
+    for( int i=0; i<_children.length; i++ ) {
+      count += _children.index( i ).descendant_count();
+    }
+    return( count );
+  }
+
   /* Returns true if the node is a leaf node */
   public bool is_leaf() {
     return( (parent != null) && (_children.length == 0) );
