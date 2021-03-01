@@ -37,6 +37,7 @@ public class Style {
   public int?             node_padding           { get; set; default = null; }
   public FontDescription? node_font              { get; set; default = null; }
   public int?             node_width             { get; set; default = null; }
+  public bool?            node_fixed_width       { get; set; default = null; }
   public bool?            node_markup            { get; set; default = null; }
   public LinkDash?        connection_dash        { get; set; default = null; }
   public int?             connection_line_width  { get; set; default = null; }
@@ -86,6 +87,7 @@ public class Style {
       node_padding           = null;
       node_font              = null;
       node_width             = null;
+      node_fixed_width       = null;
       node_markup            = null;
       connection_dash        = null;
       connection_line_width  = null;
@@ -114,6 +116,7 @@ public class Style {
     if( ((s.node_padding           != null) || !s._template) && (node_padding           != s.node_padding) )           { changed = true;  node_padding           = s.node_padding; }
     if( ((s.node_font              != null) || !s._template) )                                                         { changed = true;  node_font              = s.node_font.copy(); }
     if( ((s.node_width             != null) || !s._template) && (node_width             != s.node_width) )             { changed = true;  node_width             = s.node_width; }
+    if( ((s.node_fixed_width       != null) || !s._template) && (node_fixed_width       != s.node_fixed_width) )       { changed = true;  node_fixed_width       = s.node_fixed_width; }
     if( ((s.node_markup            != null) || !s._template) && (node_markup            != s.node_markup) )            { changed = true;  node_markup            = s.node_markup; }
     if( ((s.connection_dash        != null) || !s._template) && (connection_dash        != s.connection_dash) )        { changed = true;  connection_dash        = s.connection_dash; }
     if( ((s.connection_line_width  != null) || !s._template) && (connection_line_width  != s.connection_line_width) )  { changed = true;  connection_line_width  = s.connection_line_width; }
@@ -140,6 +143,7 @@ public class Style {
     if( node_padding           != null ) arr += "npad[%d]".printf( node_padding );
     if( node_font              != null ) arr += "nfont";
     if( node_width             != null ) arr += "nwidth[%d]".printf( node_width );
+    if( node_fixed_width       != null ) arr += "nfixed[%s]".printf( node_fixed_width.to_string() );
     if( node_markup            != null ) arr += "nmarkup[%s]".printf( node_markup.to_string() );
     if( connection_dash        != null ) arr += "cdash[%s]".printf( connection_dash.name );
     if( connection_line_width  != null ) arr += "clwidth[%d]".printf( connection_line_width );
@@ -181,6 +185,10 @@ public class Style {
     string? nw = node->get_prop( "nodewidth" );
     if( nw != null ) {
       node_width = int.parse( nw );
+    }
+    string? nx = node->get_prop( "nodefixed" );
+    if( nx != null ) {
+      node_fixed_width = bool.parse( nx );
     }
     string? nbw = node->get_prop( "nodeborderwidth" );
     if( nbw != null ) {
@@ -265,6 +273,9 @@ public class Style {
     }
     if( node_width != null ) {
       n->set_prop( "nodewidth", node_width.to_string() );
+    }
+    if( node_fixed_width != null ) {
+      n->set_prop( "nodefixed", node_fixed_width.to_string() );
     }
     if( node_borderwidth != null ) {
       n->set_prop( "nodeborderwidth", node_borderwidth.to_string() );

@@ -56,6 +56,7 @@ public class StyleInspector : Box {
   private Scale                      _node_padding;
   private FontButton                 _node_font;
   private SpinButton                 _node_width;
+  private Switch                     _node_fixed;
   private Switch                     _node_markup;
   private Image                      _conn_dash;
   private Image                      _conn_arrow;
@@ -440,6 +441,7 @@ public class StyleInspector : Box {
     var node_padding     = create_node_padding_ui();
     var node_font        = create_node_font_ui();
     var node_width       = create_node_width_ui();
+    var node_fixed       = create_node_fixed_ui();
     var node_markup      = create_node_markup_ui();
 
     cbox.pack_start( node_border,      false, false );
@@ -449,6 +451,7 @@ public class StyleInspector : Box {
     cbox.pack_start( node_padding,     false, false );
     cbox.pack_start( node_font,        false, false );
     cbox.pack_start( node_width,       false, false );
+    cbox.pack_start( node_fixed,       false, false );
     cbox.pack_start( node_markup,      false, false );
 
     exp.add( cbox );
@@ -716,6 +719,33 @@ public class StyleInspector : Box {
 
     return( box );
 
+  }
+
+  /* Create the node fixed width UI */
+  private Box create_node_fixed_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Fixed Width" ) );
+    lbl.xalign = (float)0;
+
+    _node_fixed = new Switch();
+    _node_fixed.button_release_event.connect( node_fixed_changed );
+
+    box.pack_start( lbl,       false, true );
+    box.pack_end( _node_fixed, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the node fixed width status changes */
+  private bool node_fixed_changed( Gdk.EventButton e ) {
+    bool val = !_node_fixed.get_active();
+    Idle.add(() => {
+      _da.undo_buffer.add_item( new UndoStyleNodeFixed( _affects, val, _da ) );
+      return( Source.REMOVE );
+    });
+    return( false );
   }
 
   private Box create_node_markup_ui() {
@@ -1126,6 +1156,7 @@ public class StyleInspector : Box {
     _node_padding.set_value( (double)style.node_padding );
     _node_font.set_font( style.node_font.to_string() );
     _node_width.set_value( (float)style.node_width );
+    _node_fixed.set_active( (bool)style.node_fixed_width );
     _node_markup.set_active( (bool)style.node_markup );
     _conn_arrow.surface = Connection.make_arrow_icon( style.connection_arrow );
     _conn_lwidth.set_value( (double)style.connection_line_width );
