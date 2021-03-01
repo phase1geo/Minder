@@ -80,6 +80,7 @@ e = executable('com.github.phase1geo.minder',
     c_args: c_args,
     dependencies: dependencies,
     vala_args: [
+        '-g',
         meson.source_root() + '/vapi/libmarkdown.vapi'
     ],
     install : true

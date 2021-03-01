@@ -97,6 +97,7 @@ public class Styles {
         level.style.node_padding = 6;
       }
       level.style.node_width             = 200;
+      level.style.node_fixed_width       = false;
       level.style.node_borderwidth       = 4;
       level.style.node_fill              = false;
       level.style.node_markup            = true;

@@ -130,6 +130,7 @@ sources += files(
     'undo_actions/UndoStyleNodeBorder.vala',
     'undo_actions/UndoStyleNodeBorderwidth.vala',
     'undo_actions/UndoStyleNodeFill.vala',
+    'undo_actions/UndoStyleNodeFixed.vala',
     'undo_actions/UndoStyleNodeFont.vala',
     'undo_actions/UndoStyleNodeMargin.vala',
     'undo_actions/UndoStyleNodeMarkup.vala',

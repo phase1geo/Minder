@@ -539,7 +539,7 @@ public class Node : Object {
     var margin      = style.node_margin  ?? 0;
     var padding     = style.node_padding ?? 0;
     var stk_height  = sticker_height();
-    var name_width  = task_width() + sticker_width() + _name.width + note_width() + linked_node_width();
+    var name_width  = task_width() + sticker_width() + name_width() + note_width() + linked_node_width();
     var name_height = (_name.height < stk_height) ? stk_height : _name.height;
     if( _image != null ) {
       _width  = (margin * 2) + (padding * 2) + ((name_width < _image.width) ? _image.width : name_width);
@@ -1383,9 +1383,14 @@ public class Node : Object {
     }
   }
 
+  /* Returns true if this node should be drawn with a fixed width */
+  private bool is_fixed_width() {
+    return( !is_root() && (style.node_fixed_width ?? false) );
+  }
+
   /* Returns the width of the sticker */
   public double sticker_width() {
-    return( (_sticker_buf != null) ? (_sticker_buf.width + _ipadx) : 0 );
+    return( is_fixed_width() ? (48 + _ipadx) : ((_sticker_buf != null) ? (_sticker_buf.width + _ipadx) : 0) );
   }
 
   /* Returns the height of the sticker */
@@ -1395,17 +1400,22 @@ public class Node : Object {
 
   /* Returns the amount of internal width to draw the task checkbutton */
   public double task_width() {
-    return( (_task_count > 0) ? ((_task_radius * 2) + _ipadx) : 0 );
+    return( ((_task_count > 0) || is_fixed_width()) ? ((_task_radius * 2) + _ipadx) : 0 );
+  }
+
+  /* Returns the amount of internal width to draw the name */
+  public double name_width() {
+    return( is_fixed_width() ? style.node_width : _name.width );
   }
 
   /* Returns the width of the note indicator */
   public double note_width() {
-    return( (note.length > 0) ? (10 + _ipadx) : 0 );
+    return( ((note.length > 0) || is_fixed_width()) ? (10 + _ipadx) : 0 );
   }
 
   /* Returns the width of the linked node indicator */
   public double linked_node_width() {
-    return( (linked_node != null) ? (10 + _ipadx) : 0 );
+    return( ((linked_node != null) || is_fixed_width()) ? (10 + _ipadx) : 0 );
   }
 
   /* Moves this node into the proper position within the parent node */
