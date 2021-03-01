@@ -1823,8 +1823,14 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     for( int i=0; i<_nodes.length; i++ ) {
       Node tmp = _nodes.index( i ).contains( x, y, current );
-      if( (tmp != null) && (tmp != current.parent) && !current.contains_node( tmp ) ) {
-        return( tmp );
+      if( tmp != null ) {
+        if( tmp.is_root() || tmp.attach_as_child( x, y ) ) {
+          return( ((tmp != null) && (tmp != current.parent) && !current.contains_node( tmp )) ? tmp : null );
+        } else if( tmp.attach_as_prev_sibling( x, y ) ) {
+          return( (current.parent != tmp.parent) ? tmp : null );
+        } else if( tmp.attach_as_next_sibling( x, y ) ) {
+          return( (current.parent != tmp.parent) ? tmp : null );
+        }
       }
     }
     return( null );
@@ -2072,7 +2078,15 @@ public class DrawArea : Gtk.DrawingArea {
           } else {
             Node attach_node = attachable_node( _scaled_x, _scaled_y );
             if( attach_node != null ) {
-              set_node_mode( attach_node, NodeMode.ATTACHABLE );
+              if( attach_node.attach_as_child( _scaled_x, _scaled_y ) ) {
+                set_node_mode( attach_node, NodeMode.ATTACH_CHILD );
+              } else if( attach_node.attach_as_prev_sibling( _scaled_x, _scaled_y ) ) {
+                set_node_mode( attach_node, NodeMode.ATTACH_SIB_PREV );
+              } else if( attach_node.attach_as_next_sibling( _scaled_x, _scaled_y ) ) {
+                set_node_mode( attach_node, NodeMode.ATTACH_SIB_NEXT );
+              } else {
+                set_node_mode( attach_node, NodeMode.ATTACHABLE );
+              }
               _attach_node = attach_node;
             }
             current_node.posx += diffx;
@@ -2435,7 +2449,11 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     /* Attach the node */
-    current.attach( _attach_node, -1, _theme );
+    switch( _attach_node.mode ) {
+      case NodeMode.ATTACH_CHILD    :  current.attach( _attach_node, -1, _theme );  break;
+      case NodeMode.ATTACH_SIB_PREV :  current.attach( _attach_node.parent, (_attach_node.index() + 0), _theme );  break;
+      case NodeMode.ATTACH_SIB_NEXT :  current.attach( _attach_node.parent, (_attach_node.index() + 1), _theme );  break;
+    }
     set_node_mode( _attach_node, NodeMode.NONE );
     _attach_node = null;
 

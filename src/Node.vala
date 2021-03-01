@@ -27,12 +27,27 @@ using Gee;
 
 /* Enumeration describing the different modes a node can be in */
 public enum NodeMode {
-  NONE = 0,   // Specifies that this node is not the current node
-  CURRENT,    // Specifies that this node is the current node and is not being edited
-  SELECTED,   // Specifies that this node is one of several selected nodes
-  EDITABLE,   // Specifies that this node's text has been and currently is actively being edited
-  ATTACHABLE, // Specifies that this node is the currently attachable node (affects display)
-  DROPPABLE   // Specifies that this node can receive a dropped item
+  NONE = 0,         // Specifies that this node is not the current node
+  CURRENT,          // Specifies that this node is the current node and is not being edited
+  SELECTED,         // Specifies that this node is one of several selected nodes
+  EDITABLE,         // Specifies that this node's text has been and currently is actively being edited
+  ATTACHABLE,       // Specifies that this node is the currently attachable node (affects display)
+  ATTACH_CHILD,     // Specifies that this node is attachable as the child
+  ATTACH_SIB_PREV,  // Specifies that this node is attachable as the previous sibling
+  ATTACH_SIB_NEXT,  // Specifies that this node is attachable as the next sibling
+  DROPPABLE;        // Specifies that this node can receive a dropped item
+
+  /* Returns true if we should draw this as an attachable node */
+  public bool is_attachable() {
+    switch( this ) {
+      case ATTACHABLE      :
+      case DROPPABLE       :
+      case ATTACH_CHILD    :
+      case ATTACH_SIB_PREV :
+      case ATTACH_SIB_NEXT :  return( true );
+      default              :  return( false );
+    }
+  }
 }
 
 public enum NodeSide {
@@ -685,6 +700,66 @@ public class Node : Object {
     cw -= margin * 2;
     ch -= margin * 2;
     return( Utils.is_within_bounds( x, y, cx, cy, cw, ch ) );
+  }
+
+  /*
+   Returns true if the given point lands in a zone that indicates that this node
+   can attach itself as a child node.
+  */
+  public bool attach_as_child( double x, double y ) {
+    if( !is_root() ) {
+      double cx, cy, cw, ch;
+      bbox( out cx, out cy, out cw, out ch );
+      var hw = cw / 2;
+      var hh = ch / 2;
+      switch( _side ) {
+        case NodeSide.RIGHT  :  return( Utils.is_within_bounds( x, y, (cx + hw), cy,        hw, ch ) );
+        case NodeSide.LEFT   :  return( Utils.is_within_bounds( x, y, cx,        cy,        hw, ch ) );
+        case NodeSide.TOP    :  return( Utils.is_within_bounds( x, y, cx,        cy,        cw, hh ) );
+        case NodeSide.BOTTOM :  return( Utils.is_within_bounds( x, y, cx,        (cy + hh), cw, hh ) );
+      }
+    }
+    return( false );
+  }
+
+  /*
+   Returns true if the given point lands in the zone that indicates that a node
+   can attach itself as a previous sibling node.
+  */
+  public bool attach_as_prev_sibling( double x, double y ) {
+    if( !is_root() ) {
+      double cx, cy, cw, ch;
+      bbox( out cx, out cy, out cw, out ch );
+      var hw = cw / 2;
+      var hh = ch / 2;
+      switch( _side ) {
+        case NodeSide.LEFT   :  return( Utils.is_within_bounds( x, y, (cx + hw), cy,        hw, hh ) );
+        case NodeSide.RIGHT  :  return( Utils.is_within_bounds( x, y, cx,        cy,        hw, hh ) );
+        case NodeSide.TOP    :  return( Utils.is_within_bounds( x, y, cx,        (cy + hh), hw, hh ) );
+        case NodeSide.BOTTOM :  return( Utils.is_within_bounds( x, y, cx,        cy,        hw, hh ) );
+      }
+    }
+    return( false );
+  }
+
+  /*
+   Returns true if the given point lands in the zone that indicates that a node
+   can attach itself as a next sibling node.
+  */
+  public bool attach_as_next_sibling( double x, double y ) {
+    if( !is_root() ) {
+      double cx, cy, cw, ch;
+      bbox( out cx, out cy, out cw, out ch );
+      var hw = cw / 2;
+      var hh = ch / 2;
+      switch( _side ) {
+        case NodeSide.LEFT   :  return( Utils.is_within_bounds( x, y, (cx + hw), (cy + hh), hw, hh ) );
+        case NodeSide.RIGHT  :  return( Utils.is_within_bounds( x, y, cx,        (cy + hh), hw, hh ) );
+        case NodeSide.TOP    :  return( Utils.is_within_bounds( x, y, (cx + hw), (cy + hh), hw, hh ) );
+        case NodeSide.BOTTOM :  return( Utils.is_within_bounds( x, y, (cx + hw), cy,        hw, hh ) );
+      }
+    }
+    return( false );
   }
 
   /* Returns the positional information for where the task item is located (if it exists) */
@@ -1721,7 +1796,7 @@ public class Node : Object {
     return( null );
   }
 
-  /* Returns a reference to the next child after the specified child of this node */
+  /* Returns a reference to the previous child after the specified child of this node */
   public virtual Node? prev_child( Node n ) {
     int idx = n.index();
     if( (idx != -1) && (idx > 0) ) {
@@ -2202,15 +2277,43 @@ public class Node : Object {
   /* Draws the attachable highlight border to indicate when a node is attachable */
   protected virtual void draw_attachable( Context ctx, Theme theme, RGBA? frost_background ) {
 
-    if( (mode == NodeMode.ATTACHABLE) || (mode == NodeMode.DROPPABLE) ) {
+    if( mode.is_attachable() ) {
 
       double x, y, w, h;
       bbox( out x, out y, out w, out h );
 
-      /* Draw highlight border */
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), _alpha );
       ctx.set_line_width( 4 );
-      ctx.rectangle( x, y, w, h );
+
+      switch( mode ) {
+        case NodeMode.ATTACHABLE   :
+        case NodeMode.DROPPABLE    :  ctx.rectangle( x, y, w, h );  break;
+        case NodeMode.ATTACH_CHILD :
+          switch( _side ) {
+            case NodeSide.LEFT   :  ctx.move_to( x, y );        ctx.line_to( x, (y + h) );        break;
+            case NodeSide.RIGHT  :  ctx.move_to( (x + w), y );  ctx.line_to( (x + w), (y + h) );  break;
+            case NodeSide.TOP    :  ctx.move_to( x, y );        ctx.line_to( (x + w), y );        break;
+            case NodeSide.BOTTOM :  ctx.move_to( x, (y + h) );  ctx.line_to( (x + w), (y + h) );  break;
+          }
+          break;
+        case NodeMode.ATTACH_SIB_PREV :
+          switch( _side ) {
+            case NodeSide.LEFT   :
+            case NodeSide.RIGHT  :  ctx.move_to( x, y );  ctx.line_to( (x + w), y );  break;
+            case NodeSide.TOP    :
+            case NodeSide.BOTTOM :  ctx.move_to( x, y );  ctx.line_to( x, (y + h) );  break;
+          }
+          break;
+        case NodeMode.ATTACH_SIB_NEXT :
+          switch( _side ) {
+            case NodeSide.LEFT   :
+            case NodeSide.RIGHT  :  ctx.move_to( x, (y + h) );  ctx.line_to( (x + w), (y + h) );  break;
+            case NodeSide.TOP    :
+            case NodeSide.BOTTOM :  ctx.move_to( (x + w), y );  ctx.line_to( (x + w), (y + h) );  break;
+          }
+          break;
+      }
+
       ctx.stroke();
 
     }
