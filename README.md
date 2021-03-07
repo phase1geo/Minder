@@ -55,9 +55,9 @@ To install, run `sudo ./app install` and then run the application from your appl
 
 ## Distribution packages
 
-Arch Linux users can find Minder under the name [minder-git](https://aur.archlinux.org/packages/minder-git/) in the **AUR**:
+Arch Linux users can find Minder in the official `community` repo:
 
-`$ aurman -S minder-git`
+`$ sudo pacman -S minder`
 
 Minder is packaged in Void Linux, install it with `xbps-install`:
 
