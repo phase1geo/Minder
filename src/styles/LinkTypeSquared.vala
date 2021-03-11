@@ -46,26 +46,28 @@ public class LinkTypeSquared : Object, LinkType {
 
     var side  = to_node.side;
     var style = to_node.style;
+    var adj_a = adjust_a( style );
+    var adj_t = adjust_tip( style );
+    var mid_x = (from_x + to_x) / 2;
+    var mid_y = (from_y + to_y) / 2;
 
     tipx = tipy = 0;
 
     switch( side ) {
-      case NodeSide.LEFT   :  to_x += adjust_a( style );  tipx = to_x - adjust_tip( style );  tipy = to_y;  break;
-      case NodeSide.RIGHT  :  to_x -= adjust_a( style );  tipx = to_x + adjust_tip( style );  tipy = to_y;  break;
-      case NodeSide.TOP    :  to_y += adjust_a( style );  tipy = to_y - adjust_tip( style );  tipx = to_x;  break;
-      case NodeSide.BOTTOM :  to_y -= adjust_a( style );  tipy = to_y + adjust_tip( style );  tipx = to_x;  break;
+      case NodeSide.LEFT   :  to_x += adj_a;  tipx = to_x - adj_t;  tipy = to_y;  break;
+      case NodeSide.RIGHT  :  to_x -= adj_a;  tipx = to_x + adj_t;  tipy = to_y;  break;
+      case NodeSide.TOP    :  to_y += adj_a;  tipy = to_y - adj_t;  tipx = to_x;  break;
+      case NodeSide.BOTTOM :  to_y -= adj_a;  tipy = to_y + adj_t;  tipx = to_x;  break;
     }
 
     ctx.move_to( from_x, from_y );
     if( (side & NodeSide.horizontal()) != 0 ) {
-      var mid_x = (from_x + to_x) / 2;
       tailx = mid_x;
       taily = to_y;
       ctx.line_to( mid_x, from_y );
       ctx.line_to( mid_x, to_y );
       ctx.line_to( to_x,  to_y );
     } else {
-      var mid_y = (from_y + to_y) / 2;
       tailx = to_x;
       taily = mid_y;
       ctx.line_to( from_x, mid_y );

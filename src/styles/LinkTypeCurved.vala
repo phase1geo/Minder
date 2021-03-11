@@ -46,27 +46,29 @@ public class LinkTypeCurved : Object, LinkType {
 
     var side  = to_node.side;
     var style = to_node.style;
+    var adj_a = adjust_a( style );
+    var adj_t = adjust_tip( style );
+    var x_adj = (to_x - from_x) * 0.5;
+    var y_adj = (to_y - from_y) * 0.5;
 
     tipx = tipy = 0;
 
     switch( side ) {
-      case NodeSide.LEFT   :  to_x += adjust_a( style );  tipx = to_x - adjust_tip( style );  tipy = to_y;  break;
-      case NodeSide.RIGHT  :  to_x -= adjust_a( style );  tipx = to_x + adjust_tip( style );  tipy = to_y;  break;
-      case NodeSide.TOP    :  to_y += adjust_a( style );  tipx = to_x;  tipy = to_y - adjust_tip( style );  break;
-      case NodeSide.BOTTOM :  to_y -= adjust_a( style );  tipx = to_x;  tipy = to_y + adjust_tip( style );  break;
+      case NodeSide.LEFT   :  to_x += adj_a;  tipx = to_x - adj_t;  tipy = to_y;  break;
+      case NodeSide.RIGHT  :  to_x -= adj_a;  tipx = to_x + adj_t;  tipy = to_y;  break;
+      case NodeSide.TOP    :  to_y += adj_a;  tipx = to_x;  tipy = to_y - adj_t;  break;
+      case NodeSide.BOTTOM :  to_y -= adj_a;  tipx = to_x;  tipy = to_y + adj_t;  break;
     }
 
     ctx.move_to( from_x, from_y );
     if( (side & NodeSide.horizontal()) != 0 ) {
-      var x_adjust = (to_x - from_x) * 0.5;
-      tailx = from_x + x_adjust;
+      tailx = from_x + x_adj;
       taily = from_y + ((to_y - from_y) * 0.95);
-      ctx.curve_to( (to_x - x_adjust), from_y, (from_x + x_adjust), to_y, to_x, to_y );
+      ctx.curve_to( (to_x - x_adj), from_y, (from_x + x_adj), to_y, to_x, to_y );
     } else {
-      var y_adjust = (to_y - from_y) * 0.5;
       tailx = from_x + ((to_x - from_x) * 0.95);
-      taily = from_y + y_adjust;
-      ctx.curve_to( from_x, (to_y - y_adjust), to_x, (from_y + y_adjust), to_x, to_y );
+      taily = from_y + y_adj;
+      ctx.curve_to( from_x, (to_y - y_adj), to_x, (from_y + y_adj), to_x, to_y );
     }
     ctx.stroke();
 
