@@ -95,6 +95,7 @@ sources += files(
     'undo_actions/UndoNodeStickerAdd.vala',
     'undo_actions/UndoNodeStickerChange.vala',
     'undo_actions/UndoNodeStickerRemove.vala',
+    'undo_actions/UndoNodeSummary.vala',
     'undo_actions/UndoNodeTask.vala',
 
     'undo_actions/UndoNodesAlign.vala',
@@ -196,6 +197,7 @@ sources += files(
     'Style.vala',
     'StyleInspector.vala',
     'Styles.vala',
+    'SummaryNode.vala',
     'Tagger.vala',
     'TextCompletion.vala',
     'TextMenu.vala',

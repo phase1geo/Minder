@@ -103,6 +103,10 @@ public struct NodeBounds {
     return( ((x < (other.x + other.width))  && ((x + width) > other.x)) ||
             ((y < (other.y + other.height)) && ((y + height) > other.y)) );
   }
+  public double x1() { return( x ); }
+  public double y1() { return( y ); }
+  public double x2() { return( x + width ); }
+  public double y2() { return( y + height ); }
 }
 
 public struct NodeInfo {
@@ -594,6 +598,11 @@ public class Node : Object {
   /* Returns true if the node does not have a parent */
   public bool is_root() {
     return( parent == null );
+  }
+
+  /* Returns if this is a summary node */
+  public virtual bool is_summary() {
+    return( false );
   }
 
   /* Returns true if this node exists within a group */
@@ -2476,7 +2485,7 @@ public class Node : Object {
   }
 
   /* Draw all of the node links */
-  public void draw_links( Context ctx, Theme theme ) {
+  public virtual void draw_links( Context ctx, Theme theme ) {
     if( !is_root() ) {
       draw_link( ctx, theme );
     }
@@ -2486,7 +2495,7 @@ public class Node : Object {
   }
 
   /* Draw this node and all child nodes */
-  public void draw_all( Context ctx, Theme theme, Node? current, bool motion ) {
+  public virtual void draw_all( Context ctx, Theme theme, Node? current, bool motion ) {
     if( this != current ) {
       if( !folded ) {
         if( _children.length > 0 ) {
