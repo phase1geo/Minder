@@ -1916,17 +1916,23 @@ public class DrawArea : Gtk.DrawingArea {
   /* Draws all of the root node trees */
   public void draw_all( Context ctx ) {
 
+    /* Draw the links first */
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).draw_links( ctx, _theme );
+    }
+
+    /* Draw groups next */
     _groups.draw_all( ctx, _theme );
 
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).draw_all( ctx, _theme, current_node, false, false );
+      _nodes.index( i ).draw_all( ctx, _theme, current_node, false );
     }
 
     /* Draw the current node on top of all others */
     if( (current_node != null) && (current_node.folded_ancestor() == null) ) {
-      current_node.draw_all( ctx, _theme, null, true, (!is_node_editable() && _pressed && _motion && !_resize) );
+      current_node.draw_all( ctx, _theme, null, (!is_node_editable() && _pressed && _motion && !_resize) );
     }
 
     /* Draw the current connection on top of everything else */
