@@ -2211,7 +2211,7 @@ public class Node : Object {
   }
 
   /* Draw the link from this node to the parent node */
-  protected virtual void draw_link( Context ctx, Theme theme ) {
+  public virtual void draw_link( Context ctx, Theme theme ) {
 
     double parent_x;
     double parent_y;
@@ -2358,18 +2358,25 @@ public class Node : Object {
     var mid         = first + 1;
     while( (mid < last) && (_children.index( mid ).relative_side() == first_rside) ) mid++;
     for( int i=first; i<mid; i++ ) {
-      _children.index( i ).draw_all( ctx, theme, current, false, motion );
+      _children.index( i ).draw_all( ctx, theme, current, motion );
     }
     for( int i=(last - 1); i>=mid; i-- ) {
-      _children.index( i ).draw_all( ctx, theme, current, false, motion );
+      _children.index( i ).draw_all( ctx, theme, current, motion );
+    }
+  }
+
+  /* Draw all of the node links */
+  public void draw_links( Context ctx, Theme theme ) {
+    if( !is_root() ) {
+      draw_link( ctx, theme );
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).draw_links( ctx, theme );
     }
   }
 
   /* Draw this node and all child nodes */
-  public void draw_all( Context ctx, Theme theme, Node? current, bool draw_current, bool motion ) {
-    if( !is_root() && !draw_current ) {
-      draw_link( ctx, theme );
-    }
+  public void draw_all( Context ctx, Theme theme, Node? current, bool motion ) {
     if( this != current ) {
       if( !folded ) {
         if( _children.length > 0 ) {
