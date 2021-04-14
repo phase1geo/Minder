@@ -1,749 +1,145 @@
-# Basque translations for com.github.phase1geo.minder package.
-# Copyright (C) 2019 THE com.github.phase1geo.minder'S COPYRIGHT HOLDER
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
-# Alexander Gabilondo Urkijo <alexgabi@disroot.org>, 2020.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-1 19:02-0500\n"
-"PO-Revision-Date: 2020-05-01 19:09+0200\n"
-"Last-Translator: Alexander Gabilondo <alexgabi@irakasle.net>\n"
-"Language-Team: none\n"
+"POT-Creation-Date: 2021-02-13 21:20-0600\n"
+"PO-Revision-Date: 2021-04-14 23:25+0200\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "X-Generator: Poedit 2.3\n"
 
-#: src/NodeMenu.vala:62
-msgid "Copy"
-msgstr "Kopiatu"
-
-#: src/NodeMenu.vala:66
-msgid "Cut"
-msgstr "Ebaki"
-
-#: src/NodeMenu.vala:70
-msgid "Paste"
-msgstr "Itsatsi"
-
-#: src/NodeMenu.vala:74 src/ConnectionMenu.vala:40
-msgid "Delete"
-msgstr "Ezabatu"
-
-#: src/NodeMenu.vala:78
-msgid "Delete Single Node"
-msgstr "Ezabatu nodo sinplea"
-
-#: src/NodeMenu.vala:81 src/ConnectionMenu.vala:44
-msgid "Edit…"
-msgstr "Editatu…"
-
-#: src/NodeMenu.vala:85 src/NodeMenu.vala:321
-msgid "Add Task"
-msgstr "Gehitu zeregina"
-
-#: src/NodeMenu.vala:88 src/NodeMenu.vala:322 src/ConnectionMenu.vala:48
-#: src/ConnectionMenu.vala:104
-msgid "Add Note"
-msgstr "Gehitu oharra"
-
-#: src/NodeMenu.vala:91 src/NodeMenu.vala:323
-msgid "Add Image"
-msgstr "Gehitu irudia"
-
-#: src/NodeMenu.vala:94 src/NodeMenu.vala:324
-msgid "Add Node Link"
-msgstr "Gehitu nodo baterako jauzia"
-
-#: src/NodeMenu.vala:97
-msgid "Add Connection"
-msgstr "Gehitu lotura"
-
-#: src/NodeMenu.vala:101 src/NodeInspector.vala:162
-msgid "Link Color"
-msgstr "Estekaren kolorea"
-
-#: src/NodeMenu.vala:105
-msgid "Set to color…"
-msgstr "Ezarri kolorea…"
-
-#: src/NodeMenu.vala:108
-msgid "Randomize color"
-msgstr "Errendatu kolorea"
-
-#: src/NodeMenu.vala:111
-msgid "Use parent color"
-msgstr "Erabili gurasoaren kolorea"
-
-#: src/NodeMenu.vala:114 src/NodeMenu.vala:325
-msgid "Fold Children"
-msgstr "Tolestu umeak"
-
-#: src/NodeMenu.vala:118
-msgid "Detach"
-msgstr "Askatu"
-
-#: src/NodeMenu.vala:121 src/EmptyMenu.vala:35
-msgid "Add Root Node"
-msgstr "Gehitu sustrai-nodoa"
-
-#: src/NodeMenu.vala:124
-msgid "Add Parent Node"
-msgstr "Gehitu guraso-nodoa"
-
-#: src/NodeMenu.vala:127
-msgid "Add Child Node"
-msgstr "Gehitu ume-nodoa"
-
-#: src/NodeMenu.vala:131
-msgid "Add Sibling Node"
-msgstr "Gehitu pareko nodoa"
-
-#: src/NodeMenu.vala:135
-msgid "Add Nodes With Quick Entry"
-msgstr "Gehitu nodoak sarrera azkarrarekin"
-
-#: src/NodeMenu.vala:139 src/ConnectionMenu.vala:51
-msgid "Select"
-msgstr "Hautatu"
-
-#: src/NodeMenu.vala:143
-msgid "Root Node"
-msgstr "Sustrai nodoa"
-
-#: src/NodeMenu.vala:147
-msgid "Next Sibling Node"
-msgstr "Hurrengo pareko nodoa"
-
-#: src/NodeMenu.vala:151
-msgid "Previous Sibling Node"
-msgstr "Aurreko pareko nodoa"
-
-#: src/NodeMenu.vala:155
-msgid "Child Node"
-msgstr "Ume nodoa"
-
-#: src/NodeMenu.vala:159
-msgid "Parent Node"
-msgstr "Guraso-nodoa"
-
-#: src/NodeMenu.vala:163
-msgid "Linked Node"
-msgstr "Nodo estekatua"
-
-#: src/NodeMenu.vala:167
-msgid "Connection"
-msgstr "Lotura"
-
-#: src/NodeMenu.vala:171
-msgid "Center Current Node"
-msgstr "Erdiratu uneko nodoa"
-
-#: src/NodeMenu.vala:175
-msgid "Sort Children"
-msgstr "Ordenatu umeak"
-
-#: src/NodeMenu.vala:179
-msgid "Alphabetically"
-msgstr "Alfabetikoki"
-
-#: src/NodeMenu.vala:182
-msgid "Randomize"
-msgstr "Errendatu"
-
-#: src/NodeMenu.vala:321
-msgid "Remove Task"
-msgstr "Kendu zeregina"
-
-#: src/NodeMenu.vala:322 src/ConnectionMenu.vala:104
-msgid "Remove Note"
-msgstr "Kendu oharra"
-
-#: src/NodeMenu.vala:323 src/ImageEditor.vala:363 src/NodeInspector.vala:230
-msgid "Remove Image"
-msgstr "Kendu irudia"
-
-#: src/NodeMenu.vala:324
-msgid "Remove Node Link"
-msgstr "Kendu nodoaren esteka"
-
-#: src/NodeMenu.vala:325
-msgid "Unfold Children"
-msgstr "Zabaldu ume-nodoak"
-
-#: src/NodeMenu.vala:492
-msgid "Select a link color"
-msgstr "Hautatu estekaren kolorea"
-
-#: src/EmptyMenu.vala:38
-msgid "Select Node"
-msgstr "Hautatu nodoa"
-
-#: src/EmptyMenu.vala:42
-msgid "Root"
-msgstr "Sustraia"
-
-#: src/ConnectionMenu.vala:55
-msgid "Start Node"
-msgstr "Hasierako nodoa"
-
-#: src/ConnectionMenu.vala:59
-msgid "End Node"
-msgstr "Bukatu nodoa"
-
-#: src/ConnectionMenu.vala:63
-msgid "Next Connection"
-msgstr "Hurrengo lotura"
-
-#: src/ConnectionMenu.vala:67
-msgid "Previous Connection"
-msgstr "Aurreko lotura"
-
-#: src/DrawArea.vala:177 src/themes/ThemeDefault.vala:28
-msgid "Default"
-msgstr "Lehenetsia"
-
-#: src/DrawArea.vala:606
-msgid "Main Idea"
-msgstr "Ideia nagusia"
-
-#: src/DrawArea.vala:1810
-#, c-format
-msgid "%0.3g%% complete"
-msgstr "%0.3g %% burutua"
-
-#: src/DrawArea.vala:1863
-msgid "connection endpoint change"
-msgstr "loturaren bukaera-puntuaren aldaketa"
-
-#: src/DrawArea.vala:1870
-msgid "connection drag"
-msgstr "arrastatu lotura"
-
-#: src/DrawArea.vala:2351 src/DrawArea.vala:3620
-msgid "Another Idea"
-msgstr "Beste ideia"
-
-#: src/DrawArea.vala:2545
-msgid "fold completed tasks"
-msgstr "tolestu burututako zereginak"
-
-#: src/DrawArea.vala:2582
-msgid "unfold all tasks"
-msgstr "zabaldu zeregin guztiak"
-
-#: src/Document.vala:65
-msgid "unnamed"
-msgstr "izengabea"
-
-#: src/ImageEditor.vala:179
-#, c-format
-msgid "Crop Area: %d,%d %3dx%3d"
-msgstr "Mozketa-area: %d,%d %3d×%3d"
-
-#: src/ImageEditor.vala:353
-#, c-format
-msgid "Cursor: %3d,%3d"
-msgstr "Kurtsorea: %3d,%3d"
-
-#: src/ImageEditor.vala:360 src/MainWindow.vala:741 src/MainWindow.vala:785
-#: src/MainWindow.vala:927 src/MainWindow.vala:1163
-msgid "Cancel"
-msgstr "Utzi"
-
-#: src/ImageEditor.vala:361
-msgid "Apply"
-msgstr "Aplikatu"
-
-#: src/ImageEditor.vala:362
-msgid "Change Image"
-msgstr "Aldatu irudia"
-
-#: src/layouts/LayoutManual.vala:26 src/MapInspector.vala:336
-msgid "Manual"
-msgstr "Eskuzkoa"
-
-#: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:340
-msgid "To right"
-msgstr "Eskuinera"
-
-#: src/layouts/LayoutLeft.vala:26 src/MapInspector.vala:339
-msgid "To left"
-msgstr "Ezkerrera"
-
-#: src/layouts/LayoutHorizontal.vala:26 src/MapInspector.vala:338
-msgid "Horizontal"
-msgstr "Horizontala"
-
-#: src/layouts/LayoutDown.vala:26 src/MapInspector.vala:342
-msgid "Downwards"
-msgstr "Beherantz"
-
-#: src/layouts/LayoutUp.vala:26 src/MapInspector.vala:341
-msgid "Upwards"
-msgstr "Gorantz"
-
-#: src/layouts/LayoutVertical.vala:26 src/MapInspector.vala:337
-msgid "Vertical"
-msgstr "Bertikala"
-
-#: src/MainWindow.vala:118 src/MainWindow.vala:930
-msgid "Minder"
-msgstr "Minder"
-
-#: src/MainWindow.vala:152 data/com.github.phase1geo.minder.shortcuts.ui:21
-msgid "New File"
-msgstr "Fitxategi berria"
-
-#: src/MainWindow.vala:158 src/MainWindow.vala:785
-#: data/com.github.phase1geo.minder.shortcuts.ui:28
-msgid "Open File"
-msgstr "Ireki fitxategia"
-
-#: src/MainWindow.vala:164 data/com.github.phase1geo.minder.shortcuts.ui:35
-msgid "Save File As"
-msgstr "Gorde honela"
-
-#: src/MainWindow.vala:170 src/UndoBuffer.vala:84
-msgid "Undo"
-msgstr "Desegin"
-
-#: src/MainWindow.vala:177 src/UndoBuffer.vala:90
-msgid "Redo"
-msgstr "Berregin"
-
-#: src/MainWindow.vala:330
-msgid "Unnamed Document"
-msgstr "Fitxategi izengabea"
-
-#: src/MainWindow.vala:334 src/MainWindow.vala:602
-msgid "Focus Mode"
-msgstr "Fokuratze modua"
-
-#: src/MainWindow.vala:356
-msgid "Zoom"
-msgstr "Eskala"
-
-#: src/MainWindow.vala:363
-msgid "Zoom to Percent"
-msgstr "Eskalatu ehunekotan"
-
-#: src/MainWindow.vala:374 data/com.github.phase1geo.minder.shortcuts.ui:75
-msgid "Zoom In"
-msgstr "Handiagotu"
-
-#: src/MainWindow.vala:378 data/com.github.phase1geo.minder.shortcuts.ui:82
-msgid "Zoom Out"
-msgstr "Txikiagotu"
-
-#: src/MainWindow.vala:382
-msgid "Zoom to Fit"
-msgstr "Doitzeko eskala"
-
-#: src/MainWindow.vala:386
-msgid "Zoom to Fit Selected Node"
-msgstr "Eskalatu hautatutako nodoa doitzeko"
-
-#: src/MainWindow.vala:390
-msgid "Zoom to Actual Size"
-msgstr "Eskalatu uneko tamainara"
-
-#: src/MainWindow.vala:417
-msgid "Search"
-msgstr "Bilatu"
-
-#: src/MainWindow.vala:427
-msgid "Search Nodes and Connections"
-msgstr "Bilatu nodo eta loturetan"
-
-#: src/MainWindow.vala:450
-msgid "Search Criteria"
-msgstr "Bilaketa irizpideak"
-
-#: src/MainWindow.vala:472
-msgid "Nodes"
-msgstr "Nodoak"
-
-#: src/MainWindow.vala:473
-msgid "Connections"
-msgstr "Loturak"
-
-#: src/MainWindow.vala:474
-msgid "Titles"
-msgstr "Tituluak"
-
-#: src/MainWindow.vala:475
-msgid "Notes"
-msgstr "Oharrak"
-
-#: src/MainWindow.vala:476
-msgid "Folded"
-msgstr "Tolestuta"
-
-#: src/MainWindow.vala:477
-msgid "Unfolded"
-msgstr "Zabalduak"
-
-#: src/MainWindow.vala:478
-msgid "Tasks"
-msgstr "Zereginak"
-
-#: src/MainWindow.vala:479
-msgid "Non-tasks"
-msgstr "Zereginik ez"
-
-#: src/MainWindow.vala:569 src/MainWindow.vala:1163
-msgid "Export"
-msgstr "Esportatu"
-
-#: src/MainWindow.vala:576
-msgid "Export…"
-msgstr "Esportatu…"
-
-#: src/MainWindow.vala:580
-msgid "Print"
-msgstr "Inprimatu"
-
-#: src/MainWindow.vala:632
-msgid "Shortcuts Cheatsheet"
-msgstr "Laster-teklen txuleta"
-
-#: src/MainWindow.vala:660
-msgid "Properties"
-msgstr "Propietateak"
-
-#: src/MainWindow.vala:675 src/StyleInspector.vala:48
-msgid "Current"
-msgstr "Unekoa"
-
-#: src/MainWindow.vala:676
-msgid "Style"
-msgstr "Estiloa"
-
-#: src/MainWindow.vala:677
-msgid "Map"
-msgstr "Mapa"
-
-#: src/MainWindow.vala:732
-msgid "Save current unnamed document?"
-msgstr "Gorde nahi duzu izenik gabeko fitxategia?"
-
-#: src/MainWindow.vala:733
-msgid "Changes will be permanently lost if not saved."
-msgstr "Aldaketak betiko galduko dira gorde ezean."
-
-#: src/MainWindow.vala:738
-msgid "Discard Changes"
-msgstr "Baztertu aldaketak"
-
-#: src/MainWindow.vala:744 src/MainWindow.vala:927
-msgid "Save"
-msgstr "Gorde"
-
-#: src/MainWindow.vala:785
-msgid "Open"
-msgstr "Ireki"
-
-#: src/MainWindow.vala:809 src/MainWindow.vala:1247
-msgid "PlainText"
-msgstr "Formaturik gabeko nodoa"
-
-#: src/MainWindow.vala:814 src/MainWindow.vala:1253
-msgid "Portable Minder"
-msgstr "Minder eramangarria"
-
-#: src/MainWindow.vala:927
-msgid "Save File"
-msgstr "Gorde fitxategia"
-
-#: src/MainWindow.vala:1162
-msgid "Export As"
-msgstr "Esportatu honela"
-
-#: src/MainWindow.vala:1167
-msgid "BMP"
-msgstr "BMP"
-
-#: src/MainWindow.vala:1173
+#: src/exports/ExportCSV.vala:26
 msgid "CSV"
 msgstr "CSV"
 
-#: src/MainWindow.vala:1179
+#: src/exports/ExportFreemind.vala:29
 msgid "Freemind"
 msgstr "Freemind"
 
-#: src/MainWindow.vala:1185
+#: src/exports/ExportFreemind.vala:45 src/exports/ExportFreeplane.vala:47
+#: src/exports/ExportOPML.vala:36 src/exports/ExportYed.vala:41
+msgid "Generated by Minder"
+msgstr "Minder bidez sortua"
+
+#: src/exports/ExportFreeplane.vala:31
 msgid "Freeplane"
 msgstr "Freeplane"
 
-#: src/MainWindow.vala:1191
-msgid "JPEG"
-msgstr "JPEG"
+#: src/exports/ExportImage.vala:79
+msgid "Quality"
+msgstr "Kalitatea"
 
-#: src/MainWindow.vala:1198
+#: src/exports/ExportMarkdown.vala:28
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/MainWindow.vala:1205
+#: src/exports/ExportMarkdown.vala:159
+msgid "Include image links"
+msgstr "Irudi-estekak barne"
+
+#: src/exports/ExportMarkdown.vala:160
+msgid "Creates a directory containing the Markdown and embedded images"
+msgstr "Sortzen du markdown eta kapsulatutako irudiak dituen direktorioa"
+
+#: src/exports/ExportMermaid.vala:26
 msgid "Mermaid"
 msgstr "Sirenatxoa"
 
-#: src/MainWindow.vala:1211
+#: src/exports/ExportMermaid.vala:46 src/layouts/LayoutVertical.vala:26
+#: src/MapInspector.vala:301
+msgid "Vertical"
+msgstr "Bertikala"
+
+#: src/exports/ExportMermaid.vala:46 src/layouts/LayoutDown.vala:26
+#: src/MapInspector.vala:306
+msgid "Downwards"
+msgstr "Beherantz"
+
+#: src/exports/ExportMermaid.vala:48 src/layouts/LayoutLeft.vala:26
+#: src/MapInspector.vala:303
+msgid "To left"
+msgstr "Ezkerrera"
+
+#: src/exports/ExportMermaid.vala:50 src/layouts/LayoutUp.vala:26
+#: src/MapInspector.vala:305
+msgid "Upwards"
+msgstr "Gorantz"
+
+#: src/exports/ExportOPML.vala:26
 msgid "OPML"
 msgstr "OPML"
 
-#: src/MainWindow.vala:1217
+#: src/exports/ExportOrgMode.vala:26
 msgid "Org-Mode"
 msgstr "Org modua"
 
-#: src/MainWindow.vala:1223
+#: src/exports/ExportOutliner.vala:28
 msgid "Outliner"
 msgstr "Eskema"
 
-#: src/MainWindow.vala:1229
+#: src/exports/ExportPDF.vala:28
 msgid "PDF"
 msgstr "PDF"
 
-#: src/MainWindow.vala:1235
-msgid "PNG (Transparent)"
-msgstr "PNG (gardena)"
+#: src/exports/ExportPNG.vala:30
+msgid "PNG"
+msgstr "PNG"
 
-#: src/MainWindow.vala:1241
-msgid "PNG (Opaque)"
-msgstr "PNG (opakoa)"
+#: src/exports/ExportPNG.vala:77
+msgid "Enable Transparent Background"
+msgstr "Gaitu atzeko plano gardena"
 
-#: src/MainWindow.vala:1259
+#: src/exports/ExportPNG.vala:78
+msgid "Compression"
+msgstr "Trinkotzea"
+
+#: src/exports/ExportPlantUML.vala:29
+msgid "PlantUML"
+msgstr "PlantUML"
+
+#: src/exports/ExportPortableMinder.vala:28
+msgid "Portable Minder"
+msgstr "Minder eramangarria"
+
+#: src/exports/ExportSVG.vala:28
 msgid "SVG"
 msgstr "SVG"
 
-#: src/MainWindow.vala:1265
-msgid "yEd"
-msgstr "yEd"
+#: src/exports/ExportText.vala:34
+msgid "PlainText"
+msgstr "Formaturik gabeko testua"
 
-#: src/MapInspector.vala:78
-msgid "Enable animations"
-msgstr "Gaitu animazioak"
+#: src/exports/ExportXMind.vala:80
+msgid "XMind 8"
+msgstr "XMind 8"
 
-#: src/MapInspector.vala:106
-msgid "Hide connections"
-msgstr "Ezkutatu loturak"
+#: src/exports/ExportXMind.vala:679 src/layouts/LayoutHorizontal.vala:26
+#: src/MapInspector.vala:302
+msgid "Horizontal"
+msgstr "Horizontala"
 
-#: src/MapInspector.vala:135
-msgid "Rotate main branch colors"
-msgstr "Biratu adarraren kolore nagusiak"
+#: src/exports/ExportXMind.vala:681 src/layouts/LayoutRight.vala:26
+#: src/MapInspector.vala:304
+msgid "To right"
+msgstr "Eskuinera"
 
-#: src/MapInspector.vala:167
-msgid "Node Layouts"
-msgstr "Nodoen diseinuak"
+#: src/exports/ExportYed.vala:26
+msgid "Yed"
+msgstr "Yed"
 
-#: src/MapInspector.vala:218
-msgid "Themes"
-msgstr "Gaiak"
-
-#: src/MapInspector.vala:237
-msgid "Add Custom Theme"
-msgstr "Gehitu itxura pertsonalizatua"
-
-#: src/MapInspector.vala:256
-msgid "Balance Nodes"
-msgstr "Orekatu nodoak"
-
-#: src/MapInspector.vala:262
-msgid "Fold Completed Tasks"
-msgstr "Tolestu burututako zereginak"
-
-#: src/MapInspector.vala:268
-msgid "Unfold All Nodes"
-msgstr "Zabaldu nodo guztiak"
-
-#: src/MapInspector.vala:353
-msgid "Unsaved"
-msgstr "Gorde gabe"
-
-#: src/Node.vala:1644
-msgid "Node Title"
-msgstr "Nodoko titulua"
-
-#: src/Node.vala:1647
-msgid "Node Note"
-msgstr "Nodoko oharra"
-
-#: src/NodeInspector.vala:91
-msgid "Title"
-msgstr "Titulua"
-
-#: src/NodeInspector.vala:121
-msgid "Task"
-msgstr "Zeregina"
-
-#: src/NodeInspector.vala:140
-msgid "Fold"
-msgstr "Tolestu"
-
-#: src/NodeInspector.vala:184
-msgid "Note"
-msgstr "Oharra"
-
-#: src/NodeInspector.vala:212
-msgid "Image"
-msgstr "Irudia"
-
-#: src/NodeInspector.vala:217
-msgid "Add Image…"
-msgstr "Gehitu irudia…"
-
-#: src/NodeInspector.vala:224
-msgid "Edit Image"
-msgstr "Editatu irudia"
-
-#: src/NodeInspector.vala:337
-msgid "Copy Node To Clipboard"
-msgstr "Kopiatu nodoa arbelara"
-
-#: src/NodeInspector.vala:341
-msgid "Cut Node To Clipboard"
-msgstr "Ebaki nodoa arbelara"
-
-#: src/NodeInspector.vala:346
-msgid "Detach Node"
-msgstr "Askatu nodoa"
-
-#: src/NodeInspector.vala:351 data/com.github.phase1geo.minder.shortcuts.ui:158
-#: data/com.github.phase1geo.minder.shortcuts.ui:165
-msgid "Delete Node"
-msgstr "Ezabatu nodoa"
-
-#: src/StyleInspector.vala:47
-msgid "All"
-msgstr "Denak"
-
-#: src/StyleInspector.vala:49
-msgid "Current Tree"
-msgstr "Uneko zuhaitza"
-
-#: src/StyleInspector.vala:50
-msgid "Current Node + Descendants"
-msgstr "Uneko nodoa + ondorengoak"
-
-#: src/StyleInspector.vala:51
-msgid "Root Nodes"
-msgstr "Sustrai nodoak"
-
-#: src/StyleInspector.vala:52
-msgid "Level 1 Nodes"
-msgstr "1. mailako nodoak"
-
-#: src/StyleInspector.vala:53
-msgid "Level 2 Nodes"
-msgstr "2. mailako nodoak"
-
-#: src/StyleInspector.vala:54
-msgid "Level 3 Nodes"
-msgstr "3. mailako nodoak"
-
-#: src/StyleInspector.vala:55
-msgid "Level 4 Nodes"
-msgstr "4. mailako nodoak"
-
-#: src/StyleInspector.vala:56
-msgid "Level 5 Nodes"
-msgstr "5. mailako nodoak"
-
-#: src/StyleInspector.vala:57
-msgid "Level 6 Nodes"
-msgstr "6. mailako nodoak"
-
-#: src/StyleInspector.vala:58
-msgid "Level 7 Nodes"
-msgstr "7. mailako nodoak"
-
-#: src/StyleInspector.vala:59
-msgid "Level 8 Nodes"
-msgstr "8. mailako nodoak"
-
-#: src/StyleInspector.vala:60
-msgid "Level 9 Nodes"
-msgstr "9. mailako nodoak"
-
-#: src/StyleInspector.vala:163
-msgid "Changes affect:"
-msgstr "Aldaketak honi eragingo dio:"
-
-#: src/StyleInspector.vala:209
-msgid "Branch Options"
-msgstr "Adarren aukerak"
-
-#: src/StyleInspector.vala:238
-msgid "Branch Style"
-msgstr "Adarren estiloa"
-
-#: src/StyleInspector.vala:289
-msgid "Link Options"
-msgstr "Estekaren aukerak"
-
-#: src/StyleInspector.vala:322 src/StyleInspector.vala:767
-msgid "Line Dash"
-msgstr "Lerro marratxoduna"
-
-#: src/StyleInspector.vala:361 src/StyleInspector.vala:844
-msgid "Line Width"
-msgstr "Lerroaren zabalera"
-
-#: src/StyleInspector.vala:407
-msgid "Link Arrow"
-msgstr "Esteka geziduna"
-
-#: src/StyleInspector.vala:437
-msgid "Node Options"
-msgstr "Nodoaren aukerak"
-
-#: src/StyleInspector.vala:476
-msgid "Border Style"
-msgstr "Ertza estiloa"
-
-#: src/StyleInspector.vala:525
-msgid "Border Width"
-msgstr "Ertzaren zabalera"
-
-#: src/StyleInspector.vala:570
-msgid "Fill With Link Color"
-msgstr "Bete estekaren kolorearekin"
-
-#: src/StyleInspector.vala:599
-msgid "Margin"
-msgstr "Marjina"
-
-#: src/StyleInspector.vala:640 src/StyleInspector.vala:892
-msgid "Padding"
-msgstr "Betegarria"
-
-#: src/StyleInspector.vala:679 src/StyleInspector.vala:931
-msgid "Font"
-msgstr "Letra-tipoa"
-
-#: src/StyleInspector.vala:700
-msgid "Enable Markup"
-msgstr "Gaitu Markup"
-
-#: src/StyleInspector.vala:730
-msgid "Connection Options"
-msgstr "Loturaren aukerak"
-
-#: src/StyleInspector.vala:806
-msgid "Arrows"
-msgstr "Geziak"
-
-#: src/EmptyInspector.vala:30
-msgid ""
-"<big>Select a node or connection\n"
-"to view/edit information</big>"
-msgstr ""
-"<big>Hautatu nodo edo lotura bat\n"
-"bere informazioa ikusteko/editatzeko</big>"
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4059
+#: src/MapInspector.vala:300
+msgid "Manual"
+msgstr "Eskuzkoa"
 
 #: src/styles/LinkTypeCurved.vala:34
 msgid "Curved"
@@ -785,6 +181,10 @@ msgstr "Azpimarratua"
 msgid "Solarized Light"
 msgstr "Solarizatu argia"
 
+#: src/themes/ThemeDefault.vala:28 src/ThemeEditor.vala:241
+msgid "Default"
+msgstr "Lehenetsia"
+
 #: src/themes/ThemeDark.vala:28
 msgid "Dark"
 msgstr "Iluna"
@@ -793,74 +193,1375 @@ msgstr "Iluna"
 msgid "Solarized Dark"
 msgstr "Solarizatu iluna"
 
-#: src/undo_actions/UndoNodePaste.vala:34
-msgid "paste node"
-msgstr "itsatsi nodoa"
+#: src/undo_actions/UndoConnectedNode.vala:31
+msgid "connected node"
+msgstr "konektatutako nodoa"
 
-#: src/undo_actions/UndoNodeMove.vala:34
-msgid "move node"
-msgstr "mugitu nodoa"
+#: src/undo_actions/UndoConnectionAdd.vala:30
+msgid "add connection"
+msgstr "gehitu lotura"
 
-#: src/undo_actions/UndoNodeNote.vala:32
-msgid "node note change"
-msgstr "nodoko oharraren aldaketa"
+#: src/undo_actions/UndoConnectionColor.vala:33
+msgid "connection color change"
+msgstr "loturaren kolorearen aldaketa"
 
-#: src/undo_actions/UndoNodeReveal.vala:32
-msgid "node reveal"
-msgstr "nodoaren erakusketa"
+#: src/undo_actions/UndoConnectionDelete.vala:30
+msgid "delete connection"
+msgstr "ezabatu lotura"
 
-#: src/undo_actions/UndoNodeDelete.vala:33
-msgid "delete node"
-msgstr "ezabatu nodoa"
+#: src/undo_actions/UndoConnectionNote.vala:32
+msgid "connection note change"
+msgstr "loturaren mezuaren aldaketa"
 
-#: src/undo_actions/UndoNodeCut.vala:32
-msgid "cut node"
-msgstr "ebaki nodoa"
+#: src/undo_actions/UndoConnectionStickerAdd.vala:31
+msgid "add connection sticker"
+msgstr "gehitu lotura-eranskailua"
 
-#: src/undo_actions/UndoNodeResize.vala:32
-msgid "node resize"
-msgstr "nodoaren tamainaren aldaketa"
+#: src/undo_actions/UndoConnectionStickerChange.vala:31
+msgid "change connection sticker"
+msgstr "aldatu konexio-eranskailua"
 
-#: src/undo_actions/UndoNodeInsert.vala:33
-msgid "insert node"
-msgstr "txertatu nodoa"
+#: src/undo_actions/UndoConnectionStickerRemove.vala:31
+msgid "remove connection sticker"
+msgstr "kendu lotura-eranskailua"
 
-#: src/undo_actions/UndoNodeTask.vala:34
-msgid "node task change"
-msgstr "nodoaren zeregin aldaketa"
+#: src/undo_actions/UndoConnectionTitle.vala:32
+msgid "connection title change"
+msgstr "loturaren izenburuaren aldaketa"
+
+#: src/undo_actions/UndoConnectionsDelete.vala:30
+msgid "delete connections"
+msgstr "ezabatu loturak"
+
+#: src/undo_actions/UndoGroupAdd.vala:30
+msgid "add group"
+msgstr "gehitu taldea"
+
+#: src/undo_actions/UndoGroupRemove.vala:30
+msgid "remove group"
+msgstr "kendu taldea"
+
+#: src/undo_actions/UndoGroupsColor.vala:33
+msgid "group color change"
+msgstr "taldeko kolorearen aldaketa"
+
+#: src/undo_actions/UndoGroupsMerge.vala:31
+msgid "group merge"
+msgstr "talde bateratzea"
+
+#: src/undo_actions/UndoGroupsRemove.vala:30
+msgid "remove groups"
+msgstr "kendu taldeak"
+
+#: src/undo_actions/UndoNodeAddParent.vala:32
+msgid "add parent node"
+msgstr "gehitu guraso-nodoa"
 
 #: src/undo_actions/UndoNodeAttach.vala:39
 #: src/undo_actions/UndoNodeAttach.vala:54
 msgid "attach node"
-msgstr "lotu nodoa"
-
-#: src/undo_actions/UndoNodeLinkColor.vala:33
-msgid "link color change"
-msgstr "estekaren kolore aldaketa"
-
-#: src/undo_actions/UndoNodeLayout.vala:30
-msgid "change layout"
-msgstr "aldatu diseinua"
-
-#: src/undo_actions/UndoNodeFold.vala:32
-msgid "node change fold"
-msgstr "nodoaren tolestura aldaketa"
+msgstr "erantsi nodoa"
 
 #: src/undo_actions/UndoNodeBalance.vala:61
 msgid "balance nodes"
 msgstr "orekatu nodoak"
 
-#: src/undo_actions/UndoNodeImage.vala:32
-msgid "node image change"
-msgstr "nodoaren irudiaren aldaketa"
+#: src/undo_actions/UndoNodeCut.vala:33
+msgid "cut node"
+msgstr "ebaki nodoa"
+
+#: src/undo_actions/UndoNodeDelete.vala:34
+msgid "delete node"
+msgstr "ezabatu nodoa"
 
 #: src/undo_actions/UndoNodeDetach.vala:34
 msgid "detach node"
 msgstr "askatu nodoa"
 
-#: src/undo_actions/UndoNodeName.vala:34
+#: src/undo_actions/UndoNodeFolds.vala:30
+#: src/undo_actions/UndoNodeFolds.vala:35
+msgid "node fold changes"
+msgstr "nodoaren tolesdura aldaketak"
+
+#: src/undo_actions/UndoNodeGroup.vala:30
+msgid "node group change"
+msgstr "nodoaren talde aldaketa"
+
+#: src/undo_actions/UndoNodeImage.vala:32
+msgid "node image change"
+msgstr "nodoaren irudi aldaketa"
+
+#: src/undo_actions/UndoNodeInsert.vala:33
+msgid "insert node"
+msgstr "txertatu nodoa"
+
+#: src/undo_actions/UndoNodeLayout.vala:30
+msgid "change layout"
+msgstr "aldatu diseinua"
+
+#: src/undo_actions/UndoNodeLink.vala:32
+msgid "node link change"
+msgstr "nodoaren estekaren aldaketa"
+
+#: src/undo_actions/UndoNodeLinkColor.vala:33
+msgid "link color change"
+msgstr "estekaren kolore aldaketa"
+
+#: src/undo_actions/UndoNodeMove.vala:34
+msgid "move node"
+msgstr "mugitu nodoa"
+
+#: src/undo_actions/UndoNodeName.vala:32
 msgid "node name change"
 msgstr "nodoaren izen aldaketa"
+
+#: src/undo_actions/UndoNodeNote.vala:32
+msgid "node note change"
+msgstr "nodoaren oharraren aldaketa"
+
+#: src/undo_actions/UndoNodePaste.vala:34
+msgid "paste node"
+msgstr "itsatsi nodoa"
+
+#: src/undo_actions/UndoNodeReparent.vala:32
+msgid "reparent children"
+msgstr "konpondu umea"
+
+#: src/undo_actions/UndoNodeReparentLinkColor.vala:32
+#: src/undo_actions/UndoNodesReparentLinkColor.vala:33
+msgid "node link color reparent"
+msgstr "nodoaren estekaren kolorearen konpontzailea"
+
+#: src/undo_actions/UndoNodeReplace.vala:31
+msgid "replace node"
+msgstr "ordeztu nodoa"
+
+#: src/undo_actions/UndoNodeResize.vala:32
+msgid "node resize"
+msgstr "nodoaren tamainaren aldaketa"
+
+#: src/undo_actions/UndoNodeSort.vala:56
+msgid "sort nodes"
+msgstr "ordenatu nodoak"
+
+#: src/undo_actions/UndoNodeStickerAdd.vala:31
+msgid "add node sticker"
+msgstr "gehitu nodoko eranskailua"
+
+#: src/undo_actions/UndoNodeStickerChange.vala:31
+msgid "change node sticker"
+msgstr "aldatu nodoko eranskailua"
+
+#: src/undo_actions/UndoNodeStickerRemove.vala:31
+msgid "remove node sticker"
+msgstr "kendu nodoaren eranskailua"
+
+#: src/undo_actions/UndoNodeTask.vala:34
+msgid "node task change"
+msgstr "nodoaren egitekoaren aldaketa"
+
+#: src/undo_actions/UndoNodesAlign.vala:56
+msgid "node alignment"
+msgstr "nodoaren lerrokapena"
+
+#: src/undo_actions/UndoNodesCut.vala:43
+msgid "cut nodes"
+msgstr "ebaki nodoak"
+
+#: src/undo_actions/UndoNodesDelete.vala:43
+msgid "delete nodes"
+msgstr "ezabatu nodoak"
+
+#: src/undo_actions/UndoNodesGroup.vala:30
+msgid "change node groups"
+msgstr "aldatu nodo-taldeak"
+
+#: src/undo_actions/UndoNodesInsert.vala:37
+msgid "insert nodes"
+msgstr "txertatu nodoak"
+
+#: src/undo_actions/UndoNodesLink.vala:31
+msgid "node link changes"
+msgstr "nodoaren estekaren aldaketak"
+
+#: src/undo_actions/UndoNodesLinkColor.vala:33
+msgid "node link color changes"
+msgstr "nodoaren estekaren kolorearen aldaketa"
+
+#: src/undo_actions/UndoNodesRandLinkColor.vala:33
+msgid "random node link color changes"
+msgstr "nodoaren estekaren kolorearen ausazko aldaketak"
+
+#: src/undo_actions/UndoNodesReplace.vala:31
+msgid "replace nodes"
+msgstr "ordeztu nodoak"
+
+#: src/undo_actions/UndoStickerAdd.vala:30
+#: src/undo_actions/UndoStickerMove.vala:32
+msgid "add sticker"
+msgstr "gehitu eranskailua"
+
+#: src/undo_actions/UndoStickerChange.vala:31
+msgid "change sticker"
+msgstr "aldatu eranskailua"
+
+#: src/undo_actions/UndoStickerRemove.vala:30
+msgid "remove sticker"
+msgstr "kendu eranskailua"
+
+#: src/undo_actions/UndoStickerResize.vala:31
+msgid "resize sticker"
+msgstr "eranskailuaren tamaina aldatu"
+
+#: src/undo_actions/UndoStyleChange.vala:38
+msgid "style change"
+msgstr "estilo aldaketa"
+
+#: src/undo_actions/UndoTextClearTags.vala:30
+msgid "clear formatting"
+msgstr "garbitu formatua"
+
+#: src/undo_actions/UndoTextDelete.vala:30
+msgid "text deletion"
+msgstr "testuaren ezabaketa"
+
+#: src/undo_actions/UndoTextInsert.vala:29
+#: src/undo_actions/UndoTextMultiInsert.vala:33
+msgid "text insertion"
+msgstr "testu-txertaketa"
+
+#: src/undo_actions/UndoTextReplace.vala:31
+msgid "text replacement"
+msgstr "testu-ordezkapena"
+
+#: src/undo_actions/UndoTextTagAdd.vala:32
+msgid "format tag add"
+msgstr "formatu etiketa gehitu"
+
+#: src/undo_actions/UndoTextTagRemove.vala:32
+msgid "format tag remove"
+msgstr "formatu etiketa kendu"
+
+#: src/About.vala:36
+msgid "Mind-mapping application"
+msgstr "Ideia-mapen aplikazioa"
+
+#: src/About.vala:37
+msgid "Copyright © 2018-2021 Trevor Williams"
+msgstr "Copyright © 2018-2021 Trevor Williams"
+
+#: src/About.vala:41
+msgid "Minder in AppCenter"
+msgstr "Minder aplikazioen zentroan"
+
+#: src/Connection.vala:695
+msgid "Connection Title"
+msgstr "Loturaren izenburua"
+
+#: src/Connection.vala:703
+msgid "Connection Note"
+msgstr "Loturaren mezua"
+
+#: src/ConnectionInspector.vala:74 src/NodeInspector.vala:126
+msgid "Color"
+msgstr "Kolorea"
+
+#: src/ConnectionInspector.vala:88
+msgid "Use Theme Default Color"
+msgstr "Erabili gaiaren kolore lehenetsia"
+
+#: src/ConnectionInspector.vala:107 src/NodeInspector.vala:153
+msgid "Note"
+msgstr "Oharra"
+
+#: src/ConnectionInspector.vala:140
+msgid "Delete Connection"
+msgstr "Ezabatu lotura"
+
+#: src/ConnectionMenu.vala:42 src/ConnectionsMenu.vala:35
+#: src/GroupsMenu.vala:39 src/NodeMenu.vala:85 src/NodesMenu.vala:54
+#: src/ThemeEditor.vala:138
+msgid "Delete"
+msgstr "Ezabatu"
+
+#: src/ConnectionMenu.vala:46
+msgid "Edit Title…"
+msgstr "Editatu izenburua…"
+
+#: src/ConnectionMenu.vala:50 src/NodeMenu.vala:96
+#: data/com.github.phase1geo.minder.shortcuts.ui:329
+#: data/com.github.phase1geo.minder.shortcuts.ui:598
+msgid "Edit Note"
+msgstr "Editatu mezua"
+
+#: src/ConnectionMenu.vala:53 src/NodeMenu.vala:106
+msgid "Remove Sticker"
+msgstr "Kendu eranskailua"
+
+#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:49 src/ImageManager.vala:299
+#: src/NodeMenu.vala:172 src/NodesMenu.vala:87
+msgid "Select"
+msgstr "Hautatu"
+
+#: src/ConnectionMenu.vala:61
+msgid "Start Node"
+msgstr "Hasierako nodoa"
+
+#: src/ConnectionMenu.vala:65
+msgid "End Node"
+msgstr "Bukatu nodoa"
+
+#: src/ConnectionMenu.vala:69
+msgid "Next Connection"
+msgstr "Hurrengo lotura"
+
+#: src/ConnectionMenu.vala:73
+msgid "Previous Connection"
+msgstr "Aurreko lotura"
+
+#: src/Document.vala:65
+msgid "unnamed"
+msgstr "izengabea"
+
+#: src/DrawArea.vala:720
+msgid "Main Idea"
+msgstr "Ideia nagusia"
+
+#: src/DrawArea.vala:2178
+#, c-format
+msgid "%0.3g%% complete"
+msgstr "%0.3g %% burutua"
+
+#: src/DrawArea.vala:2332
+msgid "connection endpoint change"
+msgstr "loturaren bukaera-puntuaren aldaketa"
+
+#: src/DrawArea.vala:2339
+msgid "connection drag"
+msgstr "arrastatu lotura"
+
+#: src/DrawArea.vala:2975 src/DrawArea.vala:2988 src/DrawArea.vala:4520
+msgid "Another Idea"
+msgstr "Beste ideia"
+
+#: src/DynamicNotebook.vala:234 src/DynamicNotebook.vala:258
+msgid "Close Tab"
+msgstr "Itxi fitxa"
+
+#: src/DynamicNotebook.vala:261
+msgid "Open in a New Window"
+msgstr "Ireki leiho berrian"
+
+#: src/DynamicNotebook.vala:262
+msgid "Duplicate"
+msgstr "Bikoiztu"
+
+#: src/DynamicNotebook.vala:314
+msgid "Close Other Tab"
+msgstr "Itxi beste fitxa"
+
+#: src/DynamicNotebook.vala:314
+msgid "Close Other Tabs"
+msgstr "Itxi beste fitxak"
+
+#: src/DynamicNotebook.vala:485
+msgid "Clear All"
+msgstr "Garbitu dena"
+
+#: src/DynamicNotebook.vala:767 src/DynamicNotebook.vala:798
+msgid "New Tab"
+msgstr "Fitxa berria"
+
+#: src/DynamicNotebook.vala:768
+msgid "Undo Close Tab"
+msgstr "Desegin fitxaren ixtea"
+
+#: src/DynamicNotebook.vala:810
+msgid "Closed Tabs"
+msgstr "Itxitako fitxak"
+
+#: src/EmptyInspector.vala:30
+msgid ""
+"<big>Select a node or connection\n"
+"to view/edit information</big>"
+msgstr ""
+"<big>Hautatu nodo edo lotura bat\n"
+"bere informazioa ikusteko/editatzeko</big>"
+
+#: src/EmptyMenu.vala:38 src/NodeMenu.vala:77 src/TextMenu.vala:54
+msgid "Paste"
+msgstr "Itsatsi"
+
+#: src/EmptyMenu.vala:42 src/NodeMenu.vala:145
+msgid "Add Root Node"
+msgstr "Gehitu sustrai-nodoa"
+
+#: src/EmptyMenu.vala:46
+msgid "Add Nodes With Quick Entry"
+msgstr "Gehitu nodoak sarrera azkarrarekin"
+
+#: src/EmptyMenu.vala:49
+msgid "Select Node"
+msgstr "Hautatu nodoa"
+
+#: src/EmptyMenu.vala:54 src/Theme.vala:292
+msgid "Root"
+msgstr "Sustraia"
+
+#: src/Exporter.vala:43
+msgid "Export…"
+msgstr "Esportatu…"
+
+#: src/Exporter.vala:44
+msgid "Export With Current Settings"
+msgstr "Esportatu uneko ezarpenekin"
+
+#: src/Exporter.vala:131
+#, c-format
+msgid "Export As %s"
+msgstr "Esportatu honela %s"
+
+#: src/Exporter.vala:132 src/ImageEditor.vala:375 src/ImageManager.vala:299
+#: src/MainWindow.vala:936 src/MainWindow.vala:984 src/MainWindow.vala:1102
+#: src/QuickEntry.vala:118 src/ThemeEditor.vala:143 src/UrlEditor.vala:61
+msgid "Cancel"
+msgstr "Utzi"
+
+#: src/Exporter.vala:132 src/MainWindow.vala:756
+msgid "Export"
+msgstr "Esportatu"
+
+#: src/Exporter.vala:154
+msgid "Minder Export Completed"
+msgstr "Minder esportazioa burutu da"
+
+#: src/Exports.vala:35
+msgid "JPEG"
+msgstr "JPEG"
+
+#: src/GroupsMenu.vala:42
+msgid "Merge"
+msgstr "Batu"
+
+#: src/GroupsMenu.vala:45
+msgid "Change color…"
+msgstr "Aldatu kolorea…"
+
+#: src/GroupsMenu.vala:52
+msgid "Top Nodes"
+msgstr "Goiko nodoak"
+
+#: src/GroupsMenu.vala:55
+msgid "All Grouped Nodes"
+msgstr "Taldekatutako nodo guztiak"
+
+#: src/GroupsMenu.vala:100 src/NodeMenu.vala:627 src/NodesMenu.vala:244
+msgid "Select a link color"
+msgstr "Hautatu estekaren kolorea"
+
+#: src/ImageEditor.vala:164
+#, c-format
+msgid "Crop Area: %d,%d %3dx%3d"
+msgstr "Mozketa-area: %d,%d %3d×%3d"
+
+#: src/ImageEditor.vala:368
+#, c-format
+msgid "Cursor: %3d,%3d"
+msgstr "Kurtsorea: %3d,%3d"
+
+#: src/ImageEditor.vala:376 src/UrlEditor.vala:54
+msgid "Apply"
+msgstr "Aplikatu"
+
+#: src/ImageEditor.vala:386
+msgid "Change Image"
+msgstr "Aldatu irudia"
+
+#: src/ImageEditor.vala:387
+msgid "Copy Image to Clipboard"
+msgstr "Kopiatu irudia arbelera"
+
+#: src/ImageEditor.vala:388
+msgid "Cut Image to Clipboard"
+msgstr "Ebaki irudia arbelera"
+
+#: src/ImageEditor.vala:389
+msgid "Paste Image from Clipboard"
+msgstr "Itsatsi irudia arbeletik"
+
+#: src/ImageEditor.vala:390 src/NodeInspector.vala:192 src/NodeMenu.vala:409
+msgid "Remove Image"
+msgstr "Kendu irudia"
+
+#: src/ImageManager.vala:299
+msgid "Select Image"
+msgstr "Hautatu irudia"
+
+#: src/ImageManager.vala:304
+msgid "Images"
+msgstr "Irudiak"
+
+#: src/MainWindow.vala:154 src/MainWindow.vala:1107
+msgid "Minder"
+msgstr "Minder"
+
+#: src/MainWindow.vala:188 data/com.github.phase1geo.minder.shortcuts.ui:21
+msgid "New File"
+msgstr "Fitxategi berri"
+
+#: src/MainWindow.vala:194 src/MainWindow.vala:984
+#: data/com.github.phase1geo.minder.shortcuts.ui:28
+msgid "Open File"
+msgstr "Ireki fitxategia"
+
+#: src/MainWindow.vala:200 data/com.github.phase1geo.minder.shortcuts.ui:42
+msgid "Save File As"
+msgstr "Gorde honela"
+
+#: src/MainWindow.vala:206 src/UndoBuffer.vala:84
+msgid "Undo"
+msgstr "Desegin"
+
+#: src/MainWindow.vala:213 src/UndoBuffer.vala:90
+msgid "Redo"
+msgstr "Berregin"
+
+#: src/MainWindow.vala:481
+msgid "Unnamed Document"
+msgstr "Fitxategi izengabea"
+
+#: src/MainWindow.vala:485 src/MainWindow.vala:791
+msgid "Focus Mode"
+msgstr "Fokuratze modua"
+
+#: src/MainWindow.vala:516
+msgid "Zoom"
+msgstr "Zoom"
+
+#: src/MainWindow.vala:523
+msgid "Zoom to Percent"
+msgstr "Eskalatu ehunekotan"
+
+#: src/MainWindow.vala:535 data/com.github.phase1geo.minder.shortcuts.ui:117
+msgid "Zoom In"
+msgstr "Handiagotu"
+
+#: src/MainWindow.vala:540 data/com.github.phase1geo.minder.shortcuts.ui:124
+msgid "Zoom Out"
+msgstr "Txikiagotu"
+
+#: src/MainWindow.vala:545
+msgid "Zoom to Fit"
+msgstr "Doitzeko eskala"
+
+#: src/MainWindow.vala:550
+msgid "Zoom to Fit Selected Node"
+msgstr "Eskalatu hautatutako nodoa doitzeko"
+
+#: src/MainWindow.vala:555
+msgid "Zoom to Actual Size"
+msgstr "Eskalatu uneko tamainara"
+
+#: src/MainWindow.vala:582
+msgid "Search"
+msgstr "Bilatu"
+
+#: src/MainWindow.vala:592
+msgid "Search Nodes and Connections"
+msgstr "Bilatu nodo eta loturetan"
+
+#: src/MainWindow.vala:621
+msgid "Search Criteria"
+msgstr "Bilaketa irizpideak"
+
+#: src/MainWindow.vala:624
+msgid "Search all tabs"
+msgstr "Bilatu fitxa guztietan"
+
+#: src/MainWindow.vala:658
+msgid "Nodes"
+msgstr "Nodoak"
+
+#: src/MainWindow.vala:659
+msgid "Connections"
+msgstr "Loturak"
+
+#: src/MainWindow.vala:660
+msgid "Titles"
+msgstr "Izenburuak"
+
+#: src/MainWindow.vala:661
+msgid "Notes"
+msgstr "Oharrak"
+
+#: src/MainWindow.vala:662
+msgid "Folded"
+msgstr "Tolestuta"
+
+#: src/MainWindow.vala:663
+msgid "Unfolded"
+msgstr "Zabalduak"
+
+#: src/MainWindow.vala:664
+msgid "Tasks"
+msgstr "Zereginak"
+
+#: src/MainWindow.vala:665
+msgid "Non-tasks"
+msgstr "Zereginik ez"
+
+#: src/MainWindow.vala:768
+msgid "Print…"
+msgstr "Inprimatu…"
+
+#: src/MainWindow.vala:816 src/Preferences.vala:36
+msgid "Preferences"
+msgstr "Hobespenak"
+
+#: src/MainWindow.vala:821
+msgid "Shortcuts Cheatsheet"
+msgstr "Laster-teklen txuleta"
+
+#: src/MainWindow.vala:825
+msgid "About Minder"
+msgstr "Minderri buruz"
+
+#: src/MainWindow.vala:858 src/MainWindow.vala:1217
+msgid "Show Property Sidebar"
+msgstr "Erakutsi propietateen alboko panela"
+
+#: src/MainWindow.vala:873
+msgid "Current"
+msgstr "Unekoa"
+
+#: src/MainWindow.vala:874 src/StyleInspector.vala:184
+msgid "Style"
+msgstr "Estiloa"
+
+#: src/MainWindow.vala:875
+msgid "Stickers"
+msgstr "Eranskailuak"
+
+#: src/MainWindow.vala:876
+msgid "Map"
+msgstr "Mapa"
+
+#: src/MainWindow.vala:927
+msgid "Save current unnamed document?"
+msgstr "Gorde nahi duzu izenik gabeko fitxategia?"
+
+#: src/MainWindow.vala:928
+msgid "Changes will be permanently lost if not saved."
+msgstr "Aldaketak betiko galduko dira gorde ezean."
+
+#: src/MainWindow.vala:933
+msgid "Discard Changes"
+msgstr "Baztertu aldaketak"
+
+#: src/MainWindow.vala:939 src/MainWindow.vala:1102 src/ThemeEditor.vala:146
+msgid "Save"
+msgstr "Gorde"
+
+#: src/MainWindow.vala:984
+msgid "Open"
+msgstr "Ireki"
+
+#: src/MainWindow.vala:1102
+msgid "Save File"
+msgstr "Gorde fitxategia"
+
+#: src/MainWindow.vala:1161
+msgid "Hide Property Sidebar"
+msgstr "Ezkutatu propietateen alboko barra"
+
+#: src/MapInspector.vala:76
+msgid "Hide connections"
+msgstr "Ezkutatu loturak"
+
+#: src/MapInspector.vala:105
+msgid "Rotate main branch colors"
+msgstr "Biratu adarraren kolore nagusiak"
+
+#: src/MapInspector.vala:137
+msgid "Node Layouts"
+msgstr "Nodoen diseinuak"
+
+#: src/MapInspector.vala:188
+msgid "Themes"
+msgstr "Gaiak"
+
+#: src/MapInspector.vala:207
+msgid "Add Custom Theme"
+msgstr "Gehitu itxura pertsonalizatua"
+
+#: src/MapInspector.vala:226
+msgid "Balance Nodes"
+msgstr "Orekatu nodoak"
+
+#: src/MapInspector.vala:232
+msgid "Fold Completed Tasks"
+msgstr "Tolestu burututako zereginak"
+
+#: src/MapInspector.vala:238
+msgid "Unfold All Nodes"
+msgstr "Zabaldu nodo guztiak"
+
+#: src/MapInspector.vala:317
+msgid "Unsaved"
+msgstr "Gorde gabe"
+
+#: src/Node.vala:1820
+msgid "Node Title"
+msgstr "Nodoaren izenburua"
+
+#: src/Node.vala:1828
+msgid "Node Note"
+msgstr "Nodoaren oharrak"
+
+#: src/NodeInspector.vala:87
+msgid "Task"
+msgstr "Zeregina"
+
+#: src/NodeInspector.vala:105
+msgid "Fold"
+msgstr "Tolestu"
+
+#: src/NodeInspector.vala:181
+msgid "Image"
+msgstr "Irudia"
+
+#: src/NodeInspector.vala:186
+msgid "Edit Image"
+msgstr "Editatu irudia"
+
+#: src/NodeInspector.vala:207
+msgid "Add Image…"
+msgstr "Gehitu irudia…"
+
+#: src/NodeInspector.vala:286
+msgid "Copy Node To Clipboard"
+msgstr "Kopiatu nodoa arbelera"
+
+#: src/NodeInspector.vala:290
+msgid "Cut Node To Clipboard"
+msgstr "Ebaki nodoa arbelara"
+
+#: src/NodeInspector.vala:295
+msgid "Detach Node"
+msgstr "Askatu nodoa"
+
+#: src/NodeInspector.vala:300 data/com.github.phase1geo.minder.shortcuts.ui:275
+msgid "Delete Node"
+msgstr "Ezabatu nodoa"
+
+#: src/NodeMenu.vala:69 src/NodesMenu.vala:46 src/TextMenu.vala:44
+msgid "Copy"
+msgstr "Kopiatu"
+
+#: src/NodeMenu.vala:73 src/NodesMenu.vala:50 src/TextMenu.vala:49
+msgid "Cut"
+msgstr "Ebaki"
+
+#: src/NodeMenu.vala:81 src/NodeMenu.vala:421
+msgid "Paste and Replace Node"
+msgstr "Itsatsi eta ordeztu nodoa"
+
+#: src/NodeMenu.vala:88
+msgid "Delete Single Node"
+msgstr "Ezabatu nodo sinplea"
+
+#: src/NodeMenu.vala:92
+msgid "Edit Text…"
+msgstr "Editatu testua.…"
+
+#: src/NodeMenu.vala:100 src/NodeMenu.vala:395
+msgid "Add Task"
+msgstr "Gehitu zeregina"
+
+#: src/NodeMenu.vala:103 src/NodeMenu.vala:409
+msgid "Add Image"
+msgstr "Gehitu irudia"
+
+#: src/NodeMenu.vala:110 src/NodeMenu.vala:396
+msgid "Add Node Link"
+msgstr "Gehitu nodoko esteka"
+
+#: src/NodeMenu.vala:114
+msgid "Add Connection"
+msgstr "Gehitu lotura"
+
+#: src/NodeMenu.vala:118
+msgid "Add Group"
+msgstr "Gehitu taldea"
+
+#: src/NodeMenu.vala:121 src/ThemeEditor.vala:131
+msgid "Link Color"
+msgstr "Estekaren kolorea"
+
+#: src/NodeMenu.vala:125 src/NodesMenu.vala:72
+msgid "Set to color…"
+msgstr "Ezarri kolorea…"
+
+#: src/NodeMenu.vala:128
+msgid "Randomize color"
+msgstr "Errendatu kolorea"
+
+#: src/NodeMenu.vala:131 src/NodesMenu.vala:78
+msgid "Use parent color"
+msgstr "Erabili gurasoaren kolorea"
+
+#: src/NodeMenu.vala:135 src/NodeMenu.vala:397 src/NodesMenu.vala:58
+#: src/NodesMenu.vala:203
+msgid "Fold Children"
+msgstr "Tolestu umeak"
+
+#: src/NodeMenu.vala:138
+msgid "Detach"
+msgstr "Askatu"
+
+#: src/NodeMenu.vala:141
+msgid "Add Node"
+msgstr "Gehitu nodoa"
+
+#: src/NodeMenu.vala:148
+msgid "Add Parent Node"
+msgstr "Gehitu guraso-nodoa"
+
+#: src/NodeMenu.vala:152
+msgid "Add Child Node"
+msgstr "Gehitu ume-nodoa"
+
+#: src/NodeMenu.vala:156
+msgid "Add Sibling Node"
+msgstr "Gehitu pareko nodoa"
+
+#: src/NodeMenu.vala:160 src/QuickEntry.vala:36
+msgid "Quick Entry"
+msgstr "Sarrera azkarra"
+
+#: src/NodeMenu.vala:164
+msgid "Insert Nodes"
+msgstr "Txertatu nodoak"
+
+#: src/NodeMenu.vala:168
+msgid "Replace Nodes"
+msgstr "Ordeztu nodoak"
+
+#: src/NodeMenu.vala:177
+msgid "Root Node"
+msgstr "Sustrai nodoa"
+
+#: src/NodeMenu.vala:182
+msgid "Next Sibling Node"
+msgstr "Hurrengo pareko nodoa"
+
+#: src/NodeMenu.vala:187
+msgid "Previous Sibling Node"
+msgstr "Aurreko pareko nodoa"
+
+#: src/NodeMenu.vala:192
+msgid "Child Node"
+msgstr "Ume-nodoa"
+
+#: src/NodeMenu.vala:197 src/NodesMenu.vala:96
+msgid "Child Nodes"
+msgstr "Ume-nodoak"
+
+#: src/NodeMenu.vala:202
+msgid "Subtree"
+msgstr "Azpi-zuhaitza"
+
+#: src/NodeMenu.vala:207
+msgid "Parent Node"
+msgstr "Guraso-nodoa"
+
+#: src/NodeMenu.vala:212
+msgid "Linked Node"
+msgstr "Nodo estekatua"
+
+#: src/NodeMenu.vala:217
+msgid "Connection"
+msgstr "Lotura"
+
+#: src/NodeMenu.vala:222
+msgid "Center Current Node"
+msgstr "Erdiratu uneko nodoa"
+
+#: src/NodeMenu.vala:226
+msgid "Sort Children"
+msgstr "Ordenatu umeak"
+
+#: src/NodeMenu.vala:230
+msgid "Alphabetically"
+msgstr "Alfabetikoki"
+
+#: src/NodeMenu.vala:233
+msgid "Randomize"
+msgstr "Errendatu"
+
+#: src/NodeMenu.vala:393
+msgid "Remove Task"
+msgstr "Kendu zeregina"
+
+#: src/NodeMenu.vala:394
+msgid "Mark Task As Done"
+msgstr "Burututa gisa markatu"
+
+#: src/NodeMenu.vala:396
+msgid "Remove Node Link"
+msgstr "Kendu nodoaren esteka"
+
+#: src/NodeMenu.vala:397 src/NodesMenu.vala:203
+msgid "Unfold Children"
+msgstr "Zabaldu ume-nodoak"
+
+#: src/NodeMenu.vala:414
+msgid "Paste Text As Child Node"
+msgstr "Itsatsi testua ume-nodo gisa"
+
+#: src/NodeMenu.vala:415
+msgid "Paste and Replace Node Text"
+msgstr "Itsatsi eta ordeztu nodoaren testua"
+
+#: src/NodeMenu.vala:417
+msgid "Paste Image As Child Node"
+msgstr "Itsatsi irudia ume-nodo gisa"
+
+#: src/NodeMenu.vala:418
+msgid "Paste and Replace Node Image"
+msgstr "Itsatsi eta ordeztu nodoaren irudia"
+
+#: src/NodeMenu.vala:420
+msgid "Paste Node As Child"
+msgstr "Itsatsi ume-nodo gisa"
+
+#: src/NodesMenu.vala:61
+msgid "Connect"
+msgstr "Konektatu"
+
+#: src/NodesMenu.vala:64
+msgid "Link Nodes"
+msgstr "Loturaren nodoak"
+
+#: src/NodesMenu.vala:69 src/ThemeEditor.vala:124
+msgid "Link Colors"
+msgstr "Estekaren koloreak"
+
+#: src/NodesMenu.vala:75
+msgid "Randomize colors"
+msgstr "Errendatu koloreak"
+
+#: src/NodesMenu.vala:91
+msgid "Parent Nodes"
+msgstr "Guraso-nodoak"
+
+#: src/NodesMenu.vala:105
+msgid "Align Nodes"
+msgstr "Lerrokatu nodoak"
+
+#: src/NodesMenu.vala:109
+msgid "Align Top"
+msgstr "Lerrokatu goian"
+
+#: src/NodesMenu.vala:113 data/com.github.phase1geo.minder.shortcuts.ui:543
+msgid "Align Center Horizontally"
+msgstr "Lerrokatu erdian horizontalki"
+
+#: src/NodesMenu.vala:117
+msgid "Align Bottom"
+msgstr "Lerrokatu behean"
+
+#: src/NodesMenu.vala:121
+msgid "Align Left"
+msgstr "Lerrokatu ezkerrean"
+
+#: src/NodesMenu.vala:125 data/com.github.phase1geo.minder.shortcuts.ui:564
+msgid "Align Center Vertically"
+msgstr "Lerrokatu erdian bertikalki"
+
+#: src/NodesMenu.vala:129
+msgid "Align Right"
+msgstr "Lerrokatu eskuinean"
+
+#: src/Preferences.vala:47
+msgid "Behavior"
+msgstr "Jokabidea"
+
+#: src/Preferences.vala:48
+msgid "Appearance"
+msgstr "Itxura"
+
+#: src/Preferences.vala:61
+msgid "Close"
+msgstr "Itxi"
+
+#: src/Preferences.vala:78
+msgid ""
+"Specifies if we should create a new node directly from edit mode if Return "
+"or Tab is pressed."
+msgstr ""
+"Zehazten du nodo berri bat sortu behar dugun zuzenean edizio modutik Sartu "
+"edo Tab sakatzen bada."
+
+#: src/Preferences.vala:82
+msgid ""
+"Specifies if embedded URLs found in node titles should be automatically "
+"highlighted."
+msgstr ""
+"Nodoen izenburuetan aurkitutako URL kapsulatuak automatikoki nabarmendu "
+"behar diren zehazten du."
+
+#: src/Preferences.vala:89
+msgid ""
+"Specifies if the connection title will be added and put into edit mode "
+"immediately after the connection is made."
+msgstr ""
+"Konexioaren izenburua gehitu eta edizio moduan konexioa egin eta berehala "
+"jarriko den zehazten du ."
+
+#: src/Preferences.vala:93
+msgid "If enabled, selects items when mouse cursor hovers over the item."
+msgstr ""
+"Aktibatuta badago, elementuak hautatzen ditu sagua elementuen gainean "
+"pasatzean."
+
+#: src/Preferences.vala:114
+msgid ""
+"Specifies the custom font size to use in text editing fields (i.e, quick "
+"entry or notes field)."
+msgstr ""
+"Testua editatzeko eremuetan erabili beharreko letra-tipo pertsonalizatua "
+"zehazten du (hau da, sarrera azkarra edo oharren eremua)."
+
+#: src/QuickEntry.vala:58
+msgid "Help for inputting node information:"
+msgstr "Nodoaren informazioa sartzeko laguntza:"
+
+#: src/QuickEntry.vala:59
+msgid ""
+"Each line of text describes either the title of a node or note information "
+"for a node."
+msgstr ""
+"Testu lerro bakoitzak nodo baten izenburua edo nodo baten ohar informazioa "
+"deskribatzen ditu."
+
+#: src/QuickEntry.vala:60
+msgid "Tab"
+msgstr "Fitxa"
+
+#: src/QuickEntry.vala:61
+msgid "Creates a child node of the previous node."
+msgstr "Sortu aurreko nodoaren ume-nodoa."
+
+#: src/QuickEntry.vala:63
+msgid ""
+"If this character is the first non-whitespace character, makes a new root "
+"node from the title that follows."
+msgstr ""
+"Karaktere hau zuriunea ez den lehenengo karakterea bada, egin sustrai-nodo "
+"berri bat hurrengo izenburutik."
+
+#: src/QuickEntry.vala:65
+msgid ""
+"If this character is the first non-whitespace character, make a new node "
+"from the title that follows."
+msgstr ""
+"Karaktere hau zuriunea ez den lehenengo karakterea bada, egin nodo berri bat "
+"hurrengo izenburutik."
+
+#: src/QuickEntry.vala:67
+msgid ""
+"If this character is the first non-whitespace character, the following line "
+"is appended to the previous node's note."
+msgstr ""
+"Karaktere hau zuriunea ez den lehenengo karakterea bada, hurrengo lerroa "
+"aurreko nodoaren mezuari eransten zaio."
+
+#: src/QuickEntry.vala:69
+msgid "If this follows *, + or -, the node is made an uncompleted task."
+msgstr ""
+"Honekin segitzen badu *,+ edo - nodoa amaitu gabeko zeregina bihurtzen da."
+
+#: src/QuickEntry.vala:71
+msgid "If this follows *, + or -, the node is made a completed task."
+msgstr ""
+"Honekin segitzen badu *,+ edo - nodoa amaitutako zeregina bihurtzen da."
+
+#: src/QuickEntry.vala:100
+msgid "Replace"
+msgstr "Ordeztu"
+
+#: src/QuickEntry.vala:109
+msgid "Insert"
+msgstr "Txertatu"
+
+#: src/StickerInspector.vala:59
+msgid "Remove From Favorites"
+msgstr "Kendu gogokoetatik"
+
+#: src/StickerInspector.vala:62 src/StickerInspector.vala:66
+msgid "Add To Favorites"
+msgstr "Gehitu gogokoetara"
+
+#: src/StickerInspector.vala:75
+msgid ""
+"Drag and drop sticker onto a node or anywhere else in the map to add a "
+"sticker."
+msgstr ""
+"Arrastatu eta jaregin eranskailua nodo batean edo mapako beste edozein "
+"lekutan eranskailua gehitzeko."
+
+#: src/StickerInspector.vala:81
+msgid "Search Stickers"
+msgstr "Bilatu eranskailuak"
+
+#: src/StickerInspector.vala:110
+msgid "Favorites"
+msgstr "Gogokoak"
+
+#: src/StyleInspector.vala:34
+msgid "All"
+msgstr "Denak"
+
+#: src/StyleInspector.vala:35
+msgid "Selected Nodes"
+msgstr "Hautatutako nodoak"
+
+#: src/StyleInspector.vala:36
+msgid "Selected Connections"
+msgstr "Hautatutako loturak"
+
+#: src/StyleInspector.vala:132
+msgid "Changes affect:"
+msgstr "Aldaketak honi eragingo dio:"
+
+#: src/StyleInspector.vala:152
+msgid "Branch Options"
+msgstr "Adarren aukerak"
+
+#: src/StyleInspector.vala:233 src/StyleInspector.vala:591
+msgid "Margin"
+msgstr "Marjina"
+
+#: src/StyleInspector.vala:276
+msgid "Link Options"
+msgstr "Loturaren aukerak"
+
+#: src/StyleInspector.vala:310 src/StyleInspector.vala:794
+msgid "Line Dash"
+msgstr "Lerro marratxoduna"
+
+#: src/StyleInspector.vala:349 src/StyleInspector.vala:871
+msgid "Line Width"
+msgstr "Lerroaren zabalera"
+
+#: src/StyleInspector.vala:395
+msgid "Link Arrow"
+msgstr "Esteka geziduna"
+
+#: src/StyleInspector.vala:425
+msgid "Node Options"
+msgstr "Nodoaren aukerak"
+
+#: src/StyleInspector.vala:467
+msgid "Border Style"
+msgstr "Ertza estiloa"
+
+#: src/StyleInspector.vala:516
+msgid "Border Width"
+msgstr "Ertzaren zabalera"
+
+#: src/StyleInspector.vala:562
+msgid "Color Fill"
+msgstr "Kolore betegarria"
+
+#: src/StyleInspector.vala:633 src/StyleInspector.vala:920
+msgid "Padding"
+msgstr "Betegarria"
+
+#: src/StyleInspector.vala:673
+msgid "Font"
+msgstr "Letra-tipoa"
+
+#: src/StyleInspector.vala:702
+msgid "Width"
+msgstr "Zabalera"
+
+#: src/StyleInspector.vala:724
+msgid "Enable Markup"
+msgstr "Gaitu Markup"
+
+#: src/StyleInspector.vala:754
+msgid "Connection Options"
+msgstr "Loturaren aukerak"
+
+#: src/StyleInspector.vala:833
+msgid "Arrows"
+msgstr "Geziak"
+
+#: src/StyleInspector.vala:960
+msgid "Title Font"
+msgstr "Izenburuaren letra-mota"
+
+#: src/StyleInspector.vala:989
+msgid "Title Width"
+msgstr "Izenburuaren zabalera"
+
+#: src/Styles.vala:51
+msgid "Solid"
+msgstr "Solidoa"
+
+#: src/Styles.vala:52
+msgid "Dotted"
+msgstr "Puntukakoa"
+
+#: src/Styles.vala:53
+msgid "Short Dash"
+msgstr "Marratxo laburra"
+
+#: src/Styles.vala:54
+msgid "Long Dash"
+msgstr "Marratxo luzea"
+
+#: src/Tagger.vala:121
+msgid "Add Tag"
+msgstr "Gehitu etiketa"
+
+#: src/TextMenu.vala:59
+msgid "Insert Emoji"
+msgstr "Txertatu emotikonoa"
+
+#: src/TextMenu.vala:63
+msgid "Open Link"
+msgstr "Ireki esteka"
+
+#: src/TextMenu.vala:67
+msgid "Add Link"
+msgstr "Gehitu esteka"
+
+#: src/TextMenu.vala:71
+msgid "Edit Link"
+msgstr "Editatu esteka"
+
+#: src/TextMenu.vala:75
+msgid "Remove Link"
+msgstr "Kendu esteka"
+
+#: src/TextMenu.vala:79
+msgid "Restore Link"
+msgstr "Leheneratu esteka"
+
+#: src/ThemeEditor.vala:45
+msgid "Customize Theme"
+msgstr "Gai pertsonalizatua"
+
+#: src/ThemeEditor.vala:51
+msgid "Name"
+msgstr "Izena"
+
+#: src/ThemeEditor.vala:80
+msgid "Base Colors"
+msgstr "Oinarrizko koloreak"
+
+#: src/ThemeEditor.vala:85
+msgid "Background"
+msgstr "Atzeko planoa"
+
+#: src/ThemeEditor.vala:86
+msgid "Foreground"
+msgstr "Lehen planoa"
+
+#: src/ThemeEditor.vala:87
+msgid "Root Node Background"
+msgstr "Sustrai nodoaren atzeko planoa"
+
+#: src/ThemeEditor.vala:88
+msgid "Root Node Foreground"
+msgstr "Sustrai nodoaren aurreko planoa"
+
+#: src/ThemeEditor.vala:89
+msgid "Node Select Background"
+msgstr "Nodorako hautatutako atzeko planoa"
+
+#: src/ThemeEditor.vala:90
+msgid "Node Select Foreground"
+msgstr "Nodorako hautatutako aurreko planoa"
+
+#: src/ThemeEditor.vala:91
+msgid "Text Select Background"
+msgstr "Hautatutako testuaren atzeko planoa"
+
+#: src/ThemeEditor.vala:92
+msgid "Text Select Foreground"
+msgstr "Hautatutako testuaren aurreko planoa"
+
+#: src/ThemeEditor.vala:93
+msgid "Text Cursor"
+msgstr "Testuko kurtsorea"
+
+#: src/ThemeEditor.vala:94
+msgid "Attachable Highlight"
+msgstr "Nabarmentzeko eransgarria"
+
+#: src/ThemeEditor.vala:95
+msgid "Connection Color"
+msgstr "Loturaren kolorea"
+
+#: src/ThemeEditor.vala:96
+msgid "Connection Title Color"
+msgstr "Loturaren izenburuaren kolorea"
+
+#: src/ThemeEditor.vala:97
+msgid "URL Link Background"
+msgstr "URL estekaren atzeko planoa"
+
+#: src/ThemeEditor.vala:98
+msgid "URL Link Foreground"
+msgstr "URL estekaren aurreko planoa"
+
+#: src/ThemeEditor.vala:99
+msgid "Tag"
+msgstr "Etiketa"
+
+#: src/ThemeEditor.vala:100
+msgid "Markdown Syntax Chars"
+msgstr "Markdown sintaxi karaktereak"
+
+#: src/ThemeEditor.vala:101
+msgid "Match Background"
+msgstr "Bat egin atzeko planoarekin"
+
+#: src/ThemeEditor.vala:102
+msgid "Match Foreground"
+msgstr "Bat egin aurreko planoarekin"
+
+#: src/ThemeEditor.vala:103
+msgid "Markdown List Item"
+msgstr "Markdown zerrendako elementua"
+
+#: src/ThemeEditor.vala:109
+msgid "Prefer Dark Mode"
+msgstr "Modu iluna nahiago"
+
+#: src/ThemeEditor.vala:192
+msgid "Custom"
+msgstr "Pertsonalizatu"
+
+#: src/ThemeEditor.vala:210
+msgid "Delete theme?"
+msgstr "Ezabatu gaia?"
+
+#: src/ThemeEditor.vala:211
+msgid "This operation cannot be undone."
+msgstr "Eragiketa hau ezin da desegin."
+
+#: src/ThemeEditor.vala:216
+msgid "No"
+msgstr "Ez"
+
+#: src/ThemeEditor.vala:219
+msgid "Yes"
+msgstr "Bai"
 
 #: src/UndoBuffer.vala:85
 msgid "Undo "
@@ -870,11 +1571,16 @@ msgstr "Desegin "
 msgid "Redo "
 msgstr "Berregin "
 
+#: src/UrlEditor.vala:42
+msgid "URL"
+msgstr "URL"
+
 #: data/com.github.phase1geo.minder.shortcuts.ui:6
 msgid "Minder Shortcuts"
-msgstr "Minder laster-teklak"
+msgstr "Minder lasterbideak"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:12
+#: data/com.github.phase1geo.minder.shortcuts.ui:868
 msgid "General"
 msgstr "Orokorra"
 
@@ -882,308 +1588,588 @@ msgstr "Orokorra"
 msgid "File"
 msgstr "Fitxategia"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:42
-msgid "Close File"
-msgstr "Itxi fitxategia"
+#: data/com.github.phase1geo.minder.shortcuts.ui:35
+msgid "Import File"
+msgstr "Inportatu fitxategia"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:51
+#: data/com.github.phase1geo.minder.shortcuts.ui:49
+msgid "Export File"
+msgstr "Esportatu fitxategia"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:56
+msgid "Print File"
+msgstr "Inprimatu fitxategia"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:65
+msgid "Notebook Tabs"
+msgstr "Ohar-koadernoaren fitxak"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:70
+msgid "Close Current Tab"
+msgstr "Itxi uneko fitxa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:77
+msgid "Go to Next Tab"
+msgstr "Joan hurrengo fitxara"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:84
+msgid "Go to Previous Tab"
+msgstr "Joan aurreko fitxara"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:93
 msgid "Undo/Redo"
 msgstr "Desegin/Berregin"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:55
+#: data/com.github.phase1geo.minder.shortcuts.ui:97
 msgid "Undo Last Change"
 msgstr "Desegin azken aldaketa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:62
+#: data/com.github.phase1geo.minder.shortcuts.ui:104
 msgid "Redo Last Undo"
 msgstr "Berregin azkena"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:71
+#: data/com.github.phase1geo.minder.shortcuts.ui:113
 msgid "Zooming"
 msgstr "Eskala"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:89
+#: data/com.github.phase1geo.minder.shortcuts.ui:131
 msgid "Zoom To Actual Size"
 msgstr "Eskalatu uneko tamainara"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:98
-#: data/com.github.phase1geo.minder.shortcuts.ui:428
+#: data/com.github.phase1geo.minder.shortcuts.ui:138
+msgid "Zoom To Fit"
+msgstr "Doitzeko eskala"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:147
+msgid "Properties Sidebar"
+msgstr "Propietateen alboko barra"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:151
+msgid "Show Current Tab"
+msgstr "Erakutsi uneko fitxa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:158
+msgid "Show Style Tab"
+msgstr "Erakutsi estiloen panela"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:165
+msgid "Show Sticker Tab"
+msgstr "Erakutsi eranskailuen panela"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:172
+msgid "Show Map Tab"
+msgstr "Erakutsi maparen fitxa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:181
+#: data/com.github.phase1geo.minder.shortcuts.ui:662
 msgid "Miscellaneous"
 msgstr "Denetarik"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:102
+#: data/com.github.phase1geo.minder.shortcuts.ui:185
 msgid "Toggle Focus Mode"
 msgstr "Aldatu fokuratze modua"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:110
+#: data/com.github.phase1geo.minder.shortcuts.ui:192
 msgid "Search Nodes/Connections"
 msgstr "Bilatu nodoak/loturak"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:117
+#: data/com.github.phase1geo.minder.shortcuts.ui:199
+#: data/com.github.phase1geo.minder.shortcuts.ui:872
+msgid "Show Contextual Menu"
+msgstr "Erakutsi laster-menua"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:206
+msgid "Show Preferences"
+msgstr "Erakutsi hobespenak"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:213
+msgid "Show Keyboard Shortcuts"
+msgstr "Erakutsi laster-teklak"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:220
 msgid "Quit Application"
 msgstr "Irten aplikaziotik"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:129
+#: data/com.github.phase1geo.minder.shortcuts.ui:232
 msgid "Node Commands"
-msgstr "Nodoen aginteak"
+msgstr "Nodoen komandoak"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:133
+#: data/com.github.phase1geo.minder.shortcuts.ui:236
 msgid "Creation/Deletion"
-msgstr "Sorrera/Ezabatzea"
+msgstr "Sortzea/Ezabatzea"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:137
+#: data/com.github.phase1geo.minder.shortcuts.ui:240
 msgid "New Sibling Node"
 msgstr "Pareko nodo berria"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:144
+#: data/com.github.phase1geo.minder.shortcuts.ui:247
+msgid "New Connected Node"
+msgstr "Lotutako nodo berria"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:254
 msgid "New Child Node"
 msgstr "Ume-nodo berria"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:151
-msgid "Quick Entry"
-msgstr "Sarrera azkarra"
+#: data/com.github.phase1geo.minder.shortcuts.ui:261
+msgid "Quick Entry Insertion"
+msgstr "Sarrera azkarraren txertaketa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:174
-#: data/com.github.phase1geo.minder.shortcuts.ui:510
+#: data/com.github.phase1geo.minder.shortcuts.ui:268
+msgid "Quick Entry Replacement"
+msgstr "Sarrera azkarraren ordekaketa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:284
+#: data/com.github.phase1geo.minder.shortcuts.ui:758
 msgid "Clipboard"
 msgstr "Arbela"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:178
+#: data/com.github.phase1geo.minder.shortcuts.ui:288
 msgid "Copy Node"
 msgstr "Kopiatu nodoa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:185
+#: data/com.github.phase1geo.minder.shortcuts.ui:295
 msgid "Cut Node"
 msgstr "Ebaki nodoa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:192
-msgid "Paste Node as Child"
-msgstr "Itsatsi nodoa ume gisa"
+#: data/com.github.phase1geo.minder.shortcuts.ui:302
+msgid "Add Child Node With Clipboard"
+msgstr "Gehitu ume-nodoa arbelatik"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:201
+#: data/com.github.phase1geo.minder.shortcuts.ui:309
+msgid "Replace With Clipboard"
+msgstr "Ordeztu arbelekoarekin"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:318
 msgid "Changing Current"
 msgstr "Unekoa aldatzen"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:205
-#: data/com.github.phase1geo.minder.shortcuts.ui:364
+#: data/com.github.phase1geo.minder.shortcuts.ui:322
+#: data/com.github.phase1geo.minder.shortcuts.ui:591
 msgid "Edit Title"
-msgstr "Editatu titulua"
+msgstr "Editatu izenburua"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:212
+#: data/com.github.phase1geo.minder.shortcuts.ui:336
+msgid "Change Task State"
+msgstr "Aldatu egitekoaren egoera"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:343
 msgid "View Properties"
 msgstr "Ikusi propietateak"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:219
+#: data/com.github.phase1geo.minder.shortcuts.ui:350
 msgid "Toggle Fold"
 msgstr "Tolestu"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:226
-msgid "Toggle Task Done"
-msgstr "Zeregina burutua"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:233
+#: data/com.github.phase1geo.minder.shortcuts.ui:357
 msgid "Toggle Node Link"
 msgstr "Aldatu nodoaren esteka"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:240
+#: data/com.github.phase1geo.minder.shortcuts.ui:364
+msgid "Create Group"
+msgstr "Sortu taldea"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:371
 msgid "Create Connection"
 msgstr "Sortu lotura"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:247
+#: data/com.github.phase1geo.minder.shortcuts.ui:378
 msgid "Center In View"
 msgstr "Erdiratu ikuspegian"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:254
-#: data/com.github.phase1geo.minder.shortcuts.ui:378
+#: data/com.github.phase1geo.minder.shortcuts.ui:385
+#: data/com.github.phase1geo.minder.shortcuts.ui:612
 msgid "Place Into View"
 msgstr "Begi bistan"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:261
-msgid "Sort Child Nodes Alphabetically"
-msgstr "Ordenatu ume-nodoak alfabetikoki"
+#: data/com.github.phase1geo.minder.shortcuts.ui:394
+#: data/com.github.phase1geo.minder.shortcuts.ui:785
+msgid "Selection"
+msgstr "Hautaketa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:270
-#: data/com.github.phase1geo.minder.shortcuts.ui:387
-msgid "Traversal"
-msgstr "Zeharkakoa"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:274
+#: data/com.github.phase1geo.minder.shortcuts.ui:398
 msgid "Select Root"
 msgstr "Hautatu sustraia"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:281
+#: data/com.github.phase1geo.minder.shortcuts.ui:405
 msgid "Select Parent"
 msgstr "Hautatu gurasoa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:288
+#: data/com.github.phase1geo.minder.shortcuts.ui:412
 msgid "Select Next Sibling"
 msgstr "Aukeratu hurrengo parekoa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:295
+#: data/com.github.phase1geo.minder.shortcuts.ui:419
 msgid "Select Previous Sibling"
 msgstr "Hautatu aurreko parekoa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:302
+#: data/com.github.phase1geo.minder.shortcuts.ui:426
 msgid "Select Child"
 msgstr "Hautatu umea"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:309
+#: data/com.github.phase1geo.minder.shortcuts.ui:433
+msgid "Select Children"
+msgstr "Hautatu umeak"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:440
+msgid "Select Subtree"
+msgstr "Hautatu azpi-zuhaitza"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:447
 msgid "Select Node Below"
 msgstr "Hautatu azpiko nodoa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:316
+#: data/com.github.phase1geo.minder.shortcuts.ui:454
 msgid "Select Node Above"
 msgstr "Hautatu gaineko nodoa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:323
+#: data/com.github.phase1geo.minder.shortcuts.ui:461
 msgid "Select Node To Right"
 msgstr "Hautatu eskuineko nodoa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:330
+#: data/com.github.phase1geo.minder.shortcuts.ui:468
 msgid "Select Node To Left"
 msgstr "Hautatu ezkerreko nodoa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:337
+#: data/com.github.phase1geo.minder.shortcuts.ui:475
 msgid "Select Linked Node"
 msgstr "Aukeratu nodo estekatua"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:344
+#: data/com.github.phase1geo.minder.shortcuts.ui:482
 msgid "Select Attached Connection"
 msgstr "Hautatu erantsitako lotura"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:356
+#: data/com.github.phase1geo.minder.shortcuts.ui:491
+msgid "Move"
+msgstr "Mugitu"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:495
+msgid "Swap with Sibling Node to Right"
+msgstr "Aldatu eskuineko anaia-nodoarekin"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:502
+msgid "Swap with Sibling Node to Left"
+msgstr "Aldatu ezkerreko anaia-nodoarekin"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:509
+msgid "Swap with Sibling Node Above"
+msgstr "Aldatu goiko anaia-nodoarekin"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:516
+msgid "Swap with Sibling Node Below"
+msgstr "Aldatu beheko anaia-nodoarekin"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:523
+msgid "Sort Child Nodes Alphabetically"
+msgstr "Ordenatu ume-nodoak alfabetikoki"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:532
+msgid "Alignment"
+msgstr "Lerrokapena"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:536
+msgid "Align Top Side"
+msgstr "Lerrokatu goiko aldean"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:550
+msgid "Align Bottom Side"
+msgstr "Lerrokatu beheko aldean"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:557
+msgid "Align Left Side"
+msgstr "Lerrokatu ezker aldean"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:571
+msgid "Align Right Side"
+msgstr "Lerrokatu eskuin aldean"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:583
 msgid "Connection Commands"
 msgstr "Loturaren aginteak"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:360
+#: data/com.github.phase1geo.minder.shortcuts.ui:587
 msgid "Change Current"
-msgstr "Aldatu unekoa"
+msgstr "Aldatu uneako"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:371
+#: data/com.github.phase1geo.minder.shortcuts.ui:605
 msgid "Show Properties"
 msgstr "Erakutsi propietateak"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:391
+#: data/com.github.phase1geo.minder.shortcuts.ui:621
+msgid "Traversal"
+msgstr "Zeharkakoa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:625
 msgid "Select Start Node"
 msgstr "Hautatu hasierako nodoa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:398
+#: data/com.github.phase1geo.minder.shortcuts.ui:632
 msgid "Select End Node"
 msgstr "Hautatu bukaerako nodoa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:405
+#: data/com.github.phase1geo.minder.shortcuts.ui:639
 msgid "Select Next Connection"
 msgstr "Aukeratu hurrengo lotura"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:412
+#: data/com.github.phase1geo.minder.shortcuts.ui:646
 msgid "Select Previous Connection"
 msgstr "Hautatu aurreko lotura"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:424
+#: data/com.github.phase1geo.minder.shortcuts.ui:658
 msgid "Text Editing"
 msgstr "Testuaren edizioa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:432
+#: data/com.github.phase1geo.minder.shortcuts.ui:666
+msgid "Insert Newline Character"
+msgstr "Txertatu lerro berriko karakterea"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:673
+msgid "Insert Tab Character"
+msgstr "Txertatu fitxa-karakterea"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:680
 msgid "Show Emoji Picker"
 msgstr "Erakutsi emotikonoen hautatzailea"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:439
+#: data/com.github.phase1geo.minder.shortcuts.ui:687
 msgid "End Editing"
 msgstr "Bukatu edizioa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:448
+#: data/com.github.phase1geo.minder.shortcuts.ui:696
 msgid "Cursor Movement"
 msgstr "Kurtsorearen mugimendua"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:452
+#: data/com.github.phase1geo.minder.shortcuts.ui:700
 msgid "Next Character"
-msgstr "Karaktere berria"
+msgstr "Hurrengo karakterea"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:459
+#: data/com.github.phase1geo.minder.shortcuts.ui:707
 msgid "Previous Character"
 msgstr "Aurreko karakterea"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:466
+#: data/com.github.phase1geo.minder.shortcuts.ui:714
 msgid "Next Word"
 msgstr "Hurrengo hitza"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:473
+#: data/com.github.phase1geo.minder.shortcuts.ui:721
 msgid "Previous Word"
 msgstr "Aurreko hitza"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:480
+#: data/com.github.phase1geo.minder.shortcuts.ui:728
 msgid "Next Line"
 msgstr "Hurrengo lerroa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:487
+#: data/com.github.phase1geo.minder.shortcuts.ui:735
 msgid "Previous Line"
 msgstr "Aurreko lerroa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:494
+#: data/com.github.phase1geo.minder.shortcuts.ui:742
 msgid "Start Of Text"
 msgstr "Testuaren hasiera"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:501
+#: data/com.github.phase1geo.minder.shortcuts.ui:749
 msgid "End Of Text"
-msgstr "Testuaren amaiera"
+msgstr "Testuaren bukaera"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:514
+#: data/com.github.phase1geo.minder.shortcuts.ui:762
 msgid "Copy Selected Text"
 msgstr "Kopiatu hautatutako testua"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:521
+#: data/com.github.phase1geo.minder.shortcuts.ui:769
 msgid "Cut Selected Text"
 msgstr "Ebaki hautatutako testua"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:528
+#: data/com.github.phase1geo.minder.shortcuts.ui:776
 msgid "Paste Text"
 msgstr "Itsatsi testua"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:537
-msgid "Selection"
-msgstr "Hautapena"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:541
+#: data/com.github.phase1geo.minder.shortcuts.ui:789
 msgid "Add Next Character"
 msgstr "Gehitu hurrengo karakterea"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:548
+#: data/com.github.phase1geo.minder.shortcuts.ui:796
 msgid "Add Previous Character"
 msgstr "Gehitu aurreko karakterea"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:555
+#: data/com.github.phase1geo.minder.shortcuts.ui:803
 msgid "Add Next Word"
 msgstr "Gehitu hurrengo hitza"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:562
+#: data/com.github.phase1geo.minder.shortcuts.ui:810
 msgid "Add Previous Word"
 msgstr "Gehitu aurreko hitza"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:569
+#: data/com.github.phase1geo.minder.shortcuts.ui:817
 msgid "Add Next Line"
 msgstr "Gehitu hurrengo lerroa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:576
+#: data/com.github.phase1geo.minder.shortcuts.ui:824
 msgid "Add Previous Line"
 msgstr "Gehitu aurreko lerroa"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:583
+#: data/com.github.phase1geo.minder.shortcuts.ui:831
 msgid "Add Start Of Text"
 msgstr "Gehitu testu hasiera"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:590
+#: data/com.github.phase1geo.minder.shortcuts.ui:838
 msgid "Add End Of Text"
 msgstr "Gehitu testu amaiera"
 
-#, fuzzy
-#~ msgid "Child"
-#~ msgstr "Primer secundario"
+#: data/com.github.phase1geo.minder.shortcuts.ui:845
+msgid "Select All Text"
+msgstr "Hautatu testu guztia"
 
-#~ msgid "Parent"
-#~ msgstr "Primario"
+#: data/com.github.phase1geo.minder.shortcuts.ui:852
+msgid "Clear Selection"
+msgstr "Garbitu hautaketa"
 
-#~ msgid "<b><i>Title:</i></b>"
-#~ msgstr "<b><i>Título:</i></b>"
+#: data/com.github.phase1geo.minder.shortcuts.ui:864
+msgid "Mouse Events"
+msgstr "Sagu-ekintzak"
 
-#~ msgid "<b><i>Note:</i></b>"
-#~ msgstr "<b><i>Nota:</i></b>"
+#: data/com.github.phase1geo.minder.shortcuts.ui:873
+msgid "[Right-click when item is selected]"
+msgstr "[Eskuineko klika elementua hautatuta dagoenean]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:879
+msgid "Edit Image in Canvas"
+msgstr "Editatu irudia oihalean"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:880
+msgid "[Double left-click on image]"
+msgstr "[Ezkerreko klik bikoitza irudian]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:888
+msgid "Canvas Movement"
+msgstr "Oihalaren mugimendua"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:892
+msgid "Pan Canvas"
+msgstr "Oihal panoramikoa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:893
+msgid "[Middle-click + Drag / Alt + Motion]"
+msgstr "[Erdiko klika + Arrastatu / Alt + Mugimendua]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:899
+msgid "Scroll Vertically"
+msgstr "Korritu bertikalean"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:900
+msgid "[Scrollwheel up/down]"
+msgstr "[Gurpilean gora/behera]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:906
+msgid "Scroll Horizontally"
+msgstr "Korritu horizontalean"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:907
+msgid "[Shift + Scrollwheel up/down]"
+msgstr "[Shift + Gurpilean gora/behera]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:915
+msgid "Item Selection"
+msgstr "Elementuen hautaketa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:919
+msgid "Select Single Item"
+msgstr "Hautatu elementu sinplea"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:920
+msgid "[Left-click on item]"
+msgstr "[Ezkerreko klika elementuan]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:926
+msgid "Select Child Nodes"
+msgstr "Hautatu ume-nodoak"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:927
+msgid "[Control + Left-click on parent node]"
+msgstr "[Ctrl + ezkerreko klika guraso-nodoan]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:933
+msgid "Select Node Tree/Subtree"
+msgstr "Hautatu nodo-zuhaitza/azpizuhaitza"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:934
+msgid "[Control + Double left-click on parent node]"
+msgstr "[Ctrl + ezkerreko klik bikoitza guraso-nodoan]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:940
+msgid "Select All Nodes at Same Depth Level"
+msgstr "Hautatu sakonera maila bereko nodo guztiak"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:941
+msgid "[Control + Triple left-click on node]"
+msgstr "[Ctrl + ezkerreko klik hirukoitza nodoan]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:947
+msgid "Block Selection"
+msgstr "Blokeen hautapena"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:948
+msgid "[Left-click + Drag]"
+msgstr "[Ezkerreko klika + Arrastatu]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:956
+msgid "Item Selection Toggle (Add to/Remove from Selection)"
+msgstr "Elementua hautatzeko txandakatu (Gehitu/Kendu hautaketatik)"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:960
+msgid "Toggle Selection of Item"
+msgstr "Hautatu elementuen hautaketa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:961
+msgid "[Shift + Left-click on item]"
+msgstr "[Shift + Ezkerreko klika elementuan]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:967
+msgid "Toggle Selection of Child Nodes"
+msgstr "Aldatu ume-nodoen hautaketa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:968
+msgid "[Shift + Control + Left-click on item]"
+msgstr "[Shift + Ctrl + Ezkerreko klika elementuan]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:974
+msgid "Toggle Selection of Node Tree/Subtree"
+msgstr "Aldatu nodoaren zuhaitza/azpi-zuhaitzaren hautaketa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:975
+msgid "[Shift + Control + Double left-click on parent node]"
+msgstr "[Shift + Ctrl + Ezkerreko klika guraso-nodoan]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:981
+msgid "Toggle Selection of All Nodes at Same Depth Level"
+msgstr "Aldatu sakonera maila bereko nodo guztien hautaketa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:982
+msgid "[Shift + Control + Triple left-click on node]"
+msgstr "[Shift + Ctrl + Ezkerreko klika hirukoitza nodoan]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:990
+msgid "Text Selection"
+msgstr "Testu-hautaketa"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:994
+msgid "Set Cursor Insert Point"
+msgstr "Ezarri kurtsorearen txertaketa puntua"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:995
+msgid "[Left-click anywhere in text]"
+msgstr "[Ezkerreko klika edozein testuan]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1001
+msgid "Select current word"
+msgstr "Hautatu uneko hitza"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1002
+msgid "[Double left-click on word]"
+msgstr "[Ezkerreko klik bikoitza hitzan]"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1008
+msgid "Select all text"
+msgstr "Hautatu testu guztia"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:1009
+msgid "[Triple left-click anywhere in text]"
+msgstr "[Eskerreko klik hirukoitza testuko edozein tokitan]"
