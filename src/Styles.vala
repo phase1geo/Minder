@@ -26,6 +26,7 @@ public class Styles {
   private class StyleLevel {
     public Style style { set; get; default = new Style(); }
     public bool  isset { set; get; default = false; }
+    public StyleLevel() {}
   }
 
   private static Array<LinkType>   _link_types;

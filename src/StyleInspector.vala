@@ -1111,28 +1111,42 @@ public class StyleInspector : Box {
 
   /* Update the user interface elements to match the selected level */
   private void update_ui_with_style( Style style ) {
+
+    var branch_margin   = style.branch_margin;
+    var link_width      = style.link_width;
+    var link_arrow      = style.link_arrow;
+    var node_bw         = style.node_borderwidth;
+    var node_fill       = style.node_fill;
+    var node_margin     = style.node_margin;
+    var node_padding    = style.node_padding;
+    var node_width      = style.node_width;
+    var node_markup     = style.node_markup;
+    var conn_line_width = style.connection_line_width;
+    var conn_padding    = style.connection_padding;
+
     _ignore = true;
-    _branch_margin.set_value( (double)style.branch_margin );
+    _branch_margin.set_value( (double)branch_margin );
     update_link_types_with_style( style );
     update_link_dashes_with_style( style );
     update_node_borders_with_style( style );
     update_conn_dashes_with_style( style );
-    _link_width.set_value( (double)style.link_width );
-    _link_arrow.set_active( (bool)style.link_arrow );
-    _node_borderwidth.set_value( (double)style.node_borderwidth );
-    _node_fill.set_active( (bool)style.node_fill );
+    _link_width.set_value( (double)link_width );
+    _link_arrow.set_active( (bool)link_arrow );
+    _node_borderwidth.set_value( (double)node_bw );
+    _node_fill.set_active( (bool)node_fill );
     _node_fill.set_sensitive( style.node_border.is_fillable() );
-    _node_margin.set_value( (double)style.node_margin );
-    _node_padding.set_value( (double)style.node_padding );
+    _node_margin.set_value( (double)node_margin );
+    _node_padding.set_value( (double)node_padding );
     _node_font.set_font( style.node_font.to_string() );
-    _node_width.set_value( (float)style.node_width );
-    _node_markup.set_active( (bool)style.node_markup );
+    _node_width.set_value( (float)node_width );
+    _node_markup.set_active( (bool)node_markup );
     _conn_arrow.surface = Connection.make_arrow_icon( style.connection_arrow );
-    _conn_lwidth.set_value( (double)style.connection_line_width );
+    _conn_lwidth.set_value( (double)conn_line_width );
     _conn_font.set_font( style.connection_font.to_string() );
     _conn_twidth.set_value( style.connection_title_width );
-    _conn_padding.set_value( (double)style.connection_padding );
+    _conn_padding.set_value( (double)conn_padding );
     _ignore = false;
+
   }
 
   /* Called whenever the current node changes */
