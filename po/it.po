@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-13 21:20-0600\n"
+"POT-Creation-Date: 2021-04-15 22:43-0500\n"
 "PO-Revision-Date: 2021-02-13 10:00+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -137,7 +137,7 @@ msgstr "A destra"
 msgid "Yed"
 msgstr "Si"
 
-#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4059
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4060
 #: src/MapInspector.vala:300
 msgid "Manual"
 msgstr "Manuale"
@@ -529,20 +529,20 @@ msgstr "senza nome"
 msgid "Main Idea"
 msgstr "Idea Principale"
 
-#: src/DrawArea.vala:2178
+#: src/DrawArea.vala:2182
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "% 0.3g%% completo"
 
-#: src/DrawArea.vala:2332
+#: src/DrawArea.vala:2336
 msgid "connection endpoint change"
 msgstr "modifica dell'endpoint di connessione"
 
-#: src/DrawArea.vala:2339
+#: src/DrawArea.vala:2343
 msgid "connection drag"
 msgstr "trascina della connessione"
 
-#: src/DrawArea.vala:2975 src/DrawArea.vala:2988 src/DrawArea.vala:4520
+#: src/DrawArea.vala:2979 src/DrawArea.vala:2992 src/DrawArea.vala:4519
 msgid "Another Idea"
 msgstr "Un'altra idea"
 
@@ -1407,19 +1407,19 @@ msgstr "Carattere del Titolo"
 msgid "Title Width"
 msgstr "Larghezza del Titolo"
 
-#: src/Styles.vala:51
+#: src/Styles.vala:52
 msgid "Solid"
 msgstr "Solido"
 
-#: src/Styles.vala:52
+#: src/Styles.vala:53
 msgid "Dotted"
 msgstr "Punteggiato"
 
-#: src/Styles.vala:53
+#: src/Styles.vala:54
 msgid "Short Dash"
 msgstr "Trattino Corto"
 
-#: src/Styles.vala:54
+#: src/Styles.vala:55
 msgid "Long Dash"
 msgstr "Trattino Lungo"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-13 21:20-0600\n"
+"POT-Creation-Date: 2021-04-15 22:43-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -138,7 +138,7 @@ msgstr "Do prawej"
 msgid "Yed"
 msgstr ""
 
-#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4059
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4060
 #: src/MapInspector.vala:300
 msgid "Manual"
 msgstr "Ręcznie"
@@ -578,21 +578,21 @@ msgstr "Dokument bez nazwy"
 msgid "Main Idea"
 msgstr "Główny pomysł"
 
-#: src/DrawArea.vala:2178
+#: src/DrawArea.vala:2182
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "Ukończono %0.3g%%"
 
-#: src/DrawArea.vala:2332
+#: src/DrawArea.vala:2336
 #, fuzzy
 msgid "connection endpoint change"
 msgstr "zmiana notatki węzła"
 
-#: src/DrawArea.vala:2339
+#: src/DrawArea.vala:2343
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:2975 src/DrawArea.vala:2988 src/DrawArea.vala:4520
+#: src/DrawArea.vala:2979 src/DrawArea.vala:2992 src/DrawArea.vala:4519
 msgid "Another Idea"
 msgstr "Inny pomysł"
 
@@ -1496,19 +1496,19 @@ msgstr "Tytuly"
 msgid "Title Width"
 msgstr "Tytuly"
 
-#: src/Styles.vala:51
+#: src/Styles.vala:52
 msgid "Solid"
 msgstr ""
 
-#: src/Styles.vala:52
+#: src/Styles.vala:53
 msgid "Dotted"
 msgstr ""
 
-#: src/Styles.vala:53
+#: src/Styles.vala:54
 msgid "Short Dash"
 msgstr ""
 
-#: src/Styles.vala:54
+#: src/Styles.vala:55
 msgid "Long Dash"
 msgstr ""
 

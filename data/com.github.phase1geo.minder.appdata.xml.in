@@ -91,6 +91,10 @@
   <releases>
     <release version="1.12.1" date="2021-02-18">
       <description>
+        <p>New</p>
+        <ul>
+          <li>Added Basque translation (thanks to @alexgabi)</li>
+        </ul>
         <p>Changes</p>
         <ul>
           <li>Updated to Italian translation (thanks to @albanobattistella).</li>
@@ -98,12 +102,14 @@
           <li>Opening a file will automatically close an existing unsaved, unchanged tab.</li>
           <li>Changed color of connection drag handles to yellow.</li>
           <li>Making it easier to grab connection drag handle when it is close to connection handles.</li>
+          <li>Reducing auto-saves when editing node text.</li>
         </ul>
         <p>Bug Fixes</p>
         <ul>
           <li>Removed help information from PNG export panel.</li>
           <li>Fixed issue with exporting images with connections/stickers which could get cropped out.</li>
           <li>Fixed issue with empty tab when file cannot be loaded.</li>
+          <li>Fixed issues with application crashes on startup in non-elementary environments.</li>
         </ul>
       </description>
     </release>
