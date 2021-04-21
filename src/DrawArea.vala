@@ -538,6 +538,11 @@ public class DrawArea : Gtk.DrawingArea {
       link_ids.index( i ).node.linked_node = get_node( _nodes, id_map.get( int.parse( link_ids.index( i ).id_str ) ) );
     }
 
+    /* Perform the layout process again to make sure that everything is accounted for */
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).layout.initialize( _nodes.index( i ) );
+    }
+
     queue_draw();
 
     /* Indicate to anyone listening that we have loaded a new file */

@@ -1060,6 +1060,11 @@ public class Node : Object {
       }
     }
 
+    _loaded = true;
+
+    /* Force the size to get re-calculated */
+    update_size();
+
     /* Load the layout after the nodes are loaded if the posx/posy information is set */
     if( (x != null) || (y != null) ) {
       string? l = n->get_prop( "layout" );
@@ -1087,8 +1092,6 @@ public class Node : Object {
 
     /* Make sure that the name is positioned properly */
     position_name();
-
-    _loaded = true;
 
   }
 
