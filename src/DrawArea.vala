@@ -3564,8 +3564,8 @@ public class DrawArea : Gtk.DrawingArea {
     win.close_current_tab();
   }
 
-  /* Called whenever the home key is entered in the drawing area */
-  private void handle_home( bool shift ) {
+  /* Called whenever the Control+home key is entered in the drawing area */
+  private void handle_control_home( bool shift ) {
     if( is_connection_editable() ) {
       if( shift ) {
         _selected.current_connection().title.selection_to_start( true );
@@ -3585,8 +3585,29 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Called whenever the end key is entered in the drawing area */
-  private void handle_end( bool shift ) {
+  /* Called whenever the home key is entered in the drawing area */
+  private void handle_home( bool shift ) {
+    if( is_connection_editable() ) {
+      if( shift ) {
+        _selected.current_connection().title.selection_to_start_of_line( true );
+      } else {
+        _selected.current_connection().title.move_cursor_to_start_of_line();
+      }
+      _im_context.reset();
+      queue_draw();
+    } else if( is_node_editable() ) {
+      if( shift ) {
+        _selected.current_node().name.selection_to_start_of_line( true );
+      } else {
+        _selected.current_node().name.move_cursor_to_start_of_line();
+      }
+      _im_context.reset();
+      queue_draw();
+    }
+  }
+
+  /* Called whenever the Control+end key is entered in the drawing area */
+  private void handle_control_end( bool shift ) {
     if( is_connection_editable() ) {
       if( shift ) {
         _selected.current_connection().title.selection_to_end( true );
@@ -3600,6 +3621,27 @@ public class DrawArea : Gtk.DrawingArea {
         _selected.current_node().name.selection_to_end( true );
       } else {
         _selected.current_node().name.move_cursor_to_end();
+      }
+      _im_context.reset();
+      queue_draw();
+    }
+  }
+
+  /* Called whenever the end key is entered in the drawing area */
+  private void handle_end( bool shift ) {
+    if( is_connection_editable() ) {
+      if( shift ) {
+        _selected.current_connection().title.selection_to_end_of_line( true );
+      } else {
+        _selected.current_connection().title.move_cursor_to_end_of_line();
+      }
+      _im_context.reset();
+      queue_draw();
+    } else if( is_node_editable() ) {
+      if( shift ) {
+        _selected.current_node().name.selection_to_end_of_line( true );
+      } else {
+        _selected.current_node().name.move_cursor_to_end_of_line();
       }
       _im_context.reset();
       queue_draw();
@@ -3833,6 +3875,8 @@ public class DrawArea : Gtk.DrawingArea {
           case Key.Left      :  handle_control_left( shift );   break;
           case Key.Up        :  handle_control_up( shift );     break;
           case Key.Down      :  handle_control_down( shift );   break;
+          case Key.Home      :  handle_control_home( shift );   break;
+          case Key.End       :  handle_control_end( shift );    break;
           case Key.slash     :  handle_control_slash();         break;
           case Key.backslash :  handle_control_backslash();     break;
           case Key.period    :  handle_control_period();        break;
