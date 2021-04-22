@@ -39,10 +39,10 @@ public class NodeInspector : Box {
   private Button         _detach_btn;
   private string         _orig_note = "";
   private Node?          _node = null;
+  private Stack          _image_stack;
   private Image          _image;
   private Button         _image_btn;
   private Label          _image_loc;
-  private Box            _image_btn_box;
 
   public NodeInspector( MainWindow win ) {
 
@@ -175,8 +175,38 @@ public class NodeInspector : Box {
 
   }
 
-  /* Creates the image widget */
   private void create_image() {
+
+    _image_stack = new Stack();
+    _image_stack.transition_type = StackTransitionType.NONE;
+    _image_stack.homogeneous     = false;
+    _image_stack.add_named( create_image_add(),  "add" );
+    _image_stack.add_named( create_image_edit(), "edit" );
+
+    pack_start( _image_stack, false, true, 5 );
+
+  }
+
+  /* Creates the add image widget */
+  private Box create_image_add() {
+
+    var lbl  = new Label( Utils.make_title( _( "Image" ) ) );
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
+
+    var btn = new Button.with_label( _( "Add Image…" ) );
+    btn.clicked.connect( image_button_clicked );
+
+    var box = new Box( Orientation.VERTICAL, 10 );
+    box.pack_start( lbl, false, false );
+    box.pack_start( btn, false, true );
+
+    return( box );
+
+  }
+
+  /* Creates the edit image widget */
+  private Box create_image_edit() {
 
     var lbl  = new Label( Utils.make_title( _( "Image" ) ) );
     lbl.xalign     = (float)0;
@@ -194,34 +224,26 @@ public class NodeInspector : Box {
       _da.delete_current_image();
     });
 
-    _image_btn_box = new Box( Orientation.HORIZONTAL, 10 );
-    _image_btn_box.pack_start( btn_edit, false, false );
-    _image_btn_box.pack_start( btn_del,  false, false );
+    var image_btn_box = new Box( Orientation.HORIZONTAL, 10 );
+    image_btn_box.pack_start( btn_edit, false, false );
+    image_btn_box.pack_start( btn_del,  false, false );
 
     var tbox = new Box( Orientation.HORIZONTAL, 10 );
-    tbox.pack_start( lbl,            false, false );
-    tbox.pack_end(   _image_btn_box, false, false );
+    tbox.pack_start( lbl,           false, false );
+    tbox.pack_end(   image_btn_box, false, false );
 
     _image = new Image();
 
-    _image_btn = new Button.with_label( _( "Add Image…" ) );
-    _image_btn.visible = true;
-    _image_btn.clicked.connect( image_button_clicked );
-
     _image_loc = new Label( "" );
-    _image_loc.visible    = false;
     _image_loc.use_markup = true;
     _image_loc.wrap       = true;
     _image_loc.max_width_chars = 40;
     _image_loc.activate_link.connect( image_link_clicked );
 
     var box  = new Box( Orientation.VERTICAL, 10 );
-    box.pack_start( tbox,        false, false );
-    box.pack_start( _image,      true,  true );
-    box.pack_start( _image_btn,  false, false );
-    box.pack_start( _image_loc,  false, true );
-
-    pack_start( box, false, true, 5 );
+    box.pack_start( tbox,       false, false );
+    box.pack_start( _image,     true,  true );
+    box.pack_start( _image_loc, false, true );
 
     /* Set ourselves up to be a drag target */
     Gtk.drag_dest_set( _image, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
@@ -234,22 +256,14 @@ public class NodeInspector : Box {
       }
     });
 
+    return( box );
+
   }
 
   /* Called when the user clicks on the image button */
   private void image_button_clicked() {
 
     _da.add_current_image();
-
-  }
-
-  /* Sets the visibility of the image widget to the given value */
-  private void set_image_visible( bool show ) {
-
-    _image_btn.visible     = !show;
-    _image_btn_box.visible = show;
-    _image.visible         = show;
-    _image_loc.visible     = show;
 
   }
 
@@ -376,6 +390,7 @@ public class NodeInspector : Box {
   /* Grabs the focus on the note widget */
   public void grab_note() {
     _note.grab_focus();
+    node_changed();
   }
 
   /* Called whenever the theme is changed */
@@ -425,9 +440,9 @@ public class NodeInspector : Box {
         var str = "<a href=\"" + url + "\">" + url + "</a>";
         current.image.set_image( _image );
         _image_loc.label = str;
-        set_image_visible( true );
+        _image_stack.visible_child_name = "edit";
       } else {
-        set_image_visible( false );
+        _image_stack.visible_child_name = "add";
       }
     }
 
@@ -436,6 +451,7 @@ public class NodeInspector : Box {
   /* Sets the input focus on the first widget in this inspector */
   public void grab_first() {
     _task.grab_focus();
+    node_changed();
   }
 
 }
