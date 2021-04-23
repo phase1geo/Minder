@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-15 22:43-0500\n"
+"POT-Creation-Date: 2021-04-23 10:30-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Helder Bertoldo <helder.bertoldo@gmail.com>\n"
 "Language-Team: none\n"
@@ -136,7 +136,7 @@ msgstr "Para a direita"
 msgid "Yed"
 msgstr ""
 
-#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4060
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4130
 #: src/MapInspector.vala:300
 msgid "Manual"
 msgstr "Manual"
@@ -569,24 +569,24 @@ msgstr ""
 msgid "unnamed"
 msgstr "Documento sem Nome"
 
-#: src/DrawArea.vala:720
+#: src/DrawArea.vala:730
 msgid "Main Idea"
 msgstr "Ideia principal"
 
-#: src/DrawArea.vala:2182
+#: src/DrawArea.vala:2198
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "0.3g%% completados"
 
-#: src/DrawArea.vala:2336
+#: src/DrawArea.vala:2362
 msgid "connection endpoint change"
 msgstr "mudar ponto final da conexão"
 
-#: src/DrawArea.vala:2343
+#: src/DrawArea.vala:2369
 msgid "connection drag"
 msgstr "arrastar conexão"
 
-#: src/DrawArea.vala:2979 src/DrawArea.vala:2992 src/DrawArea.vala:4519
+#: src/DrawArea.vala:3005 src/DrawArea.vala:3018 src/DrawArea.vala:4589
 msgid "Another Idea"
 msgstr "Outra Ideia"
 
@@ -650,7 +650,7 @@ msgstr "Adicionar nós com Entrada Rápida"
 msgid "Select Node"
 msgstr "Selecionar Nó"
 
-#: src/EmptyMenu.vala:54 src/Theme.vala:292
+#: src/EmptyMenu.vala:54 src/Theme.vala:298
 msgid "Root"
 msgstr "Raíz"
 
@@ -740,7 +740,7 @@ msgstr "Recortar Nó Para a Área de Transferência"
 msgid "Paste Image from Clipboard"
 msgstr "Recortar Nó Para a Área de Transferência"
 
-#: src/ImageEditor.vala:390 src/NodeInspector.vala:192 src/NodeMenu.vala:409
+#: src/ImageEditor.vala:390 src/NodeInspector.vala:222 src/NodeMenu.vala:409
 msgid "Remove Image"
 msgstr "Remover Imagem"
 
@@ -974,12 +974,12 @@ msgstr "Desdobrar Todos Os Nós"
 msgid "Unsaved"
 msgstr "Não Salvo"
 
-#: src/Node.vala:1820
+#: src/Node.vala:1832
 #, fuzzy
 msgid "Node Title"
 msgstr "Títulos"
 
-#: src/Node.vala:1828
+#: src/Node.vala:1840
 #, fuzzy
 msgid "Node Note"
 msgstr "Adicionar Nota"
@@ -993,31 +993,31 @@ msgstr "Tarefas"
 msgid "Fold"
 msgstr "Dobrar"
 
-#: src/NodeInspector.vala:181
+#: src/NodeInspector.vala:193 src/NodeInspector.vala:211
 msgid "Image"
 msgstr "Imagem"
 
-#: src/NodeInspector.vala:186
-msgid "Edit Image"
-msgstr "Editar Imagem"
-
-#: src/NodeInspector.vala:207
+#: src/NodeInspector.vala:197
 msgid "Add Image…"
 msgstr "Adicionar Imagem..."
 
-#: src/NodeInspector.vala:286
+#: src/NodeInspector.vala:216
+msgid "Edit Image"
+msgstr "Editar Imagem"
+
+#: src/NodeInspector.vala:300
 msgid "Copy Node To Clipboard"
 msgstr "Copiar Nó Para a Área de Transferência"
 
-#: src/NodeInspector.vala:290
+#: src/NodeInspector.vala:304
 msgid "Cut Node To Clipboard"
 msgstr "Recortar Nó Para a Área de Transferência"
 
-#: src/NodeInspector.vala:295
+#: src/NodeInspector.vala:309
 msgid "Detach Node"
 msgstr "Desanexar Nó"
 
-#: src/NodeInspector.vala:300 data/com.github.phase1geo.minder.shortcuts.ui:275
+#: src/NodeInspector.vala:314 data/com.github.phase1geo.minder.shortcuts.ui:275
 msgid "Delete Node"
 msgstr "Deletar Nó"
 
