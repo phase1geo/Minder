@@ -2370,8 +2370,10 @@ public class Node : Object {
     if( !is_root() ) {
       draw_link( ctx, theme );
     }
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).draw_links( ctx, theme );
+    if( !folded ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).draw_links( ctx, theme );
+      }
     }
   }
 
