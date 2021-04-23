@@ -456,15 +456,20 @@ public class DrawArea : Gtk.DrawingArea {
   private void load_theme( Xml.Node* n ) {
 
     /* Load the theme */
-    var theme = new Theme();
+    var theme       = new Theme.from_theme( win.themes.get_theme( "default" ) );
     theme.temporary = true;
     theme.rotate    = _settings.get_boolean( "rotate-main-link-colors" );
-    theme.load( n );
+
+    var valid = theme.load( n );
 
     /* If this theme does not currently exist, add the theme temporarily */
     if( !win.themes.exists( theme ) ) {
-      theme.name = win.themes.uniquify_name( theme.name );
-      win.themes.add_theme( theme );
+      if( valid ) {
+        theme.name = win.themes.uniquify_name( theme.name );
+        win.themes.add_theme( theme );
+      } else {
+        theme.name = "default";
+      }
     }
 
     /* Get the theme */

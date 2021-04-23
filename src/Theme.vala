@@ -205,7 +205,9 @@ public class Theme : Object {
   }
 
   /* Parses the specified XML node for theme coloring information */
-  public void load( Xml.Node* n ) {
+  public bool load( Xml.Node* n ) {
+
+    bool contains_data = false;
 
     string? nn = n->get_prop( "name" );
     if( nn != null ) {
@@ -230,13 +232,17 @@ public class Theme : Object {
       string? s = n->get_prop( name );
       if( s != null ) {
         set_color( name, color_from_string( s ) );
+        contains_data = true;
       }
     }
 
     string? d = n->get_prop( "prefer_dark" );
     if( d != null ) {
-      prefer_dark = bool.parse( d );
+      prefer_dark   = bool.parse( d );
+      contains_data = true;
     }
+
+    return( contains_data );
 
   }
 
