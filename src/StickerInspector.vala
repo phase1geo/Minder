@@ -264,7 +264,6 @@ public class StickerInspector : Box {
 
   /* Load the favorite stickers from the file */
   private void load_favorites() {
-    if( !FileUtils.test( favorites, FileTest.EXISTS ) ) return;
     Xml.Doc* doc = Xml.Parser.parse_file( favorites );
     if( doc == null ) {
       return;
