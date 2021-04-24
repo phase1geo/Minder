@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-23 10:30-0500\n"
-"PO-Revision-Date: 2021-02-13 10:00+0100\n"
+"PO-Revision-Date: 2021-04-24 18:00+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -133,9 +133,8 @@ msgid "To right"
 msgstr "A destra"
 
 #: src/exports/ExportYed.vala:26
-#, fuzzy
 msgid "Yed"
-msgstr "Si"
+msgstr "Yed"
 
 #: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4130
 #: src/MapInspector.vala:300
@@ -281,9 +280,8 @@ msgstr "stacca il nodo"
 
 #: src/undo_actions/UndoNodeFolds.vala:30
 #: src/undo_actions/UndoNodeFolds.vala:35
-#, fuzzy
 msgid "node fold changes"
-msgstr "cambia collegamento nodo"
+msgstr "modifiche alla piega del nodo"
 
 #: src/undo_actions/UndoNodeGroup.vala:30
 msgid "node group change"
@@ -356,7 +354,7 @@ msgstr "Cambia sitcker al nodo"
 
 #: src/undo_actions/UndoNodeStickerRemove.vala:31
 msgid "remove node sticker"
-msgstr "Rimuovi stiker al nodo"
+msgstr "rimuovi stiker al nodo"
 
 #: src/undo_actions/UndoNodeTask.vala:34
 msgid "node task change"
@@ -612,7 +610,7 @@ msgstr "Radice"
 
 #: src/Exporter.vala:43
 msgid "Export…"
-msgstr "Esporta..."
+msgstr "Esporta…"
 
 #: src/Exporter.vala:44
 msgid "Export With Current Settings"
@@ -814,7 +812,7 @@ msgstr "Non-attività"
 
 #: src/MainWindow.vala:768
 msgid "Print…"
-msgstr "Stampa..."
+msgstr "Stampa…"
 
 #: src/MainWindow.vala:816 src/Preferences.vala:36
 msgid "Preferences"
@@ -898,7 +896,7 @@ msgstr "Aggiungi tema personalizzato"
 
 #: src/MapInspector.vala:226
 msgid "Balance Nodes"
-msgstr "BIlancia Nodi"
+msgstr "Bilancia Nodi"
 
 #: src/MapInspector.vala:232
 msgid "Fold Completed Tasks"
@@ -974,7 +972,7 @@ msgstr "Elimina Nodo singolo"
 
 #: src/NodeMenu.vala:92
 msgid "Edit Text…"
-msgstr "Modifica Testo..."
+msgstr "Modifica Testo…"
 
 #: src/NodeMenu.vala:100 src/NodeMenu.vala:395
 msgid "Add Task"
@@ -1002,7 +1000,7 @@ msgstr "Colore collegamento"
 
 #: src/NodeMenu.vala:125 src/NodesMenu.vala:72
 msgid "Set to color…"
-msgstr "Imposta per colorare..."
+msgstr "Imposta per colorare…"
 
 #: src/NodeMenu.vala:128
 msgid "Randomize color"
@@ -1525,17 +1523,15 @@ msgstr "Etichetta"
 
 #: src/ThemeEditor.vala:100
 msgid "Markdown Syntax Chars"
-msgstr ""
+msgstr "Caratteri della sintassi Markdown"
 
 #: src/ThemeEditor.vala:101
-#, fuzzy
 msgid "Match Background"
-msgstr "Sfondo"
+msgstr "Unisci Sfondo"
 
 #: src/ThemeEditor.vala:102
-#, fuzzy
 msgid "Match Foreground"
-msgstr "Primo piano"
+msgstr "Abbina il primo piano"
 
 #: src/ThemeEditor.vala:103
 msgid "Markdown List Item"
