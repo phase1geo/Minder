@@ -82,7 +82,7 @@ public class Theme : Object {
     _colors     = new HashMap<string,RGBA?>();
     var it = theme._colors.map_iterator();
     while( it.next() ) {
-      _colors.set( (string)it.get_key(), (RGBA)it.get_value() );
+      _colors.set( it.get_key(), it.get_value() );
     }
   }
 
