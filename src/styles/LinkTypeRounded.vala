@@ -19,24 +19,31 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public class LinkTypeSquared : Object, LinkType {
+public class LinkTypeRounded : Object, LinkType {
 
   /* Default constructor */
-  public LinkTypeSquared() {}
+  public LinkTypeRounded() {}
 
   /* Returns the search name */
   public string name() {
-    return( "squared" );
+    return( "rounded" );
   }
 
   /* Returns the name of the link type */
   public string display_name() {
-    return( _( "Squared" ) );
+    return( _( "Rounded" ) );
   }
 
   /* Returns the name of the icon */
   public string icon_name() {
-    return( "minder-link-squared-symbolic" );
+    return( "minder-link-rounded-symbolic" );
+  }
+
+  private void adjust_mid( double from_a, double to_a, double from_b, double to_b, double radius, out double mid, out double rnd_a, out double rnd_b ) {
+    mid   = (from_a + to_a) / 2;
+    rnd_a = (from_a < to_a) ? (mid + radius) : (mid - radius);
+    rnd_b = (from_b < to_b) ? (((to_b - radius) < from_b) ? from_b : (to_b - radius)) :
+                              (((to_b + radius) > from_b) ? from_b : (to_b + radius));
   }
 
   /* Draw method for the link */
@@ -44,12 +51,13 @@ public class LinkTypeSquared : Object, LinkType {
                     double from_x, double from_y, double to_x, double to_y,
                     out double tailx, out double taily, out double tipx, out double tipy ) {
 
-    var side  = to_node.side;
-    var style = to_node.style;
-    var adj_a = adjust_a( style );
-    var adj_t = adjust_tip( style );
-    var mid_x = (from_x + to_x) / 2;
-    var mid_y = (from_y + to_y) / 2;
+    var side       = to_node.side;
+    var horizontal = (side & NodeSide.horizontal()) != 0;
+    var fstyle     = from_node.style;
+    var tstyle     = to_node.style;
+    var adj_a      = adjust_a( tstyle );
+    var adj_t      = adjust_tip( tstyle );
+    var radius     = from_node.style.branch_radius;
 
     tipx = tipy = 0;
 
@@ -61,17 +69,23 @@ public class LinkTypeSquared : Object, LinkType {
     }
 
     ctx.move_to( from_x, from_y );
-    if( (side & NodeSide.horizontal()) != 0 ) {
+    if( horizontal ) {
+      double mid_x, rnd_x, rnd_y;
+      adjust_mid( from_x, to_x, from_y, to_y, radius, out mid_x, out rnd_x, out rnd_y );
       tailx = mid_x;
       taily = to_y;
       ctx.line_to( mid_x, from_y );
-      ctx.line_to( mid_x, to_y );
+      ctx.line_to( mid_x, rnd_y );
+      ctx.curve_to( mid_x, rnd_y, mid_x, to_y, rnd_x, to_y );
       ctx.line_to( to_x,  to_y );
     } else {
+      double mid_y, rnd_y, rnd_x;
+      adjust_mid( from_y, to_y, from_x, to_x, radius, out mid_y, out rnd_y, out rnd_x );
       tailx = to_x;
       taily = mid_y;
       ctx.line_to( from_x, mid_y );
-      ctx.line_to( to_x,   mid_y );
+      ctx.line_to( rnd_x,   mid_y );
+      ctx.curve_to( rnd_x, mid_y, to_x, mid_y, to_x, rnd_y );
       ctx.line_to( to_x,   to_y );
     }
     ctx.stroke();

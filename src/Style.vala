@@ -26,6 +26,7 @@ public class Style {
   private bool _template;
 
   public int?             branch_margin          { get; set; default = null; }
+  public int?             branch_radius          { get; set; default = null; }
   public LinkType?        link_type              { get; set; default = null; }
   public int?             link_width             { get; set; default = null; }
   public bool?            link_arrow             { get; set; default = null; }
@@ -75,6 +76,7 @@ public class Style {
 
     if( _template ) {
       branch_margin          = null;
+      branch_radius          = null;
       link_type              = null;
       link_width             = null;
       link_arrow             = null;
@@ -103,6 +105,7 @@ public class Style {
     bool changed = false;
 
     if( ((s.branch_margin          != null) || !s._template) && (branch_margin          != s.branch_margin) )          { changed = true;  branch_margin          = s.branch_margin; }
+    if( ((s.branch_radius          != null) || !s._template) && (branch_radius          != s.branch_radius) )          { changed = true;  branch_radius          = s.branch_radius; }
     if( ((s.link_type              != null) || !s._template) && (link_type              != s.link_type) )              { changed = true;  link_type              = s.link_type; }
     if( ((s.link_width             != null) || !s._template) && (link_width             != s.link_width) )             { changed = true;  link_width             = s.link_width; }
     if( ((s.link_arrow             != null) || !s._template) && (link_arrow             != s.link_arrow) )             { changed = true;  link_arrow             = s.link_arrow; }
@@ -129,6 +132,7 @@ public class Style {
   public string to_string() {
     string[] arr = {};
     if( branch_margin          != null ) arr += "bmargin[%d]".printf( branch_margin );
+    if( branch_radius          != null ) arr += "bradius[%d]".printf( branch_radius );
     if( link_type              != null ) arr += "ltype[%s]".printf( link_type.name() );
     if( link_width             != null ) arr += "lwidth[%d]".printf( link_width );
     if( link_arrow             != null ) arr += "larrow[%s]".printf( link_arrow.to_string() );
@@ -156,6 +160,10 @@ public class Style {
     string? bm = node->get_prop( "branchmargin" );
     if( bm != null ) {
       branch_margin = int.parse( bm );
+    }
+    string? br = node->get_prop( "branchradius" );
+    if( br != null ) {
+      branch_radius = int.parse( br );
     }
     string? lt = node->get_prop( "linktype" );
     if( lt != null ) {
@@ -247,6 +255,9 @@ public class Style {
     if( branch_margin != null ) {
       n->set_prop( "branchmargin", branch_margin.to_string() );
     }
+    if( branch_radius != null ) {
+      n->set_prop( "branchradius", branch_radius.to_string() );
+    }
     if( link_type != null ) {
       n->set_prop( "linktype", link_type.name() );
     }
@@ -329,14 +340,14 @@ public class Style {
   }
 
   /* Draws the link with the given information, applying the stored styling */
-  public void draw_link( Cairo.Context ctx, Style parent_style, Node to_node,
+  public void draw_link( Cairo.Context ctx, Node from_node, Node to_node,
                          double from_x, double from_y, double to_x, double to_y,
                          out double tailx, out double taily, out double tipx, out double tipy ) {
 
     ctx.save();
     ctx.set_line_width( link_width );
     link_dash.set_context( ctx, link_width );
-    parent_style.link_type.draw( ctx, to_node, from_x, from_y, to_x, to_y, out tailx, out taily, out tipx, out tipy );
+    from_node.style.link_type.draw( ctx, from_node, to_node, from_x, from_y, to_x, to_y, out tailx, out taily, out tipx, out tipy );
     ctx.restore();
 
   }

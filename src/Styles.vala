@@ -40,12 +40,14 @@ public class Styles {
     /* Create the link types */
     var lt_straight = new LinkTypeStraight();
     var lt_squared  = new LinkTypeSquared();
+    var lt_rounded  = new LinkTypeRounded();
     var lt_curved   = new LinkTypeCurved();
 
     /* Add the link types to the list */
     _link_types = new Array<LinkType>();
     _link_types.append_val( lt_straight );
     _link_types.append_val( lt_squared );
+    _link_types.append_val( lt_rounded );
     _link_types.append_val( lt_curved );
 
     /* Create the link dashes */
@@ -83,6 +85,7 @@ public class Styles {
     for( int i=0; i<=10; i++ ) {
       var level = new StyleLevel();
       level.style.branch_margin = 100;
+      level.style.branch_radius = 25;
       level.style.link_type     = lt_straight;
       level.style.link_width    = 4;
       level.style.link_arrow    = false;

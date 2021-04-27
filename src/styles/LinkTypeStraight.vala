@@ -70,7 +70,7 @@ public class LinkTypeStraight : Object, LinkType {
   }
 
   /* Draw method for the link */
-  public void draw( Cairo.Context ctx, Node to_node,
+  public void draw( Cairo.Context ctx, Node from_node, Node to_node,
                     double from_x, double from_y, double to_x, double to_y,
                     out double tailx, out double taily, out double tipx, out double tipy ) {
 

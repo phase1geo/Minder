@@ -44,6 +44,8 @@ public class StyleInspector : Box {
 
   private DrawArea?                  _da = null;
   private GLib.Settings              _settings;
+  private Revealer                   _branch_radius_revealer;
+  private Scale                      _branch_radius;
   private Scale                      _branch_margin;
   private Granite.Widgets.ModeButton _link_types;
   private Scale                      _link_width;
@@ -161,9 +163,11 @@ public class StyleInspector : Box {
     cbox.border_width = 10;
 
     var branch_type   = create_branch_type_ui();
+    var branch_radius = create_branch_radius_ui();
     var branch_margin = create_branch_margin_ui();
 
     cbox.pack_start( branch_type,   false, false );
+    cbox.pack_start( branch_radius, false, true );
     cbox.pack_start( branch_margin, false, false );
 
     exp.add( cbox );
@@ -206,7 +210,8 @@ public class StyleInspector : Box {
   private bool branch_type_changed( Gdk.EventButton e ) {
     var link_types = styles.get_link_types();
     if( _link_types.selected < link_types.length ) {
-      _da.undo_buffer.add_item( new UndoStyleLinkType( _affects, link_types.index( _link_types.selected ), _da ) );
+      var link_type = link_types.index( _link_types.selected );
+      _da.undo_buffer.add_item( new UndoStyleLinkType( _affects, link_type, _da ) );
     }
     return( false );
   }
@@ -222,6 +227,51 @@ public class StyleInspector : Box {
       tooltip.set_text( link_types.index( x / button_width ).display_name() );
       return( true );
     }
+    return( false );
+  }
+
+  private Revealer create_branch_radius_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Corner Radius" ) );
+    lbl.xalign = (float)0;
+
+    _branch_radius = new Scale.with_range( Orientation.HORIZONTAL, 10, 40, 1 );
+    _branch_radius.draw_value = true;
+    _branch_radius.change_value.connect( branch_radius_changed );
+    _branch_radius.button_release_event.connect( branch_radius_released );
+
+    box.pack_start( lbl,            false, true );
+    box.pack_end(   _branch_radius, false, true );
+
+    _branch_radius_revealer = new Revealer();
+    _branch_radius_revealer.reveal_child = false;
+    _branch_radius_revealer.add( box );
+
+    return( _branch_radius_revealer );
+
+  }
+
+  /* Called whenever the branch radius value is changed */
+  private bool branch_radius_changed( ScrollType scroll, double value ) {
+    var intval = (int)Math.round( value );
+    if( intval > 40 ) {
+      return( false );
+    }
+    var margin = new UndoStyleBranchRadius( _affects, intval, _da );
+    if( _change_add ) {
+      _da.undo_buffer.add_item( margin );
+      _change_add = false;
+    } else {
+      _da.undo_buffer.replace_item( margin );
+    }
+    return( false );
+  }
+
+  private bool branch_radius_released( EventButton e ) {
+    _change_add = true;
     return( false );
   }
 
@@ -1055,10 +1105,17 @@ public class StyleInspector : Box {
   private void update_link_types_state() {
     bool sensitive = false;
     switch( _affects ) {
-      case StyleAffects.ALL            :
-      case StyleAffects.SELECTED_NODES :
+      case StyleAffects.ALL :
         for( int i=0; i<_da.get_nodes().length; i++ ) {
           if( !_da.get_nodes().index( i ).is_leaf() ) {
+            sensitive = true;
+            break;
+          }
+        }
+        break;
+      case StyleAffects.SELECTED_NODES :
+        for( int i=0; i<_da.get_selected_nodes().length; i++ ) {
+          if( _da.get_selected_nodes().index( i ).children().length > 0 ) {
             sensitive = true;
             break;
           }
@@ -1077,6 +1134,8 @@ public class StyleInspector : Box {
       }
     }
     update_link_types_state();
+    _branch_radius_revealer.visible      = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
+    _branch_radius_revealer.reveal_child = (style.link_type.name() == "rounded") && _link_types.get_sensitive();
   }
 
   private void update_link_dashes_with_style( Style style ) {
@@ -1113,6 +1172,7 @@ public class StyleInspector : Box {
   private void update_ui_with_style( Style style ) {
 
     var branch_margin   = style.branch_margin;
+    var branch_radius   = style.branch_radius;
     var link_width      = style.link_width;
     var link_arrow      = style.link_arrow;
     var node_bw         = style.node_borderwidth;
@@ -1126,6 +1186,7 @@ public class StyleInspector : Box {
 
     _ignore = true;
     _branch_margin.set_value( (double)branch_margin );
+    _branch_radius.set_value( (double)branch_radius );
     update_link_types_with_style( style );
     update_link_dashes_with_style( style );
     update_node_borders_with_style( style );

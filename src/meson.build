@@ -38,6 +38,7 @@ sources += files(
     'parsers/UrlParser.vala',
 
     'styles/LinkTypeCurved.vala',
+    'styles/LinkTypeRounded.vala',
     'styles/LinkTypeSquared.vala',
     'styles/LinkTypeStraight.vala',
     'styles/NodeBorderBracket.vala',
@@ -116,6 +117,7 @@ sources += files(
 
     'undo_actions/UndoStyleAffectChange.vala',
     'undo_actions/UndoStyleBranchMargin.vala',
+    'undo_actions/UndoStyleBranchRadius.vala',
     'undo_actions/UndoStyleChange.vala',
     'undo_actions/UndoStyleConnectionArrow.vala',
     'undo_actions/UndoStyleConnectionDash.vala',

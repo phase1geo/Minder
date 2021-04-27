@@ -2233,7 +2233,7 @@ public class Node : Object {
       case NodeSide.BOTTOM :  child_x = (posx + (_width / 2));                child_y = (posy + style.node_margin);            break;
     }
 
-    style.draw_link( ctx, parent.style, this, parent_x, parent_y, child_x, child_y, out tailx, out taily, out tipx, out tipy );
+    style.draw_link( ctx, parent, this, parent_x, parent_y, child_x, child_y, out tailx, out taily, out tipx, out tipy );
 
     /* Draw the arrow */
     if( style.link_arrow ) {

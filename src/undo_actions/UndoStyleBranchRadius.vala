@@ -19,29 +19,30 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-public interface LinkType : Object {
+using Gtk;
 
-  /* Returns the name of the link type */
-  public abstract string name();
+public class UndoStyleBranchRadius : UndoStyleChange {
 
-  /* Returns the display name of the link type (should be a translatable string) */
-  public abstract string display_name();
+  GenericArray<int> _values;
 
-  /* Returns the name of the link icon */
-  public abstract string icon_name();
-
-  protected double adjust_a( Style style ) {
-    return( style.link_arrow ? ((style.link_width / 2) + ((style.node_borderwidth / 2) + 2)) : 0 );
+  /* Constructor for a node name change */
+  public UndoStyleBranchRadius( StyleAffects affects, int branch_radius, DrawArea da ) {
+    base( affects, da );
+    _values = new GenericArray<int>();
+    _values.add( branch_radius );
+    load_styles( da );
   }
 
-  protected double adjust_tip( Style style ) {
-    return( (style.link_width / 2) + 1 );
+  protected override void load_style_value( Style style ) {
+    _values.add( style.branch_radius );
   }
 
-  /* Draw method for the link */
-  public abstract void draw( Cairo.Context ctx, Node from_node, Node to_node,
-                             double from_x, double from_y, double to_x, double to_y,
-                             out double fx, out double fy, out double tx, out double ty );
+  protected override void store_style_value( Style style, int index ) {
+    style.branch_radius = _values.get( index );
+  }
+
+  protected override void replace_with_item( UndoItem item ) {
+    _values.set( 0, ((UndoStyleBranchRadius)item)._values.get( 0 ) );
+  }
 
 }
-
