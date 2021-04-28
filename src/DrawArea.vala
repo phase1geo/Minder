@@ -77,6 +77,7 @@ public class DrawArea : Gtk.DrawingArea {
   private Array<NodeInfo?> _orig_info;
   private int              _orig_width;
   private string           _orig_title;
+  private Node?            _last_match     = null;
   private Node?            _attach_node    = null;
   private Connection?      _attach_conn    = null;
   private Sticker?         _attach_sticker = null;
@@ -1356,6 +1357,8 @@ public class DrawArea : Gtk.DrawingArea {
     var url      = "";
     var left     = 0.0;
 
+    set_tooltip_markup( null );
+
     /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
     if( node.is_within_task( scaled_x, scaled_y ) ) {
       toggle_task( node );
@@ -2024,6 +2027,17 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Updates the last_match */
+  private void update_last_match( Node? match ) {
+    if( match != _last_match ) {
+      if( _last_match != null ) {
+        _last_match.show_fold = false;
+        queue_draw();
+      }
+      _last_match = match;
+    }
+  }
+
   /* Handle mouse motion */
   private bool on_motion( EventMotion event ) {
 
@@ -2190,6 +2204,7 @@ public class DrawArea : Gtk.DrawingArea {
       for( int i=0; i<_nodes.length; i++ ) {
         Node match = _nodes.index( i ).contains( _scaled_x, _scaled_y, null );
         if( match != null ) {
+          update_last_match( match );
           if( (current_conn != null) && ((current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING)) ) {
             _attach_node = match;
             set_node_mode( _attach_node, NodeMode.ATTACHABLE );
@@ -2199,7 +2214,10 @@ public class DrawArea : Gtk.DrawingArea {
           } else if( match.is_within_note( _scaled_x, _scaled_y ) ) {
             set_tooltip_markup( prepare_note_markup( match.note ) );
           } else if( match.is_within_fold( _scaled_x, _scaled_y ) ) {
-            set_tooltip_markup( prepare_folded_count_markup( match ) );
+            set_cursor( CursorType.HAND2 );
+            if( match.folded ) {
+              set_tooltip_markup( prepare_folded_count_markup( match ) );
+            }
           } else if( match.is_within_linked_node( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.HAND2 );
           } else if( match.is_within_resizer( _scaled_x, _scaled_y ) ) {
@@ -2214,6 +2232,10 @@ public class DrawArea : Gtk.DrawingArea {
             set_cursor( text_cursor );
             set_tooltip_markup( null );
           } else {
+            if( !match.folded ) {
+              match.show_fold = true;
+              queue_draw();
+            }
             set_cursor( null );
             set_tooltip_markup( null );
             select_node_on_hover( match, shift );
@@ -2222,6 +2244,8 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
 
+
+      update_last_match( null );
       set_cursor( null );
       set_tooltip_markup( null );
       select_sticker_group_on_hover( shift );

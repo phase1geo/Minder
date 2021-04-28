@@ -227,6 +227,7 @@ public class Node : Object {
   public Node?    parent     { get; protected set; default = null; }
   public NodeSide side       { get; set; default = NodeSide.RIGHT; }
   public bool     folded     { get; set; default = false; }
+  public bool     show_fold  { get; set; default = false; }
   public double   tree_size  { get; set; default = 0; }
   public bool     group      { get; set; default = false; }
   public RGBA     link_color {
@@ -758,9 +759,8 @@ public class Node : Object {
       double tx, ty, tw, th;
       task_bbox( out tx, out ty, out tw, out th );
       return( Utils.is_within_bounds( x, y, tx, ty, tw, th ) );
-    } else {
-      return( false );
     }
+    return( false );
   }
 
   /*
@@ -771,9 +771,8 @@ public class Node : Object {
       double nx, ny, nw, nh;
       note_bbox( out nx, out ny, out nw, out nh );
       return( Utils.is_within_bounds( x, y, nx, ny, nw, nh ) );
-    } else {
-      return( false );
     }
+    return( false );
   }
 
   public virtual bool is_within_linked_node( double x, double y ) {
@@ -781,20 +780,29 @@ public class Node : Object {
       double lx, ly, lw, lh;
       linked_node_bbox( out lx, out ly, out lw, out lh );
       return( Utils.is_within_bounds( x, y, lx, ly, lw, lh ) );
-    } else {
-      return( false );
     }
+    return( false );
   }
 
   /* Returns true if the given cursor coordinates lie within the fold indicator area */
   public virtual bool is_within_fold( double x, double y ) {
-    if( folded && (_children.length > 0) ) {
+    if( _children.length > 0 ) {
       double fx, fy, fw, fh;
       fold_bbox( out fx, out fy, out fw, out fh );
       return( Utils.is_within_bounds( x, y, fx, fy, fw, fh ) );
-    } else {
-      return( false );
     }
+    return( false );
+  }
+
+  /* Returns true if the given cursor coordinates lie within the fold indicator surrounding area */
+  public virtual bool is_within_fold_area( double x, double y ) {
+    if( _children.length > 0 ) {
+      double fx, fy, fw, fh;
+      var pad = 20;
+      fold_bbox( out fx, out fy, out fw, out fh );
+      return( Utils.is_within_bounds( x, y, (fx - pad), (fy - pad), (fw + (pad * 2)), (fh + (pad * 2)) ) );
+    }
+    return( false );
   }
 
   /* Returns true if the given cursor coordinates lie within the image area */
@@ -803,9 +811,8 @@ public class Node : Object {
       double ix, iy, iw, ih;
       image_bbox( out ix, out iy, out iw, out ih );
       return( Utils.is_within_bounds( x, y, ix, iy, iw, ih ) );
-    } else {
-      return( false );
     }
+    return( false );
   }
 
   /* Returns true if the given cursor coordinates lie within the resizer area */
@@ -820,7 +827,7 @@ public class Node : Object {
 
   /* Finds the node which contains the given pixel coordinates */
   public virtual Node? contains( double x, double y, Node? n ) {
-    if( (this != n) && (is_within( x, y ) || is_within_fold( x, y )) ) {
+    if( (this != n) && (is_within( x, y ) || is_within_fold_area( x, y )) ) {
       return( this );
     } else if( !folded ) {
       for( int i=0; i<_children.length; i++ ) {
@@ -1273,22 +1280,22 @@ public class Node : Object {
     double bw, bh;
     bbox( out x, out y, out bw, out bh );
     w = 16;
-    h = 10;
+    h = 16;
     switch( side ) {
       case NodeSide.RIGHT :
         x += bw + style.node_padding;
-        y += (bh / 2) - 5;
+        y += (bh / 2) - (h / 2);
         break;
       case NodeSide.LEFT :
         x -= style.node_padding + w;
-        y += (bh / 2) - 5;
+        y += (bh / 2) - (h / 2);
         break;
       case NodeSide.TOP :
-        x += (bw / 2) - 8;
+        x += (bw / 2) - (w / 2);
         y -= style.node_padding + h;
         break;
       case NodeSide.BOTTOM :
-        x += (bw / 2) - 8;
+        x += (bw / 2) - (w / 2);
         y += bh + style.node_padding;
         break;
     }
@@ -2166,27 +2173,39 @@ public class Node : Object {
   /* Draw the fold indicator */
   protected virtual void draw_common_fold( Context ctx, RGBA bg_color, RGBA fg_color ) {
 
-    if( folded && (_children.length > 0) ) {
+    if( _children.length == 0 ) return;
 
-      double fx, fy, fw, fh;
+    double fx, fy, fw, fh;
+    fold_bbox( out fx, out fy, out fw, out fh );
 
-      fold_bbox( out fx, out fy, out fw, out fh );
+    if( folded ) {
 
       /* Draw the fold rectangle */
       Utils.set_context_color_with_alpha( ctx, bg_color, _alpha );
       ctx.new_path();
       ctx.set_line_width( 1 );
-      ctx.rectangle( fx, fy, fw, fh );
+      ctx.arc( (fx + (fw / 2)), (fy + (fh / 2)), (fw / 2), 0, (2 * Math.PI) );
       ctx.fill();
 
       /* Draw circles */
       Utils.set_context_color_with_alpha( ctx, fg_color, _alpha );
       ctx.new_path();
-      ctx.arc( (fx + 5), (fy + 5), 2, 0, (2 * Math.PI) );
+      ctx.arc( (fx + (fw / 3)), (fy + (fh / 2)), 2, 0, (2 * Math.PI) );
       ctx.fill();
       ctx.new_path();
-      ctx.arc( (fx + 10), (fy + 5), 2, 0, (2 * Math.PI) );
+      ctx.arc( (fx + ((fw / 3) * 2)), (fy + (fh / 2)), 2, 0, (2 * Math.PI) );
       ctx.fill();
+
+    } else if( show_fold ) {
+
+      /* Draw the fold rectangle */
+      Utils.set_context_color_with_alpha( ctx, fg_color, _alpha );
+      ctx.new_path();
+      ctx.set_line_width( 2 );
+      ctx.arc( (fx + (fw / 2)), (fy + (fh / 2)), (fw / 2), 0, (2 * Math.PI) );
+      ctx.fill_preserve();
+      Utils.set_context_color_with_alpha( ctx, bg_color, _alpha );
+      ctx.stroke();
 
     }
 
