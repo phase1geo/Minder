@@ -2353,15 +2353,15 @@ public class Node : Object {
    Draws all of the nodes on the same side of the parent.  Draws the nodes such that
    overlapping links are drawn in a more meaningful way.
   */
-  private void draw_side( Context ctx, Theme theme, Node? current, bool motion, int first, int last ) {
+  private void draw_side_links( Context ctx, Theme theme, int first, int last ) {
     var first_rside = _children.index( first ).relative_side();
     var mid         = first + 1;
     while( (mid < last) && (_children.index( mid ).relative_side() == first_rside) ) mid++;
     for( int i=first; i<mid; i++ ) {
-      _children.index( i ).draw_all( ctx, theme, current, motion );
+      _children.index( i ).draw_links( ctx, theme );
     }
     for( int i=(last - 1); i>=mid; i-- ) {
-      _children.index( i ).draw_all( ctx, theme, current, motion );
+      _children.index( i ).draw_links( ctx, theme );
     }
   }
 
@@ -2371,8 +2371,12 @@ public class Node : Object {
       draw_link( ctx, theme );
     }
     if( !folded ) {
-      for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).draw_links( ctx, theme );
+      if( _children.length > 0 ) {
+        var first_side = side_count( _children.index( 0 ).side );
+        draw_side_links( ctx, theme, 0, first_side );
+        if( first_side < _children.length ) {
+          draw_side_links( ctx, theme, first_side, (int)_children.length );
+        }
       }
     }
   }
@@ -2381,12 +2385,8 @@ public class Node : Object {
   public void draw_all( Context ctx, Theme theme, Node? current, bool motion ) {
     if( this != current ) {
       if( !folded ) {
-        if( _children.length > 0 ) {
-          var first_side = side_count( _children.index( 0 ).side );
-          draw_side( ctx, theme, current, motion, 0, first_side );
-          if( first_side < _children.length ) {
-            draw_side( ctx, theme, current, motion, first_side, (int)_children.length );
-          }
+        for( int i=0; i<_children.length; i++ ) {
+          _children.index( i ).draw_all( ctx, theme, current, motion );
         }
       }
       draw( ctx, theme, motion );
