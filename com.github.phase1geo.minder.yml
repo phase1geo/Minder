@@ -1,0 +1,55 @@
+# This is the same ID that you've used in meson.build and other files
+app-id: com.github.phase1geo.minder
+
+# Instead of manually specifying a long list of build and runtime dependencies,
+# we can use a convenient pre-made runtime and SDK. For this example, we'll be
+# using the runtime and SDK provided by elementary.
+runtime: io.elementary.Platform
+runtime-version: 'daily'
+sdk: io.elementary.Sdk
+
+# This should match the exec line in your .desktop file and usually is the same
+# as your app ID
+command: com.github.phase1geo.minder
+
+# Here we can specify the kinds of permissions our app needs to run. Since we're
+# not using hardware like webcams, making sound, or reading external files, we
+# only need permission to draw our app on screen using either X11 or Wayland.
+finish-args:
+  - '--share=ipc'
+  - '--socket=fallback-x11'
+  - '--socket=wayland'
+
+# This section is where you list all the source code required to build your app.
+# If we had external dependencies that weren't included in our SDK, we would list
+# them here.
+modules:
+  - name: libmarkdown2
+    buildsystem: simple
+    sources:
+      - type: archive
+        url: https://github.com/Orc/discount/archive/v2.2.3b8.tar.gz
+        sha256: 5d69aa20c43e0da5ac8509c4f95880720655a9b9e36206c5b5adcbba75f80391
+    build-commands:
+      - ./configure.sh --prefix=/app --shared --pkg-config
+      - make -j1
+      - sed -e 's|/sbin/ldconfig|/sbin/ldconfig -n|' -i librarian.sh
+      - make install
+      - install -m644 libmarkdown.pc /app/lib/pkgconfig/libmarkdown.pc
+    cleanup:
+      - /bin
+      - /include
+      - /lib/pkgconfig
+  - name: gtksourceview
+    config-opts:
+      - --disable-static
+    sources:
+      - type: archive
+        url: https://download.gnome.org/sources/gtksourceview/3.24/gtksourceview-3.24.11.tar.xz
+        sha256: 691b074a37b2a307f7f48edc5b8c7afa7301709be56378ccf9cc9735909077fd
+  - name: minder
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: .
+
