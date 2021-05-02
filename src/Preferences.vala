@@ -102,15 +102,18 @@ public class Preferences : Gtk.Dialog {
     grid.column_spacing = 12;
     grid.row_spacing    = 6;
 
-    grid.attach( make_label( "Default theme" ), 0, 0 );
-    grid.attach( make_themes(), 1, 0, 2 );
+    grid.attach( make_label( "Hide themes not matching visual style" ), 0, 0 );
+    grid.attach( make_switch( "hide-themes-not-matching-visual-style" ), 1, 0 );
 
-    grid.attach( make_label( "Enable animations" ),  0, 1 );
-    grid.attach( make_switch( "enable-animations" ), 1, 1 );
+    grid.attach( make_label( "Default theme" ), 0, 1 );
+    grid.attach( make_themes(), 1, 1, 2 );
 
-    grid.attach( make_label( "Text field font size" ), 0, 2 );
-    grid.attach( make_switch( "text-field-use-custom-font-size" ), 1, 2 );
-    grid.attach( make_spinner( "text-field-custom-font-size", 8, 24, 1 ), 2, 2 );
+    grid.attach( make_label( "Enable animations" ),  0, 2 );
+    grid.attach( make_switch( "enable-animations" ), 1, 2 );
+
+    grid.attach( make_label( "Text field font size" ), 0, 3 );
+    grid.attach( make_switch( "text-field-use-custom-font-size" ), 1, 3 );
+    grid.attach( make_spinner( "text-field-custom-font-size", 8, 24, 1 ), 2, 3 );
     grid.attach( make_info( _( "Specifies the custom font size to use in text editing fields (i.e, quick entry or notes field)." ) ), 3, 1 );
 
     return( grid );

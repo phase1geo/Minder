@@ -135,9 +135,6 @@ public class MainWindow : ApplicationWindow {
     _settings = settings;
     icon_size = on_elementary ? IconSize.LARGE_TOOLBAR : IconSize.SMALL_TOOLBAR;
 
-    /* Handle any changes to the dark mode preference setting */
-    handle_prefer_dark_changes();
-
     var window_x = settings.get_int( "window-x" );
     var window_y = settings.get_int( "window-y" );
     var window_w = settings.get_int( "window-w" );
@@ -459,19 +456,6 @@ public class MainWindow : ApplicationWindow {
     if( _nb.current == null ) { return( null ); }
     var bin = (Gtk.Bin)_nb.current.page;
     return( (DrawArea)bin.get_child() );
-  }
-
-  /* Handles any changes to the dark mode preference gsettings for the desktop */
-  private void handle_prefer_dark_changes() {
-    var lookup = SettingsSchemaSource.get_default().lookup( DESKTOP_SCHEMA, false );
-    if( lookup != null ) {
-      var desktop_settings = new GLib.Settings( DESKTOP_SCHEMA );
-      _prefer_dark = desktop_settings.get_boolean( DARK_KEY );
-      desktop_settings.changed.connect(() => {
-        _prefer_dark = desktop_settings.get_boolean( DARK_KEY );
-        on_theme_changed( get_current_da( "handle_prefer_dark_changes" ) );
-      });
-    }
   }
 
   /* Updates the title */

@@ -50,6 +50,15 @@ public class MapInspector : Box {
     win.canvas_changed.connect( tab_changed );
     win.themes.themes_changed.connect( update_themes );
 
+    /* Listen for preference changes */
+    _settings.changed.connect( settings_changed );
+
+    /* Listen for changes to the system dark mode */
+    var granite_settings = Granite.Settings.get_default();
+    granite_settings.notify["prefers-color-scheme"].connect( () => {
+      update_themes();
+    });
+
   }
 
   /* Listen for any changes to the current tab in the main window */
@@ -67,6 +76,16 @@ public class MapInspector : Box {
     _da.get_connections().hide = _settings.get_boolean( "hide-connections" );
     _da.set_theme( _da.get_theme(), false );
     update_theme_layout();
+  }
+
+  /*
+   Called whenever the preferences change values.  We will update the displayed
+   themes based on the hide setting.
+  */
+  private void settings_changed( string key ) {
+    switch( key ) {
+      case "hide-themes-not-matching-visual-style" :  update_themes();  break;
+    }
   }
 
   /* Add the connection show/hide UI */
@@ -257,32 +276,39 @@ public class MapInspector : Box {
     });
 
     /* Get the theme information to display */
-    var names  = new Array<string>();
-    var icons  = new Array<Gtk.Image>();
+    var names    = new Array<string>();
+    var icons    = new Array<Gtk.Image>();
+    var hide     = _settings.get_boolean( "hide-themes-not-matching-visual-style" );
+    var settings = Granite.Settings.get_default();
+    var dark     = settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
 
     _win.themes.names( ref names );
     _win.themes.icons( ref icons );
 
     /* Add the themes */
+    var index = 0;
     for( int i=0; i<names.length; i++ ) {
       var name  = names.index( i );
-      var ebox  = new EventBox();
-      var item  = new Box( Orientation.VERTICAL, 0 );
-      var label = new Label( theme_label( name ) );
-      item.border_width = 5;
-      item.pack_start( icons.index( i ), false, false );
-      item.pack_start( label,            false, true, 5 );
-      ebox.button_press_event.connect((w, e) => {
-        var theme = _win.themes.get_theme( name );
-        select_theme( name );
-        _da.set_theme( theme, true );
-        if( theme.custom && (e.type == Gdk.EventType.DOUBLE_BUTTON_PRESS) ) {
-          edit_current_theme();
-        }
-        return( false );
-      });
-      ebox.add( item );
-      _theme_grid.attach( ebox, (i % 2), (i / 2) );
+      var theme = _win.themes.get_theme( name );
+      if( !hide || (dark == theme.prefer_dark) ) {
+        var ebox  = new EventBox();
+        var item  = new Box( Orientation.VERTICAL, 0 );
+        var label = new Label( theme_label( name ) );
+        item.border_width = 5;
+        item.pack_start( icons.index( i ), false, false );
+        item.pack_start( label,            false, true, 5 );
+        ebox.button_press_event.connect((w, e) => {
+          select_theme( name );
+          _da.set_theme( theme, true );
+          if( theme.custom && (e.type == Gdk.EventType.DOUBLE_BUTTON_PRESS) ) {
+            edit_current_theme();
+          }
+          return( false );
+        });
+        ebox.add( item );
+        _theme_grid.attach( ebox, (index % 2), (index / 2) );
+        index++;
+      }
     }
     _theme_grid.show_all();
 
