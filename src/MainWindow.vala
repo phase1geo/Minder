@@ -1,4 +1,4 @@
-/*
+  /*
 * Copyright (c) 2018 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
@@ -37,9 +37,6 @@ public enum PropertyGrab {
 
 public class MainWindow : ApplicationWindow {
 
-  private const string DESKTOP_SCHEMA = "io.elementary.desktop";
-  private const string DARK_KEY       = "prefer-dark";
-
   private GLib.Settings     _settings;
   private HeaderBar?        _header         = null;
   private Gtk.AccelGroup?   _accel_group    = null;
@@ -76,7 +73,6 @@ public class MainWindow : ApplicationWindow {
   private ToggleButton?     _prop_btn       = null;
   private Image?            _prop_show      = null;
   private Image?            _prop_hide      = null;
-  private bool              _prefer_dark    = false;
   private bool              _debug          = false;
   private ThemeEditor       _themer;
   private Label             _scale_lbl;
@@ -1046,7 +1042,7 @@ public class MainWindow : ApplicationWindow {
   private void on_theme_changed( DrawArea da ) {
     Gtk.Settings? settings = Gtk.Settings.get_default();
     if( settings != null ) {
-      settings.gtk_application_prefer_dark_theme = _prefer_dark || da.get_theme().prefer_dark;
+      settings.gtk_application_prefer_dark_theme = da.get_theme().prefer_dark;
     }
   }
 
