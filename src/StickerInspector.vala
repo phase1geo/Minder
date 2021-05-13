@@ -264,10 +264,9 @@ public class StickerInspector : Box {
 
   /* Load the favorite stickers from the file */
   private void load_favorites() {
+    if( !FileUtils.test( favorites, FileTest.EXISTS ) ) return;
     Xml.Doc* doc = Xml.Parser.parse_file( favorites );
-    if( doc == null ) {
-      return;
-    }
+    if( doc == null ) return;
     for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "sticker") ) {
         create_image( _favorites, it->get_prop( "name" ) );
