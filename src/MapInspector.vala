@@ -342,7 +342,7 @@ public class MapInspector : Box {
     if( theme.temporary ) {
       return( theme.label + " (" + _( "Unsaved" ) + ")" );
     }
-    return( name );
+    return( theme.label );
   }
 
   /* Makes sure that only the given theme is selected in the UI */
