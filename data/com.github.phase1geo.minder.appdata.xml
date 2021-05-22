@@ -135,6 +135,33 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.12.3" date="2021-05-22">
+      <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Added rounded branching style.</li>
+          <li>Added support for drawing clickable folding areas.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Changed shape of the unfold indicator.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed application crash on Manjaro.</li>
+          <li>Fixed link drawing order regression.</li>
+          <li>Removed error output when XML storage files do not exist.</li>
+          <li>Fixed parsing issue with filepaths starting with file://.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.12.2" date="2021-04-23">
       <description>
         <p>New</p>
