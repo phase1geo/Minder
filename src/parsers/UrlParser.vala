@@ -39,7 +39,11 @@ public class UrlParser : TextParser {
 
   /* Add the URL filepath if the matched text is a valid file path */
   private void highlight_filepath( FormattedText text, MatchInfo match ) {
-    if( FileUtils.test( match.fetch( 0 ), FileTest.EXISTS ) ) {
+    var str = match.fetch( 0 );
+    if( str.substring( 0, 7 ) == "file://" ) {
+      str = str.substring( 7 );
+    }
+    if( FileUtils.test( str, FileTest.EXISTS ) ) {
       add_tag( text, match, 0, FormatTag.URL, get_text( match, 0 ) );
     }
   }
