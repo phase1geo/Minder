@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-22 13:42-0500\n"
-"PO-Revision-Date: 2021-04-24 18:00+0100\n"
+"PO-Revision-Date: 2021-05-23 10:00+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -1340,7 +1340,7 @@ msgstr "Opzioni Ramo"
 
 #: src/StyleInspector.vala:238
 msgid "Corner Radius"
-msgstr ""
+msgstr "Raggio dell'angolo"
 
 #: src/StyleInspector.vala:283 src/StyleInspector.vala:641
 msgid "Margin"
