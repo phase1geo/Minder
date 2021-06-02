@@ -45,12 +45,9 @@ if meson.get_compiler('vala').version().version_compare('>=0.48.0')
   message('Using VALAC048')
 endif
 
-# Add the math library
+# Add the math and Markdown libraries
 cc = meson.get_compiler('c')
-math_dep = cc.find_library('m', required: false)
-
-# Add the Markdown library
-cc = meson.get_compiler('c')
+math_dep    = cc.find_library('m', required: false)
 libmarkdown = cc.find_library('markdown', required: true)
 
 # Check the granite dependency
