@@ -102,8 +102,10 @@ public class Preferences : Gtk.Dialog {
     grid.column_spacing = 12;
     grid.row_spacing    = 6;
 
+#if GRANITE_6_OR_LATER
     grid.attach( make_label( "Hide themes not matching visual style" ), 0, 0 );
     grid.attach( make_switch( "hide-themes-not-matching-visual-style" ), 1, 0 );
+#endif
 
     grid.attach( make_label( "Default theme" ), 0, 1 );
     grid.attach( make_themes(), 1, 1, 2 );

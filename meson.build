@@ -53,6 +53,15 @@ math_dep = cc.find_library('m', required: false)
 cc = meson.get_compiler('c')
 libmarkdown = cc.find_library('markdown', required: true)
 
+# Check the granite dependency
+granite = dependency('granite', version: '>=6.0', required: false)
+if granite.found()
+  add_project_arguments(['--define=GRANITE_6_OR_LATER'], language: 'vala')
+else
+  granite = dependency('granite', required: true)
+  message('Using older version of granite')
+endif
+
 add_project_arguments([
         '--vapidir', join_paths(meson.current_source_dir(), 'vapi'),
         '--disable-warnings'
@@ -65,7 +74,7 @@ dependencies = [
     dependency('glib-2.0'),
     dependency('cairo'),
     dependency('gee-0.8'),
-    dependency('granite'),
+    granite,
     dependency('gtk+-3.0'),
     dependency('libxml-2.0'),
     dependency('libarchive'),

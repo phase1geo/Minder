@@ -53,11 +53,13 @@ public class MapInspector : Box {
     /* Listen for preference changes */
     _settings.changed.connect( settings_changed );
 
+#if GRANITE_6_OR_LATER
     /* Listen for changes to the system dark mode */
     var granite_settings = Granite.Settings.get_default();
     granite_settings.notify["prefers-color-scheme"].connect( () => {
       update_themes();
     });
+#endif
 
   }
 
@@ -278,9 +280,14 @@ public class MapInspector : Box {
     /* Get the theme information to display */
     var names    = new Array<string>();
     var icons    = new Array<Gtk.Image>();
+#if GRANITE_6_OR_LATER
     var hide     = _settings.get_boolean( "hide-themes-not-matching-visual-style" );
     var settings = Granite.Settings.get_default();
     var dark     = settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+#else
+    var hide     = false;
+    var dark     = false;
+#endif
 
     _win.themes.names( ref names );
     _win.themes.icons( ref icons );
@@ -350,8 +357,27 @@ public class MapInspector : Box {
 
     int index    = 0;
     var names    = new Array<string>();
+    var shown    = new Array<string>();
     var children = _theme_grid.get_children();
+#if GRANITE_6_OR_LATER
+    var hide     = _settings.get_boolean( "hide-themes-not-matching-visual-style" );
+    var settings = Granite.Settings.get_default();
+    var dark     = settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+#else
+    var hide     = false;
+    var dark     = false;
+#endif
+
     _win.themes.names( ref names );
+
+    /* Only show the names that are not hidden */
+    for( int i=0; i<names.length; i++ ) {
+      var tname = names.index( i );
+      var theme = _win.themes.get_theme( tname );
+      if( !hide || (dark == theme.prefer_dark) ) {
+        shown.append_val( tname );
+      }
+    }
 
     children.reverse();
 
@@ -361,19 +387,19 @@ public class MapInspector : Box {
       var b = (Box)e.get_children().nth_data( 0 );
       var l = (Label)b.get_children().nth_data( 1 );
       e.get_style_context().remove_class( "theme-selected" );
-      l.set_markup( theme_label( names.index( index ) ) );
+      l.set_markup( theme_label( shown.index( index ) ) );
       index++;
     });
 
     /* Select the matching theme */
     index = 0;
     children.foreach((entry) => {
-      if( names.index( index ) == name ) {
+      if( shown.index( index ) == name ) {
         var e = (EventBox)entry;
         var b = (Box)e.get_children().nth_data( 0 );
         var l = (Label)b.get_children().nth_data( 1 );
         e.get_style_context().add_class( "theme-selected" );
-        l.set_markup( "<span color=\"white\">%s</span>".printf( theme_label( names.index( index ) ) ) );
+        l.set_markup( "<span color=\"white\">%s</span>".printf( theme_label( shown.index( index ) ) ) );
       }
       index++;
     });
