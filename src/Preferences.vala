@@ -73,22 +73,22 @@ public class Preferences : Gtk.Dialog {
     grid.column_spacing = 12;
     grid.row_spacing    = 6;
 
-    grid.attach( make_label( "Create new node from edit mode" ), 0, 0 );
+    grid.attach( make_label( _( "Create new node from edit mode" ) ), 0, 0 );
     grid.attach( make_switch( "new-node-from-edit" ), 1, 0 );
     grid.attach( make_info( _( "Specifies if we should create a new node directly from edit mode if Return or Tab is pressed." ) ), 2, 0 );
 
-    grid.attach( make_label( "Automatically make embedded URLs into links" ), 0, 1 );
+    grid.attach( make_label( _( "Automatically make embedded URLs into links" ) ), 0, 1 );
     grid.attach( make_switch( "auto-parse-embedded-urls" ), 1, 1 );
     grid.attach( make_info( _( "Specifies if embedded URLs found in node titles should be automatically highlighted.") ), 2, 1 );
 
-    grid.attach( make_label( "Enable Markdown" ), 0, 2 );
+    grid.attach( make_label( _( "Enable Markdown" ) ), 0, 2 );
     grid.attach( make_switch( "enable-markdown" ), 1, 2 );
 
-    grid.attach( make_label( "Create connection title on creation" ), 0, 3 );
+    grid.attach( make_label( _( "Create connection title on creation" ) ), 0, 3 );
     grid.attach( make_switch( "edit-connection-title-on-creation" ), 1, 3 );
     grid.attach( make_info( _( "Specifies if the connection title will be added and put into edit mode immediately after the connection is made." ) ), 2, 3 );
 
-    grid.attach( make_label( "Select items on mouse hover" ), 0, 4 );
+    grid.attach( make_label( _( "Select items on mouse hover" ) ), 0, 4 );
     grid.attach( make_switch( "select-on-hover" ), 1, 4 );
     grid.attach( make_info( _( "If enabled, selects items when mouse cursor hovers over the item." ) ), 2, 4 );
 
@@ -103,17 +103,17 @@ public class Preferences : Gtk.Dialog {
     grid.row_spacing    = 6;
 
 #if GRANITE_6_OR_LATER
-    grid.attach( make_label( "Hide themes not matching visual style" ), 0, 0 );
+    grid.attach( make_label( _( "Hide themes not matching visual style" ) ), 0, 0 );
     grid.attach( make_switch( "hide-themes-not-matching-visual-style" ), 1, 0 );
 #endif
 
-    grid.attach( make_label( "Default theme" ), 0, 1 );
+    grid.attach( make_label( _( "Default theme" ) ), 0, 1 );
     grid.attach( make_themes(), 1, 1, 2 );
 
-    grid.attach( make_label( "Enable animations" ),  0, 2 );
+    grid.attach( make_label( ( "Enable animations" ) ),  0, 2 );
     grid.attach( make_switch( "enable-animations" ), 1, 2 );
 
-    grid.attach( make_label( "Text field font size" ), 0, 3 );
+    grid.attach( make_label( _( "Text field font size" ) ), 0, 3 );
     grid.attach( make_switch( "text-field-use-custom-font-size" ), 1, 3 );
     grid.attach( make_spinner( "text-field-custom-font-size", 8, 24, 1 ), 2, 3 );
     grid.attach( make_info( _( "Specifies the custom font size to use in text editing fields (i.e, quick entry or notes field)." ) ), 3, 1 );
