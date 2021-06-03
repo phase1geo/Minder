@@ -89,6 +89,20 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.12.4" date="2021-06-02">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Small optimization to Meson build procedure.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed compile and run issue for distros lacking full granite support.</li>
+          <li>Fixed issue with displaying correct themes when themes are hidden that don't match system theme.</li>
+          <li>Added missing translatable strings.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.12.3" date="2021-05-22">
       <description>
         <p>New</p>

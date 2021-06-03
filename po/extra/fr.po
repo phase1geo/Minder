@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-22 13:42-0500\n"
+"POT-Creation-Date: 2021-06-02 23:01-0500\n"
 "PO-Revision-Date: 2019-03-24 15:37+0100\n"
 "Last-Translator: Nathan Bonnemains (@NathanBnm)\n"
 "Language-Team: none\n"
@@ -177,149 +177,171 @@ msgid "Trevor Williams"
 msgstr "Trevor Williams"
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:94
-#: data/com.github.phase1geo.minder.appdata.xml.in:115
-#: data/com.github.phase1geo.minder.appdata.xml.in:136
-#: data/com.github.phase1geo.minder.appdata.xml.in:160
-#: data/com.github.phase1geo.minder.appdata.xml.in:224
-#: data/com.github.phase1geo.minder.appdata.xml.in:244
+#: data/com.github.phase1geo.minder.appdata.xml.in:113
+#: data/com.github.phase1geo.minder.appdata.xml.in:154
+#: data/com.github.phase1geo.minder.appdata.xml.in:185
+#: data/com.github.phase1geo.minder.appdata.xml.in:223
+#: data/com.github.phase1geo.minder.appdata.xml.in:242
+#: data/com.github.phase1geo.minder.appdata.xml.in:271
+#: data/com.github.phase1geo.minder.appdata.xml.in:307
+#: data/com.github.phase1geo.minder.appdata.xml.in:343
+#: data/com.github.phase1geo.minder.appdata.xml.in:362
+#: data/com.github.phase1geo.minder.appdata.xml.in:404
+#: data/com.github.phase1geo.minder.appdata.xml.in:431
+#: data/com.github.phase1geo.minder.appdata.xml.in:462
+#: data/com.github.phase1geo.minder.appdata.xml.in:493
+#: data/com.github.phase1geo.minder.appdata.xml.in:508
+#: data/com.github.phase1geo.minder.appdata.xml.in:529
+#: data/com.github.phase1geo.minder.appdata.xml.in:569
+msgid "Changes"
+msgstr "Modifications"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:96
+msgid "Small optimization to Meson build procedure."
+msgstr ""
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:98
+#: data/com.github.phase1geo.minder.appdata.xml.in:118
+#: data/com.github.phase1geo.minder.appdata.xml.in:134
+#: data/com.github.phase1geo.minder.appdata.xml.in:163
+#: data/com.github.phase1geo.minder.appdata.xml.in:198
+#: data/com.github.phase1geo.minder.appdata.xml.in:227
+#: data/com.github.phase1geo.minder.appdata.xml.in:248
 #: data/com.github.phase1geo.minder.appdata.xml.in:278
-#: data/com.github.phase1geo.minder.appdata.xml.in:342
-#: data/com.github.phase1geo.minder.appdata.xml.in:376
-#: data/com.github.phase1geo.minder.appdata.xml.in:412
-#: data/com.github.phase1geo.minder.appdata.xml.in:436
-#: data/com.github.phase1geo.minder.appdata.xml.in:470
-#: data/com.github.phase1geo.minder.appdata.xml.in:507
-#: data/com.github.phase1geo.minder.appdata.xml.in:543
+#: data/com.github.phase1geo.minder.appdata.xml.in:316
+#: data/com.github.phase1geo.minder.appdata.xml.in:334
+#: data/com.github.phase1geo.minder.appdata.xml.in:347
+#: data/com.github.phase1geo.minder.appdata.xml.in:370
+#: data/com.github.phase1geo.minder.appdata.xml.in:414
+#: data/com.github.phase1geo.minder.appdata.xml.in:439
+#: data/com.github.phase1geo.minder.appdata.xml.in:469
+#: data/com.github.phase1geo.minder.appdata.xml.in:500
+#: data/com.github.phase1geo.minder.appdata.xml.in:512
+#: data/com.github.phase1geo.minder.appdata.xml.in:537
+#: data/com.github.phase1geo.minder.appdata.xml.in:580
+msgid "Bug Fixes"
+msgstr "Corrections de bugs"
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:100
+msgid "Fixed compile and run issue for distros lacking full granite support."
+msgstr ""
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:101
+#, fuzzy
+msgid ""
+"Fixed issue with displaying correct themes when themes are hidden that don't "
+"match system theme."
+msgstr "Correction des problèmes avec les fonctions d'export."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:102
+#, fuzzy
+msgid "Added missing translatable strings."
+msgstr "Ajout des traductions en espagnol."
+
+#: data/com.github.phase1geo.minder.appdata.xml.in:108
+#: data/com.github.phase1geo.minder.appdata.xml.in:129
+#: data/com.github.phase1geo.minder.appdata.xml.in:150
+#: data/com.github.phase1geo.minder.appdata.xml.in:174
+#: data/com.github.phase1geo.minder.appdata.xml.in:238
+#: data/com.github.phase1geo.minder.appdata.xml.in:258
+#: data/com.github.phase1geo.minder.appdata.xml.in:292
+#: data/com.github.phase1geo.minder.appdata.xml.in:356
+#: data/com.github.phase1geo.minder.appdata.xml.in:390
+#: data/com.github.phase1geo.minder.appdata.xml.in:426
+#: data/com.github.phase1geo.minder.appdata.xml.in:450
+#: data/com.github.phase1geo.minder.appdata.xml.in:484
+#: data/com.github.phase1geo.minder.appdata.xml.in:521
+#: data/com.github.phase1geo.minder.appdata.xml.in:557
 msgid "New"
 msgstr "Nouveau"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:96
+#: data/com.github.phase1geo.minder.appdata.xml.in:110
 msgid "Added rounded branching style."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:97
+#: data/com.github.phase1geo.minder.appdata.xml.in:111
 #, fuzzy
 msgid "Added support for drawing clickable folding areas."
 msgstr ""
 "Ajout de la prise en charge du glisser-déposer d'images locales ou web."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:99
-#: data/com.github.phase1geo.minder.appdata.xml.in:140
-#: data/com.github.phase1geo.minder.appdata.xml.in:171
-#: data/com.github.phase1geo.minder.appdata.xml.in:209
-#: data/com.github.phase1geo.minder.appdata.xml.in:228
-#: data/com.github.phase1geo.minder.appdata.xml.in:257
-#: data/com.github.phase1geo.minder.appdata.xml.in:293
-#: data/com.github.phase1geo.minder.appdata.xml.in:329
-#: data/com.github.phase1geo.minder.appdata.xml.in:348
-#: data/com.github.phase1geo.minder.appdata.xml.in:390
-#: data/com.github.phase1geo.minder.appdata.xml.in:417
-#: data/com.github.phase1geo.minder.appdata.xml.in:448
-#: data/com.github.phase1geo.minder.appdata.xml.in:479
-#: data/com.github.phase1geo.minder.appdata.xml.in:494
-#: data/com.github.phase1geo.minder.appdata.xml.in:515
-#: data/com.github.phase1geo.minder.appdata.xml.in:555
-msgid "Changes"
-msgstr "Modifications"
-
-#: data/com.github.phase1geo.minder.appdata.xml.in:101
+#: data/com.github.phase1geo.minder.appdata.xml.in:115
 #, fuzzy
 msgid "Updated Italian translation (thanks to @albanobattistella)"
 msgstr "Ajout des traductions en tchèque (grâce à Jan Marek !)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:102
+#: data/com.github.phase1geo.minder.appdata.xml.in:116
 #, fuzzy
 msgid "Changed shape of the unfold indicator."
 msgstr "Amélioration de l'apparence des indicateurs de pli."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:104
 #: data/com.github.phase1geo.minder.appdata.xml.in:120
-#: data/com.github.phase1geo.minder.appdata.xml.in:149
-#: data/com.github.phase1geo.minder.appdata.xml.in:184
-#: data/com.github.phase1geo.minder.appdata.xml.in:213
-#: data/com.github.phase1geo.minder.appdata.xml.in:234
-#: data/com.github.phase1geo.minder.appdata.xml.in:264
-#: data/com.github.phase1geo.minder.appdata.xml.in:302
-#: data/com.github.phase1geo.minder.appdata.xml.in:320
-#: data/com.github.phase1geo.minder.appdata.xml.in:333
-#: data/com.github.phase1geo.minder.appdata.xml.in:356
-#: data/com.github.phase1geo.minder.appdata.xml.in:400
-#: data/com.github.phase1geo.minder.appdata.xml.in:425
-#: data/com.github.phase1geo.minder.appdata.xml.in:455
-#: data/com.github.phase1geo.minder.appdata.xml.in:486
-#: data/com.github.phase1geo.minder.appdata.xml.in:498
-#: data/com.github.phase1geo.minder.appdata.xml.in:523
-#: data/com.github.phase1geo.minder.appdata.xml.in:566
-msgid "Bug Fixes"
-msgstr "Corrections de bugs"
-
-#: data/com.github.phase1geo.minder.appdata.xml.in:106
 #, fuzzy
 msgid "Fixed application crash on Manjaro."
 msgstr "Correction des problèmes avec les fonctions d'export."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:107
+#: data/com.github.phase1geo.minder.appdata.xml.in:121
 #, fuzzy
 msgid "Fixed link drawing order regression."
 msgstr ""
 "Amélioration du dessin des liens lorsqu'une arborescence de nœuds est "
 "déplacée."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:108
+#: data/com.github.phase1geo.minder.appdata.xml.in:122
 msgid "Removed error output when XML storage files do not exist."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:109
+#: data/com.github.phase1geo.minder.appdata.xml.in:123
 msgid "Fixed parsing issue with filepaths starting with file://."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:117
+#: data/com.github.phase1geo.minder.appdata.xml.in:131
 msgid ""
 "Added support for Control-Home/End to move the cursor to the beginning/end "
 "of the text."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:118
+#: data/com.github.phase1geo.minder.appdata.xml.in:132
 #, fuzzy
 msgid "Added support for folded children count tooltip."
 msgstr "Ajout de la prise en charge pour Flatpak."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:122
+#: data/com.github.phase1geo.minder.appdata.xml.in:136
 msgid ""
 "Fixed issue where selected text at beginning of text would not be deleted "
 "when the Backspace key was used."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:123
+#: data/com.github.phase1geo.minder.appdata.xml.in:137
 msgid ""
 "Fixed issue where selected text at end of text would not be deleted when the "
 "Delete key was used."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:124
+#: data/com.github.phase1geo.minder.appdata.xml.in:138
 msgid "Fixed selection issues after moving the cursor by a word."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:125
+#: data/com.github.phase1geo.minder.appdata.xml.in:139
 msgid ""
 "Fixed Home/End keys to move the cursor to the beginning/end of the current "
 "line."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:126
+#: data/com.github.phase1geo.minder.appdata.xml.in:140
 msgid ""
 "Fixed node size and layout when system text size changes between Minder "
 "sessions."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:127
+#: data/com.github.phase1geo.minder.appdata.xml.in:141
 #, fuzzy
 msgid ""
 "Fixed issue with application crashing when older Minder file is loaded that "
 "used a custom theme."
 msgstr "Correction des problèmes avec les fonctions d'export."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:128
+#: data/com.github.phase1geo.minder.appdata.xml.in:142
 #, fuzzy
 msgid ""
 "Fixed issue with node sidebar image not being properly updated when sidebar "
@@ -328,56 +350,56 @@ msgstr ""
 "Correction d'un problème avec l'état des onglets qui n'étaient pas "
 "correctement enregistré lors de l'ajout d'un nouvel onglet."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:129
+#: data/com.github.phase1geo.minder.appdata.xml.in:143
 msgid ""
 "Fixed square branch link drawing when some links have arrows drawn in them."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:130
+#: data/com.github.phase1geo.minder.appdata.xml.in:144
 msgid ""
 "Fixed issue with the background border being drawn around link arrows in "
 "contexts where it should not."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:138
+#: data/com.github.phase1geo.minder.appdata.xml.in:152
 #, fuzzy
 msgid "Added Basque translation (thanks to @alexgabi)"
 msgstr "Ajout des traductions en tchèque (grâce à Jan Marek !)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:142
+#: data/com.github.phase1geo.minder.appdata.xml.in:156
 #, fuzzy
 msgid "Updated to Italian translation (thanks to @albanobattistella)."
 msgstr "Ajout des traductions en tchèque (grâce à Jan Marek !)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:143
+#: data/com.github.phase1geo.minder.appdata.xml.in:157
 #, fuzzy
 msgid "Updated to Brazilian Portugese translation (thanks to Felipe Simoes)."
 msgstr "Ajout des traductions en portugais brésilien (grâce à btd1337 !)"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:144
+#: data/com.github.phase1geo.minder.appdata.xml.in:158
 msgid ""
 "Opening a file will automatically close an existing unsaved, unchanged tab."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:145
+#: data/com.github.phase1geo.minder.appdata.xml.in:159
 msgid "Changed color of connection drag handles to yellow."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:146
+#: data/com.github.phase1geo.minder.appdata.xml.in:160
 msgid ""
 "Making it easier to grab connection drag handle when it is close to "
 "connection handles."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:147
+#: data/com.github.phase1geo.minder.appdata.xml.in:161
 msgid "Reducing auto-saves when editing node text."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:151
+#: data/com.github.phase1geo.minder.appdata.xml.in:165
 msgid "Removed help information from PNG export panel."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:152
+#: data/com.github.phase1geo.minder.appdata.xml.in:166
 #, fuzzy
 msgid ""
 "Fixed issue with exporting images with connections/stickers which could get "
@@ -386,121 +408,121 @@ msgstr ""
 "Correction d'un problème de dessin des liens de nœud lors de l'utilisation "
 "du mode de disposition manuelle."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:153
+#: data/com.github.phase1geo.minder.appdata.xml.in:167
 #, fuzzy
 msgid "Fixed issue with empty tab when file cannot be loaded."
 msgstr ""
 "Correction d'un problème de dessin des liens de nœud lors de l'utilisation "
 "du mode de disposition manuelle."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:154
+#: data/com.github.phase1geo.minder.appdata.xml.in:168
 #, fuzzy
 msgid ""
 "Fixed issues with application crashes on startup in non-elementary "
 "environments."
 msgstr "Correction des problèmes avec les fonctions d'export."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:162
+#: data/com.github.phase1geo.minder.appdata.xml.in:176
 msgid "Added subscript and superscript support to Markdown parser."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:163
+#: data/com.github.phase1geo.minder.appdata.xml.in:177
 #, fuzzy
 msgid ""
 "Added support for switching tabs with Control-Tab and Shift-Control-Tab."
 msgstr "Ajout de la prise en charge de l'exportation au format Mermaid."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:164
+#: data/com.github.phase1geo.minder.appdata.xml.in:178
 #, fuzzy
 msgid "Added support for remembering last used open/save dialog directories."
 msgstr ""
 "Ajout de la prise en charge du redimensionnement de la barre latérale de "
 "l'inspecteur."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:165
+#: data/com.github.phase1geo.minder.appdata.xml.in:179
 msgid ""
 "Added support for Alt-Left/Right/Up/Down keyboard shortcuts to rearrange "
 "sibling nodes."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:166
+#: data/com.github.phase1geo.minder.appdata.xml.in:180
 #, fuzzy
 msgid "Added support for searching all tabs (thanks to @Messius58)."
 msgstr "Ajout de la prise en charge du mode concentration."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:167
+#: data/com.github.phase1geo.minder.appdata.xml.in:181
 msgid "Added about window for non-elementary builds."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:168
+#: data/com.github.phase1geo.minder.appdata.xml.in:182
 #, fuzzy
 msgid "Added ability to move child nodes to parent via Alt+direction."
 msgstr ""
 "Ajout de la possibilité de double-cliquer sur un nœud pour le rendre "
 "éditable."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:169
+#: data/com.github.phase1geo.minder.appdata.xml.in:183
 #, fuzzy
 msgid "Added support for including images in Markdown export."
 msgstr "Ajout de la prise en charge des images à l'intérieur des nœuds."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:173
+#: data/com.github.phase1geo.minder.appdata.xml.in:187
 msgid ""
 "Added installation instructions to README.md for Debian (thanks to Robert "
 "Hubinak)."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:174
+#: data/com.github.phase1geo.minder.appdata.xml.in:188
 msgid ""
 "Replaced export UI with a new, improved UI with support for export options."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:175
+#: data/com.github.phase1geo.minder.appdata.xml.in:189
 msgid "Moved add node menu items to a submenu."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:176
+#: data/com.github.phase1geo.minder.appdata.xml.in:190
 msgid "Improved focus mode behavior."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:177
+#: data/com.github.phase1geo.minder.appdata.xml.in:191
 msgid ""
 "Changed property header button to a toggle button and clarified the tooltip."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:178
+#: data/com.github.phase1geo.minder.appdata.xml.in:192
 #, fuzzy
 msgid "Changed keyboard shortcut to open sidebar from Control-| to F9."
 msgstr "Ajout du raccourci clavier Ctrl + W pour fermer l'onglet actif."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:179
+#: data/com.github.phase1geo.minder.appdata.xml.in:193
 msgid ""
 "Changed non-symbolic header bar icons to symbolic icons for non-elementary "
 "OS environments."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:180
+#: data/com.github.phase1geo.minder.appdata.xml.in:194
 #, fuzzy
 msgid "Improved link drawing algorithm to make link connections easier to see."
 msgstr ""
 "Amélioration du dessin des liens lorsqu'une arborescence de nœuds est "
 "déplacée."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:181
+#: data/com.github.phase1geo.minder.appdata.xml.in:195
 msgid ""
 "Changed Link Color in node inspector to Color to reflect the colors use."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:182
+#: data/com.github.phase1geo.minder.appdata.xml.in:196
 msgid "Improved task button drawing."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:186
+#: data/com.github.phase1geo.minder.appdata.xml.in:200
 msgid ""
 "Fixed issue where tab background colors were incorrect when changing tabs."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:187
+#: data/com.github.phase1geo.minder.appdata.xml.in:201
 #, fuzzy
 msgid ""
 "Fixed issue with getting valac pathname from Meson (thanks to paluszak)."
@@ -508,27 +530,27 @@ msgstr ""
 "Correction d'un problème avec le style de nœud dans le texte (grâce à Viliam "
 "K.)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:188
+#: data/com.github.phase1geo.minder.appdata.xml.in:202
 msgid "Added desktop update call to post_install.py script."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:189
+#: data/com.github.phase1geo.minder.appdata.xml.in:203
 #, fuzzy
 msgid "Fixed issue with sidebar sizing."
 msgstr ""
 "Correction d'un problème avec l'action d'afficher/masquer la barre latérale."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:190
+#: data/com.github.phase1geo.minder.appdata.xml.in:204
 msgid ""
 "Fixed issue with remembering the sticker sidebar panel was last opened when "
 "restarting."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:191
+#: data/com.github.phase1geo.minder.appdata.xml.in:205
 msgid "Fixed layout issues when unfolding a parent with folded children."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:192
+#: data/com.github.phase1geo.minder.appdata.xml.in:206
 #, fuzzy
 msgid ""
 "Fixed issue with hiding node groups when the main node in group is folded."
@@ -536,7 +558,7 @@ msgstr ""
 "Correction d'un problème avec le style de nœud dans le texte (grâce à Viliam "
 "K.)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:193
+#: data/com.github.phase1geo.minder.appdata.xml.in:207
 #, fuzzy
 msgid ""
 "Fixed issue with displaying link color in sidebar when root node is selected."
@@ -544,157 +566,157 @@ msgstr ""
 "Correction d'un problème de dessin des liens de nœud lors de l'utilisation "
 "du mode de disposition manuelle."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:194
+#: data/com.github.phase1geo.minder.appdata.xml.in:208
 msgid ""
 "Fixed alpha value used for drawing node grouping when encompassed nodes are "
 "not in focus when focus mode is enabled."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:195
+#: data/com.github.phase1geo.minder.appdata.xml.in:209
 msgid "Fixed issue with saving manually added embedded links in node text."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:196
+#: data/com.github.phase1geo.minder.appdata.xml.in:210
 #, fuzzy
 msgid "Fixed undo/redo text editing support."
 msgstr "Ajout de la prise en charge mimimale de la modification d'image."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:197
+#: data/com.github.phase1geo.minder.appdata.xml.in:211
 #, fuzzy
 msgid "Updated keyboard shortcuts in help window."
 msgstr "Ajout du raccourci clavier Ctrl + W pour fermer l'onglet actif."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:198
+#: data/com.github.phase1geo.minder.appdata.xml.in:212
 msgid ""
 "Fixed issue of tab content flashing when application opens with multiple "
 "tabs."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:199
+#: data/com.github.phase1geo.minder.appdata.xml.in:213
 #, fuzzy
 msgid "Fixed error when closing a tab."
 msgstr "Correction d'une erreur de segmentation lors du chargement d'un thème."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:200
+#: data/com.github.phase1geo.minder.appdata.xml.in:214
 #, fuzzy
 msgid "Fixed issue with undo'ing text modifications."
 msgstr "Correction des problèmes avec les fonctions d'export."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:201
+#: data/com.github.phase1geo.minder.appdata.xml.in:215
 msgid ""
 "Fixed issues with style inspector scale widgets not properly reflecting "
 "their current value."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:202
+#: data/com.github.phase1geo.minder.appdata.xml.in:216
 #, fuzzy
 msgid "Fixed various issues with node layout."
 msgstr "Correction des problèmes avec les fonctions d'export."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:203
+#: data/com.github.phase1geo.minder.appdata.xml.in:217
 #, fuzzy
 msgid "Fixed issue with undo'ing the deletion of a single node."
 msgstr "Correction des problèmes avec les fonctions d'export."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:211
+#: data/com.github.phase1geo.minder.appdata.xml.in:225
 #, fuzzy
 msgid "Updated Italian translation (thanks to Albano Battistella)."
 msgstr "Ajout des traductions en tchèque (grâce à Jan Marek !)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:215
+#: data/com.github.phase1geo.minder.appdata.xml.in:229
 #, fuzzy
 msgid "Fixed application crash issues due to using custom themes."
 msgstr ""
 "Correction d'un problème avec la disposition automatique introduite en 1.4.0."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:216
+#: data/com.github.phase1geo.minder.appdata.xml.in:230
 #, fuzzy
 msgid "Added missing theme colors in custom theme pane."
 msgstr ""
 "Correction d'un problème avec la disposition automatique introduite en 1.4.0."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:217
+#: data/com.github.phase1geo.minder.appdata.xml.in:231
 #, fuzzy
 msgid "Fixed issues with application crash when editing a root node."
 msgstr "Correction des problèmes avec les fonctions d'export."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:218
+#: data/com.github.phase1geo.minder.appdata.xml.in:232
 msgid ""
 "Fixed issue with filepath parser highlighting normal text that contains "
 "slash characters."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:226
+#: data/com.github.phase1geo.minder.appdata.xml.in:240
 #, fuzzy
 msgid ""
 "Added Shift-e keyboard shortcut to edit note text for nodes and connections."
 msgstr "Ajout du raccourci clavier Ctrl + W pour fermer l'onglet actif."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:230
-#: data/com.github.phase1geo.minder.appdata.xml.in:331
+#: data/com.github.phase1geo.minder.appdata.xml.in:244
+#: data/com.github.phase1geo.minder.appdata.xml.in:345
 #, fuzzy
 msgid "Updated Italian translation (thanks to @albanobattistella)."
 msgstr "Ajout des traductions en tchèque (grâce à Jan Marek !)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:231
+#: data/com.github.phase1geo.minder.appdata.xml.in:245
 msgid ""
 "Improved automatic layout of node trees when adjacent tree sizes change."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:232
+#: data/com.github.phase1geo.minder.appdata.xml.in:246
 msgid ""
 "Changed node and connection contextual menus to show (Edit Note) instead of "
 "(Add Note) and (Remove Note) options."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:236
+#: data/com.github.phase1geo.minder.appdata.xml.in:250
 msgid "Fixing compilation issues."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:237
+#: data/com.github.phase1geo.minder.appdata.xml.in:251
 msgid "Fixing behavior of 't' command when node is selected."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:238
+#: data/com.github.phase1geo.minder.appdata.xml.in:252
 msgid "Fixing support for undo/redo of root node insertion."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:246
+#: data/com.github.phase1geo.minder.appdata.xml.in:260
 msgid "Added Preferences dialog."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:247
+#: data/com.github.phase1geo.minder.appdata.xml.in:261
 #, fuzzy
 msgid "Added Portuguese translation (thanks to Andre Barata)."
 msgstr "Ajout des traductions en portugais brésilien (grâce à btd1337 !)"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:248
+#: data/com.github.phase1geo.minder.appdata.xml.in:262
 #, fuzzy
 msgid ""
 "Added keyboard shortcut (Menu or Shift-F10) to display contextual menus in "
 "mindmap."
 msgstr "Ajout du raccourci clavier Ctrl + W pour fermer l'onglet actif."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:249
+#: data/com.github.phase1geo.minder.appdata.xml.in:263
 msgid "Added default theme preference option."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:250
+#: data/com.github.phase1geo.minder.appdata.xml.in:264
 msgid "Added preference option to select map items on cursor hover."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:251
+#: data/com.github.phase1geo.minder.appdata.xml.in:265
 msgid ""
 "Added Shift+Home/End support for selecting all text from current cursor to "
 "beginning/end of node or connection titles when editing."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:252
+#: data/com.github.phase1geo.minder.appdata.xml.in:266
 #, fuzzy
 msgid "Added support for PlantUML import/export."
 msgstr "Ajout de la prise en charge du mode concentration."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:253
+#: data/com.github.phase1geo.minder.appdata.xml.in:267
 #, fuzzy
 msgid ""
 "Added support for displaying notifications on completion of export operation."
@@ -702,51 +724,51 @@ msgstr ""
 "Ajout de la prise en charge pour plier toutes les tâches complétées dans "
 "l'inspecteur de carte."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:254
+#: data/com.github.phase1geo.minder.appdata.xml.in:268
 #, fuzzy
 msgid "Added keyboard shortcuts for displaying tabs in sidebar."
 msgstr "Ajout du raccourci clavier Ctrl + W pour fermer l'onglet actif."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:255
+#: data/com.github.phase1geo.minder.appdata.xml.in:269
 msgid ""
 "Added support for making filepath URIs clickable in nodes, connections and "
 "notes (displays the files in the file manager application)."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:259
+#: data/com.github.phase1geo.minder.appdata.xml.in:273
 msgid ""
 "When nodes are copied to clipboard, pasting them as text in an external "
 "application will be displayed as in text export format."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:260
+#: data/com.github.phase1geo.minder.appdata.xml.in:274
 msgid ""
 "When text is copied to the clipboard from an external application, pasting "
 "as nodes in Minder will parse in text import format."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:261
+#: data/com.github.phase1geo.minder.appdata.xml.in:275
 msgid "Improved look of menu accelerators and added missing accelerators."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:262
+#: data/com.github.phase1geo.minder.appdata.xml.in:276
 msgid ""
 "Changed 't' command to transition task status from disabled to enabled to "
 "done and back to disabled."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:266
+#: data/com.github.phase1geo.minder.appdata.xml.in:280
 #, fuzzy
 msgid "Fixed issues with undo/redo of node/connection title changes."
 msgstr ""
 "Correction d'un problème avec l'action d'afficher/masquer la barre latérale."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:267
+#: data/com.github.phase1geo.minder.appdata.xml.in:281
 #, fuzzy
 msgid "Fixed issue with undoing a connection add operation."
 msgstr "Correction des problèmes avec les fonctions d'export."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:268
+#: data/com.github.phase1geo.minder.appdata.xml.in:282
 #, fuzzy
 msgid ""
 "Fixed issue with connection titles being clear when connection is moved to a "
@@ -755,19 +777,19 @@ msgstr ""
 "Correction d'un problème avec le déplacement d'un nœud vers une position "
 "différente au sein d'un nœud parent."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:269
+#: data/com.github.phase1geo.minder.appdata.xml.in:283
 msgid ""
 "Fixed UI issue with changing window width by dragging right side of window "
 "when sidebar is hidden."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:270
+#: data/com.github.phase1geo.minder.appdata.xml.in:284
 msgid ""
 "Fixed issues with inputting special characters with US international "
 "keyboard."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:271
+#: data/com.github.phase1geo.minder.appdata.xml.in:285
 #, fuzzy
 msgid ""
 "Fixed issue where images in resized nodes were not displaying properly on "
@@ -776,26 +798,26 @@ msgstr ""
 "Correction d'un problème lors de l'affichage des nœuds redimensionnés à "
 "l'ouverture ou au démarrage de l'application."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:272
+#: data/com.github.phase1geo.minder.appdata.xml.in:286
 msgid ""
 "Fixed issue where copying a filename in a file manager and pasting in Minder "
 "would attempt to past the icon image instead of the filename when editing "
 "text."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:280
+#: data/com.github.phase1geo.minder.appdata.xml.in:294
 #, fuzzy
 msgid "Added Markdown highlighting support to node titles."
 msgstr "Ajout de la prise en charge des URL dans le titre des nœuds."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:281
+#: data/com.github.phase1geo.minder.appdata.xml.in:295
 #, fuzzy
 msgid "Added ability to set the maximum node size in style inspector."
 msgstr ""
 "Ajout de la possibilité d'afficher/masquer chaque panneau dans l'inspecteur "
 "de style."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:282
+#: data/com.github.phase1geo.minder.appdata.xml.in:296
 #, fuzzy
 msgid ""
 "Added ability to set the maximum connection title size in style inspector."
@@ -803,21 +825,21 @@ msgstr ""
 "Ajout de la possibilité d'afficher/masquer chaque panneau dans l'inspecteur "
 "de style."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:283
+#: data/com.github.phase1geo.minder.appdata.xml.in:297
 #, fuzzy
 msgid "Added ability to set text field font size via gsetting."
 msgstr ""
 "Ajout de la possibilité de définir une couleur spécifique pour tous les "
 "nœuds sélectionnés."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:284
+#: data/com.github.phase1geo.minder.appdata.xml.in:298
 #, fuzzy
 msgid "Added ability to set branch margin in the style inspector."
 msgstr ""
 "Ajout de la possibilité d'afficher/masquer chaque panneau dans l'inspecteur "
 "de style."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:285
+#: data/com.github.phase1geo.minder.appdata.xml.in:299
 #, fuzzy
 msgid ""
 "Added ability to add stickers to nodes, connections and anywhere else in the "
@@ -826,81 +848,81 @@ msgstr ""
 "Ajout de la possibilité d'afficher/masquer toutes les connexions dans la "
 "carte."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:286
+#: data/com.github.phase1geo.minder.appdata.xml.in:300
 #, fuzzy
 msgid "Added ability to visually create and display node groupings."
 msgstr ""
 "Ajout de la possibilité de créer, modifier et supprimer des thèmes "
 "personnalisés"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:287
+#: data/com.github.phase1geo.minder.appdata.xml.in:301
 #, fuzzy
 msgid "Added import/export support for XMind."
 msgstr "Ajout de l'exportation au format yEd."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:288
+#: data/com.github.phase1geo.minder.appdata.xml.in:302
 msgid ""
 "Added support for specifying if connection titles should be added "
 "immediately after creating a connection."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:289
+#: data/com.github.phase1geo.minder.appdata.xml.in:303
 msgid ""
 "Added support for middle-click-and-drag to pan the canvas (Alt + mouse "
 "movement still supported)."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:290
+#: data/com.github.phase1geo.minder.appdata.xml.in:304
 #, fuzzy
 msgid "Added keyboard shortcut for the Zoom to Fit option (Control-1)."
 msgstr "Ajout du raccourci clavier Ctrl + W pour fermer l'onglet actif."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:291
+#: data/com.github.phase1geo.minder.appdata.xml.in:305
 msgid "Added new Mouse Events shortcut panel in shortcut cheatsheet."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:295
+#: data/com.github.phase1geo.minder.appdata.xml.in:309
 msgid ""
 "Removed the sidebar style affects selector and using the status of the "
 "current selection instead."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:296
+#: data/com.github.phase1geo.minder.appdata.xml.in:310
 msgid ""
 "Lowered the minimum node margin from 5 pixels to 1 pixel to allow for "
 "greater node density."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:297
+#: data/com.github.phase1geo.minder.appdata.xml.in:311
 msgid ""
 "Removed connection title editing field in sidebar for better UI consistency."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:298
+#: data/com.github.phase1geo.minder.appdata.xml.in:312
 msgid ""
 "Removed bold and italicized fonts from the style inspector font selectors."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:299
+#: data/com.github.phase1geo.minder.appdata.xml.in:313
 msgid "If connection title is empty, the title will be automatically removed."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:300
+#: data/com.github.phase1geo.minder.appdata.xml.in:314
 #, fuzzy
 msgid "Updated application icon (thanks to Fatih20)."
 msgstr "Ajout des traductions en tchèque (grâce à Jan Marek !)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:304
+#: data/com.github.phase1geo.minder.appdata.xml.in:318
 #, fuzzy
 msgid "Fixed issue with importing Freemind notes."
 msgstr ""
 "Correction d'un problème avec la disposition automatique introduite en 1.4.0."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:305
+#: data/com.github.phase1geo.minder.appdata.xml.in:319
 msgid "Fixed display of right-to-left text within nodes."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:306
+#: data/com.github.phase1geo.minder.appdata.xml.in:320
 #, fuzzy
 msgid ""
 "Fixed issues with loading a .minder file that contains errant information."
@@ -908,23 +930,23 @@ msgstr ""
 "Correction du problème lors de l'ajout d'un nœud enfant qui empêchait les "
 "autres nœuds enfants d'être dépliés."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:307
+#: data/com.github.phase1geo.minder.appdata.xml.in:321
 #, fuzzy
 msgid "Fixed issues with the layout of connection titles."
 msgstr ""
 "Correction d'un problème avec l'action d'afficher/masquer la barre latérale."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:308
+#: data/com.github.phase1geo.minder.appdata.xml.in:322
 #, fuzzy
 msgid "Fixed input method support when editing connection titles."
 msgstr ""
 "Correction d'un problème avec l'action d'afficher/masquer la barre latérale."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:309
+#: data/com.github.phase1geo.minder.appdata.xml.in:323
 msgid "Fixed position of fold indicator when tree layout is Upwards."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:310
+#: data/com.github.phase1geo.minder.appdata.xml.in:324
 #, fuzzy
 msgid ""
 "Fixed node display issue when a node link is clicked to a node that is "
@@ -933,29 +955,29 @@ msgstr ""
 "Correction de problèmes d'affichage avec le bouton de remplissage de nœud "
 "dans l'inspecteur de style."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:311
+#: data/com.github.phase1geo.minder.appdata.xml.in:325
 msgid ""
 "Fixed error when connection title is double clicked when no text is present."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:312
+#: data/com.github.phase1geo.minder.appdata.xml.in:326
 msgid ""
 "Fixed issue with opening the same document twice (only one tab will now "
 "exist per file)."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:313
+#: data/com.github.phase1geo.minder.appdata.xml.in:327
 msgid ""
 "Fixed Shift-Control-s keyboard shortcut to display the 'Save As' dialog "
 "instead of the 'Open' dialog."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:314
+#: data/com.github.phase1geo.minder.appdata.xml.in:328
 msgid "Fixed issue that allows you to click on or drag onto a hidden node."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:322
-#: data/com.github.phase1geo.minder.appdata.xml.in:335
+#: data/com.github.phase1geo.minder.appdata.xml.in:336
+#: data/com.github.phase1geo.minder.appdata.xml.in:349
 #, fuzzy
 msgid ""
 "Fixed issue with setting cursor position with mouse when zoom factor is not "
@@ -964,133 +986,133 @@ msgstr ""
 "Correction d'un problème avec l'arrière-plan du graphique lorsque le facteur "
 "de zoom était faible."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:323
-#: data/com.github.phase1geo.minder.appdata.xml.in:336
+#: data/com.github.phase1geo.minder.appdata.xml.in:337
+#: data/com.github.phase1geo.minder.appdata.xml.in:350
 msgid ""
 "Fixed issue with reading in Minder files that exceed the XML parser size "
 "limitations."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:344
+#: data/com.github.phase1geo.minder.appdata.xml.in:358
 #, fuzzy
 msgid "Added support for selecting nodes by dragging out a selection box."
 msgstr ""
 "Ajout de la prise en charge de la création d'une connexion visuelle entre "
 "deux nœuds quelconques."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:345
+#: data/com.github.phase1geo.minder.appdata.xml.in:359
 #, fuzzy
 msgid "Added ability to configure the color used in connection titles."
 msgstr ""
 "Ajout de la possibilité d'afficher/masquer toutes les connexions dans la "
 "carte."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:346
+#: data/com.github.phase1geo.minder.appdata.xml.in:360
 #, fuzzy
 msgid "Added Italian translation (thanks to albanobattistella on GitHub)."
 msgstr "Ajout des traductions en tchèque (grâce à Jan Marek !)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:350
+#: data/com.github.phase1geo.minder.appdata.xml.in:364
 msgid ""
 "Refined and pixel fitted the application icon (thanks to Fatih20 on GitHub)."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:351
+#: data/com.github.phase1geo.minder.appdata.xml.in:365
 msgid ""
 "Changed panning with mouse from left-click with motion to Alt with motion."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:352
+#: data/com.github.phase1geo.minder.appdata.xml.in:366
 #, fuzzy
 msgid "Changed select parent to work with multiple selected nodes."
 msgstr "Créez des liens entre deux nœuds sélectionnés ou plus"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:353
+#: data/com.github.phase1geo.minder.appdata.xml.in:367
 #, fuzzy
 msgid "Updated keyboard shortcuts cheatsheet for task commands."
 msgstr "Ajout du raccourci clavier Ctrl + W pour fermer l'onglet actif."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:354
+#: data/com.github.phase1geo.minder.appdata.xml.in:368
 #, fuzzy
 msgid "Updated Spanish translation (thanks to febrezo on GitHub)."
 msgstr "Ajout des traductions en français (grâce à Nathan Bonnemains)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:358
+#: data/com.github.phase1geo.minder.appdata.xml.in:372
 #, fuzzy
 msgid "Fixed issues with changing connection styles."
 msgstr ""
 "Correction d'un problème avec l'action d'afficher/masquer la barre latérale."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:359
+#: data/com.github.phase1geo.minder.appdata.xml.in:373
 msgid ""
 "Fixed application crashes associated with changing layout to a balanceable "
 "layout with animations enabled."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:360
+#: data/com.github.phase1geo.minder.appdata.xml.in:374
 msgid ""
 "Fixed display of cursor when it is over a clickable feature in the mind map."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:361
+#: data/com.github.phase1geo.minder.appdata.xml.in:375
 #, fuzzy
 msgid "Fixed issues with creating custom themes."
 msgstr ""
 "Correction d'un problème avec la disposition automatique introduite en 1.4.0."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:362
+#: data/com.github.phase1geo.minder.appdata.xml.in:376
 msgid "Fixed cursor in note editor when Control key is held over a URL link."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:363
+#: data/com.github.phase1geo.minder.appdata.xml.in:377
 msgid "Fixed meson.build issue when comparing valac version."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:364
+#: data/com.github.phase1geo.minder.appdata.xml.in:378
 msgid "Fixed connection colors in dark themes to help them be more visible."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:365
+#: data/com.github.phase1geo.minder.appdata.xml.in:379
 msgid ""
 "Fixed issue where connection colors don't follow theme if they have not been "
 "manually changed."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:366
+#: data/com.github.phase1geo.minder.appdata.xml.in:380
 msgid ""
 "Fixed application crash when animation is disabled, a node is moved, "
 "animation is enabled and a node is moved."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:367
+#: data/com.github.phase1geo.minder.appdata.xml.in:381
 msgid "Fixed various issues with quick entry."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:368
+#: data/com.github.phase1geo.minder.appdata.xml.in:382
 msgid ""
 "Fixed ability to open one or more files from the command-line or from a file "
 "browser."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:369
+#: data/com.github.phase1geo.minder.appdata.xml.in:383
 #, fuzzy
 msgid "Fixed issues with connection coloring."
 msgstr "Correction des problèmes avec les fonctions d'export."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:370
+#: data/com.github.phase1geo.minder.appdata.xml.in:384
 #, fuzzy
 msgid "Fixed issue with pasting UTF8 strings from clipboard."
 msgstr ""
 "Correction d'un problème avec l'action d'afficher/masquer la barre latérale."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:378
+#: data/com.github.phase1geo.minder.appdata.xml.in:392
 #, fuzzy
 msgid "Added support for pasting an image or text as a new node."
 msgstr ""
 "Ajout de la prise en charge pour ajouter un nouveau nœud parent à un nœud "
 "existant."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:379
+#: data/com.github.phase1geo.minder.appdata.xml.in:393
 #, fuzzy
 msgid ""
 "Added support for pasting an image or text, replacing the current node "
@@ -1099,7 +1121,7 @@ msgstr ""
 "Ajout de la prise en charge pour la création d'un lien d'un nœud à un autre "
 "dans la même carte."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:380
+#: data/com.github.phase1geo.minder.appdata.xml.in:394
 #, fuzzy
 msgid ""
 "Added support for pasting text, replacing the current connection content."
@@ -1107,16 +1129,16 @@ msgstr ""
 "Ajout de la prise en charge de la création d'une connexion visuelle entre "
 "deux nœuds quelconques."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:381
+#: data/com.github.phase1geo.minder.appdata.xml.in:395
 msgid "Added task support to Outliner import/export."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:382
+#: data/com.github.phase1geo.minder.appdata.xml.in:396
 #, fuzzy
 msgid "Added keyboard shortcut (Control-E) to display export interface."
 msgstr "Ajout du raccourci clavier Ctrl + W pour fermer l'onglet actif."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:383
+#: data/com.github.phase1geo.minder.appdata.xml.in:397
 #, fuzzy
 msgid ""
 "Added support for creating a new root node hitting the Return key when no "
@@ -1125,164 +1147,164 @@ msgstr ""
 "Ajout de la prise en charge pour la création d'un lien d'un nœud à un autre "
 "dans la même carte."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:384
+#: data/com.github.phase1geo.minder.appdata.xml.in:398
 msgid ""
 "Added ability to add a new root node via the contextual menu when no node is "
 "selected."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:385
+#: data/com.github.phase1geo.minder.appdata.xml.in:399
 msgid ""
 "Added ability to launch quick entry dialog via the contextual menu when no "
 "node is selected."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:386
+#: data/com.github.phase1geo.minder.appdata.xml.in:400
 #, fuzzy
 msgid "Added node alignment support for manual node layouts."
 msgstr "Ajout de la prise en charge des URL dans le titre des nœuds."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:387
+#: data/com.github.phase1geo.minder.appdata.xml.in:401
 #, fuzzy
 msgid "Added ability to create a connected root node."
 msgstr ""
 "Ajout de la possibilité de créer, modifier et supprimer des thèmes "
 "personnalisés"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:388
+#: data/com.github.phase1geo.minder.appdata.xml.in:402
 #, fuzzy
 msgid "Added ability to replace/edit nodes via the Quick Entry feature."
 msgstr ""
 "Ajout de la possibilité de créer, modifier et supprimer des thèmes "
 "personnalisés"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:392
+#: data/com.github.phase1geo.minder.appdata.xml.in:406
 msgid ""
 "Updated image editor dialog button bar to include support for clipboard "
 "operations."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:393
+#: data/com.github.phase1geo.minder.appdata.xml.in:407
 #, fuzzy
 msgid ""
 "Improved display of buttons in image area of the node inspector sidebar."
 msgstr ""
 "Meilleure apparence et lisibilité des icônes de thème dans la barre latérale."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:394
+#: data/com.github.phase1geo.minder.appdata.xml.in:408
 #, fuzzy
 msgid "Updated keyboard shortcut cheatsheet."
 msgstr "Ajout du raccourci clavier Ctrl + W pour fermer l'onglet actif."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:395
+#: data/com.github.phase1geo.minder.appdata.xml.in:409
 msgid ""
 "Changed quick text entry keyboard shortcut from Control-E to Control-Shift-E."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:396
+#: data/com.github.phase1geo.minder.appdata.xml.in:410
 msgid ""
 "Changed the paste text in contextual menu to indicate what will be pasted."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:397
+#: data/com.github.phase1geo.minder.appdata.xml.in:411
 msgid "Updated Outliner import/export support for tasks."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:398
+#: data/com.github.phase1geo.minder.appdata.xml.in:412
 msgid ""
 "Added tooltip and changed cursor when cursor is over a link and the Control "
 "key is held down."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:402
+#: data/com.github.phase1geo.minder.appdata.xml.in:416
 msgid ""
 "Removed empty Outliner rows from being added when Outliner file is imported."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:403
+#: data/com.github.phase1geo.minder.appdata.xml.in:417
 msgid ""
 "Fixed loss of selection when shift key is held down and the background is "
 "clicked."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:404
+#: data/com.github.phase1geo.minder.appdata.xml.in:418
 msgid "Added themed background color to exported PDF format."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:405
+#: data/com.github.phase1geo.minder.appdata.xml.in:419
 msgid "Fixed exports to allow existing files to be overwritten."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:406
+#: data/com.github.phase1geo.minder.appdata.xml.in:420
 msgid "Fixed Org-Mode export syntax errors."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:414
+#: data/com.github.phase1geo.minder.appdata.xml.in:428
 #, fuzzy
 msgid "Added support for using input methods."
 msgstr "Ajout de la prise en charge du mode concentration."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:415
+#: data/com.github.phase1geo.minder.appdata.xml.in:429
 #, fuzzy
 msgid "Added Dutch translation (thanks to Heimen Stoffels)."
 msgstr "Ajout des traductions en tchèque (grâce à Jan Marek !)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:419
+#: data/com.github.phase1geo.minder.appdata.xml.in:433
 msgid ""
 "Updated README.md to indicate which version of valac should be used if "
 "building from source."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:420
+#: data/com.github.phase1geo.minder.appdata.xml.in:434
 msgid "Changed unnamed default filename to use translated value."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:421
+#: data/com.github.phase1geo.minder.appdata.xml.in:435
 #, fuzzy
 msgid "Updated French translations (thanks to Nathan Bonnemains)."
 msgstr "Ajout des traductions en français (grâce à Nathan Bonnemains)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:422
+#: data/com.github.phase1geo.minder.appdata.xml.in:436
 msgid "Changed tab colors to match current document background."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:423
+#: data/com.github.phase1geo.minder.appdata.xml.in:437
 msgid "Adjusted dark theme to help with current tab contrast."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:427
+#: data/com.github.phase1geo.minder.appdata.xml.in:441
 msgid ""
 "Fixed issue with New Document plank command to load application data before "
 "opening new tab."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:428
+#: data/com.github.phase1geo.minder.appdata.xml.in:442
 msgid ""
 "Fixed build issues with compiling libarchive code using newer versions of "
 "libarchive and valac."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:429
+#: data/com.github.phase1geo.minder.appdata.xml.in:443
 #, fuzzy
 msgid "Fixed issues with translating shortcut cheetsheat strings."
 msgstr ""
 "Correction d'un problème avec la disposition automatique introduite en 1.4.0."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:430
+#: data/com.github.phase1geo.minder.appdata.xml.in:444
 #, fuzzy
 msgid "Fixed issue with exporting images when manual layout mode is selected."
 msgstr ""
 "Correction d'un problème de dessin des liens de nœud lors de l'utilisation "
 "du mode de disposition manuelle."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:438
+#: data/com.github.phase1geo.minder.appdata.xml.in:452
 msgid ""
 "Added support for importing/exporting Outliner files (new app in AppCenter!)."
 msgstr ""
 "Ajout de la prise en charge de l'importation/exportation au format Outliner "
 "(nouvelle application dans le Centre d'Applications !)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:439
+#: data/com.github.phase1geo.minder.appdata.xml.in:453
 msgid ""
 "Added map inspector switch to enable/disable automatic rotation of main "
 "branch link color selection."
@@ -1290,20 +1312,20 @@ msgstr ""
 "Ajout d'un inspecteur de carte pour activer/désactiver la rotation "
 "automatique de la couleur de sélection du lien de la branche principale."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:440
+#: data/com.github.phase1geo.minder.appdata.xml.in:454
 msgid "Added ability to set all selected nodes to a specific color."
 msgstr ""
 "Ajout de la possibilité de définir une couleur spécifique pour tous les "
 "nœuds sélectionnés."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:441
+#: data/com.github.phase1geo.minder.appdata.xml.in:455
 msgid ""
 "Added ability to set all selected nodes to a randomly selected link color."
 msgstr ""
 "Ajout de la possibilité de définir une couleur de lien sélectionné aléatoire "
 "pour tous les nœuds sélectionnés"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:442
+#: data/com.github.phase1geo.minder.appdata.xml.in:456
 msgid ""
 "Added ability to allow descendant nodes to have different link colors than "
 "ancestor nodes."
@@ -1311,7 +1333,7 @@ msgstr ""
 "Ajout de la possibilité aux nœuds enfants d'avoir une couleur de lien "
 "différente des nœuds parents."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:443
+#: data/com.github.phase1geo.minder.appdata.xml.in:457
 msgid ""
 "Added ability to cause a descendant node with a different color than its "
 "parent to re-use the parent color."
@@ -1319,14 +1341,14 @@ msgstr ""
 "Ajout de la possibilité de créer un nœud enfant avec une couleur diffénte de "
 "son parent pour réutiliser la couleur du parent."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:444
+#: data/com.github.phase1geo.minder.appdata.xml.in:458
 #, fuzzy
 msgid "Added ability to select children nodes using Control-click."
 msgstr ""
 "Ajout de la possibilité de sélectionner les nœuds enfants en utilisant "
 "Control-Click."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:445
+#: data/com.github.phase1geo.minder.appdata.xml.in:459
 #, fuzzy
 msgid ""
 "Added ability to export a mind-map as a new Portable Minder filetype which "
@@ -1336,25 +1358,25 @@ msgstr ""
 "fichier <em>Minder portable</em> qui permet de partager des fichiers Minder "
 "avec d'autres utilisateurs/systèmes de fichiers."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:446
+#: data/com.github.phase1geo.minder.appdata.xml.in:460
 #, fuzzy
 msgid "Added ability to export to Org-Mode format."
 msgstr "Ajout de la possibilité d'exporter au format Org-Mode."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:450
+#: data/com.github.phase1geo.minder.appdata.xml.in:464
 msgid "Updated French translation (thanks to Nathan Bonnemains)."
 msgstr "Ajout des traductions en français (grâce à Nathan Bonnemains)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:451
+#: data/com.github.phase1geo.minder.appdata.xml.in:465
 msgid "Improved OPML import support."
 msgstr "Amélioration de l'import de fichiers OPML."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:452
+#: data/com.github.phase1geo.minder.appdata.xml.in:466
 msgid "Changed ability to select a subtree by Control + double-click."
 msgstr ""
 "Modification de la sélection des sous-arbres avec Control + Double clic."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:453
+#: data/com.github.phase1geo.minder.appdata.xml.in:467
 msgid ""
 "Changed ability to select all nodes of the current level by Control + triple-"
 "click."
@@ -1362,11 +1384,11 @@ msgstr ""
 "Modification de la sélection de tous les nœuds du niveau courant avec "
 "Control + Triple clic."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:457
+#: data/com.github.phase1geo.minder.appdata.xml.in:471
 msgid "Fixed NodeJS version for Travis CI."
 msgstr "Correction de la version de NodeJS dans Travis CI."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:458
+#: data/com.github.phase1geo.minder.appdata.xml.in:472
 msgid ""
 "Fixed issue with adding a new child node that doesn't cause other descendant "
 "nodes to unfold."
@@ -1374,16 +1396,16 @@ msgstr ""
 "Correction du problème lors de l'ajout d'un nœud enfant qui empêchait les "
 "autres nœuds enfants d'être dépliés."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:459
+#: data/com.github.phase1geo.minder.appdata.xml.in:473
 msgid "Fixed issue with showing/hiding sidebar."
 msgstr ""
 "Correction d'un problème avec l'action d'afficher/masquer la barre latérale."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:460
+#: data/com.github.phase1geo.minder.appdata.xml.in:474
 msgid "Fixed segmentation faults when loading a theme."
 msgstr "Correction d'une erreur de segmentation lors du chargement d'un thème."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:461
+#: data/com.github.phase1geo.minder.appdata.xml.in:475
 #, fuzzy
 msgid ""
 "Fixed issue with the style inspector Change Affect value when selection "
@@ -1392,20 +1414,20 @@ msgstr ""
 "Correction d'un problème avec l'inspecteur de style lorsque la valeur du "
 "sélécteur <em>Les modifications affectent</em> change (grâce à Vilian K.)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:462
+#: data/com.github.phase1geo.minder.appdata.xml.in:476
 msgid "Fixed issue with node markup within the node text (thanks to Viliam K)."
 msgstr ""
 "Correction d'un problème avec le style de nœud dans le texte (grâce à Viliam "
 "K.)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:463
+#: data/com.github.phase1geo.minder.appdata.xml.in:477
 msgid ""
 "Fixed issue with tab state not being properly saved when a new tab is added."
 msgstr ""
 "Correction d'un problème avec l'état des onglets qui n'étaient pas "
 "correctement enregistré lors de l'ajout d'un nouvel onglet."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:464
+#: data/com.github.phase1geo.minder.appdata.xml.in:478
 msgid ""
 "Fixed bug with updating tab tooltip and saving tab state when filename is "
 "changed."
@@ -1414,7 +1436,7 @@ msgstr ""
 "l'enregistrement de l'état de l'onglet lorsque le nom de fichier est "
 "différent."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:472
+#: data/com.github.phase1geo.minder.appdata.xml.in:486
 msgid ""
 "Added ability to delete a single node (instead of the node and its subtree) "
 "in the contextual menu."
@@ -1422,7 +1444,7 @@ msgstr ""
 "Ajout de la possibilité de supprimer un nœud seul (au lieu du nœud et de ses "
 "enfants) dans le menu contextuel."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:473
+#: data/com.github.phase1geo.minder.appdata.xml.in:487
 msgid ""
 "When a new document is first saved, the first root node text is used as the "
 "default filename."
@@ -1430,24 +1452,24 @@ msgstr ""
 "Lorsqu'un document est enregistré pour la première fois, le nom du premier "
 "nœud racine est utilisé comme nom de fichier par défaut."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:474
+#: data/com.github.phase1geo.minder.appdata.xml.in:488
 msgid ""
 "Added multi-select support which includes: Changing styles; Copy, cut, paste "
 "and delete support; Connect two selected nodes; Create node links between "
 "two or more selected nodes; and Fold/unfold selected nodes."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:476
+#: data/com.github.phase1geo.minder.appdata.xml.in:490
 msgid "Added support for URLs in node titles."
 msgstr "Ajout de la prise en charge des URL dans le titre des nœuds."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:477
+#: data/com.github.phase1geo.minder.appdata.xml.in:491
 msgid ""
 "Added support for Markdown within a note: Notes are syntax highlighted; and "
 "Embedded URLs can be opened by Control-Clicking on them."
 msgstr ""
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:481
+#: data/com.github.phase1geo.minder.appdata.xml.in:495
 msgid ""
 "Updated application icon and other recently improved icons for improved "
 "readability (thanks to Nararyans R.I.)."
@@ -1455,22 +1477,22 @@ msgstr ""
 "Mise à jour de l'icône de l'application et des autres icônes pour plus de "
 "lisibilité (grâce à Nararyans R.I.)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:482
+#: data/com.github.phase1geo.minder.appdata.xml.in:496
 msgid "Improved look and readability of theme icons in the sidebar."
 msgstr ""
 "Meilleure apparence et lisibilité des icônes de thème dans la barre latérale."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:483
+#: data/com.github.phase1geo.minder.appdata.xml.in:497
 msgid "Changed sidebar to display theme icons in a grid layout."
 msgstr ""
 "Modification de la barre latérale pour afficher les icônes de thème dans une "
 "grille."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:484
+#: data/com.github.phase1geo.minder.appdata.xml.in:498
 msgid "Improved various export format output."
 msgstr "Amélioration des différents formats d'exportation."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:488
+#: data/com.github.phase1geo.minder.appdata.xml.in:502
 msgid ""
 "Fixed various compiler warnings/errors after compiling with latest version "
 "of Vala compiler."
@@ -1478,31 +1500,31 @@ msgstr ""
 "Correction de divers avertissements/erreurs après compilation avec la "
 "dernière version du compilateur Vala."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:496
+#: data/com.github.phase1geo.minder.appdata.xml.in:510
 msgid "Improved various icons (thanks to Nararyans R.I.)"
 msgstr "Amélioration de diverses icônes (grâce à Nararyans R.I.)"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:500
+#: data/com.github.phase1geo.minder.appdata.xml.in:514
 msgid "Downgraded Node.js to fix Travis CI builds"
 msgstr ""
 "Rétrogradation de Node.js pour corriger les problèmes d'intégration continue "
 "avec Travis CI"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:501
+#: data/com.github.phase1geo.minder.appdata.xml.in:515
 msgid "Fixed various compiler errors/warnings"
 msgstr "Correction de diverses erreurs/avertissements lors de la compilation"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:509
+#: data/com.github.phase1geo.minder.appdata.xml.in:523
 msgid "Added export to yEd."
 msgstr "Ajout de l'exportation au format yEd."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:510
+#: data/com.github.phase1geo.minder.appdata.xml.in:524
 msgid "Added ability to create, edit and delete custom themes."
 msgstr ""
 "Ajout de la possibilité de créer, modifier et supprimer des thèmes "
 "personnalisés"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:511
+#: data/com.github.phase1geo.minder.appdata.xml.in:525
 msgid ""
 "Added new quick entry mode, allowing node trees to be input within a text "
 "editor."
@@ -1510,17 +1532,17 @@ msgstr ""
 "Ajout d'un nouveau mode d'entrée rapide, permettant aux arbres de nœuds "
 "d'être saisis depuis l'éditeur de texte."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:512
+#: data/com.github.phase1geo.minder.appdata.xml.in:526
 msgid "Added Control-W keyboard shortcut to close the current tab."
 msgstr "Ajout du raccourci clavier Ctrl + W pour fermer l'onglet actif."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:513
+#: data/com.github.phase1geo.minder.appdata.xml.in:527
 msgid "Added shortcut exploration help window (use F1 key to display)."
 msgstr ""
 "Ajouter du raccourci pour parcourir la fenêtre d'aide (utilisez la touche F1 "
 "pour l'afficher)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:517
+#: data/com.github.phase1geo.minder.appdata.xml.in:531
 msgid ""
 "New search icon which has better contrast for Minder's themed header bar "
 "(thanks to Nararyans R.I.)."
@@ -1528,13 +1550,13 @@ msgstr ""
 "Nouvelle icône de recherche avec un meilleur contraste pour le thème de "
 "l'entête de Minder(grâce à Nararyans R.I.)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:518
+#: data/com.github.phase1geo.minder.appdata.xml.in:532
 msgid "New non-symbolic sidebar icon in header bar (thanks to Nararyans R.I.)."
 msgstr ""
 "Nouvelle icône non symbolique pour la barre latérale dans l'entête (grâce à "
 "Nararyans R.I.)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:519
+#: data/com.github.phase1geo.minder.appdata.xml.in:533
 msgid ""
 "New Minder application icon which fits in with the elementary OS color "
 "scheme better (thansk to Nararyans R.I.)."
@@ -1542,29 +1564,29 @@ msgstr ""
 "Nouvelle icône de l'application Minder qui correspond mieux au schéma de "
 "couleurs d'elementary OS (grâce à Nararyans R.I.)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:520
+#: data/com.github.phase1geo.minder.appdata.xml.in:534
 msgid "New focus icon in header bar (thanks to Nararyans R.I.)."
 msgstr ""
 "Nouvelle icône de mode concentration dans l'entête (grâce à Nararyans R.I.)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:521
+#: data/com.github.phase1geo.minder.appdata.xml.in:535
 msgid "Improved styling when creating a new node/connection."
 msgstr "Amélioration du style lors de la création d'un nouveau nœud/connexion."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:525
+#: data/com.github.phase1geo.minder.appdata.xml.in:539
 msgid ""
 "Fixed issue where separate trees in same mind-map where allowed to overlap."
 msgstr ""
 "Correction d'un problème ou les arbres séparés dans la même carte mentale "
 "pouvaient déborder."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:526
+#: data/com.github.phase1geo.minder.appdata.xml.in:540
 msgid "Fixed node link drawing issue when using manual layout mode."
 msgstr ""
 "Correction d'un problème de dessin des liens de nœud lors de l'utilisation "
 "du mode de disposition manuelle."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:527
+#: data/com.github.phase1geo.minder.appdata.xml.in:541
 msgid ""
 "Fixed issues drawing arrows properly when straight node links were being "
 "used."
@@ -1572,44 +1594,44 @@ msgstr ""
 "Correction de problèmes de dessin correct des flèches lors de l'utilisation "
 "de liens de nœuds droits."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:528
+#: data/com.github.phase1geo.minder.appdata.xml.in:542
 msgid "Fixed display issues with the node fill switch in the style inspector."
 msgstr ""
 "Correction de problèmes d'affichage avec le bouton de remplissage de nœud "
 "dans l'inspecteur de style."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:529
+#: data/com.github.phase1geo.minder.appdata.xml.in:543
 msgid "Fixed support for cut, copy and pasting connection title text."
 msgstr ""
 "Correction de la prise en charge des fonctions couper, copier et coller du "
 "titre des connexions."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:530
+#: data/com.github.phase1geo.minder.appdata.xml.in:544
 msgid "Fixed keyboard shortcut for toggling focus mode."
 msgstr ""
 "Correction du raccourci clavier pour activer/désactiver le mode "
 "concentration."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:537
+#: data/com.github.phase1geo.minder.appdata.xml.in:551
 msgid "Fixed issue with automatic layout that was introduced in 1.4.0."
 msgstr ""
 "Correction d'un problème avec la disposition automatique introduite en 1.4.0."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:545
+#: data/com.github.phase1geo.minder.appdata.xml.in:559
 msgid "Added support for focus mode."
 msgstr "Ajout de la prise en charge du mode concentration."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:546
+#: data/com.github.phase1geo.minder.appdata.xml.in:560
 msgid "Added support for multiple documents with tabs."
 msgstr "Ajout de la prise en charge de documents multiples avec onglets."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:547
+#: data/com.github.phase1geo.minder.appdata.xml.in:561
 msgid "Added support for resizing the inspector sidebar."
 msgstr ""
 "Ajout de la prise en charge du redimensionnement de la barre latérale de "
 "l'inspecteur."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:548
+#: data/com.github.phase1geo.minder.appdata.xml.in:562
 msgid ""
 "Added support for creating a new node directly from editing an existing node "
 "presssing Return or Tab."
@@ -1617,26 +1639,26 @@ msgstr ""
 "Ajout de la prise en charge pour la création d'un nouveau nœud directement à "
 "partir de l'édition d'un nœud existant en appuyant sur Entrée ou Tab."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:549
+#: data/com.github.phase1geo.minder.appdata.xml.in:563
 msgid "Added support for adding a new parent node to an existing node."
 msgstr ""
 "Ajout de la prise en charge pour ajouter un nouveau nœud parent à un nœud "
 "existant."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:550
+#: data/com.github.phase1geo.minder.appdata.xml.in:564
 msgid ""
 "Added support for importing/exporting to FreeMind and Freeplane formats."
 msgstr ""
 "Ajout de la prise en charge de l'importation/exportation aux formats "
 "FreeMind et Freeplane."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:551
+#: data/com.github.phase1geo.minder.appdata.xml.in:565
 msgid "Added support for sorting children either alphabetically or randomly."
 msgstr ""
 "Ajout de la prise en charge du tri des enfants alphabétiquement ou "
 "aléatoirement."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:552
+#: data/com.github.phase1geo.minder.appdata.xml.in:566
 msgid ""
 "Added support for creating a link from one node to another node in the same "
 "map."
@@ -1644,26 +1666,26 @@ msgstr ""
 "Ajout de la prise en charge pour la création d'un lien d'un nœud à un autre "
 "dans la même carte."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:553
+#: data/com.github.phase1geo.minder.appdata.xml.in:567
 msgid "Added support for building a Flatpak."
 msgstr "Ajout de la prise en charge pour Flatpak."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:557
+#: data/com.github.phase1geo.minder.appdata.xml.in:571
 msgid "Removed markup from translated strings."
 msgstr "Suppression des balises des chaînes de caractères traduites."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:558
+#: data/com.github.phase1geo.minder.appdata.xml.in:572
 msgid "Standardized tooltips that display accelerator information."
 msgstr ""
 "Indications standard pour afficher les informations des raccourcis clavier."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:559
+#: data/com.github.phase1geo.minder.appdata.xml.in:573
 msgid "Changed the way that node/connection titles are displayed in inspector."
 msgstr ""
 "Modification de la façon dont les titres de nœud/connexion sont affichés "
 "dans l'inspecteur."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:560
+#: data/com.github.phase1geo.minder.appdata.xml.in:574
 msgid ""
 "Changed app terminal script to allow command-line arguments to be passed to "
 "debug subcommand."
@@ -1671,20 +1693,20 @@ msgstr ""
 "Modification du script du terminal de l'application pour autoriser les "
 "arguments en ligne de commande a être passés en sous-commandes de débogage."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:561
+#: data/com.github.phase1geo.minder.appdata.xml.in:575
 msgid "Changed header bar and widget colors to match Minder brand color."
 msgstr ""
 "Modification des couleurs de la barre d'en-tête et des widgets pour "
 "correspondre à la couleur symbolique de Minder."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:562
+#: data/com.github.phase1geo.minder.appdata.xml.in:576
 msgid ""
 "Changed search icon in header bar to a symbolic icon to improve readability."
 msgstr ""
 "Modification de l'icône de recherche dans la barre d'en-tête en icône "
 "symbolique pour améliorer la lisibilité."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:563
+#: data/com.github.phase1geo.minder.appdata.xml.in:577
 msgid ""
 "When note tooltip is displayed, markup text is rendered for improved "
 "readability."
@@ -1692,7 +1714,7 @@ msgstr ""
 "Lorsque l'indicateur des notes est affiché, le marquage du texte est "
 "restitué pour une meilleure lisibilité."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:564
+#: data/com.github.phase1geo.minder.appdata.xml.in:578
 msgid ""
 "Enhanced app script to allow command-line arguments to be passed to debug "
 "subcommand."
@@ -1700,7 +1722,7 @@ msgstr ""
 "Amélioration du script de l'application pour autoriser les arguments en "
 "ligne de commande à être passés en sous-commandes de débogage."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:568
+#: data/com.github.phase1geo.minder.appdata.xml.in:582
 msgid ""
 "Fixed an issue with calculating connection endpoints when a portion of the "
 "node is not visible."
@@ -1708,40 +1730,40 @@ msgstr ""
 "Correction d'un problème avec le calcul des point de fin de connexion "
 "lorsqu'un bout du nœud n'est pas visible."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:569
+#: data/com.github.phase1geo.minder.appdata.xml.in:583
 msgid "Fixed file naming issue when a file is imported."
 msgstr ""
 "Correction des problèmes de nommage du fichier lors de l'importation d'un "
 "fichier."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:570
+#: data/com.github.phase1geo.minder.appdata.xml.in:584
 msgid ""
 "Fixed issue with displaying resized nodes on open or application startup."
 msgstr ""
 "Correction d'un problème lors de l'affichage des nœuds redimensionnés à "
 "l'ouverture ou au démarrage de l'application."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:577
+#: data/com.github.phase1geo.minder.appdata.xml.in:591
 msgid "Fixing issue with export functions."
 msgstr "Correction des problèmes avec les fonctions d'export."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:583
+#: data/com.github.phase1geo.minder.appdata.xml.in:597
 msgid "Let's stay connected!"
 msgstr "Restons connectés !"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:585
+#: data/com.github.phase1geo.minder.appdata.xml.in:599
 msgid "Added support for creating a visual connection between any two nodes."
 msgstr ""
 "Ajout de la prise en charge de la création d'une connexion visuelle entre "
 "deux nœuds quelconques."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:586
+#: data/com.github.phase1geo.minder.appdata.xml.in:600
 msgid "Added ability to show/hide all connections in the map."
 msgstr ""
 "Ajout de la possibilité d'afficher/masquer toutes les connexions dans la "
 "carte."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:587
+#: data/com.github.phase1geo.minder.appdata.xml.in:601
 msgid ""
 "Added support for remembering the last selected child of a node when "
 "navigating the map with the keyboard."
@@ -1749,7 +1771,7 @@ msgstr ""
 "Ajout de la prise en charge de la mémorisation du dernier enfant sélectionné "
 "d'un nœud lors de la navigation sur la carte à l'aide du clavier."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:588
+#: data/com.github.phase1geo.minder.appdata.xml.in:602
 msgid ""
 "When escape key is used when editing text, editing mode is ended without "
 "reverting text."
@@ -1757,7 +1779,7 @@ msgstr ""
 "Lorsque la touche d'échappement est utilisée lors de l'édition de texte, le "
 "mode d'édition est interrompu sans que le texte ne soit réinitialisé."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:589
+#: data/com.github.phase1geo.minder.appdata.xml.in:603
 msgid ""
 "Created unique contextual menus depending on what is selected in the mind "
 "map."
@@ -1765,7 +1787,7 @@ msgstr ""
 "Création de menus contextuels uniques en fonction de ce qui est sélectionné "
 "dans la carte mentale."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:590
+#: data/com.github.phase1geo.minder.appdata.xml.in:604
 msgid ""
 "Changed Node sidebar tab to Current which shows either the currently "
 "selected node or connection."
@@ -1773,17 +1795,17 @@ msgstr ""
 "Changement de l'onglet Nœud de la barre latérale à Courant qui affiche soit "
 "le nœud ou la connexion actuellement sélectionné(e)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:591
+#: data/com.github.phase1geo.minder.appdata.xml.in:605
 msgid "Improved link drawing when a node tree is being moved."
 msgstr ""
 "Amélioration du dessin des liens lorsqu'une arborescence de nœuds est "
 "déplacée."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:592
+#: data/com.github.phase1geo.minder.appdata.xml.in:606
 msgid "Switched from using GtkFileChooserDialog to GtkFileChooserNative."
 msgstr "Passage de GtkFileChooserDialog à GtkFileChooserNative."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:593
+#: data/com.github.phase1geo.minder.appdata.xml.in:607
 msgid ""
 "Added support for inserting emoji when editing text in the mind map (use "
 "Control-period)."
@@ -1791,18 +1813,18 @@ msgstr ""
 "Ajout du support pour l'insertion d'emojis lors de l'édition de texte dans "
 "la carte mentale (utilisez la combinaison CTRL + .)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:594
+#: data/com.github.phase1geo.minder.appdata.xml.in:608
 msgid "Improved readability of theme name when the theme is selected."
 msgstr "Meilleure lisibilité du nom du thème lorsque le thème est sélectionné."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:595
+#: data/com.github.phase1geo.minder.appdata.xml.in:609
 msgid ""
 "Fixed issue where changing a global style was not saved/applied to new nodes."
 msgstr ""
 "Correction d'un problème où le changement d'un style global n'était pas "
 "sauvegardé/appliqué aux nouveaux nœuds."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:596
+#: data/com.github.phase1geo.minder.appdata.xml.in:610
 msgid ""
 "Improved copy/paste support of nodes so that copied items can be pasted in "
 "other mind maps."
@@ -1810,7 +1832,7 @@ msgstr ""
 "Amélioration du copier/coller des nœuds pour que les éléments copiés "
 "puissent être collés dans d'autres cartes mentales."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:597
+#: data/com.github.phase1geo.minder.appdata.xml.in:611
 msgid ""
 "Added support for dynamically changing to dark mode in the UI if the prefer-"
 "dark desktop gsetting is set."
@@ -1818,32 +1840,32 @@ msgstr ""
 "Ajout de la prise en charge du passage dynamique en thème sombre dans "
 "l'interface utilisateur si l'option de thème sombre est activée."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:598
+#: data/com.github.phase1geo.minder.appdata.xml.in:612
 msgid "Added ability to show/hide each panel within the style inspector."
 msgstr ""
 "Ajout de la possibilité d'afficher/masquer chaque panneau dans l'inspecteur "
 "de style."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:599
+#: data/com.github.phase1geo.minder.appdata.xml.in:613
 msgid "Removed support for Loki builds."
 msgstr "Arrêt de la prise en charge pour Loki."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:606
+#: data/com.github.phase1geo.minder.appdata.xml.in:620
 msgid "Fixing appdata.xml file omission."
 msgstr "Correction d'une omission dans le fichier appdata.xml."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:607
+#: data/com.github.phase1geo.minder.appdata.xml.in:621
 msgid ""
 "Removing automatic style apply when the affects is set to certain values."
 msgstr ""
 "La suppression du style automatique s'applique lorsque l'effet est réglé sur "
 "certaines valeurs."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:614
+#: data/com.github.phase1geo.minder.appdata.xml.in:628
 msgid "Added Spanish translation."
 msgstr "Ajout des traductions en espagnol."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:615
+#: data/com.github.phase1geo.minder.appdata.xml.in:629
 msgid ""
 "Added support for Control-Return/Tab to support adding newlines/tabs in a "
 "node's title."
@@ -1851,23 +1873,23 @@ msgstr ""
 "Ajout de la prise en charge du raccourci CTRL + Entrée/TAB pour ajouter des "
 "nouvelles lignes/tabulations dans le titre d'un nœud."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:616
+#: data/com.github.phase1geo.minder.appdata.xml.in:630
 msgid "Improved node title editing support for selection and cursor movement."
 msgstr ""
 "Amélioration de la prise en charge de l'édition du titre des nœuds pour la "
 "sélection et le déplacement du curseur."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:617
+#: data/com.github.phase1geo.minder.appdata.xml.in:631
 msgid "Added support for automatically opening Minder files from Files."
 msgstr ""
 "Ajout de la prise en charge de l'ouverture automatique des fichiers Minder à "
 "partir de Fichiers."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:618
+#: data/com.github.phase1geo.minder.appdata.xml.in:632
 msgid "Added ability to modify styles of nodes and links."
 msgstr "Ajout de la possibilité de modifier les styles des nœuds et des liens."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:619
+#: data/com.github.phase1geo.minder.appdata.xml.in:633
 msgid ""
 "Changed layouts to be stored on a per tree basis instead of a per document "
 "basis."
@@ -1875,49 +1897,49 @@ msgstr ""
 "Modification de la disposition pour l'enregistrement par arbre au lieu de "
 "l'enregistrement par document."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:620
+#: data/com.github.phase1geo.minder.appdata.xml.in:634
 msgid "Added support for exporting to the Mermaid format."
 msgstr "Ajout de la prise en charge de l'exportation au format Mermaid."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:621
+#: data/com.github.phase1geo.minder.appdata.xml.in:635
 msgid "Added support for disabling/enabling displaying markup in node title."
 msgstr ""
 "Ajout de la prise en charge de la désactivation/activation de l'affichage du "
 "balisage dans le titre du nœud."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:622
+#: data/com.github.phase1geo.minder.appdata.xml.in:636
 msgid "Improved the look of the fold indicators."
 msgstr "Amélioration de l'apparence des indicateurs de pli."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:623
+#: data/com.github.phase1geo.minder.appdata.xml.in:637
 msgid "Lots of bug fixes."
 msgstr "Nombreuses corrections de bugs."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:630
+#: data/com.github.phase1geo.minder.appdata.xml.in:644
 msgid "Adding Spanish translation (thanks to Adolfo Jayme-Barrientos)."
 msgstr "Ajout des traductions en espagnol (grâce à Adolfo Jayme-Barrientos)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:631
+#: data/com.github.phase1geo.minder.appdata.xml.in:645
 msgid "Adding support for special character insertion via the Compose key."
 msgstr ""
 "Ajout du support pour l'insertion de caractères spéciaux avec la touche "
 "Compose."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:637
+#: data/com.github.phase1geo.minder.appdata.xml.in:651
 msgid "Updating French translation."
 msgstr "Mises à jour des traductions en français."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:642
+#: data/com.github.phase1geo.minder.appdata.xml.in:656
 msgid "Bug fix release"
 msgstr "Version corrective"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:644
+#: data/com.github.phase1geo.minder.appdata.xml.in:658
 msgid "Fixed bugs related to editing unicode characters in map area."
 msgstr ""
 "Correction de bugs liés à l'édition de caractères unicode dans la zone de la "
 "carte."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:645
+#: data/com.github.phase1geo.minder.appdata.xml.in:659
 msgid ""
 "Reduced height of node textbox in sidebar to help alleviate window sizing "
 "problems."
@@ -1925,88 +1947,88 @@ msgstr ""
 "Réduction de la hauteur de la zone de texte du nœud dans la barre latérale "
 "pour aider à diminuer les problèmes de dimensionnement de la fenêtre."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:646
+#: data/com.github.phase1geo.minder.appdata.xml.in:660
 msgid ""
 "Fixed issue with moving a node to a different position within a parent node."
 msgstr ""
 "Correction d'un problème avec le déplacement d'un nœud vers une position "
 "différente au sein d'un nœud parent."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:647
+#: data/com.github.phase1geo.minder.appdata.xml.in:661
 msgid "Fixed issue connecting a root node to another node."
 msgstr ""
 "Correction d'un problème de connexion d'un nœud racine à un autre nœud."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:653
+#: data/com.github.phase1geo.minder.appdata.xml.in:667
 msgid "Images now supported!"
 msgstr "Les images sont désormais prises en charge !"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:655
+#: data/com.github.phase1geo.minder.appdata.xml.in:669
 msgid "Added support for images within nodes."
 msgstr "Ajout de la prise en charge des images à l'intérieur des nœuds."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:656
+#: data/com.github.phase1geo.minder.appdata.xml.in:670
 msgid "Added basic image editing support."
 msgstr "Ajout de la prise en charge mimimale de la modification d'image."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:657
+#: data/com.github.phase1geo.minder.appdata.xml.in:671
 msgid "Added support for dragging and dropping local and web images."
 msgstr ""
 "Ajout de la prise en charge du glisser-déposer d'images locales ou web."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:658
+#: data/com.github.phase1geo.minder.appdata.xml.in:672
 msgid "Added support for resizing node width."
 msgstr ""
 "Ajout de la prise en charge du redimensionnement de la largeur des nœuds."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:659
+#: data/com.github.phase1geo.minder.appdata.xml.in:673
 msgid "Changed cursors when over a task button."
 msgstr "Modification du curseur au survol d'un bouton de tâche."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:660
+#: data/com.github.phase1geo.minder.appdata.xml.in:674
 msgid "Changed location of task and note elements in a node."
 msgstr ""
 "Modification de l'emplacement des éléments de tâche et de note dans un nœud."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:661
+#: data/com.github.phase1geo.minder.appdata.xml.in:675
 msgid "Added support for keeping the map from scrolling off screen."
 msgstr ""
 "Ajout de la prise en charge du maintien du défilement de la carte de l'écran."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:662
+#: data/com.github.phase1geo.minder.appdata.xml.in:676
 msgid "Added support for shift-mousewheel to scroll horizontally."
 msgstr ""
 "Ajout de la prise en charge de la molette de la souris avec shift pour le "
 "défilement horizontal."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:663
+#: data/com.github.phase1geo.minder.appdata.xml.in:677
 msgid "Added support for control-mousewheel to zoom in/out."
 msgstr ""
 "Ajout de la prise en charge de la molette de la souris pour effectuer un "
 "zoom avant/arrière."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:664
+#: data/com.github.phase1geo.minder.appdata.xml.in:678
 msgid "Fixed issue with drawing background when zoom factor was small."
 msgstr ""
 "Correction d'un problème avec l'arrière-plan du graphique lorsque le facteur "
 "de zoom était faible."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:665
+#: data/com.github.phase1geo.minder.appdata.xml.in:679
 msgid ""
 "Custom icons are now stored as a gresource rather than in the file system."
 msgstr ""
 "Les icônes personnalisées sont maintenant stockées en tant que ressource "
 "gresource plutôt que dans le système de fichiers."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:666
+#: data/com.github.phase1geo.minder.appdata.xml.in:680
 msgid "Other minor bug fixes."
 msgstr "Autres corrections de bugs mineures."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:672
+#: data/com.github.phase1geo.minder.appdata.xml.in:686
 msgid "Support for more export types and bug fixes."
 msgstr "Prise en charge de plus de types d'exportation et corrections de bugs."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:674
+#: data/com.github.phase1geo.minder.appdata.xml.in:688
 msgid ""
 "Added support for exporting to SVG, JPEG, BMP, Markdown, PlainText and CSV "
 "formats."
@@ -2014,33 +2036,33 @@ msgstr ""
 "Ajout de la prise en charge pour l'exportation vers les formats SVG, JPEG, "
 "BMP, Mardown, Texte brut et CSV."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:675
+#: data/com.github.phase1geo.minder.appdata.xml.in:689
 msgid "Added support for folding all completed tasks in map inspector."
 msgstr ""
 "Ajout de la prise en charge pour plier toutes les tâches complétées dans "
 "l'inspecteur de carte."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:676
+#: data/com.github.phase1geo.minder.appdata.xml.in:690
 msgid "Added support for unfolding all folded nodes in map inspector."
 msgstr ""
 "Ajout de la prise en charge pour déplier tous les nœuds pliés dans "
 "l'inspecteur de carte."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:677
+#: data/com.github.phase1geo.minder.appdata.xml.in:691
 msgid "Added Solarized Dark and Solarized Light themes."
 msgstr "AJout des thèmes Solarized Dark et Solarized Light."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:678
+#: data/com.github.phase1geo.minder.appdata.xml.in:692
 msgid "Changing button display in map inspector."
 msgstr "Modification de l'affichage du bouton dans l'inspecteur de carte."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:679
+#: data/com.github.phase1geo.minder.appdata.xml.in:693
 #, fuzzy
 msgid "Cleaning up Export menu to include a single \"Export\" option."
 msgstr ""
 "Nettoyage du menu Exporter pour inclure une seule option « Exporter… »."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:680
+#: data/com.github.phase1geo.minder.appdata.xml.in:694
 msgid ""
 "Fixing issue where modified node title in node inspector was lost when input "
 "focus was changed."
@@ -2048,72 +2070,72 @@ msgstr ""
 "Correction d'un problème où le titre de nœud modifié dans l'inspecteur de "
 "nœud était perdu lorsque le point focalisé en entrée était modifié."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:681
+#: data/com.github.phase1geo.minder.appdata.xml.in:695
 msgid "Fixing issue where an entire tree is attached to another tree."
 msgstr ""
 "Correction d'un problème où un arbre entier est attaché à un autre arbre."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:682
+#: data/com.github.phase1geo.minder.appdata.xml.in:696
 msgid "Added Czech translation (thanks to Jan Marek!)."
 msgstr "Ajout des traductions en tchèque (grâce à Jan Marek !)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:683
+#: data/com.github.phase1geo.minder.appdata.xml.in:697
 msgid "Added French translation (thanks to Yannick A.!)."
 msgstr "Ajout des traductions en français (grâce à Yannick A. !)."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:684
+#: data/com.github.phase1geo.minder.appdata.xml.in:698
 msgid "Added Brazilian Portuguese translation (thanks to btd1337!)"
 msgstr "Ajout des traductions en portugais brésilien (grâce à btd1337 !)"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:690
+#: data/com.github.phase1geo.minder.appdata.xml.in:704
 msgid "Initial startup bug fix."
 msgstr "Correction de bug au premier démarrage."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:695
+#: data/com.github.phase1geo.minder.appdata.xml.in:709
 msgid "Search improvements and bug fixes"
 msgstr "Amélioration de la recherche et corrections de bugs"
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:697
+#: data/com.github.phase1geo.minder.appdata.xml.in:711
 msgid "Added ability to search within notes."
 msgstr "Ajout de la possibilité de chercher parmi les notes."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:698
+#: data/com.github.phase1geo.minder.appdata.xml.in:712
 msgid ""
 "Added ability to optionally control search criteria within search popover."
 msgstr ""
 "Ajout de la possibilité pour optionnellement contrôler les critères de "
 "recherche dans le volet de recherche."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:699
+#: data/com.github.phase1geo.minder.appdata.xml.in:713
 msgid "Fixed screenshots."
 msgstr "Correction des captures d'écran."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:700
+#: data/com.github.phase1geo.minder.appdata.xml.in:714
 msgid ""
 "Changed properties header bar icon to a sidebar hide/show icon for clarity."
 msgstr ""
 "L'icône de la barre supérieure des propriétés a été changée en icône de "
 "masquage/affichage dans la barre latérale pour plus de clarté."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:701
+#: data/com.github.phase1geo.minder.appdata.xml.in:715
 msgid "Several minor UI improvements."
 msgstr "Améliorations mineures diverses de l'interface."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:702
+#: data/com.github.phase1geo.minder.appdata.xml.in:716
 msgid "Removing deprecated GTK calls."
 msgstr "Suprresion des éléments GTK dépréciés."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:703
+#: data/com.github.phase1geo.minder.appdata.xml.in:717
 msgid "Added ability to double-click on a node to make it editable."
 msgstr ""
 "Ajout de la possibilité de double-cliquer sur un nœud pour le rendre "
 "éditable."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:704
+#: data/com.github.phase1geo.minder.appdata.xml.in:718
 msgid "Bug fixes."
 msgstr "Corrections de bugs."
 
-#: data/com.github.phase1geo.minder.appdata.xml.in:710
+#: data/com.github.phase1geo.minder.appdata.xml.in:724
 msgid "Initial release"
 msgstr "Version initiale"
 
