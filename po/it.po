@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-02 23:01-0500\n"
-"PO-Revision-Date: 2021-05-23 10:00+0100\n"
+"PO-Revision-Date: 2021-06-03 18:54+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -182,9 +182,8 @@ msgid "Solarized Light"
 msgstr "Luce Solarizzata"
 
 #: src/themes/ThemeDefault.vala:28
-#, fuzzy
 msgid "Light"
-msgstr "A destra"
+msgstr "Chiaro"
 
 #: src/themes/ThemeDark.vala:28
 msgid "Dark"
@@ -487,7 +486,7 @@ msgstr "Cancella"
 
 #: src/ConnectionMenu.vala:46
 msgid "Edit Title…"
-msgstr "Modifica Titolo..."
+msgstr "Modifica Titolo…"
 
 #: src/ConnectionMenu.vala:50 src/NodeMenu.vala:96
 #: data/com.github.phase1geo.minder.shortcuts.ui:329
@@ -541,7 +540,7 @@ msgstr "Piega Figli"
 #: src/DrawArea.vala:2342
 #, c-format
 msgid "Total: %d"
-msgstr ""
+msgstr "Totale: %d"
 
 #: src/DrawArea.vala:2386
 msgid "connection endpoint change"
@@ -628,9 +627,8 @@ msgid "Export With Current Settings"
 msgstr "Esporta Con Impostazioni Correnti"
 
 #: src/Exporter.vala:110
-#, fuzzy
 msgid "Export Options"
-msgstr "Opzioni Nodo"
+msgstr "Opzioni di Esportazione"
 
 #: src/Exporter.vala:131
 #, fuzzy, c-format
@@ -661,7 +659,7 @@ msgstr "Unisci"
 
 #: src/GroupsMenu.vala:45
 msgid "Change color…"
-msgstr "Cambia colore..."
+msgstr "Cambia colore…"
 
 #: src/GroupsMenu.vala:52
 msgid "Top Nodes"
@@ -948,7 +946,7 @@ msgstr "Immagine"
 
 #: src/NodeInspector.vala:197
 msgid "Add Image…"
-msgstr "Aggiungi Immagine..."
+msgstr "Aggiungi Immagine…"
 
 #: src/NodeInspector.vala:216
 msgid "Edit Image"
@@ -1213,7 +1211,7 @@ msgstr "Chiudi"
 
 #: src/Preferences.vala:76
 msgid "Create new node from edit mode"
-msgstr ""
+msgstr "Crea un nuovo nodo dalla modalità di modifica"
 
 #: src/Preferences.vala:78
 msgid ""
@@ -1225,7 +1223,7 @@ msgstr ""
 
 #: src/Preferences.vala:80
 msgid "Automatically make embedded URLs into links"
-msgstr ""
+msgstr "Trasforma automaticamente gli URL incorporati in link"
 
 #: src/Preferences.vala:82
 msgid ""
@@ -1236,14 +1234,12 @@ msgstr ""
 "automaticamente evidenziati."
 
 #: src/Preferences.vala:84
-#, fuzzy
 msgid "Enable Markdown"
-msgstr "Abilita markup"
+msgstr "Abilita Markdown"
 
 #: src/Preferences.vala:87
-#, fuzzy
 msgid "Create connection title on creation"
-msgstr "modifica del titolo della connessione"
+msgstr "Crea il titolo della connessione alla creazione"
 
 #: src/Preferences.vala:89
 msgid ""
@@ -1255,7 +1251,7 @@ msgstr ""
 
 #: src/Preferences.vala:91
 msgid "Select items on mouse hover"
-msgstr ""
+msgstr "Seleziona gli elementi al passaggio del mouse"
 
 #: src/Preferences.vala:93
 msgid "If enabled, selects items when mouse cursor hovers over the item."
@@ -1265,16 +1261,15 @@ msgstr ""
 
 #: src/Preferences.vala:106
 msgid "Hide themes not matching visual style"
-msgstr ""
+msgstr "Nascondi temi che non corrispondono allo stile visivo"
 
 #: src/Preferences.vala:110
-#, fuzzy
 msgid "Default theme"
-msgstr "Eliminare il Tema?"
+msgstr "Tema predefinito"
 
 #: src/Preferences.vala:116
 msgid "Text field font size"
-msgstr ""
+msgstr "Dimensione del carattere del campo di testo"
 
 #: src/Preferences.vala:119
 msgid ""
@@ -1371,7 +1366,7 @@ msgstr "Preferiti"
 #: src/StickerInspector.vala:149
 #, c-format
 msgid "Failed to load sticker XML template: %s"
-msgstr ""
+msgstr "Impossibile caricare il modello adesivo XML: %s"
 
 #: src/StyleInspector.vala:34
 msgid "All"
@@ -1387,7 +1382,7 @@ msgstr "Connessioni selezionate"
 
 #: src/StyleInspector.vala:38
 msgid "Unknown"
-msgstr ""
+msgstr "Sconosciuto"
 
 #: src/StyleInspector.vala:134
 msgid "Changes affect:"
@@ -1516,7 +1511,7 @@ msgstr "Ripristina Collegamento"
 #: src/Theme.vala:197
 #, c-format
 msgid "Unable to load background color: %s"
-msgstr ""
+msgstr "Impossibile caricare il colore di sfondo: %s"
 
 #: src/ThemeEditor.vala:45
 msgid "Customize Theme"
@@ -2285,7 +2280,7 @@ msgstr "[Triplo clic sinistro in qualsiasi punto del testo]"
 #~ msgstr "Attiva/disattiva attività completata"
 
 #~ msgid "Edit…"
-#~ msgstr "Modifica..."
+#~ msgstr "Modifica…"
 
 #~ msgid "Title"
 #~ msgstr "Titolo"
