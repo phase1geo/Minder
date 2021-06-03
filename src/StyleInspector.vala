@@ -35,7 +35,7 @@ public enum StyleAffects {
       case SELECTED_NODES       :  return( _( "Selected Nodes" ) );
       case SELECTED_CONNECTIONS :  return( _( "Selected Connections" ) );
     }
-    return( "Unknown" );
+    return( _( "Unknown" ) );
   }
 
 }

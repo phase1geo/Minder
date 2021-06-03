@@ -107,7 +107,7 @@ public class Exporter : Box {
     opts.expand         = true;
     export.add_settings( opts );
 
-    var label = new Label( "<i>" + "Export Options" + "</i>" );
+    var label = new Label( "<i>" + _( "Export Options" ) + "</i>" );
     label.use_markup = true;
 
     var frame = new Frame( null );

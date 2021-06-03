@@ -189,7 +189,7 @@ public class Themes : Object {
           n += " #";
         }
       } catch( RegexError e ) {
-        stdout.printf( "Error parsing regular expression\n" );
+        stdout.printf( _( "Error parsing regular expression\n" ) );
         return "";
       }
 

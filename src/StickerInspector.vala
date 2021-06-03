@@ -146,7 +146,7 @@ public class StickerInspector : Box {
         delete doc;
       }
     } catch( Error e ) {
-      warning( "Failed to load sticker XML template: %s", e.message );
+      warning( _( "Failed to load sticker XML template: %s" ), e.message );
     }
 
   }

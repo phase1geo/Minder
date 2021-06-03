@@ -2338,8 +2338,8 @@ public class DrawArea : Gtk.DrawingArea {
   /* Prepare the given folded count for use in a markup tooltip */
   private string prepare_folded_count_markup( Node node ) {
     var tooltip = "";
-    tooltip += "Children: %u\n".printf( node.children().length );
-    tooltip += "Total: %d".printf( node.descendant_count() );
+    tooltip += _( "Children: %u\n" ).printf( node.children().length );
+    tooltip += _( "Total: %d" ).printf( node.descendant_count() );
     return( tooltip );
   }
 

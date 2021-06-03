@@ -1,4 +1,4 @@
-/*
+ /*
 * Copyright (c) 2018 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
@@ -36,9 +36,6 @@ public enum PropertyGrab {
 }
 
 public class MainWindow : ApplicationWindow {
-
-  private const string DESKTOP_SCHEMA = "io.elementary.desktop";
-  private const string DARK_KEY       = "prefer-dark";
 
   private GLib.Settings     _settings;
   private HeaderBar?        _header         = null;

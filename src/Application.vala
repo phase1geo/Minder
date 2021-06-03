@@ -80,7 +80,7 @@ public class Minder : Granite.Application {
     foreach( File open_file in files ) {
       var file = open_file.get_path();
       if( !appwin.open_file( file ) ) {
-        stdout.printf( "ERROR:  Unable to open file '%s'\n", file );
+        stdout.printf( _( "ERROR:  Unable to open file '%s'\n" ), file );
       }
     }
     Gtk.main();
@@ -104,9 +104,9 @@ public class Minder : Granite.Application {
     var options = new OptionEntry[4];
 
     /* Create the command-line options */
-    options[0] = {"version", 0, 0, OptionArg.NONE, ref show_version, "Display version number", null};
-    options[1] = {"new", 'n', 0, OptionArg.NONE, ref new_file, "Starts Minder with a new file", null};
-    options[2] = {"run-tests", 0, 0, OptionArg.NONE, ref testing, "Run testing", null};
+    options[0] = {"version", 0, 0, OptionArg.NONE, ref show_version, _( "Display version number" ), null};
+    options[1] = {"new", 'n', 0, OptionArg.NONE, ref new_file, _( "Starts Minder with a new file" ), null};
+    options[2] = {"run-tests", 0, 0, OptionArg.NONE, ref testing, _( "Run testing" ), null};
     options[3] = {null};
 
     /* Parse the arguments */
@@ -115,8 +115,8 @@ public class Minder : Granite.Application {
       context.add_main_entries( options, null );
       context.parse( ref args );
     } catch( OptionError e ) {
-      stdout.printf( "ERROR: %s\n", e.message );
-      stdout.printf( "Run '%s --help' to see valid options\n", args[0] );
+      stdout.printf( _( "ERROR: %s\n" ), e.message );
+      stdout.printf( _( "Run '%s --help' to see valid options\n" ), args[0] );
       Process.exit( 1 );
     }
 
