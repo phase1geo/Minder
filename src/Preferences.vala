@@ -110,7 +110,7 @@ public class Preferences : Gtk.Dialog {
     grid.attach( make_label( _( "Default theme" ) ), 0, 1 );
     grid.attach( make_themes(), 1, 1, 2 );
 
-    grid.attach( make_label( ( "Enable animations" ) ),  0, 2 );
+    grid.attach( make_label( _( "Enable animations" ) ),  0, 2 );
     grid.attach( make_switch( "enable-animations" ), 1, 2 );
 
     grid.attach( make_label( _( "Text field font size" ) ), 0, 3 );
