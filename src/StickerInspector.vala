@@ -39,6 +39,7 @@ public class StickerInspector : Box {
   private Gtk.Menu      _menu;
   private Gtk.MenuItem  _favorite;
   private FlowBox       _clicked_category;
+  private StickerSet    _sticker_set;
   private string        _clicked_sticker;
 
   public const Gtk.TargetEntry[] DRAG_TARGETS = {
@@ -111,7 +112,7 @@ public class StickerInspector : Box {
     load_favorites();
 
     /* Pack the elements into this widget */
-    create_via_xml( box );
+    create_from_sticker_set( box );
 
     /* Add the scrollable widget to the box */
     pack_start( lbl,      false, false, 5 );
@@ -124,29 +125,19 @@ public class StickerInspector : Box {
   }
 
   /* Creates the rest of the UI from the stickers XML file that is stored in a gresource */
-  private void create_via_xml( Box box ) {
+  private void create_from_sticker_set( Box box ) {
 
-    try {
-      var template = resources_lookup_data( "/com/github/phase1geo/minder/stickers.xml", ResourceLookupFlags.NONE);
-      var contents = (string)template.get_data();
-      Xml.Doc* doc = Xml.Parser.parse_memory( contents, contents.length );
-      if( doc != null ) {
-        for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
-          if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "category") ) {
-            var category = create_category( box, it->get_prop( "name" ) );
-            for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
-              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "img") ) {
-                var name = it2->get_prop( "title" );
-                create_image( category, name );
-                create_image( _matched_box, name );
-              }
-            }
-          }
-        }
-        delete doc;
+    _sticker_set = new StickerSet();
+
+    var categories = _sticker_set.get_categories();
+
+    for( int i=0; i<categories.length; i++ ) {
+      var category = create_category( box, categories.index( i ) );
+      var icons    = _sticker_set.get_category_icons( categories.index( i ) );
+      for( int j=0; j<icons.length; j++ ) {
+        create_image( category,     icons.index( j ).resource, icons.index( j ).tooltip );
+        create_image( _matched_box, icons.index( j ).resource, icons.index( j ).tooltip );
       }
-    } catch( Error e ) {
-      warning( _( "Failed to load sticker XML template: %s" ), e.message );
     }
 
   }
@@ -170,10 +161,10 @@ public class StickerInspector : Box {
   }
 
   /* Creates the image from the given name and adds it to the flow box */
-  private void create_image( FlowBox box, string name ) {
+  private void create_image( FlowBox box, string name, string tooltip ) {
     var img = new Image.from_resource( "/com/github/phase1geo/minder/" + name );
     img.name = name;
-    img.set_tooltip_text( name );
+    img.set_tooltip_text( tooltip );
     box.add( img );
   }
 
@@ -224,7 +215,7 @@ public class StickerInspector : Box {
   private void make_favorite() {
 
     /* Add the sticker to the favorites section */
-    create_image( _favorites, _clicked_sticker );
+    create_image( _favorites, _clicked_sticker, _sticker_set.get_icon_tooltip( _clicked_sticker ) );
     _favorites.show_all();
 
     /* Save the favorited status */
@@ -269,7 +260,8 @@ public class StickerInspector : Box {
     if( doc == null ) return;
     for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "sticker") ) {
-        create_image( _favorites, it->get_prop( "name" ) );
+        var name = it->get_prop( "name" );
+        create_image( _favorites, name, _sticker_set.get_icon_tooltip( name ) );
       }
     }
     delete doc;

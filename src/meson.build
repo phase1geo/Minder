@@ -194,6 +194,7 @@ sources += files(
     'Sticker.vala',
     'Stickers.vala',
     'StickerInspector.vala',
+    'StickerSet.vala',
     'Style.vala',
     'StyleInspector.vala',
     'Styles.vala',
