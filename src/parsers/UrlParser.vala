@@ -40,7 +40,7 @@ public class UrlParser : TextParser {
   /* Add the URL filepath if the matched text is a valid file path */
   private void highlight_filepath( FormattedText text, MatchInfo match ) {
     var str = match.fetch( 0 );
-    if( str.substring( 0, 7 ) == "file://" ) {
+    if( (str.length >= 7) && (str.substring( 0, 7 ) == "file://") ) {
       str = str.substring( 7 );
     }
     if( FileUtils.test( str, FileTest.EXISTS ) ) {
