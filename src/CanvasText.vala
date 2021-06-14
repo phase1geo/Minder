@@ -686,7 +686,7 @@ public class CanvasText : Object {
       var tags = text.get_tags_in_range( spos, epos );
       text.remove_text( spos, (epos - spos) );
       undo_buffer.add_delete( spos, str, tags, cur );
-    } else if( _cursor < text.text.length ) {
+    } else if( _cursor < text.text.char_count() ) {
       var spos = text.text.index_of_nth_char( _cursor );
       var epos = text.text.index_of_nth_char( _cursor + 1 );
       var str  = text.text.slice( spos, epos );
