@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-02 23:01-0500\n"
+"POT-Creation-Date: 2021-06-14 22:46-0500\n"
 "PO-Revision-Date: 2021-06-11 15:42+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: none\n"
@@ -1374,7 +1374,7 @@ msgstr ""
 
 #: src/StickerSet.vala:26 src/StickerSet.vala:305 src/StyleInspector.vala:883
 msgid "Arrows"
-msgstr ""
+msgstr "Стрелки"
 
 #: src/StickerSet.vala:27 src/StickerSet.vala:353
 msgid "Data"
@@ -1574,7 +1574,7 @@ msgstr ""
 
 #: src/StickerSet.vala:80 data/com.github.phase1geo.minder.shortcuts.ui:16
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 #: src/StickerSet.vala:81
 msgid "Document"
@@ -2688,10 +2688,6 @@ msgstr "Включить разметку"
 msgid "Connection Options"
 msgstr "Параметры соединения"
 
-#: src/StyleInspector.vala:883
-msgid "Arrows"
-msgstr "Стрелки"
-
 #: src/StyleInspector.vala:1010
 msgid "Title Font"
 msgstr "Шрифт подписи"
@@ -2885,10 +2881,6 @@ msgstr ""
 #: data/com.github.phase1geo.minder.shortcuts.ui:868
 msgid "General"
 msgstr "Общие"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:16
-msgid "File"
-msgstr "Файл"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:35
 msgid "Import File"

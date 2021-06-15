@@ -135,6 +135,25 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.12.5" date="2021-06-14">
+      <description>
+        <p>Changes</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Updated Russian translation (thanks to Alexandre Prokoudine)</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Added missing translatable strings in various parts of the UI.</li>
+          <li>Fixed URL parser issues.</li>
+          <li>Fixed application crash when forward deleting non-Latin text.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.12.4" date="2021-06-02">
       <description>
         <p>Changes</p>
