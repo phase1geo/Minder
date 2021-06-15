@@ -533,9 +533,9 @@ msgid "%0.3g%% complete"
 msgstr "% 0.3g%% completo"
 
 #: src/DrawArea.vala:2341
-#, fuzzy, c-format
+#, c-format
 msgid "Children: %u\n"
-msgstr "Piega Figli"
+msgstr "Figli: %u\n"
 
 #: src/DrawArea.vala:2342
 #, c-format
@@ -591,13 +591,12 @@ msgid "Closed Tabs"
 msgstr "Schede Chiuse"
 
 #: src/EmptyInspector.vala:30
-#, fuzzy
 msgid ""
 "Select a node or connection\n"
 "to view/edit information"
 msgstr ""
-"<big>Seleziona un nodo o una connessione\n"
-" per visualizzare/modificare le informazioni</big>"
+"Seleziona un nodo o una connessione\n"
+"per visualizzare/modificare le informazioni"
 
 #: src/EmptyMenu.vala:38 src/NodeMenu.vala:77 src/TextMenu.vala:54
 msgid "Paste"
@@ -632,7 +631,7 @@ msgid "Export Options"
 msgstr "Opzioni di Esportazione"
 
 #: src/Exporter.vala:131
-#, fuzzy, c-format
+#, c-format
 msgid "Export As %s"
 msgstr "Esporta Come %s"
 
@@ -1081,7 +1080,7 @@ msgstr "Nodo Figlio"
 
 #: src/NodeMenu.vala:197 src/NodesMenu.vala:96
 msgid "Child Nodes"
-msgstr "Nodi Figlio"
+msgstr "Nodi Figli"
 
 #: src/NodeMenu.vala:202
 msgid "Subtree"
@@ -1371,23 +1370,23 @@ msgstr "Preferiti"
 
 #: src/StickerSet.vala:21 src/StickerSet.vala:64
 msgid "Photo and Video"
-msgstr ""
+msgstr "Foto e video"
 
 #: src/StickerSet.vala:22 src/StickerSet.vala:122
 msgid "Very Basic"
-msgstr ""
+msgstr "Molto basico"
 
 #: src/StickerSet.vala:23 src/StickerSet.vala:126 src/StickerSet.vala:217
 msgid "Business"
-msgstr ""
+msgstr "Affari"
 
 #: src/StickerSet.vala:24 src/StickerSet.vala:244
 msgid "Industry"
-msgstr ""
+msgstr "Industria"
 
 #: src/StickerSet.vala:25 src/StickerSet.vala:281
 msgid "Mobile"
-msgstr ""
+msgstr "Mobile"
 
 #: src/StickerSet.vala:26 src/StickerSet.vala:305 src/StyleInspector.vala:883
 msgid "Arrows"
@@ -1395,87 +1394,83 @@ msgstr "Frecce"
 
 #: src/StickerSet.vala:27 src/StickerSet.vala:353
 msgid "Data"
-msgstr ""
+msgstr "Dati"
 
 #: src/StickerSet.vala:29
 msgid "Flash on"
-msgstr ""
+msgstr "Flash acceso"
 
 #: src/StickerSet.vala:30
 msgid "Flash off"
-msgstr ""
+msgstr "Flash spento"
 
 #: src/StickerSet.vala:31
 msgid "Flash auto"
-msgstr ""
+msgstr "Flash automatico"
 
 #: src/StickerSet.vala:32
 msgid "Panorama"
-msgstr ""
+msgstr "Panorama"
 
 #: src/StickerSet.vala:33
 msgid "Landscape"
-msgstr ""
+msgstr "Paesaggio"
 
 #: src/StickerSet.vala:34
 msgid "Night landscape"
-msgstr ""
+msgstr "Paesaggio notturno"
 
 #: src/StickerSet.vala:35
 msgid "Sports mode"
-msgstr ""
+msgstr "Modalità sport"
 
 #: src/StickerSet.vala:36
 msgid "Portrait mode"
-msgstr ""
+msgstr "Modalità ritratto"
 
 #: src/StickerSet.vala:37
 msgid "Night portrait"
-msgstr ""
+msgstr "Ritratto notturno"
 
 #: src/StickerSet.vala:38
-#, fuzzy
 msgid "Close up mode"
-msgstr "Chiudi File"
+msgstr "modalità primo piano"
 
 #: src/StickerSet.vala:39
 msgid "Selfie"
-msgstr ""
+msgstr "Selfie"
 
 #: src/StickerSet.vala:40
 msgid "Gallery"
-msgstr ""
+msgstr "Galleria"
 
 #: src/StickerSet.vala:41
 msgid "Stack of photos"
-msgstr ""
+msgstr "Pila di foto"
 
 #: src/StickerSet.vala:42
-#, fuzzy
 msgid "Add image"
-msgstr "Aggiungi Immagine"
+msgstr "Aggiungi immagine"
 
 #: src/StickerSet.vala:43
-#, fuzzy
 msgid "Edit image"
-msgstr "Modifica Immagine"
+msgstr "Modifica immagine"
 
 #: src/StickerSet.vala:44
-#, fuzzy
 msgid "Remove image"
-msgstr "Rimuovi Immagine"
+msgstr "Rimuovi immagine"
 
 #: src/StickerSet.vala:45
 msgid "Compact camera"
-msgstr ""
+msgstr "Fotocamera compatta"
 
 #: src/StickerSet.vala:46
 msgid "Multiple cameras"
-msgstr ""
+msgstr "Fotocamere multiple"
 
 #: src/StickerSet.vala:47
 msgid "Camera"
-msgstr ""
+msgstr "Fotocamera"
 
 #: src/StickerSet.vala:48
 msgid "Slr back side"
@@ -1483,65 +1478,63 @@ msgstr ""
 
 #: src/StickerSet.vala:49
 msgid "Old time camera"
-msgstr ""
+msgstr "Fotocamera d'altri tempi"
 
 #: src/StickerSet.vala:50
 msgid "Camera addon"
-msgstr ""
+msgstr "Componente aggiuntivo della fotocamera"
 
 #: src/StickerSet.vala:51
 msgid "Camera identification"
-msgstr ""
+msgstr "Identificazione della fotocamera"
 
 #: src/StickerSet.vala:52
-#, fuzzy
 msgid "Start"
-msgstr "Avvia Nodo"
+msgstr "Avvia"
 
 #: src/StickerSet.vala:53
-#, fuzzy
 msgid "Clapperboard"
-msgstr "Appunti"
+msgstr "Ciak"
 
 #: src/StickerSet.vala:54
 msgid "Film"
-msgstr ""
+msgstr "Film"
 
 #: src/StickerSet.vala:55
 msgid "Camcorder"
-msgstr ""
+msgstr "Videocamera"
 
 #: src/StickerSet.vala:56
 msgid "Camcorder pro"
-msgstr ""
+msgstr "Videocamera professionale"
 
 #: src/StickerSet.vala:57
 msgid "Webcam"
-msgstr ""
+msgstr "Webcam"
 
 #: src/StickerSet.vala:58
 msgid "Integrated webcam"
-msgstr ""
+msgstr "Webcam integrata"
 
 #: src/StickerSet.vala:59
 msgid "Rotate camera"
-msgstr ""
+msgstr "Ruota fotocamera"
 
 #: src/StickerSet.vala:60
 msgid "Switch camera"
-msgstr ""
+msgstr "Cambia fotocamera"
 
 #: src/StickerSet.vala:61
 msgid "Photo reel"
-msgstr ""
+msgstr "Bobina foto"
 
 #: src/StickerSet.vala:62
 msgid "Film reel"
-msgstr ""
+msgstr "Bobina Film"
 
 #: src/StickerSet.vala:63
 msgid "Cable release"
-msgstr ""
+msgstr "Rilascio cavo"
 
 #: src/StickerSet.vala:66
 msgid "Home"
@@ -1553,276 +1546,264 @@ msgstr ""
 
 #: src/StickerSet.vala:68
 msgid "Globe"
-msgstr ""
+msgstr "Globo"
 
 #: src/StickerSet.vala:69
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: src/StickerSet.vala:70
 msgid "Checkmark"
-msgstr ""
+msgstr "Segno di spunta"
 
 #: src/StickerSet.vala:72
 msgid "Synchronize"
-msgstr ""
+msgstr "Sincronizza"
 
 #: src/StickerSet.vala:73
 msgid "Refresh"
-msgstr ""
+msgstr "Aggiorna"
 
 #: src/StickerSet.vala:74
-#, fuzzy
 msgid "Download"
-msgstr "Verso il basso"
+msgstr "Download"
 
 #: src/StickerSet.vala:75
 msgid "Upload"
-msgstr ""
+msgstr "Upload"
 
 #: src/StickerSet.vala:76
 msgid "Empty trash"
-msgstr ""
+msgstr "Svuota cestino"
 
 #: src/StickerSet.vala:77
 msgid "Full trash"
-msgstr ""
+msgstr "Cestino pieno"
 
 #: src/StickerSet.vala:78
-#, fuzzy
 msgid "Folder"
-msgstr "Piegato"
+msgstr "Cartella"
 
 #: src/StickerSet.vala:79
-#, fuzzy
 msgid "Opened folder"
-msgstr "Apri FIle"
+msgstr "Apri Cartella"
 
 #: src/StickerSet.vala:80 data/com.github.phase1geo.minder.shortcuts.ui:16
 msgid "File"
 msgstr "File"
 
 #: src/StickerSet.vala:81
-#, fuzzy
 msgid "Document"
-msgstr "Documento senza nome"
+msgstr "Documento"
 
 #: src/StickerSet.vala:82
 msgid "Audio file"
-msgstr ""
+msgstr "File audio"
 
 #: src/StickerSet.vala:83
-#, fuzzy
 msgid "Image file"
-msgstr "Immagine"
+msgstr "File immagine"
 
 #: src/StickerSet.vala:84
 msgid "Video file"
-msgstr ""
+msgstr "File video"
 
 #: src/StickerSet.vala:85
-#, fuzzy
 msgid "Print"
-msgstr "Stampa…"
+msgstr "Stampa"
 
 #: src/StickerSet.vala:86
 msgid "Music"
-msgstr ""
+msgstr "Musica"
 
 #: src/StickerSet.vala:87
 msgid "Share"
-msgstr ""
+msgstr "Condividi"
 
 #: src/StickerSet.vala:88
-#, fuzzy
 msgid "Cursor"
-msgstr "Cursore Testo"
+msgstr "Cursore"
 
 #: src/StickerSet.vala:89
 msgid "Puzzle"
-msgstr ""
+msgstr "Puzzle"
 
 #: src/StickerSet.vala:90
 msgid "Unlock"
-msgstr ""
+msgstr "Sblocca"
 
 #: src/StickerSet.vala:91
 msgid "Lock"
-msgstr ""
+msgstr "Blocca"
 
 #: src/StickerSet.vala:92
-#, fuzzy
 msgid "Idea"
-msgstr "Idea Principale"
+msgstr "Idea"
 
 #: src/StickerSet.vala:93
 msgid "No idea"
-msgstr ""
+msgstr "Nessuna idea"
 
 #: src/StickerSet.vala:94
-#, fuzzy
 msgid "Link"
-msgstr "Aggiungi Collegamento"
+msgstr "Link"
 
 #: src/StickerSet.vala:95
 msgid "Broken link"
-msgstr ""
+msgstr "Collegamento non funzionante"
 
 #: src/StickerSet.vala:96
 msgid "Rating"
-msgstr ""
+msgstr "Valutazione"
 
 #: src/StickerSet.vala:97
-#, fuzzy
+#, fuzzyRating
 msgid "Like placeholder"
 msgstr "sostituisci nodo"
 
 #: src/StickerSet.vala:98
 msgid "Like"
-msgstr ""
+msgstr "Mi piace"
 
 #: src/StickerSet.vala:99
 msgid "Dislike"
-msgstr ""
+msgstr "Non mi piace"
 
 #: src/StickerSet.vala:100
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #: src/StickerSet.vala:101
 msgid "About"
-msgstr ""
+msgstr "A proposito di"
 
 #: src/StickerSet.vala:102
 msgid "Picture"
-msgstr ""
+msgstr "Immagine"
 
 #: src/StickerSet.vala:103
 msgid "Clock"
-msgstr ""
+msgstr "Orologio"
 
 #: src/StickerSet.vala:104
 msgid "Alarm clock"
-msgstr ""
+msgstr "Sveglia"
 
 #: src/StickerSet.vala:105
 msgid "Address book"
-msgstr ""
+msgstr "Rubrica"
 
 #: src/StickerSet.vala:106
 msgid "Contacts"
-msgstr ""
+msgstr "Contatti"
 
 #: src/StickerSet.vala:107
 msgid "News"
-msgstr ""
+msgstr "Notizie"
 
 #: src/StickerSet.vala:108
 msgid "Bookmark"
-msgstr ""
+msgstr "Segnalibro"
 
 #: src/StickerSet.vala:109
 msgid "Binoculars"
-msgstr ""
+msgstr "Binocolo"
 
 #: src/StickerSet.vala:111
 msgid "Ruler"
-msgstr ""
+msgstr "Righello"
 
 #: src/StickerSet.vala:112
 msgid "Services"
-msgstr ""
+msgstr "Servizi"
 
 #: src/StickerSet.vala:113
-#, fuzzy
 msgid "Settings"
-msgstr "Modifica Testo"
+msgstr "Impostazioni"
 
 #: src/StickerSet.vala:114
-#, fuzzy
 msgid "Support"
-msgstr "Esporta"
+msgstr "Supporto"
 
 #: src/StickerSet.vala:115
 msgid "Frame"
-msgstr ""
+msgstr "Cornice"
 
 #: src/StickerSet.vala:116
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #: src/StickerSet.vala:117
 msgid "Key"
-msgstr ""
+msgstr "Chiave"
 
 #: src/StickerSet.vala:118
 msgid "Calendar"
-msgstr ""
+msgstr "Calendario"
 
 #: src/StickerSet.vala:119
 msgid "Calculator"
-msgstr ""
+msgstr "Calcolatrice"
 
 #: src/StickerSet.vala:120
 msgid "Minus"
-msgstr ""
+msgstr "Meno"
 
 #: src/StickerSet.vala:121
 msgid "Plus"
-msgstr ""
+msgstr "Piu"
 
 #: src/StickerSet.vala:124
 msgid "Graduation cap"
-msgstr ""
+msgstr "Cappello di laurea"
 
 #: src/StickerSet.vala:125
 msgid "Briefcase"
-msgstr ""
+msgstr "Valigetta"
 
 #: src/StickerSet.vala:127
 msgid "Signature"
-msgstr ""
+msgstr "Firma"
 
 #: src/StickerSet.vala:128
 msgid "Safe"
-msgstr ""
+msgstr "Cassaforte"
 
 #: src/StickerSet.vala:129
 msgid "Advertising"
-msgstr ""
+msgstr "Pubblicità"
 
 #: src/StickerSet.vala:130
 msgid "Businessman"
-msgstr ""
+msgstr "Uomo d'affari"
 
 #: src/StickerSet.vala:131
 msgid "Businesswoman"
-msgstr ""
+msgstr "Donna d'affari"
 
 #: src/StickerSet.vala:132
 msgid "Manager"
-msgstr ""
+msgstr "Manager"
 
 #: src/StickerSet.vala:133
 msgid "Online support"
-msgstr ""
+msgstr "Supporto online"
 
 #: src/StickerSet.vala:134
 msgid "Assistant"
-msgstr ""
+msgstr "Assistente"
 
 #: src/StickerSet.vala:135
 msgid "Customer support"
-msgstr ""
+msgstr "Servizio Clienti"
 
 #: src/StickerSet.vala:136
 msgid "Reading ebook"
-msgstr ""
+msgstr "Leggere ebook"
 
 #: src/StickerSet.vala:137
-#, fuzzy
 msgid "Reading"
-msgstr "Imbottitura"
+msgstr "Lettura"
 
 #: src/StickerSet.vala:138
 msgid "Neutral trading"
@@ -1838,23 +1819,23 @@ msgstr ""
 
 #: src/StickerSet.vala:141
 msgid "High priority"
-msgstr ""
+msgstr "Priorità alta"
 
 #: src/StickerSet.vala:142
 msgid "Medium priority"
-msgstr ""
+msgstr "Priorità media"
 
 #: src/StickerSet.vala:143
 msgid "Low priority"
-msgstr ""
+msgstr "Priorità bassa"
 
 #: src/StickerSet.vala:144
 msgid "Make decision"
-msgstr ""
+msgstr "Prendere decisione"
 
 #: src/StickerSet.vala:145
 msgid "Decision"
-msgstr ""
+msgstr "Decisione"
 
 #: src/StickerSet.vala:146
 msgid "Good decision"
@@ -1870,11 +1851,11 @@ msgstr ""
 
 #: src/StickerSet.vala:149
 msgid "Approve"
-msgstr ""
+msgstr "Approva"
 
 #: src/StickerSet.vala:150
 msgid "Disapprove"
-msgstr ""
+msgstr "Disapprova"
 
 #: src/StickerSet.vala:151
 msgid "Podium without speaker"
@@ -2402,27 +2383,24 @@ msgid "Up"
 msgstr ""
 
 #: src/StickerSet.vala:285
-#, fuzzy
 msgid "Right up"
-msgstr "Chiaro"
+msgstr "Proprio sopra"
 
 #: src/StickerSet.vala:286
 msgid "Left"
-msgstr ""
+msgstr "Sinistra"
 
 #: src/StickerSet.vala:287
-#, fuzzy
 msgid "Right"
-msgstr "Chiaro"
+msgstr "Destra"
 
 #: src/StickerSet.vala:288
 msgid "Left down"
 msgstr ""
 
 #: src/StickerSet.vala:289
-#, fuzzy
 msgid "Down"
-msgstr "Verso il basso"
+msgstr "Giu"
 
 #: src/StickerSet.vala:290
 msgid "Right down"
@@ -2433,9 +2411,8 @@ msgid "Collapse"
 msgstr ""
 
 #: src/StickerSet.vala:292
-#, fuzzy
 msgid "Previous"
-msgstr "Parola Precedente"
+msgstr "Precedente"
 
 #: src/StickerSet.vala:293
 #, fuzzy
@@ -2451,23 +2428,20 @@ msgid "Left down2"
 msgstr ""
 
 #: src/StickerSet.vala:296
-#, fuzzy
 msgid "Up left"
-msgstr "A sinistra"
+msgstr "Sopra a sinistra"
 
 #: src/StickerSet.vala:297
-#, fuzzy
 msgid "Down right"
-msgstr "A destra"
+msgstr "Giu a adestra"
 
 #: src/StickerSet.vala:298
 msgid "Right up2"
 msgstr ""
 
 #: src/StickerSet.vala:299
-#, fuzzy
 msgid "Up right"
-msgstr "A destra"
+msgstr "Sopra a destra"
 
 #: src/StickerSet.vala:300
 msgid "Right down2"
@@ -2478,9 +2452,8 @@ msgid "Left up2"
 msgstr ""
 
 #: src/StickerSet.vala:302
-#, fuzzy
 msgid "Down left"
-msgstr "A sinistra"
+msgstr "Giu a sinistra"
 
 #: src/StickerSet.vala:307
 msgid "Filing cabinet"
@@ -2495,14 +2468,12 @@ msgid "Accept database"
 msgstr ""
 
 #: src/StickerSet.vala:310
-#, fuzzy
 msgid "Add database"
-msgstr "Aggiungi Compito"
+msgstr "Aggiungi database"
 
 #: src/StickerSet.vala:311
-#, fuzzy
 msgid "Delete database"
-msgstr "Elimina nodo"
+msgstr "Elimina database"
 
 #: src/StickerSet.vala:312
 msgid "Data backup"
@@ -2518,40 +2489,35 @@ msgstr ""
 
 #: src/StickerSet.vala:315
 msgid "Data encryption"
-msgstr ""
+msgstr "Crittografia dei dati"
 
 #: src/StickerSet.vala:316
-#, fuzzy
 msgid "Data protection"
-msgstr "Elimina Connessione"
+msgstr "Protezione dati"
 
 #: src/StickerSet.vala:317
 msgid "Grid"
-msgstr ""
+msgstr "Griglia"
 
 #: src/StickerSet.vala:318
 msgid "Data sheet"
 msgstr ""
 
 #: src/StickerSet.vala:319
-#, fuzzy
 msgid "Add column"
-msgstr "Aggiungi Gruppo"
+msgstr "Aggiungi colonna"
 
 #: src/StickerSet.vala:320
-#, fuzzy
 msgid "Delete column"
-msgstr "Elimina Connessione"
+msgstr "Elimina Colonna"
 
 #: src/StickerSet.vala:321
-#, fuzzy
 msgid "Add row"
-msgstr "Aggiungi Gruppo"
+msgstr "Aggiungi riga"
 
 #: src/StickerSet.vala:322
-#, fuzzy
 msgid "Delete row"
-msgstr "Elimina nodo"
+msgstr "Elimina riga"
 
 #: src/StickerSet.vala:323
 msgid "Generic sorting ascending"
@@ -2636,14 +2602,12 @@ msgid "Line chart"
 msgstr "Linea a Trattino"
 
 #: src/StickerSet.vala:343
-#, fuzzy
 msgid "Genealogy"
-msgstr "Generale"
+msgstr "Genealogico"
 
 #: src/StickerSet.vala:344
-#, fuzzy
 msgid "Mind map"
-msgstr "XMind 8"
+msgstr "Mind map"
 
 #: src/StickerSet.vala:345
 msgid "Workflow"
@@ -2658,22 +2622,20 @@ msgid "Negative dynamic"
 msgstr ""
 
 #: src/StickerSet.vala:349
-#, fuzzy
 msgid "Import"
-msgstr "Importa FIle"
+msgstr "Importa"
 
 #: src/StickerSet.vala:350
 msgid "List"
-msgstr ""
+msgstr "Lista"
 
 #: src/StickerSet.vala:351
 msgid "Template"
-msgstr ""
+msgstr "Modello"
 
 #: src/StickerSet.vala:352
-#, fuzzy
 msgid "View details"
-msgstr "Visualizza Proprietà"
+msgstr "Visualizza dettagli"
 
 #: src/StyleInspector.vala:34
 msgid "All"
