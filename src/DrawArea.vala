@@ -909,10 +909,28 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Toggles the value of the specified node, if possible */
   public void toggle_task( Node n ) {
-    undo_buffer.add_item( new UndoNodeTask( n, true, !n.task_done() ) );
-    n.toggle_task_done();
+    var changes = new Array<NodeTaskInfo>();
+    n.toggle_task_done( ref changes );
+    undo_buffer.add_item( new UndoNodeTasks( changes ) );
     queue_draw();
     auto_save();
+  }
+
+  /* Toggles the task values of the selected nodes */
+  public void toggle_tasks() {
+    stdout.printf( "In toggle_tasks\n" );
+    var parents = new Array<Node>();
+    var changes = new Array<NodeTaskInfo?>();
+    _selected.get_parents( ref parents );
+    if( parents.length > 0 ) {
+      for( int i=0; i<parents.length; i++ ) {
+        var node = parents.index( i );
+        node.toggle_task_done( ref changes );
+      }
+      undo_buffer.add_item( new UndoNodeTasks( changes ) );
+      queue_draw();
+      auto_save();
+    }
   }
 
   /* Toggles the fold for the given node */
@@ -1014,7 +1032,10 @@ public class DrawArea : Gtk.DrawingArea {
     var nodes = _selected.nodes();
     if( nodes.length == 1 ) {
       var current = nodes.index( 0 );
-      undo_buffer.add_item( new UndoNodeTask( current, enable, done ) );
+      var change  = new NodeTaskInfo( current.task_enabled(), current.task_done(), current );
+      var changed = new Array<NodeTaskInfo>();
+      changed.append_val( change );
+      undo_buffer.add_item( new UndoNodeTasks( changed ) );
       current.enable_task( enable );
       current.set_task_done( done );
       queue_draw();
@@ -3989,6 +4010,7 @@ public class DrawArea : Gtk.DrawingArea {
         case Key.g            :  add_group();  break;
         case Key.m            :  select_root_node();  break;
         case Key.r            :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
+        case Key.t            :  toggle_tasks();  break;
         case Key.u            :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
         case Key.z            :  zoom_out();  break;
         case Key.bar          :  if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() );  break;

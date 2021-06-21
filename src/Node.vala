@@ -112,6 +112,17 @@ public struct NodeLinkInfo {
   }
 }
 
+public struct NodeTaskInfo {
+  bool enabled;
+  bool done;
+  Node node;
+  public NodeTaskInfo( bool e, bool d, Node n ) {
+    enabled = e;
+    done    = d;
+    node    = n;
+  }
+}
+
 public class Node : Object {
 
   private static int _next_id = 0;
@@ -1807,7 +1818,9 @@ public class Node : Object {
    Toggles the current value of task done and propagates the change to all
    parent nodes.
   */
-  public void toggle_task_done() {
+  public void toggle_task_done( ref Array<NodeTaskInfo?> changed ) {
+    var change = new NodeTaskInfo( task_enabled(), task_done(), this );
+    changed.append_val( change );
     set_task_done( _task_done == 0 );
   }
 

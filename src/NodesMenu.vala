@@ -27,6 +27,7 @@ public class NodesMenu : Gtk.Menu {
   Gtk.MenuItem _copy;
   Gtk.MenuItem _cut;
   Gtk.MenuItem _delete;
+  Gtk.MenuItem _task;
   Gtk.MenuItem _fold;
   Gtk.MenuItem _connect;
   Gtk.MenuItem _link;
@@ -53,6 +54,10 @@ public class NodesMenu : Gtk.Menu {
     _delete = new Gtk.MenuItem();
     _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
     _delete.activate.connect( delete_nodes );
+
+    _task = new Gtk.MenuItem();
+    _task.add( new Granite.AccelLabel( _( "Toggle Tasks" ) ) );
+    _task.activate.connect( toggle_tasks );
 
     _fold = new Gtk.MenuItem();
     _fold.add( new Granite.AccelLabel( _( "Fold Children" ), "f" ) );
@@ -142,6 +147,7 @@ public class NodesMenu : Gtk.Menu {
     add( _cut );
     add( _delete );
     add( new SeparatorMenuItem() );
+    add( _task );
     add( _link_colors );
     add( _fold );
     add( new SeparatorMenuItem() );
@@ -217,6 +223,11 @@ public class NodesMenu : Gtk.Menu {
   /* Delete all selected nodes, collapsing deselected descendants */
   private void delete_nodes() {
     _da.delete_nodes();
+  }
+
+  /* Toggles the task indicator of the selected nodes */
+  private void toggle_tasks() {
+    _da.toggle_tasks();
   }
 
   /* Folds/unfolds the selected nodes */
