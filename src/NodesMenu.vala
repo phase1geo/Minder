@@ -227,7 +227,7 @@ public class NodesMenu : Gtk.Menu {
 
   /* Toggles the task indicator of the selected nodes */
   private void toggle_tasks() {
-    _da.toggle_tasks();
+    _da.change_selected_tasks();
   }
 
   /* Folds/unfolds the selected nodes */

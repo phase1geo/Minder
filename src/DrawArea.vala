@@ -916,23 +916,6 @@ public class DrawArea : Gtk.DrawingArea {
     auto_save();
   }
 
-  /* Toggles the task values of the selected nodes */
-  public void toggle_tasks() {
-    stdout.printf( "In toggle_tasks\n" );
-    var parents = new Array<Node>();
-    var changes = new Array<NodeTaskInfo?>();
-    _selected.get_parents( ref parents );
-    if( parents.length > 0 ) {
-      for( int i=0; i<parents.length; i++ ) {
-        var node = parents.index( i );
-        node.toggle_task_done( ref changes );
-      }
-      undo_buffer.add_item( new UndoNodeTasks( changes ) );
-      queue_draw();
-      auto_save();
-    }
-  }
-
   /* Toggles the fold for the given node */
   public void toggle_fold( Node n ) {
     var fold    = !n.folded;
@@ -1024,20 +1007,61 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Changes the state of the given task if it differs from the desired values */
+  private void change_task( Node node, bool enable, bool done, Array<NodeTaskInfo?> changes ) {
+    if( (node.task_enabled() == enable) && (node.task_done() == done) ) return;
+    var change = new NodeTaskInfo( node.task_enabled(), node.task_done(), node );
+    changes.append_val( change );
+    node.enable_task( enable );
+    node.set_task_done( done );
+  }
+
   /*
    Changes the current node's task to the given values.  Updates the layout,
    adds the undo item, and redraws the canvas.
   */
   public void change_current_task( bool enable, bool done ) {
     var nodes = _selected.nodes();
-    if( nodes.length == 1 ) {
-      var current = nodes.index( 0 );
-      var change  = new NodeTaskInfo( current.task_enabled(), current.task_done(), current );
-      var changed = new Array<NodeTaskInfo>();
-      changed.append_val( change );
-      undo_buffer.add_item( new UndoNodeTasks( changed ) );
-      current.enable_task( enable );
-      current.set_task_done( done );
+    if( nodes.length != 1 ) return;
+    var changes = new Array<NodeTaskInfo>();
+    change_task( nodes.index( 0 ), enable, done, changes );
+    if( changes.length > 0 ) {
+      undo_buffer.add_item( new UndoNodeTasks( changes ) );
+      queue_draw();
+      auto_save();
+    }
+  }
+
+  /* Toggles the task values of the selected nodes */
+  public void change_selected_tasks() {
+    var parents     = new Array<Node>();
+    var changes     = new Array<NodeTaskInfo>();
+    var all_enabled = true;
+    var all_done    = true;
+    _selected.get_parents( ref parents );
+    for( int i=0; i<parents.length; i++ ) {
+      var node = parents.index( i );
+      all_enabled &= node.task_enabled();
+      all_done    &= node.task_done();
+    }
+    if( all_enabled ) {
+      if( all_done ) {
+        for( int i=0; i<parents.length; i++ ) {
+          change_task( parents.index( i ), false, false, changes );
+        }
+      } else {
+        for( int i=0; i<parents.length; i++ ) {
+          change_task( parents.index( i ), true, true, changes );
+        }
+      }
+    } else {
+      for( int i=0; i<parents.length; i++ ) {
+        change_task( parents.index( i ), true, false, changes );
+      }
+    }
+    if( changes.length > 0 ) {
+      stdout.printf( "changes: %u\n", changes.length );
+      undo_buffer.add_item( new UndoNodeTasks( changes ) );
       queue_draw();
       auto_save();
     }
@@ -4010,7 +4034,7 @@ public class DrawArea : Gtk.DrawingArea {
         case Key.g            :  add_group();  break;
         case Key.m            :  select_root_node();  break;
         case Key.r            :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
-        case Key.t            :  toggle_tasks();  break;
+        case Key.t            :  change_selected_tasks();  break;
         case Key.u            :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
         case Key.z            :  zoom_out();  break;
         case Key.bar          :  if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() );  break;
