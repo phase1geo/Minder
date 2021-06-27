@@ -2094,6 +2094,7 @@ public class Node : Object {
 
   }
 
+  /* Draws the sticker associated with the node */
   protected virtual void draw_sticker( Context ctx, RGBA sel_color, RGBA bg_color ) {
 
     if( _sticker_buf != null ) {
@@ -2195,7 +2196,8 @@ public class Node : Object {
       Utils.set_context_color_with_alpha( ctx, bg_color, _alpha );
       ctx.new_path();
       ctx.set_line_width( 1 );
-      ctx.arc( (fx + (fw / 2)), (fy + (fh / 2)), (fw / 2), 0, (2 * Math.PI) );
+      ctx.rectangle( fx, fy, fw, fh );
+      // ctx.arc( (fx + (fw / 2)), (fy + (fh / 2)), (fw / 2), 0, (2 * Math.PI) );
       ctx.fill();
 
       /* Draw circles */
@@ -2213,7 +2215,8 @@ public class Node : Object {
       Utils.set_context_color_with_alpha( ctx, fg_color, _alpha );
       ctx.new_path();
       ctx.set_line_width( 2 );
-      ctx.arc( (fx + (fw / 2)), (fy + (fh / 2)), (fw / 2), 0, (2 * Math.PI) );
+      ctx.rectangle( fx, fy, fw, fh );
+      // ctx.arc( (fx + (fw / 2)), (fy + (fh / 2)), (fw / 2), 0, (2 * Math.PI) );
       ctx.fill_preserve();
       Utils.set_context_color_with_alpha( ctx, bg_color, _alpha );
       ctx.stroke();
