@@ -33,15 +33,15 @@ public class UndoNodeTasks : UndoItem {
 
   private void update( DrawArea da ) {
     for( int i=0; i<_task_info.length; i++ ) {
-      stdout.printf( "Updating node task: %d\n", i );
+      assert( _task_info.index( i ) != null );
       var node    = _task_info.index( i ).node;
+      assert( node != null );
       var enabled = node.task_enabled();
       var done    = node.task_done();
       node.enable_task( _task_info.index( i ).enabled );
       node.set_task_done( _task_info.index( i ).done );
       _task_info.index( i ).enabled = enabled;
       _task_info.index( i ).done    = done;
-      stdout.printf( "  Complete!\n" );
     }
     da.queue_draw();
     da.current_changed( da );

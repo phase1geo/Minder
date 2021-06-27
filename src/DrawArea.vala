@@ -909,7 +909,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Toggles the value of the specified node, if possible */
   public void toggle_task( Node n ) {
-    var changes = new Array<NodeTaskInfo>();
+    var changes = new Array<NodeTaskInfo?>();
     n.toggle_task_done( ref changes );
     undo_buffer.add_item( new UndoNodeTasks( changes ) );
     queue_draw();
@@ -1010,8 +1010,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Changes the state of the given task if it differs from the desired values */
   private void change_task( Node node, bool enable, bool done, Array<NodeTaskInfo?> changes ) {
     if( (node.task_enabled() == enable) && (node.task_done() == done) ) return;
-    var change = new NodeTaskInfo( node.task_enabled(), node.task_done(), node );
-    changes.append_val( change );
+    changes.append_val( NodeTaskInfo( node.task_enabled(), node.task_done(), node ) );
     node.enable_task( enable );
     node.set_task_done( done );
   }
@@ -1023,7 +1022,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void change_current_task( bool enable, bool done ) {
     var nodes = _selected.nodes();
     if( nodes.length != 1 ) return;
-    var changes = new Array<NodeTaskInfo>();
+    var changes = new Array<NodeTaskInfo?>();
     change_task( nodes.index( 0 ), enable, done, changes );
     if( changes.length > 0 ) {
       undo_buffer.add_item( new UndoNodeTasks( changes ) );
@@ -1035,7 +1034,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Toggles the task values of the selected nodes */
   public void change_selected_tasks() {
     var parents     = new Array<Node>();
-    var changes     = new Array<NodeTaskInfo>();
+    var changes     = new Array<NodeTaskInfo?>();
     var all_enabled = true;
     var all_done    = true;
     _selected.get_parents( ref parents );
@@ -1060,7 +1059,6 @@ public class DrawArea : Gtk.DrawingArea {
       }
     }
     if( changes.length > 0 ) {
-      stdout.printf( "changes: %u\n", changes.length );
       undo_buffer.add_item( new UndoNodeTasks( changes ) );
       queue_draw();
       auto_save();
