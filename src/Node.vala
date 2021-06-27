@@ -2068,16 +2068,14 @@ public class Node : Object {
       y += _task_radius;
 
       /* Draw circle outline */
-      if( complete < 1 ) {
-        Utils.set_context_color_with_alpha( ctx, ((style.is_fillable() && (background != null)) ? background : color), _alpha );
-        ctx.new_path();
-        ctx.set_line_width( 2 );
-        ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
-        if( style.is_fillable() && (background != null) ) {
-          ctx.fill();
-        } else {
-          ctx.stroke();
-        }
+      Utils.set_context_color_with_alpha( ctx, ((style.is_fillable() && (background != null)) ? background : color), _alpha );
+      ctx.new_path();
+      ctx.set_line_width( 2 );
+      ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
+      if( style.is_fillable() && (background != null) ) {
+        ctx.fill();
+      } else {
+        ctx.stroke();
       }
 
       /* Draw completeness pie */
