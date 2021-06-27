@@ -2197,7 +2197,6 @@ public class Node : Object {
       ctx.new_path();
       ctx.set_line_width( 1 );
       ctx.rectangle( fx, fy, fw, fh );
-      // ctx.arc( (fx + (fw / 2)), (fy + (fh / 2)), (fw / 2), 0, (2 * Math.PI) );
       ctx.fill();
 
       /* Draw circles */
@@ -2216,7 +2215,6 @@ public class Node : Object {
       ctx.new_path();
       ctx.set_line_width( 2 );
       ctx.rectangle( fx, fy, fw, fh );
-      // ctx.arc( (fx + (fw / 2)), (fy + (fh / 2)), (fw / 2), 0, (2 * Math.PI) );
       ctx.fill_preserve();
       Utils.set_context_color_with_alpha( ctx, bg_color, _alpha );
       ctx.stroke();
