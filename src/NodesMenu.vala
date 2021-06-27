@@ -56,7 +56,7 @@ public class NodesMenu : Gtk.Menu {
     _delete.activate.connect( delete_nodes );
 
     _task = new Gtk.MenuItem();
-    _task.add( new Granite.AccelLabel( _( "Toggle Tasks" ) ) );
+    _task.add( new Granite.AccelLabel( _( "Toggle Tasks" ), "t" ) );
     _task.activate.connect( toggle_tasks );
 
     _fold = new Gtk.MenuItem();
