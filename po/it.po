@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-14 22:46-0500\n"
-"PO-Revision-Date: 2021-06-03 18:54+0100\n"
+"PO-Revision-Date: 2021-06-27 17:54+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -1474,7 +1474,7 @@ msgstr "Fotocamera"
 
 #: src/StickerSet.vala:48
 msgid "Slr back side"
-msgstr ""
+msgstr "Slr lato posteriore"
 
 #: src/StickerSet.vala:49
 msgid "Old time camera"
@@ -1538,7 +1538,7 @@ msgstr "Rilascio cavo"
 
 #: src/StickerSet.vala:66
 msgid "Home"
-msgstr ""
+msgstr "Casa"
 
 #: src/StickerSet.vala:67
 msgid "Icons8 cup"
@@ -1807,15 +1807,15 @@ msgstr "Lettura"
 
 #: src/StickerSet.vala:138
 msgid "Neutral trading"
-msgstr ""
+msgstr "Trading neutrale"
 
 #: src/StickerSet.vala:139
 msgid "Bullish"
-msgstr ""
+msgstr "Rialzo"
 
 #: src/StickerSet.vala:140
 msgid "Bearish"
-msgstr ""
+msgstr "Ribasso"
 
 #: src/StickerSet.vala:141
 msgid "High priority"
@@ -1839,15 +1839,15 @@ msgstr "Decisione"
 
 #: src/StickerSet.vala:146
 msgid "Good decision"
-msgstr ""
+msgstr "Buona decisione"
 
 #: src/StickerSet.vala:147
 msgid "Neutral decision"
-msgstr ""
+msgstr "Decisione neutrale"
 
 #: src/StickerSet.vala:148
 msgid "Bad decision"
-msgstr ""
+msgstr "Cattiva decisione"
 
 #: src/StickerSet.vala:149
 msgid "Approve"
@@ -1859,119 +1859,119 @@ msgstr "Disapprova"
 
 #: src/StickerSet.vala:151
 msgid "Podium without speaker"
-msgstr ""
+msgstr "Podio senza speaker"
 
 #: src/StickerSet.vala:152
 msgid "Podium with speaker"
-msgstr ""
+msgstr "Podio con speaker"
 
 #: src/StickerSet.vala:153
 msgid "Podium with audience"
-msgstr ""
+msgstr "Podio con il pubblico"
 
 #: src/StickerSet.vala:154
 msgid "Video projector"
-msgstr ""
+msgstr "Videoproiettore"
 
 #: src/StickerSet.vala:155
 msgid "Statistics"
-msgstr ""
+msgstr "Statistiche"
 
 #: src/StickerSet.vala:156
 msgid "Collaboration"
-msgstr ""
+msgstr "Collaborazione"
 
 #: src/StickerSet.vala:157
 msgid "Voice presentation"
-msgstr ""
+msgstr "Presentazione vocale"
 
 #: src/StickerSet.vala:158
 msgid "Conference call"
-msgstr ""
+msgstr "Conferenza telefonica"
 
 #: src/StickerSet.vala:159
 msgid "Comments"
-msgstr ""
+msgstr "Commenti"
 
 #: src/StickerSet.vala:160
 msgid "FAQ"
-msgstr ""
+msgstr "FAQ"
 
 #: src/StickerSet.vala:161
 msgid "Reuse"
-msgstr ""
+msgstr "Riuso"
 
 #: src/StickerSet.vala:162
 msgid "Organization"
-msgstr ""
+msgstr "Organizzazione"
 
 #: src/StickerSet.vala:163
 msgid "Department"
-msgstr ""
+msgstr "Dipartimento"
 
 #: src/StickerSet.vala:164
 msgid "Library"
-msgstr ""
+msgstr "Biblioteca"
 
 #: src/StickerSet.vala:165
 msgid "Shop"
-msgstr ""
+msgstr "Negozio"
 
 #: src/StickerSet.vala:166
 msgid "Self service kiosk"
-msgstr ""
+msgstr "Chiosco self service"
 
 #: src/StickerSet.vala:167
 msgid "Donate"
-msgstr ""
+msgstr "Donazione"
 
 #: src/StickerSet.vala:168
 msgid "Currency exchange"
-msgstr ""
+msgstr "Cambio valuta"
 
 #: src/StickerSet.vala:169
 msgid "Debt"
-msgstr ""
+msgstr "Debito"
 
 #: src/StickerSet.vala:170
 msgid "Sales performance"
-msgstr ""
+msgstr "Andamento delle vendite"
 
 #: src/StickerSet.vala:171
 msgid "Invite"
-msgstr ""
+msgstr "Invito"
 
 #: src/StickerSet.vala:172
 msgid "Money transfer"
-msgstr ""
+msgstr "Trasferimento di denaro"
 
 #: src/StickerSet.vala:173
 msgid "Feedback"
-msgstr ""
+msgstr "Feedback"
 
 #: src/StickerSet.vala:174
 msgid "Approval"
-msgstr ""
+msgstr "Approvazione"
 
 #: src/StickerSet.vala:175
 msgid "Paid"
-msgstr ""
+msgstr "Pagato"
 
 #: src/StickerSet.vala:176
 msgid "In transit"
-msgstr ""
+msgstr "In transito"
 
 #: src/StickerSet.vala:177
 msgid "Shipped"
-msgstr ""
+msgstr "Spedito"
 
 #: src/StickerSet.vala:178
 msgid "Package"
-msgstr ""
+msgstr "Pacco"
 
 #: src/StickerSet.vala:179
 msgid "Planner"
-msgstr ""
+msgstr "Pianificatore"
 
 #: src/StickerSet.vala:180
 msgid "Overtime"
@@ -1979,174 +1979,164 @@ msgstr ""
 
 #: src/StickerSet.vala:181
 msgid "Leave"
-msgstr ""
+msgstr "Lascia"
 
 #: src/StickerSet.vala:182
 msgid "Expired"
-msgstr ""
+msgstr "Scaduto"
 
 #: src/StickerSet.vala:183
 msgid "Process"
-msgstr ""
+msgstr "Processo"
 
 #: src/StickerSet.vala:184
 msgid "Diploma 1"
-msgstr ""
+msgstr "Diploma 1"
 
 #: src/StickerSet.vala:185
 msgid "Diploma 2"
-msgstr ""
+msgstr "Diploma 2"
 
 #: src/StickerSet.vala:186
 msgid "Business contact"
-msgstr ""
+msgstr "Contatto di lavoro"
 
 #: src/StickerSet.vala:187
-#, fuzzy
 msgid "Survey"
-msgstr "Curvo"
+msgstr "Questionario"
 
 #: src/StickerSet.vala:188
-#, fuzzy
 msgid "Inspection"
-msgstr "Connessione"
+msgstr "Ispezione"
 
 #: src/StickerSet.vala:189
 msgid "Rules"
-msgstr ""
+msgstr "Regole"
 
 #: src/StickerSet.vala:190
 msgid "Todo list"
-msgstr ""
+msgstr "Lista di cose da fare"
 
 #: src/StickerSet.vala:191
 msgid "Ratings"
-msgstr ""
+msgstr "Valutazioni"
 
 #: src/StickerSet.vala:192
-#, fuzzy
 msgid "Questions"
-msgstr "Connessioni"
+msgstr "Domande"
 
 #: src/StickerSet.vala:193
 msgid "Answers"
-msgstr ""
+msgstr "RIsposte"
 
 #: src/StickerSet.vala:194
 #, fuzzy
 msgid "Fine print"
-msgstr "Larghezza della Linea"
+msgstr "Stampa fine"
 
 #: src/StickerSet.vala:195
-#, fuzzy
 msgid "Candle sticks"
-msgstr "Aggiungi sticker al nodo"
+msgstr "Candelieri"
 
 #: src/StickerSet.vala:196
-#, fuzzy
 msgid "Serial tasks"
-msgstr "Cerca in tutte le schede"
+msgstr "Compiti seriali"
 
 #: src/StickerSet.vala:197
-#, fuzzy
 msgid "Parallel tasks"
-msgstr "Cerca in tutte le schede"
+msgstr "Compiti paralleli"
 
 #: src/StickerSet.vala:198
 msgid "Tree structure"
-msgstr ""
+msgstr "Struttura albero"
 
 #: src/StickerSet.vala:199
 msgid "Org unit"
-msgstr ""
+msgstr "Unità organizzativa"
 
 #: src/StickerSet.vala:200
 msgid "Privacy"
-msgstr ""
+msgstr "Privacy"
 
 #: src/StickerSet.vala:201
 msgid "Disclaimer"
-msgstr ""
+msgstr "Dichiarazione di non responsabilità"
 
 #: src/StickerSet.vala:202
 msgid "Callback"
-msgstr ""
+msgstr "Richiama"
 
 #: src/StickerSet.vala:203
 msgid "Service mark"
-msgstr ""
+msgstr "Marchio di servizio"
 
 #: src/StickerSet.vala:204
 msgid "Registered trademark"
-msgstr ""
+msgstr "Marchio registrato"
 
 #: src/StickerSet.vala:205
 msgid "Trademark"
-msgstr ""
+msgstr "Marchio"
 
 #: src/StickerSet.vala:206
-#, fuzzy
 msgid "Copyright"
-msgstr "A destra"
+msgstr "Copyright"
 
 #: src/StickerSet.vala:207
-#, fuzzy
 msgid "Copyleft"
-msgstr "A sinistra"
+msgstr "Copyleft"
 
 #: src/StickerSet.vala:208
 msgid "Sound recording copyright"
-msgstr ""
+msgstr "Diritti d'autore registrazione del suono"
 
 #: src/StickerSet.vala:209
 msgid "Butting in"
-msgstr ""
+msgstr "Interferenze"
 
 #: src/StickerSet.vala:210
 msgid "Multiple inputs"
-msgstr ""
+msgstr "Ingressi multipli"
 
 #: src/StickerSet.vala:211
-#, fuzzy
 msgid "Collect"
-msgstr "Seleziona"
+msgstr "Collezione"
 
 #: src/StickerSet.vala:212
 msgid "Internal"
-msgstr ""
+msgstr "Interna"
 
 #: src/StickerSet.vala:213
 msgid "External"
-msgstr ""
+msgstr "Esterna"
 
 #: src/StickerSet.vala:214
 msgid "VIP"
-msgstr ""
+msgstr "VIP"
 
 #: src/StickerSet.vala:215
 msgid "Light at the end of tunnel"
-msgstr ""
+msgstr "Luce alla fine del tunnel"
 
 #: src/StickerSet.vala:216
 msgid "Entering heaven alive"
-msgstr ""
+msgstr "Entrare in paradiso vivi"
 
 #: src/StickerSet.vala:219
 msgid "Biomass"
-msgstr ""
+msgstr "biomassa"
 
 #: src/StickerSet.vala:220
 msgid "Display"
-msgstr ""
+msgstr "Schermo"
 
 #: src/StickerSet.vala:221
-#, fuzzy
 msgid "Do not inhale"
-msgstr "cambia nota nodo"
+msgstr "Non inalare"
 
 #: src/StickerSet.vala:222
 msgid "Factory"
-msgstr ""
+msgstr "Fabbrica"
 
 #: src/StickerSet.vala:223
 msgid "Factory breakdown"
@@ -2154,31 +2144,31 @@ msgstr ""
 
 #: src/StickerSet.vala:224
 msgid "Crystal oscillator"
-msgstr ""
+msgstr "Oscillatore a cristallo"
 
 #: src/StickerSet.vala:225
 msgid "Capacitor"
-msgstr ""
+msgstr "Condensatore"
 
 #: src/StickerSet.vala:226
 msgid "Electricity"
-msgstr ""
+msgstr "Elettricità"
 
 #: src/StickerSet.vala:227
 msgid "Electro devices"
-msgstr ""
+msgstr "Dispositivi elettronici"
 
 #: src/StickerSet.vala:228
 msgid "Electrical sensor"
-msgstr ""
+msgstr "Sensore elettrico"
 
 #: src/StickerSet.vala:229
 msgid "Electrical threshold"
-msgstr ""
+msgstr "Soglia elettrica"
 
 #: src/StickerSet.vala:230
 msgid "Automotive"
-msgstr ""
+msgstr "Automobilistico"
 
 #: src/StickerSet.vala:231
 msgid "Feed in"
@@ -2190,37 +2180,36 @@ msgstr ""
 
 #: src/StickerSet.vala:233
 msgid "Biotech"
-msgstr ""
+msgstr "Biotecnologie"
 
 #: src/StickerSet.vala:234
 #, fuzzy
 msgid "Advance"
-msgstr "Cancella"
+msgstr ""
 
 #: src/StickerSet.vala:235
 msgid "Cloth"
 msgstr ""
 
 #: src/StickerSet.vala:236
-#, fuzzy
 msgid "Electronics"
-msgstr "Seleziona"
+msgstr "Elettronica"
 
 #: src/StickerSet.vala:237
 msgid "Deployment"
-msgstr ""
+msgstr "Distribuzione"
 
 #: src/StickerSet.vala:238
 msgid "Automatic"
-msgstr ""
+msgstr "Automatico"
 
 #: src/StickerSet.vala:239
 msgid "Do not insert"
-msgstr ""
+msgstr "Non inserire"
 
 #: src/StickerSet.vala:240
 msgid "Do not mix"
-msgstr ""
+msgstr "Non mescolare"
 
 #: src/StickerSet.vala:241
 msgid "Biohazard"
@@ -2228,7 +2217,7 @@ msgstr ""
 
 #: src/StickerSet.vala:242
 msgid "Circuit"
-msgstr ""
+msgstr "Circuito"
 
 #: src/StickerSet.vala:243
 msgid "Engineering"
