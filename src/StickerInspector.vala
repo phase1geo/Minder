@@ -293,7 +293,7 @@ public class StickerInspector : Box {
     /* Otherwise, show only the currently matching icons */
     } else {
       _matched_box.set_filter_func((item) => {
-        return( item.get_child().name.contains( search_text ) );
+        return( item.get_child().get_tooltip_text().contains( search_text ) );
       });
       _stack.set_visible_child_name( "matched" );
     }
