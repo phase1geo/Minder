@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-27 21:23-0500\n"
-"PO-Revision-Date: 2021-06-27 17:10+0300\n"
+"PO-Revision-Date: 2021-06-28 14:17+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: none\n"
 "Language: ru\n"
@@ -209,7 +209,7 @@ msgstr "смену цвета соединения"
 
 #: src/undo_actions/UndoConnectionDelete.vala:30
 msgid "delete connection"
-msgstr ""
+msgstr "удаление соединения"
 
 #: src/undo_actions/UndoConnectionNote.vala:32
 msgid "connection note change"
@@ -270,7 +270,7 @@ msgstr "балансировку узлов"
 
 #: src/undo_actions/UndoNodeCut.vala:33
 msgid "cut node"
-msgstr ""
+msgstr "вырезание узла в буфер обмена"
 
 #: src/undo_actions/UndoNodeDelete.vala:34
 msgid "delete node"
@@ -336,7 +336,7 @@ msgstr ""
 
 #: src/undo_actions/UndoNodeReplace.vala:31
 msgid "replace node"
-msgstr ""
+msgstr "замену узла"
 
 #: src/undo_actions/UndoNodeResize.vala:32
 msgid "node resize"
@@ -344,11 +344,11 @@ msgstr "смену размера узла"
 
 #: src/undo_actions/UndoNodeSort.vala:56
 msgid "sort nodes"
-msgstr ""
+msgstr "сортировку узлов"
 
 #: src/undo_actions/UndoNodeStickerAdd.vala:31
 msgid "add node sticker"
-msgstr ""
+msgstr "добавление стикера к узлу"
 
 #: src/undo_actions/UndoNodeStickerChange.vala:31
 msgid "change node sticker"
@@ -356,20 +356,19 @@ msgstr "смену стикера узла"
 
 #: src/undo_actions/UndoNodeStickerRemove.vala:31
 msgid "remove node sticker"
-msgstr ""
+msgstr "удаление стикера из узла"
 
 #: src/undo_actions/UndoNodeTasks.vala:30
-#, fuzzy
 msgid "node task changes"
 msgstr "смену статуса задачи"
 
 #: src/undo_actions/UndoNodesAlign.vala:56
 msgid "node alignment"
-msgstr ""
+msgstr "выравнивание узлов"
 
 #: src/undo_actions/UndoNodesCut.vala:43
 msgid "cut nodes"
-msgstr ""
+msgstr "вырезание узлов в буфер обмена"
 
 #: src/undo_actions/UndoNodesDelete.vala:43
 msgid "delete nodes"
@@ -397,7 +396,7 @@ msgstr ""
 
 #: src/undo_actions/UndoNodesReplace.vala:31
 msgid "replace nodes"
-msgstr ""
+msgstr "замену узлов"
 
 #: src/undo_actions/UndoStickerAdd.vala:30
 #: src/undo_actions/UndoStickerMove.vala:32
@@ -508,11 +507,11 @@ msgstr "Выбрать"
 
 #: src/ConnectionMenu.vala:61
 msgid "Start Node"
-msgstr ""
+msgstr "Начальный узел"
 
 #: src/ConnectionMenu.vala:65
 msgid "End Node"
-msgstr ""
+msgstr "Конечный узел"
 
 #: src/ConnectionMenu.vala:69
 msgid "Next Connection"
@@ -533,7 +532,7 @@ msgstr "Главная идея"
 #: src/DrawArea.vala:2256
 #, c-format
 msgid "%0.3g%% complete"
-msgstr ""
+msgstr "%0.3g%% завершено"
 
 #: src/DrawArea.vala:2384
 #, c-format
@@ -713,7 +712,7 @@ msgstr "Удалить изображение"
 
 #: src/ImageManager.vala:299
 msgid "Select Image"
-msgstr ""
+msgstr "Выберите изображение"
 
 #: src/ImageManager.vala:304
 msgid "Images"
@@ -862,7 +861,7 @@ msgstr "Стикеры"
 
 #: src/MainWindow.vala:857
 msgid "Map"
-msgstr "Карта"
+msgstr "Макет"
 
 #: src/MainWindow.vala:908
 msgid "Save current unnamed document?"
@@ -930,7 +929,7 @@ msgstr "Несохранённые"
 
 #: src/Node.vala:1852
 msgid "Node Title"
-msgstr ""
+msgstr "Заголовок узла"
 
 #: src/Node.vala:1860
 msgid "Node Note"
@@ -1131,7 +1130,7 @@ msgstr "Удалить ссылку на узел"
 
 #: src/NodeMenu.vala:397 src/NodesMenu.vala:209
 msgid "Unfold Children"
-msgstr ""
+msgstr "Развернуть узлы-потомки"
 
 #: src/NodeMenu.vala:414
 msgid "Paste Text As Child Node"
@@ -1154,9 +1153,8 @@ msgid "Paste Node As Child"
 msgstr "Вставить узел как потомок"
 
 #: src/NodesMenu.vala:59
-#, fuzzy
 msgid "Toggle Tasks"
-msgstr "Развернуть или свернуть"
+msgstr "Переключить статус задачи"
 
 #: src/NodesMenu.vala:66
 msgid "Connect"
@@ -1164,7 +1162,7 @@ msgstr "Соединить"
 
 #: src/NodesMenu.vala:69
 msgid "Link Nodes"
-msgstr ""
+msgstr "Слинковать узлы"
 
 #: src/NodesMenu.vala:74 src/ThemeEditor.vala:124
 msgid "Link Colors"
@@ -1184,27 +1182,27 @@ msgstr "Выровнять узлы"
 
 #: src/NodesMenu.vala:114
 msgid "Align Top"
-msgstr ""
+msgstr "По верхнему краю"
 
 #: src/NodesMenu.vala:118 data/com.github.phase1geo.minder.shortcuts.ui:543
 msgid "Align Center Horizontally"
-msgstr ""
+msgstr "По центру горизонтально"
 
 #: src/NodesMenu.vala:122
 msgid "Align Bottom"
-msgstr ""
+msgstr "По нижнему краю"
 
 #: src/NodesMenu.vala:126
 msgid "Align Left"
-msgstr ""
+msgstr "По левому краю"
 
 #: src/NodesMenu.vala:130 data/com.github.phase1geo.minder.shortcuts.ui:564
 msgid "Align Center Vertically"
-msgstr ""
+msgstr "По центру вертикально"
 
 #: src/NodesMenu.vala:134
 msgid "Align Right"
-msgstr ""
+msgstr "По правому краю"
 
 #: src/Preferences.vala:47
 msgid "Behavior"
@@ -1468,7 +1466,7 @@ msgstr "Задник цифровой камеры"
 
 #: src/StickerSet.vala:49
 msgid "Old time camera"
-msgstr ""
+msgstr "Ретро-фотоаппарат"
 
 #: src/StickerSet.vala:50
 msgid "Camera addon"
@@ -1620,11 +1618,11 @@ msgstr "Головоломка"
 
 #: src/StickerSet.vala:90
 msgid "Unlock"
-msgstr ""
+msgstr "Разблокировать"
 
 #: src/StickerSet.vala:91
 msgid "Lock"
-msgstr ""
+msgstr "Заблокировать"
 
 #: src/StickerSet.vala:92
 msgid "Idea"
@@ -1635,9 +1633,8 @@ msgid "No idea"
 msgstr "Нет идеи"
 
 #: src/StickerSet.vala:94
-#, fuzzy
 msgid "Link"
-msgstr "Добавить ссылку"
+msgstr "Ссылка"
 
 #: src/StickerSet.vala:95
 msgid "Broken link"
@@ -1645,20 +1642,19 @@ msgstr ""
 
 #: src/StickerSet.vala:96
 msgid "Rating"
-msgstr ""
+msgstr "Оценка"
 
 #: src/StickerSet.vala:97
-#, fuzzy
 msgid "Like placeholder"
-msgstr "Заменить узлы"
+msgstr ""
 
 #: src/StickerSet.vala:98
 msgid "Like"
-msgstr ""
+msgstr "Понравилось"
 
 #: src/StickerSet.vala:99
 msgid "Dislike"
-msgstr ""
+msgstr "Не понравилось"
 
 #: src/StickerSet.vala:100
 msgid "Info"
@@ -1678,7 +1674,7 @@ msgstr "Часы"
 
 #: src/StickerSet.vala:104
 msgid "Alarm clock"
-msgstr ""
+msgstr "Будильник"
 
 #: src/StickerSet.vala:105
 msgid "Address book"
@@ -1738,11 +1734,11 @@ msgstr "Калькулятор"
 
 #: src/StickerSet.vala:120
 msgid "Minus"
-msgstr ""
+msgstr "Минус"
 
 #: src/StickerSet.vala:121
 msgid "Plus"
-msgstr ""
+msgstr "Плюс"
 
 #: src/StickerSet.vala:124
 msgid "Graduation cap"
@@ -1762,7 +1758,7 @@ msgstr "Сейф"
 
 #: src/StickerSet.vala:129
 msgid "Advertising"
-msgstr ""
+msgstr "Реклама"
 
 #: src/StickerSet.vala:130
 msgid "Businessman"
@@ -1802,11 +1798,11 @@ msgstr ""
 
 #: src/StickerSet.vala:139
 msgid "Bullish"
-msgstr ""
+msgstr "Бычий рынок"
 
 #: src/StickerSet.vala:140
 msgid "Bearish"
-msgstr ""
+msgstr "Медвежий рынок"
 
 #: src/StickerSet.vala:141
 msgid "High priority"
@@ -1934,7 +1930,7 @@ msgstr "Пригласить"
 
 #: src/StickerSet.vala:172
 msgid "Money transfer"
-msgstr ""
+msgstr "Отправка денег"
 
 #: src/StickerSet.vala:173
 msgid "Feedback"
@@ -1946,7 +1942,7 @@ msgstr "Одобрение"
 
 #: src/StickerSet.vala:175
 msgid "Paid"
-msgstr ""
+msgstr "Оплачено"
 
 #: src/StickerSet.vala:176
 msgid "In transit"
@@ -1958,7 +1954,7 @@ msgstr "Отправлено"
 
 #: src/StickerSet.vala:178
 msgid "Package"
-msgstr ""
+msgstr "Посылка"
 
 #: src/StickerSet.vala:179
 msgid "Planner"
@@ -1966,7 +1962,7 @@ msgstr ""
 
 #: src/StickerSet.vala:180
 msgid "Overtime"
-msgstr ""
+msgstr "Переработка"
 
 #: src/StickerSet.vala:181
 msgid "Leave"
@@ -1974,11 +1970,11 @@ msgstr ""
 
 #: src/StickerSet.vala:182
 msgid "Expired"
-msgstr ""
+msgstr "Срок истёк"
 
 #: src/StickerSet.vala:183
 msgid "Process"
-msgstr ""
+msgstr "Процесс"
 
 #: src/StickerSet.vala:184
 msgid "Diploma 1"
@@ -2010,7 +2006,7 @@ msgstr "Список задач"
 
 #: src/StickerSet.vala:191
 msgid "Ratings"
-msgstr ""
+msgstr "Рейтинги"
 
 #: src/StickerSet.vala:192
 msgid "Questions"
@@ -2046,7 +2042,7 @@ msgstr ""
 
 #: src/StickerSet.vala:200
 msgid "Privacy"
-msgstr ""
+msgstr "Приватность"
 
 #: src/StickerSet.vala:201
 msgid "Disclaimer"
@@ -2089,9 +2085,8 @@ msgid "Multiple inputs"
 msgstr "Несколько входов"
 
 #: src/StickerSet.vala:211
-#, fuzzy
 msgid "Collect"
-msgstr "Выбрать"
+msgstr "Собрать"
 
 #: src/StickerSet.vala:212
 msgid "Internal"
@@ -2103,7 +2098,7 @@ msgstr "Внешний"
 
 #: src/StickerSet.vala:214
 msgid "VIP"
-msgstr ""
+msgstr "VIP"
 
 #: src/StickerSet.vala:215
 msgid "Light at the end of tunnel"
@@ -2171,12 +2166,11 @@ msgstr "Плотина"
 
 #: src/StickerSet.vala:233
 msgid "Biotech"
-msgstr ""
+msgstr "Биотехнологии"
 
 #: src/StickerSet.vala:234
-#, fuzzy
 msgid "Advance"
-msgstr "Отмена"
+msgstr ""
 
 #: src/StickerSet.vala:235
 msgid "Cloth"
@@ -2244,7 +2238,7 @@ msgstr "Kindle"
 
 #: src/StickerSet.vala:253
 msgid "Two smartphones"
-msgstr ""
+msgstr "Два смартфона"
 
 #: src/StickerSet.vala:254
 msgid "Multiple devices"
@@ -2316,7 +2310,7 @@ msgstr "Завершить звонок"
 
 #: src/StickerSet.vala:271
 msgid "Call transfer"
-msgstr ""
+msgstr "Переадресация вызова"
 
 #: src/StickerSet.vala:272
 msgid "Video call"
@@ -2360,7 +2354,7 @@ msgstr "Влево вверх"
 
 #: src/StickerSet.vala:284
 msgid "Up"
-msgstr ""
+msgstr "Вверх"
 
 #: src/StickerSet.vala:285
 msgid "Right up"
@@ -2508,11 +2502,11 @@ msgstr ""
 
 #: src/StickerSet.vala:325
 msgid "Alphabetical sorting (A->Z)"
-msgstr ""
+msgstr "Алфавитный порядок (A->Z)"
 
 #: src/StickerSet.vala:326
 msgid "Alphabetical sorting (Z->A)"
-msgstr ""
+msgstr "Алфавитный порядок (Z->A)"
 
 #: src/StickerSet.vala:327
 msgid "Numerical sorting (2->1)"
@@ -2575,9 +2569,8 @@ msgid "Flow chart"
 msgstr "Блок-схема"
 
 #: src/StickerSet.vala:342
-#, fuzzy
 msgid "Line chart"
-msgstr "Пунктир"
+msgstr "Линейная диаграмма"
 
 #: src/StickerSet.vala:343
 msgid "Genealogy"
@@ -2593,7 +2586,7 @@ msgstr ""
 
 #: src/StickerSet.vala:346
 msgid "Positive dynamic"
-msgstr ""
+msgstr "Положительная динамика"
 
 #: src/StickerSet.vala:347
 msgid "Negative dynamic"
@@ -3097,27 +3090,27 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:405
 msgid "Select Parent"
-msgstr ""
+msgstr "Выбрать узел-родитель"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:412
 msgid "Select Next Sibling"
-msgstr ""
+msgstr "Выбрать следующий узел-сиблинг"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:419
 msgid "Select Previous Sibling"
-msgstr ""
+msgstr "Выбрать предыдущий узел-сиблинг"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:426
 msgid "Select Child"
-msgstr ""
+msgstr "Выбрать узел-потомок"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:433
 msgid "Select Children"
-msgstr ""
+msgstr "Выбрать узлы потомки"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:440
 msgid "Select Subtree"
-msgstr ""
+msgstr "Выбрать поддерево"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:447
 msgid "Select Node Below"
@@ -3137,7 +3130,7 @@ msgstr "Выбрать узел слева"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:475
 msgid "Select Linked Node"
-msgstr ""
+msgstr "Выбрать слинкованный узел"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:482
 msgid "Select Attached Connection"
@@ -3173,19 +3166,19 @@ msgstr "Выравнивание"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:536
 msgid "Align Top Side"
-msgstr ""
+msgstr "Выровнять по верхней стороне"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:550
 msgid "Align Bottom Side"
-msgstr ""
+msgstr "Выровнять по нижней стороне"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:557
 msgid "Align Left Side"
-msgstr ""
+msgstr "Выровнять по левой стороне"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:571
 msgid "Align Right Side"
-msgstr ""
+msgstr "Выровнять по правой стороне"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:583
 msgid "Connection Commands"
@@ -3213,11 +3206,11 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:639
 msgid "Select Next Connection"
-msgstr ""
+msgstr "Выбрать следующее соединение"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:646
 msgid "Select Previous Connection"
-msgstr ""
+msgstr "Выбрать предыдущее соединение"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:658
 msgid "Text Editing"
@@ -3233,7 +3226,7 @@ msgstr "Вставить табулятор"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:680
 msgid "Show Emoji Picker"
-msgstr ""
+msgstr "Показать палитру эмотиконов"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:687
 msgid "End Editing"
@@ -3289,35 +3282,35 @@ msgstr "Вставить текст"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:789
 msgid "Add Next Character"
-msgstr ""
+msgstr "Добавить следующий символ"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:796
 msgid "Add Previous Character"
-msgstr ""
+msgstr "Добавить предыдущий символ"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:803
 msgid "Add Next Word"
-msgstr ""
+msgstr "Добавить следующее слово"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:810
 msgid "Add Previous Word"
-msgstr ""
+msgstr "Добавить предыдущее слово"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:817
 msgid "Add Next Line"
-msgstr ""
+msgstr "Добавить следующую строку"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:824
 msgid "Add Previous Line"
-msgstr ""
+msgstr "Добавить предыдущую строку"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:831
 msgid "Add Start Of Text"
-msgstr ""
+msgstr "Выделить до начала текста"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:838
 msgid "Add End Of Text"
-msgstr ""
+msgstr "Выделить до конца текста"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:845
 msgid "Select All Text"
@@ -3337,7 +3330,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:879
 msgid "Edit Image in Canvas"
-msgstr ""
+msgstr "Изменить изображение на холсте"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:880
 msgid "[Double left-click on image]"
