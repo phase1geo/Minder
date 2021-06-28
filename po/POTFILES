@@ -79,7 +79,7 @@ src/undo_actions/UndoNodeSort.vala
 src/undo_actions/UndoNodeStickerAdd.vala
 src/undo_actions/UndoNodeStickerChange.vala
 src/undo_actions/UndoNodeStickerRemove.vala
-src/undo_actions/UndoNodeTask.vala
+src/undo_actions/UndoNodeTasks.vala
 src/undo_actions/UndoNodesAlign.vala
 src/undo_actions/UndoNodesCut.vala
 src/undo_actions/UndoNodesDelete.vala

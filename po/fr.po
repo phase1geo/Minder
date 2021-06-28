@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-14 22:46-0500\n"
+"POT-Creation-Date: 2021-06-27 21:23-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Nathan Bonnemains (@NathanBnm)\n"
 "Language-Team: Français\n"
@@ -138,7 +138,7 @@ msgstr "Vers la droite"
 msgid "Yed"
 msgstr ""
 
-#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4154
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4198
 #: src/MapInspector.vala:333
 msgid "Manual"
 msgstr "Manuel"
@@ -382,8 +382,9 @@ msgstr "Supprimer la note"
 msgid "remove node sticker"
 msgstr "Supprimer la note"
 
-#: src/undo_actions/UndoNodeTask.vala:34
-msgid "node task change"
+#: src/undo_actions/UndoNodeTasks.vala:30
+#, fuzzy
+msgid "node task changes"
 msgstr "modification de la tâche du nœud"
 
 #: src/undo_actions/UndoNodesAlign.vala:56
@@ -524,7 +525,7 @@ msgid "Delete Connection"
 msgstr "Masquer les connexions"
 
 #: src/ConnectionMenu.vala:42 src/ConnectionsMenu.vala:35
-#: src/GroupsMenu.vala:39 src/NodeMenu.vala:85 src/NodesMenu.vala:54
+#: src/GroupsMenu.vala:39 src/NodeMenu.vala:85 src/NodesMenu.vala:55
 #: src/ThemeEditor.vala:138
 msgid "Delete"
 msgstr "Supprimer"
@@ -547,7 +548,7 @@ msgid "Remove Sticker"
 msgstr "Supprimer la note"
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:49 src/ImageManager.vala:299
-#: src/NodeMenu.vala:172 src/NodesMenu.vala:87
+#: src/NodeMenu.vala:172 src/NodesMenu.vala:92
 msgid "Select"
 msgstr "Sélectionner"
 
@@ -575,30 +576,30 @@ msgstr "sans nom"
 msgid "Main Idea"
 msgstr "Idée principale"
 
-#: src/DrawArea.vala:2213
+#: src/DrawArea.vala:2256
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% complété"
 
-#: src/DrawArea.vala:2341
+#: src/DrawArea.vala:2384
 #, fuzzy, c-format
 msgid "Children: %u\n"
 msgstr "Plier les enfants"
 
-#: src/DrawArea.vala:2342
+#: src/DrawArea.vala:2385
 #, c-format
 msgid "Total: %d"
 msgstr ""
 
-#: src/DrawArea.vala:2386
+#: src/DrawArea.vala:2429
 msgid "connection endpoint change"
 msgstr "modification du point d'extrémité de la connexion"
 
-#: src/DrawArea.vala:2393
+#: src/DrawArea.vala:2436
 msgid "connection drag"
 msgstr "déplacement de la connexion"
 
-#: src/DrawArea.vala:3029 src/DrawArea.vala:3042 src/DrawArea.vala:4613
+#: src/DrawArea.vala:3072 src/DrawArea.vala:3085 src/DrawArea.vala:4657
 msgid "Another Idea"
 msgstr "Une autre idée"
 
@@ -723,7 +724,7 @@ msgstr "Copier le nœud"
 msgid "All Grouped Nodes"
 msgstr ""
 
-#: src/GroupsMenu.vala:100 src/NodeMenu.vala:627 src/NodesMenu.vala:244
+#: src/GroupsMenu.vala:100 src/NodeMenu.vala:627 src/NodesMenu.vala:255
 #, fuzzy
 msgid "Select a link color"
 msgstr "Sélectionner le nœud lié"
@@ -991,11 +992,11 @@ msgstr "Déplier toutes les tâches"
 msgid "Unsaved"
 msgstr "Non enregistré"
 
-#: src/Node.vala:1839
+#: src/Node.vala:1852
 msgid "Node Title"
 msgstr "Titre du nœud"
 
-#: src/Node.vala:1847
+#: src/Node.vala:1860
 msgid "Node Note"
 msgstr "Note du nœud"
 
@@ -1035,11 +1036,11 @@ msgstr "Détacher le nœud"
 msgid "Delete Node"
 msgstr "Supprimer le nœud"
 
-#: src/NodeMenu.vala:69 src/NodesMenu.vala:46 src/TextMenu.vala:44
+#: src/NodeMenu.vala:69 src/NodesMenu.vala:47 src/TextMenu.vala:44
 msgid "Copy"
 msgstr "Copier"
 
-#: src/NodeMenu.vala:73 src/NodesMenu.vala:50 src/TextMenu.vala:49
+#: src/NodeMenu.vala:73 src/NodesMenu.vala:51 src/TextMenu.vala:49
 msgid "Cut"
 msgstr "Couper"
 
@@ -1080,7 +1081,7 @@ msgstr ""
 msgid "Link Color"
 msgstr "Couleur du lien"
 
-#: src/NodeMenu.vala:125 src/NodesMenu.vala:72
+#: src/NodeMenu.vala:125 src/NodesMenu.vala:77
 msgid "Set to color…"
 msgstr ""
 
@@ -1089,12 +1090,12 @@ msgstr ""
 msgid "Randomize color"
 msgstr "Aléatoirement"
 
-#: src/NodeMenu.vala:131 src/NodesMenu.vala:78
+#: src/NodeMenu.vala:131 src/NodesMenu.vala:83
 msgid "Use parent color"
 msgstr ""
 
-#: src/NodeMenu.vala:135 src/NodeMenu.vala:397 src/NodesMenu.vala:58
-#: src/NodesMenu.vala:203
+#: src/NodeMenu.vala:135 src/NodeMenu.vala:397 src/NodesMenu.vala:63
+#: src/NodesMenu.vala:209
 msgid "Fold Children"
 msgstr "Plier les enfants"
 
@@ -1149,7 +1150,7 @@ msgstr "Nœud frère précédent"
 msgid "Child Node"
 msgstr "Nœud enfant"
 
-#: src/NodeMenu.vala:197 src/NodesMenu.vala:96
+#: src/NodeMenu.vala:197 src/NodesMenu.vala:101
 #, fuzzy
 msgid "Child Nodes"
 msgstr "Nœud enfant"
@@ -1199,7 +1200,7 @@ msgstr "Marquer comme fait/à faire"
 msgid "Remove Node Link"
 msgstr "Supprimer le lien vers le nœud"
 
-#: src/NodeMenu.vala:397 src/NodesMenu.vala:203
+#: src/NodeMenu.vala:397 src/NodesMenu.vala:209
 msgid "Unfold Children"
 msgstr "Déplier les enfants"
 
@@ -1226,57 +1227,62 @@ msgstr ""
 msgid "Paste Node As Child"
 msgstr "Coller le nœud comme enfant"
 
-#: src/NodesMenu.vala:61
+#: src/NodesMenu.vala:59
+#, fuzzy
+msgid "Toggle Tasks"
+msgstr "Marquer comme fait/à faire"
+
+#: src/NodesMenu.vala:66
 #, fuzzy
 msgid "Connect"
 msgstr "Connexion"
 
-#: src/NodesMenu.vala:64
+#: src/NodesMenu.vala:69
 #, fuzzy
 msgid "Link Nodes"
 msgstr "Nœud lié"
 
-#: src/NodesMenu.vala:69 src/ThemeEditor.vala:124
+#: src/NodesMenu.vala:74 src/ThemeEditor.vala:124
 #, fuzzy
 msgid "Link Colors"
 msgstr "Couleur du lien"
 
-#: src/NodesMenu.vala:75
+#: src/NodesMenu.vala:80
 #, fuzzy
 msgid "Randomize colors"
 msgstr "Aléatoirement"
 
-#: src/NodesMenu.vala:91
+#: src/NodesMenu.vala:96
 #, fuzzy
 msgid "Parent Nodes"
 msgstr "Nœud parent"
 
-#: src/NodesMenu.vala:105
+#: src/NodesMenu.vala:110
 #, fuzzy
 msgid "Align Nodes"
 msgstr "Équilibrer les nœuds"
 
-#: src/NodesMenu.vala:109
+#: src/NodesMenu.vala:114
 msgid "Align Top"
 msgstr ""
 
-#: src/NodesMenu.vala:113 data/com.github.phase1geo.minder.shortcuts.ui:543
+#: src/NodesMenu.vala:118 data/com.github.phase1geo.minder.shortcuts.ui:543
 msgid "Align Center Horizontally"
 msgstr ""
 
-#: src/NodesMenu.vala:117
+#: src/NodesMenu.vala:122
 msgid "Align Bottom"
 msgstr ""
 
-#: src/NodesMenu.vala:121
+#: src/NodesMenu.vala:126
 msgid "Align Left"
 msgstr ""
 
-#: src/NodesMenu.vala:125 data/com.github.phase1geo.minder.shortcuts.ui:564
+#: src/NodesMenu.vala:130 data/com.github.phase1geo.minder.shortcuts.ui:564
 msgid "Align Center Vertically"
 msgstr ""
 
-#: src/NodesMenu.vala:129
+#: src/NodesMenu.vala:134
 msgid "Align Right"
 msgstr ""
 
@@ -3698,9 +3704,6 @@ msgstr ""
 
 #~ msgid "yEd"
 #~ msgstr "yEd"
-
-#~ msgid "Toggle Task Done"
-#~ msgstr "Marquer comme fait/à faire"
 
 #~ msgid "Edit…"
 #~ msgstr "Modifier…"

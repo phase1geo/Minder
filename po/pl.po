@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-14 22:46-0500\n"
+"POT-Creation-Date: 2021-06-27 21:23-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -138,7 +138,7 @@ msgstr "Do prawej"
 msgid "Yed"
 msgstr ""
 
-#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4154
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4198
 #: src/MapInspector.vala:333
 msgid "Manual"
 msgstr "Ręcznie"
@@ -381,8 +381,9 @@ msgstr "Usuń notatkę"
 msgid "remove node sticker"
 msgstr "Usuń notatkę"
 
-#: src/undo_actions/UndoNodeTask.vala:34
-msgid "node task change"
+#: src/undo_actions/UndoNodeTasks.vala:30
+#, fuzzy
+msgid "node task changes"
 msgstr "zmiana zadania"
 
 #: src/undo_actions/UndoNodesAlign.vala:56
@@ -522,7 +523,7 @@ msgid "Delete Connection"
 msgstr "Szukaj węzłów"
 
 #: src/ConnectionMenu.vala:42 src/ConnectionsMenu.vala:35
-#: src/GroupsMenu.vala:39 src/NodeMenu.vala:85 src/NodesMenu.vala:54
+#: src/GroupsMenu.vala:39 src/NodeMenu.vala:85 src/NodesMenu.vala:55
 #: src/ThemeEditor.vala:138
 msgid "Delete"
 msgstr "Usuń"
@@ -545,7 +546,7 @@ msgid "Remove Sticker"
 msgstr "Usuń notatkę"
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:49 src/ImageManager.vala:299
-#: src/NodeMenu.vala:172 src/NodesMenu.vala:87
+#: src/NodeMenu.vala:172 src/NodesMenu.vala:92
 #, fuzzy
 msgid "Select"
 msgstr "Wybierz węzeł"
@@ -579,31 +580,31 @@ msgstr "Dokument bez nazwy"
 msgid "Main Idea"
 msgstr "Główny pomysł"
 
-#: src/DrawArea.vala:2213
+#: src/DrawArea.vala:2256
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "Ukończono %0.3g%%"
 
-#: src/DrawArea.vala:2341
+#: src/DrawArea.vala:2384
 #, fuzzy, c-format
 msgid "Children: %u\n"
 msgstr "Zwiń węzeł potomny"
 
-#: src/DrawArea.vala:2342
+#: src/DrawArea.vala:2385
 #, c-format
 msgid "Total: %d"
 msgstr ""
 
-#: src/DrawArea.vala:2386
+#: src/DrawArea.vala:2429
 #, fuzzy
 msgid "connection endpoint change"
 msgstr "zmiana notatki węzła"
 
-#: src/DrawArea.vala:2393
+#: src/DrawArea.vala:2436
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:3029 src/DrawArea.vala:3042 src/DrawArea.vala:4613
+#: src/DrawArea.vala:3072 src/DrawArea.vala:3085 src/DrawArea.vala:4657
 msgid "Another Idea"
 msgstr "Inny pomysł"
 
@@ -725,7 +726,7 @@ msgstr "Dodaj węzeł główny"
 msgid "All Grouped Nodes"
 msgstr ""
 
-#: src/GroupsMenu.vala:100 src/NodeMenu.vala:627 src/NodesMenu.vala:244
+#: src/GroupsMenu.vala:100 src/NodeMenu.vala:627 src/NodesMenu.vala:255
 #, fuzzy
 msgid "Select a link color"
 msgstr "Węzeł"
@@ -999,12 +1000,12 @@ msgstr "Rozwiń wszystkie węzły"
 msgid "Unsaved"
 msgstr ""
 
-#: src/Node.vala:1839
+#: src/Node.vala:1852
 #, fuzzy
 msgid "Node Title"
 msgstr "Tytuly"
 
-#: src/Node.vala:1847
+#: src/Node.vala:1860
 #, fuzzy
 msgid "Node Note"
 msgstr "Dodaj notatkę"
@@ -1047,11 +1048,11 @@ msgstr "Odczep węzeł"
 msgid "Delete Node"
 msgstr "Usuń węzeł"
 
-#: src/NodeMenu.vala:69 src/NodesMenu.vala:46 src/TextMenu.vala:44
+#: src/NodeMenu.vala:69 src/NodesMenu.vala:47 src/TextMenu.vala:44
 msgid "Copy"
 msgstr "Kopiuj"
 
-#: src/NodeMenu.vala:73 src/NodesMenu.vala:50 src/TextMenu.vala:49
+#: src/NodeMenu.vala:73 src/NodesMenu.vala:51 src/TextMenu.vala:49
 msgid "Cut"
 msgstr "Wytnij"
 
@@ -1095,7 +1096,7 @@ msgstr ""
 msgid "Link Color"
 msgstr "Kolor połączenia"
 
-#: src/NodeMenu.vala:125 src/NodesMenu.vala:72
+#: src/NodeMenu.vala:125 src/NodesMenu.vala:77
 msgid "Set to color…"
 msgstr ""
 
@@ -1103,12 +1104,12 @@ msgstr ""
 msgid "Randomize color"
 msgstr ""
 
-#: src/NodeMenu.vala:131 src/NodesMenu.vala:78
+#: src/NodeMenu.vala:131 src/NodesMenu.vala:83
 msgid "Use parent color"
 msgstr ""
 
-#: src/NodeMenu.vala:135 src/NodeMenu.vala:397 src/NodesMenu.vala:58
-#: src/NodesMenu.vala:203
+#: src/NodeMenu.vala:135 src/NodeMenu.vala:397 src/NodesMenu.vala:63
+#: src/NodesMenu.vala:209
 msgid "Fold Children"
 msgstr "Zwiń węzeł potomny"
 
@@ -1168,7 +1169,7 @@ msgstr "Poprzedni sąsiadujący"
 msgid "Child Node"
 msgstr "Dodaj węzeł potomny"
 
-#: src/NodeMenu.vala:197 src/NodesMenu.vala:96
+#: src/NodeMenu.vala:197 src/NodesMenu.vala:101
 #, fuzzy
 msgid "Child Nodes"
 msgstr "Dodaj węzeł potomny"
@@ -1221,7 +1222,7 @@ msgstr ""
 msgid "Remove Node Link"
 msgstr "Usuń notatkę"
 
-#: src/NodeMenu.vala:397 src/NodesMenu.vala:203
+#: src/NodeMenu.vala:397 src/NodesMenu.vala:209
 msgid "Unfold Children"
 msgstr "Rozwiń węzeł potomny"
 
@@ -1247,56 +1248,61 @@ msgstr ""
 msgid "Paste Node As Child"
 msgstr ""
 
-#: src/NodesMenu.vala:61
+#: src/NodesMenu.vala:59
+#, fuzzy
+msgid "Toggle Tasks"
+msgstr "Usuń zadanie"
+
+#: src/NodesMenu.vala:66
 #, fuzzy
 msgid "Connect"
 msgstr "Szukaj węzłów"
 
-#: src/NodesMenu.vala:64
+#: src/NodesMenu.vala:69
 #, fuzzy
 msgid "Link Nodes"
 msgstr "Węzeł"
 
-#: src/NodesMenu.vala:69 src/ThemeEditor.vala:124
+#: src/NodesMenu.vala:74 src/ThemeEditor.vala:124
 #, fuzzy
 msgid "Link Colors"
 msgstr "Kolor połączenia"
 
-#: src/NodesMenu.vala:75
+#: src/NodesMenu.vala:80
 msgid "Randomize colors"
 msgstr ""
 
-#: src/NodesMenu.vala:91
+#: src/NodesMenu.vala:96
 #, fuzzy
 msgid "Parent Nodes"
 msgstr "Szukaj węzłów"
 
-#: src/NodesMenu.vala:105
+#: src/NodesMenu.vala:110
 #, fuzzy
 msgid "Align Nodes"
 msgstr "Zbalansuj wężły"
 
-#: src/NodesMenu.vala:109
+#: src/NodesMenu.vala:114
 msgid "Align Top"
 msgstr ""
 
-#: src/NodesMenu.vala:113 data/com.github.phase1geo.minder.shortcuts.ui:543
+#: src/NodesMenu.vala:118 data/com.github.phase1geo.minder.shortcuts.ui:543
 msgid "Align Center Horizontally"
 msgstr ""
 
-#: src/NodesMenu.vala:117
+#: src/NodesMenu.vala:122
 msgid "Align Bottom"
 msgstr ""
 
-#: src/NodesMenu.vala:121
+#: src/NodesMenu.vala:126
 msgid "Align Left"
 msgstr ""
 
-#: src/NodesMenu.vala:125 data/com.github.phase1geo.minder.shortcuts.ui:564
+#: src/NodesMenu.vala:130 data/com.github.phase1geo.minder.shortcuts.ui:564
 msgid "Align Center Vertically"
 msgstr ""
 
-#: src/NodesMenu.vala:129
+#: src/NodesMenu.vala:134
 msgid "Align Right"
 msgstr ""
 
