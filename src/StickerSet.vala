@@ -45,7 +45,7 @@ public class StickerSet {
     array0.append_val( new StickerInfo( "compact_camera", _( "Compact camera" ) ) );
     array0.append_val( new StickerInfo( "multiple_cameras", _( "Multiple cameras" ) ) );
     array0.append_val( new StickerInfo( "camera", _( "Camera" ) ) );
-    array0.append_val( new StickerInfo( "slr_back_side", _( "Slr back side" ) ) );
+    array0.append_val( new StickerInfo( "slr_back_side", _( "SLR back side" ) ) );
     array0.append_val( new StickerInfo( "old_time_camera", _( "Old time camera" ) ) );
     array0.append_val( new StickerInfo( "camera_addon", _( "Camera addon" ) ) );
     array0.append_val( new StickerInfo( "camera_identification", _( "Camera identification" ) ) );

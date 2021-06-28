@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-14 22:46-0500\n"
-"PO-Revision-Date: 2021-06-03 18:54+0100\n"
+"POT-Creation-Date: 2021-06-27 21:23-0500\n"
+"PO-Revision-Date: 2021-06-27 17:54+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -136,7 +136,7 @@ msgstr "A destra"
 msgid "Yed"
 msgstr "Yed"
 
-#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4154
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4198
 #: src/MapInspector.vala:333
 msgid "Manual"
 msgstr "Manuale"
@@ -356,8 +356,9 @@ msgstr "Cambia sitcker al nodo"
 msgid "remove node sticker"
 msgstr "rimuovi stiker al nodo"
 
-#: src/undo_actions/UndoNodeTask.vala:34
-msgid "node task change"
+#: src/undo_actions/UndoNodeTasks.vala:30
+#, fuzzy
+msgid "node task changes"
 msgstr "modifica attività nodo"
 
 #: src/undo_actions/UndoNodesAlign.vala:56
@@ -479,7 +480,7 @@ msgid "Delete Connection"
 msgstr "Elimina Connessione"
 
 #: src/ConnectionMenu.vala:42 src/ConnectionsMenu.vala:35
-#: src/GroupsMenu.vala:39 src/NodeMenu.vala:85 src/NodesMenu.vala:54
+#: src/GroupsMenu.vala:39 src/NodeMenu.vala:85 src/NodesMenu.vala:55
 #: src/ThemeEditor.vala:138
 msgid "Delete"
 msgstr "Cancella"
@@ -499,7 +500,7 @@ msgid "Remove Sticker"
 msgstr "Rimuovi adesivo"
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:49 src/ImageManager.vala:299
-#: src/NodeMenu.vala:172 src/NodesMenu.vala:87
+#: src/NodeMenu.vala:172 src/NodesMenu.vala:92
 msgid "Select"
 msgstr "Seleziona"
 
@@ -527,30 +528,30 @@ msgstr "senza nome"
 msgid "Main Idea"
 msgstr "Idea Principale"
 
-#: src/DrawArea.vala:2213
+#: src/DrawArea.vala:2256
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "% 0.3g%% completo"
 
-#: src/DrawArea.vala:2341
+#: src/DrawArea.vala:2384
 #, c-format
 msgid "Children: %u\n"
 msgstr "Figli: %u\n"
 
-#: src/DrawArea.vala:2342
+#: src/DrawArea.vala:2385
 #, c-format
 msgid "Total: %d"
 msgstr "Totale: %d"
 
-#: src/DrawArea.vala:2386
+#: src/DrawArea.vala:2429
 msgid "connection endpoint change"
 msgstr "modifica dell'endpoint di connessione"
 
-#: src/DrawArea.vala:2393
+#: src/DrawArea.vala:2436
 msgid "connection drag"
 msgstr "trascina della connessione"
 
-#: src/DrawArea.vala:3029 src/DrawArea.vala:3042 src/DrawArea.vala:4613
+#: src/DrawArea.vala:3072 src/DrawArea.vala:3085 src/DrawArea.vala:4657
 msgid "Another Idea"
 msgstr "Un'altra idea"
 
@@ -670,7 +671,7 @@ msgstr "Nodi Principali"
 msgid "All Grouped Nodes"
 msgstr "Tutti i nodi raggruppati"
 
-#: src/GroupsMenu.vala:100 src/NodeMenu.vala:627 src/NodesMenu.vala:244
+#: src/GroupsMenu.vala:100 src/NodeMenu.vala:627 src/NodesMenu.vala:255
 msgid "Select a link color"
 msgstr "Seleziona un colore di collegamento"
 
@@ -925,11 +926,11 @@ msgstr "Spiega tutti i nodi"
 msgid "Unsaved"
 msgstr "Non salvato"
 
-#: src/Node.vala:1839
+#: src/Node.vala:1852
 msgid "Node Title"
 msgstr "Titolo Nodo"
 
-#: src/Node.vala:1847
+#: src/Node.vala:1860
 msgid "Node Note"
 msgstr "Nota Nodo"
 
@@ -969,11 +970,11 @@ msgstr "Scollega nodo"
 msgid "Delete Node"
 msgstr "Elimina nodo"
 
-#: src/NodeMenu.vala:69 src/NodesMenu.vala:46 src/TextMenu.vala:44
+#: src/NodeMenu.vala:69 src/NodesMenu.vala:47 src/TextMenu.vala:44
 msgid "Copy"
 msgstr "Copia"
 
-#: src/NodeMenu.vala:73 src/NodesMenu.vala:50 src/TextMenu.vala:49
+#: src/NodeMenu.vala:73 src/NodesMenu.vala:51 src/TextMenu.vala:49
 msgid "Cut"
 msgstr "Taglia"
 
@@ -1013,7 +1014,7 @@ msgstr "Aggiungi Gruppo"
 msgid "Link Color"
 msgstr "Colore collegamento"
 
-#: src/NodeMenu.vala:125 src/NodesMenu.vala:72
+#: src/NodeMenu.vala:125 src/NodesMenu.vala:77
 msgid "Set to color…"
 msgstr "Imposta per colorare…"
 
@@ -1021,12 +1022,12 @@ msgstr "Imposta per colorare…"
 msgid "Randomize color"
 msgstr "Randomizza il colore"
 
-#: src/NodeMenu.vala:131 src/NodesMenu.vala:78
+#: src/NodeMenu.vala:131 src/NodesMenu.vala:83
 msgid "Use parent color"
 msgstr "Usa il colore principale"
 
-#: src/NodeMenu.vala:135 src/NodeMenu.vala:397 src/NodesMenu.vala:58
-#: src/NodesMenu.vala:203
+#: src/NodeMenu.vala:135 src/NodeMenu.vala:397 src/NodesMenu.vala:63
+#: src/NodesMenu.vala:209
 msgid "Fold Children"
 msgstr "Piega Figli"
 
@@ -1078,7 +1079,7 @@ msgstr "Nodo fratello precedente"
 msgid "Child Node"
 msgstr "Nodo Figlio"
 
-#: src/NodeMenu.vala:197 src/NodesMenu.vala:96
+#: src/NodeMenu.vala:197 src/NodesMenu.vala:101
 msgid "Child Nodes"
 msgstr "Nodi Figli"
 
@@ -1126,7 +1127,7 @@ msgstr "Contrassegna attività come completata"
 msgid "Remove Node Link"
 msgstr "Rimuovi collegamento nodo"
 
-#: src/NodeMenu.vala:397 src/NodesMenu.vala:203
+#: src/NodeMenu.vala:397 src/NodesMenu.vala:209
 msgid "Unfold Children"
 msgstr "Rivela Figli"
 
@@ -1150,51 +1151,56 @@ msgstr "Incolla e Sostituisci Immagine Nodo"
 msgid "Paste Node As Child"
 msgstr "Incolla Nodo Come Figlio"
 
-#: src/NodesMenu.vala:61
+#: src/NodesMenu.vala:59
+#, fuzzy
+msgid "Toggle Tasks"
+msgstr "Attiva/disattiva attività completata"
+
+#: src/NodesMenu.vala:66
 msgid "Connect"
 msgstr "Collegare"
 
-#: src/NodesMenu.vala:64
+#: src/NodesMenu.vala:69
 msgid "Link Nodes"
 msgstr "Nodi di Collegamento"
 
-#: src/NodesMenu.vala:69 src/ThemeEditor.vala:124
+#: src/NodesMenu.vala:74 src/ThemeEditor.vala:124
 msgid "Link Colors"
 msgstr "Colori di Collegamento"
 
-#: src/NodesMenu.vala:75
+#: src/NodesMenu.vala:80
 msgid "Randomize colors"
 msgstr "Randomizza i colori"
 
-#: src/NodesMenu.vala:91
+#: src/NodesMenu.vala:96
 msgid "Parent Nodes"
 msgstr "Nodi Genitore"
 
-#: src/NodesMenu.vala:105
+#: src/NodesMenu.vala:110
 msgid "Align Nodes"
 msgstr "Allinea nodi"
 
-#: src/NodesMenu.vala:109
+#: src/NodesMenu.vala:114
 msgid "Align Top"
 msgstr "Allinea in Alto"
 
-#: src/NodesMenu.vala:113 data/com.github.phase1geo.minder.shortcuts.ui:543
+#: src/NodesMenu.vala:118 data/com.github.phase1geo.minder.shortcuts.ui:543
 msgid "Align Center Horizontally"
 msgstr "Allinea al centro in orizzontale"
 
-#: src/NodesMenu.vala:117
+#: src/NodesMenu.vala:122
 msgid "Align Bottom"
 msgstr "Allinea in basso"
 
-#: src/NodesMenu.vala:121
+#: src/NodesMenu.vala:126
 msgid "Align Left"
 msgstr "Allineare a sinistra"
 
-#: src/NodesMenu.vala:125 data/com.github.phase1geo.minder.shortcuts.ui:564
+#: src/NodesMenu.vala:130 data/com.github.phase1geo.minder.shortcuts.ui:564
 msgid "Align Center Vertically"
 msgstr "Allinea al Centro Verticalmente"
 
-#: src/NodesMenu.vala:129
+#: src/NodesMenu.vala:134
 msgid "Align Right"
 msgstr "Allinea a destra"
 
@@ -1474,7 +1480,7 @@ msgstr "Fotocamera"
 
 #: src/StickerSet.vala:48
 msgid "Slr back side"
-msgstr ""
+msgstr "Slr lato posteriore"
 
 #: src/StickerSet.vala:49
 msgid "Old time camera"
@@ -1538,7 +1544,7 @@ msgstr "Rilascio cavo"
 
 #: src/StickerSet.vala:66
 msgid "Home"
-msgstr ""
+msgstr "Casa"
 
 #: src/StickerSet.vala:67
 msgid "Icons8 cup"
@@ -1657,7 +1663,6 @@ msgid "Rating"
 msgstr "Valutazione"
 
 #: src/StickerSet.vala:97
-#, fuzzyRating
 msgid "Like placeholder"
 msgstr "sostituisci nodo"
 
@@ -1807,15 +1812,15 @@ msgstr "Lettura"
 
 #: src/StickerSet.vala:138
 msgid "Neutral trading"
-msgstr ""
+msgstr "Trading neutrale"
 
 #: src/StickerSet.vala:139
 msgid "Bullish"
-msgstr ""
+msgstr "Rialzo"
 
 #: src/StickerSet.vala:140
 msgid "Bearish"
-msgstr ""
+msgstr "Ribasso"
 
 #: src/StickerSet.vala:141
 msgid "High priority"
@@ -1839,15 +1844,15 @@ msgstr "Decisione"
 
 #: src/StickerSet.vala:146
 msgid "Good decision"
-msgstr ""
+msgstr "Buona decisione"
 
 #: src/StickerSet.vala:147
 msgid "Neutral decision"
-msgstr ""
+msgstr "Decisione neutrale"
 
 #: src/StickerSet.vala:148
 msgid "Bad decision"
-msgstr ""
+msgstr "Cattiva decisione"
 
 #: src/StickerSet.vala:149
 msgid "Approve"
@@ -1859,119 +1864,119 @@ msgstr "Disapprova"
 
 #: src/StickerSet.vala:151
 msgid "Podium without speaker"
-msgstr ""
+msgstr "Podio senza speaker"
 
 #: src/StickerSet.vala:152
 msgid "Podium with speaker"
-msgstr ""
+msgstr "Podio con speaker"
 
 #: src/StickerSet.vala:153
 msgid "Podium with audience"
-msgstr ""
+msgstr "Podio con il pubblico"
 
 #: src/StickerSet.vala:154
 msgid "Video projector"
-msgstr ""
+msgstr "Videoproiettore"
 
 #: src/StickerSet.vala:155
 msgid "Statistics"
-msgstr ""
+msgstr "Statistiche"
 
 #: src/StickerSet.vala:156
 msgid "Collaboration"
-msgstr ""
+msgstr "Collaborazione"
 
 #: src/StickerSet.vala:157
 msgid "Voice presentation"
-msgstr ""
+msgstr "Presentazione vocale"
 
 #: src/StickerSet.vala:158
 msgid "Conference call"
-msgstr ""
+msgstr "Conferenza telefonica"
 
 #: src/StickerSet.vala:159
 msgid "Comments"
-msgstr ""
+msgstr "Commenti"
 
 #: src/StickerSet.vala:160
 msgid "FAQ"
-msgstr ""
+msgstr "FAQ"
 
 #: src/StickerSet.vala:161
 msgid "Reuse"
-msgstr ""
+msgstr "Riuso"
 
 #: src/StickerSet.vala:162
 msgid "Organization"
-msgstr ""
+msgstr "Organizzazione"
 
 #: src/StickerSet.vala:163
 msgid "Department"
-msgstr ""
+msgstr "Dipartimento"
 
 #: src/StickerSet.vala:164
 msgid "Library"
-msgstr ""
+msgstr "Biblioteca"
 
 #: src/StickerSet.vala:165
 msgid "Shop"
-msgstr ""
+msgstr "Negozio"
 
 #: src/StickerSet.vala:166
 msgid "Self service kiosk"
-msgstr ""
+msgstr "Chiosco self service"
 
 #: src/StickerSet.vala:167
 msgid "Donate"
-msgstr ""
+msgstr "Donazione"
 
 #: src/StickerSet.vala:168
 msgid "Currency exchange"
-msgstr ""
+msgstr "Cambio valuta"
 
 #: src/StickerSet.vala:169
 msgid "Debt"
-msgstr ""
+msgstr "Debito"
 
 #: src/StickerSet.vala:170
 msgid "Sales performance"
-msgstr ""
+msgstr "Andamento delle vendite"
 
 #: src/StickerSet.vala:171
 msgid "Invite"
-msgstr ""
+msgstr "Invito"
 
 #: src/StickerSet.vala:172
 msgid "Money transfer"
-msgstr ""
+msgstr "Trasferimento di denaro"
 
 #: src/StickerSet.vala:173
 msgid "Feedback"
-msgstr ""
+msgstr "Feedback"
 
 #: src/StickerSet.vala:174
 msgid "Approval"
-msgstr ""
+msgstr "Approvazione"
 
 #: src/StickerSet.vala:175
 msgid "Paid"
-msgstr ""
+msgstr "Pagato"
 
 #: src/StickerSet.vala:176
 msgid "In transit"
-msgstr ""
+msgstr "In transito"
 
 #: src/StickerSet.vala:177
 msgid "Shipped"
-msgstr ""
+msgstr "Spedito"
 
 #: src/StickerSet.vala:178
 msgid "Package"
-msgstr ""
+msgstr "Pacco"
 
 #: src/StickerSet.vala:179
 msgid "Planner"
-msgstr ""
+msgstr "Pianificatore"
 
 #: src/StickerSet.vala:180
 msgid "Overtime"
@@ -1979,174 +1984,164 @@ msgstr ""
 
 #: src/StickerSet.vala:181
 msgid "Leave"
-msgstr ""
+msgstr "Lascia"
 
 #: src/StickerSet.vala:182
 msgid "Expired"
-msgstr ""
+msgstr "Scaduto"
 
 #: src/StickerSet.vala:183
 msgid "Process"
-msgstr ""
+msgstr "Processo"
 
 #: src/StickerSet.vala:184
 msgid "Diploma 1"
-msgstr ""
+msgstr "Diploma 1"
 
 #: src/StickerSet.vala:185
 msgid "Diploma 2"
-msgstr ""
+msgstr "Diploma 2"
 
 #: src/StickerSet.vala:186
 msgid "Business contact"
-msgstr ""
+msgstr "Contatto di lavoro"
 
 #: src/StickerSet.vala:187
-#, fuzzy
 msgid "Survey"
-msgstr "Curvo"
+msgstr "Questionario"
 
 #: src/StickerSet.vala:188
-#, fuzzy
 msgid "Inspection"
-msgstr "Connessione"
+msgstr "Ispezione"
 
 #: src/StickerSet.vala:189
 msgid "Rules"
-msgstr ""
+msgstr "Regole"
 
 #: src/StickerSet.vala:190
 msgid "Todo list"
-msgstr ""
+msgstr "Lista di cose da fare"
 
 #: src/StickerSet.vala:191
 msgid "Ratings"
-msgstr ""
+msgstr "Valutazioni"
 
 #: src/StickerSet.vala:192
-#, fuzzy
 msgid "Questions"
-msgstr "Connessioni"
+msgstr "Domande"
 
 #: src/StickerSet.vala:193
 msgid "Answers"
-msgstr ""
+msgstr "RIsposte"
 
 #: src/StickerSet.vala:194
 #, fuzzy
 msgid "Fine print"
-msgstr "Larghezza della Linea"
+msgstr "Stampa fine"
 
 #: src/StickerSet.vala:195
-#, fuzzy
 msgid "Candle sticks"
-msgstr "Aggiungi sticker al nodo"
+msgstr "Candelieri"
 
 #: src/StickerSet.vala:196
-#, fuzzy
 msgid "Serial tasks"
-msgstr "Cerca in tutte le schede"
+msgstr "Compiti seriali"
 
 #: src/StickerSet.vala:197
-#, fuzzy
 msgid "Parallel tasks"
-msgstr "Cerca in tutte le schede"
+msgstr "Compiti paralleli"
 
 #: src/StickerSet.vala:198
 msgid "Tree structure"
-msgstr ""
+msgstr "Struttura albero"
 
 #: src/StickerSet.vala:199
 msgid "Org unit"
-msgstr ""
+msgstr "Unità organizzativa"
 
 #: src/StickerSet.vala:200
 msgid "Privacy"
-msgstr ""
+msgstr "Privacy"
 
 #: src/StickerSet.vala:201
 msgid "Disclaimer"
-msgstr ""
+msgstr "Dichiarazione di non responsabilità"
 
 #: src/StickerSet.vala:202
 msgid "Callback"
-msgstr ""
+msgstr "Richiama"
 
 #: src/StickerSet.vala:203
 msgid "Service mark"
-msgstr ""
+msgstr "Marchio di servizio"
 
 #: src/StickerSet.vala:204
 msgid "Registered trademark"
-msgstr ""
+msgstr "Marchio registrato"
 
 #: src/StickerSet.vala:205
 msgid "Trademark"
-msgstr ""
+msgstr "Marchio"
 
 #: src/StickerSet.vala:206
-#, fuzzy
 msgid "Copyright"
-msgstr "A destra"
+msgstr "Copyright"
 
 #: src/StickerSet.vala:207
-#, fuzzy
 msgid "Copyleft"
-msgstr "A sinistra"
+msgstr "Copyleft"
 
 #: src/StickerSet.vala:208
 msgid "Sound recording copyright"
-msgstr ""
+msgstr "Diritti d'autore registrazione del suono"
 
 #: src/StickerSet.vala:209
 msgid "Butting in"
-msgstr ""
+msgstr "Interferenze"
 
 #: src/StickerSet.vala:210
 msgid "Multiple inputs"
-msgstr ""
+msgstr "Ingressi multipli"
 
 #: src/StickerSet.vala:211
-#, fuzzy
 msgid "Collect"
-msgstr "Seleziona"
+msgstr "Collezione"
 
 #: src/StickerSet.vala:212
 msgid "Internal"
-msgstr ""
+msgstr "Interna"
 
 #: src/StickerSet.vala:213
 msgid "External"
-msgstr ""
+msgstr "Esterna"
 
 #: src/StickerSet.vala:214
 msgid "VIP"
-msgstr ""
+msgstr "VIP"
 
 #: src/StickerSet.vala:215
 msgid "Light at the end of tunnel"
-msgstr ""
+msgstr "Luce alla fine del tunnel"
 
 #: src/StickerSet.vala:216
 msgid "Entering heaven alive"
-msgstr ""
+msgstr "Entrare in paradiso vivi"
 
 #: src/StickerSet.vala:219
 msgid "Biomass"
-msgstr ""
+msgstr "biomassa"
 
 #: src/StickerSet.vala:220
 msgid "Display"
-msgstr ""
+msgstr "Schermo"
 
 #: src/StickerSet.vala:221
-#, fuzzy
 msgid "Do not inhale"
-msgstr "cambia nota nodo"
+msgstr "Non inalare"
 
 #: src/StickerSet.vala:222
 msgid "Factory"
-msgstr ""
+msgstr "Fabbrica"
 
 #: src/StickerSet.vala:223
 msgid "Factory breakdown"
@@ -2154,31 +2149,31 @@ msgstr ""
 
 #: src/StickerSet.vala:224
 msgid "Crystal oscillator"
-msgstr ""
+msgstr "Oscillatore a cristallo"
 
 #: src/StickerSet.vala:225
 msgid "Capacitor"
-msgstr ""
+msgstr "Condensatore"
 
 #: src/StickerSet.vala:226
 msgid "Electricity"
-msgstr ""
+msgstr "Elettricità"
 
 #: src/StickerSet.vala:227
 msgid "Electro devices"
-msgstr ""
+msgstr "Dispositivi elettronici"
 
 #: src/StickerSet.vala:228
 msgid "Electrical sensor"
-msgstr ""
+msgstr "Sensore elettrico"
 
 #: src/StickerSet.vala:229
 msgid "Electrical threshold"
-msgstr ""
+msgstr "Soglia elettrica"
 
 #: src/StickerSet.vala:230
 msgid "Automotive"
-msgstr ""
+msgstr "Automobilistico"
 
 #: src/StickerSet.vala:231
 msgid "Feed in"
@@ -2190,37 +2185,35 @@ msgstr ""
 
 #: src/StickerSet.vala:233
 msgid "Biotech"
-msgstr ""
+msgstr "Biotecnologie"
 
 #: src/StickerSet.vala:234
-#, fuzzy
 msgid "Advance"
-msgstr "Cancella"
+msgstr ""
 
 #: src/StickerSet.vala:235
 msgid "Cloth"
 msgstr ""
 
 #: src/StickerSet.vala:236
-#, fuzzy
 msgid "Electronics"
-msgstr "Seleziona"
+msgstr "Elettronica"
 
 #: src/StickerSet.vala:237
 msgid "Deployment"
-msgstr ""
+msgstr "Distribuzione"
 
 #: src/StickerSet.vala:238
 msgid "Automatic"
-msgstr ""
+msgstr "Automatico"
 
 #: src/StickerSet.vala:239
 msgid "Do not insert"
-msgstr ""
+msgstr "Non inserire"
 
 #: src/StickerSet.vala:240
 msgid "Do not mix"
-msgstr ""
+msgstr "Non mescolare"
 
 #: src/StickerSet.vala:241
 msgid "Biohazard"
@@ -2228,7 +2221,7 @@ msgstr ""
 
 #: src/StickerSet.vala:242
 msgid "Circuit"
-msgstr ""
+msgstr "Circuito"
 
 #: src/StickerSet.vala:243
 msgid "Engineering"
@@ -3536,9 +3529,6 @@ msgstr "[Triplo clic sinistro in qualsiasi punto del testo]"
 
 #~ msgid "yEd"
 #~ msgstr "yEd"
-
-#~ msgid "Toggle Task Done"
-#~ msgstr "Attiva/disattiva attività completata"
 
 #~ msgid "Edit…"
 #~ msgstr "Modifica…"
