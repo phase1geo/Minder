@@ -21,6 +21,7 @@ replacements = [
   ["Faq", "FAQ"],
   ["Ok", "OK"],
   ["Vip", "VIP"],
+  ["Slr", "SLR"],
   ["_", " "]]
 
 # Open the class file for writing
