@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-27 21:23-0500\n"
-"PO-Revision-Date: 2021-07-02 11:01+0200\n"
+"PO-Revision-Date: 2021-07-02 11:30+0200\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -218,15 +218,15 @@ msgstr "Notiz an Verbindung ändern"
 
 #: src/undo_actions/UndoConnectionStickerAdd.vala:31
 msgid "add connection sticker"
-msgstr "Bild zu Verbindung hinzufügen"
+msgstr "Aufkleber zur Verbindung hinzufügen"
 
 #: src/undo_actions/UndoConnectionStickerChange.vala:31
 msgid "change connection sticker"
-msgstr "Bild an Verbindung ändern"
+msgstr "Aufkleber an Verbindung ändern"
 
 #: src/undo_actions/UndoConnectionStickerRemove.vala:31
 msgid "remove connection sticker"
-msgstr "Bild von Verbindung entfernen"
+msgstr "Aufkleber von Verbindung entfernen"
 
 #: src/undo_actions/UndoConnectionTitle.vala:32
 msgid "connection title change"
@@ -350,15 +350,15 @@ msgstr "Knoten sortieren"
 
 #: src/undo_actions/UndoNodeStickerAdd.vala:31
 msgid "add node sticker"
-msgstr "Bild zu Knoten hinzufügen"
+msgstr "Aufkleber zu Knoten hinzufügen"
 
 #: src/undo_actions/UndoNodeStickerChange.vala:31
 msgid "change node sticker"
-msgstr "Bild an Knoten ändern"
+msgstr "Aufkleber an Knoten ändern"
 
 #: src/undo_actions/UndoNodeStickerRemove.vala:31
 msgid "remove node sticker"
-msgstr "Bild von Knoten entfernen"
+msgstr "Aufkleber von Knoten entfernen"
 
 #: src/undo_actions/UndoNodeTasks.vala:30
 #, fuzzy
@@ -407,19 +407,19 @@ msgstr "Knoten ersetzen"
 #: src/undo_actions/UndoStickerAdd.vala:30
 #: src/undo_actions/UndoStickerMove.vala:32
 msgid "add sticker"
-msgstr "Bild hinzufügen"
+msgstr "Aufkleber hinzufügen"
 
 #: src/undo_actions/UndoStickerChange.vala:31
 msgid "change sticker"
-msgstr "Bild ändern"
+msgstr "Aufkleber ändern"
 
 #: src/undo_actions/UndoStickerRemove.vala:30
 msgid "remove sticker"
-msgstr "Bild enfernen"
+msgstr "Aufkleber entfernen"
 
 #: src/undo_actions/UndoStickerResize.vala:31
 msgid "resize sticker"
-msgstr "Bildgröße anpassen"
+msgstr "Größe des Aufklebers anpassen"
 
 #: src/undo_actions/UndoStyleChange.vala:38
 msgid "style change"
@@ -509,7 +509,7 @@ msgstr "Notiz öndern"
 
 #: src/ConnectionMenu.vala:53 src/NodeMenu.vala:106
 msgid "Remove Sticker"
-msgstr "Bild entfernen"
+msgstr "Aufkleber entfernen"
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:49 src/ImageManager.vala:299
 #: src/NodeMenu.vala:172 src/NodesMenu.vala:92
@@ -869,7 +869,7 @@ msgstr "Stil"
 
 #: src/MainWindow.vala:856
 msgid "Stickers"
-msgstr "Bilder"
+msgstr "Aufkleber"
 
 #: src/MainWindow.vala:857
 msgid "Map"
@@ -1380,12 +1380,12 @@ msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
 msgstr ""
-"Ziehen Sie das Bild auf einen Knoten oder eine andere Stelle in der Mindmap, "
-"um es dort hinzuzufügen."
+"Ziehen Sie den Aufkleber auf einen Knoten oder eine andere Stelle in der "
+"Mindmap, um ihn dort hinzuzufügen."
 
 #: src/StickerInspector.vala:82
 msgid "Search Stickers"
-msgstr "Nach Bildern suchen"
+msgstr "Nach Aufkleber suchen"
 
 #: src/StickerInspector.vala:111
 msgid "Favorites"
@@ -2989,7 +2989,7 @@ msgstr "Stil-Tab anzeigen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:165
 msgid "Show Sticker Tab"
-msgstr "Bilder-Tab zeigen"
+msgstr "Aufkleber-Tab zeigen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:172
 msgid "Show Map Tab"
