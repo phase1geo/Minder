@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-27 21:23-0500\n"
-"PO-Revision-Date: 2021-07-01 21:52+0200\n"
+"PO-Revision-Date: 2021-07-02 11:30+0200\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -218,15 +218,15 @@ msgstr "Notiz an Verbindung ändern"
 
 #: src/undo_actions/UndoConnectionStickerAdd.vala:31
 msgid "add connection sticker"
-msgstr "Bild zu Verbindung hinzufügen"
+msgstr "Aufkleber zur Verbindung hinzufügen"
 
 #: src/undo_actions/UndoConnectionStickerChange.vala:31
 msgid "change connection sticker"
-msgstr "Bild an Verbindung ändern"
+msgstr "Aufkleber an Verbindung ändern"
 
 #: src/undo_actions/UndoConnectionStickerRemove.vala:31
 msgid "remove connection sticker"
-msgstr "Bild von Verbindung entfernen"
+msgstr "Aufkleber von Verbindung entfernen"
 
 #: src/undo_actions/UndoConnectionTitle.vala:32
 msgid "connection title change"
@@ -267,7 +267,7 @@ msgstr "Koten anfügen"
 
 #: src/undo_actions/UndoNodeBalance.vala:61
 msgid "balance nodes"
-msgstr "Knoten balancieren"
+msgstr "Knoten ausbalancieren"
 
 #: src/undo_actions/UndoNodeCut.vala:33
 msgid "cut node"
@@ -350,15 +350,15 @@ msgstr "Knoten sortieren"
 
 #: src/undo_actions/UndoNodeStickerAdd.vala:31
 msgid "add node sticker"
-msgstr "Bild zu Knoten hinzufügen"
+msgstr "Aufkleber zu Knoten hinzufügen"
 
 #: src/undo_actions/UndoNodeStickerChange.vala:31
 msgid "change node sticker"
-msgstr "Bild an Knoten ändern"
+msgstr "Aufkleber an Knoten ändern"
 
 #: src/undo_actions/UndoNodeStickerRemove.vala:31
 msgid "remove node sticker"
-msgstr "Bild von Knoten entfernen"
+msgstr "Aufkleber von Knoten entfernen"
 
 #: src/undo_actions/UndoNodeTasks.vala:30
 #, fuzzy
@@ -407,19 +407,19 @@ msgstr "Knoten ersetzen"
 #: src/undo_actions/UndoStickerAdd.vala:30
 #: src/undo_actions/UndoStickerMove.vala:32
 msgid "add sticker"
-msgstr "Bild hinzufügen"
+msgstr "Aufkleber hinzufügen"
 
 #: src/undo_actions/UndoStickerChange.vala:31
 msgid "change sticker"
-msgstr "Bild ändern"
+msgstr "Aufkleber ändern"
 
 #: src/undo_actions/UndoStickerRemove.vala:30
 msgid "remove sticker"
-msgstr "Bild enfernen"
+msgstr "Aufkleber entfernen"
 
 #: src/undo_actions/UndoStickerResize.vala:31
 msgid "resize sticker"
-msgstr "Bildgröße anpassen"
+msgstr "Größe des Aufklebers anpassen"
 
 #: src/undo_actions/UndoStyleChange.vala:38
 msgid "style change"
@@ -436,6 +436,7 @@ msgstr "Textlöschung"
 
 #: src/undo_actions/UndoTextInsert.vala:29
 #: src/undo_actions/UndoTextMultiInsert.vala:33
+#, fuzzy
 msgid "text insertion"
 msgstr "Texteinfügung"
 
@@ -508,7 +509,7 @@ msgstr "Notiz öndern"
 
 #: src/ConnectionMenu.vala:53 src/NodeMenu.vala:106
 msgid "Remove Sticker"
-msgstr "Bild entfernen"
+msgstr "Aufkleber entfernen"
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:49 src/ImageManager.vala:299
 #: src/NodeMenu.vala:172 src/NodesMenu.vala:92
@@ -607,7 +608,7 @@ msgid ""
 "Select a node or connection\n"
 "to view/edit information"
 msgstr ""
-"Wählen Sie einen Knoten oder eine Verbindung aus\n"
+"Wählen Sie einen Knoten oder eine Verbindung aus,\n"
 "um Informationen anzuzeigen/zu bearbeiten"
 
 #: src/EmptyMenu.vala:38 src/NodeMenu.vala:77 src/TextMenu.vala:54
@@ -783,11 +784,11 @@ msgstr "Auf Fenstergröße einpassen"
 
 #: src/MainWindow.vala:531
 msgid "Zoom to Fit Selected Node"
-msgstr "Ausgewählten Knoten ins Fenster einpassen\\"
+msgstr "Ausgewählten Knoten ins Fenster einpassen"
 
 #: src/MainWindow.vala:536
 msgid "Zoom to Actual Size"
-msgstr "Auf eigentliche Größe vergrößern"
+msgstr "Vergrößerung zurücksetzen"
 
 #: src/MainWindow.vala:563 src/StickerSet.vala:110
 msgid "Search"
@@ -868,7 +869,7 @@ msgstr "Stil"
 
 #: src/MainWindow.vala:856
 msgid "Stickers"
-msgstr "Bilder"
+msgstr "Aufkleber"
 
 #: src/MainWindow.vala:857
 msgid "Map"
@@ -1032,7 +1033,7 @@ msgstr "Farbe auswählen…"
 
 #: src/NodeMenu.vala:128
 msgid "Randomize color"
-msgstr "Zufallsfarbe"
+msgstr "Zufällige Farbe wählen"
 
 #: src/NodeMenu.vala:131 src/NodesMenu.vala:83
 msgid "Use parent color"
@@ -1229,7 +1230,7 @@ msgstr "Schließen"
 
 #: src/Preferences.vala:76
 msgid "Create new node from edit mode"
-msgstr "Neuen Knoten aus dem Bearbeitungsmodus erstellen"
+msgstr "Neuen Knoten aus Bearbeitungsmodus erstellen"
 
 #: src/Preferences.vala:78
 msgid ""
@@ -1237,11 +1238,11 @@ msgid ""
 "or Tab is pressed."
 msgstr ""
 "Legt fest, ob ein neuer Knoten direkt aus dem Bearbeitungsmodus erstellt "
-"werden soll, wenn Return oder Tab gedrückt wird."
+"werden soll, wenn die Eingabe- oder Tabtaste gedrückt wird."
 
 #: src/Preferences.vala:80
 msgid "Automatically make embedded URLs into links"
-msgstr "Eingebettete URLs automatisch in Links umwandeln"
+msgstr "Eingebettete URLs automatisch in Verweise umwandeln"
 
 #: src/Preferences.vala:82
 msgid ""
@@ -1268,15 +1269,14 @@ msgstr ""
 "Herstellen der Verbindung in den Bearbeitungsmodus versetzt werden soll."
 
 #: src/Preferences.vala:91
-#, fuzzy
 msgid "Select items on mouse hover"
-msgstr "Elemente bei Mausüberfahrt auswählen"
+msgstr "Elemente  unter Mauszeiger auswählen"
 
 #: src/Preferences.vala:93
 msgid "If enabled, selects items when mouse cursor hovers over the item."
 msgstr ""
-"Wenn aktiviert, werden Elemente ausgewählt, wenn sich der Mauszeiger über "
-"dem Element befindet."
+"Wenn aktiviert, werden automatisch Elemente ausgewählt, welche sich länger "
+"unter dem Mauszeiger befinden."
 
 #: src/Preferences.vala:106
 msgid "Hide themes not matching visual style"
@@ -1321,16 +1321,15 @@ msgstr "Tab"
 
 #: src/QuickEntry.vala:61
 msgid "Creates a child node of the previous node."
-msgstr "Erzeugt einen Kindknoten des vorherigen Knotens."
+msgstr "Erzeugt einen Kindknoten aus dem vorherigen Knoten."
 
 #: src/QuickEntry.vala:63
-#, fuzzy
 msgid ""
 "If this character is the first non-whitespace character, makes a new root "
 "node from the title that follows."
 msgstr ""
 "Wenn dieses Zeichen das erste Nicht-Leerzeichen ist, wird ein neuer "
-"Wurzelknoten aus dem folgenden Titel erstellt."
+"Wurzelknoten aus dem folgenden Text erstellt."
 
 #: src/QuickEntry.vala:65
 msgid ""
@@ -1338,7 +1337,7 @@ msgid ""
 "from the title that follows."
 msgstr ""
 "Wenn dieses Zeichen das erste Nicht-Leerzeichen ist, entsteht ein neuer "
-"Knoten aus dem folgenden Titel."
+"Knoten aus dem folgenden Text."
 
 #: src/QuickEntry.vala:67
 msgid ""
@@ -1381,12 +1380,12 @@ msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
 msgstr ""
-"Ziehen Sie das Bild auf einen Knoten oder eine andere Stelle in der Mindmap, "
-"um einen Bild hinzuzufügen."
+"Ziehen Sie den Aufkleber auf einen Knoten oder eine andere Stelle in der "
+"Mindmap, um ihn dort hinzuzufügen."
 
 #: src/StickerInspector.vala:82
 msgid "Search Stickers"
-msgstr "Nach Bilder suchen"
+msgstr "Nach Aufkleber suchen"
 
 #: src/StickerInspector.vala:111
 msgid "Favorites"
@@ -1398,7 +1397,7 @@ msgstr "Foto und Video"
 
 #: src/StickerSet.vala:22 src/StickerSet.vala:122
 msgid "Very Basic"
-msgstr "Grundlegende"
+msgstr "Grundlegendes"
 
 #: src/StickerSet.vala:23 src/StickerSet.vala:126 src/StickerSet.vala:217
 msgid "Business"
@@ -2666,7 +2665,7 @@ msgstr "Änderungen betreffen:"
 
 #: src/StyleInspector.vala:154
 msgid "Branch Options"
-msgstr "Zweigoptionen"
+msgstr "Zweig-Optionen"
 
 #: src/StyleInspector.vala:238
 msgid "Corner Radius"
@@ -2674,19 +2673,19 @@ msgstr "Eckradius"
 
 #: src/StyleInspector.vala:283 src/StyleInspector.vala:641
 msgid "Margin"
-msgstr "Randbereich"
+msgstr "Randstärke"
 
 #: src/StyleInspector.vala:326
 msgid "Link Options"
-msgstr "Verweis Optionen"
+msgstr "Verbinder-Optionen"
 
 #: src/StyleInspector.vala:360 src/StyleInspector.vala:844
 msgid "Line Dash"
-msgstr "Strichlinien"
+msgstr "Linientyp"
 
 #: src/StyleInspector.vala:399 src/StyleInspector.vala:921
 msgid "Line Width"
-msgstr "Linien Dicke"
+msgstr "Linienstärke"
 
 #: src/StyleInspector.vala:445
 msgid "Link Arrow"
@@ -2702,7 +2701,7 @@ msgstr "Umrandungsstil"
 
 #: src/StyleInspector.vala:566
 msgid "Border Width"
-msgstr "Breite des Randes"
+msgstr "Randbreite"
 
 #: src/StyleInspector.vala:612
 msgid "Color Fill"
@@ -2990,7 +2989,7 @@ msgstr "Stil-Tab anzeigen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:165
 msgid "Show Sticker Tab"
-msgstr "Bilder-Tab zeigen"
+msgstr "Aufkleber-Tab zeigen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:172
 msgid "Show Map Tab"
@@ -3110,17 +3109,17 @@ msgstr "Verbindung Erstellen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:378
 msgid "Center In View"
-msgstr ""
+msgstr "Auf Arbeitsfläche zentrieren"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:385
 #: data/com.github.phase1geo.minder.shortcuts.ui:612
 msgid "Place Into View"
-msgstr ""
+msgstr "Auf Arbeitsfläche platzieren"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:394
 #: data/com.github.phase1geo.minder.shortcuts.ui:785
 msgid "Selection"
-msgstr ""
+msgstr "Auswahl"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:398
 msgid "Select Root"
@@ -3132,47 +3131,47 @@ msgstr "Elternknoten Auswählen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:412
 msgid "Select Next Sibling"
-msgstr "Nächte Geschwister-Knoten Auswählen"
+msgstr "Nächten Geschwister-Knoten auswählen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:419
 msgid "Select Previous Sibling"
-msgstr "Vorherigen Kind-Knoten Auswählen"
+msgstr "Vorherigen Kind-Knoten auswählen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:426
 msgid "Select Child"
-msgstr "Kind-Knoten Auswählen"
+msgstr "Kind-Knoten auswählen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:433
 msgid "Select Children"
-msgstr "Kinder-Knoten Auswählen"
+msgstr "Kinder-Knoten auswählen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:440
 msgid "Select Subtree"
-msgstr "Unterbaum Auswählen"
+msgstr "Unterbaum auswählen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:447
 msgid "Select Node Below"
-msgstr "Knoten Darunter Auswählen"
+msgstr "Knoten darunter auswählen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:454
 msgid "Select Node Above"
-msgstr "Knoten Darüber Auswählen"
+msgstr "Knoten darüber auswählen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:461
 msgid "Select Node To Right"
-msgstr "Knoten Rechts Davon Auswählen"
+msgstr "Rechten Knoten auswählen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:468
 msgid "Select Node To Left"
-msgstr "Knoten Links Davon Auswählen"
+msgstr "Linken Knoten auswählen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:475
 msgid "Select Linked Node"
-msgstr "Verbundenen Knoten Auswählen"
+msgstr "Verbundenen Knoten auswählen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:482
 msgid "Select Attached Connection"
-msgstr "Angehängte Verbindung auswählen"
+msgstr "Dazugehörige Verbindung auswählen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:491
 msgid "Move"
@@ -3180,23 +3179,23 @@ msgstr "Verschieben"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:495
 msgid "Swap with Sibling Node to Right"
-msgstr "Mit Geschwisterknoten rechts tauschen"
+msgstr "Mit rechten Geschwisterknoten tauschen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:502
 msgid "Swap with Sibling Node to Left"
-msgstr "Mit Geschwisterknoten links tauschen"
+msgstr "Mit linken Geschwisterknoten tauschen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:509
 msgid "Swap with Sibling Node Above"
-msgstr "Mit Geschwisterknoten darüber tauschen"
+msgstr "Mit darüber liegenden Geschwisterknoten tauschen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:516
 msgid "Swap with Sibling Node Below"
-msgstr "Mit Geschwisterknoten darunter tauschen"
+msgstr "Mit darunter liegenden Geschwisterknoten tauschen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:523
 msgid "Sort Child Nodes Alphabetically"
-msgstr "Kinderknoten alphabetisch sortieren"
+msgstr "Kindknoten alphabetisch sortieren"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:532
 msgid "Alignment"
@@ -3433,7 +3432,7 @@ msgstr "[Steuerung + Doppelter Linksklick auf übergeordneten Knoten]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:940
 msgid "Select All Nodes at Same Depth Level"
-msgstr "Alle Knoten auf gleicher Ebene der Tiefe auswählen"
+msgstr "Alle Knoten auf gleicher Ebene auswählen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:941
 msgid "[Control + Triple left-click on node]"
@@ -3471,7 +3470,7 @@ msgstr "[Umschalt + Steuerung + Linksklick auf Element]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:974
 msgid "Toggle Selection of Node Tree/Subtree"
-msgstr "Auswahl des Knotenbaums/Unterbaums umschalten"
+msgstr "Knoten des Baums/Unterbaums auswählen/Auswahl aufheben"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:975
 msgid "[Shift + Control + Double left-click on parent node]"
@@ -3480,7 +3479,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:981
 msgid "Toggle Selection of All Nodes at Same Depth Level"
-msgstr "Umschalten der Auswahl aller Knoten auf derselben Tiefenebene"
+msgstr "Knoten auf derselben Ebene auswählen/Auswahl aufheben"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:982
 msgid "[Shift + Control + Triple left-click on node]"
@@ -3496,7 +3495,7 @@ msgstr "Cursor Einfügeposition setzen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:995
 msgid "[Left-click anywhere in text]"
-msgstr "[Linksklick an beliebiger Stelle im Text]"
+msgstr "[Linksklick auf beliebiger Stelle im Text]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1001
 msgid "Select current word"
