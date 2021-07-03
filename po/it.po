@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-27 21:23-0500\n"
-"PO-Revision-Date: 2021-06-27 17:54+0100\n"
+"PO-Revision-Date: 2021-07-03 10:00+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -2032,7 +2032,7 @@ msgstr "Domande"
 
 #: src/StickerSet.vala:193
 msgid "Answers"
-msgstr "RIsposte"
+msgstr "Risposte"
 
 #: src/StickerSet.vala:194
 #, fuzzy
@@ -2181,7 +2181,7 @@ msgstr ""
 
 #: src/StickerSet.vala:232
 msgid "Dam"
-msgstr ""
+msgstr "Diga"
 
 #: src/StickerSet.vala:233
 msgid "Biotech"
@@ -2193,7 +2193,7 @@ msgstr ""
 
 #: src/StickerSet.vala:235
 msgid "Cloth"
-msgstr ""
+msgstr "Abbigliamento"
 
 #: src/StickerSet.vala:236
 msgid "Electronics"
@@ -2217,7 +2217,7 @@ msgstr "Non mescolare"
 
 #: src/StickerSet.vala:241
 msgid "Biohazard"
-msgstr ""
+msgstr "Rischio biologico"
 
 #: src/StickerSet.vala:242
 msgid "Circuit"
@@ -2225,27 +2225,27 @@ msgstr "Circuito"
 
 #: src/StickerSet.vala:243
 msgid "Engineering"
-msgstr ""
+msgstr "Ingegneria"
 
 #: src/StickerSet.vala:246
 msgid "Cell phone"
-msgstr ""
+msgstr "Telefono cellulare"
 
 #: src/StickerSet.vala:247
 msgid "iPhone"
-msgstr ""
+msgstr "iPhone"
 
 #: src/StickerSet.vala:248
 msgid "iPad"
-msgstr ""
+msgstr "iPad"
 
 #: src/StickerSet.vala:249
 msgid "Phone android"
-msgstr ""
+msgstr "Telefono Android"
 
 #: src/StickerSet.vala:250
 msgid "Tablet android"
-msgstr ""
+msgstr "Tablet android"
 
 #: src/StickerSet.vala:251
 msgid "Nook"
@@ -2253,91 +2253,91 @@ msgstr ""
 
 #: src/StickerSet.vala:252
 msgid "Kindle"
-msgstr ""
+msgstr "Kindle"
 
 #: src/StickerSet.vala:253
 msgid "Two smartphones"
-msgstr ""
+msgstr "Due smartphone"
 
 #: src/StickerSet.vala:254
 msgid "Multiple devices"
-msgstr ""
+msgstr "Più dispositivi"
 
 #: src/StickerSet.vala:255
 msgid "Multiple smartphones"
-msgstr ""
+msgstr "Più smartphone"
 
 #: src/StickerSet.vala:256
 msgid "Smartphone tablet"
-msgstr ""
+msgstr "Smartphone tablet"
 
 #: src/StickerSet.vala:257
 msgid "Touchscreen smartphone"
-msgstr ""
+msgstr "Smartphone touchscreen"
 
 #: src/StickerSet.vala:258
 msgid "Sim card"
-msgstr ""
+msgstr "Sim card"
 
 #: src/StickerSet.vala:259
 msgid "Sim card chip"
-msgstr ""
+msgstr "Chip della carta SIM"
 
 #: src/StickerSet.vala:260
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #: src/StickerSet.vala:261
 msgid "MMS"
-msgstr ""
+msgstr "mms"
 
 #: src/StickerSet.vala:262
 msgid "Charge battery"
-msgstr ""
+msgstr "Carica batteria"
 
 #: src/StickerSet.vala:263
 msgid "Full battery"
-msgstr ""
+msgstr "Batteria carica"
 
 #: src/StickerSet.vala:264
 msgid "High battery"
-msgstr ""
+msgstr "Batteria alta"
 
 #: src/StickerSet.vala:265
 msgid "Middle battery"
-msgstr ""
+msgstr "batteria media"
 
 #: src/StickerSet.vala:266
 msgid "Low battery"
-msgstr ""
+msgstr "Batteria bassa"
 
 #: src/StickerSet.vala:267
 msgid "Empty battery"
-msgstr ""
+msgstr "Batteria scarica"
 
 #: src/StickerSet.vala:268
 msgid "Phone"
-msgstr ""
+msgstr "Telefono"
 
 #: src/StickerSet.vala:269
 msgid "Missed call"
-msgstr ""
+msgstr "Chiamata persa"
 
 #: src/StickerSet.vala:270
 msgid "End call"
-msgstr ""
+msgstr "Fine chiamata"
 
 #: src/StickerSet.vala:271
 msgid "Call transfer"
-msgstr ""
+msgstr "Trasferimento di chiamata"
 
 #: src/StickerSet.vala:272
 msgid "Video call"
-msgstr ""
+msgstr "Video chiamata"
 
 #: src/StickerSet.vala:273
 msgid "No video"
-msgstr ""
+msgstr "No video"
 
 #: src/StickerSet.vala:274
 msgid "Rotate to portrait"
@@ -2357,15 +2357,15 @@ msgstr ""
 
 #: src/StickerSet.vala:278
 msgid "Voicemail"
-msgstr ""
+msgstr "Segreteria telefonica"
 
 #: src/StickerSet.vala:279
 msgid "Speaker"
-msgstr ""
+msgstr "Altoparlante"
 
 #: src/StickerSet.vala:280
 msgid "Headset"
-msgstr ""
+msgstr "Cuffie"
 
 #: src/StickerSet.vala:283
 msgid "Left up"
@@ -2408,13 +2408,12 @@ msgid "Previous"
 msgstr "Precedente"
 
 #: src/StickerSet.vala:293
-#, fuzzy
 msgid "Next"
-msgstr "Parola Successiva"
+msgstr "Successiva"
 
 #: src/StickerSet.vala:294
 msgid "Expand"
-msgstr ""
+msgstr "Espandere"
 
 #: src/StickerSet.vala:295
 msgid "Left down2"
@@ -2450,15 +2449,15 @@ msgstr "Giu a sinistra"
 
 #: src/StickerSet.vala:307
 msgid "Filing cabinet"
-msgstr ""
+msgstr "Schedario"
 
 #: src/StickerSet.vala:308
 msgid "Database"
-msgstr ""
+msgstr "Database"
 
 #: src/StickerSet.vala:309
 msgid "Accept database"
-msgstr ""
+msgstr "Accetta database"
 
 #: src/StickerSet.vala:310
 msgid "Add database"
@@ -2470,15 +2469,15 @@ msgstr "Elimina database"
 
 #: src/StickerSet.vala:312
 msgid "Data backup"
-msgstr ""
+msgstr "Backup dei dati"
 
 #: src/StickerSet.vala:313
 msgid "Data recovery"
-msgstr ""
+msgstr "Recupero dati"
 
 #: src/StickerSet.vala:314
 msgid "Data configuration"
-msgstr ""
+msgstr "Configurazione dati"
 
 #: src/StickerSet.vala:315
 msgid "Data encryption"
@@ -2494,7 +2493,7 @@ msgstr "Griglia"
 
 #: src/StickerSet.vala:318
 msgid "Data sheet"
-msgstr ""
+msgstr "Scheda dati"
 
 #: src/StickerSet.vala:319
 msgid "Add column"
@@ -2522,56 +2521,55 @@ msgstr ""
 
 #: src/StickerSet.vala:325
 msgid "Alphabetical sorting (A->Z)"
-msgstr ""
+msgstr "Ordinamento alfabetico (A->Z)"
 
 #: src/StickerSet.vala:326
 msgid "Alphabetical sorting (Z->A)"
-msgstr ""
+msgstr "Ordinamento alfabetico (Z->A)"
 
 #: src/StickerSet.vala:327
 msgid "Numerical sorting (2->1)"
-msgstr ""
+msgstr "Ordinamento numerico (2->1)"
 
 #: src/StickerSet.vala:328
 msgid "Numerical sorting (1->2)"
-msgstr ""
+msgstr "Ordinamento numerico (1->2)"
 
 #: src/StickerSet.vala:329
 msgid "Empty filter"
-msgstr ""
+msgstr "Filtro vuoto"
 
 #: src/StickerSet.vala:330
 msgid "Filled filter"
-msgstr ""
+msgstr "Filtro pieno"
 
 #: src/StickerSet.vala:331
-#, fuzzy
 msgid "Clear filters"
-msgstr "Cancella Tutto"
+msgstr "Cancella filtri"
 
 #: src/StickerSet.vala:332
 msgid "Pie chart"
-msgstr ""
+msgstr "Grafico a torta"
 
 #: src/StickerSet.vala:333
 msgid "Radar plot"
-msgstr ""
+msgstr "Grafico radar"
 
 #: src/StickerSet.vala:334
 msgid "Heat map"
-msgstr ""
+msgstr "Mappa di calore"
 
 #: src/StickerSet.vala:335
 msgid "Timeline"
-msgstr ""
+msgstr "Timeline"
 
 #: src/StickerSet.vala:336
 msgid "Bar chart"
-msgstr ""
+msgstr "Grafico a barre"
 
 #: src/StickerSet.vala:337
 msgid "Area chart"
-msgstr ""
+msgstr "Grafico ad area"
 
 #: src/StickerSet.vala:338
 msgid "Scatter plot"
@@ -2579,20 +2577,19 @@ msgstr ""
 
 #: src/StickerSet.vala:339
 msgid "Doughnut chart"
-msgstr ""
+msgstr "grafico ad anello"
 
 #: src/StickerSet.vala:340
 msgid "Combo chart"
-msgstr ""
+msgstr "Grafico combinato"
 
 #: src/StickerSet.vala:341
 msgid "Flow chart"
-msgstr ""
+msgstr "Diagramma di flusso"
 
 #: src/StickerSet.vala:342
-#, fuzzy
 msgid "Line chart"
-msgstr "Linea a Trattino"
+msgstr "Grafico a linee"
 
 #: src/StickerSet.vala:343
 msgid "Genealogy"
@@ -2604,15 +2601,15 @@ msgstr "Mind map"
 
 #: src/StickerSet.vala:345
 msgid "Workflow"
-msgstr ""
+msgstr "Flusso di lavoro"
 
 #: src/StickerSet.vala:346
 msgid "Positive dynamic"
-msgstr ""
+msgstr "Dinamica positiva"
 
 #: src/StickerSet.vala:347
 msgid "Negative dynamic"
-msgstr ""
+msgstr "Dinamica negativa"
 
 #: src/StickerSet.vala:349
 msgid "Import"
