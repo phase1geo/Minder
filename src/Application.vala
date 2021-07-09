@@ -25,11 +25,14 @@ using GLib;
 
 public class Minder : Granite.Application {
 
+  private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
+
   private static bool          show_version = false;
   private static string?       open_file    = null;
   private static bool          new_file     = false;
   private static bool          testing      = false;
   private        MainWindow    appwin;
+  private        GLib.Settings iface_settings;
 
   public  static GLib.Settings settings;
   public  static string        version = "1.12.5";
@@ -71,6 +74,18 @@ public class Minder : Granite.Application {
       settings.set_int( "window-h", size_h );
       return( false );
     });
+
+    /* Initialize desktop interface settings */
+    string[] names = {"font-name", "text-scaling-factor"};
+    iface_settings = new GLib.Settings( INTERFACE_SCHEMA );
+    foreach( string name in names ) {
+      iface_settings.changed[name].connect(() => {
+        Timeout.add( 500, () => {
+          appwin.update_node_sizes();
+          return( Source.REMOVE );
+        });
+      });
+    }
 
   }
 

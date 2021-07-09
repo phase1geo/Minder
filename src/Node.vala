@@ -565,6 +565,14 @@ public class Node : Object {
     }
   }
 
+  /* Updates the size of all nodes within this tree */
+  public void update_tree() {
+    _name.update_size();
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).update_tree();
+    }
+  }
+
   /* Sets the node image to the given value, updating the image manager accordingly. */
   public void set_image( ImageManager im, NodeImage? ni ) {
     if( _image != null ) {

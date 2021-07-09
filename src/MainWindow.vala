@@ -321,6 +321,15 @@ public class MainWindow : ApplicationWindow {
     save_tab_state( tab );
   }
 
+  /* Updates all of the node sizes in all tabs */
+  public void update_node_sizes() {
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      da.update_node_sizes();
+    }
+  }
+
   /* Closes the current tab */
   public void close_current_tab() {
     if( _nb.n_tabs == 1 ) return;

@@ -377,6 +377,14 @@ public class DrawArea : Gtk.DrawingArea {
     animator.animate();
   }
 
+  /* Updates all of the node sizes */
+  public void update_node_sizes() {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).update_tree();
+    }
+    queue_draw();
+  }
+
   /* Returns the list of nodes */
   public Array<Node> get_nodes() {
     return( _nodes );
