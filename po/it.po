@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-27 21:23-0500\n"
-"PO-Revision-Date: 2021-07-03 10:00+0100\n"
+"PO-Revision-Date: 2021-07-18 16:45+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -357,9 +357,8 @@ msgid "remove node sticker"
 msgstr "rimuovi stiker al nodo"
 
 #: src/undo_actions/UndoNodeTasks.vala:30
-#, fuzzy
 msgid "node task changes"
-msgstr "modifica attività nodo"
+msgstr "modifiche attività nodo"
 
 #: src/undo_actions/UndoNodesAlign.vala:56
 msgid "node alignment"
@@ -732,7 +731,7 @@ msgstr "Apri FIle"
 
 #: src/MainWindow.vala:194 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
-msgstr "Salva FIle Come"
+msgstr "Salva File Come"
 
 #: src/MainWindow.vala:200 src/StickerSet.vala:303 src/UndoBuffer.vala:84
 msgid "Undo"
@@ -1152,9 +1151,8 @@ msgid "Paste Node As Child"
 msgstr "Incolla Nodo Come Figlio"
 
 #: src/NodesMenu.vala:59
-#, fuzzy
 msgid "Toggle Tasks"
-msgstr "Attiva/disattiva attività completata"
+msgstr "Attiva/disattiva compiti"
 
 #: src/NodesMenu.vala:66
 msgid "Connect"
@@ -2189,7 +2187,7 @@ msgstr "Biotecnologie"
 
 #: src/StickerSet.vala:234
 msgid "Advance"
-msgstr ""
+msgstr "Anticipo"
 
 #: src/StickerSet.vala:235
 msgid "Cloth"
