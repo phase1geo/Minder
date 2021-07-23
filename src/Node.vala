@@ -718,6 +718,7 @@ public class Node : Object {
     h = _task_radius * 2;
   }
 
+  /* Returns the positional information for where the sticker is located (if it exists) */
   protected virtual void sticker_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
@@ -729,6 +730,7 @@ public class Node : Object {
     h = (_sticker_buf == null) ? 0 : _sticker_buf.height;
   }
 
+  /* Returns the positional information for where the linked node indicator is located (if it exists) */
   protected virtual void linked_node_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
@@ -794,6 +796,9 @@ public class Node : Object {
     return( false );
   }
 
+  /*
+   Returns true if the given cursor coordinates lies within the linked node indicator area.
+  */
   public virtual bool is_within_linked_node( double x, double y ) {
     if( linked_node != null ) {
       double lx, ly, lw, lh;

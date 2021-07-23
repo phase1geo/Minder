@@ -38,6 +38,19 @@ public interface LinkType : Object {
     return( (style.link_width / 2) + 1 );
   }
 
+  /* Provides the midx or midy adjust value */
+  protected double adjust_mid_by( Node parent, NodeSide child_side ) {
+    if( parent.is_root() ) {
+      switch( child_side ) {
+        case LEFT   :  return( 0 - (parent.width / 4) );
+        case RIGHT  :  return( parent.width / 4 );
+        case TOP    :  return( 0 - (parent.height / 4) );
+        case BOTTOM :  return( parent.height / 4 );
+      }
+    }
+    return( 0 );
+  }
+
   /* Draw method for the link */
   public abstract void draw( Cairo.Context ctx, Node from_node, Node to_node,
                              double from_x, double from_y, double to_x, double to_y,

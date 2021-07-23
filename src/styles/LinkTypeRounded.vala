@@ -39,8 +39,8 @@ public class LinkTypeRounded : Object, LinkType {
     return( "minder-link-rounded-symbolic" );
   }
 
-  private void adjust_mid( double from_a, double to_a, double from_b, double to_b, double radius, out double mid, out double rnd_a, out double rnd_b ) {
-    mid   = (from_a + to_a) / 2;
+  private void adjust_mid( Node parent, NodeSide child_side, double from_a, double to_a, double from_b, double to_b, double radius, out double mid, out double rnd_a, out double rnd_b ) {
+    mid   = ((from_a + to_a) / 2) + adjust_mid_by( parent, child_side );
     rnd_a = (from_a < to_a) ? (mid + radius) : (mid - radius);
     rnd_b = (from_b < to_b) ? (((to_b - radius) < from_b) ? from_b : (to_b - radius)) :
                               (((to_b + radius) > from_b) ? from_b : (to_b + radius));
@@ -71,7 +71,7 @@ public class LinkTypeRounded : Object, LinkType {
     ctx.move_to( from_x, from_y );
     if( horizontal ) {
       double mid_x, rnd_x, rnd_y;
-      adjust_mid( from_x, to_x, from_y, to_y, radius, out mid_x, out rnd_x, out rnd_y );
+      adjust_mid( from_node, side, from_x, to_x, from_y, to_y, radius, out mid_x, out rnd_x, out rnd_y );
       tailx = mid_x;
       taily = to_y;
       ctx.line_to( mid_x, from_y );
@@ -80,7 +80,7 @@ public class LinkTypeRounded : Object, LinkType {
       ctx.line_to( to_x,  to_y );
     } else {
       double mid_y, rnd_y, rnd_x;
-      adjust_mid( from_y, to_y, from_x, to_x, radius, out mid_y, out rnd_y, out rnd_x );
+      adjust_mid( from_node, side, from_y, to_y, from_x, to_x, radius, out mid_y, out rnd_y, out rnd_x );
       tailx = to_x;
       taily = mid_y;
       ctx.line_to( from_x, mid_y );
