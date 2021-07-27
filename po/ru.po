@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-27 21:23-0500\n"
+"POT-Creation-Date: 2021-07-26 22:42-0500\n"
 "PO-Revision-Date: 2021-06-28 14:17+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: none\n"
@@ -138,7 +138,7 @@ msgstr "Вправо"
 msgid "Yed"
 msgstr "Yed"
 
-#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4198
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4206
 #: src/MapInspector.vala:333
 msgid "Manual"
 msgstr "Вручную"
@@ -525,34 +525,34 @@ msgstr "Предыдущее соединение"
 msgid "unnamed"
 msgstr "безымянный"
 
-#: src/DrawArea.vala:731
+#: src/DrawArea.vala:739
 msgid "Main Idea"
 msgstr "Главная идея"
 
-#: src/DrawArea.vala:2256
+#: src/DrawArea.vala:2264
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% завершено"
 
-#: src/DrawArea.vala:2384
+#: src/DrawArea.vala:2392
 #, c-format
 msgid "Children: %u\n"
 msgstr "Потомки: %u\n"
 
-#: src/DrawArea.vala:2385
+#: src/DrawArea.vala:2393
 #, c-format
 msgid "Total: %d"
 msgstr "Всего: %d"
 
-#: src/DrawArea.vala:2429
+#: src/DrawArea.vala:2437
 msgid "connection endpoint change"
 msgstr "смену конечной точки соединения"
 
-#: src/DrawArea.vala:2436
+#: src/DrawArea.vala:2444
 msgid "connection drag"
 msgstr "перетаскивание соединения"
 
-#: src/DrawArea.vala:3072 src/DrawArea.vala:3085 src/DrawArea.vala:4657
+#: src/DrawArea.vala:3080 src/DrawArea.vala:3093 src/DrawArea.vala:4665
 msgid "Another Idea"
 msgstr "Ещё одна идея"
 
@@ -638,13 +638,13 @@ msgid "Export As %s"
 msgstr "Экспортировать как %s"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:375 src/ImageManager.vala:299
-#: src/MainWindow.vala:917 src/MainWindow.vala:965 src/MainWindow.vala:1083
+#: src/MainWindow.vala:932 src/MainWindow.vala:980 src/MainWindow.vala:1098
 #: src/QuickEntry.vala:118 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:61
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/Exporter.vala:132 src/MainWindow.vala:737 src/StickerSet.vala:348
+#: src/Exporter.vala:132 src/MainWindow.vala:752 src/StickerSet.vala:348
 msgid "Export"
 msgstr "Экспортировать"
 
@@ -718,176 +718,177 @@ msgstr "Выберите изображение"
 msgid "Images"
 msgstr "Изображения"
 
-#: src/MainWindow.vala:148 src/MainWindow.vala:1088
+#: src/MainWindow.vala:149 src/MainWindow.vala:1103
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:182 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:183 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
 msgstr "Создать документ"
 
-#: src/MainWindow.vala:188 src/MainWindow.vala:965
+#: src/MainWindow.vala:189 src/MainWindow.vala:980
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: src/MainWindow.vala:194 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:195 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
 msgstr "Сохранить файл как"
 
-#: src/MainWindow.vala:200 src/StickerSet.vala:303 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:201 src/StickerSet.vala:303 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Отменить"
 
-#: src/MainWindow.vala:207 src/StickerSet.vala:304 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:208 src/StickerSet.vala:304 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Вернуть"
 
-#: src/MainWindow.vala:462
+#: src/MainWindow.vala:472
 msgid "Unnamed Document"
 msgstr "Безымянный документ"
 
-#: src/MainWindow.vala:466 src/MainWindow.vala:772
+#: src/MainWindow.vala:476 src/MainWindow.vala:787
 msgid "Focus Mode"
 msgstr "Режим фокусировки"
 
-#: src/MainWindow.vala:497
-msgid "Zoom"
-msgstr "Масштаб"
+#: src/MainWindow.vala:508 src/MainWindow.vala:1148
+#, c-format
+msgid "Zoom (%d%%)"
+msgstr ""
 
-#: src/MainWindow.vala:504
+#: src/MainWindow.vala:515
 msgid "Zoom to Percent"
 msgstr "Масштаб в процентах"
 
-#: src/MainWindow.vala:516 data/com.github.phase1geo.minder.shortcuts.ui:117
+#: src/MainWindow.vala:528 data/com.github.phase1geo.minder.shortcuts.ui:117
 msgid "Zoom In"
 msgstr "Приблизить"
 
-#: src/MainWindow.vala:521 data/com.github.phase1geo.minder.shortcuts.ui:124
+#: src/MainWindow.vala:534 data/com.github.phase1geo.minder.shortcuts.ui:124
 msgid "Zoom Out"
 msgstr "Отдалить"
 
-#: src/MainWindow.vala:526
+#: src/MainWindow.vala:544
 msgid "Zoom to Fit"
 msgstr "Уместить всё"
 
-#: src/MainWindow.vala:531
+#: src/MainWindow.vala:549
 msgid "Zoom to Fit Selected Node"
 msgstr "Уместить выбранный узел"
 
-#: src/MainWindow.vala:536
+#: src/MainWindow.vala:554
 msgid "Zoom to Actual Size"
 msgstr "Настоящий размер"
 
-#: src/MainWindow.vala:563 src/StickerSet.vala:110
+#: src/MainWindow.vala:578 src/StickerSet.vala:110
 msgid "Search"
 msgstr "Искать"
 
-#: src/MainWindow.vala:573
+#: src/MainWindow.vala:588
 msgid "Search Nodes and Connections"
 msgstr "Искать по узлам и соединениям"
 
-#: src/MainWindow.vala:602
+#: src/MainWindow.vala:617
 msgid "Search Criteria"
 msgstr "Критерии поиска"
 
-#: src/MainWindow.vala:605
+#: src/MainWindow.vala:620
 msgid "Search all tabs"
 msgstr "Искать во всех вкладках"
 
-#: src/MainWindow.vala:639
+#: src/MainWindow.vala:654
 msgid "Nodes"
 msgstr "Узлы"
 
-#: src/MainWindow.vala:640
+#: src/MainWindow.vala:655
 msgid "Connections"
 msgstr "Соединения"
 
-#: src/MainWindow.vala:641
+#: src/MainWindow.vala:656
 msgid "Titles"
 msgstr "Заголовки"
 
-#: src/MainWindow.vala:642
+#: src/MainWindow.vala:657
 msgid "Notes"
 msgstr "Примечания"
 
-#: src/MainWindow.vala:643
+#: src/MainWindow.vala:658
 msgid "Folded"
 msgstr "Свёрнутые"
 
-#: src/MainWindow.vala:644
+#: src/MainWindow.vala:659
 msgid "Unfolded"
 msgstr "Развёрнутые"
 
-#: src/MainWindow.vala:645
+#: src/MainWindow.vala:660
 msgid "Tasks"
 msgstr "Задачи"
 
-#: src/MainWindow.vala:646
+#: src/MainWindow.vala:661
 msgid "Non-tasks"
 msgstr "Не задачи"
 
-#: src/MainWindow.vala:749
+#: src/MainWindow.vala:764
 msgid "Print…"
 msgstr "Печать..."
 
-#: src/MainWindow.vala:797 src/Preferences.vala:36
+#: src/MainWindow.vala:812 src/Preferences.vala:36
 msgid "Preferences"
 msgstr "Параметры"
 
-#: src/MainWindow.vala:802
+#: src/MainWindow.vala:817
 msgid "Shortcuts Cheatsheet"
 msgstr "Справка по горячим клавишам"
 
-#: src/MainWindow.vala:806
+#: src/MainWindow.vala:821
 msgid "About Minder"
 msgstr "О программе"
 
-#: src/MainWindow.vala:839 src/MainWindow.vala:1198
+#: src/MainWindow.vala:854 src/MainWindow.vala:1214
 msgid "Show Property Sidebar"
 msgstr "Показать панель свойств"
 
-#: src/MainWindow.vala:854
+#: src/MainWindow.vala:869
 msgid "Current"
 msgstr "Выделенное"
 
-#: src/MainWindow.vala:855 src/StyleInspector.vala:188
+#: src/MainWindow.vala:870 src/StyleInspector.vala:188
 msgid "Style"
 msgstr "Стиль"
 
-#: src/MainWindow.vala:856
+#: src/MainWindow.vala:871
 msgid "Stickers"
 msgstr "Стикеры"
 
-#: src/MainWindow.vala:857
+#: src/MainWindow.vala:872
 msgid "Map"
 msgstr "Макет"
 
-#: src/MainWindow.vala:908
+#: src/MainWindow.vala:923
 msgid "Save current unnamed document?"
 msgstr "Сохранить текущий безымянный документ?"
 
-#: src/MainWindow.vala:909
+#: src/MainWindow.vala:924
 msgid "Changes will be permanently lost if not saved."
 msgstr "Без сохранения изменения будут утеряны навсегда."
 
-#: src/MainWindow.vala:914
+#: src/MainWindow.vala:929
 msgid "Discard Changes"
 msgstr "Отказаться от изменений"
 
-#: src/MainWindow.vala:920 src/MainWindow.vala:1083 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:935 src/MainWindow.vala:1098 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/MainWindow.vala:965
+#: src/MainWindow.vala:980
 msgid "Open"
 msgstr "Открыть"
 
-#: src/MainWindow.vala:1083
+#: src/MainWindow.vala:1098
 msgid "Save File"
 msgstr "Сохранить файл"
 
-#: src/MainWindow.vala:1142
+#: src/MainWindow.vala:1158
 msgid "Hide Property Sidebar"
 msgstr "Скрыть панель свойств"
 
@@ -927,11 +928,11 @@ msgstr "Развернуть все узлы"
 msgid "Unsaved"
 msgstr "Несохранённые"
 
-#: src/Node.vala:1852
+#: src/Node.vala:1865
 msgid "Node Title"
 msgstr "Заголовок узла"
 
-#: src/Node.vala:1860
+#: src/Node.vala:1873
 msgid "Node Note"
 msgstr "Примечание к узлу"
 
@@ -1461,7 +1462,8 @@ msgid "Camera"
 msgstr "Камера"
 
 #: src/StickerSet.vala:48
-msgid "Slr back side"
+#, fuzzy
+msgid "SLR back side"
 msgstr "Задник цифровой камеры"
 
 #: src/StickerSet.vala:49
@@ -3471,3 +3473,6 @@ msgstr "Выделить весь текст"
 #: data/com.github.phase1geo.minder.shortcuts.ui:1009
 msgid "[Triple left-click anywhere in text]"
 msgstr ""
+
+#~ msgid "Zoom"
+#~ msgstr "Масштаб"
