@@ -104,6 +104,7 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _sticker_posy;
   private NodeGroups       _groups;
   private uint             _select_hover_id = 0;
+  private int              _next_node_id    = 0;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -160,6 +161,11 @@ public class DrawArea : Gtk.DrawingArea {
   public NodeGroups groups {
     get {
       return( _groups );
+    }
+  }
+  public int next_node_id {
+    get {
+      return( _next_node_id++ );
     }
   }
 
@@ -663,9 +669,6 @@ public class DrawArea : Gtk.DrawingArea {
     /* Clear the undo buffer */
     undo_buffer.clear();
 
-    /* Reset the node ID generator */
-    Node.reset();
-
     /* Clear the selection */
     _selected.clear();
 
@@ -715,9 +718,6 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Clear the undo buffer */
     undo_buffer.clear();
-
-    /* Reset the node ID generator */
-    Node.reset();
 
     /* Clear the selection */
     _selected.clear();

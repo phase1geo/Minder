@@ -125,8 +125,6 @@ public struct NodeTaskInfo {
 
 public class Node : Object {
 
-  private static int _next_id = 0;
-
   /* Member variables */
   private   DrawArea     _da;
   protected int          _id;
@@ -382,7 +380,7 @@ public class Node : Object {
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
     _da       = da;
-    _id       = _next_id++;
+    _id       = da.next_node_id;
     _children = new Array<Node>();
     _layout   = layout;
     _name     = new CanvasText( da );
@@ -393,7 +391,7 @@ public class Node : Object {
   /* Constructor initializing string */
   public Node.with_name( DrawArea da, string n, Layout? layout ) {
     _da       = da;
-    _id       = _next_id++;
+    _id       = da.next_node_id;
     _children = new Array<Node>();
     _layout   = layout;
     _name     = new CanvasText.with_text( da, n );
@@ -404,7 +402,7 @@ public class Node : Object {
   /* Copies an existing node to this node */
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
     _da       = da;
-    _id       = _next_id++;
+    _id       = da.next_node_id;
     _name     = new CanvasText( da );
     copy_variables( n, im );
     _name.resized.connect( position_name_and_update_size );
@@ -418,7 +416,7 @@ public class Node : Object {
 
   public Node.copy_only( DrawArea da, Node n, ImageManager im ) {
     _da = da;
-    _id = _next_id++;
+    _id = da.next_node_id;
     _name = new CanvasText( da );
     copy_variables( n, im );
   }
@@ -426,7 +424,7 @@ public class Node : Object {
   /* Copies an existing node tree to this node */
   public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int> id_map ) {
     _da       = da;
-    _id       = _next_id++;
+    _id       = da.next_node_id;
     _name     = new CanvasText( da );
     _children = new Array<Node>();
     copy_variables( n, im );
@@ -447,11 +445,6 @@ public class Node : Object {
     _name.text.add_parser( _da.markdown_parser );
     // _name.text.add_parser( _da.tagger_parser );
     _name.text.add_parser( _da.url_parser );
-  }
-
-  /* Resets the ID generator.  This should be called whenever a new document is started. */
-  public static void reset() {
-    _next_id = 0;
   }
 
   /* Copies just the variables of the node, minus the children nodes */
