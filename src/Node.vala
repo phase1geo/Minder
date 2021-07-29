@@ -718,7 +718,7 @@ public class Node : Object {
     double img_height = (_image == null) ? 0 : (_image.height + padding);
     double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
     x = posx + margin + padding + task_width();
-    y = posy + margin + padding + img_height + ((_height - (img_height + (padding * 2) + (margin + 2))) / 2) - (stk_height / 2);
+    y = posy + margin + padding + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - (stk_height / 2);
     w = (_sticker_buf == null) ? 0 : _sticker_buf.width;
     h = (_sticker_buf == null) ? 0 : _sticker_buf.height;
   }
