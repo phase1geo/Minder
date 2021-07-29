@@ -494,11 +494,16 @@ public class CanvasText : Object {
 
   /* Finds the start or end character of a line */
   private int find_line_extent( bool start ) {
-    int line, column;
+    int line, line2, column;
     _pango_layout.index_to_line_x( text.text.index_of_nth_char( _cursor ), false, out line, out column );
     var line_layout = _pango_layout.get_line_readonly( line );
-    return( start ? text.text.char_count( line_layout.start_index ) :
-            (text.text.char_count( line_layout.start_index + line_layout.length ) - 1) );
+    if( start ) {
+      return( text.text.char_count( line_layout.start_index ) );
+    } else {
+      var eol = line_layout.start_index + line_layout.length;
+      _pango_layout.index_to_line_x( eol, false, out line2, out column );
+      return( text.text.char_count( eol ) - ((line != line2) ? 1 : 0) );
+    }
   }
 
   /* Moves the cursor to the beginning of the current line */
