@@ -404,35 +404,38 @@ public class Node : Object {
     _da       = da;
     _id       = da.next_node_id;
     _name     = new CanvasText( da );
+    _children = n._children;
     copy_variables( n, im );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
     mode      = NodeMode.NONE;
-    _children = n._children;
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).parent = this;
     }
   }
 
   public Node.copy_only( DrawArea da, Node n, ImageManager im ) {
-    _da = da;
-    _id = da.next_node_id;
-    _name = new CanvasText( da );
+    _da       = da;
+    _id       = da.next_node_id;
+    _children = new Array<Node>();
+    _name     = new CanvasText( da );
     copy_variables( n, im );
   }
 
   /* Copies an existing node tree to this node */
-  public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int> id_map ) {
+  public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int>? id_map = null ) {
     _da       = da;
     _id       = da.next_node_id;
-    _name     = new CanvasText( da );
     _children = new Array<Node>();
+    _name     = new CanvasText( da );
     copy_variables( n, im );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
-    id_map.set( n._id, _id );
+    if( id_map != null ) {
+      id_map.set( n._id, _id );
+    }
     for( int i=0; i<n._children.length; i++ ) {
       Node child = new Node.copy_tree( da, n._children.index( i ), im, id_map );
       child.parent = this;
@@ -470,6 +473,7 @@ public class Node : Object {
     side             = n.side;
     style            = n.style;
     tree_bbox        = n.tree_bbox;
+    sticker          = n.sticker;
   }
 
   /* Returns the associated ID of this node */
