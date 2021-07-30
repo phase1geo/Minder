@@ -4266,7 +4266,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Setup the nodes that will be copied */
     if( _selected.current_node() != null ) {
-      nodes.append_val( _selected.current_node() );
+      nodes.append_val( new Node.copy_tree( this, _selected.current_node(), image_manager ) );
     } else {
       _selected.get_subtrees( ref nodes, image_manager );
     }
