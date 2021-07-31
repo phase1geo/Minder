@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-26 22:42-0500\n"
-"PO-Revision-Date: 2021-06-28 14:17+0300\n"
+"PO-Revision-Date: 2021-07-30 14:53+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: none\n"
 "Language: ru\n"
@@ -59,7 +59,7 @@ msgstr "Русалка"
 #: src/exports/ExportMermaid.vala:46 src/layouts/LayoutVertical.vala:26
 #: src/MapInspector.vala:334
 msgid "Vertical"
-msgstr ""
+msgstr "Вертикально"
 
 #: src/exports/ExportMermaid.vala:46 src/layouts/LayoutDown.vala:26
 #: src/MapInspector.vala:339
@@ -127,7 +127,7 @@ msgstr "XMind 8"
 #: src/exports/ExportXMind.vala:679 src/layouts/LayoutHorizontal.vala:26
 #: src/MapInspector.vala:335
 msgid "Horizontal"
-msgstr ""
+msgstr "Горизонтально"
 
 #: src/exports/ExportXMind.vala:681 src/layouts/LayoutRight.vala:26
 #: src/MapInspector.vala:337
@@ -262,7 +262,7 @@ msgstr "добавку узла-родителя"
 #: src/undo_actions/UndoNodeAttach.vala:39
 #: src/undo_actions/UndoNodeAttach.vala:54
 msgid "attach node"
-msgstr ""
+msgstr "прикрепление узла"
 
 #: src/undo_actions/UndoNodeBalance.vala:61
 msgid "balance nodes"
@@ -278,12 +278,12 @@ msgstr "удаление узла"
 
 #: src/undo_actions/UndoNodeDetach.vala:34
 msgid "detach node"
-msgstr ""
+msgstr "открепление узла"
 
 #: src/undo_actions/UndoNodeFolds.vala:30
 #: src/undo_actions/UndoNodeFolds.vala:35
 msgid "node fold changes"
-msgstr ""
+msgstr "смену сворачивания узла"
 
 #: src/undo_actions/UndoNodeGroup.vala:30
 msgid "node group change"
@@ -303,11 +303,11 @@ msgstr "смену схемы узлов"
 
 #: src/undo_actions/UndoNodeLink.vala:32
 msgid "node link change"
-msgstr ""
+msgstr "смену ссылки узла"
 
 #: src/undo_actions/UndoNodeLinkColor.vala:33
 msgid "link color change"
-msgstr ""
+msgstr "смену цвета ссылки"
 
 #: src/undo_actions/UndoNodeMove.vala:34
 msgid "move node"
@@ -384,11 +384,11 @@ msgstr "вставку узлов"
 
 #: src/undo_actions/UndoNodesLink.vala:31
 msgid "node link changes"
-msgstr ""
+msgstr "изменение ссылки узла"
 
 #: src/undo_actions/UndoNodesLinkColor.vala:33
 msgid "node link color changes"
-msgstr ""
+msgstr "смену цвета ссылки узла"
 
 #: src/undo_actions/UndoNodesRandLinkColor.vala:33
 msgid "random node link color changes"
@@ -413,7 +413,7 @@ msgstr "удаление стикера"
 
 #: src/undo_actions/UndoStickerResize.vala:31
 msgid "resize sticker"
-msgstr ""
+msgstr "смену размера стикера"
 
 #: src/undo_actions/UndoStyleChange.vala:38
 msgid "style change"
@@ -470,7 +470,7 @@ msgstr "Цвет"
 
 #: src/ConnectionInspector.vala:88
 msgid "Use Theme Default Color"
-msgstr ""
+msgstr "Использовать цвет темы по умолчанию"
 
 #: src/ConnectionInspector.vala:107 src/NodeInspector.vala:153
 msgid "Note"
@@ -622,7 +622,7 @@ msgstr "Корень"
 
 #: src/Exporter.vala:43
 msgid "Export…"
-msgstr "Экспортировать..."
+msgstr "Экспортировать…"
 
 #: src/Exporter.vala:44
 msgid "Export With Current Settings"
@@ -662,7 +662,7 @@ msgstr "Объединить"
 
 #: src/GroupsMenu.vala:45
 msgid "Change color…"
-msgstr "Сменить цвет..."
+msgstr "Сменить цвет…"
 
 #: src/GroupsMenu.vala:52
 msgid "Top Nodes"
@@ -754,7 +754,7 @@ msgstr "Режим фокусировки"
 #: src/MainWindow.vala:508 src/MainWindow.vala:1148
 #, c-format
 msgid "Zoom (%d%%)"
-msgstr ""
+msgstr "Масштаб (%d%%)"
 
 #: src/MainWindow.vala:515
 msgid "Zoom to Percent"
@@ -830,7 +830,7 @@ msgstr "Не задачи"
 
 #: src/MainWindow.vala:764
 msgid "Print…"
-msgstr "Печать..."
+msgstr "Печать…"
 
 #: src/MainWindow.vala:812 src/Preferences.vala:36
 msgid "Preferences"
@@ -950,7 +950,7 @@ msgstr "Изображение"
 
 #: src/NodeInspector.vala:197
 msgid "Add Image…"
-msgstr "Добавить изображение..."
+msgstr "Добавить изображение…"
 
 #: src/NodeInspector.vala:216
 msgid "Edit Image"
@@ -990,7 +990,7 @@ msgstr "Удалить только этот узел"
 
 #: src/NodeMenu.vala:92
 msgid "Edit Text…"
-msgstr "Изменить текст..."
+msgstr "Изменить текст…"
 
 #: src/NodeMenu.vala:100 src/NodeMenu.vala:395
 msgid "Add Task"
@@ -1018,7 +1018,7 @@ msgstr "Цвет ссылки"
 
 #: src/NodeMenu.vala:125 src/NodesMenu.vala:77
 msgid "Set to color…"
-msgstr "Установить цвет..."
+msgstr "Установить цвет…"
 
 #: src/NodeMenu.vala:128
 msgid "Randomize color"
@@ -1283,13 +1283,13 @@ msgstr ""
 
 #: src/QuickEntry.vala:58
 msgid "Help for inputting node information:"
-msgstr ""
+msgstr "Справка по вводу узлов:"
 
 #: src/QuickEntry.vala:59
 msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
-msgstr ""
+msgstr "Каждая строка текста — лиюо заголовок узла, либо информация о нем."
 
 #: src/QuickEntry.vala:60
 msgid "Tab"
@@ -1297,33 +1297,43 @@ msgstr "Tab"
 
 #: src/QuickEntry.vala:61
 msgid "Creates a child node of the previous node."
-msgstr ""
+msgstr "Создаёт узел-потомок предыдущего узла."
 
 #: src/QuickEntry.vala:63
 msgid ""
 "If this character is the first non-whitespace character, makes a new root "
 "node from the title that follows."
 msgstr ""
+"Если строка начинается с этого символа, создается новый корневой узел с "
+"заголовком из следуюшего далее текста."
 
 #: src/QuickEntry.vala:65
 msgid ""
 "If this character is the first non-whitespace character, make a new node "
 "from the title that follows."
 msgstr ""
+"Если строка начинается с этого символа, создается новый узел с заголовком из "
+"следуюшего далее текста."
 
 #: src/QuickEntry.vala:67
 msgid ""
 "If this character is the first non-whitespace character, the following line "
 "is appended to the previous node's note."
 msgstr ""
+"Если строка начинается с этого символа, текст далее вставляется в примечание "
+"к предыдущему узлу."
 
 #: src/QuickEntry.vala:69
 msgid "If this follows *, + or -, the node is made an uncompleted task."
 msgstr ""
+"После символов *, + и - эта последовательность создаёт узел с незавершённой "
+"задачей."
 
 #: src/QuickEntry.vala:71
 msgid "If this follows *, + or -, the node is made a completed task."
 msgstr ""
+"После символов *, + и - эта последовательность создаёт узел с завершённой "
+"задачей."
 
 #: src/QuickEntry.vala:100
 msgid "Replace"
@@ -1462,7 +1472,6 @@ msgid "Camera"
 msgstr "Камера"
 
 #: src/StickerSet.vala:48
-#, fuzzy
 msgid "SLR back side"
 msgstr "Задник цифровой камеры"
 
@@ -1744,7 +1753,7 @@ msgstr "Плюс"
 
 #: src/StickerSet.vala:124
 msgid "Graduation cap"
-msgstr ""
+msgstr "Шляпа выпускника"
 
 #: src/StickerSet.vala:125
 msgid "Briefcase"
@@ -1960,7 +1969,7 @@ msgstr "Посылка"
 
 #: src/StickerSet.vala:179
 msgid "Planner"
-msgstr ""
+msgstr "Планировщик"
 
 #: src/StickerSet.vala:180
 msgid "Overtime"
@@ -2128,7 +2137,7 @@ msgstr "Фабрика"
 
 #: src/StickerSet.vala:223
 msgid "Factory breakdown"
-msgstr ""
+msgstr "Авария на фабрике"
 
 #: src/StickerSet.vala:224
 msgid "Crystal oscillator"
@@ -2252,11 +2261,11 @@ msgstr "Несколько смартфонов"
 
 #: src/StickerSet.vala:256
 msgid "Smartphone tablet"
-msgstr ""
+msgstr "Фаблет"
 
 #: src/StickerSet.vala:257
 msgid "Touchscreen smartphone"
-msgstr ""
+msgstr "Смартфон с тачскрином"
 
 #: src/StickerSet.vala:258
 msgid "Sim card"
@@ -2749,7 +2758,7 @@ msgstr "Восстановить ссылку"
 #: src/Theme.vala:197
 #, c-format
 msgid "Unable to load background color: %s"
-msgstr ""
+msgstr "Не удалось загрузить цвет фона: %s"
 
 #: src/ThemeEditor.vala:45
 msgid "Customize Theme"
@@ -2801,7 +2810,7 @@ msgstr "Текстовый курсор"
 
 #: src/ThemeEditor.vala:94
 msgid "Attachable Highlight"
-msgstr ""
+msgstr "Подсветка вложения"
 
 #: src/ThemeEditor.vala:95
 msgid "Connection Color"
@@ -2813,11 +2822,11 @@ msgstr "Цвет подписи соединения"
 
 #: src/ThemeEditor.vala:97
 msgid "URL Link Background"
-msgstr ""
+msgstr "Фон ссылки"
 
 #: src/ThemeEditor.vala:98
 msgid "URL Link Foreground"
-msgstr ""
+msgstr "Передний план ссылки"
 
 #: src/ThemeEditor.vala:99
 msgid "Tag"
@@ -2825,15 +2834,15 @@ msgstr "Метка"
 
 #: src/ThemeEditor.vala:100
 msgid "Markdown Syntax Chars"
-msgstr ""
+msgstr "Символы разметки Markdown"
 
 #: src/ThemeEditor.vala:101
 msgid "Match Background"
-msgstr ""
+msgstr "Совпадение фона"
 
 #: src/ThemeEditor.vala:102
 msgid "Match Foreground"
-msgstr ""
+msgstr "Совпадение переднего плана"
 
 #: src/ThemeEditor.vala:103
 msgid "Markdown List Item"
@@ -3004,11 +3013,11 @@ msgstr "Создать узел-сиблинг"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:247
 msgid "New Connected Node"
-msgstr ""
+msgstr "Новый соединенный узел"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:254
 msgid "New Child Node"
-msgstr ""
+msgstr "Новый узел-потомок"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:261
 msgid "Quick Entry Insertion"
@@ -3088,7 +3097,7 @@ msgstr "Выделение"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:398
 msgid "Select Root"
-msgstr ""
+msgstr "Выбрать корневой узел"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:405
 msgid "Select Parent"
@@ -3144,19 +3153,19 @@ msgstr "Переместить"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:495
 msgid "Swap with Sibling Node to Right"
-msgstr ""
+msgstr "Поменять местами с узлом-потомком справа"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:502
 msgid "Swap with Sibling Node to Left"
-msgstr ""
+msgstr "Поменять местами с узлом-потомком слева"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:509
 msgid "Swap with Sibling Node Above"
-msgstr ""
+msgstr "Поменять местами с узлом-потомком сверху"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:516
 msgid "Swap with Sibling Node Below"
-msgstr ""
+msgstr "Поменять местами с узлом-потомком снизу"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:523
 msgid "Sort Child Nodes Alphabetically"
@@ -3236,7 +3245,7 @@ msgstr "Завершить правку"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:696
 msgid "Cursor Movement"
-msgstr ""
+msgstr "Движение указателя мыши"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:700
 msgid "Next Character"
@@ -3372,7 +3381,7 @@ msgstr "Выделение объектов"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:919
 msgid "Select Single Item"
-msgstr ""
+msgstr "Выбрать один объект"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:920
 msgid "[Left-click on item]"
@@ -3380,7 +3389,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:926
 msgid "Select Child Nodes"
-msgstr ""
+msgstr "Выбрать узлы-потомки"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:927
 msgid "[Control + Left-click on parent node]"
@@ -3388,7 +3397,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:933
 msgid "Select Node Tree/Subtree"
-msgstr ""
+msgstr "Выбрать (под)дерево узлов"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:934
 msgid "[Control + Double left-click on parent node]"
@@ -3404,7 +3413,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:947
 msgid "Block Selection"
-msgstr ""
+msgstr "Заблокировать выделение"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:948
 msgid "[Left-click + Drag]"
@@ -3413,10 +3422,11 @@ msgstr ""
 #: data/com.github.phase1geo.minder.shortcuts.ui:956
 msgid "Item Selection Toggle (Add to/Remove from Selection)"
 msgstr ""
+"Переключить выбранность объекта (добавить в выделение или удалить из него)"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:960
 msgid "Toggle Selection of Item"
-msgstr ""
+msgstr "Переключить выделение объекта"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:961
 msgid "[Shift + Left-click on item]"
@@ -3452,7 +3462,7 @@ msgstr "Выделение текста"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:994
 msgid "Set Cursor Insert Point"
-msgstr ""
+msgstr "Установить точку ввода"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:995
 msgid "[Left-click anywhere in text]"
@@ -3460,7 +3470,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1001
 msgid "Select current word"
-msgstr ""
+msgstr "Выбрать текущее слово"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1002
 msgid "[Double left-click on word]"
