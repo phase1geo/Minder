@@ -114,7 +114,9 @@ public class UrlEditor : Popover {
     double left, top, bottom;
     int line;
     node.name.get_char_pos( selstart, out left, out top, out bottom, out line );
-    Gdk.Rectangle rect = {(int)left, (int)top, 1, 1};
+    var int_left = (int)left;
+    var int_top  = (int)top;
+    Gdk.Rectangle rect = {int_left, int_top, 1, 1};
     pointing_to = rect;
 
     _add        = true;
@@ -138,7 +140,9 @@ public class UrlEditor : Popover {
     int    line;
     var links = node.name.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
     node.name.get_char_pos( links.index( 0 ).start, out left, out top, out bottom, out line );
-    Gdk.Rectangle rect = {(int)left, (int)top, 1, 1};
+    var int_left = (int)left;
+    var int_top  = (int)top;
+    Gdk.Rectangle rect = {int_left, int_top, 1, 1};
     pointing_to = rect;
 
     _add        = false;

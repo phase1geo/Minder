@@ -148,7 +148,8 @@ public class Export {
   protected void set_scale( string name, int value ) {
     assert( _settings.has_key( name ) );
     var scale = (Scale)_settings.@get( name );
-    scale.set_value( (double)value );
+    var double_value = (double)value;
+    scale.set_value( double_value );
   }
 
   protected int get_scale( string name ) {

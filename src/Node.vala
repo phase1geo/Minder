@@ -877,7 +877,11 @@ public class Node : Object {
 
   /* Returns true if the given box intersects with this node box */
   public bool intersects_with( Gdk.Rectangle box ) {
-    Gdk.Rectangle node_box = { (int)posx, (int)posy, (int)width, (int)height };
+    var int_x = (int)posx;
+    var int_y = (int)posy;
+    var int_w = (int)width;
+    var int_h = (int)height;
+    Gdk.Rectangle node_box = { int_x, int_y, int_w, int_h };
     return( box.intersect( node_box, null ) );
   }
 
@@ -1270,13 +1274,15 @@ public class Node : Object {
   /* Resizes the node width by the given amount */
   public virtual void resize( double diff ) {
     diff = resizer_on_left() ? (0 - diff) : diff;
+    var int_diff = (int)diff;
     if( _image == null ) {
       if( (diff < 0) ? ((style.node_width + diff) <= _min_width) : !_name.is_wrapped() ) return;
-      style.node_width += (int)diff;
+      style.node_width += int_diff;
     } else {
       if( (style.node_width + diff) < _min_width ) return;
-      style.node_width += (int)diff;
-      _image.set_width( (int)style.node_width );
+      style.node_width += int_diff;
+      var int_node_width = (int)style.node_width;
+      _image.set_width( int_node_width );
     }
     _name.resize( diff );
   }
@@ -1712,7 +1718,7 @@ public class Node : Object {
   /* Returns a reference to the first child of this node */
   public virtual Node? first_child( NodeSide? side = null ) {
     if( !folded ) {
-      for( int i=0; i<(int)_children.length; i++ ) {
+      for( int i=0; i<_children.length; i++ ) {
         if( (side == null) || (_children.index( i ).side == side) ) {
           return( _children.index( i ) );
         }
@@ -2412,11 +2418,12 @@ public class Node : Object {
       draw_link( ctx, theme );
     }
     if( !folded ) {
-      if( _children.length > 0 ) {
+      var int_child_len = (int)_children.length;
+      if( int_child_len > 0 ) {
         var first_side = side_count( _children.index( 0 ).side );
         draw_side_links( ctx, theme, 0, first_side );
-        if( first_side < _children.length ) {
-          draw_side_links( ctx, theme, first_side, (int)_children.length );
+        if( first_side < int_child_len ) {
+          draw_side_links( ctx, theme, first_side, int_child_len );
         }
       }
     }

@@ -72,8 +72,9 @@ public class CanvasText : Object {
     }
     set {
       if( _max_width != value ) {
+        int int_value = (int)value;
         _max_width = value;
-        _pango_layout.set_width( (int)value * Pango.SCALE );
+        _pango_layout.set_width( int_value * Pango.SCALE );
         update_size( true );
       }
     }
@@ -110,24 +111,26 @@ public class CanvasText : Object {
 
   /* Default constructor */
   public CanvasText( DrawArea da ) {
+    int int_max_width = (int)_max_width;
     _text         = new FormattedText( da );
     _text.changed.connect( text_changed );
     _line_layout  = da.create_pango_layout( "M" );
     _pango_layout = da.create_pango_layout( null );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
-    _pango_layout.set_width( (int)_max_width * Pango.SCALE );
+    _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
     update_size( false );
   }
 
   /* Constructor initializing string */
   public CanvasText.with_text( DrawArea da, string txt ) {
+    int int_max_width = (int)_max_width;
     _text         = new FormattedText.with_text( da, txt );
     _text.changed.connect( text_changed );
     _line_layout  = da.create_pango_layout( "M" );
     _pango_layout = da.create_pango_layout( txt );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
-    _pango_layout.set_width( (int)_max_width * Pango.SCALE );
+    _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
     update_size( false );
   }
@@ -142,6 +145,7 @@ public class CanvasText : Object {
 
   /* Copies an existing CanvasText to this CanvasText */
   public void copy( CanvasText ct ) {
+    int int_max_width = (int)_max_width;
     posx       = ct.posx;
     posy       = ct.posy;
     _max_width = ct._max_width;
@@ -149,7 +153,7 @@ public class CanvasText : Object {
     _text.copy( ct.text );
     _line_layout.set_font_description( ct._pango_layout.get_font_description() );
     _pango_layout.set_font_description( ct._pango_layout.get_font_description() );
-    _pango_layout.set_width( (int)_max_width * Pango.SCALE );
+    _pango_layout.set_width( int_max_width * Pango.SCALE );
     update_size( true );
   }
 
@@ -167,8 +171,8 @@ public class CanvasText : Object {
     if( size != null ) {
       _font_size = size;
     }
-    var fsize = _font_size * zoom_factor;
-    fd.set_size( (int)(fsize * Pango.SCALE) );
+    var int_fsize = (int)((_font_size * zoom_factor) * Pango.SCALE);
+    fd.set_size( int_fsize );
     _line_layout.set_font_description( fd );
     _pango_layout.set_font_description( fd );
     update_size( true );
@@ -255,7 +259,8 @@ public class CanvasText : Object {
     string? mw = n->get_prop( "maxwidth" );
     if( mw != null ) {
       _max_width = double.parse( mw );
-      _pango_layout.set_width( (int)_max_width * Pango.SCALE );
+      var int_max_width = (int)_max_width;
+      _pango_layout.set_width( int_max_width * Pango.SCALE );
     }
 
     /* Load the text and formatting */
@@ -313,7 +318,8 @@ public class CanvasText : Object {
   /* Resizes the node width by the given amount */
   public virtual void resize( double diff ) {
     _max_width += diff;
-    _pango_layout.set_width( (int)_max_width * Pango.SCALE );
+    var int_max_width = (int)_max_width;
+    _pango_layout.set_width( int_max_width * Pango.SCALE );
     update_size( true );
   }
 
@@ -780,7 +786,8 @@ public class CanvasText : Object {
       text.replace_text( spos, (epos - spos), t.text );
       for( int i=0; i<ttags.length; i++ ) {
         var ttag = ttags.index( i );
-        text.add_tag( (FormatTag)ttag.tag, (ttag.start + spos), (ttag.end + spos), ttag.parsed, ttag.extra );
+        var ftag = (FormatTag)ttag.tag;
+        text.add_tag( ftag, (ttag.start + spos), (ttag.end + spos), ttag.parsed, ttag.extra );
       }
       set_cursor_only( _selstart + slen );
       change_selection( null, _selstart, "insert" );
@@ -790,7 +797,8 @@ public class CanvasText : Object {
       text.insert_text( cpos, t.text );
       for( int i=0; i<ttags.length; i++ ) {
         var ttag = ttags.index( i );
-        text.add_tag( (FormatTag)ttag.tag, (ttag.start + cpos), (ttag.end + cpos), ttag.parsed, ttag.extra );
+        var ftag = (FormatTag)ttag.tag;
+        text.add_tag( ftag, (ttag.start + cpos), (ttag.end + cpos), ttag.parsed, ttag.extra );
       }
       set_cursor_only( _cursor + slen );
       undo_buffer.add_insert( cpos, t.text, cur );
@@ -953,7 +961,8 @@ public class CanvasText : Object {
     if( alpha < 1.0 ) {
       layout = _pango_layout.copy();
       var attrs      = layout.get_attributes();
-      var alpha_attr = Pango.attr_foreground_alpha_new( (uint16)(65536 * alpha) );
+      var alpha_val  = (uint16)(65536 * alpha);
+      var alpha_attr = Pango.attr_foreground_alpha_new( alpha_val );
       alpha_attr.start_index = 0;
       alpha_attr.end_index   = _text.text.length;
       attrs.change( (owned)alpha_attr );

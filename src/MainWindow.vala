@@ -1145,7 +1145,8 @@ public class MainWindow : ApplicationWindow {
   private void change_scale( double scale_factor ) {
     var marks       = DrawArea.get_scale_marks();
     var scale_value = scale_factor * 100;
-    _zoom_btn.set_tooltip_text( _( "Zoom (%d%%)" ).printf( (int)scale_value ) );
+    var int_value   = (int)scale_value;
+    _zoom_btn.set_tooltip_text( _( "Zoom (%d%%)" ).printf( int_value ) );
     _zoom_scale.set_value( scale_value );
     _zoom_in.set_sensitive( scale_value < marks[marks.length-1] );
     _zoom_out.set_sensitive( scale_value > marks[0] );
@@ -1320,7 +1321,8 @@ public class MainWindow : ApplicationWindow {
     current.get_match_items( name, text, search_opts, ref _search_items );
     if( all_tabs ) {
       foreach (var tab in _nb.tabs ) {
-        var da = (DrawArea)((Gtk.Bin)tab.page).get_child();
+        var bin = (Gtk.Bin)tab.page;
+        var da = (DrawArea)bin.get_child();
         if( da != current ) {
           da.get_match_items( tab.label, text, search_opts, ref _search_items );
         }
@@ -1342,7 +1344,8 @@ public class MainWindow : ApplicationWindow {
     _search_items.get( it, 2, &node, 3, &conn, 4, &tabname, -1 );
     foreach (var tab in _nb.tabs ) {
       if(tab.label == tabname) {
-        da = (DrawArea)((Gtk.Bin)tab.page).get_child();
+        var bin = (Gtk.Bin)tab.page;
+        da = (DrawArea)bin.get_child();
         _nb.current = tab;
         break;
       }
