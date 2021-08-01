@@ -433,10 +433,25 @@ public class CanvasText : Object {
     }
   }
 
+  /*
+   The parameter dir assumes left-to-right; however, if the current layout
+   is a right-to-left language, we will invert the value.
+  */
+  private int calc_direction( int dir ) {
+    /*
+    var ldir = _pango_layout.get_direction();
+    switch( ldir ) {
+      case Pango.Direction.RTL :
+        return( 0 - dir );
+    }
+    */
+    return( dir );
+  }
+
   /* Adjusts the cursor by the given amount of characters */
   private void cursor_by_char( int dir ) {
     var last = text.text.char_count();
-    var cpos = _cursor + dir;
+    var cpos = _cursor + calc_direction( dir );
     if( cpos < 0 ) {
       cpos = 0;
     } else if( cpos > last ) {

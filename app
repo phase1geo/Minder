@@ -92,6 +92,9 @@ case $1 in
     initialize
     sudo ninja uninstall
     ;;
+"flatpak")
+    sudo flatpak-builder --install --force-clean ../build com.github.phase1geo.minder.yml
+    ;;
 *)
     echo "Usage:"
     echo "  ./app [OPTION]"
