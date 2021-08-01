@@ -93,7 +93,7 @@ case $1 in
     sudo ninja uninstall
     ;;
 "flatpak")
-    sudo flatpak-builder --install --force-clean ../build com.github.phase1geo.minder.yml
+    sudo flatpak-builder --install --force-clean ../build-minder com.github.phase1geo.minder.yml
     ;;
 *)
     echo "Usage:"
@@ -108,5 +108,6 @@ case $1 in
     echo "  test              Builds and runs testing for the application"
     echo "  test-run          Builds application, runs testing and if successful application is started"
     echo "  uninstall         Removes the application from the system (requires sudo)"
+    echo "  flatpak           Builds and installs the Flatpak version of the application"
     ;;
 esac
