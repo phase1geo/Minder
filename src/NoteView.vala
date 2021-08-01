@@ -193,7 +193,9 @@ public class NoteView : Gtk.SourceView {
     _last_x = (int)e.x;
     _last_y = (int)e.y;
     if( (bool)(e.state & ModifierType.CONTROL_MASK) ) {
-      enable_url_checking( (int)e.x, (int)e.y );
+      var int_x = (int)e.x;
+      var int_y = (int)e.y;
+      enable_url_checking( int_x, int_y );
       return( true );
     }
     disable_url_checking();
@@ -206,7 +208,9 @@ public class NoteView : Gtk.SourceView {
   */
   private bool on_press( EventButton e ) {
     if( (bool)(e.state & ModifierType.CONTROL_MASK) ) {
-      enable_url_checking( (int)e.x, (int)e.y );
+      var int_x = (int)e.x;
+      var int_y = (int)e.y;
+      enable_url_checking( int_x, int_y );
       if( _last_url != null ) {
         Utils.open_url( _last_url );
       }

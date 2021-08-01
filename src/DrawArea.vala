@@ -104,6 +104,7 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _sticker_posy;
   private NodeGroups       _groups;
   private uint             _select_hover_id = 0;
+  private int              _next_node_id    = 0;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -160,6 +161,11 @@ public class DrawArea : Gtk.DrawingArea {
   public NodeGroups groups {
     get {
       return( _groups );
+    }
+  }
+  public int next_node_id {
+    get {
+      return( _next_node_id++ );
     }
   }
 
@@ -663,9 +669,6 @@ public class DrawArea : Gtk.DrawingArea {
     /* Clear the undo buffer */
     undo_buffer.clear();
 
-    /* Reset the node ID generator */
-    Node.reset();
-
     /* Clear the selection */
     _selected.clear();
 
@@ -715,9 +718,6 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Clear the undo buffer */
     undo_buffer.clear();
-
-    /* Reset the node ID generator */
-    Node.reset();
 
     /* Clear the selection */
     _selected.clear();
@@ -889,7 +889,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Updates the IM context cursor location based on the canvas text position */
   private void update_im_cursor( CanvasText ct ) {
-    Gdk.Rectangle rect = {(int)ct.posx, (int)ct.posy, 0, (int)ct.height};
+    var int_posx   = (int)ct.posx;
+    var int_posy   = (int)ct.posy;
+    var int_height = (int)ct.height;
+    Gdk.Rectangle rect = {int_posx, int_posy, 0, int_height};
     _im_context.set_cursor_location( rect );
   }
 
@@ -3077,8 +3080,9 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a new root node to the canvas */
   public void add_root_node() {
-    var node = create_root_node( _( "Another Idea" ) );
-    undo_buffer.add_item( new UndoNodeInsert( node, (int)(_nodes.length - 1) ) );
+    var node         = create_root_node( _( "Another Idea" ) );
+    var int_node_len = (int)(_nodes.length - 1);
+    undo_buffer.add_item( new UndoNodeInsert( node, int_node_len ) );
     if( select_node( node ) ) {
       set_node_mode( node, NodeMode.EDITABLE, false );
       queue_draw();
@@ -4266,7 +4270,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Setup the nodes that will be copied */
     if( _selected.current_node() != null ) {
-      nodes.append_val( _selected.current_node() );
+      nodes.append_val( new Node.copy_tree( this, _selected.current_node(), image_manager ) );
     } else {
       _selected.get_subtrees( ref nodes, image_manager );
     }
@@ -4682,7 +4686,9 @@ public class DrawArea : Gtk.DrawingArea {
           _attach_sticker.mode = StickerMode.NONE;
           _attach_sticker = null;
         } else {
-          var sticker = new Sticker( data.get_text(), (double)x, (double)y );
+          var double_x = (double)x;
+          var double_y = (double)y;
+          var sticker = new Sticker( data.get_text(), double_x, double_y );
           _stickers.add_sticker( sticker );
           _selected.set_current_sticker( sticker );
           _undo_buffer.add_item( new UndoStickerAdd( sticker ) );

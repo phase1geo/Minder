@@ -183,8 +183,10 @@ public class StickerInspector : Box {
     });
     fbox.button_press_event.connect((e) => {
       if( e.button == Gdk.BUTTON_SECONDARY ) {
+        var int_x = (int)e.x;
+        var int_y = (int)e.y;
         _clicked_category = fbox;
-        _clicked_sticker  = fbox.get_child_at_pos( (int)e.x, (int)e.y ).get_child().name;
+        _clicked_sticker  = fbox.get_child_at_pos( int_x, int_y ).get_child().name;
         Utils.popup_menu( _menu, e );
       }
       return( true );
@@ -269,8 +271,10 @@ public class StickerInspector : Box {
 
   /* When the sticker drag begins, set the sticker image to the dragged content */
   private void on_drag_begin( Widget widget, DragContext context ) {
-    var fbox = (FlowBox)widget;
-    _dragged_sticker = (Image)fbox.get_child_at_pos( (int)_motion_x, (int)_motion_y ).get_child();
+    var fbox  = (FlowBox)widget;
+    var int_x = (int)_motion_x;
+    var int_y = (int)_motion_y;
+    _dragged_sticker = (Image)fbox.get_child_at_pos( int_x, int_y ).get_child();
     Gtk.drag_set_icon_pixbuf( context, _dragged_sticker.pixbuf, 0, 0 );
   }
 

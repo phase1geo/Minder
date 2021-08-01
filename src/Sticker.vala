@@ -79,7 +79,8 @@ public class Sticker {
   public void resize( double diff ) {
     var width = (int)(_buf.width + diff);
     if( (width < 24) || (width > 256) ) return;
-    set_pixbuf( (int)(_buf.width + diff) );
+    var int_new_width = (int)(_buf.width + diff);
+    set_pixbuf( int_new_width );
   }
 
   /* Saves the sticker to the XML tree */

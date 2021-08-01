@@ -110,7 +110,9 @@ public class Tagger {
     double left, top, bottom;
     int    line;
     name.get_char_pos( name.text.text.char_count(), out left, out top, out bottom, out line );
-    Gdk.Rectangle rect = {(int)left, (int)bottom, 1, 1};
+    var int_left   = (int)left;
+    var int_bottom = (int)bottom;
+    Gdk.Rectangle rect = {int_left, int_bottom, 1, 1};
 
     var popover = new Popover( _da );
     popover.pointing_to = rect;
@@ -166,9 +168,10 @@ public class Tagger {
   private void filter_tag_text( string str, int slen, ref int pos ) {
     var filtered = str.replace( " ", "" ).replace( "\t", "" ).replace( "@", "" );
     if( str != filtered ) {
-      SignalHandler.block_by_func( (void*)_entry, (void*)filter_tag_text, this );
+      var void_entry = (void*)_entry;
+      SignalHandler.block_by_func( void_entry, (void*)filter_tag_text, this );
       _entry.insert_text( filtered, filtered.length, ref pos );
-      SignalHandler.unblock_by_func( (void*)_entry, (void*)filter_tag_text, this );
+      SignalHandler.unblock_by_func( void_entry, (void*)filter_tag_text, this );
       Signal.stop_emission_by_name( _entry, "insert_text" );
     }
   }
