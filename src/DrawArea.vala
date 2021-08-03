@@ -1568,6 +1568,51 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /*
+   Checks to see if the user has clicked a connection that was not previously
+   selected.  If this is the case, select the connection.
+  */
+  private bool select_connection_if_unselected( double x, double y ) {
+    var conn = _connections.within_title( x, y );
+    if( conn == null ) {
+      conn = _connections.on_curve( x, y );
+    }
+    if( conn != null ) {
+      if( !_selected.is_connection_selected( conn ) ) {
+        _selected.set_current_connection( conn );
+        queue_draw();
+      }
+      return( true );
+    }
+    return( false );
+  }
+
+  /*
+   Checks to see if the user has clicked a node that was not previously selected.
+   If this is the case, select the node.
+  */
+  private bool select_node_if_unselected( double x, double y ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      var node = _nodes.index( i ).contains( x, y, null );
+      if( node != null ) {
+        if( !_selected.is_node_selected( node ) ) {
+          _selected.set_current_node( node );
+          queue_draw();
+        }
+        return( true );
+      }
+    }
+    return( false );
+  }
+
+  /* Handles a right click to deal with any selection changes. */
+  private void handle_right_click( double x, double y ) {
+    if( select_connection_if_unselected( x, y ) ||
+        select_node_if_unselected( x, y ) ) {
+      /* Nothing else to do */
+    }
+  }
+
+  /*
    Sets the current node pointer to the node that is within the given coordinates.
    Returns true if we sucessfully set current_node to a valid node and made it
    selected.
@@ -2046,12 +2091,14 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Handle button press event */
   private bool on_press( EventButton event ) {
+    var scaled_x = scale_value( event.x );
+    var scaled_y = scale_value( event.y );
     switch( event.button ) {
       case Gdk.BUTTON_PRIMARY :
       case Gdk.BUTTON_MIDDLE  :
         grab_focus();
-        _press_x      = scale_value( event.x );
-        _press_y      = scale_value( event.y );
+        _press_x      = scaled_x;
+        _press_y      = scaled_y;
         _pressed      = set_current_at_position( _press_x, _press_y, event );
         _press_type   = event.type;
         _press_middle = event.button == Gdk.BUTTON_MIDDLE;
@@ -2059,6 +2106,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         break;
       case Gdk.BUTTON_SECONDARY :
+        handle_right_click( scaled_x, scaled_y );
         show_contextual_menu( event );
         break;
     }
