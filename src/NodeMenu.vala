@@ -246,18 +246,6 @@ public class NodeMenu : Gtk.Menu {
     add( _delonly );
     add( new SeparatorMenuItem() );
     add( change );
-    /*
-    add( _edit );
-    add( _note );
-    add( _task );
-    add( _image );
-    add( _sticker );
-    add( _link );
-    add( _conn );
-    add( _group );
-    add( _link_color );
-    add( _fold );
-    */
     add( new SeparatorMenuItem() );
     add( addnode );
     add( quick );
