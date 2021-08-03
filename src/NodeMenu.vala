@@ -88,6 +88,10 @@ public class NodeMenu : Gtk.Menu {
     _delonly = new Gtk.MenuItem.with_label( _( "Delete Single Node" ) );
     _delonly.activate.connect( delete_node_only );
 
+    var change = new Gtk.MenuItem.with_label( _( "Change Node" ) );
+    var change_menu = new Gtk.Menu();
+    change.set_submenu( change_menu );
+
     _edit = new Gtk.MenuItem();
     _edit.add( new Granite.AccelLabel( _( "Edit Text…" ), "e" ) );
     _edit.activate.connect( edit_node );
@@ -241,6 +245,8 @@ public class NodeMenu : Gtk.Menu {
     add( _delete );
     add( _delonly );
     add( new SeparatorMenuItem() );
+    add( change );
+    /*
     add( _edit );
     add( _note );
     add( _task );
@@ -251,6 +257,7 @@ public class NodeMenu : Gtk.Menu {
     add( _group );
     add( _link_color );
     add( _fold );
+    */
     add( new SeparatorMenuItem() );
     add( addnode );
     add( quick );
@@ -261,6 +268,18 @@ public class NodeMenu : Gtk.Menu {
     add( _sortby );
     add( new SeparatorMenuItem() );
     add( _detach );
+
+    /* Add the items to the change node menu */
+    change_menu.add( _edit );
+    change_menu.add( _note );
+    change_menu.add( _task );
+    change_menu.add( _image );
+    change_menu.add( _sticker );
+    change_menu.add( _link );
+    change_menu.add( _conn );
+    change_menu.add( _group );
+    change_menu.add( _link_color );
+    change_menu.add( _fold );
 
     /* Add the items to the add node menu */
     addmenu.add( _root );
