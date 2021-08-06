@@ -35,10 +35,10 @@ public enum PropertyGrab {
   NOTE
 }
 
-public class MainWindow : ApplicationWindow {
+public class MainWindow : Hdy.ApplicationWindow {
 
   private GLib.Settings     _settings;
-  private HeaderBar?        _header         = null;
+  private Hdy.HeaderBar     _header;
   private Gtk.AccelGroup?   _accel_group    = null;
   private DynamicNotebook?  _nb             = null;
   private Revealer?         _inspector      = null;
@@ -74,7 +74,6 @@ public class MainWindow : ApplicationWindow {
   private ToggleButton?     _prop_btn       = null;
   private Image?            _prop_show      = null;
   private Image?            _prop_hide      = null;
-  private bool              _prefer_dark    = false;
   private bool              _debug          = false;
   private ThemeEditor       _themer;
   private Label             _scale_lbl;
@@ -142,7 +141,7 @@ public class MainWindow : ApplicationWindow {
     _exports = new Exports();
 
     /* Create the header bar */
-    _header = new HeaderBar();
+    _header = new Hdy.HeaderBar();
     _header.set_show_close_button( true );
 
     /* Set the main window data */
@@ -153,8 +152,7 @@ public class MainWindow : ApplicationWindow {
       move( window_x, window_y );
     }
     set_default_size( window_w, window_h );
-    set_titlebar( _header );
-    set_border_width( 2 );
+    // set_border_width( 2 );
     destroy.connect( Gtk.main_quit );
 
     /* Set the stage for menu actions */
@@ -232,8 +230,12 @@ public class MainWindow : ApplicationWindow {
       return( false );
     });
 
+    var top_box = new Box( Orientation.VERTICAL, 0 );
+    top_box.pack_start( _header, false, true, 0 );
+    top_box.pack_start( _pane, true, true, 0 );
+
     /* Display the UI */
-    add( _pane );
+    add( top_box );
     show_all();
 
     /* If the settings says to display the properties, do it now */
@@ -262,6 +264,10 @@ public class MainWindow : ApplicationWindow {
     /* Load the exports data */
     _exports.load();
 
+  }
+
+  static construct {
+    Hdy.init();
   }
 
   private void setting_changed_text_size() {
@@ -1058,7 +1064,7 @@ public class MainWindow : ApplicationWindow {
   private void on_theme_changed( DrawArea da ) {
     Gtk.Settings? settings = Gtk.Settings.get_default();
     if( settings != null ) {
-      settings.gtk_application_prefer_dark_theme = _prefer_dark || da.get_theme().prefer_dark;
+      settings.gtk_application_prefer_dark_theme = da.get_theme().prefer_dark;
     }
   }
 

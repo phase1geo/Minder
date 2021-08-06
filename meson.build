@@ -75,7 +75,8 @@ dependencies = [
     dependency('gtk+-3.0'),
     dependency('libxml-2.0'),
     dependency('libarchive'),
-    dependency('gtksourceview-3.0'),
+    dependency('gtksourceview-4'),
+    dependency('libhandy-1'),
     libmarkdown,
     math_dep
 ]
