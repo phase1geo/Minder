@@ -495,7 +495,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     app.set_accels_for_action( "win.action_export",        { "<Control>e" } );
     app.set_accels_for_action( "win.action_print",         { "<Control>p" } );
     app.set_accels_for_action( "win.action_prefs",         { "<Control>comma" } );
-    app.set_accels_for_action( "win.action_shortcuts",     { "F1" } );
+    app.set_accels_for_action( "win.action_shortcuts",     { "<Control>question" } );
     app.set_accels_for_action( "win.action_show_current",  { "<Control>6" } );
     app.set_accels_for_action( "win.action_show_style",    { "<Control>7" } );
     app.set_accels_for_action( "win.action_show_stickers", { "<Control>8" } );

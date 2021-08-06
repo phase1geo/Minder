@@ -3650,7 +3650,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Selects all of the text in the current node */
-  private void handle_control_slash() {
+  private void select_all() {
     if( is_connection_editable() ) {
       _selected.current_connection().title.set_cursor_all( false );
       queue_draw();
@@ -3661,7 +3661,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Deselects all of the text in the current node */
-  private void handle_control_backslash() {
+  private void deselect_all() {
     if( is_connection_editable() ) {
       _selected.current_connection().title.clear_selection();
       queue_draw();
@@ -4030,8 +4030,8 @@ public class DrawArea : Gtk.DrawingArea {
           case Key.Down      :  handle_control_down( shift );   break;
           case Key.Home      :  handle_control_home( shift );   break;
           case Key.End       :  handle_control_end( shift );    break;
-          case Key.slash     :  handle_control_slash();         break;
-          case Key.backslash :  handle_control_backslash();     break;
+          case Key.a         :  select_all();                   break;
+          case Key.A         :  deselect_all();                 break;
           case Key.period    :  handle_control_period();        break;
           case Key.E         :  handle_control_E();             break;
           case Key.R         :  handle_control_R();             break;
