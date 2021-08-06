@@ -516,7 +516,7 @@ public class NodeMenu : Gtk.Menu {
   /* Changes the node link of the currently selected node */
   private void change_link() {
     if( node_has_link() ) {
-      _da.delete_current_link();
+      _da.delete_links();
     } else {
       _da.start_connection( false, true );
     }

@@ -1198,10 +1198,21 @@ public class DrawArea : Gtk.DrawingArea {
     queue_draw();
   }
 
+  /* Returns true if any of the selected nodes contain node links */
+  public bool any_selected_nodes_linked() {
+    var nodes = _selected.nodes();
+    for( int i=0; i<nodes.length; i++ ) {
+      if( nodes.index( i ).linked_node != null ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
   /* Creates links between selected nodes */
   public void create_links() {
-    if( _selected.num_nodes() < 2 ) return;
     var nodes = _selected.nodes();
+    if( nodes.length < 2 ) return;
     undo_buffer.add_item( new UndoNodesLink( nodes ) );
     for( int i=0; i<(nodes.length - 1); i++ ) {
       nodes.index( i ).linked_node = nodes.index( i + 1 );
@@ -1210,27 +1221,28 @@ public class DrawArea : Gtk.DrawingArea {
     queue_draw();
   }
 
-  /* Delete the current node link */
-  public void delete_current_link() {
-    var current = _selected.current_node();
-    if( current != null ) {
-      Node? old_link = current.linked_node;
-      current.linked_node = null;
-      undo_buffer.add_item( new UndoNodeLink( current, old_link ) );
-      auto_save();
-      queue_draw();
+  /* Deletes all of the selected node links */
+  public void delete_links() {
+    var nodes = _selected.nodes();
+    undo_buffer.add_item( new UndoNodesLink( nodes ) );
+    for( int i=0; i<nodes.length; i++ ) {
+      if( nodes.index( i ).linked_node != null ) {
+        nodes.index( i ).linked_node = null;
+      }
     }
+    auto_save();
+    queue_draw();
   }
 
-  /* Toggles the node link */
-  private void toggle_link() {
-    var current = _selected.current_node();
-    if( current != null ) {
-      if( current.linked_node == null ) {
-        start_connection( true, true );
-      } else {
-        delete_current_link();
-      }
+  /* Toggles the node links */
+  public void toggle_links() {
+    var nodes = _selected.nodes();
+    if( any_selected_nodes_linked() ) {
+      delete_links();
+    } else if( nodes.length == 1 ) {
+      start_connection( true, true );
+    } else {
+      create_links();
     }
   }
 
@@ -4102,6 +4114,7 @@ public class DrawArea : Gtk.DrawingArea {
         case Key.Control_L    :  handle_control( true );  break;
         case Key.F10          :  if( shift ) show_contextual_menu( e );  break;
         case Key.Menu         :  show_contextual_menu( e );  break;
+        case Key.y            :  toggle_links();  break;
         default               :  return( false );
       }
     }
@@ -4196,7 +4209,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
         break;
       case Key.x :  start_connection( true, false );  break;
-      case Key.y :  toggle_link();  break;
+      case Key.y :  toggle_links();  break;
       case Key.z :  zoom_out();  break;
       default    :  return( false );
     }
