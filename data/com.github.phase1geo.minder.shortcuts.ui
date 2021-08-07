@@ -211,7 +211,7 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Show Keyboard Shortcuts</property>
-                <property name="accelerator">F1</property>
+                <property name="accelerator">&lt;ctrl&gt;question</property>
                 <property name="visible">1</property>
               </object>
             </child>
@@ -843,14 +843,14 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Select All Text</property>
-                <property name="accelerator">&lt;ctrl&gt;slash</property>
+                <property name="accelerator">&lt;ctrl&gt;a</property>
                 <property name="visible">1</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Clear Selection</property>
-                <property name="accelerator">&lt;ctrl&gt;backslash</property>
+                <property name="accelerator">&lt;ctrl&gt;&lt;shift&gt;a</property>
                 <property name="visible">1</property>
               </object>
             </child>

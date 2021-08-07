@@ -5,64 +5,86 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Minder</name>
+  <name xml:lang="ru">Minder</name>
   <name xml:lang="pt">Minder</name>
   <name xml:lang="fr">Minder</name>
   <summary>Create, develop and visualize your ideas</summary>
+  <summary xml:lang="ru">Создавайте, развивайте и визуализуйте идеи</summary>
   <summary xml:lang="pt">Crie, desenvolva e visualize as suas ideias</summary>
   <summary xml:lang="fr">Créez, développez et visualisez vos idées</summary>
   <description>
     <p>Use the power of mind-mapping to make your ideas come to life.</p>
+    <p xml:lang="ru">Используйте всю мощь диаграмм связей, чтобы претворять в жизнь свои идеи.</p>
     <p xml:lang="pt">Use o poder de mapear a mente para fazer com que as suas ideias ganhem vida.</p>
     <p xml:lang="fr">Utilisez le pouvoir des cartes mentales pour donner vie à vos idées.</p>
     <ul>
       <li>Quickly create visual mind-maps using the keyboard and automatic layout.</li>
+      <li xml:lang="ru">Создавайте диаграммы связей с автоматическим размещением узлов, не отрываясь от клавиатуры.</li>
       <li xml:lang="pt">Crie mapas mentais visuais rapidamente usando o teclado e o layout automático.</li>
       <li xml:lang="fr">Créez rapidement des cartes mentales visuelles en utilisant le clavier et la mise en forme automatique.</li>
       <li>Choose from many tree layout choices.</li>
+      <li xml:lang="ru">Используйте любой из доступных макетов размещения дерева узлов.</li>
       <li xml:lang="pt">Escolha entre várias opções de leyout de árvore.</li>
       <li>Support for Markdown formatting.</li>
+      <li xml:lang="ru">Используйте форматирование Markdown.</li>
       <li xml:lang="pt">Suporte para formatação Markdown.</li>
       <li>Add notes, tasks and images to your nodes.</li>
+      <li xml:lang="ru">Добавляйте примечания, задачи и изображения к узлам.</li>
       <li xml:lang="pt">Adicione notas, tarefas e imagens aos seus nós.</li>
       <li xml:lang="fr">Ajoutez des notes, des tâches et des images à vos nœuds.</li>
       <li>Add node-to-node connections with optional text and notes.</li>
+      <li xml:lang="ru">Соединяйте узлы друг с другом, подписывайте соединения и добавляйте к ним примечания.</li>
       <li xml:lang="pt">Adicione conexões nó a nó com texto opcional e notas.</li>
       <li xml:lang="fr">Ajoutez des connexions nœud-vers-nœud avec en option du texte et des notes.</li>
       <li>Stylize nodes, links and connections to add more meaning and improve readability.</li>
+      <li xml:lang="ru">Настраивайте стиль узлов, ссылок и соединений, чтобы придать диаграмме больше глубины и улучшить её восприятие.</li>
       <li xml:lang="pt">Personalize o estilo de nós, ligações e conexões para adicionar mais significado e melhorar a legibilidade.</li>
       <li xml:lang="fr">Stylisez les nœuds, liens et connexions pour ajouter plus de sens et améliorer la lisibilité.</li>
       <li>Add stickers and node groups to call out and visibly organize information.</li>
+      <li xml:lang="ru">Добавляйте стикеры и группируйте узлы, чтобы визуально организовывать информацию.</li>
       <li xml:lang="pt">Adicione autocolantes e grupos de nós para destacar e organizar a informação para esta se tornar mais visível.</li>
       <li>Quick search of node and connection titles and notes, including filtering options.</li>
+      <li xml:lang="ru">Быстро находите узлы, заголовки соединений и примечания, используйте фильтры поиска.</li>
       <li xml:lang="pt">Procura rápida de títulos e notas de nós e conexões, incluindo opções de filtragem.</li>
       <li xml:lang="fr">Recherche rapide de notes et titres de nœuds et connexions, incluant des options de filtrage.</li>
       <li>Zoom in or enable focus mode to focus on certain ideas or zoom out to see the bigger picture.</li>
+      <li xml:lang="ru">Увеличьте диаграмму, чтобы рассмотреть подробности, используйте режим фокусировки, чтобы сконцентрироваться на конкретных идеях, или уменьшите масштаб просмотра, чтобы увидеть всю картину.</li>
       <li xml:lang="pt">Amplie ou ative o modo de concentração para se focar mais em certas ideias ou reduza a ampliação para ver a grande imagem.</li>
       <li xml:lang="fr">Zoomez pour vous concentrer sur certaines idées ou dézoomez pour visualiser une image plus grande.</li>
       <li>Enter focus mode to better view and understand portions of the map.</li>
+      <li xml:lang="ru">Используйте режим фокусировки , чтобы лучше понимать отдельные участки диаграммы.</li>
       <li xml:lang="pt">Entre no modo de concentração para visualizar e perceber melhor as porções do mapa.</li>
       <li xml:lang="fr">Entrez en mode concentration pour une vue plus claire et mieux apréhender les zones de la carte.</li>
       <li>Unlimited undo/redo of any change.</li>
+      <li xml:lang="ru">Отменяйте и возвращайте любые изменения в диаграмме как угодно далеко по истории правок.</li>
       <li xml:lang="pt">Desfazer/refazer ilimitado para qualquer alteração.</li>
       <li xml:lang="fr">Possibilité infinie d'annuler/rétablir des modifications.</li>
       <li>Automatically saves in the background.</li>
+      <li xml:lang="ru">Не теряйте данны благодаря фоновому автосохранению документов.</li>
       <li xml:lang="pt">Grava automaticamente em segundo plano.</li>
       <li xml:lang="fr">Sauvegarde automatique en arrière-plan.</li>
       <li>Colorized node branches.</li>
+      <li xml:lang="ru">Пользуйтесь раскрашенными ветками узлов.</li>
       <li xml:lang="pt">Ramificações de nós coloridas.</li>
       <li xml:lang="fr">Branches de nœuds colorées.</li>
       <li>Open multiple mindmaps with the use of tabs.</li>
+      <li xml:lang="ru">Открывайте любое количество диаграмм связей на вкладках.</li>
       <li xml:lang="pt">Abrir múltiplos mapas mentais com o uso de guias.</li>
       <li xml:lang="fr">Ouvrez plusieurs carte mentales en utilisant les onglets.</li>
       <li>Built-in and customizable theming.</li>
+      <li xml:lang="ru">Используйте встроенную настраиваемую систему тем оформления.</li>
       <li xml:lang="pt">Tema incorporado e personalizável.</li>
       <li xml:lang="fr">Thèmes intégrés et personnalisables.</li>
       <li>Gorgeous animations.</li>
+      <li xml:lang="ru">Шикарная анимация.</li>
       <li xml:lang="pt">Animações lindas.</li>
       <li xml:lang="fr">Magnifiques animations.</li>
       <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, PlantUML, Portable Minder and XMind formats.</li>
+      <li xml:lang="ru">Импортируйте документы в форматах OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, PlantUML, Portable Minder и XMind.</li>
       <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, PlantUML, Portable Minder, XMind and yEd formats.</li>
+      <li xml:lang="ru">Экспортируйте в файлы форматов CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, PlantUML, Portable Minder, XMind и yEd.</li>
       <li>Printer support.</li>
+      <li xml:lang="ru">Используйте функцию вывода на печать.</li>
       <li xml:lang="pt">Suporte para impressora.</li>
       <li xml:lang="fr">Prise en charge de l'impression.</li>
     </ul>
@@ -96,6 +118,7 @@
     </screenshot>
   </screenshots>
   <developer_name>Trevor Williams</developer_name>
+  <developer_name xml:lang="ru">Trevor Williams</developer_name>
   <developer_name xml:lang="pt">Trevor Williams</developer_name>
   <developer_name xml:lang="fr">Trevor Williams</developer_name>
   <url type="homepage">https://github.com/phase1geo/minder/</url>
@@ -104,6 +127,7 @@
     <value key="x-appcenter-color-primary">#603461</value>
     <value key="x-appcenter-color-primary-text">rgb(255, 255, 255)</value>
     <value key="x-appcenter-suggested-price">10</value>
+    <value key="x-appcenter-stripe">pk_live_Uhb96elhovWNRGkq07m2FRO9008Ia8OtVa</value>
   </custom>
   <content_rating type="oars-1.1">
     <content_attribute id="violence-cartoon">none</content_attribute>
@@ -135,6 +159,77 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.12.5" date="2021-06-14">
+      <description>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Updated Russian translation (thanks to Alexandre Prokoudine)</li>
+          <li xml:lang="ru">Добавлена русская локализация (Александр Прокудин)</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Added missing translatable strings in various parts of the UI.</li>
+          <li>Fixed URL parser issues.</li>
+          <li>Fixed application crash when forward deleting non-Latin text.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.12.4" date="2021-06-02">
+      <description>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Small optimization to Meson build procedure.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed compile and run issue for distros lacking full granite support.</li>
+          <li>Fixed issue with displaying correct themes when themes are hidden that don't match system theme.</li>
+          <li>Added missing translatable strings.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.12.3" date="2021-05-22">
+      <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Added rounded branching style.</li>
+          <li>Added support for drawing clickable folding areas.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Changed shape of the unfold indicator.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed application crash on Manjaro.</li>
+          <li>Fixed link drawing order regression.</li>
+          <li>Removed error output when XML storage files do not exist.</li>
+          <li>Fixed parsing issue with filepaths starting with file://.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.12.2" date="2021-04-23">
       <description>
         <p>New</p>
@@ -145,6 +240,7 @@
           <li>Added support for folded children count tooltip.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -169,17 +265,21 @@
           <li>Added Basque translation (thanks to @alexgabi)</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated to Italian translation (thanks to @albanobattistella).</li>
+          <li xml:lang="ru">Обновлена итальянская локализация (@albanobattistella).</li>
           <li>Updated to Brazilian Portugese translation (thanks to Felipe Simoes).</li>
+          <li xml:lang="ru">Обновлена бразильская португальская локализация (Felipe Simoes).</li>
           <li>Opening a file will automatically close an existing unsaved, unchanged tab.</li>
           <li>Changed color of connection drag handles to yellow.</li>
           <li>Making it easier to grab connection drag handle when it is close to connection handles.</li>
           <li>Reducing auto-saves when editing node text.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -206,6 +306,7 @@
           <li>Added support for including images in Markdown export.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
@@ -213,6 +314,7 @@
           <li>Replaced export UI with a new, improved UI with support for export options.</li>
           <li>Moved add node menu items to a submenu.</li>
           <li>Improved focus mode behavior.</li>
+          <li xml:lang="ru">Улучшенное поведение режима фокусировки.</li>
           <li>Changed property header button to a toggle button and clarified the tooltip.</li>
           <li>Changed keyboard shortcut to open sidebar from Control-| to F9.</li>
           <li>Changed non-symbolic header bar icons to symbolic icons for non-elementary OS environments.</li>
@@ -221,6 +323,7 @@
           <li>Improved task button drawing.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -248,12 +351,14 @@
     <release version="1.11.3" date="2020-10-16">
       <description>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated Italian translation (thanks to Albano Battistella).</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -273,6 +378,7 @@
           <li>Added Shift-e keyboard shortcut to edit note text for nodes and connections.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
@@ -282,6 +388,7 @@
           <li>Changed node and connection contextual menus to show (Edit Note) instead of (Add Note) and (Remove Note) options.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -309,6 +416,7 @@
           <li>Added support for making filepath URIs clickable in nodes, connections and notes (displays the files in the file manager application).</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
@@ -318,6 +426,7 @@
           <li>Changed 't' command to transition task status from disabled to enabled to done and back to disabled.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -363,6 +472,7 @@
           <li xml:lang="pt">Painel de atalhos de eventos do rato adicionado na cábula de atalhos.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
@@ -380,6 +490,7 @@
           <li xml:lang="pt">Ícone da aplicação atualizado (obrigado a Fatih20).</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -411,6 +522,7 @@
     <release version="1.9.2" date="2020-08-07">
       <description>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -424,6 +536,7 @@
     <release version="1.9.1" date="2020-07-12">
       <description>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
@@ -431,6 +544,7 @@
           <li xml:lang="pt">Tradução em Italiano atualizada (obrigado a @albanobattistella).</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -455,6 +569,7 @@
           <li xml:lang="pt">Tradução em Italiano adicionada (obrigado a albanobattistella no GitHub).</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
@@ -467,9 +582,11 @@
           <li>Updated keyboard shortcuts cheatsheet for task commands.</li>
           <li xml:lang="pt">Cábula de atalhos de teclado atualizada para comandos de tarefa.</li>
           <li>Updated Spanish translation (thanks to febrezo on GitHub).</li>
+          <li xml:lang="ru">Обновлена испанская локализация (febrezo на GutHub).</li>
           <li xml:lang="pt">Tradução em Espanhol atualizada (obrigado a febrezo no GitHub).</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -532,6 +649,7 @@
           <li xml:lang="pt">Adicionada a possibilidade de substituir/editar nós através da funcionalidade Entrada Rápida.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
@@ -551,6 +669,7 @@
           <li xml:lang="pt">Ferramenta de dicas adicionado e o cursor do rato foi alterado para quando este se sobrepor a uma ligação e a tecla Ctrl estiver pressionada.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -579,6 +698,7 @@
           <li xml:lang="pt">Tradução em Holandês adicionada (obrigado a Heimen Stoffels).</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
@@ -594,6 +714,7 @@
           <li xml:lang="pt">Tema escuro ajustado para ajudar com o contraste da guia atual.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -640,6 +761,7 @@
           <li xml:lang="pt">Adicionada a possibilidade de exportar para o formato Modo Org.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
@@ -657,6 +779,7 @@
           <li xml:lang="fr">Modification de la sélection de tous les nœuds du niveau courant avec Control + Triple clic.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -706,6 +829,7 @@
           <li>Added support for Markdown within a note:  Notes are syntax highlighted; and Embedded URLs can be opened by Control-Clicking on them.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
@@ -723,6 +847,7 @@
           <li xml:lang="fr">Amélioration des différents formats d'exportation.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -735,6 +860,7 @@
     <release version="1.5.1" date="2019-11-23">
       <description>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
@@ -743,6 +869,7 @@
           <li xml:lang="fr">Amélioration de diverses icônes (grâce à Nararyans R.I.)</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -778,6 +905,7 @@
           <li xml:lang="fr">Ajouter du raccourci pour parcourir la fenêtre d'aide (utilisez la touche F1 pour l'afficher).</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
@@ -798,6 +926,7 @@
           <li xml:lang="fr">Amélioration du style lors de la création d'un nouveau nœud/connexion.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -866,10 +995,12 @@
           <li xml:lang="fr">Ajout de la prise en charge pour Flatpak.</li>
         </ul>
         <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Removed markup from translated strings.</li>
+          <li xml:lang="ru">Убрана разметка из переводимых сообщений.</li>
           <li xml:lang="pt">Markup removido de strings traduzidas.</li>
           <li xml:lang="fr">Suppression des balises des chaînes de caractères traduites.</li>
           <li>Standardized tooltips that display accelerator information.</li>
@@ -895,6 +1026,7 @@
           <li xml:lang="fr">Amélioration du script de l'application pour autoriser les arguments en ligne de commande à être passés en sous-commandes de débogage.</li>
         </ul>
         <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
         <p xml:lang="pt">Correções</p>
         <p xml:lang="fr">Corrections de bugs</p>
         <ul>
@@ -968,6 +1100,7 @@
           <li xml:lang="pt">Adicionada a possibilidade de mostrar/esconder cada painel no inspetor de estilo.</li>
           <li xml:lang="fr">Ajout de la possibilité d'afficher/masquer chaque panneau dans l'inspecteur de style.</li>
           <li>Removed support for Loki builds.</li>
+          <li xml:lang="ru">Удалена поддержка сборок на Loki.</li>
           <li xml:lang="pt">Suporte para Loki removido.</li>
           <li xml:lang="fr">Arrêt de la prise en charge pour Loki.</li>
         </ul>
@@ -1016,6 +1149,7 @@
           <li xml:lang="pt">Aparência melhorada dos indicadores de dobra.</li>
           <li xml:lang="fr">Amélioration de l'apparence des indicateurs de pli.</li>
           <li>Lots of bug fixes.</li>
+          <li xml:lang="ru">Множество исправлений ошибок.</li>
           <li xml:lang="pt">Muitas correções.</li>
           <li xml:lang="fr">Nombreuses corrections de bugs.</li>
         </ul>
@@ -1182,6 +1316,7 @@
           <li xml:lang="pt">Adicionada a possibilidade de clicar duas vezes num nó para o tornar editável.</li>
           <li xml:lang="fr">Ajout de la possibilité de double-cliquer sur un nœud pour le rendre éditable.</li>
           <li>Bug fixes.</li>
+          <li xml:lang="ru">Исправления ошибок.</li>
           <li xml:lang="pt">Correções.</li>
           <li xml:lang="fr">Corrections de bugs.</li>
         </ul>
@@ -1190,6 +1325,7 @@
     <release version="1.0.2" date="2018-06-29">
       <description>
         <p>Initial release</p>
+        <p xml:lang="ru">Первая версия программы</p>
         <p xml:lang="pt">Lançamento inicial</p>
         <p xml:lang="fr">Version initiale</p>
       </description>

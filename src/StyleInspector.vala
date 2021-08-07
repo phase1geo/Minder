@@ -35,7 +35,7 @@ public enum StyleAffects {
       case SELECTED_NODES       :  return( _( "Selected Nodes" ) );
       case SELECTED_CONNECTIONS :  return( _( "Selected Connections" ) );
     }
-    return( "Unknown" );
+    return( _( "Unknown" ) );
   }
 
 }
@@ -423,7 +423,8 @@ public class StyleInspector : Box {
   /* Called whenever the user changes the link width value */
   private bool link_width_changed( ScrollType scroll, double value ) {
     if( value > 8 ) value = 8;
-    var link_width = new UndoStyleLinkWidth( _affects, (int)value, _da );
+    var int_value  = (int)value;
+    var link_width = new UndoStyleLinkWidth( _affects, int_value, _da );
     if( _change_add ) {
       _da.undo_buffer.add_item( link_width );
       _change_add = false;

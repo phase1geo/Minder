@@ -3,7 +3,6 @@
   <gresource prefix="/com/github/phase1geo/minder">
     <file alias="Application.css" compressed="true">Application.css</file>
     <file alias="shortcuts.ui" compressed="true">com.github.phase1geo.minder.shortcuts.ui</file>
-    <file alias="stickers.xml" compressed="true">icons/flat-color-icons/categories.xml</file>
     <file alias="minder-logo.svg">icons/scalable/com.github.phase1geo.minder.svg</file>
 
     <file alias="minder-balance-symbolic.svg">icons/16/minder-balance-symbolic.svg</file>

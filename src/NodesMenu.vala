@@ -27,6 +27,7 @@ public class NodesMenu : Gtk.Menu {
   Gtk.MenuItem _copy;
   Gtk.MenuItem _cut;
   Gtk.MenuItem _delete;
+  Gtk.MenuItem _task;
   Gtk.MenuItem _fold;
   Gtk.MenuItem _connect;
   Gtk.MenuItem _link;
@@ -54,14 +55,20 @@ public class NodesMenu : Gtk.Menu {
     _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
     _delete.activate.connect( delete_nodes );
 
+    _task = new Gtk.MenuItem();
+    _task.add( new Granite.AccelLabel( _( "Toggle Tasks" ), "t" ) );
+    _task.activate.connect( toggle_tasks );
+
     _fold = new Gtk.MenuItem();
     _fold.add( new Granite.AccelLabel( _( "Fold Children" ), "f" ) );
     _fold.activate.connect( fold_nodes );
 
-    _connect = new Gtk.MenuItem.with_label( _( "Connect" ) );
+    _connect = new Gtk.MenuItem();
+    _connect.add( new Granite.AccelLabel( _( "Connect" ), "x" ) );
     _connect.activate.connect( connect_nodes );
 
-    _link = new Gtk.MenuItem.with_label( _( "Link Nodes" ) );
+    _link = new Gtk.MenuItem();
+    _link.add( new Granite.AccelLabel( _( "Link Nodes" ), "y" ) );
     _link.activate.connect( link_nodes );
 
     var link_color_menu = new Gtk.Menu();
@@ -142,6 +149,7 @@ public class NodesMenu : Gtk.Menu {
     add( _cut );
     add( _delete );
     add( new SeparatorMenuItem() );
+    add( _task );
     add( _link_colors );
     add( _fold );
     add( new SeparatorMenuItem() );
@@ -188,6 +196,7 @@ public class NodesMenu : Gtk.Menu {
 
     var nodes    = _da.get_selected_nodes();
     var node_num = nodes.length;
+    var has_link = _da.any_selected_nodes_linked();
 
     bool foldable, unfoldable;
     nodes_foldable_status( out foldable, out unfoldable );
@@ -200,7 +209,15 @@ public class NodesMenu : Gtk.Menu {
     _selparent.set_sensitive( _da.parent_selectable() );
     _selchildren.set_sensitive( _da.children_selectable() );
 
-    _fold.label = unfoldable ? _( "Unfold Children" )  : _( "Fold Children" );
+    var fold_acc = (Granite.AccelLabel)_fold.get_child();
+    var link_acc = (Granite.AccelLabel)_link.get_child();
+    var fold_lbl = unfoldable ? _( "Unfold Children" )   : _( "Fold Children" );
+    var link_lbl = has_link   ? _( "Remove Node Links" ) : _( "Link Nodes" );
+
+    _fold.get_child().destroy();
+    _fold.add( new Granite.AccelLabel( fold_lbl, fold_acc.accel_string ) );
+    _link.get_child().destroy();
+    _link.add( new Granite.AccelLabel( link_lbl, link_acc.accel_string ) );
 
   }
 
@@ -217,6 +234,11 @@ public class NodesMenu : Gtk.Menu {
   /* Delete all selected nodes, collapsing deselected descendants */
   private void delete_nodes() {
     _da.delete_nodes();
+  }
+
+  /* Toggles the task indicator of the selected nodes */
+  private void toggle_tasks() {
+    _da.change_selected_tasks();
   }
 
   /* Folds/unfolds the selected nodes */
@@ -236,7 +258,7 @@ public class NodesMenu : Gtk.Menu {
    Links two selected nodes such that the first selected node will link to the second selected node.
   */
   private void link_nodes() {
-    _da.create_links();
+    _da.toggle_links();
   }
 
   /* Changes the color of all selected nodes */

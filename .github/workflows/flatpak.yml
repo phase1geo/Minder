@@ -1,2 +1,0 @@
-name: Flatpak Builder
-uses: bilelmoussaoui/flatpak-github-actions@v2

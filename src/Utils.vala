@@ -156,13 +156,13 @@ public class Utils {
       try {
         app.launch_uris( uris, null );
       } catch( GLib.Error e ) {
-        stdout.printf( "error: %s\n", e.message );
+        stdout.printf( _( "error: %s\n" ), e.message );
       }
     } else {
       try {
         AppInfo.launch_default_for_uri( url, null );
       } catch( GLib.Error e ) {
-        stdout.printf( "error: %s\n", e.message );
+        stdout.printf( _( "error: %s\n" ), e.message );
       }
     }
   }

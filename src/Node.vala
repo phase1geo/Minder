@@ -112,9 +112,18 @@ public struct NodeLinkInfo {
   }
 }
 
-public class Node : Object {
+public struct NodeTaskInfo {
+  bool enabled;
+  bool done;
+  Node node;
+  public NodeTaskInfo( bool e, bool d, Node n ) {
+    enabled = e;
+    done    = d;
+    node    = n;
+  }
+}
 
-  private static int _next_id = 0;
+public class Node : Object {
 
   /* Member variables */
   private   DrawArea     _da;
@@ -371,7 +380,7 @@ public class Node : Object {
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
     _da       = da;
-    _id       = _next_id++;
+    _id       = da.next_node_id;
     _children = new Array<Node>();
     _layout   = layout;
     _name     = new CanvasText( da );
@@ -382,7 +391,7 @@ public class Node : Object {
   /* Constructor initializing string */
   public Node.with_name( DrawArea da, string n, Layout? layout ) {
     _da       = da;
-    _id       = _next_id++;
+    _id       = da.next_node_id;
     _children = new Array<Node>();
     _layout   = layout;
     _name     = new CanvasText.with_text( da, n );
@@ -393,37 +402,40 @@ public class Node : Object {
   /* Copies an existing node to this node */
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
     _da       = da;
-    _id       = _next_id++;
+    _id       = da.next_node_id;
     _name     = new CanvasText( da );
+    _children = n._children;
     copy_variables( n, im );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
     mode      = NodeMode.NONE;
-    _children = n._children;
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).parent = this;
     }
   }
 
   public Node.copy_only( DrawArea da, Node n, ImageManager im ) {
-    _da = da;
-    _id = _next_id++;
-    _name = new CanvasText( da );
+    _da       = da;
+    _id       = da.next_node_id;
+    _children = new Array<Node>();
+    _name     = new CanvasText( da );
     copy_variables( n, im );
   }
 
   /* Copies an existing node tree to this node */
-  public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int> id_map ) {
+  public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int>? id_map = null ) {
     _da       = da;
-    _id       = _next_id++;
-    _name     = new CanvasText( da );
+    _id       = da.next_node_id;
     _children = new Array<Node>();
+    _name     = new CanvasText( da );
     copy_variables( n, im );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
-    id_map.set( n._id, _id );
+    if( id_map != null ) {
+      id_map.set( n._id, _id );
+    }
     for( int i=0; i<n._children.length; i++ ) {
       Node child = new Node.copy_tree( da, n._children.index( i ), im, id_map );
       child.parent = this;
@@ -436,11 +448,6 @@ public class Node : Object {
     _name.text.add_parser( _da.markdown_parser );
     // _name.text.add_parser( _da.tagger_parser );
     _name.text.add_parser( _da.url_parser );
-  }
-
-  /* Resets the ID generator.  This should be called whenever a new document is started. */
-  public static void reset() {
-    _next_id = 0;
   }
 
   /* Copies just the variables of the node, minus the children nodes */
@@ -466,6 +473,7 @@ public class Node : Object {
     side             = n.side;
     style            = n.style;
     tree_bbox        = n.tree_bbox;
+    sticker          = n.sticker;
   }
 
   /* Returns the associated ID of this node */
@@ -551,6 +559,14 @@ public class Node : Object {
     }
     if( (_layout != null) && (((_width - orig_width) != 0) || ((_height - orig_height) != 0)) ) {
       _layout.handle_update_by_edit( this, (_width - orig_width), (_height - orig_height) );
+    }
+  }
+
+  /* Updates the size of all nodes within this tree */
+  public void update_tree() {
+    _name.update_size();
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).update_tree();
     }
   }
 
@@ -699,17 +715,19 @@ public class Node : Object {
     h = _task_radius * 2;
   }
 
+  /* Returns the positional information for where the sticker is located (if it exists) */
   protected virtual void sticker_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
     double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
     x = posx + margin + padding + task_width();
-    y = posy + margin + padding + img_height + ((_height - (img_height + (padding * 2) + (margin + 2))) / 2) - (stk_height / 2);
+    y = posy + margin + padding + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - (stk_height / 2);
     w = (_sticker_buf == null) ? 0 : _sticker_buf.width;
     h = (_sticker_buf == null) ? 0 : _sticker_buf.height;
   }
 
+  /* Returns the positional information for where the linked node indicator is located (if it exists) */
   protected virtual void linked_node_bbox( out double x, out double y, out double w, out double h ) {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
@@ -775,6 +793,9 @@ public class Node : Object {
     return( false );
   }
 
+  /*
+   Returns true if the given cursor coordinates lies within the linked node indicator area.
+  */
   public virtual bool is_within_linked_node( double x, double y ) {
     if( linked_node != null ) {
       double lx, ly, lw, lh;
@@ -856,7 +877,11 @@ public class Node : Object {
 
   /* Returns true if the given box intersects with this node box */
   public bool intersects_with( Gdk.Rectangle box ) {
-    Gdk.Rectangle node_box = { (int)posx, (int)posy, (int)width, (int)height };
+    var int_x = (int)posx;
+    var int_y = (int)posy;
+    var int_w = (int)width;
+    var int_h = (int)height;
+    Gdk.Rectangle node_box = { int_x, int_y, int_w, int_h };
     return( box.intersect( node_box, null ) );
   }
 
@@ -1249,13 +1274,15 @@ public class Node : Object {
   /* Resizes the node width by the given amount */
   public virtual void resize( double diff ) {
     diff = resizer_on_left() ? (0 - diff) : diff;
+    var int_diff = (int)diff;
     if( _image == null ) {
       if( (diff < 0) ? ((style.node_width + diff) <= _min_width) : !_name.is_wrapped() ) return;
-      style.node_width += (int)diff;
+      style.node_width += int_diff;
     } else {
       if( (style.node_width + diff) < _min_width ) return;
-      style.node_width += (int)diff;
-      _image.set_width( (int)style.node_width );
+      style.node_width += int_diff;
+      var int_node_width = (int)style.node_width;
+      _image.set_width( int_node_width );
     }
     _name.resize( diff );
   }
@@ -1691,7 +1718,7 @@ public class Node : Object {
   /* Returns a reference to the first child of this node */
   public virtual Node? first_child( NodeSide? side = null ) {
     if( !folded ) {
-      for( int i=0; i<(int)_children.length; i++ ) {
+      for( int i=0; i<_children.length; i++ ) {
         if( (side == null) || (_children.index( i ).side == side) ) {
           return( _children.index( i ) );
         }
@@ -1807,7 +1834,9 @@ public class Node : Object {
    Toggles the current value of task done and propagates the change to all
    parent nodes.
   */
-  public void toggle_task_done() {
+  public void toggle_task_done( ref Array<NodeTaskInfo?> changed ) {
+    var change = new NodeTaskInfo( task_enabled(), task_done(), this );
+    changed.append_val( change );
     set_task_done( _task_done == 0 );
   }
 
@@ -2055,16 +2084,14 @@ public class Node : Object {
       y += _task_radius;
 
       /* Draw circle outline */
-      if( complete < 1 ) {
-        Utils.set_context_color_with_alpha( ctx, ((style.is_fillable() && (background != null)) ? background : color), _alpha );
-        ctx.new_path();
-        ctx.set_line_width( 2 );
-        ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
-        if( style.is_fillable() && (background != null) ) {
-          ctx.fill();
-        } else {
-          ctx.stroke();
-        }
+      Utils.set_context_color_with_alpha( ctx, ((style.is_fillable() && (background != null)) ? background : color), _alpha );
+      ctx.new_path();
+      ctx.set_line_width( 2 );
+      ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
+      if( style.is_fillable() && (background != null) ) {
+        ctx.fill();
+      } else {
+        ctx.stroke();
       }
 
       /* Draw completeness pie */
@@ -2083,6 +2110,7 @@ public class Node : Object {
 
   }
 
+  /* Draws the sticker associated with the node */
   protected virtual void draw_sticker( Context ctx, RGBA sel_color, RGBA bg_color ) {
 
     if( _sticker_buf != null ) {
@@ -2184,7 +2212,7 @@ public class Node : Object {
       Utils.set_context_color_with_alpha( ctx, bg_color, _alpha );
       ctx.new_path();
       ctx.set_line_width( 1 );
-      ctx.arc( (fx + (fw / 2)), (fy + (fh / 2)), (fw / 2), 0, (2 * Math.PI) );
+      ctx.rectangle( fx, fy, fw, fh );
       ctx.fill();
 
       /* Draw circles */
@@ -2202,7 +2230,7 @@ public class Node : Object {
       Utils.set_context_color_with_alpha( ctx, fg_color, _alpha );
       ctx.new_path();
       ctx.set_line_width( 2 );
-      ctx.arc( (fx + (fw / 2)), (fy + (fh / 2)), (fw / 2), 0, (2 * Math.PI) );
+      ctx.rectangle( fx, fy, fw, fh );
       ctx.fill_preserve();
       Utils.set_context_color_with_alpha( ctx, bg_color, _alpha );
       ctx.stroke();
@@ -2390,11 +2418,12 @@ public class Node : Object {
       draw_link( ctx, theme );
     }
     if( !folded ) {
-      if( _children.length > 0 ) {
+      var int_child_len = (int)_children.length;
+      if( int_child_len > 0 ) {
         var first_side = side_count( _children.index( 0 ).side );
         draw_side_links( ctx, theme, 0, first_side );
-        if( first_side < _children.length ) {
-          draw_side_links( ctx, theme, first_side, (int)_children.length );
+        if( first_side < int_child_len ) {
+          draw_side_links( ctx, theme, first_side, int_child_len );
         }
       }
     }

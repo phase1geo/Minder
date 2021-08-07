@@ -1,5 +1,5 @@
-project('com.github.phase1geo.minder', ['vala', 'c'],
-    version : '1.12.2',
+ project('com.github.phase1geo.minder', ['vala', 'c'],
+    version : '1.12.5',
     license: 'GPL-3.0'
 )
 
@@ -45,13 +45,19 @@ if meson.get_compiler('vala').version().version_compare('>=0.48.0')
   message('Using VALAC048')
 endif
 
-# Add the math library
+# Add the math and Markdown libraries
 cc = meson.get_compiler('c')
-math_dep = cc.find_library('m', required: false)
-
-# Add the Markdown library
-cc = meson.get_compiler('c')
+math_dep    = cc.find_library('m', required: false)
 libmarkdown = cc.find_library('markdown', required: true)
+
+# Check the granite dependency
+granite = dependency('granite', version: '>=6.0', required: false)
+if granite.found()
+  add_project_arguments(['--define=GRANITE_6_OR_LATER'], language: 'vala')
+else
+  granite = dependency('granite', required: true)
+  message('Using older version of granite')
+endif
 
 add_project_arguments([
         '--vapidir', join_paths(meson.current_source_dir(), 'vapi'),
@@ -65,7 +71,7 @@ dependencies = [
     dependency('glib-2.0'),
     dependency('cairo'),
     dependency('gee-0.8'),
-    dependency('granite'),
+    granite,
     dependency('gtk+-3.0'),
     dependency('libxml-2.0'),
     dependency('libarchive'),

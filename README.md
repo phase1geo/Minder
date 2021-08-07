@@ -38,7 +38,7 @@ You will need the following dependencies to build Minder:
 * python3-pip
 * python3-setuptools
 * meson
-* valac (version 0.48.3 or later is recommended to avoid compile issues with libarchive)
+* valac (any 0.48.x version -- any later version will result in segfaults -- earlier versions have issues with libarchive)
 * debhelper
 * libcairo2-dev
 * libgranite-dev
@@ -49,9 +49,8 @@ You will need the following dependencies to build Minder:
 * libgtksourceview-4-dev
 * libmarkdown2-dev
 
-From the command-line within the top Minder directory, run `./app run` to build and run the application.
-
-To install, run `sudo ./app install` and then run the application from your application launcher.
+To install, run `sudo ./app install` and then run the application from your application launcher or from
+the command-line with `./app run`.
 
 ## Distribution packages
 

@@ -194,7 +194,7 @@ public class Theme : Object {
                      ".canvas { background: " + get_color( "background" ).to_string() + "; }";
       provider.load_from_data( css_data );
     } catch( GLib.Error e ) {
-      stdout.printf( "Unable to load background color: %s", e.message );
+      stdout.printf( _( "Unable to load background color: %s" ), e.message );
     }
     return( provider );
   }

@@ -254,11 +254,21 @@ public class Layout : Object {
   public virtual void handle_update_by_edit( Node n, double diffw, double diffh ) {
     double adjust = 0 - (get_adjust( n ) / 2);
     if( (n.side & NodeSide.horizontal()) != 0 ) {
-      if( (n.parent != null) && (diffh != 0) ) {
+      if( diffh != 0 ) {
         n.adjust_posy_only( 0 - (diffh / 2) );
       }
       if( diffw != 0 ) {
-        if( n.side == NodeSide.LEFT ) {
+        if( n.is_root() ) {
+          n.adjust_posx_only( 0 - (diffw / 2) );
+          for( int i=0; i<n.children().length; i++ ) {
+            var child = n.children().index( i );
+            if( child.side == NodeSide.LEFT ) {
+              child.posx -= (diffw / 2);
+            } else {
+              child.posx += (diffw / 2);
+            }
+          }
+        } else if( n.side == NodeSide.LEFT ) {
           n.posx -= diffw;
         } else {
           for( int i=0; i<n.children().length; i++ ) {
@@ -267,11 +277,21 @@ public class Layout : Object {
         }
       }
     } else {
-      if( (n.parent != null) && (diffw != 0) ) {
+      if( diffw != 0 ) {
         n.adjust_posx_only( 0 - (diffw / 2) );
       }
       if( diffh != 0 ) {
-        if( n.side == NodeSide.TOP ) {
+        if( n.is_root() ) {
+          n.posy -= (diffh / 2);
+          for( int i=0; i<n.children().length; i++ ) {
+            var child = n.children().index( i );
+            if( n.side == NodeSide.TOP ) {
+              child.posy -= (diffh / 2);
+            } else {
+              child.posy += (diffh / 2);
+            }
+          }
+        } else if( n.side == NodeSide.TOP ) {
           n.posy -= diffh;
         } else {
           for( int i=0; i<n.children().length; i++ ) {

@@ -104,6 +104,7 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _sticker_posy;
   private NodeGroups       _groups;
   private uint             _select_hover_id = 0;
+  private int              _next_node_id    = 0;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -160,6 +161,11 @@ public class DrawArea : Gtk.DrawingArea {
   public NodeGroups groups {
     get {
       return( _groups );
+    }
+  }
+  public int next_node_id {
+    get {
+      return( _next_node_id++ );
     }
   }
 
@@ -375,6 +381,14 @@ public class DrawArea : Gtk.DrawingArea {
       balance_nodes( false, false );
     }
     animator.animate();
+  }
+
+  /* Updates all of the node sizes */
+  public void update_node_sizes() {
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).update_tree();
+    }
+    queue_draw();
   }
 
   /* Returns the list of nodes */
@@ -655,9 +669,6 @@ public class DrawArea : Gtk.DrawingArea {
     /* Clear the undo buffer */
     undo_buffer.clear();
 
-    /* Reset the node ID generator */
-    Node.reset();
-
     /* Clear the selection */
     _selected.clear();
 
@@ -707,9 +718,6 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Clear the undo buffer */
     undo_buffer.clear();
-
-    /* Reset the node ID generator */
-    Node.reset();
 
     /* Clear the selection */
     _selected.clear();
@@ -881,7 +889,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Updates the IM context cursor location based on the canvas text position */
   private void update_im_cursor( CanvasText ct ) {
-    Gdk.Rectangle rect = {(int)ct.posx, (int)ct.posy, 0, (int)ct.height};
+    var int_posx   = (int)ct.posx;
+    var int_posy   = (int)ct.posy;
+    var int_height = (int)ct.height;
+    Gdk.Rectangle rect = {int_posx, int_posy, 0, int_height};
     _im_context.set_cursor_location( rect );
   }
 
@@ -909,8 +920,9 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Toggles the value of the specified node, if possible */
   public void toggle_task( Node n ) {
-    undo_buffer.add_item( new UndoNodeTask( n, true, !n.task_done() ) );
-    n.toggle_task_done();
+    var changes = new Array<NodeTaskInfo?>();
+    n.toggle_task_done( ref changes );
+    undo_buffer.add_item( new UndoNodeTasks( changes ) );
     queue_draw();
     auto_save();
   }
@@ -1006,17 +1018,59 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Changes the state of the given task if it differs from the desired values */
+  private void change_task( Node node, bool enable, bool done, Array<NodeTaskInfo?> changes ) {
+    if( (node.task_enabled() == enable) && (node.task_done() == done) ) return;
+    changes.append_val( NodeTaskInfo( node.task_enabled(), node.task_done(), node ) );
+    node.enable_task( enable );
+    node.set_task_done( done );
+  }
+
   /*
    Changes the current node's task to the given values.  Updates the layout,
    adds the undo item, and redraws the canvas.
   */
   public void change_current_task( bool enable, bool done ) {
     var nodes = _selected.nodes();
-    if( nodes.length == 1 ) {
-      var current = nodes.index( 0 );
-      undo_buffer.add_item( new UndoNodeTask( current, enable, done ) );
-      current.enable_task( enable );
-      current.set_task_done( done );
+    if( nodes.length != 1 ) return;
+    var changes = new Array<NodeTaskInfo?>();
+    change_task( nodes.index( 0 ), enable, done, changes );
+    if( changes.length > 0 ) {
+      undo_buffer.add_item( new UndoNodeTasks( changes ) );
+      queue_draw();
+      auto_save();
+    }
+  }
+
+  /* Toggles the task values of the selected nodes */
+  public void change_selected_tasks() {
+    var parents     = new Array<Node>();
+    var changes     = new Array<NodeTaskInfo?>();
+    var all_enabled = true;
+    var all_done    = true;
+    _selected.get_parents( ref parents );
+    for( int i=0; i<parents.length; i++ ) {
+      var node = parents.index( i );
+      all_enabled &= node.task_enabled();
+      all_done    &= node.task_done();
+    }
+    if( all_enabled ) {
+      if( all_done ) {
+        for( int i=0; i<parents.length; i++ ) {
+          change_task( parents.index( i ), false, false, changes );
+        }
+      } else {
+        for( int i=0; i<parents.length; i++ ) {
+          change_task( parents.index( i ), true, true, changes );
+        }
+      }
+    } else {
+      for( int i=0; i<parents.length; i++ ) {
+        change_task( parents.index( i ), true, false, changes );
+      }
+    }
+    if( changes.length > 0 ) {
+      undo_buffer.add_item( new UndoNodeTasks( changes ) );
       queue_draw();
       auto_save();
     }
@@ -1144,10 +1198,21 @@ public class DrawArea : Gtk.DrawingArea {
     queue_draw();
   }
 
+  /* Returns true if any of the selected nodes contain node links */
+  public bool any_selected_nodes_linked() {
+    var nodes = _selected.nodes();
+    for( int i=0; i<nodes.length; i++ ) {
+      if( nodes.index( i ).linked_node != null ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
   /* Creates links between selected nodes */
   public void create_links() {
-    if( _selected.num_nodes() < 2 ) return;
     var nodes = _selected.nodes();
+    if( nodes.length < 2 ) return;
     undo_buffer.add_item( new UndoNodesLink( nodes ) );
     for( int i=0; i<(nodes.length - 1); i++ ) {
       nodes.index( i ).linked_node = nodes.index( i + 1 );
@@ -1156,27 +1221,28 @@ public class DrawArea : Gtk.DrawingArea {
     queue_draw();
   }
 
-  /* Delete the current node link */
-  public void delete_current_link() {
-    var current = _selected.current_node();
-    if( current != null ) {
-      Node? old_link = current.linked_node;
-      current.linked_node = null;
-      undo_buffer.add_item( new UndoNodeLink( current, old_link ) );
-      auto_save();
-      queue_draw();
+  /* Deletes all of the selected node links */
+  public void delete_links() {
+    var nodes = _selected.nodes();
+    undo_buffer.add_item( new UndoNodesLink( nodes ) );
+    for( int i=0; i<nodes.length; i++ ) {
+      if( nodes.index( i ).linked_node != null ) {
+        nodes.index( i ).linked_node = null;
+      }
     }
+    auto_save();
+    queue_draw();
   }
 
-  /* Toggles the node link */
-  private void toggle_link() {
-    var current = _selected.current_node();
-    if( current != null ) {
-      if( current.linked_node == null ) {
-        start_connection( true, true );
-      } else {
-        delete_current_link();
-      }
+  /* Toggles the node links */
+  public void toggle_links() {
+    var nodes = _selected.nodes();
+    if( any_selected_nodes_linked() ) {
+      delete_links();
+    } else if( nodes.length == 1 ) {
+      start_connection( true, true );
+    } else {
+      create_links();
     }
   }
 
@@ -1511,6 +1577,51 @@ public class DrawArea : Gtk.DrawingArea {
 
     return( true );
 
+  }
+
+  /*
+   Checks to see if the user has clicked a connection that was not previously
+   selected.  If this is the case, select the connection.
+  */
+  private bool select_connection_if_unselected( double x, double y ) {
+    var conn = _connections.within_title( x, y );
+    if( conn == null ) {
+      conn = _connections.on_curve( x, y );
+    }
+    if( conn != null ) {
+      if( !_selected.is_connection_selected( conn ) ) {
+        _selected.set_current_connection( conn );
+        queue_draw();
+      }
+      return( true );
+    }
+    return( false );
+  }
+
+  /*
+   Checks to see if the user has clicked a node that was not previously selected.
+   If this is the case, select the node.
+  */
+  private bool select_node_if_unselected( double x, double y ) {
+    for( int i=0; i<_nodes.length; i++ ) {
+      var node = _nodes.index( i ).contains( x, y, null );
+      if( node != null ) {
+        if( !_selected.is_node_selected( node ) ) {
+          _selected.set_current_node( node );
+          queue_draw();
+        }
+        return( true );
+      }
+    }
+    return( false );
+  }
+
+  /* Handles a right click to deal with any selection changes. */
+  private void handle_right_click( double x, double y ) {
+    if( select_connection_if_unselected( x, y ) ||
+        select_node_if_unselected( x, y ) ) {
+      /* Nothing else to do */
+    }
   }
 
   /*
@@ -1992,12 +2103,14 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Handle button press event */
   private bool on_press( EventButton event ) {
+    var scaled_x = scale_value( event.x );
+    var scaled_y = scale_value( event.y );
     switch( event.button ) {
       case Gdk.BUTTON_PRIMARY :
       case Gdk.BUTTON_MIDDLE  :
         grab_focus();
-        _press_x      = scale_value( event.x );
-        _press_y      = scale_value( event.y );
+        _press_x      = scaled_x;
+        _press_y      = scaled_y;
         _pressed      = set_current_at_position( _press_x, _press_y, event );
         _press_type   = event.type;
         _press_middle = event.button == Gdk.BUTTON_MIDDLE;
@@ -2005,6 +2118,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         break;
       case Gdk.BUTTON_SECONDARY :
+        handle_right_click( scaled_x, scaled_y );
         show_contextual_menu( event );
         break;
     }
@@ -2338,8 +2452,8 @@ public class DrawArea : Gtk.DrawingArea {
   /* Prepare the given folded count for use in a markup tooltip */
   private string prepare_folded_count_markup( Node node ) {
     var tooltip = "";
-    tooltip += "Children: %u\n".printf( node.children().length );
-    tooltip += "Total: %d".printf( node.descendant_count() );
+    tooltip += _( "Children: %u\n" ).printf( node.children().length );
+    tooltip += _( "Total: %d" ).printf( node.descendant_count() );
     return( tooltip );
   }
 
@@ -3026,8 +3140,9 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a new root node to the canvas */
   public void add_root_node() {
-    var node = create_root_node( _( "Another Idea" ) );
-    undo_buffer.add_item( new UndoNodeInsert( node, (int)(_nodes.length - 1) ) );
+    var node         = create_root_node( _( "Another Idea" ) );
+    var int_node_len = (int)(_nodes.length - 1);
+    undo_buffer.add_item( new UndoNodeInsert( node, int_node_len ) );
     if( select_node( node ) ) {
       set_node_mode( node, NodeMode.EDITABLE, false );
       queue_draw();
@@ -3547,7 +3662,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Selects all of the text in the current node */
-  private void handle_control_slash() {
+  private void select_all() {
     if( is_connection_editable() ) {
       _selected.current_connection().title.set_cursor_all( false );
       queue_draw();
@@ -3558,7 +3673,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Deselects all of the text in the current node */
-  private void handle_control_backslash() {
+  private void deselect_all() {
     if( is_connection_editable() ) {
       _selected.current_connection().title.clear_selection();
       queue_draw();
@@ -3927,8 +4042,8 @@ public class DrawArea : Gtk.DrawingArea {
           case Key.Down      :  handle_control_down( shift );   break;
           case Key.Home      :  handle_control_home( shift );   break;
           case Key.End       :  handle_control_end( shift );    break;
-          case Key.slash     :  handle_control_slash();         break;
-          case Key.backslash :  handle_control_backslash();     break;
+          case Key.a         :  select_all();                   break;
+          case Key.A         :  deselect_all();                 break;
           case Key.period    :  handle_control_period();        break;
           case Key.E         :  handle_control_E();             break;
           case Key.R         :  handle_control_R();             break;
@@ -3989,6 +4104,7 @@ public class DrawArea : Gtk.DrawingArea {
         case Key.g            :  add_group();  break;
         case Key.m            :  select_root_node();  break;
         case Key.r            :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
+        case Key.t            :  change_selected_tasks();  break;
         case Key.u            :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
         case Key.z            :  zoom_out();  break;
         case Key.bar          :  if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() );  break;
@@ -3998,6 +4114,8 @@ public class DrawArea : Gtk.DrawingArea {
         case Key.Control_L    :  handle_control( true );  break;
         case Key.F10          :  if( shift ) show_contextual_menu( e );  break;
         case Key.Menu         :  show_contextual_menu( e );  break;
+        case Key.x            :  create_connection();  break;
+        case Key.y            :  toggle_links();  break;
         default               :  return( false );
       }
     }
@@ -4092,7 +4210,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
         break;
       case Key.x :  start_connection( true, false );  break;
-      case Key.y :  toggle_link();  break;
+      case Key.y :  toggle_links();  break;
       case Key.z :  zoom_out();  break;
       default    :  return( false );
     }
@@ -4214,7 +4332,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Setup the nodes that will be copied */
     if( _selected.current_node() != null ) {
-      nodes.append_val( _selected.current_node() );
+      nodes.append_val( new Node.copy_tree( this, _selected.current_node(), image_manager ) );
     } else {
       _selected.get_subtrees( ref nodes, image_manager );
     }
@@ -4630,7 +4748,9 @@ public class DrawArea : Gtk.DrawingArea {
           _attach_sticker.mode = StickerMode.NONE;
           _attach_sticker = null;
         } else {
-          var sticker = new Sticker( data.get_text(), (double)x, (double)y );
+          var double_x = (double)x;
+          var double_y = (double)y;
+          var sticker = new Sticker( data.get_text(), double_x, double_y );
           _stickers.add_sticker( sticker );
           _selected.set_current_sticker( sticker );
           _undo_buffer.add_item( new UndoStickerAdd( sticker ) );

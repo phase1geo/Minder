@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 10:30-0500\n"
+"POT-Creation-Date: 2021-07-26 22:42-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,22 +55,22 @@ msgid "Mermaid"
 msgstr ""
 
 #: src/exports/ExportMermaid.vala:46 src/layouts/LayoutVertical.vala:26
-#: src/MapInspector.vala:301
+#: src/MapInspector.vala:334
 msgid "Vertical"
 msgstr ""
 
 #: src/exports/ExportMermaid.vala:46 src/layouts/LayoutDown.vala:26
-#: src/MapInspector.vala:306
+#: src/MapInspector.vala:339
 msgid "Downwards"
 msgstr ""
 
 #: src/exports/ExportMermaid.vala:48 src/layouts/LayoutLeft.vala:26
-#: src/MapInspector.vala:303
+#: src/MapInspector.vala:336
 msgid "To left"
 msgstr ""
 
 #: src/exports/ExportMermaid.vala:50 src/layouts/LayoutUp.vala:26
-#: src/MapInspector.vala:305
+#: src/MapInspector.vala:338
 msgid "Upwards"
 msgstr ""
 
@@ -123,12 +123,12 @@ msgid "XMind 8"
 msgstr ""
 
 #: src/exports/ExportXMind.vala:679 src/layouts/LayoutHorizontal.vala:26
-#: src/MapInspector.vala:302
+#: src/MapInspector.vala:335
 msgid "Horizontal"
 msgstr ""
 
 #: src/exports/ExportXMind.vala:681 src/layouts/LayoutRight.vala:26
-#: src/MapInspector.vala:304
+#: src/MapInspector.vala:337
 msgid "To right"
 msgstr ""
 
@@ -136,8 +136,8 @@ msgstr ""
 msgid "Yed"
 msgstr ""
 
-#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4130
-#: src/MapInspector.vala:300
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4206
+#: src/MapInspector.vala:333
 msgid "Manual"
 msgstr ""
 
@@ -181,8 +181,8 @@ msgstr ""
 msgid "Solarized Light"
 msgstr ""
 
-#: src/themes/ThemeDefault.vala:28 src/ThemeEditor.vala:241
-msgid "Default"
+#: src/themes/ThemeDefault.vala:28
+msgid "Light"
 msgstr ""
 
 #: src/themes/ThemeDark.vala:28
@@ -356,8 +356,8 @@ msgstr ""
 msgid "remove node sticker"
 msgstr ""
 
-#: src/undo_actions/UndoNodeTask.vala:34
-msgid "node task change"
+#: src/undo_actions/UndoNodeTasks.vala:30
+msgid "node task changes"
 msgstr ""
 
 #: src/undo_actions/UndoNodesAlign.vala:56
@@ -479,7 +479,7 @@ msgid "Delete Connection"
 msgstr ""
 
 #: src/ConnectionMenu.vala:42 src/ConnectionsMenu.vala:35
-#: src/GroupsMenu.vala:39 src/NodeMenu.vala:85 src/NodesMenu.vala:54
+#: src/GroupsMenu.vala:39 src/NodeMenu.vala:85 src/NodesMenu.vala:55
 #: src/ThemeEditor.vala:138
 msgid "Delete"
 msgstr ""
@@ -499,7 +499,7 @@ msgid "Remove Sticker"
 msgstr ""
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:49 src/ImageManager.vala:299
-#: src/NodeMenu.vala:172 src/NodesMenu.vala:87
+#: src/NodeMenu.vala:172 src/NodesMenu.vala:92
 msgid "Select"
 msgstr ""
 
@@ -523,24 +523,34 @@ msgstr ""
 msgid "unnamed"
 msgstr ""
 
-#: src/DrawArea.vala:730
+#: src/DrawArea.vala:739
 msgid "Main Idea"
 msgstr ""
 
-#: src/DrawArea.vala:2198
+#: src/DrawArea.vala:2264
 #, c-format
 msgid "%0.3g%% complete"
 msgstr ""
 
-#: src/DrawArea.vala:2362
+#: src/DrawArea.vala:2392
+#, c-format
+msgid "Children: %u\n"
+msgstr ""
+
+#: src/DrawArea.vala:2393
+#, c-format
+msgid "Total: %d"
+msgstr ""
+
+#: src/DrawArea.vala:2437
 msgid "connection endpoint change"
 msgstr ""
 
-#: src/DrawArea.vala:2369
+#: src/DrawArea.vala:2444
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:3005 src/DrawArea.vala:3018 src/DrawArea.vala:4589
+#: src/DrawArea.vala:3080 src/DrawArea.vala:3093 src/DrawArea.vala:4665
 msgid "Another Idea"
 msgstr ""
 
@@ -582,8 +592,8 @@ msgstr ""
 
 #: src/EmptyInspector.vala:30
 msgid ""
-"<big>Select a node or connection\n"
-"to view/edit information</big>"
+"Select a node or connection\n"
+"to view/edit information"
 msgstr ""
 
 #: src/EmptyMenu.vala:38 src/NodeMenu.vala:77 src/TextMenu.vala:54
@@ -614,18 +624,23 @@ msgstr ""
 msgid "Export With Current Settings"
 msgstr ""
 
+#: src/Exporter.vala:110
+msgid "Export Options"
+msgstr ""
+
 #: src/Exporter.vala:131
 #, c-format
 msgid "Export As %s"
 msgstr ""
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:375 src/ImageManager.vala:299
-#: src/MainWindow.vala:936 src/MainWindow.vala:984 src/MainWindow.vala:1102
-#: src/QuickEntry.vala:118 src/ThemeEditor.vala:143 src/UrlEditor.vala:61
+#: src/MainWindow.vala:932 src/MainWindow.vala:980 src/MainWindow.vala:1098
+#: src/QuickEntry.vala:118 src/StickerSet.vala:71 src/ThemeEditor.vala:143
+#: src/UrlEditor.vala:61
 msgid "Cancel"
 msgstr ""
 
-#: src/Exporter.vala:132 src/MainWindow.vala:756
+#: src/Exporter.vala:132 src/MainWindow.vala:752 src/StickerSet.vala:348
 msgid "Export"
 msgstr ""
 
@@ -653,7 +668,7 @@ msgstr ""
 msgid "All Grouped Nodes"
 msgstr ""
 
-#: src/GroupsMenu.vala:100 src/NodeMenu.vala:627 src/NodesMenu.vala:244
+#: src/GroupsMenu.vala:100 src/NodeMenu.vala:627 src/NodesMenu.vala:255
 msgid "Select a link color"
 msgstr ""
 
@@ -699,220 +714,221 @@ msgstr ""
 msgid "Images"
 msgstr ""
 
-#: src/MainWindow.vala:154 src/MainWindow.vala:1107
+#: src/MainWindow.vala:149 src/MainWindow.vala:1103
 msgid "Minder"
 msgstr ""
 
-#: src/MainWindow.vala:188 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:183 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
 msgstr ""
 
-#: src/MainWindow.vala:194 src/MainWindow.vala:984
+#: src/MainWindow.vala:189 src/MainWindow.vala:980
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr ""
 
-#: src/MainWindow.vala:200 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:195 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
 msgstr ""
 
-#: src/MainWindow.vala:206 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:201 src/StickerSet.vala:303 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr ""
 
-#: src/MainWindow.vala:213 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:208 src/StickerSet.vala:304 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr ""
 
-#: src/MainWindow.vala:481
+#: src/MainWindow.vala:472
 msgid "Unnamed Document"
 msgstr ""
 
-#: src/MainWindow.vala:485 src/MainWindow.vala:791
+#: src/MainWindow.vala:476 src/MainWindow.vala:787
 msgid "Focus Mode"
 msgstr ""
 
-#: src/MainWindow.vala:516
-msgid "Zoom"
+#: src/MainWindow.vala:508 src/MainWindow.vala:1148
+#, c-format
+msgid "Zoom (%d%%)"
 msgstr ""
 
-#: src/MainWindow.vala:523
+#: src/MainWindow.vala:515
 msgid "Zoom to Percent"
 msgstr ""
 
-#: src/MainWindow.vala:535 data/com.github.phase1geo.minder.shortcuts.ui:117
+#: src/MainWindow.vala:528 data/com.github.phase1geo.minder.shortcuts.ui:117
 msgid "Zoom In"
 msgstr ""
 
-#: src/MainWindow.vala:540 data/com.github.phase1geo.minder.shortcuts.ui:124
+#: src/MainWindow.vala:534 data/com.github.phase1geo.minder.shortcuts.ui:124
 msgid "Zoom Out"
 msgstr ""
 
-#: src/MainWindow.vala:545
+#: src/MainWindow.vala:544
 msgid "Zoom to Fit"
 msgstr ""
 
-#: src/MainWindow.vala:550
+#: src/MainWindow.vala:549
 msgid "Zoom to Fit Selected Node"
 msgstr ""
 
-#: src/MainWindow.vala:555
+#: src/MainWindow.vala:554
 msgid "Zoom to Actual Size"
 msgstr ""
 
-#: src/MainWindow.vala:582
+#: src/MainWindow.vala:578 src/StickerSet.vala:110
 msgid "Search"
 msgstr ""
 
-#: src/MainWindow.vala:592
+#: src/MainWindow.vala:588
 msgid "Search Nodes and Connections"
 msgstr ""
 
-#: src/MainWindow.vala:621
+#: src/MainWindow.vala:617
 msgid "Search Criteria"
 msgstr ""
 
-#: src/MainWindow.vala:624
+#: src/MainWindow.vala:620
 msgid "Search all tabs"
 msgstr ""
 
-#: src/MainWindow.vala:658
+#: src/MainWindow.vala:654
 msgid "Nodes"
 msgstr ""
 
-#: src/MainWindow.vala:659
+#: src/MainWindow.vala:655
 msgid "Connections"
 msgstr ""
 
-#: src/MainWindow.vala:660
+#: src/MainWindow.vala:656
 msgid "Titles"
 msgstr ""
 
-#: src/MainWindow.vala:661
+#: src/MainWindow.vala:657
 msgid "Notes"
 msgstr ""
 
-#: src/MainWindow.vala:662
+#: src/MainWindow.vala:658
 msgid "Folded"
 msgstr ""
 
-#: src/MainWindow.vala:663
+#: src/MainWindow.vala:659
 msgid "Unfolded"
 msgstr ""
 
-#: src/MainWindow.vala:664
+#: src/MainWindow.vala:660
 msgid "Tasks"
 msgstr ""
 
-#: src/MainWindow.vala:665
+#: src/MainWindow.vala:661
 msgid "Non-tasks"
 msgstr ""
 
-#: src/MainWindow.vala:768
+#: src/MainWindow.vala:764
 msgid "Print…"
 msgstr ""
 
-#: src/MainWindow.vala:816 src/Preferences.vala:36
+#: src/MainWindow.vala:812 src/Preferences.vala:36
 msgid "Preferences"
 msgstr ""
 
-#: src/MainWindow.vala:821
+#: src/MainWindow.vala:817
 msgid "Shortcuts Cheatsheet"
 msgstr ""
 
-#: src/MainWindow.vala:825
+#: src/MainWindow.vala:821
 msgid "About Minder"
 msgstr ""
 
-#: src/MainWindow.vala:858 src/MainWindow.vala:1217
+#: src/MainWindow.vala:854 src/MainWindow.vala:1214
 msgid "Show Property Sidebar"
 msgstr ""
 
-#: src/MainWindow.vala:873
+#: src/MainWindow.vala:869
 msgid "Current"
 msgstr ""
 
-#: src/MainWindow.vala:874 src/StyleInspector.vala:184
+#: src/MainWindow.vala:870 src/StyleInspector.vala:188
 msgid "Style"
 msgstr ""
 
-#: src/MainWindow.vala:875
+#: src/MainWindow.vala:871
 msgid "Stickers"
 msgstr ""
 
-#: src/MainWindow.vala:876
+#: src/MainWindow.vala:872
 msgid "Map"
 msgstr ""
 
-#: src/MainWindow.vala:927
+#: src/MainWindow.vala:923
 msgid "Save current unnamed document?"
 msgstr ""
 
-#: src/MainWindow.vala:928
+#: src/MainWindow.vala:924
 msgid "Changes will be permanently lost if not saved."
 msgstr ""
 
-#: src/MainWindow.vala:933
+#: src/MainWindow.vala:929
 msgid "Discard Changes"
 msgstr ""
 
-#: src/MainWindow.vala:939 src/MainWindow.vala:1102 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:935 src/MainWindow.vala:1098 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr ""
 
-#: src/MainWindow.vala:984
+#: src/MainWindow.vala:980
 msgid "Open"
 msgstr ""
 
-#: src/MainWindow.vala:1102
+#: src/MainWindow.vala:1098
 msgid "Save File"
 msgstr ""
 
-#: src/MainWindow.vala:1161
+#: src/MainWindow.vala:1158
 msgid "Hide Property Sidebar"
 msgstr ""
 
-#: src/MapInspector.vala:76
+#: src/MapInspector.vala:97
 msgid "Hide connections"
 msgstr ""
 
-#: src/MapInspector.vala:105
+#: src/MapInspector.vala:126
 msgid "Rotate main branch colors"
 msgstr ""
 
-#: src/MapInspector.vala:137
+#: src/MapInspector.vala:158
 msgid "Node Layouts"
 msgstr ""
 
-#: src/MapInspector.vala:188
+#: src/MapInspector.vala:209
 msgid "Themes"
 msgstr ""
 
-#: src/MapInspector.vala:207
+#: src/MapInspector.vala:228
 msgid "Add Custom Theme"
 msgstr ""
 
-#: src/MapInspector.vala:226
+#: src/MapInspector.vala:247
 msgid "Balance Nodes"
 msgstr ""
 
-#: src/MapInspector.vala:232
+#: src/MapInspector.vala:253
 msgid "Fold Completed Tasks"
 msgstr ""
 
-#: src/MapInspector.vala:238
+#: src/MapInspector.vala:259
 msgid "Unfold All Nodes"
 msgstr ""
 
-#: src/MapInspector.vala:317
+#: src/MapInspector.vala:350
 msgid "Unsaved"
 msgstr ""
 
-#: src/Node.vala:1832
+#: src/Node.vala:1865
 msgid "Node Title"
 msgstr ""
 
-#: src/Node.vala:1840
+#: src/Node.vala:1873
 msgid "Node Note"
 msgstr ""
 
@@ -952,11 +968,11 @@ msgstr ""
 msgid "Delete Node"
 msgstr ""
 
-#: src/NodeMenu.vala:69 src/NodesMenu.vala:46 src/TextMenu.vala:44
+#: src/NodeMenu.vala:69 src/NodesMenu.vala:47 src/TextMenu.vala:44
 msgid "Copy"
 msgstr ""
 
-#: src/NodeMenu.vala:73 src/NodesMenu.vala:50 src/TextMenu.vala:49
+#: src/NodeMenu.vala:73 src/NodesMenu.vala:51 src/TextMenu.vala:49
 msgid "Cut"
 msgstr ""
 
@@ -996,7 +1012,7 @@ msgstr ""
 msgid "Link Color"
 msgstr ""
 
-#: src/NodeMenu.vala:125 src/NodesMenu.vala:72
+#: src/NodeMenu.vala:125 src/NodesMenu.vala:77
 msgid "Set to color…"
 msgstr ""
 
@@ -1004,12 +1020,12 @@ msgstr ""
 msgid "Randomize color"
 msgstr ""
 
-#: src/NodeMenu.vala:131 src/NodesMenu.vala:78
+#: src/NodeMenu.vala:131 src/NodesMenu.vala:83
 msgid "Use parent color"
 msgstr ""
 
-#: src/NodeMenu.vala:135 src/NodeMenu.vala:397 src/NodesMenu.vala:58
-#: src/NodesMenu.vala:203
+#: src/NodeMenu.vala:135 src/NodeMenu.vala:397 src/NodesMenu.vala:63
+#: src/NodesMenu.vala:209
 msgid "Fold Children"
 msgstr ""
 
@@ -1061,7 +1077,7 @@ msgstr ""
 msgid "Child Node"
 msgstr ""
 
-#: src/NodeMenu.vala:197 src/NodesMenu.vala:96
+#: src/NodeMenu.vala:197 src/NodesMenu.vala:101
 msgid "Child Nodes"
 msgstr ""
 
@@ -1109,7 +1125,7 @@ msgstr ""
 msgid "Remove Node Link"
 msgstr ""
 
-#: src/NodeMenu.vala:397 src/NodesMenu.vala:203
+#: src/NodeMenu.vala:397 src/NodesMenu.vala:209
 msgid "Unfold Children"
 msgstr ""
 
@@ -1133,51 +1149,55 @@ msgstr ""
 msgid "Paste Node As Child"
 msgstr ""
 
-#: src/NodesMenu.vala:61
+#: src/NodesMenu.vala:59
+msgid "Toggle Tasks"
+msgstr ""
+
+#: src/NodesMenu.vala:66
 msgid "Connect"
 msgstr ""
 
-#: src/NodesMenu.vala:64
+#: src/NodesMenu.vala:69
 msgid "Link Nodes"
 msgstr ""
 
-#: src/NodesMenu.vala:69 src/ThemeEditor.vala:124
+#: src/NodesMenu.vala:74 src/ThemeEditor.vala:124
 msgid "Link Colors"
 msgstr ""
 
-#: src/NodesMenu.vala:75
+#: src/NodesMenu.vala:80
 msgid "Randomize colors"
 msgstr ""
 
-#: src/NodesMenu.vala:91
+#: src/NodesMenu.vala:96
 msgid "Parent Nodes"
 msgstr ""
 
-#: src/NodesMenu.vala:105
+#: src/NodesMenu.vala:110
 msgid "Align Nodes"
 msgstr ""
 
-#: src/NodesMenu.vala:109
+#: src/NodesMenu.vala:114
 msgid "Align Top"
 msgstr ""
 
-#: src/NodesMenu.vala:113 data/com.github.phase1geo.minder.shortcuts.ui:543
+#: src/NodesMenu.vala:118 data/com.github.phase1geo.minder.shortcuts.ui:543
 msgid "Align Center Horizontally"
 msgstr ""
 
-#: src/NodesMenu.vala:117
+#: src/NodesMenu.vala:122
 msgid "Align Bottom"
 msgstr ""
 
-#: src/NodesMenu.vala:121
+#: src/NodesMenu.vala:126
 msgid "Align Left"
 msgstr ""
 
-#: src/NodesMenu.vala:125 data/com.github.phase1geo.minder.shortcuts.ui:564
+#: src/NodesMenu.vala:130 data/com.github.phase1geo.minder.shortcuts.ui:564
 msgid "Align Center Vertically"
 msgstr ""
 
-#: src/NodesMenu.vala:129
+#: src/NodesMenu.vala:134
 msgid "Align Right"
 msgstr ""
 
@@ -1193,10 +1213,18 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+#: src/Preferences.vala:76
+msgid "Create new node from edit mode"
+msgstr ""
+
 #: src/Preferences.vala:78
 msgid ""
 "Specifies if we should create a new node directly from edit mode if Return "
 "or Tab is pressed."
+msgstr ""
+
+#: src/Preferences.vala:80
+msgid "Automatically make embedded URLs into links"
 msgstr ""
 
 #: src/Preferences.vala:82
@@ -1205,17 +1233,45 @@ msgid ""
 "highlighted."
 msgstr ""
 
+#: src/Preferences.vala:84
+msgid "Enable Markdown"
+msgstr ""
+
+#: src/Preferences.vala:87
+msgid "Create connection title on creation"
+msgstr ""
+
 #: src/Preferences.vala:89
 msgid ""
 "Specifies if the connection title will be added and put into edit mode "
 "immediately after the connection is made."
 msgstr ""
 
+#: src/Preferences.vala:91
+msgid "Select items on mouse hover"
+msgstr ""
+
 #: src/Preferences.vala:93
 msgid "If enabled, selects items when mouse cursor hovers over the item."
 msgstr ""
 
-#: src/Preferences.vala:114
+#: src/Preferences.vala:106
+msgid "Hide themes not matching visual style"
+msgstr ""
+
+#: src/Preferences.vala:110
+msgid "Default theme"
+msgstr ""
+
+#: src/Preferences.vala:113
+msgid "Enable animations"
+msgstr ""
+
+#: src/Preferences.vala:116
+msgid "Text field font size"
+msgstr ""
+
+#: src/Preferences.vala:119
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
@@ -1273,26 +1329,1278 @@ msgstr ""
 msgid "Insert"
 msgstr ""
 
-#: src/StickerInspector.vala:59
+#: src/StickerInspector.vala:60
 msgid "Remove From Favorites"
 msgstr ""
 
-#: src/StickerInspector.vala:62 src/StickerInspector.vala:66
+#: src/StickerInspector.vala:63 src/StickerInspector.vala:67
 msgid "Add To Favorites"
 msgstr ""
 
-#: src/StickerInspector.vala:75
+#: src/StickerInspector.vala:76
 msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
 msgstr ""
 
-#: src/StickerInspector.vala:81
+#: src/StickerInspector.vala:82
 msgid "Search Stickers"
 msgstr ""
 
-#: src/StickerInspector.vala:110
+#: src/StickerInspector.vala:111
 msgid "Favorites"
+msgstr ""
+
+#: src/StickerSet.vala:21 src/StickerSet.vala:64
+msgid "Photo and Video"
+msgstr ""
+
+#: src/StickerSet.vala:22 src/StickerSet.vala:122
+msgid "Very Basic"
+msgstr ""
+
+#: src/StickerSet.vala:23 src/StickerSet.vala:126 src/StickerSet.vala:217
+msgid "Business"
+msgstr ""
+
+#: src/StickerSet.vala:24 src/StickerSet.vala:244
+msgid "Industry"
+msgstr ""
+
+#: src/StickerSet.vala:25 src/StickerSet.vala:281
+msgid "Mobile"
+msgstr ""
+
+#: src/StickerSet.vala:26 src/StickerSet.vala:305 src/StyleInspector.vala:883
+msgid "Arrows"
+msgstr ""
+
+#: src/StickerSet.vala:27 src/StickerSet.vala:353
+msgid "Data"
+msgstr ""
+
+#: src/StickerSet.vala:29
+msgid "Flash on"
+msgstr ""
+
+#: src/StickerSet.vala:30
+msgid "Flash off"
+msgstr ""
+
+#: src/StickerSet.vala:31
+msgid "Flash auto"
+msgstr ""
+
+#: src/StickerSet.vala:32
+msgid "Panorama"
+msgstr ""
+
+#: src/StickerSet.vala:33
+msgid "Landscape"
+msgstr ""
+
+#: src/StickerSet.vala:34
+msgid "Night landscape"
+msgstr ""
+
+#: src/StickerSet.vala:35
+msgid "Sports mode"
+msgstr ""
+
+#: src/StickerSet.vala:36
+msgid "Portrait mode"
+msgstr ""
+
+#: src/StickerSet.vala:37
+msgid "Night portrait"
+msgstr ""
+
+#: src/StickerSet.vala:38
+msgid "Close up mode"
+msgstr ""
+
+#: src/StickerSet.vala:39
+msgid "Selfie"
+msgstr ""
+
+#: src/StickerSet.vala:40
+msgid "Gallery"
+msgstr ""
+
+#: src/StickerSet.vala:41
+msgid "Stack of photos"
+msgstr ""
+
+#: src/StickerSet.vala:42
+msgid "Add image"
+msgstr ""
+
+#: src/StickerSet.vala:43
+msgid "Edit image"
+msgstr ""
+
+#: src/StickerSet.vala:44
+msgid "Remove image"
+msgstr ""
+
+#: src/StickerSet.vala:45
+msgid "Compact camera"
+msgstr ""
+
+#: src/StickerSet.vala:46
+msgid "Multiple cameras"
+msgstr ""
+
+#: src/StickerSet.vala:47
+msgid "Camera"
+msgstr ""
+
+#: src/StickerSet.vala:48
+msgid "SLR back side"
+msgstr ""
+
+#: src/StickerSet.vala:49
+msgid "Old time camera"
+msgstr ""
+
+#: src/StickerSet.vala:50
+msgid "Camera addon"
+msgstr ""
+
+#: src/StickerSet.vala:51
+msgid "Camera identification"
+msgstr ""
+
+#: src/StickerSet.vala:52
+msgid "Start"
+msgstr ""
+
+#: src/StickerSet.vala:53
+msgid "Clapperboard"
+msgstr ""
+
+#: src/StickerSet.vala:54
+msgid "Film"
+msgstr ""
+
+#: src/StickerSet.vala:55
+msgid "Camcorder"
+msgstr ""
+
+#: src/StickerSet.vala:56
+msgid "Camcorder pro"
+msgstr ""
+
+#: src/StickerSet.vala:57
+msgid "Webcam"
+msgstr ""
+
+#: src/StickerSet.vala:58
+msgid "Integrated webcam"
+msgstr ""
+
+#: src/StickerSet.vala:59
+msgid "Rotate camera"
+msgstr ""
+
+#: src/StickerSet.vala:60
+msgid "Switch camera"
+msgstr ""
+
+#: src/StickerSet.vala:61
+msgid "Photo reel"
+msgstr ""
+
+#: src/StickerSet.vala:62
+msgid "Film reel"
+msgstr ""
+
+#: src/StickerSet.vala:63
+msgid "Cable release"
+msgstr ""
+
+#: src/StickerSet.vala:66
+msgid "Home"
+msgstr ""
+
+#: src/StickerSet.vala:67
+msgid "Icons8 cup"
+msgstr ""
+
+#: src/StickerSet.vala:68
+msgid "Globe"
+msgstr ""
+
+#: src/StickerSet.vala:69
+msgid "OK"
+msgstr ""
+
+#: src/StickerSet.vala:70
+msgid "Checkmark"
+msgstr ""
+
+#: src/StickerSet.vala:72
+msgid "Synchronize"
+msgstr ""
+
+#: src/StickerSet.vala:73
+msgid "Refresh"
+msgstr ""
+
+#: src/StickerSet.vala:74
+msgid "Download"
+msgstr ""
+
+#: src/StickerSet.vala:75
+msgid "Upload"
+msgstr ""
+
+#: src/StickerSet.vala:76
+msgid "Empty trash"
+msgstr ""
+
+#: src/StickerSet.vala:77
+msgid "Full trash"
+msgstr ""
+
+#: src/StickerSet.vala:78
+msgid "Folder"
+msgstr ""
+
+#: src/StickerSet.vala:79
+msgid "Opened folder"
+msgstr ""
+
+#: src/StickerSet.vala:80 data/com.github.phase1geo.minder.shortcuts.ui:16
+msgid "File"
+msgstr ""
+
+#: src/StickerSet.vala:81
+msgid "Document"
+msgstr ""
+
+#: src/StickerSet.vala:82
+msgid "Audio file"
+msgstr ""
+
+#: src/StickerSet.vala:83
+msgid "Image file"
+msgstr ""
+
+#: src/StickerSet.vala:84
+msgid "Video file"
+msgstr ""
+
+#: src/StickerSet.vala:85
+msgid "Print"
+msgstr ""
+
+#: src/StickerSet.vala:86
+msgid "Music"
+msgstr ""
+
+#: src/StickerSet.vala:87
+msgid "Share"
+msgstr ""
+
+#: src/StickerSet.vala:88
+msgid "Cursor"
+msgstr ""
+
+#: src/StickerSet.vala:89
+msgid "Puzzle"
+msgstr ""
+
+#: src/StickerSet.vala:90
+msgid "Unlock"
+msgstr ""
+
+#: src/StickerSet.vala:91
+msgid "Lock"
+msgstr ""
+
+#: src/StickerSet.vala:92
+msgid "Idea"
+msgstr ""
+
+#: src/StickerSet.vala:93
+msgid "No idea"
+msgstr ""
+
+#: src/StickerSet.vala:94
+msgid "Link"
+msgstr ""
+
+#: src/StickerSet.vala:95
+msgid "Broken link"
+msgstr ""
+
+#: src/StickerSet.vala:96
+msgid "Rating"
+msgstr ""
+
+#: src/StickerSet.vala:97
+msgid "Like placeholder"
+msgstr ""
+
+#: src/StickerSet.vala:98
+msgid "Like"
+msgstr ""
+
+#: src/StickerSet.vala:99
+msgid "Dislike"
+msgstr ""
+
+#: src/StickerSet.vala:100
+msgid "Info"
+msgstr ""
+
+#: src/StickerSet.vala:101
+msgid "About"
+msgstr ""
+
+#: src/StickerSet.vala:102
+msgid "Picture"
+msgstr ""
+
+#: src/StickerSet.vala:103
+msgid "Clock"
+msgstr ""
+
+#: src/StickerSet.vala:104
+msgid "Alarm clock"
+msgstr ""
+
+#: src/StickerSet.vala:105
+msgid "Address book"
+msgstr ""
+
+#: src/StickerSet.vala:106
+msgid "Contacts"
+msgstr ""
+
+#: src/StickerSet.vala:107
+msgid "News"
+msgstr ""
+
+#: src/StickerSet.vala:108
+msgid "Bookmark"
+msgstr ""
+
+#: src/StickerSet.vala:109
+msgid "Binoculars"
+msgstr ""
+
+#: src/StickerSet.vala:111
+msgid "Ruler"
+msgstr ""
+
+#: src/StickerSet.vala:112
+msgid "Services"
+msgstr ""
+
+#: src/StickerSet.vala:113
+msgid "Settings"
+msgstr ""
+
+#: src/StickerSet.vala:114
+msgid "Support"
+msgstr ""
+
+#: src/StickerSet.vala:115
+msgid "Frame"
+msgstr ""
+
+#: src/StickerSet.vala:116
+msgid "Menu"
+msgstr ""
+
+#: src/StickerSet.vala:117
+msgid "Key"
+msgstr ""
+
+#: src/StickerSet.vala:118
+msgid "Calendar"
+msgstr ""
+
+#: src/StickerSet.vala:119
+msgid "Calculator"
+msgstr ""
+
+#: src/StickerSet.vala:120
+msgid "Minus"
+msgstr ""
+
+#: src/StickerSet.vala:121
+msgid "Plus"
+msgstr ""
+
+#: src/StickerSet.vala:124
+msgid "Graduation cap"
+msgstr ""
+
+#: src/StickerSet.vala:125
+msgid "Briefcase"
+msgstr ""
+
+#: src/StickerSet.vala:127
+msgid "Signature"
+msgstr ""
+
+#: src/StickerSet.vala:128
+msgid "Safe"
+msgstr ""
+
+#: src/StickerSet.vala:129
+msgid "Advertising"
+msgstr ""
+
+#: src/StickerSet.vala:130
+msgid "Businessman"
+msgstr ""
+
+#: src/StickerSet.vala:131
+msgid "Businesswoman"
+msgstr ""
+
+#: src/StickerSet.vala:132
+msgid "Manager"
+msgstr ""
+
+#: src/StickerSet.vala:133
+msgid "Online support"
+msgstr ""
+
+#: src/StickerSet.vala:134
+msgid "Assistant"
+msgstr ""
+
+#: src/StickerSet.vala:135
+msgid "Customer support"
+msgstr ""
+
+#: src/StickerSet.vala:136
+msgid "Reading ebook"
+msgstr ""
+
+#: src/StickerSet.vala:137
+msgid "Reading"
+msgstr ""
+
+#: src/StickerSet.vala:138
+msgid "Neutral trading"
+msgstr ""
+
+#: src/StickerSet.vala:139
+msgid "Bullish"
+msgstr ""
+
+#: src/StickerSet.vala:140
+msgid "Bearish"
+msgstr ""
+
+#: src/StickerSet.vala:141
+msgid "High priority"
+msgstr ""
+
+#: src/StickerSet.vala:142
+msgid "Medium priority"
+msgstr ""
+
+#: src/StickerSet.vala:143
+msgid "Low priority"
+msgstr ""
+
+#: src/StickerSet.vala:144
+msgid "Make decision"
+msgstr ""
+
+#: src/StickerSet.vala:145
+msgid "Decision"
+msgstr ""
+
+#: src/StickerSet.vala:146
+msgid "Good decision"
+msgstr ""
+
+#: src/StickerSet.vala:147
+msgid "Neutral decision"
+msgstr ""
+
+#: src/StickerSet.vala:148
+msgid "Bad decision"
+msgstr ""
+
+#: src/StickerSet.vala:149
+msgid "Approve"
+msgstr ""
+
+#: src/StickerSet.vala:150
+msgid "Disapprove"
+msgstr ""
+
+#: src/StickerSet.vala:151
+msgid "Podium without speaker"
+msgstr ""
+
+#: src/StickerSet.vala:152
+msgid "Podium with speaker"
+msgstr ""
+
+#: src/StickerSet.vala:153
+msgid "Podium with audience"
+msgstr ""
+
+#: src/StickerSet.vala:154
+msgid "Video projector"
+msgstr ""
+
+#: src/StickerSet.vala:155
+msgid "Statistics"
+msgstr ""
+
+#: src/StickerSet.vala:156
+msgid "Collaboration"
+msgstr ""
+
+#: src/StickerSet.vala:157
+msgid "Voice presentation"
+msgstr ""
+
+#: src/StickerSet.vala:158
+msgid "Conference call"
+msgstr ""
+
+#: src/StickerSet.vala:159
+msgid "Comments"
+msgstr ""
+
+#: src/StickerSet.vala:160
+msgid "FAQ"
+msgstr ""
+
+#: src/StickerSet.vala:161
+msgid "Reuse"
+msgstr ""
+
+#: src/StickerSet.vala:162
+msgid "Organization"
+msgstr ""
+
+#: src/StickerSet.vala:163
+msgid "Department"
+msgstr ""
+
+#: src/StickerSet.vala:164
+msgid "Library"
+msgstr ""
+
+#: src/StickerSet.vala:165
+msgid "Shop"
+msgstr ""
+
+#: src/StickerSet.vala:166
+msgid "Self service kiosk"
+msgstr ""
+
+#: src/StickerSet.vala:167
+msgid "Donate"
+msgstr ""
+
+#: src/StickerSet.vala:168
+msgid "Currency exchange"
+msgstr ""
+
+#: src/StickerSet.vala:169
+msgid "Debt"
+msgstr ""
+
+#: src/StickerSet.vala:170
+msgid "Sales performance"
+msgstr ""
+
+#: src/StickerSet.vala:171
+msgid "Invite"
+msgstr ""
+
+#: src/StickerSet.vala:172
+msgid "Money transfer"
+msgstr ""
+
+#: src/StickerSet.vala:173
+msgid "Feedback"
+msgstr ""
+
+#: src/StickerSet.vala:174
+msgid "Approval"
+msgstr ""
+
+#: src/StickerSet.vala:175
+msgid "Paid"
+msgstr ""
+
+#: src/StickerSet.vala:176
+msgid "In transit"
+msgstr ""
+
+#: src/StickerSet.vala:177
+msgid "Shipped"
+msgstr ""
+
+#: src/StickerSet.vala:178
+msgid "Package"
+msgstr ""
+
+#: src/StickerSet.vala:179
+msgid "Planner"
+msgstr ""
+
+#: src/StickerSet.vala:180
+msgid "Overtime"
+msgstr ""
+
+#: src/StickerSet.vala:181
+msgid "Leave"
+msgstr ""
+
+#: src/StickerSet.vala:182
+msgid "Expired"
+msgstr ""
+
+#: src/StickerSet.vala:183
+msgid "Process"
+msgstr ""
+
+#: src/StickerSet.vala:184
+msgid "Diploma 1"
+msgstr ""
+
+#: src/StickerSet.vala:185
+msgid "Diploma 2"
+msgstr ""
+
+#: src/StickerSet.vala:186
+msgid "Business contact"
+msgstr ""
+
+#: src/StickerSet.vala:187
+msgid "Survey"
+msgstr ""
+
+#: src/StickerSet.vala:188
+msgid "Inspection"
+msgstr ""
+
+#: src/StickerSet.vala:189
+msgid "Rules"
+msgstr ""
+
+#: src/StickerSet.vala:190
+msgid "Todo list"
+msgstr ""
+
+#: src/StickerSet.vala:191
+msgid "Ratings"
+msgstr ""
+
+#: src/StickerSet.vala:192
+msgid "Questions"
+msgstr ""
+
+#: src/StickerSet.vala:193
+msgid "Answers"
+msgstr ""
+
+#: src/StickerSet.vala:194
+msgid "Fine print"
+msgstr ""
+
+#: src/StickerSet.vala:195
+msgid "Candle sticks"
+msgstr ""
+
+#: src/StickerSet.vala:196
+msgid "Serial tasks"
+msgstr ""
+
+#: src/StickerSet.vala:197
+msgid "Parallel tasks"
+msgstr ""
+
+#: src/StickerSet.vala:198
+msgid "Tree structure"
+msgstr ""
+
+#: src/StickerSet.vala:199
+msgid "Org unit"
+msgstr ""
+
+#: src/StickerSet.vala:200
+msgid "Privacy"
+msgstr ""
+
+#: src/StickerSet.vala:201
+msgid "Disclaimer"
+msgstr ""
+
+#: src/StickerSet.vala:202
+msgid "Callback"
+msgstr ""
+
+#: src/StickerSet.vala:203
+msgid "Service mark"
+msgstr ""
+
+#: src/StickerSet.vala:204
+msgid "Registered trademark"
+msgstr ""
+
+#: src/StickerSet.vala:205
+msgid "Trademark"
+msgstr ""
+
+#: src/StickerSet.vala:206
+msgid "Copyright"
+msgstr ""
+
+#: src/StickerSet.vala:207
+msgid "Copyleft"
+msgstr ""
+
+#: src/StickerSet.vala:208
+msgid "Sound recording copyright"
+msgstr ""
+
+#: src/StickerSet.vala:209
+msgid "Butting in"
+msgstr ""
+
+#: src/StickerSet.vala:210
+msgid "Multiple inputs"
+msgstr ""
+
+#: src/StickerSet.vala:211
+msgid "Collect"
+msgstr ""
+
+#: src/StickerSet.vala:212
+msgid "Internal"
+msgstr ""
+
+#: src/StickerSet.vala:213
+msgid "External"
+msgstr ""
+
+#: src/StickerSet.vala:214
+msgid "VIP"
+msgstr ""
+
+#: src/StickerSet.vala:215
+msgid "Light at the end of tunnel"
+msgstr ""
+
+#: src/StickerSet.vala:216
+msgid "Entering heaven alive"
+msgstr ""
+
+#: src/StickerSet.vala:219
+msgid "Biomass"
+msgstr ""
+
+#: src/StickerSet.vala:220
+msgid "Display"
+msgstr ""
+
+#: src/StickerSet.vala:221
+msgid "Do not inhale"
+msgstr ""
+
+#: src/StickerSet.vala:222
+msgid "Factory"
+msgstr ""
+
+#: src/StickerSet.vala:223
+msgid "Factory breakdown"
+msgstr ""
+
+#: src/StickerSet.vala:224
+msgid "Crystal oscillator"
+msgstr ""
+
+#: src/StickerSet.vala:225
+msgid "Capacitor"
+msgstr ""
+
+#: src/StickerSet.vala:226
+msgid "Electricity"
+msgstr ""
+
+#: src/StickerSet.vala:227
+msgid "Electro devices"
+msgstr ""
+
+#: src/StickerSet.vala:228
+msgid "Electrical sensor"
+msgstr ""
+
+#: src/StickerSet.vala:229
+msgid "Electrical threshold"
+msgstr ""
+
+#: src/StickerSet.vala:230
+msgid "Automotive"
+msgstr ""
+
+#: src/StickerSet.vala:231
+msgid "Feed in"
+msgstr ""
+
+#: src/StickerSet.vala:232
+msgid "Dam"
+msgstr ""
+
+#: src/StickerSet.vala:233
+msgid "Biotech"
+msgstr ""
+
+#: src/StickerSet.vala:234
+msgid "Advance"
+msgstr ""
+
+#: src/StickerSet.vala:235
+msgid "Cloth"
+msgstr ""
+
+#: src/StickerSet.vala:236
+msgid "Electronics"
+msgstr ""
+
+#: src/StickerSet.vala:237
+msgid "Deployment"
+msgstr ""
+
+#: src/StickerSet.vala:238
+msgid "Automatic"
+msgstr ""
+
+#: src/StickerSet.vala:239
+msgid "Do not insert"
+msgstr ""
+
+#: src/StickerSet.vala:240
+msgid "Do not mix"
+msgstr ""
+
+#: src/StickerSet.vala:241
+msgid "Biohazard"
+msgstr ""
+
+#: src/StickerSet.vala:242
+msgid "Circuit"
+msgstr ""
+
+#: src/StickerSet.vala:243
+msgid "Engineering"
+msgstr ""
+
+#: src/StickerSet.vala:246
+msgid "Cell phone"
+msgstr ""
+
+#: src/StickerSet.vala:247
+msgid "iPhone"
+msgstr ""
+
+#: src/StickerSet.vala:248
+msgid "iPad"
+msgstr ""
+
+#: src/StickerSet.vala:249
+msgid "Phone android"
+msgstr ""
+
+#: src/StickerSet.vala:250
+msgid "Tablet android"
+msgstr ""
+
+#: src/StickerSet.vala:251
+msgid "Nook"
+msgstr ""
+
+#: src/StickerSet.vala:252
+msgid "Kindle"
+msgstr ""
+
+#: src/StickerSet.vala:253
+msgid "Two smartphones"
+msgstr ""
+
+#: src/StickerSet.vala:254
+msgid "Multiple devices"
+msgstr ""
+
+#: src/StickerSet.vala:255
+msgid "Multiple smartphones"
+msgstr ""
+
+#: src/StickerSet.vala:256
+msgid "Smartphone tablet"
+msgstr ""
+
+#: src/StickerSet.vala:257
+msgid "Touchscreen smartphone"
+msgstr ""
+
+#: src/StickerSet.vala:258
+msgid "Sim card"
+msgstr ""
+
+#: src/StickerSet.vala:259
+msgid "Sim card chip"
+msgstr ""
+
+#: src/StickerSet.vala:260
+msgid "SMS"
+msgstr ""
+
+#: src/StickerSet.vala:261
+msgid "MMS"
+msgstr ""
+
+#: src/StickerSet.vala:262
+msgid "Charge battery"
+msgstr ""
+
+#: src/StickerSet.vala:263
+msgid "Full battery"
+msgstr ""
+
+#: src/StickerSet.vala:264
+msgid "High battery"
+msgstr ""
+
+#: src/StickerSet.vala:265
+msgid "Middle battery"
+msgstr ""
+
+#: src/StickerSet.vala:266
+msgid "Low battery"
+msgstr ""
+
+#: src/StickerSet.vala:267
+msgid "Empty battery"
+msgstr ""
+
+#: src/StickerSet.vala:268
+msgid "Phone"
+msgstr ""
+
+#: src/StickerSet.vala:269
+msgid "Missed call"
+msgstr ""
+
+#: src/StickerSet.vala:270
+msgid "End call"
+msgstr ""
+
+#: src/StickerSet.vala:271
+msgid "Call transfer"
+msgstr ""
+
+#: src/StickerSet.vala:272
+msgid "Video call"
+msgstr ""
+
+#: src/StickerSet.vala:273
+msgid "No video"
+msgstr ""
+
+#: src/StickerSet.vala:274
+msgid "Rotate to portrait"
+msgstr ""
+
+#: src/StickerSet.vala:275
+msgid "Lock portrait"
+msgstr ""
+
+#: src/StickerSet.vala:276
+msgid "Rotate to landscape"
+msgstr ""
+
+#: src/StickerSet.vala:277
+msgid "Lock landscape"
+msgstr ""
+
+#: src/StickerSet.vala:278
+msgid "Voicemail"
+msgstr ""
+
+#: src/StickerSet.vala:279
+msgid "Speaker"
+msgstr ""
+
+#: src/StickerSet.vala:280
+msgid "Headset"
+msgstr ""
+
+#: src/StickerSet.vala:283
+msgid "Left up"
+msgstr ""
+
+#: src/StickerSet.vala:284
+msgid "Up"
+msgstr ""
+
+#: src/StickerSet.vala:285
+msgid "Right up"
+msgstr ""
+
+#: src/StickerSet.vala:286
+msgid "Left"
+msgstr ""
+
+#: src/StickerSet.vala:287
+msgid "Right"
+msgstr ""
+
+#: src/StickerSet.vala:288
+msgid "Left down"
+msgstr ""
+
+#: src/StickerSet.vala:289
+msgid "Down"
+msgstr ""
+
+#: src/StickerSet.vala:290
+msgid "Right down"
+msgstr ""
+
+#: src/StickerSet.vala:291
+msgid "Collapse"
+msgstr ""
+
+#: src/StickerSet.vala:292
+msgid "Previous"
+msgstr ""
+
+#: src/StickerSet.vala:293
+msgid "Next"
+msgstr ""
+
+#: src/StickerSet.vala:294
+msgid "Expand"
+msgstr ""
+
+#: src/StickerSet.vala:295
+msgid "Left down2"
+msgstr ""
+
+#: src/StickerSet.vala:296
+msgid "Up left"
+msgstr ""
+
+#: src/StickerSet.vala:297
+msgid "Down right"
+msgstr ""
+
+#: src/StickerSet.vala:298
+msgid "Right up2"
+msgstr ""
+
+#: src/StickerSet.vala:299
+msgid "Up right"
+msgstr ""
+
+#: src/StickerSet.vala:300
+msgid "Right down2"
+msgstr ""
+
+#: src/StickerSet.vala:301
+msgid "Left up2"
+msgstr ""
+
+#: src/StickerSet.vala:302
+msgid "Down left"
+msgstr ""
+
+#: src/StickerSet.vala:307
+msgid "Filing cabinet"
+msgstr ""
+
+#: src/StickerSet.vala:308
+msgid "Database"
+msgstr ""
+
+#: src/StickerSet.vala:309
+msgid "Accept database"
+msgstr ""
+
+#: src/StickerSet.vala:310
+msgid "Add database"
+msgstr ""
+
+#: src/StickerSet.vala:311
+msgid "Delete database"
+msgstr ""
+
+#: src/StickerSet.vala:312
+msgid "Data backup"
+msgstr ""
+
+#: src/StickerSet.vala:313
+msgid "Data recovery"
+msgstr ""
+
+#: src/StickerSet.vala:314
+msgid "Data configuration"
+msgstr ""
+
+#: src/StickerSet.vala:315
+msgid "Data encryption"
+msgstr ""
+
+#: src/StickerSet.vala:316
+msgid "Data protection"
+msgstr ""
+
+#: src/StickerSet.vala:317
+msgid "Grid"
+msgstr ""
+
+#: src/StickerSet.vala:318
+msgid "Data sheet"
+msgstr ""
+
+#: src/StickerSet.vala:319
+msgid "Add column"
+msgstr ""
+
+#: src/StickerSet.vala:320
+msgid "Delete column"
+msgstr ""
+
+#: src/StickerSet.vala:321
+msgid "Add row"
+msgstr ""
+
+#: src/StickerSet.vala:322
+msgid "Delete row"
+msgstr ""
+
+#: src/StickerSet.vala:323
+msgid "Generic sorting ascending"
+msgstr ""
+
+#: src/StickerSet.vala:324
+msgid "Generic sorting descending"
+msgstr ""
+
+#: src/StickerSet.vala:325
+msgid "Alphabetical sorting (A->Z)"
+msgstr ""
+
+#: src/StickerSet.vala:326
+msgid "Alphabetical sorting (Z->A)"
+msgstr ""
+
+#: src/StickerSet.vala:327
+msgid "Numerical sorting (2->1)"
+msgstr ""
+
+#: src/StickerSet.vala:328
+msgid "Numerical sorting (1->2)"
+msgstr ""
+
+#: src/StickerSet.vala:329
+msgid "Empty filter"
+msgstr ""
+
+#: src/StickerSet.vala:330
+msgid "Filled filter"
+msgstr ""
+
+#: src/StickerSet.vala:331
+msgid "Clear filters"
+msgstr ""
+
+#: src/StickerSet.vala:332
+msgid "Pie chart"
+msgstr ""
+
+#: src/StickerSet.vala:333
+msgid "Radar plot"
+msgstr ""
+
+#: src/StickerSet.vala:334
+msgid "Heat map"
+msgstr ""
+
+#: src/StickerSet.vala:335
+msgid "Timeline"
+msgstr ""
+
+#: src/StickerSet.vala:336
+msgid "Bar chart"
+msgstr ""
+
+#: src/StickerSet.vala:337
+msgid "Area chart"
+msgstr ""
+
+#: src/StickerSet.vala:338
+msgid "Scatter plot"
+msgstr ""
+
+#: src/StickerSet.vala:339
+msgid "Doughnut chart"
+msgstr ""
+
+#: src/StickerSet.vala:340
+msgid "Combo chart"
+msgstr ""
+
+#: src/StickerSet.vala:341
+msgid "Flow chart"
+msgstr ""
+
+#: src/StickerSet.vala:342
+msgid "Line chart"
+msgstr ""
+
+#: src/StickerSet.vala:343
+msgid "Genealogy"
+msgstr ""
+
+#: src/StickerSet.vala:344
+msgid "Mind map"
+msgstr ""
+
+#: src/StickerSet.vala:345
+msgid "Workflow"
+msgstr ""
+
+#: src/StickerSet.vala:346
+msgid "Positive dynamic"
+msgstr ""
+
+#: src/StickerSet.vala:347
+msgid "Negative dynamic"
+msgstr ""
+
+#: src/StickerSet.vala:349
+msgid "Import"
+msgstr ""
+
+#: src/StickerSet.vala:350
+msgid "List"
+msgstr ""
+
+#: src/StickerSet.vala:351
+msgid "Template"
+msgstr ""
+
+#: src/StickerSet.vala:352
+msgid "View details"
 msgstr ""
 
 #: src/StyleInspector.vala:34
@@ -1307,95 +2615,99 @@ msgstr ""
 msgid "Selected Connections"
 msgstr ""
 
-#: src/StyleInspector.vala:132
+#: src/StyleInspector.vala:38
+msgid "Unknown"
+msgstr ""
+
+#: src/StyleInspector.vala:134
 msgid "Changes affect:"
 msgstr ""
 
-#: src/StyleInspector.vala:152
+#: src/StyleInspector.vala:154
 msgid "Branch Options"
 msgstr ""
 
-#: src/StyleInspector.vala:233 src/StyleInspector.vala:591
+#: src/StyleInspector.vala:238
+msgid "Corner Radius"
+msgstr ""
+
+#: src/StyleInspector.vala:283 src/StyleInspector.vala:641
 msgid "Margin"
 msgstr ""
 
-#: src/StyleInspector.vala:276
+#: src/StyleInspector.vala:326
 msgid "Link Options"
 msgstr ""
 
-#: src/StyleInspector.vala:310 src/StyleInspector.vala:794
+#: src/StyleInspector.vala:360 src/StyleInspector.vala:844
 msgid "Line Dash"
 msgstr ""
 
-#: src/StyleInspector.vala:349 src/StyleInspector.vala:871
+#: src/StyleInspector.vala:399 src/StyleInspector.vala:921
 msgid "Line Width"
 msgstr ""
 
-#: src/StyleInspector.vala:395
+#: src/StyleInspector.vala:445
 msgid "Link Arrow"
 msgstr ""
 
-#: src/StyleInspector.vala:425
+#: src/StyleInspector.vala:475
 msgid "Node Options"
 msgstr ""
 
-#: src/StyleInspector.vala:467
+#: src/StyleInspector.vala:517
 msgid "Border Style"
 msgstr ""
 
-#: src/StyleInspector.vala:516
+#: src/StyleInspector.vala:566
 msgid "Border Width"
 msgstr ""
 
-#: src/StyleInspector.vala:562
+#: src/StyleInspector.vala:612
 msgid "Color Fill"
 msgstr ""
 
-#: src/StyleInspector.vala:633 src/StyleInspector.vala:920
+#: src/StyleInspector.vala:683 src/StyleInspector.vala:970
 msgid "Padding"
 msgstr ""
 
-#: src/StyleInspector.vala:673
+#: src/StyleInspector.vala:723
 msgid "Font"
 msgstr ""
 
-#: src/StyleInspector.vala:702
+#: src/StyleInspector.vala:752
 msgid "Width"
 msgstr ""
 
-#: src/StyleInspector.vala:724
+#: src/StyleInspector.vala:774
 msgid "Enable Markup"
 msgstr ""
 
-#: src/StyleInspector.vala:754
+#: src/StyleInspector.vala:804
 msgid "Connection Options"
 msgstr ""
 
-#: src/StyleInspector.vala:833
-msgid "Arrows"
-msgstr ""
-
-#: src/StyleInspector.vala:960
+#: src/StyleInspector.vala:1010
 msgid "Title Font"
 msgstr ""
 
-#: src/StyleInspector.vala:989
+#: src/StyleInspector.vala:1039
 msgid "Title Width"
 msgstr ""
 
-#: src/Styles.vala:52
+#: src/Styles.vala:54
 msgid "Solid"
 msgstr ""
 
-#: src/Styles.vala:53
+#: src/Styles.vala:55
 msgid "Dotted"
 msgstr ""
 
-#: src/Styles.vala:54
+#: src/Styles.vala:56
 msgid "Short Dash"
 msgstr ""
 
-#: src/Styles.vala:55
+#: src/Styles.vala:57
 msgid "Long Dash"
 msgstr ""
 
@@ -1425,6 +2737,11 @@ msgstr ""
 
 #: src/TextMenu.vala:79
 msgid "Restore Link"
+msgstr ""
+
+#: src/Theme.vala:197
+#, c-format
+msgid "Unable to load background color: %s"
 msgstr ""
 
 #: src/ThemeEditor.vala:45
@@ -1539,6 +2856,10 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
+#: src/ThemeEditor.vala:241
+msgid "Default"
+msgstr ""
+
 #: src/UndoBuffer.vala:85
 msgid "Undo "
 msgstr ""
@@ -1558,10 +2879,6 @@ msgstr ""
 #: data/com.github.phase1geo.minder.shortcuts.ui:12
 #: data/com.github.phase1geo.minder.shortcuts.ui:868
 msgid "General"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:16
-msgid "File"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:35

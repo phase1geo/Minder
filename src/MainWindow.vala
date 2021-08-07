@@ -1,4 +1,4 @@
-  /*
+ /*
 * Copyright (c) 2018 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
@@ -63,9 +63,10 @@ public class MainWindow : Hdy.ApplicationWindow {
   private Switch            _search_all_tabs;
   private Exporter          _exporter;
   private Popover?          _export         = null;
+  private MenuButton        _zoom_btn;
   private Scale?            _zoom_scale     = null;
-  private ModelButton?      _zoom_in        = null;
-  private ModelButton?      _zoom_out       = null;
+  private Button?           _zoom_in        = null;
+  private Button?           _zoom_out       = null;
   private ModelButton?      _zoom_sel       = null;
   private Button?           _undo_btn       = null;
   private Button?           _redo_btn       = null;
@@ -327,6 +328,15 @@ public class MainWindow : Hdy.ApplicationWindow {
     save_tab_state( tab );
   }
 
+  /* Updates all of the node sizes in all tabs */
+  public void update_node_sizes() {
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      da.update_node_sizes();
+    }
+  }
+
   /* Closes the current tab */
   public void close_current_tab() {
     if( _nb.n_tabs == 1 ) return;
@@ -480,11 +490,12 @@ public class MainWindow : Hdy.ApplicationWindow {
     app.set_accels_for_action( "win.action_zoom_actual",   { "<Control>0" } );
     app.set_accels_for_action( "win.action_zoom_fit",      { "<Control>1" } );
     app.set_accels_for_action( "win.action_zoom_in",       { "<Control>plus" } );
+    app.set_accels_for_action( "win.action_zoom_in",       { "<Control>equal" } );
     app.set_accels_for_action( "win.action_zoom_out",      { "<Control>minus" } );
     app.set_accels_for_action( "win.action_export",        { "<Control>e" } );
     app.set_accels_for_action( "win.action_print",         { "<Control>p" } );
     app.set_accels_for_action( "win.action_prefs",         { "<Control>comma" } );
-    app.set_accels_for_action( "win.action_shortcuts",     { "F1" } );
+    app.set_accels_for_action( "win.action_shortcuts",     { "<Control>question" } );
     app.set_accels_for_action( "win.action_show_current",  { "<Control>6" } );
     app.set_accels_for_action( "win.action_show_style",    { "<Control>7" } );
     app.set_accels_for_action( "win.action_show_stickers", { "<Control>8" } );
@@ -498,10 +509,10 @@ public class MainWindow : Hdy.ApplicationWindow {
   private void add_zoom_button() {
 
     /* Create the menu button */
-    var menu_btn = new MenuButton();
-    menu_btn.set_image( new Image.from_icon_name( (on_elementary ? "zoom-fit-best" : "zoom-fit-best-symbolic"), icon_size ) );
-    menu_btn.set_tooltip_text( _( "Zoom" ) );
-    _header.pack_end( menu_btn );
+    _zoom_btn = new MenuButton();
+    _zoom_btn.set_image( new Image.from_icon_name( (on_elementary ? "zoom-fit-best" : "zoom-fit-best-symbolic"), icon_size ) );
+    _zoom_btn.set_tooltip_text( _( "Zoom (%d%%)" ).printf( 100 ) );
+    _header.pack_end( _zoom_btn );
 
     /* Create zoom menu popover */
     Box box = new Box( Orientation.VERTICAL, 5 );
@@ -517,15 +528,22 @@ public class MainWindow : Hdy.ApplicationWindow {
     _zoom_scale.change_value.connect( adjust_zoom );
     _zoom_scale.format_value.connect( set_zoom_value );
 
-    _zoom_in = new ModelButton();
-    _zoom_in.get_child().destroy();
-    _zoom_in.add( new Granite.AccelLabel.from_action_name( _( "Zoom In" ), "win.action_zoom_in" ) );
+    _zoom_in = new Button.from_icon_name( "zoom-in-symbolic", IconSize.MENU );
+    _zoom_in.relief = ReliefStyle.NONE;
+    _zoom_in.can_focus = false;
+    _zoom_in.set_tooltip_markup( Utils.tooltip_with_accel( _( "Zoom In" ), "<Control>plus" ) );
     _zoom_in.action_name = "win.action_zoom_in";
 
-    _zoom_out = new ModelButton();
-    _zoom_out.get_child().destroy();
-    _zoom_out.add( new Granite.AccelLabel.from_action_name( _( "Zoom Out" ), "win.action_zoom_out" ) );
+    _zoom_out = new Button.from_icon_name( "zoom-out-symbolic", IconSize.MENU );
+    _zoom_out.relief = ReliefStyle.NONE;
+    _zoom_out.can_focus = false;
+    _zoom_out.set_tooltip_markup( Utils.tooltip_with_accel( _( "Zoom Out" ), "<Control>minus" ) );
     _zoom_out.action_name = "win.action_zoom_out";
+
+    var zoom_box = new Box( Orientation.HORIZONTAL, 5 );
+    zoom_box.pack_start( _zoom_out,   false, false );
+    zoom_box.pack_start( _zoom_scale, true,  true );
+    zoom_box.pack_start( _zoom_in,    false, false );
 
     var fit = new ModelButton();
     fit.get_child().destroy();
@@ -544,10 +562,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     box.margin = 5;
     box.pack_start( _scale_lbl,  false, true );
-    box.pack_start( _zoom_scale, false, true );
-    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
-    box.pack_start( _zoom_in,    false, true );
-    box.pack_start( _zoom_out,   false, true );
+    box.pack_start( zoom_box,    true,  true );
     box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
     box.pack_start( fit,         false, true );
     box.pack_start( _zoom_sel,   false, true );
@@ -556,7 +571,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     _zoom = new Popover( null );
     _zoom.add( box );
-    menu_btn.popover = _zoom;
+    _zoom_btn.popover = _zoom;
 
   }
 
@@ -1136,6 +1151,8 @@ public class MainWindow : Hdy.ApplicationWindow {
   private void change_scale( double scale_factor ) {
     var marks       = DrawArea.get_scale_marks();
     var scale_value = scale_factor * 100;
+    var int_value   = (int)scale_value;
+    _zoom_btn.set_tooltip_text( _( "Zoom (%d%%)" ).printf( int_value ) );
     _zoom_scale.set_value( scale_value );
     _zoom_in.set_sensitive( scale_value < marks[marks.length-1] );
     _zoom_out.set_sensitive( scale_value > marks[0] );
@@ -1260,14 +1277,12 @@ public class MainWindow : Hdy.ApplicationWindow {
   private void action_zoom_in() {
     var da = get_current_da( "action_zoom_in" );
     da.zoom_in();
-    da.grab_focus();
   }
 
   /* Zooms out of the image (makes things smaller) */
   private void action_zoom_out() {
     var da = get_current_da( "action_zoom_out" );
     da.zoom_out();
-    da.grab_focus();
   }
 
   /* Zooms to make all nodes visible within the viewer */
@@ -1312,7 +1327,8 @@ public class MainWindow : Hdy.ApplicationWindow {
     current.get_match_items( name, text, search_opts, ref _search_items );
     if( all_tabs ) {
       foreach (var tab in _nb.tabs ) {
-        var da = (DrawArea)((Gtk.Bin)tab.page).get_child();
+        var bin = (Gtk.Bin)tab.page;
+        var da = (DrawArea)bin.get_child();
         if( da != current ) {
           da.get_match_items( tab.label, text, search_opts, ref _search_items );
         }
@@ -1334,7 +1350,8 @@ public class MainWindow : Hdy.ApplicationWindow {
     _search_items.get( it, 2, &node, 3, &conn, 4, &tabname, -1 );
     foreach (var tab in _nb.tabs ) {
       if(tab.label == tabname) {
-        da = (DrawArea)((Gtk.Bin)tab.page).get_child();
+        var bin = (Gtk.Bin)tab.page;
+        da = (DrawArea)bin.get_child();
         _nb.current = tab;
         break;
       }
@@ -1477,9 +1494,14 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Loads the tab state */
   public void load_tab_state() {
 
-    var      tab_state = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" );
-    Xml.Doc* doc       = Xml.Parser.parse_file( tab_state );
-    var      tabs      = 0;
+    var tab_state = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" );
+    if( !FileUtils.test( tab_state, FileTest.EXISTS ) ) {
+      do_new_file();
+      return;
+    }
+
+    Xml.Doc* doc  = Xml.Parser.parse_file( tab_state );
+    var      tabs = 0;
 
     if( doc == null ) {
       do_new_file();

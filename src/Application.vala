@@ -25,14 +25,17 @@ using GLib;
 
 public class Minder : Granite.Application {
 
+  private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
+
   private static bool          show_version = false;
   private static string?       open_file    = null;
   private static bool          new_file     = false;
   private static bool          testing      = false;
   private        MainWindow    appwin;
+  private        GLib.Settings iface_settings;
 
   public  static GLib.Settings settings;
-  public  static string        version = "1.12.2";
+  public  static string        version = "1.12.5";
 
   public Minder () {
 
@@ -72,6 +75,18 @@ public class Minder : Granite.Application {
       return( false );
     });
 
+    /* Initialize desktop interface settings */
+    string[] names = {"font-name", "text-scaling-factor"};
+    iface_settings = new GLib.Settings( INTERFACE_SCHEMA );
+    foreach( string name in names ) {
+      iface_settings.changed[name].connect(() => {
+        Timeout.add( 500, () => {
+          appwin.update_node_sizes();
+          return( Source.REMOVE );
+        });
+      });
+    }
+
   }
 
   /* Called whenever files need to be opened */
@@ -80,7 +95,7 @@ public class Minder : Granite.Application {
     foreach( File open_file in files ) {
       var file = open_file.get_path();
       if( !appwin.open_file( file ) ) {
-        stdout.printf( "ERROR:  Unable to open file '%s'\n", file );
+        stdout.printf( _( "ERROR:  Unable to open file '%s'\n" ), file );
       }
     }
     Gtk.main();
@@ -104,9 +119,9 @@ public class Minder : Granite.Application {
     var options = new OptionEntry[4];
 
     /* Create the command-line options */
-    options[0] = {"version", 0, 0, OptionArg.NONE, ref show_version, "Display version number", null};
-    options[1] = {"new", 'n', 0, OptionArg.NONE, ref new_file, "Starts Minder with a new file", null};
-    options[2] = {"run-tests", 0, 0, OptionArg.NONE, ref testing, "Run testing", null};
+    options[0] = {"version", 0, 0, OptionArg.NONE, ref show_version, _( "Display version number" ), null};
+    options[1] = {"new", 'n', 0, OptionArg.NONE, ref new_file, _( "Starts Minder with a new file" ), null};
+    options[2] = {"run-tests", 0, 0, OptionArg.NONE, ref testing, _( "Run testing" ), null};
     options[3] = {null};
 
     /* Parse the arguments */
@@ -115,8 +130,8 @@ public class Minder : Granite.Application {
       context.add_main_entries( options, null );
       context.parse( ref args );
     } catch( OptionError e ) {
-      stdout.printf( "ERROR: %s\n", e.message );
-      stdout.printf( "Run '%s --help' to see valid options\n", args[0] );
+      stdout.printf( _( "ERROR: %s\n" ), e.message );
+      stdout.printf( _( "Run '%s --help' to see valid options\n" ), args[0] );
       Process.exit( 1 );
     }
 

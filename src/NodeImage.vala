@@ -181,8 +181,9 @@ public class NodeImage {
 
     var scale = (width * 1.0) / crop_w;
     var buf   = pixbuf_get_from_surface( _surface, crop_x, crop_y, crop_w, crop_h );
+    var int_crop_h = (int)(crop_h * scale);
 
-    _buf = buf.scale_simple( width, (int)(crop_h * scale), InterpType.BILINEAR );
+    _buf = buf.scale_simple( width, int_crop_h, InterpType.BILINEAR );
 
   }
 

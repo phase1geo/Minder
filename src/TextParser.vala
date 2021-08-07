@@ -63,7 +63,7 @@ public class TextParser {
     try {
       _res.append_val( { new Regex( re, RegexCompileFlags.MULTILINE ), func } );
     } catch( RegexError e ) {
-      stdout.printf( "Parser regex error (re: %s, error: %s)\n", re, e.message );
+      stdout.printf( _( "Parser regex error (re: %s, error: %s)\n" ), re, e.message );
       return;
     }
   }

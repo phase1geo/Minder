@@ -48,8 +48,6 @@ public class LinkTypeSquared : Object, LinkType {
     var style = to_node.style;
     var adj_a = adjust_a( style );
     var adj_t = adjust_tip( style );
-    var mid_x = (from_x + to_x) / 2;
-    var mid_y = (from_y + to_y) / 2;
 
     tipx = tipy = 0;
 
@@ -62,12 +60,14 @@ public class LinkTypeSquared : Object, LinkType {
 
     ctx.move_to( from_x, from_y );
     if( (side & NodeSide.horizontal()) != 0 ) {
+      var mid_x = ((from_x + to_x) / 2) + adjust_mid_by( from_node, side );
       tailx = mid_x;
       taily = to_y;
       ctx.line_to( mid_x, from_y );
       ctx.line_to( mid_x, to_y );
       ctx.line_to( to_x,  to_y );
     } else {
+      var mid_y = ((from_y + to_y) / 2) + adjust_mid_by( from_node, side );
       tailx = to_x;
       taily = mid_y;
       ctx.line_to( from_x, mid_y );

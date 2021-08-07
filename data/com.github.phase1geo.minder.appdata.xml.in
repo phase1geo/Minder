@@ -58,6 +58,7 @@
     <value key="x-appcenter-color-primary">#603461</value>
     <value key="x-appcenter-color-primary-text">rgb(255, 255, 255)</value>
     <value key="x-appcenter-suggested-price">10</value>
+    <value key="x-appcenter-stripe">pk_live_Uhb96elhovWNRGkq07m2FRO9008Ia8OtVa</value>
   </custom>
   <content_rating type="oars-1.1">
     <content_attribute id="violence-cartoon">none</content_attribute>
@@ -89,6 +90,56 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.12.5" date="2021-06-14">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Updated Russian translation (thanks to Alexandre Prokoudine)</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Added missing translatable strings in various parts of the UI.</li>
+          <li>Fixed URL parser issues.</li>
+          <li>Fixed application crash when forward deleting non-Latin text.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.12.4" date="2021-06-02">
+      <description>
+        <p>Changes</p>
+        <ul>
+          <li>Small optimization to Meson build procedure.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed compile and run issue for distros lacking full granite support.</li>
+          <li>Fixed issue with displaying correct themes when themes are hidden that don't match system theme.</li>
+          <li>Added missing translatable strings.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.12.3" date="2021-05-22">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added rounded branching style.</li>
+          <li>Added support for drawing clickable folding areas.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Changed shape of the unfold indicator.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed application crash on Manjaro.</li>
+          <li>Fixed link drawing order regression.</li>
+          <li>Removed error output when XML storage files do not exist.</li>
+          <li>Fixed parsing issue with filepaths starting with file://.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.12.2" date="2021-04-23">
       <description>
         <p>New</p>

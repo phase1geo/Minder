@@ -79,7 +79,9 @@ class ImageEditor {
   /* Opens an image editor popup containing the image of the specified node */
   public void edit_image( ImageManager im, Node node, double x, double y ) {
 
-    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
+    var int_x = (int)x;
+    var int_y = (int)y;
+    Gdk.Rectangle rect = {int_x, int_y, 1, 1};
     _popover.pointing_to = rect;
 
     /* Set the defaults */
@@ -167,7 +169,9 @@ class ImageEditor {
 
   /* Set the crop target based on the position of the cursor */
   private void set_crop_target( double x, double y ) {
-    Gdk.Rectangle cursor = {(int)x, (int)y, 1, 1};
+    var int_x = (int)x;
+    var int_y = (int)y;
+    Gdk.Rectangle cursor = {int_x, int_y, 1, 1};
     Gdk.Rectangle tmp;
     int           i      = 0;
     foreach (Gdk.Rectangle crop_point in _crop_points) {
@@ -320,7 +324,9 @@ class ImageEditor {
       }
       _last_x = e.x;
       _last_y = e.y;
-      set_cursor_location( (int)e.x, (int)e.y );
+      var int_x = (int)e.x;
+      var int_y = (int)e.y;
+      set_cursor_location( int_x, int_y );
       return( false );
     });
 
@@ -390,7 +396,8 @@ class ImageEditor {
     del.set_tooltip_markup(   Utils.tooltip_with_accel( _( "Remove Image" ),              "Delete" ) );
 
     open.clicked.connect(() => {
-      var id = im.choose_image( (Gtk.Window)da.get_toplevel() );
+      var win = (Gtk.Window)da.get_toplevel();
+      var id  = im.choose_image( win );
       if( id != -1 ) {
         var ni = new NodeImage( im, id, _node.style.node_width );
         if( ni != null ) {
