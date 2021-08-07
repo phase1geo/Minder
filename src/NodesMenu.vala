@@ -63,7 +63,8 @@ public class NodesMenu : Gtk.Menu {
     _fold.add( new Granite.AccelLabel( _( "Fold Children" ), "f" ) );
     _fold.activate.connect( fold_nodes );
 
-    _connect = new Gtk.MenuItem.with_label( _( "Connect" ) );
+    _connect = new Gtk.MenuItem();
+    _connect.add( new Granite.AccelLabel( _( "Connect" ), "x" ) );
     _connect.activate.connect( connect_nodes );
 
     _link = new Gtk.MenuItem();

@@ -4114,6 +4114,7 @@ public class DrawArea : Gtk.DrawingArea {
         case Key.Control_L    :  handle_control( true );  break;
         case Key.F10          :  if( shift ) show_contextual_menu( e );  break;
         case Key.Menu         :  show_contextual_menu( e );  break;
+        case Key.x            :  create_connection();  break;
         case Key.y            :  toggle_links();  break;
         default               :  return( false );
       }
