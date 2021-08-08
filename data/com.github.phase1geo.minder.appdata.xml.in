@@ -90,6 +90,46 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.13.0" date="2021-08-07">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for toggling the task indicator when multiple nodes are selected.</li>
+          <li>Added German translation (thanks to Peter Sonntaga).</li>
+          <li>Added zoom amount in the zoom button tooltip.</li>
+          <li>Added support for y command to create/remove node links when multiple nodes are selected.</li>
+          <li>Added support for x command to create connections when two nodes are selected.</li>
+          <li>Added support for system dark mode setting.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li>Updated Russian translation (thanks to Alexandre Prokoudine).</li>
+          <li>Improved task indicator sizes in leaf nodes.</li>
+          <li>Changed fold indicator from a circle to a square.</li>
+          <li>Removed zoom in/out menu items and made them buttons instead.</li>
+          <li>Node/connection is now automatically selected on right click if it is not selected.</li>
+          <li>Moved node change contextual menu items into their own submenu.</li>
+          <li>Changed forward slash command to Control-A for selecting all text.</li>
+          <li>Changed backward slash command to Control-Shift-A for deselecting all text.</li>
+          <li>Changed F1 command to Control-? for displaying keyboard shortcuts.</li>
+          <li>Updated keyboard shortcuts cheatsheet.</li>
+          <li>Updated code base for elementary OS 6 (gtksourceview-4, libhandy-1, Flatpak support, etc.)</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issue where sticker tooltips were not displaying translated names.</li>
+          <li>Fixed node resizing issues when system font is changed in system settings.</li>
+          <li>Fixed Flatpak issue to allow dark mode system settings to affect application.</li>
+          <li>Fixed layout issues when root node is resized.</li>
+          <li>Fixed squared and rounded link display for nodes attached to root node.</li>
+          <li>Fixed cursor location when End key used.</li>
+          <li>Fixed potential node identification generation issue that can lead to bad connections on load.</li>
+          <li>Fixed location of node stickers within the node to improve look.</li>
+          <li>Fixed issues copying and pasting a single selected node.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.12.5" date="2021-06-14">
       <description>
         <p>Changes</p>
