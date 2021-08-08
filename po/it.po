@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-07 20:28-0500\n"
-"PO-Revision-Date: 2021-07-18 16:45+0200\n"
+"PO-Revision-Date: 2021-08-08 14:45+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -1488,9 +1488,8 @@ msgid "Camera"
 msgstr "Fotocamera"
 
 #: src/StickerSet.vala:48
-#, fuzzy
 msgid "SLR back side"
-msgstr "Slr lato posteriore"
+msgstr "SLR lato posteriore"
 
 #: src/StickerSet.vala:49
 msgid "Old time camera"
@@ -2351,19 +2350,19 @@ msgstr "No video"
 
 #: src/StickerSet.vala:274
 msgid "Rotate to portrait"
-msgstr ""
+msgstr "Ruota in verticale"
 
 #: src/StickerSet.vala:275
 msgid "Lock portrait"
-msgstr ""
+msgstr "Blocca ritratto"
 
 #: src/StickerSet.vala:276
 msgid "Rotate to landscape"
-msgstr ""
+msgstr "Ruota in orizzontale"
 
 #: src/StickerSet.vala:277
 msgid "Lock landscape"
-msgstr ""
+msgstr "Blocca ritratto"
 
 #: src/StickerSet.vala:278
 msgid "Voicemail"
@@ -2379,11 +2378,11 @@ msgstr "Cuffie"
 
 #: src/StickerSet.vala:283
 msgid "Left up"
-msgstr ""
+msgstr "Sinistra su"
 
 #: src/StickerSet.vala:284
 msgid "Up"
-msgstr ""
+msgstr "Su"
 
 #: src/StickerSet.vala:285
 msgid "Right up"
@@ -2583,7 +2582,7 @@ msgstr "Grafico ad area"
 
 #: src/StickerSet.vala:338
 msgid "Scatter plot"
-msgstr ""
+msgstr "Grafico a dispersione"
 
 #: src/StickerSet.vala:339
 msgid "Doughnut chart"
