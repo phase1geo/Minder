@@ -4015,6 +4015,14 @@ public class DrawArea : Gtk.DrawingArea {
     return( false );
   }
 
+  private bool has_key( uint[] kvs, uint key ) {
+    foreach( uint kv in kvs ) {
+      if( kv == key ) return( true );
+    }
+    return( false );
+  }
+
+
   /* Handle a key event */
   private bool on_keypress( EventKey e ) {
 
@@ -4025,195 +4033,190 @@ public class DrawArea : Gtk.DrawingArea {
     var nomod        = !(control || shift || alt);
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
+    var keymap       = Keymap.get_for_display( Display.get_default() );
+    KeymapKey[] ks   = {};
+    uint[] kvs       = {};
+
+    keymap.get_entries_for_keycode( e.hardware_keycode, out ks, out kvs );
 
     /* If there is a current node or connection selected, operate on it */
     if( (current_node != null) || (current_conn != null) ) {
       if( control ) {
-        switch( e.keyval ) {
-          case Key.c         :  do_copy();                      break;
-          case Key.x         :  do_cut();                       break;
-          case Key.v         :  do_paste( false );              break;
-          case Key.V         :  do_paste( true );               break;
-          case Key.Return    :  handle_control_return();        break;
-          case Key.Tab       :  handle_control_tab();           break;
-          case Key.Right     :  handle_control_right( shift );  break;
-          case Key.Left      :  handle_control_left( shift );   break;
-          case Key.Up        :  handle_control_up( shift );     break;
-          case Key.Down      :  handle_control_down( shift );   break;
-          case Key.Home      :  handle_control_home( shift );   break;
-          case Key.End       :  handle_control_end( shift );    break;
-          case Key.a         :  select_all();                   break;
-          case Key.A         :  deselect_all();                 break;
-          case Key.period    :  handle_control_period();        break;
-          case Key.E         :  handle_control_E();             break;
-          case Key.R         :  handle_control_R();             break;
-          case Key.w         :  handle_control_w();             break;
-          default            :  return( false );
-        }
+        if( !shift && has_key( kvs, Key.c ) )           { do_copy(); }
+        else if( !shift && has_key( kvs, Key.x ) )      { do_cut(); }
+        else if( !shift && has_key( kvs, Key.v ) )      { do_paste( false ); }
+        else if(  shift && has_key( kvs, Key.V ) )      { do_paste( true ); }
+        else if( has_key( kvs, Key.Return ) )           { handle_control_return(); }
+        else if( has_key( kvs, Key.Tab ) )              { handle_control_tab(); }
+        else if( has_key( kvs, Key.Right ) )            { handle_control_right( shift ); }
+        else if( has_key( kvs, Key.Left ) )             { handle_control_left( shift ); }
+        else if( has_key( kvs, Key.Up ) )               { handle_control_up( shift ); }
+        else if( has_key( kvs, Key.Down ) )             { handle_control_down( shift ); }
+        else if( has_key( kvs, Key.Home ) )             { handle_control_home( shift ); }
+        else if( has_key( kvs, Key.End ) )              { handle_control_end( shift ); }
+        else if( !shift && has_key( kvs, Key.a ) )      { select_all(); }
+        else if(  shift && has_key( kvs, Key.A ) )      { deselect_all(); }
+        else if( !shift && has_key( kvs, Key.period ) ) { handle_control_period(); }
+        else if(  shift && has_key( kvs, Key.E ) )      { handle_control_E(); }
+        else if(  shift && has_key( kvs, Key.R ) )      { handle_control_R(); }
+        else if( !shift && has_key( kvs, Key.w ) )      { handle_control_w(); }
+        else return( false );
       } else if( nomod || shift || alt) {
-        switch( e.keyval ) {
-          case Key.BackSpace :  handle_backspace();          break;
-          case Key.Delete    :  handle_delete();             break;
-          case Key.Escape    :  handle_escape();             break;
-          case Key.Return    :  handle_return( shift );      break;
-          case Key.Tab       :  handle_tab();                break;
-          case Key.Right     :  handle_right( shift, alt );  break;
-          case Key.Left      :  handle_left( shift, alt );   break;
-          case Key.Home      :  handle_home( shift );        break;
-          case Key.End       :  handle_end( shift );         break;
-          case Key.Up        :  handle_up( shift, alt );     break;
-          case Key.Down      :  handle_down( shift, alt );   break;
-          case Key.Page_Up   :  handle_pageup();             break;
-          case Key.Page_Down :  handle_pagedn();             break;
-          case Key.Control_L :  handle_control( true );      break;
-          case Key.F10       :  if( shift ) show_contextual_menu( e );  break;
-          case Key.Menu      :  show_contextual_menu( e );  break;
-          default            :
-            if( (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
-              return( handle_node_keypress( e ) );
-            } else if( (current_conn != null) && (current_conn.mode != ConnMode.EDITABLE) ) {
-              return( handle_connection_keypress( e ) );
-            } else {
-              _im_context.filter_keypress( e );
-              return( false );
-            }
-            break;
+        if( has_key( kvs, Key.BackSpace ) )      { handle_backspace(); }
+        else if( has_key( kvs, Key.Delete ) )    { handle_delete(); }
+        else if( has_key( kvs, Key.Escape ) )    { handle_escape(); }
+        else if( has_key( kvs, Key.Return ) )    { handle_return( shift ); }
+        else if( has_key( kvs, Key.Tab ) )       { handle_tab(); }
+        else if( has_key( kvs, Key.Right ) )     { handle_right( shift, alt ); }
+        else if( has_key( kvs, Key.Left ) )      { handle_left( shift, alt ); }
+        else if( has_key( kvs, Key.Home ) )      { handle_home( shift ); }
+        else if( has_key( kvs, Key.End ) )       { handle_end( shift ); }
+        else if( has_key( kvs, Key.Up ) )        { handle_up( shift, alt ); }
+        else if( has_key( kvs, Key.Down ) )      { handle_down( shift, alt ); }
+        else if( has_key( kvs, Key.Page_Up ) )   { handle_pageup(); }
+        else if( has_key( kvs, Key.Page_Down ) ) { handle_pagedn(); }
+        else if( has_key( kvs, Key.Control_L ) ) { handle_control( true ); }
+        else if( has_key( kvs, Key.F10 ) )       { if( shift ) show_contextual_menu( e ); }
+        else if( has_key( kvs, Key.Menu ) )      { show_contextual_menu( e ); }
+        else {
+          if( (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
+            return( handle_node_keypress( e, kvs ) );
+          } else if( (current_conn != null) && (current_conn.mode != ConnMode.EDITABLE) ) {
+            return( handle_connection_keypress( e, kvs ) );
+          } else {
+            _im_context.filter_keypress( e );
+            return( false );
+          }
         }
       }
 
     /* If there is no current node, allow some of the keyboard shortcuts */
     } else if( control ) {
-      switch( e.keyval ) {
-        case Key.E :  handle_control_E();  break;
-        case Key.c :  do_copy();           break;
-        case Key.x :  do_cut();            break;
-        default    :  return( false );
-      }
+      if( shift && has_key( kvs, Key.E ) )       { handle_control_E(); }
+      else if( !shift && has_key( kvs, Key.c ) ) { do_copy(); }
+      else if( !shift && has_key( kvs, Key.x ) ) { do_cut(); }
+      else return( false );
 
     } else if( nomod || shift ) {
-      switch( e.keyval ) {
-        case Key.minus        :  if( nodes_alignable() ) NodeAlign.align_top( this, _selected.nodes() );  break;
-        case Key.equal        :  if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() );  break;
-        case Key.Z            :  zoom_in();   break;
-        case Key.bracketleft  :  if( nodes_alignable() ) NodeAlign.align_left( this, _selected.nodes() );  break;
-        case Key.bracketright :  if( nodes_alignable() ) NodeAlign.align_right( this, _selected.nodes() );  break;
-        case Key.underscore   :  if( nodes_alignable() ) NodeAlign.align_bottom( this, _selected.nodes() );  break;
-        case Key.a            :  select_parent_nodes();  break;
-        case Key.d            :  select_child_nodes();  break;
-        case Key.f            :  toggle_folds();  break;
-        case Key.g            :  add_group();  break;
-        case Key.m            :  select_root_node();  break;
-        case Key.r            :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
-        case Key.t            :  change_selected_tasks();  break;
-        case Key.u            :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
-        case Key.z            :  zoom_out();  break;
-        case Key.bar          :  if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() );  break;
-        case Key.BackSpace    :  handle_backspace();      break;
-        case Key.Delete       :  handle_delete();         break;
-        case Key.Return       :  handle_return( shift );  break;
-        case Key.Control_L    :  handle_control( true );  break;
-        case Key.F10          :  if( shift ) show_contextual_menu( e );  break;
-        case Key.Menu         :  show_contextual_menu( e );  break;
-        case Key.x            :  create_connection();  break;
-        case Key.y            :  toggle_links();  break;
-        default               :  return( false );
-      }
+      if( !shift && has_key( kvs, Key.minus ) )             { if( nodes_alignable() ) NodeAlign.align_top( this, _selected.nodes() ); }
+      else if( !shift && has_key( kvs, Key.equal ) )        { if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() ); }
+      else if(  shift && has_key( kvs, Key.Z ) )            { zoom_in(); }
+      else if( !shift && has_key( kvs, Key.bracketleft ) )  { if( nodes_alignable() ) NodeAlign.align_left( this, _selected.nodes() ); }
+      else if( !shift && has_key( kvs, Key.bracketright ) ) { if( nodes_alignable() ) NodeAlign.align_right( this, _selected.nodes() ); }
+      else if(  shift && has_key( kvs, Key.underscore ) )   { if( nodes_alignable() ) NodeAlign.align_bottom( this, _selected.nodes() ); }
+      else if( !shift && has_key( kvs, Key.a ) )            { select_parent_nodes(); }
+      else if( !shift && has_key( kvs, Key.d ) )            { select_child_nodes(); }
+      else if( !shift && has_key( kvs, Key.f ) )            { toggle_folds(); }
+      else if( !shift && has_key( kvs, Key.g ) )            { add_group(); }
+      else if( !shift && has_key( kvs, Key.m ) )            { select_root_node(); }
+      else if( !shift && has_key( kvs, Key.r ) )            { if( undo_buffer.redoable() ) undo_buffer.redo(); }
+      else if( !shift && has_key( kvs, Key.t ) )            { change_selected_tasks(); }
+      else if( !shift && has_key( kvs, Key.u ) )            { if( undo_buffer.undoable() ) undo_buffer.undo(); }
+      else if( !shift && has_key( kvs, Key.z ) )            { zoom_out(); }
+      else if(  shift && has_key( kvs, Key.bar ) )          { if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() ); }
+      else if( has_key( kvs, Key.BackSpace ) )              { handle_backspace(); }
+      else if( has_key( kvs, Key.Delete ) )                 { handle_delete(); }
+      else if( has_key( kvs, Key.Return ) )                 { handle_return( shift ); }
+      else if( has_key( kvs, Key.Control_L ) )              { handle_control( true ); }
+      else if( has_key( kvs, Key.F10 ) )                    { if( shift ) show_contextual_menu( e ); }
+      else if( has_key( kvs, Key.Menu ) )                   { show_contextual_menu( e ); }
+      else if( !shift && has_key( kvs, Key.x ) )            { create_connection(); }
+      else if( !shift && has_key( kvs, Key.y ) )            { toggle_links(); }
+      else return( false );
     }
     return( true );
   }
 
-  private bool handle_connection_keypress( EventKey e ) {
+  private bool handle_connection_keypress( EventKey e, uint[] kvs ) {
     var current = _selected.current_connection();
-    switch( e.keyval ) {
-      case Key.E :  show_properties( "current", PropertyGrab.NOTE );  break;
-      case Key.Z :  zoom_in();  break;
-      case Key.e :
-        current.edit_title_begin( this );
-        set_connection_mode( current, ConnMode.EDITABLE );
-        queue_draw();
-        break;
-      case Key.f :  select_connection_node( true );   break;
-      case Key.i :  show_properties( "current", PropertyGrab.FIRST );  break;
-      case Key.n :  select_connection( 1 );  break;
-      case Key.p :  select_connection( -1 );  break;
-      case Key.r :  // Perform redo
-        if( undo_buffer.redoable() ) {
-          undo_buffer.redo();
-        }
-        break;
-      case Key.s :  see();  break;
-      case Key.t :  select_connection_node( false );  break;
-      case Key.u :  // Perform undo
-        if( undo_buffer.undoable() ) {
-          undo_buffer.undo();
-        }
-        break;
-      case Key.z :  zoom_out();  break;
-      default    :  return( false );
+    var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
+    if( shift && has_key( kvs, Key.E ) )       { show_properties( "current", PropertyGrab.NOTE ); }
+    else if(  shift && has_key( kvs, Key.Z ) )  { zoom_in(); }
+    else if( !shift && has_key( kvs, Key.e ) ) {
+      current.edit_title_begin( this );
+      set_connection_mode( current, ConnMode.EDITABLE );
+      queue_draw();
     }
+    else if( !shift && has_key( kvs, Key.f ) ) { select_connection_node( true ); }
+    else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
+    else if( !shift && has_key( kvs, Key.n ) ) { select_connection( 1 ); }
+    else if( !shift && has_key( kvs, Key.p ) ) { select_connection( -1 ); }
+    else if( !shift && has_key( kvs, Key.r ) ) {  // Perform redo
+      if( undo_buffer.redoable() ) {
+        undo_buffer.redo();
+      }
+    }
+    else if( !shift && has_key( kvs, Key.s ) ) { see(); }
+    else if( !shift && has_key( kvs, Key.t ) ) { select_connection_node( false ); }
+    else if( !shift && has_key( kvs, Key.u ) ) {  // Perform undo
+      if( undo_buffer.undoable() ) {
+        undo_buffer.undo();
+      }
+    }
+    else if( !shift && has_key( kvs, Key.z ) ) { zoom_out(); }
+    else return( false );
     return( true );
   }
 
   /* Handles keypresses when a single node is currenly selected */
-  private bool handle_node_keypress( EventKey e ) {
+  private bool handle_node_keypress( EventKey e, uint[] kvs ) {
     var current = _selected.current_node();
-    switch( e.keyval ) {
-      case Key.C :  center_current_node();  break;
-      case Key.D :  select_node_tree();  break;
-      case Key.E :  show_properties( "current", PropertyGrab.NOTE );  break;
-      case Key.I :
-        if( _debug ) {
-          current.display();
-        }
-        break;
-      case Key.S :  sort_alphabetically();  break;
-      case Key.X :  select_attached_connection();  break;
-      case Key.Y :  select_linked_node();  break;
-      case Key.Z :  zoom_in();  break;
-      case Key.a :  select_parent_nodes();  break;
-      case Key.c :  select_child_node();  break;
-      case Key.d :  select_child_nodes();  break;
-      case Key.e :
-        set_node_mode( current, NodeMode.EDITABLE );
-        queue_draw();
-        break;
-      case Key.f :  toggle_fold( current );  break;
-      case Key.g :  add_group();  break;
-      case Key.h :  handle_left( false, false );  break;
-      case Key.i :  show_properties( "current", PropertyGrab.FIRST );  break;
-      case Key.j :  handle_down( false, false );  break;
-      case Key.k :  handle_up( false, false );  break;
-      case Key.l :  handle_right( false, false );  break;
-      case Key.m :  select_root_node();  break;
-      case Key.n :  select_sibling_node( 1 );  break;
-      case Key.p :  select_sibling_node( -1 );  break;
-      case Key.r :  // Perform redo
-        if( undo_buffer.redoable() ) {
-          undo_buffer.redo();
-        }
-        break;
-      case Key.s :  see();  break;
-      case Key.t :  // Toggle the task done indicator
-        if( current.task_enabled() ) {
-          if( current.task_done() ) {
-            change_current_task( false, false );
-          } else {
-            change_current_task( true, true );
-          }
-        } else {
-          change_current_task( true, false );
-        }
-        break;
-      case Key.u :  // Perform undo
-        if( undo_buffer.undoable() ) {
-          undo_buffer.undo();
-        }
-        break;
-      case Key.x :  start_connection( true, false );  break;
-      case Key.y :  toggle_links();  break;
-      case Key.z :  zoom_out();  break;
-      default    :  return( false );
+    var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
+    if( shift && has_key( kvs, Key.C ) )      { center_current_node(); }
+    else if( shift && has_key( kvs, Key.D ) ) { select_node_tree(); }
+    else if( shift && has_key( kvs, Key.E ) ) { show_properties( "current", PropertyGrab.NOTE ); }
+    else if( shift && has_key( kvs, Key.I ) ) {
+      if( _debug ) {
+        current.display();
+      }
     }
+    else if(  shift && has_key( kvs, Key.S ) ) { sort_alphabetically(); }
+    else if(  shift && has_key( kvs, Key.X ) ) { select_attached_connection(); }
+    else if(  shift && has_key( kvs, Key.Y ) ) { select_linked_node(); }
+    else if(  shift && has_key( kvs, Key.Z ) ) { zoom_in(); }
+    else if( !shift && has_key( kvs, Key.a ) ) { select_parent_nodes(); }
+    else if( !shift && has_key( kvs, Key.c ) ) { select_child_node(); }
+    else if( !shift && has_key( kvs, Key.d ) ) { select_child_nodes(); }
+    else if( !shift && has_key( kvs, Key.e ) ) {
+      set_node_mode( current, NodeMode.EDITABLE );
+      queue_draw();
+    }
+    else if( !shift && has_key( kvs, Key.f ) ) { toggle_fold( current ); }
+    else if( !shift && has_key( kvs, Key.g ) ) { add_group(); }
+    else if( !shift && has_key( kvs, Key.h ) ) { handle_left( false, false ); }
+    else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
+    else if( !shift && has_key( kvs, Key.j ) ) { handle_down( false, false ); }
+    else if( !shift && has_key( kvs, Key.k ) ) { handle_up( false, false ); }
+    else if( !shift && has_key( kvs, Key.l ) ) { handle_right( false, false ); }
+    else if( !shift && has_key( kvs, Key.m ) ) { select_root_node(); }
+    else if( !shift && has_key( kvs, Key.n ) ) { select_sibling_node( 1 ); }
+    else if( !shift && has_key( kvs, Key.p ) ) { select_sibling_node( -1 ); }
+    else if( !shift && has_key( kvs, Key.r ) ) {  // Perform redo
+      if( undo_buffer.redoable() ) {
+        undo_buffer.redo();
+      }
+    }
+    else if( !shift && has_key( kvs, Key.s ) ) { see(); }
+    else if( !shift && has_key( kvs, Key.t ) ) {  // Toggle the task done indicator
+      if( current.task_enabled() ) {
+        if( current.task_done() ) {
+          change_current_task( false, false );
+        } else {
+          change_current_task( true, true );
+        }
+      } else {
+        change_current_task( true, false );
+      }
+    }
+    else if( !shift && has_key( kvs, Key.u ) ) {  // Perform undo
+      if( undo_buffer.undoable() ) {
+        undo_buffer.undo();
+      }
+    }
+    else if( !shift && has_key( kvs, Key.x ) ) { start_connection( true, false ); }
+    else if( !shift && has_key( kvs, Key.y ) ) { toggle_links(); }
+    else if( !shift && has_key( kvs, Key.z ) ) { zoom_out(); }
+    else return( false );
     return( true );
   }
 
