@@ -4015,13 +4015,16 @@ public class DrawArea : Gtk.DrawingArea {
     return( false );
   }
 
+  /*
+   Returns true if the following key was found to be pressed (regardless of
+   keyboard layout).
+  */
   private bool has_key( uint[] kvs, uint key ) {
     foreach( uint kv in kvs ) {
       if( kv == key ) return( true );
     }
     return( false );
   }
-
 
   /* Handle a key event */
   private bool on_keypress( EventKey e ) {
