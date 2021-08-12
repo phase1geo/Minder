@@ -1,4 +1,4 @@
-/*
+ /*
 * Copyright (c) 2018 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ public class Minder : Granite.Application {
   private        GLib.Settings iface_settings;
 
   public  static GLib.Settings settings;
-  public  static string        version = "1.13.0";
+  public  static string        version = "1.13.1";
 
   public Minder () {
 

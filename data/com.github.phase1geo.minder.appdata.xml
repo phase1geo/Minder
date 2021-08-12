@@ -159,6 +159,25 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.13.1" date="2021-08-12">
+      <description>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Updated screenshots for elementary OS 6.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed command support for non-English keyboard layouts.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.13.0" date="2021-08-07">
       <description>
         <p>New</p>

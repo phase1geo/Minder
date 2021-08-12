@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-07 20:28-0500\n"
+"POT-Creation-Date: 2021-08-12 18:38-0500\n"
 "PO-Revision-Date: 2021-07-30 14:53+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: none\n"
@@ -138,7 +138,7 @@ msgstr "Вправо"
 msgid "Yed"
 msgstr "Yed"
 
-#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4272
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4278
 #: src/MapInspector.vala:333
 msgid "Manual"
 msgstr "Вручную"
@@ -552,7 +552,7 @@ msgstr "смену конечной точки соединения"
 msgid "connection drag"
 msgstr "перетаскивание соединения"
 
-#: src/DrawArea.vala:3143 src/DrawArea.vala:3157 src/DrawArea.vala:4731
+#: src/DrawArea.vala:3143 src/DrawArea.vala:3157 src/DrawArea.vala:4737
 msgid "Another Idea"
 msgstr "Ещё одна идея"
 

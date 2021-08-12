@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-07 20:28-0500\n"
+"POT-Creation-Date: 2021-08-12 18:38-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -138,7 +138,7 @@ msgstr "Do prawej"
 msgid "Yed"
 msgstr ""
 
-#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4272
+#: src/layouts/LayoutManual.vala:26 src/DrawArea.vala:4278
 #: src/MapInspector.vala:333
 msgid "Manual"
 msgstr "Ręcznie"
@@ -604,7 +604,7 @@ msgstr "zmiana notatki węzła"
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:3143 src/DrawArea.vala:3157 src/DrawArea.vala:4731
+#: src/DrawArea.vala:3143 src/DrawArea.vala:3157 src/DrawArea.vala:4737
 msgid "Another Idea"
 msgstr "Inny pomysł"
 
