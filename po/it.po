@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-12 18:38-0500\n"
-"PO-Revision-Date: 2021-08-08 14:45+0200\n"
+"PO-Revision-Date: 2021-08-13 14:45+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -752,7 +752,7 @@ msgstr "Modalità messa a fuoco"
 #: src/MainWindow.vala:514 src/MainWindow.vala:1155
 #, c-format
 msgid "Zoom (%d%%)"
-msgstr ""
+msgstr "Zoom (%d%%)"
 
 #: src/MainWindow.vala:521
 msgid "Zoom to Percent"
@@ -987,9 +987,8 @@ msgid "Delete Single Node"
 msgstr "Elimina Nodo singolo"
 
 #: src/NodeMenu.vala:91
-#, fuzzy
 msgid "Change Node"
-msgstr "Cambia Immagine"
+msgstr "Cambia Nodo"
 
 #: src/NodeMenu.vala:96
 msgid "Edit Text…"
@@ -1209,9 +1208,8 @@ msgid "Align Right"
 msgstr "Allinea a destra"
 
 #: src/NodesMenu.vala:215
-#, fuzzy
 msgid "Remove Node Links"
-msgstr "Rimuovi collegamento nodo"
+msgstr "Rimuovi collegamento al nodo"
 
 #: src/Preferences.vala:47
 msgid "Behavior"
@@ -2522,11 +2520,11 @@ msgstr "Elimina riga"
 
 #: src/StickerSet.vala:323
 msgid "Generic sorting ascending"
-msgstr ""
+msgstr "Ordinamento generico crescente"
 
 #: src/StickerSet.vala:324
 msgid "Generic sorting descending"
-msgstr ""
+msgstr "Ordinamento generico decrescente"
 
 #: src/StickerSet.vala:325
 msgid "Alphabetical sorting (A->Z)"
