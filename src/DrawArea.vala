@@ -928,24 +928,24 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Toggles the fold for the given node */
-  public void toggle_fold( Node n ) {
+  public void toggle_fold( Node n, bool deep ) {
     var fold    = !n.folded;
     var changes = new Array<Node>();
-    n.set_fold( fold, changes );
+    n.set_fold( fold, deep, changes );
     undo_buffer.add_item( new UndoNodeFolds( changes ) );
     queue_draw();
     auto_save();
   }
 
   /* Toggles the folding of all selected nodes that can be folded */
-  public void toggle_folds() {
+  public void toggle_folds( bool deep = false ) {
     var parents = new Array<Node>();
     var changes = new Array<Node>();
     _selected.get_parents( ref parents );
     if( parents.length > 0 ) {
       for( int i=0; i<parents.length; i++ ) {
         var node = parents.index( i );
-        node.set_fold( !node.folded, changes );
+        node.set_fold( !node.folded, deep, changes );
       }
       undo_buffer.add_item( new UndoNodeFolds( changes ) );
       queue_draw();
@@ -1080,12 +1080,12 @@ public class DrawArea : Gtk.DrawingArea {
    Changes the current node's folded state to the given value.  Updates the
    layout, adds the undo item and redraws the canvas.
   */
-  public void change_current_fold( bool folded ) {
+  public void change_current_fold( bool folded, bool deep = false ) {
     var nodes = _selected.nodes();
     if( nodes.length == 1 ) {
       var current = nodes.index( 0 );
       var changes = new Array<Node>();
-      current.set_fold( folded, changes );
+      current.set_fold( folded, deep, changes );
       undo_buffer.add_item( new UndoNodeFolds( changes ) );
       queue_draw();
       auto_save();
@@ -1434,7 +1434,7 @@ public class DrawArea : Gtk.DrawingArea {
       select_linked_node( node );
       return( false );
     } else if( node.is_within_fold( scaled_x, scaled_y ) ) {
-      toggle_fold( node );
+      toggle_fold( node, shift );
       current_changed( this );
       return( false );
     } else if( node.is_within_resizer( scaled_x, scaled_y ) ) {
@@ -3134,7 +3134,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
     node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), parent.style );
     node.attach( parent, -1, _theme );
-    parent.set_fold( false );
+    parent.set_fold( false, true );
     return( node );
   }
 
@@ -3421,10 +3421,10 @@ public class DrawArea : Gtk.DrawingArea {
     var changes = new Array<Node>();
     var current = _selected.current_node();
     if( current != null ) {
-      current.get_root().set_fold( false, changes );
+      current.get_root().set_fold( false, true, changes );
     } else {
       for( int i=0; i<_nodes.length; i++ ) {
-        _nodes.index( i ).set_fold( false, changes );
+        _nodes.index( i ).set_fold( false, true, changes );
       }
     }
     if( changes.length > 0 ) {
@@ -4109,7 +4109,8 @@ public class DrawArea : Gtk.DrawingArea {
       else if(  shift && has_key( kvs, Key.underscore ) )   { if( nodes_alignable() ) NodeAlign.align_bottom( this, _selected.nodes() ); }
       else if( !shift && has_key( kvs, Key.a ) )            { select_parent_nodes(); }
       else if( !shift && has_key( kvs, Key.d ) )            { select_child_nodes(); }
-      else if( !shift && has_key( kvs, Key.f ) )            { toggle_folds(); }
+      else if( !shift && has_key( kvs, Key.f ) )            { toggle_folds( false ); }
+      else if(  shift && has_key( kvs, Key.F ) )            { toggle_folds( true ); }
       else if( !shift && has_key( kvs, Key.g ) )            { add_group(); }
       else if( !shift && has_key( kvs, Key.m ) )            { select_root_node(); }
       else if( !shift && has_key( kvs, Key.r ) )            { if( undo_buffer.redoable() ) undo_buffer.redo(); }
@@ -4184,7 +4185,8 @@ public class DrawArea : Gtk.DrawingArea {
       set_node_mode( current, NodeMode.EDITABLE );
       queue_draw();
     }
-    else if( !shift && has_key( kvs, Key.f ) ) { toggle_fold( current ); }
+    else if( !shift && has_key( kvs, Key.f ) ) { toggle_fold( current, false ); }
+    else if(  shift && has_key( kvs, Key.F ) ) { toggle_fold( current, true ); }
     else if( !shift && has_key( kvs, Key.g ) ) { add_group(); }
     else if( !shift && has_key( kvs, Key.h ) ) { handle_left( false, false ); }
     else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }

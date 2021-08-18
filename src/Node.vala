@@ -1332,8 +1332,8 @@ public class Node : Object {
    Sets the fold for this node to the given value.  Appends this node to
    the changed list if the folded value changed.
   */
-  public void set_fold( bool value, Array<Node>? changed = null ) {
-    if( !folded && value ) {
+  public void set_fold( bool value, bool deep, Array<Node>? changed = null ) {
+    if( folded && !value && deep ) {
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).clear_tree_folds( changed );
       }
@@ -1409,7 +1409,7 @@ public class Node : Object {
       if( _task_count == _task_done ) {
         for( int i=0; i<_children.length; i++ ) {
           if( _children.index( i ).is_leaf() && (_children.index( i )._task_done == 1) ) {
-            set_fold( true, changed );
+            set_fold( true, true, changed );
             return;
           }
         }
