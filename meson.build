@@ -77,6 +77,7 @@ dependencies = [
     dependency('libarchive'),
     dependency('gtksourceview-4'),
     dependency('libhandy-1'),
+    dependency('json-glib-1.0'),
     libmarkdown,
     math_dep
 ]
