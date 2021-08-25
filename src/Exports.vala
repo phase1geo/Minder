@@ -44,7 +44,8 @@ public class Exports {
     add( new ExportPortableMinder() );
     add( new ExportSVG() );
     add( new ExportText() );
-    add( new ExportXMind() );
+    add( new ExportXMind8() );
+    add( new ExportXMind2021() );
     add( new ExportYed() );
 
   }

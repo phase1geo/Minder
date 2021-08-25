@@ -24,7 +24,7 @@ using Gdk;
 using Gee;
 using Xml;
 
-public class ExportXMind : Export {
+public class ExportXMind8 : Export {
 
   private int ids = 10000000;
 
@@ -76,7 +76,7 @@ public class ExportXMind : Export {
   }
 
   /* Constructor */
-  public ExportXMind() {
+  public ExportXMind8() {
     base( "xmind-8", _( "XMind 8" ), { ".xmind" }, true, true );
   }
 
@@ -608,18 +608,17 @@ public class ExportXMind : Export {
     /* Unarchive the files */
     unarchive_contents( fname, dir );
 
-    var content = Path.build_filename( dir, "content.json" );
-    var id_map  = new HashMap<string,IdObject>();
+    var id_map = new HashMap<string,IdObject>();
 
-    if( FileUtils.test( content, FileTest.EXISTS ) ) {
-      var styles = Path.build_filename( dir, "styles.json" );
-      import_content_json( da, content, dir, id_map );
-    } else {
-      var styles = Path.build_filename( dir, "styles.xml" );
-      content = Path.build_filename( dir, "content.xml" );
-      import_content_xml( da, content, dir, id_map );
-      import_styles_xml( da, styles, id_map );
+    /* If this .xmind file should be handled by XMind 2021, return false */
+    if( FileUtils.test( Path.build_filename( dir, "content.json" ), FileTest.EXISTS ) ) {
+      return( false );
     }
+
+    var styles  = Path.build_filename( dir, "styles.xml" );
+    var content = Path.build_filename( dir, "content.xml" );
+    import_content( da, content, dir, id_map );
+    import_styles( da, styles, id_map );
 
     /* Update the drawing area and save the result */
     da.queue_draw();
@@ -630,7 +629,7 @@ public class ExportXMind : Export {
   }
 
   /* Import the content file */
-  private bool import_content_xml( DrawArea da, string fname, string dir, HashMap<string,IdObject> id_map ) {
+  private bool import_content( DrawArea da, string fname, string dir, HashMap<string,IdObject> id_map ) {
 
     /* Read in the contents of the XMind 8 file */
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
@@ -639,7 +638,7 @@ public class ExportXMind : Export {
     }
 
     /* Load the contents of the file */
-    import_map_xml( da, doc->get_root_element(), dir, id_map );
+    import_map( da, doc->get_root_element(), dir, id_map );
 
     /* Delete the OPML document */
     delete doc;
@@ -648,103 +647,30 @@ public class ExportXMind : Export {
 
   }
 
-  private bool import_content_json( DrawArea da, string fname, string dir, HashMap<string,IdObject> id_map ) {
-
-    var parser = new Json.Parser();
-
-    /* Read in the contents of the XMind 2021 file */
-    try {
-      parser.load_from_file( fname );
-    } catch( GLib.Error e ) {
-      return( false );
-    }
-
-    import_map_json( da, parser.get_root(), dir, id_map );
-
-    return( true );
-
-  }
-
   /* Import the xmind map */
-  private void import_map_xml( DrawArea da, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_map( DrawArea da, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "sheet") ) {
-        import_sheet_xml( da, it, dir, id_map );
+        import_sheet( da, it, dir, id_map );
         return;
       }
     }
   }
 
-  private string get_json_string( unowned Json.Object obj, string prop ) {
-    unowned var node = obj.get_member( prop );
-    if( (node != null) && (node.get_node_type() == Json.NodeType.VALUE) ) {
-      return( node.get_string() );
-    }
-    return( "" );
-  }
-
-  private unowned Json.Object? get_json_object( unowned Json.Object obj, string prop ) {
-    unowned var node = obj.get_member( prop );
-    if( (node != null) && (node.get_node_type() == Json.NodeType.OBJECT) ) {
-      return( node.get_object() );
-    }
-    return( null );
-  }
-
-  private unowned Json.Array? get_json_array( unowned Json.Object obj, string prop ) {
-    unowned var node = obj.get_member( prop );
-    if( (node != null) && (node.get_node_type() == Json.NodeType.ARRAY) ) {
-      return( node.get_array() );
-    }
-    return( null );
-  }
-
-  private void import_map_json( DrawArea da, Json.Node n, string dir, HashMap<string,IdObject> id_map ) {
-    if( n.get_node_type() == Json.NodeType.ARRAY ) {
-      foreach( unowned Json.Node node in n.get_array().get_elements() ) {
-        unowned var obj = node.get_object();
-        if( get_json_string( obj, "class" ) == "sheet" ) {
-          import_sheet_json( da, obj, dir, id_map );
-        }
-      }
-    }
-  }
-
   /* Import a sheet */
-  private void import_sheet_xml( DrawArea da, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_sheet( DrawArea da, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "topic"         :  import_topic_xml( da, null, it, false, dir, id_map );  break;
-          case "relationships" :  import_relationships_xml( da, it, id_map );  break;
+          case "topic"         :  import_topic( da, null, it, false, dir, id_map );  break;
+          case "relationships" :  import_relationships( da, it, id_map );  break;
         }
       }
     }
   }
 
-  /* Import a sheet */
-  private void import_sheet_json( DrawArea da, Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
-
-    unowned var theme = get_json_object( obj, "theme" );
-    unowned var root  = get_json_object( obj, "rootTopic" );
-    unowned var rels  = get_json_array( obj, "relationships" );
-
-    if( theme != null ) {
-      import_theme_json( da, theme, id_map );
-    }
-
-    if( root != null ) {
-      import_topic_json( da, null, root, false, dir, id_map );
-    }
-
-    if( rels != null ) {
-      import_relationships_json( da, rels, id_map );
-    }
-
-  }
-
   /* Imports an XMind topic (this is a node in Minder) */
-  private void import_topic_xml( DrawArea da, Node? parent, Xml.Node* n, bool attached, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_topic( DrawArea da, Node? parent, Xml.Node* n, bool attached, string dir, HashMap<string,IdObject> id_map ) {
 
     Node node;
 
@@ -776,83 +702,19 @@ public class ExportXMind : Export {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "title"      :  import_node_name_xml( node, it );                  break;
-          case "notes"      :  import_node_notes_xml( node, it );                 break;
-          case "img"        :  import_image_xml( da, node, it, dir, id_map );     break;
-          case "children"   :  import_children_xml( da, node, it, dir, id_map );  break;
-          case "boundaries" :  import_boundaries_xml( da, node, it, id_map );     break;
+          case "title"      :  import_node_name( node, it );                  break;
+          case "notes"      :  import_node_notes( node, it );                 break;
+          case "img"        :  import_image( da, node, it, dir, id_map );     break;
+          case "children"   :  import_children( da, node, it, dir, id_map );  break;
+          case "boundaries" :  import_boundaries( da, node, it, id_map );     break;
         }
       }
     }
 
   }
 
-  private void import_topic_json( DrawArea da, Node? parent, Json.Object obj, bool attached, string dir, HashMap<string,IdObject> id_map ) {
-
-    Node node;
-
-    var sclass = get_json_string( obj, "structureClass" );
-    if( sclass != "" ) {
-      node = da.create_root_node();
-      if( sclass == "org.xmind.ui.map.unbalanced" ) {
-        node.layout = da.layouts.get_layout( _( "Horizontal" ) );
-      } else {
-        node.layout = da.layouts.get_layout( _( "To right" ) );
-      }
-    } else if( !attached ) {
-      node = da.create_root_node();
-    } else {
-      node = da.create_child_node( parent );
-    }
-
-    /* Handle the ID */
-    var id = get_json_string( obj, "id" );
-    if( id != "" ) {
-      id_map.set( id, new IdObject.for_node( node ) );
-    }
-
-    var sid = get_json_string( obj, "styleId" );
-    if( sid != "" ) {
-      id_map.set( sid, new IdObject.for_node( node ) );
-    }
-
-    var title = get_json_string( obj, "title" );
-    if( title != "" ) {
-      node.name.text.insert_text( 0, title );
-    }
-
-    unowned var notes = get_json_object( obj, "notes" );
-    if( notes != null ) {
-      import_node_notes_json( node, notes );
-    }
-
-    var href = get_json_string( obj, "href" );
-    if( href != "" ) {
-      if( node.note != "" ) {
-        node.note += "\n";
-      }
-      node.note += href;
-    }
-
-    unowned var img = get_json_object( obj, "image" );
-    if( img != null ) {
-      import_image_json( da, node, img, dir, id_map );
-    }
-
-    unowned var children = get_json_object( obj, "children" );
-    if( children != null ) {
-      import_children_json( da, node, children, dir, id_map );
-    }
-
-    unowned var bound = get_json_array( obj, "boundaries" );
-    if( bound != null ) {
-      import_boundaries_json( da, node, bound, id_map );
-    }
-
-  }
-
   /* Returns the string stored in a <title> node */
-  private string get_title_xml( Xml.Node* n ) {
+  private string get_title( Xml.Node* n ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.TEXT_NODE ) {
         return( it->content );
@@ -862,35 +724,28 @@ public class ExportXMind : Export {
   }
 
   /* Imports the node name information */
-  private void import_node_name_xml( Node node, Xml.Node* n ) {
-    node.name.text.insert_text( 0, get_title_xml( n ) );
+  private void import_node_name( Node node, Xml.Node* n ) {
+    node.name.text.insert_text( 0, get_title( n ) );
   }
 
   /* Imports the node note */
-  private void import_node_notes_xml( Node node, Xml.Node* n ) {
+  private void import_node_notes( Node node, Xml.Node* n ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "plain" :  import_note_plain_xml( node, it );  break;
+          case "plain" :  import_note_plain( node, it );  break;
         }
       }
     }
   }
 
-  private void import_node_notes_json( Node node, unowned Json.Object obj ) {
-    unowned var plain = get_json_object( obj, "plain" );
-    if( plain != null ) {
-      node.note = get_json_string( plain, "content" );
-    }
-  }
-
   /* Imports the node note as plain text */
-  private void import_note_plain_xml( Node node, Xml.Node* n ) {
-    node.note = get_title_xml( n );
+  private void import_note_plain( Node node, Xml.Node* n ) {
+    node.note = get_title( n );
   }
 
   /* Imports an image from a file */
-  private void import_image_xml( DrawArea da, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_image( DrawArea da, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
 
     int height = 1;
     int width  = 1;
@@ -918,61 +773,23 @@ public class ExportXMind : Export {
 
   }
 
-  private void import_image_json( DrawArea da, Node node, unowned Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
-
-    int height = 100;
-    int width  = 100;
-
-    var sid = get_json_string( obj, "styleId" );
-    if( sid != null ) {
-      // TBD - We need to associate styles to things that are not just nodes
-    }
-
-    var h = get_json_string( obj, "height" );
-    if( h != "" ) {
-      height = int.parse( h );
-    }
-
-    var w = get_json_string( obj, "width" );
-    if( w != "" ) {
-      width = int.parse( w );
-    }
-
-    var src = get_json_string( obj, "src" );
-    if( src != "" ) {
-      var img_file = File.new_for_path( Path.build_filename( dir, src.substring( 4 ) ) );
-      node.set_image( da.image_manager, new NodeImage.from_uri( da.image_manager, img_file.get_uri(), width ) );
-    }
-
-  }
-
   /* Importa child nodes */
-  private void import_children_xml( DrawArea da, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_children( DrawArea da, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "topics") ) {
         string? t = it->get_prop( "type" );
         var     attached = (t != null) && (t == "attached");
         for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
           if( (it2->type == ElementType.ELEMENT_NODE) && (it2->name == "topic") ) {
-            import_topic_xml( da, node, it2, attached, dir, id_map );
+            import_topic( da, node, it2, attached, dir, id_map );
           }
         }
       }
     }
   }
 
-  private void import_children_json( DrawArea da, Node node, unowned Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
-    unowned var attached = get_json_array( obj, "attached" );
-    if( attached != null ) {
-      foreach( unowned Json.Node n in attached.get_elements() ) {
-        unowned var o = n.get_object();
-        import_topic_json( da, node, o, true, dir, id_map );
-      }
-    }
-  }
-
   /* Imports boundary information */
-  private void import_boundaries_xml( DrawArea da, Node node, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private void import_boundaries( DrawArea da, Node node, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "boundary") ) {
@@ -999,32 +816,8 @@ public class ExportXMind : Export {
 
   }
 
-  private void import_boundaries_json( DrawArea da, Node node, unowned Json.Array arr, HashMap<string,IdObject> id_map ) {
-    foreach( unowned Json.Node n in arr.get_elements() ) {
-      unowned var obj = n.get_object();
-      var sid = get_json_string( obj, "styleId" );
-      var r   = get_json_string( obj, "range" );
-      if( r != "" ) {
-        int start = -1;
-        int end   = -1;
-        if( r.scanf( "(%d,%d)", &start, &end ) == 2 ) {
-          var nodes = new Array<Node>();
-          for( int i=start; i<=end; i++ ) {
-            var child = node.children().index( i );
-            nodes.append_val( child );
-          }
-          var group = new NodeGroup.array( da, nodes );
-          da.groups.add_group( group );
-          if( sid != null ) {
-            id_map.set( sid, new IdObject.for_boundary( group ) );
-          }
-        }
-      }
-    }
-  }
-
   /* Import connections */
-  private void import_relationships_xml( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private void import_relationships( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "relationship") ) {
@@ -1053,7 +846,7 @@ public class ExportXMind : Export {
         string title = "";
         for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
           if( (it2->type == ElementType.ELEMENT_NODE) && (it2->name == "title") ) {
-            title = get_title_xml( it2 );
+            title = get_title( it2 );
           }
         }
 
@@ -1075,50 +868,8 @@ public class ExportXMind : Export {
 
   }
 
-  private void import_relationships_json( DrawArea da, unowned Json.Array arr, HashMap<string,IdObject> id_map ) {
-
-    foreach( unowned Json.Node node in arr.get_elements() ) {
-
-      unowned var o = node.get_object();
-
-      Node? from_node = null;
-      Node? to_node   = null;
-
-      var sid   = get_json_string( o, "styleId" );
-      var sp    = get_json_string( o, "end1Id" );
-      var ep    = get_json_string( o, "end2Id" );
-      var title = get_json_string( o, "title" );
-      if( sp != "" ) {
-        var obj = id_map.get( sp );
-        if( obj.typ == IdObjectType.NODE ) {
-          from_node = obj.node;
-        }
-      }
-      if( ep != "" ) {
-        var obj = id_map.get( ep );
-        if( obj.typ == IdObjectType.NODE ) {
-          to_node = obj.node;
-        }
-      }
-      if( (from_node != null) && (to_node != null) ) {
-
-        var conn = new Connection( da, from_node );
-        conn.change_title( da, title );
-        conn.connect_to( to_node );
-        da.get_connections().add_connection( conn );
-
-        if( sid != null ) {
-          id_map.set( sid, new IdObject.for_connection( conn ) );
-        }
-
-      }
-
-    }
-
-  }
-
   /* Imports and applies styling information */
-  private bool import_styles_xml( DrawArea da, string fname, HashMap<string,IdObject> id_map ) {
+  private bool import_styles( DrawArea da, string fname, HashMap<string,IdObject> id_map ) {
 
     /* Read in the contents of the Freemind file */
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
@@ -1127,7 +878,7 @@ public class ExportXMind : Export {
     }
 
     /* Load the contents of the file */
-    import_styles_content_xml( da, doc->get_root_element(), id_map );
+    import_styles_content( da, doc->get_root_element(), id_map );
 
     /* Update the drawing area */
     da.queue_draw();
@@ -1140,13 +891,13 @@ public class ExportXMind : Export {
   }
 
   /* Imports tha main styles XML node */
-  private void import_styles_content_xml( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private void import_styles_content( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "styles") ) {
         for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
           if( (it->type == ElementType.ELEMENT_NODE) && (it2->name == "style") ) {
-            import_styles_style_xml( da, it2, id_map );
+            import_styles_style( da, it2, id_map );
           }
         }
       }
@@ -1155,7 +906,7 @@ public class ExportXMind : Export {
   }
 
   /* Imports the style information for one of the supported objects */
-  private void import_styles_style_xml( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private void import_styles_style( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     string? id = n->get_prop( "id" );
     if( (id == null) || !id_map.has_key( id ) ) return;
@@ -1163,9 +914,9 @@ public class ExportXMind : Export {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "topic-properties"        :   import_styles_topic_xml( da, it, id_map.get( id ).node );       break;
-          case "relationship-properties" :   import_styles_connection_xml( da, it, id_map.get( id ).conn );  break;
-          case "boundary-properties"     :   import_styles_boundary_xml( da, it, id_map.get( id ).group );   break;
+          case "topic-properties"        :   import_styles_topic( da, it, id_map.get( id ).node );       break;
+          case "relationship-properties" :   import_styles_connection( da, it, id_map.get( id ).conn );  break;
+          case "boundary-properties"     :   import_styles_boundary( da, it, id_map.get( id ).group );   break;
         }
       }
     }
@@ -1173,7 +924,7 @@ public class ExportXMind : Export {
   }
 
   /* Imports the style information for a given node */
-  private void import_styles_topic_xml( DrawArea da, Xml.Node* n, Node node ) {
+  private void import_styles_topic( DrawArea da, Xml.Node* n, Node node ) {
 
     string? sc = n->get_prop( "shape-class" );
     if( sc != null ) {
@@ -1243,7 +994,7 @@ public class ExportXMind : Export {
   }
 
   /* Imports connection styling information */
-  private void import_styles_connection_xml( DrawArea da, Xml.Node* n, Connection conn ) {
+  private void import_styles_connection( DrawArea da, Xml.Node* n, Connection conn ) {
 
     string? arrow_start = n->get_prop( "arrow-begin-class" );
     if( arrow_start != null ) {
@@ -1291,128 +1042,13 @@ public class ExportXMind : Export {
   }
 
   /* Imports styling information for a node group */
-  private void import_styles_boundary_xml( DrawArea da, Xml.Node* n, NodeGroup group ) {
+  private void import_styles_boundary( DrawArea da, Xml.Node* n, NodeGroup group ) {
 
     string? f = n->get_prop( "fill" );
     if( f != null ) {
       RGBA c = {1.0, 1.0, 1.0, 1.0};
       c.parse( f );
       group.color = c;
-    }
-
-  }
-
-  private void import_theme_json( DrawArea da, unowned Json.Object obj, HashMap<string,IdObject> id_map ) {
-
-    unowned var root     = get_json_object( obj, "centralTopic" );
-    unowned var main     = get_json_object( obj, "mainTopic" );
-    unowned var sub      = get_json_object( obj, "subTopic" );
-    unowned var boundary = get_json_object( obj, "boundary" );
-    unowned var rel      = get_json_object( obj, "relationship" );
-
-    if( root != null ) {
-      import_theme_node_json( da, root, 0, id_map );
-    }
-
-    if( main != null ) {
-      import_theme_node_json( da, main, 1, id_map );
-    }
-
-    if( sub != null ) {
-      import_theme_node_json( da, sub, 10, id_map );
-    }
-
-    if( boundary != null ) {
-      // import_theme_boundary_json( da, boundary, id_map );
-    }
-
-    if( rel != null ) {
-      // import_theme_connection_json( da, rel, id_map );
-    }
-
-  }
-
-  private void import_theme_node_json( DrawArea da, unowned Json.Object obj, int level, HashMap<string,IdObject> id_map ) {
-
-    unowned var props = get_json_object( obj, "properties" );
-
-    if( props != null ) {
-
-      var styles = new SList<Style>();
-      if( level == 10 ) {
-        for( int i=2; i<10; i++ ) {
-          styles.append( StyleInspector.styles.get_style_for_level( i, null ) );
-        }
-      } else {
-        styles.append( StyleInspector.styles.get_style_for_level( level, null ) );
-      }
-
-      var shape  = get_json_string( props, "shape-class" );
-      var bwidth = get_json_string( props, "border-line-width" );
-      var line   = get_json_string( props, "line-class" );
-      var lwidth = get_json_string( props, "line-width" );
-      var fill   = get_json_string( props, "svg:file" );
-
-      /* Node shape */
-      if( shape != "" ) {
-        var border = "squared";
-        switch( shape ) {
-          case "org.xmind.topicShape.roundedRect" :  border = "rounded";     break;
-          case "org.xmind.topicShape.rect"        :  border = "squared";     break;
-          case "org.xmind.topicShape.underline"   :  border = "underlined";  break;
-        }
-        foreach( Style style in styles ) {
-          style.node_border = StyleInspector.styles.get_node_border( border );
-        }
-      }
-
-      /* Border width */
-      if( bwidth != "" ) {
-        int width = 1;
-        if( bwidth.scanf( "%dpt", &width ) == 1 ) {
-          foreach( Style style in styles ) {
-            style.node_borderwidth = (width < 2) ? 2 : width;
-          }
-        }
-      }
-
-      /* Link type */
-      if( line != "" ) {
-        var type = "straight";
-        switch( line ) {
-          case "org.xmind.branchConnection.curve"        :  type = "curved";    break;
-          case "org.xmind.branchConnection.straight"     :  type = "straight";  break;
-          case "org.xmind.branchConnection.elbow"        :  type = "squared";   break;
-          case "org.xmind.branchConnection.roundedElbow" :  type = "rounded";   break;
-          case "org.xmind.branchConnection.arrowedCurve" :
-            type = "curved";
-            foreach( Style style in styles ) {
-              style.link_arrow = true;
-            }
-            break;
-        }
-        foreach( Style style in styles ) {
-          style.link_type = StyleInspector.styles.get_link_type( type );
-        }
-      }
-
-      /* Link width */
-      if( lwidth != "" ) {
-        int width = 1;
-        if( lwidth.scanf( "%dpt", &width ) == 1 ) {
-          foreach( Style style in styles ) {
-            style.link_width = (width < 2) ? 2 : width;
-          }
-        }
-      }
-
-      /* Fill color */
-      if( fill != "" ) {
-        foreach( Style style in styles ) {
-          style.node_fill = true;
-        }
-      }
-
     }
 
   }

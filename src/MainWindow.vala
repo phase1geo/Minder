@@ -1032,8 +1032,10 @@ public class MainWindow : Hdy.ApplicationWindow {
             new_fname += ".minder";
             var da = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
             update_title( da );
-            exports.index( i ).import( fname, da );
-            return( true );
+            if( exports.index( i ).import( fname, da ) ) {
+              return( true );
+            }
+            close_current_tab();
           }
         }
       }

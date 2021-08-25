@@ -22,7 +22,8 @@ sources += files(
     'exports/ExportPrint.vala',
     'exports/ExportSVG.vala',
     'exports/ExportText.vala',
-    'exports/ExportXMind.vala',
+    'exports/ExportXMind8.vala',
+    'exports/ExportXMind2021.vala',
     'exports/ExportYed.vala',
 
     'layouts/LayoutDown.vala',
