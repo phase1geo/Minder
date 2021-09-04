@@ -361,6 +361,14 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Create Link to Selected Node</property>
+                <property name="subtitle" translatable="yes">[After using this command, 'y' will create the link]</property>
+                <property name="accelerator">&lt;ctrl&gt;y</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Create Group</property>
                 <property name="accelerator">g</property>
                 <property name="visible">1</property>

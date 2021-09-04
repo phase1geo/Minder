@@ -1232,13 +1232,13 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Toggles the node links */
   public void toggle_links() {
-    var nodes = _selected.nodes();
+    var current = _selected.current_node();
     if( any_selected_nodes_linked() ) {
       delete_links();
-    } else if( nodes.length == 1 ) {
+    } else if( current != null ) {
       if( win.node_link != null ) {
-        if( win.node_link.is_linkable( _doc.filename ) ) {
-          nodes.index( 0 ).linked_node = win.node_link;
+        if( win.node_link.is_linkable( _doc.filename, current.id() ) ) {
+          current.linked_node = win.node_link;
           auto_save();
           queue_draw();
         }

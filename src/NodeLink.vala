@@ -60,8 +60,8 @@ public class NodeLink {
   }
 
   /* Returns true if this node_link can be linked to the given document */
-  public bool is_linkable( string fname ) {
-    return( (fname == _fname) || !_temp_file );
+  public bool is_linkable( string fname, int node_id ) {
+    return( (fname == _fname) ? (_node_id != node_id) : !_temp_file );
   }
 
   /* This should be called whenever a NodeLink is assigned to a node */
