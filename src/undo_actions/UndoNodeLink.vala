@@ -23,12 +23,12 @@ using Gtk;
 
 public class UndoNodeLink : UndoItem {
 
-  Node  _node;
-  Node? _old_link;
-  Node? _new_link;
+  Node      _node;
+  NodeLink? _old_link;
+  NodeLink? _new_link;
 
   /* Constructor for a node name change */
-  public UndoNodeLink( Node n, Node? old_link ) {
+  public UndoNodeLink( Node n, NodeLink? old_link ) {
     base( _( "node link change" ) );
     _node     = n;
     _old_link = old_link;

@@ -1,4 +1,4 @@
-/*
+ /*
 * Copyright (c) 2018 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
@@ -75,9 +75,9 @@ public class NodeGroup {
   }
 
   /* Constructor from XML */
-  public NodeGroup.from_xml( DrawArea da, Xml.Node* n, HashMap<int,int> id_map ) {
+  public NodeGroup.from_xml( DrawArea da, Xml.Node* n ) {
     _nodes = new Array<Node>();
-    load( da, n, id_map );
+    load( da, n );
   }
 
   /* Adds the given node to this node group */
@@ -145,7 +145,7 @@ public class NodeGroup {
   }
 
   /* Loads the given group information */
-  public void load( DrawArea da, Xml.Node* g, HashMap<int,int> id_map ) {
+  public void load( DrawArea da, Xml.Node* g ) {
     string? c = g->get_prop( "color" );
     if( c != null ) {
       RGBA clr = {1.0, 1.0, 1.0, 1.0};
@@ -154,16 +154,16 @@ public class NodeGroup {
     }
     for( Xml.Node* it = g->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "node") ) {
-        load_node( da, it, id_map );
+        load_node( da, it );
       }
     }
   }
 
   /* Loads the given node */
-  private void load_node( DrawArea da, Xml.Node* n, HashMap<int,int> id_map ) {
+  private void load_node( DrawArea da, Xml.Node* n ) {
     string? i = n->get_prop( "id" );
     if( i != null ) {
-      var id   = id_map.get( int.parse( i ) );
+      var id   = int.parse( i );
       var node = da.get_node( da.get_nodes(), id );
       if( node != null ) {
         node.group = true;

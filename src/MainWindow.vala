@@ -121,6 +121,7 @@ public class MainWindow : Hdy.ApplicationWindow {
       return( _exports );
     }
   }
+  public NodeLink? node_link { get; set; default = null; }
 
   public signal void canvas_changed( DrawArea? da );
 
@@ -367,7 +368,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     da.animator.enable = _settings.get_boolean( "enable-animations" );
 
     if( fname != null ) {
-      da.get_doc().filename = fname;
+      da.get_doc().load_filename( fname, (reason == TabAddReason.OPEN) );
     }
 
     /* Create the overlay that will hold the canvas so that we can put an entry box for emoji support */
@@ -1178,7 +1179,7 @@ public class MainWindow : Hdy.ApplicationWindow {
         }
         _pane.set_position( pane_width - (prop_width + 11) );
         if( get_current_da( "show_properties 1" ) != null ) {
-          get_current_da( "show_properties 2" ).see( -300 );
+          get_current_da( "show_properties 2" ).see( true, -300 );
         }
         _pane.show_all();
       }

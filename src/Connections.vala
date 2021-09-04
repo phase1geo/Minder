@@ -1,4 +1,4 @@
-/*
+ /*
 * Copyright (c) 2018 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
@@ -192,11 +192,11 @@ public class Connections {
   }
 
   /* Loads the listed connections from the given XML data */
-  public void load( DrawArea da, Xml.Node* node, Array<Connection>? conns, Array<Node> nodes, HashMap<int,int> id_map ) {
+  public void load( DrawArea da, Xml.Node* node, Array<Connection>? conns, Array<Node> nodes ) {
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "connection" ) {
-          var conn = new Connection.from_xml( da, it, nodes, id_map );
+          var conn = new Connection.from_xml( da, it, nodes );
           if( conns != null ) {
             conns.append_val( conn );
           }

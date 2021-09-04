@@ -23,36 +23,38 @@ using Gtk;
 
 public class UndoNodesLink : UndoItem {
 
-  Array<Node>  _nodes;
-  Array<Node?> _linked;
+  Array<Node>      _nodes;
+  Array<NodeLink?> _linked;
 
-  /* Constructor for a node name change */
+  /* Constructor for a node link change */
   public UndoNodesLink( Array<Node> nodes ) {
     base( _( "node link changes" ) );
     _nodes  = new Array<Node>();
-    _linked = new Array<Node>();
+    _linked = new Array<NodeLink?>();
     for( int i=0; i<nodes.length; i++ ) {
       _nodes.append_val( nodes.index( i ) );
       _linked.append_val( nodes.index( i ).linked_node );
     }
   }
 
-  /* Undoes a node image change */
-  public override void undo( DrawArea da ) {
+  private void toggle( DrawArea da ) {
     for( int i=0; i<_nodes.length; i++ ) {
+      var tmp = _nodes.index( i ).linked_node;
       _nodes.index( i ).linked_node = _linked.index( i );
+      _linked.data[i] = tmp;
     }
     da.queue_draw();
     da.auto_save();
   }
 
+  /* Undoes a node image change */
+  public override void undo( DrawArea da ) {
+    toggle( da );
+  }
+
   /* Redoes a node image change */
   public override void redo( DrawArea da ) {
-    for( int i=0; i<(_nodes.length - 1); i++ ) {
-      _nodes.index( i ).linked_node = _nodes.index( i + 1 );
-    }
-    da.queue_draw();
-    da.auto_save();
+    toggle( da );
   }
 
 }

@@ -1,4 +1,4 @@
-/*
+ /*
 * Copyright (c) 2018 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
@@ -153,10 +153,10 @@ public class NodeGroups {
   }
 
   /* Loads the given group information */
-  public void load( DrawArea da, Xml.Node* g, HashMap<int,int> id_map ) {
+  public void load( DrawArea da, Xml.Node* g ) {
     for( Xml.Node* it = g->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "group") ) {
-        _groups.append_val( new NodeGroup.from_xml( da, it, id_map ) );
+        _groups.append_val( new NodeGroup.from_xml( da, it ) );
       }
     }
   }

@@ -185,6 +185,7 @@ sources += files(
     'NodeGroups.vala',
     'NodeImage.vala',
     'NodeInspector.vala',
+    'NodeLink.vala',
     'NodeMenu.vala',
     'NodesMenu.vala',
     'NoteView.vala',

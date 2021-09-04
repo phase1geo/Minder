@@ -67,7 +67,7 @@ public class ExportFreeplane : Export {
 
     n->new_prop( "ID", "id_" + node.id().to_string() );
     if( node.linked_node != null ) {
-      n->new_prop( "LINK", "#id_" + node.linked_node.id().to_string() );
+      n->new_prop( "LINK", "#id_" + node.linked_node.node_id.to_string() );
     }
     n->new_prop( "FOLDED", node.folded.to_string() );
     n->new_prop( "POSITION", ((node.side == NodeSide.LEFT) ? "left" : "right") );
@@ -285,7 +285,7 @@ public class ExportFreeplane : Export {
 
     /* Complete node linking */
     for( int i=0; i<link_ids.length; i++ ) {
-      link_ids.index( i ).node.linked_node = da.get_node( da.get_nodes(), id_map.get( link_ids.index( i ).id_str ) );
+      link_ids.index( i ).node.linked_node = new NodeLink.for_local( id_map.get( link_ids.index( i ).id_str ) );
     }
 
     /* Finish up the connections */

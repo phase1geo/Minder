@@ -164,6 +164,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
   public int next_node_id {
+    set {
+      _next_node_id = value + 1;
+    }
     get {
       return( _next_node_id++ );
     }
@@ -515,8 +518,6 @@ public class DrawArea : Gtk.DrawingArea {
   public void load( Xml.Node* n ) {
 
     Layout? use_layout = null;
-    var     id_map     = new HashMap<int,int>();
-    var     link_ids   = new Array<NodeLinkInfo?>();
 
     /* Disable animations while we are loading */
     var animate = animator.enable;
@@ -534,14 +535,14 @@ public class DrawArea : Gtk.DrawingArea {
           case "styles"      :  StyleInspector.styles.load( it );  break;
           case "drawarea"    :  load_drawarea( it );  break;
           case "images"      :  image_manager.load( it );  break;
-          case "connections" :  _connections.load( this, it, null, _nodes, id_map );  break;
-          case "groups"      :  groups.load( this, it, id_map );  break;
+          case "connections" :  _connections.load( this, it, null, _nodes );  break;
+          case "groups"      :  groups.load( this, it );  break;
           case "stickers"    :  _stickers.load( it );  break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var node = new Node.with_name( this, "", null );
-                node.load( this, it2, true, id_map, link_ids );
+                node.load( this, it2, true );
                 if( use_layout != null ) {
                   node.layout = use_layout;
                 }
@@ -551,11 +552,6 @@ public class DrawArea : Gtk.DrawingArea {
             break;
         }
       }
-    }
-
-    /* Handle node links */
-    for( int i=0; i<link_ids.length; i++ ) {
-      link_ids.index( i ).node.linked_node = get_node( _nodes, id_map.get( int.parse( link_ids.index( i ).id_str ) ) );
     }
 
     /* Perform the layout process again to make sure that everything is accounted for */
@@ -1188,7 +1184,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void end_link( Node node ) {
     if( _selected.num_connections() == 0 ) return;
     _selected.clear_connections();
-    _last_node.linked_node = node;
+    _last_node.linked_node = new NodeLink( node );
     undo_buffer.add_item( new UndoNodeLink( _last_node, null ) );
     _last_connection  = null;
     _last_node        = null;
@@ -1215,7 +1211,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( nodes.length < 2 ) return;
     undo_buffer.add_item( new UndoNodesLink( nodes ) );
     for( int i=0; i<(nodes.length - 1); i++ ) {
-      nodes.index( i ).linked_node = nodes.index( i + 1 );
+      nodes.index( i ).linked_node = new NodeLink( nodes.index( i + 1 ) );
     }
     auto_save();
     queue_draw();
@@ -1240,10 +1236,19 @@ public class DrawArea : Gtk.DrawingArea {
     if( any_selected_nodes_linked() ) {
       delete_links();
     } else if( nodes.length == 1 ) {
-      start_connection( true, true );
+      if( win.node_link != null ) {
+        if( win.node_link.is_linkable( _doc.filename ) ) {
+          nodes.index( 0 ).linked_node = win.node_link;
+          auto_save();
+          queue_draw();
+        }
+      } else {
+        start_connection( true, true );
+      }
     } else {
       create_links();
     }
+    win.node_link = null;
   }
 
   /*
@@ -1894,7 +1899,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Brings the given node into view in its entirety including the given amount of padding */
-  public void see( double width_adjust = 0, double pad = 100.0 ) {
+  public void see( bool animate = true, double width_adjust = 0, double pad = 100.0 ) {
 
     double x, y, w, h;
 
@@ -1929,15 +1934,23 @@ public class DrawArea : Gtk.DrawingArea {
 
     if( (diff_x != 0) || (diff_y != 0) ) {
       if( sf >= sfactor ) {
-        animator.add_pan( "see" );
+        if( animate ) {
+          animator.add_pan( "see" );
+        }
         move_origin( diff_x, diff_y );
       } else {
-        animator.add_pan_scale( "see" );
+        if( animate ) {
+          animator.add_pan_scale( "see" );
+        }
         sfactor = sf;
         scale_changed( sfactor );
         move_origin( diff_x, diff_y );
       }
-      animator.animate();
+      if( animate ) {
+        animator.animate();
+      } else {
+        queue_draw();
+      }
     }
 
   }
@@ -2296,7 +2309,7 @@ public class DrawArea : Gtk.DrawingArea {
           set_cursor_from_name( "move" );
           return( false );
         } else if( current_conn.within_note( _scaled_x, _scaled_y ) ) {
-          set_tooltip_markup( prepare_note_markup( current_conn.note ) );
+          set_tooltip_markup( Utils.prepare_note_markup( current_conn.note ) );
           return( false );
         } else {
           Connection? match_conn = _connections.on_curve( _scaled_x, _scaled_y );
@@ -2308,7 +2321,7 @@ public class DrawArea : Gtk.DrawingArea {
         Connection? match_conn = _connections.on_curve( _scaled_x, _scaled_y );
         if( match_conn != null ) {
           if( match_conn.within_note( _scaled_x, _scaled_y ) ) {
-            set_tooltip_markup( prepare_note_markup( match_conn.note ) );
+            set_tooltip_markup( Utils.prepare_note_markup( match_conn.note ) );
             return( false );
           } else if( select_connection_on_hover( match_conn, shift ) ) {
             return( false );
@@ -2326,7 +2339,7 @@ public class DrawArea : Gtk.DrawingArea {
             set_cursor( CursorType.HAND2 );
             set_tooltip_markup( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
           } else if( match.is_within_note( _scaled_x, _scaled_y ) ) {
-            set_tooltip_markup( prepare_note_markup( match.note ) );
+            set_tooltip_markup( Utils.prepare_note_markup( match.note ) );
           } else if( match.is_within_fold( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.HAND2 );
             if( match.folded ) {
@@ -2334,6 +2347,7 @@ public class DrawArea : Gtk.DrawingArea {
             }
           } else if( match.is_within_linked_node( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.HAND2 );
+            set_tooltip_markup( Utils.prepare_note_markup( match.linked_node.to_string( this ) ) );
           } else if( match.is_within_resizer( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.SB_H_DOUBLE_ARROW );
             set_tooltip_markup( null );
@@ -2442,11 +2456,6 @@ public class DrawArea : Gtk.DrawingArea {
       }
     }
     return( false );
-  }
-
-  /* Prepares the given note string for use in a markup tooltip */
-  private string prepare_note_markup( string note ) {
-    return( note.replace( "<", "&lt;" ) );
   }
 
   /* Prepare the given folded count for use in a markup tooltip */
@@ -2680,7 +2689,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* If the specified node is not null, selects the node and makes it the current node */
-  private bool select_node( Node? n ) {
+  public bool select_node( Node? n, bool animate = true ) {
     if( n != null ) {
       if( n != _selected.current_node() ) {
         var folded = n.folded_ancestor();
@@ -2691,7 +2700,7 @@ public class DrawArea : Gtk.DrawingArea {
         if( n.parent != null ) {
           n.parent.last_selected_child = n;
         }
-        see();
+        see( animate );
       }
       return( true );
     }
@@ -2855,9 +2864,7 @@ public class DrawArea : Gtk.DrawingArea {
       n = _selected.current_node();
     }
     if( (n != null) && (n.linked_node != null) ) {
-      if( select_node( n.linked_node ) ) {
-        queue_draw();
-      }
+      n.linked_node.select( this );
     }
   }
 
@@ -3729,6 +3736,29 @@ public class DrawArea : Gtk.DrawingArea {
     win.close_current_tab();
   }
 
+  /* Blinks the current node to indicate that something has occurred */
+  private void blink_current() {
+    if( is_node_selected() ) {
+      var current = _selected.current_node();
+      var count   = 0;
+      win.node_link = new NodeLink( current );
+      Timeout.add( 100, () => {
+        set_node_mode( current, (((count % 2) == 0) ? NodeMode.HIGHLIGHTED : NodeMode.CURRENT) );
+        queue_draw();
+        return( ++count < 2 );
+      });
+    }
+  }
+
+  /* If a node is currently selected, creates a node link to this node */
+  private void handle_control_y() {
+    if( is_node_selected() ) {
+      var current = _selected.current_node();
+      win.node_link = new NodeLink( current );
+      blink_current();
+    }
+  }
+
   /* Called whenever the Control+home key is entered in the drawing area */
   private void handle_control_home( bool shift ) {
     if( is_connection_editable() ) {
@@ -4063,6 +4093,7 @@ public class DrawArea : Gtk.DrawingArea {
         else if(  shift && has_key( kvs, Key.E ) )      { handle_control_E(); }
         else if(  shift && has_key( kvs, Key.R ) )      { handle_control_R(); }
         else if( !shift && has_key( kvs, Key.w ) )      { handle_control_w(); }
+        else if( !shift && has_key( kvs, Key.y ) )      { handle_control_y(); }
         else return( false );
       } else if( nomod || shift || alt) {
         if( has_key( kvs, Key.BackSpace ) )      { handle_backspace(); }
@@ -4306,28 +4337,25 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Deserializes the paste string and returns the list of nodes */
-  public void deserialize_for_paste( string str, Array<Node> nodes, Array<Connection> conns, HashMap<int,int> id_map, Array<NodeLinkInfo?> link_ids ) {
-    Xml.Doc* doc    = Xml.Parser.parse_doc( str );
+  public void deserialize_for_paste( string str, Array<Node> nodes, Array<Connection> conns ) {
+    Xml.Doc* doc = Xml.Parser.parse_doc( str );
     if( doc == null ) return;
     for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           // case "images"      :  image_manager.load( it );  break;
-          case "connections" :  _connections.load( this, it, conns, nodes, id_map );  break;
+          case "connections" :  _connections.load( this, it, conns, nodes );  break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var node = new Node.with_name( this, "", null );
-                node.load( this, it2, true, id_map, link_ids );
+                node.load( this, it2, true );
                 nodes.append_val( node );
               }
             }
             break;
         }
       }
-    }
-    for( int i=0; i<link_ids.length; i++ ) {
-      link_ids.index( i ).node.linked_node = get_node( nodes, int.parse( link_ids.index( i ).id_str ) );
     }
     delete doc;
   }
@@ -4485,11 +4513,9 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void replace_node_xml( Node node, string text ) {
-    var nodes    = new Array<Node>();
-    var conns    = new Array<Connection>();
-    var id_map   = new HashMap<int,int>();
-    var link_ids = new Array<NodeLinkInfo?>();
-    deserialize_for_paste( text, nodes, conns, id_map, link_ids );
+    var nodes = new Array<Node>();
+    var conns = new Array<Connection>();
+    deserialize_for_paste( text, nodes, conns );
     if( nodes.length == 0 ) return;
     replace_node( node, nodes.index( 0 ) );
     for( int i=1; i<nodes.length; i++ ) {
@@ -4535,11 +4561,9 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void paste_as_nodes( Node? node, string text ) {
-    var nodes    = new Array<Node>();
-    var conns    = new Array<Connection>();
-    var id_map   = new HashMap<int,int>();
-    var link_ids = new Array<NodeLinkInfo?>();
-    deserialize_for_paste( text, nodes, conns, id_map, link_ids );
+    var nodes = new Array<Node>();
+    var conns = new Array<Connection>();
+    deserialize_for_paste( text, nodes, conns );
     if( nodes.length == 0 ) return;
     if( node == null ) {
       for( int i=0; i<nodes.length; i++ ) {

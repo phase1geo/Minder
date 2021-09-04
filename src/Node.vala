@@ -27,12 +27,18 @@ using Gee;
 
 /* Enumeration describing the different modes a node can be in */
 public enum NodeMode {
-  NONE = 0,   // Specifies that this node is not the current node
-  CURRENT,    // Specifies that this node is the current node and is not being edited
-  SELECTED,   // Specifies that this node is one of several selected nodes
-  EDITABLE,   // Specifies that this node's text has been and currently is actively being edited
-  ATTACHABLE, // Specifies that this node is the currently attachable node (affects display)
-  DROPPABLE   // Specifies that this node can receive a dropped item
+  NONE = 0,    // Specifies that this node is not the current node
+  CURRENT,     // Specifies that this node is the current node and is not being edited
+  SELECTED,    // Specifies that this node is one of several selected nodes
+  EDITABLE,    // Specifies that this node's text has been and currently is actively being edited
+  ATTACHABLE,  // Specifies that this node is the currently attachable node (affects display)
+  DROPPABLE,   // Specifies that this node can receive a dropped item
+  HIGHLIGHTED; // Specifies that this node is both selected and being highlighted
+
+  /* Returns true if the mode indicates that this node will be drawn as selected */
+  public bool is_selected() {
+    return( (this == CURRENT) || (this == SELECTED) || (this == HIGHLIGHTED) );
+  }
 }
 
 public enum NodeSide {
@@ -150,7 +156,7 @@ public class Node : Object {
   private   Layout?      _layout         = null;
   private   Style        _style          = new Style();
   private   bool         _loaded         = true;
-  private   Node         _linked_node    = null;
+  private   NodeLink?    _linked_node    = null;
   private   string?      _sticker        = null;
   private   Pixbuf?      _sticker_buf    = null;
 
@@ -340,12 +346,15 @@ public class Node : Object {
       }
     }
   }
-  public Node? linked_node {
+  public NodeLink? linked_node {
     get {
       return( _linked_node );
     }
     set {
       _linked_node = value;
+      if( _linked_node != null ) {
+        _linked_node.normalize( _da );
+      }
       update_size();
     }
   }
@@ -423,7 +432,7 @@ public class Node : Object {
   }
 
   /* Copies an existing node tree to this node */
-  public Node.copy_tree( DrawArea da, Node n, ImageManager im, HashMap<int,int>? id_map = null ) {
+  public Node.copy_tree( DrawArea da, Node n, ImageManager im ) {
     _da       = da;
     _id       = da.next_node_id;
     _children = new Array<Node>();
@@ -433,11 +442,8 @@ public class Node : Object {
     set_parsers();
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
-    if( id_map != null ) {
-      id_map.set( n._id, _id );
-    }
     for( int i=0; i<n._children.length; i++ ) {
-      Node child = new Node.copy_tree( da, n._children.index( i ), im, id_map );
+      Node child = new Node.copy_tree( da, n._children.index( i ), im );
       child.parent = this;
       _children.append_val( child );
     }
@@ -838,7 +844,7 @@ public class Node : Object {
 
   /* Returns true if the given cursor coordinates lie within the resizer area */
   public virtual bool is_within_resizer( double x, double y ) {
-    if( mode == NodeMode.CURRENT ) {
+    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.HIGHLIGHTED) ) {
       double rx, ry, rw, rh;
       resizer_bbox( out rx, out ry, out rw, out rh );
       return( Utils.is_within_bounds( x, y, rx, ry, rw, rh ) );
@@ -986,6 +992,11 @@ public class Node : Object {
     }
   }
 
+  /* Loads the node link from the given XML node */
+  private void load_node_link( Xml.Node* n ) {
+    _linked_node = new NodeLink.from_xml( n );
+  }
+
   /* Loads the style information from the given XML node */
   private void load_style( Xml.Node* n ) {
     _style.load_node( n );
@@ -993,13 +1004,14 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, HashMap<int,int> id_map, Array<NodeLinkInfo?> link_ids ) {
+  public virtual void load( DrawArea da, Xml.Node* n, bool isroot ) {
 
     _loaded = false;
 
     string? i = n->get_prop( "id" );
     if( i != null ) {
-      id_map.set( int.parse( i ), _id );
+      _id = int.parse( i );
+      da.next_node_id = _id;
     }
 
     string? x = n->get_prop( "posx" );
@@ -1030,7 +1042,7 @@ public class Node : Object {
 
     string? ln = n->get_prop( "link" );
     if( ln != null ) {
-      link_ids.append_val( NodeLinkInfo( ln, this ) );
+      _linked_node = new NodeLink.for_local( int.parse( ln ) );
     }
 
     string? s = n->get_prop( "side" );
@@ -1087,12 +1099,13 @@ public class Node : Object {
           case "nodename"   :  load_name( it );  break;
           case "nodenote"   :  load_note( it );  break;
           case "nodeimage"  :  load_image( da.image_manager, it );  break;
+          case "nodelink"   :  load_node_link( it );  break;
           case "style"      :  load_style( it );  break;
           case "nodes"      :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var child = new Node( da, _layout );
-                child.load( da, it2, false, id_map, link_ids );
+                child.load( da, it2, false );
                 child.attach( this, -1, null );
               }
             }
@@ -1153,9 +1166,6 @@ public class Node : Object {
     if( is_task() ) {
       node->new_prop( "task", _task_done.to_string() );
     }
-    if( _linked_node != null ) {
-      node->new_prop( "link", _linked_node.id().to_string() );
-    }
     node->new_prop( "side", side.to_string() );
     node->new_prop( "fold", folded.to_string() );
     node->new_prop( "treesize", tree_size.to_string() );
@@ -1177,6 +1187,10 @@ public class Node : Object {
 
     node->add_child( name.save( "nodename" ) );
     node->new_text_child( null, "nodenote", note );
+
+    if( _linked_node != null ) {
+      node->add_child( _linked_node.save() );
+    }
 
     if( _children.length > 0 ) {
       Xml.Node* nodes = new Xml.Node( null, "nodes" );
@@ -1984,7 +1998,7 @@ public class Node : Object {
     double h = _height - (style.node_margin * 2);
 
     /* Set the fill color */
-    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
+    if( mode.is_selected() ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
       style.draw_node_fill( ctx, x, y, w, h, side );
     } else if( is_root() || style.is_fillable() ) {
@@ -2025,7 +2039,7 @@ public class Node : Object {
     int vmargin = 3;
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
-    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
+    if( mode.is_selected() ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
       ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin),
                      ((posy + style.node_padding + style.node_margin) - vmargin),
@@ -2036,7 +2050,7 @@ public class Node : Object {
 
     /* Draw the text */
     var color = theme.get_color( "foreground" );
-    if( (mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED) ) {
+    if( mode.is_selected() ) {
       color = theme.get_color( "nodesel_foreground" );
     } else if( parent == null ) {
       color = theme.get_color( "root_foreground" );
@@ -2116,7 +2130,7 @@ public class Node : Object {
     if( _sticker_buf != null ) {
 
       double x, y, w, h;
-      RGBA color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color : bg_color;
+      RGBA color = mode.is_selected() ? sel_color : bg_color;
 
       sticker_bbox( out x, out y, out w, out h );
 
@@ -2141,9 +2155,9 @@ public class Node : Object {
     if( note.length > 0 ) {
 
       double x, y, w, h;
-      RGBA   color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color :
-                     style.is_fillable()                                         ? Granite.contrasting_foreground_color( link_color )  :
-                                                                                   reg_color;
+      RGBA   color = mode.is_selected()  ? sel_color :
+                     style.is_fillable() ? Granite.contrasting_foreground_color( link_color )  :
+                                           reg_color;
 
       note_bbox( out x, out y, out w, out h );
 
@@ -2172,9 +2186,9 @@ public class Node : Object {
     if( linked_node != null ) {
 
       double x, y, w, h;
-      RGBA   color = ((mode == NodeMode.CURRENT) || (mode == NodeMode.SELECTED)) ? sel_color :
-                     style.is_fillable()                                         ? Granite.contrasting_foreground_color( link_color )  :
-                                                                                   reg_color;
+      RGBA   color = mode.is_selected()  ? sel_color :
+                     style.is_fillable() ? Granite.contrasting_foreground_color( link_color )  :
+                                           reg_color;
 
       linked_node_bbox( out x, out y, out w, out h );
 
@@ -2192,7 +2206,11 @@ public class Node : Object {
       ctx.line_to( (x + 5), (y + 6) );
       ctx.line_to( x, (y + 6) );
       ctx.close_path();
-      ctx.fill();
+      if( linked_node.is_local() ) {
+        ctx.fill();
+      } else {
+        ctx.stroke();
+      }
 
     }
 
@@ -2242,7 +2260,7 @@ public class Node : Object {
   /* Draws the attachable highlight border to indicate when a node is attachable */
   protected virtual void draw_attachable( Context ctx, Theme theme, RGBA? frost_background ) {
 
-    if( (mode == NodeMode.ATTACHABLE) || (mode == NodeMode.DROPPABLE) ) {
+    if( (mode == NodeMode.ATTACHABLE) || (mode == NodeMode.DROPPABLE) || (mode == NodeMode.HIGHLIGHTED) ) {
 
       double x, y, w, h;
       bbox( out x, out y, out w, out h );
@@ -2327,7 +2345,7 @@ public class Node : Object {
   protected virtual void draw_resizer( Context ctx, Theme theme ) {
 
     /* Only draw the resizer if we are the current node */
-    if( mode != NodeMode.CURRENT ) {
+    if( (mode != NodeMode.CURRENT) && (mode != NodeMode.HIGHLIGHTED) ) {
       return;
     }
 

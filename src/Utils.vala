@@ -167,6 +167,11 @@ public class Utils {
     }
   }
 
+  /* Prepares the given note string for use in a markup tooltip */
+  public static string prepare_note_markup( string note ) {
+    return( note.replace( "<", "&lt;" ) );
+  }
+
   /* Converts the given Markdown into HTML */
   public static string markdown_to_html( string md, string tag ) {
     string html;
