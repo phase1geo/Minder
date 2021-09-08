@@ -49,6 +49,7 @@ You will need the following dependencies to build Minder:
 * libgtksourceview-4-dev
 * libmarkdown2-dev
 * libhandy-1-dev
+* libjson-glib-dev
 
 To install, run `sudo ./app install` and then run the application from your application launcher or from
 the command-line with `./app run`.
