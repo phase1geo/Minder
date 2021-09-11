@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-12 18:38-0500\n"
-"PO-Revision-Date: 2021-08-13 14:45+0200\n"
+"PO-Revision-Date: 2021-09-11 10:45+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -219,11 +219,11 @@ msgstr "aggiungi sticker di connessione"
 
 #: src/undo_actions/UndoConnectionStickerChange.vala:31
 msgid "change connection sticker"
-msgstr "Cambia sticker di connessione"
+msgstr "cambia sticker di connessione"
 
 #: src/undo_actions/UndoConnectionStickerRemove.vala:31
 msgid "remove connection sticker"
-msgstr "Rimuovi sticker di  connessione"
+msgstr "rimuovi sticker di  connessione"
 
 #: src/undo_actions/UndoConnectionTitle.vala:32
 msgid "connection title change"
@@ -235,11 +235,11 @@ msgstr "cancella connessioni"
 
 #: src/undo_actions/UndoGroupAdd.vala:30
 msgid "add group"
-msgstr "Aggiungi gruppo"
+msgstr "aggiungi gruppo"
 
 #: src/undo_actions/UndoGroupRemove.vala:30
 msgid "remove group"
-msgstr "Rimuovi gruppo"
+msgstr "rimuovi gruppo"
 
 #: src/undo_actions/UndoGroupsColor.vala:33
 msgid "group color change"
@@ -251,7 +251,7 @@ msgstr "fusione gruppo"
 
 #: src/undo_actions/UndoGroupsRemove.vala:30
 msgid "remove groups"
-msgstr "Rimuovi gruppi"
+msgstr "rimuovi gruppi"
 
 #: src/undo_actions/UndoNodeAddParent.vala:32
 msgid "add parent node"
@@ -325,7 +325,7 @@ msgstr "incolla nodo"
 
 #: src/undo_actions/UndoNodeReparent.vala:32
 msgid "reparent children"
-msgstr "Ripara figli"
+msgstr "ripara figli"
 
 #: src/undo_actions/UndoNodeReparentLinkColor.vala:32
 #: src/undo_actions/UndoNodesReparentLinkColor.vala:33
@@ -346,11 +346,11 @@ msgstr "ordina i nodi"
 
 #: src/undo_actions/UndoNodeStickerAdd.vala:31
 msgid "add node sticker"
-msgstr "Aggiungi sticker al nodo"
+msgstr "aggiungi sticker al nodo"
 
 #: src/undo_actions/UndoNodeStickerChange.vala:31
 msgid "change node sticker"
-msgstr "Cambia sitcker al nodo"
+msgstr "cambia sitcker al nodo"
 
 #: src/undo_actions/UndoNodeStickerRemove.vala:31
 msgid "remove node sticker"
@@ -403,11 +403,11 @@ msgstr "aggiungi sticker"
 
 #: src/undo_actions/UndoStickerChange.vala:31
 msgid "change sticker"
-msgstr "Cambia sticker"
+msgstr "cambia sticker"
 
 #: src/undo_actions/UndoStickerRemove.vala:30
 msgid "remove sticker"
-msgstr "Rimuovi  sticker"
+msgstr "rimuovi  sticker"
 
 #: src/undo_actions/UndoStickerResize.vala:31
 msgid "resize sticker"
@@ -2396,7 +2396,7 @@ msgstr "Destra"
 
 #: src/StickerSet.vala:288
 msgid "Left down"
-msgstr ""
+msgstr "Giù a sinistra"
 
 #: src/StickerSet.vala:289
 msgid "Down"
@@ -2404,7 +2404,7 @@ msgstr "Giu"
 
 #: src/StickerSet.vala:290
 msgid "Right down"
-msgstr ""
+msgstr "Giù a destra"
 
 #: src/StickerSet.vala:291
 msgid "Collapse"
@@ -2416,7 +2416,7 @@ msgstr "Precedente"
 
 #: src/StickerSet.vala:293
 msgid "Next"
-msgstr "Successiva"
+msgstr "Successivo"
 
 #: src/StickerSet.vala:294
 msgid "Expand"
@@ -2424,7 +2424,7 @@ msgstr "Espandere"
 
 #: src/StickerSet.vala:295
 msgid "Left down2"
-msgstr ""
+msgstr "Giù a sinistra2"
 
 #: src/StickerSet.vala:296
 msgid "Up left"
