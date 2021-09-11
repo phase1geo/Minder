@@ -251,7 +251,7 @@ public class ThemeEditor : Gtk.Box {
 
   /* Saves the theme and hides the theme editor panel */
   private void save_theme() {
-    _theme.name = _name.text;
+    _theme.name = _theme.label = _name.text;
     if( _edit ) {
       _orig_theme.copy( _theme );
       _orig_theme.temporary = false;

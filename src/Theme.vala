@@ -75,6 +75,7 @@ public class Theme : Object {
   /* Copies the given theme to this theme */
   public void copy( Theme theme ) {
     name        = theme.name;
+    label       = theme.label;
     index       = theme.index;
     prefer_dark = theme.prefer_dark;
     temporary   = theme.temporary;
