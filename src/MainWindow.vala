@@ -121,7 +121,6 @@ public class MainWindow : Hdy.ApplicationWindow {
       return( _exports );
     }
   }
-  public NodeLink? node_link { get; set; default = null; }
 
   public signal void canvas_changed( DrawArea? da );
 

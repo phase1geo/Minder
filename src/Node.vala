@@ -408,6 +408,17 @@ public class Node : Object {
     set_parsers();
   }
 
+  /* Constructor from an XML node */
+  public Node.from_xml( DrawArea da, Layout? layout, Xml.Node* n, bool isroot ) {
+    _da       = da;
+    _children = new Array<Node>();
+    _layout   = _layout;
+    _name     = new CanvasText.with_text( da, "" );
+    _name.resized.connect( position_name_and_update_size );
+    set_parsers();
+    load( da, n, isroot );
+  }
+
   /* Copies an existing node to this node */
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
     _da       = da;
@@ -434,7 +445,8 @@ public class Node : Object {
   /* Copies an existing node tree to this node */
   public Node.copy_tree( DrawArea da, Node n, ImageManager im ) {
     _da       = da;
-    _id       = da.next_node_id;
+    // _id       = da.next_node_id;
+    _id       = n.id();
     _children = new Array<Node>();
     _name     = new CanvasText( da );
     copy_variables( n, im );
@@ -485,6 +497,14 @@ public class Node : Object {
   /* Returns the associated ID of this node */
   public int id() {
     return( _id );
+  }
+
+  /* Reassign this node's and all child node's ID from the DrawArea */
+  public void reassign_ids() {
+    _id = _da.next_node_id;
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).reassign_ids();
+    }
   }
 
   /* Sets the posx value only, leaving the children positions alone */
@@ -1003,6 +1023,46 @@ public class Node : Object {
     _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
   }
 
+  /*
+   Searches for a node ID matching the given node ID.  If found, returns true
+   along with the plain text title of the found node.
+  */
+  public static bool xml_find( Xml.Node* n, int id, ref string name ) {
+
+    bool found = false;
+
+    string? i = n->get_prop( "id" );
+    if( i != null ) {
+      found = (int.parse( i ) == id);
+    }
+
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        switch( it->name ) {
+          case "nodename" :
+            if( (it->children != null) && (it->children->type == Xml.ElementType.TEXT_NODE) ) {
+              name = it->children->get_content();
+            } else {
+              name = CanvasText.xml_text( it );
+            }
+            break;
+          case "nodes" :
+            for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
+              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
+                if( xml_find( it2, id, ref name ) ) {
+                  return( true );
+                }
+              }
+            }
+            break;
+        }
+      }
+    }
+
+    return( found );
+
+  }
+
   /* Loads the file contents into this instance */
   public virtual void load( DrawArea da, Xml.Node* n, bool isroot ) {
 
@@ -1104,8 +1164,7 @@ public class Node : Object {
           case "nodes"      :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var child = new Node( da, _layout );
-                child.load( da, it2, false );
+                var child = new Node.from_xml( da, _layout, it2, false );
                 child.attach( this, -1, null );
               }
             }
