@@ -73,4 +73,13 @@ public class AnimatorAction : Object {
   */
   public virtual void adjust( DrawArea da ) {}
 
+  /*
+   Force the animation to complete immediately by forcing the index to
+   be equal to the frame count.
+  */
+  public void flush( DrawArea da ) {
+    frames = (double)index;
+    adjust( da );
+  }
+
 }

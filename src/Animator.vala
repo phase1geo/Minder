@@ -27,6 +27,7 @@ public class Animator : Object {
   private const int             _timeout = 20;  // Number of milliseconds between frames (30 fps)
   private const double          _frames  = 10;  // Number of frames to animate (note: set to 1 to disable animation)
   private bool                  _running = false;
+  private uint                  _id      = 0;   // ID of current Timeout call queued to run
 
   public bool enable { set; get; default = true; }
 
@@ -79,6 +80,26 @@ public class Animator : Object {
     }
   }
 
+  /*
+   This should be called whenever the drawing area wants to queue an immediate draw.
+   This function will force all of the queued animations to complete immediately.
+  */
+  public void flush() {
+    if( _id > 0 ) {
+      Source.remove( _id );
+      _id = 0;
+    }
+    if( !_actions.is_empty() ) {
+      while( !_actions.is_empty() ) {
+        var action = _actions.pop_head();
+        action.flush( _da );
+      }
+      _running = false;
+      _da.auto_save();
+      _da.queue_draw();
+    }
+  }
+
   /* User method which performs the animation */
   public void animate() {
     if( !enable ) {
@@ -89,7 +110,7 @@ public class Animator : Object {
     }
     if( !_running ) {
       _running = true;
-      Timeout.add( _timeout, animate_action );
+      _id = Timeout.add( _timeout, animate_action );
     }
     _actions.peek_tail().capture( _da );
     _actions.peek_tail().adjust( _da );
@@ -103,6 +124,9 @@ public class Animator : Object {
       _da.auto_save();
     }
     _da.queue_draw();
+    if( _actions.length == 0 ) {
+      _id = 0;
+    }
     return( _running = (_actions.length > 0) );
   }
 
