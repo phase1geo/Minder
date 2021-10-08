@@ -4059,6 +4059,12 @@ public class DrawArea : Gtk.DrawingArea {
   /* Handle a key event */
   private bool on_keypress( EventKey e ) {
 
+    /* If we have the mouse pressed, ignore keypresses */
+    if( _pressed ) return( false );
+
+    /* Make sure that we flush all animations if the user starts a keypress */
+    animator.flush();
+
     /* Figure out which modifiers were used */
     var control      = (bool)(e.state & ModifierType.CONTROL_MASK);
     var shift        = (bool)(e.state & ModifierType.SHIFT_MASK);
