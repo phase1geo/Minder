@@ -1,4 +1,4 @@
-/*
+ /*
 * Copyright (c) 2018 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
@@ -116,7 +116,7 @@ public class Preferences : Gtk.Dialog {
     grid.attach( make_label( _( "Text field font size" ) ), 0, 3 );
     grid.attach( make_switch( "text-field-use-custom-font-size" ), 1, 3 );
     grid.attach( make_spinner( "text-field-custom-font-size", 8, 24, 1 ), 2, 3 );
-    grid.attach( make_info( _( "Specifies the custom font size to use in text editing fields (i.e, quick entry or notes field)." ) ), 3, 1 );
+    grid.attach( make_info( _( "Specifies the custom font size to use in text editing fields (i.e, quick entry or notes field)." ) ), 3, 3 );
 
     return( grid );
 
