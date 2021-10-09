@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-08 09:35-0500\n"
-"PO-Revision-Date: 2021-09-11 10:45+0200\n"
+"PO-Revision-Date: 2021-10-09 22:15+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -32,30 +32,29 @@ msgstr "Minder in AppCenter"
 #: src/Application.vala:98
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
-msgstr ""
+msgstr "ERRORE: impossibile aprire il file '%s'\n"
 
 #: src/Application.vala:122
 msgid "Display version number"
-msgstr ""
+msgstr "Visualizza numero versione"
 
 #: src/Application.vala:123
 msgid "Starts Minder with a new file"
-msgstr ""
+msgstr "Avvia Minder con un nuovo file"
 
 #: src/Application.vala:124
-#, fuzzy
 msgid "Run testing"
-msgstr "Domande"
+msgstr "Esegui test"
 
 #: src/Application.vala:133
 #, c-format
 msgid "ERROR: %s\n"
-msgstr ""
+msgstr "ERRORE: %s\n"
 
 #: src/Application.vala:134
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
-msgstr ""
+msgstr "Esegui '%s --help' per vedere opzioni valide\n"
 
 #: src/ConnectionInspector.vala:74 src/NodeInspector.vala:126
 msgid "Color"
@@ -360,9 +359,8 @@ msgid "PlainText"
 msgstr "Testo Semplice"
 
 #: src/exports/ExportXMind2021.vala:79
-#, fuzzy
 msgid "XMind 2021"
-msgstr "XMind 8"
+msgstr "XMind 2021"
 
 #: src/exports/ExportXMind2021.vala:682 src/exports/ExportXMind8.vala:681
 #: src/layouts/LayoutHorizontal.vala:26 src/MapInspector.vala:335
@@ -887,7 +885,7 @@ msgstr "Attiva/disattiva compiti"
 
 #: src/NodesMenu.vala:67
 msgid "Connect"
-msgstr "Collegare"
+msgstr "Collega"
 
 #: src/NodesMenu.vala:71 src/NodesMenu.vala:215
 msgid "Link Nodes"
@@ -2030,7 +2028,7 @@ msgstr "SMS"
 
 #: src/StickerSet.vala:261
 msgid "MMS"
-msgstr "mms"
+msgstr "MMS"
 
 #: src/StickerSet.vala:262
 msgid "Charge battery"
@@ -2466,7 +2464,7 @@ msgstr "Curvo"
 
 #: src/styles/LinkTypeRounded.vala:34
 msgid "Rounded"
-msgstr ""
+msgstr "Arrotondato"
 
 #: src/styles/LinkTypeSquared.vala:34
 msgid "Squared"
@@ -2940,14 +2938,12 @@ msgid "format tag remove"
 msgstr "rimuovi formato tag"
 
 #: src/UndoBuffer.vala:85
-#, fuzzy
 msgid "Undo "
-msgstr "Annulla"
+msgstr "Annulla "
 
 #: src/UndoBuffer.vala:91
-#, fuzzy
 msgid "Redo "
-msgstr "Rifai"
+msgstr "Rifai "
 
 #: src/UrlEditor.vala:42
 msgid "URL"
@@ -2956,12 +2952,11 @@ msgstr "URL"
 #: src/Utils.vala:159 src/Utils.vala:165
 #, c-format
 msgid "error: %s\n"
-msgstr ""
+msgstr "errore: %s\n"
 
 #: src/ZoomWidget.vala:97
-#, fuzzy
 msgid "Zoom Actual"
-msgstr "Zoom su dimensione reale"
+msgstr "Zoom Effettivo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:6
 msgid "Minder Shortcuts"
@@ -3034,7 +3029,7 @@ msgstr "Mostra scheda corrente"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:158
 msgid "Show Style Tab"
-msgstr "Mostra Stile Scheda "
+msgstr "Mostra Stile Scheda"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:165
 msgid "Show Sticker Tab"
@@ -3075,9 +3070,8 @@ msgid "Quit Application"
 msgstr "Esci dall'Applicazione"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:232
-#, fuzzy
 msgid "Node Commands"
-msgstr "Comandi di Connessione"
+msgstr "Comandi Nodo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:236
 msgid "Creation/Deletion"
@@ -3150,13 +3144,12 @@ msgid "Toggle Node Link"
 msgstr "Attiva/disattiva Collegamento Nodo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:364
-#, fuzzy
 msgid "Create Link to Selected Node"
-msgstr "Zoom adattato al nodo selezionato"
+msgstr "Crea collegamento al nodo selezionato"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:365
 msgid "[After using this command, 'y' will create the link]"
-msgstr ""
+msgstr "[Dopo aver usato questo comando, 'y' creerà il collegamento]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:372
 msgid "Create Group"
@@ -3341,9 +3334,8 @@ msgid "Previous Character"
 msgstr "Carattere Precedente"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:722
-#, fuzzy
 msgid "Next Word"
-msgstr "Aggiungi Parola Successiva"
+msgstr "Parola Successiva"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:729
 msgid "Previous Word"
@@ -3572,13 +3564,11 @@ msgstr "Seleziona tutto il testo"
 msgid "[Triple left-click anywhere in text]"
 msgstr "[Triplo clic sinistro in qualsiasi punto del testo]"
 
-#, fuzzy
 #~ msgid "No text found"
-#~ msgstr "Parola Successiva"
+#~ msgstr "Nessun testo trovato"
 
-#, fuzzy
 #~ msgid "No node found"
-#~ msgstr "Comandi Nodo"
+#~ msgstr "Nessun nodo trovato"
 
 #~ msgid "Zoom"
 #~ msgstr "Zoom"
