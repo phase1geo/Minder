@@ -4867,7 +4867,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Starts a connection from the current node */
   public void start_connection( bool key, bool link ) {
     var current_node = _selected.current_node();
-    if( current_node == null ) return;
+    if( (current_node == null) || _connections.hide ) return;
     var conn = new Connection( this, current_node );
     _selected.set_current_connection( conn );
     conn.mode = link ? ConnMode.LINKING : ConnMode.CONNECTING;
@@ -4931,7 +4931,7 @@ public class DrawArea : Gtk.DrawingArea {
    to the second selected node.
   */
   public void create_connection() {
-    if( _selected.num_nodes() != 2 ) return;
+    if( (_selected.num_nodes() != 2) || _connections.hide ) return;
     double x, y, w, h;
     var    nodes = _selected.nodes();
     var    conn  = new Connection( this, nodes.index( 0 ) );

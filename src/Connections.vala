@@ -105,9 +105,11 @@ public class Connections {
    connection's curve.
   */
   public Connection? on_curve( double x, double y ) {
-    for( int i=0; i<_connections.length; i++ ) {
-      if( _connections.index( i ).on_curve( x, y ) ) {
-        return( _connections.index( i ) );
+    if( !hide ) {
+      for( int i=0; i<_connections.length; i++ ) {
+        if( _connections.index( i ).on_curve( x, y ) ) {
+          return( _connections.index( i ) );
+        }
       }
     }
     return( null );
@@ -118,9 +120,11 @@ public class Connections {
    title box.
   */
   public Connection? within_title_box( double x, double y ) {
-    for( int i=0; i<_connections.length; i++ ) {
-      if( _connections.index( i ).within_title_box( x, y ) ) {
-        return( _connections.index( i ) );
+    if( !hide ) {
+      for( int i=0; i<_connections.length; i++ ) {
+        if( _connections.index( i ).within_title_box( x, y ) ) {
+          return( _connections.index( i ) );
+        }
       }
     }
     return( null );
@@ -131,9 +135,11 @@ public class Connections {
    title text.
   */
   public Connection? within_title( double x, double y ) {
-    for( int i=0; i<_connections.length; i++ ) {
-      if( _connections.index( i ).within_title( x, y ) ) {
-        return( _connections.index( i ) );
+    if( !hide ) {
+      for( int i=0; i<_connections.length; i++ ) {
+        if( _connections.index( i ).within_title( x, y ) ) {
+          return( _connections.index( i ) );
+        }
       }
     }
     return( null );
@@ -144,9 +150,11 @@ public class Connections {
    coordinates.  If a match is found, return the connection; otherwise, return null.
   */
   public Connection? within_note( double x, double y ) {
-    for( int i=0; i<_connections.length; i++ ) {
-      if( _connections.index( i ).within_note( x, y ) ) {
-        return( _connections.index( i ) );
+    if( !hide ) {
+      for( int i=0; i<_connections.length; i++ ) {
+        if( _connections.index( i ).within_note( x, y ) ) {
+          return( _connections.index( i ) );
+        }
       }
     }
     return( null );
@@ -154,9 +162,11 @@ public class Connections {
 
   /* Returns the associated connection if the given point is within the drag handle */
   public Connection? within_drag_handle( double x, double y ) {
-    for( int i=0; i<_connections.length; i++ ) {
-      if( _connections.index( i ).within_drag_handle( x, y ) ) {
-        return( _connections.index( i ) );
+    if( !hide ) {
+      for( int i=0; i<_connections.length; i++ ) {
+        if( _connections.index( i ).within_drag_handle( x, y ) ) {
+          return( _connections.index( i ) );
+        }
       }
     }
     return( null );

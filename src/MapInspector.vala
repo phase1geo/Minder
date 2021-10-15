@@ -113,6 +113,7 @@ public class MapInspector : Box {
 
   /* Called whenever the hide connections switch is changed within the inspector */
   private bool hide_connections_changed( Gdk.EventButton e ) {
+    _da.set_current_connection( null );
     _da.get_connections().hide = !_da.get_connections().hide;
     _settings.set_boolean( "hide-connections", _da.get_connections().hide );
     _da.queue_draw();
