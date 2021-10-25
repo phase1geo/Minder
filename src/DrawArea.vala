@@ -4133,8 +4133,7 @@ public class DrawArea : Gtk.DrawingArea {
     /* If there is no current node, allow some of the keyboard shortcuts */
     } else if( control ) {
       if( shift && has_key( kvs, Key.E ) )       { handle_control_E(); }
-      else if( !shift && has_key( kvs, Key.c ) ) { do_copy(); }
-      else if( !shift && has_key( kvs, Key.x ) ) { do_cut(); }
+      else if( !shift && has_key( kvs, Key.v ) ) { do_paste( false ); }
       else return( false );
 
     } else if( nomod || shift ) {
