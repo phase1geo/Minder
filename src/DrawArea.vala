@@ -1751,6 +1751,27 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /*
+   Sets the scaling factor for the drawing area, causing the pixel
+   on defined coordinates to remain stable and forces a redraw.
+
+   coord_x = distance of zoom position from origin, in screen coordinates
+   coord_y = distance of zoom position from origin, in screen coordinates
+  */
+  public void set_scaling_factor_coord( double sf, double coord_x, double coord_y ) {
+    if( sfactor != sf ) {
+      double d_x = origin_x + scale_value(coord_x);
+      double d_y = origin_y + scale_value(coord_y);
+
+      double newo_x = d_x - coord_x / sf;
+      double newo_y = d_y - coord_y / sf;
+
+      set_origin( newo_x, newo_y );
+      sfactor = sf;
+      scale_changed( sfactor );
+    }
+  }
+
   /* Returns the scaling factor based on the given width and height */
   private double get_scaling_factor( double width, double height ) {
     double w  = get_allocated_width() / width;
@@ -1764,18 +1785,31 @@ public class DrawArea : Gtk.DrawingArea {
    otherwise, returns false.
   */
   public bool zoom_in() {
-    var value = sfactor * 100;
-    var marks = get_scale_marks();
+    // Zoom center of the screen
+    int s_x = get_allocated_width() / 2;
+    int s_y = get_allocated_height() / 2;
+
+    return zoom_in_coords(s_x, s_y);
+  }
+
+  public bool zoom_in_coords( double zoom_x, double zoom_y ) {
+    double value = sfactor * 100;
+    var    marks = get_scale_marks();
+    double last  = marks[0];
     if( value < marks[0] ) {
       value = marks[0];
     }
+
     foreach (double mark in marks) {
-      if( value < mark ) {
-        animator.add_scale( "zoom in" );
-        set_scaling_factor( mark / 100 );
-        animator.animate();
-        return( true );
+      if( mark <= value ) {
+        continue;
       }
+
+      //animator.add_scale( "zoom in" );
+      set_scaling_factor_coord( mark / 100, zoom_x, zoom_y );
+      //animator.animate();
+      queue_draw();
+      return( true );
     }
     return( false );
   }
@@ -1785,20 +1819,32 @@ public class DrawArea : Gtk.DrawingArea {
    otherwise, returns false.
   */
   public bool zoom_out() {
+    // Zoom center of the screen
+    int s_x = get_allocated_width() / 2;
+    int s_y = get_allocated_height() / 2;
+
+    return zoom_out_coords(s_x, s_y);
+  }
+
+  public bool zoom_out_coords( double zoom_x, double zoom_y ) {
     double value = sfactor * 100;
     var    marks = get_scale_marks();
     double last  = marks[0];
     if( value > marks[marks.length-1] ) {
       value = marks[marks.length-1];
     }
+
     foreach (double mark in marks) {
-      if( value <= mark ) {
-        animator.add_scale( "zoom out" );
-        set_scaling_factor( last / 100 );
-        animator.animate();
-        return( true );
+      if( value > mark ) {
+        last = mark;
+        continue;
       }
-      last = mark;
+
+      //animator.add_scale( "zoom out" );
+      set_scaling_factor_coord( last / 100, zoom_x, zoom_y );
+      //animator.animate();
+      queue_draw();
+      return( true );
     }
     return( false );
   }
@@ -4697,9 +4743,9 @@ public class DrawArea : Gtk.DrawingArea {
       delta_y = tmp;
     } else if( control ) {
       if( e.delta_y < 0 ) {
-        zoom_in();
+        zoom_in_coords(e.x, e.y);
       } else if( e.delta_y > 0 ) {
-        zoom_out();
+        zoom_out_coords(e.x, e.y);
       }
       return( false );
     }
