@@ -29,6 +29,7 @@ public class Document : Object {
   private string        _filename;
   private bool          _from_user;  // Set to true if _filename was set by the user
   private ImageManager  _image_manager;
+  private string        _etag;
 
   /* Properties */
   public string filename {
@@ -57,6 +58,9 @@ public class Document : Object {
 
     _da = da;
 
+    /* Generate unique Etag */
+    _etag = generate_etag();
+
     /* Create the temporary file */
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
     if( DirUtils.create_with_parents( dir, 0775 ) == 0 ) {
@@ -73,6 +77,11 @@ public class Document : Object {
     /* Listen for any changes from the canvas */
     _da.changed.connect( canvas_changed );
 
+  }
+
+  /* Generate new "random" etag */
+  private string generate_etag() {
+      return GLib.Random.next_int().to_string();
   }
 
   /* Called whenever the canvas changes such that a save will be needed */
@@ -123,6 +132,14 @@ public class Document : Object {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
     root->set_prop( "version", Minder.version );
+
+    /* Save previous Etag */
+    root->set_prop( "parent-etag", _etag );
+
+    /* Generate new unique Etag */
+    _etag = generate_etag();
+    root->set_prop( "etag", _etag );
+
     doc->set_root_element( root );
     _da.save( root );
     doc->save_format_file( filename, 1 );
