@@ -186,7 +186,6 @@ public class MinderClipboard {
 
     /* If we need to handle a node, do it here */
     if( nodes_atom != null ) {
-      stdout.printf( "nodes_atom: %s\n", nodes_atom.name() );
       clipboard.request_contents( nodes_atom, (c, raw_data) => {
         var data = (string)raw_data.get_data();
         if( data == null ) return;

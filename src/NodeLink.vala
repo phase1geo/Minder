@@ -94,14 +94,8 @@ public class NodeLink {
 
   /* Returns the node link string to display in a tooltip */
   public string to_string( DrawArea da ) {
-    stdout.printf( "In to_string, fname: %s, node_id: %d\n", _fname, _node_id );
     if( _fname == "" ) {
-      var node = da.get_node( da.get_nodes(), _node_id );
-      if( node != null ) {
-        stdout.printf( "  node found!\n" );
-      } else {
-        stdout.printf( "  node not found\n" );
-      }
+      var linked_node = da.get_node( da.get_nodes(), _node_id );
       return( da.get_node( da.get_nodes(), _node_id ).name.text.text );
     } else {
       string title = _( "No node found" );

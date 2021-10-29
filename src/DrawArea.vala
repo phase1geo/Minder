@@ -4323,7 +4323,10 @@ public class DrawArea : Gtk.DrawingArea {
       conns.save_if_in_node( cs, nodes.index( i ) );
     }
     root->add_child( cs );
-    // doc->dump_memory( out str );
+    if( nodes.length > 0 ) {
+      var link = new NodeLink( nodes.index( 0 ) );
+      root->add_child( link.save() );
+    }
     doc->dump_memory_format( out str );
     delete doc;
     return( str );
@@ -4362,15 +4365,10 @@ public class DrawArea : Gtk.DrawingArea {
     Xml.Doc* doc = Xml.Parser.parse_doc( str );
     if( doc == null ) return( null );
     for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
-      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "nodes") ) {
-        for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
-          if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-            var node = new Node.from_xml( this, null, it2, true );
-            delete doc;
-            var link = new NodeLink( node );
-            return( link );
-          }
-        }
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "nodelink") ) {
+        var link = new NodeLink.from_xml( it );
+        delete doc;
+        return( link );
       }
     }
     delete doc;
@@ -4383,12 +4381,7 @@ public class DrawArea : Gtk.DrawingArea {
     nodes = new Array<Node>();
     conns = _connections;
 
-    /* Setup the nodes that will be copied */
-    if( _selected.current_node() != null ) {
-      nodes.append_val( new Node.copy_tree( this, _selected.current_node(), image_manager ) );
-    } else {
-      _selected.get_subtrees( ref nodes, image_manager );
-    }
+    _selected.get_parents( ref nodes );
 
   }
 
