@@ -43,6 +43,10 @@ public class NodeInspector : Box {
   private Image          _image;
   private Button         _image_btn;
   private Label          _image_loc;
+  private Switch         _override;
+  private ColorButton    _root_color;
+  private Revealer       _root_color_reveal;
+  private Revealer       _color_reveal;
 
   public NodeInspector( MainWindow win ) {
 
@@ -52,6 +56,7 @@ public class NodeInspector : Box {
     create_task();
     create_fold();
     create_link();
+    create_color();
     create_note();
     create_image();
     create_buttons();
@@ -144,6 +149,54 @@ public class NodeInspector : Box {
     _link_reveal.add( box );
 
     pack_start( _link_reveal, false, true );
+
+  }
+
+  /*
+   Allows the user to select a different color for the current root
+   node.
+  */
+  private void create_color() {
+
+    var lbl = new Label( Utils.make_title( _( "Override Color" ) ) );
+    lbl.xalign     = (float)0;
+    lbl.use_markup = true;
+
+    _override = new Switch();
+    _override.button_release_event.connect( root_color_changed );
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.margin_top    = 5;
+    box.margin_bottom = 5;
+    box.pack_start( lbl, false, true, 0 );
+    box.pack_end( _override, false, true, 0 );
+
+    var l = new Label("");
+
+    _root_color = new ColorButton();
+    _root_color.color_set.connect(() => {
+      // _da.override_current_root_color( _link_root.rgba );
+    });
+
+    var cbox = new Box( Orientation.HORIZONTAL, 0 );
+    cbox.homogeneous = true;
+    cbox.margin_bottom = 5;
+    cbox.pack_start( l, false, true, 0 );
+    cbox.pack_end( _root_color, false, true, 0 );
+
+    _color_reveal = new Revealer();
+    _color_reveal.add( cbox );
+
+    var hbox = new Box( Orientation.VERTICAL, 0 );
+    hbox.margin_bottom = 5;
+    hbox.pack_start( box, false, true, 0 );
+    hbox.pack_start( _color_reveal, false, true, 0 );
+
+    _root_color_reveal = new Revealer();
+    _root_color_reveal.transition_type = RevealerTransitionType.NONE;
+    _root_color_reveal.add( hbox );
+
+    pack_start( _root_color_reveal, false, true );
 
   }
 
@@ -344,6 +397,26 @@ public class NodeInspector : Box {
   }
 
   /*
+   Called whenever the user chooses to override the root color via
+   this sidebar.  We will show/hide the color changer.
+  */
+  private bool root_color_changed( Gdk.EventButton e ) {
+    var current = _da.get_current_node();
+    if( _color_reveal.reveal_child ) {
+      _color_reveal.reveal_child = false;
+      if( current != null ) {
+        // _da.override_root_color( null );
+      }
+    } else {
+      _color_reveal.reveal_child = true;
+      if( current != null ) {
+        // _da.override_root_color( _root_color.get_rgba() );
+      }
+    }
+    return( false );
+  }
+
+  /*
    Called whenever the text widget is changed.  Updates the current node
    and redraws the canvas when needed.
   */
@@ -427,9 +500,15 @@ public class NodeInspector : Box {
         _fold.set_sensitive( true );
       }
       if( current.is_root() ) {
-        _link_reveal.reveal_child = false;
+        _link_reveal.reveal_child       = false;
+        _root_color_reveal.reveal_child = true;
+        _override.set_active( current.link_color_set );
+        _color_reveal.reveal_child = current.link_color_set;
+        _root_color.rgba  = current.link_color;
+        _root_color.alpha = 65535;
       } else {
-        _link_reveal.reveal_child = true;
+        _link_reveal.reveal_child       = true;
+        _root_color_reveal.reveal_child = false;
         _link_color.rgba  = current.link_color;
         _link_color.alpha = 65535;
       }

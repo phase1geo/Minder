@@ -290,6 +290,11 @@ public class Node : Object {
       }
     }
   }
+  public bool link_color_set {
+    get {
+      return( _link_color_set );
+    }
+  }
   public bool  attached { get; set; default = false; }
   public Style style {
     get {
