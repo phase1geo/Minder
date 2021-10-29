@@ -92,6 +92,21 @@ public class Document : Object {
     return( _from_user );
   }
 
+  /*
+   Searches the given file for a node with the given ID.  If found, returns
+   true along with the title of the node.
+  */
+  public static bool xml_find( string fname, int id, ref string name ) {
+    Xml.Doc* doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
+    var      found = false;
+    if( doc == null ) {
+      return( false );
+    }
+    found = DrawArea.xml_find( doc->get_root_element(), id, ref name );
+    delete doc;
+    return( found );
+  }
+
   /* Opens the given filename */
   public bool load() {
     Xml.Doc* doc = Xml.Parser.read_file( filename, null, Xml.ParserOption.HUGE );

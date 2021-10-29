@@ -84,6 +84,8 @@ public class NodeLink {
       Idle.add(() => {
         if( other_da.select_node( node, false ) ) {
           other_da.queue_draw();
+        } else {
+          // Node was not found
         }
         return( false );
       });
@@ -93,9 +95,13 @@ public class NodeLink {
   /* Returns the node link string to display in a tooltip */
   public string to_string( DrawArea da ) {
     if( _fname == "" ) {
+      var linked_node = da.get_node( da.get_nodes(), _node_id );
       return( da.get_node( da.get_nodes(), _node_id ).name.text.text );
+    } else {
+      string title = _( "No node found" );
+      Document.xml_find( _fname, _node_id, ref title );
+      return( "%s\n\nFilename: %s".printf( title, _fname ) );
     }
-    return( "%s\n\nFilename: %s".printf( _node_title, _fname ) );
   }
 
   /* Saves this node link to the XML file */

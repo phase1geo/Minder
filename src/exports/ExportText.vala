@@ -90,7 +90,7 @@ public class ExportText : Export {
 
     /* Add the node note, if specified */
     if( node.note != "" ) {
-      value += prefix + "  > " + node.note.replace( "\n", "\n%s  > ".printf( prefix ) ) + "\n";
+      value += prefix + "  > " + node.note.chomp().replace( "\n", "\n%s  > ".printf( prefix ) ) + "\n";
     }
 
     /* Add the children */

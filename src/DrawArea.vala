@@ -104,7 +104,7 @@ public class DrawArea : Gtk.DrawingArea {
   private double           _sticker_posy;
   private NodeGroups       _groups;
   private uint             _select_hover_id = 0;
-  private int              _next_node_id    = 0;
+  private int              _next_node_id    = -1;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -165,10 +165,13 @@ public class DrawArea : Gtk.DrawingArea {
   }
   public int next_node_id {
     set {
-      _next_node_id = value + 1;
+      if( !is_loaded && (_next_node_id < value) ) {
+        _next_node_id = value;
+      }
     }
     get {
-      return( _next_node_id++ );
+      _next_node_id++;
+      return( _next_node_id );
     }
   }
 
@@ -514,6 +517,22 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Searches for a node with the given ID.  If found, returns true along with its title. */
+  public static bool xml_find( Xml.Node* n, int id, ref string name ) {
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "nodes") ) {
+        for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
+          if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
+            if( Node.xml_find( it2, id, ref name ) ) {
+              return( true );
+            }
+          }
+        }
+      }
+    }
+    return( false );
+  }
+
   /* Loads the contents of the data input stream */
   public void load( Xml.Node* n ) {
 
@@ -541,8 +560,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var node = new Node.with_name( this, "", null );
-                node.load( this, it2, true );
+                var node = new Node.from_xml( this, null, it2, true );
                 if( use_layout != null ) {
                   node.layout = use_layout;
                 }
@@ -1236,19 +1254,10 @@ public class DrawArea : Gtk.DrawingArea {
     if( any_selected_nodes_linked() ) {
       delete_links();
     } else if( current != null ) {
-      if( win.node_link != null ) {
-        if( win.node_link.is_linkable( _doc.filename, current.id() ) ) {
-          current.linked_node = win.node_link;
-          auto_save();
-          queue_draw();
-        }
-      } else {
-        start_connection( true, true );
-      }
+      start_connection( true, true );
     } else {
       create_links();
     }
-    win.node_link = null;
   }
 
   /*
@@ -3736,29 +3745,6 @@ public class DrawArea : Gtk.DrawingArea {
     win.close_current_tab();
   }
 
-  /* Blinks the current node to indicate that something has occurred */
-  private void blink_current() {
-    if( is_node_selected() ) {
-      var current = _selected.current_node();
-      var count   = 0;
-      win.node_link = new NodeLink( current );
-      Timeout.add( 100, () => {
-        set_node_mode( current, (((count % 2) == 0) ? NodeMode.HIGHLIGHTED : NodeMode.CURRENT) );
-        queue_draw();
-        return( ++count < 2 );
-      });
-    }
-  }
-
-  /* If a node is currently selected, creates a node link to this node */
-  private void handle_control_y() {
-    if( is_node_selected() ) {
-      var current = _selected.current_node();
-      win.node_link = new NodeLink( current );
-      blink_current();
-    }
-  }
-
   /* Called whenever the Control+home key is entered in the drawing area */
   private void handle_control_home( bool shift ) {
     if( is_connection_editable() ) {
@@ -4099,7 +4085,7 @@ public class DrawArea : Gtk.DrawingArea {
         else if(  shift && has_key( kvs, Key.E ) )      { handle_control_E(); }
         else if(  shift && has_key( kvs, Key.R ) )      { handle_control_R(); }
         else if( !shift && has_key( kvs, Key.w ) )      { handle_control_w(); }
-        else if( !shift && has_key( kvs, Key.y ) )      { handle_control_y(); }
+        else if( !shift && has_key( kvs, Key.y ) )      { do_paste_node_link(); }
         else return( false );
       } else if( nomod || shift || alt) {
         if( has_key( kvs, Key.BackSpace ) )      { handle_backspace(); }
@@ -4336,7 +4322,11 @@ public class DrawArea : Gtk.DrawingArea {
       conns.save_if_in_node( cs, nodes.index( i ) );
     }
     root->add_child( cs );
-    doc->dump_memory( out str );
+    if( nodes.length > 0 ) {
+      var link = new NodeLink( nodes.index( 0 ) );
+      root->add_child( link.save() );
+    }
+    doc->dump_memory_format( out str );
     delete doc;
     return( str );
   }
@@ -4349,12 +4339,13 @@ public class DrawArea : Gtk.DrawingArea {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           // case "images"      :  image_manager.load( it );  break;
-          case "connections" :  _connections.load( this, it, conns, nodes );  break;
+          case "connections" :
+            _connections.load( this, it, conns, nodes );
+            break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var node = new Node.with_name( this, "", null );
-                node.load( this, it2, true );
+                var node = new Node.from_xml( this, null, it2, true );
                 nodes.append_val( node );
               }
             }
@@ -4362,7 +4353,25 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
     }
+    for( int i=0; i<nodes.length; i++ ) {
+      nodes.index( i ).reassign_ids();
+    }
     delete doc;
+  }
+
+  /* Deserialize the node tree, returning the first node as a node link */
+  public NodeLink? deserialize_for_node_link( string str ) {
+    Xml.Doc* doc = Xml.Parser.parse_doc( str );
+    if( doc == null ) return( null );
+    for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "nodelink") ) {
+        var link = new NodeLink.from_xml( it );
+        delete doc;
+        return( link );
+      }
+    }
+    delete doc;
+    return( null );
   }
 
   /* Copies the current node to the node clipboard */
@@ -4371,12 +4380,7 @@ public class DrawArea : Gtk.DrawingArea {
     nodes = new Array<Node>();
     conns = _connections;
 
-    /* Setup the nodes that will be copied */
-    if( _selected.current_node() != null ) {
-      nodes.append_val( new Node.copy_tree( this, _selected.current_node(), image_manager ) );
-    } else {
-      _selected.get_subtrees( ref nodes, image_manager );
-    }
+    _selected.get_parents( ref nodes );
 
   }
 
@@ -4401,7 +4405,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( current != null ) {
       switch( current.mode ) {
         case NodeMode.CURRENT  :  MinderClipboard.copy_nodes( this );  break;
-        case NodeMode.EDITABLE :  copy_selected_text();                break;
+        case NodeMode.EDITABLE :  copy_selected_text();  break;
       }
     } else if( _selected.nodes().length > 1 ) {
       MinderClipboard.copy_nodes( this );
@@ -4623,6 +4627,21 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Pastes the current node in the clipboard as a node link to the current node */
+  public void paste_node_link( string text ) {
+    if( is_node_selected() ) {
+      var current  = _selected.current_node();
+      var old_link = current.linked_node;
+      var new_link = deserialize_for_node_link( text );
+      if( new_link != null ) {
+        current.linked_node = new_link;
+        undo_buffer.add_item( new UndoNodeLink( current, old_link ) );
+        auto_save();
+        queue_draw();
+      }
+    }
+  }
+
   /* Called by the clipboard to paste image */
   public void paste_image( Pixbuf image, bool shift ) {
     var node = _selected.current_node();
@@ -4650,6 +4669,13 @@ public class DrawArea : Gtk.DrawingArea {
   /* Pastes the contents of the clipboard into the current node */
   public void do_paste( bool shift ) {
     MinderClipboard.paste( this, shift );
+  }
+
+  /* Paste the current node as a node link in the current node */
+  public void do_paste_node_link() {
+    if( node_pasteable() ) {
+      MinderClipboard.paste_node_link( this );
+    }
   }
 
   /*

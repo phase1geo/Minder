@@ -144,8 +144,20 @@ public class MinderClipboard {
 
   /* Returns true if there are any nodes pasteable in the clipboard */
   public static bool node_pasteable() {
+
     var clipboard = Clipboard.get_default( Gdk.Display.get_default() );
-    return( clipboard.wait_is_target_available( NODES_ATOM ) );
+
+    Atom[] targets;
+    clipboard.wait_for_targets( out targets );
+
+    foreach( var target in targets ) {
+      if( target.name() == NODES_TARGET_NAME ) {
+        return( true );
+      }
+    }
+
+    return( false );
+
   }
 
   /* Called to paste current item in clipboard to the given DrawArea */
@@ -180,7 +192,7 @@ public class MinderClipboard {
         da.paste_nodes( data, shift );
       });
 
-    /* If we need to handle pasting text, do it here */
+    /* If we need to handle pasting an image, do it here */
     } else if( (image_atom != null) && ((text_atom == null) || !text_needed) ) {
       clipboard.request_contents( image_atom, (c, raw_data) => {
         var data = raw_data.get_pixbuf();
@@ -188,13 +200,33 @@ public class MinderClipboard {
         da.paste_image( data, shift );
       });
 
-    /* If we need to handle pasting an image, do it here */
+    /* If we need to handle pasting text, do it here */
     } else if( text_atom != null ) {
       clipboard.request_contents( text_atom, (c, raw_data) => {
         var data = (string)raw_data.get_data();
         if( data == null ) return;
         da.paste_text( data, shift );
       });
+    }
+
+  }
+
+  /* Returns a node link to the first node in the clipboard */
+  public static void paste_node_link( DrawArea da ) {
+    var clipboard = Clipboard.get_default( Gdk.Display.get_default() );
+
+    Atom[] targets;
+    clipboard.wait_for_targets( out targets );
+
+    foreach( var target in targets ) {
+      if( target.name() == NODES_TARGET_NAME ) {
+        clipboard.request_contents( target, (c, raw_data) => {
+          var data = (string)raw_data.get_data();
+          if( data == null ) return;
+          da.paste_node_link( data );
+        });
+        return;
+      }
     }
 
   }

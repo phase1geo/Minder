@@ -243,6 +243,16 @@ public class CanvasText : Object {
 
   }
 
+  /* Returns the plain text string stored in the given XML node */
+  public static string xml_text( Xml.Node* n ) {
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "text" ) )  {
+        return( FormattedText.xml_text( it ) );
+      }
+    }
+    return( _( "No text found" ) );
+  }
+
   /* Loads the file contents into this instance */
   public virtual void load( Xml.Node* n ) {
 

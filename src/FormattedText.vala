@@ -1070,6 +1070,12 @@ public class FormattedText {
     return( n );
   }
 
+  /* Returns the plain text string stored in the XML node */
+  public static string xml_text( Xml.Node* n ) {
+    string? t = n->get_prop( "data" );
+    return( (t != null) ? t : _( "No text found" ) );
+  }
+
   /* Loads the given XML information */
   public void load( Xml.Node* n ) {
     string? t = n->get_prop( "data" );
