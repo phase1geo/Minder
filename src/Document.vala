@@ -149,20 +149,43 @@ public class Document : Object {
 
   /* Saves the given node information to the specified file */
   public bool save() {
+    Xml.Doc* doc = load_raw();
+    if( doc != null ) {
+      /* Load Etag */
+      string file_etag = get_etag(doc);
+      if( _etag != file_etag ) {
+        /* File was modified! Warn the user */
+        if( _da.win.ask_modified_overwrite(_da) ) {
+          doc->save_format_file( filename.replace(".mind", "-backup-%s-%s.mind".printf(new DateTime.now_local().to_string(), file_etag)), 1 );
+        } else {
+          save_internal(filename.replace(".mind", "-backup-%s-%s.mind".printf(new DateTime.now_local().to_string(), _etag)), false);
+          load();
+          return false;
+        }
+      }
+    }
+
+    return save_internal(filename, true);
+  }
+
+  private bool save_internal(string dest_filename, bool bump_etag) {
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
     root->set_prop( "version", Minder.version );
 
-    /* Save previous Etag */
-    root->set_prop( "parent-etag", _etag );
+    if ( bump_etag ) {
+      /* Save previous Etag */
+      root->set_prop( "parent-etag", _etag );
 
-    /* Generate new unique Etag */
-    _etag = generate_etag();
-    root->set_prop( "etag", _etag );
+      /* Generate new unique Etag */
+      _etag = generate_etag();
+    }
+
+    root->set_prop( "etag" , _etag );
 
     doc->set_root_element( root );
     _da.save( root );
-    doc->save_format_file( filename, 1 );
+    doc->save_format_file( dest_filename, 1 );
     delete doc;
     save_needed = false;
     return( true );
