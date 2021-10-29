@@ -116,12 +116,32 @@ public class Document : Object {
     return( found );
   }
 
+  private Xml.Doc* load_raw() {
+      return Xml.Parser.read_file( filename, null, Xml.ParserOption.HUGE );
+  }
+
+  private string get_etag(Xml.Doc* doc) {
+    for (Xml.Attr* prop = doc->get_root_element()->properties; prop != null; prop = prop->next) {
+      string attr_name = prop->name;
+      if ( attr_name != "etag" ) {
+        continue;
+      }
+
+      return prop->children->content;
+    }
+    return generate_etag();
+  }
+
   /* Opens the given filename */
   public bool load() {
-    Xml.Doc* doc = Xml.Parser.read_file( filename, null, Xml.ParserOption.HUGE );
+    Xml.Doc* doc = load_raw();
     if( doc == null ) {
       return( false );
     }
+
+    /* Load Etag */
+    _etag = get_etag(doc);
+
     _da.load( doc->get_root_element() );
     delete doc;
     return( true );
