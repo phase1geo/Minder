@@ -1805,10 +1805,9 @@ public class DrawArea : Gtk.DrawingArea {
         continue;
       }
 
-      //animator.add_scale( "zoom in" );
+      animator.add_scale_in_place( "zoom in place", zoom_x, zoom_y );
       set_scaling_factor_coord( mark / 100, zoom_x, zoom_y );
-      //animator.animate();
-      queue_draw();
+      animator.animate();
       return( true );
     }
     return( false );
@@ -1840,10 +1839,9 @@ public class DrawArea : Gtk.DrawingArea {
         continue;
       }
 
-      //animator.add_scale( "zoom out" );
+      animator.add_scale_in_place( "zoom out in place", zoom_x, zoom_y );
       set_scaling_factor_coord( last / 100, zoom_x, zoom_y );
-      //animator.animate();
-      queue_draw();
+      animator.animate();
       return( true );
     }
     return( false );
