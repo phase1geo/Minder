@@ -175,7 +175,7 @@ public class NodeInspector : Box {
 
     _root_color = new ColorButton();
     _root_color.color_set.connect(() => {
-      // _da.override_current_root_color( _link_root.rgba );
+      _da.change_current_link_color( _root_color.rgba );
     });
 
     var cbox = new Box( Orientation.HORIZONTAL, 0 );
@@ -405,12 +405,12 @@ public class NodeInspector : Box {
     if( _color_reveal.reveal_child ) {
       _color_reveal.reveal_child = false;
       if( current != null ) {
-        // _da.override_root_color( null );
+        _da.change_current_link_color( null );
       }
     } else {
       _color_reveal.reveal_child = true;
-      if( current != null ) {
-        // _da.override_root_color( _root_color.get_rgba() );
+      if( (current != null) && (_root_color.rgba != _da.get_theme().get_color( "root_background" )) ) {
+        _da.change_current_link_color( _root_color.get_rgba() );
       }
     }
     return( false );
@@ -504,7 +504,7 @@ public class NodeInspector : Box {
         _root_color_reveal.reveal_child = true;
         _override.set_active( current.link_color_set );
         _color_reveal.reveal_child = current.link_color_set;
-        _root_color.rgba  = current.link_color;
+        _root_color.rgba  = current.link_color_set ? current.link_color : _da.get_theme().get_color( "root_background" );
         _root_color.alpha = 65535;
       } else {
         _link_reveal.reveal_child       = true;
