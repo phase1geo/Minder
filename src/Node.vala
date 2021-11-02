@@ -148,7 +148,7 @@ public class Node : Object {
   private   int          _task_done    = 0;
   private   double       _posx         = 0;
   private   double       _posy         = 0;
-  private   RGBA         _link_color;
+  private   RGBA?        _link_color      = {1.0, 1.0, 1.0, 1.0};
   private   bool         _link_color_set  = false;
   private   bool         _link_color_root = false;
   private   double       _min_width      = 50;
@@ -247,15 +247,15 @@ public class Node : Object {
   public bool     group      { get; set; default = false; }
   public RGBA?    link_color {
     get {
-      return( _link_color );
+      return( (!is_root() || _link_color_set) ? _link_color : null );
     }
     set {
       if( is_root() ) {
         if( value == null ) {
           _link_color_set = false;
         } else {
-          _link_color      = value;
-          _link_color_set  = true;
+          _link_color     = value;
+          _link_color_set = true;
         }
       } else if( value != null ) {
         _link_color      = value;
@@ -2128,11 +2128,8 @@ public class Node : Object {
     if( mode.is_selected() ) {
       color = theme.get_color( "nodesel_foreground" );
     } else if( parent == null ) {
-      if( _link_color_set ) {
-        color = Granite.contrasting_foreground_color( link_color );
-      } else {
-        color = theme.get_color( "root_foreground" );
-      }
+      color = _link_color_set ? Granite.contrasting_foreground_color( link_color ) :
+                                theme.get_color( "root_foreground" );
     } else if( style.is_fillable() ) {
       color = Granite.contrasting_foreground_color( link_color );
     }
