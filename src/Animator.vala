@@ -80,6 +80,13 @@ public class Animator : Object {
     }
   }
 
+  /* Animates a change to both the canvas scale while keeping a screen location stable */
+  public void add_scale_in_place( string name, double ssx, double ssy ) {
+    if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.PANSCALE) ) {
+      _actions.push_tail( new AnimatorScaleInPlace( _da, name, ssx, ssy ) );
+    }
+  }
+
   /*
    This should be called whenever the drawing area wants to queue an immediate draw.
    This function will force all of the queued animations to complete immediately.

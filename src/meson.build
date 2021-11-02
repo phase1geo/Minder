@@ -5,6 +5,7 @@ sources += files(
     'animator/AnimatorPanScale.vala',
     'animator/AnimatorPositions.vala',
     'animator/AnimatorScale.vala',
+    'animator/AnimatorScaleInPlace.vala',
 
     'exports/ExportCSV.vala',
     'exports/ExportFreemind.vala',
