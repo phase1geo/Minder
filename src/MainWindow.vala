@@ -962,6 +962,40 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   }
 
+  /* Displays the overwrite warning dialog window.
+   * Returns true when overwrite is wanted and false when reload is wanted. */
+  public bool ask_modified_overwrite( DrawArea da ) {
+
+    var dialog = new Granite.MessageDialog.with_image_from_icon_name(
+      _( "The file %s was modified outside of the application." ).printf( da.get_doc().filename ),
+      _( "What do you want to do?" ),
+      "dialog-warning",
+      ButtonsType.NONE
+    );
+
+    var dont = new Button.with_label( _( "Discard Changes and reload" ) );
+    dialog.add_action_widget( dont, ResponseType.CLOSE );
+
+    var save = new Button.with_label( _( "Save local version and overwrite" ) );
+    dialog.add_action_widget( save, ResponseType.ACCEPT );
+
+    dialog.set_transient_for( this );
+    dialog.set_title( "Overwrite or reload?" );
+
+    dialog.show_all();
+
+    var res = dialog.run();
+
+    dialog.destroy();
+
+    switch( res ) {
+      case ResponseType.ACCEPT :  return true;
+      case ResponseType.CLOSE  :  return false;
+    }
+
+    return( false );
+  }
+
   /*
    Creates a new file
   */
