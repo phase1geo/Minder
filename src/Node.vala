@@ -148,7 +148,7 @@ public class Node : Object {
   private   int          _task_done    = 0;
   private   double       _posx         = 0;
   private   double       _posy         = 0;
-  private   RGBA         _link_color;
+  private   RGBA?        _link_color      = {1.0, 1.0, 1.0, 1.0};
   private   bool         _link_color_set  = false;
   private   bool         _link_color_root = false;
   private   double       _min_width      = 50;
@@ -245,12 +245,19 @@ public class Node : Object {
   public bool     show_fold  { get; set; default = false; }
   public double   tree_size  { get; set; default = 0; }
   public bool     group      { get; set; default = false; }
-  public RGBA     link_color {
+  public RGBA?    link_color {
     get {
-      return( _link_color );
+      return( (!is_root() || _link_color_set) ? _link_color : null );
     }
     set {
-      if( !is_root() ) {
+      if( is_root() ) {
+        if( value == null ) {
+          _link_color_set = false;
+        } else {
+          _link_color     = value;
+          _link_color_set = true;
+        }
+      } else if( value != null ) {
         _link_color      = value;
         _link_color_set  = true;
         _link_color_root = true;
@@ -288,6 +295,11 @@ public class Node : Object {
           link_color_child = parent.link_color;
         }
       }
+    }
+  }
+  public bool link_color_set {
+    get {
+      return( _link_color_set );
     }
   }
   public bool  attached { get; set; default = false; }
@@ -1228,7 +1240,11 @@ public class Node : Object {
     node->new_prop( "side", side.to_string() );
     node->new_prop( "fold", folded.to_string() );
     node->new_prop( "treesize", tree_size.to_string() );
-    if( !is_root() ) {
+    if( is_root() ) {
+      if( _link_color_set ) {
+        node->new_prop( "color", Utils.color_from_rgba( _link_color ) );
+      }
+    } else {
       node->new_prop( "color", Utils.color_from_rgba( _link_color ) );
       node->new_prop( "colorroot", link_color_root.to_string() );
     }
@@ -2112,7 +2128,8 @@ public class Node : Object {
     if( mode.is_selected() ) {
       color = theme.get_color( "nodesel_foreground" );
     } else if( parent == null ) {
-      color = theme.get_color( "root_foreground" );
+      color = _link_color_set ? Granite.contrasting_foreground_color( link_color ) :
+                                theme.get_color( "root_foreground" );
     } else if( style.is_fillable() ) {
       color = Granite.contrasting_foreground_color( link_color );
     }
@@ -2434,6 +2451,11 @@ public class Node : Object {
       var background = theme.get_color( "root_background" );
       var foreground = theme.get_color( "root_foreground" );
 
+      if( _link_color_set ) {
+        background = _link_color;
+        foreground = Granite.contrasting_foreground_color( background );
+      }
+
       draw_shape( ctx, theme, background );
       draw_name( ctx, theme );
       draw_image( ctx, theme );
@@ -2445,7 +2467,7 @@ public class Node : Object {
       draw_sticker( ctx, nodesel_background, background );
       draw_common_note( ctx, foreground, nodesel_foreground, foreground );
       draw_link_node(   ctx, foreground, nodesel_foreground, foreground );
-      draw_common_fold( ctx, background, foreground );
+      draw_common_fold( ctx, foreground, background );
       draw_attachable(  ctx, theme, background );
       draw_resizer( ctx, theme );
 

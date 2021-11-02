@@ -1264,10 +1264,10 @@ public class DrawArea : Gtk.DrawingArea {
    Changes the current node's link color and propagates that color to all
    descendants.
   */
-  public void change_current_link_color( RGBA color ) {
+  public void change_current_link_color( RGBA? color ) {
     var current = _selected.current_node();
     if( current != null ) {
-      RGBA orig_color = current.link_color;
+      RGBA? orig_color = current.link_color;
       if( orig_color != color ) {
         current.link_color = color;
         undo_buffer.add_item( new UndoNodeLinkColor( current, orig_color ) );

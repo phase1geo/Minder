@@ -24,12 +24,12 @@ using Gdk;
 
 public class UndoNodeLinkColor : UndoItem {
 
-  Node _node;
-  RGBA _old_color;
-  RGBA _new_color;
+  Node  _node;
+  RGBA? _old_color;
+  RGBA? _new_color;
 
   /* Constructor for a node name change */
-  public UndoNodeLinkColor( Node n, RGBA old_color ) {
+  public UndoNodeLinkColor( Node n, RGBA? old_color ) {
     base( _( "link color change" ) );
     _node      = n;
     _old_color = old_color;
