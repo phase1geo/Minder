@@ -105,6 +105,7 @@ public class DrawArea : Gtk.DrawingArea {
   private NodeGroups       _groups;
   private uint             _select_hover_id = 0;
   private int              _next_node_id    = -1;
+  private MinderShortcuts  _shortcuts;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -4095,106 +4096,16 @@ public class DrawArea : Gtk.DrawingArea {
     /* Make sure that we flush all animations if the user starts a keypress */
     animator.flush();
 
-    /* Figure out which modifiers were used */
-    var control      = (bool)(e.state & ModifierType.CONTROL_MASK);
-    var shift        = (bool)(e.state & ModifierType.SHIFT_MASK);
-    var alt          = (bool)(e.state & ModifierType.MOD1_MASK);
-    var nomod        = !(control || shift || alt);
-    var current_node = _selected.current_node();
-    var current_conn = _selected.current_connection();
-    var keymap       = Keymap.get_for_display( Display.get_default() );
-    KeymapKey[] ks   = {};
-    uint[] kvs       = {};
-
-    keymap.get_entries_for_keycode( e.hardware_keycode, out ks, out kvs );
-
-    /* If there is a current node or connection selected, operate on it */
-    if( (current_node != null) || (current_conn != null) ) {
-      if( control ) {
-        if( !shift && has_key( kvs, Key.c ) )           { do_copy(); }
-        else if( !shift && has_key( kvs, Key.x ) )      { do_cut(); }
-        else if( !shift && has_key( kvs, Key.v ) )      { do_paste( false ); }
-        else if(  shift && has_key( kvs, Key.V ) )      { do_paste( true ); }
-        else if( has_key( kvs, Key.Return ) )           { handle_control_return(); }
-        else if( has_key( kvs, Key.Tab ) )              { handle_control_tab(); }
-        else if( has_key( kvs, Key.Right ) )            { handle_control_right( shift ); }
-        else if( has_key( kvs, Key.Left ) )             { handle_control_left( shift ); }
-        else if( has_key( kvs, Key.Up ) )               { handle_control_up( shift ); }
-        else if( has_key( kvs, Key.Down ) )             { handle_control_down( shift ); }
-        else if( has_key( kvs, Key.Home ) )             { handle_control_home( shift ); }
-        else if( has_key( kvs, Key.End ) )              { handle_control_end( shift ); }
-        else if( !shift && has_key( kvs, Key.a ) )      { select_all(); }
-        else if(  shift && has_key( kvs, Key.A ) )      { deselect_all(); }
-        else if( !shift && has_key( kvs, Key.period ) ) { handle_control_period(); }
-        else if(  shift && has_key( kvs, Key.E ) )      { handle_control_E(); }
-        else if(  shift && has_key( kvs, Key.R ) )      { handle_control_R(); }
-        else if( !shift && has_key( kvs, Key.w ) )      { handle_control_w(); }
-        else if( !shift && has_key( kvs, Key.y ) )      { do_paste_node_link(); }
-        else return( false );
-      } else if( nomod || shift || alt) {
-        if( has_key( kvs, Key.BackSpace ) )      { handle_backspace(); }
-        else if( has_key( kvs, Key.Delete ) )    { handle_delete(); }
-        else if( has_key( kvs, Key.Escape ) )    { handle_escape(); }
-        else if( has_key( kvs, Key.Return ) )    { handle_return( shift ); }
-        else if( has_key( kvs, Key.Tab ) )       { handle_tab(); }
-        else if( has_key( kvs, Key.Right ) )     { handle_right( shift, alt ); }
-        else if( has_key( kvs, Key.Left ) )      { handle_left( shift, alt ); }
-        else if( has_key( kvs, Key.Home ) )      { handle_home( shift ); }
-        else if( has_key( kvs, Key.End ) )       { handle_end( shift ); }
-        else if( has_key( kvs, Key.Up ) )        { handle_up( shift, alt ); }
-        else if( has_key( kvs, Key.Down ) )      { handle_down( shift, alt ); }
-        else if( has_key( kvs, Key.Page_Up ) )   { handle_pageup(); }
-        else if( has_key( kvs, Key.Page_Down ) ) { handle_pagedn(); }
-        else if( has_key( kvs, Key.Control_L ) ) { handle_control( true ); }
-        else if( has_key( kvs, Key.F10 ) )       { if( shift ) show_contextual_menu( e ); }
-        else if( has_key( kvs, Key.Menu ) )      { show_contextual_menu( e ); }
-        else {
-          if( (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
-            return( handle_node_keypress( e, kvs ) );
-          } else if( (current_conn != null) && (current_conn.mode != ConnMode.EDITABLE) ) {
-            return( handle_connection_keypress( e, kvs ) );
-          } else {
-            _im_context.filter_keypress( e );
-            return( false );
-          }
-        }
+    /* Handle the keypress */
+    if( !_shortcuts.key_pressed( e ) ) {
+      if( is_node_editable() || is_connection_editable() ) {
+        _im_context.filter_keypress( e );
       }
-
-    /* If there is no current node, allow some of the keyboard shortcuts */
-    } else if( control ) {
-      if( shift && has_key( kvs, Key.E ) )       { handle_control_E(); }
-      else if( !shift && has_key( kvs, Key.v ) ) { do_paste( false ); }
-      else return( false );
-
-    } else if( nomod || shift ) {
-      if( !shift && has_key( kvs, Key.minus ) )             { if( nodes_alignable() ) NodeAlign.align_top( this, _selected.nodes() ); }
-      else if( !shift && has_key( kvs, Key.equal ) )        { if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() ); }
-      else if(  shift && has_key( kvs, Key.Z ) )            { zoom_in(); }
-      else if( !shift && has_key( kvs, Key.bracketleft ) )  { if( nodes_alignable() ) NodeAlign.align_left( this, _selected.nodes() ); }
-      else if( !shift && has_key( kvs, Key.bracketright ) ) { if( nodes_alignable() ) NodeAlign.align_right( this, _selected.nodes() ); }
-      else if(  shift && has_key( kvs, Key.underscore ) )   { if( nodes_alignable() ) NodeAlign.align_bottom( this, _selected.nodes() ); }
-      else if( !shift && has_key( kvs, Key.a ) )            { select_parent_nodes(); }
-      else if( !shift && has_key( kvs, Key.d ) )            { select_child_nodes(); }
-      else if( !shift && has_key( kvs, Key.f ) )            { toggle_folds( false ); }
-      else if(  shift && has_key( kvs, Key.F ) )            { toggle_folds( true ); }
-      else if( !shift && has_key( kvs, Key.g ) )            { add_group(); }
-      else if( !shift && has_key( kvs, Key.m ) )            { select_root_node(); }
-      else if( !shift && has_key( kvs, Key.r ) )            { if( undo_buffer.redoable() ) undo_buffer.redo(); }
-      else if( !shift && has_key( kvs, Key.t ) )            { change_selected_tasks(); }
-      else if( !shift && has_key( kvs, Key.u ) )            { if( undo_buffer.undoable() ) undo_buffer.undo(); }
-      else if( !shift && has_key( kvs, Key.z ) )            { zoom_out(); }
-      else if(  shift && has_key( kvs, Key.bar ) )          { if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() ); }
-      else if( has_key( kvs, Key.BackSpace ) )              { handle_backspace(); }
-      else if( has_key( kvs, Key.Delete ) )                 { handle_delete(); }
-      else if( has_key( kvs, Key.Return ) )                 { handle_return( shift ); }
-      else if( has_key( kvs, Key.Control_L ) )              { handle_control( true ); }
-      else if( has_key( kvs, Key.F10 ) )                    { if( shift ) show_contextual_menu( e ); }
-      else if( has_key( kvs, Key.Menu ) )                   { show_contextual_menu( e ); }
-      else if( !shift && has_key( kvs, Key.x ) )            { create_connection(); }
-      else if( !shift && has_key( kvs, Key.y ) )            { toggle_links(); }
-      else return( false );
+      return( false );
     }
+
     return( true );
+
   }
 
   private bool handle_connection_keypress( EventKey e, uint[] kvs ) {

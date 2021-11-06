@@ -1,4 +1,3 @@
-
 /*
 * Copyright (c) 2018 (https://github.com/phase1geo/Minder)
 *
