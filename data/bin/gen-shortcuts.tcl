@@ -12,10 +12,10 @@ close $rc
 set lnum 1
 foreach line [split $contents \n] {
   set cmds [list]
-  if {[regexp {^([a-zA-Z-]+)\s+(.*)$} $line -> key cmd]} {
+  if {[regexp {^([a-zA-Z0-9_-]+)\s+(.*)$} $line -> key cmd]} {
     if {[info exists shortcuts($key)]} {
       puts "ERROR:  Found a duplicate shortcut ($key) on line $lnum"
-      # exit 1
+      exit 1
     }
     set shortcuts($key) $cmd
   }
@@ -37,7 +37,7 @@ foreach {modifier pos} [list CONTROL 0 SHIFT 1 ALT 2] {
         set key [join [linsert $key_comps $pos $modifier] -]
         if {[info exists shortcuts($key)]} {
           puts "ERROR:  Found a duplicate shortcut ($key)"
-          # exit 1
+          exit 1
         }
         set shortcuts($key) [string map [list $modifier true] $cmd]
       }
@@ -71,8 +71,8 @@ puts $rc "*"
 puts $rc "* Authored by: Trevor Williams <phase1geo@gmail.com>"
 puts $rc "*/"
 puts $rc ""
-puts $rc "using Gee;"
 puts $rc "using Gdk;"
+puts $rc ""
 
 # Create the enumeration
 puts $rc "public enum ShortcutType {"
@@ -81,22 +81,15 @@ puts $rc [string map {- _} [join [lsort [array names shortcuts]] ",\n  "]]
 puts $rc "}"
 
 puts $rc ""
-puts $rc "public class MinderShortcuts {"
-puts $rc ""
-puts $rc "  DrawArea                       _da;"
-puts $rc "  HashMap<EventKey,ShortcutType> _shortcuts;"
+puts $rc "public class MinderShortcuts : ShortcutsBase {"
 puts $rc ""
 puts $rc "  /* Constructor */"
 puts $rc "  public MinderShortcuts( DrawArea da ) {"
-puts $rc "    _da        = da;"
-puts $rc "    _shortcuts = new HashMap( null, (a, b) => {"
-puts $rc "      return( (a.state == b.state) && (a.keyval == b.keyval) );"
-puts $rc "    });"
-puts $rc "    create_shortcuts();"
+puts $rc "    base( da );"
 puts $rc "  }"
 puts $rc ""
 puts $rc "  /* Adds the keyboard shortcuts */"
-puts $rc "  private void create_shortcuts() {"
+puts $rc "  protected override void create_shortcuts() {"
 
 foreach {key cmd} [array get shortcuts] {
   set control [expr {([string first CONTROL $key] != -1) ? "true" : "false"}]
@@ -113,59 +106,13 @@ foreach {key cmd} [array get shortcuts] {
 puts $rc "  }"
 puts $rc ""
 puts $rc "  /* Runs the given keyboard shortcut */"
-puts $rc "  private void run_shortcut( ShortcutType index, EventKey e ) {"
+puts $rc "  protected override bool run_shortcut( int index, EventKey e ) {"
 puts $rc "    switch( index ) {"
 foreach {key cmd} [array get shortcuts] {
-  puts $rc "      case ShortcutType.[string map {- _} $key] :  $cmd;  break;"
+  puts $rc "      case ShortcutType.[string map {- _} $key] :  return( $cmd );"
 }
 puts $rc "    }"
-puts $rc "  }"
-puts $rc ""
-puts $rc "  /* Creates a new event from the given values */"
-puts $rc "  private EventKey create_event( bool control, bool shift, bool alt, uint keyval ) {"
-puts $rc "    var e = new Event( EventType.KEY_PRESS );"
-puts $rc "    if( control ) {"
-puts $rc "      e.key.state |= ModifierType.CONTROL_MASK;"
-puts $rc "    }"
-puts $rc "    if( shift ) {"
-puts $rc "      e.key.state |= ModifierType.SHIFT_MASK;"
-puts $rc "    }"
-puts $rc "    if( alt ) {"
-puts $rc "      e.key.state |= ModifierType.MOD1_MASK;"
-puts $rc "    }"
-puts $rc "    e.key.keyval = keyval;"
-puts $rc "    return( e.key );"
-puts $rc "  }"
-puts $rc ""
-puts $rc "  /* Adds a new event-method to the list of available keyboard shortcuts */"
-puts $rc "  private void add_event( ShortcutType index, bool control, bool shift, bool alt, uint keyval ) {"
-puts $rc "    var e = create_event( control, shift, alt, keyval );"
-puts $rc "    _shortcuts.set( e, index );"
-puts $rc "  }"
-puts $rc ""
-puts $rc "  /*"
-puts $rc "   Called whenever the key is pressed.  Looks up the given key to see if it corresponds to a keyboard shortcut."
-puts $rc "   If a shortcut is found, it is run and we return true.  If no shortcut matches, we will return false. "
-puts $rc "  */"
-puts $rc "  public bool key_pressed( EventKey ek ) {"
-puts $rc ""
-puts $rc "    var e = ek.copy();"
-puts $rc ""
-puts $rc "    /* Convert the hardware keycode to a list of possible keys */"
-puts $rc "    var keymap = Keymap.get_for_display( Display.get_default() );"
-puts $rc "    uint\[\] kvs = {};"
-puts $rc "    keymap.get_entries_for_keycode( ek.hardware_keycode, null, out kvs );"
-puts $rc ""
-puts $rc "    for( int i=(kvs.length-1); i>=0; i-- ) {"
-puts $rc "      e.key.keyval = kvs\[i\];"
-puts $rc "      if( _shortcuts.has_key( e.key ) ) {"
-puts $rc "        run_shortcut( _shortcuts.get( e.key ), ek );"
-puts $rc "        return( true );"
-puts $rc "      }"
-puts $rc "    }"
-puts $rc ""
 puts $rc "    return( false );"
-puts $rc ""
 puts $rc "  }"
 puts $rc ""
 puts $rc "}"

@@ -1236,7 +1236,6 @@ public class MainWindow : Hdy.ApplicationWindow {
         }
         break;
     }
-
   }
 
   /* Displays the theme editor pane */

@@ -19,8 +19,8 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
-using Gee;
 using Gdk;
+
 public enum ShortcutType {
   A,
   ALT_Down,
@@ -51,6 +51,7 @@ public enum ShortcutType {
   CONTROL_X,
   CONTROL_Y,
   CONTROL_period,
+  Control_L,
   D,
   Delete,
   Down,
@@ -70,6 +71,8 @@ public enum ShortcutType {
   Menu,
   N,
   P,
+  Page_Down,
+  Page_Up,
   R,
   Return,
   Right,
@@ -87,6 +90,7 @@ public enum ShortcutType {
   SHIFT_E,
   SHIFT_End,
   SHIFT_F,
+  SHIFT_F10,
   SHIFT_Home,
   SHIFT_I,
   SHIFT_Left,
@@ -112,31 +116,24 @@ public enum ShortcutType {
   underscore
 }
 
-public class MinderShortcuts {
-
-  DrawArea                       _da;
-  HashMap<EventKey,ShortcutType> _shortcuts;
+public class MinderShortcuts : ShortcutsBase {
 
   /* Constructor */
   public MinderShortcuts( DrawArea da ) {
-    _da        = da;
-    _shortcuts = new HashMap( null, (a, b) => {
-      return( (a.state == b.state) && (a.keyval == b.keyval) );
-    });
-    create_shortcuts();
+    base( da );
   }
 
   /* Adds the keyboard shortcuts */
-  private void create_shortcuts() {
+  protected override void create_shortcuts() {
     add_event( ShortcutType.A, false, false, false, Key.a );
     add_event( ShortcutType.CONTROL_Up, true, false, false, Key.Up );
     add_event( ShortcutType.C, false, false, false, Key.c );
     add_event( ShortcutType.D, false, false, false, Key.d );
     add_event( ShortcutType.E, false, false, false, Key.e );
     add_event( ShortcutType.SHIFT_Left, false, true, false, Key.Left );
+    add_event( ShortcutType.F, false, false, false, Key.f );
     add_event( ShortcutType.CONTROL_Return, true, false, false, Key.Return );
     add_event( ShortcutType.Right, false, false, false, Key.Right );
-    add_event( ShortcutType.F, false, false, false, Key.f );
     add_event( ShortcutType.G, false, false, false, Key.g );
     add_event( ShortcutType.H, false, false, false, Key.h );
     add_event( ShortcutType.I, false, false, false, Key.i );
@@ -152,6 +149,7 @@ public class MinderShortcuts {
     add_event( ShortcutType.P, false, false, false, Key.p );
     add_event( ShortcutType.Escape, false, false, false, Key.Escape );
     add_event( ShortcutType.R, false, false, false, Key.r );
+    add_event( ShortcutType.SHIFT_F10, false, true, false, Key.F10 );
     add_event( ShortcutType.bracketright, false, false, false, Key.bracketright );
     add_event( ShortcutType.ALT_Up, false, false, true, Key.Up );
     add_event( ShortcutType.S, false, false, false, Key.s );
@@ -198,6 +196,7 @@ public class MinderShortcuts {
     add_event( ShortcutType.SHIFT_ALT_Left, false, true, true, Key.Left );
     add_event( ShortcutType.SHIFT_Y, false, true, false, Key.Y );
     add_event( ShortcutType.CONTROL_Right, true, false, false, Key.Right );
+    add_event( ShortcutType.Page_Down, false, false, false, Key.Page_Down );
     add_event( ShortcutType.minus, false, false, false, Key.minus );
     add_event( ShortcutType.SHIFT_Z, false, true, false, Key.Z );
     add_event( ShortcutType.Up, false, false, false, Key.Up );
@@ -206,7 +205,9 @@ public class MinderShortcuts {
     add_event( ShortcutType.SHIFT_CONTROL_Down, true, true, false, Key.Down );
     add_event( ShortcutType.CONTROL_period, true, false, false, Key.period );
     add_event( ShortcutType.SHIFT_CONTROL_Home, true, true, false, Key.Home );
+    add_event( ShortcutType.Control_L, false, false, false, Key.Control_L );
     add_event( ShortcutType.SHIFT_Right, false, true, false, Key.Right );
+    add_event( ShortcutType.Page_Up, false, false, false, Key.Page_Up );
     add_event( ShortcutType.SHIFT_Return, false, true, false, Key.Return );
     add_event( ShortcutType.SHIFT_Down, false, true, false, Key.Down );
     add_event( ShortcutType.ALT_Right, false, false, true, Key.Right );
@@ -219,144 +220,102 @@ public class MinderShortcuts {
   }
 
   /* Runs the given keyboard shortcut */
-  private void run_shortcut( ShortcutType index, EventKey e ) {
+  protected override bool run_shortcut( int index, EventKey e ) {
     switch( index ) {
-      case ShortcutType.A :  _da.select_parent_nodes();;  break;
-      case ShortcutType.CONTROL_Up :  _da.handle_control_up( false );;  break;
-      case ShortcutType.C :  _da.select_child_node();;  break;
-      case ShortcutType.D :  _da.select_child_nodes();;  break;
-      case ShortcutType.E :  _da.edit_current_title();;  break;
-      case ShortcutType.SHIFT_Left :  _da.handle_left( true, false );;  break;
-      case ShortcutType.CONTROL_Return :  _da.handle_control_return();;  break;
-      case ShortcutType.Right :  _da.handle_right( false, false );;  break;
-      case ShortcutType.F :  _da.toggle_current_fold( false );;  break;
-      case ShortcutType.G :  _da.add_group();;  break;
-      case ShortcutType.H :  _da.handle_left( false, false );;  break;
-      case ShortcutType.I :  _da.show_properties( "current", PropertyGrab.FIRST );;  break;
-      case ShortcutType.J :  _da.handle_down( false, false );;  break;
-      case ShortcutType.K :  _da.handle_up( false, false );;  break;
-      case ShortcutType.L :  _da.handle_right( false, false );;  break;
-      case ShortcutType.M :  _da.select_root_node();;  break;
-      case ShortcutType.Menu :  _da.show_contextual_menu( e );;  break;
-      case ShortcutType.CONTROL_SHIFT_Up :  _da.handle_control_up( true );;  break;
-      case ShortcutType.N :  _da.select_sibling_node( 1 );;  break;
-      case ShortcutType.ALT_SHIFT_Right :  _da.handle_right( true, true );;  break;
-      case ShortcutType.SHIFT_CONTROL_V :  _da.do_paste( true );;  break;
-      case ShortcutType.P :  _da.select_sibling_node( -1 );;  break;
-      case ShortcutType.Escape :  _da.handle_escape();;  break;
-      case ShortcutType.R :  if( _da.undo_buffer.redoable() ) _da.undo_buffer.redo();;  break;
-      case ShortcutType.bracketright :  if( _da.nodes_alignable() ) NodeAlign.align_right( _da, _da.selected.nodes() );;  break;
-      case ShortcutType.ALT_Up :  _da.handle_up( false, true );;  break;
-      case ShortcutType.S :  _da.see();;  break;
-      case ShortcutType.T :  _da.toggle_task_done_indicator();;  break;
-      case ShortcutType.U :  if( _da.undo_buffer.undoable() ) _da.undo_buffer.undo();;  break;
-      case ShortcutType.CONTROL_Down :  _da.handle_control_down( false );;  break;
-      case ShortcutType.SHIFT_C :  _da.center_current_node();;  break;
-      case ShortcutType.CONTROL_Home :  _da.handle_control_home( false );;  break;
-      case ShortcutType.End :  _da.handle_end( false );;  break;
-      case ShortcutType.bracketleft :  if( _da.nodes_alignable() ) NodeAlign.align_left( _da, _da.selected.nodes() );;  break;
-      case ShortcutType.SHIFT_D :  _da.select_node_tree();;  break;
-      case ShortcutType.SHIFT_Up :  _da.handle_up( true, false );;  break;
-      case ShortcutType.X :  _da.start_connection( true, false );;  break;
-      case ShortcutType.SHIFT_E :  _da.show_properties( "current", PropertyGrab.NOTE );;  break;
-      case ShortcutType.SHIFT_F :  _da.toggle_current_fold( true );;  break;
-      case ShortcutType.Y :  _da.toggle_links();;  break;
-      case ShortcutType.SHIFT_End :  _da.handle_end( true );;  break;
-      case ShortcutType.Z :  _da.zoom_out();;  break;
-      case ShortcutType.CONTROL_SHIFT_A :  _da.deselect_all();;  break;
-      case ShortcutType.SHIFT_I :  _da.run_debug();;  break;
-      case ShortcutType.CONTROL_End :  _da.handle_control_end( false );;  break;
-      case ShortcutType.bar :  if( _da.nodes_alignable() ) NodeAlign.align_vcenter( _da, _da.selected.nodes() );;  break;
-      case ShortcutType.ALT_SHIFT_Up :  _da.handle_up( true, true );;  break;
-      case ShortcutType.CONTROL_SHIFT_E :  _da.handle_control_E();;  break;
-      case ShortcutType.SHIFT_CONTROL_Right :  _da.handle_control_right( true );;  break;
-      case ShortcutType.Tab :  _da.handle_tab();;  break;
-      case ShortcutType.SHIFT_CONTROL_End :  _da.handle_control_end( true );;  break;
-      case ShortcutType.Down :  _da.handle_down( false, false );;  break;
-      case ShortcutType.ALT_SHIFT_Down :  _da.handle_down( true, true );;  break;
-      case ShortcutType.CONTROL_Left :  _da.handle_control_left( false );;  break;
-      case ShortcutType.Home :  _da.handle_home( false );;  break;
-      case ShortcutType.Delete :  _da.handle_delete();;  break;
-      case ShortcutType.CONTROL_Tab :  _da.handle_control_tab();;  break;
-      case ShortcutType.BackSpace :  _da.handle_backspace();;  break;
-      case ShortcutType.ALT_Down :  _da.handle_down( false, true );;  break;
-      case ShortcutType.SHIFT_S :  _da.sort_alphabetically();;  break;
-      case ShortcutType.CONTROL_A :  _da.select_all();;  break;
-      case ShortcutType.equal :  if( _da.nodes_alignable() ) NodeAlign.align_hcenter( _da, _da.selected.nodes() );;  break;
-      case ShortcutType.CONTROL_C :  _da.do_copy();;  break;
-      case ShortcutType.underscore :  if( _da.nodes_alignable() ) NodeAlign.align_bottom( _da, _da.selected.nodes() );;  break;
-      case ShortcutType.SHIFT_X :  _da.select_attached_connection();;  break;
-      case ShortcutType.CONTROL_SHIFT_R :  _da.handle_control_R();;  break;
-      case ShortcutType.Left :  _da.handle_left( false, false );;  break;
-      case ShortcutType.SHIFT_ALT_Left :  _da.handle_left( true, true );;  break;
-      case ShortcutType.SHIFT_Y :  _da.select_linked_node();;  break;
-      case ShortcutType.CONTROL_Right :  _da.handle_control_right( false );;  break;
-      case ShortcutType.minus :  if( _da.nodes_alignable() ) NodeAlign.align_top( _da, _da.selected.nodes() );;  break;
-      case ShortcutType.SHIFT_Z :  _da.zoom_in();;  break;
-      case ShortcutType.Up :  _da.handle_up( false, false );;  break;
-      case ShortcutType.Return :  _da.handle_return( false );;  break;
-      case ShortcutType.ALT_Left :  _da.handle_left( false, true );;  break;
-      case ShortcutType.SHIFT_CONTROL_Down :  _da.handle_control_down( true );;  break;
-      case ShortcutType.CONTROL_period :  _da.handle_control_period();;  break;
-      case ShortcutType.SHIFT_CONTROL_Home :  _da.handle_control_home( true );;  break;
-      case ShortcutType.SHIFT_Right :  _da.handle_right( true, false );;  break;
-      case ShortcutType.SHIFT_Return :  _da.handle_return( true );;  break;
-      case ShortcutType.SHIFT_Down :  _da.handle_down( true, false );;  break;
-      case ShortcutType.ALT_Right :  _da.handle_right( false, true );;  break;
-      case ShortcutType.SHIFT_Home :  _da.handle_home( true );;  break;
-      case ShortcutType.SHIFT_CONTROL_Left :  _da.handle_control_left( true );;  break;
-      case ShortcutType.CONTROL_V :  _da.do_paste( false );;  break;
-      case ShortcutType.CONTROL_W :  _da.handle_control_w();;  break;
-      case ShortcutType.CONTROL_X :  _da.do_cut();;  break;
-      case ShortcutType.CONTROL_Y :  _da.do_paste_node_link();;  break;
+      case ShortcutType.A :  return( _da.select_parent_nodes() );
+      case ShortcutType.CONTROL_Up :  return( _da.handle_control_up( false ) );
+      case ShortcutType.C :  return( _da.select_child_node() );
+      case ShortcutType.D :  return( _da.select_child_nodes() );
+      case ShortcutType.E :  return( _da.edit_current_title() );
+      case ShortcutType.SHIFT_Left :  return( _da.handle_left( true, true, false ) );
+      case ShortcutType.F :  return( _da.handle_f( false ) );
+      case ShortcutType.CONTROL_Return :  return( _da.handle_control_return() );
+      case ShortcutType.Right :  return( _da.handle_right( true, false, false ) );
+      case ShortcutType.G :  return( _da.add_group() );
+      case ShortcutType.H :  return( _da.handle_left( false, false, false ) );
+      case ShortcutType.I :  return( _da.show_current_properties( false ) );
+      case ShortcutType.J :  return( _da.handle_down( false, false, false ) );
+      case ShortcutType.K :  return( _da.handle_up( false, false, false ) );
+      case ShortcutType.L :  return( _da.handle_right( false, false, false ) );
+      case ShortcutType.M :  return( _da.select_root_node() );
+      case ShortcutType.Menu :  return( _da.show_contextual_menu( e ) );
+      case ShortcutType.CONTROL_SHIFT_Up :  return( _da.handle_control_up( true ) );
+      case ShortcutType.N :  return( _da.handle_n() );
+      case ShortcutType.ALT_SHIFT_Right :  return( _da.handle_right( true, true, true ) );
+      case ShortcutType.SHIFT_CONTROL_V :  return( _da.do_paste( true ) );
+      case ShortcutType.P :  return( _da.handle_p() );
+      case ShortcutType.Escape :  return( _da.handle_escape() );
+      case ShortcutType.R :  return( _da.redo() );
+      case ShortcutType.SHIFT_F10 :  return( _da.show_contextual_menu( e ) );
+      case ShortcutType.bracketright :  return( _da.align_right() );
+      case ShortcutType.ALT_Up :  return( _da.handle_up( true, false, true ) );
+      case ShortcutType.S :  return( _da.see() );
+      case ShortcutType.T :  return( _da.handle_t() );
+      case ShortcutType.U :  return( _da.undo() );
+      case ShortcutType.CONTROL_Down :  return( _da.handle_control_down( false ) );
+      case ShortcutType.SHIFT_C :  return( _da.center_current_node() );
+      case ShortcutType.CONTROL_Home :  return( _da.handle_control_home( false ) );
+      case ShortcutType.End :  return( _da.handle_end( false ) );
+      case ShortcutType.bracketleft :  return( _da.align_left() );
+      case ShortcutType.SHIFT_D :  return( _da.select_node_tree() );
+      case ShortcutType.SHIFT_Up :  return( _da.handle_up( true, true, false ) );
+      case ShortcutType.X :  return( _da.handle_x() );
+      case ShortcutType.SHIFT_E :  return( _da.show_current_properties( true ) );
+      case ShortcutType.SHIFT_F :  return( _da.handle_f( true ) );
+      case ShortcutType.Y :  return( _da.toggle_links() );
+      case ShortcutType.SHIFT_End :  return( _da.handle_end( true ) );
+      case ShortcutType.Z :  return( _da.handle_z( false ) );
+      case ShortcutType.CONTROL_SHIFT_A :  return( _da.deselect_all() );
+      case ShortcutType.SHIFT_I :  return( _da.run_debug() );
+      case ShortcutType.CONTROL_End :  return( _da.handle_control_end( false ) );
+      case ShortcutType.bar :  return( _da.align_vcenter() );
+      case ShortcutType.ALT_SHIFT_Up :  return( _da.handle_up( true, true, true ) );
+      case ShortcutType.CONTROL_SHIFT_E :  return( _da.handle_control_E() );
+      case ShortcutType.SHIFT_CONTROL_Right :  return( _da.handle_control_right( true ) );
+      case ShortcutType.Tab :  return( _da.handle_tab() );
+      case ShortcutType.SHIFT_CONTROL_End :  return( _da.handle_control_end( true ) );
+      case ShortcutType.Down :  return( _da.handle_down( true, false, false ) );
+      case ShortcutType.ALT_SHIFT_Down :  return( _da.handle_down( true, true, true ) );
+      case ShortcutType.CONTROL_Left :  return( _da.handle_control_left( false ) );
+      case ShortcutType.Home :  return( _da.handle_home( false ) );
+      case ShortcutType.Delete :  return( _da.handle_delete() );
+      case ShortcutType.CONTROL_Tab :  return( _da.handle_control_tab() );
+      case ShortcutType.BackSpace :  return( _da.handle_backspace() );
+      case ShortcutType.ALT_Down :  return( _da.handle_down( true, false, true ) );
+      case ShortcutType.SHIFT_S :  return( _da.sort_alphabetically() );
+      case ShortcutType.CONTROL_A :  return( _da.select_all() );
+      case ShortcutType.equal :  return( _da.align_hcenter() );
+      case ShortcutType.CONTROL_C :  return( _da.do_copy() );
+      case ShortcutType.underscore :  return( _da.align_bottom() );
+      case ShortcutType.SHIFT_X :  return( _da.select_attached_connection() );
+      case ShortcutType.CONTROL_SHIFT_R :  return( _da.handle_control_R() );
+      case ShortcutType.Left :  return( _da.handle_left( true, false, false ) );
+      case ShortcutType.SHIFT_ALT_Left :  return( _da.handle_left( true, true, true ) );
+      case ShortcutType.SHIFT_Y :  return( _da.select_linked_node() );
+      case ShortcutType.CONTROL_Right :  return( _da.handle_control_right( false ) );
+      case ShortcutType.Page_Down :  return( _da.handle_pagedn() );
+      case ShortcutType.minus :  return( _da.align_top() );
+      case ShortcutType.SHIFT_Z :  return( _da.handle_z( true ) );
+      case ShortcutType.Up :  return( _da.handle_up( true, false, false ) );
+      case ShortcutType.Return :  return( _da.handle_return( false ) );
+      case ShortcutType.ALT_Left :  return( _da.handle_left( true, false, true ) );
+      case ShortcutType.SHIFT_CONTROL_Down :  return( _da.handle_control_down( true ) );
+      case ShortcutType.CONTROL_period :  return( _da.handle_control_period() );
+      case ShortcutType.SHIFT_CONTROL_Home :  return( _da.handle_control_home( true ) );
+      case ShortcutType.Control_L :  return( _da.handle_control( true ) );
+      case ShortcutType.SHIFT_Right :  return( _da.handle_right( true, true, false ) );
+      case ShortcutType.Page_Up :  return( _da.handle_pageup() );
+      case ShortcutType.SHIFT_Return :  return( _da.handle_return( true ) );
+      case ShortcutType.SHIFT_Down :  return( _da.handle_down( true, true, false ) );
+      case ShortcutType.ALT_Right :  return( _da.handle_right( true, false, true ) );
+      case ShortcutType.SHIFT_Home :  return( _da.handle_home( true ) );
+      case ShortcutType.SHIFT_CONTROL_Left :  return( _da.handle_control_left( true ) );
+      case ShortcutType.CONTROL_V :  return( _da.do_paste( false ) );
+      case ShortcutType.CONTROL_W :  return( _da.handle_control_w() );
+      case ShortcutType.CONTROL_X :  return( _da.do_cut() );
+      case ShortcutType.CONTROL_Y :  return( _da.do_paste_node_link() );
     }
-  }
-
-  /* Creates a new event from the given values */
-  private EventKey create_event( bool control, bool shift, bool alt, uint keyval ) {
-    var e = new Event( EventType.KEY_PRESS );
-    if( control ) {
-      e.key.state |= ModifierType.CONTROL_MASK;
-    }
-    if( shift ) {
-      e.key.state |= ModifierType.SHIFT_MASK;
-    }
-    if( alt ) {
-      e.key.state |= ModifierType.MOD1_MASK;
-    }
-    e.key.keyval = keyval;
-    return( e.key );
-  }
-
-  /* Adds a new event-method to the list of available keyboard shortcuts */
-  private void add_event( ShortcutType index, bool control, bool shift, bool alt, uint keyval ) {
-    var e = create_event( control, shift, alt, keyval );
-    _shortcuts.set( e, index );
-  }
-
-  /*
-   Called whenever the key is pressed.  Looks up the given key to see if it corresponds to a keyboard shortcut.
-   If a shortcut is found, it is run and we return true.  If no shortcut matches, we will return false. 
-  */
-  public bool key_pressed( EventKey ek ) {
-
-    var e = ek.copy();
-
-    /* Convert the hardware keycode to a list of possible keys */
-    var keymap = Keymap.get_for_display( Display.get_default() );
-    uint[] kvs = {};
-    keymap.get_entries_for_keycode( ek.hardware_keycode, null, out kvs );
-
-    for( int i=(kvs.length-1); i>=0; i-- ) {
-      e.key.keyval = kvs[i];
-      if( _shortcuts.has_key( e.key ) ) {
-        run_shortcut( _shortcuts.get( e.key ), ek );
-        return( true );
-      }
-    }
-
     return( false );
-
   }
 
 }

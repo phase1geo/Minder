@@ -1,79 +1,72 @@
 
-CONTROL-A       _da.select_all();
-CONTROL-SHIFT-A _da.deselect_all();
-CONTROL-C       _da.do_copy();
-CONTROL-SHIFT-E _da.handle_control_E();
-CONTROL-SHIFT-R _da.handle_control_R();
-CONTROL-X       _da.do_cut();
-CONTROL-V       _da.do_paste( SHIFT );
-CONTROL-W       _da.handle_control_w();
-CONTROL-Y       _da.do_paste_node_link();
-CONTROL-Return  _da.handle_control_return();
-CONTROL-Tab     _da.handle_control_tab();
-CONTROL-Right   _da.handle_control_right( SHIFT );
-CONTROL-Left    _da.handle_control_left( SHIFT );
-CONTROL-Up      _da.handle_control_up( SHIFT );
-CONTROL-Down    _da.handle_control_down( SHIFT );
-CONTROL-Home    _da.handle_control_home( SHIFT );
-CONTROL-End     _da.handle_control_end( SHIFT );
-CONTROL-period  _da.handle_control_period();
+CONTROL-A       _da.select_all()
+CONTROL-SHIFT-A _da.deselect_all()
+CONTROL-C       _da.do_copy()
+CONTROL-SHIFT-E _da.handle_control_E()
+CONTROL-SHIFT-R _da.handle_control_R()
+CONTROL-X       _da.do_cut()
+CONTROL-V       _da.do_paste( SHIFT )
+CONTROL-W       _da.handle_control_w()
+CONTROL-Y       _da.do_paste_node_link()
+CONTROL-Return  _da.handle_control_return()
+CONTROL-Tab     _da.handle_control_tab()
+CONTROL-Right   _da.handle_control_right( SHIFT )
+CONTROL-Left    _da.handle_control_left( SHIFT )
+CONTROL-Up      _da.handle_control_up( SHIFT )
+CONTROL-Down    _da.handle_control_down( SHIFT )
+CONTROL-Home    _da.handle_control_home( SHIFT )
+CONTROL-End     _da.handle_control_end( SHIFT )
+CONTROL-period  _da.handle_control_period()
 
-BackSpace       _da.handle_backspace();
-Delete          _da.handle_delete();
-Escape          _da.handle_escape();
-Return          _da.handle_return( SHIFT );
-Tab             _da.handle_tab();
-Right           _da.handle_right( SHIFT, ALT );
-Left            _da.handle_left( SHIFT, ALT );
-Home            _da.handle_home( SHIFT );
-End             _da.handle_end( SHIFT );
-Up              _da.handle_up( SHIFT, ALT );
-Down            _da.handle_down( SHIFT, ALT );
-Page_Up         _da.handle_pageup();
-Page_Down       _da.handle_pagedn();
-Control_L       _da.handle_control( true );
-F10             if( SHIFT ) _da.show_contextual_menu( e );
-Menu            _da.show_contextual_menu( e );
+BackSpace       _da.handle_backspace()
+Delete          _da.handle_delete()
+Escape          _da.handle_escape()
+Return          _da.handle_return( SHIFT )
+Tab             _da.handle_tab()
+Right           _da.handle_right( true, SHIFT, ALT )
+Left            _da.handle_left( true, SHIFT, ALT )
+Home            _da.handle_home( SHIFT )
+End             _da.handle_end( SHIFT )
+Up              _da.handle_up( true, SHIFT, ALT )
+Down            _da.handle_down( true, SHIFT, ALT )
+Page_Up         _da.handle_pageup()
+Page_Down       _da.handle_pagedn()
+Control_L       _da.handle_control( true )
+SHIFT-F10       _da.show_contextual_menu( e )
+Menu            _da.show_contextual_menu( e )
 
-minus           if( _da.nodes_alignable() ) NodeAlign.align_top( _da, _da.selected.nodes() );
-bar             if( _da.nodes_alignable() ) NodeAlign.align_vcenter( _da, _da.selected.nodes() );
-underscore      if( _da.nodes_alignable() ) NodeAlign.align_bottom( _da, _da.selected.nodes() );
-bracketleft     if( _da.nodes_alignable() ) NodeAlign.align_left( _da, _da.selected.nodes() );
-equal           if( _da.nodes_alignable() ) NodeAlign.align_hcenter( _da, _da.selected.nodes() );
-bracketright    if( _da.nodes_alignable() ) NodeAlign.align_right( _da, _da.selected.nodes() );
-A               _da.select_parent_nodes();
-C               _da.select_child_node();
-SHIFT-C         _da.center_current_node();
-D               _da.select_child_nodes();
-SHIFT-D         _da.select_node_tree();
-E               _da.edit_current_title();
-SHIFT-E         _da.show_properties( "current", PropertyGrab.NOTE );
-F               _da.toggle_folds( SHIFT );
-F               _da.select_connection_node( true );
-F               _da.toggle_current_fold( SHIFT );
-G               _da.add_group();
-H               _da.handle_left( false, false );
-I               _da.show_properties( "current", PropertyGrab.FIRST );
-SHIFT-I         _da.run_debug();
-J               _da.handle_down( false, false );
-K               _da.handle_up( false, false );
-L               _da.handle_right( false, false );
-M               _da.select_root_node();
-N               _da.select_connection( 1 );
-N               _da.select_sibling_node( 1 );
-P               _da.select_connection( -1 );
-P               _da.select_sibling_node( -1 );
-R               if( _da.undo_buffer.redoable() ) _da.undo_buffer.redo();
-S               _da.see();
-SHIFT-S         _da.sort_alphabetically();
-T               _da.change_selected_tasks();
-T               _da.select_connection_node( false );
-T               _da.toggle_task_done_indicator();
-U               if( _da.undo_buffer.undoable() ) _da.undo_buffer.undo();
-X               _da.create_connection();
-X               _da.start_connection( true, false );
-SHIFT-X         _da.select_attached_connection();
-Y               _da.toggle_links();
-SHIFT-Y         _da.select_linked_node();
-Z               _da.zoom_out();
-SHIFT-Z         _da.zoom_in();
+minus           _da.align_top()
+bar             _da.align_vcenter()
+underscore      _da.align_bottom()
+bracketleft     _da.align_left()
+equal           _da.align_hcenter()
+bracketright    _da.align_right()
+A               _da.select_parent_nodes()
+C               _da.select_child_node()
+SHIFT-C         _da.center_current_node()
+D               _da.select_child_nodes()
+SHIFT-D         _da.select_node_tree()
+E               _da.edit_current_title()
+SHIFT-E         _da.show_current_properties( true )
+F               _da.handle_f( SHIFT )
+G               _da.add_group()
+H               _da.handle_left( false, false, false )
+I               _da.show_current_properties( false )
+SHIFT-I         _da.run_debug()
+J               _da.handle_down( false, false, false )
+K               _da.handle_up( false, false, false )
+L               _da.handle_right( false, false, false )
+M               _da.select_root_node()
+N               _da.handle_n()
+P               _da.handle_p()
+R               _da.redo()
+S               _da.see()
+SHIFT-S         _da.sort_alphabetically()
+T               _da.handle_t()
+U               _da.undo()
+X               _da.handle_x()
+SHIFT-X         _da.select_attached_connection()
+Y               _da.toggle_links()
+SHIFT-Y         _da.select_linked_node()
+Z               _da.handle_z( SHIFT )
+

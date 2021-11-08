@@ -195,6 +195,7 @@ sources += files(
     'QuickEntry.vala',
     'Selection.vala',
     'Shortcuts.vala',
+    'ShortcutsBase.vala',
     'Sticker.vala',
     'Stickers.vala',
     'StickerInspector.vala',
