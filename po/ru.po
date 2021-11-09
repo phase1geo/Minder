@@ -2,22 +2,23 @@
 # Copyright (C) 2020 THE com.github.phase1geo.minder'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
 # Automatically generated, 2020.
+# Alexandre Prokoudine <alexandre.prokoudine@gmail.com>, 2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-08 09:35-0500\n"
-"PO-Revision-Date: 2021-07-30 14:53+0300\n"
+"PO-Revision-Date: 2021-11-09 21:38+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
-"Language-Team: none\n"
+"Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.4.2\n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"X-Generator: Gtranslator 40.0\n"
 
 #: src/About.vala:36
 msgid "Mind-mapping application"
@@ -34,30 +35,31 @@ msgstr "Minder в AppCenter"
 #: src/Application.vala:98
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
-msgstr ""
+msgstr "Ошибка: не удалось открыть файл '%s'\n"
 
 #: src/Application.vala:122
 msgid "Display version number"
-msgstr ""
+msgstr "Показать номер версии"
 
 #: src/Application.vala:123
 msgid "Starts Minder with a new file"
-msgstr ""
+msgstr "Запустить Minder и создать карту"
 
 #: src/Application.vala:124
-#, fuzzy
 msgid "Run testing"
-msgstr "Вопросы"
+msgstr "Запустить тестирование"
 
 #: src/Application.vala:133
 #, c-format
 msgid "ERROR: %s\n"
-msgstr ""
+msgstr "Ошибка: %s\n"
 
 #: src/Application.vala:134
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr ""
+"Введите команду '%s --help', чтобы посмотреть корректные варианты запуска "
+"программы\n"
 
 #: src/ConnectionInspector.vala:74 src/NodeInspector.vala:126
 msgid "Color"
@@ -362,9 +364,8 @@ msgid "PlainText"
 msgstr "Простой текст"
 
 #: src/exports/ExportXMind2021.vala:79
-#, fuzzy
 msgid "XMind 2021"
-msgstr "XMind 8"
+msgstr "XMind 2021"
 
 #: src/exports/ExportXMind2021.vala:682 src/exports/ExportXMind8.vala:681
 #: src/layouts/LayoutHorizontal.vala:26 src/MapInspector.vala:335
@@ -584,7 +585,7 @@ msgstr "Показать панель свойств"
 
 #: src/MainWindow.vala:876
 msgid "Current"
-msgstr "Выделенное"
+msgstr "Выбранное"
 
 #: src/MainWindow.vala:877 src/StyleInspector.vala:188
 msgid "Style"
@@ -715,9 +716,8 @@ msgid "Delete Single Node"
 msgstr "Удалить только этот узел"
 
 #: src/NodeMenu.vala:91
-#, fuzzy
 msgid "Change Node"
-msgstr "Сменить изображение"
+msgstr "Изменить узел"
 
 #: src/NodeMenu.vala:96
 msgid "Edit Text…"
@@ -969,7 +969,7 @@ msgstr "Создавать новые узлы в режиме правки"
 msgid ""
 "Specifies if we should create a new node directly from edit mode if Return "
 "or Tab is pressed."
-msgstr ""
+msgstr "Создавать ли новые узлы при нажатии Enter или Tab в режиме правки узла"
 
 #: src/Preferences.vala:80
 msgid "Automatically make embedded URLs into links"
@@ -979,7 +979,7 @@ msgstr "Автоматически превращать встроенные URL
 msgid ""
 "Specifies if embedded URLs found in node titles should be automatically "
 "highlighted."
-msgstr ""
+msgstr "Надо ли автоматически подсвечивать URL в тексте узлов"
 
 #: src/Preferences.vala:84
 msgid "Enable Markdown"
@@ -994,6 +994,8 @@ msgid ""
 "Specifies if the connection title will be added and put into edit mode "
 "immediately after the connection is made."
 msgstr ""
+"Нужно ли автоматически создавать подпись к соединению и переходить к её "
+"редактированию после создания соединения"
 
 #: src/Preferences.vala:91
 msgid "Select items on mouse hover"
@@ -1001,11 +1003,11 @@ msgstr "Выделять объекты наведением мыши"
 
 #: src/Preferences.vala:93
 msgid "If enabled, selects items when mouse cursor hovers over the item."
-msgstr ""
+msgstr "Выделять ли объекты наведением указателя на них"
 
 #: src/Preferences.vala:106
 msgid "Hide themes not matching visual style"
-msgstr ""
+msgstr "Скрывать темы, не соответствующие визуальному стилю"
 
 #: src/Preferences.vala:110
 msgid "Default theme"
@@ -1024,6 +1026,8 @@ msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
 msgstr ""
+"Какой заказной кегль шрифта использовать в любых полях ввода, например, в "
+"поле примечаний и поле быстрого ввода"
 
 #: src/QuickEntry.vala:58
 msgid "Help for inputting node information:"
@@ -1277,7 +1281,7 @@ msgstr "Катушка плёнки"
 
 #: src/StickerSet.vala:63
 msgid "Cable release"
-msgstr ""
+msgstr "Спусковой тросик"
 
 #: src/StickerSet.vala:66
 msgid "Home"
@@ -1393,7 +1397,7 @@ msgstr "Ссылка"
 
 #: src/StickerSet.vala:95
 msgid "Broken link"
-msgstr ""
+msgstr "Битая ссылка"
 
 #: src/StickerSet.vala:96
 msgid "Rating"
@@ -1469,7 +1473,7 @@ msgstr "Поддержка"
 
 #: src/StickerSet.vala:115
 msgid "Frame"
-msgstr ""
+msgstr "Рамка"
 
 #: src/StickerSet.vala:116
 msgid "Menu"
@@ -1793,7 +1797,7 @@ msgstr "Древовидная структура"
 
 #: src/StickerSet.vala:199
 msgid "Org unit"
-msgstr ""
+msgstr "Подразделение организации"
 
 #: src/StickerSet.vala:200
 msgid "Privacy"
@@ -1861,7 +1865,7 @@ msgstr "Свет в конце туннеля"
 
 #: src/StickerSet.vala:216
 msgid "Entering heaven alive"
-msgstr ""
+msgstr "Попасть в рай живым"
 
 #: src/StickerSet.vala:219
 msgid "Biomass"
@@ -1953,7 +1957,7 @@ msgstr "Не смешивать"
 
 #: src/StickerSet.vala:241
 msgid "Biohazard"
-msgstr ""
+msgstr "Биологическая опасность"
 
 #: src/StickerSet.vala:242
 msgid "Circuit"
@@ -2265,11 +2269,11 @@ msgstr "Алфавитный порядок (Z->A)"
 
 #: src/StickerSet.vala:327
 msgid "Numerical sorting (2->1)"
-msgstr ""
+msgstr "Числовая сортировка (2->1)"
 
 #: src/StickerSet.vala:328
 msgid "Numerical sorting (1->2)"
-msgstr ""
+msgstr "Числовая сортировка (1->2)"
 
 #: src/StickerSet.vala:329
 msgid "Empty filter"
@@ -2377,7 +2381,7 @@ msgstr "Выбранные связи"
 
 #: src/StyleInspector.vala:38
 msgid "Unknown"
-msgstr ""
+msgstr "Неизвестно"
 
 #: src/StyleInspector.vala:134
 msgid "Changes affect:"
@@ -2397,7 +2401,7 @@ msgstr "Поля"
 
 #: src/StyleInspector.vala:326
 msgid "Link Options"
-msgstr "Параметры ссылок"
+msgstr "Параметры связей"
 
 #: src/StyleInspector.vala:360 src/StyleInspector.vala:845
 msgid "Line Dash"
@@ -2409,7 +2413,7 @@ msgstr "Толщина линии"
 
 #: src/StyleInspector.vala:446
 msgid "Link Arrow"
-msgstr "Стрелка ссылки"
+msgstr "Стрелка связи"
 
 #: src/StyleInspector.vala:476
 msgid "Node Options"
@@ -3068,9 +3072,8 @@ msgid "Quit Application"
 msgstr "Выйти из приложения"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:232
-#, fuzzy
 msgid "Node Commands"
-msgstr "Операции с соединениями"
+msgstr "Операции с узлами"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:236
 msgid "Creation/Deletion"
@@ -3139,14 +3142,12 @@ msgid "Toggle Fold"
 msgstr "Развернуть или свернуть"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:357
-#, fuzzy
 msgid "Toggle Node Link"
-msgstr "Удалить ссылку на узел"
+msgstr "Переключить ссылку на узел"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:364
-#, fuzzy
 msgid "Create Link to Selected Node"
-msgstr "Уместить выбранный узел"
+msgstr "Создать соединение с выбранным узлом"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:365
 msgid "[After using this command, 'y' will create the link]"
@@ -3223,9 +3224,8 @@ msgid "Select Linked Node"
 msgstr "Выбрать слинкованный узел"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:490
-#, fuzzy
 msgid "Select Attached Connection"
-msgstr "Выбранные связи"
+msgstr "Выбрать связанное соединение"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:499
 msgid "Move"
@@ -3276,9 +3276,8 @@ msgid "Connection Commands"
 msgstr "Операции с соединениями"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:595
-#, fuzzy
 msgid "Change Current"
-msgstr "Изменить текущие"
+msgstr "Редактирование"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:613
 msgid "Show Properties"
@@ -3286,17 +3285,15 @@ msgstr "Показать свойства"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:629
 msgid "Traversal"
-msgstr ""
+msgstr "Перемещение"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:633
-#, fuzzy
 msgid "Select Start Node"
-msgstr "Выбрать узел"
+msgstr "Выбрать начальный узел"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:640
-#, fuzzy
 msgid "Select End Node"
-msgstr "Выбрать слинкованный узел"
+msgstr "Выбрать конечный узел"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:647
 msgid "Select Next Connection"
@@ -3312,7 +3309,7 @@ msgstr "Правка текста"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:674
 msgid "Insert Newline Character"
-msgstr "Встаивть перенос строки"
+msgstr "Вставить перенос строки"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:681
 msgid "Insert Tab Character"
@@ -3339,9 +3336,8 @@ msgid "Previous Character"
 msgstr "Предыдущий символ"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:722
-#, fuzzy
 msgid "Next Word"
-msgstr "Добавить следующее слово"
+msgstr "Следующее слово"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:729
 msgid "Previous Word"
@@ -3517,27 +3513,24 @@ msgid "[Shift + Left-click on item]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:975
-#, fuzzy
 msgid "Toggle Selection of Child Nodes"
-msgstr "Переключить выделение объекта"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:976
 msgid "[Shift + Control + Left-click on item]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:982
-#, fuzzy
 msgid "Toggle Selection of Node Tree/Subtree"
-msgstr "Выбрать (под)дерево узлов"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:983
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:989
-#, fuzzy
 msgid "Toggle Selection of All Nodes at Same Depth Level"
-msgstr "Выбрать все узлы на одном уровне"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:990
 msgid "[Shift + Control + Triple left-click on node]"
@@ -3570,14 +3563,6 @@ msgstr "Выделить весь текст"
 #: data/com.github.phase1geo.minder.shortcuts.ui:1017
 msgid "[Triple left-click anywhere in text]"
 msgstr ""
-
-#, fuzzy
-#~ msgid "No text found"
-#~ msgstr "Следующее слово"
-
-#, fuzzy
-#~ msgid "No node found"
-#~ msgstr "Операции с узлами"
 
 #~ msgid "Zoom"
 #~ msgstr "Масштаб"
