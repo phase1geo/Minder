@@ -92,6 +92,10 @@ public class Preferences : Gtk.Dialog {
     grid.attach( make_switch( "select-on-hover" ), 1, 4 );
     grid.attach( make_info( _( "If enabled, selects items when mouse cursor hovers over the item." ) ), 2, 4 );
 
+    grid.attach( make_label( _( "Pan around with right mouse" ) ), 0, 5 );
+    grid.attach( make_switch( "pan-with-secondary" ), 1, 5 );
+    grid.attach( make_info( _( "If enabled, pan around with right click." ) ), 2, 5 );
+
     return( grid );
 
   }

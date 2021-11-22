@@ -66,6 +66,8 @@ public class DrawArea : Gtk.DrawingArea {
   private bool             _press_middle = false;
   private bool             _resize       = false;
   private bool             _motion       = false;
+  private bool             _pan_with_secondary = false;
+  private bool             _press_secondary = false;
   private Node?            _last_node    = null;
   private Connection?      _last_connection = null;
   private Array<Node>      _nodes;
@@ -2171,6 +2173,7 @@ public class DrawArea : Gtk.DrawingArea {
   private bool on_press( EventButton event ) {
     var scaled_x = scale_value( event.x );
     var scaled_y = scale_value( event.y );
+    _pan_with_secondary = _settings.get_boolean( "pan-with-secondary" );
     switch( event.button ) {
       case Gdk.BUTTON_PRIMARY :
       case Gdk.BUTTON_MIDDLE  :
@@ -2184,8 +2187,14 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         break;
       case Gdk.BUTTON_SECONDARY :
-        handle_right_click( scaled_x, scaled_y );
-        show_contextual_menu( event );
+        if( _pan_with_secondary ) {
+            _press_x         = scaled_x;
+            _press_y         = scaled_y;
+            _press_secondary = true;
+        } else {
+            handle_right_click( scaled_x, scaled_y );
+            show_contextual_menu( event );
+        }
         break;
     }
     return( false );
@@ -2333,8 +2342,8 @@ public class DrawArea : Gtk.DrawingArea {
       _press_y = _scaled_y;
       _motion  = true;
 
-    /* If the Alt key is held down, we are panning the canvas */
-    } else if( alt ) {
+    /* If the Alt key is held down, or right mouse pressed with tirgger on, we are panning the canvas */
+    } else if( alt || ( _press_secondary && _pan_with_secondary )) {
 
       double diff_x = last_x - _scaled_x;
       double diff_y = last_y - _scaled_y;
@@ -2621,6 +2630,18 @@ public class DrawArea : Gtk.DrawingArea {
         current_node.alpha = 1.0;
       }
       _motion = false;
+    }
+
+    if( _press_secondary ) {
+        _press_secondary = false;
+        if( _pan_with_secondary ) {
+            var release_x = scale_value( event.x );
+            var release_y = scale_value( event.y );
+            if(release_x == _press_x && release_y == _press_y ) {
+                handle_right_click( release_x, release_y );
+                show_contextual_menu( event );
+            }
+        }
     }
 
     return( false );

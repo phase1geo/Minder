@@ -261,6 +261,11 @@
       <summary>If enabled, selects items when mouse cursor hovers over the item.</summary>
       <description>If enabled, selects items when mouse cursor hovers over the item.</description>
     </key>
+    <key name="pan-with-secondary" type="b">
+      <default>false</default>
+      <summary>If enabled, pan around with right click.</summary>
+      <description>If enabled, pan around with right click.</description>
+    </key>
     <key name="select-on-hover-timeout" type="i">
       <default>300</default>
       <summary>If select-on-hover set, specifies hover time (in milliseconds).</summary>
