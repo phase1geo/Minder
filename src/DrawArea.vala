@@ -433,17 +433,20 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Sets the cursor of the drawing area */
-  private void set_cursor( CursorType? type = null ) {
+  private void set_cursor( CursorType type ) {
 
-    var     win    = get_window();
-    Cursor? cursor = win.get_cursor();
+    var win    = get_window();
+    var cursor = win.get_cursor();
 
-    if( type == null ) {
-      win.set_cursor( null );
-    } else if( (cursor == null) || (cursor.cursor_type != type) ) {
+    if( (cursor == null) || (cursor.cursor_type != type) ) {
       win.set_cursor( new Cursor.for_display( get_display(), type ) );
     }
 
+  }
+
+  /* Resets the cursor to the standard one */
+  private void reset_cursor() {
+    get_window().set_cursor( null );
   }
 
   /* Sets the cursor of the drawing area to the named cursor */
@@ -850,7 +853,7 @@ public class DrawArea : Gtk.DrawingArea {
       _im_context.reset();
       _im_context.focus_out();
       if( node.name.is_within( _scaled_x, _scaled_y ) ) {
-        set_cursor( null );
+        reset_cursor();
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
@@ -880,7 +883,7 @@ public class DrawArea : Gtk.DrawingArea {
       _im_context.reset();
       _im_context.focus_out();
       if( (conn.title != null) && conn.title.is_within( _scaled_x, _scaled_y ) ) {
-        set_cursor( null );
+        reset_cursor();
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
@@ -2417,7 +2420,7 @@ public class DrawArea : Gtk.DrawingArea {
               match.show_fold = true;
               queue_draw();
             }
-            set_cursor( null );
+            reset_cursor();
             set_tooltip_markup( null );
             select_node_on_hover( match, shift );
           }
@@ -2427,7 +2430,7 @@ public class DrawArea : Gtk.DrawingArea {
 
 
       update_last_match( null );
-      set_cursor( null );
+      reset_cursor();
       set_tooltip_markup( null );
       select_sticker_group_on_hover( shift );
 
@@ -2535,7 +2538,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Return the cursor to the default cursor */
     if( _motion ) {
-      set_cursor( null );
+      reset_cursor();
     }
 
     /* If we were resizing a node, end the resize */
@@ -4314,7 +4317,7 @@ public class DrawArea : Gtk.DrawingArea {
             set_cursor( url_cursor );
             set_tooltip_markup( url );
           } else {
-            set_cursor( null );
+            reset_cursor();
             set_tooltip_markup( null );
           }
         }

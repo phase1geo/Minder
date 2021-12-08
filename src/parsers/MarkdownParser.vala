@@ -52,6 +52,9 @@ public class MarkdownParser : TextParser {
     add_regex( "(?<!_)(_)([^_ \t].*?(?<!\\\\|_| |\\t))(_)(?!_)", highlight_italics );
     add_regex( "(?<!\\*)(\\*)([^* \t].*?(?<!\\\\|\\*| |\\t))(\\*)(?!\\*)", highlight_italics );
 
+    /* Strikethrough */
+    add_regex( "(~~)([^~ \t].*?(?<!\\\\|~| |\\t))(~~)", highlight_strikethrough );
+
     /* Links */
     add_regex( "(\\[)(.+?)(\\]\\s*\\((\\S+).*\\))", highlight_url1 );
     add_regex( "(<)((mailto:)?[a-z0-9.-]+@[-a-z0-9]+(\\.[-a-z0-9]+)*\\.[a-z]+)(>)", highlight_url2 );
@@ -81,6 +84,12 @@ public class MarkdownParser : TextParser {
   private void highlight_italics( FormattedText text, MatchInfo match ) {
     make_grey( text, match, 1 );
     add_tag( text, match, 2, FormatTag.ITALICS );
+    make_grey( text, match, 3 );
+  }
+
+  private void highlight_strikethrough( FormattedText text, MatchInfo match ) {
+    make_grey( text, match, 1 );
+    add_tag( text, match, 2, FormatTag.STRIKETHRU );
     make_grey( text, match, 3 );
   }
 
