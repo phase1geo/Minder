@@ -3348,6 +3348,32 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Called when the user uses the Control-Backspace keyboard shortcut when editing nodes/connections */
+  private void handle_control_backspace() {
+    if( is_connection_editable() ) {
+      _selected.current_connection().title.backspace_word( undo_text );
+      current_changed( this );
+      queue_draw();
+    } else if( is_node_editable() ) {
+      _selected.current_node().name.backspace_word( undo_text );
+      current_changed( this );
+      queue_draw();
+    }
+  }
+
+  /* Called when the user uses the Control-Delete keyboard shortcut when editing nodes/connections */
+  private void handle_control_delete() {
+    if( is_connection_editable() ) {
+      _selected.current_connection().title.delete_word( undo_text );
+      current_changed( this );
+      queue_draw();
+    } else if( is_node_editable() ) {
+      _selected.current_node().name.delete_word( undo_text );
+      current_changed( this );
+      queue_draw();
+    }
+  }
+
   /* Returns the index of the given root node */
   public int root_index( Node root ) {
     for( int i=0; i<_nodes.length; i++ ) {
@@ -4119,6 +4145,8 @@ public class DrawArea : Gtk.DrawingArea {
         else if( !shift && has_key( kvs, Key.v ) )      { do_paste( false ); }
         else if(  shift && has_key( kvs, Key.V ) )      { do_paste( true ); }
         else if( has_key( kvs, Key.Return ) )           { handle_control_return(); }
+        else if( has_key( kvs, Key.BackSpace ) )        { handle_control_backspace(); }
+        else if( has_key( kvs, Key.Delete ) )           { handle_control_delete(); }
         else if( has_key( kvs, Key.Tab ) )              { handle_control_tab(); }
         else if( has_key( kvs, Key.Right ) )            { handle_control_right( shift ); }
         else if( has_key( kvs, Key.Left ) )             { handle_control_left( shift ); }
