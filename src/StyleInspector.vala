@@ -615,6 +615,7 @@ public class StyleInspector : Box {
 
     _node_fill = new Switch();
     _node_fill.button_release_event.connect( node_fill_changed );
+    _node_fill.set_tooltip_text( _("Fills the node with color when the node\nborder is square, rounded or pill-shaped") );
 
     box.pack_start( lbl,        false, true );
     box.pack_end(   _node_fill, false, true );
