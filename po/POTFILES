@@ -1,5 +1,6 @@
 src/About.vala
 src/Application.vala
+src/CanvasText.vala
 src/ConnectionInspector.vala
 src/ConnectionMenu.vala
 src/ConnectionsMenu.vala
@@ -29,6 +30,7 @@ src/exports/ExportXMind2021.vala
 src/exports/ExportXMind8.vala
 src/exports/ExportYed.vala
 src/Exports.vala
+src/FormattedText.vala
 src/GroupsMenu.vala
 src/ImageEditor.vala
 src/ImageManager.vala
@@ -42,6 +44,7 @@ src/layouts/LayoutVertical.vala
 src/MainWindow.vala
 src/MapInspector.vala
 src/NodeInspector.vala
+src/NodeLink.vala
 src/NodeMenu.vala
 src/NodesMenu.vala
 src/Node.vala
