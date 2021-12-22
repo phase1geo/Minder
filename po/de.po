@@ -20,7 +20,7 @@ msgstr ""
 
 #: src/About.vala:36
 msgid "Mind-mapping application"
-msgstr "Mind-mapping-Anwendung"
+msgstr "Mind-Mapping-Anwendung"
 
 #: src/About.vala:37
 msgid "Copyright © 2018-2021 Trevor Williams"
