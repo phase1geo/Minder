@@ -20,7 +20,7 @@ msgstr ""
 
 #: src/About.vala:36
 msgid "Mind-mapping application"
-msgstr "Mind-mapping-Anwendung"
+msgstr "Mind-Mapping-Anwendung"
 
 #: src/About.vala:37
 msgid "Copyright © 2018-2021 Trevor Williams"
@@ -466,11 +466,11 @@ msgstr "Neue Datei"
 #: src/MainWindow.vala:187 src/MainWindow.vala:1020
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
-msgstr "Datei Öffnen"
+msgstr "Datei öffnen"
 
 #: src/MainWindow.vala:193 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
-msgstr "Datei Speichern Unter"
+msgstr "Datei speichern unter"
 
 #: src/MainWindow.vala:199 src/StickerSet.vala:303 src/UndoBuffer.vala:84
 msgid "Undo"
@@ -553,7 +553,7 @@ msgstr "Notizen"
 
 #: src/MainWindow.vala:664
 msgid "Folded"
-msgstr "Zusammengefaltet"
+msgstr "Zusammengeklappt"
 
 #: src/MainWindow.vala:665
 msgid "Unfolded"
@@ -623,11 +623,11 @@ msgstr "Speichern"
 #: src/MainWindow.vala:970
 #, c-format
 msgid "The file %s was modified outside of the application."
-msgstr ""
+msgstr "Die Datei %s wurde außerhalb von der Applikation verändert."
 
 #: src/MainWindow.vala:971
 msgid "What do you want to do?"
-msgstr ""
+msgstr "Was möchtest du tun?"
 
 #: src/MainWindow.vala:976
 #, fuzzy
@@ -696,7 +696,7 @@ msgstr "Zusammenklappen"
 
 #: src/NodeInspector.vala:161
 msgid "Override Color"
-msgstr ""
+msgstr "Farbe überschreiben"
 
 #: src/NodeInspector.vala:246 src/NodeInspector.vala:264
 msgid "Image"
@@ -823,7 +823,7 @@ msgstr "Schnelleintrag"
 
 #: src/NodeMenu.vala:168
 msgid "Insert Nodes"
-msgstr "Knoteneinfügen"
+msgstr "Knoten einfügen"
 
 #: src/NodeMenu.vala:172
 msgid "Replace Nodes"
