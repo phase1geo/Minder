@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-21 14:03-0600\n"
-"PO-Revision-Date: 2021-10-09 22:15+0100\n"
+"PO-Revision-Date: 2021-12-27 22:00+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -617,20 +617,19 @@ msgstr "Salva"
 #: src/MainWindow.vala:970
 #, c-format
 msgid "The file %s was modified outside of the application."
-msgstr ""
+msgstr "Il file %s è stato modificato al di fuori dell'applicazione."
 
 #: src/MainWindow.vala:971
 msgid "What do you want to do?"
-msgstr ""
+msgstr "Cosa vuoi fare?"
 
 #: src/MainWindow.vala:976
-#, fuzzy
 msgid "Discard Changes and reload"
-msgstr "Annullare le Modifiche"
+msgstr "Elimina modifiche e ricarica"
 
 #: src/MainWindow.vala:979
 msgid "Save local version and overwrite"
-msgstr ""
+msgstr "Salva la versione locale e sovrascrivi"
 
 #: src/MainWindow.vala:1020
 msgid "Open"
@@ -690,7 +689,7 @@ msgstr "Piega"
 
 #: src/NodeInspector.vala:161
 msgid "Override Color"
-msgstr ""
+msgstr "Sostituisci colore"
 
 #: src/NodeInspector.vala:246 src/NodeInspector.vala:264
 msgid "Image"
@@ -2465,6 +2464,8 @@ msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
 msgstr ""
+"Riempe il nodo di colore quando il bordo\n"
+"del bordo è quadrato, arrotondato o a forma di pillola"
 
 #: src/StyleInspector.vala:685 src/StyleInspector.vala:972
 msgid "Padding"
@@ -2581,7 +2582,7 @@ msgstr "Ripristina Collegamento"
 #: src/TextParser.vala:66
 #, c-format
 msgid "Parser regex error (re: %s, error: %s)\n"
-msgstr ""
+msgstr "Errore regex del parser (re: %s, errore: %s)\n"
 
 #: src/ThemeEditor.vala:45
 msgid "Customize Theme"
@@ -2717,7 +2718,7 @@ msgstr "Luce Solarizzata"
 
 #: src/Themes.vala:192
 msgid "Error parsing regular expression\n"
-msgstr ""
+msgstr "Errore durante l'analisi dell'espressione regolare\n"
 
 #: src/Theme.vala:198
 #, c-format
