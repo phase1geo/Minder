@@ -90,6 +90,34 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.14.0" date="2022-01-14">
+      <p>New</p>
+      <ul>
+        <li>Added support for shallow (one-level folding)</li>
+        <li>Added import/export support for XMind version 2021.</li>
+        <li>Added support for external mind-map node linking.</li>
+        <li>Added node link tooltips.</li>
+        <li>Added support for overriding the color of a root node.</li>
+        <li>Added support for Markdown strikethrough syntax.</li>
+        <li>Added support for Control-Backspace/Delete to delete the previous/next word when editing node/connection titles.</li>
+        <li>Added tooltip to node fill switch in style inspector.</li>
+      </ul>
+      <p>Changes</p>
+      <ul>
+        <li>Updates to Italian translation (thanks to @albanobattistella)</li>
+        <li>Updates to German translation (thanks to Hannes Fritz)</li>
+        <li>Improved accuracy of the list of translatable files.</li>
+        <li>Removed ability to use keyboard shortcuts when a mouse button is pressed.</li>
+        <li>Removed Accounts permissions from Flatpak manifest as it is no longer needed.</li>
+      </ul>
+      <p>Bug Fixes</p>
+      <ul>
+        <li>Fixed layout issues when pressing keys while animations are in process.</li>
+        <li>Fixed location of text size help information in the appearances preferences dialog.</li>
+        <li>Fixed UX issues when the Hide Connections switch is enabled.</li>
+        <li>Fixed issue with pasting nodes when a node is not selected in a map.</li>
+      </ul>
+    </release>
     <release version="1.13.1" date="2021-08-12">
       <description>
         <p>Changes</p>
