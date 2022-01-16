@@ -20,6 +20,7 @@
 */
 
 using Gtk;
+using Gdk;
 
 public class UrlEditor : Popover {
 
@@ -82,7 +83,6 @@ public class UrlEditor : Popover {
    otherwise, inactivate the action button.
   */
   private void check_entry() {
-    var node = _da.get_current_node();
     _apply.set_sensitive( Utils.is_url( _entry.text ) );
   }
 
@@ -91,14 +91,20 @@ public class UrlEditor : Popover {
    popover entry.
   */
   private void set_url() {
-    var node = _da.get_current_node();
-    int selstart, selend, cursor;
-    node.name.get_cursor_info( out cursor, out selstart, out selend );
+    var node     = _da.get_current_node();
+    var selected = node.mode == NodeMode.CURRENT;
+    if( selected ) {
+      _da.set_node_mode( node, NodeMode.EDITABLE );
+    }
     if( !_add ) {
       node.name.remove_tag( FormatTag.URL, _da.undo_text );
     }
     node.name.add_tag( FormatTag.URL, _entry.text, false, _da.undo_text );
     node.name.clear_selection();
+    if( selected ) {
+      _da.set_node_mode( node, NodeMode.CURRENT );
+    }
+    _da.queue_draw();
     _da.auto_save();
   }
 
@@ -120,11 +126,39 @@ public class UrlEditor : Popover {
     pointing_to = rect;
 
     _add        = true;
-    _entry.text = "";
-    _apply.set_sensitive( false );
+    _entry.text = get_url_from_clipboard();
+
+    /* Force a check of the entry data */
+    check_entry();
 
     Utils.show_popover( this );
 
+  }
+
+  /* Removes the current URLs from the given node */
+  public void remove_url() {
+    var node = _da.get_current_node();
+    var selected = node.mode == NodeMode.CURRENT;
+    if( selected ) {
+      _da.set_node_mode( node, NodeMode.EDITABLE );
+    }
+    node.name.remove_tag( FormatTag.URL, _da.undo_text );
+    node.name.clear_selection();
+    if( selected ) {
+      _da.set_node_mode( node, NodeMode.CURRENT );
+    }
+    _da.queue_draw();
+    _da.auto_save();
+  }
+
+  /*
+   Returns the URL that is in the clipboard (if one exists); otherwise,
+   returns the empty string.
+  */
+  private string get_url_from_clipboard() {
+    var clipboard = Clipboard.get_default( Display.get_default() );
+    var text = clipboard.wait_for_text();
+    return( ((text != null) && Utils.is_url( text )) ? text : "" );
   }
 
   /* Called when we want to edit the URL of the current node */

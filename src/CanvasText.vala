@@ -911,8 +911,8 @@ public class CanvasText : Object {
 
   /* Add tag to selected area */
   public void add_tag( FormatTag tag, string? extra, bool parsed, UndoTextBuffer undo_buffer ) {
-    var spos = text.text.index_of_nth_char( _selstart );
-    var epos = text.text.index_of_nth_char( _selend );
+    var spos = is_selected() ? text.text.index_of_nth_char( _selstart ) : 0;
+    var epos = is_selected() ? text.text.index_of_nth_char( _selend )   : text.text.length;
     text.add_tag( tag, spos, epos, parsed, extra );
     undo_buffer.add_tag_add( spos, epos, tag, extra, parsed, _cursor );
   }
@@ -921,8 +921,8 @@ public class CanvasText : Object {
   public void remove_tag( FormatTag tag, UndoTextBuffer undo_buffer ) {
     string? extra  = null;
     bool    parsed = false;
-    var spos   = text.text.index_of_nth_char( _selstart );
-    var epos   = text.text.index_of_nth_char( _selend );
+    var spos   = is_selected() ? text.text.index_of_nth_char( _selstart ) : 0;
+    var epos   = is_selected() ? text.text.index_of_nth_char( _selend )   : text.text.length;
     text.get_extra_parsed( tag, spos, out extra, out parsed );
     text.remove_tag( tag, spos, epos );
     undo_buffer.add_tag_remove( spos, epos, tag, extra, parsed, _cursor );
@@ -930,8 +930,8 @@ public class CanvasText : Object {
 
   /* Removes the specified tag for the selected range */
   public void remove_all_tags( UndoTextBuffer undo_buffer ) {
-    var spos = text.text.index_of_nth_char( _selstart );
-    var epos = text.text.index_of_nth_char( _selend );
+    var spos = is_selected() ? text.text.index_of_nth_char( _selstart ) : 0;
+    var epos = is_selected() ? text.text.index_of_nth_char( _selend )   : text.text.length;
     var tags = text.get_tags_in_range( spos, epos );
     text.remove_all_tags( spos, epos );
     undo_buffer.add_tag_clear( spos, epos, tags, _cursor );

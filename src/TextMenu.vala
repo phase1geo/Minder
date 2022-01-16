@@ -43,42 +43,35 @@ public class TextMenu : Gtk.Menu {
     _copy = new Gtk.MenuItem();
     _copy.add( new Granite.AccelLabel( _( "Copy" ), "<Control>c" ) );
     _copy.activate.connect( copy );
-    // Utils.add_accel_label( _copy, 'c', Gdk.ModifierType.CONTROL_MASK );
 
     _cut = new Gtk.MenuItem();
     _cut.add( new Granite.AccelLabel( _( "Cut" ), "<Control>x" ) );
     _cut.activate.connect( cut );
-    // Utils.add_accel_label( _cut, 'x', Gdk.ModifierType.CONTROL_MASK );
 
     _paste = new Gtk.MenuItem();
     _paste.add( new Granite.AccelLabel( _( "Paste" ), "<Control>v" ) );
     _paste.activate.connect( paste );
-    // Utils.add_accel_label( _paste, 'v', Gdk.ModifierType.CONTROL_MASK );
 
     _emoji = new Gtk.MenuItem();
     _emoji.add( new Granite.AccelLabel( _( "Insert Emoji" ), "<Control>period" ) );
     _emoji.activate.connect( insert_emoji );
-    // Utils.add_accel_label( _emoji, '.', Gdk.ModifierType.CONTROL_MASK );
 
     _open_link = new Gtk.MenuItem.with_label( _( "Open Link" ) );
     _open_link.activate.connect( open_link );
-    // Utils.add_accel_label( _delete, 'v', Gdk.ModifierType.CONTROL_MASK );
 
-    _add_link = new Gtk.MenuItem.with_label( _( "Add Link" ) );
+    _add_link = new Gtk.MenuItem();
+    _add_link.add( new Granite.AccelLabel( _( "Add Link" ), "<Control>k" ) );
     _add_link.activate.connect( add_link );
-    // Utils.add_accel_label( _delete, 'v', Gdk.ModifierType.CONTROL_MASK );
 
     _edit_link = new Gtk.MenuItem.with_label( _( "Edit Link" ) );
     _edit_link.activate.connect( edit_link );
-    // Utils.add_accel_label( _del_link, 'v', Gdk.ModifierType.CONTROL_MASK );
 
-    _del_link = new Gtk.MenuItem.with_label( _( "Remove Link" ) );
+    _del_link = new Gtk.MenuItem();
+    _del_link.add( new Granite.AccelLabel( _( "Remove Link" ), "<Shift><Control>k" ) );
     _del_link.activate.connect( remove_link );
-    // Utils.add_accel_label( _add_link, 'v', Gdk.ModifierType.CONTROL_MASK );
 
     _rest_link = new Gtk.MenuItem.with_label( _( "Restore Link" ) );
     _rest_link.activate.connect( restore_link );
-    // Utils.add_accel_label( _del_link, 'v', Gdk.ModifierType.CONTROL_MASK );
 
     _link_div1 = new Gtk.SeparatorMenuItem();
     _link_div2 = new Gtk.SeparatorMenuItem();
@@ -151,10 +144,7 @@ public class TextMenu : Gtk.Menu {
 
   /* Allows the user to remove the link located at the current cursor */
   private void remove_link() {
-    var node = _da.get_current_node();
-    node.name.remove_tag( FormatTag.URL, _da.undo_text );
-    node.name.clear_selection();
-    _da.auto_save();
+    _da.url_editor.remove_url();
   }
 
   /* Allows the user to edit the associated link. */
@@ -198,6 +188,7 @@ public class TextMenu : Gtk.Menu {
       node.name.get_cursor_info( out cursor, out selstart, out selend );
 
       var links    = node.name.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
+      stdout.printf( "links: %u\n", links.length );
       var link     = (links.length > 0) ? links.index( 0 ) : null;
       var selected = (selstart != selend);
       var valid    = (link != null);
@@ -219,7 +210,7 @@ public class TextMenu : Gtk.Menu {
 
       /* Set view of all link menus */
       _open_link.visible = valid && !ignore;
-      _add_link.visible  = !embedded && !ignore && add_link_possible( node, selstart, selend );
+      _add_link.visible  = !embedded && !ignore && _da.add_link_possible( node );
       _edit_link.visible = valid && !selected && !embedded;
       _del_link.visible  = valid && !selected && (!embedded || !ignore);
       _rest_link.visible = valid && !selected && embedded && ignore;
@@ -270,16 +261,6 @@ public class TextMenu : Gtk.Menu {
     string? value = clipboard.wait_for_text();
 
     return( value != null );
-
-  }
-
-  /*
-   A link can be added if text is selected and the selected text does not
-   overlap with any existing links.
-  */
-  private bool add_link_possible( Node node, int selstart, int selend ) {
-
-    return( (selstart != selend) && !node.name.text.is_tag_applied_in_range( FormatTag.URL, selstart, selend ) );
 
   }
 
