@@ -1606,7 +1606,7 @@ public class DrawArea : Gtk.DrawingArea {
       conn = _connections.on_curve( x, y );
     }
     if( conn != null ) {
-      if( !_selected.is_connection_selected( conn ) ) {
+      if( !_selected.is_connection_selected( conn ) && (conn.mode != ConnMode.EDITABLE) ) {
         _selected.set_current_connection( conn );
         queue_draw();
       }
@@ -1623,7 +1623,7 @@ public class DrawArea : Gtk.DrawingArea {
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i ).contains( x, y, null );
       if( node != null ) {
-        if( !_selected.is_node_selected( node ) ) {
+        if( !_selected.is_node_selected( node ) && (node.mode != NodeMode.EDITABLE) ) {
           _selected.set_current_node( node );
           queue_draw();
         }
@@ -3805,6 +3805,39 @@ public class DrawArea : Gtk.DrawingArea {
     quick_entry.show_all();
   }
 
+  /*
+   A link can be added if text is selected and the selected text does not
+   overlap with any existing links.
+  */
+  public bool add_link_possible( Node node ) {
+
+    int cursor, selstart, selend;
+    if( node.name.is_selected() ) {
+      node.name.get_cursor_info( out cursor, out selstart, out selend );
+    } else {
+      selstart = 0;
+      selend   = node.name.text.text.length;
+    }
+
+    return( (selstart != selend) && !node.name.text.is_tag_applied_in_range( FormatTag.URL, selstart, selend ) );
+
+  }
+
+  /*
+   Creates a link from the selected text within the currently editable node
+   or connection.
+  */
+  private void handle_control_k( bool shift ) {
+    var current = _selected.current_node();
+    if( current != null ) {
+      if( shift ) {
+        url_editor.remove_url();
+      } else if( add_link_possible( current ) ) {
+        url_editor.add_url();
+      }
+    }
+  }
+
   /* Displays the quick entry UI in replacement mode */
   public void handle_control_R() {
     var quick_entry = new QuickEntry( this, true, _settings );
@@ -4158,6 +4191,8 @@ public class DrawArea : Gtk.DrawingArea {
         else if(  shift && has_key( kvs, Key.A ) )      { deselect_all(); }
         else if( !shift && has_key( kvs, Key.period ) ) { handle_control_period(); }
         else if(  shift && has_key( kvs, Key.E ) )      { handle_control_E(); }
+        else if( !shift && has_key( kvs, Key.k ) )      { handle_control_k( false ); }
+        else if(  shift && has_key( kvs, Key.K ) )      { handle_control_k( true ); }
         else if(  shift && has_key( kvs, Key.R ) )      { handle_control_R(); }
         else if( !shift && has_key( kvs, Key.w ) )      { handle_control_w(); }
         else if( !shift && has_key( kvs, Key.y ) )      { do_paste_node_link(); }
