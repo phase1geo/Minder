@@ -101,6 +101,7 @@
         <li>Added support for Markdown strikethrough syntax.</li>
         <li>Added support for Control-Backspace/Delete to delete the previous/next word when editing node/connection titles.</li>
         <li>Added tooltip to node fill switch in style inspector.</li>
+        <li>Added keyboard shortcuts for adding and removing URL links from node text.</li>
       </ul>
       <p>Changes</p>
       <ul>
@@ -109,6 +110,7 @@
         <li>Improved accuracy of the list of translatable files.</li>
         <li>Removed ability to use keyboard shortcuts when a mouse button is pressed.</li>
         <li>Removed Accounts permissions from Flatpak manifest as it is no longer needed.</li>
+        <li>Improved adding URL link UI to automatically add URL from clipboard if one exists.</li>
       </ul>
       <p>Bug Fixes</p>
       <ul>
