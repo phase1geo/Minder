@@ -340,6 +340,20 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Add URL Link To Text</property>
+                <property name="accelerator">&lt;ctrl&gt;k</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Remove URL Link From Text</property>
+                <property name="accelerator">&lt;shift&gt;&lt;ctrl&gt;k</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">View Properties</property>
                 <property name="accelerator">i</property>
                 <property name="visible">1</property>
@@ -687,6 +701,20 @@
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Show Emoji Picker</property>
                 <property name="accelerator">&lt;ctrl&gt;period</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Add URL Link To Selected Text</property>
+                <property name="accelerator">&lt;ctrl&gt;k</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Remove URL Link From Text</property>
+                <property name="accelerator">&lt;shift&gt;&lt;ctrl&gt;k</property>
                 <property name="visible">1</property>
               </object>
             </child>
