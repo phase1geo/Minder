@@ -45,14 +45,14 @@ public class NodeBorderRounded : Object, NodeBorder {
   }
 
   /* Draw method for the node border */
-  public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
-    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, 5 );
+  public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding ) {
+    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, padding );
     ctx.stroke();
   }
 
   /* Draw method for the node fill */
-  public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
-    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, 5 );
+  public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding ) {
+    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, padding );
     ctx.fill();
   }
 

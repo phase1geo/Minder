@@ -34,10 +34,10 @@ public interface NodeBorder : Object {
   public abstract bool is_fillable();
 
   /* Draw method for the node border */
-  public abstract void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s );
+  public abstract void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding );
 
   /* Draw method for the node fill */
-  public abstract void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s );
+  public abstract void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding );
 
 }
 

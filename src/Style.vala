@@ -357,7 +357,7 @@ public class Style {
 
     ctx.save();
     ctx.set_line_width( node_borderwidth );
-    node_border.draw_border( ctx, x, y, w, h, s );
+    node_border.draw_border( ctx, x, y, w, h, s, node_padding );
     ctx.restore();
 
   }
@@ -365,7 +365,7 @@ public class Style {
   /* Draws the node fill */
   public void draw_node_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
 
-    node_border.draw_fill( ctx, x, y, w, h, s );
+    node_border.draw_fill( ctx, x, y, w, h, s, node_padding );
 
   }
 

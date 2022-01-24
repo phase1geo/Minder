@@ -45,7 +45,7 @@ public class NodeBorderBracket : Object, NodeBorder {
   }
 
   /* Draw method for the node border */
-  public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
+  public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding ) {
     var d = 10;
     switch( s ) {
       case NodeSide.LEFT :
@@ -77,7 +77,7 @@ public class NodeBorderBracket : Object, NodeBorder {
   }
 
   /* Draw method for the node fill */
-  public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
+  public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding ) {
     ctx.rectangle( x, y, w, h );
     ctx.fill();
   }

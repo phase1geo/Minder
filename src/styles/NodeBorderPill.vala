@@ -44,8 +44,8 @@ public class NodeBorderPill : Object, NodeBorder {
     return( true );
   }
 
-  private void draw_common( Cairo.Context ctx, double x, double y, double w, double h ) {
-    var d = 5;
+  private void draw_common( Cairo.Context ctx, double x, double y, double w, double h, int padding ) {
+    var d = padding;
     ctx.move_to( (x + d), y );
     ctx.line_to( (x + w - d), y );
     ctx.curve_to( (x + w - d), y, (x + w + d), (y + (h / 2)), (x + w - d), (y + h) );
@@ -54,14 +54,14 @@ public class NodeBorderPill : Object, NodeBorder {
   }
 
   /* Draw method for the node border */
-  public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
-    draw_common( ctx, x, y, w, h );
+  public void draw_border( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding ) {
+    draw_common( ctx, x, y, w, h, padding );
     ctx.stroke();
   }
 
   /* Draw method for the node fill */
-  public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s ) {
-    draw_common( ctx, x, y, w, h );
+  public void draw_fill( Cairo.Context ctx, double x, double y, double w, double h, NodeSide s, int padding ) {
+    draw_common( ctx, x, y, w, h, padding );
     ctx.fill();
   }
 
