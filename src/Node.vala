@@ -1933,7 +1933,7 @@ public class Node : Object {
    Returns the ancestor node that is folded or returns null if no ancestor nodes
    are folded.
   */
-  public Node folded_ancestor() {
+  public Node? folded_ancestor() {
     var node = parent;
     while( (node != null) && !node.folded ) node = node.parent;
     return( node );
