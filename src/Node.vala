@@ -347,6 +347,16 @@ public class Node : Object {
       return( _image );
     }
   }
+  public bool image_resizable {
+    get {
+      return( (_image == null) ? false : _image.resizable );
+    }
+    set {
+      if( _image != null ) {
+        _image.resizable = value;
+      }
+    }
+  }
   public double alpha {
     get {
       return( _alpha );
@@ -791,7 +801,7 @@ public class Node : Object {
   protected virtual void image_bbox( out double x, out double y, out double w, out double h ) {
     int margin  = style.node_margin  ?? 0;
     int padding = style.node_padding ?? 0;
-    x = posx + padding + margin;
+    x = (posx + (_width / 2)) - ((_image == null) ? 0 : (_image.width / 2));
     y = posy + padding + margin;
     w = (_image == null) ? 0 : _image.width;
     h = (_image == null) ? 0 : _image.height;
@@ -1358,6 +1368,13 @@ public class Node : Object {
       node->add_child( _children.index( i ).export_opml_node( ref node_id, ref expand_state ) );
     }
     return( node );
+  }
+
+  /* Sets the resizable property on the node image, if it exists. */
+  public void set_resizable( bool resizable ) {
+    if( _image != null ) {
+      _image.resizable = resizable;
+    }
   }
 
   /* Resizes the node width by the given amount */

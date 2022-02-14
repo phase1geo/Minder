@@ -26,17 +26,22 @@ public class UndoNodeResize : UndoItem {
   Node _node;
   int  _old_width;
   int  _new_width;
+  bool _old_resizable;
+  bool _new_resizable;
 
   /* Constructor for a node name change */
-  public UndoNodeResize( Node n, int old_width ) {
+  public UndoNodeResize( Node n, int old_width, bool old_resizable ) {
     base( _( "node resize" ) );
-    _node      = n;
-    _old_width = old_width;
-    _new_width = n.style.node_width;
+    _node          = n;
+    _old_width     = old_width;
+    _old_resizable = old_resizable;
+    _new_width     = n.style.node_width;
+    _new_resizable = n.image_resizable;
   }
 
   /* Undoes a node name change */
   public override void undo( DrawArea da ) {
+    _node.image_resizable = _old_resizable;
     _node.resize( _old_width - _new_width );
     da.queue_draw();
     da.auto_save();
@@ -44,6 +49,7 @@ public class UndoNodeResize : UndoItem {
 
   /* Redoes a node name change */
   public override void redo( DrawArea da ) {
+    _node.image_resizable = _new_resizable;
     _node.resize( _new_width - _old_width );
     da.queue_draw();
     da.auto_save();

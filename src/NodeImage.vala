@@ -48,6 +48,7 @@ public class NodeImage {
       return( _buf.height );
     }
   }
+  public bool resizable { get; set; default = true; }
 
   /* Default constructor */
   public NodeImage( ImageManager im, int id, int width ) {
@@ -102,6 +103,8 @@ public class NodeImage {
   /* Constructor from XML file */
   public NodeImage.from_xml( ImageManager im, Xml.Node* n, int width ) {
 
+    var resize = false;
+
     string? i = n->get_prop( "id" );
     if( i != null ) {
       id = im.get_id( int.parse( i ) );
@@ -127,12 +130,20 @@ public class NodeImage {
       crop_h = int.parse( h );
     }
 
+    string? s = n->get_prop( "size" );
+    if( s != null ) {
+      resize = true;
+      width  = int.parse( s );
+    }
+
     /* Allocate the image */
     if( id != -1 ) {
       if( load( im, id, false ) ) {
         set_width( width );
       }
     }
+
+    resizable = resize;
 
   }
 
@@ -178,6 +189,8 @@ public class NodeImage {
    up.
   */
   public void set_width( int width ) {
+
+    if( !resizable ) return;
 
     var scale = (width * 1.0) / crop_w;
     var buf   = pixbuf_get_from_surface( _surface, crop_x, crop_y, crop_w, crop_h );
@@ -235,6 +248,10 @@ public class NodeImage {
     n->new_prop( "y",  crop_y.to_string() );
     n->new_prop( "w",  crop_w.to_string() );
     n->new_prop( "h",  crop_h.to_string() );
+
+    if( !resizable ) {
+      n->new_prop( "size", _buf.width.to_string() );
+    }
 
     parent->add_child( n );
 

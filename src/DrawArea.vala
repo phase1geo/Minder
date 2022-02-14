@@ -65,6 +65,7 @@ public class DrawArea : Gtk.DrawingArea {
   private EventType        _press_type   = EventType.NOTHING;
   private bool             _press_middle = false;
   private bool             _resize       = false;
+  private bool             _orig_resizable = false;
   private bool             _motion       = false;
   private Node?            _last_node    = null;
   private Connection?      _last_connection = null;
@@ -1455,8 +1456,9 @@ public class DrawArea : Gtk.DrawingArea {
       current_changed( this );
       return( false );
     } else if( node.is_within_resizer( scaled_x, scaled_y ) ) {
-      _resize     = true;
-      _orig_width = node.style.node_width;
+      _resize         = true;
+      _orig_resizable = node.image_resizable;
+      _orig_width     = node.style.node_width;
       return( true );
     } else if( !shift && control && node.name.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
       if( tag == FormatTag.URL ) {
@@ -2280,6 +2282,7 @@ public class DrawArea : Gtk.DrawingArea {
         double diffy = _scaled_y - _press_y;
         if( current_node.mode == NodeMode.CURRENT ) {
           if( _resize ) {
+            current_node.image_resizable = !control;
             current_node.resize( diffx );
             auto_save();
           } else {
@@ -2547,8 +2550,9 @@ public class DrawArea : Gtk.DrawingArea {
       if( current_sticker != null ) {
         undo_buffer.add_item( new UndoStickerResize( current_sticker, _orig_width ) );
       } else if( current_node != null ) {
-        undo_buffer.add_item( new UndoNodeResize( current_node, _orig_width ) );
+        undo_buffer.add_item( new UndoNodeResize( current_node, _orig_width, _orig_resizable ) );
       }
+      auto_save();
       return( false );
     }
 
