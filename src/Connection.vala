@@ -708,8 +708,8 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
   public virtual void draw( Cairo.Context ctx, Theme theme ) {
 
     /* If either the from or to node is hidden, don't bother to draw ourselves */
-    if( ((_from_node != null) && !_from_node.is_root() && _from_node.parent.folded) ||
-        ((_to_node   != null) && !_to_node.is_root()   && _to_node.parent.folded) ) {
+    if( ((_from_node != null) && !_from_node.is_root() && (_from_node.folded_ancestor() != null)) ||
+        ((_to_node   != null) && !_to_node.is_root()   && (_to_node.folded_ancestor() != null)) ) {
       return;
     }
 
