@@ -2409,7 +2409,11 @@ public class DrawArea : Gtk.DrawingArea {
             set_tooltip_markup( Utils.prepare_note_markup( match.linked_node.to_string( this ) ) );
           } else if( match.is_within_resizer( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.SB_H_DOUBLE_ARROW );
-            set_tooltip_markup( null );
+            if( match.image == null ) {
+              set_tooltip_markup( _( "Drag to resize node" ) );
+            } else {
+              set_tooltip_markup( _( "Drag to resize node and image.\nControl-drag to resize only node." ) );
+            }
           } else if( control && match.name.is_within_clickable( _scaled_x, _scaled_y, out tag, out url ) ) {
             if( tag == FormatTag.URL ) {
               set_cursor( url_cursor );
