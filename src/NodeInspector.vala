@@ -47,6 +47,7 @@ public class NodeInspector : Box {
   private ColorButton    _root_color;
   private Revealer       _root_color_reveal;
   private Revealer       _color_reveal;
+  private Switch         _resize;
 
   public NodeInspector( MainWindow win ) {
 
@@ -293,10 +294,24 @@ public class NodeInspector : Box {
     _image_loc.max_width_chars = 40;
     _image_loc.activate_link.connect( image_link_clicked );
 
+    var resize_lbl = new Label( Utils.make_title( _( "Resizable" ) ) );
+    resize_lbl.xalign     = (float)0;
+    resize_lbl.use_markup = true;
+
+    _resize = new Switch();
+    _resize.button_release_event.connect( resize_changed );
+
+    var resize_box = new Box( Orientation.HORIZONTAL, 10 );
+    resize_box.margin_left  = 20;
+    resize_box.margin_right = 20;
+    resize_box.pack_start( resize_lbl, false, false, 0 );
+    resize_box.pack_end(   _resize,    false, false, 0 );
+
     var box  = new Box( Orientation.VERTICAL, 10 );
     box.pack_start( tbox,       false, false );
     box.pack_start( _image,     true,  true );
     box.pack_start( _image_loc, false, true );
+    box.pack_start( resize_box, false, true );
 
     /* Set ourselves up to be a drag target */
     Gtk.drag_dest_set( _image, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
@@ -466,6 +481,16 @@ public class NodeInspector : Box {
     node_changed();
   }
 
+  /* Called whenever the fold switch is changed within the inspector */
+  private bool resize_changed( Gdk.EventButton e ) {
+    var current = _da.get_current_node();
+    if( current != null ) {
+      current.image_resizable = !current.image_resizable;
+      _da.auto_save();
+    }
+    return( false );
+  }
+
   /* Called whenever the theme is changed */
   private void theme_changed( DrawArea da ) {
 
@@ -519,6 +544,7 @@ public class NodeInspector : Box {
         var str = "<a href=\"" + url + "\">" + url + "</a>";
         current.image.set_image( _image );
         _image_loc.label = str;
+        _resize.set_active( current.image_resizable );
         _image_stack.visible_child_name = "edit";
       } else {
         _image_stack.visible_child_name = "add";

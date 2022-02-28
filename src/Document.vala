@@ -81,7 +81,7 @@ public class Document : Object {
 
   /* Generate new "random" etag */
   private string generate_etag() {
-      return GLib.Random.next_int().to_string();
+    return GLib.Random.next_int().to_string();
   }
 
   /* Called whenever the canvas changes such that a save will be needed */
