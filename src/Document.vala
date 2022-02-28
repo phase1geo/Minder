@@ -129,7 +129,7 @@ public class Document : Object {
 
       return prop->children->content;
     }
-    return generate_etag();
+    return "";
   }
 
   /* Opens the given filename */
@@ -144,6 +144,13 @@ public class Document : Object {
 
     _da.load( doc->get_root_element() );
     delete doc;
+
+    /* If an etag was not found, generate one and save the updated map immediately */
+    if( _etag == "" ) {
+      _etag = generate_etag();
+      save_internal( filename, false );
+    }
+
     return( true );
   }
 
