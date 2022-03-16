@@ -36,5 +36,10 @@ install_data(
 
 install_data(
     join_paths('styles', meson.project_name() + '.xml'),
-    install_dir: join_paths(get_option('datadir'), 'gtksourceview-3.0', 'styles')
+    install_dir: join_paths(get_option('datadir'), 'gtksourceview-4', 'styles')
+)
+
+install_data(
+    join_paths('language-specs', meson.project_name() + '-markdown.lang'),
+    install_dir: join_paths(get_option('datadir'), 'gtksourceview-4', 'language-specs')
 )

@@ -71,7 +71,7 @@ public class NoteView : Gtk.SourceView {
     get_style_context().add_class( "textfield" );
 
     var manager       = Gtk.SourceLanguageManager.get_default();
-    var language      = manager.guess_language( null, "text/markdown" );
+    var language      = manager.get_language( get_default_language() );
     var style_manager = Gtk.SourceStyleSchemeManager.get_default();
     var style         = style_manager.get_scheme( get_default_scheme() );
 
@@ -109,8 +109,14 @@ public class NoteView : Gtk.SourceView {
 
   }
 
+  /* Returns the Markdown language parser used to highlight the text */
+  private string get_default_language() {
+    return( "markdown-minder" );
+  }
+
   /* Returns the coloring scheme to use to highlight the text */
   private string get_default_scheme () {
+    //return( "cobalt" );
     return( "minder" );
   }
 

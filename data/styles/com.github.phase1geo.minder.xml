@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright (c) 2018 (https://github.com/phase1geo/Minder)
 
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public
+ This file is part of GtkSourceView
+
+ Copyright (C) 2006-2007 GtkSourceView team
+ Author: Yevgen Muntyan <muntyan@tamu.edu>
+
+ GtkSourceView is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
  License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
+ version 2.1 of the License, or (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
+ GtkSourceView is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- General Public License for more details.
+ Lesser General Public License for more details.
 
- You should have received a copy of the GNU General Public
- License along with this program; if not, write to the
- Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301 USA
+ You should have received a copy of the GNU Lesser General Public License
+ along with this library; if not, see <http://www.gnu.org/licenses/>.
 
- Authored by: Trevor Williams <phase1geo@gmail.com>
 -->
 <style-scheme id="minder" _name="Minder" version="1.0">
   <author>Trevor Williams</author>
-  <_description>Minder color scheme for the note field</_description>
+  <_description>Color scheme used by Minder (used from Gtk classic scheme)</_description>
 
   <!-- The scheme tries to look like the default GVim scheme,
        since it is also what the hardwired GtkSourceView 1 color
@@ -29,7 +30,7 @@
 
   <!-- Palette -->
   <color name="white"      value="#FFFFFF"/>
-  <color name="blue"       value="#8080FF"/>
+  <color name="blue"       value="#0000FF"/>
   <color name="magenta"    value="#FF00FF"/>
   <color name="violet"     value="#6A5ACD"/>
   <color name="cyan"       value="#008A8C"/>
@@ -41,10 +42,11 @@
   <color name="purple"     value="#A020F0"/>
 
   <!-- Global Settings -->
+  <style name="line-numbers"                background="#rgba(0,0,0,0.005)"/>
   <style name="current-line"                background="#eeeeec"/>
   <style name="current-line-number"         background="#eeeeec"/>
   <style name="draw-spaces"                 foreground="#babdb6"/>
-  <style name="background-pattern"          background="#f3f3f3"/>
+  <style name="background-pattern"          background="#rgba(73,74,71,0.1)"/>
 
   <!-- Bracket Matching -->
   <style name="bracket-match"               foreground="white" background="gray"/>
@@ -74,23 +76,35 @@
   <!-- Types -->
   <style name="def:type"                    foreground="green" bold="true"/>
 
+  <!-- Markup -->
+  <style name="def:emphasis"                italic="true"/>
+  <style name="def:strong-emphasis"         foreground="bordeaux" bold="true"/>
+  <style name="def:inline-code"             foreground="cyan"/>
+  <style name="def:insertion"               underline="single"/>
+  <style name="def:deletion"                strikethrough="true"/>
+  <style name="def:link-text"               foreground="blue"/>
+  <style name="def:link-symbol"             foreground="blue" bold="true"/>
+  <style name="def:link-destination"        italic="true" underline="single"/>
+  <style name="def:heading"                 foreground="green" bold="true"/>
+  <style name="def:thematic-break"          foreground="green" bold="true"/>
+  <style name="def:preformatted-section"    foreground="cyan"/>
+  <style name="def:list-marker"             foreground="bordeaux" bold="true"/>
+
   <!-- Others -->
   <style name="def:preprocessor"            foreground="purple"/>
   <style name="def:error"                   background="red" bold="true"/>
   <style name="def:warning"                 background="yellow"/>
   <style name="def:note"                    foreground="blue" background="yellow" bold="true"/>
-  <style name="def:underlined"              italic="true" underline="single"/>
+  <style name="def:net-address"             italic="true" underline="single"/>
 
   <!-- Heading styles, uncomment to enable -->
-  <!--
-  <style name="def:heading0"                scale="5.0"/>
-  <style name="def:heading1"                scale="2.5"/>
-  <style name="def:heading2"                scale="2.0"/>
-  <style name="def:heading3"                scale="1.7"/>
-  <style name="def:heading4"                scale="1.5"/>
-  <style name="def:heading5"                scale="1.3"/>
-  <style name="def:heading6"                scale="1.2"/>
-  -->
+  <style name="def:heading0"                foreground="green" bold="true" scale="xx-large"/>
+  <style name="def:heading1"                foreground="green" bold="true" scale="xx-large"/>
+  <style name="def:heading2"                foreground="green" bold="true" scale="x-large"/>
+  <style name="def:heading3"                foreground="green" bold="true" scale="large"/>
+  <style name="def:heading4"                foreground="green" bold="true" scale="medium"/>
+  <style name="def:heading5"                foreground="green" bold="true" scale="medium"/>
+  <style name="def:heading6"                foreground="green" bold="true" scale="medium"/>
 
   <!-- Language specific styles -->
   <style name="diff:added-line"             foreground="#008B8B"/>
@@ -104,8 +118,7 @@
   <style name="xml:attribute-name"          foreground="violet"/>
   <style name="xml:namespace"               foreground="green" bold="true"/>
 
-  <style name="js:object"                   foreground="#2E8B57" bold="true"/>
-  <style name="js:constructors"             foreground="#008B8B"/>
+  <style name="js:built-in-constructor"     use-style="def:identifier"/>
 
   <style name="latex:display-math"          foreground="#6A5ACD"/>
   <style name="latex:command"               foreground="#2E8B57" bold="true"/>
