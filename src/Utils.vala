@@ -169,18 +169,82 @@ public class Utils {
 
   /* Prepares the given note string for use in a markup tooltip */
   public static string prepare_note_markup( string note ) {
-    return( note.replace( "<", "&lt;" ) );
+    var str = markdown_to_html( note );  // .replace( "<", "&lt;" ).replace( ">", "&gt;" ) );
+    // stdout.printf( "---------------\n%s--------------\n", str );
+    try {
+      MatchInfo match_info;
+      var re    = new Regex( "</?(\\w+)[^>]*>" );
+      var start = 0;
+      var list  = new Queue<int>();
+      while( re.match_full( str, -1, start, 0, out match_info ) ) {
+        int tag_start, tag_end;
+        int name_start, name_end;
+        match_info.fetch_pos( 0, out tag_start, out tag_end );
+        match_info.fetch_pos( 1, out name_start, out name_end );
+        var old_tag = str.slice( tag_start, tag_end );
+        var new_tag = old_tag;
+        var name    = str.slice( name_start, name_end );
+        var end_tag = (str.substring( (name_start - 1), 1 ) == "/");
+        switch( name ) {
+          case "h1"     :  new_tag = end_tag ? "</span>" : "<span weight=\"bold\" size=\"xx-large\">";  break;
+          case "h2"     :  new_tag = end_tag ? "</span>" : "<span weight=\"bold\" size=\"x-large\">";   break;
+          case "h3"     :  new_tag = end_tag ? "</span>" : "<span weight=\"bold\" size=\"large\">";     break;
+          case "h4"     :
+          case "h5"     :
+          case "h6"     :  new_tag = end_tag ? "</span>" : "<span weight=\"bold\" size=\"medium\">";    break;
+          case "strong" :  new_tag = end_tag ? "</b>" : "<b>";  break;
+          case "em"     :  new_tag = end_tag ? "</i>" : "<i>";  break;
+          case "code"   :  new_tag = end_tag ? "</tt>" : "<tt>";  break;
+          case "blockquote" :  new_tag = end_tag ? "</i>" : "<i>";  break;
+          case "hr"     :  new_tag = end_tag ? "" : "---";  break;
+          case "p"      :  new_tag = "";  break;
+          case "br"     :  new_tag = "";  break;
+          case "ul"     :
+          case "ol"     :
+            new_tag = ""; 
+            if( end_tag ) {
+              list.pop_tail();
+            } else {
+              list.push_tail( (name == "ul") ? 1000000 : 1 );
+            }
+            break;
+          case "li"     :
+            if( end_tag ) {
+              new_tag = "";
+            } else {
+              var val    = list.pop_tail();
+              var prefix = string.nfill( list.get_length(), ' ' );
+              if( val >= 1000000 ) {
+                new_tag = "%s* ".printf( prefix );
+              } else {
+                new_tag = "%s%d. ".printf( prefix, val );
+              }
+              list.push_tail( val + 1 );
+            }
+            break;
+        }
+        str   = str.splice( tag_start, tag_end, new_tag );
+        start = tag_end + (new_tag.length - old_tag.length);
+      }
+    } catch( RegexError e ) {
+      return( note.replace( "<", "&lt;" ) );
+    }
+    return( str.replace( "\n\n\n", "\n\n" ) );
   }
 
   /* Converts the given Markdown into HTML */
-  public static string markdown_to_html( string md, string tag ) {
+  public static string markdown_to_html( string md, string? tag = null ) {
     string html;
     // var    flags = 0x57607000;
     var    flags = 0x47607004;
     var    mkd = new Markdown.Document.gfm_format( md.data, flags );
     mkd.compile( flags );
     mkd.get_document( out html );
-    return( "<" + tag + ">" + html + "</" + tag + ">" );
+    if( tag == null ) {
+      return( html );
+    } else {
+      return( "<" + tag + ">" + html + "</" + tag + ">" );
+    }
   }
 
   /* Returns the line height of the first line of the given pango layout */
