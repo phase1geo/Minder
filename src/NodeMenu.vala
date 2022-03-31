@@ -472,7 +472,9 @@ public class NodeMenu : Gtk.Menu {
 
   /* Displays the sidebar to edit the node properties */
   private void edit_node() {
-    _da.show_properties( "current", PropertyGrab.FIRST );
+    var current = _da.get_current_node();
+    _da.set_node_mode( current, NodeMode.EDITABLE );
+    _da.queue_draw();
   }
 
   /* Changes the task status of the currently selected node */
