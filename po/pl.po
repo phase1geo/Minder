@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-14 19:29-0600\n"
+"POT-Creation-Date: 2022-04-02 14:43-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -62,7 +62,7 @@ msgstr ""
 msgid "No text found"
 msgstr "Dodaj węzeł główny"
 
-#: src/ConnectionInspector.vala:74 src/NodeInspector.vala:131
+#: src/ConnectionInspector.vala:74 src/NodeInspector.vala:132
 #, fuzzy
 msgid "Color"
 msgstr "Kolor połączenia"
@@ -71,7 +71,7 @@ msgstr "Kolor połączenia"
 msgid "Use Theme Default Color"
 msgstr ""
 
-#: src/ConnectionInspector.vala:107 src/NodeInspector.vala:206
+#: src/ConnectionInspector.vala:107 src/NodeInspector.vala:207
 #, fuzzy
 msgid "Note"
 msgstr "Notatki"
@@ -94,7 +94,7 @@ msgstr "Tytuly"
 
 #: src/ConnectionMenu.vala:50 src/NodeMenu.vala:100
 #: data/com.github.phase1geo.minder.shortcuts.ui:329
-#: data/com.github.phase1geo.minder.shortcuts.ui:606
+#: data/com.github.phase1geo.minder.shortcuts.ui:620
 #, fuzzy
 msgid "Edit Note"
 msgstr "Tytuly"
@@ -145,39 +145,49 @@ msgstr "Szukaj węzłów"
 msgid "unnamed"
 msgstr "Dokument bez nazwy"
 
-#: src/DrawArea.vala:756
+#: src/DrawArea.vala:757
 msgid "Main Idea"
 msgstr "Główny pomysł"
 
-#: src/DrawArea.vala:2396
+#: src/DrawArea.vala:2399
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "Ukończono %0.3g%%"
 
-#: src/DrawArea.vala:2520
+#: src/DrawArea.vala:2413
+msgid "Drag to resize node"
+msgstr ""
+
+#: src/DrawArea.vala:2415
+msgid ""
+"Drag to resize node and image.\n"
+"Control-drag to resize only node."
+msgstr ""
+
+#: src/DrawArea.vala:2527
 #, fuzzy, c-format
 msgid "Children: %u\n"
 msgstr "Zwiń węzeł potomny"
 
-#: src/DrawArea.vala:2521
+#: src/DrawArea.vala:2528
 #, c-format
 msgid "Total: %d"
 msgstr ""
 
-#: src/DrawArea.vala:2565
+#: src/DrawArea.vala:2574
 #, fuzzy
 msgid "connection endpoint change"
 msgstr "zmiana notatki węzła"
 
-#: src/DrawArea.vala:2572
+#: src/DrawArea.vala:2581
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:3206 src/DrawArea.vala:3220 src/DrawArea.vala:4869
+#: src/DrawArea.vala:3218 src/DrawArea.vala:3232 src/DrawArea.vala:4916
 msgid "Another Idea"
 msgstr "Inny pomysł"
 
-#: src/DrawArea.vala:4377 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4424 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Ręcznie"
@@ -226,7 +236,7 @@ msgid ""
 "to view/edit information"
 msgstr "<big>Wybierz węzeł aby zobaczyć/edytować informacje</big>"
 
-#: src/EmptyMenu.vala:38 src/NodeMenu.vala:77 src/TextMenu.vala:54
+#: src/EmptyMenu.vala:38 src/NodeMenu.vala:77 src/TextMenu.vala:52
 msgid "Paste"
 msgstr "Wklej"
 
@@ -267,7 +277,7 @@ msgstr "Eksportuj jako"
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:299
 #: src/MainWindow.vala:938 src/MainWindow.vala:1020 src/MainWindow.vala:1140
 #: src/QuickEntry.vala:118 src/StickerSet.vala:71 src/ThemeEditor.vala:143
-#: src/UrlEditor.vala:61
+#: src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Anuluj"
 
@@ -425,7 +435,7 @@ msgstr "Dodaj węzeł główny"
 msgid "All Grouped Nodes"
 msgstr ""
 
-#: src/GroupsMenu.vala:100 src/NodeMenu.vala:634 src/NodesMenu.vala:266
+#: src/GroupsMenu.vala:100 src/NodeMenu.vala:636 src/NodesMenu.vala:266
 #, fuzzy
 msgid "Select a link color"
 msgstr "Węzeł"
@@ -440,7 +450,7 @@ msgstr ""
 msgid "Cursor: %3d,%3d"
 msgstr ""
 
-#: src/ImageEditor.vala:382 src/UrlEditor.vala:54
+#: src/ImageEditor.vala:382 src/UrlEditor.vala:55
 msgid "Apply"
 msgstr ""
 
@@ -463,7 +473,7 @@ msgstr "Wytnij węzeł"
 msgid "Paste Image from Clipboard"
 msgstr "Wytnij węzeł"
 
-#: src/ImageEditor.vala:396 src/NodeInspector.vala:275 src/NodeMenu.vala:416
+#: src/ImageEditor.vala:396 src/NodeInspector.vala:276 src/NodeMenu.vala:416
 msgid "Remove Image"
 msgstr ""
 
@@ -720,45 +730,49 @@ msgstr "Rozwiń wszystkie węzły"
 msgid "Unsaved"
 msgstr ""
 
-#: src/NodeInspector.vala:92
+#: src/NodeInspector.vala:93
 #, fuzzy
 msgid "Task"
 msgstr "Zadania"
 
-#: src/NodeInspector.vala:110
+#: src/NodeInspector.vala:111
 #, fuzzy
 msgid "Fold"
 msgstr "Zwinięte"
 
-#: src/NodeInspector.vala:161
+#: src/NodeInspector.vala:162
 msgid "Override Color"
 msgstr ""
 
-#: src/NodeInspector.vala:246 src/NodeInspector.vala:264
+#: src/NodeInspector.vala:247 src/NodeInspector.vala:265
 msgid "Image"
 msgstr ""
 
-#: src/NodeInspector.vala:250
+#: src/NodeInspector.vala:251
 msgid "Add Image…"
 msgstr ""
 
-#: src/NodeInspector.vala:269
+#: src/NodeInspector.vala:270
 msgid "Edit Image"
 msgstr ""
 
-#: src/NodeInspector.vala:353
+#: src/NodeInspector.vala:297
+msgid "Resizable"
+msgstr ""
+
+#: src/NodeInspector.vala:368
 msgid "Copy Node To Clipboard"
 msgstr "Skopiuj węzeł"
 
-#: src/NodeInspector.vala:357
+#: src/NodeInspector.vala:372
 msgid "Cut Node To Clipboard"
 msgstr "Wytnij węzeł"
 
-#: src/NodeInspector.vala:362
+#: src/NodeInspector.vala:377
 msgid "Detach Node"
 msgstr "Odczep węzeł"
 
-#: src/NodeInspector.vala:367 data/com.github.phase1geo.minder.shortcuts.ui:275
+#: src/NodeInspector.vala:382 data/com.github.phase1geo.minder.shortcuts.ui:275
 msgid "Delete Node"
 msgstr "Usuń węzeł"
 
@@ -771,7 +785,7 @@ msgstr "Dodaj węzeł główny"
 msgid "Copy"
 msgstr "Kopiuj"
 
-#: src/NodeMenu.vala:73 src/NodesMenu.vala:51 src/TextMenu.vala:49
+#: src/NodeMenu.vala:73 src/NodesMenu.vala:51 src/TextMenu.vala:48
 msgid "Cut"
 msgstr "Wytnij"
 
@@ -1010,7 +1024,7 @@ msgstr "Zbalansuj wężły"
 msgid "Align Top"
 msgstr ""
 
-#: src/NodesMenu.vala:120 data/com.github.phase1geo.minder.shortcuts.ui:551
+#: src/NodesMenu.vala:120 data/com.github.phase1geo.minder.shortcuts.ui:565
 msgid "Align Center Horizontally"
 msgstr ""
 
@@ -1022,7 +1036,7 @@ msgstr ""
 msgid "Align Left"
 msgstr ""
 
-#: src/NodesMenu.vala:132 data/com.github.phase1geo.minder.shortcuts.ui:572
+#: src/NodesMenu.vala:132 data/com.github.phase1geo.minder.shortcuts.ui:586
 msgid "Align Center Vertically"
 msgstr ""
 
@@ -1035,12 +1049,12 @@ msgstr ""
 msgid "Remove Node Links"
 msgstr "Usuń notatkę"
 
-#: src/Node.vala:1957
+#: src/Node.vala:1974
 #, fuzzy
 msgid "Node Title"
 msgstr "Tytuly"
 
-#: src/Node.vala:1965
+#: src/Node.vala:1982
 #, fuzzy
 msgid "Node Note"
 msgstr "Dodaj notatkę"
@@ -2665,32 +2679,32 @@ msgstr ""
 msgid "Add Tag"
 msgstr "Dodaj zadanie"
 
-#: src/TextMenu.vala:59
+#: src/TextMenu.vala:56
 #, fuzzy
 msgid "Insert Emoji"
 msgstr "wstawienie węzła"
 
-#: src/TextMenu.vala:63
+#: src/TextMenu.vala:59
 #, fuzzy
 msgid "Open Link"
 msgstr "Otwórz plik"
 
-#: src/TextMenu.vala:67
+#: src/TextMenu.vala:63
 #, fuzzy
 msgid "Add Link"
 msgstr "Dodaj notatkę"
 
-#: src/TextMenu.vala:71
+#: src/TextMenu.vala:66
 #, fuzzy
 msgid "Edit Link"
 msgstr "Tytuly"
 
-#: src/TextMenu.vala:75
+#: src/TextMenu.vala:70
 #, fuzzy
 msgid "Remove Link"
 msgstr "Usuń notatkę"
 
-#: src/TextMenu.vala:79
+#: src/TextMenu.vala:73
 #, fuzzy
 msgid "Restore Link"
 msgstr "Usuń notatkę"
@@ -3012,7 +3026,7 @@ msgstr "Wybierz węzeł"
 msgid "replace node"
 msgstr "wklejenie węzła"
 
-#: src/undo_actions/UndoNodeResize.vala:32
+#: src/undo_actions/UndoNodeResize.vala:34
 msgid "node resize"
 msgstr ""
 
@@ -3144,7 +3158,7 @@ msgstr "Cofnij "
 msgid "Redo "
 msgstr "Ponów "
 
-#: src/UrlEditor.vala:42
+#: src/UrlEditor.vala:43
 msgid "URL"
 msgstr ""
 
@@ -3163,7 +3177,7 @@ msgid "Minder Shortcuts"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:12
-#: data/com.github.phase1geo.minder.shortcuts.ui:876
+#: data/com.github.phase1geo.minder.shortcuts.ui:904
 msgid "General"
 msgstr ""
 
@@ -3256,7 +3270,7 @@ msgid "Show Map Tab"
 msgstr "Wyśrodkuj na wężle"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:181
-#: data/com.github.phase1geo.minder.shortcuts.ui:670
+#: data/com.github.phase1geo.minder.shortcuts.ui:684
 msgid "Miscellaneous"
 msgstr ""
 
@@ -3271,7 +3285,7 @@ msgid "Search Nodes/Connections"
 msgstr "Szukaj węzłów"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:199
-#: data/com.github.phase1geo.minder.shortcuts.ui:880
+#: data/com.github.phase1geo.minder.shortcuts.ui:908
 msgid "Show Contextual Menu"
 msgstr ""
 
@@ -3322,7 +3336,7 @@ msgid "Quick Entry Replacement"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:284
-#: data/com.github.phase1geo.minder.shortcuts.ui:766
+#: data/com.github.phase1geo.minder.shortcuts.ui:794
 #, fuzzy
 msgid "Clipboard"
 msgstr "Wytnij węzeł"
@@ -3353,7 +3367,7 @@ msgid "Changing Current"
 msgstr "Wyśrodkuj na wężle"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:322
-#: data/com.github.phase1geo.minder.shortcuts.ui:599
+#: data/com.github.phase1geo.minder.shortcuts.ui:613
 #, fuzzy
 msgid "Edit Title"
 msgstr "Tytuly"
@@ -3363,508 +3377,523 @@ msgid "Change Task State"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:343
-#, fuzzy
-msgid "View Properties"
-msgstr "Właściwości"
+msgid "Add URL Link To Text"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:350
+#: data/com.github.phase1geo.minder.shortcuts.ui:716
 #, fuzzy
-msgid "Toggle Fold"
+msgid "Remove URL Link From Text"
 msgstr "Usuń notatkę"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:357
 #, fuzzy
+msgid "View Properties"
+msgstr "Właściwości"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:364
+#, fuzzy
+msgid "Toggle Fold"
+msgstr "Usuń notatkę"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:371
+#, fuzzy
 msgid "Toggle Node Link"
 msgstr "Usuń notatkę"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:364
+#: data/com.github.phase1geo.minder.shortcuts.ui:378
 #, fuzzy
 msgid "Create Link to Selected Node"
 msgstr "Przybliż do zaznaczonego węzła"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:365
+#: data/com.github.phase1geo.minder.shortcuts.ui:379
 msgid "[After using this command, 'y' will create the link]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:372
+#: data/com.github.phase1geo.minder.shortcuts.ui:386
 #, fuzzy
 msgid "Create Group"
 msgstr "Usuń notatkę"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:379
+#: data/com.github.phase1geo.minder.shortcuts.ui:393
 #, fuzzy
 msgid "Create Connection"
 msgstr "Szukaj węzłów"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:386
+#: data/com.github.phase1geo.minder.shortcuts.ui:400
 #, fuzzy
 msgid "Center In View"
 msgstr "Wyśrodkuj na wężle"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:393
-#: data/com.github.phase1geo.minder.shortcuts.ui:620
+#: data/com.github.phase1geo.minder.shortcuts.ui:407
+#: data/com.github.phase1geo.minder.shortcuts.ui:634
 #, fuzzy
 msgid "Place Into View"
 msgstr "Wyśrodkuj na wężle"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:402
-#: data/com.github.phase1geo.minder.shortcuts.ui:793
+#: data/com.github.phase1geo.minder.shortcuts.ui:416
+#: data/com.github.phase1geo.minder.shortcuts.ui:821
 #, fuzzy
 msgid "Selection"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:406
+#: data/com.github.phase1geo.minder.shortcuts.ui:420
 #, fuzzy
 msgid "Select Root"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:413
+#: data/com.github.phase1geo.minder.shortcuts.ui:427
 #, fuzzy
 msgid "Select Parent"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:420
+#: data/com.github.phase1geo.minder.shortcuts.ui:434
 #, fuzzy
 msgid "Select Next Sibling"
 msgstr "Następny sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:427
+#: data/com.github.phase1geo.minder.shortcuts.ui:441
 #, fuzzy
 msgid "Select Previous Sibling"
 msgstr "Poprzedni sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:434
+#: data/com.github.phase1geo.minder.shortcuts.ui:448
 #, fuzzy
 msgid "Select Child"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:441
+#: data/com.github.phase1geo.minder.shortcuts.ui:455
 #, fuzzy
 msgid "Select Children"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:448
+#: data/com.github.phase1geo.minder.shortcuts.ui:462
 #, fuzzy
 msgid "Select Subtree"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:455
+#: data/com.github.phase1geo.minder.shortcuts.ui:469
 #, fuzzy
 msgid "Select Node Below"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:462
+#: data/com.github.phase1geo.minder.shortcuts.ui:476
 #, fuzzy
 msgid "Select Node Above"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:469
+#: data/com.github.phase1geo.minder.shortcuts.ui:483
 #, fuzzy
 msgid "Select Node To Right"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:476
+#: data/com.github.phase1geo.minder.shortcuts.ui:490
 #, fuzzy
 msgid "Select Node To Left"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:483
+#: data/com.github.phase1geo.minder.shortcuts.ui:497
 #, fuzzy
 msgid "Select Linked Node"
 msgstr "Węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:490
+#: data/com.github.phase1geo.minder.shortcuts.ui:504
 #, fuzzy
 msgid "Select Attached Connection"
 msgstr "Szukaj węzłów"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:499
+#: data/com.github.phase1geo.minder.shortcuts.ui:513
 msgid "Move"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:503
+#: data/com.github.phase1geo.minder.shortcuts.ui:517
 #, fuzzy
 msgid "Swap with Sibling Node to Right"
 msgstr "Następny sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:510
+#: data/com.github.phase1geo.minder.shortcuts.ui:524
 #, fuzzy
 msgid "Swap with Sibling Node to Left"
 msgstr "Następny sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:517
+#: data/com.github.phase1geo.minder.shortcuts.ui:531
 #, fuzzy
 msgid "Swap with Sibling Node Above"
 msgstr "Następny sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:524
+#: data/com.github.phase1geo.minder.shortcuts.ui:538
 #, fuzzy
 msgid "Swap with Sibling Node Below"
 msgstr "Następny sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:531
+#: data/com.github.phase1geo.minder.shortcuts.ui:545
 msgid "Sort Child Nodes Alphabetically"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:540
+#: data/com.github.phase1geo.minder.shortcuts.ui:554
 #, fuzzy
 msgid "Alignment"
 msgstr "zmiana nazwy węzła"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:544
+#: data/com.github.phase1geo.minder.shortcuts.ui:558
 #, fuzzy
 msgid "Align Top Side"
 msgstr "Zbalansuj wężły"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:558
+#: data/com.github.phase1geo.minder.shortcuts.ui:572
 #, fuzzy
 msgid "Align Bottom Side"
 msgstr "Zbalansuj wężły"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:565
+#: data/com.github.phase1geo.minder.shortcuts.ui:579
 #, fuzzy
 msgid "Align Left Side"
 msgstr "Zbalansuj wężły"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:579
+#: data/com.github.phase1geo.minder.shortcuts.ui:593
 msgid "Align Right Side"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:591
+#: data/com.github.phase1geo.minder.shortcuts.ui:605
 #, fuzzy
 msgid "Connection Commands"
 msgstr "Szukaj węzłów"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:595
+#: data/com.github.phase1geo.minder.shortcuts.ui:609
 #, fuzzy
 msgid "Change Current"
 msgstr "Wyśrodkuj na wężle"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:613
+#: data/com.github.phase1geo.minder.shortcuts.ui:627
 #, fuzzy
 msgid "Show Properties"
 msgstr "Właściwości"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:629
+#: data/com.github.phase1geo.minder.shortcuts.ui:643
 msgid "Traversal"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:633
+#: data/com.github.phase1geo.minder.shortcuts.ui:647
 #, fuzzy
 msgid "Select Start Node"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:640
+#: data/com.github.phase1geo.minder.shortcuts.ui:654
 #, fuzzy
 msgid "Select End Node"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:647
+#: data/com.github.phase1geo.minder.shortcuts.ui:661
 #, fuzzy
 msgid "Select Next Connection"
 msgstr "Szukaj węzłów"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:654
+#: data/com.github.phase1geo.minder.shortcuts.ui:668
 #, fuzzy
 msgid "Select Previous Connection"
 msgstr "Poprzedni sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:666
+#: data/com.github.phase1geo.minder.shortcuts.ui:680
 #, fuzzy
 msgid "Text Editing"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:674
+#: data/com.github.phase1geo.minder.shortcuts.ui:688
 #, fuzzy
 msgid "Insert Newline Character"
 msgstr "Poprzedni sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:681
+#: data/com.github.phase1geo.minder.shortcuts.ui:695
 #, fuzzy
 msgid "Insert Tab Character"
 msgstr "Poprzedni sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:688
+#: data/com.github.phase1geo.minder.shortcuts.ui:702
 #, fuzzy
 msgid "Show Emoji Picker"
 msgstr "Usuń notatkę"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:695
+#: data/com.github.phase1geo.minder.shortcuts.ui:709
+#, fuzzy
+msgid "Add URL Link To Selected Text"
+msgstr "Wybierz węzeł"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:723
 #, fuzzy
 msgid "End Editing"
 msgstr "Tytuly"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:704
+#: data/com.github.phase1geo.minder.shortcuts.ui:732
 msgid "Cursor Movement"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:708
+#: data/com.github.phase1geo.minder.shortcuts.ui:736
 #, fuzzy
 msgid "Next Character"
 msgstr "Poprzedni sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:715
+#: data/com.github.phase1geo.minder.shortcuts.ui:743
 #, fuzzy
 msgid "Previous Character"
 msgstr "Poprzedni sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:722
+#: data/com.github.phase1geo.minder.shortcuts.ui:750
 #, fuzzy
 msgid "Next Word"
 msgstr "Szukaj węzłów"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:729
+#: data/com.github.phase1geo.minder.shortcuts.ui:757
 #, fuzzy
 msgid "Previous Word"
 msgstr "Poprzedni sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:736
+#: data/com.github.phase1geo.minder.shortcuts.ui:764
 #, fuzzy
 msgid "Next Line"
 msgstr "Następny sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:743
+#: data/com.github.phase1geo.minder.shortcuts.ui:771
 #, fuzzy
 msgid "Previous Line"
 msgstr "Poprzedni sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:750
+#: data/com.github.phase1geo.minder.shortcuts.ui:778
 #, fuzzy
 msgid "Start Of Text"
 msgstr "Szukaj węzłów"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:757
+#: data/com.github.phase1geo.minder.shortcuts.ui:785
 #, fuzzy
 msgid "End Of Text"
 msgstr "Szukaj węzłów"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:770
+#: data/com.github.phase1geo.minder.shortcuts.ui:798
 #, fuzzy
 msgid "Copy Selected Text"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:777
+#: data/com.github.phase1geo.minder.shortcuts.ui:805
 #, fuzzy
 msgid "Cut Selected Text"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:784
+#: data/com.github.phase1geo.minder.shortcuts.ui:812
 #, fuzzy
 msgid "Paste Text"
 msgstr "Wklej"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:797
+#: data/com.github.phase1geo.minder.shortcuts.ui:825
 #, fuzzy
 msgid "Add Next Character"
 msgstr "Szukaj węzłów"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:804
+#: data/com.github.phase1geo.minder.shortcuts.ui:832
 #, fuzzy
 msgid "Add Previous Character"
 msgstr "Poprzedni sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:811
+#: data/com.github.phase1geo.minder.shortcuts.ui:839
 #, fuzzy
 msgid "Add Next Word"
 msgstr "Szukaj węzłów"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:818
+#: data/com.github.phase1geo.minder.shortcuts.ui:846
 #, fuzzy
 msgid "Add Previous Word"
 msgstr "Szukaj węzłów"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:825
+#: data/com.github.phase1geo.minder.shortcuts.ui:853
 #, fuzzy
 msgid "Add Next Line"
 msgstr "Dodaj notatkę"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:832
+#: data/com.github.phase1geo.minder.shortcuts.ui:860
 #, fuzzy
 msgid "Add Previous Line"
 msgstr "Poprzedni sąsiadujący"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:839
+#: data/com.github.phase1geo.minder.shortcuts.ui:867
 #, fuzzy
 msgid "Add Start Of Text"
 msgstr "Szukaj węzłów"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:846
+#: data/com.github.phase1geo.minder.shortcuts.ui:874
 msgid "Add End Of Text"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:853
+#: data/com.github.phase1geo.minder.shortcuts.ui:881
 #, fuzzy
 msgid "Select All Text"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:860
+#: data/com.github.phase1geo.minder.shortcuts.ui:888
 #, fuzzy
 msgid "Clear Selection"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:872
+#: data/com.github.phase1geo.minder.shortcuts.ui:900
 msgid "Mouse Events"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:881
+#: data/com.github.phase1geo.minder.shortcuts.ui:909
 msgid "[Right-click when item is selected]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:887
+#: data/com.github.phase1geo.minder.shortcuts.ui:915
 #, fuzzy
 msgid "Edit Image in Canvas"
 msgstr "Tytuly"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:888
+#: data/com.github.phase1geo.minder.shortcuts.ui:916
 msgid "[Double left-click on image]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:896
+#: data/com.github.phase1geo.minder.shortcuts.ui:924
 msgid "Canvas Movement"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:900
+#: data/com.github.phase1geo.minder.shortcuts.ui:928
 msgid "Pan Canvas"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:901
+#: data/com.github.phase1geo.minder.shortcuts.ui:929
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:907
+#: data/com.github.phase1geo.minder.shortcuts.ui:935
 #, fuzzy
 msgid "Scroll Vertically"
 msgstr "Wertykalny"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:908
+#: data/com.github.phase1geo.minder.shortcuts.ui:936
 msgid "[Scrollwheel up/down]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:914
+#: data/com.github.phase1geo.minder.shortcuts.ui:942
 #, fuzzy
 msgid "Scroll Horizontally"
 msgstr "Horyzontalny"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:915
+#: data/com.github.phase1geo.minder.shortcuts.ui:943
 msgid "[Shift + Scrollwheel up/down]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:923
+#: data/com.github.phase1geo.minder.shortcuts.ui:951
 #, fuzzy
 msgid "Item Selection"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:927
+#: data/com.github.phase1geo.minder.shortcuts.ui:955
 #, fuzzy
 msgid "Select Single Item"
 msgstr "Usuń węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:928
+#: data/com.github.phase1geo.minder.shortcuts.ui:956
 msgid "[Left-click on item]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:934
+#: data/com.github.phase1geo.minder.shortcuts.ui:962
 #, fuzzy
 msgid "Select Child Nodes"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:935
+#: data/com.github.phase1geo.minder.shortcuts.ui:963
 msgid "[Control + Left-click on parent node]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:941
+#: data/com.github.phase1geo.minder.shortcuts.ui:969
 #, fuzzy
 msgid "Select Node Tree/Subtree"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:942
+#: data/com.github.phase1geo.minder.shortcuts.ui:970
 msgid "[Control + Double left-click on parent node]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:948
+#: data/com.github.phase1geo.minder.shortcuts.ui:976
 msgid "Select All Nodes at Same Depth Level"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:949
+#: data/com.github.phase1geo.minder.shortcuts.ui:977
 msgid "[Control + Triple left-click on node]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:955
+#: data/com.github.phase1geo.minder.shortcuts.ui:983
 #, fuzzy
 msgid "Block Selection"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:956
+#: data/com.github.phase1geo.minder.shortcuts.ui:984
 msgid "[Left-click + Drag]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:964
+#: data/com.github.phase1geo.minder.shortcuts.ui:992
 msgid "Item Selection Toggle (Add to/Remove from Selection)"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:968
+#: data/com.github.phase1geo.minder.shortcuts.ui:996
 #, fuzzy
 msgid "Toggle Selection of Item"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:969
+#: data/com.github.phase1geo.minder.shortcuts.ui:997
 msgid "[Shift + Left-click on item]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:975
+#: data/com.github.phase1geo.minder.shortcuts.ui:1003
 #, fuzzy
 msgid "Toggle Selection of Child Nodes"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:976
+#: data/com.github.phase1geo.minder.shortcuts.ui:1004
 msgid "[Shift + Control + Left-click on item]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:982
+#: data/com.github.phase1geo.minder.shortcuts.ui:1010
 #, fuzzy
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:983
+#: data/com.github.phase1geo.minder.shortcuts.ui:1011
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:989
+#: data/com.github.phase1geo.minder.shortcuts.ui:1017
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:990
+#: data/com.github.phase1geo.minder.shortcuts.ui:1018
 msgid "[Shift + Control + Triple left-click on node]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:998
+#: data/com.github.phase1geo.minder.shortcuts.ui:1026
 #, fuzzy
 msgid "Text Selection"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1002
+#: data/com.github.phase1geo.minder.shortcuts.ui:1030
 msgid "Set Cursor Insert Point"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1003
+#: data/com.github.phase1geo.minder.shortcuts.ui:1031
 msgid "[Left-click anywhere in text]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1009
+#: data/com.github.phase1geo.minder.shortcuts.ui:1037
 #, fuzzy
 msgid "Select current word"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1010
+#: data/com.github.phase1geo.minder.shortcuts.ui:1038
 msgid "[Double left-click on word]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1016
+#: data/com.github.phase1geo.minder.shortcuts.ui:1044
 #, fuzzy
 msgid "Select all text"
 msgstr "Wybierz węzeł"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1017
+#: data/com.github.phase1geo.minder.shortcuts.ui:1045
 msgid "[Triple left-click anywhere in text]"
 msgstr ""
 
