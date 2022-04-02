@@ -100,8 +100,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     { "action_prev_tab",      action_prev_tab }
   };
 
-  private bool     on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
-  private IconSize icon_size;
+  private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
 
   private delegate void ChangedFunc();
 
@@ -130,7 +129,6 @@ public class MainWindow : Hdy.ApplicationWindow {
     Object( application: app );
 
     _settings = settings;
-    icon_size = on_elementary ? IconSize.LARGE_TOOLBAR : IconSize.SMALL_TOOLBAR;
 
     var window_x = settings.get_int( "window-x" );
     var window_y = settings.get_int( "window-y" );
@@ -177,32 +175,32 @@ public class MainWindow : Hdy.ApplicationWindow {
     _nb.get_style_context().add_class( Gtk.STYLE_CLASS_INLINE_TOOLBAR );
 
     /* Create title toolbar */
-    var new_btn = new Button.from_icon_name( (on_elementary ? "document-new" : "document-new-symbolic"), icon_size );
+    var new_btn = new Button.from_icon_name( get_icon_name( "document-new" ), get_icon_size() );
     new_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "New File" ), "<Control>n" ) );
     new_btn.add_accelerator( "clicked", _accel_group, 'n', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
 
-    var open_btn = new Button.from_icon_name( (on_elementary ? "document-open" : "document-open-symbolic"), icon_size );
+    var open_btn = new Button.from_icon_name( get_icon_name( "document-open" ), get_icon_size() );
     open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open File" ), "<Control>o" ) );
     open_btn.add_accelerator( "clicked", _accel_group, 'o', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
-    var save_btn = new Button.from_icon_name( (on_elementary ? "document-save-as" : "document-save-as-symbolic"), icon_size );
+    var save_btn = new Button.from_icon_name( get_icon_name( "document-save-as" ), get_icon_size() );
     save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "<Control><Shift>s" ) );
     save_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
-    _undo_btn = new Button.from_icon_name( (on_elementary ? "edit-undo" : "edit-undo-symbolic"), icon_size );
+    _undo_btn = new Button.from_icon_name( get_icon_name( "edit-undo" ), get_icon_size() );
     _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "<Control>z" ) );
     _undo_btn.set_sensitive( false );
     _undo_btn.add_accelerator( "clicked", _accel_group, 'z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _undo_btn.clicked.connect( do_undo );
     _header.pack_start( _undo_btn );
 
-    _redo_btn = new Button.from_icon_name( (on_elementary ? "edit-redo" : "edit-redo-symbolic"), icon_size );
+    _redo_btn = new Button.from_icon_name( get_icon_name( "edit-redo" ), get_icon_size() );
     _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Redo" ), "<Control><Shift>z" ) );
     _redo_btn.set_sensitive( false );
     _redo_btn.add_accelerator( "clicked", _accel_group, 'z', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
@@ -268,6 +266,16 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   static construct {
     Hdy.init();
+  }
+
+  /* Returns the name of the icon to use for a headerbar icon */
+  private string get_icon_name( string icon_name ) {
+    return( "%s%s".printf( icon_name, (on_elementary ? "" : "-symbolic") ) );
+  }
+
+  /* Returns the size of the icon to use for a headerbar icon */
+  private IconSize get_icon_size() {
+    return( on_elementary ? IconSize.LARGE_TOOLBAR : IconSize.SMALL_TOOLBAR );
   }
 
   private void setting_changed_text_size() {
@@ -510,7 +518,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     /* Create the menu button */
     _zoom_btn = new MenuButton();
-    _zoom_btn.set_image( new Image.from_icon_name( (on_elementary ? "zoom-fit-best" : "zoom-fit-best-symbolic"), icon_size ) );
+    _zoom_btn.set_image( new Image.from_icon_name( get_icon_name( "zoom-fit-best" ), get_icon_size() ) );
     _zoom_btn.set_tooltip_text( _( "Zoom (%d%%)" ).printf( 100 ) );
     _header.pack_end( _zoom_btn );
 
@@ -580,7 +588,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     /* Create the menu button */
     _search_btn = new MenuButton();
-    _search_btn.set_image( new Image.from_icon_name( (on_elementary ? "minder-search" : "system-search-symbolic"), icon_size ) );
+    _search_btn.set_image( new Image.from_icon_name( (on_elementary ? "minder-search" : "edit-find-symbolic"), get_icon_size() ) );
     _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "<Control>f" ) );
     _search_btn.add_accelerator( "clicked", _accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
     _search_btn.clicked.connect( on_search_change );
@@ -754,7 +762,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     /* Create the menu button */
     var menu_btn = new MenuButton();
-    menu_btn.set_image( new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic"), icon_size ) );
+    menu_btn.set_image( new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic"), get_icon_size() ) );
     menu_btn.set_tooltip_text( _( "Export" ) );
     _header.pack_end( menu_btn );
 
@@ -788,7 +796,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   private void add_focus_button() {
 
     _focus_btn       = new ToggleButton();
-    _focus_btn.image = new Image.from_icon_name( (on_elementary ? "minder-focus" : "media-optical-symbolic"), icon_size );
+    _focus_btn.image = new Image.from_icon_name( (on_elementary ? "minder-focus" : "media-optical-symbolic"), get_icon_size() );
     _focus_btn.draw_indicator = true;
     _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "<Control><Shift>f" ) );
     _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
@@ -808,7 +816,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     /* Create the menu button */
     var misc_btn = new MenuButton();
-    misc_btn.set_image( new Image.from_icon_name( (on_elementary ? "open-menu" : "open-menu-symbolic"), icon_size ) );
+    misc_btn.set_image( new Image.from_icon_name( get_icon_name( "open-menu" ), get_icon_size() ) );
 
     /* Create export menu */
     var box = new Box( Orientation.VERTICAL, 5 );
@@ -852,8 +860,8 @@ public class MainWindow : Hdy.ApplicationWindow {
   private void add_property_button() {
 
     /* Add the menubutton */
-    _prop_show = new Image.from_icon_name( (on_elementary ? "minder-sidebar-open"  : "pane-show-symbolic"), icon_size );
-    _prop_hide = new Image.from_icon_name( (on_elementary ? "minder-sidebar-close" : "pane-hide-symbolic"), icon_size );
+    _prop_show = new Image.from_icon_name( (on_elementary ? "minder-sidebar-open"  : "minder-sidebar-symbolic"), get_icon_size() );
+    _prop_hide = new Image.from_icon_name( (on_elementary ? "minder-sidebar-close" : "minder-sidebar-symbolic"), get_icon_size() );
     _prop_btn  = new ToggleButton();
     _prop_btn.image  = _prop_show;
     _prop_btn.active = false;
