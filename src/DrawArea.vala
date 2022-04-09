@@ -3155,7 +3155,7 @@ public class DrawArea : Gtk.DrawingArea {
   public Node create_main_node( Node root, NodeSide side, string name = "" ) {
     var node   = new Node.with_name( this, name, layouts.get_default() );
     node.side  = side;
-    node.style.copy( root.style );
+    node.style = root.style;
     // node.style = StyleInspector.styles.get_style_for_level( 1, null );
     if( root.layout.balanceable && ((side == NodeSide.LEFT) || (side == NodeSide.TOP)) ) {
       node.attach( root, root.side_count( side ), _theme, false );
@@ -3172,7 +3172,7 @@ public class DrawArea : Gtk.DrawingArea {
   public Node create_sibling_node( Node sibling, string name = "" ) {
     var node   = new Node.with_name( this, name, layouts.get_default() );
     node.side  = sibling.side;
-    node.style.copy( sibling.style );
+    node.style = sibling.style;
     // node.style = StyleInspector.styles.get_style_for_level( sibling.get_level(), sibling.style );
     node.attach( sibling.parent, (sibling.index() + 1), _theme );
     return( node );
@@ -3185,7 +3185,7 @@ public class DrawArea : Gtk.DrawingArea {
     var node  = new Node.with_name( this, name, layouts.get_default() );
     var color = child.link_color;
     node.side  = child.side;
-    node.style.copy( child.style );
+    node.style = child.style;
     // node.style = StyleInspector.styles.get_style_for_level( child.get_level(), child.style );
     node.attach( child.parent, child.index(), null );
     node.link_color = color;
@@ -3203,9 +3203,9 @@ public class DrawArea : Gtk.DrawingArea {
       node.side = parent.side;
     }
     if( parent.children().length > 0 ) {
-      node.style.copy( parent.last_child().style );
+      node.style = parent.last_child().style;
     } else {
-      node.style.copy( parent.style );
+      node.style = parent.style;
     }
     // node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), parent.style );
     node.attach( parent, -1, _theme );

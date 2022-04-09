@@ -126,7 +126,7 @@ public class ExportOutliner : Export {
 
     /* Create the root node */
     var root = new Node.with_name( da, da.get_doc().label, da.layouts.get_default() );
-    root.style.copy( StyleInspector.styles.get_global_style() );
+    root.style = StyleInspector.styles.get_global_style();
     root.posx = (width  / 2) - 30;
     root.posy = (height / 2) - 10;
 
@@ -172,7 +172,7 @@ public class ExportOutliner : Export {
       node.folded = !bool.parse( e );
     }
     node.layout = da.layouts.get_default();
-    node.style.copy( StyleInspector.styles.get_global_style() );
+    node.style  = StyleInspector.styles.get_global_style();
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
