@@ -2,14 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
 # ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2020.
-# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2021.
+# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2021,2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-02 14:43-0500\n"
-"PO-Revision-Date: 2021-12-27 22:00+0100\n"
+"PO-Revision-Date: 2021-04-03 20:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -140,13 +140,15 @@ msgstr "% 0.3g%% completo"
 
 #: src/DrawArea.vala:2413
 msgid "Drag to resize node"
-msgstr ""
+msgstr "Trascina per ridimensionare il nodo"
 
 #: src/DrawArea.vala:2415
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
+"Trascina per ridimensionare il nodo e l'immagine.\n"
+"Control-trascina per ridimensionare solo il nodo."
 
 #: src/DrawArea.vala:2527
 #, c-format
@@ -715,7 +717,7 @@ msgstr "Modifica Immagine"
 
 #: src/NodeInspector.vala:297
 msgid "Resizable"
-msgstr ""
+msgstr "Ridimensionabile"
 
 #: src/NodeInspector.vala:368
 msgid "Copy Node To Clipboard"
@@ -1462,7 +1464,7 @@ msgstr "Info"
 
 #: src/StickerSet.vala:101
 msgid "About"
-msgstr "A proposito di"
+msgstr "Informazioni"
 
 #: src/StickerSet.vala:102
 msgid "Picture"
@@ -1911,7 +1913,7 @@ msgstr "Entrare in paradiso vivi"
 
 #: src/StickerSet.vala:219
 msgid "Biomass"
-msgstr "biomassa"
+msgstr "Biomassa"
 
 #: src/StickerSet.vala:220
 msgid "Display"
@@ -3183,15 +3185,13 @@ msgid "Change Task State"
 msgstr "Cambia stato attività"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:343
-#, fuzzy
 msgid "Add URL Link To Text"
-msgstr "Aggiungi Fine Testo"
+msgstr "Aggiungi collegamento URL al testo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:350
 #: data/com.github.phase1geo.minder.shortcuts.ui:716
-#, fuzzy
 msgid "Remove URL Link From Text"
-msgstr "Rimuovi Collegamento"
+msgstr "Rimuovi collegamento URL dal testo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:357
 msgid "View Properties"
@@ -3380,9 +3380,8 @@ msgid "Show Emoji Picker"
 msgstr "Mostra selettore Emoji"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:709
-#, fuzzy
 msgid "Add URL Link To Selected Text"
-msgstr "Copia Testo Selezionato"
+msgstr "Aggiungi collegamento URL al testo selezionato"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:723
 msgid "End Editing"
