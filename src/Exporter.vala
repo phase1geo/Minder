@@ -132,6 +132,10 @@ public class Exporter : Box {
       _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
     Utils.set_chooser_folder( dialog );
 
+    /* Set the default filename */
+    var default_fname = Utils.rootname( win.get_current_da().get_doc().filename );
+    dialog.set_current_name( win.repair_filename( default_fname, export.extensions ) );
+
     /* Set the filter */
     FileFilter filter = new FileFilter();
     filter.set_filter_name( export.label );
