@@ -2,23 +2,23 @@
 # Copyright (C) 2020 THE com.github.phase1geo.minder'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
 # Automatically generated, 2020.
-# Alexandre Prokoudine <alexandre.prokoudine@gmail.com>, 2021.
+# Alexandre Prokoudine <alexandre.prokoudine@gmail.com>, 2021-2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-02 14:43-0500\n"
-"PO-Revision-Date: 2021-11-09 21:38+0300\n"
+"PO-Revision-Date: 2022-04-17 11:13+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
-"X-Generator: Gtranslator 40.0\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"X-Generator: Gtranslator 41.0\n"
 
 #: src/About.vala:36
 msgid "Mind-mapping application"
@@ -62,9 +62,8 @@ msgstr ""
 "программы\n"
 
 #: src/CanvasText.vala:253 src/FormattedText.vala:1076
-#, fuzzy
 msgid "No text found"
-msgstr "Следующее слово"
+msgstr "Текст не найден"
 
 #: src/ConnectionInspector.vala:74 src/NodeInspector.vala:132
 msgid "Color"
@@ -146,7 +145,7 @@ msgstr "%0.3g%% завершено"
 
 #: src/DrawArea.vala:2413
 msgid "Drag to resize node"
-msgstr ""
+msgstr "Перетащите для смены размера узла"
 
 #: src/DrawArea.vala:2415
 msgid ""
@@ -368,7 +367,7 @@ msgstr "Сжатие"
 
 #: src/exports/ExportPortableMinder.vala:28
 msgid "Portable Minder"
-msgstr ""
+msgstr "Переносимый Minder"
 
 #: src/exports/ExportSVG.vala:28
 msgid "SVG"
@@ -633,20 +632,19 @@ msgstr "Сохранить"
 #: src/MainWindow.vala:970
 #, c-format
 msgid "The file %s was modified outside of the application."
-msgstr ""
+msgstr "Файл %s был изменён другим приложением."
 
 #: src/MainWindow.vala:971
 msgid "What do you want to do?"
-msgstr ""
+msgstr "Как вы хотите поступить?"
 
 #: src/MainWindow.vala:976
-#, fuzzy
 msgid "Discard Changes and reload"
-msgstr "Отказаться от изменений"
+msgstr "Отказаться от изменений и перезагрузить"
 
 #: src/MainWindow.vala:979
 msgid "Save local version and overwrite"
-msgstr ""
+msgstr "Сохранить локальную версию и перезаписать"
 
 #: src/MainWindow.vala:1020
 msgid "Open"
@@ -706,7 +704,7 @@ msgstr "Свернуть"
 
 #: src/NodeInspector.vala:162
 msgid "Override Color"
-msgstr ""
+msgstr "Использовать другой цвет"
 
 #: src/NodeInspector.vala:247 src/NodeInspector.vala:265
 msgid "Image"
@@ -722,7 +720,7 @@ msgstr "Изменить изображение"
 
 #: src/NodeInspector.vala:297
 msgid "Resizable"
-msgstr ""
+msgstr "Размер изменяем"
 
 #: src/NodeInspector.vala:368
 msgid "Copy Node To Clipboard"
@@ -741,9 +739,8 @@ msgid "Delete Node"
 msgstr "Удалить узел"
 
 #: src/NodeLink.vala:101
-#, fuzzy
 msgid "No node found"
-msgstr "Операции с узлами"
+msgstr "Узлы не найдены"
 
 #: src/NodeMenu.vala:69 src/NodesMenu.vala:47 src/TextMenu.vala:44
 msgid "Copy"
@@ -983,9 +980,8 @@ msgid "Align Right"
 msgstr "По правому краю"
 
 #: src/NodesMenu.vala:215
-#, fuzzy
 msgid "Remove Node Links"
-msgstr "Удалить ссылку на узел"
+msgstr "Удалить ссылки на узлы"
 
 #: src/Node.vala:1974
 msgid "Node Title"
@@ -1347,7 +1343,7 @@ msgstr "OK"
 
 #: src/StickerSet.vala:70
 msgid "Checkmark"
-msgstr ""
+msgstr "Значок отметки"
 
 #: src/StickerSet.vala:72
 msgid "Synchronize"
@@ -1671,7 +1667,7 @@ msgstr "Статистика"
 
 #: src/StickerSet.vala:156
 msgid "Collaboration"
-msgstr ""
+msgstr "Совместная работа"
 
 #: src/StickerSet.vala:157
 msgid "Voice presentation"
@@ -2007,7 +2003,7 @@ msgstr "Биологическая опасность"
 
 #: src/StickerSet.vala:242
 msgid "Circuit"
-msgstr ""
+msgstr "Электрическая цепь"
 
 #: src/StickerSet.vala:243
 msgid "Engineering"
@@ -2482,6 +2478,8 @@ msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
 msgstr ""
+"Залить этот узел цветом, когда его рамка квадратная,\n"
+"закругленная или в форме таблетки"
 
 #: src/StyleInspector.vala:685 src/StyleInspector.vala:972
 msgid "Padding"
@@ -3005,10 +3003,9 @@ msgstr "URL"
 #: src/Utils.vala:159 src/Utils.vala:165
 #, c-format
 msgid "error: %s\n"
-msgstr ""
+msgstr "ошибка: %s\n"
 
 #: src/ZoomWidget.vala:97
-#, fuzzy
 msgid "Zoom Actual"
 msgstr "Настоящий размер"
 
@@ -3186,15 +3183,13 @@ msgid "Change Task State"
 msgstr "Поменять статус задачи"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:343
-#, fuzzy
 msgid "Add URL Link To Text"
-msgstr "Выделить до конца текста"
+msgstr "Добавить URL к выделенному тексту"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:350
 #: data/com.github.phase1geo.minder.shortcuts.ui:716
-#, fuzzy
 msgid "Remove URL Link From Text"
-msgstr "Удалить ссылку"
+msgstr "Удалить ссылку из текста"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:357
 msgid "View Properties"
@@ -3383,9 +3378,8 @@ msgid "Show Emoji Picker"
 msgstr "Показать палитру эмотиконов"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:709
-#, fuzzy
 msgid "Add URL Link To Selected Text"
-msgstr "Скопировать выделенный текст"
+msgstr "Добавить URL к выделенному тексту"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:723
 msgid "End Editing"
@@ -3493,7 +3487,7 @@ msgstr "Изменить изображение на холсте"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:916
 msgid "[Double left-click on image]"
-msgstr ""
+msgstr "[Двойной щелчок по изображению]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:924
 msgid "Canvas Movement"
@@ -3513,7 +3507,7 @@ msgstr "Прокрутить по вертикали"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:936
 msgid "[Scrollwheel up/down]"
-msgstr ""
+msgstr "[Прокрутка колесом вверх/вниз]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:942
 msgid "Scroll Horizontally"
@@ -3521,7 +3515,7 @@ msgstr "Прокрутить по горизонтали"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:943
 msgid "[Shift + Scrollwheel up/down]"
-msgstr ""
+msgstr "[Shift + прокрутка колесом вверх/вниз]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:951
 msgid "Item Selection"
@@ -3582,7 +3576,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1003
 msgid "Toggle Selection of Child Nodes"
-msgstr ""
+msgstr "Переключить выбор узлов-потомков"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1004
 msgid "[Shift + Control + Left-click on item]"
@@ -3590,7 +3584,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1010
 msgid "Toggle Selection of Node Tree/Subtree"
-msgstr ""
+msgstr "Переключить выбор дерева/поддерева узлов"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1011
 msgid "[Shift + Control + Double left-click on parent node]"
@@ -3598,7 +3592,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1017
 msgid "Toggle Selection of All Nodes at Same Depth Level"
-msgstr ""
+msgstr "Переключить выбор всех узлов на одном уровне вложенности"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1018
 msgid "[Shift + Control + Triple left-click on node]"
@@ -3614,7 +3608,7 @@ msgstr "Установить точку ввода"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1031
 msgid "[Left-click anywhere in text]"
-msgstr ""
+msgstr "[Щелчок ЛКМ в любой части текста]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1037
 msgid "Select current word"
@@ -3622,7 +3616,7 @@ msgstr "Выбрать текущее слово"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1038
 msgid "[Double left-click on word]"
-msgstr ""
+msgstr "[Двойной щелчок по слову]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1044
 msgid "Select all text"
@@ -3630,7 +3624,7 @@ msgstr "Выделить весь текст"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1045
 msgid "[Triple left-click anywhere in text]"
-msgstr ""
+msgstr "[Тройной щелчок в любой части текста]"
 
 #~ msgid "Zoom"
 #~ msgstr "Масштаб"

@@ -2,22 +2,23 @@
 # Copyright (C) 2020 THE com.github.phase1geo.minder'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
 # Automatically generated, 2020.
+# Alexandre Prokoudine <alexandre.prokoudine@gmail.com>, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Minder 1.12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-02 14:43-0500\n"
-"PO-Revision-Date: 2021-06-27 23:46+0300\n"
+"PO-Revision-Date: 2022-04-17 11:43+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
-"Language-Team: none\n"
+"Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.4.2\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"X-Generator: Gtranslator 41.0\n"
 
 #: data/com.github.phase1geo.minder.desktop.in:3
 #: data/com.github.phase1geo.minder.appdata.xml.in:7
@@ -202,7 +203,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:98
 msgid "Added import/export support for XMind version 2021."
-msgstr ""
+msgstr "Добавлен импорт и экспорт файлов XMind 2021."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:99
 msgid "Added support for external mind-map node linking."
@@ -217,9 +218,8 @@ msgid "Added support for overriding the color of a root node."
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:102
-#, fuzzy
 msgid "Added support for Markdown strikethrough syntax."
-msgstr "Используйте форматирование Markdown."
+msgstr "Добавлена поддержка зачеркивания в синтаксисе Markdown."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:103
 msgid ""
@@ -261,14 +261,12 @@ msgid "Changes"
 msgstr "Изменения"
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:109
-#, fuzzy
 msgid "Updates to Italian translation (thanks to @albanobattistella)"
-msgstr "Обновлена итальянская локализация (@albanobattistella)."
+msgstr "Обновлена итальянская локализация (спасибо @albanobattistella)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:110
-#, fuzzy
 msgid "Updates to German translation (thanks to Hannes Fritz)"
-msgstr "Обновлена итальянская локализация (@albanobattistella)."
+msgstr "Обновлена немецкая локализация (спасибо Hannes Fritz)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:111
 msgid "Improved accuracy of the list of translatable files."
@@ -342,7 +340,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:130
 msgid "Updated screenshots for elementary OS 6."
-msgstr ""
+msgstr "Скриншоты обновлены для elementary OS 6."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:134
 msgid "Fixed command support for non-English keyboard layouts."
@@ -355,9 +353,8 @@ msgid ""
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:143
-#, fuzzy
 msgid "Added German translation (thanks to Peter Sonntaga)."
-msgstr "Обновлена испанская локализация (febrezo на GutHub)."
+msgstr "Добавлена немецкая локализация (спасибо Peter Sonntaga)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:144
 msgid "Added zoom amount in the zoom button tooltip."
@@ -377,18 +374,17 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:147
 msgid "Added support for system dark mode setting."
-msgstr ""
+msgstr "Добавлена поддержка системной темной темы."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:151
 #: data/com.github.phase1geo.minder.appdata.xml.in:345
 #: data/com.github.phase1geo.minder.appdata.xml.in:446
 msgid "Updated Italian translation (thanks to @albanobattistella)."
-msgstr ""
+msgstr "Обновлена итальянская локализация (спасибо @albanobattistella)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:152
-#, fuzzy
 msgid "Updated Russian translation (thanks to Alexandre Prokoudine)."
-msgstr "Добавлена русская локализация (Александр Прокудин)"
+msgstr "Обновлена русская локализация (Александр Прокудин)"
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:153
 msgid "Improved task indicator sizes in leaf nodes."
@@ -508,7 +504,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:203
 msgid "Added missing translatable strings."
-msgstr ""
+msgstr "Добавлены забытые переводимые сообщения."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:211
 msgid "Added rounded branching style."
@@ -601,7 +597,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:253
 msgid "Added Basque translation (thanks to @alexgabi)"
-msgstr ""
+msgstr "Добавлен перевод на баскский (спасибо @alexgabi)"
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:257
 msgid "Updated to Italian translation (thanks to @albanobattistella)."
@@ -652,7 +648,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:277
 msgid "Added subscript and superscript support to Markdown parser."
-msgstr ""
+msgstr "В парсер Markdown добавлена поддержка верхнего и нижнего индексов."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:278
 msgid ""
@@ -818,7 +814,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:326
 msgid "Updated Italian translation (thanks to Albano Battistella)."
-msgstr ""
+msgstr "Обновлен перевод на итальянский (спаисбо Albano Battistella)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:330
 msgid "Fixed application crash issues due to using custom themes."
@@ -868,11 +864,11 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:361
 msgid "Added Preferences dialog."
-msgstr ""
+msgstr "Добавлен диалог настройки программы."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:362
 msgid "Added Portuguese translation (thanks to Andre Barata)."
-msgstr ""
+msgstr "Добавлен перевод на португальский (спасибо Andre Barata)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:363
 msgid ""
@@ -1007,7 +1003,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:402
 msgid "Added import/export support for XMind."
-msgstr ""
+msgstr "Добавлен импорт и экспорт файлов XMind."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:403
 msgid ""
@@ -1132,10 +1128,12 @@ msgstr ""
 #: data/com.github.phase1geo.minder.appdata.xml.in:460
 msgid "Added ability to configure the color used in connection titles."
 msgstr ""
+"Добавлена возможность настроить цвет в подписях к соединительным линиям."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:461
 msgid "Added Italian translation (thanks to albanobattistella on GitHub)."
 msgstr ""
+"Добавлена итальянская локализация (спасибо albanobattistella на GitHub)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:465
 msgid ""
@@ -1337,7 +1335,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:530
 msgid "Added Dutch translation (thanks to Heimen Stoffels)."
-msgstr ""
+msgstr "Добавлен перевод на нидерландский (спасибо Heimen Stoffels)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:534
 msgid ""
@@ -1433,7 +1431,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:566
 msgid "Improved OPML import support."
-msgstr ""
+msgstr "Улучшен импорт OPML."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:567
 msgid "Changed ability to select a subtree by Control + double-click."
@@ -1551,11 +1549,11 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:624
 msgid "Added export to yEd."
-msgstr ""
+msgstr "Добавлен экспорт в yEd."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:625
 msgid "Added ability to create, edit and delete custom themes."
-msgstr ""
+msgstr "Добавлена возможность создавать, редактировать и удалять свои темы."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:626
 msgid ""
@@ -1628,7 +1626,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:660
 msgid "Added support for focus mode."
-msgstr ""
+msgstr "Добавлен режим фокусировки."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:661
 msgid "Added support for multiple documents with tabs."
@@ -1815,7 +1813,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:729
 msgid "Added Spanish translation."
-msgstr ""
+msgstr "Добавлен перевод на испанский."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:730
 msgid ""
@@ -1843,7 +1841,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:735
 msgid "Added support for exporting to the Mermaid format."
-msgstr ""
+msgstr "Добавлен экспорт в формат Mermaid."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:736
 msgid "Added support for disabling/enabling displaying markup in node title."
@@ -1859,7 +1857,7 @@ msgstr "Множество исправлений ошибок."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:745
 msgid "Adding Spanish translation (thanks to Adolfo Jayme-Barrientos)."
-msgstr ""
+msgstr "Добавлен перевод на испанский (спасибо Adolfo Jayme-Barrientos)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:746
 msgid "Adding support for special character insertion via the Compose key."
@@ -1867,7 +1865,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:752
 msgid "Updating French translation."
-msgstr ""
+msgstr "Обновлен перевод на французский."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:757
 msgid "Bug fix release"
@@ -1894,15 +1892,15 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:768
 msgid "Images now supported!"
-msgstr ""
+msgstr "Добавлена поддержка изображений!"
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:770
 msgid "Added support for images within nodes."
-msgstr ""
+msgstr "Добавлена поддержка изображений внутри узлов."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:771
 msgid "Added basic image editing support."
-msgstr ""
+msgstr "Добавлены простые функции редактирования изображений."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:772
 msgid "Added support for dragging and dropping local and web images."
@@ -1953,7 +1951,7 @@ msgstr ""
 msgid ""
 "Added support for exporting to SVG, JPEG, BMP, Markdown, PlainText and CSV "
 "formats."
-msgstr ""
+msgstr "Добавлен экспорт в форматы SVG, JPEG, BMP, Markdown, PlainText и CSV."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:790
 msgid "Added support for folding all completed tasks in map inspector."
@@ -1965,7 +1963,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:792
 msgid "Added Solarized Dark and Solarized Light themes."
-msgstr ""
+msgstr "Добавлены темы Solarized Dark и Solarized Light."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:793
 msgid "Changing button display in map inspector."
@@ -1987,15 +1985,15 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:797
 msgid "Added Czech translation (thanks to Jan Marek!)."
-msgstr ""
+msgstr "Добавлена чешская локализация (спасибо Jan Marek!)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:798
 msgid "Added French translation (thanks to Yannick A.!)."
-msgstr ""
+msgstr "Добавлена французская локализация (спасибо Yannick A.!)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:799
 msgid "Added Brazilian Portuguese translation (thanks to btd1337!)"
-msgstr ""
+msgstr "Добавлен перевод на бразильский португальский (спасибо btd1337!)"
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:805
 msgid "Initial startup bug fix."
@@ -2003,11 +2001,11 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:810
 msgid "Search improvements and bug fixes"
-msgstr ""
+msgstr "Улучшения в поиске и исправления ошибок."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:812
 msgid "Added ability to search within notes."
-msgstr ""
+msgstr "Добавлена возможность искать по тексту примечаний."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:813
 msgid ""
@@ -2016,7 +2014,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:814
 msgid "Fixed screenshots."
-msgstr ""
+msgstr "Исправлены скриншоты."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:815
 msgid ""
@@ -2025,7 +2023,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:816
 msgid "Several minor UI improvements."
-msgstr ""
+msgstr "Несколько несущественных улучшений в интерфейсе."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:817
 msgid "Removing deprecated GTK calls."
