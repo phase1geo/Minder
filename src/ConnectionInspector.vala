@@ -124,6 +124,8 @@ public class ConnectionInspector : Box {
     box.pack_start( lbl, false, false );
     box.pack_start( _sw,  true,  true );
 
+    box.margin_bottom = 20;
+
     pack_start( box, true, true );
 
   }
@@ -144,7 +146,7 @@ public class ConnectionInspector : Box {
     grid.attach( del_btn, 0, 0, 1, 1 );
 
     /* Add the button grid to the popover */
-    pack_start( grid, false, true );
+    // pack_start( grid, false, true );
 
   }
 
