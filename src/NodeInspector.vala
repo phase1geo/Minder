@@ -47,7 +47,7 @@ public class NodeInspector : Box {
   private ColorButton    _root_color;
   private Revealer       _root_color_reveal;
   private Revealer       _color_reveal;
-  private Switch         _resize;
+  private ToggleButton   _resize;
 
   public NodeInspector( MainWindow win ) {
 
@@ -278,40 +278,55 @@ public class NodeInspector : Box {
       _da.delete_current_image();
     });
 
+    _resize = new ToggleButton();
+    _resize.image = new Image.from_icon_name( "view-fullscreen-symbolic", IconSize.SMALL_TOOLBAR );
+    _resize.set_tooltip_text( _( "Resizable" ) );
+    _resize.toggled.connect(() => {
+      var current = _da.get_current_node();
+      if( current != null ) {
+        current.image_resizable = _resize.get_active();
+        _da.auto_save();
+      }
+    });
+
     var image_btn_box = new Box( Orientation.HORIZONTAL, 10 );
+    image_btn_box.pack_start( _resize,  false, false );
     image_btn_box.pack_start( btn_edit, false, false );
     image_btn_box.pack_start( btn_del,  false, false );
 
+    // var resize_lbl = new Label( Utils.make_title( _( "Resizable" ) ) );
+    // var resize_lbl = new Label( _( "Resizable" ) );
+    //resize_lbl.xalign     = (float)0;
+    //resize_lbl.use_markup = true;
+
+//    _resize = new Switch();
+ //   _resize.button_release_event.connect( resize_changed );
+
+//    var resize_box = new Box( Orientation.HORIZONTAL, 10 );
+    //resize_box.margin_left  = 20;
+    //resize_box.margin_right = 20;
+ //   resize_box.pack_start( resize_lbl, false, false, 0 );
+  //  resize_box.pack_start( _resize,    false, false, 0 );
+
     var tbox = new Box( Orientation.HORIZONTAL, 10 );
-    tbox.pack_start( lbl,           false, false );
-    tbox.pack_end(   image_btn_box, false, false );
+    tbox.pack_start( lbl,         false, false );
+    tbox.pack_end( image_btn_box, false, false );
+   // tbox.pack_end( resize_box,    false, false );
 
     _image = new Image();
+    _image.margin_bottom = 20;
 
-    _image_loc = new Label( "" );
-    _image_loc.use_markup = true;
-    _image_loc.wrap       = true;
-    _image_loc.max_width_chars = 40;
-    _image_loc.activate_link.connect( image_link_clicked );
-
-    var resize_lbl = new Label( Utils.make_title( _( "Resizable" ) ) );
-    resize_lbl.xalign     = (float)0;
-    resize_lbl.use_markup = true;
-
-    _resize = new Switch();
-    _resize.button_release_event.connect( resize_changed );
-
-    var resize_box = new Box( Orientation.HORIZONTAL, 10 );
-    resize_box.margin_left  = 20;
-    resize_box.margin_right = 20;
-    resize_box.pack_start( resize_lbl, false, false, 0 );
-    resize_box.pack_end(   _resize,    false, false, 0 );
+//    _image_loc = new Label( "" );
+//    _image_loc.use_markup = true;
+//    _image_loc.wrap       = true;
+//    _image_loc.max_width_chars = 40;
+//    _image_loc.activate_link.connect( image_link_clicked );
 
     var box  = new Box( Orientation.VERTICAL, 10 );
     box.pack_start( tbox,       false, false );
     box.pack_start( _image,     true,  true );
-    box.pack_start( _image_loc, false, true );
-    box.pack_start( resize_box, false, true );
+    // box.pack_start( _image_loc, false, true );
+    // box.pack_start( resize_box, false, true );
 
     /* Set ourselves up to be a drag target */
     Gtk.drag_dest_set( _image, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
@@ -389,7 +404,7 @@ public class NodeInspector : Box {
     grid.attach( del_btn,     3, 0, 1, 1 );
 
     /* Add the button grid to the popover */
-    pack_start( grid, false, true );
+    // pack_start( grid, false, true );
 
   }
 
