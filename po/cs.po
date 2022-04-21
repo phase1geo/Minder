@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-02 14:43-0500\n"
+"POT-Creation-Date: 2022-04-20 22:04-0500\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -73,7 +73,7 @@ msgstr "Použít základní barvu motivu"
 msgid "Note"
 msgstr "Poznámka"
 
-#: src/ConnectionInspector.vala:140
+#: src/ConnectionInspector.vala:142
 msgid "Delete Connection"
 msgstr "Smazat spojení"
 
@@ -258,17 +258,17 @@ msgid "Export As %s"
 msgstr "Exportovat jako %s"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:299
-#: src/MainWindow.vala:938 src/MainWindow.vala:1020 src/MainWindow.vala:1140
+#: src/MainWindow.vala:946 src/MainWindow.vala:1028 src/MainWindow.vala:1148
 #: src/QuickEntry.vala:118 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: src/Exporter.vala:132 src/MainWindow.vala:758 src/StickerSet.vala:348
+#: src/Exporter.vala:132 src/MainWindow.vala:766 src/StickerSet.vala:348
 msgid "Export"
 msgstr "Export"
 
-#: src/Exporter.vala:154
+#: src/Exporter.vala:158
 msgid "Minder Export Completed"
 msgstr "Export Minderu dokončen"
 
@@ -461,196 +461,196 @@ msgstr "Vybrat obrázek"
 msgid "Images"
 msgstr "Obrázky"
 
-#: src/MainWindow.vala:148 src/MainWindow.vala:1145
+#: src/MainWindow.vala:146 src/MainWindow.vala:1153
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:181 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:179 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
 msgstr "Nový soubor"
 
-#: src/MainWindow.vala:187 src/MainWindow.vala:1020
+#: src/MainWindow.vala:185 src/MainWindow.vala:1028
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "Otevřít soubor"
 
-#: src/MainWindow.vala:193 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:191 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
 msgstr "Uložit soubor jako"
 
-#: src/MainWindow.vala:199 src/StickerSet.vala:303 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:197 src/StickerSet.vala:303 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Zpět"
 
-#: src/MainWindow.vala:206 src/StickerSet.vala:304 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:204 src/StickerSet.vala:304 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Znovu"
 
-#: src/MainWindow.vala:478
+#: src/MainWindow.vala:486
 msgid "Unnamed Document"
 msgstr "Nepojmenovaný dokument"
 
-#: src/MainWindow.vala:482 src/MainWindow.vala:793
+#: src/MainWindow.vala:490 src/MainWindow.vala:801
 msgid "Focus Mode"
 msgstr "Režim soustředění"
 
-#: src/MainWindow.vala:514 src/MainWindow.vala:1191
+#: src/MainWindow.vala:522 src/MainWindow.vala:1199
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Přiblížení (%d%%)"
 
-#: src/MainWindow.vala:521
+#: src/MainWindow.vala:529
 msgid "Zoom to Percent"
 msgstr "Procentuální přiblížení"
 
-#: src/MainWindow.vala:534 src/ZoomWidget.vala:102
+#: src/MainWindow.vala:542 src/ZoomWidget.vala:102
 #: data/com.github.phase1geo.minder.shortcuts.ui:117
 msgid "Zoom In"
 msgstr "Přiblížit"
 
-#: src/MainWindow.vala:540 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:548 src/ZoomWidget.vala:92
 #: data/com.github.phase1geo.minder.shortcuts.ui:124
 msgid "Zoom Out"
 msgstr "Oddálit"
 
-#: src/MainWindow.vala:550
+#: src/MainWindow.vala:558
 msgid "Zoom to Fit"
 msgstr "Vměstnat do okna"
 
-#: src/MainWindow.vala:555
+#: src/MainWindow.vala:563
 msgid "Zoom to Fit Selected Node"
 msgstr "Vměstnat do okna vybraný uzel"
 
-#: src/MainWindow.vala:560
+#: src/MainWindow.vala:568
 msgid "Zoom to Actual Size"
 msgstr "Přiblížení na skutečnou velikost"
 
-#: src/MainWindow.vala:584 src/StickerSet.vala:110
+#: src/MainWindow.vala:592 src/StickerSet.vala:110
 msgid "Search"
 msgstr "Hledat"
 
-#: src/MainWindow.vala:594
+#: src/MainWindow.vala:602
 msgid "Search Nodes and Connections"
 msgstr "Hledat uzly a spojení"
 
-#: src/MainWindow.vala:623
+#: src/MainWindow.vala:631
 msgid "Search Criteria"
 msgstr "Kritéria hledání"
 
-#: src/MainWindow.vala:626
+#: src/MainWindow.vala:634
 msgid "Search all tabs"
 msgstr "Prohledat všechny panely"
 
-#: src/MainWindow.vala:660
+#: src/MainWindow.vala:668
 msgid "Nodes"
 msgstr "Uzly"
 
-#: src/MainWindow.vala:661
+#: src/MainWindow.vala:669
 msgid "Connections"
 msgstr "Spojení"
 
-#: src/MainWindow.vala:662
+#: src/MainWindow.vala:670
 msgid "Titles"
 msgstr "Názvy"
 
-#: src/MainWindow.vala:663
+#: src/MainWindow.vala:671
 msgid "Notes"
 msgstr "Poznámky"
 
-#: src/MainWindow.vala:664
+#: src/MainWindow.vala:672
 msgid "Folded"
 msgstr "Sbalené"
 
-#: src/MainWindow.vala:665
+#: src/MainWindow.vala:673
 msgid "Unfolded"
 msgstr "Rozbalené"
 
-#: src/MainWindow.vala:666
+#: src/MainWindow.vala:674
 msgid "Tasks"
 msgstr "Úkoly"
 
-#: src/MainWindow.vala:667
+#: src/MainWindow.vala:675
 msgid "Non-tasks"
 msgstr "Nejsou úkoly"
 
-#: src/MainWindow.vala:770
+#: src/MainWindow.vala:778
 msgid "Print…"
 msgstr "Vytisknout…"
 
-#: src/MainWindow.vala:818 src/Preferences.vala:36
+#: src/MainWindow.vala:826 src/Preferences.vala:36
 msgid "Preferences"
 msgstr "Přizpůsobení"
 
-#: src/MainWindow.vala:823
+#: src/MainWindow.vala:831
 msgid "Shortcuts Cheatsheet"
 msgstr "Seznam všech zkratek"
 
-#: src/MainWindow.vala:827
+#: src/MainWindow.vala:835
 msgid "About Minder"
 msgstr "O Minderu"
 
-#: src/MainWindow.vala:860 src/MainWindow.vala:1257
+#: src/MainWindow.vala:868 src/MainWindow.vala:1265
 msgid "Show Property Sidebar"
 msgstr "Zobrazit panel vlastností"
 
-#: src/MainWindow.vala:875
+#: src/MainWindow.vala:883
 msgid "Current"
 msgstr "Současné"
 
-#: src/MainWindow.vala:876 src/StyleInspector.vala:188
+#: src/MainWindow.vala:884 src/StyleInspector.vala:188
 msgid "Style"
 msgstr "Styl"
 
-#: src/MainWindow.vala:877
+#: src/MainWindow.vala:885
 msgid "Stickers"
 msgstr "Nálepky"
 
-#: src/MainWindow.vala:878
+#: src/MainWindow.vala:886
 msgid "Map"
 msgstr "Mapa"
 
-#: src/MainWindow.vala:929
+#: src/MainWindow.vala:937
 msgid "Save current unnamed document?"
 msgstr "Uložit aktuální nepojmenovaný dokument?"
 
-#: src/MainWindow.vala:930
+#: src/MainWindow.vala:938
 msgid "Changes will be permanently lost if not saved."
 msgstr "Pokud soubor neuložíte, provedené změny se navždy ztratí."
 
-#: src/MainWindow.vala:935
+#: src/MainWindow.vala:943
 msgid "Discard Changes"
 msgstr "Zahodit změny"
 
-#: src/MainWindow.vala:941 src/MainWindow.vala:1140 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:949 src/MainWindow.vala:1148 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Uložit"
 
-#: src/MainWindow.vala:970
+#: src/MainWindow.vala:978
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "Soubor %s byl upraven mimo tuto aplikaci."
 
-#: src/MainWindow.vala:971
+#: src/MainWindow.vala:979
 msgid "What do you want to do?"
 msgstr "Co chcete dělat?"
 
-#: src/MainWindow.vala:976
+#: src/MainWindow.vala:984
 msgid "Discard Changes and reload"
 msgstr "Zahodit změny a obnovit"
 
-#: src/MainWindow.vala:979
+#: src/MainWindow.vala:987
 msgid "Save local version and overwrite"
 msgstr "Uložit lokální verzi a přepsat"
 
-#: src/MainWindow.vala:1020
+#: src/MainWindow.vala:1028
 msgid "Open"
 msgstr "Otevřít"
 
-#: src/MainWindow.vala:1140
+#: src/MainWindow.vala:1148
 msgid "Save File"
 msgstr "Uložit soubor"
 
-#: src/MainWindow.vala:1201
+#: src/MainWindow.vala:1209
 msgid "Hide Property Sidebar"
 msgstr "Schovat panel vlastností"
 
@@ -714,23 +714,23 @@ msgstr "Přidat obrázek…"
 msgid "Edit Image"
 msgstr "Upravit obrázek"
 
-#: src/NodeInspector.vala:297
+#: src/NodeInspector.vala:283
 msgid "Resizable"
 msgstr ""
 
-#: src/NodeInspector.vala:368
+#: src/NodeInspector.vala:383
 msgid "Copy Node To Clipboard"
 msgstr "Zkopírovat uzel do schránky"
 
-#: src/NodeInspector.vala:372
+#: src/NodeInspector.vala:387
 msgid "Cut Node To Clipboard"
 msgstr "Vyjmout uzel do schránky"
 
-#: src/NodeInspector.vala:377
+#: src/NodeInspector.vala:392
 msgid "Detach Node"
 msgstr "Odpojit uzel"
 
-#: src/NodeInspector.vala:382 data/com.github.phase1geo.minder.shortcuts.ui:275
+#: src/NodeInspector.vala:397 data/com.github.phase1geo.minder.shortcuts.ui:275
 msgid "Delete Node"
 msgstr "Smazat uzel"
 
@@ -2727,7 +2727,8 @@ msgid "Solarized Light"
 msgstr "Solarized Light"
 
 #: src/Themes.vala:192
-msgid "Error parsing regular expression\n"
+#, fuzzy
+msgid "Error parsing regular expression"
 msgstr "Vyskytla se chyba v parsování regulárního výrazu\n"
 
 #: src/Theme.vala:198
