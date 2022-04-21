@@ -33,12 +33,13 @@ public class ExportPrint : Object {
 
     _da = da;
 
-    var op       = new PrintOperation();
-    // var settings = new PrintSettings().from_file( fname );
-    var settings = new PrintSettings();
-    op.set_print_settings( settings );
-    op.set_n_pages( 1 );
-    op.set_unit( Unit.MM );
+    var op = new PrintOperation();
+
+    op.print_settings     = new PrintSettings.from_gvariant( Minder.settings.get_value( "print-settings" ) );
+    op.default_page_setup = new PageSetup.from_gvariant( Minder.settings.get_value( "page-setup" ) );
+    op.n_pages            = 1;
+    op.unit               = Unit.MM;
+    op.embed_page_setup   = true;
 
     /* Connect to the draw_page signal */
     op.draw_page.connect( draw_page );
@@ -47,8 +48,8 @@ public class ExportPrint : Object {
       var res = op.run( PrintOperationAction.PRINT_DIALOG, main );
       switch( res ) {
         case PrintOperationResult.APPLY :
-          settings = op.get_print_settings();
-          // Save the settings to a file - settings.to_file( fname );
+          Minder.settings.set_value( "print-settings", op.print_settings.to_gvariant() );
+          Minder.settings.set_value( "page-setup",     op.default_page_setup.to_gvariant() );
           break;
         case PrintOperationResult.ERROR :
           /* TBD - Display the print error */
@@ -63,27 +64,44 @@ public class ExportPrint : Object {
 
   }
 
-  /* Draws the page */
-  public void draw_page( PrintOperation op, PrintContext context, int page_nr ) {
+  public void begin_print( PrintContext context ) {
 
-    var ctx         = context.get_cairo_context();
-    var page_width  = context.get_width();
-    var page_height = context.get_height();
-    var margin_x    = 0.5 * context.get_dpi_x();
-    var margin_y    = 0.5 * context.get_dpi_y();
+    var ctx = context.get_cairo_context();
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
     _da.document_rectangle( out x, out y, out w, out h );
 
     /* Calculate the required scaling factor to get the document to fit */
-    double width  = (page_width  - (2 * margin_x)) / w;
-    double height = (page_height - (2 * margin_y)) / h;
+    double width  = page_width  / w;
+    double height = page_height / h;
     double sf     = (width < height) ? width : height;
 
     /* Scale and translate the image */
     ctx.scale( sf, sf );
-    ctx.translate( ((0 - x) + margin_x), ((0 - y) + margin_y) );
+    ctx.translate( (0 - x), (0 - y) );
+
+  }
+
+  /* Draws the page */
+  public void draw_page( PrintOperation op, PrintContext context, int page_nr ) {
+
+    var ctx         = context.get_cairo_context();
+    var page_width  = context.get_width();
+    var page_height = context.get_height();
+
+    /* Get the rectangle holding the entire document */
+    double x, y, w, h;
+    _da.document_rectangle( out x, out y, out w, out h );
+
+    /* Calculate the required scaling factor to get the document to fit */
+    double width  = page_width  / w;
+    double height = page_height / h;
+    double sf     = (width < height) ? width : height;
+
+    /* Scale and translate the image */
+    ctx.scale( sf, sf );
+    ctx.translate( (0 - x), (0 - y) );
 
     /* Draw the map */
     _da.draw_all( ctx );

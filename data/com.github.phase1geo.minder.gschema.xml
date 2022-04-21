@@ -281,5 +281,15 @@
       <summary>Hide themes that do not match the current system visual style</summary>
       <description>Hide themes that do not match the current system visual style (aka. light/dark mode)</description>
     </key>
+    <key name="print-settings" type="a{sv}">
+      <default>[]</default>
+      <summary>Printer settings used in the last print invocation</summary>
+      <description>Printer settings used in the last print invocation</description>
+    </key>
+    <key name="page-setup" type="a{sv}">
+      <default>[]</default>
+      <summary>Printer page setup used in the last print invocation</summary>
+      <description>Printer page setup used in the last print invocation</description>
+    </key>
   </schema>
 </schemalist>
