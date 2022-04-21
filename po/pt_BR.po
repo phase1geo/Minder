@@ -45,7 +45,7 @@ msgstr "Inicializar Minder com um novo arquivo"
 #: src/Application.vala:124
 #, fuzzy
 msgid "Run testing"
-msgstr "Rodar textes"
+msgstr "Rodar testes"
 
 #: src/Application.vala:133
 #, c-format
