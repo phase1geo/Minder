@@ -64,25 +64,6 @@ public class ExportPrint : Object {
 
   }
 
-  public void begin_print( PrintContext context ) {
-
-    var ctx = context.get_cairo_context();
-
-    /* Get the rectangle holding the entire document */
-    double x, y, w, h;
-    _da.document_rectangle( out x, out y, out w, out h );
-
-    /* Calculate the required scaling factor to get the document to fit */
-    double width  = page_width  / w;
-    double height = page_height / h;
-    double sf     = (width < height) ? width : height;
-
-    /* Scale and translate the image */
-    ctx.scale( sf, sf );
-    ctx.translate( (0 - x), (0 - y) );
-
-  }
-
   /* Draws the page */
   public void draw_page( PrintOperation op, PrintContext context, int page_nr ) {
 
