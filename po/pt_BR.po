@@ -1210,8 +1210,8 @@ msgid "Favorites"
 msgstr "Favoritos"
 
 #: src/StickerSet.vala:21 src/StickerSet.vala:64
-msgid "Photo and Video"
-msgstr "Foto e Video"
+msgid "Photo and Vídeo"
+msgstr "Foto e Vídeo"
 
 #: src/StickerSet.vala:22 src/StickerSet.vala:122
 msgid "Very Basic"
@@ -1223,7 +1223,7 @@ msgstr "Negócios"
 
 #: src/StickerSet.vala:24 src/StickerSet.vala:244
 msgid "Industry"
-msgstr "Industria"
+msgstr "Indústria"
 
 #: src/StickerSet.vala:25 src/StickerSet.vala:281
 msgid "Mobile"
@@ -1298,24 +1298,24 @@ msgstr "Adicionar Imagem"
 #: src/StickerSet.vala:43
 #, fuzzy
 msgid "Edit image"
-msgstr "Editar Imagem"
+msgstr "Editar imagem"
 
 #: src/StickerSet.vala:44
 #, fuzzy
 msgid "Remove image"
-msgstr "Remover Imagem"
+msgstr "Remover imagem"
 
 #: src/StickerSet.vala:45
 msgid "Compact camera"
-msgstr "Camera compacta"
+msgstr "Câmera compacta"
 
 #: src/StickerSet.vala:46
 msgid "Multiple cameras"
-msgstr "Multiplas cameras"
+msgstr "Múltiplas câmeras"
 
 #: src/StickerSet.vala:47
 msgid "Camera"
-msgstr "Camera"
+msgstr "Câmera"
 
 #: src/StickerSet.vala:48
 msgid "SLR back side"
@@ -1323,15 +1323,15 @@ msgstr ""
 
 #: src/StickerSet.vala:49
 msgid "Old time camera"
-msgstr "Camera antiga"
+msgstr "Câmera antiga"
 
 #: src/StickerSet.vala:50
-msgid "Camera addon"
-msgstr "Complemento para camera"
+msgid "Câmera addon"
+msgstr "Complemento para câmera"
 
 #: src/StickerSet.vala:51
-msgid "Camera identification"
-msgstr "Identificação de camera"
+msgid "Câmera identification"
+msgstr "Identificação de câmera"
 
 #: src/StickerSet.vala:52
 #, fuzzy
@@ -1365,11 +1365,11 @@ msgstr "Webcan integrada"
 
 #: src/StickerSet.vala:59
 msgid "Rotate camera"
-msgstr "Rotacionar camera"
+msgstr "Rotacionar câmera"
 
 #: src/StickerSet.vala:60
 msgid "Switch camera"
-msgstr "Mudar camera"
+msgstr "Mudar câmera"
 
 #: src/StickerSet.vala:61
 msgid "Photo reel"
@@ -1458,7 +1458,7 @@ msgid "Image file"
 msgstr "Arquivo de imagem"
 
 #: src/StickerSet.vala:84
-msgid "Video file"
+msgid "Vídeo file"
 msgstr "Arquivo de vídeo"
 
 #: src/StickerSet.vala:85
@@ -1468,7 +1468,7 @@ msgstr "Imprimir"
 
 #: src/StickerSet.vala:86
 msgid "Music"
-msgstr "Arquivo de musica"
+msgstr "Arquivo de música"
 
 #: src/StickerSet.vala:87
 msgid "Share"
@@ -1727,7 +1727,7 @@ msgid "Podium with audience"
 msgstr "Pódio com espectadores"
 
 #: src/StickerSet.vala:154
-msgid "Video projector"
+msgid "Vídeo projector"
 msgstr "Projetor de vídeo"
 
 #: src/StickerSet.vala:155
@@ -2124,11 +2124,11 @@ msgstr "Dois smartphones"
 
 #: src/StickerSet.vala:254
 msgid "Multiple devices"
-msgstr "Multiplos dispositivos"
+msgstr "Múltiplos dispositivos"
 
 #: src/StickerSet.vala:255
 msgid "Multiple smartphones"
-msgstr "Multiplos smartphones"
+msgstr "Múltiplos smartphones"
 
 #: src/StickerSet.vala:256
 msgid "Smartphone tablet"
@@ -2195,7 +2195,7 @@ msgid "Call transfer"
 msgstr "Transferencia de chamada"
 
 #: src/StickerSet.vala:272
-msgid "Video call"
+msgid "Vídeo call"
 msgstr ""
 
 #: src/StickerSet.vala:273
