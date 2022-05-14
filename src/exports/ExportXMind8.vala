@@ -346,9 +346,11 @@ public class ExportXMind8 : Export {
       default           :  n->set_prop( "shape-class", "org.xmind.topicShape.rect" );         break;
     }
 
-    n->set_prop( "border-line-color", Utils.color_from_rgba( node.link_color ) );
+    if( node.link_color != null ) {
+      n->set_prop( "border-line-color", Utils.color_from_rgba( node.link_color ) );
+      n->set_prop( "line-color",        Utils.color_from_rgba( node.link_color ) );
+    }
     n->set_prop( "border-line-width", "%dpt".printf( node.style.node_borderwidth ) );
-    n->set_prop( "line-color",        Utils.color_from_rgba( node.link_color ) );
     n->set_prop( "line-width",        "%dpt".printf( node.style.link_width ) );
 
     if( node.style.node_fill ) {

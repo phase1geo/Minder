@@ -118,7 +118,9 @@ public class ExportYed : Export {
     shape->add_child( fill );
 
     Xml.Node* bs = new Xml.Node( yns, "BorderStyle" );
-    bs->new_prop( "color", Utils.color_from_rgba( node.link_color ) );
+    if( node.link_color != null ) {
+      bs->new_prop( "color", Utils.color_from_rgba( node.link_color ) );
+    }
     bs->new_prop( "type", "line" );  // TBD
     bs->new_prop( "width", node.style.node_borderwidth.to_string() );
     shape->add_child( bs );
@@ -280,7 +282,7 @@ public class ExportYed : Export {
       be->add_child( path );
 
       Xml.Node* ls = new Xml.Node( yns, "LineStyle" );
-      ls->new_prop( "color", Utils.color_from_rgba( theme.get_color( "connection" ) ) );
+      ls->new_prop( "color", Utils.color_from_rgba( theme.get_color( "connection_foreground" ) ) );
       ls->new_prop( "type", (conn.style.connection_dash.name == "solid") ? "line" : "dashed" );
       ls->new_prop( "width", conn.style.connection_line_width.to_string() );
       be->add_child( ls );

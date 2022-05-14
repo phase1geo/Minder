@@ -61,7 +61,9 @@ public class ExportFreemind : Export {
       n->new_prop( "LINK", "#id_" + node.linked_node.node_id.to_string() );
     }
     n->new_prop( "FOLDED", node.folded.to_string() );
-    n->new_prop( "COLOR", Utils.color_from_rgba( node.link_color ) );
+    if( node.link_color != null ) {
+      n->new_prop( "COLOR", Utils.color_from_rgba( node.link_color ) );
+    }
     n->new_prop( "POSITION", ((node.side == NodeSide.LEFT) ? "left" : "right") );
 
     if( node.group ) {
@@ -103,7 +105,9 @@ public class ExportFreemind : Export {
   private Xml.Node* export_edge( Node node, DrawArea da ) {
     Xml.Node* n = new Xml.Node( null, "edge" );
     n->new_prop( "STYLE", (node.style.link_type.name() == "curved") ? "bezier" : "linear" );
-    n->new_prop( "COLOR", Utils.color_from_rgba( node.link_color ) );
+    if( node.link_color != null ) {
+      n->new_prop( "COLOR", Utils.color_from_rgba( node.link_color ) );
+    }
     n->new_prop( "WIDTH", node.style.link_width.to_string() );
     return( n );
   }

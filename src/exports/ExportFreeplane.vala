@@ -120,7 +120,9 @@ public class ExportFreeplane : Export {
   private Xml.Node* export_edge( Node node, DrawArea da ) {
     Xml.Node* n = new Xml.Node( null, "edge" );
     n->new_prop( "STYLE", (node.style.link_type.name() == "curved") ? "bezier" : "linear" );
-    n->new_prop( "COLOR", Utils.color_from_rgba( node.link_color ) );
+    if( node.link_color != null ) {
+      n->new_prop( "COLOR", Utils.color_from_rgba( node.link_color ) );
+    }
     n->new_prop( "WIDTH", node.style.link_width.to_string() );
     return( n );
   }
