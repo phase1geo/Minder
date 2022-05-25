@@ -159,6 +159,39 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.15.0" date="2022-05-24">
+      <p>New</p>
+      <ul>
+        <li>Added ability to change the size of the node while leaving the embedded image size unchanged.</li>
+        <li>Added tooltip to node resize handle.</li>
+        <li>Added Flatpak permission for home folder access by default (thanks to @SubhadeepJasu).</li>
+        <li>Added header font scaling in notes field.</li>
+      </ul>
+      <p>Changes</p>
+      <ul>
+        <li>Updated German translation (thanks to @hztirf)</li>
+        <li>Updated Czech translation (thanks to @G020B)</li>
+        <li>Updated Russian translation (thanks to @prokoudine)</li>
+        <li>Updated Brazilian Portugese translation (thanks to @AncientBlueFrog)</li>
+        <li>Updated Flatpak SDK from 6 to 6.1.</li>
+        <li>Improved sticker search (now case insensitive and uses fuzzy search -- thanks to @sibevin)</li>
+        <li>Changed node borders to use node padding to control shape.</li>
+        <li>Changed note popup to display rendered text instead of literal text.</li>
+        <li>Changed export dialog to set default filename based on mindmap name.</li>
+        <li>Removed image URI from image sidebar.</li>
+        <li>Removed button toolbar in current node and connection sidebar.</li>
+        <li>Improved print dialog and print output.</li>
+      </ul>
+      <p>Bug Fixes</p>
+      <ul>
+        <li>Fixed issues with connections being displayed when ancestor node is folded.</li>
+        <li>Fixed issue with loading an older mindmap.</li>
+        <li>Fixed syntax highlighting in note fields.</li>
+        <li>Fixed Edit Text node menu functionality.</li>
+        <li>Fixed font size not following style inspector values.</li>
+        <li>Fixed segmentation faults that could occur when exporting for various filetypes.</li>
+      </ul>
+    </release>
     <release version="1.14.0" date="2022-01-14">
       <description>
         <p>New</p>
@@ -167,10 +200,12 @@
         <ul>
           <li>Added support for shallow (one-level folding)</li>
           <li>Added import/export support for XMind version 2021.</li>
+          <li xml:lang="ru">Добавлен импорт и экспорт файлов XMind 2021.</li>
           <li>Added support for external mind-map node linking.</li>
           <li>Added node link tooltips.</li>
           <li>Added support for overriding the color of a root node.</li>
           <li>Added support for Markdown strikethrough syntax.</li>
+          <li xml:lang="ru">Добавлена поддержка зачеркивания в синтаксисе Markdown.</li>
           <li>Added support for Control-Backspace/Delete to delete the previous/next word when editing node/connection titles.</li>
           <li>Added tooltip to node fill switch in style inspector.</li>
           <li>Added keyboard shortcuts for adding and removing URL links from node text.</li>
@@ -181,7 +216,9 @@
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updates to Italian translation (thanks to @albanobattistella)</li>
+          <li xml:lang="ru">Обновлена итальянская локализация (спасибо @albanobattistella).</li>
           <li>Updates to German translation (thanks to Hannes Fritz)</li>
+          <li xml:lang="ru">Обновлена немецкая локализация (спасибо Hannes Fritz).</li>
           <li>Improved accuracy of the list of translatable files.</li>
           <li>Removed ability to use keyboard shortcuts when a mouse button is pressed.</li>
           <li>Removed Accounts permissions from Flatpak manifest as it is no longer needed.</li>
@@ -208,6 +245,7 @@
         <ul>
           <li>Updated Italian translation (thanks to @albanobattistella)</li>
           <li>Updated screenshots for elementary OS 6.</li>
+          <li xml:lang="ru">Скриншоты обновлены для elementary OS 6.</li>
         </ul>
         <p>Bug Fixes</p>
         <p xml:lang="ru">Исправления ошибок</p>
@@ -226,10 +264,12 @@
         <ul>
           <li>Added support for toggling the task indicator when multiple nodes are selected.</li>
           <li>Added German translation (thanks to Peter Sonntaga).</li>
+          <li xml:lang="ru">Добавлена немецкая локализация (спасибо Peter Sonntaga).</li>
           <li>Added zoom amount in the zoom button tooltip.</li>
           <li>Added support for y command to create/remove node links when multiple nodes are selected.</li>
           <li>Added support for x command to create connections when two nodes are selected.</li>
           <li>Added support for system dark mode setting.</li>
+          <li xml:lang="ru">Добавлена поддержка системной темной темы.</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="ru">Изменения</p>
@@ -237,8 +277,10 @@
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li xml:lang="ru">Обновлена итальянская локализация (спасибо @albanobattistella).</li>
           <li xml:lang="pt">Tradução em Italiano atualizada (obrigado a @albanobattistella).</li>
           <li>Updated Russian translation (thanks to Alexandre Prokoudine).</li>
+          <li xml:lang="ru">Обновлена русская локализация (Александр Прокудин)</li>
           <li>Improved task indicator sizes in leaf nodes.</li>
           <li>Changed fold indicator from a circle to a square.</li>
           <li>Removed zoom in/out menu items and made them buttons instead.</li>
@@ -306,6 +348,7 @@
           <li>Fixed compile and run issue for distros lacking full granite support.</li>
           <li>Fixed issue with displaying correct themes when themes are hidden that don't match system theme.</li>
           <li>Added missing translatable strings.</li>
+          <li xml:lang="ru">Добавлены забытые переводимые сообщения.</li>
         </ul>
       </description>
     </release>
@@ -371,6 +414,7 @@
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added Basque translation (thanks to @alexgabi)</li>
+          <li xml:lang="ru">Добавлен перевод на баскский (спасибо @alexgabi)</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="ru">Изменения</p>
@@ -405,6 +449,7 @@
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added subscript and superscript support to Markdown parser.</li>
+          <li xml:lang="ru">В парсер Markdown добавлена поддержка верхнего и нижнего индексов.</li>
           <li>Added support for switching tabs with Control-Tab and Shift-Control-Tab.</li>
           <li>Added support for remembering last used open/save dialog directories.</li>
           <li>Added support for Alt-Left/Right/Up/Down keyboard shortcuts to rearrange sibling nodes.</li>
@@ -464,6 +509,7 @@
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated Italian translation (thanks to Albano Battistella).</li>
+          <li xml:lang="ru">Обновлен перевод на итальянский (спаисбо Albano Battistella).</li>
         </ul>
         <p>Bug Fixes</p>
         <p xml:lang="ru">Исправления ошибок</p>
@@ -491,6 +537,7 @@
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li xml:lang="ru">Обновлена итальянская локализация (спасибо @albanobattistella).</li>
           <li xml:lang="pt">Tradução em Italiano atualizada (obrigado a @albanobattistella).</li>
           <li>Improved automatic layout of node trees when adjacent tree sizes change.</li>
           <li>Changed node and connection contextual menus to show (Edit Note) instead of (Add Note) and (Remove Note) options.</li>
@@ -513,7 +560,9 @@
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added Preferences dialog.</li>
+          <li xml:lang="ru">Добавлен диалог настройки программы.</li>
           <li>Added Portuguese translation (thanks to Andre Barata).</li>
+          <li xml:lang="ru">Добавлен перевод на португальский (спасибо Andre Barata).</li>
           <li>Added keyboard shortcut (Menu or Shift-F10) to display contextual menus in mindmap.</li>
           <li>Added default theme preference option.</li>
           <li>Added preference option to select map items on cursor hover.</li>
@@ -569,6 +618,7 @@
           <li>Added ability to visually create and display node groupings.</li>
           <li xml:lang="pt">Adicionada a possibilidade de criar visualmente e exibir grupos de nós.</li>
           <li>Added import/export support for XMind.</li>
+          <li xml:lang="ru">Добавлен импорт и экспорт файлов XMind.</li>
           <li xml:lang="pt">Suporte adicionado para importar/exportar ao XMind.</li>
           <li>Added support for specifying if connection titles should be added immediately after creating a connection.</li>
           <li xml:lang="pt">Suporte adicionado para especificar se os títulos de conexões devem ser adicionados imediatamente depois de criar uma conexão.</li>
@@ -649,6 +699,7 @@
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li xml:lang="ru">Обновлена итальянская локализация (спасибо @albanobattistella).</li>
           <li xml:lang="pt">Tradução em Italiano atualizada (obrigado a @albanobattistella).</li>
         </ul>
         <p>Bug Fixes</p>
@@ -672,8 +723,10 @@
           <li>Added support for selecting nodes by dragging out a selection box.</li>
           <li xml:lang="pt">Suporte adicionado para selecionar nós ao arrastar uma caixa de seleção.</li>
           <li>Added ability to configure the color used in connection titles.</li>
+          <li xml:lang="ru">Добавлена возможность настроить цвет в подписях к соединительным линиям.</li>
           <li xml:lang="pt">Adicionada a possibilidade de configurar a cor usada nos títulos de conexão.</li>
           <li>Added Italian translation (thanks to albanobattistella on GitHub).</li>
+          <li xml:lang="ru">Добавлена итальянская локализация (спасибо albanobattistella на GitHub).</li>
           <li xml:lang="pt">Tradução em Italiano adicionada (obrigado a albanobattistella no GitHub).</li>
         </ul>
         <p>Changes</p>
@@ -803,6 +856,7 @@
           <li>Added support for using input methods.</li>
           <li xml:lang="pt">Suporte adicionado para usar métodos de entrada.</li>
           <li>Added Dutch translation (thanks to Heimen Stoffels).</li>
+          <li xml:lang="ru">Добавлен перевод на нидерландский (спасибо Heimen Stoffels).</li>
           <li xml:lang="pt">Tradução em Holandês adicionada (obrigado a Heimen Stoffels).</li>
         </ul>
         <p>Changes</p>
@@ -877,6 +931,7 @@
           <li xml:lang="pt">Tradução Francesa adicionada (obrigado a Nathan Bonnemains).</li>
           <li xml:lang="fr">Ajout des traductions en français (grâce à Nathan Bonnemains).</li>
           <li>Improved OPML import support.</li>
+          <li xml:lang="ru">Улучшен импорт OPML.</li>
           <li xml:lang="pt">Suporte para importar OPML melhorado.</li>
           <li xml:lang="fr">Amélioration de l'import de fichiers OPML.</li>
           <li>Changed ability to select a subtree by Control + double-click.</li>
@@ -997,9 +1052,11 @@
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added export to yEd.</li>
+          <li xml:lang="ru">Добавлен экспорт в yEd.</li>
           <li xml:lang="pt">Exportar em yEd adicionado.</li>
           <li xml:lang="fr">Ajout de l'exportation au format yEd.</li>
           <li>Added ability to create, edit and delete custom themes.</li>
+          <li xml:lang="ru">Добавлена возможность создавать, редактировать и удалять свои темы.</li>
           <li xml:lang="pt">Adicionada a possibilidade de criar, editar e apagar temas personalizados.</li>
           <li xml:lang="fr">Ajout de la possibilité de créer, modifier et supprimer des thèmes personnalisés</li>
           <li>Added new quick entry mode, allowing node trees to be input within a text editor.</li>
@@ -1075,6 +1132,7 @@
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added support for focus mode.</li>
+          <li xml:lang="ru">Добавлен режим фокусировки.</li>
           <li xml:lang="pt">Suporte adicionado para o modo de concentração.</li>
           <li xml:lang="fr">Ajout de la prise en charge du mode concentration.</li>
           <li>Added support for multiple documents with tabs.</li>
@@ -1230,6 +1288,7 @@
       <description>
         <ul>
           <li>Added Spanish translation.</li>
+          <li xml:lang="ru">Добавлен перевод на испанский.</li>
           <li xml:lang="pt">Tradução em Espanhol adicionada.</li>
           <li xml:lang="fr">Ajout des traductions en espagnol.</li>
           <li>Added support for Control-Return/Tab to support adding newlines/tabs in a node's title.</li>
@@ -1248,6 +1307,7 @@
           <li xml:lang="pt">Layouts alterados para serem armazenados por árvore em vez de por documento.</li>
           <li xml:lang="fr">Modification de la disposition pour l'enregistrement par arbre au lieu de l'enregistrement par document.</li>
           <li>Added support for exporting to the Mermaid format.</li>
+          <li xml:lang="ru">Добавлен экспорт в формат Mermaid.</li>
           <li xml:lang="pt">Suporte adicionado para exportar para o formato Mermaid.</li>
           <li xml:lang="fr">Ajout de la prise en charge de l'exportation au format Mermaid.</li>
           <li>Added support for disabling/enabling displaying markup in node title.</li>
@@ -1267,6 +1327,7 @@
       <description>
         <ul>
           <li>Adding Spanish translation (thanks to Adolfo Jayme-Barrientos).</li>
+          <li xml:lang="ru">Добавлен перевод на испанский (спасибо Adolfo Jayme-Barrientos).</li>
           <li xml:lang="pt">Tradução em Espanhol adicionada (obrigado a Adolfo Jayme-Barrientos).</li>
           <li xml:lang="fr">Ajout des traductions en espagnol (grâce à Adolfo Jayme-Barrientos).</li>
           <li>Adding support for special character insertion via the Compose key.</li>
@@ -1278,6 +1339,7 @@
     <release version="1.1.2" date="2018-10-09">
       <description>
         <p>Updating French translation.</p>
+        <p xml:lang="ru">Обновлен перевод на французский.</p>
         <p xml:lang="pt">Tradução em Francês atualizada.</p>
         <p xml:lang="fr">Mises à jour des traductions en français.</p>
       </description>
@@ -1306,13 +1368,16 @@
     <release version="1.1" date="2018-09-18">
       <description>
         <p>Images now supported!</p>
+        <p xml:lang="ru">Добавлена поддержка изображений!</p>
         <p xml:lang="pt">Imagens são agora suportadas!</p>
         <p xml:lang="fr">Les images sont désormais prises en charge !</p>
         <ul>
           <li>Added support for images within nodes.</li>
+          <li xml:lang="ru">Добавлена поддержка изображений внутри узлов.</li>
           <li xml:lang="pt">Suporte adicionado para imagens dentro de nós.</li>
           <li xml:lang="fr">Ajout de la prise en charge des images à l'intérieur des nœuds.</li>
           <li>Added basic image editing support.</li>
+          <li xml:lang="ru">Добавлены простые функции редактирования изображений.</li>
           <li xml:lang="pt">Suporte adicionado para edição básica de imagem.</li>
           <li xml:lang="fr">Ajout de la prise en charge mimimale de la modification d'image.</li>
           <li>Added support for dragging and dropping local and web images.</li>
@@ -1355,6 +1420,7 @@
         <p xml:lang="fr">Prise en charge de plus de types d'exportation et corrections de bugs.</p>
         <ul>
           <li>Added support for exporting to SVG, JPEG, BMP, Markdown, PlainText and CSV formats.</li>
+          <li xml:lang="ru">Добавлен экспорт в форматы SVG, JPEG, BMP, Markdown, PlainText и CSV.</li>
           <li xml:lang="pt">Suporte adicionado para exportar formatos em SVG, JPEG, BMP, Markdown, Texto Simples e CSV.</li>
           <li xml:lang="fr">Ajout de la prise en charge pour l'exportation vers les formats SVG, JPEG, BMP, Mardown, Texte brut et CSV.</li>
           <li>Added support for folding all completed tasks in map inspector.</li>
@@ -1364,6 +1430,7 @@
           <li xml:lang="pt">Suporte adicionado para desdobrar todas as notas dobradas no inspetor do mapa.</li>
           <li xml:lang="fr">Ajout de la prise en charge pour déplier tous les nœuds pliés dans l'inspecteur de carte.</li>
           <li>Added Solarized Dark and Solarized Light themes.</li>
+          <li xml:lang="ru">Добавлены темы Solarized Dark и Solarized Light.</li>
           <li xml:lang="pt">Tema Escuro e Tema Claro adicionados.</li>
           <li xml:lang="fr">AJout des thèmes Solarized Dark et Solarized Light.</li>
           <li>Changing button display in map inspector.</li>
@@ -1378,12 +1445,15 @@
           <li xml:lang="pt">Corrigido um problema em que uma árvore inteira é anexada a outra árvore.</li>
           <li xml:lang="fr">Correction d'un problème où un arbre entier est attaché à un autre arbre.</li>
           <li>Added Czech translation (thanks to Jan Marek!).</li>
+          <li xml:lang="ru">Добавлена чешская локализация (спасибо Jan Marek!).</li>
           <li xml:lang="pt">Tradução em Checo adicionada (obrigado a Jan Marek!).</li>
           <li xml:lang="fr">Ajout des traductions en tchèque (grâce à Jan Marek !).</li>
           <li>Added French translation (thanks to Yannick A.!).</li>
+          <li xml:lang="ru">Добавлена французская локализация (спасибо Yannick A.!).</li>
           <li xml:lang="pt">Tradução em Francês adicionada (obrigado a Yannick A.!).</li>
           <li xml:lang="fr">Ajout des traductions en français (grâce à Yannick A. !).</li>
           <li>Added Brazilian Portuguese translation (thanks to btd1337!)</li>
+          <li xml:lang="ru">Добавлен перевод на бразильский португальский (спасибо btd1337!)</li>
           <li xml:lang="pt">Tradução em Português do Brasil adicionada (obrigado a btd1337!)</li>
           <li xml:lang="fr">Ajout des traductions en portugais brésilien (grâce à btd1337 !)</li>
         </ul>
@@ -1399,22 +1469,26 @@
     <release version="1.0.4" date="2018-07-11">
       <description>
         <p>Search improvements and bug fixes</p>
+        <p xml:lang="ru">Улучшения в поиске и исправления ошибок.</p>
         <p xml:lang="pt">Melhorias na procura e correções</p>
         <p xml:lang="fr">Amélioration de la recherche et corrections de bugs</p>
         <ul>
           <li>Added ability to search within notes.</li>
+          <li xml:lang="ru">Добавлена возможность искать по тексту примечаний.</li>
           <li xml:lang="pt">Adicionada a possibilidade de pesquisar dentro de notas.</li>
           <li xml:lang="fr">Ajout de la possibilité de chercher parmi les notes.</li>
           <li>Added ability to optionally control search criteria within search popover.</li>
           <li xml:lang="pt">Adicionada a possibilidade de controlar opcionalmente os critérios de pesquisa no menu flutuante de pesquisa.</li>
           <li xml:lang="fr">Ajout de la possibilité pour optionnellement contrôler les critères de recherche dans le volet de recherche.</li>
           <li>Fixed screenshots.</li>
+          <li xml:lang="ru">Исправлены скриншоты.</li>
           <li xml:lang="pt">Correção das capturas de ecrã.</li>
           <li xml:lang="fr">Correction des captures d'écran.</li>
           <li>Changed properties header bar icon to a sidebar hide/show icon for clarity.</li>
           <li xml:lang="pt">Alteração do ícone da barra de cabeçalho de propriedades para um ícone esconder/mostrar da barra lateral para maior clareza.</li>
           <li xml:lang="fr">L'icône de la barre supérieure des propriétés a été changée en icône de masquage/affichage dans la barre latérale pour plus de clarté.</li>
           <li>Several minor UI improvements.</li>
+          <li xml:lang="ru">Несколько несущественных улучшений в интерфейсе.</li>
           <li xml:lang="pt">Algumas pequenass melhorias na interface do utilizador.</li>
           <li xml:lang="fr">Améliorations mineures diverses de l'interface.</li>
           <li>Removing deprecated GTK calls.</li>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-20 22:04-0500\n"
+"POT-Creation-Date: 2022-05-24 21:48-0500\n"
 "PO-Revision-Date: 2020-04-20 14:26+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: \n"
@@ -392,12 +392,12 @@ msgstr "Platte tekst"
 msgid "XMind 2021"
 msgstr "Minder"
 
-#: src/exports/ExportXMind2021.vala:682 src/exports/ExportXMind8.vala:681
+#: src/exports/ExportXMind2021.vala:682 src/exports/ExportXMind8.vala:683
 #: src/layouts/LayoutHorizontal.vala:26 src/MapInspector.vala:336
 msgid "Horizontal"
 msgstr "Horizontaal"
 
-#: src/exports/ExportXMind2021.vala:684 src/exports/ExportXMind8.vala:683
+#: src/exports/ExportXMind2021.vala:684 src/exports/ExportXMind8.vala:685
 #: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:338
 msgid "To right"
 msgstr "Naar rechts"

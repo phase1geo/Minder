@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-20 22:04-0500\n"
+"POT-Creation-Date: 2022-05-24 21:48-0500\n"
 "PO-Revision-Date: 2022-04-17 11:13+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -16,8 +16,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 "X-Generator: Gtranslator 41.0\n"
 
 #: src/About.vala:36
@@ -381,12 +381,12 @@ msgstr "Простой текст"
 msgid "XMind 2021"
 msgstr "XMind 2021"
 
-#: src/exports/ExportXMind2021.vala:682 src/exports/ExportXMind8.vala:681
+#: src/exports/ExportXMind2021.vala:682 src/exports/ExportXMind8.vala:683
 #: src/layouts/LayoutHorizontal.vala:26 src/MapInspector.vala:336
 msgid "Horizontal"
 msgstr "Горизонтально"
 
-#: src/exports/ExportXMind2021.vala:684 src/exports/ExportXMind8.vala:683
+#: src/exports/ExportXMind2021.vala:684 src/exports/ExportXMind8.vala:685
 #: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:338
 msgid "To right"
 msgstr "Вправо"

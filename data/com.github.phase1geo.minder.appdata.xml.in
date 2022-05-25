@@ -90,6 +90,39 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.15.0" date="2022-05-24">
+      <p>New</p>
+      <ul>
+        <li>Added ability to change the size of the node while leaving the embedded image size unchanged.</li>
+        <li>Added tooltip to node resize handle.</li>
+        <li>Added Flatpak permission for home folder access by default (thanks to @SubhadeepJasu).</li>
+        <li>Added header font scaling in notes field.</li>
+      </ul>
+      <p>Changes</p>
+      <ul>
+        <li>Updated German translation (thanks to @hztirf)</li>
+        <li>Updated Czech translation (thanks to @G020B)</li>
+        <li>Updated Russian translation (thanks to @prokoudine)</li>
+        <li>Updated Brazilian Portugese translation (thanks to @AncientBlueFrog)</li>
+        <li>Updated Flatpak SDK from 6 to 6.1.</li>
+        <li>Improved sticker search (now case insensitive and uses fuzzy search -- thanks to @sibevin)</li>
+        <li>Changed node borders to use node padding to control shape.</li>
+        <li>Changed note popup to display rendered text instead of literal text.</li>
+        <li>Changed export dialog to set default filename based on mindmap name.</li>
+        <li>Removed image URI from image sidebar.</li>
+        <li>Removed button toolbar in current node and connection sidebar.</li>
+        <li>Improved print dialog and print output.</li>
+      </ul>
+      <p>Bug Fixes</p>
+      <ul>
+        <li>Fixed issues with connections being displayed when ancestor node is folded.</li>
+        <li>Fixed issue with loading an older mindmap.</li>
+        <li>Fixed syntax highlighting in note fields.</li>
+        <li>Fixed Edit Text node menu functionality.</li>
+        <li>Fixed font size not following style inspector values.</li>
+        <li>Fixed segmentation faults that could occur when exporting for various filetypes.</li>
+      </ul>
+    </release>
     <release version="1.14.0" date="2022-01-14">
       <description>
         <p>New</p>
