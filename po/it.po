@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-24 21:48-0500\n"
-"PO-Revision-Date: 2021-04-03 20:30+0100\n"
+"PO-Revision-Date: 2021-06-11 19:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -2733,9 +2733,8 @@ msgid "Solarized Light"
 msgstr "Luce Solarizzata"
 
 #: src/Themes.vala:192
-#, fuzzy
 msgid "Error parsing regular expression"
-msgstr "Errore durante l'analisi dell'espressione regolare\n"
+msgstr "Errore durante l'analisi dell'espressione regolare"
 
 #: src/Theme.vala:198
 #, c-format
@@ -2956,7 +2955,7 @@ msgstr "cambia sticker"
 
 #: src/undo_actions/UndoStickerRemove.vala:30
 msgid "remove sticker"
-msgstr "rimuovi  sticker"
+msgstr "rimuovi sticker"
 
 #: src/undo_actions/UndoStickerResize.vala:31
 msgid "resize sticker"
