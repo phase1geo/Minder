@@ -497,6 +497,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     app.set_accels_for_action( "win.action_quit",          { "<Control>q" } );
     app.set_accels_for_action( "win.action_zoom_actual",   { "<Control>0" } );
     app.set_accels_for_action( "win.action_zoom_fit",      { "<Control>1" } );
+    app.set_accels_for_action( "win.action_zoom_selected", { "<Control>2" } );
     app.set_accels_for_action( "win.action_zoom_in",       { "<Control>plus" } );
     app.set_accels_for_action( "win.action_zoom_in",       { "<Control>equal" } );
     app.set_accels_for_action( "win.action_zoom_out",      { "<Control>minus" } );
@@ -560,7 +561,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     _zoom_sel = new ModelButton();
     _zoom_sel.get_child().destroy();
-    _zoom_sel.add( new Granite.AccelLabel.from_action_name( _( "Zoom to Fit Selected Node" ), "win.action_zoom_selected" ) );
+    _zoom_sel.add( new Granite.AccelLabel.from_action_name( _( "Zoom to Fit Selected Node Tree" ), "win.action_zoom_selected" ) );
     _zoom_sel.action_name = "win.action_zoom_selected";
 
     var actual = new ModelButton();
