@@ -135,6 +135,13 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Zoom to Fit Selected Node Tree</property>
+                <property name="accelerator">&lt;ctrl&gt;2</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Zoom To Fit</property>
                 <property name="accelerator">&lt;ctrl&gt;1</property>
                 <property name="visible">1</property>
