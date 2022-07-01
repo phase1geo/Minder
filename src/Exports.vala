@@ -24,36 +24,38 @@ public class Exports {
   private Array<Export> _exports;
 
   /* Constructor */
-  public Exports() {
+  public Exports( bool save_settings = true ) {
 
     _exports = new Array<Export>();
 
     /* Add the exports */
-    add( new ExportCSV() );
-    add( new ExportFreemind() );
-    add( new ExportFreeplane() );
-    add( new ExportImage( "jpeg", _( "JPEG" ), { ".jpg", ".jpeg" } ) );
-    add( new ExportMarkdown() );
-    add( new ExportMermaid() );
-    add( new ExportOPML() );
-    add( new ExportOrgMode() );
-    add( new ExportOutliner() );
-    add( new ExportPDF() );
-    add( new ExportPNG() );
-    add( new ExportPlantUML() );
-    add( new ExportPortableMinder() );
-    add( new ExportSVG() );
-    add( new ExportText() );
-    add( new ExportXMind8() );
-    add( new ExportXMind2021() );
-    add( new ExportYed() );
+    add( new ExportCSV(), save_settings );
+    add( new ExportFreemind(), save_settings );
+    add( new ExportFreeplane(), save_settings );
+    add( new ExportImage( "jpeg", _( "JPEG" ), { ".jpg", ".jpeg" } ), save_settings );
+    add( new ExportMarkdown(), save_settings );
+    add( new ExportMermaid(), save_settings );
+    add( new ExportOPML(), save_settings );
+    add( new ExportOrgMode(), save_settings );
+    add( new ExportOutliner(), save_settings );
+    add( new ExportPDF(), save_settings );
+    add( new ExportPNG(), save_settings );
+    add( new ExportPlantUML(), save_settings );
+    add( new ExportPortableMinder(), save_settings );
+    add( new ExportSVG(), save_settings );
+    add( new ExportText(), save_settings );
+    add( new ExportXMind8(), save_settings );
+    add( new ExportXMind2021(), save_settings );
+    add( new ExportYed(), save_settings );
 
   }
 
-  private void add( Export export ) {
-    export.settings_changed.connect(() => {
-      save();
-    });
+  private void add( Export export, bool save_settings ) {
+    if( save_settings ) {
+      export.settings_changed.connect(() => {
+        save();
+      });
+    }
     _exports.append_val( export );
   }
 

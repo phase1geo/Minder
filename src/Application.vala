@@ -116,13 +116,18 @@ public class Minder : Granite.Application {
   private void parse_arguments( ref unowned string[] args ) {
 
     var context = new OptionContext( "- Minder Options" );
-    var options = new OptionEntry[4];
+    var options = new OptionEntry[6];
+    var export  = false;
+    var export_format = "png";
 
     /* Create the command-line options */
     options[0] = {"version", 0, 0, OptionArg.NONE, ref show_version, _( "Display version number" ), null};
     options[1] = {"new", 'n', 0, OptionArg.NONE, ref new_file, _( "Starts Minder with a new file" ), null};
     options[2] = {"run-tests", 0, 0, OptionArg.NONE, ref testing, _( "Run testing" ), null};
-    options[3] = {null};
+    options[3] = {"export", 0, 0, OptionArg.NONE, ref export, _( "Export mindmap" ), null};
+    options[4] = {"format", 0, 0, OptionArg.STRING, ref export_format, _(
+    "Format to export as (only used when --export is used)" ), "FORMAT"};
+    options[5] = {null};
 
     /* Parse the arguments */
     try {
@@ -141,10 +146,48 @@ public class Minder : Granite.Application {
       Process.exit( 0 );
     }
 
+    /* If we are tasked to export from the command-line, let's just do it and exit */
+    if( export ) {
+      int retval = 1;
+      if( args.length >= 3 ) {
+        retval = export_as( export_format, args[args.length-2], args[args.length-1] ) ? 0 : 1;
+      } else {
+        stderr.printf( _( "ERROR: Export is missing Minder input file and/or export output file" ) + "\n" );
+      }
+      Process.exit( retval );
+    }
+
     /* If we see files on the command-line */
     if( args.length >= 2 ) {
       open_file = args[1];
     }
+
+  }
+
+  /* Exports the given mindmap from the command-line */
+  private bool export_as( string format, string infile, string outfile ) {
+
+    var exports = new Exports( false );
+
+    for( int i=0; i<exports.length(); i++ ) {
+      var export = exports.index( i );
+      if( export.name == format ) {
+        var settings    = new GLib.Settings( "com.github.phase1geo.minder" );
+        var win         = new MainWindow( this, settings );
+        var accel_group = new Gtk.AccelGroup();
+        var da          = new DrawArea( win, settings, accel_group );
+
+        da.get_doc().load_filename( infile, false );
+        if( da.get_doc().load() ) {
+          return( export.export( outfile, da ) );
+        } else {
+          stderr.printf( _( "ERROR:  Unable to load Minder input file" ) + "\n" );
+          return( false );
+        }
+      }
+    }
+
+    return( false );
 
   }
 
