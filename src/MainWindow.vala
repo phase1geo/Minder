@@ -359,6 +359,12 @@ public class MainWindow : Hdy.ApplicationWindow {
     return( ret );
   }
 
+  /* Creates a draw area */
+  public DrawArea create_da() {
+    var da = new DrawArea( this, _settings, _accel_group );
+    return( da );
+  }
+
   /* Adds a new tab to the notebook */
   public DrawArea add_tab( string? fname, TabAddReason reason ) {
 

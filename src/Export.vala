@@ -133,7 +133,17 @@ public class Export {
 
   }
 
-  protected void set_bool( string name, bool value ) {
+  /* Returns true if the given setting is a boolean */
+  public bool is_bool_setting( string name ) {
+    return( _settings.has_key( name ) && ((_settings.@get( name ) as Switch) != null) );
+  }
+
+  /* Returns true if the given setting is a scale */
+  public bool is_scale_setting( string name ) {
+    return( _settings.has_key( name ) && ((_settings.@get( name ) as Scale) != null) );
+  }
+
+  public void set_bool( string name, bool value ) {
     assert( _settings.has_key( name ) );
     var sw = (Switch)_settings.@get( name );
     sw.active = value;
@@ -145,7 +155,7 @@ public class Export {
     return( sw.active );
   }
 
-  protected void set_scale( string name, int value ) {
+  public void set_scale( string name, int value ) {
     assert( _settings.has_key( name ) );
     var scale = (Scale)_settings.@get( name );
     var double_value = (double)value;

@@ -22,17 +22,21 @@
 using Gtk;
 using Gdk;
 using GLib;
+using Gee;
 
 public class Minder : Granite.Application {
 
   private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
 
-  private static bool          show_version = false;
-  private static string?       open_file    = null;
-  private static bool          new_file     = false;
-  private static bool          testing      = false;
-  private        MainWindow    appwin;
-  private        GLib.Settings iface_settings;
+  private static bool                show_version = false;
+  private static string?             open_file    = null;
+  private static bool                new_file     = false;
+  private static bool                testing      = false;
+  private        MainWindow          appwin;
+  private        GLib.Settings       iface_settings;
+  private        bool                cl_export        = false;
+  private        string              cl_export_format = "png";
+  private        HashMap<string,int> cl_options;
 
   public  static GLib.Settings settings;
   public  static string        version = "1.15.0";
@@ -58,6 +62,11 @@ public class Minder : Granite.Application {
 
     /* Create the main window */
     appwin = new MainWindow( this, settings );
+
+    /* If we are exporting from the command-line, do that now */
+    if( cl_export ) {
+      return;
+    }
 
     /* Load the tab data */
     appwin.load_tab_state();
@@ -91,43 +100,61 @@ public class Minder : Granite.Application {
 
   /* Called whenever files need to be opened */
   private void open_files( File[] files, string hint ) {
-    hold();
-    foreach( File open_file in files ) {
-      var file = open_file.get_path();
-      if( !appwin.open_file( file ) ) {
-        stdout.printf( _( "ERROR:  Unable to open file '%s'\n" ), file );
+    if( cl_export ) {
+      int retval = 1;
+      if( files.length == 2 ) {
+        retval = export_as( cl_export_format, cl_options, files[0].get_path(), files[1].get_path() ) ? 0 : 1;
+      } else {
+        stderr.printf( _( "ERROR: Export is missing Minder input file and/or export output file" ) + "\n" );
       }
+      Process.exit( retval );
+    } else {
+      hold();
+      foreach( File open_file in files ) {
+        var file = open_file.get_path();
+        if( !appwin.open_file( file ) ) {
+          stdout.printf( _( "ERROR:  Unable to open file '%s'\n" ), file );
+        }
+      }
+      Gtk.main();
+      release();
     }
-    Gtk.main();
-    release();
   }
 
   /* Called if we have no files to open */
   protected override void activate() {
-    hold();
-    if( new_file ) {
-      appwin.do_new_file();
+    stdout.printf( "HERE C\n" );
+    if( !cl_export ) {
+      hold();
+      if( new_file ) {
+        appwin.do_new_file();
+      }
+      Gtk.main();
+      release();
     }
-    Gtk.main();
-    release();
   }
 
   /* Parse the command-line arguments */
   private void parse_arguments( ref unowned string[] args ) {
 
-    var context = new OptionContext( "- Minder Options" );
-    var options = new OptionEntry[6];
-    var export  = false;
-    var export_format = "png";
+    var context     = new OptionContext( "- Minder Options" );
+    var options     = new OptionEntry[10];
+    var transparent = false;
+    var compression = 0;
+    var quality     = 0;
+    var image_links = false;
 
     /* Create the command-line options */
     options[0] = {"version", 0, 0, OptionArg.NONE, ref show_version, _( "Display version number" ), null};
     options[1] = {"new", 'n', 0, OptionArg.NONE, ref new_file, _( "Starts Minder with a new file" ), null};
     options[2] = {"run-tests", 0, 0, OptionArg.NONE, ref testing, _( "Run testing" ), null};
-    options[3] = {"export", 0, 0, OptionArg.NONE, ref export, _( "Export mindmap" ), null};
-    options[4] = {"format", 0, 0, OptionArg.STRING, ref export_format, _(
-    "Format to export as (only used when --export is used)" ), "FORMAT"};
-    options[5] = {null};
+    options[3] = {"export", 0, 0, OptionArg.NONE, ref cl_export, _( "Export mindmap" ), null};
+    options[4] = {"format", 0, 0, OptionArg.STRING, ref cl_export_format, _( "Format to export as (only used when --export is used)" ), "FORMAT"};
+    options[5] = {"png-transparent", 0, 0, OptionArg.NONE, ref transparent, _( "Enables a transparent background for PNG images" ), null};
+    options[6] = {"png-compression", 0, 0, OptionArg.INT, ref compression,  _( "PNG compression value (0-9)" ), "INT"};
+    options[7] = {"jpeg-quality", 0, 0, OptionArg.INT, ref quality, _( "JPEG quality (0-100)" ), "INT"};
+    options[8] = {"markdown-include-image-links", 0, 0, OptionArg.NONE, ref image_links, _( "Enables image links in exported Markdown" ), null};
+    options[9] = {null};
 
     /* Parse the arguments */
     try {
@@ -146,15 +173,13 @@ public class Minder : Granite.Application {
       Process.exit( 0 );
     }
 
-    /* If we are tasked to export from the command-line, let's just do it and exit */
-    if( export ) {
-      int retval = 1;
-      if( args.length >= 3 ) {
-        retval = export_as( export_format, args[args.length-2], args[args.length-1] ) ? 0 : 1;
-      } else {
-        stderr.printf( _( "ERROR: Export is missing Minder input file and/or export output file" ) + "\n" );
-      }
-      Process.exit( retval );
+    /* Gather the export options if needed */
+    if( cl_export ) {
+      cl_options = new HashMap<string,int>();
+      cl_options.set( "transparent",         (int)transparent );
+      cl_options.set( "compression",         compression );
+      cl_options.set( "quality",             quality );
+      cl_options.set( "include-image-links", (int)image_links );
     }
 
     /* If we see files on the command-line */
@@ -165,18 +190,22 @@ public class Minder : Granite.Application {
   }
 
   /* Exports the given mindmap from the command-line */
-  private bool export_as( string format, string infile, string outfile ) {
+  private bool export_as( string format, HashMap<string,int> options, string infile, string outfile ) {
 
-    var exports = new Exports( false );
+    var exports = appwin.exports;
 
     for( int i=0; i<exports.length(); i++ ) {
       var export = exports.index( i );
       if( export.name == format ) {
-        var settings    = new GLib.Settings( "com.github.phase1geo.minder" );
-        var win         = new MainWindow( this, settings );
-        var accel_group = new Gtk.AccelGroup();
-        var da          = new DrawArea( win, settings, accel_group );
-
+        options.map_iterator().foreach((key,value) => {
+          if( export.is_bool_setting( key ) ) {
+            export.set_bool( key, (value > 0) );
+          } else if( export.is_scale_setting( key ) ) {
+            export.set_scale( key, value );
+          }
+          return( true );
+        });
+        var da = appwin.create_da();
         da.get_doc().load_filename( infile, false );
         if( da.get_doc().load() ) {
           return( export.export( outfile, da ) );
@@ -186,6 +215,8 @@ public class Minder : Granite.Application {
         }
       }
     }
+
+    stderr.printf( "ERROR: Unknown export format: %s\n", format );
 
     return( false );
 
