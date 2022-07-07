@@ -123,7 +123,6 @@ public class Minder : Granite.Application {
 
   /* Called if we have no files to open */
   protected override void activate() {
-    stdout.printf( "HERE C\n" );
     if( !cl_export ) {
       hold();
       if( new_file ) {
