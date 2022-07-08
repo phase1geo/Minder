@@ -27,7 +27,7 @@ public class ExportPNG : Export {
 
   /* Constructor */
   public ExportPNG() {
-    base( "png", _( "PNG" ), { ".png" }, true, false );
+    base( "png", _( "PNG" ), { ".png" }, true, false, false );
   }
 
   /* Default constructor */

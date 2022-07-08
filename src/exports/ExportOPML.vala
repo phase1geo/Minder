@@ -23,7 +23,7 @@ public class ExportOPML : Export {
 
   /* Constructor */
   public ExportOPML() {
-    base( "opml", _( "OPML" ), { ".opml" }, true, true );
+    base( "opml", _( "OPML" ), { ".opml" }, true, true, false );
   }
 
   /* Exports the given drawing area to the file of the given name */

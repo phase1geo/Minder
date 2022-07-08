@@ -25,7 +25,7 @@ public class ExportMarkdown : Export {
 
   /* Constructor */
   public ExportMarkdown() {
-    base( "markdown", _( "Markdown" ), { ".md", ".markdown" }, true, false );
+    base( "markdown", _( "Markdown" ), { ".md", ".markdown" }, true, false, false );
   }
 
   private bool handle_directory( string fname, out string mdfile, out string imgdir ) {

@@ -23,7 +23,7 @@ public class ExportOrgMode : Export {
 
   /* Constructor */
   public ExportOrgMode() {
-    base( "org-mode", _( "Org-Mode" ), { ".org" }, true, false );
+    base( "org-mode", _( "Org-Mode" ), { ".org" }, true, false, false );
   }
 
   /* Exports the given drawing area to the file of the given name */

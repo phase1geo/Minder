@@ -23,7 +23,7 @@ public class ExportMermaid : Export {
 
   /* Constructor */
   public ExportMermaid() {
-    base( "mermaid", _( "Mermaid" ), { ".mmd" }, true, false );
+    base( "mermaid", _( "Mermaid" ), { ".mmd" }, true, false, false );
   }
 
   /* Exports the given drawing area to the file of the given name */
