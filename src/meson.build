@@ -8,6 +8,7 @@ sources += files(
     'animator/AnimatorScaleInPlace.vala',
 
     'exports/ExportCSV.vala',
+    'exports/ExportFileSystem.vala',
     'exports/ExportFreemind.vala',
     'exports/ExportFreeplane.vala',
     'exports/ExportImage.vala',

@@ -112,7 +112,7 @@ public class Minder : Granite.Application {
       hold();
       foreach( File open_file in files ) {
         var file = open_file.get_path();
-        if( !appwin.open_file( file ) ) {
+        if( !appwin.open_file( file, false ) ) {
           stdout.printf( _( "ERROR:  Unable to open file '%s'\n" ), file );
         }
       }

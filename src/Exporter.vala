@@ -152,7 +152,7 @@ public class Exporter : Box {
       /* Perform the export */
       var fname = dialog.get_filename();
       export.export( fname = win.repair_filename( fname, export.extensions ), win.get_current_da() );
-      Utils.store_chooser_folder( fname );
+      Utils.store_chooser_folder( fname, false );
 
       /* Generate notification to indicate that the export completed */
       win.notification( _( "Minder Export Completed" ), fname );
