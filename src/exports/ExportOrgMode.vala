@@ -19,11 +19,33 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
+using Gtk;
+
 public class ExportOrgMode : Export {
 
   /* Constructor */
   public ExportOrgMode() {
     base( "org-mode", _( "Org-Mode" ), { ".org" }, true, false );
+  }
+
+  /* Add settings for Org Mode */
+  public override void add_settings( Grid grid ) {
+    add_setting_bool( "indent-mode", grid, _( "Indent Mode" ), _( "Export using indentation spaces" ), true );
+  }
+
+  /* Save the settings */
+  public override void save_settings( Xml.Node* node ) {
+    var value = get_bool( "indent-mode" );
+    node->set_prop( "indent-mode", value.to_string() );
+  }
+
+  /* Load the settings */
+  public override void load_settings( Xml.Node* node ) {
+    var q = node->get_prop( "indent-mode" );
+    if( q != null ) {
+      var value = bool.parse( q );
+      set_bool( "indent-mode", value );
+    }
   }
 
   /* Exports the given drawing area to the file of the given name */
@@ -39,6 +61,18 @@ public class ExportOrgMode : Export {
     return( retval );
   }
 
+  private string sprefix() {
+    return( get_bool( "indent-mode" ) ? "  " : "*" );
+  }
+
+  private string wrap( string prefix ) {
+    return( get_bool( "indent-mode" ) ? (prefix + " ") : "" );
+  }
+
+  private string linestart( string prefix ) {
+    return( get_bool( "indent-mode" ) ? (prefix + "  ") : "" );
+  }
+
   /* Draws each of the top-level nodes */
   private void export_top_nodes( FileOutputStream os, DrawArea da ) {
 
@@ -49,12 +83,12 @@ public class ExportOrgMode : Export {
         string title = "* " + nodes.index( i ).name.text.text + "\n\n";
         os.write( title.data );
         if( nodes.index( i ).note != "" ) {
-          string note = "  " + nodes.index( i ).note.replace( "\n", "\n  " );
+          string note = "\n" + linestart( "" ) + nodes.index( i ).note.replace( "\n", "\n  " );
           os.write( note.data );
         }
         var children = nodes.index( i ).children();
         for( int j=0; j<children.length; j++ ) {
-          export_node( os, children.index( j ) );
+          export_node( os, children.index( j ), sprefix() );
         }
       }
 
@@ -65,7 +99,7 @@ public class ExportOrgMode : Export {
   }
 
   /* Draws the given node and its children to the output stream */
-  private void export_node( FileOutputStream os, Node node, string prefix = "  " ) {
+  private void export_node( FileOutputStream os, Node node, string prefix ) {
 
     try {
 
@@ -79,12 +113,12 @@ public class ExportOrgMode : Export {
         }
       }
 
-      title += node.name.text.text.replace( "\n", prefix + " " ) + "\n";
+      title += node.name.text.text.replace( "\n", wrap( prefix ) ) + "\n";
 
       os.write( title.data );
 
       if( node.note != "" ) {
-        string note = prefix + "  " + node.note.replace( "\n", "\n" + prefix + "  " ) + "\n";
+        string note = "\n" + linestart( prefix ) + node.note.replace( "\n", "\n" + linestart( prefix ) ) + "\n";
         os.write( note.data );
       }
 
@@ -92,7 +126,7 @@ public class ExportOrgMode : Export {
 
       var children = node.children();
       for( int i=0; i<children.length; i++ ) {
-        export_node( os, children.index( i ), prefix + "  " );
+        export_node( os, children.index( i ), prefix + sprefix() );
       }
 
     } catch( Error e ) {
