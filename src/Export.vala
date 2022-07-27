@@ -87,8 +87,10 @@ public class Export {
     var sw  = new Switch();
     sw.halign = Align.END;
     sw.expand = true;
-    sw.activate.connect(() => {
+    sw.button_press_event.connect((e) => {
+      sw.active = !sw.active;
       settings_changed();
+      return( true );
     });
 
     grid.attach( lbl, 0, row );
