@@ -1,85 +1,80 @@
-# Polish translations for com.github.phase1geo.minder package.
-# Copyright (C) 2019 THE com.github.phase1geo.minder'S COPYRIGHT HOLDER
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
-# Automatically generated, 2019.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-24 21:48-0500\n"
-"PO-Revision-Date: 2019-03-24 15:24+0100\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-08-02 23:19+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: src/About.vala:36
 msgid "Mind-mapping application"
-msgstr ""
+msgstr "Program do tworzenia map myśli"
 
 #: src/About.vala:37
 msgid "Copyright © 2018-2021 Trevor Williams"
-msgstr ""
+msgstr "Copyright © 2018-2021 Trevor Williams"
 
 #: src/About.vala:41
 msgid "Minder in AppCenter"
-msgstr ""
+msgstr "Minder w AppCenter"
 
 #: src/Application.vala:98
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
-msgstr ""
+msgstr "BŁĄD:  Nie można otworzyć pliku '%s'\n"
 
 #: src/Application.vala:122
 msgid "Display version number"
-msgstr ""
+msgstr "Pokaż numer wersji"
 
 #: src/Application.vala:123
 msgid "Starts Minder with a new file"
-msgstr ""
+msgstr "Uruchom Mindera z nowym plikiem"
 
 #: src/Application.vala:124
 msgid "Run testing"
-msgstr ""
+msgstr "Uruchom testowanie"
 
 #: src/Application.vala:133
 #, c-format
 msgid "ERROR: %s\n"
-msgstr ""
+msgstr "BŁĄD: %s\n"
 
 #: src/Application.vala:134
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
-msgstr ""
+msgstr "Wykonaj '%s --help' aby zobaczyć możliwe opcje\n"
 
 #: src/CanvasText.vala:253 src/FormattedText.vala:1076
-#, fuzzy
 msgid "No text found"
-msgstr "Dodaj węzeł główny"
+msgstr "Nie znaleziono tekstu"
 
 #: src/ConnectionInspector.vala:74 src/NodeInspector.vala:132
-#, fuzzy
 msgid "Color"
-msgstr "Kolor połączenia"
+msgstr "Kolor"
 
 #: src/ConnectionInspector.vala:88
 msgid "Use Theme Default Color"
-msgstr ""
+msgstr "Użyj domyślnego koloru z motywu"
 
 #: src/ConnectionInspector.vala:107 src/NodeInspector.vala:207
-#, fuzzy
 msgid "Note"
-msgstr "Notatki"
+msgstr "Notatka (można używać znaczników Markdown)"
 
 #: src/ConnectionInspector.vala:142
-#, fuzzy
 msgid "Delete Connection"
-msgstr "Szukaj węzłów"
+msgstr "Usuń łącznik"
 
 #: src/ConnectionMenu.vala:42 src/ConnectionsMenu.vala:35
 #: src/GroupsMenu.vala:39 src/NodeMenu.vala:85 src/NodesMenu.vala:55
@@ -88,66 +83,55 @@ msgid "Delete"
 msgstr "Usuń"
 
 #: src/ConnectionMenu.vala:46
-#, fuzzy
 msgid "Edit Title…"
-msgstr "Tytuly"
+msgstr "Edytuj etykietę…"
 
 #: src/ConnectionMenu.vala:50 src/NodeMenu.vala:100
 #: data/com.github.phase1geo.minder.shortcuts.ui:329
 #: data/com.github.phase1geo.minder.shortcuts.ui:620
-#, fuzzy
 msgid "Edit Note"
-msgstr "Tytuly"
+msgstr "Notatka"
 
 #: src/ConnectionMenu.vala:53 src/NodeMenu.vala:110
-#, fuzzy
 msgid "Remove Sticker"
-msgstr "Usuń notatkę"
+msgstr "Usuń ikonę"
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:49 src/ImageManager.vala:299
 #: src/NodeMenu.vala:176 src/NodesMenu.vala:94
-#, fuzzy
 msgid "Select"
-msgstr "Wybierz węzeł"
+msgstr "Zaznacz"
 
 #: src/ConnectionMenu.vala:61
-#, fuzzy
 msgid "Start Node"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: src/ConnectionMenu.vala:65
-#, fuzzy
 msgid "End Node"
-msgstr "Węzeł"
+msgstr ""
 
 #: src/ConnectionMenu.vala:69
-#, fuzzy
 msgid "Next Connection"
-msgstr "Szukaj węzłów"
+msgstr "Następny łącznik"
 
 #: src/ConnectionMenu.vala:73
-#, fuzzy
 msgid "Previous Connection"
-msgstr "Poprzedni sąsiadujący"
+msgstr "Poprzedni łącznik"
 
 #: src/Connection.vala:695
-#, fuzzy
 msgid "Connection Title"
-msgstr "zmiana notatki węzła"
+msgstr "Etykieta łącznika"
 
 #: src/Connection.vala:703
-#, fuzzy
 msgid "Connection Note"
-msgstr "Szukaj węzłów"
+msgstr "Notatka łącznika"
 
 #: src/Document.vala:69
-#, fuzzy
 msgid "unnamed"
-msgstr "Dokument bez nazwy"
+msgstr "bez nazwy"
 
 #: src/DrawArea.vala:757
 msgid "Main Idea"
-msgstr "Główny pomysł"
+msgstr "TEMAT"
 
 #: src/DrawArea.vala:2399
 #, c-format
@@ -156,28 +140,29 @@ msgstr "Ukończono %0.3g%%"
 
 #: src/DrawArea.vala:2413
 msgid "Drag to resize node"
-msgstr ""
+msgstr "Przeciągnij aby zmienić rozmiar elementu"
 
 #: src/DrawArea.vala:2415
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
+"Przeciągnij by zmienić rozmiar elementu oraz obrazu.\n"
+"CTRL+przeciąganie zmieni tylko rozmiar elementu."
 
 #: src/DrawArea.vala:2527
-#, fuzzy, c-format
+#, c-format
 msgid "Children: %u\n"
-msgstr "Zwiń węzeł potomny"
+msgstr "Podrzędne: %u\n"
 
 #: src/DrawArea.vala:2528
 #, c-format
 msgid "Total: %d"
-msgstr ""
+msgstr "Wszystkie: %d"
 
 #: src/DrawArea.vala:2574
-#, fuzzy
 msgid "connection endpoint change"
-msgstr "zmiana notatki węzła"
+msgstr ""
 
 #: src/DrawArea.vala:2581
 msgid "connection drag"
@@ -185,7 +170,7 @@ msgstr ""
 
 #: src/DrawArea.vala:3218 src/DrawArea.vala:3232 src/DrawArea.vala:4916
 msgid "Another Idea"
-msgstr "Inny pomysł"
+msgstr "NOWY TEMAT"
 
 #: src/DrawArea.vala:4424 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
@@ -193,48 +178,48 @@ msgid "Manual"
 msgstr "Ręcznie"
 
 #: src/DynamicNotebook.vala:234 src/DynamicNotebook.vala:258
-#, fuzzy
 msgid "Close Tab"
-msgstr "Nowy Plik"
+msgstr "Zamknij kartę"
 
 #: src/DynamicNotebook.vala:261
 msgid "Open in a New Window"
-msgstr ""
+msgstr "Otwórz w nowym oknie"
 
 #: src/DynamicNotebook.vala:262
 msgid "Duplicate"
-msgstr ""
+msgstr "Duplikuj"
 
 #: src/DynamicNotebook.vala:314
 msgid "Close Other Tab"
-msgstr ""
+msgstr "Zamknij nieaktywną kartę"
 
 #: src/DynamicNotebook.vala:314
 msgid "Close Other Tabs"
-msgstr ""
+msgstr "Zamknij pozostałe karty"
 
 #: src/DynamicNotebook.vala:485
 msgid "Clear All"
-msgstr ""
+msgstr "Wyczyść wszystko"
 
 #: src/DynamicNotebook.vala:767 src/DynamicNotebook.vala:798
 msgid "New Tab"
-msgstr ""
+msgstr "Nowa karta"
 
 #: src/DynamicNotebook.vala:768
 msgid "Undo Close Tab"
-msgstr ""
+msgstr "Cofnij zamknięcie karty"
 
 #: src/DynamicNotebook.vala:810
 msgid "Closed Tabs"
-msgstr ""
+msgstr "Zamknięte karty"
 
 #: src/EmptyInspector.vala:30
-#, fuzzy
 msgid ""
 "Select a node or connection\n"
 "to view/edit information"
-msgstr "<big>Wybierz węzeł aby zobaczyć/edytować informacje</big>"
+msgstr ""
+"Wybierz element aby\n"
+"przeglądać lub edytować"
 
 #: src/EmptyMenu.vala:38 src/NodeMenu.vala:77 src/TextMenu.vala:52
 msgid "Paste"
@@ -242,37 +227,36 @@ msgstr "Wklej"
 
 #: src/EmptyMenu.vala:42 src/NodeMenu.vala:149
 msgid "Add Root Node"
-msgstr "Dodaj węzeł główny"
+msgstr "Wstaw nową gałąź główną"
 
 #: src/EmptyMenu.vala:46
 msgid "Add Nodes With Quick Entry"
-msgstr ""
+msgstr "Szybkie wstawianie wielu elementów"
 
 #: src/EmptyMenu.vala:49
 msgid "Select Node"
-msgstr "Wybierz węzeł"
+msgstr "Zaznacz gałąź / element?"
 
 #: src/EmptyMenu.vala:54 src/Theme.vala:299
 msgid "Root"
-msgstr "Główny"
+msgstr "Start"
 
 #: src/Exporter.vala:43
 msgid "Export…"
-msgstr "Eksport…"
+msgstr "Eksportuj…"
 
 #: src/Exporter.vala:44
 msgid "Export With Current Settings"
-msgstr ""
+msgstr "Eksportuj z bieżącymi ustawieniami"
 
 #: src/Exporter.vala:110
-#, fuzzy
 msgid "Export Options"
-msgstr "Eksport"
+msgstr "Opcje eksportu"
 
 #: src/Exporter.vala:131
-#, fuzzy, c-format
+#, c-format
 msgid "Export As %s"
-msgstr "Eksportuj jako"
+msgstr "Eksportuj jako %s"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:299
 #: src/MainWindow.vala:946 src/MainWindow.vala:1028 src/MainWindow.vala:1148
@@ -287,7 +271,7 @@ msgstr "Eksport"
 
 #: src/Exporter.vala:158
 msgid "Minder Export Completed"
-msgstr ""
+msgstr "Eksport z Mindera zakończony pomyślnie"
 
 #: src/exports/ExportCSV.vala:26
 msgid "CSV"
@@ -295,20 +279,20 @@ msgstr "CSV"
 
 #: src/exports/ExportFreemind.vala:29
 msgid "Freemind"
-msgstr ""
+msgstr "Freemind"
 
 #: src/exports/ExportFreemind.vala:45 src/exports/ExportFreeplane.vala:47
 #: src/exports/ExportOPML.vala:36 src/exports/ExportYed.vala:41
 msgid "Generated by Minder"
-msgstr ""
+msgstr "Utworzno w Minderze"
 
 #: src/exports/ExportFreeplane.vala:31
 msgid "Freeplane"
-msgstr ""
+msgstr "Freeplane"
 
 #: src/exports/ExportImage.vala:79
 msgid "Quality"
-msgstr ""
+msgstr "Jakość"
 
 #: src/exports/ExportMarkdown.vala:28
 msgid "Markdown"
@@ -316,35 +300,35 @@ msgstr "Markdown"
 
 #: src/exports/ExportMarkdown.vala:159
 msgid "Include image links"
-msgstr ""
+msgstr "Eksportuj z obrazami"
 
 #: src/exports/ExportMarkdown.vala:160
 msgid "Creates a directory containing the Markdown and embedded images"
-msgstr ""
+msgstr "Tworzy katalog zawierający plik Markdown wraz z osadzonymi obrazami"
 
 #: src/exports/ExportMermaid.vala:26
 msgid "Mermaid"
-msgstr ""
+msgstr "Mermaid"
 
 #: src/exports/ExportMermaid.vala:46 src/layouts/LayoutVertical.vala:26
 #: src/MapInspector.vala:335
 msgid "Vertical"
-msgstr "Wertykalny"
+msgstr "Pionowo"
 
 #: src/exports/ExportMermaid.vala:46 src/layouts/LayoutDown.vala:26
 #: src/MapInspector.vala:340
 msgid "Downwards"
-msgstr "W dół"
+msgstr "Na dole"
 
 #: src/exports/ExportMermaid.vala:48 src/layouts/LayoutLeft.vala:26
 #: src/MapInspector.vala:337
 msgid "To left"
-msgstr "Do lewej"
+msgstr "Z lewej"
 
 #: src/exports/ExportMermaid.vala:50 src/layouts/LayoutUp.vala:26
 #: src/MapInspector.vala:339
 msgid "Upwards"
-msgstr "W górę"
+msgstr "Na górze"
 
 #: src/exports/ExportOPML.vala:26
 msgid "OPML"
@@ -352,11 +336,11 @@ msgstr "OPML"
 
 #: src/exports/ExportOrgMode.vala:26
 msgid "Org-Mode"
-msgstr ""
+msgstr "Org-Mode"
 
 #: src/exports/ExportOutliner.vala:28
 msgid "Outliner"
-msgstr ""
+msgstr "Outliner"
 
 #: src/exports/ExportPDF.vala:28
 msgid "PDF"
@@ -364,23 +348,23 @@ msgstr "PDF"
 
 #: src/exports/ExportPlantUML.vala:29
 msgid "PlantUML"
-msgstr ""
+msgstr "PlantUML"
 
 #: src/exports/ExportPNG.vala:30
 msgid "PNG"
-msgstr ""
+msgstr "PNG"
 
 #: src/exports/ExportPNG.vala:77
 msgid "Enable Transparent Background"
-msgstr ""
+msgstr "Zapisz z przeźroczystym tłem"
 
 #: src/exports/ExportPNG.vala:78
 msgid "Compression"
-msgstr ""
+msgstr "Kompresja"
 
 #: src/exports/ExportPortableMinder.vala:28
 msgid "Portable Minder"
-msgstr ""
+msgstr "Portable Minder"
 
 #: src/exports/ExportSVG.vala:28
 msgid "SVG"
@@ -388,31 +372,29 @@ msgstr "SVG"
 
 #: src/exports/ExportText.vala:34
 msgid "PlainText"
-msgstr "Dokument tekstowy"
+msgstr "Plik tekstowy"
 
 #: src/exports/ExportXMind2021.vala:79
-#, fuzzy
 msgid "XMind 2021"
-msgstr "Minder"
+msgstr "XMind 2021"
 
 #: src/exports/ExportXMind2021.vala:682 src/exports/ExportXMind8.vala:683
 #: src/layouts/LayoutHorizontal.vala:26 src/MapInspector.vala:336
 msgid "Horizontal"
-msgstr "Horyzontalny"
+msgstr "Poziomo"
 
 #: src/exports/ExportXMind2021.vala:684 src/exports/ExportXMind8.vala:685
 #: src/layouts/LayoutRight.vala:26 src/MapInspector.vala:338
 msgid "To right"
-msgstr "Do prawej"
+msgstr "Z prawej"
 
 #: src/exports/ExportXMind8.vala:80
-#, fuzzy
 msgid "XMind 8"
-msgstr "Minder"
+msgstr "XMind 8"
 
 #: src/exports/ExportYed.vala:26
 msgid "Yed"
-msgstr ""
+msgstr "Yed"
 
 #: src/Exports.vala:35
 msgid "JPEG"
@@ -420,25 +402,23 @@ msgstr "JPEG"
 
 #: src/GroupsMenu.vala:42
 msgid "Merge"
-msgstr ""
+msgstr "Połącz"
 
 #: src/GroupsMenu.vala:45
 msgid "Change color…"
-msgstr ""
+msgstr "Zmień kolor…"
 
 #: src/GroupsMenu.vala:52
-#, fuzzy
 msgid "Top Nodes"
-msgstr "Dodaj węzeł główny"
+msgstr ""
 
 #: src/GroupsMenu.vala:55
 msgid "All Grouped Nodes"
-msgstr ""
+msgstr "Wszystkie zgrupowane elementy"
 
 #: src/GroupsMenu.vala:100 src/NodeMenu.vala:636 src/NodesMenu.vala:266
-#, fuzzy
 msgid "Select a link color"
-msgstr "Węzeł"
+msgstr ""
 
 #: src/ImageEditor.vala:166
 #, c-format
@@ -448,52 +428,47 @@ msgstr ""
 #: src/ImageEditor.vala:374
 #, c-format
 msgid "Cursor: %3d,%3d"
-msgstr ""
+msgstr "Kursor: %3d,%3d"
 
 #: src/ImageEditor.vala:382 src/UrlEditor.vala:55
 msgid "Apply"
-msgstr ""
+msgstr "Zastosuj"
 
 #: src/ImageEditor.vala:392
 msgid "Change Image"
-msgstr ""
+msgstr "Zmień obraz"
 
 #: src/ImageEditor.vala:393
-#, fuzzy
 msgid "Copy Image to Clipboard"
-msgstr "Skopiuj węzeł"
+msgstr "Kopiuj obraz do schowka"
 
 #: src/ImageEditor.vala:394
-#, fuzzy
 msgid "Cut Image to Clipboard"
-msgstr "Wytnij węzeł"
+msgstr "Wytnij obraz do schowka"
 
 #: src/ImageEditor.vala:395
-#, fuzzy
 msgid "Paste Image from Clipboard"
-msgstr "Wytnij węzeł"
+msgstr "Wklej obraz ze schowka"
 
 #: src/ImageEditor.vala:396 src/NodeInspector.vala:276 src/NodeMenu.vala:416
 msgid "Remove Image"
-msgstr ""
+msgstr "Usuń obraz"
 
 #: src/ImageManager.vala:299
-#, fuzzy
 msgid "Select Image"
-msgstr "Wybierz węzeł"
+msgstr "Wybierz oraz"
 
 #: src/ImageManager.vala:304
 msgid "Images"
-msgstr ""
+msgstr "Obrazy"
 
 #: src/MainWindow.vala:146 src/MainWindow.vala:1153
 msgid "Minder"
 msgstr "Minder"
 
 #: src/MainWindow.vala:179 data/com.github.phase1geo.minder.shortcuts.ui:21
-#, fuzzy
 msgid "New File"
-msgstr "Nowy Plik"
+msgstr "Nowy plik"
 
 #: src/MainWindow.vala:185 src/MainWindow.vala:1028
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
@@ -501,89 +476,84 @@ msgid "Open File"
 msgstr "Otwórz plik"
 
 #: src/MainWindow.vala:191 data/com.github.phase1geo.minder.shortcuts.ui:42
-#, fuzzy
 msgid "Save File As"
-msgstr "Zapisz jako"
+msgstr "Zapisz plik jako"
 
 #: src/MainWindow.vala:197 src/StickerSet.vala:303 src/UndoBuffer.vala:84
-#, fuzzy
 msgid "Undo"
 msgstr "Cofnij"
 
 #: src/MainWindow.vala:204 src/StickerSet.vala:304 src/UndoBuffer.vala:90
-#, fuzzy
 msgid "Redo"
 msgstr "Ponów"
 
 #: src/MainWindow.vala:486
 msgid "Unnamed Document"
-msgstr "Dokument bez nazwy"
+msgstr "Dokument Bez Nazwy"
 
 #: src/MainWindow.vala:490 src/MainWindow.vala:801
 msgid "Focus Mode"
-msgstr ""
+msgstr "Tryb skupienia"
 
 #: src/MainWindow.vala:522 src/MainWindow.vala:1199
 #, c-format
 msgid "Zoom (%d%%)"
-msgstr ""
+msgstr "Powiększenie (%d%%)"
 
 #: src/MainWindow.vala:529
 msgid "Zoom to Percent"
-msgstr "Przybliżenie "
+msgstr "Powiększenie w procentach"
 
 #: src/MainWindow.vala:542 src/ZoomWidget.vala:102
 #: data/com.github.phase1geo.minder.shortcuts.ui:117
 msgid "Zoom In"
-msgstr "Przybliż"
+msgstr "Powiększ"
 
 #: src/MainWindow.vala:548 src/ZoomWidget.vala:92
 #: data/com.github.phase1geo.minder.shortcuts.ui:124
 msgid "Zoom Out"
-msgstr "Oddal"
+msgstr "Pomniejsz"
 
 #: src/MainWindow.vala:558
 msgid "Zoom to Fit"
-msgstr "Przybliż do widoku"
+msgstr "Najlepsze dopasowanie"
 
 #: src/MainWindow.vala:563
 msgid "Zoom to Fit Selected Node"
-msgstr "Przybliż do zaznaczonego węzła"
+msgstr "Dopasowanie do wybranego elementu"
 
 #: src/MainWindow.vala:568
 msgid "Zoom to Actual Size"
-msgstr "Naturalna wielkość"
+msgstr "Dopasowanie do aktualnego rozmiaru"
 
 #: src/MainWindow.vala:592 src/StickerSet.vala:110
 msgid "Search"
 msgstr "Szukaj"
 
+# Łączniki??
 #: src/MainWindow.vala:602
-#, fuzzy
 msgid "Search Nodes and Connections"
-msgstr "Szukaj węzłów"
+msgstr "Przeszukaj gałęzie i łączniki"
 
 #: src/MainWindow.vala:631
 msgid "Search Criteria"
 msgstr "Kryteria wyszukiwania"
 
 #: src/MainWindow.vala:634
-#, fuzzy
 msgid "Search all tabs"
-msgstr "Kryteria wyszukiwania"
+msgstr "Przeszukaj wszystkie karty"
 
 #: src/MainWindow.vala:668
-#, fuzzy
 msgid "Nodes"
-msgstr "Węzeł"
+msgstr "Gałęzie"
 
 #: src/MainWindow.vala:669
 msgid "Connections"
-msgstr ""
+msgstr "Łączniki"
 
 #: src/MainWindow.vala:670
 msgid "Titles"
-msgstr "Tytuly"
+msgstr "Tytuły"
 
 #: src/MainWindow.vala:671
 msgid "Notes"
@@ -606,39 +576,36 @@ msgid "Non-tasks"
 msgstr "Nie zadania"
 
 #: src/MainWindow.vala:778
-#, fuzzy
 msgid "Print…"
-msgstr "Drukuj"
+msgstr "Drukuj…"
 
 #: src/MainWindow.vala:826 src/Preferences.vala:36
 msgid "Preferences"
-msgstr ""
+msgstr "Ustawienia"
 
 #: src/MainWindow.vala:831
 msgid "Shortcuts Cheatsheet"
-msgstr ""
+msgstr "Lista skrótów klawiaturowych"
 
 #: src/MainWindow.vala:835
-#, fuzzy
 msgid "About Minder"
-msgstr "Minder"
+msgstr "O programie Minder"
 
 #: src/MainWindow.vala:868 src/MainWindow.vala:1265
-#, fuzzy
 msgid "Show Property Sidebar"
-msgstr "Właściwości"
+msgstr "Pokaż panel właściwości"
 
 #: src/MainWindow.vala:883
 msgid "Current"
-msgstr ""
+msgstr "Zaznaczenie"
 
 #: src/MainWindow.vala:884 src/StyleInspector.vala:188
 msgid "Style"
-msgstr ""
+msgstr "Wygląd"
 
 #: src/MainWindow.vala:885
 msgid "Stickers"
-msgstr ""
+msgstr "Ikony"
 
 #: src/MainWindow.vala:886
 msgid "Map"
@@ -646,11 +613,11 @@ msgstr "Mapa"
 
 #: src/MainWindow.vala:937
 msgid "Save current unnamed document?"
-msgstr "Zapisać nienazwany dokument?"
+msgstr "Zapisać aktualny niezapisany dokument?"
 
 #: src/MainWindow.vala:938
 msgid "Changes will be permanently lost if not saved."
-msgstr "Zmainy zostaną bezpowrotnie utracone jeśli nie zostaną zapisane."
+msgstr "Zmiany zostaną utracone jeśli nie zostanie zapisany!"
 
 #: src/MainWindow.vala:943
 msgid "Discard Changes"
@@ -663,20 +630,19 @@ msgstr "Zapisz"
 #: src/MainWindow.vala:978
 #, c-format
 msgid "The file %s was modified outside of the application."
-msgstr ""
+msgstr "Plik %s został zmodyfikowany poza aplikacją."
 
 #: src/MainWindow.vala:979
 msgid "What do you want to do?"
-msgstr ""
+msgstr "Co chcesz zrobić?"
 
 #: src/MainWindow.vala:984
-#, fuzzy
 msgid "Discard Changes and reload"
-msgstr "Odrzuć zmiany"
+msgstr "Odrzuć zmiany i wczytaj ponownie."
 
 #: src/MainWindow.vala:987
 msgid "Save local version and overwrite"
-msgstr ""
+msgstr "Zachowaj lokalną wersję i nadpisz"
 
 #: src/MainWindow.vala:1028
 msgid "Open"
@@ -687,36 +653,32 @@ msgid "Save File"
 msgstr "Zapisz plik"
 
 #: src/MainWindow.vala:1209
-#, fuzzy
 msgid "Hide Property Sidebar"
-msgstr "Właściwości"
+msgstr "Ukryj panel właściwości"
 
 #: src/MapInspector.vala:97
-#, fuzzy
 msgid "Hide connections"
-msgstr "Szukaj węzłów"
+msgstr "Ukryj łączniki"
 
 #: src/MapInspector.vala:127
 msgid "Rotate main branch colors"
 msgstr ""
 
 #: src/MapInspector.vala:159
-#, fuzzy
 msgid "Node Layouts"
-msgstr "Uklad węzłów"
+msgstr "Układ gałęzi"
 
 #: src/MapInspector.vala:210
-#, fuzzy
 msgid "Themes"
 msgstr "Motywy"
 
 #: src/MapInspector.vala:229
 msgid "Add Custom Theme"
-msgstr ""
+msgstr "Dodaj własny motyw"
 
 #: src/MapInspector.vala:248
 msgid "Balance Nodes"
-msgstr "Zbalansuj wężły"
+msgstr "Zbalansuj gałęzie"
 
 #: src/MapInspector.vala:254
 msgid "Fold Completed Tasks"
@@ -724,62 +686,60 @@ msgstr "Zwiń ukończone zadania"
 
 #: src/MapInspector.vala:260
 msgid "Unfold All Nodes"
-msgstr "Rozwiń wszystkie węzły"
+msgstr "Rozwiń wszystkie gałęzie"
 
 #: src/MapInspector.vala:351
 msgid "Unsaved"
-msgstr ""
+msgstr "Niezapisany"
 
 #: src/NodeInspector.vala:93
-#, fuzzy
 msgid "Task"
-msgstr "Zadania"
+msgstr "Ustaw jako zadanie"
 
+# Może tylko zwiń?
 #: src/NodeInspector.vala:111
-#, fuzzy
 msgid "Fold"
-msgstr "Zwinięte"
+msgstr "Zwiń podrzędne"
 
 #: src/NodeInspector.vala:162
 msgid "Override Color"
-msgstr ""
+msgstr "Zmień kolor"
 
 #: src/NodeInspector.vala:247 src/NodeInspector.vala:265
 msgid "Image"
-msgstr ""
+msgstr "Obraz"
 
 #: src/NodeInspector.vala:251
 msgid "Add Image…"
-msgstr ""
+msgstr "Dodaj Obraz…"
 
 #: src/NodeInspector.vala:270
 msgid "Edit Image"
-msgstr ""
+msgstr "Edytuj obraz"
 
 #: src/NodeInspector.vala:283
 msgid "Resizable"
-msgstr ""
+msgstr "Pozwól na zmianę wielkości"
 
 #: src/NodeInspector.vala:383
 msgid "Copy Node To Clipboard"
-msgstr "Skopiuj węzeł"
+msgstr "Kopiuj gałąź do schowka"
 
 #: src/NodeInspector.vala:387
 msgid "Cut Node To Clipboard"
-msgstr "Wytnij węzeł"
+msgstr "Wytnij gałąź do schowka"
 
 #: src/NodeInspector.vala:392
 msgid "Detach Node"
-msgstr "Odczep węzeł"
+msgstr "Odłącz gałąź"
 
 #: src/NodeInspector.vala:397 data/com.github.phase1geo.minder.shortcuts.ui:275
 msgid "Delete Node"
-msgstr "Usuń węzeł"
+msgstr "Usuń gałąź"
 
 #: src/NodeLink.vala:101
-#, fuzzy
 msgid "No node found"
-msgstr "Dodaj węzeł główny"
+msgstr "Nie znaleziono gałęzi"
 
 #: src/NodeMenu.vala:69 src/NodesMenu.vala:47 src/TextMenu.vala:44
 msgid "Copy"
@@ -791,161 +751,147 @@ msgstr "Wytnij"
 
 #: src/NodeMenu.vala:81 src/NodeMenu.vala:428
 msgid "Paste and Replace Node"
-msgstr ""
+msgstr "Wklej i zastąp gałąź"
 
 #: src/NodeMenu.vala:88
-#, fuzzy
 msgid "Delete Single Node"
-msgstr "Usuń węzeł"
+msgstr "Usuń zaznaczoną gałąź"
 
+# Zmień Fiszkę?
 #: src/NodeMenu.vala:91
-#, fuzzy
 msgid "Change Node"
-msgstr "Zbalansuj wężły"
+msgstr "Edycja"
 
 #: src/NodeMenu.vala:96
-#, fuzzy
 msgid "Edit Text…"
-msgstr "Edytuj…"
+msgstr "Edytuj tekst gałęzi…"
 
 #: src/NodeMenu.vala:104 src/NodeMenu.vala:402
 msgid "Add Task"
-msgstr "Dodaj zadanie"
+msgstr "Ustaw jako zadanie"
 
 #: src/NodeMenu.vala:107 src/NodeMenu.vala:416
 msgid "Add Image"
-msgstr ""
+msgstr "Wstaw obraz"
 
 #: src/NodeMenu.vala:114 src/NodeMenu.vala:403
-#, fuzzy
 msgid "Add Node Link"
-msgstr "Dodaj notatkę"
+msgstr "Dodaj hiperłącze do innej gałęzi"
 
 #: src/NodeMenu.vala:118
 msgid "Add Connection"
-msgstr ""
+msgstr "Dodaj łącznik do innej gałęzi"
 
 #: src/NodeMenu.vala:122
 msgid "Add Group"
-msgstr ""
+msgstr "Dodaj grupę"
 
 #: src/NodeMenu.vala:125 src/ThemeEditor.vala:131
-#, fuzzy
 msgid "Link Color"
-msgstr "Kolor połączenia"
+msgstr "Kolor linii gałęzi"
 
 #: src/NodeMenu.vala:129 src/NodesMenu.vala:79
 msgid "Set to color…"
-msgstr ""
+msgstr "Ustaw kolor..."
 
 #: src/NodeMenu.vala:132
 msgid "Randomize color"
-msgstr ""
+msgstr "Kolor losowy"
 
 #: src/NodeMenu.vala:135 src/NodesMenu.vala:85
 msgid "Use parent color"
-msgstr ""
+msgstr "Użyj koloru elementu nadrzędnego"
 
 #: src/NodeMenu.vala:139 src/NodeMenu.vala:404 src/NodesMenu.vala:63
 #: src/NodesMenu.vala:214
 msgid "Fold Children"
-msgstr "Zwiń węzeł potomny"
+msgstr "Zwiń elementy podrzędne"
 
 #: src/NodeMenu.vala:142
 msgid "Detach"
-msgstr "Odczep"
+msgstr "Odłącz"
 
 #: src/NodeMenu.vala:145
-#, fuzzy
 msgid "Add Node"
-msgstr "Dodaj notatkę"
+msgstr "Dodaj gałąź"
 
 #: src/NodeMenu.vala:152
-#, fuzzy
 msgid "Add Parent Node"
-msgstr "Szukaj węzłów"
+msgstr "Dodaj gałąź nadrzędną"
 
 #: src/NodeMenu.vala:156
 msgid "Add Child Node"
-msgstr "Dodaj węzeł potomny"
+msgstr "Dodaj gałąź podrzędną"
 
 #: src/NodeMenu.vala:160
 msgid "Add Sibling Node"
-msgstr "Dodaj sąsiadujący węzeł"
+msgstr "Dodaj gałąź równorzędną"
 
 #: src/NodeMenu.vala:164 src/QuickEntry.vala:36
 msgid "Quick Entry"
-msgstr ""
+msgstr "Szybkie wstawianie"
 
 #: src/NodeMenu.vala:168
-#, fuzzy
 msgid "Insert Nodes"
-msgstr "wstawienie węzła"
+msgstr "Szybkie dodawanie gałęzi"
 
 #: src/NodeMenu.vala:172
-#, fuzzy
 msgid "Replace Nodes"
-msgstr "Zbalansuj wężły"
+msgstr "Szybka edycja gałęzi"
 
 #: src/NodeMenu.vala:181
-#, fuzzy
 msgid "Root Node"
-msgstr "Dodaj węzeł główny"
+msgstr "Główna gałąź"
 
 #: src/NodeMenu.vala:186
-#, fuzzy
 msgid "Next Sibling Node"
-msgstr "Następny sąsiadujący"
+msgstr "Następna gałąź równorzędna"
 
 #: src/NodeMenu.vala:191
-#, fuzzy
 msgid "Previous Sibling Node"
-msgstr "Poprzedni sąsiadujący"
+msgstr "Poprzednia gałąź równorzędna"
 
 #: src/NodeMenu.vala:196
-#, fuzzy
 msgid "Child Node"
-msgstr "Dodaj węzeł potomny"
+msgstr "Gałąź podrzędna"
 
+# Elementy podrzędne poziomu 1 niższego
 #: src/NodeMenu.vala:201 src/NodesMenu.vala:103
-#, fuzzy
 msgid "Child Nodes"
-msgstr "Dodaj węzeł potomny"
+msgstr "Gałęzie podrzędne"
 
+# Wszystkie podrzędne gałęzie niższych poziomów
 #: src/NodeMenu.vala:206
 msgid "Subtree"
-msgstr ""
+msgstr "Wszystkie gałęzie poniżej"
 
 #: src/NodeMenu.vala:211
-#, fuzzy
 msgid "Parent Node"
-msgstr "Szukaj węzłów"
+msgstr "Gałąź nadrzędna"
 
 #: src/NodeMenu.vala:216
-#, fuzzy
 msgid "Linked Node"
-msgstr "Węzeł"
+msgstr "Podlinkowaną gałąź (hiperłącze)"
 
 #: src/NodeMenu.vala:221
 msgid "Connection"
-msgstr ""
+msgstr "Łącznik"
 
 #: src/NodeMenu.vala:226
 msgid "Center Current Node"
-msgstr "Wyśrodkuj na wężle"
+msgstr "Wyśrodkuj na tej gałęzi"
 
 #: src/NodeMenu.vala:230
-#, fuzzy
 msgid "Sort Children"
-msgstr "Zwiń węzeł potomny"
+msgstr "Sortuj pozycje podrzędne"
 
 #: src/NodeMenu.vala:234
 msgid "Alphabetically"
-msgstr ""
+msgstr "Alfabetycznie"
 
 #: src/NodeMenu.vala:237
 msgid "Randomize"
-msgstr ""
+msgstr "Losowo"
 
 #: src/NodeMenu.vala:400
 msgid "Remove Task"
@@ -953,76 +899,67 @@ msgstr "Usuń zadanie"
 
 #: src/NodeMenu.vala:401
 msgid "Mark Task As Done"
-msgstr ""
+msgstr "Oznacz zadanie jako wykonane"
 
 #: src/NodeMenu.vala:403
-#, fuzzy
 msgid "Remove Node Link"
-msgstr "Usuń notatkę"
+msgstr "Usuń hiperłącze"
 
 #: src/NodeMenu.vala:404 src/NodesMenu.vala:214
 msgid "Unfold Children"
-msgstr "Rozwiń węzeł potomny"
+msgstr "Rozwiń gałęzie podrzędne"
 
 #: src/NodeMenu.vala:421
-#, fuzzy
 msgid "Paste Text As Child Node"
-msgstr "Dodaj węzeł potomny"
+msgstr "Wklej tekst jako gałąź podrzędną"
 
 #: src/NodeMenu.vala:422
 msgid "Paste and Replace Node Text"
-msgstr ""
+msgstr "Wklej i zastąp tekst gałęzi"
 
 #: src/NodeMenu.vala:424
-#, fuzzy
 msgid "Paste Image As Child Node"
-msgstr "Dodaj węzeł potomny"
+msgstr "Wklej obraz jako gałąź podrzędną"
 
 #: src/NodeMenu.vala:425
 msgid "Paste and Replace Node Image"
-msgstr ""
+msgstr "Wklej i zastąp obraz w gałęzi"
 
 #: src/NodeMenu.vala:427
 msgid "Paste Node As Child"
-msgstr ""
+msgstr "Wklej gałąź jako gałąź podrzędną"
 
 #: src/NodesMenu.vala:59
-#, fuzzy
 msgid "Toggle Tasks"
-msgstr "Usuń zadanie"
+msgstr "Przełącz zadania"
 
 #: src/NodesMenu.vala:67
-#, fuzzy
 msgid "Connect"
-msgstr "Szukaj węzłów"
+msgstr "Połącz"
 
 #: src/NodesMenu.vala:71 src/NodesMenu.vala:215
-#, fuzzy
 msgid "Link Nodes"
-msgstr "Węzeł"
+msgstr ""
 
 #: src/NodesMenu.vala:76 src/ThemeEditor.vala:124
-#, fuzzy
 msgid "Link Colors"
-msgstr "Kolor połączenia"
+msgstr "Kolory linii gałęzi"
 
 #: src/NodesMenu.vala:82
 msgid "Randomize colors"
-msgstr ""
+msgstr "Kolor losowy"
 
 #: src/NodesMenu.vala:98
-#, fuzzy
 msgid "Parent Nodes"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: src/NodesMenu.vala:112
-#, fuzzy
 msgid "Align Nodes"
-msgstr "Zbalansuj wężły"
+msgstr "Wyrównanie gałęzi"
 
 #: src/NodesMenu.vala:116
 msgid "Align Top"
-msgstr ""
+msgstr "Wyrównaj do góry"
 
 #: src/NodesMenu.vala:120 data/com.github.phase1geo.minder.shortcuts.ui:565
 msgid "Align Center Horizontally"
@@ -1030,11 +967,11 @@ msgstr ""
 
 #: src/NodesMenu.vala:124
 msgid "Align Bottom"
-msgstr ""
+msgstr "Wyrównaj do dołu"
 
 #: src/NodesMenu.vala:128
 msgid "Align Left"
-msgstr ""
+msgstr "Wyrównaj do lewej"
 
 #: src/NodesMenu.vala:132 data/com.github.phase1geo.minder.shortcuts.ui:586
 msgid "Align Center Vertically"
@@ -1042,35 +979,31 @@ msgstr ""
 
 #: src/NodesMenu.vala:136
 msgid "Align Right"
-msgstr ""
+msgstr "Wyrównaj do prawej"
 
 #: src/NodesMenu.vala:215
-#, fuzzy
 msgid "Remove Node Links"
-msgstr "Usuń notatkę"
+msgstr "Usuń hiperłącze elementu"
 
 #: src/Node.vala:1974
-#, fuzzy
 msgid "Node Title"
-msgstr "Tytuly"
+msgstr "Tytuł gałęzi"
 
 #: src/Node.vala:1982
-#, fuzzy
 msgid "Node Note"
-msgstr "Dodaj notatkę"
+msgstr "Notatka gałęzi"
 
 #: src/Preferences.vala:47
 msgid "Behavior"
-msgstr ""
+msgstr "Zachowanie"
 
 #: src/Preferences.vala:48
 msgid "Appearance"
-msgstr ""
+msgstr "Wygląd"
 
 #: src/Preferences.vala:61
-#, fuzzy
 msgid "Close"
-msgstr "Nowy Plik"
+msgstr "Zamknij"
 
 #: src/Preferences.vala:76
 msgid "Create new node from edit mode"
@@ -1084,7 +1017,7 @@ msgstr ""
 
 #: src/Preferences.vala:80
 msgid "Automatically make embedded URLs into links"
-msgstr ""
+msgstr "Automatycznie utwórz osadzony URL w linku"
 
 #: src/Preferences.vala:82
 msgid ""
@@ -1093,14 +1026,12 @@ msgid ""
 msgstr ""
 
 #: src/Preferences.vala:84
-#, fuzzy
 msgid "Enable Markdown"
-msgstr "Markdown"
+msgstr "Włącz Markdown"
 
 #: src/Preferences.vala:87
-#, fuzzy
 msgid "Create connection title on creation"
-msgstr "zmiana notatki węzła"
+msgstr ""
 
 #: src/Preferences.vala:89
 msgid ""
@@ -1110,7 +1041,7 @@ msgstr ""
 
 #: src/Preferences.vala:91
 msgid "Select items on mouse hover"
-msgstr ""
+msgstr "Wybierz element po najechaniu kursorem"
 
 #: src/Preferences.vala:93
 msgid "If enabled, selects items when mouse cursor hovers over the item."
@@ -1118,15 +1049,13 @@ msgstr ""
 
 #: src/Preferences.vala:106
 msgid "Hide themes not matching visual style"
-msgstr ""
+msgstr "Ukryj motywy nie pasujące do stylu wizualnego"
 
 #: src/Preferences.vala:110
-#, fuzzy
 msgid "Default theme"
-msgstr "Usuń węzeł"
+msgstr "Domyślny motyw"
 
 #: src/Preferences.vala:113
-#, fuzzy
 msgid "Enable animations"
 msgstr "Włącz animacje"
 
@@ -1142,39 +1071,40 @@ msgstr ""
 
 #: src/QuickEntry.vala:58
 msgid "Help for inputting node information:"
-msgstr ""
+msgstr "Pomoc do szybkiego wstawiania elementów:"
 
 #: src/QuickEntry.vala:59
 msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
-msgstr ""
+msgstr "Linie poniżej opisują sposób wstawiania Tytułów, gałęzi i notatek."
 
 #: src/QuickEntry.vala:60
 msgid "Tab"
-msgstr ""
+msgstr "TAB"
 
 #: src/QuickEntry.vala:61
 msgid "Creates a child node of the previous node."
-msgstr ""
+msgstr "Tabulator wstawia element podrzędny do poprzedniego elementu."
 
 #: src/QuickEntry.vala:63
 msgid ""
 "If this character is the first non-whitespace character, makes a new root "
 "node from the title that follows."
 msgstr ""
+"Wstawia nowy temat główny z tytułem, który po nim następuje (np. #WAŻNE)"
 
 #: src/QuickEntry.vala:65
 msgid ""
 "If this character is the first non-whitespace character, make a new node "
 "from the title that follows."
-msgstr ""
+msgstr "Tworzy nowy wpis, z tytułem, który po nim następuje (np. *ZAPAMIĘTAJ)"
 
 #: src/QuickEntry.vala:67
 msgid ""
 "If this character is the first non-whitespace character, the following line "
 "is appended to the previous node's note."
-msgstr ""
+msgstr "Dołącza do poprzedniego wpisu nowy opis (np. >Szczegółowe wyjaśnienie)"
 
 #: src/QuickEntry.vala:69
 msgid "If this follows *, + or -, the node is made an uncompleted task."
@@ -1185,66 +1115,64 @@ msgid "If this follows *, + or -, the node is made a completed task."
 msgstr ""
 
 #: src/QuickEntry.vala:100
-#, fuzzy
 msgid "Replace"
-msgstr "Zbalansuj wężły"
+msgstr "Zastąp"
 
 #: src/QuickEntry.vala:109
-#, fuzzy
 msgid "Insert"
-msgstr "wstawienie węzła"
+msgstr "Wstaw"
 
 #: src/StickerInspector.vala:60
-#, fuzzy
 msgid "Remove From Favorites"
-msgstr "Usuń notatkę"
+msgstr "Usuń z ulubionych"
 
 #: src/StickerInspector.vala:63 src/StickerInspector.vala:67
 msgid "Add To Favorites"
-msgstr ""
+msgstr "Dodaj do ulubionych"
 
 #: src/StickerInspector.vala:76
 msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
 msgstr ""
+"Przeciągnij ikonę na element lub na dowolne miejsce na mapie aby ją tam "
+"umieścić."
 
 #: src/StickerInspector.vala:82
-#, fuzzy
 msgid "Search Stickers"
-msgstr "Kryteria wyszukiwania"
+msgstr "Szukaj ikon"
 
 #: src/StickerInspector.vala:111
 msgid "Favorites"
-msgstr ""
+msgstr "Ulubione"
 
 #: src/StickerSet.vala:21 src/StickerSet.vala:64
 msgid "Photo and Video"
-msgstr ""
+msgstr "Zdjęcia i wideo"
 
 #: src/StickerSet.vala:22 src/StickerSet.vala:122
 msgid "Very Basic"
-msgstr ""
+msgstr "Podstawowe"
 
 #: src/StickerSet.vala:23 src/StickerSet.vala:126 src/StickerSet.vala:217
 msgid "Business"
-msgstr ""
+msgstr "Biznes"
 
 #: src/StickerSet.vala:24 src/StickerSet.vala:244
 msgid "Industry"
-msgstr ""
+msgstr "Przemysł"
 
 #: src/StickerSet.vala:25 src/StickerSet.vala:281
 msgid "Mobile"
-msgstr ""
+msgstr "Mobile"
 
 #: src/StickerSet.vala:26 src/StickerSet.vala:305 src/StyleInspector.vala:885
 msgid "Arrows"
-msgstr ""
+msgstr "Strzałki"
 
 #: src/StickerSet.vala:27 src/StickerSet.vala:353
 msgid "Data"
-msgstr ""
+msgstr "Dane"
 
 #: src/StickerSet.vala:29
 msgid "Flash on"
@@ -1283,9 +1211,8 @@ msgid "Night portrait"
 msgstr ""
 
 #: src/StickerSet.vala:38
-#, fuzzy
 msgid "Close up mode"
-msgstr "Nowy Plik"
+msgstr ""
 
 #: src/StickerSet.vala:39
 msgid "Selfie"
@@ -1300,19 +1227,16 @@ msgid "Stack of photos"
 msgstr ""
 
 #: src/StickerSet.vala:42
-#, fuzzy
 msgid "Add image"
-msgstr "Dodaj zadanie"
+msgstr ""
 
 #: src/StickerSet.vala:43
-#, fuzzy
 msgid "Edit image"
-msgstr "Tytuly"
+msgstr ""
 
 #: src/StickerSet.vala:44
-#, fuzzy
 msgid "Remove image"
-msgstr "Usuń zadanie"
+msgstr ""
 
 #: src/StickerSet.vala:45
 msgid "Compact camera"
@@ -1343,14 +1267,12 @@ msgid "Camera identification"
 msgstr ""
 
 #: src/StickerSet.vala:52
-#, fuzzy
 msgid "Start"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: src/StickerSet.vala:53
-#, fuzzy
 msgid "Clapperboard"
-msgstr "Wytnij węzeł"
+msgstr ""
 
 #: src/StickerSet.vala:54
 msgid "Film"
@@ -1421,9 +1343,8 @@ msgid "Refresh"
 msgstr ""
 
 #: src/StickerSet.vala:74
-#, fuzzy
 msgid "Download"
-msgstr "W dół"
+msgstr ""
 
 #: src/StickerSet.vala:75
 msgid "Upload"
@@ -1438,24 +1359,20 @@ msgid "Full trash"
 msgstr ""
 
 #: src/StickerSet.vala:78
-#, fuzzy
 msgid "Folder"
-msgstr "Zwinięte"
+msgstr ""
 
 #: src/StickerSet.vala:79
-#, fuzzy
 msgid "Opened folder"
-msgstr "Otwórz plik"
+msgstr ""
 
 #: src/StickerSet.vala:80 data/com.github.phase1geo.minder.shortcuts.ui:16
-#, fuzzy
 msgid "File"
-msgstr "Nowy Plik"
+msgstr ""
 
 #: src/StickerSet.vala:81
-#, fuzzy
 msgid "Document"
-msgstr "Dokument bez nazwy"
+msgstr ""
 
 #: src/StickerSet.vala:82
 msgid "Audio file"
@@ -1470,9 +1387,8 @@ msgid "Video file"
 msgstr ""
 
 #: src/StickerSet.vala:85
-#, fuzzy
 msgid "Print"
-msgstr "Drukuj"
+msgstr ""
 
 #: src/StickerSet.vala:86
 msgid "Music"
@@ -1499,18 +1415,16 @@ msgid "Lock"
 msgstr ""
 
 #: src/StickerSet.vala:92
-#, fuzzy
 msgid "Idea"
-msgstr "Główny pomysł"
+msgstr ""
 
 #: src/StickerSet.vala:93
 msgid "No idea"
 msgstr ""
 
 #: src/StickerSet.vala:94
-#, fuzzy
 msgid "Link"
-msgstr "Dodaj notatkę"
+msgstr ""
 
 #: src/StickerSet.vala:95
 msgid "Broken link"
@@ -1521,9 +1435,8 @@ msgid "Rating"
 msgstr ""
 
 #: src/StickerSet.vala:97
-#, fuzzy
 msgid "Like placeholder"
-msgstr "wklejenie węzła"
+msgstr ""
 
 #: src/StickerSet.vala:98
 msgid "Like"
@@ -1586,9 +1499,8 @@ msgid "Settings"
 msgstr ""
 
 #: src/StickerSet.vala:114
-#, fuzzy
 msgid "Support"
-msgstr "Eksport"
+msgstr ""
 
 #: src/StickerSet.vala:115
 msgid "Frame"
@@ -1871,9 +1783,8 @@ msgid "Survey"
 msgstr ""
 
 #: src/StickerSet.vala:188
-#, fuzzy
 msgid "Inspection"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: src/StickerSet.vala:189
 msgid "Rules"
@@ -1900,19 +1811,16 @@ msgid "Fine print"
 msgstr ""
 
 #: src/StickerSet.vala:195
-#, fuzzy
 msgid "Candle sticks"
-msgstr "Dodaj notatkę"
+msgstr ""
 
 #: src/StickerSet.vala:196
-#, fuzzy
 msgid "Serial tasks"
-msgstr "Kryteria wyszukiwania"
+msgstr ""
 
 #: src/StickerSet.vala:197
-#, fuzzy
 msgid "Parallel tasks"
-msgstr "Kryteria wyszukiwania"
+msgstr ""
 
 #: src/StickerSet.vala:198
 msgid "Tree structure"
@@ -1947,14 +1855,12 @@ msgid "Trademark"
 msgstr ""
 
 #: src/StickerSet.vala:206
-#, fuzzy
 msgid "Copyright"
-msgstr "Do prawej"
+msgstr ""
 
 #: src/StickerSet.vala:207
-#, fuzzy
 msgid "Copyleft"
-msgstr "Do lewej"
+msgstr ""
 
 #: src/StickerSet.vala:208
 msgid "Sound recording copyright"
@@ -1969,9 +1875,8 @@ msgid "Multiple inputs"
 msgstr ""
 
 #: src/StickerSet.vala:211
-#, fuzzy
 msgid "Collect"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: src/StickerSet.vala:212
 msgid "Internal"
@@ -2002,9 +1907,8 @@ msgid "Display"
 msgstr ""
 
 #: src/StickerSet.vala:221
-#, fuzzy
 msgid "Do not inhale"
-msgstr "zmiana notatki węzła"
+msgstr ""
 
 #: src/StickerSet.vala:222
 msgid "Factory"
@@ -2055,18 +1959,16 @@ msgid "Biotech"
 msgstr ""
 
 #: src/StickerSet.vala:234
-#, fuzzy
 msgid "Advance"
-msgstr "Anuluj"
+msgstr ""
 
 #: src/StickerSet.vala:235
 msgid "Cloth"
 msgstr ""
 
 #: src/StickerSet.vala:236
-#, fuzzy
 msgid "Electronics"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: src/StickerSet.vala:237
 msgid "Deployment"
@@ -2245,27 +2147,24 @@ msgid "Up"
 msgstr ""
 
 #: src/StickerSet.vala:285
-#, fuzzy
 msgid "Right up"
-msgstr "Do prawej"
+msgstr ""
 
 #: src/StickerSet.vala:286
 msgid "Left"
 msgstr ""
 
 #: src/StickerSet.vala:287
-#, fuzzy
 msgid "Right"
-msgstr "Do prawej"
+msgstr ""
 
 #: src/StickerSet.vala:288
 msgid "Left down"
 msgstr ""
 
 #: src/StickerSet.vala:289
-#, fuzzy
 msgid "Down"
-msgstr "W dół"
+msgstr ""
 
 #: src/StickerSet.vala:290
 msgid "Right down"
@@ -2276,14 +2175,12 @@ msgid "Collapse"
 msgstr ""
 
 #: src/StickerSet.vala:292
-#, fuzzy
 msgid "Previous"
-msgstr "Poprzedni sąsiadujący"
+msgstr ""
 
 #: src/StickerSet.vala:293
-#, fuzzy
 msgid "Next"
-msgstr "Następny sąsiadujący"
+msgstr ""
 
 #: src/StickerSet.vala:294
 msgid "Expand"
@@ -2294,23 +2191,20 @@ msgid "Left down2"
 msgstr ""
 
 #: src/StickerSet.vala:296
-#, fuzzy
 msgid "Up left"
-msgstr "Do lewej"
+msgstr ""
 
 #: src/StickerSet.vala:297
-#, fuzzy
 msgid "Down right"
-msgstr "Do prawej"
+msgstr ""
 
 #: src/StickerSet.vala:298
 msgid "Right up2"
 msgstr ""
 
 #: src/StickerSet.vala:299
-#, fuzzy
 msgid "Up right"
-msgstr "Do prawej"
+msgstr ""
 
 #: src/StickerSet.vala:300
 msgid "Right down2"
@@ -2321,9 +2215,8 @@ msgid "Left up2"
 msgstr ""
 
 #: src/StickerSet.vala:302
-#, fuzzy
 msgid "Down left"
-msgstr "Do lewej"
+msgstr ""
 
 #: src/StickerSet.vala:307
 msgid "Filing cabinet"
@@ -2338,14 +2231,12 @@ msgid "Accept database"
 msgstr ""
 
 #: src/StickerSet.vala:310
-#, fuzzy
 msgid "Add database"
-msgstr "Dodaj zadanie"
+msgstr ""
 
 #: src/StickerSet.vala:311
-#, fuzzy
 msgid "Delete database"
-msgstr "Usuń węzeł"
+msgstr ""
 
 #: src/StickerSet.vala:312
 msgid "Data backup"
@@ -2364,9 +2255,8 @@ msgid "Data encryption"
 msgstr ""
 
 #: src/StickerSet.vala:316
-#, fuzzy
 msgid "Data protection"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: src/StickerSet.vala:317
 msgid "Grid"
@@ -2381,19 +2271,16 @@ msgid "Add column"
 msgstr ""
 
 #: src/StickerSet.vala:320
-#, fuzzy
 msgid "Delete column"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: src/StickerSet.vala:321
-#, fuzzy
 msgid "Add row"
-msgstr "Dodaj notatkę"
+msgstr ""
 
 #: src/StickerSet.vala:322
-#, fuzzy
 msgid "Delete row"
-msgstr "Usuń węzeł"
+msgstr ""
 
 #: src/StickerSet.vala:323
 msgid "Generic sorting ascending"
@@ -2480,9 +2367,8 @@ msgid "Genealogy"
 msgstr ""
 
 #: src/StickerSet.vala:344
-#, fuzzy
 msgid "Mind map"
-msgstr "Minder"
+msgstr ""
 
 #: src/StickerSet.vala:345
 msgid "Workflow"
@@ -2497,9 +2383,8 @@ msgid "Negative dynamic"
 msgstr ""
 
 #: src/StickerSet.vala:349
-#, fuzzy
 msgid "Import"
-msgstr "Otwórz plik"
+msgstr ""
 
 #: src/StickerSet.vala:350
 msgid "List"
@@ -2510,153 +2395,148 @@ msgid "Template"
 msgstr ""
 
 #: src/StickerSet.vala:352
-#, fuzzy
 msgid "View details"
-msgstr "Właściwości"
+msgstr "Zobacz szczegóły"
 
 #: src/StyleInspector.vala:34
 msgid "All"
-msgstr ""
+msgstr "Wszystkich elementów"
 
 #: src/StyleInspector.vala:35
-#, fuzzy
 msgid "Selected Nodes"
-msgstr "Wybierz węzeł"
+msgstr "Zaznaczonych elementów"
 
 #: src/StyleInspector.vala:36
-#, fuzzy
 msgid "Selected Connections"
-msgstr "Szukaj węzłów"
+msgstr "Zaznaczonych łączników"
 
 #: src/StyleInspector.vala:38
 msgid "Unknown"
-msgstr ""
+msgstr "Nieznane"
 
 #: src/StyleInspector.vala:134
 msgid "Changes affect:"
-msgstr ""
+msgstr "Zastosuj zmiany dla:"
 
 #: src/StyleInspector.vala:154
 msgid "Branch Options"
-msgstr ""
+msgstr "Kształt linii łączących"
 
 #: src/StyleInspector.vala:238
 msgid "Corner Radius"
-msgstr ""
+msgstr "Zaokrąglenie"
 
 #: src/StyleInspector.vala:283 src/StyleInspector.vala:643
 msgid "Margin"
-msgstr ""
+msgstr "Odstępy"
 
 #: src/StyleInspector.vala:326
 msgid "Link Options"
-msgstr ""
+msgstr "Styl linii łączących"
 
 #: src/StyleInspector.vala:360 src/StyleInspector.vala:846
 msgid "Line Dash"
-msgstr ""
+msgstr "Styl linii"
 
 #: src/StyleInspector.vala:399 src/StyleInspector.vala:923
 msgid "Line Width"
-msgstr ""
+msgstr "Grubość linii"
 
 #: src/StyleInspector.vala:446
 msgid "Link Arrow"
-msgstr ""
+msgstr "Pokaż strzałki"
 
 #: src/StyleInspector.vala:476
 msgid "Node Options"
-msgstr ""
+msgstr "Styl gałęzi"
 
 #: src/StyleInspector.vala:518
 msgid "Border Style"
-msgstr ""
+msgstr "Obramowanie"
 
 #: src/StyleInspector.vala:567
 msgid "Border Width"
-msgstr ""
+msgstr "Grubość obramowania"
 
 #: src/StyleInspector.vala:613
-#, fuzzy
 msgid "Color Fill"
-msgstr "Nowy Plik"
+msgstr "Wypełnienie kolorem"
 
 #: src/StyleInspector.vala:618
 msgid ""
 "Fills the node with color when the node\n"
 "border is square, rounded or pill-shaped"
 msgstr ""
+"Wypełnia tło gałęzi kolorem,\n"
+"jest posiada zamknięte obramowanie"
 
 #: src/StyleInspector.vala:685 src/StyleInspector.vala:972
 msgid "Padding"
-msgstr ""
+msgstr "Wypełnienie"
 
 #: src/StyleInspector.vala:725
 msgid "Font"
-msgstr ""
+msgstr "Czcionka"
 
 #: src/StyleInspector.vala:754
 msgid "Width"
-msgstr ""
+msgstr "Szerokość"
 
 #: src/StyleInspector.vala:776
 msgid "Enable Markup"
-msgstr ""
+msgstr "Pozwól używać znaczników Markdown"
 
 #: src/StyleInspector.vala:806
-#, fuzzy
 msgid "Connection Options"
-msgstr "Szukaj węzłów"
+msgstr "Opcje łącznika"
 
 #: src/StyleInspector.vala:1012
-#, fuzzy
 msgid "Title Font"
-msgstr "Tytuly"
+msgstr "Czcionka etykiety łącznika"
 
 #: src/StyleInspector.vala:1041
-#, fuzzy
 msgid "Title Width"
-msgstr "Tytuly"
+msgstr "Szerokość etykiety łącznika"
 
 #: src/styles/LinkTypeCurved.vala:34
 msgid "Curved"
-msgstr ""
+msgstr "Faliste"
 
 #: src/styles/LinkTypeRounded.vala:34
 msgid "Rounded"
-msgstr ""
+msgstr "Zaokrąglone"
 
 #: src/styles/LinkTypeSquared.vala:34
 msgid "Squared"
-msgstr ""
+msgstr "Kwadratowe"
 
 #: src/styles/LinkTypeStraight.vala:34
 msgid "Straight"
-msgstr ""
+msgstr "Proste"
 
 #: src/styles/NodeBorderBracket.vala:34
 msgid "Square Bracket"
-msgstr ""
+msgstr "Uchwyt"
 
 #: src/styles/NodeBorderNone.vala:34
 msgid "None"
-msgstr ""
+msgstr "Brak"
 
 #: src/styles/NodeBorderPill.vala:34
 msgid "Pill-shaped"
-msgstr ""
+msgstr "Kwadrat wypukły"
 
 #: src/styles/NodeBorderRounded.vala:34
 msgid "Rounded Rectangle"
-msgstr ""
+msgstr "Kwadrat zaokrąglony"
 
 #: src/styles/NodeBorderSquared.vala:34
 msgid "Squared Off"
-msgstr ""
+msgstr "Kwadrat"
 
 #: src/styles/NodeBorderUnderlined.vala:34
 msgid "Underlined"
-msgstr ""
+msgstr "Podkreślenie"
 
 #: src/Styles.vala:54
 msgid "Solid"
@@ -2675,74 +2555,65 @@ msgid "Long Dash"
 msgstr ""
 
 #: src/Tagger.vala:123
-#, fuzzy
 msgid "Add Tag"
-msgstr "Dodaj zadanie"
+msgstr ""
 
 #: src/TextMenu.vala:56
-#, fuzzy
 msgid "Insert Emoji"
-msgstr "wstawienie węzła"
+msgstr "Wstaw emotkę"
 
 #: src/TextMenu.vala:59
-#, fuzzy
 msgid "Open Link"
-msgstr "Otwórz plik"
+msgstr "Otwórz link"
 
 #: src/TextMenu.vala:63
-#, fuzzy
 msgid "Add Link"
-msgstr "Dodaj notatkę"
+msgstr "Wstaw link URL"
 
 #: src/TextMenu.vala:66
-#, fuzzy
 msgid "Edit Link"
-msgstr "Tytuly"
+msgstr "Edytuj link"
 
 #: src/TextMenu.vala:70
-#, fuzzy
 msgid "Remove Link"
-msgstr "Usuń notatkę"
+msgstr "Usuń link"
 
 #: src/TextMenu.vala:73
-#, fuzzy
 msgid "Restore Link"
-msgstr "Usuń notatkę"
+msgstr "Przywróć link"
 
 #: src/TextParser.vala:66
 #, c-format
 msgid "Parser regex error (re: %s, error: %s)\n"
-msgstr ""
+msgstr "Błąd parsera wyrażeń reguralnych (re: %s, error: %s)\n"
 
 #: src/ThemeEditor.vala:45
 msgid "Customize Theme"
-msgstr ""
+msgstr "Edycja motywu"
 
 #: src/ThemeEditor.vala:51
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #: src/ThemeEditor.vala:80
 msgid "Base Colors"
-msgstr ""
+msgstr "Podstawowe kolory"
 
 #: src/ThemeEditor.vala:85
 msgid "Background"
-msgstr ""
+msgstr "Tło"
 
 #: src/ThemeEditor.vala:86
 msgid "Foreground"
 msgstr ""
 
 #: src/ThemeEditor.vala:87
-#, fuzzy
 msgid "Root Node Background"
-msgstr "Dodaj węzeł główny"
+msgstr "Tło głównej gałęzi"
 
 #: src/ThemeEditor.vala:88
-#, fuzzy
 msgid "Root Node Foreground"
-msgstr "Dodaj węzeł główny"
+msgstr ""
 
 #: src/ThemeEditor.vala:89
 msgid "Node Select Background"
@@ -2769,14 +2640,12 @@ msgid "Attachable Highlight"
 msgstr ""
 
 #: src/ThemeEditor.vala:95
-#, fuzzy
 msgid "Connection Color"
-msgstr "Szukaj węzłów"
+msgstr "Kolor łączników"
 
 #: src/ThemeEditor.vala:96
-#, fuzzy
 msgid "Connection Title Color"
-msgstr "zmiana notatki węzła"
+msgstr ""
 
 #: src/ThemeEditor.vala:97
 msgid "URL Link Background"
@@ -2788,146 +2657,128 @@ msgstr ""
 
 #: src/ThemeEditor.vala:99
 msgid "Tag"
-msgstr ""
+msgstr "Tag"
 
 #: src/ThemeEditor.vala:100
 msgid "Markdown Syntax Chars"
 msgstr ""
 
 #: src/ThemeEditor.vala:101
-#, fuzzy
 msgid "Match Background"
-msgstr "Dodaj węzeł główny"
+msgstr ""
 
 #: src/ThemeEditor.vala:102
-#, fuzzy
 msgid "Match Foreground"
-msgstr "Dodaj węzeł główny"
+msgstr ""
 
 #: src/ThemeEditor.vala:103
-#, fuzzy
 msgid "Markdown List Item"
-msgstr "Markdown"
+msgstr ""
 
 #: src/ThemeEditor.vala:109
 msgid "Prefer Dark Mode"
-msgstr ""
+msgstr "Preferuj tryb ciemny"
 
 #: src/ThemeEditor.vala:192
 msgid "Custom"
-msgstr ""
+msgstr "Własny"
 
 #: src/ThemeEditor.vala:210
-#, fuzzy
 msgid "Delete theme?"
-msgstr "Usuń węzeł"
+msgstr "Usunąć motyw?"
 
 #: src/ThemeEditor.vala:211
 msgid "This operation cannot be undone."
-msgstr ""
+msgstr "Tej operacji nie będzie można cofnąć!"
 
 #: src/ThemeEditor.vala:216
-#, fuzzy
 msgid "No"
-msgstr "Notatki"
+msgstr "Nie"
 
 #: src/ThemeEditor.vala:219
 msgid "Yes"
-msgstr ""
+msgstr "Tak"
 
 #: src/ThemeEditor.vala:241
 msgid "Default"
-msgstr ""
+msgstr "Domyślnie"
 
 #: src/themes/ThemeDark.vala:28
 msgid "Dark"
-msgstr ""
+msgstr "Ciemny"
 
 #: src/themes/ThemeDefault.vala:28
-#, fuzzy
 msgid "Light"
-msgstr "Do prawej"
+msgstr "Jasny"
 
 #: src/themes/ThemeSolarizedDark.vala:31
 msgid "Solarized Dark"
-msgstr ""
+msgstr "Rozświetlony Ciemny"
 
 #: src/themes/ThemeSolarizedLight.vala:31
 msgid "Solarized Light"
-msgstr ""
+msgstr "Rozświetlony Jasny"
 
 #: src/Themes.vala:192
 msgid "Error parsing regular expression"
-msgstr ""
+msgstr "Błąd parsowania wyrażenia regularnego"
 
 #: src/Theme.vala:198
 #, c-format
 msgid "Unable to load background color: %s"
-msgstr ""
+msgstr "Nie można wczytać koloru tła: %s"
 
 #: src/undo_actions/UndoConnectedNode.vala:31
-#, fuzzy
 msgid "connected node"
-msgstr "usunięcie węzła"
+msgstr ""
 
 #: src/undo_actions/UndoConnectionAdd.vala:30
-#, fuzzy
 msgid "add connection"
-msgstr "Szukaj węzłów"
+msgstr "dodanie łącznika"
 
 #: src/undo_actions/UndoConnectionColor.vala:33
-#, fuzzy
 msgid "connection color change"
-msgstr "zmiana notatki węzła"
+msgstr "zmianę koloru łącznika"
 
 #: src/undo_actions/UndoConnectionDelete.vala:30
-#, fuzzy
 msgid "delete connection"
-msgstr "Szukaj węzłów"
+msgstr "usunięcie łącznika"
 
 #: src/undo_actions/UndoConnectionNote.vala:32
-#, fuzzy
 msgid "connection note change"
-msgstr "zmiana notatki węzła"
+msgstr ""
 
 #: src/undo_actions/UndoConnectionsDelete.vala:30
-#, fuzzy
 msgid "delete connections"
-msgstr "Szukaj węzłów"
+msgstr "usunięcie łączników"
 
 #: src/undo_actions/UndoConnectionStickerAdd.vala:31
-#, fuzzy
 msgid "add connection sticker"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: src/undo_actions/UndoConnectionStickerChange.vala:31
-#, fuzzy
 msgid "change connection sticker"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: src/undo_actions/UndoConnectionStickerRemove.vala:31
-#, fuzzy
 msgid "remove connection sticker"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: src/undo_actions/UndoConnectionTitle.vala:32
-#, fuzzy
 msgid "connection title change"
-msgstr "zmiana notatki węzła"
+msgstr ""
 
 #: src/undo_actions/UndoGroupAdd.vala:30
 msgid "add group"
-msgstr ""
+msgstr "dodanie grupy"
 
 #: src/undo_actions/UndoGroupRemove.vala:30
-#, fuzzy
 msgid "remove group"
-msgstr "Usuń notatkę"
+msgstr "usunięcie grupy"
 
 #: src/undo_actions/UndoGroupsColor.vala:33
-#, fuzzy
 msgid "group color change"
-msgstr "zmiana notatki węzła"
+msgstr ""
 
 #: src/undo_actions/UndoGroupsMerge.vala:31
 msgid "group merge"
@@ -2935,44 +2786,41 @@ msgstr ""
 
 #: src/undo_actions/UndoGroupsRemove.vala:30
 msgid "remove groups"
-msgstr ""
+msgstr "usunięcie grup"
 
 #: src/undo_actions/UndoNodeAddParent.vala:32
-#, fuzzy
 msgid "add parent node"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: src/undo_actions/UndoNodeAttach.vala:39
 #: src/undo_actions/UndoNodeAttach.vala:54
 msgid "attach node"
-msgstr "przyczepienie węzła"
+msgstr ""
 
 #: src/undo_actions/UndoNodeBalance.vala:61
 msgid "balance nodes"
-msgstr "zbalansowanie węzłów"
+msgstr "zbalansowanie gałęzi"
 
 #: src/undo_actions/UndoNodeCut.vala:33
 msgid "cut node"
-msgstr "wycięcie węzła"
+msgstr "wycięcie gałęzi"
 
 #: src/undo_actions/UndoNodeDelete.vala:34
 msgid "delete node"
-msgstr "usunięcie węzła"
+msgstr "usunięcie gałęzi"
 
 #: src/undo_actions/UndoNodeDetach.vala:34
 msgid "detach node"
-msgstr "odczepienie węzła"
+msgstr "odłączenie gałęzi"
 
 #: src/undo_actions/UndoNodeFolds.vala:30
 #: src/undo_actions/UndoNodeFolds.vala:35
-#, fuzzy
 msgid "node fold changes"
-msgstr "zmiana zadania"
+msgstr ""
 
 #: src/undo_actions/UndoNodeGroup.vala:30
-#, fuzzy
 msgid "node group change"
-msgstr "zmiana notatki węzła"
+msgstr ""
 
 #: src/undo_actions/UndoNodeImage.vala:32
 msgid "node image change"
@@ -2980,7 +2828,7 @@ msgstr ""
 
 #: src/undo_actions/UndoNodeInsert.vala:33
 msgid "insert node"
-msgstr "wstawienie węzła"
+msgstr "wstawienie gałęzi"
 
 #: src/undo_actions/UndoNodeLayout.vala:30
 msgid "change layout"
@@ -2988,28 +2836,27 @@ msgstr ""
 
 #: src/undo_actions/UndoNodeLinkColor.vala:33
 msgid "link color change"
-msgstr ""
+msgstr "zmianę koloru linku"
 
 #: src/undo_actions/UndoNodeLink.vala:32
-#, fuzzy
 msgid "node link change"
-msgstr "zmiana zadania"
+msgstr ""
 
 #: src/undo_actions/UndoNodeMove.vala:34
 msgid "move node"
-msgstr "przesunięcie węzła"
+msgstr ""
 
 #: src/undo_actions/UndoNodeName.vala:32
 msgid "node name change"
-msgstr "zmiana nazwy węzła"
+msgstr ""
 
 #: src/undo_actions/UndoNodeNote.vala:32
 msgid "node note change"
-msgstr "zmiana notatki węzła"
+msgstr ""
 
 #: src/undo_actions/UndoNodePaste.vala:34
 msgid "paste node"
-msgstr "wklejenie węzła"
+msgstr "wklejenie gałęzi"
 
 #: src/undo_actions/UndoNodeReparentLinkColor.vala:32
 #: src/undo_actions/UndoNodesReparentLinkColor.vala:33
@@ -3017,87 +2864,72 @@ msgid "node link color reparent"
 msgstr ""
 
 #: src/undo_actions/UndoNodeReparent.vala:32
-#, fuzzy
 msgid "reparent children"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: src/undo_actions/UndoNodeReplace.vala:31
-#, fuzzy
 msgid "replace node"
-msgstr "wklejenie węzła"
+msgstr ""
 
 #: src/undo_actions/UndoNodeResize.vala:34
 msgid "node resize"
-msgstr ""
+msgstr "zmianę rozmiaru gałęzi"
 
 #: src/undo_actions/UndoNodesAlign.vala:56
-#, fuzzy
 msgid "node alignment"
-msgstr "zmiana nazwy węzła"
+msgstr "wyrównanie gałęzi"
 
 #: src/undo_actions/UndoNodesCut.vala:43
-#, fuzzy
 msgid "cut nodes"
-msgstr "wycięcie węzła"
+msgstr "wycięcie gałęzi"
 
 #: src/undo_actions/UndoNodesDelete.vala:43
-#, fuzzy
 msgid "delete nodes"
-msgstr "usunięcie węzła"
+msgstr "usunięcie gałęzi"
 
 #: src/undo_actions/UndoNodesGroup.vala:30
 msgid "change node groups"
 msgstr ""
 
 #: src/undo_actions/UndoNodesInsert.vala:37
-#, fuzzy
 msgid "insert nodes"
-msgstr "wstawienie węzła"
+msgstr "wstawienie gałęzi"
 
 #: src/undo_actions/UndoNodesLinkColor.vala:33
-#, fuzzy
 msgid "node link color changes"
-msgstr "zmiana notatki węzła"
+msgstr ""
 
 #: src/undo_actions/UndoNodesLink.vala:31
-#, fuzzy
 msgid "node link changes"
-msgstr "zmiana zadania"
+msgstr ""
 
 #: src/undo_actions/UndoNodeSort.vala:56
-#, fuzzy
 msgid "sort nodes"
-msgstr "wstawienie węzła"
+msgstr "sortowanie gałęzi"
 
 #: src/undo_actions/UndoNodesRandLinkColor.vala:33
-#, fuzzy
 msgid "random node link color changes"
-msgstr "zmiana notatki węzła"
+msgstr ""
 
 #: src/undo_actions/UndoNodesReplace.vala:31
-#, fuzzy
 msgid "replace nodes"
-msgstr "zbalansowanie węzłów"
+msgstr "zastąpienie gałęzi"
 
 #: src/undo_actions/UndoNodeStickerAdd.vala:31
-#, fuzzy
 msgid "add node sticker"
-msgstr "Dodaj notatkę"
+msgstr "dodanie ikony do gałęzi"
 
 #: src/undo_actions/UndoNodeStickerChange.vala:31
-#, fuzzy
 msgid "change node sticker"
-msgstr "Usuń notatkę"
+msgstr ""
 
 #: src/undo_actions/UndoNodeStickerRemove.vala:31
-#, fuzzy
 msgid "remove node sticker"
-msgstr "Usuń notatkę"
+msgstr ""
 
 #: src/undo_actions/UndoNodeTasks.vala:30
-#, fuzzy
 msgid "node task changes"
-msgstr "zmiana zadania"
+msgstr ""
 
 #: src/undo_actions/UndoStickerAdd.vala:30
 #: src/undo_actions/UndoStickerMove.vala:32
@@ -3106,41 +2938,36 @@ msgstr ""
 
 #: src/undo_actions/UndoStickerChange.vala:31
 msgid "change sticker"
-msgstr ""
+msgstr "zmianę ikony"
 
 #: src/undo_actions/UndoStickerRemove.vala:30
-#, fuzzy
 msgid "remove sticker"
-msgstr "Usuń notatkę"
+msgstr "usunięcie ikony"
 
 #: src/undo_actions/UndoStickerResize.vala:31
-#, fuzzy
 msgid "resize sticker"
-msgstr "Usuń notatkę"
+msgstr "zmianę rozmiaru ikony"
 
 #: src/undo_actions/UndoStyleChange.vala:38
-#, fuzzy
 msgid "style change"
-msgstr "zmiana notatki węzła"
+msgstr ""
 
 #: src/undo_actions/UndoTextClearTags.vala:30
 msgid "clear formatting"
 msgstr ""
 
 #: src/undo_actions/UndoTextDelete.vala:30
-#, fuzzy
 msgid "text deletion"
-msgstr "Wybierz węzeł"
+msgstr "usunięcie tekstu"
 
 #: src/undo_actions/UndoTextInsert.vala:29
 #: src/undo_actions/UndoTextMultiInsert.vala:33
-#, fuzzy
 msgid "text insertion"
-msgstr "Szukaj węzłów"
+msgstr "wstawienie tekstu"
 
 #: src/undo_actions/UndoTextReplace.vala:31
 msgid "text replacement"
-msgstr ""
+msgstr "zastąpienie tekstu"
 
 #: src/undo_actions/UndoTextTagAdd.vala:32
 msgid "format tag add"
@@ -3160,114 +2987,97 @@ msgstr "Ponów "
 
 #: src/UrlEditor.vala:43
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: src/Utils.vala:159 src/Utils.vala:165
 #, c-format
 msgid "error: %s\n"
-msgstr ""
+msgstr "błąd: %s\n"
 
 #: src/ZoomWidget.vala:97
-#, fuzzy
 msgid "Zoom Actual"
-msgstr "Naturalna wielkość"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:6
 msgid "Minder Shortcuts"
-msgstr ""
+msgstr "Skróty klawiaturowe Midera"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:12
 #: data/com.github.phase1geo.minder.shortcuts.ui:904
 msgid "General"
-msgstr ""
+msgstr "Ogólne"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:35
-#, fuzzy
 msgid "Import File"
-msgstr "Otwórz plik"
+msgstr "Importuj plik"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:49
-#, fuzzy
 msgid "Export File"
-msgstr "Eksport"
+msgstr "Eksportuj plik"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:56
-#, fuzzy
 msgid "Print File"
-msgstr "Drukuj"
+msgstr "Drukuj Plik"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:65
 msgid "Notebook Tabs"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:70
-#, fuzzy
 msgid "Close Current Tab"
-msgstr "Wyśrodkuj na wężle"
+msgstr "Zamknij bieżącą kartę"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:77
 msgid "Go to Next Tab"
-msgstr ""
+msgstr "Przejdź do następnej karty"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:84
-#, fuzzy
 msgid "Go to Previous Tab"
-msgstr "Poprzedni sąsiadujący"
+msgstr "Przejdź do poprzedniej karty"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:93
-#, fuzzy
 msgid "Undo/Redo"
-msgstr "Cofnij"
+msgstr "Cofnij/Ponów"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:97
-#, fuzzy
 msgid "Undo Last Change"
-msgstr "zmiana zadania"
+msgstr "Cofnij ostatnią zmianę"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:104
-#, fuzzy
 msgid "Redo Last Undo"
-msgstr "zmiana zadania"
+msgstr "Ponów ostatnie cofnięcie"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:113
-#, fuzzy
 msgid "Zooming"
-msgstr "Przybliżenie"
+msgstr "Powiększenie"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:131
-#, fuzzy
 msgid "Zoom To Actual Size"
-msgstr "Naturalna wielkość"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:138
-#, fuzzy
 msgid "Zoom To Fit"
-msgstr "Przybliż do widoku"
+msgstr "Najlepsze dopasowanie"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:147
-#, fuzzy
 msgid "Properties Sidebar"
-msgstr "Właściwości"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:151
-#, fuzzy
 msgid "Show Current Tab"
-msgstr "Wyśrodkuj na wężle"
+msgstr "Pokaż bieżącą kartę"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:158
-#, fuzzy
 msgid "Show Style Tab"
-msgstr "Usuń notatkę"
+msgstr "Pokaż styl karty"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:165
-#, fuzzy
 msgid "Show Sticker Tab"
-msgstr "Usuń notatkę"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:172
-#, fuzzy
 msgid "Show Map Tab"
-msgstr "Wyśrodkuj na wężle"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:181
 #: data/com.github.phase1geo.minder.shortcuts.ui:684
@@ -3275,14 +3085,12 @@ msgid "Miscellaneous"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:185
-#, fuzzy
 msgid "Toggle Focus Mode"
-msgstr "Usuń notatkę"
+msgstr "Przełączanie trybu skupienia"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:192
-#, fuzzy
 msgid "Search Nodes/Connections"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:199
 #: data/com.github.phase1geo.minder.shortcuts.ui:908
@@ -3290,42 +3098,36 @@ msgid "Show Contextual Menu"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:206
-#, fuzzy
 msgid "Show Preferences"
-msgstr "Właściwości"
+msgstr "Pokaż ustawienia"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:213
 msgid "Show Keyboard Shortcuts"
-msgstr ""
+msgstr "Pokaż skróty klawiaturowe"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:220
 msgid "Quit Application"
-msgstr ""
+msgstr "Wyjście z programu"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:232
-#, fuzzy
 msgid "Node Commands"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:236
-#, fuzzy
 msgid "Creation/Deletion"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:240
-#, fuzzy
 msgid "New Sibling Node"
-msgstr "Następny sąsiadujący"
+msgstr "Nowa gałąź równorzędna"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:247
-#, fuzzy
 msgid "New Connected Node"
-msgstr "Dodaj węzeł potomny"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:254
-#, fuzzy
 msgid "New Child Node"
-msgstr "Dodaj węzeł potomny"
+msgstr "Nowa gałąź podrzędna"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:261
 msgid "Quick Entry Insertion"
@@ -3337,399 +3139,328 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:284
 #: data/com.github.phase1geo.minder.shortcuts.ui:794
-#, fuzzy
 msgid "Clipboard"
-msgstr "Wytnij węzeł"
+msgstr "Schowek"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:288
-#, fuzzy
 msgid "Copy Node"
-msgstr "Dodaj węzeł główny"
+msgstr "Kopiuj gałąź"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:295
-#, fuzzy
 msgid "Cut Node"
-msgstr "Dodaj węzeł główny"
+msgstr "Wytnij gałąź"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:302
-#, fuzzy
 msgid "Add Child Node With Clipboard"
-msgstr "Wytnij węzeł"
+msgstr "Wstaw pozycję podrzędną ze schowka"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:309
-#, fuzzy
 msgid "Replace With Clipboard"
-msgstr "Wytnij węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:318
-#, fuzzy
 msgid "Changing Current"
-msgstr "Wyśrodkuj na wężle"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:322
 #: data/com.github.phase1geo.minder.shortcuts.ui:613
-#, fuzzy
 msgid "Edit Title"
-msgstr "Tytuly"
+msgstr "Edytuj tytuł"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:336
 msgid "Change Task State"
-msgstr ""
+msgstr "Zmień status zadania"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:343
 msgid "Add URL Link To Text"
-msgstr ""
+msgstr "Dodaj link URL do tekstu"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:350
 #: data/com.github.phase1geo.minder.shortcuts.ui:716
-#, fuzzy
 msgid "Remove URL Link From Text"
-msgstr "Usuń notatkę"
+msgstr "Usuń link URL z tekstu"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:357
-#, fuzzy
 msgid "View Properties"
-msgstr "Właściwości"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:364
-#, fuzzy
 msgid "Toggle Fold"
-msgstr "Usuń notatkę"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:371
-#, fuzzy
 msgid "Toggle Node Link"
-msgstr "Usuń notatkę"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:378
-#, fuzzy
 msgid "Create Link to Selected Node"
-msgstr "Przybliż do zaznaczonego węzła"
+msgstr "Dopasuj do wybranej Fiszki"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:379
 msgid "[After using this command, 'y' will create the link]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:386
-#, fuzzy
 msgid "Create Group"
-msgstr "Usuń notatkę"
+msgstr "Utwórz grupę"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:393
-#, fuzzy
 msgid "Create Connection"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:400
-#, fuzzy
 msgid "Center In View"
-msgstr "Wyśrodkuj na wężle"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:407
 #: data/com.github.phase1geo.minder.shortcuts.ui:634
-#, fuzzy
 msgid "Place Into View"
-msgstr "Wyśrodkuj na wężle"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:416
 #: data/com.github.phase1geo.minder.shortcuts.ui:821
-#, fuzzy
 msgid "Selection"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:420
-#, fuzzy
 msgid "Select Root"
-msgstr "Wybierz węzeł"
+msgstr "Wybierz gałąź główną"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:427
-#, fuzzy
 msgid "Select Parent"
-msgstr "Wybierz węzeł"
+msgstr "Wybierz gałąź nadrzędną"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:434
-#, fuzzy
 msgid "Select Next Sibling"
-msgstr "Następny sąsiadujący"
+msgstr "Wybierz następną równorzędną"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:441
-#, fuzzy
 msgid "Select Previous Sibling"
-msgstr "Poprzedni sąsiadujący"
+msgstr "Wybierz poprzednią równorzędną"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:448
-#, fuzzy
 msgid "Select Child"
-msgstr "Wybierz węzeł"
+msgstr "Wybierz gałąź podrzędną"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:455
-#, fuzzy
 msgid "Select Children"
-msgstr "Wybierz węzeł"
+msgstr "Wybierz gałęzie podrzędne"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:462
-#, fuzzy
 msgid "Select Subtree"
-msgstr "Wybierz węzeł"
+msgstr "Zaznacz wszystkie gałęzie poniżej"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:469
-#, fuzzy
 msgid "Select Node Below"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:476
-#, fuzzy
 msgid "Select Node Above"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:483
-#, fuzzy
 msgid "Select Node To Right"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:490
-#, fuzzy
 msgid "Select Node To Left"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:497
-#, fuzzy
 msgid "Select Linked Node"
-msgstr "Węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:504
-#, fuzzy
 msgid "Select Attached Connection"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:513
 msgid "Move"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:517
-#, fuzzy
 msgid "Swap with Sibling Node to Right"
-msgstr "Następny sąsiadujący"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:524
-#, fuzzy
 msgid "Swap with Sibling Node to Left"
-msgstr "Następny sąsiadujący"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:531
-#, fuzzy
 msgid "Swap with Sibling Node Above"
-msgstr "Następny sąsiadujący"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:538
-#, fuzzy
 msgid "Swap with Sibling Node Below"
-msgstr "Następny sąsiadujący"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:545
 msgid "Sort Child Nodes Alphabetically"
-msgstr ""
+msgstr "Sortuj gałęzie podrzędne alfabetycznie"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:554
-#, fuzzy
 msgid "Alignment"
-msgstr "zmiana nazwy węzła"
+msgstr "Wyrównanie"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:558
-#, fuzzy
 msgid "Align Top Side"
-msgstr "Zbalansuj wężły"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:572
-#, fuzzy
 msgid "Align Bottom Side"
-msgstr "Zbalansuj wężły"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:579
-#, fuzzy
 msgid "Align Left Side"
-msgstr "Zbalansuj wężły"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:593
 msgid "Align Right Side"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:605
-#, fuzzy
 msgid "Connection Commands"
-msgstr "Szukaj węzłów"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:609
-#, fuzzy
 msgid "Change Current"
-msgstr "Wyśrodkuj na wężle"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:627
-#, fuzzy
 msgid "Show Properties"
-msgstr "Właściwości"
+msgstr "Pokaż właściwości"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:643
 msgid "Traversal"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:647
-#, fuzzy
 msgid "Select Start Node"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:654
-#, fuzzy
 msgid "Select End Node"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:661
-#, fuzzy
 msgid "Select Next Connection"
-msgstr "Szukaj węzłów"
+msgstr "Wybierz następny łącznik"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:668
-#, fuzzy
 msgid "Select Previous Connection"
-msgstr "Poprzedni sąsiadujący"
+msgstr "Wybierz poprzedni łącznik"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:680
-#, fuzzy
 msgid "Text Editing"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:688
-#, fuzzy
 msgid "Insert Newline Character"
-msgstr "Poprzedni sąsiadujący"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:695
-#, fuzzy
 msgid "Insert Tab Character"
-msgstr "Poprzedni sąsiadujący"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:702
-#, fuzzy
 msgid "Show Emoji Picker"
-msgstr "Usuń notatkę"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:709
-#, fuzzy
 msgid "Add URL Link To Selected Text"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:723
-#, fuzzy
 msgid "End Editing"
-msgstr "Tytuly"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:732
 msgid "Cursor Movement"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:736
-#, fuzzy
 msgid "Next Character"
-msgstr "Poprzedni sąsiadujący"
+msgstr "Następny znak"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:743
-#, fuzzy
 msgid "Previous Character"
-msgstr "Poprzedni sąsiadujący"
+msgstr "Poprzedni znak"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:750
-#, fuzzy
 msgid "Next Word"
-msgstr "Szukaj węzłów"
+msgstr "Następne słowo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:757
-#, fuzzy
 msgid "Previous Word"
-msgstr "Poprzedni sąsiadujący"
+msgstr "Poprzednie słowo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:764
-#, fuzzy
 msgid "Next Line"
-msgstr "Następny sąsiadujący"
+msgstr "Następna linia"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:771
-#, fuzzy
 msgid "Previous Line"
-msgstr "Poprzedni sąsiadujący"
+msgstr "Poprzednia linia"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:778
-#, fuzzy
 msgid "Start Of Text"
-msgstr "Szukaj węzłów"
+msgstr "Początek tekstu"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:785
-#, fuzzy
 msgid "End Of Text"
-msgstr "Szukaj węzłów"
+msgstr "Koniec tekstu"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:798
-#, fuzzy
 msgid "Copy Selected Text"
-msgstr "Wybierz węzeł"
+msgstr "Kopiuj zaznaczony tekst"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:805
-#, fuzzy
 msgid "Cut Selected Text"
-msgstr "Wybierz węzeł"
+msgstr "Wytnij zaznaczony tekst"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:812
-#, fuzzy
 msgid "Paste Text"
-msgstr "Wklej"
+msgstr "Wklej tekst"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:825
-#, fuzzy
 msgid "Add Next Character"
-msgstr "Szukaj węzłów"
+msgstr "Dodaj następny znak"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:832
-#, fuzzy
 msgid "Add Previous Character"
-msgstr "Poprzedni sąsiadujący"
+msgstr "Dodaj poprzedni znak"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:839
-#, fuzzy
 msgid "Add Next Word"
-msgstr "Szukaj węzłów"
+msgstr "Dodaj następne słowo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:846
-#, fuzzy
 msgid "Add Previous Word"
-msgstr "Szukaj węzłów"
+msgstr "Dodaj poprzednie słowo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:853
-#, fuzzy
 msgid "Add Next Line"
-msgstr "Dodaj notatkę"
+msgstr "Dodaj następną linię"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:860
-#, fuzzy
 msgid "Add Previous Line"
-msgstr "Poprzedni sąsiadujący"
+msgstr "Dodaj poprzednią linię"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:867
-#, fuzzy
 msgid "Add Start Of Text"
-msgstr "Szukaj węzłów"
+msgstr "Dodaj początek tekstu"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:874
 msgid "Add End Of Text"
-msgstr ""
+msgstr "Dodaj koniec tekstu"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:881
-#, fuzzy
 msgid "Select All Text"
-msgstr "Wybierz węzeł"
+msgstr "Zaznacz cały tekst"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:888
-#, fuzzy
 msgid "Clear Selection"
-msgstr "Wybierz węzeł"
+msgstr "Wyczyść zaznaczenie"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:900
 msgid "Mouse Events"
@@ -3740,9 +3471,8 @@ msgid "[Right-click when item is selected]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:915
-#, fuzzy
 msgid "Edit Image in Canvas"
-msgstr "Tytuly"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:916
 msgid "[Double left-click on image]"
@@ -3761,50 +3491,44 @@ msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:935
-#, fuzzy
 msgid "Scroll Vertically"
-msgstr "Wertykalny"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:936
 msgid "[Scrollwheel up/down]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:942
-#, fuzzy
 msgid "Scroll Horizontally"
-msgstr "Horyzontalny"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:943
 msgid "[Shift + Scrollwheel up/down]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:951
-#, fuzzy
 msgid "Item Selection"
-msgstr "Wybierz węzeł"
+msgstr "Wybór elementu"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:955
-#, fuzzy
 msgid "Select Single Item"
-msgstr "Usuń węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:956
 msgid "[Left-click on item]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:962
-#, fuzzy
 msgid "Select Child Nodes"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:963
 msgid "[Control + Left-click on parent node]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:969
-#, fuzzy
 msgid "Select Node Tree/Subtree"
-msgstr "Wybierz węzeł"
+msgstr "Wybierz gałąź/Wszystkie poniżej"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:970
 msgid "[Control + Double left-click on parent node]"
@@ -3819,9 +3543,8 @@ msgid "[Control + Triple left-click on node]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:983
-#, fuzzy
 msgid "Block Selection"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:984
 msgid "[Left-click + Drag]"
@@ -3832,27 +3555,24 @@ msgid "Item Selection Toggle (Add to/Remove from Selection)"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:996
-#, fuzzy
 msgid "Toggle Selection of Item"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:997
 msgid "[Shift + Left-click on item]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1003
-#, fuzzy
 msgid "Toggle Selection of Child Nodes"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1004
 msgid "[Shift + Control + Left-click on item]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1010
-#, fuzzy
 msgid "Toggle Selection of Node Tree/Subtree"
-msgstr "Wybierz węzeł"
+msgstr "Przełącz wybór: Gałąź/Wszystkie poniżej"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1011
 msgid "[Shift + Control + Double left-click on parent node]"
@@ -3867,9 +3587,8 @@ msgid "[Shift + Control + Triple left-click on node]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1026
-#, fuzzy
 msgid "Text Selection"
-msgstr "Wybierz węzeł"
+msgstr "Zaznaczanie tekstu"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1030
 msgid "Set Cursor Insert Point"
@@ -3880,69 +3599,17 @@ msgid "[Left-click anywhere in text]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1037
-#, fuzzy
 msgid "Select current word"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1038
 msgid "[Double left-click on word]"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1044
-#, fuzzy
 msgid "Select all text"
-msgstr "Wybierz węzeł"
+msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1045
 msgid "[Triple left-click anywhere in text]"
 msgstr ""
-
-#~ msgid "Zoom"
-#~ msgstr "Przybliżenie"
-
-#~ msgid "node change fold"
-#~ msgstr "zwinięcie węzła"
-
-#, fuzzy
-#~ msgid "node change folds"
-#~ msgstr "zwinięcie węzła"
-
-#~ msgid "fold completed tasks"
-#~ msgstr "zwinięcie ukończonych zadań"
-
-#~ msgid "unfold all tasks"
-#~ msgstr "rozwinięcie wszystkich zadań"
-
-#~ msgid "Properties"
-#~ msgstr "Właściwości"
-
-#~ msgid "BMP"
-#~ msgstr "BMP"
-
-#~ msgid "PNG (Transparent)"
-#~ msgstr "PNG (z przeźroczystością)"
-
-#~ msgid "PNG (Opaque)"
-#~ msgstr "PNG"
-
-#~ msgid "Edit…"
-#~ msgstr "Edytuj…"
-
-#, fuzzy
-#~ msgid "Title"
-#~ msgstr "Tytuly"
-
-#, fuzzy
-#~ msgid "Selected"
-#~ msgstr "Wybierz węzeł"
-
-#, fuzzy
-#~ msgid "Descendant Nodes"
-#~ msgstr "Usuń węzeł"
-
-#, fuzzy
-#~ msgid "Child"
-#~ msgstr "Pierwszy potomny"
-
-#~ msgid "Parent"
-#~ msgstr "Nadrzędny"
