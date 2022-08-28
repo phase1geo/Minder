@@ -34,8 +34,8 @@ public class Minder : Granite.Application {
   private static bool                testing      = false;
   private        MainWindow          appwin;
   private        GLib.Settings       iface_settings;
-  private        bool                cl_export        = false;
-  private        string              cl_export_format = "png";
+  private        string?             cl_import    = null;
+  private        string?             cl_export    = null;
   private        HashMap<string,int> cl_options;
 
   public  static GLib.Settings settings;
@@ -64,7 +64,7 @@ public class Minder : Granite.Application {
     appwin = new MainWindow( this, settings );
 
     /* If we are exporting from the command-line, do that now */
-    if( cl_export ) {
+    if( cl_export != null ) {
       return;
     }
 
@@ -100,10 +100,10 @@ public class Minder : Granite.Application {
 
   /* Called whenever files need to be opened */
   private void open_files( File[] files, string hint ) {
-    if( cl_export ) {
+    if( cl_export != null ) {
       int retval = 1;
       if( files.length == 2 ) {
-        retval = export_as( cl_export_format, cl_options, files[0].get_path(), files[1].get_path() ) ? 0 : 1;
+        retval = export_as( cl_export, cl_options, files[0].get_path(), files[1].get_path() ) ? 0 : 1;
       } else {
         stderr.printf( _( "ERROR: Export is missing Minder input file and/or export output file" ) + "\n" );
       }
@@ -123,7 +123,7 @@ public class Minder : Granite.Application {
 
   /* Called if we have no files to open */
   protected override void activate() {
-    if( !cl_export ) {
+    if( cl_export == null ) {
       hold();
       if( new_file ) {
         appwin.do_new_file();
@@ -147,8 +147,8 @@ public class Minder : Granite.Application {
     options[0] = {"version", 0, 0, OptionArg.NONE, ref show_version, _( "Display version number" ), null};
     options[1] = {"new", 'n', 0, OptionArg.NONE, ref new_file, _( "Starts Minder with a new file" ), null};
     options[2] = {"run-tests", 0, 0, OptionArg.NONE, ref testing, _( "Run testing" ), null};
-    options[3] = {"export", 0, 0, OptionArg.NONE, ref cl_export, _( "Export mindmap" ), null};
-    options[4] = {"format", 0, 0, OptionArg.STRING, ref cl_export_format, _( "Format to export as (only used when --export is used)" ), "FORMAT"};
+    options[3] = {"import", 0, 0, OptionArg.STRING, ref cl_import, _( "Import file from format (markdown)" ), "FORMAT"};
+    options[4] = {"export", 0, 0, OptionArg.STRING, ref cl_export, _( "Export mindmap as format (png)" ), "FORMAT"};
     options[5] = {"png-transparent", 0, 0, OptionArg.NONE, ref transparent, _( "Enables a transparent background for PNG images" ), null};
     options[6] = {"png-compression", 0, 0, OptionArg.INT, ref compression,  _( "PNG compression value (0-9)" ), "INT"};
     options[7] = {"jpeg-quality", 0, 0, OptionArg.INT, ref quality, _( "JPEG quality (0-100)" ), "INT"};
@@ -173,7 +173,7 @@ public class Minder : Granite.Application {
     }
 
     /* Gather the export options if needed */
-    if( cl_export ) {
+    if( cl_export != null ) {
       cl_options = new HashMap<string,int>();
       cl_options.set( "transparent",         (int)transparent );
       cl_options.set( "compression",         compression );
