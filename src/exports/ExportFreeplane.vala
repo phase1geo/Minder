@@ -28,7 +28,7 @@ public class ExportFreeplane : Export {
 
   /* Constructor */
   public ExportFreeplane() {
-    base( "freeplane", _( "Freeplane" ), { ".mm" }, true, true );
+    base( "freeplane", _( "Freeplane" ), { ".mm" }, true, true, false );
   }
 
   /* Exports the given drawing area to the file of the given name */

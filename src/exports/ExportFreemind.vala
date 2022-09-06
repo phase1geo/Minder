@@ -26,7 +26,7 @@ using Gee;
 public class ExportFreemind : Export {
 
   public ExportFreemind() {
-    base( "freemind", _( "Freemind" ), { ".mm" }, true, true );
+    base( "freemind", _( "Freemind" ), { ".mm" }, true, true, false );
   }
 
   /* Exports the given drawing area to the file of the given name */

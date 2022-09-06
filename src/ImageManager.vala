@@ -311,7 +311,7 @@ public class ImageManager {
 
     if( dialog.run() == ResponseType.ACCEPT ) {
       id = add_image( dialog.get_uri() );
-      Utils.store_chooser_folder( dialog.get_filename() );
+      Utils.store_chooser_folder( dialog.get_filename(), false );
     }
 
     /* Close the dialog */

@@ -30,6 +30,7 @@ public class Exports {
 
     /* Add the exports */
     add( new ExportCSV(), save_settings );
+    add( new ExportFileSystem(), save_settings );
     add( new ExportFreemind(), save_settings );
     add( new ExportFreeplane(), save_settings );
     add( new ExportImage( "jpeg", _( "JPEG" ), { ".jpg", ".jpeg" } ), save_settings );

@@ -26,7 +26,7 @@ public class ExportPlantUML : Export {
 
   /* Constructor */
   public ExportPlantUML() {
-    base( "plant-uml", _( "PlantUML" ), { ".puml" }, true, true );
+    base( "plant-uml", _( "PlantUML" ), { ".puml" }, true, true, false );
   }
 
   /* Exports the given drawing area to the file of the given name */

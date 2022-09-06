@@ -26,7 +26,7 @@ using Gtk;
 public class ExportImage : Export {
 
   public ExportImage( string type, string label, string[] extensions ) {
-    base( type, label, extensions, true, false );
+    base( type, label, extensions, true, false, false );
   }
 
   /* Default constructor */

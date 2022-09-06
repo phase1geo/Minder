@@ -31,15 +31,17 @@ public class Export {
   public string[] extensions { get; private set; }
   public bool     importable { get; private set; }
   public bool     exportable { get; private set; }
+  public bool     dir        { get; private set; }
 
   /* Constructor */
-  public Export( string name, string label, string[] extensions, bool exportable, bool importable ) {
+  public Export( string name, string label, string[] extensions, bool exportable, bool importable, bool dir ) {
     _settings = new HashMap<string,Widget>();
     this.name       = name;
     this.label      = label;
     this.extensions = extensions;
     this.exportable = exportable;
     this.importable = importable;
+    this.dir        = dir;
   }
 
   public signal void settings_changed();
@@ -178,13 +180,18 @@ public class Export {
 
   /* Returns true if the given filename is targetted for this export type */
   public bool filename_matches( string fname, out string basename ) {
-    foreach( string extension in extensions ) {
-      if( fname.has_suffix( extension ) ) {
-        basename = fname.slice( 0, (fname.length - extension.length) );
-        return( true );
+    if( dir ) {
+      basename = fname;
+      return( true );
+    } else {
+      foreach( string extension in extensions ) {
+        if( fname.has_suffix( extension ) ) {
+          basename = fname.slice( 0, (fname.length - extension.length) );
+          return( true );
+        }
       }
+      return( false );
     }
-    return( false );
   }
 
   /* Saves the state of this export */

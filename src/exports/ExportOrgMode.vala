@@ -25,7 +25,7 @@ public class ExportOrgMode : Export {
 
   /* Constructor */
   public ExportOrgMode() {
-    base( "org-mode", _( "Org-Mode" ), { ".org" }, true, false );
+    base( "org-mode", _( "Org-Mode" ), { ".org" }, true, false, false );
   }
 
   /* Add settings for Org Mode */

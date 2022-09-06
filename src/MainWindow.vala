@@ -81,23 +81,24 @@ public class MainWindow : Hdy.ApplicationWindow {
   private Exports           _exports;
 
   private const GLib.ActionEntry[] action_entries = {
-    { "action_save",          action_save },
-    { "action_quit",          action_quit },
-    { "action_zoom_in",       action_zoom_in },
-    { "action_zoom_out",      action_zoom_out },
-    { "action_zoom_fit",      action_zoom_fit },
-    { "action_zoom_selected", action_zoom_selected },
-    { "action_zoom_actual",   action_zoom_actual },
+    { "action_save",           action_save },
+    { "action_open_directory", do_open_directory },
+    { "action_quit",           action_quit },
+    { "action_zoom_in",        action_zoom_in },
+    { "action_zoom_out",       action_zoom_out },
+    { "action_zoom_fit",       action_zoom_fit },
+    { "action_zoom_selected",  action_zoom_selected },
+    { "action_zoom_actual",    action_zoom_actual },
   //  { "action_export",        action_export },
-    { "action_print",         action_print },
-    { "action_prefs",         action_prefs },
-    { "action_shortcuts",     action_shortcuts },
-    { "action_show_current",  action_show_current },
-    { "action_show_style",    action_show_style },
-    { "action_show_stickers", action_show_stickers },
-    { "action_show_map",      action_show_map },
-    { "action_next_tab",      action_next_tab },
-    { "action_prev_tab",      action_prev_tab }
+    { "action_print",          action_print },
+    { "action_prefs",          action_prefs },
+    { "action_shortcuts",      action_shortcuts },
+    { "action_show_current",   action_show_current },
+    { "action_show_style",     action_show_style },
+    { "action_show_stickers",  action_show_stickers },
+    { "action_show_map",       action_show_map },
+    { "action_next_tab",       action_next_tab },
+    { "action_prev_tab",       action_prev_tab }
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -499,24 +500,25 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
 
-    app.set_accels_for_action( "win.action_save",          { "<Control>s" } );
-    app.set_accels_for_action( "win.action_quit",          { "<Control>q" } );
-    app.set_accels_for_action( "win.action_zoom_actual",   { "<Control>0" } );
-    app.set_accels_for_action( "win.action_zoom_fit",      { "<Control>1" } );
-    app.set_accels_for_action( "win.action_zoom_selected", { "<Control>2" } );
-    app.set_accels_for_action( "win.action_zoom_in",       { "<Control>plus" } );
-    app.set_accels_for_action( "win.action_zoom_in",       { "<Control>equal" } );
-    app.set_accels_for_action( "win.action_zoom_out",      { "<Control>minus" } );
-    app.set_accels_for_action( "win.action_export",        { "<Control>e" } );
-    app.set_accels_for_action( "win.action_print",         { "<Control>p" } );
-    app.set_accels_for_action( "win.action_prefs",         { "<Control>comma" } );
-    app.set_accels_for_action( "win.action_shortcuts",     { "<Control>question" } );
-    app.set_accels_for_action( "win.action_show_current",  { "<Control>6" } );
-    app.set_accels_for_action( "win.action_show_style",    { "<Control>7" } );
-    app.set_accels_for_action( "win.action_show_stickers", { "<Control>8" } );
-    app.set_accels_for_action( "win.action_show_map",      { "<Control>9" } );
-    app.set_accels_for_action( "win.action_next_tab",      { "<Control>Tab" } );
-    app.set_accels_for_action( "win.action_prev_tab",      { "<Control><Shift>Tab" } );
+    app.set_accels_for_action( "win.action_save",           { "<Control>s" } );
+    app.set_accels_for_action( "win.action_open_directory", { "<Control><Shift>o" } );
+    app.set_accels_for_action( "win.action_quit",           { "<Control>q" } );
+    app.set_accels_for_action( "win.action_zoom_actual",    { "<Control>0" } );
+    app.set_accels_for_action( "win.action_zoom_fit",       { "<Control>1" } );
+    app.set_accels_for_action( "win.action_zoom_selected",  { "<Control>2" } );
+    app.set_accels_for_action( "win.action_zoom_in",        { "<Control>plus" } );
+    app.set_accels_for_action( "win.action_zoom_in",        { "<Control>equal" } );
+    app.set_accels_for_action( "win.action_zoom_out",       { "<Control>minus" } );
+    app.set_accels_for_action( "win.action_export",         { "<Control>e" } );
+    app.set_accels_for_action( "win.action_print",          { "<Control>p" } );
+    app.set_accels_for_action( "win.action_prefs",          { "<Control>comma" } );
+    app.set_accels_for_action( "win.action_shortcuts",      { "<Control>question" } );
+    app.set_accels_for_action( "win.action_show_current",   { "<Control>6" } );
+    app.set_accels_for_action( "win.action_show_style",     { "<Control>7" } );
+    app.set_accels_for_action( "win.action_show_stickers",  { "<Control>8" } );
+    app.set_accels_for_action( "win.action_show_map",       { "<Control>9" } );
+    app.set_accels_for_action( "win.action_next_tab",       { "<Control>Tab" } );
+    app.set_accels_for_action( "win.action_prev_tab",       { "<Control><Shift>Tab" } );
 
   }
 
@@ -1026,24 +1028,40 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   }
 
+  public void do_open_file() {
+    do_open( false );
+  }
+
+  public void do_open_directory() {
+    do_open( true );
+  }
+
   /*
    Allows the user to select a file to open and opens it in the same window.
   */
-  public void do_open_file() {
+  public void do_open( bool dir ) {
 
     /* Get the file to open from the user */
-    var dialog   = new FileChooserNative( _( "Open File" ), this, FileChooserAction.OPEN, _( "Open" ), _( "Cancel" ) );
-    Utils.set_chooser_folder( dialog );
+    var dialog   = new FileChooserNative(
+      (dir ? _( "Open Directory" ) : _( "Open File" )),
+      this,
+      (dir ? FileChooserAction.SELECT_FOLDER : FileChooserAction.OPEN),
+      _( "Open" ),
+      _( "Cancel" )
+    );
+    // Utils.set_chooser_folder( dialog );
 
     /* Create file filters */
-    var filter = new FileFilter();
-    filter.set_filter_name( "Minder" );
-    filter.add_pattern( "*.minder" );
-    dialog.add_filter( filter );
+    if( !dir ) {
+      var filter = new FileFilter();
+      filter.set_filter_name( "Minder" );
+      filter.add_pattern( "*.minder" );
+      dialog.add_filter( filter );
+    }
 
     for( int i=0; i<exports.length(); i++ ) {
-      if( exports.index( i ).importable ) {
-        filter = new FileFilter();
+      if( exports.index( i ).importable && (exports.index( i ).dir == dir) ) {
+        var filter = new FileFilter();
         filter.set_filter_name( exports.index( i ).label );
         foreach( string extension in exports.index( i ).extensions ) {
           filter.add_pattern( "*" + extension );
@@ -1054,17 +1072,18 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     if( dialog.run() == ResponseType.ACCEPT ) {
       var filename = dialog.get_filename();
-      open_file( filename );
-      Utils.store_chooser_folder( filename );
+      open_file( filename, dir );
+      Utils.store_chooser_folder( filename, dir );
     }
 
-    get_current_da( "do_open_file" ).grab_focus();
+    get_current_da( "do_open" ).grab_focus();
 
   }
 
   /* Opens the file and display it in the canvas */
-  public bool open_file( string fname ) {
-    if( !FileUtils.test( fname, FileTest.IS_REGULAR ) ) {
+  public bool open_file( string fname, bool dir ) {
+    if( ( dir && !FileUtils.test( fname, FileTest.IS_DIR )) ||
+        (!dir && !FileUtils.test( fname, FileTest.IS_REGULAR )) ) {
       return( false );
     }
     close_unchanged_tabs();
@@ -1075,7 +1094,7 @@ public class MainWindow : Hdy.ApplicationWindow {
       return( true );
     } else {
       for( int i=0; i<exports.length(); i++ ) {
-        if( exports.index( i ).importable ) {
+        if( exports.index( i ).importable && (exports.index( i ).dir == dir) ) {
           string new_fname;
           if( exports.index( i ).filename_matches( fname, out new_fname ) ) {
             new_fname += ".minder";
@@ -1177,7 +1196,7 @@ public class MainWindow : Hdy.ApplicationWindow {
       update_title( da );
       save_tab_state( _nb.current );
       retval = true;
-      Utils.store_chooser_folder( fname );
+      Utils.store_chooser_folder( fname, false );
     }
     da.grab_focus();
     return( retval );

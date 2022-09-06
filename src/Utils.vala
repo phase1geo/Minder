@@ -316,8 +316,8 @@ public class Utils {
     }
   }
 
-  public static void store_chooser_folder( string file ) {
-    var dir = GLib.Path.get_dirname( file );
+  public static void store_chooser_folder( string file, bool is_dir ) {
+    var dir = is_dir ? file : GLib.Path.get_dirname( file );
     Minder.settings.set_string( "last-directory", dir );
   }
 

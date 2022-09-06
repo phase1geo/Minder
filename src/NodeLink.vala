@@ -78,7 +78,7 @@ public class NodeLink {
    opens the mindmap and selects the given node.
   */
   public void select( DrawArea da ) {
-    if( (_fname == "") || da.win.open_file( _fname ) ) {
+    if( (_fname == "") || da.win.open_file( _fname, false ) ) {
       var other_da = da.win.get_current_da();
       var node     = other_da.get_node( other_da.get_nodes(), _node_id );
       Idle.add(() => {
