@@ -147,13 +147,30 @@ public class Minder : Granite.Application {
     var compression = 0;
     var quality     = 0;
     var image_links = false;
+    var exports     = new Exports();
+    var import_list = new Array<string>();
+    var export_list = new Array<string>();
+
+    /* Get the list of import and export formats */
+    for( int i=0; i<exports.length(); i++ ) {
+      var export = exports.index( i );
+      if( export.importable ) {
+        import_list.append_val( export.name );
+      }
+      if( export.exportable ) {
+        export_list.append_val( export.name );
+      }
+    }
+
+    var import_str = _( "Import file from format (%s)" ).printf( string.joinv( ",", import_list.data ) );
+    var export_str = _( "Export mindmap as format (%s)" ).printf( string.joinv( ",", export_list.data ) );
 
     /* Create the command-line options */
     options[0] = {"version", 0, 0, OptionArg.NONE, ref show_version, _( "Display version number" ), null};
     options[1] = {"new", 'n', 0, OptionArg.NONE, ref new_file, _( "Starts Minder with a new file" ), null};
     options[2] = {"run-tests", 0, 0, OptionArg.NONE, ref testing, _( "Run testing" ), null};
-    options[3] = {"import", 0, 0, OptionArg.STRING, ref cl_import, _( "Import file from format (markdown)" ), "FORMAT"};
-    options[4] = {"export", 0, 0, OptionArg.STRING, ref cl_export, _( "Export mindmap as format (png)" ), "FORMAT"};
+    options[3] = {"import", 0, 0, OptionArg.STRING, ref cl_import, import_str, "FORMAT"};
+    options[4] = {"export", 0, 0, OptionArg.STRING, ref cl_export, export_str, "FORMAT"};
     options[5] = {"png-transparent", 0, 0, OptionArg.NONE, ref transparent, _( "Enables a transparent background for PNG images" ), null};
     options[6] = {"png-compression", 0, 0, OptionArg.INT, ref compression,  _( "PNG compression value (0-9)" ), "INT"};
     options[7] = {"jpeg-quality", 0, 0, OptionArg.INT, ref quality, _( "JPEG quality (0-100)" ), "INT"};
