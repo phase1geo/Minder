@@ -100,25 +100,38 @@ public class Minder : Granite.Application {
 
   /* Called whenever files need to be opened */
   private void open_files( File[] files, string hint ) {
+    var input_file = files[0].get_path();
+    hold();
+    if( cl_import != null ) {
+      int retval = 1;
+      if( files.length >= 1 ) {
+        if( !appwin.import_file( files[0].get_path(), cl_import, ref input_file ) ) {
+          stderr.printf( _( "ERROR: Unable to import file" ) + "\n" );
+          Process.exit( 1 );
+        }
+      } else {
+        stderr.printf( _( "ERROR: Import is missing filename to import" ) + "\n" );
+        Process.exit( 1 );
+      }
+    }
     if( cl_export != null ) {
       int retval = 1;
       if( files.length == 2 ) {
-        retval = export_as( cl_export, cl_options, files[0].get_path(), files[1].get_path() ) ? 0 : 1;
+        retval = export_as( cl_export, cl_options, input_file, files[1].get_path() ) ? 0 : 1;
       } else {
-        stderr.printf( _( "ERROR: Export is missing Minder input file and/or export output file" ) + "\n" );
+        stderr.printf( _( "ERROR: Export is missing input file and/or export output file" ) + "\n" );
       }
       Process.exit( retval );
-    } else {
-      hold();
+    } else if( cl_import == null ) {
       foreach( File open_file in files ) {
         var file = open_file.get_path();
         if( !appwin.open_file( file ) ) {
           stdout.printf( _( "ERROR:  Unable to open file '%s'\n" ), file );
         }
       }
-      Gtk.main();
-      release();
     }
+    Gtk.main();
+    release();
   }
 
   /* Called if we have no files to open */
