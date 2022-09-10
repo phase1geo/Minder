@@ -1168,6 +1168,22 @@ public class MainWindow : Hdy.ApplicationWindow {
     return( false );
   }
 
+  /* Imports the given file based on the export name */
+  public bool import_file( string fname, string export_name, ref string new_fname ) {
+    new_fname = GLib.Path.get_basename( fname ) + ".minder";
+    for( int i=0; i<exports.length(); i++ ) {
+      if( exports.index( i ).name == export_name ) {
+        var da = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
+        update_title( da );
+        if( exports.index( i ).import( fname, da ) ) {
+          return( true );
+        }
+        close_current_tab();
+      }
+    }
+    return( false );
+  }
+
   /* Perform an undo action */
   public void do_undo() {
     var da = get_current_da( "do_undo" );
