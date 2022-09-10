@@ -23,9 +23,14 @@ using Gtk;
 
 public class ExportMarkdown : Export {
 
+  struct Hier {
+    public int  spaces;
+    public Node node;
+  }
+
   /* Constructor */
   public ExportMarkdown() {
-    base( "markdown", _( "Markdown" ), { ".md", ".markdown" }, true, false );
+    base( "markdown", _( "Markdown" ), { ".md", ".markdown" }, true, true );
   }
 
   private bool handle_directory( string fname, out string mdfile, out string imgdir ) {
@@ -49,6 +54,169 @@ public class ExportMarkdown : Export {
     }
     return( true );
   }
+
+  /* Exports the given drawing area to the file of the given name */
+  public override bool import( string fname, DrawArea da ) {
+    var file = File.new_for_path( fname );
+    try {
+
+      DataInputStream dis = new DataInputStream( file.read() );
+      size_t          len;
+
+      /* Read the entire file contents */
+      var str = dis.read_upto( "\0", 1, out len ) + "\0";
+
+      /* Import the text */
+      import_text( str, da );
+
+      da.queue_draw();
+      da.auto_save();
+
+    } catch( IOError err ) {
+      return( false );
+    } catch( Error err ) {
+      return( false );
+    }
+    return( true );
+  }
+
+  /* Creates a new node from the given information and attaches it to the specified parent node */
+  private Node make_node( DrawArea da, Node? parent, string task, string name, bool attach = true ) {
+
+    // var re = new Regex( "^<img\s+src=(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
+
+    /* If the name string contained an image, extract it from the rest of the name */
+    /*
+    if( name.
+    if( (node.image != null) && get_bool( "include-image-links" ) ) {
+      var file = im.get_file( node.image.id );
+      if( copy_file( imgdir, file ) ) {
+        var basename = GLib.Path.get_basename( file );
+        title += "<img src=\"images/" + basename +
+                 "\" alt=\"image\" width=\"" + node.image.width.to_string() +
+                 "\" height=\"" + node.image.height.to_string() + "\"/>\n" + prefix + "  ";
+      }
+    }
+    */
+
+    var node = new Node.with_name( da, name, da.layouts.get_default() );
+
+    /* Add the style component to the node */
+    if( parent == null ) {
+      node.style = StyleInspector.styles.get_global_style();
+      if( attach ) {
+        da.position_root_node( node );
+        da.add_root( node, -1 );
+        da.set_current_node( node );
+      }
+    } else {
+      node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), null );
+      if( attach ) {
+        node.attach( parent, (int)parent.children().length, da.get_theme() );
+      }
+    }
+
+    /* Add the task information, if necessary */
+    if( task != "" ) {
+      node.enable_task( true );
+      if( (task == "x") || (task == "X") ) {
+        node.set_task_done( true );
+      }
+    }
+
+    return( node );
+
+  }
+
+  /* Append the given string to the note */
+  public void append_note( Node node, string str ) {
+    node.note = "%s\n%s".printf( node.note, str ).strip();
+  }
+
+  /* Imports a mindmap from the given text */
+  private void import_text( string txt, DrawArea da ) {
+
+    try {
+
+      var stack   = new Array<Hier?>();
+      var lines   = txt.split( "\n" );
+      var re      = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
+      var current = da.get_current_node();
+
+      /*
+       Populate the stack with the current node, if one exists.  Set the spaces
+       count to -1 so that everything but a new header is added to this node.
+      */
+      if( current != null ) {
+        stack.append_val( {-1, current} );
+      }
+
+      foreach( string line in lines ) {
+
+        MatchInfo match_info;
+        Node      node;
+
+        /* If we found some useful text, include it here */
+        if( re.match( line, 0, out match_info ) ) {
+
+          var spaces = match_info.fetch( 1 ).replace( "\t", " " ).length;
+          var bullet = match_info.fetch( 3 );
+          var task   = match_info.fetch( 5 );
+          var str    = match_info.fetch( 6 );
+
+          /* Add note */
+          if( str.strip() == "" ) continue;
+          if( bullet == ">" ) {
+            if( stack.length > 0 ) {
+              append_note( stack.index( stack.length - 1 ).node, str );
+            }
+
+          /* If the stack is empty */
+          } else if( stack.length == 0 ) {
+            node = make_node( da, null, task, str );
+            stack.append_val( {spaces, node} );
+
+          /* Add sibling node */
+          } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
+            node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, true );
+            stack.remove_index( stack.length - 1 );
+            stack.append_val( {spaces, node} );
+
+          /* Add child node */
+          } else if( spaces > stack.index( stack.length - 1 ).spaces ) {
+            node = make_node( da, stack.index( stack.length - 1 ).node, task, str );
+            stack.append_val( {spaces, node} );
+
+          /* Add ancestor node */
+          } else {
+            while( (stack.length > 0) && (spaces < stack.index( stack.length - 1 ).spaces) ) {
+              stack.remove_index( stack.length - 1 );
+            }
+            if( stack.length == 0 ) {
+              node = make_node( da, null, task, str );
+              stack.append_val( {spaces, node} );
+            } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
+              node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str );
+              stack.remove_index( stack.length - 1 );
+              stack.append_val( {spaces, node} );
+            } else {
+              node = make_node( da, stack.index( stack.length - 1 ).node, task, str );
+              stack.append_val( {spaces, node} );
+            }
+          }
+
+        }
+
+      }
+
+    } catch( GLib.RegexError err ) {
+      /* TBD */
+    }
+    // TBD
+
+  }
+
+  /****************************************************************/
 
   /* Exports the given drawing area to the file of the given name */
   public override bool export( string fname, DrawArea da ) {
