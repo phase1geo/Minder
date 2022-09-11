@@ -61,7 +61,8 @@ public class ExportMarkdown : Export {
 
   /* Exports the given drawing area to the file of the given name */
   public override bool import( string fname, DrawArea da ) {
-    var file = File.new_for_path( fname );
+    var file        = File.new_for_path( fname );
+    var current_dir = Path.get_dirname( fname );
     try {
 
       DataInputStream dis = new DataInputStream( file.read() );
@@ -71,7 +72,7 @@ public class ExportMarkdown : Export {
       var str = dis.read_upto( "\0", 1, out len ) + "\0";
 
       /* Import the text */
-      import_text( str, da );
+      import_text( str, da, current_dir );
 
       da.queue_draw();
       da.auto_save();
@@ -85,23 +86,41 @@ public class ExportMarkdown : Export {
   }
 
   /* Creates a new node from the given information and attaches it to the specified parent node */
-  private Node make_node( DrawArea da, Node? parent, string task, string name, bool attach = true ) {
+  private Node make_node( DrawArea da, Node? parent, string task, string pre_name, string current_dir, bool attach = true ) {
 
-    // var re = new Regex( "^<img\s+src=(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
+    NodeImage? image = null;
+    var        name  = pre_name;
 
-    /* If the name string contained an image, extract it from the rest of the name */
-    /*
-    if( name.
-    if( (node.image != null) && get_bool( "include-image-links" ) ) {
-      var file = im.get_file( node.image.id );
-      if( copy_file( imgdir, file ) ) {
-        var basename = GLib.Path.get_basename( file );
-        title += "<img src=\"images/" + basename +
-                 "\" alt=\"image\" width=\"" + node.image.width.to_string() +
-                 "\" height=\"" + node.image.height.to_string() + "\"/>\n" + prefix + "  ";
+    try {
+
+      MatchInfo match_info;
+      var re = new Regex( """(.*)<img\s+(.*?)/>(.*)""" );
+
+      if( re.match( name, 0, out match_info ) ) {
+        var src_re   = new Regex( """src\s*=\s*\"(.*?)\"""" );
+        var pretext  = match_info.fetch( 1 ).strip();
+        var attrs    = match_info.fetch( 2 );
+        var posttext = match_info.fetch( 3 ).strip();
+        if( pretext == "" ) {
+        name = (pretext == "") ? posttext : (pretext + " " + posttext);
+        stdout.printf( "  attrs: %s, name: %s\n", attrs, name );
+        if( src_re.match( attrs, 0, out match_info ) ) {
+          var file  = match_info.fetch( 1 );
+          var w_re  = new Regex( """width\s*=\s*\"(.*?)\"""" );
+          var width = 200;
+          if( w_re.match( attrs, 0, out match_info ) ) {
+            width = int.parse( match_info.fetch( 1 ) );
+          }
+          if( !Path.is_absolute( file ) ) {
+            file = Path.build_filename( current_dir, file );
+          }
+          image = new NodeImage.from_uri( da.image_manager, file, width );
+          stdout.printf( "  Image file found: %s, width: %d\n", file, width );
+        }
       }
+
+    } catch( RegexError e ) {
     }
-    */
 
     var node = new Node.with_name( da, name, da.layouts.get_default() );
 
@@ -128,8 +147,17 @@ public class ExportMarkdown : Export {
       }
     }
 
+    /* Add the node image, if necessary */
+    node.set_image( da.image_manager, image );
+    stdout.printf( "AFTER set_image\n" );
+
     return( node );
 
+  }
+
+  /* Appends the given string to the name */
+  public void append_name( Node node, string str ) {
+    node.name.text.append_text( " " + str.strip() );
   }
 
   /* Append the given string to the note */
@@ -138,7 +166,7 @@ public class ExportMarkdown : Export {
   }
 
   /* Imports a mindmap from the given text */
-  private void import_text( string txt, DrawArea da ) {
+  private void import_text( string txt, DrawArea da, string current_dir ) {
 
     try {
 
@@ -175,20 +203,24 @@ public class ExportMarkdown : Export {
               append_note( stack.index( stack.length - 1 ).node, str );
             }
 
+          /* If we don't have a bullet, we are a continuation of the previous line */
+          } else if( bullet == "" ) {
+            append_name( stack.index( stack.length - 1 ).node, str );
+
           /* If the stack is empty */
           } else if( stack.length == 0 ) {
-            node = make_node( da, null, task, str );
+            node = make_node( da, null, task, str, current_dir );
             stack.append_val( {spaces, node} );
 
           /* Add sibling node */
           } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
-            node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, true );
+            node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, current_dir, true );
             stack.remove_index( stack.length - 1 );
             stack.append_val( {spaces, node} );
 
           /* Add child node */
           } else if( spaces > stack.index( stack.length - 1 ).spaces ) {
-            node = make_node( da, stack.index( stack.length - 1 ).node, task, str );
+            node = make_node( da, stack.index( stack.length - 1 ).node, task, str, current_dir );
             stack.append_val( {spaces, node} );
 
           /* Add ancestor node */
@@ -197,14 +229,14 @@ public class ExportMarkdown : Export {
               stack.remove_index( stack.length - 1 );
             }
             if( stack.length == 0 ) {
-              node = make_node( da, null, task, str );
+              node = make_node( da, null, task, str, current_dir );
               stack.append_val( {spaces, node} );
             } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
-              node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str );
+              node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, current_dir );
               stack.remove_index( stack.length - 1 );
               stack.append_val( {spaces, node} );
             } else {
-              node = make_node( da, stack.index( stack.length - 1 ).node, task, str );
+              node = make_node( da, stack.index( stack.length - 1 ).node, task, str, current_dir );
               stack.append_val( {spaces, node} );
             }
           }
