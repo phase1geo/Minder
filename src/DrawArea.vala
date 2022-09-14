@@ -4913,10 +4913,8 @@ public class DrawArea : Gtk.DrawingArea {
         foreach (var uri in data.get_uris()) {
           var image = new NodeImage.from_uri( image_manager, uri, 200 );
           if( image.valid ) {
-            var node = new Node.with_name( this, _( "Another Idea" ), layouts.get_default() );
+            var node = create_root_node( _( "Another Idea" ) );
             node.set_image( image_manager, image );
-            _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
-            _nodes.append_val( node );
             if( select_node( node ) ) {
               set_node_mode( node, NodeMode.EDITABLE, false );
               queue_draw();
