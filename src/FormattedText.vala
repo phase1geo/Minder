@@ -773,7 +773,7 @@ public class FormattedText {
 
   /* Called whenever the theme changes */
   public static void set_theme( Theme theme ) {
-    stdout.printf( "Calling set_theme, updating color for UrlInfo with %s\n", Utils.color_from_rgba( theme.get_color( "url_foreground" ) ) );
+    // stdout.printf( "Calling set_theme, updating color for UrlInfo with %s\n", Utils.color_from_rgba( theme.get_color( "url_foreground" ) ) );
     if( _attr_tags == null ) return;
     (_attr_tags[FormatTag.URL] as UrlInfo).update_color( theme.get_color( "url_foreground" ) );
     (_attr_tags[FormatTag.TAG] as TaggingInfo).update_color( theme.get_color( "tag" ) );
