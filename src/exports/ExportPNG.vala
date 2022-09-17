@@ -50,7 +50,7 @@ public class ExportPNG : Export {
 
     /* Translate the image */
     context.translate( (10 - x), (10 - y) );
-    da.draw_all( context );
+    da.draw_all( context, true );
 
     /* Write the pixbuf to the file */
     var pixbuf = pixbuf_get_from_surface( surface, 0, 0, ((int)w + 20), ((int)h + 20) );

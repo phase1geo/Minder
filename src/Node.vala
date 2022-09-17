@@ -2125,7 +2125,7 @@ public class Node : Object {
   }
 
   /* Draws the node font to the screen */
-  protected virtual void draw_name( Cairo.Context ctx, Theme theme ) {
+  protected virtual void draw_name( Cairo.Context ctx, Theme theme, bool exporting ) {
 
     int hmargin = 3;
     int vmargin = 3;
@@ -2142,7 +2142,7 @@ public class Node : Object {
 
     /* Draw the text */
     var color = theme.get_color( "foreground" );
-    if( mode.is_selected() ) {
+    if( mode.is_selected() && !exporting ) {
       color = theme.get_color( "nodesel_foreground" );
     } else if( parent == null ) {
       color = _link_color_set ? Granite.contrasting_foreground_color( link_color ) :
@@ -2151,7 +2151,8 @@ public class Node : Object {
       color = Granite.contrasting_foreground_color( link_color );
     }
 
-    name.draw( ctx, theme, color, _alpha, false );
+    name.draw( ctx, theme, color, _alpha, exporting );
+
   }
 
   /* Draws the task checkbutton for leaf nodes */
@@ -2457,7 +2458,7 @@ public class Node : Object {
   }
 
   /* Draws the node on the screen */
-  public virtual void draw( Context ctx, Theme theme, bool motion ) {
+  public virtual void draw( Context ctx, Theme theme, bool motion, bool exporting ) {
 
     var nodesel_background = theme.get_color( "nodesel_background" );
     var nodesel_foreground = theme.get_color( "nodesel_foreground" );
@@ -2474,7 +2475,7 @@ public class Node : Object {
       }
 
       draw_shape( ctx, theme, background );
-      draw_name( ctx, theme );
+      draw_name( ctx, theme, exporting );
       draw_image( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, foreground, null );
@@ -2495,7 +2496,7 @@ public class Node : Object {
       var foreground = theme.get_color( "foreground" );
 
       draw_shape( ctx, theme, _link_color );
-      draw_name( ctx, theme );
+      draw_name( ctx, theme, exporting );
       draw_image( ctx, theme );
       if( is_leaf() ) {
         draw_leaf_task( ctx, _link_color, background );
@@ -2546,14 +2547,14 @@ public class Node : Object {
   }
 
   /* Draw this node and all child nodes */
-  public void draw_all( Context ctx, Theme theme, Node? current, bool motion ) {
+  public void draw_all( Context ctx, Theme theme, Node? current, bool motion, bool exporting ) {
     if( this != current ) {
       if( !folded ) {
         for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).draw_all( ctx, theme, current, motion );
+          _children.index( i ).draw_all( ctx, theme, current, motion, exporting );
         }
       }
-      draw( ctx, theme, motion );
+      draw( ctx, theme, motion, exporting );
     }
   }
 

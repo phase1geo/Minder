@@ -649,21 +649,29 @@ public class FormattedText {
 
   private class SyntaxInfo : TagAttr {
     private RGBA _color;
-    public SyntaxInfo( RGBA color ) {
-      set_color( color );
+    private bool _hide;
+    public SyntaxInfo( RGBA color, bool hide ) {
+      set_color( color, hide );
     }
-    private void set_color( RGBA color ) {
+    private void set_color( RGBA color, bool hide ) {
       attrs.append_val( attr_foreground_new( (uint16)(color.red * 65535), (uint16)(color.green * 65535), (uint16)(color.blue * 65535) ) );
+      attrs.append_val( attr_foreground_alpha_new( hide ? 20000 : 65535 ) );
       _color = color.copy();
+      _hide = hide;
     }
     public void update_color( RGBA color ) {
-      attrs.remove_range( 0, 1 );
-      set_color( color );
+      attrs.remove_range( 0, 2 );
+      set_color( color, _hide );
     }
     public override TextTag text_tag( string? extra ) {
       var ttag = new TextTag( "syntax" );
-      ttag.foreground     = Utils.color_from_rgba( _color );
-      ttag.foreground_set = true;
+      if( _hide ) {
+        ttag.invisible      = true;
+        ttag.invisible_set  = true;
+      } else {
+        ttag.foreground     = Utils.color_from_rgba( _color );
+        ttag.foreground_set = true;
+      }
       return( ttag );
     }
   }
@@ -762,7 +770,7 @@ public class FormattedText {
       _attr_tags[FormatTag.HILITE]     = new HighlightInfo();
       _attr_tags[FormatTag.URL]        = new UrlInfo( theme.get_color( "url_foreground" ) );
       _attr_tags[FormatTag.TAG]        = new TaggingInfo( theme.get_color( "tag" ) );
-      _attr_tags[FormatTag.SYNTAX]     = new SyntaxInfo( theme.get_color( "syntax" ) );
+      _attr_tags[FormatTag.SYNTAX]     = new SyntaxInfo( theme.get_color( "syntax" ), false );
       _attr_tags[FormatTag.MATCH]      = new MatchInfo( theme.get_color( "match_foreground" ), theme.get_color( "match_background" ) );
       _attr_tags[FormatTag.SELECT]     = new SelectInfo( theme.get_color( "textsel_foreground" ), theme.get_color( "textsel_background" ) );
     }
@@ -982,10 +990,11 @@ public class FormattedText {
   */
   public AttrList get_attributes_from_theme( Theme theme ) {
     var attrs = new AttrList();
-    for( int i=0; i<(FormatTag.LENGTH-4); i++ ) {
+    for( int i=0; i<(FormatTag.LENGTH-5); i++ ) {
       _formats[i].get_attributes( _attr_tags[i], ref attrs );
     }
     _formats[FormatTag.URL].get_attributes( new UrlInfo( theme.get_color( "url_foreground" ) ), ref attrs );
+    _formats[FormatTag.SYNTAX].get_attributes( new SyntaxInfo( theme.get_color( "syntax" ), true ), ref attrs );
     return( attrs );
   }
 

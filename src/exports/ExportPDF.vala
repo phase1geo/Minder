@@ -57,7 +57,7 @@ public class ExportPDF : Export {
     da.get_style_context().render_background( context, x, y, w, h );
 
     /* Recreate the image */
-    da.draw_all( context );
+    da.draw_all( context, true );
 
     /* Draw the page to the PDF file */
     context.show_page();

@@ -45,7 +45,7 @@ public class ExportSVG : Export {
     context.translate( (10 - x), (10 - y) );
 
     /* Recreate the image */
-    da.draw_all( context );
+    da.draw_all( context, true );
 
     /* Draw the page to the PDF file */
     context.show_page();

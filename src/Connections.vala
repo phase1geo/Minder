@@ -271,10 +271,10 @@ public class Connections {
   }
 
   /* Draws all of the connections onto the given context */
-  public void draw_all( Cairo.Context ctx, Theme theme ) {
+  public void draw_all( Cairo.Context ctx, Theme theme, bool exporting ) {
     if( hide ) return;
     for( int i=0; i<_connections.length; i++ ) {
-      _connections.index( i ).draw( ctx, theme );
+      _connections.index( i ).draw( ctx, theme, exporting );
     }
   }
 
