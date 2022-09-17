@@ -603,12 +603,14 @@ public class FormattedText {
   }
 
   private class UrlInfo : TagAttr {
+    private RGBA _color;
     public UrlInfo( RGBA color ) {
       set_color( color );
     }
     private void set_color( RGBA color ) {
       attrs.append_val( attr_foreground_new( (uint16)(color.red * 65535), (uint16)(color.green * 65535), (uint16)(color.blue * 65535) ) );
       attrs.append_val( attr_underline_new( Underline.SINGLE ) );
+      _color = color.copy();
     }
     public void update_color( RGBA color ) {
       attrs.remove_range( 0, 2 );
@@ -616,7 +618,7 @@ public class FormattedText {
     }
     public override TextTag text_tag( string? extra ) {
       var ttag = new TextTag( "url" );
-      ttag.foreground      = "#0000ff";
+      ttag.foreground      = Utils.color_from_rgba( _color );
       ttag.underline       = Underline.SINGLE;
       ttag.foreground_set  = true;
       ttag.underline_set   = true;
@@ -771,6 +773,7 @@ public class FormattedText {
 
   /* Called whenever the theme changes */
   public static void set_theme( Theme theme ) {
+    stdout.printf( "Calling set_theme, updating color for UrlInfo with %s\n", Utils.color_from_rgba( theme.get_color( "url_foreground" ) ) );
     if( _attr_tags == null ) return;
     (_attr_tags[FormatTag.URL] as UrlInfo).update_color( theme.get_color( "url_foreground" ) );
     (_attr_tags[FormatTag.TAG] as TaggingInfo).update_color( theme.get_color( "tag" ) );

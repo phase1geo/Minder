@@ -45,7 +45,7 @@ public class ThemeSolarizedDark : Theme {
     set_color( "connection_background", color_from_string( "#7e8087" ) );
     set_color( "connection_foreground", color_from_string( "#d4d4d4" ) );
     set_color( "url_background",        color_from_string( "Grey") );
-    set_color( "url_foreground",        color_from_string( "Blue" ) );
+    set_color( "url_foreground",        color_from_string( "#62a0ea" ) );
     set_color( "tag",                   color_from_string( "#c00000" ) );
     set_color( "syntax",                color_from_string( "Grey" ) );
     set_color( "match_background",      color_from_string( "Gold" ) );

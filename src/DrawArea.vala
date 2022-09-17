@@ -339,6 +339,7 @@ public class DrawArea : Gtk.DrawingArea {
     _theme        = theme;
     _theme.index  = (orig_theme != null) ? orig_theme.index : -1;
     _theme.rotate = _settings.get_boolean( "rotate-main-link-colors" );
+    FormattedText.set_theme( theme );
     update_css();
     if( orig_theme != null ) {
       map_theme_colors( orig_theme );
