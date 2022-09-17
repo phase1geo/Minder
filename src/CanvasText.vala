@@ -1004,7 +1004,7 @@ public class CanvasText : Object {
     ctx.new_path();
 
     /* Draw the insertion cursor if we are in the 'editable' state */
-    if( edit ) {
+    if( edit && !copy_layout ) {
       var cpos = text.text.index_of_nth_char( _cursor );
       var rect = layout.index_to_pos( cpos );
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "text_cursor" ), alpha );

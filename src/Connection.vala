@@ -705,7 +705,7 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
   }
 }
   /* Draws the connection to the given context */
-  public virtual void draw( Cairo.Context ctx, Theme theme ) {
+  public virtual void draw( Cairo.Context ctx, Theme theme, bool exporting ) {
 
     /* If either the from or to node is hidden, don't bother to draw ourselves */
     if( ((_from_node != null) && !_from_node.is_root() && (_from_node.folded_ancestor() != null)) ||
@@ -718,7 +718,8 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
     double dragx  = _dragx;
     double dragy  = _dragy;
     RGBA   ccolor = (_color != null) ? _color : theme.get_color( "connection_background" );
-    RGBA   bg     = (mode == ConnMode.NONE) ? theme.get_color( "background" ) : theme.get_color( "nodesel_background" );
+    RGBA   bg     = ((mode == ConnMode.NONE) || exporting) ? theme.get_color( "background" ) :
+                                                             theme.get_color( "nodesel_background" );
 
     if( _from_node == null ) {
       start_x = _posx;
@@ -768,7 +769,7 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
     ctx.set_dash( {}, 0 );
 
     /* Draw the arrow */
-    if( mode != ConnMode.SELECTED ) {
+    if( (mode != ConnMode.SELECTED) || exporting ) {
       if( (style.connection_arrow == "fromto") || (style.connection_arrow == "both") ) {
         draw_arrow( ctx, style.connection_line_width, end_x, end_y, cx, cy );
       }
@@ -778,7 +779,7 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
     }
 
     /* If we are selected draw the endpoints */
-    if( mode == ConnMode.SELECTED ) {
+    if( (mode == ConnMode.SELECTED) && !exporting ) {
 
       ctx.set_source_rgba( bg.red, bg.green, bg.blue, alpha );
       ctx.arc( start_x, start_y, RADIUS, 0, (2 * Math.PI) );
@@ -797,10 +798,10 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
     /* Draw the connection title if it exists */
     if( (_sticker != null) || (title != null) || (note.length > 0) ) {
 
-      draw_title( ctx, theme );
+      draw_title( ctx, theme, exporting );
 
     /* Draw the drag handle */
-    } else if( mode != ConnMode.NONE ) {
+    } else if( (mode != ConnMode.NONE) && !exporting ) {
 
       ctx.set_line_width( 1 );
       Utils.set_context_color_with_alpha( ctx, Utils.color_from_string( "yellow" ), alpha );
@@ -839,7 +840,7 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
   /*
    Draws the connection title if it has been enabled.
   */
-  private void draw_title( Cairo.Context ctx, Theme theme ) {
+  private void draw_title( Cairo.Context ctx, Theme theme, bool exporting ) {
 
     var    ccolor  = (_color != null) ? _color : theme.get_color( "connection_background" );
     var    fg      = theme.get_color( "connection_foreground" ) ?? theme.get_color( "background" );
@@ -865,7 +866,7 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
     ctx.fill();
 
     /* Draw the droppable indicator, if necessary */
-    if( mode == ConnMode.DROPPABLE ) {
+    if( (mode == ConnMode.DROPPABLE) && !exporting ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
       ctx.set_line_width( 4 );
       Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
@@ -877,14 +878,14 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
 
     /* Draw the text */
     if( _title != null ) {
-      _title.draw( ctx, theme, fg, alpha, false );
+      _title.draw( ctx, theme, fg, alpha, exporting );
     }
 
     /* Draw the note, if necessary */
     draw_note( ctx, fg );
 
     /* Draw the drag handle */
-    if( (mode == ConnMode.SELECTED) || (mode == ConnMode.ADJUSTING) ) {
+    if( ((mode == ConnMode.SELECTED) || (mode == ConnMode.ADJUSTING)) && !exporting ) {
 
       Utils.set_context_color_with_alpha( ctx, Utils.color_from_string( "yellow" ), alpha );
       ctx.set_line_width( 1 );

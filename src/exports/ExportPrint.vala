@@ -85,7 +85,7 @@ public class ExportPrint : Object {
     ctx.translate( (0 - x), (0 - y) );
 
     /* Draw the map */
-    _da.draw_all( ctx );
+    _da.draw_all( ctx, true );
 
   }
 
