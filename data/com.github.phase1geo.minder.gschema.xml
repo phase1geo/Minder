@@ -46,6 +46,11 @@
       <summary>Width of the property sidebar when visible</summary>
       <description>Width of the property sidebar when visible</description>
     </key>
+    <key name="enable-ui-animations" type="b">
+      <default>true</default>
+      <summary>Enables/disables application UI animations</summary>
+      <description>Enables/disables application UI animations</description>
+    </key>
     <key name="enable-animations" type="b">
       <default>true</default>
       <summary>Enables/Disables canvas animations</summary>
