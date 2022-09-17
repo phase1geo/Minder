@@ -51,14 +51,14 @@ public class NodeGroup {
 
   /* Default constructor */
   public NodeGroup( DrawArea da, Node node ) {
-    color  = node.link_color;
+    color  = node.link_color ?? da.get_theme().get_color( "root_background" );
     _nodes = new Array<Node>();
     add_node( node );
   }
 
   /* Constructor */
   public NodeGroup.array( DrawArea da, Array<Node> nodes ) {
-    color  = nodes.index( 0 ).link_color;
+    color  = nodes.index( 0 ).link_color ?? da.get_theme().get_color( "root_background" );
     _nodes = new Array<Node>();
     for( int i=0; i<nodes.length; i++ ) {
       add_node( nodes.index( i ) );
