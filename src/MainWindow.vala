@@ -255,6 +255,7 @@ public class MainWindow : Hdy.ApplicationWindow {
         case "text-field-use-custom-font-size" :
         case "text-field-custom-font-size"     :  setting_changed_text_size();      break;
         case "enable-animations"               :  setting_changed_animations();     break;
+        case "enable-ui-animations"            :  setting_changed_ui_animations();  break;
         case "auto-parse-embedded-urls"        :  setting_changed_embedded_urls();  break;
         case "enable-markdown"                 :  setting_changed_markdown();       break;
       }
@@ -287,6 +288,14 @@ public class MainWindow : Hdy.ApplicationWindow {
       var da  = (DrawArea)bin.get_child();
       da.update_css();
     }
+  }
+
+  /* Called whenever the enable-ui-animations glib setting is changed */
+  private void setting_changed_ui_animations() {
+    var duration = settings.get_boolean( "enable-ui-animations" ) ? 500 : 0;
+    var current  = (_stack.get_child_by_name( "current" ) as CurrentInspector);
+    _stack.set_transition_duration( duration );
+    current.set_transition_duration( duration );
   }
 
   private void setting_changed_animations() {
@@ -906,6 +915,9 @@ public class MainWindow : Hdy.ApplicationWindow {
         _settings.set_boolean( "map-properties-shown",     (_stack.visible_child_name == "map") );
       }
     });
+
+    /* Handle the enable-ui-animations value */
+    setting_changed_ui_animations();
 
     sb.homogeneous = true;
     sb.set_stack( _stack );
