@@ -342,7 +342,7 @@ public class DrawArea : Gtk.DrawingArea {
     FormattedText.set_theme( theme );
     update_css();
     if( orig_theme != null ) {
-      map_theme_colors( orig_theme );
+      update_theme_colors( orig_theme );
     }
     theme_changed( this );
     queue_draw();
@@ -361,9 +361,9 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Updates all nodes with the new theme colors */
-  private void map_theme_colors( Theme old_theme ) {
+  private void update_theme_colors( Theme old_theme ) {
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).map_theme_colors( old_theme, _theme );
+      _nodes.index( i ).update_theme_colors( old_theme, _theme );
     }
   }
 

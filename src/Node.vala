@@ -2005,13 +2005,14 @@ public class Node : Object {
    was custom set by the user.  Performs this mapping recursively for
    all descendants.
   */
-  public void map_theme_colors( Theme old_theme, Theme new_theme ) {
+  public void update_theme_colors( Theme old_theme, Theme new_theme ) {
     int old_index = old_theme.get_color_index( _link_color );
     if( old_index != -1 ) {
       link_color_only = new_theme.link_color( old_index );
     }
+    name.update_attributes();
     for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).map_theme_colors( old_theme, new_theme );
+      _children.index( i ).update_theme_colors( old_theme, new_theme );
     }
   }
 

@@ -325,6 +325,13 @@ public class CanvasText : Object {
     }
   }
 
+  /* Updates the canvas item with the given theme */
+  public void update_attributes() {
+    if( _pango_layout != null ) {
+      _pango_layout.set_attributes( _text.get_attributes() );
+    }
+  }
+
   /* Resizes the node width by the given amount */
   public virtual void resize( double diff ) {
     _max_width += diff;
