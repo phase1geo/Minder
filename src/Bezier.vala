@@ -24,10 +24,30 @@ using GLib.Math;
 public class Bezier {
 
   private class Point {
-    public double x { set; get; default = 0; }
-    public double y { set; get; default = 0; }
-    public Point() {}
-    public Point.with_coordinate( double a, double b ) {
+    private DrawArea _da;
+    private double   _x = 0;
+    private double   _y = 0;
+    public double x {
+      get {
+        return( _x + _da.origin_x );
+      }
+      set {
+        _x = value - _da.origin_x;
+      }
+    }
+    public double y {
+      get {
+        return( _y + _da.origin_y );
+      }
+      set {
+        _y = value - _da.origin_y;
+      }
+    }
+    public Point( DrawArea da ) {
+      _da = da;
+    }
+    public Point.with_coordinate( DrawArea da, double a, double b ) {
+      _da = da;
       x = a;
       y = b;
     }
@@ -39,22 +59,26 @@ public class Bezier {
 
   private Array<Point> _points  = new Array<Point>();
   private Array<Point> _apoints = new Array<Point>();
-  private Point        _from    = new Point();
-  private Point        _to      = new Point();
+  private Point        _from;
+  private Point        _to;
 
   /* Default constructor */
-  public Bezier() {
+  public Bezier( DrawArea da ) {
+    _from = new Point( da );
+    _to   = new Point( da );
     for( int i=0; i<3; i++ ) {
-      _points.append_val( new Point() );
-      _apoints.append_val( new Point() );
+      _points.append_val( new Point( da ) );
+      _apoints.append_val( new Point( da ) );
     }
   }
 
   /* Default constructor */
-  public Bezier.with_endpoints( double x0, double y0, double x1, double y1 ) {
+  public Bezier.with_endpoints( DrawArea da, double x0, double y0, double x1, double y1 ) {
+    _from = new Point( da );
+    _to   = new Point( da );
     for( int i=0; i<3; i++ ) {
-      _points.append_val( new Point() );
-      _apoints.append_val( new Point() );
+      _points.append_val( new Point( da ) );
+      _apoints.append_val( new Point( da ) );
     }
     _points.index( 0 ).set_coordinate( x0, y0 );
     _points.index( 1 ).set_coordinate( ((x0 + x1) * 0.5), ((y0 + y1) * 0.5) );
@@ -85,6 +109,11 @@ public class Bezier {
   public void get_to_point( out double x, out double y ) {
     x = _to.x;
     y = _to.y;
+  }
+
+  public void get_drag_point( out double x, out double y ) {
+    x = (_points.index( 1 ).x / 2) + (_points.index( 0 ).x / 4) + (_points.index( 2 ).x / 4);
+    y = (_points.index( 1 ).y / 2) + (_points.index( 0 ).y / 4) + (_points.index( 2 ).y / 4);
   }
 
   /* Update the given point */
