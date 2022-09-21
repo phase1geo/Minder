@@ -180,11 +180,11 @@ public class Node : Object {
   }
   public double posx {
     get {
-      return( _posx );
+      return( _posx + _da.origin_x );
     }
     set {
-      double diff = (value - _posx);
-      _posx = value;
+      double diff = (value - posx);
+      _posx = value - _da.origin_x;
       update_tree_bbox( diff, 0 );
       position_name();
       if( diff != 0 ) {
@@ -194,11 +194,11 @@ public class Node : Object {
   }
   public double posy {
     get {
-      return( _posy );
+      return( _posy + _da.origin_y );
     }
     set {
-      double diff = (value - _posy);
-      _posy = value;
+      double diff = (value - posy);
+      _posy = value - _da.origin_y;
       update_tree_bbox( 0, diff );
       position_name();
       if( diff != 0 ) {
@@ -1015,6 +1015,7 @@ public class Node : Object {
       name.text.insert_text( 0, n->children->get_content() );
     } else {
       name.load( n );
+      position_name();
     }
   }
 
@@ -1098,12 +1099,12 @@ public class Node : Object {
 
     string? x = n->get_prop( "posx" );
     if( x != null ) {
-      posx = double.parse( x );
+      _posx = double.parse( x );
     }
 
     string? y = n->get_prop( "posy" );
     if( y != null ) {
-      posy = double.parse( y );
+      _posy = double.parse( y );
     }
 
     string? w = n->get_prop( "width" );
@@ -1240,8 +1241,8 @@ public class Node : Object {
 
     Xml.Node* node = new Xml.Node( null, "node" );
     node->new_prop( "id", _id.to_string() );
-    node->new_prop( "posx", posx.to_string() );
-    node->new_prop( "posy", posy.to_string() );
+    node->new_prop( "posx", _posx.to_string() );
+    node->new_prop( "posy", _posy.to_string() );
     node->new_prop( "width", _width.to_string() );
     node->new_prop( "height", _height.to_string() );
     if( is_task() ) {
@@ -1986,15 +1987,6 @@ public class Node : Object {
     for( int i=0; i<_children.length; i++ ) {
       _children.index( i ).get_match_items( tabname, pattern, search_opts, ref matches );
     }
-  }
-
-  /* Adjusts the posx and posy values */
-  public virtual void pan( double diffx, double diffy ) {
-    _posx += diffx;
-    _posy += diffy;
-    update_tree_bbox( diffx, diffy );
-    position_name();
-    moved( diffx, diffy );
   }
 
   /*

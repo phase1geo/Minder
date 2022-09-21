@@ -68,15 +68,6 @@ public class Stickers {
     return( null );
   }
 
-  /* Handles a pan of the canvas */
-  public void pan( double diff_x, double diff_y ) {
-    for( int i=0; i<_stickers.length; i++ ) {
-      var s = _stickers.index( i );
-      s.posx += diff_x;
-      s.posy += diff_y;
-    }
-  }
-
   /* Adds the sticker extents to the current extents */
   public void add_extents( ref double x1, ref double y1, ref double x2, ref double y2 ) {
     for( int i=0; i<_stickers.length; i++ ) {
@@ -98,10 +89,10 @@ public class Stickers {
   }
 
   /* Loads the sticker from the XML tree */
-  public void load( Xml.Node* n ) {
+  public void load( DrawArea da, Xml.Node* n ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "sticker") ) {
-        var sticker = new Sticker.from_xml( it );
+        var sticker = new Sticker.from_xml( da, it );
         _stickers.append_val( sticker );
       }
     }

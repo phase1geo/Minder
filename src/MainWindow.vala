@@ -382,6 +382,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     var da = new DrawArea( this, _settings, _accel_group );
     da.current_changed.connect( on_current_changed );
     da.scale_changed.connect( change_scale );
+    da.scroll_changed.connect( change_origin );
     da.show_properties.connect( show_properties );
     da.hide_properties.connect( hide_properties );
     da.map_event.connect( on_canvas_mapped );
@@ -1240,6 +1241,11 @@ public class MainWindow : Hdy.ApplicationWindow {
     _zoom_out.set_sensitive( scale_value > marks[0] );
   }
 
+  /* Called whenever the DrawArea origin changes in the current tab */
+  private void change_origin() {
+    save_tab_state( _nb.current );
+  }
+
   /* Displays the node properties panel for the current node */
   private void show_properties( string? tab, PropertyGrab grab_type ) {
     if( !_inspector_nb.get_mapped() || ((tab != null) && (_stack.visible_child_name != tab)) ) {
@@ -1555,6 +1561,8 @@ public class MainWindow : Hdy.ApplicationWindow {
       Xml.Node* node = new Xml.Node( null, "tab" );
       node->new_prop( "path",  da.get_doc().filename );
       node->new_prop( "saved", da.get_doc().is_saved().to_string() );
+      node->new_prop( "origin-x", da.origin_x.to_string() );
+      node->new_prop( "origin-y", da.origin_y.to_string() );
       root->add_child( node );
       if( tab == current_tab ) {
         selected_tab = i;
@@ -1593,9 +1601,17 @@ public class MainWindow : Hdy.ApplicationWindow {
     var root = doc->get_root_element();
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
-        var fname = it->get_prop( "path" );
-        var saved = it->get_prop( "saved" );
-        var da    = add_tab( fname, TabAddReason.LOAD );
+        var fname    = it->get_prop( "path" );
+        var saved    = it->get_prop( "saved" );
+        var origin_x = it->get_prop( "origin-x" );
+        var origin_y = it->get_prop( "origin-y" );
+        var da       = add_tab( fname, TabAddReason.LOAD );
+        if( origin_x != null ) {
+          da.origin_x = int.parse( origin_x );
+        }
+        if( origin_y != null ) {
+          da.origin_y = int.parse( origin_y );
+        }
         da.get_doc().load_filename( fname, bool.parse( saved ) );
         Idle.add(() => {
           if( !da.get_doc().load() ) {

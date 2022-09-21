@@ -90,6 +90,7 @@ public class DrawArea : Gtk.DrawingArea {
   private EmptyMenu        _empty_menu;
   private TextMenu         _text_menu;
   private uint?            _auto_save_id = null;
+  private uint?            _scroll_save_id = null;
   private ImageEditor      _image_editor;
   private UrlEditor        _url_editor;
   private IMMulticontext   _im_context;
@@ -185,6 +186,7 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void current_changed( DrawArea da );
   public signal void theme_changed( DrawArea da );
   public signal void scale_changed( double scale );
+  public signal void scroll_changed();
   public signal void show_properties( string? tab, PropertyGrab grab_type );
   public signal void hide_properties();
   public signal void loaded();
@@ -460,16 +462,6 @@ public class DrawArea : Gtk.DrawingArea {
   /* Loads the drawing area origin from the XML node */
   private void load_drawarea( Xml.Node* n ) {
 
-    string? x = n->get_prop( "x" );
-    if( x != null ) {
-      origin_x = double.parse( x );
-    }
-
-    string? y = n->get_prop( "y" );
-    if( y != null ) {
-      origin_y = double.parse( y );
-    }
-
     string? sf = n->get_prop( "scale" );
     if( sf != null ) {
       sfactor = double.parse( sf );
@@ -561,7 +553,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "images"      :  image_manager.load( it );  break;
           case "connections" :  _connections.load( this, it, null, _nodes );  break;
           case "groups"      :  groups.load( this, it );  break;
-          case "stickers"    :  _stickers.load( it );  break;
+          case "stickers"    :  _stickers.load( this, it );  break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
@@ -604,8 +596,6 @@ public class DrawArea : Gtk.DrawingArea {
     StyleInspector.styles.save( parent );
 
     Xml.Node* origin = new Xml.Node( null, "drawarea" );
-    origin->new_prop( "x", _store_origin_x.to_string() );
-    origin->new_prop( "y", _store_origin_y.to_string() );
     origin->new_prop( "scale", _store_scale_factor.to_string() );
     parent->add_child( origin );
 
@@ -2084,10 +2074,12 @@ public class DrawArea : Gtk.DrawingArea {
     }
     origin_x += diff_x;
     origin_y += diff_y;
+    /*
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).pan( -diff_x, -diff_y );
     }
     _stickers.pan( -diff_x, -diff_y );
+    */
   }
 
   /* Draw the background from the stylesheet */
@@ -4833,11 +4825,26 @@ public class DrawArea : Gtk.DrawingArea {
     move_origin( (delta_x * 120), (delta_y * 120) );
     queue_draw();
 
-    /* When the end of the scroll occurs, save the scroll position to the file */
-    auto_save();
+    /* Scroll save */
+    scroll_save();
 
     return( false );
 
+  }
+
+  /* Perform a scroll save */
+  public void scroll_save() {
+    if( _scroll_save_id != null ) {
+      Source.remove( _scroll_save_id );
+    }
+    _scroll_save_id = Timeout.add( 200, do_scroll_save );
+  }
+
+  /* Allows the document to have its origin data saved to the tab state document */
+  private bool do_scroll_save() {
+    _scroll_save_id = null;
+    scroll_changed();
+    return( false );
   }
 
   /* Perform an automatic save for times when changes may be happening rapidly */
@@ -4926,7 +4933,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
       } else if( info == DragTypes.STICKER ) {
         if( _attach_sticker != null ) {
-          var sticker = new Sticker( data.get_text(), _attach_sticker.posx, _attach_sticker.posy, (int)_attach_sticker.width );
+          var sticker = new Sticker( this, data.get_text(), _attach_sticker.posx, _attach_sticker.posy, (int)_attach_sticker.width );
           _stickers.remove_sticker( _attach_sticker );
           _stickers.add_sticker( sticker );
           _selected.set_current_sticker( sticker );
@@ -4936,7 +4943,7 @@ public class DrawArea : Gtk.DrawingArea {
         } else {
           var double_x = (double)x;
           var double_y = (double)y;
-          var sticker = new Sticker( data.get_text(), double_x, double_y );
+          var sticker = new Sticker( this, data.get_text(), double_x, double_y );
           _stickers.add_sticker( sticker );
           _selected.set_current_sticker( sticker );
           _undo_buffer.add_item( new UndoStickerAdd( sticker ) );

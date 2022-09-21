@@ -30,12 +30,29 @@ public enum StickerMode {
 
 public class Sticker {
 
-  private string _name;
-  private Pixbuf _buf;
+  private DrawArea _da;
+  private string   _name;
+  private Pixbuf   _buf;
+  private double   _posx = 0.0;
+  private double   _posy = 0.0;
 
   public StickerMode mode { get; set; default = StickerMode.NONE; }
-  public double posx { get; set; default = 0.0; }
-  public double posy { get; set; default = 0.0; }
+  public double posx {
+    get {
+      return( _posx + _da.origin_x );
+    }
+    set {
+      _posx = value - _da.origin_x;
+    }
+  }
+  public double posy {
+    get {
+      return( _posy + _da.origin_y );
+    }
+    set {
+      _posy = value - _da.origin_y;
+    }
+  }
   public double width {
     get {
       return( _buf.width );
@@ -48,7 +65,8 @@ public class Sticker {
   }
 
   /* Default constructor */
-  public Sticker( string n, double x, double y, int width = -1 ) {
+  public Sticker( DrawArea da, string n, double x, double y, int width = -1 ) {
+    _da   = da;
     _name = n;
     posx  = x;
     posy  = y;
@@ -56,7 +74,8 @@ public class Sticker {
   }
 
   /* Constructor from XML */
-  public Sticker.from_xml( Xml.Node* n ) {
+  public Sticker.from_xml( DrawArea da, Xml.Node* n ) {
+    _da = da;
     load( n );
   }
 
@@ -87,8 +106,8 @@ public class Sticker {
   public Xml.Node* save() {
     Xml.Node* n = new Xml.Node( null, "sticker" );
     n->set_prop( "name",  _name );
-    n->set_prop( "posx",  posx.to_string() );
-    n->set_prop( "posy",  posy.to_string() );
+    n->set_prop( "posx",  _posx.to_string() );
+    n->set_prop( "posy",  _posy.to_string() );
     n->set_prop( "width", _buf.width.to_string() );
     return( n );
   }
@@ -102,11 +121,11 @@ public class Sticker {
     }
     string? x = n->get_prop( "posx" );
     if( x != null ) {
-      posx = double.parse( x );
+      _posx = double.parse( x );
     }
     string? y = n->get_prop( "posy" );
     if( y != null ) {
-      posy = double.parse( y );
+      _posy = double.parse( y );
     }
     string? w = n->get_prop( "width" );
     if( w != null ) {

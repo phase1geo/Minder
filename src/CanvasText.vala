@@ -28,6 +28,9 @@ using Pango;
 public class CanvasText : Object {
 
   /* Member variables */
+  private DrawArea       _da;
+  private double         _posx         = 0.0;
+  private double         _posy         = 0.0;
   private FormattedText  _text;
   private bool           _edit         = false;
   private int            _cursor       = 0;   /* Location of the cursor when editing */
@@ -54,8 +57,22 @@ public class CanvasText : Object {
       return( _text );
     }
   }
-  public double posx   { get; set; default = 0; }
-  public double posy   { get; set; default = 0; }
+  public double posx {
+    get {
+      return( _posx + _da.origin_x );
+    }
+    set {
+      _posx = value - _da.origin_x;
+    }
+  }
+  public double posy {
+    get {
+      return( _posy + _da.origin_y );
+    } 
+    set {
+      _posy = value - _da.origin_y;
+    }
+  }
   public double width  {
     get {
       return( _width );
@@ -112,6 +129,7 @@ public class CanvasText : Object {
   /* Default constructor */
   public CanvasText( DrawArea da ) {
     int int_max_width = (int)_max_width;
+    _da           = da;
     _text         = new FormattedText( da );
     _text.changed.connect( text_changed );
     _line_layout  = da.create_pango_layout( "M" );
@@ -125,6 +143,7 @@ public class CanvasText : Object {
   /* Constructor initializing string */
   public CanvasText.with_text( DrawArea da, string txt ) {
     int int_max_width = (int)_max_width;
+    _da           = da;
     _text         = new FormattedText.with_text( da, txt );
     _text.changed.connect( text_changed );
     _line_layout  = da.create_pango_layout( "M" );
@@ -210,7 +229,7 @@ public class CanvasText : Object {
     extra = "";
     if( _pango_layout.xy_to_index( adjusted_x, adjusted_y, out cursor, out trailing ) ) {
       var cindex = text.text.char_count( cursor + trailing );
-      FormatTag[] tags = { FormatTag.URL };  // TEMPORARY , FormatTag.TAG };
+      FormatTag[] tags = { FormatTag.URL };
       foreach( FormatTag t in tags ) {
         var e = text.get_extra( t, cindex );
         if( e != null ) {
@@ -233,10 +252,7 @@ public class CanvasText : Object {
 
     Xml.Node* n = new Xml.Node( null, title );
 
-    n->set_prop( "posx",     posx.to_string() );
-    n->set_prop( "posy",     posy.to_string() );
     n->set_prop( "maxwidth", _max_width.to_string() );
-
     n->add_child( _text.save() );
 
     return( n );
@@ -255,16 +271,6 @@ public class CanvasText : Object {
 
   /* Loads the file contents into this instance */
   public virtual void load( Xml.Node* n ) {
-
-    string? x = n->get_prop( "posx" );
-    if( x != null ) {
-      posx = double.parse( x );
-    }
-
-    string? y = n->get_prop( "posy" );
-    if( y != null ) {
-      posy = double.parse( y );
-    }
 
     string? mw = n->get_prop( "maxwidth" );
     if( mw != null ) {
