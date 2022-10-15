@@ -26,6 +26,7 @@ public class GroupsMenu : Gtk.Menu {
   DrawArea     _da;
   Gtk.MenuItem _delete;
   Gtk.MenuItem _merge;
+  Gtk.MenuItem _note;
   Gtk.MenuItem _color;
   Gtk.MenuItem _selnodes;
   Gtk.MenuItem _selmain;
@@ -41,6 +42,10 @@ public class GroupsMenu : Gtk.Menu {
 
     _merge = new Gtk.MenuItem.with_label( _( "Merge" ) );
     _merge.activate.connect( merge_groups );
+
+    _note = new Gtk.MenuItem();
+    _note.add( new Granite.AccelLabel( _( "Edit Note" ), "<Shift>e" ) );
+    _note.activate.connect( edit_note );
 
     _color = new Gtk.MenuItem.with_label( _( "Change color…" ) );
     _color.activate.connect( change_color );
@@ -61,6 +66,7 @@ public class GroupsMenu : Gtk.Menu {
     /* Add the menu items to the menu */
     add( _delete );
     add( new SeparatorMenuItem() );
+    add( _note );
     add( _color );
     add( _merge );
     add( new SeparatorMenuItem() );
@@ -93,6 +99,11 @@ public class GroupsMenu : Gtk.Menu {
   /* Merges two or more groups into a single group */
   private void merge_groups() {
     _da.add_group();
+  }
+
+  /* Edits the group note */
+  private void edit_note() {
+    _da.show_properties( "current", PropertyGrab.NOTE );
   }
 
   /* Allows the user to change the color of the selected groups */

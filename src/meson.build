@@ -69,6 +69,7 @@ sources += files(
     'undo_actions/UndoConnectionsDelete.vala',
 
     'undo_actions/UndoGroupAdd.vala',
+    'undo_actions/UndoGroupNote.vala',
     'undo_actions/UndoGroupRemove.vala',
 
     'undo_actions/UndoGroupsColor.vala',
@@ -170,6 +171,7 @@ sources += files(
     'Exporter.vala',
     'Exports.vala',
     'FormattedText.vala',
+    'GroupInspector.vala',
     'GroupsMenu.vala',
     'HtmlToMarkdown.vala',
     'ImageEditor.vala',

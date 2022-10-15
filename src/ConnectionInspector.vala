@@ -32,7 +32,7 @@ public class ConnectionInspector : Box {
   private ScrolledWindow _sw;
   private ColorButton    _color;
   private Button         _reset;
-  private TextView       _note;
+  private NoteView       _note;
   private DrawArea?      _da         = null;
   private string         _orig_note  = "";
   private Connection?    _connection = null;
@@ -42,6 +42,7 @@ public class ConnectionInspector : Box {
     Object( orientation:Orientation.VERTICAL, spacing:10 );
 
     /* Create the node widgets */
+    create_title();
     create_color();
     create_note();
     create_buttons();
@@ -66,6 +67,16 @@ public class ConnectionInspector : Box {
   /* Sets the width of this inspector to the given value */
   public void set_width( int width ) {
     _sw.width_request = width;
+  }
+
+  private void create_title() {
+
+    var title = new Label( "<big>" + _( "Connection" ) + "</big>" );
+    title.use_markup = true;
+    title.justify    = Justification.CENTER;
+
+    pack_start( title, false, true );
+
   }
 
   private void create_color() {
@@ -109,7 +120,7 @@ public class ConnectionInspector : Box {
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
 
-    _note = new TextView();
+    _note = new NoteView();
     _note.set_wrap_mode( Gtk.WrapMode.WORD );
     _note.buffer.text = "";
     _note.buffer.changed.connect( note_changed );

@@ -20,26 +20,33 @@
 */
 
 using Gtk;
-using Gdk;
-using Granite.Widgets;
 
-public class EmptyInspector : Box {
+public class UndoGroupNote : UndoItem {
 
-  public EmptyInspector( MainWindow win ) {
+  NodeGroup _group;
+  string    _old_note;
+  string    _new_note;
 
-    var empty_lbl = new Label( "<big>" + _( "Select a node, connection or group\nto view/edit information" ) + "</big>" );
-    empty_lbl.use_markup = true;
-    empty_lbl.justify    = Justification.CENTER;
-
-    pack_start( empty_lbl, true, true );
-
-    show_all();
-
+  /* Constructor for a node name change */
+  public UndoGroupNote( NodeGroup g, string old_note ) {
+    base( _( "node group note change" ) );
+    _group    = g;
+    _old_note = old_note;
+    _new_note = g.note;
   }
 
-  /* Returns the width of this window */
-  public int get_width() {
-    return( 300 );
+  /* Undoes a node name change */
+  public override void undo( DrawArea da ) {
+    _group.note = _old_note;
+    da.current_changed( da );
+    da.auto_save();
+  }
+
+  /* Redoes a node name change */
+  public override void redo( DrawArea da ) {
+    _group.note = _new_note;
+    da.current_changed( da );
+    da.auto_save();
   }
 
 }
