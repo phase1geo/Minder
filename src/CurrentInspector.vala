@@ -35,10 +35,12 @@ public class CurrentInspector : Stack {
 
     var node_box  = new NodeInspector( win );
     var conn_box  = new ConnectionInspector( win );
+    var group_box = new GroupInspector( win );
     var empty_box = new EmptyInspector( win );
 
     add_named( node_box,  "node" );
     add_named( conn_box,  "connection" );
+    add_named( group_box, "group" );
     add_named( empty_box, "empty" );
 
     win.canvas_changed.connect( tab_changed );
@@ -51,11 +53,15 @@ public class CurrentInspector : Stack {
   public void set_width( int width ) {
     var ni = get_child_by_name( "node" )       as NodeInspector;
     var ci = get_child_by_name( "connection" ) as ConnectionInspector;
+    var gi = get_child_by_name( "group" )      as GroupInspector;
     if( ni != null ) {
       ni.set_width( width );
     }
     if( ci != null ) {
       ci.set_width( width );
+    }
+    if( gi != null ) {
+      gi.set_width( width );
     }
   }
 
@@ -81,13 +87,18 @@ public class CurrentInspector : Stack {
 
     if( _da.get_current_node() != null ) {
       if( visible_child_name != "node" ) {
-        transition_type = (visible_child_name == "connection") ? StackTransitionType.NONE : StackTransitionType.SLIDE_UP;
+        transition_type = (visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
         set_visible_child_name( "node" );
       }
     } else if( _da.get_current_connection() != null ) {
       if( visible_child_name != "connection" ) {
-        transition_type = (visible_child_name == "node") ? StackTransitionType.NONE : StackTransitionType.SLIDE_UP;
+        transition_type = (visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
         set_visible_child_name( "connection" );
+      }
+    } else if( _da.get_current_group() != null ) {
+      if( visible_child_name != "group" ) {
+        transition_type = (visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
+        set_visible_child_name( "group" );
       }
     } else {
       transition_type = StackTransitionType.SLIDE_DOWN;
@@ -109,6 +120,11 @@ public class CurrentInspector : Stack {
       if( ci != null ) {
         ci.grab_note();
       }
+    } else if( _da.get_current_group() != null ) {
+      var gi = get_child_by_name( "group" ) as GroupInspector;
+      if( gi != null ) {
+        gi.grab_note();
+      }
     }
 
   }
@@ -116,8 +132,9 @@ public class CurrentInspector : Stack {
   /* Grabs the focus on the first field of the displayed pane */
   public void grab_first() {
     switch( visible_child_name ) {
-      case "node"       :  (get_child_by_name( "node" ) as NodeInspector).grab_first();  break;
+      case "node"       :  (get_child_by_name( "node" )       as NodeInspector).grab_first();        break;
       case "connection" :  (get_child_by_name( "connection" ) as ConnectionInspector).grab_first();  break;
+      case "group"      :  (get_child_by_name( "group" )      as GroupInspector).grab_first();       break;
     }
   }
 

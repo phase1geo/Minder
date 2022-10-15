@@ -43,6 +43,7 @@ public class NodeGroup {
 
   public GroupMode mode  { get; set; default = GroupMode.NONE; }
   public RGBA      color { get; set; }
+  public string    note  { get; set; default = ""; }
   public Array<Node> nodes {
     get {
       return( _nodes );
@@ -141,6 +142,7 @@ public class NodeGroup {
       n->set_prop( "id", _nodes.index( i ).id().to_string() );
       g->add_child( n );
     }
+    g->new_text_child( null, "groupnote", note );
     return( g );
   }
 
@@ -153,8 +155,11 @@ public class NodeGroup {
       color = clr;
     }
     for( Xml.Node* it = g->children; it != null; it = it->next ) {
-      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "node") ) {
-        load_node( da, it );
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        switch (it->name ) {
+          case "node"      :  load_node( da, it );  break;
+          case "groupnote" :  load_note( it );      break;
+        }
       }
     }
   }
@@ -169,6 +174,13 @@ public class NodeGroup {
         node.group = true;
         _nodes.append_val( node );
       }
+    }
+  }
+
+  /* Loads the note value from the given XML node */
+  private void load_note( Xml.Node* n ) {
+    if( (n->children != null) && (n->children->type == Xml.ElementType.TEXT_NODE) ) {
+      note = n->children->get_content();
     }
   }
 

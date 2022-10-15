@@ -797,6 +797,11 @@ public class DrawArea : Gtk.DrawingArea {
     return( _selected.connections() );
   }
 
+  /* Returns the current group (if selected) */
+  public NodeGroup? get_current_group() {
+    return( _selected.current_group() );
+  }
+
   /* Returns the array of selected groups */
   public Array<NodeGroup> get_selected_groups() {
     return( _selected.groups() );
@@ -4173,20 +4178,21 @@ public class DrawArea : Gtk.DrawingArea {
     animator.flush();
 
     /* Figure out which modifiers were used */
-    var control      = (bool)(e.state & ModifierType.CONTROL_MASK);
-    var shift        = (bool)(e.state & ModifierType.SHIFT_MASK);
-    var alt          = (bool)(e.state & ModifierType.MOD1_MASK);
-    var nomod        = !(control || shift || alt);
-    var current_node = _selected.current_node();
-    var current_conn = _selected.current_connection();
-    var keymap       = Keymap.get_for_display( Display.get_default() );
-    KeymapKey[] ks   = {};
-    uint[] kvs       = {};
+    var control       = (bool)(e.state & ModifierType.CONTROL_MASK);
+    var shift         = (bool)(e.state & ModifierType.SHIFT_MASK);
+    var alt           = (bool)(e.state & ModifierType.MOD1_MASK);
+    var nomod         = !(control || shift || alt);
+    var current_node  = _selected.current_node();
+    var current_conn  = _selected.current_connection();
+    var current_group = _selected.current_group();
+    var keymap        = Keymap.get_for_display( Display.get_default() );
+    KeymapKey[] ks    = {};
+    uint[] kvs        = {};
 
     keymap.get_entries_for_keycode( e.hardware_keycode, out ks, out kvs );
 
     /* If there is a current node or connection selected, operate on it */
-    if( (current_node != null) || (current_conn != null) ) {
+    if( (current_node != null) || (current_conn != null) || (current_group != null) ) {
       if( control ) {
         if( !shift && has_key( kvs, Key.c ) )           { do_copy(); }
         else if( !shift && has_key( kvs, Key.x ) )      { do_cut(); }
@@ -4234,6 +4240,8 @@ public class DrawArea : Gtk.DrawingArea {
             return( handle_node_keypress( e, kvs ) );
           } else if( (current_conn != null) && (current_conn.mode != ConnMode.EDITABLE) ) {
             return( handle_connection_keypress( e, kvs ) );
+          } else if( current_group != null ) {
+            return( handle_group_keypress( e, kvs ) );
           } else {
             _im_context.filter_keypress( e );
             return( false );
@@ -4275,6 +4283,20 @@ public class DrawArea : Gtk.DrawingArea {
       else if( !shift && has_key( kvs, Key.y ) )            { toggle_links(); }
       else return( false );
     }
+    return( true );
+  }
+
+  private bool handle_group_keypress( EventKey e, uint[] kvs ) {
+    var current = _selected.current_group();
+    var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
+    if( shift && has_key( kvs, Key.E ) )       { show_properties( "current", PropertyGrab.NOTE ); }
+    else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
+    else if( !shift && has_key( kvs, Key.u ) ) {  // Perform undo
+      if( undo_buffer.undoable() ) {
+        undo_buffer.undo();
+      }
+    }
+    else return( false );
     return( true );
   }
 

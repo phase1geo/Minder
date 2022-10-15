@@ -54,6 +54,7 @@ public class NodeInspector : Box {
     Object( orientation:Orientation.VERTICAL, spacing:0 );
 
     /* Create the node widgets */
+    create_title();
     create_task();
     create_fold();
     create_link();
@@ -85,6 +86,16 @@ public class NodeInspector : Box {
   /* Sets the width of this inspector to the given value */
   public void set_width( int width ) {
     _sw.width_request = width;
+  }
+
+  private void create_title() {
+
+    var title = new Label( "<big>" + _( "Node" ) + "</big>" );
+    title.use_markup = true;
+    title.justify    = Justification.CENTER;
+
+    pack_start( title, false, true );
+
   }
 
   /* Creates the task UI elements */
