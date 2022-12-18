@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-24 21:48-0500\n"
-"PO-Revision-Date: 2022-04-17 11:13+0300\n"
+"PO-Revision-Date: 2022-12-18 12:49+0300\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "Language: ru\n"
@@ -1463,7 +1463,7 @@ msgstr "Информация"
 
 #: src/StickerSet.vala:101
 msgid "About"
-msgstr ""
+msgstr "О программе"
 
 #: src/StickerSet.vala:102
 msgid "Picture"
@@ -1595,7 +1595,7 @@ msgstr "Чтение"
 
 #: src/StickerSet.vala:138
 msgid "Neutral trading"
-msgstr ""
+msgstr "Рыночно-нейтральный трейдинг"
 
 #: src/StickerSet.vala:139
 msgid "Bullish"
@@ -1955,7 +1955,7 @@ msgstr ""
 
 #: src/StickerSet.vala:230
 msgid "Automotive"
-msgstr ""
+msgstr "Автостроение"
 
 #: src/StickerSet.vala:231
 msgid "Feed in"
@@ -2007,7 +2007,7 @@ msgstr "Электрическая цепь"
 
 #: src/StickerSet.vala:243
 msgid "Engineering"
-msgstr ""
+msgstr "Инженерное дело"
 
 #: src/StickerSet.vala:246
 msgid "Cell phone"
@@ -2295,11 +2295,11 @@ msgstr "Удалить строку"
 
 #: src/StickerSet.vala:323
 msgid "Generic sorting ascending"
-msgstr ""
+msgstr "Обычная сортировка по возрастанию"
 
 #: src/StickerSet.vala:324
 msgid "Generic sorting descending"
-msgstr ""
+msgstr "Обычная сортировка по убыванию"
 
 #: src/StickerSet.vala:325
 msgid "Alphabetical sorting (A->Z)"
@@ -2363,7 +2363,7 @@ msgstr "Кольцевая диаграмма"
 
 #: src/StickerSet.vala:340
 msgid "Combo chart"
-msgstr ""
+msgstr "Комбинированный график"
 
 #: src/StickerSet.vala:341
 msgid "Flow chart"
@@ -2551,15 +2551,15 @@ msgstr "Подчёркивание"
 
 #: src/Styles.vala:54
 msgid "Solid"
-msgstr ""
+msgstr "Сплошная"
 
 #: src/Styles.vala:55
 msgid "Dotted"
-msgstr ""
+msgstr "Точки"
 
 #: src/Styles.vala:56
 msgid "Short Dash"
-msgstr ""
+msgstr "Короткое тире"
 
 #: src/Styles.vala:57
 msgid "Long Dash"
@@ -3479,7 +3479,7 @@ msgstr "События с мышью"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:909
 msgid "[Right-click when item is selected]"
-msgstr ""
+msgstr "[Щелчок ПКМ, когда объект выбран]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:915
 msgid "Edit Image in Canvas"
@@ -3499,7 +3499,7 @@ msgstr "Навигация по холсту"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:929
 msgid "[Middle-click + Drag / Alt + Motion]"
-msgstr ""
+msgstr "[Щелчок СКМ + перетаскивание / Alt + движение]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:935
 msgid "Scroll Vertically"
@@ -3527,7 +3527,7 @@ msgstr "Выбрать один объект"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:956
 msgid "[Left-click on item]"
-msgstr ""
+msgstr "[Щелчок ЛКМ]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:962
 msgid "Select Child Nodes"
@@ -3535,7 +3535,7 @@ msgstr "Выбрать узлы-потомки"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:963
 msgid "[Control + Left-click on parent node]"
-msgstr ""
+msgstr "[Control + щелчок ЛКМ по родительскому узлу]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:969
 msgid "Select Node Tree/Subtree"
@@ -3543,7 +3543,7 @@ msgstr "Выбрать (под)дерево узлов"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:970
 msgid "[Control + Double left-click on parent node]"
-msgstr ""
+msgstr "[Control + двойной щелчок ЛКМ по родительскому узлу]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:976
 msgid "Select All Nodes at Same Depth Level"
@@ -3551,7 +3551,7 @@ msgstr "Выбрать все узлы на одном уровне"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:977
 msgid "[Control + Triple left-click on node]"
-msgstr ""
+msgstr "[Control + тройной щелчок ЛКМ по узлу]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:983
 msgid "Block Selection"
@@ -3559,7 +3559,7 @@ msgstr "Заблокировать выделение"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:984
 msgid "[Left-click + Drag]"
-msgstr ""
+msgstr "[Щелчок ЛКМ и перетаскивание]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:992
 msgid "Item Selection Toggle (Add to/Remove from Selection)"
@@ -3572,7 +3572,7 @@ msgstr "Переключить выделение объекта"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:997
 msgid "[Shift + Left-click on item]"
-msgstr ""
+msgstr "[Shift + щелчок ЛКМ по объекту]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1003
 msgid "Toggle Selection of Child Nodes"
@@ -3580,7 +3580,7 @@ msgstr "Переключить выбор узлов-потомков"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1004
 msgid "[Shift + Control + Left-click on item]"
-msgstr ""
+msgstr "[Shift + Control + щелчок ЛКМ по объекту]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1010
 msgid "Toggle Selection of Node Tree/Subtree"
@@ -3588,7 +3588,7 @@ msgstr "Переключить выбор дерева/поддерева узл
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1011
 msgid "[Shift + Control + Double left-click on parent node]"
-msgstr ""
+msgstr "[Shift + Control + двойной щелчок ЛКМ по родительскому узлу]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1017
 msgid "Toggle Selection of All Nodes at Same Depth Level"
@@ -3596,7 +3596,7 @@ msgstr "Переключить выбор всех узлов на одном у
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1018
 msgid "[Shift + Control + Triple left-click on node]"
-msgstr ""
+msgstr "[Shift + Control + тройной щелчок ЛКМ по узлу]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:1026
 msgid "Text Selection"
