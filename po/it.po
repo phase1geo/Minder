@@ -2,14 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
 # ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2020.
-# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2021,2022.
+# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2021,2022,2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-24 21:48-0500\n"
-"PO-Revision-Date: 2021-06-11 19:30+0100\n"
+"PO-Revision-Date: 2023-02-01 19:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -1764,11 +1764,11 @@ msgstr "Pianificatore"
 
 #: src/StickerSet.vala:180
 msgid "Overtime"
-msgstr ""
+msgstr "Straordinario"
 
 #: src/StickerSet.vala:181
 msgid "Leave"
-msgstr "Lascia"
+msgstr "Vacanze"
 
 #: src/StickerSet.vala:182
 msgid "Expired"
