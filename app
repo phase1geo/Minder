@@ -3,7 +3,7 @@
 arg=$1
 
 function initialize {
-    meson build --prefix=/usr
+    meson setup build --prefix=/usr
     result=$?
 
     if [ $result -gt 0 ]; then
