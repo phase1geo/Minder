@@ -215,6 +215,7 @@ sources += files(
     'UndoItem.vala',
     'UndoTextBuffer.vala',
     'UndoTextItem.vala',
+    'UnicodeInsert.vala',
     'UrlEditor.vala',
     'Utils.vala',
     'ZoomWidget.vala'
