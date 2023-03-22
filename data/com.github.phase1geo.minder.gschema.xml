@@ -296,5 +296,10 @@
       <summary>Printer page setup used in the last print invocation</summary>
       <description>Printer page setup used in the last print invocation</description>
     </key>
+    <key name="max-auto-completion-items" type="i">
+      <default>10</default>
+      <summary>Specifies the maximum number of items that will be displayed in the auto-completion dropdown.</summary>
+      <description>Specifies the maximum number of items that will be displayed in the auto-completion dropdown.</description>
+    </key>
   </schema>
 </schemalist>
