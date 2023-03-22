@@ -2239,7 +2239,7 @@ public class UnicodeInsert {
       _insert_map.set( "\\phi", "φ" );
       _insert_map.set( "\\phmmat", "ℳ" );
       _insert_map.set( "\\phone", "☎" );
-      _insert_map.set( "\\pi", "π 1" );
+      _insert_map.set( "\\pi", "π" );
       _insert_map.set( "\\pilcrow", "¶" );
       _insert_map.set( "\\pisces", "♓" );
       _insert_map.set( "\\pitchfork", "⋔" );
@@ -2934,20 +2934,19 @@ public class UnicodeInsert {
   }
 
   /* Returns an array of matching unicode strings and their values */
-  public bool get_matches( string str, Array<UnicodeMatch> matches ) {
-
-    var word = get_last_word( str );
-
-    _insert_map.map_iterator().foreach((k,v) => {
-      if( k.has_prefix( word ) ) {
-        var match = new UnicodeMatch( k, v );
-        matches.append_val( match );
+  public GLib.List<TextCompletionItem> get_matches( string partial ) {
+    var it      = _insert_map.map_iterator();
+    var matches = new GLib.List<TextCompletionItem>();
+    while( it.next() ) {
+      var key = (string)it.get_key();
+      if( key.has_prefix( partial ) ) {
+        var val  = (string)it.get_value();
+        var item = new TextCompletionItem.with_alt( key, val );
+        matches.append( item );
       }
-      return( true );
-    });
-
-    return( matches.length > 0 );
-
+    }
+    matches.sort( TextCompletionItem.compare );
+    return( matches );
   }
 
 }

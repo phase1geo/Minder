@@ -861,7 +861,7 @@ public class CanvasText : Object {
     var str  = text.text.slice( start, end );
     var tags = text.get_tags_in_range( start, end );
     text.replace_text( start, (end - start), s );
-    set_cursor_only( start + slen );
+    set_cursor_only( text.text.char_count( start ) + slen );
     change_selection( null, _selstart, "replace" );
     undo_buffer.add_replace( start, str, s, tags, cur );
   }

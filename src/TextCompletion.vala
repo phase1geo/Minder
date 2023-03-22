@@ -21,6 +21,54 @@
 
 using Gtk;
 
+public class TextCompletionItem {
+
+  public string label { get; private set; default = ""; }
+  public string alt   { get; private set; default = ""; }
+
+  // Constructor
+  public TextCompletionItem( string label ) {
+    this.label = label;
+  }
+
+  // Constructor
+  public TextCompletionItem.with_alt( string label, string alt ) {
+    this.label = label;
+    this.alt   = alt;
+  }
+
+  // Creates the row for the listbox
+  public Box create_row() {
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( label );
+    lbl.xalign       = 0;
+    lbl.margin       = 5;
+    lbl.margin_start = 10;
+    lbl.margin_end   = 10;
+    box.pack_start( lbl, false, true );
+    if( alt != "" ) {
+      var albl = new Label( alt );
+      albl.xalign       = 0;
+      albl.margin       = 5;
+      albl.margin_start = 10;
+      albl.margin_end   = 10;
+      box.pack_start( albl, false, true );
+    }
+    return( box );
+  }
+
+  public static string get_text( Box box ) {
+    var children = box.get_children();
+    var lbl      = (Label)children.nth_data( children.length() - 1 );
+    return( lbl.get_text() );
+  }
+
+  public static int compare( TextCompletionItem a, TextCompletionItem b ) {
+    return( GLib.strcmp( a.label, b.label ) );
+  }
+
+}
+
 public class TextCompletion {
 
   private DrawArea     _da;
@@ -48,7 +96,7 @@ public class TextCompletion {
   }
 
   /* Displays the auto-completion text with the given list */
-  public void show( CanvasText ct, List<string> list, int start, int end ) {
+  public void show( CanvasText ct, List<TextCompletionItem> list, int start, int end ) {
 
     /* If there is nothing to show, hide the contents */
     if( list.length() == 0 ) {
@@ -89,13 +137,8 @@ public class TextCompletion {
     _list.foreach( (w) => {
       _list.remove( w );
     });
-    foreach( string str in list ) {
-      var lbl = new Label( str );
-      lbl.xalign       = 0;
-      lbl.margin       = 5;
-      lbl.margin_start = 10;
-      lbl.margin_end   = 10;
-      _list.add( lbl );
+    foreach( TextCompletionItem item in list ) {
+      _list.add( item.create_row() );
       if( --max_items <= 0 ) {
         break;
       }
@@ -150,8 +193,8 @@ public class TextCompletion {
 
   /* Handle a mouse event on the listbox */
   private void activate_row( ListBoxRow row ) {
-    var label = (Label)row.get_child();
-    var value = label.get_text();
+    var box   = (Box)row.get_child();
+    var value = TextCompletionItem.get_text( box );
     if( _start_pos == _end_pos ) {
       _ct.insert( value, _da.undo_text );
     } else {
