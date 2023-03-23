@@ -84,13 +84,17 @@ public class Preferences : Gtk.Dialog {
     grid.attach( make_label( _( "Enable Markdown" ) ), 0, 2 );
     grid.attach( make_switch( "enable-markdown" ), 1, 2 );
 
-    grid.attach( make_label( _( "Create connection title on creation" ) ), 0, 3 );
-    grid.attach( make_switch( "edit-connection-title-on-creation" ), 1, 3 );
-    grid.attach( make_info( _( "Specifies if the connection title will be added and put into edit mode immediately after the connection is made." ) ), 2, 3 );
+    grid.attach( make_label( _( "Enable Unicode input" ) ), 0, 3 );
+    grid.attach( make_switch( "enable-unicode-input" ), 1, 3 );
+    grid.attach( make_info( _( "Specifies if Unicode characters can be input using backslash prefixed descriptors (ex. \\pi)" ) ), 2, 3 );
 
-    grid.attach( make_label( _( "Select items on mouse hover" ) ), 0, 4 );
-    grid.attach( make_switch( "select-on-hover" ), 1, 4 );
-    grid.attach( make_info( _( "If enabled, selects items when mouse cursor hovers over the item." ) ), 2, 4 );
+    grid.attach( make_label( _( "Create connection title on creation" ) ), 0, 4 );
+    grid.attach( make_switch( "edit-connection-title-on-creation" ), 1, 4 );
+    grid.attach( make_info( _( "Specifies if the connection title will be added and put into edit mode immediately after the connection is made." ) ), 2, 4 );
+
+    grid.attach( make_label( _( "Select items on mouse hover" ) ), 0, 5 );
+    grid.attach( make_switch( "select-on-hover" ), 1, 5 );
+    grid.attach( make_info( _( "If enabled, selects items when mouse cursor hovers over the item." ) ), 2, 5 );
 
     return( grid );
 

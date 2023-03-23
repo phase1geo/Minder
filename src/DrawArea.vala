@@ -256,7 +256,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     markdown_parser.enable = settings.get_boolean( "enable-markdown" );
     url_parser.enable      = settings.get_boolean( "auto-parse-embedded-urls" );
-    unicode_parser.enable  = true;
+    unicode_parser.enable  = settings.get_boolean( "enable-unicode-input" );
 
     /* Create text completion */
     _completion = new TextCompletion( this );

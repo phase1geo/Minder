@@ -258,6 +258,7 @@ public class MainWindow : Hdy.ApplicationWindow {
         case "enable-ui-animations"            :  setting_changed_ui_animations();  break;
         case "auto-parse-embedded-urls"        :  setting_changed_embedded_urls();  break;
         case "enable-markdown"                 :  setting_changed_markdown();       break;
+        case "enable-unicode-input"            :  setting_changed_unicode_input();  break;
       }
     });
 
@@ -322,6 +323,15 @@ public class MainWindow : Hdy.ApplicationWindow {
       var bin = (Gtk.Bin)tab.page;
       var da  = (DrawArea)bin.get_child();
       da.markdown_parser.enable = value;
+    }
+  }
+
+  private void setting_changed_unicode_input() {
+    var value = settings.get_boolean( "enable-unicode-input" );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
+      da.unicode_parser.enable = value;
     }
   }
 
