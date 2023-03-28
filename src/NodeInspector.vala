@@ -59,7 +59,7 @@ public class NodeInspector : Box {
     create_fold();
     create_link();
     create_color();
-    create_note();
+    create_note( win );
     create_image();
     create_buttons();
 
@@ -213,7 +213,7 @@ public class NodeInspector : Box {
   }
 
   /* Creates the note widget */
-  private void create_note() {
+  private void create_note( MainWindow win ) {
 
     Label lbl = new Label( Utils.make_title( _( "Note" ) ) );
 
@@ -222,6 +222,7 @@ public class NodeInspector : Box {
 
     _note = new NoteView();
     _note.set_wrap_mode( Gtk.WrapMode.WORD );
+    _note.add_unicode_completion( win.unicoder );
     _note.buffer.text = "";
     _note.buffer.changed.connect( note_changed );
     _note.focus_in_event.connect( note_focus_in );

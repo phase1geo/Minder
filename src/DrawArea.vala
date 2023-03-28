@@ -100,7 +100,6 @@ public class DrawArea : Gtk.DrawingArea {
   private Selection        _selected;
   private SelectBox        _select_box;
   private Tagger           _tagger;
-  private UnicodeInsert    _unicoder;
   private TextCompletion   _completion;
   private double           _sticker_posx;
   private double           _sticker_posy;
@@ -153,11 +152,6 @@ public class DrawArea : Gtk.DrawingArea {
   public Tagger tagger {
     get {
       return( _tagger );
-    }
-  }
-  public UnicodeInsert unicoder {
-    get {
-      return( _unicoder );
     }
   }
   public Stickers stickers {
@@ -261,9 +255,6 @@ public class DrawArea : Gtk.DrawingArea {
     /* Create text completion */
     _completion = new TextCompletion( this );
 
-    /* Create unicode inserter */
-    _unicoder = new UnicodeInsert();
-
     /* Get the value of the new node from edit */
     update_focus_mode_alpha( settings );
     update_create_new_from_edit( settings );
@@ -276,7 +267,7 @@ public class DrawArea : Gtk.DrawingArea {
     set_theme( win.themes.get_theme( settings.get_string( "default-theme" ) ), false );
 
     /* Create the undo text buffer */
-    undo_text   = new UndoTextBuffer( this );
+    undo_text = new UndoTextBuffer( this );
 
     /* Add event listeners */
     this.draw.connect( on_draw );

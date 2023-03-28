@@ -52,7 +52,7 @@ public class UnicodeParser : TextParser {
       /* If the cursor is at the end of the tag, display the auto-completer */
       var cursor = _da.get_current_node().name.cursor;
       if( (start <= cursor) && (cursor <= end) ) {
-        _da.show_auto_completion( _da.unicoder.get_matches( tag ), start, end );
+        _da.show_auto_completion( _da.win.unicoder.get_matches( tag ), start, end );
       }
 
     }

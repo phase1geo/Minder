@@ -79,6 +79,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   private Label             _scale_lbl;
   private int               _text_size;
   private Exports           _exports;
+  private UnicodeInsert     _unicoder;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",           action_save },
@@ -119,6 +120,11 @@ public class MainWindow : Hdy.ApplicationWindow {
   public Exports exports {
     get {
       return( _exports );
+    }
+  }
+  public UnicodeInsert unicoder {
+    get {
+      return( _unicoder );
     }
   }
 
@@ -207,6 +213,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     _redo_btn.add_accelerator( "clicked", _accel_group, 'z', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
     _redo_btn.clicked.connect( do_redo );
     _header.pack_start( _redo_btn );
+
+    /* Create unicode inserter */
+    _unicoder = new UnicodeInsert();
 
     /* Add the buttons on the right side in the reverse order */
     add_property_button();

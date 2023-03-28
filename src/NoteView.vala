@@ -20,6 +20,39 @@
 using Gtk;
 using Gdk;
 
+public class CompletionProvider : SourceCompletionProvider, Object {
+
+  private string                              _name;
+  private GLib.List<Gtk.SourceCompletionItem> _proposals;
+
+  /* Constructor */
+  public CompletionProvider( string name, GLib.List<Gtk.SourceCompletionItem> proposals ) {
+    _name      = name;
+    _proposals = new GLib.List<Gtk.SourceCompletionItem>();
+    foreach( Gtk.SourceCompletionItem item in proposals ) {
+      _proposals.append( item );
+    }
+  }
+
+  public override string get_name() {
+    return( _name );
+  }
+
+  public override void populate( Gtk.SourceCompletionContext context ) {
+	  context.add_proposals( this, _proposals, true );
+  }
+
+  public bool activate_proposal( Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter ) {
+    stdout.printf( "In activate_proposal\n" );
+    return( true );
+  }
+
+  public Gtk.SourceCompletionActivation get_activation () {
+    return( Gtk.SourceCompletionActivation.INTERACTIVE | Gtk.SourceCompletionActivation.USER_REQUESTED );
+  }
+
+}
+
 /*
  This class is a slightly modified version of Lains Quilter SourceView.vala
  file.  The above header was kept in tact to indicate this.
@@ -189,6 +222,12 @@ public class NoteView : Gtk.SourceView {
     var win = get_window( TextWindowType.TEXT );
     win.set_cursor( null );
     _last_lnum = -1;
+  }
+
+  /* Adds the unicoder text completion service */
+  public void add_unicode_completion( UnicodeInsert unicoder ) {
+    var provider = new CompletionProvider( "Unicode", unicoder.create_proposals() );
+    completion.add_provider( provider );
   }
 
   /*
