@@ -22,14 +22,16 @@ using Gdk;
 
 public class CompletionProvider : SourceCompletionProvider, Object {
 
-  private string                              _name;
-  private GLib.List<Gtk.SourceCompletionItem> _proposals;
+  private string                          _name;
+  private GLib.List<SourceCompletionItem> _proposals;
+  private SourceBuffer                    _buffer;
 
   /* Constructor */
-  public CompletionProvider( string name, GLib.List<Gtk.SourceCompletionItem> proposals ) {
+  public CompletionProvider( SourceBuffer buffer, string name, GLib.List<SourceCompletionItem> proposals ) {
+    _buffer    = buffer;
     _name      = name;
-    _proposals = new GLib.List<Gtk.SourceCompletionItem>();
-    foreach( Gtk.SourceCompletionItem item in proposals ) {
+    _proposals = new GLib.List<SourceCompletionItem>();
+    foreach( SourceCompletionItem item in proposals ) {
       _proposals.append( item );
     }
   }
@@ -38,13 +40,49 @@ public class CompletionProvider : SourceCompletionProvider, Object {
     return( _name );
   }
 
-  public override void populate( Gtk.SourceCompletionContext context ) {
-	  context.add_proposals( this, _proposals, true );
+  private bool find_start_iter( out TextIter iter ) {
+
+    TextIter cursor, limit;
+    _buffer.get_iter_at_offset( out cursor, _buffer.cursor_position );
+
+    limit = cursor.copy();
+    limit.backward_word_start();
+    limit.backward_char();
+
+    iter = cursor.copy();
+    return( iter.backward_find_char( (c) => { return( c == '\\' ); }, limit ) );
+
+  }
+
+  public override bool match( Gtk.SourceCompletionContext ctx ) {
+    Gtk.TextIter iter;
+    if( find_start_iter( out iter ) ) {
+      return( true );
+    }
+    return( false );
+  }
+
+  public override void populate( SourceCompletionContext context ) {
+    TextIter start, end;
+    if( find_start_iter( out start ) ) {
+      _buffer.get_iter_at_offset( out end, _buffer.cursor_position );
+      var text = _buffer.get_text( start, end, false );
+      var proposals = new GLib.List<SourceCompletionItem>();
+      foreach( SourceCompletionItem item in _proposals ) {
+        if( item.get_label().has_prefix( text ) ) {
+          proposals.append( item );
+        }
+      }
+	    context.add_proposals( this, proposals, true );
+    }
+  }
+
+  public override bool get_start_iter( SourceCompletionContext ctx, SourceCompletionProposal proposal, out TextIter iter ) {
+    return( find_start_iter( out iter ) );
   }
 
   public bool activate_proposal( Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter ) {
-    stdout.printf( "In activate_proposal\n" );
-    return( true );
+    return( false );
   }
 
   public Gtk.SourceCompletionActivation get_activation () {
@@ -226,7 +264,7 @@ public class NoteView : Gtk.SourceView {
 
   /* Adds the unicoder text completion service */
   public void add_unicode_completion( UnicodeInsert unicoder ) {
-    var provider = new CompletionProvider( "Unicode", unicoder.create_proposals() );
+    var provider = new CompletionProvider( _buffer, "Unicode", unicoder.create_proposals() );
     completion.add_provider( provider );
   }
 
