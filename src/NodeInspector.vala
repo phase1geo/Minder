@@ -565,7 +565,8 @@ public class NodeInspector : Box {
         _link_color.alpha = 65535;
       }
       _detach_btn.set_sensitive( current.parent != null );
-      _note.buffer.text = current.note;
+      var note = current.note;
+      _note.buffer.text = note;
       if( current.image != null ) {
         var url = _da.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
         var str = "<a href=\"" + url + "\">" + url + "</a>";
