@@ -236,6 +236,11 @@
       <summary>Specifies if node/connection title text will be treated as Markdown syntax.</summary>
       <description>Specifies if node/connection title text will be treated as Markdown syntax.</description>
     </key>
+    <key name="enable-unicode-input" type="b">
+      <default>true</default>
+      <summary>Specifies if unicode input handling is enabled</summary>
+      <description>Specifies if unicode input (starting with a backslash character) will be enabled</description>
+    </key>
     <key name="rotate-main-link-colors" type="b">
       <default>true</default>
       <summary>If set, rotates link colors in the main branches when adding.  If set to false, the same color will be used as the last color.</summary>
@@ -295,6 +300,11 @@
       <default>[]</default>
       <summary>Printer page setup used in the last print invocation</summary>
       <description>Printer page setup used in the last print invocation</description>
+    </key>
+    <key name="max-auto-completion-items" type="i">
+      <default>10</default>
+      <summary>Specifies the maximum number of items that will be displayed in the auto-completion dropdown.</summary>
+      <description>Specifies the maximum number of items that will be displayed in the auto-completion dropdown.</description>
     </key>
   </schema>
 </schemalist>

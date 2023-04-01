@@ -44,7 +44,7 @@ public class ConnectionInspector : Box {
     /* Create the node widgets */
     create_title();
     create_color();
-    create_note();
+    create_note( win );
     create_buttons();
 
     win.canvas_changed.connect( tab_changed );
@@ -112,7 +112,7 @@ public class ConnectionInspector : Box {
   }
 
   /* Creates the note widget */
-  private void create_note() {
+  private void create_note( MainWindow win ) {
 
     Box   box = new Box( Orientation.VERTICAL, 10 );
     Label lbl = new Label( Utils.make_title( _( "Note" ) ) );
@@ -122,6 +122,7 @@ public class ConnectionInspector : Box {
 
     _note = new NoteView();
     _note.set_wrap_mode( Gtk.WrapMode.WORD );
+    _note.add_unicode_completion( win.unicoder );
     _note.buffer.text = "";
     _note.buffer.changed.connect( note_changed );
     _note.focus_in_event.connect( note_focus_in );

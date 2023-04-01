@@ -38,6 +38,7 @@ sources += files(
 
     'parsers/MarkdownParser.vala',
     'parsers/TaggerParser.vala',
+    'parsers/UnicodeParser.vala',
     'parsers/UrlParser.vala',
 
     'styles/LinkTypeCurved.vala',
@@ -215,6 +216,7 @@ sources += files(
     'UndoItem.vala',
     'UndoTextBuffer.vala',
     'UndoTextItem.vala',
+    'UnicodeInsert.vala',
     'UrlEditor.vala',
     'Utils.vala',
     'ZoomWidget.vala'

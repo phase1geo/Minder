@@ -488,6 +488,7 @@ public class Node : Object {
     _name.text.add_parser( _da.markdown_parser );
     // _name.text.add_parser( _da.tagger_parser );
     _name.text.add_parser( _da.url_parser );
+    _name.text.add_parser( _da.unicode_parser );
   }
 
   /* Copies just the variables of the node, minus the children nodes */

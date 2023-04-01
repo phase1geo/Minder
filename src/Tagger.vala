@@ -64,13 +64,14 @@ public class Tagger {
   }
 
   /* Gets the list of matching keys */
-  public GLib.List<string> get_matches( string partial ) {
+  public GLib.List<TextCompletionItem> get_matches( string partial ) {
     var it = _tags.map_iterator();
-    var matches = new GLib.List<string>();
+    var matches = new GLib.List<TextCompletionItem>();
     while( it.next() ) {
       var key = (string)it.get_key();
       if( (key.length >= partial.length) && (key.substring( 0, partial.length ) == partial) ) {
-        matches.append( key );
+        var item = new TextCompletionItem( key );
+        matches.append( item );
       }
     }
     matches.sort( GLib.strcmp );
@@ -176,17 +177,13 @@ public class Tagger {
     }
   }
 
-  private void populate_listbox( ListBox listbox, GLib.List<string> tags ) {
+  private void populate_listbox( ListBox listbox, GLib.List<TextCompletionItem> tags ) {
     listbox.foreach( (w) => {
       listbox.remove( w );
     });
-    foreach( string str in tags ) {
-      var lbl = new Label( str );
-      lbl.xalign       = 0;
-      lbl.margin       = 5;
-      lbl.margin_start = 10;
-      lbl.margin_end   = 10;
-      listbox.add( lbl );
+    foreach( TextCompletionItem item in tags ) {
+      var box = item.create_row();
+      listbox.add( box );
     }
     listbox.show_all();
   }

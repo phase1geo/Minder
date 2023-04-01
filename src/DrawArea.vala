@@ -180,6 +180,7 @@ public class DrawArea : Gtk.DrawingArea {
   public MarkdownParser markdown_parser { get; private set; }
   public TaggerParser   tagger_parser   { get; private set; }
   public UrlParser      url_parser      { get; private set; }
+  public UnicodeParser  unicode_parser  { get; private set; }
 
   public signal void changed();
   public signal void current_changed( DrawArea da );
@@ -245,9 +246,11 @@ public class DrawArea : Gtk.DrawingArea {
     tagger_parser   = new TaggerParser( this );
     markdown_parser = new MarkdownParser( this );
     url_parser      = new UrlParser();
+    unicode_parser  = new UnicodeParser( this );
 
     markdown_parser.enable = settings.get_boolean( "enable-markdown" );
     url_parser.enable      = settings.get_boolean( "auto-parse-embedded-urls" );
+    unicode_parser.enable  = settings.get_boolean( "enable-unicode-input" );
 
     /* Create text completion */
     _completion = new TextCompletion( this );
@@ -264,7 +267,7 @@ public class DrawArea : Gtk.DrawingArea {
     set_theme( win.themes.get_theme( settings.get_string( "default-theme" ) ), false );
 
     /* Create the undo text buffer */
-    undo_text   = new UndoTextBuffer( this );
+    undo_text = new UndoTextBuffer( this );
 
     /* Add event listeners */
     this.draw.connect( on_draw );
@@ -411,10 +414,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Gets the top and bottom y position of this draw area */
   public void get_window_ys( out int top, out int bottom ) {
-    var vp = parent.parent as Viewport;
-    var vh = vp.get_allocated_height();
-    var sw = parent.parent.parent as ScrolledWindow;
-    top    = (int)sw.vadjustment.value;
+    var vh = get_allocated_height();
+    top    = (int)origin_y;
     bottom = top + vh;
   }
 
@@ -3104,20 +3105,28 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the escape character is entered in the drawing area */
   private void handle_escape() {
     if( is_connection_editable() ) {
-      var current = _selected.current_connection();
-      _im_context.reset();
-      current.edit_title_end();
-      set_connection_mode( current, ConnMode.SELECTED );
-      current_changed( this );
-      queue_draw();
-      auto_save();
+      if( _completion.shown ) {
+        _completion.hide();
+      } else {
+        var current = _selected.current_connection();
+        _im_context.reset();
+        current.edit_title_end();
+        set_connection_mode( current, ConnMode.SELECTED );
+        current_changed( this );
+        queue_draw();
+        auto_save();
+      }
     } else if( is_node_editable() ) {
-      var current = _selected.current_node();
-      _im_context.reset();
-      set_node_mode( current, NodeMode.CURRENT );
-      current_changed( this );
-      queue_draw();
-      auto_save();
+      if( _completion.shown ) {
+        _completion.hide();
+      } else {
+        var current = _selected.current_node();
+        _im_context.reset();
+        set_node_mode( current, NodeMode.CURRENT );
+        current_changed( this );
+        queue_draw();
+        auto_save();
+      }
     } else if( is_connection_connecting() ) {
       var current = _selected.current_connection();
       _connections.remove_connection( current, true );
@@ -3321,23 +3330,33 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the return character is entered in the drawing area */
   private void handle_return( bool shift ) {
     if( is_connection_editable() ) {
-      var current = _selected.current_connection();
-      current.edit_title_end();
-      set_connection_mode( current, ConnMode.SELECTED );
-      current_changed( this );
-      queue_draw();
-    } else if( is_node_editable() ) {
-      var current = _selected.current_node();
-      set_node_mode( current, NodeMode.CURRENT );
-      if( _create_new_from_edit ) {
-        if( !current.is_root() ) {
-          add_sibling_node();
-        } else {
-          add_root_node();
-        }
+      if( _completion.shown ) {
+        _completion.select();
+        queue_draw();
       } else {
+        var current = _selected.current_connection();
+        current.edit_title_end();
+        set_connection_mode( current, ConnMode.SELECTED );
         current_changed( this );
         queue_draw();
+      }
+    } else if( is_node_editable() ) {
+      if( _completion.shown ) {
+        _completion.select();
+        queue_draw();
+      } else {
+        var current = _selected.current_node();
+        set_node_mode( current, NodeMode.CURRENT );
+        if( _create_new_from_edit ) {
+          if( !current.is_root() ) {
+            add_sibling_node();
+          } else {
+            add_root_node();
+          }
+        } else {
+          current_changed( this );
+          queue_draw();
+        }
       }
     } else if( is_connection_connecting() && (_attach_node != null) ) {
       end_connection( _attach_node );
@@ -3548,13 +3567,17 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the tab character is entered in the drawing area */
   private void handle_tab() {
     if( is_node_editable() ) {
-      var current = _selected.current_node();
-      set_node_mode( current, NodeMode.CURRENT );
-      if( _create_new_from_edit ) {
-        add_child_node();
+      if( _completion.shown ) {
+        _completion.select();
       } else {
-        current_changed( this );
-        queue_draw();
+        var current = _selected.current_node();
+        set_node_mode( current, NodeMode.CURRENT );
+        if( _create_new_from_edit ) {
+          add_child_node();
+        } else {
+          current_changed( this );
+          queue_draw();
+        }
       }
     } else if( is_node_selected() ) {
       add_child_node();
@@ -3958,7 +3981,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the up key is entered in the drawing area */
   private void handle_up( bool shift, bool alt ) {
     if( is_connection_editable() ) {
-      if( shift ) {
+      if( _completion.shown ) {
+        _completion.up();
+      } else if( shift ) {
         _selected.current_connection().title.selection_vertically( -1 );
       } else {
         _selected.current_connection().title.move_cursor_vertically( -1 );
@@ -3966,7 +3991,9 @@ public class DrawArea : Gtk.DrawingArea {
       _im_context.reset();
       queue_draw();
     } else if( is_node_editable() ) {
-      if( shift ) {
+      if( _completion.shown ) {
+        _completion.up();
+      } else if( shift ) {
         _selected.current_node().name.selection_vertically( -1 );
       } else {
         _selected.current_node().name.move_cursor_vertically( -1 );
@@ -4017,7 +4044,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever the down key is entered in the drawing area */
   private void handle_down( bool shift, bool alt ) {
     if( is_connection_editable() ) {
-      if( shift ) {
+      if( _completion.shown ) {
+        _completion.down();
+      } else if( shift ) {
         _selected.current_connection().title.selection_vertically( 1 );
       } else {
         _selected.current_connection().title.move_cursor_vertically( 1 );
@@ -4025,7 +4054,9 @@ public class DrawArea : Gtk.DrawingArea {
       _im_context.reset();
       queue_draw();
     } else if( is_node_editable() ) {
-      if( shift ) {
+      if( _completion.shown ) {
+        _completion.down();
+      } else if( shift ) {
         _selected.current_node().name.selection_vertically( 1 );
       } else {
         _selected.current_node().name.move_cursor_vertically( 1 );
@@ -5224,7 +5255,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Displays the auto-completion widget with the given list of values */
-  public void show_auto_completion( GLib.List<string> values, int start_pos, int end_pos ) {
+  public void show_auto_completion( GLib.List<TextCompletionItem> values, int start_pos, int end_pos ) {
     var node = _selected.current_node();
     if( is_node_editable() ) {
       _completion.show( node.name, values, start_pos, end_pos );
