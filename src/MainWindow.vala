@@ -1213,11 +1213,12 @@ public class MainWindow : Hdy.ApplicationWindow {
     if( da.get_doc().is_saved() ) {
       dialog.set_filename( da.get_doc().filename );
     } else {
-      var root_str = da.get_nodes().index( 0 ).name.text.text.strip();
-      if( root_str != "" ) {
-        dialog.set_current_name( convert_name_to_filename( root_str ) );
-      } else {
-        dialog.set_current_name( da.get_doc().label );
+      dialog.set_current_name( da.get_doc().label );
+      if( da.get_nodes().length > 0 ) {
+        var root_str = da.get_nodes().index( 0 ).name.text.text.strip();
+        if( root_str != "" ) {
+          dialog.set_current_name( convert_name_to_filename( root_str ) );
+        }
       }
     }
     if( dialog.run() == ResponseType.ACCEPT ) {
