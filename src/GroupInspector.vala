@@ -86,7 +86,7 @@ public class GroupInspector : Box {
 
     _note = new NoteView();
     _note.set_wrap_mode( Gtk.WrapMode.WORD );
-    _note.add_unicode_completion( win.unicoder );
+    _note.add_unicode_completion( win, win.unicoder );
     _note.buffer.text = "";
     _note.focus_in_event.connect( note_focus_in );
     _note.focus_out_event.connect( note_focus_out );

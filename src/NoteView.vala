@@ -22,12 +22,14 @@ using Gdk;
 
 public class CompletionProvider : SourceCompletionProvider, Object {
 
+  private MainWindow                      _win;
   private string                          _name;
   private GLib.List<SourceCompletionItem> _proposals;
   private SourceBuffer                    _buffer;
 
   /* Constructor */
-  public CompletionProvider( SourceBuffer buffer, string name, GLib.List<SourceCompletionItem> proposals ) {
+  public CompletionProvider( MainWindow win, SourceBuffer buffer, string name, GLib.List<SourceCompletionItem> proposals ) {
+    _win       = win;
     _buffer    = buffer;
     _name      = name;
     _proposals = new GLib.List<SourceCompletionItem>();
@@ -56,7 +58,7 @@ public class CompletionProvider : SourceCompletionProvider, Object {
 
   public override bool match( Gtk.SourceCompletionContext ctx ) {
     Gtk.TextIter iter;
-    if( find_start_iter( out iter ) ) {
+    if( find_start_iter( out iter ) && _win.settings.get_boolean( "enable-unicode-input" ) ) {
       return( true );
     }
     return( false );
@@ -263,8 +265,8 @@ public class NoteView : Gtk.SourceView {
   }
 
   /* Adds the unicoder text completion service */
-  public void add_unicode_completion( UnicodeInsert unicoder ) {
-    var provider = new CompletionProvider( _buffer, "Unicode", unicoder.create_proposals() );
+  public void add_unicode_completion( MainWindow win, UnicodeInsert unicoder ) {
+    var provider = new CompletionProvider( win, _buffer, "Unicode", unicoder.create_proposals() );
     completion.add_provider( provider );
   }
 

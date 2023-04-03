@@ -222,7 +222,7 @@ public class NodeInspector : Box {
 
     _note = new NoteView();
     _note.set_wrap_mode( Gtk.WrapMode.WORD );
-    _note.add_unicode_completion( win.unicoder );
+    _note.add_unicode_completion( win, win.unicoder );
     _note.buffer.text = "";
     _note.buffer.changed.connect( note_changed );
     _note.focus_in_event.connect( note_focus_in );
