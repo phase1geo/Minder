@@ -4240,12 +4240,12 @@ public class DrawArea : Gtk.DrawingArea {
         else if( has_key( kvs, Key.Home ) )             { handle_control_home( shift ); }
         else if( has_key( kvs, Key.End ) )              { handle_control_end( shift ); }
         else if( !shift && has_key( kvs, Key.a ) )      { select_all(); }
-        else if(  shift && has_key( kvs, Key.A ) )      { deselect_all(); }
+        else if(  shift && has_key( kvs, Key.a ) )      { deselect_all(); }
         else if( !shift && has_key( kvs, Key.period ) ) { handle_control_period(); }
-        else if(  shift && has_key( kvs, Key.E ) )      { handle_control_E(); }
+        else if(  shift && has_key( kvs, Key.e ) )      { handle_control_E(); }
         else if( !shift && has_key( kvs, Key.k ) )      { handle_control_k( false ); }
-        else if(  shift && has_key( kvs, Key.K ) )      { handle_control_k( true ); }
-        else if(  shift && has_key( kvs, Key.R ) )      { handle_control_R(); }
+        else if(  shift && has_key( kvs, Key.k ) )      { handle_control_k( true ); }
+        else if(  shift && has_key( kvs, Key.r ) )      { handle_control_R(); }
         else if( !shift && has_key( kvs, Key.w ) )      { handle_control_w(); }
         else if( !shift && has_key( kvs, Key.y ) )      { do_paste_node_link(); }
         else return( false );
@@ -4282,7 +4282,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* If there is no current node, allow some of the keyboard shortcuts */
     } else if( control ) {
-      if( shift && has_key( kvs, Key.E ) )       { handle_control_E(); }
+      if( shift && has_key( kvs, Key.e ) )       { handle_control_E(); }
       else if( !shift && has_key( kvs, Key.c ) ) { do_copy(); }
       else if( !shift && has_key( kvs, Key.x ) ) { do_cut(); }
       else if( !shift && has_key( kvs, Key.v ) ) { do_paste( false ); }
@@ -4291,14 +4291,14 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( nomod || shift ) {
       if( !shift && has_key( kvs, Key.minus ) )             { if( nodes_alignable() ) NodeAlign.align_top( this, _selected.nodes() ); }
       else if( !shift && has_key( kvs, Key.equal ) )        { if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() ); }
-      else if(  shift && has_key( kvs, Key.Z ) )            { zoom_in(); }
+      else if(  shift && has_key( kvs, Key.z ) )            { zoom_in(); }
       else if( !shift && has_key( kvs, Key.bracketleft ) )  { if( nodes_alignable() ) NodeAlign.align_left( this, _selected.nodes() ); }
       else if( !shift && has_key( kvs, Key.bracketright ) ) { if( nodes_alignable() ) NodeAlign.align_right( this, _selected.nodes() ); }
       else if(  shift && has_key( kvs, Key.underscore ) )   { if( nodes_alignable() ) NodeAlign.align_bottom( this, _selected.nodes() ); }
       else if( !shift && has_key( kvs, Key.a ) )            { select_parent_nodes(); }
       else if( !shift && has_key( kvs, Key.d ) )            { select_child_nodes(); }
       else if( !shift && has_key( kvs, Key.f ) )            { toggle_folds( false ); }
-      else if(  shift && has_key( kvs, Key.F ) )            { toggle_folds( true ); }
+      else if(  shift && has_key( kvs, Key.f ) )            { toggle_folds( true ); }
       else if( !shift && has_key( kvs, Key.g ) )            { add_group(); }
       else if( !shift && has_key( kvs, Key.m ) )            { select_root_node(); }
       else if( !shift && has_key( kvs, Key.r ) )            { if( undo_buffer.redoable() ) undo_buffer.redo(); }
@@ -4322,7 +4322,7 @@ public class DrawArea : Gtk.DrawingArea {
   private bool handle_group_keypress( EventKey e, uint[] kvs ) {
     var current = _selected.current_group();
     var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
-    if( shift && has_key( kvs, Key.E ) )       { show_properties( "current", PropertyGrab.NOTE ); }
+    if( shift && has_key( kvs, Key.e ) )       { show_properties( "current", PropertyGrab.NOTE ); }
     else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
     else if( !shift && has_key( kvs, Key.u ) ) {  // Perform undo
       if( undo_buffer.undoable() ) {
@@ -4336,8 +4336,8 @@ public class DrawArea : Gtk.DrawingArea {
   private bool handle_connection_keypress( EventKey e, uint[] kvs ) {
     var current = _selected.current_connection();
     var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
-    if( shift && has_key( kvs, Key.E ) )       { show_properties( "current", PropertyGrab.NOTE ); }
-    else if(  shift && has_key( kvs, Key.Z ) )  { zoom_in(); }
+    if( shift && has_key( kvs, Key.e ) )       { show_properties( "current", PropertyGrab.NOTE ); }
+    else if(  shift && has_key( kvs, Key.z ) )  { zoom_in(); }
     else if( !shift && has_key( kvs, Key.e ) ) {
       current.edit_title_begin( this );
       set_connection_mode( current, ConnMode.EDITABLE );
@@ -4369,17 +4369,17 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
     if( shift && has_key( kvs, Key.C ) )      { center_current_node(); }
-    else if( shift && has_key( kvs, Key.D ) ) { select_node_tree(); }
-    else if( shift && has_key( kvs, Key.E ) ) { show_properties( "current", PropertyGrab.NOTE ); }
-    else if( shift && has_key( kvs, Key.I ) ) {
+    else if( shift && has_key( kvs, Key.d ) ) { select_node_tree(); }
+    else if( shift && has_key( kvs, Key.e ) ) { show_properties( "current", PropertyGrab.NOTE ); }
+    else if( shift && has_key( kvs, Key.i ) ) {
       if( _debug ) {
         current.display();
       }
     }
-    else if(  shift && has_key( kvs, Key.S ) ) { sort_alphabetically(); }
-    else if(  shift && has_key( kvs, Key.X ) ) { select_attached_connection(); }
-    else if(  shift && has_key( kvs, Key.Y ) ) { select_linked_node(); }
-    else if(  shift && has_key( kvs, Key.Z ) ) { zoom_in(); }
+    else if(  shift && has_key( kvs, Key.s ) ) { sort_alphabetically(); }
+    else if(  shift && has_key( kvs, Key.x ) ) { select_attached_connection(); }
+    else if(  shift && has_key( kvs, Key.y ) ) { select_linked_node(); }
+    else if(  shift && has_key( kvs, Key.z ) ) { zoom_in(); }
     else if( !shift && has_key( kvs, Key.a ) ) { select_parent_nodes(); }
     else if( !shift && has_key( kvs, Key.c ) ) { select_child_node(); }
     else if( !shift && has_key( kvs, Key.d ) ) { select_child_nodes(); }
@@ -4388,7 +4388,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     }
     else if( !shift && has_key( kvs, Key.f ) ) { toggle_fold( current, false ); }
-    else if(  shift && has_key( kvs, Key.F ) ) { toggle_fold( current, true ); }
+    else if(  shift && has_key( kvs, Key.f ) ) { toggle_fold( current, true ); }
     else if( !shift && has_key( kvs, Key.g ) ) { add_group(); }
     else if( !shift && has_key( kvs, Key.h ) ) { handle_left( false, false ); }
     else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
