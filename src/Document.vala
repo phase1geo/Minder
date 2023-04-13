@@ -134,6 +134,7 @@ public class Document : Object {
 
   /* Opens the given filename */
   public bool load() {
+
     Xml.Doc* doc = load_raw();
     if( doc == null ) {
       return( false );
@@ -152,27 +153,37 @@ public class Document : Object {
     }
 
     return( true );
+
   }
 
   /* Saves the given node information to the specified file */
   public bool save() {
+
     Xml.Doc* doc = load_raw();
+
     if( doc != null ) {
-      /* Load Etag */
+
       string file_etag = get_etag(doc);
+
+      /* File was modified! Warn the user */
       if( _etag != file_etag ) {
-        /* File was modified! Warn the user */
+        var now = new DateTime.now_local();
         if( _da.win.ask_modified_overwrite(_da) ) {
-          doc->save_format_file( filename.replace(".mind", "-backup-%s-%s.mind".printf(new DateTime.now_local().to_string(), file_etag)), 1 );
+          var fname = filename.replace( ".mind", "-backup-%s-%s.mind".printf( now.to_string(), file_etag ) );
+          doc->save_format_file( fname, 1 );
         } else {
-          save_internal(filename.replace(".mind", "-backup-%s-%s.mind".printf(new DateTime.now_local().to_string(), _etag)), false);
+          var fname = filename.replace( ".mind", "-backup-%s-%s.mind".printf( now.to_string(), _etag ) );
+          save_internal( fname, false );
+          _da.initialize_for_open();
           load();
           return false;
         }
       }
+
     }
 
-    return save_internal(filename, true);
+    return( save_internal( filename, true ) );
+
   }
 
   private bool save_internal(string dest_filename, bool bump_etag) {
@@ -192,8 +203,11 @@ public class Document : Object {
 
     doc->set_root_element( root );
     _da.save( root );
-    doc->save_format_file( dest_filename, 1 );
+    var res = doc->save_format_file( dest_filename, 1 );
     delete doc;
+    if( res < 0 ) {
+      return( false );
+    }
     save_needed = false;
     return( true );
   }

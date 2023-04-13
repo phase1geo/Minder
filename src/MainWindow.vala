@@ -1264,6 +1264,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     _zoom_scale.set_value( scale_value );
     _zoom_in.set_sensitive( scale_value < marks[marks.length-1] );
     _zoom_out.set_sensitive( scale_value > marks[0] );
+    save_tab_state( _nb.current );
   }
 
   /* Called whenever the DrawArea origin changes in the current tab */
@@ -1588,6 +1589,7 @@ public class MainWindow : Hdy.ApplicationWindow {
       node->new_prop( "saved", da.get_doc().is_saved().to_string() );
       node->new_prop( "origin-x", da.origin_x.to_string() );
       node->new_prop( "origin-y", da.origin_y.to_string() );
+      node->new_prop( "scale", da.sfactor.to_string() );
       root->add_child( node );
       if( tab == current_tab ) {
         selected_tab = i;
@@ -1630,12 +1632,17 @@ public class MainWindow : Hdy.ApplicationWindow {
         var saved    = it->get_prop( "saved" );
         var origin_x = it->get_prop( "origin-x" );
         var origin_y = it->get_prop( "origin-y" );
+        var sfactor  = it->get_prop( "scale" );
         var da       = add_tab( fname, TabAddReason.LOAD );
         if( origin_x != null ) {
           da.origin_x = int.parse( origin_x );
         }
         if( origin_y != null ) {
           da.origin_y = int.parse( origin_y );
+        }
+        if( sfactor != null ) {
+          da.sfactor = double.parse( sfactor );
+          change_scale( da.sfactor );
         }
         da.get_doc().load_filename( fname, bool.parse( saved ) );
         Idle.add(() => {

@@ -37,6 +37,7 @@ public enum AnimationType {
 public class AnimatorAction : Object {
 
   protected string     _name;
+  protected bool       _save;
   protected int        _id;
   protected static int _next_id = 0;
 
@@ -44,14 +45,20 @@ public class AnimatorAction : Object {
   protected double frames { private set; get; default = 10; }
 
   /* Default constructor */
-  public AnimatorAction( string name ) {
+  public AnimatorAction( string name, bool save ) {
     _name = name;
+    _save = save;
     _id   = _next_id++;
   }
 
   /* Returns the name of this action for debug purposes */
   public string name() {
     return( _name + "-" + _id.to_string() );
+  }
+
+  /* Returns true if we should save after this animation ends */
+  public bool save() {
+    return( _save );
   }
 
   /* Returns true if this animation action is complete */

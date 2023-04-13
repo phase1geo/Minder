@@ -460,17 +460,6 @@ public class DrawArea : Gtk.DrawingArea {
     win.set_cursor( new Cursor.from_name( get_display(), name ) );
   }
 
-  /* Loads the drawing area origin from the XML node */
-  private void load_drawarea( Xml.Node* n ) {
-
-    string? sf = n->get_prop( "scale" );
-    if( sf != null ) {
-      sfactor = double.parse( sf );
-      scale_changed( (sfactor > 0) ? sfactor : 1.0 );
-    }
-
-  }
-
   /* Loads the given theme from the list of available options */
   private void load_theme( Xml.Node* n ) {
 
@@ -550,7 +539,6 @@ public class DrawArea : Gtk.DrawingArea {
           case "theme"       :  load_theme( it );   break;
           case "layout"      :  load_layout( it, ref use_layout );  break;
           case "styles"      :  StyleInspector.styles.load( it );  break;
-          case "drawarea"    :  load_drawarea( it );  break;
           case "images"      :  image_manager.load( it );  break;
           case "connections" :  _connections.load( this, it, null, _nodes );  break;
           case "groups"      :  groups.load( this, it );  break;
@@ -595,10 +583,6 @@ public class DrawArea : Gtk.DrawingArea {
     parent->add_child( _theme.save() );
 
     StyleInspector.styles.save( parent );
-
-    Xml.Node* origin = new Xml.Node( null, "drawarea" );
-    origin->new_prop( "scale", _store_scale_factor.to_string() );
-    parent->add_child( origin );
 
     Xml.Node* images = new Xml.Node( null, "images" );
     image_manager.save( images );

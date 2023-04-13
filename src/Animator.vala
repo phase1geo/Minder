@@ -97,12 +97,16 @@ public class Animator : Object {
       _id = 0;
     }
     if( !_actions.is_empty() ) {
+      var save_needed = false;
       while( !_actions.is_empty() ) {
         var action = _actions.pop_head();
         action.flush( _da );
+        save_needed |= action.save();
       }
       _running = false;
-      _da.auto_save();
+      if( save_needed ) {
+        _da.auto_save();
+      }
       _da.queue_draw();
     }
   }
@@ -110,8 +114,14 @@ public class Animator : Object {
   /* User method which performs the animation */
   public void animate() {
     if( !enable ) {
-      _actions.clear();
-      _da.auto_save();
+      var save_needed = false;
+      while( !_actions.is_empty() ) {
+        var action = _actions.pop_head();
+        save_needed |= action.save();
+      }
+      if( save_needed ) {
+        _da.auto_save();
+      }
       _da.queue_draw();
       return;
     }
@@ -127,8 +137,10 @@ public class Animator : Object {
   private bool animate_action() {
     _actions.peek_head().adjust( _da );
     if( _actions.peek_head().done() ) {
+      if( _actions.peek_head().save() ) {
+        _da.auto_save();
+      }
       _actions.pop_head();
-      _da.auto_save();
     }
     _da.queue_draw();
     if( _actions.length == 0 ) {

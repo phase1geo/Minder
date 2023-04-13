@@ -32,7 +32,7 @@ public class AnimatorPanScale : AnimatorAction {
 
   /* Constructor for a pan change */
   public AnimatorPanScale( DrawArea da, string name ) {
-    base( name );
+    base( name, false );
     da.get_origin( out _sox, out _soy );
     _sscale = da.sfactor;
   }
