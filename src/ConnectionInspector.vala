@@ -201,9 +201,10 @@ public class ConnectionInspector : Box {
     Connection? current = _da.get_current_connection();
 
     if( current != null ) {
+      var note = current.note;
       _color.rgba          = (current.color != null) ? current.color : _da.get_theme().get_color( "connection_background" );
       _color.alpha         = 65535;
-      _note.buffer.text    = current.note;
+      _note.buffer.text    = note;
       _reset.set_sensitive( current.color != null );
     }
 

@@ -133,7 +133,8 @@ public class GroupInspector : Box {
     NodeGroup? current = _da.get_current_group();
 
     if( current != null ) {
-      _note.buffer.text = current.note;
+      var note = current.note;
+      _note.buffer.text = note;
     }
 
   }
