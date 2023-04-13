@@ -44,6 +44,7 @@
                 <property name="visible">1</property>
               </object>
             </child>
+	    <!--
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Export File</property>
@@ -51,6 +52,7 @@
                 <property name="visible">1</property>
               </object>
             </child>
+	    -->
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Print File</property>
