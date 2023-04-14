@@ -271,6 +271,13 @@ public class MainWindow : Hdy.ApplicationWindow {
       }
     });
 
+    /* If we receive focus, update the titlebar */
+    focus_in_event.connect((e) => {
+      var da = get_current_da();
+      update_title( da );
+      return( false );
+    });
+
     /* Load the exports data */
     _exports.load();
 
@@ -521,6 +528,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     if( (da == null) || !da.get_doc().is_saved() ) {
       _header.set_title( _( "Unnamed Document" ) + suffix );
     } else {
+      if( da.get_doc().readonly ) {
+        suffix = " [%s]%s".printf( _( "Read-Only" ), suffix );
+      }
       _header.set_title( GLib.Path.get_basename( da.get_doc().filename ) + suffix );
     }
     _header.set_subtitle( _focus_btn.active ? _( "Focus Mode" ) : null );

@@ -52,6 +52,11 @@ public class Document : Object {
     }
   }
   public bool save_needed { private set; get; default = false; }
+  public bool readonly {
+    get {
+      return( Utils.is_read_only( _filename ) );
+    }
+  }
 
   /* Default constructor */
   public Document( DrawArea da ) {
@@ -120,10 +125,10 @@ public class Document : Object {
       return Xml.Parser.read_file( filename, null, Xml.ParserOption.HUGE );
   }
 
-  private string get_etag(Xml.Doc* doc) {
+  private string get_etag( Xml.Doc* doc ) {
     for (Xml.Attr* prop = doc->get_root_element()->properties; prop != null; prop = prop->next) {
       string attr_name = prop->name;
-      if ( attr_name != "etag" ) {
+      if( attr_name != "etag" ) {
         continue;
       }
 
@@ -141,7 +146,7 @@ public class Document : Object {
     }
 
     /* Load Etag */
-    _etag = get_etag(doc);
+    _etag = get_etag( doc );
 
     _da.load( doc->get_root_element() );
     delete doc;
@@ -163,7 +168,7 @@ public class Document : Object {
 
     if( doc != null ) {
 
-      string file_etag = get_etag(doc);
+      string file_etag = get_etag( doc );
 
       /* File was modified! Warn the user */
       if( _etag != file_etag ) {
@@ -186,9 +191,12 @@ public class Document : Object {
 
   }
 
-  private bool save_internal(string dest_filename, bool bump_etag) {
+  /* Saves the document to the given filename */
+  private bool save_internal( string dest_filename, bool bump_etag ) {
+
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
+    var orig_etag  = _etag;
     root->set_prop( "version", Minder.version );
 
     if ( bump_etag ) {
@@ -205,11 +213,18 @@ public class Document : Object {
     _da.save( root );
     var res = doc->save_format_file( dest_filename, 1 );
     delete doc;
+
+    /* If the save failed, restore the original etag and return false */
     if( res < 0 ) {
+      stdout.printf( "read-only? %s\n", Utils.is_read_only( dest_filename ).to_string() );
+      _etag = orig_etag;
       return( false );
     }
+
     save_needed = false;
+
     return( true );
+
   }
 
   /* Deletes the given unnamed file when called */
