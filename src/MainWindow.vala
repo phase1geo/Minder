@@ -387,6 +387,18 @@ public class MainWindow : Hdy.ApplicationWindow {
     _nb.current.close();
   }
 
+  /* Closes the tab associated with the given drawing area */
+  private void close_tab_with_da( DrawArea da ) {
+    foreach( Tab tab in _nb.tabs ) {
+      var bin     = (Gtk.Bin)tab.page;
+      var curr_da = (DrawArea)bin.get_child();
+      if( da == curr_da ) {
+        tab.close();
+        return;
+      }
+    }
+  }
+
   /* Called whenever the user clicks on the close button and the tab is unnamed */
   private bool close_tab_requested( Tab tab ) {
     var bin = (Gtk.Bin)tab.page;
@@ -1132,7 +1144,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     if( fname.has_suffix( ".minder" ) ) {
       var da = add_tab_conditionally( fname, TabAddReason.OPEN );
       update_title( da );
-      da.get_doc().load();
+      if( da.get_doc().load() ) {
+        save_tab_state( _nb.current );
+      }
       return( true );
     } else {
       for( int i=0; i<exports.length(); i++ ) {
@@ -1143,6 +1157,7 @@ public class MainWindow : Hdy.ApplicationWindow {
             var da = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
             update_title( da );
             if( exports.index( i ).import( fname, da ) ) {
+              save_tab_state( _nb.current );
               return( true );
             }
             close_current_tab();
@@ -1657,7 +1672,7 @@ public class MainWindow : Hdy.ApplicationWindow {
         da.get_doc().load_filename( fname, bool.parse( saved ) );
         Idle.add(() => {
           if( !da.get_doc().load() ) {
-            _nb.current.close();
+            close_tab_with_da( da );
           }
           if( (--tabs == 0) && (_nb.n_tabs == 0) ) {
             do_new_file();
