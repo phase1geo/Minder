@@ -271,6 +271,13 @@ public class MainWindow : Hdy.ApplicationWindow {
       }
     });
 
+    /* If we receive focus, update the titlebar */
+    focus_in_event.connect((e) => {
+      var da = get_current_da();
+      update_title( da );
+      return( false );
+    });
+
     /* Load the exports data */
     _exports.load();
 
@@ -401,6 +408,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     var da = new DrawArea( this, _settings, _accel_group );
     da.current_changed.connect( on_current_changed );
     da.scale_changed.connect( change_scale );
+    da.scroll_changed.connect( change_origin );
     da.show_properties.connect( show_properties );
     da.hide_properties.connect( hide_properties );
     da.map_event.connect( on_canvas_mapped );
@@ -520,6 +528,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     if( (da == null) || !da.get_doc().is_saved() ) {
       _header.set_title( _( "Unnamed Document" ) + suffix );
     } else {
+      if( da.get_doc().readonly ) {
+        suffix = " [%s]%s".printf( _( "Read-Only" ), suffix );
+      }
       _header.set_title( GLib.Path.get_basename( da.get_doc().filename ) + suffix );
     }
     _header.set_subtitle( _focus_btn.active ? _( "Focus Mode" ) : null );
@@ -1263,6 +1274,12 @@ public class MainWindow : Hdy.ApplicationWindow {
     _zoom_scale.set_value( scale_value );
     _zoom_in.set_sensitive( scale_value < marks[marks.length-1] );
     _zoom_out.set_sensitive( scale_value > marks[0] );
+    save_tab_state( _nb.current );
+  }
+
+  /* Called whenever the DrawArea origin changes in the current tab */
+  private void change_origin() {
+    save_tab_state( _nb.current );
   }
 
   /* Displays the node properties panel for the current node */
@@ -1580,6 +1597,9 @@ public class MainWindow : Hdy.ApplicationWindow {
       Xml.Node* node = new Xml.Node( null, "tab" );
       node->new_prop( "path",  da.get_doc().filename );
       node->new_prop( "saved", da.get_doc().is_saved().to_string() );
+      node->new_prop( "origin-x", da.origin_x.to_string() );
+      node->new_prop( "origin-y", da.origin_y.to_string() );
+      node->new_prop( "scale", da.sfactor.to_string() );
       root->add_child( node );
       if( tab == current_tab ) {
         selected_tab = i;
@@ -1618,9 +1638,22 @@ public class MainWindow : Hdy.ApplicationWindow {
     var root = doc->get_root_element();
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
-        var fname = it->get_prop( "path" );
-        var saved = it->get_prop( "saved" );
-        var da    = add_tab( fname, TabAddReason.LOAD );
+        var fname    = it->get_prop( "path" );
+        var saved    = it->get_prop( "saved" );
+        var origin_x = it->get_prop( "origin-x" );
+        var origin_y = it->get_prop( "origin-y" );
+        var sfactor  = it->get_prop( "scale" );
+        var da       = add_tab( fname, TabAddReason.LOAD );
+        if( origin_x != null ) {
+          da.origin_x = int.parse( origin_x );
+        }
+        if( origin_y != null ) {
+          da.origin_y = int.parse( origin_y );
+        }
+        if( sfactor != null ) {
+          da.sfactor = double.parse( sfactor );
+          change_scale( da.sfactor );
+        }
         da.get_doc().load_filename( fname, bool.parse( saved ) );
         Idle.add(() => {
           if( !da.get_doc().load() ) {

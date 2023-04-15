@@ -30,7 +30,7 @@ public class AnimatorPan : AnimatorAction {
 
   /* Constructor for a pan change */
   public AnimatorPan( DrawArea da, string name ) {
-    base( name );
+    base( name, false );
     da.get_origin( out _sox, out _soy );
   }
 

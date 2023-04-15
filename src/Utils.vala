@@ -282,6 +282,15 @@ public class Utils {
     return( Regex.match_simple( url_re(), str ) );
   }
 
+  /* Returns true if the given file is read-only */
+  public static bool is_read_only( string fname ) {
+    var file = File.new_for_path( fname );
+    var src  = new Gtk.SourceFile();
+    src.set_location( file );
+    src.check_file_on_disk();
+    return( src.is_readonly() );
+  }
+
   /* Show the specified popover */
   public static void show_popover( Popover popover ) {
 #if GTK322

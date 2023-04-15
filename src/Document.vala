@@ -30,6 +30,7 @@ public class Document : Object {
   private bool          _from_user;  // Set to true if _filename was set by the user
   private ImageManager  _image_manager;
   private string        _etag;
+  private bool          _read_only = false;
 
   /* Properties */
   public string filename {
@@ -52,6 +53,16 @@ public class Document : Object {
     }
   }
   public bool save_needed { private set; get; default = false; }
+  public bool readonly {
+    get {
+      var prev_read_only = _read_only;
+      _read_only = Utils.is_read_only( _filename );
+      if( save_needed && prev_read_only && !_read_only ) {
+        save();
+      }
+      return( _read_only );
+    }
+  }
 
   /* Default constructor */
   public Document( DrawArea da ) {
@@ -120,10 +131,10 @@ public class Document : Object {
       return Xml.Parser.read_file( filename, null, Xml.ParserOption.HUGE );
   }
 
-  private string get_etag(Xml.Doc* doc) {
+  private string get_etag( Xml.Doc* doc ) {
     for (Xml.Attr* prop = doc->get_root_element()->properties; prop != null; prop = prop->next) {
       string attr_name = prop->name;
-      if ( attr_name != "etag" ) {
+      if( attr_name != "etag" ) {
         continue;
       }
 
@@ -134,13 +145,14 @@ public class Document : Object {
 
   /* Opens the given filename */
   public bool load() {
+
     Xml.Doc* doc = load_raw();
     if( doc == null ) {
       return( false );
     }
 
     /* Load Etag */
-    _etag = get_etag(doc);
+    _etag = get_etag( doc );
 
     _da.load( doc->get_root_element() );
     delete doc;
@@ -152,32 +164,45 @@ public class Document : Object {
     }
 
     return( true );
+
   }
 
   /* Saves the given node information to the specified file */
   public bool save() {
+
     Xml.Doc* doc = load_raw();
+
     if( doc != null ) {
-      /* Load Etag */
-      string file_etag = get_etag(doc);
+
+      string file_etag = get_etag( doc );
+
+      /* File was modified! Warn the user */
       if( _etag != file_etag ) {
-        /* File was modified! Warn the user */
+        var now = new DateTime.now_local();
         if( _da.win.ask_modified_overwrite(_da) ) {
-          doc->save_format_file( filename.replace(".mind", "-backup-%s-%s.mind".printf(new DateTime.now_local().to_string(), file_etag)), 1 );
+          var fname = filename.replace( ".mind", "-backup-%s-%s.mind".printf( now.to_string(), file_etag ) );
+          doc->save_format_file( fname, 1 );
         } else {
-          save_internal(filename.replace(".mind", "-backup-%s-%s.mind".printf(new DateTime.now_local().to_string(), _etag)), false);
+          var fname = filename.replace( ".mind", "-backup-%s-%s.mind".printf( now.to_string(), _etag ) );
+          save_internal( fname, false );
+          _da.initialize_for_open();
           load();
           return false;
         }
       }
+
     }
 
-    return save_internal(filename, true);
+    return( save_internal( filename, true ) );
+
   }
 
-  private bool save_internal(string dest_filename, bool bump_etag) {
+  /* Saves the document to the given filename */
+  private bool save_internal( string dest_filename, bool bump_etag ) {
+
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
+    var orig_etag  = _etag;
     root->set_prop( "version", Minder.version );
 
     if ( bump_etag ) {
@@ -192,10 +217,19 @@ public class Document : Object {
 
     doc->set_root_element( root );
     _da.save( root );
-    doc->save_format_file( dest_filename, 1 );
+    var res = doc->save_format_file( dest_filename, 1 );
     delete doc;
+
+    /* If the save failed, restore the original etag and return false */
+    if( res < 0 ) {
+      _etag = orig_etag;
+      return( false );
+    }
+
     save_needed = false;
+
     return( true );
+
   }
 
   /* Deletes the given unnamed file when called */

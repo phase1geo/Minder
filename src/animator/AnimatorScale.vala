@@ -28,7 +28,7 @@ public class AnimatorScale : AnimatorAction {
 
   /* Constructor for a scale change */
   public AnimatorScale( DrawArea da, string name ) {
-    base( name );
+    base( name, false );
     _sscale = da.sfactor;
   }
 

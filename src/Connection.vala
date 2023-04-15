@@ -40,13 +40,12 @@ public enum ConnMode {
 public class Connection : Object {
 
   private int         RADIUS     = 6;
+  private DrawArea    _da;
   private ConnMode    _mode      = ConnMode.NONE;
   private Node?       _from_node = null;
   private Node?       _to_node   = null;
   private double      _posx;
   private double      _posy;
-  private double      _dragx;
-  private double      _dragy;
   private Style       _style     = new Style();
   private Bezier      _curve;
   private CanvasText? _title     = null;
@@ -173,25 +172,26 @@ public class Connection : Object {
   public Connection( DrawArea da, Node from_node ) {
     double x, y, w, h;
     from_node.bbox( out x, out y, out w, out h );
+    _da        = da;
     _posx      = x + (w / 2);
     _posy      = y + (h / 2);
     _from_node = from_node;
     connect_node( _from_node );
-    _dragx     = _posx;
-    _dragy     = _posy;
     position_title();
-    _curve     = new Bezier.with_endpoints( _posx, _posy, _posx, _posy );
+    _curve     = new Bezier.with_endpoints( da, _posx, _posy, _posx, _posy );
     style      = StyleInspector.styles.get_global_style();
   }
 
   /* Constructs a connection based on another connection */
   public Connection.from_connection( DrawArea da, Connection conn ) {
-    _curve = new Bezier();
+    _da    = da;
+    _curve = new Bezier( da );
     copy( da, conn );
   }
 
   /* Constructor from XML data */
   public Connection.from_xml( DrawArea da, Xml.Node* n, Array<Node> nodes ) {
+    _da   = da;
     style = StyleInspector.styles.get_global_style();
     load( da, n, nodes );
   }
@@ -200,8 +200,6 @@ public class Connection : Object {
   public void copy( DrawArea da, Connection conn ) {
     _from_node = conn._from_node;
     _to_node   = conn._to_node;
-    _dragx     = conn._dragx;
-    _dragy     = conn._dragy;
     position_title();
     _curve.copy( conn._curve );
     if( conn.title == null ) {
@@ -320,15 +318,18 @@ public class Connection : Object {
     }
   }
 
-  /* Positions the given title according to the location of the _dragx and _dragy values */
+  /* Positions the given title according to the location of the dragx and dragy values */
   private void position_title() {
     if( title != null ) {
       var width   = get_width();
       var swidth  = sticker_width( true );
       var theight = title_height();
 
-      _title.posx = _dragx - ((width / 2) - swidth);
-      _title.posy = _dragy - (theight / 2);
+      double dragx, dragy;
+      _curve.get_drag_point( out dragx, out dragy );
+
+      _title.posx = dragx - ((width / 2) - swidth);
+      _title.posy = dragy - (theight / 2);
     }
   }
 
@@ -361,10 +362,10 @@ public class Connection : Object {
     _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
     _curve.get_point( 0, out fx, out fy );
     _curve.get_point( 2, out tx, out ty );
-    _dragx = (fx + tx) / 2;
-    _dragy = (fy + ty) / 2;
+    var dragx = (fx + tx) / 2;
+    var dragy = (fy + ty) / 2;
     position_title();
-    _curve.update_control_from_drag_handle( _dragx, _dragy );
+    _curve.update_control_from_drag_handle( dragx, dragy );
     set_connect_point( node );
   }
 
@@ -389,22 +390,23 @@ public class Connection : Object {
     _posx = x;
     _posy = y;
     _curve.get_point( ((node == _from_node) ? 0 : 2), out nx, out ny );
-    _dragx = (nx + x) / 2;
-    _dragy = (ny + y) / 2;
+    var dragx = (nx + x) / 2;
+    var dragy = (ny + y) / 2;
     position_title();
-    _curve.update_control_from_drag_handle( _dragx, _dragy );
+    _curve.update_control_from_drag_handle( dragx, dragy );
     set_connect_point( node );
   }
 
   /* Handles any position changes of either the to or from node */
   private void end_moved( Node node, double diffx, double diffy ) {
-    double x, y, w, h;
+    double x, y, w, h, dragx, dragy;
     node.bbox( out x, out y, out w, out h );
     _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
-    _dragx += (diffx / 2);
-    _dragy += (diffy / 2);
+    _curve.get_drag_point( out dragx, out dragy );
+    dragx += (diffx / 2);
+    dragy += (diffy / 2);
     position_title();
-    _curve.update_control_from_drag_handle( _dragx, _dragy );
+    _curve.update_control_from_drag_handle( dragx, dragy );
     set_connect_point( _from_node );
     if( _to_node != null ) {
       set_connect_point( _to_node );
@@ -413,13 +415,14 @@ public class Connection : Object {
 
   /* Handles any resizing changes of either the to or from node */
   private void end_resized( Node node, double diffw, double diffh ) {
-    double x, y, w, h;
+    double x, y, w, h, dragx, dragy;
     node.bbox( out x, out y, out w, out h );
     _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
-    _dragx += (diffw / 2);
-    _dragy += (diffh / 2);
+    _curve.get_drag_point( out dragx, out dragy );
+    dragx += (diffw / 2);
+    dragy += (diffh / 2);
     position_title();
-    _curve.update_control_from_drag_handle( _dragx, _dragy );
+    _curve.update_control_from_drag_handle( dragx, dragy );
     set_connect_point( _from_node );
     set_connect_point( _to_node );
   }
@@ -451,12 +454,7 @@ public class Connection : Object {
 
   /* Returns true if the given point is within proximity to the stored curve */
   public bool on_curve( double x, double y ) {
-    double fx, fy, tx, ty;
-    _curve.get_from_point( out fx, out fy );
-    _curve.get_to_point( out tx, out ty );
-    var curve = new Bezier.with_endpoints( fx, fy, tx, ty );
-    curve.update_control_from_drag_handle( _dragx, _dragy );
-    return( curve.within_range( x, y ) );
+    return( _curve.within_range( x, y ) );
   }
 
   /* Returns true if the given x/y point lies within a handle located at hx/hy */
@@ -467,12 +465,14 @@ public class Connection : Object {
   /* Returns true if the given point is within the drag handle */
   public bool within_drag_handle( double x, double y ) {
     if( mode == ConnMode.SELECTED ) {
+      double dragx, dragy;
+      _curve.get_drag_point( out dragx, out dragy );
       if( (_sticker == null) && (title == null) && (note.length == 0) ) {
-        return( within_handle( _dragx, _dragy, x, y ) );
+        return( within_handle( dragx, dragy, x, y ) );
       } else {
         double tx, ty, tw, th;
         title_bbox( out tx, out ty, out tw, out th );
-        return( within_handle( _dragx, (_dragy + (th / 2) + _style.connection_padding), x, y ) );
+        return( within_handle( dragx, (dragy + (th / 2) + _style.connection_padding), x, y ) );
       }
     }
     return( false );
@@ -536,8 +536,11 @@ public class Connection : Object {
     var width   = get_width();
     var height  = get_height();
 
-    x = _dragx - ((width / 2) + padding);
-    y = _dragy - ((height / 2) + padding);
+    double dragx, dragy;
+    _curve.get_drag_point( out dragx, out dragy );
+
+    x = dragx - ((width / 2) + padding);
+    y = dragy - ((height / 2) + padding);
     w = width  + (padding * 2);
     h = height + (padding * 2);
   }
@@ -548,8 +551,11 @@ public class Connection : Object {
     var nwidth  = note_width( false );
     var nheight = note_height();
 
-    x = _dragx + (width / 2) - nwidth;
-    y = _dragy - (nheight / 2);
+    double dragx, dragy;
+    _curve.get_drag_point( out dragx, out dragy );
+
+    x = dragx + (width / 2) - nwidth;
+    y = dragy - (nheight / 2);
     w = nwidth;
     h = nheight;
   }
@@ -560,8 +566,11 @@ public class Connection : Object {
     var swidth  = sticker_width( false );
     var sheight = sticker_height();
 
-    x = _dragx - (width / 2);
-    y = _dragy - (sheight / 2);
+    double dragx, dragy;
+    _curve.get_drag_point( out dragx, out dragy );
+
+    x = dragx - (width / 2);
+    y = dragy - (sheight / 2);
     w = swidth;
     h = sheight;
   }
@@ -570,20 +579,20 @@ public class Connection : Object {
   public void move_drag_handle( double x, double y ) {
     mode = ConnMode.ADJUSTING;
     position_title();
-    _dragx = x;
-    _dragy = y;
     if( title != null ) {
       double tx, ty, tw, th;
       title_bbox( out tx, out ty, out tw, out th );
-      _dragy -= (th / 2);
+      y -= (th / 2);
     }
-    _curve.update_control_from_drag_handle( _dragx, _dragy );
+    _curve.update_control_from_drag_handle( x, y );
     set_connect_point( _from_node );
     set_connect_point( _to_node );
   }
 
   /* Loads the connection information */
   private void load( DrawArea da, Xml.Node* node, Array<Node> nodes ) {
+
+    double dragx = 0, dragy = 0;
 
     string? f = node->get_prop( "from_id" );
     if( f != null ) {
@@ -599,12 +608,12 @@ public class Connection : Object {
 
     string? x = node->get_prop( "drag_x" );
     if( x != null ) {
-      _dragx = double.parse( x );
+      dragx = double.parse( x ) + _da.origin_x;
     }
 
     string? y = node->get_prop( "drag_y" );
     if( y != null ) {
-      _dragy = double.parse( y );
+      dragy = double.parse( y ) + _da.origin_y;
     }
 
     string? n = node->get_prop( "note" );
@@ -628,8 +637,8 @@ public class Connection : Object {
     double tx, ty, tw, th;
     _from_node.bbox( out fx, out fy, out fw, out fh );
     _to_node.bbox(   out tx, out ty, out tw, out th );
-    _curve = new Bezier.with_endpoints( (fx + (fw / 2)), (fy + (fh / 2)), (tx + (tw / 2)), (ty + (th / 2)) );
-    _curve.update_control_from_drag_handle( _dragx, _dragy );
+    _curve = new Bezier.with_endpoints( _da, (fx + (fw / 2)), (fy + (fh / 2)), (tx + (tw / 2)), (ty + (th / 2)) );
+    _curve.update_control_from_drag_handle( dragx, dragy );
     set_connect_point( _from_node );
     set_connect_point( _to_node );
 
@@ -657,11 +666,16 @@ public class Connection : Object {
   /* Saves the connection information to the given XML node */
   public void save( Xml.Node* parent ) {
 
+    double dragx, dragy;
+    _curve.get_drag_point( out dragx, out dragy );
+    dragx -= _da.origin_x;
+    dragy -= _da.origin_y;
+
     Xml.Node* n = new Xml.Node( null, "connection" );
     n->set_prop( "from_id", _from_node.id().to_string() );
     n->set_prop( "to_id",   _to_node.id().to_string() );
-    n->set_prop( "drag_x",  _dragx.to_string() );
-    n->set_prop( "drag_y",  _dragy.to_string() );
+    n->set_prop( "drag_x",  dragx.to_string() );
+    n->set_prop( "drag_y",  dragy.to_string() );
 
     if( _color != null ) {
       n->set_prop( "color", Utils.color_from_rgba( _color ) );
@@ -715,8 +729,6 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
 
     double start_x, start_y;
     double end_x,   end_y;
-    double dragx  = _dragx;
-    double dragy  = _dragy;
     RGBA   ccolor = (_color != null) ? _color : theme.get_color( "connection_background" );
     RGBA   bg     = ((mode == ConnMode.NONE) || exporting) ? theme.get_color( "background" ) :
                                                              theme.get_color( "nodesel_background" );
@@ -737,10 +749,7 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
 
     /* The value of t is always 0.5 */
     double cx, cy;
-
-    /* Calclate the control points based on the calculated start/end points */
-    cx = dragx - (((start_x + end_x) * 0.5) - dragx);
-    cy = dragy - (((start_y + end_y) * 0.5) - dragy);
+    _curve.get_point( 1, out cx, out cy );
 
     /* Draw the curve */
     ctx.save();
@@ -802,6 +811,9 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
 
     /* Draw the drag handle */
     } else if( (mode != ConnMode.NONE) && !exporting ) {
+
+      double dragx, dragy;
+      _curve.get_drag_point( out dragx, out dragy );
 
       ctx.set_line_width( 1 );
       Utils.set_context_color_with_alpha( ctx, Utils.color_from_string( "yellow" ), alpha );
@@ -887,9 +899,12 @@ public void get_match_items( string tabname, string pattern, bool[] search_opts,
     /* Draw the drag handle */
     if( ((mode == ConnMode.SELECTED) || (mode == ConnMode.ADJUSTING)) && !exporting ) {
 
+      double dragx, dragy;
+      _curve.get_drag_point( out dragx, out dragy );
+
       Utils.set_context_color_with_alpha( ctx, Utils.color_from_string( "yellow" ), alpha );
       ctx.set_line_width( 1 );
-      ctx.arc( _dragx, (_dragy + (h / 2) + padding), RADIUS, 0, (2 * Math.PI) );
+      ctx.arc( dragx, (dragy + (h / 2) + padding), RADIUS, 0, (2 * Math.PI) );
       ctx.fill_preserve();
       ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
       ctx.stroke();

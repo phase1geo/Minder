@@ -28,7 +28,7 @@ public class AnimatorNodes : AnimatorAction {
 
   /* Default constructor */
   public AnimatorNodes( DrawArea da, Array<Node> n, string name = "unnamed" ) {
-    base( name );
+    base( name, true );
     _num = n.length;
     _pos = new AnimatorPositions( da, n );
   }

@@ -48,6 +48,7 @@ public class NodeInspector : Box {
   private Revealer       _root_color_reveal;
   private Revealer       _color_reveal;
   private ToggleButton   _resize;
+  private bool           _ignore_changes = false;
 
   public NodeInspector( MainWindow win ) {
 
@@ -463,6 +464,7 @@ public class NodeInspector : Box {
    and redraws the canvas when needed.
   */
   private void note_changed() {
+    if( _ignore_changes ) return;
     _da.change_current_node_note( _note.buffer.text );
   }
 
@@ -542,6 +544,8 @@ public class NodeInspector : Box {
 
     Node? current = _da.get_current_node();
 
+    _ignore_changes = true;
+
     if( current != null ) {
       _task.set_active( current.task_enabled() );
       if( current.is_leaf() ) {
@@ -578,6 +582,8 @@ public class NodeInspector : Box {
         _image_stack.visible_child_name = "add";
       }
     }
+
+    _ignore_changes = false;
 
   }
 

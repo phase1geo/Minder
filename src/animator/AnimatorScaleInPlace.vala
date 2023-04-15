@@ -32,7 +32,7 @@ public class AnimatorScaleInPlace : AnimatorAction {
 
   /* Constructor for a pan change */
   public AnimatorScaleInPlace( DrawArea da, string name, double ssx, double ssy ) {
-    base( name );
+    base( name, false );
 
     double? _sox = null;     // Starting origin X
     double? _soy = null;     // Starting origin Y
