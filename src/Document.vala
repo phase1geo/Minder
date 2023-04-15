@@ -30,6 +30,7 @@ public class Document : Object {
   private bool          _from_user;  // Set to true if _filename was set by the user
   private ImageManager  _image_manager;
   private string        _etag;
+  private bool          _read_only = false;
 
   /* Properties */
   public string filename {
@@ -54,7 +55,12 @@ public class Document : Object {
   public bool save_needed { private set; get; default = false; }
   public bool readonly {
     get {
-      return( Utils.is_read_only( _filename ) );
+      var prev_read_only = _read_only;
+      _read_only = Utils.is_read_only( _filename );
+      if( save_needed && prev_read_only && !_read_only ) {
+        save();
+      }
+      return( _read_only );
     }
   }
 
@@ -216,7 +222,6 @@ public class Document : Object {
 
     /* If the save failed, restore the original etag and return false */
     if( res < 0 ) {
-      stdout.printf( "read-only? %s\n", Utils.is_read_only( dest_filename ).to_string() );
       _etag = orig_etag;
       return( false );
     }
