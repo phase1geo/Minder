@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Minder 1.12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-20 23:35-0500\n"
-"PO-Revision-Date: 2022-04-17 11:43+0300\n"
+"PO-Revision-Date: 2023-04-21 15:45+0200\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "Language: ru\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
-"X-Generator: Gtranslator 41.0\n"
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: data/com.github.phase1geo.minder.desktop.in:3
 #: data/com.github.phase1geo.minder.appdata.xml.in:7
@@ -203,70 +203,77 @@ msgid ""
 "Added ability to change the size of the node while leaving the embedded "
 "image size unchanged."
 msgstr ""
+"Добавлена воможность поменять размер узлов без смены размера вложенного "
+"изображения."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:98
 msgid "Added tooltip to node resize handle."
-msgstr ""
+msgstr "Добавлена подсказка в регулятор смены размера узла."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:99
 msgid ""
 "Added Flatpak permission for home folder access by default (thanks to "
 "@SubhadeepJasu)."
 msgstr ""
+"Добавлено разрешение Flatpak для доступа к домашнему пользовательскому "
+"каталогу по умолчанию (спасибо @SubhadeepJasu)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:100
 msgid "Added header font scaling in notes field."
-msgstr ""
+msgstr "Добавлено масштабирование заголовка шрифта в поле примечаний."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:101
-#, fuzzy
 msgid "Added support for exporting a mindmap via the command-line."
-msgstr "Добавлен экспорт в формат Mermaid."
+msgstr "Добавлен экспорт ментальных карт из командной строки."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:102
-#, fuzzy
 msgid "Added support for importing via the command-line."
-msgstr "Добавлен экспорт в формат Mermaid."
+msgstr "Добавлен импорт ментальных карт из командной строки."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:103
 msgid "Added ability to import a given filesystem as a mindmap."
-msgstr ""
+msgstr "Добавлен импорт указанной файловой системы как ментальной карты."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:104
 msgid "Added ability to export a mindmap as a filesystem."
-msgstr ""
+msgstr "Добавлен экспорт ментальной карты как файловой системы."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:105
-#, fuzzy
 msgid "Added zh_CN translation (thanks to @potrans)."
-msgstr "Добавлена чешская локализация (спасибо Jan Marek!)."
+msgstr "Добавлена китайская (zh_CN) локализация (спасибо @potrans)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:106
 msgid "Added ability to enable/disable UI animations via gsettings."
-msgstr ""
+msgstr "Добавлена возможность переключать анимацию интерфейса через gsettings."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:107
-#, fuzzy
 msgid "Added ability to associate a note with a selected group."
-msgstr "Добавлена возможность создавать, редактировать и удалять свои темы."
+msgstr ""
+"Добавлена возможность ассоциировать примечание с выделенной группой узлов."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:108
 msgid ""
 "Added ability to copy and cut nodes via shortcuts when multiple nodes are "
 "selected."
 msgstr ""
+"Добавлена возможность копировать и вырезать в буфер обмена горячими "
+"клавишами, когда выделено несколько узлов."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:109
 msgid ""
 "Added ability to insert unicode characters in nodes, connections, and notes "
 "when a backslash character is entered."
 msgstr ""
+"Добавлена возможность вставлять символы Unicode в узлы, связи и примечания "
+"после ввода обратной косой черты ('\\')."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:110
 msgid ""
 "Added support to detect read-only mindmap files and handle them "
 "appropriately."
 msgstr ""
+"Добавлено распознавание и корректная обработка файлов ментальных карт, "
+"доступных только для чтения."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:112
 #: data/com.github.phase1geo.minder.appdata.xml.in:169
@@ -294,14 +301,12 @@ msgid "Changes"
 msgstr "Изменения"
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:114
-#, fuzzy
 msgid "Updated German translation (thanks to @hztirf and @bewe)"
-msgstr "Обновлена немецкая локализация (спасибо Hannes Fritz)."
+msgstr "Обновлена немецкая локализация (спасибо @hztirf и @bewe)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:115
-#, fuzzy
 msgid "Updated Czech translation (thanks to @G020B)"
-msgstr "Добавлена чешская локализация (спасибо Jan Marek!)."
+msgstr "Обновлена чешская локализация (спасибо @G020B)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:116
 #: data/com.github.phase1geo.minder.appdata.xml.in:191
@@ -313,21 +318,19 @@ msgstr ""
 #: data/com.github.phase1geo.minder.appdata.xml.in:117
 #: data/com.github.phase1geo.minder.appdata.xml.in:245
 msgid "Updated Russian translation (thanks to Alexandre Prokoudine)"
-msgstr "Добавлена русская локализация (Александр Прокудин)"
+msgstr "Обновлена русская локализация (Александр Прокудин)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:118
-#, fuzzy
 msgid "Updated Portugese translation (thanks to @AncientBlueFrog)"
-msgstr "Добавлен перевод на португальский (спасибо Andre Barata)."
+msgstr "Обновлена португальская локализация (спасибо @AncientBlueFrog)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:119
-#, fuzzy
 msgid "Updated Polish translation (thanks to @pyotr71)"
-msgstr "Обновлена испанская локализация (febrezo на GutHub)."
+msgstr "Обновлена польская локализация (спасибо @pyotr71)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:120
 msgid "Updated Flatpak SDK from 6 to 6.1."
-msgstr ""
+msgstr "Flatpak SDK обновлен с версии 6 до 6.1."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:121
 msgid ""
@@ -389,7 +392,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:133
 msgid "Improved autosave frequency."
-msgstr ""
+msgstr "Оптимизирована частота автосохранения."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:135
 #: data/com.github.phase1geo.minder.appdata.xml.in:178
@@ -1074,6 +1077,8 @@ msgstr ""
 msgid ""
 "Improved automatic layout of node trees when adjacent tree sizes change."
 msgstr ""
+"Улучшено автоматическое перепозиционирование деревьев узлов при изменениях в "
+"соседнем дереве."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:409
 msgid ""
@@ -1466,7 +1471,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:558
 msgid "Added task support to Outliner import/export."
-msgstr ""
+msgstr "Добавлена поддержка задач при импорте/экспорте файлов Outliner."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:559
 msgid "Added keyboard shortcut (Control-E) to display export interface."
@@ -1654,7 +1659,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:623
 msgid "Added ability to export to Org-Mode format."
-msgstr ""
+msgstr "Добавлен экспорт в формат Org-Mode."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:627
 msgid "Updated French translation (thanks to Nathan Bonnemains)."
@@ -1734,7 +1739,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:653
 msgid "Added support for URLs in node titles."
-msgstr ""
+msgstr "Добавлена поддержка URL в заголовках узлов."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:654
 msgid ""
@@ -2262,7 +2267,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:880
 msgid "Added ability to double-click on a node to make it editable."
-msgstr ""
+msgstr "Добавлено переключение на редактирование узла по двойному щелчку."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:881
 msgid "Bug fixes."
