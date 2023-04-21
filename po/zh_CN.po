@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-24 21:48-0500\n"
+"POT-Creation-Date: 2023-04-20 23:35-0500\n"
 "PO-Revision-Date: 2022-07-22 17:02+0800\n"
 "Last-Translator: 企鹅2035 <qie2035@qq.com>\n"
 "Language-Team: 简体中文 (机翻) <qie2035@qq.com>\n"
@@ -88,28 +88,33 @@ msgstr "运行 “%s --help” 以查看有效选项\n"
 msgid "ERROR:  Unable to load Minder input file"
 msgstr "错误：无法加载管理器输入文件"
 
-#: src/CanvasText.vala:253 src/FormattedText.vala:1076
+#: src/CanvasText.vala:269 src/FormattedText.vala:1087
 msgid "No text found"
 msgstr "未找到文本"
 
-#: src/ConnectionInspector.vala:74 src/NodeInspector.vala:132
+#: src/ConnectionInspector.vala:74 src/NodeMenu.vala:221
+msgid "Connection"
+msgstr "连接"
+
+#: src/ConnectionInspector.vala:85 src/NodeInspector.vala:144
 msgid "Color"
 msgstr "颜色"
 
-#: src/ConnectionInspector.vala:88
+#: src/ConnectionInspector.vala:99
 msgid "Use Theme Default Color"
 msgstr "使用主题默认颜色"
 
-#: src/ConnectionInspector.vala:107 src/NodeInspector.vala:207
+#: src/ConnectionInspector.vala:118 src/GroupInspector.vala:82
+#: src/NodeInspector.vala:219
 msgid "Note"
 msgstr "注释"
 
-#: src/ConnectionInspector.vala:142
+#: src/ConnectionInspector.vala:154
 msgid "Delete Connection"
 msgstr "删除连接"
 
 #: src/ConnectionMenu.vala:42 src/ConnectionsMenu.vala:35
-#: src/GroupsMenu.vala:39 src/NodeMenu.vala:85 src/NodesMenu.vala:55
+#: src/GroupsMenu.vala:40 src/NodeMenu.vala:85 src/NodesMenu.vala:55
 #: src/ThemeEditor.vala:138
 msgid "Delete"
 msgstr "删除"
@@ -118,9 +123,9 @@ msgstr "删除"
 msgid "Edit Title…"
 msgstr "编辑标题..."
 
-#: src/ConnectionMenu.vala:50 src/NodeMenu.vala:100
-#: data/com.github.phase1geo.minder.shortcuts.ui:336
-#: data/com.github.phase1geo.minder.shortcuts.ui:627
+#: src/ConnectionMenu.vala:50 src/GroupsMenu.vala:47 src/NodeMenu.vala:100
+#: data/com.github.phase1geo.minder.shortcuts.ui:338
+#: data/com.github.phase1geo.minder.shortcuts.ui:629
 msgid "Edit Note"
 msgstr "编辑备注"
 
@@ -128,7 +133,7 @@ msgstr "编辑备注"
 msgid "Remove Sticker"
 msgstr "移除贴纸"
 
-#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:49 src/ImageManager.vala:299
+#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:299
 #: src/NodeMenu.vala:176 src/NodesMenu.vala:94
 msgid "Select"
 msgstr "选择"
@@ -149,32 +154,32 @@ msgstr "下一个连接"
 msgid "Previous Connection"
 msgstr "上一个连接"
 
-#: src/Connection.vala:695
+#: src/Connection.vala:709
 msgid "Connection Title"
 msgstr "连接标题"
 
-#: src/Connection.vala:703
+#: src/Connection.vala:717
 msgid "Connection Note"
 msgstr "连接说明"
 
-#: src/Document.vala:69
+#: src/Document.vala:80
 msgid "unnamed"
 msgstr "未命名"
 
-#: src/DrawArea.vala:757
+#: src/DrawArea.vala:733
 msgid "Main Idea"
 msgstr "主要思想"
 
-#: src/DrawArea.vala:2399
+#: src/DrawArea.vala:2384
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% 完成"
 
-#: src/DrawArea.vala:2413
+#: src/DrawArea.vala:2398
 msgid "Drag to resize node"
 msgstr "拖动以调整节点大小"
 
-#: src/DrawArea.vala:2415
+#: src/DrawArea.vala:2400
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -182,29 +187,29 @@ msgstr ""
 "拖动以调整节点和图像的大小。\n"
 "按住 Control-拖动以仅调整节点的大小。"
 
-#: src/DrawArea.vala:2527
+#: src/DrawArea.vala:2512
 #, c-format
 msgid "Children: %u\n"
 msgstr "子节点： %u\n"
 
-#: src/DrawArea.vala:2528
+#: src/DrawArea.vala:2513
 #, c-format
 msgid "Total: %d"
 msgstr "总计： %d"
 
-#: src/DrawArea.vala:2574
+#: src/DrawArea.vala:2559
 msgid "connection endpoint change"
 msgstr "连接端点更改"
 
-#: src/DrawArea.vala:2581
+#: src/DrawArea.vala:2566
 msgid "connection drag"
 msgstr "连接拖动"
 
-#: src/DrawArea.vala:3218 src/DrawArea.vala:3232 src/DrawArea.vala:4916
+#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4965
 msgid "Another Idea"
 msgstr "另一个想法"
 
-#: src/DrawArea.vala:4424 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4458 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "手动"
@@ -246,8 +251,9 @@ msgid "Closed Tabs"
 msgstr "已关闭的标签页"
 
 #: src/EmptyInspector.vala:30
+#, fuzzy
 msgid ""
-"Select a node or connection\n"
+"Select a node, connection or group\n"
 "to view/edit information"
 msgstr ""
 "选择节点或连接\n"
@@ -291,13 +297,13 @@ msgid "Export As %s"
 msgstr "导出为 %s"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:299
-#: src/MainWindow.vala:953 src/MainWindow.vala:1035 src/MainWindow.vala:1155
+#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1231
 #: src/QuickEntry.vala:118 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "取消"
 
-#: src/Exporter.vala:132 src/MainWindow.vala:773 src/StickerSet.vala:348
+#: src/Exporter.vala:132 src/MainWindow.vala:826 src/StickerSet.vala:348
 msgid "Export"
 msgstr "导出"
 
@@ -308,6 +314,10 @@ msgstr "Minder导出已完成"
 #: src/exports/ExportCSV.vala:26
 msgid "CSV"
 msgstr "CSV"
+
+#: src/exports/ExportFileSystem.vala:29
+msgid "File System"
+msgstr ""
 
 #: src/exports/ExportFreemind.vala:29
 msgid "Freemind"
@@ -366,9 +376,18 @@ msgstr "向上"
 msgid "OPML"
 msgstr "OPML"
 
-#: src/exports/ExportOrgMode.vala:26
+#: src/exports/ExportOrgMode.vala:28
 msgid "Org-Mode"
 msgstr "Org-Mode"
+
+#: src/exports/ExportOrgMode.vala:33
+#, fuzzy
+msgid "Indent Mode"
+msgstr "父节点"
+
+#: src/exports/ExportOrgMode.vala:33
+msgid "Export using indentation spaces"
+msgstr ""
 
 #: src/exports/ExportOutliner.vala:28
 msgid "Outliner"
@@ -428,27 +447,32 @@ msgstr "XMind 8"
 msgid "Yed"
 msgstr "Yed"
 
-#: src/Exports.vala:35
+#: src/Exports.vala:36
 msgid "JPEG"
 msgstr "JPEG"
 
-#: src/GroupsMenu.vala:42
+#: src/GroupInspector.vala:70
+#, fuzzy
+msgid "Group"
+msgstr "添加组"
+
+#: src/GroupsMenu.vala:43
 msgid "Merge"
 msgstr "合并"
 
-#: src/GroupsMenu.vala:45
+#: src/GroupsMenu.vala:50
 msgid "Change color…"
 msgstr "更改颜色..."
 
-#: src/GroupsMenu.vala:52
+#: src/GroupsMenu.vala:57
 msgid "Top Nodes"
 msgstr "顶部节点"
 
-#: src/GroupsMenu.vala:55
+#: src/GroupsMenu.vala:60
 msgid "All Grouped Nodes"
 msgstr "所有分组节点"
 
-#: src/GroupsMenu.vala:100 src/NodeMenu.vala:636 src/NodesMenu.vala:266
+#: src/GroupsMenu.vala:111 src/NodeMenu.vala:636 src/NodesMenu.vala:266
 msgid "Select a link color"
 msgstr "选择链接颜色"
 
@@ -482,7 +506,7 @@ msgstr "将图像剪切到剪贴板"
 msgid "Paste Image from Clipboard"
 msgstr "从剪贴板粘贴图像"
 
-#: src/ImageEditor.vala:396 src/NodeInspector.vala:276 src/NodeMenu.vala:416
+#: src/ImageEditor.vala:396 src/NodeInspector.vala:289 src/NodeMenu.vala:416
 msgid "Remove Image"
 msgstr "删除图像"
 
@@ -494,196 +518,206 @@ msgstr "选择图像"
 msgid "Images"
 msgstr "图像"
 
-#: src/MainWindow.vala:146 src/MainWindow.vala:1160
+#: src/MainWindow.vala:153 src/MainWindow.vala:1236
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:179 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:186 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
 msgstr "新建文件"
 
-#: src/MainWindow.vala:185 src/MainWindow.vala:1035
+#: src/MainWindow.vala:192 src/MainWindow.vala:1100
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "打开文件"
 
-#: src/MainWindow.vala:191 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:198 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
 msgstr "将文件另存为"
 
-#: src/MainWindow.vala:197 src/StickerSet.vala:303 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:204 src/StickerSet.vala:303 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "撤消"
 
-#: src/MainWindow.vala:204 src/StickerSet.vala:304 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:211 src/StickerSet.vala:304 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "重做"
 
-#: src/MainWindow.vala:492
+#: src/MainWindow.vala:541
 msgid "Unnamed Document"
 msgstr "未命名文档"
 
-#: src/MainWindow.vala:496 src/MainWindow.vala:808
+#: src/MainWindow.vala:544
+#, fuzzy
+msgid "Read-Only"
+msgstr "读数"
+
+#: src/MainWindow.vala:548 src/MainWindow.vala:861
 msgid "Focus Mode"
 msgstr "聚焦式"
 
-#: src/MainWindow.vala:529 src/MainWindow.vala:1206
+#: src/MainWindow.vala:582 src/MainWindow.vala:1288
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "缩放 （%d%%）"
 
-#: src/MainWindow.vala:536
+#: src/MainWindow.vala:589
 msgid "Zoom to Percent"
 msgstr "缩放至百分比"
 
-#: src/MainWindow.vala:549 src/ZoomWidget.vala:102
-#: data/com.github.phase1geo.minder.shortcuts.ui:117
+#: src/MainWindow.vala:602 src/ZoomWidget.vala:102
+#: data/com.github.phase1geo.minder.shortcuts.ui:119
 msgid "Zoom In"
 msgstr "放大"
 
-#: src/MainWindow.vala:555 src/ZoomWidget.vala:92
-#: data/com.github.phase1geo.minder.shortcuts.ui:124
+#: src/MainWindow.vala:608 src/ZoomWidget.vala:92
+#: data/com.github.phase1geo.minder.shortcuts.ui:126
 msgid "Zoom Out"
 msgstr "缩小"
 
-#: src/MainWindow.vala:565
+#: src/MainWindow.vala:618
 msgid "Zoom to Fit"
 msgstr "缩放以适合"
 
-#: src/MainWindow.vala:570 data/com.github.phase1geo.minder.shortcuts.ui:138
+#: src/MainWindow.vala:623 data/com.github.phase1geo.minder.shortcuts.ui:140
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "缩放以适合选定的节点树"
 
-#: src/MainWindow.vala:575
+#: src/MainWindow.vala:628
 msgid "Zoom to Actual Size"
 msgstr "缩放至实际大小"
 
-#: src/MainWindow.vala:599 src/StickerSet.vala:110
+#: src/MainWindow.vala:652 src/StickerSet.vala:110
 msgid "Search"
 msgstr "搜索"
 
-#: src/MainWindow.vala:609
+#: src/MainWindow.vala:662
 msgid "Search Nodes and Connections"
 msgstr "搜索节点和连接"
 
-#: src/MainWindow.vala:638
+#: src/MainWindow.vala:691
 msgid "Search Criteria"
 msgstr "搜索条件"
 
-#: src/MainWindow.vala:641
+#: src/MainWindow.vala:694
 msgid "Search all tabs"
 msgstr "搜索所有选项卡"
 
-#: src/MainWindow.vala:675
+#: src/MainWindow.vala:728
 msgid "Nodes"
 msgstr "节点"
 
-#: src/MainWindow.vala:676
+#: src/MainWindow.vala:729
 msgid "Connections"
 msgstr "连接"
 
-#: src/MainWindow.vala:677
+#: src/MainWindow.vala:730
 msgid "Titles"
 msgstr "标题"
 
-#: src/MainWindow.vala:678
+#: src/MainWindow.vala:731
 msgid "Notes"
 msgstr "笔记"
 
-#: src/MainWindow.vala:679
+#: src/MainWindow.vala:732
 msgid "Folded"
 msgstr "折叠"
 
-#: src/MainWindow.vala:680
+#: src/MainWindow.vala:733
 msgid "Unfolded"
 msgstr "展开"
 
-#: src/MainWindow.vala:681
+#: src/MainWindow.vala:734
 msgid "Tasks"
 msgstr "任务"
 
-#: src/MainWindow.vala:682
+#: src/MainWindow.vala:735
 msgid "Non-tasks"
 msgstr "非任务"
 
-#: src/MainWindow.vala:785
+#: src/MainWindow.vala:838
 msgid "Print…"
 msgstr "打印..."
 
-#: src/MainWindow.vala:833 src/Preferences.vala:36
+#: src/MainWindow.vala:886 src/Preferences.vala:36
 msgid "Preferences"
 msgstr "偏好设置"
 
-#: src/MainWindow.vala:838
+#: src/MainWindow.vala:891
 msgid "Shortcuts Cheatsheet"
 msgstr "快捷键"
 
-#: src/MainWindow.vala:842
+#: src/MainWindow.vala:895
 msgid "About Minder"
 msgstr "关于Minder"
 
-#: src/MainWindow.vala:875 src/MainWindow.vala:1272
+#: src/MainWindow.vala:928 src/MainWindow.vala:1360
 msgid "Show Property Sidebar"
 msgstr "显示属性侧边栏"
 
-#: src/MainWindow.vala:890
+#: src/MainWindow.vala:943
 msgid "Current"
 msgstr "当前"
 
-#: src/MainWindow.vala:891 src/StyleInspector.vala:188
+#: src/MainWindow.vala:944 src/StyleInspector.vala:188
 msgid "Style"
 msgstr "风格"
 
-#: src/MainWindow.vala:892
+#: src/MainWindow.vala:945
 msgid "Stickers"
 msgstr "贴纸"
 
-#: src/MainWindow.vala:893
+#: src/MainWindow.vala:946
 msgid "Map"
 msgstr "地图"
 
-#: src/MainWindow.vala:944
+#: src/MainWindow.vala:1000
 msgid "Save current unnamed document?"
 msgstr "保存当前未命名的文档？"
 
-#: src/MainWindow.vala:945
+#: src/MainWindow.vala:1001
 msgid "Changes will be permanently lost if not saved."
 msgstr "如果不保存，更改将永久丢失。"
 
-#: src/MainWindow.vala:950
+#: src/MainWindow.vala:1006
 msgid "Discard Changes"
 msgstr "放弃更改"
 
-#: src/MainWindow.vala:956 src/MainWindow.vala:1155 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:1012 src/MainWindow.vala:1231 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "保存"
 
-#: src/MainWindow.vala:985
+#: src/MainWindow.vala:1041
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "文件 %s 已在应用程序外部修改。"
 
-#: src/MainWindow.vala:986
+#: src/MainWindow.vala:1042
 msgid "What do you want to do?"
 msgstr "您要做什么？"
 
-#: src/MainWindow.vala:991
+#: src/MainWindow.vala:1047
 msgid "Discard Changes and reload"
 msgstr "放弃更改并重新加载"
 
-#: src/MainWindow.vala:994
+#: src/MainWindow.vala:1050
 msgid "Save local version and overwrite"
 msgstr "保存本地版本并覆盖"
 
-#: src/MainWindow.vala:1035
+#: src/MainWindow.vala:1100
+#, fuzzy
+msgid "Open Directory"
+msgstr "打开文件"
+
+#: src/MainWindow.vala:1103
 msgid "Open"
 msgstr "打开"
 
-#: src/MainWindow.vala:1155
+#: src/MainWindow.vala:1231
 msgid "Save File"
 msgstr "保存文件"
 
-#: src/MainWindow.vala:1216
+#: src/MainWindow.vala:1304
 msgid "Hide Property Sidebar"
 msgstr "隐藏属性侧边栏"
 
@@ -723,47 +757,52 @@ msgstr "展开所有节点"
 msgid "Unsaved"
 msgstr "未保存"
 
-#: src/NodeInspector.vala:93
+#: src/NodeInspector.vala:94
+#, fuzzy
+msgid "Node"
+msgstr "节点"
+
+#: src/NodeInspector.vala:105
 msgid "Task"
 msgstr "任务"
 
-#: src/NodeInspector.vala:111
+#: src/NodeInspector.vala:123
 msgid "Fold"
 msgstr "折叠"
 
-#: src/NodeInspector.vala:162
+#: src/NodeInspector.vala:174
 msgid "Override Color"
 msgstr "覆盖颜色"
 
-#: src/NodeInspector.vala:247 src/NodeInspector.vala:265
+#: src/NodeInspector.vala:260 src/NodeInspector.vala:278
 msgid "Image"
 msgstr "图像"
 
-#: src/NodeInspector.vala:251
+#: src/NodeInspector.vala:264
 msgid "Add Image…"
 msgstr "添加图片..."
 
-#: src/NodeInspector.vala:270
+#: src/NodeInspector.vala:283
 msgid "Edit Image"
 msgstr "编辑图像"
 
-#: src/NodeInspector.vala:283
+#: src/NodeInspector.vala:296
 msgid "Resizable"
 msgstr "可调整大小"
 
-#: src/NodeInspector.vala:383
+#: src/NodeInspector.vala:396
 msgid "Copy Node To Clipboard"
 msgstr "将节点复制到剪贴板"
 
-#: src/NodeInspector.vala:387
+#: src/NodeInspector.vala:400
 msgid "Cut Node To Clipboard"
 msgstr "将节点剪切到剪贴板"
 
-#: src/NodeInspector.vala:392
+#: src/NodeInspector.vala:405
 msgid "Detach Node"
 msgstr "分离节点"
 
-#: src/NodeInspector.vala:397 data/com.github.phase1geo.minder.shortcuts.ui:282
+#: src/NodeInspector.vala:410 data/com.github.phase1geo.minder.shortcuts.ui:284
 msgid "Delete Node"
 msgstr "删除节点"
 
@@ -900,10 +939,6 @@ msgstr "父节点"
 msgid "Linked Node"
 msgstr "链接节点"
 
-#: src/NodeMenu.vala:221
-msgid "Connection"
-msgstr "连接"
-
 #: src/NodeMenu.vala:226
 msgid "Center Current Node"
 msgstr "居中当前节点"
@@ -988,7 +1023,7 @@ msgstr "对齐节点"
 msgid "Align Top"
 msgstr "对齐顶部"
 
-#: src/NodesMenu.vala:120 data/com.github.phase1geo.minder.shortcuts.ui:572
+#: src/NodesMenu.vala:120 data/com.github.phase1geo.minder.shortcuts.ui:574
 msgid "Align Center Horizontally"
 msgstr "水平居中对齐"
 
@@ -1000,7 +1035,7 @@ msgstr "底部对齐"
 msgid "Align Left"
 msgstr "左对齐"
 
-#: src/NodesMenu.vala:132 data/com.github.phase1geo.minder.shortcuts.ui:593
+#: src/NodesMenu.vala:132 data/com.github.phase1geo.minder.shortcuts.ui:595
 msgid "Align Center Vertically"
 msgstr "垂直居中对齐"
 
@@ -1012,11 +1047,11 @@ msgstr "右对齐"
 msgid "Remove Node Links"
 msgstr "删除节点链接"
 
-#: src/Node.vala:1974
+#: src/Node.vala:1976
 msgid "Node Title"
 msgstr "节点标题"
 
-#: src/Node.vala:1982
+#: src/Node.vala:1984
 msgid "Node Note"
 msgstr "节点说明"
 
@@ -1057,40 +1092,50 @@ msgid "Enable Markdown"
 msgstr "启用Markdown"
 
 #: src/Preferences.vala:87
+msgid "Enable Unicode input"
+msgstr ""
+
+#: src/Preferences.vala:89
+msgid ""
+"Specifies if Unicode characters can be input using backslash prefixed "
+"descriptors (ex. \\pi)"
+msgstr ""
+
+#: src/Preferences.vala:91
 msgid "Create connection title on creation"
 msgstr "创建时创建连接标题"
 
-#: src/Preferences.vala:89
+#: src/Preferences.vala:93
 msgid ""
 "Specifies if the connection title will be added and put into edit mode "
 "immediately after the connection is made."
 msgstr "指定在建立连接后立即添加连接标题并将其置于编辑模式。"
 
-#: src/Preferences.vala:91
+#: src/Preferences.vala:95
 msgid "Select items on mouse hover"
 msgstr "鼠标悬停时选择项目"
 
-#: src/Preferences.vala:93
+#: src/Preferences.vala:97
 msgid "If enabled, selects items when mouse cursor hovers over the item."
 msgstr "如果启用，则当鼠标光标悬停在项目上时选择项目。"
 
-#: src/Preferences.vala:106
+#: src/Preferences.vala:110
 msgid "Hide themes not matching visual style"
 msgstr "隐藏与视觉样式不匹配的主题"
 
-#: src/Preferences.vala:110
+#: src/Preferences.vala:114
 msgid "Default theme"
 msgstr "默认主题"
 
-#: src/Preferences.vala:113
+#: src/Preferences.vala:117
 msgid "Enable animations"
 msgstr "启用动画"
 
-#: src/Preferences.vala:116
+#: src/Preferences.vala:120
 msgid "Text field font size"
 msgstr "文本字段字体大小"
 
-#: src/Preferences.vala:119
+#: src/Preferences.vala:123
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
@@ -2578,7 +2623,7 @@ msgstr "短划线"
 msgid "Long Dash"
 msgstr "长破折号"
 
-#: src/Tagger.vala:123
+#: src/Tagger.vala:124
 msgid "Add Tag"
 msgstr "添加标签"
 
@@ -2795,6 +2840,11 @@ msgstr "连接标题更改"
 #: src/undo_actions/UndoGroupAdd.vala:30
 msgid "add group"
 msgstr "添加组"
+
+#: src/undo_actions/UndoGroupNote.vala:32
+#, fuzzy
+msgid "node group note change"
+msgstr "节点组更改"
 
 #: src/undo_actions/UndoGroupRemove.vala:30
 msgid "remove group"
@@ -3027,7 +3077,7 @@ msgid "Minder Shortcuts"
 msgstr "管理器快捷方式"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:12
-#: data/com.github.phase1geo.minder.shortcuts.ui:911
+#: data/com.github.phase1geo.minder.shortcuts.ui:913
 msgid "General"
 msgstr "常规"
 
@@ -3035,605 +3085,604 @@ msgstr "常规"
 msgid "Import File"
 msgstr "导入文件"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:49
-msgid "Export File"
-msgstr "导出文件"
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:56
+#: data/com.github.phase1geo.minder.shortcuts.ui:58
 msgid "Print File"
 msgstr "打印文件"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:65
+#: data/com.github.phase1geo.minder.shortcuts.ui:67
 msgid "Notebook Tabs"
 msgstr "笔记本标签"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:70
+#: data/com.github.phase1geo.minder.shortcuts.ui:72
 msgid "Close Current Tab"
 msgstr "关闭当前选项卡"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:77
+#: data/com.github.phase1geo.minder.shortcuts.ui:79
 msgid "Go to Next Tab"
 msgstr "转到“下一个”选项卡"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:84
+#: data/com.github.phase1geo.minder.shortcuts.ui:86
 msgid "Go to Previous Tab"
 msgstr "转到上一个选项卡"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:93
+#: data/com.github.phase1geo.minder.shortcuts.ui:95
 msgid "Undo/Redo"
 msgstr "撤消/重做"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:97
+#: data/com.github.phase1geo.minder.shortcuts.ui:99
 msgid "Undo Last Change"
 msgstr "撤消上次更改"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:104
+#: data/com.github.phase1geo.minder.shortcuts.ui:106
 msgid "Redo Last Undo"
 msgstr "重做上次撤消"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:113
+#: data/com.github.phase1geo.minder.shortcuts.ui:115
 msgid "Zooming"
 msgstr "缩放"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:131
+#: data/com.github.phase1geo.minder.shortcuts.ui:133
 msgid "Zoom To Actual Size"
 msgstr "缩放至实际大小"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:145
+#: data/com.github.phase1geo.minder.shortcuts.ui:147
 msgid "Zoom To Fit"
 msgstr "缩放以适合"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:154
+#: data/com.github.phase1geo.minder.shortcuts.ui:156
 msgid "Properties Sidebar"
 msgstr "属性 侧边栏"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:158
+#: data/com.github.phase1geo.minder.shortcuts.ui:160
 msgid "Show Current Tab"
 msgstr "显示当前选项卡"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:165
+#: data/com.github.phase1geo.minder.shortcuts.ui:167
 msgid "Show Style Tab"
 msgstr "“显示样式”选项卡"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:172
+#: data/com.github.phase1geo.minder.shortcuts.ui:174
 msgid "Show Sticker Tab"
 msgstr "显示贴纸选项卡"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:179
+#: data/com.github.phase1geo.minder.shortcuts.ui:181
 msgid "Show Map Tab"
 msgstr "“显示地图”选项卡"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:188
-#: data/com.github.phase1geo.minder.shortcuts.ui:691
+#: data/com.github.phase1geo.minder.shortcuts.ui:190
+#: data/com.github.phase1geo.minder.shortcuts.ui:693
 msgid "Miscellaneous"
 msgstr "杂项"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:192
+#: data/com.github.phase1geo.minder.shortcuts.ui:194
 msgid "Toggle Focus Mode"
 msgstr "切换对焦模式"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:199
+#: data/com.github.phase1geo.minder.shortcuts.ui:201
 msgid "Search Nodes/Connections"
 msgstr "搜索节点/连接"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:206
-#: data/com.github.phase1geo.minder.shortcuts.ui:915
+#: data/com.github.phase1geo.minder.shortcuts.ui:208
+#: data/com.github.phase1geo.minder.shortcuts.ui:917
 msgid "Show Contextual Menu"
 msgstr "显示上下文菜单"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:213
+#: data/com.github.phase1geo.minder.shortcuts.ui:215
 msgid "Show Preferences"
 msgstr "显示首选项"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:220
+#: data/com.github.phase1geo.minder.shortcuts.ui:222
 msgid "Show Keyboard Shortcuts"
 msgstr "显示键盘快捷键"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:227
+#: data/com.github.phase1geo.minder.shortcuts.ui:229
 msgid "Quit Application"
 msgstr "退出申请"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:239
+#: data/com.github.phase1geo.minder.shortcuts.ui:241
 msgid "Node Commands"
 msgstr "节点命令"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:243
+#: data/com.github.phase1geo.minder.shortcuts.ui:245
 msgid "Creation/Deletion"
 msgstr "创建/删除"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:247
+#: data/com.github.phase1geo.minder.shortcuts.ui:249
 msgid "New Sibling Node"
 msgstr "新建同级节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:254
+#: data/com.github.phase1geo.minder.shortcuts.ui:256
 msgid "New Connected Node"
 msgstr "新建连接的节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:261
+#: data/com.github.phase1geo.minder.shortcuts.ui:263
 msgid "New Child Node"
 msgstr "新建子节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:268
+#: data/com.github.phase1geo.minder.shortcuts.ui:270
 msgid "Quick Entry Insertion"
 msgstr "快速输入插入"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:275
+#: data/com.github.phase1geo.minder.shortcuts.ui:277
 msgid "Quick Entry Replacement"
 msgstr "快速进入更换"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:291
-#: data/com.github.phase1geo.minder.shortcuts.ui:801
+#: data/com.github.phase1geo.minder.shortcuts.ui:293
+#: data/com.github.phase1geo.minder.shortcuts.ui:803
 msgid "Clipboard"
 msgstr "剪贴板"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:295
+#: data/com.github.phase1geo.minder.shortcuts.ui:297
 msgid "Copy Node"
 msgstr "复制节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:302
+#: data/com.github.phase1geo.minder.shortcuts.ui:304
 msgid "Cut Node"
 msgstr "剪切节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:309
+#: data/com.github.phase1geo.minder.shortcuts.ui:311
 msgid "Add Child Node With Clipboard"
 msgstr "使用剪贴板添加子节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:316
+#: data/com.github.phase1geo.minder.shortcuts.ui:318
 msgid "Replace With Clipboard"
 msgstr "替换为剪贴板"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:325
+#: data/com.github.phase1geo.minder.shortcuts.ui:327
 msgid "Changing Current"
 msgstr "更改电流"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:329
-#: data/com.github.phase1geo.minder.shortcuts.ui:620
+#: data/com.github.phase1geo.minder.shortcuts.ui:331
+#: data/com.github.phase1geo.minder.shortcuts.ui:622
 msgid "Edit Title"
 msgstr "编辑标题"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:343
+#: data/com.github.phase1geo.minder.shortcuts.ui:345
 msgid "Change Task State"
 msgstr "更改任务状态"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:350
+#: data/com.github.phase1geo.minder.shortcuts.ui:352
 msgid "Add URL Link To Text"
 msgstr "向文本添加网址链接"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:357
-#: data/com.github.phase1geo.minder.shortcuts.ui:723
+#: data/com.github.phase1geo.minder.shortcuts.ui:359
+#: data/com.github.phase1geo.minder.shortcuts.ui:725
 msgid "Remove URL Link From Text"
 msgstr "从文本中删除网址链接"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:364
+#: data/com.github.phase1geo.minder.shortcuts.ui:366
 msgid "View Properties"
 msgstr "查看属性"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:371
+#: data/com.github.phase1geo.minder.shortcuts.ui:373
 msgid "Toggle Fold"
 msgstr "切换折叠"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:378
+#: data/com.github.phase1geo.minder.shortcuts.ui:380
 msgid "Toggle Node Link"
 msgstr "切换节点链接"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:385
+#: data/com.github.phase1geo.minder.shortcuts.ui:387
 msgid "Create Link to Selected Node"
 msgstr "创建指向所选节点的链接"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:386
+#: data/com.github.phase1geo.minder.shortcuts.ui:388
 msgid "[After using this command, 'y' will create the link]"
 msgstr "[使用此命令后，“y”将创建链接]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:393
+#: data/com.github.phase1geo.minder.shortcuts.ui:395
 msgid "Create Group"
 msgstr "创建组"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:400
+#: data/com.github.phase1geo.minder.shortcuts.ui:402
 msgid "Create Connection"
 msgstr "创建连接"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:407
+#: data/com.github.phase1geo.minder.shortcuts.ui:409
 msgid "Center In View"
 msgstr "居中视图"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:414
-#: data/com.github.phase1geo.minder.shortcuts.ui:641
+#: data/com.github.phase1geo.minder.shortcuts.ui:416
+#: data/com.github.phase1geo.minder.shortcuts.ui:643
 msgid "Place Into View"
 msgstr "放入视图"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:423
-#: data/com.github.phase1geo.minder.shortcuts.ui:828
+#: data/com.github.phase1geo.minder.shortcuts.ui:425
+#: data/com.github.phase1geo.minder.shortcuts.ui:830
 msgid "Selection"
 msgstr "选择"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:427
+#: data/com.github.phase1geo.minder.shortcuts.ui:429
 msgid "Select Root"
 msgstr "选择根目录"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:434
+#: data/com.github.phase1geo.minder.shortcuts.ui:436
 msgid "Select Parent"
 msgstr "选择父项"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:441
+#: data/com.github.phase1geo.minder.shortcuts.ui:443
 msgid "Select Next Sibling"
 msgstr "选择下一个同级"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:448
+#: data/com.github.phase1geo.minder.shortcuts.ui:450
 msgid "Select Previous Sibling"
 msgstr "选择上一个同级"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:455
+#: data/com.github.phase1geo.minder.shortcuts.ui:457
 msgid "Select Child"
 msgstr "选择孩子"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:462
+#: data/com.github.phase1geo.minder.shortcuts.ui:464
 msgid "Select Children"
 msgstr "选择儿童"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:469
+#: data/com.github.phase1geo.minder.shortcuts.ui:471
 msgid "Select Subtree"
 msgstr "选择子树"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:476
+#: data/com.github.phase1geo.minder.shortcuts.ui:478
 msgid "Select Node Below"
 msgstr "选择下面的节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:483
+#: data/com.github.phase1geo.minder.shortcuts.ui:485
 msgid "Select Node Above"
 msgstr "选择上方的节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:490
+#: data/com.github.phase1geo.minder.shortcuts.ui:492
 msgid "Select Node To Right"
 msgstr "选择“向右的节点”"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:497
+#: data/com.github.phase1geo.minder.shortcuts.ui:499
 msgid "Select Node To Left"
 msgstr "选择左侧的节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:504
+#: data/com.github.phase1geo.minder.shortcuts.ui:506
 msgid "Select Linked Node"
 msgstr "选择链接节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:511
+#: data/com.github.phase1geo.minder.shortcuts.ui:513
 msgid "Select Attached Connection"
 msgstr "选择连接的连接"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:520
+#: data/com.github.phase1geo.minder.shortcuts.ui:522
 msgid "Move"
 msgstr "移动"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:524
+#: data/com.github.phase1geo.minder.shortcuts.ui:526
 msgid "Swap with Sibling Node to Right"
 msgstr "与右侧的同级节点交换"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:531
+#: data/com.github.phase1geo.minder.shortcuts.ui:533
 msgid "Swap with Sibling Node to Left"
 msgstr "与左同级节点交换"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:538
+#: data/com.github.phase1geo.minder.shortcuts.ui:540
 msgid "Swap with Sibling Node Above"
 msgstr "与上面的同级节点交换"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:545
+#: data/com.github.phase1geo.minder.shortcuts.ui:547
 msgid "Swap with Sibling Node Below"
 msgstr "与下面的同级节点交换"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:552
+#: data/com.github.phase1geo.minder.shortcuts.ui:554
 msgid "Sort Child Nodes Alphabetically"
 msgstr "按字母顺序对子节点进行排序"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:561
+#: data/com.github.phase1geo.minder.shortcuts.ui:563
 msgid "Alignment"
 msgstr "对准"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:565
+#: data/com.github.phase1geo.minder.shortcuts.ui:567
 msgid "Align Top Side"
 msgstr "对齐顶部"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:579
+#: data/com.github.phase1geo.minder.shortcuts.ui:581
 msgid "Align Bottom Side"
 msgstr "对齐底部"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:586
+#: data/com.github.phase1geo.minder.shortcuts.ui:588
 msgid "Align Left Side"
 msgstr "左对齐"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:600
+#: data/com.github.phase1geo.minder.shortcuts.ui:602
 msgid "Align Right Side"
 msgstr "右侧对齐"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:612
+#: data/com.github.phase1geo.minder.shortcuts.ui:614
 msgid "Connection Commands"
 msgstr "连接命令"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:616
+#: data/com.github.phase1geo.minder.shortcuts.ui:618
 msgid "Change Current"
 msgstr "更改当前"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:634
+#: data/com.github.phase1geo.minder.shortcuts.ui:636
 msgid "Show Properties"
 msgstr "显示属性"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:650
+#: data/com.github.phase1geo.minder.shortcuts.ui:652
 msgid "Traversal"
 msgstr "遍历"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:654
+#: data/com.github.phase1geo.minder.shortcuts.ui:656
 msgid "Select Start Node"
 msgstr "选择启动节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:661
+#: data/com.github.phase1geo.minder.shortcuts.ui:663
 msgid "Select End Node"
 msgstr "选择结束节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:668
+#: data/com.github.phase1geo.minder.shortcuts.ui:670
 msgid "Select Next Connection"
 msgstr "选择下一个连接"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:675
+#: data/com.github.phase1geo.minder.shortcuts.ui:677
 msgid "Select Previous Connection"
 msgstr "选择上一个连接"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:687
+#: data/com.github.phase1geo.minder.shortcuts.ui:689
 msgid "Text Editing"
 msgstr "文本编辑"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:695
+#: data/com.github.phase1geo.minder.shortcuts.ui:697
 msgid "Insert Newline Character"
 msgstr "插入换行符"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:702
+#: data/com.github.phase1geo.minder.shortcuts.ui:704
 msgid "Insert Tab Character"
 msgstr "插入制表符"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:709
+#: data/com.github.phase1geo.minder.shortcuts.ui:711
 msgid "Show Emoji Picker"
 msgstr "显示表情符号选取器"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:716
+#: data/com.github.phase1geo.minder.shortcuts.ui:718
 msgid "Add URL Link To Selected Text"
 msgstr "向所选文本添加 URL 链接"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:730
+#: data/com.github.phase1geo.minder.shortcuts.ui:732
 msgid "End Editing"
 msgstr "结束编辑"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:739
+#: data/com.github.phase1geo.minder.shortcuts.ui:741
 msgid "Cursor Movement"
 msgstr "光标移动"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:743
+#: data/com.github.phase1geo.minder.shortcuts.ui:745
 msgid "Next Character"
 msgstr "下一个字符"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:750
+#: data/com.github.phase1geo.minder.shortcuts.ui:752
 msgid "Previous Character"
 msgstr "上一个字符"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:757
+#: data/com.github.phase1geo.minder.shortcuts.ui:759
 msgid "Next Word"
 msgstr "下一个词"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:764
+#: data/com.github.phase1geo.minder.shortcuts.ui:766
 msgid "Previous Word"
 msgstr "上一个单词"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:771
+#: data/com.github.phase1geo.minder.shortcuts.ui:773
 msgid "Next Line"
 msgstr "下一行"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:778
+#: data/com.github.phase1geo.minder.shortcuts.ui:780
 msgid "Previous Line"
 msgstr "上一行"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:785
+#: data/com.github.phase1geo.minder.shortcuts.ui:787
 msgid "Start Of Text"
 msgstr "文本开头"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:792
+#: data/com.github.phase1geo.minder.shortcuts.ui:794
 msgid "End Of Text"
 msgstr "文本结尾"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:805
+#: data/com.github.phase1geo.minder.shortcuts.ui:807
 msgid "Copy Selected Text"
 msgstr "复制所选文本"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:812
+#: data/com.github.phase1geo.minder.shortcuts.ui:814
 msgid "Cut Selected Text"
 msgstr "剪切所选文本"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:819
+#: data/com.github.phase1geo.minder.shortcuts.ui:821
 msgid "Paste Text"
 msgstr "粘贴文本"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:832
+#: data/com.github.phase1geo.minder.shortcuts.ui:834
 msgid "Add Next Character"
 msgstr "添加下一个字符"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:839
+#: data/com.github.phase1geo.minder.shortcuts.ui:841
 msgid "Add Previous Character"
 msgstr "添加上一个字符"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:846
+#: data/com.github.phase1geo.minder.shortcuts.ui:848
 msgid "Add Next Word"
 msgstr "添加下一个单词"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:853
+#: data/com.github.phase1geo.minder.shortcuts.ui:855
 msgid "Add Previous Word"
 msgstr "添加上一个单词"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:860
+#: data/com.github.phase1geo.minder.shortcuts.ui:862
 msgid "Add Next Line"
 msgstr "添加下一行"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:867
+#: data/com.github.phase1geo.minder.shortcuts.ui:869
 msgid "Add Previous Line"
 msgstr "添加上一行"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:874
+#: data/com.github.phase1geo.minder.shortcuts.ui:876
 msgid "Add Start Of Text"
 msgstr "添加文本开头"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:881
+#: data/com.github.phase1geo.minder.shortcuts.ui:883
 msgid "Add End Of Text"
 msgstr "添加文本结尾"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:888
+#: data/com.github.phase1geo.minder.shortcuts.ui:890
 msgid "Select All Text"
 msgstr "选择所有文本"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:895
+#: data/com.github.phase1geo.minder.shortcuts.ui:897
 msgid "Clear Selection"
 msgstr "清除选择"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:907
+#: data/com.github.phase1geo.minder.shortcuts.ui:909
 msgid "Mouse Events"
 msgstr "鼠标事件"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:916
+#: data/com.github.phase1geo.minder.shortcuts.ui:918
 msgid "[Right-click when item is selected]"
 msgstr "[选择项目时单击鼠标右键]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:922
+#: data/com.github.phase1geo.minder.shortcuts.ui:924
 msgid "Edit Image in Canvas"
 msgstr "在画布中编辑图像"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:923
+#: data/com.github.phase1geo.minder.shortcuts.ui:925
 msgid "[Double left-click on image]"
 msgstr "[双击图像]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:931
+#: data/com.github.phase1geo.minder.shortcuts.ui:933
 msgid "Canvas Movement"
 msgstr "画布运动"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:935
+#: data/com.github.phase1geo.minder.shortcuts.ui:937
 msgid "Pan Canvas"
 msgstr "平移画布"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:936
+#: data/com.github.phase1geo.minder.shortcuts.ui:938
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr "[中键点击 + 拖动 / 替代 + 运动]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:942
+#: data/com.github.phase1geo.minder.shortcuts.ui:944
 msgid "Scroll Vertically"
 msgstr "垂直滚动"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:943
+#: data/com.github.phase1geo.minder.shortcuts.ui:945
 msgid "[Scrollwheel up/down]"
 msgstr "[滚轮上/下]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:949
+#: data/com.github.phase1geo.minder.shortcuts.ui:951
 msgid "Scroll Horizontally"
 msgstr "水平滚动"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:950
+#: data/com.github.phase1geo.minder.shortcuts.ui:952
 msgid "[Shift + Scrollwheel up/down]"
 msgstr "[换档 + 滚轮向上/向下]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:958
+#: data/com.github.phase1geo.minder.shortcuts.ui:960
 msgid "Item Selection"
 msgstr "项目选择"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:962
+#: data/com.github.phase1geo.minder.shortcuts.ui:964
 msgid "Select Single Item"
 msgstr "选择单个项目"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:963
+#: data/com.github.phase1geo.minder.shortcuts.ui:965
 msgid "[Left-click on item]"
 msgstr "[左键点击项目]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:969
+#: data/com.github.phase1geo.minder.shortcuts.ui:971
 msgid "Select Child Nodes"
 msgstr "选择子节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:970
+#: data/com.github.phase1geo.minder.shortcuts.ui:972
 msgid "[Control + Left-click on parent node]"
 msgstr "[控制+左键点击父节点]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:976
+#: data/com.github.phase1geo.minder.shortcuts.ui:978
 msgid "Select Node Tree/Subtree"
 msgstr "选择节点树/子树"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:977
+#: data/com.github.phase1geo.minder.shortcuts.ui:979
 msgid "[Control + Double left-click on parent node]"
 msgstr "[控制+双击父节点]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:983
+#: data/com.github.phase1geo.minder.shortcuts.ui:985
 msgid "Select All Nodes at Same Depth Level"
 msgstr "选择相同深度级别的所有节点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:984
+#: data/com.github.phase1geo.minder.shortcuts.ui:986
 msgid "[Control + Triple left-click on node]"
 msgstr "[控制 + 三次左键点击节点]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:990
+#: data/com.github.phase1geo.minder.shortcuts.ui:992
 msgid "Block Selection"
 msgstr "块选择"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:991
+#: data/com.github.phase1geo.minder.shortcuts.ui:993
 msgid "[Left-click + Drag]"
 msgstr "[左键点击 + 拖动]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:999
+#: data/com.github.phase1geo.minder.shortcuts.ui:1001
 msgid "Item Selection Toggle (Add to/Remove from Selection)"
 msgstr "项目选择切换（添加到/从所选内容中删除）"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1003
+#: data/com.github.phase1geo.minder.shortcuts.ui:1005
 msgid "Toggle Selection of Item"
 msgstr "切换项目选择"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1004
+#: data/com.github.phase1geo.minder.shortcuts.ui:1006
 msgid "[Shift + Left-click on item]"
 msgstr "[移位 + 左键点击项目]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1010
+#: data/com.github.phase1geo.minder.shortcuts.ui:1012
 msgid "Toggle Selection of Child Nodes"
 msgstr "切换子节点的选择"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1011
+#: data/com.github.phase1geo.minder.shortcuts.ui:1013
 msgid "[Shift + Control + Left-click on item]"
 msgstr "[切换 + 控制 + 左键点击项目]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1017
+#: data/com.github.phase1geo.minder.shortcuts.ui:1019
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "切换节点树/子树的选择"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1018
+#: data/com.github.phase1geo.minder.shortcuts.ui:1020
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr "[Shift + Control + 双击父节点]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1024
+#: data/com.github.phase1geo.minder.shortcuts.ui:1026
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr "切换相同深度级别的所有节点的选择"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1025
+#: data/com.github.phase1geo.minder.shortcuts.ui:1027
 msgid "[Shift + Control + Triple left-click on node]"
 msgstr "[移位 + 控制 + 三次左键点击节点]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1033
+#: data/com.github.phase1geo.minder.shortcuts.ui:1035
 msgid "Text Selection"
 msgstr "文本选择"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1037
+#: data/com.github.phase1geo.minder.shortcuts.ui:1039
 msgid "Set Cursor Insert Point"
 msgstr "设置光标插入点"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1038
+#: data/com.github.phase1geo.minder.shortcuts.ui:1040
 msgid "[Left-click anywhere in text]"
 msgstr "[左键单击文本中的任意位置]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1044
+#: data/com.github.phase1geo.minder.shortcuts.ui:1046
 msgid "Select current word"
 msgstr "选择当前单词"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1045
+#: data/com.github.phase1geo.minder.shortcuts.ui:1047
 msgid "[Double left-click on word]"
 msgstr "[双击单词]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1051
+#: data/com.github.phase1geo.minder.shortcuts.ui:1053
 msgid "Select all text"
 msgstr "选择所有文本"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1052
+#: data/com.github.phase1geo.minder.shortcuts.ui:1054
 msgid "[Triple left-click anywhere in text]"
 msgstr "[在文本中的任意位置单击三次左键]"
+
+#~ msgid "Export File"
+#~ msgstr "导出文件"

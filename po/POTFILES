@@ -12,6 +12,7 @@ src/EmptyInspector.vala
 src/EmptyMenu.vala
 src/Exporter.vala
 src/exports/ExportCSV.vala
+src/exports/ExportFileSystem.vala
 src/exports/ExportFreemind.vala
 src/exports/ExportFreeplane.vala
 src/exports/ExportImage.vala
@@ -31,6 +32,7 @@ src/exports/ExportXMind8.vala
 src/exports/ExportYed.vala
 src/Exports.vala
 src/FormattedText.vala
+src/GroupInspector.vala
 src/GroupsMenu.vala
 src/ImageEditor.vala
 src/ImageManager.vala
@@ -85,6 +87,7 @@ src/undo_actions/UndoConnectionStickerChange.vala
 src/undo_actions/UndoConnectionStickerRemove.vala
 src/undo_actions/UndoConnectionTitle.vala
 src/undo_actions/UndoGroupAdd.vala
+src/undo_actions/UndoGroupNote.vala
 src/undo_actions/UndoGroupRemove.vala
 src/undo_actions/UndoGroupsColor.vala
 src/undo_actions/UndoGroupsMerge.vala
@@ -139,6 +142,7 @@ src/undo_actions/UndoTextReplace.vala
 src/undo_actions/UndoTextTagAdd.vala
 src/undo_actions/UndoTextTagRemove.vala
 src/UndoBuffer.vala
+src/UnicodeInsert.vala
 src/UrlEditor.vala
 src/Utils.vala
 src/ZoomWidget.vala

@@ -159,38 +159,76 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
-    <release version="1.15.0" date="2022-05-24">
-      <p>New</p>
-      <ul>
-        <li>Added ability to change the size of the node while leaving the embedded image size unchanged.</li>
-        <li>Added tooltip to node resize handle.</li>
-        <li>Added Flatpak permission for home folder access by default (thanks to @SubhadeepJasu).</li>
-        <li>Added header font scaling in notes field.</li>
-      </ul>
-      <p>Changes</p>
-      <ul>
-        <li>Updated German translation (thanks to @hztirf)</li>
-        <li>Updated Czech translation (thanks to @G020B)</li>
-        <li>Updated Russian translation (thanks to @prokoudine)</li>
-        <li>Updated Brazilian Portugese translation (thanks to @AncientBlueFrog)</li>
-        <li>Updated Flatpak SDK from 6 to 6.1.</li>
-        <li>Improved sticker search (now case insensitive and uses fuzzy search -- thanks to @sibevin)</li>
-        <li>Changed node borders to use node padding to control shape.</li>
-        <li>Changed note popup to display rendered text instead of literal text.</li>
-        <li>Changed export dialog to set default filename based on mindmap name.</li>
-        <li>Removed image URI from image sidebar.</li>
-        <li>Removed button toolbar in current node and connection sidebar.</li>
-        <li>Improved print dialog and print output.</li>
-      </ul>
-      <p>Bug Fixes</p>
-      <ul>
-        <li>Fixed issues with connections being displayed when ancestor node is folded.</li>
-        <li>Fixed issue with loading an older mindmap.</li>
-        <li>Fixed syntax highlighting in note fields.</li>
-        <li>Fixed Edit Text node menu functionality.</li>
-        <li>Fixed font size not following style inspector values.</li>
-        <li>Fixed segmentation faults that could occur when exporting for various filetypes.</li>
-      </ul>
+    <release version="1.15.0" date="2023-04-20">
+      <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Added ability to change the size of the node while leaving the embedded image size unchanged.</li>
+          <li>Added tooltip to node resize handle.</li>
+          <li>Added Flatpak permission for home folder access by default (thanks to @SubhadeepJasu).</li>
+          <li>Added header font scaling in notes field.</li>
+          <li>Added support for exporting a mindmap via the command-line.</li>
+          <li>Added support for importing via the command-line.</li>
+          <li>Added ability to import a given filesystem as a mindmap.</li>
+          <li>Added ability to export a mindmap as a filesystem.</li>
+          <li>Added zh_CN translation (thanks to @potrans).</li>
+          <li>Added ability to enable/disable UI animations via gsettings.</li>
+          <li>Added ability to associate a note with a selected group.</li>
+          <li>Added ability to copy and cut nodes via shortcuts when multiple nodes are selected.</li>
+          <li>Added ability to insert unicode characters in nodes, connections, and notes when a backslash character is entered.</li>
+          <li>Added support to detect read-only mindmap files and handle them appropriately.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated German translation (thanks to @hztirf and @bewe)</li>
+          <li>Updated Czech translation (thanks to @G020B)</li>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Updated Russian translation (thanks to Alexandre Prokoudine)</li>
+          <li xml:lang="ru">Добавлена русская локализация (Александр Прокудин)</li>
+          <li>Updated Portugese translation (thanks to @AncientBlueFrog)</li>
+          <li>Updated Polish translation (thanks to @pyotr71)</li>
+          <li>Updated Flatpak SDK from 6 to 6.1.</li>
+          <li>Improved sticker search (now case insensitive and uses fuzzy search -- thanks to @sibevin)</li>
+          <li>Changed node borders to use node padding to control shape.</li>
+          <li>Changed note popup to display rendered text instead of literal text.</li>
+          <li>Updated headerbar icons for Gnome environments.</li>
+          <li>Mindmap root node text is now used for default filename when initially saving mindmap.</li>
+          <li>Changed image UI in sidebar.</li>
+          <li>Removed connection sidebar button bar.</li>
+          <li>Improved Zoom to Selected Node functionality with name change (to better reflect what this feature does) and keyboard shortcut.</li>
+          <li>Enhanced OrgMode exporter (includes support for indent mode and improved output).</li>
+          <li>Enhanced image exporting features.</li>
+          <li>Minder files no longer contain precise positioning information so eliminate file changes on pan and zoom operations.</li>
+          <li>Removed Control-E (export) from shortcuts documentation.</li>
+          <li>Improved autosave frequency.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed issues with connections being displayed when ancestor node is folded.</li>
+          <li>Fixed issue with loading an older mindmap.</li>
+          <li>Fixed syntax highlighting in note fields.</li>
+          <li>Fixed Edit Text node menu functionality.</li>
+          <li>Fixed issue with node fonts not following the style inspector.</li>
+          <li>Fixed application crashes when exporting to Freemind, Freeplane, XMind8 and Yed formats.</li>
+          <li>Fixed issue with saving the state of export switch values.</li>
+          <li>Fixed application crash when an image is dropped onto a blank portion of the mindmap canvas.</li>
+          <li>Fixed issues with URL link and text colors not changing when theme is changed.</li>
+          <li>Fixed application crash when grouping root nodes.</li>
+          <li>Fixed issue causing app script to generate a warning message.</li>
+          <li>Fixed potential issue which caused notes to get deleted when selecting nodes, connections or groups.</li>
+          <li>Fixed application crash when saving an unsaved document with no root node.</li>
+          <li>Fixed issues with capitalized keyboard shortcuts.</li>
+          <li>Fixed issue with loading file via the command-line.</li>
+        </ul>
+      </description>
     </release>
     <release version="1.14.0" date="2022-01-14">
       <description>
