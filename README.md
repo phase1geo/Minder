@@ -13,6 +13,7 @@ Use the power of mind-mapping to make your ideas come to life.
 - Quickly create visual mind-maps using the keyboard and automatic layout.
 - Choose from many tree layout choices.
 - Support for Markdown formatting.
+- Support for insertion of Unicode characters.
 - Add notes, tasks and images to your nodes.
 - Add node-to-node connections with optional text and notes.
 - Stylize nodes, links and connections to add more meaning and improve readability.
@@ -26,8 +27,8 @@ Use the power of mind-mapping to make your ideas come to life.
 - Open multiple mindmaps with the use of tabs.
 - Built-in and customizable theming.
 - Gorgeous animations.
-- Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, Portable Minder and XMind formats.
-- Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, Portable Minder, PlainText, XMind and yEd formats.
+- Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, Portable Minder, filesystem and XMind formats.
+- Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, Portable Minder, PlainText, filesystem, XMind and yEd formats.
 - Printer support.
 
 ## Installation
