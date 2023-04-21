@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-20 23:35-0500\n"
-"PO-Revision-Date: 2022-12-18 12:49+0300\n"
+"PO-Revision-Date: 2023-04-21 15:22+0200\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "Language: ru\n"
@@ -17,16 +17,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
-"X-Generator: Gtranslator 41.0\n"
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: src/About.vala:36
 msgid "Mind-mapping application"
-msgstr "Программа для построения диаграмм связей"
+msgstr "Программа для построения ментальных карт"
 
 #: src/About.vala:37
 msgid "Copyright © 2018-2021 Trevor Williams"
-msgstr "Авторские права © 2018-2021 Trevor Williams"
+msgstr "Авторские права © 2018-2023 Trevor Williams"
 
 #: src/About.vala:41
 msgid "Minder in AppCenter"
@@ -54,30 +54,28 @@ msgid "Run testing"
 msgstr "Запустить тестирование"
 
 #: src/Application.vala:150
-#, fuzzy
 msgid "Export mindmap"
-msgstr "Параметры экспорта"
+msgstr "Экспортировать ментальную карту"
 
 #: src/Application.vala:151
 msgid "Format to export as (only used when --export is used)"
-msgstr ""
+msgstr "В какой формат экспортировать (использовать только с --export)"
 
 #: src/Application.vala:152
-#, fuzzy
 msgid "Enables a transparent background for PNG images"
-msgstr "Включить прозрачный фон"
+msgstr "Включить прозрачный фон для изображений PNG"
 
 #: src/Application.vala:153
 msgid "PNG compression value (0-9)"
-msgstr ""
+msgstr "Степень сжатия PNG (0-9)"
 
 #: src/Application.vala:154
 msgid "JPEG quality (0-100)"
-msgstr ""
+msgstr "Качество JPEG (0-100)"
 
 #: src/Application.vala:155
 msgid "Enables image links in exported Markdown"
-msgstr ""
+msgstr "Включает ссылки на изображения в экспортированном Markdown"
 
 #: src/Application.vala:164
 #, c-format
@@ -92,9 +90,8 @@ msgstr ""
 "программы\n"
 
 #: src/Application.vala:212
-#, fuzzy
 msgid "ERROR:  Unable to load Minder input file"
-msgstr "Ошибка: не удалось открыть файл '%s'\n"
+msgstr "Ошибка: не удалось открыть файл Minder"
 
 #: src/CanvasText.vala:269 src/FormattedText.vala:1087
 msgid "No text found"
@@ -192,6 +189,8 @@ msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
+"Перетаскивание меняет размер узла и изображения.\n"
+"Ctrl+перетаскивание меняет размер только узла."
 
 #: src/DrawArea.vala:2512
 #, c-format
@@ -257,12 +256,11 @@ msgid "Closed Tabs"
 msgstr "Закрытые вкладки"
 
 #: src/EmptyInspector.vala:30
-#, fuzzy
 msgid ""
 "Select a node, connection or group\n"
 "to view/edit information"
 msgstr ""
-"Выберите узел или связь,\n"
+"Выберите узел, связь или группу,\n"
 "чтобы просмотреть/изменить данные"
 
 #: src/EmptyMenu.vala:38 src/NodeMenu.vala:77 src/TextMenu.vala:52
@@ -323,7 +321,7 @@ msgstr "CSV"
 
 #: src/exports/ExportFileSystem.vala:29
 msgid "File System"
-msgstr ""
+msgstr "Файловая система"
 
 #: src/exports/ExportFreemind.vala:29
 msgid "Freemind"
@@ -387,13 +385,12 @@ msgid "Org-Mode"
 msgstr "Org-Mode"
 
 #: src/exports/ExportOrgMode.vala:33
-#, fuzzy
 msgid "Indent Mode"
-msgstr "Узел-родитель"
+msgstr "Режим отступа"
 
 #: src/exports/ExportOrgMode.vala:33
 msgid "Export using indentation spaces"
-msgstr ""
+msgstr "Эекспортировать с отступами пробелами"
 
 #: src/exports/ExportOutliner.vala:28
 msgid "Outliner"
@@ -458,9 +455,8 @@ msgid "JPEG"
 msgstr "JPEG"
 
 #: src/GroupInspector.vala:70
-#, fuzzy
 msgid "Group"
-msgstr "Создать группу"
+msgstr "Группа"
 
 #: src/GroupsMenu.vala:43
 msgid "Merge"
@@ -554,9 +550,8 @@ msgid "Unnamed Document"
 msgstr "Безымянный документ"
 
 #: src/MainWindow.vala:544
-#, fuzzy
 msgid "Read-Only"
-msgstr "Чтение"
+msgstr "Только чтение"
 
 #: src/MainWindow.vala:548 src/MainWindow.vala:861
 msgid "Focus Mode"
@@ -586,9 +581,8 @@ msgid "Zoom to Fit"
 msgstr "Уместить всё"
 
 #: src/MainWindow.vala:623 data/com.github.phase1geo.minder.shortcuts.ui:140
-#, fuzzy
 msgid "Zoom to Fit Selected Node Tree"
-msgstr "Уместить выбранный узел"
+msgstr "Уместить выбранное дерево узлов"
 
 #: src/MainWindow.vala:628
 msgid "Zoom to Actual Size"
@@ -712,9 +706,8 @@ msgid "Save local version and overwrite"
 msgstr "Сохранить локальную версию и перезаписать"
 
 #: src/MainWindow.vala:1100
-#, fuzzy
 msgid "Open Directory"
-msgstr "Открыть файл"
+msgstr "Открыть папку"
 
 #: src/MainWindow.vala:1103
 msgid "Open"
@@ -765,9 +758,8 @@ msgid "Unsaved"
 msgstr "Несохранённые"
 
 #: src/NodeInspector.vala:94
-#, fuzzy
 msgid "Node"
-msgstr "Узлы"
+msgstr "Узел"
 
 #: src/NodeInspector.vala:105
 msgid "Task"
@@ -1100,7 +1092,7 @@ msgstr "Включить поддержку Markdown"
 
 #: src/Preferences.vala:87
 msgid "Enable Unicode input"
-msgstr ""
+msgstr "Включить ввод Unicode"
 
 #: src/Preferences.vala:89
 msgid ""
@@ -1356,7 +1348,7 @@ msgstr "Аксессуар для камеры"
 
 #: src/StickerSet.vala:51
 msgid "Camera identification"
-msgstr ""
+msgstr "Идентификация по камере"
 
 #: src/StickerSet.vala:52
 msgid "Start"
@@ -1528,7 +1520,7 @@ msgstr "Оценка"
 
 #: src/StickerSet.vala:97
 msgid "Like placeholder"
-msgstr ""
+msgstr "Как заглушка"
 
 #: src/StickerSet.vala:98
 msgid "Like"
@@ -1848,7 +1840,7 @@ msgstr "Переработка"
 
 #: src/StickerSet.vala:181
 msgid "Leave"
-msgstr ""
+msgstr "Покинуть"
 
 #: src/StickerSet.vala:182
 msgid "Expired"
@@ -1936,7 +1928,7 @@ msgstr ""
 
 #: src/StickerSet.vala:203
 msgid "Service mark"
-msgstr ""
+msgstr "Сервисная марка"
 
 #: src/StickerSet.vala:204
 msgid "Registered trademark"
@@ -1960,7 +1952,7 @@ msgstr "Авторские права на звукозапись"
 
 #: src/StickerSet.vala:209
 msgid "Butting in"
-msgstr ""
+msgstr "Встревание"
 
 #: src/StickerSet.vala:210
 msgid "Multiple inputs"
@@ -2024,7 +2016,7 @@ msgstr "Электричество"
 
 #: src/StickerSet.vala:227
 msgid "Electro devices"
-msgstr ""
+msgstr "Электрические устройства"
 
 #: src/StickerSet.vala:228
 msgid "Electrical sensor"
@@ -2464,7 +2456,7 @@ msgstr "Диаграмма связей"
 
 #: src/StickerSet.vala:345
 msgid "Workflow"
-msgstr ""
+msgstr "Рабочий поток"
 
 #: src/StickerSet.vala:346
 msgid "Positive dynamic"
@@ -2596,7 +2588,7 @@ msgstr "Кривые"
 
 #: src/styles/LinkTypeRounded.vala:34
 msgid "Rounded"
-msgstr ""
+msgstr "Скругленный"
 
 #: src/styles/LinkTypeSquared.vala:34
 msgid "Squared"
@@ -2773,7 +2765,7 @@ msgstr "Предпочитать тёмный режим"
 
 #: src/ThemeEditor.vala:192
 msgid "Custom"
-msgstr ""
+msgstr "Своя тема"
 
 #: src/ThemeEditor.vala:210
 msgid "Delete theme?"
@@ -2813,7 +2805,7 @@ msgstr "Светлая Solarized"
 
 #: src/Themes.vala:192
 msgid "Error parsing regular expression"
-msgstr ""
+msgstr "Ошибка при разборе регулярного выражения"
 
 #: src/Theme.vala:198
 #, c-format
@@ -2822,7 +2814,7 @@ msgstr "Не удалось загрузить цвет фона: %s"
 
 #: src/undo_actions/UndoConnectedNode.vala:31
 msgid "connected node"
-msgstr ""
+msgstr "присоединение узла"
 
 #: src/undo_actions/UndoConnectionAdd.vala:30
 msgid "add connection"
@@ -2865,9 +2857,8 @@ msgid "add group"
 msgstr "создание группы"
 
 #: src/undo_actions/UndoGroupNote.vala:32
-#, fuzzy
 msgid "node group note change"
-msgstr "смену группы узлов"
+msgstr "изменения в примечании к группе узлов"
 
 #: src/undo_actions/UndoGroupRemove.vala:30
 msgid "remove group"
@@ -2962,7 +2953,7 @@ msgstr ""
 
 #: src/undo_actions/UndoNodeReparent.vala:32
 msgid "reparent children"
-msgstr ""
+msgstr "выбор нового родительского узла для узлов-потомков"
 
 #: src/undo_actions/UndoNodeReplace.vala:31
 msgid "replace node"
@@ -3006,7 +2997,7 @@ msgstr "сортировку узлов"
 
 #: src/undo_actions/UndoNodesRandLinkColor.vala:33
 msgid "random node link color changes"
-msgstr ""
+msgstr "назначение цвета связей случайным образом"
 
 #: src/undo_actions/UndoNodesReplace.vala:31
 msgid "replace nodes"
@@ -3068,11 +3059,11 @@ msgstr "замену текста"
 
 #: src/undo_actions/UndoTextTagAdd.vala:32
 msgid "format tag add"
-msgstr ""
+msgstr "добавление форматирующего тега"
 
 #: src/undo_actions/UndoTextTagRemove.vala:32
 msgid "format tag remove"
-msgstr ""
+msgstr "удаление форматирующего тега"
 
 #: src/UndoBuffer.vala:85
 msgid "Undo "
@@ -3291,7 +3282,7 @@ msgstr "Создать соединение с выбранным узлом"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:388
 msgid "[After using this command, 'y' will create the link]"
-msgstr ""
+msgstr "[После этой команды 'y' создаст связь]"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:395
 msgid "Create Group"
