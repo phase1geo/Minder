@@ -12,6 +12,7 @@
       <li>Quickly create visual mind-maps using the keyboard and automatic layout.</li>
       <li>Choose from many tree layout choices.</li>
       <li>Support for Markdown formatting.</li>
+      <li>Support for insertion of Unicode characters.</li>
       <li>Add notes, tasks and images to your nodes.</li>
       <li>Add node-to-node connections with optional text and notes.</li>
       <li>Stylize nodes, links and connections to add more meaning and improve readability.</li>
@@ -25,8 +26,8 @@
       <li>Open multiple mindmaps with the use of tabs.</li>
       <li>Built-in and customizable theming.</li>
       <li>Gorgeous animations.</li>
-      <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, PlantUML, Portable Minder and XMind formats.</li>
-      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, PlantUML, Portable Minder, XMind and yEd formats.</li>
+      <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, PlantUML, Portable Minder, filesystem, and XMind formats.</li>
+      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, PlantUML, Portable Minder, filesystem, XMind and yEd formats.</li>
       <li>Printer support.</li>
     </ul>
   </description>

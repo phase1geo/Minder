@@ -28,6 +28,7 @@
       <li>Support for Markdown formatting.</li>
       <li xml:lang="ru">Используйте форматирование Markdown.</li>
       <li xml:lang="pt">Suporte para formatação Markdown.</li>
+      <li>Support for insertion of Unicode characters.</li>
       <li>Add notes, tasks and images to your nodes.</li>
       <li xml:lang="ru">Добавляйте примечания, задачи и изображения к узлам.</li>
       <li xml:lang="pt">Adicione notas, tarefas e imagens aos seus nós.</li>
@@ -79,10 +80,8 @@
       <li xml:lang="ru">Шикарная анимация.</li>
       <li xml:lang="pt">Animações lindas.</li>
       <li xml:lang="fr">Magnifiques animations.</li>
-      <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, PlantUML, Portable Minder and XMind formats.</li>
-      <li xml:lang="ru">Импортируйте документы в форматах OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, PlantUML, Portable Minder и XMind.</li>
-      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, PlantUML, Portable Minder, XMind and yEd formats.</li>
-      <li xml:lang="ru">Экспортируйте в файлы форматов CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, PlantUML, Portable Minder, XMind и yEd.</li>
+      <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, PlantUML, Portable Minder, filesystem, and XMind formats.</li>
+      <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, PlantUML, Portable Minder, filesystem, XMind and yEd formats.</li>
       <li>Printer support.</li>
       <li xml:lang="ru">Используйте функцию вывода на печать.</li>
       <li xml:lang="pt">Suporte para impressora.</li>
@@ -166,19 +165,33 @@
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added ability to change the size of the node while leaving the embedded image size unchanged.</li>
+          <li xml:lang="ru">Добавлена воможность поменять размер узлов без смены размера вложенного изображения.</li>
           <li>Added tooltip to node resize handle.</li>
+          <li xml:lang="ru">Добавлена подсказка в регулятор смены размера узла.</li>
           <li>Added Flatpak permission for home folder access by default (thanks to @SubhadeepJasu).</li>
+          <li xml:lang="ru">Добавлено разрешение Flatpak для доступа к домашнему пользовательскому каталогу по умолчанию (спасибо @SubhadeepJasu).</li>
           <li>Added header font scaling in notes field.</li>
+          <li xml:lang="ru">Добавлено масштабирование заголовка шрифта в поле примечаний.</li>
           <li>Added support for exporting a mindmap via the command-line.</li>
+          <li xml:lang="ru">Добавлен экспорт ментальных карт из командной строки.</li>
           <li>Added support for importing via the command-line.</li>
+          <li xml:lang="ru">Добавлен импорт ментальных карт из командной строки.</li>
           <li>Added ability to import a given filesystem as a mindmap.</li>
+          <li xml:lang="ru">Добавлен импорт указанной файловой системы как ментальной карты.</li>
           <li>Added ability to export a mindmap as a filesystem.</li>
+          <li xml:lang="ru">Добавлен экспорт ментальной карты как файловой системы.</li>
           <li>Added zh_CN translation (thanks to @potrans).</li>
+          <li xml:lang="ru">Добавлена китайская (zh_CN) локализация (спасибо @potrans).</li>
           <li>Added ability to enable/disable UI animations via gsettings.</li>
+          <li xml:lang="ru">Добавлена возможность переключать анимацию интерфейса через gsettings.</li>
           <li>Added ability to associate a note with a selected group.</li>
+          <li xml:lang="ru">Добавлена возможность ассоциировать примечание с выделенной группой узлов.</li>
           <li>Added ability to copy and cut nodes via shortcuts when multiple nodes are selected.</li>
+          <li xml:lang="ru">Добавлена возможность копировать и вырезать в буфер обмена горячими клавишами, когда выделено несколько узлов.</li>
           <li>Added ability to insert unicode characters in nodes, connections, and notes when a backslash character is entered.</li>
+          <li xml:lang="ru">Добавлена возможность вставлять символы Unicode в узлы, связи и примечания после ввода обратной косой черты ('\').</li>
           <li>Added support to detect read-only mindmap files and handle them appropriately.</li>
+          <li xml:lang="ru">Добавлено распознавание и корректная обработка файлов ментальных карт, доступных только для чтения.</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="ru">Изменения</p>
@@ -186,13 +199,18 @@
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated German translation (thanks to @hztirf and @bewe)</li>
+          <li xml:lang="ru">Обновлена немецкая локализация (спасибо @hztirf и @bewe).</li>
           <li>Updated Czech translation (thanks to @G020B)</li>
+          <li xml:lang="ru">Обновлена чешская локализация (спасибо @G020B).</li>
           <li>Updated Italian translation (thanks to @albanobattistella)</li>
           <li>Updated Russian translation (thanks to Alexandre Prokoudine)</li>
-          <li xml:lang="ru">Добавлена русская локализация (Александр Прокудин)</li>
+          <li xml:lang="ru">Обновлена русская локализация (Александр Прокудин).</li>
           <li>Updated Portugese translation (thanks to @AncientBlueFrog)</li>
+          <li xml:lang="ru">Обновлена португальская локализация (спасибо @AncientBlueFrog).</li>
           <li>Updated Polish translation (thanks to @pyotr71)</li>
+          <li xml:lang="ru">Обновлена польская локализация (спасибо @pyotr71).</li>
           <li>Updated Flatpak SDK from 6 to 6.1.</li>
+          <li xml:lang="ru">Flatpak SDK обновлен с версии 6 до 6.1.</li>
           <li>Improved sticker search (now case insensitive and uses fuzzy search -- thanks to @sibevin)</li>
           <li>Changed node borders to use node padding to control shape.</li>
           <li>Changed note popup to display rendered text instead of literal text.</li>
@@ -206,6 +224,7 @@
           <li>Minder files no longer contain precise positioning information so eliminate file changes on pan and zoom operations.</li>
           <li>Removed Control-E (export) from shortcuts documentation.</li>
           <li>Improved autosave frequency.</li>
+          <li xml:lang="ru">Оптимизирована частота автосохранения.</li>
         </ul>
         <p>Bug Fixes</p>
         <p xml:lang="ru">Исправления ошибок</p>
@@ -356,7 +375,7 @@
         <ul>
           <li>Updated Italian translation (thanks to @albanobattistella)</li>
           <li>Updated Russian translation (thanks to Alexandre Prokoudine)</li>
-          <li xml:lang="ru">Добавлена русская локализация (Александр Прокудин)</li>
+          <li xml:lang="ru">Обновлена русская локализация (Александр Прокудин).</li>
         </ul>
         <p>Bug Fixes</p>
         <p xml:lang="ru">Исправления ошибок</p>
@@ -578,6 +597,7 @@
           <li xml:lang="ru">Обновлена итальянская локализация (спасибо @albanobattistella).</li>
           <li xml:lang="pt">Tradução em Italiano atualizada (obrigado a @albanobattistella).</li>
           <li>Improved automatic layout of node trees when adjacent tree sizes change.</li>
+          <li xml:lang="ru">Улучшено автоматическое перепозиционирование деревьев узлов при изменениях в соседнем дереве.</li>
           <li>Changed node and connection contextual menus to show (Edit Note) instead of (Add Note) and (Remove Note) options.</li>
         </ul>
         <p>Bug Fixes</p>
@@ -831,6 +851,7 @@
           <li>Added support for pasting text, replacing the current connection content.</li>
           <li xml:lang="pt">Suporte adicionado para colar texto, substituindo o conteúdo da conexão atual.</li>
           <li>Added task support to Outliner import/export.</li>
+          <li xml:lang="ru">Добавлена поддержка задач при импорте/экспорте файлов Outliner.</li>
           <li xml:lang="pt">Suporte de tarefa adicionado para o importar/exportar do Outliner.</li>
           <li>Added keyboard shortcut (Control-E) to display export interface.</li>
           <li xml:lang="pt">Atalho de teclado (Control-E) adicionado para exibir a interface de exportar.</li>
@@ -958,6 +979,7 @@
           <li>Added ability to export a mind-map as a new Portable Minder filetype which will allow Minder files to be copied between different users/filesystems.</li>
           <li xml:lang="pt">Adicionada a possibilidade de exportar um mapa mental como um novo tipo de ficheiro do Portable Minder, que permitirá que os ficheiros do Minder sejam copiados entre diferentes utilizadores/sistemas de ficheiros.</li>
           <li>Added ability to export to Org-Mode format.</li>
+          <li xml:lang="ru">Добавлен экспорт в формат Org-Mode.</li>
           <li xml:lang="pt">Adicionada a possibilidade de exportar para o formato Modo Org.</li>
         </ul>
         <p>Changes</p>
@@ -1025,6 +1047,7 @@
           <li>Added multi-select support which includes:  Changing styles; Copy, cut, paste and delete support; Connect two selected nodes;
             Create node links between two or more selected nodes; and Fold/unfold selected nodes.</li>
           <li>Added support for URLs in node titles.</li>
+          <li xml:lang="ru">Добавлена поддержка URL в заголовках узлов.</li>
           <li xml:lang="pt">Suporte adicionado para URLs nos títulos de nós.</li>
           <li xml:lang="fr">Ajout de la prise en charge des URL dans le titre des nœuds.</li>
           <li>Added support for Markdown within a note:  Notes are syntax highlighted; and Embedded URLs can be opened by Control-Clicking on them.</li>
@@ -1533,6 +1556,7 @@
           <li xml:lang="pt">Chamadas de GTK descontinuadas removidas.</li>
           <li xml:lang="fr">Suprresion des éléments GTK dépréciés.</li>
           <li>Added ability to double-click on a node to make it editable.</li>
+          <li xml:lang="ru">Добавлено переключение на редактирование узла по двойному щелчку.</li>
           <li xml:lang="pt">Adicionada a possibilidade de clicar duas vezes num nó para o tornar editável.</li>
           <li xml:lang="fr">Ajout de la possibilité de double-cliquer sur un nœud pour le rendre éditable.</li>
           <li>Bug fixes.</li>
