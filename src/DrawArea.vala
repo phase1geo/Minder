@@ -1960,15 +1960,15 @@ public class DrawArea : Gtk.DrawingArea {
     double sf     = get_scaling_factor( (w + (pad * 2)), (h + (pad * 2)) );
 
     if( (x - pad) < 0 ) {
-      diff_x = (x - pad);
+      diff_x = 0 - (x - pad);
     } else if( (x + w) > sw ) {
-      diff_x = (x + w + pad) - sw;
+      diff_x = sw - (x + w + pad);
     }
 
     if( (y - pad) < 0 ) {
-      diff_y = (y - pad);
+      diff_y = 0 - (y - pad);
     } else if( (y + h) > sh ) {
-      diff_y = (y + h + pad) - sh;
+      diff_y = sh - (y + h + pad);
     }
 
     if( (diff_x != 0) || (diff_y != 0) ) {
@@ -2903,6 +2903,7 @@ public class DrawArea : Gtk.DrawingArea {
       for( int i=0; i<parent_nodes.length; i++ ) {
         _selected.add_node( parent_nodes.index( i ) );
       }
+      see();
       queue_draw();
     }
   }
@@ -4861,7 +4862,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     /* Adjust the origin and redraw */
-    move_origin( (delta_x * 120), (delta_y * 120) );
+    move_origin( ((0 - delta_x) * 120), ((0 - delta_y) * 120) );
     queue_draw();
 
     /* Scroll save */
