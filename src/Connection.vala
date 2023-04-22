@@ -333,6 +333,15 @@ public class Connection : Object {
     }
   }
 
+  /*
+   This should be called by this class whenever the drag handle needs to be moved.
+   We will automatically update the position of the title after this has been done.
+  */
+  private void set_drag_handle( double dragx, double dragy ) {
+    _curve.update_control_from_drag_handle( dragx, dragy );
+    position_title();
+  }
+
   /* Connects to the given node */
   public void connect_node( Node node ) {
     node.moved.connect( this.end_moved );
@@ -364,8 +373,7 @@ public class Connection : Object {
     _curve.get_point( 2, out tx, out ty );
     var dragx = (fx + tx) / 2;
     var dragy = (fy + ty) / 2;
-    position_title();
-    _curve.update_control_from_drag_handle( dragx, dragy );
+    set_drag_handle( dragx, dragy );
     set_connect_point( node );
   }
 
@@ -392,8 +400,7 @@ public class Connection : Object {
     _curve.get_point( ((node == _from_node) ? 0 : 2), out nx, out ny );
     var dragx = (nx + x) / 2;
     var dragy = (ny + y) / 2;
-    position_title();
-    _curve.update_control_from_drag_handle( dragx, dragy );
+    set_drag_handle( dragx, dragy );
     set_connect_point( node );
   }
 
@@ -405,8 +412,7 @@ public class Connection : Object {
     _curve.get_drag_point( out dragx, out dragy );
     dragx += (diffx / 2);
     dragy += (diffy / 2);
-    position_title();
-    _curve.update_control_from_drag_handle( dragx, dragy );
+    set_drag_handle( dragx, dragy );
     set_connect_point( _from_node );
     if( _to_node != null ) {
       set_connect_point( _to_node );
@@ -421,8 +427,7 @@ public class Connection : Object {
     _curve.get_drag_point( out dragx, out dragy );
     dragx += (diffw / 2);
     dragy += (diffh / 2);
-    position_title();
-    _curve.update_control_from_drag_handle( dragx, dragy );
+    set_drag_handle( dragx, dragy );
     set_connect_point( _from_node );
     set_connect_point( _to_node );
   }
@@ -578,13 +583,12 @@ public class Connection : Object {
   /* Updates the location of the drag handle */
   public void move_drag_handle( double x, double y ) {
     mode = ConnMode.ADJUSTING;
-    position_title();
     if( title != null ) {
       double tx, ty, tw, th;
       title_bbox( out tx, out ty, out tw, out th );
       y -= (th / 2);
     }
-    _curve.update_control_from_drag_handle( x, y );
+    set_drag_handle( x, y );
     set_connect_point( _from_node );
     set_connect_point( _to_node );
   }
