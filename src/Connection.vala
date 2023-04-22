@@ -404,15 +404,34 @@ public class Connection : Object {
     set_connect_point( node );
   }
 
+  /* Returns true if the currently selected node is a common parent to both the from and to nodes */
+  private bool common_parent_moved( Node node ) {
+    var parents = new Array<Node>();
+    _da.get_selections().get_parents( ref parents );
+    for( int i=0; i<parents.length; i++ ) {
+      if( node.is_descendant_of( parents.index( i ) ) ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
   /* Handles any position changes of either the to or from node */
   private void end_moved( Node node, double diffx, double diffy ) {
     double x, y, w, h, dragx, dragy;
     node.bbox( out x, out y, out w, out h );
-    _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
-    _curve.get_drag_point( out dragx, out dragy );
-    dragx += (diffx / 2);
-    dragy += (diffy / 2);
-    set_drag_handle( dragx, dragy );
+    var from = (_from_node == node);
+    _curve.set_point( (from ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
+    if( common_parent_moved( from ? _to_node : _from_node ) ) {
+      if( !from ) {
+        _curve.get_point( 1, out dragx, out dragy );
+        _curve.set_point( 1, (dragx + diffx), (dragy + diffy) );
+        position_title();
+      }
+    } else {
+      _curve.get_drag_point( out dragx, out dragy );
+      set_drag_handle( (dragx + (diffx / 2)), (dragy + (diffy / 2)) );
+    }
     set_connect_point( _from_node );
     if( _to_node != null ) {
       set_connect_point( _to_node );
