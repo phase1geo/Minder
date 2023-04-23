@@ -234,7 +234,7 @@ public class NodeInspector : Box {
     _sw.min_content_height = 100;
     _sw.add( _note );
 
-    var box = new Box( Orientation.VERTICAL, 0 );
+    var box = new Box( Orientation.VERTICAL, 10 );
     box.pack_start( lbl, false, false );
     box.pack_start( _sw, true,  true );
 
