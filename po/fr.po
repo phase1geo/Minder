@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-21 14:08-0500\n"
+"POT-Creation-Date: 2023-04-23 19:54-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Nathan Bonnemains (@NathanBnm)\n"
 "Language-Team: Français\n"
@@ -163,12 +163,12 @@ msgstr "Connexion suivante "
 msgid "Previous Connection"
 msgstr "Connexion précédente"
 
-#: src/Connection.vala:709
+#: src/Connection.vala:732
 #, fuzzy
 msgid "Connection Title"
 msgstr "Connexion"
 
-#: src/Connection.vala:717
+#: src/Connection.vala:740
 #, fuzzy
 msgid "Connection Note"
 msgstr "Connexion"
@@ -214,11 +214,11 @@ msgstr "modification du point d'extrémité de la connexion"
 msgid "connection drag"
 msgstr "déplacement de la connexion"
 
-#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4965
+#: src/DrawArea.vala:3212 src/DrawArea.vala:3226 src/DrawArea.vala:4966
 msgid "Another Idea"
 msgstr "Une autre idée"
 
-#: src/DrawArea.vala:4458 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4459 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Manuel"

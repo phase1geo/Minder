@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-21 14:08-0500\n"
+"POT-Creation-Date: 2023-04-23 19:54-0500\n"
 "PO-Revision-Date: 2020-04-20 14:26+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: \n"
@@ -164,12 +164,12 @@ msgstr "Volgende verbinding"
 msgid "Previous Connection"
 msgstr "Vorige verbinding"
 
-#: src/Connection.vala:709
+#: src/Connection.vala:732
 #, fuzzy
 msgid "Connection Title"
 msgstr "Verbinding"
 
-#: src/Connection.vala:717
+#: src/Connection.vala:740
 #, fuzzy
 msgid "Connection Note"
 msgstr "Verbinding"
@@ -215,11 +215,11 @@ msgstr "eindknoop van verbinding aanpassen"
 msgid "connection drag"
 msgstr "verbinding verslepen"
 
-#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4965
+#: src/DrawArea.vala:3212 src/DrawArea.vala:3226 src/DrawArea.vala:4966
 msgid "Another Idea"
 msgstr "Nóg een idee"
 
-#: src/DrawArea.vala:4458 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4459 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Handmatig"
