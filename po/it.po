@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-23 19:54-0500\n"
-"PO-Revision-Date: 2023-02-01 19:30+0100\n"
+"PO-Revision-Date: 2023-04-24 15:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -31,7 +31,7 @@ msgstr "Minder in AppCenter"
 
 #: src/Application.vala:108
 msgid "ERROR: Export is missing Minder input file and/or export output file"
-msgstr ""
+msgstr "ERRORE: nell'esportazione manca il file di input di Minder e/o il file di output dell'esportazione"
 
 #: src/Application.vala:116
 #, c-format
@@ -51,30 +51,28 @@ msgid "Run testing"
 msgstr "Esegui test"
 
 #: src/Application.vala:150
-#, fuzzy
 msgid "Export mindmap"
-msgstr "Opzioni di Esportazione"
+msgstr "Esporta mappa mentale"
 
 #: src/Application.vala:151
 msgid "Format to export as (only used when --export is used)"
-msgstr ""
+msgstr "Formato per l'esportazione come (utilizzato solo quando si utilizza --export)"
 
 #: src/Application.vala:152
-#, fuzzy
 msgid "Enables a transparent background for PNG images"
-msgstr "Abilita sfondo trasparente"
+msgstr "Abilita uno sfondo trasparente per le immagini PNG"
 
 #: src/Application.vala:153
 msgid "PNG compression value (0-9)"
-msgstr ""
+msgstr "Valore di compressione PNG (0-9)"
 
 #: src/Application.vala:154
 msgid "JPEG quality (0-100)"
-msgstr ""
+msgstr "Qualità JPEG (0-100)"
 
 #: src/Application.vala:155
 msgid "Enables image links in exported Markdown"
-msgstr ""
+msgstr "Abilita i collegamenti alle immagini nel Markdown esportato"
 
 #: src/Application.vala:164
 #, c-format
@@ -87,9 +85,8 @@ msgid "Run '%s --help' to see valid options\n"
 msgstr "Esegui '%s --help' per vedere opzioni valide\n"
 
 #: src/Application.vala:212
-#, fuzzy
 msgid "ERROR:  Unable to load Minder input file"
-msgstr "ERRORE: impossibile aprire il file '%s'\n"
+msgstr "ERRORE: impossibile caricare il file di input di Minder"
 
 #: src/CanvasText.vala:269 src/FormattedText.vala:1087
 msgid "No text found"
@@ -254,13 +251,12 @@ msgid "Closed Tabs"
 msgstr "Schede Chiuse"
 
 #: src/EmptyInspector.vala:30
-#, fuzzy
 msgid ""
 "Select a node, connection or group\n"
 "to view/edit information"
 msgstr ""
-"Seleziona un nodo o una connessione\n"
-"per visualizzare/modificare le informazioni"
+"Seleziona un nodo, una connessione o un gruppo\n"
+"per visualizzare/modificare informazioni"
 
 #: src/EmptyMenu.vala:38 src/NodeMenu.vala:77 src/TextMenu.vala:52
 msgid "Paste"
@@ -320,7 +316,7 @@ msgstr "CSV"
 
 #: src/exports/ExportFileSystem.vala:29
 msgid "File System"
-msgstr ""
+msgstr "File System"
 
 #: src/exports/ExportFreemind.vala:29
 msgid "Freemind"
@@ -384,13 +380,12 @@ msgid "Org-Mode"
 msgstr "Modalità-Org"
 
 #: src/exports/ExportOrgMode.vala:33
-#, fuzzy
 msgid "Indent Mode"
-msgstr "Nodo Genitore"
+msgstr "Modalità rientro"
 
 #: src/exports/ExportOrgMode.vala:33
 msgid "Export using indentation spaces"
-msgstr ""
+msgstr "Esporta utilizzando gli spazi di rientro"
 
 #: src/exports/ExportOutliner.vala:28
 msgid "Outliner"
@@ -455,9 +450,8 @@ msgid "JPEG"
 msgstr "JPEG"
 
 #: src/GroupInspector.vala:70
-#, fuzzy
 msgid "Group"
-msgstr "Aggiungi Gruppo"
+msgstr "Gruppo"
 
 #: src/GroupsMenu.vala:43
 msgid "Merge"
@@ -551,9 +545,8 @@ msgid "Unnamed Document"
 msgstr "Documento senza nome"
 
 #: src/MainWindow.vala:544
-#, fuzzy
 msgid "Read-Only"
-msgstr "Lettura"
+msgstr "Solo-lettura"
 
 #: src/MainWindow.vala:548 src/MainWindow.vala:861
 msgid "Focus Mode"
@@ -583,9 +576,8 @@ msgid "Zoom to Fit"
 msgstr "Zoom adattivo"
 
 #: src/MainWindow.vala:623 data/com.github.phase1geo.minder.shortcuts.ui:140
-#, fuzzy
 msgid "Zoom to Fit Selected Node Tree"
-msgstr "Zoom adattato al nodo selezionato"
+msgstr "Zoom per adattare l'albero del nodo selezionato"
 
 #: src/MainWindow.vala:628
 msgid "Zoom to Actual Size"
@@ -709,9 +701,8 @@ msgid "Save local version and overwrite"
 msgstr "Salva la versione locale e sovrascrivi"
 
 #: src/MainWindow.vala:1100
-#, fuzzy
 msgid "Open Directory"
-msgstr "Apri FIle"
+msgstr "Apri Directory"
 
 #: src/MainWindow.vala:1103
 msgid "Open"
@@ -762,9 +753,8 @@ msgid "Unsaved"
 msgstr "Non salvato"
 
 #: src/NodeInspector.vala:94
-#, fuzzy
 msgid "Node"
-msgstr "Nodi"
+msgstr "Nodo"
 
 #: src/NodeInspector.vala:105
 msgid "Task"
@@ -1101,13 +1091,15 @@ msgstr "Abilita Markdown"
 
 #: src/Preferences.vala:87
 msgid "Enable Unicode input"
-msgstr ""
+msgstr "Abilita l'input Unicode"
 
 #: src/Preferences.vala:89
 msgid ""
 "Specifies if Unicode characters can be input using backslash prefixed "
 "descriptors (ex. \\pi)"
 msgstr ""
+"Specifica se i caratteri Unicode possono essere immessi utilizzando una barra rovesciata preceduta da "
+"descrittori (es. \\pi)"
 
 #: src/Preferences.vala:91
 msgid "Create connection title on creation"
@@ -2266,7 +2258,7 @@ msgstr "Giù a destra"
 
 #: src/StickerSet.vala:291
 msgid "Collapse"
-msgstr ""
+msgstr "Collasso"
 
 #: src/StickerSet.vala:292
 msgid "Previous"
