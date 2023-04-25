@@ -120,13 +120,16 @@ public class ConnectionInspector : Box {
     lbl.xalign     = (float)0;
     lbl.use_markup = true;
 
+    var focus_controller = EventControllerFocus();
+    focus_controller.enter.connect( note_focus_in );
+    focus_controller.leave.connect( note_focus_out );
+
     _note = new NoteView();
     _note.set_wrap_mode( Gtk.WrapMode.WORD );
     _note.add_unicode_completion( win, win.unicoder );
     _note.buffer.text = "";
     _note.buffer.changed.connect( note_changed );
-    _note.focus_in_event.connect( note_focus_in );
-    _note.focus_out_event.connect( note_focus_out );
+    _note.add_controller( focus_controller );
 
     _sw = new ScrolledWindow( null, null );
     _sw.min_content_width  = 300;
@@ -171,18 +174,16 @@ public class ConnectionInspector : Box {
   }
 
   /* Saves the original version of the node's note so that we can */
-  private bool note_focus_in( EventFocus e ) {
+  private void note_focus_in() {
     _connection = _da.get_current_connection();
     _orig_note  = _note.buffer.text;
-    return( false );
   }
 
   /* When the note buffer loses focus, save the note change to the undo buffer */
-  private bool note_focus_out( EventFocus e ) {
+  private void note_focus_out() {
     if( (_connection != null) && (_connection.note != _orig_note) ) {
       _da.undo_buffer.add_item( new UndoConnectionNote( _connection, _orig_note ) );
     }
-    return( false );
   }
 
   /* Deletes the current connection */

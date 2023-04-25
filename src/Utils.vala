@@ -309,15 +309,6 @@ public class Utils {
 #endif
   }
 
-  /* Pops up the given menu */
-  public static void popup_menu( Gtk.Menu menu, Event e ) {
-#if GTK322
-    menu.popup_at_pointer( e );
-#else
-    menu.popup( null, null, null, e.button, e.time );
-#endif
-  }
-
   public static void set_chooser_folder( FileChooser chooser ) {
     var dir = Minder.settings.get_string( "last-directory" );
     if( dir != "" ) {

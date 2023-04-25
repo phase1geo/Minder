@@ -33,12 +33,6 @@ subdir('po')
 subdir('src')
 subdir('tests')
 
-# If the GTK version is higher than 3.22, add a define to indicate that
-gtk_dep = dependency('gtk+-3.0')
-if gtk_dep.version().version_compare('>=3.22.0')
-  add_project_arguments(['--define=GTK322'], language: 'vala')
-endif
-
 # If the valac version is greater than or equal to 0.48, add a define for cross-compile purposes
 if meson.get_compiler('vala').version().version_compare('>=0.48.0')
   add_project_arguments(['--define=VALAC048'], language: 'vala')
@@ -51,13 +45,7 @@ math_dep    = cc.find_library('m', required: false)
 libmarkdown = cc.find_library('markdown', required: true)
 
 # Check the granite dependency
-granite = dependency('granite', version: '>=6.0', required: false)
-if granite.found()
-  add_project_arguments(['--define=GRANITE_6_OR_LATER'], language: 'vala')
-else
-  granite = dependency('granite', required: true)
-  message('Using older version of granite')
-endif
+granite = dependency('granite-7', version: '>=7.0', required: true)
 
 add_project_arguments([
         '--vapidir', join_paths(meson.current_source_dir(), 'vapi'),
@@ -72,11 +60,10 @@ dependencies = [
     dependency('cairo'),
     dependency('gee-0.8'),
     granite,
-    dependency('gtk+-3.0'),
+    dependency('gtk4'),
     dependency('libxml-2.0'),
     dependency('libarchive'),
-    dependency('gtksourceview-4'),
-    dependency('libhandy-1'),
+    dependency('gtksourceview-5'),
     dependency('json-glib-1.0'),
     libmarkdown,
     math_dep

@@ -24,7 +24,7 @@ using Gdk;
 using GLib;
 using Gee;
 
-public class Minder : Granite.Application {
+public class Minder : Gtk.Application {
 
   private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
 
