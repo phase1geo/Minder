@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-23 19:54-0500\n"
+"POT-Creation-Date: 2023-04-25 20:32-0500\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -30,64 +30,64 @@ msgstr "© 2018-2021 Trevor Williams"
 msgid "Minder in AppCenter"
 msgstr "Minder je v AppCenter"
 
-#: src/Application.vala:108
+#: src/Application.vala:113
 msgid "ERROR: Export is missing Minder input file and/or export output file"
 msgstr ""
 
-#: src/Application.vala:116
+#: src/Application.vala:121
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "ERROR: Nelze otevřít soubor '%s'\n"
 
-#: src/Application.vala:147
+#: src/Application.vala:152
 msgid "Display version number"
 msgstr "Zobrazit označení verze"
 
-#: src/Application.vala:148
+#: src/Application.vala:153
 msgid "Starts Minder with a new file"
 msgstr "Začít Minder s novým souborem"
 
-#: src/Application.vala:149
+#: src/Application.vala:154
 msgid "Run testing"
 msgstr "Spustit testování"
 
-#: src/Application.vala:150
+#: src/Application.vala:155
 #, fuzzy
 msgid "Export mindmap"
 msgstr "Možnosti exportu"
 
-#: src/Application.vala:151
+#: src/Application.vala:156
 msgid "Format to export as (only used when --export is used)"
 msgstr ""
 
-#: src/Application.vala:152
+#: src/Application.vala:157
 #, fuzzy
 msgid "Enables a transparent background for PNG images"
 msgstr "Povolit průhledné pozadí"
 
-#: src/Application.vala:153
+#: src/Application.vala:158
 msgid "PNG compression value (0-9)"
 msgstr ""
 
-#: src/Application.vala:154
+#: src/Application.vala:159
 msgid "JPEG quality (0-100)"
 msgstr ""
 
-#: src/Application.vala:155
+#: src/Application.vala:160
 msgid "Enables image links in exported Markdown"
 msgstr ""
 
-#: src/Application.vala:164
+#: src/Application.vala:169
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "ERROR: %s\n"
 
-#: src/Application.vala:165
+#: src/Application.vala:170
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "Zadejte '%s --help' pro zobrazení všech možností\n"
 
-#: src/Application.vala:212
+#: src/Application.vala:217
 #, fuzzy
 msgid "ERROR:  Unable to load Minder input file"
 msgstr "ERROR: Nelze otevřít soubor '%s'\n"

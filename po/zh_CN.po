@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-23 19:54-0500\n"
+"POT-Creation-Date: 2023-04-25 20:32-0500\n"
 "PO-Revision-Date: 2022-07-22 17:02+0800\n"
 "Last-Translator: 企鹅2035 <qie2035@qq.com>\n"
 "Language-Team: 简体中文 (机翻) <qie2035@qq.com>\n"
@@ -29,62 +29,62 @@ msgstr "版权所有 © 2018-2021 特雷弗·威廉姆斯"
 msgid "Minder in AppCenter"
 msgstr "AppCenter 中的 Minder"
 
-#: src/Application.vala:108
+#: src/Application.vala:113
 msgid "ERROR: Export is missing Minder input file and/or export output file"
 msgstr "错误：导出缺少管理器输入文件和/或导出输出文件"
 
-#: src/Application.vala:116
+#: src/Application.vala:121
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "错误：无法打开文件“%s”\n"
 
-#: src/Application.vala:147
+#: src/Application.vala:152
 msgid "Display version number"
 msgstr "显示版本号"
 
-#: src/Application.vala:148
+#: src/Application.vala:153
 msgid "Starts Minder with a new file"
 msgstr "使用新文件启动 Minder"
 
-#: src/Application.vala:149
+#: src/Application.vala:154
 msgid "Run testing"
 msgstr "运行测试"
 
-#: src/Application.vala:150
+#: src/Application.vala:155
 msgid "Export mindmap"
 msgstr "导出思维导图"
 
-#: src/Application.vala:151
+#: src/Application.vala:156
 msgid "Format to export as (only used when --export is used)"
 msgstr "要导出的格式为（仅在使用 --export 时使用）"
 
-#: src/Application.vala:152
+#: src/Application.vala:157
 msgid "Enables a transparent background for PNG images"
 msgstr "为 PNG 图像启用透明背景"
 
-#: src/Application.vala:153
+#: src/Application.vala:158
 msgid "PNG compression value (0-9)"
 msgstr "PNG 压缩值 （0-9）"
 
-#: src/Application.vala:154
+#: src/Application.vala:159
 msgid "JPEG quality (0-100)"
 msgstr "JPEG 质量 （0-100）"
 
-#: src/Application.vala:155
+#: src/Application.vala:160
 msgid "Enables image links in exported Markdown"
 msgstr "在导出的 Markdown 中启用图像链接"
 
-#: src/Application.vala:164
+#: src/Application.vala:169
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "错误： %s\n"
 
-#: src/Application.vala:165
+#: src/Application.vala:170
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "运行 “%s --help” 以查看有效选项\n"
 
-#: src/Application.vala:212
+#: src/Application.vala:217
 msgid "ERROR:  Unable to load Minder input file"
 msgstr "错误：无法加载管理器输入文件"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-23 19:54-0500\n"
+"POT-Creation-Date: 2023-04-25 20:32-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Nathan Bonnemains (@NathanBnm)\n"
 "Language-Team: Français\n"
@@ -30,64 +30,64 @@ msgstr ""
 msgid "Minder in AppCenter"
 msgstr ""
 
-#: src/Application.vala:108
+#: src/Application.vala:113
 msgid "ERROR: Export is missing Minder input file and/or export output file"
 msgstr ""
 
-#: src/Application.vala:116
+#: src/Application.vala:121
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr ""
 
-#: src/Application.vala:147
+#: src/Application.vala:152
 msgid "Display version number"
 msgstr ""
 
-#: src/Application.vala:148
+#: src/Application.vala:153
 msgid "Starts Minder with a new file"
 msgstr ""
 
-#: src/Application.vala:149
+#: src/Application.vala:154
 #, fuzzy
 msgid "Run testing"
 msgstr "Connexions"
 
-#: src/Application.vala:150
+#: src/Application.vala:155
 #, fuzzy
 msgid "Export mindmap"
 msgstr "Options des nœuds"
 
-#: src/Application.vala:151
+#: src/Application.vala:156
 msgid "Format to export as (only used when --export is used)"
 msgstr ""
 
-#: src/Application.vala:152
+#: src/Application.vala:157
 msgid "Enables a transparent background for PNG images"
 msgstr ""
 
-#: src/Application.vala:153
+#: src/Application.vala:158
 msgid "PNG compression value (0-9)"
 msgstr ""
 
-#: src/Application.vala:154
+#: src/Application.vala:159
 msgid "JPEG quality (0-100)"
 msgstr ""
 
-#: src/Application.vala:155
+#: src/Application.vala:160
 msgid "Enables image links in exported Markdown"
 msgstr ""
 
-#: src/Application.vala:164
+#: src/Application.vala:169
 #, c-format
 msgid "ERROR: %s\n"
 msgstr ""
 
-#: src/Application.vala:165
+#: src/Application.vala:170
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr ""
 
-#: src/Application.vala:212
+#: src/Application.vala:217
 msgid "ERROR:  Unable to load Minder input file"
 msgstr ""
 

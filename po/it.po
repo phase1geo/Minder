@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-23 19:54-0500\n"
+"POT-Creation-Date: 2023-04-25 20:32-0500\n"
 "PO-Revision-Date: 2023-04-24 15:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -29,62 +29,65 @@ msgstr "Copyright © 2018-2021 Trevor Williams"
 msgid "Minder in AppCenter"
 msgstr "Minder in AppCenter"
 
-#: src/Application.vala:108
+#: src/Application.vala:113
 msgid "ERROR: Export is missing Minder input file and/or export output file"
-msgstr "ERRORE: nell'esportazione manca il file di input di Minder e/o il file di output dell'esportazione"
+msgstr ""
+"ERRORE: nell'esportazione manca il file di input di Minder e/o il file di "
+"output dell'esportazione"
 
-#: src/Application.vala:116
+#: src/Application.vala:121
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "ERRORE: impossibile aprire il file '%s'\n"
 
-#: src/Application.vala:147
+#: src/Application.vala:152
 msgid "Display version number"
 msgstr "Visualizza numero versione"
 
-#: src/Application.vala:148
+#: src/Application.vala:153
 msgid "Starts Minder with a new file"
 msgstr "Avvia Minder con un nuovo file"
 
-#: src/Application.vala:149
+#: src/Application.vala:154
 msgid "Run testing"
 msgstr "Esegui test"
 
-#: src/Application.vala:150
+#: src/Application.vala:155
 msgid "Export mindmap"
 msgstr "Esporta mappa mentale"
 
-#: src/Application.vala:151
+#: src/Application.vala:156
 msgid "Format to export as (only used when --export is used)"
-msgstr "Formato per l'esportazione come (utilizzato solo quando si utilizza --export)"
+msgstr ""
+"Formato per l'esportazione come (utilizzato solo quando si utilizza --export)"
 
-#: src/Application.vala:152
+#: src/Application.vala:157
 msgid "Enables a transparent background for PNG images"
 msgstr "Abilita uno sfondo trasparente per le immagini PNG"
 
-#: src/Application.vala:153
+#: src/Application.vala:158
 msgid "PNG compression value (0-9)"
 msgstr "Valore di compressione PNG (0-9)"
 
-#: src/Application.vala:154
+#: src/Application.vala:159
 msgid "JPEG quality (0-100)"
 msgstr "Qualità JPEG (0-100)"
 
-#: src/Application.vala:155
+#: src/Application.vala:160
 msgid "Enables image links in exported Markdown"
 msgstr "Abilita i collegamenti alle immagini nel Markdown esportato"
 
-#: src/Application.vala:164
+#: src/Application.vala:169
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "ERRORE: %s\n"
 
-#: src/Application.vala:165
+#: src/Application.vala:170
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "Esegui '%s --help' per vedere opzioni valide\n"
 
-#: src/Application.vala:212
+#: src/Application.vala:217
 msgid "ERROR:  Unable to load Minder input file"
 msgstr "ERRORE: impossibile caricare il file di input di Minder"
 
@@ -1098,8 +1101,8 @@ msgid ""
 "Specifies if Unicode characters can be input using backslash prefixed "
 "descriptors (ex. \\pi)"
 msgstr ""
-"Specifica se i caratteri Unicode possono essere immessi utilizzando una barra rovesciata preceduta da "
-"descrittori (es. \\pi)"
+"Specifica se i caratteri Unicode possono essere immessi utilizzando una "
+"barra rovesciata preceduta da descrittori (es. \\pi)"
 
 #: src/Preferences.vala:91
 msgid "Create connection title on creation"
