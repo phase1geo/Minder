@@ -162,9 +162,9 @@ public class NodeGroups {
   }
 
   /* Draws a group around the stored set of nodes from this structure */
-  public void draw_all( Context ctx, Theme theme ) {
+  public void draw_all( Context ctx, Theme theme, bool exporting ) {
     for( int i=0; i<_groups.length; i++ ) {
-      _groups.index( i ).draw( ctx, theme );
+      _groups.index( i ).draw( ctx, theme, exporting );
     }
   }
 

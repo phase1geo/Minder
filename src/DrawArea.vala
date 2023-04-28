@@ -2089,12 +2089,11 @@ public class DrawArea : Gtk.DrawingArea {
   public void draw_all( Context ctx, bool exporting ) {
 
     /* Draw the links first */
-    for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).draw_links( ctx, _theme );
+    for( int i=0; i<_nodes.length; i++ ) { _nodes.index( i ).draw_links( ctx, _theme );
     }
 
     /* Draw groups next */
-    _groups.draw_all( ctx, _theme );
+    _groups.draw_all( ctx, _theme, exporting );
 
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
@@ -2114,7 +2113,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     /* Draw the floating stickers */
-    _stickers.draw_all( ctx, _theme, 1.0 /*TBD*/ );
+    _stickers.draw_all( ctx, _theme, 1.0, exporting );
 
     /* Draw the select box if one exists */
     if( !exporting ) {

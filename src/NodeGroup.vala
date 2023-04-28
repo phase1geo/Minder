@@ -185,9 +185,9 @@ public class NodeGroup {
   }
 
   /* Draws a group around the stored set of nodes from this structure */
-  public void draw( Context ctx, Theme theme ) {
+  public void draw( Context ctx, Theme theme, bool exporting ) {
     var points   = new Array<NodePoint?>();
-    var selected = mode == GroupMode.SELECTED;
+    var selected = (mode == GroupMode.SELECTED) && !exporting;
     var alpha    = 0.0;
     for( int i=0; i<_nodes.length; i++ ) {
       get_tree_points( _nodes.index( i ), _nodes.index( i ), points );
