@@ -2076,7 +2076,7 @@ public class Node : Object {
   }
 
   /* Draws the border around the node */
-  protected void draw_shape( Context ctx, Theme theme, RGBA border_color ) {
+  protected void draw_shape( Context ctx, Theme theme, RGBA border_color, bool exporting ) {
 
     double x = posx + style.node_margin;
     double y = posy + style.node_margin;
@@ -2084,7 +2084,7 @@ public class Node : Object {
     double h = _height - (style.node_margin * 2);
 
     /* Set the fill color */
-    if( mode.is_selected() ) {
+    if( mode.is_selected() && !exporting ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
       style.draw_node_fill( ctx, x, y, w, h, side );
     } else if( is_root() || style.is_fillable() ) {
@@ -2125,7 +2125,7 @@ public class Node : Object {
     int vmargin = 3;
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
-    if( mode.is_selected() ) {
+    if( mode.is_selected() && !exporting ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
       ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin),
                      ((posy + style.node_padding + style.node_margin) - vmargin),
@@ -2430,10 +2430,10 @@ public class Node : Object {
   }
 
   /* Draw the node resizer area */
-  protected virtual void draw_resizer( Context ctx, Theme theme ) {
+  protected virtual void draw_resizer( Context ctx, Theme theme, bool exporting ) {
 
     /* Only draw the resizer if we are the current node */
-    if( (mode != NodeMode.CURRENT) && (mode != NodeMode.HIGHLIGHTED) ) {
+    if( ((mode != NodeMode.CURRENT) && (mode != NodeMode.HIGHLIGHTED)) || exporting ) {
       return;
     }
 
@@ -2468,7 +2468,7 @@ public class Node : Object {
         foreground = Granite.contrasting_foreground_color( background );
       }
 
-      draw_shape( ctx, theme, background );
+      draw_shape( ctx, theme, background, exporting );
       draw_name( ctx, theme, exporting );
       draw_image( ctx, theme );
       if( is_leaf() ) {
@@ -2481,7 +2481,7 @@ public class Node : Object {
       draw_link_node(   ctx, foreground, nodesel_foreground, foreground );
       draw_common_fold( ctx, foreground, background );
       draw_attachable(  ctx, theme, background );
-      draw_resizer( ctx, theme );
+      draw_resizer( ctx, theme, exporting );
 
     /* Otherwise, draw the node as a non-root node */
     } else {
@@ -2489,7 +2489,7 @@ public class Node : Object {
       var background = theme.get_color( "background" );
       var foreground = theme.get_color( "foreground" );
 
-      draw_shape( ctx, theme, _link_color );
+      draw_shape( ctx, theme, _link_color, exporting );
       draw_name( ctx, theme, exporting );
       draw_image( ctx, theme );
       if( is_leaf() ) {
@@ -2502,7 +2502,7 @@ public class Node : Object {
       draw_link_node(   ctx, foreground, nodesel_foreground, foreground );
       draw_common_fold( ctx, _link_color, background );
       draw_attachable(  ctx, theme, background );
-      draw_resizer( ctx, theme );
+      draw_resizer( ctx, theme, exporting );
     }
 
   }

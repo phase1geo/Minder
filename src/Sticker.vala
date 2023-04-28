@@ -140,9 +140,9 @@ public class Sticker {
   }
 
   /* Draw the sticker on the mind map */
-  public void draw( Cairo.Context ctx, Theme theme, double opacity ) {
+  public void draw( Cairo.Context ctx, Theme theme, double opacity, bool exporting ) {
 
-    if( mode == StickerMode.SELECTED ) {
+    if( (mode == StickerMode.SELECTED) && !exporting ) {
 
       /* Draw selection box */
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), ((opacity == 1.0) ? 0.5 : opacity) );
