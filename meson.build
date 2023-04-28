@@ -28,16 +28,6 @@ config_file = configure_file(
     configuration: config_data
 )
 
-# conf = configuration_data()
-# conf.set_quoted('GETTEXT_PACKAGE', meson.project_name())
-# conf.set_quoted('LOCALEDIR', get_option('prefix') / get_option('localedir'))
-# configure_file(output: 'config.h', configuration: conf)
-# config_h_dir = include_directories('.')
-
-# c_args = [
-#   '-include', 'config.h',
-# ]
-
 sources = files()
 
 subdir('data')
@@ -98,7 +88,6 @@ e = executable('com.github.phase1geo.minder',
     sources,
     config_file,
     gresource,
-    #    c_args: c_args,
     dependencies: dependencies,
     vala_args: [
         meson.source_root() + '/vapi/libmarkdown.vapi'
