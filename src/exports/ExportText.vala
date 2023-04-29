@@ -135,7 +135,7 @@ public class ExportText : Export {
   }
 
   /* Creates a new node from the given information and attaches it to the specified parent node */
-  public Node make_node( DrawArea da, Node? parent, string task, string name, Array<Node>? nodes, bool attach = true ) {
+  public Node make_node( DrawArea da, Node? parent, string task, string img, string name, Array<Node>? nodes, bool attach = true ) {
 
     var node = new Node.with_name( da, name, da.layouts.get_default() );
 
@@ -162,6 +162,14 @@ public class ExportText : Export {
       }
     }
 
+    /* Add the image, if specified */
+    if( img != "" ) {
+      stdout.printf( "Creating node image from %s\n", img );
+      var ifile = File.new_for_path( img );
+      var ni    = new NodeImage.from_uri( da.image_manager, ifile.get_uri(), 200 );
+      node.set_image( da.image_manager, ni );
+    }
+
     /* Add the node to the nodes array if it exists */
     if( nodes != null ) {
       nodes.append_val( node );
@@ -183,7 +191,7 @@ public class ExportText : Export {
 
       var stack   = new Array<Hier?>();
       var lines   = txt.split( "\n" );
-      var re      = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
+      var re      = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(!\\[[^]]*\\]\\(([^\\)]+)\\)\\s*)?(.*)$" );
       var tspace  = string.nfill( ((tab_spaces <= 0) ? 1 : tab_spaces), ' ' );
       var current = da.get_current_node();
 
@@ -206,7 +214,8 @@ public class ExportText : Export {
           var spaces = match_info.fetch( 1 ).replace( "\t", tspace ).length;
           var bullet = match_info.fetch( 3 );
           var task   = match_info.fetch( 5 );
-          var str    = match_info.fetch( 6 );
+          var img    = match_info.fetch( 7 );
+          var str    = match_info.fetch( 8 );
 
           /* Add note */
           if( str.strip() == "" ) continue;
@@ -222,12 +231,12 @@ public class ExportText : Export {
 
           /* If the stack is empty */
           } else if( stack.length == 0 ) {
-            node = make_node( da, null, task, str, nodes );
+            node = make_node( da, null, task, img, str, nodes );
             stack.append_val( {spaces, node} );
 
           /* Add sibling node */
           } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
-            node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, nodes, !replace );
+            node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, img, str, nodes, !replace );
             if( replace ) {
               da.replace_node( stack.index( stack.length - 1 ).node, node );
               replace = false;
@@ -237,7 +246,7 @@ public class ExportText : Export {
 
           /* Add child node */
           } else if( spaces > stack.index( stack.length - 1 ).spaces ) {
-            node = make_node( da, stack.index( stack.length - 1 ).node, task, str, nodes );
+            node = make_node( da, stack.index( stack.length - 1 ).node, task, img, str, nodes );
             stack.append_val( {spaces, node} );
 
           /* Add ancestor node */
@@ -246,14 +255,14 @@ public class ExportText : Export {
               stack.remove_index( stack.length - 1 );
             }
             if( stack.length == 0 ) {
-              node = make_node( da, null, task, str, nodes );
+              node = make_node( da, null, task, img, str, nodes );
               stack.append_val( {spaces, node} );
             } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
-              node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, nodes );
+              node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, img, str, nodes );
               stack.remove_index( stack.length - 1 );
               stack.append_val( {spaces, node} );
             } else {
-              node = make_node( da, stack.index( stack.length - 1 ).node, task, str, nodes );
+              node = make_node( da, stack.index( stack.length - 1 ).node, task, img, str, nodes );
               stack.append_val( {spaces, node} );
             }
           }

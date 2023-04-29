@@ -69,6 +69,8 @@ public class QuickEntry : Gtk.Window {
     var help_utsk1 = make_help_label( "  " + _( "If this follows *, + or -, the node is made an uncompleted task." ) );
     var help_ctsk0 = make_help_label( "  - <b>[x] or [X]</b>:" );
     var help_ctsk1 = make_help_label( "  " + _( "If this follows *, + or -, the node is made a completed task." ) );
+    var help_img0  = make_help_label( "  - <b>![](path)</b>:" );
+    var help_img1  = make_help_label( "  " + _( "Adds an image to this node" ) );
     helpgrid.attach( help_title, 0, 0, 2 );
     helpgrid.attach( help_line,  0, 1, 2 );
     helpgrid.attach( help_tab0,  0, 2 );
@@ -83,6 +85,8 @@ public class QuickEntry : Gtk.Window {
     helpgrid.attach( help_utsk1, 1, 6 );
     helpgrid.attach( help_ctsk0, 0, 7 );
     helpgrid.attach( help_ctsk1, 1, 7 );
+    helpgrid.attach( help_img0,  0, 8 );
+    helpgrid.attach( help_img1,  1, 8 );
     helprev.reveal_child = false;
     helprev.add( helpgrid );
 
