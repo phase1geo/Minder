@@ -840,6 +840,11 @@ public class FormattedText {
     changed();
   }
 
+  /* Appends the given string to this text */
+  public void append_text( string str ) {
+    insert_text( _text.length, str );
+  }
+
   /* Inserts the formatted text at the given position */
   public void insert_formatted_text( int index, FormattedText text ) {
     insert_text( index, text.text );

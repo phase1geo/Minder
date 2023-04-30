@@ -24,7 +24,14 @@ using Gdk;
 
 public class QuickEntry : Gtk.Window {
 
-  private TextView _entry;
+  public static const Gtk.TargetEntry[] DRAG_TARGETS = {
+    {"text/uri-list", 0, DragTypes.URI},
+  };
+
+  private DrawArea         _da;
+  private TextView         _entry;
+  private Array<NodeHier?> _node_stack = null;
+  private ExportText       _export;
 
   public QuickEntry( DrawArea da, bool replace, GLib.Settings settings ) {
 
@@ -37,6 +44,10 @@ public class QuickEntry : Gtk.Window {
     transient_for   = da.win;
     window_position = WindowPosition.CENTER_ON_PARENT;
 
+    /* Initialize member variables */
+    _da     = da;
+    _export = (ExportText)da.win.exports.get_by_name( "text" );
+
     /* Add window elements */
     var box = new Box( Orientation.VERTICAL, 0 );
 
@@ -47,6 +58,7 @@ public class QuickEntry : Gtk.Window {
     _entry.get_style_context().add_class( "textfield" );
     _entry.key_press_event.connect( on_keypress );
     _entry.buffer.insert_text.connect( handle_text_insertion );
+    _entry.buffer.create_tag( "node", "background_rgba", Utils.color_from_string( "grey90" ), null );
 
     /* Create the scrolled window for the text entry area */
     var sw = new ScrolledWindow( null, null );
@@ -104,7 +116,7 @@ public class QuickEntry : Gtk.Window {
       var apply = new Button.with_label( _( "Replace" ) );
       apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
       apply.clicked.connect( () => {
-        handle_replace( da );
+        handle_replace();
         close();
       });
       if( !da.is_node_selected() ) apply.set_sensitive( false );
@@ -113,7 +125,7 @@ public class QuickEntry : Gtk.Window {
       var apply = new Button.with_label( _( "Insert" ) );
       apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
       apply.clicked.connect(() => {
-        handle_insert( da );
+        handle_insert();
         close();
       });
       bbox.pack_end( apply, false, false );
@@ -132,6 +144,12 @@ public class QuickEntry : Gtk.Window {
     add( box );
 
     show_all();
+
+    /* Set ourselves up to be a drag target */
+    Gtk.drag_dest_set( _entry, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
+
+    _entry.drag_motion.connect( handle_drag_motion );
+    _entry.drag_data_received.connect( handle_drag_data_received );
 
   }
 
@@ -162,9 +180,69 @@ public class QuickEntry : Gtk.Window {
       var void_entry = (void*)_entry;
       SignalHandler.block_by_func( void_entry, (void*)handle_text_insertion, this );
       _entry.buffer.insert_text( ref pos, cleaned, cleaned.length );
+      _node_stack = null;
       SignalHandler.unblock_by_func( void_entry, (void*)handle_text_insertion, this );
       Signal.stop_emission_by_name( _entry.buffer, "insert_text" );
     }
+  }
+
+  private void clear_node_tag() {
+
+    TextIter first, last;
+
+    /* Clear the node tag */
+    _entry.buffer.get_start_iter( out first );
+    _entry.buffer.get_end_iter( out last );
+    _entry.buffer.remove_tag_by_name( "node", first, last );
+
+  }
+
+  /* Called whenever we drag something over the canvas */
+  private bool handle_drag_motion( Gdk.DragContext ctx, int x, int y, uint t ) {
+
+    if( _node_stack == null ) {
+      _node_stack = new Array<NodeHier>();
+      if( !_export.parse_text( _da, _entry.buffer.text, _da.settings.get_int( "quick-entry-spaces-per-tab" ), _node_stack ) ) {
+        _node_stack = null;
+      }
+    }
+
+    /* Clear the node tag */
+    clear_node_tag();
+
+    if( _node_stack != null ) {
+
+      TextIter iter, first, last;
+      int first_line, last_line, line_top;
+
+      _entry.get_line_at_y( out iter, y, out line_top );
+      _export.get_node_line_range( _node_stack, iter.get_line(), out first_line, out last_line );
+
+      _entry.buffer.get_iter_at_line( out first, first_line );
+      _entry.buffer.get_iter_at_line( out last,  (last_line + 1) );
+      _entry.buffer.apply_tag_by_name( "node", first, last );
+
+    }
+
+    return( _node_stack != null );
+
+  }
+
+  /* Called when something is dropped on the DrawArea */
+  private void handle_drag_data_received( Gdk.DragContext ctx, int x, int y, Gtk.SelectionData data, uint info, uint t ) {
+
+    if( info == DragTypes.URI ) {
+      stdout.printf( "-----\n" );
+      foreach (var uri in data.get_uris()) {
+        stdout.printf( "  %s\n", uri );
+      }
+      stdout.printf( "-----\n" );
+    }
+
+    Gtk.drag_finish( ctx, true, false, t );
+
+    clear_node_tag();
+
   }
 
   /* Returns the text from the start of the current line to the current insertion cursor */
@@ -280,32 +358,30 @@ public class QuickEntry : Gtk.Window {
   }
 
   /* Inserts the specified nodes into the given drawing area */
-  private void handle_insert( DrawArea da ) {
+  private void handle_insert() {
     var nodes  = new Array<Node>();
-    var node   = da.get_current_node();
-    var export = (ExportText)da.win.exports.get_by_name( "text" );
-    export.import_text( _entry.buffer.text, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, false, nodes );
+    var node   = _da.get_current_node();
+    _export.import_text( _entry.buffer.text, _da.settings.get_int( "quick-entry-spaces-per-tab" ), _da, false, nodes );
     if( nodes.length == 0 ) return;
-    da.undo_buffer.add_item( new UndoNodesInsert( da, nodes ) );
-    da.set_current_node( nodes.index( 0 ) );
-    da.queue_draw();
-    da.auto_save();
-    da.see();
+    _da.undo_buffer.add_item( new UndoNodesInsert( _da, nodes ) );
+    _da.set_current_node( nodes.index( 0 ) );
+    _da.queue_draw();
+    _da.auto_save();
+    _da.see();
   }
 
   /* Replaces the specified nodes into the given drawing area */
-  private void handle_replace( DrawArea da ) {
+  private void handle_replace() {
     var nodes  = new Array<Node>();;
-    var node   = da.get_current_node();
+    var node   = _da.get_current_node();
     var parent = node.parent;
-    var export = (ExportText)da.win.exports.get_by_name( "text" );
-    export.import_text( _entry.buffer.text, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, true, nodes );
+    _export.import_text( _entry.buffer.text, _da.settings.get_int( "quick-entry-spaces-per-tab" ), _da, true, nodes );
     if( nodes.length == 0 ) return;
-    da.undo_buffer.add_item( new UndoNodesReplace( node, nodes ) );
-    da.set_current_node( nodes.index( 0 ) );
-    da.queue_draw();
-    da.auto_save();
-    da.see();
+    _da.undo_buffer.add_item( new UndoNodesReplace( node, nodes ) );
+    _da.set_current_node( nodes.index( 0 ) );
+    _da.queue_draw();
+    _da.auto_save();
+    _da.see();
   }
 
   /* Preloads the text buffer with the given text */
