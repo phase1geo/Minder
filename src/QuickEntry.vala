@@ -30,6 +30,7 @@ public class QuickEntry : Gtk.Window {
 
   private DrawArea         _da;
   private TextView         _entry;
+  private Button           _apply;
   private Array<NodeHier?> _node_stack = null;
   private ExportText       _export;
 
@@ -77,12 +78,12 @@ public class QuickEntry : Gtk.Window {
     var help_node1 = make_help_label( "  " + _( "If this character is the first non-whitespace character, make a new node from the title that follows." ) );
     var help_note0 = make_help_label( "  - <b>&gt;</b>:" );
     var help_note1 = make_help_label( "  " + _( "If this character is the first non-whitespace character, the following line is appended to the previous node's note." ) );
+    var help_img0  = make_help_label( "  - <b>!</b> <i>" + _( "URI" ) + "</i>:" );
+    var help_img1  = make_help_label( "  " + _( "If this character is the first non-whitespace character, adds an image from the URI to the previous node" ) );
     var help_utsk0 = make_help_label( "  - <b>[ ]</b>:" );
     var help_utsk1 = make_help_label( "  " + _( "If this follows *, + or -, the node is made an uncompleted task." ) );
     var help_ctsk0 = make_help_label( "  - <b>[x] or [X]</b>:" );
     var help_ctsk1 = make_help_label( "  " + _( "If this follows *, + or -, the node is made a completed task." ) );
-    var help_img0  = make_help_label( "  - <b>![](path)</b>:" );
-    var help_img1  = make_help_label( "  " + _( "Adds an image to this node" ) );
     helpgrid.attach( help_title, 0, 0, 2 );
     helpgrid.attach( help_line,  0, 1, 2 );
     helpgrid.attach( help_tab0,  0, 2 );
@@ -93,12 +94,12 @@ public class QuickEntry : Gtk.Window {
     helpgrid.attach( help_node1, 1, 4 );
     helpgrid.attach( help_note0, 0, 5 );
     helpgrid.attach( help_note1, 1, 5 );
-    helpgrid.attach( help_utsk0, 0, 6 );
-    helpgrid.attach( help_utsk1, 1, 6 );
-    helpgrid.attach( help_ctsk0, 0, 7 );
-    helpgrid.attach( help_ctsk1, 1, 7 );
-    helpgrid.attach( help_img0,  0, 8 );
-    helpgrid.attach( help_img1,  1, 8 );
+    helpgrid.attach( help_img0,  0, 6 );
+    helpgrid.attach( help_img1,  1, 6 );
+    helpgrid.attach( help_utsk0, 0, 7 );
+    helpgrid.attach( help_utsk1, 1, 7 );
+    helpgrid.attach( help_ctsk0, 0, 8 );
+    helpgrid.attach( help_ctsk1, 1, 8 );
     helprev.reveal_child = false;
     helprev.add( helpgrid );
 
@@ -113,22 +114,22 @@ public class QuickEntry : Gtk.Window {
     bbox.pack_start( info, false, false );
 
     if( replace ) {
-      var apply = new Button.with_label( _( "Replace" ) );
-      apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
-      apply.clicked.connect( () => {
+      _apply = new Button.with_label( _( "Replace" ) );
+      _apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+      _apply.clicked.connect( () => {
         handle_replace();
         close();
       });
-      if( !da.is_node_selected() ) apply.set_sensitive( false );
-      bbox.pack_end( apply, false, false );
+      if( !da.is_node_selected() ) _apply.set_sensitive( false );
+      bbox.pack_end( _apply, false, false );
     } else {
-      var apply = new Button.with_label( _( "Insert" ) );
-      apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
-      apply.clicked.connect(() => {
+      _apply = new Button.with_label( _( "Insert" ) );
+      _apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+      _apply.clicked.connect(() => {
         handle_insert();
         close();
       });
-      bbox.pack_end( apply, false, false );
+      bbox.pack_end( _apply, false, false );
     }
 
     var cancel = new Button.with_label( _( "Cancel" ) );
@@ -159,18 +160,6 @@ public class QuickEntry : Gtk.Window {
     lbl.xalign     = (float)0;
     lbl.get_style_context().add_class( "greyed-label" );
     return( lbl );
-  }
-
-  private bool on_keypress( EventKey e ) {
-
-    switch( e.keyval ) {
-      case 32    :  return( handle_space() );
-      case 65293 :  return( handle_return() );
-      case 65289 :  return( handle_tab() );
-    }
-
-    return( false );
-
   }
 
   /* Called whenever text is inserted by the user (either by entry or by paste) */
@@ -347,6 +336,25 @@ public class QuickEntry : Gtk.Window {
 
   }
 
+  private bool on_keypress( EventKey e ) {
+
+    var control = (bool)(e.state & ModifierType.CONTROL_MASK);
+
+    switch( e.keyval ) {
+      case 32    :  return( handle_space() );
+      case 65293 :  return( handle_return( control ) );
+      case 65289 :  return( handle_tab() );
+      default    :
+        if( e.str.get_char().isprint() ) {
+          return( handle_printable( e.str ) );
+        }
+        break;
+    }
+
+    return( false );
+
+  }
+
   /* If the user attempts to hit the space bar when adding front-end whitespace, don't insert it */
   private bool handle_space() {
 
@@ -355,11 +363,20 @@ public class QuickEntry : Gtk.Window {
   }
 
   /* If the return key is pressed, we will automatically indent the next line */
-  private bool handle_return() {
+  private bool handle_return( bool control ) {
+
+    if( control ) {
+      _apply.clicked();
+      return( false );
+    }
 
     string wspace;
 
     if( get_whitespace( get_line_text( 0 ), out wspace ) ) {
+      wspace = tabs_to_spaces( wspace );
+      if( (wspace.char_count() % 8) > 0 ) {
+        wspace = string.nfill( ((wspace.char_count() / 8) * 8), ' ' );
+      }
       var ins = "\n" + wspace;
       _entry.buffer.insert_at_cursor( ins, ins.length );
       return( true );
@@ -382,6 +399,33 @@ public class QuickEntry : Gtk.Window {
       return( true );
     } else if( get_whitespace( get_line_text( 0 ), out curr ) && get_whitespace( get_line_text( -1 ), out prev ) ) {
       return( tabs_to_spaces( curr ).length > tabs_to_spaces( prev ).length );
+    }
+
+    return( false );
+
+  }
+
+  private bool handle_printable( string str ) {
+
+    TextIter current;
+    var      prev = "";
+    var      curr = "";
+
+    _entry.buffer.get_iter_at_mark( out current, _entry.buffer.get_insert() );
+
+    if( get_start_to_current_text().strip() == "" ) {
+      if( (str == "-") || (str == "+") || (str == "*") || (str == "#") ) {
+        var ins = str + " ";
+        _entry.buffer.insert_at_cursor( ins, ins.length );
+        return( true );
+      } else if( (str == ">") || (str == "!") ) {
+        var ins = "  " + str + " ";
+        _entry.buffer.insert_at_cursor( ins, ins.length );
+        return( true );
+      } else {
+        var ins = "  ";
+        _entry.buffer.insert_at_cursor( ins, ins.length );
+      }
     }
 
     return( false );
