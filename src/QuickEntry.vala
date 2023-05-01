@@ -216,11 +216,13 @@ public class QuickEntry : Gtk.Window {
       int first_line, last_line, line_top;
 
       _entry.get_line_at_y( out iter, y, out line_top );
-      _export.get_node_line_range( _node_stack, iter.get_line(), out first_line, out last_line );
+      var node_info = _export.get_node_at_line( _node_stack, iter.get_line() );
 
-      _entry.buffer.get_iter_at_line( out first, first_line );
-      _entry.buffer.get_iter_at_line( out last,  (last_line + 1) );
-      _entry.buffer.apply_tag_by_name( "node", first, last );
+      if( node_info != null ) {
+        _entry.buffer.get_iter_at_line( out first, node_info.first_line );
+        _entry.buffer.get_iter_at_line( out last,  (node_info.last_line + 1) );
+        _entry.buffer.apply_tag_by_name( "node", first, last );
+      }
 
     }
 
@@ -232,11 +234,40 @@ public class QuickEntry : Gtk.Window {
   private void handle_drag_data_received( Gdk.DragContext ctx, int x, int y, Gtk.SelectionData data, uint info, uint t ) {
 
     if( info == DragTypes.URI ) {
-      stdout.printf( "-----\n" );
-      foreach (var uri in data.get_uris()) {
-        stdout.printf( "  %s\n", uri );
+
+      TextIter iter;
+      Node     node;
+      int      line_top;
+      string   prefix;
+
+      _entry.get_line_at_y( out iter, y, out line_top );
+      var node_info = _export.get_node_at_line( _node_stack, iter.get_line() );
+
+      if( node_info != null ) {
+
+        TextIter first, last;
+        var node_str = "";
+
+        foreach( var uri in data.get_uris() ) {
+          var node_image = new NodeImage.from_uri( _da.image_manager, uri, 200 );
+          node_info.node.set_image( _da.image_manager, node_image );
+          if( node_str != "" ) {
+            node_str += "\n";
+          }
+          node_str += _export.export_node( _da, node_info.node, string.nfill( node_info.spaces, ' ' ) );
+        }
+
+        /* Perform the text substitution */
+        _entry.buffer.get_iter_at_line( out first, node_info.first_line );
+        _entry.buffer.get_iter_at_line( out last,  (node_info.last_line + 1) );
+        _entry.buffer.delete( ref first, ref last );
+        _entry.buffer.insert( ref first, node_str, node_str.length );
+
+        /* Make sure that we clear the node stack */
+        _node_stack = null;
+
       }
-      stdout.printf( "-----\n" );
+
     }
 
     Gtk.drag_finish( ctx, true, false, t );
