@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-25 20:32-0500\n"
-"PO-Revision-Date: 2023-04-24 15:30+0100\n"
+"PO-Revision-Date: 2023-05-07 14:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -1895,7 +1895,6 @@ msgid "Answers"
 msgstr "Risposte"
 
 #: src/StickerSet.vala:194
-#, fuzzy
 msgid "Fine print"
 msgstr "Stampa fine"
 
@@ -2005,7 +2004,7 @@ msgstr "Fabbrica"
 
 #: src/StickerSet.vala:223
 msgid "Factory breakdown"
-msgstr ""
+msgstr "Produzione di fabbrica"
 
 #: src/StickerSet.vala:224
 msgid "Crystal oscillator"
@@ -2037,7 +2036,7 @@ msgstr "Automobilistico"
 
 #: src/StickerSet.vala:231
 msgid "Feed in"
-msgstr ""
+msgstr "Alimentazione"
 
 #: src/StickerSet.vala:232
 msgid "Dam"
@@ -2289,7 +2288,7 @@ msgstr "Giu a adestra"
 
 #: src/StickerSet.vala:298
 msgid "Right up2"
-msgstr ""
+msgstr "In alto a destra2"
 
 #: src/StickerSet.vala:299
 msgid "Up right"
@@ -2297,11 +2296,11 @@ msgstr "Sopra a destra"
 
 #: src/StickerSet.vala:300
 msgid "Right down2"
-msgstr ""
+msgstr "In basso a destra2"
 
 #: src/StickerSet.vala:301
 msgid "Left up2"
-msgstr ""
+msgstr "In alto a sinistra2"
 
 #: src/StickerSet.vala:302
 msgid "Down left"
@@ -2862,9 +2861,8 @@ msgid "add group"
 msgstr "aggiungi gruppo"
 
 #: src/undo_actions/UndoGroupNote.vala:32
-#, fuzzy
 msgid "node group note change"
-msgstr "cambio gruppo di nodi"
+msgstr "modifica della nota del gruppo di nodi"
 
 #: src/undo_actions/UndoGroupRemove.vala:30
 msgid "remove group"
