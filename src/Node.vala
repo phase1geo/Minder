@@ -1309,7 +1309,7 @@ public class Node : Object {
     }
 
     /* Get the note information */
-    string? o = parent->get_prop( "node" );
+    string? o = parent->get_prop( "note" );
     if( o != null ) {
       note = o;
     }
