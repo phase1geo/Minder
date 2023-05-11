@@ -46,9 +46,16 @@ public class UndoTextBuffer : UndoBuffer {
     return( false );
   }
 
+  /* Returns the current cursor location */
+  private int get_ct_cursor() {
+    int cursor, start, end;
+    ct.get_cursor_info( out cursor, out start, out end );
+    return( cursor );
+  }
+
   /* Call after text has been inserted */
   public void add_insert( int start, string text, int start_cursor ) {
-    var item = new UndoTextInsert( text, start, start_cursor, ct.cursor );
+    var item = new UndoTextInsert( text, start, start_cursor, get_ct_cursor() );
     if( !merge_with_last( item ) ) {
       add_item( item );
     }
@@ -56,7 +63,7 @@ public class UndoTextBuffer : UndoBuffer {
 
   /* Call after multiple pieces of text have been inserted */
   public void add_inserts( Array<InsertText?> its, int start_cursor ) {
-    var item = new UndoTextMultiInsert( its, start_cursor, ct.cursor );
+    var item = new UndoTextMultiInsert( its, start_cursor, get_ct_cursor() );
     if( !merge_with_last( item ) ) {
       add_item( item );
     }
@@ -64,7 +71,7 @@ public class UndoTextBuffer : UndoBuffer {
 
   /* Call after text has been deleted */
   public void add_delete( int start, string orig_text, Array<UndoTagInfo>? tags, int start_cursor ) {
-    var item = new UndoTextDelete( orig_text, start, tags, start_cursor, ct.cursor );
+    var item = new UndoTextDelete( orig_text, start, tags, start_cursor, get_ct_cursor() );
     if( !merge_with_last( item ) ) {
       add_item( item );
     }
@@ -72,7 +79,7 @@ public class UndoTextBuffer : UndoBuffer {
 
   /* Call after text has been replaced */
   public void add_replace( int start, string orig_text, string text, Array<UndoTagInfo>? tags, int start_cursor ) {
-    var item = new UndoTextReplace( orig_text, text, start, tags, start_cursor, ct.cursor );
+    var item = new UndoTextReplace( orig_text, text, start, tags, start_cursor, get_ct_cursor() );
     if( !merge_with_last( item ) ) {
       add_item( item );
     }
