@@ -32,14 +32,31 @@ public class ExportOutliner : Export {
   public override bool export( string fname, DrawArea da ) {
     Xml.Doc*  doc      = new Xml.Doc( "1.0" );
     Xml.Node* outliner = new Xml.Node( null, "outliner" );
-    outliner->new_prop( "condensed", "false" );
-    outliner->new_prop( "show-tasks", "true" );
+
+    outliner->new_prop( "condensed",   "false" );
+    outliner->new_prop( "show-tasks",  show_tasks( da ).to_string() );
+    outliner->new_prop( "show-depth",  "false" );
+    outliner->new_prop( "markdown",    da.markdown_parser.enable.to_string() );
+    outliner->new_prop( "blank-rows",  "false" );
+    outliner->new_prop( "auto-sizing", "false" );
+
     outliner->add_child( export_theme( da ) );
     outliner->add_child( export_top_nodes( da ) );
     doc->set_root_element( outliner );
     doc->save_format_file( fname, 1 );
     delete doc;
     return( true );
+  }
+
+  /* Returns true if tasks should be displayed in Outliner */
+  private bool show_tasks( DrawArea da ) {
+    var nodes = da.get_nodes();
+    for( int i=0; i<nodes.length; i++ ) {
+      if( nodes.index( i ).task_count > 0 ) {
+        return( true );
+      }
+    }
+    return( false );
   }
 
   /* Outputs the theme to use */
