@@ -22,12 +22,14 @@
 using GLib;
 using Gee;
 
-public class ExportText : Export {
+public struct NodeHier {
+  public int  spaces;
+  public Node node;
+  public int  first_line;
+  public int  last_line;
+}
 
-  struct Hier {
-    public int  spaces;
-    public Node node;
-  }
+public class ExportText : Export {
 
   /* Constructor */
   public ExportText() {
@@ -63,7 +65,7 @@ public class ExportText : Export {
       value += "# " + nodes.index( i ).name.text.text + "\n";
       var children = nodes.index( i ).children();
       for( int j=0; j<children.length; j++ ) {
-        value += export_node( children.index( j ) );
+        value += export_node( da, children.index( j ) );
       }
     }
 
@@ -72,7 +74,7 @@ public class ExportText : Export {
   }
 
   /* Draws the given node and its children to the output stream */
-  public string export_node( Node node, string prefix = "\t" ) {
+  public string export_node( DrawArea da, Node node, string prefix = "\t" ) {
 
     string value = prefix + "- ";
 
@@ -86,7 +88,14 @@ public class ExportText : Export {
     }
 
     /* Add the node title */
-    value += node.name.text.text + "\n";
+    value += node.name.text.text.chomp().replace( "\n", "\n%s  ".printf( prefix ) )  + "\n";
+
+    if( node.image != null ) {
+      var uri = da.image_manager.get_uri( node.image.id );
+      if( uri != "" ) {
+        value += prefix + "  ! " + uri + "\n";
+      }
+    }
 
     /* Add the node note, if specified */
     if( node.note != "" ) {
@@ -96,7 +105,7 @@ public class ExportText : Export {
     /* Add the children */
     var children = node.children();
     for( int i=0; i<children.length; i++ ) {
-      value += export_node( children.index( i ), prefix + "\t" );
+      value += export_node( da, children.index( i ), prefix + "\t" );
     }
 
     return( value );
@@ -135,24 +144,9 @@ public class ExportText : Export {
   }
 
   /* Creates a new node from the given information and attaches it to the specified parent node */
-  public Node make_node( DrawArea da, Node? parent, string task, string name, Array<Node>? nodes, bool attach = true ) {
+  public Node make_node( DrawArea da, string task, string name ) {
 
     var node = new Node.with_name( da, name, da.layouts.get_default() );
-
-    /* Add the style component to the node */
-    if( parent == null ) {
-      node.style = StyleInspector.styles.get_global_style();
-      if( attach ) {
-        da.position_root_node( node );
-        da.add_root( node, -1 );
-        da.set_current_node( node );
-      }
-    } else {
-      node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), null );
-      if( attach ) {
-        node.attach( parent, (int)parent.children().length, da.get_theme() );
-      }
-    }
 
     /* Add the task information, if necessary */
     if( task != "" ) {
@@ -162,13 +156,20 @@ public class ExportText : Export {
       }
     }
 
-    /* Add the node to the nodes array if it exists */
-    if( nodes != null ) {
-      nodes.append_val( node );
-    }
-
     return( node );
 
+  }
+
+  private void parent_node( DrawArea da, Node node, Node? parent ) {
+    if( parent == null ) {
+      node.style = StyleInspector.styles.get_global_style();
+      da.position_root_node( node );
+      da.add_root( node, -1 );
+      da.set_current_node( node );
+    } else {
+      node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), null );
+      node.attach( parent, (int)parent.children().length, da.get_theme() );
+    }
   }
 
   /* Append the given string to the note */
@@ -176,29 +177,24 @@ public class ExportText : Export {
     node.note = "%s\n%s".printf( node.note, str ).strip();
   }
 
-  /* Imports the given text string */
-  public void import_text( string txt, int tab_spaces, DrawArea da, bool replace, Array<Node>? nodes = null ) {
+  /* Appends the given string to the node's title */
+  public void append_title( Node node, string str ) {
+    node.name.text.append_text( "\n" + str );
+  }
+
+  public bool parse_text( DrawArea da, string txt, int tab_spaces, Array<NodeHier> stack ) {
 
     try {
 
-      var stack   = new Array<Hier?>();
-      var lines   = txt.split( "\n" );
-      var re      = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
-      var tspace  = string.nfill( ((tab_spaces <= 0) ? 1 : tab_spaces), ' ' );
-      var current = da.get_current_node();
-
-      /*
-       Populate the stack with the current node, if one exists.  Set the spaces
-       count to -1 so that everything but a new header is added to this node.
-      */
-      if( current != null ) {
-        stack.append_val( {(replace ? 0 : -1), current} );
-      }
+      Node? node = null;
+      var lines  = txt.split( "\n" );
+      var re     = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>|!)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
+      var tspace = string.nfill( ((tab_spaces <= 0) ? 1 : tab_spaces), ' ' );
+      var lnum   = 0;
 
       foreach( string line in lines ) {
 
         MatchInfo match_info;
-        Node      node;
 
         /* If we found some useful text, include it here */
         if( re.match( line, 0, out match_info ) ) {
@@ -211,60 +207,127 @@ public class ExportText : Export {
           /* Add note */
           if( str.strip() == "" ) continue;
           if( bullet == ">" ) {
-            if( stack.length > 0 ) {
-              if( replace ) {
-                stack.index( stack.length - 1 ).node.note = str;
-                replace = false;
-              } else {
-                append_note( stack.index( stack.length - 1 ).node, str );
-              }
+            if( node != null ) {
+              append_note( node, str );
+              stack.index( stack.length - 1 ).last_line = lnum;
             }
 
-          /* If the stack is empty */
-          } else if( stack.length == 0 ) {
-            node = make_node( da, null, task, str, nodes );
-            stack.append_val( {spaces, node} );
-
-          /* Add sibling node */
-          } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
-            node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, nodes, !replace );
-            if( replace ) {
-              da.replace_node( stack.index( stack.length - 1 ).node, node );
-              replace = false;
+          /* Add image */
+          } else if( bullet == "!" ) {
+            if( node != null ) {
+              var img = new NodeImage.from_uri( da.image_manager, str, 200 );
+              node.set_image( da.image_manager, img );
             }
-            stack.remove_index( stack.length - 1 );
-            stack.append_val( {spaces, node} );
 
-          /* Add child node */
-          } else if( spaces > stack.index( stack.length - 1 ).spaces ) {
-            node = make_node( da, stack.index( stack.length - 1 ).node, task, str, nodes );
-            stack.append_val( {spaces, node} );
+          /* If we are starting a new node, create it and add it to the stack */
+          } else if( (bullet == "-") || (bullet == "*") || (bullet == "+") || (bullet == "#") ) {
+            node = make_node( da, task, str );
+            stack.append_val( {spaces, node, lnum, lnum} );
 
-          /* Add ancestor node */
-          } else {
-            while( (stack.length > 0) && (spaces < stack.index( stack.length - 1 ).spaces) ) {
-              stack.remove_index( stack.length - 1 );
-            }
-            if( stack.length == 0 ) {
-              node = make_node( da, null, task, str, nodes );
-              stack.append_val( {spaces, node} );
-            } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
-              node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, nodes );
-              stack.remove_index( stack.length - 1 );
-              stack.append_val( {spaces, node} );
-            } else {
-              node = make_node( da, stack.index( stack.length - 1 ).node, task, str, nodes );
-              stack.append_val( {spaces, node} );
-            }
+          /* Otherwise, we need to append a new line to the current title */
+          } else if( node != null ) {
+            append_title( node, str );
+            stack.index( stack.length - 1 ).last_line = lnum;
           }
 
         }
 
+        lnum++;
+
       }
 
     } catch( GLib.RegexError err ) {
-      /* TBD */
+      return( false );
     }
+
+    // display_node_hier( stack );
+
+    return( true );
+
+  }
+
+  /* Imports the given text string */
+  public void import_text( string txt, int tab_spaces, DrawArea da, bool replace, Array<Node>? nodes = null ) {
+
+    var stack = new Array<NodeHier>();
+    if( !parse_text( da, txt, tab_spaces, stack ) ) {
+      return;
+    }
+
+    var current = da.get_current_node();
+    if( current != null ) {
+      if( replace ) {
+        da.replace_node( current, stack.index( 0 ).node );
+      } else {
+        parent_node( da, stack.index( 0 ).node, current );
+      }
+    }
+
+    if( nodes != null ) {
+      nodes.append_val( stack.index( 0 ).node );
+    }
+
+    for( int i=1; i<stack.length; i++ ) {
+
+      var spaces = stack.index( i ).spaces;
+      var node   = stack.index( i ).node;
+
+      /* Add sibling node */
+      if( spaces == stack.index( i - 1 ).spaces ) {
+        parent_node( da, node, stack.index( i - 1 ).node.parent );
+
+      /* Add child node */
+      } else if( spaces > stack.index( i - 1 ).spaces ) {
+        parent_node( da, node, stack.index( i - 1 ).node );
+
+      /* Add ancestor node */
+      } else {
+        var parent = i - 1;
+        while( (parent >= 0) && (spaces < stack.index( parent ).spaces) ) {
+          parent--;
+        }
+        if( parent != -1 ) {
+          if( spaces == stack.index( parent ).spaces ) {
+            parent_node( da, node, stack.index( parent ).node.parent );
+          } else {
+            parent_node( da, node, stack.index( parent ).node );
+          }
+        }
+      }
+
+      if( nodes != null ) {
+        nodes.append_val( node );
+      }
+
+    }
+
+  }
+
+  public void display_node_hier( Array<NodeHier> stack ) {
+
+    stdout.printf( "Node Hierarchy (%u)\n", stack.length );
+    stdout.printf( "--------------\n" );
+   
+    for( int i=0; i<stack.length; i++ ) {
+      var entry = stack.index( i );
+      stdout.printf( "  %s, spaces: %d, first: %d, last: %d\n", ((entry.node == null) ? "NULL" : entry.node.name.text.text), entry.spaces, entry.first_line, entry.last_line );
+    }
+
+  }
+
+  public NodeHier? get_node_at_line( Array<NodeHier>? stack, int current_line ) {
+    
+    if( stack != null ) {
+      for( int i=0; i<stack.length; i++ ) {
+        var first_line = stack.index( i ).first_line;
+        var last_line  = stack.index( i ).last_line;
+        if( (first_line <= current_line) && (current_line <= last_line) ) {
+          return( stack.index( i ) );
+        }
+      }
+    }
+
+    return( null );
 
   }
 

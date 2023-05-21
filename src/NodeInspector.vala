@@ -575,7 +575,6 @@ public class NodeInspector : Box {
         var url = _da.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
         var str = "<a href=\"" + url + "\">" + url + "</a>";
         current.image.set_image( _image );
-        _image_loc.label = str;
         _resize.set_active( current.image_resizable );
         _image_stack.visible_child_name = "edit";
       } else {
