@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-25 20:32-0500\n"
+"POT-Creation-Date: 2023-05-20 23:57-0500\n"
 "PO-Revision-Date: 2020-08-30 14:45+0100\n"
 "Last-Translator: André Barata <andretiagob@protonmail.com>\n"
 "Language-Team: none\n"
@@ -92,7 +92,7 @@ msgstr ""
 msgid "ERROR:  Unable to load Minder input file"
 msgstr ""
 
-#: src/CanvasText.vala:269 src/FormattedText.vala:1087
+#: src/CanvasText.vala:269 src/FormattedText.vala:1092
 #, fuzzy
 msgid "No text found"
 msgstr "Palavra Seguinte"
@@ -177,44 +177,44 @@ msgstr "sem nome"
 msgid "Main Idea"
 msgstr "Ideia Principal"
 
-#: src/DrawArea.vala:2384
+#: src/DrawArea.vala:2383
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% completado"
 
-#: src/DrawArea.vala:2398
+#: src/DrawArea.vala:2397
 msgid "Drag to resize node"
 msgstr ""
 
-#: src/DrawArea.vala:2400
+#: src/DrawArea.vala:2399
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:2512
+#: src/DrawArea.vala:2511
 #, fuzzy, c-format
 msgid "Children: %u\n"
 msgstr "Dobrar Filhos"
 
-#: src/DrawArea.vala:2513
+#: src/DrawArea.vala:2512
 #, c-format
 msgid "Total: %d"
 msgstr ""
 
-#: src/DrawArea.vala:2559
+#: src/DrawArea.vala:2558
 msgid "connection endpoint change"
 msgstr "alterar ponto final da conexão"
 
-#: src/DrawArea.vala:2566
+#: src/DrawArea.vala:2565
 msgid "connection drag"
 msgstr "arrastar conexão"
 
-#: src/DrawArea.vala:3212 src/DrawArea.vala:3226 src/DrawArea.vala:4966
+#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4965
 msgid "Another Idea"
 msgstr "Outra ideia"
 
-#: src/DrawArea.vala:4459 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4458 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Manual"
@@ -304,7 +304,7 @@ msgstr "Exportar Como"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:299
 #: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1231
-#: src/QuickEntry.vala:118 src/StickerSet.vala:71 src/ThemeEditor.vala:143
+#: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Cancelar"
@@ -428,7 +428,7 @@ msgstr "Minder Portátil"
 msgid "SVG"
 msgstr "SVG"
 
-#: src/exports/ExportText.vala:34
+#: src/exports/ExportText.vala:36
 msgid "PlainText"
 msgstr "Texto Simples"
 
@@ -916,7 +916,7 @@ msgstr "Adicionar Nó FIlho"
 msgid "Add Sibling Node"
 msgstr "Adicionar Nó Irmão"
 
-#: src/NodeMenu.vala:164 src/QuickEntry.vala:36
+#: src/NodeMenu.vala:164 src/QuickEntry.vala:44
 msgid "Quick Entry"
 msgstr "Entrada Rápida"
 
@@ -1169,11 +1169,11 @@ msgid ""
 "entry or notes field)."
 msgstr ""
 
-#: src/QuickEntry.vala:58
+#: src/QuickEntry.vala:71
 msgid "Help for inputting node information:"
 msgstr "Ajuda para inserir informação do nó:"
 
-#: src/QuickEntry.vala:59
+#: src/QuickEntry.vala:72
 msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
@@ -1181,15 +1181,15 @@ msgstr ""
 "Cada linha de texto descreve ou o título de um nó ou a a informação de uma "
 "nota para um nó."
 
-#: src/QuickEntry.vala:60
+#: src/QuickEntry.vala:73
 msgid "Tab"
 msgstr "Guia"
 
-#: src/QuickEntry.vala:61
+#: src/QuickEntry.vala:74
 msgid "Creates a child node of the previous node."
 msgstr "Cria um nó filho do nó anterior."
 
-#: src/QuickEntry.vala:63
+#: src/QuickEntry.vala:76
 msgid ""
 "If this character is the first non-whitespace character, makes a new root "
 "node from the title that follows."
@@ -1197,7 +1197,7 @@ msgstr ""
 "Se este caractere for o primeiro caractere sem espaço em branco, faz um novo "
 "nó de raiz do título que se segue."
 
-#: src/QuickEntry.vala:65
+#: src/QuickEntry.vala:78
 msgid ""
 "If this character is the first non-whitespace character, make a new node "
 "from the title that follows."
@@ -1205,7 +1205,7 @@ msgstr ""
 "Se este caractere for o primeiro caractere sem espaço em branco, faz um novo "
 "nó do título que se segue."
 
-#: src/QuickEntry.vala:67
+#: src/QuickEntry.vala:80
 msgid ""
 "If this character is the first non-whitespace character, the following line "
 "is appended to the previous node's note."
@@ -1213,19 +1213,33 @@ msgstr ""
 "Se este caractere for o primeiro caractere sem espaço em branco, a linha "
 "seguinte é acrescentada à nota anterior do nó."
 
-#: src/QuickEntry.vala:69
+#: src/QuickEntry.vala:81
+#, fuzzy
+msgid "URI"
+msgstr "URL"
+
+#: src/QuickEntry.vala:82
+#, fuzzy
+msgid ""
+"If this character is the first non-whitespace character, adds an image from "
+"the URI to the previous node"
+msgstr ""
+"Se este caractere for o primeiro caractere sem espaço em branco, a linha "
+"seguinte é acrescentada à nota anterior do nó."
+
+#: src/QuickEntry.vala:84
 msgid "If this follows *, + or -, the node is made an uncompleted task."
 msgstr "Se isto segue *, + ou -, o nó torna-se como uma tarefa não completada."
 
-#: src/QuickEntry.vala:71
+#: src/QuickEntry.vala:86
 msgid "If this follows *, + or -, the node is made a completed task."
 msgstr "Se isto segue *, + ou -, o nó torna-se como uma tarefa completada."
 
-#: src/QuickEntry.vala:100
+#: src/QuickEntry.vala:117
 msgid "Replace"
 msgstr "Substituir"
 
-#: src/QuickEntry.vala:109
+#: src/QuickEntry.vala:126
 msgid "Insert"
 msgstr "Inserir"
 

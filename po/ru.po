@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-25 20:32-0500\n"
+"POT-Creation-Date: 2023-05-20 23:57-0500\n"
 "PO-Revision-Date: 2023-04-21 15:22+0200\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -93,7 +93,7 @@ msgstr ""
 msgid "ERROR:  Unable to load Minder input file"
 msgstr "Ошибка: не удалось открыть файл Minder"
 
-#: src/CanvasText.vala:269 src/FormattedText.vala:1087
+#: src/CanvasText.vala:269 src/FormattedText.vala:1092
 msgid "No text found"
 msgstr "Текст не найден"
 
@@ -175,16 +175,16 @@ msgstr "безымянный"
 msgid "Main Idea"
 msgstr "Главная идея"
 
-#: src/DrawArea.vala:2384
+#: src/DrawArea.vala:2383
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% завершено"
 
-#: src/DrawArea.vala:2398
+#: src/DrawArea.vala:2397
 msgid "Drag to resize node"
 msgstr "Перетащите для смены размера узла"
 
-#: src/DrawArea.vala:2400
+#: src/DrawArea.vala:2399
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -192,29 +192,29 @@ msgstr ""
 "Перетаскивание меняет размер узла и изображения.\n"
 "Ctrl+перетаскивание меняет размер только узла."
 
-#: src/DrawArea.vala:2512
+#: src/DrawArea.vala:2511
 #, c-format
 msgid "Children: %u\n"
 msgstr "Потомки: %u\n"
 
-#: src/DrawArea.vala:2513
+#: src/DrawArea.vala:2512
 #, c-format
 msgid "Total: %d"
 msgstr "Всего: %d"
 
-#: src/DrawArea.vala:2559
+#: src/DrawArea.vala:2558
 msgid "connection endpoint change"
 msgstr "смену конечной точки соединения"
 
-#: src/DrawArea.vala:2566
+#: src/DrawArea.vala:2565
 msgid "connection drag"
 msgstr "перетаскивание соединения"
 
-#: src/DrawArea.vala:3212 src/DrawArea.vala:3226 src/DrawArea.vala:4966
+#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4965
 msgid "Another Idea"
 msgstr "Ещё одна идея"
 
-#: src/DrawArea.vala:4459 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4458 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Вручную"
@@ -302,7 +302,7 @@ msgstr "Экспортировать как %s"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:299
 #: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1231
-#: src/QuickEntry.vala:118 src/StickerSet.vala:71 src/ThemeEditor.vala:143
+#: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Отмена"
@@ -424,7 +424,7 @@ msgstr "Переносимый Minder"
 msgid "SVG"
 msgstr "SVG"
 
-#: src/exports/ExportText.vala:34
+#: src/exports/ExportText.vala:36
 msgid "PlainText"
 msgstr "Простой текст"
 
@@ -894,7 +894,7 @@ msgstr "Добавить узел-потомок"
 msgid "Add Sibling Node"
 msgstr "Добавить узел-сиблинг"
 
-#: src/NodeMenu.vala:164 src/QuickEntry.vala:36
+#: src/NodeMenu.vala:164 src/QuickEntry.vala:44
 msgid "Quick Entry"
 msgstr "Быстрый ввод"
 
@@ -1144,25 +1144,25 @@ msgstr ""
 "Какой заказной кегль шрифта использовать в любых полях ввода, например, в "
 "поле примечаний и поле быстрого ввода"
 
-#: src/QuickEntry.vala:58
+#: src/QuickEntry.vala:71
 msgid "Help for inputting node information:"
 msgstr "Справка по вводу узлов:"
 
-#: src/QuickEntry.vala:59
+#: src/QuickEntry.vala:72
 msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
 msgstr "Каждая строка текста — лиюо заголовок узла, либо информация о нем."
 
-#: src/QuickEntry.vala:60
+#: src/QuickEntry.vala:73
 msgid "Tab"
 msgstr "Tab"
 
-#: src/QuickEntry.vala:61
+#: src/QuickEntry.vala:74
 msgid "Creates a child node of the previous node."
 msgstr "Создаёт узел-потомок предыдущего узла."
 
-#: src/QuickEntry.vala:63
+#: src/QuickEntry.vala:76
 msgid ""
 "If this character is the first non-whitespace character, makes a new root "
 "node from the title that follows."
@@ -1170,7 +1170,7 @@ msgstr ""
 "Если строка начинается с этого символа, создается новый корневой узел с "
 "заголовком из следуюшего далее текста."
 
-#: src/QuickEntry.vala:65
+#: src/QuickEntry.vala:78
 msgid ""
 "If this character is the first non-whitespace character, make a new node "
 "from the title that follows."
@@ -1178,7 +1178,7 @@ msgstr ""
 "Если строка начинается с этого символа, создается новый узел с заголовком из "
 "следуюшего далее текста."
 
-#: src/QuickEntry.vala:67
+#: src/QuickEntry.vala:80
 msgid ""
 "If this character is the first non-whitespace character, the following line "
 "is appended to the previous node's note."
@@ -1186,23 +1186,37 @@ msgstr ""
 "Если строка начинается с этого символа, текст далее вставляется в примечание "
 "к предыдущему узлу."
 
-#: src/QuickEntry.vala:69
+#: src/QuickEntry.vala:81
+#, fuzzy
+msgid "URI"
+msgstr "URL"
+
+#: src/QuickEntry.vala:82
+#, fuzzy
+msgid ""
+"If this character is the first non-whitespace character, adds an image from "
+"the URI to the previous node"
+msgstr ""
+"Если строка начинается с этого символа, текст далее вставляется в примечание "
+"к предыдущему узлу."
+
+#: src/QuickEntry.vala:84
 msgid "If this follows *, + or -, the node is made an uncompleted task."
 msgstr ""
 "После символов *, + и - эта последовательность создаёт узел с незавершённой "
 "задачей."
 
-#: src/QuickEntry.vala:71
+#: src/QuickEntry.vala:86
 msgid "If this follows *, + or -, the node is made a completed task."
 msgstr ""
 "После символов *, + и - эта последовательность создаёт узел с завершённой "
 "задачей."
 
-#: src/QuickEntry.vala:100
+#: src/QuickEntry.vala:117
 msgid "Replace"
 msgstr "Заменить"
 
-#: src/QuickEntry.vala:109
+#: src/QuickEntry.vala:126
 msgid "Insert"
 msgstr "Вставить"
 

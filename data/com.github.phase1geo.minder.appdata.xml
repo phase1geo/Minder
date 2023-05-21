@@ -158,6 +158,34 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.15.2" date="2023-05-20">
+      <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Added support for embedding image path in Quick Entry.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li>Code cleanup</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed issues with exported images including selection.</li>
+          <li>Fixed issue with importing OPML files (thanks to Ygor Mutti).</li>
+          <li>Fixed issue with undo/redo of Unicode characters.</li>
+          <li>Fixed issues with exporting to Outliner format.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.15.1" date="2023-04-25">
       <description>
         <p>Changes</p>

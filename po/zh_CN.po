@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-25 20:32-0500\n"
+"POT-Creation-Date: 2023-05-20 23:57-0500\n"
 "PO-Revision-Date: 2022-07-22 17:02+0800\n"
 "Last-Translator: 企鹅2035 <qie2035@qq.com>\n"
 "Language-Team: 简体中文 (机翻) <qie2035@qq.com>\n"
@@ -88,7 +88,7 @@ msgstr "运行 “%s --help” 以查看有效选项\n"
 msgid "ERROR:  Unable to load Minder input file"
 msgstr "错误：无法加载管理器输入文件"
 
-#: src/CanvasText.vala:269 src/FormattedText.vala:1087
+#: src/CanvasText.vala:269 src/FormattedText.vala:1092
 msgid "No text found"
 msgstr "未找到文本"
 
@@ -170,16 +170,16 @@ msgstr "未命名"
 msgid "Main Idea"
 msgstr "主要思想"
 
-#: src/DrawArea.vala:2384
+#: src/DrawArea.vala:2383
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% 完成"
 
-#: src/DrawArea.vala:2398
+#: src/DrawArea.vala:2397
 msgid "Drag to resize node"
 msgstr "拖动以调整节点大小"
 
-#: src/DrawArea.vala:2400
+#: src/DrawArea.vala:2399
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -187,29 +187,29 @@ msgstr ""
 "拖动以调整节点和图像的大小。\n"
 "按住 Control-拖动以仅调整节点的大小。"
 
-#: src/DrawArea.vala:2512
+#: src/DrawArea.vala:2511
 #, c-format
 msgid "Children: %u\n"
 msgstr "子节点： %u\n"
 
-#: src/DrawArea.vala:2513
+#: src/DrawArea.vala:2512
 #, c-format
 msgid "Total: %d"
 msgstr "总计： %d"
 
-#: src/DrawArea.vala:2559
+#: src/DrawArea.vala:2558
 msgid "connection endpoint change"
 msgstr "连接端点更改"
 
-#: src/DrawArea.vala:2566
+#: src/DrawArea.vala:2565
 msgid "connection drag"
 msgstr "连接拖动"
 
-#: src/DrawArea.vala:3212 src/DrawArea.vala:3226 src/DrawArea.vala:4966
+#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4965
 msgid "Another Idea"
 msgstr "另一个想法"
 
-#: src/DrawArea.vala:4459 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4458 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "手动"
@@ -298,7 +298,7 @@ msgstr "导出为 %s"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:299
 #: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1231
-#: src/QuickEntry.vala:118 src/StickerSet.vala:71 src/ThemeEditor.vala:143
+#: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "取消"
@@ -421,7 +421,7 @@ msgstr "便携式Minder"
 msgid "SVG"
 msgstr "SVG"
 
-#: src/exports/ExportText.vala:34
+#: src/exports/ExportText.vala:36
 msgid "PlainText"
 msgstr "PlainText"
 
@@ -895,7 +895,7 @@ msgstr "添加子节点"
 msgid "Add Sibling Node"
 msgstr "添加同级节点"
 
-#: src/NodeMenu.vala:164 src/QuickEntry.vala:36
+#: src/NodeMenu.vala:164 src/QuickEntry.vala:44
 msgid "Quick Entry"
 msgstr "快速输入"
 
@@ -1141,55 +1141,67 @@ msgid ""
 "entry or notes field)."
 msgstr "指定要在文本编辑字段（即快速输入或注释字段）中使用的自定义字体大小。"
 
-#: src/QuickEntry.vala:58
+#: src/QuickEntry.vala:71
 msgid "Help for inputting node information:"
 msgstr "输入节点信息的帮助："
 
-#: src/QuickEntry.vala:59
+#: src/QuickEntry.vala:72
 msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
 msgstr "每行文本描述节点的标题或节点的注释信息。"
 
-#: src/QuickEntry.vala:60
+#: src/QuickEntry.vala:73
 msgid "Tab"
 msgstr "标签"
 
-#: src/QuickEntry.vala:61
+#: src/QuickEntry.vala:74
 msgid "Creates a child node of the previous node."
 msgstr "创建前一个节点的子节点。"
 
-#: src/QuickEntry.vala:63
+#: src/QuickEntry.vala:76
 msgid ""
 "If this character is the first non-whitespace character, makes a new root "
 "node from the title that follows."
 msgstr "如果此字符是第一个非空格字符，则 从后面的标题创建一个新的根节点。"
 
-#: src/QuickEntry.vala:65
+#: src/QuickEntry.vala:78
 msgid ""
 "If this character is the first non-whitespace character, make a new node "
 "from the title that follows."
 msgstr "如果此字符是第一个非空格字符，请从后面的标题创建一个新节点。"
 
-#: src/QuickEntry.vala:67
+#: src/QuickEntry.vala:80
 msgid ""
 "If this character is the first non-whitespace character, the following line "
 "is appended to the previous node's note."
 msgstr "如果此字符是第一个非空格字符，则以下行将追加到前一个节点的注释中。"
 
-#: src/QuickEntry.vala:69
+#: src/QuickEntry.vala:81
+#, fuzzy
+msgid "URI"
+msgstr "网址"
+
+#: src/QuickEntry.vala:82
+#, fuzzy
+msgid ""
+"If this character is the first non-whitespace character, adds an image from "
+"the URI to the previous node"
+msgstr "如果此字符是第一个非空格字符，则以下行将追加到前一个节点的注释中。"
+
+#: src/QuickEntry.vala:84
 msgid "If this follows *, + or -, the node is made an uncompleted task."
 msgstr "如果它位于 *、+ 或 - 之后，则该节点将成为未完成的任务。"
 
-#: src/QuickEntry.vala:71
+#: src/QuickEntry.vala:86
 msgid "If this follows *, + or -, the node is made a completed task."
 msgstr "如果它位于 *、+ 或 - 之后，则该节点成为已完成的任务。"
 
-#: src/QuickEntry.vala:100
+#: src/QuickEntry.vala:117
 msgid "Replace"
 msgstr "替换"
 
-#: src/QuickEntry.vala:109
+#: src/QuickEntry.vala:126
 msgid "Insert"
 msgstr "插入"
 

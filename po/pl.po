@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-25 20:32-0500\n"
+"POT-Creation-Date: 2023-05-20 23:57-0500\n"
 "PO-Revision-Date: 2022-08-02 23:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -91,7 +91,7 @@ msgstr "Wykonaj '%s --help' aby zobaczyć możliwe opcje\n"
 msgid "ERROR:  Unable to load Minder input file"
 msgstr "BŁĄD:  Nie można otworzyć pliku '%s'\n"
 
-#: src/CanvasText.vala:269 src/FormattedText.vala:1087
+#: src/CanvasText.vala:269 src/FormattedText.vala:1092
 msgid "No text found"
 msgstr "Nie znaleziono tekstu"
 
@@ -173,16 +173,16 @@ msgstr "bez nazwy"
 msgid "Main Idea"
 msgstr "TEMAT"
 
-#: src/DrawArea.vala:2384
+#: src/DrawArea.vala:2383
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "Ukończono %0.3g%%"
 
-#: src/DrawArea.vala:2398
+#: src/DrawArea.vala:2397
 msgid "Drag to resize node"
 msgstr "Przeciągnij aby zmienić rozmiar elementu"
 
-#: src/DrawArea.vala:2400
+#: src/DrawArea.vala:2399
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -190,29 +190,29 @@ msgstr ""
 "Przeciągnij by zmienić rozmiar elementu oraz obrazu.\n"
 "CTRL+przeciąganie zmieni tylko rozmiar elementu."
 
-#: src/DrawArea.vala:2512
+#: src/DrawArea.vala:2511
 #, c-format
 msgid "Children: %u\n"
 msgstr "Podrzędne: %u\n"
 
-#: src/DrawArea.vala:2513
+#: src/DrawArea.vala:2512
 #, c-format
 msgid "Total: %d"
 msgstr "Wszystkie: %d"
 
-#: src/DrawArea.vala:2559
+#: src/DrawArea.vala:2558
 msgid "connection endpoint change"
 msgstr ""
 
-#: src/DrawArea.vala:2566
+#: src/DrawArea.vala:2565
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:3212 src/DrawArea.vala:3226 src/DrawArea.vala:4966
+#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4965
 msgid "Another Idea"
 msgstr "NOWY TEMAT"
 
-#: src/DrawArea.vala:4459 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4458 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Ręcznie"
@@ -301,7 +301,7 @@ msgstr "Eksportuj jako %s"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:299
 #: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1231
-#: src/QuickEntry.vala:118 src/StickerSet.vala:71 src/ThemeEditor.vala:143
+#: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Anuluj"
@@ -424,7 +424,7 @@ msgstr "Portable Minder"
 msgid "SVG"
 msgstr "SVG"
 
-#: src/exports/ExportText.vala:34
+#: src/exports/ExportText.vala:36
 msgid "PlainText"
 msgstr "Plik tekstowy"
 
@@ -901,7 +901,7 @@ msgstr "Dodaj gałąź podrzędną"
 msgid "Add Sibling Node"
 msgstr "Dodaj gałąź równorzędną"
 
-#: src/NodeMenu.vala:164 src/QuickEntry.vala:36
+#: src/NodeMenu.vala:164 src/QuickEntry.vala:44
 msgid "Quick Entry"
 msgstr "Szybkie wstawianie"
 
@@ -1149,56 +1149,68 @@ msgid ""
 "entry or notes field)."
 msgstr ""
 
-#: src/QuickEntry.vala:58
+#: src/QuickEntry.vala:71
 msgid "Help for inputting node information:"
 msgstr "Pomoc do szybkiego wstawiania elementów:"
 
-#: src/QuickEntry.vala:59
+#: src/QuickEntry.vala:72
 msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
 msgstr "Linie poniżej opisują sposób wstawiania Tytułów, gałęzi i notatek."
 
-#: src/QuickEntry.vala:60
+#: src/QuickEntry.vala:73
 msgid "Tab"
 msgstr "TAB"
 
-#: src/QuickEntry.vala:61
+#: src/QuickEntry.vala:74
 msgid "Creates a child node of the previous node."
 msgstr "Tabulator wstawia element podrzędny do poprzedniego elementu."
 
-#: src/QuickEntry.vala:63
+#: src/QuickEntry.vala:76
 msgid ""
 "If this character is the first non-whitespace character, makes a new root "
 "node from the title that follows."
 msgstr ""
 "Wstawia nowy temat główny z tytułem, który po nim następuje (np. #WAŻNE)"
 
-#: src/QuickEntry.vala:65
+#: src/QuickEntry.vala:78
 msgid ""
 "If this character is the first non-whitespace character, make a new node "
 "from the title that follows."
 msgstr "Tworzy nowy wpis, z tytułem, który po nim następuje (np. *ZAPAMIĘTAJ)"
 
-#: src/QuickEntry.vala:67
+#: src/QuickEntry.vala:80
 msgid ""
 "If this character is the first non-whitespace character, the following line "
 "is appended to the previous node's note."
 msgstr "Dołącza do poprzedniego wpisu nowy opis (np. >Szczegółowe wyjaśnienie)"
 
-#: src/QuickEntry.vala:69
+#: src/QuickEntry.vala:81
+#, fuzzy
+msgid "URI"
+msgstr "URL"
+
+#: src/QuickEntry.vala:82
+#, fuzzy
+msgid ""
+"If this character is the first non-whitespace character, adds an image from "
+"the URI to the previous node"
+msgstr "Dołącza do poprzedniego wpisu nowy opis (np. >Szczegółowe wyjaśnienie)"
+
+#: src/QuickEntry.vala:84
 msgid "If this follows *, + or -, the node is made an uncompleted task."
 msgstr ""
 
-#: src/QuickEntry.vala:71
+#: src/QuickEntry.vala:86
 msgid "If this follows *, + or -, the node is made a completed task."
 msgstr ""
 
-#: src/QuickEntry.vala:100
+#: src/QuickEntry.vala:117
 msgid "Replace"
 msgstr "Zastąp"
 
-#: src/QuickEntry.vala:109
+#: src/QuickEntry.vala:126
 msgid "Insert"
 msgstr "Wstaw"
 
