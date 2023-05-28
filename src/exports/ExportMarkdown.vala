@@ -72,10 +72,10 @@ public class ExportMarkdown : Export {
 
       var nodes = da.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
-        string title = "# " + nodes.index( i ).name.text.text + "\n\n";
+        var title = "# " + nodes.index( i ).name.text.text + "\n\n";
         os.write( title.data );
         if( nodes.index( i ).note != "" ) {
-          string note = "  > " + nodes.index( i ).note.replace( "\n", "\n  > " );
+          var note = "  > " + nodes.index( i ).note.replace( "\n", "\n  > " ) + "\n\n";
           os.write( note.data );
         }
         var children = nodes.index( i ).children();
@@ -96,7 +96,6 @@ public class ExportMarkdown : Export {
     var lname    = GLib.Path.build_filename( imgdir, basename );
     var rfile    = File.new_for_path( filename );
     var lfile    = File.new_for_path( lname );
-    stdout.printf( "basename: %s, lname: %s, filename: %s\n", basename, lname, filename );
     try {
       rfile.copy( lfile, FileCopyFlags.OVERWRITE );
     } catch( Error e ) {
