@@ -4109,7 +4109,6 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Inserts text */
   private bool insert_text( string str ) {
-    if( !str.get_char( 0 ).isprint() ) return( false );
     if( is_connection_editable() ) {
       _selected.current_connection().title.insert( str, undo_text );
       queue_draw();
