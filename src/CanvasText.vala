@@ -467,25 +467,27 @@ public class CanvasText : Object {
    is a right-to-left language, we will invert the value.
   */
   private int calc_direction( int dir ) {
-    /*
-    var ldir = _pango_layout.get_direction();
-    switch( ldir ) {
-      case Pango.Direction.RTL :
-        return( 0 - dir );
-    }
-    */
-    return( dir );
+    var ldir = _pango_layout.get_direction( text.text.index_of_nth_char( _cursor ) );
+    return( (ldir == Pango.Direction.RTL) ? (0 - dir) : dir );
   }
 
   /* Adjusts the cursor by the given amount of characters */
   private void cursor_by_char( int dir ) {
-    var last = text.text.char_count();
-    var cpos = _cursor + calc_direction( dir );
-    if( cpos < 0 ) {
-      cpos = 0;
-    } else if( cpos > last ) {
-      cpos = last;
-    }
+    var last      = text.text.char_count();
+    var cpos      = _cursor;
+    var next_byte = false;
+    do {
+      cpos += calc_direction( dir );
+      next_byte = false;
+      if( cpos < 0 ) {
+        cpos = 0;
+      } else if( cpos > last ) {
+        cpos = last;
+      } else {
+        var ch = text.text.get_char( text.text.index_of_nth_char( cpos ) );
+        next_byte = !ch.isprint();
+      }
+    } while( next_byte );
     set_cursor_only( cpos );
   }
 
@@ -631,7 +633,7 @@ public class CanvasText : Object {
   /* Finds the next/previous word boundary */
   private int find_word( int start, int dir ) {
     bool alnum_found = false;
-    if( dir == 1 ) {
+    if( calc_direction( dir ) == 1 ) {
       for( int i=start; i<text.text.char_count(); i++ ) {
         int index = text.text.index_of_nth_char( i );
         if( text.text.get_char( index ).isalnum() ) {
