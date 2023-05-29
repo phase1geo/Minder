@@ -500,7 +500,7 @@ public class MainWindow : Hdy.ApplicationWindow {
    is already found, refresh the tab with the file contents and make it the current
    tab; otherwise, add the new tab and populate it.
   */
-  private DrawArea add_tab_conditionally( string fname, TabAddReason reason ) {
+  private DrawArea add_tab_conditionally( string? fname, TabAddReason reason ) {
 
     foreach( Tab tab in _nb.tabs ) {
       var bin = (Gtk.Bin)tab.page;
@@ -1170,10 +1170,10 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   /* Imports the given file based on the export name */
   public bool import_file( string fname, string export_name, ref string new_fname ) {
-    new_fname = GLib.Path.get_basename( fname ) + ".minder";
     for( int i=0; i<exports.length(); i++ ) {
       if( exports.index( i ).name == export_name ) {
-        var da = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
+        var da = add_tab_conditionally( null, TabAddReason.IMPORT );
+        new_fname = da.get_doc().filename;
         update_title( da );
         if( exports.index( i ).import( fname, da ) ) {
           return( true );

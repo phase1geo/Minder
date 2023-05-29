@@ -128,7 +128,7 @@ public class Document : Object {
   }
 
   private Xml.Doc* load_raw() {
-      return Xml.Parser.read_file( filename, null, Xml.ParserOption.HUGE );
+    return Xml.Parser.read_file( filename, null, (Xml.ParserOption.HUGE | Xml.ParserOption.NOWARNING) );
   }
 
   private string get_etag( Xml.Doc* doc ) {
@@ -186,6 +186,7 @@ public class Document : Object {
           var fname = filename.replace( ".mind", "-backup-%s-%s.mind".printf( now.to_string(), _etag ) );
           save_internal( fname, false );
           _da.initialize_for_open();
+          stdout.printf( "Calling load (fname: %s)\n", fname );
           load();
           return false;
         }

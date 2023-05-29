@@ -120,9 +120,15 @@ public class Minder : Granite.Application {
       }
     }
     if( cl_export != null ) {
-      int retval = 1;
+      int retval = 0;
       if( files.length == 2 ) {
-        retval = export_as( cl_export, cl_options, input_file, files[1].get_path() ) ? 0 : 1;
+        if( export_as( cl_export, cl_options, input_file, files[1].get_path() ) ) {
+          retval = 1;
+        }
+        if( cl_import != null ) {
+          appwin.close_current_tab();
+          FileUtils.unlink( input_file );  // Delete the file if we were just doing a conversion
+        }
       } else {
         stderr.printf( _( "ERROR: Export is missing input file and/or export output file" ) + "\n" );
       }
@@ -244,7 +250,7 @@ public class Minder : Granite.Application {
         if( da.get_doc().load() ) {
           return( export.export( outfile, da ) );
         } else {
-          stderr.printf( _( "ERROR:  Unable to load Minder input file" ) + "\n" );
+          stderr.printf( _( "ERROR:  Unable to load Minder input file %s" ).printf( infile ) + "\n" );
           return( false );
         }
       }

@@ -30,11 +30,7 @@ public class ExportMarkdown : Export {
 
   /* Constructor */
   public ExportMarkdown() {
-<<<<<<< HEAD
-    base( "markdown", _( "Markdown" ), { ".md", ".markdown" }, true, false, false );
-=======
-    base( "markdown", _( "Markdown" ), { ".md", ".markdown" }, true, true );
->>>>>>> 296e505 (Initial work on Markdown import (not finished).)
+    base( "markdown", _( "Markdown" ), { ".md", ".markdown" }, true, true, false );
   }
 
   private bool handle_directory( string fname, out string mdfile, out string imgdir ) {
@@ -75,7 +71,7 @@ public class ExportMarkdown : Export {
       import_text( str, da, current_dir );
 
       da.queue_draw();
-      da.auto_save();
+      da.changed();
 
     } catch( IOError err ) {
       return( false );
@@ -101,9 +97,7 @@ public class ExportMarkdown : Export {
         var pretext  = match_info.fetch( 1 ).strip();
         var attrs    = match_info.fetch( 2 );
         var posttext = match_info.fetch( 3 ).strip();
-        if( pretext == "" ) {
         name = (pretext == "") ? posttext : (pretext + " " + posttext);
-        stdout.printf( "  attrs: %s, name: %s\n", attrs, name );
         if( src_re.match( attrs, 0, out match_info ) ) {
           var file  = match_info.fetch( 1 );
           var w_re  = new Regex( """width\s*=\s*\"(.*?)\"""" );
@@ -114,8 +108,7 @@ public class ExportMarkdown : Export {
           if( !Path.is_absolute( file ) ) {
             file = Path.build_filename( current_dir, file );
           }
-          image = new NodeImage.from_uri( da.image_manager, file, width );
-          stdout.printf( "  Image file found: %s, width: %d\n", file, width );
+          image = new NodeImage.from_uri( da.image_manager, "file://" + file, width );
         }
       }
 
@@ -149,7 +142,6 @@ public class ExportMarkdown : Export {
 
     /* Add the node image, if necessary */
     node.set_image( da.image_manager, image );
-    stdout.printf( "AFTER set_image\n" );
 
     return( node );
 
@@ -303,7 +295,6 @@ public class ExportMarkdown : Export {
     try {
       rfile.copy( lfile, FileCopyFlags.OVERWRITE );
     } catch( Error e ) {
-      stdout.printf( "message: %s\n", e.message );
       return( false );
     }
     return( true );
