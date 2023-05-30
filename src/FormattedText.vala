@@ -830,6 +830,11 @@ public class FormattedText {
     _text = str;
   }
 
+  /* Appends a string to the end of the current text */
+  public void append_text( string str ) {
+    insert_text( _text.length, str );
+  }
+
   /* Inserts a string into the given text */
   public void insert_text( int index, string str ) {
     _text = _text.splice( index, index, str );
@@ -838,11 +843,6 @@ public class FormattedText {
     }
     parse();
     changed();
-  }
-
-  /* Appends the given string to this text */
-  public void append_text( string str ) {
-    insert_text( _text.length, str );
   }
 
   /* Inserts the formatted text at the given position */
