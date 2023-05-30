@@ -321,7 +321,7 @@ public class ExportMarkdown : Export {
           var basename = GLib.Path.get_basename( file );
           title += "<img src=\"images/" + basename +
                    "\" alt=\"image\" width=\"" + node.image.width.to_string() +
-                   "\" height=\"" + node.image.height.to_string() + "\"/>\n" + prefix + "  ";
+                   "\" height=\"" + node.image.height.to_string() + "\"/><br/>\n" + prefix + "  ";
         }
       }
 
