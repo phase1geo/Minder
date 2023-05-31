@@ -180,9 +180,7 @@ public class ImageManager {
    matching item.
   */
   private ImageItem? find_uri_match( string uri ) {
-    stdout.printf( "images.length: %u\n", _images.length );
     for( int i=0; i<_images.length; i++ ) {
-      stdout.printf( "find_uri_match, i: %d, stored-uri: %s, uri: %s\n", i, _images.index( i ).uri, uri );
       if( _images.index( i ).uri == uri ) {
         return( _images.index( i ) );
       }
@@ -198,16 +196,13 @@ public class ImageManager {
   public int add_image( string uri, int? orig_id = null ) {
     var item = find_uri_match( uri );
     if( item == null ) {
-      stdout.printf( "  item is NULL\n" );
       item = new ImageItem( uri );
       if( !item.copy_file() ) return( -1 );
       _images.append_val( item );
     } else if( !item.exists() ) {
-      stdout.printf( "Item does not exist\n" );
       if( !item.copy_file() ) return( -1 );
     }
     if( orig_id != null ) {
-      stdout.printf( "orig_id != null\n" );
       _id_map.set( orig_id, item.id );
     }
     return( item.id );

@@ -60,13 +60,10 @@ public class NodeImage {
   /* Constructor from a URI */
   public NodeImage.from_uri( ImageManager im, string uri, int width ) {
     int id = im.add_image( uri );
-    stdout.printf( "After im.add_image, id: %d\n", id );
     if( id != -1 ) {
       if( load( im, id, true ) ) {
-        stdout.printf( "NodeImage was loaded\n" );
         set_width( width );
       } else {
-        stdout.printf( "NodeImage was not loaded\n" );
         im.set_valid( id, false );
       }
     }
