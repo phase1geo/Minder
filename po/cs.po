@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-20 23:57-0500\n"
+"POT-Creation-Date: 2023-05-30 20:52-0500\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -30,66 +30,76 @@ msgstr "© 2018-2021 Trevor Williams"
 msgid "Minder in AppCenter"
 msgstr "Minder je v AppCenter"
 
-#: src/Application.vala:113
-msgid "ERROR: Export is missing Minder input file and/or export output file"
+#: src/Application.vala:114
+#, fuzzy
+msgid "ERROR: Unable to import file"
+msgstr "ERROR: Nelze otevřít soubor '%s'\n"
+
+#: src/Application.vala:118
+msgid "ERROR: Import is missing filename to import"
 msgstr ""
 
-#: src/Application.vala:121
+#: src/Application.vala:133
+msgid "ERROR: Export is missing input file and/or export output file"
+msgstr ""
+
+#: src/Application.vala:140
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "ERROR: Nelze otevřít soubor '%s'\n"
 
-#: src/Application.vala:152
+#: src/Application.vala:184
+#, c-format
+msgid "Import file from format (%s)"
+msgstr ""
+
+#: src/Application.vala:185
+#, fuzzy, c-format
+msgid "Export mindmap as format (%s)"
+msgstr "Možnosti exportu"
+
+#: src/Application.vala:188
 msgid "Display version number"
 msgstr "Zobrazit označení verze"
 
-#: src/Application.vala:153
+#: src/Application.vala:189
 msgid "Starts Minder with a new file"
 msgstr "Začít Minder s novým souborem"
 
-#: src/Application.vala:154
+#: src/Application.vala:190
 msgid "Run testing"
 msgstr "Spustit testování"
 
-#: src/Application.vala:155
-#, fuzzy
-msgid "Export mindmap"
-msgstr "Možnosti exportu"
-
-#: src/Application.vala:156
-msgid "Format to export as (only used when --export is used)"
-msgstr ""
-
-#: src/Application.vala:157
+#: src/Application.vala:193
 #, fuzzy
 msgid "Enables a transparent background for PNG images"
 msgstr "Povolit průhledné pozadí"
 
-#: src/Application.vala:158
+#: src/Application.vala:194
 msgid "PNG compression value (0-9)"
 msgstr ""
 
-#: src/Application.vala:159
+#: src/Application.vala:195
 msgid "JPEG quality (0-100)"
 msgstr ""
 
-#: src/Application.vala:160
+#: src/Application.vala:196
 msgid "Enables image links in exported Markdown"
 msgstr ""
 
-#: src/Application.vala:169
+#: src/Application.vala:205
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "ERROR: %s\n"
 
-#: src/Application.vala:170
+#: src/Application.vala:206
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "Zadejte '%s --help' pro zobrazení všech možností\n"
 
-#: src/Application.vala:217
-#, fuzzy
-msgid "ERROR:  Unable to load Minder input file"
+#: src/Application.vala:253
+#, fuzzy, c-format
+msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "ERROR: Nelze otevřít soubor '%s'\n"
 
 #: src/CanvasText.vala:269 src/FormattedText.vala:1092
@@ -137,7 +147,7 @@ msgstr "Upravit poznámku"
 msgid "Remove Sticker"
 msgstr "Odstranit nálepku"
 
-#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:299
+#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:305
 #: src/NodeMenu.vala:176 src/NodesMenu.vala:94
 msgid "Select"
 msgstr "Vybrat"
@@ -207,11 +217,11 @@ msgstr "změna konce spojení"
 msgid "connection drag"
 msgstr "přetáhnutí spojení"
 
-#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4965
+#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4964
 msgid "Another Idea"
 msgstr "Další myšlenka"
 
-#: src/DrawArea.vala:4458 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4457 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Ruční"
@@ -298,8 +308,8 @@ msgstr "Možnosti exportu"
 msgid "Export As %s"
 msgstr "Exportovat jako %s"
 
-#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:299
-#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1231
+#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:305
+#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1247
 #: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
@@ -338,15 +348,15 @@ msgstr "Freeplane"
 msgid "Quality"
 msgstr "Kvalita"
 
-#: src/exports/ExportMarkdown.vala:28
+#: src/exports/ExportMarkdown.vala:33
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/exports/ExportMarkdown.vala:159
+#: src/exports/ExportMarkdown.vala:353
 msgid "Include image links"
 msgstr "Obsáhnout odkazy na obrázky"
 
-#: src/exports/ExportMarkdown.vala:160
+#: src/exports/ExportMarkdown.vala:354
 msgid "Creates a directory containing the Markdown and embedded images"
 msgstr "Vytvoří adresář obsahující Markdown a přiložené obrázky"
 
@@ -512,15 +522,15 @@ msgstr "Vložit obrázek ze schránky"
 msgid "Remove Image"
 msgstr "Odstranit obrázek"
 
-#: src/ImageManager.vala:299
+#: src/ImageManager.vala:305
 msgid "Select Image"
 msgstr "Vybrat obrázek"
 
-#: src/ImageManager.vala:304
+#: src/ImageManager.vala:310
 msgid "Images"
 msgstr "Obrázky"
 
-#: src/MainWindow.vala:153 src/MainWindow.vala:1236
+#: src/MainWindow.vala:153 src/MainWindow.vala:1252
 msgid "Minder"
 msgstr "Minder"
 
@@ -558,7 +568,7 @@ msgstr "Čtení"
 msgid "Focus Mode"
 msgstr "Režim soustředění"
 
-#: src/MainWindow.vala:582 src/MainWindow.vala:1288
+#: src/MainWindow.vala:582 src/MainWindow.vala:1304
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Přiblížení (%d%%)"
@@ -654,7 +664,7 @@ msgstr "Seznam všech zkratek"
 msgid "About Minder"
 msgstr "O Minderu"
 
-#: src/MainWindow.vala:928 src/MainWindow.vala:1360
+#: src/MainWindow.vala:928 src/MainWindow.vala:1376
 msgid "Show Property Sidebar"
 msgstr "Zobrazit panel vlastností"
 
@@ -686,7 +696,7 @@ msgstr "Pokud soubor neuložíte, provedené změny se navždy ztratí."
 msgid "Discard Changes"
 msgstr "Zahodit změny"
 
-#: src/MainWindow.vala:1012 src/MainWindow.vala:1231 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:1012 src/MainWindow.vala:1247 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Uložit"
 
@@ -716,11 +726,11 @@ msgstr "Otevřít soubor"
 msgid "Open"
 msgstr "Otevřít"
 
-#: src/MainWindow.vala:1231
+#: src/MainWindow.vala:1247
 msgid "Save File"
 msgstr "Uložit soubor"
 
-#: src/MainWindow.vala:1304
+#: src/MainWindow.vala:1320
 msgid "Hide Property Sidebar"
 msgstr "Schovat panel vlastností"
 

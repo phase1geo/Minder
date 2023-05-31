@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-20 23:57-0500\n"
+"POT-Creation-Date: 2023-05-30 20:52-0500\n"
 "PO-Revision-Date: 2022-07-22 17:02+0800\n"
 "Last-Translator: 企鹅2035 <qie2035@qq.com>\n"
 "Language-Team: 简体中文 (机翻) <qie2035@qq.com>\n"
@@ -29,63 +29,77 @@ msgstr "版权所有 © 2018-2021 特雷弗·威廉姆斯"
 msgid "Minder in AppCenter"
 msgstr "AppCenter 中的 Minder"
 
-#: src/Application.vala:113
-msgid "ERROR: Export is missing Minder input file and/or export output file"
+#: src/Application.vala:114
+#, fuzzy
+msgid "ERROR: Unable to import file"
+msgstr "错误：无法打开文件“%s”\n"
+
+#: src/Application.vala:118
+#, fuzzy
+msgid "ERROR: Import is missing filename to import"
 msgstr "错误：导出缺少管理器输入文件和/或导出输出文件"
 
-#: src/Application.vala:121
+#: src/Application.vala:133
+#, fuzzy
+msgid "ERROR: Export is missing input file and/or export output file"
+msgstr "错误：导出缺少管理器输入文件和/或导出输出文件"
+
+#: src/Application.vala:140
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "错误：无法打开文件“%s”\n"
 
-#: src/Application.vala:152
+#: src/Application.vala:184
+#, c-format
+msgid "Import file from format (%s)"
+msgstr ""
+
+#: src/Application.vala:185
+#, fuzzy, c-format
+msgid "Export mindmap as format (%s)"
+msgstr "导出思维导图"
+
+#: src/Application.vala:188
 msgid "Display version number"
 msgstr "显示版本号"
 
-#: src/Application.vala:153
+#: src/Application.vala:189
 msgid "Starts Minder with a new file"
 msgstr "使用新文件启动 Minder"
 
-#: src/Application.vala:154
+#: src/Application.vala:190
 msgid "Run testing"
 msgstr "运行测试"
 
-#: src/Application.vala:155
-msgid "Export mindmap"
-msgstr "导出思维导图"
-
-#: src/Application.vala:156
-msgid "Format to export as (only used when --export is used)"
-msgstr "要导出的格式为（仅在使用 --export 时使用）"
-
-#: src/Application.vala:157
+#: src/Application.vala:193
 msgid "Enables a transparent background for PNG images"
 msgstr "为 PNG 图像启用透明背景"
 
-#: src/Application.vala:158
+#: src/Application.vala:194
 msgid "PNG compression value (0-9)"
 msgstr "PNG 压缩值 （0-9）"
 
-#: src/Application.vala:159
+#: src/Application.vala:195
 msgid "JPEG quality (0-100)"
 msgstr "JPEG 质量 （0-100）"
 
-#: src/Application.vala:160
+#: src/Application.vala:196
 msgid "Enables image links in exported Markdown"
 msgstr "在导出的 Markdown 中启用图像链接"
 
-#: src/Application.vala:169
+#: src/Application.vala:205
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "错误： %s\n"
 
-#: src/Application.vala:170
+#: src/Application.vala:206
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "运行 “%s --help” 以查看有效选项\n"
 
-#: src/Application.vala:217
-msgid "ERROR:  Unable to load Minder input file"
+#: src/Application.vala:253
+#, fuzzy, c-format
+msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "错误：无法加载管理器输入文件"
 
 #: src/CanvasText.vala:269 src/FormattedText.vala:1092
@@ -133,7 +147,7 @@ msgstr "编辑备注"
 msgid "Remove Sticker"
 msgstr "移除贴纸"
 
-#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:299
+#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:305
 #: src/NodeMenu.vala:176 src/NodesMenu.vala:94
 msgid "Select"
 msgstr "选择"
@@ -205,11 +219,11 @@ msgstr "连接端点更改"
 msgid "connection drag"
 msgstr "连接拖动"
 
-#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4965
+#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4964
 msgid "Another Idea"
 msgstr "另一个想法"
 
-#: src/DrawArea.vala:4458 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4457 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "手动"
@@ -296,8 +310,8 @@ msgstr "导出选项"
 msgid "Export As %s"
 msgstr "导出为 %s"
 
-#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:299
-#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1231
+#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:305
+#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1247
 #: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
@@ -336,15 +350,15 @@ msgstr "Freeplane"
 msgid "Quality"
 msgstr "质量"
 
-#: src/exports/ExportMarkdown.vala:28
+#: src/exports/ExportMarkdown.vala:33
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/exports/ExportMarkdown.vala:159
+#: src/exports/ExportMarkdown.vala:353
 msgid "Include image links"
 msgstr "包含图像链接"
 
-#: src/exports/ExportMarkdown.vala:160
+#: src/exports/ExportMarkdown.vala:354
 msgid "Creates a directory containing the Markdown and embedded images"
 msgstr "创建包含 Markdown 和嵌入图像的目录"
 
@@ -510,15 +524,15 @@ msgstr "从剪贴板粘贴图像"
 msgid "Remove Image"
 msgstr "删除图像"
 
-#: src/ImageManager.vala:299
+#: src/ImageManager.vala:305
 msgid "Select Image"
 msgstr "选择图像"
 
-#: src/ImageManager.vala:304
+#: src/ImageManager.vala:310
 msgid "Images"
 msgstr "图像"
 
-#: src/MainWindow.vala:153 src/MainWindow.vala:1236
+#: src/MainWindow.vala:153 src/MainWindow.vala:1252
 msgid "Minder"
 msgstr "Minder"
 
@@ -556,7 +570,7 @@ msgstr "读数"
 msgid "Focus Mode"
 msgstr "聚焦式"
 
-#: src/MainWindow.vala:582 src/MainWindow.vala:1288
+#: src/MainWindow.vala:582 src/MainWindow.vala:1304
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "缩放 （%d%%）"
@@ -651,7 +665,7 @@ msgstr "快捷键"
 msgid "About Minder"
 msgstr "关于Minder"
 
-#: src/MainWindow.vala:928 src/MainWindow.vala:1360
+#: src/MainWindow.vala:928 src/MainWindow.vala:1376
 msgid "Show Property Sidebar"
 msgstr "显示属性侧边栏"
 
@@ -683,7 +697,7 @@ msgstr "如果不保存，更改将永久丢失。"
 msgid "Discard Changes"
 msgstr "放弃更改"
 
-#: src/MainWindow.vala:1012 src/MainWindow.vala:1231 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:1012 src/MainWindow.vala:1247 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "保存"
 
@@ -713,11 +727,11 @@ msgstr "打开文件"
 msgid "Open"
 msgstr "打开"
 
-#: src/MainWindow.vala:1231
+#: src/MainWindow.vala:1247
 msgid "Save File"
 msgstr "保存文件"
 
-#: src/MainWindow.vala:1304
+#: src/MainWindow.vala:1320
 msgid "Hide Property Sidebar"
 msgstr "隐藏属性侧边栏"
 
@@ -3695,6 +3709,9 @@ msgstr "选择所有文本"
 #: data/com.github.phase1geo.minder.shortcuts.ui:1054
 msgid "[Triple left-click anywhere in text]"
 msgstr "[在文本中的任意位置单击三次左键]"
+
+#~ msgid "Format to export as (only used when --export is used)"
+#~ msgstr "要导出的格式为（仅在使用 --export 时使用）"
 
 #~ msgid "Export File"
 #~ msgstr "导出文件"

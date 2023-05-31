@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-20 23:57-0500\n"
+"POT-Creation-Date: 2023-05-30 20:52-0500\n"
 "PO-Revision-Date: 2023-05-07 14:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -29,66 +29,81 @@ msgstr "Copyright © 2018-2021 Trevor Williams"
 msgid "Minder in AppCenter"
 msgstr "Minder in AppCenter"
 
-#: src/Application.vala:113
-msgid "ERROR: Export is missing Minder input file and/or export output file"
+#: src/Application.vala:114
+#, fuzzy
+msgid "ERROR: Unable to import file"
+msgstr "ERRORE: impossibile aprire il file '%s'\n"
+
+#: src/Application.vala:118
+#, fuzzy
+msgid "ERROR: Import is missing filename to import"
 msgstr ""
 "ERRORE: nell'esportazione manca il file di input di Minder e/o il file di "
 "output dell'esportazione"
 
-#: src/Application.vala:121
+#: src/Application.vala:133
+#, fuzzy
+msgid "ERROR: Export is missing input file and/or export output file"
+msgstr ""
+"ERRORE: nell'esportazione manca il file di input di Minder e/o il file di "
+"output dell'esportazione"
+
+#: src/Application.vala:140
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "ERRORE: impossibile aprire il file '%s'\n"
 
-#: src/Application.vala:152
+#: src/Application.vala:184
+#, c-format
+msgid "Import file from format (%s)"
+msgstr ""
+
+#: src/Application.vala:185
+#, fuzzy, c-format
+msgid "Export mindmap as format (%s)"
+msgstr "Esporta mappa mentale"
+
+#: src/Application.vala:188
 msgid "Display version number"
 msgstr "Visualizza numero versione"
 
-#: src/Application.vala:153
+#: src/Application.vala:189
 msgid "Starts Minder with a new file"
 msgstr "Avvia Minder con un nuovo file"
 
-#: src/Application.vala:154
+#: src/Application.vala:190
 msgid "Run testing"
 msgstr "Esegui test"
 
-#: src/Application.vala:155
-msgid "Export mindmap"
-msgstr "Esporta mappa mentale"
-
-#: src/Application.vala:156
-msgid "Format to export as (only used when --export is used)"
-msgstr ""
-"Formato per l'esportazione come (utilizzato solo quando si utilizza --export)"
-
-#: src/Application.vala:157
+#: src/Application.vala:193
 msgid "Enables a transparent background for PNG images"
 msgstr "Abilita uno sfondo trasparente per le immagini PNG"
 
-#: src/Application.vala:158
+#: src/Application.vala:194
 msgid "PNG compression value (0-9)"
 msgstr "Valore di compressione PNG (0-9)"
 
-#: src/Application.vala:159
+#: src/Application.vala:195
 msgid "JPEG quality (0-100)"
 msgstr "Qualità JPEG (0-100)"
 
-#: src/Application.vala:160
+#: src/Application.vala:196
 msgid "Enables image links in exported Markdown"
 msgstr "Abilita i collegamenti alle immagini nel Markdown esportato"
 
-#: src/Application.vala:169
+#: src/Application.vala:205
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "ERRORE: %s\n"
 
-#: src/Application.vala:170
+#: src/Application.vala:206
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr "Esegui '%s --help' per vedere opzioni valide\n"
 
-#: src/Application.vala:217
-msgid "ERROR:  Unable to load Minder input file"
+#: src/Application.vala:253
+#, fuzzy, c-format
+msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "ERRORE: impossibile caricare il file di input di Minder"
 
 #: src/CanvasText.vala:269 src/FormattedText.vala:1092
@@ -136,7 +151,7 @@ msgstr "Modifica Note"
 msgid "Remove Sticker"
 msgstr "Rimuovi adesivo"
 
-#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:299
+#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:305
 #: src/NodeMenu.vala:176 src/NodesMenu.vala:94
 msgid "Select"
 msgstr "Seleziona"
@@ -208,11 +223,11 @@ msgstr "modifica dell'endpoint di connessione"
 msgid "connection drag"
 msgstr "trascina della connessione"
 
-#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4965
+#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4964
 msgid "Another Idea"
 msgstr "Un'altra idea"
 
-#: src/DrawArea.vala:4458 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4457 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Manuale"
@@ -298,8 +313,8 @@ msgstr "Opzioni di Esportazione"
 msgid "Export As %s"
 msgstr "Esporta Come %s"
 
-#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:299
-#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1231
+#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:305
+#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1247
 #: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
@@ -338,15 +353,15 @@ msgstr "Freeplane"
 msgid "Quality"
 msgstr "Qualità"
 
-#: src/exports/ExportMarkdown.vala:28
+#: src/exports/ExportMarkdown.vala:33
 msgid "Markdown"
 msgstr "Markdown"
 
-#: src/exports/ExportMarkdown.vala:159
+#: src/exports/ExportMarkdown.vala:353
 msgid "Include image links"
 msgstr "Includi link immagine"
 
-#: src/exports/ExportMarkdown.vala:160
+#: src/exports/ExportMarkdown.vala:354
 msgid "Creates a directory containing the Markdown and embedded images"
 msgstr "Crea una directory contenente il Markdown e le immagini incorporate"
 
@@ -510,15 +525,15 @@ msgstr "Incolla immagine dagli Appunti"
 msgid "Remove Image"
 msgstr "Rimuovi Immagine"
 
-#: src/ImageManager.vala:299
+#: src/ImageManager.vala:305
 msgid "Select Image"
 msgstr "Seleziona Immagine"
 
-#: src/ImageManager.vala:304
+#: src/ImageManager.vala:310
 msgid "Images"
 msgstr "Immagini"
 
-#: src/MainWindow.vala:153 src/MainWindow.vala:1236
+#: src/MainWindow.vala:153 src/MainWindow.vala:1252
 msgid "Minder"
 msgstr "Minder"
 
@@ -555,7 +570,7 @@ msgstr "Solo-lettura"
 msgid "Focus Mode"
 msgstr "Modalità messa a fuoco"
 
-#: src/MainWindow.vala:582 src/MainWindow.vala:1288
+#: src/MainWindow.vala:582 src/MainWindow.vala:1304
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoom (%d%%)"
@@ -650,7 +665,7 @@ msgstr "collegamenti note"
 msgid "About Minder"
 msgstr "Informazioni su Minder"
 
-#: src/MainWindow.vala:928 src/MainWindow.vala:1360
+#: src/MainWindow.vala:928 src/MainWindow.vala:1376
 msgid "Show Property Sidebar"
 msgstr "Mostra barra laterale della proprietà"
 
@@ -682,7 +697,7 @@ msgstr "Le modifiche andranno perse in modo permanente se non vengono salvate."
 msgid "Discard Changes"
 msgstr "Annullare le Modifiche"
 
-#: src/MainWindow.vala:1012 src/MainWindow.vala:1231 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:1012 src/MainWindow.vala:1247 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Salva"
 
@@ -711,11 +726,11 @@ msgstr "Apri Directory"
 msgid "Open"
 msgstr "Apri"
 
-#: src/MainWindow.vala:1231
+#: src/MainWindow.vala:1247
 msgid "Save File"
 msgstr "Salva File"
 
-#: src/MainWindow.vala:1304
+#: src/MainWindow.vala:1320
 msgid "Hide Property Sidebar"
 msgstr "Nascondi barra laterale delle proprietà"
 
@@ -3718,6 +3733,11 @@ msgstr "Seleziona tutto il testo"
 #: data/com.github.phase1geo.minder.shortcuts.ui:1054
 msgid "[Triple left-click anywhere in text]"
 msgstr "[Triplo clic sinistro in qualsiasi punto del testo]"
+
+#~ msgid "Format to export as (only used when --export is used)"
+#~ msgstr ""
+#~ "Formato per l'esportazione come (utilizzato solo quando si utilizza --"
+#~ "export)"
 
 #~ msgid "Export File"
 #~ msgstr "Esporta File"
