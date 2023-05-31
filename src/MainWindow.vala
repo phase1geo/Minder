@@ -383,7 +383,6 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   /* Closes the current tab */
   public void close_current_tab() {
-    if( _nb.n_tabs == 1 ) return;
     _nb.current.close();
   }
 
@@ -403,7 +402,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   private bool close_tab_requested( Tab tab ) {
     var bin = (Gtk.Bin)tab.page;
     var da  = bin.get_child() as DrawArea;
-    var ret = !da.is_loaded || da.get_doc().is_saved() || show_save_warning( da );
+    var ret = (_nb.n_tabs > 1) && (!da.is_loaded || da.get_doc().is_saved() || show_save_warning( da ));
     return( ret );
   }
 
