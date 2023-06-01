@@ -440,9 +440,6 @@ public class MainWindow : Hdy.ApplicationWindow {
     tab.pinnable = false;
     tab.tooltip  = fname;
 
-    /* Add the page to the notebook */
-    _nb.insert_tab( tab, _nb.n_tabs );
-
     /* Update the titlebar */
     update_title( da );
 
@@ -452,6 +449,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     } else {
       da.initialize_for_open();
     }
+
+    /* Add the page to the notebook */
+    _nb.insert_tab( tab, _nb.n_tabs );
 
     /* Indicate that the tab has changed */
     if( reason != TabAddReason.LOAD ) {
@@ -1171,13 +1171,17 @@ public class MainWindow : Hdy.ApplicationWindow {
   public bool import_file( string fname, string export_name, ref string new_fname ) {
     for( int i=0; i<exports.length(); i++ ) {
       if( exports.index( i ).name == export_name ) {
+        stdout.printf( "A n_tabs: %d\n", _nb.n_tabs );
         var da = add_tab_conditionally( null, TabAddReason.IMPORT );
+        stdout.printf( "B n_tabs: %d\n", _nb.n_tabs );
         new_fname = da.get_doc().filename;
         update_title( da );
         if( exports.index( i ).import( fname, da ) ) {
+          stdout.printf( "C n_tabs: %d\n", _nb.n_tabs );
           return( true );
         }
         close_current_tab();
+        stdout.printf( "D n_tabs: %d\n", _nb.n_tabs );
       }
     }
     return( false );
@@ -1624,6 +1628,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     _nb.tabs.foreach((tab) => {
       var       bin  = (Gtk.Bin)tab.page;
       var       da   = (DrawArea)bin.get_child();
+      if( da.sfactor == 0.0 ) {
+        assert( false );
+      }
       Xml.Node* node = new Xml.Node( null, "tab" );
       node->new_prop( "path",  da.get_doc().filename );
       node->new_prop( "saved", da.get_doc().is_saved().to_string() );

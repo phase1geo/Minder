@@ -134,6 +134,7 @@ public class Minder : Granite.Application {
       }
       Process.exit( retval );
     } else if( cl_import == null ) {
+      stdout.printf( "Opening files from command-line\n" );
       foreach( File open_file in files ) {
         var file = open_file.get_path();
         if( !appwin.open_file( file, false ) ) {
