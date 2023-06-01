@@ -140,9 +140,6 @@ public class DrawArea : Gtk.DrawingArea {
   public double sfactor {
     set {
       _store_scale_factor = _scale_factor = value;
-      if( value == 0.0 ) {
-        assert( false );
-      }
     }
     get {
       return( _scale_factor );
