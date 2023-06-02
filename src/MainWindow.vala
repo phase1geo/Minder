@@ -488,6 +488,7 @@ public class MainWindow : Hdy.ApplicationWindow {
       var da  = (DrawArea)bin.get_child();
       if( !da.is_loaded ) {
         _nb.current = tab;
+        da.grab_focus();
         return( true );
       }
     }
@@ -1169,6 +1170,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   /* Imports the given file based on the export name */
   public bool import_file( string fname, string export_name, ref string new_fname ) {
+    close_unchanged_tabs();
     for( int i=0; i<exports.length(); i++ ) {
       if( exports.index( i ).name == export_name ) {
         var da = add_tab_conditionally( null, TabAddReason.IMPORT );
