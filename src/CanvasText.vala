@@ -612,7 +612,7 @@ public class CanvasText : Object {
         set_cursor_only( 0 );
       }
     } else {
-      change_selection( _cursor, null, "selection_to_start B" );
+      change_selection( 0, null, "selection_to_start B" );
       set_cursor_only( 0 );
     }
   }
@@ -735,6 +735,8 @@ public class CanvasText : Object {
       var epos = text.text.index_of_nth_char( _selend );
       var str  = text.text.slice( spos, epos );
       var tags = text.get_tags_in_range( spos, epos );
+      set_cursor_only( _selstart );
+      change_selection( null, _selstart, "delete" );
       text.remove_text( spos, (epos - spos) );
       undo_buffer.add_delete( spos, str, tags, cur );
     } else if( _cursor < text.text.char_count() ) {
