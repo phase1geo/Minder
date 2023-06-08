@@ -110,6 +110,7 @@ public class NoteView : Gtk.SourceView {
     }
   }
 
+  private static bool   _path_init = false;
   private int           _last_lnum = -1;
   private string?       _last_url  = null;
   private Array<UrlPos> _last_urls;
@@ -141,12 +142,30 @@ public class NoteView : Gtk.SourceView {
   /* Default constructor */
   public NoteView() {
 
+    var sourceview_path = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "gtksourceview-4" );
+    var lang_path       = GLib.Path.build_filename( sourceview_path, "language-specs" );
+    var style_path      = GLib.Path.build_filename( sourceview_path, "styles" );
+
+    string[] lang_paths = {};
+
     get_style_context().add_class( "textfield" );
 
-    var manager       = Gtk.SourceLanguageManager.get_default();
-    var language      = manager.get_language( get_default_language() );
+    var manager = Gtk.SourceLanguageManager.get_default();
+    if( !_path_init ) {
+      lang_paths = manager.get_search_path();
+      lang_paths += lang_path;
+      manager.set_search_path( lang_paths );
+    }
+
     var style_manager = Gtk.SourceStyleSchemeManager.get_default();
-    var style         = style_manager.get_scheme( get_default_scheme() );
+    if( !_path_init ) {
+      style_manager.prepend_search_path( style_path );
+    }
+
+    _path_init = true;
+
+    var language = manager.get_language( get_default_language() );
+    var style    = style_manager.get_scheme( get_default_scheme() );
 
     _buffer = new Gtk.SourceBuffer.with_language( language );
     _buffer.highlight_syntax = true;

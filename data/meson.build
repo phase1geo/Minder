@@ -34,12 +34,16 @@ install_data(
     install_dir: join_paths(get_option('datadir'), 'mime', 'packages')
 )
 
+fs = import('fs')
+local_dir = fs.expanduser('~/.local')
+
 install_data(
     join_paths('styles', meson.project_name() + '.xml'),
-    install_dir: join_paths(get_option('datadir'), 'gtksourceview-4', 'styles')
+    # install_dir: join_paths(get_option('datadir'), 'minder', 'gtksourceview-4', 'styles')
+    install_dir: join_paths(local_dir, 'share', 'minder', 'gtksourceview-4', 'styles')
 )
 
 install_data(
     join_paths('language-specs', meson.project_name() + '-markdown.lang'),
-    install_dir: join_paths(get_option('datadir'), 'gtksourceview-4', 'language-specs')
+    install_dir: join_paths(local_dir, 'share', 'minder', 'gtksourceview-4', 'language-specs')
 )
