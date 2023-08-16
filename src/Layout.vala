@@ -64,10 +64,12 @@ public class Layout : Object {
   /* Get the bbox for the given parent to the given depth */
   public virtual NodeBounds bbox( Node parent, int side_mask ) {
 
-    NodeBounds nb           = {0, 0, 0, 0};
-    uint       num_children = parent.children().length;
+    uint num_children = parent.children().length;
 
-    parent.bbox( out nb.x, out nb.y, out nb.width, out nb.height );
+    double px, py, pw, ph;
+    parent.bbox( out px, out py, out pw, out ph );
+
+    var nb = new NodeBounds.with_bounds( parent.da, px, py, pw, ph );
 
     double x2 = nb.x + nb.width;
     double y2 = nb.y + nb.height;

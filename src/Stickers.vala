@@ -73,7 +73,7 @@ public class Stickers {
     for( int i=0; i<_stickers.length; i++ ) {
       var s = _stickers.index( i );
       x1 = (s.posx < x1) ? s.posx : x1;
-      y1 = (s.posy < y1) ? s.posx : y1;
+      y1 = (s.posy < y1) ? s.posy : y1;
       x2 = ((s.posx + s.width)  > x2) ? (s.posx + s.width)  : x2;
       y2 = ((s.posy + s.height) > y2) ? (s.posy + s.height) : y2;
     }

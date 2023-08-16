@@ -1729,8 +1729,8 @@ public class DrawArea : Gtk.DrawingArea {
     if( sfactor != sf ) {
       int    width  = get_allocated_width()  / 2;
       int    height = get_allocated_height() / 2;
-      double diff_x = (width  / sfactor) - (width  / sf);
-      double diff_y = (height / sfactor) - (height / sf);
+      double diff_x = (width  / sf) - (width / sfactor);
+      double diff_y = (height / sf) - (height / sfactor );
       move_origin( diff_x, diff_y );
       sfactor = sf;
       scale_changed( sfactor );
@@ -1837,26 +1837,12 @@ public class DrawArea : Gtk.DrawingArea {
    Positions the given box in the canvas based on the provided
    x and y positions (values between 0 and 1).
   */
-  private void position_box( double x, double y, double w, double h, double xpos, double ypos ) {
+  private void position_box( double x, double y, double w, double h, double xpos, double ypos, string msg = "NONE" ) {
     double ccx = scale_value( get_allocated_width()  * xpos );
     double ccy = scale_value( get_allocated_height() * ypos );
     double ncx = x + (w * xpos);
     double ncy = y + (h * ypos);
-    move_origin( (ncx - ccx), (ncy - ccy) );
-  }
-
-  /*
-   Returns the scaling factor required to display the currently selected node.
-   If no node is currently selected, returns a value of 0.
-  */
-  public void zoom_to_selected() {
-    var current = _selected.current_node();
-    if( current == null ) return;
-    animator.add_pan_scale( "zoom to selected" );
-    var nb = current.tree_bbox;
-    position_box( nb.x, nb.y, nb.width, nb.height, 0.5, 0.5 );
-    set_scaling_factor( get_scaling_factor( nb.width, nb.height ) );
-    animator.animate();
+    move_origin( (ccx - ncx), (ccy - ncy) );
   }
 
   /* Figures out the boundaries of the document primarily for the purposes of printing */
@@ -1888,17 +1874,31 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /*
+   Returns the scaling factor required to display the currently selected node.
+   If no node is currently selected, returns a value of 0.
+  */
+  public void zoom_to_selected() {
+    var current = _selected.current_node();
+    if( current == null ) return;
+    animator.add_pan_scale( "zoom to selected" );
+    var nb = current.tree_bbox;
+    position_box( nb.x, nb.y, nb.width, nb.height, 0.5, 0.5, "zoom_to_selected" );
+    set_scaling_factor( get_scaling_factor( nb.width, nb.height ) );
+    animator.animate();
+  }
+
   /* Returns the scaling factor required to display all nodes */
   public void zoom_to_fit() {
 
-    animator.add_scale( "zoom to fit" );
+    animator.add_pan_scale( "zoom to fit" );
 
     /* Get the document rectangle */
     double x, y, w, h;
     document_rectangle( out x, out y, out w, out h );
 
     /* Center the map and scale it to fit */
-    position_box( x, y, w, h, 0.5, 0.5 );
+    position_box( x, y, w, h, 0.5, 0.5, "zoom_to_fit" );
     set_scaling_factor( get_scaling_factor( w, h ) );
 
     /* Animate the scaling */
@@ -1910,7 +1910,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void zoom_actual() {
 
     /* Start animation */
-    animator.add_scale( "action_zoom_actual" );
+    animator.add_pan_scale( "action_zoom_actual" );
 
     /* Scale to a full scale */
     set_scaling_factor( 1.0 );
@@ -1925,7 +1925,7 @@ public class DrawArea : Gtk.DrawingArea {
     double x, y, w, h;
     n.bbox( out x, out y, out w, out h );
     animator.add_pan( "center node" );
-    position_box( x, y, w, h, 0.5, 0.5 );
+    position_box( x, y, w, h, 0.5, 0.5, "center_node" );
     animator.animate();
   }
 
@@ -2064,12 +2064,6 @@ public class DrawArea : Gtk.DrawingArea {
     }
     origin_x += diff_x;
     origin_y += diff_y;
-    /*
-    for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).pan( -diff_x, -diff_y );
-    }
-    _stickers.pan( -diff_x, -diff_y );
-    */
   }
 
   /* Draw the background from the stylesheet */
@@ -2089,7 +2083,8 @@ public class DrawArea : Gtk.DrawingArea {
   public void draw_all( Context ctx, bool exporting ) {
 
     /* Draw the links first */
-    for( int i=0; i<_nodes.length; i++ ) { _nodes.index( i ).draw_links( ctx, _theme );
+    for( int i=0; i<_nodes.length; i++ ) {
+      _nodes.index( i ).draw_links( ctx, _theme );
     }
 
     /* Draw groups next */

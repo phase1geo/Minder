@@ -85,15 +85,58 @@ public enum NodeSide {
   }
 }
 
-public struct NodeBounds {
-  double x;
-  double y;
-  double width;
-  double height;
+public class NodeBounds {
+
+  private DrawArea _da;
+  private double   _x = 0.0;
+  private double   _y = 0.0;
+
+  public double x {
+    get {
+      return( _x + _da.origin_x );
+    }
+    set {
+      _x = (value - _da.origin_x);
+    }
+  }
+  public double y {
+    get {
+      return( _y + _da.origin_y );
+    }
+    set {
+      _y = (value - _da.origin_y);
+    }
+  }
+  public double width  { set; get; default = 0.0; }
+  public double height { set; get; default = 0.0; }
+
+  /* Default constructor */
+  public NodeBounds( DrawArea da ) {
+    _da = da;
+  }
+
+  /* Constructor with bounds information */
+  public NodeBounds.with_bounds( DrawArea da, double x, double y, double w, double h ) {
+    _da         = da;
+    this.x      = x;
+    this.y      = y;
+    this.width  = w;
+    this.height = h;
+  }
+
+  /* Copies the given node bounds to this instance */
+  public void copy( NodeBounds nb ) {
+    this.x      = nb.x;
+    this.y      = nb.y;
+    this.width  = nb.width;
+    this.height = nb.height;
+  }
+
   public bool overlaps( NodeBounds other ) {
     return( ((x < (other.x + other.width))  && ((x + width) > other.x)) ||
             ((y < (other.y + other.height)) && ((y + height) > other.y)) );
   }
+
 }
 
 public struct NodeInfo {
@@ -144,6 +187,7 @@ public class Node : Object {
   protected double       _alpha        = 1.0;
   protected Array<Node>  _children;
   private   NodeMode     _mode         = NodeMode.NONE;
+  private   NodeBounds   _tree_bbox;
   private   int          _task_count   = 0;
   private   int          _task_done    = 0;
   private   double       _posx         = 0;
@@ -380,7 +424,14 @@ public class Node : Object {
       update_size();
     }
   }
-  public NodeBounds tree_bbox { get; set; default = NodeBounds(); }
+  public NodeBounds tree_bbox {
+    get {
+      return( _tree_bbox );
+    }
+    set {
+      _tree_bbox = value;
+    }
+  }
   public int task_count {
     get {
       return( _task_count );
@@ -410,32 +461,35 @@ public class Node : Object {
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
-    _da       = da;
-    _id       = da.next_node_id;
-    _children = new Array<Node>();
-    _layout   = layout;
-    _name     = new CanvasText( da );
+    _da        = da;
+    _id        = da.next_node_id;
+    _children  = new Array<Node>();
+    _layout    = layout;
+    _name      = new CanvasText( da );
+    _tree_bbox = new NodeBounds( da );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
   }
 
   /* Constructor initializing string */
   public Node.with_name( DrawArea da, string n, Layout? layout ) {
-    _da       = da;
-    _id       = da.next_node_id;
-    _children = new Array<Node>();
-    _layout   = layout;
-    _name     = new CanvasText.with_text( da, n );
+    _da        = da;
+    _id        = da.next_node_id;
+    _children  = new Array<Node>();
+    _layout    = layout;
+    _name      = new CanvasText.with_text( da, n );
+    _tree_bbox = new NodeBounds( da );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
   }
 
   /* Constructor from an XML node */
   public Node.from_xml( DrawArea da, Layout? layout, Xml.Node* n, bool isroot ) {
-    _da       = da;
-    _children = new Array<Node>();
-    _layout   = _layout;
-    _name     = new CanvasText.with_text( da, "" );
+    _da        = da;
+    _children  = new Array<Node>();
+    _layout    = _layout;
+    _name      = new CanvasText.with_text( da, "" );
+    _tree_bbox = new NodeBounds( da );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
     load( da, n, isroot );
@@ -443,10 +497,11 @@ public class Node : Object {
 
   /* Copies an existing node to this node */
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
-    _da       = da;
-    _id       = da.next_node_id;
-    _name     = new CanvasText( da );
-    _children = n._children;
+    _da        = da;
+    _id        = da.next_node_id;
+    _name      = new CanvasText( da );
+    _children  = n._children;
+    _tree_bbox = new NodeBounds( da );
     copy_variables( n, im );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
@@ -457,20 +512,21 @@ public class Node : Object {
   }
 
   public Node.copy_only( DrawArea da, Node n, ImageManager im ) {
-    _da       = da;
-    _id       = da.next_node_id;
-    _children = new Array<Node>();
-    _name     = new CanvasText( da );
+    _da        = da;
+    _id        = da.next_node_id;
+    _children  = new Array<Node>();
+    _name      = new CanvasText( da );
+    _tree_bbox = new NodeBounds( da );
     copy_variables( n, im );
   }
 
   /* Copies an existing node tree to this node */
   public Node.copy_tree( DrawArea da, Node n, ImageManager im ) {
-    _da       = da;
-    // _id       = da.next_node_id;
-    _id       = n.id();
-    _children = new Array<Node>();
-    _name     = new CanvasText( da );
+    _da        = da;
+    _id        = n.id();
+    _children  = new Array<Node>();
+    _name      = new CanvasText( da );
+    _tree_bbox = new NodeBounds( da );
     copy_variables( n, im );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
@@ -513,7 +569,7 @@ public class Node : Object {
     parent           = n.parent;
     side             = n.side;
     style            = n.style;
-    tree_bbox        = n.tree_bbox;
+    tree_bbox.copy( n.tree_bbox );
     sticker          = n.sticker;
   }
 
