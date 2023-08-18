@@ -124,17 +124,29 @@ public class NodeBounds {
     this.height = h;
   }
 
+  /* Copy constructor */
+  public NodeBounds.copy( NodeBounds nb ) {
+    copy_from( nb );
+  }
+
   /* Copies the given node bounds to this instance */
-  public void copy( NodeBounds nb ) {
+  public void copy_from( NodeBounds nb ) {
+    _da         = nb._da;
     this.x      = nb.x;
     this.y      = nb.y;
     this.width  = nb.width;
     this.height = nb.height;
   }
 
+  /* Returns true if the given NodeBounds overlap */
   public bool overlaps( NodeBounds other ) {
-    return( ((x < (other.x + other.width))  && ((x + width) > other.x)) ||
+    return( ((x < (other.x + other.width))  && ((x + width) > other.x)) &&
             ((y < (other.y + other.height)) && ((y + height) > other.y)) );
+  }
+
+  /* Returns a string version of this instance */
+  public string to_string() {
+    return( "da: %s, x: %g, y: %g, w: %g, h: %g".printf( (_da != null).to_string(), x, y, width, height ) );
   }
 
 }
@@ -429,7 +441,7 @@ public class Node : Object {
       return( _tree_bbox );
     }
     set {
-      _tree_bbox = value;
+      _tree_bbox.copy_from( value );
     }
   }
   public int task_count {
@@ -464,9 +476,9 @@ public class Node : Object {
     _da        = da;
     _id        = da.next_node_id;
     _children  = new Array<Node>();
+    _tree_bbox = new NodeBounds( da );
     _layout    = layout;
     _name      = new CanvasText( da );
-    _tree_bbox = new NodeBounds( da );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
   }
@@ -476,9 +488,9 @@ public class Node : Object {
     _da        = da;
     _id        = da.next_node_id;
     _children  = new Array<Node>();
+    _tree_bbox = new NodeBounds( da );
     _layout    = layout;
     _name      = new CanvasText.with_text( da, n );
-    _tree_bbox = new NodeBounds( da );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
   }
@@ -487,9 +499,9 @@ public class Node : Object {
   public Node.from_xml( DrawArea da, Layout? layout, Xml.Node* n, bool isroot ) {
     _da        = da;
     _children  = new Array<Node>();
+    _tree_bbox = new NodeBounds( da );
     _layout    = _layout;
     _name      = new CanvasText.with_text( da, "" );
-    _tree_bbox = new NodeBounds( da );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
     load( da, n, isroot );
@@ -499,9 +511,9 @@ public class Node : Object {
   public Node.copy( DrawArea da, Node n, ImageManager im ) {
     _da        = da;
     _id        = da.next_node_id;
-    _name      = new CanvasText( da );
     _children  = n._children;
     _tree_bbox = new NodeBounds( da );
+    _name      = new CanvasText( da );
     copy_variables( n, im );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
@@ -515,8 +527,8 @@ public class Node : Object {
     _da        = da;
     _id        = da.next_node_id;
     _children  = new Array<Node>();
-    _name      = new CanvasText( da );
     _tree_bbox = new NodeBounds( da );
+    _name      = new CanvasText( da );
     copy_variables( n, im );
   }
 
@@ -525,8 +537,8 @@ public class Node : Object {
     _da        = da;
     _id        = n.id();
     _children  = new Array<Node>();
-    _name      = new CanvasText( da );
     _tree_bbox = new NodeBounds( da );
+    _name      = new CanvasText( da );
     copy_variables( n, im );
     _name.resized.connect( position_name_and_update_size );
     set_parsers();
@@ -569,7 +581,7 @@ public class Node : Object {
     parent           = n.parent;
     side             = n.side;
     style            = n.style;
-    tree_bbox.copy( n.tree_bbox );
+    tree_bbox.copy_from( n.tree_bbox );
     sticker          = n.sticker;
   }
 
@@ -2512,6 +2524,13 @@ public class Node : Object {
 
     var nodesel_background = theme.get_color( "nodesel_background" );
     var nodesel_foreground = theme.get_color( "nodesel_foreground" );
+
+    /* Draw tree_bbox */
+    /*
+    Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.1 );
+    ctx.rectangle( tree_bbox.x, tree_bbox.y, tree_bbox.width, tree_bbox.height );
+    ctx.fill();
+    */
 
     /* If this is a root node, draw specifically for a root node */
     if( is_root() ) {

@@ -5291,25 +5291,32 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Moves all trees to avoid overlapping */
   public void handle_tree_overlap( NodeBounds prev ) {
-
     var current = _selected.current_node();
-
+    var visited = new GLib.List<Node>();
     if( current == null ) return;
+    handle_tree_overlap_helper( current.get_root(), prev, visited );
+  }
 
-    var root  = current.get_root();
+  /* Helper method for handle_tree_overlap */
+  public void handle_tree_overlap_helper( Node root, NodeBounds prev, GLib.List<Node> visited ) {
+
     var curr  = root.tree_bbox;
     var ldiff = curr.x - prev.x;
     var rdiff = (curr.x + curr.width) - (prev.x + prev.width);
     var adiff = curr.y - prev.y;
     var bdiff = (curr.y + curr.height) - (prev.y + prev.height);
 
+    visited.append( root );
+
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
-      if( (node != root) && curr.overlaps( node.tree_bbox ) ) {
+      if( visited.find( node ).is_empty() && curr.overlaps( node.tree_bbox ) ) {
+        var node_prev = new NodeBounds.copy( node.tree_bbox );
         if( node.is_left_of( prev ) )  node.posx += ldiff;
         if( node.is_right_of( prev ) ) node.posx += rdiff;
         if( node.is_above( prev ) )    node.posy += adiff;
         if( node.is_below( prev ) )    node.posy += bdiff;
+        handle_tree_overlap_helper( node, node_prev, visited );
       }
     }
 

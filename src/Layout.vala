@@ -142,16 +142,17 @@ public class Layout : Object {
   }
 
   /* Adjust the entire tree */
-  public virtual void adjust_tree_all( Node n, NodeBounds prev, double amount, string msg ) {
+  public virtual void adjust_tree_all( Node n, NodeBounds p, double amount, string msg ) {
 
     var parent = n.parent;
     var last   = n;
     var index  = n.index();
     var nodes  = n.da.get_nodes();
+    var prev   = new NodeBounds.copy( p );
 
     while( parent != null ) {
       adjust_tree( parent, index, n.side, amount );
-      prev   = parent.tree_bbox;
+      prev.copy_from( parent.tree_bbox );
       amount = 0 - (get_adjust( parent ) / 2);
       index  = parent.index();
       last   = parent;
