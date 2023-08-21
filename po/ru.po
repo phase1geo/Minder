@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-20 23:26-0500\n"
-"PO-Revision-Date: 2023-04-21 15:22+0200\n"
+"PO-Revision-Date: 2023-08-21 13:29+0200\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "Language: ru\n"
@@ -33,17 +33,16 @@ msgid "Minder in AppCenter"
 msgstr "Minder в AppCenter"
 
 #: src/Application.vala:114
-#, fuzzy
 msgid "ERROR: Unable to import file"
-msgstr "Ошибка: не удалось открыть файл '%s'\n"
+msgstr "Ошибка: не удалось открыть импортировать файл"
 
 #: src/Application.vala:118
 msgid "ERROR: Import is missing filename to import"
-msgstr ""
+msgstr "Ошибка: отсутствует имя импортируемого файла"
 
 #: src/Application.vala:133
 msgid "ERROR: Export is missing input file and/or export output file"
-msgstr ""
+msgstr "Ошибка: для экспорта не хватает исходного и/или экспортируемого файла"
 
 #: src/Application.vala:140
 #, c-format
@@ -53,12 +52,12 @@ msgstr "Ошибка: не удалось открыть файл '%s'\n"
 #: src/Application.vala:184
 #, c-format
 msgid "Import file from format (%s)"
-msgstr ""
+msgstr "Импортировать файл в формате %s"
 
 #: src/Application.vala:185
-#, fuzzy, c-format
+#, c-format
 msgid "Export mindmap as format (%s)"
-msgstr "Экспортировать ментальную карту"
+msgstr "Экспортировать ментальную карту в формат %s"
 
 #: src/Application.vala:188
 msgid "Display version number"
@@ -101,9 +100,9 @@ msgstr ""
 "программы\n"
 
 #: src/Application.vala:253
-#, fuzzy, c-format
+#, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
-msgstr "Ошибка: не удалось открыть файл Minder"
+msgstr "Ошибка: не удалось загрузить файл Minder, %s"
 
 #: src/CanvasText.vala:269 src/FormattedText.vala:1092
 msgid "No text found"
@@ -1096,7 +1095,7 @@ msgstr "Автоматически превращать встроенные URL
 msgid ""
 "Specifies if embedded URLs found in node titles should be automatically "
 "highlighted."
-msgstr "Надо ли автоматически подсвечивать URL в тексте узлов"
+msgstr "Надо ли автоматически подсвечивать встроенные URL в тексте узлов"
 
 #: src/Preferences.vala:84
 msgid "Enable Markdown"
@@ -1111,6 +1110,8 @@ msgid ""
 "Specifies if Unicode characters can be input using backslash prefixed "
 "descriptors (ex. \\pi)"
 msgstr ""
+"Можно ли вводить символы Unicode через дескрипторы с обратной косой чертой "
+"(например, \\pi)"
 
 #: src/Preferences.vala:91
 msgid "Create connection title on creation"
@@ -1199,18 +1200,16 @@ msgstr ""
 "к предыдущему узлу."
 
 #: src/QuickEntry.vala:81
-#, fuzzy
 msgid "URI"
-msgstr "URL"
+msgstr "URI"
 
 #: src/QuickEntry.vala:82
-#, fuzzy
 msgid ""
 "If this character is the first non-whitespace character, adds an image from "
 "the URI to the previous node"
 msgstr ""
-"Если строка начинается с этого символа, текст далее вставляется в примечание "
-"к предыдущему узлу."
+"Если это первый символ, который не является пробелом, то вставляется "
+"изображение по ссылке из предыдущего узла"
 
 #: src/QuickEntry.vala:84
 msgid "If this follows *, + or -, the node is made an uncompleted task."
@@ -2695,7 +2694,7 @@ msgstr "Восстановить ссылку"
 #: src/TextParser.vala:66
 #, c-format
 msgid "Parser regex error (re: %s, error: %s)\n"
-msgstr ""
+msgstr "Ошибка разбора регулярного выражения (выражение: %s, ошибка: %s)\n"
 
 #: src/ThemeEditor.vala:45
 msgid "Customize Theme"
