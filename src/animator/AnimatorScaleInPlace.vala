@@ -27,22 +27,13 @@ public class AnimatorScaleInPlace : AnimatorAction {
   private double? _escale = null;  // Ending scaling factor
   private double? _ssx = null;     // Screen X to keep stable
   private double? _ssy = null;     // Screen X to keep stable
-  private double? _dx = null;      // Document X to keep stable
-  private double? _dy = null;      // Document Y to keep stable
 
   /* Constructor for a pan change */
   public AnimatorScaleInPlace( DrawArea da, string name, double ssx, double ssy ) {
     base( name, false );
-
-    double? _sox = null;     // Starting origin X
-    double? _soy = null;     // Starting origin Y
-    da.get_origin( out _sox, out _soy );
-
     _sscale = da.sfactor;
     _ssx = ssx;
     _ssy = ssy;
-    _dx = _sox + _ssx / _sscale;
-    _dy = _soy + _ssy / _sscale;
   }
 
   /* Returns the NODES types */
@@ -60,12 +51,7 @@ public class AnimatorScaleInPlace : AnimatorAction {
     double divisor = index / frames;
     index++;
     double sf = _sscale + ((_escale - _sscale) * divisor);
-    da.sfactor = sf;
-
-    double newo_x = _dx - _ssx / sf;
-    double newo_y = _dy - _ssy / sf;
-
-    da.set_origin( newo_x, newo_y );
+    da.set_scaling_factor_coord( sf, _ssx, _ssy );
   }
 
 }

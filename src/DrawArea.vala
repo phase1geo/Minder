@@ -1725,16 +1725,19 @@ public class DrawArea : Gtk.DrawingArea {
    Sets the scaling factor for the drawing area, causing the center pixel
    to remain in the center and forces a redraw.
   */
-  public void set_scaling_factor( double sf ) {
+  public bool set_scaling_factor( double sf ) {
     if( sfactor != sf ) {
       int    width  = get_allocated_width()  / 2;
       int    height = get_allocated_height() / 2;
       double diff_x = (width  / sf) - (width / sfactor);
       double diff_y = (height / sf) - (height / sfactor );
-      move_origin( diff_x, diff_y );
-      sfactor = sf;
-      scale_changed( sfactor );
+      if( move_origin( diff_x, diff_y, sf ) ) {
+        sfactor = sf;
+        scale_changed( sfactor );
+        return( true );
+      }
     }
+    return( false );
   }
 
   /*
@@ -1744,18 +1747,17 @@ public class DrawArea : Gtk.DrawingArea {
    coord_x = distance of zoom position from origin, in screen coordinates
    coord_y = distance of zoom position from origin, in screen coordinates
   */
-  public void set_scaling_factor_coord( double sf, double coord_x, double coord_y ) {
+  public bool set_scaling_factor_coord( double sf, double coord_x, double coord_y ) {
     if( sfactor != sf ) {
-      double d_x = origin_x + scale_value(coord_x);
-      double d_y = origin_y + scale_value(coord_y);
-
-      double newo_x = d_x - coord_x / sf;
-      double newo_y = d_y - coord_y / sf;
-
-      set_origin( newo_x, newo_y );
-      sfactor = sf;
-      scale_changed( sfactor );
+      double diff_x = (coord_x / sf) - (coord_x / sfactor);
+      double diff_y = (coord_y / sf) - (coord_y / sfactor);
+      if( move_origin( diff_x, diff_y, sf ) ) {
+        sfactor = sf;
+        scale_changed( sfactor );
+        return( true );
+      }
     }
+    return( false );
   }
 
   /* Returns the scaling factor based on the given width and height */
@@ -1766,10 +1768,7 @@ public class DrawArea : Gtk.DrawingArea {
     return( (sf > 4) ? 4 : sf );
   }
 
-  /*
-   Zooms into the image by one scale mark.  Returns true if the zoom was successful;
-   otherwise, returns false.
-  */
+  /* Zooms into the image by one scale mark.  Returns true if the zoom was successful; otherwise, returns false. */
   public bool zoom_in() {
     // Zoom center of the screen
     int s_x = get_allocated_width() / 2;
@@ -1778,6 +1777,7 @@ public class DrawArea : Gtk.DrawingArea {
     return zoom_in_coords(s_x, s_y);
   }
 
+  /* Zooms in by one mark in the zoom mark list.  If we are currently at the largest mark, stop zooming. */
   public bool zoom_in_coords( double zoom_x, double zoom_y ) {
     double value = sfactor * 100;
     var    marks = get_scale_marks();
@@ -1792,17 +1792,17 @@ public class DrawArea : Gtk.DrawingArea {
       }
 
       animator.add_scale_in_place( "zoom in place", zoom_x, zoom_y );
-      set_scaling_factor_coord( mark / 100, zoom_x, zoom_y );
-      animator.animate();
+      if( set_scaling_factor_coord( mark / 100, zoom_x, zoom_y ) ) {
+        animator.animate();
+      } else {
+        animator.cancel_last_add();
+      }
       return( true );
     }
     return( false );
   }
 
-  /*
-   Zooms out of the image by one scale mark.  Returns true if the zoom was successful;
-   otherwise, returns false.
-  */
+  /* Zooms out of the image by one scale mark.  Returns true if the zoom was successful; otherwise, returns false. */
   public bool zoom_out() {
     // Zoom center of the screen
     int s_x = get_allocated_width() / 2;
@@ -1811,6 +1811,7 @@ public class DrawArea : Gtk.DrawingArea {
     return zoom_out_coords(s_x, s_y);
   }
 
+  /* Zooms out by one mark in the zoom mark list.  If we are currently at the smallest mark, stop zooming. */
   public bool zoom_out_coords( double zoom_x, double zoom_y ) {
     double value = sfactor * 100;
     var    marks = get_scale_marks();
@@ -1826,8 +1827,11 @@ public class DrawArea : Gtk.DrawingArea {
       }
 
       animator.add_scale_in_place( "zoom out in place", zoom_x, zoom_y );
-      set_scaling_factor_coord( last / 100, zoom_x, zoom_y );
-      animator.animate();
+      if( set_scaling_factor_coord( last / 100, zoom_x, zoom_y ) ) {
+        animator.animate();
+      } else {
+        animator.cancel_last_add();
+      }
       return( true );
     }
     return( false );
@@ -1884,8 +1888,11 @@ public class DrawArea : Gtk.DrawingArea {
     animator.add_pan_scale( "zoom to selected" );
     var nb = current.tree_bbox;
     position_box( nb.x, nb.y, nb.width, nb.height, 0.5, 0.5, "zoom_to_selected" );
-    set_scaling_factor( get_scaling_factor( nb.width, nb.height ) );
-    animator.animate();
+    if( set_scaling_factor( get_scaling_factor( nb.width, nb.height ) ) ) {
+      animator.animate();
+    } else {
+      animator.cancel_last_add();
+    }
   }
 
   /* Returns the scaling factor required to display all nodes */
@@ -1899,10 +1906,11 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Center the map and scale it to fit */
     position_box( x, y, w, h, 0.5, 0.5, "zoom_to_fit" );
-    set_scaling_factor( get_scaling_factor( w, h ) );
-
-    /* Animate the scaling */
-    animator.animate();
+    if( set_scaling_factor( get_scaling_factor( w, h ) ) ) {
+      animator.animate();
+    } else {
+      animator.cancel_last_add();
+    }
 
   }
 
@@ -1913,10 +1921,11 @@ public class DrawArea : Gtk.DrawingArea {
     animator.add_pan_scale( "action_zoom_actual" );
 
     /* Scale to a full scale */
-    set_scaling_factor( 1.0 );
-
-    /* Animate the scaling */
-    animator.animate();
+    if( set_scaling_factor( 1.0 ) ) {
+      animator.animate();
+    } else {
+      animator.cancel_last_add();
+    }
 
   }
 
@@ -2036,17 +2045,17 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Checks to see if the boundary of the map never goes out of view */
-  private bool out_of_bounds( double diff_x, double diff_y ) {
+  private bool out_of_bounds( double diff_x, double diff_y, double scale ) {
 
     double x, y, w, h;
-    double aw = scale_value( get_allocated_width() );
-    double ah = scale_value( get_allocated_height() );
-    double s  = 40;
+    double aw = get_allocated_width()  / scale;
+    double ah = get_allocated_height() / scale;
+    double s  = 40 / scale;
 
     document_rectangle( out x, out y, out w, out h );
 
-    x -= diff_x;
-    y -= diff_y;
+    x += diff_x;
+    y += diff_y;
 
     return( ((x + w) < s) || ((y + h) < s) || ((aw - x) < s) || ((ah - y) < s) );
 
@@ -2058,12 +2067,13 @@ public class DrawArea : Gtk.DrawingArea {
    nodes to be moved to the left, the origin_x value becomes a positive
    number.
   */
-  public void move_origin( double diff_x, double diff_y ) {
-    if( out_of_bounds( diff_x, diff_y ) ) {
-      return;
+  public bool move_origin( double diff_x, double diff_y, double? next_scale = null ) {
+    if( out_of_bounds( diff_x, diff_y, (next_scale ?? sfactor) ) ) {
+      return( false );
     }
     origin_x += diff_x;
     origin_y += diff_y;
+    return( true );
   }
 
   /* Draw the background from the stylesheet */
@@ -2081,6 +2091,12 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Draws all of the root node trees */
   public void draw_all( Context ctx, bool exporting ) {
+
+    double x, y, w, h;
+    document_rectangle( out x, out y, out w, out h );
+    Utils.set_context_color_with_alpha( ctx, _theme.get_color( "nodesel_background" ), 0.1 );
+    ctx.rectangle( x, y, w, h );
+    ctx.fill();
 
     /* Draw the links first */
     for( int i=0; i<_nodes.length; i++ ) {

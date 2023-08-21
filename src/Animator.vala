@@ -87,6 +87,13 @@ public class Animator : Object {
     }
   }
 
+  /* Cancels the last add operation */
+  public void cancel_last_add() {
+    if( _actions.length > 0 ) {
+      _actions.pop_tail();
+    }
+  }
+
   /*
    This should be called whenever the drawing area wants to queue an immediate draw.
    This function will force all of the queued animations to complete immediately.
