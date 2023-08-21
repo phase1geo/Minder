@@ -93,7 +93,7 @@ public class DrawArea : Gtk.DrawingArea {
   private uint?            _scroll_save_id = null;
   private ImageEditor      _image_editor;
   private UrlEditor        _url_editor;
-  private IMMulticontext   _im_context;
+  private IMContext   _im_context;
   private bool             _debug        = true;
   private bool             _focus_mode   = false;
   private double           _focus_alpha  = 0.05;
@@ -306,14 +306,6 @@ public class DrawArea : Gtk.DrawingArea {
     */
     get_style_context().add_class( "canvas" );
 
-    /* Make sure that we us the ImContextSimple input method */
-    _im_context = new IMMulticontext();
-    _im_context.set_client_window( this.get_window() );
-    _im_context.set_use_preedit( false );
-    _im_context.commit.connect( handle_im_commit );
-    _im_context.retrieve_surrounding.connect( handle_im_retrieve_surrounding );
-    _im_context.delete_surrounding.connect( handle_im_delete_surrounding );
-
   }
 
   /* If the current selection ever changes, let the sidebar know about it. */
@@ -337,7 +329,6 @@ public class DrawArea : Gtk.DrawingArea {
     return( _theme );
   }
 
-
   /* Sets the theme to the given value */
   public void set_theme( Theme theme, bool save ) {
     Theme? orig_theme = _theme;
@@ -356,6 +347,24 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  public override void realize() {
+	  base.realize();
+
+	  /* Make sure that we us the ImContextSimple input method */
+	  _im_context = new IMMulticontext();
+	  _im_context.set_use_preedit( false );
+	  
+	  _im_context.commit.connect( handle_im_commit );
+	  _im_context.retrieve_surrounding.connect( handle_im_retrieve_surrounding );
+	  _im_context.delete_surrounding.connect( handle_im_delete_surrounding );
+	  
+	  Gdk.Window? window = get_window ();
+	  if (window == null) {
+		  window  = win.get_window();			
+	  }
+	  _im_context.set_client_window( window );
+  }
+  
   /* Updates the CSS for the current theme */
   public void update_css() {
     StyleContext.add_provider_for_screen(
@@ -888,11 +897,13 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Updates the IM context cursor location based on the canvas text position */
   private void update_im_cursor( CanvasText ct ) {
-    var int_posx   = (int)ct.posx;
-    var int_posy   = (int)ct.posy;
-    var int_height = (int)ct.height;
-    Gdk.Rectangle rect = {int_posx, int_posy, 0, int_height};
-    _im_context.set_cursor_location( rect );
+      var int_posx   = (int) (ct.posx * sfactor);
+      var int_posy   = (int) (ct.posy * sfactor);
+      var int_width  = (int) (ct.width * sfactor);
+      var int_height = (int)  (ct.height * sfactor);
+	  
+      Gdk.Rectangle rect = {int_posx + int_width, int_posy + int_height, 0, 0};
+      _im_context.set_cursor_location( rect );
   }
 
   /* Sets the current connection to the given node */
