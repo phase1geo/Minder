@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-20 23:04-0500\n"
+"POT-Creation-Date: 2023-08-20 23:26-0500\n"
 "PO-Revision-Date: 2023-04-21 15:22+0200\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -183,20 +183,20 @@ msgstr "Примечание к соединению"
 msgid "unnamed"
 msgstr "безымянный"
 
-#: src/DrawArea.vala:733
+#: src/DrawArea.vala:742
 msgid "Main Idea"
 msgstr "Главная идея"
 
-#: src/DrawArea.vala:2394
+#: src/DrawArea.vala:2405
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% завершено"
 
-#: src/DrawArea.vala:2408
+#: src/DrawArea.vala:2419
 msgid "Drag to resize node"
 msgstr "Перетащите для смены размера узла"
 
-#: src/DrawArea.vala:2410
+#: src/DrawArea.vala:2421
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -204,29 +204,29 @@ msgstr ""
 "Перетаскивание меняет размер узла и изображения.\n"
 "Ctrl+перетаскивание меняет размер только узла."
 
-#: src/DrawArea.vala:2522
+#: src/DrawArea.vala:2533
 #, c-format
 msgid "Children: %u\n"
 msgstr "Потомки: %u\n"
 
-#: src/DrawArea.vala:2523
+#: src/DrawArea.vala:2534
 #, c-format
 msgid "Total: %d"
 msgstr "Всего: %d"
 
-#: src/DrawArea.vala:2569
+#: src/DrawArea.vala:2580
 msgid "connection endpoint change"
 msgstr "смену конечной точки соединения"
 
-#: src/DrawArea.vala:2576
+#: src/DrawArea.vala:2587
 msgid "connection drag"
 msgstr "перетаскивание соединения"
 
-#: src/DrawArea.vala:3222 src/DrawArea.vala:3236 src/DrawArea.vala:4975
+#: src/DrawArea.vala:3233 src/DrawArea.vala:3247 src/DrawArea.vala:4986
 msgid "Another Idea"
 msgstr "Ещё одна идея"
 
-#: src/DrawArea.vala:4468 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4479 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Вручную"

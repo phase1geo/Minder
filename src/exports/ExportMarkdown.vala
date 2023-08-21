@@ -93,14 +93,14 @@ public class ExportMarkdown : Export {
       var re = new Regex( """(.*)<img\s+(.*?)/>(.*)""" );
 
       if( re.match( name, 0, out match_info ) ) {
-        var src_re   = new Regex( """src\s*=\s*\"(.*?)\"""" );
+        var src_re   = new Regex( "src\\s*=\\s*\"(.*?)\"" );
         var pretext  = match_info.fetch( 1 ).strip();
         var attrs    = match_info.fetch( 2 );
         var posttext = match_info.fetch( 3 ).strip();
         name = (pretext == "") ? posttext : (pretext + " " + posttext);
         if( src_re.match( attrs, 0, out match_info ) ) {
           var file  = match_info.fetch( 1 );
-          var w_re  = new Regex( """width\s*=\s*\"(.*?)\"""" );
+          var w_re  = new Regex( "width\\s*=\\s*\"(.*?)\"" );
           var width = 200;
           if( w_re.match( attrs, 0, out match_info ) ) {
             width = int.parse( match_info.fetch( 1 ) );

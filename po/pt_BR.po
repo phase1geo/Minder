@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-20 23:04-0500\n"
+"POT-Creation-Date: 2023-08-20 23:26-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Helder Bertoldo <helder.bertoldo@gmail.com>\n"
 "Language-Team: none\n"
@@ -192,48 +192,48 @@ msgstr ""
 msgid "unnamed"
 msgstr "Documento sem Nome"
 
-#: src/DrawArea.vala:733
+#: src/DrawArea.vala:742
 msgid "Main Idea"
 msgstr "Ideia principal"
 
-#: src/DrawArea.vala:2394
+#: src/DrawArea.vala:2405
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "0.3g%% completados"
 
-#: src/DrawArea.vala:2408
+#: src/DrawArea.vala:2419
 msgid "Drag to resize node"
 msgstr "Arraste para redimensionar nó"
 
-#: src/DrawArea.vala:2410
+#: src/DrawArea.vala:2421
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:2522
+#: src/DrawArea.vala:2533
 #, fuzzy, c-format
 msgid "Children: %u\n"
 msgstr "Desdobrar Filhos"
 
-#: src/DrawArea.vala:2523
+#: src/DrawArea.vala:2534
 #, c-format
 msgid "Total: %d"
 msgstr ""
 
-#: src/DrawArea.vala:2569
+#: src/DrawArea.vala:2580
 msgid "connection endpoint change"
 msgstr "mudar ponto final da conexão"
 
-#: src/DrawArea.vala:2576
+#: src/DrawArea.vala:2587
 msgid "connection drag"
 msgstr "arrastar conexão"
 
-#: src/DrawArea.vala:3222 src/DrawArea.vala:3236 src/DrawArea.vala:4975
+#: src/DrawArea.vala:3233 src/DrawArea.vala:3247 src/DrawArea.vala:4986
 msgid "Another Idea"
 msgstr "Outra Ideia"
 
-#: src/DrawArea.vala:4468 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4479 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Manual"

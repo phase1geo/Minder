@@ -191,6 +191,7 @@
           <li>Fixed issue with Control-Up cursor selection shortcut.</li>
           <li>Fixed issue with centering a node with Shift-C.</li>
           <li>Fixed several issues related to zoom/scaling.</li>
+          <li>Fixed location of input method entry field (thanks to @aeghn).</li>
         </ul>
       </description>
     </release>
