@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-20 23:26-0500\n"
 "PO-Revision-Date: 2023-05-07 14:30+0100\n"
-"Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
+"Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -30,23 +30,16 @@ msgid "Minder in AppCenter"
 msgstr "Minder in AppCenter"
 
 #: src/Application.vala:114
-#, fuzzy
 msgid "ERROR: Unable to import file"
-msgstr "ERRORE: impossibile aprire il file '%s'\n"
+msgstr "ERRORE: ERRORE: impossibile importare il file"
 
 #: src/Application.vala:118
-#, fuzzy
 msgid "ERROR: Import is missing filename to import"
-msgstr ""
-"ERRORE: nell'esportazione manca il file di input di Minder e/o il file di "
-"output dell'esportazione"
+msgstr "ERRORE: nell'importazione manca il nome del file da importare"
 
 #: src/Application.vala:133
-#, fuzzy
 msgid "ERROR: Export is missing input file and/or export output file"
-msgstr ""
-"ERRORE: nell'esportazione manca il file di input di Minder e/o il file di "
-"output dell'esportazione"
+msgstr "ERRORE: nell'esportazione manca il file di input e/o il file di output dell'esportazione"
 
 #: src/Application.vala:140
 #, c-format
@@ -56,12 +49,11 @@ msgstr "ERRORE: impossibile aprire il file '%s'\n"
 #: src/Application.vala:184
 #, c-format
 msgid "Import file from format (%s)"
-msgstr ""
+msgstr "Importa file da formato (%s)"
 
 #: src/Application.vala:185
-#, fuzzy, c-format
 msgid "Export mindmap as format (%s)"
-msgstr "Esporta mappa mentale"
+msgstr "Esporta mappa mentale come formato (%s)"
 
 #: src/Application.vala:188
 msgid "Display version number"
@@ -1210,18 +1202,16 @@ msgstr ""
 "aggiunto alla nota del nodo precedente."
 
 #: src/QuickEntry.vala:81
-#, fuzzy
 msgid "URI"
-msgstr "URL"
+msgstr "URI"
 
 #: src/QuickEntry.vala:82
-#, fuzzy
 msgid ""
 "If this character is the first non-whitespace character, adds an image from "
 "the URI to the previous node"
 msgstr ""
-"Se questo carattere è il primo carattere non bianco, la seguente rigaviene "
-"aggiunto alla nota del nodo precedente."
+"Se questo carattere è il primo carattere non spaziato, aggiunge un'immagine da "
+"l'URI al nodo precedente"
 
 #: src/QuickEntry.vala:84
 msgid "If this follows *, + or -, the node is made an uncompleted task."
