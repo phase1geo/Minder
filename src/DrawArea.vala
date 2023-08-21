@@ -2103,11 +2103,13 @@ public class DrawArea : Gtk.DrawingArea {
   /* Draws all of the root node trees */
   public void draw_all( Context ctx, bool exporting ) {
 
+    /*
     double x, y, w, h;
     document_rectangle( out x, out y, out w, out h );
     Utils.set_context_color_with_alpha( ctx, _theme.get_color( "nodesel_background" ), 0.1 );
     ctx.rectangle( x, y, w, h );
     ctx.fill();
+    */
 
     /* Draw the links first */
     for( int i=0; i<_nodes.length; i++ ) {
