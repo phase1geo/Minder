@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-30 20:52-0500\n"
+"POT-Creation-Date: 2023-08-20 23:04-0500\n"
 "PO-Revision-Date: 2020-04-20 14:26+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: \n"
@@ -153,7 +153,7 @@ msgstr "Titel aanpassen"
 msgid "Remove Sticker"
 msgstr "Aantekening wissen"
 
-#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:305
+#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
 #: src/NodeMenu.vala:176 src/NodesMenu.vala:94
 msgid "Select"
 msgstr "Kiezen"
@@ -192,44 +192,44 @@ msgstr "naamloos"
 msgid "Main Idea"
 msgstr "Hoofdidee"
 
-#: src/DrawArea.vala:2383
+#: src/DrawArea.vala:2394
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% afgerond"
 
-#: src/DrawArea.vala:2397
+#: src/DrawArea.vala:2408
 msgid "Drag to resize node"
 msgstr ""
 
-#: src/DrawArea.vala:2399
+#: src/DrawArea.vala:2410
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:2511
+#: src/DrawArea.vala:2522
 #, fuzzy, c-format
 msgid "Children: %u\n"
 msgstr "Subknopen inklappen"
 
-#: src/DrawArea.vala:2512
+#: src/DrawArea.vala:2523
 #, c-format
 msgid "Total: %d"
 msgstr ""
 
-#: src/DrawArea.vala:2558
+#: src/DrawArea.vala:2569
 msgid "connection endpoint change"
 msgstr "eindknoop van verbinding aanpassen"
 
-#: src/DrawArea.vala:2565
+#: src/DrawArea.vala:2576
 msgid "connection drag"
 msgstr "verbinding verslepen"
 
-#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4964
+#: src/DrawArea.vala:3222 src/DrawArea.vala:3236 src/DrawArea.vala:4975
 msgid "Another Idea"
 msgstr "Nóg een idee"
 
-#: src/DrawArea.vala:4457 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4468 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Handmatig"
@@ -318,8 +318,8 @@ msgstr "Knoopopties"
 msgid "Export As %s"
 msgstr "Exporteren als"
 
-#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:305
-#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1247
+#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:300
+#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1248
 #: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
@@ -539,17 +539,17 @@ msgstr "Knoop knippen naar klembord"
 msgid "Remove Image"
 msgstr "Afbeelding verwijderen"
 
-#: src/ImageManager.vala:305
+#: src/ImageManager.vala:300
 #, fuzzy
 msgid "Select Image"
 msgstr "Tak kiezen"
 
-#: src/ImageManager.vala:310
+#: src/ImageManager.vala:305
 #, fuzzy
 msgid "Images"
 msgstr "Afbeelding"
 
-#: src/MainWindow.vala:153 src/MainWindow.vala:1252
+#: src/MainWindow.vala:153 src/MainWindow.vala:1253
 msgid "Minder"
 msgstr "Minder"
 
@@ -587,7 +587,7 @@ msgstr "Opvulling"
 msgid "Focus Mode"
 msgstr "Focusmodus"
 
-#: src/MainWindow.vala:582 src/MainWindow.vala:1304
+#: src/MainWindow.vala:582 src/MainWindow.vala:1305
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr ""
@@ -686,7 +686,7 @@ msgstr "Sneltoetsoverzicht"
 msgid "About Minder"
 msgstr "Meeneembare Minder"
 
-#: src/MainWindow.vala:928 src/MainWindow.vala:1376
+#: src/MainWindow.vala:928 src/MainWindow.vala:1377
 #, fuzzy
 msgid "Show Property Sidebar"
 msgstr "Eigenschappen tonen"
@@ -719,7 +719,7 @@ msgstr "Als je dat niet doen, gaan de aanpassingen permanent verloren."
 msgid "Discard Changes"
 msgstr "Aanpassingen verwerpen"
 
-#: src/MainWindow.vala:1012 src/MainWindow.vala:1247 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:1012 src/MainWindow.vala:1248 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Opslaan"
 
@@ -750,11 +750,11 @@ msgstr "Bestand openen"
 msgid "Open"
 msgstr "Openen"
 
-#: src/MainWindow.vala:1247
+#: src/MainWindow.vala:1248
 msgid "Save File"
 msgstr "Bestand opslaan"
 
-#: src/MainWindow.vala:1320
+#: src/MainWindow.vala:1321
 #, fuzzy
 msgid "Hide Property Sidebar"
 msgstr "Eigenschappen"
@@ -1104,11 +1104,11 @@ msgstr ""
 msgid "Remove Node Links"
 msgstr "Verbindingsknooop verwijderen"
 
-#: src/Node.vala:1976
+#: src/Node.vala:2044
 msgid "Node Title"
 msgstr "Titel van knoop"
 
-#: src/Node.vala:1984
+#: src/Node.vala:2052
 msgid "Node Note"
 msgstr "Aantekening"
 

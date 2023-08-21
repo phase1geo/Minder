@@ -80,7 +80,7 @@
       <li xml:lang="ru">Шикарная анимация.</li>
       <li xml:lang="pt">Animações lindas.</li>
       <li xml:lang="fr">Magnifiques animations.</li>
-      <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Outliner, PlantUML, Portable Minder, filesystem, and XMind formats.</li>
+      <li>Import from OPML, FreeMind, Freeplane, PlainText (formatted), Markdown, Outliner, PlantUML, Portable Minder, filesystem, and XMind formats.</li>
       <li>Export to CSV, FreeMind, Freeplane, JPEG, BMP, SVG, Markdown, Mermaid, OPML, Org-Mode, Outliner, PDF, PNG, PlainText, PlantUML, Portable Minder, filesystem, XMind and yEd formats.</li>
       <li>Printer support.</li>
       <li xml:lang="ru">Используйте функцию вывода на печать.</li>
@@ -158,6 +158,42 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.15.3" date="2023-08-20">
+      <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Added new --import command-line option for importing directly from command-line.</li>
+          <li>Added support for importing Markdown.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Removed --format command-line option in favor of new --import and --export options.</li>
+          <li>Improved export of Markdown output.</li>
+          <li>Improved loading of Minder Markdown syntax highlighting to make this an application-only syntax (not user-wide).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed Markdown export issue with root nodes.</li>
+          <li>Fixed issue with inserting non-printable characters.</li>
+          <li>Fixed issues with cursor movement for RTL languages.</li>
+          <li>Fixed issue with using Control-W shortcut when only a single tab is shown.</li>
+          <li>Fixed potential issue with adding a new tab.</li>
+          <li>Fixed issues with tab naming of new, unchanged documents.</li>
+          <li>Fixed cursor/selection issue when the Delete key is used (includes application crash issue).</li>
+          <li>Fixed issue with Control-Up cursor selection shortcut.</li>
+          <li>Fixed issue with centering a node with Shift-C.</li>
+          <li>Fixed several issues related to zoom/scaling.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.15.2" date="2023-05-20">
       <description>
         <p>New</p>

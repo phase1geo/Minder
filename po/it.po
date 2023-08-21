@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-30 20:52-0500\n"
+"POT-Creation-Date: 2023-08-20 23:04-0500\n"
 "PO-Revision-Date: 2023-05-07 14:30+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -151,7 +151,7 @@ msgstr "Modifica Note"
 msgid "Remove Sticker"
 msgstr "Rimuovi adesivo"
 
-#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:305
+#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
 #: src/NodeMenu.vala:176 src/NodesMenu.vala:94
 msgid "Select"
 msgstr "Seleziona"
@@ -188,16 +188,16 @@ msgstr "senza nome"
 msgid "Main Idea"
 msgstr "Idea Principale"
 
-#: src/DrawArea.vala:2383
+#: src/DrawArea.vala:2394
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "% 0.3g%% completo"
 
-#: src/DrawArea.vala:2397
+#: src/DrawArea.vala:2408
 msgid "Drag to resize node"
 msgstr "Trascina per ridimensionare il nodo"
 
-#: src/DrawArea.vala:2399
+#: src/DrawArea.vala:2410
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -205,29 +205,29 @@ msgstr ""
 "Trascina per ridimensionare il nodo e l'immagine.\n"
 "Control-trascina per ridimensionare solo il nodo."
 
-#: src/DrawArea.vala:2511
+#: src/DrawArea.vala:2522
 #, c-format
 msgid "Children: %u\n"
 msgstr "Figli: %u\n"
 
-#: src/DrawArea.vala:2512
+#: src/DrawArea.vala:2523
 #, c-format
 msgid "Total: %d"
 msgstr "Totale: %d"
 
-#: src/DrawArea.vala:2558
+#: src/DrawArea.vala:2569
 msgid "connection endpoint change"
 msgstr "modifica dell'endpoint di connessione"
 
-#: src/DrawArea.vala:2565
+#: src/DrawArea.vala:2576
 msgid "connection drag"
 msgstr "trascina della connessione"
 
-#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4964
+#: src/DrawArea.vala:3222 src/DrawArea.vala:3236 src/DrawArea.vala:4975
 msgid "Another Idea"
 msgstr "Un'altra idea"
 
-#: src/DrawArea.vala:4457 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4468 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Manuale"
@@ -313,8 +313,8 @@ msgstr "Opzioni di Esportazione"
 msgid "Export As %s"
 msgstr "Esporta Come %s"
 
-#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:305
-#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1247
+#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:300
+#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1248
 #: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
@@ -525,15 +525,15 @@ msgstr "Incolla immagine dagli Appunti"
 msgid "Remove Image"
 msgstr "Rimuovi Immagine"
 
-#: src/ImageManager.vala:305
+#: src/ImageManager.vala:300
 msgid "Select Image"
 msgstr "Seleziona Immagine"
 
-#: src/ImageManager.vala:310
+#: src/ImageManager.vala:305
 msgid "Images"
 msgstr "Immagini"
 
-#: src/MainWindow.vala:153 src/MainWindow.vala:1252
+#: src/MainWindow.vala:153 src/MainWindow.vala:1253
 msgid "Minder"
 msgstr "Minder"
 
@@ -570,7 +570,7 @@ msgstr "Solo-lettura"
 msgid "Focus Mode"
 msgstr "Modalità messa a fuoco"
 
-#: src/MainWindow.vala:582 src/MainWindow.vala:1304
+#: src/MainWindow.vala:582 src/MainWindow.vala:1305
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Zoom (%d%%)"
@@ -665,7 +665,7 @@ msgstr "collegamenti note"
 msgid "About Minder"
 msgstr "Informazioni su Minder"
 
-#: src/MainWindow.vala:928 src/MainWindow.vala:1376
+#: src/MainWindow.vala:928 src/MainWindow.vala:1377
 msgid "Show Property Sidebar"
 msgstr "Mostra barra laterale della proprietà"
 
@@ -697,7 +697,7 @@ msgstr "Le modifiche andranno perse in modo permanente se non vengono salvate."
 msgid "Discard Changes"
 msgstr "Annullare le Modifiche"
 
-#: src/MainWindow.vala:1012 src/MainWindow.vala:1247 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:1012 src/MainWindow.vala:1248 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Salva"
 
@@ -726,11 +726,11 @@ msgstr "Apri Directory"
 msgid "Open"
 msgstr "Apri"
 
-#: src/MainWindow.vala:1247
+#: src/MainWindow.vala:1248
 msgid "Save File"
 msgstr "Salva File"
 
-#: src/MainWindow.vala:1320
+#: src/MainWindow.vala:1321
 msgid "Hide Property Sidebar"
 msgstr "Nascondi barra laterale delle proprietà"
 
@@ -1059,11 +1059,11 @@ msgstr "Allinea a destra"
 msgid "Remove Node Links"
 msgstr "Rimuovi collegamento al nodo"
 
-#: src/Node.vala:1976
+#: src/Node.vala:2044
 msgid "Node Title"
 msgstr "Titolo Nodo"
 
-#: src/Node.vala:1984
+#: src/Node.vala:2052
 msgid "Node Note"
 msgstr "Nota Nodo"
 

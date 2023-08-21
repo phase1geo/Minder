@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-30 20:52-0500\n"
+"POT-Creation-Date: 2023-08-20 23:04-0500\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -147,7 +147,7 @@ msgstr "Upravit poznámku"
 msgid "Remove Sticker"
 msgstr "Odstranit nálepku"
 
-#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:305
+#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
 #: src/NodeMenu.vala:176 src/NodesMenu.vala:94
 msgid "Select"
 msgstr "Vybrat"
@@ -184,44 +184,44 @@ msgstr "nepomenováno"
 msgid "Main Idea"
 msgstr "Hlavní myšlenka"
 
-#: src/DrawArea.vala:2383
+#: src/DrawArea.vala:2394
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% hotovo"
 
-#: src/DrawArea.vala:2397
+#: src/DrawArea.vala:2408
 msgid "Drag to resize node"
 msgstr ""
 
-#: src/DrawArea.vala:2399
+#: src/DrawArea.vala:2410
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:2511
+#: src/DrawArea.vala:2522
 #, c-format
 msgid "Children: %u\n"
 msgstr "Podřadných uzlů: %u\n"
 
-#: src/DrawArea.vala:2512
+#: src/DrawArea.vala:2523
 #, c-format
 msgid "Total: %d"
 msgstr "Celkově: %d"
 
-#: src/DrawArea.vala:2558
+#: src/DrawArea.vala:2569
 msgid "connection endpoint change"
 msgstr "změna konce spojení"
 
-#: src/DrawArea.vala:2565
+#: src/DrawArea.vala:2576
 msgid "connection drag"
 msgstr "přetáhnutí spojení"
 
-#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4964
+#: src/DrawArea.vala:3222 src/DrawArea.vala:3236 src/DrawArea.vala:4975
 msgid "Another Idea"
 msgstr "Další myšlenka"
 
-#: src/DrawArea.vala:4457 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4468 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Ruční"
@@ -308,8 +308,8 @@ msgstr "Možnosti exportu"
 msgid "Export As %s"
 msgstr "Exportovat jako %s"
 
-#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:305
-#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1247
+#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:300
+#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1248
 #: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
@@ -522,15 +522,15 @@ msgstr "Vložit obrázek ze schránky"
 msgid "Remove Image"
 msgstr "Odstranit obrázek"
 
-#: src/ImageManager.vala:305
+#: src/ImageManager.vala:300
 msgid "Select Image"
 msgstr "Vybrat obrázek"
 
-#: src/ImageManager.vala:310
+#: src/ImageManager.vala:305
 msgid "Images"
 msgstr "Obrázky"
 
-#: src/MainWindow.vala:153 src/MainWindow.vala:1252
+#: src/MainWindow.vala:153 src/MainWindow.vala:1253
 msgid "Minder"
 msgstr "Minder"
 
@@ -568,7 +568,7 @@ msgstr "Čtení"
 msgid "Focus Mode"
 msgstr "Režim soustředění"
 
-#: src/MainWindow.vala:582 src/MainWindow.vala:1304
+#: src/MainWindow.vala:582 src/MainWindow.vala:1305
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Přiblížení (%d%%)"
@@ -664,7 +664,7 @@ msgstr "Seznam všech zkratek"
 msgid "About Minder"
 msgstr "O Minderu"
 
-#: src/MainWindow.vala:928 src/MainWindow.vala:1376
+#: src/MainWindow.vala:928 src/MainWindow.vala:1377
 msgid "Show Property Sidebar"
 msgstr "Zobrazit panel vlastností"
 
@@ -696,7 +696,7 @@ msgstr "Pokud soubor neuložíte, provedené změny se navždy ztratí."
 msgid "Discard Changes"
 msgstr "Zahodit změny"
 
-#: src/MainWindow.vala:1012 src/MainWindow.vala:1247 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:1012 src/MainWindow.vala:1248 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Uložit"
 
@@ -726,11 +726,11 @@ msgstr "Otevřít soubor"
 msgid "Open"
 msgstr "Otevřít"
 
-#: src/MainWindow.vala:1247
+#: src/MainWindow.vala:1248
 msgid "Save File"
 msgstr "Uložit soubor"
 
-#: src/MainWindow.vala:1320
+#: src/MainWindow.vala:1321
 msgid "Hide Property Sidebar"
 msgstr "Schovat panel vlastností"
 
@@ -1060,11 +1060,11 @@ msgstr "Zarovnat vpravo"
 msgid "Remove Node Links"
 msgstr "Odstranit odkazy uzlu"
 
-#: src/Node.vala:1976
+#: src/Node.vala:2044
 msgid "Node Title"
 msgstr "Název poznámky"
 
-#: src/Node.vala:1984
+#: src/Node.vala:2052
 msgid "Node Note"
 msgstr "Poznámka uzlu"
 

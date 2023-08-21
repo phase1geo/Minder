@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-30 20:52-0500\n"
+"POT-Creation-Date: 2023-08-20 23:04-0500\n"
 "PO-Revision-Date: 2022-08-02 23:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -146,7 +146,7 @@ msgstr "Notatka"
 msgid "Remove Sticker"
 msgstr "Usuń ikonę"
 
-#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:305
+#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
 #: src/NodeMenu.vala:176 src/NodesMenu.vala:94
 msgid "Select"
 msgstr "Zaznacz"
@@ -183,16 +183,16 @@ msgstr "bez nazwy"
 msgid "Main Idea"
 msgstr "TEMAT"
 
-#: src/DrawArea.vala:2383
+#: src/DrawArea.vala:2394
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "Ukończono %0.3g%%"
 
-#: src/DrawArea.vala:2397
+#: src/DrawArea.vala:2408
 msgid "Drag to resize node"
 msgstr "Przeciągnij aby zmienić rozmiar elementu"
 
-#: src/DrawArea.vala:2399
+#: src/DrawArea.vala:2410
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -200,29 +200,29 @@ msgstr ""
 "Przeciągnij by zmienić rozmiar elementu oraz obrazu.\n"
 "CTRL+przeciąganie zmieni tylko rozmiar elementu."
 
-#: src/DrawArea.vala:2511
+#: src/DrawArea.vala:2522
 #, c-format
 msgid "Children: %u\n"
 msgstr "Podrzędne: %u\n"
 
-#: src/DrawArea.vala:2512
+#: src/DrawArea.vala:2523
 #, c-format
 msgid "Total: %d"
 msgstr "Wszystkie: %d"
 
-#: src/DrawArea.vala:2558
+#: src/DrawArea.vala:2569
 msgid "connection endpoint change"
 msgstr ""
 
-#: src/DrawArea.vala:2565
+#: src/DrawArea.vala:2576
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4964
+#: src/DrawArea.vala:3222 src/DrawArea.vala:3236 src/DrawArea.vala:4975
 msgid "Another Idea"
 msgstr "NOWY TEMAT"
 
-#: src/DrawArea.vala:4457 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4468 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Ręcznie"
@@ -309,8 +309,8 @@ msgstr "Opcje eksportu"
 msgid "Export As %s"
 msgstr "Eksportuj jako %s"
 
-#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:305
-#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1247
+#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:300
+#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1248
 #: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
@@ -523,15 +523,15 @@ msgstr "Wklej obraz ze schowka"
 msgid "Remove Image"
 msgstr "Usuń obraz"
 
-#: src/ImageManager.vala:305
+#: src/ImageManager.vala:300
 msgid "Select Image"
 msgstr "Wybierz oraz"
 
-#: src/ImageManager.vala:310
+#: src/ImageManager.vala:305
 msgid "Images"
 msgstr "Obrazy"
 
-#: src/MainWindow.vala:153 src/MainWindow.vala:1252
+#: src/MainWindow.vala:153 src/MainWindow.vala:1253
 msgid "Minder"
 msgstr "Minder"
 
@@ -568,7 +568,7 @@ msgstr ""
 msgid "Focus Mode"
 msgstr "Tryb skupienia"
 
-#: src/MainWindow.vala:582 src/MainWindow.vala:1304
+#: src/MainWindow.vala:582 src/MainWindow.vala:1305
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Powiększenie (%d%%)"
@@ -665,7 +665,7 @@ msgstr "Lista skrótów klawiaturowych"
 msgid "About Minder"
 msgstr "O programie Minder"
 
-#: src/MainWindow.vala:928 src/MainWindow.vala:1376
+#: src/MainWindow.vala:928 src/MainWindow.vala:1377
 msgid "Show Property Sidebar"
 msgstr "Pokaż panel właściwości"
 
@@ -697,7 +697,7 @@ msgstr "Zmiany zostaną utracone jeśli nie zostanie zapisany!"
 msgid "Discard Changes"
 msgstr "Odrzuć zmiany"
 
-#: src/MainWindow.vala:1012 src/MainWindow.vala:1247 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:1012 src/MainWindow.vala:1248 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Zapisz"
 
@@ -727,11 +727,11 @@ msgstr "Otwórz plik"
 msgid "Open"
 msgstr "Otwórz"
 
-#: src/MainWindow.vala:1247
+#: src/MainWindow.vala:1248
 msgid "Save File"
 msgstr "Zapisz plik"
 
-#: src/MainWindow.vala:1320
+#: src/MainWindow.vala:1321
 msgid "Hide Property Sidebar"
 msgstr "Ukryj panel właściwości"
 
@@ -1065,11 +1065,11 @@ msgstr "Wyrównaj do prawej"
 msgid "Remove Node Links"
 msgstr "Usuń hiperłącze elementu"
 
-#: src/Node.vala:1976
+#: src/Node.vala:2044
 msgid "Node Title"
 msgstr "Tytuł gałęzi"
 
-#: src/Node.vala:1984
+#: src/Node.vala:2052
 msgid "Node Note"
 msgstr "Notatka gałęzi"
 

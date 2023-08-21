@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-30 20:52-0500\n"
+"POT-Creation-Date: 2023-08-20 23:04-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Helder Bertoldo <helder.bertoldo@gmail.com>\n"
 "Language-Team: none\n"
@@ -154,7 +154,7 @@ msgstr "Editar Nota"
 msgid "Remove Sticker"
 msgstr "Remover Nota"
 
-#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:305
+#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
 #: src/NodeMenu.vala:176 src/NodesMenu.vala:94
 #, fuzzy
 msgid "Select"
@@ -196,44 +196,44 @@ msgstr "Documento sem Nome"
 msgid "Main Idea"
 msgstr "Ideia principal"
 
-#: src/DrawArea.vala:2383
+#: src/DrawArea.vala:2394
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "0.3g%% completados"
 
-#: src/DrawArea.vala:2397
+#: src/DrawArea.vala:2408
 msgid "Drag to resize node"
 msgstr "Arraste para redimensionar nó"
 
-#: src/DrawArea.vala:2399
+#: src/DrawArea.vala:2410
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:2511
+#: src/DrawArea.vala:2522
 #, fuzzy, c-format
 msgid "Children: %u\n"
 msgstr "Desdobrar Filhos"
 
-#: src/DrawArea.vala:2512
+#: src/DrawArea.vala:2523
 #, c-format
 msgid "Total: %d"
 msgstr ""
 
-#: src/DrawArea.vala:2558
+#: src/DrawArea.vala:2569
 msgid "connection endpoint change"
 msgstr "mudar ponto final da conexão"
 
-#: src/DrawArea.vala:2565
+#: src/DrawArea.vala:2576
 msgid "connection drag"
 msgstr "arrastar conexão"
 
-#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4964
+#: src/DrawArea.vala:3222 src/DrawArea.vala:3236 src/DrawArea.vala:4975
 msgid "Another Idea"
 msgstr "Outra Ideia"
 
-#: src/DrawArea.vala:4457 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4468 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Manual"
@@ -320,8 +320,8 @@ msgstr "Exportar opções"
 msgid "Export As %s"
 msgstr "Exportar como %s"
 
-#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:305
-#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1247
+#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:300
+#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1248
 #: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
@@ -539,16 +539,16 @@ msgstr "Recortar Nó Para a Área de Transferência"
 msgid "Remove Image"
 msgstr "Remover Imagem"
 
-#: src/ImageManager.vala:305
+#: src/ImageManager.vala:300
 #, fuzzy
 msgid "Select Image"
 msgstr "Selecionar Nó"
 
-#: src/ImageManager.vala:310
+#: src/ImageManager.vala:305
 msgid "Images"
 msgstr "Imagens"
 
-#: src/MainWindow.vala:153 src/MainWindow.vala:1252
+#: src/MainWindow.vala:153 src/MainWindow.vala:1253
 msgid "Minder"
 msgstr ""
 
@@ -590,7 +590,7 @@ msgstr "Lendo"
 msgid "Focus Mode"
 msgstr "Modo Foco"
 
-#: src/MainWindow.vala:582 src/MainWindow.vala:1304
+#: src/MainWindow.vala:582 src/MainWindow.vala:1305
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr ""
@@ -689,7 +689,7 @@ msgstr "Lista de Atalhos"
 msgid "About Minder"
 msgstr "Sobre o Minder"
 
-#: src/MainWindow.vala:928 src/MainWindow.vala:1376
+#: src/MainWindow.vala:928 src/MainWindow.vala:1377
 #, fuzzy
 msgid "Show Property Sidebar"
 msgstr "Propriedades"
@@ -722,7 +722,7 @@ msgstr "Mudanças serão perdidas permanentemente se não forem salvas."
 msgid "Discard Changes"
 msgstr "Descartar Mudanças"
 
-#: src/MainWindow.vala:1012 src/MainWindow.vala:1247 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:1012 src/MainWindow.vala:1248 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "Salvar"
 
@@ -753,11 +753,11 @@ msgstr "Abrir Arquivo"
 msgid "Open"
 msgstr "Abrir"
 
-#: src/MainWindow.vala:1247
+#: src/MainWindow.vala:1248
 msgid "Save File"
 msgstr "Salvar Arquivo"
 
-#: src/MainWindow.vala:1320
+#: src/MainWindow.vala:1321
 #, fuzzy
 msgid "Hide Property Sidebar"
 msgstr "Esconder a barra de propriedades"
@@ -1118,12 +1118,12 @@ msgstr ""
 msgid "Remove Node Links"
 msgstr "Remover Nota"
 
-#: src/Node.vala:1976
+#: src/Node.vala:2044
 #, fuzzy
 msgid "Node Title"
 msgstr "Títulos"
 
-#: src/Node.vala:1984
+#: src/Node.vala:2052
 #, fuzzy
 msgid "Node Note"
 msgstr "Adicionar Nota"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-30 20:52-0500\n"
+"POT-Creation-Date: 2023-08-20 23:04-0500\n"
 "PO-Revision-Date: 2022-07-22 17:02+0800\n"
 "Last-Translator: 企鹅2035 <qie2035@qq.com>\n"
 "Language-Team: 简体中文 (机翻) <qie2035@qq.com>\n"
@@ -147,7 +147,7 @@ msgstr "编辑备注"
 msgid "Remove Sticker"
 msgstr "移除贴纸"
 
-#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:305
+#: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
 #: src/NodeMenu.vala:176 src/NodesMenu.vala:94
 msgid "Select"
 msgstr "选择"
@@ -184,16 +184,16 @@ msgstr "未命名"
 msgid "Main Idea"
 msgstr "主要思想"
 
-#: src/DrawArea.vala:2383
+#: src/DrawArea.vala:2394
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% 完成"
 
-#: src/DrawArea.vala:2397
+#: src/DrawArea.vala:2408
 msgid "Drag to resize node"
 msgstr "拖动以调整节点大小"
 
-#: src/DrawArea.vala:2399
+#: src/DrawArea.vala:2410
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -201,29 +201,29 @@ msgstr ""
 "拖动以调整节点和图像的大小。\n"
 "按住 Control-拖动以仅调整节点的大小。"
 
-#: src/DrawArea.vala:2511
+#: src/DrawArea.vala:2522
 #, c-format
 msgid "Children: %u\n"
 msgstr "子节点： %u\n"
 
-#: src/DrawArea.vala:2512
+#: src/DrawArea.vala:2523
 #, c-format
 msgid "Total: %d"
 msgstr "总计： %d"
 
-#: src/DrawArea.vala:2558
+#: src/DrawArea.vala:2569
 msgid "connection endpoint change"
 msgstr "连接端点更改"
 
-#: src/DrawArea.vala:2565
+#: src/DrawArea.vala:2576
 msgid "connection drag"
 msgstr "连接拖动"
 
-#: src/DrawArea.vala:3211 src/DrawArea.vala:3225 src/DrawArea.vala:4964
+#: src/DrawArea.vala:3222 src/DrawArea.vala:3236 src/DrawArea.vala:4975
 msgid "Another Idea"
 msgstr "另一个想法"
 
-#: src/DrawArea.vala:4457 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4468 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "手动"
@@ -310,8 +310,8 @@ msgstr "导出选项"
 msgid "Export As %s"
 msgstr "导出为 %s"
 
-#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:305
-#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1247
+#: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:300
+#: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1248
 #: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
@@ -524,15 +524,15 @@ msgstr "从剪贴板粘贴图像"
 msgid "Remove Image"
 msgstr "删除图像"
 
-#: src/ImageManager.vala:305
+#: src/ImageManager.vala:300
 msgid "Select Image"
 msgstr "选择图像"
 
-#: src/ImageManager.vala:310
+#: src/ImageManager.vala:305
 msgid "Images"
 msgstr "图像"
 
-#: src/MainWindow.vala:153 src/MainWindow.vala:1252
+#: src/MainWindow.vala:153 src/MainWindow.vala:1253
 msgid "Minder"
 msgstr "Minder"
 
@@ -570,7 +570,7 @@ msgstr "读数"
 msgid "Focus Mode"
 msgstr "聚焦式"
 
-#: src/MainWindow.vala:582 src/MainWindow.vala:1304
+#: src/MainWindow.vala:582 src/MainWindow.vala:1305
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "缩放 （%d%%）"
@@ -665,7 +665,7 @@ msgstr "快捷键"
 msgid "About Minder"
 msgstr "关于Minder"
 
-#: src/MainWindow.vala:928 src/MainWindow.vala:1376
+#: src/MainWindow.vala:928 src/MainWindow.vala:1377
 msgid "Show Property Sidebar"
 msgstr "显示属性侧边栏"
 
@@ -697,7 +697,7 @@ msgstr "如果不保存，更改将永久丢失。"
 msgid "Discard Changes"
 msgstr "放弃更改"
 
-#: src/MainWindow.vala:1012 src/MainWindow.vala:1247 src/ThemeEditor.vala:146
+#: src/MainWindow.vala:1012 src/MainWindow.vala:1248 src/ThemeEditor.vala:146
 msgid "Save"
 msgstr "保存"
 
@@ -727,11 +727,11 @@ msgstr "打开文件"
 msgid "Open"
 msgstr "打开"
 
-#: src/MainWindow.vala:1247
+#: src/MainWindow.vala:1248
 msgid "Save File"
 msgstr "保存文件"
 
-#: src/MainWindow.vala:1320
+#: src/MainWindow.vala:1321
 msgid "Hide Property Sidebar"
 msgstr "隐藏属性侧边栏"
 
@@ -1061,11 +1061,11 @@ msgstr "右对齐"
 msgid "Remove Node Links"
 msgstr "删除节点链接"
 
-#: src/Node.vala:1976
+#: src/Node.vala:2044
 msgid "Node Title"
 msgstr "节点标题"
 
-#: src/Node.vala:1984
+#: src/Node.vala:2052
 msgid "Node Note"
 msgstr "节点说明"
 
