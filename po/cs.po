@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-20 23:26-0500\n"
+"POT-Creation-Date: 2023-08-22 17:52-0500\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -184,44 +184,44 @@ msgstr "nepomenováno"
 msgid "Main Idea"
 msgstr "Hlavní myšlenka"
 
-#: src/DrawArea.vala:2405
+#: src/DrawArea.vala:2407
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% hotovo"
 
-#: src/DrawArea.vala:2419
+#: src/DrawArea.vala:2421
 msgid "Drag to resize node"
 msgstr ""
 
-#: src/DrawArea.vala:2421
+#: src/DrawArea.vala:2423
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:2533
+#: src/DrawArea.vala:2535
 #, c-format
 msgid "Children: %u\n"
 msgstr "Podřadných uzlů: %u\n"
 
-#: src/DrawArea.vala:2534
+#: src/DrawArea.vala:2536
 #, c-format
 msgid "Total: %d"
 msgstr "Celkově: %d"
 
-#: src/DrawArea.vala:2580
+#: src/DrawArea.vala:2582
 msgid "connection endpoint change"
 msgstr "změna konce spojení"
 
-#: src/DrawArea.vala:2587
+#: src/DrawArea.vala:2589
 msgid "connection drag"
 msgstr "přetáhnutí spojení"
 
-#: src/DrawArea.vala:3233 src/DrawArea.vala:3247 src/DrawArea.vala:4986
+#: src/DrawArea.vala:3235 src/DrawArea.vala:3249 src/DrawArea.vala:4988
 msgid "Another Idea"
 msgstr "Další myšlenka"
 
-#: src/DrawArea.vala:4479 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4481 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Ruční"

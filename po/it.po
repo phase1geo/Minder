@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-20 23:26-0500\n"
+"POT-Creation-Date: 2023-08-22 17:52-0500\n"
 "PO-Revision-Date: 2023-05-07 14:30+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -39,7 +39,9 @@ msgstr "ERRORE: nell'importazione manca il nome del file da importare"
 
 #: src/Application.vala:133
 msgid "ERROR: Export is missing input file and/or export output file"
-msgstr "ERRORE: nell'esportazione manca il file di input e/o il file di output dell'esportazione"
+msgstr ""
+"ERRORE: nell'esportazione manca il file di input e/o il file di output "
+"dell'esportazione"
 
 #: src/Application.vala:140
 #, c-format
@@ -52,6 +54,7 @@ msgid "Import file from format (%s)"
 msgstr "Importa file da formato (%s)"
 
 #: src/Application.vala:185
+#, c-format
 msgid "Export mindmap as format (%s)"
 msgstr "Esporta mappa mentale come formato (%s)"
 
@@ -180,16 +183,16 @@ msgstr "senza nome"
 msgid "Main Idea"
 msgstr "Idea Principale"
 
-#: src/DrawArea.vala:2405
+#: src/DrawArea.vala:2407
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "% 0.3g%% completo"
 
-#: src/DrawArea.vala:2419
+#: src/DrawArea.vala:2421
 msgid "Drag to resize node"
 msgstr "Trascina per ridimensionare il nodo"
 
-#: src/DrawArea.vala:2421
+#: src/DrawArea.vala:2423
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -197,29 +200,29 @@ msgstr ""
 "Trascina per ridimensionare il nodo e l'immagine.\n"
 "Control-trascina per ridimensionare solo il nodo."
 
-#: src/DrawArea.vala:2533
+#: src/DrawArea.vala:2535
 #, c-format
 msgid "Children: %u\n"
 msgstr "Figli: %u\n"
 
-#: src/DrawArea.vala:2534
+#: src/DrawArea.vala:2536
 #, c-format
 msgid "Total: %d"
 msgstr "Totale: %d"
 
-#: src/DrawArea.vala:2580
+#: src/DrawArea.vala:2582
 msgid "connection endpoint change"
 msgstr "modifica dell'endpoint di connessione"
 
-#: src/DrawArea.vala:2587
+#: src/DrawArea.vala:2589
 msgid "connection drag"
 msgstr "trascina della connessione"
 
-#: src/DrawArea.vala:3233 src/DrawArea.vala:3247 src/DrawArea.vala:4986
+#: src/DrawArea.vala:3235 src/DrawArea.vala:3249 src/DrawArea.vala:4988
 msgid "Another Idea"
 msgstr "Un'altra idea"
 
-#: src/DrawArea.vala:4479 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4481 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Manuale"
@@ -1210,8 +1213,8 @@ msgid ""
 "If this character is the first non-whitespace character, adds an image from "
 "the URI to the previous node"
 msgstr ""
-"Se questo carattere è il primo carattere non spaziato, aggiunge un'immagine da "
-"l'URI al nodo precedente"
+"Se questo carattere è il primo carattere non spaziato, aggiunge un'immagine "
+"da l'URI al nodo precedente"
 
 #: src/QuickEntry.vala:84
 msgid "If this follows *, + or -, the node is made an uncompleted task."

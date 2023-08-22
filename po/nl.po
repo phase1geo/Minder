@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-20 23:26-0500\n"
+"POT-Creation-Date: 2023-08-22 17:52-0500\n"
 "PO-Revision-Date: 2020-04-20 14:26+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: \n"
@@ -192,44 +192,44 @@ msgstr "naamloos"
 msgid "Main Idea"
 msgstr "Hoofdidee"
 
-#: src/DrawArea.vala:2405
+#: src/DrawArea.vala:2407
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% afgerond"
 
-#: src/DrawArea.vala:2419
+#: src/DrawArea.vala:2421
 msgid "Drag to resize node"
 msgstr ""
 
-#: src/DrawArea.vala:2421
+#: src/DrawArea.vala:2423
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:2533
+#: src/DrawArea.vala:2535
 #, fuzzy, c-format
 msgid "Children: %u\n"
 msgstr "Subknopen inklappen"
 
-#: src/DrawArea.vala:2534
+#: src/DrawArea.vala:2536
 #, c-format
 msgid "Total: %d"
 msgstr ""
 
-#: src/DrawArea.vala:2580
+#: src/DrawArea.vala:2582
 msgid "connection endpoint change"
 msgstr "eindknoop van verbinding aanpassen"
 
-#: src/DrawArea.vala:2587
+#: src/DrawArea.vala:2589
 msgid "connection drag"
 msgstr "verbinding verslepen"
 
-#: src/DrawArea.vala:3233 src/DrawArea.vala:3247 src/DrawArea.vala:4986
+#: src/DrawArea.vala:3235 src/DrawArea.vala:3249 src/DrawArea.vala:4988
 msgid "Another Idea"
 msgstr "Nóg een idee"
 
-#: src/DrawArea.vala:4479 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4481 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Handmatig"
