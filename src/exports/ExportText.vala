@@ -182,7 +182,7 @@ public class ExportText : Export {
     node.name.text.append_text( "\n" + str );
   }
 
-  public bool parse_text( DrawArea da, string txt, int tab_spaces, Array<NodeHier> stack ) {
+  public bool parse_text( DrawArea da, string txt, int tab_spaces, Array<NodeHier?> stack ) {
 
     try {
 
@@ -303,7 +303,7 @@ public class ExportText : Export {
 
   }
 
-  public void display_node_hier( Array<NodeHier> stack ) {
+  public void display_node_hier( Array<NodeHier?> stack ) {
 
     stdout.printf( "Node Hierarchy (%u)\n", stack.length );
     stdout.printf( "--------------\n" );
@@ -315,7 +315,7 @@ public class ExportText : Export {
 
   }
 
-  public NodeHier? get_node_at_line( Array<NodeHier>? stack, int current_line ) {
+  public NodeHier? get_node_at_line( Array<NodeHier?>? stack, int current_line ) {
     
     if( stack != null ) {
       for( int i=0; i<stack.length; i++ ) {

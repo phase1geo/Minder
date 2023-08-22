@@ -5339,7 +5339,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
-      if( visited.find( node ).is_empty() && curr.overlaps( node.tree_bbox ) ) {
+      if( (visited.find( node ).length() == 0) && curr.overlaps( node.tree_bbox ) ) {
         var node_prev = new NodeBounds.copy( node.tree_bbox );
         if( node.is_left_of( prev ) )  node.posx += ldiff;
         if( node.is_right_of( prev ) ) node.posx += rdiff;
