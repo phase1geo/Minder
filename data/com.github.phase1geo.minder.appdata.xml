@@ -88,11 +88,12 @@
       <li xml:lang="fr">Prise en charge de l'impression.</li>
     </ul>
   </description>
+  <launchable type="desktop-id">com.github.phase1geo.minder.desktop</launchable>
   <provides>
     <binary>com.github.phase1geo.minder</binary>
   </provides>
   <screenshots>
-    <screenshot>
+    <screenshot type="default">
       <caption>Node/Connection Property Sidebar</caption>
       <caption xml:lang="pt">Barra Lateral das Propriedades de Nó/Conexão</caption>
       <caption xml:lang="fr">Barre latérale des propriétés des nœuds et connexions</caption>

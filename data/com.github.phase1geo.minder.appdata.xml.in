@@ -31,11 +31,12 @@
       <li>Printer support.</li>
     </ul>
   </description>
+  <launchable type="desktop-id">com.github.phase1geo.minder.desktop</launchable>
   <provides>
     <binary>com.github.phase1geo.minder</binary>
   </provides>
   <screenshots>
-    <screenshot>
+    <screenshot type="default">
       <caption>Node/Connection Property Sidebar</caption>
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-current-properties.png</image>
     </screenshot>
