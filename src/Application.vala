@@ -39,7 +39,7 @@ public class Minder : Granite.Application {
   private        HashMap<string,int> cl_options;
 
   public  static GLib.Settings settings;
-  public  static string        version = "1.15.4";
+  public  static string        version = "1.15.5";
 
   public Minder () {
 

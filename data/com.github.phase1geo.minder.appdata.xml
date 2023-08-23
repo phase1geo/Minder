@@ -159,6 +159,24 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.15.5" date="2023-08-22">
+      <description>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Added app script subcommands for building/running flatpaks.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Fixed issues with Flatpak</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.15.4" date="2023-08-22">
       <description>
         <p>Changes</p>
