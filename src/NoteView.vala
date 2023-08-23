@@ -143,8 +143,16 @@ public class NoteView : Gtk.SourceView {
   public NoteView() {
 
     var sourceview_path = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "gtksourceview-4" );
-    var lang_path       = GLib.Path.build_filename( sourceview_path, "language-specs" );
-    var style_path      = GLib.Path.build_filename( sourceview_path, "styles" );
+
+    foreach( var data_dir in Environment.get_system_data_dirs() ) {
+      sourceview_path = GLib.Path.build_filename( data_dir, "minder", "gtksourceview-4" );
+      if( FileUtils.test( sourceview_path, FileTest.EXISTS ) ) {
+        break;
+      }
+    }
+
+    var lang_path  = GLib.Path.build_filename( sourceview_path, "language-specs" );
+    var style_path = GLib.Path.build_filename( sourceview_path, "styles" );
 
     string[] lang_paths = {};
 

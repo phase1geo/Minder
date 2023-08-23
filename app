@@ -79,10 +79,17 @@ case $1 in
     initialize
     ./com.github.phase1geo.minder "${@:2}"
     ;;
+"run-flatpak")
+    flatpak run com.github.phase1geo.minder
+    ;;
 "debug")
     initialize
     G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.minder "${@:2}"
     # G_DEBUG=fatal-warnings gdb --args ./com.github.phase1geo.minder "${@:2}"
+    ;;
+"flatpak-debug")
+    echo "Run command at prompt: G_DEBUG=fatal-criticals gdb /app/bin/com.github.phase1geo.minder"
+    flatpak run --devel --command=sh com.github.phase1geo.minder
     ;;
 "test")
     test
@@ -96,7 +103,8 @@ case $1 in
     sudo ninja uninstall
     ;;
 "flatpak")
-    sudo flatpak-builder --install --force-clean ../build-minder com.github.phase1geo.minder.yml
+    flatpak-builder --user --install --force-clean ../build-minder com.github.phase1geo.minder.yml
+    flatpak install --user --reinstall --assumeyes "$(pwd)/.flatpak-builder/cache" com.github.phase1geo.minder.Debug
     ;;
 *)
     echo "Usage:"
