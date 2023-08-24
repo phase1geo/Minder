@@ -1509,7 +1509,7 @@ public class Node : Object {
    the changed list if the folded value changed.
   */
   public void set_fold( bool value, bool deep, Array<Node>? changed = null ) {
-    if( folded && !value && deep ) {
+    if( !value && deep ) {
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).clear_tree_folds( changed );
       }
@@ -2311,9 +2311,9 @@ public class Node : Object {
     if( note.length > 0 ) {
 
       double x, y, w, h;
-      RGBA   color = mode.is_selected()  ? sel_color :
-                     style.is_fillable() ? Granite.contrasting_foreground_color( link_color )  :
-                                           reg_color;
+      RGBA   color = mode.is_selected()                  ? sel_color :
+                     (!is_root() && style.is_fillable()) ? Granite.contrasting_foreground_color( link_color ) :
+                                                           reg_color;
 
       note_bbox( out x, out y, out w, out h );
 
@@ -2342,9 +2342,9 @@ public class Node : Object {
     if( linked_node != null ) {
 
       double x, y, w, h;
-      RGBA   color = mode.is_selected()  ? sel_color :
-                     style.is_fillable() ? Granite.contrasting_foreground_color( link_color )  :
-                                           reg_color;
+      RGBA   color = mode.is_selected()                  ? sel_color :
+                     (!is_root() && style.is_fillable()) ? Granite.contrasting_foreground_color( link_color ) :
+                                                           reg_color;
 
       linked_node_bbox( out x, out y, out w, out h );
 
