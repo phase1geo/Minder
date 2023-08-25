@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-22 23:28-0500\n"
+"POT-Creation-Date: 2023-08-25 17:04-0500\n"
 "PO-Revision-Date: 2020-04-20 14:26+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: \n"
@@ -320,7 +320,7 @@ msgstr "Exporteren als"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:300
 #: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1248
-#: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
+#: src/QuickEntry.vala:144 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Annuleren"
@@ -1202,66 +1202,66 @@ msgid ""
 "entry or notes field)."
 msgstr ""
 
-#: src/QuickEntry.vala:71
+#: src/QuickEntry.vala:80
 msgid "Help for inputting node information:"
 msgstr ""
 
-#: src/QuickEntry.vala:72
+#: src/QuickEntry.vala:81
 msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
 msgstr ""
 
-#: src/QuickEntry.vala:73
+#: src/QuickEntry.vala:82
 msgid "Tab"
 msgstr ""
 
-#: src/QuickEntry.vala:74
+#: src/QuickEntry.vala:83
 msgid "Creates a child node of the previous node."
 msgstr ""
 
-#: src/QuickEntry.vala:76
+#: src/QuickEntry.vala:85
 msgid ""
 "If this character is the first non-whitespace character, makes a new root "
 "node from the title that follows."
 msgstr ""
 
-#: src/QuickEntry.vala:78
+#: src/QuickEntry.vala:87
 msgid ""
 "If this character is the first non-whitespace character, make a new node "
 "from the title that follows."
 msgstr ""
 
-#: src/QuickEntry.vala:80
+#: src/QuickEntry.vala:89
 msgid ""
 "If this character is the first non-whitespace character, the following line "
 "is appended to the previous node's note."
 msgstr ""
 
-#: src/QuickEntry.vala:81
+#: src/QuickEntry.vala:90
 msgid "URI"
 msgstr ""
 
-#: src/QuickEntry.vala:82
+#: src/QuickEntry.vala:91
 msgid ""
 "If this character is the first non-whitespace character, adds an image from "
 "the URI to the previous node"
 msgstr ""
 
-#: src/QuickEntry.vala:84
+#: src/QuickEntry.vala:93
 msgid "If this follows *, + or -, the node is made an uncompleted task."
 msgstr ""
 
-#: src/QuickEntry.vala:86
+#: src/QuickEntry.vala:95
 msgid "If this follows *, + or -, the node is made a completed task."
 msgstr ""
 
-#: src/QuickEntry.vala:117
+#: src/QuickEntry.vala:126
 #, fuzzy
 msgid "Replace"
 msgstr "Knopen uitlijnen"
 
-#: src/QuickEntry.vala:126
+#: src/QuickEntry.vala:135
 #, fuzzy
 msgid "Insert"
 msgstr "knoop invoegen"

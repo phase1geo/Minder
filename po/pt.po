@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-22 23:28-0500\n"
+"POT-Creation-Date: 2023-08-25 17:04-0500\n"
 "PO-Revision-Date: 2020-08-30 14:45+0100\n"
 "Last-Translator: André Barata <andretiagob@protonmail.com>\n"
 "Language-Team: none\n"
@@ -314,7 +314,7 @@ msgstr "Exportar Como"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:300
 #: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1248
-#: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
+#: src/QuickEntry.vala:144 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Cancelar"
@@ -1179,11 +1179,11 @@ msgid ""
 "entry or notes field)."
 msgstr ""
 
-#: src/QuickEntry.vala:71
+#: src/QuickEntry.vala:80
 msgid "Help for inputting node information:"
 msgstr "Ajuda para inserir informação do nó:"
 
-#: src/QuickEntry.vala:72
+#: src/QuickEntry.vala:81
 msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
@@ -1191,15 +1191,15 @@ msgstr ""
 "Cada linha de texto descreve ou o título de um nó ou a a informação de uma "
 "nota para um nó."
 
-#: src/QuickEntry.vala:73
+#: src/QuickEntry.vala:82
 msgid "Tab"
 msgstr "Guia"
 
-#: src/QuickEntry.vala:74
+#: src/QuickEntry.vala:83
 msgid "Creates a child node of the previous node."
 msgstr "Cria um nó filho do nó anterior."
 
-#: src/QuickEntry.vala:76
+#: src/QuickEntry.vala:85
 msgid ""
 "If this character is the first non-whitespace character, makes a new root "
 "node from the title that follows."
@@ -1207,7 +1207,7 @@ msgstr ""
 "Se este caractere for o primeiro caractere sem espaço em branco, faz um novo "
 "nó de raiz do título que se segue."
 
-#: src/QuickEntry.vala:78
+#: src/QuickEntry.vala:87
 msgid ""
 "If this character is the first non-whitespace character, make a new node "
 "from the title that follows."
@@ -1215,7 +1215,7 @@ msgstr ""
 "Se este caractere for o primeiro caractere sem espaço em branco, faz um novo "
 "nó do título que se segue."
 
-#: src/QuickEntry.vala:80
+#: src/QuickEntry.vala:89
 msgid ""
 "If this character is the first non-whitespace character, the following line "
 "is appended to the previous node's note."
@@ -1223,12 +1223,12 @@ msgstr ""
 "Se este caractere for o primeiro caractere sem espaço em branco, a linha "
 "seguinte é acrescentada à nota anterior do nó."
 
-#: src/QuickEntry.vala:81
+#: src/QuickEntry.vala:90
 #, fuzzy
 msgid "URI"
 msgstr "URL"
 
-#: src/QuickEntry.vala:82
+#: src/QuickEntry.vala:91
 #, fuzzy
 msgid ""
 "If this character is the first non-whitespace character, adds an image from "
@@ -1237,19 +1237,19 @@ msgstr ""
 "Se este caractere for o primeiro caractere sem espaço em branco, a linha "
 "seguinte é acrescentada à nota anterior do nó."
 
-#: src/QuickEntry.vala:84
+#: src/QuickEntry.vala:93
 msgid "If this follows *, + or -, the node is made an uncompleted task."
 msgstr "Se isto segue *, + ou -, o nó torna-se como uma tarefa não completada."
 
-#: src/QuickEntry.vala:86
+#: src/QuickEntry.vala:95
 msgid "If this follows *, + or -, the node is made a completed task."
 msgstr "Se isto segue *, + ou -, o nó torna-se como uma tarefa completada."
 
-#: src/QuickEntry.vala:117
+#: src/QuickEntry.vala:126
 msgid "Replace"
 msgstr "Substituir"
 
-#: src/QuickEntry.vala:126
+#: src/QuickEntry.vala:135
 msgid "Insert"
 msgstr "Inserir"
 

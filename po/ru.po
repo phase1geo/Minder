@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-22 23:28-0500\n"
+"POT-Creation-Date: 2023-08-25 17:04-0500\n"
 "PO-Revision-Date: 2023-08-21 13:29+0200\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -313,7 +313,7 @@ msgstr "Экспортировать как %s"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:300
 #: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1248
-#: src/QuickEntry.vala:135 src/StickerSet.vala:71 src/ThemeEditor.vala:143
+#: src/QuickEntry.vala:144 src/StickerSet.vala:71 src/ThemeEditor.vala:143
 #: src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Отмена"
@@ -1157,25 +1157,25 @@ msgstr ""
 "Какой заказной кегль шрифта использовать в любых полях ввода, например, в "
 "поле примечаний и поле быстрого ввода"
 
-#: src/QuickEntry.vala:71
+#: src/QuickEntry.vala:80
 msgid "Help for inputting node information:"
 msgstr "Справка по вводу узлов:"
 
-#: src/QuickEntry.vala:72
+#: src/QuickEntry.vala:81
 msgid ""
 "Each line of text describes either the title of a node or note information "
 "for a node."
 msgstr "Каждая строка текста — лиюо заголовок узла, либо информация о нем."
 
-#: src/QuickEntry.vala:73
+#: src/QuickEntry.vala:82
 msgid "Tab"
 msgstr "Tab"
 
-#: src/QuickEntry.vala:74
+#: src/QuickEntry.vala:83
 msgid "Creates a child node of the previous node."
 msgstr "Создаёт узел-потомок предыдущего узла."
 
-#: src/QuickEntry.vala:76
+#: src/QuickEntry.vala:85
 msgid ""
 "If this character is the first non-whitespace character, makes a new root "
 "node from the title that follows."
@@ -1183,7 +1183,7 @@ msgstr ""
 "Если строка начинается с этого символа, создается новый корневой узел с "
 "заголовком из следуюшего далее текста."
 
-#: src/QuickEntry.vala:78
+#: src/QuickEntry.vala:87
 msgid ""
 "If this character is the first non-whitespace character, make a new node "
 "from the title that follows."
@@ -1191,7 +1191,7 @@ msgstr ""
 "Если строка начинается с этого символа, создается новый узел с заголовком из "
 "следуюшего далее текста."
 
-#: src/QuickEntry.vala:80
+#: src/QuickEntry.vala:89
 msgid ""
 "If this character is the first non-whitespace character, the following line "
 "is appended to the previous node's note."
@@ -1199,11 +1199,11 @@ msgstr ""
 "Если строка начинается с этого символа, текст далее вставляется в примечание "
 "к предыдущему узлу."
 
-#: src/QuickEntry.vala:81
+#: src/QuickEntry.vala:90
 msgid "URI"
 msgstr "URI"
 
-#: src/QuickEntry.vala:82
+#: src/QuickEntry.vala:91
 msgid ""
 "If this character is the first non-whitespace character, adds an image from "
 "the URI to the previous node"
@@ -1211,23 +1211,23 @@ msgstr ""
 "Если это первый символ, который не является пробелом, то вставляется "
 "изображение по ссылке из предыдущего узла"
 
-#: src/QuickEntry.vala:84
+#: src/QuickEntry.vala:93
 msgid "If this follows *, + or -, the node is made an uncompleted task."
 msgstr ""
 "После символов *, + и - эта последовательность создаёт узел с незавершённой "
 "задачей."
 
-#: src/QuickEntry.vala:86
+#: src/QuickEntry.vala:95
 msgid "If this follows *, + or -, the node is made a completed task."
 msgstr ""
 "После символов *, + и - эта последовательность создаёт узел с завершённой "
 "задачей."
 
-#: src/QuickEntry.vala:117
+#: src/QuickEntry.vala:126
 msgid "Replace"
 msgstr "Заменить"
 
-#: src/QuickEntry.vala:126
+#: src/QuickEntry.vala:135
 msgid "Insert"
 msgstr "Вставить"
 
