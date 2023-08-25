@@ -55,6 +55,20 @@ You will need the following dependencies to build Minder:
 To install, run `sudo ./app install` and then run the application from your application launcher or from
 the command-line with `./app run`.
 
+## Flatpak
+
+Minder is available as a Flatpak (recommended) via Flathub and elementary OS AppCenter.
+
+### Flathub
+
+You can install the Flathub flatpak from:
+
+https://flathub.org/apps/com.github.phase1geo.minder
+
+### elementary OS AppCenter
+
+Search for "Minder" in AppCenter and install from there.
+
 ## Distribution packages
 
 Arch Linux users can find Minder in the official `community` repo:
