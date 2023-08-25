@@ -54,12 +54,21 @@ public class QuickEntry : Gtk.Window {
 
     /* Create the text entry area */
     _entry = new TextView();
-    _entry.border_width = 5;
+    _entry.border_width  = 5;
+    _entry.bottom_margin = 0;
     _entry.set_wrap_mode( Gtk.WrapMode.WORD );
     _entry.get_style_context().add_class( "textfield" );
     _entry.key_press_event.connect( on_keypress );
     _entry.buffer.insert_text.connect( handle_text_insertion );
     _entry.buffer.create_tag( "node", "background_rgba", Utils.color_from_string( "grey90" ), null );
+
+    /* Handle any changes to the side of the entry */
+    _entry.size_allocate.connect((alloc) => {
+      var new_margin = ((alloc.height - 100) < 0) ? 0 : (alloc.height - 100);
+      if( _entry.bottom_margin != new_margin ) {
+        _entry.bottom_margin = new_margin;
+      }
+    });
 
     /* Create the scrolled window for the text entry area */
     var sw = new ScrolledWindow( null, null );
