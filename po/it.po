@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-25 17:04-0500\n"
-"PO-Revision-Date: 2023-05-07 14:30+0100\n"
+"PO-Revision-Date: 2023-08-26 06:30+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -97,9 +97,9 @@ msgid "Run '%s --help' to see valid options\n"
 msgstr "Esegui '%s --help' per vedere opzioni valide\n"
 
 #: src/Application.vala:253
-#, fuzzy, c-format
+#, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
-msgstr "ERRORE: impossibile caricare il file di input di Minder"
+msgstr "ERRORE: impossibile caricare il file di input di Minder %s"
 
 #: src/CanvasText.vala:269 src/FormattedText.vala:1092
 msgid "No text found"
