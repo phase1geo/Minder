@@ -25,10 +25,19 @@ public class NodeLink {
   private bool   _temp_file;   // Set to true if _fname has not been saved by the user
   private string _node_title;  // Last known title node of node to link to
   private int    _node_id;     // Node ID of node to link to
+  private string _note = "";   // Note associated with the node link (optional)
 
   public int node_id {
     get {
       return( _node_id );
+    }
+  }
+  public string note {
+    get {
+      return( _note );
+    }
+    set {
+      _note = value;
     }
   }
 
@@ -110,6 +119,7 @@ public class NodeLink {
     node->new_prop( "id",    _node_id.to_string() );
     node->new_prop( "fname", _fname );
     node->new_prop( "title", _node_title );
+    node->new_prop( "note",  _note );
     return( node );
   }
 
@@ -123,6 +133,11 @@ public class NodeLink {
 
     _fname      = node->get_prop( "fname" );
     _node_title = node->get_prop( "title" );
+
+    var n = node->get_prop( "note" );
+    if( n != null ) {
+      _note = n;
+    }
 
   }
 

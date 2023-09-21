@@ -1198,8 +1198,8 @@ public class DrawArea : Gtk.DrawingArea {
   private void end_link( Node node ) {
     if( _selected.num_connections() == 0 ) return;
     _selected.clear_connections();
-    _last_node.linked_node = new NodeLink( node );
-    undo_buffer.add_item( new UndoNodeLink( _last_node, null ) );
+    _last_node.add_node_link( new NodeLink( node ) );
+    undo_buffer.add_item( new UndoNodeLinkAdd( _last_node ) );
     _last_connection  = null;
     _last_node        = null;
     set_node_mode( _attach_node, NodeMode.NONE );
@@ -1212,7 +1212,7 @@ public class DrawArea : Gtk.DrawingArea {
   public bool any_selected_nodes_linked() {
     var nodes = _selected.nodes();
     for( int i=0; i<nodes.length; i++ ) {
-      if( nodes.index( i ).linked_node != null ) {
+      if( nodes.index( i ).num_node_links() > 0 ) {
         return( true );
       }
     }
@@ -1225,7 +1225,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( nodes.length < 2 ) return;
     undo_buffer.add_item( new UndoNodesLink( nodes ) );
     for( int i=0; i<(nodes.length - 1); i++ ) {
-      nodes.index( i ).linked_node = new NodeLink( nodes.index( i + 1 ) );
+      nodes.index( i ).add_node_link( new NodeLink( nodes.index( i + 1 ) ) );
     }
     auto_save();
     queue_draw();
@@ -1236,8 +1236,8 @@ public class DrawArea : Gtk.DrawingArea {
     var nodes = _selected.nodes();
     undo_buffer.add_item( new UndoNodesLink( nodes ) );
     for( int i=0; i<nodes.length; i++ ) {
-      if( nodes.index( i ).linked_node != null ) {
-        nodes.index( i ).linked_node = null;
+      for( int j=0; j<nodes.index( i ).num_node_links(); j++ ) {
+        nodes.index( i ).remove_node_link( j );
       }
     }
     auto_save();
@@ -2414,7 +2414,7 @@ public class DrawArea : Gtk.DrawingArea {
             }
           } else if( match.is_within_linked_node( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.HAND2 );
-            set_tooltip_markup( Utils.prepare_note_markup( match.linked_node.to_string( this ) ) );
+            set_tooltip_markup( Utils.prepare_note_markup( match.get_node_link( 0 ).to_string( this ) ) );  // TBD - We need to figure out the index to pass to get_node_link
           } else if( match.is_within_resizer( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.SB_H_DOUBLE_ARROW );
             if( match.image == null ) {
@@ -2937,8 +2937,8 @@ public class DrawArea : Gtk.DrawingArea {
     if( n == null ) {
       n = _selected.current_node();
     }
-    if( (n != null) && (n.linked_node != null) ) {
-      n.linked_node.select( this );
+    if( (n != null) && (n.num_node_links() > 0) ) {
+      n.get_node_link( 0 ).select( this );  /* TBD - the index passed to get_node_link should be specified somehow */
     }
   }
 
@@ -4810,11 +4810,10 @@ public class DrawArea : Gtk.DrawingArea {
   public void paste_node_link( string text ) {
     if( is_node_selected() ) {
       var current  = _selected.current_node();
-      var old_link = current.linked_node;
       var new_link = deserialize_for_node_link( text );
       if( new_link != null ) {
-        current.linked_node = new_link;
-        undo_buffer.add_item( new UndoNodeLink( current, old_link ) );
+        current.add_node_link( new_link );
+        undo_buffer.add_item( new UndoNodeLinkAdd( current ) );
         auto_save();
         queue_draw();
       }

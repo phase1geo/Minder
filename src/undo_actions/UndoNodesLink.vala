@@ -23,25 +23,48 @@ using Gtk;
 
 public class UndoNodesLink : UndoItem {
 
-  Array<Node>      _nodes;
-  Array<NodeLink?> _linked;
+  public class NodeLinks {
+    private Node            _node;
+    private Array<NodeLink> _links;
+    public Node node {
+      get {
+        return( _node );
+      }
+    }
+    public NodeLinks( Node node ) {
+      _node  = node;
+      _links = new Array<NodeLink>();
+      for( int i=0; i<node.num_node_links(); i++ ) {
+        _links.append_val( node.get_node_link( i ) );
+      }
+    }
+    public void set_links() {
+      for( int i=0; i<node.num_node_links(); i++ ) {
+        node.remove_node_link( i );
+      }
+      for( int i=0; i<_links.length; i++ ) {
+        node.add_node_link( _links.index( i ) );
+      }
+    }
+  }
+
+  Array<NodeLinks> _node_links;
 
   /* Constructor for a node link change */
   public UndoNodesLink( Array<Node> nodes ) {
     base( _( "node link changes" ) );
-    _nodes  = new Array<Node>();
-    _linked = new Array<NodeLink?>();
+    _node_links = new Array<NodeLinks>();
     for( int i=0; i<nodes.length; i++ ) {
-      _nodes.append_val( nodes.index( i ) );
-      _linked.append_val( nodes.index( i ).linked_node );
+      _node_links.append_val( new NodeLinks( nodes.index( i ) ) );
     }
   }
 
   private void toggle( DrawArea da ) {
-    for( int i=0; i<_nodes.length; i++ ) {
-      var tmp = _nodes.index( i ).linked_node;
-      _nodes.index( i ).linked_node = _linked.index( i );
-      _linked.data[i] = tmp;
+    for( int i=0; i<_node_links.length; i++ ) {
+      var node_links = _node_links.index( i );
+      var tmp        = new NodeLinks( node_links.node );
+      node_links.set_links();
+      _node_links.data[i] = tmp;
     }
     da.queue_draw();
     da.auto_save();

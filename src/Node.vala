@@ -187,34 +187,34 @@ public struct NodeTaskInfo {
 public class Node : Object {
 
   /* Member variables */
-  private   DrawArea     _da;
-  protected int          _id;
-  private   CanvasText   _name;
-  private   string       _note         = "";
-  protected double       _width        = 0;
-  protected double       _height       = 0;
-  protected double       _ipadx        = 6;
-  protected double       _ipady        = 3;
-  protected double       _task_radius  = 7;
-  protected double       _alpha        = 1.0;
-  protected Array<Node>  _children;
-  private   NodeMode     _mode         = NodeMode.NONE;
-  private   NodeBounds   _tree_bbox;
-  private   int          _task_count   = 0;
-  private   int          _task_done    = 0;
-  private   double       _posx         = 0;
-  private   double       _posy         = 0;
-  private   RGBA?        _link_color      = {1.0, 1.0, 1.0, 1.0};
-  private   bool         _link_color_set  = false;
-  private   bool         _link_color_root = false;
-  private   double       _min_width      = 50;
-  private   NodeImage?   _image          = null;
-  private   Layout?      _layout         = null;
-  private   Style        _style          = new Style();
-  private   bool         _loaded         = true;
-  private   NodeLink?    _linked_node    = null;
-  private   string?      _sticker        = null;
-  private   Pixbuf?      _sticker_buf    = null;
+  private   DrawArea        _da;
+  protected int             _id;
+  private   CanvasText      _name;
+  private   string          _note            = "";
+  protected double          _width           = 0;
+  protected double          _height          = 0;
+  protected double          _ipadx           = 6;
+  protected double          _ipady           = 3;
+  protected double          _task_radius     = 7;
+  protected double          _alpha           = 1.0;
+  protected Array<Node>     _children;
+  private   NodeMode        _mode            = NodeMode.NONE;
+  private   NodeBounds      _tree_bbox;
+  private   int             _task_count      = 0;
+  private   int             _task_done       = 0;
+  private   double          _posx            = 0;
+  private   double          _posy            = 0;
+  private   RGBA?           _link_color      = {1.0, 1.0, 1.0, 1.0};
+  private   bool            _link_color_set  = false;
+  private   bool            _link_color_root = false;
+  private   double          _min_width       = 50;
+  private   NodeImage?      _image           = null;
+  private   Layout?         _layout          = null;
+  private   Style           _style           = new Style();
+  private   bool            _loaded          = true;
+  private   Array<NodeLink> _linked_nodes    = new Array<NodeLink>();
+  private   string?         _sticker         = null;
+  private   Pixbuf?         _sticker_buf     = null;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -422,18 +422,6 @@ public class Node : Object {
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).alpha = value;
       }
-    }
-  }
-  public NodeLink? linked_node {
-    get {
-      return( _linked_node );
-    }
-    set {
-      _linked_node = value;
-      if( _linked_node != null ) {
-        _linked_node.normalize( _da );
-      }
-      update_size();
     }
   }
   public NodeBounds tree_bbox {
@@ -687,6 +675,29 @@ public class Node : Object {
     }
   }
 
+  /* Returns the number of node links */
+  public int num_node_links() {
+    return( (int)_linked_nodes.length );
+  }
+
+  /* Returns the node link at the given index */
+  public NodeLink get_node_link( int index ) {
+    return( _linked_nodes.index( index ) );
+  }
+
+  /* Appends the node link to the list of links */
+  public void add_node_link( NodeLink linked_node ) {
+    linked_node.normalize( _da );
+    _linked_nodes.append_val( linked_node );
+    update_size();
+  }
+
+  /* Removes the node at the given index */
+  public void remove_node_link( int index ) {
+    _linked_nodes.remove_index( index );
+    update_size();
+  }
+
   /* Sets the node image to the given value, updating the image manager accordingly. */
   public void set_image( ImageManager im, NodeImage? ni ) {
     if( _image != null ) {
@@ -914,7 +925,7 @@ public class Node : Object {
    Returns true if the given cursor coordinates lies within the linked node indicator area.
   */
   public virtual bool is_within_linked_node( double x, double y ) {
-    if( linked_node != null ) {
+    if( _linked_nodes.length > 0 ) {
       double lx, ly, lw, lh;
       linked_node_bbox( out lx, out ly, out lw, out lh );
       return( Utils.is_within_bounds( x, y, lx, ly, lw, lh ) );
@@ -1106,7 +1117,16 @@ public class Node : Object {
 
   /* Loads the node link from the given XML node */
   private void load_node_link( Xml.Node* n ) {
-    _linked_node = new NodeLink.from_xml( n );
+    _linked_nodes.append_val( new NodeLink.from_xml( n ) );
+  }
+
+  /* Loads the node links from the given XML node */
+  private void load_node_links( Xml.Node* n ) {
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "nodelink") ) {
+        load_node_link( it );
+      }
+    }
   }
 
   /* Loads the style information from the given XML node */
@@ -1194,7 +1214,7 @@ public class Node : Object {
 
     string? ln = n->get_prop( "link" );
     if( ln != null ) {
-      _linked_node = new NodeLink.for_local( int.parse( ln ) );
+      _linked_nodes.append_val( new NodeLink.for_local( int.parse( ln ) ) );
     }
 
     string? s = n->get_prop( "side" );
@@ -1252,6 +1272,7 @@ public class Node : Object {
           case "nodenote"   :  load_note( it );  break;
           case "nodeimage"  :  load_image( da.image_manager, it );  break;
           case "nodelink"   :  load_node_link( it );  break;
+          case "nodelinks"  :  load_node_links( it );  break;
           case "style"      :  load_style( it );  break;
           case "nodes"      :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
@@ -1343,8 +1364,12 @@ public class Node : Object {
     node->add_child( name.save( "nodename" ) );
     node->new_text_child( null, "nodenote", note );
 
-    if( _linked_node != null ) {
-      node->add_child( _linked_node.save() );
+    if( _linked_nodes.length > 0 ) {
+      Xml.Node* links = new Xml.Node( null, "nodelinks" );
+      for( int i=0; i<_linked_nodes.length; i++ ) {
+        links->add_child( _linked_nodes.index( i ).save() );
+      }
+      node->add_child( links );
     }
 
     if( _children.length > 0 ) {
@@ -1618,7 +1643,7 @@ public class Node : Object {
 
   /* Returns the width of the linked node indicator */
   public double linked_node_width() {
-    return( (linked_node != null) ? (10 + _ipadx) : 0 );
+    return( (_linked_nodes.length > 0) ? (10 + _ipadx) : 0 );
   }
 
   /* Moves this node into the proper position within the parent node */
@@ -2339,7 +2364,7 @@ public class Node : Object {
 
   protected virtual void draw_link_node( Context ctx, RGBA reg_color, RGBA sel_color, RGBA bg_color ) {
 
-    if( linked_node != null ) {
+    if( _linked_nodes.length > 0 ) {
 
       double x, y, w, h;
       RGBA   color = mode.is_selected()                  ? sel_color :
@@ -2362,7 +2387,7 @@ public class Node : Object {
       ctx.line_to( (x + 5), (y + 6) );
       ctx.line_to( x, (y + 6) );
       ctx.close_path();
-      if( linked_node.is_local() ) {
+      if( (_linked_nodes.length > 1) || _linked_nodes.index( 0 ).is_local() ) {
         ctx.fill();
       } else {
         ctx.stroke();

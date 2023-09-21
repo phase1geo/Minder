@@ -335,7 +335,7 @@ public class NodeMenu : Gtk.Menu {
   /* Returns true if an node link is associated with the currently selected node */
   private bool node_has_link() {
     Node? current = _da.get_current_node();
-    return( (current != null) && (current.linked_node != null) );
+    return( (current != null) && (current.num_node_links() > 0) );
   }
 
   /* Returns true if there is a currently selected node that is foldable */
