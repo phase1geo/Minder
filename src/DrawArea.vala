@@ -107,6 +107,7 @@ public class DrawArea : Gtk.DrawingArea {
   private NodeGroups       _groups;
   private uint             _select_hover_id = 0;
   private int              _next_node_id    = -1;
+  private NodeLinks        _node_links;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -228,6 +229,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Allocate the URL editor popover */
     _url_editor = new UrlEditor( this );
+
+    /* Allocate the note node links manager */
+    _node_links = new NodeLinks();
 
     /* Initialize the selection box */
     _select_box = {0, 0, 0, 0, false};
@@ -552,6 +556,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "connections" :  _connections.load( this, it, null, _nodes );  break;
           case "groups"      :  groups.load( this, it );  break;
           case "stickers"    :  _stickers.load( this, it );  break;
+          case "nodelinks"   :  _node_links.load( it );  break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
@@ -606,6 +611,8 @@ public class DrawArea : Gtk.DrawingArea {
 
     _connections.save( parent );
     parent->add_child( _stickers.save() );
+
+    parent->add_child( _node_links.save() );
 
     return( true );
 
@@ -1112,6 +1119,22 @@ public class DrawArea : Gtk.DrawingArea {
       nodes.index( 0 ).note = note;
       queue_draw();
       auto_save();
+    }
+  }
+
+  /*
+   If there is a currently selected node (and there should be), adds the given node
+   link to the current node's list and returns the unique ID associated with the node link.
+  */
+  public int add_note_node_link( NodeLink link ) {
+    return( _node_links.add_link( link ) );
+  }
+
+  /* Handles a user click on a node link with the given ID */
+  public void note_node_link_clicked( int id ) {
+    var link = _node_links.get_node_link( id );
+    if( link != null ) {
+      link.select( this );
     }
   }
 
@@ -4539,7 +4562,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Deserialize the node tree, returning the first node as a node link */
-  public NodeLink? deserialize_for_node_link( string str ) {
+  public static NodeLink? deserialize_for_node_link( string str ) {
     Xml.Doc* doc = Xml.Parser.parse_doc( str );
     if( doc == null ) return( null );
     for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {

@@ -64,6 +64,11 @@ public class NodeLink {
     return( (fname == _fname) ? (_node_id != node_id) : !_temp_file );
   }
 
+  /* Returns true if the specified node link matches ourselves */
+  public bool matches( NodeLink other ) {
+    return( (_fname == other._fname) && (_node_id == other._node_id) );
+  }
+
   /* This should be called whenever a NodeLink is assigned to a node */
   public void normalize( DrawArea da ) {
     if( _fname == da.get_doc().filename ) {

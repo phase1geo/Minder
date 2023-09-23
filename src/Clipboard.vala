@@ -231,4 +231,43 @@ public class MinderClipboard {
 
   }
 
+  /* Pastes a node link or text into the given NoteView widget */
+  public static void paste_into_note( NoteView note ) {
+
+    var clipboard = Clipboard.get_default( Gdk.Display.get_default() );
+
+    Atom[] targets;
+    clipboard.wait_for_targets( out targets );
+
+    Atom? nodes_atom = null;
+    Atom? text_atom  = null;
+
+    /* Get the list of targets that we will support */
+    foreach( var target in targets ) {
+      switch( target.name() ) {
+        case NODES_TARGET_NAME :  nodes_atom = nodes_atom ?? target;  break;
+        case "UTF8_STRING"     :
+        case "STRING"          :
+        case "text/plain"      :  text_atom  = text_atom  ?? target;  break;
+      }
+    }
+
+    if( nodes_atom != null ) {
+      clipboard.request_contents( nodes_atom, (c, raw_data) => {
+        var data = (string)raw_data.get_data();
+        if( data == null ) return;
+        var link = DrawArea.deserialize_for_node_link( data );
+        note.paste_node_link( link );
+      });
+
+    } else if( text_atom != null ) {
+      clipboard.request_contents( text_atom, (c, raw_data) => {
+        var data = (string)raw_data.get_data();
+        if( data == null ) return;
+        note.paste_text( data );
+      });
+    }
+
+  }
+
 }

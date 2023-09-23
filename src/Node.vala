@@ -213,6 +213,8 @@ public class Node : Object {
   private   Style        _style          = new Style();
   private   bool         _loaded         = true;
   private   NodeLink?    _linked_node    = null;
+  private   HashMap<int,NodeLink> _note_nodes;
+  private   int                   _note_node_id = 0;
   private   string?      _sticker        = null;
   private   Pixbuf?      _sticker_buf    = null;
 

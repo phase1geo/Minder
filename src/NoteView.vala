@@ -19,6 +19,7 @@
 
 using Gtk;
 using Gdk;
+using Gee;
 
 public class CompletionProvider : SourceCompletionProvider, Object {
 
@@ -110,15 +111,29 @@ public class NoteView : Gtk.SourceView {
     }
   }
 
-  private static bool   _path_init = false;
-  private int           _last_lnum = -1;
-  private string?       _last_url  = null;
-  private Array<UrlPos> _last_urls;
-  private int           _last_x;
-  private int           _last_y;
-  private Regex?        _url_re;
-  public  SourceStyle   _srcstyle  = null;
-  public  SourceBuffer  _buffer;
+  private class LinkPos {
+    public int id;
+    public int start;
+    public int end;
+    public LinkPos( int i, int s, int e ) {
+      id    = i;
+      start = s;
+      end   = e;
+    }
+  }
+
+  private static bool    _path_init = false;
+  private int            _last_lnum = -1;
+  private string?        _last_url  = null;
+  private int?           _last_link = null;
+  private Array<UrlPos>  _last_urls;
+  private Array<LinkPos> _last_links;
+  private int            _last_x;
+  private int            _last_y;
+  private Regex?         _url_re;
+  private Regex?         _link_re;
+  public  SourceStyle    _srcstyle  = null;
+  public  SourceBuffer   _buffer;
 
   public string text {
     set {
@@ -138,6 +153,9 @@ public class NoteView : Gtk.SourceView {
       return( buffer.get_modified() );
     }
   }
+
+  public signal int node_link_added( NodeLink link );
+  public signal void node_link_clicked( int id );
 
   /* Default constructor */
   public NoteView() {
@@ -200,12 +218,15 @@ public class NoteView : Gtk.SourceView {
     set_insert_spaces_instead_of_tabs( true );
 
     try {
-      _url_re = new Regex( Utils.url_re() );
+      _url_re  = new Regex( Utils.url_re() );
+      _link_re = new Regex( "@Node-(\\d+)" );
     } catch( RegexError e ) {
-      _url_re = null;
+      _url_re  = null;
+      _link_re = null;
     }
 
-    _last_urls = new Array<UrlPos>();
+    _last_urls  = new Array<UrlPos>();
+    _last_links = new Array<LinkPos>();
 
   }
 
@@ -224,6 +245,7 @@ public class NoteView : Gtk.SourceView {
   private void clear() {
     _last_lnum = -1;
     _last_url  = null;
+    _last_link = null;
   }
 
   /* Returns the string of text for the current line */
@@ -254,6 +276,26 @@ public class NoteView : Gtk.SourceView {
     } catch( RegexError e ) {}
   }
 
+  /*
+   Parses all of the URLs in the given line and stores their positions within
+   the _last_match_pos private member array.
+  */
+  private void parse_line_for_node_links( string line ) {
+    if( _link_re == null ) return;
+    MatchInfo match_info;
+    var       start = 0;
+    _last_links.remove_range( 0, _last_links.length );
+    try {
+      while( _link_re.match_full( line, -1, start, 0, out match_info ) ) {
+        int s, e;
+        match_info.fetch_pos( 0, out s, out e );
+        var id = match_info.fetch( 1 );
+        _last_links.append_val( new LinkPos( int.parse( id ), s, e ) );
+        start = e;
+      }
+    } catch( RegexError e ) {}
+  }
+
   /* Returns true if the specified cursor is within a parsed URL pattern */
   private bool cursor_in_url( TextIter cursor ) {
     var offset = cursor.get_line_offset();
@@ -268,16 +310,32 @@ public class NoteView : Gtk.SourceView {
     return( false );
   }
 
+  /* Returns true if the specified cursor is within a parsed URL pattern */
+  private bool cursor_in_node_link( TextIter cursor ) {
+    var offset = cursor.get_line_offset();
+    for( int i=0; i<_last_links.length; i++ ) {
+      var link = _last_links.index( i );
+      if( (link.start <= offset) && (offset < link.end) ) {
+        _last_link = link.id;
+        return( true );
+      }
+    }
+    _last_link = null;
+    return( false );
+  }
+
   /* Called when URL checking should be performed on the current line (if necessary) */
   private void enable_url_checking( int x, int y ) {
     TextIter cursor;
     var      win = get_window( TextWindowType.TEXT );
     get_iter_at_location( out cursor, x, y );
     if( _last_lnum != cursor.get_line() ) {
-      parse_line_for_urls( current_line( cursor ) );
+      var line = current_line( cursor );
+      parse_line_for_urls( line );
+      parse_line_for_node_links( line );
       _last_lnum = cursor.get_line();
     }
-    if( cursor_in_url( cursor ) ) {
+    if( cursor_in_url( cursor ) || cursor_in_node_link( cursor ) ) {
       win.set_cursor( new Cursor.for_display( get_display(), CursorType.HAND2 ) );
     } else {
       win.set_cursor( null );
@@ -325,6 +383,8 @@ public class NoteView : Gtk.SourceView {
       enable_url_checking( int_x, int_y );
       if( _last_url != null ) {
         Utils.open_url( _last_url );
+      } else if( _last_link != null ) {
+        node_link_clicked( _last_link );
       }
       return( true );
     }
@@ -349,6 +409,23 @@ public class NoteView : Gtk.SourceView {
   private bool on_focus( EventFocus e ) {
     clear();
     return( false );
+  }
+
+  /* Override the built-int paste operation */
+  public override void paste_clipboard() {
+    MinderClipboard.paste_into_note( this );
+  }
+
+  /* Inserts the given string into the text buffer at the current insertion point */
+  public void paste_text( string str ) {
+    buffer.insert_at_cursor( str, str.length );
+  }
+
+  /* Inserts the given node link at the current insertion point */
+  public void paste_node_link( NodeLink link ) {
+    var id  = node_link_added( link );
+    var str = "@Node-%d".printf( id );
+    buffer.insert_at_cursor( str, str.length );
   }
 
 }
