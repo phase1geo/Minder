@@ -166,6 +166,11 @@ public class DrawArea : Gtk.DrawingArea {
       return( _groups );
     }
   }
+  public NodeLinks node_links {
+    get {
+      return( _node_links );
+    }
+  }
   public int next_node_id {
     set {
       if( !is_loaded && (_next_node_id < value) ) {

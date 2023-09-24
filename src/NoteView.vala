@@ -132,6 +132,7 @@ public class NoteView : Gtk.SourceView {
   private int            _last_y;
   private Regex?         _url_re;
   private Regex?         _link_re;
+  private Tooltip        _tooltip;
   public  SourceStyle    _srcstyle  = null;
   public  SourceBuffer   _buffer;
 
@@ -156,6 +157,7 @@ public class NoteView : Gtk.SourceView {
 
   public signal int node_link_added( NodeLink link );
   public signal void node_link_clicked( int id );
+  public signal void node_link_hover( int id );
 
   /* Default constructor */
   public NoteView() {
@@ -335,7 +337,13 @@ public class NoteView : Gtk.SourceView {
       parse_line_for_node_links( line );
       _last_lnum = cursor.get_line();
     }
-    if( cursor_in_url( cursor ) || cursor_in_node_link( cursor ) ) {
+    var in_node_link = cursor_in_node_link( cursor );
+    if( in_node_link ) {
+      node_link_hover( _last_link );
+    } else {
+      tooltip_text = "";
+    }
+    if( cursor_in_url( cursor ) || in_node_link ) {
       win.set_cursor( new Cursor.for_display( get_display(), CursorType.HAND2 ) );
     } else {
       win.set_cursor( null );
@@ -347,6 +355,7 @@ public class NoteView : Gtk.SourceView {
     var win = get_window( TextWindowType.TEXT );
     win.set_cursor( null );
     _last_lnum = -1;
+    tooltip_text = "";
   }
 
   /* Adds the unicoder text completion service */
@@ -426,6 +435,11 @@ public class NoteView : Gtk.SourceView {
     var id  = node_link_added( link );
     var str = "@Node-%d".printf( id );
     buffer.insert_at_cursor( str, str.length );
+  }
+
+  /* Displays the tooltip at the current cursor location */
+  public void show_tooltip( string tooltip ) {
+    tooltip_text = tooltip;
   }
 
 }

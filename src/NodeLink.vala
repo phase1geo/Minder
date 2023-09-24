@@ -101,7 +101,7 @@ public class NodeLink {
   public string to_string( DrawArea da ) {
     if( _fname == "" ) {
       var linked_node = da.get_node( da.get_nodes(), _node_id );
-      return( da.get_node( da.get_nodes(), _node_id ).name.text.text );
+      return( linked_node.name.text.text );
     } else {
       string title = _( "No node found" );
       Document.xml_find( _fname, _node_id, ref title );
