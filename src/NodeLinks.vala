@@ -55,8 +55,7 @@ public class NodeLinks {
    Populates the internal node links from the given node's note.  The doc_links
    parameter should come from the NodeLinks structure stored in the DrawArea.
   */
-  public void get_links_from_node( Node node, NodeLinks doc_links ) {
-    var note = node.note;
+  private void get_links_from_note( string note, NodeLinks doc_links ) {
     if( _link_re == null ) return;
     MatchInfo match_info;
     var       start = 0;
@@ -74,13 +73,23 @@ public class NodeLinks {
     } catch( RegexError e ) {}
   }
 
+  /* Gets the links from the given node's note */
+  public void get_links_from_node( Node node, NodeLinks doc_links ) {
+    get_links_from_note( node.note, doc_links );
+  }
+
+  /* Gets the links from the given connections's note */
+  public void get_links_from_connection( Connection conn, NodeLinks doc_links ) {
+    get_links_from_note( conn.note, doc_links );
+  }
+
   /*
    Finds the node links in the given node and stores the node links in the document links,
    gets the new index and updates the IDs with the new IDs.
   */
-  public void set_links_in_node( Node node, NodeLinks doc_links ) {
-    var note = node.note;
-    if( _link_re == null ) return;
+  public string? set_links_in_note( string orig_note, NodeLinks doc_links ) {
+    var note = orig_note;
+    if( _link_re == null ) return( null );
     MatchInfo match_info;
     var       start = 0;
     try {
@@ -95,8 +104,26 @@ public class NodeLinks {
         }
         start = e;
       }
+      return( note );
+    } catch( RegexError e ) {
+      return( null );
+    }
+  }
+
+  /* Extracts and updates the note text for a node with its node link information */
+  public void set_links_in_node( Node node, NodeLinks doc_links ) {
+    var note = set_links_in_note( node.note, doc_links );
+    if( note != null ) {
       node.note = note;
-    } catch( RegexError e ) {}
+    }
+  }
+
+  /* Extracts and updates the note text for a connection with its node link information */
+  public void set_links_in_connection( Connection conn, NodeLinks doc_links ) {
+    var note = set_links_in_note( conn.note, doc_links );
+    if( note != null ) {
+      conn.note = note;
+    }
   }
 
   /* Saves the node link information to the document */

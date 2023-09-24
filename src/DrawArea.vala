@@ -4528,7 +4528,7 @@ public class DrawArea : Gtk.DrawingArea {
     root->add_child( ns );
     Xml.Node* cs = new Xml.Node( null, "connections" );
     for( int i=0; i<nodes.length; i++ ) {
-      conns.save_if_in_node( cs, nodes.index( i ) );
+      conns.save_if_in_node( cs, nodes.index( i ), nodelinks, _node_links );
     }
     root->add_child( cs );
     if( nodes.length > 0 ) {
@@ -4567,6 +4567,7 @@ public class DrawArea : Gtk.DrawingArea {
             nodelinks.load( it );
             for( int i=0; i<nodes.length; i++ ) {
               nodelinks.set_links_in_node( nodes.index( i ), _node_links );
+              _connections.set_links_in_notes( nodes.index( i ), nodelinks, _node_links );
             }
             break;
         }
