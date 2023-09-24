@@ -4,10 +4,16 @@ public class NodeLinks {
 
   private HashMap<int,NodeLink> _links;
   private int                   _id = 0;
+  private Regex?                _link_re;
 
   /* Constructor */
   public NodeLinks() {
     _links = new HashMap<int,NodeLink>();
+    try {
+      _link_re = new Regex( "@Node-(\\d+)" );
+    } catch( RegexError e ) {
+      _link_re = null;
+    }
   }
 
   /* Adds the given node link to our node list */
@@ -38,6 +44,59 @@ public class NodeLinks {
       return( _links.get( id ) );
     }
     return( null );
+  }
+
+  /* Returns the number of links stored */
+  public int num_links() {
+    return( _links.size );
+  }
+
+  /*
+   Populates the internal node links from the given node's note.  The doc_links
+   parameter should come from the NodeLinks structure stored in the DrawArea.
+  */
+  public void get_links_from_node( Node node, NodeLinks doc_links ) {
+    var note = node.note;
+    if( _link_re == null ) return;
+    MatchInfo match_info;
+    var       start = 0;
+    try {
+      while( _link_re.match_full( note, -1, start, 0, out match_info ) ) {
+        int s, e;
+        match_info.fetch_pos( 1, out s, out e );
+        var id   = int.parse( note.slice( s, e ) );
+        var link = doc_links.get_node_link( id );
+        if( link != null ) {
+          _links.set( id, link );
+        }
+        start = e;
+      }
+    } catch( RegexError e ) {}
+  }
+
+  /*
+   Finds the node links in the given node and stores the node links in the document links,
+   gets the new index and updates the IDs with the new IDs.
+  */
+  public void set_links_in_node( Node node, NodeLinks doc_links ) {
+    var note = node.note;
+    if( _link_re == null ) return;
+    MatchInfo match_info;
+    var       start = 0;
+    try {
+      while( _link_re.match_full( note, -1, start, 0, out match_info ) ) {
+        int s, e;
+        match_info.fetch_pos( 1, out s, out e );
+        var id   = int.parse( note.slice( s, e ) );
+        var link = get_node_link( id );
+        if( link != null ) {
+          id = doc_links.add_link( link );
+          note = note.splice( s, e, id.to_string() );
+        }
+        start = e;
+      }
+      node.note = note;
+    } catch( RegexError e ) {}
   }
 
   /* Saves the node link information to the document */

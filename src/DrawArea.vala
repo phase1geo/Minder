@@ -4511,12 +4511,14 @@ public class DrawArea : Gtk.DrawingArea {
   /* Serializes the current node tree */
   public string serialize_for_copy( Array<Node> nodes, Connections conns ) {
     string    str;
+    var       nodelinks = new NodeLinks();
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
     Xml.Node* root = new Xml.Node( null, "minder" );
     doc->set_root_element( root );
     Xml.Node* ns = new Xml.Node( null, "nodes" );
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).save( ns );
+      nodelinks.get_links_from_node( nodes.index( i ), _node_links );
     }
     root->add_child( ns );
     Xml.Node* cs = new Xml.Node( null, "connections" );
@@ -4527,6 +4529,9 @@ public class DrawArea : Gtk.DrawingArea {
     if( nodes.length > 0 ) {
       var link = new NodeLink( nodes.index( 0 ) );
       root->add_child( link.save() );
+    }
+    if( nodelinks.num_links() > 0 ) {
+      root->add_child( nodelinks.save() );
     }
     doc->dump_memory_format( out str );
     delete doc;
@@ -4550,6 +4555,13 @@ public class DrawArea : Gtk.DrawingArea {
                 var node = new Node.from_xml( this, null, it2, true );
                 nodes.append_val( node );
               }
+            }
+            break;
+          case "nodelinks" :
+            var nodelinks = new NodeLinks();
+            nodelinks.load( it );
+            for( int i=0; i<nodes.length; i++ ) {
+              nodelinks.set_links_in_node( nodes.index( i ), _node_links );
             }
             break;
         }
