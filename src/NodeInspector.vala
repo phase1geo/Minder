@@ -228,6 +228,9 @@ public class NodeInspector : Box {
     _note.buffer.changed.connect( note_changed );
     _note.focus_in_event.connect( note_focus_in );
     _note.focus_out_event.connect( note_focus_out );
+    _note.node_link_added.connect( note_node_link_added );
+    _note.node_link_clicked.connect( note_node_link_clicked );
+    _note.node_link_hover.connect( note_node_link_hover );
 
     _sw = new ScrolledWindow( null, null );
     _sw.min_content_width  = 300;
@@ -481,6 +484,24 @@ public class NodeInspector : Box {
       _da.undo_buffer.add_item( new UndoNodeNote( _node, _orig_note ) );
     }
     return( false );
+  }
+
+  /* When a node link is added, tell the current node */
+  private int note_node_link_added( NodeLink link ) {
+    return( _da.add_note_node_link( link ) );
+  }
+
+  /* Handles a click on the node link with the given ID */
+  private void note_node_link_clicked( int id ) {
+    _da.note_node_link_clicked( id );
+  }
+
+  /* Handles a hover over a node link */
+  private void note_node_link_hover( int id ) {
+    var link = _da.node_links.get_node_link( id );
+    if( link != null ) {
+      _note.show_tooltip( link.to_string( _da ) );
+    }
   }
 
   /* Copies the current node to the clipboard */

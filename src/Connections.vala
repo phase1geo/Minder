@@ -228,10 +228,20 @@ public class Connections {
   }
 
   /* Saves the connection information to the given XML node if the connection is fully within the given node tree */
-  public void save_if_in_node( Xml.Node* parent, Node node ) {
+  public void save_if_in_node( Xml.Node* parent, Node node, NodeLinks save_links, NodeLinks doc_links ) {
     for( int i=0; i<_connections.length; i++ ) {
       if( _connections.index( i ).from_node.is_descendant_of( node ) && _connections.index( i ).to_node.is_descendant_of( node ) ) {
         _connections.index( i ).save( parent );
+        save_links.get_links_from_connection( _connections.index( i ), doc_links );
+      }
+    }
+  }
+
+  /* Updates the connection notes of any that connect to the given node */
+  public void set_links_in_notes( Node node, NodeLinks links, NodeLinks doc_links ) {
+    for( int i=0; i<_connections.length; i++ ) {
+      if( _connections.index( i ).from_node.is_descendant_of( node ) && _connections.index( i ).to_node.is_descendant_of( node ) ) {
+        links.set_links_in_connection( _connections.index( i ), doc_links );
       }
     }
   }

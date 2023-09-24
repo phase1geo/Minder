@@ -64,6 +64,11 @@ public class NodeLink {
     return( (fname == _fname) ? (_node_id != node_id) : !_temp_file );
   }
 
+  /* Returns true if the specified node link matches ourselves */
+  public bool matches( NodeLink other ) {
+    return( (_fname == other._fname) && (_node_id == other._node_id) );
+  }
+
   /* This should be called whenever a NodeLink is assigned to a node */
   public void normalize( DrawArea da ) {
     if( _fname == da.get_doc().filename ) {
@@ -96,7 +101,7 @@ public class NodeLink {
   public string to_string( DrawArea da ) {
     if( _fname == "" ) {
       var linked_node = da.get_node( da.get_nodes(), _node_id );
-      return( da.get_node( da.get_nodes(), _node_id ).name.text.text );
+      return( linked_node.name.text.text );
     } else {
       string title = _( "No node found" );
       Document.xml_find( _fname, _node_id, ref title );
