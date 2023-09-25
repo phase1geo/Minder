@@ -162,10 +162,13 @@ public class StickerInspector : Box {
 
   /* Creates the image from the given name and adds it to the flow box */
   private void create_image( FlowBox box, string name, string tooltip ) {
-    var img = new Image.from_resource( "/com/github/phase1geo/minder/" + name );
-    img.name = name;
-    img.set_tooltip_text( tooltip );
-    box.add( img );
+    var pixbuf = StickerSet.make_pixbuf( name );
+    if( pixbuf != null ) {
+      var img = new Image.from_pixbuf( pixbuf );
+      img.name = name;
+      img.set_tooltip_text( tooltip );
+      box.add( img );
+    }
   }
 
   /* Creates the icon box and sets it up */
@@ -216,8 +219,11 @@ public class StickerInspector : Box {
   /* Make the current sticker a favorite */
   private void make_favorite() {
 
+    string tooltip;
+    _sticker_set.get_icon_info( _clicked_sticker, out tooltip );
+
     /* Add the sticker to the favorites section */
-    create_image( _favorites, _clicked_sticker, _sticker_set.get_icon_tooltip( _clicked_sticker ) );
+    create_image( _favorites, _clicked_sticker, tooltip );
     _favorites.show_all();
 
     /* Save the favorited status */
@@ -263,7 +269,10 @@ public class StickerInspector : Box {
     for( Xml.Node* it=doc->get_root_element()->children; it!=null; it=it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "sticker") ) {
         var name = it->get_prop( "name" );
-        create_image( _favorites, name, _sticker_set.get_icon_tooltip( name ) );
+        string tooltip;
+        if( _sticker_set.get_icon_info( name, out tooltip ) ) {
+          create_image( _favorites, name, tooltip );
+        }
       }
     }
     delete doc;

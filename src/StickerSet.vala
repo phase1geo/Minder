@@ -1,6 +1,7 @@
 /* This is a generated file.  Do not edit. */
 
 using Gee;
+using Gdk;
 
 public class StickerSet {
 
@@ -12,6 +13,9 @@ public class StickerSet {
       this.tooltip  = tooltip;
     }
   }
+
+  private Regex _title_re;
+
   Array<string>                      categories;
   HashMap<string,Array<StickerInfo>> category_icons;
 
@@ -351,6 +355,15 @@ public class StickerSet {
     array6.append_val( new StickerInfo( "template", _( "Template" ) ) );
     array6.append_val( new StickerInfo( "view_details", _( "View details" ) ) );
     category_icons.set( _( "Data" ), array6 );
+
+    try {
+      _title_re = new Regex( "(^|\\W)([a-z])" );
+    } catch( RegexError e ) {}
+
+    /* Finally load any user-supplied sticker (if they exist) */
+    var base_dir = Path.build_filename( Environment.get_user_data_dir(), "minder", "stickers" );
+    load_from_filesystem( base_dir );
+
   }
 
   public Array<string> get_categories() {
@@ -360,15 +373,85 @@ public class StickerSet {
   public Array<StickerInfo> get_category_icons( string category ) {
     return( category_icons.get( category ) );
   }
-  public string get_icon_tooltip( string resource ) {
+
+  public bool get_icon_info( string resource, out string tooltip ) {
+    tooltip     = "";
     for( int i=0; i<categories.length; i++ ) {
       var icons = category_icons.get( categories.index( i ) );
       for( int j=0; j<icons.length; j++ ) {
         if( icons.index( j ).resource == resource ) {
-          return( icons.index( j ).tooltip );
+          tooltip = icons.index( j ).tooltip;
+          return( true );
         }
       }
     }
-    return( "" );
+    return( false );
   }
+
+  private void load_from_filesystem( string base_dir ) {
+    if( FileUtils.test( base_dir, FileTest.EXISTS ) ) {
+      try {
+        string? name;
+        var dir = Dir.open( base_dir, 0 );
+        while( (name = dir.read_name()) != null) {
+          var category = Path.build_filename( base_dir, name );
+          if( FileUtils.test( category, FileTest.IS_DIR ) ) {
+            string? subname;
+            var subdir = Dir.open( category, 0 );
+            while( (subname = subdir.read_name()) != null ) {
+              var sticker = Path.build_filename( category, subname );
+              var parts   = subname.split( "." );
+              load_sticker( name, parts[0], sticker );
+            }
+          }
+        }
+      } catch( FileError e ) {
+        stderr.printf( "ERROR: %s\n", e.message );
+      }
+    }
+  }
+
+  private string make_label( string category ) {
+    var name = category.replace( "_", " " ).down();
+    string[]  parts;
+    MatchInfo matches;
+    int       start, end;
+    while( _title_re.match( name, 0, out matches ) ) {
+      matches.fetch_pos( 2, out start, out end );
+      name = name.splice( start, end, name.slice( start, end ).up() );
+    }
+    return( name.replace( "And", "and" ) );
+  }
+
+  private void load_sticker( string category, string name, string sticker_file ) {
+    int width, height;
+    var format = Gdk.Pixbuf.get_file_info( sticker_file, out width, out height );
+    if( format != null ) {
+      var cat_label    = make_label( category );
+      var name_tooltip = name.replace( "_", " " ).splice( 0, name.index_of_nth_char( 1 ), name.slice( 0, name.index_of_nth_char( 1 ) ).up() );
+      var sticker_info = new StickerInfo( sticker_file, name_tooltip );
+      if( category_icons.has_key( cat_label ) ) {
+        var array = category_icons.get( cat_label );
+        array.append_val( sticker_info );
+      } else {
+        var array = new Array<StickerInfo>();
+        array.append_val( sticker_info );
+        category_icons.set( cat_label, array );
+        categories.prepend_val( cat_label );
+      }
+    }
+  }
+
+  public static Gdk.Pixbuf? make_pixbuf( string resource, int width = -1 ) {
+    try {
+      if( resource.get_char( 0 ) == '/' ) {
+        return( new Pixbuf.from_file_at_scale( resource, ((width == -1) ? 64 : width), -1, true ) );
+      } else {
+        return( new Pixbuf.from_resource_at_scale( ("/com/github/phase1geo/minder/" + resource), ((width == -1) ? 64 : width), -1, true ) );
+      }
+    } catch( Error e ) {
+      return( null );
+    }
+  }
+
 }
