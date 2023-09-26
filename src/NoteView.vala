@@ -155,7 +155,7 @@ public class NoteView : Gtk.SourceView {
     }
   }
 
-  public signal int node_link_added( NodeLink link );
+  public signal int node_link_added( NodeLink link, out string text );
   public signal void node_link_clicked( int id );
   public signal void node_link_hover( int id );
 
@@ -432,8 +432,9 @@ public class NoteView : Gtk.SourceView {
 
   /* Inserts the given node link at the current insertion point */
   public void paste_node_link( NodeLink link ) {
-    var id  = node_link_added( link );
-    var str = "@Node-%d".printf( id );
+    string text = "";
+    var id  = node_link_added( link, out text );
+    var str = "[%s](@Node-%d)".printf( text, id );
     buffer.insert_at_cursor( str, str.length );
   }
 
