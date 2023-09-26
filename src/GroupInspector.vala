@@ -126,8 +126,8 @@ public class GroupInspector : Box {
   }
 
   /* When a node link is added, tell the current node */
-  private int note_node_link_added( NodeLink link ) {
-    return( _da.add_note_node_link( link ) );
+  private int note_node_link_added( NodeLink link, out string text ) {
+    return( _da.add_note_node_link( link, out text ) );
   }
 
   /* Handles a click on the node link with the given ID */
@@ -139,7 +139,7 @@ public class GroupInspector : Box {
   private void note_node_link_hover( int id ) {
     var link = _da.node_links.get_node_link( id );
     if( link != null ) {
-      _note.show_tooltip( link.to_string( _da ) );
+      _note.show_tooltip( link.get_tooltip( _da ) );
     }
   }
 

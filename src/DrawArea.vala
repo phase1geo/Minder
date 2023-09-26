@@ -1131,7 +1131,9 @@ public class DrawArea : Gtk.DrawingArea {
    If there is a currently selected node (and there should be), adds the given node
    link to the current node's list and returns the unique ID associated with the node link.
   */
-  public int add_note_node_link( NodeLink link ) {
+  public int add_note_node_link( NodeLink link, out string text ) {
+    link.normalize( this );
+    text = link.get_markdown_text( this );
     return( _node_links.add_link( link ) );
   }
 
@@ -2442,7 +2444,7 @@ public class DrawArea : Gtk.DrawingArea {
             }
           } else if( match.is_within_linked_node( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.HAND2 );
-            set_tooltip_markup( Utils.prepare_note_markup( match.linked_node.to_string( this ) ) );
+            set_tooltip_markup( Utils.prepare_note_markup( match.linked_node.get_tooltip( this ) ) );
           } else if( match.is_within_resizer( _scaled_x, _scaled_y ) ) {
             set_cursor( CursorType.SB_H_DOUBLE_ARROW );
             if( match.image == null ) {

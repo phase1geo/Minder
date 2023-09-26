@@ -98,7 +98,7 @@ public class NodeLink {
   }
 
   /* Returns the node link string to display in a tooltip */
-  public string to_string( DrawArea da ) {
+  public string get_tooltip( DrawArea da ) {
     if( _fname == "" ) {
       var linked_node = da.get_node( da.get_nodes(), _node_id );
       return( linked_node.name.text.text );
@@ -106,6 +106,18 @@ public class NodeLink {
       string title = _( "No node found" );
       Document.xml_find( _fname, _node_id, ref title );
       return( "%s\n\nFilename: %s".printf( title, _fname ) );
+    }
+  }
+
+  /* Returns the text to display in a Markdown link */
+  public string get_markdown_text( DrawArea da ) {
+    if( _fname == "" ) {
+      var linked_node = da.get_node( da.get_nodes(), _node_id );
+      return( linked_node.name.text.text );
+    } else {
+      string title = "";
+      Document.xml_find( _fname, _node_id, ref title );
+      return( "%s: %s".printf( Path.get_basename( _fname ), title ) );
     }
   }
 
