@@ -257,7 +257,9 @@ public class MinderClipboard {
         var data = (string)raw_data.get_data();
         if( data == null ) return;
         var link = DrawArea.deserialize_for_node_link( data );
-        note.paste_node_link( link );
+        if( link != null ) {
+          note.paste_node_link( link );
+        }
       });
 
     } else if( text_atom != null ) {
