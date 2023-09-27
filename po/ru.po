@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-25 17:04-0500\n"
+"POT-Creation-Date: 2023-09-27 10:58-0500\n"
 "PO-Revision-Date: 2023-08-21 13:29+0200\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -125,7 +125,7 @@ msgstr "Использовать цвет темы по умолчанию"
 msgid "Note"
 msgstr "Примечание"
 
-#: src/ConnectionInspector.vala:154
+#: src/ConnectionInspector.vala:157
 msgid "Delete Connection"
 msgstr "Удалить соединение"
 
@@ -182,20 +182,20 @@ msgstr "Примечание к соединению"
 msgid "unnamed"
 msgstr "безымянный"
 
-#: src/DrawArea.vala:742
+#: src/DrawArea.vala:754
 msgid "Main Idea"
 msgstr "Главная идея"
 
-#: src/DrawArea.vala:2407
+#: src/DrawArea.vala:2437
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% завершено"
 
-#: src/DrawArea.vala:2421
+#: src/DrawArea.vala:2451
 msgid "Drag to resize node"
 msgstr "Перетащите для смены размера узла"
 
-#: src/DrawArea.vala:2423
+#: src/DrawArea.vala:2453
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -203,29 +203,29 @@ msgstr ""
 "Перетаскивание меняет размер узла и изображения.\n"
 "Ctrl+перетаскивание меняет размер только узла."
 
-#: src/DrawArea.vala:2535
+#: src/DrawArea.vala:2565
 #, c-format
 msgid "Children: %u\n"
 msgstr "Потомки: %u\n"
 
-#: src/DrawArea.vala:2536
+#: src/DrawArea.vala:2566
 #, c-format
 msgid "Total: %d"
 msgstr "Всего: %d"
 
-#: src/DrawArea.vala:2582
+#: src/DrawArea.vala:2612
 msgid "connection endpoint change"
 msgstr "смену конечной точки соединения"
 
-#: src/DrawArea.vala:2589
+#: src/DrawArea.vala:2619
 msgid "connection drag"
 msgstr "перетаскивание соединения"
 
-#: src/DrawArea.vala:3235 src/DrawArea.vala:3249 src/DrawArea.vala:4988
+#: src/DrawArea.vala:3265 src/DrawArea.vala:3279 src/DrawArea.vala:5031
 msgid "Another Idea"
 msgstr "Ещё одна идея"
 
-#: src/DrawArea.vala:4481 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4511 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Вручную"
@@ -313,12 +313,12 @@ msgstr "Экспортировать как %s"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:300
 #: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1248
-#: src/QuickEntry.vala:144 src/StickerSet.vala:71 src/ThemeEditor.vala:143
-#: src/UrlEditor.vala:62
+#: src/QuickEntry.vala:144 src/StickerInspector.vala:401 src/StickerSet.vala:75
+#: src/ThemeEditor.vala:143 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/Exporter.vala:132 src/MainWindow.vala:826 src/StickerSet.vala:348
+#: src/Exporter.vala:132 src/MainWindow.vala:826 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Экспортировать"
 
@@ -519,7 +519,7 @@ msgstr "Скопировать изображение в буфер обмена
 msgid "Paste Image from Clipboard"
 msgstr "Вставить избражение из бефера обмена"
 
-#: src/ImageEditor.vala:396 src/NodeInspector.vala:289 src/NodeMenu.vala:416
+#: src/ImageEditor.vala:396 src/NodeInspector.vala:292 src/NodeMenu.vala:416
 msgid "Remove Image"
 msgstr "Удалить изображение"
 
@@ -548,11 +548,11 @@ msgstr "Открыть файл"
 msgid "Save File As"
 msgstr "Сохранить файл как"
 
-#: src/MainWindow.vala:204 src/StickerSet.vala:303 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:204 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Отменить"
 
-#: src/MainWindow.vala:211 src/StickerSet.vala:304 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:211 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Вернуть"
 
@@ -599,7 +599,7 @@ msgstr "Уместить выбранное дерево узлов"
 msgid "Zoom to Actual Size"
 msgstr "Настоящий размер"
 
-#: src/MainWindow.vala:652 src/StickerSet.vala:110
+#: src/MainWindow.vala:652 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Искать"
 
@@ -784,39 +784,39 @@ msgstr "Свернуть"
 msgid "Override Color"
 msgstr "Использовать другой цвет"
 
-#: src/NodeInspector.vala:260 src/NodeInspector.vala:278
+#: src/NodeInspector.vala:263 src/NodeInspector.vala:281
 msgid "Image"
 msgstr "Изображение"
 
-#: src/NodeInspector.vala:264
+#: src/NodeInspector.vala:267
 msgid "Add Image…"
 msgstr "Добавить изображение…"
 
-#: src/NodeInspector.vala:283
+#: src/NodeInspector.vala:286
 msgid "Edit Image"
 msgstr "Изменить изображение"
 
-#: src/NodeInspector.vala:296
+#: src/NodeInspector.vala:299
 msgid "Resizable"
 msgstr "Размер изменяем"
 
-#: src/NodeInspector.vala:396
+#: src/NodeInspector.vala:399
 msgid "Copy Node To Clipboard"
 msgstr "Скопировать узел в буфер обмена"
 
-#: src/NodeInspector.vala:400
+#: src/NodeInspector.vala:403
 msgid "Cut Node To Clipboard"
 msgstr "Вырезать узел в буфер обмена"
 
-#: src/NodeInspector.vala:405
+#: src/NodeInspector.vala:408
 msgid "Detach Node"
 msgstr "Открепить узел"
 
-#: src/NodeInspector.vala:410 data/com.github.phase1geo.minder.shortcuts.ui:284
+#: src/NodeInspector.vala:413 data/com.github.phase1geo.minder.shortcuts.ui:284
 msgid "Delete Node"
 msgstr "Удалить узел"
 
-#: src/NodeLink.vala:101
+#: src/NodeLink.vala:106
 msgid "No node found"
 msgstr "Узлы не найдены"
 
@@ -1231,15 +1231,20 @@ msgstr "Заменить"
 msgid "Insert"
 msgstr "Вставить"
 
-#: src/StickerInspector.vala:60
+#: src/StickerInspector.vala:63
 msgid "Remove From Favorites"
 msgstr "Удалить из избранного"
 
-#: src/StickerInspector.vala:63 src/StickerInspector.vala:67
+#: src/StickerInspector.vala:70 src/StickerInspector.vala:80
 msgid "Add To Favorites"
 msgstr "Добавить в избранное"
 
-#: src/StickerInspector.vala:76
+#: src/StickerInspector.vala:83
+#, fuzzy
+msgid "Remove Custom Sticker"
+msgstr "Удалить стикер"
+
+#: src/StickerInspector.vala:99
 msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
@@ -1247,1263 +1252,1277 @@ msgstr ""
 "Чтобы добавить стикер, перетащите и бросьте стикер на узел или в любое место "
 "карты."
 
-#: src/StickerInspector.vala:82
+#: src/StickerInspector.vala:105
 msgid "Search Stickers"
 msgstr "Искать по стикерам"
 
-#: src/StickerInspector.vala:111
+#: src/StickerInspector.vala:134
 msgid "Favorites"
 msgstr "Избранное"
 
-#: src/StickerSet.vala:21 src/StickerSet.vala:64
-msgid "Photo and Video"
-msgstr "Фото и видео"
-
-#: src/StickerSet.vala:22 src/StickerSet.vala:122
-msgid "Very Basic"
-msgstr "Основные"
-
-#: src/StickerSet.vala:23 src/StickerSet.vala:126 src/StickerSet.vala:217
-msgid "Business"
-msgstr "Бизнес"
-
-#: src/StickerSet.vala:24 src/StickerSet.vala:244
-msgid "Industry"
-msgstr "Промышленность"
-
-#: src/StickerSet.vala:25 src/StickerSet.vala:281
-msgid "Mobile"
-msgstr "Мобильная связь"
-
-#: src/StickerSet.vala:26 src/StickerSet.vala:305 src/StyleInspector.vala:885
-msgid "Arrows"
-msgstr "Стрелки"
-
-#: src/StickerSet.vala:27 src/StickerSet.vala:353
-msgid "Data"
-msgstr "Данные"
-
-#: src/StickerSet.vala:29
-msgid "Flash on"
-msgstr "Вспышка включена"
-
-#: src/StickerSet.vala:30
-msgid "Flash off"
-msgstr "Вспышка выключена"
-
-#: src/StickerSet.vala:31
-msgid "Flash auto"
-msgstr "Автовспышка"
-
-#: src/StickerSet.vala:32
-msgid "Panorama"
-msgstr "Панорама"
-
-#: src/StickerSet.vala:33
-msgid "Landscape"
-msgstr "Пейзаж"
-
-#: src/StickerSet.vala:34
-msgid "Night landscape"
-msgstr "Ночной пейзаж"
-
-#: src/StickerSet.vala:35
-msgid "Sports mode"
-msgstr "Спортивный режим"
-
-#: src/StickerSet.vala:36
-msgid "Portrait mode"
-msgstr "Портретный режим"
-
-#: src/StickerSet.vala:37
-msgid "Night portrait"
-msgstr "Ночной портрет"
-
-#: src/StickerSet.vala:38
-msgid "Close up mode"
-msgstr "Макрорежим"
-
-#: src/StickerSet.vala:39
-msgid "Selfie"
-msgstr "Себяшка"
-
-#: src/StickerSet.vala:40
-msgid "Gallery"
-msgstr "Галерея"
-
-#: src/StickerSet.vala:41
-msgid "Stack of photos"
-msgstr "Стопка фотографий"
-
-#: src/StickerSet.vala:42
-msgid "Add image"
-msgstr "Добавить изображение"
-
-#: src/StickerSet.vala:43
-msgid "Edit image"
-msgstr "Изменить изображение"
-
-#: src/StickerSet.vala:44
-msgid "Remove image"
-msgstr "Удалить изображение"
-
-#: src/StickerSet.vala:45
-msgid "Compact camera"
-msgstr "Компактная фотокамера"
-
-#: src/StickerSet.vala:46
-msgid "Multiple cameras"
-msgstr "Несколько камер"
-
-#: src/StickerSet.vala:47
-msgid "Camera"
-msgstr "Камера"
-
-#: src/StickerSet.vala:48
-msgid "SLR back side"
-msgstr "Задник цифровой камеры"
-
-#: src/StickerSet.vala:49
-msgid "Old time camera"
-msgstr "Ретро-фотоаппарат"
-
-#: src/StickerSet.vala:50
-msgid "Camera addon"
-msgstr "Аксессуар для камеры"
-
-#: src/StickerSet.vala:51
-msgid "Camera identification"
-msgstr "Идентификация по камере"
-
-#: src/StickerSet.vala:52
-msgid "Start"
-msgstr "Начало"
-
-#: src/StickerSet.vala:53
-msgid "Clapperboard"
-msgstr "Нумератор с хлопушкой"
-
-#: src/StickerSet.vala:54
-msgid "Film"
-msgstr "Плёнка"
-
-#: src/StickerSet.vala:55
-msgid "Camcorder"
-msgstr "Видеокамера"
-
-#: src/StickerSet.vala:56
-msgid "Camcorder pro"
-msgstr "Профессиональная видеокамера"
-
-#: src/StickerSet.vala:57
-msgid "Webcam"
-msgstr "Веб-камера"
-
-#: src/StickerSet.vala:58
-msgid "Integrated webcam"
-msgstr "Встроенная веб-камера"
-
-#: src/StickerSet.vala:59
-msgid "Rotate camera"
-msgstr "Повернуть камеру"
-
-#: src/StickerSet.vala:60
-msgid "Switch camera"
-msgstr "Поменять камеру"
-
-#: src/StickerSet.vala:61
-msgid "Photo reel"
-msgstr "Фотоплёнка"
-
-#: src/StickerSet.vala:62
-msgid "Film reel"
-msgstr "Катушка плёнки"
-
-#: src/StickerSet.vala:63
-msgid "Cable release"
-msgstr "Спусковой тросик"
-
-#: src/StickerSet.vala:66
-msgid "Home"
-msgstr "Домой"
-
-#: src/StickerSet.vala:67
-msgid "Icons8 cup"
+#: src/StickerInspector.vala:140
+msgid "Show Custom Sticker Directory"
 msgstr ""
 
-#: src/StickerSet.vala:68
-msgid "Globe"
-msgstr "Земной шар"
-
-#: src/StickerSet.vala:69
-msgid "OK"
-msgstr "OK"
-
-#: src/StickerSet.vala:70
-msgid "Checkmark"
-msgstr "Значок отметки"
-
-#: src/StickerSet.vala:72
-msgid "Synchronize"
-msgstr "Синхронизировать"
-
-#: src/StickerSet.vala:73
-msgid "Refresh"
-msgstr "Обновить"
-
-#: src/StickerSet.vala:74
-msgid "Download"
-msgstr "Скачать"
-
-#: src/StickerSet.vala:75
-msgid "Upload"
-msgstr "Закачать"
-
-#: src/StickerSet.vala:76
-msgid "Empty trash"
-msgstr "Пустая корзина"
-
-#: src/StickerSet.vala:77
-msgid "Full trash"
-msgstr "Полная корзина"
-
-#: src/StickerSet.vala:78
-msgid "Folder"
-msgstr "Папка"
-
-#: src/StickerSet.vala:79
-msgid "Opened folder"
-msgstr "Открытая папка"
-
-#: src/StickerSet.vala:80 data/com.github.phase1geo.minder.shortcuts.ui:16
-msgid "File"
-msgstr "Файл"
-
-#: src/StickerSet.vala:81
-msgid "Document"
-msgstr "Документ"
-
-#: src/StickerSet.vala:82
-msgid "Audio file"
-msgstr "Звуковой файл"
-
-#: src/StickerSet.vala:83
-msgid "Image file"
-msgstr "Файл изображения"
-
-#: src/StickerSet.vala:84
-msgid "Video file"
-msgstr "Видеофайл"
-
-#: src/StickerSet.vala:85
-msgid "Print"
-msgstr "Печать"
-
-#: src/StickerSet.vala:86
-msgid "Music"
-msgstr "Музыка"
-
-#: src/StickerSet.vala:87
-msgid "Share"
-msgstr "Поделиться"
-
-#: src/StickerSet.vala:88
-msgid "Cursor"
-msgstr "Курсор"
-
-#: src/StickerSet.vala:89
-msgid "Puzzle"
-msgstr "Головоломка"
-
-#: src/StickerSet.vala:90
-msgid "Unlock"
-msgstr "Разблокировать"
-
-#: src/StickerSet.vala:91
-msgid "Lock"
-msgstr "Заблокировать"
-
-#: src/StickerSet.vala:92
-msgid "Idea"
-msgstr "Идея"
-
-#: src/StickerSet.vala:93
-msgid "No idea"
-msgstr "Нет идеи"
-
-#: src/StickerSet.vala:94
-msgid "Link"
-msgstr "Ссылка"
-
-#: src/StickerSet.vala:95
-msgid "Broken link"
-msgstr "Битая ссылка"
-
-#: src/StickerSet.vala:96
-msgid "Rating"
-msgstr "Оценка"
-
-#: src/StickerSet.vala:97
-msgid "Like placeholder"
-msgstr "Как заглушка"
-
-#: src/StickerSet.vala:98
-msgid "Like"
-msgstr "Понравилось"
-
-#: src/StickerSet.vala:99
-msgid "Dislike"
-msgstr "Не понравилось"
-
-#: src/StickerSet.vala:100
-msgid "Info"
-msgstr "Информация"
-
-#: src/StickerSet.vala:101
-msgid "About"
-msgstr "О программе"
-
-#: src/StickerSet.vala:102
-msgid "Picture"
-msgstr "Изображение"
-
-#: src/StickerSet.vala:103
-msgid "Clock"
-msgstr "Часы"
-
-#: src/StickerSet.vala:104
-msgid "Alarm clock"
-msgstr "Будильник"
-
-#: src/StickerSet.vala:105
-msgid "Address book"
-msgstr "Адресная книга"
-
-#: src/StickerSet.vala:106
-msgid "Contacts"
-msgstr "Контакты"
-
-#: src/StickerSet.vala:107
-msgid "News"
-msgstr "Новости"
-
-#: src/StickerSet.vala:108
-msgid "Bookmark"
-msgstr "Закладка"
-
-#: src/StickerSet.vala:109
-msgid "Binoculars"
-msgstr "Бинокль"
-
-#: src/StickerSet.vala:111
-msgid "Ruler"
-msgstr "Линейка"
-
-#: src/StickerSet.vala:112
-msgid "Services"
-msgstr "Услуги"
-
-#: src/StickerSet.vala:113
-msgid "Settings"
-msgstr "Настройки"
-
-#: src/StickerSet.vala:114
-msgid "Support"
-msgstr "Поддержка"
-
-#: src/StickerSet.vala:115
-msgid "Frame"
-msgstr "Рамка"
-
-#: src/StickerSet.vala:116
-msgid "Menu"
-msgstr "Меню"
-
-#: src/StickerSet.vala:117
-msgid "Key"
-msgstr "Ключ"
-
-#: src/StickerSet.vala:118
-msgid "Calendar"
-msgstr "Календарь"
-
-#: src/StickerSet.vala:119
-msgid "Calculator"
-msgstr "Калькулятор"
-
-#: src/StickerSet.vala:120
-msgid "Minus"
-msgstr "Минус"
-
-#: src/StickerSet.vala:121
-msgid "Plus"
-msgstr "Плюс"
-
-#: src/StickerSet.vala:124
-msgid "Graduation cap"
-msgstr "Шляпа выпускника"
-
-#: src/StickerSet.vala:125
-msgid "Briefcase"
-msgstr "Портфель"
-
-#: src/StickerSet.vala:127
-msgid "Signature"
-msgstr "Подпись"
-
-#: src/StickerSet.vala:128
-msgid "Safe"
-msgstr "Сейф"
-
-#: src/StickerSet.vala:129
-msgid "Advertising"
-msgstr "Реклама"
-
-#: src/StickerSet.vala:130
-msgid "Businessman"
-msgstr "Бизнесмен"
-
-#: src/StickerSet.vala:131
-msgid "Businesswoman"
-msgstr "Деловая женщина"
-
-#: src/StickerSet.vala:132
-msgid "Manager"
-msgstr "Менеджер"
-
-#: src/StickerSet.vala:133
-msgid "Online support"
-msgstr "Техподдержка онлайн"
-
-#: src/StickerSet.vala:134
-msgid "Assistant"
-msgstr "Помощник"
-
-#: src/StickerSet.vala:135
-msgid "Customer support"
-msgstr "Техническая поддержка"
-
-#: src/StickerSet.vala:136
-msgid "Reading ebook"
-msgstr "Чтение электронной книги"
-
-#: src/StickerSet.vala:137
-msgid "Reading"
-msgstr "Чтение"
-
-#: src/StickerSet.vala:138
-msgid "Neutral trading"
-msgstr "Рыночно-нейтральный трейдинг"
-
-#: src/StickerSet.vala:139
-msgid "Bullish"
-msgstr "Бычий рынок"
-
-#: src/StickerSet.vala:140
-msgid "Bearish"
-msgstr "Медвежий рынок"
-
-#: src/StickerSet.vala:141
-msgid "High priority"
-msgstr "Высокий приоритет"
-
-#: src/StickerSet.vala:142
-msgid "Medium priority"
-msgstr "Средний приоритет"
-
-#: src/StickerSet.vala:143
-msgid "Low priority"
-msgstr "Низкий приоритет"
-
-#: src/StickerSet.vala:144
-msgid "Make decision"
-msgstr "Принять решение"
-
-#: src/StickerSet.vala:145
-msgid "Decision"
-msgstr "Решение"
-
-#: src/StickerSet.vala:146
-msgid "Good decision"
-msgstr "Хорошее решение"
-
-#: src/StickerSet.vala:147
-msgid "Neutral decision"
-msgstr "Нейтральное решение"
-
-#: src/StickerSet.vala:148
-msgid "Bad decision"
-msgstr "Плохое решение"
-
-#: src/StickerSet.vala:149
-msgid "Approve"
-msgstr "Одобрить"
-
-#: src/StickerSet.vala:150
-msgid "Disapprove"
-msgstr "Отвергнуть"
-
-#: src/StickerSet.vala:151
-msgid "Podium without speaker"
-msgstr "Трибуна без докладчика"
-
-#: src/StickerSet.vala:152
-msgid "Podium with speaker"
-msgstr "Трибуна с докладчиком"
-
-#: src/StickerSet.vala:153
-msgid "Podium with audience"
-msgstr "Трибуна с аудиторией"
-
-#: src/StickerSet.vala:154
-msgid "Video projector"
-msgstr "Видеопроектор"
-
-#: src/StickerSet.vala:155
-msgid "Statistics"
-msgstr "Статистика"
-
-#: src/StickerSet.vala:156
-msgid "Collaboration"
-msgstr "Совместная работа"
-
-#: src/StickerSet.vala:157
-msgid "Voice presentation"
-msgstr "Голосовая презентация"
-
-#: src/StickerSet.vala:158
-msgid "Conference call"
-msgstr "Телеконференция"
-
-#: src/StickerSet.vala:159
-msgid "Comments"
-msgstr "Комментарии"
-
-#: src/StickerSet.vala:160
-msgid "FAQ"
-msgstr "FAQ"
-
-#: src/StickerSet.vala:161
-msgid "Reuse"
-msgstr "Повторное использование"
-
-#: src/StickerSet.vala:162
-msgid "Organization"
-msgstr "Организация"
-
-#: src/StickerSet.vala:163
-msgid "Department"
-msgstr "Департамент"
-
-#: src/StickerSet.vala:164
-msgid "Library"
-msgstr "Библиотека"
-
-#: src/StickerSet.vala:165
-msgid "Shop"
-msgstr "Магазин"
-
-#: src/StickerSet.vala:166
-msgid "Self service kiosk"
-msgstr "Киоск самообслуживания"
-
-#: src/StickerSet.vala:167
-msgid "Donate"
-msgstr "Пожертвовать деньги"
-
-#: src/StickerSet.vala:168
-msgid "Currency exchange"
-msgstr "Обмен валюты"
-
-#: src/StickerSet.vala:169
-msgid "Debt"
-msgstr "Долг"
-
-#: src/StickerSet.vala:170
-msgid "Sales performance"
-msgstr "Результативность продаж"
-
-#: src/StickerSet.vala:171
-msgid "Invite"
-msgstr "Пригласить"
-
-#: src/StickerSet.vala:172
-msgid "Money transfer"
-msgstr "Отправка денег"
-
-#: src/StickerSet.vala:173
-msgid "Feedback"
-msgstr "Обратная связь"
-
-#: src/StickerSet.vala:174
-msgid "Approval"
-msgstr "Одобрение"
-
-#: src/StickerSet.vala:175
-msgid "Paid"
-msgstr "Оплачено"
-
-#: src/StickerSet.vala:176
-msgid "In transit"
-msgstr "В пути"
-
-#: src/StickerSet.vala:177
-msgid "Shipped"
-msgstr "Отправлено"
-
-#: src/StickerSet.vala:178
-msgid "Package"
-msgstr "Посылка"
-
-#: src/StickerSet.vala:179
-msgid "Planner"
-msgstr "Планировщик"
-
-#: src/StickerSet.vala:180
-msgid "Overtime"
-msgstr "Переработка"
-
-#: src/StickerSet.vala:181
-msgid "Leave"
-msgstr "Покинуть"
-
-#: src/StickerSet.vala:182
-msgid "Expired"
-msgstr "Срок истёк"
-
-#: src/StickerSet.vala:183
-msgid "Process"
-msgstr "Процесс"
-
-#: src/StickerSet.vala:184
-msgid "Diploma 1"
-msgstr "Диплом 1"
-
-#: src/StickerSet.vala:185
-msgid "Diploma 2"
-msgstr "Диплом 2"
-
-#: src/StickerSet.vala:186
-msgid "Business contact"
-msgstr "Деловой контакт"
-
-#: src/StickerSet.vala:187
-msgid "Survey"
-msgstr "Опрос"
-
-#: src/StickerSet.vala:188
-msgid "Inspection"
-msgstr "Инспекция"
-
-#: src/StickerSet.vala:189
-msgid "Rules"
-msgstr "Правила"
-
-#: src/StickerSet.vala:190
-msgid "Todo list"
-msgstr "Список задач"
-
-#: src/StickerSet.vala:191
-msgid "Ratings"
-msgstr "Рейтинги"
-
-#: src/StickerSet.vala:192
-msgid "Questions"
-msgstr "Вопросы"
-
-#: src/StickerSet.vala:193
-msgid "Answers"
-msgstr "Ответы"
-
-#: src/StickerSet.vala:194
-msgid "Fine print"
-msgstr "Важная информация мелким текстом"
-
-#: src/StickerSet.vala:195
-msgid "Candle sticks"
-msgstr "Свечи"
-
-#: src/StickerSet.vala:196
-msgid "Serial tasks"
-msgstr "Последовательные задачи"
-
-#: src/StickerSet.vala:197
-msgid "Parallel tasks"
-msgstr "Параллельные задачи"
-
-#: src/StickerSet.vala:198
-msgid "Tree structure"
-msgstr "Древовидная структура"
-
-#: src/StickerSet.vala:199
-msgid "Org unit"
-msgstr "Подразделение организации"
-
-#: src/StickerSet.vala:200
-msgid "Privacy"
-msgstr "Приватность"
-
-#: src/StickerSet.vala:201
-msgid "Disclaimer"
-msgstr "Оговорка"
-
-#: src/StickerSet.vala:202
-msgid "Callback"
-msgstr ""
-
-#: src/StickerSet.vala:203
-msgid "Service mark"
-msgstr "Сервисная марка"
-
-#: src/StickerSet.vala:204
-msgid "Registered trademark"
-msgstr "Зарегистрированная торговая марка"
-
-#: src/StickerSet.vala:205
-msgid "Trademark"
-msgstr "Торговая марка"
-
-#: src/StickerSet.vala:206
-msgid "Copyright"
-msgstr "Авторские права"
-
-#: src/StickerSet.vala:207
-msgid "Copyleft"
-msgstr "Копилефт"
-
-#: src/StickerSet.vala:208
-msgid "Sound recording copyright"
-msgstr "Авторские права на звукозапись"
-
-#: src/StickerSet.vala:209
-msgid "Butting in"
-msgstr "Встревание"
-
-#: src/StickerSet.vala:210
-msgid "Multiple inputs"
-msgstr "Несколько входов"
-
-#: src/StickerSet.vala:211
-msgid "Collect"
-msgstr "Собрать"
-
-#: src/StickerSet.vala:212
-msgid "Internal"
-msgstr "Внутренний"
-
-#: src/StickerSet.vala:213
-msgid "External"
-msgstr "Внешний"
-
-#: src/StickerSet.vala:214
-msgid "VIP"
-msgstr "VIP"
-
-#: src/StickerSet.vala:215
-msgid "Light at the end of tunnel"
-msgstr "Свет в конце туннеля"
-
-#: src/StickerSet.vala:216
-msgid "Entering heaven alive"
-msgstr "Попасть в рай живым"
-
-#: src/StickerSet.vala:219
-msgid "Biomass"
-msgstr "Биомасса"
-
-#: src/StickerSet.vala:220
-msgid "Display"
-msgstr "Индикатор"
-
-#: src/StickerSet.vala:221
-msgid "Do not inhale"
-msgstr "Не вдыхать"
-
-#: src/StickerSet.vala:222
-msgid "Factory"
-msgstr "Фабрика"
-
-#: src/StickerSet.vala:223
-msgid "Factory breakdown"
-msgstr "Авария на фабрике"
-
-#: src/StickerSet.vala:224
-msgid "Crystal oscillator"
-msgstr "Кварцевый генератор"
-
-#: src/StickerSet.vala:225
-msgid "Capacitor"
-msgstr "Конденсатор"
-
-#: src/StickerSet.vala:226
-msgid "Electricity"
-msgstr "Электричество"
-
-#: src/StickerSet.vala:227
-msgid "Electro devices"
-msgstr "Электрические устройства"
-
-#: src/StickerSet.vala:228
-msgid "Electrical sensor"
-msgstr "Электрический датчик"
-
-#: src/StickerSet.vala:229
-msgid "Electrical threshold"
-msgstr ""
-
-#: src/StickerSet.vala:230
-msgid "Automotive"
-msgstr "Автостроение"
-
-#: src/StickerSet.vala:231
-msgid "Feed in"
-msgstr ""
-
-#: src/StickerSet.vala:232
-msgid "Dam"
-msgstr "Плотина"
-
-#: src/StickerSet.vala:233
-msgid "Biotech"
-msgstr "Биотехнологии"
-
-#: src/StickerSet.vala:234
-msgid "Advance"
-msgstr ""
-
-#: src/StickerSet.vala:235
-msgid "Cloth"
-msgstr "Ткань"
-
-#: src/StickerSet.vala:236
-msgid "Electronics"
-msgstr "Электроника"
-
-#: src/StickerSet.vala:237
-msgid "Deployment"
-msgstr "Развёртывание"
-
-#: src/StickerSet.vala:238
-msgid "Automatic"
-msgstr ""
-
-#: src/StickerSet.vala:239
-msgid "Do not insert"
-msgstr "Не вставлять"
-
-#: src/StickerSet.vala:240
-msgid "Do not mix"
-msgstr "Не смешивать"
-
-#: src/StickerSet.vala:241
-msgid "Biohazard"
-msgstr "Биологическая опасность"
-
-#: src/StickerSet.vala:242
-msgid "Circuit"
-msgstr "Электрическая цепь"
-
-#: src/StickerSet.vala:243
-msgid "Engineering"
-msgstr "Инженерное дело"
-
-#: src/StickerSet.vala:246
-msgid "Cell phone"
-msgstr "Сотовый телефон"
-
-#: src/StickerSet.vala:247
-msgid "iPhone"
-msgstr "iPhone"
-
-#: src/StickerSet.vala:248
-msgid "iPad"
-msgstr "iPad"
-
-#: src/StickerSet.vala:249
-msgid "Phone android"
-msgstr "Телефон с Android"
-
-#: src/StickerSet.vala:250
-msgid "Tablet android"
-msgstr "Планшет на Android"
-
-#: src/StickerSet.vala:251
-msgid "Nook"
-msgstr "Nook"
-
-#: src/StickerSet.vala:252
-msgid "Kindle"
-msgstr "Kindle"
-
-#: src/StickerSet.vala:253
-msgid "Two smartphones"
-msgstr "Два смартфона"
-
-#: src/StickerSet.vala:254
-msgid "Multiple devices"
-msgstr "Несколько устройств"
-
-#: src/StickerSet.vala:255
-msgid "Multiple smartphones"
-msgstr "Несколько смартфонов"
-
-#: src/StickerSet.vala:256
-msgid "Smartphone tablet"
-msgstr "Фаблет"
-
-#: src/StickerSet.vala:257
-msgid "Touchscreen smartphone"
-msgstr "Смартфон с тачскрином"
-
-#: src/StickerSet.vala:258
-msgid "Sim card"
-msgstr "SIM-карта"
-
-#: src/StickerSet.vala:259
-msgid "Sim card chip"
-msgstr "Чип SIM-карты"
-
-#: src/StickerSet.vala:260
-msgid "SMS"
-msgstr "SMS"
-
-#: src/StickerSet.vala:261
-msgid "MMS"
-msgstr "MMS"
-
-#: src/StickerSet.vala:262
-msgid "Charge battery"
-msgstr "Зарядить аккумулятор"
-
-#: src/StickerSet.vala:263
-msgid "Full battery"
-msgstr "Заряженный аккумулятор"
-
-#: src/StickerSet.vala:264
-msgid "High battery"
-msgstr "Высокий заряд"
-
-#: src/StickerSet.vala:265
-msgid "Middle battery"
-msgstr "Средний заряд"
-
-#: src/StickerSet.vala:266
-msgid "Low battery"
-msgstr "Низкий заряд"
-
-#: src/StickerSet.vala:267
-msgid "Empty battery"
-msgstr "Разряженный аккумулятор"
-
-#: src/StickerSet.vala:268
-msgid "Phone"
-msgstr "Телефон"
-
-#: src/StickerSet.vala:269
-msgid "Missed call"
-msgstr "Пропущенный вызов"
-
-#: src/StickerSet.vala:270
-msgid "End call"
-msgstr "Завершить звонок"
-
-#: src/StickerSet.vala:271
-msgid "Call transfer"
-msgstr "Переадресация вызова"
-
-#: src/StickerSet.vala:272
-msgid "Video call"
-msgstr "Видеозвонок"
-
-#: src/StickerSet.vala:273
-msgid "No video"
-msgstr "Нет видео"
-
-#: src/StickerSet.vala:274
-msgid "Rotate to portrait"
-msgstr "Повернуть на портретный режим"
-
-#: src/StickerSet.vala:275
-msgid "Lock portrait"
-msgstr "Принудительный портретный режим"
-
-#: src/StickerSet.vala:276
-msgid "Rotate to landscape"
-msgstr "Повернуть на альбомный режим"
-
-#: src/StickerSet.vala:277
-msgid "Lock landscape"
-msgstr "Принудительный альбомный режим"
-
-#: src/StickerSet.vala:278
-msgid "Voicemail"
-msgstr "Голосовая почта"
-
-#: src/StickerSet.vala:279
-msgid "Speaker"
-msgstr "Громкоговоритель"
-
-#: src/StickerSet.vala:280
-msgid "Headset"
-msgstr "Гарнитура"
-
-#: src/StickerSet.vala:283
-msgid "Left up"
-msgstr "Влево вверх"
-
-#: src/StickerSet.vala:284
-msgid "Up"
-msgstr "Вверх"
-
-#: src/StickerSet.vala:285
-msgid "Right up"
-msgstr "Направо вверх"
-
-#: src/StickerSet.vala:286
-msgid "Left"
-msgstr "Влево"
-
-#: src/StickerSet.vala:287
-msgid "Right"
-msgstr "Вправо"
-
-#: src/StickerSet.vala:288
-msgid "Left down"
-msgstr "Влево вниз"
-
-#: src/StickerSet.vala:289
-msgid "Down"
-msgstr "Вниз"
-
-#: src/StickerSet.vala:290
-msgid "Right down"
-msgstr "Направо вниз"
-
-#: src/StickerSet.vala:291
-msgid "Collapse"
-msgstr "Свернуть"
-
-#: src/StickerSet.vala:292
-msgid "Previous"
-msgstr "Предыдущий"
-
-#: src/StickerSet.vala:293
-msgid "Next"
-msgstr "Следующий"
-
-#: src/StickerSet.vala:294
-msgid "Expand"
-msgstr "Развернуть"
-
-#: src/StickerSet.vala:295
-msgid "Left down2"
-msgstr "Влево и вниз"
-
-#: src/StickerSet.vala:296
-msgid "Up left"
-msgstr "Вверх и влево"
-
-#: src/StickerSet.vala:297
-msgid "Down right"
-msgstr "Вниз и вправо"
-
-#: src/StickerSet.vala:298
-msgid "Right up2"
-msgstr "Направо и вверх"
-
-#: src/StickerSet.vala:299
-msgid "Up right"
-msgstr "Вверх и вправо"
-
-#: src/StickerSet.vala:300
-msgid "Right down2"
-msgstr "Направо и вниз"
-
-#: src/StickerSet.vala:301
-msgid "Left up2"
-msgstr "Влево и вверх"
-
-#: src/StickerSet.vala:302
-msgid "Down left"
-msgstr "Вниз и влево"
-
-#: src/StickerSet.vala:307
-msgid "Filing cabinet"
-msgstr "Картотека"
-
-#: src/StickerSet.vala:308
-msgid "Database"
-msgstr "База данных"
-
-#: src/StickerSet.vala:309
-msgid "Accept database"
-msgstr "Принять базу данных"
-
-#: src/StickerSet.vala:310
-msgid "Add database"
-msgstr "Добавить базу данных"
-
-#: src/StickerSet.vala:311
-msgid "Delete database"
-msgstr "Удалить базу данных"
-
-#: src/StickerSet.vala:312
-msgid "Data backup"
-msgstr "Резервная копия"
-
-#: src/StickerSet.vala:313
-msgid "Data recovery"
-msgstr "Восстановление данных"
-
-#: src/StickerSet.vala:314
-msgid "Data configuration"
-msgstr "Настройка данных"
-
-#: src/StickerSet.vala:315
-msgid "Data encryption"
-msgstr "Шифрование данных"
-
-#: src/StickerSet.vala:316
-msgid "Data protection"
-msgstr "Защита данных"
-
-#: src/StickerSet.vala:317
-msgid "Grid"
-msgstr "Сетка"
-
-#: src/StickerSet.vala:318
-msgid "Data sheet"
-msgstr "Технические данные"
-
-#: src/StickerSet.vala:319
-msgid "Add column"
-msgstr "Добавить столбец"
-
-#: src/StickerSet.vala:320
-msgid "Delete column"
-msgstr "Удалить столбец"
-
-#: src/StickerSet.vala:321
-msgid "Add row"
-msgstr "Добавить строку"
-
-#: src/StickerSet.vala:322
-msgid "Delete row"
-msgstr "Удалить строку"
-
-#: src/StickerSet.vala:323
-msgid "Generic sorting ascending"
-msgstr "Обычная сортировка по возрастанию"
-
-#: src/StickerSet.vala:324
-msgid "Generic sorting descending"
-msgstr "Обычная сортировка по убыванию"
-
-#: src/StickerSet.vala:325
-msgid "Alphabetical sorting (A->Z)"
-msgstr "Алфавитный порядок (A->Z)"
-
-#: src/StickerSet.vala:326
-msgid "Alphabetical sorting (Z->A)"
-msgstr "Алфавитный порядок (Z->A)"
-
-#: src/StickerSet.vala:327
-msgid "Numerical sorting (2->1)"
-msgstr "Числовая сортировка (2->1)"
-
-#: src/StickerSet.vala:328
-msgid "Numerical sorting (1->2)"
-msgstr "Числовая сортировка (1->2)"
-
-#: src/StickerSet.vala:329
-msgid "Empty filter"
-msgstr "Пустой фильтр"
-
-#: src/StickerSet.vala:330
-msgid "Filled filter"
-msgstr "Заполненный фильтр"
-
-#: src/StickerSet.vala:331
-msgid "Clear filters"
-msgstr "Очистить фильтры"
-
-#: src/StickerSet.vala:332
-msgid "Pie chart"
-msgstr "Круговая диаграмма"
-
-#: src/StickerSet.vala:333
-msgid "Radar plot"
-msgstr "Сетчатая диаграмма"
-
-#: src/StickerSet.vala:334
-msgid "Heat map"
-msgstr "Тепловая карта"
-
-#: src/StickerSet.vala:335
-msgid "Timeline"
-msgstr ""
-
-#: src/StickerSet.vala:336
-msgid "Bar chart"
-msgstr "Столбчатая диаграмма"
-
-#: src/StickerSet.vala:337
-msgid "Area chart"
-msgstr "Комбинированная гистограмма"
-
-#: src/StickerSet.vala:338
-msgid "Scatter plot"
-msgstr "Граффик рассеяния"
-
-#: src/StickerSet.vala:339
-msgid "Doughnut chart"
-msgstr "Кольцевая диаграмма"
-
-#: src/StickerSet.vala:340
-msgid "Combo chart"
-msgstr "Комбинированный график"
-
-#: src/StickerSet.vala:341
-msgid "Flow chart"
-msgstr "Блок-схема"
-
-#: src/StickerSet.vala:342
-msgid "Line chart"
-msgstr "Линейная диаграмма"
-
-#: src/StickerSet.vala:343
-msgid "Genealogy"
-msgstr "Генеалогия"
-
-#: src/StickerSet.vala:344
-msgid "Mind map"
-msgstr "Диаграмма связей"
-
-#: src/StickerSet.vala:345
-msgid "Workflow"
-msgstr "Рабочий поток"
-
-#: src/StickerSet.vala:346
-msgid "Positive dynamic"
-msgstr "Положительная динамика"
-
-#: src/StickerSet.vala:347
-msgid "Negative dynamic"
-msgstr "Отрицательная динамика"
-
-#: src/StickerSet.vala:349
+#: src/StickerInspector.vala:214
+#, fuzzy
+msgid "Add custom stickers"
+msgstr "добавление стикера к узлу"
+
+#: src/StickerInspector.vala:401
+#, fuzzy
+msgid "Import Sticker(s)"
+msgstr "Удалить стикер"
+
+#: src/StickerInspector.vala:401 src/StickerSet.vala:353
 msgid "Import"
 msgstr "Импортировать"
 
+#: src/StickerSet.vala:25 src/StickerSet.vala:68
+msgid "Photo and Video"
+msgstr "Фото и видео"
+
+#: src/StickerSet.vala:26 src/StickerSet.vala:126
+msgid "Very Basic"
+msgstr "Основные"
+
+#: src/StickerSet.vala:27 src/StickerSet.vala:130 src/StickerSet.vala:221
+msgid "Business"
+msgstr "Бизнес"
+
+#: src/StickerSet.vala:28 src/StickerSet.vala:248
+msgid "Industry"
+msgstr "Промышленность"
+
+#: src/StickerSet.vala:29 src/StickerSet.vala:285
+msgid "Mobile"
+msgstr "Мобильная связь"
+
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:885
+msgid "Arrows"
+msgstr "Стрелки"
+
+#: src/StickerSet.vala:31 src/StickerSet.vala:357
+msgid "Data"
+msgstr "Данные"
+
+#: src/StickerSet.vala:33
+msgid "Flash on"
+msgstr "Вспышка включена"
+
+#: src/StickerSet.vala:34
+msgid "Flash off"
+msgstr "Вспышка выключена"
+
+#: src/StickerSet.vala:35
+msgid "Flash auto"
+msgstr "Автовспышка"
+
+#: src/StickerSet.vala:36
+msgid "Panorama"
+msgstr "Панорама"
+
+#: src/StickerSet.vala:37
+msgid "Landscape"
+msgstr "Пейзаж"
+
+#: src/StickerSet.vala:38
+msgid "Night landscape"
+msgstr "Ночной пейзаж"
+
+#: src/StickerSet.vala:39
+msgid "Sports mode"
+msgstr "Спортивный режим"
+
+#: src/StickerSet.vala:40
+msgid "Portrait mode"
+msgstr "Портретный режим"
+
+#: src/StickerSet.vala:41
+msgid "Night portrait"
+msgstr "Ночной портрет"
+
+#: src/StickerSet.vala:42
+msgid "Close up mode"
+msgstr "Макрорежим"
+
+#: src/StickerSet.vala:43
+msgid "Selfie"
+msgstr "Себяшка"
+
+#: src/StickerSet.vala:44
+msgid "Gallery"
+msgstr "Галерея"
+
+#: src/StickerSet.vala:45
+msgid "Stack of photos"
+msgstr "Стопка фотографий"
+
+#: src/StickerSet.vala:46
+msgid "Add image"
+msgstr "Добавить изображение"
+
+#: src/StickerSet.vala:47
+msgid "Edit image"
+msgstr "Изменить изображение"
+
+#: src/StickerSet.vala:48
+msgid "Remove image"
+msgstr "Удалить изображение"
+
+#: src/StickerSet.vala:49
+msgid "Compact camera"
+msgstr "Компактная фотокамера"
+
+#: src/StickerSet.vala:50
+msgid "Multiple cameras"
+msgstr "Несколько камер"
+
+#: src/StickerSet.vala:51
+msgid "Camera"
+msgstr "Камера"
+
+#: src/StickerSet.vala:52
+msgid "SLR back side"
+msgstr "Задник цифровой камеры"
+
+#: src/StickerSet.vala:53
+msgid "Old time camera"
+msgstr "Ретро-фотоаппарат"
+
+#: src/StickerSet.vala:54
+msgid "Camera addon"
+msgstr "Аксессуар для камеры"
+
+#: src/StickerSet.vala:55
+msgid "Camera identification"
+msgstr "Идентификация по камере"
+
+#: src/StickerSet.vala:56
+msgid "Start"
+msgstr "Начало"
+
+#: src/StickerSet.vala:57
+msgid "Clapperboard"
+msgstr "Нумератор с хлопушкой"
+
+#: src/StickerSet.vala:58
+msgid "Film"
+msgstr "Плёнка"
+
+#: src/StickerSet.vala:59
+msgid "Camcorder"
+msgstr "Видеокамера"
+
+#: src/StickerSet.vala:60
+msgid "Camcorder pro"
+msgstr "Профессиональная видеокамера"
+
+#: src/StickerSet.vala:61
+msgid "Webcam"
+msgstr "Веб-камера"
+
+#: src/StickerSet.vala:62
+msgid "Integrated webcam"
+msgstr "Встроенная веб-камера"
+
+#: src/StickerSet.vala:63
+msgid "Rotate camera"
+msgstr "Повернуть камеру"
+
+#: src/StickerSet.vala:64
+msgid "Switch camera"
+msgstr "Поменять камеру"
+
+#: src/StickerSet.vala:65
+msgid "Photo reel"
+msgstr "Фотоплёнка"
+
+#: src/StickerSet.vala:66
+msgid "Film reel"
+msgstr "Катушка плёнки"
+
+#: src/StickerSet.vala:67
+msgid "Cable release"
+msgstr "Спусковой тросик"
+
+#: src/StickerSet.vala:70
+msgid "Home"
+msgstr "Домой"
+
+#: src/StickerSet.vala:71
+msgid "Icons8 cup"
+msgstr ""
+
+#: src/StickerSet.vala:72
+msgid "Globe"
+msgstr "Земной шар"
+
+#: src/StickerSet.vala:73
+msgid "OK"
+msgstr "OK"
+
+#: src/StickerSet.vala:74
+msgid "Checkmark"
+msgstr "Значок отметки"
+
+#: src/StickerSet.vala:76
+msgid "Synchronize"
+msgstr "Синхронизировать"
+
+#: src/StickerSet.vala:77
+msgid "Refresh"
+msgstr "Обновить"
+
+#: src/StickerSet.vala:78
+msgid "Download"
+msgstr "Скачать"
+
+#: src/StickerSet.vala:79
+msgid "Upload"
+msgstr "Закачать"
+
+#: src/StickerSet.vala:80
+msgid "Empty trash"
+msgstr "Пустая корзина"
+
+#: src/StickerSet.vala:81
+msgid "Full trash"
+msgstr "Полная корзина"
+
+#: src/StickerSet.vala:82
+msgid "Folder"
+msgstr "Папка"
+
+#: src/StickerSet.vala:83
+msgid "Opened folder"
+msgstr "Открытая папка"
+
+#: src/StickerSet.vala:84 data/com.github.phase1geo.minder.shortcuts.ui:16
+msgid "File"
+msgstr "Файл"
+
+#: src/StickerSet.vala:85
+msgid "Document"
+msgstr "Документ"
+
+#: src/StickerSet.vala:86
+msgid "Audio file"
+msgstr "Звуковой файл"
+
+#: src/StickerSet.vala:87
+msgid "Image file"
+msgstr "Файл изображения"
+
+#: src/StickerSet.vala:88
+msgid "Video file"
+msgstr "Видеофайл"
+
+#: src/StickerSet.vala:89
+msgid "Print"
+msgstr "Печать"
+
+#: src/StickerSet.vala:90
+msgid "Music"
+msgstr "Музыка"
+
+#: src/StickerSet.vala:91
+msgid "Share"
+msgstr "Поделиться"
+
+#: src/StickerSet.vala:92
+msgid "Cursor"
+msgstr "Курсор"
+
+#: src/StickerSet.vala:93
+msgid "Puzzle"
+msgstr "Головоломка"
+
+#: src/StickerSet.vala:94
+msgid "Unlock"
+msgstr "Разблокировать"
+
+#: src/StickerSet.vala:95
+msgid "Lock"
+msgstr "Заблокировать"
+
+#: src/StickerSet.vala:96
+msgid "Idea"
+msgstr "Идея"
+
+#: src/StickerSet.vala:97
+msgid "No idea"
+msgstr "Нет идеи"
+
+#: src/StickerSet.vala:98
+msgid "Link"
+msgstr "Ссылка"
+
+#: src/StickerSet.vala:99
+msgid "Broken link"
+msgstr "Битая ссылка"
+
+#: src/StickerSet.vala:100
+msgid "Rating"
+msgstr "Оценка"
+
+#: src/StickerSet.vala:101
+msgid "Like placeholder"
+msgstr "Как заглушка"
+
+#: src/StickerSet.vala:102
+msgid "Like"
+msgstr "Понравилось"
+
+#: src/StickerSet.vala:103
+msgid "Dislike"
+msgstr "Не понравилось"
+
+#: src/StickerSet.vala:104
+msgid "Info"
+msgstr "Информация"
+
+#: src/StickerSet.vala:105
+msgid "About"
+msgstr "О программе"
+
+#: src/StickerSet.vala:106
+msgid "Picture"
+msgstr "Изображение"
+
+#: src/StickerSet.vala:107
+msgid "Clock"
+msgstr "Часы"
+
+#: src/StickerSet.vala:108
+msgid "Alarm clock"
+msgstr "Будильник"
+
+#: src/StickerSet.vala:109
+msgid "Address book"
+msgstr "Адресная книга"
+
+#: src/StickerSet.vala:110
+msgid "Contacts"
+msgstr "Контакты"
+
+#: src/StickerSet.vala:111
+msgid "News"
+msgstr "Новости"
+
+#: src/StickerSet.vala:112
+msgid "Bookmark"
+msgstr "Закладка"
+
+#: src/StickerSet.vala:113
+msgid "Binoculars"
+msgstr "Бинокль"
+
+#: src/StickerSet.vala:115
+msgid "Ruler"
+msgstr "Линейка"
+
+#: src/StickerSet.vala:116
+msgid "Services"
+msgstr "Услуги"
+
+#: src/StickerSet.vala:117
+msgid "Settings"
+msgstr "Настройки"
+
+#: src/StickerSet.vala:118
+msgid "Support"
+msgstr "Поддержка"
+
+#: src/StickerSet.vala:119
+msgid "Frame"
+msgstr "Рамка"
+
+#: src/StickerSet.vala:120
+msgid "Menu"
+msgstr "Меню"
+
+#: src/StickerSet.vala:121
+msgid "Key"
+msgstr "Ключ"
+
+#: src/StickerSet.vala:122
+msgid "Calendar"
+msgstr "Календарь"
+
+#: src/StickerSet.vala:123
+msgid "Calculator"
+msgstr "Калькулятор"
+
+#: src/StickerSet.vala:124
+msgid "Minus"
+msgstr "Минус"
+
+#: src/StickerSet.vala:125
+msgid "Plus"
+msgstr "Плюс"
+
+#: src/StickerSet.vala:128
+msgid "Graduation cap"
+msgstr "Шляпа выпускника"
+
+#: src/StickerSet.vala:129
+msgid "Briefcase"
+msgstr "Портфель"
+
+#: src/StickerSet.vala:131
+msgid "Signature"
+msgstr "Подпись"
+
+#: src/StickerSet.vala:132
+msgid "Safe"
+msgstr "Сейф"
+
+#: src/StickerSet.vala:133
+msgid "Advertising"
+msgstr "Реклама"
+
+#: src/StickerSet.vala:134
+msgid "Businessman"
+msgstr "Бизнесмен"
+
+#: src/StickerSet.vala:135
+msgid "Businesswoman"
+msgstr "Деловая женщина"
+
+#: src/StickerSet.vala:136
+msgid "Manager"
+msgstr "Менеджер"
+
+#: src/StickerSet.vala:137
+msgid "Online support"
+msgstr "Техподдержка онлайн"
+
+#: src/StickerSet.vala:138
+msgid "Assistant"
+msgstr "Помощник"
+
+#: src/StickerSet.vala:139
+msgid "Customer support"
+msgstr "Техническая поддержка"
+
+#: src/StickerSet.vala:140
+msgid "Reading ebook"
+msgstr "Чтение электронной книги"
+
+#: src/StickerSet.vala:141
+msgid "Reading"
+msgstr "Чтение"
+
+#: src/StickerSet.vala:142
+msgid "Neutral trading"
+msgstr "Рыночно-нейтральный трейдинг"
+
+#: src/StickerSet.vala:143
+msgid "Bullish"
+msgstr "Бычий рынок"
+
+#: src/StickerSet.vala:144
+msgid "Bearish"
+msgstr "Медвежий рынок"
+
+#: src/StickerSet.vala:145
+msgid "High priority"
+msgstr "Высокий приоритет"
+
+#: src/StickerSet.vala:146
+msgid "Medium priority"
+msgstr "Средний приоритет"
+
+#: src/StickerSet.vala:147
+msgid "Low priority"
+msgstr "Низкий приоритет"
+
+#: src/StickerSet.vala:148
+msgid "Make decision"
+msgstr "Принять решение"
+
+#: src/StickerSet.vala:149
+msgid "Decision"
+msgstr "Решение"
+
+#: src/StickerSet.vala:150
+msgid "Good decision"
+msgstr "Хорошее решение"
+
+#: src/StickerSet.vala:151
+msgid "Neutral decision"
+msgstr "Нейтральное решение"
+
+#: src/StickerSet.vala:152
+msgid "Bad decision"
+msgstr "Плохое решение"
+
+#: src/StickerSet.vala:153
+msgid "Approve"
+msgstr "Одобрить"
+
+#: src/StickerSet.vala:154
+msgid "Disapprove"
+msgstr "Отвергнуть"
+
+#: src/StickerSet.vala:155
+msgid "Podium without speaker"
+msgstr "Трибуна без докладчика"
+
+#: src/StickerSet.vala:156
+msgid "Podium with speaker"
+msgstr "Трибуна с докладчиком"
+
+#: src/StickerSet.vala:157
+msgid "Podium with audience"
+msgstr "Трибуна с аудиторией"
+
+#: src/StickerSet.vala:158
+msgid "Video projector"
+msgstr "Видеопроектор"
+
+#: src/StickerSet.vala:159
+msgid "Statistics"
+msgstr "Статистика"
+
+#: src/StickerSet.vala:160
+msgid "Collaboration"
+msgstr "Совместная работа"
+
+#: src/StickerSet.vala:161
+msgid "Voice presentation"
+msgstr "Голосовая презентация"
+
+#: src/StickerSet.vala:162
+msgid "Conference call"
+msgstr "Телеконференция"
+
+#: src/StickerSet.vala:163
+msgid "Comments"
+msgstr "Комментарии"
+
+#: src/StickerSet.vala:164
+msgid "FAQ"
+msgstr "FAQ"
+
+#: src/StickerSet.vala:165
+msgid "Reuse"
+msgstr "Повторное использование"
+
+#: src/StickerSet.vala:166
+msgid "Organization"
+msgstr "Организация"
+
+#: src/StickerSet.vala:167
+msgid "Department"
+msgstr "Департамент"
+
+#: src/StickerSet.vala:168
+msgid "Library"
+msgstr "Библиотека"
+
+#: src/StickerSet.vala:169
+msgid "Shop"
+msgstr "Магазин"
+
+#: src/StickerSet.vala:170
+msgid "Self service kiosk"
+msgstr "Киоск самообслуживания"
+
+#: src/StickerSet.vala:171
+msgid "Donate"
+msgstr "Пожертвовать деньги"
+
+#: src/StickerSet.vala:172
+msgid "Currency exchange"
+msgstr "Обмен валюты"
+
+#: src/StickerSet.vala:173
+msgid "Debt"
+msgstr "Долг"
+
+#: src/StickerSet.vala:174
+msgid "Sales performance"
+msgstr "Результативность продаж"
+
+#: src/StickerSet.vala:175
+msgid "Invite"
+msgstr "Пригласить"
+
+#: src/StickerSet.vala:176
+msgid "Money transfer"
+msgstr "Отправка денег"
+
+#: src/StickerSet.vala:177
+msgid "Feedback"
+msgstr "Обратная связь"
+
+#: src/StickerSet.vala:178
+msgid "Approval"
+msgstr "Одобрение"
+
+#: src/StickerSet.vala:179
+msgid "Paid"
+msgstr "Оплачено"
+
+#: src/StickerSet.vala:180
+msgid "In transit"
+msgstr "В пути"
+
+#: src/StickerSet.vala:181
+msgid "Shipped"
+msgstr "Отправлено"
+
+#: src/StickerSet.vala:182
+msgid "Package"
+msgstr "Посылка"
+
+#: src/StickerSet.vala:183
+msgid "Planner"
+msgstr "Планировщик"
+
+#: src/StickerSet.vala:184
+msgid "Overtime"
+msgstr "Переработка"
+
+#: src/StickerSet.vala:185
+msgid "Leave"
+msgstr "Покинуть"
+
+#: src/StickerSet.vala:186
+msgid "Expired"
+msgstr "Срок истёк"
+
+#: src/StickerSet.vala:187
+msgid "Process"
+msgstr "Процесс"
+
+#: src/StickerSet.vala:188
+msgid "Diploma 1"
+msgstr "Диплом 1"
+
+#: src/StickerSet.vala:189
+msgid "Diploma 2"
+msgstr "Диплом 2"
+
+#: src/StickerSet.vala:190
+msgid "Business contact"
+msgstr "Деловой контакт"
+
+#: src/StickerSet.vala:191
+msgid "Survey"
+msgstr "Опрос"
+
+#: src/StickerSet.vala:192
+msgid "Inspection"
+msgstr "Инспекция"
+
+#: src/StickerSet.vala:193
+msgid "Rules"
+msgstr "Правила"
+
+#: src/StickerSet.vala:194
+msgid "Todo list"
+msgstr "Список задач"
+
+#: src/StickerSet.vala:195
+msgid "Ratings"
+msgstr "Рейтинги"
+
+#: src/StickerSet.vala:196
+msgid "Questions"
+msgstr "Вопросы"
+
+#: src/StickerSet.vala:197
+msgid "Answers"
+msgstr "Ответы"
+
+#: src/StickerSet.vala:198
+msgid "Fine print"
+msgstr "Важная информация мелким текстом"
+
+#: src/StickerSet.vala:199
+msgid "Candle sticks"
+msgstr "Свечи"
+
+#: src/StickerSet.vala:200
+msgid "Serial tasks"
+msgstr "Последовательные задачи"
+
+#: src/StickerSet.vala:201
+msgid "Parallel tasks"
+msgstr "Параллельные задачи"
+
+#: src/StickerSet.vala:202
+msgid "Tree structure"
+msgstr "Древовидная структура"
+
+#: src/StickerSet.vala:203
+msgid "Org unit"
+msgstr "Подразделение организации"
+
+#: src/StickerSet.vala:204
+msgid "Privacy"
+msgstr "Приватность"
+
+#: src/StickerSet.vala:205
+msgid "Disclaimer"
+msgstr "Оговорка"
+
+#: src/StickerSet.vala:206
+msgid "Callback"
+msgstr ""
+
+#: src/StickerSet.vala:207
+msgid "Service mark"
+msgstr "Сервисная марка"
+
+#: src/StickerSet.vala:208
+msgid "Registered trademark"
+msgstr "Зарегистрированная торговая марка"
+
+#: src/StickerSet.vala:209
+msgid "Trademark"
+msgstr "Торговая марка"
+
+#: src/StickerSet.vala:210
+msgid "Copyright"
+msgstr "Авторские права"
+
+#: src/StickerSet.vala:211
+msgid "Copyleft"
+msgstr "Копилефт"
+
+#: src/StickerSet.vala:212
+msgid "Sound recording copyright"
+msgstr "Авторские права на звукозапись"
+
+#: src/StickerSet.vala:213
+msgid "Butting in"
+msgstr "Встревание"
+
+#: src/StickerSet.vala:214
+msgid "Multiple inputs"
+msgstr "Несколько входов"
+
+#: src/StickerSet.vala:215
+msgid "Collect"
+msgstr "Собрать"
+
+#: src/StickerSet.vala:216
+msgid "Internal"
+msgstr "Внутренний"
+
+#: src/StickerSet.vala:217
+msgid "External"
+msgstr "Внешний"
+
+#: src/StickerSet.vala:218
+msgid "VIP"
+msgstr "VIP"
+
+#: src/StickerSet.vala:219
+msgid "Light at the end of tunnel"
+msgstr "Свет в конце туннеля"
+
+#: src/StickerSet.vala:220
+msgid "Entering heaven alive"
+msgstr "Попасть в рай живым"
+
+#: src/StickerSet.vala:223
+msgid "Biomass"
+msgstr "Биомасса"
+
+#: src/StickerSet.vala:224
+msgid "Display"
+msgstr "Индикатор"
+
+#: src/StickerSet.vala:225
+msgid "Do not inhale"
+msgstr "Не вдыхать"
+
+#: src/StickerSet.vala:226
+msgid "Factory"
+msgstr "Фабрика"
+
+#: src/StickerSet.vala:227
+msgid "Factory breakdown"
+msgstr "Авария на фабрике"
+
+#: src/StickerSet.vala:228
+msgid "Crystal oscillator"
+msgstr "Кварцевый генератор"
+
+#: src/StickerSet.vala:229
+msgid "Capacitor"
+msgstr "Конденсатор"
+
+#: src/StickerSet.vala:230
+msgid "Electricity"
+msgstr "Электричество"
+
+#: src/StickerSet.vala:231
+msgid "Electro devices"
+msgstr "Электрические устройства"
+
+#: src/StickerSet.vala:232
+msgid "Electrical sensor"
+msgstr "Электрический датчик"
+
+#: src/StickerSet.vala:233
+msgid "Electrical threshold"
+msgstr ""
+
+#: src/StickerSet.vala:234
+msgid "Automotive"
+msgstr "Автостроение"
+
+#: src/StickerSet.vala:235
+msgid "Feed in"
+msgstr ""
+
+#: src/StickerSet.vala:236
+msgid "Dam"
+msgstr "Плотина"
+
+#: src/StickerSet.vala:237
+msgid "Biotech"
+msgstr "Биотехнологии"
+
+#: src/StickerSet.vala:238
+msgid "Advance"
+msgstr ""
+
+#: src/StickerSet.vala:239
+msgid "Cloth"
+msgstr "Ткань"
+
+#: src/StickerSet.vala:240
+msgid "Electronics"
+msgstr "Электроника"
+
+#: src/StickerSet.vala:241
+msgid "Deployment"
+msgstr "Развёртывание"
+
+#: src/StickerSet.vala:242
+msgid "Automatic"
+msgstr ""
+
+#: src/StickerSet.vala:243
+msgid "Do not insert"
+msgstr "Не вставлять"
+
+#: src/StickerSet.vala:244
+msgid "Do not mix"
+msgstr "Не смешивать"
+
+#: src/StickerSet.vala:245
+msgid "Biohazard"
+msgstr "Биологическая опасность"
+
+#: src/StickerSet.vala:246
+msgid "Circuit"
+msgstr "Электрическая цепь"
+
+#: src/StickerSet.vala:247
+msgid "Engineering"
+msgstr "Инженерное дело"
+
+#: src/StickerSet.vala:250
+msgid "Cell phone"
+msgstr "Сотовый телефон"
+
+#: src/StickerSet.vala:251
+msgid "iPhone"
+msgstr "iPhone"
+
+#: src/StickerSet.vala:252
+msgid "iPad"
+msgstr "iPad"
+
+#: src/StickerSet.vala:253
+msgid "Phone android"
+msgstr "Телефон с Android"
+
+#: src/StickerSet.vala:254
+msgid "Tablet android"
+msgstr "Планшет на Android"
+
+#: src/StickerSet.vala:255
+msgid "Nook"
+msgstr "Nook"
+
+#: src/StickerSet.vala:256
+msgid "Kindle"
+msgstr "Kindle"
+
+#: src/StickerSet.vala:257
+msgid "Two smartphones"
+msgstr "Два смартфона"
+
+#: src/StickerSet.vala:258
+msgid "Multiple devices"
+msgstr "Несколько устройств"
+
+#: src/StickerSet.vala:259
+msgid "Multiple smartphones"
+msgstr "Несколько смартфонов"
+
+#: src/StickerSet.vala:260
+msgid "Smartphone tablet"
+msgstr "Фаблет"
+
+#: src/StickerSet.vala:261
+msgid "Touchscreen smartphone"
+msgstr "Смартфон с тачскрином"
+
+#: src/StickerSet.vala:262
+msgid "Sim card"
+msgstr "SIM-карта"
+
+#: src/StickerSet.vala:263
+msgid "Sim card chip"
+msgstr "Чип SIM-карты"
+
+#: src/StickerSet.vala:264
+msgid "SMS"
+msgstr "SMS"
+
+#: src/StickerSet.vala:265
+msgid "MMS"
+msgstr "MMS"
+
+#: src/StickerSet.vala:266
+msgid "Charge battery"
+msgstr "Зарядить аккумулятор"
+
+#: src/StickerSet.vala:267
+msgid "Full battery"
+msgstr "Заряженный аккумулятор"
+
+#: src/StickerSet.vala:268
+msgid "High battery"
+msgstr "Высокий заряд"
+
+#: src/StickerSet.vala:269
+msgid "Middle battery"
+msgstr "Средний заряд"
+
+#: src/StickerSet.vala:270
+msgid "Low battery"
+msgstr "Низкий заряд"
+
+#: src/StickerSet.vala:271
+msgid "Empty battery"
+msgstr "Разряженный аккумулятор"
+
+#: src/StickerSet.vala:272
+msgid "Phone"
+msgstr "Телефон"
+
+#: src/StickerSet.vala:273
+msgid "Missed call"
+msgstr "Пропущенный вызов"
+
+#: src/StickerSet.vala:274
+msgid "End call"
+msgstr "Завершить звонок"
+
+#: src/StickerSet.vala:275
+msgid "Call transfer"
+msgstr "Переадресация вызова"
+
+#: src/StickerSet.vala:276
+msgid "Video call"
+msgstr "Видеозвонок"
+
+#: src/StickerSet.vala:277
+msgid "No video"
+msgstr "Нет видео"
+
+#: src/StickerSet.vala:278
+msgid "Rotate to portrait"
+msgstr "Повернуть на портретный режим"
+
+#: src/StickerSet.vala:279
+msgid "Lock portrait"
+msgstr "Принудительный портретный режим"
+
+#: src/StickerSet.vala:280
+msgid "Rotate to landscape"
+msgstr "Повернуть на альбомный режим"
+
+#: src/StickerSet.vala:281
+msgid "Lock landscape"
+msgstr "Принудительный альбомный режим"
+
+#: src/StickerSet.vala:282
+msgid "Voicemail"
+msgstr "Голосовая почта"
+
+#: src/StickerSet.vala:283
+msgid "Speaker"
+msgstr "Громкоговоритель"
+
+#: src/StickerSet.vala:284
+msgid "Headset"
+msgstr "Гарнитура"
+
+#: src/StickerSet.vala:287
+msgid "Left up"
+msgstr "Влево вверх"
+
+#: src/StickerSet.vala:288
+msgid "Up"
+msgstr "Вверх"
+
+#: src/StickerSet.vala:289
+msgid "Right up"
+msgstr "Направо вверх"
+
+#: src/StickerSet.vala:290
+msgid "Left"
+msgstr "Влево"
+
+#: src/StickerSet.vala:291
+msgid "Right"
+msgstr "Вправо"
+
+#: src/StickerSet.vala:292
+msgid "Left down"
+msgstr "Влево вниз"
+
+#: src/StickerSet.vala:293
+msgid "Down"
+msgstr "Вниз"
+
+#: src/StickerSet.vala:294
+msgid "Right down"
+msgstr "Направо вниз"
+
+#: src/StickerSet.vala:295
+msgid "Collapse"
+msgstr "Свернуть"
+
+#: src/StickerSet.vala:296
+msgid "Previous"
+msgstr "Предыдущий"
+
+#: src/StickerSet.vala:297
+msgid "Next"
+msgstr "Следующий"
+
+#: src/StickerSet.vala:298
+msgid "Expand"
+msgstr "Развернуть"
+
+#: src/StickerSet.vala:299
+msgid "Left down2"
+msgstr "Влево и вниз"
+
+#: src/StickerSet.vala:300
+msgid "Up left"
+msgstr "Вверх и влево"
+
+#: src/StickerSet.vala:301
+msgid "Down right"
+msgstr "Вниз и вправо"
+
+#: src/StickerSet.vala:302
+msgid "Right up2"
+msgstr "Направо и вверх"
+
+#: src/StickerSet.vala:303
+msgid "Up right"
+msgstr "Вверх и вправо"
+
+#: src/StickerSet.vala:304
+msgid "Right down2"
+msgstr "Направо и вниз"
+
+#: src/StickerSet.vala:305
+msgid "Left up2"
+msgstr "Влево и вверх"
+
+#: src/StickerSet.vala:306
+msgid "Down left"
+msgstr "Вниз и влево"
+
+#: src/StickerSet.vala:311
+msgid "Filing cabinet"
+msgstr "Картотека"
+
+#: src/StickerSet.vala:312
+msgid "Database"
+msgstr "База данных"
+
+#: src/StickerSet.vala:313
+msgid "Accept database"
+msgstr "Принять базу данных"
+
+#: src/StickerSet.vala:314
+msgid "Add database"
+msgstr "Добавить базу данных"
+
+#: src/StickerSet.vala:315
+msgid "Delete database"
+msgstr "Удалить базу данных"
+
+#: src/StickerSet.vala:316
+msgid "Data backup"
+msgstr "Резервная копия"
+
+#: src/StickerSet.vala:317
+msgid "Data recovery"
+msgstr "Восстановление данных"
+
+#: src/StickerSet.vala:318
+msgid "Data configuration"
+msgstr "Настройка данных"
+
+#: src/StickerSet.vala:319
+msgid "Data encryption"
+msgstr "Шифрование данных"
+
+#: src/StickerSet.vala:320
+msgid "Data protection"
+msgstr "Защита данных"
+
+#: src/StickerSet.vala:321
+msgid "Grid"
+msgstr "Сетка"
+
+#: src/StickerSet.vala:322
+msgid "Data sheet"
+msgstr "Технические данные"
+
+#: src/StickerSet.vala:323
+msgid "Add column"
+msgstr "Добавить столбец"
+
+#: src/StickerSet.vala:324
+msgid "Delete column"
+msgstr "Удалить столбец"
+
+#: src/StickerSet.vala:325
+msgid "Add row"
+msgstr "Добавить строку"
+
+#: src/StickerSet.vala:326
+msgid "Delete row"
+msgstr "Удалить строку"
+
+#: src/StickerSet.vala:327
+msgid "Generic sorting ascending"
+msgstr "Обычная сортировка по возрастанию"
+
+#: src/StickerSet.vala:328
+msgid "Generic sorting descending"
+msgstr "Обычная сортировка по убыванию"
+
+#: src/StickerSet.vala:329
+msgid "Alphabetical sorting (A->Z)"
+msgstr "Алфавитный порядок (A->Z)"
+
+#: src/StickerSet.vala:330
+msgid "Alphabetical sorting (Z->A)"
+msgstr "Алфавитный порядок (Z->A)"
+
+#: src/StickerSet.vala:331
+msgid "Numerical sorting (2->1)"
+msgstr "Числовая сортировка (2->1)"
+
+#: src/StickerSet.vala:332
+msgid "Numerical sorting (1->2)"
+msgstr "Числовая сортировка (1->2)"
+
+#: src/StickerSet.vala:333
+msgid "Empty filter"
+msgstr "Пустой фильтр"
+
+#: src/StickerSet.vala:334
+msgid "Filled filter"
+msgstr "Заполненный фильтр"
+
+#: src/StickerSet.vala:335
+msgid "Clear filters"
+msgstr "Очистить фильтры"
+
+#: src/StickerSet.vala:336
+msgid "Pie chart"
+msgstr "Круговая диаграмма"
+
+#: src/StickerSet.vala:337
+msgid "Radar plot"
+msgstr "Сетчатая диаграмма"
+
+#: src/StickerSet.vala:338
+msgid "Heat map"
+msgstr "Тепловая карта"
+
+#: src/StickerSet.vala:339
+msgid "Timeline"
+msgstr ""
+
+#: src/StickerSet.vala:340
+msgid "Bar chart"
+msgstr "Столбчатая диаграмма"
+
+#: src/StickerSet.vala:341
+msgid "Area chart"
+msgstr "Комбинированная гистограмма"
+
+#: src/StickerSet.vala:342
+msgid "Scatter plot"
+msgstr "Граффик рассеяния"
+
+#: src/StickerSet.vala:343
+msgid "Doughnut chart"
+msgstr "Кольцевая диаграмма"
+
+#: src/StickerSet.vala:344
+msgid "Combo chart"
+msgstr "Комбинированный график"
+
+#: src/StickerSet.vala:345
+msgid "Flow chart"
+msgstr "Блок-схема"
+
+#: src/StickerSet.vala:346
+msgid "Line chart"
+msgstr "Линейная диаграмма"
+
+#: src/StickerSet.vala:347
+msgid "Genealogy"
+msgstr "Генеалогия"
+
+#: src/StickerSet.vala:348
+msgid "Mind map"
+msgstr "Диаграмма связей"
+
+#: src/StickerSet.vala:349
+msgid "Workflow"
+msgstr "Рабочий поток"
+
 #: src/StickerSet.vala:350
+msgid "Positive dynamic"
+msgstr "Положительная динамика"
+
+#: src/StickerSet.vala:351
+msgid "Negative dynamic"
+msgstr "Отрицательная динамика"
+
+#: src/StickerSet.vala:354
 msgid "List"
 msgstr "Список"
 
-#: src/StickerSet.vala:351
+#: src/StickerSet.vala:355
 msgid "Template"
 msgstr "Шаблон"
 
-#: src/StickerSet.vala:352
+#: src/StickerSet.vala:356
 msgid "View details"
 msgstr "Просмотреть подробности"
 
@@ -3102,7 +3121,7 @@ msgstr "Вернуть "
 msgid "URL"
 msgstr "URL"
 
-#: src/Utils.vala:159 src/Utils.vala:165
+#: src/Utils.vala:160
 #, c-format
 msgid "error: %s\n"
 msgstr "ошибка: %s\n"

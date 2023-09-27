@@ -159,6 +159,27 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.16.0" date="2023-09-01">
+      <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Added support for adding node links in node, connection or group notes.</li>
+          <li>Added support for providing custom stickers.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobatistella).</li>
+        </ul>
+      </description>
+      <issues>
+        <issue url="https://github.com/phase1geo/minder/issues/575">Clicking on files in Minder Flatpak doesn't work</issue>
+      </issues>
+    </release>
     <release version="1.15.6" date="2023-08-25">
       <description>
         <p>Changes</p>

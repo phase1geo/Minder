@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-25 17:04-0500\n"
+"POT-Creation-Date: 2023-09-27 10:58-0500\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -123,7 +123,7 @@ msgstr "Použít základní barvu motivu"
 msgid "Note"
 msgstr "Poznámka"
 
-#: src/ConnectionInspector.vala:154
+#: src/ConnectionInspector.vala:157
 msgid "Delete Connection"
 msgstr "Smazat spojení"
 
@@ -180,48 +180,48 @@ msgstr "Poznámka ke spojení"
 msgid "unnamed"
 msgstr "nepomenováno"
 
-#: src/DrawArea.vala:742
+#: src/DrawArea.vala:754
 msgid "Main Idea"
 msgstr "Hlavní myšlenka"
 
-#: src/DrawArea.vala:2407
+#: src/DrawArea.vala:2437
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% hotovo"
 
-#: src/DrawArea.vala:2421
+#: src/DrawArea.vala:2451
 msgid "Drag to resize node"
 msgstr ""
 
-#: src/DrawArea.vala:2423
+#: src/DrawArea.vala:2453
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:2535
+#: src/DrawArea.vala:2565
 #, c-format
 msgid "Children: %u\n"
 msgstr "Podřadných uzlů: %u\n"
 
-#: src/DrawArea.vala:2536
+#: src/DrawArea.vala:2566
 #, c-format
 msgid "Total: %d"
 msgstr "Celkově: %d"
 
-#: src/DrawArea.vala:2582
+#: src/DrawArea.vala:2612
 msgid "connection endpoint change"
 msgstr "změna konce spojení"
 
-#: src/DrawArea.vala:2589
+#: src/DrawArea.vala:2619
 msgid "connection drag"
 msgstr "přetáhnutí spojení"
 
-#: src/DrawArea.vala:3235 src/DrawArea.vala:3249 src/DrawArea.vala:4988
+#: src/DrawArea.vala:3265 src/DrawArea.vala:3279 src/DrawArea.vala:5031
 msgid "Another Idea"
 msgstr "Další myšlenka"
 
-#: src/DrawArea.vala:4481 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4511 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "Ruční"
@@ -310,12 +310,12 @@ msgstr "Exportovat jako %s"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:300
 #: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1248
-#: src/QuickEntry.vala:144 src/StickerSet.vala:71 src/ThemeEditor.vala:143
-#: src/UrlEditor.vala:62
+#: src/QuickEntry.vala:144 src/StickerInspector.vala:401 src/StickerSet.vala:75
+#: src/ThemeEditor.vala:143 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: src/Exporter.vala:132 src/MainWindow.vala:826 src/StickerSet.vala:348
+#: src/Exporter.vala:132 src/MainWindow.vala:826 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Export"
 
@@ -518,7 +518,7 @@ msgstr "Vyjmout obrázek do schránky"
 msgid "Paste Image from Clipboard"
 msgstr "Vložit obrázek ze schránky"
 
-#: src/ImageEditor.vala:396 src/NodeInspector.vala:289 src/NodeMenu.vala:416
+#: src/ImageEditor.vala:396 src/NodeInspector.vala:292 src/NodeMenu.vala:416
 msgid "Remove Image"
 msgstr "Odstranit obrázek"
 
@@ -547,11 +547,11 @@ msgstr "Otevřít soubor"
 msgid "Save File As"
 msgstr "Uložit soubor jako"
 
-#: src/MainWindow.vala:204 src/StickerSet.vala:303 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:204 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Zpět"
 
-#: src/MainWindow.vala:211 src/StickerSet.vala:304 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:211 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Znovu"
 
@@ -600,7 +600,7 @@ msgstr "Vměstnat do okna vybraný uzel"
 msgid "Zoom to Actual Size"
 msgstr "Přiblížení na skutečnou velikost"
 
-#: src/MainWindow.vala:652 src/StickerSet.vala:110
+#: src/MainWindow.vala:652 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Hledat"
 
@@ -787,39 +787,39 @@ msgstr "Sbalit"
 msgid "Override Color"
 msgstr "Přepsat barvu"
 
-#: src/NodeInspector.vala:260 src/NodeInspector.vala:278
+#: src/NodeInspector.vala:263 src/NodeInspector.vala:281
 msgid "Image"
 msgstr "Obrázek"
 
-#: src/NodeInspector.vala:264
+#: src/NodeInspector.vala:267
 msgid "Add Image…"
 msgstr "Přidat obrázek…"
 
-#: src/NodeInspector.vala:283
+#: src/NodeInspector.vala:286
 msgid "Edit Image"
 msgstr "Upravit obrázek"
 
-#: src/NodeInspector.vala:296
+#: src/NodeInspector.vala:299
 msgid "Resizable"
 msgstr ""
 
-#: src/NodeInspector.vala:396
+#: src/NodeInspector.vala:399
 msgid "Copy Node To Clipboard"
 msgstr "Zkopírovat uzel do schránky"
 
-#: src/NodeInspector.vala:400
+#: src/NodeInspector.vala:403
 msgid "Cut Node To Clipboard"
 msgstr "Vyjmout uzel do schránky"
 
-#: src/NodeInspector.vala:405
+#: src/NodeInspector.vala:408
 msgid "Detach Node"
 msgstr "Odpojit uzel"
 
-#: src/NodeInspector.vala:410 data/com.github.phase1geo.minder.shortcuts.ui:284
+#: src/NodeInspector.vala:413 data/com.github.phase1geo.minder.shortcuts.ui:284
 msgid "Delete Node"
 msgstr "Smazat uzel"
 
-#: src/NodeLink.vala:101
+#: src/NodeLink.vala:106
 msgid "No node found"
 msgstr "Nenalezen žádný uzel"
 
@@ -1234,15 +1234,20 @@ msgstr "Nahradit"
 msgid "Insert"
 msgstr "Vložit"
 
-#: src/StickerInspector.vala:60
+#: src/StickerInspector.vala:63
 msgid "Remove From Favorites"
 msgstr "Odstranit z oblíbených"
 
-#: src/StickerInspector.vala:63 src/StickerInspector.vala:67
+#: src/StickerInspector.vala:70 src/StickerInspector.vala:80
 msgid "Add To Favorites"
 msgstr "Přidat do oblíbených"
 
-#: src/StickerInspector.vala:76
+#: src/StickerInspector.vala:83
+#, fuzzy
+msgid "Remove Custom Sticker"
+msgstr "Odstranit nálepku"
+
+#: src/StickerInspector.vala:99
 msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
@@ -1250,1263 +1255,1277 @@ msgstr ""
 "Pokud chcete přidat nálepku, přetáhněte nálepku na uzel nebo kamkoliv jinam "
 "v mapě."
 
-#: src/StickerInspector.vala:82
+#: src/StickerInspector.vala:105
 msgid "Search Stickers"
 msgstr "Hledat nálepky"
 
-#: src/StickerInspector.vala:111
+#: src/StickerInspector.vala:134
 msgid "Favorites"
 msgstr "Oblíbené"
 
-#: src/StickerSet.vala:21 src/StickerSet.vala:64
-msgid "Photo and Video"
-msgstr "Fotky a videa"
-
-#: src/StickerSet.vala:22 src/StickerSet.vala:122
-msgid "Very Basic"
-msgstr "Úplně základní"
-
-#: src/StickerSet.vala:23 src/StickerSet.vala:126 src/StickerSet.vala:217
-msgid "Business"
-msgstr "Podnikání"
-
-#: src/StickerSet.vala:24 src/StickerSet.vala:244
-msgid "Industry"
-msgstr "Průmysl"
-
-#: src/StickerSet.vala:25 src/StickerSet.vala:281
-msgid "Mobile"
-msgstr "Souvisí s mobilem"
-
-#: src/StickerSet.vala:26 src/StickerSet.vala:305 src/StyleInspector.vala:885
-msgid "Arrows"
-msgstr "Šipky"
-
-#: src/StickerSet.vala:27 src/StickerSet.vala:353
-msgid "Data"
-msgstr "Souvisí s daty"
-
-#: src/StickerSet.vala:29
-msgid "Flash on"
-msgstr "Blesk zapnutý"
-
-#: src/StickerSet.vala:30
-msgid "Flash off"
-msgstr "Blesk vypnutý"
-
-#: src/StickerSet.vala:31
-msgid "Flash auto"
-msgstr "Automatický blesk"
-
-#: src/StickerSet.vala:32
-msgid "Panorama"
-msgstr "Panorama"
-
-#: src/StickerSet.vala:33
-msgid "Landscape"
-msgstr "Krajina"
-
-#: src/StickerSet.vala:34
-msgid "Night landscape"
-msgstr "Noční krajina"
-
-#: src/StickerSet.vala:35
-msgid "Sports mode"
-msgstr "Režim sportu"
-
-#: src/StickerSet.vala:36
-msgid "Portrait mode"
-msgstr "Portrétní režim"
-
-#: src/StickerSet.vala:37
-msgid "Night portrait"
-msgstr "Noční portrét"
-
-#: src/StickerSet.vala:38
-msgid "Close up mode"
-msgstr "Režim na blízko"
-
-#: src/StickerSet.vala:39
-msgid "Selfie"
-msgstr "Selfie"
-
-#: src/StickerSet.vala:40
-msgid "Gallery"
-msgstr "Galerie"
-
-#: src/StickerSet.vala:41
-msgid "Stack of photos"
-msgstr "Množství fotek"
-
-#: src/StickerSet.vala:42
-msgid "Add image"
-msgstr "Přidat obrázek"
-
-#: src/StickerSet.vala:43
-msgid "Edit image"
-msgstr "Upravit obrázek"
-
-#: src/StickerSet.vala:44
-msgid "Remove image"
-msgstr "Odstranit obrázek"
-
-#: src/StickerSet.vala:45
-msgid "Compact camera"
-msgstr "Porovnat fotoaparát"
-
-#: src/StickerSet.vala:46
-msgid "Multiple cameras"
-msgstr "Víc fotoaparátů"
-
-#: src/StickerSet.vala:47
-msgid "Camera"
-msgstr "Fotoaparát"
-
-#: src/StickerSet.vala:48
-msgid "SLR back side"
-msgstr "Zadní strana SLR"
-
-#: src/StickerSet.vala:49
-msgid "Old time camera"
-msgstr "Staromódní fotoaparát"
-
-#: src/StickerSet.vala:50
-msgid "Camera addon"
-msgstr "Doplněk fotoaparátu"
-
-#: src/StickerSet.vala:51
-msgid "Camera identification"
-msgstr "Identifikace fotoaparátu"
-
-#: src/StickerSet.vala:52
-msgid "Start"
-msgstr "Začít"
-
-#: src/StickerSet.vala:53
-msgid "Clapperboard"
-msgstr "Clapperboard"
-
-#: src/StickerSet.vala:54
-msgid "Film"
-msgstr "Film"
-
-#: src/StickerSet.vala:55
-msgid "Camcorder"
-msgstr "Camcorder"
-
-#: src/StickerSet.vala:56
-msgid "Camcorder pro"
-msgstr "Camcorder pro"
-
-#: src/StickerSet.vala:57
-msgid "Webcam"
-msgstr "Webkamera"
-
-#: src/StickerSet.vala:58
-msgid "Integrated webcam"
-msgstr "Integrovaná webkamera"
-
-#: src/StickerSet.vala:59
-msgid "Rotate camera"
-msgstr "Otočit pohled"
-
-#: src/StickerSet.vala:60
-msgid "Switch camera"
-msgstr "Přepnout kameru"
-
-#: src/StickerSet.vala:61
-msgid "Photo reel"
-msgstr "Photoreel"
-
-#: src/StickerSet.vala:62
-msgid "Film reel"
-msgstr "Filmreel"
-
-#: src/StickerSet.vala:63
-msgid "Cable release"
-msgstr "Kabelové vydání"
-
-#: src/StickerSet.vala:66
-msgid "Home"
-msgstr "Domov"
-
-#: src/StickerSet.vala:67
-msgid "Icons8 cup"
-msgstr "Icons8 cup"
-
-#: src/StickerSet.vala:68
-msgid "Globe"
-msgstr "Globe"
-
-#: src/StickerSet.vala:69
-msgid "OK"
-msgstr "OK"
-
-#: src/StickerSet.vala:70
-msgid "Checkmark"
-msgstr "Zaškrtnutí"
-
-#: src/StickerSet.vala:72
-msgid "Synchronize"
-msgstr "Synchronizovat"
-
-#: src/StickerSet.vala:73
-msgid "Refresh"
-msgstr "Obnovit"
-
-#: src/StickerSet.vala:74
-msgid "Download"
-msgstr "Stáhnout"
-
-#: src/StickerSet.vala:75
-msgid "Upload"
-msgstr "Nahrát"
-
-#: src/StickerSet.vala:76
-msgid "Empty trash"
-msgstr "Vysypat koš"
-
-#: src/StickerSet.vala:77
-msgid "Full trash"
-msgstr "Koš je plný"
-
-#: src/StickerSet.vala:78
-msgid "Folder"
-msgstr "Složka"
-
-#: src/StickerSet.vala:79
-msgid "Opened folder"
-msgstr "Otevřená složka"
-
-#: src/StickerSet.vala:80 data/com.github.phase1geo.minder.shortcuts.ui:16
-msgid "File"
-msgstr "Soubor"
-
-#: src/StickerSet.vala:81
-msgid "Document"
-msgstr "Dokument"
-
-#: src/StickerSet.vala:82
-msgid "Audio file"
-msgstr "Audio soubor"
-
-#: src/StickerSet.vala:83
-msgid "Image file"
-msgstr "Soubor s obrázkem"
-
-#: src/StickerSet.vala:84
-msgid "Video file"
-msgstr "Video soubor"
-
-#: src/StickerSet.vala:85
-msgid "Print"
-msgstr "Tisk"
-
-#: src/StickerSet.vala:86
-msgid "Music"
-msgstr "Hudba"
-
-#: src/StickerSet.vala:87
-msgid "Share"
-msgstr "Sdílet"
-
-#: src/StickerSet.vala:88
-msgid "Cursor"
-msgstr "Ukazatel myši"
-
-#: src/StickerSet.vala:89
-msgid "Puzzle"
-msgstr "Hádanka"
-
-#: src/StickerSet.vala:90
-msgid "Unlock"
-msgstr "Odemknout"
-
-#: src/StickerSet.vala:91
-msgid "Lock"
-msgstr "Zamknout"
-
-#: src/StickerSet.vala:92
-msgid "Idea"
-msgstr "Myšlenka"
-
-#: src/StickerSet.vala:93
-msgid "No idea"
-msgstr "Bez myšlenky"
-
-#: src/StickerSet.vala:94
-msgid "Link"
-msgstr "Odkaz"
-
-#: src/StickerSet.vala:95
-msgid "Broken link"
-msgstr "Rozbitý odkaz"
-
-#: src/StickerSet.vala:96
-msgid "Rating"
-msgstr "Hodnocení"
-
-#: src/StickerSet.vala:97
-msgid "Like placeholder"
-msgstr "Like placeholder"
-
-#: src/StickerSet.vala:98
-msgid "Like"
-msgstr "Palec nahoru"
-
-#: src/StickerSet.vala:99
-msgid "Dislike"
-msgstr "Palec dolů"
-
-#: src/StickerSet.vala:100
-msgid "Info"
-msgstr "Info"
-
-#: src/StickerSet.vala:101
-msgid "About"
-msgstr "O"
-
-#: src/StickerSet.vala:102
-msgid "Picture"
-msgstr "Obrázek"
-
-#: src/StickerSet.vala:103
-msgid "Clock"
-msgstr "Hodiny"
-
-#: src/StickerSet.vala:104
-msgid "Alarm clock"
-msgstr "Budík"
-
-#: src/StickerSet.vala:105
-msgid "Address book"
-msgstr "Adresář kontaktů"
-
-#: src/StickerSet.vala:106
-msgid "Contacts"
-msgstr "Kontakty"
-
-#: src/StickerSet.vala:107
-msgid "News"
-msgstr "Novinky"
-
-#: src/StickerSet.vala:108
-msgid "Bookmark"
-msgstr "Záložka"
-
-#: src/StickerSet.vala:109
-msgid "Binoculars"
-msgstr "Dalekohled"
-
-#: src/StickerSet.vala:111
-msgid "Ruler"
-msgstr "Pravítko"
-
-#: src/StickerSet.vala:112
-msgid "Services"
-msgstr "Služby"
-
-#: src/StickerSet.vala:113
-msgid "Settings"
-msgstr "Nastavení"
-
-#: src/StickerSet.vala:114
-msgid "Support"
-msgstr "Podpora"
-
-#: src/StickerSet.vala:115
-msgid "Frame"
-msgstr "Rámeček"
-
-#: src/StickerSet.vala:116
-msgid "Menu"
-msgstr "Menu"
-
-#: src/StickerSet.vala:117
-msgid "Key"
-msgstr "Klíč"
-
-#: src/StickerSet.vala:118
-msgid "Calendar"
-msgstr "Kalendář"
-
-#: src/StickerSet.vala:119
-msgid "Calculator"
-msgstr "Kalkulačka"
-
-#: src/StickerSet.vala:120
-msgid "Minus"
-msgstr "Mínus"
-
-#: src/StickerSet.vala:121
-msgid "Plus"
-msgstr "Plus"
-
-#: src/StickerSet.vala:124
-msgid "Graduation cap"
-msgstr "Promoční čepice"
-
-#: src/StickerSet.vala:125
-msgid "Briefcase"
-msgstr "Kufřík"
-
-#: src/StickerSet.vala:127
-msgid "Signature"
-msgstr "Podpis"
-
-#: src/StickerSet.vala:128
-msgid "Safe"
-msgstr "Trezor"
-
-#: src/StickerSet.vala:129
-msgid "Advertising"
-msgstr "Inzerce"
-
-#: src/StickerSet.vala:130
-msgid "Businessman"
-msgstr "Podnikatel"
-
-#: src/StickerSet.vala:131
-msgid "Businesswoman"
-msgstr "Podnikatelka"
-
-#: src/StickerSet.vala:132
-msgid "Manager"
-msgstr "Manažer"
-
-#: src/StickerSet.vala:133
-msgid "Online support"
-msgstr "Online podpora"
-
-#: src/StickerSet.vala:134
-msgid "Assistant"
-msgstr "Asistent"
-
-#: src/StickerSet.vala:135
-msgid "Customer support"
-msgstr "Zákaznická podpora"
-
-#: src/StickerSet.vala:136
-msgid "Reading ebook"
-msgstr "Čtení e-knih"
-
-#: src/StickerSet.vala:137
-msgid "Reading"
-msgstr "Čtení"
-
-#: src/StickerSet.vala:138
-msgid "Neutral trading"
-msgstr "Nestranný obchod"
-
-#: src/StickerSet.vala:139
-msgid "Bullish"
-msgstr "Býčí"
-
-#: src/StickerSet.vala:140
-msgid "Bearish"
-msgstr "Medvědí"
-
-#: src/StickerSet.vala:141
-msgid "High priority"
-msgstr "Vysoká priorita"
-
-#: src/StickerSet.vala:142
-msgid "Medium priority"
-msgstr "Střední priorita"
-
-#: src/StickerSet.vala:143
-msgid "Low priority"
-msgstr "Nízká priorita"
-
-#: src/StickerSet.vala:144
-msgid "Make decision"
-msgstr "Učinit rozhodnutí"
-
-#: src/StickerSet.vala:145
-msgid "Decision"
-msgstr "Rozhodnutí"
-
-#: src/StickerSet.vala:146
-msgid "Good decision"
-msgstr "Správné rozhodnutí"
-
-#: src/StickerSet.vala:147
-msgid "Neutral decision"
-msgstr "Nestranné rozhodnutí"
-
-#: src/StickerSet.vala:148
-msgid "Bad decision"
-msgstr "Špatné rozhodnutí"
-
-#: src/StickerSet.vala:149
-msgid "Approve"
-msgstr "Schválit"
-
-#: src/StickerSet.vala:150
-msgid "Disapprove"
-msgstr "Neschválit"
-
-#: src/StickerSet.vala:151
-msgid "Podium without speaker"
-msgstr "Pódium bez řečníka"
-
-#: src/StickerSet.vala:152
-msgid "Podium with speaker"
-msgstr "Pódium s řečníkem"
-
-#: src/StickerSet.vala:153
-msgid "Podium with audience"
-msgstr "Pódium s publikem"
-
-#: src/StickerSet.vala:154
-msgid "Video projector"
-msgstr "Video projektor"
-
-#: src/StickerSet.vala:155
-msgid "Statistics"
-msgstr "Statistiky"
-
-#: src/StickerSet.vala:156
-msgid "Collaboration"
-msgstr "Kolaborace"
-
-#: src/StickerSet.vala:157
-msgid "Voice presentation"
-msgstr "Hlasová prezentace"
-
-#: src/StickerSet.vala:158
-msgid "Conference call"
-msgstr "Konferenční hovor"
-
-#: src/StickerSet.vala:159
-msgid "Comments"
-msgstr "Komentáře"
-
-#: src/StickerSet.vala:160
-msgid "FAQ"
-msgstr "Otázky a odpovědi"
-
-#: src/StickerSet.vala:161
-msgid "Reuse"
-msgstr "Znovu použít"
-
-#: src/StickerSet.vala:162
-msgid "Organization"
-msgstr "Organizace"
-
-#: src/StickerSet.vala:163
-msgid "Department"
-msgstr "Oddělení"
-
-#: src/StickerSet.vala:164
-msgid "Library"
-msgstr "Knihovna"
-
-#: src/StickerSet.vala:165
-msgid "Shop"
-msgstr "Obchod"
-
-#: src/StickerSet.vala:166
-msgid "Self service kiosk"
-msgstr "Samoobslužný kiosek"
-
-#: src/StickerSet.vala:167
-msgid "Donate"
-msgstr "Darovat"
-
-#: src/StickerSet.vala:168
-msgid "Currency exchange"
-msgstr "Směnárna měn"
-
-#: src/StickerSet.vala:169
-msgid "Debt"
-msgstr "Dluh"
-
-#: src/StickerSet.vala:170
-msgid "Sales performance"
-msgstr "Prodejní výkon"
-
-#: src/StickerSet.vala:171
-msgid "Invite"
-msgstr "Pozvánka"
-
-#: src/StickerSet.vala:172
-msgid "Money transfer"
-msgstr "Převod peněz"
-
-#: src/StickerSet.vala:173
-msgid "Feedback"
-msgstr "Zpětná vazba"
-
-#: src/StickerSet.vala:174
-msgid "Approval"
-msgstr "Schválení"
-
-#: src/StickerSet.vala:175
-msgid "Paid"
-msgstr "Platba"
-
-#: src/StickerSet.vala:176
-msgid "In transit"
-msgstr "V přepravě"
-
-#: src/StickerSet.vala:177
-msgid "Shipped"
-msgstr "Odesláno"
-
-#: src/StickerSet.vala:178
-msgid "Package"
-msgstr "Balíček"
-
-#: src/StickerSet.vala:179
-msgid "Planner"
-msgstr "Plánovač"
-
-#: src/StickerSet.vala:180
-msgid "Overtime"
-msgstr "Přesčas"
-
-#: src/StickerSet.vala:181
-msgid "Leave"
-msgstr "Odejít"
-
-#: src/StickerSet.vala:182
-msgid "Expired"
-msgstr "Platnost vypršela"
-
-#: src/StickerSet.vala:183
-msgid "Process"
-msgstr "Proces"
-
-#: src/StickerSet.vala:184
-msgid "Diploma 1"
-msgstr "Diploma 1"
-
-#: src/StickerSet.vala:185
-msgid "Diploma 2"
-msgstr "Diploma 2"
-
-#: src/StickerSet.vala:186
-msgid "Business contact"
-msgstr "Obchodní kontakt"
-
-#: src/StickerSet.vala:187
-msgid "Survey"
-msgstr "Dotazník"
-
-#: src/StickerSet.vala:188
-msgid "Inspection"
-msgstr "Inspekce"
-
-#: src/StickerSet.vala:189
-msgid "Rules"
-msgstr "Pravidla"
-
-#: src/StickerSet.vala:190
-msgid "Todo list"
-msgstr "Seznam úkolů"
-
-#: src/StickerSet.vala:191
-msgid "Ratings"
-msgstr "Hodnocení"
-
-#: src/StickerSet.vala:192
-msgid "Questions"
-msgstr "Otázky"
-
-#: src/StickerSet.vala:193
-msgid "Answers"
-msgstr "Odpovědi"
-
-#: src/StickerSet.vala:194
-msgid "Fine print"
-msgstr "Detailní tisk"
-
-#: src/StickerSet.vala:195
-msgid "Candle sticks"
-msgstr "Svíčky"
-
-#: src/StickerSet.vala:196
-msgid "Serial tasks"
-msgstr "Sériové úkoly"
-
-#: src/StickerSet.vala:197
-msgid "Parallel tasks"
-msgstr "Paralelní úkoly"
-
-#: src/StickerSet.vala:198
-msgid "Tree structure"
-msgstr "Struktura stromu"
-
-#: src/StickerSet.vala:199
-msgid "Org unit"
-msgstr "Org unit"
-
-#: src/StickerSet.vala:200
-msgid "Privacy"
-msgstr "Soukromí"
-
-#: src/StickerSet.vala:201
-msgid "Disclaimer"
-msgstr "Upozornění"
-
-#: src/StickerSet.vala:202
-msgid "Callback"
-msgstr "Zpětné volání"
-
-#: src/StickerSet.vala:203
-msgid "Service mark"
-msgstr "Značka služby"
-
-#: src/StickerSet.vala:204
-msgid "Registered trademark"
-msgstr "Registrovaná ochranná známka"
-
-#: src/StickerSet.vala:205
-msgid "Trademark"
-msgstr "Ochranná známka"
-
-#: src/StickerSet.vala:206
-msgid "Copyright"
-msgstr "Copyright"
-
-#: src/StickerSet.vala:207
-msgid "Copyleft"
-msgstr "Zkopírovat vlevo"
-
-#: src/StickerSet.vala:208
-msgid "Sound recording copyright"
-msgstr "Copyright zvukových nahrávek"
-
-#: src/StickerSet.vala:209
-msgid "Butting in"
-msgstr "Zapadání"
-
-#: src/StickerSet.vala:210
-msgid "Multiple inputs"
-msgstr "Víc vstupů"
-
-#: src/StickerSet.vala:211
-msgid "Collect"
-msgstr "Sebrat"
-
-#: src/StickerSet.vala:212
-msgid "Internal"
-msgstr "Interní"
-
-#: src/StickerSet.vala:213
-msgid "External"
-msgstr "Externí"
-
-#: src/StickerSet.vala:214
-msgid "VIP"
-msgstr "VIP"
-
-#: src/StickerSet.vala:215
-msgid "Light at the end of tunnel"
-msgstr "Světlo na konci tunelu"
-
-#: src/StickerSet.vala:216
-msgid "Entering heaven alive"
-msgstr "Vstoupení do ráje za živa"
-
-#: src/StickerSet.vala:219
-msgid "Biomass"
-msgstr "Boimasa"
-
-#: src/StickerSet.vala:220
-msgid "Display"
-msgstr "Displej"
-
-#: src/StickerSet.vala:221
-msgid "Do not inhale"
-msgstr "Nevdechovat"
-
-#: src/StickerSet.vala:222
-msgid "Factory"
-msgstr "Továrna"
-
-#: src/StickerSet.vala:223
-msgid "Factory breakdown"
-msgstr "Zhroucení továrny"
-
-#: src/StickerSet.vala:224
-msgid "Crystal oscillator"
-msgstr "Krystalový oscilátor"
-
-#: src/StickerSet.vala:225
-msgid "Capacitor"
-msgstr "Kapacitor"
-
-#: src/StickerSet.vala:226
-msgid "Electricity"
-msgstr "Eelektřina"
-
-#: src/StickerSet.vala:227
-msgid "Electro devices"
-msgstr "Elektronika"
-
-#: src/StickerSet.vala:228
-msgid "Electrical sensor"
-msgstr "Elektronický sensor"
-
-#: src/StickerSet.vala:229
-msgid "Electrical threshold"
-msgstr "Elektronický limit"
-
-#: src/StickerSet.vala:230
-msgid "Automotive"
-msgstr "Automobilový průmysl"
-
-#: src/StickerSet.vala:231
-msgid "Feed in"
-msgstr "Nakrmit se"
-
-#: src/StickerSet.vala:232
-msgid "Dam"
-msgstr "Přehrada"
-
-#: src/StickerSet.vala:233
-msgid "Biotech"
-msgstr "Biotechnologie"
-
-#: src/StickerSet.vala:234
-msgid "Advance"
-msgstr "Výhoda"
-
-#: src/StickerSet.vala:235
-msgid "Cloth"
-msgstr "Oblečení"
-
-#: src/StickerSet.vala:236
-msgid "Electronics"
-msgstr "Elektronika"
-
-#: src/StickerSet.vala:237
-msgid "Deployment"
-msgstr "Rozvinutí"
-
-#: src/StickerSet.vala:238
-msgid "Automatic"
-msgstr "Automatický"
-
-#: src/StickerSet.vala:239
-msgid "Do not insert"
-msgstr "Nevkládejte"
-
-#: src/StickerSet.vala:240
-msgid "Do not mix"
-msgstr "Nemíchat"
-
-#: src/StickerSet.vala:241
-msgid "Biohazard"
-msgstr "Biologické nebezpečí"
-
-#: src/StickerSet.vala:242
-msgid "Circuit"
-msgstr "Obvod"
-
-#: src/StickerSet.vala:243
-msgid "Engineering"
-msgstr "Engineering"
-
-#: src/StickerSet.vala:246
-msgid "Cell phone"
-msgstr "Telefon"
-
-#: src/StickerSet.vala:247
-msgid "iPhone"
-msgstr "iPhone"
-
-#: src/StickerSet.vala:248
-msgid "iPad"
-msgstr "iPad"
-
-#: src/StickerSet.vala:249
-msgid "Phone android"
-msgstr "Telefon android"
-
-#: src/StickerSet.vala:250
-msgid "Tablet android"
-msgstr "Tablet android"
-
-#: src/StickerSet.vala:251
-msgid "Nook"
-msgstr "Kout"
-
-#: src/StickerSet.vala:252
-msgid "Kindle"
-msgstr "Kindle"
-
-#: src/StickerSet.vala:253
-msgid "Two smartphones"
-msgstr "Dva smartphony"
-
-#: src/StickerSet.vala:254
-msgid "Multiple devices"
-msgstr "Více zařízení"
-
-#: src/StickerSet.vala:255
-msgid "Multiple smartphones"
-msgstr "Více chytrých telefonů"
-
-#: src/StickerSet.vala:256
-msgid "Smartphone tablet"
-msgstr "Tablety smartphonů"
-
-#: src/StickerSet.vala:257
-msgid "Touchscreen smartphone"
-msgstr "Dotykový smartphone"
-
-#: src/StickerSet.vala:258
-msgid "Sim card"
-msgstr "SIM karta"
-
-#: src/StickerSet.vala:259
-msgid "Sim card chip"
-msgstr "Čip SIM karty"
-
-#: src/StickerSet.vala:260
-msgid "SMS"
-msgstr "SMS"
-
-#: src/StickerSet.vala:261
-msgid "MMS"
-msgstr "MMS"
-
-#: src/StickerSet.vala:262
-msgid "Charge battery"
-msgstr "Nabijte baterii"
-
-#: src/StickerSet.vala:263
-msgid "Full battery"
-msgstr "Plná baterie"
-
-#: src/StickerSet.vala:264
-msgid "High battery"
-msgstr "Vysoká baterie"
-
-#: src/StickerSet.vala:265
-msgid "Middle battery"
-msgstr "Střední baterie"
-
-#: src/StickerSet.vala:266
-msgid "Low battery"
-msgstr "Nízká baterie"
-
-#: src/StickerSet.vala:267
-msgid "Empty battery"
-msgstr "Prázdná baterie"
-
-#: src/StickerSet.vala:268
-msgid "Phone"
-msgstr "Telefon"
-
-#: src/StickerSet.vala:269
-msgid "Missed call"
-msgstr "Zmeškaný hovor"
-
-#: src/StickerSet.vala:270
-msgid "End call"
-msgstr "Ukončit hovor"
-
-#: src/StickerSet.vala:271
-msgid "Call transfer"
-msgstr "Přepojení hovoru"
-
-#: src/StickerSet.vala:272
-msgid "Video call"
-msgstr "Videohovor"
-
-#: src/StickerSet.vala:273
-msgid "No video"
-msgstr "Žádné video"
-
-#: src/StickerSet.vala:274
-msgid "Rotate to portrait"
-msgstr "Otočit na výšku"
-
-#: src/StickerSet.vala:275
-msgid "Lock portrait"
-msgstr "Zamknout portrét"
-
-#: src/StickerSet.vala:276
-msgid "Rotate to landscape"
-msgstr "Otočit na šířku"
-
-#: src/StickerSet.vala:277
-msgid "Lock landscape"
-msgstr "Zamknout režim na šířku"
-
-#: src/StickerSet.vala:278
-msgid "Voicemail"
-msgstr "Hlasová schránka"
-
-#: src/StickerSet.vala:279
-msgid "Speaker"
-msgstr "Reproduktor"
-
-#: src/StickerSet.vala:280
-msgid "Headset"
-msgstr "Headset"
-
-#: src/StickerSet.vala:283
-msgid "Left up"
-msgstr "Doleva nahoru"
-
-#: src/StickerSet.vala:284
-msgid "Up"
-msgstr "Nahoru"
-
-#: src/StickerSet.vala:285
-msgid "Right up"
-msgstr "Doprava nahoru"
-
-#: src/StickerSet.vala:286
-msgid "Left"
-msgstr "Do leva"
-
-#: src/StickerSet.vala:287
-msgid "Right"
-msgstr "Do prava"
-
-#: src/StickerSet.vala:288
-msgid "Left down"
-msgstr "Vlevo dolů"
-
-#: src/StickerSet.vala:289
-msgid "Down"
-msgstr "Dolů"
-
-#: src/StickerSet.vala:290
-msgid "Right down"
-msgstr "Přímo dolů"
-
-#: src/StickerSet.vala:291
-msgid "Collapse"
-msgstr "Sbalit"
-
-#: src/StickerSet.vala:292
-msgid "Previous"
-msgstr "Předchozí"
-
-#: src/StickerSet.vala:293
-msgid "Next"
-msgstr "Další"
-
-#: src/StickerSet.vala:294
-msgid "Expand"
-msgstr "Rozbalit"
-
-#: src/StickerSet.vala:295
-msgid "Left down2"
-msgstr "Left down2"
-
-#: src/StickerSet.vala:296
-msgid "Up left"
-msgstr "Nahoře vlevo"
-
-#: src/StickerSet.vala:297
-msgid "Down right"
-msgstr "Dolů vpravo"
-
-#: src/StickerSet.vala:298
-msgid "Right up2"
-msgstr "Right up2"
-
-#: src/StickerSet.vala:299
-msgid "Up right"
-msgstr "Doprava nahoru"
-
-#: src/StickerSet.vala:300
-msgid "Right down2"
-msgstr "Right down2"
-
-#: src/StickerSet.vala:301
-msgid "Left up2"
-msgstr "Left up2"
-
-#: src/StickerSet.vala:302
-msgid "Down left"
-msgstr "Doleva dolů"
-
-#: src/StickerSet.vala:307
-msgid "Filing cabinet"
-msgstr "Kartotéka"
-
-#: src/StickerSet.vala:308
-msgid "Database"
-msgstr "Databáze"
-
-#: src/StickerSet.vala:309
-msgid "Accept database"
-msgstr "Přijmout databázi"
-
-#: src/StickerSet.vala:310
-msgid "Add database"
-msgstr "Přidat databázi"
-
-#: src/StickerSet.vala:311
-msgid "Delete database"
-msgstr "Smazat databázi"
-
-#: src/StickerSet.vala:312
-msgid "Data backup"
-msgstr "Záloha dat"
-
-#: src/StickerSet.vala:313
-msgid "Data recovery"
-msgstr "Obnova dat"
-
-#: src/StickerSet.vala:314
-msgid "Data configuration"
-msgstr "Nastavení dat"
-
-#: src/StickerSet.vala:315
-msgid "Data encryption"
-msgstr "Šifrování dat"
-
-#: src/StickerSet.vala:316
-msgid "Data protection"
-msgstr "Ochrana dat"
-
-#: src/StickerSet.vala:317
-msgid "Grid"
-msgstr "Síť"
-
-#: src/StickerSet.vala:318
-msgid "Data sheet"
-msgstr "Datový list"
-
-#: src/StickerSet.vala:319
-msgid "Add column"
-msgstr "Přidat sloupec"
-
-#: src/StickerSet.vala:320
-msgid "Delete column"
-msgstr "Smazat sloupec"
-
-#: src/StickerSet.vala:321
-msgid "Add row"
-msgstr "Přidat řádek"
-
-#: src/StickerSet.vala:322
-msgid "Delete row"
-msgstr "Smazat řádek"
-
-#: src/StickerSet.vala:323
-msgid "Generic sorting ascending"
-msgstr "Obecné řazení vzestupně"
-
-#: src/StickerSet.vala:324
-msgid "Generic sorting descending"
-msgstr "Obecné řazení sestupně"
-
-#: src/StickerSet.vala:325
-msgid "Alphabetical sorting (A->Z)"
-msgstr "Abecední řazení (A->Z)"
-
-#: src/StickerSet.vala:326
-msgid "Alphabetical sorting (Z->A)"
-msgstr "Abecední řazení (Z->A)"
-
-#: src/StickerSet.vala:327
-msgid "Numerical sorting (2->1)"
-msgstr "Číselné řazení (2->1)"
-
-#: src/StickerSet.vala:328
-msgid "Numerical sorting (1->2)"
-msgstr "Číselné řazení (1->2)"
-
-#: src/StickerSet.vala:329
-msgid "Empty filter"
-msgstr "Prázdný filtr"
-
-#: src/StickerSet.vala:330
-msgid "Filled filter"
-msgstr "Naplněný filtr"
-
-#: src/StickerSet.vala:331
-msgid "Clear filters"
-msgstr "Vymazat filtry"
-
-#: src/StickerSet.vala:332
-msgid "Pie chart"
-msgstr "Výsečový graf"
-
-#: src/StickerSet.vala:333
-msgid "Radar plot"
-msgstr "Radarová zápletka"
-
-#: src/StickerSet.vala:334
-msgid "Heat map"
-msgstr "Teplotní mapa"
-
-#: src/StickerSet.vala:335
-msgid "Timeline"
-msgstr "Časová osa"
-
-#: src/StickerSet.vala:336
-msgid "Bar chart"
-msgstr "Sloupcový graf"
-
-#: src/StickerSet.vala:337
-msgid "Area chart"
-msgstr "Plošný graf"
-
-#: src/StickerSet.vala:338
-msgid "Scatter plot"
-msgstr "Bodový diagram"
-
-#: src/StickerSet.vala:339
-msgid "Doughnut chart"
-msgstr "Koblihový graf"
-
-#: src/StickerSet.vala:340
-msgid "Combo chart"
-msgstr "Kombinovaný graf"
-
-#: src/StickerSet.vala:341
-msgid "Flow chart"
-msgstr "Vývojový diagram"
-
-#: src/StickerSet.vala:342
-msgid "Line chart"
-msgstr "Spojnicový graf"
-
-#: src/StickerSet.vala:343
-msgid "Genealogy"
-msgstr "Genealogie"
-
-#: src/StickerSet.vala:344
-msgid "Mind map"
-msgstr "MapaMyšlenková mapa"
-
-#: src/StickerSet.vala:345
-msgid "Workflow"
-msgstr "Pracovní postup"
-
-#: src/StickerSet.vala:346
-msgid "Positive dynamic"
-msgstr "Pozitivní dynamika"
-
-#: src/StickerSet.vala:347
-msgid "Negative dynamic"
-msgstr "Negativní dynamika"
-
-#: src/StickerSet.vala:349
+#: src/StickerInspector.vala:140
+msgid "Show Custom Sticker Directory"
+msgstr ""
+
+#: src/StickerInspector.vala:214
+#, fuzzy
+msgid "Add custom stickers"
+msgstr "přidat poznámku uzlu"
+
+#: src/StickerInspector.vala:401
+#, fuzzy
+msgid "Import Sticker(s)"
+msgstr "Odstranit nálepku"
+
+#: src/StickerInspector.vala:401 src/StickerSet.vala:353
 msgid "Import"
 msgstr "Import"
 
+#: src/StickerSet.vala:25 src/StickerSet.vala:68
+msgid "Photo and Video"
+msgstr "Fotky a videa"
+
+#: src/StickerSet.vala:26 src/StickerSet.vala:126
+msgid "Very Basic"
+msgstr "Úplně základní"
+
+#: src/StickerSet.vala:27 src/StickerSet.vala:130 src/StickerSet.vala:221
+msgid "Business"
+msgstr "Podnikání"
+
+#: src/StickerSet.vala:28 src/StickerSet.vala:248
+msgid "Industry"
+msgstr "Průmysl"
+
+#: src/StickerSet.vala:29 src/StickerSet.vala:285
+msgid "Mobile"
+msgstr "Souvisí s mobilem"
+
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:885
+msgid "Arrows"
+msgstr "Šipky"
+
+#: src/StickerSet.vala:31 src/StickerSet.vala:357
+msgid "Data"
+msgstr "Souvisí s daty"
+
+#: src/StickerSet.vala:33
+msgid "Flash on"
+msgstr "Blesk zapnutý"
+
+#: src/StickerSet.vala:34
+msgid "Flash off"
+msgstr "Blesk vypnutý"
+
+#: src/StickerSet.vala:35
+msgid "Flash auto"
+msgstr "Automatický blesk"
+
+#: src/StickerSet.vala:36
+msgid "Panorama"
+msgstr "Panorama"
+
+#: src/StickerSet.vala:37
+msgid "Landscape"
+msgstr "Krajina"
+
+#: src/StickerSet.vala:38
+msgid "Night landscape"
+msgstr "Noční krajina"
+
+#: src/StickerSet.vala:39
+msgid "Sports mode"
+msgstr "Režim sportu"
+
+#: src/StickerSet.vala:40
+msgid "Portrait mode"
+msgstr "Portrétní režim"
+
+#: src/StickerSet.vala:41
+msgid "Night portrait"
+msgstr "Noční portrét"
+
+#: src/StickerSet.vala:42
+msgid "Close up mode"
+msgstr "Režim na blízko"
+
+#: src/StickerSet.vala:43
+msgid "Selfie"
+msgstr "Selfie"
+
+#: src/StickerSet.vala:44
+msgid "Gallery"
+msgstr "Galerie"
+
+#: src/StickerSet.vala:45
+msgid "Stack of photos"
+msgstr "Množství fotek"
+
+#: src/StickerSet.vala:46
+msgid "Add image"
+msgstr "Přidat obrázek"
+
+#: src/StickerSet.vala:47
+msgid "Edit image"
+msgstr "Upravit obrázek"
+
+#: src/StickerSet.vala:48
+msgid "Remove image"
+msgstr "Odstranit obrázek"
+
+#: src/StickerSet.vala:49
+msgid "Compact camera"
+msgstr "Porovnat fotoaparát"
+
+#: src/StickerSet.vala:50
+msgid "Multiple cameras"
+msgstr "Víc fotoaparátů"
+
+#: src/StickerSet.vala:51
+msgid "Camera"
+msgstr "Fotoaparát"
+
+#: src/StickerSet.vala:52
+msgid "SLR back side"
+msgstr "Zadní strana SLR"
+
+#: src/StickerSet.vala:53
+msgid "Old time camera"
+msgstr "Staromódní fotoaparát"
+
+#: src/StickerSet.vala:54
+msgid "Camera addon"
+msgstr "Doplněk fotoaparátu"
+
+#: src/StickerSet.vala:55
+msgid "Camera identification"
+msgstr "Identifikace fotoaparátu"
+
+#: src/StickerSet.vala:56
+msgid "Start"
+msgstr "Začít"
+
+#: src/StickerSet.vala:57
+msgid "Clapperboard"
+msgstr "Clapperboard"
+
+#: src/StickerSet.vala:58
+msgid "Film"
+msgstr "Film"
+
+#: src/StickerSet.vala:59
+msgid "Camcorder"
+msgstr "Camcorder"
+
+#: src/StickerSet.vala:60
+msgid "Camcorder pro"
+msgstr "Camcorder pro"
+
+#: src/StickerSet.vala:61
+msgid "Webcam"
+msgstr "Webkamera"
+
+#: src/StickerSet.vala:62
+msgid "Integrated webcam"
+msgstr "Integrovaná webkamera"
+
+#: src/StickerSet.vala:63
+msgid "Rotate camera"
+msgstr "Otočit pohled"
+
+#: src/StickerSet.vala:64
+msgid "Switch camera"
+msgstr "Přepnout kameru"
+
+#: src/StickerSet.vala:65
+msgid "Photo reel"
+msgstr "Photoreel"
+
+#: src/StickerSet.vala:66
+msgid "Film reel"
+msgstr "Filmreel"
+
+#: src/StickerSet.vala:67
+msgid "Cable release"
+msgstr "Kabelové vydání"
+
+#: src/StickerSet.vala:70
+msgid "Home"
+msgstr "Domov"
+
+#: src/StickerSet.vala:71
+msgid "Icons8 cup"
+msgstr "Icons8 cup"
+
+#: src/StickerSet.vala:72
+msgid "Globe"
+msgstr "Globe"
+
+#: src/StickerSet.vala:73
+msgid "OK"
+msgstr "OK"
+
+#: src/StickerSet.vala:74
+msgid "Checkmark"
+msgstr "Zaškrtnutí"
+
+#: src/StickerSet.vala:76
+msgid "Synchronize"
+msgstr "Synchronizovat"
+
+#: src/StickerSet.vala:77
+msgid "Refresh"
+msgstr "Obnovit"
+
+#: src/StickerSet.vala:78
+msgid "Download"
+msgstr "Stáhnout"
+
+#: src/StickerSet.vala:79
+msgid "Upload"
+msgstr "Nahrát"
+
+#: src/StickerSet.vala:80
+msgid "Empty trash"
+msgstr "Vysypat koš"
+
+#: src/StickerSet.vala:81
+msgid "Full trash"
+msgstr "Koš je plný"
+
+#: src/StickerSet.vala:82
+msgid "Folder"
+msgstr "Složka"
+
+#: src/StickerSet.vala:83
+msgid "Opened folder"
+msgstr "Otevřená složka"
+
+#: src/StickerSet.vala:84 data/com.github.phase1geo.minder.shortcuts.ui:16
+msgid "File"
+msgstr "Soubor"
+
+#: src/StickerSet.vala:85
+msgid "Document"
+msgstr "Dokument"
+
+#: src/StickerSet.vala:86
+msgid "Audio file"
+msgstr "Audio soubor"
+
+#: src/StickerSet.vala:87
+msgid "Image file"
+msgstr "Soubor s obrázkem"
+
+#: src/StickerSet.vala:88
+msgid "Video file"
+msgstr "Video soubor"
+
+#: src/StickerSet.vala:89
+msgid "Print"
+msgstr "Tisk"
+
+#: src/StickerSet.vala:90
+msgid "Music"
+msgstr "Hudba"
+
+#: src/StickerSet.vala:91
+msgid "Share"
+msgstr "Sdílet"
+
+#: src/StickerSet.vala:92
+msgid "Cursor"
+msgstr "Ukazatel myši"
+
+#: src/StickerSet.vala:93
+msgid "Puzzle"
+msgstr "Hádanka"
+
+#: src/StickerSet.vala:94
+msgid "Unlock"
+msgstr "Odemknout"
+
+#: src/StickerSet.vala:95
+msgid "Lock"
+msgstr "Zamknout"
+
+#: src/StickerSet.vala:96
+msgid "Idea"
+msgstr "Myšlenka"
+
+#: src/StickerSet.vala:97
+msgid "No idea"
+msgstr "Bez myšlenky"
+
+#: src/StickerSet.vala:98
+msgid "Link"
+msgstr "Odkaz"
+
+#: src/StickerSet.vala:99
+msgid "Broken link"
+msgstr "Rozbitý odkaz"
+
+#: src/StickerSet.vala:100
+msgid "Rating"
+msgstr "Hodnocení"
+
+#: src/StickerSet.vala:101
+msgid "Like placeholder"
+msgstr "Like placeholder"
+
+#: src/StickerSet.vala:102
+msgid "Like"
+msgstr "Palec nahoru"
+
+#: src/StickerSet.vala:103
+msgid "Dislike"
+msgstr "Palec dolů"
+
+#: src/StickerSet.vala:104
+msgid "Info"
+msgstr "Info"
+
+#: src/StickerSet.vala:105
+msgid "About"
+msgstr "O"
+
+#: src/StickerSet.vala:106
+msgid "Picture"
+msgstr "Obrázek"
+
+#: src/StickerSet.vala:107
+msgid "Clock"
+msgstr "Hodiny"
+
+#: src/StickerSet.vala:108
+msgid "Alarm clock"
+msgstr "Budík"
+
+#: src/StickerSet.vala:109
+msgid "Address book"
+msgstr "Adresář kontaktů"
+
+#: src/StickerSet.vala:110
+msgid "Contacts"
+msgstr "Kontakty"
+
+#: src/StickerSet.vala:111
+msgid "News"
+msgstr "Novinky"
+
+#: src/StickerSet.vala:112
+msgid "Bookmark"
+msgstr "Záložka"
+
+#: src/StickerSet.vala:113
+msgid "Binoculars"
+msgstr "Dalekohled"
+
+#: src/StickerSet.vala:115
+msgid "Ruler"
+msgstr "Pravítko"
+
+#: src/StickerSet.vala:116
+msgid "Services"
+msgstr "Služby"
+
+#: src/StickerSet.vala:117
+msgid "Settings"
+msgstr "Nastavení"
+
+#: src/StickerSet.vala:118
+msgid "Support"
+msgstr "Podpora"
+
+#: src/StickerSet.vala:119
+msgid "Frame"
+msgstr "Rámeček"
+
+#: src/StickerSet.vala:120
+msgid "Menu"
+msgstr "Menu"
+
+#: src/StickerSet.vala:121
+msgid "Key"
+msgstr "Klíč"
+
+#: src/StickerSet.vala:122
+msgid "Calendar"
+msgstr "Kalendář"
+
+#: src/StickerSet.vala:123
+msgid "Calculator"
+msgstr "Kalkulačka"
+
+#: src/StickerSet.vala:124
+msgid "Minus"
+msgstr "Mínus"
+
+#: src/StickerSet.vala:125
+msgid "Plus"
+msgstr "Plus"
+
+#: src/StickerSet.vala:128
+msgid "Graduation cap"
+msgstr "Promoční čepice"
+
+#: src/StickerSet.vala:129
+msgid "Briefcase"
+msgstr "Kufřík"
+
+#: src/StickerSet.vala:131
+msgid "Signature"
+msgstr "Podpis"
+
+#: src/StickerSet.vala:132
+msgid "Safe"
+msgstr "Trezor"
+
+#: src/StickerSet.vala:133
+msgid "Advertising"
+msgstr "Inzerce"
+
+#: src/StickerSet.vala:134
+msgid "Businessman"
+msgstr "Podnikatel"
+
+#: src/StickerSet.vala:135
+msgid "Businesswoman"
+msgstr "Podnikatelka"
+
+#: src/StickerSet.vala:136
+msgid "Manager"
+msgstr "Manažer"
+
+#: src/StickerSet.vala:137
+msgid "Online support"
+msgstr "Online podpora"
+
+#: src/StickerSet.vala:138
+msgid "Assistant"
+msgstr "Asistent"
+
+#: src/StickerSet.vala:139
+msgid "Customer support"
+msgstr "Zákaznická podpora"
+
+#: src/StickerSet.vala:140
+msgid "Reading ebook"
+msgstr "Čtení e-knih"
+
+#: src/StickerSet.vala:141
+msgid "Reading"
+msgstr "Čtení"
+
+#: src/StickerSet.vala:142
+msgid "Neutral trading"
+msgstr "Nestranný obchod"
+
+#: src/StickerSet.vala:143
+msgid "Bullish"
+msgstr "Býčí"
+
+#: src/StickerSet.vala:144
+msgid "Bearish"
+msgstr "Medvědí"
+
+#: src/StickerSet.vala:145
+msgid "High priority"
+msgstr "Vysoká priorita"
+
+#: src/StickerSet.vala:146
+msgid "Medium priority"
+msgstr "Střední priorita"
+
+#: src/StickerSet.vala:147
+msgid "Low priority"
+msgstr "Nízká priorita"
+
+#: src/StickerSet.vala:148
+msgid "Make decision"
+msgstr "Učinit rozhodnutí"
+
+#: src/StickerSet.vala:149
+msgid "Decision"
+msgstr "Rozhodnutí"
+
+#: src/StickerSet.vala:150
+msgid "Good decision"
+msgstr "Správné rozhodnutí"
+
+#: src/StickerSet.vala:151
+msgid "Neutral decision"
+msgstr "Nestranné rozhodnutí"
+
+#: src/StickerSet.vala:152
+msgid "Bad decision"
+msgstr "Špatné rozhodnutí"
+
+#: src/StickerSet.vala:153
+msgid "Approve"
+msgstr "Schválit"
+
+#: src/StickerSet.vala:154
+msgid "Disapprove"
+msgstr "Neschválit"
+
+#: src/StickerSet.vala:155
+msgid "Podium without speaker"
+msgstr "Pódium bez řečníka"
+
+#: src/StickerSet.vala:156
+msgid "Podium with speaker"
+msgstr "Pódium s řečníkem"
+
+#: src/StickerSet.vala:157
+msgid "Podium with audience"
+msgstr "Pódium s publikem"
+
+#: src/StickerSet.vala:158
+msgid "Video projector"
+msgstr "Video projektor"
+
+#: src/StickerSet.vala:159
+msgid "Statistics"
+msgstr "Statistiky"
+
+#: src/StickerSet.vala:160
+msgid "Collaboration"
+msgstr "Kolaborace"
+
+#: src/StickerSet.vala:161
+msgid "Voice presentation"
+msgstr "Hlasová prezentace"
+
+#: src/StickerSet.vala:162
+msgid "Conference call"
+msgstr "Konferenční hovor"
+
+#: src/StickerSet.vala:163
+msgid "Comments"
+msgstr "Komentáře"
+
+#: src/StickerSet.vala:164
+msgid "FAQ"
+msgstr "Otázky a odpovědi"
+
+#: src/StickerSet.vala:165
+msgid "Reuse"
+msgstr "Znovu použít"
+
+#: src/StickerSet.vala:166
+msgid "Organization"
+msgstr "Organizace"
+
+#: src/StickerSet.vala:167
+msgid "Department"
+msgstr "Oddělení"
+
+#: src/StickerSet.vala:168
+msgid "Library"
+msgstr "Knihovna"
+
+#: src/StickerSet.vala:169
+msgid "Shop"
+msgstr "Obchod"
+
+#: src/StickerSet.vala:170
+msgid "Self service kiosk"
+msgstr "Samoobslužný kiosek"
+
+#: src/StickerSet.vala:171
+msgid "Donate"
+msgstr "Darovat"
+
+#: src/StickerSet.vala:172
+msgid "Currency exchange"
+msgstr "Směnárna měn"
+
+#: src/StickerSet.vala:173
+msgid "Debt"
+msgstr "Dluh"
+
+#: src/StickerSet.vala:174
+msgid "Sales performance"
+msgstr "Prodejní výkon"
+
+#: src/StickerSet.vala:175
+msgid "Invite"
+msgstr "Pozvánka"
+
+#: src/StickerSet.vala:176
+msgid "Money transfer"
+msgstr "Převod peněz"
+
+#: src/StickerSet.vala:177
+msgid "Feedback"
+msgstr "Zpětná vazba"
+
+#: src/StickerSet.vala:178
+msgid "Approval"
+msgstr "Schválení"
+
+#: src/StickerSet.vala:179
+msgid "Paid"
+msgstr "Platba"
+
+#: src/StickerSet.vala:180
+msgid "In transit"
+msgstr "V přepravě"
+
+#: src/StickerSet.vala:181
+msgid "Shipped"
+msgstr "Odesláno"
+
+#: src/StickerSet.vala:182
+msgid "Package"
+msgstr "Balíček"
+
+#: src/StickerSet.vala:183
+msgid "Planner"
+msgstr "Plánovač"
+
+#: src/StickerSet.vala:184
+msgid "Overtime"
+msgstr "Přesčas"
+
+#: src/StickerSet.vala:185
+msgid "Leave"
+msgstr "Odejít"
+
+#: src/StickerSet.vala:186
+msgid "Expired"
+msgstr "Platnost vypršela"
+
+#: src/StickerSet.vala:187
+msgid "Process"
+msgstr "Proces"
+
+#: src/StickerSet.vala:188
+msgid "Diploma 1"
+msgstr "Diploma 1"
+
+#: src/StickerSet.vala:189
+msgid "Diploma 2"
+msgstr "Diploma 2"
+
+#: src/StickerSet.vala:190
+msgid "Business contact"
+msgstr "Obchodní kontakt"
+
+#: src/StickerSet.vala:191
+msgid "Survey"
+msgstr "Dotazník"
+
+#: src/StickerSet.vala:192
+msgid "Inspection"
+msgstr "Inspekce"
+
+#: src/StickerSet.vala:193
+msgid "Rules"
+msgstr "Pravidla"
+
+#: src/StickerSet.vala:194
+msgid "Todo list"
+msgstr "Seznam úkolů"
+
+#: src/StickerSet.vala:195
+msgid "Ratings"
+msgstr "Hodnocení"
+
+#: src/StickerSet.vala:196
+msgid "Questions"
+msgstr "Otázky"
+
+#: src/StickerSet.vala:197
+msgid "Answers"
+msgstr "Odpovědi"
+
+#: src/StickerSet.vala:198
+msgid "Fine print"
+msgstr "Detailní tisk"
+
+#: src/StickerSet.vala:199
+msgid "Candle sticks"
+msgstr "Svíčky"
+
+#: src/StickerSet.vala:200
+msgid "Serial tasks"
+msgstr "Sériové úkoly"
+
+#: src/StickerSet.vala:201
+msgid "Parallel tasks"
+msgstr "Paralelní úkoly"
+
+#: src/StickerSet.vala:202
+msgid "Tree structure"
+msgstr "Struktura stromu"
+
+#: src/StickerSet.vala:203
+msgid "Org unit"
+msgstr "Org unit"
+
+#: src/StickerSet.vala:204
+msgid "Privacy"
+msgstr "Soukromí"
+
+#: src/StickerSet.vala:205
+msgid "Disclaimer"
+msgstr "Upozornění"
+
+#: src/StickerSet.vala:206
+msgid "Callback"
+msgstr "Zpětné volání"
+
+#: src/StickerSet.vala:207
+msgid "Service mark"
+msgstr "Značka služby"
+
+#: src/StickerSet.vala:208
+msgid "Registered trademark"
+msgstr "Registrovaná ochranná známka"
+
+#: src/StickerSet.vala:209
+msgid "Trademark"
+msgstr "Ochranná známka"
+
+#: src/StickerSet.vala:210
+msgid "Copyright"
+msgstr "Copyright"
+
+#: src/StickerSet.vala:211
+msgid "Copyleft"
+msgstr "Zkopírovat vlevo"
+
+#: src/StickerSet.vala:212
+msgid "Sound recording copyright"
+msgstr "Copyright zvukových nahrávek"
+
+#: src/StickerSet.vala:213
+msgid "Butting in"
+msgstr "Zapadání"
+
+#: src/StickerSet.vala:214
+msgid "Multiple inputs"
+msgstr "Víc vstupů"
+
+#: src/StickerSet.vala:215
+msgid "Collect"
+msgstr "Sebrat"
+
+#: src/StickerSet.vala:216
+msgid "Internal"
+msgstr "Interní"
+
+#: src/StickerSet.vala:217
+msgid "External"
+msgstr "Externí"
+
+#: src/StickerSet.vala:218
+msgid "VIP"
+msgstr "VIP"
+
+#: src/StickerSet.vala:219
+msgid "Light at the end of tunnel"
+msgstr "Světlo na konci tunelu"
+
+#: src/StickerSet.vala:220
+msgid "Entering heaven alive"
+msgstr "Vstoupení do ráje za živa"
+
+#: src/StickerSet.vala:223
+msgid "Biomass"
+msgstr "Boimasa"
+
+#: src/StickerSet.vala:224
+msgid "Display"
+msgstr "Displej"
+
+#: src/StickerSet.vala:225
+msgid "Do not inhale"
+msgstr "Nevdechovat"
+
+#: src/StickerSet.vala:226
+msgid "Factory"
+msgstr "Továrna"
+
+#: src/StickerSet.vala:227
+msgid "Factory breakdown"
+msgstr "Zhroucení továrny"
+
+#: src/StickerSet.vala:228
+msgid "Crystal oscillator"
+msgstr "Krystalový oscilátor"
+
+#: src/StickerSet.vala:229
+msgid "Capacitor"
+msgstr "Kapacitor"
+
+#: src/StickerSet.vala:230
+msgid "Electricity"
+msgstr "Eelektřina"
+
+#: src/StickerSet.vala:231
+msgid "Electro devices"
+msgstr "Elektronika"
+
+#: src/StickerSet.vala:232
+msgid "Electrical sensor"
+msgstr "Elektronický sensor"
+
+#: src/StickerSet.vala:233
+msgid "Electrical threshold"
+msgstr "Elektronický limit"
+
+#: src/StickerSet.vala:234
+msgid "Automotive"
+msgstr "Automobilový průmysl"
+
+#: src/StickerSet.vala:235
+msgid "Feed in"
+msgstr "Nakrmit se"
+
+#: src/StickerSet.vala:236
+msgid "Dam"
+msgstr "Přehrada"
+
+#: src/StickerSet.vala:237
+msgid "Biotech"
+msgstr "Biotechnologie"
+
+#: src/StickerSet.vala:238
+msgid "Advance"
+msgstr "Výhoda"
+
+#: src/StickerSet.vala:239
+msgid "Cloth"
+msgstr "Oblečení"
+
+#: src/StickerSet.vala:240
+msgid "Electronics"
+msgstr "Elektronika"
+
+#: src/StickerSet.vala:241
+msgid "Deployment"
+msgstr "Rozvinutí"
+
+#: src/StickerSet.vala:242
+msgid "Automatic"
+msgstr "Automatický"
+
+#: src/StickerSet.vala:243
+msgid "Do not insert"
+msgstr "Nevkládejte"
+
+#: src/StickerSet.vala:244
+msgid "Do not mix"
+msgstr "Nemíchat"
+
+#: src/StickerSet.vala:245
+msgid "Biohazard"
+msgstr "Biologické nebezpečí"
+
+#: src/StickerSet.vala:246
+msgid "Circuit"
+msgstr "Obvod"
+
+#: src/StickerSet.vala:247
+msgid "Engineering"
+msgstr "Engineering"
+
+#: src/StickerSet.vala:250
+msgid "Cell phone"
+msgstr "Telefon"
+
+#: src/StickerSet.vala:251
+msgid "iPhone"
+msgstr "iPhone"
+
+#: src/StickerSet.vala:252
+msgid "iPad"
+msgstr "iPad"
+
+#: src/StickerSet.vala:253
+msgid "Phone android"
+msgstr "Telefon android"
+
+#: src/StickerSet.vala:254
+msgid "Tablet android"
+msgstr "Tablet android"
+
+#: src/StickerSet.vala:255
+msgid "Nook"
+msgstr "Kout"
+
+#: src/StickerSet.vala:256
+msgid "Kindle"
+msgstr "Kindle"
+
+#: src/StickerSet.vala:257
+msgid "Two smartphones"
+msgstr "Dva smartphony"
+
+#: src/StickerSet.vala:258
+msgid "Multiple devices"
+msgstr "Více zařízení"
+
+#: src/StickerSet.vala:259
+msgid "Multiple smartphones"
+msgstr "Více chytrých telefonů"
+
+#: src/StickerSet.vala:260
+msgid "Smartphone tablet"
+msgstr "Tablety smartphonů"
+
+#: src/StickerSet.vala:261
+msgid "Touchscreen smartphone"
+msgstr "Dotykový smartphone"
+
+#: src/StickerSet.vala:262
+msgid "Sim card"
+msgstr "SIM karta"
+
+#: src/StickerSet.vala:263
+msgid "Sim card chip"
+msgstr "Čip SIM karty"
+
+#: src/StickerSet.vala:264
+msgid "SMS"
+msgstr "SMS"
+
+#: src/StickerSet.vala:265
+msgid "MMS"
+msgstr "MMS"
+
+#: src/StickerSet.vala:266
+msgid "Charge battery"
+msgstr "Nabijte baterii"
+
+#: src/StickerSet.vala:267
+msgid "Full battery"
+msgstr "Plná baterie"
+
+#: src/StickerSet.vala:268
+msgid "High battery"
+msgstr "Vysoká baterie"
+
+#: src/StickerSet.vala:269
+msgid "Middle battery"
+msgstr "Střední baterie"
+
+#: src/StickerSet.vala:270
+msgid "Low battery"
+msgstr "Nízká baterie"
+
+#: src/StickerSet.vala:271
+msgid "Empty battery"
+msgstr "Prázdná baterie"
+
+#: src/StickerSet.vala:272
+msgid "Phone"
+msgstr "Telefon"
+
+#: src/StickerSet.vala:273
+msgid "Missed call"
+msgstr "Zmeškaný hovor"
+
+#: src/StickerSet.vala:274
+msgid "End call"
+msgstr "Ukončit hovor"
+
+#: src/StickerSet.vala:275
+msgid "Call transfer"
+msgstr "Přepojení hovoru"
+
+#: src/StickerSet.vala:276
+msgid "Video call"
+msgstr "Videohovor"
+
+#: src/StickerSet.vala:277
+msgid "No video"
+msgstr "Žádné video"
+
+#: src/StickerSet.vala:278
+msgid "Rotate to portrait"
+msgstr "Otočit na výšku"
+
+#: src/StickerSet.vala:279
+msgid "Lock portrait"
+msgstr "Zamknout portrét"
+
+#: src/StickerSet.vala:280
+msgid "Rotate to landscape"
+msgstr "Otočit na šířku"
+
+#: src/StickerSet.vala:281
+msgid "Lock landscape"
+msgstr "Zamknout režim na šířku"
+
+#: src/StickerSet.vala:282
+msgid "Voicemail"
+msgstr "Hlasová schránka"
+
+#: src/StickerSet.vala:283
+msgid "Speaker"
+msgstr "Reproduktor"
+
+#: src/StickerSet.vala:284
+msgid "Headset"
+msgstr "Headset"
+
+#: src/StickerSet.vala:287
+msgid "Left up"
+msgstr "Doleva nahoru"
+
+#: src/StickerSet.vala:288
+msgid "Up"
+msgstr "Nahoru"
+
+#: src/StickerSet.vala:289
+msgid "Right up"
+msgstr "Doprava nahoru"
+
+#: src/StickerSet.vala:290
+msgid "Left"
+msgstr "Do leva"
+
+#: src/StickerSet.vala:291
+msgid "Right"
+msgstr "Do prava"
+
+#: src/StickerSet.vala:292
+msgid "Left down"
+msgstr "Vlevo dolů"
+
+#: src/StickerSet.vala:293
+msgid "Down"
+msgstr "Dolů"
+
+#: src/StickerSet.vala:294
+msgid "Right down"
+msgstr "Přímo dolů"
+
+#: src/StickerSet.vala:295
+msgid "Collapse"
+msgstr "Sbalit"
+
+#: src/StickerSet.vala:296
+msgid "Previous"
+msgstr "Předchozí"
+
+#: src/StickerSet.vala:297
+msgid "Next"
+msgstr "Další"
+
+#: src/StickerSet.vala:298
+msgid "Expand"
+msgstr "Rozbalit"
+
+#: src/StickerSet.vala:299
+msgid "Left down2"
+msgstr "Left down2"
+
+#: src/StickerSet.vala:300
+msgid "Up left"
+msgstr "Nahoře vlevo"
+
+#: src/StickerSet.vala:301
+msgid "Down right"
+msgstr "Dolů vpravo"
+
+#: src/StickerSet.vala:302
+msgid "Right up2"
+msgstr "Right up2"
+
+#: src/StickerSet.vala:303
+msgid "Up right"
+msgstr "Doprava nahoru"
+
+#: src/StickerSet.vala:304
+msgid "Right down2"
+msgstr "Right down2"
+
+#: src/StickerSet.vala:305
+msgid "Left up2"
+msgstr "Left up2"
+
+#: src/StickerSet.vala:306
+msgid "Down left"
+msgstr "Doleva dolů"
+
+#: src/StickerSet.vala:311
+msgid "Filing cabinet"
+msgstr "Kartotéka"
+
+#: src/StickerSet.vala:312
+msgid "Database"
+msgstr "Databáze"
+
+#: src/StickerSet.vala:313
+msgid "Accept database"
+msgstr "Přijmout databázi"
+
+#: src/StickerSet.vala:314
+msgid "Add database"
+msgstr "Přidat databázi"
+
+#: src/StickerSet.vala:315
+msgid "Delete database"
+msgstr "Smazat databázi"
+
+#: src/StickerSet.vala:316
+msgid "Data backup"
+msgstr "Záloha dat"
+
+#: src/StickerSet.vala:317
+msgid "Data recovery"
+msgstr "Obnova dat"
+
+#: src/StickerSet.vala:318
+msgid "Data configuration"
+msgstr "Nastavení dat"
+
+#: src/StickerSet.vala:319
+msgid "Data encryption"
+msgstr "Šifrování dat"
+
+#: src/StickerSet.vala:320
+msgid "Data protection"
+msgstr "Ochrana dat"
+
+#: src/StickerSet.vala:321
+msgid "Grid"
+msgstr "Síť"
+
+#: src/StickerSet.vala:322
+msgid "Data sheet"
+msgstr "Datový list"
+
+#: src/StickerSet.vala:323
+msgid "Add column"
+msgstr "Přidat sloupec"
+
+#: src/StickerSet.vala:324
+msgid "Delete column"
+msgstr "Smazat sloupec"
+
+#: src/StickerSet.vala:325
+msgid "Add row"
+msgstr "Přidat řádek"
+
+#: src/StickerSet.vala:326
+msgid "Delete row"
+msgstr "Smazat řádek"
+
+#: src/StickerSet.vala:327
+msgid "Generic sorting ascending"
+msgstr "Obecné řazení vzestupně"
+
+#: src/StickerSet.vala:328
+msgid "Generic sorting descending"
+msgstr "Obecné řazení sestupně"
+
+#: src/StickerSet.vala:329
+msgid "Alphabetical sorting (A->Z)"
+msgstr "Abecední řazení (A->Z)"
+
+#: src/StickerSet.vala:330
+msgid "Alphabetical sorting (Z->A)"
+msgstr "Abecední řazení (Z->A)"
+
+#: src/StickerSet.vala:331
+msgid "Numerical sorting (2->1)"
+msgstr "Číselné řazení (2->1)"
+
+#: src/StickerSet.vala:332
+msgid "Numerical sorting (1->2)"
+msgstr "Číselné řazení (1->2)"
+
+#: src/StickerSet.vala:333
+msgid "Empty filter"
+msgstr "Prázdný filtr"
+
+#: src/StickerSet.vala:334
+msgid "Filled filter"
+msgstr "Naplněný filtr"
+
+#: src/StickerSet.vala:335
+msgid "Clear filters"
+msgstr "Vymazat filtry"
+
+#: src/StickerSet.vala:336
+msgid "Pie chart"
+msgstr "Výsečový graf"
+
+#: src/StickerSet.vala:337
+msgid "Radar plot"
+msgstr "Radarová zápletka"
+
+#: src/StickerSet.vala:338
+msgid "Heat map"
+msgstr "Teplotní mapa"
+
+#: src/StickerSet.vala:339
+msgid "Timeline"
+msgstr "Časová osa"
+
+#: src/StickerSet.vala:340
+msgid "Bar chart"
+msgstr "Sloupcový graf"
+
+#: src/StickerSet.vala:341
+msgid "Area chart"
+msgstr "Plošný graf"
+
+#: src/StickerSet.vala:342
+msgid "Scatter plot"
+msgstr "Bodový diagram"
+
+#: src/StickerSet.vala:343
+msgid "Doughnut chart"
+msgstr "Koblihový graf"
+
+#: src/StickerSet.vala:344
+msgid "Combo chart"
+msgstr "Kombinovaný graf"
+
+#: src/StickerSet.vala:345
+msgid "Flow chart"
+msgstr "Vývojový diagram"
+
+#: src/StickerSet.vala:346
+msgid "Line chart"
+msgstr "Spojnicový graf"
+
+#: src/StickerSet.vala:347
+msgid "Genealogy"
+msgstr "Genealogie"
+
+#: src/StickerSet.vala:348
+msgid "Mind map"
+msgstr "MapaMyšlenková mapa"
+
+#: src/StickerSet.vala:349
+msgid "Workflow"
+msgstr "Pracovní postup"
+
 #: src/StickerSet.vala:350
+msgid "Positive dynamic"
+msgstr "Pozitivní dynamika"
+
+#: src/StickerSet.vala:351
+msgid "Negative dynamic"
+msgstr "Negativní dynamika"
+
+#: src/StickerSet.vala:354
 msgid "List"
 msgstr "List"
 
-#: src/StickerSet.vala:351
+#: src/StickerSet.vala:355
 msgid "Template"
 msgstr "Šablona"
 
-#: src/StickerSet.vala:352
+#: src/StickerSet.vala:356
 msgid "View details"
 msgstr "Zobrazit detaily"
 
@@ -3107,7 +3126,7 @@ msgstr "Znovu "
 msgid "URL"
 msgstr "URL"
 
-#: src/Utils.vala:159 src/Utils.vala:165
+#: src/Utils.vala:160
 #, c-format
 msgid "error: %s\n"
 msgstr "error: %s\n"

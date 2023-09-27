@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-25 17:04-0500\n"
+"POT-Creation-Date: 2023-09-27 10:58-0500\n"
 "PO-Revision-Date: 2022-07-22 17:02+0800\n"
 "Last-Translator: 企鹅2035 <qie2035@qq.com>\n"
 "Language-Team: 简体中文 (机翻) <qie2035@qq.com>\n"
@@ -123,7 +123,7 @@ msgstr "使用主题默认颜色"
 msgid "Note"
 msgstr "注释"
 
-#: src/ConnectionInspector.vala:154
+#: src/ConnectionInspector.vala:157
 msgid "Delete Connection"
 msgstr "删除连接"
 
@@ -180,20 +180,20 @@ msgstr "连接说明"
 msgid "unnamed"
 msgstr "未命名"
 
-#: src/DrawArea.vala:742
+#: src/DrawArea.vala:754
 msgid "Main Idea"
 msgstr "主要思想"
 
-#: src/DrawArea.vala:2407
+#: src/DrawArea.vala:2437
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% 完成"
 
-#: src/DrawArea.vala:2421
+#: src/DrawArea.vala:2451
 msgid "Drag to resize node"
 msgstr "拖动以调整节点大小"
 
-#: src/DrawArea.vala:2423
+#: src/DrawArea.vala:2453
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -201,29 +201,29 @@ msgstr ""
 "拖动以调整节点和图像的大小。\n"
 "按住 Control-拖动以仅调整节点的大小。"
 
-#: src/DrawArea.vala:2535
+#: src/DrawArea.vala:2565
 #, c-format
 msgid "Children: %u\n"
 msgstr "子节点： %u\n"
 
-#: src/DrawArea.vala:2536
+#: src/DrawArea.vala:2566
 #, c-format
 msgid "Total: %d"
 msgstr "总计： %d"
 
-#: src/DrawArea.vala:2582
+#: src/DrawArea.vala:2612
 msgid "connection endpoint change"
 msgstr "连接端点更改"
 
-#: src/DrawArea.vala:2589
+#: src/DrawArea.vala:2619
 msgid "connection drag"
 msgstr "连接拖动"
 
-#: src/DrawArea.vala:3235 src/DrawArea.vala:3249 src/DrawArea.vala:4988
+#: src/DrawArea.vala:3265 src/DrawArea.vala:3279 src/DrawArea.vala:5031
 msgid "Another Idea"
 msgstr "另一个想法"
 
-#: src/DrawArea.vala:4481 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4511 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:334
 msgid "Manual"
 msgstr "手动"
@@ -312,12 +312,12 @@ msgstr "导出为 %s"
 
 #: src/Exporter.vala:132 src/ImageEditor.vala:381 src/ImageManager.vala:300
 #: src/MainWindow.vala:1009 src/MainWindow.vala:1104 src/MainWindow.vala:1248
-#: src/QuickEntry.vala:144 src/StickerSet.vala:71 src/ThemeEditor.vala:143
-#: src/UrlEditor.vala:62
+#: src/QuickEntry.vala:144 src/StickerInspector.vala:401 src/StickerSet.vala:75
+#: src/ThemeEditor.vala:143 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "取消"
 
-#: src/Exporter.vala:132 src/MainWindow.vala:826 src/StickerSet.vala:348
+#: src/Exporter.vala:132 src/MainWindow.vala:826 src/StickerSet.vala:352
 msgid "Export"
 msgstr "导出"
 
@@ -520,7 +520,7 @@ msgstr "将图像剪切到剪贴板"
 msgid "Paste Image from Clipboard"
 msgstr "从剪贴板粘贴图像"
 
-#: src/ImageEditor.vala:396 src/NodeInspector.vala:289 src/NodeMenu.vala:416
+#: src/ImageEditor.vala:396 src/NodeInspector.vala:292 src/NodeMenu.vala:416
 msgid "Remove Image"
 msgstr "删除图像"
 
@@ -549,11 +549,11 @@ msgstr "打开文件"
 msgid "Save File As"
 msgstr "将文件另存为"
 
-#: src/MainWindow.vala:204 src/StickerSet.vala:303 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:204 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "撤消"
 
-#: src/MainWindow.vala:211 src/StickerSet.vala:304 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:211 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "重做"
 
@@ -601,7 +601,7 @@ msgstr "缩放以适合选定的节点树"
 msgid "Zoom to Actual Size"
 msgstr "缩放至实际大小"
 
-#: src/MainWindow.vala:652 src/StickerSet.vala:110
+#: src/MainWindow.vala:652 src/StickerSet.vala:114
 msgid "Search"
 msgstr "搜索"
 
@@ -788,39 +788,39 @@ msgstr "折叠"
 msgid "Override Color"
 msgstr "覆盖颜色"
 
-#: src/NodeInspector.vala:260 src/NodeInspector.vala:278
+#: src/NodeInspector.vala:263 src/NodeInspector.vala:281
 msgid "Image"
 msgstr "图像"
 
-#: src/NodeInspector.vala:264
+#: src/NodeInspector.vala:267
 msgid "Add Image…"
 msgstr "添加图片..."
 
-#: src/NodeInspector.vala:283
+#: src/NodeInspector.vala:286
 msgid "Edit Image"
 msgstr "编辑图像"
 
-#: src/NodeInspector.vala:296
+#: src/NodeInspector.vala:299
 msgid "Resizable"
 msgstr "可调整大小"
 
-#: src/NodeInspector.vala:396
+#: src/NodeInspector.vala:399
 msgid "Copy Node To Clipboard"
 msgstr "将节点复制到剪贴板"
 
-#: src/NodeInspector.vala:400
+#: src/NodeInspector.vala:403
 msgid "Cut Node To Clipboard"
 msgstr "将节点剪切到剪贴板"
 
-#: src/NodeInspector.vala:405
+#: src/NodeInspector.vala:408
 msgid "Detach Node"
 msgstr "分离节点"
 
-#: src/NodeInspector.vala:410 data/com.github.phase1geo.minder.shortcuts.ui:284
+#: src/NodeInspector.vala:413 data/com.github.phase1geo.minder.shortcuts.ui:284
 msgid "Delete Node"
 msgstr "删除节点"
 
-#: src/NodeLink.vala:101
+#: src/NodeLink.vala:106
 msgid "No node found"
 msgstr "未找到节点"
 
@@ -1219,1277 +1219,1296 @@ msgstr "替换"
 msgid "Insert"
 msgstr "插入"
 
-#: src/StickerInspector.vala:60
+#: src/StickerInspector.vala:63
 msgid "Remove From Favorites"
 msgstr "从收藏夹中删除"
 
-#: src/StickerInspector.vala:63 src/StickerInspector.vala:67
+#: src/StickerInspector.vala:70 src/StickerInspector.vala:80
 msgid "Add To Favorites"
 msgstr "添加到收藏夹"
 
-#: src/StickerInspector.vala:76
+#: src/StickerInspector.vala:83
+#, fuzzy
+msgid "Remove Custom Sticker"
+msgstr "移除贴纸"
+
+#: src/StickerInspector.vala:99
 msgid ""
 "Drag and drop sticker onto a node or anywhere else in the map to add a "
 "sticker."
 msgstr "将贴图拖放到节点或地图中的其他任何位置以添加贴图。"
 
-#: src/StickerInspector.vala:82
+#: src/StickerInspector.vala:105
 msgid "Search Stickers"
 msgstr "搜索贴纸"
 
-#: src/StickerInspector.vala:111
+#: src/StickerInspector.vala:134
 msgid "Favorites"
 msgstr "收藏夹"
 
-#: src/StickerSet.vala:21 src/StickerSet.vala:64
-msgid "Photo and Video"
-msgstr "照片和视频"
-
-#: src/StickerSet.vala:22 src/StickerSet.vala:122
-msgid "Very Basic"
-msgstr "非常基本"
-
-#: src/StickerSet.vala:23 src/StickerSet.vala:126 src/StickerSet.vala:217
-msgid "Business"
-msgstr "商业"
-
-#: src/StickerSet.vala:24 src/StickerSet.vala:244
-msgid "Industry"
-msgstr "工业"
-
-#: src/StickerSet.vala:25 src/StickerSet.vala:281
-msgid "Mobile"
-msgstr "移动"
-
-#: src/StickerSet.vala:26 src/StickerSet.vala:305 src/StyleInspector.vala:885
-msgid "Arrows"
-msgstr "箭头"
-
-#: src/StickerSet.vala:27 src/StickerSet.vala:353
-msgid "Data"
-msgstr "数据"
-
-#: src/StickerSet.vala:29
-msgid "Flash on"
-msgstr "闪光灯开启"
-
-#: src/StickerSet.vala:30
-msgid "Flash off"
-msgstr "闪光灯熄灭"
-
-#: src/StickerSet.vala:31
-msgid "Flash auto"
-msgstr "自动闪光"
-
-#: src/StickerSet.vala:32
-msgid "Panorama"
-msgstr "全景"
-
-#: src/StickerSet.vala:33
-msgid "Landscape"
-msgstr "景观"
-
-#: src/StickerSet.vala:34
-msgid "Night landscape"
-msgstr "夜景"
-
-#: src/StickerSet.vala:35
-msgid "Sports mode"
-msgstr "运动模式"
-
-#: src/StickerSet.vala:36
-msgid "Portrait mode"
-msgstr "纵向模式"
-
-#: src/StickerSet.vala:37
-msgid "Night portrait"
-msgstr "夜景肖像"
-
-#: src/StickerSet.vala:38
-msgid "Close up mode"
-msgstr "特写模式"
-
-#: src/StickerSet.vala:39
-msgid "Selfie"
-msgstr "自拍"
-
-#: src/StickerSet.vala:40
-msgid "Gallery"
-msgstr "画廊"
-
-#: src/StickerSet.vala:41
-msgid "Stack of photos"
-msgstr "照片堆叠"
-
-#: src/StickerSet.vala:42
-msgid "Add image"
-msgstr "添加图片"
-
-#: src/StickerSet.vala:43
-msgid "Edit image"
-msgstr "编辑图像"
-
-#: src/StickerSet.vala:44
-msgid "Remove image"
-msgstr "删除图像"
-
-#: src/StickerSet.vala:45
-msgid "Compact camera"
-msgstr "紧凑型摄像机"
-
-#: src/StickerSet.vala:46
-msgid "Multiple cameras"
-msgstr "多个摄像头"
-
-#: src/StickerSet.vala:47
-msgid "Camera"
-msgstr "照相机"
-
-#: src/StickerSet.vala:48
-msgid "SLR back side"
-msgstr "单反背面"
-
-#: src/StickerSet.vala:49
-msgid "Old time camera"
-msgstr "旧时相机"
-
-#: src/StickerSet.vala:50
-msgid "Camera addon"
-msgstr "相机插件"
-
-#: src/StickerSet.vala:51
-msgid "Camera identification"
-msgstr "摄像头识别"
-
-#: src/StickerSet.vala:52
-msgid "Start"
-msgstr "开始"
-
-#: src/StickerSet.vala:53
-msgid "Clapperboard"
-msgstr "拍板"
-
-#: src/StickerSet.vala:54
-msgid "Film"
-msgstr "影片"
-
-#: src/StickerSet.vala:55
-msgid "Camcorder"
-msgstr "摄录一体机"
-
-#: src/StickerSet.vala:56
-msgid "Camcorder pro"
-msgstr "摄像机专业版"
-
-#: src/StickerSet.vala:57
-msgid "Webcam"
-msgstr "网络摄像头"
-
-#: src/StickerSet.vala:58
-msgid "Integrated webcam"
-msgstr "集成网络摄像头"
-
-#: src/StickerSet.vala:59
-msgid "Rotate camera"
-msgstr "旋转相机"
-
-#: src/StickerSet.vala:60
-msgid "Switch camera"
-msgstr "切换摄像头"
-
-#: src/StickerSet.vala:61
-msgid "Photo reel"
-msgstr "照片卷轴"
-
-#: src/StickerSet.vala:62
-msgid "Film reel"
-msgstr "胶卷轴"
-
-#: src/StickerSet.vala:63
-msgid "Cable release"
-msgstr "电缆释放"
-
-#: src/StickerSet.vala:66
-msgid "Home"
-msgstr "家"
-
-#: src/StickerSet.vala:67
-msgid "Icons8 cup"
-msgstr "图标8 杯"
-
-#: src/StickerSet.vala:68
-msgid "Globe"
-msgstr "球"
-
-#: src/StickerSet.vala:69
-msgid "OK"
-msgstr "OK"
-
-#: src/StickerSet.vala:70
-msgid "Checkmark"
-msgstr "复选标记"
-
-#: src/StickerSet.vala:72
-msgid "Synchronize"
-msgstr "同步"
-
-#: src/StickerSet.vala:73
-msgid "Refresh"
-msgstr "刷新"
-
-#: src/StickerSet.vala:74
-msgid "Download"
-msgstr "下载"
-
-#: src/StickerSet.vala:75
-msgid "Upload"
-msgstr "上传"
-
-#: src/StickerSet.vala:76
-msgid "Empty trash"
-msgstr "清空回收站"
-
-#: src/StickerSet.vala:77
-msgid "Full trash"
-msgstr "满满的垃圾"
-
-#: src/StickerSet.vala:78
-msgid "Folder"
-msgstr "文件夹"
-
-#: src/StickerSet.vala:79
-msgid "Opened folder"
-msgstr "打开的文件夹"
-
-#: src/StickerSet.vala:80 data/com.github.phase1geo.minder.shortcuts.ui:16
-msgid "File"
-msgstr "文件"
-
-#: src/StickerSet.vala:81
-msgid "Document"
-msgstr "公文"
-
-#: src/StickerSet.vala:82
-msgid "Audio file"
-msgstr "音频文件"
-
-#: src/StickerSet.vala:83
-msgid "Image file"
-msgstr "图像文件"
-
-#: src/StickerSet.vala:84
-msgid "Video file"
-msgstr "视频文件"
-
-#: src/StickerSet.vala:85
-msgid "Print"
-msgstr "打印"
-
-#: src/StickerSet.vala:86
-msgid "Music"
-msgstr "音乐"
-
-#: src/StickerSet.vala:87
-msgid "Share"
-msgstr "共享"
-
-#: src/StickerSet.vala:88
-msgid "Cursor"
-msgstr "光标"
-
-#: src/StickerSet.vala:89
-msgid "Puzzle"
-msgstr "难题"
-
-#: src/StickerSet.vala:90
-msgid "Unlock"
-msgstr "开锁"
-
-#: src/StickerSet.vala:91
-msgid "Lock"
-msgstr "锁"
-
-#: src/StickerSet.vala:92
-msgid "Idea"
-msgstr "想法"
-
-#: src/StickerSet.vala:93
-msgid "No idea"
-msgstr "不知道"
-
-#: src/StickerSet.vala:94
-msgid "Link"
-msgstr "链接"
-
-#: src/StickerSet.vala:95
-msgid "Broken link"
-msgstr "断开的链接"
-
-#: src/StickerSet.vala:96
-msgid "Rating"
-msgstr "额定值"
-
-#: src/StickerSet.vala:97
-msgid "Like placeholder"
-msgstr "像占位符"
-
-#: src/StickerSet.vala:98
-msgid "Like"
-msgstr "喜欢"
-
-#: src/StickerSet.vala:99
-msgid "Dislike"
-msgstr "讨厌"
-
-#: src/StickerSet.vala:100
-msgid "Info"
-msgstr "信息"
-
-#: src/StickerSet.vala:101
-msgid "About"
-msgstr "大约"
-
-#: src/StickerSet.vala:102
-msgid "Picture"
-msgstr "图片"
-
-#: src/StickerSet.vala:103
-msgid "Clock"
-msgstr "时钟"
-
-#: src/StickerSet.vala:104
-msgid "Alarm clock"
-msgstr "闹钟"
-
-#: src/StickerSet.vala:105
-msgid "Address book"
-msgstr "通訊錄"
-
-#: src/StickerSet.vala:106
-msgid "Contacts"
-msgstr "接触"
-
-#: src/StickerSet.vala:107
-msgid "News"
-msgstr "新闻"
-
-#: src/StickerSet.vala:108
-msgid "Bookmark"
-msgstr "书签"
-
-#: src/StickerSet.vala:109
-msgid "Binoculars"
-msgstr "望远镜"
-
-#: src/StickerSet.vala:111
-msgid "Ruler"
-msgstr "统治者"
-
-#: src/StickerSet.vala:112
-msgid "Services"
-msgstr "服务业"
-
-#: src/StickerSet.vala:113
-msgid "Settings"
-msgstr "设置"
-
-#: src/StickerSet.vala:114
-msgid "Support"
-msgstr "支持"
-
-#: src/StickerSet.vala:115
-msgid "Frame"
-msgstr "框架"
-
-#: src/StickerSet.vala:116
-msgid "Menu"
-msgstr "菜单"
-
-#: src/StickerSet.vala:117
-msgid "Key"
-msgstr "钥匙"
-
-#: src/StickerSet.vala:118
-msgid "Calendar"
-msgstr "日历"
-
-#: src/StickerSet.vala:119
-msgid "Calculator"
-msgstr "计算器"
-
-#: src/StickerSet.vala:120
-msgid "Minus"
-msgstr "减去"
-
-#: src/StickerSet.vala:121
-msgid "Plus"
-msgstr "加"
-
-#: src/StickerSet.vala:124
-msgid "Graduation cap"
-msgstr "刻度帽"
-
-#: src/StickerSet.vala:125
-msgid "Briefcase"
-msgstr "公文包"
-
-#: src/StickerSet.vala:127
-msgid "Signature"
-msgstr "签名"
-
-#: src/StickerSet.vala:128
-msgid "Safe"
-msgstr "安全"
-
-#: src/StickerSet.vala:129
-msgid "Advertising"
-msgstr "广告"
-
-#: src/StickerSet.vala:130
-msgid "Businessman"
-msgstr "商人"
-
-#: src/StickerSet.vala:131
-msgid "Businesswoman"
-msgstr "商人"
-
-#: src/StickerSet.vala:132
-msgid "Manager"
-msgstr "经理"
-
-#: src/StickerSet.vala:133
-msgid "Online support"
-msgstr "在线支持"
-
-#: src/StickerSet.vala:134
-msgid "Assistant"
-msgstr "助理"
-
-#: src/StickerSet.vala:135
-msgid "Customer support"
-msgstr "客户支持"
-
-#: src/StickerSet.vala:136
-msgid "Reading ebook"
-msgstr "阅读电子书"
-
-#: src/StickerSet.vala:137
-msgid "Reading"
-msgstr "读数"
-
-#: src/StickerSet.vala:138
-msgid "Neutral trading"
-msgstr "中立交易"
-
-#: src/StickerSet.vala:139
-msgid "Bullish"
-msgstr "乐观"
-
-#: src/StickerSet.vala:140
-msgid "Bearish"
-msgstr "看跌"
-
-#: src/StickerSet.vala:141
-msgid "High priority"
-msgstr "高优先级"
-
-#: src/StickerSet.vala:142
-msgid "Medium priority"
-msgstr "中等优先级"
-
-#: src/StickerSet.vala:143
-msgid "Low priority"
-msgstr "低优先级"
-
-#: src/StickerSet.vala:144
-msgid "Make decision"
-msgstr "做出决定"
-
-#: src/StickerSet.vala:145
-msgid "Decision"
-msgstr "决定"
-
-#: src/StickerSet.vala:146
-msgid "Good decision"
-msgstr "好决定"
-
-#: src/StickerSet.vala:147
-msgid "Neutral decision"
-msgstr "中立决定"
-
-#: src/StickerSet.vala:148
-msgid "Bad decision"
-msgstr "错误的决定"
-
-#: src/StickerSet.vala:149
-msgid "Approve"
-msgstr "批准"
-
-#: src/StickerSet.vala:150
-msgid "Disapprove"
-msgstr "不赞成"
-
-#: src/StickerSet.vala:151
-msgid "Podium without speaker"
-msgstr "不带扬声器的讲台"
-
-#: src/StickerSet.vala:152
-msgid "Podium with speaker"
-msgstr "带扬声器的讲台"
-
-#: src/StickerSet.vala:153
-msgid "Podium with audience"
-msgstr "有观众的领奖台"
-
-#: src/StickerSet.vala:154
-msgid "Video projector"
-msgstr "视频投影仪"
-
-#: src/StickerSet.vala:155
-msgid "Statistics"
-msgstr "统计学"
-
-#: src/StickerSet.vala:156
-msgid "Collaboration"
-msgstr "协作"
-
-#: src/StickerSet.vala:157
-msgid "Voice presentation"
-msgstr "语音演示"
-
-#: src/StickerSet.vala:158
-msgid "Conference call"
-msgstr "电话会议"
-
-#: src/StickerSet.vala:159
-msgid "Comments"
-msgstr "评论"
-
-#: src/StickerSet.vala:160
-msgid "FAQ"
-msgstr "常见问题"
-
-#: src/StickerSet.vala:161
-msgid "Reuse"
-msgstr "再使用"
-
-#: src/StickerSet.vala:162
-msgid "Organization"
-msgstr "组织"
-
-#: src/StickerSet.vala:163
-msgid "Department"
-msgstr "部门"
-
-#: src/StickerSet.vala:164
-msgid "Library"
-msgstr "图书馆"
-
-#: src/StickerSet.vala:165
-msgid "Shop"
-msgstr "店"
-
-#: src/StickerSet.vala:166
-msgid "Self service kiosk"
-msgstr "自助服务亭"
-
-#: src/StickerSet.vala:167
-msgid "Donate"
-msgstr "捐"
-
-#: src/StickerSet.vala:168
-msgid "Currency exchange"
-msgstr "外币汇兑"
-
-#: src/StickerSet.vala:169
-msgid "Debt"
-msgstr "债务"
-
-#: src/StickerSet.vala:170
-msgid "Sales performance"
-msgstr "销售业绩"
-
-#: src/StickerSet.vala:171
-msgid "Invite"
-msgstr "邀请"
-
-#: src/StickerSet.vala:172
-msgid "Money transfer"
-msgstr "汇款"
-
-#: src/StickerSet.vala:173
-msgid "Feedback"
-msgstr "反馈"
-
-#: src/StickerSet.vala:174
-msgid "Approval"
-msgstr "批准"
-
-#: src/StickerSet.vala:175
-msgid "Paid"
-msgstr "支付"
-
-#: src/StickerSet.vala:176
-msgid "In transit"
-msgstr "运输中"
-
-#: src/StickerSet.vala:177
-msgid "Shipped"
-msgstr "运"
-
-#: src/StickerSet.vala:178
-msgid "Package"
-msgstr "包"
-
-#: src/StickerSet.vala:179
-msgid "Planner"
-msgstr "计划"
-
-#: src/StickerSet.vala:180
-msgid "Overtime"
-msgstr "加班"
-
-#: src/StickerSet.vala:181
-msgid "Leave"
-msgstr "离开"
-
-#: src/StickerSet.vala:182
-msgid "Expired"
-msgstr "过期"
-
-#: src/StickerSet.vala:183
-msgid "Process"
-msgstr "过程"
-
-#: src/StickerSet.vala:184
-msgid "Diploma 1"
-msgstr "文凭 1"
-
-#: src/StickerSet.vala:185
-msgid "Diploma 2"
-msgstr "文凭 2"
-
-#: src/StickerSet.vala:186
-msgid "Business contact"
-msgstr "业务联系"
-
-#: src/StickerSet.vala:187
-msgid "Survey"
-msgstr "调查"
-
-#: src/StickerSet.vala:188
-msgid "Inspection"
-msgstr "检查"
-
-#: src/StickerSet.vala:189
-msgid "Rules"
-msgstr "规则"
-
-#: src/StickerSet.vala:190
-msgid "Todo list"
-msgstr "待办事项列表"
-
-#: src/StickerSet.vala:191
-msgid "Ratings"
-msgstr "评级"
-
-#: src/StickerSet.vala:192
-msgid "Questions"
-msgstr "问题"
-
-#: src/StickerSet.vala:193
-msgid "Answers"
-msgstr "答案"
-
-#: src/StickerSet.vala:194
-msgid "Fine print"
-msgstr "预订须知"
-
-#: src/StickerSet.vala:195
-msgid "Candle sticks"
-msgstr "蜡烛棒"
-
-#: src/StickerSet.vala:196
-msgid "Serial tasks"
-msgstr "串行任务"
-
-#: src/StickerSet.vala:197
-msgid "Parallel tasks"
-msgstr "并行任务"
-
-#: src/StickerSet.vala:198
-msgid "Tree structure"
-msgstr "树结构"
-
-#: src/StickerSet.vala:199
-msgid "Org unit"
-msgstr "组织单位"
-
-#: src/StickerSet.vala:200
-msgid "Privacy"
-msgstr "隐私"
-
-#: src/StickerSet.vala:201
-msgid "Disclaimer"
-msgstr "免責聲明"
-
-#: src/StickerSet.vala:202
-msgid "Callback"
-msgstr "回调"
-
-#: src/StickerSet.vala:203
-msgid "Service mark"
-msgstr "服务标志"
-
-#: src/StickerSet.vala:204
-msgid "Registered trademark"
-msgstr "注册商标"
-
-#: src/StickerSet.vala:205
-msgid "Trademark"
-msgstr "商标"
-
-#: src/StickerSet.vala:206
-msgid "Copyright"
-msgstr "版权"
-
-#: src/StickerSet.vala:207
-msgid "Copyleft"
-msgstr "Copyleft"
-
-#: src/StickerSet.vala:208
-msgid "Sound recording copyright"
-msgstr "录音版权"
-
-#: src/StickerSet.vala:209
-msgid "Butting in"
-msgstr "对接"
-
-#: src/StickerSet.vala:210
-msgid "Multiple inputs"
-msgstr "多个输入"
-
-#: src/StickerSet.vala:211
-msgid "Collect"
-msgstr "收集"
-
-#: src/StickerSet.vala:212
-msgid "Internal"
-msgstr "内部"
-
-#: src/StickerSet.vala:213
-msgid "External"
-msgstr "外部"
-
-#: src/StickerSet.vala:214
-msgid "VIP"
-msgstr "贵宾"
-
-#: src/StickerSet.vala:215
-msgid "Light at the end of tunnel"
-msgstr "隧道尽头的光明"
-
-#: src/StickerSet.vala:216
-msgid "Entering heaven alive"
-msgstr "活着进入天堂"
-
-#: src/StickerSet.vala:219
-msgid "Biomass"
-msgstr "生物量"
-
-#: src/StickerSet.vala:220
-msgid "Display"
-msgstr "显示"
-
-#: src/StickerSet.vala:221
-msgid "Do not inhale"
-msgstr "不要吸气"
-
-#: src/StickerSet.vala:222
-msgid "Factory"
-msgstr "厂"
-
-#: src/StickerSet.vala:223
-msgid "Factory breakdown"
-msgstr "工厂故障"
-
-#: src/StickerSet.vala:224
-msgid "Crystal oscillator"
-msgstr "晶体振荡器"
-
-#: src/StickerSet.vala:225
-msgid "Capacitor"
-msgstr "电容器"
-
-#: src/StickerSet.vala:226
-msgid "Electricity"
-msgstr "电力"
-
-#: src/StickerSet.vala:227
-msgid "Electro devices"
-msgstr "电子设备"
-
-#: src/StickerSet.vala:228
-msgid "Electrical sensor"
-msgstr "电传感器"
-
-#: src/StickerSet.vala:229
-msgid "Electrical threshold"
-msgstr "电气阈值"
-
-#: src/StickerSet.vala:230
-msgid "Automotive"
-msgstr "汽车"
-
-#: src/StickerSet.vala:231
-msgid "Feed in"
-msgstr "馈入"
-
-#: src/StickerSet.vala:232
-msgid "Dam"
-msgstr "坝"
-
-#: src/StickerSet.vala:233
-msgid "Biotech"
-msgstr "生物"
-
-#: src/StickerSet.vala:234
-msgid "Advance"
-msgstr "进展"
-
-#: src/StickerSet.vala:235
-msgid "Cloth"
-msgstr "布"
-
-#: src/StickerSet.vala:236
-msgid "Electronics"
-msgstr "电子学"
-
-#: src/StickerSet.vala:237
-msgid "Deployment"
-msgstr "部署"
-
-#: src/StickerSet.vala:238
-msgid "Automatic"
-msgstr "自动"
-
-#: src/StickerSet.vala:239
-msgid "Do not insert"
-msgstr "不要插入"
-
-#: src/StickerSet.vala:240
-msgid "Do not mix"
-msgstr "不要混合"
-
-#: src/StickerSet.vala:241
-msgid "Biohazard"
-msgstr "生物危害"
-
-#: src/StickerSet.vala:242
-msgid "Circuit"
-msgstr "电路"
-
-#: src/StickerSet.vala:243
-msgid "Engineering"
-msgstr "工程"
-
-#: src/StickerSet.vala:246
-msgid "Cell phone"
-msgstr "手机"
-
-#: src/StickerSet.vala:247
-msgid "iPhone"
-msgstr "苹果手机"
-
-#: src/StickerSet.vala:248
-msgid "iPad"
-msgstr "平板电脑"
-
-#: src/StickerSet.vala:249
-msgid "Phone android"
-msgstr "手机安卓"
-
-#: src/StickerSet.vala:250
-msgid "Tablet android"
-msgstr "平板电脑安卓"
-
-#: src/StickerSet.vala:251
-msgid "Nook"
-msgstr "角落"
-
-#: src/StickerSet.vala:252
-msgid "Kindle"
-msgstr "激起"
-
-#: src/StickerSet.vala:253
-msgid "Two smartphones"
-msgstr "两部智能手机"
-
-#: src/StickerSet.vala:254
-msgid "Multiple devices"
-msgstr "多个设备"
-
-#: src/StickerSet.vala:255
-msgid "Multiple smartphones"
-msgstr "多部智能手机"
-
-#: src/StickerSet.vala:256
-msgid "Smartphone tablet"
-msgstr "智能手机平板电脑"
-
-#: src/StickerSet.vala:257
-msgid "Touchscreen smartphone"
-msgstr "触摸屏智能手机"
-
-#: src/StickerSet.vala:258
-msgid "Sim card"
-msgstr "SIM卡"
-
-#: src/StickerSet.vala:259
-msgid "Sim card chip"
-msgstr "SIM卡芯片"
-
-#: src/StickerSet.vala:260
-msgid "SMS"
-msgstr "短信"
-
-#: src/StickerSet.vala:261
-msgid "MMS"
-msgstr "彩信"
-
-#: src/StickerSet.vala:262
-msgid "Charge battery"
-msgstr "充电电池"
-
-#: src/StickerSet.vala:263
-msgid "Full battery"
-msgstr "电池充满电量"
-
-#: src/StickerSet.vala:264
-msgid "High battery"
-msgstr "高电量"
-
-#: src/StickerSet.vala:265
-msgid "Middle battery"
-msgstr "中间电池"
-
-#: src/StickerSet.vala:266
-msgid "Low battery"
-msgstr "低电池电量"
-
-#: src/StickerSet.vala:267
-msgid "Empty battery"
-msgstr "电池电量不足"
-
-#: src/StickerSet.vala:268
-msgid "Phone"
-msgstr "电话"
-
-#: src/StickerSet.vala:269
-msgid "Missed call"
-msgstr "未接来电"
-
-#: src/StickerSet.vala:270
-msgid "End call"
-msgstr "结束呼叫"
-
-#: src/StickerSet.vala:271
-msgid "Call transfer"
-msgstr "呼叫转移"
-
-#: src/StickerSet.vala:272
-msgid "Video call"
-msgstr "视频通话"
-
-#: src/StickerSet.vala:273
-msgid "No video"
-msgstr "无视频"
-
-#: src/StickerSet.vala:274
-msgid "Rotate to portrait"
-msgstr "旋转到纵向"
-
-#: src/StickerSet.vala:275
-msgid "Lock portrait"
-msgstr "锁定肖像"
-
-#: src/StickerSet.vala:276
-msgid "Rotate to landscape"
-msgstr "旋转到横向"
-
-#: src/StickerSet.vala:277
-msgid "Lock landscape"
-msgstr "锁定景观"
-
-#: src/StickerSet.vala:278
-msgid "Voicemail"
-msgstr "语音信箱"
-
-#: src/StickerSet.vala:279
-msgid "Speaker"
-msgstr "议长"
-
-#: src/StickerSet.vala:280
-msgid "Headset"
-msgstr "耳机"
-
-#: src/StickerSet.vala:283
-msgid "Left up"
-msgstr "左起"
-
-#: src/StickerSet.vala:284
-msgid "Up"
-msgstr "向上"
-
-#: src/StickerSet.vala:285
-msgid "Right up"
-msgstr "马上"
-
-#: src/StickerSet.vala:286
-msgid "Left"
-msgstr "左"
-
-#: src/StickerSet.vala:287
-msgid "Right"
-msgstr "右"
-
-#: src/StickerSet.vala:288
-msgid "Left down"
-msgstr "左下"
-
-#: src/StickerSet.vala:289
-msgid "Down"
-msgstr "下"
-
-#: src/StickerSet.vala:290
-msgid "Right down"
-msgstr "右下"
-
-#: src/StickerSet.vala:291
-msgid "Collapse"
-msgstr "崩溃"
-
-#: src/StickerSet.vala:292
-msgid "Previous"
-msgstr "以前"
-
-#: src/StickerSet.vala:293
-msgid "Next"
-msgstr "下一个"
-
-#: src/StickerSet.vala:294
-msgid "Expand"
-msgstr "扩大"
-
-#: src/StickerSet.vala:295
-msgid "Left down2"
-msgstr "左下2"
-
-#: src/StickerSet.vala:296
-msgid "Up left"
-msgstr "左上"
-
-#: src/StickerSet.vala:297
-msgid "Down right"
-msgstr "右下"
-
-#: src/StickerSet.vala:298
-msgid "Right up2"
-msgstr "右上2"
-
-#: src/StickerSet.vala:299
-msgid "Up right"
-msgstr "右上方"
-
-#: src/StickerSet.vala:300
-msgid "Right down2"
-msgstr "右下2"
-
-#: src/StickerSet.vala:301
-msgid "Left up2"
-msgstr "左起2"
-
-#: src/StickerSet.vala:302
-msgid "Down left"
-msgstr "左下"
-
-#: src/StickerSet.vala:307
-msgid "Filing cabinet"
-msgstr "档案柜"
-
-#: src/StickerSet.vala:308
-msgid "Database"
-msgstr "数据库"
-
-#: src/StickerSet.vala:309
-msgid "Accept database"
-msgstr "接受数据库"
-
-#: src/StickerSet.vala:310
-msgid "Add database"
-msgstr "添加数据库"
-
-#: src/StickerSet.vala:311
-msgid "Delete database"
-msgstr "删除数据库"
-
-#: src/StickerSet.vala:312
-msgid "Data backup"
-msgstr "数据备份"
-
-#: src/StickerSet.vala:313
-msgid "Data recovery"
-msgstr "数据恢复"
-
-#: src/StickerSet.vala:314
-msgid "Data configuration"
-msgstr "数据配置"
-
-#: src/StickerSet.vala:315
-msgid "Data encryption"
-msgstr "数据加密"
-
-#: src/StickerSet.vala:316
-msgid "Data protection"
-msgstr "数据保护"
-
-#: src/StickerSet.vala:317
-msgid "Grid"
-msgstr "网 格"
-
-#: src/StickerSet.vala:318
-msgid "Data sheet"
-msgstr "数据表"
-
-#: src/StickerSet.vala:319
-msgid "Add column"
-msgstr "添加列"
-
-#: src/StickerSet.vala:320
-msgid "Delete column"
-msgstr "删除列"
-
-#: src/StickerSet.vala:321
-msgid "Add row"
-msgstr "添加行"
-
-#: src/StickerSet.vala:322
-msgid "Delete row"
-msgstr "删除行"
-
-#: src/StickerSet.vala:323
-msgid "Generic sorting ascending"
-msgstr "通用排序升序"
-
-#: src/StickerSet.vala:324
-msgid "Generic sorting descending"
-msgstr "通用排序降序"
-
-#: src/StickerSet.vala:325
-msgid "Alphabetical sorting (A->Z)"
-msgstr "按字母顺序排序（A->Z）"
-
-#: src/StickerSet.vala:326
-msgid "Alphabetical sorting (Z->A)"
-msgstr "按字母顺序排序（Z->A）"
-
-#: src/StickerSet.vala:327
-msgid "Numerical sorting (2->1)"
-msgstr "数字排序 （2->1）"
-
-#: src/StickerSet.vala:328
-msgid "Numerical sorting (1->2)"
-msgstr "数字排序 （1->2）"
-
-#: src/StickerSet.vala:329
-msgid "Empty filter"
-msgstr "空过滤器"
-
-#: src/StickerSet.vala:330
-msgid "Filled filter"
-msgstr "填充过滤器"
-
-#: src/StickerSet.vala:331
-msgid "Clear filters"
-msgstr "清除过滤器"
-
-#: src/StickerSet.vala:332
-msgid "Pie chart"
-msgstr "饼图"
-
-#: src/StickerSet.vala:333
-msgid "Radar plot"
-msgstr "雷达图"
-
-#: src/StickerSet.vala:334
-msgid "Heat map"
-msgstr "热图"
-
-#: src/StickerSet.vala:335
-msgid "Timeline"
-msgstr "时间线"
-
-#: src/StickerSet.vala:336
-msgid "Bar chart"
-msgstr "条形图"
-
-#: src/StickerSet.vala:337
-msgid "Area chart"
-msgstr "面积图"
-
-#: src/StickerSet.vala:338
-msgid "Scatter plot"
-msgstr "散布图"
-
-#: src/StickerSet.vala:339
-msgid "Doughnut chart"
-msgstr "圆环图"
-
-#: src/StickerSet.vala:340
-msgid "Combo chart"
-msgstr "组合图"
-
-#: src/StickerSet.vala:341
-msgid "Flow chart"
-msgstr "流程图"
-
-#: src/StickerSet.vala:342
-msgid "Line chart"
-msgstr "折线图"
-
-#: src/StickerSet.vala:343
-msgid "Genealogy"
-msgstr "家谱"
-
-#: src/StickerSet.vala:344
-msgid "Mind map"
-msgstr "思维导图"
-
-#: src/StickerSet.vala:345
-msgid "Workflow"
-msgstr "工作流程"
-
-#: src/StickerSet.vala:346
-msgid "Positive dynamic"
-msgstr "正动态"
-
-#: src/StickerSet.vala:347
-msgid "Negative dynamic"
-msgstr "负动态"
-
-#: src/StickerSet.vala:349
+#: src/StickerInspector.vala:140
+msgid "Show Custom Sticker Directory"
+msgstr ""
+
+#: src/StickerInspector.vala:214
+#, fuzzy
+msgid "Add custom stickers"
+msgstr "添加节点贴纸"
+
+#: src/StickerInspector.vala:401
+#, fuzzy
+msgid "Import Sticker(s)"
+msgstr "移除贴纸"
+
+#: src/StickerInspector.vala:401 src/StickerSet.vala:353
 msgid "Import"
 msgstr "进口"
 
+#: src/StickerSet.vala:25 src/StickerSet.vala:68
+msgid "Photo and Video"
+msgstr "照片和视频"
+
+#: src/StickerSet.vala:26 src/StickerSet.vala:126
+msgid "Very Basic"
+msgstr "非常基本"
+
+#: src/StickerSet.vala:27 src/StickerSet.vala:130 src/StickerSet.vala:221
+msgid "Business"
+msgstr "商业"
+
+#: src/StickerSet.vala:28 src/StickerSet.vala:248
+msgid "Industry"
+msgstr "工业"
+
+#: src/StickerSet.vala:29 src/StickerSet.vala:285
+msgid "Mobile"
+msgstr "移动"
+
+#: src/StickerSet.vala:30 src/StickerSet.vala:309 src/StyleInspector.vala:885
+msgid "Arrows"
+msgstr "箭头"
+
+#: src/StickerSet.vala:31 src/StickerSet.vala:357
+msgid "Data"
+msgstr "数据"
+
+#: src/StickerSet.vala:33
+msgid "Flash on"
+msgstr "闪光灯开启"
+
+#: src/StickerSet.vala:34
+msgid "Flash off"
+msgstr "闪光灯熄灭"
+
+#: src/StickerSet.vala:35
+msgid "Flash auto"
+msgstr "自动闪光"
+
+#: src/StickerSet.vala:36
+msgid "Panorama"
+msgstr "全景"
+
+#: src/StickerSet.vala:37
+msgid "Landscape"
+msgstr "景观"
+
+#: src/StickerSet.vala:38
+msgid "Night landscape"
+msgstr "夜景"
+
+#: src/StickerSet.vala:39
+msgid "Sports mode"
+msgstr "运动模式"
+
+#: src/StickerSet.vala:40
+msgid "Portrait mode"
+msgstr "纵向模式"
+
+#: src/StickerSet.vala:41
+msgid "Night portrait"
+msgstr "夜景肖像"
+
+#: src/StickerSet.vala:42
+msgid "Close up mode"
+msgstr "特写模式"
+
+#: src/StickerSet.vala:43
+msgid "Selfie"
+msgstr "自拍"
+
+#: src/StickerSet.vala:44
+msgid "Gallery"
+msgstr "画廊"
+
+#: src/StickerSet.vala:45
+msgid "Stack of photos"
+msgstr "照片堆叠"
+
+#: src/StickerSet.vala:46
+msgid "Add image"
+msgstr "添加图片"
+
+#: src/StickerSet.vala:47
+msgid "Edit image"
+msgstr "编辑图像"
+
+#: src/StickerSet.vala:48
+msgid "Remove image"
+msgstr "删除图像"
+
+#: src/StickerSet.vala:49
+msgid "Compact camera"
+msgstr "紧凑型摄像机"
+
+#: src/StickerSet.vala:50
+msgid "Multiple cameras"
+msgstr "多个摄像头"
+
+#: src/StickerSet.vala:51
+msgid "Camera"
+msgstr "照相机"
+
+#: src/StickerSet.vala:52
+msgid "SLR back side"
+msgstr "单反背面"
+
+#: src/StickerSet.vala:53
+msgid "Old time camera"
+msgstr "旧时相机"
+
+#: src/StickerSet.vala:54
+msgid "Camera addon"
+msgstr "相机插件"
+
+#: src/StickerSet.vala:55
+msgid "Camera identification"
+msgstr "摄像头识别"
+
+#: src/StickerSet.vala:56
+msgid "Start"
+msgstr "开始"
+
+#: src/StickerSet.vala:57
+msgid "Clapperboard"
+msgstr "拍板"
+
+#: src/StickerSet.vala:58
+msgid "Film"
+msgstr "影片"
+
+#: src/StickerSet.vala:59
+msgid "Camcorder"
+msgstr "摄录一体机"
+
+#: src/StickerSet.vala:60
+msgid "Camcorder pro"
+msgstr "摄像机专业版"
+
+#: src/StickerSet.vala:61
+msgid "Webcam"
+msgstr "网络摄像头"
+
+#: src/StickerSet.vala:62
+msgid "Integrated webcam"
+msgstr "集成网络摄像头"
+
+#: src/StickerSet.vala:63
+msgid "Rotate camera"
+msgstr "旋转相机"
+
+#: src/StickerSet.vala:64
+msgid "Switch camera"
+msgstr "切换摄像头"
+
+#: src/StickerSet.vala:65
+msgid "Photo reel"
+msgstr "照片卷轴"
+
+#: src/StickerSet.vala:66
+msgid "Film reel"
+msgstr "胶卷轴"
+
+#: src/StickerSet.vala:67
+msgid "Cable release"
+msgstr "电缆释放"
+
+#: src/StickerSet.vala:70
+msgid "Home"
+msgstr "家"
+
+#: src/StickerSet.vala:71
+msgid "Icons8 cup"
+msgstr "图标8 杯"
+
+#: src/StickerSet.vala:72
+msgid "Globe"
+msgstr "球"
+
+#: src/StickerSet.vala:73
+msgid "OK"
+msgstr "OK"
+
+#: src/StickerSet.vala:74
+msgid "Checkmark"
+msgstr "复选标记"
+
+#: src/StickerSet.vala:76
+msgid "Synchronize"
+msgstr "同步"
+
+#: src/StickerSet.vala:77
+msgid "Refresh"
+msgstr "刷新"
+
+#: src/StickerSet.vala:78
+msgid "Download"
+msgstr "下载"
+
+#: src/StickerSet.vala:79
+msgid "Upload"
+msgstr "上传"
+
+#: src/StickerSet.vala:80
+msgid "Empty trash"
+msgstr "清空回收站"
+
+#: src/StickerSet.vala:81
+msgid "Full trash"
+msgstr "满满的垃圾"
+
+#: src/StickerSet.vala:82
+msgid "Folder"
+msgstr "文件夹"
+
+#: src/StickerSet.vala:83
+msgid "Opened folder"
+msgstr "打开的文件夹"
+
+#: src/StickerSet.vala:84 data/com.github.phase1geo.minder.shortcuts.ui:16
+msgid "File"
+msgstr "文件"
+
+#: src/StickerSet.vala:85
+msgid "Document"
+msgstr "公文"
+
+#: src/StickerSet.vala:86
+msgid "Audio file"
+msgstr "音频文件"
+
+#: src/StickerSet.vala:87
+msgid "Image file"
+msgstr "图像文件"
+
+#: src/StickerSet.vala:88
+msgid "Video file"
+msgstr "视频文件"
+
+#: src/StickerSet.vala:89
+msgid "Print"
+msgstr "打印"
+
+#: src/StickerSet.vala:90
+msgid "Music"
+msgstr "音乐"
+
+#: src/StickerSet.vala:91
+msgid "Share"
+msgstr "共享"
+
+#: src/StickerSet.vala:92
+msgid "Cursor"
+msgstr "光标"
+
+#: src/StickerSet.vala:93
+msgid "Puzzle"
+msgstr "难题"
+
+#: src/StickerSet.vala:94
+msgid "Unlock"
+msgstr "开锁"
+
+#: src/StickerSet.vala:95
+msgid "Lock"
+msgstr "锁"
+
+#: src/StickerSet.vala:96
+msgid "Idea"
+msgstr "想法"
+
+#: src/StickerSet.vala:97
+msgid "No idea"
+msgstr "不知道"
+
+#: src/StickerSet.vala:98
+msgid "Link"
+msgstr "链接"
+
+#: src/StickerSet.vala:99
+msgid "Broken link"
+msgstr "断开的链接"
+
+#: src/StickerSet.vala:100
+msgid "Rating"
+msgstr "额定值"
+
+#: src/StickerSet.vala:101
+msgid "Like placeholder"
+msgstr "像占位符"
+
+#: src/StickerSet.vala:102
+msgid "Like"
+msgstr "喜欢"
+
+#: src/StickerSet.vala:103
+msgid "Dislike"
+msgstr "讨厌"
+
+#: src/StickerSet.vala:104
+msgid "Info"
+msgstr "信息"
+
+#: src/StickerSet.vala:105
+msgid "About"
+msgstr "大约"
+
+#: src/StickerSet.vala:106
+msgid "Picture"
+msgstr "图片"
+
+#: src/StickerSet.vala:107
+msgid "Clock"
+msgstr "时钟"
+
+#: src/StickerSet.vala:108
+msgid "Alarm clock"
+msgstr "闹钟"
+
+#: src/StickerSet.vala:109
+msgid "Address book"
+msgstr "通訊錄"
+
+#: src/StickerSet.vala:110
+msgid "Contacts"
+msgstr "接触"
+
+#: src/StickerSet.vala:111
+msgid "News"
+msgstr "新闻"
+
+#: src/StickerSet.vala:112
+msgid "Bookmark"
+msgstr "书签"
+
+#: src/StickerSet.vala:113
+msgid "Binoculars"
+msgstr "望远镜"
+
+#: src/StickerSet.vala:115
+msgid "Ruler"
+msgstr "统治者"
+
+#: src/StickerSet.vala:116
+msgid "Services"
+msgstr "服务业"
+
+#: src/StickerSet.vala:117
+msgid "Settings"
+msgstr "设置"
+
+#: src/StickerSet.vala:118
+msgid "Support"
+msgstr "支持"
+
+#: src/StickerSet.vala:119
+msgid "Frame"
+msgstr "框架"
+
+#: src/StickerSet.vala:120
+msgid "Menu"
+msgstr "菜单"
+
+#: src/StickerSet.vala:121
+msgid "Key"
+msgstr "钥匙"
+
+#: src/StickerSet.vala:122
+msgid "Calendar"
+msgstr "日历"
+
+#: src/StickerSet.vala:123
+msgid "Calculator"
+msgstr "计算器"
+
+#: src/StickerSet.vala:124
+msgid "Minus"
+msgstr "减去"
+
+#: src/StickerSet.vala:125
+msgid "Plus"
+msgstr "加"
+
+#: src/StickerSet.vala:128
+msgid "Graduation cap"
+msgstr "刻度帽"
+
+#: src/StickerSet.vala:129
+msgid "Briefcase"
+msgstr "公文包"
+
+#: src/StickerSet.vala:131
+msgid "Signature"
+msgstr "签名"
+
+#: src/StickerSet.vala:132
+msgid "Safe"
+msgstr "安全"
+
+#: src/StickerSet.vala:133
+msgid "Advertising"
+msgstr "广告"
+
+#: src/StickerSet.vala:134
+msgid "Businessman"
+msgstr "商人"
+
+#: src/StickerSet.vala:135
+msgid "Businesswoman"
+msgstr "商人"
+
+#: src/StickerSet.vala:136
+msgid "Manager"
+msgstr "经理"
+
+#: src/StickerSet.vala:137
+msgid "Online support"
+msgstr "在线支持"
+
+#: src/StickerSet.vala:138
+msgid "Assistant"
+msgstr "助理"
+
+#: src/StickerSet.vala:139
+msgid "Customer support"
+msgstr "客户支持"
+
+#: src/StickerSet.vala:140
+msgid "Reading ebook"
+msgstr "阅读电子书"
+
+#: src/StickerSet.vala:141
+msgid "Reading"
+msgstr "读数"
+
+#: src/StickerSet.vala:142
+msgid "Neutral trading"
+msgstr "中立交易"
+
+#: src/StickerSet.vala:143
+msgid "Bullish"
+msgstr "乐观"
+
+#: src/StickerSet.vala:144
+msgid "Bearish"
+msgstr "看跌"
+
+#: src/StickerSet.vala:145
+msgid "High priority"
+msgstr "高优先级"
+
+#: src/StickerSet.vala:146
+msgid "Medium priority"
+msgstr "中等优先级"
+
+#: src/StickerSet.vala:147
+msgid "Low priority"
+msgstr "低优先级"
+
+#: src/StickerSet.vala:148
+msgid "Make decision"
+msgstr "做出决定"
+
+#: src/StickerSet.vala:149
+msgid "Decision"
+msgstr "决定"
+
+#: src/StickerSet.vala:150
+msgid "Good decision"
+msgstr "好决定"
+
+#: src/StickerSet.vala:151
+msgid "Neutral decision"
+msgstr "中立决定"
+
+#: src/StickerSet.vala:152
+msgid "Bad decision"
+msgstr "错误的决定"
+
+#: src/StickerSet.vala:153
+msgid "Approve"
+msgstr "批准"
+
+#: src/StickerSet.vala:154
+msgid "Disapprove"
+msgstr "不赞成"
+
+#: src/StickerSet.vala:155
+msgid "Podium without speaker"
+msgstr "不带扬声器的讲台"
+
+#: src/StickerSet.vala:156
+msgid "Podium with speaker"
+msgstr "带扬声器的讲台"
+
+#: src/StickerSet.vala:157
+msgid "Podium with audience"
+msgstr "有观众的领奖台"
+
+#: src/StickerSet.vala:158
+msgid "Video projector"
+msgstr "视频投影仪"
+
+#: src/StickerSet.vala:159
+msgid "Statistics"
+msgstr "统计学"
+
+#: src/StickerSet.vala:160
+msgid "Collaboration"
+msgstr "协作"
+
+#: src/StickerSet.vala:161
+msgid "Voice presentation"
+msgstr "语音演示"
+
+#: src/StickerSet.vala:162
+msgid "Conference call"
+msgstr "电话会议"
+
+#: src/StickerSet.vala:163
+msgid "Comments"
+msgstr "评论"
+
+#: src/StickerSet.vala:164
+msgid "FAQ"
+msgstr "常见问题"
+
+#: src/StickerSet.vala:165
+msgid "Reuse"
+msgstr "再使用"
+
+#: src/StickerSet.vala:166
+msgid "Organization"
+msgstr "组织"
+
+#: src/StickerSet.vala:167
+msgid "Department"
+msgstr "部门"
+
+#: src/StickerSet.vala:168
+msgid "Library"
+msgstr "图书馆"
+
+#: src/StickerSet.vala:169
+msgid "Shop"
+msgstr "店"
+
+#: src/StickerSet.vala:170
+msgid "Self service kiosk"
+msgstr "自助服务亭"
+
+#: src/StickerSet.vala:171
+msgid "Donate"
+msgstr "捐"
+
+#: src/StickerSet.vala:172
+msgid "Currency exchange"
+msgstr "外币汇兑"
+
+#: src/StickerSet.vala:173
+msgid "Debt"
+msgstr "债务"
+
+#: src/StickerSet.vala:174
+msgid "Sales performance"
+msgstr "销售业绩"
+
+#: src/StickerSet.vala:175
+msgid "Invite"
+msgstr "邀请"
+
+#: src/StickerSet.vala:176
+msgid "Money transfer"
+msgstr "汇款"
+
+#: src/StickerSet.vala:177
+msgid "Feedback"
+msgstr "反馈"
+
+#: src/StickerSet.vala:178
+msgid "Approval"
+msgstr "批准"
+
+#: src/StickerSet.vala:179
+msgid "Paid"
+msgstr "支付"
+
+#: src/StickerSet.vala:180
+msgid "In transit"
+msgstr "运输中"
+
+#: src/StickerSet.vala:181
+msgid "Shipped"
+msgstr "运"
+
+#: src/StickerSet.vala:182
+msgid "Package"
+msgstr "包"
+
+#: src/StickerSet.vala:183
+msgid "Planner"
+msgstr "计划"
+
+#: src/StickerSet.vala:184
+msgid "Overtime"
+msgstr "加班"
+
+#: src/StickerSet.vala:185
+msgid "Leave"
+msgstr "离开"
+
+#: src/StickerSet.vala:186
+msgid "Expired"
+msgstr "过期"
+
+#: src/StickerSet.vala:187
+msgid "Process"
+msgstr "过程"
+
+#: src/StickerSet.vala:188
+msgid "Diploma 1"
+msgstr "文凭 1"
+
+#: src/StickerSet.vala:189
+msgid "Diploma 2"
+msgstr "文凭 2"
+
+#: src/StickerSet.vala:190
+msgid "Business contact"
+msgstr "业务联系"
+
+#: src/StickerSet.vala:191
+msgid "Survey"
+msgstr "调查"
+
+#: src/StickerSet.vala:192
+msgid "Inspection"
+msgstr "检查"
+
+#: src/StickerSet.vala:193
+msgid "Rules"
+msgstr "规则"
+
+#: src/StickerSet.vala:194
+msgid "Todo list"
+msgstr "待办事项列表"
+
+#: src/StickerSet.vala:195
+msgid "Ratings"
+msgstr "评级"
+
+#: src/StickerSet.vala:196
+msgid "Questions"
+msgstr "问题"
+
+#: src/StickerSet.vala:197
+msgid "Answers"
+msgstr "答案"
+
+#: src/StickerSet.vala:198
+msgid "Fine print"
+msgstr "预订须知"
+
+#: src/StickerSet.vala:199
+msgid "Candle sticks"
+msgstr "蜡烛棒"
+
+#: src/StickerSet.vala:200
+msgid "Serial tasks"
+msgstr "串行任务"
+
+#: src/StickerSet.vala:201
+msgid "Parallel tasks"
+msgstr "并行任务"
+
+#: src/StickerSet.vala:202
+msgid "Tree structure"
+msgstr "树结构"
+
+#: src/StickerSet.vala:203
+msgid "Org unit"
+msgstr "组织单位"
+
+#: src/StickerSet.vala:204
+msgid "Privacy"
+msgstr "隐私"
+
+#: src/StickerSet.vala:205
+msgid "Disclaimer"
+msgstr "免責聲明"
+
+#: src/StickerSet.vala:206
+msgid "Callback"
+msgstr "回调"
+
+#: src/StickerSet.vala:207
+msgid "Service mark"
+msgstr "服务标志"
+
+#: src/StickerSet.vala:208
+msgid "Registered trademark"
+msgstr "注册商标"
+
+#: src/StickerSet.vala:209
+msgid "Trademark"
+msgstr "商标"
+
+#: src/StickerSet.vala:210
+msgid "Copyright"
+msgstr "版权"
+
+#: src/StickerSet.vala:211
+msgid "Copyleft"
+msgstr "Copyleft"
+
+#: src/StickerSet.vala:212
+msgid "Sound recording copyright"
+msgstr "录音版权"
+
+#: src/StickerSet.vala:213
+msgid "Butting in"
+msgstr "对接"
+
+#: src/StickerSet.vala:214
+msgid "Multiple inputs"
+msgstr "多个输入"
+
+#: src/StickerSet.vala:215
+msgid "Collect"
+msgstr "收集"
+
+#: src/StickerSet.vala:216
+msgid "Internal"
+msgstr "内部"
+
+#: src/StickerSet.vala:217
+msgid "External"
+msgstr "外部"
+
+#: src/StickerSet.vala:218
+msgid "VIP"
+msgstr "贵宾"
+
+#: src/StickerSet.vala:219
+msgid "Light at the end of tunnel"
+msgstr "隧道尽头的光明"
+
+#: src/StickerSet.vala:220
+msgid "Entering heaven alive"
+msgstr "活着进入天堂"
+
+#: src/StickerSet.vala:223
+msgid "Biomass"
+msgstr "生物量"
+
+#: src/StickerSet.vala:224
+msgid "Display"
+msgstr "显示"
+
+#: src/StickerSet.vala:225
+msgid "Do not inhale"
+msgstr "不要吸气"
+
+#: src/StickerSet.vala:226
+msgid "Factory"
+msgstr "厂"
+
+#: src/StickerSet.vala:227
+msgid "Factory breakdown"
+msgstr "工厂故障"
+
+#: src/StickerSet.vala:228
+msgid "Crystal oscillator"
+msgstr "晶体振荡器"
+
+#: src/StickerSet.vala:229
+msgid "Capacitor"
+msgstr "电容器"
+
+#: src/StickerSet.vala:230
+msgid "Electricity"
+msgstr "电力"
+
+#: src/StickerSet.vala:231
+msgid "Electro devices"
+msgstr "电子设备"
+
+#: src/StickerSet.vala:232
+msgid "Electrical sensor"
+msgstr "电传感器"
+
+#: src/StickerSet.vala:233
+msgid "Electrical threshold"
+msgstr "电气阈值"
+
+#: src/StickerSet.vala:234
+msgid "Automotive"
+msgstr "汽车"
+
+#: src/StickerSet.vala:235
+msgid "Feed in"
+msgstr "馈入"
+
+#: src/StickerSet.vala:236
+msgid "Dam"
+msgstr "坝"
+
+#: src/StickerSet.vala:237
+msgid "Biotech"
+msgstr "生物"
+
+#: src/StickerSet.vala:238
+msgid "Advance"
+msgstr "进展"
+
+#: src/StickerSet.vala:239
+msgid "Cloth"
+msgstr "布"
+
+#: src/StickerSet.vala:240
+msgid "Electronics"
+msgstr "电子学"
+
+#: src/StickerSet.vala:241
+msgid "Deployment"
+msgstr "部署"
+
+#: src/StickerSet.vala:242
+msgid "Automatic"
+msgstr "自动"
+
+#: src/StickerSet.vala:243
+msgid "Do not insert"
+msgstr "不要插入"
+
+#: src/StickerSet.vala:244
+msgid "Do not mix"
+msgstr "不要混合"
+
+#: src/StickerSet.vala:245
+msgid "Biohazard"
+msgstr "生物危害"
+
+#: src/StickerSet.vala:246
+msgid "Circuit"
+msgstr "电路"
+
+#: src/StickerSet.vala:247
+msgid "Engineering"
+msgstr "工程"
+
+#: src/StickerSet.vala:250
+msgid "Cell phone"
+msgstr "手机"
+
+#: src/StickerSet.vala:251
+msgid "iPhone"
+msgstr "苹果手机"
+
+#: src/StickerSet.vala:252
+msgid "iPad"
+msgstr "平板电脑"
+
+#: src/StickerSet.vala:253
+msgid "Phone android"
+msgstr "手机安卓"
+
+#: src/StickerSet.vala:254
+msgid "Tablet android"
+msgstr "平板电脑安卓"
+
+#: src/StickerSet.vala:255
+msgid "Nook"
+msgstr "角落"
+
+#: src/StickerSet.vala:256
+msgid "Kindle"
+msgstr "激起"
+
+#: src/StickerSet.vala:257
+msgid "Two smartphones"
+msgstr "两部智能手机"
+
+#: src/StickerSet.vala:258
+msgid "Multiple devices"
+msgstr "多个设备"
+
+#: src/StickerSet.vala:259
+msgid "Multiple smartphones"
+msgstr "多部智能手机"
+
+#: src/StickerSet.vala:260
+msgid "Smartphone tablet"
+msgstr "智能手机平板电脑"
+
+#: src/StickerSet.vala:261
+msgid "Touchscreen smartphone"
+msgstr "触摸屏智能手机"
+
+#: src/StickerSet.vala:262
+msgid "Sim card"
+msgstr "SIM卡"
+
+#: src/StickerSet.vala:263
+msgid "Sim card chip"
+msgstr "SIM卡芯片"
+
+#: src/StickerSet.vala:264
+msgid "SMS"
+msgstr "短信"
+
+#: src/StickerSet.vala:265
+msgid "MMS"
+msgstr "彩信"
+
+#: src/StickerSet.vala:266
+msgid "Charge battery"
+msgstr "充电电池"
+
+#: src/StickerSet.vala:267
+msgid "Full battery"
+msgstr "电池充满电量"
+
+#: src/StickerSet.vala:268
+msgid "High battery"
+msgstr "高电量"
+
+#: src/StickerSet.vala:269
+msgid "Middle battery"
+msgstr "中间电池"
+
+#: src/StickerSet.vala:270
+msgid "Low battery"
+msgstr "低电池电量"
+
+#: src/StickerSet.vala:271
+msgid "Empty battery"
+msgstr "电池电量不足"
+
+#: src/StickerSet.vala:272
+msgid "Phone"
+msgstr "电话"
+
+#: src/StickerSet.vala:273
+msgid "Missed call"
+msgstr "未接来电"
+
+#: src/StickerSet.vala:274
+msgid "End call"
+msgstr "结束呼叫"
+
+#: src/StickerSet.vala:275
+msgid "Call transfer"
+msgstr "呼叫转移"
+
+#: src/StickerSet.vala:276
+msgid "Video call"
+msgstr "视频通话"
+
+#: src/StickerSet.vala:277
+msgid "No video"
+msgstr "无视频"
+
+#: src/StickerSet.vala:278
+msgid "Rotate to portrait"
+msgstr "旋转到纵向"
+
+#: src/StickerSet.vala:279
+msgid "Lock portrait"
+msgstr "锁定肖像"
+
+#: src/StickerSet.vala:280
+msgid "Rotate to landscape"
+msgstr "旋转到横向"
+
+#: src/StickerSet.vala:281
+msgid "Lock landscape"
+msgstr "锁定景观"
+
+#: src/StickerSet.vala:282
+msgid "Voicemail"
+msgstr "语音信箱"
+
+#: src/StickerSet.vala:283
+msgid "Speaker"
+msgstr "议长"
+
+#: src/StickerSet.vala:284
+msgid "Headset"
+msgstr "耳机"
+
+#: src/StickerSet.vala:287
+msgid "Left up"
+msgstr "左起"
+
+#: src/StickerSet.vala:288
+msgid "Up"
+msgstr "向上"
+
+#: src/StickerSet.vala:289
+msgid "Right up"
+msgstr "马上"
+
+#: src/StickerSet.vala:290
+msgid "Left"
+msgstr "左"
+
+#: src/StickerSet.vala:291
+msgid "Right"
+msgstr "右"
+
+#: src/StickerSet.vala:292
+msgid "Left down"
+msgstr "左下"
+
+#: src/StickerSet.vala:293
+msgid "Down"
+msgstr "下"
+
+#: src/StickerSet.vala:294
+msgid "Right down"
+msgstr "右下"
+
+#: src/StickerSet.vala:295
+msgid "Collapse"
+msgstr "崩溃"
+
+#: src/StickerSet.vala:296
+msgid "Previous"
+msgstr "以前"
+
+#: src/StickerSet.vala:297
+msgid "Next"
+msgstr "下一个"
+
+#: src/StickerSet.vala:298
+msgid "Expand"
+msgstr "扩大"
+
+#: src/StickerSet.vala:299
+msgid "Left down2"
+msgstr "左下2"
+
+#: src/StickerSet.vala:300
+msgid "Up left"
+msgstr "左上"
+
+#: src/StickerSet.vala:301
+msgid "Down right"
+msgstr "右下"
+
+#: src/StickerSet.vala:302
+msgid "Right up2"
+msgstr "右上2"
+
+#: src/StickerSet.vala:303
+msgid "Up right"
+msgstr "右上方"
+
+#: src/StickerSet.vala:304
+msgid "Right down2"
+msgstr "右下2"
+
+#: src/StickerSet.vala:305
+msgid "Left up2"
+msgstr "左起2"
+
+#: src/StickerSet.vala:306
+msgid "Down left"
+msgstr "左下"
+
+#: src/StickerSet.vala:311
+msgid "Filing cabinet"
+msgstr "档案柜"
+
+#: src/StickerSet.vala:312
+msgid "Database"
+msgstr "数据库"
+
+#: src/StickerSet.vala:313
+msgid "Accept database"
+msgstr "接受数据库"
+
+#: src/StickerSet.vala:314
+msgid "Add database"
+msgstr "添加数据库"
+
+#: src/StickerSet.vala:315
+msgid "Delete database"
+msgstr "删除数据库"
+
+#: src/StickerSet.vala:316
+msgid "Data backup"
+msgstr "数据备份"
+
+#: src/StickerSet.vala:317
+msgid "Data recovery"
+msgstr "数据恢复"
+
+#: src/StickerSet.vala:318
+msgid "Data configuration"
+msgstr "数据配置"
+
+#: src/StickerSet.vala:319
+msgid "Data encryption"
+msgstr "数据加密"
+
+#: src/StickerSet.vala:320
+msgid "Data protection"
+msgstr "数据保护"
+
+#: src/StickerSet.vala:321
+msgid "Grid"
+msgstr "网 格"
+
+#: src/StickerSet.vala:322
+msgid "Data sheet"
+msgstr "数据表"
+
+#: src/StickerSet.vala:323
+msgid "Add column"
+msgstr "添加列"
+
+#: src/StickerSet.vala:324
+msgid "Delete column"
+msgstr "删除列"
+
+#: src/StickerSet.vala:325
+msgid "Add row"
+msgstr "添加行"
+
+#: src/StickerSet.vala:326
+msgid "Delete row"
+msgstr "删除行"
+
+#: src/StickerSet.vala:327
+msgid "Generic sorting ascending"
+msgstr "通用排序升序"
+
+#: src/StickerSet.vala:328
+msgid "Generic sorting descending"
+msgstr "通用排序降序"
+
+#: src/StickerSet.vala:329
+msgid "Alphabetical sorting (A->Z)"
+msgstr "按字母顺序排序（A->Z）"
+
+#: src/StickerSet.vala:330
+msgid "Alphabetical sorting (Z->A)"
+msgstr "按字母顺序排序（Z->A）"
+
+#: src/StickerSet.vala:331
+msgid "Numerical sorting (2->1)"
+msgstr "数字排序 （2->1）"
+
+#: src/StickerSet.vala:332
+msgid "Numerical sorting (1->2)"
+msgstr "数字排序 （1->2）"
+
+#: src/StickerSet.vala:333
+msgid "Empty filter"
+msgstr "空过滤器"
+
+#: src/StickerSet.vala:334
+msgid "Filled filter"
+msgstr "填充过滤器"
+
+#: src/StickerSet.vala:335
+msgid "Clear filters"
+msgstr "清除过滤器"
+
+#: src/StickerSet.vala:336
+msgid "Pie chart"
+msgstr "饼图"
+
+#: src/StickerSet.vala:337
+msgid "Radar plot"
+msgstr "雷达图"
+
+#: src/StickerSet.vala:338
+msgid "Heat map"
+msgstr "热图"
+
+#: src/StickerSet.vala:339
+msgid "Timeline"
+msgstr "时间线"
+
+#: src/StickerSet.vala:340
+msgid "Bar chart"
+msgstr "条形图"
+
+#: src/StickerSet.vala:341
+msgid "Area chart"
+msgstr "面积图"
+
+#: src/StickerSet.vala:342
+msgid "Scatter plot"
+msgstr "散布图"
+
+#: src/StickerSet.vala:343
+msgid "Doughnut chart"
+msgstr "圆环图"
+
+#: src/StickerSet.vala:344
+msgid "Combo chart"
+msgstr "组合图"
+
+#: src/StickerSet.vala:345
+msgid "Flow chart"
+msgstr "流程图"
+
+#: src/StickerSet.vala:346
+msgid "Line chart"
+msgstr "折线图"
+
+#: src/StickerSet.vala:347
+msgid "Genealogy"
+msgstr "家谱"
+
+#: src/StickerSet.vala:348
+msgid "Mind map"
+msgstr "思维导图"
+
+#: src/StickerSet.vala:349
+msgid "Workflow"
+msgstr "工作流程"
+
 #: src/StickerSet.vala:350
+msgid "Positive dynamic"
+msgstr "正动态"
+
+#: src/StickerSet.vala:351
+msgid "Negative dynamic"
+msgstr "负动态"
+
+#: src/StickerSet.vala:354
 msgid "List"
 msgstr "列表"
 
-#: src/StickerSet.vala:351
+#: src/StickerSet.vala:355
 msgid "Template"
 msgstr "模板"
 
-#: src/StickerSet.vala:352
+#: src/StickerSet.vala:356
 msgid "View details"
 msgstr "查看详情"
 
@@ -3089,7 +3108,7 @@ msgstr "重做"
 msgid "URL"
 msgstr "网址"
 
-#: src/Utils.vala:159 src/Utils.vala:165
+#: src/Utils.vala:160
 #, c-format
 msgid "error: %s\n"
 msgstr "错误： %s\n"
