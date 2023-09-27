@@ -462,7 +462,7 @@ public class Node : Object {
       if( _sticker != value ) {
         _sticker = value;
         if( _sticker != null ) {
-          _sticker_buf = new Pixbuf.from_resource( "/com/github/phase1geo/minder/" + _sticker );
+          _sticker_buf = StickerSet.make_pixbuf( _sticker );
         } else {
           _sticker_buf = null;
         }

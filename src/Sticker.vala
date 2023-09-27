@@ -136,7 +136,7 @@ public class Sticker {
 
   /* Creates the pixbuf for the stored image */
   public void set_pixbuf( int width = -1 ) {
-    _buf = new Pixbuf.from_resource_at_scale( ("/com/github/phase1geo/minder/" + _name), width, -1, true );
+    _buf = StickerSet.make_pixbuf( _name, width );
   }
 
   /* Draw the sticker on the mind map */

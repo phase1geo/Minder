@@ -4,6 +4,7 @@
     <file alias="Application.css" compressed="true">Application.css</file>
     <file alias="shortcuts.ui" compressed="true">com.github.phase1geo.minder.shortcuts.ui</file>
     <file alias="minder-logo.svg">icons/scalable/com.github.phase1geo.minder.svg</file>
+    <file alias="README.md">custom_sticker_readme.md</file>
 
     <file alias="minder-balance-symbolic.svg">icons/16/minder-balance-symbolic.svg</file>
     <file alias="minder-detach-symbolic.svg">icons/16/minder-detach-symbolic.svg</file>

@@ -25,6 +25,11 @@ using Cairo;
 
 public class Utils {
 
+  /* Creates the given directory (and all parent directories) with appropriate permissions */
+  public static bool create_dir( string path ) {
+    return( DirUtils.create_with_parents( path, 0755 ) == 0 );
+  }
+
   /*
    Returns a regular expression useful for parsing clickable URLs.
   */
@@ -149,21 +154,10 @@ public class Utils {
 
   /* Opens the given URL in the proper external default application */
   public static void open_url( string url ) {
-    if( (url.substring( 0, 7 ) == "file://") || (url.get_char( 0 ) == '/') ) {
-      var app = AppInfo.get_default_for_type( "inode/directory", true );
-      var uris = new List<string>();
-      uris.append( url );
-      try {
-        app.launch_uris( uris, null );
-      } catch( GLib.Error e ) {
-        stdout.printf( _( "error: %s\n" ), e.message );
-      }
-    } else {
-      try {
-        AppInfo.launch_default_for_uri( url, null );
-      } catch( GLib.Error e ) {
-        stdout.printf( _( "error: %s\n" ), e.message );
-      }
+    try {
+      AppInfo.launch_default_for_uri( url, null );
+    } catch( GLib.Error e ) {
+      stdout.printf( _( "error: %s\n" ), e.message );
     }
   }
 
