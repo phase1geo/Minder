@@ -25,6 +25,11 @@ using Cairo;
 
 public class Utils {
 
+  /* Creates the given directory (and all parent directories) with appropriate permissions */
+  public static bool create_dir( string path ) {
+    return( DirUtils.create_with_parents( path, 0755 ) == 0 );
+  }
+
   /*
    Returns a regular expression useful for parsing clickable URLs.
   */

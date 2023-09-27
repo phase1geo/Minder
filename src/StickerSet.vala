@@ -360,9 +360,38 @@ public class StickerSet {
       _title_re = new Regex( "(^|\\W)([a-z])" );
     } catch( RegexError e ) {}
 
-    /* Finally load any user-supplied sticker (if they exist) */
-    var base_dir = Path.build_filename( Environment.get_user_data_dir(), "minder", "stickers" );
-    load_from_filesystem( base_dir );
+    /* Create or load the custom sticker directory */
+    if( !create_custom_dir() ) {
+      load_from_filesystem( sticker_dir(), false );
+    }
+
+  }
+
+  /* Returns the path of the internal sticker directory */
+  public string sticker_dir() {
+    return( Path.build_filename( Environment.get_user_data_dir(), "minder", "stickers" ) );
+  }
+
+  /* Creates the initial structure of the custom sticker directory */
+  private bool create_custom_dir() {
+
+    if( FileUtils.test( sticker_dir(), FileTest.EXISTS ) ) return( false );
+
+    /* Create the main sticker directory */
+    Utils.create_dir( sticker_dir() );
+
+    /* Add the README */
+    var src = File.new_for_uri( "resource:///com/github/phase1geo/minder/README.md" );
+    var dst = File.new_for_path( Path.build_filename( sticker_dir(), "README.md" ) );
+    try {
+      src.copy( dst, FileCopyFlags.OVERWRITE );
+    } catch( Error e ) {}
+
+    for( int i=0; i<categories.length; i++ ) {
+      Utils.create_dir( Path.build_filename( sticker_dir(), categories.index( i ) ) );
+    }
+
+    return( true );
 
   }
 
@@ -388,7 +417,8 @@ public class StickerSet {
     return( false );
   }
 
-  private void load_from_filesystem( string base_dir ) {
+  public bool load_from_filesystem( string base_dir, bool import ) {
+    bool retval = false;
     if( FileUtils.test( base_dir, FileTest.EXISTS ) ) {
       try {
         string? name;
@@ -401,7 +431,7 @@ public class StickerSet {
             while( (subname = subdir.read_name()) != null ) {
               var sticker = Path.build_filename( category, subname );
               var parts   = subname.split( "." );
-              load_sticker( name, parts[0], sticker );
+              retval |= load_sticker( name, parts[0], sticker, import );
             }
           }
         }
@@ -409,6 +439,7 @@ public class StickerSet {
         stderr.printf( "ERROR: %s\n", e.message );
       }
     }
+    return( retval );
   }
 
   private string make_label( string category ) {
@@ -423,7 +454,7 @@ public class StickerSet {
     return( name.replace( "And", "and" ) );
   }
 
-  private void load_sticker( string category, string name, string sticker_file ) {
+  public bool load_sticker( string category, string name, string sticker_file, bool import ) {
     int width, height;
     var format = Gdk.Pixbuf.get_file_info( sticker_file, out width, out height );
     if( format != null ) {
@@ -439,7 +470,29 @@ public class StickerSet {
         category_icons.set( cat_label, array );
         categories.prepend_val( cat_label );
       }
+      if( import ) {
+        return( import_sticker( cat_label, sticker_file ) );
+      }
+      return( true );
     }
+    return( false );
+  }
+
+  /* Copies the given sticker to the appropriate, internal sticker category directory */
+  private bool import_sticker( string category, string file ) {
+    var cat_dir = Path.build_filename( sticker_dir(), category );
+    Utils.create_dir( cat_dir );
+    try {
+      var old_file = File.new_for_path( file );
+      var new_file = File.new_for_path( Path.build_filename( cat_dir, Path.get_basename( file ) ) );
+      return( old_file.copy( new_file, FileCopyFlags.NONE ) );
+    } catch( Error e ) {}
+    return( false );
+  }
+
+  /* Removes the associated sticker */
+  public bool remove_sticker( string name ) {
+    return( FileUtils.unlink( name ) == 0 );
   }
 
   public static Gdk.Pixbuf? make_pixbuf( string resource, int width = -1 ) {
