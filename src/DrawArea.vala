@@ -752,6 +752,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Create the main idea node */
     var n = new Node.with_name( this, _("Main Idea"), layouts.get_default() );
+    n.callout = new CanvasText.with_text( this, "Callout" );
 
     /* Get the rough dimensions of the canvas */
     int wwidth, wheight;
@@ -1018,6 +1019,29 @@ public class DrawArea : Gtk.DrawingArea {
     }
     queue_draw();
     auto_save();
+  }
+
+  /* Adds a callout to the currently selected node */
+  public void add_callout() {
+    var current = _selected.current_node();
+    if( current != null ) {
+      undo_buffer.add_item( new UndoNodeCallout( current ) );
+      current.callout = new CanvasText( this );
+      current.callout.edit = true;
+      queue_draw();
+      auto_save();
+    }
+  }
+
+  /* Removes a callout on the currently selected node */
+  public void remove_callout() {
+    var current = _selected.current_node();
+    if( current != null ) {
+      undo_buffer.add_item( new UndoNodeCallout( current ) );
+      current.callout = null;
+      queue_draw();
+      auto_save();
+    }
   }
 
   /*

@@ -80,6 +80,7 @@ sources += files(
     'undo_actions/UndoNodeAddParent.vala',
     'undo_actions/UndoNodeAttach.vala',
     'undo_actions/UndoNodeBalance.vala',
+    'undo_actions/UndoNodeCallout.vala',
     'undo_actions/UndoNodeCut.vala',
     'undo_actions/UndoNodeDelete.vala',
     'undo_actions/UndoNodeDetach.vala',

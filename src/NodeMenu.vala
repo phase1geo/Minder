@@ -38,6 +38,7 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _link;
   Gtk.MenuItem _conn;
   Gtk.MenuItem _group;
+  Gtk.MenuItem _callout;
   Gtk.MenuItem _link_color;
   Gtk.MenuItem _parent_link_color;
   Gtk.MenuItem _fold;
@@ -121,6 +122,10 @@ public class NodeMenu : Gtk.Menu {
     _group = new Gtk.MenuItem();
     _group.add( new Granite.AccelLabel( _( "Add Group" ), "g" ) );
     _group.activate.connect( add_group );
+
+    _callout = new Gtk.MenuItem();
+    _callout.add( new Granite.AccelLabel( _( "Add Callout" ), "o" ) );
+    _callout.activate.connect( add_callout );
 
     _link_color = new Gtk.MenuItem.with_label( _( "Link Color" ) );
     var link_color_menu = new Gtk.Menu();
@@ -266,6 +271,7 @@ public class NodeMenu : Gtk.Menu {
     change_menu.add( _link );
     change_menu.add( _conn );
     change_menu.add( _group );
+    change_menu.add( _callout );
     change_menu.add( _link_color );
     change_menu.add( _fold );
 
@@ -336,6 +342,12 @@ public class NodeMenu : Gtk.Menu {
   private bool node_has_link() {
     Node? current = _da.get_current_node();
     return( (current != null) && (current.linked_node != null) );
+  }
+
+  /* Returns true if a callout is associated with the currently selected node */
+  private bool node_has_callout() {
+    var current = _da.get_current_node();
+    return( (current != null) && (current.callout != null) );
   }
 
   /* Returns true if there is a currently selected node that is foldable */
@@ -413,7 +425,8 @@ public class NodeMenu : Gtk.Menu {
     _fold.get_child().destroy();
     _fold.add( new Granite.AccelLabel( fold_lbl, fold_acc.accel_string ) );
 
-    _image.label = node_has_image() ? _( "Remove Image" ) : _( "Add Image" );
+    _image.label   = node_has_image() ? _( "Remove Image" ) : _( "Add Image" );
+    _callout.label = node_has_callout() ? _( "Remove Callout" ) : _( "Add Callout" );
 
     /* Set the paste and replace text */
     var clipboard = Clipboard.get_default( get_display() );
@@ -529,8 +542,18 @@ public class NodeMenu : Gtk.Menu {
     _da.start_connection( false, false );
   }
 
+  /* Creates a group from the currently selected node */
   private void add_group() {
     _da.add_group();
+  }
+
+  /* Adds a callback to the currently selected node */
+  private void add_callout() {
+    if( node_has_callout() ) {
+      _da.remove_callout();
+    } else {
+      _da.add_callout();
+    }
   }
 
   /* Fold the currently selected node */

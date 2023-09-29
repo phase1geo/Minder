@@ -197,6 +197,7 @@ public class Node : Object {
   protected double       _ipady        = 3;
   protected double       _task_radius  = 7;
   protected double       _alpha        = 1.0;
+  protected double       _callout_ptr  = 20;
   protected Array<Node>  _children;
   private   NodeMode     _mode         = NodeMode.NONE;
   private   NodeBounds   _tree_bbox;
@@ -215,6 +216,7 @@ public class Node : Object {
   private   NodeLink?    _linked_node    = null;
   private   string?      _sticker        = null;
   private   Pixbuf?      _sticker_buf    = null;
+  private   CanvasText?  _callout        = null;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -242,7 +244,7 @@ public class Node : Object {
       double diff = (value - posx);
       _posx = value - _da.origin_x;
       update_tree_bbox( diff, 0 );
-      position_name();
+      position_text();
       if( diff != 0 ) {
         moved( diff, 0 );
       }
@@ -256,7 +258,7 @@ public class Node : Object {
       double diff = (value - posy);
       _posy = value - _da.origin_y;
       update_tree_bbox( 0, diff );
-      position_name();
+      position_text();
       if( diff != 0 ) {
         moved( 0, diff );
       }
@@ -371,7 +373,7 @@ public class Node : Object {
         for( int i=0; i<_children.length; i++ ) {
           _layout.apply_margin( _children.index( i ) );
         }
-        position_name_and_update_size();
+        position_text_and_update_size();
       }
     }
   }
@@ -466,7 +468,23 @@ public class Node : Object {
         } else {
           _sticker_buf = null;
         }
-        position_name_and_update_size();
+        position_text_and_update_size();
+      }
+    }
+  }
+  public CanvasText? callout {
+    get {
+      return( _callout );
+    }
+    set {
+      if( _callout != value ) {
+        if( value != null ) {
+          value.resized.connect( position_text_and_update_size );
+        } else {
+          value.resized.disconnect( position_text_and_update_size );
+        }
+        _callout = value;
+        position_text_and_update_size();
       }
     }
   }
@@ -479,7 +497,7 @@ public class Node : Object {
     _tree_bbox = new NodeBounds( da );
     _layout    = layout;
     _name      = new CanvasText( da );
-    _name.resized.connect( position_name_and_update_size );
+    _name.resized.connect( position_text_and_update_size );
     set_parsers();
   }
 
@@ -491,7 +509,7 @@ public class Node : Object {
     _tree_bbox = new NodeBounds( da );
     _layout    = layout;
     _name      = new CanvasText.with_text( da, n );
-    _name.resized.connect( position_name_and_update_size );
+    _name.resized.connect( position_text_and_update_size );
     set_parsers();
   }
 
@@ -502,7 +520,7 @@ public class Node : Object {
     _tree_bbox = new NodeBounds( da );
     _layout    = _layout;
     _name      = new CanvasText.with_text( da, "" );
-    _name.resized.connect( position_name_and_update_size );
+    _name.resized.connect( position_text_and_update_size );
     set_parsers();
     load( da, n, isroot );
   }
@@ -515,7 +533,7 @@ public class Node : Object {
     _tree_bbox = new NodeBounds( da );
     _name      = new CanvasText( da );
     copy_variables( n, im );
-    _name.resized.connect( position_name_and_update_size );
+    _name.resized.connect( position_text_and_update_size );
     set_parsers();
     mode      = NodeMode.NONE;
     for( int i=0; i<_children.length; i++ ) {
@@ -540,7 +558,7 @@ public class Node : Object {
     _tree_bbox = new NodeBounds( da );
     _name      = new CanvasText( da );
     copy_variables( n, im );
-    _name.resized.connect( position_name_and_update_size );
+    _name.resized.connect( position_text_and_update_size );
     set_parsers();
     mode      = NodeMode.NONE;
     tree_size = n.tree_size;
@@ -603,7 +621,7 @@ public class Node : Object {
     var diff = value - _posx;
     _posx = value;
     update_tree_bbox( diff, 0 );
-    position_name();
+    position_text();
   }
 
   /* Sets the posy value only, leaving the children positions alone */
@@ -611,7 +629,7 @@ public class Node : Object {
     var diff = value - _posy;
     _posy = value;
     update_tree_bbox( 0, diff );
-    position_name();
+    position_text();
   }
 
   /* Sets the alpha value without propagating this to the children */
@@ -633,14 +651,14 @@ public class Node : Object {
   public void adjust_posx_only( double value ) {
     _posx += value;
     update_tree_bbox( value, 0 );
-    position_name();
+    position_text();
   }
 
   /* Sets the posy value only, leaving the children positions alone */
   public void adjust_posy_only( double value ) {
     _posy += value;
     update_tree_bbox( 0, value );
-    position_name();
+    position_text();
   }
 
   /* Updates the tree_bbox */
@@ -652,31 +670,36 @@ public class Node : Object {
   }
 
   /* Called whenever the canvas text is resized */
-  private void position_name_and_update_size() {
-    position_name();
+  private void position_text_and_update_size() {
+    position_text();
     update_size();
   }
 
   /* Called whenever the node size is changed */
   private void update_size() {
+
     if( !_loaded ) return;
-    var orig_width  = _width;
-    var orig_height = _height;
-    var margin      = style.node_margin  ?? 0;
-    var padding     = style.node_padding ?? 0;
-    var stk_height  = sticker_height();
-    var name_width  = task_width() + sticker_width() + _name.width + note_width() + linked_node_width();
-    var name_height = (_name.height < stk_height) ? stk_height : _name.height;
+
+    var orig_width     = _width;
+    var orig_height    = _height;
+    var margin         = style.node_margin  ?? 0;
+    var padding        = style.node_padding ?? 0;
+    var stk_height     = sticker_height();
+    var name_width     = task_width() + sticker_width() + _name.width + note_width() + linked_node_width();
+    var name_height    = (_name.height < stk_height) ? stk_height : _name.height;
+
     if( _image != null ) {
-      _width  = (margin * 2) + (padding * 2) + ((name_width < _image.width) ? _image.width : name_width);
-      _height = (margin * 2) + (padding * 2) + _image.height + padding + name_height;
+      _width  = (margin * 2) + (padding * 2) + ((name_width < _image.width) ? _image.width : name_width) + callout_width();
+      _height = (margin * 2) + (padding * 2) + _image.height + padding + name_height + callout_height();
     } else {
-      _width  = (margin * 2) + (padding * 2) + name_width;
-      _height = (margin * 2) + (padding * 2) + name_height;
+      _width  = (margin * 2) + (padding * 2) + name_width  + callout_width();
+      _height = (margin * 2) + (padding * 2) + name_height + callout_height();
     }
+
     if( (_layout != null) && (((_width - orig_width) != 0) || ((_height - orig_height) != 0)) ) {
       _layout.handle_update_by_edit( this, (_width - orig_width), (_height - orig_height) );
     }
+
   }
 
   /* Updates the size of all nodes within this tree */
@@ -813,7 +836,7 @@ public class Node : Object {
   public virtual bool is_within( double x, double y ) {
     double margin = style.node_margin ?? 0;
     double cx, cy, cw, ch;
-    bbox( out cx, out cy, out cw, out ch );
+    node_bbox( out cx, out cy, out cw, out ch );
     cx += margin;
     cy += margin;
     cw -= margin * 2;
@@ -827,7 +850,7 @@ public class Node : Object {
     int    padding    = style.node_padding ?? 0;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
     x = posx + margin + padding;
-    y = posy + margin + padding + img_height + (((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - _task_radius);
+    y = posy + margin + padding + img_height + callout_height() + (((_height - (img_height + callout_height() + (padding * 2) + (margin * 2))) / 2) - _task_radius);
     w = _task_radius * 2;
     h = _task_radius * 2;
   }
@@ -839,7 +862,7 @@ public class Node : Object {
     double img_height = (_image == null) ? 0 : (_image.height + padding);
     double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
     x = posx + margin + padding + task_width();
-    y = posy + margin + padding + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - (stk_height / 2);
+    y = posy + margin + padding + img_height + callout_height() + ((_height - (img_height + callout_height() + (padding * 2) + (margin * 2))) / 2) - (stk_height / 2);
     w = (_sticker_buf == null) ? 0 : _sticker_buf.width;
     h = (_sticker_buf == null) ? 0 : _sticker_buf.height;
   }
@@ -849,8 +872,8 @@ public class Node : Object {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
-    x = posx + (_width - (linked_node_width() + padding + margin)) + _ipadx;
-    y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
+    x = posx + (_width - (linked_node_width() + callout_width() + padding + margin)) + _ipadx;
+    y = posy + padding + margin + img_height + callout_height() + ((_height - (img_height + callout_height() + (padding * 2) + (margin * 2))) / 2) - 5;
     w = 11;
     h = 11;
   }
@@ -860,8 +883,8 @@ public class Node : Object {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
-    x = posx + (_width - (note_width() + linked_node_width() + padding + margin)) + _ipadx;
-    y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
+    x = posx + (_width - (note_width() + linked_node_width() + callout_width() + padding + margin)) + _ipadx;
+    y = posy + padding + margin + img_height + callout_height() + ((_height - (img_height + callout_height() + (padding * 2) + (margin * 2))) / 2) - 5;
     w = 11;
     h = 11;
   }
@@ -871,7 +894,7 @@ public class Node : Object {
     int margin  = style.node_margin  ?? 0;
     int padding = style.node_padding ?? 0;
     x = (posx + (_width / 2)) - ((_image == null) ? 0 : (_image.width / 2));
-    y = posy + padding + margin;
+    y = posy + padding + margin + callout_height();
     w = (_image == null) ? 0 : _image.width;
     h = (_image == null) ? 0 : _image.height;
   }
@@ -879,10 +902,20 @@ public class Node : Object {
   /* Returns the positional information for where the resizer box is located (if it exists) */
   protected virtual void resizer_bbox( out double x, out double y, out double w, out double h ) {
     int margin  = style.node_margin  ?? 0;
-    x = resizer_on_left() ? (posx + margin) : (posx + _width - margin - 8);
-    y = posy + margin;
+    x = resizer_on_left() ? (posx + margin) : (posx + _width - margin - callout_width() - 8);
+    y = posy + margin + callout_height();
     w = 8;
     h = 8;
+  }
+
+  /* Returns true if the given cursor coordinates lies within the callout area. */
+  public virtual bool is_within_callout( double x, double y ) {
+    if( _callout != null ) {
+      double cx, cy, cw, ch;
+      callout_bbox( out cx, out cy, out cw, out ch );
+      return( Utils.is_within_bounds( x, y, cx, cy, cw, ch ) );
+    }
+    return( false );
   }
 
   /*
@@ -1084,7 +1117,7 @@ public class Node : Object {
       name.text.insert_text( 0, n->children->get_content() );
     } else {
       name.load( n );
-      position_name();
+      position_text();
     }
   }
 
@@ -1113,6 +1146,14 @@ public class Node : Object {
   private void load_style( Xml.Node* n ) {
     _style.load_node( n );
     _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+  }
+
+  /* Loads the callout information */
+  private void load_callout( Xml.Node* n ) {
+    if( _callout == null ) {
+      _callout = new CanvasText( _da );
+    }
+    _callout.load( n );
   }
 
   /*
@@ -1253,6 +1294,7 @@ public class Node : Object {
           case "nodeimage"  :  load_image( da.image_manager, it );  break;
           case "nodelink"   :  load_node_link( it );  break;
           case "style"      :  load_style( it );  break;
+          case "callout"    :  load_callout( it );  break;
           case "nodes"      :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
@@ -1296,7 +1338,7 @@ public class Node : Object {
     }
 
     /* Make sure that the name is positioned properly */
-    position_name();
+    position_text();
 
   }
 
@@ -1345,6 +1387,10 @@ public class Node : Object {
 
     if( _linked_node != null ) {
       node->add_child( _linked_node.save() );
+    }
+
+    if( _callout != null ) {
+      node->add_child( _callout.save( "callout" ) );
     }
 
     if( _children.length > 0 ) {
@@ -1476,6 +1522,26 @@ public class Node : Object {
       w = _width;
       h = _height;
     }
+  }
+
+  /* Returns the bounding box for a callout associated with this node */
+  public void callout_bbox( out double x, out double y, out double w, out double h ) {
+    assert( _callout != null );
+    var margin = style.node_margin ?? 0;
+    x = ((side & NodeSide.horizontal()) != 0) ? (posx + margin) : (posx + (_width - (callout_width() + margin)));
+    y = posy + margin;
+    w = _callout.width;
+    h = _callout.height;
+  }
+
+  /* Returns the bounding box for the node box itself (this includes everything but the callout) */
+  public void node_bbox( out double x, out double y, out double w, out double h ) {
+    var margin  = style.node_margin  ?? 0;
+    var padding = style.node_padding ?? 0;
+    x = posx;
+    y = posy + callout_height(); 
+    w = _width - callout_width();
+    h = _height - callout_height();
   }
 
   /* Returns the bounding box for the fold indicator for this node */
@@ -1621,6 +1687,18 @@ public class Node : Object {
     return( (linked_node != null) ? (10 + _ipadx) : 0 );
   }
 
+  /* Returns the width of the callout, if it exists */
+  public double callout_width() {
+    var padding = style.node_padding ?? 0;
+    return( ((_callout != null) && ((side & NodeSide.vertical()) != 0)) ? ((padding * 2) + _callout.width + _callout_ptr) : 0 );
+  }
+
+  /* Returns the height of the callout, if it exists */
+  public double callout_height() {
+    var padding = style.node_padding ?? 0;
+    return( ((_callout != null) && ((side & NodeSide.horizontal()) != 0)) ? ((padding * 2) + _callout.height + _callout_ptr) : 0 );
+  }
+
   /* Moves this node into the proper position within the parent node */
   public void move_to_position( Node child, NodeSide side, double x, double y ) {
     int   idx           = child.index();
@@ -1734,15 +1812,26 @@ public class Node : Object {
   }
 
   /* Adjusts the position of the text object */
-  private void position_name() {
+  private void position_text() {
 
     var margin     = style.node_margin  ?? 0;
     var padding    = style.node_padding ?? 0;
     var stk_height = sticker_height();
     var img_height = (_image != null) ? (_image.height + padding) : 0;
 
-    name.posx = posx + margin + padding + task_width() + sticker_width();
-    name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0);
+    name.posx = posx + margin + padding + task_width() + sticker_width() + callout_width();
+    name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0) + callout_height();
+
+    if( _callout != null ) {
+      _callout.posx = posx + margin + padding;
+      _callout.posy = posy + margin + padding;
+    }
+
+  }
+
+  /* Positions the callout text */
+  private void position_callout() {
+
 
   }
 
@@ -1753,7 +1842,7 @@ public class Node : Object {
     _posy += diffy;
 
     update_tree_bbox( diffx, diffy );
-    position_name();
+    position_text();
     moved( diffx, diffy );
 
   }
@@ -1958,7 +2047,7 @@ public class Node : Object {
       }
     }
     if( enable != null ) {
-      position_name();
+      position_text();
       update_size();
     }
   }
@@ -1969,7 +2058,7 @@ public class Node : Object {
     while( p != null ) {
       p._task_count += count_adjust;
       p._task_done  += done_adjust;
-      p.position_name();
+      p.position_text();
       p.update_size();
       p = p.parent;
     }
@@ -2105,7 +2194,7 @@ public class Node : Object {
     link_color_only = info.index( index ).color;
 
     update_tree_bbox( diffx, diffy );
-    position_name();
+    position_text();
 
     for( int i=0; i<_children.length; i++ ) {
       index++;
@@ -2117,15 +2206,15 @@ public class Node : Object {
   /* Returns the link point for this node */
   protected virtual void link_point( out double x, out double y ) {
     if( is_root() ) {
-      x = posx + (_width / 2);
-      y = posy + (_height / 2);
+      x = posx + callout_width()  + (_width / 2);
+      y = posy + callout_height() + (_height / 2);
     } else {
       int    margin = style.node_margin ?? 0;
       double height = (style.node_border.name() == "underlined") ? (_height - margin) : (_height / 2);
       switch( side ) {
         case NodeSide.LEFT :
           x = posx + margin;
-          y = posy + height;
+          y = posy + height + callout_height();
           break;
         case NodeSide.TOP :
           x = posx + (_width / 2);
@@ -2133,7 +2222,7 @@ public class Node : Object {
           break;
         case NodeSide.RIGHT :
           x = posx + _width - margin;
-          y = posy + height;
+          y = posy + height + callout_height();
           break;
         default :
           x = posx + (_width / 2);
@@ -2146,10 +2235,10 @@ public class Node : Object {
   /* Draws the border around the node */
   protected void draw_shape( Context ctx, Theme theme, RGBA border_color, bool exporting ) {
 
-    double x = posx + style.node_margin;
-    double y = posy + style.node_margin;
-    double w = _width  - (style.node_margin * 2);
-    double h = _height - (style.node_margin * 2);
+    double x = posx + style.node_margin + callout_width();
+    double y = posy + style.node_margin + callout_height();
+    double w = _width  - (style.node_margin * 2) - callout_width();
+    double h = _height - (style.node_margin * 2) - callout_height();
 
     /* Set the fill color */
     if( mode.is_selected() && !exporting ) {
@@ -2194,11 +2283,13 @@ public class Node : Object {
 
     /* Draw the selection box around the text if the node is in the 'selected' state */
     if( mode.is_selected() && !exporting ) {
+      var padding = style.node_padding ?? 0;
+      var margin  = style.node_margin  ?? 0;
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
-      ctx.rectangle( ((posx + style.node_padding + style.node_margin) - hmargin),
-                     ((posy + style.node_padding + style.node_margin) - vmargin),
-                     ((_width  - (style.node_padding * 2) - (style.node_margin * 2)) + (hmargin * 2)),
-                     ((_height - (style.node_padding * 2) - (style.node_margin * 2)) + (vmargin * 2)) );
+      ctx.rectangle( ((posx + padding + margin + callout_width()) - hmargin),
+                     ((posy + padding + margin + callout_height()) - vmargin),
+                     ((_width  - (padding * 2) - (margin * 2) - callout_width()) + (hmargin * 2)),
+                     ((_height - (padding * 2) - (margin * 2) - callout_height()) + (vmargin * 2)) );
       ctx.fill();
     }
 
@@ -2519,6 +2610,48 @@ public class Node : Object {
 
   }
 
+  /* Draws the node callout, if one exists */
+  protected virtual void draw_callout( Context ctx, Theme theme, bool exporting ) {
+
+    if( _callout == null ) return;
+
+    var background = theme.get_color( "attachable" );
+    var foreground = Granite.contrasting_foreground_color( background );
+
+    double margin  = style.node_margin  ?? 0;
+    double padding = style.node_padding ?? 0;
+
+    Utils.set_context_color_with_alpha( ctx, background, _alpha );
+    ctx.set_line_width( 1 );
+
+    stdout.printf( "In draw_callout, side: %s, horizontal: %s\n", side.to_string(), ((side & NodeSide.horizontal()) != 0).to_string() );
+
+    /* Draw the shape */
+    if( (side & NodeSide.horizontal()) != 0 ) {
+      ctx.move_to( (posx + margin), (posy + margin) );
+      ctx.line_to( (posx + margin + (padding * 2) + _callout.width), (posy + margin) );
+      ctx.line_to( (posx + margin + (padding * 2) + _callout.width), (posy + margin + (padding * 2) + _callout.height) );
+      ctx.line_to( (posx + margin + _callout_ptr), (posy + margin + (padding * 2) + _callout.height) );
+      ctx.line_to( (posx + margin + (_callout_ptr / 2)), (posy + margin + (padding * 2) + _callout.height + _callout_ptr) );
+      ctx.line_to( (posx + margin), (posy + margin + (padding * 2) + _callout.height) );
+    } else {
+      ctx.move_to( (posx + (width - (_callout.width + (padding * 2))) + _callout_ptr), (posy + margin) );
+      ctx.move_to( (posx + width), (posy + margin) );
+      ctx.move_to( (posx + width), (posy + margin + (padding * 2) + _callout.height) );
+      ctx.move_to( (posx + (width - (_callout.width + (padding * 2))) + _callout_ptr), (posy + margin + (padding * 2) + _callout.height) );
+      ctx.move_to( (posx + (width - (_callout.width + (padding * 2)))), (posy + margin + (_callout_ptr / 2)) );
+    }
+    ctx.close_path();
+    ctx.fill_preserve();
+
+    Utils.set_context_color_with_alpha( ctx, foreground, _alpha );
+    ctx.stroke();
+
+    /* Draw the text */
+    _callout.draw( ctx, theme, foreground, _alpha, exporting );
+
+  }
+
   /* Draws the node on the screen */
   public virtual void draw( Context ctx, Theme theme, bool motion, bool exporting ) {
 
@@ -2579,6 +2712,8 @@ public class Node : Object {
       draw_attachable(  ctx, theme, background );
       draw_resizer( ctx, theme, exporting );
     }
+
+    draw_callout( ctx, theme, exporting );
 
   }
 
