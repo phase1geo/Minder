@@ -44,27 +44,39 @@ public class UnicodeParser : TextParser {
     add_tag( text, match, 0, FormatTag.TAG, tag );
 
     /* If the FormattedText item matches the currently edited */
-    if( (_da.get_current_node() != null) && (_da.get_current_node().name.text == text) ) {
-
-      int start, end;
-      match.fetch_pos( 0, out start, out end );
-
-      /* If the cursor is at the end of the tag, display the auto-completer */
-      var cursor = _da.get_current_node().name.cursor;
-      if( (start <= cursor) && (cursor <= end) ) {
-        _da.show_auto_completion( _da.win.unicoder.get_matches( tag ), start, end );
-      }
-
+    if( _da.get_current_node() != null ) {
+      handle_code_for_ct( _da.get_current_node().name, text, match, tag );
+    } else if( _da.get_current_callout() != null ) {
+      handle_code_for_ct( _da.get_current_callout().text, text, match, tag );
     }
 
   }
 
-  /* Handles hiding the auto-completion window */
-  private void handle_nocode( FormattedText text, MatchInfo match ) {
-    if( (_da.get_current_node() != null) && (_da.get_current_node().name.text == text) ) {
+  private void handle_code_for_ct( CanvasText ct, FormattedText text, MatchInfo match, string tag ) {
+    if( ct.text == text ) {
       int start, end;
       match.fetch_pos( 0, out start, out end );
-      if( _da.get_current_node().name.cursor == start ) {
+      var cursor = ct.cursor;
+      if( (start <= cursor) && (cursor <= end) ) {
+        _da.show_auto_completion( _da.win.unicoder.get_matches( tag ), start, end );
+      }
+    }
+  }
+
+  /* Handles hiding the auto-completion window */
+  private void handle_nocode( FormattedText text, MatchInfo match ) {
+    if( _da.get_current_node() != null ) {
+      handle_nocode_for_ct( _da.get_current_node().name, text, match );
+    } else if( _da.get_current_callout() != null ) {
+      handle_nocode_for_ct( _da.get_current_callout().text, text, match );
+    }
+  }
+
+  private void handle_nocode_for_ct( CanvasText ct, FormattedText text, MatchInfo match ) {
+    if( ct.text == text ) {
+      int start, end;
+      match.fetch_pos( 0, out start, out end );
+      if( ct.cursor == start ) {
         _da.hide_auto_completion();
       }
     }

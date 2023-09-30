@@ -104,6 +104,14 @@ public class Callout {
     _text = new CanvasText.with_text( node.da, _( "Callout" ) );
     _text.resized.connect( position_text );
     _style = new Style();
+    set_parsers();
+  }
+
+  /* Adds the valid parsers */
+  public void set_parsers() {
+    _text.text.add_parser( _node.da.markdown_parser );
+    _text.text.add_parser( _node.da.url_parser );
+    _text.text.add_parser( _node.da.unicode_parser );
   }
 
   /* Returns true if the callout should be drawn above the node; otherwise, we draw it to the right of the node */

@@ -917,6 +917,7 @@ public class DrawArea : Gtk.DrawingArea {
       undo_text.orig.copy( callout.text );
       undo_text.ct      = callout.text;
       undo_text.do_undo = undoable;
+      callout.mode = mode;
     } else if( (callout.mode == CalloutMode.EDITABLE) && (mode != CalloutMode.EDITABLE) ) {
       _im_context.reset();
       _im_context.focus_out();
@@ -929,8 +930,11 @@ public class DrawArea : Gtk.DrawingArea {
       }
       undo_text.ct      = null;
       undo_text.do_undo = false;
+      callout.mode = mode;
+      auto_save();
+    } else {
+      callout.mode = mode;
     }
-    callout.mode = mode;
   }
 
   /* Returns the undo buffer associated with the current state */
@@ -1697,12 +1701,20 @@ public class DrawArea : Gtk.DrawingArea {
     var scaled_x = scale_value( e.x );
     var scaled_y = scale_value( e.y );
     var shift    = (bool)(e.state & ModifierType.SHIFT_MASK);
+    var control  = (bool)(e.state & ModifierType.CONTROL_MASK);
+    var tag      = FormatTag.LENGTH;
+    var url      = "";
 
     /* If the callout is being edited, go handle the click */
     if( callout.is_within_resizer( scaled_x, scaled_y ) ) {
       _resize = true;
       _orig_width = (int)callout.total_width;
       return( true );
+    } else if( !shift && control && callout.text.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
+      if( tag == FormatTag.URL ) {
+        Utils.open_url( url );
+      }
+      return( false );
     }
 
     if( callout.mode == CalloutMode.EDITABLE ) {
@@ -2571,7 +2583,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
       for( int i=0; i<_nodes.length; i++ ) {
-        Node match = _nodes.index( i ).contains( _scaled_x, _scaled_y, null );
+        var match = _nodes.index( i ).contains( _scaled_x, _scaled_y, null );
         if( match != null ) {
           update_last_match( match );
           if( (current_conn != null) && ((current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING)) ) {
@@ -2613,6 +2625,22 @@ public class DrawArea : Gtk.DrawingArea {
             reset_cursor();
             set_tooltip_markup( null );
             select_node_on_hover( match, shift );
+          }
+          return( false );
+        }
+        var callout = _nodes.index( i ).contains_callout( _scaled_x, _scaled_y );
+        if( callout != null ) {
+          if( control && callout.text.is_within_clickable( _scaled_x, _scaled_y, out tag, out url ) ) {
+            if( tag == FormatTag.URL ) {
+              set_cursor( url_cursor );
+              set_tooltip_markup( url );
+            }
+          } else if( callout.mode == CalloutMode.EDITABLE ) {
+            set_cursor( text_cursor );
+            set_tooltip_markup( null );
+          } else {
+            reset_cursor();
+            set_tooltip_markup( null );
           }
           return( false );
         }
@@ -3552,6 +3580,7 @@ public class DrawArea : Gtk.DrawingArea {
         var current = _selected.current_connection();
         current.edit_title_end();
         set_connection_mode( current, ConnMode.SELECTED );
+        auto_save();
         current_changed( this );
         queue_draw();
       }
@@ -3569,6 +3598,7 @@ public class DrawArea : Gtk.DrawingArea {
             add_root_node();
           }
         } else {
+          auto_save();
           current_changed( this );
           queue_draw();
         }
@@ -4753,6 +4783,20 @@ public class DrawArea : Gtk.DrawingArea {
             reset_cursor();
             set_tooltip_markup( null );
           }
+          return;
+        }
+      }
+      var callout = _nodes.index( i ).contains_callout( _scaled_x, _scaled_y );
+      if( (callout != null) && callout.text.is_within_clickable( _scaled_x, _scaled_y, out tag, out url ) ) {
+        if( tag == FormatTag.URL ) {
+          if( pressed ) {
+            set_cursor( url_cursor );
+            set_tooltip_markup( url );
+          } else {
+            reset_cursor();
+            set_tooltip_markup( null );
+          }
+          return;
         }
       }
     }
@@ -5610,9 +5654,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Displays the auto-completion widget with the given list of values */
   public void show_auto_completion( GLib.List<TextCompletionItem> values, int start_pos, int end_pos ) {
-    var node = _selected.current_node();
     if( is_node_editable() ) {
-      _completion.show( node.name, values, start_pos, end_pos );
+      _completion.show( _selected.current_node().name, values, start_pos, end_pos );
+    } else if( is_callout_editable() ) {
+      _completion.show( _selected.current_callout().text, values, start_pos, end_pos );
     } else {
       _completion.hide();
     }
