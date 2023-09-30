@@ -197,7 +197,7 @@ public class Callout {
     _style.copy( StyleInspector.styles.get_style_for_level( (_node.is_root() ? 0 : 1), null ) );
 
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
-      if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "callout-text") ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           case "text"  :  _text.load( it );  break;
           case "style" :  load_style( it );  break;

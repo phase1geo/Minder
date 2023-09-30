@@ -62,19 +62,19 @@ public class MainWindow : Hdy.ApplicationWindow {
   private CheckButton       _search_nontasks;
   private Switch            _search_all_tabs;
   private Exporter          _exporter;
-  private Popover?          _export         = null;
+  private Popover?          _export     = null;
   private MenuButton        _zoom_btn;
-  private Scale?            _zoom_scale     = null;
-  private Button?           _zoom_in        = null;
-  private Button?           _zoom_out       = null;
-  private ModelButton?      _zoom_sel       = null;
-  private Button?           _undo_btn       = null;
-  private Button?           _redo_btn       = null;
-  private ToggleButton?     _focus_btn      = null;
-  private ToggleButton?     _prop_btn       = null;
-  private Image?            _prop_show      = null;
-  private Image?            _prop_hide      = null;
-  private bool              _debug          = false;
+  private Scale?            _zoom_scale = null;
+  private Button?           _zoom_in    = null;
+  private Button?           _zoom_out   = null;
+  private ModelButton?      _zoom_sel   = null;
+  private Button?           _undo_btn   = null;
+  private Button?           _redo_btn   = null;
+  private ToggleButton?     _focus_btn  = null;
+  private ToggleButton?     _prop_btn   = null;
+  private Image?            _prop_show  = null;
+  private Image?            _prop_hide  = null;
+  private bool              _debug      = false;
   private ThemeEditor       _themer;
   private Label             _scale_lbl;
   private int               _text_size;
@@ -179,6 +179,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     _nb.tab_switched.connect( tab_switched );
     _nb.tab_reordered.connect( tab_reordered );
     _nb.close_tab_requested.connect( close_tab_requested );
+    _nb.tab_removed.connect( tab_removed );
     _nb.get_style_context().add_class( Gtk.STYLE_CLASS_INLINE_TOOLBAR );
 
     /* Create title toolbar */
@@ -404,6 +405,11 @@ public class MainWindow : Hdy.ApplicationWindow {
     var da  = bin.get_child() as DrawArea;
     var ret = (_nb.n_tabs > 1) && (!da.is_loaded || da.get_doc().is_saved() || show_save_warning( da ));
     return( ret );
+  }
+
+  /* This should be called when the tab page is actually gone */
+  private void tab_removed( Tab tab ) {
+    save_tab_state( _nb.current );
   }
 
   /* Creates a draw area */
