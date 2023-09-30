@@ -1067,10 +1067,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* Adds a callout to the currently selected node */
   public void add_callout() {
     var current = _selected.current_node();
-    if( current != null ) {
+    if( (current != null) && (current.callout == null) ) {
       undo_buffer.add_item( new UndoNodeCallout( current ) );
       current.callout = new Callout( current );
       current.callout.style = StyleInspector.styles.get_global_style();
+      _selected.set_current_callout( current.callout, (_focus_mode ? _focus_alpha : 1.0) );
       set_callout_mode( current.callout, CalloutMode.EDITABLE );
       queue_draw();
       auto_save();
@@ -1079,8 +1080,16 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Removes a callout on the currently selected node */
   public void remove_callout() {
-    var current = _selected.current_node();
-    if( current != null ) {
+    if( is_node_selected() ) {
+      var current = _selected.current_node();
+      if( current.callout != null ) {
+        undo_buffer.add_item( new UndoNodeCallout( current ) );
+        current.callout = null;
+        queue_draw();
+        auto_save();
+      }
+    } else if( is_callout_selected() ) {
+      var current = _selected.current_callout().node;
       undo_buffer.add_item( new UndoNodeCallout( current ) );
       current.callout = null;
       queue_draw();
@@ -3201,6 +3210,20 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Selects the callout associated with the current node (if one exists) */
+  public void select_callout() {
+    if( is_node_selected() && (_selected.current_node().callout != null) ) {
+      _selected.set_current_callout( _selected.current_node().callout );
+    }
+  }
+
+  /* Selects the node associated with the current callout */
+  public void select_callout_node() {
+    if( is_callout_selected() ) {
+      _selected.set_current_node( _selected.current_callout().node );
+    }
+  }
+
   /* Deletes the given node */
   public void delete_node() {
     var current = _selected.current_node();
@@ -3297,6 +3320,7 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
       auto_save();
     } else if( is_callout_selected() ) {
+      stdout.printf( "Removing callout\n" );
       remove_callout();
     }
   }
@@ -4653,7 +4677,12 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_callout();
     var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
     if( shift && has_key( kvs, Key.e ) )       { show_properties( "current", PropertyGrab.NOTE ); }
+    else if( !shift && has_key( kvs, Key.e ) ) {
+      set_callout_mode( current, CalloutMode.EDITABLE );
+      queue_draw();
+    }
     else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
+    else if(  shift && has_key( kvs, Key.o ) ) { select_callout_node(); }
     else if( !shift && has_key( kvs, Key.u ) ) {  // Perform undo
       if( undo_buffer.undoable() ) {
         undo_buffer.undo();
@@ -4727,6 +4756,8 @@ public class DrawArea : Gtk.DrawingArea {
     else if( !shift && has_key( kvs, Key.l ) ) { handle_right( false, false ); }
     else if( !shift && has_key( kvs, Key.m ) ) { select_root_node(); }
     else if( !shift && has_key( kvs, Key.n ) ) { select_sibling_node( 1 ); }
+    else if( !shift && has_key( kvs, Key.o ) ) { add_callout(); }
+    else if(  shift && has_key( kvs, Key.o ) ) { select_callout(); }
     else if( !shift && has_key( kvs, Key.p ) ) { select_sibling_node( -1 ); }
     else if( !shift && has_key( kvs, Key.r ) ) {  // Perform redo
       if( undo_buffer.redoable() ) {

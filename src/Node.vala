@@ -684,11 +684,11 @@ public class Node : Object {
     var name_height    = (_name.height < stk_height) ? stk_height : _name.height;
 
     if( _image != null ) {
-      _width  = (margin * 2) + (padding * 2) + ((name_width < _image.width) ? _image.width : name_width) + callout_width();
-      _height = (margin * 2) + (padding * 2) + _image.height + padding + name_height + callout_height();
+      _width  = (margin * 2) + (padding * 2) + ((name_width < _image.width) ? _image.width : name_width);
+      _height = (margin * 2) + (padding * 2) + _image.height + padding + name_height;
     } else {
-      _width  = (margin * 2) + (padding * 2) + name_width  + callout_width();
-      _height = (margin * 2) + (padding * 2) + name_height + callout_height();
+      _width  = (margin * 2) + (padding * 2) + name_width;
+      _height = (margin * 2) + (padding * 2) + name_height;
     }
 
     if( (_layout != null) && (((_width - orig_width) != 0) || ((_height - orig_height) != 0)) ) {
@@ -845,7 +845,7 @@ public class Node : Object {
     int    padding    = style.node_padding ?? 0;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
     x = posx + margin + padding;
-    y = posy + margin + padding + img_height + callout_height() + (((_height - (img_height + callout_height() + (padding * 2) + (margin * 2))) / 2) - _task_radius);
+    y = posy + margin + padding + img_height + (((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - _task_radius);
     w = _task_radius * 2;
     h = _task_radius * 2;
   }
@@ -857,7 +857,7 @@ public class Node : Object {
     double img_height = (_image == null) ? 0 : (_image.height + padding);
     double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
     x = posx + margin + padding + task_width();
-    y = posy + margin + padding + img_height + callout_height() + ((_height - (img_height + callout_height() + (padding * 2) + (margin * 2))) / 2) - (stk_height / 2);
+    y = posy + margin + padding + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - (stk_height / 2);
     w = (_sticker_buf == null) ? 0 : _sticker_buf.width;
     h = (_sticker_buf == null) ? 0 : _sticker_buf.height;
   }
@@ -867,8 +867,8 @@ public class Node : Object {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
-    x = posx + (_width - (linked_node_width() + callout_width() + padding + margin)) + _ipadx;
-    y = posy + padding + margin + img_height + callout_height() + ((_height - (img_height + callout_height() + (padding * 2) + (margin * 2))) / 2) - 5;
+    x = posx + (_width - (linked_node_width() + padding + margin)) + _ipadx;
+    y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
     w = 11;
     h = 11;
   }
@@ -878,8 +878,8 @@ public class Node : Object {
     int    margin     = style.node_margin  ?? 0;
     int    padding    = style.node_padding ?? 0;
     double img_height = (_image == null) ? 0 : (_image.height + padding);
-    x = posx + (_width - (note_width() + linked_node_width() + callout_width() + padding + margin)) + _ipadx;
-    y = posy + padding + margin + img_height + callout_height() + ((_height - (img_height + callout_height() + (padding * 2) + (margin * 2))) / 2) - 5;
+    x = posx + (_width - (note_width() + linked_node_width() + padding + margin)) + _ipadx;
+    y = posy + padding + margin + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - 5;
     w = 11;
     h = 11;
   }
@@ -889,7 +889,7 @@ public class Node : Object {
     int margin  = style.node_margin  ?? 0;
     int padding = style.node_padding ?? 0;
     x = (posx + (_width / 2)) - ((_image == null) ? 0 : (_image.width / 2));
-    y = posy + padding + margin + callout_height();
+    y = posy + padding + margin;
     w = (_image == null) ? 0 : _image.width;
     h = (_image == null) ? 0 : _image.height;
   }
@@ -897,8 +897,8 @@ public class Node : Object {
   /* Returns the positional information for where the resizer box is located (if it exists) */
   protected virtual void resizer_bbox( out double x, out double y, out double w, out double h ) {
     int margin  = style.node_margin  ?? 0;
-    x = resizer_on_left() ? (posx + margin) : (posx + _width - margin - callout_width() - 8);
-    y = posy + margin + callout_height();
+    x = resizer_on_left() ? (posx + margin) : (posx + _width - margin - 8);
+    y = posy + margin;
     w = 8;
     h = 8;
   }
@@ -1530,9 +1530,9 @@ public class Node : Object {
     var margin  = style.node_margin  ?? 0;
     var padding = style.node_padding ?? 0;
     x = posx;
-    y = posy + callout_height(); 
-    w = _width - callout_width();
-    h = _height - callout_height();
+    y = posy; 
+    w = _width;
+    h = _height;
   }
 
   /* Returns the bounding box for the fold indicator for this node */
@@ -1678,18 +1678,6 @@ public class Node : Object {
     return( (linked_node != null) ? (10 + _ipadx) : 0 );
   }
 
-  /* Returns the width of the callout, if it exists */
-  public double callout_width() {
-    var padding = style.node_padding ?? 0;
-    return( 0 );
-  }
-
-  /* Returns the height of the callout, if it exists */
-  public double callout_height() {
-    var padding = style.node_padding ?? 0;
-    return( 0 );
-  }
-
   /* Moves this node into the proper position within the parent node */
   public void move_to_position( Node child, NodeSide side, double x, double y ) {
     int   idx           = child.index();
@@ -1810,8 +1798,8 @@ public class Node : Object {
     var stk_height = sticker_height();
     var img_height = (_image != null) ? (_image.height + padding) : 0;
 
-    name.posx = posx + margin + padding + task_width() + sticker_width() + callout_width();
-    name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0) + callout_height();
+    name.posx = posx + margin + padding + task_width() + sticker_width();
+    name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0);
 
     if( _callout != null ) {
       _callout.position_text();
@@ -2190,15 +2178,15 @@ public class Node : Object {
   /* Returns the link point for this node */
   protected virtual void link_point( out double x, out double y ) {
     if( is_root() ) {
-      x = posx + callout_width()  + (_width / 2);
-      y = posy + callout_height() + (_height / 2);
+      x = posx + (_width / 2);
+      y = posy + (_height / 2);
     } else {
       int    margin = style.node_margin ?? 0;
       double height = (style.node_border.name() == "underlined") ? (_height - margin) : (_height / 2);
       switch( side ) {
         case NodeSide.LEFT :
           x = posx + margin;
-          y = posy + height + callout_height();
+          y = posy + height;
           break;
         case NodeSide.TOP :
           x = posx + (_width / 2);
@@ -2206,7 +2194,7 @@ public class Node : Object {
           break;
         case NodeSide.RIGHT :
           x = posx + _width - margin;
-          y = posy + height + callout_height();
+          y = posy + height;
           break;
         default :
           x = posx + (_width / 2);
@@ -2219,10 +2207,10 @@ public class Node : Object {
   /* Draws the border around the node */
   protected void draw_shape( Context ctx, Theme theme, RGBA border_color, bool exporting ) {
 
-    double x = posx + style.node_margin + callout_width();
-    double y = posy + style.node_margin + callout_height();
-    double w = _width  - (style.node_margin * 2) - callout_width();
-    double h = _height - (style.node_margin * 2) - callout_height();
+    double x = posx + style.node_margin;
+    double y = posy + style.node_margin;
+    double w = _width  - (style.node_margin * 2);
+    double h = _height - (style.node_margin * 2);
 
     /* Set the fill color */
     if( mode.is_selected() && !exporting ) {
@@ -2270,10 +2258,10 @@ public class Node : Object {
       var padding = style.node_padding ?? 0;
       var margin  = style.node_margin  ?? 0;
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), _alpha );
-      ctx.rectangle( ((posx + padding + margin + callout_width()) - hmargin),
-                     ((posy + padding + margin + callout_height()) - vmargin),
-                     ((_width  - (padding * 2) - (margin * 2) - callout_width()) + (hmargin * 2)),
-                     ((_height - (padding * 2) - (margin * 2) - callout_height()) + (vmargin * 2)) );
+      ctx.rectangle( ((posx + padding + margin) - hmargin),
+                     ((posy + padding + margin) - vmargin),
+                     ((_width  - (padding * 2) - (margin * 2)) + (hmargin * 2)),
+                     ((_height - (padding * 2) - (margin * 2)) + (vmargin * 2)) );
       ctx.fill();
     }
 

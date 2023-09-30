@@ -40,6 +40,11 @@ public class Callout {
 
   public signal void resized();
 
+  public Node node {
+    get {
+      return( _node );
+    }
+  }
   public CanvasText text {
     get {
       return( _text );
