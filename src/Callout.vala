@@ -140,11 +140,40 @@ public class Callout {
     h = _text.height + (padding * 2);
   }
 
+  /* Returns the bounding box of the resizer */
+  private void resizer_bbox( out double x, out double y, out double w, out double h ) {
+
+    double cx, cy, cw, ch;
+    bbox( out cx, out cy, out cw, out ch );
+
+    x = _node.resizer_on_left() ? cx : (cx + cw - 8);
+    y = cy;
+    w = 8;
+    h = 8;
+
+  }
+
   /* Returns true if the given coordinates are within this callout */
   public bool contains( double x, double y ) {
     double cx, cy, cw, ch;
     bbox( out cx, out cy, out cw, out ch );
     return( Utils.is_within_bounds( x, y, cx, cy, cw, ch ) );
+  }
+
+  /* Returns true if the pixel coordinates is within the resizer */
+  public bool is_within_resizer( double x, double y ) {
+    if( mode == CalloutMode.SELECTED ) {
+      double rx, ry, rw, rh;
+      resizer_bbox( out rx, out ry, out rw, out rh );
+      return( Utils.is_within_bounds( x, y, rx, ry, rw, rh ) );
+    }
+    return( false );
+  }
+
+  /* Resizes the width (and potentially height) */
+  public void resize( double diff ) {
+    diff = _node.resizer_on_left() ? (0 - diff) : diff;
+    _text.resize( diff );
   }
 
   /* Saves the callout information in XML format */
@@ -186,7 +215,7 @@ public class Callout {
     var pwidth     = style.callout_ptr_width  ?? 0;
     var plength    = style.callout_ptr_length ?? 0;
 
-    if( mode == CalloutMode.SELECTED ) {
+    if( (mode == CalloutMode.SELECTED) && !exporting ) {
       background = theme.get_color( "nodesel_background" );
       foreground = theme.get_color( "nodesel_foreground" );
     }
@@ -214,6 +243,21 @@ public class Callout {
     }
     ctx.close_path();
     ctx.fill();
+
+    /* Draw resizer, if necessary */
+    if( (mode == CalloutMode.SELECTED) && !exporting ) {
+
+      resizer_bbox( out x, out y, out w, out h );
+
+      Utils.set_context_color( ctx, theme.get_color( "background" ) );
+      ctx.set_line_width( 1 );
+      ctx.rectangle( x, y, w, h );
+      ctx.fill_preserve();
+
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "foreground" ), _node.alpha );
+      ctx.stroke();
+
+    }
 
     /* Draw the text */
     _text.draw( ctx, theme, foreground, _node.alpha, exporting );

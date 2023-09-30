@@ -1,4 +1,6 @@
 sources += files(
+
+    'UndoCalloutResize.vala',
     'UndoCalloutText.vala',
 
     'UndoConnectedNode.vala',
@@ -99,4 +101,5 @@ sources += files(
     'UndoTextReplace.vala',
     'UndoTextTagAdd.vala',
     'UndoTextTagRemove.vala',
+
 )

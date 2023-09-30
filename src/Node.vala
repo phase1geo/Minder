@@ -823,7 +823,7 @@ public class Node : Object {
   }
 
   /* Returns true if the resizer should be in the upper left */
-  private bool resizer_on_left() {
+  public bool resizer_on_left() {
     return( !is_root() && (side == NodeSide.LEFT) );
   }
 

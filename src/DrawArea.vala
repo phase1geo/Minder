@@ -1699,6 +1699,12 @@ public class DrawArea : Gtk.DrawingArea {
     var shift    = (bool)(e.state & ModifierType.SHIFT_MASK);
 
     /* If the callout is being edited, go handle the click */
+    if( callout.is_within_resizer( scaled_x, scaled_y ) ) {
+      _resize = true;
+      _orig_width = (int)callout.total_width;
+      return( true );
+    }
+
     if( callout.mode == CalloutMode.EDITABLE ) {
       switch( e.type ) {
         case EventType.BUTTON_PRESS        :
@@ -2412,6 +2418,7 @@ public class DrawArea : Gtk.DrawingArea {
     var current_node    = _selected.current_node();
     var current_conn    = _selected.current_connection();
     var current_sticker = _selected.current_sticker();
+    var current_callout = _selected.current_callout();
 
     /* If the mouse button is current pressed, handle it */
     if( _pressed ) {
@@ -2477,6 +2484,15 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         auto_save();
 
+      /* If we are dealing with a callout, handle it */
+      } else if( current_callout != null ) {
+        double diffx = _scaled_x - _press_x;
+        if( _resize ) {
+          current_callout.resize( diffx );
+          queue_draw();
+          auto_save();
+        }
+
       /* If we are holding the middle mouse button while moving, pan the canvas */
       } else if( _press_middle ) {
         double diff_x = _scaled_x - last_x;
@@ -2515,6 +2531,12 @@ public class DrawArea : Gtk.DrawingArea {
       var url = "";
       if( current_sticker != null ) {
         if( current_sticker.is_within_resizer( _scaled_x, _scaled_y ) ) {
+          set_cursor( CursorType.SB_H_DOUBLE_ARROW );
+          return( false );
+        }
+      }
+      if( current_callout != null ) {
+        if( current_callout.is_within_resizer( _scaled_x, _scaled_y ) ) {
           set_cursor( CursorType.SB_H_DOUBLE_ARROW );
           return( false );
         }
@@ -2696,6 +2718,7 @@ public class DrawArea : Gtk.DrawingArea {
     var current_node    = _selected.current_node();
     var current_conn    = _selected.current_connection();
     var current_sticker = _selected.current_sticker();
+    var current_callout = _selected.current_callout();
 
     _pressed = false;
 
@@ -2717,6 +2740,8 @@ public class DrawArea : Gtk.DrawingArea {
       } else if( current_node != null ) {
         undo_buffer.add_item( new UndoNodeResize( current_node, _orig_width, _orig_resizable ) );
         current_node.image_resizable = _orig_resizable;
+      } else if( current_callout != null ) {
+        undo_buffer.add_item( new UndoCalloutResize( current_callout, _orig_width ) );
       }
       auto_save();
       return( false );
