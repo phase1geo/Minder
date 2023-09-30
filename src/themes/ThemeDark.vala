@@ -48,6 +48,7 @@ public class ThemeDark : Theme {
     set_color( "match_background",      color_from_string( "Gold" ) );
     set_color( "match_foreground",      color_from_string( "Black" ) );
     set_color( "markdown_listitem",     color_from_string( "Red" ) );
+    set_color( "callout_background",    color_from_string( "#9bdb4d" ) );
 
     /* Generate the link colors */
     set_color( "link_color0", color_from_string( "#c6262e" ) );

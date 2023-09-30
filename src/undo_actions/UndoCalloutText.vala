@@ -21,34 +21,36 @@
 
 using Gtk;
 
-public class UndoNodeCallout : UndoItem {
+public class UndoCalloutText : UndoItem {
 
-  private Node     _node;
-  private Callout? _prev_callout = null;
+  private Callout    _callout;
+  private CanvasText _text;
+  private CanvasText _orig_text;
 
-  /* Constructor for a node callout change */
-  public UndoNodeCallout( Node node ) {
-    base( _( "node callout changed" ) );
-    _node         = node;
-    _prev_callout = node.callout;
+  /* Constructor for a node name change */
+  public UndoCalloutText( DrawArea da, Callout callout, CanvasText orig_text ) {
+    base( _( "callout text change" ) );
+    _callout   = callout;
+    _text      = new CanvasText( da );
+    _orig_text = new CanvasText( da );
+    _text.copy( callout.text );
+    _orig_text.copy( orig_text );
   }
 
-  private void change( DrawArea da ) {
-    var current = _node.callout;
-    _node.callout = _prev_callout;
-    _prev_callout = current;
+  /* Undoes a node name change */
+  public override void undo( DrawArea da ) {
+    _callout.text.copy( _orig_text );
     da.queue_draw();
+    da.current_changed( da );
     da.auto_save();
   }
 
-  /* Undoes a node callout add/remove */
-  public override void undo( DrawArea da ) {
-    change( da );
-  }
-
-  /* Redoes a node callout add/remove */
+  /* Redoes a node name change */
   public override void redo( DrawArea da ) {
-    change( da );
+    _callout.text.copy( _text );
+    da.queue_draw();
+    da.current_changed( da );
+    da.auto_save();
   }
 
 }

@@ -109,6 +109,9 @@ public class Styles {
       level.style.connection_arrow       = "fromto";
       level.style.connection_padding     = 3;
       level.style.connection_title_width = 100;
+      level.style.callout_padding        = 5;
+      level.style.callout_ptr_width      = 20;
+      level.style.callout_ptr_length     = 20;
       _styles.append_val( level );
     }
 
@@ -126,6 +129,7 @@ public class Styles {
             int level = int.parse( l );
             _styles.index( level ).style.load_node( it );
             _styles.index( level ).style.load_connection( it );
+            _styles.index( level ).style.load_callout( it );
             _styles.index( level ).isset = (s != null) ? bool.parse( s ) : false;
           }
         }
@@ -144,6 +148,7 @@ public class Styles {
       n->set_prop( "isset", _styles.index( i ).isset.to_string() );
       _styles.index( i ).style.save_node_in_node( n );
       _styles.index( i ).style.save_connection_in_node( n );
+      _styles.index( i ).style.save_callout_in_node( n );
       node->add_child( n );
     }
 

@@ -197,7 +197,6 @@ public class Node : Object {
   protected double       _ipady        = 3;
   protected double       _task_radius  = 7;
   protected double       _alpha        = 1.0;
-  protected double       _callout_ptr  = 20;
   protected Array<Node>  _children;
   private   NodeMode     _mode         = NodeMode.NONE;
   private   NodeBounds   _tree_bbox;
@@ -216,7 +215,7 @@ public class Node : Object {
   private   NodeLink?    _linked_node    = null;
   private   string?      _sticker        = null;
   private   Pixbuf?      _sticker_buf    = null;
-  private   CanvasText?  _callout        = null;
+  private   Callout?     _callout        = null;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -472,18 +471,14 @@ public class Node : Object {
       }
     }
   }
-  public CanvasText? callout {
+  public Callout? callout {
     get {
       return( _callout );
     }
     set {
       if( _callout != value ) {
-        if( value != null ) {
-          value.resized.connect( position_text_and_update_size );
-        } else {
-          value.resized.disconnect( position_text_and_update_size );
-        }
         _callout = value;
+        _callout.resized.connect( position_text_and_update_size );
         position_text_and_update_size();
       }
     }
@@ -908,16 +903,6 @@ public class Node : Object {
     h = 8;
   }
 
-  /* Returns true if the given cursor coordinates lies within the callout area. */
-  public virtual bool is_within_callout( double x, double y ) {
-    if( _callout != null ) {
-      double cx, cy, cw, ch;
-      callout_bbox( out cx, out cy, out cw, out ch );
-      return( Utils.is_within_bounds( x, y, cx, cy, cw, ch ) );
-    }
-    return( false );
-  }
-
   /*
    Returns true if the given cursor coordinates lies within the task checkbutton
    area.
@@ -1002,12 +987,28 @@ public class Node : Object {
       return( this );
     } else if( !folded ) {
       for( int i=0; i<_children.length; i++ ) {
-        Node tmp = _children.index( i ).contains( x, y, n );
+        var tmp = _children.index( i ).contains( x, y, n );
         if( tmp != null ) {
           return( tmp );
         }
       }
     }
+    return( null );
+  }
+
+  /* Finds the callout which contains the given pixel coordinates */
+  public virtual Callout? contains_callout( double x, double y ) {
+    if( (_callout != null) && _callout.contains( x, y ) ) {
+      return( _callout );
+    } else if( !folded ) {
+      for( int i=0; i<_children.length; i++ ) {
+        var tmp = _children.index( i ).contains_callout( x, y );
+        if( tmp != null ) {
+          return( tmp );
+        }
+      }
+    }
+
     return( null );
   }
 
@@ -1151,9 +1152,9 @@ public class Node : Object {
   /* Loads the callout information */
   private void load_callout( Xml.Node* n ) {
     if( _callout == null ) {
-      _callout = new CanvasText( _da );
+      callout = new Callout( this );
     }
-    _callout.load( n );
+    callout.load( n );
   }
 
   /*
@@ -1390,7 +1391,7 @@ public class Node : Object {
     }
 
     if( _callout != null ) {
-      node->add_child( _callout.save( "callout" ) );
+      node->add_child( _callout.save() );
     }
 
     if( _children.length > 0 ) {
@@ -1522,16 +1523,6 @@ public class Node : Object {
       w = _width;
       h = _height;
     }
-  }
-
-  /* Returns the bounding box for a callout associated with this node */
-  public void callout_bbox( out double x, out double y, out double w, out double h ) {
-    assert( _callout != null );
-    var margin = style.node_margin ?? 0;
-    x = ((side & NodeSide.horizontal()) != 0) ? (posx + margin) : (posx + (_width - (callout_width() + margin)));
-    y = posy + margin;
-    w = _callout.width;
-    h = _callout.height;
   }
 
   /* Returns the bounding box for the node box itself (this includes everything but the callout) */
@@ -1690,13 +1681,13 @@ public class Node : Object {
   /* Returns the width of the callout, if it exists */
   public double callout_width() {
     var padding = style.node_padding ?? 0;
-    return( ((_callout != null) && ((side & NodeSide.vertical()) != 0)) ? ((padding * 2) + _callout.width + _callout_ptr) : 0 );
+    return( 0 );
   }
 
   /* Returns the height of the callout, if it exists */
   public double callout_height() {
     var padding = style.node_padding ?? 0;
-    return( ((_callout != null) && ((side & NodeSide.horizontal()) != 0)) ? ((padding * 2) + _callout.height + _callout_ptr) : 0 );
+    return( 0 );
   }
 
   /* Moves this node into the proper position within the parent node */
@@ -1823,15 +1814,8 @@ public class Node : Object {
     name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0) + callout_height();
 
     if( _callout != null ) {
-      _callout.posx = posx + margin + padding;
-      _callout.posy = posy + margin + padding;
+      _callout.position_text();
     }
-
-  }
-
-  /* Positions the callout text */
-  private void position_callout() {
-
 
   }
 
@@ -2612,44 +2596,9 @@ public class Node : Object {
 
   /* Draws the node callout, if one exists */
   protected virtual void draw_callout( Context ctx, Theme theme, bool exporting ) {
-
-    if( _callout == null ) return;
-
-    var background = theme.get_color( "attachable" );
-    var foreground = Granite.contrasting_foreground_color( background );
-
-    double margin  = style.node_margin  ?? 0;
-    double padding = style.node_padding ?? 0;
-
-    Utils.set_context_color_with_alpha( ctx, background, _alpha );
-    ctx.set_line_width( 1 );
-
-    stdout.printf( "In draw_callout, side: %s, horizontal: %s\n", side.to_string(), ((side & NodeSide.horizontal()) != 0).to_string() );
-
-    /* Draw the shape */
-    if( (side & NodeSide.horizontal()) != 0 ) {
-      ctx.move_to( (posx + margin), (posy + margin) );
-      ctx.line_to( (posx + margin + (padding * 2) + _callout.width), (posy + margin) );
-      ctx.line_to( (posx + margin + (padding * 2) + _callout.width), (posy + margin + (padding * 2) + _callout.height) );
-      ctx.line_to( (posx + margin + _callout_ptr), (posy + margin + (padding * 2) + _callout.height) );
-      ctx.line_to( (posx + margin + (_callout_ptr / 2)), (posy + margin + (padding * 2) + _callout.height + _callout_ptr) );
-      ctx.line_to( (posx + margin), (posy + margin + (padding * 2) + _callout.height) );
-    } else {
-      ctx.move_to( (posx + (width - (_callout.width + (padding * 2))) + _callout_ptr), (posy + margin) );
-      ctx.move_to( (posx + width), (posy + margin) );
-      ctx.move_to( (posx + width), (posy + margin + (padding * 2) + _callout.height) );
-      ctx.move_to( (posx + (width - (_callout.width + (padding * 2))) + _callout_ptr), (posy + margin + (padding * 2) + _callout.height) );
-      ctx.move_to( (posx + (width - (_callout.width + (padding * 2)))), (posy + margin + (_callout_ptr / 2)) );
+    if( _callout != null ) {
+      _callout.draw( ctx, theme, exporting );
     }
-    ctx.close_path();
-    ctx.fill_preserve();
-
-    Utils.set_context_color_with_alpha( ctx, foreground, _alpha );
-    ctx.stroke();
-
-    /* Draw the text */
-    _callout.draw( ctx, theme, foreground, _alpha, exporting );
-
   }
 
   /* Draws the node on the screen */

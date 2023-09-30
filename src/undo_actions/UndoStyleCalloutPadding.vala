@@ -21,34 +21,27 @@
 
 using Gtk;
 
-public class UndoNodeCallout : UndoItem {
+public class UndoStyleCalloutPadding : UndoStyleChange {
 
-  private Node     _node;
-  private Callout? _prev_callout = null;
+  GenericArray<int> _values;
 
-  /* Constructor for a node callout change */
-  public UndoNodeCallout( Node node ) {
-    base( _( "node callout changed" ) );
-    _node         = node;
-    _prev_callout = node.callout;
+  public UndoStyleCalloutPadding( StyleAffects affects, int padding, DrawArea da ) {
+    base( affects, da );
+    _values = new GenericArray<int>();
+    _values.add( padding );
+    load_styles( da );
   }
 
-  private void change( DrawArea da ) {
-    var current = _node.callout;
-    _node.callout = _prev_callout;
-    _prev_callout = current;
-    da.queue_draw();
-    da.auto_save();
+  protected override void load_style_value( Style style ) {
+    _values.add( style.callout_padding );
   }
 
-  /* Undoes a node callout add/remove */
-  public override void undo( DrawArea da ) {
-    change( da );
+  protected override void store_style_value( Style style, int index ) {
+    style.callout_padding = _values.get( index );
   }
 
-  /* Redoes a node callout add/remove */
-  public override void redo( DrawArea da ) {
-    change( da );
+  protected override void replace_with_item( UndoItem item ) {
+    _values.set( 0, ((UndoStyleCalloutPadding)item)._values.get( 0 ) );
   }
 
 }

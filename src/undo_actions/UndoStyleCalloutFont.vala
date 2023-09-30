@@ -20,35 +20,29 @@
 */
 
 using Gtk;
+using Pango;
 
-public class UndoNodeCallout : UndoItem {
+public class UndoStyleCalloutFont : UndoStyleChange {
 
-  private Node     _node;
-  private Callout? _prev_callout = null;
+  GenericArray<FontDescription> _values;
 
-  /* Constructor for a node callout change */
-  public UndoNodeCallout( Node node ) {
-    base( _( "node callout changed" ) );
-    _node         = node;
-    _prev_callout = node.callout;
+  /* Constructor for a node name change */
+  public UndoStyleCalloutFont( StyleAffects affects, string family, int size, DrawArea da ) {
+    base( affects, da );
+    var callout_font = new FontDescription();
+    callout_font.set_family( family );
+    callout_font.set_size( size );
+    _values = new GenericArray<FontDescription>();
+    _values.add( callout_font );
+    load_styles( da );
   }
 
-  private void change( DrawArea da ) {
-    var current = _node.callout;
-    _node.callout = _prev_callout;
-    _prev_callout = current;
-    da.queue_draw();
-    da.auto_save();
+  protected override void load_style_value( Style style ) {
+    _values.add( style.callout_font );
   }
 
-  /* Undoes a node callout add/remove */
-  public override void undo( DrawArea da ) {
-    change( da );
-  }
-
-  /* Redoes a node callout add/remove */
-  public override void redo( DrawArea da ) {
-    change( da );
+  protected override void store_style_value( Style style, int index ) {
+    style.callout_font = _values.get( index );
   }
 
 }
