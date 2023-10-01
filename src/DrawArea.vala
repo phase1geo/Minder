@@ -822,7 +822,7 @@ public class DrawArea : Gtk.DrawingArea {
    pattern.
   */
   public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
-    if( search_opts[0] ) {
+    if( search_opts[0] || search_opts[2] ) {
       for( int i=0; i<_nodes.length; i++ ) {
         _nodes.index( i ).get_match_items( tabname, pattern, search_opts, ref matches );
       }
@@ -2142,13 +2142,16 @@ public class DrawArea : Gtk.DrawingArea {
 
     double x, y, w, h;
 
-    var current_conn = _selected.current_connection();
-    var current_node = _selected.current_node();
+    var current_conn    = _selected.current_connection();
+    var current_node    = _selected.current_node();
+    var current_callout = _selected.current_callout();
 
     if( current_conn != null ) {
       current_conn.bbox( out x, out y, out w, out h );
     } else if( current_node != null ) {
       current_node.bbox( out x, out y, out w, out h );
+    } else if( current_callout != null ) {
+      current_callout.bbox( out x, out y, out w, out h );
     } else {
       return;
     }

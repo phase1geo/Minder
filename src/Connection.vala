@@ -724,20 +724,20 @@ public class Connection : Object {
   */
 public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
   var tab = Utils.rootname( tabname );
-  if( search_opts[2] && (title != null) ) {
+  if( search_opts[3] && (title != null) ) {
     string str = Utils.match_string( pattern, title.text.text);
     if(str.length > 0) {
       TreeIter it;
       matches.append( out it );
-      matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), 1, str, 2, null, 3, this, 4, tabname, 5, tab, -1 );
+      matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Connection Title" ) ), 1, str, 2, null, 3, this, 4, null, 5, tabname, 6, tab, -1 );
     }
   }
-  if( search_opts[3] ) {
+  if( search_opts[4] ) {
     string str = Utils.match_string( pattern, note);
     if(str.length > 0) {
       TreeIter it;
       matches.append( out it );
-      matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Connection Note" ) ), 1, str, 2, null, 3, this, 4, tabname, 5, tab, -1 );
+      matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Connection Note" ) ), 1, str, 2, null, 3, this, 4, null, 5, tabname, 6, tab, -1 );
     }
   }
 }

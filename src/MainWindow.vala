@@ -54,6 +54,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   private ScrolledWindow    _search_scroll;
   private CheckButton       _search_nodes;
   private CheckButton       _search_connections;
+  private CheckButton       _search_callouts;
   private CheckButton       _search_titles;
   private CheckButton       _search_notes;
   private CheckButton       _search_folded;
@@ -665,11 +666,11 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     /* Create the search entry field */
     _search_entry = new SearchEntry();
-    _search_entry.placeholder_text = _( "Search Nodes and Connections" );
+    _search_entry.placeholder_text = _( "Search Nodes, Callouts and Connections" );
     _search_entry.width_chars = 60;
     _search_entry.search_changed.connect( on_search_change );
 
-    _search_items = new Gtk.ListStore( 6, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(string), typeof(string) );
+    _search_items = new Gtk.ListStore( 7, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(Callout), typeof(string), typeof(string) );
 
     /* Create the treeview */
     _search_list  = new TreeView.with_model( _search_items );
@@ -733,6 +734,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     _search_nodes       = new CheckButton.with_label( _( "Nodes" ) );
     _search_connections = new CheckButton.with_label( _( "Connections" ) );
+    _search_callouts    = new CheckButton.with_label( _( "Callouts" ) );
     _search_titles      = new CheckButton.with_label( _( "Titles" ) );
     _search_notes       = new CheckButton.with_label( _( "Notes" ) );
     _search_folded      = new CheckButton.with_label( _( "Folded" ) );
@@ -743,6 +745,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     /* Set the active values from the settings */
     _search_nodes.active       = _settings.get_boolean( "search-opt-nodes" );
     _search_connections.active = _settings.get_boolean( "search-opt-connections" );
+    _search_callouts.active    = _settings.get_boolean( "search-opt-callouts" );
     _search_titles.active      = _settings.get_boolean( "search-opt-titles" );
     _search_notes.active       = _settings.get_boolean( "search-opt-notes" );
     _search_folded.active      = _settings.get_boolean( "search-opt-folded" );
@@ -751,8 +754,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     _search_nontasks.active    = _settings.get_boolean( "search-opt-nontasks" );
 
     /* Set the checkbutton sensitivity */
-    _search_nodes.set_sensitive( _search_connections.active );
-    _search_connections.set_sensitive( _search_nodes.active );
+    _search_nodes.set_sensitive( _search_callouts.active || _search_connections.active );
+    _search_connections.set_sensitive( _search_nodes.active | _search_callouts.active );
+    _search_callouts.set_sensitive( _search_nodes.active || _search_connections.active );
     _search_titles.set_sensitive( _search_notes.active );
     _search_notes.set_sensitive( _search_titles.active );
     _search_folded.set_sensitive( _search_nodes.active && _search_unfolded.active );
@@ -763,7 +767,8 @@ public class MainWindow : Hdy.ApplicationWindow {
     _search_nodes.toggled.connect(() => {
       bool nodes = _search_nodes.active;
       _settings.set_boolean( "search-opt-nodes", _search_nodes.active );
-      _search_connections.set_sensitive( nodes );
+      _search_connections.set_sensitive( nodes || _search_callouts.active );
+      _search_callouts.set_sensitive( nodes || _search_connections.active );
       _search_folded.set_sensitive( nodes );
       _search_unfolded.set_sensitive( nodes );
       _search_tasks.set_sensitive( nodes );
@@ -772,7 +777,14 @@ public class MainWindow : Hdy.ApplicationWindow {
     });
     _search_connections.toggled.connect(() => {
       _settings.set_boolean( "search-opt-connections", _search_connections.active );
-      _search_nodes.set_sensitive( _search_connections.active );
+      _search_nodes.set_sensitive( _search_connections.active || _search_callouts.active );
+      _search_callouts.set_sensitive( _search_connections.active || _search_nodes.active );
+      on_search_change();
+    });
+    _search_callouts.toggled.connect(() => {
+      _settings.set_boolean( "search-opt-callouts", _search_callouts.active );
+      _search_nodes.set_sensitive( _search_callouts.active || _search_connections.active );
+      _search_connections.set_sensitive( _search_callouts.active || _search_nodes.active );
       on_search_change();
     });
     _search_titles.toggled.connect(() => {
@@ -812,6 +824,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     grid.column_spacing     = 10;
     grid.attach( _search_nodes,       0, 0, 1, 1 );
     grid.attach( _search_connections, 0, 1, 1, 1 );
+    grid.attach( _search_callouts,    0, 2, 1, 1 );
     grid.attach( _search_titles,      1, 0, 1, 1 );
     grid.attach( _search_notes,       1, 1, 1, 1 );
     grid.attach( _search_folded,      2, 0, 1, 1 );
@@ -1473,12 +1486,13 @@ public class MainWindow : Hdy.ApplicationWindow {
     bool[] search_opts = {
       _search_nodes.active,       // 0
       _search_connections.active, // 1
-      _search_titles.active,      // 2
-      _search_notes.active,       // 3
-      _search_folded.active,      // 4
-      _search_unfolded.active,    // 5
-      _search_tasks.active,       // 6
-      _search_nontasks.active     // 7
+      _search_callouts.active,    // 2
+      _search_titles.active,      // 3
+      _search_notes.active,       // 4
+      _search_folded.active,      // 5
+      _search_unfolded.active,    // 6
+      _search_tasks.active,       // 7
+      _search_nontasks.active     // 8
     };
     _search_items.clear();
     var all_tabs = _settings.get_boolean( "search-opt-all-tabs" );
@@ -1504,12 +1518,13 @@ public class MainWindow : Hdy.ApplicationWindow {
   */
   private void on_search_clicked( TreePath path, TreeViewColumn col ) {
     TreeIter    it;
-    string   tabname = "";
-    Node?       node = null;
-    Connection? conn = null;
-    DrawArea    da   = get_current_da( "on_search_clicked" );
+    string      tabname = "";
+    Node?       node    = null;
+    Connection? conn    = null;
+    Callout?    callout = null;
+    DrawArea    da      = get_current_da( "on_search_clicked" );
     _search_items.get_iter( out it, path );
-    _search_items.get( it, 2, &node, 3, &conn, 4, &tabname, -1 );
+    _search_items.get( it, 2, &node, 3, &conn, 4, &callout, 5, &tabname, -1 );
     foreach (var tab in _nb.tabs ) {
       if(tab.label == tabname) {
         var bin = (Gtk.Bin)tab.page;
@@ -1519,12 +1534,13 @@ public class MainWindow : Hdy.ApplicationWindow {
       }
     }
     if( node != null ) {
-      da.set_current_connection( null );
       da.set_current_node( node );
       da.see();
     } else if( conn != null ) {
-      da.set_current_node( null );
       da.set_current_connection( conn );
+      da.see();
+    } else if( callout != null ) {
+      da.set_current_callout( callout );
       da.see();
     }
     _search.closed();

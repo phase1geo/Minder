@@ -31,7 +31,7 @@ public enum CalloutMode {
   }
 }
 
-public class Callout {
+public class Callout : Object {
 
   private Node        _node;
   private Style       _style;
