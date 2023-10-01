@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-27 10:58-0500\n"
-"PO-Revision-Date: 2023-08-26 06:30+0100\n"
+"PO-Revision-Date: 2023-10-01 15:30+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -1241,9 +1241,8 @@ msgid "Add To Favorites"
 msgstr "Aggiungi ai Preferiti"
 
 #: src/StickerInspector.vala:83
-#, fuzzy
 msgid "Remove Custom Sticker"
-msgstr "Rimuovi adesivo"
+msgstr "Rimuovi adesivo personalizzato"
 
 #: src/StickerInspector.vala:99
 msgid ""
@@ -1263,17 +1262,15 @@ msgstr "Preferiti"
 
 #: src/StickerInspector.vala:140
 msgid "Show Custom Sticker Directory"
-msgstr ""
+msgstr "Mostra la directory degli adesivi personalizzati"
 
 #: src/StickerInspector.vala:214
-#, fuzzy
 msgid "Add custom stickers"
-msgstr "aggiungi sticker al nodo"
+msgstr "aggiungi adesivo personalizzato"
 
 #: src/StickerInspector.vala:401
-#, fuzzy
 msgid "Import Sticker(s)"
-msgstr "Rimuovi adesivo"
+msgstr "Importa adesivo(i)"
 
 #: src/StickerInspector.vala:401 src/StickerSet.vala:353
 msgid "Import"
