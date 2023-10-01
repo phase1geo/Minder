@@ -71,6 +71,11 @@
       <summary>Search option for connections</summary>
       <description>Specifies whether connections should be searched or not</description>
     </key>
+    <key name="search-opt-callouts" type="b">
+      <default>true</default>
+      <summary>Search option for callouts</summary>
+      <description>Specifies whether callouts should be searched or not</description>
+    </key>
     <key name="search-opt-titles" type="b">
       <default>true</default>
       <summary>Search option for node/connection titles</summary>
