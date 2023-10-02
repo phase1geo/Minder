@@ -700,20 +700,7 @@ public class Node : Object {
       _height = (margin * 2) + (padding * 2) + name_height;
     }
 
-    if( _callout == null ) {
-      _total_width  = _width;
-      _total_height = _height;
-    } else if( (side & NodeSide.horizontal()) != 0 ) {
-      var callout_width  = _callout.total_width + (margin * 2);
-      var callout_height = _callout.total_height + margin;
-      _total_width  = (_width < callout_width) ? callout_width : _width;
-      _total_height = _height + callout_height;
-    } else {
-      var callout_width  = _callout.total_width + margin;
-      var callout_height = _callout.total_height + (margin * 2);
-      _total_width  = _width + callout_width;
-      _total_height = (_height < callout_height) ? callout_height : _height;
-    }
+    update_total_size();
 
     var diffw = _total_width - orig_width;
     var diffh = _total_height - orig_height;
@@ -722,6 +709,38 @@ public class Node : Object {
       _layout.handle_update_by_edit( this, diffw, diffh );
     }
 
+  }
+
+  /* Updates the total size which includes the callout */
+  private void update_total_size() {
+
+    if( (_callout == null) || (_callout.mode == CalloutMode.HIDDEN) ) {
+      _total_width  = _width;
+      _total_height = _height;
+    } else if( (side & NodeSide.horizontal()) != 0 ) {
+      var margin         = style.node_margin  ?? 0;
+      var callout_width  = _callout.total_width + (margin * 2);
+      var callout_height = _callout.total_height + margin;
+      _total_width  = (_width < callout_width) ? callout_width : _width;
+      _total_height = _height + callout_height;
+    } else {
+      var margin         = style.node_margin  ?? 0;
+      var callout_width  = _callout.total_width + margin;
+      var callout_height = _callout.total_height + (margin * 2);
+      _total_width  = _width + callout_width;
+      _total_height = (_height < callout_height) ? callout_height : _height;
+    }
+
+  }
+
+  /* Sets all callouts to the HIDDEN state */
+  public void hide_callouts( bool hide ) {
+    if( _callout != null ) {
+      _callout.mode = hide ? CalloutMode.HIDDEN : CalloutMode.NONE;
+    }
+    for( int i=0; i<_children.length; i++ ) {
+      _children.index( i ).hide_callouts( hide );
+    }
   }
 
   /* Updates the size of all nodes within this tree */
@@ -1025,7 +1044,7 @@ public class Node : Object {
 
   /* Finds the callout which contains the given pixel coordinates */
   public virtual Callout? contains_callout( double x, double y ) {
-    if( (_callout != null) && _callout.contains( x, y ) ) {
+    if( (_callout != null) && (_callout.mode != CalloutMode.HIDDEN) && _callout.contains( x, y ) ) {
       return( _callout );
     } else if( !folded ) {
       for( int i=0; i<_children.length; i++ ) {
@@ -1338,8 +1357,7 @@ public class Node : Object {
     _loaded = true;
 
     /* Force the size to get re-calculated */
-    _total_width  = _width + callout_width();
-    _total_height = _height + callout_height();
+    update_total_size();
     update_size();
 
     /* Load the layout after the nodes are loaded if the posx/posy information is set */
@@ -1539,21 +1557,8 @@ public class Node : Object {
     _name.resize( diff );
   }
 
-  /* Returns the added width of this node area when a callout is added (if one is assigned) */
-  private double callout_width() {
-    var margin = style.node_margin ?? 0;
-    return( (_callout == null) ? 0 : ((side & NodeSide.horizontal()) != 0) ? _callout.total_width : (_callout.total_width + margin) );
-  }
-
-  /* Returns the added height of this node area when a callout is added (if one is assigned) */
-  private double callout_height() {
-    var margin = style.node_margin ?? 0;
-    return( (_callout == null) ? 0 : ((side & NodeSide.horizontal()) != 0) ? (_callout.total_height + margin) : _callout.total_height );
-  }
-
   /* Returns the bounding box for this node */
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
-    var ch = callout_height();
     if( is_root() || ((side & NodeSide.vertical()) != 0) ) {
       x = posx;
       y = posy;

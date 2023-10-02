@@ -24,7 +24,8 @@ using Cairo;
 public enum CalloutMode {
   NONE = 0,    // Specifies that this callout is not the current callout
   SELECTED,    // Specifies that this callout is currently selected
-  EDITABLE;    // Specifies that this text is actively being edited
+  EDITABLE,    // Specifies that this text is actively being edited
+  HIDDEN;      // Specifies that the callout should not be drawn
 
   public bool is_selected() {
     return( this == SELECTED );
@@ -52,23 +53,31 @@ public class Callout : Object {
   }
   public double total_width {
     get {
-      var padding = _style.callout_padding    ?? 0;
-      var plength = _style.callout_ptr_length ?? 0;
-      if( is_above_node() ) {
-        return( _text.width + (padding * 2) );
+      if( _mode == CalloutMode.HIDDEN ) {
+        return( 0 );
       } else {
-        return( _text.width + (padding * 2) + plength );
+        var padding = _style.callout_padding    ?? 0;
+        var plength = _style.callout_ptr_length ?? 0;
+        if( is_above_node() ) {
+          return( _text.width + (padding * 2) );
+        } else {
+          return( _text.width + (padding * 2) + plength );
+        }
       }
     }
   }
   public double total_height {
     get {
-      var padding = _style.callout_padding    ?? 0;
-      var plength = _style.callout_ptr_length ?? 0;
-      if( is_above_node() ) {
-        return( _text.height + (padding * 2) + plength );
+      if( _mode == CalloutMode.HIDDEN ) {
+        return( 0 );
       } else {
-        return( _text.height + (padding * 2) );
+        var padding = _style.callout_padding    ?? 0;
+        var plength = _style.callout_ptr_length ?? 0;
+        if( is_above_node() ) {
+          return( _text.height + (padding * 2) + plength );
+        } else {
+          return( _text.height + (padding * 2) );
+        }
       }
     }
   }
@@ -78,6 +87,7 @@ public class Callout : Object {
     }
     set {
       if( _mode != value ) {
+        var orig_mode = _mode;
         _mode = value;
         if( _mode == CalloutMode.EDITABLE ) {
           _text.edit = true;
@@ -85,6 +95,9 @@ public class Callout : Object {
         } else {
           _text.edit = false;
           _text.clear_selection();
+        }
+        if( (orig_mode == CalloutMode.HIDDEN) || (value == CalloutMode.HIDDEN) ) {
+          resized();
         }
       }
     }
@@ -224,6 +237,8 @@ public class Callout : Object {
 
   /* Draws this callout to the screen */
   public void draw( Context ctx, Theme theme, bool exporting ) {
+
+    if( _mode == CalloutMode.HIDDEN ) return;
 
     var background = theme.get_color( "callout_background" );
     var foreground = Granite.contrasting_foreground_color( background );

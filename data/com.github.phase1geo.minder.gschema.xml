@@ -61,6 +61,11 @@
       <summary>Hides/Shows all connections in the canvas</summary>
       <description>Controls the initial state of the canvas hide connections widget</description>
     </key>
+    <key name="hide-callouts" type="b">
+      <default>false</default>
+      <summary>Hides/Shows all callouts in the canvas</summary>
+      <description>Controls the initial state of the canvas hide callouts widget</description>
+    </key>
     <key name="search-opt-nodes" type="b">
       <default>true</default>
       <summary>Search option for nodes</summary>
