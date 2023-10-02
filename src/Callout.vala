@@ -58,7 +58,7 @@ public class Callout : Object {
       } else {
         var padding = _style.callout_padding    ?? 0;
         var plength = _style.callout_ptr_length ?? 0;
-        if( is_above_node() ) {
+        if( is_below_node() ) {
           return( _text.width + (padding * 2) );
         } else {
           return( _text.width + (padding * 2) + plength );
@@ -73,7 +73,7 @@ public class Callout : Object {
       } else {
         var padding = _style.callout_padding    ?? 0;
         var plength = _style.callout_ptr_length ?? 0;
-        if( is_above_node() ) {
+        if( is_below_node() ) {
           return( _text.height + (padding * 2) + plength );
         } else {
           return( _text.height + (padding * 2) );
@@ -110,7 +110,7 @@ public class Callout : Object {
       if( _style.copy( value ) ) {
         _text.set_font( _style.callout_font.get_family(), (_style.callout_font.get_size() / Pango.SCALE) );
         _text.max_width = style.node_width;
-        position_text();
+        position_text( true );
         resized();
       }
     }
@@ -120,7 +120,7 @@ public class Callout : Object {
   public Callout( Node node ) {
     _node = node;
     _text = new CanvasText.with_text( node.da, _( "Callout" ) );
-    _text.resized.connect( position_text );
+    _text.resized.connect( position_text_from_ct );
     _style = new Style();
     set_parsers();
   }
@@ -132,30 +132,37 @@ public class Callout : Object {
     _text.text.add_parser( _node.da.unicode_parser );
   }
 
-  /* Returns true if the callout should be drawn above the node; otherwise, we draw it to the right of the node */
-  private bool is_above_node() {
+  /* Returns true if the callout should be drawn below the node; otherwise, we draw it to the right of the node */
+  private bool is_below_node() {
     return( (_node.side & NodeSide.horizontal()) != 0 );
   }
 
-  /* Called whenever the text changes the size of the callout */
-  public void position_text() {
+  /* Called if the text has been changed from the CanvasText perspective */
+  private void position_text_from_ct() {
+    position_text( true );
+  }
 
-    var margin  = style.node_margin     ?? 0;
+  /* Called whenever the text changes the size of the callout */
+  public void position_text( bool call_resized ) {
+
+    var margin  = _node.style.node_margin ?? 0;
     var padding = style.callout_padding ?? 0;
     var plength = style.callout_ptr_length ?? 0;
 
     double nx, ny, nw, nh;
     _node.node_bbox( out nx, out ny, out nw, out nh );
 
-    if( is_above_node() ) {
+    if( is_below_node() ) {
       _text.posx = nx + margin + padding;
-      _text.posy = (ny + nh) + (plength + padding);  // - _text.height;
+      _text.posy = (ny + nh - margin) + (plength + padding);
     } else {
-      _text.posx = (nx + nw) + (plength + padding);
+      _text.posx = (nx + nw - margin) + (plength + padding);
       _text.posy = ny + margin + padding;
     }
 
-    resized();
+    if( call_resized ) {
+      resized();
+    }
 
   }
 
@@ -244,6 +251,7 @@ public class Callout : Object {
     var foreground = Granite.contrasting_foreground_color( background );
     var pwidth     = style.callout_ptr_width  ?? 0;
     var plength    = style.callout_ptr_length ?? 0;
+    var padding    = style.callout_padding    ?? 0;
 
     if( (mode == CalloutMode.SELECTED) && !exporting ) {
       background = theme.get_color( "nodesel_background" );
@@ -256,20 +264,20 @@ public class Callout : Object {
     double x, y, w, h;
     bbox( out x, out y, out w, out h );
 
+    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, padding );
+    ctx.fill();
+
     /* Draw the shape */
-    if( is_above_node() ) {
-      ctx.move_to( x, (y - plength) );
-      ctx.line_to( (x + pwidth), y );
-      ctx.line_to( (x + w), y );
-      ctx.line_to( (x + w), (y + h) );
-      ctx.line_to( x, (y + h) );
+    if( is_below_node() ) {
+      y++;
+      ctx.move_to( (x + padding), y );
+      ctx.line_to( (x + padding), (y - plength) );
+      ctx.line_to( (x + padding + pwidth), y );
     } else {
-      ctx.move_to( x, y );
-      ctx.line_to( (x + w), y );
-      ctx.line_to( (x + w), (y + h) );
-      ctx.line_to( x, (y + h) );
-      ctx.line_to( x, (y + pwidth) );
-      ctx.line_to( (x - plength), (y + pwidth) );
+      x++;
+      ctx.move_to( x, (y + padding) );
+      ctx.line_to( (x - plength), (y + padding) );
+      ctx.line_to( x, (y + padding + pwidth) );
     }
     ctx.close_path();
     ctx.fill();

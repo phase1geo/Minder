@@ -374,6 +374,9 @@ public class Node : Object {
         for( int i=0; i<_children.length; i++ ) {
           _layout.apply_margin( _children.index( i ) );
         }
+        if( _callout != null ) {
+          _callout.position_text( false );
+        }
         position_text_and_update_size();
       }
     }
@@ -1851,7 +1854,7 @@ public class Node : Object {
     name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0);
 
     if( (_callout != null) && ((orig_posx != name.posx) || (orig_posy != name.posy)) ) {
-      _callout.position_text();
+      _callout.position_text( true );
     }
 
   }
@@ -2684,9 +2687,11 @@ public class Node : Object {
     var nodesel_foreground = theme.get_color( "nodesel_foreground" );
 
     /* Draw tree_bbox */
+    /*
     Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.1 );
     ctx.rectangle( tree_bbox.x, tree_bbox.y, tree_bbox.width, tree_bbox.height );
     ctx.fill();
+    */
 
     /* Draw bbox */
     /*
