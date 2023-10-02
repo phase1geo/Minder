@@ -2249,12 +2249,12 @@ public class Node : Object {
           y = posy + margin;
           break;
         case NodeSide.RIGHT :
-          x = posx + _width - margin;
+          x = posx + _total_width - margin;
           y = posy + height;
           break;
         default :
           x = posx + (_width / 2);
-          y = posy + _height - margin;
+          y = posy + _total_height - margin;
           break;
       }
     }
@@ -2289,6 +2289,33 @@ public class Node : Object {
       /* If we are in a vertical orientation and the border type is underlined, draw nothing */
       style.draw_node_border( ctx, x, y, w, h, side );
 
+    }
+
+    /* If we have children and we need to extend our link point, let's draw the extended link link now */
+    if( _children.length > 0 ) {
+      var max_width = 0;
+      for( int i=0; i<_children.length; i++ ) {
+        if( max_width < _children.index( i ).style.link_width ) {
+          max_width = _children.index( i ).style.link_width;
+        }
+      }
+      if( (side & NodeSide.horizontal()) != 0 ) {
+        if( _width < _total_width ) {
+          link_point( out x, out y );
+          ctx.set_line_width( max_width );
+          ctx.move_to( (posx + _width - (style.node_margin ?? 0)), y );
+          ctx.line_to( x, y );
+          ctx.stroke();
+        }
+      } else {
+        if( _height < _total_height ) {
+          link_point( out x, out y );
+          ctx.set_line_width( max_width );
+          ctx.move_to( x, (posy + _height - (style.node_margin ?? 0)) );
+          ctx.line_to( x, y );
+          ctx.stroke();
+        }
+      }
     }
 
   }
@@ -2553,12 +2580,12 @@ public class Node : Object {
   /* Draw the link from this node to the parent node */
   public virtual void draw_link( Context ctx, Theme theme ) {
 
-    double parent_x;
-    double parent_y;
-    double height  = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
-    double tailx   = 0, taily = 0, tipx = 0, tipy = 0;
-    double child_x = 0;
-    double child_y = 0;
+    double  parent_x, parent_y;
+    double  height  = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
+    double  tailx   = 0, taily = 0, tipx = 0, tipy = 0;
+    double  child_x = 0;
+    double  child_y = 0;
+    double? ext_x, ext_y;
 
     /* Get the parent's link point */
     parent.link_point( out parent_x, out parent_y );
