@@ -136,11 +136,13 @@ public class Callout : Object {
 
     if( is_above_node() ) {
       _text.posx = nx + margin + padding;
-      _text.posy = ny - plength - padding - _text.height;
+      _text.posy = (ny + nh) + (plength + padding);  // - _text.height;
     } else {
-      _text.posx = nx + nw + plength + padding;
+      _text.posx = (nx + nw) + (plength + padding);
       _text.posy = ny + margin + padding;
     }
+
+    resized();
 
   }
 
@@ -241,18 +243,18 @@ public class Callout : Object {
 
     /* Draw the shape */
     if( is_above_node() ) {
-      ctx.move_to( x, y );
+      ctx.move_to( x, (y - plength) );
+      ctx.line_to( (x + pwidth), y );
       ctx.line_to( (x + w), y );
       ctx.line_to( (x + w), (y + h) );
-      ctx.line_to( (x + pwidth), (y + h) );
-      ctx.line_to( (x + (pwidth / 2)), (y + h + plength) );
       ctx.line_to( x, (y + h) );
     } else {
       ctx.move_to( x, y );
-      ctx.move_to( (x + w), y );
-      ctx.move_to( (x + w), (y + h) );
-      ctx.move_to( x, (y + h) );
-      ctx.move_to( (x - plength), (y + (pwidth / 2)) );
+      ctx.line_to( (x + w), y );
+      ctx.line_to( (x + w), (y + h) );
+      ctx.line_to( x, (y + h) );
+      ctx.line_to( x, (y + pwidth) );
+      ctx.line_to( (x - plength), (y + pwidth) );
     }
     ctx.close_path();
     ctx.fill();

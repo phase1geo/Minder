@@ -193,6 +193,8 @@ public class Node : Object {
   private   string       _note         = "";
   protected double       _width        = 0;
   protected double       _height       = 0;
+  protected double       _total_width  = 0;
+  protected double       _total_height = 0;
   protected double       _ipadx        = 6;
   protected double       _ipady        = 3;
   protected double       _task_radius  = 7;
@@ -477,8 +479,13 @@ public class Node : Object {
     }
     set {
       if( _callout != value ) {
+        if( value == null ) {
+          _callout.resized.disconnect( position_text_and_update_size );
+        }
         _callout = value;
-        _callout.resized.connect( position_text_and_update_size );
+        if( _callout != null ) {
+          _callout.resized.connect( position_text_and_update_size );
+        }
         position_text_and_update_size();
       }
     }
@@ -576,6 +583,8 @@ public class Node : Object {
   public void copy_variables( Node n, ImageManager im ) {
     _width          = n._width;
     _height         = n._height;
+    _total_width    = n._total_width;
+    _total_height   = n._total_height;
     _task_radius    = n._task_radius;
     _alpha          = n._alpha;
     _task_count     = n._task_count;
@@ -675,13 +684,13 @@ public class Node : Object {
 
     if( !_loaded ) return;
 
-    var orig_width     = _width;
-    var orig_height    = _height;
-    var margin         = style.node_margin  ?? 0;
-    var padding        = style.node_padding ?? 0;
-    var stk_height     = sticker_height();
-    var name_width     = task_width() + sticker_width() + _name.width + note_width() + linked_node_width();
-    var name_height    = (_name.height < stk_height) ? stk_height : _name.height;
+    var orig_width  = _total_width;
+    var orig_height = _total_height;
+    var margin      = style.node_margin  ?? 0;
+    var padding     = style.node_padding ?? 0;
+    var stk_height  = sticker_height();
+    var name_width  = task_width() + sticker_width() + _name.width + note_width() + linked_node_width();
+    var name_height = (_name.height < stk_height) ? stk_height : _name.height;
 
     if( _image != null ) {
       _width  = (margin * 2) + (padding * 2) + ((name_width < _image.width) ? _image.width : name_width);
@@ -691,8 +700,26 @@ public class Node : Object {
       _height = (margin * 2) + (padding * 2) + name_height;
     }
 
-    if( (_layout != null) && (((_width - orig_width) != 0) || ((_height - orig_height) != 0)) ) {
-      _layout.handle_update_by_edit( this, (_width - orig_width), (_height - orig_height) );
+    if( _callout == null ) {
+      _total_width  = _width;
+      _total_height = _height;
+    } else if( (side & NodeSide.horizontal()) != 0 ) {
+      var callout_width  = _callout.total_width + (margin * 2);
+      var callout_height = _callout.total_height + margin;
+      _total_width  = (_width < callout_width) ? callout_width : _width;
+      _total_height = _height + callout_height;
+    } else {
+      var callout_width  = _callout.total_width + margin;
+      var callout_height = _callout.total_height + (margin * 2);
+      _total_width  = _width + callout_width;
+      _total_height = (_height < callout_height) ? callout_height : _height;
+    }
+
+    var diffw = _total_width - orig_width;
+    var diffh = _total_height - orig_height;
+
+    if( (_layout != null) && ((diffw != 0) || (diffh != 0)) ) {
+      _layout.handle_update_by_edit( this, diffw, diffh );
     }
 
   }
@@ -1311,6 +1338,8 @@ public class Node : Object {
     _loaded = true;
 
     /* Force the size to get re-calculated */
+    _total_width  = _width + callout_width();
+    _total_height = _height + callout_height();
     update_size();
 
     /* Load the layout after the nodes are loaded if the posx/posy information is set */
@@ -1510,18 +1539,31 @@ public class Node : Object {
     _name.resize( diff );
   }
 
+  /* Returns the added width of this node area when a callout is added (if one is assigned) */
+  private double callout_width() {
+    var margin = style.node_margin ?? 0;
+    return( (_callout == null) ? 0 : ((side & NodeSide.horizontal()) != 0) ? _callout.total_width : (_callout.total_width + margin) );
+  }
+
+  /* Returns the added height of this node area when a callout is added (if one is assigned) */
+  private double callout_height() {
+    var margin = style.node_margin ?? 0;
+    return( (_callout == null) ? 0 : ((side & NodeSide.horizontal()) != 0) ? (_callout.total_height + margin) : _callout.total_height );
+  }
+
   /* Returns the bounding box for this node */
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
+    var ch = callout_height();
     if( is_root() || ((side & NodeSide.vertical()) != 0) ) {
       x = posx;
       y = posy;
-      w = _width;
-      h = _height;
+      w = _total_width;
+      h = _total_height;
     } else {
       x = posx;
       y = posy;
-      w = _width;
-      h = _height;
+      w = _total_width;
+      h = _total_height;
     }
   }
 
@@ -1797,11 +1839,13 @@ public class Node : Object {
     var padding    = style.node_padding ?? 0;
     var stk_height = sticker_height();
     var img_height = (_image != null) ? (_image.height + padding) : 0;
+    var orig_posx  = name.posx;
+    var orig_posy  = name.posy;
 
     name.posx = posx + margin + padding + task_width() + sticker_width();
     name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0);
 
-    if( _callout != null ) {
+    if( (_callout != null) && ((orig_posx != name.posx) || (orig_posy != name.posy)) ) {
       _callout.position_text();
     }
 
@@ -2494,7 +2538,7 @@ public class Node : Object {
     if( (mode == NodeMode.ATTACHABLE) || (mode == NodeMode.DROPPABLE) || (mode == NodeMode.HIGHLIGHTED) ) {
 
       double x, y, w, h;
-      bbox( out x, out y, out w, out h );
+      node_bbox( out x, out y, out w, out h );
 
       /* Draw highlight border */
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), _alpha );
@@ -2608,9 +2652,16 @@ public class Node : Object {
     var nodesel_foreground = theme.get_color( "nodesel_foreground" );
 
     /* Draw tree_bbox */
-    /*
     Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.1 );
     ctx.rectangle( tree_bbox.x, tree_bbox.y, tree_bbox.width, tree_bbox.height );
+    ctx.fill();
+
+    /* Draw bbox */
+    /*
+    double x, y, w, h;
+    bbox( out x, out y, out w, out h );
+    Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.1 );
+    ctx.rectangle( x, y, w, h );
     ctx.fill();
     */
 

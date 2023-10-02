@@ -1142,7 +1142,7 @@ public class StyleInspector : Box {
     var lbl = new Label( _( "Padding" ) );
     lbl.xalign = (float)0;
 
-    _callout_padding = new Scale.with_range( Orientation.HORIZONTAL, 4, 12, 2 );
+    _callout_padding = new Scale.with_range( Orientation.HORIZONTAL, 4, 20, 2 );
     _callout_padding.draw_value = true;
     _callout_padding.change_value.connect( callout_padding_changed );
     _callout_padding.button_release_event.connect( callout_padding_released );
@@ -1184,7 +1184,7 @@ public class StyleInspector : Box {
     var lbl = new Label( _( "Pointer Width" ) );
     lbl.xalign = (float)0;
 
-    _callout_ptr_width = new Scale.with_range( Orientation.HORIZONTAL, 5, 25, 5 );
+    _callout_ptr_width = new Scale.with_range( Orientation.HORIZONTAL, 10, 30, 5 );
     _callout_ptr_width.draw_value = true;
     _callout_ptr_width.change_value.connect( callout_pointer_width_changed );
     _callout_ptr_width.button_release_event.connect( callout_pointer_width_released );
@@ -1199,7 +1199,7 @@ public class StyleInspector : Box {
   /* Called whenever the callout padding value is changed */
   private bool callout_pointer_width_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
-    if( intval > 25 ) {
+    if( intval > 30 ) {
       return( false );
     }
     var pwidth = new UndoStyleCalloutPointerWidth( _affects, intval, _da );
@@ -1226,7 +1226,7 @@ public class StyleInspector : Box {
     var lbl = new Label( _( "Pointer Length" ) );
     lbl.xalign = (float)0;
 
-    _callout_ptr_length = new Scale.with_range( Orientation.HORIZONTAL, 10, 50, 5 );
+    _callout_ptr_length = new Scale.with_range( Orientation.HORIZONTAL, 10, 100, 5 );
     _callout_ptr_length.draw_value = true;
     _callout_ptr_length.change_value.connect( callout_pointer_length_changed );
     _callout_ptr_length.button_release_event.connect( callout_pointer_length_released );
@@ -1241,7 +1241,7 @@ public class StyleInspector : Box {
   /* Called whenever the callout padding value is changed */
   private bool callout_pointer_length_changed( ScrollType scroll, double value ) {
     var intval = (int)Math.round( value );
-    if( intval > 50 ) {
+    if( intval > 100 ) {
       return( false );
     }
     var plength = new UndoStyleCalloutPointerLength( _affects, intval, _da );
