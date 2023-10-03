@@ -4,6 +4,7 @@ sources += files(
     'Application.vala',
     'Bezier.vala',
     'Callout.vala',
+    'CalloutMenu.vala',
     'CanvasText.vala',
     'Clipboard.vala',
     'Connection.vala',

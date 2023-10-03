@@ -125,12 +125,24 @@ public class TextMenu : Gtk.Menu {
     _da.handle_control_period();
   }
 
+  /* Opens the first link found */
   private void open_link() {
-    var node = _da.get_current_node();
-    int cursor, selstart, selend;
-    node.name.get_cursor_info( out cursor, out selstart, out selend );
-    var links = node.name.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
-    Utils.open_url( links.index( 0 ).extra );
+
+    CanvasText? ct = null;
+
+    if( _da.is_node_editable() ) {
+      ct = _da.get_current_node().name;
+    } else if( _da.is_callout_editable() ) {
+      ct = _da.get_current_callout().text;
+    }
+
+    if( ct != null ) {
+      int cursor, selstart, selend;
+      ct.get_cursor_info( out cursor, out selstart, out selend );
+      var links = ct.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
+      Utils.open_url( links.index( 0 ).extra );
+    }
+
   }
 
   /*
@@ -154,12 +166,23 @@ public class TextMenu : Gtk.Menu {
 
   /* Restores an embedded link that was previously removed */
   private void restore_link() {
-    var node = _da.get_current_node();
-    int cursor, selstart, selend;
-    node.name.get_cursor_info( out cursor, out selstart, out selend );
+
+    CanvasText? ct = null;
+
+    if( _da.is_node_editable() ) {
+      ct = _da.get_current_node().name;
+    } else if( _da.is_callout_editable() ) {
+      ct = _da.get_current_callout().text;
+    }
+
+    if( ct != null ) {
+      int cursor, selstart, selend;
+      ct.get_cursor_info( out cursor, out selstart, out selend );
     // TBD - node.urls.restore_link( cursor );
-    node.name.clear_selection();
-    _da.auto_save();
+      ct.clear_selection();
+      _da.auto_save();
+    }
+
   }
 
   /*
@@ -168,7 +191,8 @@ public class TextMenu : Gtk.Menu {
   */
   private void on_popup() {
 
-    var node = _da.get_current_node();
+    var node    = _da.get_current_node();
+    var callout = _da.get_current_callout();
 
     /* Set the menu sensitivity */
     _copy.set_sensitive( copy_or_cut_possible() );
@@ -182,23 +206,31 @@ public class TextMenu : Gtk.Menu {
     _del_link.visible  = false;
     _rest_link.visible = false;
 
-    if( node != null ) {
+    CanvasText? ct = null;
+
+    if( _da.is_node_editable() ) {
+      ct = _da.get_current_node().name;
+    } else if( _da.is_callout_editable() ) {
+      ct = _da.get_current_callout().text;
+    }
+
+    if( ct != null ) {
 
       int cursor, selstart, selend;
-      node.name.get_cursor_info( out cursor, out selstart, out selend );
+      ct.get_cursor_info( out cursor, out selstart, out selend );
 
-      var links    = node.name.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
+      var links    = ct.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
       var link     = (links.length > 0) ? links.index( 0 ) : null;
       var selected = (selstart != selend);
       var valid    = (link != null);
 
       /* If we have found a link, select it */
       if( !selected ) {
-        node.name.change_selection( link.start, link.end );
+        ct.change_selection( link.start, link.end );
       }
 
-      bool embedded = (links.length > 0) ? (link.extra == node.name.text.text.slice( link.start, link.end )) : false;
-      bool ignore   = false;  // TBD
+      var embedded = (links.length > 0) && (link.extra == ct.text.text.slice( link.start, link.end ));
+      var ignore   = false;
 
       // embedded ignore   RESULT
       // -------- ------   ------
@@ -209,7 +241,7 @@ public class TextMenu : Gtk.Menu {
 
       /* Set view of all link menus */
       _open_link.visible = valid && !ignore;
-      _add_link.visible  = !embedded && !ignore && _da.add_link_possible( node );
+      _add_link.visible  = !embedded && !ignore && _da.add_link_possible( ct );
       _edit_link.visible = valid && !selected && !embedded;
       _del_link.visible  = valid && !selected && (!embedded || !ignore);
       _rest_link.visible = valid && !selected && embedded && ignore;
@@ -226,8 +258,13 @@ public class TextMenu : Gtk.Menu {
   private void on_popdown() {
 
     if( _edit_link.visible || _del_link.visible || _rest_link.visible ) {
-      var node = _da.get_current_node();
-      node.name.clear_selection();
+      var node    = _da.get_current_node();
+      var callout = _da.get_current_callout();
+      if( node != null ) {
+        node.name.clear_selection();
+      } else if( callout != null ) {
+        callout.text.clear_selection();
+      }
     }
 
   }
@@ -239,6 +276,7 @@ public class TextMenu : Gtk.Menu {
 
     var node     = _da.get_current_node();
     var conn     = _da.get_current_connection();
+    var callout  = _da.get_current_callout();
     int cursor   = 0;
     int selstart = 0;
     int selend   = 0;
@@ -247,6 +285,8 @@ public class TextMenu : Gtk.Menu {
       node.name.get_cursor_info( out cursor, out selstart, out selend );
     } else if( conn != null ) {
       conn.title.get_cursor_info( out cursor, out selstart, out selend );
+    } else if( callout != null ) {
+      callout.text.get_cursor_info( out cursor, out selstart, out selend );
     }
 
     return( selstart != selend );

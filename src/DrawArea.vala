@@ -87,6 +87,7 @@ public class DrawArea : Gtk.DrawingArea {
   private ConnectionsMenu  _conns_menu;
   private NodesMenu        _nodes_menu;
   private GroupsMenu       _groups_menu;
+  private CalloutMenu      _callout_menu;
   private EmptyMenu        _empty_menu;
   private TextMenu         _text_menu;
   private uint?            _auto_save_id = null;
@@ -259,14 +260,15 @@ public class DrawArea : Gtk.DrawingArea {
     /* Initialize the selection box */
     _select_box = {0, 0, 0, 0, false};
 
-    /* Create the popup menu */
-    _node_menu   = new NodeMenu( this, accel_group );
-    _conn_menu   = new ConnectionMenu( this, accel_group );
-    _conns_menu  = new ConnectionsMenu( this, accel_group );
-    _empty_menu  = new EmptyMenu( this, accel_group );
-    _nodes_menu  = new NodesMenu( this, accel_group );
-    _groups_menu = new GroupsMenu( this, accel_group );
-    _text_menu   = new TextMenu( this, accel_group );
+    /* Create the popup menus */
+    _node_menu    = new NodeMenu( this, accel_group );
+    _conn_menu    = new ConnectionMenu( this, accel_group );
+    _conns_menu   = new ConnectionsMenu( this, accel_group );
+    _empty_menu   = new EmptyMenu( this, accel_group );
+    _nodes_menu   = new NodesMenu( this, accel_group );
+    _groups_menu  = new GroupsMenu( this, accel_group );
+    _callout_menu = new CalloutMenu( this, accel_group );
+    _text_menu    = new TextMenu( this, accel_group );
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
@@ -2358,8 +2360,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Displays the contextual menu based on what is currently selected */
   private void show_contextual_menu( Event event ) {
 
-    var current_node = _selected.current_node();
-    var current_conn = _selected.current_connection();
+    var current_node    = _selected.current_node();
+    var current_conn    = _selected.current_connection();
+    var current_callout = _selected.current_callout();
 
     if( current_node != null ) {
       if( current_node.mode == NodeMode.EDITABLE ) {
@@ -2370,9 +2373,19 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( _selected.num_nodes() > 1 ) {
       Utils.popup_menu( _nodes_menu, event );
     } else if( current_conn != null ) {
-      Utils.popup_menu( _conn_menu, event );
+      if( current_conn.mode == ConnMode.EDITABLE ) {
+        Utils.popup_menu( _text_menu, event );
+      } else {
+        Utils.popup_menu( _conn_menu, event );
+      }
     } else if( _selected.num_connections() > 1 ) {
       Utils.popup_menu( _conns_menu, event );
+    } else if( current_callout != null ) {
+      if( current_callout.mode == CalloutMode.EDITABLE ) {
+        Utils.popup_menu( _text_menu, event );
+      } else {
+        Utils.popup_menu( _callout_menu, event );
+      }
     } else if( _selected.num_groups() > 0 ) {
       Utils.popup_menu( _groups_menu, event );
     } else {
@@ -4198,17 +4211,17 @@ public class DrawArea : Gtk.DrawingArea {
    A link can be added if text is selected and the selected text does not
    overlap with any existing links.
   */
-  public bool add_link_possible( Node node ) {
+  public bool add_link_possible( CanvasText ct ) {
 
     int cursor, selstart, selend;
-    if( node.name.is_selected() ) {
-      node.name.get_cursor_info( out cursor, out selstart, out selend );
+    if( ct.is_selected() ) {
+      ct.get_cursor_info( out cursor, out selstart, out selend );
     } else {
       selstart = 0;
-      selend   = node.name.text.text.length;
+      selend   = ct.text.text.length;
     }
 
-    return( (selstart != selend) && !node.name.text.is_tag_applied_in_range( FormatTag.URL, selstart, selend ) );
+    return( (selstart != selend) && !ct.text.is_tag_applied_in_range( FormatTag.URL, selstart, selend ) );
 
   }
 
@@ -4217,11 +4230,16 @@ public class DrawArea : Gtk.DrawingArea {
    or connection.
   */
   private void handle_control_k( bool shift ) {
-    var current = _selected.current_node();
-    if( current != null ) {
+    CanvasText? ct = null;
+    if( is_node_editable() ) {
+      ct = _selected.current_node().name;
+    } else if( is_callout_editable() ) {
+      ct = _selected.current_callout().text;
+    }
+    if( ct != null ) {
       if( shift ) {
         url_editor.remove_url();
-      } else if( add_link_possible( current ) ) {
+      } else if( add_link_possible( ct ) ) {
         url_editor.add_url();
       }
     }
