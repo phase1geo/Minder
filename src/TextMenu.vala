@@ -188,7 +188,6 @@ public class TextMenu : Gtk.Menu {
       node.name.get_cursor_info( out cursor, out selstart, out selend );
 
       var links    = node.name.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
-      stdout.printf( "links: %u\n", links.length );
       var link     = (links.length > 0) ? links.index( 0 ) : null;
       var selected = (selstart != selend);
       var valid    = (link != null);

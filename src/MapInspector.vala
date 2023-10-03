@@ -31,6 +31,7 @@ public class MapInspector : Box {
   private Button?                     _balance        = null;
   private Button?                     _fold_completed = null;
   private Button?                     _unfold_all     = null;
+  private Switch                      _hide_callouts;
 
   public MapInspector( MainWindow win, GLib.Settings settings ) {
 
@@ -77,7 +78,7 @@ public class MapInspector : Box {
     _da = da;
     _da.animator.enable        = _settings.get_boolean( "enable-animations" );
     _da.get_connections().hide = _settings.get_boolean( "hide-connections" );
-    _da.hide_callouts          = _settings.get_boolean( "hide-callouts" );
+    _hide_callouts.set_active( _da.hide_callouts );
     _da.set_theme( _da.get_theme(), false );
     update_theme_layout();
   }
@@ -125,19 +126,18 @@ public class MapInspector : Box {
   /* Add the callout show/hide UI */
   private void add_callout_ui() {
 
-    var box          = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl          = new Label( Utils.make_title( _( "Hide callouts" ) ) );
-    var hide_callout = _settings.get_boolean( "hide-callouts" );
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( Utils.make_title( _( "Hide callouts" ) ) );
 
     lbl.xalign = (float)0;
     lbl.use_markup = true;
 
-    var hide_callouts = new Switch();
-    hide_callouts.set_active( hide_callout );
-    hide_callouts.button_release_event.connect( hide_callouts_changed );
+    _hide_callouts = new Switch();
+    _hide_callouts.set_active( false );
+    _hide_callouts.button_release_event.connect( hide_callouts_changed );
 
-    box.pack_start( lbl,           false, true, 0 );
-    box.pack_end(   hide_callouts, false, true, 0 );
+    box.pack_start( lbl,            false, true, 0 );
+    box.pack_end(   _hide_callouts, false, true, 0 );
 
     pack_start( box, false, true );
 
@@ -146,7 +146,6 @@ public class MapInspector : Box {
   /* Called whenever the hide connections switch is changed within the inspector */
   private bool hide_callouts_changed( Gdk.EventButton e ) {
     _da.hide_callouts = !_da.hide_callouts;
-    _settings.set_boolean( "hide-callouts", _da.hide_callouts );
     _da.queue_draw();
     return( false );
   }
