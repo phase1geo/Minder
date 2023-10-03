@@ -31,6 +31,7 @@ public class MapInspector : Box {
   private Button?                     _balance        = null;
   private Button?                     _fold_completed = null;
   private Button?                     _unfold_all     = null;
+  private Switch                      _hide_callouts;
 
   public MapInspector( MainWindow win, GLib.Settings settings ) {
 
@@ -41,6 +42,7 @@ public class MapInspector : Box {
 
     /* Create the interface */
     add_connection_ui();
+    add_callout_ui();
     add_link_color_ui();
     add_layout_ui();
     add_theme_ui();
@@ -76,6 +78,7 @@ public class MapInspector : Box {
     _da = da;
     _da.animator.enable        = _settings.get_boolean( "enable-animations" );
     _da.get_connections().hide = _settings.get_boolean( "hide-connections" );
+    _hide_callouts.set_active( _da.hide_callouts );
     _da.set_theme( _da.get_theme(), false );
     update_theme_layout();
   }
@@ -116,6 +119,33 @@ public class MapInspector : Box {
     _da.set_current_connection( null );
     _da.get_connections().hide = !_da.get_connections().hide;
     _settings.set_boolean( "hide-connections", _da.get_connections().hide );
+    _da.queue_draw();
+    return( false );
+  }
+
+  /* Add the callout show/hide UI */
+  private void add_callout_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( Utils.make_title( _( "Hide callouts" ) ) );
+
+    lbl.xalign = (float)0;
+    lbl.use_markup = true;
+
+    _hide_callouts = new Switch();
+    _hide_callouts.set_active( false );
+    _hide_callouts.button_release_event.connect( hide_callouts_changed );
+
+    box.pack_start( lbl,            false, true, 0 );
+    box.pack_end(   _hide_callouts, false, true, 0 );
+
+    pack_start( box, false, true );
+
+  }
+
+  /* Called whenever the hide connections switch is changed within the inspector */
+  private bool hide_callouts_changed( Gdk.EventButton e ) {
+    _da.hide_callouts = !_da.hide_callouts;
     _da.queue_draw();
     return( false );
   }

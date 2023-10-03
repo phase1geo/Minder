@@ -38,6 +38,7 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _link;
   Gtk.MenuItem _conn;
   Gtk.MenuItem _group;
+  Gtk.MenuItem _callout;
   Gtk.MenuItem _link_color;
   Gtk.MenuItem _parent_link_color;
   Gtk.MenuItem _fold;
@@ -58,6 +59,7 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _selparent;
   Gtk.MenuItem _selconn;
   Gtk.MenuItem _sellink;
+  Gtk.MenuItem _selcallout;
   Gtk.MenuItem _center;
 
   /* Default constructor */
@@ -121,6 +123,10 @@ public class NodeMenu : Gtk.Menu {
     _group = new Gtk.MenuItem();
     _group.add( new Granite.AccelLabel( _( "Add Group" ), "g" ) );
     _group.activate.connect( add_group );
+
+    _callout = new Gtk.MenuItem();
+    _callout.add( new Granite.AccelLabel( _( "Add Callout" ), "o" ) );
+    _callout.activate.connect( add_callout );
 
     _link_color = new Gtk.MenuItem.with_label( _( "Link Color" ) );
     var link_color_menu = new Gtk.Menu();
@@ -222,6 +228,10 @@ public class NodeMenu : Gtk.Menu {
     _selconn.activate.connect( select_connection );
     // Utils.add_accel_label( _selconn, 'X', Gdk.ModifierType.SHIFT_MASK );
 
+    _selcallout = new Gtk.MenuItem();
+    _selcallout.add( new Granite.AccelLabel( _( "Callout" ), "<Shift>o" ) );
+    _selcallout.activate.connect( select_callout );
+
     _center = new Gtk.MenuItem();
     _center.add( new Granite.AccelLabel( _( "Center Current Node" ), "<Shift>c" ) );
     _center.activate.connect( center_current_node );
@@ -266,6 +276,7 @@ public class NodeMenu : Gtk.Menu {
     change_menu.add( _link );
     change_menu.add( _conn );
     change_menu.add( _group );
+    change_menu.add( _callout );
     change_menu.add( _link_color );
     change_menu.add( _fold );
 
@@ -290,6 +301,7 @@ public class NodeMenu : Gtk.Menu {
     selmenu.add( _sellink );
     selmenu.add( new SeparatorMenuItem() );
     selmenu.add( _selconn );
+    selmenu.add( _selcallout );
 
     /* Add the items to the link color menu */
     link_color_menu.add( set_link_color );
@@ -336,6 +348,12 @@ public class NodeMenu : Gtk.Menu {
   private bool node_has_link() {
     Node? current = _da.get_current_node();
     return( (current != null) && (current.linked_node != null) );
+  }
+
+  /* Returns true if a callout is associated with the currently selected node */
+  private bool node_has_callout() {
+    var current = _da.get_current_node();
+    return( (current != null) && (current.callout != null) );
   }
 
   /* Returns true if there is a currently selected node that is foldable */
@@ -393,18 +411,21 @@ public class NodeMenu : Gtk.Menu {
     _selchild.set_sensitive( _da.children_selectable() );
     _selparent.set_sensitive( _da.parent_selectable() );
     _sellink.set_sensitive( node_has_link() );
+    _selcallout.set_sensitive( node_has_callout() );
     _sticker.set_sensitive( current.sticker != null );
 
     /* Set the menu item labels */
-    var task_lbl = node_is_task()   ?
-                   node_task_is_done() ? _( "Remove Task" ) :
-                                         _( "Mark Task As Done" ) :
-                                         _( "Add Task" );
-    var link_lbl = node_has_link()  ? _( "Remove Node Link" ) : _( "Add Node Link" );
-    var fold_lbl = node_is_folded() ? _( "Unfold Children" )  : _( "Fold Children" );
-    var task_acc = (Granite.AccelLabel)_task.get_child();
-    var link_acc = (Granite.AccelLabel)_link.get_child();
-    var fold_acc = (Granite.AccelLabel)_fold.get_child();
+    var task_lbl    = node_is_task()   ?
+                      node_task_is_done() ? _( "Remove Task" ) :
+                                            _( "Mark Task As Done" ) :
+                                            _( "Add Task" );
+    var link_lbl    = node_has_link()  ? _( "Remove Node Link" ) : _( "Add Node Link" );
+    var fold_lbl    = node_is_folded() ? _( "Unfold Children" )  : _( "Fold Children" );
+    var callout_lbl = node_has_callout() ? _( "Remove Callout" ) : _( "Add Callout" );
+    var task_acc    = (Granite.AccelLabel)_task.get_child();
+    var link_acc    = (Granite.AccelLabel)_link.get_child();
+    var fold_acc    = (Granite.AccelLabel)_fold.get_child();
+    var callout_acc = (Granite.AccelLabel)_callout.get_child();
 
     _task.get_child().destroy();
     _task.add( new Granite.AccelLabel( task_lbl, task_acc.accel_string ) );
@@ -412,6 +433,8 @@ public class NodeMenu : Gtk.Menu {
     _link.add( new Granite.AccelLabel( link_lbl, link_acc.accel_string ) );
     _fold.get_child().destroy();
     _fold.add( new Granite.AccelLabel( fold_lbl, fold_acc.accel_string ) );
+    _callout.get_child().destroy();
+    _callout.add( new Granite.AccelLabel( callout_lbl, callout_acc.accel_string ) );
 
     _image.label = node_has_image() ? _( "Remove Image" ) : _( "Add Image" );
 
@@ -430,6 +453,8 @@ public class NodeMenu : Gtk.Menu {
       _paste.set_sensitive( false );
       _replace.set_sensitive( false );
     }
+
+    show_all();
 
   }
 
@@ -529,8 +554,18 @@ public class NodeMenu : Gtk.Menu {
     _da.start_connection( false, false );
   }
 
+  /* Creates a group from the currently selected node */
   private void add_group() {
     _da.add_group();
+  }
+
+  /* Adds a callback to the currently selected node */
+  private void add_callout() {
+    if( node_has_callout() ) {
+      _da.remove_callout();
+    } else {
+      _da.add_callout();
+    }
   }
 
   /* Fold the currently selected node */
@@ -617,6 +652,11 @@ public class NodeMenu : Gtk.Menu {
   /* Selects the one of the connections attached to the current node */
   private void select_connection() {
     _da.select_attached_connection();
+  }
+
+  /* Selects the associated callout */
+  private void select_callout() {
+    _da.select_callout();
   }
 
   /* Centers the current node */

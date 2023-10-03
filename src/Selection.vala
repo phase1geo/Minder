@@ -26,6 +26,7 @@ public class Selection {
   private Array<Connection> _conns;
   private Array<Sticker>    _stickers;
   private Array<NodeGroup>  _groups;
+  private Array<Callout>    _callouts;
 
   public signal void selection_changed();
 
@@ -36,11 +37,12 @@ public class Selection {
     _conns    = new Array<Connection>();
     _stickers = new Array<Sticker>();
     _groups   = new Array<NodeGroup>();
+    _callouts = new Array<Callout>();
   }
 
   /* Returns true if the given node is currently selected */
   public bool is_node_selected( Node node ) {
-    return( (node.mode == NodeMode.CURRENT) || (node.mode == NodeMode.SELECTED) );
+    return( node.mode.is_selected() );
   }
 
   /* Returns true if the given connection is currently selected */
@@ -56,6 +58,10 @@ public class Selection {
   /* Returns true if the given group is currently selected */
   public bool is_group_selected( NodeGroup group ) {
     return( group.mode == GroupMode.SELECTED );
+  }
+
+  public bool is_callout_selected( Callout callout ) {
+    return( callout.mode.is_selected() );
   }
 
   /* Returns true if the given node is the only selected item */
@@ -78,6 +84,11 @@ public class Selection {
     return( (_groups.length == 1) && (_groups.index( 0 ) == group ) );
   }
 
+  /* Returns true if the given callout is the only selected item */
+  public bool is_current_callout( Callout callout ) {
+    return( (_callouts.length == 1) && (_callouts.index( 0 ) == callout) );
+  }
+
   /* Returns the currently selected node */
   public Node? current_node() {
     return( (_nodes.length == 1) ? _nodes.index( 0 ) : null );
@@ -96,6 +107,11 @@ public class Selection {
   /* Returns the currently selected group */
   public NodeGroup? current_group() {
     return( (_groups.length == 1) ? _groups.index( 0 ) : null );
+  }
+
+  /* Returns the currently selected callout */
+  public Callout? current_callout() {
+    return( (_callouts.length == 1) ? _callouts.index( 0 ) : null );
   }
 
   /* Sets the current node, clearing all other selected items */
@@ -120,6 +136,12 @@ public class Selection {
   public void set_current_group( NodeGroup group, double clear_alpha = 1.0 ) {
     clear( false, clear_alpha );
     add_group( group );
+  }
+
+  /* Sets the current callout, clearing all other selected items */
+  public void set_current_callout( Callout callout, double clear_alpha = 1.0 ) {
+    clear( false, clear_alpha );
+    add_callout( callout );
   }
 
   /* Adds a node to the current selection.  Returns true if the node was added. */
@@ -219,6 +241,15 @@ public class Selection {
     if( is_group_selected( group ) ) return( false );
     group.mode = GroupMode.SELECTED;
     _groups.append_val( group );
+    selection_changed();
+    return( true );
+  }
+
+  /* Adds a callout to the current selection */
+  public bool add_callout( Callout callout ) {
+    if( is_callout_selected( callout ) ) return( false );
+    callout.mode = CalloutMode.SELECTED;
+    _callouts.append_val( callout );
     selection_changed();
     return( true );
   }
@@ -359,6 +390,24 @@ public class Selection {
     return( false );
   }
 
+  /*
+   Removes the given callout from the current selection.  Returns true
+   if the callout is removed.
+  */
+  public bool remove_callout( Callout callout, double alpha = 1.0 ) {
+    if( is_callout_selected( callout ) ) {
+      callout.mode = CalloutMode.NONE;
+      for( int i=0; i<_callouts.length; i++ ) {
+        if( callout == _callouts.index( i ) ) {
+          _callouts.remove_index( i );
+          selection_changed();
+          return( true );
+        }
+      }
+    }
+    return( false );
+  }
+
   /* Clears all of the selected nodes */
   public bool clear_nodes( bool signal_change = true, double alpha = 1.0 ) {
     var num = _nodes.length;
@@ -391,7 +440,7 @@ public class Selection {
   public bool clear_stickers( bool signal_change = true ) {
     var num = _stickers.length;
     for( int i=0; i<num; i++ ) {
-      _stickers.index( i ).mode  = StickerMode.NONE;
+      _stickers.index( i ).mode = StickerMode.NONE;
     }
     _stickers.remove_range( 0, num );
     if( (num > 0) && signal_change ) {
@@ -404,9 +453,23 @@ public class Selection {
   public bool clear_groups( bool signal_change = true ) {
     var num = _groups.length;
     for( int i=0; i<num; i++ ) {
-      _groups.index( i ).mode  = GroupMode.NONE;
+      _groups.index( i ).mode = GroupMode.NONE;
     }
     _groups.remove_range( 0, num );
+    if( (num > 0) && signal_change ) {
+      selection_changed();
+    }
+    return( num > 0 );
+  }
+
+  /* Clears all of the selected callouts */
+  public bool clear_callouts( bool signal_change = true, double alpha = 1.0 ) {
+    var num = _callouts.length;
+    for( int i=0; i<num; i++ ) {
+      _da.set_callout_mode( _callouts.index( i ), CalloutMode.NONE );
+      _callouts.index( i ).alpha = alpha;
+    }
+    _callouts.remove_range( 0, num );
     if( (num > 0) && signal_change ) {
       selection_changed();
     }
@@ -420,6 +483,7 @@ public class Selection {
     changed |= clear_connections( false, alpha );
     changed |= clear_stickers( false );
     changed |= clear_groups( false );
+    changed |= clear_callouts( false, alpha );
     if( changed && signal_change ) {
       selection_changed();
     }
@@ -444,6 +508,11 @@ public class Selection {
   /* Returns the number of groups selected */
   public int num_groups() {
     return( (int)_groups.length );
+  }
+
+  /* Returns the number of callouts selected */
+  public int num_callouts() {
+    return( (int)_callouts.length );
   }
 
   /* Returns an array of currently selected nodes */
@@ -491,6 +560,11 @@ public class Selection {
   /* Returns an array of currently selected groups */
   public Array<NodeGroup> groups() {
     return( _groups );
+  }
+
+  /* Returns an array of currently selected callouts */
+  public Array<Callout> callouts() {
+    return( _callouts );
   }
 
   /*

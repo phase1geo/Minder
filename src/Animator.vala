@@ -59,6 +59,13 @@ public class Animator : Object {
     }
   }
 
+  /* Animates a fade in/out on the given set of callouts */
+  public void add_callouts_fade( Array<Node> n, bool fade_out, string name ) {
+    if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.FADE) ) {
+      _actions.push_tail( new AnimatorFade( _da, n, fade_out, name ) );
+    }
+  }
+
   /* Animates a change to the canvas scale */
   public void add_scale( string name ) {
     if( (_actions.length == 0) || (_actions.peek_tail().type() != AnimationType.SCALE) ) {
@@ -125,6 +132,7 @@ public class Animator : Object {
       while( !_actions.is_empty() ) {
         var action = _actions.pop_head();
         save_needed |= action.save();
+        action.on_completion( _da );
       }
       if( save_needed ) {
         _da.auto_save();
@@ -144,6 +152,7 @@ public class Animator : Object {
   private bool animate_action() {
     _actions.peek_head().adjust( _da );
     if( _actions.peek_head().done() ) {
+      _actions.peek_head().on_completion( _da );
       if( _actions.peek_head().save() ) {
         _da.auto_save();
       }

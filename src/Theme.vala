@@ -57,6 +57,7 @@ public class Theme : Object {
     _colors.set( "match_background",      null );
     _colors.set( "match_foreground",      null );
     _colors.set( "markdown_listitem",     null );
+    _colors.set( "callout_background",    null );
     _colors.set( "link_color0",           null );
     _colors.set( "link_color1",           null );
     _colors.set( "link_color2",           null );
@@ -105,7 +106,7 @@ public class Theme : Object {
         var it = _colors.map_iterator();
         while( it.next() ) {
           var key = it.get_key();
-          if( !theme._colors.has_key( key ) || !_colors.get( key ).equal( theme._colors.get( key ) ) ) {
+          if( !theme._colors.has_key( key ) || !it.get_value().equal( theme._colors.get( key ) ) ) {
             return( false );
           }
         }

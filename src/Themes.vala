@@ -130,7 +130,7 @@ public class Themes : Object {
       if( doc == null ) return;
       for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
         if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "theme") ) {
-          var theme = new Theme();
+          var theme = new Theme.from_theme( _themes.index( 0 ) );
           theme.load( it );
           _themes.append_val( theme );
         }

@@ -61,8 +61,10 @@ public class UrlEditor : Popover {
 
     var cancel = new Button.with_label( _( "Cancel" ) );
     cancel.clicked.connect(() => {
-      var node = _da.get_current_node();
-      node.name.clear_selection();
+      var ct = current_text();
+      if( ct != null ) {
+        ct.clear_selection();
+      }
       Utils.hide_popover( this );
     });
 
@@ -78,6 +80,17 @@ public class UrlEditor : Popover {
 
   }
 
+  /* Returns the current canvas text to operate on */
+  private CanvasText? current_text() {
+    CanvasText? ct = null;
+    if( _da.get_current_node() != null ) {
+      ct = _da.get_current_node().name;
+    } else if( _da.get_current_callout() != null ) {
+      ct = _da.get_current_callout().text;
+    }
+    return( ct );
+  }
+
   /*
    Checks the contents of the entry string.  If it is a URL, make the action button active;
    otherwise, inactivate the action button.
@@ -87,39 +100,55 @@ public class UrlEditor : Popover {
   }
 
   /*
-   Sets the URL of the current node's selected text to the value stored in the
+   Sets the URL of the current canvas text's selected text to the value stored in the
    popover entry.
   */
   private void set_url() {
     var node     = _da.get_current_node();
-    var selected = node.mode == NodeMode.CURRENT;
-    if( selected ) {
-      _da.set_node_mode( node, NodeMode.EDITABLE );
+    var callout  = _da.get_current_callout();
+    var ct       = current_text();
+    var selected = false;
+    if( node != null ) {
+      selected = node.mode == NodeMode.CURRENT;
+      if( selected ) {
+        _da.set_node_mode( node, NodeMode.EDITABLE );
+      }
+    } else if( callout != null ) {
+      selected = callout.mode == CalloutMode.SELECTED;
+      if( selected ) {
+        _da.set_callout_mode( callout, CalloutMode.EDITABLE );
+      }
     }
-    if( !_add ) {
-      node.name.remove_tag( FormatTag.URL, _da.undo_text );
+    if( ct != null ) {
+      if( !_add ) {
+        ct.remove_tag( FormatTag.URL, _da.undo_text );
+      }
+      ct.add_tag( FormatTag.URL, _entry.text, false, _da.undo_text );
+      ct.clear_selection();
+      if( selected ) {
+        if( node != null ) {
+          _da.set_node_mode( node, NodeMode.CURRENT );
+        } else if( callout != null ) {
+          _da.set_callout_mode( callout, CalloutMode.SELECTED );
+        }
+      }
+      _da.queue_draw();
+      _da.auto_save();
     }
-    node.name.add_tag( FormatTag.URL, _entry.text, false, _da.undo_text );
-    node.name.clear_selection();
-    if( selected ) {
-      _da.set_node_mode( node, NodeMode.CURRENT );
-    }
-    _da.queue_draw();
-    _da.auto_save();
   }
 
   /* Called when we want to add a URL to the currently selected text of the given node. */
   public void add_url() {
 
-    var node = _da.get_current_node();
+    var ct = current_text();
 
     int selstart, selend, cursor;
-    node.name.get_cursor_info( out cursor, out selstart, out selend );
+    ct.get_cursor_info( out cursor, out selstart, out selend );
 
     /* Position the popover */
     double left, top, bottom;
     int line;
-    node.name.get_char_pos( selstart, out left, out top, out bottom, out line );
+    ct.get_char_pos( selstart, out left, out top, out bottom, out line );
     var int_left = (int)left;
     var int_top  = (int)top;
     Gdk.Rectangle rect = {int_left, int_top, 1, 1};
@@ -137,18 +166,34 @@ public class UrlEditor : Popover {
 
   /* Removes the current URLs from the given node */
   public void remove_url() {
-    var node = _da.get_current_node();
-    var selected = node.mode == NodeMode.CURRENT;
-    if( selected ) {
-      _da.set_node_mode( node, NodeMode.EDITABLE );
+    var ct       = current_text();
+    var node     = _da.get_current_node();
+    var callout  = _da.get_current_callout();
+    var selected = false;
+    if( node != null ) {
+      selected = node.mode == NodeMode.CURRENT;
+      if( selected ) {
+        _da.set_node_mode( node, NodeMode.EDITABLE );
+      }
+    } else if( callout != null ) {
+      selected = callout.mode == CalloutMode.SELECTED;
+      if( selected ) {
+        _da.set_callout_mode( callout, CalloutMode.EDITABLE );
+      }
     }
-    node.name.remove_tag( FormatTag.URL, _da.undo_text );
-    node.name.clear_selection();
-    if( selected ) {
-      _da.set_node_mode( node, NodeMode.CURRENT );
+    if( ct != null ) {
+      ct.remove_tag( FormatTag.URL, _da.undo_text );
+      ct.clear_selection();
+      if( selected ) {
+        if( node != null ) {
+          _da.set_node_mode( node, NodeMode.CURRENT );
+        } else if( callout != null ) {
+          _da.set_callout_mode( callout, CalloutMode.SELECTED );
+        }
+      }
+      _da.queue_draw();
+      _da.auto_save();
     }
-    _da.queue_draw();
-    _da.auto_save();
   }
 
   /*
@@ -164,16 +209,16 @@ public class UrlEditor : Popover {
   /* Called when we want to edit the URL of the current node */
   public void edit_url() {
 
-    var node = _da.get_current_node();
+    var ct = current_text();
 
     int selstart, selend, cursor;
-    node.name.get_cursor_info( out cursor, out selstart, out selend );
+    ct.get_cursor_info( out cursor, out selstart, out selend );
 
     /* Position the popover */
     double left, top, bottom;
     int    line;
-    var links = node.name.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
-    node.name.get_char_pos( links.index( 0 ).start, out left, out top, out bottom, out line );
+    var links = ct.text.get_full_tags_in_range( FormatTag.URL, cursor, cursor );
+    ct.get_char_pos( links.index( 0 ).start, out left, out top, out bottom, out line );
     var int_left = (int)left;
     var int_top  = (int)top;
     Gdk.Rectangle rect = {int_left, int_top, 1, 1};

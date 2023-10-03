@@ -26,6 +26,7 @@ public class UndoStyleChange : UndoItem {
   private StyleAffects      _affects;
   private Array<Node>       _nodes;
   private Array<Connection> _conns;
+  private Array<Callout>    _callouts;
 
   private enum StyleChangeType {
     LOAD = 0,
@@ -36,15 +37,16 @@ public class UndoStyleChange : UndoItem {
   /* Constructor for a node name change */
   public UndoStyleChange( StyleAffects affects, DrawArea da ) {
     base( _( "style change" ) );
-    _affects = affects;
-    _nodes   = da.get_selected_nodes();
-    _conns   = da.get_selected_connections();
+    _affects  = affects;
+    _nodes    = da.get_selected_nodes();
+    _conns    = da.get_selected_connections();
+    _callouts = da.get_selected_callouts();
   }
 
   /* Returns true if the given undo item matches our item */
   protected override bool matches( UndoItem item ) {
     UndoStyleChange other = (UndoStyleChange)item;
-    if( (_affects == other._affects) && (_nodes.length == other._nodes.length) && (_conns.length == other._conns.length) ) {
+    if( (_affects == other._affects) && (_nodes.length == other._nodes.length) && (_conns.length == other._conns.length) && (_callouts.length == other._callouts.length) ) {
       for( int i=0; i<_nodes.length; i++ ) {
         if( _nodes.index( i ) != other._nodes.index( i ) ) {
           return( false );
@@ -52,6 +54,11 @@ public class UndoStyleChange : UndoItem {
       }
       for( int i=0; i<_conns.length; i++ ) {
         if( _conns.index( i ) != other._conns.index( i ) ) {
+          return( false );
+        }
+      }
+      for( int i=0; i<_callouts.length; i++ ) {
+        if( _callouts.index( i ) != other._callouts.index( i ) ) {
           return( false );
         }
       }
@@ -96,6 +103,12 @@ public class UndoStyleChange : UndoItem {
           set_connection_style( conns.index( i ), change_type, ref index );
         }
         break;
+      case StyleAffects.SELECTED_CALLOUTS :
+        var callouts = selected.callouts();
+        for( int i=0; i<callouts.length; i++ ) {
+          set_callout_style( callouts.index( i ), change_type, ref index );
+        }
+        break;
     }
     da.current_changed( da );
     da.auto_save();
@@ -129,8 +142,17 @@ public class UndoStyleChange : UndoItem {
     conn.style = new_style;
   }
 
+  private void set_callout_style( Callout callout, StyleChangeType change_type, ref int index ) {
+    Style new_style = new Style.templated();
+    set_style( callout.style, new_style, change_type, ref index );
+    callout.style = new_style;
+  }
+
   private void set_style_for_tree( Node node, StyleChangeType change_type, ref int index ) {
     set_node_style( node, change_type, ref index );
+    if( node.callout != null ) {
+      set_callout_style( node.callout, change_type, ref index );
+    }
     for( int i=0; i<node.children().length; i++ ) {
       set_style_for_tree( node.children().index( i ), change_type, ref index );
     }
@@ -139,6 +161,9 @@ public class UndoStyleChange : UndoItem {
   private void set_style_for_level( Node node, int levels, StyleChangeType change_type, ref int index, int level ) {
     if( (levels & (1 << level)) != 0 ) {
       set_node_style( node, change_type, ref index );
+      if( node.callout != null ) {
+        set_callout_style( node.callout, change_type, ref index );
+      }
     }
     for( int i=0; i<node.children().length; i++ ) {
       set_style_for_level( node.children().index( i ), levels, change_type, ref index, ((level == 9) ? 9 : (level + 1)) );

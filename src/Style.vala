@@ -45,6 +45,10 @@ public class Style {
   public int?             connection_padding     { get; set; default = null; }
   public FontDescription? connection_font        { get; set; default = null; }
   public int?             connection_title_width { get; set; default = null; }
+  public FontDescription? callout_font           { get; set; default = null; }
+  public int?             callout_padding        { get; set; default = null; }
+  public int?             callout_ptr_width      { get; set; default = null; }
+  public int?             callout_ptr_length     { get; set; default = null; }
 
   /* Default constructor */
   public Style() {
@@ -58,6 +62,10 @@ public class Style {
     connection_font = new FontDescription();
     connection_font.set_family( "Sans" );
     connection_font.set_size( 10 * Pango.SCALE );
+
+    callout_font = new FontDescription();
+    callout_font.set_family( "Sans" );
+    callout_font.set_size( 12 * Pango.SCALE );
 
   }
 
@@ -95,6 +103,10 @@ public class Style {
       connection_padding     = null;
       connection_font        = null;
       connection_title_width = null;
+      callout_font           = null;
+      callout_padding        = null;
+      callout_ptr_width      = null;
+      callout_ptr_length     = null;
     }
 
   }
@@ -124,6 +136,10 @@ public class Style {
     if( ((s.connection_padding     != null) || !s._template) && (connection_padding     != s.connection_padding) )     { changed = true;  connection_padding     = s.connection_padding; }
     if( ((s.connection_font        != null) || !s._template) )                                                         { changed = true;  connection_font        = s.connection_font.copy(); }
     if( ((s.connection_title_width != null) || !s._template) && (connection_title_width != s.connection_title_width) ) { changed = true;  connection_title_width = s.connection_title_width; }
+    if( ((s.callout_font           != null) || !s._template) )                                                         { changed = true;  callout_font           = s.callout_font.copy(); }
+    if( ((s.callout_padding        != null) || !s._template) && (callout_padding        != s.callout_padding) )        { changed = true;  callout_padding        = s.callout_padding; }
+    if( ((s.callout_ptr_width      != null) || !s._template) && (callout_ptr_width      != s.callout_ptr_width) )      { changed = true;  callout_ptr_width      = s.callout_ptr_width; }
+    if( ((s.callout_ptr_length     != null) || !s._template) && (callout_ptr_length     != s.callout_ptr_length) )     { changed = true;  callout_ptr_length     = s.callout_ptr_length; }
 
     return( changed );
 
@@ -151,6 +167,10 @@ public class Style {
     if( connection_padding     != null ) arr += "cpad[%d]".printf( connection_padding );
     if( connection_font        != null ) arr += "cfont";
     if( connection_title_width != null ) arr += "ctwidth[%d]".printf( connection_title_width );
+    if( callout_font           != null ) arr += "ofont";
+    if( callout_padding        != null ) arr += "opad[%d]".printf( callout_padding );
+    if( callout_ptr_width      != null ) arr += "opw[%d]".printf( callout_ptr_width );
+    if( callout_ptr_length     != null ) arr += "opl[%d]".printf( callout_ptr_length );
     return( string.joinv( "+", arr ) );
   }
 
@@ -250,6 +270,30 @@ public class Style {
 
   }
 
+  public void load_callout( Xml.Node* node ) {
+
+    var f = node->get_prop( "calloutfont" );
+    if( f != null ) {
+      callout_font = FontDescription.from_string( f );
+    }
+
+    var p = node->get_prop( "calloutpadding" );
+    if( p != null ) {
+      callout_padding = int.parse( p );
+    }
+
+    var pw = node->get_prop( "calloutptrwidth" );
+    if( pw != null ) {
+      callout_ptr_width = int.parse( pw );
+    }
+
+    var pl = node->get_prop( "calloutptrlength" );
+    if( pl != null ) {
+      callout_ptr_length = int.parse( pl );
+    }
+
+  }
+
   public void save_node_in_node( Xml.Node* n ) {
 
     if( branch_margin != null ) {
@@ -335,6 +379,32 @@ public class Style {
 
     Xml.Node* n = new Xml.Node( null, "style" );
     save_connection_in_node( n );
+    parent->add_child( n );
+
+  }
+
+  public void save_callout_in_node( Xml.Node* n ) {
+
+    if( callout_font != null ) {
+      n->set_prop( "calloutfont", callout_font.to_string() );
+    }
+    if( callout_padding != null) {
+      n->set_prop( "calloutpadding", callout_padding.to_string() );
+    }
+    if( callout_ptr_width != null) {
+      n->set_prop( "calloutptrwidth", callout_ptr_width.to_string() );
+    }
+    if( callout_ptr_length != null) {
+      n->set_prop( "calloutptrlength", callout_ptr_length.to_string() );
+    }
+
+  }
+
+  /* Stores this style in XML format */
+  public void save_callout( Xml.Node* parent ) {
+
+    Xml.Node* n = new Xml.Node( null, "style" );
+    save_callout_in_node( n );
     parent->add_child( n );
 
   }

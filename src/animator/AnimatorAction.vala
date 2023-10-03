@@ -25,6 +25,7 @@ public enum AnimationType {
   UNKNOWN = 0,
   NODES,
   NODE,
+  FADE,
   PAN,
   SCALE,
   PANSCALE
@@ -79,6 +80,11 @@ public class AnimatorAction : Object {
    complete.
   */
   public virtual void adjust( DrawArea da ) {}
+
+  /*
+   Allows the animation action to do something after the animation has completed.
+  */
+  public virtual void on_completion( DrawArea da ) {}
 
   /*
    Force the animation to complete immediately by forcing the index to

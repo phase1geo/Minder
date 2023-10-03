@@ -26,7 +26,8 @@ public enum StyleAffects {
 
   ALL = 0,               // Applies changes to all nodes and connections
   SELECTED_NODES,        // Applies changes to selected nodes
-  SELECTED_CONNECTIONS;  // Applies changes to selected connections
+  SELECTED_CONNECTIONS,  // Applies changes to selected connections
+  SELECTED_CALLOUTS;     // Applies changes to selected callouts
 
   /* Displays the label to display for this enumerated value */
   public string label() {
@@ -34,6 +35,7 @@ public enum StyleAffects {
       case ALL                  :  return( _( "All" ) );
       case SELECTED_NODES       :  return( _( "Selected Nodes" ) );
       case SELECTED_CONNECTIONS :  return( _( "Selected Connections" ) );
+      case SELECTED_CALLOUTS    :  return( _( "Selected Callouts" ) );
     }
     return( _( "Unknown" ) );
   }
@@ -65,13 +67,19 @@ public class StyleInspector : Box {
   private Scale                      _conn_padding;
   private FontButton                 _conn_font;
   private SpinButton                 _conn_twidth;
+  private FontButton                 _callout_font;
+  private Scale                      _callout_padding;
+  private Scale                      _callout_ptr_width;
+  private Scale                      _callout_ptr_length;
   private StyleAffects               _affects;
   private Label                      _affects_label;
   private Box                        _branch_group;
   private Box                        _link_group;
   private Box                        _node_group;
   private Box                        _conn_group;
+  private Box                        _callout_group;
   private Expander                   _conn_exp;
+  private Expander                   _callout_exp;
   private bool                       _change_add = true;
   private bool                       _ignore     = false;
 
@@ -95,16 +103,18 @@ public class StyleInspector : Box {
     vp.add( box );
     sw.add( vp );
 
-    _branch_group = create_branch_ui();
-    _link_group   = create_link_ui();
-    _node_group   = create_node_ui();
-    _conn_group   = create_connection_ui();
+    _branch_group  = create_branch_ui();
+    _link_group    = create_link_ui();
+    _node_group    = create_node_ui();
+    _conn_group    = create_connection_ui();
+    _callout_group = create_callout_ui();
 
     /* Pack the scrollwindow */
-    box.pack_start( _branch_group, false, true );
-    box.pack_start( _link_group,   false, true );
-    box.pack_start( _node_group,   false, true );
-    box.pack_start( _conn_group,   false, true );
+    box.pack_start( _branch_group,  false, true );
+    box.pack_start( _link_group,    false, true );
+    box.pack_start( _node_group,    false, true );
+    box.pack_start( _conn_group,    false, true );
+    box.pack_start( _callout_group, false, true );
 
     /* Pack the elements into this widget */
     pack_start( affect, false, true );
@@ -1057,6 +1067,198 @@ public class StyleInspector : Box {
 
   }
 
+  /* Creates the callout style UI */
+  private Box create_callout_ui() {
+
+    var box = new Box( Orientation.VERTICAL, 0 );
+    var sep = new Separator( Orientation.HORIZONTAL );
+
+    /* Create expander */
+    _callout_exp = new Expander( "  " + Utils.make_title( _( "Callout Options" ) ) );
+    _callout_exp.use_markup = true;
+    _callout_exp.expanded   = _settings.get_boolean( "style-callout-options-expanded" );
+    _callout_exp.activate.connect(() => {
+      _settings.set_boolean( "style-callout-options-expanded", !_callout_exp.expanded );
+    });
+
+    var cbox = new Box( Orientation.VERTICAL, 10 );
+    cbox.homogeneous  = true;
+    cbox.border_width = 10;
+
+    var callout_font    = create_callout_font_ui();
+    var callout_padding = create_callout_padding_ui();
+    var callout_pwidth  = create_callout_pointer_width_ui();
+    var callout_plength = create_callout_pointer_length_ui();
+
+    cbox.pack_start( callout_font,    false, false );
+    cbox.pack_start( callout_padding, false, false );
+    cbox.pack_start( callout_pwidth,  false, false );
+    cbox.pack_start( callout_plength, false, false );
+
+    _callout_exp.add( cbox );
+
+    box.pack_start( _callout_exp, false, true );
+    box.pack_start( sep,          false, true, 10 );
+
+    return( box );
+
+  }
+
+  /* Creates the callout font selector */
+  private Box create_callout_font_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var lbl = new Label( _( "Text Font" ) );
+    lbl.xalign = (float)0;
+
+    _callout_font = new FontButton();
+    _callout_font.use_font = true;
+    _callout_font.show_style = false;
+    _callout_font.set_filter_func( (family, face) => {
+      var fd     = face.describe();
+      var weight = fd.get_weight();
+      var style  = fd.get_style();
+      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+    });
+    _callout_font.font_set.connect(() => {
+      var family = _callout_font.get_font_family().get_name();
+      var size   = _callout_font.get_font_size();
+      _da.undo_buffer.add_item( new UndoStyleCalloutFont( _affects, family, size, _da ) );
+    });
+
+    box.pack_start( lbl,         false, true );
+    box.pack_end( _callout_font, false, true );
+
+    return( box );
+
+  }
+
+  /* Allows the user to change the callout padding */
+  private Box create_callout_padding_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Padding" ) );
+    lbl.xalign = (float)0;
+
+    _callout_padding = new Scale.with_range( Orientation.HORIZONTAL, 4, 20, 2 );
+    _callout_padding.draw_value = true;
+    _callout_padding.change_value.connect( callout_padding_changed );
+    _callout_padding.button_release_event.connect( callout_padding_released );
+
+    box.pack_start( lbl,              false, true );
+    box.pack_end(   _callout_padding, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the callout padding value is changed */
+  private bool callout_padding_changed( ScrollType scroll, double value ) {
+    var intval = (int)Math.round( value );
+    if( intval > 20 ) {
+      return( false );
+    }
+    var padding = new UndoStyleCalloutPadding( _affects, intval, _da );
+    if( _change_add ) {
+      _da.undo_buffer.add_item( padding );
+      _change_add = false;
+    } else {
+      _da.undo_buffer.replace_item( padding );
+    }
+    return( false );
+  }
+
+  private bool callout_padding_released( EventButton e ) {
+    _change_add = true;
+    return( false );
+  }
+
+  /* Allows the user to change the callout padding */
+  private Box create_callout_pointer_width_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Pointer Width" ) );
+    lbl.xalign = (float)0;
+
+    _callout_ptr_width = new Scale.with_range( Orientation.HORIZONTAL, 10, 30, 5 );
+    _callout_ptr_width.draw_value = true;
+    _callout_ptr_width.change_value.connect( callout_pointer_width_changed );
+    _callout_ptr_width.button_release_event.connect( callout_pointer_width_released );
+
+    box.pack_start( lbl,                false, true );
+    box.pack_end(   _callout_ptr_width, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the callout padding value is changed */
+  private bool callout_pointer_width_changed( ScrollType scroll, double value ) {
+    var intval = (int)Math.round( value );
+    if( intval > 30 ) {
+      return( false );
+    }
+    var pwidth = new UndoStyleCalloutPointerWidth( _affects, intval, _da );
+    if( _change_add ) {
+      _da.undo_buffer.add_item( pwidth );
+      _change_add = false;
+    } else {
+      _da.undo_buffer.replace_item( pwidth );
+    }
+    return( false );
+  }
+
+  private bool callout_pointer_width_released( EventButton e ) {
+    _change_add = true;
+    return( false );
+  }
+
+  /* Allows the user to change the callout padding */
+  private Box create_callout_pointer_length_ui() {
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.homogeneous = true;
+
+    var lbl = new Label( _( "Pointer Length" ) );
+    lbl.xalign = (float)0;
+
+    _callout_ptr_length = new Scale.with_range( Orientation.HORIZONTAL, 10, 100, 5 );
+    _callout_ptr_length.draw_value = true;
+    _callout_ptr_length.change_value.connect( callout_pointer_length_changed );
+    _callout_ptr_length.button_release_event.connect( callout_pointer_length_released );
+
+    box.pack_start( lbl,                 false, true );
+    box.pack_end(   _callout_ptr_length, false, true );
+
+    return( box );
+
+  }
+
+  /* Called whenever the callout padding value is changed */
+  private bool callout_pointer_length_changed( ScrollType scroll, double value ) {
+    var intval = (int)Math.round( value );
+    if( intval > 100 ) {
+      return( false );
+    }
+    var plength = new UndoStyleCalloutPointerLength( _affects, intval, _da );
+    if( _change_add ) {
+      _da.undo_buffer.add_item( plength );
+      _change_add = false;
+    } else {
+      _da.undo_buffer.replace_item( plength );
+    }
+    return( false );
+  }
+
+  private bool callout_pointer_length_released( EventButton e ) {
+    _change_add = true;
+    return( false );
+  }
+
   /* Sets the affects value and save the change to the settings */
   private void set_affects( StyleAffects affects ) {
     var selected         = _da.get_selections();
@@ -1065,26 +1267,39 @@ public class StyleInspector : Box {
     switch( _affects ) {
       case StyleAffects.ALL     :
         update_ui_with_style( styles.get_global_style() );
-        _branch_group.visible = true;
-        _link_group.visible   = true;
-        _node_group.visible   = true;
-        _conn_group.visible   = true;
-        _conn_exp.expanded    = _settings.get_boolean( "style-connection-options-expanded" );
+        _branch_group.visible  = true;
+        _link_group.visible    = true;
+        _node_group.visible    = true;
+        _conn_group.visible    = true;
+        _callout_group.visible = true;
+        _conn_exp.expanded     = _settings.get_boolean( "style-connection-options-expanded" );
+        _callout_exp.expanded  = _settings.get_boolean( "style-callout-options-expanded" ); 
         break;
       case StyleAffects.SELECTED_NODES :
         update_ui_with_style( selected.nodes().index( 0 ).style );
-        _branch_group.visible = true;
-        _link_group.visible   = true;
-        _node_group.visible   = true;
-        _conn_group.visible   = false;
+        _branch_group.visible  = true;
+        _link_group.visible    = true;
+        _node_group.visible    = true;
+        _conn_group.visible    = false;
+        _callout_group.visible = false;
         break;
       case StyleAffects.SELECTED_CONNECTIONS :
         update_ui_with_style( selected.connections().index( 0 ).style );
-        _branch_group.visible = false;
-        _link_group.visible   = false;
-        _node_group.visible   = false;
-        _conn_group.visible   = true;
-        _conn_exp.expanded    = true;
+        _branch_group.visible  = false;
+        _link_group.visible    = false;
+        _node_group.visible    = false;
+        _conn_group.visible    = true;
+        _callout_group.visible = false;
+        _conn_exp.expanded     = true;
+        break;
+      case StyleAffects.SELECTED_CALLOUTS :
+        update_ui_with_style( selected.callouts().index( 0 ).style );
+        _branch_group.visible  = false;
+        _link_group.visible    = false;
+        _node_group.visible    = false;
+        _conn_group.visible    = false;
+        _callout_group.visible = true;
+        _callout_exp.expanded  = true;
         break;
     }
   }
@@ -1185,6 +1400,9 @@ public class StyleInspector : Box {
     var node_markup     = style.node_markup;
     var conn_line_width = style.connection_line_width;
     var conn_padding    = style.connection_padding;
+    var callout_padding = style.callout_padding;
+    var callout_pwidth  = style.callout_ptr_width;
+    var callout_plength = style.callout_ptr_length;
 
     _ignore = true;
     _branch_margin.set_value( (double)branch_margin );
@@ -1208,6 +1426,10 @@ public class StyleInspector : Box {
     _conn_font.set_font( style.connection_font.to_string() );
     _conn_twidth.set_value( style.connection_title_width );
     _conn_padding.set_value( (double)conn_padding );
+    _callout_font.set_font( style.callout_font.to_string() );
+    _callout_padding.set_value( (double)callout_padding );
+    _callout_ptr_width.set_value( (double)callout_pwidth );
+    _callout_ptr_length.set_value( (double)callout_plength );
     _ignore = false;
 
   }
@@ -1218,6 +1440,8 @@ public class StyleInspector : Box {
       update_ui_with_style( _da.get_current_node().style );
     } else if( _da.get_current_connection() != null ) {
       update_ui_with_style( _da.get_current_connection().style );
+    } else if( _da.get_current_callout() != null ) {
+      update_ui_with_style( _da.get_current_callout().style );
     }
     handle_ui_changed();
   }
@@ -1229,6 +1453,8 @@ public class StyleInspector : Box {
       set_affects( StyleAffects.SELECTED_NODES );
     } else if( selected.num_connections() > 0 ) {
       set_affects( StyleAffects.SELECTED_CONNECTIONS );
+    } else if( selected.num_callouts() > 0 ) {
+      set_affects( StyleAffects.SELECTED_CALLOUTS );
     } else {
       set_affects( StyleAffects.ALL );
     }

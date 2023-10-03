@@ -61,6 +61,11 @@
       <summary>Hides/Shows all connections in the canvas</summary>
       <description>Controls the initial state of the canvas hide connections widget</description>
     </key>
+    <key name="hide-callouts" type="b">
+      <default>false</default>
+      <summary>Hides/Shows all callouts in the canvas</summary>
+      <description>Controls the initial state of the canvas hide callouts widget</description>
+    </key>
     <key name="search-opt-nodes" type="b">
       <default>true</default>
       <summary>Search option for nodes</summary>
@@ -70,6 +75,11 @@
       <default>true</default>
       <summary>Search option for connections</summary>
       <description>Specifies whether connections should be searched or not</description>
+    </key>
+    <key name="search-opt-callouts" type="b">
+      <default>true</default>
+      <summary>Search option for callouts</summary>
+      <description>Specifies whether callouts should be searched or not</description>
     </key>
     <key name="search-opt-titles" type="b">
       <default>true</default>
@@ -183,13 +193,43 @@
     </key>
     <key name="style-connection-font-family" type="s">
       <default>"sans"</default>
-      <summary>Last used node font family in Style properties</summary>
-      <description>Last used node font family in Style properties</description>
+      <summary>Last used connection font family in Style properties</summary>
+      <description>Last used connection font family in Style properties</description>
     </key>
     <key name="style-connection-font-size" type="i">
       <default>10</default>
-      <summary>Last used node font size in Style properties</summary>
-      <description>Last used node font size in Style properties</description>
+      <summary>Last used connection font size in Style properties</summary>
+      <description>Last used connection font size in Style properties</description>
+    </key>
+    <key name="style-callout-options-expanded" type="b">
+      <default>true</default>
+      <summary>Specifies the expanded state of the Callout Options panel in the Style properties</summary>
+      <description>Specifies the expanded state of the Callout Options panel in the Style properties</description>
+    </key>
+    <key name="style-callout-font-family" type="s">
+      <default>"sans"</default>
+      <summary>Last used callout font family in Style properties</summary>
+      <description>Last used callout font family in Style properties</description>
+    </key>
+    <key name="style-callout-font-size" type="i">
+      <default>12</default>
+      <summary>Last used callout font size in Style properties</summary>
+      <description>Last used callout font size in Style properties</description>
+    </key>
+    <key name="style-callout-padding" type="i">
+      <default>6</default>
+      <summary>Last used callout padding value in Style properties</summary>
+      <description>Last used callout padding value in Style properties</description>
+    </key>
+    <key name="style-callout-pointer-width" type="i">
+      <default>20</default>
+      <summary>Last used callout pointer width value in Style properties</summary>
+      <description>Last used callout pointer width value in Style properties</description>
+    </key>
+    <key name="style-callout-pointer-length" type="i">
+      <default>20</default>
+      <summary>Last used callout pointer length value in Style properties</summary>
+      <description>Last used callout pointer length value in Style properties</description>
     </key>
     <key name="style-branch-options-expanded" type="b">
       <default>true</default>

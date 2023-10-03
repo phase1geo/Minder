@@ -87,13 +87,14 @@ public class DrawArea : Gtk.DrawingArea {
   private ConnectionsMenu  _conns_menu;
   private NodesMenu        _nodes_menu;
   private GroupsMenu       _groups_menu;
+  private CalloutMenu      _callout_menu;
   private EmptyMenu        _empty_menu;
   private TextMenu         _text_menu;
   private uint?            _auto_save_id = null;
   private uint?            _scroll_save_id = null;
   private ImageEditor      _image_editor;
   private UrlEditor        _url_editor;
-  private IMContext   _im_context;
+  private IMContext        _im_context;
   private bool             _debug        = true;
   private bool             _focus_mode   = false;
   private double           _focus_alpha  = 0.05;
@@ -108,6 +109,7 @@ public class DrawArea : Gtk.DrawingArea {
   private uint             _select_hover_id = 0;
   private int              _next_node_id    = -1;
   private NodeLinks        _node_links;
+  private bool             _hide_callouts   = false;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -182,6 +184,23 @@ public class DrawArea : Gtk.DrawingArea {
       return( _next_node_id );
     }
   }
+  public bool hide_callouts {
+    get {
+      return( _hide_callouts );
+    }
+    set {
+      if( _hide_callouts != value ) {
+        if( is_callout_editable() ) {
+          set_callout_mode( _selected.current_callout(), CalloutMode.NONE );
+          _selected.clear_callouts( false );
+        }
+        animator.add_callouts_fade( _nodes, value, "hide callouts" );
+        _hide_callouts = value;
+        auto_save();
+        animator.animate();
+      }
+    }
+  }
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -241,14 +260,15 @@ public class DrawArea : Gtk.DrawingArea {
     /* Initialize the selection box */
     _select_box = {0, 0, 0, 0, false};
 
-    /* Create the popup menu */
-    _node_menu   = new NodeMenu( this, accel_group );
-    _conn_menu   = new ConnectionMenu( this, accel_group );
-    _conns_menu  = new ConnectionsMenu( this, accel_group );
-    _empty_menu  = new EmptyMenu( this, accel_group );
-    _nodes_menu  = new NodesMenu( this, accel_group );
-    _groups_menu = new GroupsMenu( this, accel_group );
-    _text_menu   = new TextMenu( this, accel_group );
+    /* Create the popup menus */
+    _node_menu    = new NodeMenu( this, accel_group );
+    _conn_menu    = new ConnectionMenu( this, accel_group );
+    _conns_menu   = new ConnectionsMenu( this, accel_group );
+    _empty_menu   = new EmptyMenu( this, accel_group );
+    _nodes_menu   = new NodesMenu( this, accel_group );
+    _groups_menu  = new GroupsMenu( this, accel_group );
+    _callout_menu = new CalloutMenu( this, accel_group );
+    _text_menu    = new TextMenu( this, accel_group );
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
@@ -783,6 +803,11 @@ public class DrawArea : Gtk.DrawingArea {
     return( _selected.current_connection() );
   }
 
+  /* Returns the current callout */
+  public Callout? get_current_callout() {
+    return( _selected.current_callout() );
+  }
+
   /* Returns the array of selected nodes */
   public Array<Node> get_selected_nodes() {
     return( _selected.nodes() );
@@ -791,6 +816,10 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns the array of selected connections */
   public Array<Connection> get_selected_connections() {
     return( _selected.connections() );
+  }
+
+  public Array<Callout> get_selected_callouts() {
+    return( _selected.callouts() );
   }
 
   /* Returns the current group (if selected) */
@@ -813,7 +842,7 @@ public class DrawArea : Gtk.DrawingArea {
    pattern.
   */
   public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
-    if( search_opts[0] ) {
+    if( search_opts[0] || search_opts[2] ) {
       for( int i=0; i<_nodes.length; i++ ) {
         _nodes.index( i ).get_match_items( tabname, pattern, search_opts, ref matches );
       }
@@ -898,6 +927,36 @@ public class DrawArea : Gtk.DrawingArea {
     conn.mode = mode;
   }
 
+  public void set_callout_mode( Callout callout, CalloutMode mode, bool undoable = true ) {
+    if( (callout.mode != CalloutMode.EDITABLE) && (mode == CalloutMode.EDITABLE) ) {
+      update_im_cursor( callout.text );
+      _im_context.focus_in();
+      if( (callout.text != null) && callout.text.is_within( _scaled_x, _scaled_y ) ) {
+        set_cursor( text_cursor );
+      }
+      undo_text.orig.copy( callout.text );
+      undo_text.ct      = callout.text;
+      undo_text.do_undo = undoable;
+      callout.mode = mode;
+    } else if( (callout.mode == CalloutMode.EDITABLE) && (mode != CalloutMode.EDITABLE) ) {
+      _im_context.reset();
+      _im_context.focus_out();
+      if( (callout.text != null) && callout.text.is_within( _scaled_x, _scaled_y ) ) {
+        reset_cursor();
+      }
+      undo_text.clear();
+      if( undo_text.do_undo ) {
+        undo_buffer.add_item( new UndoCalloutText( this, callout, undo_text.orig ) );
+      }
+      undo_text.ct      = null;
+      undo_text.do_undo = false;
+      callout.mode = mode;
+      auto_save();
+    } else {
+      callout.mode = mode;
+    }
+  }
+
   /* Returns the undo buffer associated with the current state */
   public UndoBuffer current_undo_buffer() {
     var current = _selected.current_node();
@@ -938,6 +997,11 @@ public class DrawArea : Gtk.DrawingArea {
   /* Sets the current selected group to the specified group */
   public void set_current_group( NodeGroup? g ) {
     _selected.set_current_group( g );
+  }
+
+  /* Sets the current selected callout to the specified callout */
+  public void set_current_callout( Callout? c ) {
+    _selected.set_current_callout( c );
   }
 
   /* Toggles the value of the specified node, if possible */
@@ -1018,6 +1082,39 @@ public class DrawArea : Gtk.DrawingArea {
     }
     queue_draw();
     auto_save();
+  }
+
+  /* Adds a callout to the currently selected node */
+  public void add_callout() {
+    var current = _selected.current_node();
+    if( (current != null) && (current.callout == null) ) {
+      undo_buffer.add_item( new UndoNodeCallout( current ) );
+      current.callout = new Callout( current );
+      current.callout.style = StyleInspector.styles.get_global_style();
+      _selected.set_current_callout( current.callout, (_focus_mode ? _focus_alpha : 1.0) );
+      set_callout_mode( current.callout, CalloutMode.EDITABLE );
+      queue_draw();
+      auto_save();
+    }
+  }
+
+  /* Removes a callout on the currently selected node */
+  public void remove_callout() {
+    if( is_node_selected() ) {
+      var current = _selected.current_node();
+      if( current.callout != null ) {
+        undo_buffer.add_item( new UndoNodeCallout( current ) );
+        current.callout = null;
+        queue_draw();
+        auto_save();
+      }
+    } else if( is_callout_selected() ) {
+      var current = _selected.current_callout().node;
+      undo_buffer.add_item( new UndoNodeCallout( current ) );
+      current.callout = null;
+      queue_draw();
+      auto_save();
+    }
   }
 
   /*
@@ -1409,6 +1506,13 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Clears the current callout (if it is set) and updates the UI accordingly */
+  private void clear_current_callout( bool signal_change ) {
+    if( _selected.num_callouts() > 0 ) {
+      _selected.clear_callouts( signal_change );
+    }
+  }
+
   /* Called whenever the user clicks on a valid connection */
   private bool set_current_connection_from_position( Connection conn, EventButton e ) {
 
@@ -1620,6 +1724,59 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
+  /* Handles a click on the specified callout */
+  public bool set_current_callout_from_position( Callout callout, EventButton e ) {
+
+    var scaled_x = scale_value( e.x );
+    var scaled_y = scale_value( e.y );
+    var shift    = (bool)(e.state & ModifierType.SHIFT_MASK);
+    var control  = (bool)(e.state & ModifierType.CONTROL_MASK);
+    var tag      = FormatTag.LENGTH;
+    var url      = "";
+
+    /* If the callout is being edited, go handle the click */
+    if( callout.is_within_resizer( scaled_x, scaled_y ) ) {
+      _resize = true;
+      _orig_width = (int)callout.total_width;
+      return( true );
+    } else if( !shift && control && callout.text.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
+      if( tag == FormatTag.URL ) {
+        Utils.open_url( url );
+      }
+      return( false );
+    }
+
+    if( callout.mode == CalloutMode.EDITABLE ) {
+      switch( e.type ) {
+        case EventType.BUTTON_PRESS        :
+          callout.text.set_cursor_at_char( scaled_x, scaled_y, shift );
+          _im_context.reset();
+          break;
+        case EventType.DOUBLE_BUTTON_PRESS :
+          callout.text.set_cursor_at_word( scaled_x, scaled_y, shift );
+          _im_context.reset();
+          break;
+        case EventType.TRIPLE_BUTTON_PRESS :
+          callout.text.set_cursor_all( false );
+          _im_context.reset();
+          break;
+      }
+      return( true );
+
+    /* If the user double-clicked a callout, set the callout mode to editable */
+    } else if( e.type == EventType.DOUBLE_BUTTON_PRESS ) {
+      set_callout_mode( callout, CalloutMode.EDITABLE );
+      return( true );
+
+    /* Otherwise, just make the callout the selected callout */
+    } else {
+      set_current_callout( callout );
+    }
+
+    return( true );
+
+  }
+
   /*
    Checks to see if the user has clicked a connection that was not previously
    selected.  If this is the case, select the connection.
@@ -1707,6 +1864,7 @@ public class DrawArea : Gtk.DrawingArea {
         clear_current_node( false );
         clear_current_sticker( false );
         clear_current_group( false );
+        clear_current_callout( false );
         return( set_current_connection_from_position( match_conn, e ) );
       } else {
         for( int i=0; i<_nodes.length; i++ ) {
@@ -1715,7 +1873,16 @@ public class DrawArea : Gtk.DrawingArea {
             clear_current_connection( false );
             clear_current_sticker( false );
             clear_current_group( false );
+            clear_current_callout( false );
             return( set_current_node_from_position( match_node, e ) );
+          }
+          var match_callout = _nodes.index( i ).contains_callout( x, y );
+          if( match_callout != null ) {
+            clear_current_node( false );
+            clear_current_connection( false );
+            clear_current_sticker( false );
+            clear_current_group( false );
+            return( set_current_callout_from_position( match_callout, e ) );
           }
         }
         var sticker = _stickers.is_within( x, y );
@@ -1723,6 +1890,7 @@ public class DrawArea : Gtk.DrawingArea {
           clear_current_node( false );
           clear_current_connection( false );
           clear_current_group( false );
+          clear_current_callout( false );
           return( set_current_sticker_from_position( sticker, e ) );
         }
         var group = groups.node_group_containing( _scaled_x, _scaled_y );
@@ -1730,6 +1898,7 @@ public class DrawArea : Gtk.DrawingArea {
           clear_current_node( false );
           clear_current_connection( false );
           clear_current_sticker( false );
+          clear_current_callout( false );
           return( set_current_group_from_position( group, e ) );
         }
         _select_box.x     = x;
@@ -1741,6 +1910,7 @@ public class DrawArea : Gtk.DrawingArea {
         clear_current_connection( true );
         clear_current_sticker( true );
         clear_current_group( true );
+        clear_current_callout( true );
         if( _last_node != null ) {
           _selected.set_current_node( _last_node );
         }
@@ -1992,13 +2162,16 @@ public class DrawArea : Gtk.DrawingArea {
 
     double x, y, w, h;
 
-    var current_conn = _selected.current_connection();
-    var current_node = _selected.current_node();
+    var current_conn    = _selected.current_connection();
+    var current_node    = _selected.current_node();
+    var current_callout = _selected.current_callout();
 
     if( current_conn != null ) {
       current_conn.bbox( out x, out y, out w, out h );
     } else if( current_node != null ) {
       current_node.bbox( out x, out y, out w, out h );
+    } else if( current_callout != null ) {
+      current_callout.bbox( out x, out y, out w, out h );
     } else {
       return;
     }
@@ -2187,8 +2360,9 @@ public class DrawArea : Gtk.DrawingArea {
   /* Displays the contextual menu based on what is currently selected */
   private void show_contextual_menu( Event event ) {
 
-    var current_node = _selected.current_node();
-    var current_conn = _selected.current_connection();
+    var current_node    = _selected.current_node();
+    var current_conn    = _selected.current_connection();
+    var current_callout = _selected.current_callout();
 
     if( current_node != null ) {
       if( current_node.mode == NodeMode.EDITABLE ) {
@@ -2199,9 +2373,19 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( _selected.num_nodes() > 1 ) {
       Utils.popup_menu( _nodes_menu, event );
     } else if( current_conn != null ) {
-      Utils.popup_menu( _conn_menu, event );
+      if( current_conn.mode == ConnMode.EDITABLE ) {
+        Utils.popup_menu( _text_menu, event );
+      } else {
+        Utils.popup_menu( _conn_menu, event );
+      }
     } else if( _selected.num_connections() > 1 ) {
       Utils.popup_menu( _conns_menu, event );
+    } else if( current_callout != null ) {
+      if( current_callout.mode == CalloutMode.EDITABLE ) {
+        Utils.popup_menu( _text_menu, event );
+      } else {
+        Utils.popup_menu( _callout_menu, event );
+      }
     } else if( _selected.num_groups() > 0 ) {
       Utils.popup_menu( _groups_menu, event );
     } else {
@@ -2289,6 +2473,7 @@ public class DrawArea : Gtk.DrawingArea {
     var current_node    = _selected.current_node();
     var current_conn    = _selected.current_connection();
     var current_sticker = _selected.current_sticker();
+    var current_callout = _selected.current_callout();
 
     /* If the mouse button is current pressed, handle it */
     if( _pressed ) {
@@ -2354,6 +2539,15 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         auto_save();
 
+      /* If we are dealing with a callout, handle it */
+      } else if( current_callout != null ) {
+        double diffx = _scaled_x - _press_x;
+        if( _resize ) {
+          current_callout.resize( diffx );
+          queue_draw();
+          auto_save();
+        }
+
       /* If we are holding the middle mouse button while moving, pan the canvas */
       } else if( _press_middle ) {
         double diff_x = _scaled_x - last_x;
@@ -2396,6 +2590,12 @@ public class DrawArea : Gtk.DrawingArea {
           return( false );
         }
       }
+      if( current_callout != null ) {
+        if( current_callout.is_within_resizer( _scaled_x, _scaled_y ) ) {
+          set_cursor( CursorType.SB_H_DOUBLE_ARROW );
+          return( false );
+        }
+      }
       if( current_conn != null )  {
         if( (current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING) ) {
           update_connection( event.x, event.y );
@@ -2426,7 +2626,7 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
       for( int i=0; i<_nodes.length; i++ ) {
-        Node match = _nodes.index( i ).contains( _scaled_x, _scaled_y, null );
+        var match = _nodes.index( i ).contains( _scaled_x, _scaled_y, null );
         if( match != null ) {
           update_last_match( match );
           if( (current_conn != null) && ((current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING)) ) {
@@ -2468,6 +2668,22 @@ public class DrawArea : Gtk.DrawingArea {
             reset_cursor();
             set_tooltip_markup( null );
             select_node_on_hover( match, shift );
+          }
+          return( false );
+        }
+        var callout = _nodes.index( i ).contains_callout( _scaled_x, _scaled_y );
+        if( callout != null ) {
+          if( control && callout.text.is_within_clickable( _scaled_x, _scaled_y, out tag, out url ) ) {
+            if( tag == FormatTag.URL ) {
+              set_cursor( url_cursor );
+              set_tooltip_markup( url );
+            }
+          } else if( callout.mode == CalloutMode.EDITABLE ) {
+            set_cursor( text_cursor );
+            set_tooltip_markup( null );
+          } else {
+            reset_cursor();
+            set_tooltip_markup( null );
           }
           return( false );
         }
@@ -2573,6 +2789,7 @@ public class DrawArea : Gtk.DrawingArea {
     var current_node    = _selected.current_node();
     var current_conn    = _selected.current_connection();
     var current_sticker = _selected.current_sticker();
+    var current_callout = _selected.current_callout();
 
     _pressed = false;
 
@@ -2594,6 +2811,8 @@ public class DrawArea : Gtk.DrawingArea {
       } else if( current_node != null ) {
         undo_buffer.add_item( new UndoNodeResize( current_node, _orig_width, _orig_resizable ) );
         current_node.image_resizable = _orig_resizable;
+      } else if( current_callout != null ) {
+        undo_buffer.add_item( new UndoCalloutResize( current_callout, _orig_width ) );
       }
       auto_save();
       return( false );
@@ -2728,6 +2947,18 @@ public class DrawArea : Gtk.DrawingArea {
   public bool is_connection_editable() {
     var current = _selected.current_connection();
     return( (current != null) && (current.mode == ConnMode.EDITABLE) );
+  }
+
+  /* Returns true if the current callout is in the selected state */
+  public bool is_callout_selected() {
+    var current = _selected.current_callout();
+    return( (current != null) && (current.mode == CalloutMode.SELECTED) );
+  }
+
+  /* Returns true if we are editing a callout title */
+  public bool is_callout_editable() {
+    var current = _selected.current_callout();
+    return( (current != null) && (current.mode == CalloutMode.EDITABLE) );
   }
 
   /* Returns true if the current connection is in the selected state */
@@ -3013,6 +3244,20 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Selects the callout associated with the current node (if one exists) */
+  public void select_callout() {
+    if( is_node_selected() && (_selected.current_node().callout != null) ) {
+      _selected.set_current_callout( _selected.current_node().callout );
+    }
+  }
+
+  /* Selects the node associated with the current callout */
+  public void select_callout_node() {
+    if( is_callout_selected() ) {
+      _selected.set_current_node( _selected.current_callout().node );
+    }
+  }
+
   /* Deletes the given node */
   public void delete_node() {
     var current = _selected.current_node();
@@ -3104,6 +3349,12 @@ public class DrawArea : Gtk.DrawingArea {
       remove_sticker();
     } else if( _selected.num_groups() > 0 ) {
       remove_groups();
+    } else if( is_callout_editable() ) {
+      _selected.current_callout().text.backspace( undo_text );
+      queue_draw();
+      auto_save();
+    } else if( is_callout_selected() ) {
+      remove_callout();
     }
   }
 
@@ -3129,6 +3380,12 @@ public class DrawArea : Gtk.DrawingArea {
       remove_sticker();
     } else if( _selected.num_groups() > 0 ) {
       remove_groups();
+    } else if( is_callout_editable() ) {
+      _selected.current_callout().text.delete( undo_text );
+      queue_draw();
+      auto_save();
+    } else if( is_callout_selected() ) {
+      remove_callout();
     }
   }
 
@@ -3157,6 +3414,17 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         auto_save();
       }
+    } else if( is_callout_editable() ) {
+      if( _completion.shown ) {
+        _completion.hide();
+      } else {
+        var current = _selected.current_callout();
+        _im_context.reset();
+        set_callout_mode( current, CalloutMode.SELECTED );
+        current_changed( this );
+        queue_draw();
+        auto_save();
+      }
     } else if( is_connection_connecting() ) {
       var current = _selected.current_connection();
       _connections.remove_connection( current, true );
@@ -3169,6 +3437,8 @@ public class DrawArea : Gtk.DrawingArea {
       _last_connection = null;
       queue_draw();
     } else if( is_node_selected() ) {
+      hide_properties();
+    } else if( is_callout_selected() ) {
       hide_properties();
     }
   }
@@ -3367,6 +3637,7 @@ public class DrawArea : Gtk.DrawingArea {
         var current = _selected.current_connection();
         current.edit_title_end();
         set_connection_mode( current, ConnMode.SELECTED );
+        auto_save();
         current_changed( this );
         queue_draw();
       }
@@ -3384,9 +3655,20 @@ public class DrawArea : Gtk.DrawingArea {
             add_root_node();
           }
         } else {
+          auto_save();
           current_changed( this );
           queue_draw();
         }
+      }
+    } else if( is_callout_editable() ) {
+      if( _completion.shown ) {
+        _completion.select();
+        queue_draw();
+      } else {
+        var current = _selected.current_callout();
+        set_callout_mode( current, CalloutMode.SELECTED );
+        current_changed( this );
+        queue_draw();
       }
     } else if( is_connection_connecting() && (_attach_node != null) ) {
       end_connection( _attach_node );
@@ -3414,6 +3696,10 @@ public class DrawArea : Gtk.DrawingArea {
       see();
       current_changed( this );
       queue_draw();
+    } else if( is_callout_editable() ) {
+      _selected.current_callout().text.insert( "\n", undo_text );
+      current_changed( this );
+      queue_draw();
     }
   }
 
@@ -3427,6 +3713,10 @@ public class DrawArea : Gtk.DrawingArea {
       _selected.current_node().name.backspace_word( undo_text );
       current_changed( this );
       queue_draw();
+    } else if( is_callout_editable() ) {
+      _selected.current_callout().text.backspace_word( undo_text );
+      current_changed( this );
+      queue_draw();
     }
   }
 
@@ -3438,6 +3728,10 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     } else if( is_node_editable() ) {
       _selected.current_node().name.delete_word( undo_text );
+      current_changed( this );
+      queue_draw();
+    } else if( is_callout_editable() ) {
+      _selected.current_callout().text.delete_word( undo_text );
       current_changed( this );
       queue_draw();
     }
@@ -3725,6 +4019,13 @@ public class DrawArea : Gtk.DrawingArea {
         _selected.current_node().name.move_cursor( 1 );
       }
       queue_draw();
+    } else if( is_callout_editable() ) {
+      if( shift ) {
+        _selected.current_callout().text.selection_by_char( 1 );
+      } else {
+        _selected.current_callout().text.move_cursor( 1 );
+      }
+      queue_draw();
     } else if( is_connection_connecting() && (_attach_node != null) ) {
       update_connection_by_node( get_node_right( _attach_node ) );
     } else if( is_connection_selected() ) {
@@ -3763,6 +4064,13 @@ public class DrawArea : Gtk.DrawingArea {
         _selected.current_node().name.move_cursor_by_word( 1 );
       }
       queue_draw();
+    } else if( is_callout_editable() ) {
+      if( shift ) {
+        _selected.current_callout().text.selection_by_word( 1 );
+      } else {
+        _selected.current_callout().text.move_cursor_by_word( 1 );
+      }
+      queue_draw();
     }
   }
 
@@ -3780,6 +4088,13 @@ public class DrawArea : Gtk.DrawingArea {
         _selected.current_node().name.selection_by_char( -1 );
       } else {
         _selected.current_node().name.move_cursor( -1 );
+      }
+      queue_draw();
+    } else if( is_callout_editable() ) {
+      if( shift ) {
+        _selected.current_callout().text.selection_by_char( -1 );
+      } else {
+        _selected.current_callout().text.move_cursor( -1 );
       }
       queue_draw();
     } else if( is_connection_connecting() && (_attach_node != null) ) {
@@ -3820,6 +4135,12 @@ public class DrawArea : Gtk.DrawingArea {
         _selected.current_node().name.move_cursor_by_word( -1 );
       }
       queue_draw();
+    } else if( is_callout_editable() ) {
+      if( shift ) {
+        _selected.current_callout().text.selection_by_word( -1 );
+      } else {
+        _selected.current_callout().text.move_cursor_by_word( -1 );
+      }
     }
   }
 
@@ -3831,6 +4152,9 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_node_editable() ) {
       _selected.current_node().name.set_cursor_all( false );
       queue_draw();
+    } else if( is_callout_editable() ) {
+      _selected.current_callout().text.set_cursor_all( false );
+      queue_draw();
     }
   }
 
@@ -3841,6 +4165,9 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
     } else if( is_node_editable() ) {
       _selected.current_node().name.clear_selection();
+      queue_draw();
+    } else if( is_callout_editable() ) {
+      _selected.current_callout().text.clear_selection();
       queue_draw();
     }
   }
@@ -3869,6 +4196,8 @@ public class DrawArea : Gtk.DrawingArea {
       insert_emoji( _selected.current_node().name );
     } else if( is_connection_editable() ) {
       insert_emoji( _selected.current_connection().title );
+    } else if( is_callout_editable() ) {
+      insert_emoji( _selected.current_callout().text );
     }
   }
 
@@ -3882,17 +4211,17 @@ public class DrawArea : Gtk.DrawingArea {
    A link can be added if text is selected and the selected text does not
    overlap with any existing links.
   */
-  public bool add_link_possible( Node node ) {
+  public bool add_link_possible( CanvasText ct ) {
 
     int cursor, selstart, selend;
-    if( node.name.is_selected() ) {
-      node.name.get_cursor_info( out cursor, out selstart, out selend );
+    if( ct.is_selected() ) {
+      ct.get_cursor_info( out cursor, out selstart, out selend );
     } else {
       selstart = 0;
-      selend   = node.name.text.text.length;
+      selend   = ct.text.text.length;
     }
 
-    return( (selstart != selend) && !node.name.text.is_tag_applied_in_range( FormatTag.URL, selstart, selend ) );
+    return( (selstart != selend) && !ct.text.is_tag_applied_in_range( FormatTag.URL, selstart, selend ) );
 
   }
 
@@ -3901,11 +4230,16 @@ public class DrawArea : Gtk.DrawingArea {
    or connection.
   */
   private void handle_control_k( bool shift ) {
-    var current = _selected.current_node();
-    if( current != null ) {
+    CanvasText? ct = null;
+    if( is_node_editable() ) {
+      ct = _selected.current_node().name;
+    } else if( is_callout_editable() ) {
+      ct = _selected.current_callout().text;
+    }
+    if( ct != null ) {
       if( shift ) {
         url_editor.remove_url();
-      } else if( add_link_possible( current ) ) {
+      } else if( add_link_possible( ct ) ) {
         url_editor.add_url();
       }
     }
@@ -3924,112 +4258,115 @@ public class DrawArea : Gtk.DrawingArea {
     win.close_current_tab();
   }
 
+  /* Handles Control-home key in edit mode for canvas text */
+  private void edit_control_home( CanvasText ct, bool shift ) {
+    if( shift ) {
+      ct.selection_to_start( true );
+    } else {
+      ct.move_cursor_to_start();
+    }
+    _im_context.reset();
+    queue_draw();
+  }
+
   /* Called whenever the Control+home key is entered in the drawing area */
   private void handle_control_home( bool shift ) {
     if( is_connection_editable() ) {
-      if( shift ) {
-        _selected.current_connection().title.selection_to_start( true );
-      } else {
-        _selected.current_connection().title.move_cursor_to_start();
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_control_home( _selected.current_connection().title, shift );
     } else if( is_node_editable() ) {
-      if( shift ) {
-        _selected.current_node().name.selection_to_start( true );
-      } else {
-        _selected.current_node().name.move_cursor_to_start();
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_control_home( _selected.current_node().name, shift );
+    } else if( is_callout_editable() ) {
+      edit_control_home( _selected.current_callout().text, shift );
     }
+  }
+
+  /* Handles home key in edit mode for canvas text */
+  private void edit_home( CanvasText ct, bool shift ) {
+    if( shift ) {
+      ct.selection_to_start_of_line( true );
+    } else {
+      ct.move_cursor_to_start_of_line();
+    }
+    _im_context.reset();
+    queue_draw();
   }
 
   /* Called whenever the home key is entered in the drawing area */
   private void handle_home( bool shift ) {
     if( is_connection_editable() ) {
-      if( shift ) {
-        _selected.current_connection().title.selection_to_start_of_line( true );
-      } else {
-        _selected.current_connection().title.move_cursor_to_start_of_line();
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_home( _selected.current_connection().title, shift );
     } else if( is_node_editable() ) {
-      if( shift ) {
-        _selected.current_node().name.selection_to_start_of_line( true );
-      } else {
-        _selected.current_node().name.move_cursor_to_start_of_line();
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_home( _selected.current_node().name, shift );
+    } else if( is_callout_editable() ) {
+      edit_home( _selected.current_callout().text, shift );
     }
+  }
+
+  /* Handles Control-end key in edit mode for canvas text */
+  private void edit_control_end( CanvasText ct, bool shift ) {
+    if( shift ) {
+      ct.selection_to_end( true );
+    } else {
+      ct.move_cursor_to_end();
+    }
+    _im_context.reset();
+    queue_draw();
   }
 
   /* Called whenever the Control+end key is entered in the drawing area */
   private void handle_control_end( bool shift ) {
     if( is_connection_editable() ) {
-      if( shift ) {
-        _selected.current_connection().title.selection_to_end( true );
-      } else {
-        _selected.current_connection().title.move_cursor_to_end();
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_control_end( _selected.current_connection().title, shift );
     } else if( is_node_editable() ) {
-      if( shift ) {
-        _selected.current_node().name.selection_to_end( true );
-      } else {
-        _selected.current_node().name.move_cursor_to_end();
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_control_end( _selected.current_node().name, shift );
+    } else if( is_callout_editable() ) {
+      edit_control_end( _selected.current_callout().text, shift );
     }
+  }
+
+  /* Handles End key in edit mode for canvas text */
+  private void edit_end( CanvasText ct, bool shift ) {
+    if( shift ) {
+      ct.selection_to_end_of_line( true );
+    } else {
+      ct.move_cursor_to_end_of_line();
+    }
+    _im_context.reset();
+    queue_draw();
   }
 
   /* Called whenever the end key is entered in the drawing area */
   private void handle_end( bool shift ) {
     if( is_connection_editable() ) {
-      if( shift ) {
-        _selected.current_connection().title.selection_to_end_of_line( true );
-      } else {
-        _selected.current_connection().title.move_cursor_to_end_of_line();
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_end( _selected.current_connection().title, shift );
     } else if( is_node_editable() ) {
-      if( shift ) {
-        _selected.current_node().name.selection_to_end_of_line( true );
-      } else {
-        _selected.current_node().name.move_cursor_to_end_of_line();
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_end( _selected.current_node().name, shift );
+    } else if( is_callout_editable() ) {
+      edit_end( _selected.current_callout().text, shift );
     }
+  }
+
+  /* Handles Up key in edit mode for canvas text */
+  private void edit_up( CanvasText ct, bool shift ) {
+    if( _completion.shown ) {
+      _completion.up();
+    } else if( shift ) {
+      ct.selection_vertically( -1 );
+    } else {
+      ct.move_cursor_vertically( -1 );
+    }
+    _im_context.reset();
+    queue_draw();
   }
 
   /* Called whenever the up key is entered in the drawing area */
   private void handle_up( bool shift, bool alt ) {
     if( is_connection_editable() ) {
-      if( _completion.shown ) {
-        _completion.up();
-      } else if( shift ) {
-        _selected.current_connection().title.selection_vertically( -1 );
-      } else {
-        _selected.current_connection().title.move_cursor_vertically( -1 );
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_up( _selected.current_connection().title, shift );
     } else if( is_node_editable() ) {
-      if( _completion.shown ) {
-        _completion.up();
-      } else if( shift ) {
-        _selected.current_node().name.selection_vertically( -1 );
-      } else {
-        _selected.current_node().name.move_cursor_vertically( -1 );
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_up( _selected.current_node().name, shift );
+    } else if( is_callout_editable() ) {
+      edit_up( _selected.current_callout().text, shift );
     } else if( is_connection_connecting() && (_attach_node != null) ) {
       update_connection_by_node( get_node_up( _attach_node ) );
     } else if( is_node_selected() ) {
@@ -4047,52 +4384,51 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  private void edit_control_up( CanvasText ct, bool shift ) {
+    if( shift ) {
+      ct.selection_to_start( false );
+    } else {
+      ct.move_cursor_to_start();
+    }
+    _im_context.reset();
+    queue_draw();
+  }
+
   /*
    If the Control key is used, jumps the cursor to the beginning of the text.  If Control-Shift
    is used, selects everything from the beginnning of the string to the cursor position.
   */
   private void handle_control_up( bool shift ) {
     if( is_connection_editable() ) {
-      if( shift ) {
-        _selected.current_connection().title.selection_to_start( false );
-      } else {
-        _selected.current_connection().title.move_cursor_to_start();
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_control_up( _selected.current_connection().title, shift );
     } else if( is_node_editable() ) {
-      if( shift ) {
-        _selected.current_node().name.selection_to_start( false );
-      } else {
-        _selected.current_node().name.move_cursor_to_start();
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_control_up( _selected.current_node().name, shift );
+    } else if( is_callout_editable() ) {
+      edit_control_up( _selected.current_callout().text, shift );
     }
+  }
+
+  /* Handles the Down key in edit mode for canvas text */
+  private void edit_down( CanvasText ct, bool shift ) {
+    if( _completion.shown ) {
+      _completion.down();
+    } else if( shift ) {
+      ct.selection_vertically( 1 );
+    } else {
+      ct.move_cursor_vertically( 1 );
+    }
+    _im_context.reset();
+    queue_draw();
   }
 
   /* Called whenever the down key is entered in the drawing area */
   private void handle_down( bool shift, bool alt ) {
     if( is_connection_editable() ) {
-      if( _completion.shown ) {
-        _completion.down();
-      } else if( shift ) {
-        _selected.current_connection().title.selection_vertically( 1 );
-      } else {
-        _selected.current_connection().title.move_cursor_vertically( 1 );
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_down( _selected.current_connection().title, shift );
     } else if( is_node_editable() ) {
-      if( _completion.shown ) {
-        _completion.down();
-      } else if( shift ) {
-        _selected.current_node().name.selection_vertically( 1 );
-      } else {
-        _selected.current_node().name.move_cursor_vertically( 1 );
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_down( _selected.current_node().name, shift );
+    } else if( is_callout_editable() ) {
+      edit_down( _selected.current_callout().text, shift );
     } else if( is_connection_connecting() && (_attach_node != null) ) {
       update_connection_by_node( get_node_down( _attach_node ) );
     } else if( is_node_selected() ) {
@@ -4110,27 +4446,28 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Handles Control-Down key in edit mode for canvas text */
+  private void edit_control_down( CanvasText ct, bool shift ) {
+    if( shift ) {
+      ct.selection_to_end( false );
+    } else {
+      ct.move_cursor_to_end();
+    }
+    _im_context.reset();
+    queue_draw();
+  }
+
   /*
    If the Control key is used, jumps the cursor to the end of the text.  If Control-Shift is
    used, selects all text from the current cursor position to the end of the string.
   */
   private void handle_control_down( bool shift ) {
     if( is_connection_editable() ) {
-      if( shift ) {
-        _selected.current_connection().title.selection_to_end( false );
-      } else {
-        _selected.current_connection().title.move_cursor_to_end();
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_control_down( _selected.current_connection().title, shift );
     } else if( is_node_editable() ) {
-      if( shift ) {
-        _selected.current_node().name.selection_to_end( false );
-      } else {
-        _selected.current_node().name.move_cursor_to_end();
-      }
-      _im_context.reset();
-      queue_draw();
+      edit_control_down( _selected.current_node().name, shift );
+    } else if( is_callout_editable() ) {
+      edit_control_down( _selected.current_callout().text, shift );
     }
   }
 
@@ -4170,6 +4507,9 @@ public class DrawArea : Gtk.DrawingArea {
       _selected.current_node().name.insert( str, undo_text );
       see();
       queue_draw();
+    } else if( is_callout_editable() ) {
+      _selected.current_callout().text.insert( str, undo_text );
+      queue_draw();
     } else {
       return( false );
     }
@@ -4192,6 +4532,9 @@ public class DrawArea : Gtk.DrawingArea {
     } else if( is_connection_editable() ) {
       retrieve_surrounding_in_text( _selected.current_connection().title );
       return( true );
+    } else if( is_callout_editable() ) {
+      retrieve_surrounding_in_text( _selected.current_callout().text );
+      return( true );
     }
     return( false );
   }
@@ -4212,6 +4555,9 @@ public class DrawArea : Gtk.DrawingArea {
       return( true );
     } else if( is_connection_editable() ) {
       delete_surrounding_in_text( _selected.current_connection().title, offset, nchars );
+      return( true );
+    } else if( is_callout_editable() ) {
+      delete_surrounding_in_text( _selected.current_callout().text, offset, nchars );
       return( true );
     }
     return( false );
@@ -4238,21 +4584,22 @@ public class DrawArea : Gtk.DrawingArea {
     animator.flush();
 
     /* Figure out which modifiers were used */
-    var control       = (bool)(e.state & ModifierType.CONTROL_MASK);
-    var shift         = (bool)(e.state & ModifierType.SHIFT_MASK);
-    var alt           = (bool)(e.state & ModifierType.MOD1_MASK);
-    var nomod         = !(control || shift || alt);
-    var current_node  = _selected.current_node();
-    var current_conn  = _selected.current_connection();
-    var current_group = _selected.current_group();
-    var keymap        = Keymap.get_for_display( Display.get_default() );
-    KeymapKey[] ks    = {};
-    uint[] kvs        = {};
+    var control         = (bool)(e.state & ModifierType.CONTROL_MASK);
+    var shift           = (bool)(e.state & ModifierType.SHIFT_MASK);
+    var alt             = (bool)(e.state & ModifierType.MOD1_MASK);
+    var nomod           = !(control || shift || alt);
+    var current_node    = _selected.current_node();
+    var current_conn    = _selected.current_connection();
+    var current_callout = _selected.current_callout();
+    var current_group   = _selected.current_group();
+    var keymap          = Keymap.get_for_display( Display.get_default() );
+    KeymapKey[] ks      = {};
+    uint[] kvs          = {};
 
     keymap.get_entries_for_keycode( e.hardware_keycode, out ks, out kvs );
 
     /* If there is a current node or connection selected, operate on it */
-    if( (current_node != null) || (current_conn != null) || (current_group != null) ) {
+    if( (current_node != null) || (current_conn != null) || (current_callout != null) || (current_group != null) ) {
       if( control ) {
         if( !shift && has_key( kvs, Key.c ) )           { do_copy(); }
         else if( !shift && has_key( kvs, Key.x ) )      { do_cut(); }
@@ -4300,6 +4647,8 @@ public class DrawArea : Gtk.DrawingArea {
             return( handle_node_keypress( e, kvs ) );
           } else if( (current_conn != null) && (current_conn.mode != ConnMode.EDITABLE) ) {
             return( handle_connection_keypress( e, kvs ) );
+          } else if( (current_callout != null) && (current_callout.mode != CalloutMode.EDITABLE) ) {
+            return( handle_callout_keypress( e, kvs ) );
           } else if( current_group != null ) {
             return( handle_group_keypress( e, kvs ) );
           } else {
@@ -4353,6 +4702,25 @@ public class DrawArea : Gtk.DrawingArea {
     var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
     if( shift && has_key( kvs, Key.e ) )       { show_properties( "current", PropertyGrab.NOTE ); }
     else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
+    else if( !shift && has_key( kvs, Key.u ) ) {  // Perform undo
+      if( undo_buffer.undoable() ) {
+        undo_buffer.undo();
+      }
+    }
+    else return( false );
+    return( true );
+  }
+
+  private bool handle_callout_keypress( EventKey e, uint[] kvs ) {
+    var current = _selected.current_callout();
+    var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
+    if( shift && has_key( kvs, Key.e ) )       { show_properties( "current", PropertyGrab.NOTE ); }
+    else if( !shift && has_key( kvs, Key.e ) ) {
+      set_callout_mode( current, CalloutMode.EDITABLE );
+      queue_draw();
+    }
+    else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
+    else if(  shift && has_key( kvs, Key.o ) ) { select_callout_node(); }
     else if( !shift && has_key( kvs, Key.u ) ) {  // Perform undo
       if( undo_buffer.undoable() ) {
         undo_buffer.undo();
@@ -4426,6 +4794,8 @@ public class DrawArea : Gtk.DrawingArea {
     else if( !shift && has_key( kvs, Key.l ) ) { handle_right( false, false ); }
     else if( !shift && has_key( kvs, Key.m ) ) { select_root_node(); }
     else if( !shift && has_key( kvs, Key.n ) ) { select_sibling_node( 1 ); }
+    else if( !shift && has_key( kvs, Key.o ) ) { add_callout(); }
+    else if(  shift && has_key( kvs, Key.o ) ) { select_callout(); }
     else if( !shift && has_key( kvs, Key.p ) ) { select_sibling_node( -1 ); }
     else if( !shift && has_key( kvs, Key.r ) ) {  // Perform redo
       if( undo_buffer.redoable() ) {
@@ -4482,6 +4852,20 @@ public class DrawArea : Gtk.DrawingArea {
             reset_cursor();
             set_tooltip_markup( null );
           }
+          return;
+        }
+      }
+      var callout = _nodes.index( i ).contains_callout( _scaled_x, _scaled_y );
+      if( (callout != null) && callout.text.is_within_clickable( _scaled_x, _scaled_y, out tag, out url ) ) {
+        if( tag == FormatTag.URL ) {
+          if( pressed ) {
+            set_cursor( url_cursor );
+            set_tooltip_markup( url );
+          } else {
+            reset_cursor();
+            set_tooltip_markup( null );
+          }
+          return;
         }
       }
     }
@@ -4608,13 +4992,16 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Copies the currently selected text to the clipboard */
   public void copy_selected_text() {
-    string? value        = null;
-    var     current_node = _selected.current_node();
-    var     current_conn = _selected.current_connection();
+    string? value           = null;
+    var     current_node    = _selected.current_node();
+    var     current_conn    = _selected.current_connection();
+    var     current_callout = _selected.current_callout();
     if( current_node != null ) {
       value = current_node.name.get_selected_text();
     } else if( current_conn != null ) {
       value = current_conn.title.get_selected_text();
+    } else if( current_callout != null ) {
+      value = current_callout.text.get_selected_text();
     }
     if( value != null ) {
       MinderClipboard.copy_text( value );
@@ -4631,7 +5018,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
     } else if( _selected.nodes().length > 1 ) {
       MinderClipboard.copy_nodes( this );
-    } else if( is_connection_editable() ) {
+    } else if( is_connection_editable() || is_callout_editable() ) {
       copy_selected_text();
     }
   }
@@ -4686,12 +5073,15 @@ public class DrawArea : Gtk.DrawingArea {
   /* Cuts the current selected text to the clipboard */
   public void cut_selected_text() {
     copy_selected_text();
-    var current_node = _selected.current_node();
-    var current_conn = _selected.current_connection();
+    var current_node    = _selected.current_node();
+    var current_conn    = _selected.current_connection();
+    var current_callout = _selected.current_callout();
     if( current_node != null ) {
       current_node.name.insert( "", undo_text );
     } else if( current_conn != null ) {
       current_conn.title.insert( "", undo_text );
+    } else if( current_callout != null ) {
+      current_callout.text.insert( "", undo_text );
     }
     queue_draw();
     auto_save();
@@ -4707,7 +5097,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
     } else if( _selected.nodes().length > 1 ) {
       cut_selected_nodes_to_clipboard();
-    } else if( is_connection_editable() ) {
+    } else if( is_connection_editable() || is_callout_editable() ) {
       cut_selected_text();
     }
   }
@@ -4726,6 +5116,16 @@ public class DrawArea : Gtk.DrawingArea {
     orig_title.copy( conn.title );
     conn.title.text.replace_text( 0, conn.title.text.text.char_count(), text.strip() );
     undo_buffer.add_item( new UndoConnectionTitle( this, conn, orig_title ) );
+    queue_draw();
+    current_changed( this );
+    auto_save();
+  }
+
+  private void replace_callout_text( Callout callout, string text ) {
+    var orig_text = new CanvasText( this );
+    orig_text.copy( callout.text );
+    callout.text.text.replace_text( 0, callout.text.text.text.char_count(), text.strip() );
+    undo_buffer.add_item( new UndoCalloutText( this, callout, orig_text ) );
     queue_draw();
     current_changed( this );
     auto_save();
@@ -4766,6 +5166,11 @@ public class DrawArea : Gtk.DrawingArea {
 
   private void insert_connection_text( Connection conn, string text ) {
     conn.title.insert( text, undo_text );
+    queue_draw();
+  }
+
+  private void insert_callout_text( Callout callout, string text ) {
+    callout.text.insert( text, undo_text );
     queue_draw();
   }
 
@@ -4830,19 +5235,24 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Called by the clipboard to paste text */
   public void paste_text( string text, bool shift ) {
-    var node = _selected.current_node();
-    var conn = _selected.current_connection();
+    var node    = _selected.current_node();
+    var conn    = _selected.current_connection();
+    var callout = _selected.current_callout();
     if( shift ) {
       if( (node != null) && (node.mode == NodeMode.CURRENT) ) {
         replace_node_text( node, text );
       } else if( (conn != null) && (conn.mode == ConnMode.SELECTED) ) {
         replace_connection_text( conn, text );
+      } else if( (callout != null) && (callout.mode == CalloutMode.SELECTED) ) {
+        replace_callout_text( callout, text );
       }
     } else {
       if( (node != null) && (node.mode == NodeMode.EDITABLE) ) {
         insert_node_text( node, text );
       } else if( (conn != null) && (conn.mode == ConnMode.EDITABLE) ) {
         insert_connection_text( conn, text );
+      } else if( (callout != null) && (callout.mode == CalloutMode.EDITABLE) ) {
+        insert_callout_text( callout, text );
       } else if( conn == null ) {
         paste_text_as_node( node, text );
       }
@@ -5313,9 +5723,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Displays the auto-completion widget with the given list of values */
   public void show_auto_completion( GLib.List<TextCompletionItem> values, int start_pos, int end_pos ) {
-    var node = _selected.current_node();
     if( is_node_editable() ) {
-      _completion.show( node.name, values, start_pos, end_pos );
+      _completion.show( _selected.current_node().name, values, start_pos, end_pos );
+    } else if( is_callout_editable() ) {
+      _completion.show( _selected.current_callout().text, values, start_pos, end_pos );
     } else {
       _completion.hide();
     }
