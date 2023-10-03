@@ -94,13 +94,14 @@ public class ThemeEditor : Gtk.Box {
     add_color( _( "Attachable Highlight" ),   "attachable",            grid, 10 );
     add_color( _( "Connection Color" ),       "connection_background", grid, 11 );
     add_color( _( "Connection Title Color" ), "connection_foreground", grid, 12 );
-    add_color( _( "URL Link Background" ),    "url_background",        grid, 13 );
-    add_color( _( "URL Link Foreground" ),    "url_foreground",        grid, 14 );
-    add_color( _( "Tag" ),                    "tag",                   grid, 15 );
-    add_color( _( "Markdown Syntax Chars" ),  "syntax",                grid, 16 );
-    add_color( _( "Match Background" ),       "match_background",      grid, 17 );
-    add_color( _( "Match Foreground" ),       "match_foreground",      grid, 18 );
-    add_color( _( "Markdown List Item" ),     "markdown_listitem",     grid, 19 );
+    add_color( _( "Callout Background" ),     "callout_background",    grid, 13 );
+    add_color( _( "URL Link Background" ),    "url_background",        grid, 14 );
+    add_color( _( "URL Link Foreground" ),    "url_foreground",        grid, 15 );
+    add_color( _( "Tag" ),                    "tag",                   grid, 16 );
+    add_color( _( "Markdown Syntax Chars" ),  "syntax",                grid, 17 );
+    add_color( _( "Match Background" ),       "match_background",      grid, 18 );
+    add_color( _( "Match Foreground" ),       "match_foreground",      grid, 19 );
+    add_color( _( "Markdown List Item" ),     "markdown_listitem",     grid, 20 );
 
     var row = 20;
 
