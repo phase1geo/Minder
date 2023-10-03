@@ -34,10 +34,14 @@ public class ExportPNG : Export {
   public override bool export( string fname, DrawArea da ) {
 
     var transparent = get_bool( "transparent" );
+    var scale       = get_zoom( "zoom" ) / 100.0;
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
     da.document_rectangle( out x, out y, out w, out h );
+
+    w *= scale;
+    h *= scale;
 
     /* Create the drawing surface */
     var surface = new ImageSurface( (transparent ? Format.ARGB32 : Format.RGB24), ((int)w + 20), ((int)h + 20) );
@@ -50,6 +54,11 @@ public class ExportPNG : Export {
 
     /* Translate the image */
     context.translate( (10 - x), (10 - y) );
+
+    /* Scale the image */
+    context.scale( scale, scale );
+
+    /* Draw the image */
     da.draw_all( context, true );
 
     /* Write the pixbuf to the file */
@@ -74,18 +83,25 @@ public class ExportPNG : Export {
 
   /* Add the PNG settings */
   public override void add_settings( Grid grid ) {
+    add_setting_zoom( "zoom", grid, _( "Zoom %" ), null, 50, 500, 25, 100 ); 
     add_setting_bool( "transparent", grid, _( "Enable Transparent Background" ), null, false );
     add_setting_scale( "compression", grid, _( "Compression" ), null, 0, 9, 1, 5 );
   }
 
   /* Save the settings */
   public override void save_settings( Xml.Node* node ) {
+    node->set_prop( "zoom",        get_zoom( "zoom" ).to_string() );
     node->set_prop( "transparent", get_bool( "transparent" ).to_string() );
     node->set_prop( "compression", get_scale( "compression" ).to_string() );
   }
 
   /* Load the settings */
   public override void load_settings( Xml.Node* node ) {
+
+    var z = node->get_prop( "zoom" );
+    if( z != null ) {
+      set_zoom( "zoom", int.parse( z ) );
+    }
 
     var t = node->get_prop( "transparent" );
     if( t != null ) {

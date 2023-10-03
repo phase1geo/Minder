@@ -102,9 +102,11 @@ public class Exporter : Box {
 
     /* Add the page */
     var opts = new Grid();
-    opts.margin         = 5;
-    opts.column_spacing = 5;
-    opts.expand         = true;
+    opts.margin             = 5;
+    opts.column_homogeneous = true;
+    opts.row_spacing        = 5;
+    opts.column_spacing     = 5;
+    opts.expand             = true;
     export.add_settings( opts );
 
     var label = new Label( "<i>" + _( "Export Options" ) + "</i>" );

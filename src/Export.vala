@@ -89,6 +89,7 @@ public class Export {
     var sw  = new Switch();
     sw.halign = Align.END;
     sw.expand = true;
+    sw.active = dflt;
     sw.button_press_event.connect((e) => {
       sw.active = !sw.active;
       settings_changed();
@@ -100,7 +101,7 @@ public class Export {
 
     if( help != null ) {
       var hlp = make_help( help );
-      grid.attach( hlp, 0, (row + 1) );
+      grid.attach( hlp, 0, (row + 1), 2 );
     }
 
     _settings.@set( name, sw );
@@ -116,24 +117,50 @@ public class Export {
     lbl.use_markup = true;
 
     var scale = new Scale.with_range( Orientation.HORIZONTAL, min, max, step );
-    scale.halign       = Align.END;
+    scale.halign       = Align.FILL;
     scale.expand       = true;
     scale.draw_value   = true;
     scale.round_digits = max.to_string().char_count();
+    scale.set_value( dflt );
     scale.value_changed.connect(() => {
       settings_changed();
     });
-    scale.set_size_request( 150, -1 );
 
     grid.attach( lbl,   0, row );
     grid.attach( scale, 1, row );
 
     if( help != null ) {
       var hlp = make_help( help );
-      grid.attach( hlp, 0, (row + 1) );
+      grid.attach( hlp, 0, (row + 1), 2 );
     }
 
     _settings.@set( name, scale );
+
+  }
+
+  protected void add_setting_zoom( string name, Grid grid, string label, string? help, int min, int max, int step, int dflt ) {
+
+    var row = _settings.size * 2;
+
+    var lbl = new Label( Utils.make_title( label ) );
+    lbl.halign     = Align.START;
+    lbl.use_markup = true;
+
+    var zoom = new ZoomWidget( min, max, step );
+    zoom.value = dflt;
+    zoom.zoom_changed.connect(() => {
+      settings_changed();
+    });
+
+    grid.attach( lbl,  0, row );
+    grid.attach( zoom, 1, row );
+
+    if( help != null ) {
+      var hlp = make_help( help );
+      grid.attach( hlp, 0, (row + 1), 2 );
+    }
+
+    _settings.@set( name, zoom );
 
   }
 
@@ -145,6 +172,11 @@ public class Export {
   /* Returns true if the given setting is a scale */
   public bool is_scale_setting( string name ) {
     return( _settings.has_key( name ) && ((_settings.@get( name ) as Scale) != null) );
+  }
+
+  /* Returns true if the given setting is a zoom widget */
+  public bool is_zoom_setting( string name ) {
+    return( _settings.has_key( name ) && ((_settings.@get( name ) as ZoomWidget) != null) );
   }
 
   public void set_bool( string name, bool value ) {
@@ -170,6 +202,18 @@ public class Export {
     assert( _settings.has_key( name ) );
     var scale = (Scale)_settings.@get( name );
     return( (int)scale.get_value() );
+  }
+
+  public void set_zoom( string name, int value ) {
+    assert( _settings.has_key( name ) );
+    var zoom = (ZoomWidget)_settings.@get( name );
+    zoom.value = value;
+  }
+
+  protected int get_zoom( string name ) {
+    assert( _settings.has_key( name ) );
+    var zoom = (ZoomWidget)_settings.@get( name );
+    return( zoom.value );
   }
 
   /* Saves the settings */

@@ -32,9 +32,14 @@ public class ExportImage : Export {
   /* Default constructor */
   public override bool export( string fname, DrawArea da ) {
 
+    var scale = get_zoom( "zoom" ) / 100.0;
+
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
     da.document_rectangle( out x, out y, out w, out h );
+
+    w *= scale;
+    h *= scale;
 
     /* Create the drawing surface */
     var surface = new ImageSurface( Format.RGB24, ((int)w + 20), ((int)h + 20) );
@@ -43,6 +48,7 @@ public class ExportImage : Export {
     /* Recreate the image */
     da.get_style_context().render_background( context, 0, 0, ((int)w + 20), ((int)h + 20) );
     context.translate( (10 - x), (10 - y) );
+    context.scale( scale, scale );
     da.draw_all( context, true );
 
     /* Write the pixbuf to the file */
@@ -70,6 +76,7 @@ public class ExportImage : Export {
   }
 
   public override void add_settings( Grid grid ) {
+    add_setting_zoom( "zoom", grid, _( "Zoom %" ), null, 50, 500, 25, 100 );
     switch( name ) {
       case "jpeg" :  add_settings_jpeg( grid );  break;
     }
@@ -81,9 +88,13 @@ public class ExportImage : Export {
 
   /* Save the settings */
   public override void save_settings( Xml.Node* node ) {
+
+    node->set_prop( "zoom", get_zoom( "zoom" ).to_string() );
+
     switch( name ) {
       case "jpeg" :  save_settings_jpeg( node );  break;
     }
+
   }
 
   private void save_settings_jpeg( Xml.Node* node ) {
@@ -93,9 +104,16 @@ public class ExportImage : Export {
 
   /* Load the settings */
   public override void load_settings( Xml.Node* node ) {
+
+    var z = node->get_prop( "zoom" );
+    if( z != null ) {
+      set_zoom( "zoom", int.parse( z ) );
+    }
+
     switch( name ) {
       case "jpeg" :  load_settings_jpeg( node );  break;
     }
+
   }
 
   private void load_settings_jpeg( Xml.Node* node ) {

@@ -77,7 +77,7 @@ public class ZoomWidget : Gtk.Box {
   public signal void zoom_changed( double factor );
 
   /* Constructor */
-  public ZoomWidget( int min, int max, int step ) {
+  public ZoomWidget( int min, int max, int step, bool fill = true ) {
 
     this.min  = min;
     this.max  = max;
@@ -102,9 +102,9 @@ public class ZoomWidget : Gtk.Box {
     _zoom_in.set_tooltip_markup( Utils.tooltip_with_accel( _( "Zoom In" ), "<Control>plus" ) );
     _zoom_in.clicked.connect( zoom_in );
 
-    pack_start( _zoom_out,    false, true );
-    pack_start( _zoom_actual, false, true );
-    pack_start( _zoom_in,     false, true );
+    pack_start( _zoom_out,    false, fill );
+    pack_start( _zoom_actual, false, fill );
+    pack_start( _zoom_in,     false, fill );
 
     /* Update the state of the widget */
     update_state();
