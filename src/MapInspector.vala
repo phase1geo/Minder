@@ -295,9 +295,9 @@ public class MapInspector : Box {
     toolbar.pack_start( _vcenter, false, false );
     toolbar.pack_start( _vbottom, false, false );
 
-    var box = new Box( Orientation.VERTICAL, 10 );
+    var box = new Box( Orientation.HORIZONTAL, 10 );
     box.pack_start( lbl,     false, true );
-    box.pack_start( toolbar, false, true );
+    box.pack_end( toolbar, false, true );
 
     _alignment_revealer = new Revealer();
     _alignment_revealer.add( box );
