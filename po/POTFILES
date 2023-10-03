@@ -1,5 +1,7 @@
 src/About.vala
 src/Application.vala
+src/CalloutMenu.vala
+src/Callout.vala
 src/CanvasText.vala
 src/ConnectionInspector.vala
 src/ConnectionMenu.vala
@@ -76,6 +78,8 @@ src/themes/ThemeSolarizedDark.vala
 src/themes/ThemeSolarizedLight.vala
 src/Themes.vala
 src/Theme.vala
+src/undo_actions/UndoCalloutResize.vala
+src/undo_actions/UndoCalloutText.vala
 src/undo_actions/UndoConnectedNode.vala
 src/undo_actions/UndoConnectionAdd.vala
 src/undo_actions/UndoConnectionColor.vala
@@ -95,6 +99,7 @@ src/undo_actions/UndoGroupsRemove.vala
 src/undo_actions/UndoNodeAddParent.vala
 src/undo_actions/UndoNodeAttach.vala
 src/undo_actions/UndoNodeBalance.vala
+src/undo_actions/UndoNodeCallout.vala
 src/undo_actions/UndoNodeCut.vala
 src/undo_actions/UndoNodeDelete.vala
 src/undo_actions/UndoNodeDetach.vala

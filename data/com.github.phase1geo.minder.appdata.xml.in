@@ -92,16 +92,25 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
-    <release version="1.16.0" date="2023-09-01">
+    <release version="1.16.0" date="2023-11-01">
       <description>
         <p>New</p>
         <ul>
           <li>Added support for adding node links in node, connection or group notes.</li>
           <li>Added support for providing custom stickers.</li>
+          <li>Added support for callouts that can be applied to nodes.</li>
+          <li>Added node alignment toolbar in map sidebar when manual layout mode is selected.</li>
+          <li>Added output scaling to PNG/JPEG export options.</li>
         </ul>
         <p>Changes</p>
         <ul>
           <li>Updated Italian translation (thanks to @albanobatistella).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed potential issues with custom themes.</li>
+          <li>Fixed tab state saving when tabs are closed.</li>
+          <li>Fixed contextual menu when connection text is editable.</li>
         </ul>
       </description>
       <issues>
