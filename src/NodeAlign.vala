@@ -70,12 +70,12 @@ public class NodeAlign {
 
   /* Aligns all of the given nodes to the center of the first node horizontally */
   public static void align_hcenter( DrawArea da, Array<Node> nodes ) {
-    align_to( da, nodes, (first, node) => { node.posy = ((first.posy + (first.height / 2)) - (node.height / 2)); } );
+    align_to( da, nodes, (first, node) => { node.posx = ((first.posx + (first.width / 2)) - (node.width / 2)); } );
   }
 
   /* Aligns all of the given nodes to the center of the first node vertically */
   public static void align_vcenter( DrawArea da, Array<Node> nodes ) {
-    align_to( da, nodes, (first, node) => { node.posx = ((first.posx + (first.width / 2)) - (node.width / 2)); } );
+    align_to( da, nodes, (first, node) => { node.posy = ((first.posy + (first.height / 2)) - (node.height / 2)); } );
   }
 
 }

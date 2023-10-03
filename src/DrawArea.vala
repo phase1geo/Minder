@@ -4668,7 +4668,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     } else if( nomod || shift ) {
       if( !shift && has_key( kvs, Key.minus ) )             { if( nodes_alignable() ) NodeAlign.align_top( this, _selected.nodes() ); }
-      else if( !shift && has_key( kvs, Key.equal ) )        { if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() ); }
+      else if( !shift && has_key( kvs, Key.equal ) )        { if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() ); }
       else if(  shift && has_key( kvs, Key.z ) )            { zoom_in(); }
       else if( !shift && has_key( kvs, Key.bracketleft ) )  { if( nodes_alignable() ) NodeAlign.align_left( this, _selected.nodes() ); }
       else if( !shift && has_key( kvs, Key.bracketright ) ) { if( nodes_alignable() ) NodeAlign.align_right( this, _selected.nodes() ); }
@@ -4683,7 +4683,7 @@ public class DrawArea : Gtk.DrawingArea {
       else if( !shift && has_key( kvs, Key.t ) )            { change_selected_tasks(); }
       else if( !shift && has_key( kvs, Key.u ) )            { if( undo_buffer.undoable() ) undo_buffer.undo(); }
       else if( !shift && has_key( kvs, Key.z ) )            { zoom_out(); }
-      else if(  shift && has_key( kvs, Key.bar ) )          { if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() ); }
+      else if(  shift && has_key( kvs, Key.bar ) )          { if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() ); }
       else if( has_key( kvs, Key.BackSpace ) )              { handle_backspace(); }
       else if( has_key( kvs, Key.Delete ) )                 { handle_delete(); }
       else if( has_key( kvs, Key.Return ) )                 { handle_return( shift ); }

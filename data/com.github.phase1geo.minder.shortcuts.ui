@@ -406,6 +406,13 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Create Callout</property>
+                <property name="accelerator">o</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Center In View</property>
                 <property name="accelerator">&lt;shift&gt;c</property>
                 <property name="visible">1</property>
@@ -510,6 +517,13 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Select Callout</property>
+                <property name="accelerator">&lt;shift&gt;o</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Select Attached Connection</property>
                 <property name="accelerator">&lt;shift&gt;x</property>
                 <property name="visible">1</property>
@@ -571,7 +585,7 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">Align Center Horizontally</property>
+                <property name="title" translatable="yes">Align Vertical Center</property>
                 <property name="accelerator">equal</property>
                 <property name="visible">1</property>
               </object>
@@ -592,7 +606,7 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">Align Center Vertically</property>
+                <property name="title" translatable="yes">Align Horizontal Center</property>
                 <property name="accelerator">bar</property>
                 <property name="visible">1</property>
               </object>
@@ -601,6 +615,39 @@
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Align Right Side</property>
                 <property name="accelerator">bracketright</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkShortcutsSection">
+        <property name="section-name">callout</property>
+        <property name="title" translatable="yes">Callout Commands</property>
+        <property name="visible">1</property>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes">Change Current</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Remove Callout</property>
+                <property name="accelerator">Delete BackSpace</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes">Selection</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Select Node</property>
+                <property name="accelerator">&lt;shift&gt;o</property>
                 <property name="visible">1</property>
               </object>
             </child>

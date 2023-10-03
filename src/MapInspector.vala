@@ -32,6 +32,13 @@ public class MapInspector : Box {
   private Button?                     _fold_completed = null;
   private Button?                     _unfold_all     = null;
   private Switch                      _hide_callouts;
+  private Button                      _hleft;
+  private Button                      _hcenter;
+  private Button                      _hright;
+  private Button                      _vtop;
+  private Button                      _vcenter;
+  private Button                      _vbottom;
+  private Revealer                    _alignment_revealer;
 
   public MapInspector( MainWindow win, GLib.Settings settings ) {
 
@@ -45,6 +52,7 @@ public class MapInspector : Box {
     add_callout_ui();
     add_link_color_ui();
     add_layout_ui();
+    add_alignmen_ui();
     add_theme_ui();
     add_button_ui();
 
@@ -214,6 +222,7 @@ public class MapInspector : Box {
       Node? node   = _da.get_current_node();
       _da.set_layout( name, ((node == null) ? null : node.get_root()) );
       _balance.set_sensitive( layout.balanceable );
+      _alignment_revealer.reveal_child = (name == _( "Manual" ));
     }
     return( false );
   }
@@ -231,6 +240,81 @@ public class MapInspector : Box {
       return( true );
     }
     return( false );
+  }
+
+  /* Adds alignment buttons when multiple nodes are selected in manual layout mode */
+  private void add_alignmen_ui() {
+
+    /* Create the modebutton to select the current layout */
+    var lbl = new Label( Utils.make_title( _( "Node Alignment" ) ) );
+    lbl.xalign = (float)0;
+    lbl.use_markup = true;
+
+    /* Create the alignment buttons */
+    _hleft = new Button.from_icon_name( "align-horizontal-left-symbolic", IconSize.SMALL_TOOLBAR );
+    _hleft.set_tooltip_markup( Utils.tooltip_with_accel( _( "Align left side of selected nodes" ), "bracketleft" ) );
+    _hleft.clicked.connect(() => {
+      NodeAlign.align_left( _da, _da.get_selected_nodes() );
+    });
+
+    _hcenter = new Button.from_icon_name( "align-horizontal-center-symbolic", IconSize.SMALL_TOOLBAR );
+    _hcenter.set_tooltip_markup( Utils.tooltip_with_accel( _( "Align horizontal center of selected nodes" ), "bar" ) );
+    _hcenter.clicked.connect(() => {
+      NodeAlign.align_hcenter( _da, _da.get_selected_nodes() );
+    });
+
+    _hright = new Button.from_icon_name( "align-horizontal-right-symbolic", IconSize.SMALL_TOOLBAR );
+    _hright.set_tooltip_markup( Utils.tooltip_with_accel( _( "Align right side of selected nodes" ), "bracketright" ) );
+    _hright.clicked.connect(() => {
+      NodeAlign.align_right( _da, _da.get_selected_nodes() );
+    });
+
+    _vtop = new Button.from_icon_name( "align-vertical-top-symbolic", IconSize.SMALL_TOOLBAR );
+    _vtop.set_tooltip_markup( Utils.tooltip_with_accel( _( "Align top side of selected nodes" ), "minus" ) );
+    _vtop.clicked.connect(() => {
+      NodeAlign.align_top( _da, _da.get_selected_nodes() );
+    });
+
+    _vcenter = new Button.from_icon_name( "align-vertical-center-symbolic", IconSize.SMALL_TOOLBAR );
+    _vcenter.set_tooltip_markup( Utils.tooltip_with_accel( _( "Align vertical center of selected nodes" ), "equal" ) );
+    _vcenter.clicked.connect(() => {
+      NodeAlign.align_vcenter( _da, _da.get_selected_nodes() );
+    });
+
+    _vbottom = new Button.from_icon_name( "align-vertical-bottom-symbolic", IconSize.SMALL_TOOLBAR );
+    _vbottom.set_tooltip_markup( Utils.tooltip_with_accel( _( "Align bottom side of selected nodes" ), "underscore" ) );
+    _vbottom.clicked.connect(() => {
+      NodeAlign.align_bottom( _da, _da.get_selected_nodes() );
+    });
+
+    var toolbar = new Box( Orientation.HORIZONTAL, 5 );
+    toolbar.pack_start( _hleft,   false, false );
+    toolbar.pack_start( _hcenter, false, false );
+    toolbar.pack_start( _hright,  false, false );
+    toolbar.pack_start( _vtop,    false, false );
+    toolbar.pack_start( _vcenter, false, false );
+    toolbar.pack_start( _vbottom, false, false );
+
+    var box = new Box( Orientation.VERTICAL, 10 );
+    box.pack_start( lbl,     false, true );
+    box.pack_start( toolbar, false, true );
+
+    _alignment_revealer = new Revealer();
+    _alignment_revealer.add( box );
+
+    pack_start( _alignment_revealer, false, true );
+
+  }
+
+  /* Updates the state of the node alignment buttons */
+  private void update_node_alignment() {
+    var enable_alignment = _da.nodes_alignable();
+    _hleft.set_sensitive( enable_alignment );
+    _hcenter.set_sensitive( enable_alignment );
+    _hright.set_sensitive( enable_alignment );
+    _vtop.set_sensitive( enable_alignment );
+    _vcenter.set_sensitive( enable_alignment );
+    _vbottom.set_sensitive( enable_alignment );
   }
 
   /* Adds the themes UI */
@@ -372,6 +456,9 @@ public class MapInspector : Box {
     /* Set the sensitivity of the Balance Nodes button */
     _balance.set_sensitive( _da.layouts.get_layout( name ).balanceable );
 
+    /* Make sure that alignment tools are shown when manual layout is selected */
+    _alignment_revealer.reveal_child = (_layouts.selected == 0);
+
   }
 
   /* Returns the label to use for the given theme by name */
@@ -483,6 +570,9 @@ public class MapInspector : Box {
     /* Update the sensitivity of the buttons */
     _fold_completed.set_sensitive( foldable );
     _unfold_all.set_sensitive( unfoldable );
+
+    /* Update the node alignment buttons */
+    update_node_alignment();
 
   }
 
