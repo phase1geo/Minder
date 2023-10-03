@@ -171,7 +171,7 @@ public class Connection : Object {
   /* Default constructor */
   public Connection( DrawArea da, Node from_node ) {
     double x, y, w, h;
-    from_node.bbox( out x, out y, out w, out h );
+    from_node.node_bbox( out x, out y, out w, out h );
     _da        = da;
     _posx      = x + (w / 2);
     _posy      = y + (h / 2);
@@ -267,16 +267,16 @@ public class Connection : Object {
     double fx, fy, fw, fh;
     double tx, ty, tw, th;
     if( (_from_node != null) && (_to_node != null) ) {
-      _from_node.bbox( out fx, out fy, out fw, out fh );
-      _to_node.bbox( out tx, out ty, out tw, out th );
+      _from_node.node_bbox( out fx, out fy, out fw, out fh );
+      _to_node.node_bbox( out tx, out ty, out tw, out th );
       x = (fx < tx) ? fx : tx;
       y = (fy < ty) ? fy : ty;
       w = ((fx + fw) > (tx + tw)) ? ((fx + fw) - x) : ((tx + tw) - x);
       h = ((fy + fh) > (ty + th)) ? ((fy + fh) - y) : ((ty + th) - y);
     } else if( _from_node != null ) {
-      _from_node.bbox( out x, out y, out w, out h );
+      _from_node.node_bbox( out x, out y, out w, out h );
     } else if( _to_node != null ) {
-      _to_node.bbox( out x, out y, out w, out h );
+      _to_node.node_bbox( out x, out y, out w, out h );
     } else {
       x = 0;
       y = 0;
@@ -361,7 +361,7 @@ public class Connection : Object {
   public void connect_to( Node node ) {
     double fx, fy, tx, ty;
     double x, y, w, h;
-    node.bbox( out x, out y, out w, out h );
+    node.node_bbox( out x, out y, out w, out h );
     if( _from_node == null ) {
       _from_node = node;
     } else {
@@ -419,7 +419,7 @@ public class Connection : Object {
   /* Handles any position changes of either the to or from node */
   private void end_moved( Node node, double diffx, double diffy ) {
     double x, y, w, h, dragx, dragy;
-    node.bbox( out x, out y, out w, out h );
+    node.node_bbox( out x, out y, out w, out h );
     var from = (_from_node == node);
     _curve.set_point( (from ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
     if( common_parent_moved( from ? _to_node : _from_node ) ) {
@@ -441,7 +441,7 @@ public class Connection : Object {
   /* Handles any resizing changes of either the to or from node */
   private void end_resized( Node node, double diffw, double diffh ) {
     double x, y, w, h, dragx, dragy;
-    node.bbox( out x, out y, out w, out h );
+    node.node_bbox( out x, out y, out w, out h );
     _curve.set_point( ((_from_node == node) ? 0 : 2), (x + (w / 2)), (y + (h / 2)) );
     _curve.get_drag_point( out dragx, out dragy );
     dragx += (diffw / 2);
@@ -464,7 +464,7 @@ public class Connection : Object {
     double extra  = bw + (style.connection_line_width / 2);
     double margin = node.style.node_margin;
 
-    node.bbox( out x, out y, out w, out h );
+    node.node_bbox( out x, out y, out w, out h );
 
     /* Remove the node's margin */
     x += margin;
@@ -658,8 +658,8 @@ public class Connection : Object {
     /* Update the stored curve */
     double fx, fy, fw, fh;
     double tx, ty, tw, th;
-    _from_node.bbox( out fx, out fy, out fw, out fh );
-    _to_node.bbox(   out tx, out ty, out tw, out th );
+    _from_node.node_bbox( out fx, out fy, out fw, out fh );
+    _to_node.node_bbox(   out tx, out ty, out tw, out th );
     _curve = new Bezier.with_endpoints( _da, (fx + (fw / 2)), (fy + (fh / 2)), (tx + (tw / 2)), (ty + (th / 2)) );
     _curve.update_control_from_drag_handle( dragx, dragy );
     set_connect_point( _from_node );
