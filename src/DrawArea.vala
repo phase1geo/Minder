@@ -191,12 +191,9 @@ public class DrawArea : Gtk.DrawingArea {
       if( _hide_callouts != value ) {
         if( is_callout_editable() ) {
           set_callout_mode( _selected.current_callout(), CalloutMode.NONE );
-          set_current_callout( null );
+          _selected.clear_callouts( false );
         }
-        animator.add_nodes( _nodes, "set layout" );
-        for( int i=0; i<_nodes.length; i++ ) {
-          _nodes.index( i ).hide_callouts( value );
-        }
+        animator.add_callouts_fade( _nodes, value, "hide callouts" );
         _hide_callouts = value;
         auto_save();
         animator.animate();
@@ -3344,7 +3341,6 @@ public class DrawArea : Gtk.DrawingArea {
       queue_draw();
       auto_save();
     } else if( is_callout_selected() ) {
-      stdout.printf( "Removing callout\n" );
       remove_callout();
     }
   }

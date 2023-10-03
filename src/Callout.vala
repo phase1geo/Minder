@@ -25,11 +25,17 @@ public enum CalloutMode {
   NONE = 0,    // Specifies that this callout is not the current callout
   SELECTED,    // Specifies that this callout is currently selected
   EDITABLE,    // Specifies that this text is actively being edited
+  HIDING,      // Specifies that the callout should be drawn but not be a part of its node's treebox
   HIDDEN;      // Specifies that the callout should not be drawn
 
   public bool is_selected() {
     return( this == SELECTED );
   }
+
+  public bool is_disconnected() {
+    return( (this == HIDING) || (this == HIDDEN) );
+  }
+
 }
 
 public class Callout : Object {
@@ -53,7 +59,7 @@ public class Callout : Object {
   }
   public double total_width {
     get {
-      if( _mode == CalloutMode.HIDDEN ) {
+      if( _mode.is_disconnected() ) {
         return( 0 );
       } else {
         var padding = _style.callout_padding    ?? 0;
@@ -68,7 +74,7 @@ public class Callout : Object {
   }
   public double total_height {
     get {
-      if( _mode == CalloutMode.HIDDEN ) {
+      if( _mode.is_disconnected() ) {
         return( 0 );
       } else {
         var padding = _style.callout_padding    ?? 0;
@@ -96,7 +102,7 @@ public class Callout : Object {
           _text.edit = false;
           _text.clear_selection();
         }
-        if( (orig_mode == CalloutMode.HIDDEN) || (value == CalloutMode.HIDDEN) ) {
+        if( orig_mode.is_disconnected() || value.is_disconnected() ) {
           resized();
         }
       }
@@ -115,6 +121,7 @@ public class Callout : Object {
       }
     }
   }
+  public double alpha { set; get; default = 1.0; }
 
   /* Default constructor */
   public Callout( Node node ) {
@@ -258,7 +265,7 @@ public class Callout : Object {
       foreground = theme.get_color( "nodesel_foreground" );
     }
 
-    Utils.set_context_color_with_alpha( ctx, background, _node.alpha );
+    Utils.set_context_color_with_alpha( ctx, background, alpha );
     ctx.set_line_width( 1 );
 
     double x, y, w, h;
@@ -292,13 +299,13 @@ public class Callout : Object {
       ctx.rectangle( x, y, w, h );
       ctx.fill_preserve();
 
-      Utils.set_context_color_with_alpha( ctx, theme.get_color( "foreground" ), _node.alpha );
+      Utils.set_context_color_with_alpha( ctx, theme.get_color( "foreground" ), alpha );
       ctx.stroke();
 
     }
 
     /* Draw the text */
-    _text.draw( ctx, theme, foreground, _node.alpha, exporting );
+    _text.draw( ctx, theme, foreground, alpha, exporting );
 
   }
 

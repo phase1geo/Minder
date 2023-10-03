@@ -428,6 +428,9 @@ public class Node : Object {
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).alpha = value;
       }
+      if( _callout != null ) {
+        _callout.alpha = _alpha;
+      }
     }
   }
   public NodeLink? linked_node {
@@ -717,7 +720,7 @@ public class Node : Object {
   /* Updates the total size which includes the callout */
   private void update_total_size() {
 
-    if( (_callout == null) || (_callout.mode == CalloutMode.HIDDEN) ) {
+    if( (_callout == null) || _callout.mode.is_disconnected() ) {
       _total_width  = _width;
       _total_height = _height;
     } else if( (side & NodeSide.horizontal()) != 0 ) {
@@ -736,13 +739,13 @@ public class Node : Object {
 
   }
 
-  /* Sets all callouts to the HIDDEN state */
-  public void hide_callouts( bool hide ) {
+  /* Sets all callouts to the HIDING state */
+  public void set_callout_modes( CalloutMode mode ) {
     if( _callout != null ) {
-      _callout.mode = hide ? CalloutMode.HIDDEN : CalloutMode.NONE;
+      _callout.mode = mode;
     }
     for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).hide_callouts( hide );
+      _children.index( i ).set_callout_modes( mode );
     }
   }
 
@@ -1047,7 +1050,7 @@ public class Node : Object {
 
   /* Finds the callout which contains the given pixel coordinates */
   public virtual Callout? contains_callout( double x, double y ) {
-    if( (_callout != null) && (_callout.mode != CalloutMode.HIDDEN) && _callout.contains( x, y ) ) {
+    if( (_callout != null) && !_callout.mode.is_disconnected() && _callout.contains( x, y ) ) {
       return( _callout );
     } else if( !folded ) {
       for( int i=0; i<_children.length; i++ ) {

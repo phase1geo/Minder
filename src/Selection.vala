@@ -463,10 +463,11 @@ public class Selection {
   }
 
   /* Clears all of the selected callouts */
-  public bool clear_callouts( bool signal_change = true ) {
+  public bool clear_callouts( bool signal_change = true, double alpha = 1.0 ) {
     var num = _callouts.length;
     for( int i=0; i<num; i++ ) {
-      _callouts.index( i ).mode = CalloutMode.NONE;
+      _da.set_callout_mode( _callouts.index( i ), CalloutMode.NONE );
+      _callouts.index( i ).alpha = alpha;
     }
     _callouts.remove_range( 0, num );
     if( (num > 0) && signal_change ) {
@@ -482,7 +483,7 @@ public class Selection {
     changed |= clear_connections( false, alpha );
     changed |= clear_stickers( false );
     changed |= clear_groups( false );
-    changed |= clear_callouts( false );
+    changed |= clear_callouts( false, alpha );
     if( changed && signal_change ) {
       selection_changed();
     }
