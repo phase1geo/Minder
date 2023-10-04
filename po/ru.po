@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-03 17:00-0500\n"
-"PO-Revision-Date: 2023-08-21 13:29+0200\n"
+"PO-Revision-Date: 2023-10-04 02:05+0200\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "Language: ru\n"
@@ -117,7 +117,7 @@ msgstr "Выбрать узел"
 
 #: src/Callout.vala:129 src/NodeMenu.vala:232
 msgid "Callout"
-msgstr ""
+msgstr "Выноска"
 
 #: src/CanvasText.vala:269 src/FormattedText.vala:1092
 msgid "No text found"
@@ -353,9 +353,8 @@ msgid "Freeplane"
 msgstr "Freeplane"
 
 #: src/exports/ExportImage.vala:79 src/exports/ExportPNG.vala:86
-#, fuzzy
 msgid "Zoom %"
-msgstr "Масштаб"
+msgstr "Масштаб %"
 
 #: src/exports/ExportImage.vala:86
 msgid "Quality"
@@ -636,7 +635,7 @@ msgstr "Соединения"
 
 #: src/MainWindow.vala:737
 msgid "Callouts"
-msgstr ""
+msgstr "Выноски"
 
 #: src/MainWindow.vala:738
 msgid "Titles"
@@ -752,9 +751,8 @@ msgid "Hide connections"
 msgstr "Скрывать соединения"
 
 #: src/MapInspector.vala:138
-#, fuzzy
 msgid "Hide callouts"
-msgstr "Видеозвонок"
+msgstr "Скрыть выноски"
 
 #: src/MapInspector.vala:165
 msgid "Rotate main branch colors"
@@ -765,13 +763,12 @@ msgid "Node Layouts"
 msgstr "Схемы узлов"
 
 #: src/MapInspector.vala:249
-#, fuzzy
 msgid "Node Alignment"
-msgstr "выравнивание узлов"
+msgstr "Выравнивание узлов"
 
 #: src/MapInspector.vala:255
 msgid "Align left side of selected nodes"
-msgstr ""
+msgstr "Выровнять выбранные узлы по левому краю"
 
 #: src/MapInspector.vala:261
 msgid "Align horizontal center of selected nodes"
@@ -779,11 +776,11 @@ msgstr ""
 
 #: src/MapInspector.vala:267
 msgid "Align right side of selected nodes"
-msgstr ""
+msgstr "Выровнять выбранные узлы по правому краю"
 
 #: src/MapInspector.vala:273
 msgid "Align top side of selected nodes"
-msgstr ""
+msgstr "Выровнять выбранные узлы по верхнему краю"
 
 #: src/MapInspector.vala:279
 msgid "Align vertical center of selected nodes"
@@ -791,7 +788,7 @@ msgstr ""
 
 #: src/MapInspector.vala:285
 msgid "Align bottom side of selected nodes"
-msgstr ""
+msgstr "Выровнять выбранные узлы по нижнему краю"
 
 #: src/MapInspector.vala:324
 msgid "Themes"
@@ -914,9 +911,8 @@ msgid "Add Group"
 msgstr "Создать группу"
 
 #: src/NodeMenu.vala:128 src/NodeMenu.vala:424
-#, fuzzy
 msgid "Add Callout"
-msgstr "Создать группу"
+msgstr "Добавить выноску"
 
 #: src/NodeMenu.vala:131 src/ThemeEditor.vala:132
 msgid "Link Color"
@@ -1036,9 +1032,8 @@ msgid "Unfold Children"
 msgstr "Развернуть узлы-потомки"
 
 #: src/NodeMenu.vala:424 data/com.github.phase1geo.minder.shortcuts.ui:636
-#, fuzzy
 msgid "Remove Callout"
-msgstr "Удалить задачу"
+msgstr "Удалить выноску"
 
 #: src/NodeMenu.vala:444
 msgid "Paste Text As Child Node"
@@ -1125,9 +1120,8 @@ msgid "Node Note"
 msgstr "Примечание к узлу"
 
 #: src/Node.vala:2180
-#, fuzzy
 msgid "Callout Text"
-msgstr "Вставить текст"
+msgstr "Текст выноски"
 
 #: src/Preferences.vala:47
 msgid "Behavior"
@@ -1304,9 +1298,8 @@ msgid "Add To Favorites"
 msgstr "Добавить в избранное"
 
 #: src/StickerInspector.vala:83
-#, fuzzy
 msgid "Remove Custom Sticker"
-msgstr "Удалить стикер"
+msgstr "Удалить свой стикер"
 
 #: src/StickerInspector.vala:99
 msgid ""
@@ -1329,14 +1322,12 @@ msgid "Show Custom Sticker Directory"
 msgstr ""
 
 #: src/StickerInspector.vala:214
-#, fuzzy
 msgid "Add custom stickers"
-msgstr "добавление стикера к узлу"
+msgstr "Добавить свои стикеры"
 
 #: src/StickerInspector.vala:401
-#, fuzzy
 msgid "Import Sticker(s)"
-msgstr "Удалить стикер"
+msgstr "Импортировать стикеры"
 
 #: src/StickerInspector.vala:401 src/StickerSet.vala:353
 msgid "Import"
@@ -2603,9 +2594,8 @@ msgid "Selected Connections"
 msgstr "Выбранные связи"
 
 #: src/StyleInspector.vala:38
-#, fuzzy
 msgid "Selected Callouts"
-msgstr "Выбранные узлы"
+msgstr "Выбранные выноски"
 
 #: src/StyleInspector.vala:40
 msgid "Unknown"
@@ -2697,23 +2687,20 @@ msgid "Title Width"
 msgstr "Ширина подписи"
 
 #: src/StyleInspector.vala:1077
-#, fuzzy
 msgid "Callout Options"
-msgstr "Параметры экспорта"
+msgstr "Параметры выноски"
 
 #: src/StyleInspector.vala:1111
-#, fuzzy
 msgid "Text Font"
-msgstr "Шрифт подписи"
+msgstr "Шрифт текста"
 
 #: src/StyleInspector.vala:1184
-#, fuzzy
 msgid "Pointer Width"
-msgstr "Толщина линии"
+msgstr "Ширина указателя"
 
 #: src/StyleInspector.vala:1226
 msgid "Pointer Length"
-msgstr ""
+msgstr "Длина указателя"
 
 #: src/styles/LinkTypeCurved.vala:34
 msgid "Curved"
@@ -2865,9 +2852,8 @@ msgid "Connection Title Color"
 msgstr "Цвет подписи соединения"
 
 #: src/ThemeEditor.vala:97
-#, fuzzy
 msgid "Callout Background"
-msgstr "Совпадение фона"
+msgstr "Фон выноски"
 
 #: src/ThemeEditor.vala:98
 msgid "URL Link Background"
@@ -2951,14 +2937,12 @@ msgid "Unable to load background color: %s"
 msgstr "Не удалось загрузить цвет фона: %s"
 
 #: src/undo_actions/UndoCalloutResize.vala:32
-#, fuzzy
 msgid "callout resize"
-msgstr "смену размера узла"
+msgstr "смена размера выноски"
 
 #: src/undo_actions/UndoCalloutText.vala:32
-#, fuzzy
 msgid "callout text change"
-msgstr "смену примечания к соединению"
+msgstr "смена текст выноски"
 
 #: src/undo_actions/UndoConnectedNode.vala:31
 msgid "connected node"
@@ -3446,9 +3430,8 @@ msgid "Create Connection"
 msgstr "Создать соединение"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:409
-#, fuzzy
 msgid "Create Callout"
-msgstr "Создать группу"
+msgstr "Создать выноску"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:416
 msgid "Center In View"
@@ -3514,9 +3497,8 @@ msgid "Select Linked Node"
 msgstr "Выбрать слинкованный узел"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:520
-#, fuzzy
 msgid "Select Callout"
-msgstr "Выделить весь текст"
+msgstr "Выбрать выноску"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:527
 msgid "Select Attached Connection"
@@ -3577,9 +3559,8 @@ msgid "Align Right Side"
 msgstr "Выровнять по правой стороне"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:628
-#, fuzzy
 msgid "Callout Commands"
-msgstr "Операции с узлами"
+msgstr "Команды выносок"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:632
 #: data/com.github.phase1geo.minder.shortcuts.ui:665
