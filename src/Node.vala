@@ -144,6 +144,18 @@ public class NodeBounds {
             ((y < (other.y + other.height)) && ((y + height) > other.y)) );
   }
 
+  /* Returns the X-coordinates of the upper-left corner of this bounds */
+  public double x1() { return( x ); }
+
+  /* Returns the Y-coordinates of the upper-left corner of this bounds */
+  public double y1() { return( y ); }
+
+  /* Returns the X-coordinates of the lower-right corner of this bounds */
+  public double x2() { return( x + width ); }
+
+  /* Returns the Y-coordinates of the lower-right corner of this bounds */
+  public double y2() { return( y + height ); }
+
   /* Returns a string version of this instance */
   public string to_string() {
     return( "da: %s, x: %g, y: %g, w: %g, h: %g".printf( (_da != null).to_string(), x, y, width, height ) );
@@ -739,7 +751,7 @@ public class Node : Object {
 
   }
 
-  /* Sets all callouts to the HIDING state */
+  /* Sets all callouts to the specified mode */
   public void set_callout_modes( CalloutMode mode ) {
     if( _callout != null ) {
       _callout.mode = mode;
@@ -783,6 +795,16 @@ public class Node : Object {
   /* Returns true if the node does not have a parent */
   public bool is_root() {
     return( parent == null );
+  }
+
+  /* Returns if this is a summary node */
+  public virtual bool is_summary() {
+    return( false );
+  }
+
+  /* Returns true if this node is summarized in the mindmap */
+  public virtual bool is_summarized() {
+    return( (_children.length == 1) && _children.index( 0 ).is_summary() );
   }
 
   /* Returns true if this node exists within a group */
@@ -1771,6 +1793,26 @@ public class Node : Object {
     child.attached = true;
     child.attach( this, -1, null, false );
     last_selected_child = last_selected;
+  }
+
+  /* Returns the sibling node relative to this node */
+  private Node? get_sibling( int dir ) {
+    var index = index() + dir;
+    if( (index < 0) || (index >= parent.children().length) ) {
+      return( null );
+    } else {
+      return( parent.children().index( index ) );
+    }
+  }
+
+  /* Returns the previous sibling node relative to this node */
+  public Node? previous_sibling() {
+    return( get_sibling( -1 ) );
+  }
+
+  /* Returns the previous sibling node relative to this node */
+  public Node? next_sibling() {
+    return( get_sibling( 1 ) );
   }
 
   /*
@@ -2778,7 +2820,7 @@ public class Node : Object {
     if( !is_root() ) {
       draw_link( ctx, theme );
     }
-    if( !folded ) {
+    if( !folded && (!is_summarized() || (this == (_children.index( 0 ) as SummaryNode).first_node())) ) {
       var int_child_len = (int)_children.length;
       if( int_child_len > 0 ) {
         var first_side = side_count( _children.index( 0 ).side );
@@ -2793,7 +2835,7 @@ public class Node : Object {
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Node? current, bool motion, bool exporting ) {
     if( this != current ) {
-      if( !folded ) {
+      if( !folded && (!is_summarized() || (this == (_children.index( 0 ) as SummaryNode).first_node())) ) {
         for( int i=0; i<_children.length; i++ ) {
           _children.index( i ).draw_all( ctx, theme, current, motion, exporting );
         }

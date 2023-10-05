@@ -2222,7 +2222,7 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     for( int i=0; i<_nodes.length; i++ ) {
       Node tmp = _nodes.index( i ).contains( x, y, current );
-      if( (tmp != null) && (tmp != current.parent) && !current.contains_node( tmp ) ) {
+      if( (tmp != null) && (tmp != current.parent) && !current.contains_node( tmp ) && !tmp.is_summarized() ) {
         return( tmp );
       }
     }
@@ -3530,6 +3530,17 @@ public class DrawArea : Gtk.DrawingArea {
     return( node );
   }
 
+  /*
+   Creates a summary node for the nodes in the range of first to last, inclusive.
+  */
+  public Node create_summary_node( Array<Node> nodes ) {
+    var node = new SummaryNode( this, nodes, layouts.get_default() );
+    node.side  = nodes.index( 0 ).side;
+    node.style = nodes.index( 0 ).style;
+    // node.attach( first, -1, _theme );
+    return( node );
+  }
+
   /* Adds a new root node to the canvas */
   public void add_root_node() {
     var node         = create_root_node( _( "Another Idea" ) );
@@ -3592,6 +3603,19 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     var node    = create_child_node( current );
     undo_buffer.add_item( new UndoNodeInsert( node, node.index() ) );
+    set_current_node( node );
+    set_node_mode( node, NodeMode.EDITABLE, false );
+    queue_draw();
+    see();
+    auto_save();
+  }
+
+  /* Adds a summary node to the first and last nodes in the selected range */
+  public void add_summary_node() {
+    var nodes = _selected.nodes();
+    if( nodes.length < 2 ) return;
+    var node = create_summary_node( nodes );
+    undo_buffer.add_item( new UndoNodeSummary( (SummaryNode)node ) );
     set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );
     queue_draw();
