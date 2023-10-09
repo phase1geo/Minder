@@ -544,7 +544,6 @@ public class Node : Object {
     set_parsers();
     siblings.append_val( this );
     load( da, n, isroot, ref siblings );
-    stdout.printf( "from_xml, name: %s, children: %u\n", name.text.text, children().length );
   }
 
   /* Copies an existing node to this node */
@@ -1485,7 +1484,6 @@ public class Node : Object {
 
     if( (_children.length > 0) && (!is_summarized() || ((_children.index( 0 ) as SummaryNode).last_node() == this)) ) {
       Xml.Node* nodes = new Xml.Node( null, "nodes" );
-      stdout.printf( "Node %s has %u children\n", name.text.text, _children.length );
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).save( nodes );
       }
