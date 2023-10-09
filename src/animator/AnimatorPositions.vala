@@ -53,8 +53,10 @@ public class AnimatorPositions : Object {
     _old_x.append_val( n.posx );
     _old_y.append_val( n.posy );
     _node.append_val( n );
-    for( int i=0; i<n.children().length; i++ ) {
-      gather_old_positions( n.children().index( i ) );
+    if( !n.is_summarized() || ((n.children().index( 0 ) as SummaryNode).last_node() == n) ) {
+      for( int i=0; i<n.children().length; i++ ) {
+        gather_old_positions( n.children().index( i ) );
+      }
     }
   }
 

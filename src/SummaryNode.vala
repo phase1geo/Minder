@@ -26,38 +26,22 @@ public class SummaryNode : Node {
   private List<Node> _nodes;
 
   /* Default constructor */
-  public SummaryNode( DrawArea da, Array<Node> nodes, Layout? layout ) {
+  public SummaryNode( DrawArea da, Layout? layout ) {
     base( da, layout );
     _nodes = new List<Node>();
-    for( int i=0; i<nodes.length; i++ ) {
-      var node = nodes.index( i );
-      _nodes.append( node );
-      node.children().append_val( this );
-      connect_node( node );
-    }
-    _nodes.sort((a, b) => {
-      return( (a.index() == b.index()) ? 0 :
-              (a.index() <  b.index()) ? -1 : 1 );
-    });
-    parent = first_node();
-    style  = first_node().style;
-    nodes_changed( 0, 0 );
   }
 
   /* Converts the given node into a summary node that summarizes its sibling nodes */
-  public SummaryNode.from_sibling( DrawArea da, Node node, ImageManager im ) {
+  public SummaryNode.from_node( DrawArea da, Node node, ImageManager im ) {
     base.copy( da, node, im );
     _nodes = new List<Node>();
-    var sibling = node.previous_sibling();
-    while( (sibling != null) && (sibling.children().length == 0) && !sibling.is_summarized() && (sibling.side == node.side) ) {
-      _nodes.prepend( sibling );
-      sibling.children().append_val( this );
-      sibling = node.previous_sibling();
-      connect_node( sibling );
-    }
-    parent = first_node();
-    style  = first_node().style;
-    nodes_changed( 0, 0 );
+  }
+
+  /* Constructor from XML data */
+  public SummaryNode.from_xml( DrawArea da, Layout? layout, Xml.Node* node, ref Array<Node> siblings ) {
+    base( da, layout );
+    _nodes = new List<Node>();
+    load( da, node, false, ref siblings );
   }
 
   /* Connects the node to signals */
@@ -87,6 +71,7 @@ public class SummaryNode : Node {
     return( true );
   }
 
+  /* Comparison function of two double types */
   private static int compare_pos( double pos1, double pos2 ) {
     return( (pos1 == pos2) ? 0 : (pos1 < pos2) ? -1 : 1 );
   }
@@ -130,20 +115,51 @@ public class SummaryNode : Node {
 
   }
 
-  /* Attaches this node to its parent node */
-  /*
-  protected override void attach_common( int index, Theme? theme ) {
-    lastparent.children().append_val( this );
-    parent.moved.connect( this.parent_moved );
-    if( layout != null ) {
-      layout.handle_update_by_insert( parent, this, index );
+  /* Attach ourself to the list of nodes */
+  public void attach_nodes( Array<Node> nodes, Theme? theme ) {
+    stdout.printf( "In attach_nodes, nodes.length: %u\n", nodes.length );
+    for( int i=0; i<nodes.length; i++ ) {
+      var node = nodes.index( i );
+      _nodes.append( node );
+      node.children().append_val( this );
+      stdout.printf( "Appending child to %s (total: %u)\n", node.name.text.text, node.children().length );
+      connect_node( node );
     }
+    _nodes.sort((a, b) => {
+      return( (a.index() == b.index()) ? 0 :
+              (a.index() <  b.index()) ? -1 : 1 );
+    });
+    parent = last_node();
+    style  = last_node().style;
     if( theme != null ) {
       link_color_child = main_branch() ? theme.next_color() : parent.link_color;
     }
-    attached = true;
+    nodes_changed( 0, 0 );
+    stdout.printf( "  last_node (%s) children: %u\n", last_node().name.text.text, last_node().children().length );
   }
+
+  /*
+   We attach ourself to the given node and all of its siblings that are on the same side, contain no children and are not
+   already summarized.
   */
+  public void attach_siblings( Node node, Theme? theme ) {
+    stdout.printf( "In attach_siblings\n" );
+    var sibling = node;
+    while( (sibling != null) && (sibling.children().length == 0) && !sibling.is_summarized() && (sibling.side == side) ) {
+      stdout.printf( "attaching sibling: %s, parent.children.length: %d\n", sibling.name.text.text, ((sibling.parent == null) ? -1 : (int)sibling.parent.children().length) );
+      _nodes.prepend( sibling );
+      sibling.children().append_val( this );
+      connect_node( sibling );
+      sibling = sibling.previous_sibling();
+      stdout.printf( "  checking attach sibling: %s\n", ((sibling == null) ? "NULL" : sibling.name.text.text) );
+    }
+    parent = last_node();
+    style  = last_node().style;
+    if( theme != null ) {
+      link_color_child = main_branch() ? theme.next_color() : parent.link_color;
+    }
+    nodes_changed( 0, 0 );
+  }
 
   /* Draws the link to the left of the summarized nodes */
   private void draw_link_left( Context ctx ) {
@@ -154,7 +170,7 @@ public class SummaryNode : Node {
     /* Get the smallest X value */
     var sx = first_node().posx;
     foreach( var node in _nodes ) {
-      if( sx < node.posx ) {
+      if( sx > node.posx ) {
         sx = node.posx;
       }
     }
@@ -216,7 +232,7 @@ public class SummaryNode : Node {
     /* Get the smallest X value */
     var sy = first_node().posy;
     foreach( var node in _nodes ) {
-      if( sy < node.posy ) {
+      if( sy > node.posy ) {
         sy = node.posy;
       }
     }
@@ -233,7 +249,7 @@ public class SummaryNode : Node {
     ctx.stroke();
 
     ctx.move_to( (((x2 - x1) / 2) + x1), y2 );
-    ctx.line_to( ((w / 2) + x), y );
+    ctx.line_to( ((w / 2) + x), (y + h) );
     ctx.stroke();
 
   }
@@ -247,8 +263,8 @@ public class SummaryNode : Node {
     /* Get the smallest X value */
     var sy = first_node().posy;
     foreach( var node in _nodes ) {
-      if( sy < node.posy ) {
-        sy = node.posy;
+      if( sy < (node.posy + node.height) ) {
+        sy = (node.posy + node.height);
       }
     }
 
@@ -263,7 +279,6 @@ public class SummaryNode : Node {
     ctx.line_to( x2, y1 );
     ctx.stroke();
 
-    var mx = (w / 2) + x;
     ctx.move_to( (((y2 - y1) / 2) + y1), y2 );
     ctx.line_to( ((w / 2) + x), y );
     ctx.stroke();
@@ -273,7 +288,7 @@ public class SummaryNode : Node {
   /* Draw the summary link that spans the first and last node */
   public override void draw_link( Context ctx, Theme theme ) {
 
-    Utils.set_context_color_with_alpha( ctx, theme.get_color( "callout_background" ), ((parent.alpha != 1.0) ? parent.alpha : alpha) );
+    Utils.set_context_color_with_alpha( ctx, link_color, ((parent.alpha != 1.0) ? parent.alpha : alpha) );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.set_line_width( parent.style.link_width );
 

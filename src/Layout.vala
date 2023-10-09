@@ -51,7 +51,9 @@ public class Layout : Object {
       Node n = parent.children().index( i );
       initialize( n );
       n.side = side_mapping( n.side );
-      list.append( n );
+      if( !n.is_summary() ) {
+        list.append( n );
+      }
     }
     list.@foreach((item) => {
       item.detach( item.side );

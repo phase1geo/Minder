@@ -344,7 +344,7 @@ public class Node : Object {
       _link_color_set = true;
     }
   }
-  private RGBA link_color_child {
+  protected RGBA link_color_child {
     set {
       if( !link_color_root ) {
         _link_color     = value;
@@ -534,15 +534,17 @@ public class Node : Object {
   }
 
   /* Constructor from an XML node */
-  public Node.from_xml( DrawArea da, Layout? layout, Xml.Node* n, bool isroot ) {
+  public Node.from_xml( DrawArea da, Layout? layout, Xml.Node* n, bool isroot, ref Array<Node> siblings ) {
     _da        = da;
     _children  = new Array<Node>();
     _tree_bbox = new NodeBounds( da );
-    _layout    = _layout;
+    _layout    = layout;
     _name      = new CanvasText.with_text( da, "" );
     _name.resized.connect( position_text_and_update_size );
     set_parsers();
-    load( da, n, isroot );
+    siblings.append_val( this );
+    load( da, n, isroot, ref siblings );
+    stdout.printf( "from_xml, name: %s, children: %u\n", name.text.text, children().length );
   }
 
   /* Copies an existing node to this node */
@@ -1231,6 +1233,25 @@ public class Node : Object {
     callout.load( n );
   }
 
+  /* Loads the child nodes */
+  private void load_nodes( Xml.Node* n, ref Array<Node> siblings ) {
+    var nodes = new Array<Node>();
+    for( Xml.Node* it = n->children; it != null; it = it->next ) {
+      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
+        switch( it->name ) {
+          case "node" :
+            var node = new Node.from_xml( _da, _layout, it, false, ref nodes );
+            node.attach( this, -1, null );
+            break;
+          case "summary-node" :
+            var node = new SummaryNode.from_xml( _da, _layout, it, ref nodes );
+            node.attach_nodes( siblings, null );
+            break;
+        }
+      }
+    }
+  }
+
   /*
    Searches for a node ID matching the given node ID.  If found, returns true
    along with the plain text title of the found node.
@@ -1272,7 +1293,7 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, bool isroot ) {
+  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, ref Array<Node> siblings ) {
 
     _loaded = false;
 
@@ -1370,14 +1391,7 @@ public class Node : Object {
           case "nodelink"   :  load_node_link( it );  break;
           case "style"      :  load_style( it );  break;
           case "callout"    :  load_callout( it );  break;
-          case "nodes"      :
-            for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
-              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var child = new Node.from_xml( da, _layout, it2, false );
-                child.attach( this, -1, null );
-              }
-            }
-            break;
+          case "nodes"      :  load_nodes( it, ref siblings );  break;
         }
       }
     }
@@ -1426,7 +1440,7 @@ public class Node : Object {
   /* Saves the node contents to the given data output stream */
   protected Xml.Node* save_node() {
 
-    Xml.Node* node = new Xml.Node( null, "node" );
+    Xml.Node* node = new Xml.Node( null, (is_summary() ? "summary-node" : "node") );
     node->new_prop( "id", _id.to_string() );
     node->new_prop( "posx", _posx.to_string() );
     node->new_prop( "posy", _posy.to_string() );
@@ -1469,8 +1483,9 @@ public class Node : Object {
       node->add_child( _callout.save() );
     }
 
-    if( _children.length > 0 ) {
+    if( (_children.length > 0) && (!is_summarized() || ((_children.index( 0 ) as SummaryNode).last_node() == this)) ) {
       Xml.Node* nodes = new Xml.Node( null, "nodes" );
+      stdout.printf( "Node %s has %u children\n", name.text.text, _children.length );
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).save( nodes );
       }
@@ -1919,6 +1934,8 @@ public class Node : Object {
   /* Detaches this node from its parent node */
   public virtual void detach( NodeSide side ) {
 
+    assert( !is_summary() );
+
     if( parent != null ) {
       int idx = index();
       propagate_task_info_up( (0 - _task_count), (0 - _task_done) );
@@ -1976,6 +1993,7 @@ public class Node : Object {
 
   /* Undoes a delete_only call by reattaching this node to the given parent */
   public virtual void attach_only( Node? prev_parent, int prev_index ) {
+    assert( !is_summary() );
     var temp = new Array<Node>();
     for( int i=0; i<children().length; i++ ) {
       temp.append_val( children().index( i ) );
@@ -2000,6 +2018,7 @@ public class Node : Object {
   public virtual void attach( Node parent, int index, Theme? theme, bool set_side = true ) {
     this.parent = parent;
     layout = parent.layout;
+    assert( !is_summary() );
     if( layout != null ) {
       if( set_side ) {
         if( parent.is_root() ) {
@@ -2019,6 +2038,7 @@ public class Node : Object {
   }
 
   public virtual void attach_init( Node parent, int index ) {
+    assert( !is_summary() );
     this.parent = parent;
     layout = parent.layout;
     attach_common( index, null );
@@ -2820,7 +2840,7 @@ public class Node : Object {
     if( !is_root() ) {
       draw_link( ctx, theme );
     }
-    if( !folded && (!is_summarized() || (this == (_children.index( 0 ) as SummaryNode).first_node())) ) {
+    if( !folded && (!is_summarized() || (this == (_children.index( 0 ) as SummaryNode).last_node())) ) {
       var int_child_len = (int)_children.length;
       if( int_child_len > 0 ) {
         var first_side = side_count( _children.index( 0 ).side );
@@ -2835,7 +2855,7 @@ public class Node : Object {
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Node? current, bool motion, bool exporting ) {
     if( this != current ) {
-      if( !folded && (!is_summarized() || (this == (_children.index( 0 ) as SummaryNode).first_node())) ) {
+      if( !folded && (!is_summarized() || (this == (_children.index( 0 ) as SummaryNode).last_node())) ) {
         for( int i=0; i<_children.length; i++ ) {
           _children.index( i ).draw_all( ctx, theme, current, motion, exporting );
         }
