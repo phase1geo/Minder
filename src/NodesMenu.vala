@@ -31,6 +31,7 @@ public class NodesMenu : Gtk.Menu {
   Gtk.MenuItem _fold;
   Gtk.MenuItem _connect;
   Gtk.MenuItem _link;
+  Gtk.MenuItem _summary;
   Gtk.MenuItem _link_colors;
   Gtk.MenuItem _parent_link_colors;
   Gtk.MenuItem _align;
@@ -70,6 +71,9 @@ public class NodesMenu : Gtk.Menu {
     _link = new Gtk.MenuItem();
     _link.add( new Granite.AccelLabel( _( "Link Nodes" ), "y" ) );
     _link.activate.connect( link_nodes );
+
+    _summary = new Gtk.MenuItem.with_label( _( "Add Summary Node" ) );
+    _summary.activate.connect( summarize );
 
     var link_color_menu = new Gtk.Menu();
 
@@ -155,6 +159,7 @@ public class NodesMenu : Gtk.Menu {
     add( new SeparatorMenuItem() );
     add( _connect );
     add( _link );
+    add( _summary );
     add( new SeparatorMenuItem() );
     add( _selnodes );
     add( new SeparatorMenuItem() );
@@ -194,9 +199,10 @@ public class NodesMenu : Gtk.Menu {
   /* Called when the menu is popped up */
   private void on_popup() {
 
-    var nodes    = _da.get_selected_nodes();
-    var node_num = nodes.length;
-    var has_link = _da.any_selected_nodes_linked();
+    var nodes        = _da.get_selected_nodes();
+    var node_num     = nodes.length;
+    var has_link     = _da.any_selected_nodes_linked();
+    var summarizable = (node_num >= 2) && have_same_parent( nodes );
 
     bool foldable, unfoldable;
     nodes_foldable_status( out foldable, out unfoldable );
@@ -204,6 +210,7 @@ public class NodesMenu : Gtk.Menu {
     /* Set the menu sensitivity */
     _fold.set_sensitive( foldable || unfoldable );
     _connect.set_sensitive( node_num == 2 );
+    _summary.set_sensitive( summarizable );
     _parent_link_colors.set_sensitive( link_colors_parentable() );
     _align.set_sensitive( _da.nodes_alignable() );
     _selparent.set_sensitive( _da.parent_selectable() );
@@ -219,6 +226,16 @@ public class NodesMenu : Gtk.Menu {
     _link.get_child().destroy();
     _link.add( new Granite.AccelLabel( link_lbl, link_acc.accel_string ) );
 
+  }
+
+  /* Returns true if all of the nodes in the array have the same parent */
+  private bool have_same_parent( Array<Node> nodes ) {
+    var first = nodes.index( 0 );
+    for( int i=1; i<nodes.length; i++ ) {
+      var node = nodes.index( i );
+      if( first.parent != node.parent ) return( false );
+    }
+    return( true );
   }
 
   /* Copies all selected nodes to the node clipboard */
@@ -259,6 +276,11 @@ public class NodesMenu : Gtk.Menu {
   */
   private void link_nodes() {
     _da.toggle_links();
+  }
+
+  /* Adds a new summary node */
+  private void summarize() {
+    _da.add_summary_node();
   }
 
   /* Changes the color of all selected nodes */

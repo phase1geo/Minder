@@ -56,6 +56,7 @@ sources += files(
     'Style.vala',
     'StyleInspector.vala',
     'Styles.vala',
+    'SummaryNode.vala',
     'Tagger.vala',
     'TextCompletion.vala',
     'TextMenu.vala',

@@ -585,7 +585,8 @@ public class DrawArea : Gtk.DrawingArea {
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var node = new Node.from_xml( this, null, it2, true );
+                var siblings = new Array<Node>();
+                var node = new Node.from_xml( this, null, it2, true, ref siblings );
                 if( use_layout != null ) {
                   node.layout = use_layout;
                 }
@@ -2222,7 +2223,7 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     for( int i=0; i<_nodes.length; i++ ) {
       Node tmp = _nodes.index( i ).contains( x, y, current );
-      if( (tmp != null) && (tmp != current.parent) && !current.contains_node( tmp ) ) {
+      if( (tmp != null) && (tmp != current.parent) && !current.contains_node( tmp ) && !tmp.is_summarized() ) {
         return( tmp );
       }
     }
@@ -2862,8 +2863,8 @@ public class DrawArea : Gtk.DrawingArea {
           _orig_text.copy( current_node.name );
           current_node.name.move_cursor_to_end();
 
-        /* If we are not a root node, move the node into the appropriate position */
-        } else if( current_node.parent != null ) {
+        /* If we are not a root node or a summary node, move the node into the appropriate position */
+        } else if( (current_node.parent != null) && !current_node.is_summary() ) {
           int orig_index = current_node.index();
           animator.add_nodes( _nodes, "move to position" );
           current_node.parent.move_to_position( current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) );
@@ -3530,6 +3531,24 @@ public class DrawArea : Gtk.DrawingArea {
     return( node );
   }
 
+  /*
+   Creates a summary node for the nodes in the range of first to last, inclusive.
+  */
+  public Node create_summary_node( Array<Node> nodes ) {
+    var summary = new SummaryNode( this, layouts.get_default() );
+    summary.side = nodes.index( 0 ).side;
+    summary.attach_nodes( nodes, _theme );
+    return( summary );
+  }
+
+  public Node create_summary_node_from_node( Node node ) {
+    node.detach( node.side );
+    var summary = new SummaryNode.from_node( this, node, image_manager );
+    summary.side = node.side;
+    summary.attach_siblings( node.previous_sibling(), _theme );
+    return( summary );
+  }
+
   /* Adds a new root node to the canvas */
   public void add_root_node() {
     var node         = create_root_node( _( "Another Idea" ) );
@@ -3592,6 +3611,19 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     var node    = create_child_node( current );
     undo_buffer.add_item( new UndoNodeInsert( node, node.index() ) );
+    set_current_node( node );
+    set_node_mode( node, NodeMode.EDITABLE, false );
+    queue_draw();
+    see();
+    auto_save();
+  }
+
+  /* Adds a summary node to the first and last nodes in the selected range */
+  public void add_summary_node() {
+    var nodes = _selected.nodes();
+    if( nodes.length < 2 ) return;
+    var node = create_summary_node( nodes );
+    undo_buffer.add_item( new UndoNodeSummary( (SummaryNode)node ) );
     set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );
     queue_draw();
@@ -4943,7 +4975,8 @@ public class DrawArea : Gtk.DrawingArea {
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
-                var node = new Node.from_xml( this, null, it2, true );
+                var siblings = new Array<Node>();
+                var node = new Node.from_xml( this, null, it2, true, ref siblings );
                 nodes.append_val( node );
               }
             }

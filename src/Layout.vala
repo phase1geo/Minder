@@ -51,7 +51,9 @@ public class Layout : Object {
       Node n = parent.children().index( i );
       initialize( n );
       n.side = side_mapping( n.side );
-      list.append( n );
+      if( !n.is_summary() ) {
+        list.append( n );
+      }
     }
     list.@foreach((item) => {
       item.detach( item.side );
@@ -76,7 +78,7 @@ public class Layout : Object {
 
     if( (num_children != 0) && !parent.folded ) {
       for( int i=0; i<parent.children().length; i++ ) {
-        if( (parent.children().index( i ).side & side_mask) != 0 ) {
+        if( ((parent.children().index( i ).side & side_mask) != 0) && !parent.children().index( i ).is_summary() ) {
           var cb = parent.children().index( i ).tree_bbox;
           nb.x  = (nb.x < cb.x) ? nb.x : cb.x;
           nb.y  = (nb.y < cb.y) ? nb.y : cb.y;
