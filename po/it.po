@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-03 17:00-0500\n"
-"PO-Revision-Date: 2023-10-01 15:30+0100\n"
+"PO-Revision-Date: 2023-10-07 15:30+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -350,9 +350,8 @@ msgid "Freeplane"
 msgstr "Freeplane"
 
 #: src/exports/ExportImage.vala:79 src/exports/ExportPNG.vala:86
-#, fuzzy
 msgid "Zoom %"
-msgstr "Zoom"
+msgstr "Zoom %"
 
 #: src/exports/ExportImage.vala:86
 msgid "Quality"
@@ -762,33 +761,32 @@ msgid "Node Layouts"
 msgstr "Layout dei nodi"
 
 #: src/MapInspector.vala:249
-#, fuzzy
 msgid "Node Alignment"
-msgstr "allineamento nodo"
+msgstr "Allineamento dei nodi"
 
 #: src/MapInspector.vala:255
 msgid "Align left side of selected nodes"
-msgstr ""
+msgstr "Allinea il lato sinistro dei nodi selezionati"
 
 #: src/MapInspector.vala:261
 msgid "Align horizontal center of selected nodes"
-msgstr ""
+msgstr "Allinea il centro orizzontale dei nodi selezionati"
 
 #: src/MapInspector.vala:267
 msgid "Align right side of selected nodes"
-msgstr ""
+msgstr "Allinea il lato destro dei nodi selezionati"
 
 #: src/MapInspector.vala:273
 msgid "Align top side of selected nodes"
-msgstr ""
+msgstr "Allinea il lato superiore dei nodi selezionati"
 
 #: src/MapInspector.vala:279
 msgid "Align vertical center of selected nodes"
-msgstr ""
+msgstr "Allinea il centro verticale dei nodi selezionati"
 
 #: src/MapInspector.vala:285
 msgid "Align bottom side of selected nodes"
-msgstr ""
+msgstr "Allinea il lato inferiore dei nodi selezionati"
 
 #: src/MapInspector.vala:324
 msgid "Themes"
@@ -2700,18 +2698,16 @@ msgid "Callout Options"
 msgstr "Opzioni di Esportazione"
 
 #: src/StyleInspector.vala:1111
-#, fuzzy
 msgid "Text Font"
-msgstr "Carattere del Titolo"
+msgstr "Carattere del testo"
 
 #: src/StyleInspector.vala:1184
-#, fuzzy
 msgid "Pointer Width"
-msgstr "Larghezza della Linea"
+msgstr "Larghezza del puntatore"
 
 #: src/StyleInspector.vala:1226
 msgid "Pointer Length"
-msgstr ""
+msgstr "Lunghezza del puntatore"
 
 #: src/styles/LinkTypeCurved.vala:34
 msgid "Curved"
@@ -3566,9 +3562,8 @@ msgid "Align Left Side"
 msgstr "Allinea a Sinistra"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:609
-#, fuzzy
 msgid "Align Horizontal Center"
-msgstr "Allinea al centro in orizzontale"
+msgstr "Allinea centro orizzontale"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:616
 msgid "Align Right Side"
