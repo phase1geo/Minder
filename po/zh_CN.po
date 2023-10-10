@@ -1,7 +1,7 @@
-# Minder 的简体中文 (机翻).
+# Minder 的简体中文 (机翻)。已经人工修订。
 # Copyright (C) 2022 THE com.github.phase1geo.minder'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
-# 企鹅2035 <qie2035@qq.com>, 2022.
+# 企鹅2035 <qie2035@qq.com>, 2022。YuanLijie<aerowolf@tom.com>, 2023.10.10, 人工修订。
 #
 msgid ""
 msgstr ""
@@ -10,7 +10,7 @@ msgstr ""
 "POT-Creation-Date: 2023-10-03 17:00-0500\n"
 "PO-Revision-Date: 2022-07-22 17:02+0800\n"
 "Last-Translator: 企鹅2035 <qie2035@qq.com>\n"
-"Language-Team: 简体中文 (机翻) <qie2035@qq.com>\n"
+"Language-Team: 简体中文 <qie2035@qq.com>\n,<aerowolf@tom.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,26 +23,26 @@ msgstr "思维导图应用程序"
 
 #: src/About.vala:37
 msgid "Copyright © 2018-2021 Trevor Williams"
-msgstr "版权所有 © 2018-2021 特雷弗·威廉姆斯"
+msgstr "版权所有 © 2018-2021 Trevor Williams"
 
 #: src/About.vala:41
 msgid "Minder in AppCenter"
-msgstr "AppCenter 中的 Minder"
+msgstr "在AppCenter 中打开 Minder"
 
 #: src/Application.vala:114
 #, fuzzy
 msgid "ERROR: Unable to import file"
-msgstr "错误：无法打开文件“%s”\n"
+msgstr "错误：无法导入文件"
 
 #: src/Application.vala:118
 #, fuzzy
 msgid "ERROR: Import is missing filename to import"
-msgstr "错误：导出缺少管理器输入文件和/或导出输出文件"
+msgstr "错误：导出缺少文件名"
 
 #: src/Application.vala:133
 #, fuzzy
 msgid "ERROR: Export is missing input file and/or export output file"
-msgstr "错误：导出缺少管理器输入文件和/或导出输出文件"
+msgstr "错误：导出缺少输入文件和/或导出输出文件"
 
 #: src/Application.vala:140
 #, c-format
@@ -52,12 +52,12 @@ msgstr "错误：无法打开文件“%s”\n"
 #: src/Application.vala:184
 #, c-format
 msgid "Import file from format (%s)"
-msgstr ""
+msgstr "导入 %s 格式文件"
 
 #: src/Application.vala:185
 #, fuzzy, c-format
 msgid "Export mindmap as format (%s)"
-msgstr "导出思维导图"
+msgstr "将思维导图导出为 %s 格式"
 
 #: src/Application.vala:188
 msgid "Display version number"
@@ -65,7 +65,7 @@ msgstr "显示版本号"
 
 #: src/Application.vala:189
 msgid "Starts Minder with a new file"
-msgstr "使用新文件启动 Minder"
+msgstr "启动 Minder ,新建空文件"
 
 #: src/Application.vala:190
 msgid "Run testing"
@@ -95,12 +95,12 @@ msgstr "错误： %s\n"
 #: src/Application.vala:206
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
-msgstr "运行 “%s --help” 以查看有效选项\n"
+msgstr "运行 “%s --help”可查看有效选项\n"
 
 #: src/Application.vala:253
 #, fuzzy, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
-msgstr "错误：无法加载管理器输入文件"
+msgstr "错误：不能载入Minder输入文件%s"
 
 #: src/CalloutMenu.vala:34 src/ConnectionMenu.vala:42
 #: src/ConnectionsMenu.vala:35 src/GroupsMenu.vala:40 src/NodeMenu.vala:87
@@ -136,7 +136,7 @@ msgstr "使用主题默认颜色"
 #: src/ConnectionInspector.vala:118 src/GroupInspector.vala:82
 #: src/NodeInspector.vala:219
 msgid "Note"
-msgstr "注释"
+msgstr "备注"
 
 #: src/ConnectionInspector.vala:157
 msgid "Delete Connection"
@@ -144,7 +144,7 @@ msgstr "删除连接"
 
 #: src/ConnectionMenu.vala:46
 msgid "Edit Title…"
-msgstr "编辑标题..."
+msgstr "编辑标题……"
 
 #: src/ConnectionMenu.vala:50 src/GroupsMenu.vala:47 src/NodeMenu.vala:102
 #: data/com.github.phase1geo.minder.shortcuts.ui:338
@@ -154,7 +154,7 @@ msgstr "编辑备注"
 
 #: src/ConnectionMenu.vala:53 src/NodeMenu.vala:112
 msgid "Remove Sticker"
-msgstr "移除贴纸"
+msgstr "移除便条"
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
 #: src/NodeMenu.vala:182 src/NodesMenu.vala:94
@@ -163,7 +163,7 @@ msgstr "选择"
 
 #: src/ConnectionMenu.vala:61
 msgid "Start Node"
-msgstr "启动节点"
+msgstr "起始节点"
 
 #: src/ConnectionMenu.vala:65
 msgid "End Node"
@@ -183,7 +183,7 @@ msgstr "连接标题"
 
 #: src/Connection.vala:740
 msgid "Connection Note"
-msgstr "连接说明"
+msgstr "连接备注"
 
 #: src/Document.vala:80
 msgid "unnamed"
