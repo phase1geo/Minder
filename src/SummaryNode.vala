@@ -180,8 +180,11 @@ public class SummaryNode : Node {
     ctx.line_to( x1, y2 );
     ctx.stroke();
 
+    var margin = style.node_margin;
+    h = (style.node_border.name() == "underlined") ? (h - margin) : (h / 2);
+
     ctx.move_to( x2, (((y2 - y1) / 2) + y1) );
-    ctx.line_to( (x + w), ((h / 2) + y) );
+    ctx.line_to( (x + w - margin), (y + h) );
     ctx.stroke();
 
   }
@@ -195,8 +198,8 @@ public class SummaryNode : Node {
     /* Get the smallest X value */
     var sx = first_node().posx;
     foreach( var node in _nodes ) {
-      if( sx < (node.posx + node.width) ) {
-        sx = node.posx + node.width;
+      if( sx < (node.posx + node.total_width) ) {
+        sx = node.posx + node.total_width;
       }
     }
 
@@ -211,8 +214,11 @@ public class SummaryNode : Node {
     ctx.line_to( x1, y2 );
     ctx.stroke();
 
+    var margin = style.node_margin;
+    h = (style.node_border.name() == "underlined") ? (h - margin) : (h / 2);
+
     ctx.move_to( x2, (((y2 - y1) / 2) + y1) );
-    ctx.line_to( x, ((h / 2) + y) );
+    ctx.line_to( (x + margin), (y + h) );
     ctx.stroke();
 
   }
@@ -242,8 +248,10 @@ public class SummaryNode : Node {
     ctx.line_to( x2, y1 );
     ctx.stroke();
 
+    var margin = style.node_margin;
+
     ctx.move_to( (((x2 - x1) / 2) + x1), y2 );
-    ctx.line_to( ((w / 2) + x), (y + h) );
+    ctx.line_to( ((w / 2) + x), (y + h - margin) );
     ctx.stroke();
 
   }
@@ -257,8 +265,8 @@ public class SummaryNode : Node {
     /* Get the smallest X value */
     var sy = first_node().posy;
     foreach( var node in _nodes ) {
-      if( sy < (node.posy + node.height) ) {
-        sy = (node.posy + node.height);
+      if( sy < (node.posy + node.total_height) ) {
+        sy = (node.posy + node.total_height);
       }
     }
 
@@ -273,8 +281,10 @@ public class SummaryNode : Node {
     ctx.line_to( x2, y1 );
     ctx.stroke();
 
-    ctx.move_to( (((y2 - y1) / 2) + y1), y2 );
-    ctx.line_to( ((w / 2) + x), y );
+    var margin = style.node_margin;
+
+    ctx.move_to( (((x2 - x1) / 2) + x1), y2 );
+    ctx.line_to( ((w / 2) + x), (y + margin) );
     ctx.stroke();
 
   }

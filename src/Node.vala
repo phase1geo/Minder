@@ -421,6 +421,16 @@ public class Node : Object {
       return( _image );
     }
   }
+  public double total_width {
+    get {
+      return( _total_width );
+    }
+  }
+  public double total_height {
+    get {
+      return( _total_height );
+    }
+  }
   public bool image_resizable {
     get {
       return( (_image == null) ? false : _image.resizable );
@@ -807,6 +817,16 @@ public class Node : Object {
     return( (_children.length == 1) && _children.index( 0 ).is_summary() );
   }
 
+  /* Returns true if this node is the first node of a summary node */
+  public virtual bool first_summarized() {
+    return( is_summarized() && ((_children.index( 0 ) as SummaryNode).first_node() == this) );
+  }
+
+  /* Returns true if this node is the last node of a summary node */
+  public virtual bool last_summarized() {
+    return( is_summarized() && ((_children.index( 0 ) as SummaryNode).last_node() == this) );
+  }
+
   /* Returns true if this node exists within a group */
   public bool is_grouped() {
     var node = this;
@@ -840,11 +860,15 @@ public class Node : Object {
 
   /* Returns the number of descendants within this node */
   public int descendant_count() {
-    var count = (int)_children.length;
-    for( int i=0; i<_children.length; i++ ) {
-      count += _children.index( i ).descendant_count();
+    if( is_summarized() && !last_summarized() ) {
+      return( 0 );
+    } else {
+      var count = (int)_children.length;
+      for( int i=0; i<_children.length; i++ ) {
+        count += _children.index( i ).descendant_count();
+      }
+      return( count );
     }
-    return( count );
   }
 
   /* Returns true if the node is a leaf node */
@@ -1016,7 +1040,7 @@ public class Node : Object {
 
   /* Returns true if the given cursor coordinates lie within the fold indicator area */
   public virtual bool is_within_fold( double x, double y ) {
-    if( _children.length > 0 ) {
+    if( (_children.length > 0) && !is_summarized() ) {
       double fx, fy, fw, fh;
       fold_bbox( out fx, out fy, out fw, out fh );
       return( Utils.is_within_bounds( x, y, fx, fy, fw, fh ) );
@@ -1026,7 +1050,7 @@ public class Node : Object {
 
   /* Returns true if the given cursor coordinates lie within the fold indicator surrounding area */
   public virtual bool is_within_fold_area( double x, double y ) {
-    if( _children.length > 0 ) {
+    if( (_children.length > 0) && !is_summarized() ) {
       double fx, fy, fw, fh;
       var pad = 20;
       fold_bbox( out fx, out fy, out fw, out fh );
@@ -1620,8 +1644,6 @@ public class Node : Object {
 
   /* Returns the bounding box for the node box itself (this includes everything but the callout) */
   public void node_bbox( out double x, out double y, out double w, out double h ) {
-    var margin  = style.node_margin  ?? 0;
-    var padding = style.node_padding ?? 0;
     x = posx;
     y = posy; 
     w = _width;
@@ -1631,7 +1653,7 @@ public class Node : Object {
   /* Returns the bounding box for the fold indicator for this node */
   public void fold_bbox( out double x, out double y, out double w, out double h ) {
     double bw, bh;
-    bbox( out x, out y, out bw, out bh );
+    node_bbox( out x, out y, out bw, out bh );
     w = 16;
     h = 16;
     switch( side ) {
@@ -2368,29 +2390,25 @@ public class Node : Object {
     }
 
     /* If we have children and we need to extend our link point, let's draw the extended link link now */
-    if( _children.length > 0 ) {
+    if( (_children.length > 0) && !is_summarized() ) {
       var max_width = 0;
       for( int i=0; i<_children.length; i++ ) {
         if( max_width < _children.index( i ).style.link_width ) {
           max_width = _children.index( i ).style.link_width;
         }
       }
-      if( (side & NodeSide.horizontal()) != 0 ) {
-        if( _width < _total_width ) {
-          link_point( out x, out y );
-          ctx.set_line_width( max_width );
-          ctx.move_to( (posx + _width - (style.node_margin ?? 0)), y );
-          ctx.line_to( x, y );
-          ctx.stroke();
-        }
-      } else {
-        if( _height < _total_height ) {
-          link_point( out x, out y );
-          ctx.set_line_width( max_width );
-          ctx.move_to( x, (posy + _height - (style.node_margin ?? 0)) );
-          ctx.line_to( x, y );
-          ctx.stroke();
-        }
+      if( (side == NodeSide.RIGHT) && (_width < _total_width) ) {
+        link_point( out x, out y );
+        ctx.set_line_width( max_width );
+        ctx.move_to( (posx + _width - (style.node_margin ?? 0)), y );
+        ctx.line_to( x, y );
+        ctx.stroke();
+      } else if( (side == NodeSide.BOTTOM) && (_height < _total_height) ) {
+        link_point( out x, out y );
+        ctx.set_line_width( max_width );
+        ctx.move_to( x, (posy + _height - (style.node_margin ?? 0)) );
+        ctx.line_to( x, y );
+        ctx.stroke();
       }
     }
 
@@ -2597,7 +2615,7 @@ public class Node : Object {
   /* Draw the fold indicator */
   protected virtual void draw_common_fold( Context ctx, RGBA bg_color, RGBA fg_color ) {
 
-    if( _children.length == 0 ) return;
+    if( (_children.length == 0) || is_summarized() ) return;
 
     double fx, fy, fw, fh;
     fold_bbox( out fx, out fy, out fw, out fh );
@@ -2682,6 +2700,11 @@ public class Node : Object {
     if( style.link_arrow ) {
       draw_link_arrow( ctx, theme, tailx, taily, tipx, tipy );
     }
+
+    Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), 0.1 );
+    ctx.set_line_width( 1 );
+    ctx.rectangle( posx, posy, _width, _height );
+    ctx.fill();
 
   }
 
@@ -2843,7 +2866,7 @@ public class Node : Object {
     if( !is_root() ) {
       draw_link( ctx, theme );
     }
-    if( !folded && (!is_summarized() || (this == (_children.index( 0 ) as SummaryNode).last_node())) ) {
+    if( !folded && (!is_summarized() || last_summarized()) ) {
       var int_child_len = (int)_children.length;
       if( int_child_len > 0 ) {
         var first_side = side_count( _children.index( 0 ).side );
