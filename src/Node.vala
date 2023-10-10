@@ -542,7 +542,6 @@ public class Node : Object {
     _name      = new CanvasText.with_text( da, "" );
     _name.resized.connect( position_text_and_update_size );
     set_parsers();
-    siblings.append_val( this );
     load( da, n, isroot, ref siblings );
   }
 
@@ -1369,6 +1368,11 @@ public class Node : Object {
       group = bool.parse( g );
     }
 
+    string? su = n->get_prop( "summarized" );
+    if( (su != null) && bool.parse( su ) ) {
+      siblings.append_val( this );
+    }
+
     /* If the posx and posy values are not set, set the layout now */
     if( (x == null) && (y == null) ) {
       string? l = n->get_prop( "layout" );
@@ -1459,6 +1463,7 @@ public class Node : Object {
       node->new_prop( "color", Utils.color_from_rgba( _link_color ) );
       node->new_prop( "colorroot", link_color_root.to_string() );
     }
+    node->new_prop( "summarized", is_summarized().to_string() );
     node->new_prop( "layout", _layout.name );
     if( _sticker != null ) {
       node->new_prop( "sticker", _sticker );
