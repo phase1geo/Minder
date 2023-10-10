@@ -1166,7 +1166,7 @@ msgstr "启用Unicode输入"
 msgid ""
 "Specifies if Unicode characters can be input using backslash prefixed "
 "descriptors (ex. \\pi)"
-msgstr "是否可以使用反斜杠前缀描述符输入 Unicode 字符（例如 \pi）"
+msgstr "是否可以使用反斜杠前缀描述符输入 Unicode 字符（例如 \\pi）"
 
 #: src/Preferences.vala:91
 msgid "Create connection title on creation"
