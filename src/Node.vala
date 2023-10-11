@@ -2675,11 +2675,15 @@ public class Node : Object {
   public virtual void draw_link( Context ctx, Theme theme ) {
 
     double  parent_x, parent_y;
-    double  height  = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
-    double  tailx   = 0, taily = 0, tipx = 0, tipy = 0;
-    double  child_x = 0;
-    double  child_y = 0;
+    double  height   = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
+    double  tailx    = 0, taily = 0, tipx = 0, tipy = 0;
+    double  child_x1 = 0;
+    double  child_y1 = 0;
+    double  child_x2 = 0;
+    double  child_y2 = 0;
     double? ext_x, ext_y;
+
+    var margin = style.node_margin;
 
     /* Get the parent's link point */
     parent.link_point( out parent_x, out parent_y );
@@ -2688,23 +2692,38 @@ public class Node : Object {
     ctx.set_line_cap( LineCap.ROUND );
 
     switch( side ) {
-      case NodeSide.LEFT   :  child_x = (posx + _width - style.node_margin);  child_y = (posy + height);                       break;
-      case NodeSide.RIGHT  :  child_x = (posx + style.node_margin);           child_y = (posy + height);                       break;
-      case NodeSide.TOP    :  child_x = (posx + (_width / 2));                child_y = (posy + _height - style.node_margin);  break;
-      case NodeSide.BOTTOM :  child_x = (posx + (_width / 2));                child_y = (posy + style.node_margin);            break;
+      case NodeSide.LEFT   :
+        child_x1 = (posx + _total_width - margin);
+        child_x2 = (posx + _width - margin);
+        child_y1 = (posy + height);
+        child_y2 = child_y1;
+        break;
+      case NodeSide.RIGHT  :
+        child_x1 = (posx + margin);
+        child_x2 = child_x1;
+        child_y1 = (posy + height);
+        child_y2 = child_y1;
+        break;
+      case NodeSide.TOP    :
+        child_x1 = (posx + (_width / 2));
+        child_x2 = child_x1;
+        child_y1 = (posy + _total_height - margin);
+        child_y2 = (posy + _height - margin);
+        break;
+      case NodeSide.BOTTOM :
+        child_x1 = (posx + (_width / 2));
+        child_x2 = child_x1;
+        child_y1 = (posy + margin);
+        child_y2 = child_y1;
+        break;
     }
 
-    style.draw_link( ctx, parent, this, parent_x, parent_y, child_x, child_y, out tailx, out taily, out tipx, out tipy );
+    style.draw_link( ctx, parent, this, parent_x, parent_y, child_x1, child_y1, child_x2, child_y2, out tailx, out taily, out tipx, out tipy );
 
     /* Draw the arrow */
     if( style.link_arrow ) {
       draw_link_arrow( ctx, theme, tailx, taily, tipx, tipy );
     }
-
-    Utils.set_context_color_with_alpha( ctx, theme.get_color( "nodesel_background" ), 0.1 );
-    ctx.set_line_width( 1 );
-    ctx.rectangle( posx, posy, _width, _height );
-    ctx.fill();
 
   }
 

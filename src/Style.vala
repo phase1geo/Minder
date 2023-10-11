@@ -411,13 +411,21 @@ public class Style {
 
   /* Draws the link with the given information, applying the stored styling */
   public void draw_link( Cairo.Context ctx, Node from_node, Node to_node,
-                         double from_x, double from_y, double to_x, double to_y,
+                         double from_x, double from_y, double to_x1, double to_y1, double to_x2, double to_y2,
                          out double tailx, out double taily, out double tipx, out double tipy ) {
 
     ctx.save();
     ctx.set_line_width( link_width );
     link_dash.set_context( ctx, link_width );
-    from_node.style.link_type.draw( ctx, from_node, to_node, from_x, from_y, to_x, to_y, out tailx, out taily, out tipx, out tipy );
+    from_node.style.link_type.draw( ctx, from_node, to_node, from_x, from_y, to_x1, to_y1, out tailx, out taily, out tipx, out tipy );
+
+    /* Draw the extension line, if necessary */
+    if( (to_x1 != to_x2) || (to_y1 != to_y2) ) {
+      ctx.move_to( to_x1, to_y1 );
+      ctx.line_to( to_x2, to_y2 );
+      ctx.stroke();
+    }
+
     ctx.restore();
 
   }
