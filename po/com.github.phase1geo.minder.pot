@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-03 17:00-0500\n"
+"POT-Creation-Date: 2023-10-12 18:16-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,7 +101,7 @@ msgstr ""
 
 #: src/CalloutMenu.vala:34 src/ConnectionMenu.vala:42
 #: src/ConnectionsMenu.vala:35 src/GroupsMenu.vala:40 src/NodeMenu.vala:87
-#: src/NodesMenu.vala:55 src/ThemeEditor.vala:139
+#: src/NodesMenu.vala:56 src/ThemeEditor.vala:139
 msgid "Delete"
 msgstr ""
 
@@ -154,7 +154,7 @@ msgid "Remove Sticker"
 msgstr ""
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
-#: src/NodeMenu.vala:182 src/NodesMenu.vala:94
+#: src/NodeMenu.vala:182 src/NodesMenu.vala:98
 msgid "Select"
 msgstr ""
 
@@ -186,48 +186,48 @@ msgstr ""
 msgid "unnamed"
 msgstr ""
 
-#: src/DrawArea.vala:774
+#: src/DrawArea.vala:775
 msgid "Main Idea"
 msgstr ""
 
-#: src/DrawArea.vala:2637
+#: src/DrawArea.vala:2638
 #, c-format
 msgid "%0.3g%% complete"
 msgstr ""
 
-#: src/DrawArea.vala:2651
+#: src/DrawArea.vala:2652
 msgid "Drag to resize node"
 msgstr ""
 
-#: src/DrawArea.vala:2653
+#: src/DrawArea.vala:2654
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:2781
+#: src/DrawArea.vala:2782
 #, c-format
 msgid "Children: %u\n"
 msgstr ""
 
-#: src/DrawArea.vala:2782
+#: src/DrawArea.vala:2783
 #, c-format
 msgid "Total: %d"
 msgstr ""
 
-#: src/DrawArea.vala:2831
+#: src/DrawArea.vala:2832
 msgid "connection endpoint change"
 msgstr ""
 
-#: src/DrawArea.vala:2838
+#: src/DrawArea.vala:2839
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:3535 src/DrawArea.vala:3549 src/DrawArea.vala:5441
+#: src/DrawArea.vala:3554 src/DrawArea.vala:3568 src/DrawArea.vala:5474
 msgid "Another Idea"
 msgstr ""
 
-#: src/DrawArea.vala:4895 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4927 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:225 src/MapInspector.vala:448
 msgid "Manual"
 msgstr ""
@@ -485,7 +485,7 @@ msgstr ""
 msgid "All Grouped Nodes"
 msgstr ""
 
-#: src/GroupsMenu.vala:111 src/NodeMenu.vala:676 src/NodesMenu.vala:266
+#: src/GroupsMenu.vala:111 src/NodeMenu.vala:676 src/NodesMenu.vala:288
 msgid "Select a link color"
 msgstr ""
 
@@ -856,11 +856,11 @@ msgstr ""
 msgid "No node found"
 msgstr ""
 
-#: src/NodeMenu.vala:71 src/NodesMenu.vala:47 src/TextMenu.vala:44
+#: src/NodeMenu.vala:71 src/NodesMenu.vala:48 src/TextMenu.vala:44
 msgid "Copy"
 msgstr ""
 
-#: src/NodeMenu.vala:75 src/NodesMenu.vala:51 src/TextMenu.vala:48
+#: src/NodeMenu.vala:75 src/NodesMenu.vala:52 src/TextMenu.vala:48
 msgid "Cut"
 msgstr ""
 
@@ -908,7 +908,7 @@ msgstr ""
 msgid "Link Color"
 msgstr ""
 
-#: src/NodeMenu.vala:135 src/NodesMenu.vala:79
+#: src/NodeMenu.vala:135 src/NodesMenu.vala:83
 msgid "Set to color…"
 msgstr ""
 
@@ -916,12 +916,12 @@ msgstr ""
 msgid "Randomize color"
 msgstr ""
 
-#: src/NodeMenu.vala:141 src/NodesMenu.vala:85
+#: src/NodeMenu.vala:141 src/NodesMenu.vala:89
 msgid "Use parent color"
 msgstr ""
 
-#: src/NodeMenu.vala:145 src/NodeMenu.vala:423 src/NodesMenu.vala:63
-#: src/NodesMenu.vala:214
+#: src/NodeMenu.vala:145 src/NodeMenu.vala:423 src/NodesMenu.vala:64
+#: src/NodesMenu.vala:221
 msgid "Fold Children"
 msgstr ""
 
@@ -973,7 +973,7 @@ msgstr ""
 msgid "Child Node"
 msgstr ""
 
-#: src/NodeMenu.vala:207 src/NodesMenu.vala:103
+#: src/NodeMenu.vala:207 src/NodesMenu.vala:107
 msgid "Child Nodes"
 msgstr ""
 
@@ -1017,7 +1017,7 @@ msgstr ""
 msgid "Remove Node Link"
 msgstr ""
 
-#: src/NodeMenu.vala:423 src/NodesMenu.vala:214
+#: src/NodeMenu.vala:423 src/NodesMenu.vala:221
 msgid "Unfold Children"
 msgstr ""
 
@@ -1045,71 +1045,75 @@ msgstr ""
 msgid "Paste Node As Child"
 msgstr ""
 
-#: src/NodesMenu.vala:59
+#: src/NodesMenu.vala:60
 msgid "Toggle Tasks"
 msgstr ""
 
-#: src/NodesMenu.vala:67
+#: src/NodesMenu.vala:68
 msgid "Connect"
 msgstr ""
 
-#: src/NodesMenu.vala:71 src/NodesMenu.vala:215
+#: src/NodesMenu.vala:72 src/NodesMenu.vala:222
 msgid "Link Nodes"
 msgstr ""
 
-#: src/NodesMenu.vala:76 src/ThemeEditor.vala:125
+#: src/NodesMenu.vala:75
+msgid "Add Summary Node"
+msgstr ""
+
+#: src/NodesMenu.vala:80 src/ThemeEditor.vala:125
 msgid "Link Colors"
 msgstr ""
 
-#: src/NodesMenu.vala:82
+#: src/NodesMenu.vala:86
 msgid "Randomize colors"
 msgstr ""
 
-#: src/NodesMenu.vala:98
+#: src/NodesMenu.vala:102
 msgid "Parent Nodes"
 msgstr ""
 
-#: src/NodesMenu.vala:112
+#: src/NodesMenu.vala:116
 msgid "Align Nodes"
 msgstr ""
 
-#: src/NodesMenu.vala:116
+#: src/NodesMenu.vala:120
 msgid "Align Top"
 msgstr ""
 
-#: src/NodesMenu.vala:120
+#: src/NodesMenu.vala:124
 msgid "Align Center Horizontally"
 msgstr ""
 
-#: src/NodesMenu.vala:124
+#: src/NodesMenu.vala:128
 msgid "Align Bottom"
 msgstr ""
 
-#: src/NodesMenu.vala:128
+#: src/NodesMenu.vala:132
 msgid "Align Left"
 msgstr ""
 
-#: src/NodesMenu.vala:132
+#: src/NodesMenu.vala:136
 msgid "Align Center Vertically"
 msgstr ""
 
-#: src/NodesMenu.vala:136
+#: src/NodesMenu.vala:140
 msgid "Align Right"
 msgstr ""
 
-#: src/NodesMenu.vala:215
+#: src/NodesMenu.vala:222
 msgid "Remove Node Links"
 msgstr ""
 
-#: src/Node.vala:2161
+#: src/Node.vala:2222
 msgid "Node Title"
 msgstr ""
 
-#: src/Node.vala:2169
+#: src/Node.vala:2230
 msgid "Node Note"
 msgstr ""
 
-#: src/Node.vala:2180
+#: src/Node.vala:2241
 msgid "Callout Text"
 msgstr ""
 
@@ -3117,6 +3121,10 @@ msgstr ""
 
 #: src/undo_actions/UndoNodeStickerRemove.vala:31
 msgid "remove node sticker"
+msgstr ""
+
+#: src/undo_actions/UndoNodeSummary.vala:32
+msgid "insert summary node"
 msgstr ""
 
 #: src/undo_actions/UndoNodeTasks.vala:30
