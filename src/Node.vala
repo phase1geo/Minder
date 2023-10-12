@@ -1485,7 +1485,6 @@ public class Node : Object {
 
     if( (_children.length > 0) && (!is_summarized() || ((_children.index( 0 ) as SummaryNode).last_node() == this)) ) {
       Xml.Node* nodes = new Xml.Node( null, "nodes" );
-      stdout.printf( "Node %s has %u children\n", name.text.text, _children.length );
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).save( nodes );
       }
@@ -2448,10 +2447,18 @@ public class Node : Object {
       ctx.set_line_width( 2 );
       ctx.arc( (x + _task_radius), (y + _task_radius), _task_radius, 0, (2 * Math.PI) );
 
-      Utils.set_context_color_with_alpha( ctx, (((_task_done == 0) && (background != null)) ? background : color), _alpha );
+      if( (_task_done == 0) && (background != null) ) {
+        Utils.set_context_color_with_alpha( ctx, background, _alpha );
+      } else {
+        Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      }
       ctx.fill_preserve();
 
-      Utils.set_context_color_with_alpha( ctx, ((style.is_fillable() && (background != null)) ? background : color), _alpha );
+      if( style.is_fillable() && (background != null) ) {
+        Utils.set_context_color_with_alpha( ctx, background, _alpha );
+      } else {
+        Utils.set_context_color_with_alpha( ctx, color, _alpha );
+      }
       ctx.stroke();
 
     }
@@ -2473,13 +2480,14 @@ public class Node : Object {
       y += _task_radius;
 
       /* Draw circle outline */
-      Utils.set_context_color_with_alpha( ctx, ((style.is_fillable() && (background != null)) ? background : color), _alpha );
       ctx.new_path();
       ctx.set_line_width( 2 );
       ctx.arc( x, y, _task_radius, 0, (2 * Math.PI) );
       if( style.is_fillable() && (background != null) ) {
+        Utils.set_context_color_with_alpha( ctx, background, _alpha );
         ctx.fill();
       } else {
+        Utils.set_context_color_with_alpha( ctx, color, _alpha );
         ctx.stroke();
       }
 
