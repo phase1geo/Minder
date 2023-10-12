@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-03 17:00-0500\n"
+"POT-Creation-Date: 2023-10-12 18:16-0500\n"
 "PO-Revision-Date: 2022-08-02 23:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -103,7 +103,7 @@ msgstr "BŁĄD:  Nie można otworzyć pliku '%s'\n"
 
 #: src/CalloutMenu.vala:34 src/ConnectionMenu.vala:42
 #: src/ConnectionsMenu.vala:35 src/GroupsMenu.vala:40 src/NodeMenu.vala:87
-#: src/NodesMenu.vala:55 src/ThemeEditor.vala:139
+#: src/NodesMenu.vala:56 src/ThemeEditor.vala:139
 msgid "Delete"
 msgstr "Usuń"
 
@@ -156,7 +156,7 @@ msgid "Remove Sticker"
 msgstr "Usuń ikonę"
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
-#: src/NodeMenu.vala:182 src/NodesMenu.vala:94
+#: src/NodeMenu.vala:182 src/NodesMenu.vala:98
 msgid "Select"
 msgstr "Zaznacz"
 
@@ -188,20 +188,20 @@ msgstr "Notatka łącznika"
 msgid "unnamed"
 msgstr "bez nazwy"
 
-#: src/DrawArea.vala:774
+#: src/DrawArea.vala:775
 msgid "Main Idea"
 msgstr "TEMAT"
 
-#: src/DrawArea.vala:2637
+#: src/DrawArea.vala:2638
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "Ukończono %0.3g%%"
 
-#: src/DrawArea.vala:2651
+#: src/DrawArea.vala:2652
 msgid "Drag to resize node"
 msgstr "Przeciągnij aby zmienić rozmiar elementu"
 
-#: src/DrawArea.vala:2653
+#: src/DrawArea.vala:2654
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -209,29 +209,29 @@ msgstr ""
 "Przeciągnij by zmienić rozmiar elementu oraz obrazu.\n"
 "CTRL+przeciąganie zmieni tylko rozmiar elementu."
 
-#: src/DrawArea.vala:2781
+#: src/DrawArea.vala:2782
 #, c-format
 msgid "Children: %u\n"
 msgstr "Podrzędne: %u\n"
 
-#: src/DrawArea.vala:2782
+#: src/DrawArea.vala:2783
 #, c-format
 msgid "Total: %d"
 msgstr "Wszystkie: %d"
 
-#: src/DrawArea.vala:2831
+#: src/DrawArea.vala:2832
 msgid "connection endpoint change"
 msgstr ""
 
-#: src/DrawArea.vala:2838
+#: src/DrawArea.vala:2839
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:3535 src/DrawArea.vala:3549 src/DrawArea.vala:5441
+#: src/DrawArea.vala:3554 src/DrawArea.vala:3568 src/DrawArea.vala:5474
 msgid "Another Idea"
 msgstr "NOWY TEMAT"
 
-#: src/DrawArea.vala:4895 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4927 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:225 src/MapInspector.vala:448
 msgid "Manual"
 msgstr "Ręcznie"
@@ -495,7 +495,7 @@ msgstr ""
 msgid "All Grouped Nodes"
 msgstr "Wszystkie zgrupowane elementy"
 
-#: src/GroupsMenu.vala:111 src/NodeMenu.vala:676 src/NodesMenu.vala:266
+#: src/GroupsMenu.vala:111 src/NodeMenu.vala:676 src/NodesMenu.vala:288
 msgid "Select a link color"
 msgstr ""
 
@@ -874,11 +874,11 @@ msgstr "Usuń gałąź"
 msgid "No node found"
 msgstr "Nie znaleziono gałęzi"
 
-#: src/NodeMenu.vala:71 src/NodesMenu.vala:47 src/TextMenu.vala:44
+#: src/NodeMenu.vala:71 src/NodesMenu.vala:48 src/TextMenu.vala:44
 msgid "Copy"
 msgstr "Kopiuj"
 
-#: src/NodeMenu.vala:75 src/NodesMenu.vala:51 src/TextMenu.vala:48
+#: src/NodeMenu.vala:75 src/NodesMenu.vala:52 src/TextMenu.vala:48
 msgid "Cut"
 msgstr "Wytnij"
 
@@ -928,7 +928,7 @@ msgstr "Dodaj grupę"
 msgid "Link Color"
 msgstr "Kolor linii gałęzi"
 
-#: src/NodeMenu.vala:135 src/NodesMenu.vala:79
+#: src/NodeMenu.vala:135 src/NodesMenu.vala:83
 msgid "Set to color…"
 msgstr "Ustaw kolor..."
 
@@ -936,12 +936,12 @@ msgstr "Ustaw kolor..."
 msgid "Randomize color"
 msgstr "Kolor losowy"
 
-#: src/NodeMenu.vala:141 src/NodesMenu.vala:85
+#: src/NodeMenu.vala:141 src/NodesMenu.vala:89
 msgid "Use parent color"
 msgstr "Użyj koloru elementu nadrzędnego"
 
-#: src/NodeMenu.vala:145 src/NodeMenu.vala:423 src/NodesMenu.vala:63
-#: src/NodesMenu.vala:214
+#: src/NodeMenu.vala:145 src/NodeMenu.vala:423 src/NodesMenu.vala:64
+#: src/NodesMenu.vala:221
 msgid "Fold Children"
 msgstr "Zwiń elementy podrzędne"
 
@@ -994,7 +994,7 @@ msgid "Child Node"
 msgstr "Gałąź podrzędna"
 
 # Elementy podrzędne poziomu 1 niższego
-#: src/NodeMenu.vala:207 src/NodesMenu.vala:103
+#: src/NodeMenu.vala:207 src/NodesMenu.vala:107
 msgid "Child Nodes"
 msgstr "Gałęzie podrzędne"
 
@@ -1039,7 +1039,7 @@ msgstr "Oznacz zadanie jako wykonane"
 msgid "Remove Node Link"
 msgstr "Usuń hiperłącze"
 
-#: src/NodeMenu.vala:423 src/NodesMenu.vala:214
+#: src/NodeMenu.vala:423 src/NodesMenu.vala:221
 msgid "Unfold Children"
 msgstr "Rozwiń gałęzie podrzędne"
 
@@ -1068,71 +1068,76 @@ msgstr "Wklej i zastąp obraz w gałęzi"
 msgid "Paste Node As Child"
 msgstr "Wklej gałąź jako gałąź podrzędną"
 
-#: src/NodesMenu.vala:59
+#: src/NodesMenu.vala:60
 msgid "Toggle Tasks"
 msgstr "Przełącz zadania"
 
-#: src/NodesMenu.vala:67
+#: src/NodesMenu.vala:68
 msgid "Connect"
 msgstr "Połącz"
 
-#: src/NodesMenu.vala:71 src/NodesMenu.vala:215
+#: src/NodesMenu.vala:72 src/NodesMenu.vala:222
 msgid "Link Nodes"
 msgstr ""
 
-#: src/NodesMenu.vala:76 src/ThemeEditor.vala:125
+#: src/NodesMenu.vala:75
+#, fuzzy
+msgid "Add Summary Node"
+msgstr "Dodaj gałąź nadrzędną"
+
+#: src/NodesMenu.vala:80 src/ThemeEditor.vala:125
 msgid "Link Colors"
 msgstr "Kolory linii gałęzi"
 
-#: src/NodesMenu.vala:82
+#: src/NodesMenu.vala:86
 msgid "Randomize colors"
 msgstr "Kolor losowy"
 
-#: src/NodesMenu.vala:98
+#: src/NodesMenu.vala:102
 msgid "Parent Nodes"
 msgstr ""
 
-#: src/NodesMenu.vala:112
+#: src/NodesMenu.vala:116
 msgid "Align Nodes"
 msgstr "Wyrównanie gałęzi"
 
-#: src/NodesMenu.vala:116
+#: src/NodesMenu.vala:120
 msgid "Align Top"
 msgstr "Wyrównaj do góry"
 
-#: src/NodesMenu.vala:120
+#: src/NodesMenu.vala:124
 msgid "Align Center Horizontally"
 msgstr ""
 
-#: src/NodesMenu.vala:124
+#: src/NodesMenu.vala:128
 msgid "Align Bottom"
 msgstr "Wyrównaj do dołu"
 
-#: src/NodesMenu.vala:128
+#: src/NodesMenu.vala:132
 msgid "Align Left"
 msgstr "Wyrównaj do lewej"
 
-#: src/NodesMenu.vala:132
+#: src/NodesMenu.vala:136
 msgid "Align Center Vertically"
 msgstr ""
 
-#: src/NodesMenu.vala:136
+#: src/NodesMenu.vala:140
 msgid "Align Right"
 msgstr "Wyrównaj do prawej"
 
-#: src/NodesMenu.vala:215
+#: src/NodesMenu.vala:222
 msgid "Remove Node Links"
 msgstr "Usuń hiperłącze elementu"
 
-#: src/Node.vala:2161
+#: src/Node.vala:2222
 msgid "Node Title"
 msgstr "Tytuł gałęzi"
 
-#: src/Node.vala:2169
+#: src/Node.vala:2230
 msgid "Node Note"
 msgstr "Notatka gałęzi"
 
-#: src/Node.vala:2180
+#: src/Node.vala:2241
 #, fuzzy
 msgid "Callout Text"
 msgstr "Wklej tekst"
@@ -3159,6 +3164,11 @@ msgstr ""
 #: src/undo_actions/UndoNodeStickerRemove.vala:31
 msgid "remove node sticker"
 msgstr ""
+
+#: src/undo_actions/UndoNodeSummary.vala:32
+#, fuzzy
+msgid "insert summary node"
+msgstr "wstawienie gałęzi"
 
 #: src/undo_actions/UndoNodeTasks.vala:30
 msgid "node task changes"

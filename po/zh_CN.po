@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-03 17:00-0500\n"
+"POT-Creation-Date: 2023-10-12 18:16-0500\n"
 "PO-Revision-Date: 2023-10-10 17:50+0800\n"
 "Last-Translator: Aerowolf <aerowolf@tom.com>\n"
 "Language-Team: 简体中文\n"
-",<aerowolf@tom.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+",<aerowolf@tom.com>\n"
 "X-Generator: Lokalize 21.12.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
@@ -105,7 +105,7 @@ msgstr "错误：不能载入Minder输入文件%s"
 
 #: src/CalloutMenu.vala:34 src/ConnectionMenu.vala:42
 #: src/ConnectionsMenu.vala:35 src/GroupsMenu.vala:40 src/NodeMenu.vala:87
-#: src/NodesMenu.vala:55 src/ThemeEditor.vala:139
+#: src/NodesMenu.vala:56 src/ThemeEditor.vala:139
 msgid "Delete"
 msgstr "删除"
 
@@ -158,7 +158,7 @@ msgid "Remove Sticker"
 msgstr "移除贴纸"
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
-#: src/NodeMenu.vala:182 src/NodesMenu.vala:94
+#: src/NodeMenu.vala:182 src/NodesMenu.vala:98
 msgid "Select"
 msgstr "选择"
 
@@ -190,20 +190,20 @@ msgstr "连接备注"
 msgid "unnamed"
 msgstr "未命名"
 
-#: src/DrawArea.vala:774
+#: src/DrawArea.vala:775
 msgid "Main Idea"
 msgstr "主要想法"
 
-#: src/DrawArea.vala:2637
+#: src/DrawArea.vala:2638
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% 完成"
 
-#: src/DrawArea.vala:2651
+#: src/DrawArea.vala:2652
 msgid "Drag to resize node"
 msgstr "拖动可调整节点大小"
 
-#: src/DrawArea.vala:2653
+#: src/DrawArea.vala:2654
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
@@ -211,29 +211,29 @@ msgstr ""
 "拖动可调整节点和图像的大小。\n"
 "按住Ctrl键再拖动，可只调整节点大小。"
 
-#: src/DrawArea.vala:2781
+#: src/DrawArea.vala:2782
 #, c-format
 msgid "Children: %u\n"
 msgstr "子节点： %u\n"
 
-#: src/DrawArea.vala:2782
+#: src/DrawArea.vala:2783
 #, c-format
 msgid "Total: %d"
 msgstr "总计： %d"
 
-#: src/DrawArea.vala:2831
+#: src/DrawArea.vala:2832
 msgid "connection endpoint change"
 msgstr "连接端点修改"
 
-#: src/DrawArea.vala:2838
+#: src/DrawArea.vala:2839
 msgid "connection drag"
 msgstr "连接拖动"
 
-#: src/DrawArea.vala:3535 src/DrawArea.vala:3549 src/DrawArea.vala:5441
+#: src/DrawArea.vala:3554 src/DrawArea.vala:3568 src/DrawArea.vala:5474
 msgid "Another Idea"
 msgstr "其他想法"
 
-#: src/DrawArea.vala:4895 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:4927 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:225 src/MapInspector.vala:448
 msgid "Manual"
 msgstr "手动"
@@ -492,7 +492,7 @@ msgstr "顶部节点"
 msgid "All Grouped Nodes"
 msgstr "所有已分群组的节点"
 
-#: src/GroupsMenu.vala:111 src/NodeMenu.vala:676 src/NodesMenu.vala:266
+#: src/GroupsMenu.vala:111 src/NodeMenu.vala:676 src/NodesMenu.vala:288
 msgid "Select a link color"
 msgstr "选择链接颜色"
 
@@ -865,11 +865,11 @@ msgstr "删除节点"
 msgid "No node found"
 msgstr "未找到节点"
 
-#: src/NodeMenu.vala:71 src/NodesMenu.vala:47 src/TextMenu.vala:44
+#: src/NodeMenu.vala:71 src/NodesMenu.vala:48 src/TextMenu.vala:44
 msgid "Copy"
 msgstr "复制"
 
-#: src/NodeMenu.vala:75 src/NodesMenu.vala:51 src/TextMenu.vala:48
+#: src/NodeMenu.vala:75 src/NodesMenu.vala:52 src/TextMenu.vala:48
 msgid "Cut"
 msgstr "剪切"
 
@@ -917,7 +917,7 @@ msgstr "添加标记"
 msgid "Link Color"
 msgstr "链接颜色"
 
-#: src/NodeMenu.vala:135 src/NodesMenu.vala:79
+#: src/NodeMenu.vala:135 src/NodesMenu.vala:83
 msgid "Set to color…"
 msgstr "设置颜色……"
 
@@ -925,12 +925,12 @@ msgstr "设置颜色……"
 msgid "Randomize color"
 msgstr "颜色随机"
 
-#: src/NodeMenu.vala:141 src/NodesMenu.vala:85
+#: src/NodeMenu.vala:141 src/NodesMenu.vala:89
 msgid "Use parent color"
 msgstr "使用父节点颜色"
 
-#: src/NodeMenu.vala:145 src/NodeMenu.vala:423 src/NodesMenu.vala:63
-#: src/NodesMenu.vala:214
+#: src/NodeMenu.vala:145 src/NodeMenu.vala:423 src/NodesMenu.vala:64
+#: src/NodesMenu.vala:221
 msgid "Fold Children"
 msgstr "折叠子节点"
 
@@ -982,7 +982,7 @@ msgstr "上一个同级节点"
 msgid "Child Node"
 msgstr "子节点"
 
-#: src/NodeMenu.vala:207 src/NodesMenu.vala:103
+#: src/NodeMenu.vala:207 src/NodesMenu.vala:107
 msgid "Child Nodes"
 msgstr "子节点"
 
@@ -1026,7 +1026,7 @@ msgstr "将任务标记为已完成"
 msgid "Remove Node Link"
 msgstr "删除节点链接"
 
-#: src/NodeMenu.vala:423 src/NodesMenu.vala:214
+#: src/NodeMenu.vala:423 src/NodesMenu.vala:221
 msgid "Unfold Children"
 msgstr "展开子节点"
 
@@ -1054,71 +1054,76 @@ msgstr "粘贴和替换节点图像"
 msgid "Paste Node As Child"
 msgstr "将节点粘贴为子节点"
 
-#: src/NodesMenu.vala:59
+#: src/NodesMenu.vala:60
 msgid "Toggle Tasks"
 msgstr "切换任务"
 
-#: src/NodesMenu.vala:67
+#: src/NodesMenu.vala:68
 msgid "Connect"
 msgstr "连接"
 
-#: src/NodesMenu.vala:71 src/NodesMenu.vala:215
+#: src/NodesMenu.vala:72 src/NodesMenu.vala:222
 msgid "Link Nodes"
 msgstr "链接节点"
 
-#: src/NodesMenu.vala:76 src/ThemeEditor.vala:125
+#: src/NodesMenu.vala:75
+#, fuzzy
+msgid "Add Summary Node"
+msgstr "添加父节点"
+
+#: src/NodesMenu.vala:80 src/ThemeEditor.vala:125
 msgid "Link Colors"
 msgstr "链接颜色"
 
-#: src/NodesMenu.vala:82
+#: src/NodesMenu.vala:86
 msgid "Randomize colors"
 msgstr "颜色随机"
 
-#: src/NodesMenu.vala:98
+#: src/NodesMenu.vala:102
 msgid "Parent Nodes"
 msgstr "父节点"
 
-#: src/NodesMenu.vala:112
+#: src/NodesMenu.vala:116
 msgid "Align Nodes"
 msgstr "对齐节点"
 
-#: src/NodesMenu.vala:116
+#: src/NodesMenu.vala:120
 msgid "Align Top"
 msgstr "上部对齐"
 
-#: src/NodesMenu.vala:120
+#: src/NodesMenu.vala:124
 msgid "Align Center Horizontally"
 msgstr "水平居中对齐"
 
-#: src/NodesMenu.vala:124
+#: src/NodesMenu.vala:128
 msgid "Align Bottom"
 msgstr "下部对齐"
 
-#: src/NodesMenu.vala:128
+#: src/NodesMenu.vala:132
 msgid "Align Left"
 msgstr "左对齐"
 
-#: src/NodesMenu.vala:132
+#: src/NodesMenu.vala:136
 msgid "Align Center Vertically"
 msgstr "垂直居中对齐"
 
-#: src/NodesMenu.vala:136
+#: src/NodesMenu.vala:140
 msgid "Align Right"
 msgstr "右对齐"
 
-#: src/NodesMenu.vala:215
+#: src/NodesMenu.vala:222
 msgid "Remove Node Links"
 msgstr "删除节点链接"
 
-#: src/Node.vala:2161
+#: src/Node.vala:2222
 msgid "Node Title"
 msgstr "节点标题"
 
-#: src/Node.vala:2169
+#: src/Node.vala:2230
 msgid "Node Note"
 msgstr "节点备注"
 
-#: src/Node.vala:2180
+#: src/Node.vala:2241
 msgid "Callout Text"
 msgstr "标记文本"
 
@@ -3131,6 +3136,11 @@ msgstr "修改节点贴纸"
 #: src/undo_actions/UndoNodeStickerRemove.vala:31
 msgid "remove node sticker"
 msgstr "删除节点贴纸"
+
+#: src/undo_actions/UndoNodeSummary.vala:32
+#, fuzzy
+msgid "insert summary node"
+msgstr "插入节点"
 
 #: src/undo_actions/UndoNodeTasks.vala:30
 msgid "node task changes"
