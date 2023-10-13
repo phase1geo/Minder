@@ -49,6 +49,8 @@ sources += files(
     'UndoNodeStickerChange.vala',
     'UndoNodeStickerRemove.vala',
     'UndoNodeSummary.vala',
+    'UndoNodeSummaryFromNode.vala',
+    'UndoNodeSummaryDelete.vala',
     'UndoNodeTasks.vala',
 
     'UndoNodesAlign.vala',

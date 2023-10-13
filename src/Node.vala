@@ -1268,6 +1268,7 @@ public class Node : Object {
           case "summary-node" :
             var node = new SummaryNode.from_xml( _da, _layout, it, ref nodes );
             node.attach_nodes( siblings, null );
+            siblings.remove_range( 0, siblings.length );
             break;
         }
       }

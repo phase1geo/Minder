@@ -47,6 +47,7 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _parent;
   Gtk.MenuItem _child;
   Gtk.MenuItem _sibling;
+  Gtk.MenuItem _summarize;
   Gtk.MenuItem _quick_insert;
   Gtk.MenuItem _quick_replace;
   Gtk.MenuItem _sortby;
@@ -166,6 +167,10 @@ public class NodeMenu : Gtk.Menu {
     _sibling.add( new Granite.AccelLabel( _( "Add Sibling Node" ), "Return" ) );
     _sibling.activate.connect( add_sibling_node );
 
+    _summarize = new Gtk.MenuItem();
+    _summarize.add( new Granite.AccelLabel( _( "Use to Summarize Previous Sibling Nodes" ), "<Shift>Tab" ) );
+    _summarize.activate.connect( convert_to_summary_node );
+
     var quick_menu = new Gtk.Menu();
     var quick = new Gtk.MenuItem.with_label( _( "Quick Entry" ) );
     quick.set_submenu( quick_menu );
@@ -258,6 +263,7 @@ public class NodeMenu : Gtk.Menu {
     add( change );
     add( new SeparatorMenuItem() );
     add( addnode );
+    add( _summarize );
     add( quick );
     add( new SeparatorMenuItem() );
     add( selnode );
@@ -413,6 +419,7 @@ public class NodeMenu : Gtk.Menu {
     _sellink.set_sensitive( node_has_link() );
     _selcallout.set_sensitive( node_has_callout() );
     _sticker.set_sensitive( current.sticker != null );
+    _summarize.set_sensitive( _da.node_summarizable() );
 
     /* Set the menu item labels */
     var task_lbl    = node_is_task()   ?
@@ -592,6 +599,11 @@ public class NodeMenu : Gtk.Menu {
   /* Creates a sibling node of the current node */
   private void add_sibling_node() {
     _da.add_sibling_node();
+  }
+
+  /* Converts the current node into a summary node */
+  private void convert_to_summary_node() {
+    _da.add_summary_node_from_current();
   }
 
   /* Show the quick entry insert window */

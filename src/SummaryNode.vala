@@ -141,7 +141,7 @@ public class SummaryNode : Node {
   */
   public void attach_siblings( Node node, Theme? theme ) {
     var sibling = node;
-    while( (sibling != null) && (sibling.children().length == 0) && !sibling.is_summarized() && (sibling.side == side) ) {
+    while( (sibling != null) && sibling.is_leaf() && !sibling.is_summarized() && (sibling.side == side) ) {
       _nodes.prepend( sibling );
       sibling.children().append_val( this );
       connect_node( sibling );
@@ -153,6 +153,27 @@ public class SummaryNode : Node {
       link_color_child = main_branch() ? theme.next_color() : parent.link_color;
     }
     nodes_changed( 0, 0 );
+  }
+
+  /* We just attach our existing nodes back to their original values (used in undo/redo operations) */
+  public void attach_all() {
+    foreach( var node in _nodes ) {
+      node.children().append_val( this );
+      connect_node( node );
+    }
+  }
+
+  /* We just detach ourselves from the node list */
+  public void detach_all() {
+    foreach( var node in _nodes ) {
+      node.children().remove_index( 0 );
+      disconnect_node( node );
+    }
+  }
+
+  /* Removes all summarized nodes from this node so that it can be deleted */
+  public override void delete() {
+    detach_all();
   }
 
   /* Draws the link to the left of the summarized nodes */

@@ -3276,6 +3276,9 @@ public class DrawArea : Gtk.DrawingArea {
           break;
         }
       }
+    } else if( current.is_summary() ) {
+      undo_buffer.add_item( new UndoNodeSummaryDelete( (SummaryNode)current, conns, undo_groups ) );
+      current.delete();
     } else {
       undo_buffer.add_item( new UndoNodeDelete( current, current.index(), conns, undo_groups ) );
       current.delete();
@@ -3541,11 +3544,13 @@ public class DrawArea : Gtk.DrawingArea {
     return( summary );
   }
 
+  /* Creates a summary node from the given node */
   public Node create_summary_node_from_node( Node node ) {
+    var prev_node = node.previous_sibling();
     node.detach( node.side );
     var summary = new SummaryNode.from_node( this, node, image_manager );
     summary.side = node.side;
-    summary.attach_siblings( node.previous_sibling(), _theme );
+    summary.attach_siblings( prev_node, _theme );
     return( summary );
   }
 
@@ -3618,14 +3623,55 @@ public class DrawArea : Gtk.DrawingArea {
     auto_save();
   }
 
+  /* Returns true if all of the selected nodes are consecutive siblings that are not already summarized and are leaf nodes on the same side */
+  public bool nodes_summarizable() {
+    var nodes = _selected.ordered_nodes();
+    if( nodes.length < 2 ) return( false );
+    var first = nodes.index( 0 );
+    if( first.is_leaf() && !first.is_summarized() ) {
+      for( int i=1; i<nodes.length; i++ ) {
+        var prev = nodes.index( i - 1 );
+        var node = nodes.index( i );
+        if( (prev.parent != node.parent) || (prev.side != node.side) || ((prev.index() + 1) != node.index()) || !node.is_leaf() || node.is_summarized() ) return( false );
+      }
+    }
+    return( true );
+  }
+
+  /*
+   Returns true if the currently selected node has at least one sibling that is
+   before this node which is not already summarized and is on the same side.
+  */
+  public bool node_summarizable() {
+    var current = _selected.current_node();
+    if( (current != null) && !current.is_summary() && !current.is_summarized() ) {
+      var sibling = current.previous_sibling();
+      return( (sibling != null) && !sibling.is_summarized() && sibling.is_leaf() && (current.side == sibling.side) );
+    }
+    return( false );
+  }
+
   /* Adds a summary node to the first and last nodes in the selected range */
   public void add_summary_node() {
+    if( !nodes_summarizable() ) return;
     var nodes = _selected.nodes();
-    if( nodes.length < 2 ) return;
-    var node = create_summary_node( nodes );
+    var node  = create_summary_node( nodes );
     undo_buffer.add_item( new UndoNodeSummary( (SummaryNode)node ) );
     set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );
+    queue_draw();
+    see();
+    auto_save();
+  }
+
+  /* Adds a summary node to the first and last nodes in the selected range */
+  public void add_summary_node_from_current() {
+    if( !node_summarizable() ) return;
+    var current = _selected.current_node();
+    var node = create_summary_node_from_node( current );
+    undo_buffer.add_item( new UndoNodeSummaryFromNode( current, (SummaryNode)node ) );
+    set_current_node( node );
+    set_node_mode( node, NodeMode.CURRENT, false );
     queue_draw();
     see();
     auto_save();
@@ -3921,7 +3967,7 @@ public class DrawArea : Gtk.DrawingArea {
 
 
   /* Called whenever the tab character is entered in the drawing area */
-  private void handle_tab() {
+  private void handle_tab( bool shift ) {
     if( is_node_editable() ) {
       if( _completion.shown ) {
         _completion.select();
@@ -3936,7 +3982,13 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
     } else if( is_node_selected() ) {
-      add_child_node();
+      if( shift ) {
+        add_summary_node_from_current();
+      } else {
+        add_child_node();
+      }
+    } else if( _selected.num_nodes() > 1 ) {
+      add_summary_node();
     }
   }
 
@@ -4662,7 +4714,7 @@ public class DrawArea : Gtk.DrawingArea {
         else if( has_key( kvs, Key.Delete ) )    { handle_delete(); }
         else if( has_key( kvs, Key.Escape ) )    { handle_escape(); }
         else if( has_key( kvs, Key.Return ) )    { handle_return( shift ); }
-        else if( has_key( kvs, Key.Tab ) )       { handle_tab(); }
+        else if( has_key( kvs, Key.Tab ) )       { handle_tab( shift ); }
         else if( has_key( kvs, Key.Right ) )     { handle_right( shift, alt ); }
         else if( has_key( kvs, Key.Left ) )      { handle_left( shift, alt ); }
         else if( has_key( kvs, Key.Home ) )      { handle_home( shift ); }
