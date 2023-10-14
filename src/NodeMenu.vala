@@ -598,7 +598,7 @@ public class NodeMenu : Gtk.Menu {
 
   /* Creates a sibling node of the current node */
   private void add_sibling_node() {
-    _da.add_sibling_node();
+    _da.add_sibling_node( false );
   }
 
   /* Converts the current node into a summary node */

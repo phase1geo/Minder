@@ -2223,7 +2223,7 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     for( int i=0; i<_nodes.length; i++ ) {
       Node tmp = _nodes.index( i ).contains( x, y, current );
-      if( (tmp != null) && (tmp != current.parent) && !current.contains_node( tmp ) && !tmp.is_summarized() ) {
+      if( (tmp != null) && (tmp != current.parent) && !current.contains_node( tmp ) && (!tmp.is_summarized() || ((tmp.first_summarized() || tmp.last_summarized()) && (current.is_leaf() || current.is_summarized()))) ) {
         return( tmp );
       }
     }
@@ -2900,10 +2900,13 @@ public class DrawArea : Gtk.DrawingArea {
   /* Attaches the current node to the attach node */
   private void attach_current_node() {
 
-    Node? orig_parent = null;
-    var   orig_index  = -1;
-    var   current     = _selected.current_node();
-    var   isroot      = current.is_root();
+    Node?        orig_parent        = null;
+    var          orig_index         = -1;
+    SummaryNode? orig_summary       = null;
+    var          orig_summary_index = -1;
+    var          current            = _selected.current_node();
+    var          isroot             = current.is_root();
+    var          isleaf             = current.is_leaf();
 
     /* Remove the current node from its current location */
     if( isroot ) {
@@ -2915,13 +2918,33 @@ public class DrawArea : Gtk.DrawingArea {
         }
       }
     } else {
-      orig_parent = current.parent;
-      orig_index  = current.index();
+      orig_parent        = current.parent;
+      orig_index         = current.index();
+      orig_summary       = current.is_summarized() ? (SummaryNode)current.children().index( 0 ) : null;
+      orig_summary_index = current.is_summarized() ? orig_summary.node_index( current ) : -1;
       current.detach( _orig_side );
+      if( orig_summary != null ) {
+        orig_summary.remove_node( current );
+      }
+    }
+
+    var summary = _attach_node.is_summarized() ? (SummaryNode)_attach_node.children().index( 0 ) : null;
+
+    if( isleaf && (orig_summary != summary) && _attach_node.first_summarized() ) {
+      current.attach( _attach_node.parent, _attach_node.index(), _theme );
+      summary.add_node( current, summary.node_index( _attach_node ) );
+    } else if( isleaf && (orig_summary != summary) && _attach_node.last_summarized() ) {
+      current.attach( _attach_node.parent, (_attach_node.index() + 1), _theme );
+      summary.add_node( current, (summary.node_index( _attach_node ) + 1) );
+    } else if( (orig_summary == summary) && _attach_node.first_summarized() ) {
+      current.attach( _attach_node.parent, _attach_node.index(), _theme );
+    } else if( (orig_summary == summary) && _attach_node.last_summarized() ) {
+      current.attach( _attach_node.parent, (_attach_node.index() + 1), _theme );
+    } else {
+      current.attach( _attach_node, -1, _theme );
     }
 
     /* Attach the node */
-    current.attach( _attach_node, -1, _theme );
     set_node_mode( _attach_node, NodeMode.NONE );
     _attach_node = null;
 
@@ -2929,7 +2952,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( isroot ) {
       undo_buffer.add_item( new UndoNodeAttach.for_root( current, orig_index, _orig_info ) );
     } else {
-      undo_buffer.add_item( new UndoNodeAttach( current, orig_parent, _orig_side, orig_index, _orig_info ) );
+      undo_buffer.add_item( new UndoNodeAttach( current, orig_parent, _orig_side, orig_index, _orig_info, orig_summary, orig_summary_index ) );
     }
 
     queue_draw();
@@ -3490,12 +3513,15 @@ public class DrawArea : Gtk.DrawingArea {
    Creates a sibling node, positions it and appends immediately after the given
    sibling node.
   */
-  public Node create_sibling_node( Node sibling, string name = "" ) {
+  public Node create_sibling_node( Node sibling, bool below, string name = "" ) {
     var node   = new Node.with_name( this, name, layouts.get_default() );
     node.side  = sibling.side;
     node.style = sibling.style;
-    // node.style = StyleInspector.styles.get_style_for_level( sibling.get_level(), sibling.style );
-    node.attach( sibling.parent, (sibling.index() + 1), _theme );
+    node.attach( sibling.parent, (sibling.index() + (below ? 1 : 0)), _theme );
+    if( sibling.is_summarized() ) {
+      var summary = (SummaryNode)sibling.children().index( 0 );
+      summary.add_node( node, (summary.node_index( sibling ) + (below ? 1 : 0)) );
+    }
     return( node );
   }
 
@@ -3585,8 +3611,8 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Adds a new sibling node to the current node */
-  public void add_sibling_node() {
-    var node = create_sibling_node( _selected.current_node() );
+  public void add_sibling_node( bool shift ) {
+    var node = create_sibling_node( _selected.current_node(), !shift );
     undo_buffer.add_item( new UndoNodeInsert( node, node.index() ) );
     set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );
@@ -3601,7 +3627,7 @@ public class DrawArea : Gtk.DrawingArea {
   */
   public void add_parent_node() {
     var current = _selected.current_node();
-    if( current.is_root() ) return;
+    if( current.is_root() || current.is_summarized() ) return;
     var node  = create_parent_node( current );
     undo_buffer.add_item( new UndoNodeAddParent( node, current ) );
     set_current_node( node );
@@ -3614,6 +3640,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Adds a child node to the current node */
   public void add_child_node() {
     var current = _selected.current_node();
+    if( current.is_summarized() ) return;
     var node    = create_child_node( current );
     undo_buffer.add_item( new UndoNodeInsert( node, node.index() ) );
     set_current_node( node );
@@ -3728,7 +3755,7 @@ public class DrawArea : Gtk.DrawingArea {
         set_node_mode( current, NodeMode.CURRENT );
         if( _create_new_from_edit ) {
           if( !current.is_root() ) {
-            add_sibling_node();
+            add_sibling_node( shift );
           } else {
             add_root_node();
           }
@@ -3752,7 +3779,7 @@ public class DrawArea : Gtk.DrawingArea {
       end_connection( _attach_node );
     } else if( is_node_selected() ) {
       if( !_selected.current_node().is_root() ) {
-        add_sibling_node();
+        add_sibling_node( shift );
       } else if( shift ) {
         add_connected_node();
       } else {

@@ -66,6 +66,11 @@ public class SummaryNode : Node {
     return( _nodes.last().data );
   }
 
+  /* Returns the index of the given node in the list of summarized nodes.  Returns -1 if the node could not be found. */
+  public int node_index( Node node ) {
+    return( _nodes.index( node ) );
+  }
+
   /* Returns true to indicate that this is a summary node */
   public override bool is_summary() {
     return( true );
@@ -169,6 +174,24 @@ public class SummaryNode : Node {
       node.children().remove_index( 0 );
       disconnect_node( node );
     }
+  }
+
+  /* Adds the given node to the list of summarized nodes */
+  public void add_node( Node node, int index ) {
+    _nodes.insert( node, index );
+    node.children().append_val( this );
+    connect_node( node );
+    parent = last_node();
+    nodes_changed( 0, 0 );
+  }
+
+  /* Removes the given node from the list of summarized nodes */
+  public void remove_node( Node node ) {
+    _nodes.remove( node );
+    node.children().remove_range( 0, 1 );
+    disconnect_node( node );
+    parent = last_node();
+    nodes_changed( 0, 0 );
   }
 
   /* Removes all summarized nodes from this node so that it can be deleted */
