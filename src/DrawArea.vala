@@ -2868,6 +2868,17 @@ public class DrawArea : Gtk.DrawingArea {
           int orig_index = current_node.index();
           animator.add_nodes( _nodes, "move to position" );
           current_node.parent.move_to_position( current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) );
+          var prev = current_node.previous_sibling();
+          var next = current_node.next_sibling();
+          if( !current_node.is_summarized() ) {
+            if( (prev != null) && (next != null) && prev.is_summarized() && (prev.summary_node() == next.summary_node()) ) {
+              prev.summary_node().add_node( current_node, next.summary_node().node_index( next ) );
+            }
+          } else {
+            if( ((prev != null) && !prev.is_summarized()) || ((next != null) && !next.is_summarized()) ) {
+              current_node.summary_node().remove_node( current_node );
+            }
+          }
           undo_buffer.add_item( new UndoNodeMove( current_node, _orig_side, orig_index ) );
           animator.animate();
 

@@ -827,6 +827,19 @@ public class Node : Object {
     return( is_summarized() && ((_children.index( 0 ) as SummaryNode).last_node() == this) );
   }
 
+  /* Returns the summary node this node is attached to if it is summarized; otherwise, returns null */
+  public SummaryNode? summary_node() {
+    if( is_summarized() ) {
+      return( (SummaryNode)children().index( 0 ) );
+    }
+    return( null );
+  }
+
+  /* Returns true if this node is positioned somewhere between the first and last sibling node in the same parent */
+  public bool is_between_siblings( Node first, Node last ) {
+    return( (first.parent == parent) && (last.parent == parent) && ((first.index() <= index()) && (index() <= last.index())) );
+  }
+
   /* Returns true if this node exists within a group */
   public bool is_grouped() {
     var node = this;
