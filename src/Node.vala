@@ -1288,6 +1288,9 @@ public class Node : Object {
           case "node" :
             var node = new Node.from_xml( _da, _layout, it, false, ref nodes );
             node.attach( this, -1, null );
+            if( node.last_summarized() ) {
+              node.summary_node().update_extents();
+            }
             break;
           case "summary-node" :
             var node = new SummaryNode.from_xml( _da, _layout, it, ref nodes );

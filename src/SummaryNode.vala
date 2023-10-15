@@ -94,6 +94,9 @@ public class SummaryNode : Node {
   /* Updates the stored summarized extents based on the current layout and first/last position */
   public void update_extents() {
 
+    /* If we don't have any nodes, this is bad */
+    assert( _nodes.length() > 0 );
+
     double fx, fy, fw, fh;
     double lx, ly, lw, lh;
     first_node().bbox( out fx, out fy, out fw, out fh );
