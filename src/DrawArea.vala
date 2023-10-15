@@ -80,6 +80,7 @@ public class DrawArea : Gtk.DrawingArea {
   private string           _orig_title;
   private Node?            _last_match     = null;
   private Node?            _attach_node    = null;
+  private SummaryNode?     _attach_summary = null;
   private Connection?      _attach_conn    = null;
   private Sticker?         _attach_sticker = null;
   private NodeMenu         _node_menu;
@@ -716,6 +717,7 @@ public class DrawArea : Gtk.DrawingArea {
     _press_type         = EventType.NOTHING;
     _motion             = false;
     _attach_node        = null;
+    _attach_summary     = null;
     _attach_conn        = null;
     _attach_sticker     = null;
     _orig_text          = new CanvasText( this );
@@ -766,6 +768,7 @@ public class DrawArea : Gtk.DrawingArea {
     _press_type         = EventType.NOTHING;
     _motion             = false;
     _attach_node        = null;
+    _attach_summary     = null;
     _attach_conn        = null;
     _attach_sticker     = null;
     _orig_text          = new CanvasText( this );
@@ -2223,8 +2226,22 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     for( int i=0; i<_nodes.length; i++ ) {
       Node tmp = _nodes.index( i ).contains( x, y, current );
-      if( (tmp != null) && (tmp != current.parent) && !current.contains_node( tmp ) && (!tmp.is_summarized() || ((tmp.first_summarized() || tmp.last_summarized()) && (current.is_leaf() || current.is_summarized()))) ) {
+      if( (tmp != null) && (tmp != current.parent) && !current.contains_node( tmp ) && !tmp.is_summarized() ) {
         return( tmp );
+      }
+    }
+    return( null );
+  }
+
+  /* Returns the summary node that the current node can be attached to; otherwise, returns null */
+  private SummaryNode? attachable_summary_node( double x, double y ) {
+    var current = _selected.current_node();
+    if( current.is_summarized() || current.is_leaf() ) {
+      for( int i=0; i<current.parent.children().length; i++ ) {
+        var sibling = current.parent.children().index( i );
+        if( sibling.last_summarized() && sibling.summary_node().is_within_summarized( x, y ) ) {
+          return( sibling.summary_node() );
+        }
       }
     }
     return( null );
@@ -2459,6 +2476,12 @@ public class DrawArea : Gtk.DrawingArea {
     var shift   = (bool)(event.state & ModifierType.SHIFT_MASK);
     var alt     = (bool)(event.state & ModifierType.MOD1_MASK);
 
+    /* If we have an attachable summary node, clear it */
+    if( _attach_summary != null ) {
+      _attach_summary.attachable = false;
+      _attach_summary = null;
+    }
+
     /* If the node is attached, clear it */
     if( _attach_node != null ) {
       set_node_mode( _attach_node, NodeMode.NONE );
@@ -2510,7 +2533,12 @@ public class DrawArea : Gtk.DrawingArea {
             current_node.resize( diffx );
             auto_save();
           } else {
-            Node attach_node = attachable_node( _scaled_x, _scaled_y );
+            var attach_summary = attachable_summary_node( _scaled_x, _scaled_y );
+            if( attach_summary != null ) {
+              attach_summary.attachable = true;
+              _attach_summary = attach_summary;
+            }
+            var attach_node = attachable_node( _scaled_x, _scaled_y );
             if( attach_node != null ) {
               set_node_mode( attach_node, NodeMode.ATTACHABLE );
               _attach_node = attach_node;
@@ -2565,7 +2593,7 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
       }
 
-      if( !_motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within( _scaled_x, _scaled_y ) ) {
+      if( !_motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within_node( _scaled_x, _scaled_y ) ) {
         current_node.alpha = 0.3;
       }
       _press_x = _scaled_x;
@@ -2868,19 +2896,20 @@ public class DrawArea : Gtk.DrawingArea {
           int orig_index = current_node.index();
           animator.add_nodes( _nodes, "move to position" );
           current_node.parent.move_to_position( current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) );
-          var prev = current_node.previous_sibling();
           var next = current_node.next_sibling();
-          if( !current_node.is_summarized() ) {
-            if( (prev != null) && (next != null) && prev.is_summarized() && (prev.summary_node() == next.summary_node()) ) {
-              prev.summary_node().add_node( current_node, next.summary_node().node_index( next ) );
-            }
-          } else {
-            if( ((prev != null) && !prev.is_summarized()) || ((next != null) && !next.is_summarized()) ) {
-              current_node.summary_node().remove_node( current_node );
-            }
+          if( !current_node.is_summarized() && (_attach_summary != null) ) {
+            _attach_summary.add_node( current_node, _attach_summary.node_index( next ?? current_node.previous_sibling() ) );
+          } else if( current_node.is_summarized() && (_attach_summary == null) ) {
+            current_node.summary_node().remove_node( current_node );
           }
           undo_buffer.add_item( new UndoNodeMove( current_node, _orig_side, orig_index ) );
           animator.animate();
+
+          /* Clear the attachable summary indicator */
+          if( _attach_summary != null ) {
+            _attach_summary.attachable = false;
+            _attach_summary = null;
+          }
 
         /* Otherwise, redraw everything after the move */
         } else {

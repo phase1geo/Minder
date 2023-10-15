@@ -52,7 +52,7 @@ public class LinkTypeRounded : Object, LinkType {
                     out double tailx, out double taily, out double tipx, out double tipy ) {
 
     var side       = to_node.side;
-    var horizontal = (side & NodeSide.horizontal()) != 0;
+    var horizontal = side.horizontal();
     var fstyle     = from_node.style;
     var tstyle     = to_node.style;
     var adj_a      = adjust_a( tstyle );

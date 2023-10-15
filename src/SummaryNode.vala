@@ -24,6 +24,12 @@ using Cairo;
 public class SummaryNode : Node {
 
   private List<Node> _nodes;
+  private double     _first_xy;
+  private double     _last_xy;
+
+  // If this is set to true, the summary line will be drawn in the attachable color to indicate that
+  // releasing a node that is being moved will be a part of the summary node.
+  public bool attachable { set; get; default = false; }
 
   /* Default constructor */
   public SummaryNode( DrawArea da, Layout? layout ) {
@@ -76,16 +82,43 @@ public class SummaryNode : Node {
     return( true );
   }
 
+  /* Returns true if the given coordinates is within the horizontal/vertical extents of the list of summarized nodes */
+  public bool is_within_summarized( double x, double y ) {
+    if( side.horizontal() ) {
+      return( (_first_xy <= y) && (y <= _last_xy) );
+    } else {
+      return( (_first_xy <= x) && (x <= _last_xy) );
+    }
+  }
+
+  /* Updates the stored summarized extents based on the current layout and first/last position */
+  public void update_extents() {
+
+    double fx, fy, fw, fh;
+    double lx, ly, lw, lh;
+    first_node().bbox( out fx, out fy, out fw, out fh );
+    last_node().bbox( out lx, out ly, out lw, out lh );
+
+    if( side.horizontal() ) {
+      _first_xy = fy;
+      _last_xy  = ly + lh;
+    } else {
+      _first_xy = fx;
+      _last_xy  = lx + lw;
+    }
+
+  }
+
   /* Comparison function of two double types */
   private static int compare_pos( double pos1, double pos2 ) {
     return( (pos1 == pos2) ? 0 : (pos1 < pos2) ? -1 : 1 );
   }
 
   /* Called whenever the first or last summarized nodes changes in position or size, we need to adjust our location */
-  private void nodes_changed( double first_diffx, double first_diffy ) {
+  public void nodes_changed( double first_diffx, double first_diffy ) {
 
     /* Let's resort the summarized nodes in case some nodes changed location */
-    if( (side & NodeSide.horizontal()) != 0 ) {
+    if( side.horizontal() ) {
       _nodes.sort((a, b) => { return( compare_pos( a.posy, b.posy ) ); });
     } else {
       _nodes.sort((a, b) => { return( compare_pos( a.posx, b.posx ) ); });
@@ -137,6 +170,7 @@ public class SummaryNode : Node {
     if( theme != null ) {
       link_color_child = main_branch() ? theme.next_color() : parent.link_color;
     }
+    update_extents();
     nodes_changed( 0, 0 );
   }
 
@@ -157,6 +191,7 @@ public class SummaryNode : Node {
     if( theme != null ) {
       link_color_child = main_branch() ? theme.next_color() : parent.link_color;
     }
+    update_extents();
     nodes_changed( 0, 0 );
   }
 
@@ -166,6 +201,7 @@ public class SummaryNode : Node {
       node.children().append_val( this );
       connect_node( node );
     }
+    update_extents();
   }
 
   /* We just detach ourselves from the node list */
@@ -182,7 +218,25 @@ public class SummaryNode : Node {
     node.children().append_val( this );
     connect_node( node );
     parent = last_node();
+    update_extents();
     nodes_changed( 0, 0 );
+  }
+
+  /* Moves the given node from its current location to a new location */
+  public void move_node( Node node, int to_index ) {
+    var from_index = _nodes.index( node );
+    if( from_index != -1 ) {
+      if( from_index > to_index ) {
+        _nodes.remove( node );
+        _nodes.insert( node, to_index );
+      } else if( from_index < to_index ) {
+        _nodes.remove( node );
+        _nodes.insert( node, (to_index - 1) );
+      }
+      parent = last_node();
+      update_extents();
+      nodes_changed( 0, 0 );
+    }
   }
 
   /* Removes the given node from the list of summarized nodes */
@@ -191,6 +245,7 @@ public class SummaryNode : Node {
     node.children().remove_range( 0, 1 );
     disconnect_node( node );
     parent = last_node();
+    update_extents();
     nodes_changed( 0, 0 );
   }
 
@@ -214,9 +269,9 @@ public class SummaryNode : Node {
     }
 
     var x1 = sx - 10;
-    var y1 = first_node().posy;
+    var y1 = _first_xy;
     var x2 = sx - 20;
-    var y2 = last_node().posy + last_node().height;
+    var y2 = _last_xy;
 
     ctx.move_to( x1, y1 );
     ctx.line_to( x2, y1 );
@@ -227,6 +282,7 @@ public class SummaryNode : Node {
     var margin = style.node_margin;
     h = (style.node_border.name() == "underlined") ? (h - margin) : (h / 2);
 
+    Utils.set_context_color_with_alpha( ctx, link_color, ((_nodes.length() == 1) ? parent.alpha : alpha) );
     ctx.move_to( x2, (((y2 - y1) / 2) + y1) );
     ctx.line_to( (x + w - margin), (y + h) );
     ctx.stroke();
@@ -248,9 +304,9 @@ public class SummaryNode : Node {
     }
 
     var x1 = sx + 10;
-    var y1 = first_node().posy;
+    var y1 = _first_xy;
     var x2 = sx + 20;
-    var y2 = last_node().posy + last_node().height;
+    var y2 = _last_xy;
 
     ctx.move_to( x1, y1 );
     ctx.line_to( x2, y1 );
@@ -261,6 +317,7 @@ public class SummaryNode : Node {
     var margin = style.node_margin;
     h = (style.node_border.name() == "underlined") ? (h - margin) : (h / 2);
 
+    Utils.set_context_color_with_alpha( ctx, link_color, ((_nodes.length() == 1) ? parent.alpha : alpha) );
     ctx.move_to( x2, (((y2 - y1) / 2) + y1) );
     ctx.line_to( (x + margin), (y + h) );
     ctx.stroke();
@@ -281,9 +338,9 @@ public class SummaryNode : Node {
       }
     }
 
-    var x1 = first_node().posx;
+    var x1 = _first_xy;
     var y1 = sy - 10;
-    var x2 = last_node().posx + last_node().width;
+    var x2 = _last_xy;
     var y2 = sy - 20;
 
     ctx.move_to( x1, y1 );
@@ -294,6 +351,7 @@ public class SummaryNode : Node {
 
     var margin = style.node_margin;
 
+    Utils.set_context_color_with_alpha( ctx, link_color, ((_nodes.length() == 1) ? parent.alpha : alpha) );
     ctx.move_to( (((x2 - x1) / 2) + x1), y2 );
     ctx.line_to( ((w / 2) + x), (y + h - margin) );
     ctx.stroke();
@@ -314,9 +372,9 @@ public class SummaryNode : Node {
       }
     }
 
-    var x1 = first_node().posx;
+    var x1 = _first_xy;
     var y1 = sy + 10;
-    var x2 = last_node().posx + last_node().width;
+    var x2 = _last_xy;
     var y2 = sy + 20;
 
     ctx.move_to( x1, y1 );
@@ -327,6 +385,7 @@ public class SummaryNode : Node {
 
     var margin = style.node_margin;
 
+    Utils.set_context_color_with_alpha( ctx, link_color, ((_nodes.length() == 1) ? parent.alpha : alpha) );
     ctx.move_to( (((x2 - x1) / 2) + x1), y2 );
     ctx.line_to( ((w / 2) + x), (y + margin) );
     ctx.stroke();
@@ -336,7 +395,13 @@ public class SummaryNode : Node {
   /* Draw the summary link that spans the first and last node */
   public override void draw_link( Context ctx, Theme theme ) {
 
-    Utils.set_context_color_with_alpha( ctx, link_color, ((parent.alpha != 1.0) ? parent.alpha : alpha) );
+    var color = link_color;
+
+    if( attachable ) {
+      color = theme.get_color( "attachable" );
+    }
+
+    Utils.set_context_color_with_alpha( ctx, color, ((_nodes.length() == 1) ? parent.alpha : alpha) );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.set_line_width( parent.style.link_width );
 

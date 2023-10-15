@@ -540,7 +540,7 @@ public class Selection {
   private void ordered_nodes_helper( Array<Node> children, ref Array<Node> nodes ) {
     for( int i=0; i<children.length; i++ ) {
       var node = children.index( i );
-      if( !node.is_summarized() || node.last_summarized() ) {
+      if( node.traversable() ) {
         ordered_nodes_helper( node.children(), ref nodes );
       }
       if( is_node_selected( node ) ) {

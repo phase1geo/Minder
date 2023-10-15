@@ -141,7 +141,7 @@ public class Callout : Object {
 
   /* Returns true if the callout should be drawn below the node; otherwise, we draw it to the right of the node */
   private bool is_below_node() {
-    return( (_node.side & NodeSide.horizontal()) != 0 );
+    return( _node.side.horizontal() );
   }
 
   /* Called if the text has been changed from the CanvasText perspective */

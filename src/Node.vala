@@ -69,19 +69,14 @@ public enum NodeSide {
     }
   }
 
-  /* Generates the value of the ANY mask value */
-  public static int any() {
-    return( LEFT + RIGHT + TOP + BOTTOM );
-  }
-
   /* Generates the value of the VERTICAL mask value */
-  public static int vertical() {
-    return( TOP + BOTTOM );
+  public bool vertical() {
+    return( (this == TOP) || (this == BOTTOM) );
   }
 
   /* Generates the value of the HORIZONTAL mask value */
-  public static int horizontal() {
-    return( LEFT + RIGHT );
+  public bool horizontal() {
+    return( (this == LEFT) || (this == RIGHT) );
   }
 }
 
@@ -400,7 +395,9 @@ public class Node : Object {
     set {
       _layout = value;
       for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).layout = value;
+        if( traversable() ) {
+          _children.index( i ).layout = value;
+        }
       }
     }
   }
@@ -448,7 +445,9 @@ public class Node : Object {
     set {
       _alpha = value;
       for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).alpha = value;
+        if( _children.index( i ).traversable() ) {
+          _children.index( i ).alpha = value;
+        }
       }
       if( _callout != null ) {
         _callout.alpha = _alpha;
@@ -745,7 +744,7 @@ public class Node : Object {
     if( (_callout == null) || _callout.mode.is_disconnected() ) {
       _total_width  = _width;
       _total_height = _height;
-    } else if( (side & NodeSide.horizontal()) != 0 ) {
+    } else if( side.horizontal() ) {
       var margin         = style.node_margin  ?? 0;
       var callout_width  = _callout.total_width + (margin * 2);
       var callout_height = _callout.total_height + margin;
@@ -805,6 +804,11 @@ public class Node : Object {
   /* Returns true if the node does not have a parent */
   public bool is_root() {
     return( parent == null );
+  }
+
+  /* Returns true if this node can be traversed in the hierarchy */
+  public bool traversable() {
+    return( !is_summarized() || last_summarized() );
   }
 
   /* Returns if this is a summary node */
@@ -873,7 +877,7 @@ public class Node : Object {
 
   /* Returns the number of descendants within this node */
   public int descendant_count() {
-    if( is_summarized() && !last_summarized() ) {
+    if( !traversable() ) {
       return( 0 );
     } else {
       var count = (int)_children.length;
@@ -938,8 +942,15 @@ public class Node : Object {
     return( !is_root() && (side == NodeSide.LEFT) );
   }
 
-  /* Returns true if the given cursor coordinates lies within this node */
+  /* Returns true if the given cursor coordinates lie within any part of this node */
   public virtual bool is_within( double x, double y ) {
+    double bx, by, bw, bh;
+    bbox( out bx, out by, out bw, out bh );
+    return( Utils.is_within_bounds( x, y, bx, by, bw, bh ) );
+  }
+
+  /* Returns true if the given cursor coordinates lies within the node bounding box */
+  public virtual bool is_within_node( double x, double y ) {
     double margin = style.node_margin ?? 0;
     double cx, cy, cw, ch;
     node_bbox( out cx, out cy, out cw, out ch );
@@ -1094,7 +1105,7 @@ public class Node : Object {
 
   /* Finds the node which contains the given pixel coordinates */
   public virtual Node? contains( double x, double y, Node? n ) {
-    if( (this != n) && (is_within( x, y ) || is_within_fold_area( x, y )) ) {
+    if( (this != n) && (is_within_node( x, y ) || is_within_fold_area( x, y )) ) {
       return( this );
     } else if( !folded ) {
       for( int i=0; i<_children.length; i++ ) {
@@ -1465,7 +1476,7 @@ public class Node : Object {
     tree_bbox = layout.bbox( this, -1 );
 
     if( ts == null ) {
-      tree_size = ((side & NodeSide.horizontal()) != 0) ? tree_bbox.height : tree_bbox.width;
+      tree_size = side.horizontal() ? tree_bbox.height : tree_bbox.width;
     }
 
     /* Make sure that the name is positioned properly */
@@ -1588,7 +1599,7 @@ public class Node : Object {
 
     /* Calculate the tree size */
     tree_bbox = layout.bbox( this, -1 );
-    tree_size = ((side & NodeSide.horizontal()) != 0) ? tree_bbox.height : tree_bbox.width;
+    tree_size = side.horizontal() ? tree_bbox.height : tree_bbox.width;
 
   }
 
@@ -1643,7 +1654,7 @@ public class Node : Object {
 
   /* Returns the bounding box for this node */
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
-    if( is_root() || ((side & NodeSide.vertical()) != 0) ) {
+    if( is_root() || side.vertical() ) {
       x = posx;
       y = posy;
       w = _total_width;
@@ -2908,7 +2919,7 @@ public class Node : Object {
     if( !is_root() ) {
       draw_link( ctx, theme );
     }
-    if( !folded && (!is_summarized() || last_summarized()) ) {
+    if( !folded && traversable() ) {
       var int_child_len = (int)_children.length;
       if( int_child_len > 0 ) {
         var first_side = side_count( _children.index( 0 ).side );
