@@ -327,8 +327,10 @@ public class Node : Object {
         _link_color      = value;
         _link_color_set  = true;
         _link_color_root = true;
-        for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).link_color_child = value;
+        if( traversable() ) {
+          for( int i=0; i<_children.length; i++ ) {
+            _children.index( i ).link_color_child = value;
+          }
         }
       }
     }
@@ -344,8 +346,10 @@ public class Node : Object {
       if( !link_color_root ) {
         _link_color     = value;
         _link_color_set = true;
-        for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).link_color_child = value;
+        if( traversable() ) {
+          for( int i=0; i<_children.length; i++ ) {
+            _children.index( i ).link_color_child = value;
+          }
         }
       }
     }
@@ -378,8 +382,10 @@ public class Node : Object {
       if( _style.copy( value ) ) {
         name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
         name.max_width = style.node_width;
-        for( int i=0; i<_children.length; i++ ) {
-          _layout.apply_margin( _children.index( i ) );
+        if( traversable() ) {
+          for( int i=0; i<_children.length; i++ ) {
+            _layout.apply_margin( _children.index( i ) );
+          }
         }
         if( _callout != null ) {
           _callout.position_text( false );
@@ -394,8 +400,8 @@ public class Node : Object {
     }
     set {
       _layout = value;
-      for( int i=0; i<_children.length; i++ ) {
-        if( traversable() ) {
+      if( traversable() ) {
+        for( int i=0; i<_children.length; i++ ) {
           _children.index( i ).layout = value;
         }
       }
@@ -444,8 +450,8 @@ public class Node : Object {
     }
     set {
       _alpha = value;
-      for( int i=0; i<_children.length; i++ ) {
-        if( _children.index( i ).traversable() ) {
+      if( traversable() ) {
+        for( int i=0; i<_children.length; i++ ) {
           _children.index( i ).alpha = value;
         }
       }
@@ -1539,7 +1545,7 @@ public class Node : Object {
       node->add_child( _callout.save() );
     }
 
-    if( (_children.length > 0) && (!is_summarized() || ((_children.index( 0 ) as SummaryNode).last_node() == this)) ) {
+    if( (_children.length > 0) && traversable() ) {
       Xml.Node* nodes = new Xml.Node( null, "nodes" );
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).save( nodes );
@@ -2937,7 +2943,7 @@ public class Node : Object {
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Node? current, bool motion, bool exporting ) {
     if( this != current ) {
-      if( !folded && (!is_summarized() || (this == (_children.index( 0 ) as SummaryNode).last_node())) ) {
+      if( !folded && traversable() ) {
         for( int i=0; i<_children.length; i++ ) {
           _children.index( i ).draw_all( ctx, theme, current, motion, exporting );
         }

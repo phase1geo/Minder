@@ -129,9 +129,11 @@ public class Layout : Object {
   /* Adjusts the given tree by the given amount */
   public virtual void adjust_tree( Node parent, int child_index, int side_mask, double amount ) {
 
+    if( !parent.traversable() ) return;
+
     for( int i=0; i<parent.children().length; i++ ) {
       if( i != child_index ) {
-        Node n = parent.children().index( i );
+        var n = parent.children().index( i );
         if( (n.side & side_mask) != 0 ) {
           if( n.side.horizontal() ) {
             n.posy += amount;
@@ -174,6 +176,8 @@ public class Layout : Object {
 
   /* Recursively sets the side property of this node and all children nodes */
   public virtual void propagate_side( Node parent, NodeSide side ) {
+
+    if( !parent.traversable() ) return;
 
     double px, py, pw, ph;
     var margin = parent.style.branch_margin;
