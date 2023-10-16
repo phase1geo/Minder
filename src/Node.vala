@@ -1979,14 +1979,17 @@ public class Node : Object {
   }
 
   /* If the parent node is moved, we will move ourselves the same amount */
-  private void parent_moved( Node parent, double diffx, double diffy ) {
+  protected void parent_moved( Node parent, double diffx, double diffy ) {
 
     _posx += diffx;
     _posy += diffy;
 
     update_tree_bbox( diffx, diffy );
     position_text();
-    moved( diffx, diffy );
+
+    if( !is_summarized() ) {
+      moved( diffx, diffy );
+    }
 
   }
 

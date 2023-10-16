@@ -1680,6 +1680,9 @@ public class DrawArea : Gtk.DrawingArea {
       if( node.parent != null ) {
         node.parent.last_selected_child = node;
       }
+      if( node.is_summarized() ) {
+        node.summary_node().last_selected_node = node;
+      }
       return( true );
     }
 
@@ -2236,7 +2239,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns the summary node that the current node can be attached to; otherwise, returns null */
   private SummaryNode? attachable_summary_node( double x, double y ) {
     var current = _selected.current_node();
-    if( current.is_summarized() || current.is_leaf() ) {
+    if( (current.is_summarized() && (current.parent.children().length > 1) && (current.summary_node().summarized_count() > 1)) || current.is_leaf() ) {
       for( int i=0; i<current.parent.children().length; i++ ) {
         var sibling = current.parent.children().index( i );
         if( sibling.last_summarized() && sibling.summary_node().is_within_summarized( x, y ) ) {
@@ -2899,7 +2902,7 @@ public class DrawArea : Gtk.DrawingArea {
           var next = current_node.next_sibling();
           if( !current_node.is_summarized() && (_attach_summary != null) ) {
             _attach_summary.add_node( current_node, _attach_summary.node_index( next ?? current_node.previous_sibling() ) );
-          } else if( current_node.is_summarized() && (_attach_summary == null) ) {
+          } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_attach_summary == null) ) {
             current_node.summary_node().remove_node( current_node );
           }
           undo_buffer.add_item( new UndoNodeMove( current_node, _orig_side, orig_index ) );
@@ -2960,15 +2963,15 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       orig_parent        = current.parent;
       orig_index         = current.index();
-      orig_summary       = current.is_summarized() ? (SummaryNode)current.children().index( 0 ) : null;
-      orig_summary_index = current.is_summarized() ? orig_summary.node_index( current ) : -1;
+      orig_summary       = current.summary_node();
+      orig_summary_index = (orig_summary != null) ? orig_summary.node_index( current ) : -1;
       current.detach( _orig_side );
-      if( orig_summary != null ) {
+      if( (orig_summary != null) && (orig_summary.summarized_count() > 1) ) {
         orig_summary.remove_node( current );
       }
     }
 
-    var summary = _attach_node.is_summarized() ? (SummaryNode)_attach_node.children().index( 0 ) : null;
+    var summary = _attach_node.summary_node();
 
     if( isleaf && (orig_summary != summary) && _attach_node.first_summarized() ) {
       current.attach( _attach_node.parent, _attach_node.index(), _theme );
@@ -3097,6 +3100,9 @@ public class DrawArea : Gtk.DrawingArea {
         _selected.set_current_node( n, (_focus_mode ? _focus_alpha : 1.0) );
         if( n.parent != null ) {
           n.parent.last_selected_child = n;
+        }
+        if( n.is_summarized() ) {
+          n.summary_node().last_selected_node = n;
         }
         see( animate );
       }
@@ -3243,7 +3249,11 @@ public class DrawArea : Gtk.DrawingArea {
     for( int i=0; i<child_nodes.length; i++ ) {
       var node = child_nodes.index( i );
       if( (node != null) && !node.is_root() ) {
-        parent_nodes.append_val( node.parent );
+        if( node.is_summary() ) {
+          parent_nodes.append_val( (node as SummaryNode).last_selected_node );
+        } else {
+          parent_nodes.append_val( node.parent );
+        }
       }
     }
     if( parent_nodes.length > 0 ) {
@@ -4072,6 +4082,15 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  /* Returns the parent node of the given node that should be selected */
+  private Node? get_select_parent( Node node ) {
+    if( node.is_summary() ) {
+      var summary = (SummaryNode)node;
+      return( summary.last_selected_node ?? summary.first_node() );
+    }
+    return( node.parent );
+  }
+
   /* Returns the node to the right of the given node */
   private Node? get_node_right( Node node ) {
     if( node.is_root() ) {
@@ -4079,8 +4098,8 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       switch( node.side ) {
         case NodeSide.TOP    :
-        case NodeSide.BOTTOM :  return( node.parent.next_child( node ) );
-        case NodeSide.LEFT   :  return( node.parent );
+        case NodeSide.BOTTOM :  return( node.is_summary() ? null : node.parent.next_child( node ) );
+        case NodeSide.LEFT   :  return( get_select_parent( node ) );
         default              :  return( node.last_selected_child ?? node.first_child( NodeSide.RIGHT ) );
       }
     }
@@ -4093,9 +4112,9 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       switch( node.side ) {
         case NodeSide.TOP :
-        case NodeSide.BOTTOM :  return( node.parent.prev_child( node ) );
+        case NodeSide.BOTTOM :  return( node.is_summary() ? null : node.parent.prev_child( node ) );
         case NodeSide.LEFT   :  return( node.last_selected_child ?? node.first_child( NodeSide.LEFT ) );
-        default              :  return( node.parent );
+        default              :  return( get_select_parent( node ) );
       }
     }
   }
@@ -4112,8 +4131,8 @@ public class DrawArea : Gtk.DrawingArea {
     } else {
       switch( node.side ) {
         case NodeSide.TOP    :  return( node.last_selected_child ?? node.first_child( NodeSide.TOP ) );
-        case NodeSide.BOTTOM :  return( node.parent );
-        default              :  return( node.parent.prev_child( node ) );
+        case NodeSide.BOTTOM :  return( get_select_parent( node ) );
+        default              :  return( node.is_summary() ? null : node.parent.prev_child( node ) );
       }
     }
   }
@@ -4129,9 +4148,9 @@ public class DrawArea : Gtk.DrawingArea {
       return( null );
     } else {
       switch( node.side ) {
-        case NodeSide.TOP    :  return( node.parent );
+        case NodeSide.TOP    :  return( get_select_parent( node ) );
         case NodeSide.BOTTOM :  return( node.last_selected_child ?? node.first_child( NodeSide.BOTTOM ) );
-        default              :  return( node.parent.next_child( node ) );
+        default              :  return( node.is_summary() ? null : node.parent.next_child( node ) );
       }
     }
   }
@@ -4141,7 +4160,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( node.is_root() ) {
       return( (_nodes.length > 0) ? _nodes.index( 0 ) : null );
     } else {
-      return( node.parent.first_child() );
+      return( node.is_summary() ? null : node.parent.first_child() );
     }
   }
 
@@ -4150,7 +4169,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( node.is_root() ) {
       return( (_nodes.length > 0) ? _nodes.index( _nodes.length - 1 ) : null );
     } else {
-      return( node.parent.last_child() );
+      return( node.is_summary() ? null : node.parent.last_child() );
     }
   }
 

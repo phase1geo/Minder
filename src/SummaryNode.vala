@@ -27,9 +27,14 @@ public class SummaryNode : Node {
   private double     _first_xy;
   private double     _last_xy;
 
-  // If this is set to true, the summary line will be drawn in the attachable color to indicate that
-  // releasing a node that is being moved will be a part of the summary node.
+  /*
+   If this is set to true, the summary line will be drawn in the attachable color to indicate that
+   releasing a node that is being moved will be a part of the summary node.
+  */
   public bool attachable { set; get; default = false; }
+
+  /* Remembers the last selected summarized node when the selection changed to us */
+  public Node? last_selected_node { get; set; default = null; }
 
   /* Default constructor */
   public SummaryNode( DrawArea da, Layout? layout ) {
@@ -60,6 +65,11 @@ public class SummaryNode : Node {
   private void disconnect_node( Node node ) {
     node.moved.disconnect( nodes_changed );
     node.resized.disconnect( nodes_changed );
+  }
+
+  /* Returns the number of nodes that this node summarizes */
+  public int summarized_count() {
+    return( (int)_nodes.length() );
   }
 
   /* Returns the first node that is summarized */
@@ -150,20 +160,23 @@ public class SummaryNode : Node {
       case NodeSide.BOTTOM :  posx = (((x2 -x1) / 2) - (width / 2)) + x1;  posy = y2 + margin;                            break;
     }
 
-    var diffx = posx - old_posx;
-    var diffy = posy - old_posy;
-    moved( diffx, diffy );
+  }
 
+  private void parent_changed( Node node, double diffx, double diffy ) {
+    update_extents();
+    parent_moved( node, diffx, diffy );
   }
 
   /* Attach ourself to the list of nodes */
   public void attach_nodes( Array<Node> nodes, Theme? theme ) {
+    assert( nodes.length > 0 );
     for( int i=0; i<nodes.length; i++ ) {
       var node = nodes.index( i );
       _nodes.append( node );
       node.children().append_val( this );
       connect_node( node );
     }
+    nodes.index( 0 ).parent.moved.connect( parent_changed );
     _nodes.sort((a, b) => {
       return( (a.index() == b.index()) ? 0 :
               (a.index() <  b.index()) ? -1 : 1 );
@@ -189,6 +202,7 @@ public class SummaryNode : Node {
       connect_node( sibling );
       sibling = sibling.previous_sibling();
     }
+    node.parent.moved.connect( parent_changed );
     parent = last_node();
     style  = last_node().style;
     if( theme != null ) {
@@ -204,11 +218,13 @@ public class SummaryNode : Node {
       node.children().append_val( this );
       connect_node( node );
     }
+    first_node().parent.moved.connect( parent_changed );
     update_extents();
   }
 
   /* We just detach ourselves from the node list */
   public void detach_all() {
+    first_node().parent.moved.disconnect( parent_changed );
     foreach( var node in _nodes ) {
       node.children().remove_index( 0 );
       disconnect_node( node );
@@ -272,9 +288,9 @@ public class SummaryNode : Node {
     }
 
     var x1 = sx - 10;
-    var y1 = _first_xy;
+    var y1 = (summarized_count() == 1) ? first_node().posy : _first_xy;
     var x2 = sx - 20;
-    var y2 = _last_xy;
+    var y2 = (summarized_count() == 1) ? (last_node().posy + last_node().height) : _last_xy;
 
     ctx.move_to( x1, y1 );
     ctx.line_to( x2, y1 );
@@ -307,9 +323,9 @@ public class SummaryNode : Node {
     }
 
     var x1 = sx + 10;
-    var y1 = _first_xy;
+    var y1 = (summarized_count() == 1) ? first_node().posy : _first_xy;
     var x2 = sx + 20;
-    var y2 = _last_xy;
+    var y2 = (summarized_count() == 1) ? (last_node().posy + last_node().height) : _last_xy;
 
     ctx.move_to( x1, y1 );
     ctx.line_to( x2, y1 );
@@ -341,9 +357,9 @@ public class SummaryNode : Node {
       }
     }
 
-    var x1 = _first_xy;
+    var x1 = (summarized_count() == 1) ? first_node().posx : _first_xy;
     var y1 = sy - 10;
-    var x2 = _last_xy;
+    var x2 = (summarized_count() == 1) ? (last_node().posx + last_node().width) : _last_xy;
     var y2 = sy - 20;
 
     ctx.move_to( x1, y1 );
@@ -375,9 +391,9 @@ public class SummaryNode : Node {
       }
     }
 
-    var x1 = _first_xy;
+    var x1 = (summarized_count() == 1) ? first_node().posx : _first_xy;
     var y1 = sy + 10;
-    var x2 = _last_xy;
+    var x2 = (summarized_count() == 1) ? (last_node().posx + last_node().width) : _last_xy;
     var y2 = sy + 20;
 
     ctx.move_to( x1, y1 );
@@ -409,10 +425,10 @@ public class SummaryNode : Node {
     ctx.set_line_width( parent.style.link_width );
 
     switch( side ) {
-      case NodeSide.LEFT   :  draw_link_left( ctx );   break;
-      case NodeSide.RIGHT  :  draw_link_right( ctx );  break;
-      case NodeSide.TOP    :  draw_link_above( ctx );  break;
-      case NodeSide.BOTTOM :  draw_link_below( ctx );  break;
+      case NodeSide.LEFT   : draw_link_left( ctx );   break;
+      case NodeSide.RIGHT  : draw_link_right( ctx );  break;
+      case NodeSide.TOP    : draw_link_above( ctx );  break;
+      case NodeSide.BOTTOM : draw_link_below( ctx );  break;
     }
 
   }
