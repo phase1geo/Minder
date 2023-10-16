@@ -672,6 +672,9 @@ public class Node : Object {
   /* Sets the alpha value without propagating this to the children */
   public void set_alpha_only( double value ) {
     _alpha = value;
+    if( _callout != null ) {
+      _callout.alpha = value;
+    }
   }
 
   /* Updates the alpha value if it is not set to 1.0 */
@@ -679,8 +682,10 @@ public class Node : Object {
     if( _alpha < 1.0 ) {
       _alpha = value;
     }
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).update_alpha( value );
+    if( traversable() ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).update_alpha( value );
+      }
     }
   }
 
@@ -696,6 +701,26 @@ public class Node : Object {
     _posy += value;
     update_tree_bbox( 0, value );
     position_text();
+  }
+
+  /* Clears the summary extents found as grandchildren of this node */
+  public virtual void clear_summary_extents() {
+    for( int i=0; i<_children.length; i++ ) {
+      var node = _children.index( i );
+      if( node.last_summarized() ) {
+        node.summary_node().clear_extents();
+      }
+    }
+  }
+
+  /* Sets the summary extents found as grandchildren of this node */
+  public virtual void set_summary_extents() {
+    for( int i=0; i<_children.length; i++ ) {
+      var node = _children.index( i );
+      if( node.last_summarized() ) {
+        node.summary_node().set_extents();
+      }
+    }
   }
 
   /* Updates the tree_bbox */
@@ -1294,9 +1319,6 @@ public class Node : Object {
           case "node" :
             var node = new Node.from_xml( _da, _layout, it, false, ref nodes );
             node.attach( this, -1, null );
-            if( node.last_summarized() ) {
-              node.summary_node().update_extents();
-            }
             break;
           case "summary-node" :
             var node = new SummaryNode.from_xml( _da, _layout, it, ref nodes );

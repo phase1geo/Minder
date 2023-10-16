@@ -24,8 +24,8 @@ using Cairo;
 public class SummaryNode : Node {
 
   private List<Node> _nodes;
-  private double     _first_xy;
-  private double     _last_xy;
+  private double?    _first_xy = null;
+  private double?    _last_xy  = null;
 
   /*
    If this is set to true, the summary line will be drawn in the attachable color to indicate that
@@ -94,15 +94,22 @@ public class SummaryNode : Node {
 
   /* Returns true if the given coordinates is within the horizontal/vertical extents of the list of summarized nodes */
   public bool is_within_summarized( double x, double y ) {
+    if( _first_xy == null ) return( false );
     if( side.horizontal() ) {
-      return( (_first_xy <= y) && (y <= _last_xy) );
+      return( ((_first_xy + da.origin_y) <= y) && (y <= (_last_xy + da.origin_y)) );
     } else {
-      return( (_first_xy <= x) && (x <= _last_xy) );
+      return( ((_first_xy + da.origin_x) <= x) && (x <= (_last_xy + da.origin_x)) );
     }
   }
 
+  /* Clears the extents */
+  public void clear_extents() {
+    _first_xy = null;
+    _last_xy  = null;
+  }
+
   /* Updates the stored summarized extents based on the current layout and first/last position */
-  public void update_extents() {
+  public void set_extents() {
 
     /* If we don't have any nodes, this is bad */
     assert( _nodes.length() > 0 );
@@ -112,12 +119,15 @@ public class SummaryNode : Node {
     first_node().bbox( out fx, out fy, out fw, out fh );
     last_node().bbox( out lx, out ly, out lw, out lh );
 
+    var first_margin = first_node().style.node_margin;
+    var last_margin  = last_node().style.node_margin;
+
     if( side.horizontal() ) {
-      _first_xy = fy;
-      _last_xy  = ly + lh;
+      _first_xy = (fy - da.origin_y) + first_margin;
+      _last_xy  = (ly - da.origin_y) + (lh - first_margin);
     } else {
-      _first_xy = fx;
-      _last_xy  = lx + lw;
+      _first_xy = (fx - da.origin_x) + last_margin;
+      _last_xy  = (lx - da.origin_x) + (lw - last_margin);
     }
 
   }
@@ -162,11 +172,6 @@ public class SummaryNode : Node {
 
   }
 
-  private void parent_changed( Node node, double diffx, double diffy ) {
-    update_extents();
-    parent_moved( node, diffx, diffy );
-  }
-
   /* Attach ourself to the list of nodes */
   public void attach_nodes( Array<Node> nodes, Theme? theme ) {
     assert( nodes.length > 0 );
@@ -176,7 +181,7 @@ public class SummaryNode : Node {
       node.children().append_val( this );
       connect_node( node );
     }
-    nodes.index( 0 ).parent.moved.connect( parent_changed );
+    nodes.index( 0 ).parent.moved.connect( parent_moved );
     _nodes.sort((a, b) => {
       return( (a.index() == b.index()) ? 0 :
               (a.index() <  b.index()) ? -1 : 1 );
@@ -186,7 +191,6 @@ public class SummaryNode : Node {
     if( theme != null ) {
       link_color_child = main_branch() ? theme.next_color() : parent.link_color;
     }
-    update_extents();
     nodes_changed( 0, 0 );
   }
 
@@ -202,13 +206,12 @@ public class SummaryNode : Node {
       connect_node( sibling );
       sibling = sibling.previous_sibling();
     }
-    node.parent.moved.connect( parent_changed );
+    node.parent.moved.connect( parent_moved );
     parent = last_node();
     style  = last_node().style;
     if( theme != null ) {
       link_color_child = main_branch() ? theme.next_color() : parent.link_color;
     }
-    update_extents();
     nodes_changed( 0, 0 );
   }
 
@@ -218,13 +221,12 @@ public class SummaryNode : Node {
       node.children().append_val( this );
       connect_node( node );
     }
-    first_node().parent.moved.connect( parent_changed );
-    update_extents();
+    first_node().parent.moved.connect( parent_moved );
   }
 
   /* We just detach ourselves from the node list */
   public void detach_all() {
-    first_node().parent.moved.disconnect( parent_changed );
+    first_node().parent.moved.disconnect( parent_moved );
     foreach( var node in _nodes ) {
       node.children().remove_index( 0 );
       disconnect_node( node );
@@ -237,7 +239,6 @@ public class SummaryNode : Node {
     node.children().append_val( this );
     connect_node( node );
     parent = last_node();
-    update_extents();
     nodes_changed( 0, 0 );
   }
 
@@ -253,7 +254,6 @@ public class SummaryNode : Node {
         _nodes.insert( node, (to_index - 1) );
       }
       parent = last_node();
-      update_extents();
       nodes_changed( 0, 0 );
     }
   }
@@ -264,7 +264,6 @@ public class SummaryNode : Node {
     node.children().remove_range( 0, 1 );
     disconnect_node( node );
     parent = last_node();
-    update_extents();
     nodes_changed( 0, 0 );
   }
 
@@ -288,9 +287,9 @@ public class SummaryNode : Node {
     }
 
     var x1 = sx - 10;
-    var y1 = (summarized_count() == 1) ? first_node().posy : _first_xy;
+    var y1 = (_first_xy == null) ? (first_node().posy + first_node().style.node_margin) : (_first_xy + da.origin_x);
     var x2 = sx - 20;
-    var y2 = (summarized_count() == 1) ? (last_node().posy + last_node().height) : _last_xy;
+    var y2 = (_last_xy == null) ? ((last_node().posy + last_node().height) - last_node().style.node_margin) : (_last_xy + da.origin_y);
 
     ctx.move_to( x1, y1 );
     ctx.line_to( x2, y1 );
@@ -323,9 +322,9 @@ public class SummaryNode : Node {
     }
 
     var x1 = sx + 10;
-    var y1 = (summarized_count() == 1) ? first_node().posy : _first_xy;
+    var y1 = (_first_xy == null) ? (first_node().posy + first_node().style.node_margin) : (_first_xy + da.origin_y);
     var x2 = sx + 20;
-    var y2 = (summarized_count() == 1) ? (last_node().posy + last_node().height) : _last_xy;
+    var y2 = (_last_xy == null) ? ((last_node().posy + last_node().height) - last_node().style.node_margin) : (_last_xy + da.origin_y);
 
     ctx.move_to( x1, y1 );
     ctx.line_to( x2, y1 );
@@ -357,9 +356,9 @@ public class SummaryNode : Node {
       }
     }
 
-    var x1 = (summarized_count() == 1) ? first_node().posx : _first_xy;
+    var x1 = (_first_xy == null) ? (first_node().posx + first_node().style.node_margin) : (_first_xy + da.origin_x);
     var y1 = sy - 10;
-    var x2 = (summarized_count() == 1) ? (last_node().posx + last_node().width) : _last_xy;
+    var x2 = (_last_xy == null) ? ((last_node().posx + last_node().width) - last_node().style.node_margin) : (_last_xy + da.origin_x);
     var y2 = sy - 20;
 
     ctx.move_to( x1, y1 );
@@ -391,9 +390,9 @@ public class SummaryNode : Node {
       }
     }
 
-    var x1 = (summarized_count() == 1) ? first_node().posx : _first_xy;
+    var x1 = (_first_xy == null) ? (first_node().posx + first_node().style.node_margin) : (_first_xy + da.origin_x);
     var y1 = sy + 10;
-    var x2 = (summarized_count() == 1) ? (last_node().posx + last_node().width) : _last_xy;
+    var x2 = (_last_xy == null) ? ((last_node().posx + last_node().width) - last_node().style.node_margin) : (_last_xy + da.origin_x);
     var y2 = sy + 20;
 
     ctx.move_to( x1, y1 );

@@ -281,7 +281,7 @@ public class NodesMenu : Gtk.Menu {
 
   /* Adds a new summary node */
   private void summarize() {
-    _da.add_summary_node();
+    _da.add_summary_node_from_selected();
   }
 
   /* Changes the color of all selected nodes */

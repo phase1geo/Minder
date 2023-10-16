@@ -1675,6 +1675,9 @@ public class DrawArea : Gtk.DrawingArea {
       /* Otherwise, just select the current node */
       } else {
         _selected.set_current_node( node );
+        if( node.parent != null ) {
+          node.parent.set_summary_extents();
+        }
       }
 
       if( node.parent != null ) {
@@ -2597,7 +2600,11 @@ public class DrawArea : Gtk.DrawingArea {
       }
 
       if( !_motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within_node( _scaled_x, _scaled_y ) ) {
-        current_node.alpha = 0.3;
+        if( current_node.is_summarized() ) {
+          current_node.set_alpha_only( 0.3 );
+        } else {
+          current_node.alpha = 0.3;
+        }
       }
       _press_x = _scaled_x;
       _press_y = _scaled_y;
@@ -2898,6 +2905,9 @@ public class DrawArea : Gtk.DrawingArea {
         } else if( (current_node.parent != null) && !current_node.is_summary() ) {
           int orig_index = current_node.index();
           animator.add_nodes( _nodes, "move to position" );
+          if( current_node.parent != null ) {
+            current_node.parent.clear_summary_extents();
+          }
           current_node.parent.move_to_position( current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) );
           var next = current_node.next_sibling();
           if( !current_node.is_summarized() && (_attach_summary != null) ) {
@@ -3729,7 +3739,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Adds a summary node to the first and last nodes in the selected range */
-  public void add_summary_node() {
+  public void add_summary_node_from_selected() {
     if( !nodes_summarizable() ) return;
     var nodes = _selected.nodes();
     var node  = create_summary_node( nodes );
@@ -4065,7 +4075,7 @@ public class DrawArea : Gtk.DrawingArea {
         add_child_node();
       }
     } else if( _selected.num_nodes() > 1 ) {
-      add_summary_node();
+      add_summary_node_from_selected();
     }
   }
 

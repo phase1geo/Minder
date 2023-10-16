@@ -48,21 +48,23 @@ public class Layout : Object {
   public virtual void initialize( Node parent ) {
     var list = new SList<Node>();
     parent.side = side_mapping( parent.side );
-    for( int i=0; i<parent.children().length; i++ ) {
-      var n = parent.children().index( i );
-      initialize( n );
-      if( !n.is_summary() ) {
-        list.append( n );
+    if( parent.traversable() ) {
+      for( int i=0; i<parent.children().length; i++ ) {
+        var n = parent.children().index( i );
+        initialize( n );
+        if( !n.is_summary() ) {
+          list.append( n );
+        }
       }
-    }
-    list.@foreach((item) => {
-      item.detach( item.side );
-    });
-    list.@foreach((item) => {
-      item.attach_init( parent, -1 );
-    });
-    if( parent.last_summarized() ) {
-      parent.summary_node().nodes_changed( 0, 0 );
+      list.@foreach((item) => {
+        item.detach( item.side );
+      });
+      list.@foreach((item) => {
+        item.attach_init( parent, -1 );
+      });
+      if( parent.last_summarized() ) {
+        parent.summary_node().nodes_changed( 0, 0 );
+      }
     }
   }
 
