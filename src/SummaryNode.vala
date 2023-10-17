@@ -52,7 +52,7 @@ public class SummaryNode : Node {
   public SummaryNode.from_xml( DrawArea da, Layout? layout, Xml.Node* node, ref Array<Node> siblings ) {
     base( da, layout );
     _nodes = new List<Node>();
-    load( da, node, false, ref siblings );
+    load( da, node, false, null, ref siblings );
   }
 
   /* Connects the node to signals */
@@ -173,7 +173,7 @@ public class SummaryNode : Node {
   }
 
   /* Attach ourself to the list of nodes */
-  public void attach_nodes( Array<Node> nodes, Theme? theme ) {
+  public void attach_nodes( Node p, Array<Node> nodes, Theme? theme ) {
     assert( nodes.length > 0 );
     for( int i=0; i<nodes.length; i++ ) {
       var node = nodes.index( i );
@@ -181,7 +181,7 @@ public class SummaryNode : Node {
       node.children().append_val( this );
       connect_node( node );
     }
-    nodes.index( 0 ).parent.moved.connect( parent_moved );
+    p.moved.connect( parent_moved );
     _nodes.sort((a, b) => {
       return( (a.index() == b.index()) ? 0 :
               (a.index() <  b.index()) ? -1 : 1 );

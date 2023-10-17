@@ -587,7 +587,7 @@ public class DrawArea : Gtk.DrawingArea {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var siblings = new Array<Node>();
-                var node = new Node.from_xml( this, null, it2, true, ref siblings );
+                var node = new Node.from_xml( this, null, it2, true, null, ref siblings );
                 if( use_layout != null ) {
                   node.layout = use_layout;
                 }
@@ -2549,8 +2549,13 @@ public class DrawArea : Gtk.DrawingArea {
               set_node_mode( attach_node, NodeMode.ATTACHABLE );
               _attach_node = attach_node;
             }
-            current_node.posx += diffx;
-            current_node.posy += diffy;
+            if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) ) {
+              current_node.set_posx_only( (current_node.posx - origin_x) + diffx );
+              current_node.set_posy_only( (current_node.posy - origin_y) + diffy );
+            } else {
+              current_node.posx += diffx;
+              current_node.posy += diffy;
+            }
             current_node.layout.set_side( current_node );
           }
         } else {
@@ -2600,7 +2605,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
 
       if( !_motion && !_resize && (current_node != null) && (current_node.mode != NodeMode.EDITABLE) && current_node.is_within_node( _scaled_x, _scaled_y ) ) {
-        if( current_node.is_summarized() ) {
+        if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) ) {
           current_node.set_alpha_only( 0.3 );
         } else {
           current_node.alpha = 0.3;
@@ -3626,7 +3631,7 @@ public class DrawArea : Gtk.DrawingArea {
   public Node create_summary_node( Array<Node> nodes ) {
     var summary = new SummaryNode( this, layouts.get_default() );
     summary.side = nodes.index( 0 ).side;
-    summary.attach_nodes( nodes, _theme );
+    summary.attach_nodes( nodes.index( 0 ).parent, nodes, _theme );
     return( summary );
   }
 
@@ -5124,7 +5129,7 @@ public class DrawArea : Gtk.DrawingArea {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var siblings = new Array<Node>();
-                var node = new Node.from_xml( this, null, it2, true, ref siblings );
+                var node = new Node.from_xml( this, null, it2, true, null, ref siblings );
                 nodes.append_val( node );
               }
             }

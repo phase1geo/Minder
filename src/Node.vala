@@ -549,7 +549,7 @@ public class Node : Object {
   }
 
   /* Constructor from an XML node */
-  public Node.from_xml( DrawArea da, Layout? layout, Xml.Node* n, bool isroot, ref Array<Node> siblings ) {
+  public Node.from_xml( DrawArea da, Layout? layout, Xml.Node* n, bool isroot, Node? sibling_parent, ref Array<Node> siblings ) {
     _da        = da;
     _children  = new Array<Node>();
     _tree_bbox = new NodeBounds( da );
@@ -557,7 +557,7 @@ public class Node : Object {
     _name      = new CanvasText.with_text( da, "" );
     _name.resized.connect( position_text_and_update_size );
     set_parsers();
-    load( da, n, isroot, ref siblings );
+    load( da, n, isroot, sibling_parent, ref siblings );
   }
 
   /* Copies an existing node to this node */
@@ -717,7 +717,7 @@ public class Node : Object {
   public virtual void set_summary_extents() {
     for( int i=0; i<_children.length; i++ ) {
       var node = _children.index( i );
-      if( node.last_summarized() ) {
+      if( node.last_summarized() && (node.summary_node().summarized_count() > 1) ) {
         node.summary_node().set_extents();
       }
     }
@@ -1311,18 +1311,18 @@ public class Node : Object {
   }
 
   /* Loads the child nodes */
-  private void load_nodes( Xml.Node* n, ref Array<Node> siblings ) {
+  private void load_nodes( Xml.Node* n, Node? sibling_parent, ref Array<Node> siblings ) {
     var nodes = new Array<Node>();
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           case "node" :
-            var node = new Node.from_xml( _da, _layout, it, false, ref nodes );
+            var node = new Node.from_xml( _da, _layout, it, false, this, ref nodes );
             node.attach( this, -1, null );
             break;
           case "summary-node" :
             var node = new SummaryNode.from_xml( _da, _layout, it, ref nodes );
-            node.attach_nodes( siblings, null );
+            node.attach_nodes( sibling_parent, siblings, null );
             siblings.remove_range( 0, siblings.length );
             break;
         }
@@ -1371,7 +1371,7 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, ref Array<Node> siblings ) {
+  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, Node? sibling_parent, ref Array<Node> siblings ) {
 
     _loaded = false;
 
@@ -1474,7 +1474,7 @@ public class Node : Object {
           case "nodelink"   :  load_node_link( it );  break;
           case "style"      :  load_style( it );  break;
           case "callout"    :  load_callout( it );  break;
-          case "nodes"      :  load_nodes( it, ref siblings );  break;
+          case "nodes"      :  load_nodes( it, sibling_parent, ref siblings );  break;
         }
       }
     }
