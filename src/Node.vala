@@ -1918,19 +1918,27 @@ public class Node : Object {
   */
   public bool swap_with_sibling( Node? other ) {
 
-    if( (other != null) && (other.parent == parent) ) {
+    if( (other != null) && !is_summary() && !other.is_summary() && (summary_node() == other.summary_node()) && (other.parent == parent) ) {
 
-      var other_index = other.index();
-      var our_index   = index();
-      var our_parent  = parent;
+      var other_index   = other.index();
+      var other_summary = other.summary_node();
+      var our_index     = index();
+      var our_parent    = parent;
+      var our_summary   = summary_node();
 
       if( (other_index + 1) == our_index ) {
         da.animator.add_nodes( da.get_nodes(), "swap_with_sibling" );
         detach( side );
+        if( our_summary != null ) {
+          our_summary.remove_node( this );
+        }
         attached = true;
         attach( our_parent, other_index, null, false );
+        if( other_summary != null ) {
+          other_summary.add_node( this );
+        }
         our_parent.last_selected_child = this;
-        da.undo_buffer.add_item( new UndoNodeMove( this, side, our_index ) );
+        da.undo_buffer.add_item( new UndoNodeMove( this, side, our_index, our_summary ) );
         da.animator.animate();
         return( true );
 
@@ -1938,9 +1946,15 @@ public class Node : Object {
         var other_side = other.side;
         da.animator.add_nodes( da.get_nodes(), "swap_with_sibling" );
         other.detach( other_side );
+        if( other_summary != null ) {
+          other_summary.remove_node( other );
+        }
         other.attached = true;
         other.attach( our_parent, our_index, null, false );
-        da.undo_buffer.add_item( new UndoNodeMove( other, other_side, other_index ) );
+        if( our_summary != null ) {
+          our_summary.add_node( other );
+        }
+        da.undo_buffer.add_item( new UndoNodeMove( other, other_side, other_index, other_summary ) );
         da.animator.animate();
         return( true );
       }

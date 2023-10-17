@@ -186,21 +186,15 @@ public class SummaryNode : Node {
     assert( nodes.length > 0 );
     for( int i=0; i<nodes.length; i++ ) {
       var node = nodes.index( i );
-      stdout.printf( "attach_nodes, i: %d, node: %s\n", i, node.name.text.text );
       _nodes.append( node );
       node.children().append_val( this );
       connect_node( node );
     }
     p.moved.connect( parent_moved );
     if( sort ) {
-      stdout.printf( "  Sorting...\n" );
-      _nodes.sort((a, b) => {
-        return( (a.index() == b.index()) ? 0 :
-                (a.index() <  b.index()) ? -1 : 1 );
-      });
+      sort_nodes();
     }
     parent = last_node();
-    stdout.printf( "attach_nodes, parent: %s\n", last_node().name.text.text );
     style  = last_node().style;
     if( theme != null ) {
       link_color_child = main_branch() ? theme.next_color() : parent.link_color;
@@ -258,44 +252,42 @@ public class SummaryNode : Node {
     }
     */
   }
+
+  /* Re-sorts nodes that are fixed in their location and updates the parent */
+  private void sort_nodes() {
+    _nodes.sort((a, b) => {
+      return( (a.index() == b.index()) ? 0 :
+              (a.index() <  b.index()) ? -1 : 1 );
+    });
+    parent = last_node();
+  }
+
   /* Adds the given node to the list of summarized nodes */
-  public void add_node( Node node, int index ) {
-    first_node().parent.moved.disconnect( parent_moved );
-    _nodes.insert( node, index );
+  public void add_node( Node node ) {
+    _nodes.append( node );
+    sort_nodes();
     node.children().append_val( this );
     connect_node( node );
-    first_node().parent.moved.connect( parent_moved );
     parent = last_node();
     nodes_changed( 0, 0 );
   }
 
   /* Moves the given node from its current location to a new location */
-  public void move_node( Node node, int to_index ) {
-    var from_index = _nodes.index( node );
-    if( from_index != -1 ) {
-      first_node().parent.moved.disconnect( parent_moved );
-      if( from_index > to_index ) {
-        _nodes.remove( node );
-        _nodes.insert( node, to_index );
-      } else if( from_index < to_index ) {
-        _nodes.remove( node );
-        _nodes.insert( node, (to_index - 1) );
-      }
-      first_node().parent.moved.connect( parent_moved );
-      parent = last_node();
-      nodes_changed( 0, 0 );
-    }
+  public void node_moved() {
+    sort_nodes();
+    nodes_changed( 0, 0 );
   }
 
   /* Removes the given node from the list of summarized nodes */
   public void remove_node( Node node ) {
-    first_node().parent.moved.disconnect( parent_moved );
+    var update_color = (node == parent);
     _nodes.remove( node );
+    sort_nodes();
     node.children().remove_range( 0, 1 );
     disconnect_node( node );
-    first_node().parent.moved.connect( parent_moved );
-    parent = last_node();
-    link_color_child = parent.link_color;
+    if( update_color ) {
+      link_color_child = parent.link_color;
+    }
     nodes_changed( 0, 0 );
   }
 

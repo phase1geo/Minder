@@ -2912,19 +2912,21 @@ public class DrawArea : Gtk.DrawingArea {
 
         /* If we are not a root node or a summary node, move the node into the appropriate position */
         } else if( (current_node.parent != null) && !current_node.is_summary() ) {
-          int orig_index = current_node.index();
+          var orig_index   = current_node.index();
+          var orig_summary = current_node.summary_node();
           animator.add_nodes( _nodes, "move to position" );
           if( current_node.parent != null ) {
             current_node.parent.clear_summary_extents();
           }
           current_node.parent.move_to_position( current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) );
-          var next = current_node.next_sibling();
           if( !current_node.is_summarized() && (_attach_summary != null) ) {
-            _attach_summary.add_node( current_node, _attach_summary.node_index( next ?? current_node.previous_sibling() ) );
+            _attach_summary.add_node( current_node );
           } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_attach_summary == null) ) {
             current_node.summary_node().remove_node( current_node );
+          } else if( current_node.is_summarized() ) {
+            current_node.summary_node().node_moved();
           }
-          undo_buffer.add_item( new UndoNodeMove( current_node, _orig_side, orig_index ) );
+          undo_buffer.add_item( new UndoNodeMove( current_node, _orig_side, orig_index, orig_summary ) );
           animator.animate();
 
           /* Clear the attachable summary indicator */
@@ -2994,10 +2996,10 @@ public class DrawArea : Gtk.DrawingArea {
 
     if( isleaf && (orig_summary != summary) && _attach_node.first_summarized() ) {
       current.attach( _attach_node.parent, _attach_node.index(), _theme );
-      summary.add_node( current, summary.node_index( _attach_node ) );
+      summary.add_node( current );
     } else if( isleaf && (orig_summary != summary) && _attach_node.last_summarized() ) {
       current.attach( _attach_node.parent, (_attach_node.index() + 1), _theme );
-      summary.add_node( current, (summary.node_index( _attach_node ) + 1) );
+      summary.add_node( current );
     } else if( (orig_summary == summary) && _attach_node.first_summarized() ) {
       current.attach( _attach_node.parent, _attach_node.index(), _theme );
     } else if( (orig_summary == summary) && _attach_node.last_summarized() ) {
@@ -3588,8 +3590,7 @@ public class DrawArea : Gtk.DrawingArea {
     node.style = sibling.style;
     node.attach( sibling.parent, (sibling.index() + (below ? 1 : 0)), _theme );
     if( sibling.is_summarized() ) {
-      var summary = (SummaryNode)sibling.children().index( 0 );
-      summary.add_node( node, (summary.node_index( sibling ) + (below ? 1 : 0)) );
+      sibling.summary_node().add_node( node );
     }
     return( node );
   }
