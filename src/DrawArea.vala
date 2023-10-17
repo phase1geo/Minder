@@ -2549,11 +2549,15 @@ public class DrawArea : Gtk.DrawingArea {
               set_node_mode( attach_node, NodeMode.ATTACHABLE );
               _attach_node = attach_node;
             }
-            if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) ) {
+            var summarized_moved = current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1);
+            if( summarized_moved && current_node.side.vertical() ) {
               current_node.set_posx_only( (current_node.posx - origin_x) + diffx );
-              current_node.set_posy_only( (current_node.posy - origin_y) + diffy );
             } else {
               current_node.posx += diffx;
+            }
+            if( summarized_moved && current_node.side.horizontal() ) {
+              current_node.set_posy_only( (current_node.posy - origin_y) + diffy );
+            } else {
               current_node.posy += diffy;
             }
             current_node.layout.set_side( current_node );

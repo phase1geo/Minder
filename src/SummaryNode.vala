@@ -138,7 +138,7 @@ public class SummaryNode : Node {
   }
 
   /* Called whenever the first or last summarized nodes changes in position or size, we need to adjust our location */
-  public void nodes_changed( double first_diffx, double first_diffy ) {
+  public void nodes_changed( double fx, double fy ) {
 
     /* Let's resort the summarized nodes in case some nodes changed location */
     if( side.horizontal() ) {
@@ -160,14 +160,23 @@ public class SummaryNode : Node {
       if( y2 < (node.posy + node.height) ) { y2 = (node.posy + node.height); }
     }
 
-    var old_posx = posx;
-    var old_posy = posy;
-
     switch( side ) {
-      case NodeSide.LEFT   :  posx = (x1 - width) - margin;                posy = (((y2 - y1) / 2) - (height / 2)) + y1;  break;
-      case NodeSide.RIGHT  :  posx = x2 + margin;                          posy = (((y2 - y1) / 2) - (height / 2)) + y1;  break;
-      case NodeSide.TOP    :  posx = (((x2 -x1) / 2) - (width / 2)) + x1;  posy = (y1 - height) - margin;                 break;
-      case NodeSide.BOTTOM :  posx = (((x2 -x1) / 2) - (width / 2)) + x1;  posy = y2 + margin;                            break;
+      case NodeSide.LEFT   :  
+        posx = (fx == 0) ? posx : (x1 - width) - margin;
+        posy = (fy == 0) ? posy : (((y2 - y1) / 2) - (height / 2)) + y1;
+        break;
+      case NodeSide.RIGHT  :  
+        posx = (fx == 0) ? posx : x2 + margin;
+        posy = (fy == 0) ? posy : (((y2 - y1) / 2) - (height / 2)) + y1;
+        break;
+      case NodeSide.TOP    :  
+        posx = (fx == 0) ? posx : (((x2 -x1) / 2) - (width / 2)) + x1;
+        posy = (fy == 0) ? posy : (y1 - height) - margin;
+        break;
+      case NodeSide.BOTTOM :  
+        posx = (fx == 0) ? posx : (((x2 -x1) / 2) - (width / 2)) + x1;
+        posy = (fy == 0) ? posy : y2 + margin;
+        break;
     }
 
   }
