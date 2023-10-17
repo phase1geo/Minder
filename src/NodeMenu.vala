@@ -419,6 +419,7 @@ public class NodeMenu : Gtk.Menu {
     _sellink.set_sensitive( node_has_link() );
     _selcallout.set_sensitive( node_has_callout() );
     _sticker.set_sensitive( current.sticker != null );
+    _sibling.set_sensitive( !current.is_summary() );
     _summarize.set_sensitive( _da.node_summarizable() );
 
     /* Set the menu item labels */

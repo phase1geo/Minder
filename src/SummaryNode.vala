@@ -182,20 +182,25 @@ public class SummaryNode : Node {
   }
 
   /* Attach ourself to the list of nodes */
-  public void attach_nodes( Node p, Array<Node> nodes, Theme? theme ) {
+  public void attach_nodes( Node p, Array<Node> nodes, bool sort, Theme? theme ) {
     assert( nodes.length > 0 );
     for( int i=0; i<nodes.length; i++ ) {
       var node = nodes.index( i );
+      stdout.printf( "attach_nodes, i: %d, node: %s\n", i, node.name.text.text );
       _nodes.append( node );
       node.children().append_val( this );
       connect_node( node );
     }
     p.moved.connect( parent_moved );
-    _nodes.sort((a, b) => {
-      return( (a.index() == b.index()) ? 0 :
-              (a.index() <  b.index()) ? -1 : 1 );
-    });
+    if( sort ) {
+      stdout.printf( "  Sorting...\n" );
+      _nodes.sort((a, b) => {
+        return( (a.index() == b.index()) ? 0 :
+                (a.index() <  b.index()) ? -1 : 1 );
+      });
+    }
     parent = last_node();
+    stdout.printf( "attach_nodes, parent: %s\n", last_node().name.text.text );
     style  = last_node().style;
     if( theme != null ) {
       link_color_child = main_branch() ? theme.next_color() : parent.link_color;
@@ -231,6 +236,7 @@ public class SummaryNode : Node {
       connect_node( node );
     }
     first_node().parent.moved.connect( parent_moved );
+    parent = last_node();
   }
 
   /* We just detach ourselves from the node list */
@@ -240,13 +246,25 @@ public class SummaryNode : Node {
       node.children().remove_index( 0 );
       disconnect_node( node );
     }
+    parent = null;
   }
 
+  /* Overrides the standard detachment */
+  public override void detach( NodeSide side ) {
+    detach_all();
+    /*
+    if( layout != null ) {
+      layout.handle_update_by_delete( parent, idx, side, tree_size );
+    }
+    */
+  }
   /* Adds the given node to the list of summarized nodes */
   public void add_node( Node node, int index ) {
+    first_node().parent.moved.disconnect( parent_moved );
     _nodes.insert( node, index );
     node.children().append_val( this );
     connect_node( node );
+    first_node().parent.moved.connect( parent_moved );
     parent = last_node();
     nodes_changed( 0, 0 );
   }
@@ -255,6 +273,7 @@ public class SummaryNode : Node {
   public void move_node( Node node, int to_index ) {
     var from_index = _nodes.index( node );
     if( from_index != -1 ) {
+      first_node().parent.moved.disconnect( parent_moved );
       if( from_index > to_index ) {
         _nodes.remove( node );
         _nodes.insert( node, to_index );
@@ -262,6 +281,7 @@ public class SummaryNode : Node {
         _nodes.remove( node );
         _nodes.insert( node, (to_index - 1) );
       }
+      first_node().parent.moved.connect( parent_moved );
       parent = last_node();
       nodes_changed( 0, 0 );
     }
@@ -269,10 +289,13 @@ public class SummaryNode : Node {
 
   /* Removes the given node from the list of summarized nodes */
   public void remove_node( Node node ) {
+    first_node().parent.moved.disconnect( parent_moved );
     _nodes.remove( node );
     node.children().remove_range( 0, 1 );
     disconnect_node( node );
+    first_node().parent.moved.connect( parent_moved );
     parent = last_node();
+    link_color_child = parent.link_color;
     nodes_changed( 0, 0 );
   }
 

@@ -3635,7 +3635,7 @@ public class DrawArea : Gtk.DrawingArea {
   public Node create_summary_node( Array<Node> nodes ) {
     var summary = new SummaryNode( this, layouts.get_default() );
     summary.side = nodes.index( 0 ).side;
-    summary.attach_nodes( nodes.index( 0 ).parent, nodes, _theme );
+    summary.attach_nodes( nodes.index( 0 ).parent, nodes, true, _theme );
     return( summary );
   }
 
@@ -3681,7 +3681,9 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Adds a new sibling node to the current node */
   public void add_sibling_node( bool shift ) {
-    var node = create_sibling_node( _selected.current_node(), !shift );
+    var current = _selected.current_node();
+    if( current.is_summary() ) return;
+    var node = create_sibling_node( current, !shift );
     undo_buffer.add_item( new UndoNodeInsert( node, node.index() ) );
     set_current_node( node );
     set_node_mode( node, NodeMode.EDITABLE, false );

@@ -81,9 +81,9 @@ public class Layout : Object {
     double x2 = nb.x + nb.width;
     double y2 = nb.y + nb.height;
 
-    if( (num_children != 0) && !parent.folded ) {
+    if( (num_children != 0) && !parent.folded && parent.traversable() ) {
       for( int i=0; i<parent.children().length; i++ ) {
-        if( ((parent.children().index( i ).side & side_mask) != 0) && !parent.children().index( i ).is_summary() ) {
+        if( ((parent.children().index( i ).side & side_mask) != 0) ) {  // && !parent.children().index( i ).is_summary() ) {
           var cb = parent.children().index( i ).tree_bbox;
           nb.x  = (nb.x < cb.x) ? nb.x : cb.x;
           nb.y  = (nb.y < cb.y) ? nb.y : cb.y;
@@ -131,6 +131,8 @@ public class Layout : Object {
   /* Adjusts the given tree by the given amount */
   public virtual void adjust_tree( Node parent, int child_index, int side_mask, double amount ) {
 
+    stdout.printf( "    In adjust_tree, parent: %s, traversable: %s, amount: %g, side_mask: 0x%x, child_index: %d\n", parent.name.text.text, parent.traversable().to_string(), amount, side_mask, child_index );
+
     if( !parent.traversable() ) return;
 
     for( int i=0; i<parent.children().length; i++ ) {
@@ -152,6 +154,8 @@ public class Layout : Object {
 
   /* Adjust the entire tree */
   public virtual void adjust_tree_all( Node n, NodeBounds p, double amount, string msg ) {
+
+    stdout.printf( "In adjust_tree_all, n: %s, amount: %g, msg: %s\n", n.name.text.text, amount, msg );
 
     var parent = n.parent;
     var last   = n;
