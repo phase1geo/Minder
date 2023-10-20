@@ -717,7 +717,7 @@ public class Node : Object {
   public virtual void set_summary_extents() {
     for( int i=0; i<_children.length; i++ ) {
       var node = _children.index( i );
-      if( node.last_summarized() && (node.summary_node().summarized_count() > 1) ) {
+      if( node.last_summarized() ) {
         node.summary_node().set_extents();
       }
     }
@@ -2879,9 +2879,11 @@ public class Node : Object {
     var nodesel_foreground = theme.get_color( "nodesel_foreground" );
 
     /* Draw tree_bbox */
-    Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.1 );
-    ctx.rectangle( tree_bbox.x, tree_bbox.y, tree_bbox.width, tree_bbox.height );
-    ctx.fill();
+    if( is_summarized() || is_summary() ) {
+      Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.1 );
+      ctx.rectangle( tree_bbox.x, tree_bbox.y, tree_bbox.width, tree_bbox.height );
+      ctx.fill();
+    }
 
     /* Draw bbox */
     /*

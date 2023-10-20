@@ -2924,7 +2924,7 @@ public class DrawArea : Gtk.DrawingArea {
           } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_attach_summary == null) ) {
             current_node.summary_node().remove_node( current_node );
           } else if( current_node.is_summarized() ) {
-            current_node.summary_node().node_moved();
+            current_node.summary_node().node_moved( current_node );
           }
           undo_buffer.add_item( new UndoNodeMove( current_node, _orig_side, orig_index, orig_summary ) );
           animator.animate();

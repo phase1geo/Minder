@@ -57,14 +57,14 @@ public class SummaryNode : Node {
 
   /* Connects the node to signals */
   private void connect_node( Node node ) {
-    node.moved.connect( nodes_changed );
-    node.resized.connect( nodes_changed );
+    node.moved.connect( nodes_changed_moved );
+    node.resized.connect( nodes_changed_resized );
   }
 
   /* Disconnects the node from signals */
   private void disconnect_node( Node node ) {
-    node.moved.disconnect( nodes_changed );
-    node.resized.disconnect( nodes_changed );
+    node.moved.disconnect( nodes_changed_moved );
+    node.resized.disconnect( nodes_changed_resized );
   }
 
   /* Returns the number of nodes that this node summarizes */
@@ -108,27 +108,40 @@ public class SummaryNode : Node {
     _last_xy  = null;
   }
 
-  /* Updates the stored summarized extents based on the current layout and first/last position */
-  public void set_extents() {
+  /* Returns the top/bottom or left/right extents of the summarized nodes */
+  public void get_extents( out double xy1, out double xy2 ) {
 
-    /* If we don't have any nodes, this is bad */
-    assert( _nodes.length() > 0 );
+    if( _nodes.length() == 0 ) {
+      xy1 = 0;
+      xy2 = 0;
+      return;
+    }
 
     double fx, fy, fw, fh;
     double lx, ly, lw, lh;
     first_node().bbox( out fx, out fy, out fw, out fh );
     last_node().bbox( out lx, out ly, out lw, out lh );
 
+    xy1 = side.horizontal() ? fy : fx;
+    xy2 = side.horizontal() ? (ly + lh) : (lx + lw);
+
+  }
+
+  /* Updates the stored summarized extents based on the current layout and first/last position */
+  public void set_extents() {
+
+    /* If we don't have any nodes, this is bad */
+    assert( _nodes.length() > 0 );
+
+    double xy1, xy2;
+    get_extents( out xy1, out xy2 );
+
     var first_margin = first_node().style.node_margin;
     var last_margin  = last_node().style.node_margin;
+    var origin       = side.horizontal() ? da.origin_y : da.origin_x;
 
-    if( side.horizontal() ) {
-      _first_xy = (fy - da.origin_y) + first_margin;
-      _last_xy  = (ly - da.origin_y) + (lh - first_margin);
-    } else {
-      _first_xy = (fx - da.origin_x) + last_margin;
-      _last_xy  = (lx - da.origin_x) + (lw - last_margin);
-    }
+    _first_xy = (xy1 + first_margin) - origin;
+    _last_xy  = (xy2 - last_margin)  - origin;
 
   }
 
@@ -137,8 +150,16 @@ public class SummaryNode : Node {
     return( (pos1 == pos2) ? 0 : (pos1 < pos2) ? -1 : 1 );
   }
 
+  private void nodes_changed_moved( double fx, double fy ) {
+    // nodes_changed( fx, fy, "moved" );
+  }
+
+  private void nodes_changed_resized( double fx, double fy ) {
+    nodes_changed( fx, fy, "resized" );
+  }
+
   /* Called whenever the first or last summarized nodes changes in position or size, we need to adjust our location */
-  public void nodes_changed( double fx, double fy ) {
+  public void nodes_changed( double fx, double fy, string msg = "" ) {
 
     /* Let's resort the summarized nodes in case some nodes changed location */
     if( side.horizontal() ) {
@@ -159,6 +180,8 @@ public class SummaryNode : Node {
       if( x2 < (node.posx + node.width) )  { x2 = (node.posx + node.width); }
       if( y2 < (node.posy + node.height) ) { y2 = (node.posy + node.height); }
     }
+
+    stdout.printf( "In nodes_changed, side: %s, fx: %g, fy: %g, x1: %g, y1: %g, x2: %g, y2: %g, msg: %s\n", side.to_string(), fx, fy, x1, y1, x2, y2, msg );
 
     switch( side ) {
       case NodeSide.LEFT   :  
@@ -195,11 +218,16 @@ public class SummaryNode : Node {
       sort_nodes();
     }
     parent = last_node();
+    layout.handle_update_by_insert( parent, this, -1 );
     style  = last_node().style;
+    /*
+    if( layout != null ) {
+      layout.handle_update_by_insert( parent, this, -1 );
+    }
+    */
     if( theme != null ) {
       link_color_child = main_branch() ? theme.next_color() : parent.link_color;
     }
-    nodes_changed( 0, 0 );
   }
 
   /*
@@ -208,19 +236,12 @@ public class SummaryNode : Node {
   */
   public void attach_siblings( Node node, Theme? theme ) {
     var sibling = node;
+    var nodes   = new Array<Node>();
     while( (sibling != null) && sibling.is_leaf() && !sibling.is_summarized() && (sibling.side == side) ) {
-      _nodes.prepend( sibling );
-      sibling.children().append_val( this );
-      connect_node( sibling );
+      nodes.prepend_val( sibling );
       sibling = sibling.previous_sibling();
     }
-    node.parent.moved.connect( parent_moved );
-    parent = last_node();
-    style  = last_node().style;
-    if( theme != null ) {
-      link_color_child = main_branch() ? theme.next_color() : parent.link_color;
-    }
-    nodes_changed( 0, 0 );
+    attach_nodes( node.parent, nodes, false, theme );
   }
 
   /* We just attach our existing nodes back to their original values (used in undo/redo operations) */
@@ -264,23 +285,39 @@ public class SummaryNode : Node {
 
   /* Adds the given node to the list of summarized nodes */
   public void add_node( Node node ) {
+
     _nodes.append( node );
     sort_nodes();
     node.children().append_val( this );
     connect_node( node );
     parent = last_node();
-    nodes_changed( 0, 0 );
+
+    /* Calculate the tree size */
+    node.tree_bbox = layout.bbox( node, -1 );
+    node.tree_size = side.horizontal() ? node.tree_bbox.height : node.tree_bbox.width;
+
+    nodes_changed( 1, 1, "add_nodes" );
+
   }
 
   /* Moves the given node from its current location to a new location */
-  public void node_moved() {
+  public void node_moved( Node node ) {
+
     sort_nodes();
-    nodes_changed( 0, 0 );
+
+    /* Calculate the tree size */
+    node.tree_bbox = layout.bbox( node, -1 );
+    node.tree_size = side.horizontal() ? node.tree_bbox.height : node.tree_bbox.width;
+
+    nodes_changed( 1, 1, "node_moved" );
+
   }
 
   /* Removes the given node from the list of summarized nodes */
   public void remove_node( Node node ) {
+
     var update_color = (node == parent);
+
     _nodes.remove( node );
     sort_nodes();
     node.children().remove_range( 0, 1 );
@@ -288,7 +325,13 @@ public class SummaryNode : Node {
     if( update_color ) {
       link_color_child = parent.link_color;
     }
-    nodes_changed( 0, 0 );
+
+    /* Calculate the tree size */
+    node.tree_bbox = layout.bbox( node, -1 );
+    node.tree_size = side.horizontal() ? node.tree_bbox.height : node.tree_bbox.width;
+
+    nodes_changed( 1, 1, "remove_node" );
+
   }
 
   /* Removes all summarized nodes from this node so that it can be deleted */
@@ -311,9 +354,9 @@ public class SummaryNode : Node {
     }
 
     var x1 = sx - 10;
-    var y1 = (_first_xy == null) ? (first_node().posy + first_node().style.node_margin) : (_first_xy + da.origin_x);
+    var y1 = ((_first_xy == null) ? first_node().posy : (_first_xy + da.origin_x)) + first_node().style.node_margin;
     var x2 = sx - 20;
-    var y2 = (_last_xy == null) ? ((last_node().posy + last_node().height) - last_node().style.node_margin) : (_last_xy + da.origin_y);
+    var y2 = ((_last_xy == null) ? (last_node().posy + last_node().height) : (_last_xy + da.origin_y)) - last_node().style.node_margin;
 
     ctx.move_to( x1, y1 );
     ctx.line_to( x2, y1 );
@@ -346,9 +389,9 @@ public class SummaryNode : Node {
     }
 
     var x1 = sx + 10;
-    var y1 = (_first_xy == null) ? (first_node().posy + first_node().style.node_margin) : (_first_xy + da.origin_y);
+    var y1 = ((_first_xy == null) ? first_node().posy : (_first_xy + da.origin_y)) + first_node().style.node_margin;
     var x2 = sx + 20;
-    var y2 = (_last_xy == null) ? ((last_node().posy + last_node().height) - last_node().style.node_margin) : (_last_xy + da.origin_y);
+    var y2 = ((_last_xy == null) ? (last_node().posy + last_node().height) : (_last_xy + da.origin_y)) - last_node().style.node_margin;
 
     ctx.move_to( x1, y1 );
     ctx.line_to( x2, y1 );
@@ -380,9 +423,9 @@ public class SummaryNode : Node {
       }
     }
 
-    var x1 = (_first_xy == null) ? (first_node().posx + first_node().style.node_margin) : (_first_xy + da.origin_x);
+    var x1 = ((_first_xy == null) ? first_node().posx : (_first_xy + da.origin_x)) + first_node().style.node_margin;
     var y1 = sy - 10;
-    var x2 = (_last_xy == null) ? ((last_node().posx + last_node().width) - last_node().style.node_margin) : (_last_xy + da.origin_x);
+    var x2 = ((_last_xy == null) ? (last_node().posx + last_node().width) : (_last_xy + da.origin_x)) - last_node().style.node_margin;
     var y2 = sy - 20;
 
     ctx.move_to( x1, y1 );
@@ -414,9 +457,9 @@ public class SummaryNode : Node {
       }
     }
 
-    var x1 = (_first_xy == null) ? (first_node().posx + first_node().style.node_margin) : (_first_xy + da.origin_x);
+    var x1 = ((_first_xy == null) ? first_node().posx : (_first_xy + da.origin_x)) + first_node().style.node_margin;
     var y1 = sy + 10;
-    var x2 = (_last_xy == null) ? ((last_node().posx + last_node().width) - last_node().style.node_margin) : (_last_xy + da.origin_x);
+    var x2 = ((_last_xy == null) ? (last_node().posx + last_node().width) : (_last_xy + da.origin_x)) - last_node().style.node_margin;
     var y2 = sy + 20;
 
     ctx.move_to( x1, y1 );
