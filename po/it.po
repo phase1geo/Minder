@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-12 18:16-0500\n"
-"PO-Revision-Date: 2023-10-07 15:30+0100\n"
+"PO-Revision-Date: 2023-11-05 13:30+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -114,7 +114,7 @@ msgstr "Seleziona Nodo"
 
 #: src/Callout.vala:129 src/NodeMenu.vala:232
 msgid "Callout"
-msgstr ""
+msgstr "Chiamata"
 
 #: src/CanvasText.vala:269 src/FormattedText.vala:1092
 msgid "No text found"
@@ -909,9 +909,8 @@ msgid "Add Group"
 msgstr "Aggiungi Gruppo"
 
 #: src/NodeMenu.vala:128 src/NodeMenu.vala:424
-#, fuzzy
 msgid "Add Callout"
-msgstr "Aggiungi Gruppo"
+msgstr "Aggiungi chiamata"
 
 #: src/NodeMenu.vala:131 src/ThemeEditor.vala:132
 msgid "Link Color"
@@ -1031,9 +1030,8 @@ msgid "Unfold Children"
 msgstr "Rivela Figli"
 
 #: src/NodeMenu.vala:424 data/com.github.phase1geo.minder.shortcuts.ui:636
-#, fuzzy
 msgid "Remove Callout"
-msgstr "Rimuovi Attività"
+msgstr "Rimuovi chiamata"
 
 #: src/NodeMenu.vala:444
 msgid "Paste Text As Child Node"
@@ -1125,9 +1123,8 @@ msgid "Node Note"
 msgstr "Nota Nodo"
 
 #: src/Node.vala:2241
-#, fuzzy
 msgid "Callout Text"
-msgstr "Incolla Testo"
+msgstr "Chiamata testo"
 
 #: src/Preferences.vala:47
 msgid "Behavior"
@@ -2698,9 +2695,8 @@ msgid "Title Width"
 msgstr "Larghezza del Titolo"
 
 #: src/StyleInspector.vala:1077
-#, fuzzy
 msgid "Callout Options"
-msgstr "Opzioni di Esportazione"
+msgstr "Opzioni di chiamata"
 
 #: src/StyleInspector.vala:1111
 msgid "Text Font"
@@ -2864,9 +2860,8 @@ msgid "Connection Title Color"
 msgstr "Colore Connessione Titolo"
 
 #: src/ThemeEditor.vala:97
-#, fuzzy
 msgid "Callout Background"
-msgstr "Unisci Sfondo"
+msgstr "Chiamata sfondo"
 
 #: src/ThemeEditor.vala:98
 msgid "URL Link Background"
@@ -2950,14 +2945,12 @@ msgid "Unable to load background color: %s"
 msgstr "Impossibile caricare il colore di sfondo: %s"
 
 #: src/undo_actions/UndoCalloutResize.vala:32
-#, fuzzy
 msgid "callout resize"
-msgstr "ridimensiona nodo"
+msgstr "ridimensiona chiamata"
 
 #: src/undo_actions/UndoCalloutText.vala:32
-#, fuzzy
 msgid "callout text change"
-msgstr "modifica della nota di connessione"
+msgstr "Chiamata modifica del testa"
 
 #: src/undo_actions/UndoConnectedNode.vala:31
 msgid "connected node"
@@ -3037,9 +3030,8 @@ msgid "balance nodes"
 msgstr "bilancia nodi"
 
 #: src/undo_actions/UndoNodeCallout.vala:31
-#, fuzzy
 msgid "node callout changed"
-msgstr "cambia nota nodo"
+msgstr "Chiamata del nodo modificato"
 
 #: src/undo_actions/UndoNodeCut.vala:33
 msgid "cut node"
@@ -3450,9 +3442,8 @@ msgid "Create Connection"
 msgstr "Crea Connessione"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:409
-#, fuzzy
 msgid "Create Callout"
-msgstr "Crea Gruppo"
+msgstr "Crea chiamata"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:416
 msgid "Center In View"
@@ -3518,9 +3509,8 @@ msgid "Select Linked Node"
 msgstr "Seleziona Nodo Collegato"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:520
-#, fuzzy
 msgid "Select Callout"
-msgstr "Seleziona tutto il testo"
+msgstr "Seleziona chiamata"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:527
 msgid "Select Attached Connection"
@@ -3580,9 +3570,8 @@ msgid "Align Right Side"
 msgstr "Allineare Lato Destro"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:628
-#, fuzzy
 msgid "Callout Commands"
-msgstr "Comandi Nodo"
+msgstr "Comandi di chiamata"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:632
 #: data/com.github.phase1geo.minder.shortcuts.ui:665
