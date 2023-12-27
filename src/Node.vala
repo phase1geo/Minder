@@ -544,7 +544,6 @@ public class Node : Object {
     set_parsers();
     siblings.append_val( this );
     load( da, n, isroot, ref siblings );
-    stdout.printf( "from_xml, name: %s, children: %u\n", name.text.text, children().length );
   }
 
   /* Copies an existing node to this node */

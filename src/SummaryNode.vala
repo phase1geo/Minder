@@ -117,12 +117,10 @@ public class SummaryNode : Node {
 
   /* Attach ourself to the list of nodes */
   public void attach_nodes( Array<Node> nodes, Theme? theme ) {
-    stdout.printf( "In attach_nodes, nodes.length: %u\n", nodes.length );
     for( int i=0; i<nodes.length; i++ ) {
       var node = nodes.index( i );
       _nodes.append( node );
       node.children().append_val( this );
-      stdout.printf( "Appending child to %s (total: %u)\n", node.name.text.text, node.children().length );
       connect_node( node );
     }
     _nodes.sort((a, b) => {
@@ -135,7 +133,6 @@ public class SummaryNode : Node {
       link_color_child = main_branch() ? theme.next_color() : parent.link_color;
     }
     nodes_changed( 0, 0 );
-    stdout.printf( "  last_node (%s) children: %u\n", last_node().name.text.text, last_node().children().length );
   }
 
   /*
@@ -143,15 +140,12 @@ public class SummaryNode : Node {
    already summarized.
   */
   public void attach_siblings( Node node, Theme? theme ) {
-    stdout.printf( "In attach_siblings\n" );
     var sibling = node;
     while( (sibling != null) && (sibling.children().length == 0) && !sibling.is_summarized() && (sibling.side == side) ) {
-      stdout.printf( "attaching sibling: %s, parent.children.length: %d\n", sibling.name.text.text, ((sibling.parent == null) ? -1 : (int)sibling.parent.children().length) );
       _nodes.prepend( sibling );
       sibling.children().append_val( this );
       connect_node( sibling );
       sibling = sibling.previous_sibling();
-      stdout.printf( "  checking attach sibling: %s\n", ((sibling == null) ? "NULL" : sibling.name.text.text) );
     }
     parent = last_node();
     style  = last_node().style;

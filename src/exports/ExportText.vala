@@ -22,11 +22,17 @@
 using GLib;
 using Gee;
 
-public struct NodeHier {
+public class NodeHier {
   public int  spaces;
   public Node node;
   public int  first_line;
   public int  last_line;
+  public NodeHier( int s, Node n, int f, int l ) {
+    spaces     = s;
+    node       = n;
+    first_line = f;
+    last_line  = l;
+  }
 }
 
 public class ExportText : Export {
@@ -222,7 +228,8 @@ public class ExportText : Export {
           /* If we are starting a new node, create it and add it to the stack */
           } else if( (bullet == "-") || (bullet == "*") || (bullet == "+") || (bullet == "#") ) {
             node = make_node( da, task, str );
-            stack.append_val( {spaces, node, lnum, lnum} );
+            var hier = new NodeHier( spaces, node, lnum, lnum );
+            stack.append_val( hier );
 
           /* Otherwise, we need to append a new line to the current title */
           } else if( node != null ) {
