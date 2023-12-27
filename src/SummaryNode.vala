@@ -161,13 +161,6 @@ public class SummaryNode : Node {
   /* Called whenever the first or last summarized nodes changes in position or size, we need to adjust our location */
   public void nodes_changed( double fx, double fy, string msg = "" ) {
 
-    /* Let's resort the summarized nodes in case some nodes changed location */
-    if( side.horizontal() ) {
-      _nodes.sort((a, b) => { return( compare_pos( a.posy, b.posy ) ); });
-    } else {
-      _nodes.sort((a, b) => { return( compare_pos( a.posx, b.posx ) ); });
-    }
-
     var margin = style.branch_margin ?? 0;
     var x1     = first_node().posx;
     var y1     = first_node().posy;
@@ -216,8 +209,10 @@ public class SummaryNode : Node {
     p.moved.connect( parent_moved );
     if( sort ) {
       sort_nodes();
+    } else {
+      parent = last_node();
+      update_tree_bboxes();
     }
-    parent = last_node();
     layout.handle_update_by_insert( parent, this, -1 );
     style  = last_node().style;
     /*
@@ -274,6 +269,14 @@ public class SummaryNode : Node {
     */
   }
 
+  /* Update the tree_bbox structures of the summarized nodes */
+  private void update_tree_bboxes() {
+    foreach( var node in _nodes ) {
+      node.tree_bbox = layout.bbox( node, -1, "update_tree_bboxes" );
+      node.tree_size = side.horizontal() ? node.tree_bbox.height : node.tree_bbox.width;
+    }
+  }
+
   /* Re-sorts nodes that are fixed in their location and updates the parent */
   private void sort_nodes() {
     _nodes.sort((a, b) => {
@@ -281,22 +284,18 @@ public class SummaryNode : Node {
               (a.index() <  b.index()) ? -1 : 1 );
     });
     parent = last_node();
+    update_tree_bboxes();
   }
 
   /* Adds the given node to the list of summarized nodes */
   public void add_node( Node node ) {
 
     _nodes.append( node );
-    sort_nodes();
     node.children().append_val( this );
     connect_node( node );
-    parent = last_node();
+    sort_nodes();
 
-    /* Calculate the tree size */
-    node.tree_bbox = layout.bbox( node, -1 );
-    node.tree_size = side.horizontal() ? node.tree_bbox.height : node.tree_bbox.width;
-
-    nodes_changed( 1, 1, "add_nodes" );
+    // nodes_changed( 1, 1, "add_nodes" );
 
   }
 
@@ -305,11 +304,7 @@ public class SummaryNode : Node {
 
     sort_nodes();
 
-    /* Calculate the tree size */
-    node.tree_bbox = layout.bbox( node, -1 );
-    node.tree_size = side.horizontal() ? node.tree_bbox.height : node.tree_bbox.width;
-
-    nodes_changed( 1, 1, "node_moved" );
+    // nodes_changed( 1, 1, "node_moved" );
 
   }
 
@@ -319,18 +314,15 @@ public class SummaryNode : Node {
     var update_color = (node == parent);
 
     _nodes.remove( node );
-    sort_nodes();
     node.children().remove_range( 0, 1 );
     disconnect_node( node );
+    sort_nodes();
+
     if( update_color ) {
       link_color_child = parent.link_color;
     }
 
-    /* Calculate the tree size */
-    node.tree_bbox = layout.bbox( node, -1 );
-    node.tree_size = side.horizontal() ? node.tree_bbox.height : node.tree_bbox.width;
-
-    nodes_changed( 1, 1, "remove_node" );
+    // nodes_changed( 1, 1, "remove_node" );
 
   }
 

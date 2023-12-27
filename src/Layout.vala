@@ -71,7 +71,7 @@ public class Layout : Object {
   }
 
   /* Get the bbox for the given parent to the given depth */
-  public virtual NodeBounds bbox( Node parent, int side_mask ) {
+  public virtual NodeBounds bbox( Node parent, int side_mask, string msg ) {
 
     uint num_children = parent.children().length;
 
@@ -100,22 +100,31 @@ public class Layout : Object {
       var summary = parent.summary_node();
       var sb      = summary.tree_bbox;
 
+      stdout.printf( "node %s, first: %s, last: %s, nb: %s, sb: %s, msg: %s\n",
+                     parent.name.text.text, parent.first_summarized().to_string(), parent.last_summarized().to_string(), nb.to_string(), sb.to_string(), msg );
+
       if( parent.first_summarized() ) {
-        nb.x = (nb.x < sb.x) ? nb.x : sb.x;
-        nb.y = (nb.y < sb.y) ? nb.y : sb.y;
+        nb.x = (parent.side.vertical()   && (nb.x > sb.x)) ? sb.x : nb.x;
+        nb.y = (parent.side.horizontal() && (nb.y > sb.y)) ? sb.y : nb.y;
+        /*
         x2   = ((parent.side == NodeSide.RIGHT)  && (x2 < (sb.x + sb.width)))  ? (sb.x + sb.width)  : x2;
         y2   = ((parent.side == NodeSide.BOTTOM) && (y2 < (sb.y + sb.height))) ? (sb.y + sb.height) : y2;
+        */
       } else if( parent.last_summarized() ) {
+        /*
         nb.x = ((parent.side == NodeSide.LEFT) && (nb.x > sb.x)) ? sb.x : nb.x;
         nb.y = ((parent.side == NodeSide.TOP)  && (nb.y > sb.y)) ? sb.y : nb.y;
-        x2   = (x2 < (sb.x + sb.width))  ? (sb.x + sb.width)  : x2;
-        y2   = (y2 < (sb.y + sb.height)) ? (sb.y + sb.height) : y2;
+        */
+        x2   = (parent.side.vertical()   && (x2 < (sb.x + sb.width)))  ? (sb.x + sb.width)  : x2;
+        y2   = (parent.side.horizontal() && (y2 < (sb.y + sb.height))) ? (sb.y + sb.height) : y2;
+        /*
       } else if( parent.side.horizontal() ) {
         nb.x = (nb.x < sb.x) ? nb.x : sb.x;
         x2   = (x2 < (sb.x + sb.width)) ? (sb.x + sb.width) : x2;
       } else {
         nb.y = (nb.y < sb.y) ? nb.y : sb.y;
         y2   = (y2 < (sb.y + sb.height)) ? (sb.y + sb.height) : y2;
+        */
       }
 
     }
@@ -131,7 +140,7 @@ public class Layout : Object {
   protected void update_tree_size( Node n ) {
 
     /* Get the node's tree dimensions */
-    var nb = bbox( n, -1 );  // n.is_summarized() ? n.summary_node().tree_bbox : bbox( n, -1 );
+    var nb = bbox( n, -1, "update_tree_size" );  // n.is_summarized() ? n.summary_node().tree_bbox : bbox( n, -1 );
 
     /* Store the newly calculated node bounds back to the node */
     n.tree_bbox = nb;
@@ -175,7 +184,9 @@ public class Layout : Object {
   public virtual void adjust_tree( Node parent, int child_index, int side_mask, double amount ) {
 
     for( int i=0; i<parent.children().length; i++ ) {
+
       var n = parent.children().index( i );
+
       if( ((i != child_index) || n.last_summarized()) && ((n.side & side_mask) != 0) ) {
         if( n.side.horizontal() ) {
           n.posy += amount;
@@ -183,9 +194,11 @@ public class Layout : Object {
           n.posx += amount;
         }
       }
+
       if( i == child_index ) {
         amount = 0 - amount;
       }
+
     }
 
   }
@@ -409,7 +422,7 @@ public class Layout : Object {
      place ourselves just below the next to last sibling.
     */
     } else if( ((pos + 1) == parent.children().length) || (parent.children().index( pos + 1 ).side != child.side) ) {
-      var sb = bbox( parent.children().index( pos - 1 ), child.side );
+      var sb = bbox( parent.children().index( pos - 1 ), child.side, "insert a" );
       if( child.side.horizontal() ) {
         child.posy = (sb.y + sb.height + (oy - cb.y)) - adjust;
       } else {
@@ -418,7 +431,7 @@ public class Layout : Object {
 
     /* Otherwise, place ourselves just above the next sibling */
     } else {
-      var sb = bbox( parent.children().index( pos + 1 ), child.side );
+      var sb = bbox( parent.children().index( pos + 1 ), child.side, "insert b" );
       if( child.side.horizontal() ) {
         child.posy = sb.y + (oy - cb.y) - adjust;
       } else {

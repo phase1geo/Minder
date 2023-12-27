@@ -2911,14 +2911,18 @@ public class DrawArea : Gtk.DrawingArea {
           current_node.name.move_cursor_to_end();
 
         /* If we are not a root node or a summary node, move the node into the appropriate position */
-        } else if( (current_node.parent != null) && !current_node.is_summary() ) {
+        } else if( current_node.parent != null ) {
           var orig_index   = current_node.index();
           var orig_summary = current_node.summary_node();
           animator.add_nodes( _nodes, "move to position" );
           if( current_node.parent != null ) {
             current_node.parent.clear_summary_extents();
           }
-          current_node.parent.move_to_position( current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) );
+          if( current_node.is_summary() ) {
+            (current_node as SummaryNode).nodes_changed( 1, 1 );
+          } else {
+            current_node.parent.move_to_position( current_node, _orig_side, scale_value( event.x ), scale_value( event.y ) );
+          }
           if( !current_node.is_summarized() && (_attach_summary != null) ) {
             _attach_summary.add_node( current_node );
           } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_attach_summary == null) ) {

@@ -1504,7 +1504,7 @@ public class Node : Object {
     }
 
     /* Get the tree bbox */
-    tree_bbox = layout.bbox( this, -1 );
+    tree_bbox = layout.bbox( this, -1, "node.load" );
 
     if( ts == null ) {
       tree_size = side.horizontal() ? tree_bbox.height : tree_bbox.width;
@@ -1629,7 +1629,7 @@ public class Node : Object {
     }
 
     /* Calculate the tree size */
-    tree_bbox = layout.bbox( this, -1 );
+    tree_bbox = layout.bbox( this, -1, "import_opml" );
     tree_size = side.horizontal() ? tree_bbox.height : tree_bbox.width;
 
   }
@@ -2023,7 +2023,7 @@ public class Node : Object {
     update_tree_bbox( diffx, diffy );
     position_text();
 
-    if( !is_summarized() ) {
+    if( !is_summarized() || last_summarized() ) {
       moved( diffx, diffy );
     }
 
