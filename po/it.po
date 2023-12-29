@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-12 18:16-0500\n"
-"PO-Revision-Date: 2023-11-05 13:30+0100\n"
+"PO-Revision-Date: 2023-12-29 15:30+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -548,7 +548,7 @@ msgstr "Nuovo File"
 #: src/MainWindow.vala:194 src/MainWindow.vala:1119
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
-msgstr "Apri FIle"
+msgstr "Apri File"
 
 #: src/MainWindow.vala:200 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
@@ -610,9 +610,8 @@ msgid "Search"
 msgstr "Cerca"
 
 #: src/MainWindow.vala:669
-#, fuzzy
 msgid "Search Nodes, Callouts and Connections"
-msgstr "Cerca Nodi e Connessioni"
+msgstr "Cerca Nodi, Chiamate e Connessioni"
 
 #: src/MainWindow.vala:698
 msgid "Search Criteria"
@@ -632,7 +631,7 @@ msgstr "Connessioni"
 
 #: src/MainWindow.vala:737
 msgid "Callouts"
-msgstr ""
+msgstr "Chiamate"
 
 #: src/MainWindow.vala:738
 msgid "Titles"
@@ -748,9 +747,8 @@ msgid "Hide connections"
 msgstr "Nascondi connessioni"
 
 #: src/MapInspector.vala:138
-#, fuzzy
 msgid "Hide callouts"
-msgstr "Video chiamata"
+msgstr "Nascondi chiamate"
 
 #: src/MapInspector.vala:165
 msgid "Rotate main branch colors"
@@ -1066,9 +1064,8 @@ msgid "Link Nodes"
 msgstr "Nodi di Collegamento"
 
 #: src/NodesMenu.vala:75
-#, fuzzy
 msgid "Add Summary Node"
-msgstr "Aggiungi Nodo Genitore"
+msgstr "Aggiungi nodo di riepilogo"
 
 #: src/NodesMenu.vala:80 src/ThemeEditor.vala:125
 msgid "Link Colors"
@@ -3160,9 +3157,8 @@ msgid "remove node sticker"
 msgstr "rimuovi stiker al nodo"
 
 #: src/undo_actions/UndoNodeSummary.vala:32
-#, fuzzy
 msgid "insert summary node"
-msgstr "inserisci nodo"
+msgstr "inserisci nodo di riepilogo"
 
 #: src/undo_actions/UndoNodeTasks.vala:30
 msgid "node task changes"
@@ -3549,9 +3545,8 @@ msgid "Align Top Side"
 msgstr "Allinea Lato Superiore"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:588
-#, fuzzy
 msgid "Align Vertical Center"
-msgstr "Allinea al Centro Verticalmente"
+msgstr "Allinea verticalmente al centro"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:595
 msgid "Align Bottom Side"
