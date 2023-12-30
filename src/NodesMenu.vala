@@ -31,7 +31,7 @@ public class NodesMenu : Gtk.Menu {
   Gtk.MenuItem _fold;
   Gtk.MenuItem _connect;
   Gtk.MenuItem _link;
-  Gtk.MenuItem _summary;
+  // Gtk.MenuItem _summary;
   Gtk.MenuItem _link_colors;
   Gtk.MenuItem _parent_link_colors;
   Gtk.MenuItem _align;
@@ -72,8 +72,8 @@ public class NodesMenu : Gtk.Menu {
     _link.add( new Granite.AccelLabel( _( "Link Nodes" ), "y" ) );
     _link.activate.connect( link_nodes );
 
-    _summary = new Gtk.MenuItem.with_label( _( "Add Summary Node" ) );
-    _summary.activate.connect( summarize );
+    // _summary = new Gtk.MenuItem.with_label( _( "Add Summary Node" ) );
+    // _summary.activate.connect( summarize );
 
     var link_color_menu = new Gtk.Menu();
 
@@ -159,7 +159,7 @@ public class NodesMenu : Gtk.Menu {
     add( new SeparatorMenuItem() );
     add( _connect );
     add( _link );
-    add( _summary );
+    // add( _summary );
     add( new SeparatorMenuItem() );
     add( _selnodes );
     add( new SeparatorMenuItem() );
@@ -210,7 +210,7 @@ public class NodesMenu : Gtk.Menu {
     /* Set the menu sensitivity */
     _fold.set_sensitive( foldable || unfoldable );
     _connect.set_sensitive( node_num == 2 );
-    _summary.set_sensitive( summarizable );
+    // _summary.set_sensitive( summarizable );
     _parent_link_colors.set_sensitive( link_colors_parentable() );
     _align.set_sensitive( _da.nodes_alignable() );
     _selparent.set_sensitive( _da.parent_selectable() );
