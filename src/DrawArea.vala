@@ -5236,7 +5236,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( nodes.length == 0 ) return;
     if( node == null ) {
       for( int i=0; i<nodes.length; i++ ) {
-        _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), nodes.index( i ) );
+        position_root_node( nodes.index( i ) );
         add_root( nodes.index( i ), -1 );
       }
     } else if( node.is_root() ) {
