@@ -170,7 +170,6 @@
           <li>Added support for callouts that can be applied to nodes.</li>
           <li>Added node alignment toolbar in map sidebar when manual layout mode is selected.</li>
           <li>Added output scaling to PNG/JPEG export options.</li>
-          <li>Added support for summary nodes.</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="ru">Изменения</p>
@@ -196,6 +195,8 @@
       <issues>
         <issue url="https://github.com/phase1geo/minder/issues/575">Clicking on files in Minder Flatpak doesn't work</issue>
         <issue url="https://github.com/phase1geo/minder/issues/583">Task node colors look bad</issue>
+        <issue url="https://github.com/phase1geo/minder/issues/587">Crashing while using Quick Entry Issue</issue>
+        <issue url="https://github.com/phase1geo/minder/issues/589">Crash when pasting into a blank document</issue>
       </issues>
     </release>
     <release version="1.15.6" date="2023-08-25">

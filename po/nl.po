@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-12 18:16-0500\n"
+"POT-Creation-Date: 2023-12-30 17:34-0600\n"
 "PO-Revision-Date: 2020-04-20 14:26+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: \n"
@@ -454,7 +454,7 @@ msgstr "Meeneembare Minder"
 msgid "SVG"
 msgstr "SVG"
 
-#: src/exports/ExportText.vala:36
+#: src/exports/ExportText.vala:42
 msgid "PlainText"
 msgstr "Platte tekst"
 
@@ -1167,15 +1167,15 @@ msgstr ""
 msgid "Remove Node Links"
 msgstr "Verbindingsknooop verwijderen"
 
-#: src/Node.vala:2222
+#: src/Node.vala:2221
 msgid "Node Title"
 msgstr "Titel van knoop"
 
-#: src/Node.vala:2230
+#: src/Node.vala:2229
 msgid "Node Note"
 msgstr "Aantekening"
 
-#: src/Node.vala:2241
+#: src/Node.vala:2240
 #, fuzzy
 msgid "Callout Text"
 msgstr "Tekst plakken"

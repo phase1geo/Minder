@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-12 18:16-0500\n"
+"POT-Creation-Date: 2023-12-30 17:34-0600\n"
 "PO-Revision-Date: 2023-11-05 13:30+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -441,7 +441,7 @@ msgstr "Minder portatile"
 msgid "SVG"
 msgstr "SVG"
 
-#: src/exports/ExportText.vala:36
+#: src/exports/ExportText.vala:42
 msgid "PlainText"
 msgstr "Testo Semplice"
 
@@ -1114,15 +1114,15 @@ msgstr "Allinea a destra"
 msgid "Remove Node Links"
 msgstr "Rimuovi collegamento al nodo"
 
-#: src/Node.vala:2222
+#: src/Node.vala:2221
 msgid "Node Title"
 msgstr "Titolo Nodo"
 
-#: src/Node.vala:2230
+#: src/Node.vala:2229
 msgid "Node Note"
 msgstr "Nota Nodo"
 
-#: src/Node.vala:2241
+#: src/Node.vala:2240
 msgid "Callout Text"
 msgstr "Chiamata testo"
 

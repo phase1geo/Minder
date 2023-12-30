@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-12 18:16-0500\n"
+"POT-Creation-Date: 2023-12-30 17:34-0600\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Helder Bertoldo <helder.bertoldo@gmail.com>\n"
 "Language-Team: none\n"
@@ -455,7 +455,7 @@ msgstr ""
 msgid "SVG"
 msgstr ""
 
-#: src/exports/ExportText.vala:36
+#: src/exports/ExportText.vala:42
 msgid "PlainText"
 msgstr ""
 
@@ -1181,17 +1181,17 @@ msgstr ""
 msgid "Remove Node Links"
 msgstr "Remover Nota"
 
-#: src/Node.vala:2222
+#: src/Node.vala:2221
 #, fuzzy
 msgid "Node Title"
 msgstr "Títulos"
 
-#: src/Node.vala:2230
+#: src/Node.vala:2229
 #, fuzzy
 msgid "Node Note"
 msgstr "Adicionar Nota"
 
-#: src/Node.vala:2241
+#: src/Node.vala:2240
 #, fuzzy
 msgid "Callout Text"
 msgstr "Colar"
