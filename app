@@ -115,7 +115,7 @@ case $1 in
     echo "  generate-i18n     Generates .pot and .po files for i18n (multi-language support)"
     echo "  install           Builds and installs application to the system (requires sudo)"
     echo "  install-deps      Installs missing build dependencies"
-    echo "  run               Builds and runs the application"
+    echo "  run               Builds and runs the application (must run install once before successive calls to this command)"
     echo "  test              Builds and runs testing for the application"
     echo "  test-run          Builds application, runs testing and if successful application is started"
     echo "  uninstall         Removes the application from the system (requires sudo)"

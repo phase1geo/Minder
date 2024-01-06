@@ -59,7 +59,7 @@ public class LinkTypeSquared : Object, LinkType {
     }
 
     ctx.move_to( from_x, from_y );
-    if( (side & NodeSide.horizontal()) != 0 ) {
+    if( side.horizontal() ) {
       var mid_x = ((from_x + to_x) / 2) + adjust_mid_by( from_node, side );
       tailx = mid_x;
       taily = to_y;

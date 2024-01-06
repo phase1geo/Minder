@@ -72,7 +72,8 @@ public class NodesMenu : Gtk.Menu {
     _link.add( new Granite.AccelLabel( _( "Link Nodes" ), "y" ) );
     _link.activate.connect( link_nodes );
 
-    // _summary = new Gtk.MenuItem.with_label( _( "Add Summary Node" ) );
+    // _summary = new Gtk.MenuItem();
+    // _summary.add( new Granite.AccelLabel( _( "Add Summary Node" ), "<Shift>Tab" ) );
     // _summary.activate.connect( summarize );
 
     var link_color_menu = new Gtk.Menu();
@@ -202,7 +203,7 @@ public class NodesMenu : Gtk.Menu {
     var nodes        = _da.get_selected_nodes();
     var node_num     = nodes.length;
     var has_link     = _da.any_selected_nodes_linked();
-    var summarizable = (node_num >= 2) && have_same_parent( nodes );
+    var summarizable = _da.nodes_summarizable();
 
     bool foldable, unfoldable;
     nodes_foldable_status( out foldable, out unfoldable );
@@ -280,7 +281,7 @@ public class NodesMenu : Gtk.Menu {
 
   /* Adds a new summary node */
   private void summarize() {
-    _da.add_summary_node();
+    _da.add_summary_node_from_selected();
   }
 
   /* Changes the color of all selected nodes */

@@ -69,19 +69,14 @@ public enum NodeSide {
     }
   }
 
-  /* Generates the value of the ANY mask value */
-  public static int any() {
-    return( LEFT + RIGHT + TOP + BOTTOM );
-  }
-
   /* Generates the value of the VERTICAL mask value */
-  public static int vertical() {
-    return( TOP + BOTTOM );
+  public bool vertical() {
+    return( (this == TOP) || (this == BOTTOM) );
   }
 
   /* Generates the value of the HORIZONTAL mask value */
-  public static int horizontal() {
-    return( LEFT + RIGHT );
+  public bool horizontal() {
+    return( (this == LEFT) || (this == RIGHT) );
   }
 }
 
@@ -332,8 +327,10 @@ public class Node : Object {
         _link_color      = value;
         _link_color_set  = true;
         _link_color_root = true;
-        for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).link_color_child = value;
+        if( traversable() ) {
+          for( int i=0; i<_children.length; i++ ) {
+            _children.index( i ).link_color_child = value;
+          }
         }
       }
     }
@@ -349,8 +346,10 @@ public class Node : Object {
       if( !link_color_root ) {
         _link_color     = value;
         _link_color_set = true;
-        for( int i=0; i<_children.length; i++ ) {
-          _children.index( i ).link_color_child = value;
+        if( traversable() ) {
+          for( int i=0; i<_children.length; i++ ) {
+            _children.index( i ).link_color_child = value;
+          }
         }
       }
     }
@@ -383,8 +382,10 @@ public class Node : Object {
       if( _style.copy( value ) ) {
         name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
         name.max_width = style.node_width;
-        for( int i=0; i<_children.length; i++ ) {
-          _layout.apply_margin( _children.index( i ) );
+        if( traversable() ) {
+          for( int i=0; i<_children.length; i++ ) {
+            _layout.apply_margin( _children.index( i ) );
+          }
         }
         if( _callout != null ) {
           _callout.position_text( false );
@@ -399,8 +400,10 @@ public class Node : Object {
     }
     set {
       _layout = value;
-      for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).layout = value;
+      if( traversable() ) {
+        for( int i=0; i<_children.length; i++ ) {
+          _children.index( i ).layout = value;
+        }
       }
     }
   }
@@ -421,6 +424,16 @@ public class Node : Object {
       return( _image );
     }
   }
+  public double total_width {
+    get {
+      return( _total_width );
+    }
+  }
+  public double total_height {
+    get {
+      return( _total_height );
+    }
+  }
   public bool image_resizable {
     get {
       return( (_image == null) ? false : _image.resizable );
@@ -437,8 +450,10 @@ public class Node : Object {
     }
     set {
       _alpha = value;
-      for( int i=0; i<_children.length; i++ ) {
-        _children.index( i ).alpha = value;
+      if( traversable() ) {
+        for( int i=0; i<_children.length; i++ ) {
+          _children.index( i ).alpha = value;
+        }
       }
       if( _callout != null ) {
         _callout.alpha = _alpha;
@@ -534,7 +549,7 @@ public class Node : Object {
   }
 
   /* Constructor from an XML node */
-  public Node.from_xml( DrawArea da, Layout? layout, Xml.Node* n, bool isroot, ref Array<Node> siblings ) {
+  public Node.from_xml( DrawArea da, Layout? layout, Xml.Node* n, bool isroot, Node? sibling_parent, ref Array<Node> siblings ) {
     _da        = da;
     _children  = new Array<Node>();
     _tree_bbox = new NodeBounds( da );
@@ -543,7 +558,7 @@ public class Node : Object {
     _name.resized.connect( position_text_and_update_size );
     set_parsers();
     siblings.append_val( this );
-    load( da, n, isroot, ref siblings );
+    load( da, n, isroot, sibling_parent, ref siblings );
   }
 
   /* Copies an existing node to this node */
@@ -658,6 +673,9 @@ public class Node : Object {
   /* Sets the alpha value without propagating this to the children */
   public void set_alpha_only( double value ) {
     _alpha = value;
+    if( _callout != null ) {
+      _callout.alpha = value;
+    }
   }
 
   /* Updates the alpha value if it is not set to 1.0 */
@@ -665,8 +683,10 @@ public class Node : Object {
     if( _alpha < 1.0 ) {
       _alpha = value;
     }
-    for( int i=0; i<_children.length; i++ ) {
-      _children.index( i ).update_alpha( value );
+    if( traversable() ) {
+      for( int i=0; i<_children.length; i++ ) {
+        _children.index( i ).update_alpha( value );
+      }
     }
   }
 
@@ -682,6 +702,26 @@ public class Node : Object {
     _posy += value;
     update_tree_bbox( 0, value );
     position_text();
+  }
+
+  /* Clears the summary extents found as grandchildren of this node */
+  public virtual void clear_summary_extents() {
+    for( int i=0; i<_children.length; i++ ) {
+      var node = _children.index( i );
+      if( node.last_summarized() ) {
+        node.summary_node().clear_extents();
+      }
+    }
+  }
+
+  /* Sets the summary extents found as grandchildren of this node */
+  public virtual void set_summary_extents() {
+    for( int i=0; i<_children.length; i++ ) {
+      var node = _children.index( i );
+      if( node.last_summarized() ) {
+        node.summary_node().set_extents();
+      }
+    }
   }
 
   /* Updates the tree_bbox */
@@ -736,7 +776,7 @@ public class Node : Object {
     if( (_callout == null) || _callout.mode.is_disconnected() ) {
       _total_width  = _width;
       _total_height = _height;
-    } else if( (side & NodeSide.horizontal()) != 0 ) {
+    } else if( side.horizontal() ) {
       var margin         = style.node_margin  ?? 0;
       var callout_width  = _callout.total_width + (margin * 2);
       var callout_height = _callout.total_height + margin;
@@ -798,6 +838,11 @@ public class Node : Object {
     return( parent == null );
   }
 
+  /* Returns true if this node can be traversed in the hierarchy */
+  public bool traversable() {
+    return( !is_summarized() || last_summarized() );
+  }
+
   /* Returns if this is a summary node */
   public virtual bool is_summary() {
     return( false );
@@ -806,6 +851,29 @@ public class Node : Object {
   /* Returns true if this node is summarized in the mindmap */
   public virtual bool is_summarized() {
     return( (_children.length == 1) && _children.index( 0 ).is_summary() );
+  }
+
+  /* Returns true if this node is the first node of a summary node */
+  public virtual bool first_summarized() {
+    return( is_summarized() && ((_children.index( 0 ) as SummaryNode).first_node() == this) );
+  }
+
+  /* Returns true if this node is the last node of a summary node */
+  public virtual bool last_summarized() {
+    return( is_summarized() && ((_children.index( 0 ) as SummaryNode).last_node() == this) );
+  }
+
+  /* Returns the summary node this node is attached to if it is summarized; otherwise, returns null */
+  public SummaryNode? summary_node() {
+    if( is_summarized() ) {
+      return( (SummaryNode)children().index( 0 ) );
+    }
+    return( null );
+  }
+
+  /* Returns true if this node is positioned somewhere between the first and last sibling node in the same parent */
+  public bool is_between_siblings( Node first, Node last ) {
+    return( (first.parent == parent) && (last.parent == parent) && ((first.index() <= index()) && (index() <= last.index())) );
   }
 
   /* Returns true if this node exists within a group */
@@ -841,11 +909,15 @@ public class Node : Object {
 
   /* Returns the number of descendants within this node */
   public int descendant_count() {
-    var count = (int)_children.length;
-    for( int i=0; i<_children.length; i++ ) {
-      count += _children.index( i ).descendant_count();
+    if( !traversable() ) {
+      return( 0 );
+    } else {
+      var count = (int)_children.length;
+      for( int i=0; i<_children.length; i++ ) {
+        count += _children.index( i ).descendant_count();
+      }
+      return( count );
     }
-    return( count );
   }
 
   /* Returns true if the node is a leaf node */
@@ -902,8 +974,15 @@ public class Node : Object {
     return( !is_root() && (side == NodeSide.LEFT) );
   }
 
-  /* Returns true if the given cursor coordinates lies within this node */
+  /* Returns true if the given cursor coordinates lie within any part of this node */
   public virtual bool is_within( double x, double y ) {
+    double bx, by, bw, bh;
+    bbox( out bx, out by, out bw, out bh );
+    return( Utils.is_within_bounds( x, y, bx, by, bw, bh ) );
+  }
+
+  /* Returns true if the given cursor coordinates lies within the node bounding box */
+  public virtual bool is_within_node( double x, double y ) {
     double margin = style.node_margin ?? 0;
     double cx, cy, cw, ch;
     node_bbox( out cx, out cy, out cw, out ch );
@@ -1017,7 +1096,7 @@ public class Node : Object {
 
   /* Returns true if the given cursor coordinates lie within the fold indicator area */
   public virtual bool is_within_fold( double x, double y ) {
-    if( _children.length > 0 ) {
+    if( (_children.length > 0) && !is_summarized() ) {
       double fx, fy, fw, fh;
       fold_bbox( out fx, out fy, out fw, out fh );
       return( Utils.is_within_bounds( x, y, fx, fy, fw, fh ) );
@@ -1027,7 +1106,7 @@ public class Node : Object {
 
   /* Returns true if the given cursor coordinates lie within the fold indicator surrounding area */
   public virtual bool is_within_fold_area( double x, double y ) {
-    if( _children.length > 0 ) {
+    if( (_children.length > 0) && !is_summarized() ) {
       double fx, fy, fw, fh;
       var pad = 20;
       fold_bbox( out fx, out fy, out fw, out fh );
@@ -1058,7 +1137,7 @@ public class Node : Object {
 
   /* Finds the node which contains the given pixel coordinates */
   public virtual Node? contains( double x, double y, Node? n ) {
-    if( (this != n) && (is_within( x, y ) || is_within_fold_area( x, y )) ) {
+    if( (this != n) && (is_within_node( x, y ) || is_within_fold_area( x, y )) ) {
       return( this );
     } else if( !folded ) {
       for( int i=0; i<_children.length; i++ ) {
@@ -1233,18 +1312,19 @@ public class Node : Object {
   }
 
   /* Loads the child nodes */
-  private void load_nodes( Xml.Node* n, ref Array<Node> siblings ) {
+  private void load_nodes( Xml.Node* n, Node? sibling_parent, ref Array<Node> siblings ) {
     var nodes = new Array<Node>();
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
           case "node" :
-            var node = new Node.from_xml( _da, _layout, it, false, ref nodes );
+            var node = new Node.from_xml( _da, _layout, it, false, this, ref nodes );
             node.attach( this, -1, null );
             break;
           case "summary-node" :
             var node = new SummaryNode.from_xml( _da, _layout, it, ref nodes );
-            node.attach_nodes( siblings, null );
+            node.attach_nodes( sibling_parent, siblings, false, null );
+            siblings.remove_range( 0, siblings.length );
             break;
         }
       }
@@ -1292,7 +1372,7 @@ public class Node : Object {
   }
 
   /* Loads the file contents into this instance */
-  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, ref Array<Node> siblings ) {
+  public virtual void load( DrawArea da, Xml.Node* n, bool isroot, Node? sibling_parent, ref Array<Node> siblings ) {
 
     _loaded = false;
 
@@ -1369,6 +1449,11 @@ public class Node : Object {
       group = bool.parse( g );
     }
 
+    string? su = n->get_prop( "summarized" );
+    if( (su != null) && bool.parse( su ) ) {
+      siblings.append_val( this );
+    }
+
     /* If the posx and posy values are not set, set the layout now */
     if( (x == null) && (y == null) ) {
       string? l = n->get_prop( "layout" );
@@ -1390,7 +1475,7 @@ public class Node : Object {
           case "nodelink"   :  load_node_link( it );  break;
           case "style"      :  load_style( it );  break;
           case "callout"    :  load_callout( it );  break;
-          case "nodes"      :  load_nodes( it, ref siblings );  break;
+          case "nodes"      :  load_nodes( it, sibling_parent, ref siblings );  break;
         }
       }
     }
@@ -1420,10 +1505,10 @@ public class Node : Object {
     }
 
     /* Get the tree bbox */
-    tree_bbox = layout.bbox( this, -1 );
+    tree_bbox = layout.bbox( this, -1, "node.load" );
 
     if( ts == null ) {
-      tree_size = ((side & NodeSide.horizontal()) != 0) ? tree_bbox.height : tree_bbox.width;
+      tree_size = side.horizontal() ? tree_bbox.height : tree_bbox.width;
     }
 
     /* Make sure that the name is positioned properly */
@@ -1459,6 +1544,7 @@ public class Node : Object {
       node->new_prop( "color", Utils.color_from_rgba( _link_color ) );
       node->new_prop( "colorroot", link_color_root.to_string() );
     }
+    node->new_prop( "summarized", is_summarized().to_string() );
     node->new_prop( "layout", _layout.name );
     if( _sticker != null ) {
       node->new_prop( "sticker", _sticker );
@@ -1482,7 +1568,7 @@ public class Node : Object {
       node->add_child( _callout.save() );
     }
 
-    if( (_children.length > 0) && (!is_summarized() || ((_children.index( 0 ) as SummaryNode).last_node() == this)) ) {
+    if( (_children.length > 0) && traversable() ) {
       Xml.Node* nodes = new Xml.Node( null, "nodes" );
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).save( nodes );
@@ -1544,8 +1630,8 @@ public class Node : Object {
     }
 
     /* Calculate the tree size */
-    tree_bbox = layout.bbox( this, -1 );
-    tree_size = ((side & NodeSide.horizontal()) != 0) ? tree_bbox.height : tree_bbox.width;
+    tree_bbox = layout.bbox( this, -1, "import_opml" );
+    tree_size = side.horizontal() ? tree_bbox.height : tree_bbox.width;
 
   }
 
@@ -1600,7 +1686,7 @@ public class Node : Object {
 
   /* Returns the bounding box for this node */
   public virtual void bbox( out double x, out double y, out double w, out double h ) {
-    if( is_root() || ((side & NodeSide.vertical()) != 0) ) {
+    if( is_root() || side.vertical() ) {
       x = posx;
       y = posy;
       w = _total_width;
@@ -1615,8 +1701,6 @@ public class Node : Object {
 
   /* Returns the bounding box for the node box itself (this includes everything but the callout) */
   public void node_bbox( out double x, out double y, out double w, out double h ) {
-    var margin  = style.node_margin  ?? 0;
-    var padding = style.node_padding ?? 0;
     x = posx;
     y = posy; 
     w = _width;
@@ -1626,7 +1710,7 @@ public class Node : Object {
   /* Returns the bounding box for the fold indicator for this node */
   public void fold_bbox( out double x, out double y, out double w, out double h ) {
     double bw, bh;
-    bbox( out x, out y, out bw, out bh );
+    node_bbox( out x, out y, out bw, out bh );
     w = 16;
     h = 16;
     switch( side ) {
@@ -1835,19 +1919,27 @@ public class Node : Object {
   */
   public bool swap_with_sibling( Node? other ) {
 
-    if( (other != null) && (other.parent == parent) ) {
+    if( (other != null) && !is_summary() && !other.is_summary() && (summary_node() == other.summary_node()) && (other.parent == parent) ) {
 
-      var other_index = other.index();
-      var our_index   = index();
-      var our_parent  = parent;
+      var other_index   = other.index();
+      var other_summary = other.summary_node();
+      var our_index     = index();
+      var our_parent    = parent;
+      var our_summary   = summary_node();
 
       if( (other_index + 1) == our_index ) {
         da.animator.add_nodes( da.get_nodes(), "swap_with_sibling" );
         detach( side );
+        if( our_summary != null ) {
+          our_summary.remove_node( this );
+        }
         attached = true;
         attach( our_parent, other_index, null, false );
+        if( other_summary != null ) {
+          other_summary.add_node( this );
+        }
         our_parent.last_selected_child = this;
-        da.undo_buffer.add_item( new UndoNodeMove( this, side, our_index ) );
+        da.undo_buffer.add_item( new UndoNodeMove( this, side, our_index, our_summary ) );
         da.animator.animate();
         return( true );
 
@@ -1855,9 +1947,15 @@ public class Node : Object {
         var other_side = other.side;
         da.animator.add_nodes( da.get_nodes(), "swap_with_sibling" );
         other.detach( other_side );
+        if( other_summary != null ) {
+          other_summary.remove_node( other );
+        }
         other.attached = true;
         other.attach( our_parent, our_index, null, false );
-        da.undo_buffer.add_item( new UndoNodeMove( other, other_side, other_index ) );
+        if( our_summary != null ) {
+          our_summary.add_node( other );
+        }
+        da.undo_buffer.add_item( new UndoNodeMove( other, other_side, other_index, other_summary ) );
         da.animator.animate();
         return( true );
       }
@@ -1918,14 +2016,17 @@ public class Node : Object {
   }
 
   /* If the parent node is moved, we will move ourselves the same amount */
-  private void parent_moved( Node parent, double diffx, double diffy ) {
+  protected void parent_moved( Node parent, double diffx, double diffy ) {
 
     _posx += diffx;
     _posy += diffy;
 
     update_tree_bbox( diffx, diffy );
     position_text();
-    moved( diffx, diffy );
+
+    if( !is_summarized() || last_summarized() ) {
+      moved( diffx, diffy );
+    }
 
   }
 
@@ -2363,29 +2464,25 @@ public class Node : Object {
     }
 
     /* If we have children and we need to extend our link point, let's draw the extended link link now */
-    if( _children.length > 0 ) {
+    if( (_children.length > 0) && !is_summarized() ) {
       var max_width = 0;
       for( int i=0; i<_children.length; i++ ) {
         if( max_width < _children.index( i ).style.link_width ) {
           max_width = _children.index( i ).style.link_width;
         }
       }
-      if( (side & NodeSide.horizontal()) != 0 ) {
-        if( _width < _total_width ) {
-          link_point( out x, out y );
-          ctx.set_line_width( max_width );
-          ctx.move_to( (posx + _width - (style.node_margin ?? 0)), y );
-          ctx.line_to( x, y );
-          ctx.stroke();
-        }
-      } else {
-        if( _height < _total_height ) {
-          link_point( out x, out y );
-          ctx.set_line_width( max_width );
-          ctx.move_to( x, (posy + _height - (style.node_margin ?? 0)) );
-          ctx.line_to( x, y );
-          ctx.stroke();
-        }
+      if( (side == NodeSide.RIGHT) && (_width < _total_width) ) {
+        link_point( out x, out y );
+        ctx.set_line_width( max_width );
+        ctx.move_to( (posx + _width - (style.node_margin ?? 0)), y );
+        ctx.line_to( x, y );
+        ctx.stroke();
+      } else if( (side == NodeSide.BOTTOM) && (_height < _total_height) ) {
+        link_point( out x, out y );
+        ctx.set_line_width( max_width );
+        ctx.move_to( x, (posy + _height - (style.node_margin ?? 0)) );
+        ctx.line_to( x, y );
+        ctx.stroke();
       }
     }
 
@@ -2601,7 +2698,7 @@ public class Node : Object {
   /* Draw the fold indicator */
   protected virtual void draw_common_fold( Context ctx, RGBA bg_color, RGBA fg_color ) {
 
-    if( _children.length == 0 ) return;
+    if( (_children.length == 0) || is_summarized() ) return;
 
     double fx, fy, fw, fh;
     fold_bbox( out fx, out fy, out fw, out fh );
@@ -2661,11 +2758,15 @@ public class Node : Object {
   public virtual void draw_link( Context ctx, Theme theme ) {
 
     double  parent_x, parent_y;
-    double  height  = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
-    double  tailx   = 0, taily = 0, tipx = 0, tipy = 0;
-    double  child_x = 0;
-    double  child_y = 0;
+    double  height   = (style.node_border.name() == "underlined") ? (_height - style.node_margin) : (_height / 2);
+    double  tailx    = 0, taily = 0, tipx = 0, tipy = 0;
+    double  child_x1 = 0;
+    double  child_y1 = 0;
+    double  child_x2 = 0;
+    double  child_y2 = 0;
     double? ext_x, ext_y;
+
+    var margin = style.node_margin;
 
     /* Get the parent's link point */
     parent.link_point( out parent_x, out parent_y );
@@ -2674,13 +2775,33 @@ public class Node : Object {
     ctx.set_line_cap( LineCap.ROUND );
 
     switch( side ) {
-      case NodeSide.LEFT   :  child_x = (posx + _width - style.node_margin);  child_y = (posy + height);                       break;
-      case NodeSide.RIGHT  :  child_x = (posx + style.node_margin);           child_y = (posy + height);                       break;
-      case NodeSide.TOP    :  child_x = (posx + (_width / 2));                child_y = (posy + _height - style.node_margin);  break;
-      case NodeSide.BOTTOM :  child_x = (posx + (_width / 2));                child_y = (posy + style.node_margin);            break;
+      case NodeSide.LEFT   :
+        child_x1 = (posx + _total_width - margin);
+        child_x2 = (posx + _width - margin);
+        child_y1 = (posy + height);
+        child_y2 = child_y1;
+        break;
+      case NodeSide.RIGHT  :
+        child_x1 = (posx + margin);
+        child_x2 = child_x1;
+        child_y1 = (posy + height);
+        child_y2 = child_y1;
+        break;
+      case NodeSide.TOP    :
+        child_x1 = (posx + (_width / 2));
+        child_x2 = child_x1;
+        child_y1 = (posy + _total_height - margin);
+        child_y2 = (posy + _height - margin);
+        break;
+      case NodeSide.BOTTOM :
+        child_x1 = (posx + (_width / 2));
+        child_x2 = child_x1;
+        child_y1 = (posy + margin);
+        child_y2 = child_y1;
+        break;
     }
 
-    style.draw_link( ctx, parent, this, parent_x, parent_y, child_x, child_y, out tailx, out taily, out tipx, out tipy );
+    style.draw_link( ctx, parent, this, parent_x, parent_y, child_x1, child_y1, child_x2, child_y2, out tailx, out taily, out tipx, out tipy );
 
     /* Draw the arrow */
     if( style.link_arrow ) {
@@ -2759,11 +2880,11 @@ public class Node : Object {
     var nodesel_foreground = theme.get_color( "nodesel_foreground" );
 
     /* Draw tree_bbox */
-    /*
-    Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.1 );
-    ctx.rectangle( tree_bbox.x, tree_bbox.y, tree_bbox.width, tree_bbox.height );
-    ctx.fill();
-    */
+    if( is_summarized() || is_summary() ) {
+      Utils.set_context_color_with_alpha( ctx, nodesel_background, 0.1 );
+      ctx.rectangle( tree_bbox.x, tree_bbox.y, tree_bbox.width, tree_bbox.height );
+      ctx.fill();
+    }
 
     /* Draw bbox */
     /*
@@ -2847,7 +2968,7 @@ public class Node : Object {
     if( !is_root() ) {
       draw_link( ctx, theme );
     }
-    if( !folded && (!is_summarized() || (this == (_children.index( 0 ) as SummaryNode).last_node())) ) {
+    if( !folded && traversable() ) {
       var int_child_len = (int)_children.length;
       if( int_child_len > 0 ) {
         var first_side = side_count( _children.index( 0 ).side );
@@ -2862,7 +2983,7 @@ public class Node : Object {
   /* Draw this node and all child nodes */
   public void draw_all( Context ctx, Theme theme, Node? current, bool motion, bool exporting ) {
     if( this != current ) {
-      if( !folded && (!is_summarized() || (this == (_children.index( 0 ) as SummaryNode).last_node())) ) {
+      if( !folded && traversable() ) {
         for( int i=0; i<_children.length; i++ ) {
           _children.index( i ).draw_all( ctx, theme, current, motion, exporting );
         }

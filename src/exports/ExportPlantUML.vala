@@ -218,12 +218,12 @@ public class ExportPlantUML : Export {
           if( (last_depth + 1) == depth ) {
             last_node = da.create_child_node( last_node, text );
           } else if( last_depth == depth ) {
-            last_node = da.create_sibling_node( last_node, text );
+            last_node = da.create_sibling_node( last_node, true, text );
           } else if( last_depth > depth ) {
             for( int i=0; i<(last_depth - depth); i++ ) {
               last_node = last_node.parent;
             }
-            last_node = da.create_sibling_node( last_node, text );
+            last_node = da.create_sibling_node( last_node, true, text );
           }
         }
         break;

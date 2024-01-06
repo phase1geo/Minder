@@ -61,7 +61,7 @@ public class LinkTypeCurved : Object, LinkType {
     }
 
     ctx.move_to( from_x, from_y );
-    if( (side & NodeSide.horizontal()) != 0 ) {
+    if( side.horizontal() ) {
       tailx = from_x + x_adj;
       taily = from_y + ((to_y - from_y) * 0.95);
       ctx.curve_to( (to_x - x_adj), from_y, (from_x + x_adj), to_y, to_x, to_y );

@@ -23,41 +23,51 @@ using Gtk;
 
 public class UndoNodeMove : UndoItem {
 
-  private Node     _n;
-  private NodeSide _old_side;
-  private int      _old_index;
-  private NodeSide _new_side;
-  private int      _new_index;
+  private Node         _n;
+  private NodeSide     _old_side;
+  private int          _old_index;
+  private SummaryNode? _old_summary;
+  private NodeSide     _new_side;
+  private int          _new_index;
+  private SummaryNode? _new_summary;
 
   /* Default constructor */
-  public UndoNodeMove( Node n, NodeSide old_side, int old_index ) {
+  public UndoNodeMove( Node n, NodeSide old_side, int old_index, SummaryNode? old_summary ) {
     base( _( "move node" ) );
-    _n         = n;
-    _old_side  = old_side;
-    _old_index = old_index;
-    _new_side  = n.side;
-    _new_index = n.index();
+    _n           = n;
+    _old_side    = old_side;
+    _old_index   = old_index;
+    _old_summary = old_summary;
+    _new_side    = n.side;
+    _new_index   = n.index();
+    _new_summary = n.summary_node();
   }
 
   /* Perform the node move change */
-  public void change( DrawArea da, NodeSide old_side, NodeSide new_side, int new_index ) {
+  public void change( DrawArea da, NodeSide old_side, SummaryNode? old_summary, NodeSide new_side, int new_index, SummaryNode? new_summary ) {
     Node parent = _n.parent;
     da.animator.add_nodes( da.get_nodes(), "undo move" );
     _n.detach( old_side );
+    if( old_summary != null ) {
+      old_summary.remove_node( _n );
+    }
     _n.side = new_side;
     _n.layout.propagate_side( _n, new_side );
     _n.attach( parent, new_index, null, false );
+    if( new_summary != null ) {
+      new_summary.add_node( _n );
+    }
     da.animator.animate();
   }
 
   /* Performs an undo operation for this data */
   public override void undo( DrawArea da ) {
-    change( da, _new_side, _old_side, _old_index );
+    change( da, _new_side, _new_summary, _old_side, _old_index, _old_summary );
   }
 
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
-    change( da, _old_side, _new_side, _new_index );
+    change( da, _old_side, _old_summary, _new_side, _new_index, _new_summary );
   }
 
 }
