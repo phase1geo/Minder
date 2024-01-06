@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 21:56-0600\n"
-"PO-Revision-Date: 2023-10-04 02:05+0200\n"
+"PO-Revision-Date: 2024-01-06 18:37+0100\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "Language: ru\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.4\n"
 
 #: src/About.vala:36
 msgid "Mind-mapping application"
@@ -613,9 +613,8 @@ msgid "Search"
 msgstr "Искать"
 
 #: src/MainWindow.vala:669
-#, fuzzy
 msgid "Search Nodes, Callouts and Connections"
-msgstr "Искать по узлам и соединениям"
+msgstr "Искать по узлам, выноскам и соединениям"
 
 #: src/MainWindow.vala:698
 msgid "Search Criteria"
@@ -772,7 +771,7 @@ msgstr "Выровнять выбранные узлы по левому кра�
 
 #: src/MapInspector.vala:261
 msgid "Align horizontal center of selected nodes"
-msgstr ""
+msgstr "Выровнять горизонтальные центры выбранных узлов"
 
 #: src/MapInspector.vala:267
 msgid "Align right side of selected nodes"
@@ -784,7 +783,7 @@ msgstr "Выровнять выбранные узлы по верхнему к�
 
 #: src/MapInspector.vala:279
 msgid "Align vertical center of selected nodes"
-msgstr ""
+msgstr "Выровнять вертикальные центры выбранных узлов"
 
 #: src/MapInspector.vala:285
 msgid "Align bottom side of selected nodes"
@@ -956,9 +955,8 @@ msgid "Add Sibling Node"
 msgstr "Добавить узел-сиблинг"
 
 #: src/NodeMenu.vala:171
-#, fuzzy
 msgid "Use to Summarize Previous Sibling Nodes"
-msgstr "Предыдущий узел-сиблинг"
+msgstr "Использовать для создания сводки по предыдущим узлам-сиблингам"
 
 #: src/NodeMenu.vala:175 src/QuickEntry.vala:44
 msgid "Quick Entry"
@@ -1324,7 +1322,7 @@ msgstr "Избранное"
 
 #: src/StickerInspector.vala:140
 msgid "Show Custom Sticker Directory"
-msgstr ""
+msgstr "Показать каталог с собственными стикерами"
 
 #: src/StickerInspector.vala:214
 msgid "Add custom stickers"
@@ -1512,7 +1510,7 @@ msgstr "Домой"
 
 #: src/StickerSet.vala:71
 msgid "Icons8 cup"
-msgstr ""
+msgstr "Стаканчик с крышкой"
 
 #: src/StickerSet.vala:72
 msgid "Globe"
@@ -2032,7 +2030,7 @@ msgstr "Оговорка"
 
 #: src/StickerSet.vala:206
 msgid "Callback"
-msgstr ""
+msgstr "Обратный звонок"
 
 #: src/StickerSet.vala:207
 msgid "Service mark"
@@ -2132,7 +2130,7 @@ msgstr "Электрический датчик"
 
 #: src/StickerSet.vala:233
 msgid "Electrical threshold"
-msgstr ""
+msgstr "Пороговое напряжение"
 
 #: src/StickerSet.vala:234
 msgid "Automotive"
@@ -2140,7 +2138,7 @@ msgstr "Автостроение"
 
 #: src/StickerSet.vala:235
 msgid "Feed in"
-msgstr ""
+msgstr "Подача"
 
 #: src/StickerSet.vala:236
 msgid "Dam"
@@ -2152,7 +2150,7 @@ msgstr "Биотехнологии"
 
 #: src/StickerSet.vala:238
 msgid "Advance"
-msgstr ""
+msgstr "Движение вперед"
 
 #: src/StickerSet.vala:239
 msgid "Cloth"
@@ -2168,7 +2166,7 @@ msgstr "Развёртывание"
 
 #: src/StickerSet.vala:242
 msgid "Automatic"
-msgstr ""
+msgstr "Автоматический"
 
 #: src/StickerSet.vala:243
 msgid "Do not insert"
@@ -2524,7 +2522,7 @@ msgstr "Тепловая карта"
 
 #: src/StickerSet.vala:339
 msgid "Timeline"
-msgstr ""
+msgstr "Линия времени"
 
 #: src/StickerSet.vala:340
 msgid "Bar chart"
@@ -3027,9 +3025,8 @@ msgid "balance nodes"
 msgstr "балансировку узлов"
 
 #: src/undo_actions/UndoNodeCallout.vala:31
-#, fuzzy
 msgid "node callout changed"
-msgstr "изменение комментария к узлу"
+msgstr "смена выноски узла"
 
 #: src/undo_actions/UndoNodeCut.vala:33
 msgid "cut node"
@@ -3091,7 +3088,7 @@ msgstr "вставку узла"
 #: src/undo_actions/UndoNodeReparentLinkColor.vala:32
 #: src/undo_actions/UndoNodesReparentLinkColor.vala:33
 msgid "node link color reparent"
-msgstr ""
+msgstr "смена цвета узла на родительский"
 
 #: src/undo_actions/UndoNodeReparent.vala:32
 msgid "reparent children"
@@ -3158,19 +3155,16 @@ msgid "remove node sticker"
 msgstr "удаление стикера из узла"
 
 #: src/undo_actions/UndoNodeSummaryDelete.vala:32
-#, fuzzy
 msgid "delete summary node"
-msgstr "вставку узла"
+msgstr "удаление узла сводки"
 
 #: src/undo_actions/UndoNodeSummaryFromNode.vala:31
-#, fuzzy
 msgid "convert to summary node"
-msgstr "вставку узла"
+msgstr "превращение в узел сводки"
 
 #: src/undo_actions/UndoNodeSummary.vala:32
-#, fuzzy
 msgid "insert summary node"
-msgstr "вставку узла"
+msgstr "вставка узла сводки"
 
 #: src/undo_actions/UndoNodeTasks.vala:30
 msgid "node task changes"
@@ -3557,7 +3551,6 @@ msgid "Align Top Side"
 msgstr "Выровнять по верхней стороне"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:588
-#, fuzzy
 msgid "Align Vertical Center"
 msgstr "По центру вертикально"
 
@@ -3570,7 +3563,6 @@ msgid "Align Left Side"
 msgstr "Выровнять по левой стороне"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:609
-#, fuzzy
 msgid "Align Horizontal Center"
 msgstr "По центру горизонтально"
 
