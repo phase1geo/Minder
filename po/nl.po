@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-30 17:34-0600\n"
+"POT-Creation-Date: 2024-01-05 21:56-0600\n"
 "PO-Revision-Date: 2020-04-20 14:26+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: \n"
@@ -103,7 +103,7 @@ msgid "ERROR:  Unable to load Minder input file %s"
 msgstr ""
 
 #: src/CalloutMenu.vala:34 src/ConnectionMenu.vala:42
-#: src/ConnectionsMenu.vala:35 src/GroupsMenu.vala:40 src/NodeMenu.vala:87
+#: src/ConnectionsMenu.vala:35 src/GroupsMenu.vala:40 src/NodeMenu.vala:88
 #: src/NodesMenu.vala:56 src/ThemeEditor.vala:139
 msgid "Delete"
 msgstr "Verwijderen"
@@ -113,7 +113,7 @@ msgstr "Verwijderen"
 msgid "Select Node"
 msgstr "Knoop kiezen"
 
-#: src/Callout.vala:129 src/NodeMenu.vala:232
+#: src/Callout.vala:129 src/NodeMenu.vala:237
 msgid "Callout"
 msgstr ""
 
@@ -122,7 +122,7 @@ msgstr ""
 msgid "No text found"
 msgstr "Volgende woord"
 
-#: src/ConnectionInspector.vala:74 src/NodeMenu.vala:227
+#: src/ConnectionInspector.vala:74 src/NodeMenu.vala:232
 msgid "Connection"
 msgstr "Verbinding"
 
@@ -150,20 +150,20 @@ msgstr "Verbindingen verbergen"
 msgid "Edit Title…"
 msgstr "Titel aanpassen"
 
-#: src/ConnectionMenu.vala:50 src/GroupsMenu.vala:47 src/NodeMenu.vala:102
+#: src/ConnectionMenu.vala:50 src/GroupsMenu.vala:47 src/NodeMenu.vala:103
 #: data/com.github.phase1geo.minder.shortcuts.ui:338
 #: data/com.github.phase1geo.minder.shortcuts.ui:676
 #, fuzzy
 msgid "Edit Note"
 msgstr "Titel aanpassen"
 
-#: src/ConnectionMenu.vala:53 src/NodeMenu.vala:112
+#: src/ConnectionMenu.vala:53 src/NodeMenu.vala:113
 #, fuzzy
 msgid "Remove Sticker"
 msgstr "Aantekening wissen"
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
-#: src/NodeMenu.vala:182 src/NodesMenu.vala:98
+#: src/NodeMenu.vala:187 src/NodesMenu.vala:99
 msgid "Select"
 msgstr "Kiezen"
 
@@ -197,48 +197,48 @@ msgstr "Verbinding"
 msgid "unnamed"
 msgstr "naamloos"
 
-#: src/DrawArea.vala:775
+#: src/DrawArea.vala:778
 msgid "Main Idea"
 msgstr "Hoofdidee"
 
-#: src/DrawArea.vala:2638
+#: src/DrawArea.vala:2685
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% afgerond"
 
-#: src/DrawArea.vala:2652
+#: src/DrawArea.vala:2699
 msgid "Drag to resize node"
 msgstr ""
 
-#: src/DrawArea.vala:2654
+#: src/DrawArea.vala:2701
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:2782
+#: src/DrawArea.vala:2829
 #, fuzzy, c-format
 msgid "Children: %u\n"
 msgstr "Subknopen inklappen"
 
-#: src/DrawArea.vala:2783
+#: src/DrawArea.vala:2830
 #, c-format
 msgid "Total: %d"
 msgstr ""
 
-#: src/DrawArea.vala:2832
+#: src/DrawArea.vala:2879
 msgid "connection endpoint change"
 msgstr "eindknoop van verbinding aanpassen"
 
-#: src/DrawArea.vala:2839
+#: src/DrawArea.vala:2886
 msgid "connection drag"
 msgstr "verbinding verslepen"
 
-#: src/DrawArea.vala:3554 src/DrawArea.vala:3568 src/DrawArea.vala:5474
+#: src/DrawArea.vala:3659 src/DrawArea.vala:3673 src/DrawArea.vala:5642
 msgid "Another Idea"
 msgstr "Nóg een idee"
 
-#: src/DrawArea.vala:4927 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:5095 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:225 src/MapInspector.vala:448
 msgid "Manual"
 msgstr "Handmatig"
@@ -289,11 +289,11 @@ msgstr ""
 "<big>Kies een knoop of verbinding\n"
 "om informatie te tonen/aan te passen</big>"
 
-#: src/EmptyMenu.vala:38 src/NodeMenu.vala:79 src/TextMenu.vala:52
+#: src/EmptyMenu.vala:38 src/NodeMenu.vala:80 src/TextMenu.vala:52
 msgid "Paste"
 msgstr "Plakken"
 
-#: src/EmptyMenu.vala:42 src/NodeMenu.vala:155
+#: src/EmptyMenu.vala:42 src/NodeMenu.vala:156
 msgid "Add Root Node"
 msgstr "Beginpunt toevoegen"
 
@@ -508,7 +508,7 @@ msgstr "Knoop kopiëren"
 msgid "All Grouped Nodes"
 msgstr ""
 
-#: src/GroupsMenu.vala:111 src/NodeMenu.vala:676 src/NodesMenu.vala:288
+#: src/GroupsMenu.vala:111 src/NodeMenu.vala:689 src/NodesMenu.vala:289
 msgid "Select a link color"
 msgstr "Verbindingskleur kiezen"
 
@@ -545,7 +545,7 @@ msgstr "Knoop knippen naar klembord"
 msgid "Paste Image from Clipboard"
 msgstr "Knoop knippen naar klembord"
 
-#: src/ImageEditor.vala:396 src/NodeInspector.vala:292 src/NodeMenu.vala:439
+#: src/ImageEditor.vala:396 src/NodeInspector.vala:292 src/NodeMenu.vala:447
 msgid "Remove Image"
 msgstr "Afbeelding verwijderen"
 
@@ -898,202 +898,207 @@ msgstr "Knoop verwijderen"
 msgid "No node found"
 msgstr "Knoopopdrachten"
 
-#: src/NodeMenu.vala:71 src/NodesMenu.vala:48 src/TextMenu.vala:44
+#: src/NodeMenu.vala:72 src/NodesMenu.vala:48 src/TextMenu.vala:44
 msgid "Copy"
 msgstr "Kopiëren"
 
-#: src/NodeMenu.vala:75 src/NodesMenu.vala:52 src/TextMenu.vala:48
+#: src/NodeMenu.vala:76 src/NodesMenu.vala:52 src/TextMenu.vala:48
 msgid "Cut"
 msgstr "Knippen"
 
-#: src/NodeMenu.vala:83 src/NodeMenu.vala:451
+#: src/NodeMenu.vala:84 src/NodeMenu.vala:459
 msgid "Paste and Replace Node"
 msgstr ""
 
-#: src/NodeMenu.vala:90
+#: src/NodeMenu.vala:91
 msgid "Delete Single Node"
 msgstr "Knoop verwijderen"
 
-#: src/NodeMenu.vala:93
+#: src/NodeMenu.vala:94
 #, fuzzy
 msgid "Change Node"
 msgstr "Afbeelding wijzigen"
 
-#: src/NodeMenu.vala:98
+#: src/NodeMenu.vala:99
 #, fuzzy
 msgid "Edit Text…"
 msgstr "Aanpassen…"
 
-#: src/NodeMenu.vala:106 src/NodeMenu.vala:421
+#: src/NodeMenu.vala:107 src/NodeMenu.vala:429
 msgid "Add Task"
 msgstr "Taak toevoegen"
 
-#: src/NodeMenu.vala:109 src/NodeMenu.vala:439
+#: src/NodeMenu.vala:110 src/NodeMenu.vala:447
 msgid "Add Image"
 msgstr "Afbeelding toevoegen"
 
-#: src/NodeMenu.vala:116 src/NodeMenu.vala:422
+#: src/NodeMenu.vala:117 src/NodeMenu.vala:430
 msgid "Add Node Link"
 msgstr "Knopen verbinden"
 
-#: src/NodeMenu.vala:120
+#: src/NodeMenu.vala:121
 msgid "Add Connection"
 msgstr "Verbinding toevoegen"
 
-#: src/NodeMenu.vala:124
+#: src/NodeMenu.vala:125
 msgid "Add Group"
 msgstr ""
 
-#: src/NodeMenu.vala:128 src/NodeMenu.vala:424
+#: src/NodeMenu.vala:129 src/NodeMenu.vala:432
 msgid "Add Callout"
 msgstr ""
 
-#: src/NodeMenu.vala:131 src/ThemeEditor.vala:132
+#: src/NodeMenu.vala:132 src/ThemeEditor.vala:132
 msgid "Link Color"
 msgstr "Verbindingskleur"
 
-#: src/NodeMenu.vala:135 src/NodesMenu.vala:83
+#: src/NodeMenu.vala:136 src/NodesMenu.vala:84
 msgid "Set to color…"
 msgstr "Kleur instellen…"
 
-#: src/NodeMenu.vala:138
+#: src/NodeMenu.vala:139
 msgid "Randomize color"
 msgstr "Willekeurig"
 
-#: src/NodeMenu.vala:141 src/NodesMenu.vala:89
+#: src/NodeMenu.vala:142 src/NodesMenu.vala:90
 msgid "Use parent color"
 msgstr "Overnemen van vorige"
 
-#: src/NodeMenu.vala:145 src/NodeMenu.vala:423 src/NodesMenu.vala:64
-#: src/NodesMenu.vala:221
+#: src/NodeMenu.vala:146 src/NodeMenu.vala:431 src/NodesMenu.vala:64
+#: src/NodesMenu.vala:222
 msgid "Fold Children"
 msgstr "Subknopen inklappen"
 
-#: src/NodeMenu.vala:148
+#: src/NodeMenu.vala:149
 msgid "Detach"
 msgstr "Losmaken"
 
-#: src/NodeMenu.vala:151
+#: src/NodeMenu.vala:152
 #, fuzzy
 msgid "Add Node"
 msgstr "Aantekening maken"
 
-#: src/NodeMenu.vala:158
+#: src/NodeMenu.vala:159
 msgid "Add Parent Node"
 msgstr "Tak toevoegen"
 
-#: src/NodeMenu.vala:162
+#: src/NodeMenu.vala:163
 msgid "Add Child Node"
 msgstr "Subknoop toevoegen"
 
-#: src/NodeMenu.vala:166
+#: src/NodeMenu.vala:167
 msgid "Add Sibling Node"
 msgstr "Afgeleide knoop toevoegen"
 
-#: src/NodeMenu.vala:170 src/QuickEntry.vala:44
+#: src/NodeMenu.vala:171
+#, fuzzy
+msgid "Use to Summarize Previous Sibling Nodes"
+msgstr "Vorige afgeleide knoop"
+
+#: src/NodeMenu.vala:175 src/QuickEntry.vala:44
 msgid "Quick Entry"
 msgstr "Snel toevoegen"
 
-#: src/NodeMenu.vala:174
+#: src/NodeMenu.vala:179
 #, fuzzy
 msgid "Insert Nodes"
 msgstr "knoop invoegen"
 
-#: src/NodeMenu.vala:178
+#: src/NodeMenu.vala:183
 #, fuzzy
 msgid "Replace Nodes"
 msgstr "Knopen uitlijnen"
 
-#: src/NodeMenu.vala:187
+#: src/NodeMenu.vala:192
 msgid "Root Node"
 msgstr "Beginpunt"
 
-#: src/NodeMenu.vala:192
+#: src/NodeMenu.vala:197
 msgid "Next Sibling Node"
 msgstr "Volgende afgeleide knoop"
 
-#: src/NodeMenu.vala:197
+#: src/NodeMenu.vala:202
 msgid "Previous Sibling Node"
 msgstr "Vorige afgeleide knoop"
 
-#: src/NodeMenu.vala:202
+#: src/NodeMenu.vala:207
 msgid "Child Node"
 msgstr "Subknoop"
 
-#: src/NodeMenu.vala:207 src/NodesMenu.vala:107
+#: src/NodeMenu.vala:212 src/NodesMenu.vala:108
 #, fuzzy
 msgid "Child Nodes"
 msgstr "Subknoop"
 
-#: src/NodeMenu.vala:212
+#: src/NodeMenu.vala:217
 msgid "Subtree"
 msgstr ""
 
-#: src/NodeMenu.vala:217
+#: src/NodeMenu.vala:222
 msgid "Parent Node"
 msgstr "Tak"
 
-#: src/NodeMenu.vala:222
+#: src/NodeMenu.vala:227
 msgid "Linked Node"
 msgstr "Verbonden knoop"
 
-#: src/NodeMenu.vala:236
+#: src/NodeMenu.vala:241
 msgid "Center Current Node"
 msgstr "Huidige knoop centreren"
 
-#: src/NodeMenu.vala:240
+#: src/NodeMenu.vala:245
 msgid "Sort Children"
 msgstr "Subknopen sorteren"
 
-#: src/NodeMenu.vala:244
+#: src/NodeMenu.vala:249
 msgid "Alphabetically"
 msgstr "Alfabetisch"
 
-#: src/NodeMenu.vala:247
+#: src/NodeMenu.vala:252
 msgid "Randomize"
 msgstr "Willekeurig"
 
-#: src/NodeMenu.vala:419
+#: src/NodeMenu.vala:427
 msgid "Remove Task"
 msgstr "Taak verwijderen"
 
-#: src/NodeMenu.vala:420
+#: src/NodeMenu.vala:428
 #, fuzzy
 msgid "Mark Task As Done"
 msgstr "Taak (de)markeren als afgerond"
 
-#: src/NodeMenu.vala:422
+#: src/NodeMenu.vala:430
 msgid "Remove Node Link"
 msgstr "Verbindingsknooop verwijderen"
 
-#: src/NodeMenu.vala:423 src/NodesMenu.vala:221
+#: src/NodeMenu.vala:431 src/NodesMenu.vala:222
 msgid "Unfold Children"
 msgstr "Subknopen uitklappen"
 
-#: src/NodeMenu.vala:424 data/com.github.phase1geo.minder.shortcuts.ui:636
+#: src/NodeMenu.vala:432 data/com.github.phase1geo.minder.shortcuts.ui:636
 #, fuzzy
 msgid "Remove Callout"
 msgstr "Taak verwijderen"
 
-#: src/NodeMenu.vala:444
+#: src/NodeMenu.vala:452
 #, fuzzy
 msgid "Paste Text As Child Node"
 msgstr "Plakken als subknoop"
 
-#: src/NodeMenu.vala:445
+#: src/NodeMenu.vala:453
 msgid "Paste and Replace Node Text"
 msgstr ""
 
-#: src/NodeMenu.vala:447
+#: src/NodeMenu.vala:455
 #, fuzzy
 msgid "Paste Image As Child Node"
 msgstr "Plakken als subknoop"
 
-#: src/NodeMenu.vala:448
+#: src/NodeMenu.vala:456
 msgid "Paste and Replace Node Image"
 msgstr ""
 
-#: src/NodeMenu.vala:450
+#: src/NodeMenu.vala:458
 #, fuzzy
 msgid "Paste Node As Child"
 msgstr "Plakken als subknoop"
@@ -1108,74 +1113,69 @@ msgstr "Taak (de)markeren als afgerond"
 msgid "Connect"
 msgstr "Verbinding"
 
-#: src/NodesMenu.vala:72 src/NodesMenu.vala:222
+#: src/NodesMenu.vala:72 src/NodesMenu.vala:223
 #, fuzzy
 msgid "Link Nodes"
 msgstr "Verbonden knoop"
 
-#: src/NodesMenu.vala:75
-#, fuzzy
-msgid "Add Summary Node"
-msgstr "Tak toevoegen"
-
-#: src/NodesMenu.vala:80 src/ThemeEditor.vala:125
+#: src/NodesMenu.vala:81 src/ThemeEditor.vala:125
 #, fuzzy
 msgid "Link Colors"
 msgstr "Verbindingskleur"
 
-#: src/NodesMenu.vala:86
+#: src/NodesMenu.vala:87
 #, fuzzy
 msgid "Randomize colors"
 msgstr "Willekeurig"
 
-#: src/NodesMenu.vala:102
+#: src/NodesMenu.vala:103
 #, fuzzy
 msgid "Parent Nodes"
 msgstr "Tak"
 
-#: src/NodesMenu.vala:116
+#: src/NodesMenu.vala:117
 #, fuzzy
 msgid "Align Nodes"
 msgstr "Knopen uitlijnen"
 
-#: src/NodesMenu.vala:120
+#: src/NodesMenu.vala:121
 msgid "Align Top"
 msgstr ""
 
-#: src/NodesMenu.vala:124
+#: src/NodesMenu.vala:125
 msgid "Align Center Horizontally"
 msgstr ""
 
-#: src/NodesMenu.vala:128
+#: src/NodesMenu.vala:129
 msgid "Align Bottom"
 msgstr ""
 
-#: src/NodesMenu.vala:132
+#: src/NodesMenu.vala:133
 msgid "Align Left"
 msgstr ""
 
-#: src/NodesMenu.vala:136
+#: src/NodesMenu.vala:137
 msgid "Align Center Vertically"
 msgstr ""
 
-#: src/NodesMenu.vala:140
+#: src/NodesMenu.vala:141
 msgid "Align Right"
 msgstr ""
 
-#: src/NodesMenu.vala:222
+#: src/NodesMenu.vala:223
 #, fuzzy
 msgid "Remove Node Links"
 msgstr "Verbindingsknooop verwijderen"
 
-#: src/Node.vala:2221
+#: src/Node.vala:2322
 msgid "Node Title"
 msgstr "Titel van knoop"
 
-#: src/Node.vala:2229
+#: src/Node.vala:2330
 msgid "Node Note"
 msgstr "Aantekening"
 
-#: src/Node.vala:2240
+#: src/Node.vala:2341
 #, fuzzy
 msgid "Callout Text"
 msgstr "Tekst plakken"
@@ -3158,8 +3158,8 @@ msgstr ""
 msgid "add parent node"
 msgstr "Tak toevoegen"
 
-#: src/undo_actions/UndoNodeAttach.vala:39
-#: src/undo_actions/UndoNodeAttach.vala:54
+#: src/undo_actions/UndoNodeAttach.vala:41
+#: src/undo_actions/UndoNodeAttach.vala:58
 msgid "attach node"
 msgstr "knoop vastmaken"
 
@@ -3216,7 +3216,7 @@ msgstr "verbindingskleur aanpassen"
 msgid "node link change"
 msgstr "taak aanpassen"
 
-#: src/undo_actions/UndoNodeMove.vala:34
+#: src/undo_actions/UndoNodeMove.vala:36
 msgid "move node"
 msgstr "knoop verplaatsen"
 
@@ -3315,6 +3315,16 @@ msgstr "Aantekening wissen"
 #, fuzzy
 msgid "remove node sticker"
 msgstr "Aantekening wissen"
+
+#: src/undo_actions/UndoNodeSummaryDelete.vala:32
+#, fuzzy
+msgid "delete summary node"
+msgstr "knoop invoegen"
+
+#: src/undo_actions/UndoNodeSummaryFromNode.vala:31
+#, fuzzy
+msgid "convert to summary node"
+msgstr "knoop invoegen"
 
 #: src/undo_actions/UndoNodeSummary.vala:32
 #, fuzzy
@@ -4092,6 +4102,10 @@ msgstr "Tak kiezen"
 #: data/com.github.phase1geo.minder.shortcuts.ui:1101
 msgid "[Triple left-click anywhere in text]"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Add Summary Node"
+#~ msgstr "Tak toevoegen"
 
 #, fuzzy
 #~ msgid "Export File"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-30 17:34-0600\n"
+"POT-Creation-Date: 2024-01-05 21:56-0600\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -103,7 +103,7 @@ msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "ERROR: Nelze otevřít soubor '%s'\n"
 
 #: src/CalloutMenu.vala:34 src/ConnectionMenu.vala:42
-#: src/ConnectionsMenu.vala:35 src/GroupsMenu.vala:40 src/NodeMenu.vala:87
+#: src/ConnectionsMenu.vala:35 src/GroupsMenu.vala:40 src/NodeMenu.vala:88
 #: src/NodesMenu.vala:56 src/ThemeEditor.vala:139
 msgid "Delete"
 msgstr "Smazat"
@@ -113,7 +113,7 @@ msgstr "Smazat"
 msgid "Select Node"
 msgstr "Vybrat uzel"
 
-#: src/Callout.vala:129 src/NodeMenu.vala:232
+#: src/Callout.vala:129 src/NodeMenu.vala:237
 msgid "Callout"
 msgstr ""
 
@@ -121,7 +121,7 @@ msgstr ""
 msgid "No text found"
 msgstr "Text nenalezen"
 
-#: src/ConnectionInspector.vala:74 src/NodeMenu.vala:227
+#: src/ConnectionInspector.vala:74 src/NodeMenu.vala:232
 msgid "Connection"
 msgstr "Spojení"
 
@@ -146,18 +146,18 @@ msgstr "Smazat spojení"
 msgid "Edit Title…"
 msgstr "Upravit název…"
 
-#: src/ConnectionMenu.vala:50 src/GroupsMenu.vala:47 src/NodeMenu.vala:102
+#: src/ConnectionMenu.vala:50 src/GroupsMenu.vala:47 src/NodeMenu.vala:103
 #: data/com.github.phase1geo.minder.shortcuts.ui:338
 #: data/com.github.phase1geo.minder.shortcuts.ui:676
 msgid "Edit Note"
 msgstr "Upravit poznámku"
 
-#: src/ConnectionMenu.vala:53 src/NodeMenu.vala:112
+#: src/ConnectionMenu.vala:53 src/NodeMenu.vala:113
 msgid "Remove Sticker"
 msgstr "Odstranit nálepku"
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
-#: src/NodeMenu.vala:182 src/NodesMenu.vala:98
+#: src/NodeMenu.vala:187 src/NodesMenu.vala:99
 msgid "Select"
 msgstr "Vybrat"
 
@@ -189,48 +189,48 @@ msgstr "Poznámka ke spojení"
 msgid "unnamed"
 msgstr "nepomenováno"
 
-#: src/DrawArea.vala:775
+#: src/DrawArea.vala:778
 msgid "Main Idea"
 msgstr "Hlavní myšlenka"
 
-#: src/DrawArea.vala:2638
+#: src/DrawArea.vala:2685
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% hotovo"
 
-#: src/DrawArea.vala:2652
+#: src/DrawArea.vala:2699
 msgid "Drag to resize node"
 msgstr ""
 
-#: src/DrawArea.vala:2654
+#: src/DrawArea.vala:2701
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:2782
+#: src/DrawArea.vala:2829
 #, c-format
 msgid "Children: %u\n"
 msgstr "Podřadných uzlů: %u\n"
 
-#: src/DrawArea.vala:2783
+#: src/DrawArea.vala:2830
 #, c-format
 msgid "Total: %d"
 msgstr "Celkově: %d"
 
-#: src/DrawArea.vala:2832
+#: src/DrawArea.vala:2879
 msgid "connection endpoint change"
 msgstr "změna konce spojení"
 
-#: src/DrawArea.vala:2839
+#: src/DrawArea.vala:2886
 msgid "connection drag"
 msgstr "přetáhnutí spojení"
 
-#: src/DrawArea.vala:3554 src/DrawArea.vala:3568 src/DrawArea.vala:5474
+#: src/DrawArea.vala:3659 src/DrawArea.vala:3673 src/DrawArea.vala:5642
 msgid "Another Idea"
 msgstr "Další myšlenka"
 
-#: src/DrawArea.vala:4927 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:5095 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:225 src/MapInspector.vala:448
 msgid "Manual"
 msgstr "Ruční"
@@ -280,11 +280,11 @@ msgstr ""
 "Vyberte uzel nebo spojení\n"
 "pro zobrazení/upravení informací"
 
-#: src/EmptyMenu.vala:38 src/NodeMenu.vala:79 src/TextMenu.vala:52
+#: src/EmptyMenu.vala:38 src/NodeMenu.vala:80 src/TextMenu.vala:52
 msgid "Paste"
 msgstr "Vložit"
 
-#: src/EmptyMenu.vala:42 src/NodeMenu.vala:155
+#: src/EmptyMenu.vala:42 src/NodeMenu.vala:156
 msgid "Add Root Node"
 msgstr "Přidat kořenový uzel"
 
@@ -494,7 +494,7 @@ msgstr "Vrchní uzle"
 msgid "All Grouped Nodes"
 msgstr "Všechny sdružené uzle"
 
-#: src/GroupsMenu.vala:111 src/NodeMenu.vala:676 src/NodesMenu.vala:288
+#: src/GroupsMenu.vala:111 src/NodeMenu.vala:689 src/NodesMenu.vala:289
 msgid "Select a link color"
 msgstr "Vyberte barvu odkazu"
 
@@ -528,7 +528,7 @@ msgstr "Vyjmout obrázek do schránky"
 msgid "Paste Image from Clipboard"
 msgstr "Vložit obrázek ze schránky"
 
-#: src/ImageEditor.vala:396 src/NodeInspector.vala:292 src/NodeMenu.vala:439
+#: src/ImageEditor.vala:396 src/NodeInspector.vala:292 src/NodeMenu.vala:447
 msgid "Remove Image"
 msgstr "Odstranit obrázek"
 
@@ -872,194 +872,199 @@ msgstr "Smazat uzel"
 msgid "No node found"
 msgstr "Nenalezen žádný uzel"
 
-#: src/NodeMenu.vala:71 src/NodesMenu.vala:48 src/TextMenu.vala:44
+#: src/NodeMenu.vala:72 src/NodesMenu.vala:48 src/TextMenu.vala:44
 msgid "Copy"
 msgstr "Kopírovat"
 
-#: src/NodeMenu.vala:75 src/NodesMenu.vala:52 src/TextMenu.vala:48
+#: src/NodeMenu.vala:76 src/NodesMenu.vala:52 src/TextMenu.vala:48
 msgid "Cut"
 msgstr "Vyjmout"
 
-#: src/NodeMenu.vala:83 src/NodeMenu.vala:451
+#: src/NodeMenu.vala:84 src/NodeMenu.vala:459
 msgid "Paste and Replace Node"
 msgstr "Režim vložení a nahrazení"
 
-#: src/NodeMenu.vala:90
+#: src/NodeMenu.vala:91
 msgid "Delete Single Node"
 msgstr "Smazat jednotlivý uzel"
 
-#: src/NodeMenu.vala:93
+#: src/NodeMenu.vala:94
 msgid "Change Node"
 msgstr "Změnit uzly"
 
-#: src/NodeMenu.vala:98
+#: src/NodeMenu.vala:99
 msgid "Edit Text…"
 msgstr "Upravit text…"
 
-#: src/NodeMenu.vala:106 src/NodeMenu.vala:421
+#: src/NodeMenu.vala:107 src/NodeMenu.vala:429
 msgid "Add Task"
 msgstr "Přidat úkol"
 
-#: src/NodeMenu.vala:109 src/NodeMenu.vala:439
+#: src/NodeMenu.vala:110 src/NodeMenu.vala:447
 msgid "Add Image"
 msgstr "Přidat obrázek"
 
-#: src/NodeMenu.vala:116 src/NodeMenu.vala:422
+#: src/NodeMenu.vala:117 src/NodeMenu.vala:430
 msgid "Add Node Link"
 msgstr "Přidat poznámku k odkazu"
 
-#: src/NodeMenu.vala:120
+#: src/NodeMenu.vala:121
 msgid "Add Connection"
 msgstr "Přidat spojení"
 
-#: src/NodeMenu.vala:124
+#: src/NodeMenu.vala:125
 msgid "Add Group"
 msgstr "Přidat skupinu"
 
-#: src/NodeMenu.vala:128 src/NodeMenu.vala:424
+#: src/NodeMenu.vala:129 src/NodeMenu.vala:432
 #, fuzzy
 msgid "Add Callout"
 msgstr "Přidat skupinu"
 
-#: src/NodeMenu.vala:131 src/ThemeEditor.vala:132
+#: src/NodeMenu.vala:132 src/ThemeEditor.vala:132
 msgid "Link Color"
 msgstr "Barva odkazu"
 
-#: src/NodeMenu.vala:135 src/NodesMenu.vala:83
+#: src/NodeMenu.vala:136 src/NodesMenu.vala:84
 msgid "Set to color…"
 msgstr "Nastavit barvu…"
 
-#: src/NodeMenu.vala:138
+#: src/NodeMenu.vala:139
 msgid "Randomize color"
 msgstr "Randomizovat barvu"
 
-#: src/NodeMenu.vala:141 src/NodesMenu.vala:89
+#: src/NodeMenu.vala:142 src/NodesMenu.vala:90
 msgid "Use parent color"
 msgstr "Použít nadřazenou barvu"
 
-#: src/NodeMenu.vala:145 src/NodeMenu.vala:423 src/NodesMenu.vala:64
-#: src/NodesMenu.vala:221
+#: src/NodeMenu.vala:146 src/NodeMenu.vala:431 src/NodesMenu.vala:64
+#: src/NodesMenu.vala:222
 msgid "Fold Children"
 msgstr "Sbalit podřadné uzly"
 
-#: src/NodeMenu.vala:148
+#: src/NodeMenu.vala:149
 msgid "Detach"
 msgstr "Odpojit"
 
-#: src/NodeMenu.vala:151
+#: src/NodeMenu.vala:152
 msgid "Add Node"
 msgstr "Přidat uzel"
 
-#: src/NodeMenu.vala:158
+#: src/NodeMenu.vala:159
 msgid "Add Parent Node"
 msgstr "Hledat nadřazený uzel"
 
-#: src/NodeMenu.vala:162
+#: src/NodeMenu.vala:163
 msgid "Add Child Node"
 msgstr "Přidat podřadný uzel"
 
-#: src/NodeMenu.vala:166
+#: src/NodeMenu.vala:167
 msgid "Add Sibling Node"
 msgstr "Přidat souřadný uzel"
 
-#: src/NodeMenu.vala:170 src/QuickEntry.vala:44
+#: src/NodeMenu.vala:171
+#, fuzzy
+msgid "Use to Summarize Previous Sibling Nodes"
+msgstr "Předchozí souřadný uzel"
+
+#: src/NodeMenu.vala:175 src/QuickEntry.vala:44
 msgid "Quick Entry"
 msgstr "Rychlé zadávání"
 
-#: src/NodeMenu.vala:174
+#: src/NodeMenu.vala:179
 msgid "Insert Nodes"
 msgstr "Vložit uzly"
 
-#: src/NodeMenu.vala:178
+#: src/NodeMenu.vala:183
 msgid "Replace Nodes"
 msgstr "Nahradit uzly"
 
-#: src/NodeMenu.vala:187
+#: src/NodeMenu.vala:192
 msgid "Root Node"
 msgstr "Kořenový uzel"
 
-#: src/NodeMenu.vala:192
+#: src/NodeMenu.vala:197
 msgid "Next Sibling Node"
 msgstr "Další souřadný uzel"
 
-#: src/NodeMenu.vala:197
+#: src/NodeMenu.vala:202
 msgid "Previous Sibling Node"
 msgstr "Předchozí souřadný uzel"
 
-#: src/NodeMenu.vala:202
+#: src/NodeMenu.vala:207
 msgid "Child Node"
 msgstr "Podřadný uzel"
 
-#: src/NodeMenu.vala:207 src/NodesMenu.vala:107
+#: src/NodeMenu.vala:212 src/NodesMenu.vala:108
 msgid "Child Nodes"
 msgstr "Podřadné uzly"
 
-#: src/NodeMenu.vala:212
+#: src/NodeMenu.vala:217
 msgid "Subtree"
 msgstr "Podřadný strom"
 
-#: src/NodeMenu.vala:217
+#: src/NodeMenu.vala:222
 msgid "Parent Node"
 msgstr "Nadřazený uzel"
 
-#: src/NodeMenu.vala:222
+#: src/NodeMenu.vala:227
 msgid "Linked Node"
 msgstr "Spojený uzel"
 
-#: src/NodeMenu.vala:236
+#: src/NodeMenu.vala:241
 msgid "Center Current Node"
 msgstr "Zarovnat tento uzel na střed"
 
-#: src/NodeMenu.vala:240
+#: src/NodeMenu.vala:245
 msgid "Sort Children"
 msgstr "Třídit podřadné uzly"
 
-#: src/NodeMenu.vala:244
+#: src/NodeMenu.vala:249
 msgid "Alphabetically"
 msgstr "Abecedně"
 
-#: src/NodeMenu.vala:247
+#: src/NodeMenu.vala:252
 msgid "Randomize"
 msgstr "Randomizovat"
 
-#: src/NodeMenu.vala:419
+#: src/NodeMenu.vala:427
 msgid "Remove Task"
 msgstr "Odstranit úkol"
 
-#: src/NodeMenu.vala:420
+#: src/NodeMenu.vala:428
 msgid "Mark Task As Done"
 msgstr "Označit úkol za splněný"
 
-#: src/NodeMenu.vala:422
+#: src/NodeMenu.vala:430
 msgid "Remove Node Link"
 msgstr "Odstranit odkaz uzlu"
 
-#: src/NodeMenu.vala:423 src/NodesMenu.vala:221
+#: src/NodeMenu.vala:431 src/NodesMenu.vala:222
 msgid "Unfold Children"
 msgstr "Rozbalit podřadné uzly"
 
-#: src/NodeMenu.vala:424 data/com.github.phase1geo.minder.shortcuts.ui:636
+#: src/NodeMenu.vala:432 data/com.github.phase1geo.minder.shortcuts.ui:636
 #, fuzzy
 msgid "Remove Callout"
 msgstr "Odstranit úkol"
 
-#: src/NodeMenu.vala:444
+#: src/NodeMenu.vala:452
 msgid "Paste Text As Child Node"
 msgstr "Vložit uzel jako podřadný"
 
-#: src/NodeMenu.vala:445
+#: src/NodeMenu.vala:453
 msgid "Paste and Replace Node Text"
 msgstr "Vložit a nahradit text uzlu"
 
-#: src/NodeMenu.vala:447
+#: src/NodeMenu.vala:455
 msgid "Paste Image As Child Node"
 msgstr "Vložit obrázek jako podřadný uzel"
 
-#: src/NodeMenu.vala:448
+#: src/NodeMenu.vala:456
 msgid "Paste and Replace Node Image"
 msgstr "Vložit a nahradit obrázek uzlu"
 
-#: src/NodeMenu.vala:450
+#: src/NodeMenu.vala:458
 msgid "Paste Node As Child"
 msgstr "Vložit uzel jako podřadný"
 
@@ -1071,68 +1076,63 @@ msgstr "Přepnout úkoly"
 msgid "Connect"
 msgstr "Spojit"
 
-#: src/NodesMenu.vala:72 src/NodesMenu.vala:222
+#: src/NodesMenu.vala:72 src/NodesMenu.vala:223
 msgid "Link Nodes"
 msgstr "Uzly s odkazem"
 
-#: src/NodesMenu.vala:75
-#, fuzzy
-msgid "Add Summary Node"
-msgstr "Hledat nadřazený uzel"
-
-#: src/NodesMenu.vala:80 src/ThemeEditor.vala:125
+#: src/NodesMenu.vala:81 src/ThemeEditor.vala:125
 msgid "Link Colors"
 msgstr "Barvy odkazu"
 
-#: src/NodesMenu.vala:86
+#: src/NodesMenu.vala:87
 msgid "Randomize colors"
 msgstr "Randomizovat barvy"
 
-#: src/NodesMenu.vala:102
+#: src/NodesMenu.vala:103
 msgid "Parent Nodes"
 msgstr "Nadřazené uzly"
 
-#: src/NodesMenu.vala:116
+#: src/NodesMenu.vala:117
 msgid "Align Nodes"
 msgstr "Zarovnat uzly"
 
-#: src/NodesMenu.vala:120
+#: src/NodesMenu.vala:121
 msgid "Align Top"
 msgstr "Zarovnat nahoru"
 
-#: src/NodesMenu.vala:124
+#: src/NodesMenu.vala:125
 msgid "Align Center Horizontally"
 msgstr "Zarovnat prostředek vodorovně"
 
-#: src/NodesMenu.vala:128
+#: src/NodesMenu.vala:129
 msgid "Align Bottom"
 msgstr "Zarovnat dolů"
 
-#: src/NodesMenu.vala:132
+#: src/NodesMenu.vala:133
 msgid "Align Left"
 msgstr "Zarovnat vlevo"
 
-#: src/NodesMenu.vala:136
+#: src/NodesMenu.vala:137
 msgid "Align Center Vertically"
 msgstr "Zarovnat prostředek svisle"
 
-#: src/NodesMenu.vala:140
+#: src/NodesMenu.vala:141
 msgid "Align Right"
 msgstr "Zarovnat vpravo"
 
-#: src/NodesMenu.vala:222
+#: src/NodesMenu.vala:223
 msgid "Remove Node Links"
 msgstr "Odstranit odkazy uzlu"
 
-#: src/Node.vala:2221
+#: src/Node.vala:2322
 msgid "Node Title"
 msgstr "Název poznámky"
 
-#: src/Node.vala:2229
+#: src/Node.vala:2330
 msgid "Node Note"
 msgstr "Poznámka uzlu"
 
-#: src/Node.vala:2240
+#: src/Node.vala:2341
 #, fuzzy
 msgid "Callout Text"
 msgstr "Vložit text"
@@ -3038,8 +3038,8 @@ msgstr "odstranit skupiny"
 msgid "add parent node"
 msgstr "přidat nadřazený uzel"
 
-#: src/undo_actions/UndoNodeAttach.vala:39
-#: src/undo_actions/UndoNodeAttach.vala:54
+#: src/undo_actions/UndoNodeAttach.vala:41
+#: src/undo_actions/UndoNodeAttach.vala:58
 msgid "attach node"
 msgstr "připojit uzel"
 
@@ -3093,7 +3093,7 @@ msgstr "změna barvy odkazu"
 msgid "node link change"
 msgstr "změna odkazu uzlu"
 
-#: src/undo_actions/UndoNodeMove.vala:34
+#: src/undo_actions/UndoNodeMove.vala:36
 msgid "move node"
 msgstr "přesunout uzel"
 
@@ -3177,6 +3177,16 @@ msgstr "změnit nálepku uzlu"
 #: src/undo_actions/UndoNodeStickerRemove.vala:31
 msgid "remove node sticker"
 msgstr "odstranit nálepku uzlu"
+
+#: src/undo_actions/UndoNodeSummaryDelete.vala:32
+#, fuzzy
+msgid "delete summary node"
+msgstr "vložit uzel"
+
+#: src/undo_actions/UndoNodeSummaryFromNode.vala:31
+#, fuzzy
+msgid "convert to summary node"
+msgstr "vložit uzel"
 
 #: src/undo_actions/UndoNodeSummary.vala:32
 #, fuzzy
@@ -3895,6 +3905,10 @@ msgstr "Vybrat celý text"
 #: data/com.github.phase1geo.minder.shortcuts.ui:1101
 msgid "[Triple left-click anywhere in text]"
 msgstr "[trojité levé kliknutí kdekoliv v textu]"
+
+#, fuzzy
+#~ msgid "Add Summary Node"
+#~ msgstr "Hledat nadřazený uzel"
 
 #~ msgid "Export File"
 #~ msgstr "Exportovat soubor"

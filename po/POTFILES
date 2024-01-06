@@ -132,6 +132,8 @@ src/undo_actions/UndoNodesReplace.vala
 src/undo_actions/UndoNodeStickerAdd.vala
 src/undo_actions/UndoNodeStickerChange.vala
 src/undo_actions/UndoNodeStickerRemove.vala
+src/undo_actions/UndoNodeSummaryDelete.vala
+src/undo_actions/UndoNodeSummaryFromNode.vala
 src/undo_actions/UndoNodeSummary.vala
 src/undo_actions/UndoNodeTasks.vala
 src/undo_actions/UndoStickerAdd.vala
