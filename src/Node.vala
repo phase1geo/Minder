@@ -2065,6 +2065,7 @@ public class Node : Object {
    nodes will become top-level nodes themselves.
   */
   public virtual void delete_only() {
+    // FOOBAR - Need to account for tasks here
     if( parent == null ) {
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).parent   = null;
@@ -2074,6 +2075,7 @@ public class Node : Object {
       _da.remove_root_node( this );
     } else {
       int idx = index();
+      propagate_task_info_up( (0 - _task_count), (0 - _task_done) );
       parent.children().remove_index( idx );
       parent.moved.disconnect( this.parent_moved );
       if( parent.last_selected_child == this ) {
