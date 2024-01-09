@@ -4404,6 +4404,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Displays the quick entry UI in insertion mode */
   public void handle_control_E() {
     var quick_entry = new QuickEntry( this, false, _settings );
+    quick_entry.preload( "- " );
     quick_entry.show_all();
   }
 

@@ -126,8 +126,13 @@ public class QuickEntry : Gtk.Window {
       _apply = new Button.with_label( _( "Replace" ) );
       _apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
       _apply.clicked.connect( () => {
-        handle_replace();
-        close();
+        if( handle_replace() ) {
+          close();
+        } else {
+          helprev.reveal_child = true;
+          help_node0.get_style_context().add_class( "highlighted" );
+          help_node1.get_style_context().add_class( "highlighted" );
+        }
       });
       if( !da.is_node_selected() ) _apply.set_sensitive( false );
       bbox.pack_end( _apply, false, false );
@@ -135,8 +140,13 @@ public class QuickEntry : Gtk.Window {
       _apply = new Button.with_label( _( "Insert" ) );
       _apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
       _apply.clicked.connect(() => {
-        handle_insert();
-        close();
+        if( handle_insert() ) {
+          close();
+        } else {
+          helprev.reveal_child = true;
+          help_node0.get_style_context().add_class( "highlighted" );
+          help_node1.get_style_context().add_class( "highlighted" );
+        }
       });
       bbox.pack_end( _apply, false, false );
     }
@@ -173,7 +183,7 @@ public class QuickEntry : Gtk.Window {
 
   /* Called whenever text is inserted by the user (either by entry or by paste) */
   private void handle_text_insertion( ref TextIter pos, string new_text, int new_text_length ) {
-    var cleaned  = (pos.get_offset() == 0) ? new_text.chug() : new_text;
+    var cleaned = (pos.get_offset() == 0) ? new_text.chug() : new_text;
     if( cleaned != new_text ) {
       var void_entry = (void*)_entry;
       SignalHandler.block_by_func( void_entry, (void*)handle_text_insertion, this );
@@ -336,24 +346,66 @@ public class QuickEntry : Gtk.Window {
 
   }
 
+  /* Returns true if the current line describes the start of a new node */
+  private bool is_node_line( string line ) {
+    return( Regex.match_simple( "^[ \\t]*[+*#-]", line ) );
+  }
+
+  /* Returns true if the current line is a blank line */
+  private bool is_blank_line( string line ) {
+    return( line.strip() == "" );
+  }
+
   /* Converts the given whitespace to all spaces */
   private string tabs_to_spaces( string wspace ) {
-
     var tspace = string.nfill( 8, ' ' );
-
     return( wspace.replace( "\t", tspace ) );
+  }
+
+  /* Aligns the given prefix whitespace to be tabbed properly */
+  private string align_to_tab( string wspace ) {
+    var ws = tabs_to_spaces( wspace );
+    return( string.nfill( (ws.char_count() / 8), '\t' ) );
+  }
+
+  /* Deletes the whitespace on the current line */
+  private void delete_whitespace( string? ins_text = null ) {
+
+    string ws;
+    if( get_whitespace( get_line_text( 0 ), out ws ) ) {
+
+      TextIter current;
+      TextIter start;
+      var      buf = _entry.buffer;
+
+      buf.get_iter_at_mark( out current, buf.get_insert() );
+      buf.get_iter_at_line( out start,   current.get_line() );
+
+      var end = start.copy();
+      end.forward_chars( ws.char_count() );
+
+      buf.delete( ref start, ref end );
+
+      if( ins_text != null ) {
+        buf.insert_text( ref start, ins_text, ins_text.length );
+      }
+
+    }
 
   }
 
+  /* Handles any keypresses in the quick entry text field */
   private bool on_keypress( EventKey e ) {
 
     var control = (bool)(e.state & ModifierType.CONTROL_MASK);
+    var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
 
     switch( e.keyval ) {
-      case 32    :  return( handle_space() );
-      case 65293 :  return( handle_return( control ) );
-      case 65289 :  return( handle_tab() );
-      default    :
+      case Key.space        :  return( handle_space() );
+      case Key.Return       :  return( handle_return( control ) );
+      case Key.Tab          :  return( handle_tab( false ) );
+      case Key.ISO_Left_Tab :  return( handle_tab( true ) );
+      default             :
         if( e.str.get_char().isprint() ) {
           return( handle_printable( e.str ) );
         }
@@ -382,11 +434,8 @@ public class QuickEntry : Gtk.Window {
     string wspace;
 
     if( get_whitespace( get_line_text( 0 ), out wspace ) ) {
-      wspace = tabs_to_spaces( wspace );
-      if( (wspace.char_count() % 8) > 0 ) {
-        wspace = string.nfill( ((wspace.char_count() / 8) * 8), ' ' );
-      }
-      var ins = "\n" + wspace;
+      var prefix = align_to_tab( wspace );
+      var ins    = "\n" + prefix;
       _entry.buffer.insert_at_cursor( ins, ins.length );
       return( true );
     }
@@ -396,21 +445,41 @@ public class QuickEntry : Gtk.Window {
   }
 
   /* If the Tab key is pressed, only allow it if it is valid to do so */
-  private bool handle_tab() {
+  private bool handle_tab( bool shift ) {
 
     TextIter current;
     var      prev = "";
     var      curr = "";
+    var      line = get_line_text( 0 );
 
     _entry.buffer.get_iter_at_mark( out current, _entry.buffer.get_insert() );
 
-    if( current.get_line() == 0 ) {
-      return( true );
-    } else if( get_whitespace( get_line_text( 0 ), out curr ) && get_whitespace( get_line_text( -1 ), out prev ) ) {
-      return( tabs_to_spaces( curr ).length > tabs_to_spaces( prev ).length );
+    if( !shift ) {
+      if( current.get_line() == 0 ) {
+        return( true );
+      } else if( get_whitespace( line, out curr ) && get_whitespace( get_line_text( -1 ), out prev ) && (is_blank_line( line ) || is_node_line( line )) ) {
+        if( tabs_to_spaces( curr ).length <= tabs_to_spaces( prev ).length ) {
+          var prefix = align_to_tab( curr ) + "\t";
+          if( is_blank_line( line ) ) {
+            prefix += "- ";
+          }
+          delete_whitespace( prefix );
+        }
+      }
+    } else {
+      if( get_whitespace( line, out curr ) && (is_blank_line( line ) || is_node_line( line )) ) {
+        var prefix = align_to_tab( curr );
+        if( prefix.char_count() > 0 ) {
+          prefix = prefix.substring( prefix.index_of_nth_char( 1 ) );
+        }
+        if( is_blank_line( line ) ) {
+          prefix += "- ";
+        }
+        delete_whitespace( prefix );
+      }
     }
 
-    return( false );
+    return( true );
 
   }
 
@@ -442,30 +511,32 @@ public class QuickEntry : Gtk.Window {
   }
 
   /* Inserts the specified nodes into the given drawing area */
-  private void handle_insert() {
+  private bool handle_insert() {
     var nodes  = new Array<Node>();
     var node   = _da.get_current_node();
     _export.import_text( _entry.buffer.text, _da.settings.get_int( "quick-entry-spaces-per-tab" ), _da, false, nodes );
-    if( nodes.length == 0 ) return;
+    if( nodes.length == 0 ) return( false );
     _da.undo_buffer.add_item( new UndoNodesInsert( _da, nodes ) );
     _da.set_current_node( nodes.index( 0 ) );
     _da.queue_draw();
     _da.auto_save();
     _da.see();
+    return( true );
   }
 
   /* Replaces the specified nodes into the given drawing area */
-  private void handle_replace() {
+  private bool handle_replace() {
     var nodes  = new Array<Node>();;
     var node   = _da.get_current_node();
     var parent = node.parent;
     _export.import_text( _entry.buffer.text, _da.settings.get_int( "quick-entry-spaces-per-tab" ), _da, true, nodes );
-    if( nodes.length == 0 ) return;
+    if( nodes.length == 0 ) return( false );
     _da.undo_buffer.add_item( new UndoNodesReplace( node, nodes ) );
     _da.set_current_node( nodes.index( 0 ) );
     _da.queue_draw();
     _da.auto_save();
     _da.see();
+    return( true );
   }
 
   /* Preloads the text buffer with the given text */

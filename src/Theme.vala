@@ -193,7 +193,8 @@ public class Theme : Object {
                      "@define-color tab_base_color " + get_color( "background" ).to_string() + ";" +
                      tv_size +
                      ".theme-selected { background: #087DFF; } " +
-                     ".canvas { background: " + get_color( "background" ).to_string() + "; }";
+                     ".canvas { background: " + get_color( "background" ).to_string() + "; }" +
+                     ".highlighted { background: rgba(255, 255, 129, " + (prefer_dark ? "0.15" : "1.0") + "); }";
       provider.load_from_data( css_data );
     } catch( GLib.Error e ) {
       stdout.printf( _( "Unable to load background color: %s" ), e.message );

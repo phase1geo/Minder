@@ -249,7 +249,7 @@ public class ExportText : Export {
 
     // display_node_hier( stack );
 
-    return( true );
+    return( stack.length > 0 );
 
   }
 
