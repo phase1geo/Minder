@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-08 18:30-0600\n"
-"PO-Revision-Date: 2023-11-05 13:30+0100\n"
+"PO-Revision-Date: 2024-01-09 20:30+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -952,9 +952,8 @@ msgid "Add Sibling Node"
 msgstr "Aggiungi nodo fratello"
 
 #: src/NodeMenu.vala:171
-#, fuzzy
 msgid "Use to Summarize Previous Sibling Nodes"
-msgstr "Nodo fratello precedente"
+msgstr "Utilizza per riepilogare i precedenti nodi fratelli"
 
 #: src/NodeMenu.vala:175 src/QuickEntry.vala:44
 msgid "Quick Entry"
@@ -2599,9 +2598,8 @@ msgid "Selected Connections"
 msgstr "Connessioni selezionate"
 
 #: src/StyleInspector.vala:38
-#, fuzzy
 msgid "Selected Callouts"
-msgstr "Nodi selezionati"
+msgstr "Chiamate selezionate"
 
 #: src/StyleInspector.vala:40
 msgid "Unknown"
@@ -3158,14 +3156,12 @@ msgid "remove node sticker"
 msgstr "rimuovi stiker al nodo"
 
 #: src/undo_actions/UndoNodeSummaryDelete.vala:32
-#, fuzzy
 msgid "delete summary node"
-msgstr "inserisci nodo di riepilogo"
+msgstr "eliminare il nodo di riepilogo"
 
 #: src/undo_actions/UndoNodeSummaryFromNode.vala:31
-#, fuzzy
 msgid "convert to summary node"
-msgstr "inserisci nodo di riepilogo"
+msgstr "convertire in nodo di riepilogo"
 
 #: src/undo_actions/UndoNodeSummary.vala:32
 msgid "insert summary node"
