@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 18:30-0600\n"
+"POT-Creation-Date: 2024-01-10 10:30-0600\n"
 "PO-Revision-Date: 2023-10-06 00:10+0200\n"
 "Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
 "Language-Team: \n"
@@ -228,11 +228,11 @@ msgstr "Änderung des Verbindungsendpunkts"
 msgid "connection drag"
 msgstr "Verbindung verschieben"
 
-#: src/DrawArea.vala:3659 src/DrawArea.vala:3673 src/DrawArea.vala:5642
+#: src/DrawArea.vala:3659 src/DrawArea.vala:3673 src/DrawArea.vala:5643
 msgid "Another Idea"
 msgstr "Noch eine Idee"
 
-#: src/DrawArea.vala:5095 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:5096 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:225 src/MapInspector.vala:448
 msgid "Manual"
 msgstr "Manuell"
@@ -293,7 +293,7 @@ msgstr "Wurzelknoten hinzufügen"
 msgid "Add Nodes With Quick Entry"
 msgstr "Knoten mit Schnelleingabe hinzufügen"
 
-#: src/EmptyMenu.vala:54 src/Theme.vala:300
+#: src/EmptyMenu.vala:54 src/Theme.vala:301
 msgid "Root"
 msgstr "Wurzel"
 
@@ -316,7 +316,7 @@ msgstr "Als %s exportieren"
 
 #: src/Exporter.vala:134 src/ImageEditor.vala:381 src/ImageManager.vala:300
 #: src/MainWindow.vala:1028 src/MainWindow.vala:1123 src/MainWindow.vala:1267
-#: src/QuickEntry.vala:144 src/StickerInspector.vala:401 src/StickerSet.vala:75
+#: src/QuickEntry.vala:154 src/StickerInspector.vala:401 src/StickerSet.vala:75
 #: src/ThemeEditor.vala:144 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -1115,15 +1115,15 @@ msgstr "Rechts ausrichten"
 msgid "Remove Node Links"
 msgstr "Knotenverbindungen entfernen"
 
-#: src/Node.vala:2322
+#: src/Node.vala:2325
 msgid "Node Title"
 msgstr "Knoten-Titel"
 
-#: src/Node.vala:2330
+#: src/Node.vala:2333
 msgid "Node Note"
 msgstr "Knoten-Notiz"
 
-#: src/Node.vala:2341
+#: src/Node.vala:2344
 msgid "Callout Text"
 msgstr "Callout-Text"
 
@@ -1298,7 +1298,7 @@ msgstr ""
 msgid "Replace"
 msgstr "Ersetzen"
 
-#: src/QuickEntry.vala:135
+#: src/QuickEntry.vala:140
 msgid "Insert"
 msgstr "Einfügen"
 
@@ -2944,7 +2944,7 @@ msgstr "Polarisiert Hell"
 msgid "Error parsing regular expression"
 msgstr "Fehler beim Parsen eines regulären Ausdrucks"
 
-#: src/Theme.vala:199
+#: src/Theme.vala:200
 #, c-format
 msgid "Unable to load background color: %s"
 msgstr "Hintergrundfarbe kann nicht geladen werden: %s"

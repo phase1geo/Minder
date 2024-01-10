@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 18:30-0600\n"
+"POT-Creation-Date: 2024-01-10 10:30-0600\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -226,11 +226,11 @@ msgstr "změna konce spojení"
 msgid "connection drag"
 msgstr "přetáhnutí spojení"
 
-#: src/DrawArea.vala:3659 src/DrawArea.vala:3673 src/DrawArea.vala:5642
+#: src/DrawArea.vala:3659 src/DrawArea.vala:3673 src/DrawArea.vala:5643
 msgid "Another Idea"
 msgstr "Další myšlenka"
 
-#: src/DrawArea.vala:5095 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:5096 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:225 src/MapInspector.vala:448
 msgid "Manual"
 msgstr "Ruční"
@@ -292,7 +292,7 @@ msgstr "Přidat kořenový uzel"
 msgid "Add Nodes With Quick Entry"
 msgstr "Přidat poznámku pomocí Rychlého zadávání"
 
-#: src/EmptyMenu.vala:54 src/Theme.vala:300
+#: src/EmptyMenu.vala:54 src/Theme.vala:301
 msgid "Root"
 msgstr "Kořen"
 
@@ -315,7 +315,7 @@ msgstr "Exportovat jako %s"
 
 #: src/Exporter.vala:134 src/ImageEditor.vala:381 src/ImageManager.vala:300
 #: src/MainWindow.vala:1028 src/MainWindow.vala:1123 src/MainWindow.vala:1267
-#: src/QuickEntry.vala:144 src/StickerInspector.vala:401 src/StickerSet.vala:75
+#: src/QuickEntry.vala:154 src/StickerInspector.vala:401 src/StickerSet.vala:75
 #: src/ThemeEditor.vala:144 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Zrušit"
@@ -1124,15 +1124,15 @@ msgstr "Zarovnat vpravo"
 msgid "Remove Node Links"
 msgstr "Odstranit odkazy uzlu"
 
-#: src/Node.vala:2322
+#: src/Node.vala:2325
 msgid "Node Title"
 msgstr "Název poznámky"
 
-#: src/Node.vala:2330
+#: src/Node.vala:2333
 msgid "Node Note"
 msgstr "Poznámka uzlu"
 
-#: src/Node.vala:2341
+#: src/Node.vala:2344
 #, fuzzy
 msgid "Callout Text"
 msgstr "Vložit text"
@@ -1299,7 +1299,7 @@ msgstr ""
 msgid "Replace"
 msgstr "Nahradit"
 
-#: src/QuickEntry.vala:135
+#: src/QuickEntry.vala:140
 msgid "Insert"
 msgstr "Vložit"
 
@@ -2954,7 +2954,7 @@ msgstr "Solarized Light"
 msgid "Error parsing regular expression"
 msgstr "Vyskytla se chyba v parsování regulárního výrazu\n"
 
-#: src/Theme.vala:199
+#: src/Theme.vala:200
 #, c-format
 msgid "Unable to load background color: %s"
 msgstr "Nebylo možné načíst barvu pozadí: %s"

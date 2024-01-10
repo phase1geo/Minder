@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 18:30-0600\n"
+"POT-Creation-Date: 2024-01-10 10:30-0600\n"
 "PO-Revision-Date: 2022-08-02 23:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -227,11 +227,11 @@ msgstr ""
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:3659 src/DrawArea.vala:3673 src/DrawArea.vala:5642
+#: src/DrawArea.vala:3659 src/DrawArea.vala:3673 src/DrawArea.vala:5643
 msgid "Another Idea"
 msgstr "NOWY TEMAT"
 
-#: src/DrawArea.vala:5095 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:5096 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:225 src/MapInspector.vala:448
 msgid "Manual"
 msgstr "Ręcznie"
@@ -293,7 +293,7 @@ msgstr "Wstaw nową gałąź główną"
 msgid "Add Nodes With Quick Entry"
 msgstr "Szybkie wstawianie wielu elementów"
 
-#: src/EmptyMenu.vala:54 src/Theme.vala:300
+#: src/EmptyMenu.vala:54 src/Theme.vala:301
 msgid "Root"
 msgstr "Start"
 
@@ -316,7 +316,7 @@ msgstr "Eksportuj jako %s"
 
 #: src/Exporter.vala:134 src/ImageEditor.vala:381 src/ImageManager.vala:300
 #: src/MainWindow.vala:1028 src/MainWindow.vala:1123 src/MainWindow.vala:1267
-#: src/QuickEntry.vala:144 src/StickerInspector.vala:401 src/StickerSet.vala:75
+#: src/QuickEntry.vala:154 src/StickerInspector.vala:401 src/StickerSet.vala:75
 #: src/ThemeEditor.vala:144 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Anuluj"
@@ -1129,15 +1129,15 @@ msgstr "Wyrównaj do prawej"
 msgid "Remove Node Links"
 msgstr "Usuń hiperłącze elementu"
 
-#: src/Node.vala:2322
+#: src/Node.vala:2325
 msgid "Node Title"
 msgstr "Tytuł gałęzi"
 
-#: src/Node.vala:2330
+#: src/Node.vala:2333
 msgid "Node Note"
 msgstr "Notatka gałęzi"
 
-#: src/Node.vala:2341
+#: src/Node.vala:2344
 #, fuzzy
 msgid "Callout Text"
 msgstr "Wklej tekst"
@@ -1289,7 +1289,7 @@ msgstr ""
 msgid "Replace"
 msgstr "Zastąp"
 
-#: src/QuickEntry.vala:135
+#: src/QuickEntry.vala:140
 msgid "Insert"
 msgstr "Wstaw"
 
@@ -2943,7 +2943,7 @@ msgstr "Rozświetlony Jasny"
 msgid "Error parsing regular expression"
 msgstr "Błąd parsowania wyrażenia regularnego"
 
-#: src/Theme.vala:199
+#: src/Theme.vala:200
 #, c-format
 msgid "Unable to load background color: %s"
 msgstr "Nie można wczytać koloru tła: %s"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 18:30-0600\n"
+"POT-Creation-Date: 2024-01-10 10:30-0600\n"
 "PO-Revision-Date: 2020-08-30 14:45+0100\n"
 "Last-Translator: André Barata <andretiagob@protonmail.com>\n"
 "Language-Team: none\n"
@@ -229,11 +229,11 @@ msgstr "alterar ponto final da conexão"
 msgid "connection drag"
 msgstr "arrastar conexão"
 
-#: src/DrawArea.vala:3659 src/DrawArea.vala:3673 src/DrawArea.vala:5642
+#: src/DrawArea.vala:3659 src/DrawArea.vala:3673 src/DrawArea.vala:5643
 msgid "Another Idea"
 msgstr "Outra ideia"
 
-#: src/DrawArea.vala:5095 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:5096 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:225 src/MapInspector.vala:448
 msgid "Manual"
 msgstr "Manual"
@@ -295,7 +295,7 @@ msgstr "Adicionar Nó de Raiz"
 msgid "Add Nodes With Quick Entry"
 msgstr "Adicionar Nós Com a Entrada Rápida"
 
-#: src/EmptyMenu.vala:54 src/Theme.vala:300
+#: src/EmptyMenu.vala:54 src/Theme.vala:301
 msgid "Root"
 msgstr "Raiz"
 
@@ -319,7 +319,7 @@ msgstr "Exportar Como"
 
 #: src/Exporter.vala:134 src/ImageEditor.vala:381 src/ImageManager.vala:300
 #: src/MainWindow.vala:1028 src/MainWindow.vala:1123 src/MainWindow.vala:1267
-#: src/QuickEntry.vala:144 src/StickerInspector.vala:401 src/StickerSet.vala:75
+#: src/QuickEntry.vala:154 src/StickerInspector.vala:401 src/StickerSet.vala:75
 #: src/ThemeEditor.vala:144 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Cancelar"
@@ -1145,15 +1145,15 @@ msgstr "Alinhar à Direita"
 msgid "Remove Node Links"
 msgstr "Remover Ligação do Nó"
 
-#: src/Node.vala:2322
+#: src/Node.vala:2325
 msgid "Node Title"
 msgstr "Título do Nó"
 
-#: src/Node.vala:2330
+#: src/Node.vala:2333
 msgid "Node Note"
 msgstr "Nota do Nó"
 
-#: src/Node.vala:2341
+#: src/Node.vala:2344
 #, fuzzy
 msgid "Callout Text"
 msgstr "Colar Texto"
@@ -1318,7 +1318,7 @@ msgstr "Se isto segue *, + ou -, o nó torna-se como uma tarefa completada."
 msgid "Replace"
 msgstr "Substituir"
 
-#: src/QuickEntry.vala:135
+#: src/QuickEntry.vala:140
 msgid "Insert"
 msgstr "Inserir"
 
@@ -3030,7 +3030,7 @@ msgstr "Luz de Sol"
 msgid "Error parsing regular expression"
 msgstr ""
 
-#: src/Theme.vala:199
+#: src/Theme.vala:200
 #, c-format
 msgid "Unable to load background color: %s"
 msgstr ""

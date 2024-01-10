@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 18:30-0600\n"
+"POT-Creation-Date: 2024-01-10 10:30-0600\n"
 "PO-Revision-Date: 2023-10-10 17:50+0800\n"
 "Last-Translator: Aerowolf <aerowolf@tom.com>\n"
 "Language-Team: 简体中文\n"
@@ -229,11 +229,11 @@ msgstr "连接端点修改"
 msgid "connection drag"
 msgstr "连接拖动"
 
-#: src/DrawArea.vala:3659 src/DrawArea.vala:3673 src/DrawArea.vala:5642
+#: src/DrawArea.vala:3659 src/DrawArea.vala:3673 src/DrawArea.vala:5643
 msgid "Another Idea"
 msgstr "其他想法"
 
-#: src/DrawArea.vala:5095 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:5096 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:225 src/MapInspector.vala:448
 msgid "Manual"
 msgstr "手动"
@@ -292,7 +292,7 @@ msgstr "添加根节点"
 msgid "Add Nodes With Quick Entry"
 msgstr "使用快速输入添加节点"
 
-#: src/EmptyMenu.vala:54 src/Theme.vala:300
+#: src/EmptyMenu.vala:54 src/Theme.vala:301
 msgid "Root"
 msgstr "根"
 
@@ -315,7 +315,7 @@ msgstr "导出为 %s"
 
 #: src/Exporter.vala:134 src/ImageEditor.vala:381 src/ImageManager.vala:300
 #: src/MainWindow.vala:1028 src/MainWindow.vala:1123 src/MainWindow.vala:1267
-#: src/QuickEntry.vala:144 src/StickerInspector.vala:401 src/StickerSet.vala:75
+#: src/QuickEntry.vala:154 src/StickerInspector.vala:401 src/StickerSet.vala:75
 #: src/ThemeEditor.vala:144 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "取消"
@@ -1115,15 +1115,15 @@ msgstr "右对齐"
 msgid "Remove Node Links"
 msgstr "删除节点链接"
 
-#: src/Node.vala:2322
+#: src/Node.vala:2325
 msgid "Node Title"
 msgstr "节点标题"
 
-#: src/Node.vala:2330
+#: src/Node.vala:2333
 msgid "Node Note"
 msgstr "节点备注"
 
-#: src/Node.vala:2341
+#: src/Node.vala:2344
 msgid "Callout Text"
 msgstr "标记文本"
 
@@ -1273,7 +1273,7 @@ msgstr "如果它位于 *、+ 或 - 之后，则该节点将被设成为已完�
 msgid "Replace"
 msgstr "替换"
 
-#: src/QuickEntry.vala:135
+#: src/QuickEntry.vala:140
 msgid "Insert"
 msgstr "插入"
 
@@ -2916,7 +2916,7 @@ msgstr "日光亮色"
 msgid "Error parsing regular expression"
 msgstr "分析正则表达式时出错"
 
-#: src/Theme.vala:199
+#: src/Theme.vala:200
 #, c-format
 msgid "Unable to load background color: %s"
 msgstr "无法加载背景色： %s"
