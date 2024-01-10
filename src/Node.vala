@@ -2065,7 +2065,6 @@ public class Node : Object {
    nodes will become top-level nodes themselves.
   */
   public virtual void delete_only() {
-    // FOOBAR - Need to account for tasks here
     if( parent == null ) {
       for( int i=0; i<_children.length; i++ ) {
         _children.index( i ).parent   = null;
@@ -2084,6 +2083,7 @@ public class Node : Object {
       if( layout != null ) {
         layout.handle_update_by_delete( parent, idx, side, tree_size );
       }
+      parent   = null;
       attached = false;
       for( int i=(int)(_children.length - 1); i>=0; i-- ) {
         moved.disconnect( _children.index( i ).parent_moved );
@@ -2097,16 +2097,17 @@ public class Node : Object {
     assert( !is_summary() );
     var temp = new Array<Node>();
     for( int i=0; i<children().length; i++ ) {
-      temp.append_val( children().index( i ) );
-    }
-    children().remove_range( 0, children().length );
-    for( int i=0; i<temp.length; i++ ) {
-      var child = temp.index( i );
+      var child = children().index( i );
       if( child.is_root() ) {
         _da.remove_root_node( child );
       } else {
         child.detach( child.side );
       }
+      temp.append_val( child );
+    }
+    children().remove_range( 0, children().length );
+    for( int i=0; i<temp.length; i++ ) {
+      var child = temp.index( i );
       child.attach_init( this, -1 );
     }
     if( index() == -1 ) {
