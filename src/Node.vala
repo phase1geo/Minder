@@ -2086,7 +2086,7 @@ public class Node : Object {
       attached = false;
       for( int i=(int)(_children.length - 1); i>=0; i-- ) {
         moved.disconnect( _children.index( i ).parent_moved );
-        _children.index( i ).attach( parent, idx, null );
+        _children.index( i ).attach( parent, idx, null, false );
       }
       parent = null;
     }
