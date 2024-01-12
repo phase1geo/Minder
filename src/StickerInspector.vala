@@ -130,6 +130,9 @@ public class StickerInspector : Box {
     _stack.add_named( sw, "all" );
     _stack.add_named( msw, "matched" );
 
+    /* Create the sticker set */
+    _sticker_set = new StickerSet();
+
     /* Create Favorites */
     _favorites = create_category( box, _( "Favorites" ) );
     load_favorites();
@@ -156,8 +159,6 @@ public class StickerInspector : Box {
 
   /* Creates the rest of the UI from the stickers XML file that is stored in a gresource */
   private void create_from_sticker_set( Box box ) {
-
-    _sticker_set = new StickerSet();
 
     var categories = _sticker_set.get_categories();
 
@@ -407,10 +408,8 @@ public class StickerInspector : Box {
       stickers.foreach((sticker) => {
         var parts = Path.get_basename( sticker ).split( "." );
         if( _sticker_set.load_sticker( category, parts[0], sticker, true ) ) {
-          stdout.printf( "Sticker loaded\n" );
           string tooltip;
           _sticker_set.get_icon_info( sticker, out tooltip );
-          stdout.printf( "after get_icon_info, sticker: %s, tooltip: %s\n", sticker, tooltip );
           create_image( fbox, sticker, tooltip, false );
           fbox.show_all();
         }
