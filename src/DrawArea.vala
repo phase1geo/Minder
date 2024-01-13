@@ -3593,6 +3593,7 @@ public class DrawArea : Gtk.DrawingArea {
     node.side  = sibling.side;
     node.style = sibling.style;
     node.attach( sibling.parent, (sibling.index() + (below ? 1 : 0)), _theme );
+    node.parent.set_fold( false, true );
     if( sibling.is_summarized() ) {
       sibling.summary_node().add_node( node );
     }

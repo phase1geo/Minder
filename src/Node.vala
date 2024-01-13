@@ -2147,18 +2147,14 @@ public class Node : Object {
   }
 
   protected virtual void attach_common( int index, Theme? theme ) {
-    if( (parent._children.length == 0) && (parent._task_count == 1) ) {
-      parent.propagate_task_info_up( (0 - parent._task_count), (0 - parent._task_done) );
-      parent._task_count = 0;
-      parent._task_done  = 0;
-      _task_count = 1;
-      _task_done  = 0;
-    }
     if( index == -1 ) {
       index = (int)this.parent.children().length;
       parent.children().append_val( this );
     } else {
       parent.children().insert_val( index, this );
+    }
+    if( (parent._task_count > 0) && (_task_count == 0) ) {
+      _task_count = 1;
     }
     propagate_task_info_up( _task_count, _task_done );
     parent.moved.connect( this.parent_moved );
