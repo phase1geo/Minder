@@ -133,7 +133,8 @@ public class NodeMenu : Gtk.Menu {
     var link_color_menu = new Gtk.Menu();
     _link_color.set_submenu( link_color_menu );
 
-    var set_link_color = new Gtk.MenuItem.with_label( _( "Set to color…" ) );
+    var set_link_color = new Gtk.MenuItem();
+    set_link_color.add( new Granite.AccelLabel( _( "Set to color…" ), "<Shift>l" ) );
     set_link_color.activate.connect( change_link_color );
 
     var rand_link_color = new Gtk.MenuItem.with_label( _( "Randomize color" ) );
