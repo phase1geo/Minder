@@ -4879,6 +4879,7 @@ public class DrawArea : Gtk.DrawingArea {
       else if( !shift && has_key( kvs, Key.f ) )            { toggle_folds( false ); }
       else if(  shift && has_key( kvs, Key.f ) )            { toggle_folds( true ); }
       else if( !shift && has_key( kvs, Key.g ) )            { add_group(); }
+      else if(  shift && has_key( kvs, Key.l ) )            { _nodes_menu.change_link_colors(); }
       else if( !shift && has_key( kvs, Key.m ) )            { select_root_node(); }
       else if( !shift && has_key( kvs, Key.r ) )            { if( undo_buffer.redoable() ) undo_buffer.redo(); }
       else if( !shift && has_key( kvs, Key.t ) )            { change_selected_tasks(); }
@@ -4974,6 +4975,7 @@ public class DrawArea : Gtk.DrawingArea {
         current.display();
       }
     }
+    else if(  shift && has_key( kvs, Key.l ) ) { _node_menu.change_link_color(); }
     else if(  shift && has_key( kvs, Key.s ) ) { sort_alphabetically(); }
     else if(  shift && has_key( kvs, Key.x ) ) { select_attached_connection(); }
     else if(  shift && has_key( kvs, Key.y ) ) { select_linked_node(); }

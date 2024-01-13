@@ -685,7 +685,7 @@ public class NodeMenu : Gtk.Menu {
     _da.sort_randomly();
   }
 
-  private void change_link_color() {
+  public void change_link_color() {
     var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
     if( color_picker.run() == ResponseType.OK ) {
       _da.change_current_link_color( color_picker.get_rgba() );

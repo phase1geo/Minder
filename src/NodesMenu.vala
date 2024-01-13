@@ -285,7 +285,7 @@ public class NodesMenu : Gtk.Menu {
   }
 
   /* Changes the color of all selected nodes */
-  private void change_link_colors() {
+  public void change_link_colors() {
     var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
     if( color_picker.run() == ResponseType.OK ) {
       _da.change_link_colors( color_picker.get_rgba() );
