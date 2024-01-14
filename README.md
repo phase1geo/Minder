@@ -71,17 +71,23 @@ Search for "Minder" in AppCenter and install from there.
 
 ## Distribution packages
 
-Arch Linux users can find Minder in the official `community` repo:
+### Arch Linux
 
-`$ sudo pacman -S minder`
+Arch Linux users should use the flatpak version of Minder from Flathub.
+
+### Void Linux
 
 Minder is packaged in Void Linux, install it with `xbps-install`:
 
 `$ sudo xbps-install Minder`
 
+### Fedora
+
 For Fedora users, install the RPM package with:
 
 `$ sudo dnf install minder`
+
+### Debian/Ubuntu
 
 Debian/Ubuntu package is also available:
 
