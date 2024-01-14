@@ -101,7 +101,11 @@ public class NodeLink {
   public string get_tooltip( DrawArea da ) {
     if( _fname == "" ) {
       var linked_node = da.get_node( da.get_nodes(), _node_id );
-      return( linked_node.name.text.text );
+      if( linked_node != null ) {
+        return( linked_node.name.text.text );
+      } else {
+        return( _( "No node found" ) );
+      }
     } else {
       string title = _( "No node found" );
       Document.xml_find( _fname, _node_id, ref title );
