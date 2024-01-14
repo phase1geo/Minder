@@ -75,26 +75,30 @@ public class Preferences : Gtk.Dialog {
 
     grid.attach( make_label( _( "Create new node from edit mode" ) ), 0, 0 );
     grid.attach( make_switch( "new-node-from-edit" ), 1, 0 );
-    grid.attach( make_info( _( "Specifies if we should create a new node directly from edit mode if Return or Tab is pressed." ) ), 2, 0 );
+    grid.attach( make_info( _( "Specifies if we should create a new node directly from edit mode if Return or Tab is pressed." ) ), 3, 0 );
 
     grid.attach( make_label( _( "Automatically make embedded URLs into links" ) ), 0, 1 );
     grid.attach( make_switch( "auto-parse-embedded-urls" ), 1, 1 );
-    grid.attach( make_info( _( "Specifies if embedded URLs found in node titles should be automatically highlighted.") ), 2, 1 );
+    grid.attach( make_info( _( "Specifies if embedded URLs found in node titles should be automatically highlighted.") ), 3, 1 );
 
     grid.attach( make_label( _( "Enable Markdown" ) ), 0, 2 );
     grid.attach( make_switch( "enable-markdown" ), 1, 2 );
 
     grid.attach( make_label( _( "Enable Unicode input" ) ), 0, 3 );
     grid.attach( make_switch( "enable-unicode-input" ), 1, 3 );
-    grid.attach( make_info( _( "Specifies if Unicode characters can be input using backslash prefixed descriptors (ex. \\pi)" ) ), 2, 3 );
+    grid.attach( make_info( _( "Specifies if Unicode characters can be input using backslash prefixed descriptors (ex. \\pi)" ) ), 3, 3 );
 
     grid.attach( make_label( _( "Create connection title on creation" ) ), 0, 4 );
     grid.attach( make_switch( "edit-connection-title-on-creation" ), 1, 4 );
-    grid.attach( make_info( _( "Specifies if the connection title will be added and put into edit mode immediately after the connection is made." ) ), 2, 4 );
+    grid.attach( make_info( _( "Specifies if the connection title will be added and put into edit mode immediately after the connection is made." ) ), 3, 4 );
 
     grid.attach( make_label( _( "Select items on mouse hover" ) ), 0, 5 );
     grid.attach( make_switch( "select-on-hover" ), 1, 5 );
-    grid.attach( make_info( _( "If enabled, selects items when mouse cursor hovers over the item." ) ), 2, 5 );
+    grid.attach( make_info( _( "If enabled, selects items when mouse cursor hovers over the item." ) ), 3, 5 );
+
+    grid.attach( make_label( _( "Natural scrolling" ) ), 0, 6 );
+    grid.attach( make_natural_scrolling(), 1, 6, 2 );
+    grid.attach( make_info( _( "Specifies scrolling used when panning the canvas." ) ), 3, 6 );
 
     return( grid );
 
@@ -176,6 +180,33 @@ public class Preferences : Gtk.Dialog {
       var item = new Gtk.MenuItem.with_label( lbl );
       item.activate.connect(() => {
         _settings.set_string( "default-theme", name );
+        mb.label = lbl;
+      });
+      mnu.add( item );
+    }
+
+    mnu.show_all();
+
+    return( mb );
+
+  }
+
+  /* Creates the natural scrolling menu */
+  private MenuButton make_natural_scrolling() {
+    
+    var mb      = new MenuButton();
+    var mnu     = new Gtk.Menu();
+    var setting = NaturalScrollType.parse( _settings.get_string( "natural-scrolling-type" ) );
+
+    mb.label = setting.label();
+    mb.popup = mnu;
+
+    for( int i=0; i<NaturalScrollType.NUM; i++ ) {
+      var type = (NaturalScrollType)i;
+      var lbl  = type.label();
+      var item = new Gtk.MenuItem.with_label( lbl );
+      item.activate.connect(() => {
+        _settings.set_string( "natural-scrolling-type", type.to_string() );
         mb.label = lbl;
       });
       mnu.add( item );

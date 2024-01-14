@@ -186,7 +186,6 @@ public class Document : Object {
           var fname = filename.replace( ".mind", "-backup-%s-%s.mind".printf( now.to_string(), _etag ) );
           save_internal( fname, false );
           _da.initialize_for_open();
-          stdout.printf( "Calling load (fname: %s)\n", fname );
           load();
           return false;
         }

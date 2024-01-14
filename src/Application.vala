@@ -27,6 +27,7 @@ using Gee;
 public class Minder : Granite.Application {
 
   private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
+  private const string TOUCH_SCHEMA     = "org.gnome.desktop.peripherals.touchpad";
 
   private static bool                show_version = false;
   private static string?             open_file    = null;
@@ -34,6 +35,7 @@ public class Minder : Granite.Application {
   private static bool                testing      = false;
   private        MainWindow          appwin;
   private        GLib.Settings       iface_settings;
+  private        GLib.Settings       touch_settings;
   private        string?             cl_import    = null;
   private        string?             cl_export    = null;
   private        HashMap<string,int> cl_options;
@@ -100,6 +102,12 @@ public class Minder : Granite.Application {
         });
       });
     }
+
+    touch_settings = new GLib.Settings( TOUCH_SCHEMA );
+    appwin.update_natural_scrolling( touch_settings.get_boolean( "natural-scroll" ) );
+    touch_settings.changed["natural-scroll"].connect(() => {
+      appwin.update_natural_scrolling( touch_settings.get_boolean( "natural-scroll" ) );
+    });
 
   }
 

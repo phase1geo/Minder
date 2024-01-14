@@ -346,5 +346,10 @@
       <summary>Specifies the maximum number of items that will be displayed in the auto-completion dropdown.</summary>
       <description>Specifies the maximum number of items that will be displayed in the auto-completion dropdown.</description>
     </key>
+    <key name="natural-scrolling-type" type="s">
+      <default>"system"</default>
+      <summary>Specifies whether natural scrolling should be used when panning the canvas.</summary>
+      <description>Specifies whether natural scrolling should be used when panning the canvas.  Valid values are:  system, enabled, disabled</description>
+    </key>
   </schema>
 </schemalist>

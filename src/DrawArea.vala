@@ -2622,8 +2622,8 @@ public class DrawArea : Gtk.DrawingArea {
     /* If the Alt key is held down, we are panning the canvas */
     } else if( alt ) {
 
-      double diff_x = last_x - _scaled_x;
-      double diff_y = last_y - _scaled_y;
+      double diff_x = win.natural_scrolling ? (_scaled_x - last_x) : (last_x - _scaled_x);
+      double diff_y = win.natural_scrolling ? (_scaled_y - last_y) : (last_y - _scaled_y);
       move_origin( diff_x, diff_y );
       queue_draw();
       auto_save();
@@ -5542,7 +5542,11 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     /* Adjust the origin and redraw */
-    move_origin( ((0 - delta_x) * 120), ((0 - delta_y) * 120) );
+    if( win.natural_scrolling ) {
+      move_origin( (delta_x * 120), (delta_y * 120) );
+    } else {
+      move_origin( ((0 - delta_x) * 120), ((0 - delta_y) * 120) );
+    }
     queue_draw();
 
     /* Scroll save */

@@ -112,7 +112,6 @@ public class Partitioner : Object {
     var last_side = -1;
     data.@foreach((item) => {
       var place_node = !item.node().is_summarized() || item.node().first_summarized();
-      stdout.printf( "%s  place_node: %s, summarized: %s, first_summarized: %s\n", item.node().name.text.text, place_node.to_string(), item.node().is_summarized().to_string(), item.node().first_summarized().to_string() );
       if( place_node ? (sum0 < sum1) : (last_side == 0) ) {
         sum0 += item.size();
         item.update_node( root, size0, 0 );
