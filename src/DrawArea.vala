@@ -2594,8 +2594,8 @@ public class DrawArea : Gtk.DrawingArea {
 
       /* If we are holding the middle mouse button while moving, pan the canvas */
       } else if( _press_middle ) {
-        double diff_x = _scaled_x - last_x;
-        double diff_y = _scaled_y - last_y;
+        double diff_x = win.natural_scrolling ? (_scaled_x - last_x) : (last_x - _scaled_x);
+        double diff_y = win.natural_scrolling ? (_scaled_y - last_y) : (last_y - _scaled_y);
         move_origin( diff_x, diff_y );
         queue_draw();
         auto_save();
