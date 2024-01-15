@@ -92,6 +92,24 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.16.2" date="2024-01-15">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for Shift-L to change the color of any selected nodes.</li>
+          <li>Added support for natural scrolling preference.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated README.md to change the installation instructions for Arch-based distros to avoid issues with discount library.</li>
+        </ul>
+      </description>
+      <issues>
+        <issue url="https://github.com/phase1geo/minder/issues/595">TODO status not inherited by all child nodes</issue>
+        <issue url="https://github.com/phase1geo/minder/issues/598">Favorited stickers are not displayed in favorited section on application restart</issue>
+        <issue url="https://github.com/phase1geo/minder/issues/599">Missing linked node causes errors with tooltip display</issue>
+      </issues>
+    </release>
     <release version="1.16.1" date="2024-01-10">
       <description>
         <p>New</p>

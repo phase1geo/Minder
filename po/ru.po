@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-10 10:30-0600\n"
+"POT-Creation-Date: 2024-01-14 23:06-0600\n"
 "PO-Revision-Date: 2024-01-06 18:37+0100\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -32,74 +32,74 @@ msgstr "Авторские права © 2018-2023 Trevor Williams"
 msgid "Minder in AppCenter"
 msgstr "Minder в AppCenter"
 
-#: src/Application.vala:114
+#: src/Application.vala:122
 msgid "ERROR: Unable to import file"
 msgstr "Ошибка: не удалось открыть импортировать файл"
 
-#: src/Application.vala:118
+#: src/Application.vala:126
 msgid "ERROR: Import is missing filename to import"
 msgstr "Ошибка: отсутствует имя импортируемого файла"
 
-#: src/Application.vala:133
+#: src/Application.vala:141
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr "Ошибка: для экспорта не хватает исходного и/или экспортируемого файла"
 
-#: src/Application.vala:140
+#: src/Application.vala:148
 #, c-format
 msgid "ERROR:  Unable to open file '%s'\n"
 msgstr "Ошибка: не удалось открыть файл '%s'\n"
 
-#: src/Application.vala:184
+#: src/Application.vala:192
 #, c-format
 msgid "Import file from format (%s)"
 msgstr "Импортировать файл в формате %s"
 
-#: src/Application.vala:185
+#: src/Application.vala:193
 #, c-format
 msgid "Export mindmap as format (%s)"
 msgstr "Экспортировать ментальную карту в формат %s"
 
-#: src/Application.vala:188
+#: src/Application.vala:196
 msgid "Display version number"
 msgstr "Показать номер версии"
 
-#: src/Application.vala:189
+#: src/Application.vala:197
 msgid "Starts Minder with a new file"
 msgstr "Запустить Minder и создать карту"
 
-#: src/Application.vala:190
+#: src/Application.vala:198
 msgid "Run testing"
 msgstr "Запустить тестирование"
 
-#: src/Application.vala:193
+#: src/Application.vala:201
 msgid "Enables a transparent background for PNG images"
 msgstr "Включить прозрачный фон для изображений PNG"
 
-#: src/Application.vala:194
+#: src/Application.vala:202
 msgid "PNG compression value (0-9)"
 msgstr "Степень сжатия PNG (0-9)"
 
-#: src/Application.vala:195
+#: src/Application.vala:203
 msgid "JPEG quality (0-100)"
 msgstr "Качество JPEG (0-100)"
 
-#: src/Application.vala:196
+#: src/Application.vala:204
 msgid "Enables image links in exported Markdown"
 msgstr "Включает ссылки на изображения в экспортированном Markdown"
 
-#: src/Application.vala:205
+#: src/Application.vala:213
 #, c-format
 msgid "ERROR: %s\n"
 msgstr "Ошибка: %s\n"
 
-#: src/Application.vala:206
+#: src/Application.vala:214
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr ""
 "Введите команду '%s --help', чтобы посмотреть корректные варианты запуска "
 "программы\n"
 
-#: src/Application.vala:253
+#: src/Application.vala:261
 #, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr "Ошибка: не удалось загрузить файл Minder, %s"
@@ -111,11 +111,11 @@ msgid "Delete"
 msgstr "Удалить"
 
 #: src/CalloutMenu.vala:38 src/EmptyMenu.vala:49
-#: data/com.github.phase1geo.minder.shortcuts.ui:649
+#: data/com.github.phase1geo.minder.shortcuts.ui:656
 msgid "Select Node"
 msgstr "Выбрать узел"
 
-#: src/Callout.vala:129 src/NodeMenu.vala:237
+#: src/Callout.vala:129 src/NodeMenu.vala:238
 msgid "Callout"
 msgstr "Выноска"
 
@@ -123,7 +123,7 @@ msgstr "Выноска"
 msgid "No text found"
 msgstr "Текст не найден"
 
-#: src/ConnectionInspector.vala:74 src/NodeMenu.vala:232
+#: src/ConnectionInspector.vala:74 src/NodeMenu.vala:233
 msgid "Connection"
 msgstr "Соединения"
 
@@ -150,7 +150,7 @@ msgstr "Изменить заголовок…"
 
 #: src/ConnectionMenu.vala:50 src/GroupsMenu.vala:47 src/NodeMenu.vala:103
 #: data/com.github.phase1geo.minder.shortcuts.ui:338
-#: data/com.github.phase1geo.minder.shortcuts.ui:676
+#: data/com.github.phase1geo.minder.shortcuts.ui:683
 msgid "Edit Note"
 msgstr "Изменить примечание"
 
@@ -159,7 +159,7 @@ msgid "Remove Sticker"
 msgstr "Удалить стикер"
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
-#: src/NodeMenu.vala:187 src/NodesMenu.vala:99
+#: src/NodeMenu.vala:188 src/NodesMenu.vala:100
 msgid "Select"
 msgstr "Выбрать"
 
@@ -230,11 +230,11 @@ msgstr "смену конечной точки соединения"
 msgid "connection drag"
 msgstr "перетаскивание соединения"
 
-#: src/DrawArea.vala:3659 src/DrawArea.vala:3673 src/DrawArea.vala:5643
+#: src/DrawArea.vala:3660 src/DrawArea.vala:3674 src/DrawArea.vala:5650
 msgid "Another Idea"
 msgstr "Ещё одна идея"
 
-#: src/DrawArea.vala:5096 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:5099 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:225 src/MapInspector.vala:448
 msgid "Manual"
 msgstr "Вручную"
@@ -287,7 +287,7 @@ msgstr ""
 msgid "Paste"
 msgstr "Вставить"
 
-#: src/EmptyMenu.vala:42 src/NodeMenu.vala:156
+#: src/EmptyMenu.vala:42 src/NodeMenu.vala:157
 msgid "Add Root Node"
 msgstr "Вставить корневой узел"
 
@@ -317,13 +317,13 @@ msgid "Export As %s"
 msgstr "Экспортировать как %s"
 
 #: src/Exporter.vala:134 src/ImageEditor.vala:381 src/ImageManager.vala:300
-#: src/MainWindow.vala:1028 src/MainWindow.vala:1123 src/MainWindow.vala:1267
-#: src/QuickEntry.vala:154 src/StickerInspector.vala:401 src/StickerSet.vala:75
+#: src/MainWindow.vala:1083 src/MainWindow.vala:1178 src/MainWindow.vala:1322
+#: src/QuickEntry.vala:154 src/StickerInspector.vala:402 src/StickerSet.vala:75
 #: src/ThemeEditor.vala:144 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/Exporter.vala:134 src/MainWindow.vala:845 src/StickerSet.vala:352
+#: src/Exporter.vala:134 src/MainWindow.vala:900 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Экспортировать"
 
@@ -494,7 +494,7 @@ msgstr "Верхние в группе узлы"
 msgid "All Grouped Nodes"
 msgstr "Все сгруппированные узлы"
 
-#: src/GroupsMenu.vala:111 src/NodeMenu.vala:689 src/NodesMenu.vala:289
+#: src/GroupsMenu.vala:111 src/NodeMenu.vala:690 src/NodesMenu.vala:290
 msgid "Select a link color"
 msgstr "Выбрать цвет связи"
 
@@ -528,7 +528,7 @@ msgstr "Скопировать изображение в буфер обмена
 msgid "Paste Image from Clipboard"
 msgstr "Вставить избражение из бефера обмена"
 
-#: src/ImageEditor.vala:396 src/NodeInspector.vala:292 src/NodeMenu.vala:447
+#: src/ImageEditor.vala:396 src/NodeInspector.vala:292 src/NodeMenu.vala:448
 msgid "Remove Image"
 msgstr "Удалить изображение"
 
@@ -540,208 +540,220 @@ msgstr "Выберите изображение"
 msgid "Images"
 msgstr "Изображения"
 
-#: src/MainWindow.vala:154 src/MainWindow.vala:1272
+#: src/MainWindow.vala:64
+msgid "Use system setting"
+msgstr ""
+
+#: src/MainWindow.vala:65
+msgid "Always use natural scrolling"
+msgstr ""
+
+#: src/MainWindow.vala:66
+msgid "Never use natural scrolling"
+msgstr ""
+
+#: src/MainWindow.vala:195 src/MainWindow.vala:1327
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:188 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:229 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
 msgstr "Создать документ"
 
-#: src/MainWindow.vala:194 src/MainWindow.vala:1119
+#: src/MainWindow.vala:235 src/MainWindow.vala:1174
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: src/MainWindow.vala:200 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:241 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
 msgstr "Сохранить файл как"
 
-#: src/MainWindow.vala:206 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:247 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Отменить"
 
-#: src/MainWindow.vala:213 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:254 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Вернуть"
 
-#: src/MainWindow.vala:548
+#: src/MainWindow.vala:603
 msgid "Unnamed Document"
 msgstr "Безымянный документ"
 
-#: src/MainWindow.vala:551
+#: src/MainWindow.vala:606
 msgid "Read-Only"
 msgstr "Только чтение"
 
-#: src/MainWindow.vala:555 src/MainWindow.vala:880
+#: src/MainWindow.vala:610 src/MainWindow.vala:935
 msgid "Focus Mode"
 msgstr "Режим фокусировки"
 
-#: src/MainWindow.vala:589 src/MainWindow.vala:1324
+#: src/MainWindow.vala:644 src/MainWindow.vala:1379
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr "Масштаб (%d%%)"
 
-#: src/MainWindow.vala:596
+#: src/MainWindow.vala:651
 msgid "Zoom to Percent"
 msgstr "Масштаб в процентах"
 
-#: src/MainWindow.vala:609 src/ZoomWidget.vala:102
+#: src/MainWindow.vala:664 src/ZoomWidget.vala:102
 #: data/com.github.phase1geo.minder.shortcuts.ui:119
 msgid "Zoom In"
 msgstr "Приблизить"
 
-#: src/MainWindow.vala:615 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:670 src/ZoomWidget.vala:92
 #: data/com.github.phase1geo.minder.shortcuts.ui:126
 msgid "Zoom Out"
 msgstr "Отдалить"
 
-#: src/MainWindow.vala:625
+#: src/MainWindow.vala:680
 msgid "Zoom to Fit"
 msgstr "Уместить всё"
 
-#: src/MainWindow.vala:630 data/com.github.phase1geo.minder.shortcuts.ui:140
+#: src/MainWindow.vala:685 data/com.github.phase1geo.minder.shortcuts.ui:140
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "Уместить выбранное дерево узлов"
 
-#: src/MainWindow.vala:635
+#: src/MainWindow.vala:690
 msgid "Zoom to Actual Size"
 msgstr "Настоящий размер"
 
-#: src/MainWindow.vala:659 src/StickerSet.vala:114
+#: src/MainWindow.vala:714 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Искать"
 
-#: src/MainWindow.vala:669
+#: src/MainWindow.vala:724
 msgid "Search Nodes, Callouts and Connections"
 msgstr "Искать по узлам, выноскам и соединениям"
 
-#: src/MainWindow.vala:698
+#: src/MainWindow.vala:753
 msgid "Search Criteria"
 msgstr "Критерии поиска"
 
-#: src/MainWindow.vala:701
+#: src/MainWindow.vala:756
 msgid "Search all tabs"
 msgstr "Искать во всех вкладках"
 
-#: src/MainWindow.vala:735
+#: src/MainWindow.vala:790
 msgid "Nodes"
 msgstr "Узлы"
 
-#: src/MainWindow.vala:736
+#: src/MainWindow.vala:791
 msgid "Connections"
 msgstr "Соединения"
 
-#: src/MainWindow.vala:737
+#: src/MainWindow.vala:792
 msgid "Callouts"
 msgstr "Выноски"
 
-#: src/MainWindow.vala:738
+#: src/MainWindow.vala:793
 msgid "Titles"
 msgstr "Заголовки"
 
-#: src/MainWindow.vala:739
+#: src/MainWindow.vala:794
 msgid "Notes"
 msgstr "Примечания"
 
-#: src/MainWindow.vala:740
+#: src/MainWindow.vala:795
 msgid "Folded"
 msgstr "Свёрнутые"
 
-#: src/MainWindow.vala:741
+#: src/MainWindow.vala:796
 msgid "Unfolded"
 msgstr "Развёрнутые"
 
-#: src/MainWindow.vala:742
+#: src/MainWindow.vala:797
 msgid "Tasks"
 msgstr "Задачи"
 
-#: src/MainWindow.vala:743
+#: src/MainWindow.vala:798
 msgid "Non-tasks"
 msgstr "Не задачи"
 
-#: src/MainWindow.vala:857
+#: src/MainWindow.vala:912
 msgid "Print…"
 msgstr "Печать…"
 
-#: src/MainWindow.vala:905 src/Preferences.vala:36
+#: src/MainWindow.vala:960 src/Preferences.vala:36
 msgid "Preferences"
 msgstr "Параметры"
 
-#: src/MainWindow.vala:910
+#: src/MainWindow.vala:965
 msgid "Shortcuts Cheatsheet"
 msgstr "Справка по горячим клавишам"
 
-#: src/MainWindow.vala:914
+#: src/MainWindow.vala:969
 msgid "About Minder"
 msgstr "О программе"
 
-#: src/MainWindow.vala:947 src/MainWindow.vala:1396
+#: src/MainWindow.vala:1002 src/MainWindow.vala:1451
 msgid "Show Property Sidebar"
 msgstr "Показать панель свойств"
 
-#: src/MainWindow.vala:962
+#: src/MainWindow.vala:1017
 msgid "Current"
 msgstr "Выбранное"
 
-#: src/MainWindow.vala:963 src/StyleInspector.vala:198
+#: src/MainWindow.vala:1018 src/StyleInspector.vala:198
 msgid "Style"
 msgstr "Стиль"
 
-#: src/MainWindow.vala:964
+#: src/MainWindow.vala:1019
 msgid "Stickers"
 msgstr "Стикеры"
 
-#: src/MainWindow.vala:965
+#: src/MainWindow.vala:1020
 msgid "Map"
 msgstr "Макет"
 
-#: src/MainWindow.vala:1019
+#: src/MainWindow.vala:1074
 msgid "Save current unnamed document?"
 msgstr "Сохранить текущий безымянный документ?"
 
-#: src/MainWindow.vala:1020
+#: src/MainWindow.vala:1075
 msgid "Changes will be permanently lost if not saved."
 msgstr "Без сохранения изменения будут утеряны навсегда."
 
-#: src/MainWindow.vala:1025
+#: src/MainWindow.vala:1080
 msgid "Discard Changes"
 msgstr "Отказаться от изменений"
 
-#: src/MainWindow.vala:1031 src/MainWindow.vala:1267 src/ThemeEditor.vala:147
+#: src/MainWindow.vala:1086 src/MainWindow.vala:1322 src/ThemeEditor.vala:147
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/MainWindow.vala:1060
+#: src/MainWindow.vala:1115
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr "Файл %s был изменён другим приложением."
 
-#: src/MainWindow.vala:1061
+#: src/MainWindow.vala:1116
 msgid "What do you want to do?"
 msgstr "Как вы хотите поступить?"
 
-#: src/MainWindow.vala:1066
+#: src/MainWindow.vala:1121
 msgid "Discard Changes and reload"
 msgstr "Отказаться от изменений и перезагрузить"
 
-#: src/MainWindow.vala:1069
+#: src/MainWindow.vala:1124
 msgid "Save local version and overwrite"
 msgstr "Сохранить локальную версию и перезаписать"
 
-#: src/MainWindow.vala:1119
+#: src/MainWindow.vala:1174
 msgid "Open Directory"
 msgstr "Открыть папку"
 
-#: src/MainWindow.vala:1122
+#: src/MainWindow.vala:1177
 msgid "Open"
 msgstr "Открыть"
 
-#: src/MainWindow.vala:1267
+#: src/MainWindow.vala:1322
 msgid "Save File"
 msgstr "Сохранить файл"
 
-#: src/MainWindow.vala:1340
+#: src/MainWindow.vala:1395
 msgid "Hide Property Sidebar"
 msgstr "Скрыть панель свойств"
 
@@ -861,7 +873,7 @@ msgstr "Открепить узел"
 msgid "Delete Node"
 msgstr "Удалить узел"
 
-#: src/NodeLink.vala:106
+#: src/NodeLink.vala:107 src/NodeLink.vala:110
 msgid "No node found"
 msgstr "Узлы не найдены"
 
@@ -873,7 +885,7 @@ msgstr "Скопировать"
 msgid "Cut"
 msgstr "Вырезать"
 
-#: src/NodeMenu.vala:84 src/NodeMenu.vala:459
+#: src/NodeMenu.vala:84 src/NodeMenu.vala:460
 msgid "Paste and Replace Node"
 msgstr "Вставить и заменить узел"
 
@@ -889,15 +901,15 @@ msgstr "Изменить узел"
 msgid "Edit Text…"
 msgstr "Изменить текст…"
 
-#: src/NodeMenu.vala:107 src/NodeMenu.vala:429
+#: src/NodeMenu.vala:107 src/NodeMenu.vala:430
 msgid "Add Task"
 msgstr "Добавить задачу"
 
-#: src/NodeMenu.vala:110 src/NodeMenu.vala:447
+#: src/NodeMenu.vala:110 src/NodeMenu.vala:448
 msgid "Add Image"
 msgstr "Добавить изображение"
 
-#: src/NodeMenu.vala:117 src/NodeMenu.vala:430
+#: src/NodeMenu.vala:117 src/NodeMenu.vala:431
 msgid "Add Node Link"
 msgstr "Добавить ссылку на узел"
 
@@ -909,7 +921,7 @@ msgstr "Добавить связь"
 msgid "Add Group"
 msgstr "Создать группу"
 
-#: src/NodeMenu.vala:129 src/NodeMenu.vala:432
+#: src/NodeMenu.vala:129 src/NodeMenu.vala:433
 msgid "Add Callout"
 msgstr "Добавить выноску"
 
@@ -917,144 +929,144 @@ msgstr "Добавить выноску"
 msgid "Link Color"
 msgstr "Цвет ссылки"
 
-#: src/NodeMenu.vala:136 src/NodesMenu.vala:84
+#: src/NodeMenu.vala:137 src/NodesMenu.vala:85
 msgid "Set to color…"
 msgstr "Установить цвет…"
 
-#: src/NodeMenu.vala:139
+#: src/NodeMenu.vala:140
 msgid "Randomize color"
 msgstr "Выбрать случайный цвет"
 
-#: src/NodeMenu.vala:142 src/NodesMenu.vala:90
+#: src/NodeMenu.vala:143 src/NodesMenu.vala:91
 msgid "Use parent color"
 msgstr "Использовать цвет узла-родителя"
 
-#: src/NodeMenu.vala:146 src/NodeMenu.vala:431 src/NodesMenu.vala:64
-#: src/NodesMenu.vala:222
+#: src/NodeMenu.vala:147 src/NodeMenu.vala:432 src/NodesMenu.vala:64
+#: src/NodesMenu.vala:223
 msgid "Fold Children"
 msgstr "Свернуть узлы-потомки"
 
-#: src/NodeMenu.vala:149
+#: src/NodeMenu.vala:150
 msgid "Detach"
 msgstr "Открепить"
 
-#: src/NodeMenu.vala:152
+#: src/NodeMenu.vala:153
 msgid "Add Node"
 msgstr "Добавить узел"
 
-#: src/NodeMenu.vala:159
+#: src/NodeMenu.vala:160
 msgid "Add Parent Node"
 msgstr "Добавить узел-родитель"
 
-#: src/NodeMenu.vala:163
+#: src/NodeMenu.vala:164
 msgid "Add Child Node"
 msgstr "Добавить узел-потомок"
 
-#: src/NodeMenu.vala:167
+#: src/NodeMenu.vala:168
 msgid "Add Sibling Node"
 msgstr "Добавить узел-сиблинг"
 
-#: src/NodeMenu.vala:171
+#: src/NodeMenu.vala:172
 msgid "Use to Summarize Previous Sibling Nodes"
 msgstr "Использовать для создания сводки по предыдущим узлам-сиблингам"
 
-#: src/NodeMenu.vala:175 src/QuickEntry.vala:44
+#: src/NodeMenu.vala:176 src/QuickEntry.vala:44
 msgid "Quick Entry"
 msgstr "Быстрый ввод"
 
-#: src/NodeMenu.vala:179
+#: src/NodeMenu.vala:180
 msgid "Insert Nodes"
 msgstr "Вставить узлы"
 
-#: src/NodeMenu.vala:183
+#: src/NodeMenu.vala:184
 msgid "Replace Nodes"
 msgstr "Заменить узлы"
 
-#: src/NodeMenu.vala:192
+#: src/NodeMenu.vala:193
 msgid "Root Node"
 msgstr "Корневой узел"
 
-#: src/NodeMenu.vala:197
+#: src/NodeMenu.vala:198
 msgid "Next Sibling Node"
 msgstr "Следующий узел-сиблинг"
 
-#: src/NodeMenu.vala:202
+#: src/NodeMenu.vala:203
 msgid "Previous Sibling Node"
 msgstr "Предыдущий узел-сиблинг"
 
-#: src/NodeMenu.vala:207
+#: src/NodeMenu.vala:208
 msgid "Child Node"
 msgstr "Узел-потомок"
 
-#: src/NodeMenu.vala:212 src/NodesMenu.vala:108
+#: src/NodeMenu.vala:213 src/NodesMenu.vala:109
 msgid "Child Nodes"
 msgstr "Узлы-потомки"
 
-#: src/NodeMenu.vala:217
+#: src/NodeMenu.vala:218
 msgid "Subtree"
 msgstr "Всё поддерево"
 
-#: src/NodeMenu.vala:222
+#: src/NodeMenu.vala:223
 msgid "Parent Node"
 msgstr "Узел-родитель"
 
-#: src/NodeMenu.vala:227
+#: src/NodeMenu.vala:228
 msgid "Linked Node"
 msgstr "Связанный узел"
 
-#: src/NodeMenu.vala:241
+#: src/NodeMenu.vala:242
 msgid "Center Current Node"
 msgstr "Центрировать выбранный узел"
 
-#: src/NodeMenu.vala:245
+#: src/NodeMenu.vala:246
 msgid "Sort Children"
 msgstr "Отсортировать узлы-потомки"
 
-#: src/NodeMenu.vala:249
+#: src/NodeMenu.vala:250
 msgid "Alphabetically"
 msgstr "По алфавиту"
 
-#: src/NodeMenu.vala:252
+#: src/NodeMenu.vala:253
 msgid "Randomize"
 msgstr "Случайным образом"
 
-#: src/NodeMenu.vala:427
+#: src/NodeMenu.vala:428
 msgid "Remove Task"
 msgstr "Удалить задачу"
 
-#: src/NodeMenu.vala:428
+#: src/NodeMenu.vala:429
 msgid "Mark Task As Done"
 msgstr "Пометить задачу как выполненную"
 
-#: src/NodeMenu.vala:430
+#: src/NodeMenu.vala:431
 msgid "Remove Node Link"
 msgstr "Удалить ссылку на узел"
 
-#: src/NodeMenu.vala:431 src/NodesMenu.vala:222
+#: src/NodeMenu.vala:432 src/NodesMenu.vala:223
 msgid "Unfold Children"
 msgstr "Развернуть узлы-потомки"
 
-#: src/NodeMenu.vala:432 data/com.github.phase1geo.minder.shortcuts.ui:636
+#: src/NodeMenu.vala:433 data/com.github.phase1geo.minder.shortcuts.ui:643
 msgid "Remove Callout"
 msgstr "Удалить выноску"
 
-#: src/NodeMenu.vala:452
+#: src/NodeMenu.vala:453
 msgid "Paste Text As Child Node"
 msgstr "Вставить текст как узел-потомок"
 
-#: src/NodeMenu.vala:453
+#: src/NodeMenu.vala:454
 msgid "Paste and Replace Node Text"
 msgstr "Вставить и заменить текст узла"
 
-#: src/NodeMenu.vala:455
+#: src/NodeMenu.vala:456
 msgid "Paste Image As Child Node"
 msgstr "Вставить изображение как узел-потомок"
 
-#: src/NodeMenu.vala:456
+#: src/NodeMenu.vala:457
 msgid "Paste and Replace Node Image"
 msgstr "Вставить и заменить изображение узла"
 
-#: src/NodeMenu.vala:458
+#: src/NodeMenu.vala:459
 msgid "Paste Node As Child"
 msgstr "Вставить узел как потомок"
 
@@ -1066,7 +1078,7 @@ msgstr "Переключить статус задачи"
 msgid "Connect"
 msgstr "Соединить"
 
-#: src/NodesMenu.vala:72 src/NodesMenu.vala:223
+#: src/NodesMenu.vala:72 src/NodesMenu.vala:224
 msgid "Link Nodes"
 msgstr "Слинковать узлы"
 
@@ -1074,55 +1086,55 @@ msgstr "Слинковать узлы"
 msgid "Link Colors"
 msgstr "Цвета ссылок"
 
-#: src/NodesMenu.vala:87
+#: src/NodesMenu.vala:88
 msgid "Randomize colors"
 msgstr "Выбрать случайные цвета"
 
-#: src/NodesMenu.vala:103
+#: src/NodesMenu.vala:104
 msgid "Parent Nodes"
 msgstr "Узлы-родители"
 
-#: src/NodesMenu.vala:117
+#: src/NodesMenu.vala:118
 msgid "Align Nodes"
 msgstr "Выровнять узлы"
 
-#: src/NodesMenu.vala:121
+#: src/NodesMenu.vala:122
 msgid "Align Top"
 msgstr "По верхнему краю"
 
-#: src/NodesMenu.vala:125
+#: src/NodesMenu.vala:126
 msgid "Align Center Horizontally"
 msgstr "По центру горизонтально"
 
-#: src/NodesMenu.vala:129
+#: src/NodesMenu.vala:130
 msgid "Align Bottom"
 msgstr "По нижнему краю"
 
-#: src/NodesMenu.vala:133
+#: src/NodesMenu.vala:134
 msgid "Align Left"
 msgstr "По левому краю"
 
-#: src/NodesMenu.vala:137
+#: src/NodesMenu.vala:138
 msgid "Align Center Vertically"
 msgstr "По центру вертикально"
 
-#: src/NodesMenu.vala:141
+#: src/NodesMenu.vala:142
 msgid "Align Right"
 msgstr "По правому краю"
 
-#: src/NodesMenu.vala:223
+#: src/NodesMenu.vala:224
 msgid "Remove Node Links"
 msgstr "Удалить ссылки на узлы"
 
-#: src/Node.vala:2325
+#: src/Node.vala:2321
 msgid "Node Title"
 msgstr "Заголовок узла"
 
-#: src/Node.vala:2333
+#: src/Node.vala:2329
 msgid "Node Note"
 msgstr "Примечание к узлу"
 
-#: src/Node.vala:2344
+#: src/Node.vala:2340
 msgid "Callout Text"
 msgstr "Текст выноски"
 
@@ -1194,23 +1206,32 @@ msgstr "Выделять объекты наведением мыши"
 msgid "If enabled, selects items when mouse cursor hovers over the item."
 msgstr "Выделять ли объекты наведением указателя на них"
 
-#: src/Preferences.vala:110
+#: src/Preferences.vala:99
+#, fuzzy
+msgid "Natural scrolling"
+msgstr "Рыночно-нейтральный трейдинг"
+
+#: src/Preferences.vala:101
+msgid "Specifies scrolling used when panning the canvas."
+msgstr ""
+
+#: src/Preferences.vala:114
 msgid "Hide themes not matching visual style"
 msgstr "Скрывать темы, не соответствующие визуальному стилю"
 
-#: src/Preferences.vala:114
+#: src/Preferences.vala:118
 msgid "Default theme"
 msgstr "Тема по умолчанию"
 
-#: src/Preferences.vala:117
+#: src/Preferences.vala:121
 msgid "Enable animations"
 msgstr "Включить анимацию"
 
-#: src/Preferences.vala:120
+#: src/Preferences.vala:124
 msgid "Text field font size"
 msgstr "Размер шрифта в текстовых полях"
 
-#: src/Preferences.vala:123
+#: src/Preferences.vala:127
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
@@ -1316,23 +1337,23 @@ msgstr ""
 msgid "Search Stickers"
 msgstr "Искать по стикерам"
 
-#: src/StickerInspector.vala:134
+#: src/StickerInspector.vala:137
 msgid "Favorites"
 msgstr "Избранное"
 
-#: src/StickerInspector.vala:140
+#: src/StickerInspector.vala:143
 msgid "Show Custom Sticker Directory"
 msgstr "Показать каталог с собственными стикерами"
 
-#: src/StickerInspector.vala:214
+#: src/StickerInspector.vala:215
 msgid "Add custom stickers"
 msgstr "Добавить свои стикеры"
 
-#: src/StickerInspector.vala:401
+#: src/StickerInspector.vala:402
 msgid "Import Sticker(s)"
 msgstr "Импортировать стикеры"
 
-#: src/StickerInspector.vala:401 src/StickerSet.vala:353
+#: src/StickerInspector.vala:402 src/StickerSet.vala:353
 msgid "Import"
 msgstr "Импортировать"
 
@@ -3242,7 +3263,7 @@ msgid "Minder Shortcuts"
 msgstr "Горячие клавиши в Minder"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:12
-#: data/com.github.phase1geo.minder.shortcuts.ui:960
+#: data/com.github.phase1geo.minder.shortcuts.ui:967
 msgid "General"
 msgstr "Общие"
 
@@ -3315,7 +3336,7 @@ msgid "Show Map Tab"
 msgstr "Показать вкладку «Карта»"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:190
-#: data/com.github.phase1geo.minder.shortcuts.ui:740
+#: data/com.github.phase1geo.minder.shortcuts.ui:747
 msgid "Miscellaneous"
 msgstr "Разное"
 
@@ -3328,7 +3349,7 @@ msgid "Search Nodes/Connections"
 msgstr "Искать узлы и соединения"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:208
-#: data/com.github.phase1geo.minder.shortcuts.ui:964
+#: data/com.github.phase1geo.minder.shortcuts.ui:971
 msgid "Show Contextual Menu"
 msgstr "Показать контекстное меню"
 
@@ -3373,7 +3394,7 @@ msgid "Quick Entry Replacement"
 msgstr "Быстрая замена записи"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:293
-#: data/com.github.phase1geo.minder.shortcuts.ui:850
+#: data/com.github.phase1geo.minder.shortcuts.ui:857
 msgid "Clipboard"
 msgstr "Буфер обмена"
 
@@ -3398,7 +3419,7 @@ msgid "Changing Current"
 msgstr "Изменить текущие"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:331
-#: data/com.github.phase1geo.minder.shortcuts.ui:669
+#: data/com.github.phase1geo.minder.shortcuts.ui:676
 msgid "Edit Title"
 msgstr "Изменить заголовок"
 
@@ -3411,464 +3432,469 @@ msgid "Add URL Link To Text"
 msgstr "Добавить URL к выделенному тексту"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:359
-#: data/com.github.phase1geo.minder.shortcuts.ui:772
+#: data/com.github.phase1geo.minder.shortcuts.ui:779
 msgid "Remove URL Link From Text"
 msgstr "Удалить ссылку из текста"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:366
+#, fuzzy
+msgid "Change Link Color"
+msgstr "Цвет ссылки"
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:373
 msgid "View Properties"
 msgstr "Открыть свойства"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:373
+#: data/com.github.phase1geo.minder.shortcuts.ui:380
 msgid "Toggle Fold"
 msgstr "Развернуть или свернуть"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:380
+#: data/com.github.phase1geo.minder.shortcuts.ui:387
 msgid "Toggle Node Link"
 msgstr "Переключить ссылку на узел"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:387
+#: data/com.github.phase1geo.minder.shortcuts.ui:394
 msgid "Create Link to Selected Node"
 msgstr "Создать соединение с выбранным узлом"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:388
+#: data/com.github.phase1geo.minder.shortcuts.ui:395
 msgid "[After using this command, 'y' will create the link]"
 msgstr "[После этой команды 'y' создаст связь]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:395
+#: data/com.github.phase1geo.minder.shortcuts.ui:402
 msgid "Create Group"
 msgstr "Создать группу"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:402
+#: data/com.github.phase1geo.minder.shortcuts.ui:409
 msgid "Create Connection"
 msgstr "Создать соединение"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:409
+#: data/com.github.phase1geo.minder.shortcuts.ui:416
 msgid "Create Callout"
 msgstr "Создать выноску"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:416
+#: data/com.github.phase1geo.minder.shortcuts.ui:423
 msgid "Center In View"
 msgstr "Центрировать в окне"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:423
-#: data/com.github.phase1geo.minder.shortcuts.ui:690
+#: data/com.github.phase1geo.minder.shortcuts.ui:430
+#: data/com.github.phase1geo.minder.shortcuts.ui:697
 msgid "Place Into View"
 msgstr "Прокрутить холст и показать"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:432
-#: data/com.github.phase1geo.minder.shortcuts.ui:645
-#: data/com.github.phase1geo.minder.shortcuts.ui:877
+#: data/com.github.phase1geo.minder.shortcuts.ui:439
+#: data/com.github.phase1geo.minder.shortcuts.ui:652
+#: data/com.github.phase1geo.minder.shortcuts.ui:884
 msgid "Selection"
 msgstr "Выделение"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:436
+#: data/com.github.phase1geo.minder.shortcuts.ui:443
 msgid "Select Root"
 msgstr "Выбрать корневой узел"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:443
+#: data/com.github.phase1geo.minder.shortcuts.ui:450
 msgid "Select Parent"
 msgstr "Выбрать узел-родитель"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:450
+#: data/com.github.phase1geo.minder.shortcuts.ui:457
 msgid "Select Next Sibling"
 msgstr "Выбрать следующий узел-сиблинг"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:457
+#: data/com.github.phase1geo.minder.shortcuts.ui:464
 msgid "Select Previous Sibling"
 msgstr "Выбрать предыдущий узел-сиблинг"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:464
+#: data/com.github.phase1geo.minder.shortcuts.ui:471
 msgid "Select Child"
 msgstr "Выбрать узел-потомок"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:471
+#: data/com.github.phase1geo.minder.shortcuts.ui:478
 msgid "Select Children"
 msgstr "Выбрать узлы потомки"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:478
+#: data/com.github.phase1geo.minder.shortcuts.ui:485
 msgid "Select Subtree"
 msgstr "Выбрать поддерево"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:485
+#: data/com.github.phase1geo.minder.shortcuts.ui:492
 msgid "Select Node Below"
 msgstr "Выбрать узел ниже"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:492
+#: data/com.github.phase1geo.minder.shortcuts.ui:499
 msgid "Select Node Above"
 msgstr "Выбрать узел выше"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:499
+#: data/com.github.phase1geo.minder.shortcuts.ui:506
 msgid "Select Node To Right"
 msgstr "Выбрать узел справа"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:506
+#: data/com.github.phase1geo.minder.shortcuts.ui:513
 msgid "Select Node To Left"
 msgstr "Выбрать узел слева"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:513
+#: data/com.github.phase1geo.minder.shortcuts.ui:520
 msgid "Select Linked Node"
 msgstr "Выбрать слинкованный узел"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:520
+#: data/com.github.phase1geo.minder.shortcuts.ui:527
 msgid "Select Callout"
 msgstr "Выбрать выноску"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:527
+#: data/com.github.phase1geo.minder.shortcuts.ui:534
 msgid "Select Attached Connection"
 msgstr "Выбрать связанное соединение"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:536
+#: data/com.github.phase1geo.minder.shortcuts.ui:543
 msgid "Move"
 msgstr "Переместить"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:540
+#: data/com.github.phase1geo.minder.shortcuts.ui:547
 msgid "Swap with Sibling Node to Right"
 msgstr "Поменять местами с узлом-потомком справа"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:547
+#: data/com.github.phase1geo.minder.shortcuts.ui:554
 msgid "Swap with Sibling Node to Left"
 msgstr "Поменять местами с узлом-потомком слева"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:554
+#: data/com.github.phase1geo.minder.shortcuts.ui:561
 msgid "Swap with Sibling Node Above"
 msgstr "Поменять местами с узлом-потомком сверху"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:561
+#: data/com.github.phase1geo.minder.shortcuts.ui:568
 msgid "Swap with Sibling Node Below"
 msgstr "Поменять местами с узлом-потомком снизу"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:568
+#: data/com.github.phase1geo.minder.shortcuts.ui:575
 msgid "Sort Child Nodes Alphabetically"
 msgstr "Сортировать узлы-потомки в алфавитном порядке"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:577
+#: data/com.github.phase1geo.minder.shortcuts.ui:584
 msgid "Alignment"
 msgstr "Выравнивание"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:581
+#: data/com.github.phase1geo.minder.shortcuts.ui:588
 msgid "Align Top Side"
 msgstr "Выровнять по верхней стороне"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:588
+#: data/com.github.phase1geo.minder.shortcuts.ui:595
 msgid "Align Vertical Center"
 msgstr "По центру вертикально"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:595
+#: data/com.github.phase1geo.minder.shortcuts.ui:602
 msgid "Align Bottom Side"
 msgstr "Выровнять по нижней стороне"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:602
+#: data/com.github.phase1geo.minder.shortcuts.ui:609
 msgid "Align Left Side"
 msgstr "Выровнять по левой стороне"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:609
+#: data/com.github.phase1geo.minder.shortcuts.ui:616
 msgid "Align Horizontal Center"
 msgstr "По центру горизонтально"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:616
+#: data/com.github.phase1geo.minder.shortcuts.ui:623
 msgid "Align Right Side"
 msgstr "Выровнять по правой стороне"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:628
+#: data/com.github.phase1geo.minder.shortcuts.ui:635
 msgid "Callout Commands"
 msgstr "Команды выносок"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:632
-#: data/com.github.phase1geo.minder.shortcuts.ui:665
+#: data/com.github.phase1geo.minder.shortcuts.ui:639
+#: data/com.github.phase1geo.minder.shortcuts.ui:672
 msgid "Change Current"
 msgstr "Редактирование"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:661
+#: data/com.github.phase1geo.minder.shortcuts.ui:668
 msgid "Connection Commands"
 msgstr "Операции с соединениями"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:683
+#: data/com.github.phase1geo.minder.shortcuts.ui:690
 msgid "Show Properties"
 msgstr "Показать свойства"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:699
+#: data/com.github.phase1geo.minder.shortcuts.ui:706
 msgid "Traversal"
 msgstr "Перемещение"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:703
+#: data/com.github.phase1geo.minder.shortcuts.ui:710
 msgid "Select Start Node"
 msgstr "Выбрать начальный узел"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:710
+#: data/com.github.phase1geo.minder.shortcuts.ui:717
 msgid "Select End Node"
 msgstr "Выбрать конечный узел"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:717
+#: data/com.github.phase1geo.minder.shortcuts.ui:724
 msgid "Select Next Connection"
 msgstr "Выбрать следующее соединение"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:724
+#: data/com.github.phase1geo.minder.shortcuts.ui:731
 msgid "Select Previous Connection"
 msgstr "Выбрать предыдущее соединение"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:736
+#: data/com.github.phase1geo.minder.shortcuts.ui:743
 msgid "Text Editing"
 msgstr "Правка текста"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:744
+#: data/com.github.phase1geo.minder.shortcuts.ui:751
 msgid "Insert Newline Character"
 msgstr "Вставить перенос строки"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:751
+#: data/com.github.phase1geo.minder.shortcuts.ui:758
 msgid "Insert Tab Character"
 msgstr "Вставить табулятор"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:758
+#: data/com.github.phase1geo.minder.shortcuts.ui:765
 msgid "Show Emoji Picker"
 msgstr "Показать палитру эмотиконов"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:765
+#: data/com.github.phase1geo.minder.shortcuts.ui:772
 msgid "Add URL Link To Selected Text"
 msgstr "Добавить URL к выделенному тексту"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:779
+#: data/com.github.phase1geo.minder.shortcuts.ui:786
 msgid "End Editing"
 msgstr "Завершить правку"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:788
+#: data/com.github.phase1geo.minder.shortcuts.ui:795
 msgid "Cursor Movement"
 msgstr "Движение указателя мыши"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:792
+#: data/com.github.phase1geo.minder.shortcuts.ui:799
 msgid "Next Character"
 msgstr "Следующий символ"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:799
+#: data/com.github.phase1geo.minder.shortcuts.ui:806
 msgid "Previous Character"
 msgstr "Предыдущий символ"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:806
+#: data/com.github.phase1geo.minder.shortcuts.ui:813
 msgid "Next Word"
 msgstr "Следующее слово"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:813
+#: data/com.github.phase1geo.minder.shortcuts.ui:820
 msgid "Previous Word"
 msgstr "Предыдущее слово"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:820
+#: data/com.github.phase1geo.minder.shortcuts.ui:827
 msgid "Next Line"
 msgstr "Следующая строка"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:827
+#: data/com.github.phase1geo.minder.shortcuts.ui:834
 msgid "Previous Line"
 msgstr "Предыдущая строка"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:834
+#: data/com.github.phase1geo.minder.shortcuts.ui:841
 msgid "Start Of Text"
 msgstr "Начало текста"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:841
+#: data/com.github.phase1geo.minder.shortcuts.ui:848
 msgid "End Of Text"
 msgstr "Конец текста"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:854
+#: data/com.github.phase1geo.minder.shortcuts.ui:861
 msgid "Copy Selected Text"
 msgstr "Скопировать выделенный текст"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:861
+#: data/com.github.phase1geo.minder.shortcuts.ui:868
 msgid "Cut Selected Text"
 msgstr "Вырезать выделенный текст"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:868
+#: data/com.github.phase1geo.minder.shortcuts.ui:875
 msgid "Paste Text"
 msgstr "Вставить текст"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:881
+#: data/com.github.phase1geo.minder.shortcuts.ui:888
 msgid "Add Next Character"
 msgstr "Добавить следующий символ"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:888
+#: data/com.github.phase1geo.minder.shortcuts.ui:895
 msgid "Add Previous Character"
 msgstr "Добавить предыдущий символ"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:895
+#: data/com.github.phase1geo.minder.shortcuts.ui:902
 msgid "Add Next Word"
 msgstr "Добавить следующее слово"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:902
+#: data/com.github.phase1geo.minder.shortcuts.ui:909
 msgid "Add Previous Word"
 msgstr "Добавить предыдущее слово"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:909
+#: data/com.github.phase1geo.minder.shortcuts.ui:916
 msgid "Add Next Line"
 msgstr "Добавить следующую строку"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:916
+#: data/com.github.phase1geo.minder.shortcuts.ui:923
 msgid "Add Previous Line"
 msgstr "Добавить предыдущую строку"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:923
+#: data/com.github.phase1geo.minder.shortcuts.ui:930
 msgid "Add Start Of Text"
 msgstr "Выделить до начала текста"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:930
+#: data/com.github.phase1geo.minder.shortcuts.ui:937
 msgid "Add End Of Text"
 msgstr "Выделить до конца текста"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:937
+#: data/com.github.phase1geo.minder.shortcuts.ui:944
 msgid "Select All Text"
 msgstr "Выделить весь текст"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:944
+#: data/com.github.phase1geo.minder.shortcuts.ui:951
 msgid "Clear Selection"
 msgstr "Снять выделение"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:956
+#: data/com.github.phase1geo.minder.shortcuts.ui:963
 msgid "Mouse Events"
 msgstr "События с мышью"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:965
+#: data/com.github.phase1geo.minder.shortcuts.ui:972
 msgid "[Right-click when item is selected]"
 msgstr "[Щелчок ПКМ, когда объект выбран]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:971
+#: data/com.github.phase1geo.minder.shortcuts.ui:978
 msgid "Edit Image in Canvas"
 msgstr "Изменить изображение на холсте"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:972
+#: data/com.github.phase1geo.minder.shortcuts.ui:979
 msgid "[Double left-click on image]"
 msgstr "[Двойной щелчок по изображению]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:980
+#: data/com.github.phase1geo.minder.shortcuts.ui:987
 msgid "Canvas Movement"
 msgstr "Перемещение по холсту"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:984
+#: data/com.github.phase1geo.minder.shortcuts.ui:991
 msgid "Pan Canvas"
 msgstr "Навигация по холсту"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:985
+#: data/com.github.phase1geo.minder.shortcuts.ui:992
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr "[Щелчок СКМ + перетаскивание / Alt + движение]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:991
+#: data/com.github.phase1geo.minder.shortcuts.ui:998
 msgid "Scroll Vertically"
 msgstr "Прокрутить по вертикали"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:992
+#: data/com.github.phase1geo.minder.shortcuts.ui:999
 msgid "[Scrollwheel up/down]"
 msgstr "[Прокрутка колесом вверх/вниз]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:998
+#: data/com.github.phase1geo.minder.shortcuts.ui:1005
 msgid "Scroll Horizontally"
 msgstr "Прокрутить по горизонтали"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:999
+#: data/com.github.phase1geo.minder.shortcuts.ui:1006
 msgid "[Shift + Scrollwheel up/down]"
 msgstr "[Shift + прокрутка колесом вверх/вниз]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1007
+#: data/com.github.phase1geo.minder.shortcuts.ui:1014
 msgid "Item Selection"
 msgstr "Выделение объектов"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1011
+#: data/com.github.phase1geo.minder.shortcuts.ui:1018
 msgid "Select Single Item"
 msgstr "Выбрать один объект"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1012
+#: data/com.github.phase1geo.minder.shortcuts.ui:1019
 msgid "[Left-click on item]"
 msgstr "[Щелчок ЛКМ]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1018
+#: data/com.github.phase1geo.minder.shortcuts.ui:1025
 msgid "Select Child Nodes"
 msgstr "Выбрать узлы-потомки"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1019
+#: data/com.github.phase1geo.minder.shortcuts.ui:1026
 msgid "[Control + Left-click on parent node]"
 msgstr "[Control + щелчок ЛКМ по родительскому узлу]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1025
+#: data/com.github.phase1geo.minder.shortcuts.ui:1032
 msgid "Select Node Tree/Subtree"
 msgstr "Выбрать (под)дерево узлов"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1026
+#: data/com.github.phase1geo.minder.shortcuts.ui:1033
 msgid "[Control + Double left-click on parent node]"
 msgstr "[Control + двойной щелчок ЛКМ по родительскому узлу]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1032
+#: data/com.github.phase1geo.minder.shortcuts.ui:1039
 msgid "Select All Nodes at Same Depth Level"
 msgstr "Выбрать все узлы на одном уровне"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1033
+#: data/com.github.phase1geo.minder.shortcuts.ui:1040
 msgid "[Control + Triple left-click on node]"
 msgstr "[Control + тройной щелчок ЛКМ по узлу]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1039
+#: data/com.github.phase1geo.minder.shortcuts.ui:1046
 msgid "Block Selection"
 msgstr "Заблокировать выделение"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1040
+#: data/com.github.phase1geo.minder.shortcuts.ui:1047
 msgid "[Left-click + Drag]"
 msgstr "[Щелчок ЛКМ и перетаскивание]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1048
+#: data/com.github.phase1geo.minder.shortcuts.ui:1055
 msgid "Item Selection Toggle (Add to/Remove from Selection)"
 msgstr ""
 "Переключить выбранность объекта (добавить в выделение или удалить из него)"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1052
+#: data/com.github.phase1geo.minder.shortcuts.ui:1059
 msgid "Toggle Selection of Item"
 msgstr "Переключить выделение объекта"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1053
+#: data/com.github.phase1geo.minder.shortcuts.ui:1060
 msgid "[Shift + Left-click on item]"
 msgstr "[Shift + щелчок ЛКМ по объекту]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1059
+#: data/com.github.phase1geo.minder.shortcuts.ui:1066
 msgid "Toggle Selection of Child Nodes"
 msgstr "Переключить выбор узлов-потомков"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1060
+#: data/com.github.phase1geo.minder.shortcuts.ui:1067
 msgid "[Shift + Control + Left-click on item]"
 msgstr "[Shift + Control + щелчок ЛКМ по объекту]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1066
+#: data/com.github.phase1geo.minder.shortcuts.ui:1073
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr "Переключить выбор дерева/поддерева узлов"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1067
+#: data/com.github.phase1geo.minder.shortcuts.ui:1074
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr "[Shift + Control + двойной щелчок ЛКМ по родительскому узлу]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1073
+#: data/com.github.phase1geo.minder.shortcuts.ui:1080
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr "Переключить выбор всех узлов на одном уровне вложенности"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1074
+#: data/com.github.phase1geo.minder.shortcuts.ui:1081
 msgid "[Shift + Control + Triple left-click on node]"
 msgstr "[Shift + Control + тройной щелчок ЛКМ по узлу]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1082
+#: data/com.github.phase1geo.minder.shortcuts.ui:1089
 msgid "Text Selection"
 msgstr "Выделение текста"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1086
+#: data/com.github.phase1geo.minder.shortcuts.ui:1093
 msgid "Set Cursor Insert Point"
 msgstr "Установить точку ввода"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1087
+#: data/com.github.phase1geo.minder.shortcuts.ui:1094
 msgid "[Left-click anywhere in text]"
 msgstr "[Щелчок ЛКМ в любой части текста]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1093
+#: data/com.github.phase1geo.minder.shortcuts.ui:1100
 msgid "Select current word"
 msgstr "Выбрать текущее слово"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1094
+#: data/com.github.phase1geo.minder.shortcuts.ui:1101
 msgid "[Double left-click on word]"
 msgstr "[Двойной щелчок по слову]"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1100
+#: data/com.github.phase1geo.minder.shortcuts.ui:1107
 msgid "Select all text"
 msgstr "Выделить весь текст"
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1101
+#: data/com.github.phase1geo.minder.shortcuts.ui:1108
 msgid "[Triple left-click anywhere in text]"
 msgstr "[Тройной щелчок в любой части текста]"
 
