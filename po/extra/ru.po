@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Minder 1.12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-14 23:06-0600\n"
-"PO-Revision-Date: 2023-04-21 15:45+0200\n"
+"PO-Revision-Date: 2024-01-15 07:09+0100\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "Language: ru\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.4\n"
 
 #: data/com.github.phase1geo.minder.desktop.in:3
 #: data/com.github.phase1geo.minder.appdata.xml.in:7
@@ -210,14 +210,12 @@ msgid "New"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:99
-#, fuzzy
 msgid "Added support for Shift-L to change the color of any selected nodes."
-msgstr "Добавлена поддержка изображений внутри узлов."
+msgstr "Добавлена поддержка Shift+L для быстрой смены цвета выбранных узлов."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:100
-#, fuzzy
 msgid "Added support for natural scrolling preference."
-msgstr "Добавлен режим фокусировки."
+msgstr "Добавлена настраиваемая поддержка естественной прокрутки."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:102
 #: data/com.github.phase1geo.minder.appdata.xml.in:119
@@ -260,9 +258,8 @@ msgid ""
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:117
-#, fuzzy
 msgid "Added support for Shift-Tab to unindent nodes in Quick Entry."
-msgstr "Добавлена поддержка изображений внутри узлов."
+msgstr "Добавлена поддержка Shift+Tab для удаления отступов в быстрой вставке."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:121
 #: data/com.github.phase1geo.minder.appdata.xml.in:143
@@ -280,14 +277,12 @@ msgid "Added support for adding node links in node, connection or group notes."
 msgstr "Добавлена поддержка URL в заголовках узлов."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:136
-#, fuzzy
 msgid "Added support for providing custom stickers."
-msgstr "Добавлен режим фокусировки."
+msgstr "Добавлена поддержка пользовательских стикеров."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:137
-#, fuzzy
 msgid "Added support for callouts that can be applied to nodes."
-msgstr "Добавлена поддержка изображений внутри узлов."
+msgstr "Добавлена поддержка выносок в узлах."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:138
 msgid ""
@@ -399,16 +394,16 @@ msgid "Adjusted codebase to compile on Fedora"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:202
-#, fuzzy
 msgid ""
 "Added new --import command-line option for importing directly from command-"
 "line."
-msgstr "Добавлен импорт ментальных карт из командной строки."
+msgstr ""
+"Добавлен новый ключ --import command-line для импорта прямо из командной "
+"строки."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:203
-#, fuzzy
 msgid "Added support for importing Markdown."
-msgstr "Добавлен импорт ментальных карт из командной строки."
+msgstr "Добавлен импорт Markdown."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:207
 msgid ""
@@ -466,9 +461,8 @@ msgid "Fixed issue with Control-Up cursor selection shortcut."
 msgstr "Добавлен экспорт в формат Mermaid."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:221
-#, fuzzy
 msgid "Fixed issue with centering a node with Shift-C."
-msgstr "Добавлен экспорт в формат Mermaid."
+msgstr "Исправлена ошибка центрирования узлов с помощью Shift+C."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:222
 msgid "Fixed several issues related to zoom/scaling."
@@ -479,9 +473,9 @@ msgid "Fixed location of input method entry field (thanks to @aeghn)."
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:231
-#, fuzzy
 msgid "Added support for embedding image path in Quick Entry."
-msgstr "Добавлена поддержка изображений внутри узлов."
+msgstr ""
+"Добавлено встраивание изображений через указание пути в быстрой вставке."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:235
 #: data/com.github.phase1geo.minder.appdata.xml.in:251
@@ -490,7 +484,7 @@ msgstr "Добавлена поддержка изображений внутр�
 #: data/com.github.phase1geo.minder.appdata.xml.in:410
 #: data/com.github.phase1geo.minder.appdata.xml.in:444
 msgid "Updated Italian translation (thanks to @albanobattistella)"
-msgstr ""
+msgstr "Обновлен перевод на итальянский (спасибо @albanobattistella)"
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:236
 msgid "Code cleanup"
@@ -509,9 +503,8 @@ msgid "Fixed issue with undo/redo of Unicode characters."
 msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:243
-#, fuzzy
 msgid "Fixed issues with exporting to Outliner format."
-msgstr "Добавлен экспорт в формат Mermaid."
+msgstr "Исправлены ошибки при экспорте в формат Outliner."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:255
 msgid "Fixing translation issues with Flatpak"
@@ -1160,6 +1153,8 @@ msgstr ""
 #: data/com.github.phase1geo.minder.appdata.xml.in:511
 msgid "Added ability to move child nodes to parent via Alt+direction."
 msgstr ""
+"Добавлена возможность перемещать узлы-потомки в родительские через "
+"Alt+направление."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:512
 msgid "Added support for including images in Markdown export."
@@ -1539,7 +1534,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:643
 msgid "Updated application icon (thanks to Fatih20)."
-msgstr ""
+msgstr "Обновлена иконка приложения (спасибо Fatih20)."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:647
 msgid "Fixed issue with importing Freemind notes."
@@ -1756,6 +1751,7 @@ msgstr ""
 #: data/com.github.phase1geo.minder.appdata.xml.in:731
 msgid "Added ability to replace/edit nodes via the Quick Entry feature."
 msgstr ""
+"Добавлена возможность заменять и изменять узлы через функцию быстрой вставки."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:735
 msgid ""
@@ -1899,7 +1895,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:787
 msgid "Added ability to select children nodes using Control-click."
-msgstr ""
+msgstr "Добавлена возможность выбирать узлы-потомки через Ctrl+щелчок."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:788
 msgid ""
@@ -2317,7 +2313,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:961
 msgid "Added ability to modify styles of nodes and links."
-msgstr ""
+msgstr "Добавлена возможность менять стили узлов и ссылок."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:962
 msgid ""
@@ -2410,7 +2406,7 @@ msgstr ""
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:1005
 msgid "Added support for shift-mousewheel to scroll horizontally."
-msgstr ""
+msgstr "Добавлена поддержка Shift+колеса мыши для горизонтальной прокрутки."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:1006
 msgid "Added support for control-mousewheel to zoom in/out."
@@ -2496,7 +2492,7 @@ msgstr "Добавлена возможность искать по тексту
 #: data/com.github.phase1geo.minder.appdata.xml.in:1041
 msgid ""
 "Added ability to optionally control search criteria within search popover."
-msgstr ""
+msgstr "Добавлена возможность по выбору менять критерии поиска."
 
 #: data/com.github.phase1geo.minder.appdata.xml.in:1042
 msgid "Fixed screenshots."
