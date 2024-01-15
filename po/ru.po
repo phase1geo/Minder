@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-14 23:06-0600\n"
-"PO-Revision-Date: 2024-01-06 18:37+0100\n"
+"PO-Revision-Date: 2024-01-15 06:57+0100\n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "Language: ru\n"
@@ -542,15 +542,15 @@ msgstr "Изображения"
 
 #: src/MainWindow.vala:64
 msgid "Use system setting"
-msgstr ""
+msgstr "Использовать системные настройки"
 
 #: src/MainWindow.vala:65
 msgid "Always use natural scrolling"
-msgstr ""
+msgstr "Всегда"
 
 #: src/MainWindow.vala:66
 msgid "Never use natural scrolling"
-msgstr ""
+msgstr "Никогда"
 
 #: src/MainWindow.vala:195 src/MainWindow.vala:1327
 msgid "Minder"
@@ -1207,13 +1207,12 @@ msgid "If enabled, selects items when mouse cursor hovers over the item."
 msgstr "Выделять ли объекты наведением указателя на них"
 
 #: src/Preferences.vala:99
-#, fuzzy
 msgid "Natural scrolling"
-msgstr "Рыночно-нейтральный трейдинг"
+msgstr "Естественная прокрутка"
 
 #: src/Preferences.vala:101
 msgid "Specifies scrolling used when panning the canvas."
-msgstr ""
+msgstr "Какой способ прокрутки на холсте использовать"
 
 #: src/Preferences.vala:114
 msgid "Hide themes not matching visual style"
@@ -3437,9 +3436,8 @@ msgid "Remove URL Link From Text"
 msgstr "Удалить ссылку из текста"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:366
-#, fuzzy
 msgid "Change Link Color"
-msgstr "Цвет ссылки"
+msgstr "Сменить цвет ссылки"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:373
 msgid "View Properties"
