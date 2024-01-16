@@ -166,13 +166,17 @@
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added support for Shift-L to change the color of any selected nodes.</li>
+          <li xml:lang="ru">Добавлена поддержка Shift+L для быстрой смены цвета выбранных узлов.</li>
           <li>Added support for natural scrolling preference.</li>
+          <li xml:lang="ru">Добавлена настраиваемая поддержка естественной прокрутки.</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="ru">Изменения</p>
         <p xml:lang="pt">Alterações</p>
         <p xml:lang="fr">Modifications</p>
         <ul>
+          <li>Updated Russian translation (thanks to Alexandre Prokoudine).</li>
+          <li xml:lang="ru">Обновлена русская локализация (Александр Прокудин)</li>
           <li>Updated README.md to change the installation instructions for Arch-based distros to avoid issues with discount library.</li>
         </ul>
       </description>
@@ -189,6 +193,7 @@
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added support for Shift-Tab to unindent nodes in Quick Entry.</li>
+          <li xml:lang="ru">Добавлена поддержка Shift+Tab для удаления отступов в быстрой вставке.</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="ru">Изменения</p>
@@ -213,7 +218,9 @@
         <ul>
           <li>Added support for adding node links in node, connection or group notes.</li>
           <li>Added support for providing custom stickers.</li>
+          <li xml:lang="ru">Добавлена поддержка пользовательских стикеров.</li>
           <li>Added support for callouts that can be applied to nodes.</li>
+          <li xml:lang="ru">Добавлена поддержка выносок в узлах.</li>
           <li>Added node alignment toolbar in map sidebar when manual layout mode is selected.</li>
           <li>Added output scaling to PNG/JPEG export options.</li>
         </ul>
@@ -306,7 +313,9 @@
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added new --import command-line option for importing directly from command-line.</li>
+          <li xml:lang="ru">Добавлен новый ключ --import command-line для импорта прямо из командной строки.</li>
           <li>Added support for importing Markdown.</li>
+          <li xml:lang="ru">Добавлен импорт Markdown.</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="ru">Изменения</p>
@@ -331,6 +340,7 @@
           <li>Fixed cursor/selection issue when the Delete key is used (includes application crash issue).</li>
           <li>Fixed issue with Control-Up cursor selection shortcut.</li>
           <li>Fixed issue with centering a node with Shift-C.</li>
+          <li xml:lang="ru">Исправлена ошибка центрирования узлов с помощью Shift+C.</li>
           <li>Fixed several issues related to zoom/scaling.</li>
           <li>Fixed location of input method entry field (thanks to @aeghn).</li>
         </ul>
@@ -343,6 +353,7 @@
         <p xml:lang="fr">Nouveau</p>
         <ul>
           <li>Added support for embedding image path in Quick Entry.</li>
+          <li xml:lang="ru">Добавлено встраивание изображений через указание пути в быстрой вставке.</li>
         </ul>
         <p>Changes</p>
         <p xml:lang="ru">Изменения</p>
@@ -350,6 +361,7 @@
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li xml:lang="ru">Обновлен перевод на итальянский (спасибо @albanobattistella)</li>
           <li>Code cleanup</li>
         </ul>
         <p>Bug Fixes</p>
@@ -361,6 +373,7 @@
           <li>Fixed issue with importing OPML files (thanks to Ygor Mutti).</li>
           <li>Fixed issue with undo/redo of Unicode characters.</li>
           <li>Fixed issues with exporting to Outliner format.</li>
+          <li xml:lang="ru">Исправлены ошибки при экспорте в формат Outliner.</li>
         </ul>
       </description>
     </release>
@@ -372,6 +385,7 @@
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li xml:lang="ru">Обновлен перевод на итальянский (спасибо @albanobattistella)</li>
         </ul>
         <p>Bug Fixes</p>
         <p xml:lang="ru">Исправления ошибок</p>
@@ -427,6 +441,7 @@
           <li>Updated Czech translation (thanks to @G020B)</li>
           <li xml:lang="ru">Обновлена чешская локализация (спасибо @G020B).</li>
           <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li xml:lang="ru">Обновлен перевод на итальянский (спасибо @albanobattistella)</li>
           <li>Updated Russian translation (thanks to Alexandre Prokoudine)</li>
           <li xml:lang="ru">Обновлена русская локализация (Александр Прокудин).</li>
           <li>Updated Portugese translation (thanks to @AncientBlueFrog)</li>
@@ -525,6 +540,7 @@
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li xml:lang="ru">Обновлен перевод на итальянский (спасибо @albanobattistella)</li>
           <li>Updated screenshots for elementary OS 6.</li>
           <li xml:lang="ru">Скриншоты обновлены для elementary OS 6.</li>
         </ul>
@@ -598,6 +614,7 @@
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li xml:lang="ru">Обновлен перевод на итальянский (спасибо @albanobattistella)</li>
           <li>Updated Russian translation (thanks to Alexandre Prokoudine)</li>
           <li xml:lang="ru">Обновлена русская локализация (Александр Прокудин).</li>
         </ul>
@@ -648,6 +665,7 @@
         <p xml:lang="fr">Modifications</p>
         <ul>
           <li>Updated Italian translation (thanks to @albanobattistella)</li>
+          <li xml:lang="ru">Обновлен перевод на итальянский (спасибо @albanobattistella)</li>
           <li>Changed shape of the unfold indicator.</li>
         </ul>
         <p>Bug Fixes</p>
@@ -737,6 +755,7 @@
           <li>Added support for searching all tabs (thanks to @Messius58).</li>
           <li>Added about window for non-elementary builds.</li>
           <li>Added ability to move child nodes to parent via Alt+direction.</li>
+          <li xml:lang="ru">Добавлена возможность перемещать узлы-потомки в родительские через Alt+направление.</li>
           <li>Added support for including images in Markdown export.</li>
         </ul>
         <p>Changes</p>
@@ -927,6 +946,7 @@
           <li>If connection title is empty, the title will be automatically removed.</li>
           <li xml:lang="pt">Se o título da conexão estiver vazio, o título é removido automaticamente.</li>
           <li>Updated application icon (thanks to Fatih20).</li>
+          <li xml:lang="ru">Обновлена иконка приложения (спасибо Fatih20).</li>
           <li xml:lang="pt">Ícone da aplicação atualizado (obrigado a Fatih20).</li>
         </ul>
         <p>Bug Fixes</p>
@@ -1090,6 +1110,7 @@
           <li>Added ability to create a connected root node.</li>
           <li xml:lang="pt">Adicionada a possibilidade de criar um nó raiz conectado.</li>
           <li>Added ability to replace/edit nodes via the Quick Entry feature.</li>
+          <li xml:lang="ru">Добавлена возможность заменять и изменять узлы через функцию быстрой вставки.</li>
           <li xml:lang="pt">Adicionada a possibilidade de substituir/editar nós através da funcionalidade Entrada Rápida.</li>
         </ul>
         <p>Changes</p>
@@ -1199,6 +1220,7 @@
           <li xml:lang="pt">Adicionada a possibilidade de fazer com que um nó descendente com uma cor diferente de seu pai reutilize a cor do mesmo.</li>
           <li xml:lang="fr">Ajout de la possibilité de créer un nœud enfant avec une couleur diffénte de son parent pour réutiliser la couleur du parent.</li>
           <li>Added ability to select children nodes using Control-click.</li>
+          <li xml:lang="ru">Добавлена возможность выбирать узлы-потомки через Ctrl+щелчок.</li>
           <li xml:lang="pt">Adicionada a possibilidade de selecionar nós filhos usando o Ctrl-clique.</li>
           <li>Added ability to export a mind-map as a new Portable Minder filetype which will allow Minder files to be copied between different users/filesystems.</li>
           <li xml:lang="pt">Adicionada a possibilidade de exportar um mapa mental como um novo tipo de ficheiro do Portable Minder, que permitirá que os ficheiros do Minder sejam copiados entre diferentes utilizadores/sistemas de ficheiros.</li>
@@ -1586,6 +1608,7 @@
           <li xml:lang="pt">Suporte adicionado para abrir ficheiros Minder automaticamente a partir de Ficheiros.</li>
           <li xml:lang="fr">Ajout de la prise en charge de l'ouverture automatique des fichiers Minder à partir de Fichiers.</li>
           <li>Added ability to modify styles of nodes and links.</li>
+          <li xml:lang="ru">Добавлена возможность менять стили узлов и ссылок.</li>
           <li xml:lang="pt">Adicionada a possibilidade de modificar estilos de nós e ligações.</li>
           <li xml:lang="fr">Ajout de la possibilité de modifier les styles des nœuds et des liens.</li>
           <li>Changed layouts to be stored on a per tree basis instead of a per document basis.</li>
@@ -1681,6 +1704,7 @@
           <li xml:lang="pt">Suporte adicionado para impedir que o mapa saía para fora do ecrã ao deslizar.</li>
           <li xml:lang="fr">Ajout de la prise en charge du maintien du défilement de la carte de l'écran.</li>
           <li>Added support for shift-mousewheel to scroll horizontally.</li>
+          <li xml:lang="ru">Добавлена поддержка Shift+колеса мыши для горизонтальной прокрутки.</li>
           <li xml:lang="pt">Suporte adicionado para deslizar na horizontal com a tecla Shift-roda do rato.</li>
           <li xml:lang="fr">Ajout de la prise en charge de la molette de la souris avec shift pour le défilement horizontal.</li>
           <li>Added support for control-mousewheel to zoom in/out.</li>
@@ -1763,6 +1787,7 @@
           <li xml:lang="pt">Adicionada a possibilidade de pesquisar dentro de notas.</li>
           <li xml:lang="fr">Ajout de la possibilité de chercher parmi les notes.</li>
           <li>Added ability to optionally control search criteria within search popover.</li>
+          <li xml:lang="ru">Добавлена возможность по выбору менять критерии поиска.</li>
           <li xml:lang="pt">Adicionada a possibilidade de controlar opcionalmente os critérios de pesquisa no menu flutuante de pesquisa.</li>
           <li xml:lang="fr">Ajout de la possibilité pour optionnellement contrôler les critères de recherche dans le volet de recherche.</li>
           <li>Fixed screenshots.</li>

@@ -101,6 +101,7 @@
         </ul>
         <p>Changes</p>
         <ul>
+          <li>Updated Russian translation (thanks to Alexandre Prokoudine).</li>
           <li>Updated README.md to change the installation instructions for Arch-based distros to avoid issues with discount library.</li>
         </ul>
       </description>
