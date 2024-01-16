@@ -2,14 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
 # ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2020.
-# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2021,2022,2023.
+# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2021,2022,2023,2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-15 23:18-0600\n"
-"PO-Revision-Date: 2024-01-09 20:30+0100\n"
+"PO-Revision-Date: 2024-01-16 10:57+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -539,15 +539,15 @@ msgstr "Immagini"
 
 #: src/MainWindow.vala:64
 msgid "Use system setting"
-msgstr ""
+msgstr "Utilizza le impostazioni di sistema"
 
 #: src/MainWindow.vala:65
 msgid "Always use natural scrolling"
-msgstr ""
+msgstr "Utilizza sempre lo scorrimento naturale"
 
 #: src/MainWindow.vala:66
 msgid "Never use natural scrolling"
-msgstr ""
+msgstr "Non utilizzare mai lo scorrimento naturale"
 
 #: src/MainWindow.vala:195 src/MainWindow.vala:1327
 msgid "Minder"
@@ -3438,9 +3438,8 @@ msgid "Remove URL Link From Text"
 msgstr "Rimuovi collegamento URL dal testo"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:366
-#, fuzzy
 msgid "Change Link Color"
-msgstr "Colore collegamento"
+msgstr "Modifica il colore del collegamento"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:373
 msgid "View Properties"
