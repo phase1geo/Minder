@@ -96,10 +96,6 @@ public class Preferences : Gtk.Dialog {
     grid.attach( make_switch( "select-on-hover" ), 1, 5 );
     grid.attach( make_info( _( "If enabled, selects items when mouse cursor hovers over the item." ) ), 3, 5 );
 
-    grid.attach( make_label( _( "Natural scrolling" ) ), 0, 6 );
-    grid.attach( make_natural_scrolling(), 1, 6, 2 );
-    grid.attach( make_info( _( "Specifies scrolling used when panning the canvas." ) ), 3, 6 );
-
     return( grid );
 
   }
@@ -180,33 +176,6 @@ public class Preferences : Gtk.Dialog {
       var item = new Gtk.MenuItem.with_label( lbl );
       item.activate.connect(() => {
         _settings.set_string( "default-theme", name );
-        mb.label = lbl;
-      });
-      mnu.add( item );
-    }
-
-    mnu.show_all();
-
-    return( mb );
-
-  }
-
-  /* Creates the natural scrolling menu */
-  private MenuButton make_natural_scrolling() {
-    
-    var mb      = new MenuButton();
-    var mnu     = new Gtk.Menu();
-    var setting = NaturalScrollType.parse( _settings.get_string( "natural-scrolling-type" ) );
-
-    mb.label = setting.label();
-    mb.popup = mnu;
-
-    for( int i=0; i<NaturalScrollType.NUM; i++ ) {
-      var type = (NaturalScrollType)i;
-      var lbl  = type.label();
-      var item = new Gtk.MenuItem.with_label( lbl );
-      item.activate.connect(() => {
-        _settings.set_string( "natural-scrolling-type", type.to_string() );
         mb.label = lbl;
       });
       mnu.add( item );

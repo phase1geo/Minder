@@ -35,6 +35,7 @@ public class DrawArea : Gtk.DrawingArea {
   private const CursorType move_cursor = CursorType.HAND1;
   private const CursorType url_cursor  = CursorType.HAND2;
   private const CursorType text_cursor = CursorType.XTERM;
+  private const CursorType pan_cursor  = CursorType.FLEUR;
 
   public static const Gtk.TargetEntry[] DRAG_TARGETS = {
     {"text/uri-list", 0,                    DragTypes.URI},
@@ -317,6 +318,7 @@ public class DrawArea : Gtk.DrawingArea {
       EventMask.BUTTON1_MOTION_MASK |
       EventMask.POINTER_MOTION_MASK |
       EventMask.KEY_PRESS_MASK |
+      EventMask.KEY_RELEASE_MASK |
       EventMask.SMOOTH_SCROLL_MASK |
       EventMask.STRUCTURE_MASK
     );
@@ -1841,6 +1843,12 @@ public class DrawArea : Gtk.DrawingArea {
 
     var current_conn = _selected.current_connection();
     var shift        = (bool)(e.state & ModifierType.SHIFT_MASK);
+    var alt          = (bool)(e.state & ModifierType.MOD1_MASK);
+    
+    /* If we are going to pan the canvas, do it and return */
+    if( _press_middle || alt ) {
+      return( true );
+    }
 
     /* If the user clicked on a selected connection endpoint, disconnect that endpoint */
     if( (current_conn != null) && (current_conn.mode == ConnMode.SELECTED) ) {
@@ -2428,9 +2436,9 @@ public class DrawArea : Gtk.DrawingArea {
         grab_focus();
         _press_x      = scaled_x;
         _press_y      = scaled_y;
+        _press_middle = event.button == Gdk.BUTTON_MIDDLE;
         _pressed      = set_current_at_position( _press_x, _press_y, event );
         _press_type   = event.type;
-        _press_middle = event.button == Gdk.BUTTON_MIDDLE;
         _motion       = false;
         queue_draw();
         break;
@@ -2481,7 +2489,7 @@ public class DrawArea : Gtk.DrawingArea {
     var control = (bool)(event.state & ModifierType.CONTROL_MASK);
     var shift   = (bool)(event.state & ModifierType.SHIFT_MASK);
     var alt     = (bool)(event.state & ModifierType.MOD1_MASK);
-
+    
     /* If we have an attachable summary node, clear it */
     if( _attach_summary != null ) {
       _attach_summary.attachable = false;
@@ -2508,6 +2516,16 @@ public class DrawArea : Gtk.DrawingArea {
     /* If the mouse button is current pressed, handle it */
     if( _pressed ) {
 
+      /* If we are holding the middle mouse button while moving, pan the canvas */
+      if( _press_middle || alt ) {
+        double diff_x = _scaled_x - last_x;
+        double diff_y = _scaled_y - last_y;
+        move_origin( diff_x, diff_y );
+        queue_draw();
+        auto_save();
+        return( true );
+      }
+  
       /* If we are dealing with a connection, update it based on its mode */
       if( current_conn != null ) {
         switch( current_conn.mode ) {
@@ -2592,13 +2610,6 @@ public class DrawArea : Gtk.DrawingArea {
           auto_save();
         }
 
-      /* If we are holding the middle mouse button while moving, pan the canvas */
-      } else if( _press_middle ) {
-        double diff_x = win.natural_scrolling ? (_scaled_x - last_x) : (last_x - _scaled_x);
-        double diff_y = win.natural_scrolling ? (_scaled_y - last_y) : (last_y - _scaled_y);
-        move_origin( diff_x, diff_y );
-        queue_draw();
-        auto_save();
 
       /* Otherwise, we are drawing a selection rectangle */
       } else {
@@ -2618,15 +2629,6 @@ public class DrawArea : Gtk.DrawingArea {
       _press_x = _scaled_x;
       _press_y = _scaled_y;
       _motion  = true;
-
-    /* If the Alt key is held down, we are panning the canvas */
-    } else if( alt ) {
-
-      double diff_x = win.natural_scrolling ? (_scaled_x - last_x) : (last_x - _scaled_x);
-      double diff_y = win.natural_scrolling ? (_scaled_y - last_y) : (last_y - _scaled_y);
-      move_origin( diff_x, diff_y );
-      queue_draw();
-      auto_save();
 
     } else {
 
@@ -4799,7 +4801,7 @@ public class DrawArea : Gtk.DrawingArea {
     uint[] kvs          = {};
 
     keymap.get_entries_for_keycode( e.hardware_keycode, out ks, out kvs );
-
+    
     /* If there is a current node or connection selected, operate on it */
     if( (current_node != null) || (current_conn != null) || (current_callout != null) || (current_group != null) ) {
       if( control ) {
@@ -4842,6 +4844,7 @@ public class DrawArea : Gtk.DrawingArea {
         else if( has_key( kvs, Key.Page_Up ) )   { handle_pageup(); }
         else if( has_key( kvs, Key.Page_Down ) ) { handle_pagedn(); }
         else if( has_key( kvs, Key.Control_L ) ) { handle_control( true ); }
+        else if( has_key( kvs, Key.Control_R ) ) { handle_control( true ); }
         else if( has_key( kvs, Key.F10 ) )       { if( shift ) show_contextual_menu( e ); }
         else if( has_key( kvs, Key.Menu ) )      { show_contextual_menu( e ); }
         else {
@@ -4891,6 +4894,7 @@ public class DrawArea : Gtk.DrawingArea {
       else if( has_key( kvs, Key.Delete ) )                 { handle_delete(); }
       else if( has_key( kvs, Key.Return ) )                 { handle_return( shift ); }
       else if( has_key( kvs, Key.Control_L ) )              { handle_control( true ); }
+      else if( has_key( kvs, Key.Control_R ) )              { handle_control( true ); }
       else if( has_key( kvs, Key.F10 ) )                    { if( shift ) show_contextual_menu( e ); }
       else if( has_key( kvs, Key.Menu ) )                   { show_contextual_menu( e ); }
       else if( !shift && has_key( kvs, Key.x ) )            { create_connection(); }
@@ -5032,7 +5036,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Handles a key release event */
   private bool on_keyrelease( EventKey e ) {
-    if( e.keyval == 65507 ) {
+    if( (e.keyval == 65507) || (e.keyval == 65508) ) {
       handle_control( false );
     }
     return( true );
@@ -5074,7 +5078,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
     }
   }
-
+  
   /* Returns true if we can perform a node copy operation */
   public bool node_copyable() {
     return( _selected.current_node() != null );
@@ -5520,7 +5524,7 @@ public class DrawArea : Gtk.DrawingArea {
    origin to give the canvas the appearance of scrolling.
   */
   private bool on_scroll( EventScroll e ) {
-
+    
     double delta_x, delta_y;
     e.get_scroll_deltas( out delta_x, out delta_y );
 
@@ -5542,11 +5546,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     /* Adjust the origin and redraw */
-    if( win.natural_scrolling ) {
-      move_origin( (delta_x * 120), (delta_y * 120) );
-    } else {
-      move_origin( ((0 - delta_x) * 120), ((0 - delta_y) * 120) );
-    }
+    move_origin( ((0 - delta_x) * 120), ((0 - delta_y) * 120) );
     queue_draw();
 
     /* Scroll save */

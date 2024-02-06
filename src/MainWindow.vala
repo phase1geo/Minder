@@ -35,40 +35,6 @@ public enum PropertyGrab {
   NOTE
 }
 
-public enum NaturalScrollType {
-  SYSTEM,
-  ENABLED,
-  DISABLED,
-  NUM;
-
-  public string to_string() {
-    switch( this ) {
-      case SYSTEM   :  return( "system" );
-      case ENABLED  :  return( "enabled" );
-      case DISABLED :  return( "disabled" );
-      default       :  return( "unknown" );
-    }
-  }
-
-  public static NaturalScrollType parse( string str ) {
-    switch( str ) {
-      case "system"   :  return( SYSTEM );
-      case "enabled"  :  return( ENABLED );
-      case "disabled" :  return( DISABLED );
-      default         :  assert_not_reached();
-    }
-  }
-
-  public string label() {
-    switch( this ) {
-      case SYSTEM   :  return( _( "Use system setting" ) );
-      case ENABLED  :  return( _( "Always use natural scrolling" ) );
-      case DISABLED :  return( _( "Never use natural scrolling" ) );
-      default       :  assert_not_reached();
-    }
-  }
-}
-
 public class MainWindow : Hdy.ApplicationWindow {
 
   private GLib.Settings     _settings;
@@ -115,8 +81,6 @@ public class MainWindow : Hdy.ApplicationWindow {
   private int               _text_size;
   private Exports           _exports;
   private UnicodeInsert     _unicoder;
-  private bool              _sys_natural_scrolling = false;
-  private bool              _natural_scrolling     = false;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",           action_save },
@@ -162,11 +126,6 @@ public class MainWindow : Hdy.ApplicationWindow {
   public UnicodeInsert unicoder {
     get {
       return( _unicoder );
-    }
-  }
-  public bool natural_scrolling {
-    get {
-      return( _natural_scrolling );
     }
   }
 
@@ -311,7 +270,6 @@ public class MainWindow : Hdy.ApplicationWindow {
         case "auto-parse-embedded-urls"        :  setting_changed_embedded_urls();   break;
         case "enable-markdown"                 :  setting_changed_markdown();        break;
         case "enable-unicode-input"            :  setting_changed_unicode_input();   break;
-        case "natural-scrolling-type"          :  update_natural_scrolling( null );  break;
       }
     });
 
@@ -339,19 +297,6 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Returns the size of the icon to use for a headerbar icon */
   private IconSize get_icon_size() {
     return( on_elementary ? IconSize.LARGE_TOOLBAR : IconSize.SMALL_TOOLBAR );
-  }
-
-  /* Update the value of natural_scrolling */
-  public void update_natural_scrolling( bool? system ) {
-    if( system != null ) {
-      _sys_natural_scrolling = system;
-    }
-    var setting = NaturalScrollType.parse( settings.get_string( "natural-scrolling-type" ) );
-    switch( setting ) {
-      case NaturalScrollType.SYSTEM   :  _natural_scrolling = false;                    break;
-      case NaturalScrollType.ENABLED  :  _natural_scrolling = !_sys_natural_scrolling;  break;
-      case NaturalScrollType.DISABLED :  _natural_scrolling =  _sys_natural_scrolling;  break;
-    }
   }
 
   private void setting_changed_text_size() {
