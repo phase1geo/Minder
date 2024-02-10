@@ -92,6 +92,24 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.16.3" date="2024-02-11">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added ability to use either Control key for keyboard commands.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li>Removed natural scrolling preference option and just using system setting.</li>
+          <li>Changed panning with Alt key when dragging on the canvas.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed issues with panning when using Alt key or middle mouse button panning (canvas follows mouse cursor).</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.16.2" date="2024-01-15">
       <description>
         <p>New</p>
