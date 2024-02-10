@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-09 22:29-0600\n"
+"POT-Creation-Date: 2024-02-10 08:52-0600\n"
 "PO-Revision-Date: 2020-04-20 14:26+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: \n"
@@ -32,14 +32,17 @@ msgid "Minder in AppCenter"
 msgstr ""
 
 #: src/Application.vala:115
+#, c-format
 msgid "ERROR: Unable to import file"
 msgstr ""
 
 #: src/Application.vala:119
+#, c-format
 msgid "ERROR: Import is missing filename to import"
 msgstr ""
 
 #: src/Application.vala:134
+#, c-format
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
 
@@ -184,12 +187,12 @@ msgid "Previous Connection"
 msgstr "Vorige verbinding"
 
 #: src/Connection.vala:732
-#, fuzzy
+#, fuzzy, c-format
 msgid "Connection Title"
 msgstr "Verbinding"
 
 #: src/Connection.vala:740
-#, fuzzy
+#, fuzzy, c-format
 msgid "Connection Note"
 msgstr "Verbinding"
 
@@ -589,7 +592,7 @@ msgid "Unnamed Document"
 msgstr "Naamloos document"
 
 #: src/MainWindow.vala:551
-#, fuzzy
+#, fuzzy, c-format
 msgid "Read-Only"
 msgstr "Opvulling"
 
@@ -1168,15 +1171,17 @@ msgid "Remove Node Links"
 msgstr "Verbindingsknooop verwijderen"
 
 #: src/Node.vala:2321
+#, c-format
 msgid "Node Title"
 msgstr "Titel van knoop"
 
 #: src/Node.vala:2329
+#, c-format
 msgid "Node Note"
 msgstr "Aantekening"
 
 #: src/Node.vala:2340
-#, fuzzy
+#, fuzzy, c-format
 msgid "Callout Text"
 msgstr "Tekst plakken"
 
@@ -3058,6 +3063,7 @@ msgid "Solarized Light"
 msgstr "Gesolariseerd (licht)"
 
 #: src/Themes.vala:192
+#, c-format
 msgid "Error parsing regular expression"
 msgstr ""
 

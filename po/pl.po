@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-09 22:29-0600\n"
+"POT-Creation-Date: 2024-02-10 08:52-0600\n"
 "PO-Revision-Date: 2022-08-02 23:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -30,15 +30,17 @@ msgid "Minder in AppCenter"
 msgstr "Minder w AppCenter"
 
 #: src/Application.vala:115
-#, fuzzy
+#, fuzzy, c-format
 msgid "ERROR: Unable to import file"
 msgstr "BŁĄD:  Nie można otworzyć pliku '%s'\n"
 
 #: src/Application.vala:119
+#, c-format
 msgid "ERROR: Import is missing filename to import"
 msgstr ""
 
 #: src/Application.vala:134
+#, c-format
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
 
@@ -177,10 +179,12 @@ msgid "Previous Connection"
 msgstr "Poprzedni łącznik"
 
 #: src/Connection.vala:732
+#, c-format
 msgid "Connection Title"
 msgstr "Etykieta łącznika"
 
 #: src/Connection.vala:740
+#, c-format
 msgid "Connection Note"
 msgstr "Notatka łącznika"
 
@@ -571,6 +575,7 @@ msgid "Unnamed Document"
 msgstr "Dokument Bez Nazwy"
 
 #: src/MainWindow.vala:551
+#, c-format
 msgid "Read-Only"
 msgstr ""
 
@@ -1130,15 +1135,17 @@ msgid "Remove Node Links"
 msgstr "Usuń hiperłącze elementu"
 
 #: src/Node.vala:2321
+#, c-format
 msgid "Node Title"
 msgstr "Tytuł gałęzi"
 
 #: src/Node.vala:2329
+#, c-format
 msgid "Node Note"
 msgstr "Notatka gałęzi"
 
 #: src/Node.vala:2340
-#, fuzzy
+#, fuzzy, c-format
 msgid "Callout Text"
 msgstr "Wklej tekst"
 
@@ -2940,6 +2947,7 @@ msgid "Solarized Light"
 msgstr "Rozświetlony Jasny"
 
 #: src/Themes.vala:192
+#, c-format
 msgid "Error parsing regular expression"
 msgstr "Błąd parsowania wyrażenia regularnego"
 

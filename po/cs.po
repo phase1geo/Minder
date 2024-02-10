@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-09 22:29-0600\n"
+"POT-Creation-Date: 2024-02-10 08:52-0600\n"
 "PO-Revision-Date: 2022-02-20 17:48+0100\n"
 "Last-Translator: Jan Kožíšek <janxkozisek@gmail.com>\n"
 "Language-Team: none\n"
@@ -31,15 +31,17 @@ msgid "Minder in AppCenter"
 msgstr "Minder je v AppCenter"
 
 #: src/Application.vala:115
-#, fuzzy
+#, fuzzy, c-format
 msgid "ERROR: Unable to import file"
 msgstr "ERROR: Nelze otevřít soubor '%s'\n"
 
 #: src/Application.vala:119
+#, c-format
 msgid "ERROR: Import is missing filename to import"
 msgstr ""
 
 #: src/Application.vala:134
+#, c-format
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
 
@@ -178,10 +180,12 @@ msgid "Previous Connection"
 msgstr "Předchozí spojení"
 
 #: src/Connection.vala:732
+#, c-format
 msgid "Connection Title"
 msgstr "Název spojení"
 
 #: src/Connection.vala:740
+#, c-format
 msgid "Connection Note"
 msgstr "Poznámka ke spojení"
 
@@ -570,7 +574,7 @@ msgid "Unnamed Document"
 msgstr "Nepojmenovaný dokument"
 
 #: src/MainWindow.vala:551
-#, fuzzy
+#, fuzzy, c-format
 msgid "Read-Only"
 msgstr "Čtení"
 
@@ -1125,15 +1129,17 @@ msgid "Remove Node Links"
 msgstr "Odstranit odkazy uzlu"
 
 #: src/Node.vala:2321
+#, c-format
 msgid "Node Title"
 msgstr "Název poznámky"
 
 #: src/Node.vala:2329
+#, c-format
 msgid "Node Note"
 msgstr "Poznámka uzlu"
 
 #: src/Node.vala:2340
-#, fuzzy
+#, fuzzy, c-format
 msgid "Callout Text"
 msgstr "Vložit text"
 
@@ -2950,7 +2956,7 @@ msgid "Solarized Light"
 msgstr "Solarized Light"
 
 #: src/Themes.vala:192
-#, fuzzy
+#, fuzzy, c-format
 msgid "Error parsing regular expression"
 msgstr "Vyskytla se chyba v parsování regulárního výrazu\n"
 

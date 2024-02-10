@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-09 22:29-0600\n"
+"POT-Creation-Date: 2024-02-10 08:52-0600\n"
 "PO-Revision-Date: 2023-10-06 00:10+0200\n"
 "Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
 "Language-Team: \n"
@@ -31,14 +31,17 @@ msgid "Minder in AppCenter"
 msgstr "Minder im AppCenter"
 
 #: src/Application.vala:115
+#, c-format
 msgid "ERROR: Unable to import file"
 msgstr "ERROR: Datei kann nicht importiert werden"
 
 #: src/Application.vala:119
+#, c-format
 msgid "ERROR: Import is missing filename to import"
 msgstr "ERROR: Beim Importieren fehlt der zu importierende Dateiname"
 
 #: src/Application.vala:134
+#, c-format
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
 "ERROR: Beim Export fehlt eine Eingabedatei und/oder eine Export-Ausgabedatei"
@@ -177,10 +180,12 @@ msgid "Previous Connection"
 msgstr "Vorherige Verbindung"
 
 #: src/Connection.vala:732
+#, c-format
 msgid "Connection Title"
 msgstr "Verbindungstitel"
 
 #: src/Connection.vala:740
+#, c-format
 msgid "Connection Note"
 msgstr "Verbindungsnotiz"
 
@@ -570,6 +575,7 @@ msgid "Unnamed Document"
 msgstr "Unbenanntes Dokument"
 
 #: src/MainWindow.vala:551
+#, c-format
 msgid "Read-Only"
 msgstr "Nur Lesen"
 
@@ -1116,14 +1122,17 @@ msgid "Remove Node Links"
 msgstr "Knotenverbindungen entfernen"
 
 #: src/Node.vala:2321
+#, c-format
 msgid "Node Title"
 msgstr "Knoten-Titel"
 
 #: src/Node.vala:2329
+#, c-format
 msgid "Node Note"
 msgstr "Knoten-Notiz"
 
 #: src/Node.vala:2340
+#, c-format
 msgid "Callout Text"
 msgstr "Callout-Text"
 
@@ -2941,6 +2950,7 @@ msgid "Solarized Light"
 msgstr "Polarisiert Hell"
 
 #: src/Themes.vala:192
+#, c-format
 msgid "Error parsing regular expression"
 msgstr "Fehler beim Parsen eines regulären Ausdrucks"
 

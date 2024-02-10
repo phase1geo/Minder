@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-09 22:29-0600\n"
+"POT-Creation-Date: 2024-02-10 08:52-0600\n"
 "PO-Revision-Date: 2020-08-30 14:45+0100\n"
 "Last-Translator: André Barata <andretiagob@protonmail.com>\n"
 "Language-Team: none\n"
@@ -32,14 +32,17 @@ msgid "Minder in AppCenter"
 msgstr ""
 
 #: src/Application.vala:115
+#, c-format
 msgid "ERROR: Unable to import file"
 msgstr ""
 
 #: src/Application.vala:119
+#, c-format
 msgid "ERROR: Import is missing filename to import"
 msgstr ""
 
 #: src/Application.vala:134
+#, c-format
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
 
@@ -181,10 +184,12 @@ msgid "Previous Connection"
 msgstr "Conexão Anterior"
 
 #: src/Connection.vala:732
+#, c-format
 msgid "Connection Title"
 msgstr "Título da Conexão"
 
 #: src/Connection.vala:740
+#, c-format
 msgid "Connection Note"
 msgstr "Nota da Conexão"
 
@@ -579,7 +584,7 @@ msgid "Unnamed Document"
 msgstr "Documento Sem Nome"
 
 #: src/MainWindow.vala:551
-#, fuzzy
+#, fuzzy, c-format
 msgid "Read-Only"
 msgstr "Preenchimento"
 
@@ -1146,15 +1151,17 @@ msgid "Remove Node Links"
 msgstr "Remover Ligação do Nó"
 
 #: src/Node.vala:2321
+#, c-format
 msgid "Node Title"
 msgstr "Título do Nó"
 
 #: src/Node.vala:2329
+#, c-format
 msgid "Node Note"
 msgstr "Nota do Nó"
 
 #: src/Node.vala:2340
-#, fuzzy
+#, fuzzy, c-format
 msgid "Callout Text"
 msgstr "Colar Texto"
 
@@ -3027,6 +3034,7 @@ msgid "Solarized Light"
 msgstr "Luz de Sol"
 
 #: src/Themes.vala:192
+#, c-format
 msgid "Error parsing regular expression"
 msgstr ""
 

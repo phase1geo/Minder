@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-09 22:29-0600\n"
+"POT-Creation-Date: 2024-02-10 08:52-0600\n"
 "PO-Revision-Date: 2024-02-09 14:57+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
@@ -30,18 +30,21 @@ msgid "Minder in AppCenter"
 msgstr "Minder in AppCenter"
 
 #: src/Application.vala:115
+#, c-format
 msgid "ERROR: Unable to import file"
 msgstr "ERRORE: ERRORE: impossibile importare il file"
 
 #: src/Application.vala:119
+#, c-format
 msgid "ERROR: Import is missing filename to import"
 msgstr "ERRORE: nell'importazione manca il nome del file da importare"
 
 #: src/Application.vala:134
+#, c-format
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
-"ERRORE: Nell'esportazione manca il file di input e/o il file di output"
-"dell'esportazione"
+"ERRORE: Nell'esportazione manca il file di input e/o il file di "
+"outputdell'esportazione"
 
 #: src/Application.vala:141
 #, c-format
@@ -177,10 +180,12 @@ msgid "Previous Connection"
 msgstr "Connessione precedente"
 
 #: src/Connection.vala:732
+#, c-format
 msgid "Connection Title"
 msgstr "Titolo della connessione"
 
 #: src/Connection.vala:740
+#, c-format
 msgid "Connection Note"
 msgstr "Nota sulla connessione"
 
@@ -567,6 +572,7 @@ msgid "Unnamed Document"
 msgstr "Documento senza nome"
 
 #: src/MainWindow.vala:551
+#, c-format
 msgid "Read-Only"
 msgstr "Solo-lettura"
 
@@ -1112,14 +1118,17 @@ msgid "Remove Node Links"
 msgstr "Rimuovi collegamento al nodo"
 
 #: src/Node.vala:2321
+#, c-format
 msgid "Node Title"
 msgstr "Titolo Nodo"
 
 #: src/Node.vala:2329
+#, c-format
 msgid "Node Note"
 msgstr "Nota Nodo"
 
 #: src/Node.vala:2340
+#, c-format
 msgid "Callout Text"
 msgstr "Chiamata testo"
 
@@ -2932,6 +2941,7 @@ msgid "Solarized Light"
 msgstr "Luce Solarizzata"
 
 #: src/Themes.vala:192
+#, c-format
 msgid "Error parsing regular expression"
 msgstr "Errore durante l'analisi dell'espressione regolare"
 
