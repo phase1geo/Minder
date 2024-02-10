@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-09 22:29-0600\n"
-"PO-Revision-Date: 2024-01-16 10:57+0100\n"
+"PO-Revision-Date: 2024-02-09 14:57+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -40,7 +40,7 @@ msgstr "ERRORE: nell'importazione manca il nome del file da importare"
 #: src/Application.vala:134
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
-"ERRORE: nell'esportazione manca il file di input e/o il file di output "
+"ERRORE: Nell'esportazione manca il file di input e/o il file di output"
 "dell'esportazione"
 
 #: src/Application.vala:141
@@ -3888,9 +3888,8 @@ msgstr "[Triplo clic sinistro in qualsiasi punto del testo]"
 #~ msgid "Never use natural scrolling"
 #~ msgstr "Non utilizzare mai lo scorrimento naturale"
 
-#, fuzzy
 #~ msgid "Natural scrolling"
-#~ msgstr "Trading neutrale"
+#~ msgstr "Scorrimento naturale"
 
 #~ msgid "Add Summary Node"
 #~ msgstr "Aggiungi nodo di riepilogo"
