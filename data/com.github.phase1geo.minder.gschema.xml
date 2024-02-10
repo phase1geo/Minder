@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+ <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema path="/com/github/phase1geo/minder/" id="com.github.phase1geo.minder" gettext-domain="com.github.phase1geo.minder">
     <key name="window-x" type="i">
@@ -345,11 +345,6 @@
       <default>10</default>
       <summary>Specifies the maximum number of items that will be displayed in the auto-completion dropdown.</summary>
       <description>Specifies the maximum number of items that will be displayed in the auto-completion dropdown.</description>
-    </key>
-    <key name="natural-scrolling-type" type="s">
-      <default>"system"</default>
-      <summary>Specifies whether natural scrolling should be used when panning the canvas.</summary>
-      <description>Specifies whether natural scrolling should be used when panning the canvas.  Valid values are:  system, enabled, disabled</description>
     </key>
   </schema>
 </schemalist>
