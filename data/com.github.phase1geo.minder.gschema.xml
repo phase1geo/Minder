@@ -81,6 +81,11 @@
       <summary>Search option for callouts</summary>
       <description>Specifies whether callouts should be searched or not</description>
     </key>
+    <key name="search-opt-groups" type="b">
+      <default>true</default>
+      <summary>Search option for node groups</summary>
+      <description>Specifies whether node group should be searched or not</description>
+    </key>
     <key name="search-opt-titles" type="b">
       <default>true</default>
       <summary>Search option for node/connection titles</summary>

@@ -20,6 +20,7 @@
 */
 
 using Cairo;
+using Gtk;
 using Gdk;
 using Gee;
 
@@ -37,7 +38,7 @@ public enum GroupMode {
   SELECTED
 }
 
-public class NodeGroup {
+public class NodeGroup : Object {
 
   private Array<Node> _nodes;
 
@@ -131,6 +132,22 @@ public class NodeGroup {
       }
     }
     return( true );
+  }
+
+  /*
+   Populates the given ListStore with all groups that have notes that match
+   the given string pattern.
+  */
+  public void get_match_items( string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+    var tab = Utils.rootname( tabname );
+    if( search_opts[SearchOptions.NOTES] ) {
+      string str = Utils.match_string( pattern, note );
+      if( str.length > 0 ) {
+        TreeIter it;
+        matches.append( out it );
+        matches.set( it, 0, "<b><i>%s:</i></b>".printf( _( "Group Note" ) ), 1, str, 2, null, 3, null, 4, null, 5, this, 6, tabname, 7, tab, -1 );
+      }
+    }
   }
 
   /* Saves the current group in Minder XML format */
