@@ -143,6 +143,13 @@ public class NodeGroups {
     return( null );
   }
 
+  /* Searches the groups for ones that match the given pattern and search options */
+  public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
+    for( int i=0; i<_groups.length; i++ ) {
+      _groups.index( i ).get_match_items( tabname, pattern, search_opts, ref matches );
+    }
+  }
+
   /* Saves the current group in Minder XML format */
   public Xml.Node* save() {
     Xml.Node* g = new Xml.Node( null, "groups" );

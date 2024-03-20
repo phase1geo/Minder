@@ -848,13 +848,16 @@ public class DrawArea : Gtk.DrawingArea {
    pattern.
   */
   public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
-    if( search_opts[0] || search_opts[2] ) {
+    if( search_opts[SearchOptions.NODES] || search_opts[SearchOptions.CALLOUTS] ) {
       for( int i=0; i<_nodes.length; i++ ) {
         _nodes.index( i ).get_match_items( tabname, pattern, search_opts, ref matches );
       }
     }
-    if( search_opts[1] ) {
+    if( search_opts[SearchOptions.CONNECTIONS] ) {
       _connections.get_match_items( tabname, pattern, search_opts, ref matches );
+    }
+    if( search_opts[SearchOptions.GROUPS] ) {
+      _groups.get_match_items( tabname, pattern, search_opts, ref matches );
     }
   }
 
@@ -1021,6 +1024,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Toggles the fold for the given node */
   public void toggle_fold( Node n, bool deep ) {
+
     var fold    = !n.folded;
     var changes = new Array<Node>();
     n.set_fold( fold, deep, changes );
@@ -2183,6 +2187,7 @@ public class DrawArea : Gtk.DrawingArea {
     var current_conn    = _selected.current_connection();
     var current_node    = _selected.current_node();
     var current_callout = _selected.current_callout();
+    var current_group   = _selected.current_group();
 
     if( current_conn != null ) {
       current_conn.bbox( out x, out y, out w, out h );
@@ -2190,6 +2195,8 @@ public class DrawArea : Gtk.DrawingArea {
       current_node.bbox( out x, out y, out w, out h );
     } else if( current_callout != null ) {
       current_callout.bbox( out x, out y, out w, out h );
+    } else if( current_group != null ) {
+      current_group.nodes.index( 0 ).bbox( out x, out y, out w, out h );
     } else {
       return;
     }
