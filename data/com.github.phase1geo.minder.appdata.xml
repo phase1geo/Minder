@@ -159,6 +159,30 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.16.4" date="2024-04-07">
+      <description>
+        <p>New</p>
+        <p xml:lang="pt">Novo</p>
+        <p xml:lang="fr">Nouveau</p>
+        <ul>
+          <li>Added ability to search group notes in search UI.</li>
+        </ul>
+        <p>Changes</p>
+        <p xml:lang="ru">Изменения</p>
+        <p xml:lang="pt">Alterações</p>
+        <p xml:lang="fr">Modifications</p>
+        <ul>
+          <li>Removed executable permissions from SVG (thanks to @yangfl).</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <p xml:lang="ru">Исправления ошибок</p>
+        <p xml:lang="pt">Correções</p>
+        <p xml:lang="fr">Corrections de bugs</p>
+        <ul>
+          <li>Removing node summary menu option when a single node is selected (unsupported feature).</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.16.3" date="2024-02-11">
       <description>
         <p>New</p>
