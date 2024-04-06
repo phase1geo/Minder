@@ -264,7 +264,7 @@ public class NodeMenu : Gtk.Menu {
     add( change );
     add( new SeparatorMenuItem() );
     add( addnode );
-    add( _summarize );
+    // add( _summarize );
     add( quick );
     add( new SeparatorMenuItem() );
     add( selnode );
