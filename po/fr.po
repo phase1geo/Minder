@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-10 13:24-0600\n"
+"POT-Creation-Date: 2024-04-06 15:34-0500\n"
 "PO-Revision-Date: 2019-03-24 15:24+0100\n"
 "Last-Translator: Nathan Bonnemains (@NathanBnm)\n"
 "Language-Team: Français\n"
@@ -31,17 +31,14 @@ msgid "Minder in AppCenter"
 msgstr ""
 
 #: src/Application.vala:115
-#, c-format
 msgid "ERROR: Unable to import file"
 msgstr ""
 
 #: src/Application.vala:119
-#, c-format
 msgid "ERROR: Import is missing filename to import"
 msgstr ""
 
 #: src/Application.vala:134
-#, c-format
 msgid "ERROR: Export is missing input file and/or export output file"
 msgstr ""
 
@@ -186,12 +183,12 @@ msgid "Previous Connection"
 msgstr "Connexion précédente"
 
 #: src/Connection.vala:732
-#, fuzzy, c-format
+#, fuzzy
 msgid "Connection Title"
 msgstr "Connexion"
 
 #: src/Connection.vala:740
-#, fuzzy, c-format
+#, fuzzy
 msgid "Connection Note"
 msgstr "Connexion"
 
@@ -203,44 +200,44 @@ msgstr "sans nom"
 msgid "Main Idea"
 msgstr "Idée principale"
 
-#: src/DrawArea.vala:2687
+#: src/DrawArea.vala:2694
 #, c-format
 msgid "%0.3g%% complete"
 msgstr "%0.3g%% complété"
 
-#: src/DrawArea.vala:2701
+#: src/DrawArea.vala:2708
 msgid "Drag to resize node"
 msgstr ""
 
-#: src/DrawArea.vala:2703
+#: src/DrawArea.vala:2710
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:2831
+#: src/DrawArea.vala:2838
 #, fuzzy, c-format
 msgid "Children: %u\n"
 msgstr "Plier les enfants"
 
-#: src/DrawArea.vala:2832
+#: src/DrawArea.vala:2839
 #, c-format
 msgid "Total: %d"
 msgstr ""
 
-#: src/DrawArea.vala:2881
+#: src/DrawArea.vala:2888
 msgid "connection endpoint change"
 msgstr "modification du point d'extrémité de la connexion"
 
-#: src/DrawArea.vala:2888
+#: src/DrawArea.vala:2895
 msgid "connection drag"
 msgstr "déplacement de la connexion"
 
-#: src/DrawArea.vala:3662 src/DrawArea.vala:3676 src/DrawArea.vala:5650
+#: src/DrawArea.vala:3669 src/DrawArea.vala:3683 src/DrawArea.vala:5657
 msgid "Another Idea"
 msgstr "Une autre idée"
 
-#: src/DrawArea.vala:5103 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:5110 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:225 src/MapInspector.vala:448
 msgid "Manual"
 msgstr "Manuel"
@@ -326,13 +323,13 @@ msgid "Export As %s"
 msgstr "Exporter sous"
 
 #: src/Exporter.vala:134 src/ImageEditor.vala:381 src/ImageManager.vala:300
-#: src/MainWindow.vala:1028 src/MainWindow.vala:1123 src/MainWindow.vala:1267
+#: src/MainWindow.vala:1057 src/MainWindow.vala:1152 src/MainWindow.vala:1296
 #: src/QuickEntry.vala:154 src/StickerInspector.vala:402 src/StickerSet.vala:75
 #: src/ThemeEditor.vala:144 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/Exporter.vala:134 src/MainWindow.vala:845 src/StickerSet.vala:352
+#: src/Exporter.vala:134 src/MainWindow.vala:874 src/StickerSet.vala:352
 msgid "Export"
 msgstr "Exporter"
 
@@ -562,219 +559,223 @@ msgstr "Sélectionner le parent"
 msgid "Images"
 msgstr "Image"
 
-#: src/MainWindow.vala:154 src/MainWindow.vala:1272
+#: src/MainWindow.vala:169 src/MainWindow.vala:1301
 msgid "Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:188 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:203 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
 msgstr "Nouveau fichier"
 
-#: src/MainWindow.vala:194 src/MainWindow.vala:1119
+#: src/MainWindow.vala:209 src/MainWindow.vala:1148
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr "Ouvrir un fichier"
 
-#: src/MainWindow.vala:200 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:215 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
 msgstr "Enregistrer sous"
 
-#: src/MainWindow.vala:206 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:221 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr "Annuler"
 
-#: src/MainWindow.vala:213 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:228 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr "Rétablir"
 
-#: src/MainWindow.vala:548
+#: src/MainWindow.vala:563
 msgid "Unnamed Document"
 msgstr "Document sans nom"
 
-#: src/MainWindow.vala:551
-#, fuzzy, c-format
+#: src/MainWindow.vala:566
+#, fuzzy
 msgid "Read-Only"
 msgstr "Marge intérieure"
 
-#: src/MainWindow.vala:555 src/MainWindow.vala:880
+#: src/MainWindow.vala:570 src/MainWindow.vala:909
 msgid "Focus Mode"
 msgstr "Mode concentration"
 
-#: src/MainWindow.vala:589 src/MainWindow.vala:1324
+#: src/MainWindow.vala:604 src/MainWindow.vala:1353
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr ""
 
-#: src/MainWindow.vala:596
+#: src/MainWindow.vala:611
 msgid "Zoom to Percent"
 msgstr "Pourcentage de zoom"
 
-#: src/MainWindow.vala:609 src/ZoomWidget.vala:102
+#: src/MainWindow.vala:624 src/ZoomWidget.vala:102
 #: data/com.github.phase1geo.minder.shortcuts.ui:119
 msgid "Zoom In"
 msgstr "Zoomer"
 
-#: src/MainWindow.vala:615 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:630 src/ZoomWidget.vala:92
 #: data/com.github.phase1geo.minder.shortcuts.ui:126
 msgid "Zoom Out"
 msgstr "Dézoomer"
 
-#: src/MainWindow.vala:625
+#: src/MainWindow.vala:640
 msgid "Zoom to Fit"
 msgstr "Voir l'ensemble du document"
 
-#: src/MainWindow.vala:630 data/com.github.phase1geo.minder.shortcuts.ui:140
+#: src/MainWindow.vala:645 data/com.github.phase1geo.minder.shortcuts.ui:140
 #, fuzzy
 msgid "Zoom to Fit Selected Node Tree"
 msgstr "Zoomer sur le nœud sélectionné"
 
-#: src/MainWindow.vala:635
+#: src/MainWindow.vala:650
 msgid "Zoom to Actual Size"
 msgstr "Zoom par défaut (100 %)"
 
-#: src/MainWindow.vala:659 src/StickerSet.vala:114
+#: src/MainWindow.vala:674 src/StickerSet.vala:114
 msgid "Search"
 msgstr "Rechercher"
 
-#: src/MainWindow.vala:669
+#: src/MainWindow.vala:684
 #, fuzzy
 msgid "Search Nodes, Callouts and Connections"
 msgstr "Rechercher des nœuds et des connexions"
 
-#: src/MainWindow.vala:698
+#: src/MainWindow.vala:713
 msgid "Search Criteria"
 msgstr "Critères de recherche"
 
-#: src/MainWindow.vala:701
+#: src/MainWindow.vala:716
 #, fuzzy
 msgid "Search all tabs"
 msgstr "Critères de recherche"
 
-#: src/MainWindow.vala:735
+#: src/MainWindow.vala:750
 msgid "Nodes"
 msgstr "Nœuds"
 
-#: src/MainWindow.vala:736
+#: src/MainWindow.vala:751
 msgid "Connections"
 msgstr "Connexions"
 
-#: src/MainWindow.vala:737
+#: src/MainWindow.vala:752
 msgid "Callouts"
 msgstr ""
 
-#: src/MainWindow.vala:738
+#: src/MainWindow.vala:753
+msgid "Groups"
+msgstr ""
+
+#: src/MainWindow.vala:754
 msgid "Titles"
 msgstr "Titres"
 
-#: src/MainWindow.vala:739
+#: src/MainWindow.vala:755
 msgid "Notes"
 msgstr "Notes"
 
-#: src/MainWindow.vala:740
+#: src/MainWindow.vala:756
 msgid "Folded"
 msgstr "Pliés"
 
-#: src/MainWindow.vala:741
+#: src/MainWindow.vala:757
 msgid "Unfolded"
 msgstr "Dépliés"
 
-#: src/MainWindow.vala:742
+#: src/MainWindow.vala:758
 msgid "Tasks"
 msgstr "Tâches"
 
-#: src/MainWindow.vala:743
+#: src/MainWindow.vala:759
 msgid "Non-tasks"
 msgstr "Non-tâches"
 
-#: src/MainWindow.vala:857
+#: src/MainWindow.vala:886
 #, fuzzy
 msgid "Print…"
 msgstr "Imprimer"
 
-#: src/MainWindow.vala:905 src/Preferences.vala:36
+#: src/MainWindow.vala:934 src/Preferences.vala:36
 msgid "Preferences"
 msgstr ""
 
-#: src/MainWindow.vala:910
+#: src/MainWindow.vala:939
 msgid "Shortcuts Cheatsheet"
 msgstr "Feuille de raccourcis"
 
-#: src/MainWindow.vala:914
+#: src/MainWindow.vala:943
 #, fuzzy
 msgid "About Minder"
 msgstr "Minder"
 
-#: src/MainWindow.vala:947 src/MainWindow.vala:1396
+#: src/MainWindow.vala:976 src/MainWindow.vala:1425
 #, fuzzy
 msgid "Show Property Sidebar"
 msgstr "Afficher le propriétés"
 
-#: src/MainWindow.vala:962
+#: src/MainWindow.vala:991
 msgid "Current"
 msgstr "Courant"
 
-#: src/MainWindow.vala:963 src/StyleInspector.vala:198
+#: src/MainWindow.vala:992 src/StyleInspector.vala:198
 msgid "Style"
 msgstr "Style"
 
-#: src/MainWindow.vala:964
+#: src/MainWindow.vala:993
 msgid "Stickers"
 msgstr ""
 
-#: src/MainWindow.vala:965
+#: src/MainWindow.vala:994
 msgid "Map"
 msgstr "Carte"
 
-#: src/MainWindow.vala:1019
+#: src/MainWindow.vala:1048
 msgid "Save current unnamed document?"
 msgstr "Enregistrer le document sans titre actuel ?"
 
-#: src/MainWindow.vala:1020
+#: src/MainWindow.vala:1049
 msgid "Changes will be permanently lost if not saved."
 msgstr ""
 "Les modifications seront définitivement perdues si elles ne sont pas "
 "enregistrées."
 
-#: src/MainWindow.vala:1025
+#: src/MainWindow.vala:1054
 msgid "Discard Changes"
 msgstr "Ignorer les modifications"
 
-#: src/MainWindow.vala:1031 src/MainWindow.vala:1267 src/ThemeEditor.vala:147
+#: src/MainWindow.vala:1060 src/MainWindow.vala:1296 src/ThemeEditor.vala:147
 msgid "Save"
 msgstr "Enregistrer"
 
-#: src/MainWindow.vala:1060
+#: src/MainWindow.vala:1089
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr ""
 
-#: src/MainWindow.vala:1061
+#: src/MainWindow.vala:1090
 msgid "What do you want to do?"
 msgstr ""
 
-#: src/MainWindow.vala:1066
+#: src/MainWindow.vala:1095
 #, fuzzy
 msgid "Discard Changes and reload"
 msgstr "Ignorer les modifications"
 
-#: src/MainWindow.vala:1069
+#: src/MainWindow.vala:1098
 msgid "Save local version and overwrite"
 msgstr ""
 
-#: src/MainWindow.vala:1119
+#: src/MainWindow.vala:1148
 #, fuzzy
 msgid "Open Directory"
 msgstr "Ouvrir un fichier"
 
-#: src/MainWindow.vala:1122
+#: src/MainWindow.vala:1151
 msgid "Open"
 msgstr "Ouvrir"
 
-#: src/MainWindow.vala:1267
+#: src/MainWindow.vala:1296
 msgid "Save File"
 msgstr "Enregistrer le fichier"
 
-#: src/MainWindow.vala:1340
+#: src/MainWindow.vala:1369
 #, fuzzy
 msgid "Hide Property Sidebar"
 msgstr "Propriétés"
@@ -848,6 +849,11 @@ msgstr "Déplier toutes les tâches"
 #: src/MapInspector.vala:468
 msgid "Unsaved"
 msgstr "Non enregistré"
+
+#: src/NodeGroup.vala:148
+#, fuzzy
+msgid "Group Note"
+msgstr "Note du nœud"
 
 #: src/NodeInspector.vala:94
 #, fuzzy
@@ -1174,17 +1180,15 @@ msgid "Remove Node Links"
 msgstr "Supprimer le lien vers le nœud"
 
 #: src/Node.vala:2321
-#, c-format
 msgid "Node Title"
 msgstr "Titre du nœud"
 
 #: src/Node.vala:2329
-#, c-format
 msgid "Node Note"
 msgstr "Note du nœud"
 
-#: src/Node.vala:2340
-#, fuzzy, c-format
+#: src/Node.vala:2339
+#, fuzzy
 msgid "Callout Text"
 msgstr "Coller le texte"
 
@@ -3066,7 +3070,6 @@ msgid "Solarized Light"
 msgstr "Solarized Light"
 
 #: src/Themes.vala:192
-#, c-format
 msgid "Error parsing regular expression"
 msgstr ""
 

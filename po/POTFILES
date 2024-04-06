@@ -47,6 +47,7 @@ src/layouts/LayoutUp.vala
 src/layouts/LayoutVertical.vala
 src/MainWindow.vala
 src/MapInspector.vala
+src/NodeGroup.vala
 src/NodeInspector.vala
 src/NodeLink.vala
 src/NodeMenu.vala
