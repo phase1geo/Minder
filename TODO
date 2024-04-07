@@ -1,0 +1,17 @@
+General:
+
+  ☐ Release version 1.16.4
+
+Summary Node:
+
+  ☐ Debug issues with layout
+
+Future Features:
+
+  ☐ Add support for remembering theme and style between maps and sessions @new
+  ☐ Add support for named styles @new
+    Saves the state of a style group and gives it a name so that it can be quickly
+    applied to selected items.
+  ☐ Fix issue with drawing connection attachment points when node has a callout @bugfix
+  ☐ Add support for tagging @new
+  ☐ Add support for moving selected nodes when manual layout is enabled for all selected nodes @bugfix
