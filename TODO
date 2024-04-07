@@ -1,10 +1,12 @@
 General:
 
-  ☐ Release version 1.16.4
+  ☐ Release version 1.16.4 @due(24-04-08 10:00)
 
 Summary Node:
 
   ☐ Debug issues with layout
+
+--- ✄ -----------------------
 
 Future Features:
 
@@ -15,3 +17,5 @@ Future Features:
   ☐ Fix issue with drawing connection attachment points when node has a callout @bugfix
   ☐ Add support for tagging @new
   ☐ Add support for moving selected nodes when manual layout is enabled for all selected nodes @bugfix
+
+--- ✄ -----------------------
