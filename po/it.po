@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-04-06 15:41-0500\n"
-"PO-Revision-Date: 2024-02-09 14:57+0100\n"
+"PO-Revision-Date: 2024-04-10 12:37+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -634,9 +634,8 @@ msgid "Callouts"
 msgstr "Chiamate"
 
 #: src/MainWindow.vala:753
-#, fuzzy
 msgid "Groups"
-msgstr "Gruppo"
+msgstr "Gruppi"
 
 #: src/MainWindow.vala:754
 msgid "Titles"
@@ -816,9 +815,8 @@ msgid "Unsaved"
 msgstr "Non salvato"
 
 #: src/NodeGroup.vala:148
-#, fuzzy
 msgid "Group Note"
-msgstr "Gruppo"
+msgstr "Nota di gruppo"
 
 #: src/NodeInspector.vala:94
 msgid "Node"
@@ -2903,7 +2901,7 @@ msgstr "Preferire Modalità Scura"
 
 #: src/ThemeEditor.vala:193
 msgid "Custom"
-msgstr "Personalizza"
+msgstr "Personalizzato"
 
 #: src/ThemeEditor.vala:211
 msgid "Delete theme?"
@@ -3535,7 +3533,7 @@ msgstr "Seleziona Connessione Collegata"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:543
 msgid "Move"
-msgstr "Muovi"
+msgstr "Sposta"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:547
 msgid "Swap with Sibling Node to Right"
