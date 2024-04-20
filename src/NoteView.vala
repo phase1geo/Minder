@@ -230,6 +230,12 @@ public class NoteView : Gtk.SourceView {
     _last_urls  = new Array<UrlPos>();
     _last_links = new Array<LinkPos>();
 
+    // Handle any changes to the colorize-notes preference option
+    Minder.settings.changed["colorize-notes"].connect(() => {
+      var s = style_manager.get_scheme( get_default_scheme() );
+      _buffer.set_style_scheme( s );
+    });
+
   }
 
   /* Returns the Markdown language parser used to highlight the text */
@@ -239,8 +245,7 @@ public class NoteView : Gtk.SourceView {
 
   /* Returns the coloring scheme to use to highlight the text */
   private string get_default_scheme () {
-    //return( "cobalt" );
-    return( "minder" );
+    return( Minder.settings.get_boolean( "colorize-notes" ) ? "minder.color" : "minder.none" );
   }
 
   /* Clears the URL handler code to force it reparse the current line for URLs */
@@ -391,6 +396,7 @@ public class NoteView : Gtk.SourceView {
       var int_y = (int)e.y;
       enable_url_checking( int_x, int_y );
       if( _last_url != null ) {
+        stdout.printf( "Opening URL: %s\n", _last_url );
         Utils.open_url( _last_url );
       } else if( _last_link != null ) {
         node_link_clicked( _last_link );

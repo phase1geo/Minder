@@ -35,7 +35,8 @@ install_data(
 )
 
 install_data(
-    join_paths('styles', meson.project_name() + '.xml'),
+    join_paths('styles', meson.project_name() + '.color.xml'),
+    join_paths('styles', meson.project_name() + '.none.xml'),
     install_dir: join_paths(get_option('datadir'), 'minder', 'gtksourceview-4', 'styles')
 )
 

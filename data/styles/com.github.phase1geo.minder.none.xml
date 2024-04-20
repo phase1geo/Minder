@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+ This file is part of GtkSourceView
+
+ Copyright (C) 2006-2007 GtkSourceView team
+ Author: Yevgen Muntyan <muntyan@tamu.edu>
+
+ GtkSourceView is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ GtkSourceView is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public License
+ along with this library; if not, see <http://www.gnu.org/licenses/>.
+
+-->
+<style-scheme id="minder.none" _name="Minder" version="1.0">
+  <author>Trevor Williams</author>
+  <_description>Uncolored scheme used by Minder (used from Gtk classic scheme)</_description>
+
+  <!-- The scheme tries to look like the default GVim scheme,
+       since it is also what the hardwired GtkSourceView 1 color
+       scheme did -->
+
+  <!-- Markup -->
+  <style name="def:emphasis"                italic="true"/>
+  <style name="def:strong-emphasis"         bold="true"/>
+  <style name="def:link-symbol"             foreground="blue" bold="true"/>
+  <style name="def:link-destination"        italic="true" underline="single"/>
+  <style name="def:heading"                 bold="true"/>
+  <style name="def:thematic-break"          bold="true"/>
+  <style name="def:list-marker"             bold="true"/>
+
+    <!-- Heading styles, uncomment to enable -->
+  <style name="def:heading0"                bold="true" scale="xx-large"/>
+  <style name="def:heading1"                bold="true" scale="xx-large"/>
+  <style name="def:heading2"                bold="true" scale="x-large"/>
+  <style name="def:heading3"                bold="true" scale="large"/>
+  <style name="def:heading4"                bold="true" scale="medium"/>
+  <style name="def:heading5"                bold="true" scale="medium"/>
+  <style name="def:heading6"                bold="true" scale="medium"/>
+
+</style-scheme>

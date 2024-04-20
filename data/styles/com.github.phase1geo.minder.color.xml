@@ -20,7 +20,7 @@
  along with this library; if not, see <http://www.gnu.org/licenses/>.
 
 -->
-<style-scheme id="minder" _name="Minder" version="1.0">
+<style-scheme id="minder.color" _name="Minder" version="1.0">
   <author>Trevor Williams</author>
   <_description>Color scheme used by Minder (used from Gtk classic scheme)</_description>
 
@@ -30,7 +30,7 @@
 
   <!-- Palette -->
   <color name="white"      value="#FFFFFF"/>
-  <color name="blue"       value="#0000FF"/>
+  <color name="blue"       value="#1080FF"/>
   <color name="magenta"    value="#FF00FF"/>
   <color name="violet"     value="#6A5ACD"/>
   <color name="cyan"       value="#008A8C"/>

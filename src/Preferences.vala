@@ -122,6 +122,9 @@ public class Preferences : Gtk.Dialog {
     grid.attach( make_spinner( "text-field-custom-font-size", 8, 24, 1 ), 2, 3 );
     grid.attach( make_info( _( "Specifies the custom font size to use in text editing fields (i.e, quick entry or notes field)." ) ), 3, 3 );
 
+    grid.attach( make_label( _( "Colorize note fields" ) ), 0, 4 );
+    grid.attach( make_switch( "colorize-notes" ), 1, 4 );
+
     return( grid );
 
   }

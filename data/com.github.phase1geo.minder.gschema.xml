@@ -351,5 +351,10 @@
       <summary>Specifies the maximum number of items that will be displayed in the auto-completion dropdown.</summary>
       <description>Specifies the maximum number of items that will be displayed in the auto-completion dropdown.</description>
     </key>
+    <key name="colorize-notes" type="b">
+      <default>true</default>
+      <summary>Specifies that the notes textbox should have syntax coloring applied</summary>
+      <description>Specifies that the notes textbox should have syntax coloring applied</description>
+    </key>
   </schema>
 </schemalist>
