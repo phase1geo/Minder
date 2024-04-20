@@ -190,6 +190,8 @@ public class Document : Object {
           return false;
         }
       }
+      
+      delete doc;
 
     }
 
