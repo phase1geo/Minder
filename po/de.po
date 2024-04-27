@@ -1,14 +1,14 @@
 # GERMAN TRANSLATION.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.phase1geo.minder package.
-# Benjamin Weis <benjamin.weis@gmx.com>, 2023.
+# Benjamin Weis <benjamin.weis@gmx.com>, 2023-2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-04-06 15:41-0500\n"
-"PO-Revision-Date: 2023-10-06 00:10+0200\n"
+"PO-Revision-Date: 2024-04-27 15:12+0200\n"
 "Last-Translator: Benjamin Weis <benjamin.weis@gmx.com>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: src/About.vala:36
 msgid "Mind-mapping application"
@@ -637,9 +637,8 @@ msgid "Callouts"
 msgstr "Callouts"
 
 #: src/MainWindow.vala:753
-#, fuzzy
 msgid "Groups"
-msgstr "Gruppieren"
+msgstr "Gruppen"
 
 #: src/MainWindow.vala:754
 msgid "Titles"
@@ -819,9 +818,8 @@ msgid "Unsaved"
 msgstr "Ungespeichert"
 
 #: src/NodeGroup.vala:148
-#, fuzzy
 msgid "Group Note"
-msgstr "Gruppieren"
+msgstr "Gruppenhinweis"
 
 #: src/NodeInspector.vala:94
 msgid "Node"
@@ -965,9 +963,8 @@ msgid "Add Sibling Node"
 msgstr "Geschwisterknoten hinzufügen"
 
 #: src/NodeMenu.vala:172
-#, fuzzy
 msgid "Use to Summarize Previous Sibling Nodes"
-msgstr "Vorheriger Geschwisterknoten"
+msgstr "Zum Zusammenfassen früherer Geschwisterknoten verwenden"
 
 #: src/NodeMenu.vala:176 src/QuickEntry.vala:44
 msgid "Quick Entry"
@@ -3175,19 +3172,16 @@ msgid "remove node sticker"
 msgstr "Aufkleber von Knoten entfernen"
 
 #: src/undo_actions/UndoNodeSummaryDelete.vala:32
-#, fuzzy
 msgid "delete summary node"
-msgstr "Knoten einfügen"
+msgstr "Zusammenfassungsknoten löschen"
 
 #: src/undo_actions/UndoNodeSummaryFromNode.vala:31
-#, fuzzy
 msgid "convert to summary node"
-msgstr "Knoten einfügen"
+msgstr "in Zusammenfassungsknoten umwandeln"
 
 #: src/undo_actions/UndoNodeSummary.vala:32
-#, fuzzy
 msgid "insert summary node"
-msgstr "Knoten einfügen"
+msgstr "Zusammenfassungsknoten einfügen"
 
 #: src/undo_actions/UndoNodeTasks.vala:30
 msgid "node task changes"
@@ -3439,9 +3433,8 @@ msgid "Remove URL Link From Text"
 msgstr "URL-Link aus Text entfernen"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:366
-#, fuzzy
 msgid "Change Link Color"
-msgstr "Verbindungsfarbe"
+msgstr "Verbindungsfarbe ändern"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:373
 msgid "View Properties"
