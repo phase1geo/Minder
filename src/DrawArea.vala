@@ -792,7 +792,10 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Make this initial node the current node */
     set_current_node( n );
-    set_node_mode( n, NodeMode.EDITABLE, false );
+    Idle.add(() => {
+      set_node_mode( n, NodeMode.EDITABLE, false );
+      return( false );
+    });
 
     /* Redraw the canvas */
     queue_draw();
