@@ -324,6 +324,26 @@
         </child>
         <child>
           <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes">View</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Center In View</property>
+                <property name="accelerator">&lt;shift&gt;c</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Place Into View</property>
+                <property name="accelerator">s</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcutsGroup">
             <property name="title" translatable="yes">Changing Current</property>
             <property name="visible">1</property>
             <child>
@@ -415,20 +435,6 @@
               <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Create Callout</property>
                 <property name="accelerator">o</property>
-                <property name="visible">1</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">Center In View</property>
-                <property name="accelerator">&lt;shift&gt;c</property>
-                <property name="visible">1</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="title" translatable="yes">Place Into View</property>
-                <property name="accelerator">s</property>
                 <property name="visible">1</property>
               </object>
             </child>
