@@ -262,12 +262,10 @@ public class ExportText : Export {
     }
 
     var current = da.get_current_node();
-    if( current != null ) {
-      if( replace ) {
-        da.replace_node( current, stack.index( 0 ).node );
-      } else {
-        parent_node( da, stack.index( 0 ).node, current );
-      }
+    if( (current != null) && replace ) {
+      da.replace_node( current, stack.index( 0 ).node );
+    } else {
+      parent_node( da, stack.index( 0 ).node, current );
     }
 
     if( nodes != null ) {
