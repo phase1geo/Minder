@@ -54,6 +54,7 @@
     </screenshot>
   </screenshots>
   <developer_name>Trevor Williams</developer_name>
+  <developer>com.github.phase1geo</developer>
   <url type="homepage">https://github.com/phase1geo/minder/</url>
   <url type="bugtracker">https://github.com/phase1geo/minder/issues/</url>
   <custom>
