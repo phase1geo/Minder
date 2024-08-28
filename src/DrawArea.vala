@@ -4248,6 +4248,7 @@ public class DrawArea : Gtk.DrawingArea {
       var right_node = get_node_right( current );
       if( alt ) {
         if( current.swap_with_sibling( right_node ) ||
+            current.make_parent_sibling( right_node ) ||
             current.make_children_siblings( right_node ) ) {
           queue_draw();
           auto_save();
@@ -4319,6 +4320,7 @@ public class DrawArea : Gtk.DrawingArea {
       var left_node = get_node_left( current );
       if( alt ) {
         if( current.swap_with_sibling( left_node ) ||
+            current.make_parent_sibling( left_node ) ||
             current.make_children_siblings( left_node ) ) {
           queue_draw();
           auto_save();
@@ -4588,6 +4590,7 @@ public class DrawArea : Gtk.DrawingArea {
       var up_node = get_node_up( current );
       if( alt ) {
         if( current.swap_with_sibling( up_node ) ||
+            current.make_parent_sibling( up_node ) ||
             current.make_children_siblings( up_node ) ) {
           queue_draw();
           auto_save();
@@ -4650,6 +4653,7 @@ public class DrawArea : Gtk.DrawingArea {
       var down_node = get_node_down( current );
       if( alt ) {
         if( current.swap_with_sibling( down_node ) ||
+            current.make_parent_sibling( down_node ) ||
             current.make_children_siblings( down_node ) ) {
           queue_draw();
           auto_save();

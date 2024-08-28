@@ -21,35 +21,32 @@
 
 using Gtk;
 
-public class UndoNodeReparent : UndoItem {
+public class UndoNodeUnclify : UndoItem {
 
   private Node _node;
-  private int  _first_index;
-  private int  _last_index;
+  private Node _parent;
+  private int  _index;
 
   /* Default constructor */
-  public UndoNodeReparent( Node node, int first_index, int last_index ) {
-    base( _( "reparent children" ) );
-    _node        = node;
-    _first_index = first_index;
-    _last_index  = last_index;
+  public UndoNodeUnclify( Node node ) {
+    base( _( "reparent node" ) );
+    _node   = node;
+    _parent = node.parent;
+    _index  = node.index();
   }
 
   /* Performs an undo operation for this data */
   public override void undo( DrawArea da ) {
-    da.animator.add_nodes( da.get_nodes(), "undo_make_children_siblings" );
-    for( int i=(_last_index - 1); i>=_first_index; i-- ) {
-      var child = _node.parent.children().index( i );
-      child.detach( child.side );
-      child.attach( _node, 0, null );
-    }
+    da.animator.add_nodes( da.get_nodes(), "undo_make_parent_sibling" );
+    _node.detach( _node.side );
+    _node.attach( _parent, _index, null );
     da.animator.animate();
     da.auto_save();
   }
 
   /* Performs a redo operation */
   public override void redo( DrawArea da ) {
-    _node.make_children_siblings( _node.children().index( 0 ), false );
+    _node.make_parent_sibling( _node.parent, false );
     da.auto_save();
   }
 

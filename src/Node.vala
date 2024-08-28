@@ -1967,12 +1967,42 @@ public class Node : Object {
   }
 
   /*
+   Moves the node (and its tree) to be a sibling of its parent located just
+   before its parent node (side will match parent's side).
+  */
+  public bool make_parent_sibling( Node? other, bool add_undo = true ) {
+
+    // If the other node matches our parent, perform this operation
+    if( (other != null) && (other == parent) && !parent.is_root() ) {
+
+      var grandparent = parent.parent;
+      var parent_idx  = parent.index();
+
+      if( add_undo ) {
+        da.undo_buffer.add_item( new UndoNodeUnclify( this ) );
+      }
+
+      da.animator.add_nodes( da.get_nodes(), "make_sibling_of_grandparent" );
+      detach( side );
+      attach( grandparent, parent_idx, null );
+
+      da.animator.animate();
+
+      return( true );
+
+    }
+
+    return( false );
+
+  }
+
+  /*
    Moves all children of the given node to the node's parent, placed just
    before the parent node.
   */
-  public bool make_children_siblings( Node? potential_parent, bool add_undo = true ) {
+  public bool make_children_siblings( Node? potential_child, bool add_undo = true ) {
 
-    if( (potential_parent != null) && (potential_parent == parent) ) {
+    if( (potential_child != null) && contains_node( potential_child ) ) {
 
       var idx          = index();
       var num_children = (int)_children.length;
