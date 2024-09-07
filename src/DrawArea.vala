@@ -4986,7 +4986,7 @@ public class DrawArea : Gtk.DrawingArea {
   private bool handle_node_keypress( EventKey e, uint[] kvs ) {
     var current = _selected.current_node();
     var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
-    if( shift && has_key( kvs, Key.C ) )      { center_current_node(); }
+    if( shift && has_key( kvs, Key.c ) )      { center_current_node(); }
     else if( shift && has_key( kvs, Key.d ) ) { select_node_tree(); }
     else if( shift && has_key( kvs, Key.e ) ) { show_properties( "current", PropertyGrab.NOTE ); }
     else if( shift && has_key( kvs, Key.i ) ) {
