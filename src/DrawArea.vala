@@ -4137,7 +4137,19 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns the node to the right of the given node */
   private Node? get_node_right( Node node ) {
     if( node.is_root() ) {
-      return( node.last_selected_child ?? node.first_child( NodeSide.RIGHT ) );
+      if( node.side.horizontal() ) {
+        if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.RIGHT) ) {
+          return( node.last_selected_child );
+        }
+        return( node.first_child( NodeSide.RIGHT ) );
+      } else {
+        for( int i=0; i<_nodes.length; i++ ) {
+          if( _nodes.index( i ) == node ) {
+            return( ((i + 1) < _nodes.length) ? _nodes.index( i + 1 ) : null );
+          }
+        }
+      }
+      return( null );
     } else {
       switch( node.side ) {
         case NodeSide.TOP    :
@@ -4151,7 +4163,19 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns the node to the left of the given node */
   private Node? get_node_left( Node node ) {
     if( node.is_root() ) {
-      return( node.last_selected_child ?? node.first_child( NodeSide.LEFT ) );
+      if( node.side.horizontal() ) {
+        if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.LEFT) ) {
+          return( node.last_selected_child );
+        }
+        return( node.first_child( NodeSide.LEFT ) );
+      } else {
+        for( int i=0; i<_nodes.length; i++ ) {
+          if( _nodes.index( i ) == node ) {
+            return( (i > 0) ? _nodes.index( i - 1 ) : null );
+          }
+        }
+      }
+      return( null );
     } else {
       switch( node.side ) {
         case NodeSide.TOP :
@@ -4165,9 +4189,16 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns the node above the given node */
   private Node? get_node_up( Node node ) {
     if( node.is_root() ) {
-      for( int i=0; i<_nodes.length; i++ ) {
-        if( _nodes.index( i ) == node ) {
-          return( (i > 0) ? _nodes.index( i - 1 ) : null );
+      if( node.side.vertical() ) {
+        if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.TOP) ) {
+          return( node.last_selected_child );
+        }
+        return( node.first_child( NodeSide.TOP ) );
+      } else {
+        for( int i=0; i<_nodes.length; i++ ) {
+          if( _nodes.index( i ) == node ) {
+            return( (i > 0) ? _nodes.index( i - 1 ) : null );
+          }
         }
       }
       return( null );
@@ -4183,9 +4214,16 @@ public class DrawArea : Gtk.DrawingArea {
   /* Returns the node below the given node */
   private Node? get_node_down( Node node ) {
     if( node.is_root() ) {
-      for( int i=0; i<_nodes.length; i++ ) {
-        if( _nodes.index( i ) == node ) {
-          return( ((i + 1) < _nodes.length) ? _nodes.index( i + 1 ) : null );
+      if( node.side.vertical() ) {
+        if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.BOTTOM) ) {
+          return( node.last_selected_child );
+        }
+        return( node.first_child( NodeSide.BOTTOM ) );
+      } else {
+        for( int i=0; i<_nodes.length; i++ ) {
+          if( _nodes.index( i ) == node ) {
+            return( ((i + 1) < _nodes.length) ? _nodes.index( i + 1 ) : null );
+          }
         }
       }
       return( null );
