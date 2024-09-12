@@ -50,7 +50,9 @@ endif
 # Add the math and Markdown libraries
 cc = meson.get_compiler('c')
 math_dep    = cc.find_library('m', required: false)
-libmarkdown = cc.find_library('markdown', required: true)
+
+# Check libmarkdown2 dependency
+libmarkdown = dependency('libmarkdown', version: '<3.0', required: true)
 
 # Check the granite dependency
 granite = dependency('granite', version: '>=6.0', required: false)
