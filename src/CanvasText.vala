@@ -793,12 +793,13 @@ public class CanvasText : Object {
       var tags = text.get_tags_in_range( spos, epos );
       text.replace_text( spos, (epos - spos), s );
       set_cursor_only( _selstart + slen );
-      change_selection( null, _selstart, "insert" );
+      change_selection( _cursor, _cursor, "insert A" );
       undo_buffer.add_replace( spos, str, s, tags, cur );
     } else {
       var cpos = text.text.index_of_nth_char( _cursor );
       text.insert_text( cpos, s );
       set_cursor_only( _cursor + slen );
+      change_selection( _cursor, _cursor, "insert B" );
       undo_buffer.add_insert( cpos, s, cur );
     }
   }
@@ -812,6 +813,7 @@ public class CanvasText : Object {
     if( start <= cursor ) {
       set_cursor_only( _cursor + slen );
     }
+    change_selection( _cursor, _cursor, "insert_at_pos" );
     undo_buffer.add_insert( spos, s, cur );
   }
 
@@ -832,7 +834,7 @@ public class CanvasText : Object {
         text.add_tag( ftag, (ttag.start + spos), (ttag.end + spos), ttag.parsed, ttag.extra );
       }
       set_cursor_only( _selstart + slen );
-      change_selection( null, _selstart, "insert" );
+      change_selection( _cursor, _cursor, "insert_formatted_text A" );
       undo_buffer.add_replace( spos, str, t.text, tags, cur );
     } else {
       var cpos = text.text.index_of_nth_char( _cursor );
@@ -843,6 +845,7 @@ public class CanvasText : Object {
         text.add_tag( ftag, (ttag.start + cpos), (ttag.end + cpos), ttag.parsed, ttag.extra );
       }
       set_cursor_only( _cursor + slen );
+      change_selection( _cursor, _cursor, "insert_formatted_text A" );
       undo_buffer.add_insert( cpos, t.text, cur );
     }
   }
