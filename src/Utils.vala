@@ -229,6 +229,9 @@ public class Utils {
   /* Converts the given Markdown into HTML */
   public static string markdown_to_html( string md, string? tag = null ) {
     string html;
+#if MD30
+    return( md );
+#else
     // var    flags = 0x57607000;
     var    flags = 0x47607004;
     var    mkd = new Markdown.Document.gfm_format( md.data, flags );
@@ -239,6 +242,7 @@ public class Utils {
     } else {
       return( "<" + tag + ">" + html + "</" + tag + ">" );
     }
+#endif
   }
 
   /* Returns the line height of the first line of the given pango layout */

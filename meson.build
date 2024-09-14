@@ -49,10 +49,15 @@ endif
 
 # Add the math and Markdown libraries
 cc = meson.get_compiler('c')
-math_dep    = cc.find_library('m', required: false)
+math_dep = cc.find_library('m', required: false)
 
 # Check libmarkdown2 dependency
-libmarkdown = dependency('libmarkdown', version: '<3.0', required: true)
+libmarkdown = dependency('libmarkdown', required: true)
+markdown_vapi = '/vapi/libmarkdown.vapi'
+if libmarkdown.version().version_compare('>=3.0')
+  add_project_arguments(['--define=MD30'], language: 'vala')
+  markdown_vapi = '/vapi/libmarkdown3.vapi'
+endif
 
 # Check the granite dependency
 granite = dependency('granite', version: '>=6.0', required: false)
