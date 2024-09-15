@@ -34,7 +34,7 @@ public class About : AboutDialog {
     authors       = { "Trevor Williams" };
     program_name  = "Minder";
     comments      = _( "Mind-mapping application" );
-    copyright     = _( "Copyright © 2018-2021 Trevor Williams" );
+    copyright     = _( "Copyright © 2018-2024 Trevor Williams" );
     version       = Minder.version;
     license_type  = License.GPL_3_0;
     website       = "https://appcenter.elementary.io/com.github.phase1geo.minder/";
