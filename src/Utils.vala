@@ -230,7 +230,16 @@ public class Utils {
   public static string markdown_to_html( string md, string? tag = null ) {
     string html;
 #if MD30
-    return( md );
+    mkd_flags_t flags = {};
+    var mkd = new Markdown3.Document.gfm_format( md.data, flags );
+    flags.bits[MKD_NOPANTS]    = 1;
+    flags.bits[MKD_TOC]        = 1;
+    flags.bits[MKD_1_COMPAT]   = 1;
+    flags.bits[MKD_AUTOLINK]   = 1;
+    flags.bits[MKD_NOSTYLE]    = 1;
+    flags.bits[MKD_DLEXTRA]    = 1;
+    flags.bits[MKD_FENCEDCODE] = 1;
+    flags.bits[MKD_IDANCHOR]   = 1;
 #else
     uint32 flags = Markdown.DocumentFlags.NOPANTS |
                 Markdown.DocumentFlags.TOC |
@@ -251,7 +260,6 @@ public class Utils {
     } else {
       return( "<" + tag + ">" + html + "</" + tag + ">" );
     }
-#endif
   }
 
   /* Returns the line height of the first line of the given pango layout */
