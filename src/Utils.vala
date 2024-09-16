@@ -232,11 +232,20 @@ public class Utils {
 #if MD30
     return( md );
 #else
-    // var    flags = 0x57607000;
-    var    flags = 0x47607004;
-    var    mkd = new Markdown.Document.gfm_format( md.data, flags );
+    uint32 flags = Markdown.DocumentFlags.NOPANTS |
+                Markdown.DocumentFlags.TOC |
+                Markdown.DocumentFlags.@1_COMPAT |
+                Markdown.DocumentFlags.AUTOLINK |
+                Markdown.DocumentFlags.EXTRA_FOOTNOTE |
+                Markdown.DocumentFlags.NOSTYLE |
+                Markdown.DocumentFlags.DLEXTRA |
+                Markdown.DocumentFlags.FENCEDCODE |
+                Markdown.DocumentFlags.IDANCHOR |
+                Markdown.DocumentFlags.LATEX;
+    // var    flags = 0x47607004;
+    var    mkd = new Markdown.Document.from_gfm_string( md.data, flags );
     mkd.compile( flags );
-    mkd.get_document( out html );
+    mkd.document( out html );
     if( tag == null ) {
       return( html );
     } else {
