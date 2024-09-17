@@ -174,7 +174,6 @@ public class MainWindow : Hdy.ApplicationWindow {
     }
     set_default_size( window_w, window_h );
     // set_border_width( 2 );
-    destroy.connect( Gtk.main_quit );
 
     /* Set the stage for menu actions */
     var actions = new SimpleActionGroup ();
