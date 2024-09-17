@@ -230,7 +230,7 @@ public class Utils {
   public static string markdown_to_html( string md, string? tag = null ) {
     string html;
 #if MD30
-    html = Markdup.escape_string( md );
+    html = Markup.escape_string( md );
 #else
     uint32 flags = Markdown.DocumentFlags.NOPANTS |
                 Markdown.DocumentFlags.TOC |
