@@ -230,16 +230,7 @@ public class Utils {
   public static string markdown_to_html( string md, string? tag = null ) {
     string html;
 #if MD30
-    mkd_flags_t flags = {};
-    var mkd = new Markdown3.Document.gfm_format( md.data, flags );
-    flags.bits[MKD_NOPANTS]    = 1;
-    flags.bits[MKD_TOC]        = 1;
-    flags.bits[MKD_1_COMPAT]   = 1;
-    flags.bits[MKD_AUTOLINK]   = 1;
-    flags.bits[MKD_NOSTYLE]    = 1;
-    flags.bits[MKD_DLEXTRA]    = 1;
-    flags.bits[MKD_FENCEDCODE] = 1;
-    flags.bits[MKD_IDANCHOR]   = 1;
+    html = Markdup.escape_string( md );
 #else
     uint32 flags = Markdown.DocumentFlags.NOPANTS |
                 Markdown.DocumentFlags.TOC |
@@ -251,10 +242,10 @@ public class Utils {
                 Markdown.DocumentFlags.FENCEDCODE |
                 Markdown.DocumentFlags.IDANCHOR |
                 Markdown.DocumentFlags.LATEX;
-    // var    flags = 0x47607004;
-    var    mkd = new Markdown.Document.from_gfm_string( md.data, flags );
+    var mkd = new Markdown.Document.from_gfm_string( md.data, flags );
     mkd.compile( flags );
     mkd.document( out html );
+#endif
     if( tag == null ) {
       return( html );
     } else {

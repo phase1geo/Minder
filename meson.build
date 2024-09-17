@@ -56,7 +56,6 @@ libmarkdown = dependency('libmarkdown', required: true)
 markdown_vapi = '/vapi/libmarkdown.vapi'
 if libmarkdown.version().version_compare('>=3.0')
   add_project_arguments(['--define=MD30'], language: 'vala')
-  markdown_vapi = '/vapi/libmarkdown3.vapi'
 endif
 
 # Check the granite dependency
