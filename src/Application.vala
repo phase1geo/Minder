@@ -28,23 +28,16 @@ public class Minder : Granite.Application {
 
   private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
 
-  private static bool                show_version = false;
-  private static string?             open_file    = null;
-  private static bool                new_file     = false;
-  private static bool                testing      = false;
   private        MainWindow          appwin;
   private        GLib.Settings       iface_settings;
   private        GLib.Settings       touch_settings;
-  private        string?             cl_import    = null;
-  private        string?             cl_export    = null;
-  private        HashMap<string,int> cl_options;
 
   public  static GLib.Settings settings;
   public  static string        version = "1.16.4";
 
   public Minder () {
 
-    Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.HANDLES_OPEN );
+    Object( application_id: "com.github.phase1geo.minder", flags: ApplicationFlags.HANDLES_COMMAND_LINE );
 
     Intl.setlocale( LocaleCategory.ALL, "" );
     Intl.bindtextdomain( GETTEXT_PACKAGE, LOCALEDIR );
@@ -52,7 +45,7 @@ public class Minder : Granite.Application {
     Intl.textdomain( GETTEXT_PACKAGE );
 
     startup.connect( start_application );
-    open.connect( open_files );
+    command_line.connect( handle_command_line );
 
   }
 
@@ -68,11 +61,6 @@ public class Minder : Granite.Application {
 
     /* Create the main window */
     appwin = new MainWindow( this, settings );
-
-    /* If we are exporting from the command-line, do that now */
-    if( cl_export != null ) {
-      return;
-    }
 
     /* Load the tab data */
     appwin.load_tab_state();
@@ -90,6 +78,10 @@ public class Minder : Granite.Application {
       return( false );
     });
 
+    appwin.destroy.connect(() => {
+      quit();
+    });
+
     /* Initialize desktop interface settings */
     string[] names = {"font-name", "text-scaling-factor"};
     iface_settings = new GLib.Settings( INTERFACE_SCHEMA );
@@ -104,72 +96,36 @@ public class Minder : Granite.Application {
 
   }
 
-  /* Called whenever files need to be opened */
-  private void open_files( File[] files, string hint ) {
-    var input_file = files[0].get_path();
-    hold();
-    if( cl_import != null ) {
-      int retval = 1;
-      if( files.length >= 1 ) {
-        if( !appwin.import_file( files[0].get_path(), cl_import, ref input_file ) ) {
-          stderr.printf( _( "ERROR: Unable to import file" ) + "\n" );
-          Process.exit( 1 );
-        }
-      } else {
-        stderr.printf( _( "ERROR: Import is missing filename to import" ) + "\n" );
-        Process.exit( 1 );
-      }
+  private int end_cl( ApplicationCommandLine cl, int status ) {
+    // If we are the primary instance, exit now
+    if( !cl.get_is_remote() ) {
+      Process.exit( status );
+    } else {
+      cl.set_exit_status( status );
+      cl.done();
     }
-    if( cl_export != null ) {
-      int retval = 0;
-      if( files.length == 2 ) {
-        if( export_as( cl_export, cl_options, input_file, files[1].get_path() ) ) {
-          retval = 1;
-        }
-        if( cl_import != null ) {
-          appwin.close_current_tab();
-          FileUtils.unlink( input_file );  // Delete the file if we were just doing a conversion
-        }
-      } else {
-        stderr.printf( _( "ERROR: Export is missing input file and/or export output file" ) + "\n" );
-      }
-      Process.exit( retval );
-    } else if( cl_import == null ) {
-      foreach( File open_file in files ) {
-        var file = open_file.get_path();
-        if( !appwin.open_file( file, false ) ) {
-          stdout.printf( _( "ERROR:  Unable to open file '%s'\n" ), file );
-        }
-      }
-    }
-    Gtk.main();
-    release();
-  }
-
-  /* Called if we have no files to open */
-  protected override void activate() {
-    if( cl_export == null ) {
-      hold();
-      if( new_file ) {
-        appwin.do_new_file();
-      }
-      Gtk.main();
-      release();
-    }
+    return( status );
   }
 
   /* Parse the command-line arguments */
-  private void parse_arguments( ref unowned string[] args ) {
+  private int handle_command_line( ApplicationCommandLine cl ) {
 
-    var context     = new OptionContext( "- Minder Options" );
-    var options     = new OptionEntry[10];
-    var transparent = false;
-    var compression = 0;
-    var quality     = 0;
-    var image_links = false;
-    var exports     = new Exports();
-    var import_list = new Array<string>();
-    var export_list = new Array<string>();
+    string? open_file = null;
+    string? cl_import = null;
+    string? cl_export = null;
+
+    var context      = new OptionContext( "- Minder Options" );
+    var options      = new OptionEntry[10];
+    var transparent  = false;
+    var compression  = 0;
+    var quality      = 90;
+    var image_links  = false;
+    var exports      = new Exports();
+    var import_list  = new Array<string>();
+    var export_list  = new Array<string>();
+    var show_version = false;
+    var show_help    = false;
+    var new_file     = false;
 
     /* Get the list of import and export formats */
     for( int i=0; i<exports.length(); i++ ) {
@@ -185,48 +141,95 @@ public class Minder : Granite.Application {
     var import_str = _( "Import file from format (%s)" ).printf( string.joinv( ",", import_list.data ) );
     var export_str = _( "Export mindmap as format (%s)" ).printf( string.joinv( ",", export_list.data ) );
 
+    var args = cl.get_arguments();
+
     /* Create the command-line options */
     options[0] = {"version", 0, 0, OptionArg.NONE, ref show_version, _( "Display version number" ), null};
-    options[1] = {"new", 'n', 0, OptionArg.NONE, ref new_file, _( "Starts Minder with a new file" ), null};
-    options[2] = {"run-tests", 0, 0, OptionArg.NONE, ref testing, _( "Run testing" ), null};
+    options[1] = {"help", 0, 0, OptionArg.NONE, ref show_help, _( "Display help" ), null};
+    options[2] = {"new", 'n', 0, OptionArg.NONE, ref new_file, _( "Starts Minder with a new file" ), null};
     options[3] = {"import", 0, 0, OptionArg.STRING, ref cl_import, import_str, "FORMAT"};
     options[4] = {"export", 0, 0, OptionArg.STRING, ref cl_export, export_str, "FORMAT"};
-    options[5] = {"png-transparent", 0, 0, OptionArg.NONE, ref transparent, _( "Enables a transparent background for PNG images" ), null};
-    options[6] = {"png-compression", 0, 0, OptionArg.INT, ref compression,  _( "PNG compression value (0-9)" ), "INT"};
-    options[7] = {"jpeg-quality", 0, 0, OptionArg.INT, ref quality, _( "JPEG quality (0-100)" ), "INT"};
+    options[5] = {"png-transparent", 0, 0, OptionArg.NONE, ref transparent, _( "Enables a transparent background for PNG images.  Default is no transparency." ), null};
+    options[6] = {"png-compression", 0, 0, OptionArg.INT, ref compression,  _( "PNG compression value (0-9). Default is 0." ), "INT"};
+    options[7] = {"jpeg-quality", 0, 0, OptionArg.INT, ref quality, _( "JPEG quality (0-100). Default is 90." ), "INT"};
     options[8] = {"markdown-include-image-links", 0, 0, OptionArg.NONE, ref image_links, _( "Enables image links in exported Markdown" ), null};
     options[9] = {null};
 
     /* Parse the arguments */
     try {
-      context.set_help_enabled( true );
+      context.set_help_enabled( false );
       context.add_main_entries( options, null );
-      context.parse( ref args );
+      context.parse_strv( ref args );
     } catch( OptionError e ) {
       stdout.printf( _( "ERROR: %s\n" ), e.message );
       stdout.printf( _( "Run '%s --help' to see valid options\n" ), args[0] );
-      Process.exit( 1 );
+      return( end_cl( cl, 1 ) );
+    }
+
+    if( show_help ) {
+      stdout.printf( context.get_help( true, null ) );
+      return( end_cl( cl, 0 ) );
     }
 
     /* If the version was specified, output it and then exit */
     if( show_version ) {
       stdout.printf( version + "\n" );
-      Process.exit( 0 );
-    }
-
-    /* Gather the export options if needed */
-    if( cl_export != null ) {
-      cl_options = new HashMap<string,int>();
-      cl_options.set( "transparent",         (int)transparent );
-      cl_options.set( "compression",         compression );
-      cl_options.set( "quality",             quality );
-      cl_options.set( "include-image-links", (int)image_links );
+      return( end_cl( cl, 0 ) );
     }
 
     /* If we see files on the command-line */
     if( args.length >= 2 ) {
       open_file = args[1];
     }
+
+    if( cl_import != null ) {
+      if( args.length >= 2 ) {
+        if( !appwin.import_file( open_file, cl_import, ref open_file ) ) {
+          stderr.printf( _( "ERROR: Unable to import file" ) + "\n" );
+          return( end_cl( cl, 1 ) );
+        }
+      } else {
+        stderr.printf( _( "ERROR: Import is missing filename to import" ) + "\n" );
+        return( end_cl( cl, 1 ) );
+      }
+    }
+
+    if( cl_export != null ) {
+      int retval = 0;
+      var cl_options = new HashMap<string,int>();
+      cl_options.set( "transparent",         (int)transparent );
+      cl_options.set( "compression",         compression );
+      cl_options.set( "quality",             quality );
+      cl_options.set( "include-image-links", (int)image_links );
+      if( args.length == 3 ) {
+        if( export_as( cl_export, cl_options, open_file, args[2] ) ) {
+          stdout.printf( "Successfully exported %s!\n", args[2] );
+        } else {
+          retval = 1;
+        }
+        if( cl_import != null ) {
+          appwin.close_current_tab();
+          FileUtils.unlink( open_file );  // Delete the file if we were just doing a conversion
+        }
+      } else {
+        stderr.printf( _( "ERROR: Export is missing input file and/or export output file" ) + "\n" );
+      }
+      return( end_cl( cl, retval ) );
+    } else if( cl_import == null ) {
+      if( new_file ) {
+        appwin.do_new_file();
+      } else {
+        for( int i=1; i<args.length; i++ ) {
+          var file = args[i];
+          if( !appwin.open_file( file, false ) ) {
+            stdout.printf( _( "ERROR:  Unable to open file '%s'\n" ), file );
+          }
+        }
+      }
+      appwin.present();
+    }
+
+    return( 0 );
 
   }
 
@@ -267,21 +270,7 @@ public class Minder : Granite.Application {
   public static int main( string[] args ) {
 
     var app = new Minder();
-    app.parse_arguments( ref args );
-
-    if( testing ) {
-      Gtk.init( ref args );
-      var testing = new App.Tests.Testing( args );
-      Idle.add(() => {
-        testing.run();
-        Gtk.main_quit();
-        return( false );
-      });
-      Gtk.main();
-      return( 0 );
-    } else {
-      return( app.run( args ) );
-    }
+    return( app.run( args ) );
 
   }
 
