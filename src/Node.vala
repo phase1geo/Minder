@@ -1669,7 +1669,7 @@ public class Node : Object {
   }
 
   /* Resizes the node width by the given amount */
-  public virtual void resize( double diff ) {
+  public virtual void resize( double diff, bool finalize ) {
     diff = resizer_on_left() ? (0 - diff) : diff;
     var int_diff = (int)diff;
     if( _image == null ) {
@@ -1679,7 +1679,7 @@ public class Node : Object {
       if( (style.node_width + diff) < _min_width ) return;
       style.node_width += int_diff;
       var int_node_width = (int)style.node_width;
-      _image.set_width( int_node_width );
+      _image.set_width( _da.image_manager, int_node_width, finalize );
     }
     _name.resize( diff );
   }

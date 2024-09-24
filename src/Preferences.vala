@@ -96,6 +96,10 @@ public class Preferences : Gtk.Dialog {
     grid.attach( make_switch( "select-on-hover" ), 1, 5 );
     grid.attach( make_info( _( "If enabled, selects items when mouse cursor hovers over the item." ) ), 3, 5 );
 
+    grid.attach( make_label( _( "Use original size when loading images" ) ), 0, 6 );
+    grid.attach( make_switch( "load-original-image-sizes" ), 1, 6 );
+    grid.attach( make_info( _( "If enabled, the original size of the image will be used on initial creation; otherwise, the image size is capped to 600x600 to save on memory." ) ), 3, 6 );
+
     return( grid );
 
   }

@@ -2564,7 +2564,7 @@ public class DrawArea : Gtk.DrawingArea {
         if( current_node.mode == NodeMode.CURRENT ) {
           if( _resize ) {
             current_node.image_resizable = control ? !_orig_resizable : _orig_resizable;
-            current_node.resize( diffx );
+            current_node.resize( diffx, false );
             auto_save();
           } else {
             var attach_summary = attachable_summary_node( _scaled_x, _scaled_y );
@@ -2870,6 +2870,7 @@ public class DrawArea : Gtk.DrawingArea {
         undo_buffer.add_item( new UndoStickerResize( current_sticker, _orig_width ) );
       } else if( current_node != null ) {
         undo_buffer.add_item( new UndoNodeResize( current_node, _orig_width, _orig_resizable ) );
+        current_node.resize( 0, true );
         current_node.image_resizable = _orig_resizable;
       } else if( current_callout != null ) {
         undo_buffer.add_item( new UndoCalloutResize( current_callout, _orig_width ) );

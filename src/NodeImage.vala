@@ -52,8 +52,8 @@ public class NodeImage {
 
   /* Default constructor */
   public NodeImage( ImageManager im, int id, int width ) {
-    if( load( im, id, true ) ) {
-      set_width( width );
+    if( load( im, id, EDIT_WIDTH, EDIT_HEIGHT, true ) ) {
+      set_width( im, width, false );
     }
   }
 
@@ -61,8 +61,8 @@ public class NodeImage {
   public NodeImage.from_uri( ImageManager im, string uri, int width ) {
     int id = im.add_image( uri );
     if( id != -1 ) {
-      if( load( im, id, true ) ) {
-        set_width( width );
+      if( load( im, id, EDIT_WIDTH, EDIT_HEIGHT, true ) ) {
+        set_width( im, width, false );
       } else {
         im.set_valid( id, false );
       }
@@ -73,8 +73,8 @@ public class NodeImage {
   public NodeImage.from_pixbuf( ImageManager im, Pixbuf buf, int width ) {
     int id = im.add_pixbuf( buf );
     if( id != -1 ) {
-      if( load( im, id, true ) ) {
-        set_width( width );
+      if( load( im, id, EDIT_WIDTH, EDIT_HEIGHT, true ) ) {
+        set_width( im, width, false );
       } else {
         im.set_valid( id, false );
       }
@@ -91,8 +91,8 @@ public class NodeImage {
         crop_y = ni.crop_y;
         crop_w = ni.crop_w;
         crop_h = ni.crop_h;
-        if( load( im, id, false ) ) {
-          set_width( width );
+        if( load( im, id, EDIT_WIDTH, EDIT_HEIGHT, false ) ) {
+          set_width( im, width, false );
         } else {
           im.set_valid( id, false );
         }
@@ -138,8 +138,8 @@ public class NodeImage {
 
     /* Allocate the image */
     if( id != -1 ) {
-      if( load( im, id, false ) ) {
-        set_width( width );
+      if( load( im, id, EDIT_WIDTH, EDIT_HEIGHT, false ) ) {
+        set_width( im, width, false );
       }
     }
 
@@ -148,7 +148,7 @@ public class NodeImage {
   }
 
   /* Loads the current file into this structure */
-  private bool load( ImageManager im, int id, bool init ) {
+  private bool load( ImageManager im, int id, int width, int height, bool init ) {
 
     this.id    = id;
     this.valid = true;
@@ -164,7 +164,7 @@ public class NodeImage {
       }
 
       /* Read in the file into the given buffer */
-      var buf   = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
+      var buf = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
       _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
 
       /* Initialize the variables */
@@ -188,9 +188,19 @@ public class NodeImage {
    the buffer from the stored surface so that we don't lose resolution when scaling
    up.
   */
-  public void set_width( int width ) {
+  public void set_width( ImageManager im, int width, bool finalize ) {
 
     if( !resizable ) return;
+
+    if( finalize ) {
+      if( width > EDIT_WIDTH ) {
+        stdout.printf( "Reloading image\n" );
+        load( im, id, width, -1, true );
+      }
+      if( width > crop_w ) {
+        apply_sharpen_filter();
+      }
+    }
 
     var scale = (width * 1.0) / crop_w;
     var buf   = pixbuf_get_from_surface( _surface, crop_x, crop_y, crop_w, crop_h );
@@ -198,6 +208,52 @@ public class NodeImage {
 
     _buf = buf.scale_simple( width, int_crop_h, InterpType.BILINEAR );
 
+  }
+
+  //-------------------------------------------------------------
+  // Sharpens the image if the requested width is larger than the
+  // original width.
+  private void apply_sharpen_filter() {
+
+    stdout.printf( "Sharpening\n" );
+
+    // Simple sharpen filter (Laplacian kernel)
+    var width  = _surface.get_width();
+    var height = _surface.get_height();
+
+    // Create a new surface for the output
+    var data = _surface.get_data();
+
+    // Laplacian kernel for sharpening
+    var kernel = new int[3, 3] {
+      { 0, -1,  0},
+      {-1,  5, -1},
+      { 0, -1,  0}
+    };
+
+    // Apply the filter
+    for( int y=1; y<height - 1; y++ ) {
+      for( int x=1; x<width - 1; x++ ) {
+        int r = 0, g = 0, b = 0;
+        for( int ky=-1; ky<=1; ky++ ) {
+          for( int kx=-1; kx<=1; kx++ ) {
+            int pixel = data[(y + ky) * width + (x + kx)];
+            r += ((pixel >> 16) & 0xff) * kernel[ky + 1, kx + 1];
+            g += ((pixel >> 8) & 0xff) * kernel[ky + 1, kx + 1];
+            b += (pixel & 0xff) * kernel[ky + 1, kx + 1];
+          }
+        }
+        // Clamp values and write to output
+        data[y * width + x] = (0xff << 24) | clamp(r) << 16 | clamp(g) << 8 | clamp(b);
+      }
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Clamps the value to not exceed valid RGB value ranges.
+  private int clamp(int value) {
+    return( (value < 0) ? 0 : ((value > 255) ? 255 : value) );
   }
 
   /* Returns the original pixbuf */

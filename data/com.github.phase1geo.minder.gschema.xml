@@ -126,6 +126,11 @@
       <summary>Unique ID added to image names</summary>
       <description>Specifies the current unique image ID value</description>
     </key>
+    <key name="load-original-image-sizes" type="b">
+      <default>false</default>
+      <summary>If true, original image sizes will be loaded; otherwise, they will be capped at 600x600 to save on memory</summary>
+      <description>If true, original image sizes will be loaded; otherwise, they will be capped at 600x600 to save on memory</description>
+    </key>
     <key name="style-link-type" type="s">
       <default>"curved"</default>
       <summary>Last used link type style in Style properties</summary>

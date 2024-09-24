@@ -507,7 +507,7 @@ class ImageEditor {
     var orig_image = _node.image;
 
     /* Set the image width to match the node's max width */
-    _image.set_width( _node.style.node_width );
+    _image.set_width( im, _node.style.node_width, true );
 
     /* Set the node image */
     _node.set_image( im, _image );
