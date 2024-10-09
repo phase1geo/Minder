@@ -9,3 +9,4 @@ src/exports/*.c
 src/themes/*.c
 src/layouts/*.c
 src/undo_actions/*.c
+src/.DS_Store
