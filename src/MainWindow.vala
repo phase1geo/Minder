@@ -54,7 +54,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   private GLib.Settings     _settings;
   private Hdy.HeaderBar     _header;
   private Gtk.AccelGroup?   _accel_group    = null;
-  private Notebook          _nb;
+  private DynamicNotebook?  _nb             = null;
   private Revealer?         _inspector      = null;
   private Paned             _pane           = null;
   private Notebook?         _inspector_nb   = null;
@@ -96,7 +96,6 @@ public class MainWindow : Hdy.ApplicationWindow {
   private int               _text_size;
   private Exports           _exports;
   private UnicodeInsert     _unicoder;
-  private bool              _stop_recording_tab_state = false;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",           action_save },
@@ -189,17 +188,14 @@ public class MainWindow : Hdy.ApplicationWindow {
     add_keyboard_shortcuts( app );
 
     /* Create the notebook */
-    _nb = new Notebook() {
-      show_tabs = true,
-      scrollable = true,
-      halign = Align.FILL,
-      valign = Align.FILL,
-      hexpand = true,
-      vexpand = true
-    };
-    _nb.switch_page.connect( tab_switched );
-    _nb.page_reordered.connect( tab_reordered );
-    _nb.page_removed.connect( tab_removed );
+    _nb = new DynamicNotebook();
+    _nb.add_button_visible = false;
+    _nb.tab_bar_behavior   = DynamicNotebook.TabBarBehavior.SINGLE;
+    _nb.tab_switched.connect( tab_switched );
+    _nb.tab_reordered.connect( tab_reordered );
+    _nb.close_tab_requested.connect( close_tab_requested );
+    _nb.tab_removed.connect( tab_removed );
+    _nb.get_style_context().add_class( Gtk.STYLE_CLASS_INLINE_TOOLBAR );
 
     /* Create title toolbar */
     var new_btn = new Button.from_icon_name( get_icon_name( "document-new" ), get_icon_size() );
@@ -298,10 +294,6 @@ public class MainWindow : Hdy.ApplicationWindow {
       return( false );
     });
 
-    destroy.connect(() => {
-      _stop_recording_tab_state = true;
-    });
-
     /* Load the exports data */
     _exports.load();
 
@@ -324,8 +316,9 @@ public class MainWindow : Hdy.ApplicationWindow {
   private void setting_changed_text_size() {
     var value = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
     _text_size = value;
-    for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
       da.update_css();
     }
   }
@@ -340,92 +333,98 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   private void setting_changed_animations() {
     var value = settings.get_boolean( "enable-animations" );
-    for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
       da.animator.enable = value;
     }
   }
 
   private void setting_changed_embedded_urls() {
     var value = settings.get_boolean( "auto-parse-embedded-urls" );
-    for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
       da.url_parser.enable = value;
     }
   }
 
   private void setting_changed_markdown() {
     var value = settings.get_boolean( "enable-markdown" );
-    for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
       da.markdown_parser.enable = value;
     }
   }
 
   private void setting_changed_unicode_input() {
     var value = settings.get_boolean( "enable-unicode-input" );
-    for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
       da.unicode_parser.enable = value;
     }
   }
 
   /* Called whenever the current tab is switched in the notebook */
-  private void tab_switched( Widget page, uint page_num ) {
-    tab_changed( page_num );
+  private void tab_switched( Tab? old_tab, Tab new_tab ) {
+    tab_changed( new_tab );
   }
 
   /* This needs to be called whenever the tab is changed */
-  private void tab_changed( uint page_num ) {
-    var da = get_da( (int)page_num );
+  private void tab_changed( Tab tab ) {
+    var bin = (Gtk.Bin)tab.page;
+    var da  = bin.get_child() as DrawArea;
     do_buffer_changed( da.current_undo_buffer() );
     on_current_changed( da );
     update_title( da );
     canvas_changed( da );
-    save_tab_state( "tab_changed" );
+    save_tab_state( tab );
   }
 
   /* Called whenever the current tab is moved to a new position */
-  private void tab_reordered( Widget child, uint new_pos ) {
-    save_tab_state( "tab_reordered" );
+  private void tab_reordered( Tab? tab, int new_pos ) {
+    save_tab_state( tab );
   }
 
   /* Updates all of the node sizes in all tabs */
   public void update_node_sizes() {
-    for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
       da.update_node_sizes();
     }
   }
 
   /* Closes the current tab */
   public void close_current_tab() {
-    close_tab( _nb.page );
+    _nb.current.close();
   }
 
   /* Closes the tab associated with the given drawing area */
   private void close_tab_with_da( DrawArea da ) {
-    var page = _nb.page_num( da );
-    if( page != -1 ) {
-      close_tab( page );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin     = (Gtk.Bin)tab.page;
+      var curr_da = (DrawArea)bin.get_child();
+      if( da == curr_da ) {
+        tab.close();
+        return;
+      }
     }
   }
 
   /* Called whenever the user clicks on the close button and the tab is unnamed */
-  private void close_tab( int page_num ) {
-    stdout.printf( "In close_tab\n" );
-    if( _nb.get_n_pages() == 1 ) return;
-    var da = get_da( page_num );
-    if( da.get_doc().is_saved() ) {
-      _nb.detach_tab( _nb.get_nth_page( page_num ) );
-    } else {
-      show_save_warning( da );
-    }
+  private bool close_tab_requested( Tab tab ) {
+    var bin = (Gtk.Bin)tab.page;
+    var da  = bin.get_child() as DrawArea;
+    var ret = (_nb.n_tabs > 1) && (!da.is_loaded || da.get_doc().is_saved() || show_save_warning( da ));
+    return( ret );
   }
 
   /* This should be called when the tab page is actually gone */
-  private void tab_removed( Widget child, uint page_num ) {
-    save_tab_state( "tab_removed" );
+  private void tab_removed( Tab tab ) {
+    save_tab_state( _nb.current );
   }
 
   /* Creates a draw area */
@@ -458,66 +457,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     var overlay = new Overlay();
     overlay.add( da );
 
-    var tab_label = new Label( da.get_doc().label ) {
-      margin_start  = 10,
-      margin_end    = 5,
-      margin_top    = 5,
-      margin_bottom = 5,
-      tooltip_text  = fname
-    };
-
-    var tab_close = new Button.from_icon_name( "window-close-symbolic" ) {
-      relief        = ReliefStyle.NONE,
-      margin_end    = 10,
-      margin_top    = 5,
-      margin_bottom = 5
-    };
-
-    var tab_revealer = new Revealer() {
-      reveal_child = true,
-      transition_type = RevealerTransitionType.CROSSFADE
-    };
-    tab_revealer.add( tab_close );
-
-    var tab_box = new Box( Orientation.HORIZONTAL, 5 );
-    tab_box.pack_start( tab_label, false, false );
-    tab_box.pack_end( tab_revealer, false, false );
-
-    var tab_ebox = new EventBox() {
-      child = tab_box
-    };
-    tab_ebox.add_events( EventMask.ENTER_NOTIFY_MASK | EventMask.LEAVE_NOTIFY_MASK );
-
-    tab_ebox.show_all();
-
-    var other_page = _nb.get_nth_page( _nb.page );
-    if( other_page != null ) {
-      var ebox = (EventBox)_nb.get_tab_label( other_page );
-      var box  = (Box)ebox.get_child();
-      var revealer = (Revealer)box.get_children().nth_data( 1 );
-      revealer.reveal_child = false;
-    }
-
-    var tab_index = _nb.append_page( overlay, tab_ebox );
-    _nb.show_all();
-
-    tab_close.clicked.connect(() => {
-      close_tab( tab_index );
-    });
-
-    tab_ebox.enter_notify_event.connect((e) => {
-      if( _nb.get_n_pages() > 1 ) {
-        tab_revealer.reveal_child = true;
-      }
-      return( false );
-    });
-
-    tab_ebox.leave_notify_event.connect((e) => {
-      if( _nb.page != tab_index ) {
-        tab_revealer.reveal_child = false;
-      }
-      return( false );
-    });
+    var tab = new Tab( da.get_doc().label, null, overlay );
+    tab.pinnable = false;
+    tab.tooltip  = fname;
 
     /* Update the titlebar */
     update_title( da );
@@ -529,10 +471,12 @@ public class MainWindow : Hdy.ApplicationWindow {
       da.initialize_for_open();
     }
 
+    /* Add the page to the notebook */
+    _nb.insert_tab( tab, _nb.n_tabs );
+
     /* Indicate that the tab has changed */
     if( reason != TabAddReason.LOAD ) {
-      stdout.printf( "Setting current page to %d\n", tab_index );
-      _nb.page = tab_index;
+      _nb.current = tab;
     }
 
     da.grab_focus();
@@ -545,10 +489,11 @@ public class MainWindow : Hdy.ApplicationWindow {
    Closes all tabs that contain documents that have not been changed.
   */
   private void close_unchanged_tabs() {
-    for( int i=(_nb.get_n_pages() - 1); i>=0; i-- ) {
-      var da = get_da( i );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
       if( !da.is_loaded ) {
-        close_tab( i );
+        tab.close();
         return;
       }
     }
@@ -559,10 +504,11 @@ public class MainWindow : Hdy.ApplicationWindow {
    current tab.
   */
   private bool find_unchanged_tab() {
-    for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
       if( !da.is_loaded ) {
-        _nb.page = i;
+        _nb.current = tab;
         da.grab_focus();
         return( true );
       }
@@ -570,17 +516,19 @@ public class MainWindow : Hdy.ApplicationWindow {
     return( false );
   }
 
-  //-------------------------------------------------------------
-  // Checks to see if any other tab contains the given filename.  If the filename
-  // is already found, refresh the tab with the file contents and make it the current
-  // tab; otherwise, add the new tab and populate it.
+  /*
+   Checks to see if any other tab contains the given filename.  If the filename
+   is already found, refresh the tab with the file contents and make it the current
+   tab; otherwise, add the new tab and populate it.
+  */
   private DrawArea add_tab_conditionally( string? fname, TabAddReason reason ) {
 
-    for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
+    foreach( Tab tab in _nb.tabs ) {
+      var bin = (Gtk.Bin)tab.page;
+      var da  = (DrawArea)bin.get_child();
       if( da.get_doc().filename == fname ) {
         da.initialize_for_open();
-        _nb.page = i;
+        _nb.current = tab;
         return( da );
       }
     }
@@ -589,50 +537,25 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   }
 
-  //-------------------------------------------------------------
-  // Switches the view to the next tab.
   public void next_tab() {
     _nb.next_page();
   }
 
-  //-------------------------------------------------------------
-  // Switches the view to the previous tab.
   public void previous_tab() {
-    _nb.prev_page();
+    _nb.previous_page();
   }
 
-  //-------------------------------------------------------------
-  // Returns the DrawArea widget at the given page number in the notebook
-  private DrawArea? get_da( int page_num ) {
-    var ol = (Overlay)_nb.get_nth_page( page_num );
-    return( (ol != null) ? (DrawArea)ol.get_child() : null );
-  }
-
-  //-------------------------------------------------------------
-  // Returns the label widget associated with the given tab page number
-  // in the notebook.
-  private Label? get_tab_label( int page_num ) {
-    var page = _nb.get_nth_page( page_num );
-    if( page != null ) {
-      var tab_ebox = (EventBox)_nb.get_tab_label( page );
-      var tab_box  = (Box)tab_ebox.get_child();
-      return( (Label)tab_box.get_children().nth_data( 0 ) );
-    }
-    return( null );
-  }
-
-  //-------------------------------------------------------------
-  // Returns the current drawing area
+  /* Returns the current drawing area */
   public DrawArea? get_current_da( string? caller = null ) {
     if( _debug && (caller != null) ) {
       stdout.printf( "get_current_da called from %s\n", caller );
     }
-    if( _nb.page == -1 ) { return( null ); }
-    return( get_da( _nb.page ) );
+    if( _nb.current == null ) { return( null ); }
+    var bin = (Gtk.Bin)_nb.current.page;
+    return( (DrawArea)bin.get_child() );
   }
 
-  //-------------------------------------------------------------
-  // Updates the title
+  /* Updates the title */
   private void update_title( DrawArea? da ) {
     var suffix = " \u2014 Minder";
     if( (da == null) || !da.get_doc().is_saved() ) {
@@ -646,8 +569,7 @@ public class MainWindow : Hdy.ApplicationWindow {
     _header.set_subtitle( _focus_btn.active ? _( "Focus Mode" ) : null );
   }
 
-  //-------------------------------------------------------------
-  // Adds keyboard shortcuts for the menu actions
+  /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
 
     app.set_accels_for_action( "win.action_save",           { "<Control>s" } );
@@ -672,8 +594,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   }
 
-  //-------------------------------------------------------------
-  // Adds the zoom functionality
+  /* Adds the zoom functionality */
   private void add_zoom_button() {
 
     /* Create the menu button */
@@ -1152,12 +1073,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     switch( res ) {
       case ResponseType.ACCEPT :  return( save_file( da ) );
-      case ResponseType.CLOSE  :
-        if( da.get_doc().remove() ) {
-          _nb.detach_tab( _nb.get_nth_page( _nb.page ) );
-          return( true );
-        }
-        break;
+      case ResponseType.CLOSE  :  return( da.get_doc().remove() );
     }
 
     return( false );
@@ -1276,7 +1192,7 @@ public class MainWindow : Hdy.ApplicationWindow {
       var da = add_tab_conditionally( fname, TabAddReason.OPEN );
       update_title( da );
       if( da.get_doc().load() ) {
-        save_tab_state( "open file A" );
+        save_tab_state( _nb.current );
       }
       return( true );
     } else {
@@ -1288,7 +1204,7 @@ public class MainWindow : Hdy.ApplicationWindow {
             var da = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
             update_title( da );
             if( exports.index( i ).import( fname, da ) ) {
-              save_tab_state( "open file B" );
+              save_tab_state( _nb.current );
               return( true );
             }
             close_current_tab();
@@ -1402,13 +1318,10 @@ public class MainWindow : Hdy.ApplicationWindow {
       }
       da.get_doc().filename = fname;
       da.get_doc().save();
-      var page = _nb.get_nth_page( _nb.page );
-      var tab_box = (Box)_nb.get_tab_label( page );
-      var tab_label = (Label)tab_box.get_children().nth_data( 0 );
-      tab_label.label = da.get_doc().label;
-      tab_label.tooltip_text = fname;
+      _nb.current.label = da.get_doc().label;
+      _nb.current.tooltip = fname;
       update_title( da );
-      save_tab_state( "save_file" );
+      save_tab_state( _nb.current );
       retval = true;
       Utils.store_chooser_folder( fname, false );
     }
@@ -1440,12 +1353,12 @@ public class MainWindow : Hdy.ApplicationWindow {
     _zoom_scale.set_value( scale_value );
     _zoom_in.set_sensitive( scale_value < marks[marks.length-1] );
     _zoom_out.set_sensitive( scale_value > marks[0] );
-    save_tab_state( "change_scale" );
+    save_tab_state( _nb.current );
   }
 
   /* Called whenever the DrawArea origin changes in the current tab */
   private void change_origin() {
-    save_tab_state( "change_origin" );
+    save_tab_state( _nb.current );
   }
 
   /* Displays the node properties panel for the current node */
@@ -1610,18 +1523,18 @@ public class MainWindow : Hdy.ApplicationWindow {
     search_opts[SearchOptions.TASKS]       = _search_tasks.active;
     search_opts[SearchOptions.NONTASKS]    = _search_nontasks.active;
     _search_items.clear();
-    var all_tabs  = _settings.get_boolean( "search-opt-all-tabs" );
-    var current   = get_current_da( "on_search_change" );
-    var text      = _search_entry.get_text().casefold();
-    var tab_label = get_tab_label( _nb.page );
-    var name      = all_tabs ? tab_label.label : "";
+    var all_tabs = _settings.get_boolean( "search-opt-all-tabs" );
+    var current  = get_current_da( "on_search_change" );
+    var text     = _search_entry.get_text().casefold();
+    var name     = all_tabs ? _nb.current.label : "";
     if( text == "" ) return;
     current.get_match_items( name, text, search_opts, ref _search_items );
     if( all_tabs ) {
-      for( int i=0; i<_nb.get_n_pages(); i++ ) {
-        var da = get_da( i );
+      foreach (var tab in _nb.tabs ) {
+        var bin = (Gtk.Bin)tab.page;
+        var da = (DrawArea)bin.get_child();
         if( da != current ) {
-          da.get_match_items( tab_label.label, text, search_opts, ref _search_items );
+          da.get_match_items( tab.label, text, search_opts, ref _search_items );
         }
       }
     }
@@ -1641,11 +1554,11 @@ public class MainWindow : Hdy.ApplicationWindow {
     DrawArea    da      = get_current_da( "on_search_clicked" );
     _search_items.get_iter( out it, path );
     _search_items.get( it, 2, &node, 3, &conn, 4, &callout, 5, &group, 6, &tabname, -1 );
-    for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var tab_label = get_tab_label( i );
-      if( tab_label.label == tabname) {
-        da = get_da( i );
-        _nb.page = i;
+    foreach (var tab in _nb.tabs ) {
+      if(tab.label == tabname) {
+        var bin = (Gtk.Bin)tab.page;
+        da = (DrawArea)bin.get_child();
+        _nb.current = tab;
         break;
       }
     }
@@ -1744,17 +1657,11 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   /* Shows the previous tab in the tabbar */
   private void action_prev_tab() {
-    _nb.prev_page();
+    _nb.previous_page();
   }
 
   /* Save the current tab state */
-  private void save_tab_state( string? msg = null ) {
-
-    if( _stop_recording_tab_state ) return;
-
-    if( msg != null ) {
-      stdout.printf( "In save_tab_state, msg: %s\n", msg );
-    }
+  private void save_tab_state( Tab current_tab ) {
 
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
 
@@ -1762,16 +1669,17 @@ public class MainWindow : Hdy.ApplicationWindow {
       return;
     }
 
-    var       fname = GLib.Path.build_filename( dir, "tab_state.xml" );
-    Xml.Doc*  doc   = new Xml.Doc( "1.0" );
-    Xml.Node* root  = new Xml.Node( null, "tabs" );
+    var       fname        = GLib.Path.build_filename( dir, "tab_state.xml" );
+    var       selected_tab = -1;
+    var       i            = 0;
+    Xml.Doc*  doc          = new Xml.Doc( "1.0" );
+    Xml.Node* root         = new Xml.Node( null, "tabs" );
 
     doc->set_root_element( root );
 
-    stdout.printf( "  Saving %d pages\n", _nb.get_n_pages() );
-
-    for( int i=0; i<_nb.get_n_pages(); i++ ) {
-      var da = get_da( i );
+    _nb.tabs.foreach((tab) => {
+      var       bin  = (Gtk.Bin)tab.page;
+      var       da   = (DrawArea)bin.get_child();
       Xml.Node* node = new Xml.Node( null, "tab" );
       node->new_prop( "path",  da.get_doc().filename );
       node->new_prop( "saved", da.get_doc().is_saved().to_string() );
@@ -1779,10 +1687,14 @@ public class MainWindow : Hdy.ApplicationWindow {
       node->new_prop( "origin-y", da.origin_y.to_string() );
       node->new_prop( "scale", da.sfactor.to_string() );
       root->add_child( node );
-    }
+      if( tab == current_tab ) {
+        selected_tab = i;
+      }
+      i++;
+    });
 
-    if( _nb.page != -1 ) {
-      root->new_prop( "selected", _nb.page.to_string() );
+    if( selected_tab > -1 ) {
+      root->new_prop( "selected", selected_tab.to_string() );
     }
 
     /* Save the file */
@@ -1802,13 +1714,12 @@ public class MainWindow : Hdy.ApplicationWindow {
     }
 
     Xml.Doc* doc  = Xml.Parser.parse_file( tab_state );
+    var      tabs = 0;
 
     if( doc == null ) {
       do_new_file();
       return;
     }
-
-    stdout.printf( "Loading tab state tabs\n" );
 
     var root = doc->get_root_element();
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
@@ -1818,7 +1729,6 @@ public class MainWindow : Hdy.ApplicationWindow {
         var origin_x = it->get_prop( "origin-x" );
         var origin_y = it->get_prop( "origin-y" );
         var sfactor  = it->get_prop( "scale" );
-        stdout.printf( "Found tab to restore (%s)\n", fname );
         var da       = add_tab( fname, TabAddReason.LOAD );
         if( origin_x != null ) {
           da.origin_x = int.parse( origin_x );
@@ -1835,18 +1745,19 @@ public class MainWindow : Hdy.ApplicationWindow {
           if( !da.get_doc().load() ) {
             close_tab_with_da( da );
           }
-          if( _nb.get_n_pages() == 0 ) {
+          if( (--tabs == 0) && (_nb.n_tabs == 0) ) {
             do_new_file();
           }
           return( false );
         });
+        tabs++;
       }
     }
 
     var s = root->get_prop( "selected" );
     if( s != null ) {
-      _nb.page = int.parse( s );
-      tab_changed( _nb.page );
+      _nb.current = _nb.get_tab_by_index( int.parse( s ) );
+      tab_changed( _nb.current );
     }
 
     delete doc;
