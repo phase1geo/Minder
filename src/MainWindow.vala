@@ -413,6 +413,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   /* Called whenever the user clicks on the close button and the tab is unnamed */
   private void close_tab( int page_num ) {
+    stdout.printf( "In close_tab\n" );
     if( _nb.get_n_pages() == 1 ) return;
     var da = get_da( page_num );
     if( da.get_doc().is_saved() ) {
@@ -530,6 +531,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     /* Indicate that the tab has changed */
     if( reason != TabAddReason.LOAD ) {
+      stdout.printf( "Setting current page to %d\n", tab_index );
       _nb.page = tab_index;
     }
 
@@ -1750,7 +1752,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     if( _stop_recording_tab_state ) return;
 
-    if( _debug && (msg != null) ) {
+    if( msg != null ) {
       stdout.printf( "In save_tab_state, msg: %s\n", msg );
     }
 
@@ -1765,6 +1767,8 @@ public class MainWindow : Hdy.ApplicationWindow {
     Xml.Node* root  = new Xml.Node( null, "tabs" );
 
     doc->set_root_element( root );
+
+    stdout.printf( "  Saving %d pages\n", _nb.get_n_pages() );
 
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var da = get_da( i );
@@ -1804,6 +1808,8 @@ public class MainWindow : Hdy.ApplicationWindow {
       return;
     }
 
+    stdout.printf( "Loading tab state tabs\n" );
+
     var root = doc->get_root_element();
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
@@ -1812,6 +1818,7 @@ public class MainWindow : Hdy.ApplicationWindow {
         var origin_x = it->get_prop( "origin-x" );
         var origin_y = it->get_prop( "origin-y" );
         var sfactor  = it->get_prop( "scale" );
+        stdout.printf( "Found tab to restore (%s)\n", fname );
         var da       = add_tab( fname, TabAddReason.LOAD );
         if( origin_x != null ) {
           da.origin_x = int.parse( origin_x );
