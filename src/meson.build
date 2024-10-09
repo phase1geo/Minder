@@ -15,6 +15,7 @@ sources += files(
     'CurrentInspector.vala',
     'Document.vala',
     'DrawArea.vala',
+    'DynamicNotebook.vala',
     'EmptyInspector.vala',
     'EmptyMenu.vala',
     'Export.vala',
