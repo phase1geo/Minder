@@ -1715,6 +1715,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
     Xml.Doc* doc  = Xml.Parser.parse_file( tab_state );
     var      tabs = 0;
+    var      tab_skipped = false;
 
     if( doc == null ) {
       do_new_file();
@@ -1724,40 +1725,46 @@ public class MainWindow : Hdy.ApplicationWindow {
     var root = doc->get_root_element();
     for( Xml.Node* it = root->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
-        var fname    = it->get_prop( "path" );
-        var saved    = it->get_prop( "saved" );
-        var origin_x = it->get_prop( "origin-x" );
-        var origin_y = it->get_prop( "origin-y" );
-        var sfactor  = it->get_prop( "scale" );
-        var da       = add_tab( fname, TabAddReason.LOAD );
-        if( origin_x != null ) {
-          da.origin_x = int.parse( origin_x );
-        }
-        if( origin_y != null ) {
-          da.origin_y = int.parse( origin_y );
-        }
-        if( sfactor != null ) {
-          da.sfactor = double.parse( sfactor );
-          change_scale( da.sfactor );
-        }
-        da.get_doc().load_filename( fname, bool.parse( saved ) );
-        Idle.add(() => {
-          if( !da.get_doc().load() ) {
-            close_tab_with_da( da );
+        var fname = it->get_prop( "path" );
+        if( FileUtils.test( fname, FileTest.EXISTS ) ) {
+          var saved    = it->get_prop( "saved" );
+          var origin_x = it->get_prop( "origin-x" );
+          var origin_y = it->get_prop( "origin-y" );
+          var sfactor  = it->get_prop( "scale" );
+          var da = add_tab( fname, TabAddReason.LOAD );
+          if( origin_x != null ) {
+            da.origin_x = int.parse( origin_x );
           }
-          if( (--tabs == 0) && (_nb.n_tabs == 0) ) {
-            do_new_file();
+          if( origin_y != null ) {
+            da.origin_y = int.parse( origin_y );
           }
-          return( false );
-        });
-        tabs++;
+          if( sfactor != null ) {
+            da.sfactor = double.parse( sfactor );
+            change_scale( da.sfactor );
+          }
+          da.get_doc().load_filename( fname, bool.parse( saved ) );
+          if( da.get_doc().load() ) {
+            tabs++;
+          }
+        } else {
+          tab_skipped = true;
+        }
       }
     }
 
-    var s = root->get_prop( "selected" );
-    if( s != null ) {
-      _nb.current = _nb.get_tab_by_index( int.parse( s ) );
-      tab_changed( _nb.current );
+    if( tabs == 0 ) {
+      do_new_file();
+    } else if( !tab_skipped ) {
+      var s = root->get_prop( "selected" );
+      if( s != null ) {
+        _nb.current = _nb.get_tab_by_index( int.parse( s ) );
+        tab_changed( _nb.current );
+      }
+    }
+
+    // Save the tab state if we did something
+    if( tab_skipped ) {
+      save_tab_state( _nb.current );
     }
 
     delete doc;
