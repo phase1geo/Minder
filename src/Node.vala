@@ -523,6 +523,7 @@ public class Node : Object {
       }
     }
   }
+  public bool sequence { get; set; default = false; }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -1423,6 +1424,11 @@ public class Node : Object {
       folded = bool.parse( f );
     }
 
+    string? srl = n->get_prop( "sequence" );
+    if( srl != null ) {
+      sequence = bool.parse( srl );
+    }
+
     string? ts = n->get_prop( "treesize" );
     if( ts != null ) {
       tree_size = double.parse( ts );
@@ -1535,6 +1541,7 @@ public class Node : Object {
     }
     node->new_prop( "side", side.to_string() );
     node->new_prop( "fold", folded.to_string() );
+    node->new_prop( "sequence", sequence.to_string() );
     node->new_prop( "treesize", tree_size.to_string() );
     if( is_root() ) {
       if( _link_color_set ) {
@@ -2431,10 +2438,20 @@ public class Node : Object {
   }
 
   /* Returns the link point for this node */
-  protected virtual void link_point( out double x, out double y ) {
+  protected virtual void link_point( out double x, out double y, bool seq = false ) {
     if( is_root() ) {
       x = posx + (_width / 2);
       y = posy + (_height / 2);
+    } else if( seq ) {
+      int margin  = style.node_margin ?? 0;
+      int padding = style.node_padding ?? 0;
+      if( side.horizontal() ) {
+        x = posx + margin + padding;
+        y = posy + _total_height - margin;
+      } else {
+        x = posx + _total_width - margin;
+        y = posy + margin + padding;
+      }
     } else {
       int    margin = style.node_margin ?? 0;
       double height = (style.node_border.name() == "underlined") ? (_height - margin) : (_height / 2);
@@ -2781,7 +2798,10 @@ public class Node : Object {
 
   }
 
-  /* Draw the link from this node to the parent node */
+  /*
+   Draw the link from this node to the parent node (or previous sibling if this is node
+   is part of a sequence).
+  */
   public virtual void draw_link( Context ctx, Theme theme ) {
 
     double  parent_x, parent_y;
@@ -2793,42 +2813,64 @@ public class Node : Object {
     double  child_y2 = 0;
     double? ext_x, ext_y;
 
-    var margin = style.node_margin;
+    var margin  = style.node_margin  ?? 0;
+    var padding = style.node_padding ?? 0;
 
     /* Get the parent's link point */
-    parent.link_point( out parent_x, out parent_y );
+    var prev = previous_sibling();
+    var link_sibling = parent.sequence && (prev != null);
+    if( link_sibling ) {
+      prev.link_point( out parent_x, out parent_y, true );
+    } else {
+      parent.link_point( out parent_x, out parent_y );
+    }
 
     Utils.set_context_color_with_alpha( ctx, _link_color, ((_parent.alpha != 1.0) ? _parent.alpha : _alpha) );
     ctx.set_line_cap( LineCap.ROUND );
 
-    switch( side ) {
-      case NodeSide.LEFT   :
-        child_x1 = (posx + _total_width - margin);
-        child_x2 = (posx + _width - margin);
-        child_y1 = (posy + height);
-        child_y2 = child_y1;
-        break;
-      case NodeSide.RIGHT  :
-        child_x1 = (posx + margin);
-        child_x2 = child_x1;
-        child_y1 = (posy + height);
-        child_y2 = child_y1;
-        break;
-      case NodeSide.TOP    :
-        child_x1 = (posx + (_width / 2));
-        child_x2 = child_x1;
-        child_y1 = (posy + _total_height - margin);
-        child_y2 = (posy + _height - margin);
-        break;
-      case NodeSide.BOTTOM :
-        child_x1 = (posx + (_width / 2));
+    if( link_sibling ) {
+      if( side.horizontal() ) {
+        child_x1 = posx + margin + padding;
         child_x2 = child_x1;
         child_y1 = (posy + margin);
         child_y2 = child_y1;
-        break;
+      } else {
+        child_x1 = (posx + margin);
+        child_x2 = child_x1;
+        child_y1 = posy + height + padding;
+        child_y2 = child_y1;
+      }
+      style.draw_link( ctx, parent, this, true, parent_x, parent_y, child_x1, child_y1, child_x2, child_y2, out tailx, out taily, out tipx, out tipy );
+    } else {
+      switch( side ) {
+        case NodeSide.LEFT   :
+          child_x1 = (posx + _total_width - margin);
+          child_x2 = (posx + _width - margin);
+          child_y1 = (posy + height);
+          child_y2 = child_y1;
+          break;
+        case NodeSide.RIGHT  :
+          child_x1 = (posx + margin);
+          child_x2 = child_x1;
+          child_y1 = (posy + height);
+          child_y2 = child_y1;
+          break;
+        case NodeSide.TOP    :
+          child_x1 = (posx + (_width / 2));
+          child_x2 = child_x1;
+          child_y1 = (posy + _total_height - margin);
+          child_y2 = (posy + _height - margin);
+          break;
+        case NodeSide.BOTTOM :
+          child_x1 = (posx + (_width / 2));
+          child_x2 = child_x1;
+          child_y1 = (posy + margin);
+          child_y2 = child_y1;
+          break;
+      }
+      style.draw_link( ctx, parent, this, false, parent_x, parent_y, child_x1, child_y1, child_x2, child_y2, out tailx, out taily, out tipx, out tipy );
     }
 
-    style.draw_link( ctx, parent, this, parent_x, parent_y, child_x1, child_y1, child_x2, child_y2, out tailx, out taily, out tipx, out tipy );
 
     /* Draw the arrow */
     if( style.link_arrow ) {

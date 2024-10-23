@@ -32,6 +32,7 @@ public class NodeInspector : Box {
   private ScrolledWindow _sw;
   private Switch         _task;
   private Switch         _fold;
+  private Switch         _sequence;
   private Revealer       _link_reveal;
   private ColorButton    _link_color;
   private NoteView       _note;
@@ -58,6 +59,7 @@ public class NodeInspector : Box {
     create_title();
     create_task();
     create_fold();
+    create_sequence();
     create_link();
     create_color();
     create_note( win );
@@ -134,6 +136,26 @@ public class NodeInspector : Box {
     pack_start( box, false, true, 5 );
 
   }
+
+  /* Creates the sequence UI elements */
+  private void create_sequence() {
+
+    var lbl = new Label( Utils.make_title( _( "Sequence" ) ) ) {
+      xalign     = (float)0,
+      use_markup = true
+    };
+
+    _sequence = new Switch();
+    _sequence.button_release_event.connect( sequence_changed );
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.pack_start( lbl,       false, true, 0 );
+    box.pack_end(   _sequence, false, true, 0 );
+
+    pack_start( box, false, true, 5 );
+    
+  }
+
 
   /*
    Allows the user to select a different color for the current link
@@ -442,6 +464,17 @@ public class NodeInspector : Box {
     return( false );
   }
 
+  /* Called whenever the sequence switch is changed within the inspector */
+  private bool sequence_changed( Gdk.EventButton e ) {
+    var current = _da.get_current_node();
+    if( current != null ) {
+      current.sequence = !current.sequence;
+      _da.auto_save();
+      _da.queue_draw();
+    }
+    return( false );
+  }
+
   /*
    Called whenever the user chooses to override the root color via
    this sidebar.  We will show/hide the color changer.
@@ -576,6 +609,7 @@ public class NodeInspector : Box {
         _fold.set_active( current.folded );
         _fold.set_sensitive( true );
       }
+      _sequence.set_active( current.sequence );
       if( current.is_root() ) {
         _link_reveal.reveal_child       = false;
         _root_color_reveal.reveal_child = true;
