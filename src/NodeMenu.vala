@@ -107,7 +107,8 @@ public class NodeMenu : Gtk.Menu {
     _task.add( new Granite.AccelLabel( _( "Add Task" ), "t" ) );
     _task.activate.connect( change_task );
 
-    _image = new Gtk.MenuItem.with_label( _( "Add Image" ) );
+    _image = new Gtk.MenuItem();
+    _image.add( new Granite.AccelLabel( _( "Add Image" ), "<Shift>i" ) );
     _image.activate.connect( change_image );
 
     _sticker = new Gtk.MenuItem.with_label( _( "Remove Sticker" ) );
@@ -445,7 +446,12 @@ public class NodeMenu : Gtk.Menu {
     _callout.get_child().destroy();
     _callout.add( new Granite.AccelLabel( callout_lbl, callout_acc.accel_string ) );
 
-    _image.label = node_has_image() ? _( "Remove Image" ) : _( "Add Image" );
+    _image.get_child().destroy();
+    if( node_has_image() ) {
+      _image.add( new Granite.AccelLabel( _( "Remove Image" ), null ) );
+    } else {
+      _image.add( new Granite.AccelLabel( _( "Add Image" ), "<Shift>i" ) );
+    }
 
     /* Set the paste and replace text */
     var clipboard = Clipboard.get_default( get_display() );

@@ -369,6 +369,13 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Add Image</property>
+                <property name="accelerator">&lt;shift&gt;i</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Add URL Link To Text</property>
                 <property name="accelerator">&lt;ctrl&gt;k</property>
                 <property name="visible">1</property>

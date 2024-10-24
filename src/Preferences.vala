@@ -113,6 +113,7 @@ public class Preferences : Gtk.Dialog {
 
     grid.attach( make_label( _( "Default theme" ) ), 0, 1 );
     grid.attach( make_themes(), 1, 1, 2 );
+    grid.attach( make_info( _( "Sets the default theme to use for newly created mindmaps (use Map sidebar panel to make immediate changes)." ) ), 3, 1 );
 
     grid.attach( make_label( _( "Enable animations" ) ),  0, 2 );
     grid.attach( make_switch( "enable-animations" ), 1, 2 );

@@ -5025,13 +5025,9 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _selected.current_node();
     var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
     if( shift && has_key( kvs, Key.c ) )      { center_current_node(); }
-    else if( shift && has_key( kvs, Key.d ) ) { select_node_tree(); }
-    else if( shift && has_key( kvs, Key.e ) ) { show_properties( "current", PropertyGrab.NOTE ); }
-    else if( shift && has_key( kvs, Key.i ) ) {
-      if( _debug ) {
-        current.display();
-      }
-    }
+    else if(  shift && has_key( kvs, Key.d ) ) { select_node_tree(); }
+    else if(  shift && has_key( kvs, Key.e ) ) { show_properties( "current", PropertyGrab.NOTE ); }
+    else if(  shift && has_key( kvs, Key.i ) ) { add_current_image(); }
     else if(  shift && has_key( kvs, Key.l ) ) { _node_menu.change_link_color(); }
     else if(  shift && has_key( kvs, Key.s ) ) { sort_alphabetically(); }
     else if(  shift && has_key( kvs, Key.x ) ) { select_attached_connection(); }
