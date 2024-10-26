@@ -609,7 +609,13 @@ public class NodeInspector : Box {
         _fold.set_active( current.folded );
         _fold.set_sensitive( true );
       }
-      _sequence.set_active( current.sequence );
+      if( current.is_root() ) {
+        _sequence.set_active( false );
+        _sequence.set_sensitive( false );
+      } else {
+        _sequence.set_active( current.sequence );
+        _sequence.set_sensitive( true );
+      }
       if( current.is_root() ) {
         _link_reveal.reveal_child       = false;
         _root_color_reveal.reveal_child = true;

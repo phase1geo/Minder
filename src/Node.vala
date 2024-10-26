@@ -224,7 +224,9 @@ public class Node : Object {
   private   NodeLink?    _linked_node    = null;
   private   string?      _sticker        = null;
   private   Pixbuf?      _sticker_buf    = null;
+  private   SequenceNum  _sequence_num   = null;
   private   Callout?     _callout        = null;
+  private   bool         _sequence       = false;
 
   /* Node signals */
   public signal void moved( double diffx, double diffy );
@@ -381,6 +383,9 @@ public class Node : Object {
       var branch_margin = style.branch_margin;
       if( _style.copy( value ) ) {
         name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+        if( _sequence_num != null ) {
+          _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+        }
         name.max_width = style.node_width;
         if( traversable() ) {
           for( int i=0; i<_children.length; i++ ) {
@@ -523,7 +528,19 @@ public class Node : Object {
       }
     }
   }
-  public bool sequence { get; set; default = false; }
+  public bool sequence {
+    get {
+      return( _sequence );
+    }
+    set {
+      if( _sequence != value ) {
+        _sequence = value;
+        for( int i=0; i<_children.length; i++ ) {
+          _children.index( i ).update_sequence_num();
+        }
+      }
+    }
+  }
 
   /* Default constructor */
   public Node( DrawArea da, Layout? layout ) {
@@ -640,6 +657,7 @@ public class Node : Object {
     style            = n.style;
     tree_bbox.copy_from( n.tree_bbox );
     sticker          = n.sticker;
+    sequence         = n.sequence;
   }
 
   /* Returns the associated ID of this node */
@@ -705,6 +723,21 @@ public class Node : Object {
     position_text();
   }
 
+  //-------------------------------------------------------------
+  // Updates the sequence number pango layout.
+  public void update_sequence_num() {
+    if( parent.sequence ) {
+      if( _sequence_num == null ) {
+        _sequence_num = new SequenceNum( _da );
+        _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+      }
+      _sequence_num.set_num( index() + 1 );
+    } else {
+      _sequence_num = null;
+    }
+    position_text_and_update_size();
+  }
+
   /* Clears the summary extents found as grandchildren of this node */
   public virtual void clear_summary_extents() {
     for( int i=0; i<_children.length; i++ ) {
@@ -749,7 +782,7 @@ public class Node : Object {
     var margin      = style.node_margin  ?? 0;
     var padding     = style.node_padding ?? 0;
     var stk_height  = sticker_height();
-    var name_width  = task_width() + sticker_width() + _name.width + note_width() + linked_node_width();
+    var name_width  = task_width() + sticker_width() + sequence_width() + _name.width + note_width() + linked_node_width();
     var name_height = (_name.height < stk_height) ? stk_height : _name.height;
 
     if( _image != null ) {
@@ -1015,6 +1048,19 @@ public class Node : Object {
     y = posy + margin + padding + img_height + ((_height - (img_height + (padding * 2) + (margin * 2))) / 2) - (stk_height / 2);
     w = (_sticker_buf == null) ? 0 : _sticker_buf.width;
     h = (_sticker_buf == null) ? 0 : _sticker_buf.height;
+  }
+
+  /* Returns the positional information for where the sequence number is located (if it exists) */
+  protected virtual void sequence_bbox( out double x, out double y, out double w, out double h ) {
+    int    margin     = style.node_margin  ?? 0;
+    int    padding    = style.node_padding ?? 0;
+    double img_height = (_image == null) ? 0 : (_image.height + padding);
+    double stk_height = (_sticker_buf == null) ? 0 : _sticker_buf.height;
+    double seq_height = (_sequence_num == null) ? 0 : _sequence_num.height;
+    x = posx + margin + padding + task_width() + sticker_width();
+    y = name.posy;
+    w = sequence_width();
+    h = sequence_height();
   }
 
   /* Returns the positional information for where the linked node indicator is located (if it exists) */
@@ -1302,6 +1348,9 @@ public class Node : Object {
   private void load_style( Xml.Node* n ) {
     _style.load_node( n );
     _name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+    if( _sequence_num != null ) {
+      _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+    }
   }
 
   /* Loads the callout information */
@@ -1424,11 +1473,6 @@ public class Node : Object {
       folded = bool.parse( f );
     }
 
-    string? srl = n->get_prop( "sequence" );
-    if( srl != null ) {
-      sequence = bool.parse( srl );
-    }
-
     string? ts = n->get_prop( "treesize" );
     if( ts != null ) {
       tree_size = double.parse( ts );
@@ -1484,6 +1528,11 @@ public class Node : Object {
           case "nodes"      :  load_nodes( it, sibling_parent, ref siblings );  break;
         }
       }
+    }
+
+    string? srl = n->get_prop( "sequence" );
+    if( srl != null ) {
+      sequence = bool.parse( srl );
     }
 
     _loaded = true;
@@ -1842,6 +1891,16 @@ public class Node : Object {
     return( (_sticker_buf != null) ? _sticker_buf.height : 0 );
   }
 
+  /* Returns the width of the sequence number */
+  public double sequence_width() {
+    return( (_sequence_num != null) ? _sequence_num.width : 0 );
+  }
+
+  /* Returns the height of the sequence number */
+  public double sequence_height() {
+    return( (_sequence_num != null) ? _sequence_num.height : 0 );
+  }
+
   /* Returns the amount of internal width to draw the task checkbutton */
   public double task_width() {
     return( (_task_count > 0) ? ((_task_radius * 2) + _ipadx) : 0 );
@@ -2043,7 +2102,7 @@ public class Node : Object {
     var orig_posx  = name.posx;
     var orig_posy  = name.posy;
 
-    name.posx = posx + margin + padding + task_width() + sticker_width();
+    name.posx = posx + margin + padding + task_width() + sticker_width() + sequence_width();
     name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0);
 
     if( (_callout != null) && ((orig_posx != name.posx) || (orig_posy != name.posy)) ) {
@@ -2194,6 +2253,11 @@ public class Node : Object {
       _task_count = 1;
     }
     propagate_task_info_up( _task_count, _task_done );
+    if( parent.sequence ) {
+      for( int i=index; i<parent.children().length; i++ ) {
+        parent.children().index( i ).update_sequence_num();
+      }
+    }
     parent.moved.connect( this.parent_moved );
     if( layout != null ) {
       layout.handle_update_by_insert( parent, this, index );
@@ -2672,6 +2736,38 @@ public class Node : Object {
 
   }
 
+  //-------------------------------------------------------------
+  // Draw the sequence number, if applicable.
+  protected virtual void draw_sequence_num( Context ctx, RGBA sel_color, RGBA bg_color, RGBA fg_color ) {
+
+    if( _sequence_num != null ) {
+
+      double x, y, w, h;
+      RGBA color = mode.is_selected() ? sel_color : bg_color;
+
+      sequence_bbox( out x, out y, out w, out h );
+
+      if( _mode == NodeMode.SELECTED ) {
+        Utils.set_context_color_with_alpha( ctx, color, _alpha );
+        ctx.move_to( x, y );
+        ctx.rectangle( x, y, w, h );
+        ctx.fill();
+      }
+
+      /* Draw sequence number */
+      Pango.Rectangle ink_rect, log_rect;
+      _sequence_num.layout.get_extents( out ink_rect, out log_rect );
+
+      /* Output the text */
+      ctx.move_to( (x - (log_rect.x / Pango.SCALE)), y );
+      Utils.set_context_color_with_alpha( ctx, fg_color, _alpha );
+      Pango.cairo_show_layout( ctx, _sequence_num.layout );
+      ctx.new_path();
+
+    }
+
+  }
+
   /* Draws the icon indicating that a note is associated with this node */
   protected virtual void draw_common_note( Context ctx, RGBA reg_color, RGBA sel_color, RGBA bg_color ) {
 
@@ -3005,6 +3101,7 @@ public class Node : Object {
         draw_acc_task( ctx, _link_color, background );
       }
       draw_sticker( ctx, nodesel_background, background );
+      draw_sequence_num( ctx, nodesel_background, background, foreground );
       draw_common_note( ctx, foreground, nodesel_foreground, background );
       draw_link_node(   ctx, foreground, nodesel_foreground, foreground );
       draw_common_fold( ctx, _link_color, background );

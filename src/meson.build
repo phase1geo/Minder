@@ -49,6 +49,7 @@ sources += files(
     'Preferences.vala',
     'QuickEntry.vala',
     'Selection.vala',
+    'SequenceNum.vala',
     'Sticker.vala',
     'Stickers.vala',
     'StickerInspector.vala',
