@@ -21,13 +21,27 @@
 
 using Gdk;
 
+public enum SequenceNumType {
+  NUM,
+  LETTER;
+
+  public string to_string( int index ) {
+    switch( this ) {
+      case NUM    :  return( "%d".printf( index + 1 ) );
+      case LETTER :  return( "%c".printf( 'a' + index ) );
+      default     :  return( "" );
+    }
+  }
+}
+
 public class SequenceNum {
 
   private Pango.Layout _layout;
   private int          _font_size = 12;
 
-  public double width  { get; private set; default = 0.0; }
-  public double height { get; private set; default = 0.0; }
+  public double          width    { get; private set; default = 0.0; }
+  public double          height   { get; private set; default = 0.0; }
+  public SequenceNumType seq_type { get; private set; default = SequenceNumType.NUM; }
 
   public Pango.Layout layout {
     get {
@@ -72,9 +86,11 @@ public class SequenceNum {
 
   //-------------------------------------------------------------
   // Sets the sequence number to the given value.
-  public void set_num( int num ) {
+  public void set_num( int index, SequenceNumType type ) {
 
-    var numstr    = "%d. ".printf( num );
+    seq_type = type;
+
+    var numstr    = "%s. ".printf( type.to_string( index ) );
     var attr_list = new Pango.AttrList();
     var bold      = Pango.attr_weight_new( Pango.Weight.ULTRABOLD );
     bold.start_index = 0;

@@ -731,7 +731,11 @@ public class Node : Object {
         _sequence_num = new SequenceNum( _da );
         _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
       }
-      _sequence_num.set_num( index() + 1 );
+      var seq_type = SequenceNumType.NUM;
+      if( (parent._sequence_num != null) && (parent._sequence_num.seq_type == SequenceNumType.NUM) ) {
+        seq_type = SequenceNumType.LETTER;
+      }
+      _sequence_num.set_num( index(), seq_type );
     } else {
       _sequence_num = null;
     }
@@ -2139,6 +2143,7 @@ public class Node : Object {
       if( parent.last_selected_child == this ) {
         parent.last_selected_child = null;
       }
+      _sequence_num = null;
       if( layout != null ) {
         layout.handle_update_by_delete( parent, idx, side, tree_size );
       }
