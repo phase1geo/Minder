@@ -82,7 +82,7 @@ public class ExportMarkdown : Export {
   }
 
   /* Creates a new node from the given information and attaches it to the specified parent node */
-  private Node make_node( DrawArea da, Node? parent, string task, string pre_name, string current_dir, bool attach = true ) {
+  private Node make_node( DrawArea da, Node? parent, string bullet, string task, string pre_name, string current_dir, bool attach = true ) {
 
     NodeImage? image = null;
     var        name  = pre_name;
@@ -132,6 +132,11 @@ public class ExportMarkdown : Export {
       }
     }
 
+    /* Check the bullet type for a sequence */
+    if( Regex.match_simple( "\\d+\\.", bullet ) && (node.parent != null) ) {
+      node.parent.sequence = true;
+    }
+
     /* Add the task information, if necessary */
     if( task != "" ) {
       node.enable_task( true );
@@ -164,7 +169,7 @@ public class ExportMarkdown : Export {
 
       var stack   = new Array<Hier?>();
       var lines   = txt.split( "\n" );
-      var re      = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
+      var re      = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>|\\d+\\.)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
       var current = da.get_current_node();
 
       /*
@@ -201,18 +206,18 @@ public class ExportMarkdown : Export {
 
           /* If the stack is empty */
           } else if( stack.length == 0 ) {
-            node = make_node( da, null, task, str, current_dir );
+            node = make_node( da, null, bullet, task, str, current_dir );
             stack.append_val( {spaces, node} );
 
           /* Add sibling node */
           } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
-            node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, current_dir, true );
+            node = make_node( da, stack.index( stack.length - 1 ).node.parent, bullet, task, str, current_dir, true );
             stack.remove_index( stack.length - 1 );
             stack.append_val( {spaces, node} );
 
           /* Add child node */
           } else if( spaces > stack.index( stack.length - 1 ).spaces ) {
-            node = make_node( da, stack.index( stack.length - 1 ).node, task, str, current_dir );
+            node = make_node( da, stack.index( stack.length - 1 ).node, bullet, task, str, current_dir );
             stack.append_val( {spaces, node} );
 
           /* Add ancestor node */
@@ -221,14 +226,14 @@ public class ExportMarkdown : Export {
               stack.remove_index( stack.length - 1 );
             }
             if( stack.length == 0 ) {
-              node = make_node( da, null, task, str, current_dir );
+              node = make_node( da, null, bullet, task, str, current_dir );
               stack.append_val( {spaces, node} );
             } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
-              node = make_node( da, stack.index( stack.length - 1 ).node.parent, task, str, current_dir );
+              node = make_node( da, stack.index( stack.length - 1 ).node.parent, bullet, task, str, current_dir );
               stack.remove_index( stack.length - 1 );
               stack.append_val( {spaces, node} );
             } else {
-              node = make_node( da, stack.index( stack.length - 1 ).node, task, str, current_dir );
+              node = make_node( da, stack.index( stack.length - 1 ).node, bullet, task, str, current_dir );
               stack.append_val( {spaces, node} );
             }
           }
@@ -305,7 +310,7 @@ public class ExportMarkdown : Export {
 
     try {
 
-      var title = prefix + "- ";
+      var title = prefix + (node.is_in_sequence() ? "%d. ".printf( node.index() + 1 ) : "- ");
 
       if( node.is_task() ) {
         if( node.is_task_done() ) {

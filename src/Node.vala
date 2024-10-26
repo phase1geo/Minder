@@ -1002,6 +1002,19 @@ public class Node : Object {
     return( tree_bbox.y > (nb.y + nb.height) );
   }
 
+  //-------------------------------------------------------------
+  // Returns true if this node contains a sequence of nodes (i.e., is the
+  // parent node of a sequence of nodes).
+  public bool contains_sequence() {
+    return( sequence );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if this node is within a sequence.
+  public bool is_in_sequence() {
+    return( _sequence_num != null );
+  }
+
   /* Returns the task completion percentage value */
   public double task_completion_percentage() {
     return( (_task_done / (_task_count * 1.0)) * 100 );

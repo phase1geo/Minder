@@ -25,13 +25,15 @@ using Gee;
 public class NodeHier {
   public int  spaces;
   public Node node;
+  public bool in_sequence;
   public int  first_line;
   public int  last_line;
-  public NodeHier( int s, Node n, int f, int l ) {
-    spaces     = s;
-    node       = n;
-    first_line = f;
-    last_line  = l;
+  public NodeHier( int s, Node n, bool is, int f, int l ) {
+    spaces      = s;
+    node        = n;
+    in_sequence = is;
+    first_line  = f;
+    last_line   = l;
   }
 }
 
@@ -82,7 +84,7 @@ public class ExportText : Export {
   /* Draws the given node and its children to the output stream */
   public string export_node( DrawArea da, Node node, string prefix = "\t" ) {
 
-    string value = prefix + "- ";
+    string value = prefix + (node.is_in_sequence() ? "%d. ".printf( node.index() + 1 ) : "- ");
 
     /* Add the task information, if necessary */
     if( node.is_task() ) {
@@ -166,13 +168,14 @@ public class ExportText : Export {
 
   }
 
-  private void parent_node( DrawArea da, Node node, Node? parent ) {
+  private void parent_node( DrawArea da, Node node, bool node_in_sequence, Node? parent ) {
     if( parent == null ) {
       node.style = StyleInspector.styles.get_global_style();
       da.position_root_node( node );
       da.add_root( node, -1 );
       da.set_current_node( node );
     } else {
+      parent.sequence = node_in_sequence;
       node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), null );
       node.attach( parent, (int)parent.children().length, da.get_theme() );
     }
@@ -194,7 +197,7 @@ public class ExportText : Export {
 
       Node? node = null;
       var lines  = txt.split( "\n" );
-      var re     = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>|!)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
+      var re     = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>|\\d+\\.|!)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
       var tspace = string.nfill( ((tab_spaces <= 0) ? 1 : tab_spaces), ' ' );
       var lnum   = 0;
 
@@ -226,9 +229,9 @@ public class ExportText : Export {
             }
 
           /* If we are starting a new node, create it and add it to the stack */
-          } else if( (bullet == "-") || (bullet == "*") || (bullet == "+") || (bullet == "#") ) {
+          } else if( bullet != "" ) {
             node = make_node( da, task, str );
-            var hier = new NodeHier( spaces, node, lnum, lnum );
+            var hier = new NodeHier( spaces, node, Regex.match_simple( "\\d+\\.", bullet ), lnum, lnum );
             stack.append_val( hier );
 
           /* Otherwise, we need to append a new line to the current title */
@@ -265,7 +268,7 @@ public class ExportText : Export {
     if( (current != null) && replace ) {
       da.replace_node( current, stack.index( 0 ).node );
     } else {
-      parent_node( da, stack.index( 0 ).node, current );
+      parent_node( da, stack.index( 0 ).node, stack.index( 0 ).in_sequence, current );
     }
 
     if( nodes != null ) {
@@ -276,14 +279,15 @@ public class ExportText : Export {
 
       var spaces = stack.index( i ).spaces;
       var node   = stack.index( i ).node;
+      var in_seq = stack.index( i ).in_sequence;
 
       /* Add sibling node */
       if( spaces == stack.index( i - 1 ).spaces ) {
-        parent_node( da, node, stack.index( i - 1 ).node.parent );
+        parent_node( da, node, in_seq, stack.index( i - 1 ).node.parent );
 
       /* Add child node */
       } else if( spaces > stack.index( i - 1 ).spaces ) {
-        parent_node( da, node, stack.index( i - 1 ).node );
+        parent_node( da, node, in_seq, stack.index( i - 1 ).node );
 
       /* Add ancestor node */
       } else {
@@ -293,9 +297,9 @@ public class ExportText : Export {
         }
         if( parent != -1 ) {
           if( spaces == stack.index( parent ).spaces ) {
-            parent_node( da, node, stack.index( parent ).node.parent );
+            parent_node( da, node, in_seq, stack.index( parent ).node.parent );
           } else {
-            parent_node( da, node, stack.index( parent ).node );
+            parent_node( da, node, in_seq, stack.index( parent ).node );
           }
         }
       }
@@ -315,7 +319,10 @@ public class ExportText : Export {
    
     for( int i=0; i<stack.length; i++ ) {
       var entry = stack.index( i );
-      stdout.printf( "  %s, spaces: %d, first: %d, last: %d\n", ((entry.node == null) ? "NULL" : entry.node.name.text.text), entry.spaces, entry.first_line, entry.last_line );
+      stdout.printf( "  %s, spaces: %d, in_seq: %s, first: %d, last: %d\n",
+        ((entry.node == null) ? "NULL" : entry.node.name.text.text),
+        entry.spaces, entry.in_sequence.to_string(), entry.first_line, entry.last_line
+      );
     }
 
   }
