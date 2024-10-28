@@ -411,6 +411,13 @@
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes">Toggle Sequence</property>
+                <property name="accelerator">numbersign</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
                 <property name="title" translatable="yes">Toggle Node Link</property>
                 <property name="accelerator">y</property>
                 <property name="visible">1</property>
