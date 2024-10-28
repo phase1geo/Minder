@@ -103,7 +103,7 @@ public class ExportOrgMode : Export {
 
     try {
 
-      string title = prefix + "* ";
+      string title = prefix + (node.is_in_sequence() ? "%d. ".printf( node.index() + 1 ) : "* ");
 
       if( node.is_task() ) {
         if( node.is_task_done() ) {

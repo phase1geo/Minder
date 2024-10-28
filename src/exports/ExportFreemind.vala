@@ -65,6 +65,9 @@ public class ExportFreemind : Export {
       n->new_prop( "COLOR", Utils.color_from_rgba( node.link_color ) );
     }
     n->new_prop( "POSITION", ((node.side == NodeSide.LEFT) ? "left" : "right") );
+    if( node.is_in_sequence() ) {
+      n->new_prop( "NUMBERED", "true" );
+    }
 
     if( node.group ) {
       n->add_child( export_cloud( node, da ) );
@@ -265,6 +268,11 @@ public class ExportFreemind : Export {
     string? p = n->get_prop( "POSITION" );
     if( p != null ) {
       node.side = (p == "left") ? NodeSide.LEFT : NodeSide.RIGHT;
+    }
+
+    var num = n->get_prop( "NUMBERED" );
+    if( (num != null) && (parent != null) ) {
+      parent.sequence = bool.parse( num );
     }
 
     /* Parse the child nodes */
