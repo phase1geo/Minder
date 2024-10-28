@@ -29,6 +29,7 @@ public class NodesMenu : Gtk.Menu {
   Gtk.MenuItem _delete;
   Gtk.MenuItem _task;
   Gtk.MenuItem _fold;
+  Gtk.MenuItem _sequence;
   Gtk.MenuItem _connect;
   Gtk.MenuItem _link;
   // Gtk.MenuItem _summary;
@@ -63,6 +64,10 @@ public class NodesMenu : Gtk.Menu {
     _fold = new Gtk.MenuItem();
     _fold.add( new Granite.AccelLabel( _( "Fold Children" ), "f" ) );
     _fold.activate.connect( fold_nodes );
+
+    _sequence = new Gtk.MenuItem();
+    _sequence.add( new Granite.AccelLabel( _( "Toggle Sequences" ), "numbersign" ) );
+    _sequence.activate.connect( toggle_sequences );
 
     _connect = new Gtk.MenuItem();
     _connect.add( new Granite.AccelLabel( _( "Connect" ), "x" ) );
@@ -158,6 +163,7 @@ public class NodesMenu : Gtk.Menu {
     add( _task );
     add( _link_colors );
     add( _fold );
+    add( _sequence );
     add( new SeparatorMenuItem() );
     add( _connect );
     add( _link );
@@ -211,6 +217,7 @@ public class NodesMenu : Gtk.Menu {
 
     /* Set the menu sensitivity */
     _fold.set_sensitive( foldable || unfoldable );
+    _sequence.set_sensitive( _da.sequences_togglable() );
     _connect.set_sensitive( node_num == 2 );
     // _summary.set_sensitive( summarizable );
     _parent_link_colors.set_sensitive( link_colors_parentable() );
@@ -263,6 +270,12 @@ public class NodesMenu : Gtk.Menu {
   /* Folds/unfolds the selected nodes */
   private void fold_nodes() {
     _da.toggle_folds();
+  }
+
+  //-------------------------------------------------------------
+  // Toggles sequences
+  private void toggle_sequences() {
+    _da.toggle_sequence();
   }
 
   /*

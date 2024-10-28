@@ -145,11 +145,17 @@ public class NodeInspector : Box {
       use_markup = true
     };
 
+    var info = new Image.from_icon_name( "dialog-information-symbolic", IconSize.MENU ) {
+      halign       = Align.START,
+      tooltip_text = _( "When set, automatically numbers child nodes and displays them as a sequence." )
+    };
+
     _sequence = new Switch();
     _sequence.button_release_event.connect( sequence_changed );
 
-    var box = new Box( Orientation.HORIZONTAL, 0 );
+    var box = new Box( Orientation.HORIZONTAL, 5 );
     box.pack_start( lbl,       false, true, 0 );
+    box.pack_start( info,      false, true, 0 );
     box.pack_end(   _sequence, false, true, 0 );
 
     pack_start( box, false, true, 5 );

@@ -1027,11 +1027,11 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Toggles the fold for the given node */
   public void toggle_fold( Node n, bool deep ) {
-
     var fold    = !n.folded;
     var changes = new Array<Node>();
     n.set_fold( fold, deep, changes );
     undo_buffer.add_item( new UndoNodeFolds( changes ) );
+    current_changed( this );
     queue_draw();
     auto_save();
   }
@@ -1169,6 +1169,7 @@ public class DrawArea : Gtk.DrawingArea {
     change_task( nodes.index( 0 ), enable, done, changes );
     if( changes.length > 0 ) {
       undo_buffer.add_item( new UndoNodeTasks( changes ) );
+      current_changed( this );
       queue_draw();
       auto_save();
     }
@@ -3369,6 +3370,38 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
+  //-------------------------------------------------------------
+  // Returns true if the selected nodes can have their sequence attribute
+  // toggled.
+  public bool sequences_togglable() {
+    for( int i=0; i<_selected.nodes().length; i++ ) {
+      var node = _selected.nodes().index( i );
+      if( !node.is_root() ) {
+        return( true );
+      }
+    }
+    return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Toggles the current node's sequence indicator.
+  public void toggle_sequence() {
+    var changed = new Array<Node>();
+    for( int i=0; i<_selected.nodes().length; i++ ) {
+      var node = _selected.nodes().index( i );
+      if( !node.is_root() ) {
+        node.sequence = !node.sequence;
+        changed.append_val( node );
+      }
+    }
+    if( changed.length > 0 ) {
+      undo_buffer.add_item( new UndoNodeSequences( changed ) );
+      current_changed( this );
+      auto_save();
+      queue_draw();
+    }
+  }
+
   /* Deletes the given node */
   public void delete_node() {
     var current = _selected.current_node();
@@ -4942,6 +4975,7 @@ public class DrawArea : Gtk.DrawingArea {
       else if( !shift && has_key( kvs, Key.u ) )            { if( undo_buffer.undoable() ) undo_buffer.undo(); }
       else if( !shift && has_key( kvs, Key.z ) )            { zoom_out(); }
       else if(  shift && has_key( kvs, Key.bar ) )          { if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() ); }
+      else if(  shift && has_key( kvs, Key.numbersign ) )   { toggle_sequence(); }
       else if( has_key( kvs, Key.BackSpace ) )              { handle_backspace(); }
       else if( has_key( kvs, Key.Delete ) )                 { handle_delete(); }
       else if( has_key( kvs, Key.Return ) )                 { handle_return( shift ); }
@@ -5059,6 +5093,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
     }
     else if( !shift && has_key( kvs, Key.s ) ) { see(); }
+    else if(  shift && has_key( kvs, Key.numbersign ) ) { toggle_sequence(); }
     else if( !shift && has_key( kvs, Key.t ) ) {  // Toggle the task done indicator
       if( current.task_enabled() ) {
         if( current.task_done() ) {

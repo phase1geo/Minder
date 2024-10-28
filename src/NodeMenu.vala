@@ -42,6 +42,7 @@ public class NodeMenu : Gtk.Menu {
   Gtk.MenuItem _link_color;
   Gtk.MenuItem _parent_link_color;
   Gtk.MenuItem _fold;
+  Gtk.MenuItem _sequence;
   Gtk.MenuItem _detach;
   Gtk.MenuItem _root;
   Gtk.MenuItem _parent;
@@ -147,6 +148,10 @@ public class NodeMenu : Gtk.Menu {
     _fold = new Gtk.MenuItem();
     _fold.add( new Granite.AccelLabel( _( "Fold Children" ), "f" ) );
     _fold.activate.connect( fold_node );
+
+    _sequence = new Gtk.MenuItem();
+    _sequence.add( new Granite.AccelLabel( _( "Toggle Sequence" ), "numbersign" ) );
+    _sequence.activate.connect( toggle_sequence );
 
     _detach = new Gtk.MenuItem.with_label( _( "Detach" ) );
     _detach.activate.connect( detach_node );
@@ -287,6 +292,7 @@ public class NodeMenu : Gtk.Menu {
     change_menu.add( _callout );
     change_menu.add( _link_color );
     change_menu.add( _fold );
+    change_menu.add( _sequence );
 
     /* Add the items to the add node menu */
     addmenu.add( _root );
@@ -410,6 +416,7 @@ public class NodeMenu : Gtk.Menu {
     _link_color.set_sensitive( !current.is_root() );
     _parent_link_color.set_sensitive( !current.main_branch() && current.link_color_root );
     _fold.set_sensitive( node_foldable() );
+    _sequence.set_sensitive( _da.sequences_togglable() );
     _link.set_sensitive( node_linkable() );
     _detach.set_sensitive( _da.detachable() );
     _sortby.set_sensitive( node_sortable() );
@@ -586,7 +593,12 @@ public class NodeMenu : Gtk.Menu {
   /* Fold the currently selected node */
   private void fold_node() {
     _da.change_current_fold( !node_is_folded() );
-    _da.current_changed( _da );
+  }
+
+  //-------------------------------------------------------------
+  // Toggles the sequence indicator of the current node
+  private void toggle_sequence() {
+    _da.toggle_sequence();
   }
 
   /* Creates a new root node */
