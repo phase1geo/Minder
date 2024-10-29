@@ -2527,12 +2527,24 @@ public class Node : Object {
     } else if( seq ) {
       int margin  = style.node_margin ?? 0;
       int padding = style.node_padding ?? 0;
-      if( side.horizontal() ) {
-        x = posx + margin + padding;
-        y = posy + _total_height - margin;
-      } else {
-        x = posx + _total_width - margin;
-        y = posy + margin + padding;
+      switch( side ) {
+        case NodeSide.LEFT :
+          x = posx + _total_width - margin - padding;
+          y = posy + _total_height - margin;
+          break;
+        case NodeSide.RIGHT :
+          x = posx + margin + padding;
+          y = posy + _total_height - margin;
+          break;
+        default :
+          if( (side == NodeSide.BOTTOM) && (style.node_border.name() != "underlined") ) {
+            x = posx + _total_width - margin;
+            y = posy + margin + padding;
+          } else {
+            x = posx + _total_width - margin;
+            y = posy + _total_height - margin - padding;
+          }
+          break;
       }
     } else {
       int    margin = style.node_margin ?? 0;
@@ -2943,16 +2955,32 @@ public class Node : Object {
     ctx.set_line_cap( LineCap.ROUND );
 
     if( link_sibling ) {
-      if( side.horizontal() ) {
-        child_x1 = posx + margin + padding;
-        child_x2 = child_x1;
-        child_y1 = (posy + margin);
-        child_y2 = child_y1;
-      } else {
-        child_x1 = (posx + margin);
-        child_x2 = child_x1;
-        child_y1 = posy + height + padding;
-        child_y2 = child_y1;
+      switch( side ) {
+        case NodeSide.LEFT :
+          child_x1 = posx + _width - margin - padding;
+          child_x2 = child_x1;
+          child_y1 = (posy + margin);
+          child_y2 = child_y1;
+          break;
+        case NodeSide.RIGHT :
+          child_x1 = posx + margin + padding;
+          child_x2 = child_x1;
+          child_y1 = (posy + margin);
+          child_y2 = child_y1;
+          break;
+        default :
+          if( (side == NodeSide.BOTTOM) && (style.node_border.name() != "underlined") ) {
+            child_x1 = (posx + margin);
+            child_x2 = child_x1;
+            child_y1 = posy + margin + padding;
+            child_y2 = child_y1;
+          } else {
+            child_x1 = (posx + margin);
+            child_x2 = child_x1;
+            child_y1 = posy + _height - margin - padding;
+            child_y2 = child_y1;
+          }
+          break;
       }
       style.draw_link( ctx, parent, this, true, parent_x, parent_y, child_x1, child_y1, child_x2, child_y2, out tailx, out taily, out tipx, out tipy );
     } else {
