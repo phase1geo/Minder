@@ -122,6 +122,7 @@ src/undo_actions/UndoNodeResize.vala
 src/undo_actions/UndoNodesAlign.vala
 src/undo_actions/UndoNodesCut.vala
 src/undo_actions/UndoNodesDelete.vala
+src/undo_actions/UndoNodeSequences.vala
 src/undo_actions/UndoNodesGroup.vala
 src/undo_actions/UndoNodesInsert.vala
 src/undo_actions/UndoNodesLinkColor.vala
@@ -137,6 +138,7 @@ src/undo_actions/UndoNodeSummaryDelete.vala
 src/undo_actions/UndoNodeSummaryFromNode.vala
 src/undo_actions/UndoNodeSummary.vala
 src/undo_actions/UndoNodeTasks.vala
+src/undo_actions/UndoNodeUnclify.vala
 src/undo_actions/UndoStickerAdd.vala
 src/undo_actions/UndoStickerChange.vala
 src/undo_actions/UndoStickerMove.vala

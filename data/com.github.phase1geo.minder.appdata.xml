@@ -121,6 +121,7 @@
   <developer_name xml:lang="ru">Trevor Williams</developer_name>
   <developer_name xml:lang="pt">Trevor Williams</developer_name>
   <developer_name xml:lang="fr">Trevor Williams</developer_name>
+  <developer>com.github.phase1geo</developer>
   <url type="homepage">https://github.com/phase1geo/minder/</url>
   <url type="bugtracker">https://github.com/phase1geo/minder/issues/</url>
   <custom>

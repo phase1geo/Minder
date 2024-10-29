@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-06 15:41-0500\n"
+"POT-Creation-Date: 2024-10-28 23:16-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,95 +22,96 @@ msgid "Mind-mapping application"
 msgstr ""
 
 #: src/About.vala:37
-msgid "Copyright © 2018-2021 Trevor Williams"
+msgid "Copyright © 2018-2024 Trevor Williams"
 msgstr ""
 
 #: src/About.vala:41
 msgid "Minder in AppCenter"
 msgstr ""
 
-#: src/Application.vala:115
-msgid "ERROR: Unable to import file"
-msgstr ""
-
-#: src/Application.vala:119
-msgid "ERROR: Import is missing filename to import"
-msgstr ""
-
-#: src/Application.vala:134
-msgid "ERROR: Export is missing input file and/or export output file"
-msgstr ""
-
 #: src/Application.vala:141
-#, c-format
-msgid "ERROR:  Unable to open file '%s'\n"
-msgstr ""
-
-#: src/Application.vala:185
 #, c-format
 msgid "Import file from format (%s)"
 msgstr ""
 
-#: src/Application.vala:186
+#: src/Application.vala:142
 #, c-format
 msgid "Export mindmap as format (%s)"
 msgstr ""
 
-#: src/Application.vala:189
+#: src/Application.vala:147
 msgid "Display version number"
 msgstr ""
 
-#: src/Application.vala:190
+#: src/Application.vala:148
+msgid "Display help"
+msgstr ""
+
+#: src/Application.vala:149
 msgid "Starts Minder with a new file"
 msgstr ""
 
-#: src/Application.vala:191
-msgid "Run testing"
+#: src/Application.vala:152
+msgid ""
+"Enables a transparent background for PNG images.  Default is no transparency."
 msgstr ""
 
-#: src/Application.vala:194
-msgid "Enables a transparent background for PNG images"
+#: src/Application.vala:153
+msgid "PNG compression value (0-9). Default is 0."
 msgstr ""
 
-#: src/Application.vala:195
-msgid "PNG compression value (0-9)"
+#: src/Application.vala:154
+msgid "JPEG quality (0-100). Default is 90."
 msgstr ""
 
-#: src/Application.vala:196
-msgid "JPEG quality (0-100)"
-msgstr ""
-
-#: src/Application.vala:197
+#: src/Application.vala:155
 msgid "Enables image links in exported Markdown"
 msgstr ""
 
-#: src/Application.vala:206
+#: src/Application.vala:164
 #, c-format
 msgid "ERROR: %s\n"
 msgstr ""
 
-#: src/Application.vala:207
+#: src/Application.vala:165
 #, c-format
 msgid "Run '%s --help' to see valid options\n"
 msgstr ""
 
-#: src/Application.vala:254
+#: src/Application.vala:188
+msgid "ERROR: Unable to import file"
+msgstr ""
+
+#: src/Application.vala:192
+msgid "ERROR: Import is missing filename to import"
+msgstr ""
+
+#: src/Application.vala:215
+msgid "ERROR: Export is missing input file and/or export output file"
+msgstr ""
+
+#: src/Application.vala:225
+#, c-format
+msgid "ERROR:  Unable to open file '%s'\n"
+msgstr ""
+
+#: src/Application.vala:257
 #, c-format
 msgid "ERROR:  Unable to load Minder input file %s"
 msgstr ""
 
 #: src/CalloutMenu.vala:34 src/ConnectionMenu.vala:42
-#: src/ConnectionsMenu.vala:35 src/GroupsMenu.vala:40 src/NodeMenu.vala:88
-#: src/NodesMenu.vala:56 src/ThemeEditor.vala:139
+#: src/ConnectionsMenu.vala:35 src/GroupsMenu.vala:40 src/NodeMenu.vala:89
+#: src/NodesMenu.vala:57 src/ThemeEditor.vala:139
 msgid "Delete"
 msgstr ""
 
 #: src/CalloutMenu.vala:38 src/EmptyMenu.vala:49
-#: data/com.github.phase1geo.minder.shortcuts.ui:656
+#: data/com.github.phase1geo.minder.shortcuts.ui:676
 msgid "Select Node"
 msgstr ""
 
-#: src/Callout.vala:129 src/NodeMenu.vala:238
+#: src/Callout.vala:129 src/NodeMenu.vala:244
 msgid "Callout"
 msgstr ""
 
@@ -118,11 +119,11 @@ msgstr ""
 msgid "No text found"
 msgstr ""
 
-#: src/ConnectionInspector.vala:74 src/NodeMenu.vala:233
+#: src/ConnectionInspector.vala:74 src/NodeMenu.vala:239
 msgid "Connection"
 msgstr ""
 
-#: src/ConnectionInspector.vala:85 src/NodeInspector.vala:144
+#: src/ConnectionInspector.vala:85 src/NodeInspector.vala:172
 msgid "Color"
 msgstr ""
 
@@ -131,7 +132,7 @@ msgid "Use Theme Default Color"
 msgstr ""
 
 #: src/ConnectionInspector.vala:118 src/GroupInspector.vala:82
-#: src/NodeInspector.vala:219
+#: src/NodeInspector.vala:247
 msgid "Note"
 msgstr ""
 
@@ -143,18 +144,18 @@ msgstr ""
 msgid "Edit Title…"
 msgstr ""
 
-#: src/ConnectionMenu.vala:50 src/GroupsMenu.vala:47 src/NodeMenu.vala:103
-#: data/com.github.phase1geo.minder.shortcuts.ui:338
-#: data/com.github.phase1geo.minder.shortcuts.ui:683
+#: src/ConnectionMenu.vala:50 src/GroupsMenu.vala:47 src/NodeMenu.vala:104
+#: data/com.github.phase1geo.minder.shortcuts.ui:358
+#: data/com.github.phase1geo.minder.shortcuts.ui:703
 msgid "Edit Note"
 msgstr ""
 
-#: src/ConnectionMenu.vala:53 src/NodeMenu.vala:113
+#: src/ConnectionMenu.vala:53 src/NodeMenu.vala:115
 msgid "Remove Sticker"
 msgstr ""
 
 #: src/ConnectionMenu.vala:56 src/GroupsMenu.vala:54 src/ImageManager.vala:300
-#: src/NodeMenu.vala:188 src/NodesMenu.vala:100
+#: src/NodeMenu.vala:194 src/NodesMenu.vala:105
 msgid "Select"
 msgstr ""
 
@@ -190,44 +191,44 @@ msgstr ""
 msgid "Main Idea"
 msgstr ""
 
-#: src/DrawArea.vala:2694
+#: src/DrawArea.vala:2698
 #, c-format
 msgid "%0.3g%% complete"
 msgstr ""
 
-#: src/DrawArea.vala:2708
+#: src/DrawArea.vala:2712
 msgid "Drag to resize node"
 msgstr ""
 
-#: src/DrawArea.vala:2710
+#: src/DrawArea.vala:2714
 msgid ""
 "Drag to resize node and image.\n"
 "Control-drag to resize only node."
 msgstr ""
 
-#: src/DrawArea.vala:2838
+#: src/DrawArea.vala:2842
 #, c-format
 msgid "Children: %u\n"
 msgstr ""
 
-#: src/DrawArea.vala:2839
+#: src/DrawArea.vala:2843
 #, c-format
 msgid "Total: %d"
 msgstr ""
 
-#: src/DrawArea.vala:2888
+#: src/DrawArea.vala:2892
 msgid "connection endpoint change"
 msgstr ""
 
-#: src/DrawArea.vala:2895
+#: src/DrawArea.vala:2899
 msgid "connection drag"
 msgstr ""
 
-#: src/DrawArea.vala:3669 src/DrawArea.vala:3683 src/DrawArea.vala:5657
+#: src/DrawArea.vala:3705 src/DrawArea.vala:3719 src/DrawArea.vala:5733
 msgid "Another Idea"
 msgstr ""
 
-#: src/DrawArea.vala:5110 src/layouts/LayoutManual.vala:26
+#: src/DrawArea.vala:5186 src/layouts/LayoutManual.vala:26
 #: src/MapInspector.vala:225 src/MapInspector.vala:448
 msgid "Manual"
 msgstr ""
@@ -274,11 +275,11 @@ msgid ""
 "to view/edit information"
 msgstr ""
 
-#: src/EmptyMenu.vala:38 src/NodeMenu.vala:80 src/TextMenu.vala:52
+#: src/EmptyMenu.vala:38 src/NodeMenu.vala:81 src/TextMenu.vala:52
 msgid "Paste"
 msgstr ""
 
-#: src/EmptyMenu.vala:42 src/NodeMenu.vala:157
+#: src/EmptyMenu.vala:42 src/NodeMenu.vala:163
 msgid "Add Root Node"
 msgstr ""
 
@@ -308,13 +309,13 @@ msgid "Export As %s"
 msgstr ""
 
 #: src/Exporter.vala:134 src/ImageEditor.vala:381 src/ImageManager.vala:300
-#: src/MainWindow.vala:1057 src/MainWindow.vala:1152 src/MainWindow.vala:1296
+#: src/MainWindow.vala:1056 src/MainWindow.vala:1151 src/MainWindow.vala:1295
 #: src/QuickEntry.vala:154 src/StickerInspector.vala:402 src/StickerSet.vala:75
 #: src/ThemeEditor.vala:144 src/UrlEditor.vala:62
 msgid "Cancel"
 msgstr ""
 
-#: src/Exporter.vala:134 src/MainWindow.vala:874 src/StickerSet.vala:352
+#: src/Exporter.vala:134 src/MainWindow.vala:873 src/StickerSet.vala:352
 msgid "Export"
 msgstr ""
 
@@ -355,11 +356,11 @@ msgstr ""
 msgid "Markdown"
 msgstr ""
 
-#: src/exports/ExportMarkdown.vala:353
+#: src/exports/ExportMarkdown.vala:358
 msgid "Include image links"
 msgstr ""
 
-#: src/exports/ExportMarkdown.vala:354
+#: src/exports/ExportMarkdown.vala:359
 msgid "Creates a directory containing the Markdown and embedded images"
 msgstr ""
 
@@ -435,7 +436,7 @@ msgstr ""
 msgid "SVG"
 msgstr ""
 
-#: src/exports/ExportText.vala:42
+#: src/exports/ExportText.vala:44
 msgid "PlainText"
 msgstr ""
 
@@ -485,7 +486,7 @@ msgstr ""
 msgid "All Grouped Nodes"
 msgstr ""
 
-#: src/GroupsMenu.vala:111 src/NodeMenu.vala:690 src/NodesMenu.vala:290
+#: src/GroupsMenu.vala:111 src/NodeMenu.vala:708 src/NodesMenu.vala:303
 msgid "Select a link color"
 msgstr ""
 
@@ -519,7 +520,7 @@ msgstr ""
 msgid "Paste Image from Clipboard"
 msgstr ""
 
-#: src/ImageEditor.vala:396 src/NodeInspector.vala:292 src/NodeMenu.vala:448
+#: src/ImageEditor.vala:396 src/NodeInspector.vala:320 src/NodeMenu.vala:458
 msgid "Remove Image"
 msgstr ""
 
@@ -531,212 +532,212 @@ msgstr ""
 msgid "Images"
 msgstr ""
 
-#: src/MainWindow.vala:169 src/MainWindow.vala:1301
+#: src/MainWindow.vala:169 src/MainWindow.vala:1300
 msgid "Minder"
 msgstr ""
 
-#: src/MainWindow.vala:203 data/com.github.phase1geo.minder.shortcuts.ui:21
+#: src/MainWindow.vala:202 data/com.github.phase1geo.minder.shortcuts.ui:21
 msgid "New File"
 msgstr ""
 
-#: src/MainWindow.vala:209 src/MainWindow.vala:1148
+#: src/MainWindow.vala:208 src/MainWindow.vala:1147
 #: data/com.github.phase1geo.minder.shortcuts.ui:28
 msgid "Open File"
 msgstr ""
 
-#: src/MainWindow.vala:215 data/com.github.phase1geo.minder.shortcuts.ui:42
+#: src/MainWindow.vala:214 data/com.github.phase1geo.minder.shortcuts.ui:42
 msgid "Save File As"
 msgstr ""
 
-#: src/MainWindow.vala:221 src/StickerSet.vala:307 src/UndoBuffer.vala:84
+#: src/MainWindow.vala:220 src/StickerSet.vala:307 src/UndoBuffer.vala:84
 msgid "Undo"
 msgstr ""
 
-#: src/MainWindow.vala:228 src/StickerSet.vala:308 src/UndoBuffer.vala:90
+#: src/MainWindow.vala:227 src/StickerSet.vala:308 src/UndoBuffer.vala:90
 msgid "Redo"
 msgstr ""
 
-#: src/MainWindow.vala:563
+#: src/MainWindow.vala:562
 msgid "Unnamed Document"
 msgstr ""
 
-#: src/MainWindow.vala:566
+#: src/MainWindow.vala:565
 msgid "Read-Only"
 msgstr ""
 
-#: src/MainWindow.vala:570 src/MainWindow.vala:909
+#: src/MainWindow.vala:569 src/MainWindow.vala:908
 msgid "Focus Mode"
 msgstr ""
 
-#: src/MainWindow.vala:604 src/MainWindow.vala:1353
+#: src/MainWindow.vala:603 src/MainWindow.vala:1352
 #, c-format
 msgid "Zoom (%d%%)"
 msgstr ""
 
-#: src/MainWindow.vala:611
+#: src/MainWindow.vala:610
 msgid "Zoom to Percent"
 msgstr ""
 
-#: src/MainWindow.vala:624 src/ZoomWidget.vala:102
+#: src/MainWindow.vala:623 src/ZoomWidget.vala:102
 #: data/com.github.phase1geo.minder.shortcuts.ui:119
 msgid "Zoom In"
 msgstr ""
 
-#: src/MainWindow.vala:630 src/ZoomWidget.vala:92
+#: src/MainWindow.vala:629 src/ZoomWidget.vala:92
 #: data/com.github.phase1geo.minder.shortcuts.ui:126
 msgid "Zoom Out"
 msgstr ""
 
-#: src/MainWindow.vala:640
+#: src/MainWindow.vala:639
 msgid "Zoom to Fit"
 msgstr ""
 
-#: src/MainWindow.vala:645 data/com.github.phase1geo.minder.shortcuts.ui:140
+#: src/MainWindow.vala:644 data/com.github.phase1geo.minder.shortcuts.ui:140
 msgid "Zoom to Fit Selected Node Tree"
 msgstr ""
 
-#: src/MainWindow.vala:650
+#: src/MainWindow.vala:649
 msgid "Zoom to Actual Size"
 msgstr ""
 
-#: src/MainWindow.vala:674 src/StickerSet.vala:114
+#: src/MainWindow.vala:673 src/StickerSet.vala:114
 msgid "Search"
 msgstr ""
 
-#: src/MainWindow.vala:684
+#: src/MainWindow.vala:683
 msgid "Search Nodes, Callouts and Connections"
 msgstr ""
 
-#: src/MainWindow.vala:713
+#: src/MainWindow.vala:712
 msgid "Search Criteria"
 msgstr ""
 
-#: src/MainWindow.vala:716
+#: src/MainWindow.vala:715
 msgid "Search all tabs"
 msgstr ""
 
-#: src/MainWindow.vala:750
+#: src/MainWindow.vala:749
 msgid "Nodes"
 msgstr ""
 
-#: src/MainWindow.vala:751
+#: src/MainWindow.vala:750
 msgid "Connections"
 msgstr ""
 
-#: src/MainWindow.vala:752
+#: src/MainWindow.vala:751
 msgid "Callouts"
 msgstr ""
 
-#: src/MainWindow.vala:753
+#: src/MainWindow.vala:752
 msgid "Groups"
 msgstr ""
 
-#: src/MainWindow.vala:754
+#: src/MainWindow.vala:753
 msgid "Titles"
 msgstr ""
 
-#: src/MainWindow.vala:755
+#: src/MainWindow.vala:754
 msgid "Notes"
 msgstr ""
 
-#: src/MainWindow.vala:756
+#: src/MainWindow.vala:755
 msgid "Folded"
 msgstr ""
 
-#: src/MainWindow.vala:757
+#: src/MainWindow.vala:756
 msgid "Unfolded"
 msgstr ""
 
-#: src/MainWindow.vala:758
+#: src/MainWindow.vala:757
 msgid "Tasks"
 msgstr ""
 
-#: src/MainWindow.vala:759
+#: src/MainWindow.vala:758
 msgid "Non-tasks"
 msgstr ""
 
-#: src/MainWindow.vala:886
+#: src/MainWindow.vala:885
 msgid "Print…"
 msgstr ""
 
-#: src/MainWindow.vala:934 src/Preferences.vala:36
+#: src/MainWindow.vala:933 src/Preferences.vala:36
 msgid "Preferences"
 msgstr ""
 
-#: src/MainWindow.vala:939
+#: src/MainWindow.vala:938
 msgid "Shortcuts Cheatsheet"
 msgstr ""
 
-#: src/MainWindow.vala:943
+#: src/MainWindow.vala:942
 msgid "About Minder"
 msgstr ""
 
-#: src/MainWindow.vala:976 src/MainWindow.vala:1425
+#: src/MainWindow.vala:975 src/MainWindow.vala:1424
 msgid "Show Property Sidebar"
 msgstr ""
 
-#: src/MainWindow.vala:991
+#: src/MainWindow.vala:990
 msgid "Current"
 msgstr ""
 
-#: src/MainWindow.vala:992 src/StyleInspector.vala:198
+#: src/MainWindow.vala:991 src/StyleInspector.vala:198
 msgid "Style"
 msgstr ""
 
-#: src/MainWindow.vala:993
+#: src/MainWindow.vala:992
 msgid "Stickers"
 msgstr ""
 
-#: src/MainWindow.vala:994
+#: src/MainWindow.vala:993
 msgid "Map"
 msgstr ""
 
-#: src/MainWindow.vala:1048
+#: src/MainWindow.vala:1047
 msgid "Save current unnamed document?"
 msgstr ""
 
-#: src/MainWindow.vala:1049
+#: src/MainWindow.vala:1048
 msgid "Changes will be permanently lost if not saved."
 msgstr ""
 
-#: src/MainWindow.vala:1054
+#: src/MainWindow.vala:1053
 msgid "Discard Changes"
 msgstr ""
 
-#: src/MainWindow.vala:1060 src/MainWindow.vala:1296 src/ThemeEditor.vala:147
+#: src/MainWindow.vala:1059 src/MainWindow.vala:1295 src/ThemeEditor.vala:147
 msgid "Save"
 msgstr ""
 
-#: src/MainWindow.vala:1089
+#: src/MainWindow.vala:1088
 #, c-format
 msgid "The file %s was modified outside of the application."
 msgstr ""
 
-#: src/MainWindow.vala:1090
+#: src/MainWindow.vala:1089
 msgid "What do you want to do?"
 msgstr ""
 
-#: src/MainWindow.vala:1095
+#: src/MainWindow.vala:1094
 msgid "Discard Changes and reload"
 msgstr ""
 
-#: src/MainWindow.vala:1098
+#: src/MainWindow.vala:1097
 msgid "Save local version and overwrite"
 msgstr ""
 
-#: src/MainWindow.vala:1148
+#: src/MainWindow.vala:1147
 msgid "Open Directory"
 msgstr ""
 
-#: src/MainWindow.vala:1151
+#: src/MainWindow.vala:1150
 msgid "Open"
 msgstr ""
 
-#: src/MainWindow.vala:1296
+#: src/MainWindow.vala:1295
 msgid "Save File"
 msgstr ""
 
-#: src/MainWindow.vala:1369
+#: src/MainWindow.vala:1368
 msgid "Hide Property Sidebar"
 msgstr ""
 
@@ -812,51 +813,60 @@ msgstr ""
 msgid "Group Note"
 msgstr ""
 
-#: src/NodeInspector.vala:94
+#: src/NodeInspector.vala:96
 msgid "Node"
 msgstr ""
 
-#: src/NodeInspector.vala:105
+#: src/NodeInspector.vala:107
 msgid "Task"
 msgstr ""
 
-#: src/NodeInspector.vala:123
+#: src/NodeInspector.vala:125
 msgid "Fold"
 msgstr ""
 
-#: src/NodeInspector.vala:174
+#: src/NodeInspector.vala:143
+msgid "Sequence"
+msgstr ""
+
+#: src/NodeInspector.vala:150
+msgid ""
+"When set, automatically numbers child nodes and displays them as a sequence."
+msgstr ""
+
+#: src/NodeInspector.vala:202
 msgid "Override Color"
 msgstr ""
 
-#: src/NodeInspector.vala:263 src/NodeInspector.vala:281
+#: src/NodeInspector.vala:291 src/NodeInspector.vala:309
 msgid "Image"
 msgstr ""
 
-#: src/NodeInspector.vala:267
+#: src/NodeInspector.vala:295
 msgid "Add Image…"
 msgstr ""
 
-#: src/NodeInspector.vala:286
+#: src/NodeInspector.vala:314
 msgid "Edit Image"
 msgstr ""
 
-#: src/NodeInspector.vala:299
+#: src/NodeInspector.vala:327
 msgid "Resizable"
 msgstr ""
 
-#: src/NodeInspector.vala:399
+#: src/NodeInspector.vala:427
 msgid "Copy Node To Clipboard"
 msgstr ""
 
-#: src/NodeInspector.vala:403
+#: src/NodeInspector.vala:431
 msgid "Cut Node To Clipboard"
 msgstr ""
 
-#: src/NodeInspector.vala:408
+#: src/NodeInspector.vala:436
 msgid "Detach Node"
 msgstr ""
 
-#: src/NodeInspector.vala:413 data/com.github.phase1geo.minder.shortcuts.ui:284
+#: src/NodeInspector.vala:441 data/com.github.phase1geo.minder.shortcuts.ui:284
 msgid "Delete Node"
 msgstr ""
 
@@ -864,264 +874,273 @@ msgstr ""
 msgid "No node found"
 msgstr ""
 
-#: src/NodeMenu.vala:72 src/NodesMenu.vala:48 src/TextMenu.vala:44
+#: src/NodeMenu.vala:73 src/NodesMenu.vala:49 src/TextMenu.vala:44
 msgid "Copy"
 msgstr ""
 
-#: src/NodeMenu.vala:76 src/NodesMenu.vala:52 src/TextMenu.vala:48
+#: src/NodeMenu.vala:77 src/NodesMenu.vala:53 src/TextMenu.vala:48
 msgid "Cut"
 msgstr ""
 
-#: src/NodeMenu.vala:84 src/NodeMenu.vala:460
+#: src/NodeMenu.vala:85 src/NodeMenu.vala:473
 msgid "Paste and Replace Node"
 msgstr ""
 
-#: src/NodeMenu.vala:91
+#: src/NodeMenu.vala:92
 msgid "Delete Single Node"
 msgstr ""
 
-#: src/NodeMenu.vala:94
+#: src/NodeMenu.vala:95
 msgid "Change Node"
 msgstr ""
 
-#: src/NodeMenu.vala:99
+#: src/NodeMenu.vala:100
 msgid "Edit Text…"
 msgstr ""
 
-#: src/NodeMenu.vala:107 src/NodeMenu.vala:430
+#: src/NodeMenu.vala:108 src/NodeMenu.vala:438
 msgid "Add Task"
 msgstr ""
 
-#: src/NodeMenu.vala:110 src/NodeMenu.vala:448
+#: src/NodeMenu.vala:112 src/NodeMenu.vala:460
+#: data/com.github.phase1geo.minder.shortcuts.ui:372
 msgid "Add Image"
 msgstr ""
 
-#: src/NodeMenu.vala:117 src/NodeMenu.vala:431
+#: src/NodeMenu.vala:119 src/NodeMenu.vala:439
 msgid "Add Node Link"
 msgstr ""
 
-#: src/NodeMenu.vala:121
+#: src/NodeMenu.vala:123
 msgid "Add Connection"
 msgstr ""
 
-#: src/NodeMenu.vala:125
+#: src/NodeMenu.vala:127
 msgid "Add Group"
 msgstr ""
 
-#: src/NodeMenu.vala:129 src/NodeMenu.vala:433
+#: src/NodeMenu.vala:131 src/NodeMenu.vala:441
 msgid "Add Callout"
 msgstr ""
 
-#: src/NodeMenu.vala:132 src/ThemeEditor.vala:132
+#: src/NodeMenu.vala:134 src/ThemeEditor.vala:132
 msgid "Link Color"
 msgstr ""
 
-#: src/NodeMenu.vala:137 src/NodesMenu.vala:85
+#: src/NodeMenu.vala:139 src/NodesMenu.vala:90
 msgid "Set to color…"
 msgstr ""
 
-#: src/NodeMenu.vala:140
+#: src/NodeMenu.vala:142
 msgid "Randomize color"
 msgstr ""
 
-#: src/NodeMenu.vala:143 src/NodesMenu.vala:91
+#: src/NodeMenu.vala:145 src/NodesMenu.vala:96
 msgid "Use parent color"
 msgstr ""
 
-#: src/NodeMenu.vala:147 src/NodeMenu.vala:432 src/NodesMenu.vala:64
-#: src/NodesMenu.vala:223
+#: src/NodeMenu.vala:149 src/NodeMenu.vala:440 src/NodesMenu.vala:65
+#: src/NodesMenu.vala:230
 msgid "Fold Children"
 msgstr ""
 
-#: src/NodeMenu.vala:150
+#: src/NodeMenu.vala:153 data/com.github.phase1geo.minder.shortcuts.ui:414
+msgid "Toggle Sequence"
+msgstr ""
+
+#: src/NodeMenu.vala:156
 msgid "Detach"
 msgstr ""
 
-#: src/NodeMenu.vala:153
+#: src/NodeMenu.vala:159
 msgid "Add Node"
 msgstr ""
 
-#: src/NodeMenu.vala:160
+#: src/NodeMenu.vala:166
 msgid "Add Parent Node"
 msgstr ""
 
-#: src/NodeMenu.vala:164
+#: src/NodeMenu.vala:170
 msgid "Add Child Node"
 msgstr ""
 
-#: src/NodeMenu.vala:168
+#: src/NodeMenu.vala:174
 msgid "Add Sibling Node"
 msgstr ""
 
-#: src/NodeMenu.vala:172
+#: src/NodeMenu.vala:178
 msgid "Use to Summarize Previous Sibling Nodes"
 msgstr ""
 
-#: src/NodeMenu.vala:176 src/QuickEntry.vala:44
+#: src/NodeMenu.vala:182 src/QuickEntry.vala:44
 msgid "Quick Entry"
 msgstr ""
 
-#: src/NodeMenu.vala:180
+#: src/NodeMenu.vala:186
 msgid "Insert Nodes"
 msgstr ""
 
-#: src/NodeMenu.vala:184
+#: src/NodeMenu.vala:190
 msgid "Replace Nodes"
 msgstr ""
 
-#: src/NodeMenu.vala:193
+#: src/NodeMenu.vala:199
 msgid "Root Node"
 msgstr ""
 
-#: src/NodeMenu.vala:198
+#: src/NodeMenu.vala:204
 msgid "Next Sibling Node"
 msgstr ""
 
-#: src/NodeMenu.vala:203
+#: src/NodeMenu.vala:209
 msgid "Previous Sibling Node"
 msgstr ""
 
-#: src/NodeMenu.vala:208
+#: src/NodeMenu.vala:214
 msgid "Child Node"
 msgstr ""
 
-#: src/NodeMenu.vala:213 src/NodesMenu.vala:109
+#: src/NodeMenu.vala:219 src/NodesMenu.vala:114
 msgid "Child Nodes"
 msgstr ""
 
-#: src/NodeMenu.vala:218
+#: src/NodeMenu.vala:224
 msgid "Subtree"
 msgstr ""
 
-#: src/NodeMenu.vala:223
+#: src/NodeMenu.vala:229
 msgid "Parent Node"
 msgstr ""
 
-#: src/NodeMenu.vala:228
+#: src/NodeMenu.vala:234
 msgid "Linked Node"
 msgstr ""
 
-#: src/NodeMenu.vala:242
+#: src/NodeMenu.vala:248
 msgid "Center Current Node"
 msgstr ""
 
-#: src/NodeMenu.vala:246
+#: src/NodeMenu.vala:252
 msgid "Sort Children"
 msgstr ""
 
-#: src/NodeMenu.vala:250
+#: src/NodeMenu.vala:256
 msgid "Alphabetically"
 msgstr ""
 
-#: src/NodeMenu.vala:253
+#: src/NodeMenu.vala:259
 msgid "Randomize"
 msgstr ""
 
-#: src/NodeMenu.vala:428
+#: src/NodeMenu.vala:436
 msgid "Remove Task"
 msgstr ""
 
-#: src/NodeMenu.vala:429
+#: src/NodeMenu.vala:437
 msgid "Mark Task As Done"
 msgstr ""
 
-#: src/NodeMenu.vala:431
+#: src/NodeMenu.vala:439
 msgid "Remove Node Link"
 msgstr ""
 
-#: src/NodeMenu.vala:432 src/NodesMenu.vala:223
+#: src/NodeMenu.vala:440 src/NodesMenu.vala:230
 msgid "Unfold Children"
 msgstr ""
 
-#: src/NodeMenu.vala:433 data/com.github.phase1geo.minder.shortcuts.ui:643
+#: src/NodeMenu.vala:441 data/com.github.phase1geo.minder.shortcuts.ui:663
 msgid "Remove Callout"
 msgstr ""
 
-#: src/NodeMenu.vala:453
+#: src/NodeMenu.vala:466
 msgid "Paste Text As Child Node"
 msgstr ""
 
-#: src/NodeMenu.vala:454
+#: src/NodeMenu.vala:467
 msgid "Paste and Replace Node Text"
 msgstr ""
 
-#: src/NodeMenu.vala:456
+#: src/NodeMenu.vala:469
 msgid "Paste Image As Child Node"
 msgstr ""
 
-#: src/NodeMenu.vala:457
+#: src/NodeMenu.vala:470
 msgid "Paste and Replace Node Image"
 msgstr ""
 
-#: src/NodeMenu.vala:459
+#: src/NodeMenu.vala:472
 msgid "Paste Node As Child"
 msgstr ""
 
-#: src/NodesMenu.vala:60
+#: src/NodesMenu.vala:61
 msgid "Toggle Tasks"
 msgstr ""
 
-#: src/NodesMenu.vala:68
+#: src/NodesMenu.vala:69
+msgid "Toggle Sequences"
+msgstr ""
+
+#: src/NodesMenu.vala:73
 msgid "Connect"
 msgstr ""
 
-#: src/NodesMenu.vala:72 src/NodesMenu.vala:224
+#: src/NodesMenu.vala:77 src/NodesMenu.vala:231
 msgid "Link Nodes"
 msgstr ""
 
-#: src/NodesMenu.vala:81 src/ThemeEditor.vala:125
+#: src/NodesMenu.vala:86 src/ThemeEditor.vala:125
 msgid "Link Colors"
 msgstr ""
 
-#: src/NodesMenu.vala:88
+#: src/NodesMenu.vala:93
 msgid "Randomize colors"
 msgstr ""
 
-#: src/NodesMenu.vala:104
+#: src/NodesMenu.vala:109
 msgid "Parent Nodes"
 msgstr ""
 
-#: src/NodesMenu.vala:118
+#: src/NodesMenu.vala:123
 msgid "Align Nodes"
 msgstr ""
 
-#: src/NodesMenu.vala:122
+#: src/NodesMenu.vala:127
 msgid "Align Top"
 msgstr ""
 
-#: src/NodesMenu.vala:126
+#: src/NodesMenu.vala:131
 msgid "Align Center Horizontally"
 msgstr ""
 
-#: src/NodesMenu.vala:130
+#: src/NodesMenu.vala:135
 msgid "Align Bottom"
 msgstr ""
 
-#: src/NodesMenu.vala:134
+#: src/NodesMenu.vala:139
 msgid "Align Left"
 msgstr ""
 
-#: src/NodesMenu.vala:138
+#: src/NodesMenu.vala:143
 msgid "Align Center Vertically"
 msgstr ""
 
-#: src/NodesMenu.vala:142
+#: src/NodesMenu.vala:147
 msgid "Align Right"
 msgstr ""
 
-#: src/NodesMenu.vala:224
+#: src/NodesMenu.vala:231
 msgid "Remove Node Links"
 msgstr ""
 
-#: src/Node.vala:2321
+#: src/Node.vala:2440
 msgid "Node Title"
 msgstr ""
 
-#: src/Node.vala:2329
+#: src/Node.vala:2448
 msgid "Node Note"
 msgstr ""
 
-#: src/Node.vala:2339
+#: src/Node.vala:2458
 msgid "Callout Text"
 msgstr ""
 
@@ -1197,18 +1216,28 @@ msgstr ""
 msgid "Default theme"
 msgstr ""
 
-#: src/Preferences.vala:117
+#: src/Preferences.vala:116
+msgid ""
+"Sets the default theme to use for newly created mindmaps (use Map sidebar "
+"panel to make immediate changes)."
+msgstr ""
+
+#: src/Preferences.vala:118
 msgid "Enable animations"
 msgstr ""
 
-#: src/Preferences.vala:120
+#: src/Preferences.vala:121
 msgid "Text field font size"
 msgstr ""
 
-#: src/Preferences.vala:123
+#: src/Preferences.vala:124
 msgid ""
 "Specifies the custom font size to use in text editing fields (i.e, quick "
 "entry or notes field)."
+msgstr ""
+
+#: src/Preferences.vala:126
+msgid "Colorize note fields"
 msgstr ""
 
 #: src/QuickEntry.vala:80
@@ -3091,6 +3120,10 @@ msgstr ""
 msgid "delete nodes"
 msgstr ""
 
+#: src/undo_actions/UndoNodeSequences.vala:30
+msgid "node sequence changes"
+msgstr ""
+
 #: src/undo_actions/UndoNodesGroup.vala:30
 msgid "change node groups"
 msgstr ""
@@ -3145,6 +3178,10 @@ msgstr ""
 
 #: src/undo_actions/UndoNodeTasks.vala:30
 msgid "node task changes"
+msgstr ""
+
+#: src/undo_actions/UndoNodeUnclify.vala:32
+msgid "reparent node"
 msgstr ""
 
 #: src/undo_actions/UndoStickerAdd.vala:30
@@ -3219,7 +3256,7 @@ msgid "Minder Shortcuts"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:12
-#: data/com.github.phase1geo.minder.shortcuts.ui:967
+#: data/com.github.phase1geo.minder.shortcuts.ui:987
 msgid "General"
 msgstr ""
 
@@ -3292,7 +3329,7 @@ msgid "Show Map Tab"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:190
-#: data/com.github.phase1geo.minder.shortcuts.ui:747
+#: data/com.github.phase1geo.minder.shortcuts.ui:767
 msgid "Miscellaneous"
 msgstr ""
 
@@ -3305,7 +3342,7 @@ msgid "Search Nodes/Connections"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:208
-#: data/com.github.phase1geo.minder.shortcuts.ui:971
+#: data/com.github.phase1geo.minder.shortcuts.ui:991
 msgid "Show Contextual Menu"
 msgstr ""
 
@@ -3350,7 +3387,7 @@ msgid "Quick Entry Replacement"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:293
-#: data/com.github.phase1geo.minder.shortcuts.ui:857
+#: data/com.github.phase1geo.minder.shortcuts.ui:877
 msgid "Clipboard"
 msgstr ""
 
@@ -3371,483 +3408,487 @@ msgid "Replace With Clipboard"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:327
-msgid "Changing Current"
+msgid "View"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:331
-#: data/com.github.phase1geo.minder.shortcuts.ui:676
-msgid "Edit Title"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:345
-msgid "Change Task State"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:352
-msgid "Add URL Link To Text"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:359
-#: data/com.github.phase1geo.minder.shortcuts.ui:779
-msgid "Remove URL Link From Text"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:366
-msgid "Change Link Color"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:373
-msgid "View Properties"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:380
-msgid "Toggle Fold"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:387
-msgid "Toggle Node Link"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:394
-msgid "Create Link to Selected Node"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:395
-msgid "[After using this command, 'y' will create the link]"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:402
-msgid "Create Group"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:409
-msgid "Create Connection"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:416
-msgid "Create Callout"
-msgstr ""
-
-#: data/com.github.phase1geo.minder.shortcuts.ui:423
 msgid "Center In View"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:430
-#: data/com.github.phase1geo.minder.shortcuts.ui:697
+#: data/com.github.phase1geo.minder.shortcuts.ui:338
+#: data/com.github.phase1geo.minder.shortcuts.ui:717
 msgid "Place Into View"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:439
-#: data/com.github.phase1geo.minder.shortcuts.ui:652
-#: data/com.github.phase1geo.minder.shortcuts.ui:884
-msgid "Selection"
+#: data/com.github.phase1geo.minder.shortcuts.ui:347
+msgid "Changing Current"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:351
+#: data/com.github.phase1geo.minder.shortcuts.ui:696
+msgid "Edit Title"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:365
+msgid "Change Task State"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:379
+msgid "Add URL Link To Text"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:386
+#: data/com.github.phase1geo.minder.shortcuts.ui:799
+msgid "Remove URL Link From Text"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:393
+msgid "Change Link Color"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:400
+msgid "View Properties"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:407
+msgid "Toggle Fold"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:421
+msgid "Toggle Node Link"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:428
+msgid "Create Link to Selected Node"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:429
+msgid "[After using this command, 'y' will create the link]"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:436
+msgid "Create Group"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:443
-msgid "Select Root"
+msgid "Create Connection"
 msgstr ""
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:450
+msgid "Create Callout"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:459
+#: data/com.github.phase1geo.minder.shortcuts.ui:672
+#: data/com.github.phase1geo.minder.shortcuts.ui:904
+msgid "Selection"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:463
+msgid "Select Root"
+msgstr ""
+
+#: data/com.github.phase1geo.minder.shortcuts.ui:470
 msgid "Select Parent"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:457
+#: data/com.github.phase1geo.minder.shortcuts.ui:477
 msgid "Select Next Sibling"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:464
+#: data/com.github.phase1geo.minder.shortcuts.ui:484
 msgid "Select Previous Sibling"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:471
+#: data/com.github.phase1geo.minder.shortcuts.ui:491
 msgid "Select Child"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:478
+#: data/com.github.phase1geo.minder.shortcuts.ui:498
 msgid "Select Children"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:485
+#: data/com.github.phase1geo.minder.shortcuts.ui:505
 msgid "Select Subtree"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:492
+#: data/com.github.phase1geo.minder.shortcuts.ui:512
 msgid "Select Node Below"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:499
+#: data/com.github.phase1geo.minder.shortcuts.ui:519
 msgid "Select Node Above"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:506
+#: data/com.github.phase1geo.minder.shortcuts.ui:526
 msgid "Select Node To Right"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:513
+#: data/com.github.phase1geo.minder.shortcuts.ui:533
 msgid "Select Node To Left"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:520
+#: data/com.github.phase1geo.minder.shortcuts.ui:540
 msgid "Select Linked Node"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:527
+#: data/com.github.phase1geo.minder.shortcuts.ui:547
 msgid "Select Callout"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:534
+#: data/com.github.phase1geo.minder.shortcuts.ui:554
 msgid "Select Attached Connection"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:543
+#: data/com.github.phase1geo.minder.shortcuts.ui:563
 msgid "Move"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:547
+#: data/com.github.phase1geo.minder.shortcuts.ui:567
 msgid "Swap with Sibling Node to Right"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:554
+#: data/com.github.phase1geo.minder.shortcuts.ui:574
 msgid "Swap with Sibling Node to Left"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:561
+#: data/com.github.phase1geo.minder.shortcuts.ui:581
 msgid "Swap with Sibling Node Above"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:568
+#: data/com.github.phase1geo.minder.shortcuts.ui:588
 msgid "Swap with Sibling Node Below"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:575
+#: data/com.github.phase1geo.minder.shortcuts.ui:595
 msgid "Sort Child Nodes Alphabetically"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:584
+#: data/com.github.phase1geo.minder.shortcuts.ui:604
 msgid "Alignment"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:588
+#: data/com.github.phase1geo.minder.shortcuts.ui:608
 msgid "Align Top Side"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:595
+#: data/com.github.phase1geo.minder.shortcuts.ui:615
 msgid "Align Vertical Center"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:602
+#: data/com.github.phase1geo.minder.shortcuts.ui:622
 msgid "Align Bottom Side"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:609
+#: data/com.github.phase1geo.minder.shortcuts.ui:629
 msgid "Align Left Side"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:616
+#: data/com.github.phase1geo.minder.shortcuts.ui:636
 msgid "Align Horizontal Center"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:623
+#: data/com.github.phase1geo.minder.shortcuts.ui:643
 msgid "Align Right Side"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:635
+#: data/com.github.phase1geo.minder.shortcuts.ui:655
 msgid "Callout Commands"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:639
-#: data/com.github.phase1geo.minder.shortcuts.ui:672
+#: data/com.github.phase1geo.minder.shortcuts.ui:659
+#: data/com.github.phase1geo.minder.shortcuts.ui:692
 msgid "Change Current"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:668
+#: data/com.github.phase1geo.minder.shortcuts.ui:688
 msgid "Connection Commands"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:690
+#: data/com.github.phase1geo.minder.shortcuts.ui:710
 msgid "Show Properties"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:706
+#: data/com.github.phase1geo.minder.shortcuts.ui:726
 msgid "Traversal"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:710
+#: data/com.github.phase1geo.minder.shortcuts.ui:730
 msgid "Select Start Node"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:717
+#: data/com.github.phase1geo.minder.shortcuts.ui:737
 msgid "Select End Node"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:724
+#: data/com.github.phase1geo.minder.shortcuts.ui:744
 msgid "Select Next Connection"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:731
+#: data/com.github.phase1geo.minder.shortcuts.ui:751
 msgid "Select Previous Connection"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:743
+#: data/com.github.phase1geo.minder.shortcuts.ui:763
 msgid "Text Editing"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:751
+#: data/com.github.phase1geo.minder.shortcuts.ui:771
 msgid "Insert Newline Character"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:758
+#: data/com.github.phase1geo.minder.shortcuts.ui:778
 msgid "Insert Tab Character"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:765
+#: data/com.github.phase1geo.minder.shortcuts.ui:785
 msgid "Show Emoji Picker"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:772
+#: data/com.github.phase1geo.minder.shortcuts.ui:792
 msgid "Add URL Link To Selected Text"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:786
+#: data/com.github.phase1geo.minder.shortcuts.ui:806
 msgid "End Editing"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:795
+#: data/com.github.phase1geo.minder.shortcuts.ui:815
 msgid "Cursor Movement"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:799
+#: data/com.github.phase1geo.minder.shortcuts.ui:819
 msgid "Next Character"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:806
+#: data/com.github.phase1geo.minder.shortcuts.ui:826
 msgid "Previous Character"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:813
+#: data/com.github.phase1geo.minder.shortcuts.ui:833
 msgid "Next Word"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:820
+#: data/com.github.phase1geo.minder.shortcuts.ui:840
 msgid "Previous Word"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:827
+#: data/com.github.phase1geo.minder.shortcuts.ui:847
 msgid "Next Line"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:834
+#: data/com.github.phase1geo.minder.shortcuts.ui:854
 msgid "Previous Line"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:841
+#: data/com.github.phase1geo.minder.shortcuts.ui:861
 msgid "Start Of Text"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:848
+#: data/com.github.phase1geo.minder.shortcuts.ui:868
 msgid "End Of Text"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:861
+#: data/com.github.phase1geo.minder.shortcuts.ui:881
 msgid "Copy Selected Text"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:868
+#: data/com.github.phase1geo.minder.shortcuts.ui:888
 msgid "Cut Selected Text"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:875
+#: data/com.github.phase1geo.minder.shortcuts.ui:895
 msgid "Paste Text"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:888
+#: data/com.github.phase1geo.minder.shortcuts.ui:908
 msgid "Add Next Character"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:895
+#: data/com.github.phase1geo.minder.shortcuts.ui:915
 msgid "Add Previous Character"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:902
+#: data/com.github.phase1geo.minder.shortcuts.ui:922
 msgid "Add Next Word"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:909
+#: data/com.github.phase1geo.minder.shortcuts.ui:929
 msgid "Add Previous Word"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:916
+#: data/com.github.phase1geo.minder.shortcuts.ui:936
 msgid "Add Next Line"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:923
+#: data/com.github.phase1geo.minder.shortcuts.ui:943
 msgid "Add Previous Line"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:930
+#: data/com.github.phase1geo.minder.shortcuts.ui:950
 msgid "Add Start Of Text"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:937
+#: data/com.github.phase1geo.minder.shortcuts.ui:957
 msgid "Add End Of Text"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:944
+#: data/com.github.phase1geo.minder.shortcuts.ui:964
 msgid "Select All Text"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:951
+#: data/com.github.phase1geo.minder.shortcuts.ui:971
 msgid "Clear Selection"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:963
+#: data/com.github.phase1geo.minder.shortcuts.ui:983
 msgid "Mouse Events"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:972
+#: data/com.github.phase1geo.minder.shortcuts.ui:992
 msgid "[Right-click when item is selected]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:978
+#: data/com.github.phase1geo.minder.shortcuts.ui:998
 msgid "Edit Image in Canvas"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:979
+#: data/com.github.phase1geo.minder.shortcuts.ui:999
 msgid "[Double left-click on image]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:987
+#: data/com.github.phase1geo.minder.shortcuts.ui:1007
 msgid "Canvas Movement"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:991
+#: data/com.github.phase1geo.minder.shortcuts.ui:1011
 msgid "Pan Canvas"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:992
+#: data/com.github.phase1geo.minder.shortcuts.ui:1012
 msgid "[Middle-click + Drag / Alt + Motion]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:998
+#: data/com.github.phase1geo.minder.shortcuts.ui:1018
 msgid "Scroll Vertically"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:999
+#: data/com.github.phase1geo.minder.shortcuts.ui:1019
 msgid "[Scrollwheel up/down]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1005
+#: data/com.github.phase1geo.minder.shortcuts.ui:1025
 msgid "Scroll Horizontally"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1006
+#: data/com.github.phase1geo.minder.shortcuts.ui:1026
 msgid "[Shift + Scrollwheel up/down]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1014
+#: data/com.github.phase1geo.minder.shortcuts.ui:1034
 msgid "Item Selection"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1018
+#: data/com.github.phase1geo.minder.shortcuts.ui:1038
 msgid "Select Single Item"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1019
+#: data/com.github.phase1geo.minder.shortcuts.ui:1039
 msgid "[Left-click on item]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1025
+#: data/com.github.phase1geo.minder.shortcuts.ui:1045
 msgid "Select Child Nodes"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1026
+#: data/com.github.phase1geo.minder.shortcuts.ui:1046
 msgid "[Control + Left-click on parent node]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1032
+#: data/com.github.phase1geo.minder.shortcuts.ui:1052
 msgid "Select Node Tree/Subtree"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1033
+#: data/com.github.phase1geo.minder.shortcuts.ui:1053
 msgid "[Control + Double left-click on parent node]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1039
+#: data/com.github.phase1geo.minder.shortcuts.ui:1059
 msgid "Select All Nodes at Same Depth Level"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1040
+#: data/com.github.phase1geo.minder.shortcuts.ui:1060
 msgid "[Control + Triple left-click on node]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1046
+#: data/com.github.phase1geo.minder.shortcuts.ui:1066
 msgid "Block Selection"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1047
+#: data/com.github.phase1geo.minder.shortcuts.ui:1067
 msgid "[Left-click + Drag]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1055
+#: data/com.github.phase1geo.minder.shortcuts.ui:1075
 msgid "Item Selection Toggle (Add to/Remove from Selection)"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1059
+#: data/com.github.phase1geo.minder.shortcuts.ui:1079
 msgid "Toggle Selection of Item"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1060
+#: data/com.github.phase1geo.minder.shortcuts.ui:1080
 msgid "[Shift + Left-click on item]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1066
+#: data/com.github.phase1geo.minder.shortcuts.ui:1086
 msgid "Toggle Selection of Child Nodes"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1067
+#: data/com.github.phase1geo.minder.shortcuts.ui:1087
 msgid "[Shift + Control + Left-click on item]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1073
+#: data/com.github.phase1geo.minder.shortcuts.ui:1093
 msgid "Toggle Selection of Node Tree/Subtree"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1074
+#: data/com.github.phase1geo.minder.shortcuts.ui:1094
 msgid "[Shift + Control + Double left-click on parent node]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1080
+#: data/com.github.phase1geo.minder.shortcuts.ui:1100
 msgid "Toggle Selection of All Nodes at Same Depth Level"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1081
+#: data/com.github.phase1geo.minder.shortcuts.ui:1101
 msgid "[Shift + Control + Triple left-click on node]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1089
+#: data/com.github.phase1geo.minder.shortcuts.ui:1109
 msgid "Text Selection"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1093
+#: data/com.github.phase1geo.minder.shortcuts.ui:1113
 msgid "Set Cursor Insert Point"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1094
+#: data/com.github.phase1geo.minder.shortcuts.ui:1114
 msgid "[Left-click anywhere in text]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1100
+#: data/com.github.phase1geo.minder.shortcuts.ui:1120
 msgid "Select current word"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1101
+#: data/com.github.phase1geo.minder.shortcuts.ui:1121
 msgid "[Double left-click on word]"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1107
+#: data/com.github.phase1geo.minder.shortcuts.ui:1127
 msgid "Select all text"
 msgstr ""
 
-#: data/com.github.phase1geo.minder.shortcuts.ui:1108
+#: data/com.github.phase1geo.minder.shortcuts.ui:1128
 msgid "[Triple left-click anywhere in text]"
 msgstr ""
