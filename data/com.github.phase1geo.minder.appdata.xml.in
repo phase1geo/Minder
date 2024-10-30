@@ -53,8 +53,9 @@
       <image>https://raw.githubusercontent.com/phase1geo/Minder/master/data/screenshots/screenshot-map-properties.png</image>
     </screenshot>
   </screenshots>
-  <developer_name>Trevor Williams</developer_name>
-  <developer>com.github.phase1geo</developer>
+  <developer id="com.github.phase1geo">
+    <name>Trevor Williams</name>
+  </developer>
   <url type="homepage">https://github.com/phase1geo/minder/</url>
   <url type="bugtracker">https://github.com/phase1geo/minder/issues/</url>
   <custom>
@@ -93,6 +94,43 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <releases>
+    <release version="1.17.0" date="2024-10-30">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Added support for removing Markdown syntax highlighting in the note field.</li>
+          <li>Added support for moving a node to be a sibling of its parent (with Alt+direction-of-parent).</li>
+          <li>Added support for displaying child nodes as a sequence, including auto-numbering.</li>
+          <li>Added support for Shift-I keyboard shortcut to add an image to a node.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>Updated Italian translation (thanks to @albanobattistella).</li>
+          <li>Updated German translation (thanks to Benjamin Weis).</li>
+          <li>Updated Flatpak platform from 7.2 to 8.</li>
+          <li>Adjusted blue color used in note field to improve readability in dark themes.</li>
+          <li>Regrouped node commands in shortcuts cheatsheet to reduce required window height.</li>
+          <li>Changed keyboard shortcut for moving child nodes of a node to be siblings with that node from Alt+direction-of-parent to Alt+direction-of-children.</li>
+          <li>Added tooltip to new info icon to Default Theme within preferences to improve user documentation on what this setting does.</li>
+          <li>Updated gtksourceview location in Flatpak manifest.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed memory leak issue when saving the document.</li>
+          <li>Fixed issue with inserting root nodes using the quick entry feature.</li>
+          <li>Fixed potential issue when creating a new tab.</li>
+          <li>Fixed issue with centering a node with the keyboard shortcut.</li>
+          <li>Fixed issue with pasting by replacement using the keyboard shortcut.</li>
+          <li>Fixed issues using up, down, left, right to navigate nodes when selected node is a root node.</li>
+          <li>Fixed issue with deleting the previous word when editing node text.</li>
+          <li>Fixed issue where application would crash when hovering over node note icon on systems that installed Discount version &gt;= 3.0.</li>
+          <li>Fixed issue where Minder process could remain running after application was closed.</li>
+          <li>Fixed issue related to invoking Minder while application is running.</li>
+          <li>Fixed issue with installation of application icon in the wrong directory.</li>
+          <li>Fixed potential issue with tab handling on startup.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.16.4" date="2024-04-07">
       <description>
         <p>New</p>
