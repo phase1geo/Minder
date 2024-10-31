@@ -134,9 +134,22 @@ public class ConnectionInspector : Box {
       wrap_mode = Gtk.WrapMode.WORD
     };
 
+<<<<<<< HEAD
     _note.add_unicode_completion( win, win.unicoder );
     _note.buffer.text = "";
     _note.buffer.changed.connect( note_changed );
+=======
+    var focus_controller = EventControllerFocus();
+    focus_controller.enter.connect( note_focus_in );
+    focus_controller.leave.connect( note_focus_out );
+
+    _note = new NoteView();
+    _note.set_wrap_mode( Gtk.WrapMode.WORD );
+    _note.add_unicode_completion( win, win.unicoder );
+    _note.buffer.text = "";
+    _note.buffer.changed.connect( note_changed );
+    _note.add_controller( focus_controller );
+>>>>>>> origin/gtk4
 
     var focus = new EventControllerFocus();
     _note.add_controller( focus );
@@ -209,6 +222,7 @@ public class ConnectionInspector : Box {
     if( (_connection != null) && (_connection.note != _orig_note) ) {
       _da.undo_buffer.add_item( new UndoConnectionNote( _connection, _orig_note ) );
     }
+<<<<<<< HEAD
   }
 
   /* When a node link is added, tell the current node */
@@ -227,6 +241,8 @@ public class ConnectionInspector : Box {
     if( link != null ) {
       _note.show_tooltip( link.get_tooltip( _da ) );
     }
+=======
+>>>>>>> origin/gtk4
   }
 
   /* Deletes the current connection */
