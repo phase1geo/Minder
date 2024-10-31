@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: com.github.phase1geo.minder\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-29 21:52-0500\n"
-"PO-Revision-Date: 2024-04-10 12:37+0100\n"
+"PO-Revision-Date: 2024-10-31 12:37+0100\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it\n"
@@ -22,9 +22,8 @@ msgid "Mind-mapping application"
 msgstr "Applicazione di mappe mentali"
 
 #: src/About.vala:37
-#, fuzzy
 msgid "Copyright © 2018-2024 Trevor Williams"
-msgstr "Copyright © 2018-2021 Trevor Williams"
+msgstr "Copyright © 2018-2024 Trevor Williams"
 
 #: src/About.vala:41
 msgid "Minder in AppCenter"
@@ -45,29 +44,26 @@ msgid "Display version number"
 msgstr "Visualizza numero versione"
 
 #: src/Application.vala:148
-#, fuzzy
 msgid "Display help"
-msgstr "Schermo"
+msgstr "Mostra aiuto"
 
 #: src/Application.vala:149
 msgid "Starts Minder with a new file"
 msgstr "Avvia Minder con un nuovo file"
 
 #: src/Application.vala:152
-#, fuzzy
 msgid ""
 "Enables a transparent background for PNG images.  Default is no transparency."
-msgstr "Abilita uno sfondo trasparente per le immagini PNG"
+msgstr ""
+"Abilita uno sfondo trasparente per le immagini PNG. L'impostazione predefinita è nessuna trasparenza."
 
 #: src/Application.vala:153
-#, fuzzy
 msgid "PNG compression value (0-9). Default is 0."
-msgstr "Valore di compressione PNG (0-9)"
+msgstr "Valore di compressione PNG (0-9). Il valore predefinito è 0."
 
 #: src/Application.vala:154
-#, fuzzy
 msgid "JPEG quality (0-100). Default is 90."
-msgstr "Qualità JPEG (0-100)"
+msgstr "Qualità JPEG (0-100). Il valore predefinito è 90."
 
 #: src/Application.vala:155
 msgid "Enables image links in exported Markdown"
@@ -838,12 +834,13 @@ msgstr "Piega"
 
 #: src/NodeInspector.vala:143
 msgid "Sequence"
-msgstr ""
+msgstr "Sequenza"
 
 #: src/NodeInspector.vala:150
 msgid ""
 "When set, automatically numbers child nodes and displays them as a sequence."
 msgstr ""
+"Se impostato, numera automaticamente i nodi figlio e li visualizza in sequenza."
 
 #: src/NodeInspector.vala:202
 msgid "Override Color"
@@ -956,9 +953,8 @@ msgid "Fold Children"
 msgstr "Piega Figli"
 
 #: src/NodeMenu.vala:153 data/com.github.phase1geo.minder.shortcuts.ui:414
-#, fuzzy
 msgid "Toggle Sequence"
-msgstr "Attiva o disattiva la selezione dell'elemento"
+msgstr "Attiva sequenza"
 
 #: src/NodeMenu.vala:156
 msgid "Detach"
@@ -1089,9 +1085,8 @@ msgid "Toggle Tasks"
 msgstr "Attiva/disattiva compiti"
 
 #: src/NodesMenu.vala:69
-#, fuzzy
 msgid "Toggle Sequences"
-msgstr "Attiva o disattiva la selezione dell'elemento"
+msgstr "Attiva sequenze"
 
 #: src/NodesMenu.vala:73
 msgid "Connect"
@@ -1263,7 +1258,7 @@ msgstr ""
 
 #: src/Preferences.vala:126
 msgid "Colorize note fields"
-msgstr ""
+msgstr "Colora i campi delle note"
 
 #: src/QuickEntry.vala:80
 msgid "Help for inputting node information:"
@@ -3160,9 +3155,8 @@ msgid "delete nodes"
 msgstr "cancella nodi"
 
 #: src/undo_actions/UndoNodeSequences.vala:30
-#, fuzzy
 msgid "node sequence changes"
-msgstr "modifica nome nodo"
+msgstr "modifiche della sequenza dei nodi"
 
 #: src/undo_actions/UndoNodesGroup.vala:30
 msgid "change node groups"
@@ -3221,9 +3215,8 @@ msgid "node task changes"
 msgstr "modifiche attività nodo"
 
 #: src/undo_actions/UndoNodeUnclify.vala:32
-#, fuzzy
 msgid "reparent node"
-msgstr "sostituisci nodo"
+msgstr "nodo di riparazione"
 
 #: src/undo_actions/UndoStickerAdd.vala:30
 #: src/undo_actions/UndoStickerMove.vala:32
@@ -3450,7 +3443,7 @@ msgstr "Sostituisci con gli Appunti"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:327
 msgid "View"
-msgstr ""
+msgstr "Vista"
 
 #: data/com.github.phase1geo.minder.shortcuts.ui:331
 msgid "Center In View"
