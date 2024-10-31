@@ -49,11 +49,10 @@ public enum SearchOptions {
   NUM
 }
 
-public class MainWindow : Hdy.ApplicationWindow {
+public class MainWindow : Gtk.ApplicationWindow {
 
   private GLib.Settings     _settings;
-  private Hdy.HeaderBar     _header;
-  private Gtk.AccelGroup?   _accel_group    = null;
+  private HeaderBar         _header;
   private DynamicNotebook?  _nb             = null;
   private Revealer?         _inspector      = null;
   private Paned             _pane           = null;
@@ -83,7 +82,6 @@ public class MainWindow : Hdy.ApplicationWindow {
   private Scale?            _zoom_scale = null;
   private Button?           _zoom_in    = null;
   private Button?           _zoom_out   = null;
-  private ModelButton?      _zoom_sel   = null;
   private Button?           _undo_btn   = null;
   private Button?           _redo_btn   = null;
   private ToggleButton?     _focus_btn  = null;
@@ -162,27 +160,18 @@ public class MainWindow : Hdy.ApplicationWindow {
     _exports = new Exports();
 
     /* Create the header bar */
-    _header = new Hdy.HeaderBar();
-    _header.set_show_close_button( true );
+    _header = new HeaderBar() {
+      show_title_buttons = true,
+      title_width        = new Label( _( "Minder" ) )
+    };
 
-    /* Set the main window data */
-    title = _( "Minder" );
-    if( (window_x == -1) && (window_y == -1) ) {
-      set_position( Gtk.WindowPosition.CENTER );
-    } else {
-      move( window_x, window_y );
-    }
+    // Set the default window size to the last session size
     set_default_size( window_w, window_h );
-    // set_border_width( 2 );
 
     /* Set the stage for menu actions */
     var actions = new SimpleActionGroup ();
     actions.add_action_entries( action_entries, this );
     insert_action_group( "win", actions );
-
-    /* Create the accelerator group for the window */
-    _accel_group = new Gtk.AccelGroup();
-    this.add_accel_group( _accel_group );
 
     /* Add keyboard shortcuts */
     add_keyboard_shortcuts( app );
@@ -198,9 +187,9 @@ public class MainWindow : Hdy.ApplicationWindow {
     _nb.get_style_context().add_class( Gtk.STYLE_CLASS_INLINE_TOOLBAR );
 
     /* Create title toolbar */
-    var new_btn = new Button.from_icon_name( get_icon_name( "document-new" ), get_icon_size() );
-    new_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "New File" ), "<Control>n" ) );
-    new_btn.add_accelerator( "clicked", _accel_group, 'n', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    var new_btn = new Button.from_icon_name( get_icon_name( "document-new" ) ) {
+      tooltip_markup = Utils.tooltip_with_accel( _( "New File" ), "<Control>n" ),
+    };
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
 
@@ -306,11 +295,6 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Returns the name of the icon to use for a headerbar icon */
   private string get_icon_name( string icon_name ) {
     return( "%s%s".printf( icon_name, (on_elementary ? "" : "-symbolic") ) );
-  }
-
-  /* Returns the size of the icon to use for a headerbar icon */
-  private IconSize get_icon_size() {
-    return( on_elementary ? IconSize.LARGE_TOOLBAR : IconSize.SMALL_TOOLBAR );
   }
 
   private void setting_changed_text_size() {
@@ -429,7 +413,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   /* Creates a draw area */
   public DrawArea create_da() {
-    var da = new DrawArea( this, _settings, _accel_group );
+    var da = new DrawArea( this, _settings );
     return( da );
   }
 
@@ -437,7 +421,7 @@ public class MainWindow : Hdy.ApplicationWindow {
   public DrawArea add_tab( string? fname, TabAddReason reason ) {
 
     /* Create and pack the canvas */
-    var da = new DrawArea( this, _settings, _accel_group );
+    var da = new DrawArea( this, _settings );
     da.current_changed.connect( on_current_changed );
     da.scale_changed.connect( change_scale );
     da.scroll_changed.connect( change_origin );
@@ -597,91 +581,90 @@ public class MainWindow : Hdy.ApplicationWindow {
   /* Adds the zoom functionality */
   private void add_zoom_button() {
 
-    /* Create the menu button */
-    _zoom_btn = new MenuButton();
-    _zoom_btn.set_image( new Image.from_icon_name( get_icon_name( "zoom-fit-best" ), get_icon_size() ) );
-    _zoom_btn.set_tooltip_text( _( "Zoom (%d%%)" ).printf( 100 ) );
-    _header.pack_end( _zoom_btn );
+    var zoom_item = new GLib.MenuItem( null, null );
+    zoom_item.set_attribute( "custom", "s", "scale" );
 
-    /* Create zoom menu popover */
-    Box box = new Box( Orientation.VERTICAL, 5 );
+    var scale_menu = new GLib.Menu();
+    scale_menu.append_item( zoom_item );
 
+    var fit_menu = new GLib.Menu();
+    fit_menu.append( _( "Zoom to Fit" ),                    "win.action_zoom_fit" );
+    fit_menu.append( _( "Zoom to Fit Selected Node Tree" ), "win.action_zoom_selected" );
+    fit_menu.append( _( "Zoom to Actual Size" ),            "win.action_zoom_actual" );
+
+    var menu = new GLib.Menu();
+    menu.append_section( null, scale_menu );
+    menu.append_section( null, fit_menu );
+
+    // Create scale UI in menu
     var marks   = DrawArea.get_scale_marks();
     _scale_lbl  = new Label( _( "Zoom to Percent" ) );
-    _zoom_scale = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 );
+    _zoom_scale = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 ) {
+      has_origin = false,
+      set_value  =  100
+    };
     foreach (double mark in marks) {
       _zoom_scale.add_mark( mark, PositionType.BOTTOM, null );
     }
-    _zoom_scale.has_origin = false;
-    _zoom_scale.set_value( 100 );
     _zoom_scale.change_value.connect( adjust_zoom );
     _zoom_scale.format_value.connect( set_zoom_value );
 
-    _zoom_in = new Button.from_icon_name( "zoom-in-symbolic", IconSize.MENU );
-    _zoom_in.relief = ReliefStyle.NONE;
-    _zoom_in.can_focus = false;
-    _zoom_in.set_tooltip_markup( Utils.tooltip_with_accel( _( "Zoom In" ), "<Control>plus" ) );
-    _zoom_in.action_name = "win.action_zoom_in";
+    _zoom_in = new Button.from_icon_name( "zoom-in-symbolic" ) {
+      has_frame = false,
+      can_focus = false,
+      tooltip_markup = Utils.tooltip_with_accel( _( "Zoom In" ), "<Control>plus" )
+    };
+    _zoom_in.clicked.connect( action_zoom_in );
 
-    _zoom_out = new Button.from_icon_name( "zoom-out-symbolic", IconSize.MENU );
-    _zoom_out.relief = ReliefStyle.NONE;
-    _zoom_out.can_focus = false;
-    _zoom_out.set_tooltip_markup( Utils.tooltip_with_accel( _( "Zoom Out" ), "<Control>minus" ) );
-    _zoom_out.action_name = "win.action_zoom_out";
+    _zoom_out = new Button.from_icon_name( "zoom-out-symbolic" ) {
+      has_frame = false,
+      can_focus = false,
+      tooltip_markup = Utils.tooltip_with_accel( _( "Zoom Out" ), "<Control>minus" )
+    };
+    _zoom_out.clicked.connect( action_zoom_out );
 
     var zoom_box = new Box( Orientation.HORIZONTAL, 5 );
-    zoom_box.pack_start( _zoom_out,   false, false );
-    zoom_box.pack_start( _zoom_scale, true,  true );
-    zoom_box.pack_start( _zoom_in,    false, false );
+    zoom_box.append( _zoom_out );
+    zoom_box.append( _zoom_scale );
+    zoom_box.append( _zoom_in );
 
-    var fit = new ModelButton();
-    fit.get_child().destroy();
-    fit.add( new Granite.AccelLabel.from_action_name( _( "Zoom to Fit" ), "win.action_zoom_fit" ) );
-    fit.action_name = "win.action_zoom_fit";
+    var zbox = new Box( Orientation.VERTICAL, 5 );
+    zbox.append( _scale_lbl );
+    zbox.append( zoom_box );
 
-    _zoom_sel = new ModelButton();
-    _zoom_sel.get_child().destroy();
-    _zoom_sel.add( new Granite.AccelLabel.from_action_name( _( "Zoom to Fit Selected Node Tree" ), "win.action_zoom_selected" ) );
-    _zoom_sel.action_name = "win.action_zoom_selected";
-
-    var actual = new ModelButton();
-    actual.get_child().destroy();
-    actual.add( new Granite.AccelLabel.from_action_name( _( "Zoom to Actual Size" ), "win.action_zoom_actual" ) );
-    actual.action_name = "win.action_zoom_actual";
-
-    box.margin = 5;
-    box.pack_start( _scale_lbl,  false, true );
-    box.pack_start( zoom_box,    true,  true );
-    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
-    box.pack_start( fit,         false, true );
-    box.pack_start( _zoom_sel,   false, true );
-    box.pack_start( actual,      false, true );
+    /* Create zoom menu popover */
+    Box box = new Box( Orientation.VERTICAL, 5 ) {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
+    box.append( _scale_lbl,  false, true );
+    box.append( zoom_box,    true,  true );
+    box.append( new Separator( Orientation.HORIZONTAL ), false, true );
     box.show_all();
 
-    _zoom = new Popover( null );
-    _zoom.add( box );
-    _zoom_btn.popover = _zoom;
+    var popover = new PopoverMenu.from_model( menu );
+    popover.add_child( zbox, "scale" );
+
+    /* Create the menu button */
+    _zoom_btn = new MenuButton() {
+      icon_name    = get_icon_name( "zoom-fit-best" ),
+      tooltip_text = _( "Zoom (%d%%)" ).printf( 100 ),
+      popover      = popover
+    };
+    _header.pack_end( _zoom_btn );
 
   }
 
   /* Adds the search functionality */
   private void add_search_button() {
 
-    /* Create the menu button */
-    _search_btn = new MenuButton();
-    _search_btn.set_image( new Image.from_icon_name( (on_elementary ? "minder-search" : "edit-find-symbolic"), get_icon_size() ) );
-    _search_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Search" ), "<Control>f" ) );
-    _search_btn.add_accelerator( "clicked", _accel_group, 'f', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
-    _search_btn.clicked.connect( on_search_change );
-    _header.pack_end( _search_btn );
-
-    /* Create search popover */
-    var box = new Box( Orientation.VERTICAL, 5 );
-
     /* Create the search entry field */
-    _search_entry = new SearchEntry();
-    _search_entry.placeholder_text = _( "Search Nodes, Callouts and Connections" );
-    _search_entry.width_chars = 60;
+    _search_entry = new SearchEntry() {
+      placeholder_text = _( "Search Nodes, Callouts and Connections" ),
+      width_chars      = 60
+    };
     _search_entry.search_changed.connect( on_search_change );
 
     _search_items = new Gtk.ListStore( 8, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(Callout), typeof(NodeGroup), typeof(string), typeof(string) );
@@ -704,42 +687,60 @@ public class MainWindow : Hdy.ApplicationWindow {
     _search_list.row_activated.connect( on_search_clicked );
 
     /* Create the scrolled window for the treeview */
-    _search_scroll = new ScrolledWindow( null, null );
-    _search_scroll.height_request = 200;
-    _search_scroll.hscrollbar_policy = PolicyType.EXTERNAL;
-    _search_scroll.add( _search_list );
+    _search_scroll = new ScrolledWindow() {
+      height_request    = 200,
+      hscrollbar_policy = PolicyType.EXTERNAL,
+      child             = _search_list
+    };
 
-    var search_opts = new Expander( _( "Search Criteria" ) );
-    search_opts.add( create_search_options_box() );
+    var search_opts = new Expander( _( "Search Criteria" ) ) {
+      child = create_search_options_box()
+    };
 
-    var search_all_label = new Label( _( "Search all tabs" ) );
-    search_all_label.halign = Align.START;
+    var search_all_label = new Label( _( "Search all tabs" ) ) {
+      halign = Align.START
+    };
 
-    _search_all_tabs = new Switch();
-    _search_all_tabs.active = _settings.get_boolean( "search-opt-all-tabs" );
-    _search_all_tabs.button_press_event.connect((e) => {
+    _search_all_tabs = new Switch() {
+      halign = Align.END,
+      active = _settings.get_boolean( "search-opt-all-tabs" )
+    };
+    _search_all_tabs.notify["active"].connect(() => {
       _settings.set_boolean( "search-opt-all-tabs", !_search_all_tabs.active );
       on_search_change();
-      return( false );
     });
 
     var search_all_box = new Box( Orientation.HORIZONTAL, 0 );
-    search_all_box.pack_start( search_all_label, false, false );
-    search_all_box.pack_end(   _search_all_tabs, false, false );
+    search_all_box.append( search_all_label );
+    search_all_box.append( _search_all_tabs );
 
-    box.margin = 5;
-    box.pack_start( _search_entry,  false, true );
-    box.pack_start( _search_scroll, true,  true );
-    box.pack_start( new Separator( Orientation.HORIZONTAL ) );
-    box.pack_start( search_opts,    false, true, 5 );
-    box.pack_start( new Separator( Orientation.HORIZONTAL ) );
-    box.pack_start( search_all_box, false, true );
-    box.show_all();
+    // Create search popover
+    var box = new Box( Orientation.VERTICAL, 5 ) {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
+    box.append( _search_entry );
+    box.append( _search_scroll );
+    box.append( new Separator( Orientation.HORIZONTAL ) );
+    box.append( search_opts );
+    box.append( new Separator( Orientation.HORIZONTAL ) );
+    box.append( search_all_box );
 
     /* Create the popover and associate it with the menu button */
-    _search = new Popover( null );
-    _search.add( box );
-    _search_btn.popover = _search;
+    _search = new Popover() {
+      child = box
+    };
+
+    /* Create the menu button */
+    _search_btn = new MenuButton() {
+      icon_name      = (on_elementary ? "minder-search" : "edit-find-symbolic"),
+      tooltip_markup = Utils.tooltip_with_accel( _( "Search" ), "<Control>f" ),
+      popover        = _search
+    };
+    // TODO - _search_btn.clicked.connect( on_search_change );
+    _header.pack_end( _search_btn );
 
   }
 
@@ -845,20 +846,21 @@ public class MainWindow : Hdy.ApplicationWindow {
       on_search_change();
     });
 
-    var grid = new Grid();
-    grid.margin_top         = 10;
-    grid.column_homogeneous = true;
-    grid.column_spacing     = 10;
-    grid.attach( _search_nodes,       0, 0, 1, 1 );
-    grid.attach( _search_connections, 0, 1, 1, 1 );
-    grid.attach( _search_callouts,    0, 2, 1, 1 );
-    grid.attach( _search_groups,      0, 3, 1, 1 );
-    grid.attach( _search_titles,      1, 0, 1, 1 );
-    grid.attach( _search_notes,       1, 1, 1, 1 );
-    grid.attach( _search_folded,      2, 0, 1, 1 );
-    grid.attach( _search_unfolded,    2, 1, 1, 1 );
-    grid.attach( _search_tasks,       3, 0, 1, 1 );
-    grid.attach( _search_nontasks,    3, 1, 1, 1 );
+    var grid = new Grid() {
+      margin_top         = 10,
+      column_homogeneous = true,
+      column_spacing     = 10
+    };
+    grid.attach( _search_nodes,       0, 0 );
+    grid.attach( _search_connections, 0, 1 );
+    grid.attach( _search_callouts,    0, 2 );
+    grid.attach( _search_groups,      0, 3 );
+    grid.attach( _search_titles,      1, 0 );
+    grid.attach( _search_notes,       1, 1 );
+    grid.attach( _search_folded,      2, 0 );
+    grid.attach( _search_unfolded,    2, 1 );
+    grid.attach( _search_tasks,       3, 0 );
+    grid.attach( _search_nontasks,    3, 1 );
 
     return( grid );
 
@@ -1337,7 +1339,7 @@ public class MainWindow : Hdy.ApplicationWindow {
 
   /* Called whenever the node selection changes in the canvas */
   private void on_current_changed( DrawArea da ) {
-    _zoom_sel.set_sensitive( da.get_current_node() != null );
+    set_action_enabled( "win.action_zoom_selected", (da.get_current_node() != null) );
     _focus_btn.active = da.get_focus_mode();
   }
 

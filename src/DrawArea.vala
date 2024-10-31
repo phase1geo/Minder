@@ -215,7 +215,7 @@ public class DrawArea : Gtk.DrawingArea {
   public signal void loaded();
 
   /* Default constructor */
-  public DrawArea( MainWindow w, GLib.Settings settings, AccelGroup accel_group ) {
+  public DrawArea( MainWindow w, GLib.Settings settings ) {
 
     win = w;
 
@@ -266,12 +266,12 @@ public class DrawArea : Gtk.DrawingArea {
     _select_box = {0, 0, 0, 0, false};
 
     /* Create the popup menus */
-    _node_menu    = new NodeMenu( this, accel_group );
+    _node_menu    = new NodeMenu( win.application, this );
     _conn_menu    = new ConnectionMenu( win.application, this );
     _conns_menu   = new ConnectionsMenu( win.application, this );
-    _empty_menu   = new EmptyMenu( this, accel_group );
+    _empty_menu   = new EmptyMenu( win.application, this );
     _nodes_menu   = new NodesMenu( win.application, this );
-    _groups_menu  = new GroupsMenu( this, accel_group );
+    _groups_menu  = new GroupsMenu( win.application, this );
     _callout_menu = new CalloutMenu( win.application, this );
     _text_menu    = new TextMenu( win.application, this );
 

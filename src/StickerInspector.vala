@@ -34,18 +34,12 @@ public class StickerInspector : Box {
   private FlowBox       _favorites;
   private FlowBox       _matched_box;
   private Image         _dragged_sticker;
-  private double        _motion_x;
-  private double        _motion_y;
-  private Gtk.Menu      _favorite_menu;
-  private Gtk.Menu      _builtin_menu;
-  private Gtk.Menu      _custom_menu;
+  private GLib.Menu     _favorite_menu;
+  private GLib.Menu     _builtin_menu;
+  private GLib.Menu     _custom_menu;
   private FlowBox       _clicked_category;
   private StickerSet    _sticker_set;
   private string        _clicked_sticker;
-
-  public const Gtk.TargetEntry[] DRAG_TARGETS = {
-    {"STRING", TargetFlags.SAME_APP, DragTypes.STICKER}
-  };
 
   public StickerInspector( MainWindow win, GLib.Settings settings ) {
 
@@ -55,79 +49,72 @@ public class StickerInspector : Box {
     _settings = settings;
 
     /* Setup menus */
-    _favorite_menu = new Gtk.Menu();
-    _builtin_menu  = new Gtk.Menu();
-    _custom_menu   = new Gtk.Menu();
+    _favorite_menu = new GLib.Menu();
+    _favorite_menu.append( _( "Remove From Favorites" ), "sticker.action_make_unfavorite" );
 
-    /* Setup favorite menu */
-    var unfavorite = new Gtk.MenuItem.with_label( _( "Remove From Favorites" ) );
-    unfavorite.activate.connect( make_unfavorite );
+    _builtin_menu = new GLib.Menu();
+    _builtin_menu.append( _( "Add To Favorites" ), "sticker.action_make_favorite" );
 
-    _favorite_menu.add( unfavorite );
-    _favorite_menu.show_all();
+    var custom_fav_menu = new GLib.Menu();
+    custom_fav_menu.append( _( "Add To Favorites" ), "sticker.action_make_favorite" );
 
-    /* Setup built-in sticker menu */
-    var bi_favorite = new Gtk.MenuItem.with_label( _( "Add To Favorites" ) );
-    bi_favorite.activate.connect( make_favorite );
+    var custom_del_menu = new GLib.Menu();
+    custom_del_menu.append( _( "Remove Custom Sticker" ), "sticker.action_remove" );
 
-    _builtin_menu.add( bi_favorite );
-    _builtin_menu.show_all();
+    _custom_menu = new GLib.Menu();
+    _custom_menu.append_section( null, custom_fav_menu );
+    _custom_menu.append_section( null, custom_del_menu );
+
+    /* TODO
+    _da.
     _builtin_menu.show.connect(() => {
       bi_favorite.set_sensitive( !is_favorite( _clicked_sticker ) );
     });
 
-    /* Setup custom sticker menu */
-    var cu_favorite = new Gtk.MenuItem.with_label( _( "Add To Favorites" ) );
-    cu_favorite.activate.connect( make_favorite );
-    
-    var cu_remove = new Gtk.MenuItem.with_label( _( "Remove Custom Sticker" ) );
-    cu_remove.activate.connect( handle_remove );
-
-    _custom_menu.add( cu_favorite );
-    _custom_menu.add( new SeparatorMenuItem() );
-    _custom_menu.add( cu_remove );
-    _custom_menu.show_all();
     _custom_menu.show.connect(() => {
       cu_favorite.set_sensitive( !is_favorite( _clicked_sticker ) );
     });
+    *?
 
 
     /*
      Create instruction label (this will always be visible so it will not be
      within the scrolled box
     */
-    var lbl = new Label( _( "Drag and drop sticker onto a node or anywhere else in the map to add a sticker." ) );
-    lbl.wrap      = true;
-    lbl.wrap_mode = Pango.WrapMode.WORD;
+    var lbl = new Label( _( "Drag and drop sticker onto a node or anywhere else in the map to add a sticker." ) ) {
+      wrap      = true,
+      wrap_mode = Pango.WrapMode.WORD
+    };
 
     /* Create search field */
-    _search = new SearchEntry();
-    _search.placeholder_text = _( "Search Stickers" );
+    _search = new SearchEntry() {
+      placeholder_text = _( "Search Stickers" )
+    };
     _search.search_changed.connect( do_search );
 
-    /* Create stack */
-    _stack = new Stack();
-
     /* Create main scrollable pane */
-    var box    = new Box( Orientation.VERTICAL, 5 );
-    var sw     = new ScrolledWindow( null, null );
-    var vp     = new Viewport( null, null );
+    var box = new Box( Orientation.VERTICAL, 20 );
+    var sw  = new ScrolledWindow() {
+      child = box
+    };
+    var vp = (Viewport)sw.child;
     vp.set_size_request( 200, 600 );
-    vp.add( box );
-    sw.add( vp );
 
     /* Create search result flowbox */
     _matched_box = create_icon_box( "" );
 
     var mbox = new Box( Orientation.VERTICAL, 0 );
-    var msw = new ScrolledWindow( null, null );
-    msw.expand = false;
-    msw.get_style_context().add_class( Gtk.STYLE_CLASS_VIEW );
-    msw.add( mbox );
+    mbox.append( _matched_box );
 
-    mbox.pack_start( _matched_box, false, false, 0 );
+    var msw = new ScrolledWindow() {
+      expand = false,
+      child  = mbox
+    };
+    msw.add_css_class( Gtk.STYLE_CLASS_VIEW );
 
-    _stack.add_named( sw, "all" );
+    /* Create stack */
+    _stack = new Stack();
+    _stack.add_named( sw,  "all" );
     _stack.add_named( msw, "matched" );
 
     /* Create the sticker set */
@@ -145,15 +132,12 @@ public class StickerInspector : Box {
       Utils.open_url( "file://" + _sticker_set.sticker_dir() );
     });
 
-    box.pack_start( show, false, false, 0 );
+    box.append( show );
 
     /* Add the scrollable widget to the box */
-    pack_start( lbl,      false, false, 5 );
-    pack_start( _search,  false, false, 5 );
-    pack_start( _stack,   true,  true,  5 );
-
-    /* Make sure all elements are visible */
-    show_all();
+    append( lbl );
+    append( _search );
+    append( _stack );
 
   }
 
@@ -187,7 +171,7 @@ public class StickerInspector : Box {
     var fbox = create_icon_box( name );
     exp.add( fbox );
 
-    box.pack_start( exp, false, false, 20 );
+    box.append( exp );
 
     return( fbox );
 
@@ -210,28 +194,47 @@ public class StickerInspector : Box {
 
   /* Adds an import image button to the given category flowbox */
   private void create_import( FlowBox box ) {
-    var img  = new Image.from_icon_name( "list-add-symbolic", IconSize.LARGE_TOOLBAR );
-    img.name = "";
-    img.set_tooltip_text( _( "Add custom stickers" ) );
+    var img = new Image.from_icon_name( "list-add-symbolic" ) {
+      name = "",
+      tooltip_text = _( "Add custom stickers" )
+    };
     box.add( img );
   }
 
   /* Creates the icon box and sets it up */
   private FlowBox create_icon_box( string category ) {
-    var fbox = new FlowBox();
-    fbox.homogeneous = true;
-    fbox.selection_mode = SelectionMode.NONE;
-    drag_source_set( fbox, Gdk.ModifierType.BUTTON1_MASK, DRAG_TARGETS, Gdk.DragAction.COPY );
-    fbox.drag_begin.connect( on_drag_begin );
-    fbox.drag_data_get.connect( on_drag_data_get );
-    fbox.motion_notify_event.connect((e) => {
-      _motion_x = e.x;
-      _motion_y = e.y;
-      return( true );
+    var fbox = new FlowBox() {
+      homogeneous = true,
+      selection_mode = SelectionMode.NONE
+    };
+
+    var drag = new DragSource() {
+      actions = Gdk.DragAction.COPY
+    };
+    fbox.add_controller( drag );
+
+    drag.prepare.connect((x, y) => {
+
+      // Set icon
+      _dragged_sticker = (Image)fbox.get_child_at_pos( (int)x, (int)y ).get_child();
+      drag.set_icon( _dragged_sticker.paintable, 0, 0 );
+
+      // Set content to the name of the selected sticker
+      var val = Value( typeof( string ) );
+      val.set_string( _dragged_sticker.name );
+      var content = new ContentProvider.for_value( val );
+
+      return( content );
+
     });
-    fbox.button_press_event.connect((e) => {
-      var int_x = (int)e.x;
-      var int_y = (int)e.y;
+
+    var primary_click = new GestureClicked() {
+      button = Gdk.BUTTON_PRIMARY
+    };
+    fbox.add_controller( click );
+    primary_click.pressed.connect((n_press, x, y) => {
+      var int_x = (int)x;
+      var int_y = (int)y;
       if( e.button == Gdk.BUTTON_PRIMARY ) {
         if( fbox.get_child_at_pos( int_x, int_y ).get_child().name == "" ) {
           import_stickers( fbox, category );
@@ -347,21 +350,6 @@ public class StickerInspector : Box {
       }
     }
     delete doc;
-  }
-
-  /* When the sticker drag begins, set the sticker image to the dragged content */
-  private void on_drag_begin( Widget widget, DragContext context ) {
-    var fbox  = (FlowBox)widget;
-    var int_x = (int)_motion_x;
-    var int_y = (int)_motion_y;
-    _dragged_sticker = (Image)fbox.get_child_at_pos( int_x, int_y ).get_child();
-    Gtk.drag_set_icon_pixbuf( context, _dragged_sticker.pixbuf, 0, 0 );
-  }
-
-  private void on_drag_data_get( Widget widget, DragContext context, SelectionData selection_data, uint target_type, uint time ) {
-    if( target_type == DragTypes.STICKER ) {
-      selection_data.set_text( _dragged_sticker.name, -1 );
-    }
   }
 
   /* Performs search */

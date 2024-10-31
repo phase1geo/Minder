@@ -21,55 +21,63 @@
 
 using Gtk;
 
-public class EmptyMenu : Gtk.Menu {
+public class EmptyMenu {
 
-  DrawArea     _da;
-  Gtk.MenuItem _paste;
-  Gtk.MenuItem _root;
-  Gtk.MenuItem _quick;
-  Gtk.MenuItem _selroot;
+  private DrawArea    _da;
+  private PopoverMenu _popover;
+
+  private const GLib.ActionEntry action_entries[] = {
+    { "action_paste",            action_paste },
+    { "action_add_root_node",    action_add_root_node },
+    { "action_add_quick_entry",  action_add_quick_entry },
+    { "action_select_root_node", action_select_root_node },
+  };
 
   /* Default constructor */
-  public EmptyMenu( DrawArea da, AccelGroup accel_group ) {
+  public EmptyMenu( Gtk.Application app, DrawArea da ) {
 
     _da = da;
 
-    _paste = new Gtk.MenuItem();
-    _paste.add( new Granite.AccelLabel( _( "Paste" ), "<Control>v" ) );
-    _paste.activate.connect( paste );
+    var edit_menu = new GLib.Menu();
+    edit_menu.append( _( "Paste" ), "empty.action_paste" );
 
-    _root = new Gtk.MenuItem();
-    _root.add( new Granite.AccelLabel( _( "Add Root Node" ), "Return" ) );
-    _root.activate.connect( add_root_node );
+    var add_menu = new GLib.Menu();
+    add_menu.append( _( "Add Root Node" ),              "empty.action_add_root_node" );
+    add_menu.append( _( "Add Nodes With Quick Entry" ), "empty.action_add_quick_entry" );
 
-    _quick = new Gtk.MenuItem();
-    _quick.add( new Granite.AccelLabel( _( "Add Nodes With Quick Entry" ), "<Control><Shift>e" ) );
-    _quick.activate.connect( add_quick_entry );
+    var sel_menu = new GLib.Menu();
+    sel_menu.append( _( "Select First Root Node" ), "empty.action_select_root_node" );
 
-    var selnode = new Gtk.MenuItem.with_label( _( "Select Node" ) );
-    var selmenu = new Gtk.Menu();
-    selnode.set_submenu( selmenu );
+    var menu = new GLib.Menu();
+    menu.append_section( null, edit_menu );
+    menu.append_section( null, add_menu );
+    menu.append_section( null, sel_menu );
 
-    _selroot = new Gtk.MenuItem();
-    _selroot.add( new Granite.AccelLabel( _( "Root" ), "m" ) );
-    _selroot.activate.connect( select_root_node );
+    // Add the menu actions
+    var actions = new SimpleActionGroup();
+    actions.add_action_entries( action_entries, this );
+    _da.insert_action_group( "paste", actions );
 
-    /* Add the menu items to the menu */
-    add( _paste );
-    add( new SeparatorMenuItem() );
-    add( _root );
-    add( _quick );
-    add( new SeparatorMenuItem() );
-    add( selnode );
-
-    /* Add the items to the selection menu */
-    selmenu.add( _selroot );
-
-    /* Make the menu visible */
-    show_all();
+    // Add keyboard shortcuts
+    app.set_accels_for_action( "empty.action_paste",            { "<Control>y" } );
+    app.set_accels_for_action( "empty.action_add_root_node",    { "Return" } );
+    app.set_accels_for_action( "empty.action_add_quick_entry",  { "<Control<Shift>e" } );
+    app.set_accels_for_action( "empty.action_select_root_node", { "m" } );
 
     /* Make sure that we handle menu state when we are popped up */
     show.connect( on_popup );
+
+  }
+
+  public void show( double x, double y ) {
+
+    // Handle action state
+    on_popup();
+
+    // Display the popover at the given location
+    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
+    _popover.pointing_to = rect;
+    _popover.popup();
 
   }
 
@@ -81,30 +89,29 @@ public class EmptyMenu : Gtk.Menu {
   /* Called when the menu is popped up */
   private void on_popup() {
 
-    /* Set the menu sensitivity */
-    _paste.set_sensitive( _da.node_pasteable() );
-    _root.set_sensitive( !connection_selected() );
-    _selroot.set_sensitive( _da.root_selectable() );
+    _da.set_action_enabled( "empty.action_paste",            _da.node_pasteable() );
+    _da.set_action_enabled( "empty.action_add_root_node",    !connection_selected() );
+    _da.set_action_enabled( "empty.action_select_root_node", _da.root_selectable() );
 
   }
 
   /* Pastes node tree as root from clipboard */
-  private void paste() {
+  private void action_paste() {
     _da.do_paste( false );
   }
 
   /* Creates a new root node */
-  private void add_root_node() {
+  private void action_add_root_node() {
     _da.add_root_node();
   }
 
   /* Adds top-level nodes via the quick entry facility */
-  private void add_quick_entry() {
+  private void action_add_quick_entry() {
     _da.handle_control_E();
   }
 
   /* Selects the current root node */
-  private void select_root_node() {
+  private void action_select_root_node() {
     _da.select_root_node();
   }
 

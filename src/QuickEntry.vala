@@ -24,10 +24,6 @@ using Gdk;
 
 public class QuickEntry : Gtk.Window {
 
-  public static const Gtk.TargetEntry[] DRAG_TARGETS = {
-    {"text/uri-list", 0, DragTypes.URI},
-  };
-
   private DrawArea         _da;
   private TextView         _entry;
   private Button           _apply;
@@ -53,12 +49,24 @@ public class QuickEntry : Gtk.Window {
     var box = new Box( Orientation.VERTICAL, 0 );
 
     /* Create the text entry area */
-    _entry = new TextView();
-    _entry.border_width  = 5;
-    _entry.bottom_margin = 0;
-    _entry.set_wrap_mode( Gtk.WrapMode.WORD );
-    _entry.get_style_context().add_class( "textfield" );
-    _entry.key_press_event.connect( on_keypress );
+    _entry = new TextView() {
+      border_width  = 5,
+      bottom_margin = 0,
+      wrap_mode     = Gtk.WrapMode.WORD
+    };
+    _entry.add_css_class( "textfield" );
+
+    var key = new EventControllerKey();
+    _entry.add_controller( key );
+    _entry.key_pressed.connect( on_keypress );
+
+    var drop = new DropTarget();
+    _entry.add_controller( drop );
+
+    drop.drag_motion.connect( handle_drag_motion );
+    drop.drop.connect( handle_drop );
+
+
     _entry.buffer.insert_text.connect( handle_text_insertion );
     _entry.buffer.create_tag( "node", "background_rgba", Utils.color_from_string( "grey90" ), null );
 
@@ -71,12 +79,13 @@ public class QuickEntry : Gtk.Window {
     });
 
     /* Create the scrolled window for the text entry area */
-    var sw = new ScrolledWindow( null, null );
-    sw.add( _entry );
+    var sw = new ScrolledWindow() {
+      child = _entry
+    };
 
-    var helprev    = new Revealer();
-    var helpgrid   = new Grid();
-    helpgrid.border_width = 5;
+    var helpgrid = new Grid() {
+      border_width = 5
+    };
     var help_title = make_help_label( _( "Help for inputting node information:" ) + "\n" );
     var help_line  = make_help_label( "  - " + _( "Each line of text describes either the title of a node or note information for a node." ) );
     var help_tab0  = make_help_label( "  - <b>" + _( "Tab" ) + "</b>:" );
@@ -109,67 +118,75 @@ public class QuickEntry : Gtk.Window {
     helpgrid.attach( help_utsk1, 1, 7 );
     helpgrid.attach( help_ctsk0, 0, 8 );
     helpgrid.attach( help_ctsk1, 1, 8 );
-    helprev.reveal_child = false;
-    helprev.add( helpgrid );
 
-    var bbox = new Box( Orientation.HORIZONTAL, 5 );
-    bbox.border_width = 5;
+    var helprev = new Revealer() {
+      halign       = Align.FILL,
+      valign       = Align.END,
+      reveal_child = false,
+      child        = helpgrid
+    };
 
-    var info = new Button.from_icon_name( "dialog-information-symbolic", IconSize.BUTTON );
-    info.relief = ReliefStyle.NONE;
+    var info = new Button.from_icon_name( "dialog-information-symbolic" ) {
+      halign = Align.START,
+      has_frame = false
+    };
     info.clicked.connect(() => {
       helprev.reveal_child = !helprev.reveal_child;
     });
-    bbox.pack_start( info, false, false );
+    bbox.append( info );
 
     if( replace ) {
-      _apply = new Button.with_label( _( "Replace" ) );
-      _apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+      _apply = new Button.with_label( _( "Replace" ) ) {
+        halign = Align.END
+      };
+      _apply.add_css_class( STYLE_CLASS_SUGGESTED_ACTION );
       _apply.clicked.connect( () => {
         if( handle_replace() ) {
           close();
         } else {
           helprev.reveal_child = true;
-          help_node0.get_style_context().add_class( "highlighted" );
-          help_node1.get_style_context().add_class( "highlighted" );
+          help_node0.add_css_class( "highlighted" );
+          help_node1.add_css_class( "highlighted" );
         }
       });
       if( !da.is_node_selected() ) _apply.set_sensitive( false );
-      bbox.pack_end( _apply, false, false );
     } else {
-      _apply = new Button.with_label( _( "Insert" ) );
-      _apply.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+      _apply = new Button.with_label( _( "Insert" ) ) {
+        halign = Align.END
+      };
+      _apply.add_css_class( STYLE_CLASS_SUGGESTED_ACTION );
       _apply.clicked.connect(() => {
         if( handle_insert() ) {
           close();
         } else {
           helprev.reveal_child = true;
-          help_node0.get_style_context().add_class( "highlighted" );
-          help_node1.get_style_context().add_class( "highlighted" );
+          help_node0.add_css_class( "highlighted" );
+          help_node1.add_css_class( "highlighted" );
         }
       });
-      bbox.pack_end( _apply, false, false );
     }
 
-    var cancel = new Button.with_label( _( "Cancel" ) );
+    var cancel = new Button.with_label( _( "Cancel" ) ) {
+      halign = Align.END
+    };
     cancel.clicked.connect(() => {
       close();
     });
-    bbox.pack_end( cancel, false, false );
 
-    box.pack_start( sw,      true,  true );
-    box.pack_end(   bbox,    false, true );
-    box.pack_end(   helprev, false, true );
+    var bbox = new Box( Orientation.HORIZONTAL, 5 ) {
+      halign       = Align.FILL,
+      valign       = Align.END,
+      border_width = 5
+    };
+    bbox.append( info );
+    bbox.append( _apply );
+    bbox.append( cancel );
 
-    add( box );
+    box.append( sw );
+    box.append( bbox );
+    box.append( helprev );
 
-    show_all();
-
-    /* Set ourselves up to be a drag target */
-    Gtk.drag_dest_set( _entry, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
-
-    _entry.drag_motion.connect( handle_drag_motion );
-    _entry.drag_data_received.connect( handle_drag_data_received );
+    append( box );
 
   }
 
@@ -206,7 +223,7 @@ public class QuickEntry : Gtk.Window {
   }
 
   /* Called whenever we drag something over the canvas */
-  private bool handle_drag_motion( Gdk.DragContext ctx, int x, int y, uint t ) {
+  private DragAction? handle_drag_motion( double x, double y ) {
 
     if( _node_stack == null ) {
       _node_stack = new Array<NodeHier>();
@@ -232,16 +249,20 @@ public class QuickEntry : Gtk.Window {
         _entry.buffer.apply_tag_by_name( "node", first, last );
       }
 
+      return( Gdk.DragAction.COPY );
+
     }
 
-    return( _node_stack != null );
+    return( null );
 
   }
 
   /* Called when something is dropped on the DrawArea */
-  private void handle_drag_data_received( Gdk.DragContext ctx, int x, int y, Gtk.SelectionData data, uint info, uint t ) {
+  private bool handle_drop( Value val, double x, double y ) {
 
-    if( info == DragTypes.URI ) {
+    stdout.printf( "In handle_drop, val.type_name: %s\n", val.type_name );
+
+    if( val.type_name == "string" ) {
 
       TextIter iter;
       Node     node;
@@ -277,8 +298,6 @@ public class QuickEntry : Gtk.Window {
       }
 
     }
-
-    Gtk.drag_finish( ctx, true, false, t );
 
     clear_node_tag();
 
@@ -395,19 +414,20 @@ public class QuickEntry : Gtk.Window {
   }
 
   /* Handles any keypresses in the quick entry text field */
-  private bool on_keypress( EventKey e ) {
+  private bool on_keypress( int keyval, int keycode, ModifierType state ) {
 
-    var control = (bool)(e.state & ModifierType.CONTROL_MASK);
-    var shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
+    var control = (bool)(state & ModifierType.CONTROL_MASK);
+    var shift   = (bool)(state & ModifierType.SHIFT_MASK);
+    var ch      = (unichar)keyval;
 
-    switch( e.keyval ) {
+    switch( keyval ) {
       case Key.space        :  return( handle_space() );
       case Key.Return       :  return( handle_return( control ) );
       case Key.Tab          :  return( handle_tab( false ) );
       case Key.ISO_Left_Tab :  return( handle_tab( true ) );
       default             :
-        if( e.str.get_char().isprint() ) {
-          return( handle_printable( e.str ) );
+        if( ch.isprint() ) {
+          return( handle_printable( ch.to_string() ) );
         }
         break;
     }

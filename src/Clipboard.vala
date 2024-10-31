@@ -42,7 +42,8 @@ public class MinderClipboard {
     clipboard.set_texture( texture );
   }
 
-  /* Copies the current selected node list to the clipboard */
+  //-------------------------------------------------------------
+  // Copies the current selected node list to the clipboard
   public static void copy_nodes( DrawArea da ) {
 
     Array<Node>       nodes;
@@ -61,13 +62,29 @@ public class MinderClipboard {
 
   }
 
-  /* Returns true if there are any nodes pasteable in the clipboard */
+  //-------------------------------------------------------------
+  // Returns true if there are any nodes pasteable in the clipboard
   public static bool node_pasteable() {
     var clipboard = Display.get_default().get_clipboard();
     return( clipboard.get_formats().contain_mime_type( NODES_TARGET_NAME ) );
   }
 
-  /* Called to paste current item in clipboard to the given DrawArea */
+  //-------------------------------------------------------------
+  // Returns true if an image is in the clipboard.
+  public static bool image_pasteable() {
+    var clipboard = Display.get_default().get_clipboard();
+    return( clipboard.get_formats().contain_mime_type( "image/png" ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if text is in the clipboard.
+  public static bool text_pastable() {
+    var clipboard = Display.get_default().get_clipboard();
+    return( clipboard.get_formats().contain_gtype( Type.STRING ) );
+  }
+
+  //-------------------------------------------------------------
+  // Called to paste current item in clipboard to the given DrawArea
   public static void paste( DrawArea da, bool shift ) {
 
     var clipboard   = Display.get_default().get_clipboard();
@@ -99,7 +116,8 @@ public class MinderClipboard {
 
   }
 
-  /* Returns a node link to the first node in the clipboard */
+  //-------------------------------------------------------------
+  // Returns a node link to the first node in the clipboard
   public static void paste_node_link( DrawArea da ) {
 
     var clipboard = Display.get_default().get_clipboard();
@@ -117,7 +135,8 @@ public class MinderClipboard {
 
   }
 
-  /* Pastes a node link or text into the given NoteView widget */
+  //-------------------------------------------------------------
+  // Pastes a node link or text into the given NoteView widget
   public static void paste_into_note( NoteView note ) {
 
     var clipboard = Display.get_default().get_clipboard();

@@ -56,7 +56,7 @@ public class CalloutMenu {
 
     // Add keyboard shortcuts
     app.set_accels_for_action( "callout.action_delete", { "Delete" } );
-    app.set_accels_for_action( "callout.action_delete", { "<Shift>o" } );
+    app.set_accels_for_action( "callout.action_select_node", { "<Shift>o" } );
 
   }
 
@@ -72,12 +72,12 @@ public class CalloutMenu {
   }
 
   /* Deletes the current group */
-  private void handle_delete() {
+  private void action_delete() {
     _da.remove_callout();
   }
 
   /* Selects the top-most nodes in each selected node group */
-  private void handle_select_node() {
+  private void action_select_node() {
     _da.select_callout_node();
   }
 
