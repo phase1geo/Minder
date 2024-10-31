@@ -281,27 +281,6 @@ public class Utils {
     return( src.is_readonly() );
   }
 
-<<<<<<< HEAD
-=======
-  /* Show the specified popover */
-  public static void show_popover( Popover popover ) {
-#if GTK322
-    popover.popup();
-#else
-    popover.show();
-#endif
-  }
-
-  /* Hide the specified popover */
-  public static void hide_popover( Popover popover ) {
-#if GTK322
-    popover.popdown();
-#else
-    popover.hide();
-#endif
-  }
-
->>>>>>> origin/gtk4
   public static void set_chooser_folder( FileChooser chooser ) {
     var dir = Minder.settings.get_string( "last-directory" );
     if( dir != "" ) {

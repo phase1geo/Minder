@@ -35,30 +35,16 @@ subdir('po')
 subdir('src')
 subdir('tests')
 
-<<<<<<< HEAD
-=======
-# If the valac version is greater than or equal to 0.48, add a define for cross-compile purposes
-if meson.get_compiler('vala').version().version_compare('>=0.48.0')
-  add_project_arguments(['--define=VALAC048'], language: 'vala')
-  message('Using VALAC048')
-endif
-
->>>>>>> origin/gtk4
 # Add the math and Markdown libraries
 cc = meson.get_compiler('c')
 math_dep = cc.find_library('m', required: false)
 
-<<<<<<< HEAD
 # Check libmarkdown2 dependency
 libmarkdown = dependency('libmarkdown', required: true)
 markdown_vapi = '/vapi/libmarkdown.vapi'
 if libmarkdown.version().version_compare('>=3.0')
   add_project_arguments(['--define=MD30'], language: 'vala')
 endif
-=======
-# Check the granite dependency
-granite = dependency('granite-7', version: '>=7.0', required: true)
->>>>>>> origin/gtk4
 
 add_project_arguments([
         '--vapidir', join_paths(meson.current_source_dir(), 'vapi'),
@@ -72,11 +58,7 @@ dependencies = [
     dependency('glib-2.0'),
     dependency('cairo'),
     dependency('gee-0.8'),
-<<<<<<< HEAD
     dependency('granite-7'),
-=======
-    granite,
->>>>>>> origin/gtk4
     dependency('gtk4'),
     dependency('libxml-2.0'),
     dependency('libarchive'),
