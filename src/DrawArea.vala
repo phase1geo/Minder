@@ -32,15 +32,10 @@ public enum DragTypes {
 
 public class DrawArea : Gtk.DrawingArea {
 
-  private const CursorType move_cursor = CursorType.HAND1;
-  private const CursorType url_cursor  = CursorType.HAND2;
-  private const CursorType text_cursor = CursorType.XTERM;
-  private const CursorType pan_cursor  = CursorType.FLEUR;
-
-  public static const Gtk.TargetEntry[] DRAG_TARGETS = {
-    {"text/uri-list", 0,                    DragTypes.URI},
-    {"STRING",        TargetFlags.SAME_APP, DragTypes.STICKER}
-  };
+  private static Cursor? move_cursor = null;
+  private static Cursor? url_cursor  = null;
+  private static Cursor? text_cursor = null;
+  private static Cursor? pan_cursor  = null;
 
   private struct SelectBox {
     double x;
@@ -224,6 +219,14 @@ public class DrawArea : Gtk.DrawingArea {
 
     win = w;
 
+    // Create the cursors if they haven't been created yet
+    if( move_cursor != null ) {
+      move_cursor = new Cursor.from_name( "move",     null );
+      url_cursor  = new Cursor.from_name( "pointer",  null );
+      text_cursor = new Cursor.from_name( "text",     null );
+      pan_cursor  = new Cursor.from_name( "grabbing", null );
+    }
+
     _doc      = new Document( this );
     _settings = settings;
 
@@ -264,13 +267,13 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Create the popup menus */
     _node_menu    = new NodeMenu( this, accel_group );
-    _conn_menu    = new ConnectionMenu( this, accel_group );
-    _conns_menu   = new ConnectionsMenu( this, accel_group );
+    _conn_menu    = new ConnectionMenu( win.application, this );
+    _conns_menu   = new ConnectionsMenu( win.application, this );
     _empty_menu   = new EmptyMenu( this, accel_group );
-    _nodes_menu   = new NodesMenu( this, accel_group );
+    _nodes_menu   = new NodesMenu( win.application, this );
     _groups_menu  = new GroupsMenu( this, accel_group );
-    _callout_menu = new CalloutMenu( this, accel_group );
-    _text_menu    = new TextMenu( this, accel_group );
+    _callout_menu = new CalloutMenu( win.application, this );
+    _text_menu    = new TextMenu( win.application, this );
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
@@ -479,7 +482,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Sets the cursor of the drawing area */
-  private void set_cursor( CursorType type ) {
+  private void set_cursor( Cursor type ) {
 
     var win    = get_window();
     var cursor = win.get_cursor();
@@ -2647,13 +2650,13 @@ public class DrawArea : Gtk.DrawingArea {
       var url = "";
       if( current_sticker != null ) {
         if( current_sticker.is_within_resizer( _scaled_x, _scaled_y ) ) {
-          set_cursor( CursorType.SB_H_DOUBLE_ARROW );
+          set_cursor( Cursor.SB_H_DOUBLE_ARROW );
           return( false );
         }
       }
       if( current_callout != null ) {
         if( current_callout.is_within_resizer( _scaled_x, _scaled_y ) ) {
-          set_cursor( CursorType.SB_H_DOUBLE_ARROW );
+          set_cursor( Cursor.SB_H_DOUBLE_ARROW );
           return( false );
         }
       }
@@ -2694,20 +2697,20 @@ public class DrawArea : Gtk.DrawingArea {
             _attach_node = match;
             set_node_mode( _attach_node, NodeMode.ATTACHABLE );
           } else if( match.is_within_task( _scaled_x, _scaled_y ) ) {
-            set_cursor( CursorType.HAND2 );
+            set_cursor( Cursor.HAND2 );
             set_tooltip_markup( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
           } else if( match.is_within_note( _scaled_x, _scaled_y ) ) {
             set_tooltip_markup( Utils.prepare_note_markup( match.note ) );
           } else if( match.is_within_fold( _scaled_x, _scaled_y ) ) {
-            set_cursor( CursorType.HAND2 );
+            set_cursor( Cursor.HAND2 );
             if( match.folded ) {
               set_tooltip_markup( prepare_folded_count_markup( match ) );
             }
           } else if( match.is_within_linked_node( _scaled_x, _scaled_y ) ) {
-            set_cursor( CursorType.HAND2 );
+            set_cursor( Cursor.HAND2 );
             set_tooltip_markup( Utils.prepare_note_markup( match.linked_node.get_tooltip( this ) ) );
           } else if( match.is_within_resizer( _scaled_x, _scaled_y ) ) {
-            set_cursor( CursorType.SB_H_DOUBLE_ARROW );
+            set_cursor( Cursor.SB_H_DOUBLE_ARROW );
             if( match.image == null ) {
               set_tooltip_markup( _( "Drag to resize node" ) );
             } else {

@@ -79,22 +79,6 @@ public class Utils {
   }
 
   /*
-   Adds the given accelerator label to the given menu item.
-  */
-  public static void add_accel_label( Gtk.MenuItem item, uint key, Gdk.ModifierType mods ) {
-
-    /* Convert the menu item to an accelerator label */
-    AccelLabel? label = item.get_child() as AccelLabel;
-
-    if( label == null ) return;
-
-    /* Add the accelerator to the label */
-    label.set_accel( key, mods );
-    label.refetch();
-
-  }
-
-  /*
    Checks the given string to see if it is a match to the given pattern.  If
    it is, the matching portion of the string appended to the list of matches.
 
@@ -295,33 +279,6 @@ public class Utils {
     src.set_location( file );
     src.check_file_on_disk();
     return( src.is_readonly() );
-  }
-
-  /* Show the specified popover */
-  public static void show_popover( Popover popover ) {
-#if GTK322
-    popover.popup();
-#else
-    popover.show();
-#endif
-  }
-
-  /* Hide the specified popover */
-  public static void hide_popover( Popover popover ) {
-#if GTK322
-    popover.popdown();
-#else
-    popover.hide();
-#endif
-  }
-
-  /* Pops up the given menu */
-  public static void popup_menu( Gtk.Menu menu, Event e ) {
-#if GTK322
-    menu.popup_at_pointer( e );
-#else
-    menu.popup( null, null, null, e.button, e.time );
-#endif
   }
 
   public static void set_chooser_folder( FileChooser chooser ) {

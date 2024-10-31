@@ -24,7 +24,7 @@ using Gdk;
 using GLib;
 using Gee;
 
-public class Minder : Granite.Application {
+public class Minder : Gtk.Application {
 
   private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
 
@@ -33,7 +33,7 @@ public class Minder : Granite.Application {
   private        GLib.Settings       touch_settings;
 
   public  static GLib.Settings settings;
-  public  static string        version = "1.17";
+  public  static string        version = "2.0";
 
   public Minder () {
 

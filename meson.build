@@ -1,5 +1,5 @@
 project('com.github.phase1geo.minder', ['vala', 'c'],
-    version : '1.17.0',
+    version : '2.0.0',
     license: 'GPL-3.0'
 )
 
@@ -35,18 +35,6 @@ subdir('po')
 subdir('src')
 subdir('tests')
 
-# If the GTK version is higher than 3.22, add a define to indicate that
-gtk_dep = dependency('gtk+-3.0')
-if gtk_dep.version().version_compare('>=3.22.0')
-  add_project_arguments(['--define=GTK322'], language: 'vala')
-endif
-
-# If the valac version is greater than or equal to 0.48, add a define for cross-compile purposes
-if meson.get_compiler('vala').version().version_compare('>=0.48.0')
-  add_project_arguments(['--define=VALAC048'], language: 'vala')
-  message('Using VALAC048')
-endif
-
 # Add the math and Markdown libraries
 cc = meson.get_compiler('c')
 math_dep = cc.find_library('m', required: false)
@@ -56,15 +44,6 @@ libmarkdown = dependency('libmarkdown', required: true)
 markdown_vapi = '/vapi/libmarkdown.vapi'
 if libmarkdown.version().version_compare('>=3.0')
   add_project_arguments(['--define=MD30'], language: 'vala')
-endif
-
-# Check the granite dependency
-granite = dependency('granite', version: '>=6.0', required: false)
-if granite.found()
-  add_project_arguments(['--define=GRANITE_6_OR_LATER'], language: 'vala')
-else
-  granite = dependency('granite', required: true)
-  message('Using older version of granite')
 endif
 
 add_project_arguments([
@@ -79,12 +58,11 @@ dependencies = [
     dependency('glib-2.0'),
     dependency('cairo'),
     dependency('gee-0.8'),
-    granite,
-    dependency('gtk+-3.0'),
+    dependency('granite-7'),
+    dependency('gtk4'),
     dependency('libxml-2.0'),
     dependency('libarchive'),
-    dependency('gtksourceview-4'),
-    dependency('libhandy-1'),
+    dependency('gtksourceview-5'),
     dependency('json-glib-1.0'),
     libmarkdown,
     math_dep
@@ -101,6 +79,8 @@ e = executable('com.github.phase1geo.minder',
     install : true
 )
 
-#test('tests', e, args : ['--run-tests'])
-
-meson.add_install_script('meson/post_install.py')
+gnome.post_install(
+  glib_compile_schemas: true,
+  gtk_update_icon_cache: true,
+  update_desktop_database: true
+)

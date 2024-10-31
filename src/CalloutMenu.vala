@@ -21,40 +21,63 @@
 
 using Gtk;
 
-public class CalloutMenu : Gtk.Menu {
+public class CalloutMenu {
 
-  DrawArea _da;
+  private DrawArea    _da;
+  private PopoverMenu _popup;
 
-  /* Default constructor */
-  public CalloutMenu( DrawArea da, AccelGroup accel_group ) {
+  private const GLib.ActionEntry action_entries[] = {
+    { "action_delete",      action_delete },
+    { "action_select_node", action_select_node },
+  };
+
+  //-------------------------------------------------------------
+  // Default constructor
+  public CalloutMenu( Gtk.Application app, DrawArea da ) {
 
     _da = da;
 
-    var del = new Gtk.MenuItem();
-    del.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
-    del.activate.connect( delete_callout );
+    var del_menu = new GLib.Menu();
+    del_menu.append( _( "Delete" ), "callout.action_delete" );
 
-    var selnode = new Gtk.MenuItem();
-    selnode.add( new Granite.AccelLabel( _( "Select Node" ), "<Shift>o" ) );
-    selnode.activate.connect( select_node );
+    var sel_menu = new GLib.Menu();
+    sel_menu.append( _( "Select Node" ), "callout.action_select_node" );
 
-    /* Add the menu items to the menu */
-    add( del );
-    add( new SeparatorMenuItem() );
-    add( selnode );
+    var menu = new GLib.Menu();
+    menu.append_section( null, del_menu );
+    menu.append_section( null, sel_menu );
 
-    /* Make the menu visible */
-    show_all();
+    _popup = new PopoverMenu.from_model( menu );
+
+    // Add the menu actions
+    var actions = new SimpleActionGroup();
+    actions.add_action_entries( action_entries, this );
+    _da.insert_action_group( "callout", actions );
+
+    // Add keyboard shortcuts
+    app.set_accels_for_action( "callout.action_delete", { "Delete" } );
+    app.set_accels_for_action( "callout.action_delete", { "<Shift>o" } );
+
+  }
+
+  //-------------------------------------------------------------
+  // Shows the callout popup menu at the given location.
+  public void show( double x, double y ) {
+
+    /* Display the popover at the given location */
+    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
+    _popover.pointing_to = rect;
+    _popover.popup();
 
   }
 
   /* Deletes the current group */
-  private void delete_callout() {
+  private void handle_delete() {
     _da.remove_callout();
   }
 
   /* Selects the top-most nodes in each selected node group */
-  private void select_node() {
+  private void handle_select_node() {
     _da.select_callout_node();
   }
 
