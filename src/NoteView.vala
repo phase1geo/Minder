@@ -26,15 +26,15 @@ public class CompletionProvider : SourceCompletionProvider, Object {
   private MainWindow                      _win;
   private string                          _name;
   private GLib.List<SourceCompletionItem> _proposals;
-  private SourceBuffer                    _buffer;
+  private GtkSource.Buffer                _buffer;
 
   /* Constructor */
-  public CompletionProvider( MainWindow win, SourceBuffer buffer, string name, GLib.List<SourceCompletionItem> proposals ) {
+  public CompletionProvider( MainWindow win, GtkSource.Buffer buffer, string name, GLib.List<GtkSource.CompletionItem> proposals ) {
     _win       = win;
     _buffer    = buffer;
     _name      = name;
-    _proposals = new GLib.List<SourceCompletionItem>();
-    foreach( SourceCompletionItem item in proposals ) {
+    _proposals = new GLib.List<GtkSource.CompletionItem>();
+    foreach( GtkSource.CompletionItem item in proposals ) {
       _proposals.append( item );
     }
   }
@@ -57,7 +57,7 @@ public class CompletionProvider : SourceCompletionProvider, Object {
 
   }
 
-  public override bool match( Gtk.SourceCompletionContext ctx ) {
+  public override bool match( GtkSource.CompletionContext ctx ) {
     Gtk.TextIter iter;
     if( find_start_iter( out iter ) && _win.settings.get_boolean( "enable-unicode-input" ) ) {
       return( true );
@@ -65,13 +65,13 @@ public class CompletionProvider : SourceCompletionProvider, Object {
     return( false );
   }
 
-  public override void populate( SourceCompletionContext context ) {
+  public override void populate( GtkSource.CompletionContext context ) {
     TextIter start, end;
     if( find_start_iter( out start ) ) {
       _buffer.get_iter_at_offset( out end, _buffer.cursor_position );
       var text = _buffer.get_text( start, end, false );
-      var proposals = new GLib.List<SourceCompletionItem>();
-      foreach( SourceCompletionItem item in _proposals ) {
+      var proposals = new GLib.List<GtkSource.CompletionItem>();
+      foreach( GtkSource.CompletionItem item in _proposals ) {
         if( item.get_label().has_prefix( text ) ) {
           proposals.append( item );
         }
@@ -80,16 +80,16 @@ public class CompletionProvider : SourceCompletionProvider, Object {
     }
   }
 
-  public override bool get_start_iter( SourceCompletionContext ctx, SourceCompletionProposal proposal, out TextIter iter ) {
+  public override bool get_start_iter( GtkSource.CompletionContext ctx, GtkSource.CompletionProposal proposal, out TextIter iter ) {
     return( find_start_iter( out iter ) );
   }
 
-  public bool activate_proposal( Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter ) {
+  public bool activate_proposal( GtkSource.CompletionProposal proposal, Gtk.TextIter iter ) {
     return( false );
   }
 
-  public Gtk.SourceCompletionActivation get_activation () {
-    return( Gtk.SourceCompletionActivation.INTERACTIVE | Gtk.SourceCompletionActivation.USER_REQUESTED );
+  public GtkSource.CompletionActivation get_activation () {
+    return( GtkSource.CompletionActivation.INTERACTIVE | GtkSource.CompletionActivation.USER_REQUESTED );
   }
 
 }
@@ -98,7 +98,7 @@ public class CompletionProvider : SourceCompletionProvider, Object {
  This class is a slightly modified version of Lains Quilter SourceView.vala
  file.  The above header was kept in tact to indicate this.
 */
-public class NoteView : Gtk.SourceView {
+public class NoteView : GtkSource.View {
 
   private class UrlPos {
     public string url;
@@ -122,19 +122,20 @@ public class NoteView : Gtk.SourceView {
     }
   }
 
-  private static bool    _path_init = false;
-  private int            _last_lnum = -1;
-  private string?        _last_url  = null;
-  private int?           _last_link = null;
-  private Array<UrlPos>  _last_urls;
-  private Array<LinkPos> _last_links;
-  private int            _last_x;
-  private int            _last_y;
-  private Regex?         _url_re;
-  private Regex?         _link_re;
-  private Tooltip        _tooltip;
-  public  SourceStyle    _srcstyle  = null;
-  public  SourceBuffer   _buffer;
+  private static bool      _path_init = false;
+  private int              _last_lnum = -1;
+  private string?          _last_url  = null;
+  private int?             _last_link = null;
+  private Array<UrlPos>    _last_urls;
+  private Array<LinkPos>   _last_links;
+  private int              _last_x;
+  private int              _last_y;
+  private Regex?           _url_re;
+  private Regex?           _link_re;
+  private Tooltip          _tooltip;
+  private bool             _control   = false;
+  public  GtkSource.Style  _srcstyle  = null;
+  public  GtkSource.Buffer _buffer;
 
   public string text {
     set {
@@ -178,14 +179,14 @@ public class NoteView : Gtk.SourceView {
 
     get_style_context().add_class( "textfield" );
 
-    var manager = Gtk.SourceLanguageManager.get_default();
+    var manager = GtkSource.LanguageManager.get_default();
     if( !_path_init ) {
       lang_paths = manager.get_search_path();
       lang_paths += lang_path;
       manager.set_search_path( lang_paths );
     }
 
-    var style_manager = Gtk.SourceStyleSchemeManager.get_default();
+    var style_manager = GtkSource.StyleSchemeManager.get_default();
     if( !_path_init ) {
       style_manager.prepend_search_path( style_path );
     }
@@ -195,9 +196,10 @@ public class NoteView : Gtk.SourceView {
     var language = manager.get_language( get_default_language() );
     var style    = style_manager.get_scheme( get_default_scheme() );
 
-    _buffer = new Gtk.SourceBuffer.with_language( language );
-    _buffer.highlight_syntax = true;
-    _buffer.set_max_undo_levels( 20 );
+    _buffer = new GtkSource.Buffer.with_language( language ) {
+      highlight_syntax = true,
+      max_undo_levels  = 20
+    };
     _buffer.set_style_scheme( style );
     set_buffer( _buffer );
 
@@ -206,11 +208,23 @@ public class NoteView : Gtk.SourceView {
     _buffer.changed.connect (() => {
       modified = true;
     });
-    this.focus_in_event.connect( on_focus );
-    this.motion_notify_event.connect( on_motion );
-    this.button_press_event.connect( on_press );
-    this.key_press_event.connect( on_keypress );
-    this.key_release_event.connect( on_keyrelease );
+
+    var focus = new EventControllerFocus();
+    add_controller( focus );
+    focus.enter.connect( on_focus );
+
+    var motion = new EventControllerMotion();
+    add_controller( motion );
+    motion.motion.connect( on_motion );
+
+    var click = new GestureClick();
+    add_controller( click );
+    click.pressed.connect( on_press );
+
+    var key = new EventControllerKey();
+    add_controller( key );
+    key.key_pressed.connect( on_keypress );
+    key.key_released.connect( on_keyrelease );
 
     expand      = true;
     has_focus   = true;
@@ -373,57 +387,52 @@ public class NoteView : Gtk.SourceView {
    If the cursor is moved in the text viewer when the control key is held down,
    check to see if the cursor is over a URL.
   */
-  private bool on_motion( EventMotion e ) {
-    _last_x = (int)e.x;
-    _last_y = (int)e.y;
-    if( (bool)(e.state & ModifierType.CONTROL_MASK) ) {
-      var int_x = (int)e.x;
-      var int_y = (int)e.y;
-      enable_url_checking( int_x, int_y );
-      return( true );
+  private void on_motion( double x, double y ) {
+    _last_x = (int)x;
+    _last_y = (int)y;
+    if( _control ) {
+      enable_url_checking( _last_x, _last_y );
+    } else {
+      disable_url_checking();
     }
-    disable_url_checking();
-    return( false );
   }
 
   /*
    Called when the user clicks with the mouse.  If the cursor is over a URL,
    open the URL in an external application.
   */
-  private bool on_press( EventButton e ) {
-    if( (bool)(e.state & ModifierType.CONTROL_MASK) ) {
-      var int_x = (int)e.x;
-      var int_y = (int)e.y;
+  private void on_press( int n_press, double x, double y ) {
+    if( _control ) {
+      var int_x = (int)x;
+      var int_y = (int)y;
       enable_url_checking( int_x, int_y );
       if( _last_url != null ) {
-        stdout.printf( "Opening URL: %s\n", _last_url );
         Utils.open_url( _last_url );
       } else if( _last_link != null ) {
         node_link_clicked( _last_link );
       }
-      return( true );
     }
-    return( false );
   }
 
-  private bool on_keypress( EventKey e ) {
-    if( e.keyval == 65507 ) {
+  private void on_keypress( int keyval, int keycode, ModifierType state ) {
+    if( keyval == 65507 ) {
+      _control = true;
       enable_url_checking( _last_x, _last_y );
     }
     return( false );
   }
 
-  private bool on_keyrelease( EventKey e ) {
-    if( e.keyval == 65507 ) {
+  private bool on_keyrelease( int keyval, int keycode, ModifierType state ) {
+    if( keyval == 65507 ) {
+      _control = false;
       disable_url_checking();
     }
     return( false );
   }
 
   /* Clears the stored URL information */
-  private bool on_focus( EventFocus e ) {
+  private void on_focus() {
     clear();
-    return( false );
   }
 
   /* Override the built-int paste operation */

@@ -24,7 +24,7 @@ using Gtk;
 public class ConnectionMenu {
 
   private DrawArea     _da;
-  private PopoverMenu  _popup;
+  private PopoverMenu  _popover;
 
   private const GLib.ActionEntry action_entries[] = {
     { "action_delete",                 action_delete },
@@ -71,7 +71,7 @@ public class ConnectionMenu {
     menu.append_section( null, edit_menu );
     menu.append_submenu( null, sel_menu );
 
-    _popup = new PopoverMenu.from_model( menu );
+    _popover = new PopoverMenu.from_model( menu );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();

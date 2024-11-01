@@ -40,8 +40,6 @@ public class GroupsMenu {
 
     _da = da;
 
-    add( select );
-
     var del_menu = new GLib.Menu();
     del_menu.append( _( "Delete" ), "groups.action_delete_groups" );
 
