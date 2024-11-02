@@ -293,13 +293,27 @@ public class Utils {
     Minder.settings.set_string( "last-directory", dir );
   }
 
-  /* Returns the child widget at the given index of the parent widget (or null if one does not exist) */
+  //-------------------------------------------------------------
+  // Returns the child widget at the given index of the parent
+  // widget (or null if one does not exist)
   public static Widget? get_child_at_index( Widget parent, int index ) {
     var child = parent.get_first_child();
     while( (child != null) && (index-- > 0) ) {
       child = child.get_next_sibling();
     }
     return( child );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the index of the given child within the parent
+  public static int get_child_index( Widget parent, Widget child ) {
+    var index = 0;
+    var current_child = parent.get_first_child();
+    while( (current_child != null) && (child != current_child) ) {
+      current_child = current_child.get_next_sibling();
+      index++;
+    }
+    return( (current_child == null) ? -1 : index );
   }
 
 }

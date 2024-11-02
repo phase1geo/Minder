@@ -224,13 +224,14 @@ public class MapInspector : Box {
       use_markup = true
     };
 
-    var menu = new GLib.Menu();
+    _layout = new ModeButtons() {
+      halign = Align.END
+    };
+    _layout.changed.connect( set_layout );
+
     for( int i=0; i<icons.length; i++ ) {
-      var mi   = new GLib.MenuItem( names.index( i ), "map.action_set_layout(%d)".printf( i ) );
-      var icon = new ThemedIcon( icons.index( i ) );
-      mi.set_icon( icon );
-      menu.append_item( mi );
-    }j
+      _layout.add_button( icons.index( i ), names.index( i ) );
+    }
 
     // Create the layouts menu button
     _layout = new MenuButton() {
@@ -248,27 +249,22 @@ public class MapInspector : Box {
 
   }
 
-  private void action_set_layout( SimpleAction action, Variant? variant ) {
+  //-------------------------------------------------------------
+  // Handles changes to the selected layout.
+  private void set_layout( int index ) {
 
-    if( variant != null ) {
+    var icons = new Array<string>();
+    var names = new Array<string>();
+    _da.layouts.get_icons( ref icons );
+    _da.layouts.get_names( ref names );
 
-      var index = variant.get_int32();
-
-      var icons = new Array<string>();
-      var names = new Array<string>();
-      _da.layouts.get_icons( ref icons );
-      _da.layouts.get_names( ref names );
-
-      if( index < names.length ) {
-        var name   = names.index( index );
-        var layout = _da.layouts.get_layout( name );
-        var node   = _da.get_current_node();
-        _da.set_layout( name, ((node == null) ? null : node.get_root()) );
-        _balance.set_sensitive( layout.balanceable );
-        _alignment_revealer.reveal_child = (name == _( "Manual" ));
-        _layout.icon_name = icons.index( index );
-      }
-
+    if( index < names.length ) {
+      var name   = names.index( index );
+      var layout = _da.layouts.get_layout( name );
+      var node   = _da.get_current_node();
+      _da.set_layout( name, ((node == null) ? null : node.get_root()) );
+      _balance.set_sensitive( layout.balanceable );
+      _alignment_revealer.reveal_child = (name == _( "Manual" ));
     }
 
   }

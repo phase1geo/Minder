@@ -49,11 +49,11 @@ public class StyleInspector : Box {
   private Revealer      _branch_radius_revealer;
   private Scale         _branch_radius;
   private Scale         _branch_margin;
-  private MenuButton    _link_types;
+  private ModeButtons   _link_types;
   private Scale         _link_width;
   private Switch        _link_arrow;
   private Image         _link_dash;
-  private MenuButton    _node_borders;
+  private ModeButtons   _node_borders;
   private Scale         _node_borderwidth;
   private Switch        _node_fill;
   private Scale         _node_margin;
@@ -199,22 +199,16 @@ public class StyleInspector : Box {
       xalign  = (float)0
     };
 
-    var menu = new GLib.Menu();
+    _link_types = new ModeButtons() {
+      halign = Align.END
+    };
+    _link_types.changed.connect( action_set_link_type );
 
     var link_types = styles.get_link_types();
     for( int i=0; i<link_types.length; i++ ) {
       var link_type = link_types.index( i );
-      var mi   = new GLib.MenuItem( link_type.display_name(), "map.action_set_link_type(%d)".printf( i ) );
-      var icon = new ThemedIcon( link_type.icon_name() );
-      mi.set_icon( icon );
-      menu.append_item( mi );
+      _link_types.add_button( link_type.icon_name(), link_type.display_name() );
     }
-
-    /* Create the line types mode button */
-    _link_types = new MenuButton() {
-      halign     = Align.END,
-      menu_model = menu
-    };
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
       homogeneous = true
@@ -227,15 +221,11 @@ public class StyleInspector : Box {
   }
 
   /* Called whenever the user changes the current layout */
-  private void action_set_link_type( SimpleAction action, Variant? variant ) {
-    if( variant != null ) {
-      var index      = variant.get_int32();
-      var link_types = styles.get_link_types();
-      if( index < link_types.length ) {
-        var link_type = link_types.index( _link_types.selected );
-        _da.undo_buffer.add_item( new UndoStyleLinkType( _affects, link_type, _da ) );
-        _link_types.icon_name = link_type.icon_name();
-      }
+  private void action_set_link_type( int index ) {
+    var link_types = styles.get_link_types();
+    if( index < link_types.length ) {
+      var link_type = link_types.index( _link_types.selected );
+      _da.undo_buffer.add_item( new UndoStyleLinkType( _affects, link_type, _da ) );
     }
   }
 
@@ -534,22 +524,16 @@ public class StyleInspector : Box {
       hexpand = true
     };
 
-    var menu = new GLib.Menu();
+    _node_borders = new ModeButtons() {
+      halign = Align.END
+    };
+    _node_borders.changed.connect( set_node_border );
 
     var node_borders = styles.get_node_borders();
     for( int i=0; i<node_borders.length; i++ ) {
       var node_border = node_borders.index( i );
-      var mi = new GLib.MenuItem( node_border.display_name(), "style.action_set_node_border(%d)".printf( i ) );
-      var icon = new ThemedIcon( node_border.icon_name() );
-      mi.set_icon( icon );
-      menu.append_item( mi );
+      _node_borders.add_button( node_border.icon_name(), node_border.display_name() );
     }
-
-    /* Create the line types mode button */
-    _node_borders = new MenuButton() {
-      halign     = Align.END,
-      menu_model = menu
-    };
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
     box.append( lbl );
@@ -560,14 +544,10 @@ public class StyleInspector : Box {
   }
 
   /* Called whenever the user changes the current layout */
-  private void action_set_node_border( SimpleAction action, Variant? variant ) {
-    if( variant != null ) {
-      var index        = variant.get_int32();
-      var node_borders = styles.get_node_borders();
-      if( index < node_borders.length ) {
-        _da.undo_buffer.add_item( new UndoStyleNodeBorder( _affects, node_borders.index( index ), _da ) );
-      }
-      _node_borders.icon_name = node_borders.index( index ).icon_name();
+  private void set_node_border( int index ) {
+    var node_borders = styles.get_node_borders();
+    if( index < node_borders.length ) {
+      _da.undo_buffer.add_item( new UndoStyleNodeBorder( _affects, node_borders.index( index ), _da ) );
     }
   }
 
