@@ -27,9 +27,6 @@ class ImageEditor {
 
   private const double MIN_WIDTH  = 50;
   private const int    CROP_WIDTH = 8;
-  private const Gtk.TargetEntry[] DRAG_TARGETS = {
-    {"text/uri-list", 0, 0}
-  };
 
   private Popover         _popover;
   private ImageManager    _im;
@@ -41,7 +38,7 @@ class ImageEditor {
   private double          _last_x;
   private double          _last_y;
   private Gdk.Rectangle[] _crop_points;
-  private CursorType[]    _crop_cursors;
+  private Cursor[]        _crop_cursors;
   private Label           _status_cursor;
   private Label           _status_crop;
 
@@ -54,7 +51,7 @@ class ImageEditor {
 
     /* Allocate crop points */
     _crop_points  = new Gdk.Rectangle[9];
-    _crop_cursors = new CursorType[8];
+    _crop_cursors = new Gdk.Cursor[8];
 
     /* Initialize the crop points */
     for( int i=0; i<_crop_points.length; i++ ) {
@@ -62,14 +59,14 @@ class ImageEditor {
     }
 
     /* Setup cursor types */
-    _crop_cursors[0] = CursorType.TOP_LEFT_CORNER;
-    _crop_cursors[1] = CursorType.SB_V_DOUBLE_ARROW;
-    _crop_cursors[2] = CursorType.TOP_RIGHT_CORNER;
-    _crop_cursors[3] = CursorType.SB_H_DOUBLE_ARROW;
-    _crop_cursors[4] = CursorType.SB_H_DOUBLE_ARROW;
-    _crop_cursors[5] = CursorType.TOP_RIGHT_CORNER;
-    _crop_cursors[6] = CursorType.SB_V_DOUBLE_ARROW;
-    _crop_cursors[7] = CursorType.TOP_LEFT_CORNER;
+    _crop_cursors[0] = new Gdk.Cursor.from_name( "nwse-resize" );
+    _crop_cursors[1] = new Gdk.Cursor.from_name( "ns-resize" );
+    _crop_cursors[2] = new Gdk.Cursor.from_name( "nesw-resize" );
+    _crop_cursors[3] = new Gdk.Cursor.from_name( "ew-resize" );
+    _crop_cursors[4] = new Gdk.Cursor.from_name( "ew-resize" );
+    _crop_cursors[5] = new Gdk.Cursor.from_name( "nesw-resize" );
+    _crop_cursors[6] = new Gdk.Cursor.from_name( "ns-resize" );
+    _crop_cursors[7] = new Gdk.Cursor.from_name( "nwse-resize" );
 
     /* Create the user interface of the editor window */
     create_ui( da, da.image_manager );
@@ -426,15 +423,14 @@ class ImageEditor {
   }
 
   /* Sets the cursor of the drawing area */
-  private void set_cursor( CursorType? type = null ) {
+  private void set_cursor( Gdk.Cursor? type = null ) {
 
-    var     win    = _da.get_window();
-    Cursor? cursor = win.get_cursor();
+    var cursor = _da.get_cursor();
 
     if( type == null ) {
-      win.set_cursor( null );
+      _da.set_cursor( null );
     } else if( (cursor == null) || (cursor.cursor_type != type) ) {
-      win.set_cursor( new Cursor.for_display( _popover.get_display(), type ) );
+      _da.set_cursor( new Cursor.for_display( _popover.get_display(), type ) );
     }
 
   }

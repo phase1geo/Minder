@@ -230,7 +230,7 @@ public class MapInspector : Box {
       var icon = new ThemedIcon( icons.index( i ) );
       mi.set_icon( icon );
       menu.append_item( mi );
-    }
+    }j
 
     // Create the layouts menu button
     _layout = new MenuButton() {
@@ -249,10 +249,16 @@ public class MapInspector : Box {
   }
 
   private void action_set_layout( SimpleAction action, Variant? variant ) {
+
     if( variant != null ) {
+
       var index = variant.get_int32();
+
+      var icons = new Array<string>();
       var names = new Array<string>();
+      _da.layouts.get_icons( ref icons );
       _da.layouts.get_names( ref names );
+
       if( index < names.length ) {
         var name   = names.index( index );
         var layout = _da.layouts.get_layout( name );
@@ -260,8 +266,11 @@ public class MapInspector : Box {
         _da.set_layout( name, ((node == null) ? null : node.get_root()) );
         _balance.set_sensitive( layout.balanceable );
         _alignment_revealer.reveal_child = (name == _( "Manual" ));
+        _layout.icon_name = icons.index( index );
       }
+
     }
+
   }
 
   /* Adds alignment buttons when multiple nodes are selected in manual layout mode */
