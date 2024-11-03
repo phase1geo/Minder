@@ -183,19 +183,19 @@ public class NodesMenu {
     nodes_foldable_status( out foldable, out unfoldable );
 
     /* Set the menu sensitivity */
-    _da.set_action_enabled( "nodes.action_toggle_folds",         (foldable || unfoldable) );
-    _da.set_action_enabled( "nodes.action_toggle_sequences",     _da.sequences_togglable() );
-    _da.set_action_enabled( "nodes.action_connect_nodes",        (node_num == 2) );
-    // _da.set_action_enabled( "nodes.action_summarize",        summarizable );
-    _da.set_action_enabled( "nodes.action_reparent_link_colors", link_colors_parentable() );
-    _da.set_action_enabled( "nodes.action_align_to_top",         alignable );
-    _da.set_action_enabled( "nodes.action_align_to_hcenter",     alignable );
-    _da.set_action_enabled( "nodes.action_align_to_bottom",      alignable );
-    _da.set_action_enabled( "nodes.action_align_to_left",        alignable );
-    _da.set_action_enabled( "nodes.action_align_to_vcenter",     alignable );
-    _da.set_action_enabled( "nodes.action_align_to_right",       alignable );
-    _da.set_action_enabled( "nodes.action_select_parent_nodes",  _da.parent_selectable() );
-    _da.set_action_enabled( "nodes.action_select_child_nodes",   _da.children_selectable() );
+    _da.action_set_enabled( "nodes.action_toggle_folds",         (foldable || unfoldable) );
+    _da.action_set_enabled( "nodes.action_toggle_sequences",     _da.sequences_togglable() );
+    _da.action_set_enabled( "nodes.action_connect_nodes",        (node_num == 2) );
+    // _da.action_set_enabled( "nodes.action_summarize",        summarizable );
+    _da.action_set_enabled( "nodes.action_reparent_link_colors", link_colors_parentable() );
+    _da.action_set_enabled( "nodes.action_align_to_top",         alignable );
+    _da.action_set_enabled( "nodes.action_align_to_hcenter",     alignable );
+    _da.action_set_enabled( "nodes.action_align_to_bottom",      alignable );
+    _da.action_set_enabled( "nodes.action_align_to_left",        alignable );
+    _da.action_set_enabled( "nodes.action_align_to_vcenter",     alignable );
+    _da.action_set_enabled( "nodes.action_align_to_right",       alignable );
+    _da.action_set_enabled( "nodes.action_select_parent_nodes",  _da.parent_selectable() );
+    _da.action_set_enabled( "nodes.action_select_child_nodes",   _da.children_selectable() );
 
   }
 

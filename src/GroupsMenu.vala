@@ -28,7 +28,7 @@ public class GroupsMenu {
 
   private const GLib.ActionEntry action_entries[] = {
     { "action_delete_groups", action_delete_groups },
-    { "action_edit_node",     action_edit_node },
+    { "action_edit_note",     action_edit_note },
     { "action_change_color",  action_change_color },
     { "action_merge_groups",  action_merge_groups },
     { "action_select_main",   action_select_main },
@@ -44,7 +44,7 @@ public class GroupsMenu {
     del_menu.append( _( "Delete" ), "groups.action_delete_groups" );
 
     var change_menu = new GLib.Menu();
-    change_menu.append( _( "Edit Note" ),     "groups.action_edit_node" );
+    change_menu.append( _( "Edit Note" ),     "groups.action_edit_note" );
     change_menu.append( _( "Change color…" ), "groups.action_change_color" ); 
     change_menu.append( _( "Merge" ),         "groups.action_merge_groups" );
 
@@ -60,7 +60,7 @@ public class GroupsMenu {
     menu.append_section( null, change_menu );
     menu.append_section( null, sel_menu );
 
-    _popover = new PopoverMenu.with_model( menu );
+    _popover = new PopoverMenu.from_model( menu );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();
@@ -94,7 +94,7 @@ public class GroupsMenu {
     var num    = groups.length;
 
     /* Set the menu sensitivity */
-    _da.set_action_enabled( "groups.action_merge_groups", (num > 1) );
+    _da.action_set_enabled( "groups.action_merge_groups", (num > 1) );
 
   }
 

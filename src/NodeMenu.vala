@@ -292,29 +292,29 @@ public class NodeMenu {
     var current = _da.get_current_node();
 
     /* Set the menu sensitivity */
-    _da.set_action_enabled( "node.action_paste", true );
-    _da.set_action_enabled( "node.action_replace", true );
-    _da.set_action_enabled( "node.action_add_connection", !_da.get_connections().hide );
-    _da.set_action_enabled( "node.action_add_parent_node", node_parentable() );
-    _da.set_action_enabled( "node.action_change_link_color",    !current.is_root() );
-    _da.set_action_enabled( "node.action_randomize_link_color", !current.is_root() );
-    _da.set_action_enabled( "node.action_reparent_link_color",  (!current.is_root() && !current.main_branch() && current.link_color_root) );
-    _da.set_action_enabled( "node.action_fold_node", node_foldable() );
-    _da.set_action_enabled( "node.action_toggle_sequence", _da.sequences_togglable() );
-    _da.set_action_enabled( "node.action_change_link", node_linkable() );
-    _da.set_action_enabled( "node.action_detach_node", _da.detachable() );
-    _da.set_action_enabled( "node.action_sort_alphabetically", node_sortable() );
-    _da.set_action_enabled( "node.action_sort_randomly",       node_sortable() );
-    _da.set_action_enabled( "node.action_select_root_node", _da.root_selectable() );
-    _da.set_action_enabled( "node.action_select_next_sibling_node", _da.sibling_selectable() );
-    _da.set_action_enabled( "node.action_select_previous_sibling_node", _da.sibling_selectable() );
-    _da.set_action_enabled( "node.action_select_child_node", _da.children_selectable() );
-    _da.set_action_enabled( "node.action_select_parent_node", _da.parent_selectable() );
-    _da.set_action_enabled( "node.action_select_linked_node", node_has_link() );
-    _da.set_action_enabled( "node.action_select_callout", node_has_callout() );
-    _da.set_action_enabled( "node.action_remove_sticker", (current.sticker != null) );
-    _da.set_action_enabled( "node.action_add_sibling_node", !current.is_summary() );
-    _da.set_action_enabled( "node.action_convert_to_summary_node", _da.node_summarizable() );
+    _da.action_set_enabled( "node.action_paste", true );
+    _da.action_set_enabled( "node.action_replace", true );
+    _da.action_set_enabled( "node.action_add_connection", !_da.get_connections().hide );
+    _da.action_set_enabled( "node.action_add_parent_node", node_parentable() );
+    _da.action_set_enabled( "node.action_change_link_color",    !current.is_root() );
+    _da.action_set_enabled( "node.action_randomize_link_color", !current.is_root() );
+    _da.action_set_enabled( "node.action_reparent_link_color",  (!current.is_root() && !current.main_branch() && current.link_color_root) );
+    _da.action_set_enabled( "node.action_fold_node", node_foldable() );
+    _da.action_set_enabled( "node.action_toggle_sequence", _da.sequences_togglable() );
+    _da.action_set_enabled( "node.action_change_link", node_linkable() );
+    _da.action_set_enabled( "node.action_detach_node", _da.detachable() );
+    _da.action_set_enabled( "node.action_sort_alphabetically", node_sortable() );
+    _da.action_set_enabled( "node.action_sort_randomly",       node_sortable() );
+    _da.action_set_enabled( "node.action_select_root_node", _da.root_selectable() );
+    _da.action_set_enabled( "node.action_select_next_sibling_node", _da.sibling_selectable() );
+    _da.action_set_enabled( "node.action_select_previous_sibling_node", _da.sibling_selectable() );
+    _da.action_set_enabled( "node.action_select_child_node", _da.children_selectable() );
+    _da.action_set_enabled( "node.action_select_parent_node", _da.parent_selectable() );
+    _da.action_set_enabled( "node.action_select_linked_node", node_has_link() );
+    _da.action_set_enabled( "node.action_select_callout", node_has_callout() );
+    _da.action_set_enabled( "node.action_remove_sticker", (current.sticker != null) );
+    _da.action_set_enabled( "node.action_add_sibling_node", !current.is_summary() );
+    _da.action_set_enabled( "node.action_convert_to_summary_node", _da.node_summarizable() );
 
     /* TODO
     // Set the menu item labels
@@ -353,8 +353,8 @@ public class NodeMenu {
       _paste.label   = _( "Paste Text As Child Node" );
       _replace.label = _( "Paste and Replace Node Text" );
     } else {
-      _da.set_action_enabled( "node.action_paste",   false );
-      _da.set_action_enabled( "node.action_replace", false );
+      _da.action_set_enabled( "node.action_paste",   false );
+      _da.action_set_enabled( "node.action_replace", false );
     }
     */
 

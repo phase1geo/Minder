@@ -64,9 +64,6 @@ public class EmptyMenu {
     app.set_accels_for_action( "empty.action_add_quick_entry",  { "<Control<Shift>e" } );
     app.set_accels_for_action( "empty.action_select_root_node", { "m" } );
 
-    /* Make sure that we handle menu state when we are popped up */
-    show.connect( on_popup );
-
   }
 
   public void show( double x, double y ) {
@@ -89,9 +86,9 @@ public class EmptyMenu {
   /* Called when the menu is popped up */
   private void on_popup() {
 
-    _da.set_action_enabled( "empty.action_paste",            _da.node_pasteable() );
-    _da.set_action_enabled( "empty.action_add_root_node",    !connection_selected() );
-    _da.set_action_enabled( "empty.action_select_root_node", _da.root_selectable() );
+    _da.action_set_enabled( "empty.action_paste",            _da.node_pasteable() );
+    _da.action_set_enabled( "empty.action_add_root_node",    !connection_selected() );
+    _da.action_set_enabled( "empty.action_select_root_node", _da.root_selectable() );
 
   }
 

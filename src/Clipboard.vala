@@ -78,7 +78,7 @@ public class MinderClipboard {
 
   //-------------------------------------------------------------
   // Returns true if text is in the clipboard.
-  public static bool text_pastable() {
+  public static bool text_pasteable() {
     var clipboard = Display.get_default().get_clipboard();
     return( clipboard.get_formats().contain_gtype( Type.STRING ) );
   }

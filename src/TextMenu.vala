@@ -24,7 +24,7 @@ using Gtk;
 public class TextMenu {
 
   private DrawArea    _da;
-  private PopoverMenu _popup;
+  private PopoverMenu _popover;
   private bool        _clear_selection = false;
 
   private const GLib.ActionEntry action_entries[] = {
@@ -69,8 +69,8 @@ public class TextMenu {
     menu.append_section( null, open_menu );
     menu.append_section( null, other_menu );
 
-    _popup = new PopoverMenu.with_model( menu );
-    _popup.closed.connect( on_popdown );
+    _popover = new PopoverMenu.from_model( menu );
+    _popover.closed.connect( on_popdown );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();
@@ -207,16 +207,16 @@ public class TextMenu {
     var callout = _da.get_current_callout();
 
     /* Set the menu sensitivity */
-    _da.set_action_enabled( "text.action_copy",  copy_or_cut_possible() );
-    _da.set_action_enabled( "text.action_cut",   copy_or_cut_possible() );
-    _da.set_action_enabled( "text.action_paste", paste_possible() );
+    _da.action_set_enabled( "text.action_copy",  copy_or_cut_possible() );
+    _da.action_set_enabled( "text.action_cut",   copy_or_cut_possible() );
+    _da.action_set_enabled( "text.action_paste", paste_possible() );
 
     /* Initialize the visible attribute */
-    _da.set_action_enabled( "text.action_open_link",    false );
-    _da.set_action_enabled( "text.action_add_link",     false );
-    _da.set_action_enabled( "text.action_edit_link",    false );
-    _da.set_action_enabled( "text.action_delete_link",  false );
-    _da.set_action_enabled( "text.action_restore_link", false );
+    _da.action_set_enabled( "text.action_open_link",    false );
+    _da.action_set_enabled( "text.action_add_link",     false );
+    _da.action_set_enabled( "text.action_edit_link",    false );
+    _da.action_set_enabled( "text.action_delete_link",  false );
+    _da.action_set_enabled( "text.action_restore_link", false );
     _clear_selection = false;
 
     CanvasText? ct = null;
@@ -253,11 +253,11 @@ public class TextMenu {
       //    1       1       rest
 
       // Set view of all link menus
-      _da.set_action_enabled( "text.action_open_link",    (valid && !ignore) );
-      _da.set_action_enabled( "text.action_add_link",     (!embedded && !ignore && _da.add_link_possible( ct )) );
-      _da.set_action_enabled( "text.action_edit_link",    (valid && !selected && !embedded) );
-      _da.set_action_enabled( "text.action_delete_link",  (valid && !selected && (!embedded || !ignore)) );
-      _da.set_action_enabled( "text.action_restore_link", (valid && !selected && embedded && ignore) );
+      _da.action_set_enabled( "text.action_open_link",    (valid && !ignore) );
+      _da.action_set_enabled( "text.action_add_link",     (!embedded && !ignore && _da.add_link_possible( ct )) );
+      _da.action_set_enabled( "text.action_edit_link",    (valid && !selected && !embedded) );
+      _da.action_set_enabled( "text.action_delete_link",  (valid && !selected && (!embedded || !ignore)) );
+      _da.action_set_enabled( "text.action_restore_link", (valid && !selected && embedded && ignore) );
 
       _clear_selection = valid && !selected;
 
@@ -306,12 +306,7 @@ public class TextMenu {
 
   /* Returns true if there is text in the clipboard to paste */
   private bool paste_possible() {
-
-    var clipboard = Clipboard.get_default( get_display() );
-    string? value = clipboard.wait_for_text();
-
-    return( value != null );
-
+    return( MinderClipboard.text_pasteable() );
   }
 
 }
