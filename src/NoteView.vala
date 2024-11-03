@@ -21,6 +21,7 @@ using Gtk;
 using Gdk;
 using Gee;
 
+/*
 public class CompletionProvider : SourceCompletionProvider, Object {
 
   private MainWindow                      _win;
@@ -28,7 +29,8 @@ public class CompletionProvider : SourceCompletionProvider, Object {
   private GLib.List<SourceCompletionItem> _proposals;
   private GtkSource.Buffer                _buffer;
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public CompletionProvider( MainWindow win, GtkSource.Buffer buffer, string name, GLib.List<GtkSource.CompletionItem> proposals ) {
     _win       = win;
     _buffer    = buffer;
@@ -93,11 +95,12 @@ public class CompletionProvider : SourceCompletionProvider, Object {
   }
 
 }
-
-/*
- This class is a slightly modified version of Lains Quilter SourceView.vala
- file.  The above header was kept in tact to indicate this.
 */
+
+//-------------------------------------------------------------
+// This class is a slightly modified version of Lains Quilter
+// SourceView.vala file.  The above header was kept in tact to
+// indicate this.
 public class NoteView : GtkSource.View {
 
   private class UrlPos {

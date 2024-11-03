@@ -2893,7 +2893,10 @@ public class UnicodeInsert {
     }
   }
 
-  /* Populates the source completion provider with the list of proposals from this */
+  //-------------------------------------------------------------
+  // Populates the source completion provider with the list of
+  // proposals from this
+  /*
   public GLib.List<Gtk.SourceCompletionItem> create_proposals() {
     var proposals = new GLib.List<Gtk.SourceCompletionItem>();
     var it        = _insert_map.map_iterator();
@@ -2910,8 +2913,10 @@ public class UnicodeInsert {
     });
     return( proposals );
   }
+  */
 
-  /* Returns the last word of the given string */
+  //-------------------------------------------------------------
+  // Returns the last word of the given string
   private string get_last_word( string str ) {
 
     for( int i=(str.char_count() - 1); i>=0; i-- ) {

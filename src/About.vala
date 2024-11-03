@@ -40,17 +40,8 @@ public class About : AboutDialog {
     website       = "https://appcenter.elementary.io/com.github.phase1geo.minder/";
     website_label = _( "Minder in AppCenter" );
 
-    try {
-      logo = new Pixbuf.from_resource( "/com/github/phase1geo/minder/minder-logo.svg" );
-    } catch( Error e ) {
-      logo = null;
-    }
-
-    response.connect ((response_id) => {
-      if( (response_id == Gtk.ResponseType.CANCEL) || (response_id == Gtk.ResponseType.DELETE_EVENT) ) {
-        hide_on_delete();
-      }
-		});
+    var image = new Image.from_resource( "/com/github/phase1geo/minder/minder-logo.svg" );
+    logo = image.get_paintable();
 
   }
 

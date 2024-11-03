@@ -235,7 +235,7 @@ public class ExportPlantUML : Export {
     } else {
       last_node.style.node_border = StyleInspector.styles.get_node_border( "squared" );
       if( color.get_char( 0 ) == '[' ) {
-        RGBA c = {1.0, 1.0, 1.0, 1.0};
+        RGBA c = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
         c.parse( color.slice( color.index_of_nth_char( 1 ), color.index_of_nth_char( 8 ) ) );
         last_node.link_color = c;
       }

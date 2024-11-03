@@ -1,5 +1,5 @@
- /*
-* Copyright (c) 2018 (https://github.com/phase1geo/Minder)
+/*
+* Copyright (c) 2018-2024 (https://github.com/phase1geo/Minder)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -53,7 +53,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   private GLib.Settings     _settings;
   private HeaderBar         _header;
-  private DynamicNotebook?  _nb             = null;
+  private Notebook?         _nb             = null;
   private Revealer?         _inspector      = null;
   private Paned             _pane           = null;
   private Notebook?         _inspector_nb   = null;
@@ -77,7 +77,6 @@ public class MainWindow : Gtk.ApplicationWindow {
   private CheckButton       _search_nontasks;
   private Switch            _search_all_tabs;
   private Exporter          _exporter;
-  private Popover?          _export     = null;
   private MenuButton        _zoom_btn;
   private Scale?            _zoom_scale = null;
   private Button?           _zoom_in    = null;
@@ -86,8 +85,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   private Button?           _redo_btn   = null;
   private ToggleButton?     _focus_btn  = null;
   private ToggleButton?     _prop_btn   = null;
-  private Image?            _prop_show  = null;
-  private Image?            _prop_hide  = null;
+  private string            _prop_show;
+  private string            _prop_hide;
   private bool              _debug      = false;
   private ThemeEditor       _themer;
   private Label             _scale_lbl;
@@ -113,7 +112,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     { "action_show_stickers",  action_show_stickers },
     { "action_show_map",       action_show_map },
     { "action_next_tab",       action_next_tab },
-    { "action_prev_tab",       action_prev_tab }
+    { "action_prev_tab",       action_prev_tab },
+    { "action_about",          action_about },
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -162,7 +162,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     /* Create the header bar */
     _header = new HeaderBar() {
       show_title_buttons = true,
-      title_width        = new Label( _( "Minder" ) )
+      title_widget       = new Label( _( "Minder" ) )
     };
 
     // Set the default window size to the last session size
@@ -177,14 +177,16 @@ public class MainWindow : Gtk.ApplicationWindow {
     add_keyboard_shortcuts( app );
 
     /* Create the notebook */
-    _nb = new DynamicNotebook();
-    _nb.add_button_visible = false;
-    _nb.tab_bar_behavior   = DynamicNotebook.TabBarBehavior.SINGLE;
-    _nb.tab_switched.connect( tab_switched );
-    _nb.tab_reordered.connect( tab_reordered );
-    _nb.close_tab_requested.connect( close_tab_requested );
-    _nb.tab_removed.connect( tab_removed );
-    _nb.get_style_context().add_class( Gtk.STYLE_CLASS_INLINE_TOOLBAR );
+    _nb = new Notebook() {
+      halign     = Align.FILL,
+      valign     = Align.FILL,
+      hexpand    = true,
+      vexpand    = true,
+      scrollable = true
+    };
+    _nb.switch_page.connect( tab_switched );
+    _nb.page_reordered.connect( tab_reordered );
+    _nb.page_removed.connect( tab_removed );
 
     /* Create title toolbar */
     var new_btn = new Button.from_icon_name( get_icon_name( "document-new" ) ) {
@@ -193,29 +195,29 @@ public class MainWindow : Gtk.ApplicationWindow {
     new_btn.clicked.connect( do_new_file );
     _header.pack_start( new_btn );
 
-    var open_btn = new Button.from_icon_name( get_icon_name( "document-open" ), get_icon_size() );
-    open_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Open File" ), "<Control>o" ) );
-    open_btn.add_accelerator( "clicked", _accel_group, 'o', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    var open_btn = new Button.from_icon_name( get_icon_name( "document-open" ) ) {
+      tooltip_markup = Utils.tooltip_with_accel( _( "Open File" ), "<Control>o" )
+    };
     open_btn.clicked.connect( do_open_file );
     _header.pack_start( open_btn );
 
-    var save_btn = new Button.from_icon_name( get_icon_name( "document-save-as" ), get_icon_size() );
-    save_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Save File As" ), "<Control><Shift>s" ) );
-    save_btn.add_accelerator( "clicked", _accel_group, 's', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
+    var save_btn = new Button.from_icon_name( get_icon_name( "document-save-as" ) ) {
+      tooltip_markup = Utils.tooltip_with_accel( _( "Save File As" ), "<Control><Shift>s" )
+    };
     save_btn.clicked.connect( do_save_as_file );
     _header.pack_start( save_btn );
 
-    _undo_btn = new Button.from_icon_name( get_icon_name( "edit-undo" ), get_icon_size() );
-    _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Undo" ), "<Control>z" ) );
-    _undo_btn.set_sensitive( false );
-    _undo_btn.add_accelerator( "clicked", _accel_group, 'z', Gdk.ModifierType.CONTROL_MASK, AccelFlags.VISIBLE );
+    _undo_btn = new Button.from_icon_name( get_icon_name( "edit-undo" ) ) {
+      tooltip_markup = Utils.tooltip_with_accel( _( "Undo" ), "<Control>z" ),
+      sensitive      = false
+    };
     _undo_btn.clicked.connect( do_undo );
     _header.pack_start( _undo_btn );
 
-    _redo_btn = new Button.from_icon_name( get_icon_name( "edit-redo" ), get_icon_size() );
-    _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Redo" ), "<Control><Shift>z" ) );
-    _redo_btn.set_sensitive( false );
-    _redo_btn.add_accelerator( "clicked", _accel_group, 'z', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
+    _redo_btn = new Button.from_icon_name( get_icon_name( "edit-redo" ) ) {
+      tooltip_markup = Utils.tooltip_with_accel( _( "Redo" ), "<Control><Shift>z" ),
+      sensitive      = false
+    };
     _redo_btn.clicked.connect( do_redo );
     _header.pack_start( _redo_btn );
 
@@ -231,25 +233,27 @@ public class MainWindow : Gtk.ApplicationWindow {
     add_focus_button();
 
     /* Create the panel so that we can resize */
-    _pane = new Paned( Orientation.HORIZONTAL );
-    _pane.pack1( _nb, true, true );
+    _pane = new Paned( Orientation.HORIZONTAL ) {
+      halign      = Align.FILL,
+      valign      = Align.FILL,
+      start_child = _nb
+    };
     _pane.move_handle.connect(() => {
       return( false );
     });
-    _pane.button_release_event.connect((e) => {
-      if( e.window == _pane.get_handle_window() ) {
-        _settings.set_int( "properties-width", ((_pane.get_allocated_width() - _pane.position) - 11) );
-      }
-      return( false );
+
+    var click = new GestureClick();
+    _pane.add_controller( click );
+    click.released.connect((n_press, x, y) => {
+      _settings.set_int( "properties-width", ((_pane.get_allocated_width() - _pane.position) - 11) );
     });
 
     var top_box = new Box( Orientation.VERTICAL, 0 );
-    top_box.pack_start( _header, false, true, 0 );
-    top_box.pack_start( _pane, true, true, 0 );
+    top_box.append( _header );
+    top_box.append( _pane );
 
     /* Display the UI */
-    add( top_box );
-    show_all();
+    child = top_box;
 
     /* If the settings says to display the properties, do it now */
     if( _settings.get_boolean( "current-properties-shown" ) ) {
@@ -277,10 +281,11 @@ public class MainWindow : Gtk.ApplicationWindow {
     });
 
     /* If we receive focus, update the titlebar */
-    focus_in_event.connect((e) => {
+    var focus = new EventControllerFocus();
+    this.add_controller( focus );
+    focus.enter.connect(() => {
       var da = get_current_da();
       update_title( da );
-      return( false );
     });
 
     /* Load the exports data */
@@ -288,26 +293,53 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  static construct {
-    Hdy.init();
-  }
-
   /* Returns the name of the icon to use for a headerbar icon */
   private string get_icon_name( string icon_name ) {
     return( "%s%s".printf( icon_name, (on_elementary ? "" : "-symbolic") ) );
   }
 
+  //-------------------------------------------------------------
+  // Returns the DrawingArea associated with the given notebook
+  // page index.
+  private DrawArea get_da( int page ) {
+    var pg = _nb.get_nth_page( page );
+    var ol = (Overlay)Utils.get_child_at_index( pg, 0 );
+    return( (DrawArea)ol.child );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the tab label associated with the given notebook page.
+  private string get_tab_label_name( int page_num ) {
+    var page = _nb.get_nth_page( page_num );
+    var tab  = _nb.get_tab_label( page );
+    var label = (Label)Utils.get_child_at_index( tab, 0 );
+    return( label.label );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the tab label name and tooltip to the given values.
+  private void set_tab_label_info( string label, string tooltip ) {
+    var page = _nb.get_nth_page( _nb.page );
+    var tab  = _nb.get_tab_label( page );
+    var lbl  = (Label)Utils.get_child_at_index( tab, 0 );
+    lbl.label = label;
+    lbl.tooltip_text = tooltip;
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever the text size setting value changes.
   private void setting_changed_text_size() {
     var value = settings.get_boolean( "text-field-use-custom-font-size" ) ? settings.get_int( "text-field-custom-font-size" ) : -1;
     _text_size = value;
-    foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      var da = get_da( i );
       da.update_css();
     }
   }
 
-  /* Called whenever the enable-ui-animations glib setting is changed */
+  //-------------------------------------------------------------
+  // Called whenever the enable-ui-animations glib setting is
+  // changed.
   private void setting_changed_ui_animations() {
     var duration = settings.get_boolean( "enable-ui-animations" ) ? 500 : 0;
     var current  = (_stack.get_child_by_name( "current" ) as CurrentInspector);
@@ -315,109 +347,111 @@ public class MainWindow : Gtk.ApplicationWindow {
     current.set_transition_duration( duration );
   }
 
+  //-------------------------------------------------------------
+  // Called whenever the animation enable setting is changed.
   private void setting_changed_animations() {
     var value = settings.get_boolean( "enable-animations" );
-    foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      var da = get_da( i );
       da.animator.enable = value;
     }
   }
 
+  //-------------------------------------------------------------
+  // Called whenever the auto-parse embedded URLs setting is changed.
   private void setting_changed_embedded_urls() {
     var value = settings.get_boolean( "auto-parse-embedded-urls" );
-    foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      var da = get_da( i );
       da.url_parser.enable = value;
     }
   }
 
+  //-------------------------------------------------------------
+  // Called whenever the enable Markdown setting is changed.
   private void setting_changed_markdown() {
     var value = settings.get_boolean( "enable-markdown" );
-    foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      var da = get_da( i );
       da.markdown_parser.enable = value;
     }
   }
 
+  //-------------------------------------------------------------
+  // Called whenever the enable unicode input setting is changed.
   private void setting_changed_unicode_input() {
     var value = settings.get_boolean( "enable-unicode-input" );
-    foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      var da = get_da( i );
       da.unicode_parser.enable = value;
     }
   }
 
-  /* Called whenever the current tab is switched in the notebook */
-  private void tab_switched( Tab? old_tab, Tab new_tab ) {
-    tab_changed( new_tab );
+  //-------------------------------------------------------------
+  // Called whenever the current tab is switched in the notebook
+  private void tab_switched( Widget page, uint page_num ) {
+    tab_changed( (int)page_num );
   }
 
-  /* This needs to be called whenever the tab is changed */
-  private void tab_changed( Tab tab ) {
-    var bin = (Gtk.Bin)tab.page;
-    var da  = bin.get_child() as DrawArea;
+  //-------------------------------------------------------------
+  // This needs to be called whenever the tab is changed
+  private void tab_changed( int page_num ) {
+    var da = get_da( page_num );
     do_buffer_changed( da.current_undo_buffer() );
     on_current_changed( da );
     update_title( da );
     canvas_changed( da );
-    save_tab_state( tab );
+    save_tab_state( page_num );
   }
 
-  /* Called whenever the current tab is moved to a new position */
-  private void tab_reordered( Tab? tab, int new_pos ) {
-    save_tab_state( tab );
+  //-------------------------------------------------------------
+  // Called whenever the current tab is moved to a new position
+  private void tab_reordered( Widget w, uint page_num ) {
+    save_tab_state( (int)page_num );
   }
 
-  /* Updates all of the node sizes in all tabs */
+  //-------------------------------------------------------------
+  // Updates all of the node sizes in all tabs
   public void update_node_sizes() {
-    foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      var da = get_da( i );
       da.update_node_sizes();
     }
   }
 
-  /* Closes the current tab */
+  //-------------------------------------------------------------
+  // Closes the current tab
   public void close_current_tab() {
     _nb.current.close();
   }
 
-  /* Closes the tab associated with the given drawing area */
-  private void close_tab_with_da( DrawArea da ) {
-    foreach( Tab tab in _nb.tabs ) {
-      var bin     = (Gtk.Bin)tab.page;
-      var curr_da = (DrawArea)bin.get_child();
-      if( da == curr_da ) {
-        tab.close();
-        return;
-      }
+  //-------------------------------------------------------------
+  // Closes the tab associated with the given drawing area
+  private void close_tab( int page_num ) {
+    if( _nb.get_n_pages() == 1 ) return;
+    var da = get_da( page_num );
+    if( da.get_doc.is_saved() ) {
+      _nb.detach_tab( _nb.get_nth_page( _nb.page ) );
+    } else {
+      show_save_warning( da );
     }
   }
 
-  /* Called whenever the user clicks on the close button and the tab is unnamed */
-  private bool close_tab_requested( Tab tab ) {
-    var bin = (Gtk.Bin)tab.page;
-    var da  = bin.get_child() as DrawArea;
-    var ret = (_nb.n_tabs > 1) && (!da.is_loaded || da.get_doc().is_saved() || show_save_warning( da ));
-    return( ret );
+  //-------------------------------------------------------------
+  // This should be called when the tab page is actually gone
+  private void tab_removed( Widget w, uint page_num ) {
+    save_tab_state( _nb.page );
   }
 
-  /* This should be called when the tab page is actually gone */
-  private void tab_removed( Tab tab ) {
-    save_tab_state( _nb.current );
-  }
-
-  /* Creates a draw area */
+  //-------------------------------------------------------------
+  // Creates a draw area
   public DrawArea create_da() {
     var da = new DrawArea( this, _settings );
     return( da );
   }
 
-  /* Adds a new tab to the notebook */
+  //-------------------------------------------------------------
+  // Adds a new tab to the notebook
   public DrawArea add_tab( string? fname, TabAddReason reason ) {
 
     /* Create and pack the canvas */
@@ -427,7 +461,6 @@ public class MainWindow : Gtk.ApplicationWindow {
     da.scroll_changed.connect( change_origin );
     da.show_properties.connect( show_properties );
     da.hide_properties.connect( hide_properties );
-    da.map_event.connect( on_canvas_mapped );
     da.undo_buffer.buffer_changed.connect( do_buffer_changed );
     da.undo_text.buffer_changed.connect( do_buffer_changed );
     da.theme_changed.connect( on_theme_changed );
@@ -441,9 +474,48 @@ public class MainWindow : Gtk.ApplicationWindow {
     var overlay = new Overlay();
     overlay.add( da );
 
-    var tab = new Tab( da.get_doc().label, null, overlay );
-    tab.pinnable = false;
-    tab.tooltip  = fname;
+    var tab_label = new Label( da.get_doc().label ) {
+      margin_start  = 10,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_top    = 5,
+      margin_bottom = 5,
+      tooltip_text  = da.get_doc().label
+    };
+
+    var tab_close = new Button.from_icon_name( "window-close-symbolic" ) {
+      has_frame     = false,
+      margin_end    = 10,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
+
+    var tab_revealer = new Revealer() {
+      reveal_child    = true,
+      transition_type = RevealerTransitionType.CROSSFADE,
+      child           = tab_close
+    };
+
+    var tab_box = new Box( Orientation.HORIZONTAL, 5 );
+    tab_box.append( tab_label );
+    tab_box.append( tab_revealer );
+
+    var tab_motion = new EventControllerMotion();
+    tab_box.add_controller( tab_motion );
+
+    // Add the tab
+    var tab_index = _nb.append_page( overlay, tab_box );
+
+    tab_motion.enter.connect((x, y) => {
+      tab_revealer.reveal_child = (_nb.get_n_pages() > 1);
+    });
+    tab_motion.leave.connect((x, y) => {
+      tab_revealer.reveal_child = (_nb.page == tab_index);
+    });
+
+    tab_close.clicked.connect(() => {
+      close_tab( tab_index );
+    });
 
     /* Update the titlebar */
     update_title( da );
@@ -455,12 +527,9 @@ public class MainWindow : Gtk.ApplicationWindow {
       da.initialize_for_open();
     }
 
-    /* Add the page to the notebook */
-    _nb.insert_tab( tab, _nb.n_tabs );
-
     /* Indicate that the tab has changed */
     if( reason != TabAddReason.LOAD ) {
-      _nb.current = tab;
+      _nb.page = tab_index;
     }
 
     da.grab_focus();
@@ -473,10 +542,10 @@ public class MainWindow : Gtk.ApplicationWindow {
    Closes all tabs that contain documents that have not been changed.
   */
   private void close_unchanged_tabs() {
-    foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      var da = get_da( i );
       if( !da.is_loaded ) {
+        _nb.detach_tab( _nb.get_nth_page( i ) );
         tab.close();
         return;
       }
@@ -488,11 +557,10 @@ public class MainWindow : Gtk.ApplicationWindow {
    current tab.
   */
   private bool find_unchanged_tab() {
-    foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      var da = get_da( i );
       if( !da.is_loaded ) {
-        _nb.current = tab;
+        _nb.page = i;
         da.grab_focus();
         return( true );
       }
@@ -507,12 +575,11 @@ public class MainWindow : Gtk.ApplicationWindow {
   */
   private DrawArea add_tab_conditionally( string? fname, TabAddReason reason ) {
 
-    foreach( Tab tab in _nb.tabs ) {
-      var bin = (Gtk.Bin)tab.page;
-      var da  = (DrawArea)bin.get_child();
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      var da = get_da( i );
       if( da.get_doc().filename == fname ) {
         da.initialize_for_open();
-        _nb.current = tab;
+        _nb.page = i;
         return( da );
       }
     }
@@ -526,7 +593,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   public void previous_tab() {
-    _nb.previous_page();
+    _nb.prev_page();
   }
 
   /* Returns the current drawing area */
@@ -534,9 +601,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     if( _debug && (caller != null) ) {
       stdout.printf( "get_current_da called from %s\n", caller );
     }
-    if( _nb.current == null ) { return( null ); }
-    var bin = (Gtk.Bin)_nb.current.page;
-    return( (DrawArea)bin.get_child() );
+    if( _nb.page == -1 ) { return( null ); }
+    return( get_da( _nb.page ) );
   }
 
   /* Updates the title */
@@ -600,14 +666,13 @@ public class MainWindow : Gtk.ApplicationWindow {
     var marks   = DrawArea.get_scale_marks();
     _scale_lbl  = new Label( _( "Zoom to Percent" ) );
     _zoom_scale = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 ) {
-      has_origin = false,
-      set_value  =  100
+      has_origin = false
     };
+    _zoom_scale.set_value( 100 );
     foreach (double mark in marks) {
       _zoom_scale.add_mark( mark, PositionType.BOTTOM, null );
     }
     _zoom_scale.change_value.connect( adjust_zoom );
-    _zoom_scale.format_value.connect( set_zoom_value );
 
     _zoom_in = new Button.from_icon_name( "zoom-in-symbolic" ) {
       has_frame = false,
@@ -639,10 +704,9 @@ public class MainWindow : Gtk.ApplicationWindow {
       margin_top    = 5,
       margin_bottom = 5
     };
-    box.append( _scale_lbl,  false, true );
-    box.append( zoom_box,    true,  true );
-    box.append( new Separator( Orientation.HORIZONTAL ), false, true );
-    box.show_all();
+    box.append( _scale_lbl );
+    box.append( zoom_box );
+    box.append( new Separator( Orientation.HORIZONTAL ) );
 
     var popover = new PopoverMenu.from_model( menu );
     popover.add_child( zbox, "scale" );
@@ -840,7 +904,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       _search_nontasks.set_sensitive( _search_tasks.active );
       on_search_change();
     });
-    _search_nontasks.clicked.connect(() => {
+    _search_nontasks.toggled.connect(() => {
       _settings.set_boolean( "search-opt-nontasks", _search_nontasks.active );
       _search_tasks.set_sensitive( _search_nontasks.active );
       on_search_change();
@@ -866,49 +930,52 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Adds the export functionality */
+  //-------------------------------------------------------------
+  // Adds the export functionality
   private void add_export_button() {
 
-    /* Create the menu button */
-    var menu_btn = new MenuButton();
-    menu_btn.set_image( new Image.from_icon_name( (on_elementary ? "document-export" : "document-send-symbolic"), get_icon_size() ) );
-    menu_btn.set_tooltip_text( _( "Export" ) );
-    _header.pack_end( menu_btn );
+    var export_item = new GLib.MenuItem( null, null );
+    export_item.set_attribute( "custom", "s", "export" );
+
+    var export_menu = new GLib.Menu();
+    export_menu.append_item( export_item );
+
+    var print_menu = new GLib.Menu();
+    print_menu.append( _( "Print…" ), "win.action_print" );
+
+    var menu = new GLib.Menu();
+    menu.append_section( null, export_menu );
+    menu.append_section( null, print_menu );
+    
+    /* Create the popover and associate it with clicking on the menu button */
+    var popover = new PopoverMenu.from_model( menu );
 
     /* Create export menu */
     _exporter = new Exporter( this );
     _exporter.export_done.connect(() => {
-      Utils.hide_popover( menu_btn.popover );
+      popover.popdown();
     });
 
-    /* Create print menu */
-    var print = new ModelButton();
-    print.get_child().destroy();
-    print.add( new Granite.AccelLabel.from_action_name( _( "Print…" ), "win.action_print" ) );
-    print.action_name = "win.action_print";
+    popover.add_child( _exporter, "export" );
 
-    var box = new Box( Orientation.VERTICAL, 5 );
-    box.margin = 5;
-    box.pack_start( _exporter, false, true );
-    box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
-    box.pack_start( print,  false, true );
-    box.show_all();
-
-    /* Create the popover and associate it with clicking on the menu button */
-    _export = new Popover( null );
-    _export.add( box );
-    menu_btn.popover = _export;
+    /* Create the menu button */
+    var menu_btn = new MenuButton() {
+      icon_name    = (on_elementary ? "document-export" : "document-send-symbolic"),
+      tooltip_text = _( "Export" ),
+      popover      = popover
+    };
+    _header.pack_end( menu_btn );
 
   }
 
-  /* Adds the focus mode button to the headerbar */
+  //-------------------------------------------------------------
+  // Adds the focus mode button to the headerbar
   private void add_focus_button() {
 
-    _focus_btn       = new ToggleButton();
-    _focus_btn.image = new Image.from_icon_name( (on_elementary ? "minder-focus" : "media-optical-symbolic"), get_icon_size() );
-    _focus_btn.draw_indicator = true;
-    _focus_btn.set_tooltip_markup( Utils.tooltip_with_accel( _( "Focus Mode" ), "<Control><Shift>f" ) );
-    _focus_btn.add_accelerator( "clicked", _accel_group, 'f', (Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK), AccelFlags.VISIBLE );
+    _focus_btn = new ToggleButton() {
+      icon_name      = (on_elementary ? "minder-focus" : "media-optical-symbolic"),
+      tooltip_markup = Utils.tooltip_with_accel( _( "Focus Mode" ), "<Control><Shift>f" )
+    };
     _focus_btn.clicked.connect((e) => {
       var da = get_current_da();
       update_title( da );
@@ -920,82 +987,71 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Adds the miscellaneous functionality */
+  //-------------------------------------------------------------
+  // Adds the miscellaneous functionality
   private void add_miscellaneous_button() {
 
-    /* Create the menu button */
-    var misc_btn = new MenuButton();
-    misc_btn.set_image( new Image.from_icon_name( get_icon_name( "open-menu" ), get_icon_size() ) );
+    GLib.Menu menu;
 
-    /* Create export menu */
-    var box = new Box( Orientation.VERTICAL, 5 );
+    var misc_menu = new GLib.Menu();
+    misc_menu.append( _( "Preferences" ),          "win.action_prefs" );
+    misc_menu.append( _( "Shortcuts Cheatsheet" ), "win.action_shortcuts" );
 
-    var prefs = new ModelButton();
-    prefs.get_child().destroy();
-    prefs.add( new Granite.AccelLabel.from_action_name( _( "Preferences" ), "win.action_prefs" ) );
-    prefs.action_name = "win.action_prefs";
+    if( on_elementary ) {
 
-    var shortcuts = new ModelButton();
-    shortcuts.get_child().destroy();
-    shortcuts.add( new Granite.AccelLabel.from_action_name( _( "Shortcuts Cheatsheet" ), "win.action_shortcuts" ) );
-    shortcuts.action_name = "win.action_shortcuts";
+      menu = misc_menu;
 
-    var about = new ModelButton();
-    about.text = _( "About Minder" );
-    about.clicked.connect(() => {
-      var about_win = new About( this );
-      about_win.present();
-    });
+    } else {
 
-    box.margin = 5;
-    box.pack_start( prefs,     false, true );
-    box.pack_start( shortcuts, false, true );
-    if( !on_elementary ) {
-      box.pack_start( new Separator( Orientation.HORIZONTAL ), false, true );
-      box.pack_start( about, false, true );
+      var about_menu = new GLib.Menu();
+      about_menu.append( _( "About Minder" ), "win.action_about" );
+
+      menu = new GLib.Menu();
+      menu.append_section( null, misc_menu );
+      menu.append_section( null, about_menu );
+
     }
-    box.show_all();
 
-    /* Create the popover and associate it with clicking on the menu button */
-    var misc_pop = new Popover( null );
-    misc_pop.add( box );
-    misc_btn.popover = misc_pop;
-
+    /* Create the menu button */
+    var misc_btn = new MenuButton() {
+      icon_name  = get_icon_name( "open-menu" ),
+      menu_model = menu
+    };
     _header.pack_end( misc_btn );
 
   }
 
-  /* Adds the property functionality */
+  //-------------------------------------------------------------
+  // Adds the property functionality
   private void add_property_button() {
 
+    // Keep the show/hide sidebar icon names
+    _prop_show = (on_elementary ? "minder-sidebar-open"  : "minder-sidebar-symbolic");
+    _prop_hide = (on_elementary ? "minder-sidebar-close" : "minder-sidebar-symbolic");
+
     /* Add the menubutton */
-    _prop_show = new Image.from_icon_name( (on_elementary ? "minder-sidebar-open"  : "minder-sidebar-symbolic"), get_icon_size() );
-    _prop_hide = new Image.from_icon_name( (on_elementary ? "minder-sidebar-close" : "minder-sidebar-symbolic"), get_icon_size() );
-    _prop_btn  = new ToggleButton();
-    _prop_btn.image  = _prop_show;
-    _prop_btn.active = false;
-    _prop_btn.set_tooltip_text( _( "Show Property Sidebar" ) );
-    _prop_btn.add_accelerator( "clicked", _accel_group, Key.F9, 0, AccelFlags.VISIBLE );
+    _prop_btn  = new ToggleButton() {
+      icon_name    = _prop_show,
+      active       = false,
+      tooltip_text = _( "Show Property Sidebar" )
+    };
     _prop_btn.toggled.connect( inspector_clicked );
     _header.pack_end( _prop_btn );
 
-    /* Create the inspector sidebar */
-    _inspector_nb = new Notebook();
-    _inspector_nb.show_tabs = false;
-
-    var box = new Box( Orientation.VERTICAL, 20 );
-    var sb  = new StackSwitcher();
-
-    _stack = new Stack();
-    _stack.set_transition_type( StackTransitionType.SLIDE_LEFT_RIGHT );
-    _stack.set_transition_duration( 500 );
+    _stack = new Stack() {
+      halign              = Align.FILL,
+      valign              = Align.FILL,
+      transition_type     = StackTransitionType.SLIDE_LEFT_RIGHT,
+      transition_duration = 500
+    };
     _stack.add_titled( new CurrentInspector( this ), "current", _("Current") );
     _stack.add_titled( new StyleInspector( this, _settings ), "style", _("Style") );
     _stack.add_titled( new StickerInspector( this, _settings ), "sticker", _("Stickers") );
     _stack.add_titled( new MapInspector( this, _settings ),  "map",  _("Map") );
 
-    _stack.add_events( EventMask.KEY_PRESS_MASK );
-    _stack.key_press_event.connect( stack_keypress );
+    var key = new EventControllerKey();
+    _stack.add_controller( key );
+    key.key_pressed.connect( stack_keypress );
 
     /* If the stack switcher is clicked, save off which tab is in view */
     _stack.notify.connect((ps) => {
@@ -1010,30 +1066,46 @@ public class MainWindow : Gtk.ApplicationWindow {
     /* Handle the enable-ui-animations value */
     setting_changed_ui_animations();
 
-    sb.homogeneous = true;
-    sb.set_stack( _stack );
+    var sb = new StackSwitcher() {
+      halign = Align.FILL,
+      stack  = _stack
+    };
 
-    box.margin = 5;
-    box.pack_start( sb,     false, true, 0 );
-    box.pack_start( _stack, true,  true, 0 );
-    box.show_all();
+    var box = new Box( Orientation.VERTICAL, 20 ) {
+      halign        = Align.FILL,
+      valign        = Align.FILL,
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
+    box.append( sb );
+    box.append( _stack );
 
     _themer = new ThemeEditor( this );
 
+    /* Create the inspector sidebar */
+    _inspector_nb = new Notebook() {
+      show_tabs = false
+    };
     _inspector_nb.append_page( box );
     _inspector_nb.append_page( _themer );
 
   }
 
-  private bool stack_keypress( EventKey e ) {
-    if( e.keyval == 65307 ) {  /* Escape key pressed */
+  //-------------------------------------------------------------
+  // Handles an escape key press in the inspector widget to hide
+  // the sidebar.
+  private bool stack_keypress( uint keyval, uint keycode, ModifierType state ) {
+    if( keyval == 65307 ) {  /* Escape key pressed */
       hide_properties();
-      return( false );
+      return( true );
     }
-    return( true );
+    return( false );
   }
 
-  /* Show or hides the inspector sidebar */
+  //-------------------------------------------------------------
+  // Show or hides the inspector sidebar
   private void inspector_clicked() {
     if( _inspector_nb.get_mapped() ) {
       hide_properties();
@@ -1042,7 +1114,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
   }
 
-  /* Displays the save warning dialog window */
+  //-------------------------------------------------------------
+  // Displays the save warning dialog window
   public bool show_save_warning( DrawArea da ) {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
@@ -1082,8 +1155,9 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Displays the overwrite warning dialog window.
-   * Returns true when overwrite is wanted and false when reload is wanted. */
+  //-------------------------------------------------------------
+  // Displays the overwrite warning dialog window.  Returns true
+  // when overwrite is wanted and false when reload is wanted.
   public bool ask_modified_overwrite( DrawArea da ) {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
@@ -1116,9 +1190,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     return( false );
   }
 
-  /*
-   Creates a new file
-  */
+  //-------------------------------------------------------------
+  // Creates a new file
   public void do_new_file() {
 
     /* Close any unchanged tabs */
@@ -1131,35 +1204,33 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
+  //-------------------------------------------------------------
+  // Opens an existing file.
   public void do_open_file() {
     do_open( false );
   }
 
+  //-------------------------------------------------------------
+  // Opens a directory.
   public void do_open_directory() {
     do_open( true );
   }
 
-  /*
-   Allows the user to select a file to open and opens it in the same window.
-  */
+  //-------------------------------------------------------------
+  // Allows the user to select a file to open and opens it in the
+  // same window.
   public void do_open( bool dir ) {
 
-    /* Get the file to open from the user */
-    var dialog   = new FileChooserNative(
-      (dir ? _( "Open Directory" ) : _( "Open File" )),
-      this,
-      (dir ? FileChooserAction.SELECT_FOLDER : FileChooserAction.OPEN),
-      _( "Open" ),
-      _( "Cancel" )
-    );
-    // Utils.set_chooser_folder( dialog );
+    var dialog = Utils.make_file_chooser( (dir ? _( "Open Directory" ) : _( "Open File" )), _( "Open" ) );
+
+    var filters = new GLib.ListStore( typeof( FileFilter ) );
 
     /* Create file filters */
     if( !dir ) {
       var filter = new FileFilter();
       filter.set_filter_name( "Minder" );
       filter.add_pattern( "*.minder" );
-      dialog.add_filter( filter );
+      filters.append( filter );
     }
 
     for( int i=0; i<exports.length(); i++ ) {
@@ -1169,21 +1240,40 @@ public class MainWindow : Gtk.ApplicationWindow {
         foreach( string extension in exports.index( i ).extensions ) {
           filter.add_pattern( "*" + extension );
         }
-        dialog.add_filter( filter );
+        filters.append( filter );
       }
     }
 
-    if( dialog.run() == ResponseType.ACCEPT ) {
-      var filename = dialog.get_filename();
-      open_file( filename, dir );
-      Utils.store_chooser_folder( filename, dir );
-    }
+    dialog.set_filters( filters );
 
-    get_current_da( "do_open" ).grab_focus();
+    if( dir ) {
+      dialog.select_folder.begin( this, null, (obj, res) => {
+        try {
+          var file = dialog.select_folder.end( res );
+          if( file != null ) {
+            open_file( file.get_path(), dir );
+            Utils.store_chooser_folder( file.get_path(), dir );
+            get_current_da( "do_open" ).grab_focus();
+          }
+        } catch( Error e ) {}
+      });
+    } else {
+      dialog.open.begin( this, null, (obj, res) => {
+        try {
+          var file = dialog.select_folder.end( res );
+          if( file != null ) {
+            open_file( file.get_path(), dir );
+            Utils.store_chooser_folder( file.get_path(), dir );
+            get_current_da( "do_open" ).grab_focus();
+          }
+        } catch( Error e ) {}
+      });
+    }
 
   }
 
-  /* Opens the file and display it in the canvas */
+  //-------------------------------------------------------------
+  // Opens the file and display it in the canvas
   public bool open_file( string fname, bool dir ) {
     if( ( dir && !FileUtils.test( fname, FileTest.IS_DIR )) ||
         (!dir && !FileUtils.test( fname, FileTest.IS_REGULAR )) ) {
@@ -1194,7 +1284,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       var da = add_tab_conditionally( fname, TabAddReason.OPEN );
       update_title( da );
       if( da.get_doc().load() ) {
-        save_tab_state( _nb.current );
+        save_tab_state( _nb.page );
       }
       return( true );
     } else {
@@ -1206,7 +1296,7 @@ public class MainWindow : Gtk.ApplicationWindow {
             var da = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
             update_title( da );
             if( exports.index( i ).import( fname, da ) ) {
-              save_tab_state( _nb.current );
+              save_tab_state( _nb.page );
               return( true );
             }
             close_current_tab();
@@ -1217,7 +1307,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     return( false );
   }
 
-  /* Imports the given file based on the export name */
+  //-------------------------------------------------------------
+  // Imports the given file based on the export name
   public bool import_file( string fname, string export_name, ref string new_fname ) {
     close_unchanged_tabs();
     for( int i=0; i<exports.length(); i++ ) {
@@ -1234,26 +1325,24 @@ public class MainWindow : Gtk.ApplicationWindow {
     return( false );
   }
 
-  /* Perform an undo action */
+  //-------------------------------------------------------------
+  // Perform an undo action
   public void do_undo() {
     var da = get_current_da( "do_undo" );
     da.current_undo_buffer().undo();
     da.grab_focus();
   }
 
-  /* Perform a redo action */
+  //-------------------------------------------------------------
+  // Perform a redo action
   public void do_redo() {
     var da = get_current_da( "do_redo" );
     da.current_undo_buffer().redo();
     da.grab_focus();
   }
 
-  private bool on_canvas_mapped( Gdk.EventAny e ) {
-    get_current_da( "on_canvas_mapped" ).queue_draw();
-    return( false );
-  }
-
-  /* Called whenever the theme is changed */
+  //-------------------------------------------------------------
+  // Called whenever the theme is changed
   private void on_theme_changed( DrawArea da ) {
     Gtk.Settings? settings = Gtk.Settings.get_default();
     if( settings != null ) {
@@ -1261,10 +1350,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
   }
 
-  /*
-   Called whenever the undo buffer changes state.  Updates the state of
-   the undo and redo buffer buttons.
-  */
+  //-------------------------------------------------------------
+  // Called whenever the undo buffer changes state.  Updates the
+  // state of the undo and redo buffer buttons.
   public void do_buffer_changed( UndoBuffer buf ) {
     _undo_btn.set_sensitive( buf.undoable() );
     _undo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buf.undo_tooltip(), "<Control>z" ) );
@@ -1272,7 +1360,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     _redo_btn.set_tooltip_markup( Utils.tooltip_with_accel( buf.redo_tooltip(), "<Control><Shift>z" ) );
   }
 
-  /* Converts the given node name to an appropriate filename */
+  //-------------------------------------------------------------
+  // Converts the given node name to an appropriate filename
   private string convert_name_to_filename( string name ) {
 
     /* If the name contains newline characters, just use the first line */
@@ -1291,47 +1380,54 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Allow the user to select a filename to save the document as */
-  public bool save_file( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Allow the user to select a filename to save the document as
+  public void save_file( DrawArea da ) {
 
-    var dialog = new FileChooserNative( _( "Save File" ), this, FileChooserAction.SAVE, _( "Save" ), _( "Cancel" ) );
-    Utils.set_chooser_folder( dialog );
+    var dialog  = Utils.make_file_chooser( _( "Save File" ), _( "Save" ) );
+    var filters = new GLib.ListStore( typeof( FileFilter ) );
 
     var filter = new FileFilter();
-    var retval = false;
     filter.set_filter_name( _( "Minder" ) );
     filter.add_pattern( "*.minder" );
-    dialog.add_filter( filter );
+    filters.append( filter );
     if( da.get_doc().is_saved() ) {
-      dialog.set_filename( da.get_doc().filename );
+      dialog.set_initial_name( da.get_doc().filename );
     } else {
-      dialog.set_current_name( da.get_doc().label );
+      dialog.set_initial_name( da.get_doc().label );
       if( da.get_nodes().length > 0 ) {
         var root_str = da.get_nodes().index( 0 ).name.text.text.strip();
         if( root_str != "" ) {
-          dialog.set_current_name( convert_name_to_filename( root_str ) );
+          dialog.set_initial_name( convert_name_to_filename( root_str ) );
         }
       }
     }
-    if( dialog.run() == ResponseType.ACCEPT ) {
-      var fname = dialog.get_filename();
-      if( fname.substring( -7, -1 ) != ".minder" ) {
-        fname += ".minder";
-      }
-      da.get_doc().filename = fname;
-      da.get_doc().save();
-      _nb.current.label = da.get_doc().label;
-      _nb.current.tooltip = fname;
-      update_title( da );
-      save_tab_state( _nb.current );
-      retval = true;
-      Utils.store_chooser_folder( fname, false );
-    }
-    da.grab_focus();
-    return( retval );
+
+    dialog.set_filters( filters );
+
+    dialog.save.begin( this, null, (obj, res) => {
+      try {
+        var file = dialog.save.end( res );
+        if( file != null ) {
+          var fname = file.get_path();
+          if( !fname.has_suffix( ".minder" ) ) {
+            fname += ".minder";
+          }
+          da.get_doc().filename = fname;
+          da.get_doc().save();
+          set_tab_label_info( da.get_doc().label, fname );
+          update_title( da );
+          save_tab_state( _nb.page );
+          Utils.store_chooser_folder( fname, false );
+          da.grab_focus();
+        }
+      } catch( Error e ) {}
+    });
+
   }
 
-  /* Called when the save as button is clicked */
+  //-------------------------------------------------------------
+  // Called when the save as button is clicked
   public void do_save_as_file() {
     var da = get_current_da( "do_save_as_file" );
     save_file( da );
@@ -1355,12 +1451,12 @@ public class MainWindow : Gtk.ApplicationWindow {
     _zoom_scale.set_value( scale_value );
     _zoom_in.set_sensitive( scale_value < marks[marks.length-1] );
     _zoom_out.set_sensitive( scale_value > marks[0] );
-    save_tab_state( _nb.current );
+    save_tab_state( _nb.page );
   }
 
   /* Called whenever the DrawArea origin changes in the current tab */
   private void change_origin() {
-    save_tab_state( _nb.current );
+    save_tab_state( _nb.page );
   }
 
   /* Displays the node properties panel for the current node */
@@ -1373,7 +1469,7 @@ public class MainWindow : Gtk.ApplicationWindow {
         _stack.visible_child_name = tab;
       }
       if( !_inspector_nb.get_mapped() ) {
-        _pane.pack2( _inspector_nb, false, false );
+        _pane.end_child( _inspector_nb, false, false );
         var prop_width = _settings.get_int( "properties-width" );
         var pane_width = _pane.get_allocated_width();
         if( pane_width <= 1 ) {
@@ -1458,11 +1554,6 @@ public class MainWindow : Gtk.ApplicationWindow {
     return( false );
   }
 
-  /* Returns the value to display in the zoom control */
-  private string set_zoom_value( double val ) {
-    return( zoom_to_value( val ).to_string() );
-  }
-
   /* Called when the user uses the Control-s keyboard shortcut */
   private void action_save() {
     var da = get_current_da( "action_save" );
@@ -1528,25 +1619,24 @@ public class MainWindow : Gtk.ApplicationWindow {
     var all_tabs = _settings.get_boolean( "search-opt-all-tabs" );
     var current  = get_current_da( "on_search_change" );
     var text     = _search_entry.get_text().casefold();
-    var name     = all_tabs ? _nb.current.label : "";
+    var name     = all_tabs ? get_tab_label_name( _nb.page ) : "";
     if( text == "" ) return;
     current.get_match_items( name, text, search_opts, ref _search_items );
     if( all_tabs ) {
-      foreach (var tab in _nb.tabs ) {
-        var bin = (Gtk.Bin)tab.page;
-        var da = (DrawArea)bin.get_child();
+      for( int i=0; i<_nb.get_n_pages(); i++ ) {
+        var da = get_da( i );
         if( da != current ) {
-          da.get_match_items( tab.label, text, search_opts, ref _search_items );
+          da.get_match_items( get_tab_label_name( i ), text, search_opts, ref _search_items );
         }
       }
     }
   }
 
-  /*
-   Called when the user selects an item in the search list.  The current node
-   will be set to the node associated with the selection.
-  */
-  private void on_search_clicked( TreePath path, TreeViewColumn col ) {
+  //-------------------------------------------------------------
+  // Called when the user selects an item in the search list.
+  // The current node will be set to the node associated with the
+  // selection.
+  private void on_search_clicked( TreeView view, TreePath path, TreeViewColumn? col ) {
     TreeIter    it;
     string      tabname = "";
     Node?       node    = null;
@@ -1556,11 +1646,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     DrawArea    da      = get_current_da( "on_search_clicked" );
     _search_items.get_iter( out it, path );
     _search_items.get( it, 2, &node, 3, &conn, 4, &callout, 5, &group, 6, &tabname, -1 );
-    foreach (var tab in _nb.tabs ) {
-      if(tab.label == tabname) {
-        var bin = (Gtk.Bin)tab.page;
-        da = (DrawArea)bin.get_child();
-        _nb.current = tab;
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      if( get_tab_label_name( i ) == tabname ) {
+        da = get_da( i );
+        _nb.page = i;
         break;
       }
     }
@@ -1581,11 +1670,11 @@ public class MainWindow : Gtk.ApplicationWindow {
     da.grab_focus();
   }
 
-  /*
-   Checks the given filename to see if it contains any of the given suffixes.
-   If a valid suffix is found, return the filename without modification; otherwise,
-   returns the filename with the extension added.
-  */
+  //-------------------------------------------------------------
+  // Checks the given filename to see if it contains any of the
+  // given suffixes.  If a valid suffix is found, return the
+  // filename without modification; otherwise, returns the filename
+  // with the extension added.
   public string repair_filename( string fname, string[] extensions ) {
     foreach (string ext in extensions) {
       if( fname.has_suffix( ext ) ) {
@@ -1595,19 +1684,22 @@ public class MainWindow : Gtk.ApplicationWindow {
     return( fname + extensions[0] );
   }
 
-  /* Exports the model to the printer */
+  //-------------------------------------------------------------
+  // Exports the model to the printer
   private void action_print() {
     var print = new ExportPrint();
     print.print( get_current_da( "action_print" ), this );
   }
 
-  /* Displays the preferences dialog */
+  //-------------------------------------------------------------
+  // Displays the preferences dialog
   private void action_prefs() {
-    var prefs = new Preferences( this, _settings );
-    prefs.show_all();
+    var prefs = new Preferences( this );
+    prefs.present();
   }
 
-  /* Displays the shortcuts cheatsheet */
+  //-------------------------------------------------------------
+  // Displays the shortcuts cheatsheet
   private void action_shortcuts() {
 
     var builder = new Builder.from_resource( "/com/github/phase1geo/minder/shortcuts.ui" );
@@ -1632,38 +1724,52 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Displays the current sidebar tab */
+  //-------------------------------------------------------------
+  // Displays the current sidebar tab
   private void action_show_current() {
     show_properties( "current", PropertyGrab.FIRST );
   }
 
-  /* Displays the style sidebar tab */
+  //-------------------------------------------------------------
+  // Displays the style sidebar tab
   private void action_show_style() {
     show_properties( "style", PropertyGrab.FIRST );
   }
 
-  /* Displays the stickers sidebar tab */
+  //-------------------------------------------------------------
+  // Displays the stickers sidebar tab
   private void action_show_stickers() {
     show_properties( "sticker", PropertyGrab.FIRST );
   }
 
-  /* Displays the map sidebar tab */
+  //-------------------------------------------------------------
+  // Displays the map sidebar tab
   private void action_show_map() {
     show_properties( "map", PropertyGrab.FIRST );
   }
 
-  /* Shows the next tab in the tabbar */
+  //-------------------------------------------------------------
+  // Shows the next tab in the tabbar
   private void action_next_tab() {
     _nb.next_page();
   }
 
-  /* Shows the previous tab in the tabbar */
+  //-------------------------------------------------------------
+  // Shows the previous tab in the tabbar
   private void action_prev_tab() {
-    _nb.previous_page();
+    _nb.prev_page();
   }
 
-  /* Save the current tab state */
-  private void save_tab_state( Tab current_tab ) {
+  //-------------------------------------------------------------
+  // Displays the about dialog window.
+  private void action_about() {
+    var about_win = new About( this );
+    about_win.present();
+  }
+
+  //-------------------------------------------------------------
+  // Save the current tab state
+  private void save_tab_state( uint current_page ) {
 
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );
 
@@ -1671,17 +1777,15 @@ public class MainWindow : Gtk.ApplicationWindow {
       return;
     }
 
-    var       fname        = GLib.Path.build_filename( dir, "tab_state.xml" );
-    var       selected_tab = -1;
-    var       i            = 0;
-    Xml.Doc*  doc          = new Xml.Doc( "1.0" );
-    Xml.Node* root         = new Xml.Node( null, "tabs" );
+    var       fname = GLib.Path.build_filename( dir, "tab_state.xml" );
+    var       i     = 0;
+    Xml.Doc*  doc   = new Xml.Doc( "1.0" );
+    Xml.Node* root  = new Xml.Node( null, "tabs" );
 
     doc->set_root_element( root );
 
-    _nb.tabs.foreach((tab) => {
-      var       bin  = (Gtk.Bin)tab.page;
-      var       da   = (DrawArea)bin.get_child();
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      var       da   = get_da( i );
       Xml.Node* node = new Xml.Node( null, "tab" );
       node->new_prop( "path",  da.get_doc().filename );
       node->new_prop( "saved", da.get_doc().is_saved().to_string() );
@@ -1689,15 +1793,9 @@ public class MainWindow : Gtk.ApplicationWindow {
       node->new_prop( "origin-y", da.origin_y.to_string() );
       node->new_prop( "scale", da.sfactor.to_string() );
       root->add_child( node );
-      if( tab == current_tab ) {
-        selected_tab = i;
-      }
-      i++;
-    });
-
-    if( selected_tab > -1 ) {
-      root->new_prop( "selected", selected_tab.to_string() );
     }
+
+    root->new_prop( "selected", current_page.to_string() );
 
     /* Save the file */
     doc->save_format_file( fname, 1 );
@@ -1706,7 +1804,8 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   }
 
-  /* Loads the tab state */
+  //-------------------------------------------------------------
+  // Loads the tab state
   public void load_tab_state() {
 
     var tab_state = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "tab_state.xml" );
@@ -1759,28 +1858,30 @@ public class MainWindow : Gtk.ApplicationWindow {
     } else if( !tab_skipped ) {
       var s = root->get_prop( "selected" );
       if( s != null ) {
-        _nb.current = _nb.get_tab_by_index( int.parse( s ) );
-        tab_changed( _nb.current );
+        _nb.page = int.parse( s );
+        tab_changed( _nb.page );
       }
     }
 
     // Save the tab state if we did something
     if( tab_skipped ) {
-      save_tab_state( _nb.current );
+      save_tab_state( _nb.page );
     }
 
     delete doc;
 
   }
 
-  /* Returns the height of a single line label */
+  //-------------------------------------------------------------
+  // Returns the height of a single line label
   public int get_label_height() {
     int min_height, nat_height;
     _scale_lbl.get_preferred_height( out min_height, out nat_height );
     return( nat_height );
   }
 
-  /* Generate a notification */
+  //-------------------------------------------------------------
+  // Generate a notification
   public void notification( string title, string msg, NotificationPriority priority = NotificationPriority.NORMAL ) {
     GLib.Application? app = null;
     @get( "application", ref app );

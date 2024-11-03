@@ -316,4 +316,23 @@ public class Utils {
     return( (current_child == null) ? -1 : index );
   }
 
+  //-------------------------------------------------------------
+  // Creates a file chooser dialog and returns it to the code
+  public static Gtk.FileDialog make_file_chooser( string user_title, string user_accept_label ) {
+      
+    var gtk_settings = Gtk.Settings.get_default();
+
+    var use_header = gtk_settings.gtk_dialogs_use_header;
+    gtk_settings.gtk_dialogs_use_header = true;
+   
+    var dialog = new FileDialog() {
+      title = user_title,
+      accept_label = user_accept_label
+    };
+    gtk_settings.gtk_dialogs_use_header = use_header;
+  
+    return( dialog );
+    
+  }
+
 }

@@ -85,26 +85,29 @@ public class ZoomWidget : Gtk.Box {
 
     homogeneous = true;
 
-    get_style_context().add_class( Gtk.STYLE_CLASS_LINKED );
+    add_css_class( Granite.STYLE_CLASS_LINKED );
 
-    _zoom_out = new Button.from_icon_name( "zoom-out-symbolic", IconSize.SMALL_TOOLBAR );
-    _zoom_out.relief = ReliefStyle.NORMAL;
-    _zoom_out.set_tooltip_markup( Utils.tooltip_with_accel( _( "Zoom Out" ), "<Control>minus" ) );
+    _zoom_out = new Button.from_icon_name( "zoom-out-symbolic" ) {
+      has_frame      = false,
+      tooltip_markup = Utils.tooltip_with_accel( _( "Zoom Out" ), "<Control>minus" )
+    };
     _zoom_out.clicked.connect( zoom_out );
 
-    _zoom_actual = new Button.with_label( "100%" );
-    _zoom_actual.relief = ReliefStyle.NORMAL;
-    _zoom_actual.set_tooltip_markup( Utils.tooltip_with_accel( _( "Zoom Actual" ), "<Control>0" ) );
+    _zoom_actual = new Button.with_label( "100%" ) {
+      has_frame      = false,
+      tooltip_markup = Utils.tooltip_with_accel( _( "Zoom Actual" ), "<Control>0" )
+    };
     _zoom_actual.clicked.connect( zoom_actual );
 
-    _zoom_in = new Button.from_icon_name( "zoom-in-symbolic", IconSize.SMALL_TOOLBAR );
-    _zoom_in.relief = ReliefStyle.NORMAL;
-    _zoom_in.set_tooltip_markup( Utils.tooltip_with_accel( _( "Zoom In" ), "<Control>plus" ) );
+    _zoom_in = new Button.from_icon_name( "zoom-in-symbolic" ) {
+      has_frame      = false,
+      tooltip_markup = Utils.tooltip_with_accel( _( "Zoom In" ), "<Control>plus" )
+    };
     _zoom_in.clicked.connect( zoom_in );
 
-    pack_start( _zoom_out,    false, fill );
-    pack_start( _zoom_actual, false, fill );
-    pack_start( _zoom_in,     false, fill );
+    append( _zoom_out );
+    append( _zoom_actual );
+    append( _zoom_in );
 
     /* Update the state of the widget */
     update_state();

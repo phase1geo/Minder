@@ -561,15 +561,9 @@ public class ExportXMind8 : Export {
         // Add an entry to the archive
         Archive.Entry entry = new Archive.Entry();
         entry.set_pathname( pwd.get_relative_path( file ) );
-#if VALAC048
         entry.set_size( (Archive.int64_t)file_info.get_size() );
         entry.set_filetype( Archive.FileType.IFREG );
         entry.set_perm( (Archive.FileMode)0644 );
-#else
-        entry.set_size( file_info.get_size() );
-        entry.set_filetype( (uint)Posix.S_IFREG );
-        entry.set_perm( 0644 );
-#endif
         if( archive.write_header( entry ) != Archive.Result.OK ) {
           critical( "Error writing '%s': %s (%d)", file.get_path(), archive.error_string(), archive.errno() );
           continue;
@@ -582,11 +576,7 @@ public class ExportXMind8 : Export {
           if( bytes_read <= 0 ) {
             break;
           }
-#if VALAC048
           archive.write_data( buffer );
-#else
-          archive.write_data( buffer, bytes_read );
-#endif
         }
       } catch( GLib.Error e ) {
         critical( e.message );
@@ -941,7 +931,7 @@ public class ExportXMind8 : Export {
 
     string? blc = n->get_prop( "border-line-color" );
     if( blc != null ) {
-      RGBA c = {1.0, 1.0, 1.0, 1.0};
+      RGBA c = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
       c.parse( blc );
       node.link_color = c;
     }
@@ -956,7 +946,7 @@ public class ExportXMind8 : Export {
 
     string? f = n->get_prop( "fill" );
     if( f != null ) {
-      RGBA c = {1.0, 1.0, 1.0, 1.0};
+      RGBA c = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
       c.parse( f );
       node.link_color = c;
       node.style.node_fill = true;
@@ -964,7 +954,7 @@ public class ExportXMind8 : Export {
 
     string? lc = n->get_prop( "line-color" );
     if( lc != null ) {
-      RGBA c = {1.0, 1.0, 1.0, 1.0};
+      RGBA c = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
       c.parse( lc );
       node.link_color = c;
     }
@@ -1019,7 +1009,7 @@ public class ExportXMind8 : Export {
 
     string? lc = n->get_prop( "line-color" );
     if( lc != null ) {
-      RGBA c = {1.0, 1.0, 1.0, 1.0};
+      RGBA c = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
       c.parse( lc );
       conn.color = c;
     }
@@ -1048,7 +1038,7 @@ public class ExportXMind8 : Export {
 
     string? f = n->get_prop( "fill" );
     if( f != null ) {
-      RGBA c = {1.0, 1.0, 1.0, 1.0};
+      RGBA c = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
       c.parse( f );
       group.color = c;
     }
@@ -1089,7 +1079,6 @@ public class ExportXMind8 : Export {
         continue;
       }
 
-#if VALAC048
       uint8[]         buffer;
       Archive.int64_t offset;
 
@@ -1098,17 +1087,6 @@ public class ExportXMind8 : Export {
           break;
         }
       }
-#else
-      void*       buffer = null;
-      size_t      buffer_length;
-      Posix.off_t offset;
-
-      while( archive.read_data_block( out buffer, out buffer_length, out offset ) == Archive.Result.OK ) {
-        if( extractor.write_data_block( buffer, buffer_length, offset ) != Archive.Result.OK ) {
-          break;
-        }
-      }
-#endif
 
     }
 
