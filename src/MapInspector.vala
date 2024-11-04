@@ -202,10 +202,11 @@ public class MapInspector : Box {
   /* Adds the layout UI */
   private void add_layout_ui() {
 
-    var icons = new Array<string>();
-    var names = new Array<string>();
-    _da.layouts.get_icons( ref icons );
-    _da.layouts.get_names( ref names );
+    var layouts = new Layouts();
+    var icons   = new Array<string>();
+    var names   = new Array<string>();
+    layouts.get_icons( ref icons );
+    layouts.get_names( ref names );
 
     /* Create the modebutton to select the current layout */
     var lbl = new Label( Utils.make_title( _( "Node Layouts" ) ) ) {

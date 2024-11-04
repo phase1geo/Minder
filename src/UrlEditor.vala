@@ -35,7 +35,7 @@ public class UrlEditor : Box {
   /* Default constructor */
   public UrlEditor( DrawArea da ) {
 
-    Object( orientation: Orientation.VERTICAL, spacing: 5, border_width: 5 );
+    Object( orientation: Orientation.VERTICAL, spacing: 5 );
 
     _da = da;
 

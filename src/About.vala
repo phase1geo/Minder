@@ -22,27 +22,37 @@
 using Gtk;
 using Gdk;
 
-public class About : AboutDialog {
+public class About {
+
+  private AboutDialog _about;
 
   /* Constructor */
   public About( MainWindow win ) {
 
-   	set_destroy_with_parent( true );
-	  set_transient_for( win);
-	  set_modal( true );
+    _about = new AboutDialog();
 
-    authors       = { "Trevor Williams" };
-    program_name  = "Minder";
-    comments      = _( "Mind-mapping application" );
-    copyright     = _( "Copyright © 2018-2024 Trevor Williams" );
-    version       = Minder.version;
-    license_type  = License.GPL_3_0;
-    website       = "https://appcenter.elementary.io/com.github.phase1geo.minder/";
-    website_label = _( "Minder in AppCenter" );
+   	_about.set_destroy_with_parent( true );
+	  _about.set_transient_for( win);
+	  _about.set_modal( true );
+
+    _about.authors       = { "Trevor Williams" };
+    _about.program_name  = "Minder";
+    _about.comments      = _( "Mind-mapping application" );
+    _about.copyright     = _( "Copyright © 2018-2024 Trevor Williams" );
+    _about.version       = Minder.version;
+    _about.license_type  = License.GPL_3_0;
+    _about.website       = "https://appcenter.elementary.io/com.github.phase1geo.minder/";
+    _about.website_label = _( "Minder in AppCenter" );
 
     var image = new Image.from_resource( "/com/github/phase1geo/minder/minder-logo.svg" );
-    logo = image.get_paintable();
+    _about.logo = image.get_paintable();
 
+  }
+
+  //-------------------------------------------------------------
+  // Displays the About window
+  public void show() {
+    _about.present();
   }
 
 }

@@ -93,8 +93,8 @@ class ImageEditor {
       _image.crop_h = node.image.crop_h;
 
       /* Load the image and draw it */
-      _da.width_request      = node.image.get_surface().get_width();
-      _da.height_request     = node.image.get_surface().get_height();
+      _da.width_request      = node.image.orig_width;
+      _da.height_request     = node.image.orig_height;
       _crop_points[8].width  = _image.crop_w;
       _crop_points[8].height = _image.crop_h;
       set_crop_points();
@@ -115,8 +115,8 @@ class ImageEditor {
 
     /* Load the image and draw it */
     if( _image.valid ) {
-      _da.width_request      = _image.get_surface().get_width();
-      _da.height_request     = _image.get_surface().get_height();
+      _da.width_request      = _image.orig_width;
+      _da.height_request     = _image.orig_height;
       _crop_points[8].width  = _image.crop_w;
       _crop_points[8].height = _image.crop_h;
       set_crop_points();
@@ -438,7 +438,7 @@ class ImageEditor {
   private void draw_image( Context ctx ) {
 
     /* Draw the cropped portion of the image */
-    ctx.set_source_surface( _image.get_surface(), 0, 0 );
+    cairo_set_source_pixbuf( ctx, _image.get_orig_pixbuf(), 0, 0 );
     ctx.paint();
 
     /* On top of that, draw the crop transparency */
@@ -453,7 +453,7 @@ class ImageEditor {
 
     /* Finally, draw the portion of the image this not cropped */
     ctx.set_operator( Operator.OVER );
-    ctx.set_source_surface( _image.get_surface(), 0, 0 );
+    cairo_set_source_pixbuf( ctx, _image.get_orig_pixbuf(), 0, 0 );
     ctx.rectangle( _image.crop_x, _image.crop_y, _image.crop_w, _image.crop_h );
     ctx.fill();
 

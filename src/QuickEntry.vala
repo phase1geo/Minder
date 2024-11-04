@@ -293,9 +293,13 @@ public class QuickEntry : Gtk.Window {
       /* Make sure that we clear the node stack */
       _node_stack = null;
 
+      return( true );
+
     }
 
     clear_node_tag();
+
+    return( false );
 
   }
 

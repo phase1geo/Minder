@@ -61,7 +61,7 @@ public class EmptyMenu {
     // Add keyboard shortcuts
     app.set_accels_for_action( "empty.action_paste",            { "<Control>y" } );
     app.set_accels_for_action( "empty.action_add_root_node",    { "Return" } );
-    app.set_accels_for_action( "empty.action_add_quick_entry",  { "<Control<Shift>e" } );
+    app.set_accels_for_action( "empty.action_add_quick_entry",  { "<Control><Shift>e" } );
     app.set_accels_for_action( "empty.action_select_root_node", { "m" } );
 
   }

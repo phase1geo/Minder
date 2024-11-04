@@ -730,15 +730,20 @@ public class StyleInspector : Box {
       use_font = true,
       use_size = true
     };
-    _node_font.set_filter_func( (family, face) => {
-      var fd     = face.describe();
-      var weight = fd.get_weight();
-      var style  = fd.get_style();
-      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+    var font_filter = new CustomFilter((obj) => {
+      var font_face = (obj as Pango.FontFace);
+      if( font_face != null ) {
+        var fd     = font_face.describe();
+        var weight = fd.get_weight();
+        var style  = fd.get_style();
+        return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+      }
+      return( false );
     });
-    _node_font.font_set.connect(() => {
-      var family = _node_font.get_font_family().get_name();
-      var size   = _node_font.get_font_size();
+    font_dialog.set_filter( font_filter );
+    _node_font.notify["font_desc"].connect(() => {
+      var family = _node_font.font_desc.get_family();
+      var size   = _node_font.font_desc.get_size();
       _da.undo_buffer.add_item( new UndoStyleNodeFont( _affects, family, size, _da ) );
     });
 
@@ -1042,19 +1047,23 @@ public class StyleInspector : Box {
 
     var font_dialog = new FontDialog();
     _conn_font = new FontDialogButton( font_dialog ) {
-      halign   = Align.END,
       use_font = true,
       use_size = true
     };
-    _conn_font.set_filter_func( (family, face) => {
-      var fd     = face.describe();
-      var weight = fd.get_weight();
-      var style  = fd.get_style();
-      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+    var font_filter = new CustomFilter((obj) => {
+      var font_face = (obj as Pango.FontFace);
+      if( font_face != null ) {
+        var fd     = font_face.describe();
+        var weight = fd.get_weight();
+        var style  = fd.get_style();
+        return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+      }
+      return( false );
     });
-    _conn_font.font_set.connect(() => {
-      var family = _conn_font.get_font_family().get_name();
-      var size   = _conn_font.get_font_size();
+    font_dialog.set_filter( font_filter );
+    _conn_font.notify["font_desc"].connect(() => {
+      var family = _node_font.font_desc.get_family();
+      var size   = _node_font.font_desc.get_size();
       _da.undo_buffer.add_item( new UndoStyleConnectionFont( _affects, family, size, _da ) );
     });
 
@@ -1149,19 +1158,23 @@ public class StyleInspector : Box {
 
     var font_dialog = new FontDialog();
     _callout_font = new FontDialogButton( font_dialog ) {
-      halign   = Align.END,
       use_font = true,
       use_size = true
     };
-    _callout_font.set_filter_func( (family, face) => {
-      var fd     = face.describe();
-      var weight = fd.get_weight();
-      var style  = fd.get_style();
-      return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+    var font_filter = new CustomFilter((obj) => {
+      var font_face = (obj as Pango.FontFace);
+      if( font_face != null ) {
+        var fd     = font_face.describe();
+        var weight = fd.get_weight();
+        var style  = fd.get_style();
+        return( (weight == Pango.Weight.NORMAL) && (style == Pango.Style.NORMAL) );
+      }
+      return( false );
     });
-    _callout_font.font_set.connect(() => {
-      var family = _callout_font.get_font_family().get_name();
-      var size   = _callout_font.get_font_size();
+    font_dialog.set_filter( font_filter );
+    _callout_font.notify["font_desc"].connect(() => {
+      var family = _node_font.font_desc.get_family();
+      var size   = _node_font.font_desc.get_size();
       _da.undo_buffer.add_item( new UndoStyleCalloutFont( _affects, family, size, _da ) );
     });
 
@@ -1421,7 +1434,7 @@ public class StyleInspector : Box {
     var link_dashes = styles.get_link_dashes();
     for( int i=0; i<link_dashes.length; i++ ) {
       if( link_dashes.index( i ).name == style.connection_dash.name ) {
-        _conn_dash.paintable = link_dashes.index( i ).make_icon();
+        // TODO _conn_dash.paintable = link_dashes.index( i ).make_icon();
         break;
       }
     }
@@ -1460,15 +1473,15 @@ public class StyleInspector : Box {
     _node_fill.set_sensitive( style.node_border.is_fillable() );
     _node_margin.set_value( (double)node_margin );
     _node_padding.set_value( (double)node_padding );
-    _node_font.set_font( style.node_font.to_string() );
+    _node_font.set_font_features( style.node_font.to_string() );
     _node_width.set_value( (float)node_width );
     _node_markup.set_active( (bool)node_markup );
     _conn_arrow.paintable = Connection.make_arrow_icon( style.connection_arrow );
     _conn_lwidth.set_value( (double)conn_line_width );
-    _conn_font.set_font( style.connection_font.to_string() );
+    _conn_font.set_font_features( style.connection_font.to_string() );
     _conn_twidth.set_value( style.connection_title_width );
     _conn_padding.set_value( (double)conn_padding );
-    _callout_font.set_font( style.callout_font.to_string() );
+    _callout_font.set_font_features( style.callout_font.to_string() );
     _callout_padding.set_value( (double)callout_padding );
     _callout_ptr_width.set_value( (double)callout_pwidth );
     _callout_ptr_length.set_value( (double)callout_plength );

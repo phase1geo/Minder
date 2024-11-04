@@ -35,7 +35,6 @@ public class Preferences : Gtk.Dialog {
   public Preferences( MainWindow win ) {
 
     Object(
-      border_width: 5,
       deletable: false,
       resizable: false,
       title: _("Preferences"),

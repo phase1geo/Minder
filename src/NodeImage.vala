@@ -29,8 +29,8 @@ public class NodeImage {
   public const int EDIT_WIDTH  = 600;
   public const int EDIT_HEIGHT = 600;
 
-  private ImageSurface _surface;
-  private Pixbuf       _buf;
+  private Pixbuf _orig;
+  private Pixbuf _buf;
 
   public int  id     { get; set; default = -1; }
   public bool valid  { get; private set; default = false; }
@@ -38,6 +38,16 @@ public class NodeImage {
   public int  crop_y { get; set; default = 0; }
   public int  crop_w { get; set; default = 0; }
   public int  crop_h { get; set; default = 0; }
+  public int  orig_width {
+    get {
+      return( _orig.width );
+    }
+  }
+  public int orig_height {
+    get {
+      return( _orig.height );
+    }
+  }
   public int  width  {
     get {
       return( _buf.width );
@@ -164,15 +174,14 @@ public class NodeImage {
       }
 
       /* Read in the file into the given buffer */
-      var buf   = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
-      _surface = (ImageSurface)cairo_surface_create_from_pixbuf( buf, 1, null );
+      _orig = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
 
       /* Initialize the variables */
       if( init ) {
         crop_x = 0;
         crop_y = 0;
-        crop_w = _surface.get_width();
-        crop_h = _surface.get_height();
+        crop_w = _orig.width;
+        crop_h = _orig.height;
       }
 
     } catch( Error e ) {
@@ -192,17 +201,16 @@ public class NodeImage {
 
     if( !resizable ) return;
 
-    var scale = (width * 1.0) / crop_w;
-    var buf   = pixbuf_get_from_surface( _surface, crop_x, crop_y, crop_w, crop_h );
+    var scale      = (width * 1.0) / crop_w;
     var int_crop_h = (int)(crop_h * scale);
 
-    _buf = buf.scale_simple( width, int_crop_h, InterpType.BILINEAR );
+    _buf = _orig.scale_simple( width, int_crop_h, InterpType.BILINEAR );
 
   }
 
   /* Returns the original pixbuf */
-  public ImageSurface? get_surface() {
-    return( _surface );
+  public Pixbuf? get_orig_pixbuf() {
+    return( _orig );
   }
 
   /* Returns a pixbuf */
@@ -216,9 +224,8 @@ public class NodeImage {
     ctx.paint_with_alpha( opacity );
   }
 
-
   /* Sets the given image widget to the stored pixbuf */
-  public void set_image( Image img ) {
+  public void set_image( Picture img ) {
 
     var scale_width  = 300.0 / _buf.width;
     var scale_height = 300.0 / _buf.height;
@@ -233,8 +240,9 @@ public class NodeImage {
     }
 
     /* Create the pixbuf thumbnail and set it in the given image widget */
-    var buf = _buf.scale_simple( w, h, InterpType.BILINEAR );
-    img.set_from_pixbuf( buf );
+    var buf     = _buf.scale_simple( w, h, InterpType.BILINEAR );
+    var texture = Texture.for_pixbuf( buf );
+    img.set_paintable( (Paintable)texture );
 
   }
 

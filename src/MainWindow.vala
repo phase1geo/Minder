@@ -305,8 +305,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Returns the DrawingArea associated with the given notebook
   // page index.
   private DrawArea get_da( int page ) {
-    var pg = _nb.get_nth_page( page );
-    var ol = (Overlay)Utils.get_child_at_index( pg, 0 );
+    var ol = (Overlay)_nb.get_nth_page( page );
     return( (DrawArea)ol.child );
   }
 
@@ -703,17 +702,6 @@ public class MainWindow : Gtk.ApplicationWindow {
     var zbox = new Box( Orientation.VERTICAL, 5 );
     zbox.append( _scale_lbl );
     zbox.append( zoom_box );
-
-    /* Create zoom menu popover */
-    Box box = new Box( Orientation.VERTICAL, 5 ) {
-      margin_start  = 5,
-      margin_end    = 5,
-      margin_top    = 5,
-      margin_bottom = 5
-    };
-    box.append( _scale_lbl );
-    box.append( zoom_box );
-    box.append( new Separator( Orientation.HORIZONTAL ) );
 
     var popover = new PopoverMenu.from_model( menu );
     popover.add_child( zbox, "scale" );
@@ -1755,7 +1743,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Displays the about dialog window.
   private void action_about() {
     var about_win = new About( this );
-    about_win.present();
+    about_win.show();
   }
 
   //-------------------------------------------------------------

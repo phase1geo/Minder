@@ -34,7 +34,13 @@ public class Exporter : Box {
 
     Object( orientation: Orientation.VERTICAL, spacing: 0 );
 
-    // Get the list of export types
+    _stack = new Stack() {
+      transition_type = StackTransitionType.NONE,
+      hhomogeneous    = true,
+      vhomogeneous    = false
+    };
+
+    // Populate the list of export types
     string[] export_types = {};
     for( int i=0; i<win.exports.length(); i++ ) {
       if( win.exports.index( i ).exportable ) {
@@ -60,12 +66,6 @@ public class Exporter : Box {
     var bbox = new Box( Orientation.HORIZONTAL, 5 );
     bbox.append( mb );
     bbox.append( export );
-
-    _stack = new Stack() {
-      transition_type = StackTransitionType.NONE,
-      hhomogeneous    = true,
-      vhomogeneous    = false
-    };
 
     _stack_reveal = new Revealer() {
       child = _stack
