@@ -106,7 +106,7 @@ public class NodesMenu {
     menu.append_section( null, sel_menu );
     menu.append_section( null, align_menu );
 
-    _popover = new Popover.with_model( menu );
+    _popover = new PopoverMenu.from_model( menu );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();
@@ -263,10 +263,10 @@ public class NodesMenu {
   /* Changes the color of all selected nodes */
   public void action_change_link_colors() {
     var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
-    if( color_picker.run() == ResponseType.OK ) {
+    color_picker.color_activated.connect((color) => {
       _da.change_link_colors( color_picker.get_rgba() );
-    }
-    color_picker.close();
+    });
+    color_picker.present();
   }
 
   /* Randomize the selected link colors */

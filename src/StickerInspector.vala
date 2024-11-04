@@ -107,10 +107,9 @@ public class StickerInspector : Box {
     mbox.append( _matched_box );
 
     var msw = new ScrolledWindow() {
-      expand = false,
-      child  = mbox
+      child = mbox
     };
-    msw.add_css_class( Gtk.STYLE_CLASS_VIEW );
+    msw.add_css_class( Granite.STYLE_CLASS_VIEW );
 
     /* Create stack */
     _stack = new Stack();
@@ -150,8 +149,8 @@ public class StickerInspector : Box {
       var category = create_category( box, categories.index( i ) );
       var icons    = _sticker_set.get_category_icons( categories.index( i ) );
       for( int j=0; j<icons.length; j++ ) {
-        create_image( category,     icons.index( j ).resource, icons.index( j ).tooltip, true );
-        create_image( _matched_box, icons.index( j ).resource, icons.index( j ).tooltip, true );
+        create_image( category,     icons.index( j ).resource, icons.index( j ).tooltip );
+        create_image( _matched_box, icons.index( j ).resource, icons.index( j ).tooltip );
       }
       create_import( category );
     }
@@ -161,15 +160,15 @@ public class StickerInspector : Box {
   /* Creates the expander flowbox for the given category name and adds it to the sidebar */
   private FlowBox create_category( Box box, string name ) {
 
+    /* Create the flowbox which will contain the stickers */
+    var fbox = create_icon_box( name );
+
     /* Create expander */
     var exp = new Expander( Utils.make_title( name ) ) {
       use_markup = true,
-      expanded   = true
+      expanded   = true,
+      child      = fbox
     };
-
-    /* Create the flowbox which will contain the stickers */
-    var fbox = create_icon_box( name );
-    exp.add( fbox );
 
     box.append( exp );
 
@@ -178,17 +177,14 @@ public class StickerInspector : Box {
   }
 
   /* Creates the image from the given name and adds it to the flow box */
-  private void create_image( FlowBox box, string name, string tooltip, bool add ) {
+  private void create_image( FlowBox fbox, string name, string tooltip ) {
     var pixbuf = StickerSet.make_pixbuf( name );
     if( pixbuf != null ) {
-      var img = new Image.from_pixbuf( pixbuf );
-      img.name = name;
-      img.set_tooltip_text( tooltip );
-      if( add ) {
-        box.add( img );
-      } else {
-        box.insert( img, (int)(box.get_children().length() - 1) );
-      }
+      var img = new Image.from_pixbuf( pixbuf ) {
+        name         = name,
+        tooltip_text = tooltip
+      };
+      fbox.append( img );
     }
   }
 
@@ -198,7 +194,7 @@ public class StickerInspector : Box {
       name = "",
       tooltip_text = _( "Add custom stickers" )
     };
-    box.add( img );
+    box.append( img );
   }
 
   /* Creates the icon box and sets it up */
@@ -228,31 +224,36 @@ public class StickerInspector : Box {
 
     });
 
-    var primary_click = new GestureClicked() {
+    var primary_click = new GestureClick() {
       button = Gdk.BUTTON_PRIMARY
     };
-    fbox.add_controller( click );
+    fbox.add_controller( primary_click );
     primary_click.pressed.connect((n_press, x, y) => {
-      var int_x = (int)x;
-      var int_y = (int)y;
-      if( e.button == Gdk.BUTTON_PRIMARY ) {
-        if( fbox.get_child_at_pos( int_x, int_y ).get_child().name == "" ) {
-          import_stickers( fbox, category );
-        }
-      } else if( e.button == Gdk.BUTTON_SECONDARY ) {
-        _clicked_category = fbox;
-        _clicked_sticker  = fbox.get_child_at_pos( int_x, int_y ).get_child().name;
-        if( _clicked_sticker != "" ) {
-          if( _clicked_category == _favorites ) {
-            Utils.popup_menu( _favorite_menu, e );
-          } else if( is_custom( _clicked_sticker ) ) {
-            Utils.popup_menu( _custom_menu, e );
-          } else {
-            Utils.popup_menu( _builtin_menu, e );
-          }
-        }
+      if( fbox.get_child_at_pos( (int)x, (int)y ).get_child().name == "" ) {
+        import_stickers( fbox, category );
       }
-      return( true );
+    });
+
+    var secondary_click = new GestureClick() {
+      button = Gdk.BUTTON_SECONDARY
+    };
+    fbox.add_controller( secondary_click );
+    secondary_click.pressed.connect((n_press, x, y) => {
+      var sticker = fbox.get_child_at_pos( (int)x, (int)y );
+      _clicked_category = fbox;
+      _clicked_sticker  = sticker.get_child().name;
+      if( _clicked_sticker != "" ) {
+        PopoverMenu popover;
+        if( _clicked_category == _favorites ) {
+          popover = new PopoverMenu.from_model( _favorite_menu );
+        } else if( is_custom( _clicked_sticker ) ) {
+          popover = new PopoverMenu.from_model( _custom_menu );
+        } else {
+          popover = new PopoverMenu.from_model( _builtin_menu );
+        }
+        popover.set_parent( sticker );
+        popover.popup();
+      }
     });
 
     return( fbox );
@@ -271,21 +272,28 @@ public class StickerInspector : Box {
   private void handle_remove() {
     if( _sticker_set.remove_sticker( _clicked_sticker ) ) {
       make_unfavorite();
-      _clicked_category.get_children().foreach((w) => {
+      var index = 0;
+      var w     = Utils.get_child_at_index( _clicked_category, index++ );
+      while( w != null ) {
         if( (w as FlowBoxChild).get_child().name == _clicked_sticker ) {
           _clicked_category.remove( w );
+          return;
         }
-      });
+        w = Utils.get_child_at_index( _clicked_category, index++ );
+      }
     }
   }
 
   /* Returns true if the given icon name is favorited */
   private bool is_favorite( string name ) {
-    bool exists = false;
-    _favorites.get_children().foreach((w) => {
-      exists |= (w as FlowBoxChild).get_child().name == name;
-    });
-    return( exists );
+    var index = 0;
+    var w     = Utils.get_child_at_index( _favorites, index++ );
+    while( w != null ) {
+      if( (w as FlowBoxChild).get_child().name == name ) {
+        return( true );
+      }
+    }
+    return( false );
   }
 
   /* Returns true if the given sticker is a custom sticker */
@@ -300,8 +308,7 @@ public class StickerInspector : Box {
     if( _sticker_set.get_icon_info( _clicked_sticker, out tooltip ) ) {
 
       /* Add the sticker to the favorites section */
-      create_image( _favorites, _clicked_sticker, tooltip, true );
-      _favorites.show_all();
+      create_image( _favorites, _clicked_sticker, tooltip );
 
       /* Save the favorited status */
       save_favorites();
@@ -312,12 +319,16 @@ public class StickerInspector : Box {
 
   /* Remove the current sticker as a favorite */
   private void make_unfavorite() {
-    _favorites.get_children().foreach((w) => {
+    var index = 0;
+    var w     = Utils.get_child_at_index( _favorites, index++ );
+    while( w != null ) {
       if( (w as FlowBoxChild).get_child().name == _clicked_sticker ) {
         _favorites.remove( w );
         save_favorites();
+        return;
       }
-    });
+      w = Utils.get_child_at_index( _favorites, index++ );
+    }
   }
 
   /* Save the favorited stickers to the save file */
@@ -325,12 +336,15 @@ public class StickerInspector : Box {
     Xml.Doc*  doc  = new Xml.Doc();
     Xml.Node* root = new Xml.Node( null, "favorites" );
     doc->set_root_element( root );
-    _favorites.get_children().foreach((w) => {
+    var index = 0;
+    var w     = Utils.get_child_at_index( _favorites, index++ );
+    while( w != null ) {
       var name = (w as FlowBoxChild).get_child().name;
       Xml.Node* n = new Xml.Node( null, "sticker" );
       n->set_prop( "name", name );
       root->add_child( n );
-    });
+      w = Utils.get_child_at_index( _favorites, index++ );
+    }
     doc->save_format_file( favorites, 1 );
     delete doc;
   }
@@ -345,7 +359,7 @@ public class StickerInspector : Box {
         var name = it->get_prop( "name" );
         string tooltip;
         if( _sticker_set.get_icon_info( name, out tooltip ) ) {
-          create_image( _favorites, name, tooltip, true );
+          create_image( _favorites, name, tooltip );
         }
       }
     }
@@ -386,23 +400,25 @@ public class StickerInspector : Box {
   /* Imports one or more stickers from the filesystem and imports them into the given category */
   private void import_stickers( FlowBox fbox, string category ) {
 
-    /* Get the file to open from the user */
-    var dialog = new FileChooserNative( _( "Import Sticker(s)" ), _win, FileChooserAction.OPEN, _( "Import" ), _( "Cancel" ) ) {
-      select_multiple = true
-    };
+    var dialog = Utils.make_file_chooser( _( "Import Sticker(s)" ), _( "Import" ) );
 
-    if( dialog.run() == ResponseType.ACCEPT ) {
-      var stickers = dialog.get_filenames();
-      stickers.foreach((sticker) => {
-        var parts = Path.get_basename( sticker ).split( "." );
-        if( _sticker_set.load_sticker( category, parts[0], sticker, true ) ) {
-          string tooltip;
-          _sticker_set.get_icon_info( sticker, out tooltip );
-          create_image( fbox, sticker, tooltip, false );
-          fbox.show_all();
+    dialog.open_multiple.begin( _win, null, (obj, res) => {
+      try {
+        var files = dialog.open_multiple.end( res );
+        if( files != null ) {
+          for( int i=0; i<files.get_n_items(); i++ ) {
+            var file    = (File)files.get_item( i );
+            var sticker = file.get_path();
+            var parts   = Path.get_basename( sticker ).split( "." );
+            if( _sticker_set.load_sticker( category, parts[0], sticker, true ) ) {
+              string tooltip;
+              _sticker_set.get_icon_info( sticker, out tooltip );
+              create_image( fbox, sticker, tooltip );
+            }
+          }
         }
-      });
-    }
+      } catch( Error e ) {}
+    });
 
   }
 

@@ -430,7 +430,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void close_tab( int page_num ) {
     if( _nb.get_n_pages() == 1 ) return;
     var da = get_da( page_num );
-    if( da.get_doc.is_saved() ) {
+    if( da.get_doc().is_saved() ) {
       _nb.detach_tab( _nb.get_nth_page( _nb.page ) );
     } else {
       show_save_warning( da );
@@ -471,8 +471,9 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
 
     /* Create the overlay that will hold the canvas so that we can put an entry box for emoji support */
-    var overlay = new Overlay();
-    overlay.add( da );
+    var overlay = new Overlay() {
+      child = da
+    };
 
     var tab_label = new Label( da.get_doc().label ) {
       margin_start  = 10,
@@ -509,7 +510,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     tab_motion.enter.connect((x, y) => {
       tab_revealer.reveal_child = (_nb.get_n_pages() > 1);
     });
-    tab_motion.leave.connect((x, y) => {
+    tab_motion.leave.connect(() => {
       tab_revealer.reveal_child = (_nb.page == tab_index);
     });
 
@@ -1116,7 +1117,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Displays the save warning dialog window
-  public bool show_save_warning( DrawArea da ) {
+  public void show_save_warning( DrawArea da ) {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
       _( "Save current unnamed document?" ),
@@ -1132,26 +1133,19 @@ public class MainWindow : Gtk.ApplicationWindow {
     dialog.add_action_widget( cancel, ResponseType.CANCEL );
 
     var save = new Button.with_label( _( "Save" ) );
-    save.set_can_default( true );
-    save.get_style_context().add_class( STYLE_CLASS_SUGGESTED_ACTION );
+    save.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
     dialog.add_action_widget( save, ResponseType.ACCEPT );
 
     dialog.set_transient_for( this );
     dialog.set_default_response( ResponseType.ACCEPT );
     dialog.set_title( "" );
 
-    dialog.show_all();
-
-    var res = dialog.run();
-
-    dialog.destroy();
-
-    switch( res ) {
-      case ResponseType.ACCEPT :  return( save_file( da ) );
-      case ResponseType.CLOSE  :  return( da.get_doc().remove() );
-    }
-
-    return( false );
+    dialog.response.connect((id) => {
+      switch( id ) {
+        case ResponseType.ACCEPT :  save_file( da );        break;
+        case ResponseType.CLOSE  :  da.get_doc().remove();  break;
+      }
+    });
 
   }
 
@@ -1462,9 +1456,9 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Displays the node properties panel for the current node */
   private void show_properties( string? tab, PropertyGrab grab_type ) {
     if( !_inspector_nb.get_mapped() || ((tab != null) && (_stack.visible_child_name != tab)) ) {
-      _prop_btn.image = _prop_hide;
-      _prop_btn.set_tooltip_text( _( "Hide Property Sidebar" ) );
-      _prop_btn.active = true;
+      _prop_btn.icon_name    = _prop_hide;
+      _prop_btn.tooltip_text = _( "Hide Property Sidebar" );
+      _prop_btn.active       = true;
       if( tab != null ) {
         _stack.visible_child_name = tab;
       }
@@ -1518,11 +1512,11 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Hides the node properties panel */
   private void hide_properties() {
     if( !_inspector_nb.get_mapped() ) return;
-    _prop_btn.image         = _prop_show;
-    _prop_btn.set_tooltip_text( _( "Show Property Sidebar" ) );
-    _prop_btn.active        = false;
-    _pane.position_set      = false;
-    _pane.remove( _inspector_nb );
+    _prop_btn.icon_name    = _prop_show;
+    _prop_btn.tooltip_text = _( "Show Property Sidebar" );
+    _prop_btn.active       = false;
+    _pane.position_set     = false;
+    _pane.end_child        = null;
     get_current_da( "hide_properties" ).grab_focus();
     _settings.set_boolean( "current-properties-shown", false );
     _settings.set_boolean( "map-properties-shown",     false );

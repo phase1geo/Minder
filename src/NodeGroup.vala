@@ -167,7 +167,7 @@ public class NodeGroup : Object {
   public void load( DrawArea da, Xml.Node* g ) {
     string? c = g->get_prop( "color" );
     if( c != null ) {
-      RGBA clr = {1.0, 1.0, 1.0, 1.0};
+      RGBA clr = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
       clr.parse( c );
       color = clr;
     }

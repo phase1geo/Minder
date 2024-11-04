@@ -45,8 +45,6 @@ public class CurrentInspector : Stack {
 
     win.canvas_changed.connect( tab_changed );
 
-    show_all();
-
   }
 
   /* Sets the width of this panel to the given value */

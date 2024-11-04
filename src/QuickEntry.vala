@@ -39,7 +39,6 @@ public class QuickEntry : Gtk.Window {
     deletable       = false;
     title           = _( "Quick Entry" );
     transient_for   = da.win;
-    window_position = WindowPosition.CENTER_ON_PARENT;
 
     /* Initialize member variables */
     _da     = da;
@@ -50,7 +49,6 @@ public class QuickEntry : Gtk.Window {
 
     /* Create the text entry area */
     _entry = new TextView() {
-      border_width  = 5,
       bottom_margin = 0,
       wrap_mode     = Gtk.WrapMode.WORD
     };
@@ -58,25 +56,25 @@ public class QuickEntry : Gtk.Window {
 
     var key = new EventControllerKey();
     _entry.add_controller( key );
-    _entry.key_pressed.connect( on_keypress );
+    key.key_pressed.connect( on_keypress );
 
-    var drop = new DropTarget();
+    var drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
     _entry.add_controller( drop );
-
-    drop.drag_motion.connect( handle_drag_motion );
+    drop.motion.connect( handle_drag_motion );
     drop.drop.connect( handle_drop );
-
 
     _entry.buffer.insert_text.connect( handle_text_insertion );
     _entry.buffer.create_tag( "node", "background_rgba", Utils.color_from_string( "grey90" ), null );
 
-    /* Handle any changes to the side of the entry */
+    /* Handle any changes to the size of the entry */
+    /* TODO
     _entry.size_allocate.connect((alloc) => {
       var new_margin = ((alloc.height - 100) < 0) ? 0 : (alloc.height - 100);
       if( _entry.bottom_margin != new_margin ) {
         _entry.bottom_margin = new_margin;
       }
     });
+    */
 
     /* Create the scrolled window for the text entry area */
     var sw = new ScrolledWindow() {
@@ -84,7 +82,10 @@ public class QuickEntry : Gtk.Window {
     };
 
     var helpgrid = new Grid() {
-      border_width = 5
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
     };
     var help_title = make_help_label( _( "Help for inputting node information:" ) + "\n" );
     var help_line  = make_help_label( "  - " + _( "Each line of text describes either the title of a node or note information for a node." ) );
@@ -133,13 +134,12 @@ public class QuickEntry : Gtk.Window {
     info.clicked.connect(() => {
       helprev.reveal_child = !helprev.reveal_child;
     });
-    bbox.append( info );
 
     if( replace ) {
       _apply = new Button.with_label( _( "Replace" ) ) {
         halign = Align.END
       };
-      _apply.add_css_class( STYLE_CLASS_SUGGESTED_ACTION );
+      _apply.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
       _apply.clicked.connect( () => {
         if( handle_replace() ) {
           close();
@@ -154,7 +154,7 @@ public class QuickEntry : Gtk.Window {
       _apply = new Button.with_label( _( "Insert" ) ) {
         halign = Align.END
       };
-      _apply.add_css_class( STYLE_CLASS_SUGGESTED_ACTION );
+      _apply.add_css_class( Granite.STYLE_CLASS_SUGGESTED_ACTION );
       _apply.clicked.connect(() => {
         if( handle_insert() ) {
           close();
@@ -174,9 +174,12 @@ public class QuickEntry : Gtk.Window {
     });
 
     var bbox = new Box( Orientation.HORIZONTAL, 5 ) {
-      halign       = Align.FILL,
-      valign       = Align.END,
-      border_width = 5
+      halign        = Align.FILL,
+      valign        = Align.END,
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
     };
     bbox.append( info );
     bbox.append( _apply );
@@ -186,7 +189,7 @@ public class QuickEntry : Gtk.Window {
     box.append( bbox );
     box.append( helprev );
 
-    append( box );
+    child = box;
 
   }
 
@@ -223,7 +226,7 @@ public class QuickEntry : Gtk.Window {
   }
 
   /* Called whenever we drag something over the canvas */
-  private DragAction? handle_drag_motion( double x, double y ) {
+  private DragAction handle_drag_motion( double x, double y ) {
 
     if( _node_stack == null ) {
       _node_stack = new Array<NodeHier>();
@@ -240,7 +243,7 @@ public class QuickEntry : Gtk.Window {
       TextIter iter, first, last;
       int first_line, last_line, line_top;
 
-      _entry.get_line_at_y( out iter, y, out line_top );
+      _entry.get_line_at_y( out iter, (int)y, out line_top );
       var node_info = _export.get_node_at_line( _node_stack, iter.get_line() );
 
       if( node_info != null ) {
@@ -253,49 +256,42 @@ public class QuickEntry : Gtk.Window {
 
     }
 
-    return( null );
+    return( 0 );
 
   }
 
   /* Called when something is dropped on the DrawArea */
   private bool handle_drop( Value val, double x, double y ) {
 
-    stdout.printf( "In handle_drop, val.type_name: %s\n", val.type_name );
+    TextIter iter;
+    Node     node;
+    int      line_top;
+    string   prefix;
 
-    if( val.type_name == "string" ) {
+    _entry.get_line_at_y( out iter, (int)y, out line_top );
+    var node_info = _export.get_node_at_line( _node_stack, iter.get_line() );
 
-      TextIter iter;
-      Node     node;
-      int      line_top;
-      string   prefix;
+    if( node_info != null ) {
 
-      _entry.get_line_at_y( out iter, y, out line_top );
-      var node_info = _export.get_node_at_line( _node_stack, iter.get_line() );
+      TextIter first, last;
+      var node_str = "";
 
-      if( node_info != null ) {
-
-        TextIter first, last;
-        var node_str = "";
-
-        foreach( var uri in data.get_uris() ) {
-          var node_image = new NodeImage.from_uri( _da.image_manager, uri, 200 );
-          node_info.node.set_image( _da.image_manager, node_image );
-          if( node_str != "" ) {
-            node_str += "\n";
-          }
-          node_str += _export.export_node( _da, node_info.node, string.nfill( node_info.spaces, ' ' ) );
-        }
-
-        /* Perform the text substitution */
-        _entry.buffer.get_iter_at_line( out first, node_info.first_line );
-        _entry.buffer.get_iter_at_line( out last,  (node_info.last_line + 1) );
-        _entry.buffer.delete( ref first, ref last );
-        _entry.buffer.insert( ref first, node_str, node_str.length );
-
-        /* Make sure that we clear the node stack */
-        _node_stack = null;
-
+      var uri        = ((File)val).get_uri();
+      var node_image = new NodeImage.from_uri( _da.image_manager, uri, 200 );
+      node_info.node.set_image( _da.image_manager, node_image );
+      if( node_str != "" ) {
+        node_str += "\n";
       }
+      node_str += _export.export_node( _da, node_info.node, string.nfill( node_info.spaces, ' ' ) );
+
+      /* Perform the text substitution */
+      _entry.buffer.get_iter_at_line( out first, node_info.first_line );
+      _entry.buffer.get_iter_at_line( out last,  (node_info.last_line + 1) );
+      _entry.buffer.delete( ref first, ref last );
+      _entry.buffer.insert( ref first, node_str, node_str.length );
+
+      /* Make sure that we clear the node stack */
+      _node_stack = null;
 
     }
 
@@ -414,7 +410,7 @@ public class QuickEntry : Gtk.Window {
   }
 
   /* Handles any keypresses in the quick entry text field */
-  private bool on_keypress( int keyval, int keycode, ModifierType state ) {
+  private bool on_keypress( uint keyval, uint keycode, ModifierType state ) {
 
     var control = (bool)(state & ModifierType.CONTROL_MASK);
     var shift   = (bool)(state & ModifierType.SHIFT_MASK);

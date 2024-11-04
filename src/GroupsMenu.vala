@@ -116,10 +116,10 @@ public class GroupsMenu {
   /* Allows the user to change the color of the selected groups */
   private void action_change_color() {
     var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
-    if( color_picker.run() == ResponseType.OK ) {
-      _da.change_group_color( color_picker.get_rgba() );
-    }
-    color_picker.close();
+    color_picker.color_activated.connect((color) => {
+      _da.change_group_color( color );
+    });
+    color_picker.present();
   }
 
   /* Selects the top-most nodes in each selected node group */

@@ -47,8 +47,6 @@ public class ConnectionInspector : Box {
 
     win.canvas_changed.connect( tab_changed );
 
-    show_all();
-
   }
 
   /* Called whenever the tab in the main window changes */
@@ -246,9 +244,8 @@ public class ConnectionInspector : Box {
 
     if( current != null ) {
       var note = current.note;
-      _color.rgba          = (current.color != null) ? current.color : _da.get_theme().get_color( "connection_background" );
-      _color.alpha         = 65535;
-      _note.buffer.text    = note;
+      _color.rgba       = (current.color != null) ? current.color : _da.get_theme().get_color( "connection_background" );
+      _note.buffer.text = note;
       _reset.set_sensitive( current.color != null );
     }
 

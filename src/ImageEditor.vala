@@ -38,7 +38,7 @@ class ImageEditor {
   private double          _last_x;
   private double          _last_y;
   private Gdk.Rectangle[] _crop_points;
-  private Cursor[]        _crop_cursors;
+  private string[]        _crop_cursors;
   private Label           _status_cursor;
   private Label           _status_crop;
 
@@ -51,7 +51,7 @@ class ImageEditor {
 
     /* Allocate crop points */
     _crop_points  = new Gdk.Rectangle[9];
-    _crop_cursors = new Gdk.Cursor[8];
+    _crop_cursors = new string[8];
 
     /* Initialize the crop points */
     for( int i=0; i<_crop_points.length; i++ ) {
@@ -59,14 +59,14 @@ class ImageEditor {
     }
 
     /* Setup cursor types */
-    _crop_cursors[0] = new Gdk.Cursor.from_name( "nwse-resize" );
-    _crop_cursors[1] = new Gdk.Cursor.from_name( "ns-resize" );
-    _crop_cursors[2] = new Gdk.Cursor.from_name( "nesw-resize" );
-    _crop_cursors[3] = new Gdk.Cursor.from_name( "ew-resize" );
-    _crop_cursors[4] = new Gdk.Cursor.from_name( "ew-resize" );
-    _crop_cursors[5] = new Gdk.Cursor.from_name( "nesw-resize" );
-    _crop_cursors[6] = new Gdk.Cursor.from_name( "ns-resize" );
-    _crop_cursors[7] = new Gdk.Cursor.from_name( "nwse-resize" );
+    _crop_cursors[0] = "nwse-resize";
+    _crop_cursors[1] = "ns-resize";
+    _crop_cursors[2] = "nesw-resize";
+    _crop_cursors[3] = "ew-resize";
+    _crop_cursors[4] = "ew-resize";
+    _crop_cursors[5] = "nesw-resize";
+    _crop_cursors[6] = "ns-resize";
+    _crop_cursors[7] = "nwse-resize";
 
     /* Create the user interface of the editor window */
     create_ui( da, da.image_manager );
@@ -101,7 +101,7 @@ class ImageEditor {
       _da.queue_draw();
 
       /* Display ourselves */
-      Utils.show_popover( _popover );
+      _popover.popup();
 
     }
 
@@ -214,39 +214,41 @@ class ImageEditor {
   /* Creates the user interface */
   public void create_ui( DrawArea da, ImageManager im ) {
 
-    _popover = new Popover( da );
-    _popover.modal = true;
-
-    var box = new Box( Orientation.VERTICAL, 5 );
-
-    box.border_width = 5;
-
     _da = create_drawing_area( im );
     var status  = create_status_area();
     var buttons = create_buttons( da, im );
 
     /* Pack the widgets into the window */
-    box.pack_start( _da,     true,  true );
-    box.pack_start( status,  false, false );
-    box.pack_start( buttons, false, true );
-
-    box.show_all();
+    var box = new Box( Orientation.VERTICAL, 5 ) {
+      margin_start  = 5,
+      margin_end    = 5,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
+    box.append( _da );
+    box.append( status );
+    box.append( buttons );
 
     /* Add the box to the popover */
-    _popover.add( box );
+    _popover = new Popover() {
+      child = box
+    };
+    _popover.set_parent( da );
 
     /* Set the stage for keyboard shortcuts */
-    _popover.key_press_event.connect( (e) => {
-      var control = (bool)(e.state & ModifierType.CONTROL_MASK);
+    var key = new EventControllerKey();
+    _popover.add_controller( key );
+    key.key_pressed.connect( (keyval, keycode, state) => {
+      var control = (bool)(state & ModifierType.CONTROL_MASK);
       if( control ) {
-        switch( e.keyval ) {
+        switch( keyval ) {
           case 99    :  action_copy();    break;
           case 118   :  action_paste();   break;
           case 120   :  action_cut();     break;
           default    :  return( false );
         }
       } else {
-        switch( e.keyval ) {
+        switch( keyval ) {
           case 65293 :  action_apply();   break;
           case 65307 :  action_cancel();  break;
           case 65535 :  action_delete();  break;
@@ -257,9 +259,10 @@ class ImageEditor {
     });
 
     /* Update the UI state whenever the mouse enters the popover area */
-    _popover.enter_notify_event.connect( (e) => {
+    var motion = new EventControllerMotion();
+    box.add_controller( motion );
+    motion.enter.connect((x, y) => {
       update_ui();
-      return( true );
     });
 
     /* Initialize the past button state */
@@ -267,48 +270,45 @@ class ImageEditor {
 
   }
 
-  /* Create the image editing area */
+  //-------------------------------------------------------------
+  // Create the image editing area
   public DrawingArea create_drawing_area( ImageManager im ) {
 
     var da = new DrawingArea();
 
     da.width_request  = NodeImage.EDIT_WIDTH;
     da.height_request = NodeImage.EDIT_HEIGHT;
-
-    /* Make sure the above events are listened for */
-    da.add_events(
-      EventMask.BUTTON_PRESS_MASK |
-      EventMask.BUTTON_RELEASE_MASK |
-      EventMask.BUTTON1_MOTION_MASK |
-      EventMask.POINTER_MOTION_MASK
-    );
+    da.set_draw_func((d, ctx, w, h) => {
+      draw_image( ctx );
+    });
 
     /*
      Make sure that we add a CSS class name to ourselves so we can color
      our background with the theme.
     */
-    da.get_style_context().add_class( "canvas" );
+    da.add_css_class( "canvas" );
 
-    /* Add event listeners */
-    da.draw.connect((ctx) => {
-      draw_image( ctx );
-      return( false );
-    });
-
-    da.button_press_event.connect((e) => {
-      set_crop_target( e.x, e.y );
+    var click = new GestureClick();
+    da.add_controller( click );
+    click.pressed.connect((n_press, x, y) => {
+      set_crop_target( x, y );
       if( _crop_target == 8 ) {
-        var win = _da.get_window();
-        win.set_cursor( new Cursor.from_name( _popover.get_display(), "grabbing" ) );
+        da.set_cursor( new Gdk.Cursor.from_name( "grabbing", null ) );
       }
-      _last_x = e.x;
-      _last_y = e.y;
-      return( false );
+      _last_x = x;
+      _last_y = y;
     });
 
-    da.motion_notify_event.connect((e) => {
+    click.released.connect((n_press, x, y) => {
+      _crop_target = -1;
+      set_cursor( null );
+    });
+
+    var motion = new EventControllerMotion();
+    da.add_controller( motion );
+    motion.motion.connect((x, y) => {
       if( _crop_target == -1 ) {
-        set_crop_target( e.x, e.y );
+        set_crop_target( x, y );
         if( (_crop_target >= 0) && (_crop_target < 8) ) {
           set_cursor( _crop_cursors[_crop_target] );
         } else {
@@ -316,33 +316,21 @@ class ImageEditor {
         }
         _crop_target = -1;
       } else {
-        adjust_crop_points( (int)(e.x - _last_x), (int)(e.y - _last_y) );
+        adjust_crop_points( (int)(x - _last_x), (int)(y - _last_y) );
         da.queue_draw();
       }
-      _last_x = e.x;
-      _last_y = e.y;
-      var int_x = (int)e.x;
-      var int_y = (int)e.y;
-      set_cursor_location( int_x, int_y );
-      return( false );
-    });
-
-    da.button_release_event.connect((e) => {
-      _crop_target = -1;
-      set_cursor( null );
-      return( false );
+      _last_x = x;
+      _last_y = y;
+      set_cursor_location( (int)x, (int)y );
     });
 
     /* Set ourselves up to be a drag target */
-    Gtk.drag_dest_set( da, DestDefaults.MOTION | DestDefaults.DROP, DRAG_TARGETS, Gdk.DragAction.COPY );
-
-    da.drag_data_received.connect((ctx, x, y, data, info, t) => {
-      if( data.get_uris().length == 1 ) {
-        NodeImage? ni = new NodeImage.from_uri( im, data.get_uris()[0], _node.style.node_width );
-        if( (ni != null) && initialize( ni ) ) {
-          Gtk.drag_finish( ctx, true, false, t );
-        }
-      }
+    var drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
+    da.add_controller( drop );
+    drop.drop.connect((val, x, y) => {
+      var file = (File)val;
+      var ni   = new NodeImage.from_uri( im, file.get_uri(), _node.style.node_width );
+      return( (ni != null) && initialize( ni ) );
     });
 
     return( da );
@@ -352,15 +340,15 @@ class ImageEditor {
   /* Creates the status area */
   private Box create_status_area() {
 
-    var box = new Box( Orientation.HORIZONTAL, 10 );
-
-    box.homogeneous = true;
+    var box = new Box( Orientation.HORIZONTAL, 10 ) {
+      homogeneous = true
+    };
 
     _status_cursor = new Label( null );
     _status_crop   = new Label( null );
 
-    box.pack_start( _status_cursor, false, false );
-    box.pack_start( _status_crop,   false, false );
+    box.append( _status_cursor );
+    box.append( _status_crop );
 
     return( box );
 
@@ -374,27 +362,38 @@ class ImageEditor {
   /* Creates the button bar at the bottom of the window */
   private Box create_buttons( DrawArea da, ImageManager im ) {
 
-    var box    = new Box( Orientation.HORIZONTAL, 5 );
-    var cancel = new Button.with_label( _( "Cancel" ) );
-    var apply  = new Button.with_label( _( "Apply" ) );
-    var open   = new Button.from_icon_name( "folder-open-symbolic", IconSize.SMALL_TOOLBAR );
-    var copy   = new Button.from_icon_name( "edit-copy-symbolic",   IconSize.SMALL_TOOLBAR );
-    var cut    = new Button.from_icon_name( "edit-cut-symbolic",    IconSize.SMALL_TOOLBAR );
-    var paste  = new Button.from_icon_name( "edit-paste-symbolic",  IconSize.SMALL_TOOLBAR );
-    var del    = new Button.from_icon_name( "edit-delete-symbolic", IconSize.SMALL_TOOLBAR );
+    var open = new Button.from_icon_name( "folder-open-symbolic" ) {
+      halign         = Align.START,
+      tooltip_markup = Utils.tooltip_with_accel( _( "Change Image" ), "<Control>o" )
+    };
+    var paste = new Button.from_icon_name( "edit-paste-symbolic" ) {
+      halign         = Align.START,
+      tooltip_markup = Utils.tooltip_with_accel( _( "Paste Image from Clipboard" ), "<Control>v" )
+    };
+    var del = new Button.from_icon_name( "edit-delete-symbolic" ) {
+      halign         = Align.START,
+      tooltip_markup = Utils.tooltip_with_accel( _( "Remove Image" ), "Delete" )
+    };
+    var copy = new Button.from_icon_name( "edit-copy-symbolic" ) {
+      halign         = Align.START,
+      tooltip_markup = Utils.tooltip_with_accel( _( "Copy Image to Clipboard" ), "<Control>c" )
+    };
+    var cut = new Button.from_icon_name( "edit-cut-symbolic" ) {
+      halign         = Align.START,
+      tooltip_markup = Utils.tooltip_with_accel( _( "Cut Image to Clipboard" ), "<Control>x" )
+    };
+
+    var apply = new Button.with_label( _( "Apply" ) ) {
+      halign = Align.END
+    };
+    var cancel = new Button.with_label( _( "Cancel" ) ) {
+      halign = Align.END
+    };
 
     _paste = paste;
 
-    /* Create tooltips for all buttons */
-    open.set_tooltip_markup(  Utils.tooltip_with_accel( _( "Change Image" ),               "<Control>o" ) );
-    copy.set_tooltip_markup(  Utils.tooltip_with_accel( _( "Copy Image to Clipboard" ),    "<Control>c" ) );
-    cut.set_tooltip_markup(   Utils.tooltip_with_accel( _( "Cut Image to Clipboard" ),     "<Control>x" ) );
-    paste.set_tooltip_markup( Utils.tooltip_with_accel( _( "Paste Image from Clipboard" ), "<Control>v" ) );
-    del.set_tooltip_markup(   Utils.tooltip_with_accel( _( "Remove Image" ),              "Delete" ) );
-
     open.clicked.connect(() => {
-      var win = (Gtk.Window)da.get_toplevel();
-      var id  = im.choose_image( win );
+      var id  = im.choose_image( da.win );
       if( id != -1 ) {
         var ni = new NodeImage( im, id, _node.style.node_width );
         if( ni != null ) {
@@ -410,27 +409,28 @@ class ImageEditor {
     paste.clicked.connect( action_paste );
     del.clicked.connect( action_delete );
 
-    box.pack_start( open,   false, false );
-    box.pack_start( paste,  false, false );
-    box.pack_start( del,    false, false );
-    box.pack_start( copy,   false, false );
-    box.pack_start( cut,    false, false );
-    box.pack_end(   apply,  false, false );
-    box.pack_end(   cancel, false, false );
+    var box = new Box( Orientation.HORIZONTAL, 5 );
+    box.append( open );
+    box.append( paste );
+    box.append( del );
+    box.append( copy );
+    box.append( cut );
+    box.append( apply );
+    box.append( cancel );
 
     return( box );
 
   }
 
   /* Sets the cursor of the drawing area */
-  private void set_cursor( Gdk.Cursor? type = null ) {
+  private void set_cursor( string? cursor_name = null ) {
 
     var cursor = _da.get_cursor();
 
-    if( type == null ) {
+    if( cursor_name == null ) {
       _da.set_cursor( null );
-    } else if( (cursor == null) || (cursor.cursor_type != type) ) {
-      _da.set_cursor( new Cursor.for_display( _popover.get_display(), type ) );
+    } else if( (cursor == null) || (cursor.name != cursor_name) ) {
+      _da.set_cursor( new Gdk.Cursor.from_name( cursor_name, null ) );
     }
 
   }
@@ -492,7 +492,7 @@ class ImageEditor {
     changed( orig_image );
 
     /* Hide the popover */
-    Utils.hide_popover( _popover );
+    _popover.popdown();
 
   }
 
@@ -512,14 +512,13 @@ class ImageEditor {
     changed( orig_image );
 
     /* Close the popover */
-    Utils.hide_popover( _popover );
+    _popover.popdown();
 
   }
 
   /* Returns true if an image is pasteable from the clipboard */
   private bool image_pasteable() {
-    var clipboard = Clipboard.get_default( _popover.get_display() );
-    return( clipboard.wait_is_image_available() );
+    return( MinderClipboard.image_pasteable() );
   }
 
   /* Updates the state of the UI */
@@ -532,10 +531,8 @@ class ImageEditor {
     var fname = _im.get_file( _node.image.id );
     if( fname != null ) {
       try {
-        var buf       = new Gdk.Pixbuf.from_file( fname );
-        var clipboard = Clipboard.get_default( _popover.get_display() );
-        clipboard.clear();
-        clipboard.set_image( buf );
+        var buf = new Gdk.Pixbuf.from_file( fname );
+        MinderClipboard.copy_image( buf );
         update_ui();
       } catch( Error e ) {}
     }
@@ -550,15 +547,22 @@ class ImageEditor {
   /* Pastes the image from the clipboard */
   private void action_paste() {
     if( image_pasteable() ) {
-      var clipboard = Clipboard.get_default( _popover.get_display() );
-      var buf       = clipboard.wait_for_image();
-      var image     = new NodeImage.from_pixbuf( _im, buf, _node.style.node_width );
-      image.crop_x = _image.crop_x;
-      image.crop_y = _image.crop_y;
-      image.crop_w = _image.crop_w;
-      image.crop_h = _image.crop_h;
-      _image       = image;
-      _da.queue_draw();
+      var clipboard = Display.get_default().get_clipboard();
+      clipboard.read_texture_async.begin( null, (ob, res) => {
+        try {
+          var texture = clipboard.read_texture_async.end( res );
+          if( texture != null ) {
+            var buf   = Utils.texture_to_pixbuf( texture );
+            var image = new NodeImage.from_pixbuf( _im, buf, _node.style.node_width );
+            image.crop_x = _image.crop_x;
+            image.crop_y = _image.crop_y;
+            image.crop_w = _image.crop_w;
+            image.crop_h = _image.crop_h;
+            _image       = image;
+            _da.queue_draw();
+          }
+        } catch( Error e ) {}
+      });
     } else {
       update_ui();
     }
@@ -571,7 +575,7 @@ class ImageEditor {
 
   /* Cancels this editing session */
   private void action_cancel() {
-    Utils.hide_popover( _popover );
+    _popover.popdown();
   }
 
   /* Applies the current edits and closes the window */

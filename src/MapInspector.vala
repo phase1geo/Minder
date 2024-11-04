@@ -26,7 +26,7 @@ public class MapInspector : Box {
   private MainWindow    _win;
   private DrawArea?     _da             = null;
   private GLib.Settings _settings;
-  private MenuButton    _layout;
+  private ModeButtons   _layout;
   private Grid?         _theme_grid     = null;
   private Button?       _balance        = null;
   private Button?       _fold_completed = null;
@@ -39,10 +39,6 @@ public class MapInspector : Box {
   private Button        _vcenter;
   private Button        _vbottom;
   private Revealer      _alignment_revealer;
-
-  private const GLib.ActionEntry action_entries[] = {
-    { "action_set_layout", action_set_layout, "i" },
-  };
 
   public MapInspector( MainWindow win, GLib.Settings settings ) {
 
@@ -72,11 +68,6 @@ public class MapInspector : Box {
     granite_settings.notify["prefers-color-scheme"].connect( () => {
       update_themes();
     });
-
-    // Add the menu actions
-    var actions = new SimpleActionGroup();
-    actions.add_action_entries( action_entries, this );
-    _da.insert_action_group( "map", actions );
 
   }
 
@@ -232,12 +223,6 @@ public class MapInspector : Box {
     for( int i=0; i<icons.length; i++ ) {
       _layout.add_button( icons.index( i ), names.index( i ) );
     }
-
-    // Create the layouts menu button
-    _layout = new MenuButton() {
-      halign     = Align.END,
-      menu_model = menu
-    };
 
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
       halign = Align.FILL
@@ -437,9 +422,9 @@ public class MapInspector : Box {
   private void update_themes() {
 
     /* Clear the contents of the theme box */
-    _theme_grid.get_children().foreach((entry) => {
-      _theme_grid.remove( entry );
-    });
+    for( int i=0; i<2; i++ ) {
+      _theme_grid.remove_column( i );
+    }
 
     /* Get the theme information to display */
     var names    = new Array<string>();
@@ -459,19 +444,21 @@ public class MapInspector : Box {
       if( !hide || (dark == theme.prefer_dark) ) {
         var label = new Label( theme_label( name ) );
         var item  = new Box( Orientation.VERTICAL, 0 ) {
-          border_width = 5
+          margin_start  = 5,
+          margin_end    = 5,
+          margin_top    = 5,
+          margin_bottom = 5
         };
         item.append( icons.index( i ) );
         item.append( label );
         var click = new GestureClick();
-        box.add_controller( click );
+        item.add_controller( click );
         click.pressed.connect((n_press, x, y) => {
           select_theme( name );
           _da.set_theme( theme, true );
           if( theme.custom && (n_press == 2) ) {
             edit_current_theme();
           }
-          return( false );
         });
         _theme_grid.attach( item, (index % 2), (index / 2) );
         index++;
@@ -495,8 +482,7 @@ public class MapInspector : Box {
 
     for( int i=0; i<names.length; i++ ) {
       if( name == names.index( i ) ) {
-        _layout.icon_name    = icons.index( i );
-        _layout.tooltip_text = name;
+        _layout.selected = i;
         break;
       }
     }
@@ -521,10 +507,8 @@ public class MapInspector : Box {
   /* Makes sure that only the given theme is selected in the UI */
   private void select_theme( string name ) {
 
-    int index    = 0;
     var names    = new Array<string>();
     var shown    = new Array<string>();
-    var children = _theme_grid.get_children();
     var hide     = _settings.get_boolean( "hide-themes-not-matching-visual-style" );
     var settings = Granite.Settings.get_default();
     var dark     = settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
@@ -540,26 +524,21 @@ public class MapInspector : Box {
       }
     }
 
-    children.reverse();
-
-    /* Deselect all themes */
-    children.foreach((b) => {
-      var l = (Label)Utils.get_child_at_index( b, 1 );
-      b.remove_css_class( "theme-selected" );
-      l.set_markup( theme_label( shown.index( index ) ) );
-      index++;
-    });
-
-    /* Select the matching theme */
-    index = 0;
-    children.foreach((b) => {
+    /* Update selection of themes */
+    var index = 0;
+    var child = Utils.get_child_at_index( _theme_grid, index++ );
+    while( child != null ) {
       if( shown.index( index ) == name ) {
-        var l = (Label)Utils.get_child_at_index( b, 1 );
-        b.add_css_class( "theme-selected" );
+        child.add_css_class( "theme-selected" );
+        var l = (Label)Utils.get_child_at_index( child, 1 );
         l.set_markup( "<span color=\"white\">%s</span>".printf( theme_label( shown.index( index ) ) ) );
+      } else {
+        child.remove_css_class( "theme-selected" );
+        var l = (Label)Utils.get_child_at_index( child, 1 );
+        l.set_markup( theme_label( shown.index( index ) ) );
       }
-      index++;
-    });
+      child = Utils.get_child_at_index( _theme_grid, index++ );
+    }
 
   }
 

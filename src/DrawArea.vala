@@ -4472,7 +4472,6 @@ public class DrawArea : Gtk.DrawingArea {
   public void handle_control_E() {
     var quick_entry = new QuickEntry( this, false, _settings );
     quick_entry.preload( "- " );
-    quick_entry.show_all();
   }
 
   /*
@@ -4518,7 +4517,6 @@ public class DrawArea : Gtk.DrawingArea {
     var quick_entry = new QuickEntry( this, true, _settings );
     var export      = (ExportText)win.exports.get_by_name( "text" );
     quick_entry.preload( export.export_node( this, _selected.current_node(), "" ) );
-    quick_entry.show_all();
   }
 
   /* Closes the current tab */

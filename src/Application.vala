@@ -66,6 +66,7 @@ public class Minder : Gtk.Application {
     appwin.load_tab_state();
 
     /* Handle any changes to the position of the window */
+    /*
     appwin.configure_event.connect(() => {
       int root_x, root_y;
       int size_w, size_h;
@@ -77,10 +78,13 @@ public class Minder : Gtk.Application {
       settings.set_int( "window-h", size_h );
       return( false );
     });
+    */
 
+    /*
     appwin.destroy.connect(() => {
       quit();
     });
+    */
 
     /* Initialize desktop interface settings */
     string[] names = {"font-name", "text-scaling-factor"};

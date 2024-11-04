@@ -41,8 +41,6 @@ public class GroupInspector : Box {
 
     win.canvas_changed.connect( tab_changed );
 
-    show_all();
-
   }
 
   /* Called whenever the tab in the main window changes */
@@ -90,7 +88,7 @@ public class GroupInspector : Box {
     _note.buffer.text = "";
 
     var focus = new EventControllerFocus();
-    _node.add_controller( focus );
+    _note.add_controller( focus );
     focus.enter.connect( note_focus_in );
     focus.leave.connect( note_focus_out );
 

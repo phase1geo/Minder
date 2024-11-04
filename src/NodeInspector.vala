@@ -37,7 +37,7 @@ public class NodeInspector : Box {
   private string         _orig_note = "";
   private Node?          _node = null;
   private Stack          _image_stack;
-  private Image          _image;
+  private Picture        _image;
   private Button         _image_btn;
   private Label          _image_loc;
   private Switch         _override;
@@ -61,8 +61,6 @@ public class NodeInspector : Box {
     create_note( win );
     create_image();
     create_buttons();
-
-    show_all();
 
     win.canvas_changed.connect( tab_changed );
 
@@ -387,14 +385,16 @@ public class NodeInspector : Box {
       }
     });
 
-    var image_btn_box = new Box( Orientation.HORIZONTAL, 10 );
+    var image_btn_box = new Box( Orientation.HORIZONTAL, 10 ) {
+      halign = Align.END
+    };
     image_btn_box.append( _resize );
     image_btn_box.append( btn_edit );
     image_btn_box.append( btn_del );
 
     var tbox = new Box( Orientation.HORIZONTAL, 10 );
-    tbox.pack_start( lbl,         false, false );
-    tbox.pack_end( image_btn_box, false, false );
+    tbox.append( lbl );
+    tbox.append( image_btn_box );
 
     _image = new Picture() {
       margin_bottom = 20
@@ -405,18 +405,12 @@ public class NodeInspector : Box {
     box.append( _image );
 
     /* Set ourselves up to be a drag target */
-    var drop = new DropTarget();
+    var drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
     _image.add_controller( drop );
 
-    _image.drop.connect((val, x, y) => {
-      /* TODO
-      if( data.get_uris().length == 1 ) {
-        if( _da.update_current_image( data.get_uris()[0] ) ) {
-          Gtk.drag_finish( ctx, true, false, t );
-        }
-      }
-      */
-      return( false );
+    drop.drop.connect((val, x, y) => {
+      var file = (File)val;
+      return( _da.update_current_image( file.get_uri() ) );
     });
 
     return( box );
@@ -659,13 +653,11 @@ public class NodeInspector : Box {
         _root_color_reveal.reveal_child = true;
         _override.set_active( current.link_color_set );
         _color_reveal.reveal_child = current.link_color_set;
-        _root_color.rgba  = current.link_color_set ? current.link_color : _da.get_theme().get_color( "root_background" );
-        _root_color.alpha = 65535;
+        _root_color.rgba = current.link_color_set ? current.link_color : _da.get_theme().get_color( "root_background" );
       } else {
         _link_reveal.reveal_child       = true;
         _root_color_reveal.reveal_child = false;
-        _link_color.rgba  = current.link_color;
-        _link_color.alpha = 65535;
+        _link_color.rgba = current.link_color;
       }
       _detach_btn.set_sensitive( current.parent != null );
       var note = current.note;

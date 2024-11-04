@@ -103,7 +103,7 @@ public class NodeMenu {
     change_submenu.append( _( "Toggle Sequence" ), "node.action_toggle_sequence" );
 
     var change_menu = new GLib.Menu();
-    change_menu.add_submenu( _( "Change Node" ), change_submenu );
+    change_menu.append_submenu( _( "Change Node" ), change_submenu );
 
     var add_submenu = new GLib.Menu();
     add_submenu.append( _( "Add Root Node" ),    "node.action_add_root_node" );
@@ -160,7 +160,7 @@ public class NodeMenu {
     menu.append_section( null, sort_menu );
     menu.append_section( null, detach_menu );
 
-    _popover = new PopoverMenu.with_model( menu );
+    _popover = new PopoverMenu.from_model( menu );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();
@@ -586,10 +586,10 @@ public class NodeMenu {
 
   public void action_change_link_color() {
     var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
-    if( color_picker.run() == ResponseType.OK ) {
-      _da.change_current_link_color( color_picker.get_rgba() );
-    }
-    color_picker.close();
+    color_picker.color_activated.connect((color) => {
+      _da.change_current_link_color( color );
+    });
+    color_picker.present();
   }
 
   private void action_randomize_link_color() {

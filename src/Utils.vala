@@ -52,7 +52,7 @@ public class Utils {
 
   /* Returns the RGBA color for the given color value */
   public static RGBA color_from_string( string value ) {
-    RGBA c = {1.0, 1.0, 1.0, 1.0};
+    RGBA c = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
     c.parse( value );
     return( c );
   }
@@ -334,5 +334,36 @@ public class Utils {
     return( dialog );
     
   }
+
+  //-------------------------------------------------------------
+  // Clears the given box widget
+  public static void clear_box( Box box ) {
+    while( box.get_first_child() != null ) {
+      box.remove( box.get_first_child() );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Clears the given listbox widget
+  public static void clear_listbox( ListBox box ) {
+    box.remove_all();
+  }
+
+  /* Creates a pixbuf from a Texture */
+   public static Gdk.Pixbuf? texture_to_pixbuf( Gdk.Texture texture ) {
+
+     FileIOStream iostream;
+
+     try {
+       var tmp = File.new_tmp( null, out iostream );
+       texture.save_to_png( tmp.get_path() );
+       var pixbuf = new Pixbuf.from_file( tmp.get_path() );
+       return( pixbuf );
+     } catch( Error e ) {
+       return( null );
+     }
+
+   }
+
 
 }
