@@ -156,7 +156,7 @@ public class NodeInspector : Box {
       use_markup = true
     };
 
-    var info = new Image.from_icon_name( "dialog-information-symbolic", IconSize.MENU ) {
+    var info = new Image.from_icon_name( "dialog-information-symbolic" ) {
       halign       = Align.START,
       hexpand      = true,
       tooltip_text = _( "When set, automatically numbers child nodes and displays them as a sequence." )
@@ -321,7 +321,8 @@ public class NodeInspector : Box {
     _image_stack = new Stack() {
       halign          = Align.FILL,
       transition_type = StackTransitionType.NONE,
-      homogeneous     = false
+      hhomogeneous    = false,
+      vhomogeneous    = false
     };
     _image_stack.add_named( create_image_add(),  "add" );
     _image_stack.add_named( create_image_edit(), "edit" );

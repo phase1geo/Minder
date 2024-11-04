@@ -46,8 +46,8 @@ public class MinderClipboard {
   // Copies the current selected node list to the clipboard
   public static void copy_nodes( DrawArea da ) {
 
-    Array<Node>       nodes;
-    Array<Connection> conns;
+    Array<Node> nodes;
+    Connections conns;
 
     /* Store the data to copy */
     da.get_nodes_for_clipboard( out nodes, out conns );

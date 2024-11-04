@@ -271,7 +271,8 @@ public class Callout : Object {
     double x, y, w, h;
     bbox( out x, out y, out w, out h );
 
-    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, padding );
+    /* Draws a rounded rectangle on the given context */
+    Utils.draw_rounded_rectangle( ctx, x, y, w, h, padding );
     ctx.fill();
 
     /* Draw the shape */

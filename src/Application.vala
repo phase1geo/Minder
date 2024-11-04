@@ -56,7 +56,7 @@ public class Minder : Gtk.Application {
     settings = new GLib.Settings( "com.github.phase1geo.minder" );
 
     /* Add the application-specific icons */
-    weak IconTheme default_theme = IconTheme.get_default();
+    weak IconTheme default_theme = IconTheme.get_for_display( Gdk.Display.get_default() );
     default_theme.add_resource_path( "/com/github/phase1geo/minder" );
 
     /* Create the main window */

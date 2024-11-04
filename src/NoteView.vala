@@ -229,8 +229,6 @@ public class NoteView : GtkSource.View {
     key.key_pressed.connect( on_keypress );
     key.key_released.connect( on_keyrelease );
 
-    expand      = true;
-    has_focus   = true;
     auto_indent = true;
     set_wrap_mode( Gtk.WrapMode.WORD );
     set_tab_width( 4 );
@@ -417,7 +415,7 @@ public class NoteView : GtkSource.View {
     }
   }
 
-  private void on_keypress( int keyval, int keycode, ModifierType state ) {
+  private bool on_keypress( uint keyval, uint keycode, ModifierType state ) {
     if( keyval == 65507 ) {
       _control = true;
       enable_url_checking( _last_x, _last_y );
@@ -425,12 +423,11 @@ public class NoteView : GtkSource.View {
     return( false );
   }
 
-  private bool on_keyrelease( int keyval, int keycode, ModifierType state ) {
+  private void on_keyrelease( uint keyval, uint keycode, ModifierType state ) {
     if( keyval == 65507 ) {
       _control = false;
       disable_url_checking();
     }
-    return( false );
   }
 
   /* Clears the stored URL information */

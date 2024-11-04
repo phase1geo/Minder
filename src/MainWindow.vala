@@ -282,7 +282,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     /* If we receive focus, update the titlebar */
     var focus = new EventControllerFocus();
-    this.add_controller( focus );
+    top_box.add_controller( focus );
     focus.enter.connect(() => {
       var da = get_current_da();
       update_title( da );
@@ -1473,7 +1473,6 @@ public class MainWindow : Gtk.ApplicationWindow {
         if( get_current_da( "show_properties 1" ) != null ) {
           get_current_da( "show_properties 2" ).see( true, -300 );
         }
-        _pane.show_all();
       }
       _settings.set_boolean( (_stack.visible_child_name + "-properties-shown"), true );
     }

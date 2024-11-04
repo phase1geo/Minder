@@ -237,7 +237,7 @@ class ImageEditor {
 
     /* Set the stage for keyboard shortcuts */
     var key = new EventControllerKey();
-    _popover.add_controller( key );
+    box.add_controller( key );
     key.key_pressed.connect( (keyval, keycode, state) => {
       var control = (bool)(state & ModifierType.CONTROL_MASK);
       if( control ) {

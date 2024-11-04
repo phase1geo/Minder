@@ -898,14 +898,14 @@ public class Connection : Object {
 
     /* Draw the box */
     ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
-    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
+    Utils.draw_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
     ctx.fill();
 
     /* Draw the droppable indicator, if necessary */
     if( (mode == ConnMode.DROPPABLE) && !exporting ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
       ctx.set_line_width( 4 );
-      Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
+      Utils.draw_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
       ctx.stroke();
     }
 

@@ -40,19 +40,23 @@ public class TextCompletionItem {
   // Creates the row for the listbox
   public Box create_row() {
     var box = new Box( Orientation.HORIZONTAL, 0 );
-    var lbl = new Label( label );
-    lbl.xalign       = 0;
-    lbl.margin       = 5;
-    lbl.margin_start = 10;
-    lbl.margin_end   = 10;
-    box.pack_start( lbl, false, true );
+    var lbl = new Label( label ) {
+      xalign        = 0,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 5,
+      margin_bottom = 5
+    };
+    box.append( lbl );
     if( alt != "" ) {
-      var albl = new Label( alt );
-      albl.xalign       = 0;
-      albl.margin       = 5;
-      albl.margin_start = 10;
-      albl.margin_end   = 10;
-      box.pack_start( albl, false, true );
+      var albl = new Label( alt ) {
+        xalign        = 0,
+        margin_start  = 10,
+        margin_end    = 10,
+        margin_top    = 5,
+        margin_bottom = 5
+      };
+      box.append( albl );
     }
     return( box );
   }

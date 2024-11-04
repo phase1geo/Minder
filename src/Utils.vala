@@ -349,21 +349,53 @@ public class Utils {
     box.remove_all();
   }
 
-  /* Creates a pixbuf from a Texture */
-   public static Gdk.Pixbuf? texture_to_pixbuf( Gdk.Texture texture ) {
+  //-------------------------------------------------------------
+  // Reads the string from the input stream
+  public static string read_stream( InputStream stream ) {
+    var str = "";
+    var dis = new DataInputStream( stream );
+    try {
+      do {
+        var line = dis.read_line();
+        if( line != null ) {
+          str += line + "\n";
+        }
+      } while( dis.get_available() > 0 );
+    } catch( IOError e ) {
+      return( "" );
+    }
+    return( str );
+  }
 
-     FileIOStream iostream;
+  //-------------------------------------------------------------
+  // Creates a pixbuf from a Texture
+  public static Gdk.Pixbuf? texture_to_pixbuf( Gdk.Texture texture ) {
 
-     try {
-       var tmp = File.new_tmp( null, out iostream );
-       texture.save_to_png( tmp.get_path() );
-       var pixbuf = new Pixbuf.from_file( tmp.get_path() );
-       return( pixbuf );
-     } catch( Error e ) {
-       return( null );
-     }
+    FileIOStream iostream;
 
-   }
+    try {
+      var tmp = File.new_tmp( null, out iostream );
+      texture.save_to_png( tmp.get_path() );
+      var pixbuf = new Pixbuf.from_file( tmp.get_path() );
+      return( pixbuf );
+    } catch( Error e ) {
+      return( null );
+    }
 
+  }
 
+  //-------------------------------------------------------------
+  // Draws a rounded rectangle on the given context
+  public static void draw_rounded_rectangle( Cairo.Context ctx, double x, double y, double w, double h, double radius ) {
+
+    var deg = Math.PI / 180.0;
+
+    ctx.new_sub_path();
+    ctx.arc( (x + w - radius), (y + radius),     radius, (-90 * deg), (0 * deg) );
+    ctx.arc( (x + w - radius), (y + h - radius), radius, (0 * deg),   (90 * deg) );
+    ctx.arc( (x + radius),     (y + h - radius), radius, (90 * deg),  (180 * deg) );
+    ctx.arc( (x + radius),     (y + radius),     radius, (180 * deg), (270 * deg) );
+    ctx.close_path();
+
+  }
 }

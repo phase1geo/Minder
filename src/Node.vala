@@ -213,7 +213,7 @@ public class Node : Object {
   private   int          _task_done    = 0;
   private   double       _posx         = 0;
   private   double       _posy         = 0;
-  private   RGBA?        _link_color      = {1.0, 1.0, 1.0, 1.0};
+  private   RGBA?        _link_color      = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
   private   bool         _link_color_set  = false;
   private   bool         _link_color_root = false;
   private   double       _min_width      = 50;
