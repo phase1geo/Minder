@@ -53,6 +53,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   private GLib.Settings     _settings;
   private HeaderBar         _header;
+  private Label             _title;
   private Notebook?         _nb             = null;
   private Revealer?         _inspector      = null;
   private Paned             _pane           = null;
@@ -141,6 +142,8 @@ public class MainWindow : Gtk.ApplicationWindow {
       return( _unicoder );
     }
   }
+
+  public delegate void OverwriteFunc( bool overwrite );
 
   public signal void canvas_changed( DrawArea? da );
 
@@ -422,7 +425,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Closes the current tab
   public void close_current_tab() {
-    _nb.current.close();
+    close_tab( _nb.page );
   }
 
   //-------------------------------------------------------------
@@ -547,7 +550,6 @@ public class MainWindow : Gtk.ApplicationWindow {
       var da = get_da( i );
       if( !da.is_loaded ) {
         _nb.detach_tab( _nb.get_nth_page( i ) );
-        tab.close();
         return;
       }
     }
@@ -608,16 +610,20 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   /* Updates the title */
   private void update_title( DrawArea? da ) {
-    var suffix = " \u2014 Minder";
+    var label = " \u2014 Minder";
+    if( _focus_btn.active ) {
+      label += " (%s)".printf( _( "Focus Mode" ) );
+    }
     if( (da == null) || !da.get_doc().is_saved() ) {
-      _header.set_title( _( "Unnamed Document" ) + suffix );
+      label = _( "Unnamed Document" ) + label;
     } else {
       if( da.get_doc().readonly ) {
-        suffix = " [%s]%s".printf( _( "Read-Only" ), suffix );
+        label += " [%s]%s".printf( _( "Read-Only" ), label );
       }
-      _header.set_title( GLib.Path.get_basename( da.get_doc().filename ) + suffix );
+      label = GLib.Path.get_basename( da.get_doc().filename ) + label;
     }
-    _header.set_subtitle( _focus_btn.active ? _( "Focus Mode" ) : null );
+    var lbl = (Label)_header.title_widget;
+    lbl.label = label;
   }
 
   /* Adds keyboard shortcuts for the menu actions */
@@ -1152,7 +1158,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Displays the overwrite warning dialog window.  Returns true
   // when overwrite is wanted and false when reload is wanted.
-  public bool ask_modified_overwrite( DrawArea da ) {
+  public void ask_modified_overwrite( DrawArea da, OverwriteFunc func ) {
 
     var dialog = new Granite.MessageDialog.with_image_from_icon_name(
       _( "The file %s was modified outside of the application." ).printf( da.get_doc().filename ),
@@ -1170,18 +1176,10 @@ public class MainWindow : Gtk.ApplicationWindow {
     dialog.set_transient_for( this );
     dialog.set_title( "Overwrite or reload?" );
 
-    dialog.show_all();
+    dialog.response.connect((id) => {
+      func( id == ResponseType.ACCEPT );
+    });
 
-    var res = dialog.run();
-
-    dialog.destroy();
-
-    switch( res ) {
-      case ResponseType.ACCEPT :  return true;
-      case ResponseType.CLOSE  :  return false;
-    }
-
-    return( false );
   }
 
   //-------------------------------------------------------------
@@ -1429,7 +1427,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   /* Called whenever the node selection changes in the canvas */
   private void on_current_changed( DrawArea da ) {
-    set_action_enabled( "win.action_zoom_selected", (da.get_current_node() != null) );
+    action_set_enabled( "win.action_zoom_selected", (da.get_current_node() != null) );
     _focus_btn.active = da.get_focus_mode();
   }
 
@@ -1463,7 +1461,7 @@ public class MainWindow : Gtk.ApplicationWindow {
         _stack.visible_child_name = tab;
       }
       if( !_inspector_nb.get_mapped() ) {
-        _pane.end_child( _inspector_nb, false, false );
+        _pane.end_child = _inspector_nb;
         var prop_width = _settings.get_int( "properties-width" );
         var pane_width = _pane.get_allocated_width();
         if( pane_width <= 1 ) {
@@ -1771,7 +1769,6 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
 
     var       fname = GLib.Path.build_filename( dir, "tab_state.xml" );
-    var       i     = 0;
     Xml.Doc*  doc   = new Xml.Doc( "1.0" );
     Xml.Node* root  = new Xml.Node( null, "tabs" );
 
@@ -1868,9 +1865,9 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Returns the height of a single line label
   public int get_label_height() {
-    int min_height, nat_height;
-    _scale_lbl.get_preferred_height( out min_height, out nat_height );
-    return( nat_height );
+    Requisition min, nat;
+    _scale_lbl.get_preferred_size( out min, out nat );
+    return( nat.height );
   }
 
   //-------------------------------------------------------------

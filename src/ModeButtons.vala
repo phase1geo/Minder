@@ -32,7 +32,7 @@ public class ModeButtons : Box {
     set {
       if( _selected != value ) {
         _selected = value;
-        var button = Utils.get_child_at_index( this, value );
+        var button = (CheckButton)Utils.get_child_at_index( this, value );
         button.active = true;
       }
     }
@@ -64,7 +64,7 @@ public class ModeButtons : Box {
     // This the checkbutton to the group
     var first = get_first_child();
     if( first != null ) {
-      button.set_group( first );
+      button.set_group( (CheckButton)first );
     } else {
       button.active = true;
     }

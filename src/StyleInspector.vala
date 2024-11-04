@@ -44,44 +44,44 @@ public enum StyleAffects {
 
 public class StyleInspector : Box {
 
-  private DrawArea?     _da = null;
-  private GLib.Settings _settings;
-  private Revealer      _branch_radius_revealer;
-  private Scale         _branch_radius;
-  private Scale         _branch_margin;
-  private ModeButtons   _link_types;
-  private Scale         _link_width;
-  private Switch        _link_arrow;
-  private Image         _link_dash;
-  private ModeButtons   _node_borders;
-  private Scale         _node_borderwidth;
-  private Switch        _node_fill;
-  private Scale         _node_margin;
-  private Scale         _node_padding;
-  private FontButton    _node_font;
-  private SpinButton    _node_width;
-  private Switch        _node_markup;
-  private Image         _conn_dash;
-  private Image         _conn_arrow;
-  private Scale         _conn_lwidth;
-  private Scale         _conn_padding;
-  private FontButton    _conn_font;
-  private SpinButton    _conn_twidth;
-  private FontButton    _callout_font;
-  private Scale         _callout_padding;
-  private Scale         _callout_ptr_width;
-  private Scale         _callout_ptr_length;
-  private StyleAffects  _affects;
-  private Label         _affects_label;
-  private Box           _branch_group;
-  private Box           _link_group;
-  private Box           _node_group;
-  private Box           _conn_group;
-  private Box           _callout_group;
-  private Expander      _conn_exp;
-  private Expander      _callout_exp;
-  private bool          _change_add = true;
-  private bool          _ignore     = false;
+  private DrawArea?        _da = null;
+  private GLib.Settings    _settings;
+  private Revealer         _branch_radius_revealer;
+  private Scale            _branch_radius;
+  private Scale            _branch_margin;
+  private ModeButtons      _link_types;
+  private Scale            _link_width;
+  private Switch           _link_arrow;
+  private Image            _link_dash;
+  private ModeButtons      _node_borders;
+  private Scale            _node_borderwidth;
+  private Switch           _node_fill;
+  private Scale            _node_margin;
+  private Scale            _node_padding;
+  private FontDialogButton _node_font;
+  private SpinButton       _node_width;
+  private Switch           _node_markup;
+  private Image            _conn_dash;
+  private Image            _conn_arrow;
+  private Scale            _conn_lwidth;
+  private Scale            _conn_padding;
+  private FontDialogButton _conn_font;
+  private SpinButton       _conn_twidth;
+  private FontDialogButton _callout_font;
+  private Scale            _callout_padding;
+  private Scale            _callout_ptr_width;
+  private Scale            _callout_ptr_length;
+  private StyleAffects     _affects;
+  private Label            _affects_label;
+  private Box              _branch_group;
+  private Box              _link_group;
+  private Box              _node_group;
+  private Box              _conn_group;
+  private Box              _callout_group;
+  private Expander         _conn_exp;
+  private Expander         _callout_exp;
+  private bool             _change_add = true;
+  private bool             _ignore     = false;
 
   public static Styles styles = new Styles();
 
@@ -163,8 +163,11 @@ public class StyleInspector : Box {
     var branch_margin = create_branch_margin_ui();
 
     var cbox = new Box( Orientation.VERTICAL, 10 ) {
-      homogeneous  = true,
-      border_width = 10
+      homogeneous   = true,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
     };
     cbox.append( branch_type );
     cbox.append( branch_radius );
@@ -323,8 +326,11 @@ public class StyleInspector : Box {
     var link_arrow = create_link_arrow_ui();
 
     var cbox = new Box( Orientation.VERTICAL, 10 ) {
-      homogeneous  = true,
-      border_width = 10
+      homogeneous   = true,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
     };
     cbox.append( link_dash );
     cbox.append( link_width );
@@ -484,8 +490,11 @@ public class StyleInspector : Box {
     var node_markup      = create_node_markup_ui();
 
     var cbox = new Box( Orientation.VERTICAL, 10 ) {
-      homogeneous  = true,
-      border_width = 10
+      homogeneous   = true,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
     };
     cbox.append( node_border );
     cbox.append( node_borderwidth );
@@ -718,9 +727,10 @@ public class StyleInspector : Box {
       xalign  = (float)0
     };
 
-    _node_font = new FontButton() {
-      use_font   = true,
-      show_style = false
+    var font_dialog = new FontDialog();
+    _node_font = new FontDialogButton( font_dialog ) {
+      use_font = true,
+      use_size = true
     };
     _node_font.set_filter_func( (family, face) => {
       var fd     = face.describe();
@@ -814,8 +824,11 @@ public class StyleInspector : Box {
     var conn_twidth  = create_connection_title_width_ui();
 
     var cbox = new Box( Orientation.VERTICAL, 10 ) {
-      homogeneous  = true,
-      border_width = 10
+      homogeneous   = true,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
     };
     cbox.append( conn_dash );
     cbox.append( conn_arrow );
@@ -1029,10 +1042,11 @@ public class StyleInspector : Box {
       xalign  = (float)0
     };
 
-    _conn_font = new FontButton() {
-      halign     = Align.END,
-      use_font   = true,
-      show_style = false
+    var font_dialog = new FontDialog();
+    _conn_font = new FontDialogButton( font_dialog ) {
+      halign   = Align.END,
+      use_font = true,
+      use_size = true
     };
     _conn_font.set_filter_func( (family, face) => {
       var fd     = face.describe();
@@ -1095,8 +1109,11 @@ public class StyleInspector : Box {
     var callout_plength = create_callout_pointer_length_ui();
 
     var cbox = new Box( Orientation.VERTICAL, 10 ) {
-      homogeneous  = true,
-      border_width = 10
+      homogeneous   = true,
+      margin_start  = 10,
+      margin_end    = 10,
+      margin_top    = 10,
+      margin_bottom = 10
     };
     cbox.append( callout_font );
     cbox.append( callout_padding );
@@ -1132,10 +1149,11 @@ public class StyleInspector : Box {
       xalign  = (float)0
     };
 
-    _callout_font = new FontButton() {
-      halign     = Align.END,
-      use_font   = true,
-      show_style = false
+    var font_dialog = new FontDialog();
+    _callout_font = new FontDialogButton( font_dialog ) {
+      halign   = Align.END,
+      use_font = true,
+      use_size = true
     };
     _callout_font.set_filter_func( (family, face) => {
       var fd     = face.describe();
