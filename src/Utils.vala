@@ -275,16 +275,17 @@ public class Utils {
   /* Returns true if the given file is read-only */
   public static bool is_read_only( string fname ) {
     var file = File.new_for_path( fname );
-    var src  = new Gtk.SourceFile();
+    var src  = new GtkSource.File();
     src.set_location( file );
     src.check_file_on_disk();
     return( src.is_readonly() );
   }
 
-  public static void set_chooser_folder( FileChooser chooser ) {
+  public static void set_chooser_folder( FileDialog dialog ) {
     var dir = Minder.settings.get_string( "last-directory" );
     if( dir != "" ) {
-      chooser.set_current_folder( dir );
+      var file = File.new_for_path( dir );
+      dialog.set_initial_folder( file );
     }
   }
 

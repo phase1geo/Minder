@@ -365,11 +365,12 @@ public class StyleInspector : Box {
       xalign  = (float)0
     };
 
+    var dashes = styles.get_link_dashes();
+
     _link_dash = new Image.from_paintable( dashes.index( 0 ).make_icon() );
 
-    var menu = new Gtk.Menu();
+    var menu = new GLib.Menu();
     /* TODO - Need to figure out how to display the paintables
-    var dashes = styles.get_link_dashes();
     for( int i=0; i<dashes.length; i++ ) {
       var dash = dashes.index( i );
       var img  = new Image.from_paintable( dash.make_icon() );
@@ -383,11 +384,8 @@ public class StyleInspector : Box {
     }
     */
 
-    var popover = new Popover();
-
-    var mb = new MenuButton() {
-      halign  = Align.END,
-      popover = popover
+    var mb = new PopoverMenu.from_model( menu ) {
+      halign = Align.END
     };
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1465,7 +1463,7 @@ public class StyleInspector : Box {
     _node_font.set_font( style.node_font.to_string() );
     _node_width.set_value( (float)node_width );
     _node_markup.set_active( (bool)node_markup );
-    _conn_arrow.surface = Connection.make_arrow_icon( style.connection_arrow );
+    _conn_arrow.paintable = Connection.make_arrow_icon( style.connection_arrow );
     _conn_lwidth.set_value( (double)conn_line_width );
     _conn_font.set_font( style.connection_font.to_string() );
     _conn_twidth.set_value( style.connection_title_width );

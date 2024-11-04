@@ -405,8 +405,8 @@ public class DrawArea : Gtk.DrawingArea {
   
   /* Updates the CSS for the current theme */
   public void update_css() {
-    StyleContext.add_provider_for_screen(
-      Screen.get_default(),
+    StyleContext.add_provider_for_display(
+      Display.get_default(),
       _theme.get_css_provider( win.text_size ),
       STYLE_PROVIDER_PRIORITY_APPLICATION
     );
@@ -490,8 +490,8 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Sets the cursor of the drawing area to the named cursor */
-  private void set_cursor( string name ) {
-    set_cursor( new Cursor.from_name( name ) );
+  private void set_cursor_name( string name ) {
+    set_cursor( new Cursor.from_name( name, null ) );
   }
 
   /* Loads the given theme from the list of available options */
@@ -880,7 +880,7 @@ public class DrawArea : Gtk.DrawingArea {
       update_im_cursor( node.name );
       _im_context.focus_in();
       if( node.name.is_within( _scaled_x, _scaled_y ) ) {
-        set_cursor( text_cursor );
+        set_cursor_name( text_cursor );
       }
       undo_text.orig.copy( node.name );
       undo_text.ct      = node.name;
@@ -911,7 +911,7 @@ public class DrawArea : Gtk.DrawingArea {
       update_im_cursor( conn.title );
       _im_context.focus_in();
       if( (conn.title != null) && conn.title.is_within( _scaled_x, _scaled_y ) ) {
-        set_cursor( text_cursor );
+        set_cursor_name( text_cursor );
       }
       undo_text.orig.copy( conn.title );
       undo_text.ct      = conn.title;
@@ -937,7 +937,7 @@ public class DrawArea : Gtk.DrawingArea {
       update_im_cursor( callout.text );
       _im_context.focus_in();
       if( (callout.text != null) && callout.text.is_within( _scaled_x, _scaled_y ) ) {
-        set_cursor( text_cursor );
+        set_cursor_name( text_cursor );
       }
       undo_text.orig.copy( callout.text );
       undo_text.ct      = callout.text;
@@ -2630,13 +2630,13 @@ public class DrawArea : Gtk.DrawingArea {
       var url = "";
       if( current_sticker != null ) {
         if( current_sticker.is_within_resizer( _scaled_x, _scaled_y ) ) {
-          set_cursor( "ew-resize" );
+          set_cursor_name( "ew-resize" );
           return;
         }
       }
       if( current_callout != null ) {
         if( current_callout.is_within_resizer( _scaled_x, _scaled_y ) ) {
-          set_cursor( "ew-resize" );
+          set_cursor_name( "ew-resize" );
           return;
         }
       }
@@ -2647,7 +2647,7 @@ public class DrawArea : Gtk.DrawingArea {
         if( current_conn.within_drag_handle( _scaled_x, _scaled_y ) ||
             current_conn.within_from_handle( _scaled_x, _scaled_y ) ||
             current_conn.within_to_handle( _scaled_x, _scaled_y ) ) {
-          set_cursor( move_cursor );
+          set_cursor_name( move_cursor );
           return;
         } else if( current_conn.within_note( _scaled_x, _scaled_y ) ) {
           set_tooltip_markup( Utils.prepare_note_markup( current_conn.note ) );
@@ -2677,20 +2677,20 @@ public class DrawArea : Gtk.DrawingArea {
             _attach_node = match;
             set_node_mode( _attach_node, NodeMode.ATTACHABLE );
           } else if( match.is_within_task( _scaled_x, _scaled_y ) ) {
-            set_cursor( pointer_cursor );
+            set_cursor_name( pointer_cursor );
             set_tooltip_markup( _( "%0.3g%% complete" ).printf( match.task_completion_percentage() ) );
           } else if( match.is_within_note( _scaled_x, _scaled_y ) ) {
             set_tooltip_markup( Utils.prepare_note_markup( match.note ) );
           } else if( match.is_within_fold( _scaled_x, _scaled_y ) ) {
-            set_cursor( pointer_cursor );
+            set_cursor_name( pointer_cursor );
             if( match.folded ) {
               set_tooltip_markup( prepare_folded_count_markup( match ) );
             }
           } else if( match.is_within_linked_node( _scaled_x, _scaled_y ) ) {
-            set_cursor( pointer_cursor );
+            set_cursor_name( pointer_cursor );
             set_tooltip_markup( Utils.prepare_note_markup( match.linked_node.get_tooltip( this ) ) );
           } else if( match.is_within_resizer( _scaled_x, _scaled_y ) ) {
-            set_cursor( "ew-resize" );
+            set_cursor_name( "ew-resize" );
             if( match.image == null ) {
               set_tooltip_markup( _( "Drag to resize node" ) );
             } else {
@@ -2698,11 +2698,11 @@ public class DrawArea : Gtk.DrawingArea {
             }
           } else if( _control && match.name.is_within_clickable( _scaled_x, _scaled_y, out tag, out url ) ) {
             if( tag == FormatTag.URL ) {
-              set_cursor( pointer_cursor );
+              set_cursor_name( pointer_cursor );
               set_tooltip_markup( url );
             }
           } else if( match.mode == NodeMode.EDITABLE ) {
-            set_cursor( text_cursor );
+            set_cursor_name( text_cursor );
             set_tooltip_markup( null );
           } else {
             if( !match.folded ) {
@@ -2719,11 +2719,11 @@ public class DrawArea : Gtk.DrawingArea {
         if( callout != null ) {
           if( _control && callout.text.is_within_clickable( _scaled_x, _scaled_y, out tag, out url ) ) {
             if( tag == FormatTag.URL ) {
-              set_cursor( pointer_cursor );
+              set_cursor_name( pointer_cursor );
               set_tooltip_markup( url );
             }
           } else if( callout.mode == CalloutMode.EDITABLE ) {
-            set_cursor( text_cursor );
+            set_cursor_name( text_cursor );
             set_tooltip_markup( null );
           } else {
             reset_cursor();
@@ -4437,22 +4437,22 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Handles the emoji insertion process for the given text item */
+  //-------------------------------------------------------------
+  // Handles the emoji insertion process for the given text item
   private void insert_emoji( CanvasText text ) {
-    var overlay = (Overlay)get_parent();
-    var entry = new Entry();
     int x, ytop, ybot;
     text.get_cursor_pos( out x, out ytop, out ybot );
-    entry.margin_start = x;
-    entry.margin_top   = ytop + ((ybot - ytop) / 2);
-    entry.changed.connect(() => {
-      text.insert( entry.text, undo_text );
-      queue_draw();
-      entry.unparent();
+    Gdk.Rectangle rect = {x, (ytop + ((ybot - ytop) / 2)), 1, 1};
+    var emoji = new EmojiChooser() {
+      pointing_to = rect
+    };
+    emoji.set_parent( this );
+    emoji.popup();
+    emoji.emoji_picked.connect((txt) => {
+      text.insert( txt, undo_text );
       grab_focus();
+      queue_draw();
     });
-    overlay.add_overlay( entry );
-    entry.insert_emoji();
   }
 
   /* Called whenever the period key is entered with the control key */
@@ -5107,7 +5107,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( (match != null) && match.name.is_within_clickable( _scaled_x, _scaled_y, out tag, out url ) ) {
         if( tag == FormatTag.URL ) {
           if( pressed ) {
-            set_cursor( pointer_cursor );
+            set_cursor_name( pointer_cursor );
             set_tooltip_markup( url );
           } else {
             reset_cursor();
@@ -5120,7 +5120,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( (callout != null) && callout.text.is_within_clickable( _scaled_x, _scaled_y, out tag, out url ) ) {
         if( tag == FormatTag.URL ) {
           if( pressed ) {
-            set_cursor( pointer_cursor );
+            set_cursor_name( pointer_cursor );
             set_tooltip_markup( url );
           } else {
             reset_cursor();

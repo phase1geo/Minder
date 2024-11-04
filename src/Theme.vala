@@ -195,7 +195,7 @@ public class Theme : Object {
                      ".theme-selected { background: #087DFF; } " +
                      ".canvas { background: " + get_color( "background" ).to_string() + "; }" +
                      ".highlighted { background: rgba(255, 255, 129, " + (prefer_dark ? "0.15" : "1.0") + "); }";
-      provider.load_from_data( css_data );
+      provider.load_from_string( css_data );
     } catch( GLib.Error e ) {
       stdout.printf( _( "Unable to load background color: %s" ), e.message );
     }
@@ -283,10 +283,10 @@ public class Theme : Object {
     double ypos[6];
     int    width, height;
 
-    var rect = Graphene.Rectangle.alloc();
+    var rect = Graphene.Rect.alloc();
     rect.init( (float)0.0, (float)0.0, (float)side, (float)side );
 
-    var snapshot = new Snapshot();
+    var snapshot = new Gtk.Snapshot();
     var ctx      = snapshot.append_cairo( rect );
 
     var font_desc = new Pango.FontDescription();

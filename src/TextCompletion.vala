@@ -62,8 +62,7 @@ public class TextCompletionItem {
   }
 
   public static string get_text( Box box ) {
-    var children = box.get_children();
-    var lbl      = (Label)children.nth_data( children.length() - 1 );
+    var lbl = (Label)box.get_last_child();
     return( lbl.get_text() );
   }
 
@@ -92,10 +91,11 @@ public class TextCompletion {
   /* Default constructor */
   public TextCompletion( DrawArea da ) {
     _da   = da;
-    _list = new ListBox();
-    _list.selection_mode = SelectionMode.BROWSE;
-    _list.halign         = Align.START;
-    _list.valign         = Align.START;
+    _list = new ListBox() {
+      selection_mode = SelectionMode.BROWSE,
+      halign         = Align.START,
+      valign         = Align.START
+    };
     _list.row_activated.connect( activate_row );
   }
 
@@ -138,11 +138,9 @@ public class TextCompletion {
     }
 
     /* Populate the list */
-    _list.foreach( (w) => {
-      _list.remove( w );
-    });
+    Utils.clear_listbox( _list );
     foreach( TextCompletionItem item in list ) {
-      _list.add( item.create_row() );
+      _list.append( item.create_row() );
       if( --max_items <= 0 ) {
         break;
       }
@@ -150,9 +148,6 @@ public class TextCompletion {
 
     /* Select the first row */
     _list.select_row( _list.get_row_at_index( below ? 0 : (_size - 1) ) );
-
-    /* Make sure that everything is seen */
-    _list.show_all();
 
     /* If the list isn't being shown, show it */
     if( !_shown ) {

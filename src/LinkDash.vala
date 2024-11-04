@@ -42,7 +42,7 @@ public class LinkDash : Object {
     var rect = Graphene.Rect.alloc();
     rect.init( (float)0.0, (float)0.0, (float)100, (float) 20 );
 
-    var snapshot = new Snapshot();
+    var snapshot = new Gtk.Snapshot();
     var ctx      = snapshot.append_cairo( rect );
 
     ctx.set_source_rgba( 0.5, 0.5, 0.5, 1 );
@@ -53,7 +53,7 @@ public class LinkDash : Object {
     ctx.line_to( 90, 10 );
     ctx.stroke();
 
-    return( snapshot.free_to_paintable() );
+    return( snapshot.free_to_paintable( null ) );
 
   }
 
