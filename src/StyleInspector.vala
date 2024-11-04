@@ -365,18 +365,18 @@ public class StyleInspector : Box {
       xalign  = (float)0
     };
 
-    _link_dash = new Image.from_surface( dashes.index( 0 ).make_icon() );
+    _link_dash = new Image.from_paintable( dashes.index( 0 ).make_icon() );
 
-    /* TODO - Need to figure out how to display surfaces
     var menu = new Gtk.Menu();
+    /* TODO - Need to figure out how to display the paintables
     var dashes = styles.get_link_dashes();
     for( int i=0; i<dashes.length; i++ ) {
       var dash = dashes.index( i );
-      var img  = new Image.from_surface( dash.make_icon() );
+      var img  = new Image.from_paintable( dash.make_icon() );
       var mi   = new Gtk.MenuItem( );
       mi.activate.connect(() => {
         _da.undo_buffer.add_item( new UndoStyleLinkDash( _affects, dash, _da ) );
-        _link_dash.surface = img.surface;
+        _link_dash.paintable = img.paintable;
       });
       mi.add( img );
       menu.add( mi );
@@ -1280,8 +1280,8 @@ public class StyleInspector : Box {
       halign      = Align.FILL,
       homogeneous = true
     };
-    box.pack_start( lbl,                 false, true );
-    box.pack_end(   _callout_ptr_length, false, true );
+    box.append( lbl );
+    box.append( _callout_ptr_length );
 
     return( box );
 
@@ -1390,7 +1390,7 @@ public class StyleInspector : Box {
     var link_types = styles.get_link_types();
     for( int i=0; i<link_types.length; i++ ) {
       if( link_types.index( i ).name() == style.link_type.name() ) {
-        _link_types.icon_name = link_types.index( i ).icon_name();
+        _link_types.selected = i;
         break;
       }
     }
@@ -1403,7 +1403,7 @@ public class StyleInspector : Box {
     var link_dashes = styles.get_link_dashes();
     for( int i=0; i<link_dashes.length; i++ ) {
       if( link_dashes.index( i ).name == style.link_dash.name ) {
-        // TODO - _link_dash.surface = link_dashes.index( i ).make_icon();
+        _link_dash.paintable = link_dashes.index( i ).make_icon();
         break;
       }
     }
@@ -1413,7 +1413,7 @@ public class StyleInspector : Box {
     var node_borders = styles.get_node_borders();
     for( int i=0; i<node_borders.length; i++ ) {
       if( node_borders.index( i ).name() == style.node_border.name() ) {
-        _node_borders.icon_name = node_borders.index( i ).icon_name();
+        _node_borders.selected = i;
         break;
       }
     }
@@ -1423,7 +1423,7 @@ public class StyleInspector : Box {
     var link_dashes = styles.get_link_dashes();
     for( int i=0; i<link_dashes.length; i++ ) {
       if( link_dashes.index( i ).name == style.connection_dash.name ) {
-        // TODO - _conn_dash.surface = link_dashes.index( i ).make_icon();
+        _conn_dash.paintable = link_dashes.index( i ).make_icon();
         break;
       }
     }

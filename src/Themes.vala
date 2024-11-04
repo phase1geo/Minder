@@ -71,7 +71,7 @@ public class Themes : Object {
   /* Returns a list of icons associated with each of the loaded themes */
   public void icons( ref Array<Image> icons ) {
     for( int i=0; i<_themes.length; i++ ) {
-      icons.append_val( new Image.from_surface( _themes.index( i ).make_icon() ) );
+      icons.append_val( new Image.from_paintable( _themes.index( i ).make_icon() ) );
     }
   }
 

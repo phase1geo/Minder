@@ -201,7 +201,7 @@ public class NoteView : GtkSource.View {
 
     _buffer = new GtkSource.Buffer.with_language( language ) {
       highlight_syntax = true,
-      max_undo_levels  = 20
+      enable_undo      = true
     };
     _buffer.set_style_scheme( style );
     set_buffer( _buffer );
@@ -349,7 +349,6 @@ public class NoteView : GtkSource.View {
   /* Called when URL checking should be performed on the current line (if necessary) */
   private void enable_url_checking( int x, int y ) {
     TextIter cursor;
-    var      win = get_window( TextWindowType.TEXT );
     get_iter_at_location( out cursor, x, y );
     if( _last_lnum != cursor.get_line() ) {
       var line = current_line( cursor );
@@ -364,24 +363,25 @@ public class NoteView : GtkSource.View {
       tooltip_text = "";
     }
     if( cursor_in_url( cursor ) || in_node_link ) {
-      win.set_cursor( new Cursor.for_display( get_display(), CursorType.HAND2 ) );
+      set_cursor( new Gdk.Cursor.from_name( "pointer", null ) );
     } else {
-      win.set_cursor( null );
+      set_cursor( null );
     }
   }
 
   /* Called when URL checking should no longer be performed on the current line */
   private void disable_url_checking() {
-    var win = get_window( TextWindowType.TEXT );
-    win.set_cursor( null );
+    set_cursor( null );
     _last_lnum = -1;
     tooltip_text = "";
   }
 
   /* Adds the unicoder text completion service */
   public void add_unicode_completion( MainWindow win, UnicodeInsert unicoder ) {
+    /* TODO
     var provider = new CompletionProvider( win, _buffer, "Unicode", unicoder.create_proposals() );
     completion.add_provider( provider );
+    */
   }
 
   /*

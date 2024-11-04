@@ -275,15 +275,19 @@ public class Theme : Object {
   }
 
   /* Creates the icon representation based on the theme's colors */
-  public Cairo.Surface make_icon() {
+  public Paintable make_icon() {
 
-    int                side    = 140;
-    int                nrad    = 15;
-    Cairo.ImageSurface surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, side, side );
-    Cairo.Context      ctx     = new Cairo.Context( surface );
-    int                hside   = side / 2;
-    double             ypos[6];
-    int                width, height;
+    var    side  = 140;
+    var    nrad  = 15;
+    var    hside = side / 2;
+    double ypos[6];
+    int    width, height;
+
+    var rect = Graphene.Rectangle.alloc();
+    rect.init( (float)0.0, (float)0.0, (float)side, (float)side );
+
+    var snapshot = new Snapshot();
+    var ctx      = snapshot.append_cairo( rect );
 
     var font_desc = new Pango.FontDescription();
     font_desc.set_family( "Sans" );
@@ -349,7 +353,7 @@ public class Theme : Object {
     Connection.draw_arrow( ctx, 2, p[0], p[1], p[2], p[3], 7 );
     Connection.draw_arrow( ctx, 2, p[4], p[5], p[2], p[3], 7 );
 
-    return( surface );
+    return( snapshot.free_to_paintable( null ) );
 
   }
 

@@ -393,13 +393,12 @@ class ImageEditor {
     _paste = paste;
 
     open.clicked.connect(() => {
-      var id  = im.choose_image( da.win );
-      if( id != -1 ) {
+      im.choose_image( da.win, (id) => {
         var ni = new NodeImage( im, id, _node.style.node_width );
         if( ni != null ) {
           initialize( ni );
         }
-      }
+      });
     });
 
     cancel.clicked.connect( action_cancel );

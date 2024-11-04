@@ -1272,9 +1272,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( nodes.length == 1 ) {
       var current = nodes.index( 0 );
       if( current.image == null ) {
-        var parent = (Gtk.Window)get_toplevel();
-        var id     = image_manager.choose_image( parent );
-        if( id != -1 ) {
+        image_manager.choose_image( win, (id) => {
           current.set_image( image_manager, new NodeImage( image_manager, id, current.style.node_width ) );
           if( current.image != null ) {
             undo_buffer.add_item( new UndoNodeImage( current, null ) );
@@ -1282,7 +1280,7 @@ public class DrawArea : Gtk.DrawingArea {
             current_changed( this );
             auto_save();
           }
-        }
+        });
       }
     }
   }
