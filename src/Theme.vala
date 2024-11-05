@@ -185,7 +185,7 @@ public class Theme : Object {
   public CssProvider get_css_provider( int text_size ) {
     CssProvider provider = new CssProvider();
     try {
-      var tv_size  = (text_size == -1) ? ".textfield { font: 1em \"Sans\" } " :
+      var tv_size  = (text_size == -1) ? ".textfield { font: 1em \"Sans\"; } " :
                                          ".textfield { font: %dpx \"Sans\"; } ".printf( text_size );
       var css_data = "@define-color colorPrimary #603461; " +
                      "@define-color textColorPrimary @SILVER_100; " +
@@ -277,7 +277,7 @@ public class Theme : Object {
   /* Creates the icon representation based on the theme's colors */
   public Paintable make_icon() {
 
-    var    side  = 140;
+    var    side  = 140 * 3;
     var    nrad  = 15;
     var    hside = side / 2;
     double ypos[6];

@@ -342,6 +342,7 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
+    this.focusable = true;
 
     /*
      Make sure that we add a CSS class name to ourselves so we can color
@@ -351,11 +352,12 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Make sure that we us the ImContextSimple input method */
     _im_context = new IMMulticontext();
-    _im_context.set_use_preedit( false );
     _im_context.set_client_widget( this );
+    _im_context.set_use_preedit( false );
     _im_context.commit.connect( handle_im_commit );
     _im_context.retrieve_surrounding.connect( handle_im_retrieve_surrounding );
     _im_context.delete_surrounding.connect( handle_im_delete_surrounding );
+    key.set_im_context( _im_context );
 
   }
 
@@ -4761,6 +4763,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Handle input method */
   private void handle_im_commit( string str ) {
+    stdout.printf( "In handle_im_commit, str: %s\n", str );
     insert_text( str );
   }
 

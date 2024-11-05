@@ -84,8 +84,8 @@ case $1 in
     ;;
 "debug")
     initialize
-    G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.minder "${@:2}"
-    # G_DEBUG=fatal-warnings gdb --args ./com.github.phase1geo.minder "${@:2}"
+    # G_DEBUG=fatal-criticals gdb --args ./com.github.phase1geo.minder "${@:2}"
+    G_DEBUG=fatal-warnings gdb --args ./com.github.phase1geo.minder "${@:2}"
     ;;
 "flatpak-debug")
     echo "Run command at prompt: G_DEBUG=fatal-criticals gdb /app/bin/com.github.phase1geo.minder"

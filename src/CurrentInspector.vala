@@ -30,7 +30,10 @@ public class CurrentInspector : Box {
 
   public CurrentInspector( MainWindow win ) {
 
+    Object( orientation: Orientation.VERTICAL, spacing: 10, valign: Align.FILL );
+
     _stack = new Stack() {
+      vexpand             = true,
       transition_duration = 500,
       transition_type     = StackTransitionType.NONE
     };

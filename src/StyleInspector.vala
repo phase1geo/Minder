@@ -52,7 +52,7 @@ public class StyleInspector : Box {
   private ModeButtons      _link_types;
   private Scale            _link_width;
   private Switch           _link_arrow;
-  private Image            _link_dash;
+  private Picture          _link_dash;
   private ModeButtons      _node_borders;
   private Scale            _node_borderwidth;
   private Switch           _node_fill;
@@ -61,8 +61,8 @@ public class StyleInspector : Box {
   private FontDialogButton _node_font;
   private SpinButton       _node_width;
   private Switch           _node_markup;
-  private Image            _conn_dash;
-  private Image            _conn_arrow;
+  private Picture          _conn_dash;
+  private Picture          _conn_arrow;
   private Scale            _conn_lwidth;
   private Scale            _conn_padding;
   private FontDialogButton _conn_font;
@@ -104,7 +104,7 @@ public class StyleInspector : Box {
     _callout_group = create_callout_ui();
 
     /* Pack the scrollwindow */
-    var box = new Box( Orientation.VERTICAL, 0 );
+    var box = new Box( Orientation.VERTICAL, 10 );
     box.append( _branch_group );
     box.append( _link_group );
     box.append( _node_group );
@@ -128,10 +128,10 @@ public class StyleInspector : Box {
   /* Listen for any changes to the current tab in the main window */
   private void tab_changed( DrawArea? da ) {
     if( _da != null ) {
-      _da.current_changed.disconnect( handle_current_changed );
+//      _da.current_changed.disconnect( handle_current_changed );
     }
     if( da != null ) {
-      da.current_changed.connect( handle_current_changed );
+//      da.current_changed.connect( handle_current_changed );
     }
     _da = da;
     handle_ui_changed();
@@ -141,10 +141,13 @@ public class StyleInspector : Box {
   private Box create_affect_ui() {
 
     var lbl = new Label( Utils.make_title( _( "Changes affect:" ) ) ) {
+      halign     = Align.START,
       use_markup = true
     };
 
-    _affects_label = new Label( "" );
+    _affects_label = new Label( "" ) {
+      halign = Align.START
+    };
 
     /* Pack the menubutton box */
     var box = new Box( Orientation.HORIZONTAL, 10 );
@@ -162,12 +165,13 @@ public class StyleInspector : Box {
     var branch_radius = create_branch_radius_ui();
     var branch_margin = create_branch_margin_ui();
 
-    var cbox = new Box( Orientation.VERTICAL, 10 ) {
+    var cbox = new Box( Orientation.VERTICAL, 0 ) {
+      vexpand       = true,
       homogeneous   = true,
       margin_start  = 10,
       margin_end    = 10,
       margin_top    = 10,
-      margin_bottom = 10
+   //   margin_bottom = 10
     };
     cbox.append( branch_type );
     cbox.append( branch_radius );
@@ -185,7 +189,7 @@ public class StyleInspector : Box {
 
     var sep = new Separator( Orientation.HORIZONTAL );
 
-    var box = new Box( Orientation.VERTICAL, 0 );
+    var box = new Box( Orientation.VERTICAL, 10 );
     box.append( exp );
     box.append( sep );
 
@@ -213,7 +217,7 @@ public class StyleInspector : Box {
       _link_types.add_button( link_type.icon_name(), link_type.display_name() );
     }
 
-    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+    var box = new Box( Orientation.HORIZONTAL, 10 ) {
       homogeneous = true
     };
     box.append( lbl );
@@ -235,18 +239,17 @@ public class StyleInspector : Box {
   private Revealer create_branch_radius_ui() {
 
     var lbl = new Label( _( "Corner Radius" ) ) {
-      halign  = Align.START,
       hexpand = true,
       xalign  = (float)0
     };
 
     _branch_radius = new Scale.with_range( Orientation.HORIZONTAL, 10, 40, 1 ) {
-      halign     = Align.END,
+      halign     = Align.FILL,
       draw_value = true
     };
     _branch_radius.change_value.connect( branch_radius_changed );
 
-    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+    var box = new Box( Orientation.HORIZONTAL, 10 ) {
       homogeneous = true
     };
     box.append( lbl );
@@ -280,18 +283,17 @@ public class StyleInspector : Box {
   private Box create_branch_margin_ui() {
 
     var lbl = new Label( _( "Margin" ) ) {
-      halign  = Align.START,
       hexpand = true,
       xalign  = (float)0
     };
 
     _branch_margin = new Scale.with_range( Orientation.HORIZONTAL, 20, 150, 10 ) {
-      halign     = Align.END,
+      halign     = Align.FILL,
       draw_value = true
     };
     _branch_margin.change_value.connect( branch_margin_changed );
 
-    var box = new Box( Orientation.HORIZONTAL, 0 ) {
+    var box = new Box( Orientation.HORIZONTAL, 10 ) {
       halign      = Align.FILL,
       homogeneous = true
     };
@@ -367,7 +369,7 @@ public class StyleInspector : Box {
 
     var dashes = styles.get_link_dashes();
 
-    _link_dash = new Image.from_paintable( dashes.index( 0 ).make_icon() );
+    _link_dash = new Picture.for_paintable( dashes.index( 0 ).make_icon() );
 
     var menu = new GLib.Menu();
     /* TODO - Need to figure out how to display the paintables
@@ -384,8 +386,13 @@ public class StyleInspector : Box {
     }
     */
 
-    var mb = new PopoverMenu.from_model( menu ) {
-      halign = Align.END
+    var popover = new Popover();
+
+    var mb = new MenuButton() {
+      halign  = Align.END,
+      valign  = Align.CENTER,
+      child   = _link_dash,
+      popover = popover
     };
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -409,7 +416,7 @@ public class StyleInspector : Box {
     };
 
     _link_width = new Scale.with_range( Orientation.HORIZONTAL, 2, 8, 1 ) {
-      halign     = Align.END,
+      halign     = Align.FILL,
       draw_value = false
     };
 
@@ -457,6 +464,7 @@ public class StyleInspector : Box {
 
     _link_arrow = new Switch() {
       halign = Align.END,
+      valign = Align.CENTER,
       active = false
     };
     _link_arrow.notify["active"].connect( link_arrow_changed );
@@ -568,7 +576,7 @@ public class StyleInspector : Box {
     };
 
     _node_borderwidth = new Scale.with_range( Orientation.HORIZONTAL, 2, 8, 1 ) {
-      halign     = Align.END,
+      halign     = Align.FILL,
       draw_value = false
     };
 
@@ -616,6 +624,7 @@ public class StyleInspector : Box {
 
     _node_fill = new Switch() {
       halign       = Align.END,
+      valign       = Align.CENTER,
       tooltip_text = _("Fills the node with color when the node\nborder is square, rounded or pill-shaped" )
     };
     _node_fill.notify["active"].connect( node_fill_changed );
@@ -644,7 +653,7 @@ public class StyleInspector : Box {
     };
 
     _node_margin = new Scale.with_range( Orientation.HORIZONTAL, 1, 20, 1 ) {
-      halign     = Align.END,
+      halign     = Align.FILL,
       draw_value = true
     };
     _node_margin.change_value.connect( node_margin_changed );
@@ -685,7 +694,7 @@ public class StyleInspector : Box {
     };
 
     _node_padding = new Scale.with_range( Orientation.HORIZONTAL, 5, 20, 2 ) {
-      halign     = Align.END,
+      halign     = Align.FILL,
       draw_value = true
     };
     _node_padding.change_value.connect( node_padding_changed );
@@ -727,6 +736,7 @@ public class StyleInspector : Box {
 
     var font_dialog = new FontDialog();
     _node_font = new FontDialogButton( font_dialog ) {
+      valign   = Align.CENTER,
       use_font = true,
       use_size = true
     };
@@ -768,6 +778,7 @@ public class StyleInspector : Box {
 
     _node_width = new SpinButton.with_range( 200, 1000, 100 ) {
       halign = Align.END,
+      valign = Align.CENTER,
       value  = _settings.get_int( "style-node-width" )
     };
     _node_width.value_changed.connect(() => {
@@ -796,7 +807,8 @@ public class StyleInspector : Box {
     };
 
     _node_markup = new Switch() {
-      halign = Align.END
+      halign = Align.END,
+      valign = Align.CENTER
     };
     _node_markup.notify["active"].connect( node_markup_changed );
 
@@ -869,8 +881,11 @@ public class StyleInspector : Box {
       xalign  = (float)0
     };
 
-    /*
     var dashes = styles.get_link_dashes();
+
+    _conn_dash = new Picture.for_paintable( dashes.index( 0 ).make_icon() );
+
+    /*
     for( int i=0; i<dashes.length; i++ ) {
       var dash = dashes.index( i );
       var img  = new Image.from_surface( dash.make_icon() );
@@ -888,6 +903,8 @@ public class StyleInspector : Box {
 
     var mb = new MenuButton() {
       halign  = Align.END,
+      valign  = Align.CENTER,
+      child   = _conn_dash,
       popover = popover
     };
 
@@ -911,6 +928,8 @@ public class StyleInspector : Box {
       xalign  = (float)0
     };
 
+    _conn_arrow = new Picture.for_paintable( Connection.make_arrow_icon( "fromto" ) );
+
     /* TODO
     var menu         = new Gtk.Menu();
     string arrows[4] = {"none", "fromto", "tofrom", "both"};
@@ -931,6 +950,8 @@ public class StyleInspector : Box {
 
     var mb = new MenuButton() {
       halign  = Align.END,
+      valign  = Align.CENTER,
+      child   = _conn_arrow,
       popover = popover
     };
 
@@ -955,7 +976,7 @@ public class StyleInspector : Box {
     };
 
     _conn_lwidth = new Scale.with_range( Orientation.HORIZONTAL, 1, 8, 1 ) {
-      halign     = Align.END,
+      halign     = Align.FILL,
       draw_value = false
     };
 
@@ -1004,7 +1025,7 @@ public class StyleInspector : Box {
     };
 
     _conn_padding = new Scale.with_range( Orientation.HORIZONTAL, 2, 10, 2 ) {
-      halign     = Align.END,
+      halign     = Align.FILL,
       draw_value = true
     };
     _conn_padding.change_value.connect( connection_padding_changed );
@@ -1047,6 +1068,7 @@ public class StyleInspector : Box {
 
     var font_dialog = new FontDialog();
     _conn_font = new FontDialogButton( font_dialog ) {
+      valign   = Align.CENTER,
       use_font = true,
       use_size = true
     };
@@ -1088,6 +1110,7 @@ public class StyleInspector : Box {
 
     _conn_twidth = new SpinButton.with_range( 100, 400, 50 ) {
       halign = Align.END,
+      valign = Align.CENTER,
       value  = _settings.get_int( "style-connection-title-width" )
     };
     _conn_twidth.value_changed.connect(() => {
@@ -1158,6 +1181,7 @@ public class StyleInspector : Box {
 
     var font_dialog = new FontDialog();
     _callout_font = new FontDialogButton( font_dialog ) {
+      valign   = Align.CENTER,
       use_font = true,
       use_size = true
     };
@@ -1198,7 +1222,7 @@ public class StyleInspector : Box {
     };
 
     _callout_padding = new Scale.with_range( Orientation.HORIZONTAL, 4, 20, 2 ) {
-      halign     = Align.END,
+      halign     = Align.FILL,
       draw_value = true
     };
     _callout_padding.change_value.connect( callout_padding_changed );
@@ -1240,7 +1264,7 @@ public class StyleInspector : Box {
     };
 
     _callout_ptr_width = new Scale.with_range( Orientation.HORIZONTAL, 10, 30, 5 ) {
-      halign     = Align.END,
+      halign     = Align.FILL,
       draw_value = true
     };
     _callout_ptr_width.change_value.connect( callout_pointer_width_changed );
@@ -1282,7 +1306,7 @@ public class StyleInspector : Box {
     };
 
     _callout_ptr_length = new Scale.with_range( Orientation.HORIZONTAL, 10, 100, 5 ) {
-      halign     = Align.END,
+      halign     = Align.FILL,
       draw_value = true
     };
     _callout_ptr_length.change_value.connect( callout_pointer_length_changed );
@@ -1476,7 +1500,7 @@ public class StyleInspector : Box {
     _node_font.set_font_features( style.node_font.to_string() );
     _node_width.set_value( (float)node_width );
     _node_markup.set_active( (bool)node_markup );
-    _conn_arrow.paintable = Connection.make_arrow_icon( style.connection_arrow );
+    _conn_arrow.set_paintable( Connection.make_arrow_icon( style.connection_arrow ) );
     _conn_lwidth.set_value( (double)conn_line_width );
     _conn_font.set_font_features( style.connection_font.to_string() );
     _conn_twidth.set_value( style.connection_title_width );

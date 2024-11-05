@@ -167,6 +167,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       show_title_buttons = true,
       title_widget       = new Label( _( "Minder" ) )
     };
+    set_titlebar( _header );
 
     // Set the default window size to the last session size
     set_default_size( window_w, window_h );
@@ -251,12 +252,8 @@ public class MainWindow : Gtk.ApplicationWindow {
       _settings.set_int( "properties-width", ((_pane.get_allocated_width() - _pane.position) - 11) );
     });
 
-    var top_box = new Box( Orientation.VERTICAL, 0 );
-    top_box.append( _header );
-    top_box.append( _pane );
-
     /* Display the UI */
-    child = top_box;
+    child = _pane;
 
     /* If the settings says to display the properties, do it now */
     if( _settings.get_boolean( "current-properties-shown" ) ) {
@@ -285,7 +282,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     /* If we receive focus, update the titlebar */
     var focus = new EventControllerFocus();
-    top_box.add_controller( focus );
+    _pane.add_controller( focus );
     focus.enter.connect(() => {
       var da = get_current_da();
       update_title( da );
@@ -1069,8 +1066,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     var box = new Box( Orientation.VERTICAL, 20 ) {
       halign        = Align.FILL,
       valign        = Align.FILL,
-      margin_start  = 5,
-      margin_end    = 5,
+      margin_start  = 10,
+      margin_end    = 10,
       margin_top    = 5,
       margin_bottom = 5
     };

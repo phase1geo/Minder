@@ -28,7 +28,8 @@ public class EmptyInspector : Box {
   public EmptyInspector( MainWindow win ) {
 
     var empty_lbl = new Label( "<big>" + _( "Select a node, connection or group\nto view/edit information" ) + "</big>" ) {
-      halign     = Align.CENTER,
+      halign     = Align.FILL,
+      hexpand    = true,
       valign     = Align.CENTER,
       use_markup = true,
       justify    = Justification.CENTER

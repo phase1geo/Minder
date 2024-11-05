@@ -69,7 +69,7 @@ public class ConnectionMenu {
     var menu = new GLib.Menu();
     menu.append_section( null, sel_menu );
     menu.append_section( null, edit_menu );
-    menu.append_submenu( null, sel_menu );
+    menu.append_section( null, sel_menu );
 
     _popover = new PopoverMenu.from_model( menu );
 

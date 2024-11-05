@@ -358,9 +358,10 @@ public class MapInspector : Box {
     tb.append( _theme_grid );
 
     var sw = new ScrolledWindow() {
-      halign = Align.FILL,
-      valign = Align.FILL,
-      child  = tb
+      halign  = Align.FILL,
+      valign  = Align.FILL,
+      vexpand = true,
+      child   = tb
     };
     sw.child.set_size_request( 200, 600 );
 
@@ -527,7 +528,7 @@ public class MapInspector : Box {
 
     /* Update selection of themes */
     var index = 0;
-    var child = Utils.get_child_at_index( _theme_grid, index++ );
+    var child = Utils.get_child_at_index( _theme_grid, index );
     while( child != null ) {
       if( shown.index( index ) == name ) {
         child.add_css_class( "theme-selected" );
@@ -538,7 +539,7 @@ public class MapInspector : Box {
         var l = (Label)Utils.get_child_at_index( child, 1 );
         l.set_markup( theme_label( shown.index( index ) ) );
       }
-      child = Utils.get_child_at_index( _theme_grid, index++ );
+      child = Utils.get_child_at_index( _theme_grid, ++index );
     }
 
   }

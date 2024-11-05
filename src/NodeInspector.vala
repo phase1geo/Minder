@@ -49,7 +49,7 @@ public class NodeInspector : Box {
 
   public NodeInspector( MainWindow win ) {
 
-    Object( orientation:Orientation.VERTICAL, spacing:0 );
+    Object( orientation: Orientation.VERTICAL, spacing: 10 );
 
     /* Create the node widgets */
     create_title();
