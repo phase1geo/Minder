@@ -29,7 +29,7 @@ public class NodeInspector : Box {
   private Switch         _task;
   private Switch         _fold;
   private Switch         _sequence;
-  private Revealer       _link_reveal;
+  private Box            _link_box;
   private ColorButton    _link_color;
   private NoteView       _note;
   private DrawArea?      _da = null;
@@ -42,7 +42,7 @@ public class NodeInspector : Box {
   private Label          _image_loc;
   private Switch         _override;
   private ColorButton    _root_color;
-  private Revealer       _root_color_reveal;
+  private Box            _root_color_box;
   private Revealer       _color_reveal;
   private ToggleButton   _resize;
   private bool           _ignore_changes = false;
@@ -193,26 +193,21 @@ public class NodeInspector : Box {
     };
 
     _link_color = new ColorButton() {
-      halign = Align.END
+      halign = Align.FILL
     };
     _link_color.color_set.connect(() => {
       _da.change_current_link_color( _link_color.rgba );
     });
 
-    var box = new Box( Orientation.HORIZONTAL, 5 ) {
+    _link_box = new Box( Orientation.HORIZONTAL, 5 ) {
       homogeneous   = true,
       margin_top    = 5,
       margin_bottom = 5
     };
-    box.append( lbl );
-    box.append( _link_color );
+    _link_box.append( lbl );
+    _link_box.append( _link_color );
 
-    _link_reveal = new Revealer() {
-      transition_type = RevealerTransitionType.NONE,
-      child           = box
-    };
-
-    append( _link_reveal );
+    append( _link_box );
 
   }
 
@@ -244,7 +239,9 @@ public class NodeInspector : Box {
 
     var l = new Label( "" );
 
-    _root_color = new ColorButton();
+    _root_color = new ColorButton() {
+      halign = Align.FILL
+    };
     _root_color.color_set.connect(() => {
       _da.change_current_link_color( _root_color.rgba );
     });
@@ -260,18 +257,13 @@ public class NodeInspector : Box {
       child = cbox
     };
 
-    var hbox = new Box( Orientation.VERTICAL, 5 ) {
+    _root_color_box = new Box( Orientation.VERTICAL, 5 ) {
       margin_bottom = 5
     };
-    hbox.append( box );
-    hbox.append( _color_reveal );
+    _root_color_box.append( box );
+    _root_color_box.append( _color_reveal );
 
-    _root_color_reveal = new Revealer() {
-      transition_type = RevealerTransitionType.NONE,
-      child           = hbox
-    };
-
-    append( _root_color_reveal );
+    append( _root_color_box );
 
   }
 
@@ -284,6 +276,8 @@ public class NodeInspector : Box {
     };
 
     _note = new NoteView() {
+      valign    = Align.FILL,
+      vexpand   = true,
       wrap_mode = Gtk.WrapMode.WORD
     };
     _note.add_unicode_completion( win, win.unicoder );
@@ -650,14 +644,14 @@ public class NodeInspector : Box {
         _sequence.set_sensitive( true );
       }
       if( current.is_root() ) {
-        _link_reveal.reveal_child       = false;
-        _root_color_reveal.reveal_child = true;
+        _link_box.visible = false;
+        _root_color_box.visible = true;
         _override.set_active( current.link_color_set );
         _color_reveal.reveal_child = current.link_color_set;
         _root_color.rgba = current.link_color_set ? current.link_color : _da.get_theme().get_color( "root_background" );
       } else {
-        _link_reveal.reveal_child       = true;
-        _root_color_reveal.reveal_child = false;
+        _link_box.visible = true;
+        _root_color_box.visible = false;
         _link_color.rgba = current.link_color;
       }
       _detach_btn.set_sensitive( current.parent != null );
