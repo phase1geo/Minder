@@ -4763,12 +4763,12 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Handle input method */
   private void handle_im_commit( string str ) {
-    stdout.printf( "In handle_im_commit, str: %s\n", str );
     insert_text( str );
   }
 
   /* Inserts text */
   private bool insert_text( string str ) {
+    if( !str.get_char( 0 ).isprint() ) return( false );
     if( is_connection_editable() ) {
       _selected.current_connection().title.insert( str, undo_text );
       queue_draw();
@@ -4780,7 +4780,7 @@ public class DrawArea : Gtk.DrawingArea {
       _selected.current_callout().text.insert( str, undo_text );
       queue_draw();
     } else {
-      return( false );
+      return( handle_filtered_keypress( str ) );
     }
     return( true );
   }
@@ -4841,6 +4841,61 @@ public class DrawArea : Gtk.DrawingArea {
       if( kv == key ) return( true );
     }
     return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Handle any single character strings that the user pressed and
+  // attempt to interpret them as key commands.
+  private bool handle_filtered_keypress( string str ) {
+
+    /* If we have the mouse pressed, ignore keypresses */
+    if( _pressed ) return( false );
+
+    /* Make sure that we flush all animations if the user starts a keypress */
+    animator.flush();
+
+    var current_node    = _selected.current_node();
+    var current_conn    = _selected.current_connection();
+    var current_callout = _selected.current_callout();
+    var current_group   = _selected.current_group();
+
+    if( (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
+      return( handle_node_keypress( str ) );
+    } else if( (current_conn != null) && (current_conn.mode != ConnMode.EDITABLE) ) {
+      return( handle_connection_keypress( str ) );
+    } else if( (current_callout != null) && (current_callout.mode != CalloutMode.EDITABLE) ) {
+      return( handle_callout_keypress( str ) );
+    } else if( current_group != null ) {
+      return( handle_group_keypress( str ) );
+    } else {
+      switch( str ) {
+        case "-" :  if( nodes_alignable() ) NodeAlign.align_top( this, _selected.nodes() );  break;
+        case "=" :  if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() );  break;
+        case "Z" :  zoom_in();  break;
+        case "[" :  if( nodes_alignable() ) NodeAlign.align_left( this, _selected.nodes() );  break;
+        case "]" :  if( nodes_alignable() ) NodeAlign.align_right( this, _selected.nodes() );  break;
+        case "_" :  if( nodes_alignable() ) NodeAlign.align_bottom( this, _selected.nodes() );  break;
+        case "a" :  select_parent_nodes();  break;
+        case "d" :  select_child_nodes();  break;
+        case "f" :  toggle_folds( false );  break;
+        case "F" :  toggle_folds( true );  break;
+        case "g" :  add_group();  break;
+        case "L" :  _nodes_menu.action_change_link_colors();  break;
+        case "m" :  select_root_node();  break;
+        case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
+        case "t" :  change_selected_tasks();  break;
+        case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
+        case "z" :  zoom_out();   break;
+        case "|" :  if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() );  break;
+        case "#" :  toggle_sequence();  break;
+        case "x" :  create_connection();  break;
+        case "y" :  toggle_links();  break;
+        default  :  return( false );
+      }
+    }
+
+    return( true );
+
   }
 
   /* Handle a key event */
@@ -4911,6 +4966,7 @@ public class DrawArea : Gtk.DrawingArea {
         else if( has_key( kvs, Key.Control_R ) ) { handle_control( true ); }
         else if( has_key( kvs, Key.F10 ) )       { if( shift ) show_contextual_menu( _scaled_x, _scaled_y ); }
         else if( has_key( kvs, Key.Menu ) )      { show_contextual_menu( _scaled_x, _scaled_y ); }
+        /*
         else {
           if( (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
             return( handle_node_keypress( shift, kvs ) );
@@ -4924,6 +4980,7 @@ public class DrawArea : Gtk.DrawingArea {
             return( false );
           }
         }
+        */
       }
 
     /* If there is no current node, allow some of the keyboard shortcuts */
@@ -4968,126 +5025,119 @@ public class DrawArea : Gtk.DrawingArea {
     return( true );
   }
 
-  private bool handle_group_keypress( bool shift, uint[] kvs ) {
+  //-------------------------------------------------------------
+  // Handles any filtered keypresses that occur when a group is
+  // selected.
+  private bool handle_group_keypress( string str ) {
     var current = _selected.current_group();
-    if( shift && has_key( kvs, Key.e ) )       { show_properties( "current", PropertyGrab.NOTE ); }
-    else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
-    else if( !shift && has_key( kvs, Key.u ) ) {  // Perform undo
-      if( undo_buffer.undoable() ) {
-        undo_buffer.undo();
-      }
+    switch( str ) {
+      case "E" :  show_properties( "current", PropertyGrab.NOTE );  break;
+      case "Z" :  zoom_in();  break;
+      case "i" :  show_properties( "current", PropertyGrab.FIRST );  break;
+      case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
+      case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
+      case "z" :  zoom_out();  break;
+      default  :  return( false );
     }
-    else return( false );
     return( true );
   }
 
-  private bool handle_callout_keypress( bool shift, uint[] kvs ) {
+  //-------------------------------------------------------------
+  // Handles any filtered keypresses that occur when a callout is
+  // selected.
+  private bool handle_callout_keypress( string str ) {
     var current = _selected.current_callout();
-    if( shift && has_key( kvs, Key.e ) )       { show_properties( "current", PropertyGrab.NOTE ); }
-    else if( !shift && has_key( kvs, Key.e ) ) {
-      set_callout_mode( current, CalloutMode.EDITABLE );
-      queue_draw();
+    switch( str ) {
+      case "E" :  show_properties( "current", PropertyGrab.NOTE );  break;
+      case "O" :  select_callout_node();  break;
+      case "Z" :  zoom_in();  break;
+      case "e" :  set_callout_mode( current, CalloutMode.EDITABLE );  queue_draw();  break;
+      case "i" :  show_properties( "current", PropertyGrab.FIRST );  break;
+      case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
+      case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
+      case "z" :  zoom_out();  break;
+      default  :  return( false );
     }
-    else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
-    else if(  shift && has_key( kvs, Key.o ) ) { select_callout_node(); }
-    else if( !shift && has_key( kvs, Key.u ) ) {  // Perform undo
-      if( undo_buffer.undoable() ) {
-        undo_buffer.undo();
-      }
-    }
-    else return( false );
     return( true );
   }
 
-  private bool handle_connection_keypress( bool shift, uint[] kvs ) {
+  //-------------------------------------------------------------
+  // Handles any filtered keypresses that occur when a connection
+  // is selected.
+  private bool handle_connection_keypress( string str ) {
     var current = _selected.current_connection();
-    if( shift && has_key( kvs, Key.e ) )       { show_properties( "current", PropertyGrab.NOTE ); }
-    else if(  shift && has_key( kvs, Key.z ) )  { zoom_in(); }
-    else if( !shift && has_key( kvs, Key.e ) ) {
-      current.edit_title_begin( this );
-      set_connection_mode( current, ConnMode.EDITABLE );
-      queue_draw();
+    switch( str ) {
+      case "E" :  show_properties( "current", PropertyGrab.NOTE );  break;
+      case "Z" :  zoom_in();  break;
+      case "e" :
+        current.edit_title_begin( this );
+        set_connection_mode( current, ConnMode.EDITABLE );
+        queue_draw();
+        break;
+      case "f" :  select_connection_node( true );  break;
+      case "i" :  show_properties( "current", PropertyGrab.FIRST );  break;
+      case "n" :  select_connection( 1 );  break;
+      case "p" :  select_connection( -1 );  break;
+      case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
+      case "s" :  see();  break;
+      case "t" :  select_connection_node( false );  break;
+      case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
+      case "z" :  zoom_out();  break;
+      default  :  return( false );
     }
-    else if( !shift && has_key( kvs, Key.f ) ) { select_connection_node( true ); }
-    else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
-    else if( !shift && has_key( kvs, Key.n ) ) { select_connection( 1 ); }
-    else if( !shift && has_key( kvs, Key.p ) ) { select_connection( -1 ); }
-    else if( !shift && has_key( kvs, Key.r ) ) {  // Perform redo
-      if( undo_buffer.redoable() ) {
-        undo_buffer.redo();
-      }
-    }
-    else if( !shift && has_key( kvs, Key.s ) ) { see(); }
-    else if( !shift && has_key( kvs, Key.t ) ) { select_connection_node( false ); }
-    else if( !shift && has_key( kvs, Key.u ) ) {  // Perform undo
-      if( undo_buffer.undoable() ) {
-        undo_buffer.undo();
-      }
-    }
-    else if( !shift && has_key( kvs, Key.z ) ) { zoom_out(); }
-    else return( false );
     return( true );
   }
 
   /* Handles keypresses when a single node is currenly selected */
-  private bool handle_node_keypress( bool shift, uint[] kvs ) {
+  private bool handle_node_keypress( string str ) {
     var current = _selected.current_node();
-    if( shift && has_key( kvs, Key.c ) )       { center_current_node(); }
-    else if(  shift && has_key( kvs, Key.d ) ) { select_node_tree(); }
-    else if(  shift && has_key( kvs, Key.e ) ) { show_properties( "current", PropertyGrab.NOTE ); }
-    else if(  shift && has_key( kvs, Key.i ) ) { add_current_image(); }
-    else if(  shift && has_key( kvs, Key.l ) ) { _node_menu.action_change_link_color(); }
-    else if(  shift && has_key( kvs, Key.s ) ) { sort_alphabetically(); }
-    else if(  shift && has_key( kvs, Key.x ) ) { select_attached_connection(); }
-    else if(  shift && has_key( kvs, Key.y ) ) { select_linked_node(); }
-    else if(  shift && has_key( kvs, Key.z ) ) { zoom_in(); }
-    else if( !shift && has_key( kvs, Key.a ) ) { select_parent_nodes(); }
-    else if( !shift && has_key( kvs, Key.c ) ) { select_child_node(); }
-    else if( !shift && has_key( kvs, Key.d ) ) { select_child_nodes(); }
-    else if( !shift && has_key( kvs, Key.e ) ) {
-      set_node_mode( current, NodeMode.EDITABLE );
-      queue_draw();
-    }
-    else if( !shift && has_key( kvs, Key.f ) ) { toggle_fold( current, false ); }
-    else if(  shift && has_key( kvs, Key.f ) ) { toggle_fold( current, true ); }
-    else if( !shift && has_key( kvs, Key.g ) ) { add_group(); }
-    else if( !shift && has_key( kvs, Key.h ) ) { handle_left( false, false ); }
-    else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
-    else if( !shift && has_key( kvs, Key.j ) ) { handle_down( false, false ); }
-    else if( !shift && has_key( kvs, Key.k ) ) { handle_up( false, false ); }
-    else if( !shift && has_key( kvs, Key.l ) ) { handle_right( false, false ); }
-    else if( !shift && has_key( kvs, Key.m ) ) { select_root_node(); }
-    else if( !shift && has_key( kvs, Key.n ) ) { select_sibling_node( 1 ); }
-    else if( !shift && has_key( kvs, Key.o ) ) { add_callout(); }
-    else if(  shift && has_key( kvs, Key.o ) ) { select_callout(); }
-    else if( !shift && has_key( kvs, Key.p ) ) { select_sibling_node( -1 ); }
-    else if( !shift && has_key( kvs, Key.r ) ) {  // Perform redo
-      if( undo_buffer.redoable() ) {
-        undo_buffer.redo();
-      }
-    }
-    else if( !shift && has_key( kvs, Key.s ) ) { see(); }
-    else if(  shift && has_key( kvs, Key.numbersign ) ) { toggle_sequence(); }
-    else if( !shift && has_key( kvs, Key.t ) ) {  // Toggle the task done indicator
-      if( current.task_enabled() ) {
-        if( current.task_done() ) {
-          change_current_task( false, false );
+    switch( str ) {
+      case "#" :  toggle_sequence();  break;
+      case "C" :  center_current_node();  break;
+      case "D" :  select_node_tree();  break;
+      case "E" :  show_properties( "current", PropertyGrab.NOTE );  break;
+      case "F" :  toggle_fold( current, true );  break;
+      case "I" :  add_current_image();  break;
+      case "L" :  _node_menu.action_change_link_color();  break;
+      case "O" :  select_callout();  break;
+      case "S" :  sort_alphabetically();  break;
+      case "X" :  select_attached_connection();  break;
+      case "Y" :  select_linked_node();  break;
+      case "Z" :  zoom_in();  break;
+      case "a" :  select_parent_nodes();  break;
+      case "c" :  select_child_node();  break;
+      case "d" :  select_child_nodes();  break;
+      case "e" :  set_node_mode( current, NodeMode.EDITABLE ); queue_draw();  break;
+      case "f" :  toggle_fold( current, false );  break;
+      case "g" :  add_group();  break;
+      case "h" :  handle_left( false, false );  break;
+      case "i" :  show_properties( "current", PropertyGrab.FIRST );  break;
+      case "j" :  handle_down( false, false );  break;
+      case "k" :  handle_up( false, false );  break;
+      case "l" :  handle_right( false, false );  break;
+      case "m" :  select_root_node();  break;
+      case "n" :  select_sibling_node( 1 );  break;
+      case "o" :  add_callout();  break;
+      case "p" :  select_sibling_node( -1 );  break;
+      case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
+      case "s" :  see();  break;
+      case "t" :  
+        if( current.task_enabled() ) {
+          if( current.task_done() ) {
+            change_current_task( false, false );
+          } else {
+            change_current_task( true, true );
+          }
         } else {
-          change_current_task( true, true );
+          change_current_task( true, false );
         }
-      } else {
-        change_current_task( true, false );
-      }
+        break;
+      case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
+      case "x" :  start_connection( true, false );  break;
+      case "y" :  toggle_links();  break;
+      case "z" :  zoom_out();  break;
+      default  :  return( false );
     }
-    else if( !shift && has_key( kvs, Key.u ) ) {  // Perform undo
-      if( undo_buffer.undoable() ) {
-        undo_buffer.undo();
-      }
-    }
-    else if( !shift && has_key( kvs, Key.x ) ) { start_connection( true, false ); }
-    else if( !shift && has_key( kvs, Key.y ) ) { toggle_links(); }
-    else if( !shift && has_key( kvs, Key.z ) ) { zoom_out(); }
-    else return( false );
     return( true );
   }
 
