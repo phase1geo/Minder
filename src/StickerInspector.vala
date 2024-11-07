@@ -33,7 +33,7 @@ public class StickerInspector : Box {
   private Stack         _stack;
   private FlowBox       _favorites;
   private FlowBox       _matched_box;
-  private Image         _dragged_sticker;
+  private Picture       _dragged_sticker;
   private GLib.Menu     _favorite_menu;
   private GLib.Menu     _builtin_menu;
   private GLib.Menu     _custom_menu;
@@ -112,7 +112,9 @@ public class StickerInspector : Box {
     msw.add_css_class( Granite.STYLE_CLASS_VIEW );
 
     /* Create stack */
-    _stack = new Stack();
+    _stack = new Stack() {
+      vexpand = true
+    };
     _stack.add_named( sw,  "all" );
     _stack.add_named( msw, "matched" );
 
@@ -180,7 +182,9 @@ public class StickerInspector : Box {
   private void create_image( FlowBox fbox, string name, string tooltip ) {
     var pixbuf = StickerSet.make_pixbuf( name );
     if( pixbuf != null ) {
-      var img = new Image.from_pixbuf( pixbuf ) {
+      var texture = Texture.for_pixbuf( pixbuf );
+      var img     = new Picture.for_paintable( texture ) {
+        can_shrink   = false,
         name         = name,
         tooltip_text = tooltip
       };
@@ -212,11 +216,11 @@ public class StickerInspector : Box {
     drag.prepare.connect((x, y) => {
 
       // Set icon
-      _dragged_sticker = (Image)fbox.get_child_at_pos( (int)x, (int)y ).get_child();
+      _dragged_sticker = (Picture)fbox.get_child_at_pos( (int)x, (int)y ).get_child();
       drag.set_icon( _dragged_sticker.paintable, 0, 0 );
 
       // Set content to the name of the selected sticker
-      var val = Value( typeof( string ) );
+      var val = Value( typeof( Sticker ) );
       val.set_string( _dragged_sticker.name );
       var content = new ContentProvider.for_value( val );
 

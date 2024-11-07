@@ -129,6 +129,8 @@ public class ConnectionInspector : Box {
     };
 
     _note = new NoteView() {
+      valign    = Align.FILL,
+      vexpand   = true,
       wrap_mode = Gtk.WrapMode.WORD
     };
 
@@ -154,9 +156,9 @@ public class ConnectionInspector : Box {
     };
 
     var box = new Box( Orientation.VERTICAL, 10 ) {
-      halign        = Align.FILL,
-      valign        = Align.FILL,
-      margin_bottom = 20
+      halign = Align.FILL,
+      valign = Align.FILL,
+      margin_bottom = 5
     };
     box.append( lbl );
     box.append( _sw );

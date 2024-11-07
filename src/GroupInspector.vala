@@ -82,6 +82,7 @@ public class GroupInspector : Box {
     };
 
     _note = new NoteView() {
+      vexpand   = true,
       wrap_mode = Gtk.WrapMode.WORD
     };
     _note.add_unicode_completion( win, win.unicoder );
@@ -103,7 +104,7 @@ public class GroupInspector : Box {
     };
 
     var box = new Box( Orientation.VERTICAL, 10 ) {
-      margin_bottom = 20
+      margin_bottom = 5
     };
     box.append( lbl );
     box.append( _sw );

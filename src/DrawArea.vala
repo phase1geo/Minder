@@ -45,71 +45,72 @@ public class DrawArea : Gtk.DrawingArea {
     bool   valid;
   }
 
-  private Document         _doc;
-  private GLib.Settings    _settings;
-  private double           _press_x;
-  private double           _press_y;
-  private double           _scaled_x;
-  private double           _scaled_y;
-  private double           _origin_x;
-  private double           _origin_y;
-  private double           _scale_factor;
-  private double           _store_origin_x;
-  private double           _store_origin_y;
-  private double           _store_scale_factor;
-  private bool             _control      = false;
-  private bool             _shift        = false;
-  private bool             _alt          = false;
-  private bool             _pressed      = false;
-  private int              _press_num    = 0;
-  private bool             _press_middle = false;
-  private bool             _resize       = false;
-  private bool             _orig_resizable = false;
-  private bool             _motion       = false;
-  private Node?            _last_node    = null;
-  private Connection?      _last_connection = null;
-  private Array<Node>      _nodes;
-  private Connections      _connections;
-  private Stickers         _stickers;
-  private Theme            _theme;
-  private CanvasText       _orig_text;
-  private NodeSide         _orig_side;
-  private Array<NodeInfo?> _orig_info;
-  private int              _orig_width;
-  private string           _orig_title;
-  private Node?            _last_match     = null;
-  private Node?            _attach_node    = null;
-  private SummaryNode?     _attach_summary = null;
-  private Connection?      _attach_conn    = null;
-  private Sticker?         _attach_sticker = null;
-  private NodeMenu         _node_menu;
-  private ConnectionMenu   _conn_menu;
-  private ConnectionsMenu  _conns_menu;
-  private NodesMenu        _nodes_menu;
-  private GroupsMenu       _groups_menu;
-  private CalloutMenu      _callout_menu;
-  private EmptyMenu        _empty_menu;
-  private TextMenu         _text_menu;
-  private uint?            _auto_save_id = null;
-  private uint?            _scroll_save_id = null;
-  private ImageEditor      _image_editor;
-  private UrlEditor        _url_editor;
-  private IMContext        _im_context;
-  private bool             _debug        = true;
-  private bool             _focus_mode   = false;
-  private double           _focus_alpha  = 0.05;
-  private bool             _create_new_from_edit;
-  private Selection        _selected;
-  private SelectBox        _select_box;
-  private Tagger           _tagger;
-  private TextCompletion   _completion;
-  private double           _sticker_posx;
-  private double           _sticker_posy;
-  private NodeGroups       _groups;
-  private uint             _select_hover_id = 0;
-  private int              _next_node_id    = -1;
-  private NodeLinks        _node_links;
-  private bool             _hide_callouts   = false;
+  private Document           _doc;
+  private GLib.Settings      _settings;
+  private double             _press_x;
+  private double             _press_y;
+  private double             _scaled_x;
+  private double             _scaled_y;
+  private double             _origin_x;
+  private double             _origin_y;
+  private double             _scale_factor;
+  private double             _store_origin_x;
+  private double             _store_origin_y;
+  private double             _store_scale_factor;
+  private bool               _control      = false;
+  private bool               _shift        = false;
+  private bool               _alt          = false;
+  private bool               _pressed      = false;
+  private int                _press_num    = 0;
+  private bool               _press_middle = false;
+  private bool               _resize       = false;
+  private bool               _orig_resizable = false;
+  private bool               _motion       = false;
+  private Node?              _last_node    = null;
+  private Connection?        _last_connection = null;
+  private Array<Node>        _nodes;
+  private Connections        _connections;
+  private Stickers           _stickers;
+  private Theme              _theme;
+  private CanvasText         _orig_text;
+  private NodeSide           _orig_side;
+  private Array<NodeInfo?>   _orig_info;
+  private int                _orig_width;
+  private string             _orig_title;
+  private Node?              _last_match     = null;
+  private Node?              _attach_node    = null;
+  private SummaryNode?       _attach_summary = null;
+  private Connection?        _attach_conn    = null;
+  private Sticker?           _attach_sticker = null;
+  private NodeMenu           _node_menu;
+  private ConnectionMenu     _conn_menu;
+  private ConnectionsMenu    _conns_menu;
+  private NodesMenu          _nodes_menu;
+  private GroupsMenu         _groups_menu;
+  private CalloutMenu        _callout_menu;
+  private EmptyMenu          _empty_menu;
+  private TextMenu           _text_menu;
+  private uint?              _auto_save_id = null;
+  private uint?              _scroll_save_id = null;
+  private ImageEditor        _image_editor;
+  private UrlEditor          _url_editor;
+  private IMContext          _im_context;
+  private bool               _debug        = true;
+  private bool               _focus_mode   = false;
+  private double             _focus_alpha  = 0.05;
+  private bool               _create_new_from_edit;
+  private Selection          _selected;
+  private SelectBox          _select_box;
+  private Tagger             _tagger;
+  private TextCompletion     _completion;
+  private double             _sticker_posx;
+  private double             _sticker_posy;
+  private NodeGroups         _groups;
+  private uint               _select_hover_id = 0;
+  private int                _next_node_id    = -1;
+  private NodeLinks          _node_links;
+  private bool               _hide_callouts   = false;
+  private EventControllerKey _key_controller;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -326,10 +327,10 @@ public class DrawArea : Gtk.DrawingArea {
     this.add_controller( motion );
     motion.motion.connect( on_motion );
 
-    var key = new EventControllerKey();
-    this.add_controller( key );
-    key.key_pressed.connect( on_keypress );
-    key.key_released.connect( on_keyrelease );
+    _key_controller = new EventControllerKey();
+    this.add_controller( _key_controller );
+    _key_controller.key_pressed.connect( on_keypress );
+    _key_controller.key_released.connect( on_keyrelease );
 
     var scroll = new EventControllerScroll( EventControllerScrollFlags.BOTH_AXES );
     this.add_controller( scroll );
@@ -357,7 +358,6 @@ public class DrawArea : Gtk.DrawingArea {
     _im_context.commit.connect( handle_im_commit );
     _im_context.retrieve_surrounding.connect( handle_im_retrieve_surrounding );
     _im_context.delete_surrounding.connect( handle_im_delete_surrounding );
-    key.set_im_context( _im_context );
 
   }
 
@@ -4780,7 +4780,7 @@ public class DrawArea : Gtk.DrawingArea {
       _selected.current_callout().text.insert( str, undo_text );
       queue_draw();
     } else {
-      return( handle_filtered_keypress( str ) );
+      return( false );
     }
     return( true );
   }
@@ -4832,10 +4832,9 @@ public class DrawArea : Gtk.DrawingArea {
     return( false );
   }
 
-  /*
-   Returns true if the following key was found to be pressed (regardless of
-   keyboard layout).
-  */
+  //-------------------------------------------------------------
+  // Returns true if the following key was found to be pressed
+  // (regardless of keyboard layout).
   private bool has_key( uint[] kvs, uint key ) {
     foreach( uint kv in kvs ) {
       if( kv == key ) return( true );
@@ -4844,61 +4843,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   //-------------------------------------------------------------
-  // Handle any single character strings that the user pressed and
-  // attempt to interpret them as key commands.
-  private bool handle_filtered_keypress( string str ) {
-
-    /* If we have the mouse pressed, ignore keypresses */
-    if( _pressed ) return( false );
-
-    /* Make sure that we flush all animations if the user starts a keypress */
-    animator.flush();
-
-    var current_node    = _selected.current_node();
-    var current_conn    = _selected.current_connection();
-    var current_callout = _selected.current_callout();
-    var current_group   = _selected.current_group();
-
-    if( (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
-      return( handle_node_keypress( str ) );
-    } else if( (current_conn != null) && (current_conn.mode != ConnMode.EDITABLE) ) {
-      return( handle_connection_keypress( str ) );
-    } else if( (current_callout != null) && (current_callout.mode != CalloutMode.EDITABLE) ) {
-      return( handle_callout_keypress( str ) );
-    } else if( current_group != null ) {
-      return( handle_group_keypress( str ) );
-    } else {
-      switch( str ) {
-        case "-" :  if( nodes_alignable() ) NodeAlign.align_top( this, _selected.nodes() );  break;
-        case "=" :  if( nodes_alignable() ) NodeAlign.align_vcenter( this, _selected.nodes() );  break;
-        case "Z" :  zoom_in();  break;
-        case "[" :  if( nodes_alignable() ) NodeAlign.align_left( this, _selected.nodes() );  break;
-        case "]" :  if( nodes_alignable() ) NodeAlign.align_right( this, _selected.nodes() );  break;
-        case "_" :  if( nodes_alignable() ) NodeAlign.align_bottom( this, _selected.nodes() );  break;
-        case "a" :  select_parent_nodes();  break;
-        case "d" :  select_child_nodes();  break;
-        case "f" :  toggle_folds( false );  break;
-        case "F" :  toggle_folds( true );  break;
-        case "g" :  add_group();  break;
-        case "L" :  _nodes_menu.action_change_link_colors();  break;
-        case "m" :  select_root_node();  break;
-        case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
-        case "t" :  change_selected_tasks();  break;
-        case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
-        case "z" :  zoom_out();   break;
-        case "|" :  if( nodes_alignable() ) NodeAlign.align_hcenter( this, _selected.nodes() );  break;
-        case "#" :  toggle_sequence();  break;
-        case "x" :  create_connection();  break;
-        case "y" :  toggle_links();  break;
-        default  :  return( false );
-      }
-    }
-
-    return( true );
-
-  }
-
-  /* Handle a key event */
+  // Handle a key event
   private bool on_keypress( uint keyval, uint keycode, ModifierType state ) {
 
     /* If we have the mouse pressed, ignore keypresses */
@@ -4966,7 +4911,6 @@ public class DrawArea : Gtk.DrawingArea {
         else if( has_key( kvs, Key.Control_R ) ) { handle_control( true ); }
         else if( has_key( kvs, Key.F10 ) )       { if( shift ) show_contextual_menu( _scaled_x, _scaled_y ); }
         else if( has_key( kvs, Key.Menu ) )      { show_contextual_menu( _scaled_x, _scaled_y ); }
-        /*
         else {
           if( (current_node != null) && (current_node.mode != NodeMode.EDITABLE) ) {
             return( handle_node_keypress( shift, kvs ) );
@@ -4977,10 +4921,10 @@ public class DrawArea : Gtk.DrawingArea {
           } else if( current_group != null ) {
             return( handle_group_keypress( shift, kvs ) );
           } else {
+            _im_context.filter_keypress( _key_controller.get_current_event() );
             return( false );
           }
         }
-        */
       }
 
     /* If there is no current node, allow some of the keyboard shortcuts */
@@ -5028,116 +4972,111 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Handles any filtered keypresses that occur when a group is
   // selected.
-  private bool handle_group_keypress( string str ) {
+  private bool handle_group_keypress( bool shift, uint[] kvs ) {
     var current = _selected.current_group();
-    switch( str ) {
-      case "E" :  show_properties( "current", PropertyGrab.NOTE );  break;
-      case "Z" :  zoom_in();  break;
-      case "i" :  show_properties( "current", PropertyGrab.FIRST );  break;
-      case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
-      case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
-      case "z" :  zoom_out();  break;
-      default  :  return( false );
-    }
+    if( shift && has_key( kvs, Key.e ) )       { show_properties( "current", PropertyGrab.NOTE ); }
+    else if(  shift && has_key( kvs, Key.z ) ) { zoom_in(); }
+    else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
+    else if( !shift && has_key( kvs, Key.r ) ) { if( undo_buffer.redoable() ) undo_buffer.redo(); }
+    else if( !shift && has_key( kvs, Key.u ) ) { if( undo_buffer.undoable() ) undo_buffer.undo(); }
+    else if( !shift && has_key( kvs, Key.z ) ) { zoom_out(); }
+    else return( false );
     return( true );
   }
 
   //-------------------------------------------------------------
   // Handles any filtered keypresses that occur when a callout is
   // selected.
-  private bool handle_callout_keypress( string str ) {
+  private bool handle_callout_keypress( bool shift, uint[] kvs ) {
     var current = _selected.current_callout();
-    switch( str ) {
-      case "E" :  show_properties( "current", PropertyGrab.NOTE );  break;
-      case "O" :  select_callout_node();  break;
-      case "Z" :  zoom_in();  break;
-      case "e" :  set_callout_mode( current, CalloutMode.EDITABLE );  queue_draw();  break;
-      case "i" :  show_properties( "current", PropertyGrab.FIRST );  break;
-      case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
-      case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
-      case "z" :  zoom_out();  break;
-      default  :  return( false );
-    }
+    if( shift && has_key( kvs, Key.e ) ) { show_properties( "current", PropertyGrab.NOTE ); }
+    else if(  shift && has_key( kvs, Key.o ) ) { select_callout_node(); }
+    else if(  shift && has_key( kvs, Key.z ) ) { zoom_in(); }
+    else if( !shift && has_key( kvs, Key.e ) ) { set_callout_mode( current, CalloutMode.EDITABLE );  queue_draw(); }
+    else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
+    else if( !shift && has_key( kvs, Key.r ) ) { if( undo_buffer.redoable() ) undo_buffer.redo(); }
+    else if( !shift && has_key( kvs, Key.u ) ) { if( undo_buffer.undoable() ) undo_buffer.undo(); }
+    else if( !shift && has_key( kvs, Key.z ) ) { zoom_out(); }
+    else return( false );
     return( true );
   }
 
   //-------------------------------------------------------------
   // Handles any filtered keypresses that occur when a connection
   // is selected.
-  private bool handle_connection_keypress( string str ) {
+  private bool handle_connection_keypress( bool shift, uint[] kvs ) {
     var current = _selected.current_connection();
-    switch( str ) {
-      case "E" :  show_properties( "current", PropertyGrab.NOTE );  break;
-      case "Z" :  zoom_in();  break;
-      case "e" :
-        current.edit_title_begin( this );
-        set_connection_mode( current, ConnMode.EDITABLE );
-        queue_draw();
-        break;
-      case "f" :  select_connection_node( true );  break;
-      case "i" :  show_properties( "current", PropertyGrab.FIRST );  break;
-      case "n" :  select_connection( 1 );  break;
-      case "p" :  select_connection( -1 );  break;
-      case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
-      case "s" :  see();  break;
-      case "t" :  select_connection_node( false );  break;
-      case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
-      case "z" :  zoom_out();  break;
-      default  :  return( false );
+    if( shift && has_key( kvs, Key.e ) )      { show_properties( "current", PropertyGrab.NOTE ); }
+    else if(  shift && has_key( kvs, Key.z ) ) { zoom_in(); }
+    else if( !shift && has_key( kvs, Key.e ) ) {
+      current.edit_title_begin( this );
+      set_connection_mode( current, ConnMode.EDITABLE );
+      queue_draw();
     }
+    else if( !shift && has_key( kvs, Key.f ) ) { select_connection_node( true ); }
+    else if( !shift && has_key( kvs, Key.i ) ) { show_properties( "current", PropertyGrab.FIRST ); }
+    else if( !shift && has_key( kvs, Key.n ) ) { select_connection( 1 ); }
+    else if( !shift && has_key( kvs, Key.p ) ) { select_connection( -1 ); }
+    else if( !shift && has_key( kvs, Key.r ) ) { if( undo_buffer.redoable() ) undo_buffer.redo(); }
+    else if( !shift && has_key( kvs, Key.s ) ) { see(); }
+    else if( !shift && has_key( kvs, Key.t ) ) { select_connection_node( false ); }
+    else if( !shift && has_key( kvs, Key.u ) ) { if( undo_buffer.undoable() ) undo_buffer.undo(); }
+    else if( !shift && has_key( kvs, Key.z ) ) { zoom_out(); }
+    else return( false );
     return( true );
   }
 
   /* Handles keypresses when a single node is currenly selected */
-  private bool handle_node_keypress( string str ) {
+  private bool handle_node_keypress( bool shift, uint[] kvs ) {
     var current = _selected.current_node();
-    switch( str ) {
-      case "#" :  toggle_sequence();  break;
-      case "C" :  center_current_node();  break;
-      case "D" :  select_node_tree();  break;
-      case "E" :  show_properties( "current", PropertyGrab.NOTE );  break;
-      case "F" :  toggle_fold( current, true );  break;
-      case "I" :  add_current_image();  break;
-      case "L" :  _node_menu.action_change_link_color();  break;
-      case "O" :  select_callout();  break;
-      case "S" :  sort_alphabetically();  break;
-      case "X" :  select_attached_connection();  break;
-      case "Y" :  select_linked_node();  break;
-      case "Z" :  zoom_in();  break;
-      case "a" :  select_parent_nodes();  break;
-      case "c" :  select_child_node();  break;
-      case "d" :  select_child_nodes();  break;
-      case "e" :  set_node_mode( current, NodeMode.EDITABLE ); queue_draw();  break;
-      case "f" :  toggle_fold( current, false );  break;
-      case "g" :  add_group();  break;
-      case "h" :  handle_left( false, false );  break;
-      case "i" :  show_properties( "current", PropertyGrab.FIRST );  break;
-      case "j" :  handle_down( false, false );  break;
-      case "k" :  handle_up( false, false );  break;
-      case "l" :  handle_right( false, false );  break;
-      case "m" :  select_root_node();  break;
-      case "n" :  select_sibling_node( 1 );  break;
-      case "o" :  add_callout();  break;
-      case "p" :  select_sibling_node( -1 );  break;
-      case "r" :  if( undo_buffer.redoable() ) undo_buffer.redo();  break;
-      case "s" :  see();  break;
-      case "t" :  
-        if( current.task_enabled() ) {
-          if( current.task_done() ) {
-            change_current_task( false, false );
-          } else {
-            change_current_task( true, true );
-          }
-        } else {
-          change_current_task( true, false );
-        }
-        break;
-      case "u" :  if( undo_buffer.undoable() ) undo_buffer.undo();  break;
-      case "x" :  start_connection( true, false );  break;
-      case "y" :  toggle_links();  break;
-      case "z" :  zoom_out();  break;
-      default  :  return( false );
+    if( shift && has_key( kvs, Key.numbersign ) ) { toggle_sequence(); }
+    else if(  shift && has_key( kvs, Key.c ) )    { center_current_node(); }
+    else if(  shift && has_key( kvs, Key.d ) )    { select_node_tree(); }
+    else if(  shift && has_key( kvs, Key.e ) )    { show_properties( "current", PropertyGrab.NOTE ); }
+    else if(  shift && has_key( kvs, Key.f ) )    { toggle_fold( current, true ); }
+    else if(  shift && has_key( kvs, Key.i ) )    { add_current_image(); }
+    else if(  shift && has_key( kvs, Key.l ) )    { _node_menu.action_change_link_color(); }
+    else if(  shift && has_key( kvs, Key.o ) )    { select_callout(); }
+    else if(  shift && has_key( kvs, Key.s ) )    { sort_alphabetically(); }
+    else if(  shift && has_key( kvs, Key.x ) )    { select_attached_connection(); }
+    else if(  shift && has_key( kvs, Key.y ) )    { select_linked_node(); }
+    else if(  shift && has_key( kvs, Key.z ) )    { zoom_in(); }
+    else if( !shift && has_key( kvs, Key.a ) )    { select_parent_nodes(); }
+    else if( !shift && has_key( kvs, Key.c ) )    { select_child_node(); }
+    else if( !shift && has_key( kvs, Key.d ) )    { select_child_nodes(); }
+    else if( !shift && has_key( kvs, Key.e ) )    {
+      set_node_mode( current, NodeMode.EDITABLE );
+      queue_draw();
     }
+    else if( !shift && has_key( kvs, Key.f ) )    { toggle_fold( current, false ); }
+    else if( !shift && has_key( kvs, Key.g ) )    { add_group(); }
+    else if( !shift && has_key( kvs, Key.h ) )    { handle_left( false, false ); }
+    else if( !shift && has_key( kvs, Key.i ) )    { show_properties( "current", PropertyGrab.FIRST ); }
+    else if( !shift && has_key( kvs, Key.j ) )    { handle_down( false, false ); }
+    else if( !shift && has_key( kvs, Key.k ) )    { handle_up( false, false ); }
+    else if( !shift && has_key( kvs, Key.l ) )    { handle_right( false, false ); }
+    else if( !shift && has_key( kvs, Key.m ) )    { select_root_node(); }
+    else if( !shift && has_key( kvs, Key.n ) )    { select_sibling_node( 1 ); }
+    else if( !shift && has_key( kvs, Key.o ) )    { add_callout(); }
+    else if( !shift && has_key( kvs, Key.p ) )    { select_sibling_node( -1 ); }
+    else if( !shift && has_key( kvs, Key.r ) )    { if( undo_buffer.redoable() ) undo_buffer.redo(); }
+    else if( !shift && has_key( kvs, Key.s ) )    { see(); }
+    else if( !shift && has_key( kvs, Key.t ) )    {
+      if( current.task_enabled() ) {
+        if( current.task_done() ) {
+          change_current_task( false, false );
+        } else {
+          change_current_task( true, true );
+        }
+      } else {
+        change_current_task( true, false );
+      }
+    }
+    else if( !shift && has_key( kvs, Key.u ) )    { if( undo_buffer.undoable() ) undo_buffer.undo(); }
+    else if( !shift && has_key( kvs, Key.x ) )    { start_connection( true, false ); }
+    else if( !shift && has_key( kvs, Key.y ) )    { toggle_links(); }
+    else if( !shift && has_key( kvs, Key.z ) )    { zoom_out(); }
+    else return( false );
     return( true );
   }
 
