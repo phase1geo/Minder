@@ -42,19 +42,19 @@ public class ModeButtons : Box {
 
   //-------------------------------------------------------------
   // Default constructor
-  public ModeButtons() {}
+  public ModeButtons() {
+    add_css_class( Granite.STYLE_CLASS_LINKED );
+  }
 
   //-------------------------------------------------------------
   // Add a button to this model
   public void add_button( string icon_name, string tooltip ) {
 
     var image = new Image.from_icon_name( icon_name );
-    var button = new CheckButton() {
+    var button = new ToggleButton() {
       child        = image,
       tooltip_text = tooltip
     };
-
-    button.add_css_class( Granite.STYLE_CLASS_LINKED );
 
     button.activate.connect(() => {
       _selected = Utils.get_child_index( this, button );
@@ -64,7 +64,7 @@ public class ModeButtons : Box {
     // This the checkbutton to the group
     var first = get_first_child();
     if( first != null ) {
-      button.set_group( (CheckButton)first );
+      button.set_group( (ToggleButton)first );
     } else {
       button.active = true;
     }

@@ -207,7 +207,8 @@ public class StyleInspector : Box {
     };
 
     _link_types = new ModeButtons() {
-      halign = Align.END
+      halign = Align.END,
+      valign = Align.CENTER
     };
     _link_types.changed.connect( action_set_link_type );
 
@@ -540,7 +541,8 @@ public class StyleInspector : Box {
     };
 
     _node_borders = new ModeButtons() {
-      halign = Align.END
+      halign = Align.END,
+      valign = Align.CENTER
     };
     _node_borders.changed.connect( set_node_border );
 

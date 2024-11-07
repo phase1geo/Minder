@@ -430,7 +430,7 @@ public class MapInspector : Box {
 
     /* Get the theme information to display */
     var names    = new Array<string>();
-    var icons    = new Array<Gtk.Image>();
+    var icons    = new Array<Picture>();
     var hide     = _settings.get_boolean( "hide-themes-not-matching-visual-style" );
     var settings = Granite.Settings.get_default();
     var dark     = settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
