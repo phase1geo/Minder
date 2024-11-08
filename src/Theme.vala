@@ -277,7 +277,7 @@ public class Theme : Object {
   /* Creates the icon representation based on the theme's colors */
   public Paintable make_icon() {
 
-    var    side  = 140 * 3;
+    var    side  = 140;
     var    nrad  = 15;
     var    hside = side / 2;
     double ypos[6];

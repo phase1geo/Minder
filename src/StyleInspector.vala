@@ -61,8 +61,8 @@ public class StyleInspector : Box {
   private FontDialogButton _node_font;
   private SpinButton       _node_width;
   private Switch           _node_markup;
-  private Picture          _conn_dash;
-  private Picture          _conn_arrow;
+  private ImageMenu        _conn_dash;
+  private ImageMenu        _conn_arrow;
   private Scale            _conn_lwidth;
   private Scale            _conn_padding;
   private FontDialogButton _conn_font;
@@ -871,37 +871,24 @@ public class StyleInspector : Box {
 
     var dashes = styles.get_link_dashes();
 
-    _conn_dash = new Picture.for_paintable( dashes.index( 0 ).make_icon() );
-
-    /*
-    for( int i=0; i<dashes.length; i++ ) {
-      var dash = dashes.index( i );
-      var img  = new Image.from_surface( dash.make_icon() );
-      var mi   = new Gtk.MenuItem();
-      mi.activate.connect(() => {
-        _da.undo_buffer.add_item( new UndoStyleConnectionDash( _affects, dash, _da ) );
-        _conn_dash.surface = img.surface;
-      });
-      mi.add( img );
-      menu.add( mi );
-    }
-    */
-
-    var popover = new Popover();
-
-    var mb = new MenuButton() {
-      halign  = Align.END,
-      valign  = Align.CENTER,
-      child   = _conn_dash,
-      popover = popover
+    _conn_dash = new ImageMenu() {
+      halign = Align.END
     };
+
+    _conn_dash.changed.connect((index) => {
+      _da.undo_buffer.add_item( new UndoStyleConnectionDash( _affects, dashes.index( index ), _da ) );
+    });
+
+    for( int i=0; i<dashes.length; i++ ) {
+      _conn_dash.add_image( dashes.index( i ).make_icon() );
+    }
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
       halign      = Align.FILL,
       homogeneous = true
     };
     box.append( lbl );
-    box.append( mb );
+    box.append( _conn_dash );
 
     return( box );
 
@@ -916,39 +903,26 @@ public class StyleInspector : Box {
       xalign  = (float)0
     };
 
-    _conn_arrow = new Picture.for_paintable( Connection.make_arrow_icon( "fromto" ) );
-
-    /* TODO
-    var menu         = new Gtk.Menu();
     string arrows[4] = {"none", "fromto", "tofrom", "both"};
 
-    foreach (string arrow in arrows) {
-      var img = new Image.from_surface( Connection.make_arrow_icon( arrow ) );
-      var mi  = new Gtk.MenuItem();
-      mi.activate.connect(() => {
-        _da.undo_buffer.add_item( new UndoStyleConnectionArrow( _affects, arrow, _da ) );
-        _conn_arrow.surface = img.surface;
-      });
-      mi.add( img );
-      menu.add( mi );
-    }
-    */
-
-    var popover = new Popover();
-
-    var mb = new MenuButton() {
-      halign  = Align.END,
-      valign  = Align.CENTER,
-      child   = _conn_arrow,
-      popover = popover
+    _conn_arrow = new ImageMenu() {
+      halign = Align.END
     };
+
+    _conn_arrow.changed.connect((index) => {
+      _da.undo_buffer.add_item( new UndoStyleConnectionArrow( _affects, arrows[index], _da ) );
+    });
+
+    foreach (string arrow in arrows) {
+      _conn_arrow.add_image( Connection.make_arrow_icon( arrow ) );
+    }
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
       halign      = Align.FILL,
       homogeneous = true
     };
     box.append( lbl );
-    box.append( mb );
+    box.append( _conn_arrow );
 
     return( box );
 
@@ -1446,9 +1420,20 @@ public class StyleInspector : Box {
     var link_dashes = styles.get_link_dashes();
     for( int i=0; i<link_dashes.length; i++ ) {
       if( link_dashes.index( i ).name == style.connection_dash.name ) {
-        // TODO _conn_dash.paintable = link_dashes.index( i ).make_icon();
+        _conn_dash.selected = i;
         break;
       }
+    }
+  }
+
+  private void update_conn_arrows_with_style( Style style ) {
+    string arrows[4] = {"none", "fromto", "tofrom", "both"};
+    var i = 0;
+    foreach( var arrow in arrows ) {
+      if( arrow == style.connection_arrow ) {
+        _conn_arrow.selected = i;
+      }
+      i++;
     }
   }
 
@@ -1478,6 +1463,7 @@ public class StyleInspector : Box {
     update_link_dashes_with_style( style );
     update_node_borders_with_style( style );
     update_conn_dashes_with_style( style );
+    update_conn_arrows_with_style( style );
     _link_width.set_value( (double)link_width );
     _link_arrow.set_active( (bool)link_arrow );
     _node_borderwidth.set_value( (double)node_bw );
@@ -1488,7 +1474,6 @@ public class StyleInspector : Box {
     _node_font.set_font_features( style.node_font.to_string() );
     _node_width.set_value( (float)node_width );
     _node_markup.set_active( (bool)node_markup );
-    _conn_arrow.set_paintable( Connection.make_arrow_icon( style.connection_arrow ) );
     _conn_lwidth.set_value( (double)conn_line_width );
     _conn_font.set_font_features( style.connection_font.to_string() );
     _conn_twidth.set_value( style.connection_title_width );
