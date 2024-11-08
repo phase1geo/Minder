@@ -369,6 +369,7 @@ public class MapInspector : Box {
     update_themes();
 
     var add = new Button.from_icon_name( "list-add-symbolic" ) {
+      valign       = Align.END,
       has_frame    = false,
       tooltip_text = _( "Add Custom Theme" )
     };

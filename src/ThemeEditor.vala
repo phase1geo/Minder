@@ -32,7 +32,7 @@ public class ThemeEditor : Gtk.Box {
   private Entry                       _name;
   private HashMap<string,ColorButton> _btns;
   private Switch                      _prefer_dark;
-  private Revealer                    _delrev;
+  private Button                      _del;
 
   public ThemeEditor( MainWindow win ) {
 
@@ -87,6 +87,7 @@ public class ThemeEditor : Gtk.Box {
 
     /* Create scrollable options grid */
     var sw = new ScrolledWindow() {
+      vexpand = true,
       child = grid
     };
     sw.child.set_size_request( 180, 600 );
@@ -128,7 +129,9 @@ public class ThemeEditor : Gtk.Box {
       use_markup = true
     };
 
-    _prefer_dark = new Switch();
+    _prefer_dark = new Switch() {
+      margin_top = 20
+    };
     _prefer_dark.notify["active"].connect((e) => {
       _theme.prefer_dark = !_theme.prefer_dark;
       _win.get_current_da().set_theme( _theme, true );
@@ -150,12 +153,16 @@ public class ThemeEditor : Gtk.Box {
     }
 
     /* Create the button bar */
-    var del = new Button.with_label( _( "Delete" ) );
-    del.add_css_class( "destructive-action" );
-    del.clicked.connect( confirm_deletion );
-    _delrev = new Revealer() {
-      halign = Align.START,
-      child  = del
+    _del = new Button.with_label( _( "Delete" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      visible = false
+    };
+    _del.add_css_class( "destructive-action" );
+    _del.clicked.connect( confirm_deletion );
+
+    var l = new Label( "" ) {
+      hexpand = true
     };
 
     var cancel = new Button.with_label( _( "Cancel" ) ) {
@@ -170,11 +177,12 @@ public class ThemeEditor : Gtk.Box {
     save.clicked.connect( save_theme );
 
     var bbox = new Box( Orientation.HORIZONTAL, 5 ) {
-      valign = Align.END
+      valign = Align.FILL
     };
-    bbox.append( _delrev );
-    bbox.append( save );
+    bbox.append( _del );
+    bbox.append( l );
     bbox.append( cancel );
+    bbox.append( save );
 
     append( bbox );
 
@@ -187,7 +195,9 @@ public class ThemeEditor : Gtk.Box {
       xalign = (float)0
     };
 
-    var btn = new ColorButton();
+    var btn = new ColorButton() {
+      valign = Align.CENTER
+    };
     btn.color_set.connect(() => {
       _theme.set_color( name, btn.rgba );
       _win.get_current_da().set_theme( _theme, true );
@@ -219,7 +229,7 @@ public class ThemeEditor : Gtk.Box {
     }
     _name.text = _theme.name;
     _prefer_dark.set_active( _theme.prefer_dark );
-    _delrev.reveal_child = edit && !theme.temporary;
+    _del.visible = edit && !theme.temporary;
 
   }
 
