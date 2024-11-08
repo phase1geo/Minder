@@ -32,7 +32,7 @@ public class ModeButtons : Box {
     set {
       if( _selected != value ) {
         _selected = value;
-        var button = (CheckButton)Utils.get_child_at_index( this, value );
+        var button = (ToggleButton)Utils.get_child_at_index( this, value );
         button.active = true;
       }
     }

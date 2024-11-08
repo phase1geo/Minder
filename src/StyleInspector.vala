@@ -52,7 +52,7 @@ public class StyleInspector : Box {
   private ModeButtons      _link_types;
   private Scale            _link_width;
   private Switch           _link_arrow;
-  private Picture          _link_dash;
+  private ImageMenu        _link_dash;
   private ModeButtons      _node_borders;
   private Scale            _node_borderwidth;
   private Switch           _node_fill;
@@ -370,38 +370,24 @@ public class StyleInspector : Box {
 
     var dashes = styles.get_link_dashes();
 
-    _link_dash = new Picture.for_paintable( dashes.index( 0 ).make_icon() );
-
-    var menu = new GLib.Menu();
-    /* TODO - Need to figure out how to display the paintables
-    for( int i=0; i<dashes.length; i++ ) {
-      var dash = dashes.index( i );
-      var img  = new Image.from_paintable( dash.make_icon() );
-      var mi   = new Gtk.MenuItem( );
-      mi.activate.connect(() => {
-        _da.undo_buffer.add_item( new UndoStyleLinkDash( _affects, dash, _da ) );
-        _link_dash.paintable = img.paintable;
-      });
-      mi.add( img );
-      menu.add( mi );
-    }
-    */
-
-    var popover = new Popover();
-
-    var mb = new MenuButton() {
-      halign  = Align.END,
-      valign  = Align.CENTER,
-      child   = _link_dash,
-      popover = popover
+    _link_dash = new ImageMenu() {
+      halign = Align.END
     };
+
+    _link_dash.changed.connect((index) => {
+      _da.undo_buffer.add_item( new UndoStyleLinkDash( _affects, dashes.index( index ), _da ) );
+    });
+
+    for( int i=0; i<dashes.length; i++ ) {
+      _link_dash.add_image( dashes.index( i ).make_icon() );
+    }
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
       halign      = Align.FILL,
       homogeneous = true
     };
     box.append( lbl );
-    box.append( mb );
+    box.append( _link_dash );
 
     return( box );
 
@@ -1440,7 +1426,7 @@ public class StyleInspector : Box {
     var link_dashes = styles.get_link_dashes();
     for( int i=0; i<link_dashes.length; i++ ) {
       if( link_dashes.index( i ).name == style.link_dash.name ) {
-        _link_dash.paintable = link_dashes.index( i ).make_icon();
+        _link_dash.selected = i;
         break;
       }
     }

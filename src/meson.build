@@ -26,6 +26,7 @@ sources += files(
     'HtmlToMarkdown.vala',
     'ImageEditor.vala',
     'ImageManager.vala',
+    'ImageMenu.vala',
     'Layout.vala',
     'Layouts.vala',
     'LinkDash.vala',
