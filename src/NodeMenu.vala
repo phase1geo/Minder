@@ -139,7 +139,7 @@ public class NodeMenu {
     sel_submenu.append_section( null, sel_other_menu );
 
     var sel_menu = new GLib.Menu();
-    sel_menu.append_section( null, sel_submenu );
+    sel_menu.append_submenu( _( "Select" ), sel_submenu );
     sel_menu.append( _( "Center Current Node" ), "node.action_center_current_node" );
 
     var sort_submenu = new GLib.Menu();
@@ -161,6 +161,7 @@ public class NodeMenu {
     menu.append_section( null, detach_menu );
 
     _popover = new PopoverMenu.from_model( menu );
+    _popover.set_parent( _da );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();

@@ -53,10 +53,13 @@ public class EmptyMenu {
     menu.append_section( null, add_menu );
     menu.append_section( null, sel_menu );
 
+    _popover = new PopoverMenu.from_model( menu );
+    _popover.set_parent( _da );
+
     // Add the menu actions
     var actions = new SimpleActionGroup();
     actions.add_action_entries( action_entries, this );
-    _da.insert_action_group( "paste", actions );
+    _da.insert_action_group( "empty", actions );
 
     // Add keyboard shortcuts
     app.set_accels_for_action( "empty.action_paste",            { "<Control>y" } );

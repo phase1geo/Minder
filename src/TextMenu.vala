@@ -70,6 +70,7 @@ public class TextMenu {
     menu.append_section( null, other_menu );
 
     _popover = new PopoverMenu.from_model( menu );
+    _popover.set_parent( _da );
     _popover.closed.connect( on_popdown );
 
     // Add the menu actions

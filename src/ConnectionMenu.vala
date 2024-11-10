@@ -72,6 +72,7 @@ public class ConnectionMenu {
     menu.append_section( null, sel_menu );
 
     _popover = new PopoverMenu.from_model( menu );
+    _popover.set_parent( _da );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();

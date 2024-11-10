@@ -78,7 +78,14 @@ public class QuickEntry : Gtk.Window {
 
     /* Create the scrolled window for the text entry area */
     var sw = new ScrolledWindow() {
-      child = _entry
+      margin_start = 10,
+      margin_end   = 10,
+      margin_top   = 10,
+      margin_bottom = 10,
+      halign  = Align.FILL,
+      valign  = Align.FILL,
+      vexpand = true,
+      child   = _entry
     };
 
     var helpgrid = new Grid() {
@@ -128,7 +135,8 @@ public class QuickEntry : Gtk.Window {
     };
 
     var info = new Button.from_icon_name( "dialog-information-symbolic" ) {
-      halign = Align.START,
+      halign    = Align.START,
+      hexpand   = true,
       has_frame = false
     };
     info.clicked.connect(() => {
@@ -182,22 +190,27 @@ public class QuickEntry : Gtk.Window {
       margin_bottom = 5
     };
     bbox.append( info );
-    bbox.append( _apply );
     bbox.append( cancel );
+    bbox.append( _apply );
 
     box.append( sw );
-    box.append( bbox );
     box.append( helprev );
+    box.append( bbox );
 
     child = box;
 
+    present();
+
   }
 
+  //-------------------------------------------------------------
+  // Creates a help label with the given string label.
   private Label make_help_label( string str ) {
-    var lbl = new Label( str );
-    lbl.use_markup = true;
-    lbl.xalign     = (float)0;
-    lbl.get_style_context().add_class( "greyed-label" );
+    var lbl = new Label( str ) {
+      use_markup = true,
+      xalign     = (float)0,
+    };
+    lbl.add_css_class( "greyed-label" );
     return( lbl );
   }
 
