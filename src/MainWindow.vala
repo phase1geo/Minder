@@ -238,9 +238,10 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     /* Create the panel so that we can resize */
     _pane = new Paned( Orientation.HORIZONTAL ) {
-      halign      = Align.FILL,
-      valign      = Align.FILL,
-      start_child = _nb
+      halign           = Align.FILL,
+      valign           = Align.FILL,
+      start_child      = _nb,
+      shrink_end_child = false
     };
     _pane.move_handle.connect(() => {
       return( false );
@@ -767,7 +768,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       on_search_change();
     });
 
-    var search_all_box = new Box( Orientation.HORIZONTAL, 0 );
+    var search_all_box = new Box( Orientation.HORIZONTAL, 10 );
     search_all_box.append( search_all_label );
     search_all_box.append( _search_all_tabs );
 
@@ -906,7 +907,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     var grid = new Grid() {
       margin_top         = 10,
       column_homogeneous = true,
-      column_spacing     = 10
+      column_spacing     = 10,
+      row_spacing        = 10
     };
     grid.attach( _search_nodes,       0, 0 );
     grid.attach( _search_connections, 0, 1 );

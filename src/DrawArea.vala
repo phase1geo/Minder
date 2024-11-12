@@ -111,6 +111,7 @@ public class DrawArea : Gtk.DrawingArea {
   private NodeLinks          _node_links;
   private bool               _hide_callouts   = false;
   private EventControllerKey _key_controller;
+  private EventControllerScroll _scroll;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -332,9 +333,9 @@ public class DrawArea : Gtk.DrawingArea {
     _key_controller.key_pressed.connect( on_keypress );
     _key_controller.key_released.connect( on_keyrelease );
 
-    var scroll = new EventControllerScroll( EventControllerScrollFlags.BOTH_AXES );
-    this.add_controller( scroll );
-    scroll.scroll.connect( on_scroll );
+    _scroll = new EventControllerScroll( EventControllerScrollFlags.BOTH_AXES );
+    this.add_controller( _scroll );
+    _scroll.scroll.connect( on_scroll );
 
     var drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
     this.add_controller( drop );
@@ -4852,6 +4853,23 @@ public class DrawArea : Gtk.DrawingArea {
     /* Make sure that we flush all animations if the user starts a keypress */
     animator.flush();
 
+    // Handle Control, Shift or Alt keyvals
+    switch( keyval ) {
+      case Gdk.Key.Control_L :
+      case Gdk.Key.Control_R :
+        _control = true;
+        handle_control( true );
+        break;
+      case Gdk.Key.Shift_L :
+      case Gdk.Key.Shift_R :
+        _shift = true;
+        break;
+      case Gdk.Key.Alt_L :
+      case Gdk.Key.Alt_R :
+        _alt = true;
+        break;
+    }
+
     /* Figure out which modifiers were used */
     var control         = (bool)(state & ModifierType.CONTROL_MASK);
     var shift           = (bool)(state & ModifierType.SHIFT_MASK);
@@ -5082,8 +5100,20 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Handles a key release event */
   private void on_keyrelease( uint keyval, uint keycode, ModifierType state ) {
-    if( (keyval == 65507) || (keyval == 65508) ) {
-      handle_control( false );
+    switch( keyval ) {
+      case Gdk.Key.Control_L :
+      case Gdk.Key.Control_R :
+        _control = false;
+        handle_control( false );
+        break;
+      case Gdk.Key.Shift_L :
+      case Gdk.Key.Shift_R :
+        _shift = false;
+        break;
+      case Gdk.Key.Alt_L :
+      case Gdk.Key.Alt_R :
+        _alt = false;
+        break;
     }
   }
 
@@ -5570,24 +5600,22 @@ public class DrawArea : Gtk.DrawingArea {
   */
   private bool on_scroll( double delta_x, double delta_y ) {
     
-    /* TODO
-    bool shift   = (bool)(e.state & ModifierType.SHIFT_MASK);
-    bool control = (bool)(e.state & ModifierType.CONTROL_MASK);
-
     // Swap the deltas if the SHIFT key is held down
-    if( shift && !control ) {
+    if( _shift && !_control ) {
       double tmp = delta_x;
       delta_x = delta_y;
       delta_y = tmp;
-    } else if( control ) {
-      if( e.delta_y < 0 ) {
-        zoom_in_coords(e.x, e.y);
-      } else if( e.delta_y > 0 ) {
-        zoom_out_coords(e.x, e.y);
+    } else if( _control ) {
+      double x, y;
+      var e = _scroll.get_current_event();
+      e.get_position( out x, out y );
+      if( delta_y < 0 ) {
+        zoom_in_coords( x, y );
+      } else if( delta_y > 0 ) {
+        zoom_out_coords( x, y );
       }
       return( false );
     }
-    */
 
     // Adjust the origin and redraw
     move_origin( ((0 - delta_x) * 120), ((0 - delta_y) * 120) );
