@@ -103,8 +103,6 @@ public class ImageMenu : Box {
   // Add a button to this model
   public void add_image( Gdk.Paintable image ) {
 
-    stdout.printf( "Adding image menu item %d\n", _size );
-
     var entry = new Picture.for_paintable( image );
     var index = _size++;
 

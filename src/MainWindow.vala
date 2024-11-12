@@ -669,6 +669,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     var marks   = DrawArea.get_scale_marks();
     _scale_lbl  = new Label( _( "Zoom to Percent" ) );
     _zoom_scale = new Scale.with_range( Orientation.HORIZONTAL, marks[0], marks[marks.length-1], 25 ) {
+      hexpand = true,
       has_origin = false
     };
     _zoom_scale.set_value( 100 );
