@@ -2768,12 +2768,14 @@ public class Node : Object {
 
   //-------------------------------------------------------------
   // Draw the sequence number, if applicable.
-  protected virtual void draw_sequence_num( Context ctx, RGBA sel_color, RGBA bg_color, RGBA fg_color ) {
+  protected virtual void draw_sequence_num( Context ctx, RGBA sel_color, RGBA fg_color ) {
 
     if( _sequence_num != null ) {
 
       double x, y, w, h;
-      RGBA color = mode.is_selected() ? sel_color : bg_color;
+      RGBA color = mode.is_selected()  ? sel_color :
+                   style.is_fillable() ?  Granite.contrasting_foreground_color( link_color ) :
+                   fg_color;
 
       sequence_bbox( out x, out y, out w, out h );
 
@@ -2790,7 +2792,7 @@ public class Node : Object {
 
       /* Output the text */
       ctx.move_to( (x - (log_rect.x / Pango.SCALE)), y );
-      Utils.set_context_color_with_alpha( ctx, fg_color, _alpha );
+      Utils.set_context_color_with_alpha( ctx, color, _alpha );
       Pango.cairo_show_layout( ctx, _sequence_num.layout );
       ctx.new_path();
 
@@ -3147,7 +3149,7 @@ public class Node : Object {
         draw_acc_task( ctx, _link_color, background );
       }
       draw_sticker( ctx, nodesel_background, background );
-      draw_sequence_num( ctx, nodesel_background, background, foreground );
+      draw_sequence_num( ctx, nodesel_foreground, foreground );
       draw_common_note( ctx, foreground, nodesel_foreground, background );
       draw_link_node(   ctx, foreground, nodesel_foreground, foreground );
       draw_common_fold( ctx, _link_color, background );

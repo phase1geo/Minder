@@ -128,10 +128,10 @@ public class StyleInspector : Box {
   /* Listen for any changes to the current tab in the main window */
   private void tab_changed( DrawArea? da ) {
     if( _da != null ) {
-//      _da.current_changed.disconnect( handle_current_changed );
+      _da.current_changed.disconnect( handle_current_changed );
     }
     if( da != null ) {
-//      da.current_changed.connect( handle_current_changed );
+      da.current_changed.connect( handle_current_changed );
     }
     _da = da;
     handle_ui_changed();
@@ -466,8 +466,10 @@ public class StyleInspector : Box {
 
   /* Called when the user clicks on the link arrow switch */
   private void link_arrow_changed() {
-    bool val = !_link_arrow.get_active();
-    _da.undo_buffer.add_item( new UndoStyleLinkArrow( _affects, val, _da ) );
+    if( !_ignore ) {
+      bool val = _link_arrow.get_active();
+      _da.undo_buffer.add_item( new UndoStyleLinkArrow( _affects, val, _da ) );
+    }
   }
 
   /* Creates the options to manipulate node options */
@@ -627,8 +629,10 @@ public class StyleInspector : Box {
 
   /* Called whenever the node fill status changes */
   private void node_fill_changed() {
-    bool val = !_node_fill.get_active();
-    _da.undo_buffer.add_item( new UndoStyleNodeFill( _affects, val, _da ) );
+    if( !_ignore ) {
+      bool val = _node_fill.get_active();
+      _da.undo_buffer.add_item( new UndoStyleNodeFill( _affects, val, _da ) );
+    }
   }
 
   /* Allows the user to change the node margin */
@@ -812,8 +816,10 @@ public class StyleInspector : Box {
 
   /* Called whenever the node fill status changes */
   private void node_markup_changed() {
-    var val = !_node_markup.get_active();
-    _da.undo_buffer.add_item( new UndoStyleNodeMarkup( _affects, val, _da ) );
+    if( _ignore ) {
+      var val = _node_markup.get_active();
+      _da.undo_buffer.add_item( new UndoStyleNodeMarkup( _affects, val, _da ) );
+    }
   }
 
   /* Creates the connection style UI */
