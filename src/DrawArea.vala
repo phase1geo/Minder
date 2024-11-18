@@ -337,10 +337,22 @@ public class DrawArea : Gtk.DrawingArea {
     this.add_controller( _scroll );
     _scroll.scroll.connect( on_scroll );
 
-    var drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
-    this.add_controller( drop );
-    drop.motion.connect( handle_drag_motion );
-    drop.drop.connect( handle_drop );
+    /*
+    var file_drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
+    this.add_controller( file_drop );
+    file_drop.motion.connect( handle_file_drag_motion );
+    file_drop.drop.connect( handle_file_drop );
+    */
+
+    var sticker_drop = new DropTarget( Type.POINTER, Gdk.DragAction.COPY );
+    this.add_controller( sticker_drop );
+    sticker_drop.motion.connect( handle_sticker_drag_motion );
+    sticker_drop.drop.connect( handle_sticker_drop );
+
+    stdout.printf( "Sticker drop formats:\n" );
+    foreach (var typ in sticker_drop.formats.get_gtypes()) {
+      stdout.printf( "  %s\n", typ.name() );
+    }
 
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
@@ -5660,7 +5672,81 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Called whenever we drag something over the canvas */
-  private Gdk.DragAction handle_drag_motion( double x, double y ) {
+  private Gdk.DragAction handle_file_drag_motion( double x, double y ) {
+
+    stdout.printf( "In handle_file_drag_motion, x: %g, y: %g\n", x, y );
+
+    Node       attach_node;
+    Connection attach_conn;
+    Sticker    attach_sticker;
+
+    var scaled_x = scale_value( x );
+    var scaled_y = scale_value( y );
+
+    get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
+
+    /* Clear the mode of any previous attach node/connection */
+    if( _attach_node != null ) {
+      set_node_mode( _attach_node, NodeMode.NONE );
+    }
+
+    if( attach_node != null ) {
+      set_node_mode( attach_node, NodeMode.DROPPABLE );
+      _attach_node = attach_node;
+      queue_draw();
+    } else if( _attach_node != null ) {
+      _attach_node = null;
+      queue_draw();
+    }
+
+    return( Gdk.DragAction.COPY );
+
+  }
+
+  /* Called when something is dropped on the DrawArea */
+  private bool handle_file_drop( Value val, double x, double y ) {
+
+    stdout.printf( "In handle_file_drop\n" );
+
+    var file = (GLib.File)val;
+
+    if( (_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE) ) {
+
+      var image = new NodeImage.from_uri( image_manager, file.get_uri(), 200 );
+      if( image.valid ) {
+        var node = create_root_node( _( "Another Idea" ) );
+        node.set_image( image_manager, image );
+        if( select_node( node ) ) {
+          set_node_mode( node, NodeMode.EDITABLE, false );
+          queue_draw();
+          auto_save();
+        }
+      }
+
+    } else {
+
+      var image = new NodeImage.from_uri( image_manager, file.get_uri(), _attach_node.style.node_width );
+      if( image.valid ) {
+        var orig_image = _attach_node.image;
+        _attach_node.set_image( image_manager, image );
+        undo_buffer.add_item( new UndoNodeImage( _attach_node, orig_image ) );
+        set_node_mode( _attach_node, NodeMode.NONE );
+        _attach_node = null;
+        queue_draw();
+        current_changed( this );
+        auto_save();
+      }
+
+    }
+
+    return( true );
+
+  }
+
+  /* Called whenever we drag a sticker over the canvas */
+  private Gdk.DragAction handle_sticker_drag_motion( double x, double y ) {
+
+    stdout.printf( "In handle_sticker_drag_motion, x: %g, y: %g\n", x, y );
 
     Node       attach_node;
     Connection attach_conn;
@@ -5709,42 +5795,32 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
-  /* Called when something is dropped on the DrawArea */
-  private bool handle_drop( Value val, double x, double y ) {
 
-    /* TODO
+  /* Called when a sticker is dropped on the DrawArea */
+  private bool handle_sticker_drop( Value val, double x, double y ) {
+
+    stdout.printf( "In handle_sticker_drop\n" );
+
+    var drop_sticker = (Sticker)val;
+
     if( ((_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE)) &&
         ((_attach_conn == null) || (_attach_conn.mode != ConnMode.DROPPABLE)) ) {
 
-      if( info == DragTypes.URI ) {
-        foreach (var uri in data.get_uris()) {
-          var image = new NodeImage.from_uri( image_manager, uri, 200 );
-          if( image.valid ) {
-            var node = create_root_node( _( "Another Idea" ) );
-            node.set_image( image_manager, image );
-            if( select_node( node ) ) {
-              set_node_mode( node, NodeMode.EDITABLE, false );
-              queue_draw();
-            }
-          }
-        }
-      } else if( info == DragTypes.STICKER ) {
-        if( _attach_sticker != null ) {
-          var sticker = new Sticker( this, data.get_text(), _attach_sticker.posx, _attach_sticker.posy, (int)_attach_sticker.width );
-          _stickers.remove_sticker( _attach_sticker );
-          _stickers.add_sticker( sticker );
-          _selected.set_current_sticker( sticker );
-          _undo_buffer.add_item( new UndoStickerChange( _attach_sticker, sticker ) );
-          _attach_sticker.mode = StickerMode.NONE;
-          _attach_sticker = null;
-        } else {
-          var double_x = (double)x;
-          var double_y = (double)y;
-          var sticker = new Sticker( this, data.get_text(), double_x, double_y );
-          _stickers.add_sticker( sticker );
-          _selected.set_current_sticker( sticker );
-          _undo_buffer.add_item( new UndoStickerAdd( sticker ) );
-        }
+      if( _attach_sticker != null ) {
+        var sticker = new Sticker( this, drop_sticker.name, _attach_sticker.posx, _attach_sticker.posy, (int)_attach_sticker.width );
+        _stickers.remove_sticker( _attach_sticker );
+        _stickers.add_sticker( sticker );
+        _selected.set_current_sticker( sticker );
+        _undo_buffer.add_item( new UndoStickerChange( _attach_sticker, sticker ) );
+        _attach_sticker.mode = StickerMode.NONE;
+        _attach_sticker = null;
+      } else {
+        var double_x = (double)x;
+        var double_y = (double)y;
+        var sticker = new Sticker( this, drop_sticker.name, double_x, double_y );
+        _stickers.add_sticker( sticker );
+        _selected.set_current_sticker( sticker );
+        _undo_buffer.add_item( new UndoStickerAdd( sticker ) );
       }
 
       grab_focus();
@@ -5755,38 +5831,24 @@ public class DrawArea : Gtk.DrawingArea {
 
     } else {
 
-      if( info == DragTypes.URI ) {
-        if( data.get_uris().length == 1 ) {
-          var image = new NodeImage.from_uri( image_manager, data.get_uris()[0], _attach_node.style.node_width );
-          if( image.valid ) {
-            var orig_image = _attach_node.image;
-            _attach_node.set_image( image_manager, image );
-            undo_buffer.add_item( new UndoNodeImage( _attach_node, orig_image ) );
-            set_node_mode( _attach_node, NodeMode.NONE );
-            _attach_node = null;
-          }
+      if( _attach_node != null ) {
+        if( _attach_node.sticker == null ) {
+          undo_buffer.add_item( new UndoNodeStickerAdd( _attach_node, drop_sticker.name ) );
+        } else {
+          undo_buffer.add_item( new UndoNodeStickerChange( _attach_node, _attach_node.sticker ) );
         }
-      } else if( info == DragTypes.STICKER ) {
-        var sticker = data.get_text();
-        if( _attach_node != null ) {
-          if( _attach_node.sticker == null ) {
-            undo_buffer.add_item( new UndoNodeStickerAdd( _attach_node, sticker ) );
-          } else {
-            undo_buffer.add_item( new UndoNodeStickerChange( _attach_node, _attach_node.sticker ) );
-          }
-          _attach_node.sticker = data.get_text();
-          set_node_mode( _attach_node, NodeMode.NONE );
-          _attach_node = null;
-        } else if( _attach_conn != null ) {
-          if( _attach_conn.sticker == null ) {
-            undo_buffer.add_item( new UndoConnectionStickerAdd( _attach_conn, sticker ) );
-          } else {
-            undo_buffer.add_item( new UndoConnectionStickerChange( _attach_conn, _attach_conn.sticker ) );
-          }
-          set_connection_mode( _attach_conn, ConnMode.NONE );
-          _attach_conn.sticker = data.get_text();
-          _attach_conn = null;
+        _attach_node.sticker = drop_sticker.name;
+        set_node_mode( _attach_node, NodeMode.NONE );
+        _attach_node = null;
+      } else if( _attach_conn != null ) {
+        if( _attach_conn.sticker == null ) {
+          undo_buffer.add_item( new UndoConnectionStickerAdd( _attach_conn, drop_sticker.name ) );
+        } else {
+          undo_buffer.add_item( new UndoConnectionStickerChange( _attach_conn, _attach_conn.sticker ) );
         }
+        set_connection_mode( _attach_conn, ConnMode.NONE );
+        _attach_conn.sticker = drop_sticker.name;
+        _attach_conn = null;
       }
 
       queue_draw();
@@ -5794,7 +5856,6 @@ public class DrawArea : Gtk.DrawingArea {
       auto_save();
 
     }
-    */
 
     return( true );
 
