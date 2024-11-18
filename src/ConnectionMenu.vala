@@ -67,7 +67,7 @@ public class ConnectionMenu {
     sel_menu.append_submenu( _( "Select" ), sel_submenu );
 
     var menu = new GLib.Menu();
-    menu.append_section( null, sel_menu );
+    menu.append_section( null, del_menu );
     menu.append_section( null, edit_menu );
     menu.append_section( null, sel_menu );
 
