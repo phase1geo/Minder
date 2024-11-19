@@ -41,6 +41,12 @@ public class StickerInspector : Box {
   private StickerSet    _sticker_set;
   private string        _clicked_sticker;
 
+  private const GLib.ActionEntry action_entries[] = {
+    { "action_make_favorite",   action_make_favorite },
+    { "action_make_unfavorite", action_make_unfavorite },
+    { "action_remove",          action_remove },
+  };
+
   public StickerInspector( MainWindow win, GLib.Settings settings ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
@@ -65,34 +71,20 @@ public class StickerInspector : Box {
     _custom_menu.append_section( null, custom_fav_menu );
     _custom_menu.append_section( null, custom_del_menu );
 
-    /* TODO
-    _da.
-    _builtin_menu.show.connect(() => {
-      bi_favorite.set_sensitive( !is_favorite( _clicked_sticker ) );
-    });
-
-    _custom_menu.show.connect(() => {
-      cu_favorite.set_sensitive( !is_favorite( _clicked_sticker ) );
-    });
-    *?
-
-
-    /*
-     Create instruction label (this will always be visible so it will not be
-     within the scrolled box
-    */
+    // Create instruction label (this will always be visible so it will not be
+    // within the scrolled box
     var lbl = new Label( _( "Drag and drop sticker onto a node or anywhere else in the map to add a sticker." ) ) {
       wrap      = true,
       wrap_mode = Pango.WrapMode.WORD
     };
 
-    /* Create search field */
+    // Create search field
     _search = new SearchEntry() {
       placeholder_text = _( "Search Stickers" )
     };
     _search.search_changed.connect( do_search );
 
-    /* Create main scrollable pane */
+    // Create main scrollable pane
     var box = new Box( Orientation.VERTICAL, 20 );
     var sw  = new ScrolledWindow() {
       child = box
@@ -100,7 +92,7 @@ public class StickerInspector : Box {
     var vp = (Viewport)sw.child;
     vp.set_size_request( 200, 600 );
 
-    /* Create search result flowbox */
+    // Create search result flowbox
     _matched_box = create_icon_box( "" );
 
     var mbox = new Box( Orientation.VERTICAL, 0 );
@@ -111,21 +103,21 @@ public class StickerInspector : Box {
     };
     msw.add_css_class( Granite.STYLE_CLASS_VIEW );
 
-    /* Create stack */
+    // Create stack
     _stack = new Stack() {
       vexpand = true
     };
     _stack.add_named( sw,  "all" );
     _stack.add_named( msw, "matched" );
 
-    /* Create the sticker set */
+    // Create the sticker set
     _sticker_set = new StickerSet();
 
-    /* Create Favorites */
+    // Create Favorites
     _favorites = create_category( box, _( "Favorites" ) );
     load_favorites();
 
-    /* Pack the elements into this widget */
+    // Pack the elements into this widget
     create_from_sticker_set( box );
 
     var show = new Button.with_label( _( "Show Custom Sticker Directory" ) );
@@ -135,14 +127,21 @@ public class StickerInspector : Box {
 
     box.append( show );
 
-    /* Add the scrollable widget to the box */
+    // Add the scrollable widget to the box
     append( lbl );
     append( _search );
     append( _stack );
 
+    // Add the menu actions
+    var actions = new SimpleActionGroup();
+    actions.add_action_entries( action_entries, this );
+    insert_action_group( "sticker", actions );
+
   }
 
-  /* Creates the rest of the UI from the stickers XML file that is stored in a gresource */
+  //-------------------------------------------------------------
+  // Creates the rest of the UI from the stickers XML file that
+  // is stored in a gresource
   private void create_from_sticker_set( Box box ) {
 
     var categories = _sticker_set.get_categories();
@@ -159,7 +158,9 @@ public class StickerInspector : Box {
 
   }
 
-  /* Creates the expander flowbox for the given category name and adds it to the sidebar */
+  //-------------------------------------------------------------
+  // Creates the expander flowbox for the given category name and
+  // adds it to the sidebar
   private FlowBox create_category( Box box, string name ) {
 
     /* Create the flowbox which will contain the stickers */
@@ -178,7 +179,9 @@ public class StickerInspector : Box {
 
   }
 
-  /* Creates the image from the given name and adds it to the flow box */
+  //-------------------------------------------------------------
+  // Creates the image from the given name and adds it to the
+  // flow box
   private void create_image( FlowBox fbox, string name, string tooltip ) {
     var pixbuf = StickerSet.make_pixbuf( name );
     if( pixbuf != null ) {
@@ -192,7 +195,8 @@ public class StickerInspector : Box {
     }
   }
 
-  /* Adds an import image button to the given category flowbox */
+  //-------------------------------------------------------------
+  // Adds an import image button to the given category flowbox
   private void create_import( FlowBox box ) {
     var img = new Image.from_icon_name( "list-add-symbolic" ) {
       name = "",
@@ -201,7 +205,8 @@ public class StickerInspector : Box {
     box.append( img );
   }
 
-  /* Creates the icon box and sets it up */
+  //-------------------------------------------------------------
+  // Creates the icon box and sets it up
   private FlowBox create_icon_box( string category ) {
     var fbox = new FlowBox() {
       homogeneous = true,
@@ -220,7 +225,6 @@ public class StickerInspector : Box {
       drag.set_icon( _dragged_sticker.paintable, 0, 0 );
 
       // Set content to the name of the selected sticker
-      stdout.printf( "HERE!\n" );
       var val = Value( Type.POINTER ); // typeof( Sticker ) );
       val = _dragged_sticker;
       var content = new ContentProvider.for_value( val );
@@ -256,6 +260,7 @@ public class StickerInspector : Box {
         } else {
           popover = new PopoverMenu.from_model( _builtin_menu );
         }
+        action_set_enabled( "sticker.action_make_favorite", !is_favorite( _clicked_sticker ) );
         popover.set_parent( sticker );
         popover.popup();
       }
@@ -265,7 +270,7 @@ public class StickerInspector : Box {
   }
 
   /* Called whenever the user selects the favorite/unfavorite menu item */
-  private void handle_favorite() {
+  private void action_make_favorite() {
     if( _clicked_category == _favorites ) {
       make_unfavorite();
     } else {
@@ -273,8 +278,14 @@ public class StickerInspector : Box {
     }
   }
 
+  //-------------------------------------------------------------
+  // Called when the unfavorite menu item is selected.
+  private void action_make_unfavorite() {
+    make_unfavorite();
+  }
+
   /* Called whenever the user selects the remove menu item */
-  private void handle_remove() {
+  private void action_remove() {
     if( _sticker_set.remove_sticker( _clicked_sticker ) ) {
       make_unfavorite();
       var index = 0;
