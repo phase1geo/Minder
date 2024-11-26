@@ -40,11 +40,13 @@ public class StickerInspector : Box {
   private FlowBox       _clicked_category;
   private StickerSet    _sticker_set;
   private string        _clicked_sticker;
+  private SimpleActionGroup _actions;
 
   private const GLib.ActionEntry action_entries[] = {
-    { "action_make_favorite",   action_make_favorite },
-    { "action_make_unfavorite", action_make_unfavorite },
-    { "action_remove",          action_remove },
+    { "action_make_builtin_favorite", action_make_builtin_favorite },
+    { "action_make_custom_favorite",  action_make_custom_favorite },
+    { "action_make_unfavorite",       action_make_unfavorite },
+    { "action_remove",                action_remove },
   };
 
   public StickerInspector( MainWindow win, GLib.Settings settings ) {
@@ -59,10 +61,10 @@ public class StickerInspector : Box {
     _favorite_menu.append( _( "Remove From Favorites" ), "sticker.action_make_unfavorite" );
 
     _builtin_menu = new GLib.Menu();
-    _builtin_menu.append( _( "Add To Favorites" ), "sticker.action_make_favorite" );
+    _builtin_menu.append( _( "Add To Favorites" ), "sticker.action_make_builtin_favorite" );
 
     var custom_fav_menu = new GLib.Menu();
-    custom_fav_menu.append( _( "Add To Favorites" ), "sticker.action_make_favorite" );
+    custom_fav_menu.append( _( "Add To Favorites" ), "sticker.action_make_custom_favorite" );
 
     var custom_del_menu = new GLib.Menu();
     custom_del_menu.append( _( "Remove Custom Sticker" ), "sticker.action_remove" );
@@ -133,9 +135,9 @@ public class StickerInspector : Box {
     append( _stack );
 
     // Add the menu actions
-    var actions = new SimpleActionGroup();
-    actions.add_action_entries( action_entries, this );
-    insert_action_group( "sticker", actions );
+    _actions = new SimpleActionGroup();
+    _actions.add_action_entries( action_entries, this );
+    insert_action_group( "sticker", _actions );
 
   }
 
@@ -252,30 +254,55 @@ public class StickerInspector : Box {
       _clicked_category = fbox;
       _clicked_sticker  = sticker.get_child().name;
       if( _clicked_sticker != "" ) {
-        PopoverMenu popover;
-        if( _clicked_category == _favorites ) {
-          popover = new PopoverMenu.from_model( _favorite_menu );
-        } else if( is_custom( _clicked_sticker ) ) {
-          popover = new PopoverMenu.from_model( _custom_menu );
-        } else {
-          popover = new PopoverMenu.from_model( _builtin_menu );
-        }
-        action_set_enabled( "sticker.action_make_favorite", !is_favorite( _clicked_sticker ) );
-        popover.set_parent( sticker );
-        popover.popup();
+        show_contextual_menu( sticker );
       }
     });
 
     return( fbox );
+
   }
 
-  /* Called whenever the user selects the favorite/unfavorite menu item */
-  private void action_make_favorite() {
-    if( _clicked_category == _favorites ) {
-      make_unfavorite();
-    } else {
-      make_favorite();
+  //-------------------------------------------------------------
+  // Sets the action enable for the specified action.
+  private void set_action_enable( string action_name, bool enabled ) {
+    var action = (SimpleAction)_actions.lookup_action( action_name );
+    if( action != null ) {
+      action.set_enabled( enabled );
     }
+  }
+
+  //-------------------------------------------------------------
+  // Displays the contextual menu for the item that is under the
+  // given coordinates.
+  private void show_contextual_menu( Widget sticker ) {
+
+    PopoverMenu popover;
+
+    if( _clicked_category == _favorites ) {
+      popover = new PopoverMenu.from_model( _favorite_menu );
+    } else if( is_custom( _clicked_sticker ) ) {
+      set_action_enable( "action_make_custom_favorite", !is_favorite( _clicked_sticker ) );
+      popover = new PopoverMenu.from_model( _custom_menu );
+    } else {
+      set_action_enable( "action_make_builtin_favorite", !is_favorite( _clicked_sticker ) );
+      popover = new PopoverMenu.from_model( _builtin_menu );
+    }
+
+    popover.set_parent( sticker );
+    popover.popup();
+
+  }
+
+  //-------------------------------------------------------------
+  // Called to favorite a built-in sticker.
+  private void action_make_builtin_favorite() {
+    make_favorite();
+  }
+
+  //-------------------------------------------------------------
+  // Called to favorite a custom sticker.
+  private void action_make_custom_favorite() {
+    make_favorite();
   }
 
   //-------------------------------------------------------------
@@ -308,6 +335,7 @@ public class StickerInspector : Box {
       if( (w as FlowBoxChild).get_child().name == name ) {
         return( true );
       }
+      w = Utils.get_child_at_index( _favorites, index++ );
     }
     return( false );
   }
