@@ -222,16 +222,21 @@ public class StickerInspector : Box {
 
     drag.prepare.connect((x, y) => {
 
-      // Set icon
-      _dragged_sticker = (Picture)fbox.get_child_at_pos( (int)x, (int)y ).get_child();
-      drag.set_icon( _dragged_sticker.paintable, 0, 0 );
+      var sticker = fbox.get_child_at_pos( (int)x, (int)y );
 
-      // Set content to the name of the selected sticker
-      var val = Value( typeof( Picture ) );
-      val = _dragged_sticker;
-      var content = new ContentProvider.for_value( val );
+      if( sticker != null ) {
+        _dragged_sticker = (Picture)sticker.get_child();
+        drag.set_icon( _dragged_sticker.paintable, 0, 0 );
 
-      return( content );
+        // Set content to the name of the selected sticker
+        var val = Value( typeof( Picture ) );
+        val = _dragged_sticker;
+        var content = new ContentProvider.for_value( val );
+
+        return( content );
+      }
+
+      return( null );
 
     });
 
@@ -240,7 +245,8 @@ public class StickerInspector : Box {
     };
     fbox.add_controller( primary_click );
     primary_click.pressed.connect((n_press, x, y) => {
-      if( fbox.get_child_at_pos( (int)x, (int)y ).get_child().name == "" ) {
+      var sticker = fbox.get_child_at_pos( (int)x, (int)y );
+      if( (sticker != null) && (sticker.get_child().name == "") ) {
         import_stickers( fbox, category );
       }
     });
@@ -251,10 +257,12 @@ public class StickerInspector : Box {
     fbox.add_controller( secondary_click );
     secondary_click.pressed.connect((n_press, x, y) => {
       var sticker = fbox.get_child_at_pos( (int)x, (int)y );
-      _clicked_category = fbox;
-      _clicked_sticker  = sticker.get_child().name;
-      if( _clicked_sticker != "" ) {
-        show_contextual_menu( sticker );
+      if( sticker != null ) {
+        _clicked_category = fbox;
+        _clicked_sticker  = sticker.get_child().name;
+        if( _clicked_sticker != "" ) {
+          show_contextual_menu( sticker );
+        }
       }
     });
 

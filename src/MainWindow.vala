@@ -241,16 +241,15 @@ public class MainWindow : Gtk.ApplicationWindow {
       halign           = Align.FILL,
       valign           = Align.FILL,
       start_child      = _nb,
-      shrink_end_child = false
+      shrink_end_child = false,
+      position         = _settings.get_int( "properties-width" )
     };
     _pane.move_handle.connect(() => {
       return( false );
     });
 
-    var click = new GestureClick();
-    _pane.add_controller( click );
-    click.released.connect((n_press, x, y) => {
-      _settings.set_int( "properties-width", ((_pane.get_allocated_width() - _pane.position) - 11) );
+    _pane.notify["position"].connect(() => {
+      _settings.set_int( "properties-width", _pane.position );
     });
 
     /* Display the UI */
@@ -1451,11 +1450,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       if( !_inspector_nb.get_mapped() ) {
         _pane.end_child = _inspector_nb;
         var prop_width = _settings.get_int( "properties-width" );
-        var pane_width = _pane.get_allocated_width();
-        if( pane_width <= 1 ) {
-          pane_width = _settings.get_int( "window-w" ) + 4;
-        }
-        _pane.set_position( pane_width - (prop_width + 11) );
+        _pane.set_position( prop_width );
         if( get_current_da( "show_properties 1" ) != null ) {
           get_current_da( "show_properties 2" ).see( true, -300 );
         }
