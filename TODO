@@ -1,7 +1,6 @@
 General:
 
   ☐ Update codebase to GTK4
-    ☐ Fix issue with drag/drop of stickers
     ☐ Fix issue with remembering sidebar drag handle position
     ☐ Add support for text completion code
     ☐ Cleanup up rest of the TODOs
@@ -32,4 +31,5 @@ Future Features:
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
+ ✔ Fix issue with drag/drop of stickers @done (24-11-25 23:15) @project(General)
  ✔ Release version 1.16.4 @due(24-04-08 10:00) @done (24-11-25 15:46) @project(General)
