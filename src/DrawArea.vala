@@ -337,22 +337,15 @@ public class DrawArea : Gtk.DrawingArea {
     this.add_controller( _scroll );
     _scroll.scroll.connect( on_scroll );
 
-    /*
     var file_drop = new DropTarget( typeof(File), Gdk.DragAction.COPY );
     this.add_controller( file_drop );
     file_drop.motion.connect( handle_file_drag_motion );
     file_drop.drop.connect( handle_file_drop );
-    */
 
-    var sticker_drop = new DropTarget( Type.POINTER, Gdk.DragAction.COPY );
+    var sticker_drop = new DropTarget( typeof(Picture), Gdk.DragAction.COPY );
     this.add_controller( sticker_drop );
     sticker_drop.motion.connect( handle_sticker_drag_motion );
     sticker_drop.drop.connect( handle_sticker_drop );
-
-    stdout.printf( "Sticker drop formats:\n" );
-    foreach (var typ in sticker_drop.formats.get_gtypes()) {
-      stdout.printf( "  %s\n", typ.name() );
-    }
 
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
@@ -2639,6 +2632,7 @@ public class DrawArea : Gtk.DrawingArea {
       _press_y = _scaled_y;
       _motion  = true;
 
+    // If we are not dragging, check to see what item the mouse is hovering over
     } else {
 
       var tag = FormatTag.LENGTH;
@@ -2747,7 +2741,6 @@ public class DrawArea : Gtk.DrawingArea {
           return;
         }
       }
-
 
       update_last_match( null );
       reset_cursor();
@@ -5674,8 +5667,6 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called whenever we drag something over the canvas */
   private Gdk.DragAction handle_file_drag_motion( double x, double y ) {
 
-    stdout.printf( "In handle_file_drag_motion, x: %g, y: %g\n", x, y );
-
     Node       attach_node;
     Connection attach_conn;
     Sticker    attach_sticker;
@@ -5705,8 +5696,6 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Called when something is dropped on the DrawArea */
   private bool handle_file_drop( Value val, double x, double y ) {
-
-    stdout.printf( "In handle_file_drop\n" );
 
     var file = (GLib.File)val;
 
@@ -5745,8 +5734,6 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Called whenever we drag a sticker over the canvas */
   private Gdk.DragAction handle_sticker_drag_motion( double x, double y ) {
-
-    stdout.printf( "In handle_sticker_drag_motion, x: %g, y: %g\n", x, y );
 
     Node       attach_node;
     Connection attach_conn;
@@ -5799,9 +5786,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Called when a sticker is dropped on the DrawArea */
   private bool handle_sticker_drop( Value val, double x, double y ) {
 
-    stdout.printf( "In handle_sticker_drop\n" );
-
-    var drop_sticker = (Sticker)val;
+    var drop_sticker = (Picture)val;
 
     if( ((_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE)) &&
         ((_attach_conn == null) || (_attach_conn.mode != ConnMode.DROPPABLE)) ) {
@@ -5815,9 +5800,7 @@ public class DrawArea : Gtk.DrawingArea {
         _attach_sticker.mode = StickerMode.NONE;
         _attach_sticker = null;
       } else {
-        var double_x = (double)x;
-        var double_y = (double)y;
-        var sticker = new Sticker( this, drop_sticker.name, double_x, double_y );
+        var sticker = new Sticker( this, drop_sticker.name, scale_value( x ), scale_value( y ) );
         _stickers.add_sticker( sticker );
         _selected.set_current_sticker( sticker );
         _undo_buffer.add_item( new UndoStickerAdd( sticker ) );

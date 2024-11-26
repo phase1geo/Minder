@@ -227,7 +227,7 @@ public class StickerInspector : Box {
       drag.set_icon( _dragged_sticker.paintable, 0, 0 );
 
       // Set content to the name of the selected sticker
-      var val = Value( Type.POINTER ); // typeof( Sticker ) );
+      var val = Value( typeof( Picture ) );
       val = _dragged_sticker;
       var content = new ContentProvider.for_value( val );
 

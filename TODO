@@ -1,8 +1,13 @@
 General:
 
   ☐ Update codebase to GTK4
+    ☐ Fix issue with drag/drop of stickers
+    ☐ Fix issue with remembering sidebar drag handle position
+    ☐ Add support for text completion code
+    ☐ Cleanup up rest of the TODOs
   ☐ Add support for new file format
   ☐ Create new MindMap class that takes over most of the functionality in DrawArea
+  ☐ Summary node support (?)
 
 Summary Node:
 
@@ -12,7 +17,6 @@ Summary Node:
 
 Future Features:
 
-  ☐ Add support for remembering theme and style between maps and sessions @new
   ☐ Add support for named styles @new
     Saves the state of a style group and gives it a name so that it can be quickly
     applied to selected items.
