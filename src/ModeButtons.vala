@@ -56,7 +56,7 @@ public class ModeButtons : Box {
       tooltip_text = tooltip
     };
 
-    button.activate.connect(() => {
+    button.clicked.connect(() => {
       _selected = Utils.get_child_index( this, button );
       changed( _selected );
     });

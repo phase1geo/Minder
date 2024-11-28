@@ -197,7 +197,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Create the branch type UI */
+  //-------------------------------------------------------------
+  // Create the branch type UI
   private Box create_branch_type_ui() {
 
     var lbl = new Label( _( "Style" ) ) {
@@ -228,7 +229,8 @@ public class StyleInspector : Box {
 
   }
 
-  /* Called whenever the user changes the current layout */
+  //-------------------------------------------------------------
+  // Called whenever the user changes the current layout
   private void action_set_link_type( int index ) {
     var link_types = styles.get_link_types();
     if( index < link_types.length ) {
