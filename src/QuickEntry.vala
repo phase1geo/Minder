@@ -66,16 +66,6 @@ public class QuickEntry : Gtk.Window {
     _entry.buffer.insert_text.connect( handle_text_insertion );
     _entry.buffer.create_tag( "node", "background_rgba", Utils.color_from_string( "grey90" ), null );
 
-    /* Handle any changes to the size of the entry */
-    /* TODO
-    _entry.size_allocate.connect((alloc) => {
-      var new_margin = ((alloc.height - 100) < 0) ? 0 : (alloc.height - 100);
-      if( _entry.bottom_margin != new_margin ) {
-        _entry.bottom_margin = new_margin;
-      }
-    });
-    */
-
     /* Create the scrolled window for the text entry area */
     var sw = new ScrolledWindow() {
       margin_start = 10,
@@ -201,6 +191,16 @@ public class QuickEntry : Gtk.Window {
 
     present();
 
+  }
+
+  //-------------------------------------------------------------
+  // Called when the size of the window changes.
+  public override void size_allocate( int width, int height, int baseline ) {
+    base.size_allocate( width, height, baseline );
+    var new_margin = ((height - 100) < 0) ? 0 : (height - 100);
+    if( _entry.bottom_margin != new_margin ) {
+      _entry.bottom_margin = new_margin;
+    }
   }
 
   //-------------------------------------------------------------

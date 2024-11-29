@@ -241,6 +241,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       halign           = Align.FILL,
       valign           = Align.FILL,
       start_child      = _nb,
+      resize_end_child = false,
       shrink_end_child = false,
       position         = _settings.get_int( "properties-width" )
     };
