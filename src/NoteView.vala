@@ -21,81 +21,175 @@ using Gtk;
 using Gdk;
 using Gee;
 
-/*
-public class CompletionProvider : SourceCompletionProvider, Object {
+public class CompletionItem : GtkSource.CompletionProposal, Object {
 
-  private MainWindow                      _win;
-  private string                          _name;
-  private GLib.List<SourceCompletionItem> _proposals;
-  private GtkSource.Buffer                _buffer;
+  public string label { get; private set; default = ""; }
+  public string text  { get; private set; default = ""; }
 
   //-------------------------------------------------------------
   // Constructor
-  public CompletionProvider( MainWindow win, GtkSource.Buffer buffer, string name, GLib.List<GtkSource.CompletionItem> proposals ) {
+  public CompletionItem( string label, string text ) {
+    this.label = label;
+    this.text  = text;
+  }
+
+}
+
+public class CompletionItemFilter : Filter {
+
+  private string _match_str = "";
+
+  //-------------------------------------------------------------
+  // Constructor
+  public CompletionItemFilter() {}
+
+  //-------------------------------------------------------------
+  // Provide functionality for get_strictness() virtual method.
+  public override FilterMatch get_strictness() {
+    return( FilterMatch.SOME );
+  }
+
+  //-------------------------------------------------------------
+  // Called to set the match string.
+  public void set_search( string match_str ) {
+    if( _match_str != match_str ) {
+      _match_str = match_str;
+      changed( FilterChange.DIFFERENT );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the specified item matches the match_str.
+  public override bool match( Object? item ) {
+    if( item != null ) {
+      var comp_item = (item as CompletionItem);
+      if( comp_item != null ) {
+        return( comp_item.label.has_prefix( _match_str ) );
+      }
+    }
+    return( false );
+  }
+
+}
+
+public class CompletionProvider : GtkSource.CompletionProvider, Object {
+
+  private MainWindow                _win;
+  private string                    _name;
+  private GLib.List<CompletionItem> _proposals;
+  private GtkSource.Buffer          _buffer;
+
+  //-------------------------------------------------------------
+  // Constructor
+  public CompletionProvider( MainWindow win, GtkSource.Buffer buffer, string name, GLib.List<CompletionItem> proposals ) {
     _win       = win;
     _buffer    = buffer;
     _name      = name;
-    _proposals = new GLib.List<GtkSource.CompletionItem>();
-    foreach( GtkSource.CompletionItem item in proposals ) {
+    _proposals = new GLib.List<CompletionItem>();
+    foreach( var item in proposals ) {
       _proposals.append( item );
     }
   }
 
-  public override string get_name() {
+  //-------------------------------------------------------------
+  // Returns the title of the completion provider.
+  public override string? get_title() {
     return( _name );
   }
 
-  private bool find_start_iter( out TextIter iter ) {
-
-    TextIter cursor, limit;
-    _buffer.get_iter_at_offset( out cursor, _buffer.cursor_position );
-
-    limit = cursor.copy();
-    limit.backward_word_start();
-    limit.backward_char();
-
-    iter = cursor.copy();
-    return( iter.backward_find_char( (c) => { return( c == '\\' ); }, limit ) );
-
+  //-------------------------------------------------------------
+  // Returns the priority of the completion provider.
+  public override int get_priority( GtkSource.CompletionContext context ) {
+    return( 1 );
   }
 
-  public override bool match( GtkSource.CompletionContext ctx ) {
-    Gtk.TextIter iter;
-    if( find_start_iter( out iter ) && _win.settings.get_boolean( "enable-unicode-input" ) ) {
-      return( true );
+  //-------------------------------------------------------------
+  // We will only trigger the completion if unicode input completion
+  // is enabled and we see the backslash character.
+  public override bool is_trigger( TextIter iter, unichar ch ) {
+    stdout.printf( "In is_trigger, ch: %s\n", ch.to_string() );
+    return( _win.settings.get_boolean( "enable-unicode-input" ) && (ch == '\\') );
+  }
+
+  //-------------------------------------------------------------
+  // Hitting the return key will activate the completion (if a
+  // proposal is selected).
+  public override bool key_activates( GtkSource.CompletionContext context, GtkSource.CompletionProposal proposal, uint keyval, ModifierType state ) {
+    return( keyval == Gdk.Key.Return );
+  }
+
+  //-------------------------------------------------------------
+  // I don't know what this is supposed to do, but we will just
+  // return null.
+  public GenericArray<GtkSource.CompletionProposal>? list_alternatives( GtkSource.CompletionContext context, GtkSource.CompletionProposal proposal ) {
+    return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Populate the list of potential matches.
+  public async ListModel populate_async( GtkSource.CompletionContext context, Cancellable? cancellable ) throws Error {
+    TextIter start_iter, end_iter;
+    var proposals = new GLib.ListStore( typeof(CompletionItem) );
+    foreach( var item in _proposals ) {
+      proposals.append( item );
     }
-    return( false );
+    var filter = new CompletionItemFilter();
+    filter.set_search( "\\" + context.get_word() );
+    var filter_model = new Gtk.FilterListModel( proposals, filter );
+    return( filter_model );
   }
 
-  public override void populate( GtkSource.CompletionContext context ) {
-    TextIter start, end;
-    if( find_start_iter( out start ) ) {
-      _buffer.get_iter_at_offset( out end, _buffer.cursor_position );
-      var text = _buffer.get_text( start, end, false );
-      var proposals = new GLib.List<GtkSource.CompletionItem>();
-      foreach( GtkSource.CompletionItem item in _proposals ) {
-        if( item.get_label().has_prefix( text ) ) {
-          proposals.append( item );
-        }
+  //-------------------------------------------------------------
+  // Called whenever the user changes the current word.  We will
+  // update the filter with the current word to change the list
+  // of displayed proposals.
+  public void refilter( GtkSource.CompletionContext context, ListModel model ) {
+    var list = (model as Gtk.FilterListModel);
+    if( list != null ) {
+      var filter = (list.filter as CompletionItemFilter);
+      if( filter != null ) {
+        filter.set_search( "\\" + context.get_word() );
       }
-	    context.add_proposals( this, proposals, true );
     }
   }
 
-  public override bool get_start_iter( GtkSource.CompletionContext ctx, GtkSource.CompletionProposal proposal, out TextIter iter ) {
-    return( find_start_iter( out iter ) );
+  //-------------------------------------------------------------
+  // Called whe the user hits the return key.  We will replace the
+  // current word (including the previous backslash character) with
+  // the proposal text.
+  public void activate( GtkSource.CompletionContext context, GtkSource.CompletionProposal proposal ) {
+
+    var item = (proposal as CompletionItem);
+
+    if( item != null ) {
+
+      TextIter start_iter, end_iter;
+      context.get_bounds( out start_iter, out end_iter );
+      start_iter.backward_char();
+
+      var buffer = start_iter.get_buffer();
+      buffer.begin_user_action();
+      buffer.delete( ref start_iter, ref end_iter );
+      buffer.insert_text( ref start_iter, item.text, item.text.length );
+      buffer.end_user_action();
+
+    }
+
   }
 
-  public bool activate_proposal( GtkSource.CompletionProposal proposal, Gtk.TextIter iter ) {
-    return( false );
-  }
-
-  public GtkSource.CompletionActivation get_activation () {
-    return( GtkSource.CompletionActivation.INTERACTIVE | GtkSource.CompletionActivation.USER_REQUESTED );
+  //-------------------------------------------------------------
+  // Displays the proposals in a dropdown list.
+  public void display( GtkSource.CompletionContext context, GtkSource.CompletionProposal proposal, GtkSource.CompletionCell cell ) {
+    var item = (proposal as CompletionItem);
+    if( item != null ) {
+      switch( cell.get_column() ) {
+        case GtkSource.CompletionColumn.TYPED_TEXT:  cell.text = item.text;  break;
+        default                                   :  cell.text = null;  break;
+      }
+    }
   }
 
 }
-*/
 
 //-------------------------------------------------------------
 // This class is a slightly modified version of Lains Quilter
@@ -378,10 +472,8 @@ public class NoteView : GtkSource.View {
 
   /* Adds the unicoder text completion service */
   public void add_unicode_completion( MainWindow win, UnicodeInsert unicoder ) {
-    /* TODO
     var provider = new CompletionProvider( win, _buffer, "Unicode", unicoder.create_proposals() );
     completion.add_provider( provider );
-    */
   }
 
   /*

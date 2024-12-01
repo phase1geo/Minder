@@ -273,6 +273,9 @@ public class Minder : Gtk.Application {
   /* Main routine which gets everything started */
   public static int main( string[] args ) {
 
+    // Initialize the GtkSource infrastructure
+    GtkSource.init();
+
     var app = new Minder();
     return( app.run( args ) );
 
