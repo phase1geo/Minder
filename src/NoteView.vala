@@ -107,7 +107,6 @@ public class CompletionProvider : GtkSource.CompletionProvider, Object {
   // We will only trigger the completion if unicode input completion
   // is enabled and we see the backslash character.
   public override bool is_trigger( TextIter iter, unichar ch ) {
-    stdout.printf( "In is_trigger, ch: %s\n", ch.to_string() );
     return( _win.settings.get_boolean( "enable-unicode-input" ) && (ch == '\\') );
   }
 
@@ -130,13 +129,20 @@ public class CompletionProvider : GtkSource.CompletionProvider, Object {
   public async ListModel populate_async( GtkSource.CompletionContext context, Cancellable? cancellable ) throws Error {
     TextIter start_iter, end_iter;
     var proposals = new GLib.ListStore( typeof(CompletionItem) );
-    foreach( var item in _proposals ) {
-      proposals.append( item );
+    if( context.get_bounds( out start_iter, out end_iter ) ) {
+      var buffer = start_iter.get_buffer();
+      start_iter.backward_char();
+      if( is_trigger( start_iter, start_iter.get_char() ) ) {
+        foreach( var item in _proposals ) {
+          proposals.append( item );
+        }
+        var filter = new CompletionItemFilter();
+        filter.set_search( "\\" + context.get_word() );
+        var filter_model = new Gtk.FilterListModel( proposals, filter );
+        return( filter_model );
+      }
     }
-    var filter = new CompletionItemFilter();
-    filter.set_search( "\\" + context.get_word() );
-    var filter_model = new Gtk.FilterListModel( proposals, filter );
-    return( filter_model );
+    return( proposals );
   }
 
   //-------------------------------------------------------------
@@ -183,8 +189,9 @@ public class CompletionProvider : GtkSource.CompletionProvider, Object {
     var item = (proposal as CompletionItem);
     if( item != null ) {
       switch( cell.get_column() ) {
-        case GtkSource.CompletionColumn.TYPED_TEXT:  cell.text = item.text;  break;
-        default                                   :  cell.text = null;  break;
+        case GtkSource.CompletionColumn.TYPED_TEXT :  cell.text = item.text;   break;
+        case GtkSource.CompletionColumn.COMMENT    :  cell.text = item.label;  break; 
+        default                                    :  break;
       }
     }
   }
@@ -259,6 +266,8 @@ public class NoteView : GtkSource.View {
 
   /* Default constructor */
   public NoteView() {
+
+    completion.select_on_show = true;
 
     var sourceview_path = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "gtksourceview-4" );
 
