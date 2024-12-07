@@ -1281,6 +1281,7 @@ public class DrawArea : Gtk.DrawingArea {
       var current = nodes.index( 0 );
       if( current.image == null ) {
         image_manager.choose_image( win, (id) => {
+          stdout.printf( "Setting current: %s\n", (current == null) ? "NA" : current.name.text.text );
           current.set_image( image_manager, new NodeImage( image_manager, id, current.style.node_width ) );
           if( current.image != null ) {
             undo_buffer.add_item( new UndoNodeImage( current, null ) );

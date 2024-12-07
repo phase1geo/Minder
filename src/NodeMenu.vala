@@ -24,6 +24,8 @@ using Gtk;
 public class NodeMenu {
 
   private DrawArea    _da;
+  private GLib.Menu   _edit_menu;
+  private GLib.Menu   _change_submenu;
   private PopoverMenu _popover;
 
   private const GLib.ActionEntry action_entries[] = {
@@ -75,35 +77,35 @@ public class NodeMenu {
 
     _da = da;
 
-    var edit_menu = new GLib.Menu();
-    edit_menu.append( _( "Copy" ),                   "node.action_copy" );
-    edit_menu.append( _( "Cut" ),                    "node.action_cut" );
-    edit_menu.append( _( "Paste" ),                  "node.action_paste" );
-    edit_menu.append( _( "Paste and Replace Node" ), "node.action_replace" );
-    edit_menu.append( _( "Delete" ),                 "node.action_delete_node" );
-    edit_menu.append( _( "Delete Single Node" ),     "node.action_delete_node_only" );
+    _edit_menu = new GLib.Menu();
+    _edit_menu.append( _( "Copy" ),                   "node.action_copy" );
+    _edit_menu.append( _( "Cut" ),                    "node.action_cut" );
+    _edit_menu.append( _( "Paste" ),                  "node.action_paste" );
+    _edit_menu.append( _( "Paste and Replace Node" ), "node.action_replace" );
+    _edit_menu.append( _( "Delete" ),                 "node.action_delete_node" );
+    _edit_menu.append( _( "Delete Single Node" ),     "node.action_delete_node_only" );
 
     var color_menu = new GLib.Menu();
     color_menu.append( _( "Set to color…" ),    "node.action_change_link_color" );
     color_menu.append( _( "Randomize color" ),  "node.action_randomize_link_color" );
     color_menu.append( _( "Use parent color" ), "node.action_reparent_link_color" );
 
-    var change_submenu = new GLib.Menu();
-    change_submenu.append( _( "Edit Text…" ),      "node.action_edit_node" );
-    change_submenu.append( _( "Edit Note" ),       "node.action_edit_note" );
-    change_submenu.append( _( "Add Task" ),        "node.action_change_task" );
-    change_submenu.append( _( "Add Image" ),       "node.action_change_image" );
-    change_submenu.append( _( "Remove Sticker" ),  "node.action_remove_sticker" );
-    change_submenu.append( _( "Add Node Link" ),   "node.action_change_link" );
-    change_submenu.append( _( "Add Connection" ),  "node.action_add_connection" );
-    change_submenu.append( _( "Add Group" ),       "node.action_add_group" );
-    change_submenu.append( _( "Add Callout" ),     "node.action_add_callout" );
-    change_submenu.append_submenu( _( "Link Color" ), color_menu );
-    change_submenu.append( _( "Fold Children" ),   "node.action_fold_node" );
-    change_submenu.append( _( "Toggle Sequence" ), "node.action_toggle_sequence" );
+    _change_submenu = new GLib.Menu();
+    _change_submenu.append( _( "Edit Text…" ),      "node.action_edit_node" );
+    _change_submenu.append( _( "Edit Note" ),       "node.action_edit_note" );
+    _change_submenu.append( _( "Add Task" ),        "node.action_change_task" );
+    _change_submenu.append( _( "Add Image" ),       "node.action_change_image" );
+    _change_submenu.append( _( "Remove Sticker" ),  "node.action_remove_sticker" );
+    _change_submenu.append( _( "Add Node Link" ),   "node.action_change_link" );
+    _change_submenu.append( _( "Add Connection" ),  "node.action_add_connection" );
+    _change_submenu.append( _( "Add Group" ),       "node.action_add_group" );
+    _change_submenu.append( _( "Add Callout" ),     "node.action_add_callout" );
+    _change_submenu.append_submenu( _( "Link Color" ), color_menu );
+    _change_submenu.append( _( "Fold Children" ),   "node.action_fold_node" );
+    _change_submenu.append( _( "Toggle Sequence" ), "node.action_toggle_sequence" );
 
     var change_menu = new GLib.Menu();
-    change_menu.append_submenu( _( "Change Node" ), change_submenu );
+    change_menu.append_submenu( _( "Change Node" ), _change_submenu );
 
     var add_submenu = new GLib.Menu();
     add_submenu.append( _( "Add Root Node" ),    "node.action_add_root_node" );
@@ -153,7 +155,7 @@ public class NodeMenu {
     detach_menu.append( _( "Detach" ), "node.action_detach_node" );
 
     var menu = new GLib.Menu();
-    menu.append_section( null, edit_menu );
+    menu.append_section( null, _edit_menu );
     menu.append_section( null, change_menu );
     menu.append_section( null, add_menu );
     menu.append_section( null, sel_menu );
@@ -287,10 +289,51 @@ public class NodeMenu {
     return( (current != null) && current.folded );
   }
 
+  //-------------------------------------------------------------
+  // Changes the menu item at the given position in the given Menu
+  // to the new name.
+  private void change_menu( GLib.Menu menu, int pos, string new_name, string action ) {
+    menu.remove( pos );
+    menu.insert( pos, new_name, action );
+  }
+
   /* Called when the menu is popped up */
   private void on_popup() {
 
     var current = _da.get_current_node();
+
+    // Set the menu item labels
+    var task_lbl    = node_is_task()   ?
+                      node_task_is_done() ? _( "Remove Task" ) :
+                                            _( "Mark Task As Done" ) :
+                                            _( "Add Task" );
+    var link_lbl    = node_has_link()    ? _( "Remove Node Link" ) : _( "Add Node Link" );
+    var fold_lbl    = node_is_folded()   ? _( "Unfold Children" )  : _( "Fold Children" );
+    var callout_lbl = node_has_callout() ? _( "Remove Callout" ) : _( "Add Callout" );
+    var img_lbl     = node_has_image()   ? _( "Remove Image" )   : _( "Add Image" );
+
+    change_menu( _change_submenu, 2,  task_lbl,    "node.action_change_task" );
+    change_menu( _change_submenu, 3,  img_lbl,     "node.action_change_image" );
+    change_menu( _change_submenu, 5,  link_lbl,    "node.action_change_link" );
+    change_menu( _change_submenu, 8,  callout_lbl, "node.action_add_callout" );
+    change_menu( _change_submenu, 10, fold_lbl,    "node.action_fold_node" );
+
+    // Set the paste and replace text
+    if( MinderClipboard.node_pasteable() ) {
+      change_menu( _edit_menu, 2, _( "Paste Node As Child" ), "node.action_paste" );
+      change_menu( _edit_menu, 3, _( "Paste and Replace Node" ), "node.action_replace" );
+    } else if( MinderClipboard.image_pasteable() ) {
+      change_menu( _edit_menu, 2, _( "Paste Image As Child Node" ), "node.action_paste" );
+      change_menu( _edit_menu, 3, _( "Paste and Replace Node Image" ), "node.action_replace" );
+    } else if( MinderClipboard.text_pasteable() ) {
+      change_menu( _edit_menu, 2, _( "Paste Text As Child Node" ), "node.action_paste" );
+      change_menu( _edit_menu, 3, _( "Paste and Replace Node Text" ), "node.action_replace" );
+    } else {
+      change_menu( _edit_menu, 2, _( "Paste" ), "node.action_paste" );
+      change_menu( _edit_menu, 3, _( "Paste and Replace Node" ), "node.action_replace" );
+      _da.action_set_enabled( "node.action_paste",   false );
+      _da.action_set_enabled( "node.action_replace", false );
+    }
 
     /* Set the menu sensitivity */
     _da.action_set_enabled( "node.action_paste", true );
@@ -316,48 +359,6 @@ public class NodeMenu {
     _da.action_set_enabled( "node.action_remove_sticker", (current.sticker != null) );
     _da.action_set_enabled( "node.action_add_sibling_node", !current.is_summary() );
     _da.action_set_enabled( "node.action_convert_to_summary_node", _da.node_summarizable() );
-
-    /* TODO
-    // Set the menu item labels
-    var task_lbl    = node_is_task()   ?
-                      node_task_is_done() ? _( "Remove Task" ) :
-                                            _( "Mark Task As Done" ) :
-                                            _( "Add Task" );
-    var link_lbl    = node_has_link()  ? _( "Remove Node Link" ) : _( "Add Node Link" );
-    var fold_lbl    = node_is_folded() ? _( "Unfold Children" )  : _( "Fold Children" );
-    var callout_lbl = node_has_callout() ? _( "Remove Callout" ) : _( "Add Callout" );
-
-    _task.get_child().destroy();
-    _task.add( new Granite.AccelLabel( task_lbl, task_acc.accel_string ) );
-    _link.get_child().destroy();
-    _link.add( new Granite.AccelLabel( link_lbl, link_acc.accel_string ) );
-    _fold.get_child().destroy();
-    _fold.add( new Granite.AccelLabel( fold_lbl, fold_acc.accel_string ) );
-    _callout.get_child().destroy();
-    _callout.add( new Granite.AccelLabel( callout_lbl, callout_acc.accel_string ) );
-
-    _image.get_child().destroy();
-    if( node_has_image() ) {
-      _image.add( new Granite.AccelLabel( _( "Remove Image" ), null ) );
-    } else {
-      _image.add( new Granite.AccelLabel( _( "Add Image" ), "<Shift>i" ) );
-    }
-
-    // Set the paste and replace text
-    if( MinderClipboard.node_pasteable() ) {
-      _paste.label   = _( "Paste Node As Child" );
-      _replace.label = _( "Paste and Replace Node" );
-    } else if( MinderClipboard.image_pasteable() ) {
-      _paste.label   = _( "Paste Image As Child Node" );
-      _replace.label = _( "Paste and Replace Node Image" );
-    } else if( MinderClipboard.text_pasteable() ) {
-      _paste.label   = _( "Paste Text As Child Node" );
-      _replace.label = _( "Paste and Replace Node Text" );
-    } else {
-      _da.action_set_enabled( "node.action_paste",   false );
-      _da.action_set_enabled( "node.action_replace", false );
-    }
-    */
 
   }
 
