@@ -350,11 +350,13 @@ public class NodeInspector : Box {
 
     var lbl  = new Label( Utils.make_title( _( "Image" ) ) ) {
       halign     = Align.START,
+      hexpand    = true,
       xalign     = (float)0,
       use_markup = true
     };
 
     var btn_edit = new Button.from_icon_name( "document-edit-symbolic" ) {
+      halign       = Align.END,
       tooltip_text = _( "Edit Image" )
     };
     btn_edit.clicked.connect(() => {
@@ -362,6 +364,7 @@ public class NodeInspector : Box {
     });
 
     var btn_del = new Button.from_icon_name( "edit-delete-symbolic" ) {
+      halign       = Align.END,
       tooltip_text = _( "Remove Image" )
     };
     btn_del.clicked.connect(() => {
@@ -369,6 +372,7 @@ public class NodeInspector : Box {
     });
 
     _resize = new ToggleButton() {
+      halign       = Align.END,
       icon_name    = "view-fullscreen-symbolic",
       tooltip_text =  _( "Resizable" )
     };

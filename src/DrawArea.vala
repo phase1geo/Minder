@@ -1276,21 +1276,18 @@ public class DrawArea : Gtk.DrawingArea {
    item and redraws the canvas.
   */
   public void add_current_image() {
-    var nodes = _selected.nodes();
-    if( nodes.length == 1 ) {
-      var current = nodes.index( 0 );
-      if( current.image == null ) {
-        image_manager.choose_image( win, (id) => {
-          stdout.printf( "Setting current: %s\n", (current == null) ? "NA" : current.name.text.text );
-          current.set_image( image_manager, new NodeImage( image_manager, id, current.style.node_width ) );
-          if( current.image != null ) {
-            undo_buffer.add_item( new UndoNodeImage( current, null ) );
-            queue_draw();
-            current_changed( this );
-            auto_save();
-          }
-        });
-      }
+    var current = _selected.current_node();
+    if( (current != null) && (current.image == null) ) {
+      image_manager.choose_image( win, (id) => {
+        var curr = _selected.current_node();
+        curr.set_image( image_manager, new NodeImage( image_manager, id, curr.style.node_width ) );
+        if( curr.image != null ) {
+          undo_buffer.add_item( new UndoNodeImage( curr, null ) );
+          queue_draw();
+          current_changed( this );
+          auto_save();
+        }
+      });
     }
   }
 
