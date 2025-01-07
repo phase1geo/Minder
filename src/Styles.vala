@@ -94,12 +94,12 @@ public class Styles {
         level.style.node_border  = nb_rounded;
         level.style.node_margin  = 10;
         level.style.node_padding = 10;
-//        level.style.node_font    = FOOBAR;
       } else {
         level.style.node_border  = nb_underlined;
         level.style.node_margin  = 8;
         level.style.node_padding = 6;
       }
+      level.style.node_text_align        = Pango.Alignment.LEFT;
       level.style.node_width             = 200;
       level.style.node_borderwidth       = 4;
       level.style.node_fill              = false;

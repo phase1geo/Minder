@@ -221,7 +221,7 @@ class ImageEditor {
   private void adjust_crop_points( double diffx, double diffy ) {
     stdout.printf( "In adjust_crop_points, diffx: %g, diffy: %g\n", diffx, diffy );
     if( _crop_target != -1 ) {
-      var x = _image.FOOBAR;  // crop_x;
+      var x = _crop_x;  // _image.FOOBAR;  // crop_x;
       var y = _crop_y;
       var w = _crop_w;
       var h = _crop_h;

@@ -59,6 +59,7 @@ public class StyleInspector : Box {
   private Scale            _node_margin;
   private Scale            _node_padding;
   private FontDialogButton _node_font;
+  private ModeButtons      _node_text_align;
   private SpinButton       _node_width;
   private Switch           _node_markup;
   private ImageMenu        _conn_dash;
@@ -112,6 +113,7 @@ public class StyleInspector : Box {
     box.append( _callout_group );
 
     var sw = new ScrolledWindow() {
+      vexpand = true,
       child = box
     };
     sw.child.set_size_request( 200, 600 );
@@ -483,6 +485,7 @@ public class StyleInspector : Box {
     var node_margin      = create_node_margin_ui();
     var node_padding     = create_node_padding_ui();
     var node_font        = create_node_font_ui();
+    var node_text_align  = create_node_text_align_ui();
     var node_width       = create_node_width_ui();
     var node_markup      = create_node_markup_ui();
 
@@ -499,6 +502,7 @@ public class StyleInspector : Box {
     cbox.append( node_margin );
     cbox.append( node_padding );
     cbox.append( node_font );
+    cbox.append( node_text_align );
     cbox.append( node_width );
     cbox.append( node_markup );
 
@@ -761,7 +765,45 @@ public class StyleInspector : Box {
 
   }
 
-  /* Creates the node width selector */
+  //-------------------------------------------------------------
+  // Creates the UI for the node text alignment widget.
+  private Box create_node_text_align_ui() {
+
+    var lbl = new Label( _( "Text Alignment" ) ) {
+      halign  = Align.START,
+      hexpand = true
+    };
+
+    _node_text_align = new ModeButtons() {
+      halign = Align.END,
+      valign = Align.CENTER
+    };
+    _node_text_align.changed.connect( set_node_text_align );
+
+    _node_text_align.add_button( "format-justify-left-symbolic",   _( "Left" ) );
+    _node_text_align.add_button( "format-justify-center-symbolic", _( "Center" ) );
+    _node_text_align.add_button( "format-justify-right-symbolic",  _( "Right" ) );
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.append( lbl );
+    box.append( _node_text_align );
+
+    return( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Sets the node text alignment value.
+  private void set_node_text_align( int index ) {
+    switch( index ) {
+      case 0 :  _da.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.LEFT,   _da ) );  break;
+      case 1 :  _da.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.CENTER, _da ) );  break;
+      case 2 :  _da.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.RIGHT,  _da ) );  break;
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Creates the node width selector
   private Box create_node_width_ui() {
 
     var lbl = new Label( _( "Width" ) ) {
@@ -860,7 +902,7 @@ public class StyleInspector : Box {
 
     var sep = new Separator( Orientation.HORIZONTAL );
 
-    var box = new Box( Orientation.VERTICAL, 0 );
+    var box = new Box( Orientation.VERTICAL, 5 );
     box.append( _conn_exp );
     box.append( sep );
 
@@ -1424,6 +1466,15 @@ public class StyleInspector : Box {
     }
   }
 
+  private void update_node_text_align_with_style( Style style ) {
+    if( style.node_text_align == null ) return;
+    switch( style.node_text_align ) {
+      case Pango.Alignment.LEFT   :  _node_text_align.selected = 0;  break;
+      case Pango.Alignment.CENTER :  _node_text_align.selected = 1;  break;
+      case Pango.Alignment.RIGHT  :  _node_text_align.selected = 2;  break;
+    }
+  }
+
   private void update_conn_dashes_with_style( Style style ) {
     var link_dashes = styles.get_link_dashes();
     for( int i=0; i<link_dashes.length; i++ ) {
@@ -1470,6 +1521,7 @@ public class StyleInspector : Box {
     update_link_types_with_style( style );
     update_link_dashes_with_style( style );
     update_node_borders_with_style( style );
+    update_node_text_align_with_style( style );
     update_conn_dashes_with_style( style );
     update_conn_arrows_with_style( style );
     _link_width.set_value( (double)link_width );

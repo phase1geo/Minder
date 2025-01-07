@@ -97,6 +97,7 @@ sources += files(
     'UndoStyleNodeMargin.vala',
     'UndoStyleNodeMarkup.vala',
     'UndoStyleNodePadding.vala',
+    'UndoStyleNodeTextAlign.vala',
     'UndoStyleNodeWidth.vala',
 
     'UndoTextClearTags.vala',
