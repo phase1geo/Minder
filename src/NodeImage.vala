@@ -26,9 +26,6 @@ using Cairo;
 
 public class NodeImage {
 
-  public const int EDIT_WIDTH  = 600;
-  public const int EDIT_HEIGHT = 600;
-
   private Pixbuf _orig;
   private Pixbuf _buf;
 
@@ -174,7 +171,7 @@ public class NodeImage {
       }
 
       /* Read in the file into the given buffer */
-      _orig = new Pixbuf.from_file_at_size( fname, EDIT_WIDTH, EDIT_HEIGHT );
+      _orig = new Pixbuf.from_file( fname );
 
       /* Initialize the variables */
       if( init ) {
@@ -204,7 +201,8 @@ public class NodeImage {
     var scale      = (width * 1.0) / crop_w;
     var int_crop_h = (int)(crop_h * scale);
 
-    _buf = _orig.scale_simple( width, int_crop_h, InterpType.BILINEAR );
+    var tmp = new Pixbuf.subpixbuf( _orig, crop_x, crop_y, crop_w, crop_h );
+    _buf = tmp.scale_simple( width, int_crop_h, InterpType.BILINEAR );
 
   }
 
