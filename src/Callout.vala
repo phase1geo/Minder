@@ -115,6 +115,7 @@ public class Callout : Object {
     set {
       if( _style.copy( value ) ) {
         _text.set_font( _style.callout_font.get_family(), (_style.callout_font.get_size() / Pango.SCALE) );
+        _text.set_text_alignment( _style.callout_text_align );
         _text.max_width = style.node_width;
         position_text( true );
         resized();

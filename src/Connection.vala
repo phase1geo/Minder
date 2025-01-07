@@ -118,6 +118,7 @@ public class Connection : Object {
     set {
       if( _style.copy( value ) && (_title != null) ) {
         _title.set_font( _style.connection_font.get_family(), (_style.connection_font.get_size() / Pango.SCALE) );
+        _title.set_text_alignment( _style.connection_text_align );
         _title.max_width = _style.connection_title_width;
         position_title();
       }

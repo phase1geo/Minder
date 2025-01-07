@@ -109,9 +109,11 @@ public class Styles {
       level.style.connection_arrow       = "fromto";
       level.style.connection_padding     = 3;
       level.style.connection_title_width = 100;
+      level.style.connection_text_align  = Pango.Alignment.LEFT;
       level.style.callout_padding        = 5;
       level.style.callout_ptr_width      = 20;
       level.style.callout_ptr_length     = 20;
+      level.style.callout_text_align     = Pango.Alignment.LEFT;
       _styles.append_val( level );
     }
 
