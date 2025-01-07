@@ -21,30 +21,52 @@
 
 using Gtk;
 
-public class ConnectionsMenu : Gtk.Menu {
+public class ConnectionsMenu {
 
-  DrawArea     _da;
-  Gtk.MenuItem _delete;
+  private DrawArea    _da;
+  private PopoverMenu _popover;
+
+  private const GLib.ActionEntry action_entries[] = {
+    { "action_delete", action_delete },
+  };
 
   /* Default constructor */
-  public ConnectionsMenu( DrawArea da, AccelGroup accel_group ) {
+  public ConnectionsMenu( Gtk.Application app, DrawArea da ) {
 
     _da = da;
 
-    _delete = new Gtk.MenuItem();
-    _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
-    _delete.activate.connect( delete_connections );
+    var del_menu = new GLib.Menu();
+    del_menu.append( _( "Delete" ), "conns.action_delete" );
 
-    /* Add the menu items to the menu */
-    add( _delete );
+    var menu = new GLib.Menu();
+    menu.append_section( null, del_menu );
 
-    /* Make the menu visible */
-    show_all();
+    _popover = new PopoverMenu.from_model( menu );
+    _popover.set_parent( _da );
+
+    // Add the menu actions
+    var actions = new SimpleActionGroup();
+    actions.add_action_entries( action_entries, this );
+    _da.insert_action_group( "conns", actions );
+
+    // Add keyboard shortcuts
+    app.set_accels_for_action( "conns.action_delete", { "Delete" } );
+
+  }
+
+  //-------------------------------------------------------------
+  // Shows the callout popup menu at the given location.
+  public void show( double x, double y ) {
+
+    /* Display the popover at the given location */
+    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
+    _popover.pointing_to = rect;
+    _popover.popup();
 
   }
 
   /* Deletes the current node */
-  private void delete_connections() {
+  private void action_delete() {
     _da.delete_connections();
   }
 

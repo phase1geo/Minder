@@ -1,6 +1,11 @@
 General:
 
-  ☐ Release version 1.16.4 @due(24-04-08 10:00)
+  ☐ Update codebase to GTK4
+    ☐ Add support for text completion code
+    ☐ Cleanup up rest of the TODOs
+  ☐ Add support for new file format
+  ☐ Create new MindMap class that takes over most of the functionality in DrawArea
+  ☐ Summary node support (?)
 
 Summary Node:
 
@@ -10,12 +15,21 @@ Summary Node:
 
 Future Features:
 
-  ☐ Add support for remembering theme and style between maps and sessions @new
   ☐ Add support for named styles @new
     Saves the state of a style group and gives it a name so that it can be quickly
     applied to selected items.
   ☐ Fix issue with drawing connection attachment points when node has a callout @bugfix
   ☐ Add support for tagging @new
   ☐ Add support for moving selected nodes when manual layout is enabled for all selected nodes @bugfix
+  ☐ Add support for brainstorming @new
+    We will implement this with with a new list widget that will contain the node titles which can be
+    dragged and dropped within the mind map.
 
 --- ✄ -----------------------
+
+
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+Archive:
+ ✔ Fix issue with remembering sidebar drag handle position @done (24-11-26 00:13) @project(General)
+ ✔ Fix issue with drag/drop of stickers @done (24-11-25 23:15) @project(General)
+ ✔ Release version 1.16.4 @due(24-04-08 10:00) @done (24-11-25 15:46) @project(General)

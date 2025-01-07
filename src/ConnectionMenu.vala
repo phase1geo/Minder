@@ -21,102 +21,93 @@
 
 using Gtk;
 
-public class ConnectionMenu : Gtk.Menu {
+public class ConnectionMenu {
 
-  DrawArea     _da;
-  Gtk.MenuItem _delete;
-  Gtk.MenuItem _edit;
-  Gtk.MenuItem _note;
-  Gtk.MenuItem _sticker;
-  Gtk.MenuItem _selstart;
-  Gtk.MenuItem _selend;
-  Gtk.MenuItem _selnext;
-  Gtk.MenuItem _selprev;
+  private DrawArea     _da;
+  private PopoverMenu  _popover;
+
+  private const GLib.ActionEntry action_entries[] = {
+    { "action_delete",                 action_delete },
+    { "action_edit_title",             action_edit_title },
+    { "action_edit_note",              action_edit_note },
+    { "action_remove_sticker",         action_remove_sticker },
+    { "action_select_start_node",      action_select_start_node },
+    { "action_select_end_node",        action_select_end_node },
+    { "action_select_next_connection", action_select_next_connection },
+    { "action_select_prev_connection", action_select_prev_connection },
+  };
 
   /* Default constructor */
-  public ConnectionMenu( DrawArea da, AccelGroup accel_group ) {
+  public ConnectionMenu( Gtk.Application app, DrawArea da ) {
 
     _da = da;
 
-    _delete = new Gtk.MenuItem();
-    _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
-    _delete.activate.connect( delete_connection );
+    // Create the menu
+    var del_menu = new GLib.Menu();
+    del_menu.append( _( "Delete" ), "conn.action_delete" );
 
-    _edit = new Gtk.MenuItem();
-    _edit.add( new Granite.AccelLabel( _( "Edit Title…" ), "e" ) );
-    _edit.activate.connect( edit_title );
+    var edit_menu = new GLib.Menu();
+    edit_menu.append( _( "Edit Title…" ),    "conn.action_edit_title" );
+    edit_menu.append( _( "Edit Note" ),      "conn.action_edit_note" );
+    edit_menu.append( _( "Remove Sticker" ), "conn.action_remove_sticker" );
 
-    _note = new Gtk.MenuItem();
-    _note.add( new Granite.AccelLabel( _( "Edit Note" ), "<Shift>e" ) );
-    _note.activate.connect( edit_note );
+    var sel_node_menu = new GLib.Menu();
+    sel_node_menu.append( _( "Start Node" ), "conn.action_select_start_node" );
+    sel_node_menu.append( _( "End Node" ),   "conn.action_select_end_node" );
 
-    _sticker = new Gtk.MenuItem.with_label( _( "Remove Sticker" ) );
-    _sticker.activate.connect( remove_sticker );
+    var sel_conn_menu = new GLib.Menu();
+    sel_conn_menu.append( _( "Next Connection"),     "conn.action_select_next_connection" );
+    sel_conn_menu.append( _( "Previous Connection"), "conn.action_select_prev_connection" );
 
-    var selnode = new Gtk.MenuItem.with_label( _( "Select" ) );
-    var selmenu = new Gtk.Menu();
-    selnode.set_submenu( selmenu );
+    var sel_submenu = new GLib.Menu();
+    sel_submenu.append_section( null, sel_node_menu );
+    sel_submenu.append_section( null, sel_conn_menu );
 
-    _selstart = new Gtk.MenuItem();
-    _selstart.add( new Granite.AccelLabel( _( "Start Node" ), "f" ) );
-    _selstart.activate.connect( select_start_node );
+    var sel_menu = new GLib.Menu();
+    sel_menu.append_submenu( _( "Select" ), sel_submenu );
 
-    _selend = new Gtk.MenuItem();
-    _selend.add( new Granite.AccelLabel( _( "End Node" ), "t" ) );
-    _selend.activate.connect( select_end_node );
+    var menu = new GLib.Menu();
+    menu.append_section( null, del_menu );
+    menu.append_section( null, edit_menu );
+    menu.append_section( null, sel_menu );
 
-    _selnext = new Gtk.MenuItem();
-    _selnext.add( new Granite.AccelLabel( _( "Next Connection" ), "Right" ) );
-    _selnext.activate.connect( select_next_connection );
+    _popover = new PopoverMenu.from_model( menu );
+    _popover.set_parent( _da );
 
-    _selprev = new Gtk.MenuItem();
-    _selprev.add( new Granite.AccelLabel( _( "Previous Connection" ), "Left" ) );
-    _selprev.activate.connect( select_prev_connection );
+    // Add the menu actions
+    var actions = new SimpleActionGroup();
+    actions.add_action_entries( action_entries, this );
+    _da.insert_action_group( "conn", actions );
 
-    /* Add the menu items to the menu */
-    add( _delete );
-    add( new SeparatorMenuItem() );
-    add( _edit );
-    add( _note );
-    add( _sticker );
-    add( new SeparatorMenuItem() );
-    add( selnode );
+    app.set_accels_for_action( "conn.action_delete",                 { "Delete" } );
+    app.set_accels_for_action( "conn.action_edit_title",             { "e" } );
+    app.set_accels_for_action( "conn.action_edit_note",              { "<Shift>e" } );
+    app.set_accels_for_action( "conn.action_select_start_node",      { "f" } );
+    app.set_accels_for_action( "conn.action_select_end_node",        { "t" } );
+    app.set_accels_for_action( "conn.action_select_next_connection", { "Right" } );
+    app.set_accels_for_action( "conn.action_select_prev_connection", { "Left" } );
 
-    /* Add the items to the selection menu */
-    selmenu.add( _selstart );
-    selmenu.add( _selend );
-    selmenu.add( new SeparatorMenuItem() );
-    selmenu.add( _selnext );
-    selmenu.add( _selprev );
-
-    /* Make the menu visible */
-    show_all();
-
-    /* Make sure that we handle menu state when we are popped up */
-    show.connect( on_popup );
-
-  }
-
-  /* Returns true if a note is associated with the currently selected node */
-  private bool connection_has_note() {
-    Connection? current = _da.get_current_connection();
-    return( (current != null) && (current.note != "") );
   }
 
   /* Called when the menu is popped up */
-  private void on_popup() {
+  public void show( double x, double y ) {
 
-    _sticker.set_sensitive( _da.get_current_connection().sticker != null );
+    _da.action_set_enabled( "conn.action_edit_sticker", (_da.get_current_connection().sticker != null) );
+
+    // Display the popover at the given location
+    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
+    _popover.pointing_to = rect;
+    _popover.popup();
 
   }
 
   /* Deletes the current node */
-  private void delete_connection() {
+  private void action_delete() {
     _da.delete_connection();
   }
 
   /* Displays the sidebar to edit the node properties */
-  private void edit_title() {
+  private void action_edit_title() {
     Connection conn = _da.get_current_connection();
     if( conn.title == null ) {
       conn.change_title( _da, "", true );
@@ -125,12 +116,12 @@ public class ConnectionMenu : Gtk.Menu {
   }
 
   /* Changes the note status of the currently selected node */
-  private void edit_note() {
+  private void action_edit_note() {
     _da.show_properties( "current", PropertyGrab.NOTE );
   }
 
   /* Removes the sticker attached to the connection */
-  private void remove_sticker() {
+  private void action_remove_sticker() {
     var current = _da.get_current_connection();
     _da.undo_buffer.add_item( new UndoConnectionStickerRemove( current ) );
     current.sticker = null;
@@ -139,22 +130,22 @@ public class ConnectionMenu : Gtk.Menu {
   }
 
   /* Selects the next sibling node of the current node */
-  private void select_start_node() {
+  private void action_select_start_node() {
     _da.select_connection_node( true );
   }
 
   /* Selects the previous sibling node of the current node */
-  private void select_end_node() {
+  private void action_select_end_node() {
     _da.select_connection_node( false );
   }
 
   /* Selects the next connection in the mind map */
-  private void select_next_connection() {
+  private void action_select_next_connection() {
     _da.select_connection( 1 );
   }
 
   /* Selects the previous connection in the mind map */
-  private void select_prev_connection() {
+  private void action_select_prev_connection() {
     _da.select_connection( -1 );
   }
 

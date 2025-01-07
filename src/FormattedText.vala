@@ -443,7 +443,7 @@ public class FormattedText {
       return( new TextTag() );
     }
     protected RGBA get_color( string value ) {
-      RGBA c = {1.0, 1.0, 1.0, 1.0};
+      RGBA c = {(float)1.0, (float)1.0, (float)1.0, (float)1.0};
       c.parse( value );
       return( c );
     }

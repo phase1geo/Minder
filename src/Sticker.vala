@@ -28,7 +28,7 @@ public enum StickerMode {
   DROPPABLE   // Sticker is a dropzone for another sticker
 }
 
-public class Sticker {
+public class Sticker : Object {
 
   private DrawArea _da;
   private string   _name;
@@ -36,6 +36,11 @@ public class Sticker {
   private double   _posx = 0.0;
   private double   _posy = 0.0;
 
+  public string name {
+    get {
+      return( _name );
+    }
+  }
   public StickerMode mode { get; set; default = StickerMode.NONE; }
   public double posx {
     get {

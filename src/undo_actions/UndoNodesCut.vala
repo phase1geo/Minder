@@ -51,8 +51,6 @@ public class UndoNodesCut : UndoItem {
 
   /* Undoes a node deletion */
   public override void undo( DrawArea da ) {
-    var clipboard = Clipboard.get_default( da.get_display() );
-    clipboard.clear();
     da.get_selections().clear();
     for( int i=0; i<_nodes.length; i++ ) {
       var ni = _nodes.index( i );

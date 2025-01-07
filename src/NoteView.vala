@@ -21,84 +21,188 @@ using Gtk;
 using Gdk;
 using Gee;
 
-public class CompletionProvider : SourceCompletionProvider, Object {
+public class CompletionItem : GtkSource.CompletionProposal, Object {
 
-  private MainWindow                      _win;
-  private string                          _name;
-  private GLib.List<SourceCompletionItem> _proposals;
-  private SourceBuffer                    _buffer;
+  public string label { get; private set; default = ""; }
+  public string text  { get; private set; default = ""; }
 
-  /* Constructor */
-  public CompletionProvider( MainWindow win, SourceBuffer buffer, string name, GLib.List<SourceCompletionItem> proposals ) {
-    _win       = win;
-    _buffer    = buffer;
-    _name      = name;
-    _proposals = new GLib.List<SourceCompletionItem>();
-    foreach( SourceCompletionItem item in proposals ) {
-      _proposals.append( item );
-    }
-  }
-
-  public override string get_name() {
-    return( _name );
-  }
-
-  private bool find_start_iter( out TextIter iter ) {
-
-    TextIter cursor, limit;
-    _buffer.get_iter_at_offset( out cursor, _buffer.cursor_position );
-
-    limit = cursor.copy();
-    limit.backward_word_start();
-    limit.backward_char();
-
-    iter = cursor.copy();
-    return( iter.backward_find_char( (c) => { return( c == '\\' ); }, limit ) );
-
-  }
-
-  public override bool match( Gtk.SourceCompletionContext ctx ) {
-    Gtk.TextIter iter;
-    if( find_start_iter( out iter ) && _win.settings.get_boolean( "enable-unicode-input" ) ) {
-      return( true );
-    }
-    return( false );
-  }
-
-  public override void populate( SourceCompletionContext context ) {
-    TextIter start, end;
-    if( find_start_iter( out start ) ) {
-      _buffer.get_iter_at_offset( out end, _buffer.cursor_position );
-      var text = _buffer.get_text( start, end, false );
-      var proposals = new GLib.List<SourceCompletionItem>();
-      foreach( SourceCompletionItem item in _proposals ) {
-        if( item.get_label().has_prefix( text ) ) {
-          proposals.append( item );
-        }
-      }
-	    context.add_proposals( this, proposals, true );
-    }
-  }
-
-  public override bool get_start_iter( SourceCompletionContext ctx, SourceCompletionProposal proposal, out TextIter iter ) {
-    return( find_start_iter( out iter ) );
-  }
-
-  public bool activate_proposal( Gtk.SourceCompletionProposal proposal, Gtk.TextIter iter ) {
-    return( false );
-  }
-
-  public Gtk.SourceCompletionActivation get_activation () {
-    return( Gtk.SourceCompletionActivation.INTERACTIVE | Gtk.SourceCompletionActivation.USER_REQUESTED );
+  //-------------------------------------------------------------
+  // Constructor
+  public CompletionItem( string label, string text ) {
+    this.label = label;
+    this.text  = text;
   }
 
 }
 
-/*
- This class is a slightly modified version of Lains Quilter SourceView.vala
- file.  The above header was kept in tact to indicate this.
-*/
-public class NoteView : Gtk.SourceView {
+public class CompletionItemFilter : Filter {
+
+  private string _match_str = "";
+
+  //-------------------------------------------------------------
+  // Constructor
+  public CompletionItemFilter() {}
+
+  //-------------------------------------------------------------
+  // Provide functionality for get_strictness() virtual method.
+  public override FilterMatch get_strictness() {
+    return( FilterMatch.SOME );
+  }
+
+  //-------------------------------------------------------------
+  // Called to set the match string.
+  public void set_search( string match_str ) {
+    if( _match_str != match_str ) {
+      _match_str = match_str;
+      changed( FilterChange.DIFFERENT );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if the specified item matches the match_str.
+  public override bool match( Object? item ) {
+    if( item != null ) {
+      var comp_item = (item as CompletionItem);
+      if( comp_item != null ) {
+        return( comp_item.label.has_prefix( _match_str ) );
+      }
+    }
+    return( false );
+  }
+
+}
+
+public class CompletionProvider : GtkSource.CompletionProvider, Object {
+
+  private MainWindow                _win;
+  private string                    _name;
+  private GLib.List<CompletionItem> _proposals;
+  private GtkSource.Buffer          _buffer;
+
+  //-------------------------------------------------------------
+  // Constructor
+  public CompletionProvider( MainWindow win, GtkSource.Buffer buffer, string name, GLib.List<CompletionItem> proposals ) {
+    _win       = win;
+    _buffer    = buffer;
+    _name      = name;
+    _proposals = new GLib.List<CompletionItem>();
+    foreach( var item in proposals ) {
+      _proposals.append( item );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the title of the completion provider.
+  public override string? get_title() {
+    return( _name );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the priority of the completion provider.
+  public override int get_priority( GtkSource.CompletionContext context ) {
+    return( 1 );
+  }
+
+  //-------------------------------------------------------------
+  // We will only trigger the completion if unicode input completion
+  // is enabled and we see the backslash character.
+  public override bool is_trigger( TextIter iter, unichar ch ) {
+    return( _win.settings.get_boolean( "enable-unicode-input" ) && (ch == '\\') );
+  }
+
+  //-------------------------------------------------------------
+  // Hitting the return key will activate the completion (if a
+  // proposal is selected).
+  public override bool key_activates( GtkSource.CompletionContext context, GtkSource.CompletionProposal proposal, uint keyval, ModifierType state ) {
+    return( keyval == Gdk.Key.Return );
+  }
+
+  //-------------------------------------------------------------
+  // I don't know what this is supposed to do, but we will just
+  // return null.
+  public GenericArray<GtkSource.CompletionProposal>? list_alternatives( GtkSource.CompletionContext context, GtkSource.CompletionProposal proposal ) {
+    return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Populate the list of potential matches.
+  public async ListModel populate_async( GtkSource.CompletionContext context, Cancellable? cancellable ) throws Error {
+    TextIter start_iter, end_iter;
+    var proposals = new GLib.ListStore( typeof(CompletionItem) );
+    if( context.get_bounds( out start_iter, out end_iter ) ) {
+      var buffer = start_iter.get_buffer();
+      start_iter.backward_char();
+      if( is_trigger( start_iter, start_iter.get_char() ) ) {
+        foreach( var item in _proposals ) {
+          proposals.append( item );
+        }
+        var filter = new CompletionItemFilter();
+        filter.set_search( "\\" + context.get_word() );
+        var filter_model = new Gtk.FilterListModel( proposals, filter );
+        return( filter_model );
+      }
+    }
+    return( proposals );
+  }
+
+  //-------------------------------------------------------------
+  // Called whenever the user changes the current word.  We will
+  // update the filter with the current word to change the list
+  // of displayed proposals.
+  public void refilter( GtkSource.CompletionContext context, ListModel model ) {
+    var list = (model as Gtk.FilterListModel);
+    if( list != null ) {
+      var filter = (list.filter as CompletionItemFilter);
+      if( filter != null ) {
+        filter.set_search( "\\" + context.get_word() );
+      }
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Called whe the user hits the return key.  We will replace the
+  // current word (including the previous backslash character) with
+  // the proposal text.
+  public void activate( GtkSource.CompletionContext context, GtkSource.CompletionProposal proposal ) {
+
+    var item = (proposal as CompletionItem);
+
+    if( item != null ) {
+
+      TextIter start_iter, end_iter;
+      context.get_bounds( out start_iter, out end_iter );
+      start_iter.backward_char();
+
+      var buffer = start_iter.get_buffer();
+      buffer.begin_user_action();
+      buffer.delete( ref start_iter, ref end_iter );
+      buffer.insert_text( ref start_iter, item.text, item.text.length );
+      buffer.end_user_action();
+
+    }
+
+  }
+
+  //-------------------------------------------------------------
+  // Displays the proposals in a dropdown list.
+  public void display( GtkSource.CompletionContext context, GtkSource.CompletionProposal proposal, GtkSource.CompletionCell cell ) {
+    var item = (proposal as CompletionItem);
+    if( item != null ) {
+      switch( cell.get_column() ) {
+        case GtkSource.CompletionColumn.TYPED_TEXT :  cell.text = item.text;   break;
+        case GtkSource.CompletionColumn.COMMENT    :  cell.text = item.label;  break; 
+        default                                    :  break;
+      }
+    }
+  }
+
+}
+
+//-------------------------------------------------------------
+// This class is a slightly modified version of Lains Quilter
+// SourceView.vala file.  The above header was kept in tact to
+// indicate this.
+public class NoteView : GtkSource.View {
 
   private class UrlPos {
     public string url;
@@ -122,19 +226,20 @@ public class NoteView : Gtk.SourceView {
     }
   }
 
-  private static bool    _path_init = false;
-  private int            _last_lnum = -1;
-  private string?        _last_url  = null;
-  private int?           _last_link = null;
-  private Array<UrlPos>  _last_urls;
-  private Array<LinkPos> _last_links;
-  private int            _last_x;
-  private int            _last_y;
-  private Regex?         _url_re;
-  private Regex?         _link_re;
-  private Tooltip        _tooltip;
-  public  SourceStyle    _srcstyle  = null;
-  public  SourceBuffer   _buffer;
+  private static bool      _path_init = false;
+  private int              _last_lnum = -1;
+  private string?          _last_url  = null;
+  private int?             _last_link = null;
+  private Array<UrlPos>    _last_urls;
+  private Array<LinkPos>   _last_links;
+  private int              _last_x;
+  private int              _last_y;
+  private Regex?           _url_re;
+  private Regex?           _link_re;
+  private Tooltip          _tooltip;
+  private bool             _control   = false;
+  public  GtkSource.Style  _srcstyle  = null;
+  public  GtkSource.Buffer _buffer;
 
   public string text {
     set {
@@ -162,6 +267,8 @@ public class NoteView : Gtk.SourceView {
   /* Default constructor */
   public NoteView() {
 
+    completion.select_on_show = true;
+
     var sourceview_path = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "gtksourceview-4" );
 
     foreach( var data_dir in Environment.get_system_data_dirs() ) {
@@ -178,14 +285,14 @@ public class NoteView : Gtk.SourceView {
 
     get_style_context().add_class( "textfield" );
 
-    var manager = Gtk.SourceLanguageManager.get_default();
+    var manager = GtkSource.LanguageManager.get_default();
     if( !_path_init ) {
       lang_paths = manager.get_search_path();
       lang_paths += lang_path;
       manager.set_search_path( lang_paths );
     }
 
-    var style_manager = Gtk.SourceStyleSchemeManager.get_default();
+    var style_manager = GtkSource.StyleSchemeManager.get_default();
     if( !_path_init ) {
       style_manager.prepend_search_path( style_path );
     }
@@ -195,9 +302,10 @@ public class NoteView : Gtk.SourceView {
     var language = manager.get_language( get_default_language() );
     var style    = style_manager.get_scheme( get_default_scheme() );
 
-    _buffer = new Gtk.SourceBuffer.with_language( language );
-    _buffer.highlight_syntax = true;
-    _buffer.set_max_undo_levels( 20 );
+    _buffer = new GtkSource.Buffer.with_language( language ) {
+      highlight_syntax = true,
+      enable_undo      = true
+    };
     _buffer.set_style_scheme( style );
     set_buffer( _buffer );
 
@@ -206,14 +314,24 @@ public class NoteView : Gtk.SourceView {
     _buffer.changed.connect (() => {
       modified = true;
     });
-    this.focus_in_event.connect( on_focus );
-    this.motion_notify_event.connect( on_motion );
-    this.button_press_event.connect( on_press );
-    this.key_press_event.connect( on_keypress );
-    this.key_release_event.connect( on_keyrelease );
 
-    expand      = true;
-    has_focus   = true;
+    var focus = new EventControllerFocus();
+    add_controller( focus );
+    focus.enter.connect( on_focus );
+
+    var motion = new EventControllerMotion();
+    add_controller( motion );
+    motion.motion.connect( on_motion );
+
+    var click = new GestureClick();
+    add_controller( click );
+    click.pressed.connect( on_press );
+
+    var key = new EventControllerKey();
+    add_controller( key );
+    key.key_pressed.connect( on_keypress );
+    key.key_released.connect( on_keyrelease );
+
     auto_indent = true;
     set_wrap_mode( Gtk.WrapMode.WORD );
     set_tab_width( 4 );
@@ -334,7 +452,6 @@ public class NoteView : Gtk.SourceView {
   /* Called when URL checking should be performed on the current line (if necessary) */
   private void enable_url_checking( int x, int y ) {
     TextIter cursor;
-    var      win = get_window( TextWindowType.TEXT );
     get_iter_at_location( out cursor, x, y );
     if( _last_lnum != cursor.get_line() ) {
       var line = current_line( cursor );
@@ -349,16 +466,15 @@ public class NoteView : Gtk.SourceView {
       tooltip_text = "";
     }
     if( cursor_in_url( cursor ) || in_node_link ) {
-      win.set_cursor( new Cursor.for_display( get_display(), CursorType.HAND2 ) );
+      set_cursor( new Gdk.Cursor.from_name( "pointer", null ) );
     } else {
-      win.set_cursor( null );
+      set_cursor( null );
     }
   }
 
   /* Called when URL checking should no longer be performed on the current line */
   private void disable_url_checking() {
-    var win = get_window( TextWindowType.TEXT );
-    win.set_cursor( null );
+    set_cursor( null );
     _last_lnum = -1;
     tooltip_text = "";
   }
@@ -373,57 +489,51 @@ public class NoteView : Gtk.SourceView {
    If the cursor is moved in the text viewer when the control key is held down,
    check to see if the cursor is over a URL.
   */
-  private bool on_motion( EventMotion e ) {
-    _last_x = (int)e.x;
-    _last_y = (int)e.y;
-    if( (bool)(e.state & ModifierType.CONTROL_MASK) ) {
-      var int_x = (int)e.x;
-      var int_y = (int)e.y;
-      enable_url_checking( int_x, int_y );
-      return( true );
+  private void on_motion( double x, double y ) {
+    _last_x = (int)x;
+    _last_y = (int)y;
+    if( _control ) {
+      enable_url_checking( _last_x, _last_y );
+    } else {
+      disable_url_checking();
     }
-    disable_url_checking();
-    return( false );
   }
 
   /*
    Called when the user clicks with the mouse.  If the cursor is over a URL,
    open the URL in an external application.
   */
-  private bool on_press( EventButton e ) {
-    if( (bool)(e.state & ModifierType.CONTROL_MASK) ) {
-      var int_x = (int)e.x;
-      var int_y = (int)e.y;
+  private void on_press( int n_press, double x, double y ) {
+    if( _control ) {
+      var int_x = (int)x;
+      var int_y = (int)y;
       enable_url_checking( int_x, int_y );
       if( _last_url != null ) {
-        stdout.printf( "Opening URL: %s\n", _last_url );
         Utils.open_url( _last_url );
       } else if( _last_link != null ) {
         node_link_clicked( _last_link );
       }
-      return( true );
     }
-    return( false );
   }
 
-  private bool on_keypress( EventKey e ) {
-    if( e.keyval == 65507 ) {
+  private bool on_keypress( uint keyval, uint keycode, ModifierType state ) {
+    if( keyval == 65507 ) {
+      _control = true;
       enable_url_checking( _last_x, _last_y );
     }
     return( false );
   }
 
-  private bool on_keyrelease( EventKey e ) {
-    if( e.keyval == 65507 ) {
+  private void on_keyrelease( uint keyval, uint keycode, ModifierType state ) {
+    if( keyval == 65507 ) {
+      _control = false;
       disable_url_checking();
     }
-    return( false );
   }
 
   /* Clears the stored URL information */
-  private bool on_focus( EventFocus e ) {
+  private void on_focus() {
     clear();
-    return( false );
   }
 
   /* Override the built-int paste operation */

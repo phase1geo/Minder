@@ -179,19 +179,19 @@ public class Document : Object {
       /* File was modified! Warn the user */
       if( _etag != file_etag ) {
         var now = new DateTime.now_local();
-        if( _da.win.ask_modified_overwrite(_da) ) {
-          var fname = filename.replace( ".mind", "-backup-%s-%s.mind".printf( now.to_string(), file_etag ) );
-          doc->save_format_file( fname, 1 );
-        } else {
-          var fname = filename.replace( ".mind", "-backup-%s-%s.mind".printf( now.to_string(), _etag ) );
-          save_internal( fname, false );
-          _da.initialize_for_open();
-          load();
-          return false;
-        }
+        _da.win.ask_modified_overwrite( _da, (overwrite) => {
+          if( overwrite ) {
+            var fname = filename.replace( ".mind", "-backup-%s-%s.mind".printf( now.to_string(), file_etag ) );
+            doc->save_format_file( fname, 1 );
+          } else {
+            var fname = filename.replace( ".mind", "-backup-%s-%s.mind".printf( now.to_string(), _etag ) );
+            save_internal( fname, false );
+            _da.initialize_for_open();
+            load();
+          }
+          delete doc;
+        });
       }
-      
-      delete doc;
 
     }
 

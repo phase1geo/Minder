@@ -21,163 +21,131 @@
 
 using Gtk;
 
-public class NodesMenu : Gtk.Menu {
+public class NodesMenu {
 
-  DrawArea     _da;
-  Gtk.MenuItem _copy;
-  Gtk.MenuItem _cut;
-  Gtk.MenuItem _delete;
-  Gtk.MenuItem _task;
-  Gtk.MenuItem _fold;
-  Gtk.MenuItem _sequence;
-  Gtk.MenuItem _connect;
-  Gtk.MenuItem _link;
-  // Gtk.MenuItem _summary;
-  Gtk.MenuItem _link_colors;
-  Gtk.MenuItem _parent_link_colors;
-  Gtk.MenuItem _align;
-  Gtk.MenuItem _selnodes;
-  Gtk.MenuItem _selparent;
-  Gtk.MenuItem _selchildren;
+  private DrawArea    _da;
+  private PopoverMenu _popover;
+
+  private const GLib.ActionEntry action_entries[] = {
+    { "action_copy",                  action_copy },
+    { "action_cut",                   action_cut },
+    { "action_delete",                action_delete },
+    { "action_change_link_colors",    action_change_link_colors },
+    { "action_randomize_link_colors", action_randomize_link_colors },
+    { "action_reparent_link_colors",  action_reparent_link_colors },
+    { "action_toggle_tasks",          action_toggle_tasks },
+    { "action_fold_nodes",            action_fold_nodes },
+    { "action_toggle_sequences",      action_toggle_sequences },
+    { "action_connect_nodes",         action_connect_nodes },
+    { "action_link_nodes",            action_link_nodes },
+    // { "action_summarize",             action_summarize },
+    { "action_select_parent_nodes",   action_select_parent_nodes },
+    { "action_select_child_nodes",    action_select_child_nodes },
+    { "action_align_to_top",          action_align_to_top },
+    { "action_align_to_hcenter",      action_align_to_hcenter },
+    { "action_align_to_bottom",       action_align_to_bottom },
+    { "action_align_to_left",         action_align_to_left },
+    { "action_align_to_vcenter",      action_align_to_vcenter },
+    { "action_align_to_right",        action_align_to_right },
+  };
 
   /* Default constructor */
-  public NodesMenu( DrawArea da, AccelGroup accel_group ) {
+  public NodesMenu( Gtk.Application app, DrawArea da ) {
 
     _da = da;
 
-    _copy = new Gtk.MenuItem();
-    _copy.add( new Granite.AccelLabel( _( "Copy" ), "<Control>c" ) );
-    _copy.activate.connect( copy_nodes );
+    var edit_menu = new GLib.Menu();
+    edit_menu.append( _( "Copy" ),   "nodes.action_copy" );
+    edit_menu.append( _( "Cut" ),    "nodes.action_cut" );
+    edit_menu.append( _( "Delete" ), "nodes.action_delete" );
 
-    _cut = new Gtk.MenuItem();
-    _cut.add( new Granite.AccelLabel( _( "Cut" ), "<Control>x" ) );
-    _cut.activate.connect( cut_nodes );
+    var color_menu = new GLib.Menu();
+    color_menu.append( _( "Set To Color…" ),    "nodes.action_change_link_colors" );
+    color_menu.append( _( "Randomize Colors" ), "nodes.action_randomize_link_colors" );
+    color_menu.append( _( "Use Parent Color" ), "nodes.action_reparent_link_colors" );
 
-    _delete = new Gtk.MenuItem();
-    _delete.add( new Granite.AccelLabel( _( "Delete" ), "Delete" ) );
-    _delete.activate.connect( delete_nodes );
+    var change_menu = new GLib.Menu();
+    change_menu.append_submenu( _( "Link Colors" ), color_menu );
+    change_menu.append( _( "Toggle Tasks" ),     "nodes.action_toggle_tasks" );
+    change_menu.append( _( "Toggle Folds" ),     "nodes.action_fold_nodes" );
+    change_menu.append( _( "Toggle Sequences" ), "nodes.action_toggle_sequences" );
 
-    _task = new Gtk.MenuItem();
-    _task.add( new Granite.AccelLabel( _( "Toggle Tasks" ), "t" ) );
-    _task.activate.connect( toggle_tasks );
+    var link_menu = new GLib.Menu();
+    link_menu.append( _( "Connect" ),    "nodes.action_connect_nodes" );
+    link_menu.append( _( "Link Nodes" ), "nodes.action_link_nodes" );
+    // link_menu.append( _( "Add Summary Node" ), "nodes.action_summarize" );
 
-    _fold = new Gtk.MenuItem();
-    _fold.add( new Granite.AccelLabel( _( "Fold Children" ), "f" ) );
-    _fold.activate.connect( fold_nodes );
+    var sel_submenu = new GLib.Menu();
+    sel_submenu.append( _( "Parent Nodes" ), "nodes.action_select_parent_nodes" );
+    sel_submenu.append( _( "Child Nodes" ),  "nodes.action_select_child_nodes" );
 
-    _sequence = new Gtk.MenuItem();
-    _sequence.add( new Granite.AccelLabel( _( "Toggle Sequences" ), "numbersign" ) );
-    _sequence.activate.connect( toggle_sequences );
+    var sel_menu = new GLib.Menu();
+    sel_menu.append_submenu( _( "Select" ), sel_submenu );
 
-    _connect = new Gtk.MenuItem();
-    _connect.add( new Granite.AccelLabel( _( "Connect" ), "x" ) );
-    _connect.activate.connect( connect_nodes );
+    var align_vert_menu = new GLib.Menu();
+    align_vert_menu.append( _( "Align Top" ),                 "nodes.action_align_to_top" );
+    align_vert_menu.append( _( "Align Center Horizontally" ), "nodes.action_align_to_hcenter" );
+    align_vert_menu.append( _( "Align Bottom" ),              "nodes.action_align_to_bottom" );
 
-    _link = new Gtk.MenuItem();
-    _link.add( new Granite.AccelLabel( _( "Link Nodes" ), "y" ) );
-    _link.activate.connect( link_nodes );
+    var align_horz_menu = new GLib.Menu();
+    align_horz_menu.append( _( "Align Left" ),              "nodes.action_align_to_left" );
+    align_horz_menu.append( _( "Align Center Vertically" ), "nodes.action_align_to_vcenter" );
+    align_horz_menu.append( _( "Align Right" ),             "nodes.action_align_to_right" );
 
-    // _summary = new Gtk.MenuItem();
-    // _summary.add( new Granite.AccelLabel( _( "Add Summary Node" ), "<Shift>Tab" ) );
-    // _summary.activate.connect( summarize );
+    var align_submenu = new GLib.Menu();
+    align_submenu.append_section( null, align_vert_menu );
+    align_submenu.append_section( null, align_horz_menu );
 
-    var link_color_menu = new Gtk.Menu();
+    var align_menu = new GLib.Menu();
+    align_menu.append_submenu( _( "Align" ), align_submenu );
 
-    _link_colors = new Gtk.MenuItem.with_label( _( "Link Colors" ) );
-    _link_colors.set_submenu( link_color_menu );
+    var menu = new GLib.Menu();
+    menu.append_section( null, edit_menu );
+    menu.append_section( null, change_menu );
+    menu.append_section( null, link_menu );
+    menu.append_section( null, sel_menu );
+    menu.append_section( null, align_menu );
 
-    var set_link_colors = new Gtk.MenuItem();
-    set_link_colors.add( new Granite.AccelLabel( _( "Set to color…" ), "<Shift>l" ) ); 
-    set_link_colors.activate.connect( change_link_colors );
+    _popover = new PopoverMenu.from_model( menu );
+    _popover.set_parent( _da );
 
-    var rand_link_colors = new Gtk.MenuItem.with_label( _( "Randomize colors" ) );
-    rand_link_colors.activate.connect( randomize_link_colors );
+    // Add the menu actions
+    var actions = new SimpleActionGroup();
+    actions.add_action_entries( action_entries, this );
+    _da.insert_action_group( "nodes", actions );
 
-    _parent_link_colors = new Gtk.MenuItem.with_label( _( "Use parent color" ) );
-    _parent_link_colors.activate.connect( reparent_link_colors );
+    // Add keyboard shortcuts
+    app.set_accels_for_action( "nodes.action_copy",               { "<Control>c" } );
+    app.set_accels_for_action( "nodes.action_cut",                { "<Control>x" } );
+    app.set_accels_for_action( "nodes.action_delete",             { "Delete" } );
+    app.set_accels_for_action( "nodes.action_toggle_tasks",       { "t" } );
+    app.set_accels_for_action( "nodes.action_toggle_folds",       { "f" } );
+    app.set_accels_for_action( "nodes.action_change_link_colors", { "<Shift>l" } );
+    app.set_accels_for_action( "nodes.action_toggle_sequences",   { "numbersign" } );
+    app.set_accels_for_action( "nodes.action_connect_nodes",      { "x" } );
+    app.set_accels_for_action( "nodes.action_link_nodes",         { "y" } );
+    // app.set_accels_for_action( "nodes.action_summarize",          { "<Shift>Tab" } );
+    app.set_accels_for_action( "nodes.action_select_parent_nodes", { "a" } );
+    app.set_accels_for_action( "nodes.action_select_child_nodes",  { "d" } );
+    app.set_accels_for_action( "nodes.action_align_to_top",        { "minus" } );
+    app.set_accels_for_action( "nodes.action_align_to_hcenter",    { "equal" } );
+    app.set_accels_for_action( "nodes.action_align_to_bottom",     { "underscore" } );
+    app.set_accels_for_action( "nodes.action_align_to_left",       { "bracketleft" } );
+    app.set_accels_for_action( "nodes.action_align_to_vcenter",    { "bar" } );
+    app.set_accels_for_action( "nodes.action_align_to_right",      { "bracketright" } );
 
-    link_color_menu.add( set_link_colors );
-    link_color_menu.add( rand_link_colors );
-    link_color_menu.add( _parent_link_colors );
+  }
 
-    var selmenu = new Gtk.Menu();
+  //-------------------------------------------------------------
+  // Shows this menu.
+  public void show( double x, double y ) {
 
-    _selnodes = new Gtk.MenuItem.with_label( _( "Select" ) );
-    _selnodes.set_submenu( selmenu );
+    on_popup();
 
-    _selparent = new Gtk.MenuItem();
-    _selparent.add( new Granite.AccelLabel( _( "Parent Nodes" ), "a" ) );
-    _selparent.activate.connect( select_parent_nodes );
-    // Utils.add_accel_label( _selparent, 'a', 0 );
-
-    _selchildren = new Gtk.MenuItem();
-    _selchildren.add( new Granite.AccelLabel( _( "Child Nodes" ), "d" ) );
-    _selchildren.activate.connect( select_child_nodes );
-    // Utils.add_accel_label( _selchildren, 'd', 0 );
-
-    selmenu.add( _selparent );
-    selmenu.add( _selchildren );
-
-    var align_menu = new Gtk.Menu();
-
-    _align = new Gtk.MenuItem.with_label( _( "Align Nodes" ) );
-    _align.set_submenu( align_menu );
-
-    var align_top = new Gtk.MenuItem();
-    align_top.add( new Granite.AccelLabel( _( "Align Top" ), "minus" ) );
-    align_top.activate.connect( align_to_top );
-
-    var align_hcenter = new Gtk.MenuItem();
-    align_hcenter.add( new Granite.AccelLabel( _( "Align Center Horizontally" ), "equal" ) );
-    align_hcenter.activate.connect( align_to_hcenter );
-
-    var align_bottom = new Gtk.MenuItem();
-    align_bottom.add( new Granite.AccelLabel( _( "Align Bottom" ), "underscore" ) );
-    align_bottom.activate.connect( align_to_bottom );
-
-    var align_left = new Gtk.MenuItem();
-    align_left.add( new Granite.AccelLabel( _( "Align Left" ), "bracketleft" ) );
-    align_left.activate.connect( align_to_left );
-
-    var align_vcenter = new Gtk.MenuItem();
-    align_vcenter.add( new Granite.AccelLabel( _( "Align Center Vertically" ), "bar" ) );
-    align_vcenter.activate.connect( align_to_vcenter );
-
-    var align_right = new Gtk.MenuItem();
-    align_right.add( new Granite.AccelLabel( _( "Align Right" ), "bracketright" ) );
-    align_right.activate.connect( align_to_right );
-
-    align_menu.add( align_top );
-    align_menu.add( align_hcenter );
-    align_menu.add( align_bottom );
-    align_menu.add( new SeparatorMenuItem() );
-    align_menu.add( align_left );
-    align_menu.add( align_vcenter );
-    align_menu.add( align_right );
-
-    /* Add the menu items to the menu */
-    add( _copy );
-    add( _cut );
-    add( _delete );
-    add( new SeparatorMenuItem() );
-    add( _task );
-    add( _link_colors );
-    add( _fold );
-    add( _sequence );
-    add( new SeparatorMenuItem() );
-    add( _connect );
-    add( _link );
-    // add( _summary );
-    add( new SeparatorMenuItem() );
-    add( _selnodes );
-    add( new SeparatorMenuItem() );
-    add( _align );
-
-    /* Make the menu visible */
-    show_all();
-
-    /* Make sure that we handle menu state when we are popped up */
-    show.connect( on_popup );
+    /* Display the popover at the given location */
+    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
+    _popover.pointing_to = rect;
+    _popover.popup();
 
   }
 
@@ -209,31 +177,26 @@ public class NodesMenu : Gtk.Menu {
 
     var nodes        = _da.get_selected_nodes();
     var node_num     = nodes.length;
-    var has_link     = _da.any_selected_nodes_linked();
     var summarizable = _da.nodes_summarizable();
+    var alignable    = _da.nodes_alignable();
 
     bool foldable, unfoldable;
     nodes_foldable_status( out foldable, out unfoldable );
 
     /* Set the menu sensitivity */
-    _fold.set_sensitive( foldable || unfoldable );
-    _sequence.set_sensitive( _da.sequences_togglable() );
-    _connect.set_sensitive( node_num == 2 );
-    // _summary.set_sensitive( summarizable );
-    _parent_link_colors.set_sensitive( link_colors_parentable() );
-    _align.set_sensitive( _da.nodes_alignable() );
-    _selparent.set_sensitive( _da.parent_selectable() );
-    _selchildren.set_sensitive( _da.children_selectable() );
-
-    var fold_acc = (Granite.AccelLabel)_fold.get_child();
-    var link_acc = (Granite.AccelLabel)_link.get_child();
-    var fold_lbl = unfoldable ? _( "Unfold Children" )   : _( "Fold Children" );
-    var link_lbl = has_link   ? _( "Remove Node Links" ) : _( "Link Nodes" );
-
-    _fold.get_child().destroy();
-    _fold.add( new Granite.AccelLabel( fold_lbl, fold_acc.accel_string ) );
-    _link.get_child().destroy();
-    _link.add( new Granite.AccelLabel( link_lbl, link_acc.accel_string ) );
+    _da.action_set_enabled( "nodes.action_toggle_folds",         (foldable || unfoldable) );
+    _da.action_set_enabled( "nodes.action_toggle_sequences",     _da.sequences_togglable() );
+    _da.action_set_enabled( "nodes.action_connect_nodes",        (node_num == 2) );
+    // _da.action_set_enabled( "nodes.action_summarize",        summarizable );
+    _da.action_set_enabled( "nodes.action_reparent_link_colors", link_colors_parentable() );
+    _da.action_set_enabled( "nodes.action_align_to_top",         alignable );
+    _da.action_set_enabled( "nodes.action_align_to_hcenter",     alignable );
+    _da.action_set_enabled( "nodes.action_align_to_bottom",      alignable );
+    _da.action_set_enabled( "nodes.action_align_to_left",        alignable );
+    _da.action_set_enabled( "nodes.action_align_to_vcenter",     alignable );
+    _da.action_set_enabled( "nodes.action_align_to_right",       alignable );
+    _da.action_set_enabled( "nodes.action_select_parent_nodes",  _da.parent_selectable() );
+    _da.action_set_enabled( "nodes.action_select_child_nodes",   _da.children_selectable() );
 
   }
 
@@ -248,33 +211,33 @@ public class NodesMenu : Gtk.Menu {
   }
 
   /* Copies all selected nodes to the node clipboard */
-  private void copy_nodes() {
+  private void action_copy() {
     _da.do_copy();
   }
 
   /* Cuts all selected nodes to the node clipboard */
-  private void cut_nodes() {
+  private void action_cut() {
     _da.do_cut();
   }
 
   /* Delete all selected nodes, collapsing deselected descendants */
-  private void delete_nodes() {
+  private void action_delete() {
     _da.delete_nodes();
   }
 
   /* Toggles the task indicator of the selected nodes */
-  private void toggle_tasks() {
+  private void action_toggle_tasks() {
     _da.change_selected_tasks();
   }
 
   /* Folds/unfolds the selected nodes */
-  private void fold_nodes() {
+  private void action_fold_nodes() {
     _da.toggle_folds();
   }
 
   //-------------------------------------------------------------
   // Toggles sequences
-  private void toggle_sequences() {
+  private void action_toggle_sequences() {
     _da.toggle_sequence();
   }
 
@@ -282,78 +245,78 @@ public class NodesMenu : Gtk.Menu {
    Creates a connection between two selected nodes, where the first node is the from node and the
    second node is the to node.
   */
-  private void connect_nodes() {
+  private void action_connect_nodes() {
     _da.create_connection();
   }
 
   /*
    Links two selected nodes such that the first selected node will link to the second selected node.
   */
-  private void link_nodes() {
+  private void action_link_nodes() {
     _da.toggle_links();
   }
 
   /* Adds a new summary node */
-  private void summarize() {
+  private void action_summarize() {
     _da.add_summary_node_from_selected();
   }
 
   /* Changes the color of all selected nodes */
-  public void change_link_colors() {
+  public void action_change_link_colors() {
     var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
-    if( color_picker.run() == ResponseType.OK ) {
+    color_picker.color_activated.connect((color) => {
       _da.change_link_colors( color_picker.get_rgba() );
-    }
-    color_picker.close();
+    });
+    color_picker.present();
   }
 
   /* Randomize the selected link colors */
-  private void randomize_link_colors() {
+  private void action_randomize_link_colors() {
     _da.randomize_link_colors();
   }
 
   /* Changes the selected nodes to use parent node's colors */
-  private void reparent_link_colors() {
+  private void action_reparent_link_colors() {
     _da.reparent_link_colors();
   }
 
   /* Selects all of the parent nodes of the selected nodes */
-  private void select_parent_nodes() {
+  private void action_select_parent_nodes() {
     _da.select_parent_nodes();
   }
 
   /* Selects all child nodes of selected nodes */
-  private void select_child_nodes() {
+  private void action_select_child_nodes() {
     _da.select_child_nodes();
   }
 
   /* Aligns all selected nodes to the top of the first node */
-  private void align_to_top() {
+  private void action_align_to_top() {
     NodeAlign.align_top( _da, _da.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the center of the first node horizontally */
-  private void align_to_hcenter() {
+  private void action_align_to_hcenter() {
     NodeAlign.align_hcenter( _da, _da.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the bottom of the first node */
-  private void align_to_bottom() {
+  private void action_align_to_bottom() {
     NodeAlign.align_bottom( _da, _da.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the left side of the first node */
-  private void align_to_left() {
+  private void action_align_to_left() {
     NodeAlign.align_left( _da, _da.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the center of the first node vertically */
-  private void align_to_vcenter() {
+  private void action_align_to_vcenter() {
     NodeAlign.align_vcenter( _da, _da.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the right side of the first node */
-  private void align_to_right() {
+  private void action_align_to_right() {
     NodeAlign.align_right( _da, _da.get_selected_nodes() );
   }
 

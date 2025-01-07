@@ -898,14 +898,14 @@ public class Connection : Object {
 
     /* Draw the box */
     ctx.set_source_rgba( ccolor.red, ccolor.green, ccolor.blue, alpha );
-    Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
+    Utils.draw_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
     ctx.fill();
 
     /* Draw the droppable indicator, if necessary */
     if( (mode == ConnMode.DROPPABLE) && !exporting ) {
       Utils.set_context_color_with_alpha( ctx, theme.get_color( "attachable" ), alpha );
       ctx.set_line_width( 4 );
-      Granite.Drawing.Utilities.cairo_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
+      Utils.draw_rounded_rectangle( ctx, x, y, w, h, (padding * 2) );
       ctx.stroke();
     }
 
@@ -1002,10 +1002,13 @@ public class Connection : Object {
   }
 
   /* Makes an icon for the given dash */
-  public static Cairo.Surface make_arrow_icon( string type ) {
+  public static Paintable make_arrow_icon( string type ) {
 
-    Cairo.ImageSurface surface = new Cairo.ImageSurface( Cairo.Format.ARGB32, 100, 20 );
-    Cairo.Context      ctx     = new Cairo.Context( surface );
+    var rect = Graphene.Rect.alloc();
+    rect.init( (float)0.0, (float)0.0, (float)100, (float)20 );
+
+    var snapshot = new Gtk.Snapshot();
+    var ctx      = snapshot.append_cairo( rect );
 
     ctx.set_source_rgba( 0.5, 0.5, 0.5, 1 );
     ctx.set_line_width( 4 );
@@ -1021,7 +1024,7 @@ public class Connection : Object {
       draw_arrow( ctx, 4, 10, 10, 90, 10 );
     }
 
-    return( surface );
+    return( snapshot.free_to_paintable( null ) );
 
   }
 

@@ -23,6 +23,8 @@ using GLib;
 using Gtk;
 using Gee;
 
+public delegate void ImageIdFunc( int id );
+
 public class ImageManager {
 
   /* Returns the web pathname used to store downloaded images */
@@ -293,32 +295,35 @@ public class ImageManager {
    adds the image to the manager and returns the image ID to the calling function.
    If no image was selected, a value of -1 will be returned.
   */
-  public int choose_image( Gtk.Window parent ) {
+  public void choose_image( Gtk.Window parent, ImageIdFunc func ) {
 
     int id = -1;
 
-    var dialog = new FileChooserNative( _( "Select Image" ), parent, FileChooserAction.OPEN, _( "Select" ), _( "Cancel" ) );
-    Utils.set_chooser_folder( dialog );
+    var dialog = Utils.make_file_chooser( _( "Select Image" ), _( "Select" ) );
+    // Utils.set_chooser_folder( dialog );
 
     /* Allow pixbuf image types */
-    FileFilter filter = new FileFilter();
+    var filter  = new FileFilter();
     filter.set_filter_name( _( "Images" ) );
     filter.add_pattern( "*.bmp" );
     filter.add_pattern( "*.png" );
     filter.add_pattern( "*.jpg" );
     filter.add_pattern( "*.jpeg" );
     filter.add_pattern( "*.svg" );
-    dialog.add_filter( filter );
 
-    if( dialog.run() == ResponseType.ACCEPT ) {
-      id = add_image( dialog.get_uri() );
-      Utils.store_chooser_folder( dialog.get_filename(), false );
-    }
+    var filters = new GLib.ListStore( typeof(FileFilter) );
+    filters.append( filter );
+    dialog.set_filters( filters );
 
-    /* Close the dialog */
-    dialog.destroy();
-
-    return( id );
+    dialog.open.begin( parent, null, (obj, res) => {
+      try {
+        var file = dialog.open.end( res );
+        if( file != null ) {
+          id = add_image( file.get_uri() );
+          func( id );
+        }
+      } catch( Error e ) {}
+    });
 
   }
 

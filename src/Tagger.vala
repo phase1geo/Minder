@@ -115,51 +115,55 @@ public class Tagger {
     var int_bottom = (int)bottom;
     Gdk.Rectangle rect = {int_left, int_bottom, 1, 1};
 
-    var popover = new Popover( _da );
-    popover.pointing_to = rect;
-    popover.position    = PositionType.BOTTOM;
-
-    var box = new Box( Orientation.VERTICAL, 0 );
-
     var lbl = new Label( _( "Add Tag" ) );
 
-    var listbox = new ListBox();
-    listbox.selection_mode = SelectionMode.BROWSE;
-    listbox.halign         = Align.START;
-    listbox.valign         = Align.START;
-    listbox.row_activated.connect( (row) => {
+    _entry = new SearchEntry() {
+      max_width_chars = 30
+    };
+    _entry.insert_text.connect( filter_tag_text );
+
+    var listbox = new ListBox() {
+      halign         = Align.START,
+      valign         = Align.START,
+      selection_mode = SelectionMode.BROWSE
+    };
+
+    var scroll = new ScrolledWindow() {
+      vscrollbar_policy  = PolicyType.AUTOMATIC,
+      hscrollbar_policy  = PolicyType.EXTERNAL,
+      min_content_height = 200,
+      child              = listbox
+    };
+
+    var box = new Box( Orientation.VERTICAL, 0 );
+    box.append( lbl );
+    box.append( _entry );
+    box.append( scroll );
+
+    var popover = new Popover() {
+      pointing_to = rect,
+      position    = PositionType.BOTTOM,
+      child       = box
+    };
+
+    listbox.row_activated.connect((row) => {
       var label = (Label)row.get_child();
       var value = label.get_text();
       _da.add_tag( value );
-      Utils.hide_popover( popover );
+      popover.popdown();
     });
 
-    var scroll = new ScrolledWindow( null, null );
-    scroll.vscrollbar_policy  = PolicyType.AUTOMATIC;
-    scroll.hscrollbar_policy  = PolicyType.EXTERNAL;
-    scroll.min_content_height = 200;
-    scroll.add( listbox );
-
-    _entry = new SearchEntry();
-    _entry.max_width_chars  = 30;
-    _entry.activate.connect( () => {
-      var value = _entry.text;
-      _da.add_tag( value );
-      Utils.hide_popover( popover );
-    });
-    _entry.insert_text.connect( filter_tag_text );
     _entry.search_changed.connect( () => {
       populate_listbox( listbox, get_matches( _entry.text ) );
     });
 
-    box.pack_start( lbl,    false, true, 5 );
-    box.pack_start( _entry, false, true, 5 );
-    box.pack_start( scroll, true,  true, 5 );
-    box.show_all();
+    _entry.activate.connect( () => {
+      var value = _entry.text;
+      _da.add_tag( value );
+      popover.popdown();
+    });
 
-    popover.add( box );
-
-    Utils.show_popover( popover );
+    popover.popup();
 
     /* Preload the tags */
     populate_listbox( listbox, get_matches( "" ) );
@@ -178,14 +182,11 @@ public class Tagger {
   }
 
   private void populate_listbox( ListBox listbox, GLib.List<TextCompletionItem> tags ) {
-    listbox.foreach( (w) => {
-      listbox.remove( w );
-    });
+    Utils.clear_listbox( listbox );
     foreach( TextCompletionItem item in tags ) {
       var box = item.create_row();
-      listbox.add( box );
+      listbox.append( box );
     }
-    listbox.show_all();
   }
 
 }

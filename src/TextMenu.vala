@@ -21,91 +21,104 @@
 
 using Gtk;
 
-public class TextMenu : Gtk.Menu {
+public class TextMenu {
 
-  DrawArea              _da;
-  Gtk.MenuItem          _copy;
-  Gtk.MenuItem          _cut;
-  Gtk.MenuItem          _paste;
-  Gtk.MenuItem          _emoji;
-  Gtk.MenuItem          _open_link;
-  Gtk.MenuItem          _add_link;
-  Gtk.MenuItem          _del_link;
-  Gtk.MenuItem          _edit_link;
-  Gtk.MenuItem          _rest_link;
-  Gtk.SeparatorMenuItem _link_div1;
-  Gtk.SeparatorMenuItem _link_div2;
+  private DrawArea    _da;
+  private PopoverMenu _popover;
+  private bool        _clear_selection = false;
 
-  public TextMenu( DrawArea da, AccelGroup accel_group ) {
+  private const GLib.ActionEntry action_entries[] = {
+    { "action_copy",         action_copy },
+    { "action_cut",          action_cut },
+    { "action_paste",        action_paste },
+    { "action_insert_emoji", action_insert_emoji },
+    { "action_open_link",    action_open_link },
+    { "action_add_link",     action_add_link },
+    { "action_edit_link",    action_edit_link },
+    { "action_remove_link",  action_remove_link },
+    { "action_restore_link", action_restore_link },
+  };
+
+  //-------------------------------------------------------------
+  // Default constructor
+  public TextMenu( Gtk.Application app, DrawArea da ) {
 
     _da = da;
 
-    _copy = new Gtk.MenuItem();
-    _copy.add( new Granite.AccelLabel( _( "Copy" ), "<Control>c" ) );
-    _copy.activate.connect( copy );
+    // Add the menu items to the menu
+    var edit_menu = new GLib.Menu();
+    edit_menu.append( _( "Copy" ),  "text.action_copy" );
+    edit_menu.append( _( "Cut" ),   "text.action_cut" );
+    edit_menu.append( _( "Paste" ), "text.action_paste" );
 
-    _cut = new Gtk.MenuItem();
-    _cut.add( new Granite.AccelLabel( _( "Cut" ), "<Control>x" ) );
-    _cut.activate.connect( cut );
+    var emoji_menu = new GLib.Menu();
+    emoji_menu.append( _( "Insert Emoji" ), "text.action_insert_emoji" );
 
-    _paste = new Gtk.MenuItem();
-    _paste.add( new Granite.AccelLabel( _( "Paste" ), "<Control>v" ) );
-    _paste.activate.connect( paste );
+    var open_menu = new GLib.Menu();
+    open_menu.append( _( "Open Link" ), "text.action_open_link" );
 
-    _emoji = new Gtk.MenuItem();
-    _emoji.add( new Granite.AccelLabel( _( "Insert Emoji" ), "<Control>period" ) );
-    _emoji.activate.connect( insert_emoji );
+    var other_menu = new GLib.Menu();
+    other_menu.append( _( "Add Link" ),     "text.action_add_link" );
+    other_menu.append( _( "Edit Link" ),    "text.action_edit_link" );
+    other_menu.append( _( "Remove Link" ),  "text.action_remove_link" );
+    other_menu.append( _( "Restore Link" ), "text.action_restore_link" );
 
-    _open_link = new Gtk.MenuItem.with_label( _( "Open Link" ) );
-    _open_link.activate.connect( open_link );
+    var menu = new GLib.Menu();
+    menu.append_section( null, edit_menu );
+    menu.append_section( null, emoji_menu );
+    menu.append_section( null, open_menu );
+    menu.append_section( null, other_menu );
 
-    _add_link = new Gtk.MenuItem();
-    _add_link.add( new Granite.AccelLabel( _( "Add Link" ), "<Control>k" ) );
-    _add_link.activate.connect( add_link );
+    _popover = new PopoverMenu.from_model( menu );
+    _popover.set_parent( _da );
+    _popover.closed.connect( on_popdown );
 
-    _edit_link = new Gtk.MenuItem.with_label( _( "Edit Link" ) );
-    _edit_link.activate.connect( edit_link );
+    // Add the menu actions
+    var actions = new SimpleActionGroup();
+    actions.add_action_entries( action_entries, this );
+    _da.insert_action_group( "text", actions );
 
-    _del_link = new Gtk.MenuItem();
-    _del_link.add( new Granite.AccelLabel( _( "Remove Link" ), "<Shift><Control>k" ) );
-    _del_link.activate.connect( remove_link );
+    // Add keyboard shortcuts
+    app.set_accels_for_action( "text.action_copy",         { "<Control>c" } );
+    app.set_accels_for_action( "text.action_cut",          { "<Control>x" } );
+    app.set_accels_for_action( "text.action_paste",        { "<Control>v" } );
+    app.set_accels_for_action( "text.action_insert_emoji", { "<Control>period" } );
+    app.set_accels_for_action( "text.action_add_link",     { "<Control>k" } );
+    app.set_accels_for_action( "text.action_edit_link",    { "<Control>k" } );
+    app.set_accels_for_action( "text.action_remove_link",  { "<Control><Shift>k" } );
 
-    _rest_link = new Gtk.MenuItem.with_label( _( "Restore Link" ) );
-    _rest_link.activate.connect( restore_link );
+  }
 
-    _link_div1 = new Gtk.SeparatorMenuItem();
-    _link_div2 = new Gtk.SeparatorMenuItem();
+  //-------------------------------------------------------------
+  // Shows the menu at the given location.
+  public void show( double x, double y ) {
 
-    /* Add the menu items to the menu */
-    add( _copy );
-    add( _cut );
-    add( _paste );
-    add( new SeparatorMenuItem() );
-    add( _emoji );
-    add( _link_div1 );
-    add( _open_link );
-    add( _link_div2 );
-    add( _add_link );
-    add( _edit_link );
-    add( _del_link );
-    add( _rest_link );
+    // Set the menu state
+    on_popup();
 
-    /* Make the menu visible */
-    show_all();
+    // Display the popover at the given location
+    Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
+    _popover.pointing_to = rect;
+    _popover.popup();
 
-    /* Make sure that we handle menu state when we are popped up */
-    show.connect( on_popup );
-    hide.connect( on_popdown );
+  }
+
+  //-------------------------------------------------------------
+  // Hides the menu.
+  public void hide() {
+
+    // Hides the menu
+    _popover.popdown();
 
   }
 
   /* Copies the selected text to the clipboard */
-  private void copy() {
+  private void action_copy() {
     _da.copy_selected_text();
   }
 
   /* Copies the selected text to the clipboard and removes the text */
-  private void cut() {
+  private void action_cut() {
     _da.cut_selected_text();
   }
 
@@ -113,7 +126,7 @@ public class TextMenu : Gtk.Menu {
    Pastes text in the clipboard to the current location of the cursor, replacing
    any selected text.
   */
-  private void paste() {
+  private void action_paste() {
     MinderClipboard.paste( _da, false );
   }
 
@@ -121,12 +134,12 @@ public class TextMenu : Gtk.Menu {
    Displays the emoji selection window to allow the user to insert an emoji
    character at the current cursor location.
   */
-  private void insert_emoji() {
+  private void action_insert_emoji() {
     _da.handle_control_period();
   }
 
   /* Opens the first link found */
-  private void open_link() {
+  private void action_open_link() {
 
     CanvasText? ct = null;
 
@@ -150,22 +163,22 @@ public class TextMenu : Gtk.Menu {
    allowed if there is either nothing selected or the current selection overlaps
    text that currently has a link associated with it.
   */
-  private void add_link() {
+  private void action_add_link() {
     _da.url_editor.add_url();
   }
 
   /* Allows the user to remove the link located at the current cursor */
-  private void remove_link() {
+  private void action_remove_link() {
     _da.url_editor.remove_url();
   }
 
   /* Allows the user to edit the associated link. */
-  private void edit_link() {
+  private void action_edit_link() {
     _da.url_editor.edit_url();
   }
 
   /* Restores an embedded link that was previously removed */
-  private void restore_link() {
+  private void action_restore_link() {
 
     CanvasText? ct = null;
 
@@ -195,16 +208,17 @@ public class TextMenu : Gtk.Menu {
     var callout = _da.get_current_callout();
 
     /* Set the menu sensitivity */
-    _copy.set_sensitive( copy_or_cut_possible() );
-    _cut.set_sensitive( copy_or_cut_possible() );
-    _paste.set_sensitive( paste_possible() );
+    _da.action_set_enabled( "text.action_copy",  copy_or_cut_possible() );
+    _da.action_set_enabled( "text.action_cut",   copy_or_cut_possible() );
+    _da.action_set_enabled( "text.action_paste", paste_possible() );
 
     /* Initialize the visible attribute */
-    _open_link.visible = false;
-    _add_link.visible  = false;
-    _edit_link.visible = false;
-    _del_link.visible  = false;
-    _rest_link.visible = false;
+    _da.action_set_enabled( "text.action_open_link",    false );
+    _da.action_set_enabled( "text.action_add_link",     false );
+    _da.action_set_enabled( "text.action_edit_link",    false );
+    _da.action_set_enabled( "text.action_delete_link",  false );
+    _da.action_set_enabled( "text.action_restore_link", false );
+    _clear_selection = false;
 
     CanvasText? ct = null;
 
@@ -239,25 +253,23 @@ public class TextMenu : Gtk.Menu {
       //    1       0       del
       //    1       1       rest
 
-      /* Set view of all link menus */
-      _open_link.visible = valid && !ignore;
-      _add_link.visible  = !embedded && !ignore && _da.add_link_possible( ct );
-      _edit_link.visible = valid && !selected && !embedded;
-      _del_link.visible  = valid && !selected && (!embedded || !ignore);
-      _rest_link.visible = valid && !selected && embedded && ignore;
+      // Set view of all link menus
+      _da.action_set_enabled( "text.action_open_link",    (valid && !ignore) );
+      _da.action_set_enabled( "text.action_add_link",     (!embedded && !ignore && _da.add_link_possible( ct )) );
+      _da.action_set_enabled( "text.action_edit_link",    (valid && !selected && !embedded) );
+      _da.action_set_enabled( "text.action_delete_link",  (valid && !selected && (!embedded || !ignore)) );
+      _da.action_set_enabled( "text.action_restore_link", (valid && !selected && embedded && ignore) );
+
+      _clear_selection = valid && !selected;
 
     }
-
-    /* Set the visibility of the dividers */
-    _link_div1.visible = _open_link.visible;
-    _link_div2.visible = _add_link.visible || _edit_link.visible || _del_link.visible || _rest_link.visible;
 
   }
 
   /* Called when the menu is poppped down */
   private void on_popdown() {
 
-    if( _edit_link.visible || _del_link.visible || _rest_link.visible ) {
+    if( _clear_selection ) {
       var node    = _da.get_current_node();
       var callout = _da.get_current_callout();
       if( node != null ) {
@@ -295,12 +307,7 @@ public class TextMenu : Gtk.Menu {
 
   /* Returns true if there is text in the clipboard to paste */
   private bool paste_possible() {
-
-    var clipboard = Clipboard.get_default( get_display() );
-    string? value = clipboard.wait_for_text();
-
-    return( value != null );
-
+    return( MinderClipboard.text_pasteable() );
   }
 
 }

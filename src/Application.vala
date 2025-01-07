@@ -24,7 +24,7 @@ using Gdk;
 using GLib;
 using Gee;
 
-public class Minder : Granite.Application {
+public class Minder : Gtk.Application {
 
   private const string INTERFACE_SCHEMA = "org.gnome.desktop.interface";
 
@@ -33,7 +33,7 @@ public class Minder : Granite.Application {
   private        GLib.Settings       touch_settings;
 
   public  static GLib.Settings settings;
-  public  static string        version = "1.17";
+  public  static string        version = "2.0";
 
   public Minder () {
 
@@ -56,7 +56,7 @@ public class Minder : Granite.Application {
     settings = new GLib.Settings( "com.github.phase1geo.minder" );
 
     /* Add the application-specific icons */
-    weak IconTheme default_theme = IconTheme.get_default();
+    weak IconTheme default_theme = IconTheme.get_for_display( Gdk.Display.get_default() );
     default_theme.add_resource_path( "/com/github/phase1geo/minder" );
 
     /* Create the main window */
@@ -66,6 +66,7 @@ public class Minder : Granite.Application {
     appwin.load_tab_state();
 
     /* Handle any changes to the position of the window */
+    /*
     appwin.configure_event.connect(() => {
       int root_x, root_y;
       int size_w, size_h;
@@ -77,10 +78,13 @@ public class Minder : Granite.Application {
       settings.set_int( "window-h", size_h );
       return( false );
     });
+    */
 
+    /*
     appwin.destroy.connect(() => {
       quit();
     });
+    */
 
     /* Initialize desktop interface settings */
     string[] names = {"font-name", "text-scaling-factor"};
@@ -268,6 +272,9 @@ public class Minder : Granite.Application {
 
   /* Main routine which gets everything started */
   public static int main( string[] args ) {
+
+    // Initialize the GtkSource infrastructure
+    GtkSource.init();
 
     var app = new Minder();
     return( app.run( args ) );

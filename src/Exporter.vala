@@ -23,101 +23,98 @@ using Gtk;
 
 public class Exporter : Box {
 
-  private MenuButton _mb;
-  private Revealer   _stack_reveal;
-  private Stack      _stack;
+  private Revealer _stack_reveal;
+  private Stack    _stack;
 
   public signal void export_done();
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public Exporter( MainWindow win ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 0 );
 
-    _mb       = new MenuButton();
-    _mb.popup = new Gtk.Menu();
-    _mb.image = new Image.from_icon_name( "pan-down-symbolic", IconSize.SMALL_TOOLBAR );
-    _mb.image_position = PositionType.RIGHT;
-    _mb.always_show_image = true;
+    _stack = new Stack() {
+      transition_type = StackTransitionType.NONE,
+      hhomogeneous    = true,
+      vhomogeneous    = false
+    };
 
-    var export = new Button.with_label( _( "Export…" ) );
-    export.set_tooltip_markup( Utils.tooltip_with_accel( _( "Export With Current Settings" ), "<Control>e" ) );
+    // Populate the list of export types
+    string[] export_types = {};
+    for( int i=0; i<win.exports.length(); i++ ) {
+      if( win.exports.index( i ).exportable ) {
+        export_types += win.exports.index( i ).label;
+        add_export( win, win.exports.index( i ) );
+      }
+    }
+
+    var mb = new DropDown.from_strings( export_types );
+    mb.notify["selected"].connect(() => {
+      handle_mb_change( win.exports.index( (int)mb.selected ) );
+    });
+
+    var export = new Button.with_label( _( "Export…" ) ) {
+      halign         = Align.END,
+      tooltip_markup = Utils.tooltip_with_accel( _( "Export With Current Settings" ), "<Control>e" )
+    };
     export.clicked.connect(() => {
       do_export( win );
       export_done();
     });
 
     var bbox = new Box( Orientation.HORIZONTAL, 5 );
-    bbox.pack_start( _mb,    true,  true );
-    bbox.pack_end(   export, false, false );
+    bbox.append( mb );
+    bbox.append( export );
 
-    _stack = new Stack();
-    _stack.transition_type = StackTransitionType.NONE;
-    _stack.hhomogeneous    = true;
-    _stack.vhomogeneous    = false;
+    _stack_reveal = new Revealer() {
+      child = _stack
+    };
 
-    _stack_reveal = new Revealer();
-    _stack_reveal.add( _stack );
-
-    populate( win );
-
-    _mb.popup.show_all();
-
-    pack_start( bbox,          false, true, 0 );
-    pack_start( _stack_reveal, true,  true, 0 );
-    show_all();
+    append( bbox );
+    append( _stack_reveal );
 
     /* Initialize the UI */
     var last    = win.settings.get_string( "last-export" );
     var current = win.exports.get_by_name( last );
-    handle_mb_change( win, current );
+    handle_mb_change( current );
 
   }
 
-  /* Populates the exporter widget with the available export types */
-  private void populate( MainWindow win ) {
-    for( int i=0; i<win.exports.length(); i++ ) {
-      if( win.exports.index( i ).exportable ) {
-        add_export( win, win.exports.index( i ) );
-      }
-    }
-  }
-
-  private void handle_mb_change( MainWindow win, Export export ) {
-    _mb.label                  = export.label;
+  //-------------------------------------------------------------
+  // Handles a change to the export dropdown.
+  private void handle_mb_change( Export export ) {
     _stack.visible_child_name  = export.name;
     _stack_reveal.reveal_child = export.settings_available();
-    win.settings.set_string( "last-export", export.name );
+    Minder.settings.set_string( "last-export", export.name );
   }
 
   /* Add the given export */
   private void add_export( MainWindow win, Export export ) {
 
-    /* Add menu option to the menubutton */
-    var mnu = new Gtk.MenuItem.with_label( export.label );
-    mnu.activate.connect(() => {
-      handle_mb_change( win, export );
-    });
-    _mb.popup.add( mnu );
-
     /* Add the page */
-    var opts = new Grid();
-    opts.margin             = 5;
-    opts.column_homogeneous = true;
-    opts.row_spacing        = 5;
-    opts.column_spacing     = 5;
-    opts.expand             = true;
+    var opts = new Grid() {
+      margin_start       = 5,
+      margin_end         = 5,
+      margin_top         = 5,
+      margin_bottom      = 5,
+      column_homogeneous = true,
+      row_spacing        = 5,
+      column_spacing     = 5
+    };
     export.add_settings( opts );
 
-    var label = new Label( "<i>" + _( "Export Options" ) + "</i>" );
-    label.use_markup = true;
+    var label = new Label( "<i>" + _( "Export Options" ) + "</i>" ) {
+      use_markup = true
+    };
 
-    var frame = new Frame( null );
-    frame.label_widget  = label;
-    frame.label_xalign  = (float)0.5;
-    frame.margin_top    = 5;
-    frame.margin_bottom = 5;
-    frame.add( opts );
+    var frame = new Frame( null ) {
+      label_widget  = label,
+      label_xalign  = (float)0.5,
+      margin_top    = 5,
+      margin_bottom = 5,
+      child         = opts
+    };
 
     /* Add the options to the options stack */
     _stack.add_named( frame, export.name );
@@ -130,13 +127,13 @@ public class Exporter : Box {
     var name   = _stack.visible_child_name;
     var export = win.exports.get_by_name( name );
 
-    var dialog = new FileChooserDialog( _( "Export As %s" ).printf( export.label ), win, FileChooserAction.SAVE,
-      _( "Cancel" ), ResponseType.CANCEL, _( "Export" ), ResponseType.ACCEPT );
-    Utils.set_chooser_folder( dialog );
+    var dialog = Utils.make_file_chooser( _( "Export As %s" ).printf( export.label ), _( "Export" ) );
 
     /* Set the default filename */
     var default_fname = Utils.rootname( win.get_current_da().get_doc().filename );
-    dialog.set_current_name( win.repair_filename( default_fname, export.extensions ) );
+    dialog.set_initial_name( win.repair_filename( default_fname, export.extensions ) );
+
+    var filters = new GLib.ListStore( typeof( FileFilter ) );
 
     /* Set the filter */
     FileFilter filter = new FileFilter();
@@ -144,26 +141,19 @@ public class Exporter : Box {
     foreach( string extension in export.extensions ) {
       filter.add_pattern( "*" + extension );
     }
-    dialog.set_filter( filter );
 
-    if( dialog.run() == ResponseType.ACCEPT ) {
+    dialog.set_filters( filters );
 
-      /* Close the dialog and parent window */
-      dialog.close();
-
-      /* Perform the export */
-      var fname = dialog.get_filename();
-      export.export( fname = win.repair_filename( fname, export.extensions ), win.get_current_da() );
-      Utils.store_chooser_folder( fname, false );
-
-      /* Generate notification to indicate that the export completed */
-      win.notification( _( "Minder Export Completed" ), fname );
-
-    } else {
-
-      dialog.close();
-
-    }
+    dialog.save.begin( win, null, (obj, res) => {
+      try {
+        var file = dialog.save.end( res );
+        if( file != null ) {
+          var fname = file.get_path();
+          export.export( fname = win.repair_filename( fname, export.extensions ), win.get_current_da() );
+          win.notification( _( "Minder Export Completed" ), fname );
+        }
+      } catch( Error e ) {}
+    });
 
   }
 

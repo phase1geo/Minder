@@ -23,37 +23,42 @@ using Gtk;
 using Gdk;
 using Granite.Widgets;
 
-public class CurrentInspector : Stack {
+public class CurrentInspector : Box {
 
   private DrawArea? _da = null;
+  private Stack     _stack;
 
   public CurrentInspector( MainWindow win ) {
 
-    /* Set the transition duration information */
-    transition_duration = 500;
-    transition_type     = StackTransitionType.NONE;
+    Object( orientation: Orientation.VERTICAL, spacing: 10, valign: Align.FILL );
+
+    _stack = new Stack() {
+      vexpand             = true,
+      transition_duration = 500,
+      transition_type     = StackTransitionType.NONE
+    };
 
     var node_box  = new NodeInspector( win );
     var conn_box  = new ConnectionInspector( win );
     var group_box = new GroupInspector( win );
     var empty_box = new EmptyInspector( win );
 
-    add_named( node_box,  "node" );
-    add_named( conn_box,  "connection" );
-    add_named( group_box, "group" );
-    add_named( empty_box, "empty" );
+    _stack.add_named( node_box,  "node" );
+    _stack.add_named( conn_box,  "connection" );
+    _stack.add_named( group_box, "group" );
+    _stack.add_named( empty_box, "empty" );
 
     win.canvas_changed.connect( tab_changed );
 
-    show_all();
+    append( _stack );
 
   }
 
   /* Sets the width of this panel to the given value */
   public void set_width( int width ) {
-    var ni = get_child_by_name( "node" )       as NodeInspector;
-    var ci = get_child_by_name( "connection" ) as ConnectionInspector;
-    var gi = get_child_by_name( "group" )      as GroupInspector;
+    var ni = _stack.get_child_by_name( "node" )       as NodeInspector;
+    var ci = _stack.get_child_by_name( "connection" ) as ConnectionInspector;
+    var gi = _stack.get_child_by_name( "group" )      as GroupInspector;
     if( ni != null ) {
       ni.set_width( width );
     }
@@ -63,6 +68,12 @@ public class CurrentInspector : Stack {
     if( gi != null ) {
       gi.set_width( width );
     }
+  }
+
+  //-------------------------------------------------------------
+  // Sets the transition duration to the given value.
+  public void set_transition_duration( int duration ) {
+    _stack.set_transition_duration( duration );
   }
 
   /* Resets the width of this inspector to its default width */
@@ -86,23 +97,23 @@ public class CurrentInspector : Stack {
   private void current_changed() {
 
     if( _da.get_current_node() != null ) {
-      if( visible_child_name != "node" ) {
-        transition_type = (visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
-        set_visible_child_name( "node" );
+      if( _stack.visible_child_name != "node" ) {
+        _stack.transition_type = (_stack.visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
+        _stack.set_visible_child_name( "node" );
       }
     } else if( _da.get_current_connection() != null ) {
-      if( visible_child_name != "connection" ) {
-        transition_type = (visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
-        set_visible_child_name( "connection" );
+      if( _stack.visible_child_name != "connection" ) {
+        _stack.transition_type = (_stack.visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
+        _stack.set_visible_child_name( "connection" );
       }
     } else if( _da.get_current_group() != null ) {
-      if( visible_child_name != "group" ) {
-        transition_type = (visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
-        set_visible_child_name( "group" );
+      if( _stack.visible_child_name != "group" ) {
+        _stack.transition_type = (_stack.visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
+        _stack.set_visible_child_name( "group" );
       }
     } else {
-      transition_type = StackTransitionType.SLIDE_DOWN;
-      set_visible_child_name( "empty" );
+      _stack.transition_type = StackTransitionType.SLIDE_DOWN;
+      _stack.set_visible_child_name( "empty" );
     }
 
   }
@@ -111,17 +122,17 @@ public class CurrentInspector : Stack {
   public void grab_note() {
 
     if( _da.get_current_node() != null ) {
-      var ni = get_child_by_name( "node" ) as NodeInspector;
+      var ni = _stack.get_child_by_name( "node" ) as NodeInspector;
       if( ni != null ) {
         ni.grab_note();
       }
     } else if( _da.get_current_connection() != null ) {
-      var ci = get_child_by_name( "connection" ) as ConnectionInspector;
+      var ci = _stack.get_child_by_name( "connection" ) as ConnectionInspector;
       if( ci != null ) {
         ci.grab_note();
       }
     } else if( _da.get_current_group() != null ) {
-      var gi = get_child_by_name( "group" ) as GroupInspector;
+      var gi = _stack.get_child_by_name( "group" ) as GroupInspector;
       if( gi != null ) {
         gi.grab_note();
       }
@@ -131,10 +142,10 @@ public class CurrentInspector : Stack {
 
   /* Grabs the focus on the first field of the displayed pane */
   public void grab_first() {
-    switch( visible_child_name ) {
-      case "node"       :  (get_child_by_name( "node" )       as NodeInspector).grab_first();        break;
-      case "connection" :  (get_child_by_name( "connection" ) as ConnectionInspector).grab_first();  break;
-      case "group"      :  (get_child_by_name( "group" )      as GroupInspector).grab_first();       break;
+    switch( _stack.visible_child_name ) {
+      case "node"       :  (_stack.get_child_by_name( "node" )       as NodeInspector).grab_first();        break;
+      case "connection" :  (_stack.get_child_by_name( "connection" ) as ConnectionInspector).grab_first();  break;
+      case "group"      :  (_stack.get_child_by_name( "group" )      as GroupInspector).grab_first();       break;
     }
   }
 

@@ -25,10 +25,6 @@ using Granite.Widgets;
 
 public class GroupInspector : Box {
 
-  private const Gtk.TargetEntry[] DRAG_TARGETS = {
-    {"text/uri-list", 0, 0}
-  };
-
   private ScrolledWindow _sw;
   private NoteView       _note;
   private DrawArea?      _da        = null;
@@ -44,8 +40,6 @@ public class GroupInspector : Box {
     create_note( win );
 
     win.canvas_changed.connect( tab_changed );
-
-    show_all();
 
   }
 
@@ -65,64 +59,73 @@ public class GroupInspector : Box {
     _sw.width_request = width;
   }
 
+  //-------------------------------------------------------------
+  // Creates the title widget
   private void create_title() {
 
-    var title = new Label( "<big>" + _( "Group" ) + "</big>" );
-    title.use_markup = true;
-    title.justify    = Justification.CENTER;
+    var title = new Label( "<big>" + _( "Group" ) + "</big>" ) {
+      use_markup = true,
+      justify    = Justification.CENTER
+    };
 
-    pack_start( title, false, true );
+    append( title );
 
   }
 
-  /* Creates the note widget */
+  //-------------------------------------------------------------
+  // Creates the note widget
   private void create_note( MainWindow win ) {
 
-    Box   box = new Box( Orientation.VERTICAL, 10 );
-    Label lbl = new Label( Utils.make_title( _( "Note" ) ) );
+    Label lbl = new Label( Utils.make_title( _( "Note" ) ) ) {
+      xalign     = (float)0,
+      use_markup = true
+    };
 
-    lbl.xalign     = (float)0;
-    lbl.use_markup = true;
-
-    _note = new NoteView();
-    _note.set_wrap_mode( Gtk.WrapMode.WORD );
+    _note = new NoteView() {
+      vexpand   = true,
+      wrap_mode = Gtk.WrapMode.WORD
+    };
     _note.add_unicode_completion( win, win.unicoder );
     _note.buffer.text = "";
-    _note.focus_in_event.connect( note_focus_in );
-    _note.focus_out_event.connect( note_focus_out );
+
+    var focus = new EventControllerFocus();
+    _note.add_controller( focus );
+    focus.enter.connect( note_focus_in );
+    focus.leave.connect( note_focus_out );
+
     _note.node_link_added.connect( note_node_link_added );
     _note.node_link_clicked.connect( note_node_link_clicked );
     _note.node_link_hover.connect( note_node_link_hover );
 
-    _sw = new ScrolledWindow( null, null );
-    _sw.min_content_width  = 300;
-    _sw.min_content_height = 100;
-    _sw.add( _note );
+    _sw = new ScrolledWindow() {
+      min_content_width  = 300,
+      min_content_height = 100,
+      child              = _note
+    };
 
-    box.pack_start( lbl, false, false );
-    box.pack_start( _sw,  true,  true );
+    var box = new Box( Orientation.VERTICAL, 10 ) {
+      margin_bottom = 5
+    };
+    box.append( lbl );
+    box.append( _sw );
 
-    box.margin_bottom = 20;
-
-    pack_start( box, true, true );
+    append( box );
 
   }
 
   /* Saves the original version of the node's note so that we can */
-  private bool note_focus_in( EventFocus e ) {
+  private void note_focus_in() {
     _group     = _da.get_current_group();
     _orig_note = _note.buffer.text;
-    return( false );
   }
 
   /* When the note buffer loses focus, save the note change to the undo buffer */
-  private bool note_focus_out( EventFocus e ) {
+  private void note_focus_out() {
     if( (_group != null) && (_note.buffer.text != _orig_note) ) {
       _group.note = _note.buffer.text;
       _da.undo_buffer.add_item( new UndoGroupNote( _group, _orig_note ) );
       _da.auto_save();
     }
-    return( false );
   }
 
   /* When a node link is added, tell the current node */
