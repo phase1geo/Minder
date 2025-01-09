@@ -59,6 +59,7 @@ public class StyleInspector : Box {
   private Scale            _node_margin;
   private Scale            _node_padding;
   private FontDialogButton _node_font;
+  private ModeButtons      _node_text_align;
   private SpinButton       _node_width;
   private Switch           _node_markup;
   private ImageMenu        _conn_dash;
@@ -66,8 +67,10 @@ public class StyleInspector : Box {
   private Scale            _conn_lwidth;
   private Scale            _conn_padding;
   private FontDialogButton _conn_font;
+  private ModeButtons      _conn_text_align;
   private SpinButton       _conn_twidth;
   private FontDialogButton _callout_font;
+  private ModeButtons      _callout_text_align;
   private Scale            _callout_padding;
   private Scale            _callout_ptr_width;
   private Scale            _callout_ptr_length;
@@ -112,6 +115,7 @@ public class StyleInspector : Box {
     box.append( _callout_group );
 
     var sw = new ScrolledWindow() {
+      vexpand = true,
       child = box
     };
     sw.child.set_size_request( 200, 600 );
@@ -483,6 +487,7 @@ public class StyleInspector : Box {
     var node_margin      = create_node_margin_ui();
     var node_padding     = create_node_padding_ui();
     var node_font        = create_node_font_ui();
+    var node_text_align  = create_node_text_align_ui();
     var node_width       = create_node_width_ui();
     var node_markup      = create_node_markup_ui();
 
@@ -499,6 +504,7 @@ public class StyleInspector : Box {
     cbox.append( node_margin );
     cbox.append( node_padding );
     cbox.append( node_font );
+    cbox.append( node_text_align );
     cbox.append( node_width );
     cbox.append( node_markup );
 
@@ -761,7 +767,45 @@ public class StyleInspector : Box {
 
   }
 
-  /* Creates the node width selector */
+  //-------------------------------------------------------------
+  // Creates the UI for the node text alignment widget.
+  private Box create_node_text_align_ui() {
+
+    var lbl = new Label( _( "Text Alignment" ) ) {
+      halign  = Align.START,
+      hexpand = true
+    };
+
+    _node_text_align = new ModeButtons() {
+      halign = Align.END,
+      valign = Align.CENTER
+    };
+    _node_text_align.changed.connect( set_node_text_align );
+
+    _node_text_align.add_button( "format-justify-left-symbolic",   _( "Left" ) );
+    _node_text_align.add_button( "format-justify-center-symbolic", _( "Center" ) );
+    _node_text_align.add_button( "format-justify-right-symbolic",  _( "Right" ) );
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.append( lbl );
+    box.append( _node_text_align );
+
+    return( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Sets the node text alignment value.
+  private void set_node_text_align( int index ) {
+    switch( index ) {
+      case 0 :  _da.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.LEFT,   _da ) );  break;
+      case 1 :  _da.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.CENTER, _da ) );  break;
+      case 2 :  _da.undo_buffer.add_item( new UndoStyleNodeTextAlign( _affects, Pango.Alignment.RIGHT,  _da ) );  break;
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Creates the node width selector
   private Box create_node_width_ui() {
 
     var lbl = new Label( _( "Width" ) ) {
@@ -827,12 +871,13 @@ public class StyleInspector : Box {
   /* Creates the connection style UI */
   private Box create_connection_ui() {
 
-    var conn_dash    = create_connection_dash_ui();
-    var conn_arrow   = create_connection_arrow_ui();
-    var conn_lwidth  = create_connection_line_width_ui();
-    var conn_padding = create_connection_padding_ui();
-    var conn_font    = create_connection_font_ui();
-    var conn_twidth  = create_connection_title_width_ui();
+    var conn_dash       = create_connection_dash_ui();
+    var conn_arrow      = create_connection_arrow_ui();
+    var conn_lwidth     = create_connection_line_width_ui();
+    var conn_padding    = create_connection_padding_ui();
+    var conn_font       = create_connection_font_ui();
+    var conn_text_align = create_connection_text_align_ui();
+    var conn_twidth     = create_connection_title_width_ui();
 
     var cbox = new Box( Orientation.VERTICAL, 10 ) {
       homogeneous   = true,
@@ -846,6 +891,7 @@ public class StyleInspector : Box {
     cbox.append( conn_lwidth );
     cbox.append( conn_padding );
     cbox.append( conn_font );
+    cbox.append( conn_text_align );
     cbox.append( conn_twidth );
 
     /* Create expander */
@@ -860,7 +906,7 @@ public class StyleInspector : Box {
 
     var sep = new Separator( Orientation.HORIZONTAL );
 
-    var box = new Box( Orientation.VERTICAL, 0 );
+    var box = new Box( Orientation.VERTICAL, 5 );
     box.append( _conn_exp );
     box.append( sep );
 
@@ -1069,6 +1115,43 @@ public class StyleInspector : Box {
 
   }
 
+  //-------------------------------------------------------------
+  // Creates the UI for the connection text alignment widget.
+  private Box create_connection_text_align_ui() {
+
+    var lbl = new Label( _( "Text Alignment" ) ) {
+      halign  = Align.START,
+      hexpand = true
+    };
+
+    _conn_text_align = new ModeButtons() {
+      halign = Align.END,
+      valign = Align.CENTER
+    };
+    _conn_text_align.changed.connect( set_connection_text_align );
+
+    _conn_text_align.add_button( "format-justify-left-symbolic",   _( "Left" ) );
+    _conn_text_align.add_button( "format-justify-center-symbolic", _( "Center" ) );
+    _conn_text_align.add_button( "format-justify-right-symbolic",  _( "Right" ) );
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.append( lbl );
+    box.append( _conn_text_align );
+
+    return( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Sets the connection text alignment value.
+  private void set_connection_text_align( int index ) {
+    switch( index ) {
+      case 0 :  _da.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, Pango.Alignment.LEFT,   _da ) );  break;
+      case 1 :  _da.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, Pango.Alignment.CENTER, _da ) );  break;
+      case 2 :  _da.undo_buffer.add_item( new UndoStyleConnectionTextAlign( _affects, Pango.Alignment.RIGHT,  _da ) );  break;
+    }
+  }
+
   /* Creates the connection title width selector */
   private Box create_connection_title_width_ui() {
 
@@ -1103,10 +1186,11 @@ public class StyleInspector : Box {
   /* Creates the callout style UI */
   private Box create_callout_ui() {
 
-    var callout_font    = create_callout_font_ui();
-    var callout_padding = create_callout_padding_ui();
-    var callout_pwidth  = create_callout_pointer_width_ui();
-    var callout_plength = create_callout_pointer_length_ui();
+    var callout_font       = create_callout_font_ui();
+    var callout_text_align = create_callout_text_align_ui();
+    var callout_padding    = create_callout_padding_ui();
+    var callout_pwidth     = create_callout_pointer_width_ui();
+    var callout_plength    = create_callout_pointer_length_ui();
 
     var cbox = new Box( Orientation.VERTICAL, 10 ) {
       homogeneous   = true,
@@ -1116,6 +1200,7 @@ public class StyleInspector : Box {
       margin_bottom = 10
     };
     cbox.append( callout_font );
+    cbox.append( callout_text_align );
     cbox.append( callout_padding );
     cbox.append( callout_pwidth );
     cbox.append( callout_plength );
@@ -1180,6 +1265,43 @@ public class StyleInspector : Box {
 
     return( box );
 
+  }
+
+  //-------------------------------------------------------------
+  // Creates the UI for the callout text alignment widget.
+  private Box create_callout_text_align_ui() {
+
+    var lbl = new Label( _( "Text Alignment" ) ) {
+      halign  = Align.START,
+      hexpand = true
+    };
+
+    _callout_text_align = new ModeButtons() {
+      halign = Align.END,
+      valign = Align.CENTER
+    };
+    _callout_text_align.changed.connect( set_callout_text_align );
+
+    _callout_text_align.add_button( "format-justify-left-symbolic",   _( "Left" ) );
+    _callout_text_align.add_button( "format-justify-center-symbolic", _( "Center" ) );
+    _callout_text_align.add_button( "format-justify-right-symbolic",  _( "Right" ) );
+
+    var box = new Box( Orientation.HORIZONTAL, 0 );
+    box.append( lbl );
+    box.append( _callout_text_align );
+
+    return( box );
+
+  }
+
+  //-------------------------------------------------------------
+  // Sets the callout text alignment value.
+  private void set_callout_text_align( int index ) {
+    switch( index ) {
+      case 0 :  _da.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, Pango.Alignment.LEFT,   _da ) );  break;
+      case 1 :  _da.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, Pango.Alignment.CENTER, _da ) );  break;
+      case 2 :  _da.undo_buffer.add_item( new UndoStyleCalloutTextAlign( _affects, Pango.Alignment.RIGHT,  _da ) );  break;
+    }
   }
 
   /* Allows the user to change the callout padding */
@@ -1424,6 +1546,15 @@ public class StyleInspector : Box {
     }
   }
 
+  private void update_node_text_align_with_style( Style style ) {
+    if( style.node_text_align == null ) return;
+    switch( style.node_text_align ) {
+      case Pango.Alignment.LEFT   :  _node_text_align.selected = 0;  break;
+      case Pango.Alignment.CENTER :  _node_text_align.selected = 1;  break;
+      case Pango.Alignment.RIGHT  :  _node_text_align.selected = 2;  break;
+    }
+  }
+
   private void update_conn_dashes_with_style( Style style ) {
     var link_dashes = styles.get_link_dashes();
     for( int i=0; i<link_dashes.length; i++ ) {
@@ -1445,7 +1576,26 @@ public class StyleInspector : Box {
     }
   }
 
-  /* Update the user interface elements to match the selected level */
+  private void update_conn_text_align_with_style( Style style ) {
+    if( style.connection_text_align == null ) return;
+    switch( style.connection_text_align ) {
+      case Pango.Alignment.LEFT   :  _conn_text_align.selected = 0;  break;
+      case Pango.Alignment.CENTER :  _conn_text_align.selected = 1;  break;
+      case Pango.Alignment.RIGHT  :  _conn_text_align.selected = 2;  break;
+    }
+  }
+
+  private void update_callout_text_align_with_style( Style style ) {
+    if( style.callout_text_align == null ) return;
+    switch( style.callout_text_align ) {
+      case Pango.Alignment.LEFT   :  _callout_text_align.selected = 0;  break;
+      case Pango.Alignment.CENTER :  _callout_text_align.selected = 1;  break;
+      case Pango.Alignment.RIGHT  :  _callout_text_align.selected = 2;  break;
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Update the user interface elements to match the selected level
   private void update_ui_with_style( Style style ) {
 
     var branch_margin   = style.branch_margin;
@@ -1470,8 +1620,11 @@ public class StyleInspector : Box {
     update_link_types_with_style( style );
     update_link_dashes_with_style( style );
     update_node_borders_with_style( style );
+    update_node_text_align_with_style( style );
     update_conn_dashes_with_style( style );
     update_conn_arrows_with_style( style );
+    update_conn_text_align_with_style( style );
+    update_callout_text_align_with_style( style );
     _link_width.set_value( (double)link_width );
     _link_arrow.set_active( (bool)link_arrow );
     _node_borderwidth.set_value( (double)node_bw );

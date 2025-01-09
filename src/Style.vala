@@ -37,6 +37,7 @@ public class Style {
   public int?             node_margin            { get; set; default = null; }
   public int?             node_padding           { get; set; default = null; }
   public FontDescription? node_font              { get; set; default = null; }
+  public Pango.Alignment? node_text_align        { get; set; default = null; }
   public int?             node_width             { get; set; default = null; }
   public bool?            node_markup            { get; set; default = null; }
   public LinkDash?        connection_dash        { get; set; default = null; }
@@ -44,8 +45,10 @@ public class Style {
   public string?          connection_arrow       { get; set; default = null; }
   public int?             connection_padding     { get; set; default = null; }
   public FontDescription? connection_font        { get; set; default = null; }
+  public Pango.Alignment? connection_text_align  { get; set; default = null; }
   public int?             connection_title_width { get; set; default = null; }
   public FontDescription? callout_font           { get; set; default = null; }
+  public Pango.Alignment? callout_text_align     { get; set; default = null; }
   public int?             callout_padding        { get; set; default = null; }
   public int?             callout_ptr_width      { get; set; default = null; }
   public int?             callout_ptr_length     { get; set; default = null; }
@@ -95,6 +98,7 @@ public class Style {
       node_margin            = null;
       node_padding           = null;
       node_font              = null;
+      node_text_align        = null;
       node_width             = null;
       node_markup            = null;
       connection_dash        = null;
@@ -102,8 +106,10 @@ public class Style {
       connection_arrow       = null;
       connection_padding     = null;
       connection_font        = null;
+      connection_text_align  = null;
       connection_title_width = null;
       callout_font           = null;
+      callout_text_align     = null;
       callout_padding        = null;
       callout_ptr_width      = null;
       callout_ptr_length     = null;
@@ -128,6 +134,7 @@ public class Style {
     if( ((s.node_margin            != null) || !s._template) && (node_margin            != s.node_margin) )            { changed = true;  node_margin            = s.node_margin; }
     if( ((s.node_padding           != null) || !s._template) && (node_padding           != s.node_padding) )           { changed = true;  node_padding           = s.node_padding; }
     if( ((s.node_font              != null) || !s._template) )                                                         { changed = true;  node_font              = s.node_font.copy(); }
+    if( ((s.node_text_align        != null) || !s._template) && (node_text_align        != s.node_text_align) )        { changed = true;  node_text_align        = s.node_text_align; }
     if( ((s.node_width             != null) || !s._template) && (node_width             != s.node_width) )             { changed = true;  node_width             = s.node_width; }
     if( ((s.node_markup            != null) || !s._template) && (node_markup            != s.node_markup) )            { changed = true;  node_markup            = s.node_markup; }
     if( ((s.connection_dash        != null) || !s._template) && (connection_dash        != s.connection_dash) )        { changed = true;  connection_dash        = s.connection_dash; }
@@ -135,8 +142,10 @@ public class Style {
     if( ((s.connection_arrow       != null) || !s._template) && (connection_arrow       != s.connection_arrow) )       { changed = true;  connection_arrow       = s.connection_arrow; }
     if( ((s.connection_padding     != null) || !s._template) && (connection_padding     != s.connection_padding) )     { changed = true;  connection_padding     = s.connection_padding; }
     if( ((s.connection_font        != null) || !s._template) )                                                         { changed = true;  connection_font        = s.connection_font.copy(); }
+    if( ((s.connection_text_align  != null) || !s._template) && (connection_text_align  != s.connection_text_align) )  { changed = true;  connection_text_align  = s.connection_text_align; }
     if( ((s.connection_title_width != null) || !s._template) && (connection_title_width != s.connection_title_width) ) { changed = true;  connection_title_width = s.connection_title_width; }
     if( ((s.callout_font           != null) || !s._template) )                                                         { changed = true;  callout_font           = s.callout_font.copy(); }
+    if( ((s.callout_text_align     != null) || !s._template) && (callout_text_align     != s.callout_text_align) )     { changed = true;  callout_text_align     = s.callout_text_align; }
     if( ((s.callout_padding        != null) || !s._template) && (callout_padding        != s.callout_padding) )        { changed = true;  callout_padding        = s.callout_padding; }
     if( ((s.callout_ptr_width      != null) || !s._template) && (callout_ptr_width      != s.callout_ptr_width) )      { changed = true;  callout_ptr_width      = s.callout_ptr_width; }
     if( ((s.callout_ptr_length     != null) || !s._template) && (callout_ptr_length     != s.callout_ptr_length) )     { changed = true;  callout_ptr_length     = s.callout_ptr_length; }
@@ -159,6 +168,13 @@ public class Style {
     if( node_margin            != null ) arr += "nmargin[%d]".printf( node_margin );
     if( node_padding           != null ) arr += "npad[%d]".printf( node_padding );
     if( node_font              != null ) arr += "nfont";
+    if( node_text_align        != null ) {
+      switch( node_text_align ) {
+        case Pango.Alignment.LEFT   :  arr += "nalign[left]";    break;
+        case Pango.Alignment.CENTER :  arr += "nalign[center]";  break;
+        case Pango.Alignment.RIGHT  :  arr += "nalign[right]";   break;
+      }
+    }
     if( node_width             != null ) arr += "nwidth[%d]".printf( node_width );
     if( node_markup            != null ) arr += "nmarkup[%s]".printf( node_markup.to_string() );
     if( connection_dash        != null ) arr += "cdash[%s]".printf( connection_dash.name );
@@ -166,8 +182,22 @@ public class Style {
     if( connection_arrow       != null ) arr += "carrow[%s]".printf( connection_arrow );
     if( connection_padding     != null ) arr += "cpad[%d]".printf( connection_padding );
     if( connection_font        != null ) arr += "cfont";
+    if( connection_text_align  != null ) {
+      switch( connection_text_align ) {
+        case Pango.Alignment.LEFT   :  arr += "calign[left]";    break;
+        case Pango.Alignment.CENTER :  arr += "calign[center]";  break;
+        case Pango.Alignment.RIGHT  :  arr += "calign[right]";   break;
+      }
+    }
     if( connection_title_width != null ) arr += "ctwidth[%d]".printf( connection_title_width );
     if( callout_font           != null ) arr += "ofont";
+    if( callout_text_align  != null ) {
+      switch( callout_text_align ) {
+        case Pango.Alignment.LEFT   :  arr += "oalign[left]";    break;
+        case Pango.Alignment.CENTER :  arr += "oalign[center]";  break;
+        case Pango.Alignment.RIGHT  :  arr += "oalign[right]";   break;
+      }
+    }
     if( callout_padding        != null ) arr += "opad[%d]".printf( callout_padding );
     if( callout_ptr_width      != null ) arr += "opw[%d]".printf( callout_ptr_width );
     if( callout_ptr_length     != null ) arr += "opl[%d]".printf( callout_ptr_length );
@@ -230,6 +260,14 @@ public class Style {
     if( nf != null ) {
       node_font = FontDescription.from_string( nf );
     }
+    string? nta = node->get_prop( "nodetextalign" );
+    if( nta != null ) {
+      switch( nta ) {
+        case "left"   :  node_text_align = Pango.Alignment.LEFT;    break;
+        case "center" :  node_text_align = Pango.Alignment.CENTER;  break;
+        case "right"  :  node_text_align = Pango.Alignment.RIGHT;   break;
+      }
+    }
     string? nmu = node->get_prop( "nodemarkup" );
     if( nmu != null ) {
       node_markup = bool.parse( nmu );
@@ -263,6 +301,14 @@ public class Style {
     if( f != null ) {
       connection_font = FontDescription.from_string( f );
     }
+    string? cta = node->get_prop( "connectiontextalign" );
+    if( cta != null ) {
+      switch( cta ) {
+        case "left"   :  connection_text_align = Pango.Alignment.LEFT;    break;
+        case "center" :  connection_text_align = Pango.Alignment.CENTER;  break;
+        case "right"  :  connection_text_align = Pango.Alignment.RIGHT;   break;
+      }
+    }
     string? tw = node->get_prop( "connectiontwidth" );
     if( tw != null ) {
       connection_title_width = int.parse( tw );
@@ -275,6 +321,15 @@ public class Style {
     var f = node->get_prop( "calloutfont" );
     if( f != null ) {
       callout_font = FontDescription.from_string( f );
+    }
+
+    string? ta = node->get_prop( "connectiontextalign" );
+    if( ta != null ) {
+      switch( ta ) {
+        case "left"   :  callout_text_align = Pango.Alignment.LEFT;    break;
+        case "center" :  callout_text_align = Pango.Alignment.CENTER;  break;
+        case "right"  :  callout_text_align = Pango.Alignment.RIGHT;   break;
+      }
     }
 
     var p = node->get_prop( "calloutpadding" );
@@ -336,6 +391,13 @@ public class Style {
     if( node_font != null ) {
       n->set_prop( "nodefont", node_font.to_string() );
     }
+    if( node_text_align != null ) {
+      switch( node_text_align ) {
+        case Pango.Alignment.LEFT   :  n->set_prop( "nodetextalign", "left" );    break;
+        case Pango.Alignment.CENTER :  n->set_prop( "nodetextalign", "center" );  break;
+        case Pango.Alignment.RIGHT  :  n->set_prop( "nodetextalign", "right" );   break;
+      }
+    }
     if( node_markup != null ) {
       n->set_prop( "nodemarkup", node_markup.to_string() );
     }
@@ -368,6 +430,13 @@ public class Style {
     if( connection_font != null ) {
       n->set_prop( "connectionfont", connection_font.to_string() );
     }
+    if( connection_text_align != null ) {
+      switch( connection_text_align ) {
+        case Pango.Alignment.LEFT   :  n->set_prop( "connectiontextalign", "left" );    break;
+        case Pango.Alignment.CENTER :  n->set_prop( "connectiontextalign", "center" );  break;
+        case Pango.Alignment.RIGHT  :  n->set_prop( "connectiontextalign", "right" );   break;
+      }
+    }
     if( connection_title_width != null ) {
       n->set_prop( "connectiontwidth", connection_title_width.to_string() );
     }
@@ -387,6 +456,13 @@ public class Style {
 
     if( callout_font != null ) {
       n->set_prop( "calloutfont", callout_font.to_string() );
+    }
+    if( callout_text_align != null ) {
+      switch( callout_text_align ) {
+        case Pango.Alignment.LEFT   :  n->set_prop( "callouttextalign", "left" );    break;
+        case Pango.Alignment.CENTER :  n->set_prop( "callouttextalign", "center" );  break;
+        case Pango.Alignment.RIGHT  :  n->set_prop( "callouttextalign", "right" );   break;
+      }
     }
     if( callout_padding != null) {
       n->set_prop( "calloutpadding", callout_padding.to_string() );

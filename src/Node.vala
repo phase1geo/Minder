@@ -383,6 +383,7 @@ public class Node : Object {
       var branch_margin = style.branch_margin;
       if( _style.copy( value ) ) {
         name.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
+        name.set_text_alignment( _style.node_text_align );
         if( _sequence_num != null ) {
           _sequence_num.set_font( _style.node_font.get_family(), (_style.node_font.get_size() / Pango.SCALE) );
         }
@@ -776,27 +777,41 @@ public class Node : Object {
     update_size();
   }
 
+  //-------------------------------------------------------------
+  // Calculates the node size based on the width and height of all of the node elements.
+  // Also returns whether the node width was dictated by the embedded image or not.
+  private void calculate_node_size( out double width, out double height, out double name_space ) {
+
+    var margin       = style.node_margin  ?? 0;
+    var padding      = style.node_padding ?? 0;
+    var stk_height   = sticker_height();
+    var noname_width = task_width() + sticker_width() + sequence_width() + note_width() + linked_node_width();
+    var name_width   = noname_width + _name.width;
+    var name_height  = (_name.height < stk_height) ? stk_height : _name.height;
+
+    if( _image != null ) {
+      width      = (margin * 2) + (padding * 2) + ((name_width < _image.width) ? _image.width : name_width);
+      height     = (margin * 2) + (padding * 2) + _image.height + padding + name_height;
+      name_space = (name_width < _image.width) ? (_image.width - name_width) : 0.0;
+    } else {
+      width      = (margin * 2) + (padding * 2) + name_width;
+      height     = (margin * 2) + (padding * 2) + name_height;
+      name_space = 0.0;
+    }
+
+  }
+
   /* Called whenever the node size is changed */
   private void update_size() {
 
     if( !_loaded ) return;
 
+    double name_space;
+
     var orig_width  = _total_width;
     var orig_height = _total_height;
-    var margin      = style.node_margin  ?? 0;
-    var padding     = style.node_padding ?? 0;
-    var stk_height  = sticker_height();
-    var name_width  = task_width() + sticker_width() + sequence_width() + _name.width + note_width() + linked_node_width();
-    var name_height = (_name.height < stk_height) ? stk_height : _name.height;
 
-    if( _image != null ) {
-      _width  = (margin * 2) + (padding * 2) + ((name_width < _image.width) ? _image.width : name_width);
-      _height = (margin * 2) + (padding * 2) + _image.height + padding + name_height;
-    } else {
-      _width  = (margin * 2) + (padding * 2) + name_width;
-      _height = (margin * 2) + (padding * 2) + name_height;
-    }
-
+    calculate_node_size( out _width, out _height, out name_space );
     update_total_size();
 
     var diffw = _total_width - orig_width;
@@ -2112,6 +2127,10 @@ public class Node : Object {
   /* Adjusts the position of the text object */
   private void position_text() {
 
+    double node_width, node_height, name_space;
+
+    calculate_node_size( out node_width, out node_height, out name_space );
+
     var margin     = style.node_margin  ?? 0;
     var padding    = style.node_padding ?? 0;
     var stk_height = sticker_height();
@@ -2121,6 +2140,13 @@ public class Node : Object {
 
     name.posx = posx + margin + padding + task_width() + sticker_width() + sequence_width();
     name.posy = posy + margin + padding + img_height + ((name.height < stk_height) ? ((stk_height - name.height) / 2) : 0);
+
+    if( style.node_text_align != null ) {
+      switch( style.node_text_align ) {
+        case Pango.Alignment.CENTER :  name.posx += (name_space / 2);  break;
+        case Pango.Alignment.RIGHT  :  name.posx += name_space;        break;
+      }
+    }
 
     if( (_callout != null) && ((orig_posx != name.posx) || (orig_posy != name.posy)) ) {
       _callout.position_text( true );

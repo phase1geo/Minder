@@ -172,6 +172,7 @@ public class CanvasText : Object {
     _text.copy( ct.text );
     _line_layout.set_font_description( ct._pango_layout.get_font_description() );
     _pango_layout.set_font_description( ct._pango_layout.get_font_description() );
+    _pango_layout.set_alignment( ct._pango_layout.get_alignment() );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     update_size( true );
   }
@@ -194,6 +195,15 @@ public class CanvasText : Object {
     fd.set_size( int_fsize );
     _line_layout.set_font_description( fd );
     _pango_layout.set_font_description( fd );
+    update_size( true );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the text alignment to the given value.
+  public void set_text_alignment( Pango.Alignment? text_align ) {
+    if( text_align == null ) return;
+    _line_layout.set_alignment( text_align );
+    _pango_layout.set_alignment( text_align );
     update_size( true );
   }
 

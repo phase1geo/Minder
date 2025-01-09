@@ -37,6 +37,9 @@ public class Styles {
   /* Default constructor */
   public Styles() {
 
+    var rtl        = (Gtk.get_locale_direction() == Gtk.TextDirection.RTL);
+    var text_align = rtl ? Pango.Alignment.RIGHT : Pango.Alignment.LEFT;
+
     /* Create the link types */
     var lt_straight = new LinkTypeStraight();
     var lt_squared  = new LinkTypeSquared();
@@ -94,12 +97,12 @@ public class Styles {
         level.style.node_border  = nb_rounded;
         level.style.node_margin  = 10;
         level.style.node_padding = 10;
-//        level.style.node_font    = FOOBAR;
       } else {
         level.style.node_border  = nb_underlined;
         level.style.node_margin  = 8;
         level.style.node_padding = 6;
       }
+      level.style.node_text_align        = text_align;
       level.style.node_width             = 200;
       level.style.node_borderwidth       = 4;
       level.style.node_fill              = false;
@@ -109,9 +112,11 @@ public class Styles {
       level.style.connection_arrow       = "fromto";
       level.style.connection_padding     = 3;
       level.style.connection_title_width = 100;
+      level.style.connection_text_align  = text_align;
       level.style.callout_padding        = 5;
       level.style.callout_ptr_width      = 20;
       level.style.callout_ptr_length     = 20;
+      level.style.callout_text_align     = text_align;
       _styles.append_val( level );
     }
 
