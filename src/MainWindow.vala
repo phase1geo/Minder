@@ -84,6 +84,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private Button?           _zoom_out   = null;
   private Button?           _undo_btn   = null;
   private Button?           _redo_btn   = null;
+  private ToggleButton?     _brain_btn  = null;
   private ToggleButton?     _focus_btn  = null;
   private ToggleButton?     _prop_btn   = null;
   private string            _prop_show;
@@ -94,6 +95,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private int               _text_size;
   private Exports           _exports;
   private UnicodeInsert     _unicoder;
+  private Brainstorm        _brain;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",           action_save },
@@ -192,6 +194,17 @@ public class MainWindow : Gtk.ApplicationWindow {
     _nb.page_reordered.connect( tab_reordered );
     _nb.page_removed.connect( tab_removed );
 
+    // Create the brainstorm pane
+    _brain = new Brainstorm() {
+      valign  = Align.FILL,
+      vexpand = true,
+      visible = false
+    };
+
+    var content = new Box( Orientation.HORIZONTAL, 0 );
+    content.append( _nb );
+    content.append( _brain );
+
     /* Create title toolbar */
     var new_btn = new Button.from_icon_name( get_icon_name( "document-new" ) ) {
       tooltip_markup = Utils.tooltip_with_accel( _( "New File" ), "<Control>n" ),
@@ -235,12 +248,13 @@ public class MainWindow : Gtk.ApplicationWindow {
     add_search_button();
     add_zoom_button();
     add_focus_button();
+    add_brainstorm_button();
 
     /* Create the panel so that we can resize */
     _pane = new Paned( Orientation.HORIZONTAL ) {
       halign           = Align.FILL,
       valign           = Align.FILL,
-      start_child      = _nb,
+      start_child      = content,
       resize_end_child = false,
       shrink_end_child = false,
       position         = _settings.get_int( "properties-width" )
@@ -960,6 +974,27 @@ public class MainWindow : Gtk.ApplicationWindow {
       popover      = popover
     };
     _header.pack_end( menu_btn );
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds the brainstorm button to the headerbar
+  private void add_brainstorm_button() {
+
+    _brain_btn = new ToggleButton() {
+      icon_name      = (on_elementary ? "applications-internet" : "applications-internet-symbolic"),
+      tooltip_markup = Utils.tooltip_with_accel( _( "Brainstorm" ), "<Control><Shift>b" ),
+    };
+
+    _brain_btn.clicked.connect((e) => {
+      var da = get_current_da();
+      _brain.visible = !_brain.visible;
+      if( _brain.visible ) {
+        _brain.grab_focus();
+      }
+    });
+
+    _header.pack_end( _brain_btn );
 
   }
 

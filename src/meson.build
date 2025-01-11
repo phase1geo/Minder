@@ -3,6 +3,7 @@ sources += files(
     'Animator.vala',
     'Application.vala',
     'Bezier.vala',
+    'Brainstorm.vala',
     'Callout.vala',
     'CalloutMenu.vala',
     'CanvasText.vala',

@@ -347,6 +347,11 @@ public class DrawArea : Gtk.DrawingArea {
     sticker_drop.motion.connect( handle_sticker_drag_motion );
     sticker_drop.drop.connect( handle_sticker_drop );
 
+    var text_drop = new DropTarget( typeof(string), Gdk.DragAction.MOVE );
+    this.add_controller( text_drop );
+    text_drop.motion.connect( handle_text_drag_motion );
+    text_drop.drop.connect( handle_text_drop );
+
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
     this.focusable = true;
@@ -5660,6 +5665,56 @@ public class DrawArea : Gtk.DrawingArea {
     is_loaded = true;
     changed();
     return( false );
+  }
+
+  private Gdk.DragAction handle_text_drag_motion( double x, double y ) {
+
+    Node       attach_node;
+    Connection attach_conn;
+    Sticker    attach_sticker;
+
+    var scaled_x = scale_value( x );
+    var scaled_y = scale_value( y );
+
+    get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
+
+    // Clear the node of any attached nodes
+    if( _attach_node != null ) {
+      set_node_mode( _attach_node, NodeMode.NONE );
+    }
+
+    if( attach_node != null ) {
+      set_node_mode( attach_node, NodeMode.DROPPABLE );
+      _attach_node = attach_node;
+      queue_draw();
+    } else if( _attach_node != null ) {
+      _attach_node = null;
+      queue_draw();
+    }
+
+    return( Gdk.DragAction.MOVE );
+
+  }
+
+  /* Called when text is dropped on the DrawArea */
+  private bool handle_text_drop( Value val, double x, double y ) {
+
+    Node node;
+    var  text = (string)val;
+
+    if( (_attach_node != null) && (_attach_node.mode == NodeMode.DROPPABLE) ) {
+      node = create_child_node( _attach_node, text );
+      undo_buffer.add_item( new UndoNodeInsert( node, node.index() ) );
+      if( select_node( node ) ) {
+        queue_draw();
+        see();
+        auto_save();
+      }
+      return( true );
+    }
+
+    return( false );
+
   }
 
   /* Called whenever we drag something over the canvas */
