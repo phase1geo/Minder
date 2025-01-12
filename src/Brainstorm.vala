@@ -24,18 +24,21 @@ using Gdk;
 
 public class Brainstorm : Box {
 
-  private Entry   _entry;
-  private ListBox _ideas;
+  private MainWindow _win;
+  private Entry      _entry;
+  private ListBox    _ideas;
 
   //-------------------------------------------------------------
   // Constructor
-  public Brainstorm() {
+  public Brainstorm( MainWindow win ) {
 
-    Object( orientation:Orientation.VERTICAL, spacing:10 );
+    Object( orientation:Orientation.VERTICAL, spacing:5 );
+
+    _win = win;
 
     _entry = new Entry() {
       placeholder_text = _( "Enter Idea" ),
-      margin_top       = 10,
+      margin_top       = 5,
       margin_start     = 5,
       margin_end       = 5
     };
@@ -53,9 +56,9 @@ public class Brainstorm : Box {
     var sw = new ScrolledWindow() {
       vscrollbar_policy = PolicyType.AUTOMATIC,
       hscrollbar_policy = PolicyType.NEVER,
-      margin_bottom = 10,
-      margin_start  = 10,
-      margin_end    = 10,
+      margin_bottom = 5,
+      margin_start  = 5,
+      margin_end    = 5,
       valign  = Align.FILL,
       vexpand = true,
       child   = _ideas
@@ -75,6 +78,8 @@ public class Brainstorm : Box {
       wrap_mode     = Pango.WrapMode.WORD,
       halign        = Align.START,
       hexpand       = true,
+      margin_start  = 5,
+      margin_end    = 5,
       margin_top    = 10,
       margin_bottom = 10
     };
@@ -84,6 +89,8 @@ public class Brainstorm : Box {
     var drag = new DragSource() {
       actions = DragAction.MOVE
     };
+
+    drag.set_icon( create_icon( label, text ), 10, 10 );
 
     label.add_controller( drag );
 
@@ -99,6 +106,44 @@ public class Brainstorm : Box {
         _ideas.remove( label.get_parent() ); 
       }
     });
+
+  }
+
+  //-------------------------------------------------------------
+  // Creates the icon that will be displayed when dragging and dropping
+  // the given text from the brainstorm list.
+  private Paintable create_icon( Label label, string text ) {
+    
+    Pango.Rectangle log, ink;
+
+    var theme = _win.get_current_da().get_theme();
+
+    var layout = label.create_pango_layout( text );
+    layout.set_wrap( Pango.WrapMode.WORD_CHAR );
+    layout.set_width( 200 * Pango.SCALE );
+    layout.get_extents( out ink, out log );
+
+    var padding = 10;
+    var alpha   = 0.5;
+    var width   = (log.width  / Pango.SCALE) + (padding * 2);
+    var height  = (log.height / Pango.SCALE) + (padding * 2);
+
+    var rect = Graphene.Rect.alloc();
+    rect.init( (float)0.0, (float)0.0, (float)width, (float)height );
+
+    var snapshot = new Gtk.Snapshot();
+    var context  = snapshot.append_cairo( rect );
+
+    Utils.set_context_color_with_alpha( context, theme.get_color( "root_background" ), alpha );
+    context.rectangle( 0, 0, width, height );
+    context.fill();
+
+    Utils.set_context_color_with_alpha( context, theme.get_color( "root_foreground" ), alpha );
+    context.move_to( (padding - (log.x / Pango.SCALE)), padding );
+    Pango.cairo_show_layout( context, layout );
+    context.new_path();
+
+    return( snapshot.free_to_paintable( null ) );
 
   }
 

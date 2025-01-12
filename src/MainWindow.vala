@@ -195,7 +195,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _nb.page_removed.connect( tab_removed );
 
     // Create the brainstorm pane
-    _brain = new Brainstorm() {
+    _brain = new Brainstorm( this ) {
       valign  = Align.FILL,
       vexpand = true,
       visible = false
