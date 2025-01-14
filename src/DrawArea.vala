@@ -203,6 +203,11 @@ public class DrawArea : Gtk.DrawingArea {
       }
     }
   }
+  public Node? attach_node {
+    get {
+      return( _attach_node );
+    }
+  }
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -2280,6 +2285,16 @@ public class DrawArea : Gtk.DrawingArea {
       conn = _connections.on_curve( x, y );
     }
     sticker = _stickers.is_within( x, y );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if a node is droppable at the given coordinates
+  public bool text_droppable( double x, double y ) {
+    Node?       node;
+    Connection? conn;
+    Sticker?    sticker;
+    get_droppable( scale_value( x ), scale_value( y ), out node, out conn, out sticker );
+    return( node != null );
   }
 
   /* Returns the origin */

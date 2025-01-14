@@ -49,9 +49,24 @@ public class Brainstorm : Box {
     });
 
     _ideas = new ListBox() {
-      selection_mode  = SelectionMode.NONE,
+      selection_mode  = SelectionMode.SINGLE,
       show_separators = true
     };
+
+    var key = new EventControllerKey();
+
+    _ideas.add_controller( key );
+
+    key.key_pressed.connect((keyval, keycode, state) => {
+      var current = _ideas.get_selected_row();
+      if( current != null ) {
+        if( keyval == Gdk.Key.Delete ) {
+          _ideas.remove( current );
+          return( true );
+        }
+      }
+      return( false );
+    });
 
     var sw = new ScrolledWindow() {
       vscrollbar_policy = PolicyType.AUTOMATIC,
@@ -86,13 +101,15 @@ public class Brainstorm : Box {
 
     _ideas.append( label );
 
+    var index = (label.get_parent() as ListBoxRow).get_index();
+
     var drag = new DragSource() {
       actions = DragAction.MOVE
     };
 
-    drag.set_icon( create_icon( label, text ), 10, 10 );
-
     label.add_controller( drag );
+
+    drag.set_icon( create_icon( label, text ), 10, 10 );
 
     drag.prepare.connect((x, y) => {
       var val = new Value( typeof(string) );
@@ -101,9 +118,17 @@ public class Brainstorm : Box {
       return( provider );
     });
 
+    drag.drag_begin.connect((d) => {
+      _ideas.remove( label.get_parent() );
+    });
+
+    drag.drag_cancel.connect((d) => {
+      return( false );
+    });
+
     drag.drag_end.connect((d, del) => {
-      if( del ) {
-        _ideas.remove( label.get_parent() ); 
+      if( _win.get_current_da().attach_node == null ) {
+        _ideas.insert( label, index ); 
       }
     });
 
@@ -151,7 +176,9 @@ public class Brainstorm : Box {
   // Make sure that the entry field receives the focus if the box
   // is given focus.
   public override bool grab_focus() {
+
     return( _entry.grab_focus() );
+
   }
 
 }
