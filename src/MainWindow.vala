@@ -117,6 +117,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     { "action_next_tab",       action_next_tab },
     { "action_prev_tab",       action_prev_tab },
     { "action_about",          action_about },
+    { "action_braindump",      action_braindump },
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -659,6 +660,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     app.set_accels_for_action( "win.action_show_map",       { "<Control>9" } );
     app.set_accels_for_action( "win.action_next_tab",       { "<Control>Tab" } );
     app.set_accels_for_action( "win.action_prev_tab",       { "<Control><Shift>Tab" } );
+    app.set_accels_for_action( "win.action_braindump",      { "<Control><Shift>b" } );
 
   }
 
@@ -982,8 +984,8 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void add_brainstorm_button() {
 
     _brain_btn = new ToggleButton() {
-      icon_name      = (on_elementary ? "applications-internet" : "applications-internet-symbolic"),
-      tooltip_markup = Utils.tooltip_with_accel( _( "Brainstorm" ), "<Control><Shift>b" ),
+      icon_name      = "minder-braindump",
+      tooltip_markup = Utils.tooltip_with_accel( _( "Brain Dump" ), "<Control><Shift>b" ),
     };
 
     _brain_btn.clicked.connect((e) => {
@@ -1452,6 +1454,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void on_current_changed( DrawArea da ) {
     action_set_enabled( "win.action_zoom_selected", (da.get_current_node() != null) );
     _focus_btn.active = da.get_focus_mode();
+    _brain.set_list( da.brainstorm );
   }
 
   /*
@@ -1775,6 +1778,12 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void action_about() {
     var about_win = new About( this );
     about_win.show();
+  }
+
+  //-------------------------------------------------------------
+  // Toggles the braindump toggle button
+  private void action_braindump() {
+    _brain_btn.clicked();
   }
 
   //-------------------------------------------------------------

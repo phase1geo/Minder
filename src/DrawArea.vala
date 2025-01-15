@@ -112,6 +112,7 @@ public class DrawArea : Gtk.DrawingArea {
   private bool               _hide_callouts   = false;
   private EventControllerKey _key_controller;
   private EventControllerScroll _scroll;
+  private Array<string>      _brainstorm;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -208,6 +209,11 @@ public class DrawArea : Gtk.DrawingArea {
       return( _attach_node );
     }
   }
+  public Array<string> brainstorm {
+    get {
+      return( _brainstorm );
+    }
+  }
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -279,6 +285,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
+
+    // Create the brainstorm list
+    _brainstorm = new Array<string>();
 
     /* Create the parsers */
     tagger_parser   = new TaggerParser( this );
@@ -608,6 +617,13 @@ public class DrawArea : Gtk.DrawingArea {
               }
             }
             break;
+          case "ideas" :
+            for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
+              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "idea") ) {
+                _brainstorm.append_val( it2->get_content() );
+              }
+            }
+            break;
         }
       }
     }
@@ -653,6 +669,14 @@ public class DrawArea : Gtk.DrawingArea {
     parent->add_child( _stickers.save() );
 
     parent->add_child( _node_links.save() );
+
+    Xml.Node* ideas = new Xml.Node( null, "ideas" );
+    for( int i=0; i<_brainstorm.length; i++ ) {
+      Xml.Node* idea = new Xml.Node( null, "idea" );
+      idea->add_content( _brainstorm.index( i ) );
+      ideas->add_child( idea );
+    }
+    parent->add_child( ideas );
 
     return( true );
 
@@ -5682,6 +5706,8 @@ public class DrawArea : Gtk.DrawingArea {
     return( false );
   }
 
+  //-------------------------------------------------------------
+  // Handle any drag operations involving text.
   private Gdk.DragAction handle_text_drag_motion( double x, double y ) {
 
     Node       attach_node;
@@ -5711,7 +5737,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
-  /* Called when text is dropped on the DrawArea */
+  //-------------------------------------------------------------
+  // Called when text is dropped on the DrawArea
   private bool handle_text_drop( Value val, double x, double y ) {
 
     Node node;

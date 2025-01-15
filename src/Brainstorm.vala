@@ -38,6 +38,7 @@ public class Brainstorm : Box {
 
     _entry = new Entry() {
       placeholder_text = _( "Enter Idea" ),
+      width_chars      = 30,
       margin_top       = 5,
       margin_start     = 5,
       margin_end       = 5
@@ -179,6 +180,28 @@ public class Brainstorm : Box {
 
     return( _entry.grab_focus() );
 
+  }
+
+  //-------------------------------------------------------------
+  // Sets the current brainstorm list to the given array of strings.
+  public void set_list( Array<string> list ) {
+    _ideas.remove_all();
+    for( int i=0; i<list.length; i++ ) {
+      add_idea( list.index( i ) );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Populates the given list with the 
+  public void get_list( Array<string> list ) {
+    list.remove_range( 0, list.length );
+    var index = 0;
+    var row   = _ideas.get_row_at_index( index++ );
+    while( row != null ) {
+      var label = (Label)row.child;
+      list.append_val( label.label );
+      row = _ideas.get_row_at_index( index++ );
+    }
   }
 
 }
