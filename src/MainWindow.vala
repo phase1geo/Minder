@@ -84,6 +84,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private Button?           _zoom_out   = null;
   private Button?           _undo_btn   = null;
   private Button?           _redo_btn   = null;
+  private ToggleButton?     _brain_btn  = null;
   private ToggleButton?     _focus_btn  = null;
   private ToggleButton?     _prop_btn   = null;
   private string            _prop_show;
@@ -94,6 +95,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private int               _text_size;
   private Exports           _exports;
   private UnicodeInsert     _unicoder;
+  private Braindump         _brain;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",           action_save },
@@ -115,6 +117,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     { "action_next_tab",       action_next_tab },
     { "action_prev_tab",       action_prev_tab },
     { "action_about",          action_about },
+    { "action_braindump",      action_braindump },
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -140,6 +143,11 @@ public class MainWindow : Gtk.ApplicationWindow {
   public UnicodeInsert unicoder {
     get {
       return( _unicoder );
+    }
+  }
+  public Braindump braindump {
+    get {
+      return( _brain );
     }
   }
 
@@ -192,6 +200,27 @@ public class MainWindow : Gtk.ApplicationWindow {
     _nb.page_reordered.connect( tab_reordered );
     _nb.page_removed.connect( tab_removed );
 
+    // Create the braindump pane
+    _brain = new Braindump( this ) {
+      valign  = Align.FILL,
+      vexpand = true,
+      visible = false
+    };
+
+    _brain.ideas_changed.connect((added, name_index) => {
+      var da = get_current_da();
+      if( added ) {
+        da.braindump.append_val( name_index );
+      } else {
+        da.braindump.remove_index( int.parse( name_index ) );
+      }
+      da.auto_save();
+    });
+
+    var content = new Box( Orientation.HORIZONTAL, 0 );
+    content.append( _nb );
+    content.append( _brain );
+
     /* Create title toolbar */
     var new_btn = new Button.from_icon_name( get_icon_name( "document-new" ) ) {
       tooltip_markup = Utils.tooltip_with_accel( _( "New File" ), "<Control>n" ),
@@ -235,12 +264,13 @@ public class MainWindow : Gtk.ApplicationWindow {
     add_search_button();
     add_zoom_button();
     add_focus_button();
+    add_braindump_button();
 
     /* Create the panel so that we can resize */
     _pane = new Paned( Orientation.HORIZONTAL ) {
       halign           = Align.FILL,
       valign           = Align.FILL,
-      start_child      = _nb,
+      start_child      = content,
       resize_end_child = false,
       shrink_end_child = false,
       position         = _settings.get_int( "properties-width" )
@@ -402,6 +432,11 @@ public class MainWindow : Gtk.ApplicationWindow {
     update_title( da );
     canvas_changed( da );
     save_tab_state( page_num );
+    _brain.set_list( da.braindump );
+    if( ( _brain.visible && (da.braindump.length == 0)) ||
+        (!_brain.visible && (da.braindump.length  > 0)) ) {
+      _brain_btn.clicked(); 
+    }
   }
 
   //-------------------------------------------------------------
@@ -645,6 +680,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     app.set_accels_for_action( "win.action_show_map",       { "<Control>9" } );
     app.set_accels_for_action( "win.action_next_tab",       { "<Control>Tab" } );
     app.set_accels_for_action( "win.action_prev_tab",       { "<Control><Shift>Tab" } );
+    app.set_accels_for_action( "win.action_braindump",      { "<Control><Shift>b" } );
 
   }
 
@@ -960,6 +996,27 @@ public class MainWindow : Gtk.ApplicationWindow {
       popover      = popover
     };
     _header.pack_end( menu_btn );
+
+  }
+
+  //-------------------------------------------------------------
+  // Adds the braindump button to the headerbar
+  private void add_braindump_button() {
+
+    _brain_btn = new ToggleButton() {
+      icon_name      = "minder-braindump-light-symbolic",
+      tooltip_markup = Utils.tooltip_with_accel( _( "Brain Dump" ), "<Control><Shift>b" ),
+    };
+
+    _brain_btn.clicked.connect((e) => {
+      var da = get_current_da();
+      _brain.visible = !_brain.visible;
+      if( _brain.visible ) {
+        _brain.grab_focus();
+      }
+    });
+
+    _header.pack_end( _brain_btn );
 
   }
 
@@ -1324,10 +1381,12 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Called whenever the theme is changed
   private void on_theme_changed( DrawArea da ) {
-    Gtk.Settings? settings = Gtk.Settings.get_default();
+    var settings  = Gtk.Settings.get_default();
+    var dark_mode = da.get_theme().prefer_dark;
     if( settings != null ) {
-      settings.gtk_application_prefer_dark_theme = da.get_theme().prefer_dark;
+      settings.gtk_application_prefer_dark_theme = dark_mode;
     }
+    _brain_btn.icon_name = dark_mode ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
   }
 
   //-------------------------------------------------------------
@@ -1740,6 +1799,12 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void action_about() {
     var about_win = new About( this );
     about_win.show();
+  }
+
+  //-------------------------------------------------------------
+  // Toggles the braindump toggle button
+  private void action_braindump() {
+    _brain_btn.clicked();
   }
 
   //-------------------------------------------------------------

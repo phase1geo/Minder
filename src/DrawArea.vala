@@ -112,6 +112,7 @@ public class DrawArea : Gtk.DrawingArea {
   private bool               _hide_callouts   = false;
   private EventControllerKey _key_controller;
   private EventControllerScroll _scroll;
+  private Array<string>      _braindump;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -203,6 +204,16 @@ public class DrawArea : Gtk.DrawingArea {
       }
     }
   }
+  public Node? attach_node {
+    get {
+      return( _attach_node );
+    }
+  }
+  public Array<string> braindump {
+    get {
+      return( _braindump );
+    }
+  }
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -275,6 +286,9 @@ public class DrawArea : Gtk.DrawingArea {
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
 
+    // Create the braindump list
+    _braindump = new Array<string>();
+
     /* Create the parsers */
     tagger_parser   = new TaggerParser( this );
     markdown_parser = new MarkdownParser( this );
@@ -346,6 +360,11 @@ public class DrawArea : Gtk.DrawingArea {
     this.add_controller( sticker_drop );
     sticker_drop.motion.connect( handle_sticker_drag_motion );
     sticker_drop.drop.connect( handle_sticker_drop );
+
+    var text_drop = new DropTarget( typeof(string), Gdk.DragAction.MOVE );
+    this.add_controller( text_drop );
+    text_drop.motion.connect( handle_text_drag_motion );
+    text_drop.drop.connect( handle_text_drop );
 
     /* Make sure the drawing area can receive keyboard focus */
     this.can_focus = true;
@@ -598,6 +617,16 @@ public class DrawArea : Gtk.DrawingArea {
               }
             }
             break;
+          case "ideas" :
+            for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
+              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "idea") ) {
+                var idea = it2->get_prop( "text" );
+                if( idea != null ) {
+                  _braindump.append_val( idea );
+                }
+              }
+            }
+            break;
         }
       }
     }
@@ -643,6 +672,14 @@ public class DrawArea : Gtk.DrawingArea {
     parent->add_child( _stickers.save() );
 
     parent->add_child( _node_links.save() );
+
+    Xml.Node* ideas = new Xml.Node( null, "ideas" );
+    for( int i=0; i<_braindump.length; i++ ) {
+      Xml.Node* idea = new Xml.Node( null, "idea" );
+      idea->set_prop( "text", _braindump.index( i ) );
+      ideas->add_child( idea );
+    }
+    parent->add_child( ideas );
 
     return( true );
 
@@ -2275,6 +2312,16 @@ public class DrawArea : Gtk.DrawingArea {
       conn = _connections.on_curve( x, y );
     }
     sticker = _stickers.is_within( x, y );
+  }
+
+  //-------------------------------------------------------------
+  // Returns true if a node is droppable at the given coordinates
+  public bool text_droppable( double x, double y ) {
+    Node?       node;
+    Connection? conn;
+    Sticker?    sticker;
+    get_droppable( scale_value( x ), scale_value( y ), out node, out conn, out sticker );
+    return( node != null );
   }
 
   /* Returns the origin */
@@ -5660,6 +5707,59 @@ public class DrawArea : Gtk.DrawingArea {
     is_loaded = true;
     changed();
     return( false );
+  }
+
+  //-------------------------------------------------------------
+  // Handle any drag operations involving text.
+  private Gdk.DragAction handle_text_drag_motion( double x, double y ) {
+
+    Node       attach_node;
+    Connection attach_conn;
+    Sticker    attach_sticker;
+
+    var scaled_x = scale_value( x );
+    var scaled_y = scale_value( y );
+
+    get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
+
+    // Clear the node of any attached nodes
+    if( _attach_node != null ) {
+      set_node_mode( _attach_node, NodeMode.NONE );
+    }
+
+    if( attach_node != null ) {
+      set_node_mode( attach_node, NodeMode.DROPPABLE );
+      _attach_node = attach_node;
+      queue_draw();
+    } else if( _attach_node != null ) {
+      _attach_node = null;
+      queue_draw();
+    }
+
+    return( Gdk.DragAction.MOVE );
+
+  }
+
+  //-------------------------------------------------------------
+  // Called when text is dropped on the DrawArea
+  private bool handle_text_drop( Value val, double x, double y ) {
+
+    Node node;
+    var  text = (string)val;
+
+    if( (_attach_node != null) && (_attach_node.mode == NodeMode.DROPPABLE) ) {
+      node = create_child_node( _attach_node, text );
+      undo_buffer.add_item( new UndoNodeInsert( node, node.index() ) );
+      if( select_node( node ) ) {
+        queue_draw();
+        see();
+        auto_save();
+      }
+      return( true );
+    }
+
+    return( false );
+
   }
 
   /* Called whenever we drag something over the canvas */

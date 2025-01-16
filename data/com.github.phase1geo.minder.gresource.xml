@@ -32,6 +32,8 @@
     <file alias="minder-sidebar-close.svg">icons/scalable/mindi-sidebar-close.svg</file>
     <file alias="minder-sidebar-symbolic.svg">icons/scalable/minder-sidebar-symbolic.svg</file>
     <file alias="minder-search.svg">icons/scalable/minder-search.svg</file>
+    <file alias="minder-braindump-light-symbolic.svg">icons/scalable/minder-braindump-light-symbolic.svg</file>
+    <file alias="minder-braindump-dark-symbolic.svg">icons/scalable/minder-braindump-dark-symbolic.svg</file>
 
     <file alias="data_encryption">icons/flat-color-icons/svg/data_encryption.svg</file>
     <file alias="factory_breakdown">icons/flat-color-icons/svg/factory_breakdown.svg</file>
