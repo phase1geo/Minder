@@ -95,7 +95,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private int               _text_size;
   private Exports           _exports;
   private UnicodeInsert     _unicoder;
-  private Brainstorm        _brain;
+  private Braindump         _brain;
 
   private const GLib.ActionEntry[] action_entries = {
     { "action_save",           action_save },
@@ -196,7 +196,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _nb.page_removed.connect( tab_removed );
 
     // Create the brainstorm pane
-    _brain = new Brainstorm( this ) {
+    _brain = new Braindump( this ) {
       valign  = Align.FILL,
       vexpand = true,
       visible = false
@@ -249,7 +249,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     add_search_button();
     add_zoom_button();
     add_focus_button();
-    add_brainstorm_button();
+    add_braindump_button();
 
     /* Create the panel so that we can resize */
     _pane = new Paned( Orientation.HORIZONTAL ) {
@@ -980,11 +980,11 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
-  // Adds the brainstorm button to the headerbar
-  private void add_brainstorm_button() {
+  // Adds the braindump button to the headerbar
+  private void add_braindump_button() {
 
     _brain_btn = new ToggleButton() {
-      icon_name      = "minder-braindump",
+      icon_name      = "minder-braindump-light-symbolic",
       tooltip_markup = Utils.tooltip_with_accel( _( "Brain Dump" ), "<Control><Shift>b" ),
     };
 
@@ -1361,10 +1361,12 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Called whenever the theme is changed
   private void on_theme_changed( DrawArea da ) {
-    Gtk.Settings? settings = Gtk.Settings.get_default();
+    var settings  = Gtk.Settings.get_default();
+    var dark_mode = da.get_theme().prefer_dark;
     if( settings != null ) {
-      settings.gtk_application_prefer_dark_theme = da.get_theme().prefer_dark;
+      settings.gtk_application_prefer_dark_theme = dark_mode;
     }
+    _brain_btn.icon_name = dark_mode ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
   }
 
   //-------------------------------------------------------------

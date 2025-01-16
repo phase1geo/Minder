@@ -22,7 +22,7 @@
 using Gtk;
 using Gdk;
 
-public class Brainstorm : Box {
+public class Braindump : Box {
 
   private MainWindow _win;
   private Entry      _entry;
@@ -30,7 +30,7 @@ public class Brainstorm : Box {
 
   //-------------------------------------------------------------
   // Constructor
-  public Brainstorm( MainWindow win ) {
+  public Braindump( MainWindow win ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:5 );
 
