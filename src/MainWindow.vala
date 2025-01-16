@@ -145,6 +145,11 @@ public class MainWindow : Gtk.ApplicationWindow {
       return( _unicoder );
     }
   }
+  public Braindump braindump {
+    get {
+      return( _brain );
+    }
+  }
 
   public delegate void OverwriteFunc( bool overwrite );
 
@@ -195,12 +200,22 @@ public class MainWindow : Gtk.ApplicationWindow {
     _nb.page_reordered.connect( tab_reordered );
     _nb.page_removed.connect( tab_removed );
 
-    // Create the brainstorm pane
+    // Create the braindump pane
     _brain = new Braindump( this ) {
       valign  = Align.FILL,
       vexpand = true,
       visible = false
     };
+
+    _brain.ideas_changed.connect((added, name_index) => {
+      var da = get_current_da();
+      if( added ) {
+        da.braindump.append_val( name_index );
+      } else {
+        da.braindump.remove_index( int.parse( name_index ) );
+      }
+      da.auto_save();
+    });
 
     var content = new Box( Orientation.HORIZONTAL, 0 );
     content.append( _nb );
@@ -417,6 +432,11 @@ public class MainWindow : Gtk.ApplicationWindow {
     update_title( da );
     canvas_changed( da );
     save_tab_state( page_num );
+    _brain.set_list( da.braindump );
+    if( ( _brain.visible && (da.braindump.length == 0)) ||
+        (!_brain.visible && (da.braindump.length  > 0)) ) {
+      _brain_btn.clicked(); 
+    }
   }
 
   //-------------------------------------------------------------
@@ -1456,7 +1476,6 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void on_current_changed( DrawArea da ) {
     action_set_enabled( "win.action_zoom_selected", (da.get_current_node() != null) );
     _focus_btn.active = da.get_focus_mode();
-    _brain.set_list( da.brainstorm );
   }
 
   /*

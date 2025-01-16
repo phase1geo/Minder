@@ -27,6 +27,9 @@ public class Braindump : Box {
   private MainWindow _win;
   private Entry      _entry;
   private ListBox    _ideas;
+  private int        _current_index;
+
+  public signal void ideas_changed( bool added, string name_index );
 
   //-------------------------------------------------------------
   // Constructor
@@ -46,6 +49,7 @@ public class Braindump : Box {
 
     _entry.activate.connect(() => {
       add_idea( _entry.text );
+      ideas_changed( true, _entry.text );
       _entry.text = "";
     });
 
@@ -62,7 +66,9 @@ public class Braindump : Box {
       var current = _ideas.get_selected_row();
       if( current != null ) {
         if( keyval == Gdk.Key.Delete ) {
+          var index = current.get_index();
           _ideas.remove( current );
+          ideas_changed( false, index.to_string() );
           return( true );
         }
       }
@@ -102,8 +108,6 @@ public class Braindump : Box {
 
     _ideas.append( label );
 
-    var index = (label.get_parent() as ListBoxRow).get_index();
-
     var drag = new DragSource() {
       actions = DragAction.MOVE
     };
@@ -120,7 +124,9 @@ public class Braindump : Box {
     });
 
     drag.drag_begin.connect((d) => {
-      _ideas.remove( label.get_parent() );
+      var row = (ListBoxRow)label.get_parent();
+      _current_index = row.get_index();
+      _ideas.remove( row );
     });
 
     drag.drag_cancel.connect((d) => {
@@ -129,7 +135,9 @@ public class Braindump : Box {
 
     drag.drag_end.connect((d, del) => {
       if( _win.get_current_da().attach_node == null ) {
-        _ideas.insert( label, index ); 
+        _ideas.insert( label, _current_index );
+      } else {
+        ideas_changed( false, _current_index.to_string() );
       }
     });
 
@@ -188,19 +196,6 @@ public class Braindump : Box {
     _ideas.remove_all();
     for( int i=0; i<list.length; i++ ) {
       add_idea( list.index( i ) );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Populates the given list with the 
-  public void get_list( Array<string> list ) {
-    list.remove_range( 0, list.length );
-    var index = 0;
-    var row   = _ideas.get_row_at_index( index++ );
-    while( row != null ) {
-      var label = (Label)row.child;
-      list.append_val( label.label );
-      row = _ideas.get_row_at_index( index++ );
     }
   }
 

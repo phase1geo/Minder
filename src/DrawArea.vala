@@ -112,7 +112,7 @@ public class DrawArea : Gtk.DrawingArea {
   private bool               _hide_callouts   = false;
   private EventControllerKey _key_controller;
   private EventControllerScroll _scroll;
-  private Array<string>      _brainstorm;
+  private Array<string>      _braindump;
 
   public MainWindow     win           { private set; get; }
   public UndoBuffer     undo_buffer   { set; get; }
@@ -209,9 +209,9 @@ public class DrawArea : Gtk.DrawingArea {
       return( _attach_node );
     }
   }
-  public Array<string> brainstorm {
+  public Array<string> braindump {
     get {
-      return( _brainstorm );
+      return( _braindump );
     }
   }
 
@@ -286,8 +286,8 @@ public class DrawArea : Gtk.DrawingArea {
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
 
-    // Create the brainstorm list
-    _brainstorm = new Array<string>();
+    // Create the braindump list
+    _braindump = new Array<string>();
 
     /* Create the parsers */
     tagger_parser   = new TaggerParser( this );
@@ -620,7 +620,10 @@ public class DrawArea : Gtk.DrawingArea {
           case "ideas" :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "idea") ) {
-                _brainstorm.append_val( it2->get_content() );
+                var idea = it2->get_prop( "text" );
+                if( idea != null ) {
+                  _braindump.append_val( idea );
+                }
               }
             }
             break;
@@ -671,9 +674,9 @@ public class DrawArea : Gtk.DrawingArea {
     parent->add_child( _node_links.save() );
 
     Xml.Node* ideas = new Xml.Node( null, "ideas" );
-    for( int i=0; i<_brainstorm.length; i++ ) {
+    for( int i=0; i<_braindump.length; i++ ) {
       Xml.Node* idea = new Xml.Node( null, "idea" );
-      idea->add_content( _brainstorm.index( i ) );
+      idea->set_prop( "text", _braindump.index( i ) );
       ideas->add_child( idea );
     }
     parent->add_child( ideas );
