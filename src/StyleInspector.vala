@@ -226,7 +226,7 @@ public class StyleInspector : Box {
     var link_types = styles.get_link_types();
     for( int i=0; i<link_types.length; i++ ) {
       var link_type = link_types.index( i );
-      _link_types.add_button( link_type.icon_name(), link_type.icon_name(), link_type.display_name() );
+      _link_types.add_button( link_type.light_icon_name(), link_type.dark_icon_name(), link_type.display_name() );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 10 ) {
