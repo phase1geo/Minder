@@ -48,7 +48,7 @@ public class LinkDash : Object {
 
     ctx.set_source_rgba( color, color, color, 1 );
     ctx.set_dash( pattern, 0 );
-    ctx.set_line_width( 4 );
+    ctx.set_line_width( 2 );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( 10, 10 );
     ctx.line_to( 90, 10 );

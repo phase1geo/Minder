@@ -1013,17 +1013,17 @@ public class Connection : Object {
     var color    = dark ? 1.0 : 0.0;
 
     ctx.set_source_rgba( color, color, color, 1 );
-    ctx.set_line_width( 4 );
+    ctx.set_line_width( 2 );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( 15, 10 );
     ctx.line_to( 85, 10 );
     ctx.stroke();
 
     if( (type == "fromto") || (type == "both") ) {
-      draw_arrow( ctx, 4, 90, 10, 10, 10 );
+      draw_arrow( ctx, 2, 90, 10, 10, 10 );
     }
     if( (type == "tofrom") || (type == "both") ) {
-      draw_arrow( ctx, 4, 10, 10, 90, 10 );
+      draw_arrow( ctx, 2, 10, 10, 90, 10 );
     }
 
     return( snapshot.free_to_paintable( null ) );
