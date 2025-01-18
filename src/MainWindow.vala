@@ -1386,7 +1386,11 @@ public class MainWindow : Gtk.ApplicationWindow {
     if( settings != null ) {
       settings.gtk_application_prefer_dark_theme = dark_mode;
     }
-    _brain_btn.icon_name = dark_mode ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
+    var use_dark_mode = Utils.use_dark_mode( _header );
+    _brain_btn.icon_name = use_dark_mode ? "minder-braindump-dark-symbolic" : "minder-braindump-light-symbolic";
+    _prop_btn.icon_name  = use_dark_mode ? "minder-sidebar-dark-symbolic"   : "minder-sidebar-light-symbolic";
+    (_stack.get_child_by_name( "style" ) as StyleInspector).update_icons();
+    (_stack.get_child_by_name( "map" )   as MapInspector).update_icons();
   }
 
   //-------------------------------------------------------------

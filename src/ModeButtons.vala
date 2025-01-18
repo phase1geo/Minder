@@ -40,6 +40,8 @@ public class ModeButtons : Box {
 
   public signal void changed( int index );
 
+  public signal void update_icons();
+
   //-------------------------------------------------------------
   // Default constructor
   public ModeButtons() {
@@ -48,9 +50,16 @@ public class ModeButtons : Box {
 
   //-------------------------------------------------------------
   // Add a button to this model
-  public void add_button( string icon_name, string tooltip ) {
+  public void add_button( string light_icon_name, string? dark_icon_name, string tooltip ) {
 
-    var image = new Image.from_icon_name( icon_name );
+    var image = new Image.from_icon_name( light_icon_name );
+
+    if( dark_icon_name != null ) {
+      update_icons.connect(() => {
+        image.icon_name = Utils.use_dark_mode( this ) ? dark_icon_name : light_icon_name;
+      });
+    }
+
     var button = new ToggleButton() {
       child        = image,
       tooltip_text = tooltip

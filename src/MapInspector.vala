@@ -40,6 +40,9 @@ public class MapInspector : Box {
   private Button        _vbottom;
   private Revealer      _alignment_revealer;
 
+  // This signal can be called by outside code to force icons to be updated
+  public signal void update_icons();
+
   public MapInspector( MainWindow win, GLib.Settings settings ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
@@ -202,10 +205,11 @@ public class MapInspector : Box {
   /* Adds the layout UI */
   private void add_layout_ui() {
 
-    var layouts = new Layouts();
-    var icons   = new Array<string>();
-    var names   = new Array<string>();
-    layouts.get_icons( ref icons );
+    var layouts     = new Layouts();
+    var light_icons = new Array<string>();
+    var dark_icons  = new Array<string>();
+    var names       = new Array<string>();
+    layouts.get_icons( ref light_icons, ref dark_icons );
     layouts.get_names( ref names );
 
     /* Create the modebutton to select the current layout */
@@ -220,9 +224,13 @@ public class MapInspector : Box {
       halign = Align.END
     };
     _layout.changed.connect( set_layout );
+    
+    update_icons.connect(() => {
+      _layout.update_icons();
+    });
 
-    for( int i=0; i<icons.length; i++ ) {
-      _layout.add_button( icons.index( i ), names.index( i ) );
+    for( int i=0; i<names.length; i++ ) {
+      _layout.add_button( light_icons.index( i ), dark_icons.index( i ), names.index( i ) );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -239,9 +247,7 @@ public class MapInspector : Box {
   // Handles changes to the selected layout.
   private void set_layout( int index ) {
 
-    var icons = new Array<string>();
     var names = new Array<string>();
-    _da.layouts.get_icons( ref icons );
     _da.layouts.get_names( ref names );
 
     if( index < names.length ) {
@@ -426,7 +432,7 @@ public class MapInspector : Box {
 
     /* Clear the contents of the theme box */
     for( int i=0; i<2; i++ ) {
-      _theme_grid.remove_column( i );
+      _theme_grid.remove_column( 0 );
     }
 
     /* Get the theme information to display */
@@ -478,9 +484,7 @@ public class MapInspector : Box {
   /* Sets the map inspector UI to match the given layout name */
   private void select_layout( string name ) {
 
-    var icons = new Array<string>();
     var names = new Array<string>();
-    _da.layouts.get_icons( ref icons );
     _da.layouts.get_names( ref names );
 
     for( int i=0; i<names.length; i++ ) {
