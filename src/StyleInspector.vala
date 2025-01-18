@@ -390,8 +390,13 @@ public class StyleInspector : Box {
       _da.undo_buffer.add_item( new UndoStyleLinkDash( _affects, dashes.index( index ), _da ) );
     });
 
+    update_icons.connect(() => {
+      _link_dash.update_icons();
+    });
+
     for( int i=0; i<dashes.length; i++ ) {
-      _link_dash.add_image( dashes.index( i ).make_icon() );
+      var dash = dashes.index( i );
+      _link_dash.add_image( dash.make_icon( false ), dash.make_icon( true ) );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -943,8 +948,13 @@ public class StyleInspector : Box {
       _da.undo_buffer.add_item( new UndoStyleConnectionDash( _affects, dashes.index( index ), _da ) );
     });
 
+    update_icons.connect(() => {
+      _conn_dash.update_icons();
+    });
+
     for( int i=0; i<dashes.length; i++ ) {
-      _conn_dash.add_image( dashes.index( i ).make_icon() );
+      var dash = dashes.index( i );
+      _conn_dash.add_image( dash.make_icon( false ), dash.make_icon( true ) );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -977,8 +987,12 @@ public class StyleInspector : Box {
       _da.undo_buffer.add_item( new UndoStyleConnectionArrow( _affects, arrows[index], _da ) );
     });
 
+    update_icons.connect(() => {
+      _conn_arrow.update_icons();
+    });
+
     foreach (string arrow in arrows) {
-      _conn_arrow.add_image( Connection.make_arrow_icon( arrow ) );
+      _conn_arrow.add_image( Connection.make_arrow_icon( arrow, false ), Connection.make_arrow_icon( arrow, true ) );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {

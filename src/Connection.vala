@@ -1003,15 +1003,16 @@ public class Connection : Object {
   }
 
   /* Makes an icon for the given dash */
-  public static Paintable make_arrow_icon( string type ) {
+  public static Paintable make_arrow_icon( string type, bool dark ) {
 
     var rect = Graphene.Rect.alloc();
     rect.init( (float)0.0, (float)0.0, (float)100, (float)20 );
 
     var snapshot = new Gtk.Snapshot();
     var ctx      = snapshot.append_cairo( rect );
+    var color    = dark ? 1.0 : 0.0;
 
-    ctx.set_source_rgba( 0.5, 0.5, 0.5, 1 );
+    ctx.set_source_rgba( color, color, color, 1 );
     ctx.set_line_width( 4 );
     ctx.set_line_cap( LineCap.ROUND );
     ctx.move_to( 15, 10 );
