@@ -34,9 +34,14 @@ public class NodeBorderSquared : Object, NodeBorder {
     return( _( "Squared Off" ) );
   }
 
-  /* Returns the name of the icon */
-  public string icon_name() {
-    return( "minder-node-border-squared-symbolic" );
+  /* Returns the name of the light-mode icon */
+  public string light_icon_name() {
+    return( "minder-node-border-squared-light-symbolic" );
+  }
+
+  /* Returns the name of the dark-mode icon */
+  public string? dark_icon_name() {
+    return( "minder-node-border-squared-dark-symbolic" );
   }
 
   /* Indicate that this node is fillable */

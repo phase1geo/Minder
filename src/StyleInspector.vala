@@ -555,7 +555,7 @@ public class StyleInspector : Box {
     var node_borders = styles.get_node_borders();
     for( int i=0; i<node_borders.length; i++ ) {
       var node_border = node_borders.index( i );
-      _node_borders.add_button( node_border.icon_name(), node_border.icon_name(), node_border.display_name() );
+      _node_borders.add_button( node_border.light_icon_name(), node_border.dark_icon_name(), node_border.display_name() );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
