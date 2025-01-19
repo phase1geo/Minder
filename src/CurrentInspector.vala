@@ -28,6 +28,8 @@ public class CurrentInspector : Box {
   private DrawArea? _da = null;
   private Stack     _stack;
 
+  public signal void update_icons();
+
   public CurrentInspector( MainWindow win ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 10, valign: Align.FILL );
@@ -42,6 +44,10 @@ public class CurrentInspector : Box {
     var conn_box  = new ConnectionInspector( win );
     var group_box = new GroupInspector( win );
     var empty_box = new EmptyInspector( win );
+
+    update_icons.connect(() => {
+      node_box.update_icons();
+    });
 
     _stack.add_named( node_box,  "node" );
     _stack.add_named( conn_box,  "connection" );

@@ -6,9 +6,12 @@
     <file alias="minder-logo.svg">icons/scalable/com.github.phase1geo.minder.svg</file>
     <file alias="README.md">custom_sticker_readme.md</file>
 
-    <file alias="minder-balance-symbolic.svg">icons/16/minder-balance-symbolic.svg</file>
-    <file alias="minder-detach-symbolic.svg">icons/16/minder-detach-symbolic.svg</file>
-    <file alias="minder-fold-completed-symbolic.svg">icons/16/minder-fold-completed-symbolic.svg</file>
+    <file alias="minder-balance-light-symbolic.svg">icons/16/minder-balance-light-symbolic.svg</file>
+    <file alias="minder-balance-dark-symbolic.svg">icons/16/minder-balance-dark-symbolic.svg</file>
+    <file alias="minder-detach-light-symbolic.svg">icons/16/minder-detach-light-symbolic.svg</file>
+    <file alias="minder-detach-dark-symbolic.svg">icons/16/minder-detach-dark-symbolic.svg</file>
+    <file alias="minder-fold-completed-light-symbolic.svg">icons/16/minder-fold-completed-light-symbolic.svg</file>
+    <file alias="minder-fold-completed-dark-symbolic.svg">icons/16/minder-fold-completed-dark-symbolic.svg</file>
     <file alias="minder-layout-down-light-symbolic.svg">icons/16/minder-layout-down-light-symbolic.svg</file>
     <file alias="minder-layout-down-dark-symbolic.svg">icons/16/minder-layout-down-dark-symbolic.svg</file>
     <file alias="minder-layout-horizontal-light-symbolic.svg">icons/16/minder-layout-horizontal-light-symbolic.svg</file>
@@ -23,7 +26,8 @@
     <file alias="minder-layout-up-dark-symbolic.svg">icons/16/minder-layout-up-dark-symbolic.svg</file>
     <file alias="minder-layout-vertical-light-symbolic.svg">icons/16/minder-layout-vertical-light-symbolic.svg</file>
     <file alias="minder-layout-vertical-dark-symbolic.svg">icons/16/minder-layout-vertical-dark-symbolic.svg</file>
-    <file alias="minder-unfold-symbolic.svg">icons/16/minder-unfold-symbolic.svg</file>
+    <file alias="minder-unfold-light-symbolic.svg">icons/16/minder-unfold-light-symbolic.svg</file>
+    <file alias="minder-unfold-dark-symbolic.svg">icons/16/minder-unfold-dark-symbolic.svg</file>
     <file alias="minder-link-curved-light-symbolic.svg">icons/16/minder-link-curved-light-symbolic.svg</file>
     <file alias="minder-link-curved-dark-symbolic.svg">icons/16/minder-link-curved-dark-symbolic.svg</file>
     <file alias="minder-link-rounded-light-symbolic.svg">icons/16/minder-link-rounded-light-symbolic.svg</file>

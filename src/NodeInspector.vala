@@ -47,6 +47,8 @@ public class NodeInspector : Box {
   private ToggleButton   _resize;
   private bool           _ignore_changes = false;
 
+  public signal void update_icons();
+
   public NodeInspector( MainWindow win ) {
 
     Object( orientation: Orientation.VERTICAL, spacing: 10 );
@@ -462,10 +464,14 @@ public class NodeInspector : Box {
     cut_btn.clicked.connect( node_cut );
 
     /* Create the detach button */
-    _detach_btn = new Button.from_icon_name( "minder-detach-symbolic" ) {
+    _detach_btn = new Button.from_icon_name( "minder-detach-light-symbolic" ) {
       tooltip_text = _( "Detach Node" )
     };
     _detach_btn.clicked.connect( node_detach );
+
+    update_icons.connect(() => {
+      _detach_btn.icon_name = Utils.use_dark_mode( _detach_btn ) ? "minder-detach-dark-symbolic" : "minder-detach-light-symbolic";
+    });
 
     /* Create the node deletion button */
     var del_btn = new Button.from_icon_name( "edit-delete-symbolic" ) {
