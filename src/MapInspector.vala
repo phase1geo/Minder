@@ -40,6 +40,9 @@ public class MapInspector : Box {
   private Button        _vbottom;
   private Revealer      _alignment_revealer;
 
+  // This signal can be called by outside code to force icons to be updated
+  public signal void update_icons();
+
   public MapInspector( MainWindow win, GLib.Settings settings ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:10 );
@@ -202,10 +205,11 @@ public class MapInspector : Box {
   /* Adds the layout UI */
   private void add_layout_ui() {
 
-    var layouts = new Layouts();
-    var icons   = new Array<string>();
-    var names   = new Array<string>();
-    layouts.get_icons( ref icons );
+    var layouts     = new Layouts();
+    var light_icons = new Array<string>();
+    var dark_icons  = new Array<string>();
+    var names       = new Array<string>();
+    layouts.get_icons( ref light_icons, ref dark_icons );
     layouts.get_names( ref names );
 
     /* Create the modebutton to select the current layout */
@@ -220,9 +224,13 @@ public class MapInspector : Box {
       halign = Align.END
     };
     _layout.changed.connect( set_layout );
+    
+    update_icons.connect(() => {
+      _layout.update_icons();
+    });
 
-    for( int i=0; i<icons.length; i++ ) {
-      _layout.add_button( icons.index( i ), names.index( i ) );
+    for( int i=0; i<names.length; i++ ) {
+      _layout.add_button( light_icons.index( i ), dark_icons.index( i ), names.index( i ) );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -239,9 +247,7 @@ public class MapInspector : Box {
   // Handles changes to the selected layout.
   private void set_layout( int index ) {
 
-    var icons = new Array<string>();
     var names = new Array<string>();
-    _da.layouts.get_icons( ref icons );
     _da.layouts.get_names( ref names );
 
     if( index < names.length ) {
@@ -392,25 +398,32 @@ public class MapInspector : Box {
       row_spacing        = 5
     };
 
-    _balance = new Button.from_icon_name( "minder-balance-symbolic" ) {
+    _balance = new Button.from_icon_name( "minder-balance-light-symbolic" ) {
       tooltip_text = _( "Balance Nodes" )
     };
     _balance.clicked.connect(() => {
       _da.balance_nodes( true, true );
     });
 
-    _fold_completed = new Button.from_icon_name( "minder-fold-completed-symbolic" ) {
+    _fold_completed = new Button.from_icon_name( "minder-fold-completed-light-symbolic" ) {
       tooltip_text = _( "Fold Completed Tasks" )
     };
     _fold_completed.clicked.connect(() => {
       _da.fold_completed_tasks();
     });
 
-    _unfold_all = new Button.from_icon_name( "minder-unfold-symbolic" ) {
+    _unfold_all = new Button.from_icon_name( "minder-unfold-light-symbolic" ) {
       tooltip_text = _( "Unfold All Nodes" )
     };
     _unfold_all.clicked.connect(() => {
       _da.unfold_all_nodes();
+    });
+
+    update_icons.connect(() => {
+      var dark = Utils.use_dark_mode( _balance );
+      _balance.icon_name        = dark ? "minder-balance-dark-symbolic"        : "minder-balance-light-symbolic";
+      _fold_completed.icon_name = dark ? "minder-fold-completed-dark-symbolic" : "minder-fold-completed-light-symbolic";
+      _unfold_all.icon_name     = dark ? "minder-unfold-dark-symbolic"         : "minder-unfold-light-symbolic";
     });
 
     grid.attach( _balance,        0, 0 );
@@ -426,7 +439,7 @@ public class MapInspector : Box {
 
     /* Clear the contents of the theme box */
     for( int i=0; i<2; i++ ) {
-      _theme_grid.remove_column( i );
+      _theme_grid.remove_column( 0 );
     }
 
     /* Get the theme information to display */
@@ -478,9 +491,7 @@ public class MapInspector : Box {
   /* Sets the map inspector UI to match the given layout name */
   private void select_layout( string name ) {
 
-    var icons = new Array<string>();
     var names = new Array<string>();
-    _da.layouts.get_icons( ref icons );
     _da.layouts.get_names( ref names );
 
     for( int i=0; i<names.length; i++ ) {

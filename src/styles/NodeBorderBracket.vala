@@ -34,9 +34,14 @@ public class NodeBorderBracket : Object, NodeBorder {
     return( _( "Square Bracket" ) );
   }
 
-  /* Returns the name of the icon */
-  public string icon_name() {
-    return( "minder-node-border-bracket-symbolic" );
+  /* Returns the name of the light-mode icon */
+  public string light_icon_name() {
+    return( "minder-node-border-bracket-light-symbolic" );
+  }
+
+  /* Returns the name of the dark-mode icon */
+  public string? dark_icon_name() {
+    return( "minder-node-border-bracket-dark-symbolic" );
   }
 
   /* Indicate that this border type is not fillable */

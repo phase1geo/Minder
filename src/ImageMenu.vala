@@ -44,6 +44,8 @@ public class ImageMenu : Box {
 
   public signal void changed( int index );
 
+  public signal void update_icons();
+
   //-------------------------------------------------------------
   // Default constructor
   public ImageMenu() {
@@ -101,10 +103,17 @@ public class ImageMenu : Box {
 
   //-------------------------------------------------------------
   // Add a button to this model
-  public void add_image( Gdk.Paintable image ) {
+  public void add_image( Gdk.Paintable light_image, Gdk.Paintable dark_image ) {
 
-    var entry = new Picture.for_paintable( image );
+    var entry = new Picture.for_paintable( light_image );
     var index = _size++;
+
+    update_icons.connect(() => {
+      entry.paintable = Utils.use_dark_mode( this ) ? dark_image : light_image;      
+      if( index == selected ) {
+        _mb.child = new Picture.for_paintable( entry.paintable );
+      }
+    });
 
     var click = new GestureClick();
     entry.add_controller( click );

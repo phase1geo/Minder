@@ -23,8 +23,9 @@ public class LayoutManual : Layout {
 
   /* Default constructor */
   public LayoutManual() {
-    name = _( "Manual" );
-    icon = "minder-layout-manual-symbolic";
+    name        = _( "Manual" );
+    light_icon  = "minder-layout-manual-light-symbolic";
+    dark_icon   = "minder-layout-manual-dark-symbolic";
     balanceable = false;
   }
 

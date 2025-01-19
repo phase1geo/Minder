@@ -399,4 +399,12 @@ public class Utils {
     ctx.close_path();
 
   }
+
+  //-------------------------------------------------------------
+  // Returns true if the given widget should be using a dark mode.
+  public static bool use_dark_mode( Widget w ) {
+    var color = Utils.color_from_rgba( Granite.contrasting_foreground_color( w.get_color() ) );
+    return( color == "#000000" );
+  }
+
 }

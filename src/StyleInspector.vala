@@ -88,6 +88,8 @@ public class StyleInspector : Box {
 
   public static Styles styles = new Styles();
 
+  public signal void update_icons();
+
   public StyleInspector( MainWindow win, GLib.Settings settings ) {
 
     Object( orientation:Orientation.VERTICAL, spacing:20 );
@@ -170,12 +172,11 @@ public class StyleInspector : Box {
     var branch_margin = create_branch_margin_ui();
 
     var cbox = new Box( Orientation.VERTICAL, 0 ) {
-      vexpand       = true,
-      homogeneous   = true,
-      margin_start  = 10,
-      margin_end    = 10,
-      margin_top    = 10,
-   //   margin_bottom = 10
+      vexpand      = true,
+      homogeneous  = true,
+      margin_start = 10,
+      margin_end   = 10,
+      margin_top   = 10,
     };
     cbox.append( branch_type );
     cbox.append( branch_radius );
@@ -217,10 +218,14 @@ public class StyleInspector : Box {
     };
     _link_types.changed.connect( action_set_link_type );
 
+    update_icons.connect(() => {
+      _link_types.update_icons();
+    });
+
     var link_types = styles.get_link_types();
     for( int i=0; i<link_types.length; i++ ) {
       var link_type = link_types.index( i );
-      _link_types.add_button( link_type.icon_name(), link_type.display_name() );
+      _link_types.add_button( link_type.light_icon_name(), link_type.dark_icon_name(), link_type.display_name() );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 10 ) {
@@ -384,8 +389,13 @@ public class StyleInspector : Box {
       _da.undo_buffer.add_item( new UndoStyleLinkDash( _affects, dashes.index( index ), _da ) );
     });
 
+    update_icons.connect(() => {
+      _link_dash.update_icons();
+    });
+
     for( int i=0; i<dashes.length; i++ ) {
-      _link_dash.add_image( dashes.index( i ).make_icon() );
+      var dash = dashes.index( i );
+      _link_dash.add_image( dash.make_icon( false ), dash.make_icon( true ) );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -542,10 +552,14 @@ public class StyleInspector : Box {
     };
     _node_borders.changed.connect( set_node_border );
 
+    update_icons.connect(() => {
+      _node_borders.update_icons();
+    });
+
     var node_borders = styles.get_node_borders();
     for( int i=0; i<node_borders.length; i++ ) {
       var node_border = node_borders.index( i );
-      _node_borders.add_button( node_border.icon_name(), node_border.display_name() );
+      _node_borders.add_button( node_border.light_icon_name(), node_border.dark_icon_name(), node_border.display_name() );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
@@ -782,9 +796,9 @@ public class StyleInspector : Box {
     };
     _node_text_align.changed.connect( set_node_text_align );
 
-    _node_text_align.add_button( "format-justify-left-symbolic",   _( "Left" ) );
-    _node_text_align.add_button( "format-justify-center-symbolic", _( "Center" ) );
-    _node_text_align.add_button( "format-justify-right-symbolic",  _( "Right" ) );
+    _node_text_align.add_button( "format-justify-left-symbolic",   null, _( "Left" ) );
+    _node_text_align.add_button( "format-justify-center-symbolic", null, _( "Center" ) );
+    _node_text_align.add_button( "format-justify-right-symbolic",  null, _( "Right" ) );
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
     box.append( lbl );
@@ -933,8 +947,13 @@ public class StyleInspector : Box {
       _da.undo_buffer.add_item( new UndoStyleConnectionDash( _affects, dashes.index( index ), _da ) );
     });
 
+    update_icons.connect(() => {
+      _conn_dash.update_icons();
+    });
+
     for( int i=0; i<dashes.length; i++ ) {
-      _conn_dash.add_image( dashes.index( i ).make_icon() );
+      var dash = dashes.index( i );
+      _conn_dash.add_image( dash.make_icon( false ), dash.make_icon( true ) );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -967,8 +986,12 @@ public class StyleInspector : Box {
       _da.undo_buffer.add_item( new UndoStyleConnectionArrow( _affects, arrows[index], _da ) );
     });
 
+    update_icons.connect(() => {
+      _conn_arrow.update_icons();
+    });
+
     foreach (string arrow in arrows) {
-      _conn_arrow.add_image( Connection.make_arrow_icon( arrow ) );
+      _conn_arrow.add_image( Connection.make_arrow_icon( arrow, false ), Connection.make_arrow_icon( arrow, true ) );
     }
 
     var box = new Box( Orientation.HORIZONTAL, 0 ) {
@@ -1130,9 +1153,9 @@ public class StyleInspector : Box {
     };
     _conn_text_align.changed.connect( set_connection_text_align );
 
-    _conn_text_align.add_button( "format-justify-left-symbolic",   _( "Left" ) );
-    _conn_text_align.add_button( "format-justify-center-symbolic", _( "Center" ) );
-    _conn_text_align.add_button( "format-justify-right-symbolic",  _( "Right" ) );
+    _conn_text_align.add_button( "format-justify-left-symbolic",   null, _( "Left" ) );
+    _conn_text_align.add_button( "format-justify-center-symbolic", null, _( "Center" ) );
+    _conn_text_align.add_button( "format-justify-right-symbolic",  null, _( "Right" ) );
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
     box.append( lbl );
@@ -1282,9 +1305,9 @@ public class StyleInspector : Box {
     };
     _callout_text_align.changed.connect( set_callout_text_align );
 
-    _callout_text_align.add_button( "format-justify-left-symbolic",   _( "Left" ) );
-    _callout_text_align.add_button( "format-justify-center-symbolic", _( "Center" ) );
-    _callout_text_align.add_button( "format-justify-right-symbolic",  _( "Right" ) );
+    _callout_text_align.add_button( "format-justify-left-symbolic",   null, _( "Left" ) );
+    _callout_text_align.add_button( "format-justify-center-symbolic", null, _( "Center" ) );
+    _callout_text_align.add_button( "format-justify-right-symbolic",  null, _( "Right" ) );
 
     var box = new Box( Orientation.HORIZONTAL, 0 );
     box.append( lbl );
