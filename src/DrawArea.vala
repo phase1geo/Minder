@@ -619,17 +619,11 @@ public class DrawArea : Gtk.DrawingArea {
             }
             break;
           case "ideas" :
-            {
-              var show = it->get_prop( "show" );
-              if( show != null ) {
-                braindump_shown = bool.parse( show );
-              }
-              for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
-                if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "idea") ) {
-                  var idea = it2->get_prop( "text" );
-                  if( idea != null ) {
-                    _braindump.append_val( idea );
-                  }
+            for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
+              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "idea") ) {
+                var idea = it2->get_prop( "text" );
+                if( idea != null ) {
+                  _braindump.append_val( idea );
                 }
               }
             }
@@ -681,7 +675,6 @@ public class DrawArea : Gtk.DrawingArea {
     parent->add_child( _node_links.save() );
 
     Xml.Node* ideas = new Xml.Node( null, "ideas" );
-    ideas->set_prop( "show", braindump_shown.to_string() );
     for( int i=0; i<_braindump.length; i++ ) {
       Xml.Node* idea = new Xml.Node( null, "idea" );
       idea->set_prop( "text", _braindump.index( i ) );
@@ -762,7 +755,7 @@ public class DrawArea : Gtk.DrawingArea {
     origin_y            = 0.0;
     sfactor             = 1.0;
     _pressed            = false;
-    _press_num         = 0;
+    _press_num          = 0;
     _motion             = false;
     _attach_node        = null;
     _attach_summary     = null;
@@ -813,7 +806,7 @@ public class DrawArea : Gtk.DrawingArea {
     origin_y            = 0.0;
     sfactor             = 1.0;
     _pressed            = false;
-    _press_num         = 0;
+    _press_num          = 0;
     _motion             = false;
     _attach_node        = null;
     _attach_summary     = null;
@@ -853,22 +846,26 @@ public class DrawArea : Gtk.DrawingArea {
     return( _selected.current_node() );
   }
 
-  /* Returns the current connection */
+  //-------------------------------------------------------------
+  // Returns the current connection
   public Connection? get_current_connection() {
     return( _selected.current_connection() );
   }
 
-  /* Returns the current callout */
+  //-------------------------------------------------------------
+  // Returns the current callout
   public Callout? get_current_callout() {
     return( _selected.current_callout() );
   }
 
-  /* Returns the array of selected nodes */
+  //-------------------------------------------------------------
+  // Returns the array of selected nodes
   public Array<Node> get_selected_nodes() {
     return( _selected.nodes() );
   }
 
-  /* Returns the array of selected connections */
+  //-------------------------------------------------------------
+  // Returns the array of selected connections
   public Array<Connection> get_selected_connections() {
     return( _selected.connections() );
   }
@@ -877,25 +874,27 @@ public class DrawArea : Gtk.DrawingArea {
     return( _selected.callouts() );
   }
 
-  /* Returns the current group (if selected) */
+  //-------------------------------------------------------------
+  // Returns the current group (if selected)
   public NodeGroup? get_current_group() {
     return( _selected.current_group() );
   }
 
-  /* Returns the array of selected groups */
+  //-------------------------------------------------------------
+  // Returns the array of selected groups
   public Array<NodeGroup> get_selected_groups() {
     return( _selected.groups() );
   }
 
-  /* Returns the selection instance associated with this DrawArea */
+  //-------------------------------------------------------------
+  // Returns the selection instance associated with this DrawArea
   public Selection get_selections() {
     return( _selected );
   }
 
-  /*
-   Populates the list of matches with any nodes that match the given string
-   pattern.
-  */
+  //-------------------------------------------------------------
+  // Populates the list of matches with any nodes that match the
+  // given string pattern.
   public void get_match_items(string tabname, string pattern, bool[] search_opts, ref Gtk.ListStore matches ) {
     if( search_opts[SearchOptions.NODES] || search_opts[SearchOptions.CALLOUTS] ) {
       for( int i=0; i<_nodes.length; i++ ) {
@@ -910,7 +909,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Sets the current node to the given node */
+  //-------------------------------------------------------------
+  // Sets the current node to the given node
   public void set_current_node( Node? n ) {
     if( n == null ) {
       _selected.clear_nodes();
@@ -927,7 +927,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Needs to be called whenever the user changes the mode of the current node */
+  //-------------------------------------------------------------
+  // Needs to be called whenever the user changes the mode of the
+  // current node
   public void set_node_mode( Node node, NodeMode mode, bool undoable = true ) {
     if( (node.mode != NodeMode.EDITABLE) && (mode == NodeMode.EDITABLE) ) {
       update_im_cursor( node.name );
@@ -958,7 +960,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Needs to be called whenever the user changes the mode of the current connection */
+  //-------------------------------------------------------------
+  // Needs to be called whenever the user changes the mode of the
+  // current connection
   public void set_connection_mode( Connection conn, ConnMode mode, bool undoable = true ) {
     if( (conn.mode != ConnMode.EDITABLE) && (mode == ConnMode.EDITABLE) ) {
       update_im_cursor( conn.title );
@@ -1015,7 +1019,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Returns the undo buffer associated with the current state */
+  //-------------------------------------------------------------
+  // Returns the undo buffer associated with the current state
   public UndoBuffer current_undo_buffer() {
     var current = _selected.current_node();
     if( (current != null) && (current.mode == NodeMode.EDITABLE) ) {
@@ -1024,7 +1029,9 @@ public class DrawArea : Gtk.DrawingArea {
     return( undo_buffer );
   }
 
-  /* Updates the IM context cursor location based on the canvas text position */
+  //-------------------------------------------------------------
+  // Updates the IM context cursor location based on the canvas
+  // text position
   private void update_im_cursor( CanvasText ct ) {
       var int_posx   = (int) (ct.posx * sfactor);
       var int_posy   = (int) (ct.posy * sfactor);
@@ -1035,7 +1042,8 @@ public class DrawArea : Gtk.DrawingArea {
       _im_context.set_cursor_location( rect );
   }
 
-  /* Sets the current connection to the given node */
+  //-------------------------------------------------------------
+  // Sets the current connection to the given node
   public void set_current_connection( Connection? c ) {
     if( c != null ) {
       _selected.set_current_connection( c );
@@ -1046,23 +1054,27 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Sets the current selected sticker to the specified sticker */
+  //-------------------------------------------------------------
+  // Sets the current selected sticker to the specified sticker
   public void set_current_sticker( Sticker? s ) {
     _selected.set_current_sticker( s );
     _stickers.select_sticker( s );
   }
 
-  /* Sets the current selected group to the specified group */
+  //-------------------------------------------------------------
+  // Sets the current selected group to the specified group
   public void set_current_group( NodeGroup? g ) {
     _selected.set_current_group( g );
   }
 
-  /* Sets the current selected callout to the specified callout */
+  //-------------------------------------------------------------
+  // Sets the current selected callout to the specified callout
   public void set_current_callout( Callout? c ) {
     _selected.set_current_callout( c );
   }
 
-  /* Toggles the value of the specified node, if possible */
+  //-------------------------------------------------------------
+  // Toggles the value of the specified node, if possible
   public void toggle_task( Node n ) {
     var changes = new Array<NodeTaskInfo?>();
     n.toggle_task_done( ref changes );
@@ -1071,7 +1083,8 @@ public class DrawArea : Gtk.DrawingArea {
     auto_save();
   }
 
-  /* Toggles the fold for the given node */
+  //-------------------------------------------------------------
+  // Toggles the fold for the given node
   public void toggle_fold( Node n, bool deep ) {
     var fold    = !n.folded;
     var changes = new Array<Node>();
@@ -1082,7 +1095,8 @@ public class DrawArea : Gtk.DrawingArea {
     auto_save();
   }
 
-  /* Toggles the folding of all selected nodes that can be folded */
+  //-------------------------------------------------------------
+  // Toggles the folding of all selected nodes that can be folded
   public void toggle_folds( bool deep = false ) {
     var parents = new Array<Node>();
     var changes = new Array<Node>();
@@ -1098,7 +1112,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Adds a new group for the given list of nodes */
+  //-------------------------------------------------------------
+  // Adds a new group for the given list of nodes
   public void add_group() {
     if( _selected.num_groups() > 1 ) {
       var selgroups = _selected.groups();
@@ -1119,7 +1134,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Removes the currently selected group */
+  //-------------------------------------------------------------
+  // Removes the currently selected group
   public void remove_groups() {
     var selgroups = _selected.groups();
     if( selgroups.length == 0 ) return;
@@ -1143,7 +1159,8 @@ public class DrawArea : Gtk.DrawingArea {
     auto_save();
   }
 
-  /* Adds a callout to the currently selected node */
+  //-------------------------------------------------------------
+  // Adds a callout to the currently selected node
   public void add_callout() {
     var current = _selected.current_node();
     if( (current != null) && (current.callout == null) ) {
@@ -1157,7 +1174,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Removes a callout on the currently selected node */
+  //-------------------------------------------------------------
+  // Removes a callout on the currently selected node
   public void remove_callout() {
     if( is_node_selected() ) {
       var current = _selected.current_node();
@@ -1176,9 +1194,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /*
-   Changes the current connection's title to the given value.
-  */
+  //-------------------------------------------------------------
+  // Changes the current connection's title to the given value.
   public void change_current_connection_title( string title ) {
     var conns = _selected.connections();
     if( conns.length == 1 ) {
@@ -1196,7 +1213,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Changes the state of the given task if it differs from the desired values */
+  //-------------------------------------------------------------
+  // Changes the state of the given task if it differs from the
+  // desired values
   private void change_task( Node node, bool enable, bool done, Array<NodeTaskInfo?> changes ) {
     if( (node.task_enabled() == enable) && (node.task_done() == done) ) return;
     changes.append_val( NodeTaskInfo( node.task_enabled(), node.task_done(), node ) );
@@ -1204,10 +1223,9 @@ public class DrawArea : Gtk.DrawingArea {
     node.set_task_done( done );
   }
 
-  /*
-   Changes the current node's task to the given values.  Updates the layout,
-   adds the undo item, and redraws the canvas.
-  */
+  //-------------------------------------------------------------
+  // Changes the current node's task to the given values.  Updates
+  // the layout, adds the undo item, and redraws the canvas.
   public void change_current_task( bool enable, bool done ) {
     var nodes = _selected.nodes();
     if( nodes.length != 1 ) return;
@@ -1221,7 +1239,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Toggles the task values of the selected nodes */
+  //-------------------------------------------------------------
+  // Toggles the task values of the selected nodes
   public void change_selected_tasks() {
     var parents     = new Array<Node>();
     var changes     = new Array<NodeTaskInfo?>();

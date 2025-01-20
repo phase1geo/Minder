@@ -1031,7 +1031,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     var da = get_current_da();
     if( da != null ) {
       da.braindump_shown = show;
-      da.auto_save();
+      save_tab_state( _nb.page );
     }
 
     _brain.visible    = show;
@@ -1881,6 +1881,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       node->new_prop( "origin-x", da.origin_x.to_string() );
       node->new_prop( "origin-y", da.origin_y.to_string() );
       node->new_prop( "scale", da.sfactor.to_string() );
+      node->new_prop( "braindump", da.braindump_shown.to_string() );
       root->add_child( node );
     }
 
@@ -1917,10 +1918,11 @@ public class MainWindow : Gtk.ApplicationWindow {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "tab") ) {
         var fname = it->get_prop( "path" );
         if( FileUtils.test( fname, FileTest.EXISTS ) ) {
-          var saved    = it->get_prop( "saved" );
-          var origin_x = it->get_prop( "origin-x" );
-          var origin_y = it->get_prop( "origin-y" );
-          var sfactor  = it->get_prop( "scale" );
+          var saved     = it->get_prop( "saved" );
+          var origin_x  = it->get_prop( "origin-x" );
+          var origin_y  = it->get_prop( "origin-y" );
+          var sfactor   = it->get_prop( "scale" );
+          var braindump = it->get_prop( "braindump" );
           var da = add_tab( fname, TabAddReason.LOAD );
           if( origin_x != null ) {
             da.origin_x = int.parse( origin_x );
@@ -1931,6 +1933,9 @@ public class MainWindow : Gtk.ApplicationWindow {
           if( sfactor != null ) {
             da.sfactor = double.parse( sfactor );
             change_scale( da.sfactor );
+          }
+          if( braindump != null ) {
+            da.braindump_shown = bool.parse( braindump );
           }
           da.get_doc().load_filename( fname, bool.parse( saved ) );
           if( da.get_doc().load() ) {
