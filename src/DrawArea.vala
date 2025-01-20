@@ -114,13 +114,14 @@ public class DrawArea : Gtk.DrawingArea {
   private EventControllerScroll _scroll;
   private Array<string>      _braindump;
 
-  public MainWindow     win           { private set; get; }
-  public UndoBuffer     undo_buffer   { set; get; }
-  public UndoTextBuffer undo_text     { set; get; }
-  public Layouts        layouts       { set; get; default = new Layouts(); }
-  public Animator       animator      { set; get; }
-  public ImageManager   image_manager { set; get; default = new ImageManager(); }
-  public bool           is_loaded     { get; private set; default = false; }
+  public MainWindow     win             { private set; get; }
+  public UndoBuffer     undo_buffer     { set; get; }
+  public UndoTextBuffer undo_text       { set; get; }
+  public Layouts        layouts         { set; get; default = new Layouts(); }
+  public Animator       animator        { set; get; }
+  public ImageManager   image_manager   { set; get; default = new ImageManager(); }
+  public bool           is_loaded       { get; private set; default = false; }
+  public bool           braindump_shown { get; set; default = false; }
 
   public GLib.Settings settings {
     get {
@@ -618,11 +619,17 @@ public class DrawArea : Gtk.DrawingArea {
             }
             break;
           case "ideas" :
-            for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
-              if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "idea") ) {
-                var idea = it2->get_prop( "text" );
-                if( idea != null ) {
-                  _braindump.append_val( idea );
+            {
+              var show = it->get_prop( "show" );
+              if( show != null ) {
+                braindump_shown = bool.parse( show );
+              }
+              for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
+                if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "idea") ) {
+                  var idea = it2->get_prop( "text" );
+                  if( idea != null ) {
+                    _braindump.append_val( idea );
+                  }
                 }
               }
             }
@@ -674,6 +681,7 @@ public class DrawArea : Gtk.DrawingArea {
     parent->add_child( _node_links.save() );
 
     Xml.Node* ideas = new Xml.Node( null, "ideas" );
+    ideas->set_prop( "show", braindump_shown.to_string() );
     for( int i=0; i<_braindump.length; i++ ) {
       Xml.Node* idea = new Xml.Node( null, "idea" );
       idea->set_prop( "text", _braindump.index( i ) );
@@ -1247,10 +1255,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /*
-   Changes the current node's folded state to the given value.  Updates the
-   layout, adds the undo item and redraws the canvas.
-  */
+  //-------------------------------------------------------------
+  // Changes the current node's folded state to the given value.
+  // Updates the layout, adds the undo item and redraws the canvas.
   public void change_current_fold( bool folded, bool deep = false ) {
     var nodes = _selected.nodes();
     if( nodes.length == 1 ) {
@@ -1263,10 +1270,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /*
-   Changes the current node's note to the given value.  Updates the
-   layout, adds the undo item and redraws the canvas.
-  */
+  //-------------------------------------------------------------
+  // Changes the current node's note to the given value.  Updates
+  // the layout, adds the undo item and redraws the canvas.
   public void change_current_node_note( string note ) {
     var nodes = _selected.nodes();
     if( nodes.length == 1 ) {
@@ -1276,17 +1282,18 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /*
-   If there is a currently selected node (and there should be), adds the given node
-   link to the current node's list and returns the unique ID associated with the node link.
-  */
+  //-------------------------------------------------------------
+  // If there is a currently selected node (and there should be),
+  // adds the given node link to the current node's list and
+  // returns the unique ID associated with the node link.
   public int add_note_node_link( NodeLink link, out string text ) {
     link.normalize( this );
     text = link.get_markdown_text( this );
     return( _node_links.add_link( link ) );
   }
 
-  /* Handles a user click on a node link with the given ID */
+  //-------------------------------------------------------------
+  // Handles a user click on a node link with the given ID
   public void note_node_link_clicked( int id ) {
     var link = _node_links.get_node_link( id );
     if( link != null ) {
@@ -1294,9 +1301,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /*
-   Changes the current connection's note to the given value.
-  */
+  //-------------------------------------------------------------
+  // Changes the current connection's note to the given value.
   public void change_current_connection_note( string note ) {
     var conns = _selected.connections();
     if( conns.length == 1 ) {
@@ -1306,12 +1312,12 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /*
-   Adds an image to the current node by allowing the user to select an image file
-   from the file system and, optionally, editing the image prior to assigning it
-   to a node.  Updates the layout, adds the undo item and redraws the canvas.
-   item and redraws the canvas.
-  */
+  //-------------------------------------------------------------
+  // Adds an image to the current node by allowing the user to
+  // select an image file from the file system and, optionally,
+  // editing the image prior to assigning it to a node.  Updates
+  // the layout, adds the undo item and redraws the canvas item
+  // and redraws the canvas.
   public void add_current_image() {
     var current = _selected.current_node();
     if( (current != null) && (current.image == null) ) {
@@ -1328,10 +1334,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /*
-   Deletes the image from the current node.  Updates the layout, adds the undo
-   item and redraws the canvas.
-  */
+  //-------------------------------------------------------------
+  // Deletes the image from the current node.  Updates the layout,
+  // adds the undo item and redraws the canvas.
   public void delete_current_image() {
     var nodes = _selected.nodes();
     if( nodes.length == 1 ) {
@@ -1347,9 +1352,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /*
-   Causes the current node's image to be edited.
-  */
+  //-------------------------------------------------------------
+  // Causes the current node's image to be edited.
   public void edit_current_image() {
     var nodes = _selected.nodes();
     if( nodes.length == 1 ) {
@@ -1360,7 +1364,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Called whenever the current node's image is changed */
+  //-------------------------------------------------------------
+  // Called whenever the current node's image is changed
   private void current_image_edited( NodeImage? orig_image ) {
     var current = _selected.current_node();
     undo_buffer.add_item( new UndoNodeImage( current, orig_image ) );
@@ -1369,7 +1374,8 @@ public class DrawArea : Gtk.DrawingArea {
     auto_save();
   }
 
-  /* Called when the linking process has successfully completed */
+  //-------------------------------------------------------------
+  // Called when the linking process has successfully completed
   private void end_link( Node node ) {
     if( _selected.num_connections() == 0 ) return;
     _selected.clear_connections();
@@ -1383,7 +1389,8 @@ public class DrawArea : Gtk.DrawingArea {
     queue_draw();
   }
 
-  /* Returns true if any of the selected nodes contain node links */
+  //-------------------------------------------------------------
+  // Returns true if any of the selected nodes contain node links
   public bool any_selected_nodes_linked() {
     var nodes = _selected.nodes();
     for( int i=0; i<nodes.length; i++ ) {
@@ -1394,7 +1401,8 @@ public class DrawArea : Gtk.DrawingArea {
     return( false );
   }
 
-  /* Creates links between selected nodes */
+  //-------------------------------------------------------------
+  // Creates links between selected nodes
   public void create_links() {
     var nodes = _selected.nodes();
     if( nodes.length < 2 ) return;
@@ -1406,7 +1414,8 @@ public class DrawArea : Gtk.DrawingArea {
     queue_draw();
   }
 
-  /* Deletes all of the selected node links */
+  //-------------------------------------------------------------
+  // Deletes all of the selected node links
   public void delete_links() {
     var nodes = _selected.nodes();
     undo_buffer.add_item( new UndoNodesLink( nodes ) );
@@ -1419,7 +1428,8 @@ public class DrawArea : Gtk.DrawingArea {
     queue_draw();
   }
 
-  /* Toggles the node links */
+  //-------------------------------------------------------------
+  // Toggles the node links
   public void toggle_links() {
     var current = _selected.current_node();
     if( any_selected_nodes_linked() ) {
@@ -1431,10 +1441,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /*
-   Changes the current node's link color and propagates that color to all
-   descendants.
-  */
+  //-------------------------------------------------------------
+  // Changes the current node's link color and propagates that
+  // color to all descendants.
   public void change_current_link_color( RGBA? color ) {
     var current = _selected.current_node();
     if( current != null ) {
@@ -1448,7 +1457,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Changes the link colors of all selected nodes to the specified color */
+  //-------------------------------------------------------------
+  // Changes the link colors of all selected nodes to the
+  // specified color
   public void change_link_colors( RGBA color ) {
     var nodes = _selected.nodes();
     undo_buffer.add_item( new UndoNodesLinkColor( nodes, color ) );
@@ -1459,6 +1470,8 @@ public class DrawArea : Gtk.DrawingArea {
     auto_save();
   }
 
+  //-------------------------------------------------------------
+  // Randomizes the current link color.
   public void randomize_current_link_color() {
     var current = _selected.current_node();
     if( current != null ) {
@@ -1473,7 +1486,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Randomizes the link colors of the selected nodes */
+  //-------------------------------------------------------------
+  // Randomizes the link colors of the selected nodes
   public void randomize_link_colors() {
     var nodes  = _selected.nodes();
     var colors = new Array<RGBA?>();
@@ -1486,7 +1500,8 @@ public class DrawArea : Gtk.DrawingArea {
     auto_save();
   }
 
-  /* Reparents the current node's link color */
+  //-------------------------------------------------------------
+  // Reparents the current node's link color
   public void reparent_current_link_color() {
     var current = _selected.current_node();
     if( current != null ) {
@@ -1498,7 +1513,8 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Causes the selected nodes to use the link color of their parent */
+  //-------------------------------------------------------------
+  // Causes the selected nodes to use the link color of their parent
   public void reparent_link_colors() {
     var nodes = _selected.nodes();
     undo_buffer.add_item( new UndoNodesReparentLinkColor( nodes ) );
@@ -1509,9 +1525,8 @@ public class DrawArea : Gtk.DrawingArea {
     auto_save();
   }
 
-  /*
-   Changes the current connection's color to the specified color.
-  */
+  //-------------------------------------------------------------
+  // Changes the current connection's color to the specified color.
   public void change_current_connection_color( RGBA? color ) {
     var conn = _selected.current_connection();
     if( conn == null ) return;
@@ -1525,7 +1540,9 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Clears the current connection (if it is set) and updates the UI accordingly */
+  //-------------------------------------------------------------
+  // Clears the current connection (if it is set) and updates the
+  // UI accordingly
   private void clear_current_connection( bool signal_change ) {
     if( _selected.num_connections() > 0 ) {
       _selected.clear_connections( signal_change );
@@ -1533,35 +1550,44 @@ public class DrawArea : Gtk.DrawingArea {
     }
   }
 
-  /* Clears the current node (if it is set) and updates the UI accordingly */
+  //-------------------------------------------------------------
+  // Clears the current node (if it is set) and updates the UI
+  // accordingly
   private void clear_current_node( bool signal_change ) {
     if( _selected.num_nodes() > 0 ) {
       _selected.clear_nodes( signal_change );
     }
   }
 
-  /* Clears the current sticker (if it is set) and updates the UI accordingly */
+  //-------------------------------------------------------------
+  // Clears the current sticker (if it is set) and updates the UI
+  // accordingly
   private void clear_current_sticker( bool signal_change ) {
     if( _selected.num_stickers() > 0 ) {
       _selected.clear_stickers( signal_change );
     }
   }
 
-  /* Clears the current group (if it is set) and updates the UI accordingly */
+  //-------------------------------------------------------------
+  // Clears the current group (if it is set) and updates the UI
+  // accordingly
   private void clear_current_group( bool signal_change ) {
     if( _selected.num_groups() > 0 ) {
       _selected.clear_groups( signal_change );
     }
   }
 
-  /* Clears the current callout (if it is set) and updates the UI accordingly */
+  //-------------------------------------------------------------
+  // Clears the current callout (if it is set) and updates the UI
+  // accordingly
   private void clear_current_callout( bool signal_change ) {
     if( _selected.num_callouts() > 0 ) {
       _selected.clear_callouts( signal_change );
     }
   }
 
-  /* Called whenever the user clicks on a valid connection */
+  //-------------------------------------------------------------
+  // Called whenever the user clicks on a valid connection
   private bool set_current_connection_from_position( Connection conn, double x, double y ) {
 
     if( _selected.is_current_connection( conn ) ) {
@@ -1600,7 +1626,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
-  /* Called whenever the user clicks on node */
+  //-------------------------------------------------------------
+  // Called whenever the user clicks on node
   private bool set_current_node_from_position( Node node, double x, double y ) {
 
     var scaled_x = scale_value( x );
@@ -1731,7 +1758,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
-  /* Handles a click on the specified sticker */
+  //-------------------------------------------------------------
+  // Handles a click on the specified sticker
   public bool set_current_sticker_from_position( Sticker sticker, double x, double y ) {
 
     var scaled_x = scale_value( x );
@@ -1758,7 +1786,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
-  /* Handles a click on the specified group */
+  //-------------------------------------------------------------
+  // Handles a click on the specified group
   public bool set_current_group_from_position( NodeGroup group, double x, double y ) {
 
     /* Select the current group */
@@ -1772,7 +1801,8 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
-  /* Handles a click on the specified callout */
+  //-------------------------------------------------------------
+  // Handles a click on the specified callout
   public bool set_current_callout_from_position( Callout callout, double x, double y ) {
 
     var scaled_x = scale_value( x );
@@ -1823,10 +1853,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
-  /*
-   Checks to see if the user has clicked a connection that was not previously
-   selected.  If this is the case, select the connection.
-  */
+  //-------------------------------------------------------------
+  // Checks to see if the user has clicked a connection that was
+  // not previously selected.  If this is the case, select the
+  // connection.
   private bool select_connection_if_unselected( double x, double y ) {
     var conn = _connections.within_title( x, y );
     if( conn == null ) {
@@ -1842,10 +1872,9 @@ public class DrawArea : Gtk.DrawingArea {
     return( false );
   }
 
-  /*
-   Checks to see if the user has clicked a node that was not previously selected.
-   If this is the case, select the node.
-  */
+  //-------------------------------------------------------------
+  // Checks to see if the user has clicked a node that was not
+  // previously selected.  If this is the case, select the node.
   private bool select_node_if_unselected( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i ).contains( x, y, null );

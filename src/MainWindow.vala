@@ -433,10 +433,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     canvas_changed( da );
     save_tab_state( page_num );
     _brain.set_list( da.braindump );
-    if( ( _brain.visible && (da.braindump.length == 0)) ||
-        (!_brain.visible && (da.braindump.length  > 0)) ) {
-      _brain_btn.clicked(); 
-    }
+    set_braindump_ui( da.braindump_shown );
   }
 
   //-------------------------------------------------------------
@@ -1009,16 +1006,31 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
 
     _brain_btn.clicked.connect((e) => {
-      var da = get_current_da();
-      _brain.visible = !_brain.visible;
-      if( _brain.visible ) {
-        _brain.grab_focus();
-      } else {
-        da.grab_focus();
-      }
+      set_braindump_ui( !_brain.visible );
     });
 
     _header.pack_end( _brain_btn );
+
+  }
+
+  //-------------------------------------------------------------
+  // Shows or hides the braindump UI.
+  public void set_braindump_ui( bool show ) {
+
+    var da = get_current_da();
+    if( da != null ) {
+      da.braindump_shown = show;
+      da.auto_save();
+    }
+
+    _brain.visible    = show;
+    _brain_btn.active = show;
+
+    if( show ) {
+      _brain.grab_focus();
+    } else if( da != null ) {
+      da.grab_focus();
+    }
 
   }
 
@@ -1030,6 +1042,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       icon_name      = (on_elementary ? "minder-focus" : "media-optical-symbolic"),
       tooltip_markup = Utils.tooltip_with_accel( _( "Focus Mode" ), "<Control><Shift>f" )
     };
+
     _focus_btn.clicked.connect((e) => {
       var da = get_current_da();
       update_title( da );
