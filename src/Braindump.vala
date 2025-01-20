@@ -22,6 +22,12 @@
 using Gtk;
 using Gdk;
 
+public enum BraindumpChangeType {
+  ADD,
+  REMOVE,
+  CLEAR
+}
+
 public class Braindump : Box {
 
   private MainWindow _win;
@@ -29,7 +35,7 @@ public class Braindump : Box {
   private ListBox    _ideas;
   private int        _current_index;
 
-  public signal void ideas_changed( bool added, string name_index );
+  public signal void ideas_changed( BraindumpChangeType change, string name_index );
 
   //-------------------------------------------------------------
   // Constructor
@@ -40,6 +46,7 @@ public class Braindump : Box {
     _win = win;
 
     _entry = new Entry() {
+      halign           = Align.FILL,
       placeholder_text = _( "Enter Idea" ),
       width_chars      = 30,
       margin_top       = 5,
@@ -49,45 +56,67 @@ public class Braindump : Box {
 
     _entry.activate.connect(() => {
       add_idea( _entry.text );
-      ideas_changed( true, _entry.text );
+      ideas_changed( BraindumpChangeType.ADD, _entry.text );
       _entry.text = "";
     });
 
     _ideas = new ListBox() {
+      halign          = Align.FILL,
       selection_mode  = SelectionMode.SINGLE,
       show_separators = true
     };
 
     var key = new EventControllerKey();
-
-    _ideas.add_controller( key );
-
     key.key_pressed.connect((keyval, keycode, state) => {
       var current = _ideas.get_selected_row();
       if( current != null ) {
         if( keyval == Gdk.Key.Delete ) {
           var index = current.get_index();
           _ideas.remove( current );
-          ideas_changed( false, index.to_string() );
+          ideas_changed( BraindumpChangeType.REMOVE, index.to_string() );
           return( true );
         }
       }
       return( false );
     });
 
+    _ideas.add_controller( key );
+
     var sw = new ScrolledWindow() {
       vscrollbar_policy = PolicyType.AUTOMATIC,
       hscrollbar_policy = PolicyType.NEVER,
+      halign            = Align.FILL,
+      valign            = Align.FILL,
+      margin_start      = 5,
+      margin_end        = 5,
+      vexpand           = true,
+      child             = _ideas
+    };
+
+    var remove_btn = new Button.with_label( _( "Clear Idea List" ) ) {
+      halign = Align.CENTER,
+      hexpand = true
+    };
+
+    remove_btn.clicked.connect(() => {
+      _ideas.remove_all();
+      ideas_changed( BraindumpChangeType.CLEAR, "" );
+    });
+
+    ideas_changed.connect((change, idea) => {
+      remove_btn.sensitive = (_ideas.get_row_at_index( 0 ) != null);
+    });
+
+    var bbar = new Box( Orientation.HORIZONTAL, 5 ) {
       margin_bottom = 5,
       margin_start  = 5,
-      margin_end    = 5,
-      valign  = Align.FILL,
-      vexpand = true,
-      child   = _ideas
+      margin_end    = 5
     };
+    bbar.append( remove_btn );
 
     append( _entry );
     append( sw );
+    append( bbar );
 
   }
 
@@ -137,7 +166,7 @@ public class Braindump : Box {
       if( _win.get_current_da().attach_node == null ) {
         _ideas.insert( label, _current_index );
       } else {
-        ideas_changed( false, _current_index.to_string() );
+        ideas_changed( BraindumpChangeType.REMOVE, _current_index.to_string() );
       }
     });
 

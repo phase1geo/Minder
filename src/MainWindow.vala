@@ -191,8 +191,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     /* Create the notebook */
     _nb = new Notebook() {
       halign     = Align.FILL,
-      valign     = Align.FILL,
       hexpand    = true,
+      valign     = Align.FILL,
       vexpand    = true,
       scrollable = true
     };
@@ -202,18 +202,21 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     // Create the braindump pane
     _brain = new Braindump( this ) {
+      halign  = Align.START,
+      hexpand_set = true,
       valign  = Align.FILL,
       vexpand = true,
       visible = false
     };
 
-    _brain.ideas_changed.connect((added, name_index) => {
+    _brain.ideas_changed.connect((change, name_index) => {
       var da = get_current_da();
-      if( added ) {
-        da.braindump.append_val( name_index );
-      } else {
-        da.braindump.remove_index( int.parse( name_index ) );
+      switch( change ) {
+        case BraindumpChangeType.ADD    :  da.braindump.append_val( name_index );  break;
+        case BraindumpChangeType.REMOVE :  da.braindump.remove_index( int.parse( name_index ) );  break;
+        case BraindumpChangeType.CLEAR  :  da.braindump.remove_range( 0, da.braindump.length );  break;
       }
+      stdout.printf( "braindump size: %u\n", da.braindump.length );
       da.auto_save();
     });
 
