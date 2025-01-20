@@ -112,7 +112,13 @@ public class NodeInspector : Box {
     _task = new Switch() {
       halign = Align.END
     };
-    _task.notify["active"].connect( task_changed );
+
+    var btn = new GestureClick();
+    btn.released.connect((n_press, x, y) => {
+      task_changed();
+    });
+
+    _task.add_controller( btn );
 
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
       halign = Align.FILL
@@ -137,7 +143,13 @@ public class NodeInspector : Box {
     _fold = new Switch() {
       halign = Align.END
     };
-    _fold.notify["active"].connect( fold_changed );
+
+    var btn = new GestureClick();
+    btn.released.connect((n_press, x, y) => {
+      fold_changed();
+    });
+
+    _fold.add_controller( btn );
 
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
       halign = Align.FILL
@@ -167,7 +179,13 @@ public class NodeInspector : Box {
     _sequence = new Switch() {
       halign = Align.END
     };
-    _sequence.notify["active"].connect( sequence_changed );
+
+    var btn = new GestureClick();
+    btn.released.connect((n_press, x, y) => {
+      sequence_changed();
+    });
+
+    _sequence.add_controller( btn );
 
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
       halign = Align.FILL
@@ -229,7 +247,13 @@ public class NodeInspector : Box {
     _override = new Switch() {
       halign = Align.END
     };
-    _override.notify["active"].connect( root_color_changed );
+
+    var btn = new GestureClick();
+    btn.released.connect((n_press, x, y) => {
+      root_color_changed();
+    });
+
+    _override.add_controller( btn );
 
     var box = new Box( Orientation.HORIZONTAL, 5 ) {
       halign        = Align.FILL,

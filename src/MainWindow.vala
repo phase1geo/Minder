@@ -1013,6 +1013,8 @@ public class MainWindow : Gtk.ApplicationWindow {
       _brain.visible = !_brain.visible;
       if( _brain.visible ) {
         _brain.grab_focus();
+      } else {
+        da.grab_focus();
       }
     });
 
