@@ -322,6 +322,14 @@ public class MainWindow : Gtk.ApplicationWindow {
     /* Load the exports data */
     _exports.load();
 
+    close_request.connect(() => {
+      save_window_size();
+      return( false );
+    });
+
+    // Set the window size based on gsettings
+    set_window_size();
+
   }
 
   /* Returns the name of the icon to use for a headerbar icon */
@@ -1608,7 +1616,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     return( false );
   }
 
-  /* Called when the user uses the Control-s keyboard shortcut */
+  //-------------------------------------------------------------
+  // Called when the user uses the Control-s keyboard shortcut
   private void action_save() {
     var da = get_current_da( "action_save" );
     if( da.get_doc().is_saved() ) {
@@ -1618,24 +1627,42 @@ public class MainWindow : Gtk.ApplicationWindow {
     }
   }
 
-  /* Called when the user uses the Control-q keyboard shortcut */
+  //-------------------------------------------------------------
+  // Saves the window size to gsettings.
+  private void save_window_size() {
+    Minder.settings.set_int( "window-w", get_width() );
+    Minder.settings.set_int( "window-h", get_height() );
+  }
+
+  //-------------------------------------------------------------
+  // Restores the window size from gsettings.
+  private void set_window_size() {
+    set_default_size( Minder.settings.get_int( "window-w" ), Minder.settings.get_int( "window-h" ) );
+  }
+
+  //-------------------------------------------------------------
+  // Called when the user uses the Control-q keyboard shortcut
   private void action_quit() {
+    save_window_size();
     destroy();
   }
 
-  /* Zooms into the image (makes things larger) */
+  //-------------------------------------------------------------
+  // Zooms into the image (makes things larger)
   private void action_zoom_in() {
     var da = get_current_da( "action_zoom_in" );
     da.zoom_in();
   }
 
-  /* Zooms out of the image (makes things smaller) */
+  //-------------------------------------------------------------
+  // Zooms out of the image (makes things smaller)
   private void action_zoom_out() {
     var da = get_current_da( "action_zoom_out" );
     da.zoom_out();
   }
 
-  /* Zooms to make all nodes visible within the viewer */
+  //-------------------------------------------------------------
+  // Zooms to make all nodes visible within the viewer
   private void action_zoom_fit() {
     var da = get_current_da( "action_zoom_fit" );
     da.zoom_to_fit();

@@ -1,16 +1,6 @@
  <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema path="/com/github/phase1geo/minder/" id="com.github.phase1geo.minder" gettext-domain="com.github.phase1geo.minder">
-    <key name="window-x" type="i">
-      <default>-1</default>
-      <summary>Most recent x position of minder window</summary>
-      <description>Most recent x position of minder window</description>
-    </key>
-    <key name="window-y" type="i">
-      <default>-1</default>
-      <summary>Most recent y position of minder window</summary>
-      <description>Most recent y position of minder window</description>
-    </key>
     <key name="window-w" type="i">
       <default>1000</default>
       <summary>Most recent width of minder window</summary>
