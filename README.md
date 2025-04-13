@@ -73,7 +73,9 @@ Search for "Minder" in AppCenter and install from there.
 
 ### Arch Linux
 
-Arch Linux users should use the flatpak version of Minder from Flathub.
+Minder is packaged in Arch Linux, install it with `pacman`:
+
+`$ sudo pacman -S minder`
 
 ### Void Linux
 
