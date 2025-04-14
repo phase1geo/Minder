@@ -1,37 +1,63 @@
 name: CI
 
-# This workflow will run for any pull request or pushed commit
-on: [push, pull_request]
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "flatpak"
-  flatpak:
-    # The type of runner that the job will run on
+  build:
     runs-on: ubuntu-latest
-
-    # This job runs in a special container designed for building Flatpaks for AppCenter
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [stable, unstable, development-target]
     container:
-      image: ghcr.io/elementary/flatpak-platform/runtime:8.1
+      image: ghcr.io/elementary/docker:${{ matrix.version }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Dependencies
+      run: |
+        apt update
+        apt install -y libgee-0.8-dev libgranite-dev libgtk-4-dev libgtksourceview-5-dev libxml2-dev libarchive-dev libmarkdown2-dev libjson-glib-dev libcairo2-dev libvala-dev meson valac
+    - name: Build
+      env:
+        DESTDIR: out
+      run: |
+        meson build
+        ninja -C build install
+
+  flatpak:
+    name: Flatpak
+    runs-on: ${{ matrix.configuration.runs-on }}
+
+    strategy:
+      matrix:
+        configuration:
+          - arch: x86_64
+            runs-on: ubuntu-latest
+          - arch: aarch64
+            runs-on: ubuntu-24.04-arm
+      # Don't fail the whole workflow if one architecture fails
+      fail-fast: false
+
+    container:
+      image: ghcr.io/elementary/flatpak-platform/runtime:8-${{ matrix.configuration.arch }}
       options: --privileged
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so the job can access it
-    - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # Builds your flatpak manifest using the Flatpak Builder action
-    - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v3
-      with:
-        # This is the name of the Bundle file we're building and can be anything you like
-        bundle: Minderflatpak
-        # This uses your app's RDNN ID
-        manifest-path: com.github.phase1geo.minder.yml
-
-        # You can automatically run any of the tests you've created as part of this workflow
-        run-tests: true
-
-        # These lines specify the location of the elementary Runtime and Sdk
-        repository-name: appcenter
-        repository-url: https://flatpak.elementary.io/repo.flatpakrepo
-        cache-key: "flatpak-builder-${{ github.sha }}"
+      - name: Build
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6.4
+        with:
+          bundle: minder.flatpak
+          manifest-path: com.github.phase1geo.minder.yml
+          repository-name: appcenter
+          repository-url: https://flatpak.elementary.io/repo.flatpakrepo
+          cache-key: "flatpak-builder-${{ github.sha }}"
+          arch: ${{ matrix.configuration.arch }}
