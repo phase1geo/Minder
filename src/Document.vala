@@ -141,7 +141,7 @@ public class Document : Object {
   }
 
   private Xml.Doc* load_raw() {
-    return Xml.Parser.read_file( filename, null, (Xml.ParserOption.HUGE | Xml.ParserOption.NOWARNING) );
+    return Xml.Parser.read_file( get_map_file(), null, (Xml.ParserOption.HUGE | Xml.ParserOption.NOWARNING) );
   }
 
   private string get_etag( Xml.Doc* doc ) {
@@ -162,6 +162,7 @@ public class Document : Object {
 
     Xml.Doc* doc = load_raw();
     if( doc == null ) {
+      stdout.printf( "  Well, that didn't work\n" );
       return( false );
     }
 
@@ -254,6 +255,8 @@ public class Document : Object {
   // Saves the given node information to the specified file
   public bool save_xml() {
 
+    stdout.printf( "In save_xml!\n" );
+
     Xml.Doc* doc = load_raw();
 
     if( doc != null ) {
@@ -279,7 +282,9 @@ public class Document : Object {
 
     }
 
-    return( save_xml_internal( filename, true ) );
+    stdout.printf( "Calling save_xml_internal\n" );
+
+    return( save_xml_internal( get_map_file(), true ) );
 
   }
 
@@ -323,6 +328,8 @@ public class Document : Object {
   // Archives the contents of the opened Minder directory.
   public bool save() {
 
+    stdout.printf( "Saving...\n" );
+
     // Create the tar.gz archive named according the the first argument
     Archive.Write archive = new Archive.Write ();
     archive.add_filter_gzip();
@@ -344,6 +351,8 @@ public class Document : Object {
       error( "Error : %s (%d)", archive.error_string(), archive.errno() );
     }
 
+    stdout.printf( "HERE!!!!\n" );
+
     // Indicate that a save is no longer needed
     save_needed = false;
 
@@ -354,6 +363,8 @@ public class Document : Object {
   //-------------------------------------------------------------
   // Adds the given file to the archive.
   public bool archive_file( Archive.Write archive, string fname, int? image_id = null ) {
+
+    stdout.printf( "Attempting to archive, fname: %s\n", fname );
 
     try {
 
@@ -389,6 +400,7 @@ public class Document : Object {
       }
 
     } catch( Error e ) {
+      stdout.printf( "ERROR archiving: %s\n", e.message );
       critical( e.message );
       return( false );
     }
@@ -498,6 +510,7 @@ public class Document : Object {
 
     // Force the save to occur
     if( save_needed ) {
+      save_xml();
       save();
     }
 

@@ -146,10 +146,10 @@ public class StyleInspector : Box {
   /* Creates the menubutton that changes the affect */
   private Box create_affect_ui() {
 
-    var lbl = new Label( Utils.make_title( _( "Changes affect:" ) ) ) {
-      halign     = Align.START,
-      use_markup = true
+    var lbl = new Label( _( "Changes affect:" ) ) {
+      halign = Align.START
     };
+    lbl.add_css_class( "titled" );
 
     _affects_label = new Label( "" ) {
       halign = Align.START
@@ -183,11 +183,11 @@ public class StyleInspector : Box {
     cbox.append( branch_margin );
 
     /* Create expander */
-    var exp = new Expander( "  " + Utils.make_title( _( "Branch Options" ) ) ) {
-      use_markup = true,
-      expanded   = _settings.get_boolean( "style-branch-options-expanded" ),
-      child      = cbox
+    var exp = new Expander( "  " + _( "Branch Options" ) ) {
+      expanded = _settings.get_boolean( "style-branch-options-expanded" ),
+      child    = cbox
     };
+    exp.add_css_class( "titled" );
     exp.activate.connect(() => {
       _settings.set_boolean( "style-branch-options-expanded", !exp.expanded );
     });
@@ -351,11 +351,11 @@ public class StyleInspector : Box {
     cbox.append( link_arrow );
 
     /* Create expander */
-    var exp = new Expander( "  " + Utils.make_title( _( "Link Options" ) ) ) {
-      use_markup = true,
-      expanded   = _settings.get_boolean( "style-link-options-expanded" ),
-      child      = cbox
+    var exp = new Expander( "  " + _( "Link Options" ) ) {
+      expanded = _settings.get_boolean( "style-link-options-expanded" ),
+      child    = cbox
     };
+    exp.add_css_class( "titled" );
     exp.activate.connect(() => {
       _settings.set_boolean( "style-link-options-expanded", !exp.expanded );
     });
@@ -519,11 +519,11 @@ public class StyleInspector : Box {
     cbox.append( node_markup );
 
     /* Create expander */
-    var exp = new Expander( "  " + Utils.make_title( _( "Node Options" ) ) ) {
-      use_markup = true,
-      expanded   = _settings.get_boolean( "style-node-options-expanded" ),
-      child      = cbox
+    var exp = new Expander( "  " + _( "Node Options" ) ) {
+      expanded = _settings.get_boolean( "style-node-options-expanded" ),
+      child    = cbox
     };
+    exp.add_css_class( "titled" );
     exp.activate.connect(() => {
       _settings.set_boolean( "style-node-options-expanded", !exp.expanded );
     });
@@ -909,11 +909,11 @@ public class StyleInspector : Box {
     cbox.append( conn_twidth );
 
     /* Create expander */
-    _conn_exp = new Expander( "  " + Utils.make_title( _( "Connection Options" ) ) ) {
-      use_markup = true,
-      expanded   = _settings.get_boolean( "style-connection-options-expanded" ),
-      child      = cbox
+    _conn_exp = new Expander( "  " + _( "Connection Options" ) ) {
+      expanded = _settings.get_boolean( "style-connection-options-expanded" ),
+      child    = cbox
     };
+    _conn_exp.add_css_class( "titled" );
     _conn_exp.activate.connect(() => {
       _settings.set_boolean( "style-connection-options-expanded", !_conn_exp.expanded );
     });
@@ -1229,11 +1229,12 @@ public class StyleInspector : Box {
     cbox.append( callout_plength );
 
     /* Create expander */
-    _callout_exp = new Expander( "  " + Utils.make_title( _( "Callout Options" ) ) ) {
+    _callout_exp = new Expander( "  " + _( "Callout Options" ) ) {
       use_markup = true,
       expanded   = _settings.get_boolean( "style-callout-options-expanded" ),
       child      = cbox
     };
+    _callout_exp.add_css_class( "titled" );
     _callout_exp.activate.connect(() => {
       _settings.set_boolean( "style-callout-options-expanded", !_callout_exp.expanded );
     });

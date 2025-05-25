@@ -94,7 +94,6 @@ public class Export {
       active = dflt
     };
     sw.notify["active"].connect((e) => {
-      sw.active = !sw.active;
       settings_changed();
     });
 

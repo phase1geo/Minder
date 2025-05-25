@@ -83,6 +83,18 @@ public class Exports {
     return( null );
   }
 
+  /*
+   Returns the index of the export with the given name.
+  */
+  public int get_index_by_name( string name ) {
+    for( int i=0; i<_exports.length; i++ ) {
+      if (_exports.index( i ).name == name ) {
+        return( i );
+      }
+    }
+    return( -1 );
+  }
+
   /* Gets the save filename and creates the parent directory if it doesn't exist */
   private string? settings_file( bool make_dir ) {
     var dir = GLib.Path.build_filename( Environment.get_user_data_dir(), "minder" );

@@ -19,6 +19,8 @@
 * Authored by: Trevor Williams <phase1geo@gmail.com>
 */
 
+using Gtk;
+
 public class ExportMermaid : Export {
 
   /* Constructor */
@@ -32,7 +34,11 @@ public class ExportMermaid : Export {
     bool retval = true;
     try {
       var os = file.replace( null, false, FileCreateFlags.NONE );
-      export_top_nodes( os, da );
+      if( get_bool( "mindmap" ) ) {
+        export_top_nodes_mindmap( os, da );
+      } else {
+        export_top_nodes_graph( os, da );
+      }
     } catch( Error e ) {
       retval = false;
     }
@@ -56,7 +62,7 @@ public class ExportMermaid : Export {
   }
 
   /* Draws each of the top-level nodes */
-  private void export_top_nodes( FileOutputStream os, DrawArea da ) {
+  private void export_top_nodes_graph( FileOutputStream os, DrawArea da ) {
 
     try {
 
@@ -71,7 +77,33 @@ public class ExportMermaid : Export {
       os.write( title.data );
 
       for( int i=0; i<nodes.length; i++ ) {
-        export_node( os, nodes.index( i ), ref link_id );
+        export_node_graph( os, nodes.index( i ), ref link_id );
+      }
+
+    } catch( Error e ) {
+      // Handle the error
+    }
+
+  }
+
+  private void export_top_nodes_mindmap( FileOutputStream os, DrawArea da ) {
+
+    try {
+
+      var nodes = da.get_nodes();
+      
+      if( nodes.length != 1 ) {
+        return;
+      }
+
+      var root     = nodes.index( 0 );
+      var children = root.children();
+
+      string title = "mindmap\nroot(" + root.name.text.text + ")\n";
+      os.write( title.data );
+
+      for( int i=0; i<children.length; i++ ) {
+        export_node_mindmap( os, children.index( i ), "  " );
       }
 
     } catch( Error e ) {
@@ -153,8 +185,8 @@ public class ExportMermaid : Export {
 
   }
 
-  /* Draws the given node and its children to the output stream */
-  private void export_node( FileOutputStream os, Node node, ref int link_id ) {
+  /* Draws the given node and its children to the output stream for graph output */
+  private void export_node_graph( FileOutputStream os, Node node, ref int link_id ) {
 
     try {
 
@@ -172,7 +204,7 @@ public class ExportMermaid : Export {
           var lstyle = make_link_style( children.index( i ), ref link_id );
           var line   = "  " + title + " " + link + " " + ctitle + ";  " + nstyle + ";  " + lstyle + ";\n";
           os.write( line.data );
-          export_node( os, children.index( i ), ref link_id );
+          export_node_graph( os, children.index( i ), ref link_id );
         }
       }
 
@@ -180,6 +212,44 @@ public class ExportMermaid : Export {
       // Handle error
     }
 
+  }
+
+  /* Draws the given node and its children to the output stream for mindmap output */
+  private void export_node_mindmap( FileOutputStream os, Node node, string prefix ) {
+
+    try {
+
+      var title    = prefix + make_title( node );
+      var children = node.children();
+
+      os.write( title.data );
+
+      for( int i=0; i<children.length; i++ ) {
+        export_node_mindmap( os, children.index( i ), prefix + "  " );
+      }
+
+    } catch( Error e ) {
+      // Handle error
+    }
+
+  }
+
+  /* Adds settings panel */
+  public override void add_settings( Grid grid ) {
+    add_setting_bool( "mindmap", grid, _( "Use Mermaid Mindmap Format" ), null, false );
+  }
+
+  /* Save the settings */
+  public override void save_settings( Xml.Node* node ) {
+    node->set_prop( "mindmap", get_bool( "mindmap" ).to_string() );
+  }
+
+  /* Load the settings */
+  public override void load_settings( Xml.Node* node ) {
+    var mm = node->get_prop( "mindmap" );
+    if( mm != null ) {
+      set_bool( "mindmap", bool.parse( mm ) );
+    }
   }
 
 }

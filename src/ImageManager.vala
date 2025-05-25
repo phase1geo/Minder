@@ -27,13 +27,10 @@ public delegate void ImageIdFunc( int id );
 
 public class ImageManager {
 
-  /* Returns the web pathname used to store downloaded images */
-  private static string get_storage_path() {
-    return( GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "images" ) );
-  }
-
   /* Private class used by the image manager to store image information */
   private class ImageItem {
+
+    private ImageManager _manager;
 
     public int    id    { set; get; default = -1; }
     public string uri   { set; get; default = ""; }
@@ -41,7 +38,8 @@ public class ImageManager {
     public bool   valid { set; get; default = false; }
 
     /* Default constructor */
-    public ImageItem( string uri ) {
+    public ImageItem( ImageManager manager, string uri ) {
+      _manager   = manager;
       this.id    = Minder.settings.get_int( "image-id" );
       this.uri   = uri;
       this.ext   = get_extension();
@@ -97,7 +95,7 @@ public class ImageManager {
     /* Returns the full pathname to the given fname */
     public string get_path() {
       var basename = "img%06x%s".printf( id, ext );
-      return( GLib.Path.build_filename( get_storage_path(), basename ) );
+      return( GLib.Path.build_filename( _manager.get_image_dir(), basename ) );
     }
 
     /* Copies the given URI to the given filename in the storage directory */
@@ -123,20 +121,33 @@ public class ImageManager {
   }
 
   private Array<ImageItem> _images;
-  private bool             _available = true;
   private HashMap<int,int> _id_map;
+  private string           _image_dir = null;
 
   /* Default constructor */
   public ImageManager() {
 
     /* Create the images directory if it does not exist */
-    if( DirUtils.create_with_parents( get_storage_path(), 0775 ) == 0 ) {
-      _available = true;
-    }
+    set_image_dir( get_image_dir() );
 
     /* Allocate the images array */
     _images = new Array<ImageItem>();
     _id_map = new HashMap<int,int>();
+
+  }
+
+  /* Returns the web pathname used to store downloaded images */
+  public string get_image_dir() {
+    return( _image_dir );
+  }
+
+  /* Sets the image dir to the specified path (pass null to use the default system path) */
+  public void set_image_dir( string? image_dir ) {
+
+    _image_dir = image_dir ?? GLib.Path.build_filename( Environment.get_user_data_dir(), "minder", "images" );
+
+    /* Create the images directory if it does not exist */
+    DirUtils.create_with_parents( _image_dir, 0775 );
 
   }
 
@@ -198,7 +209,7 @@ public class ImageManager {
   public int add_image( string uri, int? orig_id = null ) {
     var item = find_uri_match( uri );
     if( item == null ) {
-      item = new ImageItem( uri );
+      item = new ImageItem( this, uri );
       if( !item.copy_file() ) return( -1 );
       _images.append_val( item );
     } else if( !item.exists() ) {
@@ -217,7 +228,7 @@ public class ImageManager {
    value of -1.
   */
   public int add_pixbuf( Gdk.Pixbuf buf, int? orig_id = null ) {
-    var item = new ImageItem( "" );
+    var item = new ImageItem( this, "" );
     try {
       buf.save( item.get_path(), "png", null );
       _images.append_val( item );
