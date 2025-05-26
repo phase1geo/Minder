@@ -255,8 +255,6 @@ public class Document : Object {
   // Saves the given node information to the specified file
   public bool save_xml() {
 
-    stdout.printf( "In save_xml!\n" );
-
     Xml.Doc* doc = load_raw();
 
     if( doc != null ) {
@@ -281,8 +279,6 @@ public class Document : Object {
       }
 
     }
-
-    stdout.printf( "Calling save_xml_internal\n" );
 
     return( save_xml_internal( get_map_file(), true ) );
 
