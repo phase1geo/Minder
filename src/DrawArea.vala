@@ -2525,11 +2525,13 @@ public class DrawArea : Gtk.DrawingArea {
     var scaled_x = scale_value( x );
     var scaled_y = scale_value( y );
 
+    stdout.printf( "In on_press, n_press: %d\n", n_press );
+
     _press_x      = scaled_x;
     _press_y      = scaled_y;
     _press_middle = button == Gdk.BUTTON_MIDDLE;
     _pressed      = set_current_at_position( _press_x, _press_y );
-    _press_num   = n_press;
+    _press_num    = n_press;
     _motion       = false;
 
     grab_focus();
@@ -5872,7 +5874,6 @@ public class DrawArea : Gtk.DrawingArea {
 
     } else {
 
-      var image = new NodeImage.from_uri( image_manager, file.get_uri(), _attach_node.style.node_width );
       var image = new NodeImage.from_uri( image_manager, uri, _attach_node.style.node_width );
       if( image.valid ) {
         var orig_image = _attach_node.image;

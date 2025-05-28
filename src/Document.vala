@@ -25,13 +25,12 @@ using GLib;
 
 public class Document : Object {
 
-  private DrawArea      _da;
-  private string        _filename;
-  private string        _temp_dir;
-  private bool          _from_user;  // Set to true if _filename was set by the user
-  private ImageManager  _image_manager;
-  private string        _etag;
-  private bool          _read_only = false;
+  private DrawArea _da;
+  private string   _filename;
+  private string   _temp_dir;
+  private bool     _from_user;  // Set to true if _filename was set by the user
+  private string   _etag;
+  private bool     _read_only = false;
 
   /* Properties */
   public string filename {
@@ -88,9 +87,6 @@ public class Document : Object {
 
     // Create the temporary directory to store the mind map
     make_temp_dir();
-
-    /* Create the image manager */
-    _image_manager = new ImageManager();
 
     /* Listen for any changes from the canvas */
     _da.changed.connect( canvas_changed );
@@ -166,10 +162,13 @@ public class Document : Object {
       return( false );
     }
 
-    /* Load Etag */
+    // Load Etag
     _etag = get_etag( doc );
 
+    // Load document
     _da.load( doc->get_root_element() );
+
+    // Delete the XML document contents
     delete doc;
 
     /* If an etag was not found, generate one and save the updated map immediately */

@@ -48,7 +48,8 @@ public class ImageManager {
     }
 
     /* Loads the item information from given XML node */
-    public ImageItem.from_xml( Xml.Node* n ) {
+    public ImageItem.from_xml( ImageManager manager, Xml.Node* n ) {
+      _manager = manager;
       string? i = n->get_prop( "id" );
       if( i != null ) {
         id = int.parse( i );
@@ -122,7 +123,7 @@ public class ImageManager {
 
   private Array<ImageItem> _images;
   private HashMap<int,int> _id_map;
-  private string           _image_dir = null;
+  private string?          _image_dir = null;
 
   /* Default constructor */
   public ImageManager() {
@@ -137,7 +138,7 @@ public class ImageManager {
   }
 
   /* Returns the web pathname used to store downloaded images */
-  public string get_image_dir() {
+  public string? get_image_dir() {
     return( _image_dir );
   }
 
@@ -156,7 +157,7 @@ public class ImageManager {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "image" ) {
-          var ii = new ImageItem.from_xml( it );
+          var ii = new ImageItem.from_xml( this, it );
           if( !_id_map.has_key( ii.id ) ) {
             _images.append_val( ii );
           }
@@ -176,8 +177,7 @@ public class ImageManager {
 
   /*
    Searches the list of stored image items, returning the array index
-   of the item that matches.  If no match is found, a value of -1 is
-   returned.
+   of the item that matches.  If no match is found, a value of -1 is returned.
   */
   private ImageItem? find_match( int id ) {
     for( int i=0; i<_images.length; i++ ) {
