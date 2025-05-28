@@ -8,30 +8,8 @@ on:
       - synchronize
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        version: [stable, unstable, development-target]
-    container:
-      image: ghcr.io/elementary/docker:${{ matrix.version }}
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Install Dependencies
-      run: |
-        apt update
-        apt install -y libgee-0.8-dev libgranite-dev libgtk-4-dev libgtksourceview-5-dev libxml2-dev libarchive-dev libmarkdown2-dev libjson-glib-dev libcairo2-dev libvala-dev meson valac
-    - name: Build
-      env:
-        DESTDIR: out
-      run: |
-        meson build
-        ninja -C build install
-
   flatpak:
-    name: Flatpak
+    name: Flatpak (${{ matrix.configuration.arch }})
     runs-on: ${{ matrix.configuration.runs-on }}
 
     strategy:
@@ -45,7 +23,7 @@ jobs:
       fail-fast: false
 
     container:
-      image: ghcr.io/elementary/flatpak-platform/runtime:8-${{ matrix.configuration.arch }}
+      image: ghcr.io/elementary/flatpak-platform/runtime:8.1-${{ matrix.configuration.arch }}
       options: --privileged
 
     steps:
@@ -53,7 +31,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build
-        uses: flatpak/flatpak-github-actions/flatpak-builder@v6.4
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6.5
         with:
           bundle: minder.flatpak
           manifest-path: com.github.phase1geo.minder.yml
