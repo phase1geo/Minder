@@ -102,12 +102,12 @@ public class NodeInspector : Box {
   /* Creates the task UI elements */
   private void create_task() {
 
-    var lbl = new Label( Utils.make_title( _( "Task" ) ) ) {
-      halign     = Align.START,
-      hexpand    = true,
-      xalign     = (float)0,
-      use_markup = true
+    var lbl = new Label( _( "Task" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
     };
+    lbl.add_css_class( "titled" );
 
     _task = new Switch() {
       halign = Align.END
@@ -133,12 +133,12 @@ public class NodeInspector : Box {
   /* Creates the fold UI elements */
   private void create_fold() {
 
-    var lbl = new Label( Utils.make_title( _( "Fold" ) ) ) {
-      halign     = Align.START,
-      hexpand    = true,
-      xalign     = (float)0,
-      use_markup = true
+    var lbl = new Label( _( "Fold" ) ) {
+      halign  = Align.START,
+      hexpand = true,
+      xalign  = (float)0
     };
+    lbl.add_css_class( "titled" );
 
     _fold = new Switch() {
       halign = Align.END

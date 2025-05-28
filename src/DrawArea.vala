@@ -2525,11 +2525,13 @@ public class DrawArea : Gtk.DrawingArea {
     var scaled_x = scale_value( x );
     var scaled_y = scale_value( y );
 
+    stdout.printf( "In on_press, n_press: %d\n", n_press );
+
     _press_x      = scaled_x;
     _press_y      = scaled_y;
     _press_middle = button == Gdk.BUTTON_MIDDLE;
     _pressed      = set_current_at_position( _press_x, _press_y );
-    _press_num   = n_press;
+    _press_num    = n_press;
     _motion       = false;
 
     grab_focus();
@@ -5795,6 +5797,10 @@ public class DrawArea : Gtk.DrawingArea {
     Node node;
     var  text = (string)val;
 
+    if( Utils.is_url( text.chomp() ) && do_file_drop( text.chomp(), x, y ) ) {
+      return( true );
+    }
+
     if( (_attach_node != null) && (_attach_node.mode == NodeMode.DROPPABLE) ) {
       node = create_child_node( _attach_node, text );
       undo_buffer.add_item( new UndoNodeInsert( node, node.index() ) );
@@ -5845,9 +5851,16 @@ public class DrawArea : Gtk.DrawingArea {
 
     var file = (GLib.File)val;
 
+    return( do_file_drop( file.get_uri(), x, y ) );
+
+  }
+
+  /* Performs the file drop operation */
+  private bool do_file_drop( string uri, double x, double y ) {
+
     if( (_attach_node == null) || (_attach_node.mode != NodeMode.DROPPABLE) ) {
 
-      var image = new NodeImage.from_uri( image_manager, file.get_uri(), 200 );
+      var image = new NodeImage.from_uri( image_manager, uri, 200 );
       if( image.valid ) {
         var node = create_root_node( _( "Another Idea" ) );
         node.set_image( image_manager, image );
@@ -5856,11 +5869,12 @@ public class DrawArea : Gtk.DrawingArea {
           queue_draw();
           auto_save();
         }
+        return( true );
       }
 
     } else {
 
-      var image = new NodeImage.from_uri( image_manager, file.get_uri(), _attach_node.style.node_width );
+      var image = new NodeImage.from_uri( image_manager, uri, _attach_node.style.node_width );
       if( image.valid ) {
         var orig_image = _attach_node.image;
         _attach_node.set_image( image_manager, image );
@@ -5870,11 +5884,12 @@ public class DrawArea : Gtk.DrawingArea {
         queue_draw();
         current_changed( this );
         auto_save();
+        return( true );
       }
 
     }
 
-    return( true );
+    return( false );
 
   }
 

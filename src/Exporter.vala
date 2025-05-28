@@ -49,7 +49,10 @@ public class Exporter : Box {
       }
     }
 
-    var mb = new DropDown.from_strings( export_types );
+    var mb = new DropDown.from_strings( export_types ) {
+      halign  = Align.FILL,
+      hexpand = true
+    };
     mb.notify["selected"].connect(() => {
       handle_mb_change( win.exports.index( (int)mb.selected ) );
     });
@@ -75,9 +78,8 @@ public class Exporter : Box {
     append( _stack_reveal );
 
     /* Initialize the UI */
-    var last    = win.settings.get_string( "last-export" );
-    var current = win.exports.get_by_name( last );
-    handle_mb_change( current );
+    var last = win.settings.get_string( "last-export" );
+    mb.set_selected( win.exports.get_index_by_name( last ) );
 
   }
 

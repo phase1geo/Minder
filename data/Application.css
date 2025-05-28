@@ -36,3 +36,7 @@
 .highlighted {
   background: yellow;
 }
+
+.titled {
+  font-weight: bold;
+}

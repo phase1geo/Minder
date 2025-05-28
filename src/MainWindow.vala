@@ -987,11 +987,17 @@ public class MainWindow : Gtk.ApplicationWindow {
     menu.append_section( null, print_menu );
     
     /* Create the popover and associate it with clicking on the menu button */
-    var popover = new PopoverMenu.from_model( menu );
+    var popover = new PopoverMenu.from_model( menu ) {
+      cascade_popdown = false
+    };
 
     /* Create export menu */
-    _exporter = new Exporter( this );
+    _exporter = new Exporter( this ) {
+      margin_start = 5,
+      margin_end   = 5
+    };
     _exporter.export_done.connect(() => {
+      stdout.printf( "export_done\n" );
       popover.popdown();
     });
 
