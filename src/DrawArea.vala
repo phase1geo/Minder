@@ -1607,17 +1607,17 @@ public class DrawArea : Gtk.DrawingArea {
 
   //-------------------------------------------------------------
   // Called whenever the user clicks on a valid connection
-  private bool set_current_connection_from_position( Connection conn, double x, double y ) {
+  private bool set_current_connection_from_position( Connection conn, double scaled_x, double scaled_y ) {
 
     if( _selected.is_current_connection( conn ) ) {
       if( conn.mode == ConnMode.EDITABLE ) {
         switch( _press_num ) {
           case 1 :
-            conn.title.set_cursor_at_char( x, y, _shift );
+            conn.title.set_cursor_at_char( scaled_x, scaled_y, _shift );
             _im_context.reset();
             break;
           case 2 :
-            conn.title.set_cursor_at_word( x, y, _shift );
+            conn.title.set_cursor_at_word( scaled_x, scaled_y, _shift );
             _im_context.reset();
             break;
           case 3 :
@@ -1647,15 +1647,13 @@ public class DrawArea : Gtk.DrawingArea {
 
   //-------------------------------------------------------------
   // Called whenever the user clicks on node
-  private bool set_current_node_from_position( Node node, double x, double y ) {
+  private bool set_current_node_from_position( Node node, double scaled_x, double scaled_y ) {
 
-    var scaled_x = scale_value( x );
-    var scaled_y = scale_value( y );
-    var dpress   = _press_num == 2;
-    var tpress   = _press_num == 3;
-    var tag      = FormatTag.LENGTH;
-    var url      = "";
-    var left     = 0.0;
+    var dpress = _press_num == 2;
+    var tpress = _press_num == 3;
+    var tag    = FormatTag.LENGTH;
+    var url    = "";
+    var left   = 0.0;
 
     set_tooltip_markup( null );
 
@@ -1779,10 +1777,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   //-------------------------------------------------------------
   // Handles a click on the specified sticker
-  public bool set_current_sticker_from_position( Sticker sticker, double x, double y ) {
-
-    var scaled_x = scale_value( x );
-    var scaled_y = scale_value( y );
+  public bool set_current_sticker_from_position( Sticker sticker, double scaled_x, double scaled_y ) {
 
     /* If the sticker is selected, check to see if the cursor is over other parts */
     if( sticker.mode == StickerMode.SELECTED ) {
@@ -1807,7 +1802,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   //-------------------------------------------------------------
   // Handles a click on the specified group
-  public bool set_current_group_from_position( NodeGroup group, double x, double y ) {
+  public bool set_current_group_from_position( NodeGroup group, double scaled_x, double scaled_y ) {
 
     /* Select the current group */
     if( _shift ) {
@@ -1822,12 +1817,10 @@ public class DrawArea : Gtk.DrawingArea {
 
   //-------------------------------------------------------------
   // Handles a click on the specified callout
-  public bool set_current_callout_from_position( Callout callout, double x, double y ) {
+  public bool set_current_callout_from_position( Callout callout, double scaled_x, double scaled_y ) {
 
-    var scaled_x = scale_value( x );
-    var scaled_y = scale_value( y );
-    var tag      = FormatTag.LENGTH;
-    var url      = "";
+    var tag = FormatTag.LENGTH;
+    var url = "";
 
     /* If the callout is being edited, go handle the click */
     if( callout.is_within_resizer( scaled_x, scaled_y ) ) {
@@ -1921,7 +1914,7 @@ public class DrawArea : Gtk.DrawingArea {
    Returns true if we sucessfully set current_node to a valid node and made it
    selected.
   */
-  private bool set_current_at_position( double x, double y ) {
+  private bool set_current_at_position( double scaled_x, double scaled_y ) {
 
     var current_conn = _selected.current_connection();
     
@@ -1932,14 +1925,14 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* If the user clicked on a selected connection endpoint, disconnect that endpoint */
     if( (current_conn != null) && (current_conn.mode == ConnMode.SELECTED) ) {
-      if( current_conn.within_drag_handle( x, y ) ) {
+      if( current_conn.within_drag_handle( scaled_x, scaled_y ) ) {
         set_connection_mode( current_conn, ConnMode.ADJUSTING );
         return( true );
-      } else if( current_conn.within_from_handle( x, y ) ) {
+      } else if( current_conn.within_from_handle( scaled_x, scaled_y ) ) {
         _last_connection = new Connection.from_connection( this, current_conn );
         current_conn.disconnect_from_node( true );
         return( true );
-      } else if( current_conn.within_to_handle( x, y ) ) {
+      } else if( current_conn.within_to_handle( scaled_x, scaled_y ) ) {
         _last_connection = new Connection.from_connection( this, current_conn );
         current_conn.disconnect_from_node( false );
         return( true );
@@ -1950,12 +1943,12 @@ public class DrawArea : Gtk.DrawingArea {
         ((current_conn.mode != ConnMode.CONNECTING) && (current_conn.mode != ConnMode.LINKING)) ) {
       Connection? match_conn = current_conn;
       if( current_conn == null ) {
-        if( (match_conn = _connections.within_title( x, y )) == null ) {
-          match_conn = _connections.on_curve( x, y );
+        if( (match_conn = _connections.within_title( scaled_x, scaled_y )) == null ) {
+          match_conn = _connections.on_curve( scaled_x, scaled_y );
         }
-      } else if( !current_conn.within_drag_handle( x, y ) ) {
-        if( (match_conn = _connections.within_title( x, y )) == null ) {
-          match_conn = _connections.on_curve( x, y );
+      } else if( !current_conn.within_drag_handle( scaled_x, scaled_y ) ) {
+        if( (match_conn = _connections.within_title( scaled_x, scaled_y )) == null ) {
+          match_conn = _connections.on_curve( scaled_x, scaled_y );
         }
       }
       if( match_conn != null ) {
@@ -1963,33 +1956,33 @@ public class DrawArea : Gtk.DrawingArea {
         clear_current_sticker( false );
         clear_current_group( false );
         clear_current_callout( false );
-        return( set_current_connection_from_position( match_conn, x, y ) );
+        return( set_current_connection_from_position( match_conn, scaled_x, scaled_y ) );
       } else {
         for( int i=0; i<_nodes.length; i++ ) {
-          var match_node = _nodes.index( i ).contains( x, y, null );
+          var match_node = _nodes.index( i ).contains( scaled_x, scaled_y, null );
           if( match_node != null ) {
             clear_current_connection( false );
             clear_current_sticker( false );
             clear_current_group( false );
             clear_current_callout( false );
-            return( set_current_node_from_position( match_node, x, y ) );
+            return( set_current_node_from_position( match_node, scaled_x, scaled_y ) );
           }
-          var match_callout = _nodes.index( i ).contains_callout( x, y );
+          var match_callout = _nodes.index( i ).contains_callout( scaled_x, scaled_y );
           if( match_callout != null ) {
             clear_current_node( false );
             clear_current_connection( false );
             clear_current_sticker( false );
             clear_current_group( false );
-            return( set_current_callout_from_position( match_callout, x, y ) );
+            return( set_current_callout_from_position( match_callout, scaled_x, scaled_y ) );
           }
         }
-        var sticker = _stickers.is_within( x, y );
+        var sticker = _stickers.is_within( scaled_x, scaled_y );
         if( sticker != null ) {
           clear_current_node( false );
           clear_current_connection( false );
           clear_current_group( false );
           clear_current_callout( false );
-          return( set_current_sticker_from_position( sticker, x, y ) );
+          return( set_current_sticker_from_position( sticker, scaled_x, scaled_y ) );
         }
         var group = groups.node_group_containing( _scaled_x, _scaled_y );
         if( group != null ) {
@@ -1997,10 +1990,10 @@ public class DrawArea : Gtk.DrawingArea {
           clear_current_connection( false );
           clear_current_sticker( false );
           clear_current_callout( false );
-          return( set_current_group_from_position( group, x, y ) );
+          return( set_current_group_from_position( group, scaled_x, scaled_y ) );
         }
-        _select_box.x     = x;
-        _select_box.y     = y;
+        _select_box.x     = scaled_x;
+        _select_box.y     = scaled_y;
         _select_box.valid = true;
         if( !_shift ) {
           clear_current_node( true );
@@ -2525,13 +2518,11 @@ public class DrawArea : Gtk.DrawingArea {
     var scaled_x = scale_value( x );
     var scaled_y = scale_value( y );
 
-    stdout.printf( "In on_press, n_press: %d\n", n_press );
-
     _press_x      = scaled_x;
     _press_y      = scaled_y;
     _press_middle = button == Gdk.BUTTON_MIDDLE;
-    _pressed      = set_current_at_position( _press_x, _press_y );
     _press_num    = n_press;
+    _pressed      = set_current_at_position( _press_x, _press_y );
     _motion       = false;
 
     grab_focus();
