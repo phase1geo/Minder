@@ -1655,6 +1655,8 @@ public class DrawArea : Gtk.DrawingArea {
     var url    = "";
     var left   = 0.0;
 
+    stdout.printf( "Current node: %s\n", node.name.text.text );
+
     set_tooltip_markup( null );
 
     /* Check to see if the user clicked anywhere within the node which is itself a clickable target */

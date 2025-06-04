@@ -98,9 +98,14 @@ public class MainWindow : Gtk.ApplicationWindow {
   private Braindump         _brain;
 
   private const GLib.ActionEntry[] action_entries = {
+    { "action_new",            action_new },
+    { "action_open",           action_open },
     { "action_save",           action_save },
+    { "action_save_as",        action_save_as },
     { "action_open_directory", do_open_directory },
     { "action_quit",           action_quit },
+    { "action_undo",           action_undo },
+    { "action_redo",           action_redo },
     { "action_zoom_in",        action_zoom_in },
     { "action_zoom_out",       action_zoom_out },
     { "action_zoom_fit",       action_zoom_fit },
@@ -216,7 +221,6 @@ public class MainWindow : Gtk.ApplicationWindow {
         case BraindumpChangeType.REMOVE :  da.braindump.remove_index( int.parse( name_index ) );  break;
         case BraindumpChangeType.CLEAR  :  da.braindump.remove_range( 0, da.braindump.length );  break;
       }
-      stdout.printf( "braindump size: %u\n", da.braindump.length );
       da.auto_save();
     });
 
@@ -471,12 +475,21 @@ public class MainWindow : Gtk.ApplicationWindow {
   //-------------------------------------------------------------
   // Closes the tab associated with the given drawing area
   private void close_tab( int page_num ) {
-    if( _nb.get_n_pages() == 1 ) return;
     var da = get_da( page_num );
     if( da.get_doc().is_saved() ) {
-      _nb.detach_tab( _nb.get_nth_page( _nb.page ) );
+      remove_tab( page_num );
     } else {
       show_save_warning( da );
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Removes the specified tab from the notebook.  If this leaves
+  // the notebook in an empty state, add a blank tab.
+  private void remove_tab( int? page_num ) {
+    _nb.detach_tab( _nb.get_nth_page( page_num ?? _nb.page ) );
+    if( _nb.get_n_pages() == 0 ) {
+      add_tab( null, TabAddReason.NEW );
     }
   }
 
@@ -518,8 +531,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       child = da
     };
 
-    var tab_label = new Label( da.get_doc().label ) {
-      margin_start  = 10,
+    var tab_label = new Label( da.get_doc().label ) { margin_start  = 10,
       margin_end    = 5,
       margin_top    = 5,
       margin_top    = 5,
@@ -551,7 +563,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     var tab_index = _nb.append_page( overlay, tab_box );
 
     tab_motion.enter.connect((x, y) => {
-      tab_revealer.reveal_child = (_nb.get_n_pages() > 1);
+      tab_revealer.reveal_child = true; // (_nb.get_n_pages() > 1);
     });
     tab_motion.leave.connect(() => {
       tab_revealer.reveal_child = (_nb.page == tab_index);
@@ -669,9 +681,14 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
 
+    app.set_accels_for_action( "win.action_new",            { "<Control>n" } );
+    app.set_accels_for_action( "win.action_open",           { "<Control>o" } );
     app.set_accels_for_action( "win.action_save",           { "<Control>s" } );
+    app.set_accels_for_action( "win.action_save_as",        { "<Control><Shift>s" } );
     app.set_accels_for_action( "win.action_open_directory", { "<Control><Shift>o" } );
     app.set_accels_for_action( "win.action_quit",           { "<Control>q" } );
+    app.set_accels_for_action( "win.action_undo",           { "<Control>z" } );
+    app.set_accels_for_action( "win.action_redo",           { "<Control><Shift>z" } );
     app.set_accels_for_action( "win.action_zoom_actual",    { "<Control>0" } );
     app.set_accels_for_action( "win.action_zoom_fit",       { "<Control>1" } );
     app.set_accels_for_action( "win.action_zoom_selected",  { "<Control>2" } );
@@ -1225,10 +1242,16 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     dialog.response.connect((id) => {
       switch( id ) {
-        case ResponseType.ACCEPT :  save_file( da );        break;
-        case ResponseType.CLOSE  :  da.get_doc().remove();  break;
+        case ResponseType.ACCEPT :  save_file( da, true );  break;
+        case ResponseType.CLOSE  :  
+          da.get_doc().remove();
+          remove_tab( null );
+          break;
       }
+      dialog.close();
     });
+
+    dialog.show();
 
   }
 
@@ -1255,7 +1278,10 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     dialog.response.connect((id) => {
       func( id == ResponseType.ACCEPT );
+      dialog.close();
     });
+
+    dialog.show();
 
   }
 
@@ -1458,7 +1484,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   //-------------------------------------------------------------
   // Allow the user to select a filename to save the document as
-  public void save_file( DrawArea da ) {
+  public void save_file( DrawArea da, bool remove_after_save ) {
 
     var dialog  = Utils.make_file_chooser( _( "Save File" ), _( "Save" ) );
     var filters = new GLib.ListStore( typeof( FileFilter ) );
@@ -1491,11 +1517,15 @@ public class MainWindow : Gtk.ApplicationWindow {
           }
           da.get_doc().filename = fname;
           da.get_doc().save();
-          set_tab_label_info( da.get_doc().label, fname );
-          update_title( da );
-          save_tab_state( _nb.page );
-          Utils.store_chooser_folder( fname, false );
-          da.grab_focus();
+          if( remove_after_save ) {
+            remove_tab( null );
+          } else {
+            set_tab_label_info( da.get_doc().label, fname );
+            update_title( da );
+            save_tab_state( _nb.page );
+            Utils.store_chooser_folder( fname, false );
+            da.grab_focus();
+          }
         }
       } catch( Error e ) {}
     });
@@ -1506,7 +1536,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Called when the save as button is clicked
   public void do_save_as_file() {
     var da = get_current_da( "do_save_as_file" );
-    save_file( da );
+    save_file( da, false );
   }
 
   /* Called whenever the node selection changes in the canvas */
@@ -1626,14 +1656,32 @@ public class MainWindow : Gtk.ApplicationWindow {
   }
 
   //-------------------------------------------------------------
+  // Called when the user uses the Control-n keyboard shortcut
+  private void action_new() {
+    do_new_file();
+  }
+
+  //-------------------------------------------------------------
+  // Called when the user uses the Control-o keyboard shortcut
+  private void action_open() {
+    do_open_file();
+  }
+
+  //-------------------------------------------------------------
   // Called when the user uses the Control-s keyboard shortcut
   private void action_save() {
     var da = get_current_da( "action_save" );
     if( da.get_doc().is_saved() ) {
       da.get_doc().save();
     } else {
-      save_file( da );
+      save_file( da, false );
     }
+  }
+
+  //-------------------------------------------------------------
+  // Called when the user uses the Control-Shift-s keyboard shortcut
+  private void action_save_as() {
+    do_save_as_file();
   }
 
   //-------------------------------------------------------------
@@ -1654,6 +1702,18 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void action_quit() {
     save_window_size();
     destroy();
+  }
+
+  //-------------------------------------------------------------
+  // Called when the user uses the Control-z keyboard shortcut
+  private void action_undo() {
+    do_undo();
+  }
+
+  //-------------------------------------------------------------
+  // Called when the user uses the Control-Shift-z keyboard shortcut
+  private void action_redo() {
+    do_redo();
   }
 
   //-------------------------------------------------------------
