@@ -35,7 +35,6 @@ public class Document : Object {
   /* Properties */
   public string filename {
     set {
-      stdout.printf( "In set_filename, _filename: %s, value: %s\n", _filename, value );
       if( _filename != value ) {
         if( !_from_user ) {
           FileUtils.unlink( _filename );
@@ -113,7 +112,6 @@ public class Document : Object {
   // file
   public void load_filename( string fname, bool saved ) {
     filename   = fname;
-    stdout.printf( "In load_filename, saved: %s\n", saved.to_string() );
     _from_user = saved;
   }
 
@@ -256,8 +254,6 @@ public class Document : Object {
   // Saves the given node information to the specified file
   public bool save_xml() {
 
-    stdout.printf( "In save_xml (%s)\n", get_map_file() );
-
     Xml.Doc* doc = load_raw();
 
     if( doc != null ) {
@@ -317,8 +313,6 @@ public class Document : Object {
       return( false );
     }
 
-    save_needed = false;
-
     return( true );
 
   }
@@ -362,8 +356,6 @@ public class Document : Object {
   //-------------------------------------------------------------
   // Adds the given file to the archive.
   public bool archive_file( Archive.Write archive, string fname, int? image_id = null ) {
-
-    stdout.printf( "Attempting to archive, fname: %s\n", fname );
 
     try {
 

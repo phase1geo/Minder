@@ -331,6 +331,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     close_request.connect(() => {
       save_window_size();
+      save_tabs();
       return( false );
     });
 
@@ -1565,6 +1566,16 @@ public class MainWindow : Gtk.ApplicationWindow {
     save_tab_state( _nb.page );
   }
 
+  //-------------------------------------------------------------
+  // Forces all of the opened documents in the tabs to automatically
+  // save their state before we allow the application to exit.
+  private void save_tabs() {
+    for( int i=0; i<_nb.get_n_pages(); i++ ) {
+      var da = get_da( i );
+      da.get_doc().cleanup();
+    }
+  }
+
   /* Displays the node properties panel for the current node */
   private void show_properties( string? tab, PropertyGrab grab_type ) {
     if( !_inspector_nb.get_mapped() || ((tab != null) && (_stack.visible_child_name != tab)) ) {
@@ -1701,6 +1712,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Called when the user uses the Control-q keyboard shortcut
   private void action_quit() {
     save_window_size();
+    save_tabs();
     destroy();
   }
 
