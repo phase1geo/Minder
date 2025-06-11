@@ -219,7 +219,7 @@ public class ExportMermaid : Export {
 
     try {
 
-      var title    = prefix + make_title( node );
+      var title    = prefix + make_title( node ) + "\n";
       var children = node.children();
 
       os.write( title.data );
