@@ -123,6 +123,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     { "action_prev_tab",       action_prev_tab },
     { "action_about",          action_about },
     { "action_braindump",      action_braindump },
+    { "action_focus",          action_focus },
+    { "action_find",           action_find }
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -707,6 +709,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     app.set_accels_for_action( "win.action_next_tab",       { "<Control>Tab" } );
     app.set_accels_for_action( "win.action_prev_tab",       { "<Control><Shift>Tab" } );
     app.set_accels_for_action( "win.action_braindump",      { "<Control><Shift>b" } );
+    app.set_accels_for_action( "win.action_focus",          { "<Control><Shift>f" } );
+    app.set_accels_for_action( "win.action_find",           { "<Control>f" } );
 
   }
 
@@ -786,6 +790,17 @@ public class MainWindow : Gtk.ApplicationWindow {
       width_chars      = 60
     };
     _search_entry.search_changed.connect( on_search_change );
+
+    var search_key = new EventControllerKey();
+    _search_entry.add_controller( search_key );
+
+    search_key.key_pressed.connect((keyval, keycode, state) => {
+      if( keyval == Gdk.Key.Escape ) {
+        _search_btn.active = false;
+        return( true );
+      }
+      return( false );
+    });
 
     _search_items = new Gtk.ListStore( 8, typeof(string), typeof(string), typeof(Node), typeof(Connection), typeof(Callout), typeof(NodeGroup), typeof(string), typeof(string) );
 
@@ -1933,6 +1948,18 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Toggles the braindump toggle button
   private void action_braindump() {
     _brain_btn.clicked();
+  }
+
+  //-------------------------------------------------------------
+  // Toggles the focus toggle button
+  private void action_focus() {
+    _focus_btn.clicked();
+  }
+
+  //-------------------------------------------------------------
+  // Toggles the find toggle button
+  private void action_find() {
+    _search_btn.activate();
   }
 
   //-------------------------------------------------------------
