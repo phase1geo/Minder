@@ -86,6 +86,12 @@ public class AnimatorAction : Object {
   */
   public virtual void on_completion( DrawArea da ) {}
 
+  //-------------------------------------------------------------
+  // Returns true if this action can be cancelled in the animator.
+  public virtual bool can_cancel() {
+    return( true );
+  }
+
   /*
    Force the animation to complete immediately by forcing the index to
    be equal to the frame count.

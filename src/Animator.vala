@@ -95,10 +95,21 @@ public class Animator : Object {
     }
   }
 
-  /* Cancels the last add operation */
+  //-------------------------------------------------------------
+  // Cancels the last add operation if it can be cancelled; otherwise,
+  // force the animation.
   public void cancel_last_add() {
     if( _actions.length > 0 ) {
-      _actions.pop_tail();
+      var action = _actions.pop_tail();
+      if( action.can_cancel() ) {
+        if( action.save() ) {
+          _da.auto_save();
+        }
+        _da.queue_draw();
+      } else {
+        _actions.push_tail( action );
+        animate();
+      }
     }
   }
 

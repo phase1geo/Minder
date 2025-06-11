@@ -63,5 +63,12 @@ public class AnimatorPanScale : AnimatorAction {
     da.set_origin( origin_x, origin_y );
   }
 
+  //-------------------------------------------------------------
+  // Only allow this action to be cancelled if the start and
+  // end origin values haven't changed.
+  public override bool can_cancel() {
+    return( (_sox == _eox) && (_soy == _eoy) );
+  }
+
 }
 
