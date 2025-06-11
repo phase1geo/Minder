@@ -124,7 +124,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     { "action_about",          action_about },
     { "action_braindump",      action_braindump },
     { "action_focus",          action_focus },
-    { "action_find",           action_find }
+    { "action_find",           action_find },
+    { "action_close_current_tab", action_close_current_tab }
   };
 
   private bool on_elementary = Gtk.Settings.get_default().gtk_icon_theme_name == "elementary";
@@ -684,33 +685,34 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Adds keyboard shortcuts for the menu actions */
   private void add_keyboard_shortcuts( Gtk.Application app ) {
 
-    app.set_accels_for_action( "win.action_new",            { "<Control>n" } );
-    app.set_accels_for_action( "win.action_open",           { "<Control>o" } );
-    app.set_accels_for_action( "win.action_save",           { "<Control>s" } );
-    app.set_accels_for_action( "win.action_save_as",        { "<Control><Shift>s" } );
-    app.set_accels_for_action( "win.action_open_directory", { "<Control><Shift>o" } );
-    app.set_accels_for_action( "win.action_quit",           { "<Control>q" } );
-    app.set_accels_for_action( "win.action_undo",           { "<Control>z" } );
-    app.set_accels_for_action( "win.action_redo",           { "<Control><Shift>z" } );
-    app.set_accels_for_action( "win.action_zoom_actual",    { "<Control>0" } );
-    app.set_accels_for_action( "win.action_zoom_fit",       { "<Control>1" } );
-    app.set_accels_for_action( "win.action_zoom_selected",  { "<Control>2" } );
-    app.set_accels_for_action( "win.action_zoom_in",        { "<Control>plus" } );
-    app.set_accels_for_action( "win.action_zoom_in",        { "<Control>equal" } );
-    app.set_accels_for_action( "win.action_zoom_out",       { "<Control>minus" } );
-    app.set_accels_for_action( "win.action_export",         { "<Control>e" } );
-    app.set_accels_for_action( "win.action_print",          { "<Control>p" } );
-    app.set_accels_for_action( "win.action_prefs",          { "<Control>comma" } );
-    app.set_accels_for_action( "win.action_shortcuts",      { "<Control>question" } );
-    app.set_accels_for_action( "win.action_show_current",   { "<Control>6" } );
-    app.set_accels_for_action( "win.action_show_style",     { "<Control>7" } );
-    app.set_accels_for_action( "win.action_show_stickers",  { "<Control>8" } );
-    app.set_accels_for_action( "win.action_show_map",       { "<Control>9" } );
-    app.set_accels_for_action( "win.action_next_tab",       { "<Control>Tab" } );
-    app.set_accels_for_action( "win.action_prev_tab",       { "<Control><Shift>Tab" } );
-    app.set_accels_for_action( "win.action_braindump",      { "<Control><Shift>b" } );
-    app.set_accels_for_action( "win.action_focus",          { "<Control><Shift>f" } );
-    app.set_accels_for_action( "win.action_find",           { "<Control>f" } );
+    app.set_accels_for_action( "win.action_new",               { "<Control>n" } );
+    app.set_accels_for_action( "win.action_open",              { "<Control>o" } );
+    app.set_accels_for_action( "win.action_save",              { "<Control>s" } );
+    app.set_accels_for_action( "win.action_save_as",           { "<Control><Shift>s" } );
+    app.set_accels_for_action( "win.action_open_directory",    { "<Control><Shift>o" } );
+    app.set_accels_for_action( "win.action_quit",              { "<Control>q" } );
+    app.set_accels_for_action( "win.action_undo",              { "<Control>z" } );
+    app.set_accels_for_action( "win.action_redo",              { "<Control><Shift>z" } );
+    app.set_accels_for_action( "win.action_zoom_actual",       { "<Control>0" } );
+    app.set_accels_for_action( "win.action_zoom_fit",          { "<Control>1" } );
+    app.set_accels_for_action( "win.action_zoom_selected",     { "<Control>2" } );
+    app.set_accels_for_action( "win.action_zoom_in",           { "<Control>plus" } );
+    app.set_accels_for_action( "win.action_zoom_in",           { "<Control>equal" } );
+    app.set_accels_for_action( "win.action_zoom_out",          { "<Control>minus" } );
+    app.set_accels_for_action( "win.action_export",            { "<Control>e" } );
+    app.set_accels_for_action( "win.action_print",             { "<Control>p" } );
+    app.set_accels_for_action( "win.action_prefs",             { "<Control>comma" } );
+    app.set_accels_for_action( "win.action_shortcuts",         { "<Control>question" } );
+    app.set_accels_for_action( "win.action_show_current",      { "<Control>6" } );
+    app.set_accels_for_action( "win.action_show_style",        { "<Control>7" } );
+    app.set_accels_for_action( "win.action_show_stickers",     { "<Control>8" } );
+    app.set_accels_for_action( "win.action_show_map",          { "<Control>9" } );
+    app.set_accels_for_action( "win.action_next_tab",          { "<Control>Tab" } );
+    app.set_accels_for_action( "win.action_prev_tab",          { "<Control><Shift>Tab" } );
+    app.set_accels_for_action( "win.action_braindump",         { "<Control><Shift>b" } );
+    app.set_accels_for_action( "win.action_focus",             { "<Control><Shift>f" } );
+    app.set_accels_for_action( "win.action_find",              { "<Control>f" } );
+    app.set_accels_for_action( "win.action_close_current_tab", { "<Control>w" } );
 
   }
 
@@ -1960,6 +1962,12 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Toggles the find toggle button
   private void action_find() {
     _search_btn.activate();
+  }
+
+  //-------------------------------------------------------------
+  // Closes the curren tab
+  private void action_close_current_tab() {
+    close_current_tab();
   }
 
   //-------------------------------------------------------------
