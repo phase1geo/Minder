@@ -2602,6 +2602,7 @@ public class DrawArea : Gtk.DrawingArea {
     var current_conn    = _selected.current_connection();
     var current_sticker = _selected.current_sticker();
     var current_callout = _selected.current_callout();
+    var current_group   = _selected.current_group();
 
     /* If the mouse button is current pressed, handle it */
     if( _pressed ) {
@@ -2700,9 +2701,8 @@ public class DrawArea : Gtk.DrawingArea {
           auto_save();
         }
 
-
       /* Otherwise, we are drawing a selection rectangle */
-      } else {
+      } else if( current_group == null ) {
         _select_box.w = (_scaled_x - _select_box.x);
         _select_box.h = (_scaled_y - _select_box.y);
         select_nodes_within_box( _shift );
