@@ -21,7 +21,7 @@
 
 public class Selection {
 
-  private DrawArea          _da;
+  private MindMap           _map;
   private Array<Node>       _nodes;
   private Array<Connection> _conns;
   private Array<Sticker>    _stickers;
@@ -31,8 +31,8 @@ public class Selection {
   public signal void selection_changed();
 
   /* Default constructor */
-  public Selection( DrawArea da ) {
-    _da       = da;
+  public Selection( MindMap map ) {
+    _map      = map;
     _nodes    = new Array<Node>();
     _conns    = new Array<Connection>();
     _stickers = new Array<Sticker>();
@@ -147,9 +147,9 @@ public class Selection {
   /* Adds a node to the current selection.  Returns true if the node was added. */
   public bool add_node( Node node, bool signal_change = true ) {
     if( is_node_selected( node ) || ((node.parent != null) && node.parent.folded) ) return( false );
-    _da.set_node_mode( node, ((_nodes.length == 0) ? NodeMode.CURRENT : NodeMode.SELECTED) );
+    _map.set_node_mode( node, ((_nodes.length == 0) ? NodeMode.CURRENT : NodeMode.SELECTED) );
     if( _nodes.length == 1 ) {
-      _da.set_node_mode( _nodes.index( 0 ), NodeMode.SELECTED );
+      _map.set_node_mode( _nodes.index( 0 ), NodeMode.SELECTED );
     }
     _nodes.append_val( node );
     if( signal_change ) {
@@ -221,7 +221,7 @@ public class Selection {
   /* Adds a connection to the current selection */
   public bool add_connection( Connection conn ) {
     if( is_connection_selected( conn ) ) return( false );
-    _da.set_connection_mode( conn, ConnMode.SELECTED );
+    _map.set_connection_mode( conn, ConnMode.SELECTED );
     _conns.append_val( conn );
     selection_changed();
     return( true );
@@ -260,13 +260,13 @@ public class Selection {
   */
   public bool remove_node( Node node, double alpha = 1.0, bool signal_change = true ) {
     if( is_node_selected( node ) ) {
-      _da.set_node_mode( node, NodeMode.NONE );
+      _map.set_node_mode( node, NodeMode.NONE );
       node.alpha = alpha;
       for( int i=0; i<_nodes.length; i++ ) {
         if( node == _nodes.index( i ) ) {
           _nodes.remove_index( i );
           if( _nodes.length == 1 ) {
-            _da.set_node_mode( _nodes.index( 0 ), NodeMode.CURRENT );
+            _map.set_node_mode( _nodes.index( 0 ), NodeMode.CURRENT );
           }
           if( signal_change ) {
             selection_changed();
@@ -341,7 +341,7 @@ public class Selection {
   */
   public bool remove_connection( Connection conn, double alpha = 1.0 ) {
     if( is_connection_selected( conn ) ) {
-      _da.set_connection_mode( conn, ConnMode.NONE );
+      _map.set_connection_mode( conn, ConnMode.NONE );
       conn.alpha = alpha;
       for( int i=0; i<_conns.length; i++ ) {
         if( conn == _conns.index( i ) ) {
@@ -412,7 +412,7 @@ public class Selection {
   public bool clear_nodes( bool signal_change = true, double alpha = 1.0 ) {
     var num = _nodes.length;
     for( int i=0; i<num; i++ ) {
-      _da.set_node_mode( _nodes.index( i ), NodeMode.NONE );
+      _map.set_node_mode( _nodes.index( i ), NodeMode.NONE );
       _nodes.index( i ).alpha = alpha;
     }
     _nodes.remove_range( 0, num );
@@ -426,7 +426,7 @@ public class Selection {
   public bool clear_connections( bool signal_change = true, double alpha = 1.0 ) {
     var num = _conns.length;
     for( int i=0; i<num; i++ ) {
-      _da.set_connection_mode( _conns.index( i ), ConnMode.NONE );
+      _map.set_connection_mode( _conns.index( i ), ConnMode.NONE );
       _conns.index( i ).alpha = alpha;
     }
     _conns.remove_range( 0, num );
@@ -466,7 +466,7 @@ public class Selection {
   public bool clear_callouts( bool signal_change = true, double alpha = 1.0 ) {
     var num = _callouts.length;
     for( int i=0; i<num; i++ ) {
-      _da.set_callout_mode( _callouts.index( i ), CalloutMode.NONE );
+      _map.set_callout_mode( _callouts.index( i ), CalloutMode.NONE );
       _callouts.index( i ).alpha = alpha;
     }
     _callouts.remove_range( 0, num );
@@ -532,7 +532,7 @@ public class Selection {
   /* Returns an array of currently selected nodes in index order */
   public Array<Node> ordered_nodes() {
     var nodes = new Array<Node>();
-    ordered_nodes_helper( _da.get_nodes(), ref nodes );
+    ordered_nodes_helper( _map.get_nodes(), ref nodes );
     return( nodes );
   }
 
@@ -602,7 +602,7 @@ public class Selection {
 
     for( int i=0; i<parents.length; i++ ) {
       var old_parent = parents.index( i );
-      var node       = new Node( _da, old_parent.layout );
+      var node       = new Node( _map, old_parent.layout );
       node.copy_variables( old_parent, im );
       subtrees.append_val( node );
       get_subtrees_helper( old_parent, node, im );
@@ -618,7 +618,7 @@ public class Selection {
     for( int i=0; i<old_parent.children().length; i++ ) {
       var old_child = old_parent.children().index( i );
       if( is_node_selected( old_child ) ) {
-        var node = new Node( _da, old_child.layout );
+        var node = new Node( _map, old_child.layout );
         node.copy_variables( old_child, im );
         node.attach( new_parent, -1, null );
         get_subtrees_helper( old_child, node, im );

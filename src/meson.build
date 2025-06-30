@@ -34,6 +34,7 @@ sources += files(
     'LinkType.vala',
     'MainWindow.vala',
     'MapInspector.vala',
+    'MindMap.vala',
     'ModeButtons.vala',
     'Node.vala',
     'NodeAlign.vala',
