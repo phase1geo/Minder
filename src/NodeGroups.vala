@@ -159,11 +159,26 @@ public class NodeGroups {
     return( g );
   }
 
+  //-------------------------------------------------------------
+  // Adds the node groups that are descendants of the given node
+  // to the specified XML parent node.
+  public void save_if_in_node( Xml.Node* parent, Node node ) {
+    for( int i=0; i<_groups.length; i++ ) {
+      if( _groups.index( i ).within_node( node ) ) {
+        parent->add_child( _groups.index( i ).save() );
+      }
+    }
+  }
+
   /* Loads the given group information */
-  public void load( DrawArea da, Xml.Node* g ) {
+  public void load( DrawArea da, Xml.Node* g, Array<NodeGroup>? groups, Array<Node> nodes ) {
     for( Xml.Node* it = g->children; it != null; it = it->next ) {
       if( (it->type == Xml.ElementType.ELEMENT_NODE) && (it->name == "group") ) {
-        _groups.append_val( new NodeGroup.from_xml( da, it ) );
+        var group = new NodeGroup.from_xml( da, it, nodes );
+        if( groups != null ) {
+          groups.append_val( group );
+        }
+        _groups.append_val( group );
       }
     }
   }

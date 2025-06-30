@@ -48,13 +48,14 @@ public class MinderClipboard {
 
     Array<Node> nodes;
     Connections conns;
+    NodeGroups  groups;
 
     /* Store the data to copy */
-    da.get_nodes_for_clipboard( out nodes, out conns );
+    da.get_nodes_for_clipboard( out nodes, out conns, out groups );
 
     /* Inform the clipboard */
     var clipboard = Display.get_default().get_clipboard();
-    var text      = da.serialize_for_copy( nodes, conns );
+    var text      = da.serialize_for_copy( nodes, conns, groups );
 
     var bytes = new Bytes( text.data );
     var provider = new ContentProvider.for_bytes( NODES_TARGET_NAME, bytes );

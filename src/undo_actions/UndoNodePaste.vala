@@ -28,12 +28,14 @@ public class UndoNodePaste : UndoItem {
   private Array<Node>       _nodes;
   private Array<int>        _indices;
   private Array<Connection> _conns;
+  private Array<NodeGroup>  _groups;
 
   /* Default constructor */
-  public UndoNodePaste( Array<Node> nodes, Array<Connection> conns ) {
+  public UndoNodePaste( Array<Node> nodes, Array<Connection> conns, Array<NodeGroup> groups ) {
     base( _( "paste node" ) );
     _nodes   = nodes;
     _conns   = conns;
+    _groups  = groups;
     _indices = new Array<int>();
     _parents = new Array<Node?>();
     for( int i=0; i<nodes.length; i++ ) {
@@ -51,6 +53,9 @@ public class UndoNodePaste : UndoItem {
     for( int i=0; i<_conns.length; i++ ) {
       da.get_connections().remove_connection( _conns.index( i ), false );
     }
+    for( int i=0; i<_groups.length; i++ ) {
+      da.groups.remove_group( _groups.index( i ) );
+    }
     da.set_current_node( null );
     da.queue_draw();
     da.auto_save();
@@ -63,6 +68,9 @@ public class UndoNodePaste : UndoItem {
     }
     for( int i=0; i<_conns.length; i++ ) {
       da.get_connections().add_connection( _conns.index( i ) );
+    }
+    for( int i=0; i<_groups.length; i++ ) {
+      da.groups.add_group( _groups.index( i ) );
     }
     da.set_current_node( _nodes.index( 0 ) );
     da.queue_draw();

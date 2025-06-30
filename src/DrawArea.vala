@@ -603,7 +603,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "styles"      :  StyleInspector.styles.load( it );  break;
           case "images"      :  image_manager.load( it );  break;
           case "connections" :  _connections.load( this, it, null, _nodes );  break;
-          case "groups"      :  groups.load( this, it );  break;
+          case "groups"      :  groups.load( this, it, null, _nodes );  break;
           case "stickers"    :  _stickers.load( this, it );  break;
           case "nodelinks"   :  _node_links.load( it );  break;
           case "nodes"       :
@@ -1148,6 +1148,8 @@ public class DrawArea : Gtk.DrawingArea {
     auto_save();
   }
 
+  //-------------------------------------------------------------
+  // Changes to the color of all selected groups to the given color.
   public void change_group_color( RGBA color ) {
     var selgroups = _selected.groups();
     if( selgroups.length == 0 ) return;
@@ -1654,8 +1656,6 @@ public class DrawArea : Gtk.DrawingArea {
     var tag    = FormatTag.LENGTH;
     var url    = "";
     var left   = 0.0;
-
-    stdout.printf( "Current node: %s\n", node.name.text.text );
 
     set_tooltip_markup( null );
 
@@ -5276,7 +5276,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Serializes the current node tree */
-  public string serialize_for_copy( Array<Node> nodes, Connections conns ) {
+  public string serialize_for_copy( Array<Node> nodes, Connections conns, NodeGroups groups ) {
     string    str;
     var       nodelinks = new NodeLinks();
     Xml.Doc*  doc  = new Xml.Doc( "1.0" );
@@ -5289,10 +5289,13 @@ public class DrawArea : Gtk.DrawingArea {
     }
     root->add_child( ns );
     Xml.Node* cs = new Xml.Node( null, "connections" );
+    Xml.Node* gs = new Xml.Node( null, "groups" );
     for( int i=0; i<nodes.length; i++ ) {
       conns.save_if_in_node( cs, nodes.index( i ), nodelinks, _node_links );
+      groups.save_if_in_node( gs, nodes.index( i ) );
     }
     root->add_child( cs );
+    root->add_child( gs );
     if( nodes.length > 0 ) {
       var link = new NodeLink( nodes.index( 0 ) );
       root->add_child( link.save() );
@@ -5306,7 +5309,7 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Deserializes the paste string and returns the list of nodes */
-  public void deserialize_for_paste( string str, Array<Node> nodes, Array<Connection> conns ) {
+  public void deserialize_for_paste( string str, Array<Node> nodes, Array<Connection> conns, Array<NodeGroup> groups ) {
     Xml.Doc* doc = Xml.Parser.parse_doc( str );
     if( doc == null ) return;
     for( Xml.Node* it = doc->get_root_element()->children; it != null; it = it->next ) {
@@ -5315,6 +5318,9 @@ public class DrawArea : Gtk.DrawingArea {
           // case "images"      :  image_manager.load( it );  break;
           case "connections" :
             _connections.load( this, it, conns, nodes );
+            break;
+          case "groups" :
+            _groups.load( this, it, groups, nodes );
             break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
@@ -5358,10 +5364,11 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Copies the current node to the node clipboard */
-  public void get_nodes_for_clipboard( out Array<Node> nodes, out Connections conns ) {
+  public void get_nodes_for_clipboard( out Array<Node> nodes, out Connections conns, out NodeGroups groups ) {
 
-    nodes = new Array<Node>();
-    conns = _connections;
+    nodes  = new Array<Node>();
+    conns  = _connections;
+    groups = _groups;
 
     _selected.get_parents( ref nodes );
 
@@ -5521,9 +5528,10 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void replace_node_xml( Node node, string text ) {
-    var nodes = new Array<Node>();
-    var conns = new Array<Connection>();
-    deserialize_for_paste( text, nodes, conns );
+    var nodes  = new Array<Node>();
+    var conns  = new Array<Connection>();
+    var groups = new Array<NodeGroup>();
+    deserialize_for_paste( text, nodes, conns, groups );
     if( nodes.length == 0 ) return;
     replace_node( node, nodes.index( 0 ) );
     for( int i=1; i<nodes.length; i++ ) {
@@ -5574,9 +5582,10 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void paste_as_nodes( Node? node, string text ) {
-    var nodes = new Array<Node>();
-    var conns = new Array<Connection>();
-    deserialize_for_paste( text, nodes, conns );
+    var nodes  = new Array<Node>();
+    var conns  = new Array<Connection>();
+    var groups = new Array<NodeGroup>();
+    deserialize_for_paste( text, nodes, conns, groups );
     if( nodes.length == 0 ) return;
     if( node == null ) {
       for( int i=0; i<nodes.length; i++ ) {
@@ -5603,7 +5612,7 @@ public class DrawArea : Gtk.DrawingArea {
         nodes.index( i ).attach( node, -1, _theme );
       }
     }
-    undo_buffer.add_item( new UndoNodePaste( nodes, conns ) );
+    undo_buffer.add_item( new UndoNodePaste( nodes, conns, groups ) );
     select_node( nodes.index( 0 ) );
     queue_draw();
     current_changed( this );
