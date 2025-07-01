@@ -49,7 +49,7 @@ public class UndoGroupsMerge : UndoItem {
   }
 
   /* Redoes a connection change */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     map.selected.clear();
     for( int i=0; i<_groups.length; i++ ) {
       map.groups.remove_group( _groups.index( i ) );

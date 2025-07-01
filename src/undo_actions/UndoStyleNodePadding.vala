@@ -26,11 +26,11 @@ public class UndoStyleNodePadding : UndoStyleChange {
   GenericArray<int> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleNodePadding( StyleAffects affects, int node_padding, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleNodePadding( StyleAffects affects, int node_padding, MindMap map ) {
+    base( affects, map );
     _values = new GenericArray<int>();
     _values.add( node_padding );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

@@ -46,7 +46,7 @@ public class UndoNodeMove : UndoItem {
   /* Perform the node move change */
   public void change( MindMap map, NodeSide old_side, SummaryNode? old_summary, NodeSide new_side, int new_index, SummaryNode? new_summary ) {
     Node parent = _n.parent;
-    map.da.animator.add_nodes( da.get_nodes(), "undo move" );
+    map.da.animator.add_nodes( map.get_nodes(), "undo move" );
     _n.detach( old_side );
     if( old_summary != null ) {
       old_summary.remove_node( _n );

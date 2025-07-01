@@ -128,6 +128,26 @@ public class DrawArea : Gtk.DrawingArea {
       return( _settings );
     }
   }
+  public MindMap map {
+    get {
+      return( _map );
+    }
+  }
+  public IMContext im_context {
+    get {
+      return( _im_context );
+    }
+  }
+  public double scaled_x {
+    get {
+      return( _scaled_x );
+    }
+  }
+  public double scaled_y {
+    get {
+      return( _scaled_y );
+    }
+  }
   public double origin_x {
     set {
       _store_origin_x = _origin_x = value;
@@ -239,7 +259,7 @@ public class DrawArea : Gtk.DrawingArea {
     _doc      = new Document( this );
     _settings = settings;
 
-    _map = new MindMap( settings );
+    _map = new MindMap( this, settings );
     _map.queue_draw.connect( queue_draw );
     _map.see.connect( see );
 
@@ -315,7 +335,7 @@ public class DrawArea : Gtk.DrawingArea {
     set_theme( win.themes.get_theme( settings.get_string( "default-theme" ) ), false );
 
     /* Create the undo text buffer */
-    undo_text = new UndoTextBuffer( this );
+    undo_text = new UndoTextBuffer( _map );
 
     /* Add event listeners */
     this.set_draw_func( on_draw );
@@ -518,14 +538,22 @@ public class DrawArea : Gtk.DrawingArea {
     return( null );
   }
 
-  /* Resets the cursor to the standard one */
-  private void reset_cursor() {
+  //-------------------------------------------------------------
+  // Resets the cursor to the standard one.
+  public void reset_cursor() {
     set_cursor( null );
   }
 
-  /* Sets the cursor of the drawing area to the named cursor */
+  //-------------------------------------------------------------
+  // Sets the cursor of the drawing area to the named cursor.
   private void set_cursor_name( string name ) {
     set_cursor( new Cursor.from_name( name, null ) );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the current cursor to the text input cursor.
+  public void set_text_cursor() {
+    set_cursor_name( text_cursor );
   }
 
   /* Loads the given theme from the list of available options */
@@ -1026,7 +1054,7 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Updates the IM context cursor location based on the canvas
   // text position
-  private void update_im_cursor( CanvasText ct ) {
+  public void update_im_cursor( CanvasText ct ) {
       var int_posx   = (int) (ct.posx * sfactor);
       var int_posy   = (int) (ct.posy * sfactor);
       var int_width  = (int) (ct.width * sfactor);
@@ -1925,11 +1953,11 @@ public class DrawArea : Gtk.DrawingArea {
         set_connection_mode( current_conn, ConnMode.ADJUSTING );
         return( true );
       } else if( current_conn.within_from_handle( scaled_x, scaled_y ) ) {
-        _last_connection = new Connection.from_connection( this, current_conn );
+        _last_connection = new Connection.from_connection( _map, current_conn );
         current_conn.disconnect_from_node( true );
         return( true );
       } else if( current_conn.within_to_handle( scaled_x, scaled_y ) ) {
-        _last_connection = new Connection.from_connection( this, current_conn );
+        _last_connection = new Connection.from_connection( _map, current_conn );
         current_conn.disconnect_from_node( false );
         return( true );
       }
@@ -2957,7 +2985,7 @@ public class DrawArea : Gtk.DrawingArea {
 
       /* If we were dragging a connection end and failed to attach it to a node, return the connection to where it was prior to the drag */
       } else if( _last_connection != null ) {
-        current_conn.copy( this, _last_connection );
+        current_conn.copy( _map, _last_connection );
         _last_connection = null;
       }
 
@@ -3770,7 +3798,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void add_connected_node() {
     var index = (int)_nodes.length;
     var node  = create_root_node( _( "Another Idea" ) );
-    var conn  = new Connection( this, _map.selected.current_node() );
+    var conn  = new Connection( _map, _map.selected.current_node() );
     conn.connect_to( _map.selected.current_node() );
     conn.connect_to( node );
     _connections.add_connection( conn );
@@ -5375,11 +5403,11 @@ public class DrawArea : Gtk.DrawingArea {
     var current = _map.selected.current_node();
     if( current != null ) {
       switch( current.mode ) {
-        case NodeMode.CURRENT  :  MinderClipboard.copy_nodes( this );  break;
+        case NodeMode.CURRENT  :  MinderClipboard.copy_nodes( _map );  break;
         case NodeMode.EDITABLE :  copy_selected_text();  break;
       }
     } else if( _map.selected.nodes().length > 1 ) {
-      MinderClipboard.copy_nodes( this );
+      MinderClipboard.copy_nodes( _map );
     } else if( is_connection_editable() || is_callout_editable() ) {
       copy_selected_text();
     }
@@ -5394,7 +5422,7 @@ public class DrawArea : Gtk.DrawingArea {
     UndoNodeGroups? undo_groups = null;
     _connections.node_deleted( current, conns );
     _groups.remove_node( current, ref undo_groups );
-    MinderClipboard.copy_nodes( this );
+    MinderClipboard.copy_nodes( _map );
     if( current.is_root() ) {
       for( int i=0; i<_nodes.length; i++ ) {
         if( _nodes.index( i ) == current ) {
@@ -5422,7 +5450,7 @@ public class DrawArea : Gtk.DrawingArea {
       _connections.node_only_deleted( nodes.index( i ), conns );
     }
     _groups.remove_nodes( nodes, out undo_groups );
-    MinderClipboard.copy_nodes( this );
+    MinderClipboard.copy_nodes( _map );
     undo_buffer.add_item( new UndoNodesCut( nodes, conns, undo_groups ) );
     for( int i=0; i<nodes.length; i++ ) {
       nodes.index( i ).delete_only();
@@ -5541,7 +5569,7 @@ public class DrawArea : Gtk.DrawingArea {
     var nodes  = new Array<Node>();
     var export = (ExportText)win.exports.get_by_name( "text" );
     export.import_text( text, 0, this, false, nodes );
-    undo_buffer.add_item( new UndoNodesInsert( this, nodes ) );
+    undo_buffer.add_item( new UndoNodesInsert( _map, nodes ) );
     queue_draw();
     auto_save();
   }
@@ -5664,13 +5692,13 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Pastes the contents of the clipboard into the current node */
   public void do_paste( bool shift ) {
-    MinderClipboard.paste( this, shift );
+    MinderClipboard.paste( _map, shift );
   }
 
   /* Paste the current node as a node link in the current node */
   public void do_paste_node_link() {
     if( node_pasteable() ) {
-      MinderClipboard.paste_node_link( this );
+      MinderClipboard.paste_node_link( _map );
     }
   }
 
@@ -6005,7 +6033,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void start_connection( bool key, bool link ) {
     var current_node = _map.selected.current_node();
     if( (current_node == null) || _connections.hide ) return;
-    var conn = new Connection( this, current_node );
+    var conn = new Connection( _map, current_node );
     _map.selected.set_current_connection( conn );
     conn.mode = link ? ConnMode.LINKING : ConnMode.CONNECTING;
     if( key ) {
@@ -6071,7 +6099,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( (_map.selected.num_nodes() != 2) || _connections.hide ) return;
     double x, y, w, h;
     var    nodes = _map.selected.nodes();
-    var    conn  = new Connection( this, nodes.index( 0 ) );
+    var    conn  = new Connection( _map, nodes.index( 0 ) );
     conn.connect_to( nodes.index( 1 ) );
     nodes.index( 1 ).bbox( out x, out y, out w, out h );
     conn.draw_to( (x + (w / 2)), (y + (h / 2)) );

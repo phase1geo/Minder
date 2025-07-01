@@ -26,11 +26,11 @@ public class UndoStyleLinkWidth : UndoStyleChange {
   private GenericArray<int> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleLinkWidth( StyleAffects affects, int link_width, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleLinkWidth( StyleAffects affects, int link_width, MindMap map ) {
+    base( affects, map );
     _values = new GenericArray<int>();
     _values.add( link_width );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

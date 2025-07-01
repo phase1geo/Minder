@@ -44,18 +44,18 @@ public class MinderClipboard {
 
   //-------------------------------------------------------------
   // Copies the current selected node list to the clipboard
-  public static void copy_nodes( DrawArea da ) {
+  public static void copy_nodes( MindMap map ) {
 
     Array<Node> nodes;
     Connections conns;
     NodeGroups  groups;
 
     /* Store the data to copy */
-    da.get_nodes_for_clipboard( out nodes, out conns, out groups );
+    map.get_nodes_for_clipboard( out nodes, out conns, out groups );
 
     /* Inform the clipboard */
     var clipboard = Display.get_default().get_clipboard();
-    var text      = da.serialize_for_copy( nodes, conns, groups );
+    var text      = map.serialize_for_copy( nodes, conns, groups );
 
     var bytes = new Bytes( text.data );
     var provider = new ContentProvider.for_bytes( NODES_TARGET_NAME, bytes );
@@ -86,10 +86,10 @@ public class MinderClipboard {
 
   //-------------------------------------------------------------
   // Called to paste current item in clipboard to the given DrawArea
-  public static void paste( DrawArea da, bool shift ) {
+  public static void paste( MindMap map, bool shift ) {
 
     var clipboard   = Display.get_default().get_clipboard();
-    var text_needed = da.is_node_editable() || da.is_connection_editable();
+    var text_needed = map.is_node_editable() || map.is_connection_editable();
 
     try {
       if( clipboard.get_formats().contain_mime_type( NODES_TARGET_NAME ) ) {
@@ -97,20 +97,20 @@ public class MinderClipboard {
           string str;
           var stream = clipboard.read_async.end( res, out str );
           var contents = Utils.read_stream( stream );
-          da.paste_nodes( contents, shift );
+          map.paste_nodes( contents, shift );
         });
       } else if( clipboard.get_formats().contain_mime_type( "image/png" ) || !text_needed ) {
         clipboard.read_texture_async.begin( null, (ob, res) => {
           var texture = clipboard.read_texture_async.end( res );
           if( texture != null ) {
             var pixbuf = Utils.texture_to_pixbuf( texture );
-            da.paste_image( pixbuf, true );
+            map.paste_image( pixbuf, true );
           }
         });
       } else if( clipboard.get_formats().contain_gtype( Type.STRING ) ) {
         clipboard.read_text_async.begin( null, (obj, res) => {
           var text = clipboard.read_text_async.end( res );
-          da.paste_text( text, shift );
+          map.paste_text( text, shift );
         });
       }
     } catch( Error e ) {}
@@ -119,7 +119,7 @@ public class MinderClipboard {
 
   //-------------------------------------------------------------
   // Returns a node link to the first node in the clipboard
-  public static void paste_node_link( DrawArea da ) {
+  public static void paste_node_link( MindMap map ) {
 
     var clipboard = Display.get_default().get_clipboard();
 
@@ -129,7 +129,7 @@ public class MinderClipboard {
           string str;
           var stream = clipboard.read_async.end( res, out str );
           var contents = Utils.read_stream( stream );
-          da.paste_node_link( contents );
+          map.paste_node_link( contents );
         });
       }
     } catch( Error e ) {}

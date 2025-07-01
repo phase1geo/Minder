@@ -26,11 +26,11 @@ public class UndoStyleConnectionTitleWidth : UndoStyleChange {
   GenericArray<int> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleConnectionTitleWidth( StyleAffects affects, int title_width, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleConnectionTitleWidth( StyleAffects affects, int title_width, MindMap map ) {
+    base( affects, map );
     _values = new GenericArray<int>();
     _values.add( title_width );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

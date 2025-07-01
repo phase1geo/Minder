@@ -80,6 +80,16 @@ public class MindMap {
       return( _da );
     }
   }
+  public double origin_x {
+    get {
+      return( _da.origin_x );
+    }
+  }
+  public double origin_y {
+    get {
+      return( _da.origin_y );
+    }
+  }
   public GLib.Settings settings {
     get {
       return( _settings );
@@ -719,20 +729,20 @@ public class MindMap {
   // current node
   public void set_node_mode( Node node, NodeMode mode, bool undoable = true ) {
     if( (node.mode != NodeMode.EDITABLE) && (mode == NodeMode.EDITABLE) ) {
-      update_im_cursor( node.name );
-      _im_context.focus_in();
-      if( node.name.is_within( _scaled_x, _scaled_y ) ) {
-        set_cursor_name( text_cursor );
+      _da.update_im_cursor( node.name );
+      _da.im_context.focus_in();
+      if( node.name.is_within( _da.scaled_x, _da.scaled_y ) ) {
+        _da.set_text_cursor();
       }
       undo_text.orig.copy( node.name );
       undo_text.ct      = node.name;
       undo_text.do_undo = undoable;
       node.mode = mode;
     } else if( (node.mode == NodeMode.EDITABLE) && (mode != NodeMode.EDITABLE) ) {
-      _im_context.reset();
-      _im_context.focus_out();
-      if( node.name.is_within( _scaled_x, _scaled_y ) ) {
-        reset_cursor();
+      _da.im_context.reset();
+      _da.im_context.focus_out();
+      if( node.name.is_within( _da.scaled_x, _da.scaled_y ) ) {
+        _da.reset_cursor();
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
@@ -752,10 +762,10 @@ public class MindMap {
   // current connection
   public void set_connection_mode( Connection conn, ConnMode mode, bool undoable = true ) {
     if( (conn.mode != ConnMode.EDITABLE) && (mode == ConnMode.EDITABLE) ) {
-      update_im_cursor( conn.title );
-      _im_context.focus_in();
-      if( (conn.title != null) && conn.title.is_within( _scaled_x, _scaled_y ) ) {
-        set_cursor_name( text_cursor );
+      _da.update_im_cursor( conn.title );
+      _da.im_context.focus_in();
+      if( (conn.title != null) && conn.title.is_within( _da.scaled_x, _da.scaled_y ) ) {
+        _da.set_text_cursor();
       }
       undo_text.orig.copy( conn.title );
       undo_text.ct      = conn.title;
@@ -763,8 +773,8 @@ public class MindMap {
     } else if( (conn.mode == ConnMode.EDITABLE) && (mode != ConnMode.EDITABLE) ) {
       _im_context.reset();
       _im_context.focus_out();
-      if( (conn.title != null) && conn.title.is_within( _scaled_x, _scaled_y ) ) {
-        reset_cursor();
+      if( (conn.title != null) && conn.title.is_within( _da.scaled_x, _da.scaled_y ) ) {
+        _da.reset_cursor();
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
@@ -778,20 +788,20 @@ public class MindMap {
 
   public void set_callout_mode( Callout callout, CalloutMode mode, bool undoable = true ) {
     if( (callout.mode != CalloutMode.EDITABLE) && (mode == CalloutMode.EDITABLE) ) {
-      update_im_cursor( callout.text );
-      _im_context.focus_in();
-      if( (callout.text != null) && callout.text.is_within( _scaled_x, _scaled_y ) ) {
-        set_cursor_name( text_cursor );
+      _da.update_im_cursor( callout.text );
+      _da.im_context.focus_in();
+      if( (callout.text != null) && callout.text.is_within( _da.scaled_x, _da.scaled_y ) ) {
+        _da.set_text_cursor();
       }
       undo_text.orig.copy( callout.text );
       undo_text.ct      = callout.text;
       undo_text.do_undo = undoable;
       callout.mode = mode;
     } else if( (callout.mode == CalloutMode.EDITABLE) && (mode != CalloutMode.EDITABLE) ) {
-      _im_context.reset();
-      _im_context.focus_out();
-      if( (callout.text != null) && callout.text.is_within( _scaled_x, _scaled_y ) ) {
-        reset_cursor();
+      _da.im_context.reset();
+      _da.im_context.focus_out();
+      if( (callout.text != null) && callout.text.is_within( _da.scaled_x, _da.scaled_y ) ) {
+        _da.reset_cursor();
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
@@ -1746,7 +1756,7 @@ public class MindMap {
           clear_current_callout( false );
           return( set_current_sticker_from_position( sticker, scaled_x, scaled_y, control, shift, press_num ) );
         }
-        var group = groups.node_group_containing( _scaled_x, _scaled_y );
+        var group = groups.node_group_containing( scaled_x, scaled_y );
         if( group != null ) {
           clear_current_node( false );
           clear_current_connection( false );

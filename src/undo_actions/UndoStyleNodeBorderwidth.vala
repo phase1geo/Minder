@@ -26,11 +26,11 @@ public class UndoStyleNodeBorderwidth : UndoStyleChange {
   GenericArray<int> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleNodeBorderwidth( StyleAffects affects, int node_borderwidth, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleNodeBorderwidth( StyleAffects affects, int node_borderwidth, MindMap map ) {
+    base( affects, map );
     _values = new GenericArray<int>();
     _values.add( node_borderwidth );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

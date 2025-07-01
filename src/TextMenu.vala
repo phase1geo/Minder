@@ -127,7 +127,7 @@ public class TextMenu {
    any selected text.
   */
   private void action_paste() {
-    MinderClipboard.paste( _da, false );
+    MinderClipboard.paste( _da.map, false );
   }
 
   /*

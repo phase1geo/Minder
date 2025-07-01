@@ -26,11 +26,11 @@ public class UndoStyleLinkType : UndoStyleChange {
   GenericArray<LinkType> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleLinkType( StyleAffects affects, LinkType link_type, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleLinkType( StyleAffects affects, LinkType link_type, MindMap map ) {
+    base( affects, map );
     _values = new GenericArray<LinkType>();
     _values.add( link_type );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {

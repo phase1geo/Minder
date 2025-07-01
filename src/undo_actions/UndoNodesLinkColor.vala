@@ -41,21 +41,21 @@ public class UndoNodesLinkColor : UndoItem {
   }
 
   /* Undoes a node link color change */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).link_color = _old_colors.index( i );
     }
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Redoes a node link color change */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       _nodes.index( i ).link_color = _new_color;
     }
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

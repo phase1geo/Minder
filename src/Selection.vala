@@ -602,7 +602,7 @@ public class Selection {
 
     for( int i=0; i<parents.length; i++ ) {
       var old_parent = parents.index( i );
-      var node       = new Node( _map, old_parent.layout );
+      var node       = new Node( _map.da, old_parent.layout );
       node.copy_variables( old_parent, im );
       subtrees.append_val( node );
       get_subtrees_helper( old_parent, node, im );
@@ -618,7 +618,7 @@ public class Selection {
     for( int i=0; i<old_parent.children().length; i++ ) {
       var old_child = old_parent.children().index( i );
       if( is_node_selected( old_child ) ) {
-        var node = new Node( _map, old_child.layout );
+        var node = new Node( _map.da, old_child.layout );
         node.copy_variables( old_child, im );
         node.attach( new_parent, -1, null );
         get_subtrees_helper( old_child, node, im );

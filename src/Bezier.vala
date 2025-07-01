@@ -24,30 +24,31 @@ using GLib.Math;
 public class Bezier {
 
   private class Point {
-    private DrawArea _da;
-    private double   _x = 0;
-    private double   _y = 0;
+    private MindMap _map;
+    private double  _x = 0;
+    private double  _y = 0;
+
     public double x {
       get {
-        return( _x + _da.origin_x );
+        return( _x + _map.origin_x );
       }
       set {
-        _x = value - _da.origin_x;
+        _x = value - _map.origin_x;
       }
     }
     public double y {
       get {
-        return( _y + _da.origin_y );
+        return( _y + _map.origin_y );
       }
       set {
-        _y = value - _da.origin_y;
+        _y = value - _map.origin_y;
       }
     }
-    public Point( DrawArea da ) {
-      _da = da;
+    public Point( MindMap map ) {
+      _map = map;
     }
-    public Point.with_coordinate( DrawArea da, double a, double b ) {
-      _da = da;
+    public Point.with_coordinate( MindMap map, double a, double b ) {
+      _map = map;
       x = a;
       y = b;
     }
@@ -63,22 +64,22 @@ public class Bezier {
   private Point        _to;
 
   /* Default constructor */
-  public Bezier( DrawArea da ) {
-    _from = new Point( da );
-    _to   = new Point( da );
+  public Bezier( MindMap map ) {
+    _from = new Point( map );
+    _to   = new Point( map );
     for( int i=0; i<3; i++ ) {
-      _points.append_val( new Point( da ) );
-      _apoints.append_val( new Point( da ) );
+      _points.append_val( new Point( map ) );
+      _apoints.append_val( new Point( map ) );
     }
   }
 
   /* Default constructor */
-  public Bezier.with_endpoints( DrawArea da, double x0, double y0, double x1, double y1 ) {
-    _from = new Point( da );
-    _to   = new Point( da );
+  public Bezier.with_endpoints( MindMap map, double x0, double y0, double x1, double y1 ) {
+    _from = new Point( map );
+    _to   = new Point( map );
     for( int i=0; i<3; i++ ) {
-      _points.append_val( new Point( da ) );
-      _apoints.append_val( new Point( da ) );
+      _points.append_val( new Point( map ) );
+      _apoints.append_val( new Point( map ) );
     }
     _points.index( 0 ).set_coordinate( x0, y0 );
     _points.index( 1 ).set_coordinate( ((x0 + x1) * 0.5), ((y0 + y1) * 0.5) );

@@ -27,7 +27,8 @@ public class UndoStickerMove : UndoItem {
   private double  _posx;
   private double  _posy;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public UndoStickerMove( Sticker sticker, double orig_posx, double orig_posy ) {
     base( _( "add sticker" ) );
     _sticker = sticker;
@@ -35,26 +36,28 @@ public class UndoStickerMove : UndoItem {
     _posy    = orig_posy;
   }
 
-  private void toggle( DrawArea da ) {
+  private void toggle( MindMap map ) {
     var posx = _sticker.posx;
     var posy = _sticker.posy;
     _sticker.posx = _posx;
     _sticker.posy = _posy;
     _posx = posx;
     _posy = posy;
-    da.set_current_sticker( _sticker );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_sticker( _sticker );
+    map.queue_draw();
+    map.auto_save();
   }
 
-  /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
-    toggle( da );
+  //-------------------------------------------------------------
+  // Performs an undo operation for this data.
+  public override void undo( MindMap map ) {
+    toggle( map );
   }
 
-  /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
-    toggle( da );
+  //-------------------------------------------------------------
+  // Performs a redo operation.
+  public override void redo( MindMap map ) {
+    toggle( map );
   }
 
 }

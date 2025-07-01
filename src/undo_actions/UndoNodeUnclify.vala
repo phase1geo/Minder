@@ -36,18 +36,18 @@ public class UndoNodeUnclify : UndoItem {
   }
 
   /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
-    da.animator.add_nodes( da.get_nodes(), "undo_make_parent_sibling" );
+  public override void undo( MindMap map ) {
+    map.da.animator.add_nodes( map.get_nodes(), "undo_make_parent_sibling" );
     _node.detach( _node.side );
     _node.attach( _parent, _index, null );
-    da.animator.animate();
-    da.auto_save();
+    map.da.animator.animate();
+    map.auto_save();
   }
 
   /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     _node.make_parent_sibling( _node.parent, false );
-    da.auto_save();
+    map.auto_save();
   }
 
 }

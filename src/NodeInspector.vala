@@ -32,7 +32,7 @@ public class NodeInspector : Box {
   private Box            _link_box;
   private ColorButton    _link_color;
   private NoteView       _note;
-  private DrawArea?      _da = null;
+  private MindMap?       _map = null;
   private Button         _detach_btn;
   private string         _orig_note = "";
   private Node?          _node = null;
@@ -70,14 +70,14 @@ public class NodeInspector : Box {
 
   /* Called whenever the user clicks on a tab in the tab bar */
   private void tab_changed( DrawArea? da ) {
-    if( _da != null ) {
-      _da.current_changed.disconnect( node_changed );
-      _da.theme_changed.disconnect( theme_changed );
+    if( _map != null ) {
+      _map.current_changed.disconnect( node_changed );
+      _map.theme_changed.disconnect( theme_changed );
     }
-    _da = da;
+    _map = da.map;
     if( da != null ) {
-      da.current_changed.connect( node_changed );
-      da.theme_changed.connect( theme_changed );
+      da.map.current_changed.connect( node_changed );
+      da.map.theme_changed.connect( theme_changed );
       node_changed();
     }
   }
@@ -216,7 +216,7 @@ public class NodeInspector : Box {
       halign = Align.FILL
     };
     _link_color.color_set.connect(() => {
-      _da.change_current_link_color( _link_color.rgba );
+      _map.change_current_link_color( _link_color.rgba );
     });
 
     _link_box = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -269,7 +269,7 @@ public class NodeInspector : Box {
       halign = Align.FILL
     };
     _root_color.color_set.connect(() => {
-      _da.change_current_link_color( _root_color.rgba );
+      _map.change_current_link_color( _root_color.rgba );
     });
 
     var cbox = new Box( Orientation.HORIZONTAL, 5 ) {
@@ -386,7 +386,7 @@ public class NodeInspector : Box {
       tooltip_text = _( "Edit Image" )
     };
     btn_edit.clicked.connect(() => {
-      _da.edit_current_image();
+      _map.edit_current_image();
     });
 
     var btn_del = new Button.from_icon_name( "edit-delete-symbolic" ) {
@@ -394,7 +394,7 @@ public class NodeInspector : Box {
       tooltip_text = _( "Remove Image" )
     };
     btn_del.clicked.connect(() => {
-      _da.delete_current_image();
+      _map.delete_current_image();
     });
 
     _resize = new ToggleButton() {
@@ -403,10 +403,10 @@ public class NodeInspector : Box {
       tooltip_text =  _( "Resizable" )
     };
     _resize.toggled.connect(() => {
-      var current = _da.get_current_node();
+      var current = _map.get_current_node();
       if( current != null ) {
         current.image_resizable = _resize.get_active();
-        _da.auto_save();
+        _map.auto_save();
       }
     });
 
@@ -435,7 +435,7 @@ public class NodeInspector : Box {
 
     drop.drop.connect((val, x, y) => {
       var file = (File)val;
-      return( _da.update_current_image( file.get_uri() ) );
+      return( _map.update_current_image( file.get_uri() ) );
     });
 
     return( box );
@@ -444,7 +444,7 @@ public class NodeInspector : Box {
 
   /* Called when the user clicks on the image button */
   private void image_button_clicked() {
-    _da.add_current_image();
+    _map.add_current_image();
   }
 
   /* Called if the user clicks on the image URI */
@@ -516,27 +516,27 @@ public class NodeInspector : Box {
 
   /* Called whenever the task enable switch is changed within the inspector */
   private void task_changed() {
-    var current = _da.get_current_node();
+    var current = _map.get_current_node();
     if( current != null ) {
-      _da.change_current_task( !current.task_enabled(), false );
+      _map.change_current_task( !current.task_enabled(), false );
     }
   }
 
   /* Called whenever the fold switch is changed within the inspector */
   private void fold_changed() {
-    var current = _da.get_current_node();
+    var current = _map.get_current_node();
     if( current != null ) {
-      _da.change_current_fold( !current.folded );
+      _map.change_current_fold( !current.folded );
     }
   }
 
   /* Called whenever the sequence switch is changed within the inspector */
   private void sequence_changed() {
-    var current = _da.get_current_node();
+    var current = _map.get_current_node();
     if( current != null ) {
       current.sequence = !current.sequence;
-      _da.auto_save();
-      _da.queue_draw();
+      _map.auto_save();
+      _map.queue_draw();
     }
   }
 
@@ -545,16 +545,16 @@ public class NodeInspector : Box {
    this sidebar.  We will show/hide the color changer.
   */
   private void root_color_changed() {
-    var current = _da.get_current_node();
+    var current = _map.get_current_node();
     if( _color_reveal.reveal_child ) {
       _color_reveal.reveal_child = false;
       if( current != null ) {
-        _da.change_current_link_color( null );
+        _map.change_current_link_color( null );
       }
     } else {
       _color_reveal.reveal_child = true;
-      if( (current != null) && (_root_color.rgba != _da.get_theme().get_color( "root_background" )) ) {
-        _da.change_current_link_color( _root_color.get_rgba() );
+      if( (current != null) && (_root_color.rgba != _map.get_theme().get_color( "root_background" )) ) {
+        _map.change_current_link_color( _root_color.get_rgba() );
       }
     }
   }
@@ -565,59 +565,59 @@ public class NodeInspector : Box {
   */
   private void note_changed() {
     if( _ignore_changes ) return;
-    _da.change_current_node_note( _note.buffer.text );
+    _map.change_current_node_note( _note.buffer.text );
   }
 
   /* Saves the original version of the node's note so that we can */
   private void note_focus_in() {
-    _node      = _da.get_current_node();
+    _node      = _map.get_current_node();
     _orig_note = _note.buffer.text;
   }
 
   /* When the note buffer loses focus, save the note change to the undo buffer */
   private void note_focus_out() {
     if( (_node != null) && (_node.note != _orig_note) ) {
-      _da.undo_buffer.add_item( new UndoNodeNote( _node, _orig_note ) );
+      _map.undo_buffer.add_item( new UndoNodeNote( _node, _orig_note ) );
     }
   }
 
   /* When a node link is added, tell the current node */
   private int note_node_link_added( NodeLink link, out string text ) {
-    return( _da.add_note_node_link( link, out text ) );
+    return( _map.add_note_node_link( link, out text ) );
   }
 
   /* Handles a click on the node link with the given ID */
   private void note_node_link_clicked( int id ) {
-    _da.note_node_link_clicked( id );
+    _map.note_node_link_clicked( id );
   }
 
   /* Handles a hover over a node link */
   private void note_node_link_hover( int id ) {
-    var link = _da.node_links.get_node_link( id );
+    var link = _map.node_links.get_node_link( id );
     if( link != null ) {
-      _note.show_tooltip( link.get_tooltip( _da ) );
+      _note.show_tooltip( link.get_tooltip( _map ) );
     }
   }
 
   /* Copies the current node to the clipboard */
   private void node_copy() {
-    MinderClipboard.copy_nodes( _da );
+    MinderClipboard.copy_nodes( _map );
   }
 
   /* Cuts the current node to the clipboard */
   private void node_cut() {
-    _da.cut_node_to_clipboard();
+    _map.cut_node_to_clipboard();
   }
 
   /* Detaches the current node and makes it a parent node */
   private void node_detach() {
-    _da.detach();
+    _map.detach();
     _detach_btn.set_sensitive( false );
   }
 
   /* Deletes the current node */
   private void node_delete() {
-    _da.delete_node();
+    _map.delete_node();
   }
 
   /* Grabs the focus on the note widget */
@@ -628,10 +628,10 @@ public class NodeInspector : Box {
 
   /* Called whenever the fold switch is changed within the inspector */
   private void resize_changed() {
-    var current = _da.get_current_node();
+    var current = _map.get_current_node();
     if( current != null ) {
       current.image_resizable = !current.image_resizable;
-      _da.auto_save();
+      _map.auto_save();
     }
   }
 
@@ -643,7 +643,7 @@ public class NodeInspector : Box {
 
     /* Gather the theme colors into an RGBA array */
     for( int i=0; i<num_colors; i++ ) {
-      colors[i] = _da.get_theme().link_color( i );
+      colors[i] = _map.get_theme().link_color( i );
     }
 
     /* Clear the palette */
@@ -657,7 +657,7 @@ public class NodeInspector : Box {
   /* Called whenever the user changes the current node in the canvas */
   private void node_changed() {
 
-    Node? current = _da.get_current_node();
+    Node? current = _map.get_current_node();
 
     _ignore_changes = true;
 
@@ -682,7 +682,7 @@ public class NodeInspector : Box {
         _root_color_box.visible = true;
         _override.set_active( current.link_color_set );
         _color_reveal.reveal_child = current.link_color_set;
-        _root_color.rgba = current.link_color_set ? current.link_color : _da.get_theme().get_color( "root_background" );
+        _root_color.rgba = current.link_color_set ? current.link_color : _map.get_theme().get_color( "root_background" );
       } else {
         _link_box.visible = true;
         _root_color_box.visible = false;
@@ -692,7 +692,7 @@ public class NodeInspector : Box {
       var note = current.note;
       _note.buffer.text = note;
       if( current.image != null ) {
-        var url = _da.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
+        var url = _map.image_manager.get_uri( current.image.id ).replace( "&", "&amp;" );
         var str = "<a href=\"" + url + "\">" + url + "</a>";
         current.image.set_image( _image );
         _resize.set_active( current.image_resizable );

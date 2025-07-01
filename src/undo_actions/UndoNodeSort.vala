@@ -59,23 +59,23 @@ public class UndoNodeSort : UndoItem {
   }
 
   /* Perform the swap */
-  private void change( DrawArea da, SortNodes nodes ) {
-    da.animator.add_nodes( da.get_nodes(), "undo sorted nodes" );
+  private void change( MindMap map, SortNodes nodes ) {
+    map.da.animator.add_nodes( map.get_nodes(), "undo sorted nodes" );
     nodes.change( _parent );
-    da.animator.animate();
+    map.da.animator.animate();
   }
 
   /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     if( _new == null ) {
       _new = new SortNodes( _parent );
     }
-    change( da, _old );
+    change( map, _old );
   }
 
   /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
-    change( da, _new );
+  public override void redo( MindMap map ) {
+    change( map, _new );
   }
 
 }

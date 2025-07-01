@@ -40,7 +40,7 @@ public enum ConnMode {
 public class Connection : Object {
 
   private int         RADIUS     = 6;
-  private DrawArea    _da;
+  private MindMap     _map;
   private ConnMode    _mode      = ConnMode.NONE;
   private Node?       _from_node = null;
   private Node?       _to_node   = null;
@@ -170,35 +170,35 @@ public class Connection : Object {
   public double extent_y2 { get; private set; default = 0.0; }
 
   /* Default constructor */
-  public Connection( DrawArea da, Node from_node ) {
+  public Connection( MindMap map, Node from_node ) {
     double x, y, w, h;
     from_node.node_bbox( out x, out y, out w, out h );
-    _da        = da;
+    _map       = map;
     _posx      = x + (w / 2);
     _posy      = y + (h / 2);
     _from_node = from_node;
     connect_node( _from_node );
     position_title();
-    _curve     = new Bezier.with_endpoints( da, _posx, _posy, _posx, _posy );
+    _curve     = new Bezier.with_endpoints( map, _posx, _posy, _posx, _posy );
     style      = StyleInspector.styles.get_global_style();
   }
 
   /* Constructs a connection based on another connection */
-  public Connection.from_connection( DrawArea da, Connection conn ) {
-    _da    = da;
-    _curve = new Bezier( da );
-    copy( da, conn );
+  public Connection.from_connection( MindMap map, Connection conn ) {
+    _map   = map;
+    _curve = new Bezier( map );
+    copy( map, conn );
   }
 
   /* Constructor from XML data */
-  public Connection.from_xml( DrawArea da, Xml.Node* n, Array<Node> nodes ) {
-    _da   = da;
+  public Connection.from_xml( MindMap map, Xml.Node* n, Array<Node> nodes ) {
+    _map  = map;
     style = StyleInspector.styles.get_global_style();
-    load( da, n, nodes );
+    load( map, n, nodes );
   }
 
   /* Copies the given connection to this instance */
-  public void copy( DrawArea da, Connection conn ) {
+  public void copy( MindMap map, Connection conn ) {
     _from_node = conn._from_node;
     _to_node   = conn._to_node;
     position_title();
@@ -210,7 +210,7 @@ public class Connection : Object {
       _title = null;
     } else {
       if( title == null ) {
-        _title = new CanvasText( da );
+        _title = new CanvasText( map.da );
         _title.resized.connect( position_title );
       }
       _title.copy( conn.title );
@@ -408,7 +408,7 @@ public class Connection : Object {
   /* Returns true if the currently selected node is a common parent to both the from and to nodes */
   private bool common_parent_moved( Node node ) {
     var parents = new Array<Node>();
-    _da.get_selections().get_parents( ref parents );
+    _map.selected.get_parents( ref parents );
     for( int i=0; i<parents.length; i++ ) {
       if( node.is_descendant_of( parents.index( i ) ) ) {
         return( true );
@@ -632,12 +632,12 @@ public class Connection : Object {
 
     string? x = node->get_prop( "drag_x" );
     if( x != null ) {
-      dragx = double.parse( x ) + _da.origin_x;
+      dragx = double.parse( x ) + _map.origin_x;
     }
 
     string? y = node->get_prop( "drag_y" );
     if( y != null ) {
-      dragy = double.parse( y ) + _da.origin_y;
+      dragy = double.parse( y ) + _map.origin_y;
     }
 
     string? n = node->get_prop( "note" );
@@ -661,7 +661,7 @@ public class Connection : Object {
     double tx, ty, tw, th;
     _from_node.node_bbox( out fx, out fy, out fw, out fh );
     _to_node.node_bbox(   out tx, out ty, out tw, out th );
-    _curve = new Bezier.with_endpoints( _da, (fx + (fw / 2)), (fy + (fh / 2)), (tx + (tw / 2)), (ty + (th / 2)) );
+    _curve = new Bezier.with_endpoints( _map, (fx + (fw / 2)), (fy + (fh / 2)), (tx + (tw / 2)), (ty + (th / 2)) );
     _curve.update_control_from_drag_handle( dragx, dragy );
     set_connect_point( _from_node );
     set_connect_point( _to_node );
@@ -692,8 +692,8 @@ public class Connection : Object {
 
     double dragx, dragy;
     _curve.get_drag_point( out dragx, out dragy );
-    dragx -= _da.origin_x;
-    dragy -= _da.origin_y;
+    dragx -= _map.origin_x;
+    dragy -= _map.origin_y;
 
     Xml.Node* n = new Xml.Node( null, "connection" );
     n->set_prop( "from_id", _from_node.id().to_string() );

@@ -36,18 +36,18 @@ public class UndoTextReplace : UndoTextItem {
   }
 
   /* Causes the stored item to be put into the before state */
-  public override void undo_text( DrawArea da, CanvasText ct ) {
+  public override void undo_text( MindMap map, CanvasText ct ) {
     ct.text.replace_text( start, new_text.length, orig_text );
     ct.text.apply_tags( tags, start );
     ct.set_cursor_only( start_cursor );
-    da.queue_draw();
+    map.queue_draw();
   }
 
   /* Causes the stored item to be put into the after state */
-  public override void redo_text( DrawArea da, CanvasText ct ) {
+  public override void redo_text( MindMap map, CanvasText ct ) {
     ct.text.replace_text( start, orig_text.length, new_text );
     ct.set_cursor_only( end_cursor );
-    da.queue_draw();
+    map.queue_draw();
   }
 
   /* Merges the given item with this item, if possible */

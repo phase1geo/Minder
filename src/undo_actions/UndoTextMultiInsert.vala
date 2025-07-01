@@ -35,23 +35,23 @@ public class UndoTextMultiInsert : UndoTextItem {
   }
 
   /* Causes the stored item to be put into the before state */
-  public override void undo_text( DrawArea da, CanvasText ct ) {
+  public override void undo_text( MindMap map, CanvasText ct ) {
     for( int i=0; i<_inserts.length; i++ ) {
       var insert = _inserts.index( i );
       ct.text.remove_text( insert.start, insert.text.length );
     }
     ct.set_cursor_only( start_cursor );
-    da.queue_draw();
+    map.queue_draw();
   }
 
   /* Causes the stored item to be put into the after state */
-  public override void redo_text( DrawArea da, CanvasText ct ) {
+  public override void redo_text( MindMap map, CanvasText ct ) {
     for( int i=(int)(_inserts.length - 1); i>=0; i-- ) {
       var insert = _inserts.index( i );
       ct.text.insert_text( insert.start, insert.text );
     }
     ct.set_cursor_only( end_cursor );
-    da.queue_draw();
+    map.queue_draw();
   }
 
 }

@@ -63,24 +63,24 @@ public class UndoNodesAlign : UndoItem {
     }
   }
 
-  private void change( DrawArea da ) {
-    da.animator.add_nodes( _nodes, "align change" );
+  private void change( MindMap map ) {
+    map.da.animator.add_nodes( _nodes, "align change" );
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
       _info.index( i ).swap_with_node( node );
     }
-    da.animator.animate();
-    da.auto_save();
+    map.da.animator.animate();
+    map.auto_save();
   }
 
   /* Undoes a node image change */
-  public override void undo( DrawArea da ) {
-    change( da );
+  public override void undo( MindMap map ) {
+    change( map );
   }
 
   /* Redoes a node image change */
-  public override void redo( DrawArea da ) {
-    change( da );
+  public override void redo( MindMap map ) {
+    change( map );
   }
 
 }

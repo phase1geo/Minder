@@ -35,12 +35,12 @@ public class UndoStyleChange : UndoItem {
   }
 
   /* Constructor for a node name change */
-  public UndoStyleChange( StyleAffects affects, DrawArea da ) {
+  public UndoStyleChange( StyleAffects affects, MindMap map ) {
     base( _( "style change" ) );
     _affects  = affects;
-    _nodes    = da.get_selected_nodes();
-    _conns    = da.get_selected_connections();
-    _callouts = da.get_selected_callouts();
+    _nodes    = map.get_selected_nodes();
+    _conns    = map.get_selected_connections();
+    _callouts = map.get_selected_callouts();
   }
 
   /* Returns true if the given undo item matches our item */
@@ -66,18 +66,18 @@ public class UndoStyleChange : UndoItem {
     return( false );
   }
 
-  protected void load_styles( DrawArea da ) {
-    traverse_styles( da, StyleChangeType.LOAD );
+  protected void load_styles( MindMap map ) {
+    traverse_styles( map, StyleChangeType.LOAD );
   }
 
-  private void traverse_styles( DrawArea da, StyleChangeType change_type ) {
+  private void traverse_styles( MindMap map, StyleChangeType change_type ) {
     var index    = 1;
-    var selected = da.get_selections();
+    var selected = map.selected;
     switch( _affects ) {
       case StyleAffects.ALL         :
         {
-          var nodes = da.get_nodes();
-          var conns = da.get_connections().connections;
+          var nodes = map.get_nodes();
+          var conns = map.get_connections().connections;
           for( int i=0; i<nodes.length; i++ ) {
             set_style_for_tree( nodes.index( i ), change_type, ref index );
           }
@@ -110,9 +110,9 @@ public class UndoStyleChange : UndoItem {
         }
         break;
     }
-    da.current_changed( da );
-    da.auto_save();
-    da.queue_draw();
+    map.current_changed( map );
+    map.auto_save();
+    map.queue_draw();
   }
 
   private void set_style( Style old_style, Style new_style, StyleChangeType change_type, ref int index ) {
@@ -179,13 +179,13 @@ public class UndoStyleChange : UndoItem {
   }
 
   /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
-    traverse_styles( da, StyleChangeType.UNDO );
+  public override void undo( MindMap map ) {
+    traverse_styles( map, StyleChangeType.UNDO );
   }
 
   /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
-    traverse_styles( da, StyleChangeType.REDO );
+  public override void redo( MindMap map ) {
+    traverse_styles( map, StyleChangeType.REDO );
   }
 
   public override string to_string() {

@@ -28,7 +28,7 @@ using Pango;
 public class CanvasText : Object {
 
   /* Member variables */
-  private MindMap        _map;
+  private DrawArea       _da;
   private double         _posx         = 0.0;
   private double         _posy         = 0.0;
   private FormattedText  _text;
@@ -130,7 +130,7 @@ public class CanvasText : Object {
   public CanvasText( DrawArea da ) {
     int int_max_width = (int)_max_width;
     _da           = da;
-    _text         = new FormattedText( da );
+    _text         = new FormattedText( map );
     _text.changed.connect( text_changed );
     _line_layout  = da.create_pango_layout( "M" );
     _pango_layout = da.create_pango_layout( null );

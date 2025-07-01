@@ -26,11 +26,11 @@ public class UndoStyleConnectionArrow : UndoStyleChange {
   GenericArray<string> _values;
 
   /* Constructor for a node name change */
-  public UndoStyleConnectionArrow( StyleAffects affects, string connection_arrow, DrawArea da ) {
-    base( affects, da );
+  public UndoStyleConnectionArrow( StyleAffects affects, string connection_arrow, MindMap map ) {
+    base( affects, map );
     _values = new GenericArray<string>();
     _values.add( connection_arrow );
-    load_styles( da );
+    load_styles( map );
   }
 
   protected override void load_style_value( Style style ) {
