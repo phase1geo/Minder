@@ -37,27 +37,27 @@ public class UndoGroupsMerge : UndoItem {
   }
 
   /* Undoes a connection change */
-  public override void undo( DrawArea da ) {
-    da.get_selections().clear();
-    da.groups.remove_group( _merged );
+  public override void undo( MindMap map ) {
+    map.selected.clear();
+    map.groups.remove_group( _merged );
     for( int i=0; i<_groups.length; i++ ) {
-      da.groups.add_group( _groups.index( i ) );
-      da.get_selections().add_group( _groups.index( i ) );
+      map.groups.add_group( _groups.index( i ) );
+      map.selected.add_group( _groups.index( i ) );
     }
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Redoes a connection change */
   public override void redo( DrawArea da ) {
-    da.get_selections().clear();
+    map.selected.clear();
     for( int i=0; i<_groups.length; i++ ) {
-      da.groups.remove_group( _groups.index( i ) );
+      map.groups.remove_group( _groups.index( i ) );
     }
-    da.groups.add_group( _merged );
-    da.get_selections().add_group( _merged );
-    da.queue_draw();
-    da.auto_save();
+    map.groups.add_group( _merged );
+    map.selected.add_group( _merged );
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

@@ -34,22 +34,22 @@ public class UndoConnectedNode : UndoItem {
     _index = index;
   }
 
-  public override void undo( DrawArea da ) {
-    da.remove_root( _index );
-    da.get_connections().remove_connection( _conn, false );
-    if( da.get_current_node() == _node ) {
-      da.set_current_node( null );
+  public override void undo( MindMap map ) {
+    map.remove_root( _index );
+    map.get_connections().remove_connection( _conn, false );
+    if( map.get_current_node() == _node ) {
+      map.set_current_node( null );
     }
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
-  public override void redo( DrawArea da ) {
-    da.get_nodes().insert_val( _index, _node );
-    da.get_connections().add_connection( _conn );
-    da.set_current_node( _node );
-    da.queue_draw();
-    da.auto_save();
+  public override void redo( MindMap map ) {
+    map.get_nodes().insert_val( _index, _node );
+    map.get_connections().add_connection( _conn );
+    map.set_current_node( _node );
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

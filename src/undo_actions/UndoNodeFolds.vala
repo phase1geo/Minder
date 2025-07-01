@@ -38,24 +38,24 @@ public class UndoNodeFolds : UndoItem {
   }
 
   /* Toggles the fold indicators */
-  private void change( DrawArea da ) {
+  private void change( MindMap map ) {
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i );
       node.set_fold_only( !node.folded );
     }
-    da.queue_draw();
-    da.current_changed( da );
-    da.auto_save();
+    map.queue_draw();
+    map.current_changed( map );
+    map.auto_save();
   }
 
   /* Undoes a node fold operation */
-  public override void undo( DrawArea da ) {
-    change( da );
+  public override void undo( MindMap map ) {
+    change( map );
   }
 
   /* Redoes a node fold operation */
-  public override void redo( DrawArea da ) {
-    change( da );
+  public override void redo( MindMap map ) {
+    change( map );
   }
 
 }

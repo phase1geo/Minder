@@ -70,15 +70,15 @@ public class UndoNodeAttach : UndoItem {
   }
 
   /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     int index = 0;
-    da.animator.add_nodes( da.get_nodes(), "undo attach" );
+    map.da.animator.add_nodes( map.get_nodes(), "undo attach" );
     if( _new_summary != null ) {
       _new_summary.remove_node( _n );
     }
     _n.detach( _new_side );
     if( _old_parent == null ) {
-      da.add_root( _n, _old_index );
+      map.add_root( _n, _old_index );
       _n.set_node_info( _old_info, ref index );
     } else {
       _n.set_node_info( _old_info, ref index );
@@ -89,27 +89,27 @@ public class UndoNodeAttach : UndoItem {
         _old_summary.add_node( _n );
       }
     }
-    da.set_current_node( _n );
-    da.animator.animate();
-    da.auto_save();
+    map.set_current_node( _n );
+    map.da.animator.animate();
+    map.auto_save();
   }
 
   /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     int index = 0;
-    da.animator.add_nodes( da.get_nodes(), "redo attach" );
+    map.da.animator.add_nodes( map.get_nodes(), "redo attach" );
     if( _old_summary != null ) {
       _old_summary.remove_node( _n );
     }
     if( _old_parent == null ) {
-      da.remove_root( _old_index );
+      map.remove_root( _old_index );
     } else {
       _n.detach( _old_side );
     }
     _n.side = _new_side;
     _n.layout.propagate_side( _n, _new_side );
     if( _old_parent == null ) {
-      _n.attach( _new_parent, -1, da.get_theme() );
+      _n.attach( _new_parent, -1, map.get_theme() );
       _n.set_node_info( _new_info, ref index );
     } else {
       _n.set_node_info( _new_info, ref index );
@@ -118,9 +118,9 @@ public class UndoNodeAttach : UndoItem {
         _new_summary.add_node( _n );
       }
     }
-    da.set_current_node( _n );
-    da.animator.animate();
-    da.auto_save();
+    map.set_current_node( _n );
+    map.da.animator.animate();
+    map.auto_save();
   }
 
 }

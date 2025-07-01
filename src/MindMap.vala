@@ -27,6 +27,7 @@ using Gee;
 
 public class MindMap {
 
+  private DrawArea           _da;  // TBD - Temporary
   private GLib.Settings      _settings;
   private Node?              _last_node       = null;
   private Connection?        _last_connection = null;
@@ -47,14 +48,12 @@ public class MindMap {
   private uint?              _auto_save_id   = null;
   private uint?              _scroll_save_id = null;
   private ImageEditor        _image_editor;
-  private UrlEditor          _url_editor;
   private IMContext          _im_context;
   private bool               _debug        = true;
   private bool               _focus_mode   = false;
   private double             _focus_alpha  = 0.05;
   private bool               _create_new_from_edit;
   private Selection          _selected;
-  private Tagger             _tagger;
   private TextCompletion     _completion;
   private double             _sticker_posx;
   private double             _sticker_posy;
@@ -76,6 +75,11 @@ public class MindMap {
   public bool           is_loaded       { get; private set; default = false; }
   public bool           braindump_shown { get; set; default = false; }
 
+  public DrawArea da {
+    get {
+      return( _da );
+    }
+  }
   public GLib.Settings settings {
     get {
       return( _settings );
@@ -155,10 +159,12 @@ public class MindMap {
   public signal void hide_properties();
   public signal void loaded();
   public signal void queue_draw();
+  public signal void see( bool animate = true, double width_adjust = 0, double pad = 100.0 );
 
   /* Default constructor */
-  public MindMap( GLib.Settings settings ) {
+  public MindMap( DrawArea da, GLib.Settings settings ) {
 
+    _da       = da;
     _settings = settings;
 
     /* Create the selection */
@@ -187,9 +193,6 @@ public class MindMap {
     _image_editor = new ImageEditor( this );
     _image_editor.changed.connect( current_image_edited );
 
-    /* Allocate the URL editor popover */
-    _url_editor = new UrlEditor( this );
-
     /* Allocate the note node links manager */
     _node_links = new NodeLinks();
 
@@ -214,10 +217,8 @@ public class MindMap {
 
     /* Get the value of the new node from edit */
     update_focus_mode_alpha( settings );
-    update_create_new_from_edit( settings );
     settings.changed.connect(() => {
       update_focus_mode_alpha( settings );
-      update_create_new_from_edit( settings );
     });
 
     /* Set the theme to the default theme */
@@ -735,7 +736,7 @@ public class MindMap {
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
-        undo_buffer.add_item( new UndoNodeName( this, node, undo_text.orig ) );
+        undo_buffer.add_item( new UndoNodeName( _da, node, undo_text.orig ) );
       }
       undo_text.ct      = null;
       undo_text.do_undo = false;
@@ -767,7 +768,7 @@ public class MindMap {
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
-        undo_buffer.add_item( new UndoConnectionTitle( this, conn, undo_text.orig ) );
+        undo_buffer.add_item( new UndoConnectionTitle( _da, conn, undo_text.orig ) );
       }
       undo_text.ct      = null;
       undo_text.do_undo = false;
@@ -794,7 +795,7 @@ public class MindMap {
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
-        undo_buffer.add_item( new UndoCalloutText( this, callout, undo_text.orig ) );
+        undo_buffer.add_item( new UndoCalloutText( _da, callout, undo_text.orig ) );
       }
       undo_text.ct      = null;
       undo_text.do_undo = false;
@@ -976,11 +977,11 @@ public class MindMap {
     if( conns.length == 1 ) {
       var current = conns.index( 0 );
       if( current.title.text.text != title ) {
-        var orig_title = new CanvasText( this );
+        var orig_title = new CanvasText( _da );
         orig_title.copy( current.title );
         current.change_title( this, title );
         // if( !_current_new ) {
-          undo_buffer.add_item( new UndoConnectionTitle( this, current, orig_title ) );
+          undo_buffer.add_item( new UndoConnectionTitle( _da, current, orig_title ) );
         // }
         queue_draw();
         auto_save();
@@ -1382,17 +1383,17 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Called whenever the user clicks on a valid connection
-  private bool set_current_connection_from_position( Connection conn, double scaled_x, double scaled_y ) {
+  private bool set_current_connection_from_position( Connection conn, double scaled_x, double scaled_y, bool control, bool shift, int press_num ) {
 
     if( _selected.is_current_connection( conn ) ) {
       if( conn.mode == ConnMode.EDITABLE ) {
-        switch( _press_num ) {
+        switch( press_num ) {
           case 1 :
-            conn.title.set_cursor_at_char( scaled_x, scaled_y, _shift );
+            conn.title.set_cursor_at_char( scaled_x, scaled_y, shift );
             _im_context.reset();
             break;
           case 2 :
-            conn.title.set_cursor_at_word( scaled_x, scaled_y, _shift );
+            conn.title.set_cursor_at_word( scaled_x, scaled_y, shift );
             _im_context.reset();
             break;
           case 3 :
@@ -1400,7 +1401,7 @@ public class MindMap {
             _im_context.reset();
             break;
         }
-      } else if( _press_num == 2 ) {
+      } else if( press_num == 2 ) {
         var current = _selected.current_connection();
         _orig_title = (current.title != null) ? current.title.text.text : "";
         current.edit_title_begin( this );
@@ -1408,7 +1409,7 @@ public class MindMap {
       }
       return( true );
     } else {
-      if( _shift ) {
+      if( shift ) {
         _selected.add_connection( conn );
         handle_connection_edit_on_creation( conn );
       } else {
@@ -1422,10 +1423,10 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Called whenever the user clicks on node
-  private bool set_current_node_from_position( Node node, double scaled_x, double scaled_y ) {
+  private bool set_current_node_from_position( Node node, double scaled_x, double scaled_y, bool control, bool shift, int press_num ) {
 
-    var dpress = _press_num == 2;
-    var tpress = _press_num == 3;
+    var dpress = press_num == 2;
+    var tpress = press_num == 3;
     var tag    = FormatTag.LENGTH;
     var url    = "";
     var left   = 0.0;
@@ -1441,7 +1442,7 @@ public class MindMap {
       select_linked_node( node );
       return( false );
     } else if( node.is_within_fold( scaled_x, scaled_y ) ) {
-      toggle_fold( node, _shift );
+      toggle_fold( node, shift );
       current_changed( this );
       return( false );
     } else if( node.is_within_resizer( scaled_x, scaled_y ) ) {
@@ -1449,7 +1450,7 @@ public class MindMap {
       _orig_resizable = node.image_resizable;
       _orig_width     = node.style.node_width;
       return( true );
-    } else if( !_shift && _control && node.name.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
+    } else if( !shift && control && node.name.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
       if( tag == FormatTag.URL ) {
         Utils.open_url( url );
       }
@@ -1462,13 +1463,13 @@ public class MindMap {
 
     /* If the node is being edited, go handle the click */
     if( node.mode == NodeMode.EDITABLE ) {
-      switch( _press_num ) {
+      switch( press_num ) {
         case 1 :
-          node.name.set_cursor_at_char( scaled_x, scaled_y, _shift );
+          node.name.set_cursor_at_char( scaled_x, scaled_y, shift );
           _im_context.reset();
           break;
         case 2 :
-          node.name.set_cursor_at_word( scaled_x, scaled_y, _shift );
+          node.name.set_cursor_at_word( scaled_x, scaled_y, shift );
           _im_context.reset();
           break;
         case 3 :
@@ -1482,7 +1483,7 @@ public class MindMap {
      If the user double-clicked a node.  If an image was clicked on, edit the image;
      otherwise, set the node's mode to editable.
     */
-    } else if( !_control && !_shift && (_press_num == 2) ) {
+    } else if( !control && !shift && (press_num == 2) ) {
       if( node.is_within_image( scaled_x, scaled_y ) ) {
         edit_current_image();
         return( false );
@@ -1495,8 +1496,8 @@ public class MindMap {
     } else {
 
       /* The shift key has a toggling effect */
-      if( _shift ) {
-        if( _control ) {
+      if( shift ) {
+        if( control ) {
           if( tpress ) {
             if( !_selected.remove_nodes_at_level( node ) ) {
               _selected.add_nodes_at_level( node );
@@ -1521,7 +1522,7 @@ public class MindMap {
        The Control key + double click will select the current node tree.
        The Control key + triple click will select all nodes at the same level.
       */
-      } else if( _control ) {
+      } else if( control ) {
         _selected.clear_nodes();
         if( tpress ) {
           _selected.add_nodes_at_level( node );
@@ -1577,10 +1578,10 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Handles a click on the specified group
-  public bool set_current_group_from_position( NodeGroup group, double scaled_x, double scaled_y ) {
+  public bool set_current_group_from_position( NodeGroup group, double scaled_x, double scaled_y, bool control, bool shift, int press_num ) {
 
     /* Select the current group */
-    if( _shift ) {
+    if( shift ) {
       _selected.add_group( group );
     } else {
       set_current_group( group );
@@ -1592,7 +1593,7 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Handles a click on the specified callout
-  public bool set_current_callout_from_position( Callout callout, double scaled_x, double scaled_y ) {
+  public bool set_current_callout_from_position( Callout callout, double scaled_x, double scaled_y, bool control, bool shift, int press_num ) {
 
     var tag = FormatTag.LENGTH;
     var url = "";
@@ -1602,7 +1603,7 @@ public class MindMap {
       _resize = true;
       _orig_width = (int)callout.total_width;
       return( true );
-    } else if( !_shift && _control && callout.text.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
+    } else if( !shift && control && callout.text.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
       if( tag == FormatTag.URL ) {
         Utils.open_url( url );
       }
@@ -1610,13 +1611,13 @@ public class MindMap {
     }
 
     if( callout.mode == CalloutMode.EDITABLE ) {
-      switch( _press_num ) {
+      switch( press_num ) {
         case 1 :
-          callout.text.set_cursor_at_char( scaled_x, scaled_y, _shift );
+          callout.text.set_cursor_at_char( scaled_x, scaled_y, shift );
           _im_context.reset();
           break;
         case 2 :
-          callout.text.set_cursor_at_word( scaled_x, scaled_y, _shift );
+          callout.text.set_cursor_at_word( scaled_x, scaled_y, shift );
           _im_context.reset();
           break;
         case 3 :
@@ -1627,7 +1628,7 @@ public class MindMap {
       return( true );
 
     /* If the user double-clicked a callout, set the callout mode to editable */
-    } else if( _press_num == 2 ) {
+    } else if( press_num == 2 ) {
       set_callout_mode( callout, CalloutMode.EDITABLE );
       return( true );
 
@@ -1676,20 +1677,14 @@ public class MindMap {
     return( false );
   }
 
-  /*
-   Sets the current node pointer to the node that is within the given coordinates.
-   Returns true if we sucessfully set current_node to a valid node and made it
-   selected.
-  */
-  private bool set_current_at_position( double scaled_x, double scaled_y ) {
+  //-------------------------------------------------------------
+  // Sets the current node pointer to the node that is within the
+  // given coordinates.  Returns true if we sucessfully set
+  // current_node to a valid node and made it selected.
+  public bool set_current_at_position( double scaled_x, double scaled_y, bool control, bool shift, int press_num ) {
 
     var current_conn = _selected.current_connection();
     
-    /* If we are going to pan the canvas, do it and return */
-    if( _press_middle || _alt ) {
-      return( true );
-    }
-
     /* If the user clicked on a selected connection endpoint, disconnect that endpoint */
     if( (current_conn != null) && (current_conn.mode == ConnMode.SELECTED) ) {
       if( current_conn.within_drag_handle( scaled_x, scaled_y ) ) {
@@ -1723,7 +1718,7 @@ public class MindMap {
         clear_current_sticker( false );
         clear_current_group( false );
         clear_current_callout( false );
-        return( set_current_connection_from_position( match_conn, scaled_x, scaled_y ) );
+        return( set_current_connection_from_position( match_conn, scaled_x, scaled_y, control, shift, press_num ) );
       } else {
         for( int i=0; i<_nodes.length; i++ ) {
           var match_node = _nodes.index( i ).contains( scaled_x, scaled_y, null );
@@ -1732,7 +1727,7 @@ public class MindMap {
             clear_current_sticker( false );
             clear_current_group( false );
             clear_current_callout( false );
-            return( set_current_node_from_position( match_node, scaled_x, scaled_y ) );
+            return( set_current_node_from_position( match_node, scaled_x, scaled_y, control, shift, press_num ) );
           }
           var match_callout = _nodes.index( i ).contains_callout( scaled_x, scaled_y );
           if( match_callout != null ) {
@@ -1740,7 +1735,7 @@ public class MindMap {
             clear_current_connection( false );
             clear_current_sticker( false );
             clear_current_group( false );
-            return( set_current_callout_from_position( match_callout, scaled_x, scaled_y ) );
+            return( set_current_callout_from_position( match_callout, scaled_x, scaled_y, control, shift, press_num ) );
           }
         }
         var sticker = _stickers.is_within( scaled_x, scaled_y );
@@ -1749,7 +1744,7 @@ public class MindMap {
           clear_current_connection( false );
           clear_current_group( false );
           clear_current_callout( false );
-          return( set_current_sticker_from_position( sticker, scaled_x, scaled_y ) );
+          return( set_current_sticker_from_position( sticker, scaled_x, scaled_y, control, shift, press_num ) );
         }
         var group = groups.node_group_containing( _scaled_x, _scaled_y );
         if( group != null ) {
@@ -1757,12 +1752,12 @@ public class MindMap {
           clear_current_connection( false );
           clear_current_sticker( false );
           clear_current_callout( false );
-          return( set_current_group_from_position( group, scaled_x, scaled_y ) );
+          return( set_current_group_from_position( group, scaled_x, scaled_y, control, shift, press_num ) );
         }
         _select_box.x     = scaled_x;
         _select_box.y     = scaled_y;
         _select_box.valid = true;
-        if( !_shift ) {
+        if( !shift ) {
           clear_current_node( true );
         }
         clear_current_connection( true );
@@ -1779,306 +1774,8 @@ public class MindMap {
 
   }
 
-  /* Returns the supported scale points */
-  public static double[] get_scale_marks() {
-    double[] marks = {10, 25, 50, 75, 100, 150, 200, 250, 300, 350, 400};
-    return( marks );
-  }
-
-  /* Returns a properly scaled version of the given value */
-  private double scale_value( double val ) {
-    return( val / sfactor );
-  }
-
-  /*
-   Sets the scaling factor for the drawing area, causing the center pixel
-   to remain in the center and forces a redraw.
-  */
-  public bool set_scaling_factor( double sf ) {
-    if( sfactor != sf ) {
-      int    width  = get_allocated_width()  / 2;
-      int    height = get_allocated_height() / 2;
-      double diff_x = (width  / sf) - (width / sfactor);
-      double diff_y = (height / sf) - (height / sfactor );
-      if( move_origin( diff_x, diff_y, sf ) ) {
-        sfactor = sf;
-        scale_changed( sfactor );
-        return( true );
-      }
-    }
-    return( false );
-  }
-
-  /*
-   Sets the scaling factor for the drawing area, causing the pixel
-   on defined coordinates to remain stable and forces a redraw.
-
-   coord_x = distance of zoom position from origin, in screen coordinates
-   coord_y = distance of zoom position from origin, in screen coordinates
-  */
-  public bool set_scaling_factor_coord( double sf, double coord_x, double coord_y ) {
-    if( sfactor != sf ) {
-      double diff_x = (coord_x / sf) - (coord_x / sfactor);
-      double diff_y = (coord_y / sf) - (coord_y / sfactor);
-      if( move_origin( diff_x, diff_y, sf ) ) {
-        sfactor = sf;
-        scale_changed( sfactor );
-        return( true );
-      }
-    }
-    return( false );
-  }
-
-  /* Returns the scaling factor based on the given width and height */
-  private double get_scaling_factor( double width, double height ) {
-    double w  = get_allocated_width() / width;
-    double h  = get_allocated_height() / height;
-    double sf = (w < h) ? w : h;
-    return( (sf > 4) ? 4 : sf );
-  }
-
-  /* Zooms into the image by one scale mark.  Returns true if the zoom was successful; otherwise, returns false. */
-  public bool zoom_in() {
-    // Zoom center of the screen
-    int s_x = get_allocated_width() / 2;
-    int s_y = get_allocated_height() / 2;
-
-    return zoom_in_coords(s_x, s_y);
-  }
-
-  /* Zooms in by one mark in the zoom mark list.  If we are currently at the largest mark, stop zooming. */
-  public bool zoom_in_coords( double zoom_x, double zoom_y ) {
-    double value = sfactor * 100;
-    var    marks = get_scale_marks();
-    double last  = marks[0];
-    if( value < marks[0] ) {
-      value = marks[0];
-    }
-
-    foreach (double mark in marks) {
-      if( mark <= value ) {
-        continue;
-      }
-
-      animator.add_scale_in_place( "zoom in place", zoom_x, zoom_y );
-      if( set_scaling_factor_coord( mark / 100, zoom_x, zoom_y ) ) {
-        animator.animate();
-      } else {
-        animator.cancel_last_add();
-      }
-      return( true );
-    }
-    return( false );
-  }
-
-  /* Zooms out of the image by one scale mark.  Returns true if the zoom was successful; otherwise, returns false. */
-  public bool zoom_out() {
-    // Zoom center of the screen
-    int s_x = get_allocated_width() / 2;
-    int s_y = get_allocated_height() / 2;
-
-    return zoom_out_coords(s_x, s_y);
-  }
-
-  /* Zooms out by one mark in the zoom mark list.  If we are currently at the smallest mark, stop zooming. */
-  public bool zoom_out_coords( double zoom_x, double zoom_y ) {
-    double value = sfactor * 100;
-    var    marks = get_scale_marks();
-    double last  = marks[0];
-    if( value > marks[marks.length-1] ) {
-      value = marks[marks.length-1];
-    }
-
-    foreach (double mark in marks) {
-      if( value > mark ) {
-        last = mark;
-        continue;
-      }
-
-      animator.add_scale_in_place( "zoom out in place", zoom_x, zoom_y );
-      if( set_scaling_factor_coord( last / 100, zoom_x, zoom_y ) ) {
-        animator.animate();
-      } else {
-        animator.cancel_last_add();
-      }
-      return( true );
-    }
-    return( false );
-  }
-
-  /*
-   Positions the given box in the canvas based on the provided
-   x and y positions (values between 0 and 1).
-  */
-  private void position_box( double x, double y, double w, double h, double xpos, double ypos, string msg = "NONE" ) {
-    double ccx = scale_value( get_allocated_width()  * xpos );
-    double ccy = scale_value( get_allocated_height() * ypos );
-    double ncx = x + (w * xpos);
-    double ncy = y + (h * ypos);
-    move_origin( (ccx - ncx), (ccy - ncy) );
-  }
-
-  /* Figures out the boundaries of the document primarily for the purposes of printing */
-  public void document_rectangle( out double x, out double y, out double width, out double height ) {
-
-    double x1 =  10000000;
-    double y1 =  10000000;
-    double x2 = -10000000;
-    double y2 = -10000000;
-
-    /* Calculate the overall size of the map */
-    for( int i=0; i<_nodes.length; i++ ) {
-      var nb = _nodes.index( i ).tree_bbox;
-      x1 = (x1 < nb.x) ? x1 : nb.x;
-      y1 = (y1 < nb.y) ? y1 : nb.y;
-      x2 = (x2 < (nb.x + nb.width))  ? (nb.x + nb.width)  : x2;
-      y2 = (y2 < (nb.y + nb.height)) ? (nb.y + nb.height) : y2;
-    }
-
-    /* Include the connection and sticker extents */
-    _connections.add_extents( ref x1, ref y1, ref x2, ref y2 );
-    _stickers.add_extents( ref x1, ref y1, ref x2, ref y2 );
-
-    /* Set the outputs */
-    x      = x1;
-    y      = y1;
-    width  = (x2 - x1);
-    height = (y2 - y1);
-
-  }
-
-  /*
-   Returns the scaling factor required to display the currently selected node.
-   If no node is currently selected, returns a value of 0.
-  */
-  public void zoom_to_selected() {
-    var current = _selected.current_node();
-    if( current == null ) return;
-    animator.add_pan_scale( "zoom to selected" );
-    var nb = current.tree_bbox;
-    position_box( nb.x, nb.y, nb.width, nb.height, 0.5, 0.5, "zoom_to_selected" );
-    if( set_scaling_factor( get_scaling_factor( nb.width, nb.height ) ) ) {
-      animator.animate();
-    } else {
-      animator.cancel_last_add();
-    }
-  }
-
-  /* Returns the scaling factor required to display all nodes */
-  public void zoom_to_fit() {
-
-    animator.add_pan_scale( "zoom to fit" );
-
-    /* Get the document rectangle */
-    double x, y, w, h;
-    document_rectangle( out x, out y, out w, out h );
-
-    /* Center the map and scale it to fit */
-    position_box( x, y, w, h, 0.5, 0.5, "zoom_to_fit" );
-    if( set_scaling_factor( get_scaling_factor( w, h ) ) ) {
-      animator.animate();
-    } else {
-      animator.cancel_last_add();
-    }
-
-  }
-
-  /* Scale to actual size */
-  public void zoom_actual() {
-
-    /* Start animation */
-    animator.add_pan_scale( "action_zoom_actual" );
-
-    /* Scale to a full scale */
-    if( set_scaling_factor( 1.0 ) ) {
-      animator.animate();
-    } else {
-      animator.cancel_last_add();
-    }
-
-  }
-
-  /* Centers the given node within the canvas by adjusting the origin */
-  public void center_node( Node n ) {
-    double x, y, w, h;
-    n.bbox( out x, out y, out w, out h );
-    animator.add_pan( "center node" );
-    position_box( x, y, w, h, 0.5, 0.5, "center_node" );
-    animator.animate();
-  }
-
-  /* Centers the currently selected node */
-  public void center_current_node() {
-    var current = _selected.current_node();
-    if( current != null ) {
-      center_node( current );
-    }
-  }
-
-  /* Brings the given node into view in its entirety including the given amount of padding */
-  public void see( bool animate = true, double width_adjust = 0, double pad = 100.0 ) {
-
-    double x, y, w, h;
-
-    var current_conn    = _selected.current_connection();
-    var current_node    = _selected.current_node();
-    var current_callout = _selected.current_callout();
-    var current_group   = _selected.current_group();
-
-    if( current_conn != null ) {
-      current_conn.bbox( out x, out y, out w, out h );
-    } else if( current_node != null ) {
-      current_node.bbox( out x, out y, out w, out h );
-    } else if( current_callout != null ) {
-      current_callout.bbox( out x, out y, out w, out h );
-    } else if( current_group != null ) {
-      current_group.nodes.index( 0 ).bbox( out x, out y, out w, out h );
-    } else {
-      return;
-    }
-
-    double diff_x = 0;
-    double diff_y = 0;
-    double sw     = scale_value( get_allocated_width() + width_adjust );
-    double sh     = scale_value( get_allocated_height() );
-    double sf     = get_scaling_factor( (w + (pad * 2)), (h + (pad * 2)) );
-
-    if( (x - pad) < 0 ) {
-      diff_x = 0 - (x - pad);
-    } else if( (x + w) > sw ) {
-      diff_x = sw - (x + w + pad);
-    }
-
-    if( (y - pad) < 0 ) {
-      diff_y = 0 - (y - pad);
-    } else if( (y + h) > sh ) {
-      diff_y = sh - (y + h + pad);
-    }
-
-    if( (diff_x != 0) || (diff_y != 0) ) {
-      if( sf >= sfactor ) {
-        if( animate ) {
-          animator.add_pan( "see" );
-        }
-        move_origin( diff_x, diff_y );
-      } else {
-        if( animate ) {
-          animator.add_pan_scale( "see" );
-        }
-        sfactor = sf;
-        scale_changed( sfactor );
-        move_origin( diff_x, diff_y );
-      }
-      if( animate ) {
-        animator.animate();
-      } else {
-        queue_draw();
-      }
-    }
-
-  }
-
-  /* Returns the attachable node if one is found */
+  //-------------------------------------------------------------
+  // Returns the attachable node if one is found.
   private Node? attachable_node( double x, double y ) {
     var current = _selected.current_node();
     for( int i=0; i<_nodes.length; i++ ) {
@@ -2090,7 +1787,9 @@ public class MindMap {
     return( null );
   }
 
-  /* Returns the summary node that the current node can be attached to; otherwise, returns null */
+  //-------------------------------------------------------------
+  // Returns the summary node that the current node can be
+  // attached to; otherwise, returns null.
   private SummaryNode? attachable_summary_node( double x, double y ) {
     var current = _selected.current_node();
     if( (current.is_summarized() && (current.parent.children().length > 1) && (current.summary_node().summarized_count() > 1)) || current.is_leaf() ) {
@@ -2104,64 +1803,9 @@ public class MindMap {
     return( null );
   }
 
-  /* Returns the origin */
-  public void get_origin( out double x, out double y ) {
-    x = origin_x;
-    y = origin_y;
-  }
-
-  /* Sets the origin to the given x and y coordinates */
-  public void set_origin( double x, double y ) {
-    move_origin( (x - origin_x), (y - origin_y) );
-  }
-
-  /* Checks to see if the boundary of the map never goes out of view */
-  private bool out_of_bounds( double diff_x, double diff_y, double scale ) {
-
-    double x, y, w, h;
-    double aw = get_allocated_width()  / scale;
-    double ah = get_allocated_height() / scale;
-    double s  = 40 / scale;
-
-    document_rectangle( out x, out y, out w, out h );
-
-    x += diff_x;
-    y += diff_y;
-
-    return( ((x + w) < s) || ((y + h) < s) || ((aw - x) < s) || ((ah - y) < s) );
-
-  }
-
-  /*
-   Adjusts the x and y origins, panning all elements by the given amount.
-   Important Note:  When the canvas is panned to the left (causing all
-   nodes to be moved to the left, the origin_x value becomes a positive
-   number.
-  */
-  public bool move_origin( double diff_x, double diff_y, double? next_scale = null ) {
-    if( out_of_bounds( diff_x, diff_y, (next_scale ?? sfactor) ) ) {
-      return( false );
-    }
-    origin_x += diff_x;
-    origin_y += diff_y;
-    return( true );
-  }
-
-  /* Draw the background from the stylesheet */
-  public void draw_background( Context ctx ) {
-    get_style_context().render_background( ctx, 0, 0, (get_allocated_width() / _scale_factor), (get_allocated_height() / _scale_factor) );
-  }
-
-  /* Draws all of the root node trees */
+  //-------------------------------------------------------------
+  // Draws all of the root node trees.
   public void draw_all( Context ctx, bool exporting ) {
-
-    /*
-    double x, y, w, h;
-    document_rectangle( out x, out y, out w, out h );
-    Utils.set_context_color_with_alpha( ctx, _theme.get_color( "nodesel_background" ), 0.1 );
-    ctx.rectangle( x, y, w, h );
-    ctx.fill();
-    */
 
     /* Draw the links first */
     for( int i=0; i<_nodes.length; i++ ) {
@@ -2193,14 +1837,8 @@ public class MindMap {
 
   }
 
-  /* Draw the available nodes */
-  public void on_draw( DrawingArea da, Context ctx, int width, int height ) {
-    ctx.scale( sfactor, sfactor );
-    draw_background( ctx );
-    draw_all( ctx, false );
-  }
-
-  /* Selects all nodes within the selected box */
+  //-------------------------------------------------------------
+  // Selects all nodes within the selected box.
   public void select_nodes_within_box( SelectBox select_box, bool shift ) {
     Gdk.Rectangle box = {
       (int)((select_box.w < 0) ? (select_box.x + select_box.w) : select_box.x),
@@ -2227,89 +1865,8 @@ public class MindMap {
     }
   }
 
-  /* Selects the given node on hover, if enabled */
-  private bool select_node_on_hover( Node node, bool shift ) {
-    if( _settings.get_boolean( "select-on-hover" ) ) {
-      var timeout = _settings.get_int( "select-on-hover-timeout" );
-      _select_hover_id = Timeout.add( timeout, () => {
-        _select_hover_id = 0;
-        if( !shift || (_selected.num_nodes() == 0) ) {
-          _selected.set_current_node( node );
-        } else {
-          _selected.add_node( node );
-        }
-        queue_draw();
-        return( false );
-      });
-      return( true );
-    }
-    return( false );
-  }
-
-  /* Selects the given connection on hover, if enabled */
-  private bool select_connection_on_hover( Connection conn, bool shift ) {
-    if( _settings.get_boolean( "select-on-hover" ) ) {
-      var timeout = _settings.get_int( "select-on-hover-timeout" );
-      _select_hover_id = Timeout.add( timeout, () => {
-        _select_hover_id = 0;
-        if( !shift || (_selected.num_connections() == 0) ) {
-          _selected.set_current_connection( conn );
-        } else {
-          _selected.add_connection( conn );
-        }
-        queue_draw();
-        return( false );
-      });
-      return( true );
-    }
-    return( false );
-  }
-
-  /* Selects the current sticker/group on hover */
-  private bool select_sticker_group_on_hover( bool shift ) {
-    if( _settings.get_boolean( "select-on-hover" ) ) {
-      var timeout = _settings.get_int( "select-on-hover-timeout" );
-      var sticker = _stickers.is_within( _scaled_x, _scaled_y );
-      if( sticker != null ) {
-        _select_hover_id = Timeout.add( timeout, () => {
-          _select_hover_id = 0;
-          if( !shift || (_selected.num_stickers() == 0) ) {
-            _selected.set_current_sticker( sticker );
-          } else {
-            _selected.add_sticker( sticker );
-          }
-          queue_draw();
-          return( false );
-        });
-        return( true );
-      }
-      var group = _groups.node_group_containing( _scaled_x, _scaled_y );
-      if( group != null ) {
-        _select_hover_id = Timeout.add( timeout, () => {
-          _select_hover_id = 0;
-          if( !shift || (_selected.num_groups() == 0) ) {
-            _selected.set_current_group( group );
-          } else {
-            _selected.add_group( group );
-          }
-          queue_draw();
-          return( false );
-        });
-        return( true );
-      }
-    }
-    return( false );
-  }
-
-  /* Prepare the given folded count for use in a markup tooltip */
-  private string prepare_folded_count_markup( Node node ) {
-    var tooltip = "";
-    tooltip += _( "Children: %u\n" ).printf( node.children().length );
-    tooltip += _( "Total: %d" ).printf( node.descendant_count() );
-    return( tooltip );
-  }
-
-  /* Attaches the current node to the attach node */
+  //-------------------------------------------------------------
+  // Attaches the current node to the attach node.
   private void attach_current_node() {
 
     Node?        orig_parent        = null;
@@ -2373,61 +1930,72 @@ public class MindMap {
 
   }
 
-  /* Returns true if we are connecting a connection title */
+  //-------------------------------------------------------------
+  // Returns true if we are connecting a connection title.
   public bool is_connection_connecting() {
     var current = _selected.current_connection();
     return( (current != null) && (current.mode == ConnMode.CONNECTING) );
   }
 
-  /* Returns true if we are editing a connection title */
+  //-------------------------------------------------------------
+  // Returns true if we are editing a connection title.
   public bool is_connection_editable() {
     var current = _selected.current_connection();
     return( (current != null) && (current.mode == ConnMode.EDITABLE) );
   }
 
-  /* Returns true if the current callout is in the selected state */
+  //-------------------------------------------------------------
+  // Returns true if the current callout is in the selected state.
   public bool is_callout_selected() {
     var current = _selected.current_callout();
     return( (current != null) && (current.mode == CalloutMode.SELECTED) );
   }
 
-  /* Returns true if we are editing a callout title */
+  //-------------------------------------------------------------
+  // Returns true if we are editing a callout title.
   public bool is_callout_editable() {
     var current = _selected.current_callout();
     return( (current != null) && (current.mode == CalloutMode.EDITABLE) );
   }
 
-  /* Returns true if the current connection is in the selected state */
+  //-------------------------------------------------------------
+  // Returns true if the current connection is in the selected state.
   public bool is_connection_selected() {
     var current = _selected.current_connection();
     return( (current != null) && (current.mode == ConnMode.SELECTED) );
   }
 
-  /* Returns true if we are in node edit mode */
+  //-------------------------------------------------------------
+  // Returns true if we are in node edit mode.
   public bool is_node_editable() {
     var current = _selected.current_node();
     return( (current != null) && (current.mode == NodeMode.EDITABLE) );
   }
 
-  /* Returns true if we are in node selected mode */
+  //-------------------------------------------------------------
+  // Returns true if we are in node selected mode.
   public bool is_node_selected() {
     var current = _selected.current_node();
     return( (current != null) && (current.mode == NodeMode.CURRENT) );
   }
 
-  /* Returns true if we are in sticker selected mode */
+  //-------------------------------------------------------------
+  // Returns true if we are in sticker selected mode.
   public bool is_sticker_selected() {
     var current = _selected.current_sticker();
     return( (current != null) && (current.mode == StickerMode.SELECTED) );
   }
 
-  /* Returns true if we are in group selected mode */
+  //-------------------------------------------------------------
+  // Returns true if we are in group selected mode.
   public bool is_group_selected() {
     var current = _selected.current_group();
     return( (current != null) && (current.mode == GroupMode.SELECTED) );
   }
 
-  /* Returns the next node to select after the current node is removed */
+  //-------------------------------------------------------------
+  // Returns the next node to select after the current node is
+  // removed.
   private Node? next_node_to_select() {
     var current = _selected.current_node();
     if( current != null ) {
@@ -2458,7 +2026,9 @@ public class MindMap {
     return( null );
   }
 
-  /* If the specified node is not null, selects the node and makes it the current node */
+  //-------------------------------------------------------------
+  // If the specified node is not null, selects the node and
+  // makes it the current node.
   public bool select_node( Node? n, bool animate = true ) {
     if( n != null ) {
       if( n != _selected.current_node() ) {
@@ -2480,17 +2050,17 @@ public class MindMap {
     return( false );
   }
 
-  /* Returns true if there is a root that is available for selection */
+  //-------------------------------------------------------------
+  // Returns true if there is a root that is available for selection.
   public bool root_selectable() {
     var current_node = _selected.current_node();
     var current_conn = _selected.current_connection();
     return( (current_conn == null) && ((current_node == null) ? (_nodes.length > 0) : (current_node.get_root() != current_node)) );
   }
 
-  /*
-   If there is no current node, selects the first root node; otherwise, selects
-   the current node's root node.
-  */
+  //-------------------------------------------------------------
+  // If there is no current node, selects the first root node;
+  // otherwise, selects the current node's root node.
   public void select_root_node() {
     if( _selected.current_connection() != null ) return;
     var current = _selected.current_node();
@@ -2505,13 +2075,16 @@ public class MindMap {
     }
   }
 
-  /* Returns true if there is a sibling available for selection */
+  //-------------------------------------------------------------
+  // Returns true if there is a sibling available for selection.
   public bool sibling_selectable() {
     var current = _selected.current_node();
     return( (current != null) && (current.is_root() ? (_nodes.length > 1) : (current.parent.children().length > 1)) );
   }
 
-  /* Returns the sibling node in the given direction of the current node */
+  //-------------------------------------------------------------
+  // Returns the sibling node in the given direction of the current
+  // node.
   public Node? sibling_node( int dir ) {
     var current = _selected.current_node();
     if( current != null ) {
@@ -2530,7 +2103,8 @@ public class MindMap {
     return( null );
   }
 
-  /* Selects the next (dir = 1) or previous (dir = -1) sibling */
+  //-------------------------------------------------------------
+  // Selects the next (dir = 1) or previous (dir = -1) sibling.
   public void select_sibling_node( int dir ) {
     var current = _selected.current_node();
     if( current != null ) {
@@ -2560,7 +2134,8 @@ public class MindMap {
     }
   }
 
-  /* Returns true if there is a child node of the current node */
+  //-------------------------------------------------------------
+  // Returns true if there is a child node of the current node.
   public bool children_selectable() {
     var nodes      = _selected.nodes();
     var selectable = false;
@@ -2571,7 +2146,8 @@ public class MindMap {
     return( selectable );
   }
 
-  /* Selects the last selected child node of the current node */
+  //-------------------------------------------------------------
+  // Selects the last selected child node of the current node.
   public void select_child_node() {
     var current = _selected.current_node();
     if( (current != null) && !current.is_leaf() && !current.folded ) {
@@ -2581,7 +2157,8 @@ public class MindMap {
     }
   }
 
-  /* Selects all of the child nodes */
+  //-------------------------------------------------------------
+  // Selects all of the child nodes.
   public void select_child_nodes() {
     var nodes   = _selected.nodes_copy();
     var changed = _selected.clear_nodes( false );
@@ -2594,14 +2171,16 @@ public class MindMap {
     queue_draw();
   }
 
-  /* Selects all of the nodes in the current node's tree */
+  //-------------------------------------------------------------
+  // Selects all of the nodes in the current node's tree.
   public void select_node_tree() {
     var current = _selected.current_node();
     _selected.add_node_tree( current );
     queue_draw();
   }
 
-  /* Returns true if there is a parent node of the current node */
+  //-------------------------------------------------------------
+  // Returns true if there is a parent node of the current node.
   public bool parent_selectable() {
     var nodes      = _selected.nodes();
     var selectable = false;
@@ -2611,7 +2190,8 @@ public class MindMap {
     return( selectable );
   }
 
-  /* Selects the parent nodes of the selected nodes */
+  //-------------------------------------------------------------
+  // Selects the parent nodes of the selected nodes.
   public void select_parent_nodes() {
     var child_nodes  = _selected.nodes();
     var parent_nodes = new Array<Node>();
@@ -2635,7 +2215,8 @@ public class MindMap {
     }
   }
 
-  /* Selects the node that is linked to this node */
+  //-------------------------------------------------------------
+  // Selects the node that is linked to this node.
   public void select_linked_node( Node? node = null ) {
     var n = node;
     if( n == null ) {
@@ -2646,7 +2227,8 @@ public class MindMap {
     }
   }
 
-  /* Selects the given connection node */
+  //-------------------------------------------------------------
+  // Selects the given connection node.
   public void select_connection_node( bool start ) {
     var current = _selected.current_connection();
     if( current != null ) {
@@ -2657,7 +2239,8 @@ public class MindMap {
     }
   }
 
-  /* Selects the next connection in the list */
+  //-------------------------------------------------------------
+  // Selects the next connection in the list.
   public void select_connection( int dir ) {
     var current = _selected.current_connection();
     if( current == null ) return;
@@ -2669,7 +2252,8 @@ public class MindMap {
     }
   }
 
-  /* Selects the first connection in the list */
+  //-------------------------------------------------------------
+  // Selects the first connection in the list.
   public void select_attached_connection() {
     var current = _selected.current_node();
     if( current == null ) return;
@@ -2687,14 +2271,17 @@ public class MindMap {
     }
   }
 
-  /* Selects the callout associated with the current node (if one exists) */
+  //-------------------------------------------------------------
+  // Selects the callout associated with the current node (if one
+  // exists).
   public void select_callout() {
     if( is_node_selected() && (_selected.current_node().callout != null) ) {
       _selected.set_current_callout( _selected.current_node().callout );
     }
   }
 
-  /* Selects the node associated with the current callout */
+  //-------------------------------------------------------------
+  // Selects the node associated with the current callout.
   public void select_callout_node() {
     if( is_callout_selected() ) {
       _selected.set_current_node( _selected.current_callout().node );
@@ -2733,7 +2320,8 @@ public class MindMap {
     }
   }
 
-  /* Deletes the given node */
+  //-------------------------------------------------------------
+  // Deletes the given node.
   public void delete_node() {
     var current = _selected.current_node();
     if( current == null ) return;
@@ -2763,7 +2351,8 @@ public class MindMap {
     auto_save();
   }
 
-  /* Deletes all selected nodes */
+  //-------------------------------------------------------------
+  // Deletes all selected nodes.
   public void delete_nodes() {
     if( _selected.num_nodes() == 0 ) return;
     var nodes = _selected.ordered_nodes();
@@ -2782,7 +2371,8 @@ public class MindMap {
     auto_save();
   }
 
-  /* Deletes the currently selected sticker */
+  //-------------------------------------------------------------
+  // Deletes the currently selected sticker.
   public void remove_sticker() {
     var current = _selected.current_sticker();
     if( current == null ) return;
@@ -2793,148 +2383,21 @@ public class MindMap {
     auto_save();
   }
 
-  /* Called whenever the backspace character is entered in the drawing area */
-  private void handle_backspace() {
-    if( is_connection_editable() ) {
-      _selected.current_connection().title.backspace( undo_text );
-      queue_draw();
-      auto_save();
-    } else if( is_connection_selected() ) {
-      delete_connection();
-    } else if( _selected.num_connections() > 0 ) {
-      delete_connections();
-    } else if( is_node_editable() ) {
-      _selected.current_node().name.backspace( undo_text );
-      queue_draw();
-      auto_save();
-    } else if( is_node_selected() ) {
-      Node? next;
-      var   current = _selected.current_node();
-      if( ((next = sibling_node( 1 )) == null) && ((next = sibling_node( -1 )) == null) && current.is_root() ) {
-        delete_node();
-      } else {
-        if( next == null ) {
-          next = current.parent;
-        }
-        delete_node();
-        if( select_node( next ) ) {
-          queue_draw();
-        }
-      }
-    } else if( _selected.num_nodes() > 0 ) {
-      delete_nodes();
-    } else if( is_sticker_selected() ) {
-      remove_sticker();
-    } else if( _selected.num_groups() > 0 ) {
-      remove_groups();
-    } else if( is_callout_editable() ) {
-      _selected.current_callout().text.backspace( undo_text );
-      queue_draw();
-      auto_save();
-    } else if( is_callout_selected() ) {
-      remove_callout();
-    }
-  }
-
-  /* Called whenever the delete character is entered in the drawing area */
-  private void handle_delete() {
-    if( is_connection_editable() ) {
-      _selected.current_connection().title.delete( undo_text );
-      queue_draw();
-      auto_save();
-    } else if( is_connection_selected() ) {
-      delete_connection();
-    } else if( _selected.num_connections() > 0 ) {
-      delete_connections();
-    } else if( is_node_editable() ) {
-      _selected.current_node().name.delete( undo_text );
-      queue_draw();
-      auto_save();
-    } else if( is_node_selected() ) {
-      delete_node();
-    } else if( _selected.num_nodes() > 0 ) {
-      delete_nodes();
-    } else if( is_sticker_selected() ) {
-      remove_sticker();
-    } else if( _selected.num_groups() > 0 ) {
-      remove_groups();
-    } else if( is_callout_editable() ) {
-      _selected.current_callout().text.delete( undo_text );
-      queue_draw();
-      auto_save();
-    } else if( is_callout_selected() ) {
-      remove_callout();
-    }
-  }
-
-  /* Called whenever the escape character is entered in the drawing area */
-  private void handle_escape() {
-    if( is_connection_editable() ) {
-      if( _completion.shown ) {
-        _completion.hide();
-      } else {
-        var current = _selected.current_connection();
-        _im_context.reset();
-        current.edit_title_end();
-        set_connection_mode( current, ConnMode.SELECTED );
-        current_changed( this );
-        queue_draw();
-        auto_save();
-      }
-    } else if( is_node_editable() ) {
-      if( _completion.shown ) {
-        _completion.hide();
-      } else {
-        var current = _selected.current_node();
-        _im_context.reset();
-        set_node_mode( current, NodeMode.CURRENT );
-        current_changed( this );
-        queue_draw();
-        auto_save();
-      }
-    } else if( is_callout_editable() ) {
-      if( _completion.shown ) {
-        _completion.hide();
-      } else {
-        var current = _selected.current_callout();
-        _im_context.reset();
-        set_callout_mode( current, CalloutMode.SELECTED );
-        current_changed( this );
-        queue_draw();
-        auto_save();
-      }
-    } else if( is_connection_connecting() ) {
-      var current = _selected.current_connection();
-      _connections.remove_connection( current, true );
-      _selected.remove_connection( current );
-      if( _attach_node != null ) {
-        set_node_mode( _attach_node, NodeMode.NONE );
-        _attach_node = null;
-      }
-      _selected.set_current_node( _last_node );
-      _last_connection = null;
-      queue_draw();
-    } else if( is_node_selected() ) {
-      hide_properties();
-    } else if( is_callout_selected() ) {
-      hide_properties();
-    }
-  }
-
-  /* Positions the given node that will added as a root prior to adding it */
-  public void position_root_node( Node node ) {
+  //-------------------------------------------------------------
+  // Positions the given node that will added as a root prior to
+  // adding it.
+  public void position_root_node( Node node, int canvas_width, int canvas_height ) {
     if( _nodes.length == 0 ) {
-      node.posx = (get_allocated_width()  / 2) - 30;
-      node.posy = (get_allocated_height() / 2) - 10;
+      node.posx = (canvas_width  / 2) - 30;
+      node.posy = (canvas_height / 2) - 10;
     } else {
       _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
     }
   }
 
-  /*
-   Creates a root node with the given name, positions it and appends it to the
-   root node list.
-  */
+  //-------------------------------------------------------------
+  // Creates a root node with the given name, positions it and
+  // appends it to the root node list.
   public Node create_root_node( string name = "" ) {
     var node = new Node.with_name( this, name, ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
     node.style = StyleInspector.styles.get_global_style();
@@ -2943,10 +2406,9 @@ public class MindMap {
     return( node );
   }
 
-  /*
-   Creates a sibling node, positions it and appends immediately after the given
-   sibling node.
-  */
+  //-------------------------------------------------------------
+  // Creates a sibling node, positions it and appends immediately
+  // after the given sibling node.
   public Node create_main_node( Node root, NodeSide side, string name = "" ) {
     var node   = new Node.with_name( this, name, layouts.get_default() );
     node.side  = side;
@@ -2960,10 +2422,9 @@ public class MindMap {
     return( node );
   }
 
-  /*
-   Creates a sibling node, positions it and appends immediately after the given
-   sibling node.
-  */
+  //-------------------------------------------------------------
+  // Creates a sibling node, positions it and appends immediately
+  // after the given sibling node.
   public Node create_sibling_node( Node sibling, bool below, string name = "" ) {
     var node   = new Node.with_name( this, name, layouts.get_default() );
     node.side  = sibling.side;
@@ -2976,9 +2437,9 @@ public class MindMap {
     return( node );
   }
 
-  /*
-   Creates a parent node, positions it, and inserts it just above the child node.
-  */
+  //-------------------------------------------------------------
+  // Creates a parent node, positions it, and inserts it just
+  // above the child node.
   public Node create_parent_node( Node child, string name = "" ) {
     var node  = new Node.with_name( this, name, layouts.get_default() );
     var color = child.link_color;
@@ -2992,9 +2453,9 @@ public class MindMap {
     return( node );
   }
 
-  /*
-   Creates a child node, positions it, and inserts it into the parent node.
-  */
+  //-------------------------------------------------------------
+  // Creates a child node, positions it, and inserts it into the
+  // parent node.
   public Node create_child_node( Node parent, string name = "" ) {
     var node = new Node.with_name( this, name, layouts.get_default() );
     if( !parent.is_root() ) {
@@ -3011,9 +2472,9 @@ public class MindMap {
     return( node );
   }
 
-  /*
-   Creates a summary node for the nodes in the range of first to last, inclusive.
-  */
+  //-------------------------------------------------------------
+  // Creates a summary node for the nodes in the range of first
+  // to last, inclusive.
   public Node create_summary_node( Array<Node> nodes ) {
     var summary = new SummaryNode( this, layouts.get_default() );
     summary.side = nodes.index( 0 ).side;
@@ -3021,7 +2482,8 @@ public class MindMap {
     return( summary );
   }
 
-  /* Creates a summary node from the given node */
+  //-------------------------------------------------------------
+  // Creates a summary node from the given node.
   public Node create_summary_node_from_node( Node node ) {
     var prev_node = node.previous_sibling();
     node.detach( node.side );
@@ -3031,7 +2493,8 @@ public class MindMap {
     return( summary );
   }
 
-  /* Adds a new root node to the canvas */
+  //-------------------------------------------------------------
+  // Adds a new root node to the canvas.
   public void add_root_node() {
     var node         = create_root_node( _( "Another Idea" ) );
     var int_node_len = (int)(_nodes.length - 1);
@@ -3044,7 +2507,8 @@ public class MindMap {
     auto_save();
   }
 
-  /* Adds a connected node to the currently selected node */
+  //-------------------------------------------------------------
+  // Adds a connected node to the currently selected node.
   public void add_connected_node() {
     var index = (int)_nodes.length;
     var node  = create_root_node( _( "Another Idea" ) );
@@ -3061,7 +2525,8 @@ public class MindMap {
     auto_save();
   }
 
-  /* Adds a new sibling node to the current node */
+  //-------------------------------------------------------------
+  // Adds a new sibling node to the current node.
   public void add_sibling_node( bool shift ) {
     var current = _selected.current_node();
     if( current.is_summary() ) return;
@@ -3074,10 +2539,10 @@ public class MindMap {
     auto_save();
   }
 
-  /*
-   Re-parents a node by creating a new node whose parent matches the current node's parent
-   and then makes the current node's parent match the new node.
-  */
+  //-------------------------------------------------------------
+  // Re-parents a node by creating a new node whose parent
+  // matches the current node's parent and then makes the current
+  // node's parent match the new node.
   public void add_parent_node() {
     var current = _selected.current_node();
     if( current.is_root() || current.is_summarized() ) return;
@@ -3090,7 +2555,8 @@ public class MindMap {
     auto_save();
   }
 
-  /* Adds a child node to the current node */
+  //-------------------------------------------------------------
+  // Adds a child node to the current node.
   public void add_child_node() {
     var current = _selected.current_node();
     if( current.is_summarized() ) return;
@@ -3103,7 +2569,10 @@ public class MindMap {
     auto_save();
   }
 
-  /* Returns true if all of the selected nodes are consecutive siblings that are not already summarized and are leaf nodes on the same side */
+  //-------------------------------------------------------------
+  // Returns true if all of the selected nodes are consecutive
+  // siblings that are not already summarized and are leaf nodes
+  // on the same side.
   public bool nodes_summarizable() {
     var nodes = _selected.ordered_nodes();
     if( nodes.length < 2 ) return( false );
@@ -3118,10 +2587,10 @@ public class MindMap {
     return( true );
   }
 
-  /*
-   Returns true if the currently selected node has at least one sibling that is
-   before this node which is not already summarized and is on the same side.
-  */
+  //-------------------------------------------------------------
+  // Returns true if the currently selected node has at least one
+  // sibling that is before this node which is not already
+  // summarized and is on the same side.
   public bool node_summarizable() {
     var current = _selected.current_node();
     if( (current != null) && !current.is_summary() && !current.is_summarized() ) {
@@ -3144,7 +2613,9 @@ public class MindMap {
     auto_save();
   }
 
-  /* Adds a summary node to the first and last nodes in the selected range */
+  //-------------------------------------------------------------
+  // Adds a summary node to the first and last nodes in the
+  // selected range.
   public void add_summary_node_from_current() {
     if( !node_summarizable() ) return;
     var current = _selected.current_node();
@@ -3157,11 +2628,10 @@ public class MindMap {
     auto_save();
   }
 
-  /*
-   Replaces the original node with the new node.  The new_node must not
-   have any children.  Returns true if the replacement was successful; otherwise,
-   returns false.
-  */
+  //-------------------------------------------------------------
+  // Replaces the original node with the new node.  The new_node
+  // must not have any children.  Returns true if the replacement
+  // was successful; otherwise, returns false.
   public void replace_node( Node orig_node, Node new_node ) {
 
     var parent = orig_node.parent;
@@ -3185,117 +2655,8 @@ public class MindMap {
 
   }
 
-  /* Called whenever the return character is entered in the drawing area */
-  private void handle_return( bool shift ) {
-    if( is_connection_editable() ) {
-      if( _completion.shown ) {
-        _completion.select();
-        queue_draw();
-      } else {
-        var current = _selected.current_connection();
-        current.edit_title_end();
-        set_connection_mode( current, ConnMode.SELECTED );
-        auto_save();
-        current_changed( this );
-        queue_draw();
-      }
-    } else if( is_node_editable() ) {
-      if( _completion.shown ) {
-        _completion.select();
-        queue_draw();
-      } else {
-        var current = _selected.current_node();
-        set_node_mode( current, NodeMode.CURRENT );
-        if( _create_new_from_edit ) {
-          if( !current.is_root() ) {
-            add_sibling_node( shift );
-          } else {
-            add_root_node();
-          }
-        } else {
-          auto_save();
-          current_changed( this );
-          queue_draw();
-        }
-      }
-    } else if( is_callout_editable() ) {
-      if( _completion.shown ) {
-        _completion.select();
-        queue_draw();
-      } else {
-        var current = _selected.current_callout();
-        set_callout_mode( current, CalloutMode.SELECTED );
-        current_changed( this );
-        queue_draw();
-      }
-    } else if( is_connection_connecting() && (_attach_node != null) ) {
-      end_connection( _attach_node );
-    } else if( is_node_selected() ) {
-      if( !_selected.current_node().is_root() ) {
-        add_sibling_node( shift );
-      } else if( shift ) {
-        add_connected_node();
-      } else {
-        add_root_node();
-      }
-    } else if( _selected.num_nodes() == 0 ) {
-      add_root_node();
-    }
-  }
-
-  /* Called whenever the user hits a Control-Return key.  Causes a newline to be inserted */
-  private void handle_control_return() {
-    if( is_connection_editable() ) {
-      _selected.current_connection().title.insert( "\n", undo_text );
-      current_changed( this );
-      queue_draw();
-    } else if( is_node_editable() ) {
-      _selected.current_node().name.insert( "\n", undo_text );
-      see();
-      current_changed( this );
-      queue_draw();
-    } else if( is_callout_editable() ) {
-      _selected.current_callout().text.insert( "\n", undo_text );
-      current_changed( this );
-      queue_draw();
-    }
-  }
-
-  /* Called when the user uses the Control-Backspace keyboard shortcut when editing nodes/connections */
-  private void handle_control_backspace() {
-    if( is_connection_editable() ) {
-      _selected.current_connection().title.backspace_word( undo_text );
-      current_changed( this );
-      queue_draw();
-    } else if( is_node_editable() ) {
-      _selected.current_node().name.backspace_word( undo_text );
-      current_changed( this );
-      queue_draw();
-    } else if( is_callout_editable() ) {
-      _selected.current_callout().text.backspace_word( undo_text );
-      current_changed( this );
-      queue_draw();
-    }
-  }
-
-  /* Called when the user uses the Control-Delete keyboard shortcut when editing nodes/connections */
-  private void handle_control_delete() {
-    if( is_connection_editable() ) {
-      _selected.current_connection().title.delete_word( undo_text );
-      current_changed( this );
-      queue_draw();
-    } else if( is_node_editable() ) {
-      _selected.current_node().name.delete_word( undo_text );
-      current_changed( this );
-      queue_draw();
-    } else if( is_callout_editable() ) {
-      _selected.current_callout().text.delete_word( undo_text );
-      current_changed( this );
-      queue_draw();
-    }
-  }
-
-  /* Returns the index of the given root node */
+  //-------------------------------------------------------------
+  // Returns the index of the given root node.
   public int root_index( Node root ) {
     for( int i=0; i<_nodes.length; i++ ) {
       if( _nodes.index( i ) == root ) {
@@ -3305,7 +2666,8 @@ public class MindMap {
     return( -1 );
   }
 
-  /* Adds the given node to the list of root nodes */
+  //-------------------------------------------------------------
+  // Adds the given node to the list of root nodes.
   public void add_root( Node n, int index ) {
     if( index == -1 ) {
       _nodes.append_val( n );
@@ -3314,12 +2676,15 @@ public class MindMap {
     }
   }
 
-  /* Removes the node at the given root index from the list of root nodes */
+  //-------------------------------------------------------------
+  // Removes the node at the given root index from the list of
+  // root nodes.
   public void remove_root( int index ) {
     _nodes.remove_index( index );
   }
 
-  /* Removes the given root node from the node array */
+  //-------------------------------------------------------------
+  // Removes the given root node from the node array.
   public void remove_root_node( Node node ) {
     for( int i=0; i<_nodes.length; i++ ) {
       if( _nodes.index( i ) == node ) {
@@ -3328,13 +2693,17 @@ public class MindMap {
     }
   }
 
-  /* Returns true if the drawing area has a node that is available for detaching */
+  //-------------------------------------------------------------
+  // Returns true if the drawing area has a node that is
+  // available for detaching.
   public bool detachable() {
     var current = _selected.current_node();
     return( (current != null) && (current.parent != null) );
   }
 
-  /* Detaches the current node from its parent and adds it as a root node */
+  //-------------------------------------------------------------
+  // Detaches the current node from its parent and adds it as a
+  // root node.
   public void detach() {
     if( !detachable() ) return;
     var current    = _selected.current_node();
@@ -3349,7 +2718,8 @@ public class MindMap {
     auto_save();
   }
 
-  /* Balances the existing nodes based on the current layout */
+  //-------------------------------------------------------------
+  // Balances the existing nodes based on the current layout.
   public void balance_nodes( bool undoable, bool animate ) {
     var current   = _selected.current_node();
     var root_node = (current == null) ? null : current.get_root();
@@ -3376,7 +2746,9 @@ public class MindMap {
     }
   }
 
-  /* Returns true if there is at least one node that can be folded due to completed tasks */
+  //-------------------------------------------------------------
+  // Returns true if there is at least one node that can be
+  // folded due to completed tasks.
   public bool completed_tasks_foldable() {
     var current = _selected.current_node();
     if( current != null ) {
@@ -3391,7 +2763,8 @@ public class MindMap {
     return( false );
   }
 
-  /* Folds all completed tasks found in any tree */
+  //-------------------------------------------------------------
+  // Folds all completed tasks found in any tree.
   public void fold_completed_tasks() {
     var changes = new Array<Node>();
     var current = _selected.current_node();
@@ -3410,7 +2783,8 @@ public class MindMap {
     }
   }
 
-  /* Returns true if there is at least one node that is unfoldable */
+  //-------------------------------------------------------------
+  // Returns true if there is at least one node that is unfoldable.
   public bool unfoldable() {
     var current = _selected.current_node();
     if( current != null ) {
@@ -3425,7 +2799,8 @@ public class MindMap {
     return( false );
   }
 
-  /* Unfolds all nodes in the document */
+  //-------------------------------------------------------------
+  // Unfolds all nodes in the document.
   public void unfold_all_nodes() {
     var changes = new Array<Node>();
     var current = _selected.current_node();
@@ -3444,51 +2819,9 @@ public class MindMap {
     }
   }
 
-
-  /* Called whenever the tab character is entered in the drawing area */
-  private void handle_tab( bool shift ) {
-    if( is_node_editable() ) {
-      if( _completion.shown ) {
-        _completion.select();
-      } else {
-        var current = _selected.current_node();
-        set_node_mode( current, NodeMode.CURRENT );
-        if( _create_new_from_edit ) {
-          // if( shift ) {
-          //   add_summary_node_from_current();
-          // } else {
-            add_child_node();
-          // }
-        } else {
-          current_changed( this );
-          queue_draw();
-        }
-      }
-    } else if( is_node_selected() ) {
-      // if( shift ) {
-      //   add_summary_node_from_current();
-      // } else {
-        add_child_node();
-      // }
-    } else if( _selected.num_nodes() > 1 ) {
-      // add_summary_node_from_selected();
-    }
-  }
-
-  /*
-   Called whenever the Control-Tab key combo is entered.  Causes a tab character
-   to be inserted into the title.
-  */
-  private void handle_control_tab() {
-    if( is_node_editable() ) {
-      _selected.current_node().name.insert( "\t", undo_text );
-      see();
-      current_changed( this );
-      queue_draw();
-    }
-  }
-
-  /* Returns the parent node of the given node that should be selected */
+  //-------------------------------------------------------------
+  // Returns the parent node of the given node that should be
+  // selected.
   private Node? get_select_parent( Node node ) {
     if( node.is_summary() ) {
       var summary = (SummaryNode)node;
@@ -3497,7 +2830,8 @@ public class MindMap {
     return( node.parent );
   }
 
-  /* Returns the node to the right of the given node */
+  //-------------------------------------------------------------
+  // Returns the node to the right of the given node.
   private Node? get_node_right( Node node ) {
     if( node.is_root() ) {
       if( node.side.horizontal() ) {
@@ -3617,150 +2951,8 @@ public class MindMap {
     }
   }
 
-  /* Called whenever the right key is entered in the drawing area */
-  private void handle_right( bool shift, bool alt ) {
-    if( is_connection_editable() ) {
-      if( shift ) {
-        _selected.current_connection().title.selection_by_char( 1 );
-      } else {
-        _selected.current_connection().title.move_cursor( 1 );
-      }
-      queue_draw();
-    } else if( is_node_editable() ) {
-      if( shift ) {
-        _selected.current_node().name.selection_by_char( 1 );
-      } else {
-        _selected.current_node().name.move_cursor( 1 );
-      }
-      queue_draw();
-    } else if( is_callout_editable() ) {
-      if( shift ) {
-        _selected.current_callout().text.selection_by_char( 1 );
-      } else {
-        _selected.current_callout().text.move_cursor( 1 );
-      }
-      queue_draw();
-    } else if( is_connection_connecting() && (_attach_node != null) ) {
-      update_connection_by_node( get_node_right( _attach_node ) );
-    } else if( is_connection_selected() ) {
-      select_connection( 1 );
-    } else if( is_node_selected() ) {
-      var current    = _selected.current_node();
-      var right_node = get_node_right( current );
-      if( alt ) {
-        if( current.swap_with_sibling( right_node ) ||
-            current.make_parent_sibling( right_node ) ||
-            current.make_children_siblings( right_node ) ) {
-          queue_draw();
-          auto_save();
-        }
-      } else if( select_node( right_node ) ) {
-        queue_draw();
-      }
-    }
-  }
-
-  /*
-   Called whenever the Control-right key combo is entered.  Moves the cursor
-   one word to the right.
-  */
-  private void handle_control_right( bool shift ) {
-    if( is_connection_editable() ) {
-      if( shift ) {
-        _selected.current_connection().title.selection_by_word( 1 );
-      } else {
-        _selected.current_connection().title.move_cursor_by_word( 1 );
-      }
-      queue_draw();
-    } else if( is_node_editable() ) {
-      if( shift ) {
-        _selected.current_node().name.selection_by_word( 1 );
-      } else {
-        _selected.current_node().name.move_cursor_by_word( 1 );
-      }
-      queue_draw();
-    } else if( is_callout_editable() ) {
-      if( shift ) {
-        _selected.current_callout().text.selection_by_word( 1 );
-      } else {
-        _selected.current_callout().text.move_cursor_by_word( 1 );
-      }
-      queue_draw();
-    }
-  }
-
-  /* Called whenever the left key is entered in the drawing area */
-  private void handle_left( bool shift, bool alt ) {
-    if( is_connection_editable() ) {
-      if( shift ) {
-        _selected.current_connection().title.selection_by_char( -1 );
-      } else {
-        _selected.current_connection().title.move_cursor( -1 );
-      }
-      queue_draw();
-    } else if( is_node_editable() ) {
-      if( shift ) {
-        _selected.current_node().name.selection_by_char( -1 );
-      } else {
-        _selected.current_node().name.move_cursor( -1 );
-      }
-      queue_draw();
-    } else if( is_callout_editable() ) {
-      if( shift ) {
-        _selected.current_callout().text.selection_by_char( -1 );
-      } else {
-        _selected.current_callout().text.move_cursor( -1 );
-      }
-      queue_draw();
-    } else if( is_connection_connecting() && (_attach_node != null) ) {
-      update_connection_by_node( get_node_left( _attach_node ) );
-    } else if( is_connection_selected() ) {
-      select_connection( -1 );
-    } else if( is_node_selected() ) {
-      var current   = _selected.current_node();
-      var left_node = get_node_left( current );
-      if( alt ) {
-        if( current.swap_with_sibling( left_node ) ||
-            current.make_parent_sibling( left_node ) ||
-            current.make_children_siblings( left_node ) ) {
-          queue_draw();
-          auto_save();
-        }
-      } else if( select_node( left_node ) ) {
-        queue_draw();
-      }
-    }
-  }
-
-  /*
-   If Control is used, jumps the cursor to the end of the previous word.  If Control-Shift
-   is used, adds the previous word to the selection.
-  */
-  private void handle_control_left( bool shift ) {
-    if( is_connection_editable() ) {
-      if( shift ) {
-        _selected.current_connection().title.selection_by_word( -1 );
-      } else {
-        _selected.current_connection().title.move_cursor_by_word( -1 );
-      }
-      queue_draw();
-    } else if( is_node_editable() ) {
-      if( shift ) {
-        _selected.current_node().name.selection_by_word( -1 );
-      } else {
-        _selected.current_node().name.move_cursor_by_word( -1 );
-      }
-      queue_draw();
-    } else if( is_callout_editable() ) {
-      if( shift ) {
-        _selected.current_callout().text.selection_by_word( -1 );
-      } else {
-        _selected.current_callout().text.move_cursor_by_word( -1 );
-      }
-    }
-  }
-
-  /* Selects all of the text in the current node */
+  //-------------------------------------------------------------
+  // Selects all of the text in the current node.
   private void select_all() {
     if( is_connection_editable() ) {
       _selected.current_connection().title.set_cursor_all( false );
@@ -3774,7 +2966,8 @@ public class MindMap {
     }
   }
 
-  /* Deselects all of the text in the current node */
+  //-------------------------------------------------------------
+  // Deselects all of the text in the current node.
   private void deselect_all() {
     if( is_connection_editable() ) {
       _selected.current_connection().title.clear_selection();
@@ -3788,392 +2981,8 @@ public class MindMap {
     }
   }
 
-  /* Called whenever the period key is entered with the control key */
-  public void handle_control_period() {
-    if( is_node_editable() ) {
-      insert_emoji( _selected.current_node().name );
-    } else if( is_connection_editable() ) {
-      insert_emoji( _selected.current_connection().title );
-    } else if( is_callout_editable() ) {
-      insert_emoji( _selected.current_callout().text );
-    }
-  }
-
-  /* Displays the quick entry UI in insertion mode */
-  public void handle_control_E() {
-    var quick_entry = new QuickEntry( this, false, _settings );
-    quick_entry.preload( "- " );
-  }
-
-  /*
-   A link can be added if text is selected and the selected text does not
-   overlap with any existing links.
-  */
-  public bool add_link_possible( CanvasText ct ) {
-
-    int cursor, selstart, selend;
-    if( ct.is_selected() ) {
-      ct.get_cursor_info( out cursor, out selstart, out selend );
-    } else {
-      selstart = 0;
-      selend   = ct.text.text.length;
-    }
-
-    return( (selstart != selend) && !ct.text.is_tag_applied_in_range( FormatTag.URL, selstart, selend ) );
-
-  }
-
-  /*
-   Creates a link from the selected text within the currently editable node
-   or connection.
-  */
-  private void handle_control_k( bool shift ) {
-    CanvasText? ct = null;
-    if( is_node_editable() ) {
-      ct = _selected.current_node().name;
-    } else if( is_callout_editable() ) {
-      ct = _selected.current_callout().text;
-    }
-    if( ct != null ) {
-      if( shift ) {
-        url_editor.remove_url();
-      } else if( add_link_possible( ct ) ) {
-        url_editor.add_url();
-      }
-    }
-  }
-
-  /* Displays the quick entry UI in replacement mode */
-  public void handle_control_R() {
-    var quick_entry = new QuickEntry( this, true, _settings );
-    var export      = (ExportText)win.exports.get_by_name( "text" );
-    quick_entry.preload( export.export_node( this, _selected.current_node(), "" ) );
-  }
-
-  /* Closes the current tab */
-  private void handle_control_w() {
-    win.close_current_tab();
-  }
-
-  /* Handles Control-home key in edit mode for canvas text */
-  private void edit_control_home( CanvasText ct, bool shift ) {
-    if( shift ) {
-      ct.selection_to_start( true );
-    } else {
-      ct.move_cursor_to_start();
-    }
-    _im_context.reset();
-    queue_draw();
-  }
-
-  /* Called whenever the Control+home key is entered in the drawing area */
-  private void handle_control_home( bool shift ) {
-    if( is_connection_editable() ) {
-      edit_control_home( _selected.current_connection().title, shift );
-    } else if( is_node_editable() ) {
-      edit_control_home( _selected.current_node().name, shift );
-    } else if( is_callout_editable() ) {
-      edit_control_home( _selected.current_callout().text, shift );
-    }
-  }
-
-  /* Handles home key in edit mode for canvas text */
-  private void edit_home( CanvasText ct, bool shift ) {
-    if( shift ) {
-      ct.selection_to_start_of_line( true );
-    } else {
-      ct.move_cursor_to_start_of_line();
-    }
-    _im_context.reset();
-    queue_draw();
-  }
-
-  /* Called whenever the home key is entered in the drawing area */
-  private void handle_home( bool shift ) {
-    if( is_connection_editable() ) {
-      edit_home( _selected.current_connection().title, shift );
-    } else if( is_node_editable() ) {
-      edit_home( _selected.current_node().name, shift );
-    } else if( is_callout_editable() ) {
-      edit_home( _selected.current_callout().text, shift );
-    }
-  }
-
-  /* Handles Control-end key in edit mode for canvas text */
-  private void edit_control_end( CanvasText ct, bool shift ) {
-    if( shift ) {
-      ct.selection_to_end( true );
-    } else {
-      ct.move_cursor_to_end();
-    }
-    _im_context.reset();
-    queue_draw();
-  }
-
-  /* Called whenever the Control+end key is entered in the drawing area */
-  private void handle_control_end( bool shift ) {
-    if( is_connection_editable() ) {
-      edit_control_end( _selected.current_connection().title, shift );
-    } else if( is_node_editable() ) {
-      edit_control_end( _selected.current_node().name, shift );
-    } else if( is_callout_editable() ) {
-      edit_control_end( _selected.current_callout().text, shift );
-    }
-  }
-
-  /* Handles End key in edit mode for canvas text */
-  private void edit_end( CanvasText ct, bool shift ) {
-    if( shift ) {
-      ct.selection_to_end_of_line( true );
-    } else {
-      ct.move_cursor_to_end_of_line();
-    }
-    _im_context.reset();
-    queue_draw();
-  }
-
-  /* Called whenever the end key is entered in the drawing area */
-  private void handle_end( bool shift ) {
-    if( is_connection_editable() ) {
-      edit_end( _selected.current_connection().title, shift );
-    } else if( is_node_editable() ) {
-      edit_end( _selected.current_node().name, shift );
-    } else if( is_callout_editable() ) {
-      edit_end( _selected.current_callout().text, shift );
-    }
-  }
-
-  /* Handles Up key in edit mode for canvas text */
-  private void edit_up( CanvasText ct, bool shift ) {
-    if( _completion.shown ) {
-      _completion.up();
-    } else if( shift ) {
-      ct.selection_vertically( -1 );
-    } else {
-      ct.move_cursor_vertically( -1 );
-    }
-    _im_context.reset();
-    queue_draw();
-  }
-
-  /* Called whenever the up key is entered in the drawing area */
-  private void handle_up( bool shift, bool alt ) {
-    if( is_connection_editable() ) {
-      edit_up( _selected.current_connection().title, shift );
-    } else if( is_node_editable() ) {
-      edit_up( _selected.current_node().name, shift );
-    } else if( is_callout_editable() ) {
-      edit_up( _selected.current_callout().text, shift );
-    } else if( is_connection_connecting() && (_attach_node != null) ) {
-      update_connection_by_node( get_node_up( _attach_node ) );
-    } else if( is_node_selected() ) {
-      var current = _selected.current_node();
-      var up_node = get_node_up( current );
-      if( alt ) {
-        if( current.swap_with_sibling( up_node ) ||
-            current.make_parent_sibling( up_node ) ||
-            current.make_children_siblings( up_node ) ) {
-          queue_draw();
-          auto_save();
-        }
-      } else if( select_node( up_node ) ) {
-        queue_draw();
-      }
-    }
-  }
-
-  private void edit_control_up( CanvasText ct, bool shift ) {
-    if( shift ) {
-      ct.selection_to_start( false );
-    } else {
-      ct.move_cursor_to_start();
-    }
-    _im_context.reset();
-    queue_draw();
-  }
-
-  /*
-   If the Control key is used, jumps the cursor to the beginning of the text.  If Control-Shift
-   is used, selects everything from the beginnning of the string to the cursor position.
-  */
-  private void handle_control_up( bool shift ) {
-    if( is_connection_editable() ) {
-      edit_control_up( _selected.current_connection().title, shift );
-    } else if( is_node_editable() ) {
-      edit_control_up( _selected.current_node().name, shift );
-    } else if( is_callout_editable() ) {
-      edit_control_up( _selected.current_callout().text, shift );
-    }
-  }
-
-  /* Handles the Down key in edit mode for canvas text */
-  private void edit_down( CanvasText ct, bool shift ) {
-    if( _completion.shown ) {
-      _completion.down();
-    } else if( shift ) {
-      ct.selection_vertically( 1 );
-    } else {
-      ct.move_cursor_vertically( 1 );
-    }
-    _im_context.reset();
-    queue_draw();
-  }
-
-  /* Called whenever the down key is entered in the drawing area */
-  private void handle_down( bool shift, bool alt ) {
-    if( is_connection_editable() ) {
-      edit_down( _selected.current_connection().title, shift );
-    } else if( is_node_editable() ) {
-      edit_down( _selected.current_node().name, shift );
-    } else if( is_callout_editable() ) {
-      edit_down( _selected.current_callout().text, shift );
-    } else if( is_connection_connecting() && (_attach_node != null) ) {
-      update_connection_by_node( get_node_down( _attach_node ) );
-    } else if( is_node_selected() ) {
-      var current   = _selected.current_node();
-      var down_node = get_node_down( current );
-      if( alt ) {
-        if( current.swap_with_sibling( down_node ) ||
-            current.make_parent_sibling( down_node ) ||
-            current.make_children_siblings( down_node ) ) {
-          queue_draw();
-          auto_save();
-        }
-      } else if( select_node( down_node ) ) {
-        queue_draw();
-      }
-    }
-  }
-
-  /* Handles Control-Down key in edit mode for canvas text */
-  private void edit_control_down( CanvasText ct, bool shift ) {
-    if( shift ) {
-      ct.selection_to_end( false );
-    } else {
-      ct.move_cursor_to_end();
-    }
-    _im_context.reset();
-    queue_draw();
-  }
-
-  /*
-   If the Control key is used, jumps the cursor to the end of the text.  If Control-Shift is
-   used, selects all text from the current cursor position to the end of the string.
-  */
-  private void handle_control_down( bool shift ) {
-    if( is_connection_editable() ) {
-      edit_control_down( _selected.current_connection().title, shift );
-    } else if( is_node_editable() ) {
-      edit_control_down( _selected.current_node().name, shift );
-    } else if( is_callout_editable() ) {
-      edit_control_down( _selected.current_callout().text, shift );
-    }
-  }
-
-  /* Called whenever the page up key is entered in the drawing area */
-  private void handle_pageup() {
-    if( is_connection_connecting() && (_attach_node != null) ) {
-      update_connection_by_node( get_node_pageup( _attach_node ) );
-    } else if( is_node_selected() ) {
-      if( select_node( get_node_pageup( _selected.current_node() ) ) ) {
-        queue_draw();
-      }
-    }
-  }
-
-  /* Called whenever the page down key is entered in the drawing area */
-  private void handle_pagedn() {
-    if( is_connection_connecting() && (_attach_node != null) ) {
-      update_connection_by_node( get_node_pagedn( _attach_node ) );
-    } else if( is_node_selected() ) {
-      if( select_node( get_node_pagedn( _selected.current_node() ) ) ) {
-        queue_draw();
-      }
-    }
-  }
-
-  /* Handle input method */
-  private void handle_im_commit( string str ) {
-    insert_text( str );
-  }
-
-  /* Inserts text */
-  private bool insert_text( string str ) {
-    if( !str.get_char( 0 ).isprint() ) return( false );
-    if( is_connection_editable() ) {
-      _selected.current_connection().title.insert( str, undo_text );
-      queue_draw();
-    } else if( is_node_editable() ) {
-      _selected.current_node().name.insert( str, undo_text );
-      see();
-      queue_draw();
-    } else if( is_callout_editable() ) {
-      _selected.current_callout().text.insert( str, undo_text );
-      queue_draw();
-    } else {
-      return( false );
-    }
-    return( true );
-  }
-
-  /* Helper class for the handle_im_retrieve_surrounding method */
-  private void retrieve_surrounding_in_text( CanvasText ct ) {
-    int    cursor, selstart, selend;
-    string text = ct.text.text;
-    ct.get_cursor_info( out cursor, out selstart, out selend );
-    _im_context.set_surrounding( text, text.length, text.index_of_nth_char( cursor ) );
-  }
-
-  /* Called in IMContext callback of the same name */
-  private bool handle_im_retrieve_surrounding() {
-    if( is_node_editable() ) {
-      retrieve_surrounding_in_text( _selected.current_node().name );
-      return( true );
-    } else if( is_connection_editable() ) {
-      retrieve_surrounding_in_text( _selected.current_connection().title );
-      return( true );
-    } else if( is_callout_editable() ) {
-      retrieve_surrounding_in_text( _selected.current_callout().text );
-      return( true );
-    }
-    return( false );
-  }
-
-  /* Helper class for the handle_im_delete_surrounding method */
-  private void delete_surrounding_in_text( CanvasText ct, int offset, int chars ) {
-    int cursor, selstart, selend;
-    ct.get_cursor_info( out cursor, out selstart, out selend );
-    var startpos = cursor - offset;
-    var endpos   = startpos + chars;
-    ct.delete_range( startpos, endpos, undo_text );
-  }
-
-  /* Called in IMContext callback of the same name */
-  private bool handle_im_delete_surrounding( int offset, int nchars ) {
-    if( is_node_editable() ) {
-      delete_surrounding_in_text( _selected.current_node().name, offset, nchars );
-      return( true );
-    } else if( is_connection_editable() ) {
-      delete_surrounding_in_text( _selected.current_connection().title, offset, nchars );
-      return( true );
-    } else if( is_callout_editable() ) {
-      delete_surrounding_in_text( _selected.current_callout().text, offset, nchars );
-      return( true );
-    }
-    return( false );
-  }
-
   //-------------------------------------------------------------
-  // Returns true if the following key was found to be pressed
-  // (regardless of keyboard layout).
-  private bool has_key( uint[] kvs, uint key ) {
-    foreach( uint kv in kvs ) {
-      if( kv == key ) return( true );
-    }
-    return( false );
-  }
-
-  /* Returns true if we can perform a node copy operation */
+  // Returns true if we can perform a node copy operation.
   public bool node_copyable() {
     return( _selected.current_node() != null );
   }
@@ -4289,18 +3098,17 @@ public class MindMap {
     return( null );
   }
 
-  /* Copies the current node to the node clipboard */
+  //-------------------------------------------------------------
+  // Copies the current node to the node clipboard.
   public void get_nodes_for_clipboard( out Array<Node> nodes, out Connections conns, out NodeGroups groups ) {
-
     nodes  = new Array<Node>();
     conns  = _connections;
     groups = _groups;
-
     _selected.get_parents( ref nodes );
-
   }
 
-  /* Copies the currently selected text to the clipboard */
+  //-------------------------------------------------------------
+  // Copies the currently selected text to the clipboard.
   public void copy_selected_text() {
     string? value           = null;
     var     current_node    = _selected.current_node();
@@ -4412,35 +3220,43 @@ public class MindMap {
     }
   }
 
+  //-------------------------------------------------------------
+  // Replaces the node's text with the given string.
   private void replace_node_text( Node node, string text ) {
-    var orig_text = new CanvasText( this );
+    var orig_text = new CanvasText( _da );
     orig_text.copy( node.name );
     node.name.text.replace_text( 0, node.name.text.text.char_count(), text.strip() );
-    undo_buffer.add_item( new UndoNodeName( this, node, orig_text ) );
+    undo_buffer.add_item( new UndoNodeName( _da, node, orig_text ) );
     queue_draw();
     auto_save();
   }
 
+  //-------------------------------------------------------------
+  // Replaces the connection's text with the given string.
   private void replace_connection_text( Connection conn, string text ) {
-    var orig_title = new CanvasText( this );
+    var orig_title = new CanvasText( _da );
     orig_title.copy( conn.title );
     conn.title.text.replace_text( 0, conn.title.text.text.char_count(), text.strip() );
-    undo_buffer.add_item( new UndoConnectionTitle( this, conn, orig_title ) );
+    undo_buffer.add_item( new UndoConnectionTitle( _da, conn, orig_title ) );
     queue_draw();
     current_changed( this );
     auto_save();
   }
 
+  //-------------------------------------------------------------
+  // Replaces the callout's text with the given string.
   private void replace_callout_text( Callout callout, string text ) {
-    var orig_text = new CanvasText( this );
+    var orig_text = new CanvasText( _da );
     orig_text.copy( callout.text );
     callout.text.text.replace_text( 0, callout.text.text.text.char_count(), text.strip() );
-    undo_buffer.add_item( new UndoCalloutText( this, callout, orig_text ) );
+    undo_buffer.add_item( new UndoCalloutText( _da, callout, orig_text ) );
     queue_draw();
     current_changed( this );
     auto_save();
   }
 
+  //-------------------------------------------------------------
+  // Replaces the node's image with the given image.
   private void replace_node_image( Node node, Pixbuf image ) {
     var ni = new NodeImage.from_pixbuf( image_manager, image, node.style.node_width );
     if( ni.valid ) {
@@ -4453,6 +3269,8 @@ public class MindMap {
     }
   }
 
+  //-------------------------------------------------------------
+  // Replaces the current node with the node tree expressed in XML.
   private void replace_node_xml( Node node, string text ) {
     var nodes  = new Array<Node>();
     var conns  = new Array<Connection>();
@@ -4470,21 +3288,30 @@ public class MindMap {
     auto_save();
   }
 
+  //-------------------------------------------------------------
+  // Inserts the given text string into the given node.
   private void insert_node_text( Node node, string text ) {
     node.name.insert( text, undo_text );
     queue_draw();
   }
 
+  //-------------------------------------------------------------
+  // Inserts the given text string into the given connection.
   private void insert_connection_text( Connection conn, string text ) {
     conn.title.insert( text, undo_text );
     queue_draw();
   }
 
+  //-------------------------------------------------------------
+  // Inserts the given text string into the given callout.
   private void insert_callout_text( Callout callout, string text ) {
     callout.text.insert( text, undo_text );
     queue_draw();
   }
 
+  //-------------------------------------------------------------
+  // Converts the given text string into a node tree and inserts
+  // the node tree into the mindmap.
   private void paste_text_as_node( Node? node, string text ) {
     var nodes  = new Array<Node>();
     var export = (ExportText)win.exports.get_by_name( "text" );
@@ -4494,6 +3321,9 @@ public class MindMap {
     auto_save();
   }
 
+  //-------------------------------------------------------------
+  // Creates a node for the given image and inserts the new node
+  // into the mindmap.
   private void paste_image_as_node( Node? node, Pixbuf image ) {
     var new_node = (node == null) ? create_root_node() : create_child_node( node );
     var ni = new NodeImage.from_pixbuf( image_manager, image, 200 );
@@ -4507,6 +3337,9 @@ public class MindMap {
     auto_save();
   }
 
+  //-------------------------------------------------------------
+  // Converts the given text into a list of nodes, connections
+  // and/or groups and inserts them into the mindmap.
   private void paste_as_nodes( Node? node, string text ) {
     var nodes  = new Array<Node>();
     var conns  = new Array<Connection>();
@@ -4545,7 +3378,8 @@ public class MindMap {
     auto_save();
   }
 
-  /* Called by the clipboard to paste text */
+  //-------------------------------------------------------------
+  // Called by the clipboard to paste text.
   public void paste_text( string text, bool shift ) {
     var node    = _selected.current_node();
     var conn    = _selected.current_connection();
@@ -4571,7 +3405,9 @@ public class MindMap {
     }
   }
 
-  /* Pastes the current node in the clipboard as a node link to the current node */
+  //-------------------------------------------------------------
+  // Pastes the current node in the clipboard as a node link to
+  // the current node.
   public void paste_node_link( string text ) {
     if( is_node_selected() ) {
       var current  = _selected.current_node();
@@ -4586,7 +3422,8 @@ public class MindMap {
     }
   }
 
-  /* Called by the clipboard to paste image */
+  //-------------------------------------------------------------
+  // Called by the clipboard to paste image.
   public void paste_image( Pixbuf image, bool shift ) {
     var node = _selected.current_node();
     if( shift ) {
@@ -4598,7 +3435,8 @@ public class MindMap {
     }
   }
 
-  /* Called by the clipboard to paste nodes */
+  //-------------------------------------------------------------
+  // Called by the clipboard to paste nodes.
   public void paste_nodes( string text, bool shift ) {
     var node = _selected.current_node();
     if( shift ) {
@@ -4610,22 +3448,9 @@ public class MindMap {
     }
   }
 
-  /* Perform a scroll save */
-  public void scroll_save() {
-    if( _scroll_save_id != null ) {
-      Source.remove( _scroll_save_id );
-    }
-    _scroll_save_id = Timeout.add( 200, do_scroll_save );
-  }
-
-  /* Allows the document to have its origin data saved to the tab state document */
-  private bool do_scroll_save() {
-    _scroll_save_id = null;
-    scroll_changed();
-    return( false );
-  }
-
-  /* Perform an automatic save for times when changes may be happening rapidly */
+  //-------------------------------------------------------------
+  // Perform an automatic save for times when changes may be
+  // happening rapidly.
   public void auto_save() {
     if( _auto_save_id != null ) {
       Source.remove( _auto_save_id );
@@ -4633,7 +3458,8 @@ public class MindMap {
     _auto_save_id = Timeout.add( 200, do_auto_save );
   }
 
-  /* Allows the document to be auto-saved after a scroll event */
+  //-------------------------------------------------------------
+  // Allows the document to be auto-saved after a scroll event.
   private bool do_auto_save() {
     _auto_save_id = null;
     is_loaded = true;
@@ -4641,7 +3467,8 @@ public class MindMap {
     return( false );
   }
 
-  /* Sets the image of the current node to the given filename */
+  //-------------------------------------------------------------
+  // Sets the image of the current node to the given filename.
   public bool update_current_image( string uri ) {
     var current = _selected.current_node();
     var image   = new NodeImage.from_uri( image_manager, uri, current.style.node_width );
@@ -4657,7 +3484,8 @@ public class MindMap {
     return( false );
   }
 
-  /* Starts a connection from the current node */
+  //-------------------------------------------------------------
+  // Starts a connection from the current node.
   public void start_connection( bool key, bool link ) {
     var current_node = _selected.current_node();
     if( (current_node == null) || _connections.hide ) return;
@@ -4680,7 +3508,8 @@ public class MindMap {
     queue_draw();
   }
 
-  /* Called when a connection is being drawn by moving the mouse */
+  //-------------------------------------------------------------
+  // Called when a connection is being drawn by moving the mouse.
   public void update_connection( double x, double y ) {
     var current = _selected.current_connection();
     if( current == null ) return;
@@ -4688,7 +3517,9 @@ public class MindMap {
     queue_draw();
   }
 
-  /* Called when the connection is being connected via the keyboard */
+  //-------------------------------------------------------------
+  // Called when the connection is being connected via the
+  // keyboard.
   public void update_connection_by_node( Node? node ) {
     if( node == null ) return;
     double x, y, w, h;
@@ -4702,7 +3533,8 @@ public class MindMap {
     queue_draw();
   }
 
-  /* Ends a connection at the given node */
+  //-------------------------------------------------------------
+  // Ends a connection at the given node.
   public void end_connection( Node n ) {
     var current = _selected.current_connection();
     if( current == null ) return;
@@ -4719,10 +3551,10 @@ public class MindMap {
     queue_draw();
   }
 
-  /*
-   If exactly two nodes are currently selected, draws a connection from the first selected node
-   to the second selected node.
-  */
+  //-------------------------------------------------------------
+  // If exactly two nodes are currently selected, draws a
+  // connection from the first selected node to the second selected
+  // node.
   public void create_connection() {
     if( (_selected.num_nodes() != 2) || _connections.hide ) return;
     double x, y, w, h;
@@ -4739,7 +3571,8 @@ public class MindMap {
     queue_draw();
   }
 
-  /* Deletes the current connection */
+  //-------------------------------------------------------------
+  // Deletes the current connection.
   public void delete_connection() {
     var current = _selected.current_connection();
     if( current == null ) return;
@@ -4751,7 +3584,8 @@ public class MindMap {
     queue_draw();
   }
 
-  /* Deletes the currently selected connections */
+  //-------------------------------------------------------------
+  // Deletes the currently selected connections.
   public void delete_connections() {
     if( _selected.num_connections() == 0 ) return;
     var conns = _selected.connections();
@@ -4772,17 +3606,18 @@ public class MindMap {
     }
   }
 
-  /*
-   Called when the focus button active state changes.  Causes all nodes and connections
-   to have the alpha state set to almost transparent (when focus mode is enabled) or fully opaque.
-  */
+  //-------------------------------------------------------------
+  // Called when the focus button active state changes.  Causes
+  // all nodes and connections to have the alpha state set to
+  // almost transparent (when focus mode is enabled) or fully opaque.
   public void set_focus_mode( bool focus ) {
     double alpha = focus ? _focus_alpha : 1.0;
     _focus_mode = focus;
     update_focus_mode();
   }
 
-  /* Update the focus mode */
+  //-------------------------------------------------------------
+  // Update the focus mode.
   public void update_focus_mode() {
     var nodes = _selected.nodes();
     var conns = _selected.connections();
@@ -4808,12 +3643,8 @@ public class MindMap {
     queue_draw();
   }
 
-  /* Updates the create_new_from_edit variable */
-  private void update_create_new_from_edit( GLib.Settings settings ) {
-    _create_new_from_edit = settings.get_boolean( "new-node-from-edit" );
-  }
-
-  /* Updates all alpha values with the given value */
+  //-------------------------------------------------------------
+  // Updates all alpha values with the given value.
   public void update_focus_mode_alpha( GLib.Settings settings ) {
     var key   = "focus-mode-alpha";
     var alpha = settings.get_double( key );
@@ -4829,22 +3660,9 @@ public class MindMap {
     }
   }
 
-  /* Called by the Tagger class to actually add the tag to the currently selected row */
-  public void add_tag( string tag ) {
-    var node = _selected.current_node();
-    if( node == null ) return;
-    var name = node.name;
-    var orig_text = new CanvasText( this );
-    orig_text.copy( name );
-    tagger.preedit_load_tags( name.text );
-    name.text.insert_text( name.text.text.length, (" @" + tag) );
-    name.text.changed();
-    tagger.postedit_load_tags( name.text );
-    undo_buffer.add_item( new UndoNodeName( this, node, orig_text ) );
-    auto_save();
-  }
-
-  /* Sorts and re-arranges the children of the given parent using the given array */
+  //-------------------------------------------------------------
+  // Sorts and re-arranges the children of the given parent using
+  // the given array.
   private void sort_children( Node parent, CompareFunc<Node> sort_fn ) {
     var children = new SList<Node>();
     undo_buffer.add_item( new UndoNodeSort( parent ) );
@@ -4863,7 +3681,8 @@ public class MindMap {
     auto_save();
   }
 
-  /* Sorts the current node's children alphabetically */
+  //-------------------------------------------------------------
+  // Sorts the current node's children alphabetically.
   public void sort_alphabetically() {
     CompareFunc<Node> sort_fn = (a, b) => {
       return( strcmp( a.name.text.text, b.name.text.text ) );
@@ -4871,7 +3690,8 @@ public class MindMap {
     sort_children( _selected.current_node(), sort_fn );
   }
 
-  /* Sorts the current node's children in a random manner */
+  //-------------------------------------------------------------
+  // Sorts the current node's children in a random manner.
   public void sort_randomly() {
     CompareFunc<Node> sort_fn = (a, b) => {
       return( (Random.int_range( 0, 2 ) == 0) ? -1 : 1 );
@@ -4879,7 +3699,8 @@ public class MindMap {
     sort_children( _selected.current_node(), sort_fn );
   }
 
-  /* Moves all trees to avoid overlapping */
+  //-------------------------------------------------------------
+  // Moves all trees to avoid overlapping.
   public void handle_tree_overlap( NodeBounds prev ) {
     var current = _selected.current_node();
     var visited = new GLib.List<Node>();
@@ -4887,7 +3708,8 @@ public class MindMap {
     handle_tree_overlap_helper( current.get_root(), prev, visited );
   }
 
-  /* Helper method for handle_tree_overlap */
+  //-------------------------------------------------------------
+  // Helper method for handle_tree_overlap.
   public void handle_tree_overlap_helper( Node root, NodeBounds prev, GLib.List<Node> visited ) {
 
     var curr  = root.tree_bbox;

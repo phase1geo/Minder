@@ -34,19 +34,20 @@ public class UndoNodeReplace : UndoItem {
   }
 
   /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
-    da.replace_node( _new_node, _orig_node );
-    da.set_current_node( _orig_node );
-    da.queue_draw();
-    da.auto_save();
+  public override void undo( MindMap map ) {
+    map.replace_node( _new_node, _orig_node );
+    map.set_current_node( _orig_node );
+    map.queue_draw();
+    map.auto_save();
   }
 
-  /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
-    da.replace_node( _orig_node, _new_node );
-    da.set_current_node( _new_node );
-    da.queue_draw();
-    da.auto_save();
+  //-------------------------------------------------------------
+  // Performs a redo operation.
+  public override void redo( MindMap map ) {
+    map.replace_node( _orig_node, _new_node );
+    map.set_current_node( _new_node );
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

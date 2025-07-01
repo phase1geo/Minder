@@ -32,19 +32,19 @@ public class UndoGroupRemove : UndoItem {
   }
 
   /* Undoes a connection change */
-  public override void undo( DrawArea da ) {
-    da.groups.add_group( _group );
-    da.get_selections().add_group( _group );
-    da.queue_draw();
-    da.auto_save();
+  public override void undo( MindMap map ) {
+    map.groups.add_group( _group );
+    map.get_selections().add_group( _group );
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Redoes a connection change */
-  public override void redo( DrawArea da ) {
-    da.groups.remove_group( _group );
-    da.get_selections().remove_group( _group );
-    da.queue_draw();
-    da.auto_save();
+  public override void redo( MindMap map ) {
+    map.groups.remove_group( _group );
+    map.get_selections().remove_group( _group );
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

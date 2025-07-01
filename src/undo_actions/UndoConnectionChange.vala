@@ -34,23 +34,23 @@ public class UndoConnectionChange : UndoItem {
   }
 
   /* Undoes a connection change */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     if( _old_connection == null ) {
-      da.get_connections().remove_connection( _new_connection, true );
+      map.get_connections().remove_connection( _new_connection, true );
     }
-    da.set_current_connection( _old_connection );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_connection( _old_connection );
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Redoes a connection change */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     if( _new_connection == null ) {
-      da.get_connections().remove_connection( _old_connection, true );
+      map.get_connections().remove_connection( _old_connection, true );
     }
-    da.set_current_connection( _new_connection );
-    da.queue_draw();
-    da.auto_save();
+    map.set_current_connection( _new_connection );
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

@@ -36,21 +36,21 @@ public class UndoNodeReparent : UndoItem {
   }
 
   /* Performs an undo operation for this data */
-  public override void undo( DrawArea da ) {
-    da.animator.add_nodes( da.get_nodes(), "undo_make_children_siblings" );
+  public override void undo( MindMap map ) {
+    map.da.animator.add_nodes( map.get_nodes(), "undo_make_children_siblings" );
     for( int i=(_last_index - 1); i>=_first_index; i-- ) {
       var child = _node.parent.children().index( i );
       child.detach( child.side );
       child.attach( _node, 0, null );
     }
-    da.animator.animate();
-    da.auto_save();
+    map.da.animator.animate();
+    map.auto_save();
   }
 
   /* Performs a redo operation */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     _node.make_children_siblings( _node.children().index( 0 ), false );
-    da.auto_save();
+    map.auto_save();
   }
 
 }

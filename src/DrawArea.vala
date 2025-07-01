@@ -239,8 +239,9 @@ public class DrawArea : Gtk.DrawingArea {
     _doc      = new Document( this );
     _settings = settings;
 
-    _map      = new MindMap( settings );
+    _map = new MindMap( settings );
     _map.queue_draw.connect( queue_draw );
+    _map.see.connect( see );
 
     /* Create the array of root nodes in the map */
     _nodes = new Array<Node>();
@@ -258,7 +259,7 @@ public class DrawArea : Gtk.DrawingArea {
     animator = new Animator( this );
 
     /* Allocate memory for the undo buffer */
-    undo_buffer = new UndoBuffer( this );
+    undo_buffer = new UndoBuffer( _map );
 
     /* Allocate the image editor popover */
     _image_editor = new ImageEditor( this );
@@ -4075,7 +4076,7 @@ public class DrawArea : Gtk.DrawingArea {
     var current   = _map.selected.current_node();
     var root_node = (current == null) ? null : current.get_root();
     if( undoable ) {
-      undo_buffer.add_item( new UndoNodeBalance( this, root_node ) );
+      undo_buffer.add_item( new UndoNodeBalance( _map, root_node ) );
     }
     if( (current == null) || !undoable ) {
       if( animate ) {

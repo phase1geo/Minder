@@ -28,7 +28,7 @@ using Pango;
 public class CanvasText : Object {
 
   /* Member variables */
-  private DrawArea       _da;
+  private MindMap        _map;
   private double         _posx         = 0.0;
   private double         _posy         = 0.0;
   private FormattedText  _text;

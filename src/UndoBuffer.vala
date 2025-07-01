@@ -23,7 +23,7 @@ using GLib;
 
 public class UndoBuffer : Object {
 
-  protected DrawArea        _da;
+  protected MindMap         _map;
   protected Array<UndoItem> _undo_buffer;
   protected Array<UndoItem> _redo_buffer;
   private   bool            _debug = false;
@@ -32,8 +32,8 @@ public class UndoBuffer : Object {
   public signal void buffer_changed( UndoBuffer buf );
 
   /* Default constructor */
-  public UndoBuffer( DrawArea da ) {
-    _da          = da;
+  public UndoBuffer( MindMap map ) {
+    _map         = map;
     _undo_buffer = new Array<UndoItem>();
     _redo_buffer = new Array<UndoItem>();
   }
@@ -59,7 +59,7 @@ public class UndoBuffer : Object {
   public virtual void undo() {
     if( undoable() ) {
       UndoItem item = _undo_buffer.index( _undo_buffer.length - 1 );
-      item.undo( _da );
+      item.undo( _map );
       _undo_buffer.remove_index( _undo_buffer.length - 1 );
       _redo_buffer.append_val( item );
       buffer_changed( this );
@@ -71,7 +71,7 @@ public class UndoBuffer : Object {
   public virtual void redo() {
     if( redoable() ) {
       UndoItem item = _redo_buffer.index( _redo_buffer.length - 1 );
-      item.redo( _da );
+      item.redo( _map );
       _redo_buffer.remove_index( _redo_buffer.length - 1 );
       _undo_buffer.append_val( item );
       buffer_changed( this );

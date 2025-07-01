@@ -32,10 +32,10 @@ public class UndoItem : GLib.Object {
   }
 
   /* Causes the stored item to be put into the before state */
-  public virtual void undo( DrawArea da ) {}
+  public virtual void undo( MindMap map ) {}
 
   /* Causes the stored item to be put into the after state */
-  public virtual void redo( DrawArea da ) {}
+  public virtual void redo( MindMap map ) {}
 
   /* Checks to see if the given undo item is "mergeable" with this one */
   public virtual bool matches( UndoItem item ) {

@@ -27,7 +27,8 @@ public class UndoNodeName : UndoItem {
   private CanvasText _text;
   private CanvasText _orig_text;
 
-  /* Constructor for a node name change */
+  //-------------------------------------------------------------
+  // Constructor for a node name change.
   public UndoNodeName( DrawArea da, Node node, CanvasText orig_text ) {
     base( _( "node name change" ) );
     _node      = node;
@@ -37,20 +38,22 @@ public class UndoNodeName : UndoItem {
     _orig_text.copy( orig_text );
   }
 
-  /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Undoes a node name change.
+  public override void undo( MindMap map ) {
     _node.name.copy( _orig_text );
-    da.queue_draw();
-    da.current_changed( da );
-    da.auto_save();
+    map.queue_draw();
+    map.current_changed( map );
+    map.auto_save();
   }
 
-  /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Redoes a node name change.
+  public override void redo( MindMap map ) {
     _node.name.copy( _text );
-    da.queue_draw();
-    da.current_changed( da );
-    da.auto_save();
+    map.queue_draw();
+    map.current_changed( map );
+    map.auto_save();
   }
 
 }

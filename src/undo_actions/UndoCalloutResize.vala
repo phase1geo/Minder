@@ -36,17 +36,17 @@ public class UndoCalloutResize : UndoItem {
   }
 
   /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     _callout.resize( _old_width - _new_width );
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     _callout.resize( _new_width - _old_width );
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

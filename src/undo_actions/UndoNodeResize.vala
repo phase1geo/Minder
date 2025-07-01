@@ -40,19 +40,19 @@ public class UndoNodeResize : UndoItem {
   }
 
   /* Undoes a node name change */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     _node.image_resizable = _old_resizable;
     _node.resize( _old_width - _new_width );
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Redoes a node name change */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     _node.image_resizable = _new_resizable;
     _node.resize( _new_width - _old_width );
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

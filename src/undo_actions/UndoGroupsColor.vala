@@ -41,21 +41,21 @@ public class UndoGroupsColor : UndoItem {
   }
 
   /* Undoes a connection change */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     for( int i=0; i<_groups.length; i++ ) {
       _groups.index( i ).color = _old_colors.index( i );
     }
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Redoes a connection change */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     for( int i=0; i<_groups.length; i++ ) {
       _groups.index( i ).color = _new_color;
     }
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

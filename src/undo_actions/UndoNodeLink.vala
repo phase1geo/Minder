@@ -36,17 +36,17 @@ public class UndoNodeLink : UndoItem {
   }
 
   /* Undoes a node image change */
-  public override void undo( DrawArea da ) {
+  public override void undo( MindMap map ) {
     _node.linked_node = _old_link;
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Redoes a node image change */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     _node.linked_node = _new_link;
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
 }

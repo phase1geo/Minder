@@ -35,25 +35,25 @@ public class UndoConnectionsDelete : UndoItem {
   }
 
   /* Undoes connection deletions */
-  public override void undo( DrawArea da ) {
-    var selections = da.get_selections();
+  public override void undo( MindMap map ) {
+    var selections = map.selected;
     selections.clear();
     for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().add_connection( _conns.index( i ) );
+      map.get_connections().add_connection( _conns.index( i ) );
       selections.add_connection( _conns.index( i ) );
     }
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
   }
 
   /* Redoes connection deletions */
-  public override void redo( DrawArea da ) {
+  public override void redo( MindMap map ) {
     for( int i=0; i<_conns.length; i++ ) {
-      da.get_connections().remove_connection( _conns.index( i ), false );
+      map.get_connections().remove_connection( _conns.index( i ), false );
     }
-    da.get_selections().clear_connections();
-    da.queue_draw();
-    da.auto_save();
+    map.selected.clear_connections();
+    map.queue_draw();
+    map.auto_save();
   }
 
 }
