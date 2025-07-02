@@ -191,7 +191,7 @@ public class MindMap {
     _stickers = new Stickers();
 
     /* Create groups */
-    _groups = new NodeGroups( this );
+    _groups = new NodeGroups();
 
     /* Allocate memory for the animator */
     animator = new Animator( this );
@@ -366,7 +366,7 @@ public class MindMap {
     _theme = win.themes.get_theme( theme.name );
 
     /* If we are the current drawarea, update the CSS and indicate the theme change */
-    if( win.get_current_da() == this ) {
+    if( _da.win.get_current_da() == this ) {
       update_css();
       theme_changed( this );
     }
@@ -433,7 +433,7 @@ public class MindMap {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var siblings = new Array<Node>();
-                var node = new Node.from_xml( this, null, it2, true, null, ref siblings );
+                var node = new Node.from_xml( _da, null, it2, true, null, ref siblings );
                 if( use_layout != null ) {
                   node.layout = use_layout;
                 }
@@ -510,50 +510,34 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
-  // THIS SHOULD BE MOVED TO EXPORTER
-  // Imports the OPML data, creating a mind map
-  public void import_opml( Xml.Node* n, ref Array<int>? expand_state) {
+  // Figures out the boundaries of the document primarily for the
+  // purposes of printing.
+  public void document_rectangle( out double x, out double y, out double width, out double height ) {
 
-    int node_id = 1;
+    double x1 =  10000000;
+    double y1 =  10000000;
+    double x2 = -10000000;
+    double y2 = -10000000;
 
-    /* Clear the existing nodes */
-    _nodes.remove_range( 0, _nodes.length );
-
-    /* Load the contents of the file */
-    for( Xml.Node* it = n->children; it != null; it = it->next ) {
-      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
-        if( it->name == "outline") {
-          var root = new Node( this, layouts.get_default() );
-          root.import_opml( this, it, node_id, ref expand_state, _theme );
-          if (_nodes.length == 0) {
-            root.posx = (get_allocated_width()  / 2) - 30;
-            root.posy = (get_allocated_height() / 2) - 10;
-          } else {
-            _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), root );
-          }
-          _nodes.append_val( root );
-        }
-      }
-    }
-
-  }
-
-  //-------------------------------------------------------------
-  // THIS SHOULD BE MOVED TO EXPORTER
-  // Exports all of the nodes in OPML format
-  public void export_opml( Xml.Node* parent, out string expand_state ) {
-    Array<int> estate  = new Array<int>();
-    int        node_id = 1;
+    /* Calculate the overall size of the map */
     for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).export_opml( parent, ref node_id, ref estate );
+      var nb = _nodes.index( i ).tree_bbox;
+      x1 = (x1 < nb.x) ? x1 : nb.x;
+      y1 = (y1 < nb.y) ? y1 : nb.y;
+      x2 = (x2 < (nb.x + nb.width))  ? (nb.x + nb.width)  : x2;
+      y2 = (y2 < (nb.y + nb.height)) ? (nb.y + nb.height) : y2;
     }
-    expand_state = "";
-    for( int i=0; i<estate.length; i++ ) {
-      if( i > 0 ) {
-        expand_state += ",";
-      }
-      expand_state += estate.index( i ).to_string();
-    }
+
+    /* Include the connection and sticker extents */
+    _connections.add_extents( ref x1, ref y1, ref x2, ref y2 );
+    _stickers.add_extents( ref x1, ref y1, ref x2, ref y2 );
+
+    /* Set the outputs */
+    x      = x1;
+    y      = y1;
+    width  = (x2 - x1);
+    height = (y2 - y1);
+
   }
 
   //-------------------------------------------------------------
@@ -618,7 +602,7 @@ public class MindMap {
     _selected.clear();
 
     /* Create the main idea node */
-    var n = new Node.with_name( this, _("Main Idea"), layouts.get_default() );
+    var n = new Node.with_name( _da, _("Main Idea"), layouts.get_default() );
 
     /* Get the rough dimensions of the canvas */
     int wwidth, wheight;
@@ -1815,7 +1799,7 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Draws all of the root node trees.
-  public void draw_all( Context ctx, bool exporting ) {
+  public void draw_all( Context ctx, bool exporting, bool moving_node ) {
 
     /* Draw the links first */
     for( int i=0; i<_nodes.length; i++ ) {
@@ -1833,7 +1817,7 @@ public class MindMap {
 
     /* Draw the current node on top of all others */
     if( (current_node != null) && (current_node.folded_ancestor() == null) ) {
-      current_node.draw_all( ctx, _theme, null, (!is_node_editable() && _pressed && _motion && !_resize), exporting );
+      current_node.draw_all( ctx, _theme, null, (!is_node_editable() && moving_node), exporting );
     }
 
     /* Draw the current connection on top of everything else */
@@ -2396,10 +2380,10 @@ public class MindMap {
   //-------------------------------------------------------------
   // Positions the given node that will added as a root prior to
   // adding it.
-  public void position_root_node( Node node, int canvas_width, int canvas_height ) {
+  public void position_root_node( Node node ) {
     if( _nodes.length == 0 ) {
-      node.posx = (canvas_width  / 2) - 30;
-      node.posy = (canvas_height / 2) - 10;
+      node.posx = (_da.get_allocated_width()  / 2) - 30;
+      node.posy = (_da.get_allocated_height() / 2) - 10;
     } else {
       _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), node );
     }
@@ -2409,9 +2393,9 @@ public class MindMap {
   // Creates a root node with the given name, positions it and
   // appends it to the root node list.
   public Node create_root_node( string name = "" ) {
-    var node = new Node.with_name( this, name, ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
+    var node = new Node.with_name( _da, name, ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
     node.style = StyleInspector.styles.get_global_style();
-    position_root_node( node );
+    _da.position_root_node( node );
     _nodes.append_val( node );
     return( node );
   }
@@ -2420,7 +2404,7 @@ public class MindMap {
   // Creates a sibling node, positions it and appends immediately
   // after the given sibling node.
   public Node create_main_node( Node root, NodeSide side, string name = "" ) {
-    var node   = new Node.with_name( this, name, layouts.get_default() );
+    var node   = new Node.with_name( _da, name, layouts.get_default() );
     node.side  = side;
     node.style = root.style;
     // node.style = StyleInspector.styles.get_style_for_level( 1, null );
@@ -2436,7 +2420,7 @@ public class MindMap {
   // Creates a sibling node, positions it and appends immediately
   // after the given sibling node.
   public Node create_sibling_node( Node sibling, bool below, string name = "" ) {
-    var node   = new Node.with_name( this, name, layouts.get_default() );
+    var node   = new Node.with_name( _da, name, layouts.get_default() );
     node.side  = sibling.side;
     node.style = sibling.style;
     node.attach( sibling.parent, (sibling.index() + (below ? 1 : 0)), _theme );
@@ -2451,7 +2435,7 @@ public class MindMap {
   // Creates a parent node, positions it, and inserts it just
   // above the child node.
   public Node create_parent_node( Node child, string name = "" ) {
-    var node  = new Node.with_name( this, name, layouts.get_default() );
+    var node  = new Node.with_name( _da, name, layouts.get_default() );
     var color = child.link_color;
     node.side  = child.side;
     node.style = child.style;
@@ -2467,7 +2451,7 @@ public class MindMap {
   // Creates a child node, positions it, and inserts it into the
   // parent node.
   public Node create_child_node( Node parent, string name = "" ) {
-    var node = new Node.with_name( this, name, layouts.get_default() );
+    var node = new Node.with_name( _da, name, layouts.get_default() );
     if( !parent.is_root() ) {
       node.side = parent.side;
     }
@@ -3071,7 +3055,7 @@ public class MindMap {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var siblings = new Array<Node>();
-                var node = new Node.from_xml( this, null, it2, true, null, ref siblings );
+                var node = new Node.from_xml( _da, null, it2, true, null, ref siblings );
                 nodes.append_val( node );
               }
             }
@@ -3324,7 +3308,7 @@ public class MindMap {
   // the node tree into the mindmap.
   private void paste_text_as_node( Node? node, string text ) {
     var nodes  = new Array<Node>();
-    var export = (ExportText)win.exports.get_by_name( "text" );
+    var export = (ExportText)_da.win.exports.get_by_name( "text" );
     export.import_text( text, 0, this, false, nodes );
     undo_buffer.add_item( new UndoNodesInsert( this, nodes ) );
     queue_draw();
@@ -3496,7 +3480,7 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Starts a connection from the current node.
-  public void start_connection( bool key, bool link ) {
+  public void start_connection( bool key, bool link, double press_x, double press_y ) {
     var current_node = _selected.current_node();
     if( (current_node == null) || _connections.hide ) return;
     var conn = new Connection( this, current_node );
@@ -3512,18 +3496,9 @@ public class MindMap {
       _attach_node = current_node;
       set_node_mode( _attach_node, NodeMode.ATTACHABLE );
     } else {
-      conn.draw_to( _press_x, _press_y );
+      conn.draw_to( press_x, press_y );
     }
     _last_node = current_node;
-    queue_draw();
-  }
-
-  //-------------------------------------------------------------
-  // Called when a connection is being drawn by moving the mouse.
-  public void update_connection( double x, double y ) {
-    var current = _selected.current_connection();
-    if( current == null ) return;
-    current.draw_to( scale_value( x ), scale_value( y ) );
     queue_draw();
   }
 

@@ -1408,7 +1408,7 @@ public class MainWindow : Gtk.ApplicationWindow {
             new_fname += ".minder";
             var da = add_tab_conditionally( new_fname, TabAddReason.IMPORT );
             update_title( da );
-            if( exports.index( i ).import( fname, da ) ) {
+            if( exports.index( i ).import( fname, da.map ) ) {
               save_tab_state( _nb.page );
               return( true );
             }

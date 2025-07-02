@@ -23,23 +23,27 @@ using Gtk;
 
 public class ExportOrgMode : Export {
 
-  /* Constructor */
+  //-------------------------------------------------------------
+  // Constructor
   public ExportOrgMode() {
     base( "org-mode", _( "Org-Mode" ), { ".org" }, true, false, false );
   }
 
-  /* Add settings for Org Mode */
+  //-------------------------------------------------------------
+  // Add settings for Org Mode
   public override void add_settings( Grid grid ) {
     add_setting_bool( "indent-mode", grid, _( "Indent Mode" ), _( "Export using indentation spaces" ), true );
   }
 
-  /* Save the settings */
+  //-------------------------------------------------------------
+  // Save the settings.
   public override void save_settings( Xml.Node* node ) {
     var value = get_bool( "indent-mode" );
     node->set_prop( "indent-mode", value.to_string() );
   }
 
-  /* Load the settings */
+  //-------------------------------------------------------------
+  // Load the settings.
   public override void load_settings( Xml.Node* node ) {
     var q = node->get_prop( "indent-mode" );
     if( q != null ) {
@@ -48,13 +52,14 @@ public class ExportOrgMode : Export {
     }
   }
 
-  /* Exports the given drawing area to the file of the given name */
-  public override bool export( string fname, DrawArea da ) {
+  //-------------------------------------------------------------
+  // Exports the given drawing area to the file of the given name.
+  public override bool export( string fname, MindMap map ) {
     var  file   = File.new_for_path( fname );
     bool retval = true;
     try {
       var os = file.replace( null, false, FileCreateFlags.NONE );
-      export_top_nodes( os, da );
+      export_top_nodes( os, map );
     } catch( Error e ) {
       retval = false;
     }
@@ -74,11 +79,11 @@ public class ExportOrgMode : Export {
   }
 
   /* Draws each of the top-level nodes */
-  private void export_top_nodes( FileOutputStream os, DrawArea da ) {
+  private void export_top_nodes( FileOutputStream os, MindMap map ) {
 
     try {
 
-      var nodes = da.get_nodes();
+      var nodes = map.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
         string title = "* " + nodes.index( i ).name.text.text + "\n\n";
         os.write( title.data );

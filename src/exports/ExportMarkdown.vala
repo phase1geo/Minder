@@ -56,7 +56,7 @@ public class ExportMarkdown : Export {
   }
 
   /* Exports the given drawing area to the file of the given name */
-  public override bool import( string fname, DrawArea da ) {
+  public override bool import( string fname, MindMap map ) {
     var file        = File.new_for_path( fname );
     var current_dir = Path.get_dirname( fname );
     try {
@@ -68,10 +68,10 @@ public class ExportMarkdown : Export {
       var str = dis.read_upto( "\0", 1, out len ) + "\0";
 
       /* Import the text */
-      import_text( str, da, current_dir );
+      import_text( str, map, current_dir );
 
-      da.queue_draw();
-      da.changed();
+      map.queue_draw();
+      map.changed();
 
     } catch( IOError err ) {
       return( false );
@@ -82,7 +82,7 @@ public class ExportMarkdown : Export {
   }
 
   /* Creates a new node from the given information and attaches it to the specified parent node */
-  private Node make_node( DrawArea da, Node? parent, string bullet, string task, string pre_name, string current_dir, bool attach = true ) {
+  private Node make_node( MindMap map, Node? parent, string bullet, string task, string pre_name, string current_dir, bool attach = true ) {
 
     NodeImage? image = null;
     var        name  = pre_name;
@@ -108,27 +108,27 @@ public class ExportMarkdown : Export {
           if( !Path.is_absolute( file ) ) {
             file = Path.build_filename( current_dir, file );
           }
-          image = new NodeImage.from_uri( da.image_manager, "file://" + file, width );
+          image = new NodeImage.from_uri( map.image_manager, "file://" + file, width );
         }
       }
 
     } catch( RegexError e ) {
     }
 
-    var node = new Node.with_name( da, name, da.layouts.get_default() );
+    var node = new Node.with_name( map.da, name, map.layouts.get_default() );
 
     /* Add the style component to the node */
     if( parent == null ) {
       node.style = StyleInspector.styles.get_global_style();
       if( attach ) {
-        da.position_root_node( node );
-        da.add_root( node, -1 );
-        da.set_current_node( node );
+        map.da.position_root_node( node );
+        map.add_root( node, -1 );
+        map.set_current_node( node );
       }
     } else {
       node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), null );
       if( attach ) {
-        node.attach( parent, (int)parent.children().length, da.get_theme() );
+        node.attach( parent, (int)parent.children().length, map.get_theme() );
       }
     }
 
@@ -146,7 +146,7 @@ public class ExportMarkdown : Export {
     }
 
     /* Add the node image, if necessary */
-    node.set_image( da.image_manager, image );
+    node.set_image( map.image_manager, image );
 
     return( node );
 
@@ -163,14 +163,14 @@ public class ExportMarkdown : Export {
   }
 
   /* Imports a mindmap from the given text */
-  private void import_text( string txt, DrawArea da, string current_dir ) {
+  private void import_text( string txt, MindMap map, string current_dir ) {
 
     try {
 
       var stack   = new Array<Hier?>();
       var lines   = txt.split( "\n" );
       var re      = new Regex( "^(\\s*)((\\-|\\+|\\*|#|>|\\d+\\.)\\s*)?(\\[([ xX])\\]\\s*)?(.*)$" );
-      var current = da.get_current_node();
+      var current = map.get_current_node();
 
       /*
        Populate the stack with the current node, if one exists.  Set the spaces
@@ -206,18 +206,18 @@ public class ExportMarkdown : Export {
 
           /* If the stack is empty */
           } else if( stack.length == 0 ) {
-            node = make_node( da, null, bullet, task, str, current_dir );
+            node = make_node( map, null, bullet, task, str, current_dir );
             stack.append_val( {spaces, node} );
 
           /* Add sibling node */
           } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
-            node = make_node( da, stack.index( stack.length - 1 ).node.parent, bullet, task, str, current_dir, true );
+            node = make_node( map, stack.index( stack.length - 1 ).node.parent, bullet, task, str, current_dir, true );
             stack.remove_index( stack.length - 1 );
             stack.append_val( {spaces, node} );
 
           /* Add child node */
           } else if( spaces > stack.index( stack.length - 1 ).spaces ) {
-            node = make_node( da, stack.index( stack.length - 1 ).node, bullet, task, str, current_dir );
+            node = make_node( map, stack.index( stack.length - 1 ).node, bullet, task, str, current_dir );
             stack.append_val( {spaces, node} );
 
           /* Add ancestor node */
@@ -226,14 +226,14 @@ public class ExportMarkdown : Export {
               stack.remove_index( stack.length - 1 );
             }
             if( stack.length == 0 ) {
-              node = make_node( da, null, bullet, task, str, current_dir );
+              node = make_node( map, null, bullet, task, str, current_dir );
               stack.append_val( {spaces, node} );
             } else if( spaces == stack.index( stack.length - 1 ).spaces ) {
-              node = make_node( da, stack.index( stack.length - 1 ).node.parent, bullet, task, str, current_dir );
+              node = make_node( map, stack.index( stack.length - 1 ).node.parent, bullet, task, str, current_dir );
               stack.remove_index( stack.length - 1 );
               stack.append_val( {spaces, node} );
             } else {
-              node = make_node( da, stack.index( stack.length - 1 ).node, bullet, task, str, current_dir );
+              node = make_node( map, stack.index( stack.length - 1 ).node, bullet, task, str, current_dir );
               stack.append_val( {spaces, node} );
             }
           }
@@ -252,14 +252,14 @@ public class ExportMarkdown : Export {
   /****************************************************************/
 
   /* Exports the given drawing area to the file of the given name */
-  public override bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, MindMap map ) {
     string filename, imgdir;
     if( !handle_directory( fname, out filename, out imgdir ) ) return( false );
     var  file     = File.new_for_path( filename );
     bool retval   = true;
     try {
       var os = file.replace( null, false, FileCreateFlags.NONE );
-      export_top_nodes( os, da, imgdir );
+      export_top_nodes( os, map, imgdir );
     } catch( Error e ) {
       retval = false;
     }
@@ -267,11 +267,11 @@ public class ExportMarkdown : Export {
   }
 
   /* Draws each of the top-level nodes */
-  private void export_top_nodes( FileOutputStream os, DrawArea da, string imgdir ) {
+  private void export_top_nodes( FileOutputStream os, MindMap map, string imgdir ) {
 
     try {
 
-      var nodes = da.get_nodes();
+      var nodes = map.get_nodes();
       for( int i=0; i<nodes.length; i++ ) {
         var title = "# " + nodes.index( i ).name.text.text + "\n\n";
         os.write( title.data );
@@ -281,7 +281,7 @@ public class ExportMarkdown : Export {
         }
         var children = nodes.index( i ).children();
         for( int j=0; j<children.length; j++ ) {
-          export_node( os, da.image_manager, children.index( j ), imgdir );
+          export_node( os, map.image_manager, children.index( j ), imgdir );
         }
       }
 

@@ -287,9 +287,9 @@ public class Connection : Object {
   }
 
   /* Makes sure that the title is ready to be edited */
-  public void edit_title_begin( DrawArea da ) {
+  public void edit_title_begin( MindMap map ) {
     if( _title != null ) return;
-    _title = new CanvasText.with_text( da, "" );
+    _title = new CanvasText.with_text( map.da, "" );
     _title.resized.connect( position_title );
     _title.set_font( style.connection_font.get_family(), (style.connection_font.get_size() / Pango.SCALE) );
     position_title();
@@ -303,14 +303,14 @@ public class Connection : Object {
   }
 
   /* Adds a title */
-  public void change_title( DrawArea da, string title, bool allow_empty = false ) {
+  public void change_title( MindMap map, string title, bool allow_empty = false ) {
     if( (title == "") && !allow_empty ) {
       if( _title != null ) {
         _title.resized.disconnect( position_title );
       }
       _title = null;
     } else if( _title == null ) {
-      _title = new CanvasText.with_text( da, title );
+      _title = new CanvasText.with_text( map.da, title );
       _title.resized.connect( position_title );
       _title.set_font( style.connection_font.get_family(), (style.connection_font.get_size() / Pango.SCALE) );
       position_title();
@@ -614,19 +614,19 @@ public class Connection : Object {
   }
 
   /* Loads the connection information */
-  private void load( DrawArea da, Xml.Node* node, Array<Node> nodes ) {
+  private void load( MindMap map, Xml.Node* node, Array<Node> nodes ) {
 
     double dragx = 0, dragy = 0;
 
     string? f = node->get_prop( "from_id" );
     if( f != null ) {
-      _from_node = da.get_node( nodes, int.parse( f ) );
+      _from_node = map.get_node( nodes, int.parse( f ) );
       connect_node( _from_node );
     }
 
     string? t = node->get_prop( "to_id" );
     if( t != null ) {
-      _to_node = da.get_node( nodes, int.parse( t ) );
+      _to_node = map.get_node( nodes, int.parse( t ) );
       connect_node( _to_node );
     }
 
@@ -647,7 +647,7 @@ public class Connection : Object {
 
     string? c = node->get_prop( "color" );
     if( c != null ) {
-      _color = da.get_theme().get_color( "connection_background" );
+      _color = map.get_theme().get_color( "connection_background" );
       _color.parse( c );
     }
 
@@ -673,7 +673,7 @@ public class Connection : Object {
           case "style" :  style.load_connection( it );  break;
           case "title" :
            if( (it->children != null) && (it->children->type == Xml.ElementType.TEXT_NODE) ) {
-             change_title( da, it->children->get_content() );
+             change_title( map, it->children->get_content() );
            }
            break;
           case "note"  :

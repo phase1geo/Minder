@@ -636,8 +636,8 @@ public class DrawArea : Gtk.DrawingArea {
           case "layout"      :  load_layout( it, ref use_layout );  break;
           case "styles"      :  StyleInspector.styles.load( it );  break;
           case "images"      :  image_manager.load( it );  break;
-          case "connections" :  _connections.load( this, it, null, _nodes );  break;
-          case "groups"      :  groups.load( this, it, null, _nodes );  break;
+          case "connections" :  _connections.load( _map, it, null, _nodes );  break;
+          case "groups"      :  groups.load( _map, it, null, _nodes );  break;
           case "stickers"    :  _stickers.load( this, it );  break;
           case "nodelinks"   :  _node_links.load( it );  break;
           case "nodes"       :
@@ -2445,57 +2445,11 @@ public class DrawArea : Gtk.DrawingArea {
     ctx.fill();
   }
 
-  /* Draws all of the root node trees */
-  public void draw_all( Context ctx, bool exporting ) {
-
-    /*
-    double x, y, w, h;
-    document_rectangle( out x, out y, out w, out h );
-    Utils.set_context_color_with_alpha( ctx, _theme.get_color( "nodesel_background" ), 0.1 );
-    ctx.rectangle( x, y, w, h );
-    ctx.fill();
-    */
-
-    /* Draw the links first */
-    for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).draw_links( ctx, _theme );
-    }
-
-    /* Draw groups next */
-    _groups.draw_all( ctx, _theme, exporting );
-
-    var current_node = _map.selected.current_node();
-    var current_conn = _map.selected.current_connection();
-    for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).draw_all( ctx, _theme, current_node, false, exporting );
-    }
-
-    /* Draw the current node on top of all others */
-    if( (current_node != null) && (current_node.folded_ancestor() == null) ) {
-      current_node.draw_all( ctx, _theme, null, (!is_node_editable() && _pressed && _motion && !_resize), exporting );
-    }
-
-    /* Draw the current connection on top of everything else */
-    _connections.draw_all( ctx, _theme, exporting );
-    if( current_conn != null ) {
-      current_conn.draw( ctx, _theme, exporting );
-    }
-
-    /* Draw the floating stickers */
-    _stickers.draw_all( ctx, _theme, 1.0, exporting );
-
-    /* Draw the select box if one exists */
-    if( !exporting ) {
-      draw_select_box( ctx );
-    }
-
-  }
-
   /* Draw the available nodes */
   public void on_draw( DrawingArea da, Context ctx, int width, int height ) {
     ctx.scale( sfactor, sfactor );
     draw_background( ctx );
-    draw_all( ctx, false );
+    _map.draw_all( ctx, false, (_pressed && _motion && !_resize) );
   }
 
   /* Displays the contextual menu based on what is currently selected */
@@ -5190,7 +5144,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
     }
     else if( !shift && has_key( kvs, Key.u ) )    { if( undo_buffer.undoable() ) undo_buffer.undo(); }
-    else if( !shift && has_key( kvs, Key.x ) )    { start_connection( true, false ); }
+    else if( !shift && has_key( kvs, Key.x ) )    { _map.start_connection( true, false, _press_x, _press_y ); }
     else if( !shift && has_key( kvs, Key.y ) )    { toggle_links(); }
     else if( !shift && has_key( kvs, Key.z ) )    { zoom_out(); }
     else return( false );

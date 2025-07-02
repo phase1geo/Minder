@@ -202,11 +202,11 @@ public class Connections {
   }
 
   /* Loads the listed connections from the given XML data */
-  public void load( DrawArea da, Xml.Node* node, Array<Connection>? conns, Array<Node> nodes ) {
+  public void load( MindMap map, Xml.Node* node, Array<Connection>? conns, Array<Node> nodes ) {
     for( Xml.Node* it = node->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "connection" ) {
-          var conn = new Connection.from_xml( da, it, nodes );
+          var conn = new Connection.from_xml( map, it, nodes );
           if( conns != null ) {
             conns.append_val( conn );
           }

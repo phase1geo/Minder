@@ -29,15 +29,15 @@ public class ExportMermaid : Export {
   }
 
   /* Exports the given drawing area to the file of the given name */
-  public override bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, MindMap map ) {
     var  file   = File.new_for_path( fname );
     bool retval = true;
     try {
       var os = file.replace( null, false, FileCreateFlags.NONE );
       if( get_bool( "mindmap" ) ) {
-        export_top_nodes_mindmap( os, da );
+        export_top_nodes_mindmap( os, map );
       } else {
-        export_top_nodes_graph( os, da );
+        export_top_nodes_graph( os, map );
       }
     } catch( Error e ) {
       retval = false;
@@ -62,11 +62,11 @@ public class ExportMermaid : Export {
   }
 
   /* Draws each of the top-level nodes */
-  private void export_top_nodes_graph( FileOutputStream os, DrawArea da ) {
+  private void export_top_nodes_graph( FileOutputStream os, MindMap map ) {
 
     try {
 
-      var nodes   = da.get_nodes();
+      var nodes   = map.get_nodes();
       int link_id = 0;
 
       if( nodes.length == 0 ) {
@@ -86,11 +86,11 @@ public class ExportMermaid : Export {
 
   }
 
-  private void export_top_nodes_mindmap( FileOutputStream os, DrawArea da ) {
+  private void export_top_nodes_mindmap( FileOutputStream os, MindMap map ) {
 
     try {
 
-      var nodes = da.get_nodes();
+      var nodes = map.get_nodes();
       
       if( nodes.length != 1 ) {
         return;

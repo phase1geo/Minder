@@ -30,12 +30,12 @@ public class ExportFileSystem : Export {
   }
 
   /* Performs export to the given filename */
-  public override bool export( string dname, DrawArea da ) {
+  public override bool export( string dname, MindMap map ) {
     if( DirUtils.create( dname, 0775 ) == -1 ) {
       return( false );
     }
-    for( int i=0; i<da.get_nodes().length; i++ ) {
-      if( !export_node( dname, da.get_nodes().index( i ) ) ) {
+    for( int i=0; i<map.get_nodes().length; i++ ) {
+      if( !export_node( dname, map.get_nodes().index( i ) ) ) {
         return( false );
       }
     }
@@ -65,20 +65,20 @@ public class ExportFileSystem : Export {
   }
 
   /* Imports given filename into drawing area */
-  public override bool import( string dname, DrawArea da ) {
-    var node = da.create_root_node( Path.get_basename( dname ) );
-    return( import_node( dname, node, da ) );
+  public override bool import( string dname, MindMap map ) {
+    var node = map.create_root_node( Path.get_basename( dname ) );
+    return( import_node( dname, node, map ) );
   }
 
   /* Imports the given directory as a node tree of the given parent */
-  private bool import_node( string dname, Node parent, DrawArea da ) {
+  private bool import_node( string dname, Node parent, MindMap map ) {
     if( FileUtils.test( dname, FileTest.IS_DIR ) ) {
       var dir = Dir.open( dname, 0 );
       string? name;
       while( (name = dir.read_name()) != null ) {
-        var node = da.create_child_node( parent, name );
+        var node = map.create_child_node( parent, name );
         var path = Path.build_filename( dname, name );
-        if( !import_node( path, node, da ) ) {
+        if( !import_node( path, node, map ) ) {
           return( false );
         }
       }

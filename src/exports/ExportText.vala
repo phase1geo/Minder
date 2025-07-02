@@ -45,14 +45,14 @@ public class ExportText : Export {
   }
 
   /* Exports the given drawing area to the file of the given name */
-  public override bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, MindMap map ) {
 
     var  file   = File.new_for_path( fname );
     bool retval = true;
 
     try {
       var os  = file.replace( null, false, FileCreateFlags.NONE );
-      var str = export_top_nodes( da );
+      var str = export_top_nodes( map );
       os.write( str.data );
       os.close();
     } catch( Error e ) {
@@ -64,16 +64,16 @@ public class ExportText : Export {
   }
 
   /* Draws each of the top-level nodes */
-  public string export_top_nodes( DrawArea da ) {
+  public string export_top_nodes( MindMap map ) {
 
     var value = "";
-    var nodes = da.get_nodes();
+    var nodes = map.get_nodes();
 
     for( int i=0; i<nodes.length; i++ ) {
       value += "# " + nodes.index( i ).name.text.text + "\n";
       var children = nodes.index( i ).children();
       for( int j=0; j<children.length; j++ ) {
-        value += export_node( da, children.index( j ) );
+        value += export_node( map, children.index( j ) );
       }
     }
 
@@ -82,7 +82,7 @@ public class ExportText : Export {
   }
 
   /* Draws the given node and its children to the output stream */
-  public string export_node( DrawArea da, Node node, string prefix = "\t" ) {
+  public string export_node( MindMap map, Node node, string prefix = "\t" ) {
 
     string value = prefix + (node.is_in_sequence() ? "%d. ".printf( node.index() + 1 ) : "- ");
 
@@ -99,7 +99,7 @@ public class ExportText : Export {
     value += node.name.text.text.chomp().replace( "\n", "\n%s  ".printf( prefix ) )  + "\n";
 
     if( node.image != null ) {
-      var uri = da.image_manager.get_uri( node.image.id );
+      var uri = map.image_manager.get_uri( node.image.id );
       if( uri != "" ) {
         value += prefix + "  ! " + uri + "\n";
       }
@@ -113,7 +113,7 @@ public class ExportText : Export {
     /* Add the children */
     var children = node.children();
     for( int i=0; i<children.length; i++ ) {
-      value += export_node( da, children.index( i ), prefix + "\t" );
+      value += export_node( map, children.index( i ), prefix + "\t" );
     }
 
     return( value );
@@ -123,7 +123,7 @@ public class ExportText : Export {
   /****************************************************************************/
 
   /* Imports a text file */
-  public override bool import( string fname, DrawArea da ) {
+  public override bool import( string fname, MindMap map ) {
 
     try {
 
@@ -136,10 +136,10 @@ public class ExportText : Export {
       var str = dis.read_upto( "\0", 1, out len ) + "\0";
 
       /* Import the text */
-      import_text( str, da.settings.get_int( "quick-entry-spaces-per-tab" ), da, false );
+      import_text( str, map.settings.get_int( "quick-entry-spaces-per-tab" ), map, false );
 
-      da.queue_draw();
-      da.auto_save();
+      map.queue_draw();
+      map.auto_save();
 
     } catch( IOError err ) {
       return( false );
@@ -152,9 +152,9 @@ public class ExportText : Export {
   }
 
   /* Creates a new node from the given information and attaches it to the specified parent node */
-  public Node make_node( DrawArea da, string task, string name ) {
+  public Node make_node( MindMap map, string task, string name ) {
 
-    var node = new Node.with_name( da, name, da.layouts.get_default() );
+    var node = new Node.with_name( map.da, name, map.layouts.get_default() );
 
     /* Add the task information, if necessary */
     if( task != "" ) {
@@ -168,16 +168,16 @@ public class ExportText : Export {
 
   }
 
-  private void parent_node( DrawArea da, Node node, bool node_in_sequence, Node? parent ) {
+  private void parent_node( MindMap map, Node node, bool node_in_sequence, Node? parent ) {
     if( parent == null ) {
       node.style = StyleInspector.styles.get_global_style();
-      da.position_root_node( node );
-      da.add_root( node, -1 );
-      da.set_current_node( node );
+      map.da.position_root_node( node );
+      map.add_root( node, -1 );
+      map.set_current_node( node );
     } else {
       parent.sequence = node_in_sequence;
       node.style = StyleInspector.styles.get_style_for_level( (parent.get_level() + 1), null );
-      node.attach( parent, (int)parent.children().length, da.get_theme() );
+      node.attach( parent, (int)parent.children().length, map.get_theme() );
     }
   }
 
@@ -186,12 +186,13 @@ public class ExportText : Export {
     node.note = "%s\n%s".printf( node.note, str ).strip();
   }
 
-  /* Appends the given string to the node's title */
+  //-------------------------------------------------------------
+  // Appends the given string to the node's title.
   public void append_title( Node node, string str ) {
     node.name.text.append_text( "\n" + str );
   }
 
-  public bool parse_text( DrawArea da, string txt, int tab_spaces, Array<NodeHier?> stack ) {
+  public bool parse_text( MindMap map, string txt, int tab_spaces, Array<NodeHier?> stack ) {
 
     try {
 
@@ -224,13 +225,13 @@ public class ExportText : Export {
           /* Add image */
           } else if( bullet == "!" ) {
             if( node != null ) {
-              var img = new NodeImage.from_uri( da.image_manager, str, 200 );
-              node.set_image( da.image_manager, img );
+              var img = new NodeImage.from_uri( map.image_manager, str, 200 );
+              node.set_image( map.image_manager, img );
             }
 
           /* If we are starting a new node, create it and add it to the stack */
           } else if( bullet != "" ) {
-            node = make_node( da, task, str );
+            node = make_node( map, task, str );
             var hier = new NodeHier( spaces, node, Regex.match_simple( "\\d+\\.", bullet ), lnum, lnum );
             stack.append_val( hier );
 
@@ -257,18 +258,18 @@ public class ExportText : Export {
   }
 
   /* Imports the given text string */
-  public void import_text( string txt, int tab_spaces, DrawArea da, bool replace, Array<Node>? nodes = null ) {
+  public void import_text( string txt, int tab_spaces, MindMap map, bool replace, Array<Node>? nodes = null ) {
 
     var stack = new Array<NodeHier>();
-    if( !parse_text( da, txt, tab_spaces, stack ) ) {
+    if( !parse_text( map, txt, tab_spaces, stack ) ) {
       return;
     }
 
-    var current = da.get_current_node();
+    var current = map.get_current_node();
     if( (current != null) && replace ) {
-      da.replace_node( current, stack.index( 0 ).node );
+      map.replace_node( current, stack.index( 0 ).node );
     } else {
-      parent_node( da, stack.index( 0 ).node, stack.index( 0 ).in_sequence, current );
+      parent_node( map, stack.index( 0 ).node, stack.index( 0 ).in_sequence, current );
     }
 
     if( nodes != null ) {
@@ -283,11 +284,11 @@ public class ExportText : Export {
 
       /* Add sibling node */
       if( spaces == stack.index( i - 1 ).spaces ) {
-        parent_node( da, node, in_seq, stack.index( i - 1 ).node.parent );
+        parent_node( map, node, in_seq, stack.index( i - 1 ).node.parent );
 
       /* Add child node */
       } else if( spaces > stack.index( i - 1 ).spaces ) {
-        parent_node( da, node, in_seq, stack.index( i - 1 ).node );
+        parent_node( map, node, in_seq, stack.index( i - 1 ).node );
 
       /* Add ancestor node */
       } else {
@@ -297,9 +298,9 @@ public class ExportText : Export {
         }
         if( parent != -1 ) {
           if( spaces == stack.index( parent ).spaces ) {
-            parent_node( da, node, in_seq, stack.index( parent ).node.parent );
+            parent_node( map, node, in_seq, stack.index( parent ).node.parent );
           } else {
-            parent_node( da, node, in_seq, stack.index( parent ).node );
+            parent_node( map, node, in_seq, stack.index( parent ).node );
           }
         }
       }

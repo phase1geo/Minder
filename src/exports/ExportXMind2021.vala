@@ -80,7 +80,7 @@ public class ExportXMind2021 : Export {
   }
 
   /* Exports the given drawing area to the file of the given name */
-  public override bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, MindMap map ) {
 
     /* Create temporary directory to place contents in */
     var dir = DirUtils.mkdtemp( "minderXXXXXX" );
@@ -88,10 +88,10 @@ public class ExportXMind2021 : Export {
     var file_list = new FileItems();
 
     /* Export the meta file */
-    export_meta( da, dir, file_list );
+    export_meta( map, dir, file_list );
 
     /* Export the content file */
-    export_content( da, dir, file_list );
+    export_content( map, dir, file_list );
 
     /* Export manifest file */
     export_manifest( dir, file_list );
@@ -135,7 +135,7 @@ public class ExportXMind2021 : Export {
   }
 
   /* Generate the main content file from  */
-  private bool export_content( DrawArea da, string dir, FileItems file_list ) {
+  private bool export_content( MindMap map, string dir, FileItems file_list ) {
 
     var root  = new Json.Node( Json.NodeType.ARRAY );
     var top   = new Json.Array();
@@ -145,12 +145,12 @@ public class ExportXMind2021 : Export {
 
     sheet.set_string_member( "class", "sheet" );
     sheet.set_string_member( "title", "Map" );
-    sheet.set_object_member( "rootTopic", export_node( da, da.get_nodes().index( 0 ), true, dir, file_list ) );
-    sheet.set_object_member( "theme", export_theme( da ) );
-    sheet.set_array_member( "extensions", export_extensions( da ) );
+    sheet.set_object_member( "rootTopic", export_node( map, map.get_nodes().index( 0 ), true, dir, file_list ) );
+    sheet.set_object_member( "theme", export_theme( map ) );
+    sheet.set_array_member( "extensions", export_extensions( map ) );
     sheet.set_string_member( "topicPositioning", "fixed" );
-    sheet.set_array_member( "relationships", export_relationships( da ) );
-    // sheet.set_member( "style", export_style( da ) );
+    sheet.set_array_member( "relationships", export_relationships( map ) );
+    // sheet.set_member( "style", export_style( map ) );
 
     top.add_object_element( sheet );
 
@@ -170,7 +170,7 @@ public class ExportXMind2021 : Export {
 
   }
 
-  private Json.Object export_node( DrawArea da, Node node, bool top, string dir, FileItems file_list ) {
+  private Json.Object export_node( MindMap map, Node node, bool top, string dir, FileItems file_list ) {
 
     var topic  = new Json.Object();
     var groups = new Array<int>();
@@ -189,7 +189,7 @@ public class ExportXMind2021 : Export {
     }
 
     if( node.image != null ) {
-      var image = export_node_image( da, node, dir, file_list );
+      var image = export_node_image( map, node, dir, file_list );
       if( image != null ) {
         topic.set_object_member( "image", image );
       }
@@ -201,7 +201,7 @@ public class ExportXMind2021 : Export {
 
       for( int i=0; i<node.children().length; i++ ) {
         var child = node.children().index( i );
-        attached.add_object_element( export_node( da, child, false, dir, file_list ) );
+        attached.add_object_element( export_node( map, child, false, dir, file_list ) );
         if( child.group ) {
           groups.append_val( i );
         }
@@ -238,11 +238,11 @@ public class ExportXMind2021 : Export {
   }
 
   /* Exports the given node's image */
-  private Json.Object? export_node_image( DrawArea da, Node node, string dir, FileItems file_list ) {
+  private Json.Object? export_node_image( MindMap map, Node node, string dir, FileItems file_list ) {
 
     var image     = new Json.Object();
-    var img_name  = da.image_manager.get_file( node.image.id );
-    var mime_type = da.image_manager.get_mime_type( node.image.id );
+    var img_name  = map.image_manager.get_file( node.image.id );
+    var mime_type = map.image_manager.get_mime_type( node.image.id );
     var src       = Path.build_filename( "resources", Filename.display_basename( img_name ) );
     var parts     = src.split( "." );
 
@@ -287,16 +287,16 @@ public class ExportXMind2021 : Export {
     return( content );
   }
 
-  private Json.Object export_theme( DrawArea da ) {
+  private Json.Object export_theme( MindMap map ) {
 
     var theme = new Json.Object();
 
     theme.set_object_member( "centralTopic", export_node_style( 0 ) );
     theme.set_object_member( "mainTopic",    export_node_style( 1 ) );
     theme.set_object_member( "subTopic",     export_node_style( 2 ) );
-    theme.set_object_member( "boundary",     export_boundary_style( da ) );
-    theme.set_object_member( "relationship", export_relationship_style( da ) );
-    theme.set_object_member( "map",          export_map_style( da ) );
+    theme.set_object_member( "boundary",     export_boundary_style( map ) );
+    theme.set_object_member( "relationship", export_relationship_style( map ) );
+    theme.set_object_member( "map",          export_map_style( map ) );
 
     return( theme );
 
@@ -336,9 +336,9 @@ public class ExportXMind2021 : Export {
 
   }
 
-  private Json.Object export_boundary_style( DrawArea da ) {
+  private Json.Object export_boundary_style( MindMap map ) {
 
-    var theme = da.get_theme();
+    var theme = map.get_theme();
     var node  = new Json.Object();
     var props = new Json.Object();
 
@@ -355,9 +355,9 @@ public class ExportXMind2021 : Export {
 
   }
 
-  private Json.Object export_relationship_style( DrawArea da ) {
+  private Json.Object export_relationship_style( MindMap map ) {
 
-    var theme = da.get_theme();
+    var theme = map.get_theme();
     var style = StyleInspector.styles.get_global_style();
     var node  = new Json.Object();
     var props = new Json.Object();
@@ -385,9 +385,9 @@ public class ExportXMind2021 : Export {
 
   }
 
-  private Json.Object export_map_style( DrawArea da ) {
+  private Json.Object export_map_style( MindMap map ) {
 
-    var theme = da.get_theme();
+    var theme = map.get_theme();
     var node  = new Json.Object();
     var props = new Json.Object();
 
@@ -401,9 +401,9 @@ public class ExportXMind2021 : Export {
 
   }
 
-  private Json.Array export_extensions( DrawArea da ) {
+  private Json.Array export_extensions( MindMap map ) {
 
-    var root    = da.get_nodes().index( 0 );
+    var root    = map.get_nodes().index( 0 );
     var layout  = root.layout;
     var exts    = new Json.Array();
     var node    = new Json.Object();
@@ -427,10 +427,10 @@ public class ExportXMind2021 : Export {
 
   }
 
-  private Json.Array export_relationships( DrawArea da ) {
+  private Json.Array export_relationships( MindMap map ) {
 
     var rels  = new Json.Array();
-    var conns = da.get_connections().connections;
+    var conns = map.get_connections().connections;
 
     for( int i=0; i<conns.length; i++ ) {
 
@@ -438,7 +438,7 @@ public class ExportXMind2021 : Export {
       var conn     = conns.index( i );
       var conn_id  = ids++;
       var style_id = ids++;
-      var color    = (conn.color == null) ? da.get_theme().get_color( "connection_background" ) : conn.color;
+      var color    = (conn.color == null) ? map.get_theme().get_color( "connection_background" ) : conn.color;
       var dash     = "dash";
 
       node.set_string_member( "id", conn_id.to_string() );
@@ -474,7 +474,7 @@ public class ExportXMind2021 : Export {
   }
 
   /* Exports the contents of the meta file */
-  private bool export_meta( DrawArea da, string dir, FileItems file_list ) {
+  private bool export_meta( MindMap map, string dir, FileItems file_list ) {
 
     var root    = new Json.Node( Json.NodeType.OBJECT );
     var top     = new Json.Object();
@@ -557,7 +557,7 @@ public class ExportXMind2021 : Export {
   // --------------------------------------------------------------------------------------
 
   /* Main method used to import an XMind mind-map into Minder */
-  public override bool import( string fname, DrawArea da ) {
+  public override bool import( string fname, MindMap map ) {
 
     stdout.printf( "In XMind 2021 import\n" );
 
@@ -578,17 +578,17 @@ public class ExportXMind2021 : Export {
       return( false );
     }
 
-    import_content( da, content, dir, id_map );
+    import_content( map, content, dir, id_map );
 
     /* Update the drawing area and save the result */
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
 
     return( true );
 
   }
 
-  private bool import_content( DrawArea da, string fname, string dir, HashMap<string,IdObject> id_map ) {
+  private bool import_content( MindMap map, string fname, string dir, HashMap<string,IdObject> id_map ) {
 
     var parser = new Json.Parser();
 
@@ -599,7 +599,7 @@ public class ExportXMind2021 : Export {
       return( false );
     }
 
-    import_map( da, parser.get_root(), dir, id_map );
+    import_map( map, parser.get_root(), dir, id_map );
 
     return( true );
 
@@ -629,54 +629,54 @@ public class ExportXMind2021 : Export {
     return( null );
   }
 
-  private void import_map( DrawArea da, Json.Node n, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_map( MindMap map, Json.Node n, string dir, HashMap<string,IdObject> id_map ) {
     if( n.get_node_type() == Json.NodeType.ARRAY ) {
       foreach( unowned Json.Node node in n.get_array().get_elements() ) {
         unowned var obj = node.get_object();
         if( get_json_string( obj, "class" ) == "sheet" ) {
-          import_sheet( da, obj, dir, id_map );
+          import_sheet( map, obj, dir, id_map );
         }
       }
     }
   }
 
   /* Import a sheet */
-  private void import_sheet( DrawArea da, Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_sheet( MindMap map, Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
 
     unowned var theme = get_json_object( obj, "theme" );
     unowned var root  = get_json_object( obj, "rootTopic" );
     unowned var rels  = get_json_array( obj, "relationships" );
 
     if( theme != null ) {
-      import_theme( da, theme, id_map );
+      import_theme( map, theme, id_map );
     }
 
     if( root != null ) {
-      import_topic( da, null, root, false, dir, id_map );
+      import_topic( map, null, root, false, dir, id_map );
     }
 
     if( rels != null ) {
-      import_relationships( da, rels, id_map );
+      import_relationships( map, rels, id_map );
     }
 
   }
 
-  private void import_topic( DrawArea da, Node? parent, Json.Object obj, bool attached, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_topic( MindMap map, Node? parent, Json.Object obj, bool attached, string dir, HashMap<string,IdObject> id_map ) {
 
     Node node;
 
     var sclass = get_json_string( obj, "structureClass" );
     if( sclass != "" ) {
-      node = da.create_root_node();
+      node = map.create_root_node();
       if( sclass == "org.xmind.ui.map.unbalanced" ) {
-        node.layout = da.layouts.get_layout( _( "Horizontal" ) );
+        node.layout = map.layouts.get_layout( _( "Horizontal" ) );
       } else {
-        node.layout = da.layouts.get_layout( _( "To right" ) );
+        node.layout = map.layouts.get_layout( _( "To right" ) );
       }
     } else if( !attached ) {
-      node = da.create_root_node();
+      node = map.create_root_node();
     } else {
-      node = da.create_child_node( parent );
+      node = map.create_child_node( parent );
     }
 
     /* Handle the ID */
@@ -710,17 +710,17 @@ public class ExportXMind2021 : Export {
 
     unowned var img = get_json_object( obj, "image" );
     if( img != null ) {
-      import_image( da, node, img, dir, id_map );
+      import_image( map, node, img, dir, id_map );
     }
 
     unowned var children = get_json_object( obj, "children" );
     if( children != null ) {
-      import_children( da, node, children, dir, id_map );
+      import_children( map, node, children, dir, id_map );
     }
 
     unowned var bound = get_json_array( obj, "boundaries" );
     if( bound != null ) {
-      import_boundaries( da, node, bound, id_map );
+      import_boundaries( map, node, bound, id_map );
     }
 
   }
@@ -732,7 +732,7 @@ public class ExportXMind2021 : Export {
     }
   }
 
-  private void import_image( DrawArea da, Node node, unowned Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_image( MindMap map, Node node, unowned Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
 
     int height = 100;
     int width  = 100;
@@ -755,22 +755,22 @@ public class ExportXMind2021 : Export {
     var src = get_json_string( obj, "src" );
     if( src != "" ) {
       var img_file = File.new_for_path( Path.build_filename( dir, src.substring( 4 ) ) );
-      node.set_image( da.image_manager, new NodeImage.from_uri( da.image_manager, img_file.get_uri(), width ) );
+      node.set_image( map.image_manager, new NodeImage.from_uri( map.image_manager, img_file.get_uri(), width ) );
     }
 
   }
 
-  private void import_children( DrawArea da, Node node, unowned Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_children( MindMap map, Node node, unowned Json.Object obj, string dir, HashMap<string,IdObject> id_map ) {
     unowned var attached = get_json_array( obj, "attached" );
     if( attached != null ) {
       foreach( unowned Json.Node n in attached.get_elements() ) {
         unowned var o = n.get_object();
-        import_topic( da, node, o, true, dir, id_map );
+        import_topic( map, node, o, true, dir, id_map );
       }
     }
   }
 
-  private void import_boundaries( DrawArea da, Node node, unowned Json.Array arr, HashMap<string,IdObject> id_map ) {
+  private void import_boundaries( MindMap map, Node node, unowned Json.Array arr, HashMap<string,IdObject> id_map ) {
     foreach( unowned Json.Node n in arr.get_elements() ) {
       unowned var obj = n.get_object();
       var sid = get_json_string( obj, "styleId" );
@@ -784,8 +784,8 @@ public class ExportXMind2021 : Export {
             var child = node.children().index( i );
             nodes.append_val( child );
           }
-          var group = new NodeGroup.array( da, nodes );
-          da.groups.add_group( group );
+          var group = new NodeGroup.array( map, nodes );
+          map.groups.add_group( group );
           if( sid != null ) {
             id_map.set( sid, new IdObject.for_boundary( group ) );
           }
@@ -794,7 +794,7 @@ public class ExportXMind2021 : Export {
     }
   }
 
-  private void import_relationships( DrawArea da, unowned Json.Array arr, HashMap<string,IdObject> id_map ) {
+  private void import_relationships( MindMap map, unowned Json.Array arr, HashMap<string,IdObject> id_map ) {
 
     foreach( unowned Json.Node node in arr.get_elements() ) {
 
@@ -821,10 +821,10 @@ public class ExportXMind2021 : Export {
       }
       if( (from_node != null) && (to_node != null) ) {
 
-        var conn = new Connection( da, from_node );
-        conn.change_title( da, title );
+        var conn = new Connection( map, from_node );
+        conn.change_title( map, title );
         conn.connect_to( to_node );
-        da.get_connections().add_connection( conn );
+        map.get_connections().add_connection( conn );
 
         if( sid != null ) {
           id_map.set( sid, new IdObject.for_connection( conn ) );
@@ -836,7 +836,7 @@ public class ExportXMind2021 : Export {
 
   }
 
-  private void import_theme( DrawArea da, unowned Json.Object obj, HashMap<string,IdObject> id_map ) {
+  private void import_theme( MindMap map, unowned Json.Object obj, HashMap<string,IdObject> id_map ) {
 
     unowned var root     = get_json_object( obj, "centralTopic" );
     unowned var main     = get_json_object( obj, "mainTopic" );
@@ -845,28 +845,28 @@ public class ExportXMind2021 : Export {
     unowned var rel      = get_json_object( obj, "relationship" );
 
     if( root != null ) {
-      import_theme_node( da, root, 0, id_map );
+      import_theme_node( map, root, 0, id_map );
     }
 
     if( main != null ) {
-      import_theme_node( da, main, 1, id_map );
+      import_theme_node( map, main, 1, id_map );
     }
 
     if( sub != null ) {
-      import_theme_node( da, sub, 10, id_map );
+      import_theme_node( map, sub, 10, id_map );
     }
 
     if( boundary != null ) {
-      // import_theme_boundary_json( da, boundary, id_map );
+      // import_theme_boundary_json( map, boundary, id_map );
     }
 
     if( rel != null ) {
-      // import_theme_connection_json( da, rel, id_map );
+      // import_theme_connection_json( map, rel, id_map );
     }
 
   }
 
-  private void import_theme_node( DrawArea da, unowned Json.Object obj, int level, HashMap<string,IdObject> id_map ) {
+  private void import_theme_node( MindMap map, unowned Json.Object obj, int level, HashMap<string,IdObject> id_map ) {
 
     unowned var props = get_json_object( obj, "properties" );
 

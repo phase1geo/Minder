@@ -151,7 +151,7 @@ public class Exporter : Box {
         var file = dialog.save.end( res );
         if( file != null ) {
           var fname = file.get_path();
-          export.export( fname = win.repair_filename( fname, export.extensions ), win.get_current_da() );
+          export.export( fname = win.repair_filename( fname, export.extensions ), win.get_current_da().map );
           win.notification( _( "Minder Export Completed" ), fname );
         }
       } catch( Error e ) {}

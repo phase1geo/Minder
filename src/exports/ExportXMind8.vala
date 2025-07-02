@@ -81,7 +81,7 @@ public class ExportXMind8 : Export {
   }
 
   /* Exports the given drawing area to the file of the given name */
-  public override bool export( string fname, DrawArea da ) {
+  public override bool export( string fname, MindMap map ) {
 
     /* Create temporary directory to place contents in */
     var dir = DirUtils.mkdtemp( "minderXXXXXX" );
@@ -90,10 +90,10 @@ public class ExportXMind8 : Export {
     var file_list = new FileItems();
 
     /* Export the meta file */
-    export_meta( da, dir, file_list );
+    export_meta( map, dir, file_list );
 
     /* Export the content file */
-    export_content( da, dir, file_list, styles );
+    export_content( map, dir, file_list, styles );
 
     if( styles.length > 0 ) {
       export_styles( dir, file_list, styles );
@@ -150,7 +150,7 @@ public class ExportXMind8 : Export {
   }
 
   /* Generate the main content file from  */
-  private bool export_content( DrawArea da, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
+  private bool export_content( MindMap map, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
 
     Xml.Doc*  doc       = new Xml.Doc( "1.0" );
     Xml.Node* xmap      = new Xml.Node( null, "xmap-content" );
@@ -168,7 +168,7 @@ public class ExportXMind8 : Export {
     sheet->set_prop( "id", "1" );
     sheet->set_prop( "timestamp", timestamp );
 
-    export_map( da, sheet, timestamp, dir, file_list, styles );
+    export_map( map, sheet, timestamp, dir, file_list, styles );
 
     title->add_content( "Sheet 1" );
     sheet->add_child( title );
@@ -186,17 +186,17 @@ public class ExportXMind8 : Export {
   }
 
   /* Exports the map contents */
-  private void export_map( DrawArea da, Xml.Node* sheet, string timestamp, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
-    var nodes = da.get_nodes();
-    var conns = da.get_connections().connections;
-    Xml.Node* top = export_node( da, nodes.index( 0 ), timestamp, true, dir, file_list, styles );
+  private void export_map( MindMap map, Xml.Node* sheet, string timestamp, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
+    var nodes = map.get_nodes();
+    var conns = map.get_connections().connections;
+    Xml.Node* top = export_node( map, nodes.index( 0 ), timestamp, true, dir, file_list, styles );
     if( nodes.length > 1 ) {
       for( Xml.Node* it=top->children; it!=null; it=it->next ) {
         if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "children") ) {
           Xml.Node* topics = new Xml.Node( null, "topics" );
           topics->set_prop( "type", "detached" );
           for( int i=1; i<nodes.length; i++ ) {
-            Xml.Node* topic = export_node( da, nodes.index( i ), timestamp, false, dir, file_list, styles );
+            Xml.Node* topic = export_node( map, nodes.index( i ), timestamp, false, dir, file_list, styles );
             Xml.Node* pos   = new Xml.Node( null, "position" );
             var       x     = (int)(nodes.index( i ).posx - nodes.index( 0 ).posx);
             var       y     = (int)(nodes.index( i ).posy - nodes.index( 0 ).posy);
@@ -210,10 +210,10 @@ public class ExportXMind8 : Export {
       }
     }
     sheet->add_child( top );
-    export_connections( da, sheet, timestamp, styles );
+    export_connections( map, sheet, timestamp, styles );
   }
 
-  private Xml.Node* export_node( DrawArea da, Node node, string timestamp, bool top, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
+  private Xml.Node* export_node( MindMap map, Node node, string timestamp, bool top, string dir, FileItems file_list, Array<Xml.Node*> styles ) {
 
     Xml.Node* topic = new Xml.Node( null, "topic" );
     Xml.Node* title = new Xml.Node( null, "title" );
@@ -246,7 +246,7 @@ public class ExportXMind8 : Export {
 
     /* Add image, if needed */
     if( node.image != null ) {
-      export_image( da, node, dir, file_list, topic );
+      export_image( map, node, dir, file_list, topic );
     }
 
     if( node.children().length > 0 ) {
@@ -259,7 +259,7 @@ public class ExportXMind8 : Export {
 
       for( int i=0; i<node.children().length; i++ ) {
         var child = node.children().index( i );
-        topics->add_child( export_node( da, child, timestamp, false, dir, file_list, styles ) );
+        topics->add_child( export_node( map, child, timestamp, false, dir, file_list, styles ) );
         if( child.group ) {
           groups.append_val( i );
         }
@@ -304,10 +304,10 @@ public class ExportXMind8 : Export {
   }
 
   /* Exports the given node's image */
-  private void export_image( DrawArea da, Node node, string dir, FileItems file_list, Xml.Node* topic ) {
+  private void export_image( MindMap map, Node node, string dir, FileItems file_list, Xml.Node* topic ) {
 
-    var img_name  = da.image_manager.get_file( node.image.id );
-    var mime_type = da.image_manager.get_mime_type( node.image.id );
+    var img_name  = map.image_manager.get_file( node.image.id );
+    var mime_type = map.image_manager.get_mime_type( node.image.id );
     var src       = Path.build_filename( "attachments", Filename.display_basename( img_name ) );
     var parts     = src.split( "." );
     Xml.Node* img = new Xml.Node( null, "xhtml:img" );
@@ -418,9 +418,9 @@ public class ExportXMind8 : Export {
 
   }
 
-  private void export_connections( DrawArea da, Xml.Node* sheet, string timestamp, Array<Xml.Node*> styles ) {
+  private void export_connections( MindMap map, Xml.Node* sheet, string timestamp, Array<Xml.Node*> styles ) {
 
-    var conns = da.get_connections().connections;
+    var conns = map.get_connections().connections;
 
     if( conns.length > 0 ) {
 
@@ -430,7 +430,7 @@ public class ExportXMind8 : Export {
         var conn     = conns.index( i );
         var conn_id  = ids++;
         var style_id = ids++;
-        var color    = (conn.color == null) ? da.get_theme().get_color( "connection_background" ) : conn.color;
+        var color    = (conn.color == null) ? map.get_theme().get_color( "connection_background" ) : conn.color;
         var dash     = "dash";
 
         switch( conn.style.connection_dash.name ) {
@@ -504,7 +504,7 @@ public class ExportXMind8 : Export {
   }
 
   /* Exports the contents of the meta file */
-  private void export_meta( DrawArea da, string dir, FileItems file_list ) {
+  private void export_meta( MindMap map, string dir, FileItems file_list ) {
 
     Xml.Doc*  doc       = new Xml.Doc( "1.0" );
     Xml.Node* meta      = new Xml.Node( null, "meta" );
@@ -592,7 +592,7 @@ public class ExportXMind8 : Export {
   // --------------------------------------------------------------------------------------
 
   /* Main method used to import an XMind mind-map into Minder */
-  public override bool import( string fname, DrawArea da ) {
+  public override bool import( string fname, MindMap map ) {
 
     /* Create temporary directory to place contents in */
     var dir = DirUtils.mkdtemp( "minderXXXXXX" );
@@ -609,19 +609,19 @@ public class ExportXMind8 : Export {
 
     var styles  = Path.build_filename( dir, "styles.xml" );
     var content = Path.build_filename( dir, "content.xml" );
-    import_content( da, content, dir, id_map );
-    import_styles( da, styles, id_map );
+    import_content( map, content, dir, id_map );
+    import_styles( map, styles, id_map );
 
     /* Update the drawing area and save the result */
-    da.queue_draw();
-    da.auto_save();
+    map.queue_draw();
+    map.auto_save();
 
     return( true );
 
   }
 
   /* Import the content file */
-  private bool import_content( DrawArea da, string fname, string dir, HashMap<string,IdObject> id_map ) {
+  private bool import_content( MindMap map, string fname, string dir, HashMap<string,IdObject> id_map ) {
 
     /* Read in the contents of the XMind 8 file */
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
@@ -630,7 +630,7 @@ public class ExportXMind8 : Export {
     }
 
     /* Load the contents of the file */
-    import_map( da, doc->get_root_element(), dir, id_map );
+    import_map( map, doc->get_root_element(), dir, id_map );
 
     /* Delete the OPML document */
     delete doc;
@@ -640,44 +640,44 @@ public class ExportXMind8 : Export {
   }
 
   /* Import the xmind map */
-  private void import_map( DrawArea da, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_map( MindMap map, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "sheet") ) {
-        import_sheet( da, it, dir, id_map );
+        import_sheet( map, it, dir, id_map );
         return;
       }
     }
   }
 
   /* Import a sheet */
-  private void import_sheet( DrawArea da, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_sheet( MindMap map, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "topic"         :  import_topic( da, null, it, false, dir, id_map );  break;
-          case "relationships" :  import_relationships( da, it, id_map );  break;
+          case "topic"         :  import_topic( map, null, it, false, dir, id_map );  break;
+          case "relationships" :  import_relationships( map, it, id_map );  break;
         }
       }
     }
   }
 
   /* Imports an XMind topic (this is a node in Minder) */
-  private void import_topic( DrawArea da, Node? parent, Xml.Node* n, bool attached, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_topic( MindMap map, Node? parent, Xml.Node* n, bool attached, string dir, HashMap<string,IdObject> id_map ) {
 
     Node node;
 
     string? sclass = n->get_prop( "structure-class" );
     if( sclass != null ) {
-      node = da.create_root_node();
+      node = map.create_root_node();
       if( sclass == "org.xmind.ui.map.unbalanced" ) {
-        node.layout = da.layouts.get_layout( _( "Horizontal" ) );
+        node.layout = map.layouts.get_layout( _( "Horizontal" ) );
       } else {
-        node.layout = da.layouts.get_layout( _( "To right" ) );
+        node.layout = map.layouts.get_layout( _( "To right" ) );
       }
     } else if( !attached ) {
-      node = da.create_root_node();
+      node = map.create_root_node();
     } else {
-      node = da.create_child_node( parent );
+      node = map.create_child_node( parent );
     }
 
     /* Handle the ID */
@@ -696,9 +696,9 @@ public class ExportXMind8 : Export {
         switch( it->name ) {
           case "title"      :  import_node_name( node, it );                  break;
           case "notes"      :  import_node_notes( node, it );                 break;
-          case "img"        :  import_image( da, node, it, dir, id_map );     break;
-          case "children"   :  import_children( da, node, it, dir, id_map );  break;
-          case "boundaries" :  import_boundaries( da, node, it, id_map );     break;
+          case "img"        :  import_image( map, node, it, dir, id_map );     break;
+          case "children"   :  import_children( map, node, it, dir, id_map );  break;
+          case "boundaries" :  import_boundaries( map, node, it, id_map );     break;
         }
       }
     }
@@ -737,7 +737,7 @@ public class ExportXMind8 : Export {
   }
 
   /* Imports an image from a file */
-  private void import_image( DrawArea da, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_image( MindMap map, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
 
     int height = 1;
     int width  = 1;
@@ -760,20 +760,20 @@ public class ExportXMind8 : Export {
     string? src = n->get_prop( "src" );
     if( src != null ) {
       var img_file = File.new_for_path( Path.build_filename( dir, src.substring( 4 ) ) );
-      node.set_image( da.image_manager, new NodeImage.from_uri( da.image_manager, img_file.get_uri(), width ) );
+      node.set_image( map.image_manager, new NodeImage.from_uri( map.image_manager, img_file.get_uri(), width ) );
     }
 
   }
 
   /* Importa child nodes */
-  private void import_children( DrawArea da, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
+  private void import_children( MindMap map, Node node, Xml.Node* n, string dir, HashMap<string,IdObject> id_map ) {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "topics") ) {
         string? t = it->get_prop( "type" );
         var     attached = (t != null) && (t == "attached");
         for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
           if( (it2->type == ElementType.ELEMENT_NODE) && (it2->name == "topic") ) {
-            import_topic( da, node, it2, attached, dir, id_map );
+            import_topic( map, node, it2, attached, dir, id_map );
           }
         }
       }
@@ -781,7 +781,7 @@ public class ExportXMind8 : Export {
   }
 
   /* Imports boundary information */
-  private void import_boundaries( DrawArea da, Node node, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private void import_boundaries( MindMap map, Node node, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "boundary") ) {
@@ -796,8 +796,8 @@ public class ExportXMind8 : Export {
               var child = node.children().index( i );
               nodes.append_val( child );
             }
-            var group = new NodeGroup.array( da, nodes );
-            da.groups.add_group( group );
+            var group = new NodeGroup.array( map, nodes );
+            map.groups.add_group( group );
             if( sid != null ) {
               id_map.set( sid, new IdObject.for_boundary( group ) );
             }
@@ -809,7 +809,7 @@ public class ExportXMind8 : Export {
   }
 
   /* Import connections */
-  private void import_relationships( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private void import_relationships( MindMap map, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "relationship") ) {
@@ -844,10 +844,10 @@ public class ExportXMind8 : Export {
 
         if( (from_node != null) && (to_node != null) ) {
 
-          var conn = new Connection( da, from_node );
-          conn.change_title( da, title );
+          var conn = new Connection( map, from_node );
+          conn.change_title( map, title );
           conn.connect_to( to_node );
-          da.get_connections().add_connection( conn );
+          map.get_connections().add_connection( conn );
 
           if( sid != null ) {
             id_map.set( sid, new IdObject.for_connection( conn ) );
@@ -861,7 +861,7 @@ public class ExportXMind8 : Export {
   }
 
   /* Imports and applies styling information */
-  private bool import_styles( DrawArea da, string fname, HashMap<string,IdObject> id_map ) {
+  private bool import_styles( MindMap map, string fname, HashMap<string,IdObject> id_map ) {
 
     /* Read in the contents of the Freemind file */
     var doc = Xml.Parser.read_file( fname, null, Xml.ParserOption.HUGE );
@@ -870,10 +870,10 @@ public class ExportXMind8 : Export {
     }
 
     /* Load the contents of the file */
-    import_styles_content( da, doc->get_root_element(), id_map );
+    import_styles_content( map, doc->get_root_element(), id_map );
 
     /* Update the drawing area */
-    da.queue_draw();
+    map.queue_draw();
 
     /* Delete the OPML document */
     delete doc;
@@ -883,13 +883,13 @@ public class ExportXMind8 : Export {
   }
 
   /* Imports tha main styles XML node */
-  private void import_styles_content( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private void import_styles_content( MindMap map, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( (it->type == ElementType.ELEMENT_NODE) && (it->name == "styles") ) {
         for( Xml.Node* it2=it->children; it2!=null; it2=it2->next ) {
           if( (it->type == ElementType.ELEMENT_NODE) && (it2->name == "style") ) {
-            import_styles_style( da, it2, id_map );
+            import_styles_style( map, it2, id_map );
           }
         }
       }
@@ -898,7 +898,7 @@ public class ExportXMind8 : Export {
   }
 
   /* Imports the style information for one of the supported objects */
-  private void import_styles_style( DrawArea da, Xml.Node* n, HashMap<string,IdObject> id_map ) {
+  private void import_styles_style( MindMap map, Xml.Node* n, HashMap<string,IdObject> id_map ) {
 
     string? id = n->get_prop( "id" );
     if( (id == null) || !id_map.has_key( id ) ) return;
@@ -906,9 +906,9 @@ public class ExportXMind8 : Export {
     for( Xml.Node* it=n->children; it!=null; it=it->next ) {
       if( it->type == ElementType.ELEMENT_NODE ) {
         switch( it->name ) {
-          case "topic-properties"        :   import_styles_topic( da, it, id_map.get( id ).node );       break;
-          case "relationship-properties" :   import_styles_connection( da, it, id_map.get( id ).conn );  break;
-          case "boundary-properties"     :   import_styles_boundary( da, it, id_map.get( id ).group );   break;
+          case "topic-properties"        :   import_styles_topic( map, it, id_map.get( id ).node );       break;
+          case "relationship-properties" :   import_styles_connection( map, it, id_map.get( id ).conn );  break;
+          case "boundary-properties"     :   import_styles_boundary( map, it, id_map.get( id ).group );   break;
         }
       }
     }
@@ -916,7 +916,7 @@ public class ExportXMind8 : Export {
   }
 
   /* Imports the style information for a given node */
-  private void import_styles_topic( DrawArea da, Xml.Node* n, Node node ) {
+  private void import_styles_topic( MindMap map, Xml.Node* n, Node node ) {
 
     string? sc = n->get_prop( "shape-class" );
     if( sc != null ) {
@@ -986,7 +986,7 @@ public class ExportXMind8 : Export {
   }
 
   /* Imports connection styling information */
-  private void import_styles_connection( DrawArea da, Xml.Node* n, Connection conn ) {
+  private void import_styles_connection( MindMap map, Xml.Node* n, Connection conn ) {
 
     string? arrow_start = n->get_prop( "arrow-begin-class" );
     if( arrow_start != null ) {
@@ -1034,7 +1034,7 @@ public class ExportXMind8 : Export {
   }
 
   /* Imports styling information for a node group */
-  private void import_styles_boundary( DrawArea da, Xml.Node* n, NodeGroup group ) {
+  private void import_styles_boundary( MindMap map, Xml.Node* n, NodeGroup group ) {
 
     string? f = n->get_prop( "fill" );
     if( f != null ) {

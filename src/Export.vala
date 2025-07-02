@@ -47,12 +47,12 @@ public class Export {
   public signal void settings_changed();
 
   /* Performs export to the given filename */
-  public virtual bool export( string fname, DrawArea da ) {
+  public virtual bool export( string fname, MindMap map ) {
     return( false );
   }
 
   /* Imports given filename into drawing area */
-  public virtual bool import( string fname, DrawArea da ) {
+  public virtual bool import( string fname, MindMap map ) {
     return( false );
   }
 
