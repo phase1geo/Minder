@@ -177,6 +177,11 @@ public class DrawArea : Gtk.DrawingArea {
       return( _url_editor );
     }
   }
+  public ImageEditor image_editor {
+    get {
+      return( _image_editor );
+    }
+  }
   public Tagger tagger {
     get {
       return( _tagger );
@@ -1288,7 +1293,7 @@ public class DrawArea : Gtk.DrawingArea {
   // returns the unique ID associated with the node link.
   public int add_note_node_link( NodeLink link, out string text ) {
     link.normalize( this );
-    text = link.get_markdown_text( this );
+    text = link.get_markdown_text( _map );
     return( _node_links.add_link( link ) );
   }
 
@@ -2702,7 +2707,7 @@ public class DrawArea : Gtk.DrawingArea {
             }
           } else if( match.is_within_linked_node( _scaled_x, _scaled_y ) ) {
             set_cursor_name( pointer_cursor );
-            set_tooltip_markup( Utils.prepare_note_markup( match.linked_node.get_tooltip( this ) ) );
+            set_tooltip_markup( Utils.prepare_note_markup( match.linked_node.get_tooltip( _map ) ) );
           } else if( match.is_within_resizer( _scaled_x, _scaled_y ) ) {
             set_cursor_name( "ew-resize" );
             if( match.image == null ) {

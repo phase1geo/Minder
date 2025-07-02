@@ -595,7 +595,7 @@ public class NodeInspector : Box {
   private void note_node_link_hover( int id ) {
     var link = _map.node_links.get_node_link( id );
     if( link != null ) {
-      _note.show_tooltip( link.get_tooltip( _map.da ) );
+      _note.show_tooltip( link.get_tooltip( _map ) );
     }
   }
 

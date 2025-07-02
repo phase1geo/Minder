@@ -23,7 +23,7 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-class ImageEditor {
+public class ImageEditor {
 
   private const double MIN_WIDTH   = 50;
   private const int    CROP_WIDTH  = 8;

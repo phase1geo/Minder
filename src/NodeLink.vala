@@ -78,17 +78,16 @@ public class NodeLink {
     }
   }
 
-  /*
-   Displays the linked node.  If the node is in a different file,
-   opens the mindmap and selects the given node.
-  */
+  //-------------------------------------------------------------
+  // Displays the linked node.  If the node is in a different file,
+  // opens the mindmap and selects the given node.
   public void select( DrawArea da ) {
     if( (_fname == "") || da.win.open_file( _fname, false ) ) {
       var other_da = da.win.get_current_da();
-      var node     = other_da.get_node( other_da.get_nodes(), _node_id );
+      var node     = other_da.map.get_node( other_da.map.get_nodes(), _node_id );
       Idle.add(() => {
-        if( other_da.select_node( node, false ) ) {
-          other_da.queue_draw();
+        if( other_da.map.select_node( node, false ) ) {
+          other_da.map.queue_draw();
         } else {
           // Node was not found
         }
@@ -97,10 +96,11 @@ public class NodeLink {
     }
   }
 
-  /* Returns the node link string to display in a tooltip */
-  public string get_tooltip( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Returns the node link string to display in a tooltip.
+  public string get_tooltip( MindMap map ) {
     if( _fname == "" ) {
-      var linked_node = da.get_node( da.get_nodes(), _node_id );
+      var linked_node = map.get_node( map.get_nodes(), _node_id );
       if( linked_node != null ) {
         return( linked_node.name.text.text );
       } else {
@@ -113,10 +113,11 @@ public class NodeLink {
     }
   }
 
-  /* Returns the text to display in a Markdown link */
-  public string get_markdown_text( DrawArea da ) {
+  //-------------------------------------------------------------
+  // Returns the text to display in a Markdown link.
+  public string get_markdown_text( MindMap map ) {
     if( _fname == "" ) {
-      var linked_node = da.get_node( da.get_nodes(), _node_id );
+      var linked_node = map.get_node( map.get_nodes(), _node_id );
       return( linked_node.name.text.text );
     } else {
       string title = "";
@@ -125,7 +126,8 @@ public class NodeLink {
     }
   }
 
-  /* Saves this node link to the XML file */
+  //-------------------------------------------------------------
+  // Saves this node link to the XML file.
   public Xml.Node* save() {
     Xml.Node* node = new Xml.Node( null, "nodelink" );
     node->new_prop( "id",    _node_id.to_string() );
@@ -134,7 +136,8 @@ public class NodeLink {
     return( node );
   }
 
-  /* Loads the given NodeLink data from the given XML node */
+  //-------------------------------------------------------------
+  // Loads the given NodeLink data from the given XML node.
   public void load( Xml.Node* node ) {
 
     var id = node->get_prop( "id" );

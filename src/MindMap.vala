@@ -47,8 +47,6 @@ public class MindMap {
   private Sticker?           _attach_sticker = null;
   private uint?              _auto_save_id   = null;
   private uint?              _scroll_save_id = null;
-  private ImageEditor        _image_editor;
-  private IMContext          _im_context;
   private bool               _debug        = true;
   private bool               _focus_mode   = false;
   private double             _focus_alpha  = 0.05;
@@ -70,7 +68,6 @@ public class MindMap {
   public UndoBuffer     undo_buffer     { set; get; }
   public UndoTextBuffer undo_text       { set; get; }
   public Layouts        layouts         { set; get; default = new Layouts(); }
-  public Animator       animator        { set; get; }
   public ImageManager   image_manager   { set; get; default = new ImageManager(); }
   public bool           is_loaded       { get; private set; default = false; }
   public bool           braindump_shown { get; set; default = false; }
@@ -136,10 +133,10 @@ public class MindMap {
           set_callout_mode( _selected.current_callout(), CalloutMode.NONE );
           _selected.clear_callouts( false );
         }
-        animator.add_callouts_fade( _nodes, value, "hide callouts" );
+        _da.animator.add_callouts_fade( _nodes, value, "hide callouts" );
         _hide_callouts = value;
         auto_save();
-        animator.animate();
+        _da.animator.animate();
       }
     }
   }
@@ -193,15 +190,8 @@ public class MindMap {
     /* Create groups */
     _groups = new NodeGroups();
 
-    /* Allocate memory for the animator */
-    animator = new Animator( this );
-
     /* Allocate memory for the undo buffer */
     undo_buffer = new UndoBuffer( this );
-
-    /* Allocate the image editor popover */
-    _image_editor = new ImageEditor( this );
-    _image_editor.changed.connect( current_image_edited );
 
     /* Allocate the note node links manager */
     _node_links = new NodeLinks();
@@ -297,7 +287,7 @@ public class MindMap {
       undo_buffer.add_item( new UndoNodeLayout( old_layout, new_layout, root_node ) );
     }
     var old_balanceable = old_layout.balanceable;
-    animator.add_nodes( _nodes, "set layout" );
+    _da.animator.add_nodes( _nodes, "set layout" );
     if( root_node == null ) {
       for( int i=0; i<_nodes.length; i++ ) {
         _nodes.index( i ).layout = new_layout;
@@ -310,7 +300,7 @@ public class MindMap {
     if( !old_balanceable && new_layout.balanceable ) {
       balance_nodes( false, false );
     }
-    animator.animate();
+    _da.animator.animate();
   }
 
   /* Updates all of the node sizes */
@@ -366,7 +356,7 @@ public class MindMap {
     _theme = win.themes.get_theme( theme.name );
 
     /* If we are the current drawarea, update the CSS and indicate the theme change */
-    if( _da.win.get_current_da() == this ) {
+    if( _da.win.get_current_da() == _da ) {
       update_css();
       theme_changed( this );
     }
@@ -411,8 +401,8 @@ public class MindMap {
     Layout? use_layout = null;
 
     /* Disable animations while we are loading */
-    var animate = animator.enable;
-    animator.enable = false;
+    var animate = _da.animator.enable;
+    _da.animator.enable = false;
 
     /* Clear the existing nodes */
     _nodes.remove_range( 0, _nodes.length );
@@ -470,7 +460,7 @@ public class MindMap {
     current_changed( this );
 
     /* Reset the animator enable */
-    animator.enable = animate;
+    _da.animator.enable = animate;
 
   }
 
@@ -755,8 +745,8 @@ public class MindMap {
       undo_text.ct      = conn.title;
       undo_text.do_undo = undoable;
     } else if( (conn.mode == ConnMode.EDITABLE) && (mode != ConnMode.EDITABLE) ) {
-      _im_context.reset();
-      _im_context.focus_out();
+      _da.im_context.reset();
+      _da.im_context.focus_out();
       if( (conn.title != null) && conn.title.is_within( _da.scaled_x, _da.scaled_y ) ) {
         _da.reset_cursor();
       }
@@ -1076,7 +1066,7 @@ public class MindMap {
   // adds the given node link to the current node's list and
   // returns the unique ID associated with the node link.
   public int add_note_node_link( NodeLink link, out string text ) {
-    link.normalize( this );
+    link.normalize( _da );
     text = link.get_markdown_text( this );
     return( _node_links.add_link( link ) );
   }
@@ -1086,7 +1076,7 @@ public class MindMap {
   public void note_node_link_clicked( int id ) {
     var link = _node_links.get_node_link( id );
     if( link != null ) {
-      link.select( this );
+      link.select( _da );
     }
   }
 
@@ -1148,7 +1138,7 @@ public class MindMap {
     if( nodes.length == 1 ) {
       var current = nodes.index( 0 );
       if( current.image != null ) {
-        _image_editor.edit_image( image_manager, current, current.posx, current.posy );
+        _da.image_editor.edit_image( image_manager, current, current.posx, current.posy );
       }
     }
   }
@@ -1384,15 +1374,15 @@ public class MindMap {
         switch( press_num ) {
           case 1 :
             conn.title.set_cursor_at_char( scaled_x, scaled_y, shift );
-            _im_context.reset();
+            _da.im_context.reset();
             break;
           case 2 :
             conn.title.set_cursor_at_word( scaled_x, scaled_y, shift );
-            _im_context.reset();
+            _da.im_context.reset();
             break;
           case 3 :
             conn.title.set_cursor_all( false );
-            _im_context.reset();
+            _da.im_context.reset();
             break;
         }
       } else if( press_num == 2 ) {
@@ -1460,15 +1450,15 @@ public class MindMap {
       switch( press_num ) {
         case 1 :
           node.name.set_cursor_at_char( scaled_x, scaled_y, shift );
-          _im_context.reset();
+          _da.im_context.reset();
           break;
         case 2 :
           node.name.set_cursor_at_word( scaled_x, scaled_y, shift );
-          _im_context.reset();
+          _da.im_context.reset();
           break;
         case 3 :
           node.name.set_cursor_all( false );
-          _im_context.reset();
+          _da.im_context.reset();
           break;
       }
       return( true );
@@ -1608,15 +1598,15 @@ public class MindMap {
       switch( press_num ) {
         case 1 :
           callout.text.set_cursor_at_char( scaled_x, scaled_y, shift );
-          _im_context.reset();
+          _da.im_context.reset();
           break;
         case 2 :
           callout.text.set_cursor_at_word( scaled_x, scaled_y, shift );
-          _im_context.reset();
+          _da.im_context.reset();
           break;
         case 3 :
           callout.text.set_cursor_all( false );
-          _im_context.reset();
+          _da.im_context.reset();
           break;
       }
       return( true );
@@ -2470,7 +2460,7 @@ public class MindMap {
   // Creates a summary node for the nodes in the range of first
   // to last, inclusive.
   public Node create_summary_node( Array<Node> nodes ) {
-    var summary = new SummaryNode( this, layouts.get_default() );
+    var summary = new SummaryNode( _da, layouts.get_default() );
     summary.side = nodes.index( 0 ).side;
     summary.attach_nodes( nodes.index( 0 ).parent, nodes, true, _theme );
     return( summary );
@@ -2481,7 +2471,7 @@ public class MindMap {
   public Node create_summary_node_from_node( Node node ) {
     var prev_node = node.previous_sibling();
     node.detach( node.side );
-    var summary = new SummaryNode.from_node( this, node, image_manager );
+    var summary = new SummaryNode.from_node( _da, node, image_manager );
     summary.side = node.side;
     summary.attach_siblings( prev_node, _theme );
     return( summary );
@@ -2722,7 +2712,7 @@ public class MindMap {
     }
     if( (current == null) || !undoable ) {
       if( animate ) {
-        animator.add_nodes( _nodes, "balance nodes" );
+        _da.animator.add_nodes( _nodes, "balance nodes" );
       }
       for( int i=0; i<_nodes.length; i++ ) {
         var partitioner = new Partitioner();
@@ -2730,13 +2720,13 @@ public class MindMap {
       }
     } else {
       if( animate ) {
-        animator.add_node( root_node, "balance tree" );
+        _da.animator.add_node( root_node, "balance tree" );
       }
       var partitioner = new Partitioner();
       partitioner.partition_node( root_node );
     }
     if( animate ) {
-      animator.animate();
+      _da.animator.animate();
     }
   }
 
@@ -3651,7 +3641,7 @@ public class MindMap {
   private void sort_children( Node parent, CompareFunc<Node> sort_fn ) {
     var children = new SList<Node>();
     undo_buffer.add_item( new UndoNodeSort( parent ) );
-    animator.add_nodes( _nodes, "sort nodes" );
+    _da.animator.add_nodes( _nodes, "sort nodes" );
     for( int i=0; i<parent.children().length; i++ ) {
       children.append( parent.children().index( i ) );
     }
@@ -3662,7 +3652,7 @@ public class MindMap {
     children.@foreach( (child) => {
       child.attach( parent, -1, null, false );
     });
-    animator.animate();
+    _da.animator.animate();
     auto_save();
   }
 
