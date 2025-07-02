@@ -1429,7 +1429,7 @@ public class MainWindow : Gtk.ApplicationWindow {
         var da = add_tab_conditionally( null, TabAddReason.IMPORT );
         new_fname = da.get_doc().filename;
         update_title( da );
-        if( exports.index( i ).import( fname, da ) ) {
+        if( exports.index( i ).import( fname, da.map ) ) {
           return( true );
         }
         close_current_tab();

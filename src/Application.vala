@@ -256,7 +256,7 @@ public class Minder : Gtk.Application {
         var da = appwin.create_da();
         da.get_doc().load_filename( infile, false );
         if( da.get_doc().load() ) {
-          return( export.export( outfile, da ) );
+          return( export.export( outfile, da.map ) );
         } else {
           stderr.printf( _( "ERROR:  Unable to load Minder input file %s" ).printf( infile ) + "\n" );
           return( false );

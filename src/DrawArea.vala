@@ -273,7 +273,7 @@ public class DrawArea : Gtk.DrawingArea {
     _stickers = new Stickers();
 
     /* Create groups */
-    _groups = new NodeGroups( this );
+    _groups = new NodeGroups();
 
     /* Allocate memory for the animator */
     animator = new Animator( this );
@@ -720,49 +720,6 @@ public class DrawArea : Gtk.DrawingArea {
 
   }
 
-  /* Imports the OPML data, creating a mind map */
-  public void import_opml( Xml.Node* n, ref Array<int>? expand_state) {
-
-    int node_id = 1;
-
-    /* Clear the existing nodes */
-    _nodes.remove_range( 0, _nodes.length );
-
-    /* Load the contents of the file */
-    for( Xml.Node* it = n->children; it != null; it = it->next ) {
-      if( it->type == Xml.ElementType.ELEMENT_NODE ) {
-        if( it->name == "outline") {
-          var root = new Node( this, layouts.get_default() );
-          root.import_opml( this, it, node_id, ref expand_state, _theme );
-          if (_nodes.length == 0) {
-            root.posx = (get_allocated_width()  / 2) - 30;
-            root.posy = (get_allocated_height() / 2) - 10;
-          } else {
-            _nodes.index( _nodes.length - 1 ).layout.position_root( _nodes.index( _nodes.length - 1 ), root );
-          }
-          _nodes.append_val( root );
-        }
-      }
-    }
-
-  }
-
-  /* Exports all of the nodes in OPML format */
-  public void export_opml( Xml.Node* parent, out string expand_state ) {
-    Array<int> estate  = new Array<int>();
-    int        node_id = 1;
-    for( int i=0; i<_nodes.length; i++ ) {
-      _nodes.index( i ).export_opml( parent, ref node_id, ref estate );
-    }
-    expand_state = "";
-    for( int i=0; i<estate.length; i++ ) {
-      if( i > 0 ) {
-        expand_state += ",";
-      }
-      expand_state += estate.index( i ).to_string();
-    }
-  }
-
   /* Initializes the canvas to prepare it for a document that will be loaded */
   public void initialize_for_open() {
 
@@ -1148,7 +1105,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
     } else if( _map.selected.num_nodes() > 0 ) {
       var nodes = _map.selected.nodes();
-      var group = new NodeGroup.array( this, nodes );
+      var group = new NodeGroup.array( _map, nodes );
       groups.add_group( group );
       undo_buffer.add_item( new UndoGroupAdd( group ) );
       queue_draw();
@@ -1227,7 +1184,7 @@ public class DrawArea : Gtk.DrawingArea {
       if( current.title.text.text != title ) {
         var orig_title = new CanvasText( this );
         orig_title.copy( current.title );
-        current.change_title( this, title );
+        current.change_title( _map, title );
         // if( !_current_new ) {
           undo_buffer.add_item( new UndoConnectionTitle( this, current, orig_title ) );
         // }
@@ -1652,7 +1609,7 @@ public class DrawArea : Gtk.DrawingArea {
       } else if( _press_num == 2 ) {
         var current = _map.selected.current_connection();
         _orig_title = (current.title != null) ? current.title.text.text : "";
-        current.edit_title_begin( this );
+        current.edit_title_begin( _map );
         set_connection_mode( current, ConnMode.EDITABLE );
       }
       return( true );
@@ -4524,7 +4481,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Displays the quick entry UI in insertion mode */
   public void handle_control_E() {
-    var quick_entry = new QuickEntry( this, false, _settings );
+    var quick_entry = new QuickEntry( _map, false, _settings );
     quick_entry.preload( "- " );
   }
 
@@ -4568,9 +4525,9 @@ public class DrawArea : Gtk.DrawingArea {
 
   /* Displays the quick entry UI in replacement mode */
   public void handle_control_R() {
-    var quick_entry = new QuickEntry( this, true, _settings );
+    var quick_entry = new QuickEntry( _map, true, _settings );
     var export      = (ExportText)win.exports.get_by_name( "text" );
-    quick_entry.preload( export.export_node( this, _map.selected.current_node(), "" ) );
+    quick_entry.preload( export.export_node( _map, _map.selected.current_node(), "" ) );
   }
 
   /* Closes the current tab */
@@ -5080,7 +5037,7 @@ public class DrawArea : Gtk.DrawingArea {
     if( shift && has_key( kvs, Key.e ) )      { show_properties( "current", PropertyGrab.NOTE ); }
     else if(  shift && has_key( kvs, Key.z ) ) { zoom_in(); }
     else if( !shift && has_key( kvs, Key.e ) ) {
-      current.edit_title_begin( this );
+      current.edit_title_begin( _map );
       set_connection_mode( current, ConnMode.EDITABLE );
       queue_draw();
     }
@@ -5277,10 +5234,10 @@ public class DrawArea : Gtk.DrawingArea {
         switch( it->name ) {
           // case "images"      :  image_manager.load( it );  break;
           case "connections" :
-            _connections.load( this, it, conns, nodes );
+            _connections.load( _map, it, conns, nodes );
             break;
           case "groups" :
-            _groups.load( this, it, groups, nodes );
+            _groups.load( _map, it, groups, nodes );
             break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
@@ -5522,7 +5479,7 @@ public class DrawArea : Gtk.DrawingArea {
   private void paste_text_as_node( Node? node, string text ) {
     var nodes  = new Array<Node>();
     var export = (ExportText)win.exports.get_by_name( "text" );
-    export.import_text( text, 0, this, false, nodes );
+    export.import_text( text, 0, _map, false, nodes );
     undo_buffer.add_item( new UndoNodesInsert( _map, nodes ) );
     queue_draw();
     auto_save();
@@ -6093,7 +6050,7 @@ public class DrawArea : Gtk.DrawingArea {
   /* Handles the edit on creation of a newly created connection */
   private void handle_connection_edit_on_creation( Connection conn ) {
     if( (conn.title == null) && _settings.get_boolean( "edit-connection-title-on-creation" ) ) {
-      conn.change_title( this, "", true );
+      conn.change_title( _map, "", true );
       set_connection_mode( conn, ConnMode.EDITABLE, false );
     }
   }

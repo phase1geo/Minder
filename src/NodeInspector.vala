@@ -595,7 +595,7 @@ public class NodeInspector : Box {
   private void note_node_link_hover( int id ) {
     var link = _map.node_links.get_node_link( id );
     if( link != null ) {
-      _note.show_tooltip( link.get_tooltip( _map ) );
+      _note.show_tooltip( link.get_tooltip( _map.da ) );
     }
   }
 
@@ -636,7 +636,7 @@ public class NodeInspector : Box {
   }
 
   /* Called whenever the theme is changed */
-  private void theme_changed( DrawArea da ) {
+  private void theme_changed( MindMap map ) {
 
     int    num_colors = Theme.num_link_colors();
     RGBA[] colors     = new RGBA[num_colors];
