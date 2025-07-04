@@ -25,6 +25,30 @@ using Gdk;
 using Cairo;
 using Gee;
 
+public enum MapItemComponent {
+  NONE,
+  CURVE,
+  TITLE_BOX,
+  TITLE,
+  NOTE,
+  DRAG_HANDLE,
+  FROM_HANDLE,
+  TO_HANDLE,
+  STICKER,
+  NODE_LINK,
+  IMAGE,
+  LINK,
+  TASK,
+  FOLD,
+  RESIZER;
+
+  //-------------------------------------------------------------
+  // Returns true if this component is a connection handle.
+  public bool is_connection_handle() {
+    return( (this == DRAG_HANDLE) || (this == FROM_HANDLE) || (this == TO_HANDLE) );
+  }
+}
+
 public class MindMap {
 
   private DrawArea           _da;  // TBD - Temporary
@@ -52,7 +76,6 @@ public class MindMap {
   private double             _focus_alpha  = 0.05;
   private bool               _create_new_from_edit;
   private Selection          _selected;
-  private TextCompletion     _completion;
   private double             _sticker_posx;
   private double             _sticker_posy;
   private NodeGroups         _groups;
@@ -151,12 +174,6 @@ public class MindMap {
     }
   }
 
-  /* Allocate static parsers */
-  public MarkdownParser markdown_parser { get; private set; }
-  public TaggerParser   tagger_parser   { get; private set; }
-  public UrlParser      url_parser      { get; private set; }
-  public UnicodeParser  unicode_parser  { get; private set; }
-
   public signal void changed();
   public signal void current_changed( MindMap map );
   public signal void theme_changed( MindMap map );
@@ -201,19 +218,6 @@ public class MindMap {
 
     // Create the braindump list
     _braindump = new Array<string>();
-
-    /* Create the parsers */
-    tagger_parser   = new TaggerParser( this );
-    markdown_parser = new MarkdownParser( this );
-    url_parser      = new UrlParser();
-    unicode_parser  = new UnicodeParser( this );
-
-    markdown_parser.enable = settings.get_boolean( "enable-markdown" );
-    url_parser.enable      = settings.get_boolean( "auto-parse-embedded-urls" );
-    unicode_parser.enable  = settings.get_boolean( "enable-unicode-input" );
-
-    /* Create text completion */
-    _completion = new TextCompletion( this );
 
     /* Get the value of the new node from edit */
     update_focus_mode_alpha( settings );
@@ -464,7 +468,9 @@ public class MindMap {
 
   }
 
-  /* Saves the contents of the drawing area to the data output stream */
+  //-------------------------------------------------------------
+  // Saves the contents of the drawing area to the data output
+  // stream.
   public bool save( Xml.Node* parent ) {
 
     parent->add_child( _theme.save() );
@@ -533,7 +539,7 @@ public class MindMap {
   //-------------------------------------------------------------
   // Initializes the mindmap to prepare it for a document that
   // will be loaded.
-  public void initialize_for_open() {
+  public void initialize() {
 
     /* Clear the list of existing nodes */
     _nodes.remove_range( 0, _nodes.length );
@@ -552,68 +558,6 @@ public class MindMap {
 
     /* Clear the selection */
     _selected.clear();
-
-    set_current_node( null );
-
-    queue_draw();
-
-  }
-
-  /* Retrieves canvas size settings and returns the approximate dimensions */
-  public void get_dimensions( out int width, out int height ) {
-    var sidebar_width = _settings.get_boolean( "current-properties-shown" ) ||
-                        _settings.get_boolean( "map-properties-shown" )     ||
-                        _settings.get_boolean( "sticker-properties-shown" ) ||
-                        _settings.get_boolean( "style-properties-shown" ) ? _settings.get_int( "properties-width" ) : 0;
-    width  = _settings.get_int( "window-w" ) - sidebar_width;
-    height = _settings.get_int( "window-h" );
-  }
-
-  //-------------------------------------------------------------
-  // Initialize the empty drawing area with a node.
-  public void initialize_for_new() {
-
-    /* Clear the list of existing nodes */
-    _nodes.remove_range( 0, _nodes.length );
-
-    /* Clear the list of connections */
-    _connections.clear_all_connections();
-
-    /* Clear the stickers */
-    _stickers.clear();
-
-    /* Clear the groups */
-    _groups.clear();
-
-    /* Clear the undo buffer */
-    undo_buffer.clear();
-
-    /* Clear the selection */
-    _selected.clear();
-
-    /* Create the main idea node */
-    var n = new Node.with_name( _da, _("Main Idea"), layouts.get_default() );
-
-    /* Get the rough dimensions of the canvas */
-    int wwidth, wheight;
-    get_dimensions( out wwidth, out wheight );
-
-    /* Set the node information */
-    n.posx  = (wwidth  / 2) - 30;
-    n.posy  = (wheight / 2) - 10;
-    n.style = StyleInspector.styles.get_global_style();
-
-    _nodes.append_val( n );
-
-    /* Make this initial node the current node */
-    set_current_node( n );
-    Idle.add(() => {
-      set_node_mode( n, NodeMode.EDITABLE, false );
-      return( false );
-    });
-
-    /* Redraw the canvas */
-    queue_draw();
 
   }
 
@@ -647,6 +591,8 @@ public class MindMap {
     return( _selected.connections() );
   }
 
+  //-------------------------------------------------------------
+  // Returns the array of selected callouts
   public Array<Callout> get_selected_callouts() {
     return( _selected.callouts() );
   }
@@ -760,6 +706,9 @@ public class MindMap {
     conn.mode = mode;
   }
 
+  //-------------------------------------------------------------
+  // Needs to be called whenever the user changes the mode of the
+  // current callout.
   public void set_callout_mode( Callout callout, CalloutMode mode, bool undoable = true ) {
     if( (callout.mode != CalloutMode.EDITABLE) && (mode == CalloutMode.EDITABLE) ) {
       _da.update_im_cursor( callout.text );
@@ -1209,12 +1158,12 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Toggles the node links
-  public void toggle_links() {
+  public void toggle_links( double last_x, double last_y ) {
     var current = _selected.current_node();
     if( any_selected_nodes_linked() ) {
       delete_links();
     } else if( current != null ) {
-      start_connection( true, true );
+      start_connection( true, true, last_x, last_y );
     } else {
       create_links();
     }
@@ -1320,312 +1269,6 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
-  // Clears the current connection (if it is set) and updates the
-  // UI accordingly
-  private void clear_current_connection( bool signal_change ) {
-    if( _selected.num_connections() > 0 ) {
-      _selected.clear_connections( signal_change );
-      _last_connection = null;
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Clears the current node (if it is set) and updates the UI
-  // accordingly
-  private void clear_current_node( bool signal_change ) {
-    if( _selected.num_nodes() > 0 ) {
-      _selected.clear_nodes( signal_change );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Clears the current sticker (if it is set) and updates the UI
-  // accordingly
-  private void clear_current_sticker( bool signal_change ) {
-    if( _selected.num_stickers() > 0 ) {
-      _selected.clear_stickers( signal_change );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Clears the current group (if it is set) and updates the UI
-  // accordingly
-  private void clear_current_group( bool signal_change ) {
-    if( _selected.num_groups() > 0 ) {
-      _selected.clear_groups( signal_change );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Clears the current callout (if it is set) and updates the UI
-  // accordingly
-  private void clear_current_callout( bool signal_change ) {
-    if( _selected.num_callouts() > 0 ) {
-      _selected.clear_callouts( signal_change );
-    }
-  }
-
-  //-------------------------------------------------------------
-  // Called whenever the user clicks on a valid connection
-  private bool set_current_connection_from_position( Connection conn, double scaled_x, double scaled_y, bool control, bool shift, int press_num ) {
-
-    if( _selected.is_current_connection( conn ) ) {
-      if( conn.mode == ConnMode.EDITABLE ) {
-        switch( press_num ) {
-          case 1 :
-            conn.title.set_cursor_at_char( scaled_x, scaled_y, shift );
-            _da.im_context.reset();
-            break;
-          case 2 :
-            conn.title.set_cursor_at_word( scaled_x, scaled_y, shift );
-            _da.im_context.reset();
-            break;
-          case 3 :
-            conn.title.set_cursor_all( false );
-            _da.im_context.reset();
-            break;
-        }
-      } else if( press_num == 2 ) {
-        var current = _selected.current_connection();
-        _orig_title = (current.title != null) ? current.title.text.text : "";
-        current.edit_title_begin( this );
-        set_connection_mode( current, ConnMode.EDITABLE );
-      }
-      return( true );
-    } else {
-      if( shift ) {
-        _selected.add_connection( conn );
-        handle_connection_edit_on_creation( conn );
-      } else {
-        set_current_connection( conn );
-      }
-    }
-
-    return( false );
-
-  }
-
-  //-------------------------------------------------------------
-  // Called whenever the user clicks on node
-  private bool set_current_node_from_position( Node node, double scaled_x, double scaled_y, bool control, bool shift, int press_num ) {
-
-    var dpress = press_num == 2;
-    var tpress = press_num == 3;
-    var tag    = FormatTag.LENGTH;
-    var url    = "";
-    var left   = 0.0;
-
-    set_tooltip_markup( null );
-
-    /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
-    if( node.is_within_task( scaled_x, scaled_y ) ) {
-      toggle_task( node );
-      current_changed( this );
-      return( false );
-    } else if( node.is_within_linked_node( scaled_x, scaled_y ) ) {
-      select_linked_node( node );
-      return( false );
-    } else if( node.is_within_fold( scaled_x, scaled_y ) ) {
-      toggle_fold( node, shift );
-      current_changed( this );
-      return( false );
-    } else if( node.is_within_resizer( scaled_x, scaled_y ) ) {
-      _resize         = true;
-      _orig_resizable = node.image_resizable;
-      _orig_width     = node.style.node_width;
-      return( true );
-    } else if( !shift && control && node.name.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
-      if( tag == FormatTag.URL ) {
-        Utils.open_url( url );
-      }
-      return( false );
-    }
-
-    _orig_side = node.side;
-    _orig_info.remove_range( 0, _orig_info.length );
-    node.get_node_info( ref _orig_info );
-
-    /* If the node is being edited, go handle the click */
-    if( node.mode == NodeMode.EDITABLE ) {
-      switch( press_num ) {
-        case 1 :
-          node.name.set_cursor_at_char( scaled_x, scaled_y, shift );
-          _da.im_context.reset();
-          break;
-        case 2 :
-          node.name.set_cursor_at_word( scaled_x, scaled_y, shift );
-          _da.im_context.reset();
-          break;
-        case 3 :
-          node.name.set_cursor_all( false );
-          _da.im_context.reset();
-          break;
-      }
-      return( true );
-
-    /*
-     If the user double-clicked a node.  If an image was clicked on, edit the image;
-     otherwise, set the node's mode to editable.
-    */
-    } else if( !control && !shift && (press_num == 2) ) {
-      if( node.is_within_image( scaled_x, scaled_y ) ) {
-        edit_current_image();
-        return( false );
-      } else {
-        set_node_mode( node, NodeMode.EDITABLE );
-      }
-      return( true );
-
-    /* Otherwise, we need to adjust the selection */
-    } else {
-
-      /* The shift key has a toggling effect */
-      if( shift ) {
-        if( control ) {
-          if( tpress ) {
-            if( !_selected.remove_nodes_at_level( node ) ) {
-              _selected.add_nodes_at_level( node );
-            }
-          } else if( dpress ) {
-            if( !_selected.remove_node_tree( node ) ) {
-              _selected.add_node_tree( node );
-            }
-          } else {
-            if( !_selected.remove_child_nodes( node ) ) {
-              _selected.add_child_nodes( node );
-            }
-          }
-        } else {
-          if( !_selected.remove_node( node ) ) {
-            _selected.add_node( node );
-          }
-        }
-
-      /*
-       The Control key + single click will select the current node's children
-       The Control key + double click will select the current node tree.
-       The Control key + triple click will select all nodes at the same level.
-      */
-      } else if( control ) {
-        _selected.clear_nodes();
-        if( tpress ) {
-          _selected.add_nodes_at_level( node );
-        } else if( dpress ) {
-          _selected.add_node_tree( node );
-        } else {
-          _selected.add_child_nodes( node );
-        }
-
-      /* Otherwise, just select the current node */
-      } else {
-        _selected.set_current_node( node );
-        if( node.parent != null ) {
-          node.parent.set_summary_extents();
-        }
-      }
-
-      if( node.parent != null ) {
-        node.parent.last_selected_child = node;
-      }
-      if( node.is_summarized() ) {
-        node.summary_node().last_selected_node = node;
-      }
-      return( true );
-    }
-
-  }
-
-  //-------------------------------------------------------------
-  // Handles a click on the specified sticker
-  public bool set_current_sticker_from_position( Sticker sticker, double scaled_x, double scaled_y ) {
-
-    /* If the sticker is selected, check to see if the cursor is over other parts */
-    if( sticker.mode == StickerMode.SELECTED ) {
-      if( sticker.is_within_resizer( scaled_x, scaled_y ) ) {
-        _resize     = true;
-        _orig_width = (int)sticker.width;
-        return( true );
-      }
-
-    /* Otherwise, add the sticker to the selection */
-    } else {
-      set_current_sticker( sticker );
-    }
-
-    /* Save the location of the sticker */
-    _sticker_posx = sticker.posx;
-    _sticker_posy = sticker.posy;
-
-    return( true );
-
-  }
-
-  //-------------------------------------------------------------
-  // Handles a click on the specified group
-  public bool set_current_group_from_position( NodeGroup group, double scaled_x, double scaled_y, bool control, bool shift, int press_num ) {
-
-    /* Select the current group */
-    if( shift ) {
-      _selected.add_group( group );
-    } else {
-      set_current_group( group );
-    }
-
-    return( true );
-
-  }
-
-  //-------------------------------------------------------------
-  // Handles a click on the specified callout
-  public bool set_current_callout_from_position( Callout callout, double scaled_x, double scaled_y, bool control, bool shift, int press_num ) {
-
-    var tag = FormatTag.LENGTH;
-    var url = "";
-
-    /* If the callout is being edited, go handle the click */
-    if( callout.is_within_resizer( scaled_x, scaled_y ) ) {
-      _resize = true;
-      _orig_width = (int)callout.total_width;
-      return( true );
-    } else if( !shift && control && callout.text.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
-      if( tag == FormatTag.URL ) {
-        Utils.open_url( url );
-      }
-      return( false );
-    }
-
-    if( callout.mode == CalloutMode.EDITABLE ) {
-      switch( press_num ) {
-        case 1 :
-          callout.text.set_cursor_at_char( scaled_x, scaled_y, shift );
-          _da.im_context.reset();
-          break;
-        case 2 :
-          callout.text.set_cursor_at_word( scaled_x, scaled_y, shift );
-          _da.im_context.reset();
-          break;
-        case 3 :
-          callout.text.set_cursor_all( false );
-          _da.im_context.reset();
-          break;
-      }
-      return( true );
-
-    /* If the user double-clicked a callout, set the callout mode to editable */
-    } else if( press_num == 2 ) {
-      set_callout_mode( callout, CalloutMode.EDITABLE );
-      return( true );
-
-    /* Otherwise, just make the callout the selected callout */
-    } else {
-      set_current_callout( callout );
-    }
-
-    return( true );
-
-  }
-
-  //-------------------------------------------------------------
   // Checks to see if the user has clicked a connection that was
   // not previously selected.  If this is the case, select the
   // connection.
@@ -1662,100 +1305,71 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
-  // Sets the current node pointer to the node that is within the
-  // given coordinates.  Returns true if we sucessfully set
-  // current_node to a valid node and made it selected.
-  public bool set_current_at_position( double scaled_x, double scaled_y, bool control, bool shift, int press_num ) {
-
-    var current_conn = _selected.current_connection();
-    
-    /* If the user clicked on a selected connection endpoint, disconnect that endpoint */
-    if( (current_conn != null) && (current_conn.mode == ConnMode.SELECTED) ) {
-      if( current_conn.within_drag_handle( scaled_x, scaled_y ) ) {
-        set_connection_mode( current_conn, ConnMode.ADJUSTING );
-        return( true );
-      } else if( current_conn.within_from_handle( scaled_x, scaled_y ) ) {
-        _last_connection = new Connection.from_connection( this, current_conn );
-        current_conn.disconnect_from_node( true );
-        return( true );
-      } else if( current_conn.within_to_handle( scaled_x, scaled_y ) ) {
-        _last_connection = new Connection.from_connection( this, current_conn );
-        current_conn.disconnect_from_node( false );
-        return( true );
+  // Returns the node that is located at the given X,Y coordinates.
+  // Additionally, returns the portion of the node that is under
+  // those same coordinates.
+  public Node? get_node_at_position( double x, double y, out MapItemComponent component ) {
+    component = MapItemComponent.NONE;
+    for( int i=0; i<_nodes.length; i++ ) {
+      var node = _nodes.index( i ).contains( x, y, null );
+      if( node != null ) {
+        if( node.is_within_title( x, y ) ) {
+          component = MapItemComponent.TITLE;
+        } else if( node.is_within_task( x, y ) ) {
+          component = MapItemComponent.TASK;
+        } else if( node.is_within_note( x, y ) ) {
+          component = MapItemComponent.NOTE;
+        } else if( node.is_within_linked_node( x, y ) ) {
+          component = MapItemComponent.NODE_LINK;
+        } else if( node.is_within_fold( x, y ) ) {
+          component = MapItemComponent.FOLD;
+        } else if( node.is_within_image( x, y ) ) {
+          component = MapItemComponent.IMAGE;
+        } else if( node.is_within_resizer( x, y ) ) {
+          component = MapItemComponent.RESIZER;
+        }
+        return( node );
       }
     }
+    return( null );
+  }
 
-    if( (_attach_node == null) || (current_conn == null) ||
-        ((current_conn.mode != ConnMode.CONNECTING) && (current_conn.mode != ConnMode.LINKING)) ) {
-      Connection? match_conn = current_conn;
-      if( current_conn == null ) {
-        if( (match_conn = _connections.within_title( scaled_x, scaled_y )) == null ) {
-          match_conn = _connections.on_curve( scaled_x, scaled_y );
+  //-------------------------------------------------------------
+  // Returns the callout that is located at the given coordinates
+  // along with the callout component that is at that position.
+  public Callout? get_callout_at_position( double x, double y, out MapItemComponent component ) {
+    component = MapItemComponent.NONE;
+    for( int i=0; i<_nodes.length; i++ ) {
+      var callout = _nodes.index( i ).contains_callout( x, y );
+      if( callout != null ) {
+        if( callout.is_within_title( x, y ) ) {
+          component = MapItemComponent.TITLE;
+        } else if( callout.is_within_resizer( x, y ) ) {
+          component = MapItemComponent.RESIZER;
         }
-      } else if( !current_conn.within_drag_handle( scaled_x, scaled_y ) ) {
-        if( (match_conn = _connections.within_title( scaled_x, scaled_y )) == null ) {
-          match_conn = _connections.on_curve( scaled_x, scaled_y );
-        }
-      }
-      if( match_conn != null ) {
-        clear_current_node( false );
-        clear_current_sticker( false );
-        clear_current_group( false );
-        clear_current_callout( false );
-        return( set_current_connection_from_position( match_conn, scaled_x, scaled_y, control, shift, press_num ) );
-      } else {
-        for( int i=0; i<_nodes.length; i++ ) {
-          var match_node = _nodes.index( i ).contains( scaled_x, scaled_y, null );
-          if( match_node != null ) {
-            clear_current_connection( false );
-            clear_current_sticker( false );
-            clear_current_group( false );
-            clear_current_callout( false );
-            return( set_current_node_from_position( match_node, scaled_x, scaled_y, control, shift, press_num ) );
-          }
-          var match_callout = _nodes.index( i ).contains_callout( scaled_x, scaled_y );
-          if( match_callout != null ) {
-            clear_current_node( false );
-            clear_current_connection( false );
-            clear_current_sticker( false );
-            clear_current_group( false );
-            return( set_current_callout_from_position( match_callout, scaled_x, scaled_y, control, shift, press_num ) );
-          }
-        }
-        var sticker = _stickers.is_within( scaled_x, scaled_y );
-        if( sticker != null ) {
-          clear_current_node( false );
-          clear_current_connection( false );
-          clear_current_group( false );
-          clear_current_callout( false );
-          return( set_current_sticker_from_position( sticker, scaled_x, scaled_y, control, shift, press_num ) );
-        }
-        var group = groups.node_group_containing( scaled_x, scaled_y );
-        if( group != null ) {
-          clear_current_node( false );
-          clear_current_connection( false );
-          clear_current_sticker( false );
-          clear_current_callout( false );
-          return( set_current_group_from_position( group, scaled_x, scaled_y, control, shift, press_num ) );
-        }
-        _select_box.x     = scaled_x;
-        _select_box.y     = scaled_y;
-        _select_box.valid = true;
-        if( !shift ) {
-          clear_current_node( true );
-        }
-        clear_current_connection( true );
-        clear_current_sticker( true );
-        clear_current_group( true );
-        clear_current_callout( true );
-        if( _last_node != null ) {
-          _selected.set_current_node( _last_node );
-        }
+        return( callout );
       }
     }
+    return( null );
+  }
 
-    return( true );
+  //-------------------------------------------------------------
+  // Returns the connection and its associated component that is
+  // located at the given X,Y coordinates.
+  public Connection? get_connection_at_position( double x, double y, out MapItemComponent component ) {
+    return( _connections.within( x, y, out component ) );
+  }
 
+  //-------------------------------------------------------------
+  // Returns the sticker that is located at the given X,Y coordinates.
+  public Sticker? get_sticker_at_position( double x, double y ) {
+    return( _stickers.is_within( x, y ) );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the node group that is located at the given X,Y coordinates.
+  public NodeGroup? get_group_at_position( double x, double y ) {
+    return( _groups.node_group_containing( x, y ) );
   }
 
   //-------------------------------------------------------------
@@ -2207,7 +1821,7 @@ public class MindMap {
       n = _selected.current_node();
     }
     if( (n != null) && (n.linked_node != null) ) {
-      n.linked_node.select( this );
+      n.linked_node.select( _da );
     }
   }
 
@@ -2217,7 +1831,7 @@ public class MindMap {
     var current = _selected.current_connection();
     if( current != null ) {
       if( select_node( start ? current.from_node : current.to_node ) ) {
-        clear_current_connection( true );
+        _da.clear_current_connection( true );
         queue_draw();
       }
     }

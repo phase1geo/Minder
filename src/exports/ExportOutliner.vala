@@ -139,7 +139,7 @@ public class ExportOutliner : Export {
 
     /* Get the dimensions of the window */
     int width, height;
-    map.get_dimensions( out width, out height );
+    map.da.get_dimensions( out width, out height );
 
     /* Create the root node */
     var root = new Node.with_name( map.da, map.da.get_doc().label, map.layouts.get_default() );

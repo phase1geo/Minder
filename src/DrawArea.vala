@@ -643,7 +643,7 @@ public class DrawArea : Gtk.DrawingArea {
           case "images"      :  image_manager.load( it );  break;
           case "connections" :  _connections.load( _map, it, null, _nodes );  break;
           case "groups"      :  groups.load( _map, it, null, _nodes );  break;
-          case "stickers"    :  _stickers.load( this, it );  break;
+          case "stickers"    :  _stickers.load( _map, it );  break;
           case "nodelinks"   :  _node_links.load( it );  break;
           case "nodes"       :
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
@@ -1434,16 +1434,9 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   //-------------------------------------------------------------
-  // Toggles the node links
+  // Toggles the node links.
   public void toggle_links() {
-    var current = _map.selected.current_node();
-    if( any_selected_nodes_linked() ) {
-      delete_links();
-    } else if( current != null ) {
-      start_connection( true, true );
-    } else {
-      create_links();
-    }
+    _map.toggle_links( _press_x, _press_y );
   }
 
   //-------------------------------------------------------------
@@ -1548,7 +1541,7 @@ public class DrawArea : Gtk.DrawingArea {
   //-------------------------------------------------------------
   // Clears the current connection (if it is set) and updates the
   // UI accordingly
-  private void clear_current_connection( bool signal_change ) {
+  public void clear_current_connection( bool signal_change ) {
     if( _map.selected.num_connections() > 0 ) {
       _map.selected.clear_connections( signal_change );
       _last_connection = null;
@@ -1593,7 +1586,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   //-------------------------------------------------------------
   // Called whenever the user clicks on a valid connection
-  private bool set_current_connection_from_position( Connection conn, double scaled_x, double scaled_y ) {
+  private bool set_current_connection_from_position( Connection conn, MapItemComponent component, double scaled_x, double scaled_y ) {
 
     if( _map.selected.is_current_connection( conn ) ) {
       if( conn.mode == ConnMode.EDITABLE ) {
@@ -1633,7 +1626,7 @@ public class DrawArea : Gtk.DrawingArea {
 
   //-------------------------------------------------------------
   // Called whenever the user clicks on node
-  private bool set_current_node_from_position( Node node, double scaled_x, double scaled_y ) {
+  private bool set_current_node_from_position( Node node, MapItemComponent component, double scaled_x, double scaled_y ) {
 
     var dpress = _press_num == 2;
     var tpress = _press_num == 3;
@@ -1644,27 +1637,31 @@ public class DrawArea : Gtk.DrawingArea {
     set_tooltip_markup( null );
 
     /* Check to see if the user clicked anywhere within the node which is itself a clickable target */
-    if( node.is_within_task( scaled_x, scaled_y ) ) {
-      toggle_task( node );
-      current_changed( this );
-      return( false );
-    } else if( node.is_within_linked_node( scaled_x, scaled_y ) ) {
-      select_linked_node( node );
-      return( false );
-    } else if( node.is_within_fold( scaled_x, scaled_y ) ) {
-      toggle_fold( node, _shift );
-      current_changed( this );
-      return( false );
-    } else if( node.is_within_resizer( scaled_x, scaled_y ) ) {
-      _resize         = true;
-      _orig_resizable = node.image_resizable;
-      _orig_width     = node.style.node_width;
-      return( true );
-    } else if( !_shift && _control && node.name.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
-      if( tag == FormatTag.URL ) {
-        Utils.open_url( url );
-      }
-      return( false );
+    switch( component ) {
+      case MapItemComponent.TASK :
+        toggle_task( node );
+        current_changed( this );
+        return( false );
+      case MapItemComponent.NODE_LINK :
+        select_linked_node( node );
+        return( false );
+      case MapItemComponent.FOLD :
+        toggle_fold( node, _shift );
+        current_changed( this );
+        return( false );
+      case MapItemComponent.RESIZER :
+        _resize         = true;
+        _orig_resizable = node.image_resizable;
+        _orig_width     = node.style.node_width;
+        return( true );
+      case MapItemComponent.TITLE :
+        if( !_shift && _control && node.name.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
+          if( tag == FormatTag.URL ) {
+            Utils.open_url( url );
+          }
+          return( false );
+        }
+        break;
     }
 
     _orig_side = node.side;
@@ -1694,7 +1691,7 @@ public class DrawArea : Gtk.DrawingArea {
      otherwise, set the node's mode to editable.
     */
     } else if( !_control && !_shift && (_press_num == 2) ) {
-      if( node.is_within_image( scaled_x, scaled_y ) ) {
+      if( component == MapItemComponent.IMAGE ) {
         edit_current_image();
         return( false );
       } else {
@@ -1803,21 +1800,25 @@ public class DrawArea : Gtk.DrawingArea {
 
   //-------------------------------------------------------------
   // Handles a click on the specified callout
-  public bool set_current_callout_from_position( Callout callout, double scaled_x, double scaled_y ) {
+  public bool set_current_callout_from_position( Callout callout, MapItemComponent component, double scaled_x, double scaled_y ) {
 
     var tag = FormatTag.LENGTH;
     var url = "";
 
     /* If the callout is being edited, go handle the click */
-    if( callout.is_within_resizer( scaled_x, scaled_y ) ) {
-      _resize = true;
-      _orig_width = (int)callout.total_width;
-      return( true );
-    } else if( !_shift && _control && callout.text.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
-      if( tag == FormatTag.URL ) {
-        Utils.open_url( url );
-      }
-      return( false );
+    switch( component ) {
+      case MapItemComponent.RESIZER :
+        _resize = true;
+        _orig_width = (int)callout.total_width;
+        return( true );
+      case MapItemComponent.TITLE :
+        if( !_shift && _control && callout.text.is_within_clickable( scaled_x, scaled_y, out tag, out url ) ) {
+          if( tag == FormatTag.URL ) {
+            Utils.open_url( url );
+          }
+          return( false );
+        }
+        break;
     }
 
     if( callout.mode == CalloutMode.EDITABLE ) {
@@ -1850,8 +1851,7 @@ public class DrawArea : Gtk.DrawingArea {
     return( true );
 
   }
-
-  //-------------------------------------------------------------
+//-------------------------------------------------------------
   // Checks to see if the user has clicked a connection that was
   // not previously selected.  If this is the case, select the
   // connection.
@@ -1902,95 +1902,77 @@ public class DrawArea : Gtk.DrawingArea {
   */
   private bool set_current_at_position( double scaled_x, double scaled_y ) {
 
-    var current_conn = _map.selected.current_connection();
-    
     /* If we are going to pan the canvas, do it and return */
     if( _press_middle || _alt ) {
       return( true );
     }
 
-    /* If the user clicked on a selected connection endpoint, disconnect that endpoint */
-    if( (current_conn != null) && (current_conn.mode == ConnMode.SELECTED) ) {
-      if( current_conn.within_drag_handle( scaled_x, scaled_y ) ) {
-        set_connection_mode( current_conn, ConnMode.ADJUSTING );
-        return( true );
-      } else if( current_conn.within_from_handle( scaled_x, scaled_y ) ) {
-        _last_connection = new Connection.from_connection( _map, current_conn );
-        current_conn.disconnect_from_node( true );
-        return( true );
-      } else if( current_conn.within_to_handle( scaled_x, scaled_y ) ) {
-        _last_connection = new Connection.from_connection( _map, current_conn );
-        current_conn.disconnect_from_node( false );
-        return( true );
+    MapItemComponent component;
+    var match_conn = _map.get_connection_at_position( scaled_x, scaled_y, out component );
+    if( (match_conn != null) && component.is_connection_handle() && (match_conn.mode == ConnMode.SELECTED) ) {
+      if( component == MapItemComponent.DRAG_HANDLE ) {
+        set_connection_mode( match_conn, ConnMode.ADJUSTING );
+      } else {
+        _last_connection = new Connection.from_connection( _map, match_conn );
+        match_conn.disconnect_from_node( true );
       }
+      return( true );
     }
 
-    if( (_attach_node == null) || (current_conn == null) ||
-        ((current_conn.mode != ConnMode.CONNECTING) && (current_conn.mode != ConnMode.LINKING)) ) {
-      Connection? match_conn = current_conn;
-      if( current_conn == null ) {
-        if( (match_conn = _connections.within_title( scaled_x, scaled_y )) == null ) {
-          match_conn = _connections.on_curve( scaled_x, scaled_y );
-        }
-      } else if( !current_conn.within_drag_handle( scaled_x, scaled_y ) ) {
-        if( (match_conn = _connections.within_title( scaled_x, scaled_y )) == null ) {
-          match_conn = _connections.on_curve( scaled_x, scaled_y );
-        }
-      }
-      if( match_conn != null ) {
+    var current_conn = _map.selected.current_connection();
+    
+    if( (_attach_node == null) || (current_conn == null) || !current_conn.mode.is_connecting() ) {
+      if( (match_conn != null) && (component != MapItemComponent.DRAG_HANDLE) ) {
         clear_current_node( false );
         clear_current_sticker( false );
         clear_current_group( false );
         clear_current_callout( false );
-        return( set_current_connection_from_position( match_conn, scaled_x, scaled_y ) );
-      } else {
-        for( int i=0; i<_nodes.length; i++ ) {
-          var match_node = _nodes.index( i ).contains( scaled_x, scaled_y, null );
-          if( match_node != null ) {
-            clear_current_connection( false );
-            clear_current_sticker( false );
-            clear_current_group( false );
-            clear_current_callout( false );
-            return( set_current_node_from_position( match_node, scaled_x, scaled_y ) );
-          }
-          var match_callout = _nodes.index( i ).contains_callout( scaled_x, scaled_y );
-          if( match_callout != null ) {
-            clear_current_node( false );
-            clear_current_connection( false );
-            clear_current_sticker( false );
-            clear_current_group( false );
-            return( set_current_callout_from_position( match_callout, scaled_x, scaled_y ) );
-          }
-        }
-        var sticker = _stickers.is_within( scaled_x, scaled_y );
-        if( sticker != null ) {
-          clear_current_node( false );
-          clear_current_connection( false );
-          clear_current_group( false );
-          clear_current_callout( false );
-          return( set_current_sticker_from_position( sticker, scaled_x, scaled_y ) );
-        }
-        var group = groups.node_group_containing( _scaled_x, _scaled_y );
-        if( group != null ) {
-          clear_current_node( false );
-          clear_current_connection( false );
-          clear_current_sticker( false );
-          clear_current_callout( false );
-          return( set_current_group_from_position( group, scaled_x, scaled_y ) );
-        }
-        _select_box.x     = scaled_x;
-        _select_box.y     = scaled_y;
-        _select_box.valid = true;
-        if( !_shift ) {
-          clear_current_node( true );
-        }
-        clear_current_connection( true );
-        clear_current_sticker( true );
-        clear_current_group( true );
-        clear_current_callout( true );
-        if( _last_node != null ) {
-          _map.selected.set_current_node( _last_node );
-        }
+        return( set_current_connection_from_position( match_conn, component, scaled_x, scaled_y ) );
+      }
+      var match_node = _map.get_node_at_position( scaled_x, scaled_y, out component );
+      if( match_node != null ) {
+        clear_current_connection( false );
+        clear_current_sticker( false );
+        clear_current_group( false );
+        clear_current_callout( false );
+        return( set_current_node_from_position( match_node, component, scaled_x, scaled_y ) );
+      }
+      var match_callout = _map.get_callout_at_position( scaled_x, scaled_y, out component );
+      if( match_callout != null ) {
+        clear_current_node( false );
+        clear_current_connection( false );
+        clear_current_sticker( false );
+        clear_current_group( false );
+        return( set_current_callout_from_position( match_callout, component, scaled_x, scaled_y ) );
+      }
+      var match_sticker = _map.get_sticker_at_position( scaled_x, scaled_y );
+      if( match_sticker != null ) {
+        clear_current_node( false );
+        clear_current_connection( false );
+        clear_current_group( false );
+        clear_current_callout( false );
+        return( set_current_sticker_from_position( match_sticker, scaled_x, scaled_y ) );
+      }
+      var match_group = _map.get_group_at_position( scaled_x, scaled_y );
+      if( match_group != null ) {
+        clear_current_node( false );
+        clear_current_connection( false );
+        clear_current_sticker( false );
+        clear_current_callout( false );
+        return( set_current_group_from_position( match_group, scaled_x, scaled_y ) );
+      }
+      _select_box.x     = scaled_x;
+      _select_box.y     = scaled_y;
+      _select_box.valid = true;
+      if( !_shift ) {
+        clear_current_node( true );
+      }
+      clear_current_connection( true );
+      clear_current_sticker( true );
+      clear_current_group( true );
+      clear_current_callout( true );
+      if( _last_node != null ) {
+        _map.selected.set_current_node( _last_node );
       }
     }
 
@@ -5877,7 +5859,7 @@ public class DrawArea : Gtk.DrawingArea {
         ((_attach_conn == null) || (_attach_conn.mode != ConnMode.DROPPABLE)) ) {
 
       if( _attach_sticker != null ) {
-        var sticker = new Sticker( this, drop_sticker.name, _attach_sticker.posx, _attach_sticker.posy, (int)_attach_sticker.width );
+        var sticker = new Sticker( _map, drop_sticker.name, _attach_sticker.posx, _attach_sticker.posy, (int)_attach_sticker.width );
         _stickers.remove_sticker( _attach_sticker );
         _stickers.add_sticker( sticker );
         _map.selected.set_current_sticker( sticker );
@@ -5885,7 +5867,7 @@ public class DrawArea : Gtk.DrawingArea {
         _attach_sticker.mode = StickerMode.NONE;
         _attach_sticker = null;
       } else {
-        var sticker = new Sticker( this, drop_sticker.name, scale_value( x ), scale_value( y ) );
+        var sticker = new Sticker( _map, drop_sticker.name, scale_value( x ), scale_value( y ) );
         _stickers.add_sticker( sticker );
         _map.selected.set_current_sticker( sticker );
         _undo_buffer.add_item( new UndoStickerAdd( sticker ) );

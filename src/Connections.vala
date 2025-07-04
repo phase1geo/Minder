@@ -160,7 +160,9 @@ public class Connections {
     return( null );
   }
 
-  /* Returns the associated connection if the given point is within the drag handle */
+  //-------------------------------------------------------------
+  // Returns the associated connection if the given point is
+  // within the drag handle.
   public Connection? within_drag_handle( double x, double y ) {
     if( !hide ) {
       for( int i=0; i<_connections.length; i++ ) {
@@ -169,6 +171,41 @@ public class Connections {
         }
       }
     }
+    return( null );
+  }
+
+  //-------------------------------------------------------------
+  // Returns the associated connection and its component that is
+  // within the given X,Y coordinates.
+  public Connection? within( double x, double y, out MapItemComponent component ) {
+    if( !hide ) {
+      for( int i=0; i<_connections.length; i++ ) {
+        var conn = _connections.index( i );
+        if( conn.on_curve( x, y ) ) {
+          component = MapItemComponent.CURVE;
+          return( conn );
+        } else if( conn.within_title_box( x, y ) ) {
+          if( conn.within_title( x, y ) ) {
+            component = MapItemComponent.TITLE;
+          } else if( conn.within_note( x, y ) ) {
+            component = MapItemComponent.NOTE;
+          } else if( conn.within_sticker( x, y ) ) {
+            component = MapItemComponent.STICKER;
+          } else {
+            component = MapItemComponent.TITLE_BOX;
+          }
+          return( conn );
+        } else if( conn.within_drag_handle( x, y ) ) {
+          component = MapItemComponent.DRAG_HANDLE;
+          return( conn );
+        } else if( conn.within_from_handle( x, y ) ) {
+          component = MapItemComponent.FROM_HANDLE;
+        } else if( conn.within_to_handle( x, y ) ) {
+          component = MapItemComponent.TO_HANDLE;
+        }
+      }
+    }
+    component = MapItemComponent.NONE;
     return( null );
   }
 

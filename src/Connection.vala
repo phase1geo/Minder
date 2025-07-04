@@ -34,7 +34,11 @@ public enum ConnMode {
   SELECTED,    // Indicates that the connection is currently selected
   ADJUSTING,   // Indicates that we are moving the drag handle to change the line shape
   EDITABLE,    // Indicates that the connection title is in edit mode
-  DROPPABLE    // Indicates that the connection is a drop zone for stickers
+  DROPPABLE;   // Indicates that the connection is a drop zone for stickers
+
+  public bool is_connecting() {
+    return( (this == LINKING) || (this == CONNECTING) );
+  }
 }
 
 public class Connection : Object {

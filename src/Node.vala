@@ -1214,6 +1214,13 @@ public class Node : Object {
     return( false );
   }
 
+  //-------------------------------------------------------------
+  // Returns true if the given coordinates are within the node title
+  // text.
+  public virtual bool is_within_title( double x, double y ) {
+    return( (_name != null) && (_name.is_within( x, y ) ) );
+  }
+
   /* Finds the node which contains the given pixel coordinates */
   public virtual Node? contains( double x, double y, Node? n ) {
     if( (this != n) && (is_within_node( x, y ) || is_within_fold_area( x, y )) ) {
