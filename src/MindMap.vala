@@ -189,6 +189,7 @@ public class MindMap {
   public MindMap( DrawArea da, GLib.Settings settings ) {
 
     _da       = da;
+    win       = da.win;
     _settings = settings;
 
     /* Create the selection */
@@ -427,7 +428,7 @@ public class MindMap {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var siblings = new Array<Node>();
-                var node = new Node.from_xml( _da, null, it2, true, null, ref siblings );
+                var node = new Node.from_xml( this, null, it2, true, null, ref siblings );
                 if( use_layout != null ) {
                   node.layout = use_layout;
                 }
@@ -666,7 +667,7 @@ public class MindMap {
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
-        undo_buffer.add_item( new UndoNodeName( _da, node, undo_text.orig ) );
+        undo_buffer.add_item( new UndoNodeName( this, node, undo_text.orig ) );
       }
       undo_text.ct      = null;
       undo_text.do_undo = false;
@@ -698,7 +699,7 @@ public class MindMap {
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
-        undo_buffer.add_item( new UndoConnectionTitle( _da, conn, undo_text.orig ) );
+        undo_buffer.add_item( new UndoConnectionTitle( this, conn, undo_text.orig ) );
       }
       undo_text.ct      = null;
       undo_text.do_undo = false;
@@ -728,7 +729,7 @@ public class MindMap {
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
-        undo_buffer.add_item( new UndoCalloutText( _da, callout, undo_text.orig ) );
+        undo_buffer.add_item( new UndoCalloutText( this, callout, undo_text.orig ) );
       }
       undo_text.ct      = null;
       undo_text.do_undo = false;
@@ -910,11 +911,11 @@ public class MindMap {
     if( conns.length == 1 ) {
       var current = conns.index( 0 );
       if( current.title.text.text != title ) {
-        var orig_title = new CanvasText( _da );
+        var orig_title = new CanvasText( this );
         orig_title.copy( current.title );
         current.change_title( this, title );
         // if( !_current_new ) {
-          undo_buffer.add_item( new UndoConnectionTitle( _da, current, orig_title ) );
+          undo_buffer.add_item( new UndoConnectionTitle( this, current, orig_title ) );
         // }
         queue_draw();
         auto_save();
@@ -1997,7 +1998,7 @@ public class MindMap {
   // Creates a root node with the given name, positions it and
   // appends it to the root node list.
   public Node create_root_node( string name = "" ) {
-    var node = new Node.with_name( _da, name, ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
+    var node = new Node.with_name( this, name, ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
     node.style = StyleInspector.styles.get_global_style();
     _da.position_root_node( node );
     _nodes.append_val( node );
@@ -2008,7 +2009,7 @@ public class MindMap {
   // Creates a sibling node, positions it and appends immediately
   // after the given sibling node.
   public Node create_main_node( Node root, NodeSide side, string name = "" ) {
-    var node   = new Node.with_name( _da, name, layouts.get_default() );
+    var node   = new Node.with_name( this, name, layouts.get_default() );
     node.side  = side;
     node.style = root.style;
     // node.style = StyleInspector.styles.get_style_for_level( 1, null );
@@ -2024,7 +2025,7 @@ public class MindMap {
   // Creates a sibling node, positions it and appends immediately
   // after the given sibling node.
   public Node create_sibling_node( Node sibling, bool below, string name = "" ) {
-    var node   = new Node.with_name( _da, name, layouts.get_default() );
+    var node   = new Node.with_name( this, name, layouts.get_default() );
     node.side  = sibling.side;
     node.style = sibling.style;
     node.attach( sibling.parent, (sibling.index() + (below ? 1 : 0)), _theme );
@@ -2039,7 +2040,7 @@ public class MindMap {
   // Creates a parent node, positions it, and inserts it just
   // above the child node.
   public Node create_parent_node( Node child, string name = "" ) {
-    var node  = new Node.with_name( _da, name, layouts.get_default() );
+    var node  = new Node.with_name( this, name, layouts.get_default() );
     var color = child.link_color;
     node.side  = child.side;
     node.style = child.style;
@@ -2055,7 +2056,7 @@ public class MindMap {
   // Creates a child node, positions it, and inserts it into the
   // parent node.
   public Node create_child_node( Node parent, string name = "" ) {
-    var node = new Node.with_name( _da, name, layouts.get_default() );
+    var node = new Node.with_name( this, name, layouts.get_default() );
     if( !parent.is_root() ) {
       node.side = parent.side;
     }
@@ -2074,7 +2075,7 @@ public class MindMap {
   // Creates a summary node for the nodes in the range of first
   // to last, inclusive.
   public Node create_summary_node( Array<Node> nodes ) {
-    var summary = new SummaryNode( _da, layouts.get_default() );
+    var summary = new SummaryNode( this, layouts.get_default() );
     summary.side = nodes.index( 0 ).side;
     summary.attach_nodes( nodes.index( 0 ).parent, nodes, true, _theme );
     return( summary );
@@ -2085,7 +2086,7 @@ public class MindMap {
   public Node create_summary_node_from_node( Node node ) {
     var prev_node = node.previous_sibling();
     node.detach( node.side );
-    var summary = new SummaryNode.from_node( _da, node, image_manager );
+    var summary = new SummaryNode.from_node( this, node, image_manager );
     summary.side = node.side;
     summary.attach_siblings( prev_node, _theme );
     return( summary );
@@ -2659,7 +2660,7 @@ public class MindMap {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var siblings = new Array<Node>();
-                var node = new Node.from_xml( _da, null, it2, true, null, ref siblings );
+                var node = new Node.from_xml( this, null, it2, true, null, ref siblings );
                 nodes.append_val( node );
               }
             }
@@ -2821,10 +2822,10 @@ public class MindMap {
   //-------------------------------------------------------------
   // Replaces the node's text with the given string.
   private void replace_node_text( Node node, string text ) {
-    var orig_text = new CanvasText( _da );
+    var orig_text = new CanvasText( this );
     orig_text.copy( node.name );
     node.name.text.replace_text( 0, node.name.text.text.char_count(), text.strip() );
-    undo_buffer.add_item( new UndoNodeName( _da, node, orig_text ) );
+    undo_buffer.add_item( new UndoNodeName( this, node, orig_text ) );
     queue_draw();
     auto_save();
   }
@@ -2832,10 +2833,10 @@ public class MindMap {
   //-------------------------------------------------------------
   // Replaces the connection's text with the given string.
   private void replace_connection_text( Connection conn, string text ) {
-    var orig_title = new CanvasText( _da );
+    var orig_title = new CanvasText( this );
     orig_title.copy( conn.title );
     conn.title.text.replace_text( 0, conn.title.text.text.char_count(), text.strip() );
-    undo_buffer.add_item( new UndoConnectionTitle( _da, conn, orig_title ) );
+    undo_buffer.add_item( new UndoConnectionTitle( this, conn, orig_title ) );
     queue_draw();
     current_changed( this );
     auto_save();
@@ -2844,10 +2845,10 @@ public class MindMap {
   //-------------------------------------------------------------
   // Replaces the callout's text with the given string.
   private void replace_callout_text( Callout callout, string text ) {
-    var orig_text = new CanvasText( _da );
+    var orig_text = new CanvasText( this );
     orig_text.copy( callout.text );
     callout.text.text.replace_text( 0, callout.text.text.text.char_count(), text.strip() );
-    undo_buffer.add_item( new UndoCalloutText( _da, callout, orig_text ) );
+    undo_buffer.add_item( new UndoCalloutText( this, callout, orig_text ) );
     queue_draw();
     current_changed( this );
     auto_save();

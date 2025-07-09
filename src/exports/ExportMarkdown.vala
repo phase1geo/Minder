@@ -115,7 +115,7 @@ public class ExportMarkdown : Export {
     } catch( RegexError e ) {
     }
 
-    var node = new Node.with_name( map.da, name, map.layouts.get_default() );
+    var node = new Node.with_name( map, name, map.layouts.get_default() );
 
     /* Add the style component to the node */
     if( parent == null ) {

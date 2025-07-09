@@ -154,7 +154,7 @@ public class ExportText : Export {
   /* Creates a new node from the given information and attaches it to the specified parent node */
   public Node make_node( MindMap map, string task, string name ) {
 
-    var node = new Node.with_name( map.da, name, map.layouts.get_default() );
+    var node = new Node.with_name( map, name, map.layouts.get_default() );
 
     /* Add the task information, if necessary */
     if( task != "" ) {

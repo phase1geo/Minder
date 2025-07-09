@@ -309,7 +309,7 @@ public class ExportFreeplane : Export {
   /* Parses the given Freemind node */
   public Node import_node( Xml.Node* n, MindMap map, Node? parent, HashMap<string,RGBA?> color_map, HashMap<string,int> id_map, Array<NodeLinkInfo?> link_ids, Array<string> to_nodes, File ifile ) {
 
-    var node = new Node( map.da, map.layouts.get_default() );
+    var node = new Node( map, map.layouts.get_default() );
 
     /* Make sure the style has a default value */
     node.style = StyleInspector.styles.get_style_for_level( ((parent == null) ? 0 : 1), null );

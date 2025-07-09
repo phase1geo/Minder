@@ -128,7 +128,7 @@ public class Callout : Object {
   // Default constructor.
   public Callout( Node node ) {
     _node = node;
-    _text = new CanvasText.with_text( node.da, _( "Callout" ) );
+    _text = new CanvasText.with_text( node.map, _( "Callout" ) );
     _text.resized.connect( position_text_from_ct );
     _style = new Style();
     set_parsers();
@@ -137,9 +137,9 @@ public class Callout : Object {
   //-------------------------------------------------------------
   // Adds the valid parsers.
   public void set_parsers() {
-    _text.text.add_parser( _node.da.markdown_parser );
-    _text.text.add_parser( _node.da.url_parser );
-    _text.text.add_parser( _node.da.unicode_parser );
+    _text.text.add_parser( _node.map.da.markdown_parser );
+    _text.text.add_parser( _node.map.da.url_parser );
+    _text.text.add_parser( _node.map.da.unicode_parser );
   }
 
   //-------------------------------------------------------------

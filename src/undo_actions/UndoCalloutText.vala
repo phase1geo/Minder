@@ -28,11 +28,11 @@ public class UndoCalloutText : UndoItem {
   private CanvasText _orig_text;
 
   /* Constructor for a node name change */
-  public UndoCalloutText( DrawArea da, Callout callout, CanvasText orig_text ) {
+  public UndoCalloutText( MindMap map, Callout callout, CanvasText orig_text ) {
     base( _( "callout text change" ) );
     _callout   = callout;
-    _text      = new CanvasText( da );
-    _orig_text = new CanvasText( da );
+    _text      = new CanvasText( map );
+    _orig_text = new CanvasText( map );
     _text.copy( callout.text );
     _orig_text.copy( orig_text );
   }

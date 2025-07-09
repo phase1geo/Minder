@@ -37,22 +37,22 @@ public class SummaryNode : Node {
   public Node? last_selected_node { get; set; default = null; }
 
   /* Default constructor */
-  public SummaryNode( DrawArea da, Layout? layout ) {
-    base( da, layout );
+  public SummaryNode( MindMap map, Layout? layout ) {
+    base( map, layout );
     _nodes = new List<Node>();
   }
 
   /* Converts the given node into a summary node that summarizes its sibling nodes */
-  public SummaryNode.from_node( DrawArea da, Node node, ImageManager im ) {
-    base.copy( da, node, im );
+  public SummaryNode.from_node( MindMap map, Node node, ImageManager im ) {
+    base.copy( map, node, im );
     _nodes = new List<Node>();
   }
 
   /* Constructor from XML data */
-  public SummaryNode.from_xml( DrawArea da, Layout? layout, Xml.Node* node, ref Array<Node> siblings ) {
-    base( da, layout );
+  public SummaryNode.from_xml( MindMap map, Layout? layout, Xml.Node* node, ref Array<Node> siblings ) {
+    base( map, layout );
     _nodes = new List<Node>();
-    load( da, node, false, null, ref siblings );
+    load( map, node, false, null, ref siblings );
   }
 
   /* Connects the node to signals */
@@ -96,9 +96,9 @@ public class SummaryNode : Node {
   public bool is_within_summarized( double x, double y ) {
     if( _first_xy == null ) return( false );
     if( side.horizontal() ) {
-      return( ((_first_xy + da.origin_y) <= y) && (y <= (_last_xy + da.origin_y)) );
+      return( ((_first_xy + map.da.origin_y) <= y) && (y <= (_last_xy + map.da.origin_y)) );
     } else {
-      return( ((_first_xy + da.origin_x) <= x) && (x <= (_last_xy + da.origin_x)) );
+      return( ((_first_xy + map.da.origin_x) <= x) && (x <= (_last_xy + map.da.origin_x)) );
     }
   }
 
@@ -138,7 +138,7 @@ public class SummaryNode : Node {
 
     var first_margin = first_node().style.node_margin;
     var last_margin  = last_node().style.node_margin;
-    var origin       = side.horizontal() ? da.origin_y : da.origin_x;
+    var origin       = side.horizontal() ? map.da.origin_y : map.da.origin_x;
 
     _first_xy = (xy1 + first_margin) - origin;
     _last_xy  = (xy2 - last_margin)  - origin;
@@ -346,9 +346,9 @@ public class SummaryNode : Node {
     }
 
     var x1 = sx - 10;
-    var y1 = ((_first_xy == null) ? first_node().posy : (_first_xy + da.origin_x)) + first_node().style.node_margin;
+    var y1 = ((_first_xy == null) ? first_node().posy : (_first_xy + map.da.origin_x)) + first_node().style.node_margin;
     var x2 = sx - 20;
-    var y2 = ((_last_xy == null) ? (last_node().posy + last_node().height) : (_last_xy + da.origin_y)) - last_node().style.node_margin;
+    var y2 = ((_last_xy == null) ? (last_node().posy + last_node().height) : (_last_xy + map.da.origin_y)) - last_node().style.node_margin;
 
     ctx.move_to( x1, y1 );
     ctx.line_to( x2, y1 );
@@ -381,9 +381,9 @@ public class SummaryNode : Node {
     }
 
     var x1 = sx + 10;
-    var y1 = ((_first_xy == null) ? first_node().posy : (_first_xy + da.origin_y)) + first_node().style.node_margin;
+    var y1 = ((_first_xy == null) ? first_node().posy : (_first_xy + map.da.origin_y)) + first_node().style.node_margin;
     var x2 = sx + 20;
-    var y2 = ((_last_xy == null) ? (last_node().posy + last_node().height) : (_last_xy + da.origin_y)) - last_node().style.node_margin;
+    var y2 = ((_last_xy == null) ? (last_node().posy + last_node().height) : (_last_xy + map.da.origin_y)) - last_node().style.node_margin;
 
     ctx.move_to( x1, y1 );
     ctx.line_to( x2, y1 );
@@ -415,9 +415,9 @@ public class SummaryNode : Node {
       }
     }
 
-    var x1 = ((_first_xy == null) ? first_node().posx : (_first_xy + da.origin_x)) + first_node().style.node_margin;
+    var x1 = ((_first_xy == null) ? first_node().posx : (_first_xy + map.da.origin_x)) + first_node().style.node_margin;
     var y1 = sy - 10;
-    var x2 = ((_last_xy == null) ? (last_node().posx + last_node().width) : (_last_xy + da.origin_x)) - last_node().style.node_margin;
+    var x2 = ((_last_xy == null) ? (last_node().posx + last_node().width) : (_last_xy + map.da.origin_x)) - last_node().style.node_margin;
     var y2 = sy - 20;
 
     ctx.move_to( x1, y1 );
@@ -449,9 +449,9 @@ public class SummaryNode : Node {
       }
     }
 
-    var x1 = ((_first_xy == null) ? first_node().posx : (_first_xy + da.origin_x)) + first_node().style.node_margin;
+    var x1 = ((_first_xy == null) ? first_node().posx : (_first_xy + map.da.origin_x)) + first_node().style.node_margin;
     var y1 = sy + 10;
-    var x2 = ((_last_xy == null) ? (last_node().posx + last_node().width) : (_last_xy + da.origin_x)) - last_node().style.node_margin;
+    var x2 = ((_last_xy == null) ? (last_node().posx + last_node().width) : (_last_xy + map.da.origin_x)) - last_node().style.node_margin;
     var y2 = sy + 20;
 
     ctx.move_to( x1, y1 );

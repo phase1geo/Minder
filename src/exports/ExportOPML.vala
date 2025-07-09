@@ -167,7 +167,7 @@ public class ExportOPML : Export {
     for( Xml.Node* it = n->children; it != null; it = it->next ) {
       if( it->type == Xml.ElementType.ELEMENT_NODE ) {
         if( it->name == "outline") {
-          var root = new Node( map.da, map.layouts.get_default() );
+          var root = new Node( map, map.layouts.get_default() );
           import_node( map, root, it, node_id, ref expand_state, map.get_theme() );
           if (map.get_nodes().length == 0) {
             root.posx = (map.da.get_allocated_width()  / 2) - 30;
@@ -225,7 +225,7 @@ public class ExportOPML : Export {
     /* Parse the child nodes */
     for( Xml.Node* it2 = parent->children; it2 != null; it2 = it2->next ) {
       if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "outline") ) {
-        var child = new Node( map.da, node.layout );
+        var child = new Node( map, node.layout );
         import_node( map, child, it2, node_id, ref expand_state, theme );
         child.attach( node, -1, theme );
       }

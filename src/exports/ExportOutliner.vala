@@ -142,7 +142,7 @@ public class ExportOutliner : Export {
     map.da.get_dimensions( out width, out height );
 
     /* Create the root node */
-    var root = new Node.with_name( map.da, map.da.get_doc().label, map.layouts.get_default() );
+    var root = new Node.with_name( map, map.da.get_doc().label, map.layouts.get_default() );
     root.style = StyleInspector.styles.get_global_style();
     root.posx = (width  / 2) - 30;
     root.posy = (height / 2) - 10;
@@ -183,7 +183,7 @@ public class ExportOutliner : Export {
   }
 
   private void import_node( Xml.Node* n, MindMap map, Node? parent ) {
-    var node = new Node( map.da, null );
+    var node = new Node( map, null );
     var e = n->get_prop( "expanded" );
     if( e != null ) {
       node.folded = !bool.parse( e );

@@ -127,13 +127,13 @@ public class CanvasText : Object {
   }
 
   /* Default constructor */
-  public CanvasText( DrawArea da ) {
+  public CanvasText( MindMap map ) {
     int int_max_width = (int)_max_width;
-    _da           = da;
-    _text         = new FormattedText( da );
+    _da           = map.da;
+    _text         = new FormattedText( map );
     _text.changed.connect( text_changed );
-    _line_layout  = da.create_pango_layout( "M" );
-    _pango_layout = da.create_pango_layout( null );
+    _line_layout  = map.da.create_pango_layout( "M" );
+    _pango_layout = map.da.create_pango_layout( null );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
@@ -141,13 +141,13 @@ public class CanvasText : Object {
   }
 
   /* Constructor initializing string */
-  public CanvasText.with_text( DrawArea da, string txt ) {
+  public CanvasText.with_text( MindMap map, string txt ) {
     int int_max_width = (int)_max_width;
-    _da           = da;
-    _text         = new FormattedText.with_text( da, txt );
+    _da           = map.da;
+    _text         = new FormattedText.with_text( map, txt );
     _text.changed.connect( text_changed );
-    _line_layout  = da.create_pango_layout( "M" );
-    _pango_layout = da.create_pango_layout( txt );
+    _line_layout  = map.da.create_pango_layout( "M" );
+    _pango_layout = map.da.create_pango_layout( txt );
     _pango_layout.set_wrap( Pango.WrapMode.WORD_CHAR );
     _pango_layout.set_width( int_max_width * Pango.SCALE );
     initialize_font_description();
@@ -930,11 +930,11 @@ public class CanvasText : Object {
   }
 
   /* Returns a populated FormattedText instance containing the selected text range */
-  public FormattedText? get_selected_formatted_text( DrawArea da ) {
+  public FormattedText? get_selected_formatted_text( MindMap map ) {
     if( _selstart != _selend ) {
       var spos = text.text.index_of_nth_char( _selstart );
       var epos = text.text.index_of_nth_char( _selend );
-      return( new FormattedText.copy_range( da, text, spos, epos ) );
+      return( new FormattedText.copy_range( map, text, spos, epos ) );
     }
     return( null );
   }

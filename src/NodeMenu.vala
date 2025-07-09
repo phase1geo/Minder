@@ -23,7 +23,7 @@ using Gtk;
 
 public class NodeMenu {
 
-  private DrawArea    _da;
+  private MindMap     _map;
   private GLib.Menu   _edit_menu;
   private GLib.Menu   _change_submenu;
   private PopoverMenu _popover;
@@ -75,7 +75,7 @@ public class NodeMenu {
   /* Default constructor */
   public NodeMenu( Gtk.Application app, DrawArea da ) {
 
-    _da = da;
+    _map = da.map;
 
     _edit_menu = new GLib.Menu();
     _edit_menu.append( _( "Copy" ),                   "node.action_copy" );
@@ -163,12 +163,12 @@ public class NodeMenu {
     menu.append_section( null, detach_menu );
 
     _popover = new PopoverMenu.from_model( menu );
-    _popover.set_parent( _da );
+    _popover.set_parent( da );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();
     actions.add_action_entries( action_entries, this );
-    _da.insert_action_group( "node", actions );
+    da.insert_action_group( "node", actions );
 
     // Add keyboard shortcuts
     app.set_accels_for_action( "node.action_copy",                { "<Control>c" } );
@@ -211,7 +211,7 @@ public class NodeMenu {
   public void show( double x, double y ) {
 
     // Handle menu state
-    on_popup();
+    on_popup( _map.da );
 
     // Display the popover at the given location
     Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
@@ -222,61 +222,61 @@ public class NodeMenu {
 
   /* Returns true if the currently selected node is a task */
   private bool node_is_task() {
-    Node? current = _da.get_current_node();
+    Node? current = _map.get_current_node();
     return( (current != null) && current.task_enabled() );
   }
 
   /* Returns true if the currently selected node task is marked as done */
   private bool node_task_is_done() {
-    Node? current = _da.get_current_node();
+    Node? current = _map.get_current_node();
     return( node_is_task() && current.task_done() );
   }
 
   /* Returns true if a note is associated with the currently selected node */
   private bool node_has_note() {
-    Node? current = _da.get_current_node();
+    Node? current = _map.get_current_node();
     return( (current != null) && (current.note != "") );
   }
 
   /* Returns true if an image is associated with the currently selected node */
   private bool node_has_image() {
-    Node? current = _da.get_current_node();
+    Node? current = _map.get_current_node();
     return( (current != null) && (current.image != null) );
   }
 
   /* Returns true if an node link is associated with the currently selected node */
   private bool node_has_link() {
-    Node? current = _da.get_current_node();
+    Node? current = _map.get_current_node();
     return( (current != null) && (current.linked_node != null) );
   }
 
   /* Returns true if a callout is associated with the currently selected node */
   private bool node_has_callout() {
-    var current = _da.get_current_node();
+    var current = _map.get_current_node();
     return( (current != null) && (current.callout != null) );
   }
 
   /* Returns true if there is a currently selected node that is foldable */
   private bool node_foldable() {
-    Node? current = _da.get_current_node();
+    Node? current = _map.get_current_node();
     return( (current != null) && !current.is_leaf() );
   }
 
   /* Returns true if there are two or more nodes in the map and one is selected */
   private bool node_linkable() {
-    Node? current = _da.get_current_node();
-    return( (current != null) && (!current.is_root() || (_da.get_nodes().length > 1)) );
+    Node? current = _map.get_current_node();
+    return( (current != null) && (!current.is_root() || (_map.get_nodes().length > 1)) );
   }
 
   /* Returns true if the currently selected node can have a parent node added */
   private bool node_parentable() {
-    Node? current = _da.get_current_node();
+    Node? current = _map.get_current_node();
     return( (current != null) && !current.is_root() );
   }
 
   /* Returns true if the currently selected node has more than one child node */
   private bool node_sortable() {
-    Node? current = _da.get_current_node();
+    Node? current = _map.get_current_node();
     return( (current != null) && (current.children().length > 1) );
   }
 
@@ -285,7 +285,7 @@ public class NodeMenu {
    folded.
   */
   private bool node_is_folded() {
-    Node? current = _da.get_current_node();
+    Node? current = _map.get_current_node();
     return( (current != null) && current.folded );
   }
 
@@ -298,9 +298,9 @@ public class NodeMenu {
   }
 
   /* Called when the menu is popped up */
-  private void on_popup() {
+  private void on_popup( DrawArea da ) {
 
-    var current = _da.get_current_node();
+    var current = _map.get_current_node();
 
     // Set the menu item labels
     var task_lbl    = node_is_task()   ?
@@ -331,45 +331,45 @@ public class NodeMenu {
     } else {
       change_menu( _edit_menu, 2, _( "Paste" ), "node.action_paste" );
       change_menu( _edit_menu, 3, _( "Paste and Replace Node" ), "node.action_replace" );
-      _da.action_set_enabled( "node.action_paste",   false );
-      _da.action_set_enabled( "node.action_replace", false );
+      da.action_set_enabled( "node.action_paste",   false );
+      da.action_set_enabled( "node.action_replace", false );
     }
 
     /* Set the menu sensitivity */
-    _da.action_set_enabled( "node.action_paste", true );
-    _da.action_set_enabled( "node.action_replace", true );
-    _da.action_set_enabled( "node.action_add_connection", !_da.get_connections().hide );
-    _da.action_set_enabled( "node.action_add_parent_node", node_parentable() );
-    _da.action_set_enabled( "node.action_change_link_color",    !current.is_root() );
-    _da.action_set_enabled( "node.action_randomize_link_color", !current.is_root() );
-    _da.action_set_enabled( "node.action_reparent_link_color",  (!current.is_root() && !current.main_branch() && current.link_color_root) );
-    _da.action_set_enabled( "node.action_fold_node", node_foldable() );
-    _da.action_set_enabled( "node.action_toggle_sequence", _da.sequences_togglable() );
-    _da.action_set_enabled( "node.action_change_link", node_linkable() );
-    _da.action_set_enabled( "node.action_detach_node", _da.detachable() );
-    _da.action_set_enabled( "node.action_sort_alphabetically", node_sortable() );
-    _da.action_set_enabled( "node.action_sort_randomly",       node_sortable() );
-    _da.action_set_enabled( "node.action_select_root_node", _da.root_selectable() );
-    _da.action_set_enabled( "node.action_select_next_sibling_node", _da.sibling_selectable() );
-    _da.action_set_enabled( "node.action_select_previous_sibling_node", _da.sibling_selectable() );
-    _da.action_set_enabled( "node.action_select_child_node", _da.children_selectable() );
-    _da.action_set_enabled( "node.action_select_parent_node", _da.parent_selectable() );
-    _da.action_set_enabled( "node.action_select_linked_node", node_has_link() );
-    _da.action_set_enabled( "node.action_select_callout", node_has_callout() );
-    _da.action_set_enabled( "node.action_remove_sticker", (current.sticker != null) );
-    _da.action_set_enabled( "node.action_add_sibling_node", !current.is_summary() );
-    _da.action_set_enabled( "node.action_convert_to_summary_node", _da.node_summarizable() );
+    da.action_set_enabled( "node.action_paste", true );
+    da.action_set_enabled( "node.action_replace", true );
+    da.action_set_enabled( "node.action_add_connection", !_map.get_connections().hide );
+    da.action_set_enabled( "node.action_add_parent_node", node_parentable() );
+    da.action_set_enabled( "node.action_change_link_color",    !current.is_root() );
+    da.action_set_enabled( "node.action_randomize_link_color", !current.is_root() );
+    da.action_set_enabled( "node.action_reparent_link_color",  (!current.is_root() && !current.main_branch() && current.link_color_root) );
+    da.action_set_enabled( "node.action_fold_node", node_foldable() );
+    da.action_set_enabled( "node.action_toggle_sequence", _map.sequences_togglable() );
+    da.action_set_enabled( "node.action_change_link", node_linkable() );
+    da.action_set_enabled( "node.action_detach_node", _map.detachable() );
+    da.action_set_enabled( "node.action_sort_alphabetically", node_sortable() );
+    da.action_set_enabled( "node.action_sort_randomly",       node_sortable() );
+    da.action_set_enabled( "node.action_select_root_node", _map.root_selectable() );
+    da.action_set_enabled( "node.action_select_next_sibling_node", _map.sibling_selectable() );
+    da.action_set_enabled( "node.action_select_previous_sibling_node", _map.sibling_selectable() );
+    da.action_set_enabled( "node.action_select_child_node", _map.children_selectable() );
+    da.action_set_enabled( "node.action_select_parent_node", _map.parent_selectable() );
+    da.action_set_enabled( "node.action_select_linked_node", node_has_link() );
+    da.action_set_enabled( "node.action_select_callout", node_has_callout() );
+    da.action_set_enabled( "node.action_remove_sticker", (current.sticker != null) );
+    da.action_set_enabled( "node.action_add_sibling_node", !current.is_summary() );
+    da.action_set_enabled( "node.action_convert_to_summary_node", _map.node_summarizable() );
 
   }
 
   /* Copies the current node to the clipboard */
   private void action_copy() {
-    _da.do_copy();
+    _map.do_copy();
   }
 
   /* Cuts the current node to the clipboard */
   private void action_cut() {
-    _da.do_cut();
+    _map.do_cut();
   }
 
   /*
@@ -378,7 +378,7 @@ public class NodeMenu {
    node.
   */
   private void action_paste() {
-    _da.do_paste( false );
+    _map.da.do_paste( false );
   }
 
   /*
@@ -386,220 +386,220 @@ public class NodeMenu {
    in the clipboard.
   */
   private void action_replace() {
-    _da.do_paste( true );
+    _map.da.do_paste( true );
   }
 
   /* Deletes the current node */
   private void action_delete_node() {
-    _da.delete_node();
+    _map.delete_node();
   }
 
   /* Deletes just the node that is selected */
   private void action_delete_node_only() {
-    _da.delete_nodes();
+    _map.delete_nodes();
   }
 
   /* Displays the sidebar to edit the node properties */
   private void action_edit_node() {
-    var current = _da.get_current_node();
-    _da.set_node_mode( current, NodeMode.EDITABLE );
-    _da.queue_draw();
+    var current = _map.get_current_node();
+    _map.set_node_mode( current, NodeMode.EDITABLE );
+    _map.queue_draw();
   }
 
   /* Changes the task status of the currently selected node */
   private void action_change_task() {
     if( node_is_task() ) {
       if( node_task_is_done() ) {
-        _da.change_current_task( false, false );
+        _map.change_current_task( false, false );
       } else {
-        _da.change_current_task( true, true );
+        _map.change_current_task( true, true );
       }
     } else {
-      _da.change_current_task( true, false );
+      _map.change_current_task( true, false );
     }
-    _da.current_changed( _da );
+    _map.current_changed( _map );
   }
 
   /* Changes the note status of the currently selected node */
   private void action_edit_note() {
-    _da.show_properties( "current", PropertyGrab.NOTE );
+    _map.da.show_properties( "current", PropertyGrab.NOTE );
   }
 
   /* Changes the image of the currently selected node */
   private void action_change_image() {
     if( node_has_image() ) {
-      _da.delete_current_image();
+      _map.delete_current_image();
     } else {
-      _da.add_current_image();
+      _map.add_current_image();
     }
-    _da.current_changed( _da );
+    _map.current_changed( _map );
   }
 
   /* Removes the sticker from the node */
   private void action_remove_sticker() {
-    var current = _da.get_current_node();
-    _da.undo_buffer.add_item( new UndoNodeStickerRemove( current ) );
+    var current = _map.get_current_node();
+    _map.undo_buffer.add_item( new UndoNodeStickerRemove( current ) );
     current.sticker = null;
-    _da.queue_draw();
-    _da.auto_save();
+    _map.queue_draw();
+    _map.auto_save();
   }
 
   /* Changes the node link of the currently selected node */
   private void action_change_link() {
     if( node_has_link() ) {
-      _da.delete_links();
+      _map.delete_links();
     } else {
-      _da.start_connection( false, true );
+      _map.da.start_connection( false, true );
     }
   }
 
   /* Changes the connection of the currently selected node */
   private void action_add_connection() {
-    _da.start_connection( false, false );
+    _map.da.start_connection( false, false );
   }
 
   /* Creates a group from the currently selected node */
   private void action_add_group() {
-    _da.add_group();
+    _map.add_group();
   }
 
   /* Adds a callback to the currently selected node */
   private void action_add_callout() {
     if( node_has_callout() ) {
-      _da.remove_callout();
+      _map.remove_callout();
     } else {
-      _da.add_callout();
+      _map.add_callout();
     }
   }
 
   /* Fold the currently selected node */
   private void action_fold_node() {
-    _da.change_current_fold( !node_is_folded() );
+    _map.change_current_fold( !node_is_folded() );
   }
 
   //-------------------------------------------------------------
   // Toggles the sequence indicator of the current node
   private void action_toggle_sequence() {
-    _da.toggle_sequence();
+    _map.toggle_sequence();
   }
 
   /* Creates a new root node */
   private void action_add_root_node() {
-    _da.add_root_node();
+    _map.add_root_node();
   }
 
   /* Creates a new parent node for the current node */
   private void action_add_parent_node() {
-    _da.add_parent_node();
+    _map.add_parent_node();
   }
 
   /* Creates a new child node from the current node */
   private void action_add_child_node() {
-    _da.add_child_node();
+    _map.add_child_node();
   }
 
   /* Creates a sibling node of the current node */
   private void action_add_sibling_node() {
-    _da.add_sibling_node( false );
+    _map.add_sibling_node( false );
   }
 
   /* Converts the current node into a summary node */
   private void action_convert_to_summary_node() {
-    _da.add_summary_node_from_current();
+    _map.add_summary_node_from_current();
   }
 
   /* Show the quick entry insert window */
   private void action_quick_entry_insert() {
-    _da.handle_control_E();
+    _map.da.handle_control_E();
   }
 
   /* Show the quick entry replace window */
   private void action_quick_entry_replace() {
-    _da.handle_control_R();
+    _map.da.handle_control_R();
   }
 
   /* Detaches the currently selected node and make it a root node */
   private void action_detach_node() {
-    _da.detach();
+    _map.detach();
   }
 
   /* Selects the current root node */
   private void action_select_root_node() {
-    _da.select_root_node();
+    _map.select_root_node();
   }
 
   /* Selects the next sibling node of the current node */
   private void action_select_next_sibling_node() {
-    _da.select_sibling_node( 1 );
+    _map.select_sibling_node( 1 );
   }
 
   /* Selects the previous sibling node of the current node */
   private void action_select_previous_sibling_node() {
-    _da.select_sibling_node( -1 );
+    _map.select_sibling_node( -1 );
   }
 
   /* Selects the first child node of the current node */
   private void action_select_child_node() {
-    _da.select_child_node();
+    _map.select_child_node();
   }
 
   /* Selects all of the child nodes of the current node */
   private void action_select_child_nodes() {
-    _da.select_child_nodes();
+    _map.select_child_nodes();
   }
 
   /* Selects all of the descendant nodes of the current node */
   private void action_select_node_tree() {
-    _da.select_node_tree();
+    _map.select_node_tree();
   }
 
   /* Selects the parent node of the current node */
   private void action_select_parent_nodes() {
-    _da.select_parent_nodes();
+    _map.select_parent_nodes();
   }
 
   /* Selects the node the current node is linked to */
   private void action_select_linked_node() {
-    _da.select_linked_node();
+    _map.select_linked_node();
   }
 
   /* Selects the one of the connections attached to the current node */
   private void action_select_connection() {
-    _da.select_attached_connection();
+    _map.select_attached_connection();
   }
 
   /* Selects the associated callout */
   private void action_select_callout() {
-    _da.select_callout();
+    _map.select_callout();
   }
 
   /* Centers the current node */
   private void action_center_current_node() {
-    _da.center_current_node();
+    _map.da.center_current_node();
   }
 
   private void action_sort_alphabetically() {
-    _da.sort_alphabetically();
+    _map.sort_alphabetically();
   }
 
   private void action_sort_randomly() {
-    _da.sort_randomly();
+    _map.sort_randomly();
   }
 
   public void action_change_link_color() {
-    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
+    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _map.da.win );
     color_picker.color_activated.connect((color) => {
-      _da.change_current_link_color( color );
+      _map.change_current_link_color( color );
     });
     color_picker.present();
   }
 
   private void action_randomize_link_color() {
-    _da.randomize_current_link_color();
+    _map.randomize_current_link_color();
   }
 
   private void action_reparent_link_color() {
-    _da.reparent_current_link_color();
+    _map.reparent_current_link_color();
   }
 
 }

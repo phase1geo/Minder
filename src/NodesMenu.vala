@@ -23,7 +23,7 @@ using Gtk;
 
 public class NodesMenu {
 
-  private DrawArea    _da;
+  private MindMap     _map;
   private PopoverMenu _popover;
 
   private const GLib.ActionEntry action_entries[] = {
@@ -52,7 +52,7 @@ public class NodesMenu {
   /* Default constructor */
   public NodesMenu( Gtk.Application app, DrawArea da ) {
 
-    _da = da;
+    _map = da.map;
 
     var edit_menu = new GLib.Menu();
     edit_menu.append( _( "Copy" ),   "nodes.action_copy" );
@@ -107,12 +107,12 @@ public class NodesMenu {
     menu.append_section( null, align_menu );
 
     _popover = new PopoverMenu.from_model( menu );
-    _popover.set_parent( _da );
+    _popover.set_parent( da );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();
     actions.add_action_entries( action_entries, this );
-    _da.insert_action_group( "nodes", actions );
+    da.insert_action_group( "nodes", actions );
 
     // Add keyboard shortcuts
     app.set_accels_for_action( "nodes.action_copy",               { "<Control>c" } );
@@ -140,7 +140,7 @@ public class NodesMenu {
   // Shows this menu.
   public void show( double x, double y ) {
 
-    on_popup();
+    on_popup( _map.da );
 
     /* Display the popover at the given location */
     Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
@@ -152,7 +152,7 @@ public class NodesMenu {
   /* Returns true if there is a currently selected node that is foldable */
   private void nodes_foldable_status( out bool foldable, out bool unfoldable ) {
     foldable = unfoldable = false;
-    var nodes = _da.get_selected_nodes();
+    var nodes = _map.get_selected_nodes();
     for( int i=0; i<nodes.length; i++ ) {
       if( !nodes.index( i ).is_leaf() ) {
         foldable   |= !nodes.index( i ).folded;
@@ -163,7 +163,7 @@ public class NodesMenu {
 
   /* Returns true if at least one selected node has its local_link_color indicator set */
   private bool link_colors_parentable() {
-    var nodes = _da.get_selected_nodes();
+    var nodes = _map.get_selected_nodes();
     for( int i=0; i<nodes.length; i++ ) {
       if( nodes.index( i ).link_color_root ) {
         return( true );
@@ -173,30 +173,30 @@ public class NodesMenu {
   }
 
   /* Called when the menu is popped up */
-  private void on_popup() {
+  private void on_popup( DrawArea da ) {
 
-    var nodes        = _da.get_selected_nodes();
+    var nodes        = _map.get_selected_nodes();
     var node_num     = nodes.length;
-    var summarizable = _da.nodes_summarizable();
-    var alignable    = _da.nodes_alignable();
+    var summarizable = _map.nodes_summarizable();
+    var alignable    = _map.nodes_alignable();
 
     bool foldable, unfoldable;
     nodes_foldable_status( out foldable, out unfoldable );
 
     /* Set the menu sensitivity */
-    _da.action_set_enabled( "nodes.action_toggle_folds",         (foldable || unfoldable) );
-    _da.action_set_enabled( "nodes.action_toggle_sequences",     _da.sequences_togglable() );
-    _da.action_set_enabled( "nodes.action_connect_nodes",        (node_num == 2) );
+    da.action_set_enabled( "nodes.action_toggle_folds",         (foldable || unfoldable) );
+    da.action_set_enabled( "nodes.action_toggle_sequences",     _map.sequences_togglable() );
+    da.action_set_enabled( "nodes.action_connect_nodes",        (node_num == 2) );
     // _da.action_set_enabled( "nodes.action_summarize",        summarizable );
-    _da.action_set_enabled( "nodes.action_reparent_link_colors", link_colors_parentable() );
-    _da.action_set_enabled( "nodes.action_align_to_top",         alignable );
-    _da.action_set_enabled( "nodes.action_align_to_hcenter",     alignable );
-    _da.action_set_enabled( "nodes.action_align_to_bottom",      alignable );
-    _da.action_set_enabled( "nodes.action_align_to_left",        alignable );
-    _da.action_set_enabled( "nodes.action_align_to_vcenter",     alignable );
-    _da.action_set_enabled( "nodes.action_align_to_right",       alignable );
-    _da.action_set_enabled( "nodes.action_select_parent_nodes",  _da.parent_selectable() );
-    _da.action_set_enabled( "nodes.action_select_child_nodes",   _da.children_selectable() );
+    da.action_set_enabled( "nodes.action_reparent_link_colors", link_colors_parentable() );
+    da.action_set_enabled( "nodes.action_align_to_top",         alignable );
+    da.action_set_enabled( "nodes.action_align_to_hcenter",     alignable );
+    da.action_set_enabled( "nodes.action_align_to_bottom",      alignable );
+    da.action_set_enabled( "nodes.action_align_to_left",        alignable );
+    da.action_set_enabled( "nodes.action_align_to_vcenter",     alignable );
+    da.action_set_enabled( "nodes.action_align_to_right",       alignable );
+    da.action_set_enabled( "nodes.action_select_parent_nodes",  _map.parent_selectable() );
+    da.action_set_enabled( "nodes.action_select_child_nodes",   _map.children_selectable() );
 
   }
 
@@ -212,33 +212,33 @@ public class NodesMenu {
 
   /* Copies all selected nodes to the node clipboard */
   private void action_copy() {
-    _da.do_copy();
+    _map.do_copy();
   }
 
   /* Cuts all selected nodes to the node clipboard */
   private void action_cut() {
-    _da.do_cut();
+    _map.do_cut();
   }
 
   /* Delete all selected nodes, collapsing deselected descendants */
   private void action_delete() {
-    _da.delete_nodes();
+    _map.delete_nodes();
   }
 
   /* Toggles the task indicator of the selected nodes */
   private void action_toggle_tasks() {
-    _da.change_selected_tasks();
+    _map.change_selected_tasks();
   }
 
   /* Folds/unfolds the selected nodes */
   private void action_fold_nodes() {
-    _da.toggle_folds();
+    _map.toggle_folds();
   }
 
   //-------------------------------------------------------------
   // Toggles sequences
   private void action_toggle_sequences() {
-    _da.toggle_sequence();
+    _map.toggle_sequence();
   }
 
   /*
@@ -246,78 +246,78 @@ public class NodesMenu {
    second node is the to node.
   */
   private void action_connect_nodes() {
-    _da.create_connection();
+    _map.create_connection();
   }
 
   /*
    Links two selected nodes such that the first selected node will link to the second selected node.
   */
   private void action_link_nodes() {
-    _da.toggle_links();
+    _map.toggle_links( 0.0, 0.0 );
   }
 
   /* Adds a new summary node */
   private void action_summarize() {
-    _da.add_summary_node_from_selected();
+    _map.add_summary_node_from_selected();
   }
 
   /* Changes the color of all selected nodes */
   public void action_change_link_colors() {
-    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _da.win );
+    var color_picker = new ColorChooserDialog( _( "Select a link color" ), _map.da.win );
     color_picker.color_activated.connect((color) => {
-      _da.change_link_colors( color_picker.get_rgba() );
+      _map.change_link_colors( color_picker.get_rgba() );
     });
     color_picker.present();
   }
 
   /* Randomize the selected link colors */
   private void action_randomize_link_colors() {
-    _da.randomize_link_colors();
+    _map.randomize_link_colors();
   }
 
   /* Changes the selected nodes to use parent node's colors */
   private void action_reparent_link_colors() {
-    _da.reparent_link_colors();
+    _map.reparent_link_colors();
   }
 
   /* Selects all of the parent nodes of the selected nodes */
   private void action_select_parent_nodes() {
-    _da.select_parent_nodes();
+    _map.select_parent_nodes();
   }
 
   /* Selects all child nodes of selected nodes */
   private void action_select_child_nodes() {
-    _da.select_child_nodes();
+    _map.select_child_nodes();
   }
 
   /* Aligns all selected nodes to the top of the first node */
   private void action_align_to_top() {
-    NodeAlign.align_top( _da, _da.get_selected_nodes() );
+    NodeAlign.align_top( _map, _map.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the center of the first node horizontally */
   private void action_align_to_hcenter() {
-    NodeAlign.align_hcenter( _da, _da.get_selected_nodes() );
+    NodeAlign.align_hcenter( _map, _map.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the bottom of the first node */
   private void action_align_to_bottom() {
-    NodeAlign.align_bottom( _da, _da.get_selected_nodes() );
+    NodeAlign.align_bottom( _map, _map.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the left side of the first node */
   private void action_align_to_left() {
-    NodeAlign.align_left( _da, _da.get_selected_nodes() );
+    NodeAlign.align_left( _map, _map.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the center of the first node vertically */
   private void action_align_to_vcenter() {
-    NodeAlign.align_vcenter( _da, _da.get_selected_nodes() );
+    NodeAlign.align_vcenter( _map, _map.get_selected_nodes() );
   }
 
   /* Aligns all selected nodes to the right side of the first node */
   private void action_align_to_right() {
-    NodeAlign.align_right( _da, _da.get_selected_nodes() );
+    NodeAlign.align_right( _map, _map.get_selected_nodes() );
   }
 
 }

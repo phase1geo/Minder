@@ -419,12 +419,13 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   /* Returns the stored document */
+  // public Document get_doc() {
   public Document get_doc() {
     return( _doc );
   }
 
   /* Returns the name of the currently selected theme */
-  public string get_theme_name() {
+  private string get_theme_name() {
     return( _theme.name );
   }
 
@@ -649,7 +650,7 @@ public class DrawArea : Gtk.DrawingArea {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var siblings = new Array<Node>();
-                var node = new Node.from_xml( this, null, it2, true, null, ref siblings );
+                var node = new Node.from_xml( _map, null, it2, true, null, ref siblings );
                 if( use_layout != null ) {
                   node.layout = use_layout;
                 }
@@ -754,7 +755,7 @@ public class DrawArea : Gtk.DrawingArea {
     _attach_summary     = null;
     _attach_conn        = null;
     _attach_sticker     = null;
-    _orig_text          = new CanvasText( this );
+    _orig_text          = new CanvasText( _map );
     _last_connection    = null;
 
     set_current_node( null );
@@ -802,11 +803,11 @@ public class DrawArea : Gtk.DrawingArea {
     _attach_summary     = null;
     _attach_conn        = null;
     _attach_sticker     = null;
-    _orig_text          = new CanvasText( this );
+    _orig_text          = new CanvasText( _map );
     _last_connection    = null;
 
     /* Create the main idea node */
-    var n = new Node.with_name( this, _("Main Idea"), layouts.get_default() );
+    var n = new Node.with_name( _map, _("Main Idea"), layouts.get_default() );
 
     /* Get the rough dimensions of the canvas */
     int wwidth, wheight;
@@ -933,7 +934,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
-        undo_buffer.add_item( new UndoNodeName( this, node, undo_text.orig ) );
+        undo_buffer.add_item( new UndoNodeName( _map, node, undo_text.orig ) );
       }
       undo_text.ct      = null;
       undo_text.do_undo = false;
@@ -965,7 +966,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
-        undo_buffer.add_item( new UndoConnectionTitle( this, conn, undo_text.orig ) );
+        undo_buffer.add_item( new UndoConnectionTitle( _map, conn, undo_text.orig ) );
       }
       undo_text.ct      = null;
       undo_text.do_undo = false;
@@ -992,7 +993,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       undo_text.clear();
       if( undo_text.do_undo ) {
-        undo_buffer.add_item( new UndoCalloutText( this, callout, undo_text.orig ) );
+        undo_buffer.add_item( new UndoCalloutText( _map, callout, undo_text.orig ) );
       }
       undo_text.ct      = null;
       undo_text.do_undo = false;
@@ -1187,11 +1188,11 @@ public class DrawArea : Gtk.DrawingArea {
     if( conns.length == 1 ) {
       var current = conns.index( 0 );
       if( current.title.text.text != title ) {
-        var orig_title = new CanvasText( this );
+        var orig_title = new CanvasText( _map );
         orig_title.copy( current.title );
         current.change_title( _map, title );
         // if( !_current_new ) {
-          undo_buffer.add_item( new UndoConnectionTitle( this, current, orig_title ) );
+          undo_buffer.add_item( new UndoConnectionTitle( _map, current, orig_title ) );
         // }
         queue_draw();
         auto_save();
@@ -3584,7 +3585,7 @@ public class DrawArea : Gtk.DrawingArea {
    root node list.
   */
   public Node create_root_node( string name = "" ) {
-    var node = new Node.with_name( this, name, ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
+    var node = new Node.with_name( _map, name, ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
     node.style = StyleInspector.styles.get_global_style();
     position_root_node( node );
     _nodes.append_val( node );
@@ -3596,7 +3597,7 @@ public class DrawArea : Gtk.DrawingArea {
    sibling node.
   */
   public Node create_main_node( Node root, NodeSide side, string name = "" ) {
-    var node   = new Node.with_name( this, name, layouts.get_default() );
+    var node   = new Node.with_name( _map, name, layouts.get_default() );
     node.side  = side;
     node.style = root.style;
     // node.style = StyleInspector.styles.get_style_for_level( 1, null );
@@ -3613,7 +3614,7 @@ public class DrawArea : Gtk.DrawingArea {
    sibling node.
   */
   public Node create_sibling_node( Node sibling, bool below, string name = "" ) {
-    var node   = new Node.with_name( this, name, layouts.get_default() );
+    var node   = new Node.with_name( _map, name, layouts.get_default() );
     node.side  = sibling.side;
     node.style = sibling.style;
     node.attach( sibling.parent, (sibling.index() + (below ? 1 : 0)), _theme );
@@ -3628,7 +3629,7 @@ public class DrawArea : Gtk.DrawingArea {
    Creates a parent node, positions it, and inserts it just above the child node.
   */
   public Node create_parent_node( Node child, string name = "" ) {
-    var node  = new Node.with_name( this, name, layouts.get_default() );
+    var node  = new Node.with_name( _map, name, layouts.get_default() );
     var color = child.link_color;
     node.side  = child.side;
     node.style = child.style;
@@ -3644,7 +3645,7 @@ public class DrawArea : Gtk.DrawingArea {
    Creates a child node, positions it, and inserts it into the parent node.
   */
   public Node create_child_node( Node parent, string name = "" ) {
-    var node = new Node.with_name( this, name, layouts.get_default() );
+    var node = new Node.with_name( _map, name, layouts.get_default() );
     if( !parent.is_root() ) {
       node.side = parent.side;
     }
@@ -3663,7 +3664,7 @@ public class DrawArea : Gtk.DrawingArea {
    Creates a summary node for the nodes in the range of first to last, inclusive.
   */
   public Node create_summary_node( Array<Node> nodes ) {
-    var summary = new SummaryNode( this, layouts.get_default() );
+    var summary = new SummaryNode( _map, layouts.get_default() );
     summary.side = nodes.index( 0 ).side;
     summary.attach_nodes( nodes.index( 0 ).parent, nodes, true, _theme );
     return( summary );
@@ -3673,7 +3674,7 @@ public class DrawArea : Gtk.DrawingArea {
   public Node create_summary_node_from_node( Node node ) {
     var prev_node = node.previous_sibling();
     node.detach( node.side );
-    var summary = new SummaryNode.from_node( this, node, image_manager );
+    var summary = new SummaryNode.from_node( _map, node, image_manager );
     summary.side = node.side;
     summary.attach_siblings( prev_node, _theme );
     return( summary );
@@ -4951,12 +4952,12 @@ public class DrawArea : Gtk.DrawingArea {
       else return( false );
 
     } else if( nomod || shift ) {
-      if( !shift && has_key( kvs, Key.minus ) )             { if( nodes_alignable() ) NodeAlign.align_top( this, _map.selected.nodes() ); }
-      else if( !shift && has_key( kvs, Key.equal ) )        { if( nodes_alignable() ) NodeAlign.align_vcenter( this, _map.selected.nodes() ); }
+      if( !shift && has_key( kvs, Key.minus ) )             { if( nodes_alignable() ) NodeAlign.align_top( _map, _map.selected.nodes() ); }
+      else if( !shift && has_key( kvs, Key.equal ) )        { if( nodes_alignable() ) NodeAlign.align_vcenter( _map, _map.selected.nodes() ); }
       else if(  shift && has_key( kvs, Key.z ) )            { zoom_in(); }
-      else if( !shift && has_key( kvs, Key.bracketleft ) )  { if( nodes_alignable() ) NodeAlign.align_left( this, _map.selected.nodes() ); }
-      else if( !shift && has_key( kvs, Key.bracketright ) ) { if( nodes_alignable() ) NodeAlign.align_right( this, _map.selected.nodes() ); }
-      else if(  shift && has_key( kvs, Key.underscore ) )   { if( nodes_alignable() ) NodeAlign.align_bottom( this, _map.selected.nodes() ); }
+      else if( !shift && has_key( kvs, Key.bracketleft ) )  { if( nodes_alignable() ) NodeAlign.align_left( _map, _map.selected.nodes() ); }
+      else if( !shift && has_key( kvs, Key.bracketright ) ) { if( nodes_alignable() ) NodeAlign.align_right( _map, _map.selected.nodes() ); }
+      else if(  shift && has_key( kvs, Key.underscore ) )   { if( nodes_alignable() ) NodeAlign.align_bottom( _map, _map.selected.nodes() ); }
       else if( !shift && has_key( kvs, Key.a ) )            { select_parent_nodes(); }
       else if( !shift && has_key( kvs, Key.d ) )            { select_child_nodes(); }
       else if( !shift && has_key( kvs, Key.f ) )            { toggle_folds( false ); }
@@ -4968,7 +4969,7 @@ public class DrawArea : Gtk.DrawingArea {
       else if( !shift && has_key( kvs, Key.t ) )            { change_selected_tasks(); }
       else if( !shift && has_key( kvs, Key.u ) )            { if( undo_buffer.undoable() ) undo_buffer.undo(); }
       else if( !shift && has_key( kvs, Key.z ) )            { zoom_out(); }
-      else if(  shift && has_key( kvs, Key.bar ) )          { if( nodes_alignable() ) NodeAlign.align_hcenter( this, _map.selected.nodes() ); }
+      else if(  shift && has_key( kvs, Key.bar ) )          { if( nodes_alignable() ) NodeAlign.align_hcenter( _map, _map.selected.nodes() ); }
       else if(  shift && has_key( kvs, Key.numbersign ) )   { toggle_sequence(); }
       else if( has_key( kvs, Key.BackSpace ) )              { handle_backspace(); }
       else if( has_key( kvs, Key.Delete ) )                 { handle_delete(); }
@@ -5230,7 +5231,7 @@ public class DrawArea : Gtk.DrawingArea {
             for( Xml.Node* it2 = it->children; it2 != null; it2 = it2->next ) {
               if( (it2->type == Xml.ElementType.ELEMENT_NODE) && (it2->name == "node") ) {
                 var siblings = new Array<Node>();
-                var node = new Node.from_xml( this, null, it2, true, null, ref siblings );
+                var node = new Node.from_xml( _map, null, it2, true, null, ref siblings );
                 nodes.append_val( node );
               }
             }
@@ -5391,29 +5392,29 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   private void replace_node_text( Node node, string text ) {
-    var orig_text = new CanvasText( this );
+    var orig_text = new CanvasText( _map );
     orig_text.copy( node.name );
     node.name.text.replace_text( 0, node.name.text.text.char_count(), text.strip() );
-    undo_buffer.add_item( new UndoNodeName( this, node, orig_text ) );
+    undo_buffer.add_item( new UndoNodeName( _map, node, orig_text ) );
     queue_draw();
     auto_save();
   }
 
   private void replace_connection_text( Connection conn, string text ) {
-    var orig_title = new CanvasText( this );
+    var orig_title = new CanvasText( _map );
     orig_title.copy( conn.title );
     conn.title.text.replace_text( 0, conn.title.text.text.char_count(), text.strip() );
-    undo_buffer.add_item( new UndoConnectionTitle( this, conn, orig_title ) );
+    undo_buffer.add_item( new UndoConnectionTitle( _map, conn, orig_title ) );
     queue_draw();
     current_changed( this );
     auto_save();
   }
 
   private void replace_callout_text( Callout callout, string text ) {
-    var orig_text = new CanvasText( this );
+    var orig_text = new CanvasText( _map );
     orig_text.copy( callout.text );
     callout.text.text.replace_text( 0, callout.text.text.text.char_count(), text.strip() );
-    undo_buffer.add_item( new UndoCalloutText( this, callout, orig_text ) );
+    undo_buffer.add_item( new UndoCalloutText( _map, callout, orig_text ) );
     queue_draw();
     current_changed( this );
     auto_save();
@@ -6104,13 +6105,13 @@ public class DrawArea : Gtk.DrawingArea {
     var node = _map.selected.current_node();
     if( node == null ) return;
     var name = node.name;
-    var orig_text = new CanvasText( this );
+    var orig_text = new CanvasText( _map );
     orig_text.copy( name );
     tagger.preedit_load_tags( name.text );
     name.text.insert_text( name.text.text.length, (" @" + tag) );
     name.text.changed();
     tagger.postedit_load_tags( name.text );
-    undo_buffer.add_item( new UndoNodeName( this, node, orig_text ) );
+    undo_buffer.add_item( new UndoNodeName( _map, node, orig_text ) );
     auto_save();
   }
 

@@ -29,11 +29,11 @@ public class UndoNodeName : UndoItem {
 
   //-------------------------------------------------------------
   // Constructor for a node name change.
-  public UndoNodeName( DrawArea da, Node node, CanvasText orig_text ) {
+  public UndoNodeName( MindMap map, Node node, CanvasText orig_text ) {
     base( _( "node name change" ) );
     _node      = node;
-    _text      = new CanvasText( da );
-    _orig_text = new CanvasText( da );
+    _text      = new CanvasText( map );
+    _orig_text = new CanvasText( map );
     _text.copy( node.name );
     _orig_text.copy( orig_text );
   }

@@ -34,8 +34,8 @@ public class NodeLink {
 
   /* Constructor */
   public NodeLink( Node node ) {
-    _fname      = node.da.get_doc().filename;
-    _temp_file  = !node.da.get_doc().is_saved();
+    _fname      = node.map.da.get_doc().filename;
+    _temp_file  = !node.map.da.get_doc().is_saved();
     _node_title = node.name.text.text;
     _node_id    = node.id();
   }

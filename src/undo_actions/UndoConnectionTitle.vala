@@ -28,11 +28,11 @@ public class UndoConnectionTitle : UndoItem {
   private CanvasText _orig_text;
 
   /* Constructor for a node name change */
-  public UndoConnectionTitle( DrawArea da, Connection conn, CanvasText orig_text ) {
+  public UndoConnectionTitle( MindMap map, Connection conn, CanvasText orig_text ) {
     base( _( "connection title change" ) );
     _conn      = conn;
-    _text      = new CanvasText( da );
-    _orig_text = new CanvasText( da );
+    _text      = new CanvasText( map );
+    _orig_text = new CanvasText( map );
     _text.copy( conn.title );
     _orig_text.copy( orig_text );
   }

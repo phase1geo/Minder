@@ -214,7 +214,7 @@ public class Connection : Object {
       _title = null;
     } else {
       if( title == null ) {
-        _title = new CanvasText( map.da );
+        _title = new CanvasText( map );
         _title.resized.connect( position_title );
       }
       _title.copy( conn.title );
@@ -293,7 +293,7 @@ public class Connection : Object {
   /* Makes sure that the title is ready to be edited */
   public void edit_title_begin( MindMap map ) {
     if( _title != null ) return;
-    _title = new CanvasText.with_text( map.da, "" );
+    _title = new CanvasText.with_text( map, "" );
     _title.resized.connect( position_title );
     _title.set_font( style.connection_font.get_family(), (style.connection_font.get_size() / Pango.SCALE) );
     position_title();
@@ -314,7 +314,7 @@ public class Connection : Object {
       }
       _title = null;
     } else if( _title == null ) {
-      _title = new CanvasText.with_text( map.da, title );
+      _title = new CanvasText.with_text( map, title );
       _title.resized.connect( position_title );
       _title.set_font( style.connection_font.get_family(), (style.connection_font.get_size() / Pango.SCALE) );
       position_title();

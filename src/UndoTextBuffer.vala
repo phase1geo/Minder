@@ -31,7 +31,7 @@ public class UndoTextBuffer : UndoBuffer {
   /* Default constructor */
   public UndoTextBuffer( MindMap map ) {
     base( map );
-    orig = new CanvasText( map.da );
+    orig = new CanvasText( map );
   }
 
   /*

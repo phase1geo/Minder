@@ -79,7 +79,7 @@ public class Layout : Object {
     double px, py, pw, ph;
     parent.bbox( out px, out py, out pw, out ph );
 
-    var nb = new NodeBounds.with_bounds( parent.da, px, py, pw, ph );
+    var nb = new NodeBounds.with_bounds( parent.map.da, px, py, pw, ph );
 
     double x2 = nb.x + nb.width;
     double y2 = nb.y + nb.height;
@@ -210,7 +210,7 @@ public class Layout : Object {
     var parent = n.parent;
     var last   = n;
     var index  = n.index();
-    var nodes  = n.da.get_nodes();
+    var nodes  = n.map.get_nodes();
     var prev   = new NodeBounds.copy( p );
 
     while( parent != null ) {
@@ -224,7 +224,7 @@ public class Layout : Object {
 
     for( int i=0; i<nodes.length; i++ ) {
       if( nodes.index( i ) == last ) {
-        n.da.handle_tree_overlap( prev );
+        n.map.handle_tree_overlap( prev );
       }
     }
 
