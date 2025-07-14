@@ -23,15 +23,17 @@ using Gtk;
 
 public class ExportPrint : Object {
 
-  private DrawArea _da;
+  private MindMap _map;
 
-  /* Default constructor */
+  //-------------------------------------------------------------
+  // Default constructor.
   public ExportPrint() {}
 
-  /* Perform print operation */
-  public void print( DrawArea da, MainWindow main ) {
+  //-------------------------------------------------------------
+  // Perform print operation.
+  public void print( MindMap map, MainWindow main ) {
 
-    _da = da;
+    _map = map;
 
     var op = new PrintOperation();
 
@@ -64,7 +66,8 @@ public class ExportPrint : Object {
 
   }
 
-  /* Draws the page */
+  //-------------------------------------------------------------
+  // Draws the page.
   public void draw_page( PrintOperation op, PrintContext context, int page_nr ) {
 
     var ctx         = context.get_cairo_context();
@@ -73,7 +76,7 @@ public class ExportPrint : Object {
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
-    _da.document_rectangle( out x, out y, out w, out h );
+    _map.document_rectangle( out x, out y, out w, out h );
 
     /* Calculate the required scaling factor to get the document to fit */
     double width  = page_width  / w;
@@ -85,7 +88,7 @@ public class ExportPrint : Object {
     ctx.translate( (0 - x), (0 - y) );
 
     /* Draw the map */
-    _da.map.draw_all( ctx, true, false );
+    _map.draw_all( ctx, true, false );
 
   }
 

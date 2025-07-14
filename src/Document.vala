@@ -89,7 +89,7 @@ public class Document : Object {
     make_temp_dir();
 
     /* Listen for any changes from the canvas */
-    _da.changed.connect( canvas_changed );
+    _da.map.changed.connect( canvas_changed );
 
   }
 
@@ -131,7 +131,7 @@ public class Document : Object {
     if( doc == null ) {
       return( false );
     }
-    found = DrawArea.xml_find( doc->get_root_element(), id, ref name );
+    found = MindMap.xml_find( doc->get_root_element(), id, ref name );
     delete doc;
     return( found );
   }
@@ -166,7 +166,7 @@ public class Document : Object {
     _etag = get_etag( doc );
 
     // Load document
-    _da.load( doc->get_root_element() );
+    _da.map.load( doc->get_root_element() );
 
     // Delete the XML document contents
     delete doc;
@@ -240,11 +240,11 @@ public class Document : Object {
     }
 
     /* Set the image directory in the image manager */
-    _da.image_manager.set_image_dir( get_image_dir() );
+    _da.map.image_manager.set_image_dir( get_image_dir() );
 
     /* Finally, load the minder file and re-save it */
     load_xml();
-    _da.changed();
+    _da.map.changed();
 
     return( true );
 
@@ -303,7 +303,7 @@ public class Document : Object {
     root->set_prop( "etag" , _etag );
 
     doc->set_root_element( root );
-    _da.save( root );
+    _da.map.save( root );
     var res = doc->save_format_file( dest_filename, 1 );
     delete doc;
 
@@ -333,10 +333,10 @@ public class Document : Object {
     archive_file( archive, get_map_file() );
 
     // Add the images
-    var image_ids = _da.image_manager.get_ids();
+    var image_ids = _da.map.image_manager.get_ids();
     for( int i=0; i<image_ids.length; i++ ) {
       var id = image_ids.index( i );
-      archive_file( archive, _da.image_manager.get_file( id ), id );
+      archive_file( archive, _da.map.image_manager.get_file( id ), id );
     }
 
     // Close the archive
@@ -461,15 +461,15 @@ public class Document : Object {
     load_xml();
 
     /* Move all image files that are related to the temp images directory */
-    var image_ids = _da.image_manager.get_ids();
+    var image_ids = _da.map.image_manager.get_ids();
     for( int i=0; i<image_ids.length; i++ ) {
       var id       = image_ids.index( i );
-      var img_file = _da.image_manager.get_file( id );
+      var img_file = _da.map.image_manager.get_file( id );
       copy_file( img_file, GLib.Path.build_filename( get_image_dir(), GLib.Path.get_basename( img_file ) ) );
     }
 
     /* Set the image directory in the image manager */
-    _da.image_manager.set_image_dir( get_image_dir() );
+    _da.map.image_manager.set_image_dir( get_image_dir() );
 
     /* Finally, create the new .minder file (it will act as a backup) */
     save();

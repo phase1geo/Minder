@@ -446,7 +446,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // This needs to be called whenever the tab is changed
   private void tab_changed( int page_num ) {
     var da = get_da( page_num );
-    do_buffer_changed( da.current_undo_buffer() );
+    do_buffer_changed( da.map.current_undo_buffer() );
     on_current_changed( da );
     update_title( da );
     canvas_changed( da );
@@ -466,7 +466,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   public void update_node_sizes() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var da = get_da( i );
-      da.update_node_sizes();
+      da.map.update_node_sizes();
     }
   }
 
@@ -1442,7 +1442,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Perform an undo action
   public void do_undo() {
     var da = get_current_da( "do_undo" );
-    da.current_undo_buffer().undo();
+    da.map.current_undo_buffer().undo();
     da.grab_focus();
   }
 
@@ -1450,7 +1450,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Perform a redo action
   public void do_redo() {
     var da = get_current_da( "do_redo" );
-    da.current_undo_buffer().redo();
+    da.map.current_undo_buffer().redo();
     da.grab_focus();
   }
 
@@ -1458,7 +1458,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Called whenever the theme is changed
   private void on_theme_changed( DrawArea da ) {
     var settings  = Gtk.Settings.get_default();
-    var dark_mode = da.get_theme().prefer_dark;
+    var dark_mode = da.map.get_theme().prefer_dark;
     if( settings != null ) {
       settings.gtk_application_prefer_dark_theme = dark_mode;
     }
@@ -1515,8 +1515,8 @@ public class MainWindow : Gtk.ApplicationWindow {
       dialog.set_initial_name( da.get_doc().filename );
     } else {
       dialog.set_initial_name( da.get_doc().label );
-      if( da.get_nodes().length > 0 ) {
-        var root_str = da.get_nodes().index( 0 ).name.text.text.strip();
+      if( da.map.get_nodes().length > 0 ) {
+        var root_str = da.map.get_nodes().index( 0 ).name.text.text.strip();
         if( root_str != "" ) {
           dialog.set_initial_name( convert_name_to_filename( root_str ) );
         }
@@ -1559,7 +1559,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   /* Called whenever the node selection changes in the canvas */
   private void on_current_changed( DrawArea da ) {
-    action_set_enabled( "win.action_zoom_selected", (da.get_current_node() != null) );
+    action_set_enabled( "win.action_zoom_selected", (da.map.get_current_node() != null) );
     _focus_btn.active = da.get_focus_mode();
   }
 
@@ -1635,7 +1635,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
   /* Displays the theme editor pane */
   public void show_theme_editor( bool edit ) {
-    _themer.initialize( get_current_da().get_theme(), edit );
+    _themer.initialize( get_current_da().map.get_theme(), edit );
     _inspector_nb.page = 1;
   }
 
@@ -1800,12 +1800,12 @@ public class MainWindow : Gtk.ApplicationWindow {
     var text     = _search_entry.get_text().casefold();
     var name     = all_tabs ? get_tab_label_name( _nb.page ) : "";
     if( text == "" ) return;
-    current.get_match_items( name, text, search_opts, ref _search_items );
+    current.map.get_match_items( name, text, search_opts, ref _search_items );
     if( all_tabs ) {
       for( int i=0; i<_nb.get_n_pages(); i++ ) {
         var da = get_da( i );
         if( da != current ) {
-          da.get_match_items( get_tab_label_name( i ), text, search_opts, ref _search_items );
+          da.map.get_match_items( get_tab_label_name( i ), text, search_opts, ref _search_items );
         }
       }
     }
@@ -1833,16 +1833,16 @@ public class MainWindow : Gtk.ApplicationWindow {
       }
     }
     if( node != null ) {
-      da.set_current_node( node );
+      da.map.set_current_node( node );
       da.see();
     } else if( conn != null ) {
-      da.set_current_connection( conn );
+      da.map.set_current_connection( conn );
       da.see();
     } else if( callout != null ) {
-      da.set_current_callout( callout );
+      da.map.set_current_callout( callout );
       da.see();
     } else if( group != null ) {
-      da.set_current_group( group );
+      da.map.set_current_group( group );
       da.see();
     }
     _search.closed();
@@ -1867,7 +1867,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   // Exports the model to the printer
   private void action_print() {
     var print = new ExportPrint();
-    print.print( get_current_da( "action_print" ), this );
+    print.print( get_current_da( "action_print" ).map, this );
   }
 
   //-------------------------------------------------------------

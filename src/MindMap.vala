@@ -1031,6 +1031,24 @@ public class MindMap {
   }
 
   //-------------------------------------------------------------
+  // A link can be added if text is selected and the selected text
+  // does not overlap with any existing links.
+  public bool add_link_possible( CanvasText ct ) {
+
+    int cursor, selstart, selend;
+    if( ct.is_selected() ) {
+      ct.get_cursor_info( out cursor, out selstart, out selend );
+    } else {
+      selstart = 0;
+      selend   = ct.text.text.length;
+    }
+
+    return( (selstart != selend) && !ct.text.is_tag_applied_in_range( FormatTag.URL, selstart, selend ) );
+
+  }
+
+
+  //-------------------------------------------------------------
   // Changes the current connection's note to the given value.
   public void change_current_connection_note( string note ) {
     var conns = _selected.connections();
@@ -1095,7 +1113,7 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Called whenever the current node's image is changed
-  private void current_image_edited( NodeImage? orig_image ) {
+  public void current_image_edited( NodeImage? orig_image ) {
     var current = _selected.current_node();
     undo_buffer.add_item( new UndoNodeImage( current, orig_image ) );
     queue_draw();
@@ -1105,7 +1123,7 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Called when the linking process has successfully completed
-  private void end_link( Node node ) {
+  public void end_link( Node node ) {
     if( _selected.num_connections() == 0 ) return;
     _selected.clear_connections();
     _last_node.linked_node = new NodeLink( node );
@@ -1273,7 +1291,7 @@ public class MindMap {
   // Checks to see if the user has clicked a connection that was
   // not previously selected.  If this is the case, select the
   // connection.
-  private bool select_connection_if_unselected( double x, double y ) {
+  public bool select_connection_if_unselected( double x, double y ) {
     var conn = _connections.within_title( x, y );
     if( conn == null ) {
       conn = _connections.on_curve( x, y );
@@ -1291,7 +1309,7 @@ public class MindMap {
   //-------------------------------------------------------------
   // Checks to see if the user has clicked a node that was not
   // previously selected.  If this is the case, select the node.
-  private bool select_node_if_unselected( double x, double y ) {
+  public bool select_node_if_unselected( double x, double y ) {
     for( int i=0; i<_nodes.length; i++ ) {
       var node = _nodes.index( i ).contains( x, y, null );
       if( node != null ) {
@@ -1375,7 +1393,7 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Returns the attachable node if one is found.
-  private Node? attachable_node( double x, double y ) {
+  public Node? attachable_node( double x, double y ) {
     var current = _selected.current_node();
     for( int i=0; i<_nodes.length; i++ ) {
       Node tmp = _nodes.index( i ).contains( x, y, current );
@@ -1389,7 +1407,7 @@ public class MindMap {
   //-------------------------------------------------------------
   // Returns the summary node that the current node can be
   // attached to; otherwise, returns null.
-  private SummaryNode? attachable_summary_node( double x, double y ) {
+  public SummaryNode? attachable_summary_node( double x, double y ) {
     var current = _selected.current_node();
     if( (current.is_summarized() && (current.parent.children().length > 1) && (current.summary_node().summarized_count() > 1)) || current.is_leaf() ) {
       for( int i=0; i<current.parent.children().length; i++ ) {

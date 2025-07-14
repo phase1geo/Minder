@@ -179,7 +179,7 @@ public class Braindump : Box {
     
     Pango.Rectangle log, ink;
 
-    var theme = _win.get_current_da().get_theme();
+    var theme = _win.get_current_da().map.get_theme();
 
     var layout = label.create_pango_layout( text );
     layout.set_wrap( Pango.WrapMode.WORD_CHAR );

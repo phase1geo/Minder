@@ -34,7 +34,7 @@ public class MarkdownParser : TextParser {
 
     /* Lists */
     add_regex( "^\\s*(\\*|\\+|\\-|[0-9]+\\.)\\s", (text, match) => {
-      add_tag( text, match, 1, FormatTag.COLOR, _da.get_theme().get_color( "markdown_listitem" ).to_string() );
+      add_tag( text, match, 1, FormatTag.COLOR, _da.map.get_theme().get_color( "markdown_listitem" ).to_string() );
     });
 
     /* Code */

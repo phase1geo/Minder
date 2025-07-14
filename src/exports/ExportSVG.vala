@@ -33,7 +33,7 @@ public class ExportSVG : Export {
 
     /* Get the rectangle holding the entire document */
     double x, y, w, h;
-    map.da.document_rectangle( out x, out y, out w, out h );
+    map.document_rectangle( out x, out y, out w, out h );
 
     /* Create the drawing surface */
     var surface = new SvgSurface( fname, ((int)w + 20), ((int)h + 20) );

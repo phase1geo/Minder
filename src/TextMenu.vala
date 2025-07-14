@@ -23,7 +23,7 @@ using Gtk;
 
 public class TextMenu {
 
-  private DrawArea    _da;
+  private MindMap     _map;
   private PopoverMenu _popover;
   private bool        _clear_selection = false;
 
@@ -43,7 +43,7 @@ public class TextMenu {
   // Default constructor
   public TextMenu( Gtk.Application app, DrawArea da ) {
 
-    _da = da;
+    _map = da.map;
 
     // Add the menu items to the menu
     var edit_menu = new GLib.Menu();
@@ -70,13 +70,13 @@ public class TextMenu {
     menu.append_section( null, other_menu );
 
     _popover = new PopoverMenu.from_model( menu );
-    _popover.set_parent( _da );
+    _popover.set_parent( da );
     _popover.closed.connect( on_popdown );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();
     actions.add_action_entries( action_entries, this );
-    _da.insert_action_group( "text", actions );
+    da.insert_action_group( "text", actions );
 
     // Add keyboard shortcuts
     app.set_accels_for_action( "text.action_copy",         { "<Control>c" } );
@@ -114,12 +114,12 @@ public class TextMenu {
 
   /* Copies the selected text to the clipboard */
   private void action_copy() {
-    _da.copy_selected_text();
+    _map.copy_selected_text();
   }
 
   /* Copies the selected text to the clipboard and removes the text */
   private void action_cut() {
-    _da.cut_selected_text();
+    _map.cut_selected_text();
   }
 
   /*
@@ -127,7 +127,7 @@ public class TextMenu {
    any selected text.
   */
   private void action_paste() {
-    MinderClipboard.paste( _da.map, false );
+    MinderClipboard.paste( _map, false );
   }
 
   /*
@@ -135,7 +135,7 @@ public class TextMenu {
    character at the current cursor location.
   */
   private void action_insert_emoji() {
-    _da.handle_control_period();
+    _map.da.handle_control_period();
   }
 
   /* Opens the first link found */
@@ -143,10 +143,10 @@ public class TextMenu {
 
     CanvasText? ct = null;
 
-    if( _da.is_node_editable() ) {
-      ct = _da.get_current_node().name;
-    } else if( _da.is_callout_editable() ) {
-      ct = _da.get_current_callout().text;
+    if( _map.is_node_editable() ) {
+      ct = _map.get_current_node().name;
+    } else if( _map.is_callout_editable() ) {
+      ct = _map.get_current_callout().text;
     }
 
     if( ct != null ) {
@@ -164,17 +164,17 @@ public class TextMenu {
    text that currently has a link associated with it.
   */
   private void action_add_link() {
-    _da.url_editor.add_url();
+    _map.da.url_editor.add_url();
   }
 
   /* Allows the user to remove the link located at the current cursor */
   private void action_remove_link() {
-    _da.url_editor.remove_url();
+    _map.da.url_editor.remove_url();
   }
 
   /* Allows the user to edit the associated link. */
   private void action_edit_link() {
-    _da.url_editor.edit_url();
+    _map.da.url_editor.edit_url();
   }
 
   /* Restores an embedded link that was previously removed */
@@ -182,10 +182,10 @@ public class TextMenu {
 
     CanvasText? ct = null;
 
-    if( _da.is_node_editable() ) {
-      ct = _da.get_current_node().name;
-    } else if( _da.is_callout_editable() ) {
-      ct = _da.get_current_callout().text;
+    if( _map.is_node_editable() ) {
+      ct = _map.get_current_node().name;
+    } else if( _map.is_callout_editable() ) {
+      ct = _map.get_current_callout().text;
     }
 
     if( ct != null ) {
@@ -193,7 +193,7 @@ public class TextMenu {
       ct.get_cursor_info( out cursor, out selstart, out selend );
     // TBD - node.urls.restore_link( cursor );
       ct.clear_selection();
-      _da.auto_save();
+      _map.auto_save();
     }
 
   }
@@ -204,28 +204,28 @@ public class TextMenu {
   */
   private void on_popup() {
 
-    var node    = _da.get_current_node();
-    var callout = _da.get_current_callout();
+    var node    = _map.get_current_node();
+    var callout = _map.get_current_callout();
 
     /* Set the menu sensitivity */
-    _da.action_set_enabled( "text.action_copy",  copy_or_cut_possible() );
-    _da.action_set_enabled( "text.action_cut",   copy_or_cut_possible() );
-    _da.action_set_enabled( "text.action_paste", paste_possible() );
+    _map.da.action_set_enabled( "text.action_copy",  copy_or_cut_possible() );
+    _map.da.action_set_enabled( "text.action_cut",   copy_or_cut_possible() );
+    _map.da.action_set_enabled( "text.action_paste", paste_possible() );
 
     /* Initialize the visible attribute */
-    _da.action_set_enabled( "text.action_open_link",    false );
-    _da.action_set_enabled( "text.action_add_link",     false );
-    _da.action_set_enabled( "text.action_edit_link",    false );
-    _da.action_set_enabled( "text.action_delete_link",  false );
-    _da.action_set_enabled( "text.action_restore_link", false );
+    _map.da.action_set_enabled( "text.action_open_link",    false );
+    _map.da.action_set_enabled( "text.action_add_link",     false );
+    _map.da.action_set_enabled( "text.action_edit_link",    false );
+    _map.da.action_set_enabled( "text.action_delete_link",  false );
+    _map.da.action_set_enabled( "text.action_restore_link", false );
     _clear_selection = false;
 
     CanvasText? ct = null;
 
-    if( _da.is_node_editable() ) {
-      ct = _da.get_current_node().name;
-    } else if( _da.is_callout_editable() ) {
-      ct = _da.get_current_callout().text;
+    if( _map.is_node_editable() ) {
+      ct = _map.get_current_node().name;
+    } else if( _map.is_callout_editable() ) {
+      ct = _map.get_current_callout().text;
     }
 
     if( ct != null ) {
@@ -254,11 +254,11 @@ public class TextMenu {
       //    1       1       rest
 
       // Set view of all link menus
-      _da.action_set_enabled( "text.action_open_link",    (valid && !ignore) );
-      _da.action_set_enabled( "text.action_add_link",     (!embedded && !ignore && _da.add_link_possible( ct )) );
-      _da.action_set_enabled( "text.action_edit_link",    (valid && !selected && !embedded) );
-      _da.action_set_enabled( "text.action_delete_link",  (valid && !selected && (!embedded || !ignore)) );
-      _da.action_set_enabled( "text.action_restore_link", (valid && !selected && embedded && ignore) );
+      _map.da.action_set_enabled( "text.action_open_link",    (valid && !ignore) );
+      _map.da.action_set_enabled( "text.action_add_link",     (!embedded && !ignore && _map.add_link_possible( ct )) );
+      _map.da.action_set_enabled( "text.action_edit_link",    (valid && !selected && !embedded) );
+      _map.da.action_set_enabled( "text.action_delete_link",  (valid && !selected && (!embedded || !ignore)) );
+      _map.da.action_set_enabled( "text.action_restore_link", (valid && !selected && embedded && ignore) );
 
       _clear_selection = valid && !selected;
 
@@ -270,8 +270,8 @@ public class TextMenu {
   private void on_popdown() {
 
     if( _clear_selection ) {
-      var node    = _da.get_current_node();
-      var callout = _da.get_current_callout();
+      var node    = _map.get_current_node();
+      var callout = _map.get_current_callout();
       if( node != null ) {
         node.name.clear_selection();
       } else if( callout != null ) {
@@ -286,9 +286,9 @@ public class TextMenu {
   */
   private bool copy_or_cut_possible() {
 
-    var node     = _da.get_current_node();
-    var conn     = _da.get_current_connection();
-    var callout  = _da.get_current_callout();
+    var node     = _map.get_current_node();
+    var conn     = _map.get_current_connection();
+    var callout  = _map.get_current_callout();
     int cursor   = 0;
     int selstart = 0;
     int selend   = 0;

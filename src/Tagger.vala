@@ -24,14 +24,14 @@ using Gee;
 
 public class Tagger {
 
-  private DrawArea             _da;
+  private MindMap              _map;
   private HashMap<string,bool> _pre_tags;
   private HashMap<string,int>  _tags;
   private Gtk.SearchEntry      _entry;
 
   /* Default constructor */
   public Tagger( DrawArea da ) {
-    _da   = da;
+    _map  = da.map;
     _tags = new HashMap<string,int>();
   }
 
@@ -107,7 +107,7 @@ public class Tagger {
   /* Creates the UI for selecting/creating tags */
   public void show_add_ui() {
 
-    var    name = _da.get_current_node().name;
+    var    name = _map.get_current_node().name;
     double left, top, bottom;
     int    line;
     name.get_char_pos( name.text.text.char_count(), out left, out top, out bottom, out line );
@@ -149,7 +149,7 @@ public class Tagger {
     listbox.row_activated.connect((row) => {
       var label = (Label)row.get_child();
       var value = label.get_text();
-      _da.add_tag( value );
+      _map.da.add_tag( value );
       popover.popdown();
     });
 
@@ -159,7 +159,7 @@ public class Tagger {
 
     _entry.activate.connect( () => {
       var value = _entry.text;
-      _da.add_tag( value );
+      _map.da.add_tag( value );
       popover.popdown();
     });
 

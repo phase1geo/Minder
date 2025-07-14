@@ -102,17 +102,17 @@ public class CurrentInspector : Box {
   /* Called whenever the user changes the current node in the canvas */
   private void current_changed() {
 
-    if( _da.get_current_node() != null ) {
+    if( _da.map.get_current_node() != null ) {
       if( _stack.visible_child_name != "node" ) {
         _stack.transition_type = (_stack.visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
         _stack.set_visible_child_name( "node" );
       }
-    } else if( _da.get_current_connection() != null ) {
+    } else if( _da.map.get_current_connection() != null ) {
       if( _stack.visible_child_name != "connection" ) {
         _stack.transition_type = (_stack.visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
         _stack.set_visible_child_name( "connection" );
       }
-    } else if( _da.get_current_group() != null ) {
+    } else if( _da.map.get_current_group() != null ) {
       if( _stack.visible_child_name != "group" ) {
         _stack.transition_type = (_stack.visible_child_name == "empty") ? StackTransitionType.SLIDE_UP : StackTransitionType.NONE;
         _stack.set_visible_child_name( "group" );
@@ -127,17 +127,17 @@ public class CurrentInspector : Box {
   /* Gives the node or connection note field keyboard focus */
   public void grab_note() {
 
-    if( _da.get_current_node() != null ) {
+    if( _da.map.get_current_node() != null ) {
       var ni = _stack.get_child_by_name( "node" ) as NodeInspector;
       if( ni != null ) {
         ni.grab_note();
       }
-    } else if( _da.get_current_connection() != null ) {
+    } else if( _da.map.get_current_connection() != null ) {
       var ci = _stack.get_child_by_name( "connection" ) as ConnectionInspector;
       if( ci != null ) {
         ci.grab_note();
       }
-    } else if( _da.get_current_group() != null ) {
+    } else if( _da.map.get_current_group() != null ) {
       var gi = _stack.get_child_by_name( "group" ) as GroupInspector;
       if( gi != null ) {
         gi.grab_note();

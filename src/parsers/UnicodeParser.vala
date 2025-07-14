@@ -44,10 +44,10 @@ public class UnicodeParser : TextParser {
     add_tag( text, match, 0, FormatTag.TAG, tag );
 
     /* If the FormattedText item matches the currently edited */
-    if( _da.get_current_node() != null ) {
-      handle_code_for_ct( _da.get_current_node().name, text, match, tag );
-    } else if( _da.get_current_callout() != null ) {
-      handle_code_for_ct( _da.get_current_callout().text, text, match, tag );
+    if( _da.map.get_current_node() != null ) {
+      handle_code_for_ct( _da.map.get_current_node().name, text, match, tag );
+    } else if( _da.map.get_current_callout() != null ) {
+      handle_code_for_ct( _da.map.get_current_callout().text, text, match, tag );
     }
 
   }
@@ -65,10 +65,10 @@ public class UnicodeParser : TextParser {
 
   /* Handles hiding the auto-completion window */
   private void handle_nocode( FormattedText text, MatchInfo match ) {
-    if( _da.get_current_node() != null ) {
-      handle_nocode_for_ct( _da.get_current_node().name, text, match );
-    } else if( _da.get_current_callout() != null ) {
-      handle_nocode_for_ct( _da.get_current_callout().text, text, match );
+    if( _da.map.get_current_node() != null ) {
+      handle_nocode_for_ct( _da.map.get_current_node().name, text, match );
+    } else if( _da.map.get_current_callout() != null ) {
+      handle_nocode_for_ct( _da.map.get_current_callout().text, text, match );
     }
   }
 
