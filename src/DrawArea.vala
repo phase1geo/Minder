@@ -96,10 +96,8 @@ public class DrawArea : Gtk.DrawingArea {
   private TextCompletion     _completion;
   private double             _sticker_posx;
   private double             _sticker_posy;
-  private NodeGroups         _groups;
   private uint               _select_hover_id = 0;
   private int                _next_node_id    = -1;
-  private NodeLinks          _node_links;
   private bool               _hide_callouts   = false;
   private EventControllerKey _key_controller;
   private EventControllerScroll _scroll;
@@ -186,16 +184,6 @@ public class DrawArea : Gtk.DrawingArea {
       return( _tagger );
     }
   }
-  public NodeGroups groups {
-    get {
-      return( _groups );
-    }
-  }
-  public NodeLinks node_links {
-    get {
-      return( _node_links );
-    }
-  }
   public int next_node_id {
     set {
       if( !is_loaded && (_next_node_id < value) ) {
@@ -269,9 +257,6 @@ public class DrawArea : Gtk.DrawingArea {
 
     /* Allocate the URL editor popover */
     _url_editor = new UrlEditor( this );
-
-    /* Allocate the note node links manager */
-    _node_links = new NodeLinks();
 
     /* Initialize the selection box */
     _select_box = {0, 0, 0, 0, false};
@@ -1699,7 +1684,7 @@ public class DrawArea : Gtk.DrawingArea {
         });
         return( true );
       }
-      var group = _groups.node_group_containing( _scaled_x, _scaled_y );
+      var group = _map.get_group_at_position( _scaled_x, _scaled_y );
       if( group != null ) {
         _select_hover_id = Timeout.add( timeout, () => {
           _select_hover_id = 0;
