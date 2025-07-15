@@ -69,18 +69,12 @@ public class DrawArea : Gtk.DrawingArea {
   private bool               _motion       = false;
   private Node?              _last_node    = null;
   private Connection?        _last_connection = null;
-  private Connections        _connections;
-  private Stickers           _stickers;
-  private Theme              _theme;
   private CanvasText         _orig_text;
   private NodeSide           _orig_side;
   private Array<NodeInfo?>   _orig_info;
   private int                _orig_width;
   private string             _orig_title;
   private Node?              _last_match     = null;
-  private SummaryNode?       _attach_summary = null;
-  private Connection?        _attach_conn    = null;
-  private Sticker?           _attach_sticker = null;
   private NodeMenu           _node_menu;
   private ConnectionMenu     _conn_menu;
   private ConnectionsMenu    _conns_menu;
@@ -194,11 +188,6 @@ public class DrawArea : Gtk.DrawingArea {
       return( _tagger );
     }
   }
-  public Stickers stickers {
-    get {
-      return( _stickers );
-    }
-  }
   public NodeGroups groups {
     get {
       return( _groups );
@@ -269,15 +258,6 @@ public class DrawArea : Gtk.DrawingArea {
     _map = new MindMap( this, settings );
     _map.queue_draw.connect( queue_draw );
     _map.see.connect( see );
-
-    /* Create the connections */
-    _connections = new Connections();
-
-    /* Create the stickers */
-    _stickers = new Stickers();
-
-    /* Create groups */
-    _groups = new NodeGroups();
 
     /* Allocate memory for the animator */
     animator = new Animator( this );
@@ -427,7 +407,7 @@ public class DrawArea : Gtk.DrawingArea {
   public void update_css() {
     StyleContext.add_provider_for_display(
       Display.get_default(),
-      _theme.get_css_provider( win.text_size ),
+      _map.get_theme().get_css_provider( win.text_size ),
       STYLE_PROVIDER_PRIORITY_APPLICATION
     );
   }
@@ -485,17 +465,14 @@ public class DrawArea : Gtk.DrawingArea {
     _map.initialize();
 
     /* Initialize variables */
-    origin_x            = 0.0;
-    origin_y            = 0.0;
-    sfactor             = 1.0;
-    _pressed            = false;
-    _press_num          = 0;
-    _motion             = false;
-    _attach_summary     = null;
-    _attach_conn        = null;
-    _attach_sticker     = null;
-    _orig_text          = new CanvasText( _map );
-    _last_connection    = null;
+    origin_x         = 0.0;
+    origin_y         = 0.0;
+    sfactor          = 1.0;
+    _pressed         = false;
+    _press_num       = 0;
+    _motion          = false;
+    _orig_text       = new CanvasText( _map );
+    _last_connection = null;
 
     _map.set_current_node( null );
 
@@ -511,17 +488,14 @@ public class DrawArea : Gtk.DrawingArea {
     _map.initialize();
 
     // Initialize variables
-    origin_x            = 0.0;
-    origin_y            = 0.0;
-    sfactor             = 1.0;
-    _pressed            = false;
-    _press_num          = 0;
-    _motion             = false;
-    _attach_summary     = null;
-    _attach_conn        = null;
-    _attach_sticker     = null;
-    _orig_text          = new CanvasText( _map );
-    _last_connection    = null;
+    origin_x         = 0.0;
+    origin_y         = 0.0;
+    sfactor          = 1.0;
+    _pressed         = false;
+    _press_num       = 0;
+    _motion          = false;
+    _orig_text       = new CanvasText( _map );
+    _last_connection = null;
 
     /* Create the main idea node */
     var n = new Node.with_name( _map, _("Main Idea"), layouts.get_default() );
@@ -1321,7 +1295,7 @@ public class DrawArea : Gtk.DrawingArea {
   // Draws the selection box, if one is set.
   public void draw_select_box( Context ctx ) {
     if( !_select_box.valid ) return;
-    Utils.set_context_color_with_alpha( ctx, _theme.get_color( "nodesel_background" ), 0.1 );
+    Utils.set_context_color_with_alpha( ctx, _map.get_theme().get_color( "nodesel_background" ), 0.1 );
     ctx.rectangle( _select_box.x, _select_box.y, _select_box.w, _select_box.h );
     ctx.fill();
   }
@@ -1427,10 +1401,7 @@ public class DrawArea : Gtk.DrawingArea {
     }
 
     /* If we have an attachable summary node, clear it */
-    if( _attach_summary != null ) {
-      _attach_summary.attachable = false;
-      _attach_summary = null;
-    }
+    _map.set_attach_summary( null );
 
     /* If the node is attached, clear it */
     _map.set_attach_node( null );
@@ -1489,8 +1460,7 @@ public class DrawArea : Gtk.DrawingArea {
           } else {
             var attach_summary = _map.attachable_summary_node( _scaled_x, _scaled_y );
             if( attach_summary != null ) {
-              attach_summary.attachable = true;
-              _attach_summary = attach_summary;
+              _map.set_attach_summary( attach_summary );
             }
             var attach_node = _map.attachable_node( _scaled_x, _scaled_y );
             if( attach_node != null ) {
@@ -1561,6 +1531,7 @@ public class DrawArea : Gtk.DrawingArea {
     // If we are not dragging, check to see what item the mouse is hovering over
     } else {
 
+      MapItemComponent component;
       var tag = FormatTag.LENGTH;
       var url = "";
       if( current_sticker != null ) {
@@ -1588,15 +1559,15 @@ public class DrawArea : Gtk.DrawingArea {
           set_tooltip_markup( Utils.prepare_note_markup( current_conn.note ) );
           return;
         } else {
-          Connection? match_conn = _connections.on_curve( _scaled_x, _scaled_y );
+          var match_conn = _map.get_connection_at_position( _scaled_x, _scaled_y, out component );
           if( (match_conn != null) && select_connection_on_hover( match_conn, _shift ) ) {
             return;
           }
         }
       } else {
-        Connection? match_conn = _connections.on_curve( _scaled_x, _scaled_y );
+        var match_conn = _map.get_connection_at_position( _scaled_x, _scaled_y, out component );
         if( match_conn != null ) {
-          if( match_conn.within_note( _scaled_x, _scaled_y ) ) {
+          if( component == MapItemComponent.NOTE ) {
             set_tooltip_markup( Utils.prepare_note_markup( match_conn.note ) );
             return;
           } else if( select_connection_on_hover( match_conn, _shift ) ) {
@@ -1604,7 +1575,6 @@ public class DrawArea : Gtk.DrawingArea {
           }
         }
       }
-      MapItemComponent component;
       var match_node = _map.get_node_at_position( _scaled_x, _scaled_y, out component );
       if( match_node != null ) {
         update_last_match( match_node );
@@ -1720,7 +1690,7 @@ public class DrawArea : Gtk.DrawingArea {
   private bool select_sticker_group_on_hover( bool shift ) {
     if( _settings.get_boolean( "select-on-hover" ) ) {
       var timeout = _settings.get_int( "select-on-hover-timeout" );
-      var sticker = _stickers.is_within( _scaled_x, _scaled_y );
+      var sticker = _map.get_sticker_at_position( _scaled_x, _scaled_y );
       if( sticker != null ) {
         _select_hover_id = Timeout.add( timeout, () => {
           _select_hover_id = 0;
@@ -1854,9 +1824,9 @@ public class DrawArea : Gtk.DrawingArea {
           } else {
             current_node.parent.move_to_position( current_node, _orig_side, scale_value( x ), scale_value( y ) );
           }
-          if( !current_node.is_summarized() && (_attach_summary != null) ) {
-            _attach_summary.add_node( current_node );
-          } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_attach_summary == null) ) {
+          if( !current_node.is_summarized() && (_map.attach_summary != null) ) {
+            _map.attach_summary.add_node( current_node );
+          } else if( current_node.is_summarized() && (current_node.summary_node().summarized_count() > 1) && (_map.attach_summary == null) ) {
             current_node.summary_node().remove_node( current_node );
           } else if( current_node.is_summarized() ) {
             current_node.summary_node().node_moved( current_node );
@@ -1865,10 +1835,7 @@ public class DrawArea : Gtk.DrawingArea {
           animator.animate();
 
           /* Clear the attachable summary indicator */
-          if( _attach_summary != null ) {
-            _attach_summary.attachable = false;
-            _attach_summary = null;
-          }
+          _map.set_attach_summary( null );
 
         /* Otherwise, redraw everything after the move */
         } else {
@@ -2050,7 +2017,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
     } else if( _map.is_connection_connecting() ) {
       var current = _map.selected.current_connection();
-      _connections.remove_connection( current, true );
+      _map.get_connections().remove_connection( current, true );
       _map.selected.remove_connection( current );
       _map.set_attach_node( null );
       _map.selected.set_current_node( _last_node );
@@ -3256,31 +3223,9 @@ public class DrawArea : Gtk.DrawingArea {
 
     _map.get_droppable( scaled_x, scaled_y, out attach_node, out attach_conn, out attach_sticker );
 
-    /* Clear the mode of any previous attach node/connection */
-    if( _attach_conn != null ) {
-      _map.set_connection_mode( _attach_conn, ConnMode.NONE );
-    }
-    if( _attach_sticker != null ) {
-      _attach_sticker.mode = StickerMode.NONE;
-    }
-
     _map.set_attach_node( attach_node, NodeMode.DROPPABLE );
-
-    if( attach_conn != null ) {
-      _map.set_connection_mode( attach_conn, ConnMode.DROPPABLE );
-      _attach_conn = attach_conn;
-      queue_draw();
-    } else if( attach_sticker != null ) {
-      attach_sticker.mode = StickerMode.DROPPABLE;
-      _attach_sticker = attach_sticker;
-      queue_draw();
-    } else if( _attach_conn != null ) {
-      _attach_conn = null;
-      queue_draw();
-    } else if( _attach_sticker != null ) {
-      _attach_sticker = null;
-      queue_draw();
-    }
+    _map.set_attach_connection( attach_conn, ConnMode.DROPPABLE );
+    _map.set_attach_sticker( attach_sticker, StickerMode.DROPPABLE );
 
     return( Gdk.DragAction.COPY );
 
@@ -3293,19 +3238,18 @@ public class DrawArea : Gtk.DrawingArea {
     var drop_sticker = (Picture)val;
 
     if( ((_map.attach_node == null) || (_map.attach_node.mode != NodeMode.DROPPABLE)) &&
-        ((_attach_conn == null) || (_attach_conn.mode != ConnMode.DROPPABLE)) ) {
+        ((_map.attach_conn == null) || (_map.attach_conn.mode != ConnMode.DROPPABLE)) ) {
 
-      if( _attach_sticker != null ) {
-        var sticker = new Sticker( _map, drop_sticker.name, _attach_sticker.posx, _attach_sticker.posy, (int)_attach_sticker.width );
-        _stickers.remove_sticker( _attach_sticker );
-        _stickers.add_sticker( sticker );
+      if( _map.attach_sticker != null ) {
+        var sticker = new Sticker( _map, drop_sticker.name, _map.attach_sticker.posx, _map.attach_sticker.posy, (int)_map.attach_sticker.width );
+        _map.stickers.remove_sticker( _map.attach_sticker );
+        _map.stickers.add_sticker( sticker );
         _map.selected.set_current_sticker( sticker );
-        _undo_buffer.add_item( new UndoStickerChange( _attach_sticker, sticker ) );
-        _attach_sticker.mode = StickerMode.NONE;
-        _attach_sticker = null;
+        _undo_buffer.add_item( new UndoStickerChange( _map.attach_sticker, sticker ) );
+        _map.set_attach_sticker( null );
       } else {
         var sticker = new Sticker( _map, drop_sticker.name, scale_value( x ), scale_value( y ) );
-        _stickers.add_sticker( sticker );
+        _map.stickers.add_sticker( sticker );
         _map.selected.set_current_sticker( sticker );
         _undo_buffer.add_item( new UndoStickerAdd( sticker ) );
       }
@@ -3326,15 +3270,14 @@ public class DrawArea : Gtk.DrawingArea {
         }
         _map.attach_node.sticker = drop_sticker.name;
         _map.set_attach_node( null );
-      } else if( _attach_conn != null ) {
-        if( _attach_conn.sticker == null ) {
-          undo_buffer.add_item( new UndoConnectionStickerAdd( _attach_conn, drop_sticker.name ) );
+      } else if( _map.attach_conn != null ) {
+        if( _map.attach_conn.sticker == null ) {
+          undo_buffer.add_item( new UndoConnectionStickerAdd( _map.attach_conn, drop_sticker.name ) );
         } else {
-          undo_buffer.add_item( new UndoConnectionStickerChange( _attach_conn, _attach_conn.sticker ) );
+          undo_buffer.add_item( new UndoConnectionStickerChange( _map.attach_conn, _map.attach_conn.sticker ) );
         }
-        _map.set_connection_mode( _attach_conn, ConnMode.NONE );
-        _attach_conn.sticker = drop_sticker.name;
-        _attach_conn = null;
+        _map.attach_conn.sticker = drop_sticker.name;
+        _map.set_attach_connection( null );
       }
 
       queue_draw();

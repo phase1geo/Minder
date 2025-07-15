@@ -168,6 +168,21 @@ public class MindMap {
       return( _attach_node );
     }
   }
+  public SummaryNode? attach_summary {
+    get {
+      return( _attach_summary );
+    }
+  }
+  public Connection? attach_conn {
+    get {
+      return( _attach_conn );
+    }
+  }
+  public Sticker? attach_sticker {
+    get {
+      return( _attach_sticker );
+    }
+  }
   public Array<string> braindump {
     get {
       return( _braindump );
@@ -233,7 +248,10 @@ public class MindMap {
     undo_text = new UndoTextBuffer( this );
 
     // Initialize variables
-    _attach_node = null;
+    _attach_node    = null;
+    _attach_summary = null;
+    _attach_conn    = null;
+    _attach_sticker = null;
 
   }
 
@@ -1404,6 +1422,54 @@ public class MindMap {
     _attach_node = n;
     if( n != null ) {
       set_node_mode( n, mode );
+    }
+    if( change ) {
+      _da.queue_draw();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Sets the given summary node to be the new attach summary node.
+  public void set_attach_summary( SummaryNode? n ) {
+    var change = (_attach_summary != n);
+    if( _attach_summary != null ) {
+      _attach_summary.attachable = false;
+    }
+    _attach_summary = n;
+    if( n != null ) {
+      _attach_summary.attachable = true;
+    }
+    if( change ) {
+      _da.queue_draw();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Sets the given connection to be the new attach connection.
+  public void set_attach_connection( Connection? c, ConnMode mode = ConnMode.DROPPABLE ) {
+    var change = (_attach_conn != c);
+    if( _attach_conn != null ) {
+      set_connection_mode( _attach_conn, ConnMode.NONE );
+    }
+    _attach_conn = c;
+    if( c != null ) {
+      set_connection_mode( c, mode );
+    }
+    if( change ) {
+      _da.queue_draw();
+    }
+  }
+
+  //-------------------------------------------------------------
+  // Sets the attached sticker to the given sticker.
+  public void set_attach_sticker( Sticker? s, StickerMode mode = StickerMode.DROPPABLE ) {
+    var change = (_attach_sticker != s);
+    if( _attach_sticker != null ) {
+      _attach_sticker.mode = StickerMode.NONE;
+    }
+    _attach_sticker = s;
+    if( s != null ) {
+      s.mode = mode;
     }
     if( change ) {
       _da.queue_draw();
