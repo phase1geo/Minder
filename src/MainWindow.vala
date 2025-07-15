@@ -521,8 +521,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     da.scroll_changed.connect( change_origin );
     da.show_properties.connect( show_properties );
     da.hide_properties.connect( hide_properties );
-    da.undo_buffer.buffer_changed.connect( do_buffer_changed );
-    da.undo_text.buffer_changed.connect( do_buffer_changed );
+    da.map.undo_buffer.buffer_changed.connect( do_buffer_changed );
+    da.map.undo_text.buffer_changed.connect( do_buffer_changed );
     da.theme_changed.connect( on_theme_changed );
     da.animator.enable = _settings.get_boolean( "enable-animations" );
 

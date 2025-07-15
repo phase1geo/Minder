@@ -195,9 +195,9 @@ public class TextCompletion {
     var box   = (Box)row.get_child();
     var value = TextCompletionItem.get_text( box );
     if( _start_pos == _end_pos ) {
-      _ct.insert( value, _da.undo_text );
+      _ct.insert( value, _da.map.undo_text );
     } else {
-      _ct.replace( _start_pos, _end_pos, value, _da.undo_text );
+      _ct.replace( _start_pos, _end_pos, value, _da.map.undo_text );
     }
     hide();
   }
