@@ -112,7 +112,7 @@ public class EmptyMenu {
 
   /* Selects the current root node */
   private void action_select_root_node() {
-    _map.da.select_root_node();
+    _map.select_root_node();
   }
 
 }

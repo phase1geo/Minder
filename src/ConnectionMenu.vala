@@ -23,7 +23,7 @@ using Gtk;
 
 public class ConnectionMenu {
 
-  private DrawArea     _da;
+  private MindMap      _map;
   private PopoverMenu  _popover;
 
   private const GLib.ActionEntry action_entries[] = {
@@ -40,7 +40,7 @@ public class ConnectionMenu {
   /* Default constructor */
   public ConnectionMenu( Gtk.Application app, DrawArea da ) {
 
-    _da = da;
+    _map = da.map;
 
     // Create the menu
     var del_menu = new GLib.Menu();
@@ -72,12 +72,12 @@ public class ConnectionMenu {
     menu.append_section( null, sel_menu );
 
     _popover = new PopoverMenu.from_model( menu );
-    _popover.set_parent( _da );
+    _popover.set_parent( da );
 
     // Add the menu actions
     var actions = new SimpleActionGroup();
     actions.add_action_entries( action_entries, this );
-    _da.insert_action_group( "conn", actions );
+    da.insert_action_group( "conn", actions );
 
     app.set_accels_for_action( "conn.action_delete",                 { "Delete" } );
     app.set_accels_for_action( "conn.action_edit_title",             { "e" } );
@@ -92,7 +92,7 @@ public class ConnectionMenu {
   /* Called when the menu is popped up */
   public void show( double x, double y ) {
 
-    _da.action_set_enabled( "conn.action_edit_sticker", (_da.map.get_current_connection().sticker != null) );
+    _map.da.action_set_enabled( "conn.action_edit_sticker", (_map.get_current_connection().sticker != null) );
 
     // Display the popover at the given location
     Gdk.Rectangle rect = {(int)x, (int)y, 1, 1};
@@ -103,50 +103,50 @@ public class ConnectionMenu {
 
   /* Deletes the current node */
   private void action_delete() {
-    _da.map.delete_connection();
+    _map.delete_connection();
   }
 
   /* Displays the sidebar to edit the node properties */
   private void action_edit_title() {
-    Connection conn = _da.map.get_current_connection();
+    Connection conn = _map.get_current_connection();
     if( conn.title == null ) {
-      conn.change_title( _da.map, "", true );
+      conn.change_title( _map, "", true );
     }
-    _da.map.set_connection_mode( conn, ConnMode.EDITABLE );
+    _map.set_connection_mode( conn, ConnMode.EDITABLE );
   }
 
   /* Changes the note status of the currently selected node */
   private void action_edit_note() {
-    _da.show_properties( "current", PropertyGrab.NOTE );
+    _map.da.show_properties( "current", PropertyGrab.NOTE );
   }
 
   /* Removes the sticker attached to the connection */
   private void action_remove_sticker() {
-    var current = _da.map.get_current_connection();
-    _da.map.undo_buffer.add_item( new UndoConnectionStickerRemove( current ) );
+    var current = _map.get_current_connection();
+    _map.undo_buffer.add_item( new UndoConnectionStickerRemove( current ) );
     current.sticker = null;
-    _da.map.queue_draw();
-    _da.map.auto_save();
+    _map.queue_draw();
+    _map.auto_save();
   }
 
   /* Selects the next sibling node of the current node */
   private void action_select_start_node() {
-    _da.map.select_connection_node( true );
+    _map.select_connection_node( true );
   }
 
   /* Selects the previous sibling node of the current node */
   private void action_select_end_node() {
-    _da.map.select_connection_node( false );
+    _map.select_connection_node( false );
   }
 
   /* Selects the next connection in the mind map */
   private void action_select_next_connection() {
-    _da.map.select_connection( 1 );
+    _map.select_connection( 1 );
   }
 
   /* Selects the previous connection in the mind map */
   private void action_select_prev_connection() {
-    _da.map.select_connection( -1 );
+    _map.select_connection( -1 );
   }
 
 }

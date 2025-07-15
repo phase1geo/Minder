@@ -253,7 +253,7 @@ public class NodesMenu {
    Links two selected nodes such that the first selected node will link to the second selected node.
   */
   private void action_link_nodes() {
-    _map.toggle_links( 0.0, 0.0 );
+    _map.toggle_links();
   }
 
   /* Adds a new summary node */

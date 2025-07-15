@@ -218,13 +218,13 @@ public class MainWindow : Gtk.ApplicationWindow {
     };
 
     _brain.ideas_changed.connect((change, name_index) => {
-      var da = get_current_da();
+      var map = get_current_da().map;
       switch( change ) {
-        case BraindumpChangeType.ADD    :  da.braindump.append_val( name_index );  break;
-        case BraindumpChangeType.REMOVE :  da.braindump.remove_index( int.parse( name_index ) );  break;
-        case BraindumpChangeType.CLEAR  :  da.braindump.remove_range( 0, da.braindump.length );  break;
+        case BraindumpChangeType.ADD    :  map.braindump.append_val( name_index );  break;
+        case BraindumpChangeType.REMOVE :  map.braindump.remove_index( int.parse( name_index ) );  break;
+        case BraindumpChangeType.CLEAR  :  map.braindump.remove_range( 0, map.braindump.length );  break;
       }
-      da.auto_save();
+      map.auto_save();
     });
 
     var content = new Box( Orientation.HORIZONTAL, 0 );
@@ -1098,7 +1098,7 @@ public class MainWindow : Gtk.ApplicationWindow {
     _focus_btn.clicked.connect((e) => {
       var da = get_current_da();
       update_title( da );
-      da.set_focus_mode( _focus_btn.active );
+      da.map.set_focus_mode( _focus_btn.active );
       da.grab_focus();
     });
 
@@ -1883,17 +1883,17 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     var builder = new Builder.from_resource( "/com/github/phase1geo/minder/shortcuts.ui" );
     var win     = builder.get_object( "shortcuts" ) as ShortcutsWindow;
-    var da      = get_current_da();
+    var map     = get_current_da().map;
 
     win.transient_for = this;
     win.view_name     = null;
 
     /* Display the most relevant information based on the current state */
-    if( da.is_node_editable() || da.is_connection_editable() ) {
+    if( map.is_node_editable() || map.is_connection_editable() ) {
       win.section_name = "text-editing";
-    } else if( da.is_node_selected() ) {
+    } else if( map.is_node_selected() ) {
       win.section_name = "node";
-    } else if( da.is_connection_selected() ) {
+    } else if( map.is_connection_selected() ) {
       win.section_name = "connection";
     } else {
       win.section_name = "general";

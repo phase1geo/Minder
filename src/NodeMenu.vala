@@ -449,13 +449,13 @@ public class NodeMenu {
     if( node_has_link() ) {
       _map.delete_links();
     } else {
-      _map.da.start_connection( false, true );
+      _map.start_connection( false, true );
     }
   }
 
   /* Changes the connection of the currently selected node */
   private void action_add_connection() {
-    _map.da.start_connection( false, false );
+    _map.start_connection( false, false );
   }
 
   /* Creates a group from the currently selected node */

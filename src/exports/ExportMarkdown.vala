@@ -121,7 +121,7 @@ public class ExportMarkdown : Export {
     if( parent == null ) {
       node.style = StyleInspector.styles.get_global_style();
       if( attach ) {
-        map.da.position_root_node( node );
+        map.position_root_node( node );
         map.add_root( node, -1 );
         map.set_current_node( node );
       }

@@ -1177,12 +1177,12 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Toggles the node links
-  public void toggle_links( double last_x, double last_y ) {
+  public void toggle_links() {
     var current = _selected.current_node();
     if( any_selected_nodes_linked() ) {
       delete_links();
     } else if( current != null ) {
-      start_connection( true, true, last_x, last_y );
+      start_connection( true, true );
     } else {
       create_links();
     }
@@ -1484,7 +1484,7 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Attaches the current node to the attach node.
-  private void attach_current_node() {
+  public void attach_current_node() {
 
     Node?        orig_parent        = null;
     var          orig_index         = -1;
@@ -1613,7 +1613,7 @@ public class MindMap {
   //-------------------------------------------------------------
   // Returns the next node to select after the current node is
   // removed.
-  private Node? next_node_to_select() {
+  public Node? next_node_to_select() {
     var current = _selected.current_node();
     if( current != null ) {
       if( current.is_root() ) {
@@ -2018,7 +2018,7 @@ public class MindMap {
   public Node create_root_node( string name = "" ) {
     var node = new Node.with_name( this, name, ((_nodes.length == 0) ? layouts.get_default() : _nodes.index( 0 ).layout) );
     node.style = StyleInspector.styles.get_global_style();
-    _da.position_root_node( node );
+    position_root_node( node );
     _nodes.append_val( node );
     return( node );
   }
@@ -2439,7 +2439,7 @@ public class MindMap {
   //-------------------------------------------------------------
   // Returns the parent node of the given node that should be
   // selected.
-  private Node? get_select_parent( Node node ) {
+  public Node? get_select_parent( Node node ) {
     if( node.is_summary() ) {
       var summary = (SummaryNode)node;
       return( summary.last_selected_node ?? summary.first_node() );
@@ -2449,7 +2449,7 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Returns the node to the right of the given node.
-  private Node? get_node_right( Node node ) {
+  public Node? get_node_right( Node node ) {
     if( node.is_root() ) {
       if( node.side.horizontal() ) {
         if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.RIGHT) ) {
@@ -2475,7 +2475,7 @@ public class MindMap {
   }
 
   /* Returns the node to the left of the given node */
-  private Node? get_node_left( Node node ) {
+  public Node? get_node_left( Node node ) {
     if( node.is_root() ) {
       if( node.side.horizontal() ) {
         if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.LEFT) ) {
@@ -2501,7 +2501,7 @@ public class MindMap {
   }
 
   /* Returns the node above the given node */
-  private Node? get_node_up( Node node ) {
+  public Node? get_node_up( Node node ) {
     if( node.is_root() ) {
       if( node.side.vertical() ) {
         if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.TOP) ) {
@@ -2526,7 +2526,7 @@ public class MindMap {
   }
 
   /* Returns the node below the given node */
-  private Node? get_node_down( Node node ) {
+  public Node? get_node_down( Node node ) {
     if( node.is_root() ) {
       if( node.side.vertical() ) {
         if( (node.last_selected_child != null) && (node.last_selected_child.side == NodeSide.BOTTOM) ) {
@@ -2551,7 +2551,7 @@ public class MindMap {
   }
 
   /* Returns the node at the top of the sibling list */
-  private Node? get_node_pageup( Node node ) {
+  public Node? get_node_pageup( Node node ) {
     if( node.is_root() ) {
       return( (_nodes.length > 0) ? _nodes.index( 0 ) : null );
     } else {
@@ -2560,7 +2560,7 @@ public class MindMap {
   }
 
   /* Returns the node at the top of the sibling list */
-  private Node? get_node_pagedn( Node node ) {
+  public Node? get_node_pagedn( Node node ) {
     if( node.is_root() ) {
       return( (_nodes.length > 0) ? _nodes.index( _nodes.length - 1 ) : null );
     } else {
@@ -2570,7 +2570,7 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Selects all of the text in the current node.
-  private void select_all() {
+  public void select_all() {
     if( is_connection_editable() ) {
       _selected.current_connection().title.set_cursor_all( false );
       queue_draw();
@@ -2585,7 +2585,7 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Deselects all of the text in the current node.
-  private void deselect_all() {
+  public void deselect_all() {
     if( is_connection_editable() ) {
       _selected.current_connection().title.clear_selection();
       queue_draw();
@@ -3103,7 +3103,7 @@ public class MindMap {
 
   //-------------------------------------------------------------
   // Starts a connection from the current node.
-  public void start_connection( bool key, bool link, double press_x, double press_y ) {
+  public void start_connection( bool key, bool link ) {
     var current_node = _selected.current_node();
     if( (current_node == null) || _connections.hide ) return;
     var conn = new Connection( this, current_node );
@@ -3119,7 +3119,7 @@ public class MindMap {
       _attach_node = current_node;
       set_node_mode( _attach_node, NodeMode.ATTACHABLE );
     } else {
-      conn.draw_to( press_x, press_y );
+      conn.draw_to( _da.press_x, _da.press_y );
     }
     _last_node = current_node;
     queue_draw();
@@ -3206,8 +3206,9 @@ public class MindMap {
     queue_draw();
   }
 
-  /* Handles the edit on creation of a newly created connection */
-  private void handle_connection_edit_on_creation( Connection conn ) {
+  //-------------------------------------------------------------
+  // Handles the edit on creation of a newly created connection.
+  public void handle_connection_edit_on_creation( Connection conn ) {
     if( (conn.title == null) && _settings.get_boolean( "edit-connection-title-on-creation" ) ) {
       conn.change_title( this, "", true );
       set_connection_mode( conn, ConnMode.EDITABLE, false );
