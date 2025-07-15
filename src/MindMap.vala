@@ -232,6 +232,9 @@ public class MindMap {
     /* Create the undo text buffer */
     undo_text = new UndoTextBuffer( this );
 
+    // Initialize variables
+    _attach_node = null;
+
   }
 
   /* If the current selection ever changes, let the sidebar know about it. */
@@ -1389,6 +1392,22 @@ public class MindMap {
   // Returns the node group that is located at the given X,Y coordinates.
   public NodeGroup? get_group_at_position( double x, double y ) {
     return( _groups.node_group_containing( x, y ) );
+  }
+
+  //-------------------------------------------------------------
+  // Sets the given node to be the new attach node.
+  public void set_attach_node( Node? n, NodeMode mode = NodeMode.ATTACHABLE ) {
+    var change = _attach_node != n;
+    if( _attach_node != null ) {
+      set_node_mode( _attach_node, NodeMode.NONE );
+    }
+    _attach_node = n;
+    if( n != null ) {
+      set_node_mode( n, mode );
+    }
+    if( change ) {
+      _da.queue_draw();
+    }
   }
 
   //-------------------------------------------------------------
@@ -3341,6 +3360,25 @@ public class MindMap {
       }
     }
 
+  }
+
+  //-------------------------------------------------------------
+  // Returns the droppable node or connection if one is found.
+  public void get_droppable( double x, double y, out Node? node, out Connection? conn, out Sticker? sticker ) {
+    node = null;
+    conn = null;
+    for( int i=0; i<_nodes.length; i++ ) {
+      Node tmp = _nodes.index( i ).contains( x, y, null );
+      if( tmp != null ) {
+        node = tmp;
+        return;
+      }
+    }
+    conn = _connections.within_title_box( x, y );
+    if( conn == null ) {
+      conn = _connections.on_curve( x, y );
+    }
+    sticker = _stickers.is_within( x, y );
   }
 
 }

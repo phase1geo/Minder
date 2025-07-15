@@ -163,7 +163,7 @@ public class Braindump : Box {
     });
 
     drag.drag_end.connect((d, del) => {
-      if( _win.get_current_da().attach_node == null ) {
+      if( _win.get_current_da().map.attach_node == null ) {
         _ideas.insert( label, _current_index );
       } else {
         ideas_changed( BraindumpChangeType.REMOVE, _current_index.to_string() );
