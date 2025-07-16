@@ -55,7 +55,7 @@ public class ImageEditor {
   // Default constructor
   public ImageEditor( DrawArea da ) {
 
-    _im = da.image_manager;
+    _im = da.map.image_manager;
 
     // Allocate crop points
     _crop_points  = new Gdk.Rectangle[9];
@@ -84,7 +84,7 @@ public class ImageEditor {
     _crop_cursors[7] = "nwse-resize";
 
     // Create the user interface of the editor window
-    create_ui( da, da.image_manager );
+    create_ui( da, da.map.image_manager );
 
   }
 

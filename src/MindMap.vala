@@ -54,37 +54,27 @@ public class MindMap {
   private DrawArea           _da;  // TBD - Temporary
   private GLib.Settings      _settings;
   private Node?              _last_node       = null;
-  private Connection?        _last_connection = null;
+  private Connection?        _last_connection = null;  // REMOVE
   private Array<Node>        _nodes;
   private Connections        _connections;
   private Stickers           _stickers;
   private Theme              _theme;
-  private CanvasText         _orig_text;
   private NodeSide           _orig_side;
   private Array<NodeInfo?>   _orig_info;
-  private int                _orig_width;
-  private string             _orig_title;
   private Node?              _last_match     = null;
   private Node?              _attach_node    = null;
   private SummaryNode?       _attach_summary = null;
   private Connection?        _attach_conn    = null;
   private Sticker?           _attach_sticker = null;
   private uint?              _auto_save_id   = null;
-  private uint?              _scroll_save_id = null;
   private bool               _debug        = true;
   private bool               _focus_mode   = false;
   private double             _focus_alpha  = 0.05;
-  private bool               _create_new_from_edit;
   private Selection          _selected;
-  private double             _sticker_posx;
-  private double             _sticker_posy;
   private NodeGroups         _groups;
-  private uint               _select_hover_id = 0;
   private int                _next_node_id    = -1;
   private NodeLinks          _node_links;
   private bool               _hide_callouts   = false;
-  private EventControllerKey _key_controller;
-  private EventControllerScroll _scroll;
   private Array<string>      _braindump;
 
   public MainWindow     win             { private set; get; }
@@ -1556,8 +1546,9 @@ public class MindMap {
     }
   }
 
-  /* Updates the last_match */
-  private void update_last_match( Node? match ) {
+  //-------------------------------------------------------------
+  // Updates the last_match.
+  public void update_last_match( Node? match ) {
     if( match != _last_match ) {
       if( _last_match != null ) {
         _last_match.show_fold = false;
@@ -3298,6 +3289,12 @@ public class MindMap {
       conn.change_title( this, "", true );
       set_connection_mode( conn, ConnMode.EDITABLE, false );
     }
+  }
+
+  //-------------------------------------------------------------
+  // Returns the current focus mode state.
+  public bool get_focus_mode() {
+    return( _focus_mode );
   }
 
   //-------------------------------------------------------------

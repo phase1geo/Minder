@@ -45,70 +45,59 @@ public class DrawArea : Gtk.DrawingArea {
   private const string pointer_cursor = "pointer";
   private const string pan_cursor     = "grabbing";
 
-  private Document           _doc;
-  private MindMap            _map;
-  private GLib.Settings      _settings;
-  private double             _press_x;
-  private double             _press_y;
-  private double             _scaled_x;
-  private double             _scaled_y;
-  private double             _origin_x;
-  private double             _origin_y;
-  private double             _scale_factor;
-  private double             _store_origin_x;
-  private double             _store_origin_y;
-  private double             _store_scale_factor;
-  private bool               _control      = false;
-  private bool               _shift        = false;
-  private bool               _alt          = false;
-  private bool               _pressed      = false;
-  private int                _press_num    = 0;
-  private bool               _press_middle = false;
-  private bool               _resize       = false;
-  private bool               _orig_resizable = false;
-  private bool               _motion       = false;
-  private Node?              _last_node    = null;
-  private Connection?        _last_connection = null;
-  private CanvasText         _orig_text;
-  private NodeSide           _orig_side;
-  private Array<NodeInfo?>   _orig_info;
-  private int                _orig_width;
-  private string             _orig_title;
-  private Node?              _last_match     = null;
-  private NodeMenu           _node_menu;
-  private ConnectionMenu     _conn_menu;
-  private ConnectionsMenu    _conns_menu;
-  private NodesMenu          _nodes_menu;
-  private GroupsMenu         _groups_menu;
-  private CalloutMenu        _callout_menu;
-  private EmptyMenu          _empty_menu;
-  private TextMenu           _text_menu;
-  private uint?              _scroll_save_id = null;
-  private ImageEditor        _image_editor;
-  private UrlEditor          _url_editor;
-  private IMContext          _im_context;
-  private bool               _debug        = true;
-  private bool               _focus_mode   = false;
-  private double             _focus_alpha  = 0.05;
-  private bool               _create_new_from_edit;
-  private SelectBox          _select_box;
-  private Tagger             _tagger;
-  private TextCompletion     _completion;
-  private double             _sticker_posx;
-  private double             _sticker_posy;
-  private uint               _select_hover_id = 0;
-  private int                _next_node_id    = -1;
-  private bool               _hide_callouts   = false;
-  private EventControllerKey _key_controller;
+  private Document              _doc;
+  private MindMap               _map;
+  private GLib.Settings         _settings;
+  private double                _press_x;
+  private double                _press_y;
+  private double                _scaled_x;
+  private double                _scaled_y;
+  private double                _origin_x;
+  private double                _origin_y;
+  private double                _scale_factor;
+  private double                _store_origin_x;
+  private double                _store_origin_y;
+  private double                _store_scale_factor;
+  private bool                  _control         = false;
+  private bool                  _shift           = false;
+  private bool                  _alt             = false;
+  private bool                  _pressed         = false;
+  private int                   _press_num       = 0;
+  private bool                  _press_middle    = false;
+  private bool                  _resize          = false;
+  private bool                  _orig_resizable  = false;
+  private bool                  _motion          = false;
+  private Node?                 _last_node       = null;     // SAME REMOVE
+  private Connection?           _last_connection = null;  // SAME
+  private CanvasText            _orig_text;
+  private NodeSide              _orig_side;               // SAME ??
+  private Array<NodeInfo?>      _orig_info;               // SAME ??
+  private int                   _orig_width;
+  private NodeMenu              _node_menu;
+  private ConnectionMenu        _conn_menu;
+  private ConnectionsMenu       _conns_menu;
+  private NodesMenu             _nodes_menu;
+  private GroupsMenu            _groups_menu;
+  private CalloutMenu           _callout_menu;
+  private EmptyMenu             _empty_menu;
+  private TextMenu              _text_menu;
+  private uint?                 _scroll_save_id = null;
+  private ImageEditor           _image_editor;
+  private UrlEditor             _url_editor;
+  private IMContext             _im_context;
+  private bool                  _debug        = true;
+  private SelectBox             _select_box;
+  private Tagger                _tagger;
+  private TextCompletion        _completion;
+  private double                _sticker_posx;
+  private double                _sticker_posy;
+  private uint                  _select_hover_id = 0;
+  private EventControllerKey    _key_controller;
   private EventControllerScroll _scroll;
-  private Array<string>      _braindump;
+  private bool                  _create_new_from_edit;
 
-  public MainWindow     win             { private set; get; }
-  public Layouts        layouts         { set; get; default = new Layouts(); }
-  public Animator       animator        { set; get; }
-  public ImageManager   image_manager   { set; get; default = new ImageManager(); }
-  public bool           is_loaded       { get; private set; default = false; }
-  public bool           braindump_shown { get; set; default = false; }
+  public MainWindow win      { private set; get; }
+  public Animator   animator { set; get; }
 
   public GLib.Settings settings {
     get {
@@ -184,39 +173,6 @@ public class DrawArea : Gtk.DrawingArea {
       return( _tagger );
     }
   }
-  public int next_node_id {
-    set {
-      if( !is_loaded && (_next_node_id < value) ) {
-        _next_node_id = value;
-      }
-    }
-    get {
-      _next_node_id++;
-      return( _next_node_id );
-    }
-  }
-  public bool hide_callouts {
-    get {
-      return( _hide_callouts );
-    }
-    set {
-      if( _hide_callouts != value ) {
-        if( _map.is_callout_editable() ) {
-          _map.set_callout_mode( _map.selected.current_callout(), CalloutMode.NONE );
-          _map.selected.clear_callouts( false );
-        }
-        animator.add_callouts_fade( _map.get_nodes(), value, "hide callouts" );
-        _hide_callouts = value;
-        _map.auto_save();
-        animator.animate();
-      }
-    }
-  }
-  public Array<string> braindump {
-    get {
-      return( _braindump );
-    }
-  }
 
   /* Allocate static parsers */
   public MarkdownParser markdown_parser { get; private set; }
@@ -274,9 +230,6 @@ public class DrawArea : Gtk.DrawingArea {
     /* Create the node information array */
     _orig_info = new Array<NodeInfo?>();
 
-    // Create the braindump list
-    _braindump = new Array<string>();
-
     /* Create the parsers */
     tagger_parser   = new TaggerParser( this );
     markdown_parser = new MarkdownParser( this );
@@ -291,10 +244,8 @@ public class DrawArea : Gtk.DrawingArea {
     _completion = new TextCompletion( this );
 
     /* Get the value of the new node from edit */
-    _map.update_focus_mode_alpha( settings );
     update_create_new_from_edit( settings );
     settings.changed.connect(() => {
-      _map.update_focus_mode_alpha( settings );
       update_create_new_from_edit( settings );
     });
 
@@ -401,12 +352,6 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   //-------------------------------------------------------------
-  // Returns the current focus mode value.
-  public bool get_focus_mode() {
-    return( _focus_mode );
-  }
-
-  //-------------------------------------------------------------
   // Resets the cursor to the standard one.
   public void reset_cursor() {
     set_cursor( null );
@@ -478,7 +423,7 @@ public class DrawArea : Gtk.DrawingArea {
     _last_connection = null;
 
     /* Create the main idea node */
-    var n = new Node.with_name( _map, _("Main Idea"), layouts.get_default() );
+    var n = new Node.with_name( _map, _("Main Idea"), _map.layouts.get_default() );
 
     /* Get the rough dimensions of the canvas */
     int wwidth, wheight;
@@ -584,7 +529,6 @@ public class DrawArea : Gtk.DrawingArea {
         }
       } else if( _press_num == 2 ) {
         var current = _map.selected.current_connection();
-        _orig_title = (current.title != null) ? current.title.text.text : "";
         current.edit_title_begin( _map );
         _map.set_connection_mode( current, ConnMode.EDITABLE );
       }
@@ -1359,18 +1303,6 @@ public class DrawArea : Gtk.DrawingArea {
   }
 
   //-------------------------------------------------------------
-  // Updates the last_match.
-  private void update_last_match( Node? match ) {
-    if( match != _last_match ) {
-      if( _last_match != null ) {
-        _last_match.show_fold = false;
-        queue_draw();
-      }
-      _last_match = match;
-    }
-  }
-
-  //-------------------------------------------------------------
   // Handle mouse motion.
   private void on_motion( double x, double y ) {
 
@@ -1557,7 +1489,7 @@ public class DrawArea : Gtk.DrawingArea {
       }
       var match_node = _map.get_node_at_position( _scaled_x, _scaled_y, out component );
       if( match_node != null ) {
-        update_last_match( match_node );
+        _map.update_last_match( match_node );
         if( (current_conn != null) && ((current_conn.mode == ConnMode.CONNECTING) || (current_conn.mode == ConnMode.LINKING)) ) {
           _map.set_attach_node( match_node );
         } else if( component == MapItemComponent.TASK ) {
@@ -1616,7 +1548,7 @@ public class DrawArea : Gtk.DrawingArea {
         return;
       }
 
-      update_last_match( null );
+      _map.update_last_match( null );
       reset_cursor();
       set_tooltip_markup( null );
       select_sticker_group_on_hover( _shift );
@@ -3158,10 +3090,10 @@ public class DrawArea : Gtk.DrawingArea {
 
     if( (_map.attach_node == null) || (_map.attach_node.mode != NodeMode.DROPPABLE) ) {
 
-      var image = new NodeImage.from_uri( image_manager, uri, 200 );
+      var image = new NodeImage.from_uri( _map.image_manager, uri, 200 );
       if( image.valid ) {
         var node = _map.create_root_node( _( "Another Idea" ) );
-        node.set_image( image_manager, image );
+        node.set_image( _map.image_manager, image );
         if( _map.select_node( node ) ) {
           _map.set_node_mode( node, NodeMode.EDITABLE, false );
           queue_draw();
@@ -3172,10 +3104,10 @@ public class DrawArea : Gtk.DrawingArea {
 
     } else {
 
-      var image = new NodeImage.from_uri( image_manager, uri, _map.attach_node.style.node_width );
+      var image = new NodeImage.from_uri( _map.image_manager, uri, _map.attach_node.style.node_width );
       if( image.valid ) {
         var orig_image = _map.attach_node.image;
-        _map.attach_node.set_image( image_manager, image );
+        _map.attach_node.set_image( _map.image_manager, image );
         _map.undo_buffer.add_item( new UndoNodeImage( _map.attach_node, orig_image ) );
         _map.set_attach_node( null );
         queue_draw();

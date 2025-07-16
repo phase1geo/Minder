@@ -451,8 +451,8 @@ public class MainWindow : Gtk.ApplicationWindow {
     update_title( da );
     canvas_changed( da );
     save_tab_state( page_num );
-    _brain.set_list( da.braindump );
-    set_braindump_ui( da.braindump_shown );
+    _brain.set_list( da.map.braindump );
+    set_braindump_ui( da.map.braindump_shown );
   }
 
   //-------------------------------------------------------------
@@ -604,7 +604,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private void close_unchanged_tabs() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var da = get_da( i );
-      if( !da.is_loaded ) {
+      if( !da.map.is_loaded ) {
         _nb.detach_tab( _nb.get_nth_page( i ) );
         return;
       }
@@ -618,7 +618,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   private bool find_unchanged_tab() {
     for( int i=0; i<_nb.get_n_pages(); i++ ) {
       var da = get_da( i );
-      if( !da.is_loaded ) {
+      if( !da.map.is_loaded ) {
         _nb.page = i;
         da.grab_focus();
         return( true );
@@ -1071,7 +1071,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 
     var da = get_current_da();
     if( da != null ) {
-      da.braindump_shown = show;
+      da.map.braindump_shown = show;
       save_tab_state( _nb.page );
     }
 
@@ -1560,7 +1560,7 @@ public class MainWindow : Gtk.ApplicationWindow {
   /* Called whenever the node selection changes in the canvas */
   private void on_current_changed( DrawArea da ) {
     action_set_enabled( "win.action_zoom_selected", (da.map.get_current_node() != null) );
-    _focus_btn.active = da.get_focus_mode();
+    _focus_btn.active = da.map.get_focus_mode();
   }
 
   /*
@@ -1994,7 +1994,7 @@ public class MainWindow : Gtk.ApplicationWindow {
       node->new_prop( "origin-x", da.origin_x.to_string() );
       node->new_prop( "origin-y", da.origin_y.to_string() );
       node->new_prop( "scale", da.sfactor.to_string() );
-      node->new_prop( "braindump", da.braindump_shown.to_string() );
+      node->new_prop( "braindump", da.map.braindump_shown.to_string() );
       root->add_child( node );
     }
 
@@ -2048,7 +2048,7 @@ public class MainWindow : Gtk.ApplicationWindow {
             change_scale( da.sfactor );
           }
           if( braindump != null ) {
-            da.braindump_shown = bool.parse( braindump );
+            da.map.braindump_shown = bool.parse( braindump );
           }
           da.get_doc().load_filename( fname, bool.parse( saved ) );
           if( da.get_doc().load() ) {

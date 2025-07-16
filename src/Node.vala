@@ -546,7 +546,7 @@ public class Node : Object {
   /* Default constructor */
   public Node( MindMap map, Layout? layout ) {
     _map       = map;
-    _id        = map.da.next_node_id;
+    _id        = map.next_node_id;
     _children  = new Array<Node>();
     _tree_bbox = new NodeBounds( map.da );
     _layout    = layout;
